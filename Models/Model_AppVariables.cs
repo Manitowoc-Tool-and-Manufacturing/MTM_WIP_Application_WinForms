@@ -1,4 +1,5 @@
-﻿using System.Reflection;
+﻿using System;
+using System.Reflection;
 using MTM_Inventory_Application.Data;
 using MTM_Inventory_Application.Helpers;
 
@@ -10,8 +11,8 @@ namespace MTM_Inventory_Application.Models
     {
         #region User Info
 
-        public static string EnteredUser { get; set; } = "Default User";
-        public static string User { get; set; } = "DEFAULT";
+    public static string EnteredUser { get; set; } = "Default User";
+    public static string User { get; set; } = (Environment.UserName ?? "UNKNOWN").ToUpperInvariant();
         public static string? UserPin { get; set; }
         public static string? UserShift { get; set; }
         public static bool UserTypeAdmin { get; set; } = false;
@@ -60,7 +61,7 @@ namespace MTM_Inventory_Application.Models
         public static string? WipServerPort { get; set; } = "3306";
         public static string? Version { get; set; } = Assembly.GetEntryAssembly()?.GetName().Version?.ToString();
 
-        public static string ConnectionString { get; set; } =
+        public static string ConnectionString =>
             Helper_Database_Variables.GetConnectionString(null, null, null, null);
 
         #endregion

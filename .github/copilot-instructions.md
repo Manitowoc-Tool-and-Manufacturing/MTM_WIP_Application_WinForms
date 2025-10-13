@@ -1,61 +1,117 @@
-# Copilot Instructions for this repository
+# MTM_WIP_Application_WinForms Copilot Configuration
 
-Always consult the root README.md and the docs under Documentation/Copilot Files/ before answering.
+Last updated: 2025-10-13
 
-## Key Rules
-- WinForms (.NET 8), MySQL stored procedures only
-- Use DaoResult<T>, no inline SQL, C# params without p_ prefix (helper adds it)
-- Follow UI progress, theming, and null-safety patterns
-- **MANDATORY: All code must use proper #region organization and method ordering**
+## Active Technologies
+- .NET 8.0 Windows Forms (WinForms) desktop application
+- MySQL 5.7 + MySql.Data connector (stored procedure driven data access)
+- Dapper-style helper utilities in `Helpers/` for database calls and UI helpers
 
-## Environment and Database Rules
+## Core Instruction Files
 
-### **Database File Structure** (CRITICAL)
-- **Current\*** folders: Reference only - **DO NOT ALTER** (CurrentDatabase, CurrentServer, CurrentStoredProcedures)
-- **Updated\*** folders: Active development - **USE FOR ALL CHANGES** (UpdatedDatabase, UpdatedStoredProcedures)
+GitHub Copilot will load these guidance files while generating code:
 
-### **Environment-Specific Logic**
-**Database Names:**
-- Debug Mode: `mtm_wip_application_test`
-- Release Mode: `mtm_wip_application`
+- #file:instructions/csharp-dotnet8.instructions.md
+- #file:instructions/mysql-database.instructions.md
+- #file:instructions/testing-standards.instructions.md
+- #file:instructions/documentation.instructions.md
+- #file:instructions/security-best-practices.instructions.md
+- #file:instructions/performance-optimization.instructions.md
+- #file:instructions/code-review-standards.instructions.md
 
-**Server Addresses:**
-- Release Mode: Always `172.16.1.104`
-- Debug Mode: `172.16.1.104` if current IP matches, otherwise `localhost`
+> Note: Avalonia/MVVM instructions are being retired. Prefer WinForms event-driven patterns and the existing DAO/service abstractions when authoring new code.
 
-**Implementation:**
-- Use `Model_Users.Database` and `Model_Users.WipServerAddress` properties
-- These properties automatically handle environment detection
-- Connection strings use `Helper_Database_Variables.GetConnectionString()`
+## Memory Files
 
-## Code Organization Requirements (MANDATORY)
+Cross-project lessons that remain relevant:
 
-When refactoring or creating ANY C# file, MUST follow:
+- #file:memory/database-patterns.md (MySQL stored-procedure usage)
 
-### **Standard Region Order:**
-1. `#region Fields` - Private fields, static instances, progress helpers
-2. `#region Properties` - Public properties, getters/setters  
-3. `#region Progress Control Methods` - SetProgressControls and progress-related methods
-4. `#region Constructors` - Constructor and initialization
-5. `#region [Specific Functionality]` - Business logic regions
-6. `#region Key Processing` - ProcessCmdKey and keyboard shortcuts
-7. `#region Button Clicks` - Event handlers for button clicks
-8. `#region ComboBox & UI Events` - UI event handlers and validation
-9. `#region Helpers` or `#region Private Methods` - Helper and utility methods
-10. `#region Cleanup` or `#region Disposal` - Cleanup and disposal methods
+All Avalonia/MVVM memories are being phased out; ignore any that reference AXAML or MVVM patterns.
 
-### **Method Ordering Within Regions:**
-- Public methods first ? Protected methods ? Private methods ? Static methods
+## Useful Prompts
 
-If a user asks for a refactor:
-- Generate a Pre-Refactor Report first (see Documentation/Copilot Files/21-refactoring-workflow.md)
-- **MUST include region organization analysis and planning**
-- For online refactors, use the MASTER REFRACTOR PROMPT (Online Mode)
-- **ALL refactored files MUST have proper region organization**
+Prompts that still apply to this WinForms solution:
 
-When unsure or context is missing:
-- Ask the user to attach the specific file(s), or
-- Search the workspace for the relevant files and sections
+- `/database-operation` – scaffold stored-procedure execution helpers
+- `/refactor-code` – assist with large WinForms/DAO refactors
+- `/generate-docs` – add XML docs and inline explanations
+- `/debug-issue` – gather structured context when troubleshooting
+- `/write-tests` – outline manual validation scenarios for forms and workflows
 
-**Non-compliance with region organization will require rework.**
+(Other Avalonia-specific prompts should be removed or rewritten before reuse.)
 
+## Project Structure
+```
+.
+├── Core/                     # Theme, JSON, and shared WinForms utilities
+├── Data/                     # DAO classes wrapping stored procedures
+├── Forms/                    # WinForms UI (MainForm, Settings, Transactions, etc.)
+├── Helpers/                  # UI and database helper classes
+├── Models/                   # POCOs for users, inventory, history, etc.
+├── Services/                 # Background services (timers, startup, diagnostics)
+├── Logging/                  # Logging utility abstractions
+├── Resources/                # WinForms resource files
+├── Database/                 # Stored procedures and schema snapshots
+├── Documentation/            # End-user and developer documentation
+└── .github/                  # Copilot configuration (instructions, prompts, workflows)
+```
+
+## Build and Run
+```powershell
+# Restore packages
+dotnet restore
+
+# Build WinForms project (Debug)
+dotnet build MTM_Inventory_Application.csproj -c Debug
+
+# Build Release when preparing deployments
+dotnet build MTM_Inventory_Application.csproj -c Release
+
+# Launch application (opens WinForms UI)
+dotnet run --project MTM_Inventory_Application.csproj
+```
+
+## Database Connection
+```
+Server: localhost
+Port:   3306
+Database: mtm_wip_application
+Username: root
+Password: root
+Connection string template:
+  Server=localhost;Port=3306;Database=mtm_wip_application;
+  User=root;Password=root;SslMode=none;AllowPublicKeyRetrieval=true;
+```
+
+Data access code should continue to route through the helper classes in `Helpers/` and DAO wrappers in `Data/`. Every query is executed via stored procedures; avoid inline SQL.
+
+## Testing Expectations
+
+- Manual validation is the primary QA approach.
+- Exercise key WinForms workflows (login, inventory adjustments, transfers, reporting).
+- Confirm database side-effects using the DAO history tables and stored procedure outputs.
+- Follow guidance in `testing-standards.instructions.md` to capture success criteria and regression coverage.
+
+## Coding Guidelines
+
+- Apply .NET 8 language features where helpful, but keep compatibility with WinForms designer code patterns.
+- Maintain separation between UI event handlers, helper utilities, and DAO/service layers.
+- Reuse existing logging and error-reporting utilities in `Logging/` and `Services/`.
+- Keep long-running operations off the UI thread—use async patterns or background workers as documented in `performance-optimization.instructions.md`.
+
+## Operations Checklist for Copilot Sessions
+
+1. Respect existing file organization; prefer enhancing DAOs/services over introducing new abstractions.
+2. Keep configuration secrets out of source (use `Helper_Database_Variables` and configuration files).
+3. Align naming with existing WinForms controls and models.
+4. Favor stored procedure updates over ad-hoc SQL changes.
+5. Document manual validation steps whenever features touch production workflows.
+
+## Work in Progress
+- Avalonia/MVVM artifacts are being removed from `.github/`.
+- Chatmodes will be rebuilt around WinForms troubleshooting and manufacturing workflows once cleanup completes.
+- The Copilot workflow will be expanded with WinForms-specific prompts after the instruction set stabilizes.
+
+<!-- MANUAL ADDITIONS START -->
+<!-- MANUAL ADDITIONS END -->
