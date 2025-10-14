@@ -37,7 +37,7 @@ internal static class Dao_Part
         catch (Exception ex)
         {
             LoggingUtility.LogDatabaseError(ex);
-            await Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex, useAsync, "DeletePart");
+            await Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex, callerName: "DeletePart");
             return DaoResult.Failure($"Error deleting part {partNumber}", ex);
         }
     }
@@ -79,7 +79,7 @@ internal static class Dao_Part
         catch (Exception ex)
         {
             LoggingUtility.LogDatabaseError(ex);
-            await Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex, useAsync, "InsertPart");
+            await Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex, callerName: "InsertPart");
             return DaoResult.Failure($"Error creating part {partNumber}", ex);
         }
     }
@@ -129,7 +129,7 @@ internal static class Dao_Part
         catch (Exception ex)
         {
             LoggingUtility.LogDatabaseError(ex);
-            await Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex, useAsync, "UpdatePart");
+            await Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex, callerName: "UpdatePart");
             return DaoResult.Failure($"Error updating part {partNumber}", ex);
         }
     }
@@ -162,7 +162,7 @@ internal static class Dao_Part
         catch (Exception ex)
         {
             LoggingUtility.LogDatabaseError(ex);
-            await Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex, useAsync, "GetAllParts");
+            await Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex, callerName: "GetAllParts");
             return DaoResult<DataTable>.Failure("Error retrieving parts", ex);
         }
     }
@@ -193,7 +193,7 @@ internal static class Dao_Part
         catch (Exception ex)
         {
             LoggingUtility.LogDatabaseError(ex);
-            await Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex, useAsync, "GetPartByNumber");
+            await Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex, callerName: "GetPartByNumber");
             return DaoResult<DataRow>.Failure($"Error retrieving part {partNumber}", ex);
         }
     }
@@ -236,7 +236,7 @@ internal static class Dao_Part
         catch (Exception ex)
         {
             LoggingUtility.LogDatabaseError(ex);
-            await Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex, useAsync, "GetPartTypes");
+            await Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex, callerName: "GetPartTypes");
             return DaoResult<DataTable>.Failure("Error retrieving part types", ex);
         }
     }
@@ -279,7 +279,7 @@ internal static class Dao_Part
         catch (Exception ex)
         {
             LoggingUtility.LogDatabaseError(ex);
-            await Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex, useAsync, "AddPartWithStoredProcedure");
+            await Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex, callerName: "AddPartWithStoredProcedure");
             return DaoResult.Failure($"Error adding part {itemNumber}", ex);
         }
     }
@@ -319,7 +319,7 @@ internal static class Dao_Part
         catch (Exception ex)
         {
             LoggingUtility.LogDatabaseError(ex);
-            await Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex, useAsync, "UpdatePartWithStoredProcedure");
+            await Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex, callerName: "UpdatePartWithStoredProcedure");
             return DaoResult.Failure($"Error updating part {itemNumber}", ex);
         }
     }

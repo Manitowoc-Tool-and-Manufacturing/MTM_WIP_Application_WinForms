@@ -31,12 +31,11 @@ internal class Dao_History
                 ["in_ReceiveDate"] = history.DateTime
             };
 
-            var result = await Helper_Database_StoredProcedure.ExecuteNonQueryWithStatus(
+            var result = await Helper_Database_StoredProcedure.ExecuteNonQueryWithStatusAsync(
                 Model_AppVariables.ConnectionString,
                 "inv_transaction_Add",
                 parameters,
-                null, // No progress helper for this method
-                true  // Use async
+                null // No progress helper for this method
             );
 
             if (!result.IsSuccess)
@@ -47,7 +46,7 @@ internal class Dao_History
         catch (Exception ex)
         {
             LoggingUtility.LogDatabaseError(ex);
-            await Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex, true, "AddTransactionHistoryAsync");
+            await Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex, callerName: "AddTransactionHistoryAsync");
         }
     }
 

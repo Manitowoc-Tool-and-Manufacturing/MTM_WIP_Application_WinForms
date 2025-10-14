@@ -37,7 +37,7 @@ internal static class Dao_Operation
         catch (Exception ex)
         {
             LoggingUtility.LogDatabaseError(ex);
-            await Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex, useAsync, "DeleteOperation");
+            await Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex, callerName: "DeleteOperation");
             return DaoResult.Failure($"Error deleting operation {operationNumber}", ex);
         }
     }
@@ -76,7 +76,7 @@ internal static class Dao_Operation
         catch (Exception ex)
         {
             LoggingUtility.LogDatabaseError(ex);
-            await Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex, useAsync, "InsertOperation");
+            await Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex, callerName: "InsertOperation");
             return DaoResult.Failure($"Error creating operation {operationNumber}", ex);
         }
     }
@@ -117,7 +117,7 @@ internal static class Dao_Operation
         catch (Exception ex)
         {
             LoggingUtility.LogDatabaseError(ex);
-            await Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex, useAsync, "UpdateOperation");
+            await Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex, callerName: "UpdateOperation");
             return DaoResult.Failure($"Error updating operation {oldOperation}", ex);
         }
     }
@@ -150,7 +150,7 @@ internal static class Dao_Operation
         catch (Exception ex)
         {
             LoggingUtility.LogDatabaseError(ex);
-            await Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex, useAsync, "GetAllOperations");
+            await Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex, callerName: "GetAllOperations");
             return DaoResult<DataTable>.Failure("Error retrieving operations", ex);
         }
     }
@@ -209,7 +209,7 @@ internal static class Dao_Operation
         catch (Exception ex)
         {
             LoggingUtility.LogDatabaseError(ex);
-            await Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex, useAsync, "OperationExists");
+            await Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex, callerName: "OperationExists");
             return DaoResult<bool>.Failure($"Error checking operation {operationNumber}", ex);
         }
     }

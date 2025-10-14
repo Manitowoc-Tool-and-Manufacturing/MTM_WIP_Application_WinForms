@@ -1,4 +1,4 @@
-﻿using System.ComponentModel;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Text;
 using MTM_Inventory_Application.Core;
@@ -215,7 +215,7 @@ namespace MTM_Inventory_Application.Controls.MainForm
             catch (Exception ex)
             {
                 LoggingUtility.LogApplicationError(ex);
-                await Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex, true,
+                await Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex,
                     "MainForm_LoadInventoryTabComboBoxesAsync");
             }
         }
@@ -290,7 +290,7 @@ namespace MTM_Inventory_Application.Controls.MainForm
             catch (Exception ex)
             {
                 LoggingUtility.LogApplicationError(ex);
-                _ = Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex, false, "MainForm_ProcessCmdKey");
+                _ = Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex, callerName: "MainForm_ProcessCmdKey");
                 return false;
             }
         }
@@ -386,7 +386,7 @@ namespace MTM_Inventory_Application.Controls.MainForm
             catch (Exception ex)
             {
                 LoggingUtility.LogApplicationError(ex);
-                _ = Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex, false,
+                _ = Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex,
                     new StringBuilder().Append("Control_InventoryTab_Button_AdvancedEntry_Click").ToString());
             }
         }
@@ -411,7 +411,7 @@ namespace MTM_Inventory_Application.Controls.MainForm
             catch (Exception ex)
             {
                 LoggingUtility.LogApplicationError(ex);
-                _ = Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex, false,
+                _ = Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex,
                     "MainForm_Inventory_Button_Reset_Click");
             }
             finally
@@ -474,7 +474,7 @@ namespace MTM_Inventory_Application.Controls.MainForm
             {
                 Debug.WriteLine($"[ERROR] Exception in InventoryTab Reset: {ex}");
                 LoggingUtility.LogApplicationError(ex);
-                _ = Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex, false, "MainForm_Inventory_Button_Reset");
+                _ = Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex, callerName: "MainForm_Inventory_Button_Reset");
             }
             finally
             {
@@ -525,7 +525,7 @@ namespace MTM_Inventory_Application.Controls.MainForm
             {
                 Debug.WriteLine($"[ERROR] Exception in InventoryTab SoftReset: {ex}");
                 LoggingUtility.LogApplicationError(ex);
-                _ = Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex, false, "MainForm_Inventory_SoftReset");
+                _ = Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex, callerName: "MainForm_Inventory_SoftReset");
             }
             finally
             {
@@ -661,7 +661,7 @@ namespace MTM_Inventory_Application.Controls.MainForm
                         $@"Error occurred during save operation @ {DateTime.Now:hh:mm tt}";
                 }
                 
-                await Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex, true, "MainForm_Inventory_Button_Save");
+                await Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex, callerName: "MainForm_Inventory_Button_Save");
             }
             finally
             {
@@ -730,7 +730,7 @@ namespace MTM_Inventory_Application.Controls.MainForm
             catch (Exception ex)
             {
                 LoggingUtility.LogApplicationError(ex);
-                _ = Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex, false, "MainForm_Inventory_ComboBox_Loc");
+                _ = Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex, callerName: "MainForm_Inventory_ComboBox_Loc");
             }
         }
 
@@ -762,7 +762,7 @@ namespace MTM_Inventory_Application.Controls.MainForm
             catch (Exception ex)
             {
                 LoggingUtility.LogApplicationError(ex);
-                _ = Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex, false, "MainForm_Inventory_ComboBox_Op");
+                _ = Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex, callerName: "MainForm_Inventory_ComboBox_Op");
             }
         }
 
@@ -794,7 +794,7 @@ namespace MTM_Inventory_Application.Controls.MainForm
             catch (Exception ex)
             {
                 LoggingUtility.LogApplicationError(ex);
-                _ = Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex, false, "MainForm_Inventory_ComboBox_Part");
+                _ = Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex, callerName: "MainForm_Inventory_ComboBox_Part");
             }
         }
 
@@ -828,7 +828,7 @@ namespace MTM_Inventory_Application.Controls.MainForm
             catch (Exception ex)
             {
                 LoggingUtility.LogApplicationError(ex);
-                _ = Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex, false, "MainForm_Inventory_TextBox_Qty");
+                _ = Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex, callerName: "MainForm_Inventory_TextBox_Qty");
             }
         }
 
@@ -848,7 +848,7 @@ namespace MTM_Inventory_Application.Controls.MainForm
             catch (Exception ex)
             {
                 LoggingUtility.LogApplicationError(ex);
-                _ = Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex, false,
+                _ = Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex,
                     "Control_InventoryTab_Update_SaveButtonState");
             }
         }
@@ -926,7 +926,7 @@ namespace MTM_Inventory_Application.Controls.MainForm
             catch (Exception ex)
             {
                 LoggingUtility.LogApplicationError(ex);
-                _ = Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex, false, "MainForm_WireUpInventoryTabEvents");
+                _ = Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex, callerName: "MainForm_WireUpInventoryTabEvents");
             }
         }
 

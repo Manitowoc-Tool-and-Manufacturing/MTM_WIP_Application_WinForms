@@ -45,7 +45,7 @@ namespace MTM_Inventory_Application.Data
             catch (Exception ex)
             {
                 LoggingUtility.LogDatabaseError(ex);
-                await Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex, true, "UpdateQuickButtonAsync");
+                await Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex, callerName: "UpdateQuickButtonAsync");
             }
         }
 
@@ -79,7 +79,7 @@ namespace MTM_Inventory_Application.Data
             catch (Exception ex)
             {
                 LoggingUtility.LogDatabaseError(ex);
-                await Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex, true, "RemoveQuickButtonAndShiftAsync");
+                await Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex, callerName: "RemoveQuickButtonAndShiftAsync");
             }
         }
 
@@ -113,7 +113,7 @@ namespace MTM_Inventory_Application.Data
             catch (Exception ex)
             {
                 LoggingUtility.LogDatabaseError(ex);
-                await Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex, true, "AddQuickButtonAsync");
+                await Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex, callerName: "AddQuickButtonAsync");
             }
         }
 
@@ -149,7 +149,7 @@ namespace MTM_Inventory_Application.Data
             catch (Exception ex)
             {
                 LoggingUtility.LogDatabaseError(ex);
-                await Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex, true, "MoveQuickButtonAsync");
+                await Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex, callerName: "MoveQuickButtonAsync");
             }
         }
 
@@ -179,7 +179,7 @@ namespace MTM_Inventory_Application.Data
             catch (Exception ex)
             {
                 LoggingUtility.LogDatabaseError(ex);
-                await Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex, true, "DeleteAllQuickButtonsForUserAsync");
+                await Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex, callerName: "DeleteAllQuickButtonsForUserAsync");
             }
         }
 
@@ -218,7 +218,7 @@ namespace MTM_Inventory_Application.Data
             catch (Exception ex)
             {
                 LoggingUtility.LogDatabaseError(ex);
-                await Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex, true, "AddOrShiftQuickButtonAsync");
+                await Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex, callerName: "AddOrShiftQuickButtonAsync");
             }
         }
 
@@ -251,7 +251,7 @@ namespace MTM_Inventory_Application.Data
             catch (Exception ex)
             {
                 LoggingUtility.LogDatabaseError(ex);
-                await Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex, true, "RemoveAndShiftQuickButtonAsync");
+                await Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex, callerName: "RemoveAndShiftQuickButtonAsync");
             }
         }
 
@@ -285,7 +285,7 @@ namespace MTM_Inventory_Application.Data
             catch (Exception ex)
             {
                 LoggingUtility.LogDatabaseError(ex);
-                await Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex, true, "AddQuickButtonAtPositionAsync");
+                await Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex, callerName: "AddQuickButtonAtPositionAsync");
             }
         }
 

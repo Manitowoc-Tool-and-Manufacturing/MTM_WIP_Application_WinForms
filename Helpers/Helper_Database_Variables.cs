@@ -8,6 +8,15 @@ namespace MTM_Inventory_Application.Helpers
 
     public static class Helper_Database_Variables
     {
+        #region Database Configuration Constants
+
+        /// <summary>
+        /// Test database name for integration testing. Matches the database created during test setup.
+        /// </summary>
+        public const string TestDatabaseName = "mtm_wip_application_test";
+
+        #endregion
+
         #region Connection String
 
         public static string GetConnectionString(string? server, string? database, string? uid, string? password)

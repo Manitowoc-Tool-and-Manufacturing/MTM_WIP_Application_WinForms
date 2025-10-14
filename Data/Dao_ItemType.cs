@@ -33,7 +33,7 @@ internal static class Dao_ItemType
         catch (Exception ex)
         {
             LoggingUtility.LogDatabaseError(ex);
-            await Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex, useAsync, "DeleteItemType");
+            await Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex, callerName: "DeleteItemType");
         }
     }
 
@@ -63,7 +63,7 @@ internal static class Dao_ItemType
         catch (Exception ex)
         {
             LoggingUtility.LogDatabaseError(ex);
-            await Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex, useAsync, "InsertItemType");
+            await Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex, callerName: "InsertItemType");
         }
     }
 
@@ -98,7 +98,7 @@ internal static class Dao_ItemType
         catch (Exception ex)
         {
             LoggingUtility.LogDatabaseError(ex);
-            await Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex, useAsync, "UpdateItemType");
+            await Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex, callerName: "UpdateItemType");
         }
     }
 
@@ -127,7 +127,7 @@ internal static class Dao_ItemType
         catch (Exception ex)
         {
             LoggingUtility.LogDatabaseError(ex);
-            await Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex, useAsync, "GetAllItemTypes");
+            await Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex, callerName: "GetAllItemTypes");
             return new DataTable();
         }
     }
@@ -143,7 +143,7 @@ internal static class Dao_ItemType
         catch (Exception ex)
         {
             LoggingUtility.LogDatabaseError(ex);
-            await Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex, useAsync, "GetItemTypeByName");
+            await Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex, callerName: "GetItemTypeByName");
             return null;
         }
     }
@@ -179,7 +179,7 @@ internal static class Dao_ItemType
         catch (Exception ex)
         {
             LoggingUtility.LogDatabaseError(ex);
-            await Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex, useAsync, "ItemTypeExists");
+            await Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex, callerName: "ItemTypeExists");
             return false;
         }
     }

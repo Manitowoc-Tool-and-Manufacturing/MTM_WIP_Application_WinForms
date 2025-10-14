@@ -224,12 +224,11 @@ namespace MTM_Inventory_Application.Controls.SettingsForm
                 await Task.Delay(100);
 
                 // Use enhanced stored procedure call with status reporting
-                var userExistsResult = await Helper_Database_StoredProcedure.ExecuteDataTableWithStatus(
+                var userExistsResult = await Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync(
                     Model_AppVariables.ConnectionString,
                     "usr_users_Exists",
                     new Dictionary<string, object> { ["p_User"] = userName },
-                    _progressHelper,
-                    true
+                    _progressHelper
                 );
 
                 if (!userExistsResult.IsSuccess)
@@ -257,7 +256,7 @@ namespace MTM_Inventory_Application.Controls.SettingsForm
                 UpdateProgress(40, "Creating user account...");
                 
                 // Use enhanced stored procedure call with status reporting
-                var createUserResult = await Helper_Database_StoredProcedure.ExecuteNonQueryWithStatus(
+                var createUserResult = await Helper_Database_StoredProcedure.ExecuteNonQueryWithStatusAsync(
                     Model_AppVariables.ConnectionString,
                     "usr_users_Add_User",
                     new Dictionary<string, object>
@@ -277,8 +276,7 @@ namespace MTM_Inventory_Application.Controls.SettingsForm
                         ["WIPDatabase"] = Model_Users.Database,
                         ["WipServerPort"] = Model_Users.WipServerPort
                     },
-                    _progressHelper,
-                    true
+                    _progressHelper
                 );
 
                 if (!createUserResult.IsSuccess)
@@ -290,12 +288,11 @@ namespace MTM_Inventory_Application.Controls.SettingsForm
                 UpdateProgress(60, "Retrieving user information...");
                 
                 // Get the created user to retrieve the ID
-                var getUserResult = await Helper_Database_StoredProcedure.ExecuteDataTableWithStatus(
+                var getUserResult = await Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync(
                     Model_AppVariables.ConnectionString,
                     "usr_users_Get_ByUser",
                     new Dictionary<string, object> { ["p_User"] = userName },
-                    _progressHelper,
-                    true
+                    _progressHelper
                 );
 
                 if (!getUserResult.IsSuccess || getUserResult.Data == null || getUserResult.Data.Rows.Count == 0)
@@ -321,7 +318,7 @@ namespace MTM_Inventory_Application.Controls.SettingsForm
                 UpdateProgress(80, "Assigning user role...");
                 
                 // Add user role assignment
-                var addRoleResult = await Helper_Database_StoredProcedure.ExecuteNonQueryWithStatus(
+                var addRoleResult = await Helper_Database_StoredProcedure.ExecuteNonQueryWithStatusAsync(
                     Model_AppVariables.ConnectionString,
                     "sys_user_roles_Add",
                     new Dictionary<string, object>
@@ -330,8 +327,7 @@ namespace MTM_Inventory_Application.Controls.SettingsForm
                         ["RoleID"] = roleId,
                         ["AssignedBy"] = Environment.UserName
                     },
-                    _progressHelper,
-                    true
+                    _progressHelper
                 );
 
                 if (!addRoleResult.IsSuccess)

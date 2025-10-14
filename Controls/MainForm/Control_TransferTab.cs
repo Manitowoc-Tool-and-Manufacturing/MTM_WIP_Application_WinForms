@@ -148,7 +148,7 @@ namespace MTM_Inventory_Application.Controls.MainForm
                 catch (Exception ex)
                 {
                     LoggingUtility.LogApplicationError(ex);
-                    await Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex, true, "Control_TransferTab_InitializeBackground_GetUserFullName");
+                    await Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex, callerName: "Control_TransferTab_InitializeBackground_GetUserFullName");
                 }
 
                 // Update button states on UI thread after background operations complete
@@ -171,7 +171,7 @@ namespace MTM_Inventory_Application.Controls.MainForm
             catch (Exception ex)
             {
                 LoggingUtility.LogApplicationError(ex);
-                await Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex, true, "Control_TransferTab_InitializeBackground");
+                await Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex, callerName: "Control_TransferTab_InitializeBackground");
             }
         }
 
@@ -263,7 +263,7 @@ namespace MTM_Inventory_Application.Controls.MainForm
             catch (Exception ex)
             {
                 LoggingUtility.LogApplicationError(ex);
-                _ = Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex, false,
+                _ = Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex,
                     new StringBuilder().Append("MainForm_ProcessCmdKey").ToString());
                 return false;
             }
@@ -287,7 +287,7 @@ namespace MTM_Inventory_Application.Controls.MainForm
             catch (Exception ex)
             {
                 LoggingUtility.LogApplicationError(ex);
-                await Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex, true,
+                await Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex,
                     new StringBuilder().Append("MainForm_LoadTransferTabComboBoxesAsync").ToString());
             }
         }
@@ -320,7 +320,7 @@ namespace MTM_Inventory_Application.Controls.MainForm
             {
                 Debug.WriteLine($"[ERROR] Exception in TransferTab Reset: {ex}");
                 LoggingUtility.LogApplicationError(ex);
-                _ = Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex, false,
+                _ = Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex,
                     new StringBuilder().Append("MainForm_Transfer_Button_Reset_Click").ToString());
             }
             finally
@@ -380,7 +380,7 @@ namespace MTM_Inventory_Application.Controls.MainForm
             {
                 Debug.WriteLine($"[ERROR] Exception in TransferTab HardReset: {ex}");
                 LoggingUtility.LogApplicationError(ex);
-                _ = Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex, false,
+                _ = Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex,
                     new StringBuilder().Append("MainForm_Transfer_HardReset").ToString());
             }
             finally
@@ -447,7 +447,7 @@ namespace MTM_Inventory_Application.Controls.MainForm
             {
                 Debug.WriteLine($"[ERROR] Exception in TransferTab SoftReset: {ex}");
                 LoggingUtility.LogApplicationError(ex);
-                _ = Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex, false,
+                _ = Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex,
                     new StringBuilder().Append("MainForm_Transfer_SoftReset").ToString());
             }
             finally
@@ -591,7 +591,7 @@ namespace MTM_Inventory_Application.Controls.MainForm
                 LoggingUtility.LogApplicationError(ex);
                 MessageBox.Show($"An unexpected error occurred during search: {ex.Message}", "Search Error", 
                     MessageBoxButtons.OK, MessageBoxIcon.Error);
-                await Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex, true,
+                await Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex,
                     new StringBuilder().Append("Control_TransferTab_Button_Search_Click").ToString());
             }
             finally
@@ -643,7 +643,7 @@ namespace MTM_Inventory_Application.Controls.MainForm
             catch (Exception ex)
             {
                 LoggingUtility.LogApplicationError(ex);
-                await Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex, true,
+                await Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex,
                     new StringBuilder().Append("Control_TransferTab_Button_Transfer_Click").ToString());
             }
             finally
@@ -866,7 +866,7 @@ namespace MTM_Inventory_Application.Controls.MainForm
             catch (Exception ex)
             {
                 LoggingUtility.LogApplicationError(ex);
-                _ = Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex, false,
+                _ = Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex,
                     new StringBuilder().Append("MainForm_Inventory_ComboBox_Op").ToString());
             }
         }
@@ -896,7 +896,7 @@ namespace MTM_Inventory_Application.Controls.MainForm
             catch (Exception ex)
             {
                 LoggingUtility.LogApplicationError(ex);
-                _ = Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex, false,
+                _ = Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex,
                     new StringBuilder().Append("MainForm_Inventory_ComboBox_Part").ToString());
             }
         }
@@ -946,7 +946,7 @@ namespace MTM_Inventory_Application.Controls.MainForm
             catch (Exception ex)
             {
                 LoggingUtility.LogApplicationError(ex);
-                _ = Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex, false,
+                _ = Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex,
                     new StringBuilder().Append("Control_TransferTab_Update_ButtonStates").ToString());
             }
         }
@@ -1042,7 +1042,7 @@ namespace MTM_Inventory_Application.Controls.MainForm
             catch (Exception ex)
             {
                 LoggingUtility.LogApplicationError(ex);
-                _ = Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex, false,
+                _ = Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex,
                     new StringBuilder().Append("MainForm_WireUpTransferTabEvents").ToString());
             }
         }

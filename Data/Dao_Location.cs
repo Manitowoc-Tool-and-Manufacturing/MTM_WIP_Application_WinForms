@@ -1,4 +1,4 @@
-﻿using System.Data;
+using System.Data;
 using MTM_Inventory_Application.Helpers;
 using MTM_Inventory_Application.Models;
 using MTM_Inventory_Application.Logging;
@@ -37,7 +37,7 @@ internal static class Dao_Location
         catch (Exception ex)
         {
             LoggingUtility.LogDatabaseError(ex);
-            await Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex, useAsync, "DeleteLocation");
+            await Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex, callerName: "DeleteLocation");
             return DaoResult.Failure($"Error deleting location {location}", ex);
         }
     }
@@ -77,7 +77,7 @@ internal static class Dao_Location
         catch (Exception ex)
         {
             LoggingUtility.LogDatabaseError(ex);
-            await Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex, useAsync, "InsertLocation");
+            await Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex, callerName: "InsertLocation");
             return DaoResult.Failure($"Error creating location {location}", ex);
         }
     }
@@ -119,7 +119,7 @@ internal static class Dao_Location
         catch (Exception ex)
         {
             LoggingUtility.LogDatabaseError(ex);
-            await Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex, useAsync, "UpdateLocation");
+            await Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex, callerName: "UpdateLocation");
             return DaoResult.Failure($"Error updating location {oldLocation}", ex);
         }
     }
@@ -148,7 +148,7 @@ internal static class Dao_Location
         catch (Exception ex)
         {
             LoggingUtility.LogDatabaseError(ex);
-            await Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex, useAsync, "GetAllLocations");
+            await Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex, callerName: "GetAllLocations");
             return DaoResult<DataTable>.Failure("Error retrieving locations", ex);
         }
     }
@@ -211,7 +211,7 @@ internal static class Dao_Location
         catch (Exception ex)
         {
             LoggingUtility.LogDatabaseError(ex);
-            await Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex, useAsync, "LocationExists");
+            await Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex, callerName: "LocationExists");
             return DaoResult<bool>.Failure($"Error checking location {location}", ex);
         }
     }

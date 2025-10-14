@@ -2664,7 +2664,7 @@ namespace MTM_Inventory_Application.Core
                         LoggingUtility.Log("Attempting to load themes from database using Dao_System.GetAllThemesAsync...");
                         
                         // UPDATED: Use Dao_System.GetAllThemesAsync instead of non-existent stored procedure
-                        var dataResult = await Dao_System.GetAllThemesAsync(useAsync: true);
+                        var dataResult = await Dao_System.GetAllThemesAsync();
                         
                         if (dataResult.IsSuccess && dataResult.Data != null)
                         {

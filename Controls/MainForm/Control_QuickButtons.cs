@@ -121,12 +121,11 @@ namespace MTM_Inventory_Application.Controls.MainForm
             {
                 // FIXED: Use Helper_Database_StoredProcedure instead of direct MySqlConnection
                 // because the stored procedure has p_Status and p_ErrorMsg parameters
-                var dataResult = await Helper_Database_StoredProcedure.ExecuteDataTableWithStatus(
+                var dataResult = await Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync(
                     Model_AppVariables.ConnectionString,
                     "sys_last_10_transactions_Get_ByUser",
                     new Dictionary<string, object> { ["p_User"] = currentUser },
-                    null, // No progress helper for this method
-                    true  // Use async
+                    null // No progress helper for this method
                 );
 
                 if (!dataResult.IsSuccess || dataResult.Data == null)

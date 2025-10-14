@@ -196,7 +196,7 @@ namespace MTM_Inventory_Application.Controls.MainForm
             catch (Exception ex)
             {
                 LoggingUtility.LogApplicationError(ex);
-                _ = Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex, false, "Control_AdvancedInventory_Ctor");
+                _ = Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex, callerName: "Control_AdvancedInventory_Ctor");
             }
         }
 
@@ -228,7 +228,7 @@ namespace MTM_Inventory_Application.Controls.MainForm
             catch (Exception ex)
             {
                 LoggingUtility.LogApplicationError(ex);
-                await Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex, true, "Control_AdvancedInventory.OnLoad");
+                await Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex, callerName: "Control_AdvancedInventory.OnLoad");
             }
         }
 
@@ -252,7 +252,7 @@ namespace MTM_Inventory_Application.Controls.MainForm
             catch (Exception ex)
             {
                 LoggingUtility.LogApplicationError(ex);
-                await Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex, true,
+                await Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex,
                     "Control_AdvancedInventory_LoadAllComboBoxesAsync");
             }
         }
@@ -405,7 +405,7 @@ namespace MTM_Inventory_Application.Controls.MainForm
             catch (Exception ex)
             {
                 LoggingUtility.LogApplicationError(ex);
-                _ = Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex, false,
+                _ = Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex,
                     "Control_AdvancedInventory_WireUpEvents");
             }
         }
@@ -644,7 +644,7 @@ namespace MTM_Inventory_Application.Controls.MainForm
             catch (Exception ex)
             {
                 LoggingUtility.LogApplicationError(ex);
-                _ = Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex, false,
+                _ = Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex,
                     "Control_AdvancedInventory_ProcessCmdKey");
                 return false;
             }
@@ -734,7 +734,7 @@ namespace MTM_Inventory_Application.Controls.MainForm
             {
                 Debug.WriteLine($"[ERROR] Exception in AdvancedInventory Single HardReset: {ex}");
                 LoggingUtility.LogApplicationError(ex);
-                _ = Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex, false,
+                _ = Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex,
                     "AdvancedInventory_Single_HardResetAsync");
             }
             finally
@@ -808,7 +808,7 @@ namespace MTM_Inventory_Application.Controls.MainForm
             {
                 Debug.WriteLine($"[ERROR] Exception in AdvancedInventory Single SoftReset: {ex}");
                 LoggingUtility.LogApplicationError(ex);
-                _ = Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex, false,
+                _ = Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex,
                     "AdvancedInventory_Single_SoftReset");
             }
             finally
@@ -844,7 +844,7 @@ namespace MTM_Inventory_Application.Controls.MainForm
             {
                 Debug.WriteLine($"[ERROR] Exception in AdvancedInventory Single Reset: {ex}");
                 LoggingUtility.LogApplicationError(ex);
-                _ = Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex, false,
+                _ = Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex,
                     "AdvancedInventory_Single_Button_Reset_Click");
             }
         }
@@ -945,7 +945,7 @@ namespace MTM_Inventory_Application.Controls.MainForm
             catch (Exception ex)
             {
                 LoggingUtility.LogApplicationError(ex);
-                await Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex, true,
+                await Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex,
                     "AdvancedInventory_Single_Button_Save_Click");
             }
         }
@@ -1037,7 +1037,7 @@ namespace MTM_Inventory_Application.Controls.MainForm
             catch (Exception ex)
             {
                 LoggingUtility.LogApplicationError(ex);
-                _ = Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex, false,
+                _ = Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex,
                     "AdvancedInventory_Single_Button_Send_Click");
             }
         }
@@ -1090,7 +1090,7 @@ namespace MTM_Inventory_Application.Controls.MainForm
             catch (Exception ex)
             {
                 LoggingUtility.LogApplicationError(ex);
-                _ = Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex, false,
+                _ = Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex,
                     "Control_InventoryTab_Button_AdvancedInventory_Click");
             }
         }
@@ -1179,7 +1179,7 @@ namespace MTM_Inventory_Application.Controls.MainForm
             {
                 Debug.WriteLine($"[ERROR] Exception in AdvancedInventory MultiLoc HardReset: {ex}");
                 LoggingUtility.LogApplicationError(ex);
-                _ = Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex, false,
+                _ = Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex,
                     "AdvancedInventory_MultiLoc_HardResetAsync");
             }
             finally
@@ -1253,7 +1253,7 @@ namespace MTM_Inventory_Application.Controls.MainForm
             {
                 Debug.WriteLine($"[ERROR] Exception in AdvancedInventory MultiLoc SoftReset: {ex}");
                 LoggingUtility.LogApplicationError(ex);
-                _ = Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex, false,
+                _ = Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex,
                     "AdvancedInventory_MultiLoc_SoftReset");
             }
             finally
@@ -1289,7 +1289,7 @@ namespace MTM_Inventory_Application.Controls.MainForm
             {
                 Debug.WriteLine($"[ERROR] Exception in AdvancedInventory MultiLoc Reset: {ex}");
                 LoggingUtility.LogApplicationError(ex);
-                _ = Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex, false,
+                _ = Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex,
                     "AdvancedInventory_MultiLoc_Button_Reset_Click");
             }
         }
@@ -1375,7 +1375,7 @@ namespace MTM_Inventory_Application.Controls.MainForm
             catch (Exception ex)
             {
                 LoggingUtility.LogApplicationError(ex);
-                _ = Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex, false,
+                _ = Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex,
                     "AdvancedInventory_MultiLoc_Button_AddLoc_Click");
             }
         }
@@ -1476,7 +1476,7 @@ namespace MTM_Inventory_Application.Controls.MainForm
             catch (Exception ex)
             {
                 LoggingUtility.LogApplicationError(ex);
-                await Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex, true,
+                await Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex,
                     "AdvancedInventory_MultiLoc_Button_SaveAll_Click");
             }
         }

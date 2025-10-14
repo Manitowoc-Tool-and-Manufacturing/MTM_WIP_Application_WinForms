@@ -66,24 +66,23 @@ internal class Dao_Transactions
                 ["ToLocation"] = toLocation ?? "",
                 ["p_Operation"] = operation ?? "",
                 ["TransactionType"] = transactionType?.ToString() ?? "",
-                ["Quantity"] = quantity,
+                ["Quantity"] = quantity ?? (object)DBNull.Value,
                 ["Notes"] = notes ?? "",
                 ["ItemType"] = itemType ?? "",
-                ["FromDate"] = fromDate,
-                ["ToDate"] = toDate,
+                ["FromDate"] = fromDate ?? (object)DBNull.Value,
+                ["ToDate"] = toDate ?? (object)DBNull.Value,
                 ["SortColumn"] = sortColumn,
                 ["SortDescending"] = sortDescending,
                 ["Page"] = page,
                 ["PageSize"] = pageSize
             };
 
-            // Use Helper_Database_StoredProcedure.ExecuteDataTableWithStatus for proper status handling
-            var result = await Helper_Database_StoredProcedure.ExecuteDataTableWithStatus(
+            // Use Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync for proper status handling
+            var result = await Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync(
                 Model_AppVariables.ConnectionString,
                 "inv_transactions_Search",
                 parameters,
-                null, // No progress helper for this method
-                true // Use async
+                null // No progress helper for this method
             );
 
             if (!result.IsSuccess)
@@ -110,7 +109,7 @@ internal class Dao_Transactions
         catch (Exception ex)
         {
             LoggingUtility.LogDatabaseError(ex);
-            await Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex, true, "SearchTransactionsAsync");
+            await Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex, callerName: "SearchTransactionsAsync");
             return DaoResult<List<Model_Transactions>>.Failure(
                 "Failed to search transactions", ex
             );
@@ -169,7 +168,7 @@ internal class Dao_Transactions
         catch (Exception ex)
         {
             LoggingUtility.LogDatabaseError(ex);
-            _ = Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex, false, "SearchTransactions");
+            _ = Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex, callerName: "SearchTransactions");
             return DaoResult<List<Model_Transactions>>.Failure(
                 "Failed to search transactions (sync)", ex
             );
@@ -325,13 +324,12 @@ internal class Dao_Transactions
             System.Diagnostics.Debug.WriteLine($"[DAO DEBUG] Full SQL will be: SELECT ... FROM inv_transaction WHERE {whereBuilder} ORDER BY ReceiveDate DESC LIMIT ...");
             System.Diagnostics.Debug.WriteLine($"[DAO DEBUG] === CALLING STORED PROCEDURE ===");
 
-            // Use Helper_Database_StoredProcedure.ExecuteDataTableWithStatus for proper status handling
-            var result = await Helper_Database_StoredProcedure.ExecuteDataTableWithStatus(
+            // Use Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync for proper status handling
+            var result = await Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync(
                 Model_AppVariables.ConnectionString,
                 "inv_transactions_SmartSearch",
                 parameters,
-                null, // No progress helper for this method
-                true // Use async
+                null // No progress helper for this method
             );
 
             System.Diagnostics.Debug.WriteLine($"[DAO DEBUG] Stored procedure result: IsSuccess={result.IsSuccess}, ErrorMessage='{result.ErrorMessage}'");
@@ -366,7 +364,7 @@ internal class Dao_Transactions
             System.Diagnostics.Debug.WriteLine($"[DAO DEBUG] Stack trace: {ex.StackTrace}");
             
             LoggingUtility.LogDatabaseError(ex);
-            await Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex, true, "SmartSearchAsync");
+            await Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex, callerName: "SmartSearchAsync");
             return DaoResult<List<Model_Transactions>>.Failure(
                 "Smart search failed", ex
             );
@@ -392,17 +390,16 @@ internal class Dao_Transactions
             {
                 ["UserName"] = userName ?? "",
                 ["IsAdmin"] = isAdmin,
-                ["FromDate"] = timeRange.from,
-                ["ToDate"] = timeRange.to
+                ["FromDate"] = timeRange.from ?? (object)DBNull.Value,
+                ["ToDate"] = timeRange.to ?? (object)DBNull.Value
             };
 
-            // Use Helper_Database_StoredProcedure.ExecuteDataTableWithStatus for proper status handling
-            var result = await Helper_Database_StoredProcedure.ExecuteDataTableWithStatus(
+            // Use Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync for proper status handling
+            var result = await Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync(
                 Model_AppVariables.ConnectionString,
                 "inv_transactions_GetAnalytics",
                 parameters,
-                null, // No progress helper for this method
-                true // Use async
+                null // No progress helper for this method
             );
 
             if (!result.IsSuccess)
@@ -436,7 +433,7 @@ internal class Dao_Transactions
         catch (Exception ex)
         {
             LoggingUtility.LogDatabaseError(ex);
-            await Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex, true, "GetTransactionAnalyticsAsync");
+            await Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex, callerName: "GetTransactionAnalyticsAsync");
             return DaoResult<Dictionary<string, object>>.Failure(
                 "Failed to retrieve transaction analytics", ex
             );

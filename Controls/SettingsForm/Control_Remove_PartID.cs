@@ -53,7 +53,7 @@ namespace MTM_Inventory_Application.Controls.SettingsForm
             catch (Exception ex)
             {
                 LoggingUtility.LogApplicationError(ex);
-                await Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex, true,
+                await Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex,
                     "SettingsForm / RemovePartControl_OnLoadOverRide");
             }
         }

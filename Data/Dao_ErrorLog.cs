@@ -16,19 +16,15 @@ internal static class Dao_ErrorLog
 
     #region Query Methods
 
-    internal static async Task<List<(string MethodName, string ErrorMessage)>> GetUniqueErrorsAsync(
-        bool useAsync = true) // Default to async for better performance
+    internal static async Task<List<(string MethodName, string ErrorMessage)>> GetUniqueErrorsAsync()
     {
         List<(string MethodName, string ErrorMessage)> uniqueErrors = new();
         try
         {
-            // FIXED: Use Helper_Database_StoredProcedure instead of Helper_Database_Core
-            var dataResult = await Helper_Database_StoredProcedure.ExecuteDataTableWithStatus(
+            var dataResult = await Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync(
                 Model_AppVariables.ConnectionString,
                 "log_error_Get_Unique",
-                null, // No parameters needed
-                null, // No progress helper for this method
-                useAsync
+                null // No parameters needed
             );
 
             if (dataResult.IsSuccess && dataResult.Data != null)
@@ -58,32 +54,29 @@ internal static class Dao_ErrorLog
         return uniqueErrors;
     }
 
-    internal static async Task<DataTable> GetAllErrorsAsync(bool useAsync = false) =>
-        await GetErrorsByStoredProcedureAsync("log_error_Get_All", null, useAsync);
+    internal static async Task<DataTable> GetAllErrorsAsync() =>
+        await GetErrorsByStoredProcedureAsync("log_error_Get_All", null);
 
-    internal static async Task<DataTable> GetErrorsByUserAsync(string user, bool useAsync = false) =>
+    internal static async Task<DataTable> GetErrorsByUserAsync(string user) =>
         await GetErrorsByStoredProcedureAsync(
             "log_error_Get_ByUser",
-            new Dictionary<string, object> { ["p_User"] = user }, useAsync); // FIXED: Remove p_ prefix
+            new Dictionary<string, object> { ["p_User"] = user }); // FIXED: Remove p_ prefix
 
     internal static async Task<DataTable>
-        GetErrorsByDateRangeAsync(DateTime start, DateTime end, bool useAsync = false) =>
+        GetErrorsByDateRangeAsync(DateTime start, DateTime end) =>
         await GetErrorsByStoredProcedureAsync(
             "log_error_Get_ByDateRange",
-            new Dictionary<string, object> { ["StartDate"] = start, ["EndDate"] = end }, useAsync); // FIXED: Remove p_ prefix
+            new Dictionary<string, object> { ["StartDate"] = start, ["EndDate"] = end }); // FIXED: Remove p_ prefix
 
     private static async Task<DataTable> GetErrorsByStoredProcedureAsync(string procedureName, 
-        Dictionary<string, object>? parameters, bool useAsync)
+        Dictionary<string, object>? parameters)
     {
         try
         {
-            // FIXED: Use Helper_Database_StoredProcedure for proper status handling
-            var dataResult = await Helper_Database_StoredProcedure.ExecuteDataTableWithStatus(
+            var dataResult = await Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync(
                 Model_AppVariables.ConnectionString,
                 procedureName,
-                parameters,
-                null, // No progress helper for these methods
-                useAsync
+                parameters
             );
 
             if (dataResult.IsSuccess && dataResult.Data != null)
@@ -109,25 +102,22 @@ internal static class Dao_ErrorLog
 
     #region Delete Methods
 
-    internal static async Task DeleteErrorByIdAsync(int id, bool useAsync = false) =>
+    internal static async Task DeleteErrorByIdAsync(int id) =>
         await ExecuteStoredProcedureNonQueryAsync("log_error_Delete_ById",
-            new Dictionary<string, object> { ["Id"] = id }, useAsync); // FIXED: Remove p_ prefix
+            new Dictionary<string, object> { ["Id"] = id }); // FIXED: Remove p_ prefix
 
-    internal static async Task DeleteAllErrorsAsync(bool useAsync = false) =>
-        await ExecuteStoredProcedureNonQueryAsync("log_error_Delete_All", null, useAsync);
+    internal static async Task DeleteAllErrorsAsync() =>
+        await ExecuteStoredProcedureNonQueryAsync("log_error_Delete_All", null);
 
     private static async Task ExecuteStoredProcedureNonQueryAsync(string procedureName, 
-        Dictionary<string, object>? parameters, bool useAsync)
+        Dictionary<string, object>? parameters)
     {
         try
         {
-            // FIXED: Use Helper_Database_StoredProcedure for proper status handling
-            var result = await Helper_Database_StoredProcedure.ExecuteNonQueryWithStatus(
+            var result = await Helper_Database_StoredProcedure.ExecuteNonQueryWithStatusAsync(
                 Model_AppVariables.ConnectionString,
                 procedureName,
-                parameters,
-                null, // No progress helper for these methods
-                useAsync
+                parameters
             );
 
             if (!result.IsSuccess)
@@ -201,7 +191,6 @@ internal static class Dao_ErrorLog
 
     internal static async Task HandleException_SQLError_CloseApp(
         Exception ex,
-        bool useAsync = false,
         [System.Runtime.CompilerServices.CallerMemberName]
         string callerName = "",
         string controlName = "")
@@ -248,8 +237,7 @@ internal static class Dao_ErrorLog
                     ex.StackTrace,
                     "",
                     callerName,
-                    controlName,
-                    useAsync
+                    controlName
                 );
 
                 if (ShouldShowSqlErrorMessage(message))
@@ -266,7 +254,6 @@ internal static class Dao_ErrorLog
 
     internal static async Task HandleException_GeneralError_CloseApp(
         Exception ex,
-        bool useAsync = false,
         [System.Runtime.CompilerServices.CallerMemberName]
         string callerName = "",
         string controlName = "")
@@ -306,8 +293,7 @@ internal static class Dao_ErrorLog
                 ex.StackTrace,
                 "",
                 callerName,
-                controlName,
-                useAsync
+                controlName
             );
 
             if (ShouldShowErrorMessage(message))
@@ -329,7 +315,7 @@ internal static class Dao_ErrorLog
         catch (Exception innerEx)
         {
             LoggingUtility.LogApplicationError(innerEx);
-            await HandleException_GeneralError_CloseApp(innerEx, useAsync, controlName: controlName);
+            await HandleException_GeneralError_CloseApp(innerEx, controlName: controlName);
         }
     }
 
@@ -340,12 +326,10 @@ internal static class Dao_ErrorLog
         string? stackTrace,
         string moduleName,
         string methodName,
-        string? additionalInfo,
-        bool useAsync)
+        string? additionalInfo)
     {
         try
         {
-            // FIXED: Use Helper_Database_StoredProcedure for proper status handling
             Dictionary<string, object> parameters = new()
             {
                 ["p_User"] = Model_AppVariables.User ?? "Unknown", // FIXED: Remove p_ prefix
@@ -362,12 +346,10 @@ internal static class Dao_ErrorLog
                 ["ErrorTime"] = DateTime.Now
             };
 
-            var result = await Helper_Database_StoredProcedure.ExecuteNonQueryWithStatus(
+            var result = await Helper_Database_StoredProcedure.ExecuteNonQueryWithStatusAsync(
                 Model_AppVariables.ConnectionString,
                 "log_error_Add_Error",
-                parameters,
-                null, // No progress helper for this method
-                useAsync
+                parameters
             );
 
             if (!result.IsSuccess)
@@ -389,7 +371,7 @@ internal static class Dao_ErrorLog
     #region Synchronous Helpers
 
     internal static List<(string MethodName, string ErrorMessage)> GetUniqueErrors() =>
-        GetUniqueErrorsAsync(false).GetAwaiter().GetResult();
+        GetUniqueErrorsAsync().GetAwaiter().GetResult();
 
     internal static void LogErrorWithMethod(Exception ex,
         [System.Runtime.CompilerServices.CallerMemberName]
