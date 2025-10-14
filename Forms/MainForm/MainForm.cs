@@ -1,4 +1,4 @@
-﻿using System.ComponentModel;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Reflection;
 using Microsoft.Win32;
@@ -137,7 +137,7 @@ namespace MTM_Inventory_Application.Forms.MainForm
         {
             Service_DebugTracer.TraceMethodEntry(new Dictionary<string, object>
             {
-                ["User"] = Model_AppVariables.User,
+                ["p_User"] = Model_AppVariables.User,
                 ["UserType"] = Model_AppVariables.UserTypeAdmin ? "Admin" : Model_AppVariables.UserTypeNormal ? "Normal" : "ReadOnly"
             }, nameof(InitializeFormTitle), nameof(MainForm));
 
@@ -146,7 +146,7 @@ namespace MTM_Inventory_Application.Forms.MainForm
                 string privilege = GetUserPrivilegeDisplayText();
                 var formTitleData = new Dictionary<string, object>
                 {
-                    ["User"] = Model_AppVariables.User,
+                    ["p_User"] = Model_AppVariables.User,
                     ["Privilege"] = privilege,
                     ["Title"] = $"Manitowoc Tool and Manufacturing WIP Inventory System | {Model_AppVariables.User} | {privilege}"
                 };
@@ -309,7 +309,7 @@ namespace MTM_Inventory_Application.Forms.MainForm
                     Service_DebugTracer.TraceUIAction("DEVELOPMENT_MENU_CONFIGURED", nameof(MainForm),
                         new Dictionary<string, object>
                         {
-                            ["User"] = Model_AppVariables.User ?? "Unknown",
+                            ["p_User"] = Model_AppVariables.User ?? "Unknown",
                             ["MenuVisible"] = isDeveloper,
                             ["AccessLevel"] = isDeveloper ? "Developer" : "Standard User"
                         });
@@ -337,7 +337,7 @@ namespace MTM_Inventory_Application.Forms.MainForm
                     contextData: new Dictionary<string, object> 
                     { 
                         ["Method"] = nameof(ConfigureDevelopmentMenuVisibility),
-                        ["User"] = Model_AppVariables.User ?? "Unknown"
+                        ["p_User"] = Model_AppVariables.User ?? "Unknown"
                     });
             }
 

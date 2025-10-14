@@ -1,4 +1,4 @@
-﻿using System.ComponentModel;
+using System.ComponentModel;
 using System.Data;
 using System.Diagnostics;
 using System.Windows.Forms;
@@ -1683,7 +1683,7 @@ namespace MTM_Inventory_Application.Controls.MainForm
                 }
 
                 string part = row.Cells["Part"].Value?.ToString() ?? "";
-                string op = row.Cells["Operation"].Value?.ToString() ?? "";
+                string op = row.Cells["p_Operation"].Value?.ToString() ?? "";
                 string loc = row.Cells["Location"].Value?.ToString() ?? "";
                 string qtyText = row.Cells["Quantity"].Value?.ToString() ?? "";
                 string notesOriginal = row.Cells["Notes"].Value?.ToString() ?? "";
@@ -1698,7 +1698,7 @@ namespace MTM_Inventory_Application.Controls.MainForm
 
                 if (!validOps.Contains(op))
                 {
-                    row.Cells["Operation"].Style.ForeColor =
+                    row.Cells["p_Operation"].Style.ForeColor =
                         Model_AppVariables.UserUiColors.TextBoxErrorForeColor ?? Color.Red;
                     rowValid = false;
                 }

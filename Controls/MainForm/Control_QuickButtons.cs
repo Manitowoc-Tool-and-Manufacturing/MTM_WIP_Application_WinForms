@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Reflection;
@@ -124,7 +124,7 @@ namespace MTM_Inventory_Application.Controls.MainForm
                 var dataResult = await Helper_Database_StoredProcedure.ExecuteDataTableWithStatus(
                     Model_AppVariables.ConnectionString,
                     "sys_last_10_transactions_Get_ByUser",
-                    new Dictionary<string, object> { ["User"] = currentUser },
+                    new Dictionary<string, object> { ["p_User"] = currentUser },
                     null, // No progress helper for this method
                     true  // Use async
                 );
@@ -162,8 +162,8 @@ namespace MTM_Inventory_Application.Controls.MainForm
                 {
                     if (i >= quickButtons?.Count) break;
                     
-                    string? partId = row["PartID"] == DBNull.Value ? null : row["PartID"].ToString();
-                    string? operation = row["Operation"] == DBNull.Value ? null : row["Operation"].ToString();
+                    string? partId = row["p_PartID"] == DBNull.Value ? null : row["p_PartID"].ToString();
+                    string? operation = row["p_Operation"] == DBNull.Value ? null : row["p_Operation"].ToString();
                     int? quantity = row["Quantity"] == DBNull.Value ? null :
                         row["Quantity"] is int q ? q : Convert.ToInt32(row["Quantity"]);
                     

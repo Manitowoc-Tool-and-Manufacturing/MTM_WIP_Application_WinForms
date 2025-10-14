@@ -2661,15 +2661,10 @@ namespace MTM_Inventory_Application.Core
                     
                     try
                     {
-                        LoggingUtility.Log("Attempting to load themes from database using app_themes_Get_All stored procedure...");
+                        LoggingUtility.Log("Attempting to load themes from database using Dao_System.GetAllThemesAsync...");
                         
-                        var dataResult = await Helper_Database_StoredProcedure.ExecuteDataTableWithStatus(
-                            Model_AppVariables.ConnectionString,
-                            "app_themes_Get_All",
-                            null,
-                            null,
-                            true
-                        );
+                        // UPDATED: Use Dao_System.GetAllThemesAsync instead of non-existent stored procedure
+                        var dataResult = await Dao_System.GetAllThemesAsync(useAsync: true);
                         
                         if (dataResult.IsSuccess && dataResult.Data != null)
                         {

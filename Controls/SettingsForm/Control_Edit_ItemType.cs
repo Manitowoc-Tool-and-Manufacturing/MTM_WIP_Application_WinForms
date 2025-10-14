@@ -127,7 +127,7 @@ namespace MTM_Inventory_Application.Controls.SettingsForm
                     }
                 }
 
-                int itemTypeId = Convert.ToInt32(_currentItemType["ID"]);
+                int itemTypeId = Convert.ToInt32(_currentItemType["p_ID"]);
                 await Dao_ItemType.UpdateItemType(itemTypeId, newItemType, Model_AppVariables.User ?? "Current User");
                 LoadItemTypes();
                 ClearForm();

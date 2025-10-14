@@ -15,20 +15,20 @@ internal class Dao_History
     {
         try
         {
-            // MIGRATED: Use Helper_Database_StoredProcedure instead of Helper_Database_Core
+            // MIGRATED: Use Helper_Database_StoredProcedure with explicit in_ prefix
             Dictionary<string, object> parameters = new()
             {
-                ["TransactionType"] = history.TransactionType,         // p_ prefix added automatically
-                ["PartID"] = history.PartId,
-                ["FromLocation"] = history.FromLocation ?? (object)DBNull.Value,
-                ["ToLocation"] = history.ToLocation ?? (object)DBNull.Value,
-                ["Operation"] = history.Operation ?? (object)DBNull.Value,
-                ["Quantity"] = history.Quantity,
-                ["Notes"] = history.Notes ?? (object)DBNull.Value,
-                ["User"] = history.User,
-                ["ItemType"] = history.ItemType ?? (object)DBNull.Value,
-                ["BatchNumber"] = history.BatchNumber ?? (object)DBNull.Value,
-                ["ReceiveDate"] = history.DateTime
+                ["in_TransactionType"] = history.TransactionType,      // Explicit in_ prefix for transaction procedures
+                ["in_PartID"] = history.PartId,
+                ["in_FromLocation"] = history.FromLocation ?? (object)DBNull.Value,
+                ["in_ToLocation"] = history.ToLocation ?? (object)DBNull.Value,
+                ["in_Operation"] = history.Operation ?? (object)DBNull.Value,
+                ["in_Quantity"] = history.Quantity,
+                ["in_Notes"] = history.Notes ?? (object)DBNull.Value,
+                ["in_User"] = history.User,
+                ["in_ItemType"] = history.ItemType ?? (object)DBNull.Value,
+                ["in_BatchNumber"] = history.BatchNumber ?? (object)DBNull.Value,
+                ["in_ReceiveDate"] = history.DateTime
             };
 
             var result = await Helper_Database_StoredProcedure.ExecuteNonQueryWithStatus(

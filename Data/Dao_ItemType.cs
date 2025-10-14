@@ -77,7 +77,7 @@ internal static class Dao_ItemType
         {
             Dictionary<string, object> parameters = new()
             {
-                ["ID"] = id,                    // p_ prefix added automatically
+                ["p_ID"] = id,                    // p_ prefix added automatically
                 ["ItemType"] = newItemType,
                 ["IssuedBy"] = user
             };

@@ -150,14 +150,14 @@ namespace MTM_Inventory_Application.Controls.SettingsForm
                     string[] names = (userRow["Full Name"]?.ToString() ?? "").Split(' ');
                     Control_Edit_User_TextBox_FirstName.Text = names.Length > 0 ? names[0] : "";
                     Control_Edit_User_TextBox_LastName.Text = names.Length > 1 ? string.Join(" ", names.Skip(1)) : "";
-                    Control_Edit_User_TextBox_UserName.Text = userRow["User"]?.ToString() ?? "";
+                    Control_Edit_User_TextBox_UserName.Text = userRow["p_User"]?.ToString() ?? "";
                     Control_Edit_User_ComboBox_Shift.Text = userRow["Shift"]?.ToString() ?? "First";
                     Control_Edit_User_TextBox_Pin.Text = userRow["Pin"]?.ToString() ?? "";
                     Control_Edit_User_CheckBox_VisualAccess.Checked =
                         !string.IsNullOrWhiteSpace(userRow["VisualUserName"]?.ToString());
                     Control_Edit_User_TextBox_VisualUserName.Text = userRow["VisualUserName"]?.ToString() ?? "";
                     Control_Edit_User_TextBox_VisualPassword.Text = userRow["VisualPassword"]?.ToString() ?? "";
-                    int userId = Convert.ToInt32(userRow["ID"]);
+                    int userId = Convert.ToInt32(userRow["p_ID"]);
                     int roleId = await Dao_User.GetUserRoleIdAsync(userId);
                     Control_Edit_User_RadioButton_NormalUser.Checked = roleId == 3;
                     Control_Edit_User_RadioButton_Administrator.Checked = roleId == 1;
@@ -217,7 +217,7 @@ namespace MTM_Inventory_Application.Controls.SettingsForm
                 DataRow? userRow = await Dao_User.GetUserByUsernameAsync(userName, true);
                 if (userRow != null && userRow.Table.Columns.Contains("ID"))
                 {
-                    int userId = Convert.ToInt32(userRow["ID"]);
+                    int userId = Convert.ToInt32(userRow["p_ID"]);
                     int newRoleId = 3;
                     if (Control_Edit_User_RadioButton_Administrator.Checked)
                     {

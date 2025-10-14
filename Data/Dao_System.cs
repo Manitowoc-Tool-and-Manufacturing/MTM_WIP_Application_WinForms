@@ -231,6 +231,54 @@ internal static class Dao_System
 
     #endregion
 
+    #region Themes
+
+    /// <summary>
+    /// Retrieves all themes from the app_themes table.
+    /// Alternative implementation that queries the table directly since app_themes_Get_All stored procedure doesn't exist.
+    /// </summary>
+    /// <param name="useAsync">Whether to execute asynchronously.</param>
+    /// <returns>A DaoResult containing a DataTable with ThemeName and SettingsJson columns.</returns>
+    internal static async Task<DaoResult<DataTable>> GetAllThemesAsync(bool useAsync = true)
+    {
+        try
+        {
+            // Direct SQL query since the stored procedure doesn't exist
+            const string query = "SELECT ThemeName, SettingsJson FROM app_themes ORDER BY ThemeName";
+
+            using var connection = new MySql.Data.MySqlClient.MySqlConnection(Model_AppVariables.ConnectionString);
+            
+            if (useAsync)
+                await connection.OpenAsync();
+            else
+                connection.Open();
+
+            using var command = new MySql.Data.MySqlClient.MySqlCommand(query, connection)
+            {
+                CommandType = CommandType.Text
+            };
+
+            var dataTable = new DataTable();
+            using var adapter = new MySql.Data.MySqlClient.MySqlDataAdapter(command);
+            
+            if (useAsync)
+                await Task.Run(() => adapter.Fill(dataTable));
+            else
+                adapter.Fill(dataTable);
+
+            LoggingUtility.Log($"[Dao_System] Retrieved {dataTable.Rows.Count} themes from app_themes table");
+            return DaoResult<DataTable>.Success(dataTable, $"Successfully retrieved {dataTable.Rows.Count} themes");
+        }
+        catch (Exception ex)
+        {
+            LoggingUtility.LogApplicationError(ex);
+            await HandleSystemDaoExceptionAsync(ex, "GetAllThemes", useAsync);
+            return DaoResult<DataTable>.Failure("Failed to retrieve themes from database", ex);
+        }
+    }
+
+    #endregion
+
     #region Helpers
 
     private static async Task HandleSystemDaoExceptionAsync(Exception ex, string method, bool useAsync)

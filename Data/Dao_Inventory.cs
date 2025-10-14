@@ -33,7 +33,7 @@ public static class Dao_Inventory
             var result = await Helper_Database_StoredProcedure.ExecuteDataTableWithStatus(
                 Model_AppVariables.ConnectionString,
                 "inv_inventory_Get_ByPartID",
-                new Dictionary<string, object> { ["PartID"] = partId }, // p_ prefix added automatically
+                new Dictionary<string, object> { ["p_PartID"] = partId }, // p_ prefix added automatically
                 null, // No progress helper for this method
                 useAsync
             );
@@ -90,31 +90,85 @@ public static class Dao_Inventory
     public static async Task<DaoResult<DataTable>> GetInventoryByPartIdAndOperationAsync(string partId, string operation,
         bool useAsync = false)
     {
+        Service_DebugTracer.TraceMethodEntry(new Dictionary<string, object>
+        {
+            ["partId"] = partId ?? "NULL",
+            ["operation"] = operation ?? "NULL",
+            ["useAsync"] = useAsync
+        }, nameof(GetInventoryByPartIdAndOperationAsync), "Dao_Inventory");
+
         try
         {
+            // Validate input parameters to prevent ArgumentException
+            if (string.IsNullOrWhiteSpace(partId))
+            {
+                var validationResult = DaoResult<DataTable>.Failure("PartID cannot be null or empty");
+                Service_DebugTracer.TraceMethodExit(validationResult, nameof(GetInventoryByPartIdAndOperationAsync), "Dao_Inventory");
+                return validationResult;
+            }
+
+            if (string.IsNullOrWhiteSpace(operation))
+            {
+                var validationResult = DaoResult<DataTable>.Failure("Operation cannot be null or empty");
+                Service_DebugTracer.TraceMethodExit(validationResult, nameof(GetInventoryByPartIdAndOperationAsync), "Dao_Inventory");
+                return validationResult;
+            }
+
             // MIGRATED: Use Helper_Database_StoredProcedure instead of Helper_Database_Core for procedures with output parameters
+            // NOTE: Stored procedure uses o_Operation prefix (not p_Operation)
+            // IMPORTANT: Procedure name in database is "inv_inventory_Get_ByPartIDandOperation" with lowercase "and"
+            // IMPORTANT: Helper now preserves o_ prefixes as well as p_ prefixes
             var result = await Helper_Database_StoredProcedure.ExecuteDataTableWithStatus(
                 Model_AppVariables.ConnectionString,
-                "inv_inventory_Get_ByPartIDAndOperation",
-                new Dictionary<string, object> { ["PartID"] = partId, ["Operation"] = operation }, // p_ prefix added automatically
+                "inv_inventory_Get_ByPartIDandOperation",  // Fixed: lowercase "and" to match database
+                new Dictionary<string, object> 
+                { 
+                    ["p_PartID"] = partId.Trim(),
+                    ["o_Operation"] = operation.Trim() 
+                },
                 null, // No progress helper for this method
                 useAsync
             );
                 
             if (result.IsSuccess && result.Data != null)
             {
-                return DaoResult<DataTable>.Success(result.Data, $"Retrieved {result.Data.Rows.Count} inventory items for part {partId}, operation {operation}");
+                var successResult = DaoResult<DataTable>.Success(result.Data, $"Retrieved {result.Data.Rows.Count} inventory items for part {partId}, operation {operation}");
+                
+                Service_DebugTracer.TraceBusinessLogic("INVENTORY_SEARCH_BY_PART_AND_OP_COMPLETE", 
+                    inputData: new Dictionary<string, object> { ["partId"] = partId, ["operation"] = operation },
+                    outputData: new Dictionary<string, object> 
+                    { 
+                        ["recordCount"] = result.Data.Rows.Count,
+                        ["hasData"] = result.Data.Rows.Count > 0 
+                    });
+
+                Service_DebugTracer.TraceMethodExit(successResult, nameof(GetInventoryByPartIdAndOperationAsync), "Dao_Inventory");
+                return successResult;
             }
             else
             {
-                return DaoResult<DataTable>.Failure($"Failed to retrieve inventory for part {partId}, operation {operation}: {result.ErrorMessage}");
+                var failureResult = DaoResult<DataTable>.Failure($"Failed to retrieve inventory for part {partId}, operation {operation}: {result.ErrorMessage}");
+                Service_DebugTracer.TraceMethodExit(failureResult, nameof(GetInventoryByPartIdAndOperationAsync), "Dao_Inventory");
+                return failureResult;
             }
         }
         catch (Exception ex)
         {
             LoggingUtility.LogDatabaseError(ex);
             await Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex, useAsync, "GetInventoryByPartIdAndOperationAsync");
-            return DaoResult<DataTable>.Failure($"Failed to retrieve inventory for part {partId}, operation {operation}", ex);
+            
+            var errorResult = DaoResult<DataTable>.Failure($"Failed to retrieve inventory for part {partId}, operation {operation}", ex);
+            
+            Service_DebugTracer.TraceBusinessLogic("INVENTORY_SEARCH_BY_PART_AND_OP_ERROR",
+                inputData: new Dictionary<string, object> { ["partId"] = partId ?? "NULL", ["operation"] = operation ?? "NULL" },
+                validationResults: new Dictionary<string, object>
+                {
+                    ["exception"] = ex.GetType().Name,
+                    ["message"] = ex.Message
+                });
+
+            Service_DebugTracer.TraceMethodExit(errorResult, nameof(GetInventoryByPartIdAndOperationAsync), "Dao_Inventory");
+            return errorResult;
         }
     }
 
@@ -141,7 +195,7 @@ public static class Dao_Inventory
                 var itemTypeResult = await Helper_Database_StoredProcedure.ExecuteScalarWithStatus(
                     Model_AppVariables.ConnectionString,
                     "md_part_ids_GetItemType_ByPartID",
-                    new Dictionary<string, object> { ["PartID"] = partId }, // p_ prefix added automatically
+                    new Dictionary<string, object> { ["p_PartID"] = partId }, // p_ prefix added automatically
                     null, // No progress helper for this method
                     useAsync
                 );
@@ -178,12 +232,12 @@ public static class Dao_Inventory
                 "inv_inventory_Add_Item",
                 new Dictionary<string, object>
                 {
-                    ["PartID"] = partId,         // p_ prefix added automatically
+                    ["p_PartID"] = partId,         // p_ prefix added automatically
                     ["Location"] = location,
-                    ["Operation"] = operation,
+                    ["p_Operation"] = operation,
                     ["Quantity"] = quantity,
                     ["ItemType"] = itemType,
-                    ["User"] = user,
+                    ["p_User"] = user,
                     ["BatchNumber"] = batchNumber,
                     ["Notes"] = notes
                 },
@@ -227,13 +281,13 @@ public static class Dao_Inventory
         {
             foreach (System.Windows.Forms.DataGridViewRow row in dgv.SelectedRows)
             {
-                string partId = row.Cells["PartID"].Value?.ToString() ?? "";
+                string partId = row.Cells["p_PartID"].Value?.ToString() ?? "";
                 string location = row.Cells["Location"].Value?.ToString() ?? "";
-                string operation = row.Cells["Operation"].Value?.ToString() ?? "";
+                string operation = row.Cells["p_Operation"].Value?.ToString() ?? "";
                 int quantity = int.TryParse(row.Cells["Quantity"].Value?.ToString(), out int qty) ? qty : 0;
                 string batchNumber = row.Cells["BatchNumber"].Value?.ToString() ?? "";
                 string itemType = row.Cells["ItemType"].Value?.ToString() ?? "";
-                string user = row.Cells["User"].Value?.ToString() ?? "";
+                string user = row.Cells["p_User"].Value?.ToString() ?? "";
                 string notes = row.Cells["Notes"].Value?.ToString() ?? "";
 
                 if (string.IsNullOrWhiteSpace(partId) || string.IsNullOrWhiteSpace(location) ||
@@ -288,12 +342,12 @@ public static class Dao_Inventory
             // MIGRATED: Use Helper_Database_StoredProcedure for proper status handling
             Dictionary<string, object> parameters = new()
             {
-                ["PartID"] = partId,             // p_ prefix added automatically
+                ["p_PartID"] = partId,             // p_ prefix added automatically
                 ["Location"] = location,
-                ["Operation"] = operation,
+                ["p_Operation"] = operation,
                 ["Quantity"] = quantity,
                 ["ItemType"] = itemType,
-                ["User"] = user,
+                ["p_User"] = user,
                 ["BatchNumber"] = batchNumber,
                 ["Notes"] = notes
             };
@@ -335,17 +389,17 @@ public static class Dao_Inventory
         }
     }
 
-    public static async Task<DaoResult> TransferPartSimpleAsync(string batchNumber, string partId, string operation, string quantity, string newLocation)
+    public static async Task<DaoResult> TransferPartSimpleAsync(string batchNumber, string partId, string operation, string newLocation)
     {
         try
         {
-            // MIGRATED: Use Helper_Database_StoredProcedure and correct parameter names (p_ prefix added automatically)
+            // MIGRATED: Use Helper_Database_StoredProcedure with explicit in_ prefix
             Dictionary<string, object> parameters = new()
             {
-                ["BatchNumber"] = batchNumber,   // p_ prefix added automatically
-                ["PartID"] = partId,
-                ["Operation"] = operation,
-                ["NewLocation"] = newLocation
+                ["in_BatchNumber"] = batchNumber,    // Explicit in_ prefix for transfer procedures
+                ["in_PartID"] = partId,
+                ["in_Operation"] = operation,
+                ["in_NewLocation"] = newLocation
             };
 
             var result = await Helper_Database_StoredProcedure.ExecuteNonQueryWithStatus(
@@ -383,16 +437,16 @@ public static class Dao_Inventory
     {
         try
         {
-            // MIGRATED: Use Helper_Database_StoredProcedure and correct parameter names (p_ prefix added automatically)
+            // MIGRATED: Use Helper_Database_StoredProcedure with explicit in_ prefix
             Dictionary<string, object> parameters = new()
             {
-                ["BatchNumber"] = batchNumber,       // p_ prefix added automatically
-                ["PartID"] = partId,
-                ["Operation"] = operation,
-                ["TransferQuantity"] = transferQuantity,
-                ["OriginalQuantity"] = originalQuantity,
-                ["NewLocation"] = newLocation,
-                ["User"] = user
+                ["in_BatchNumber"] = batchNumber,        // Explicit in_ prefix for transfer procedures
+                ["in_PartID"] = partId,
+                ["in_Operation"] = operation,
+                ["in_TransferQuantity"] = transferQuantity,
+                ["in_OriginalQuantity"] = originalQuantity,
+                ["in_NewLocation"] = newLocation,
+                ["in_User"] = user
             };
 
             var result = await Helper_Database_StoredProcedure.ExecuteNonQueryWithStatus(

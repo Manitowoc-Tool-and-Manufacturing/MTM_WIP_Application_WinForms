@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -144,7 +144,7 @@ internal static class Service_ErrorHandler
             
             var contextData = new Dictionary<string, object>
             {
-                ["Operation"] = operation,
+                ["p_Operation"] = operation,
                 ["UserName"] = Environment.UserName,
                 ["IsAdmin"] = IsRunningAsAdministrator()
             };

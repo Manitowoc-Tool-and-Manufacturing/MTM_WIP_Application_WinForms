@@ -60,11 +60,11 @@ internal class Dao_Transactions
             {
                 ["UserName"] = userName ?? "",
                 ["IsAdmin"] = isAdmin,
-                ["PartID"] = partID ?? "",
+                ["p_PartID"] = partID ?? "",
                 ["BatchNumber"] = batchNumber ?? "",
                 ["FromLocation"] = fromLocation ?? "",
                 ["ToLocation"] = toLocation ?? "",
-                ["Operation"] = operation ?? "",
+                ["p_Operation"] = operation ?? "",
                 ["TransactionType"] = transactionType?.ToString() ?? "",
                 ["Quantity"] = quantity,
                 ["Notes"] = notes ?? "",
@@ -455,19 +455,19 @@ internal class Dao_Transactions
     private Model_Transactions MapTransactionFromDataRow(DataRow row) =>
         new()
         {
-            ID = Convert.ToInt32(row["ID"]),
+            ID = Convert.ToInt32(row["p_ID"]),
             TransactionType =
                 Enum.TryParse<TransactionType>(row["TransactionType"].ToString(), out TransactionType type)
                     ? type
                     : TransactionType.IN,
             BatchNumber = row["BatchNumber"] == DBNull.Value ? null : row["BatchNumber"].ToString(),
-            PartID = row["PartID"] == DBNull.Value ? null : row["PartID"].ToString(),
+            PartID = row["p_PartID"] == DBNull.Value ? null : row["p_PartID"].ToString(),
             FromLocation = row["FromLocation"] == DBNull.Value ? null : row["FromLocation"].ToString(),
             ToLocation = row["ToLocation"] == DBNull.Value ? null : row["ToLocation"].ToString(),
-            Operation = row["Operation"] == DBNull.Value ? null : row["Operation"].ToString(),
+            Operation = row["p_Operation"] == DBNull.Value ? null : row["p_Operation"].ToString(),
             Quantity = row["Quantity"] == DBNull.Value ? 0 : Convert.ToInt32(row["Quantity"]),
             Notes = row["Notes"] == DBNull.Value ? null : row["Notes"].ToString(),
-            User = row["User"] == DBNull.Value ? null : row["User"].ToString(),
+            User = row["p_User"] == DBNull.Value ? null : row["p_User"].ToString(),
             ItemType = row["ItemType"] == DBNull.Value ? null : row["ItemType"].ToString(),
             DateTime = row["ReceiveDate"] == DBNull.Value
                 ? DateTime.MinValue

@@ -1,4 +1,4 @@
-﻿using System.Data;
+using System.Data;
 using System.Diagnostics;
 using System.Text.Json;
 using MTM_Inventory_Application.Helpers;
@@ -161,21 +161,25 @@ namespace MTM_Inventory_Application.Data
             Debug.WriteLine($"[Dao_User] Entering GetUserFullNameAsync(user={user}, useAsync={useAsync})");
             try
             {
-                // FIXED: Use Helper_Database_StoredProcedure instead of Helper_Database_Core to avoid p_Status parameter errors
+                // UPDATED: Use existing usr_users_Get_ByUser stored procedure instead of non-existent procedure
                 var dataResult = await Helper_Database_StoredProcedure.ExecuteDataTableWithStatus(
                     Model_AppVariables.ConnectionString,
-                    "usr_users_GetFullName_ByUser",
-                    new Dictionary<string, object> { ["User"] = user }, // Remove p_ prefix - added automatically
+                    "usr_users_Get_ByUser",
+                    new Dictionary<string, object> { ["p_User"] = user },
                     null, // No progress helper for this method
                     useAsync
                 );
 
                 if (dataResult.IsSuccess && dataResult.Data != null && dataResult.Data.Rows.Count > 0)
                 {
-                    object? result = dataResult.Data.Rows[0][0]; // Get first column of first row
-                    Debug.WriteLine($"[Dao_User] GetUserFullNameAsync result: {result}");
-                    Model_Users.FullName = result?.ToString() ?? string.Empty;
-                    return result?.ToString();
+                    // Extract the 'Full Name' column from the result
+                    DataRow row = dataResult.Data.Rows[0];
+                    object? fullNameObj = row["Full Name"]; // Column name in database is "Full Name"
+                    string? fullName = fullNameObj == DBNull.Value ? null : fullNameObj?.ToString();
+                    
+                    Debug.WriteLine($"[Dao_User] GetUserFullNameAsync result: {fullName}");
+                    Model_Users.FullName = fullName ?? string.Empty;
+                    return fullName;
                 }
                 
                 return null;
@@ -196,18 +200,19 @@ namespace MTM_Inventory_Application.Data
                 $"[Dao_User] Entering GetSettingsJsonAsync(field={field}, user={user}, useAsync={useAsync})");
             try
             {
-                // FIXED: Use Helper_Database_StoredProcedure instead of Helper_Database_Core to avoid p_Status parameter errors
+                // UPDATED: Use existing usr_ui_settings_Get stored procedure
                 var dataResult = await Helper_Database_StoredProcedure.ExecuteDataTableWithStatus(
                     Model_AppVariables.ConnectionString,
-                    "usr_ui_settings_GetSettingsJson_ByUserId",
-                    new Dictionary<string, object> { ["UserId"] = user }, // Remove p_ prefix - added automatically
+                    "usr_ui_settings_Get",
+                    new Dictionary<string, object> { ["p_UserId"] = user },
                     null, // No progress helper for this method
                     useAsync
                 );
 
                 if (dataResult.IsSuccess && dataResult.Data != null && dataResult.Data.Rows.Count > 0)
                 {
-                    object? result = dataResult.Data.Rows[0][0]; // Get first column of first row
+                    // The stored procedure returns the SettingsJson column directly
+                    object? result = dataResult.Data.Rows[0]["SettingsJson"];
                     if (result != null && result != DBNull.Value)
                     {
                         string? json = result.ToString();
@@ -246,6 +251,10 @@ namespace MTM_Inventory_Application.Data
                                     Debug.WriteLine($"[Dao_User] GetSettingsJsonAsync found value in JSON: {value}");
                                     return value ?? string.Empty;
                                 }
+                                else
+                                {
+                                    Debug.WriteLine($"[Dao_User] Field '{field}' not found in SettingsJson");
+                                }
                             }
                             catch (JsonException ex)
                             {
@@ -255,34 +264,13 @@ namespace MTM_Inventory_Application.Data
                     }
                 }
 
-                // FIXED: Use Helper_Database_StoredProcedure for legacy fallback too
-                var legacyResult = await Helper_Database_StoredProcedure.ExecuteDataTableWithStatus(
-                    Model_AppVariables.ConnectionString,
-                    "usr_users_GetUserSetting_ByUserAndField",
-                    new Dictionary<string, object> 
-                    { 
-                        ["User"] = user,    // Remove p_ prefix - added automatically
-                        ["Field"] = field   // Remove p_ prefix - added automatically
-                    },
-                    null, // No progress helper for this method
-                    useAsync
-                );
-
-                if (legacyResult.IsSuccess && legacyResult.Data != null && legacyResult.Data.Rows.Count > 0)
-                {
-                    object? legacyValue = legacyResult.Data.Rows[0][0];
-                    Debug.WriteLine($"[Dao_User] GetSettingsJsonAsync legacy result: {legacyValue}");
-                    return legacyValue?.ToString() ?? string.Empty;
-                }
-
+                Debug.WriteLine($"[Dao_User] GetSettingsJsonAsync returning empty string (no data found for field '{field}')");
                 return string.Empty;
             }
             catch (Exception ex)
             {
                 Debug.WriteLine($"[Dao_User] Exception in GetSettingsJsonAsync: {ex}");
                 LoggingUtility.LogDatabaseError(ex);
-                // Don't call error handlers here to avoid recursion during startup
-                LoggingUtility.Log($"GetSettingsJsonAsync failed with exception: {ex.Message}");
                 return string.Empty;
             }
         }
@@ -295,7 +283,7 @@ namespace MTM_Inventory_Application.Data
                 // FIXED: Use Helper_Database_StoredProcedure for proper status handling
                 Dictionary<string, object> parameters = new()
                 {
-                    ["UserId"] = userId,      // FIXED: Remove p_ prefix - added automatically
+                    ["p_UserId"] = userId,      // FIXED: Remove p_ prefix - added automatically
                     ["ThemeJson"] = themeJson // FIXED: Remove p_ prefix - added automatically
                 };
 
@@ -332,7 +320,7 @@ namespace MTM_Inventory_Application.Data
                 // FIXED: Use Helper_Database_StoredProcedure for proper status handling
                 Dictionary<string, object> parameters = new()
                 {
-                    ["UserId"] = userId,        // FIXED: Remove p_ prefix - added автоматически
+                    ["p_UserId"] = userId,        // FIXED: Remove p_ prefix - added автоматически
                     ["DgvName"] = dgvName,      // FIXED: Remove p_ prefix - added автоматически
                     ["SettingJson"] = settingsJson // FIXED: Remove p_ prefix - added автоматически
                 };
@@ -371,7 +359,7 @@ namespace MTM_Inventory_Application.Data
                 var dataResult = await Helper_Database_StoredProcedure.ExecuteDataTableWithStatus(
                     Model_AppVariables.ConnectionString,
                     "usr_ui_settings_GetJsonSetting",
-                    new Dictionary<string, object> { ["UserId"] = userId }, // Remove p_ prefix - added automatically
+                    new Dictionary<string, object> { ["p_UserId"] = userId }, // Remove p_ prefix - added automatically
                     null, // No progress helper for this method
                     true
                 );
@@ -408,7 +396,7 @@ namespace MTM_Inventory_Application.Data
                     "usr_users_SetUserSetting_ByUserAndField",
                     new Dictionary<string, object> 
                     { 
-                        ["User"] = user,    // Remove p_ prefix - added automatically
+                        ["p_User"] = user,    // Remove p_ prefix - added automatically
                         ["Field"] = field,  // Remove p_ prefix - added automatically
                         ["Value"] = value   // Remove p_ prefix - added automatically
                     },
@@ -448,7 +436,7 @@ namespace MTM_Inventory_Application.Data
                 var result = await Helper_Database_StoredProcedure.ExecuteNonQueryWithStatus(
                     Model_AppVariables.ConnectionString,
                     "usr_ui_settings_Delete_ByUserId",
-                    new Dictionary<string, object> { ["UserId"] = userName }, // Remove p_ prefix - added automatically
+                    new Dictionary<string, object> { ["p_UserId"] = userName }, // Remove p_ prefix - added automatically
                     null, // No progress helper for this method
                     useAsync
                 );
@@ -489,7 +477,7 @@ namespace MTM_Inventory_Application.Data
                     "usr_users_Add_User",
                     new Dictionary<string, object>
                     {
-                        ["User"] = user,                           // Remove p_ prefix - added automatically
+                        ["p_User"] = user,                           // Remove p_ prefix - added automatically
                         ["FullName"] = fullName,
                         ["Shift"] = shift,
                         ["VitsUser"] = vitsUser,
@@ -542,7 +530,7 @@ namespace MTM_Inventory_Application.Data
                     "usr_users_Update_User",
                     new Dictionary<string, object>
                     {
-                        ["User"] = user,                    // Remove p_ prefix - added automatically
+                        ["p_User"] = user,                    // Remove p_ prefix - added automatically
                         ["FullName"] = fullName,
                         ["Shift"] = shift,
                         ["Pin"] = pin,
@@ -577,7 +565,7 @@ namespace MTM_Inventory_Application.Data
                 var result = await Helper_Database_StoredProcedure.ExecuteNonQueryWithStatus(
                     Model_AppVariables.ConnectionString,
                     "usr_users_Delete_User",
-                    new Dictionary<string, object> { ["User"] = user }, // Remove p_ prefix - добавлено автоматически
+                    new Dictionary<string, object> { ["p_User"] = user }, // Remove p_ prefix - добавлено автоматически
                     null, // No progress helper for this method
                     useAsync
                 );
@@ -645,7 +633,7 @@ namespace MTM_Inventory_Application.Data
                 var dataResult = await Helper_Database_StoredProcedure.ExecuteDataTableWithStatus(
                     Model_AppVariables.ConnectionString,
                     "usr_users_Get_ByUser",
-                    new Dictionary<string, object> { ["User"] = user }, // Remove p_ prefix - добавлено автоматически
+                    new Dictionary<string, object> { ["p_User"] = user }, // Remove p_ prefix - добавлено автоматически
                     null, // No progress helper for this method
                     useAsync
                 );
@@ -680,7 +668,7 @@ namespace MTM_Inventory_Application.Data
                 var dataResult = await Helper_Database_StoredProcedure.ExecuteDataTableWithStatus(
                     Model_AppVariables.ConnectionString,
                     "usr_users_Exists",
-                    new Dictionary<string, object> { ["User"] = user }, // Remove p_ prefix - добавлено автоматически
+                    new Dictionary<string, object> { ["p_User"] = user }, // Remove p_ prefix - добавлено автоматически
                     null, // No progress helper for this method
                     useAsync
                 );
@@ -718,7 +706,7 @@ namespace MTM_Inventory_Application.Data
             {
                 var inputParameters = new Dictionary<string, object>
                 {
-                    ["UserId"] = userId // No p_ prefix; helper adds it
+                    ["p_UserId"] = userId // No p_ prefix; helper adds it
                 };
                 var outputParameters = new Dictionary<string, MySqlDbType>
                 {
@@ -762,7 +750,7 @@ namespace MTM_Inventory_Application.Data
                 // FIXED: Use Helper_Database_StoredProcedure for proper status handling
                 Dictionary<string, object> parameters = new()
                 {
-                    ["UserId"] = userId,              // FIXED: Remove p_ prefix - добавлено автоматически
+                    ["p_UserId"] = userId,              // FIXED: Remove p_ prefix - добавлено автоматически
                     ["ShortcutsJson"] = shortcutsJson // FIXED: Remove p_ prefix - добавлено автоматически
                 };
 
@@ -795,8 +783,6 @@ namespace MTM_Inventory_Application.Data
             Debug.WriteLine($"[Dao_User] Entering SetThemeNameAsync(user={user}, themeName={themeName}, useAsync={useAsync})");
             try
             {
-                // FIXED: Use the existing SetUserSettingAsync method instead of non-existent app_themes_Set_UserTheme
-                // This calls usr_users_SetUserSetting_ByUserAndField which updates the Theme_Name field in usr_users table
                 await SetUserSettingAsync("Theme_Name", user, themeName, useAsync);
                 Debug.WriteLine($"[Dao_User] SetThemeNameAsync completed successfully for user {user}, theme {themeName}");
             }
@@ -825,7 +811,7 @@ namespace MTM_Inventory_Application.Data
                     "sys_user_roles_Add",
                     new Dictionary<string, object>
                     {
-                        ["UserID"] = userId,       // Remove p_ prefix - добавлено автоматически
+                        ["p_UserID"] = userId,       // Remove p_ prefix - добавлено автоматически
                         ["RoleID"] = roleId,
                         ["AssignedBy"] = assignedBy
                     },
@@ -857,7 +843,7 @@ namespace MTM_Inventory_Application.Data
                 var dataResult = await Helper_Database_StoredProcedure.ExecuteDataTableWithStatus(
                     Model_AppVariables.ConnectionString,
                     "usr_user_roles_GetRoleId_ByUserId",
-                    new Dictionary<string, object> { ["UserID"] = userId }, // Remove p_ prefix - добавлено автоматически
+                    new Dictionary<string, object> { ["p_UserID"] = userId }, // Remove p_ prefix - добавлено автоматически
                     null, // No progress helper for this method
                     useAsync
                 );
@@ -870,7 +856,7 @@ namespace MTM_Inventory_Application.Data
                         var roleResult = await Helper_Database_StoredProcedure.ExecuteDataTableWithStatus(
                             Model_AppVariables.ConnectionString,
                             "sys_roles_Get_ById",
-                            new Dictionary<string, object> { ["ID"] = roleId }, // Remove p_ prefix - добавлено автоматически
+                            new Dictionary<string, object> { ["p_ID"] = roleId }, // Remove p_ prefix - добавлено автоматически
                             null, // No progress helper for this method
                             useAsync
                         );
@@ -903,7 +889,7 @@ namespace MTM_Inventory_Application.Data
                     "sys_user_roles_Update",
                     new Dictionary<string, object>
                     {
-                        ["UserID"] = userId,          // Remove p_ prefix - добавлено автоматически
+                        ["p_UserID"] = userId,          // Remove p_ prefix - добавлено автоматически
                         ["NewRoleID"] = newRoleId,
                         ["AssignedBy"] = assignedBy
                     },
@@ -941,7 +927,7 @@ namespace MTM_Inventory_Application.Data
                         "sys_user_roles_Update",
                         new Dictionary<string, object>
                         {
-                            ["UserID"] = userId,          // Remove p_ prefix - добавлено автоматически
+                            ["p_UserID"] = userId,          // Remove p_ prefix - добавлено автоматически
                             ["NewRoleID"] = newRoleId,
                             ["AssignedBy"] = assignedBy
                         },
@@ -977,7 +963,7 @@ namespace MTM_Inventory_Application.Data
                     "sys_user_roles_Delete",
                     new Dictionary<string, object> 
                     { 
-                        ["UserID"] = userId,  // Remove p_ prefix - добавлено автоматически
+                        ["p_UserID"] = userId,  // Remove p_ prefix - добавлено автоматически
                         ["RoleID"] = roleId   // Remove p_ prefix - добавлено автоматически
                     },
                     null, // No progress helper for this method

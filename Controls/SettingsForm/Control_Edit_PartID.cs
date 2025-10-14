@@ -201,7 +201,7 @@ namespace MTM_Inventory_Application.Controls.SettingsForm
             Service_DebugTracer.TraceMethodEntry(new Dictionary<string, object>
             {
                 ["HasCurrentPart"] = _currentPart != null,
-                ["OriginalPartID"] = _currentPart?["PartID"]?.ToString() ?? "NULL"
+                ["OriginalPartID"] = _currentPart?["p_PartID"]?.ToString() ?? "NULL"
             }, nameof(SaveButton_Click), nameof(Control_Edit_PartID));
 
             Service_DebugTracer.TraceUIAction("SAVE_BUTTON_CLICKED", nameof(Control_Edit_PartID),
@@ -318,7 +318,7 @@ namespace MTM_Inventory_Application.Controls.SettingsForm
                 }
 
                 // Check for duplicate part number
-                string? originalItemNumber = _currentPart["PartID"].ToString();
+                string? originalItemNumber = _currentPart["p_PartID"].ToString();
                 string newItemNumber = itemNumberTextBox.Text.Trim();
                 
                 Service_DebugTracer.TraceBusinessLogic("DUPLICATE_CHECK_LOGIC",
@@ -462,7 +462,7 @@ namespace MTM_Inventory_Application.Controls.SettingsForm
                 return;
             }
 
-            itemNumberTextBox.Text = _currentPart["PartID"].ToString();
+            itemNumberTextBox.Text = _currentPart["p_PartID"].ToString();
             customerTextBox.Text = _currentPart["Customer"].ToString();
             descriptionTextBox.Text = _currentPart["Description"].ToString();
             string? partType = _currentPart["ItemType"].ToString();
@@ -503,7 +503,7 @@ namespace MTM_Inventory_Application.Controls.SettingsForm
                 return;
             }
 
-            int id = Convert.ToInt32(_currentPart["ID"]);
+            int id = Convert.ToInt32(_currentPart["p_ID"]);
             string itemNumber = itemNumberTextBox.Text.Trim();
             string customer = customerTextBox.Text.Trim();
             string description = descriptionTextBox.Text.Trim();

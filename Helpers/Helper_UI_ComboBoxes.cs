@@ -1,4 +1,4 @@
-﻿using System.Data;
+using System.Data;
 using System.Diagnostics;
 using System.Reflection;
 using MTM_Inventory_Application.Controls.MainForm;
@@ -169,7 +169,7 @@ namespace MTM_Inventory_Application.Helpers
                         List<DataRow> rowsToRemove = new();
                         foreach (DataRow row in ComboBoxUser_DataTable.Rows)
                         {
-                            string userVal = row["User"]?.ToString() ?? string.Empty;
+                            string userVal = row["p_User"]?.ToString() ?? string.Empty;
                             if (userVal.Contains("All Users"))
                             {
                                 rowsToRemove.Add(row);

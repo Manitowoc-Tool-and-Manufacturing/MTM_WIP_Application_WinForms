@@ -16,8 +16,9 @@ namespace MTM_Inventory_Application.Helpers
             {
                 server ??= Model_Users.WipServerAddress;
                 database ??= Model_Users.Database;
-                uid ??= Model_AppVariables.User.ToUpper();
-                return $"SERVER={server};DATABASE={database};UID={uid};Allow User Variables=True ;";
+                uid ??= "root";  // Use root user for MAMP MySQL
+                password ??= "root";  // Use root password for MAMP MySQL
+                return $"SERVER={server};DATABASE={database};UID={uid};PASSWORD={password};Allow User Variables=True;SslMode=none;AllowPublicKeyRetrieval=true;";
             }
             catch (Exception ex)
             {

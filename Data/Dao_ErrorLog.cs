@@ -1,4 +1,4 @@
-﻿using System.Data;
+using System.Data;
 using System.Diagnostics;
 using MTM_Inventory_Application.Forms.MainForm;
 using MTM_Inventory_Application.Helpers;
@@ -64,7 +64,7 @@ internal static class Dao_ErrorLog
     internal static async Task<DataTable> GetErrorsByUserAsync(string user, bool useAsync = false) =>
         await GetErrorsByStoredProcedureAsync(
             "log_error_Get_ByUser",
-            new Dictionary<string, object> { ["User"] = user }, useAsync); // FIXED: Remove p_ prefix
+            new Dictionary<string, object> { ["p_User"] = user }, useAsync); // FIXED: Remove p_ prefix
 
     internal static async Task<DataTable>
         GetErrorsByDateRangeAsync(DateTime start, DateTime end, bool useAsync = false) =>
@@ -348,7 +348,7 @@ internal static class Dao_ErrorLog
             // FIXED: Use Helper_Database_StoredProcedure for proper status handling
             Dictionary<string, object> parameters = new()
             {
-                ["User"] = Model_AppVariables.User ?? "Unknown", // FIXED: Remove p_ prefix
+                ["p_User"] = Model_AppVariables.User ?? "Unknown", // FIXED: Remove p_ prefix
                 ["Severity"] = severity,
                 ["ErrorType"] = errorType,
                 ["ErrorMessage"] = errorMessage,

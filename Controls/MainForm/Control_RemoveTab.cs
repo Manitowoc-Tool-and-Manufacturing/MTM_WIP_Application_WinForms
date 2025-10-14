@@ -1,4 +1,4 @@
-﻿using System.ComponentModel;
+using System.ComponentModel;
 using System.Data;
 using System.Diagnostics;
 using System.Drawing.Printing;
@@ -320,13 +320,13 @@ namespace MTM_Inventory_Application.Controls.MainForm
                         attempted++;
                         Model_HistoryRemove item = new()
                         {
-                            PartId = drv["PartID"]?.ToString() ?? "",
+                            PartId = drv["p_PartID"]?.ToString() ?? "",
                             Location = drv["Location"]?.ToString() ?? "",
-                            Operation = drv["Operation"]?.ToString() ?? "",
+                            Operation = drv["p_Operation"]?.ToString() ?? "",
                             Quantity = TryParse(drv["Quantity"]?.ToString(), out int qty) ? qty : 0,
                             ItemType =
                                 drv.Row.Table.Columns.Contains("ItemType") ? drv["ItemType"]?.ToString() ?? "" : "",
-                            User = drv.Row.Table.Columns.Contains("User") ? drv["User"]?.ToString() ?? "" : "",
+                            User = drv.Row.Table.Columns.Contains("User") ? drv["p_User"]?.ToString() ?? "" : "",
                             BatchNumber =
                                 drv.Row.Table.Columns.Contains("BatchNumber")
                                     ? drv["BatchNumber"]?.ToString() ?? ""
@@ -1096,7 +1096,7 @@ namespace MTM_Inventory_Application.Controls.MainForm
             {
                 if (row.DataBoundItem is DataRowView drv)
                 {
-                    string partId = drv["PartID"]?.ToString() ?? "";
+                    string partId = drv["p_PartID"]?.ToString() ?? "";
                     string location = drv["Location"]?.ToString() ?? "";
                     string quantityStr = drv["Quantity"]?.ToString() ?? "";
                     if (!TryParse(quantityStr, out int quantity))

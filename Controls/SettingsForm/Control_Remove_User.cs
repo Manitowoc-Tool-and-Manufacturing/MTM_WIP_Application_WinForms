@@ -134,7 +134,7 @@ namespace MTM_Inventory_Application.Controls.SettingsForm
                     RemoveUserControl_Label_FullName.Text = userRow["Full Name"]?.ToString() ?? "";
                     RemoveUserControl_Label_Shift.Text = userRow["Shift"]?.ToString() ?? "";
 
-                    if (userRow.Table.Columns.Contains("ID") && int.TryParse(userRow["ID"]?.ToString(), out int userId))
+                    if (userRow.Table.Columns.Contains("ID") && int.TryParse(userRow["p_ID"]?.ToString(), out int userId))
                     {
                         UpdateProgress(80, "Loading user role information...");
                         int roleId = await Dao_User.GetUserRoleIdAsync(userId);
@@ -201,7 +201,7 @@ namespace MTM_Inventory_Application.Controls.SettingsForm
                     UpdateProgress(30, "Deleting user settings...");
                     await Dao_User.DeleteUserSettingsAsync(userName);
 
-                    int userId = Convert.ToInt32(userRow["ID"]);
+                    int userId = Convert.ToInt32(userRow["p_ID"]);
 
                     UpdateProgress(45, "Retrieving user role information...");
                     int roleId = await Dao_User.GetUserRoleIdAsync(userId);

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Threading.Tasks;
@@ -227,7 +227,7 @@ namespace MTM_Inventory_Application.Controls.SettingsForm
                 var userExistsResult = await Helper_Database_StoredProcedure.ExecuteDataTableWithStatus(
                     Model_AppVariables.ConnectionString,
                     "usr_users_Exists",
-                    new Dictionary<string, object> { ["User"] = userName },
+                    new Dictionary<string, object> { ["p_User"] = userName },
                     _progressHelper,
                     true
                 );
@@ -262,7 +262,7 @@ namespace MTM_Inventory_Application.Controls.SettingsForm
                     "usr_users_Add_User",
                     new Dictionary<string, object>
                     {
-                        ["User"] = userName,
+                        ["p_User"] = userName,
                         ["FullName"] = fullName,
                         ["Shift"] = Control_Add_User_ComboBox_Shift.Text,
                         ["VitsUser"] = false,
@@ -293,7 +293,7 @@ namespace MTM_Inventory_Application.Controls.SettingsForm
                 var getUserResult = await Helper_Database_StoredProcedure.ExecuteDataTableWithStatus(
                     Model_AppVariables.ConnectionString,
                     "usr_users_Get_ByUser",
-                    new Dictionary<string, object> { ["User"] = userName },
+                    new Dictionary<string, object> { ["p_User"] = userName },
                     _progressHelper,
                     true
                 );
@@ -307,7 +307,7 @@ namespace MTM_Inventory_Application.Controls.SettingsForm
                 UpdateProgress(70, "Processing user role assignment...");
                 await Task.Delay(100);
 
-                int userId = Convert.ToInt32(getUserResult.Data.Rows[0]["ID"]);
+                int userId = Convert.ToInt32(getUserResult.Data.Rows[0]["p_ID"]);
                 int roleId = 3; // Default to Normal User
                 if (Control_Add_User_RadioButton_Administrator.Checked)
                 {
@@ -326,7 +326,7 @@ namespace MTM_Inventory_Application.Controls.SettingsForm
                     "sys_user_roles_Add",
                     new Dictionary<string, object>
                     {
-                        ["UserID"] = userId,
+                        ["p_UserID"] = userId,
                         ["RoleID"] = roleId,
                         ["AssignedBy"] = Environment.UserName
                     },

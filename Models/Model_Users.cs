@@ -20,7 +20,7 @@
         {
             get => _database ?? (
 #if DEBUG
-                "mtm_wip_application_test"
+                "mtm_wip_application"  // Changed to use main database in debug mode
 #else
         "mtm_wip_application"
 #endif

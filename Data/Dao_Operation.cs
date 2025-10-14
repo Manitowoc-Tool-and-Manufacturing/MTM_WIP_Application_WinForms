@@ -1,4 +1,4 @@
-﻿using System.Data;
+using System.Data;
 using MTM_Inventory_Application.Helpers;
 using MTM_Inventory_Application.Models;
 using MTM_Inventory_Application.Logging;
@@ -15,7 +15,7 @@ internal static class Dao_Operation
     {
         try
         {
-            var parameters = new Dictionary<string, object> { ["Operation"] = operationNumber }; // p_ prefix added automatically
+            var parameters = new Dictionary<string, object> { ["p_Operation"] = operationNumber }; // p_ prefix added automatically
 
             var result = await Helper_Database_StoredProcedure.ExecuteNonQueryWithStatus(
                 Model_AppVariables.ConnectionString,
@@ -52,7 +52,7 @@ internal static class Dao_Operation
         {
             var parameters = new Dictionary<string, object>
             {
-                ["Operation"] = operationNumber,   // p_ prefix added automatically
+                ["p_Operation"] = operationNumber,   // p_ prefix added automatically
                 ["IssuedBy"] = user
             };
             
@@ -92,7 +92,7 @@ internal static class Dao_Operation
         {
             var parameters = new Dictionary<string, object>
             {
-                ["Operation"] = oldOperation,        // p_ prefix added automatically
+                ["p_Operation"] = oldOperation,        // p_ prefix added automatically
                 ["NewOperation"] = newOperationNumber,
                 ["IssuedBy"] = user
             };
@@ -186,7 +186,7 @@ internal static class Dao_Operation
     {
         try
         {
-            var parameters = new Dictionary<string, object> { ["Operation"] = operationNumber }; // p_ prefix added automatically
+            var parameters = new Dictionary<string, object> { ["p_Operation"] = operationNumber }; // p_ prefix added automatically
 
             var result = await Helper_Database_StoredProcedure.ExecuteScalarWithStatus(
                 Model_AppVariables.ConnectionString,

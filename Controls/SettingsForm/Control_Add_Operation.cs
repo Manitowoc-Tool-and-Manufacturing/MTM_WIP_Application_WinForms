@@ -99,7 +99,7 @@ namespace MTM_Inventory_Application.Controls.SettingsForm
                 var existsResult = await Helper_Database_StoredProcedure.ExecuteDataTableWithStatus(
                     Model_AppVariables.ConnectionString,
                     "md_operation_numbers_Exists_ByOperation",
-                    new Dictionary<string, object> { ["Operation"] = operationNumber },
+                    new Dictionary<string, object> { ["p_Operation"] = operationNumber },
                     _progressHelper,
                     true
                 );
@@ -129,7 +129,7 @@ namespace MTM_Inventory_Application.Controls.SettingsForm
                     "md_operation_numbers_Add_Operation",
                     new Dictionary<string, object>
                     {
-                        ["Operation"] = operationNumber,
+                        ["p_Operation"] = operationNumber,
                         ["IssuedBy"] = Model_AppVariables.User ?? "Current User"
                     },
                     _progressHelper,

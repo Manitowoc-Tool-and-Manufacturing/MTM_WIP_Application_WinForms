@@ -64,15 +64,15 @@ namespace MTM_Inventory_Application.Helpers
                     CommandType = CommandType.StoredProcedure
                 };
 
-                // Add input parameters (WITH automatic p_ prefix addition)
+                // Add input parameters (NO automatic prefix addition - all prefixes must be explicit)
                 var finalParameters = new Dictionary<string, object>();
                 if (parameters != null)
                 {
                     foreach (var param in parameters)
                     {
-                        string paramName = param.Key.StartsWith("p_") ? param.Key : $"p_{param.Key}";
-                        command.Parameters.AddWithValue(paramName, param.Value ?? DBNull.Value);
-                        finalParameters[paramName] = param.Value ?? DBNull.Value;
+                        // Use parameter name exactly as provided - no automatic prefix addition
+                        command.Parameters.AddWithValue(param.Key, param.Value ?? DBNull.Value);
+                        finalParameters[param.Key] = param.Value ?? DBNull.Value;
                     }
                 }
 
@@ -217,13 +217,13 @@ namespace MTM_Inventory_Application.Helpers
                     CommandType = commandType
                 };
 
-                // Add input parameters (WITH automatic p_ prefix addition)
+                // Add input parameters (NO automatic prefix addition - all prefixes must be explicit)
                 if (parameters != null)
                 {
                     foreach (var param in parameters)
                     {
-                        string paramName = param.Key.StartsWith("p_") ? param.Key : $"p_{param.Key}";
-                        command.Parameters.AddWithValue(paramName, param.Value ?? DBNull.Value);
+                        // Use parameter name exactly as provided - no automatic prefix addition
+                        command.Parameters.AddWithValue(param.Key, param.Value ?? DBNull.Value);
                     }
                 }
 
@@ -275,12 +275,12 @@ namespace MTM_Inventory_Application.Helpers
                     CommandType = CommandType.StoredProcedure
                 };
 
-                // Add input parameters (WITH automatic p_ prefix addition)
+                // Add input parameters (NO automatic prefix addition - all prefixes must be explicit)
                 if (parameters != null)
                 {
                     foreach (var param in parameters)
                     {
-                        string paramName = param.Key.StartsWith("p_") ? param.Key : $"p_{param.Key}";
+                        string paramName = (param.Key.StartsWith("p_") || param.Key.StartsWith("o_") || param.Key.StartsWith("in_")) ? param.Key : $"p_{param.Key}";
                         command.Parameters.AddWithValue(paramName, param.Value ?? DBNull.Value);
                     }
                 }
@@ -357,12 +357,12 @@ namespace MTM_Inventory_Application.Helpers
                     CommandType = CommandType.StoredProcedure
                 };
 
-                // Add input parameters (WITH automatic p_ prefix addition)
+                // Add input parameters (NO automatic prefix addition - all prefixes must be explicit)
                 if (parameters != null)
                 {
                     foreach (var param in parameters)
                     {
-                        string paramName = param.Key.StartsWith("p_") ? param.Key : $"p_{param.Key}";
+                        string paramName = (param.Key.StartsWith("p_") || param.Key.StartsWith("o_") || param.Key.StartsWith("in_")) ? param.Key : $"p_{param.Key}";
                         command.Parameters.AddWithValue(paramName, param.Value ?? DBNull.Value);
                     }
                 }
@@ -441,12 +441,12 @@ namespace MTM_Inventory_Application.Helpers
                     CommandType = CommandType.StoredProcedure
                 };
 
-                // Add input parameters (WITH automatic p_ prefix addition)
+                // Add input parameters (NO automatic prefix addition - all prefixes must be explicit)
                 if (inputParameters != null)
                 {
                     foreach (var param in inputParameters)
                     {
-                        string paramName = param.Key.StartsWith("p_") ? param.Key : $"p_{param.Key}";
+                        string paramName = (param.Key.StartsWith("p_") || param.Key.StartsWith("o_") || param.Key.StartsWith("in_")) ? param.Key : $"p_{param.Key}";
                         command.Parameters.AddWithValue(paramName, param.Value ?? DBNull.Value);
                     }
                 }
@@ -457,7 +457,7 @@ namespace MTM_Inventory_Application.Helpers
                 {
                     foreach (var param in outputParameters)
                     {
-                        string paramName = param.Key.StartsWith("p_") ? param.Key : $"p_{param.Key}";
+                        string paramName = (param.Key.StartsWith("p_") || param.Key.StartsWith("o_") || param.Key.StartsWith("in_")) ? param.Key : $"p_{param.Key}";
                         var outputParam = new MySqlParameter(paramName, param.Value)
                         {
                             Direction = ParameterDirection.Output
@@ -480,7 +480,7 @@ namespace MTM_Inventory_Application.Helpers
                 {
                     foreach (var param in outputParameters)
                     {
-                        string paramName = param.Key.StartsWith("p_") ? param.Key : $"p_{param.Key}";
+                        string paramName = (param.Key.StartsWith("p_") || param.Key.StartsWith("o_") || param.Key.StartsWith("in_")) ? param.Key : $"p_{param.Key}";
                         outputValues[param.Key] = command.Parameters[paramName].Value ?? DBNull.Value;
                     }
                 }
@@ -659,3 +659,5 @@ namespace MTM_Inventory_Application.Helpers
         #endregion
     }
 }
+
+

@@ -1,4 +1,4 @@
-﻿using System.Data;
+using System.Data;
 using MTM_Inventory_Application.Helpers;
 using MTM_Inventory_Application.Logging;
 using MTM_Inventory_Application.Models;
@@ -101,7 +101,7 @@ internal static class Dao_Part
 
             Dictionary<string, object> parameters = new()
             {
-                ["ID"] = existingPart.Data["ID"],                                   // p_ prefix added automatically
+                ["p_ID"] = existingPart.Data["p_ID"],                                   // p_ prefix added automatically
                 ["ItemNumber"] = partNumber,
                 ["Customer"] = existingPart.Data["Customer"]?.ToString() ?? "",
                 ["Description"] = existingPart.Data["Description"]?.ToString() ?? "",
@@ -291,7 +291,7 @@ internal static class Dao_Part
         {
             Dictionary<string, object> parameters = new()
             {
-                ["ID"] = id,                     // p_ prefix added automatically
+                ["p_ID"] = id,                     // p_ prefix added automatically
                 ["ItemNumber"] = itemNumber,
                 ["Customer"] = customer,
                 ["Description"] = description,
