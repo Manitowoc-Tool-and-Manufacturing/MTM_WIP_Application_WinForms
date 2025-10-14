@@ -6,6 +6,8 @@ Last updated: 2025-10-13
 - .NET 8.0 Windows Forms (WinForms) desktop application
 - MySQL 5.7 + MySql.Data connector (stored procedure driven data access)
 - Dapper-style helper utilities in `Helpers/` for database calls and UI helpers
+- C# 12, .NET 8.0 (file-scoped namespaces, required members, pattern matching) + MySql.Data 8.x (MySqlConnection, MySqlCommand), System.Text.Json, Microsoft.Web.WebView2, ClosedXML (002-comprehensive-database-layer)
+- MySQL 5.7.24+ (MAMP compatible) - stored procedures only, no inline SQL permitted (002-comprehensive-database-layer)
 
 ## Core Instruction Files
 
