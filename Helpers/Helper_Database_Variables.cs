@@ -13,7 +13,7 @@ namespace MTM_Inventory_Application.Helpers
         /// <summary>
         /// Test database name for integration testing. Matches the database created during test setup.
         /// </summary>
-        public const string TestDatabaseName = "mtm_wip_application_test";
+        public const string TestDatabaseName = "mtm_wip_application_winforms_test";
 
         #endregion
 

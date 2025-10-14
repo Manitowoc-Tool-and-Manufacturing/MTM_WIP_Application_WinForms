@@ -12,6 +12,9 @@
         <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
         <!-- Allow building a Windows-targeting TFM on non-Windows build agents (fixes NETSDK1100) -->
         <EnableWindowsTargeting>true</EnableWindowsTargeting>
+        <!-- Disable duplicate assembly attribute generation -->
+        <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+        <GenerateTargetFrameworkAttribute>false</GenerateTargetFrameworkAttribute>
     </PropertyGroup>
 
     <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
