@@ -3,105 +3,100 @@ You may only use the Microsoft Visual Studio .NET/C/C++ Debugger (vsdbg) with
 Visual Studio Code, Visual Studio or Visual Studio for Mac software to help you
 develop and test your applications.
 ------------------------------------------------------------------------------
-MTM_Inventory_Application.exe (34280): Loaded 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.20\System.Private.CoreLib.dll'. Symbols loaded.
-MTM_Inventory_Application.exe (34280): Loaded 'c:\Users\johnk\source\repos\MTM_WIP_Application_WinForms\bin\Debug\net8.0-windows\MTM_Inventory_Application.dll'. Symbols loaded.
-MTM_Inventory_Application.exe (34280): Loaded 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.20\System.Runtime.dll'. Cannot find or open the PDB file.
-MTM_Inventory_Application.exe (34280): Loaded 'C:\Program Files\dotnet\shared\Microsoft.WindowsDesktop.App\8.0.20\System.Windows.Forms.dll'. Symbols loaded.
-MTM_Inventory_Application.exe (34280): Loaded 'c:\Users\johnk\source\repos\MTM_WIP_Application_WinForms\bin\Debug\net8.0-windows\MySql.Data.dll'. Cannot find or open the PDB file.
-MTM_Inventory_Application.exe (34280): Loaded 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.20\System.Data.Common.dll'. Cannot find or open the PDB file.
-MTM_Inventory_Application.exe (34280): Loaded 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.20\System.Collections.dll'. Cannot find or open the PDB file.
-MTM_Inventory_Application.exe (34280): Loaded 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.20\System.Threading.Thread.dll'. Cannot find or open the PDB file.
-MTM_Inventory_Application.exe (34280): Loaded 'C:\Program Files\dotnet\shared\Microsoft.WindowsDesktop.App\8.0.20\System.Windows.Forms.Primitives.dll'. Cannot find or open the PDB file.
-MTM_Inventory_Application.exe (34280): Loaded 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.20\System.Diagnostics.TraceSource.dll'. Cannot find or open the PDB file.
-MTM_Inventory_Application.exe (34280): Loaded 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.20\System.Console.dll'. Cannot find or open the PDB file.
-MTM_Inventory_Application.exe (34280): Loaded 'c:\Users\johnk\source\repos\MTM_WIP_Application_WinForms\bin\Debug\net8.0-windows\System.Text.Json.dll'. Cannot find or open the PDB file.
-MTM_Inventory_Application.exe (34280): Loaded 'c:\Users\johnk\source\repos\MTM_WIP_Application_WinForms\bin\Debug\net8.0-windows\System.Text.Encodings.Web.dll'. Cannot find or open the PDB file.
-MTM_Inventory_Application.exe (34280): Loaded 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.20\System.Linq.dll'. Cannot find or open the PDB file.
-[19:05:33.010] [LOW   ] 🚀 DEBUG TRACER INITIALIZED
-MTM_Inventory_Application.exe (34280): Loaded 'c:\Users\johnk\source\repos\MTM_WIP_Application_WinForms\bin\Debug\net8.0-windows\DocumentFormat.OpenXml.dll'. Cannot find or open the PDB file.
-MTM_Inventory_Application.exe (34280): Loaded 'c:\Users\johnk\source\repos\MTM_WIP_Application_WinForms\bin\Debug\net8.0-windows\DocumentFormat.OpenXml.Framework.dll'. Cannot find or open the PDB file.
-MTM_Inventory_Application.exe (34280): Loaded 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.20\System.Threading.dll'. Cannot find or open the PDB file.
-MTM_Inventory_Application.exe (34280): Loaded 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.20\System.ComponentModel.TypeConverter.dll'. Cannot find or open the PDB file.
-MTM_Inventory_Application.exe (34280): Loaded 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.20\System.ComponentModel.Primitives.dll'. Cannot find or open the PDB file.
-MTM_Inventory_Application.exe (34280): Loaded 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.20\System.ComponentModel.dll'. Cannot find or open the PDB file.
-MTM_Inventory_Application.exe (34280): Loaded 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.20\System.Xml.ReaderWriter.dll'. Cannot find or open the PDB file.
-MTM_Inventory_Application.exe (34280): Loaded 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.20\System.Private.Xml.dll'. Cannot find or open the PDB file.
-[19:05:33.388] [LOW   ] 🖱️ UI ACTION: DEBUG_CONFIGURATION_INITIALIZED on Service_DebugConfiguration
-[19:05:33.389] [LOW   ] 🖱️ UI ACTION: DEBUG_MODE_SET on Service_DebugConfiguration
-[19:05:33.390] [LOW   ] 🖱️ UI ACTION: APPLICATION_STARTUP on Program
-MTM_Inventory_Application.exe (34280): Loaded 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.20\System.Drawing.Primitives.dll'. Cannot find or open the PDB file.
-MTM_Inventory_Application.exe (34280): Loaded 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.20\System.Collections.Specialized.dll'. Cannot find or open the PDB file.
-MTM_Inventory_Application.exe (34280): Loaded 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.20\System.Runtime.InteropServices.dll'. Cannot find or open the PDB file.
-MTM_Inventory_Application.exe (34280): Loaded 'C:\Program Files\dotnet\shared\Microsoft.WindowsDesktop.App\8.0.20\System.Drawing.Common.dll'. Cannot find or open the PDB file.
-MTM_Inventory_Application.exe (34280): Loaded 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.20\System.Security.Principal.Windows.dll'. Cannot find or open the PDB file.
-MTM_Inventory_Application.exe (34280): Loaded 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.20\System.Security.Claims.dll'. Cannot find or open the PDB file.
-MTM_Inventory_Application.exe (34280): Loaded 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.20\Microsoft.Win32.Primitives.dll'. Cannot find or open the PDB file.
-MTM_Inventory_Application.exe (34280): Loaded 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.20\System.Text.Encoding.Extensions.dll'. Cannot find or open the PDB file.
-[Startup] Validating database connectivity...
-MTM_Inventory_Application.exe (34280): Loaded 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.20\System.Net.Sockets.dll'. Cannot find or open the PDB file.
-MTM_Inventory_Application.exe (34280): Loaded 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.20\System.Net.Primitives.dll'. Cannot find or open the PDB file.
-MTM_Inventory_Application.exe (34280): Loaded 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.20\System.Diagnostics.Tracing.dll'. Cannot find or open the PDB file.
-MTM_Inventory_Application.exe (34280): Loaded 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.20\System.Memory.dll'. Cannot find or open the PDB file.
-MTM_Inventory_Application.exe (34280): Loaded 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.20\System.Transactions.Local.dll'. Cannot find or open the PDB file.
-MTM_Inventory_Application.exe (34280): Loaded 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.20\System.Text.RegularExpressions.dll'. Cannot find or open the PDB file.
-MTM_Inventory_Application.exe (34280): Loaded 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.20\System.Diagnostics.DiagnosticSource.dll'. Cannot find or open the PDB file.
-MTM_Inventory_Application.exe (34280): Loaded 'C:\Program Files\dotnet\shared\Microsoft.WindowsDesktop.App\8.0.20\System.Security.Permissions.dll'. Cannot find or open the PDB file.
-MTM_Inventory_Application.exe (34280): Loaded 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.20\System.Runtime.Loader.dll'. Cannot find or open the PDB file.
-MTM_Inventory_Application.exe (34280): Loaded 'C:\Program Files\dotnet\shared\Microsoft.WindowsDesktop.App\8.0.20\System.Configuration.ConfigurationManager.dll'. Cannot find or open the PDB file.
-MTM_Inventory_Application.exe (34280): Loaded 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.20\System.Private.Uri.dll'. Cannot find or open the PDB file.
-MTM_Inventory_Application.exe (34280): Loaded 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.20\System.Net.WebClient.dll'. Cannot find or open the PDB file.
-MTM_Inventory_Application.exe (34280): Loaded 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.20\System.Security.Cryptography.dll'. Cannot find or open the PDB file.
-MTM_Inventory_Application.exe (34280): Loaded 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.20\System.Collections.Concurrent.dll'. Cannot find or open the PDB file.
-MTM_Inventory_Application.exe (34280): Loaded 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.20\System.Net.NameResolution.dll'. Cannot find or open the PDB file.
-MTM_Inventory_Application.exe (34280): Loaded 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.20\System.Runtime.Intrinsics.dll'. Cannot find or open the PDB file.
-MTM_Inventory_Application.exe (34280): Loaded 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.20\System.Threading.Overlapped.dll'. Cannot find or open the PDB file.
-MTM_Inventory_Application.exe (34280): Loaded 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.20\System.Threading.ThreadPool.dll'. Cannot find or open the PDB file.
-MTM_Inventory_Application.exe (34280): Loaded 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.20\System.Diagnostics.Process.dll'. Cannot find or open the PDB file.
-MTM_Inventory_Application.exe (34280): Loaded 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.20\System.Collections.NonGeneric.dll'. Cannot find or open the PDB file.
-MTM_Inventory_Application.exe (34280): Loaded 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.20\System.Text.Encoding.CodePages.dll'. Cannot find or open the PDB file.
-[Startup] Database connectivity validated successfully.
-[19:05:33.595] [HIGH  ] ⏱️ PERFORMANCE START: SP_sys_GetUserAccessType
-MTM_Inventory_Application.exe (34280): Loaded 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.20\System.Numerics.Vectors.dll'. Cannot find or open the PDB file.
-MTM_Inventory_Application.exe (34280): Loaded 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.20\System.Reflection.Emit.ILGeneration.dll'. Cannot find or open the PDB file.
-MTM_Inventory_Application.exe (34280): Loaded 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.20\System.Reflection.Emit.Lightweight.dll'. Cannot find or open the PDB file.
-MTM_Inventory_Application.exe (34280): Loaded 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.20\System.Reflection.Primitives.dll'. Cannot find or open the PDB file.
-MTM_Inventory_Application.exe (34280): Loaded 'c:\Users\johnk\source\repos\MTM_WIP_Application_WinForms\bin\Debug\net8.0-windows\System.IO.Pipelines.dll'. Cannot find or open the PDB file.
-[19:05:33.652] [MEDIUM] ➡️ ENTERING Helper_Database_StoredProcedure.ExecuteDataTableWithStatus
-[19:05:33.653] [MEDIUM] 🗄️ DB PROCEDURE START: sys_GetUserAccessType
+MTM_Inventory_Application.exe (31104): Loaded 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.20\System.Private.CoreLib.dll'. Symbols loaded.
+MTM_Inventory_Application.exe (31104): Loaded 'c:\Users\johnk\source\repos\MTM_WIP_Application_WinForms\bin\Debug\net8.0-windows\MTM_Inventory_Application.dll'. Symbols loaded.
+MTM_Inventory_Application.exe (31104): Loaded 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.20\System.Runtime.dll'. Cannot find or open the PDB file.
+MTM_Inventory_Application.exe (31104): Loaded 'C:\Program Files\dotnet\shared\Microsoft.WindowsDesktop.App\8.0.20\System.Windows.Forms.dll'. Symbols loaded.
+MTM_Inventory_Application.exe (31104): Loaded 'c:\Users\johnk\source\repos\MTM_WIP_Application_WinForms\bin\Debug\net8.0-windows\MySql.Data.dll'. Cannot find or open the PDB file.
+MTM_Inventory_Application.exe (31104): Loaded 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.20\System.Data.Common.dll'. Symbols loaded.
+MTM_Inventory_Application.exe (31104): Loaded 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.20\System.Collections.dll'. Cannot find or open the PDB file.
+MTM_Inventory_Application.exe (31104): Loaded 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.20\System.Threading.Thread.dll'. Cannot find or open the PDB file.
+MTM_Inventory_Application.exe (31104): Loaded 'C:\Program Files\dotnet\shared\Microsoft.WindowsDesktop.App\8.0.20\System.Windows.Forms.Primitives.dll'. Symbols loaded.
+MTM_Inventory_Application.exe (31104): Loaded 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.20\System.Console.dll'. Cannot find or open the PDB file.
+MTM_Inventory_Application.exe (31104): Loaded 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.20\System.Diagnostics.TraceSource.dll'. Cannot find or open the PDB file.
+MTM_Inventory_Application.exe (31104): Loaded 'c:\Users\johnk\source\repos\MTM_WIP_Application_WinForms\bin\Debug\net8.0-windows\System.Text.Json.dll'. Cannot find or open the PDB file.
+MTM_Inventory_Application.exe (31104): Loaded 'c:\Users\johnk\source\repos\MTM_WIP_Application_WinForms\bin\Debug\net8.0-windows\System.Text.Encodings.Web.dll'. Cannot find or open the PDB file.
+MTM_Inventory_Application.exe (31104): Loaded 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.20\System.Linq.dll'. Cannot find or open the PDB file.
+[16:38:43.774] [LOW   ] 🚀 DEBUG TRACER INITIALIZED
+MTM_Inventory_Application.exe (31104): Loaded 'c:\Users\johnk\source\repos\MTM_WIP_Application_WinForms\bin\Debug\net8.0-windows\DocumentFormat.OpenXml.dll'. Cannot find or open the PDB file.
+MTM_Inventory_Application.exe (31104): Loaded 'c:\Users\johnk\source\repos\MTM_WIP_Application_WinForms\bin\Debug\net8.0-windows\DocumentFormat.OpenXml.Framework.dll'. Cannot find or open the PDB file.
+MTM_Inventory_Application.exe (31104): Loaded 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.20\System.Threading.dll'. Cannot find or open the PDB file.
+MTM_Inventory_Application.exe (31104): Loaded 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.20\System.ComponentModel.TypeConverter.dll'. Cannot find or open the PDB file.
+MTM_Inventory_Application.exe (31104): Loaded 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.20\System.ComponentModel.Primitives.dll'. Cannot find or open the PDB file.
+MTM_Inventory_Application.exe (31104): Loaded 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.20\System.ComponentModel.dll'. Cannot find or open the PDB file.
+MTM_Inventory_Application.exe (31104): Loaded 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.20\System.Xml.ReaderWriter.dll'. Cannot find or open the PDB file.
+MTM_Inventory_Application.exe (31104): Loaded 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.20\System.Private.Xml.dll'. Cannot find or open the PDB file.
+[16:38:43.806] [LOW   ] 🖱️ UI ACTION: DEBUG_CONFIGURATION_INITIALIZED on Service_DebugConfiguration
+[16:38:43.808] [LOW   ] 🖱️ UI ACTION: DEBUG_MODE_SET on Service_DebugConfiguration
+[16:38:43.809] [LOW   ] 🖱️ UI ACTION: APPLICATION_STARTUP on Program
+MTM_Inventory_Application.exe (31104): Loaded 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.20\System.Drawing.Primitives.dll'. Cannot find or open the PDB file.
+MTM_Inventory_Application.exe (31104): Loaded 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.20\System.Collections.Specialized.dll'. Cannot find or open the PDB file.
+MTM_Inventory_Application.exe (31104): Loaded 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.20\System.Runtime.InteropServices.dll'. Cannot find or open the PDB file.
+MTM_Inventory_Application.exe (31104): Loaded 'C:\Program Files\dotnet\shared\Microsoft.WindowsDesktop.App\8.0.20\System.Drawing.Common.dll'. Cannot find or open the PDB file.
+MTM_Inventory_Application.exe (31104): Loaded 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.20\System.Security.Principal.Windows.dll'. Cannot find or open the PDB file.
+MTM_Inventory_Application.exe (31104): Loaded 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.20\System.Security.Claims.dll'. Cannot find or open the PDB file.
+MTM_Inventory_Application.exe (31104): Loaded 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.20\Microsoft.Win32.Primitives.dll'. Cannot find or open the PDB file.
+MTM_Inventory_Application.exe (31104): Loaded 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.20\System.Net.Sockets.dll'. Cannot find or open the PDB file.
+MTM_Inventory_Application.exe (31104): Loaded 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.20\System.Net.Primitives.dll'. Cannot find or open the PDB file.
+MTM_Inventory_Application.exe (31104): Loaded 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.20\System.Diagnostics.Tracing.dll'. Cannot find or open the PDB file.
+MTM_Inventory_Application.exe (31104): Loaded 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.20\System.Memory.dll'. Cannot find or open the PDB file.
+[16:38:43.854] [HIGH  ] ⏱️ PERFORMANCE START: SP_sys_theme_GetAll
+MTM_Inventory_Application.exe (31104): Loaded 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.20\System.Runtime.Intrinsics.dll'. Cannot find or open the PDB file.
+MTM_Inventory_Application.exe (31104): Loaded 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.20\System.Numerics.Vectors.dll'. Cannot find or open the PDB file.
+MTM_Inventory_Application.exe (31104): Loaded 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.20\System.Text.Encoding.Extensions.dll'. Cannot find or open the PDB file.
+MTM_Inventory_Application.exe (31104): Loaded 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.20\System.Collections.Concurrent.dll'. Cannot find or open the PDB file.
+MTM_Inventory_Application.exe (31104): Loaded 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.20\System.Private.Uri.dll'. Cannot find or open the PDB file.
+MTM_Inventory_Application.exe (31104): Loaded 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.20\System.Reflection.Emit.ILGeneration.dll'. Cannot find or open the PDB file.
+MTM_Inventory_Application.exe (31104): Loaded 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.20\System.Reflection.Emit.Lightweight.dll'. Cannot find or open the PDB file.
+MTM_Inventory_Application.exe (31104): Loaded 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.20\System.Reflection.Primitives.dll'. Cannot find or open the PDB file.
+MTM_Inventory_Application.exe (31104): Loaded 'c:\Users\johnk\source\repos\MTM_WIP_Application_WinForms\bin\Debug\net8.0-windows\System.IO.Pipelines.dll'. Cannot find or open the PDB file.
+MTM_Inventory_Application.exe (31104): Loaded 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.20\System.Collections.NonGeneric.dll'. Cannot find or open the PDB file.
+[16:38:43.909] [MEDIUM] ➡️ ENTERING Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync
+[16:38:43.910] [MEDIUM] 🗄️ DB PROCEDURE START: sys_theme_GetAll
+MTM_Inventory_Application.exe (31104): Loaded 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.20\System.Transactions.Local.dll'. Cannot find or open the PDB file.
+MTM_Inventory_Application.exe (31104): Loaded 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.20\System.Text.RegularExpressions.dll'. Cannot find or open the PDB file.
+MTM_Inventory_Application.exe (31104): Loaded 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.20\System.Diagnostics.DiagnosticSource.dll'. Cannot find or open the PDB file.
+MTM_Inventory_Application.exe (31104): Loaded 'C:\Program Files\dotnet\shared\Microsoft.WindowsDesktop.App\8.0.20\System.Security.Permissions.dll'. Cannot find or open the PDB file.
+MTM_Inventory_Application.exe (31104): Loaded 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.20\System.Runtime.Loader.dll'. Cannot find or open the PDB file.
+MTM_Inventory_Application.exe (31104): Loaded 'C:\Program Files\dotnet\shared\Microsoft.WindowsDesktop.App\8.0.20\System.Configuration.ConfigurationManager.dll'. Cannot find or open the PDB file.
+MTM_Inventory_Application.exe (31104): Loaded 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.20\System.Net.WebClient.dll'. Cannot find or open the PDB file.
+MTM_Inventory_Application.exe (31104): Loaded 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.20\System.Security.Cryptography.dll'. Cannot find or open the PDB file.
+MTM_Inventory_Application.exe (31104): Loaded 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.20\System.Net.NameResolution.dll'. Cannot find or open the PDB file.
+MTM_Inventory_Application.exe (31104): Loaded 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.20\System.Threading.ThreadPool.dll'. Cannot find or open the PDB file.
+MTM_Inventory_Application.exe (31104): Loaded 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.20\System.Threading.Overlapped.dll'. Cannot find or open the PDB file.
+MTM_Inventory_Application.exe (31104): Loaded 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.20\System.Diagnostics.Process.dll'. Cannot find or open the PDB file.
+MTM_Inventory_Application.exe (31104): Loaded 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.20\System.Text.Encoding.CodePages.dll'. Cannot find or open the PDB file.
+MTM_Inventory_Application.exe (31104): Loaded 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.20\System.Runtime.Numerics.dll'. Cannot find or open the PDB file.
+[16:38:44.103] [HIGH  ] ✅ PROCEDURE sys_theme_GetAll (249ms) - Status: 0
+[16:38:44.114] [MEDIUM] ✅ DB PROCEDURE COMPLETE: sys_theme_GetAll (249ms) - 9 rows
+[16:38:44.116] [MEDIUM] ⬅️ EXITING Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync (206ms)
+[16:38:44.117] [HIGH  ] ⏱️ PERFORMANCE COMPLETE: SP_sys_theme_GetAll (263ms)
+[Startup] Parameter cache: 63 procedures cached in 9ms
+[16:38:44.130] [HIGH  ] ⏱️ PERFORMANCE START: SP_sys_GetUserAccessType
+[16:38:44.131] [MEDIUM] ➡️ ENTERING Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync
+[16:38:44.132] [MEDIUM] 🗄️ DB PROCEDURE START: sys_GetUserAccessType
 [Trace] [Main] Application starting...
 [Trace] [Main] Application starting...
-MTM_Inventory_Application.exe (34280): Loaded 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.20\System.ComponentModel.EventBasedAsync.dll'. Cannot find or open the PDB file.
-Exception thrown: 'MySql.Data.MySqlClient.MySqlException' in MySql.Data.dll
-Exception thrown: 'MySql.Data.MySqlClient.MySqlException' in System.Private.CoreLib.dll
-Exception thrown: 'MySql.Data.MySqlClient.MySqlException' in System.Private.CoreLib.dll
-Exception thrown: 'MySql.Data.MySqlClient.MySqlException' in System.Private.CoreLib.dll
-Exception thrown: 'MySql.Data.MySqlClient.MySqlException' in System.Private.CoreLib.dll
-Exception thrown: 'MySql.Data.MySqlClient.MySqlException' in System.Private.CoreLib.dll
-Exception thrown: 'MySql.Data.MySqlClient.MySqlException' in System.Private.CoreLib.dll
-Exception thrown: 'MySql.Data.MySqlClient.MySqlException' in System.Private.CoreLib.dll
-Exception thrown: 'MySql.Data.MySqlClient.MySqlException' in System.Private.CoreLib.dll
-MTM_Inventory_Application.exe (34280): Loaded 'C:\Program Files\dotnet\shared\Microsoft.WindowsDesktop.App\8.0.20\Accessibility.dll'. Module was built without symbols.
-[19:05:33.741] [MEDIUM] ➡️ ENTERING SplashScreenForm.SplashScreenForm
+MTM_Inventory_Application.exe (31104): Loaded 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.20\System.ComponentModel.EventBasedAsync.dll'. Cannot find or open the PDB file.
+MTM_Inventory_Application.exe (31104): Loaded 'C:\Program Files\dotnet\shared\Microsoft.WindowsDesktop.App\8.0.20\Accessibility.dll'. Module was built without symbols.
+[16:38:44.154] [HIGH  ] ✅ PROCEDURE sys_GetUserAccessType (23ms) - Status: 0
+[16:38:44.155] [MEDIUM] ✅ DB PROCEDURE COMPLETE: sys_GetUserAccessType (23ms) - 88 rows
+[16:38:44.156] [MEDIUM] ⬅️ EXITING Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync (24ms)
+[16:38:44.157] [HIGH  ] ⏱️ PERFORMANCE COMPLETE: SP_sys_GetUserAccessType (26ms)
+[16:38:44.157] [MEDIUM] ➡️ ENTERING SplashScreenForm.SplashScreenForm
 [DEBUG] [SplashScreenForm.ctor] Constructing SplashScreenForm...
-[19:05:33.743] [LOW   ] 🖱️ UI ACTION: SPLASH_FORM_INITIALIZATION on SplashScreenForm
-MTM_Inventory_Application.exe (34280): Loaded 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.20\System.Diagnostics.StackTrace.dll'. Cannot find or open the PDB file.
-MTM_Inventory_Application.exe (34280): Loaded 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.20\System.Reflection.Metadata.dll'. Cannot find or open the PDB file.
-MTM_Inventory_Application.exe (34280): Loaded 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.20\System.Collections.Immutable.dll'. Cannot find or open the PDB file.
-MTM_Inventory_Application.exe (34280): Loaded 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.20\System.IO.MemoryMappedFiles.dll'. Cannot find or open the PDB file.
-MTM_Inventory_Application.exe (34280): Loaded 'C:\Program Files\dotnet\shared\Microsoft.WindowsDesktop.App\8.0.20\Microsoft.Win32.SystemEvents.dll'. Cannot find or open the PDB file.
-[19:05:33.765] [MEDIUM] ✅ DB PROCEDURE COMPLETE: sys_GetUserAccessType (146ms) - 0 rows
-[19:05:33.767] [MEDIUM] ⬅️ EXITING Helper_Database_StoredProcedure.ExecuteDataTableWithStatus (114ms)
-MTM_Inventory_Application.exe (34280): Loaded 'C:\Program Files\dotnet\shared\Microsoft.WindowsDesktop.App\8.0.20\System.Resources.Extensions.dll'. Cannot find or open the PDB file.
-[19:05:33.770] [HIGH  ] ⏱️ PERFORMANCE COMPLETE: SP_sys_GetUserAccessType (175ms)
-MTM_Inventory_Application.exe (34280): Loaded 'C:\Program Files\dotnet\shared\Microsoft.WindowsDesktop.App\8.0.20\System.Drawing.dll'. Cannot find or open the PDB file.
-[19:05:33.777] [LOW   ] 🖱️ UI ACTION: THEME_APPLICATION on SplashScreenForm
-MTM_Inventory_Application.exe (34280): Loaded 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.20\System.ObjectModel.dll'. Cannot find or open the PDB file.
+[16:38:44.159] [LOW   ] 🖱️ UI ACTION: SPLASH_FORM_INITIALIZATION on SplashScreenForm
+MTM_Inventory_Application.exe (31104): Loaded 'C:\Program Files\dotnet\shared\Microsoft.WindowsDesktop.App\8.0.20\Microsoft.Win32.SystemEvents.dll'. Cannot find or open the PDB file.
+MTM_Inventory_Application.exe (31104): Loaded 'C:\Program Files\dotnet\shared\Microsoft.WindowsDesktop.App\8.0.20\System.Resources.Extensions.dll'. Cannot find or open the PDB file.
+MTM_Inventory_Application.exe (31104): Loaded 'C:\Program Files\dotnet\shared\Microsoft.WindowsDesktop.App\8.0.20\System.Drawing.dll'. Cannot find or open the PDB file.
+[16:38:44.181] [LOW   ] 🖱️ UI ACTION: THEME_APPLICATION on SplashScreenForm
+MTM_Inventory_Application.exe (31104): Loaded 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.20\System.ObjectModel.dll'. Cannot find or open the PDB file.
 Exception thrown: 'System.Text.Json.JsonException' in System.Text.Json.dll
 Exception thrown: 'System.Text.Json.JsonException' in System.Text.Json.dll
 Exception thrown: 'System.Text.Json.JsonException' in System.Text.Json.dll
 Exception thrown: 'System.Text.Json.JsonException' in System.Text.Json.dll
-[19:05:33.828] [MEDIUM] 📊 BUSINESS LOGIC: UI_COLORS_APPLICATION
-[19:05:33.829] [LOW   ] 🖱️ UI ACTION: THEME_APPLIED on SplashScreenForm
+[16:38:44.225] [MEDIUM] 📊 BUSINESS LOGIC: UI_COLORS_APPLICATION
+[16:38:44.226] [LOW   ] 🖱️ UI ACTION: THEME_APPLIED on SplashScreenForm
 [DEBUG] [SplashScreenForm.ApplyTheme] Applying theme...
 [THEME]  (Label) - BackColor: FormBackColor = Color [A=255, R=30, G=30, B=30] | Theme: Default
 [THEME]  (Label) - ForeColor: FormForeColor = Color [A=255, R=255, G=255, B=255] | Theme: Default
@@ -116,15 +111,15 @@ Exception thrown: 'System.Text.Json.JsonException' in System.Text.Json.dll
 [THEME]  (Label) - BackColor: FormBackColor = Color [A=255, R=30, G=30, B=30] | Theme: Default
 [THEME]  (Label) - ForeColor: FormForeColor = Color [A=255, R=255, G=255, B=255] | Theme: Default
 [DEBUG] [SplashScreenForm.ApplyTheme] Theme applied.
-[19:05:33.848] [LOW   ] 🖱️ UI ACTION: SPLASH_FORM_INITIALIZATION on SplashScreenForm
-[19:05:33.849] [MEDIUM] ⬅️ EXITING SplashScreenForm.SplashScreenForm (107ms)
+[16:38:44.245] [LOW   ] 🖱️ UI ACTION: SPLASH_FORM_INITIALIZATION on SplashScreenForm
+[16:38:44.246] [MEDIUM] ⬅️ EXITING SplashScreenForm.SplashScreenForm (89ms)
 [DEBUG] [SplashScreenForm.ctor] SplashScreenForm constructed.
 [DEBUG] [SplashScreenForm.UpdateProgress] Progress: 0, Status: Starting startup sequence...
 [DEBUG] [SplashScreenForm.UpdateProgress] Progress: 5, Status: Initializing logging...
 [DEBUG] Starting logging initialization...
 [DEBUG] Server: localhost, User: JOHNK
 [DEBUG] Log directory: C:\Users\johnk\OneDrive\Documents\Work Folder\WIP App Logs\JOHNK
-[DEBUG] Normal log file: C:\Users\johnk\OneDrive\Documents\Work Folder\WIP App Logs\JOHNK\JOHNK 10-13-2025 @ 7-05 PM_normal.log
+[DEBUG] Normal log file: C:\Users\johnk\OneDrive\Documents\Work Folder\WIP App Logs\JOHNK\JOHNK 10-14-2025 @ 4-38 PM_normal.log
 [DEBUG] Logging initialization completed
 [DEBUG] [SplashScreenForm.UpdateProgress] Progress: 10, Status: Logging initialized.
 [DEBUG] [SplashScreenForm.UpdateProgress] Progress: 15, Status: Cleaning up old logs...
@@ -134,168 +129,177 @@ Exception thrown: 'System.Text.Json.JsonException' in System.Text.Json.dll
 [DEBUG] [SplashScreenForm.UpdateProgress] Progress: 35, Status: Verifying database connectivity...
 [DEBUG] [SplashScreenForm.UpdateProgress] Progress: 40, Status: Database connectivity verified.
 [DEBUG] [SplashScreenForm.UpdateProgress] Progress: 45, Status: Setting up Data Tables...
-[19:05:34.271] [HIGH  ] ⏱️ PERFORMANCE START: SP_md_part_ids_Get_All
-[19:05:34.272] [MEDIUM] ➡️ ENTERING Helper_Database_StoredProcedure.ExecuteDataTableWithStatus
-[19:05:34.273] [MEDIUM] 🗄️ DB PROCEDURE START: md_part_ids_Get_All
-MTM_Inventory_Application.exe (34280): Loaded 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.20\System.Runtime.Numerics.dll'. Cannot find or open the PDB file.
-[19:05:34.318] [HIGH  ] ✅ PROCEDURE md_part_ids_Get_All (46ms) - Status: 0
-[19:05:34.323] [MEDIUM] ✅ DB PROCEDURE COMPLETE: md_part_ids_Get_All (46ms) - 3746 rows
-[19:05:34.325] [MEDIUM] ⬅️ EXITING Helper_Database_StoredProcedure.ExecuteDataTableWithStatus (52ms)
-[19:05:34.326] [HIGH  ] ⏱️ PERFORMANCE COMPLETE: SP_md_part_ids_Get_All (54ms)
-[19:05:34.331] [HIGH  ] ⏱️ PERFORMANCE START: SP_md_operation_numbers_Get_All
-[19:05:34.332] [MEDIUM] ➡️ ENTERING Helper_Database_StoredProcedure.ExecuteDataTableWithStatus
-[19:05:34.333] [MEDIUM] 🗄️ DB PROCEDURE START: md_operation_numbers_Get_All
-[19:05:34.361] [HIGH  ] ✅ PROCEDURE md_operation_numbers_Get_All (30ms) - Status: 0
-[19:05:34.362] [MEDIUM] ✅ DB PROCEDURE COMPLETE: md_operation_numbers_Get_All (30ms) - 72 rows
-[19:05:34.363] [MEDIUM] ⬅️ EXITING Helper_Database_StoredProcedure.ExecuteDataTableWithStatus (31ms)
-[19:05:34.364] [HIGH  ] ⏱️ PERFORMANCE COMPLETE: SP_md_operation_numbers_Get_All (33ms)
-[19:05:34.369] [HIGH  ] ⏱️ PERFORMANCE START: SP_md_locations_Get_All
-[19:05:34.370] [MEDIUM] ➡️ ENTERING Helper_Database_StoredProcedure.ExecuteDataTableWithStatus
-[19:05:34.371] [MEDIUM] 🗄️ DB PROCEDURE START: md_locations_Get_All
-[19:05:34.430] [HIGH  ] ✅ PROCEDURE md_locations_Get_All (61ms) - Status: 0
-[19:05:34.433] [MEDIUM] ✅ DB PROCEDURE COMPLETE: md_locations_Get_All (61ms) - 10371 rows
-[19:05:34.434] [MEDIUM] ⬅️ EXITING Helper_Database_StoredProcedure.ExecuteDataTableWithStatus (63ms)
-[19:05:34.435] [HIGH  ] ⏱️ PERFORMANCE COMPLETE: SP_md_locations_Get_All (65ms)
-[19:05:34.447] [HIGH  ] ⏱️ PERFORMANCE START: SP_usr_users_Get_All
-[19:05:34.449] [MEDIUM] ➡️ ENTERING Helper_Database_StoredProcedure.ExecuteDataTableWithStatus
-[19:05:34.450] [MEDIUM] 🗄️ DB PROCEDURE START: usr_users_Get_All
-[19:05:34.465] [HIGH  ] ✅ PROCEDURE usr_users_Get_All (17ms) - Status: 0
-[19:05:34.467] [MEDIUM] ✅ DB PROCEDURE COMPLETE: usr_users_Get_All (17ms) - 88 rows
-[19:05:34.469] [MEDIUM] ⬅️ EXITING Helper_Database_StoredProcedure.ExecuteDataTableWithStatus (19ms)
-[19:05:34.470] [HIGH  ] ⏱️ PERFORMANCE COMPLETE: SP_usr_users_Get_All (22ms)
+[16:38:44.668] [HIGH  ] ⏱️ PERFORMANCE START: SP_md_part_ids_Get_All
+[16:38:44.669] [MEDIUM] ➡️ ENTERING Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync
+[16:38:44.670] [MEDIUM] 🗄️ DB PROCEDURE START: md_part_ids_Get_All
+[16:38:44.714] [HIGH  ] ✅ PROCEDURE md_part_ids_Get_All (45ms) - Status: 0
+[16:38:44.714] [MEDIUM] ✅ DB PROCEDURE COMPLETE: md_part_ids_Get_All (45ms) - 3746 rows
+[16:38:44.715] [MEDIUM] ⬅️ EXITING Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync (46ms)
+[16:38:44.717] [HIGH  ] ⏱️ PERFORMANCE COMPLETE: SP_md_part_ids_Get_All (48ms)
+[16:38:44.725] [HIGH  ] ⏱️ PERFORMANCE START: SP_md_operation_numbers_Get_All
+[16:38:44.726] [MEDIUM] ➡️ ENTERING Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync
+[16:38:44.727] [MEDIUM] 🗄️ DB PROCEDURE START: md_operation_numbers_Get_All
+[16:38:44.746] [HIGH  ] ✅ PROCEDURE md_operation_numbers_Get_All (20ms) - Status: 0
+[16:38:44.747] [MEDIUM] ✅ DB PROCEDURE COMPLETE: md_operation_numbers_Get_All (20ms) - 72 rows
+[16:38:44.748] [MEDIUM] ⬅️ EXITING Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync (21ms)
+[16:38:44.750] [HIGH  ] ⏱️ PERFORMANCE COMPLETE: SP_md_operation_numbers_Get_All (24ms)
+[16:38:44.752] [HIGH  ] ⏱️ PERFORMANCE START: SP_md_locations_Get_All
+[16:38:44.753] [MEDIUM] ➡️ ENTERING Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync
+[16:38:44.754] [MEDIUM] 🗄️ DB PROCEDURE START: md_locations_Get_All
+[16:38:44.816] [HIGH  ] ✅ PROCEDURE md_locations_Get_All (63ms) - Status: 0
+[16:38:44.824] [MEDIUM] ✅ DB PROCEDURE COMPLETE: md_locations_Get_All (63ms) - 10371 rows
+[16:38:44.825] [MEDIUM] ⬅️ EXITING Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync (72ms)
+[16:38:44.826] [HIGH  ] ⏱️ PERFORMANCE COMPLETE: SP_md_locations_Get_All (74ms)
+[16:38:44.836] [HIGH  ] ⏱️ PERFORMANCE START: SP_usr_users_Get_All
+[16:38:44.837] [MEDIUM] ➡️ ENTERING Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync
+[16:38:44.838] [MEDIUM] 🗄️ DB PROCEDURE START: usr_users_Get_All
+[16:38:44.856] [HIGH  ] ✅ PROCEDURE usr_users_Get_All (20ms) - Status: 0
+[16:38:44.857] [MEDIUM] ✅ DB PROCEDURE COMPLETE: usr_users_Get_All (20ms) - 88 rows
+[16:38:44.859] [MEDIUM] ⬅️ EXITING Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync (21ms)
+[16:38:44.860] [HIGH  ] ⏱️ PERFORMANCE COMPLETE: SP_usr_users_Get_All (24ms)
 Exception thrown: 'System.ArgumentException' in System.Data.Common.dll
-[19:05:34.489] [HIGH  ] ⏱️ PERFORMANCE START: SP_md_item_types_Get_All
-[19:05:34.490] [MEDIUM] ➡️ ENTERING Helper_Database_StoredProcedure.ExecuteDataTableWithStatus
-[19:05:34.491] [MEDIUM] 🗄️ DB PROCEDURE START: md_item_types_Get_All
-[19:05:34.510] [HIGH  ] ✅ PROCEDURE md_item_types_Get_All (20ms) - Status: 0
-[19:05:34.511] [MEDIUM] ✅ DB PROCEDURE COMPLETE: md_item_types_Get_All (20ms) - 4 rows
-[19:05:34.513] [MEDIUM] ⬅️ EXITING Helper_Database_StoredProcedure.ExecuteDataTableWithStatus (21ms)
-[19:05:34.514] [HIGH  ] ⏱️ PERFORMANCE COMPLETE: SP_md_item_types_Get_All (24ms)
+MTM_Inventory_Application.exe (31104): Loaded 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.20\System.Diagnostics.StackTrace.dll'. Cannot find or open the PDB file.
+MTM_Inventory_Application.exe (31104): Loaded 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.20\System.Reflection.Metadata.dll'. Cannot find or open the PDB file.
+MTM_Inventory_Application.exe (31104): Loaded 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.20\System.Collections.Immutable.dll'. Cannot find or open the PDB file.
+MTM_Inventory_Application.exe (31104): Loaded 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.20\System.IO.MemoryMappedFiles.dll'. Cannot find or open the PDB file.
+[16:38:44.904] [HIGH  ] ⏱️ PERFORMANCE START: SP_md_item_types_Get_All
+[16:38:44.905] [MEDIUM] ➡️ ENTERING Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync
+[16:38:44.906] [MEDIUM] 🗄️ DB PROCEDURE START: md_item_types_Get_All
+[16:38:44.924] [HIGH  ] ✅ PROCEDURE md_item_types_Get_All (20ms) - Status: 0
+[16:38:44.925] [MEDIUM] ✅ DB PROCEDURE COMPLETE: md_item_types_Get_All (20ms) - 4 rows
+[16:38:44.926] [MEDIUM] ⬅️ EXITING Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync (21ms)
+[16:38:44.927] [HIGH  ] ⏱️ PERFORMANCE COMPLETE: SP_md_item_types_Get_All (23ms)
 [DEBUG] [SplashScreenForm.UpdateProgress] Progress: 50, Status: Data Tables set up.
 [DEBUG] [SplashScreenForm.UpdateProgress] Progress: 60, Status: Initializing version checker...
 VersionTimer initialized and started.
 Running VersionChecker...
-[19:05:34.583] [HIGH  ] ⏱️ PERFORMANCE START: SP_log_changelog_Get_Current
-[19:05:34.584] [MEDIUM] ➡️ ENTERING Helper_Database_StoredProcedure.ExecuteDataTableWithStatus
-[19:05:34.586] [MEDIUM] 🗄️ DB PROCEDURE START: log_changelog_Get_Current
+[16:38:44.996] [HIGH  ] ⏱️ PERFORMANCE START: SP_log_changelog_Get_Current
+[16:38:44.997] [MEDIUM] ➡️ ENTERING Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync
+[16:38:44.998] [MEDIUM] 🗄️ DB PROCEDURE START: log_changelog_Get_Current
 [DEBUG] [SplashScreenForm.UpdateProgress] Progress: 65, Status: Version checker initialized.
-[19:05:34.603] [HIGH  ] ✅ PROCEDURE log_changelog_Get_Current (20ms) - Status: 0
-[19:05:34.605] [MEDIUM] ✅ DB PROCEDURE COMPLETE: log_changelog_Get_Current (20ms) - 1 rows
-[19:05:34.606] [MEDIUM] ⬅️ EXITING Helper_Database_StoredProcedure.ExecuteDataTableWithStatus (20ms)
-[19:05:34.607] [HIGH  ] ⏱️ PERFORMANCE COMPLETE: SP_log_changelog_Get_Current (23ms)
+[16:38:45.018] [HIGH  ] ✅ PROCEDURE log_changelog_Get_Current (22ms) - Status: 0
+[16:38:45.019] [MEDIUM] ✅ DB PROCEDURE COMPLETE: log_changelog_Get_Current (22ms) - 1 rows
+[16:38:45.021] [MEDIUM] ⬅️ EXITING Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync (23ms)
+[16:38:45.022] [HIGH  ] ⏱️ PERFORMANCE COMPLETE: SP_log_changelog_Get_Current (25ms)
 Database version retrieved: 5.0.1.3
-Version labels updated - App: 5.0.1.2, DB: 5.0.1.3
+Version labels updated - App: 1.0.0.0, DB: 5.0.1.3
 [DEBUG] [SplashScreenForm.UpdateProgress] Progress: 70, Status: Initializing theme system...
-[Dao_User] Entering GetSettingsJsonAsync(field=Theme_Name, user=JOHNK, useAsync=True)
-[19:05:34.694] [HIGH  ] ⏱️ PERFORMANCE START: SP_usr_ui_settings_Get
-[19:05:34.695] [MEDIUM] ➡️ ENTERING Helper_Database_StoredProcedure.ExecuteDataTableWithStatus
-[19:05:34.696] [MEDIUM] 🗄️ DB PROCEDURE START: usr_ui_settings_Get
-[19:05:34.712] [HIGH  ] ✅ PROCEDURE usr_ui_settings_Get (17ms) - Status: 0
-[19:05:34.713] [MEDIUM] ✅ DB PROCEDURE COMPLETE: usr_ui_settings_Get (17ms) - 1 rows
-[19:05:34.714] [MEDIUM] ⬅️ EXITING Helper_Database_StoredProcedure.ExecuteDataTableWithStatus (18ms)
-[19:05:34.715] [HIGH  ] ⏱️ PERFORMANCE COMPLETE: SP_usr_ui_settings_Get (20ms)
-[Dao_User] GetSettingsJsonAsync found value in JSON: Forest
+[16:38:45.104] [MEDIUM] ➡️ ENTERING Dao_User.GetSettingsJsonAsync
+[16:38:45.105] [HIGH  ] ⏱️ PERFORMANCE START: SP_usr_ui_settings_Get
+[16:38:45.106] [MEDIUM] ➡️ ENTERING Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync
+[16:38:45.107] [MEDIUM] 🗄️ DB PROCEDURE START: usr_ui_settings_Get
+[16:38:45.126] [HIGH  ] ✅ PROCEDURE usr_ui_settings_Get (20ms) - Status: 0
+[16:38:45.127] [MEDIUM] ✅ DB PROCEDURE COMPLETE: usr_ui_settings_Get (20ms) - 1 rows
+[16:38:45.128] [MEDIUM] ⬅️ EXITING Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync (21ms)
+[16:38:45.129] [HIGH  ] ⏱️ PERFORMANCE COMPLETE: SP_usr_ui_settings_Get (24ms)
+[16:38:45.137] [MEDIUM] ⬅️ EXITING Dao_User.GetSettingsJsonAsync (33ms)
 [DEBUG] [SplashScreenForm.UpdateProgress] Progress: 75, Status: Theme system initialized.
 [DEBUG] [SplashScreenForm.UpdateProgress] Progress: 80, Status: User Full Name loaded: JOHNK
 [DEBUG] [SplashScreenForm.UpdateProgress] Progress: 85, Status: Loading theme settings...
-[Dao_User] Entering GetThemeFontSizeAsync(user=JOHNK, useAsync=False)
-[Dao_User] Entering GetSettingsJsonAsync(field=Theme_FontSize, user=JOHNK, useAsync=False)
-[19:05:34.846] [HIGH  ] ⏱️ PERFORMANCE START: SP_usr_ui_settings_Get
-[19:05:34.847] [MEDIUM] ➡️ ENTERING Helper_Database_StoredProcedure.ExecuteDataTableWithStatus
-[19:05:34.848] [MEDIUM] 🗄️ DB PROCEDURE START: usr_ui_settings_Get
-[19:05:34.850] [HIGH  ] ✅ PROCEDURE usr_ui_settings_Get (4ms) - Status: 0
-[19:05:34.851] [MEDIUM] ✅ DB PROCEDURE COMPLETE: usr_ui_settings_Get (4ms) - 1 rows
-[19:05:34.852] [MEDIUM] ⬅️ EXITING Helper_Database_StoredProcedure.ExecuteDataTableWithStatus (5ms)
-[19:05:34.853] [HIGH  ] ⏱️ PERFORMANCE COMPLETE: SP_usr_ui_settings_Get (7ms)
-[Dao_User] GetSettingsJsonAsync found value in JSON: 9
-[Dao_User] Entering GetSettingsJsonAsync(field=Theme_Name, user=JOHNK, useAsync=True)
-[19:05:34.859] [HIGH  ] ⏱️ PERFORMANCE START: SP_usr_ui_settings_Get
-[19:05:34.860] [MEDIUM] ➡️ ENTERING Helper_Database_StoredProcedure.ExecuteDataTableWithStatus
-[19:05:34.861] [MEDIUM] 🗄️ DB PROCEDURE START: usr_ui_settings_Get
-[19:05:34.865] [HIGH  ] ✅ PROCEDURE usr_ui_settings_Get (5ms) - Status: 0
-[19:05:34.866] [MEDIUM] ✅ DB PROCEDURE COMPLETE: usr_ui_settings_Get (5ms) - 1 rows
-[19:05:34.867] [MEDIUM] ⬅️ EXITING Helper_Database_StoredProcedure.ExecuteDataTableWithStatus (6ms)
-[19:05:34.868] [HIGH  ] ⏱️ PERFORMANCE COMPLETE: SP_usr_ui_settings_Get (9ms)
-[Dao_User] GetSettingsJsonAsync found value in JSON: Forest
+[16:38:45.257] [MEDIUM] ➡️ ENTERING Dao_User.GetThemeFontSizeAsync
+[16:38:45.259] [MEDIUM] ➡️ ENTERING Dao_User.GetSettingsJsonAsync
+[16:38:45.261] [HIGH  ] ⏱️ PERFORMANCE START: SP_usr_ui_settings_Get
+[16:38:45.262] [MEDIUM] ➡️ ENTERING Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync
+[16:38:45.263] [MEDIUM] 🗄️ DB PROCEDURE START: usr_ui_settings_Get
+[16:38:45.267] [HIGH  ] ✅ PROCEDURE usr_ui_settings_Get (6ms) - Status: 0
+[16:38:45.268] [MEDIUM] ✅ DB PROCEDURE COMPLETE: usr_ui_settings_Get (6ms) - 1 rows
+[16:38:45.270] [MEDIUM] ⬅️ EXITING Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync (7ms)
+[16:38:45.271] [HIGH  ] ⏱️ PERFORMANCE COMPLETE: SP_usr_ui_settings_Get (9ms)
+[16:38:45.273] [MEDIUM] ⬅️ EXITING Dao_User.GetSettingsJsonAsync (13ms)
+[16:38:45.274] [MEDIUM] ⬅️ EXITING Dao_User.GetThemeFontSizeAsync (16ms)
+[16:38:45.276] [MEDIUM] ➡️ ENTERING Dao_User.GetSettingsJsonAsync
+[16:38:45.277] [HIGH  ] ⏱️ PERFORMANCE START: SP_usr_ui_settings_Get
+[16:38:45.278] [MEDIUM] ➡️ ENTERING Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync
+[16:38:45.279] [MEDIUM] 🗄️ DB PROCEDURE START: usr_ui_settings_Get
+[16:38:45.282] [HIGH  ] ✅ PROCEDURE usr_ui_settings_Get (5ms) - Status: 0
+[16:38:45.283] [MEDIUM] ✅ DB PROCEDURE COMPLETE: usr_ui_settings_Get (5ms) - 1 rows
+[16:38:45.284] [MEDIUM] ⬅️ EXITING Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync (6ms)
+[16:38:45.286] [HIGH  ] ⏱️ PERFORMANCE COMPLETE: SP_usr_ui_settings_Get (8ms)
+[16:38:45.287] [MEDIUM] ⬅️ EXITING Dao_User.GetSettingsJsonAsync (11ms)
 [DEBUG] [SplashScreenForm.UpdateProgress] Progress: 90, Status: Theme settings loaded.
 [DEBUG] [SplashScreenForm.UpdateProgress] Progress: 93, Status: Startup sequence completed.
 [DEBUG] [SplashScreenForm.UpdateProgress] Progress: 95, Status: Creating main form...
-[19:05:35.260] [MEDIUM] ➡️ ENTERING MainForm.MainForm
+[16:38:45.673] [MEDIUM] ➡️ ENTERING MainForm.MainForm
 [DEBUG] [MainForm.ctor] Constructing MainForm...
-[19:05:35.262] [LOW   ] 🖱️ UI ACTION: FORM_INITIALIZATION on MainForm
-[19:05:35.284] [MEDIUM] ➡️ ENTERING Control_InventoryTab.Control_InventoryTab
-[19:05:35.285] [LOW   ] 🖱️ UI ACTION: INVENTORY_TAB_INITIALIZATION on Control_InventoryTab
-MTM_Inventory_Application.exe (34280): Loaded 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.20\System.Diagnostics.FileVersionInfo.dll'. Cannot find or open the PDB file.
-[19:05:35.295] [LOW   ] 🖱️ UI ACTION: THEME_APPLICATION on Control_InventoryTab
-[19:05:35.306] [LOW   ] 🖱️ UI ACTION: TOOLTIPS_SETUP on Control_InventoryTab
-[19:05:35.308] [LOW   ] 🖱️ UI ACTION: VERSION_TIMER_SETUP on Control_InventoryTab
-[19:05:35.309] [LOW   ] 🖱️ UI ACTION: DATA_LOADING_START on Control_InventoryTab
-[19:05:35.320] [LOW   ] 🖱️ UI ACTION: EVENTS_WIREUP on Control_InventoryTab
-[19:05:35.322] [LOW   ] 🖱️ UI ACTION: VERSION_LABEL_SET on Control_InventoryTab
-[19:05:35.324] [LOW   ] 🖱️ UI ACTION: UI_STYLING_APPLIED on Control_InventoryTab
-[19:05:35.326] [LOW   ] 🖱️ UI ACTION: PRIVILEGES_APPLIED on Control_InventoryTab
-[19:05:35.328] [LOW   ] 🖱️ UI ACTION: INVENTORY_TAB_INITIALIZATION on Control_InventoryTab
-[19:05:35.329] [MEDIUM] ⬅️ EXITING Control_InventoryTab.Control_InventoryTab (44ms)
-[19:05:35.331] [MEDIUM] ➡️ ENTERING Control_AdvancedInventory.Control_AdvancedInventory
-[19:05:35.332] [LOW   ] 🖱️ UI ACTION: ADVANCED_INVENTORY_INITIALIZATION on Control_AdvancedInventory
-[19:05:35.342] [LOW   ] 🖱️ UI ACTION: THEME_APPLICATION on Control_AdvancedInventory
-[19:05:35.363] [LOW   ] 🖱️ UI ACTION: TOOLTIPS_SETUP on Control_AdvancedInventory
-[19:05:35.366] [MEDIUM] ➡️ ENTERING Control_RemoveTab.Control_RemoveTab
-[19:05:35.367] [LOW   ] 🖱️ UI ACTION: REMOVE_TAB_INITIALIZATION on Control_RemoveTab
-[19:05:35.375] [LOW   ] 🖱️ UI ACTION: THEME_APPLICATION on Control_RemoveTab
-[19:05:35.388] [LOW   ] 🖱️ UI ACTION: CONTROL_INITIALIZATION on Control_RemoveTab
-[19:05:35.389] [LOW   ] 🖱️ UI ACTION: COMBOBOX_PROPERTIES_APPLIED on Control_RemoveTab
-[19:05:35.390] [LOW   ] 🖱️ UI ACTION: DATA_LOADING_START on Control_RemoveTab
-[19:05:35.399] [LOW   ] 🖱️ UI ACTION: EVENT_HANDLERS_SETUP on Control_RemoveTab
-[19:05:35.400] [LOW   ] 🖱️ UI ACTION: TOOLTIPS_SETUP on Control_RemoveTab
-[19:05:35.401] [LOW   ] 🖱️ UI ACTION: PRIVILEGES_APPLIED on Control_RemoveTab
-[19:05:35.402] [LOW   ] 🖱️ UI ACTION: REMOVE_TAB_INITIALIZATION on Control_RemoveTab
-[19:05:35.403] [MEDIUM] ⬅️ EXITING Control_RemoveTab.Control_RemoveTab (37ms)
-[19:05:35.405] [MEDIUM] ➡️ ENTERING Control_AdvancedRemove.Control_AdvancedRemove
-[19:05:35.406] [LOW   ] 🖱️ UI ACTION: ADVANCED_REMOVE_INITIALIZATION on Control_AdvancedRemove
-[19:05:35.414] [LOW   ] 🖱️ UI ACTION: THEME_APPLICATION on Control_AdvancedRemove
-[19:05:35.431] [LOW   ] 🖱️ UI ACTION: CONTROL_INITIALIZATION on Control_AdvancedRemove
-[19:05:35.433] [LOW   ] 🖱️ UI ACTION: BUTTON_EVENTS_SETUP on Control_AdvancedRemove
-[19:05:35.437] [MEDIUM] ➡️ ENTERING Control_TransferTab.Control_TransferTab
-[19:05:35.438] [LOW   ] 🖱️ UI ACTION: TRANSFER_TAB_INITIALIZATION on Control_TransferTab
-[19:05:35.452] [LOW   ] 🖱️ UI ACTION: TRANSFER_TAB_INITIALIZATION on Control_TransferTab
-[19:05:35.454] [MEDIUM] ➡️ ENTERING Control_QuickButtons.Control_QuickButtons
-[19:05:35.455] [LOW   ] 🖱️ UI ACTION: QUICK_BUTTONS_INITIALIZATION on Control_QuickButtons
-[19:05:35.458] [LOW   ] 🖱️ UI ACTION: TABLE_LAYOUT_SETUP on Control_QuickButtons
-[19:05:35.525] [LOW   ] 🖱️ UI ACTION: THEME_APPLICATION on MainForm
+[16:38:45.675] [LOW   ] 🖱️ UI ACTION: FORM_INITIALIZATION on MainForm
+[16:38:45.695] [MEDIUM] ➡️ ENTERING Control_InventoryTab.Control_InventoryTab
+[16:38:45.696] [LOW   ] 🖱️ UI ACTION: INVENTORY_TAB_INITIALIZATION on Control_InventoryTab
+MTM_Inventory_Application.exe (31104): Loaded 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.20\System.Diagnostics.FileVersionInfo.dll'. Cannot find or open the PDB file.
+[16:38:45.707] [LOW   ] 🖱️ UI ACTION: THEME_APPLICATION on Control_InventoryTab
+[16:38:45.718] [LOW   ] 🖱️ UI ACTION: TOOLTIPS_SETUP on Control_InventoryTab
+[16:38:45.720] [LOW   ] 🖱️ UI ACTION: VERSION_TIMER_SETUP on Control_InventoryTab
+[16:38:45.721] [LOW   ] 🖱️ UI ACTION: DATA_LOADING_START on Control_InventoryTab
+[16:38:45.730] [LOW   ] 🖱️ UI ACTION: EVENTS_WIREUP on Control_InventoryTab
+[16:38:45.732] [LOW   ] 🖱️ UI ACTION: VERSION_LABEL_SET on Control_InventoryTab
+[16:38:45.734] [LOW   ] 🖱️ UI ACTION: UI_STYLING_APPLIED on Control_InventoryTab
+[16:38:45.736] [LOW   ] 🖱️ UI ACTION: PRIVILEGES_APPLIED on Control_InventoryTab
+[16:38:45.738] [LOW   ] 🖱️ UI ACTION: INVENTORY_TAB_INITIALIZATION on Control_InventoryTab
+[16:38:45.739] [MEDIUM] ⬅️ EXITING Control_InventoryTab.Control_InventoryTab (43ms)
+[16:38:45.741] [MEDIUM] ➡️ ENTERING Control_AdvancedInventory.Control_AdvancedInventory
+[16:38:45.742] [LOW   ] 🖱️ UI ACTION: ADVANCED_INVENTORY_INITIALIZATION on Control_AdvancedInventory
+[16:38:45.752] [LOW   ] 🖱️ UI ACTION: THEME_APPLICATION on Control_AdvancedInventory
+[16:38:45.773] [LOW   ] 🖱️ UI ACTION: TOOLTIPS_SETUP on Control_AdvancedInventory
+[16:38:45.776] [MEDIUM] ➡️ ENTERING Control_RemoveTab.Control_RemoveTab
+[16:38:45.777] [LOW   ] 🖱️ UI ACTION: REMOVE_TAB_INITIALIZATION on Control_RemoveTab
+[16:38:45.785] [LOW   ] 🖱️ UI ACTION: THEME_APPLICATION on Control_RemoveTab
+[16:38:45.798] [LOW   ] 🖱️ UI ACTION: CONTROL_INITIALIZATION on Control_RemoveTab
+[16:38:45.799] [LOW   ] 🖱️ UI ACTION: COMBOBOX_PROPERTIES_APPLIED on Control_RemoveTab
+[16:38:45.800] [LOW   ] 🖱️ UI ACTION: DATA_LOADING_START on Control_RemoveTab
+[16:38:45.808] [LOW   ] 🖱️ UI ACTION: EVENT_HANDLERS_SETUP on Control_RemoveTab
+[16:38:45.809] [LOW   ] 🖱️ UI ACTION: TOOLTIPS_SETUP on Control_RemoveTab
+[16:38:45.810] [LOW   ] 🖱️ UI ACTION: PRIVILEGES_APPLIED on Control_RemoveTab
+[16:38:45.811] [LOW   ] 🖱️ UI ACTION: REMOVE_TAB_INITIALIZATION on Control_RemoveTab
+[16:38:45.813] [MEDIUM] ⬅️ EXITING Control_RemoveTab.Control_RemoveTab (36ms)
+[16:38:45.815] [MEDIUM] ➡️ ENTERING Control_AdvancedRemove.Control_AdvancedRemove
+[16:38:45.816] [LOW   ] 🖱️ UI ACTION: ADVANCED_REMOVE_INITIALIZATION on Control_AdvancedRemove
+[16:38:45.824] [LOW   ] 🖱️ UI ACTION: THEME_APPLICATION on Control_AdvancedRemove
+[16:38:45.850] [LOW   ] 🖱️ UI ACTION: CONTROL_INITIALIZATION on Control_AdvancedRemove
+[16:38:45.852] [LOW   ] 🖱️ UI ACTION: BUTTON_EVENTS_SETUP on Control_AdvancedRemove
+[16:38:45.856] [MEDIUM] ➡️ ENTERING Control_TransferTab.Control_TransferTab
+[16:38:45.857] [LOW   ] 🖱️ UI ACTION: TRANSFER_TAB_INITIALIZATION on Control_TransferTab
+[16:38:45.874] [LOW   ] 🖱️ UI ACTION: TRANSFER_TAB_INITIALIZATION on Control_TransferTab
+[16:38:45.875] [MEDIUM] ➡️ ENTERING Control_QuickButtons.Control_QuickButtons
+[16:38:45.876] [LOW   ] 🖱️ UI ACTION: QUICK_BUTTONS_INITIALIZATION on Control_QuickButtons
+[16:38:45.880] [LOW   ] 🖱️ UI ACTION: TABLE_LAYOUT_SETUP on Control_QuickButtons
+[16:38:45.894] [LOW   ] 🖱️ UI ACTION: QUICK_BUTTONS_POST_CONSTRUCTOR on Control_QuickButtons
+[16:38:45.916] [LOW   ] 🖱️ UI ACTION: THEME_APPLICATION on MainForm
 [DEBUG] [MainForm.ctor] InitializeComponent complete.
-[19:05:35.553] [MEDIUM] ➡️ ENTERING MainForm.InitializeFormTitle
-[19:05:35.554] [MEDIUM] ➡️ ENTERING MainForm.GetUserPrivilegeDisplayText
-[19:05:35.558] [MEDIUM] 📊 BUSINESS LOGIC: USER_PRIVILEGE_DETERMINATION
-[19:05:35.559] [MEDIUM] ⬅️ EXITING MainForm.GetUserPrivilegeDisplayText (4ms)
-[19:05:35.561] [MEDIUM] 📊 BUSINESS LOGIC: FORM_TITLE_GENERATION
-[19:05:35.562] [LOW   ] 🖱️ UI ACTION: FORM_TITLE_SET on MainForm
-[19:05:35.563] [MEDIUM] ⬅️ EXITING MainForm.InitializeFormTitle (10ms)
+[16:38:45.951] [MEDIUM] ➡️ ENTERING MainForm.InitializeFormTitle
+[16:38:45.955] [MEDIUM] ➡️ ENTERING MainForm.GetUserPrivilegeDisplayText
+[16:38:45.958] [MEDIUM] 📊 BUSINESS LOGIC: USER_PRIVILEGE_DETERMINATION
+[16:38:45.960] [MEDIUM] ⬅️ EXITING MainForm.GetUserPrivilegeDisplayText (4ms)
+[16:38:45.962] [MEDIUM] 📊 BUSINESS LOGIC: FORM_TITLE_GENERATION
+[16:38:45.963] [LOW   ] 🖱️ UI ACTION: FORM_TITLE_SET on MainForm
+[16:38:45.965] [MEDIUM] ⬅️ EXITING MainForm.InitializeFormTitle (13ms)
 [DEBUG] [MainForm] UserControl progress helpers initialized.
 [DEBUG] [MainForm.ctor] Progress control initialized.
-[19:05:35.567] [LOW   ] 🖱️ UI ACTION: CONNECTION_CHECKER_INIT on MainForm
+[16:38:45.969] [LOW   ] 🖱️ UI ACTION: CONNECTION_CHECKER_INIT on MainForm
 [DEBUG] [MainForm.ctor] ConnectionStrengthChecker initialized.
-[19:05:35.569] [LOW   ] 🖱️ UI ACTION: CONNECTION_RECOVERY_INIT on MainForm
+[16:38:45.971] [LOW   ] 🖱️ UI ACTION: CONNECTION_RECOVERY_INIT on MainForm
 [DEBUG] [MainForm.ctor] ConnectionRecoveryManager initialized.
-[19:05:35.572] [MEDIUM] ➡️ ENTERING MainForm.InitializeStartupComponents
-[19:05:35.573] [LOW   ] 🖱️ UI ACTION: CONNECTION_STRENGTH_SETUP on MainForm
+[16:38:45.974] [MEDIUM] ➡️ ENTERING MainForm.InitializeStartupComponents
+[16:38:45.975] [LOW   ] 🖱️ UI ACTION: CONNECTION_STRENGTH_SETUP on MainForm
 [DEBUG] [MainForm.ctor] ConnectionStrengthControl setup complete.
-[19:05:35.575] [LOW   ] 🖱️ UI ACTION: EVENTS_WIREUP on MainForm
+[16:38:45.978] [LOW   ] 🖱️ UI ACTION: EVENTS_WIREUP on MainForm
 [DEBUG] [MainForm.ctor] Events wired up.
-[19:05:35.578] [LOW   ] 🖱️ UI ACTION: DPI_EVENTS_WIREUP on MainForm
+[16:38:45.980] [LOW   ] 🖱️ UI ACTION: DPI_EVENTS_WIREUP on MainForm
 [DEBUG] [MainForm.ctor] DPI change events wired up.
-[19:05:35.581] [LOW   ] 🖱️ UI ACTION: STARTUP_COMPONENTS on MainForm
-[19:05:35.582] [MEDIUM] ⬅️ EXITING MainForm.InitializeStartupComponents (9ms)
+[16:38:45.984] [LOW   ] 🖱️ UI ACTION: STARTUP_COMPONENTS on MainForm
+[16:38:45.985] [MEDIUM] ⬅️ EXITING MainForm.InitializeStartupComponents (11ms)
 [DEBUG] [MainForm.ctor] Startup components initialized.
-[19:05:35.584] [LOW   ] 🖱️ UI ACTION: FORM_INITIALIZATION on MainForm
+[16:38:45.987] [LOW   ] 🖱️ UI ACTION: FORM_INITIALIZATION on MainForm
 [DEBUG] [MainForm.ctor] MainForm constructed.
-[19:05:35.586] [MEDIUM] ⬅️ EXITING MainForm.MainForm (326ms)
+[16:38:45.990] [MEDIUM] ⬅️ EXITING MainForm.MainForm (317ms)
 [DEBUG] [SplashScreenForm.UpdateProgress] Progress: 97, Status: Configuring form instances...
-[Dao_User] Entering GetUserFullNameAsync(user=JOHNK, useAsync=True)
-[19:05:35.607] [HIGH  ] ⏱️ PERFORMANCE START: SP_usr_users_Get_ByUser
-[19:05:35.609] [MEDIUM] ➡️ ENTERING Helper_Database_StoredProcedure.ExecuteDataTableWithStatus
-[19:05:35.610] [MEDIUM] 🗄️ DB PROCEDURE START: usr_users_Get_ByUser
+[16:38:46.009] [MEDIUM] ➡️ ENTERING Dao_User.GetUserFullNameAsync
+[16:38:46.010] [HIGH  ] ⏱️ PERFORMANCE START: SP_usr_users_Get_ByUser
+[16:38:46.012] [MEDIUM] ➡️ ENTERING Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync
+[16:38:46.013] [MEDIUM] 🗄️ DB PROCEDURE START: usr_users_Get_ByUser
 [DEBUG] [SplashScreenForm.UpdateProgress] Progress: 99, Status: Applying theme...
+[16:38:46.091] [MEDIUM]   ➡️ ENTERING Dao_User.GetUserFullNameAsync
+[16:38:46.093] [HIGH  ] ⏱️ PERFORMANCE START: SP_usr_users_Get_ByUser
+[16:38:46.095] [MEDIUM]   ➡️ ENTERING Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync
+[16:38:46.096] [MEDIUM] 🗄️ DB PROCEDURE START: usr_users_Get_ByUser
 [THEME] MainForm_TableLayout (TableLayoutPanel) - BackColor: FormBackColor = Color [A=255, R=240, G=248, B=240] | Theme: Forest
 [THEME] MainForm_TableLayout (TableLayoutPanel) - ForeColor: FormForeColor = Color [A=255, R=26, G=26, B=26] | Theme: Forest
 [THEME] MainForm_MenuStrip (MenuStrip) - BackColor: FormBackColor = Color [A=255, R=240, G=248, B=240] | Theme: Forest
@@ -306,13 +310,9 @@ MTM_Inventory_Application.exe (34280): Loaded 'C:\Program Files\dotnet\shared\Mi
 [THEME]  (SplitterPanel) - ForeColor: FormForeColor = Color [A=255, R=26, G=26, B=26] | Theme: Forest
 [THEME] MainForm_TabControl (TabControl) - BackColor: FormBackColor = Color [A=255, R=240, G=248, B=240] | Theme: Forest
 [THEME] MainForm_TabControl (TabControl) - ForeColor: FormForeColor = Color [A=255, R=26, G=26, B=26] | Theme: Forest
-[Dao_User] Entering GetUserFullNameAsync(user=JOHNK, useAsync=True)
 [THEME] MainForm_TabPage_Inventory (TabPage) - BackColor: FormBackColor = Color [A=255, R=240, G=248, B=240] | Theme: Forest
-[19:05:35.724] [HIGH  ] ⏱️ PERFORMANCE START: SP_usr_users_Get_ByUser
 [THEME] MainForm_TabPage_Inventory (TabPage) - ForeColor: FormForeColor = Color [A=255, R=26, G=26, B=26] | Theme: Forest
-[19:05:35.727] [MEDIUM]   ➡️ ENTERING Helper_Database_StoredProcedure.ExecuteDataTableWithStatus
 [THEME] MainForm_UserControl_InventoryTab (Control_InventoryTab) - BackColor: FormBackColor = Color [A=255, R=240, G=248, B=240] | Theme: Forest
-[19:05:35.728] [MEDIUM] 🗄️ DB PROCEDURE START: usr_users_Get_ByUser
 [THEME] MainForm_UserControl_InventoryTab (Control_InventoryTab) - ForeColor: FormForeColor = Color [A=255, R=26, G=26, B=26] | Theme: Forest
 [THEME] Control_InventoryTab_GroupBox_Main (GroupBox) - BackColor: FormBackColor = Color [A=255, R=240, G=248, B=240] | Theme: Forest
 [THEME] Control_InventoryTab_GroupBox_Main (GroupBox) - ForeColor: FormForeColor = Color [A=255, R=26, G=26, B=26] | Theme: Forest
@@ -330,14 +330,19 @@ MTM_Inventory_Application.exe (34280): Loaded 'C:\Program Files\dotnet\shared\Mi
 [THEME] Control_InventoryTab_ComboBox_Location (ComboBox) - ForeColor: FormForeColor = Color [A=255, R=26, G=26, B=26] | Theme: Forest
 [THEME] Control_InventoryTab_TextBox_Quantity (TextBox) - BackColor: FormBackColor = Color [A=255, R=240, G=248, B=240] | Theme: Forest
 [THEME] Control_InventoryTab_TextBox_Quantity (TextBox) - ForeColor: FormForeColor = Color [A=255, R=26, G=26, B=26] | Theme: Forest
+[16:38:46.137] [HIGH  ] ✅ PROCEDURE usr_users_Get_ByUser (43ms) - Status: 0
 [THEME] Control_InventoryTab_ComboBox_Operation (ComboBox) - BackColor: FormBackColor = Color [A=255, R=240, G=248, B=240] | Theme: Forest
 [THEME] Control_InventoryTab_ComboBox_Operation (ComboBox) - ForeColor: FormForeColor = Color [A=255, R=26, G=26, B=26] | Theme: Forest
 [THEME] Control_InventoryTab_ComboBox_Part (ComboBox) - BackColor: FormBackColor = Color [A=255, R=240, G=248, B=240] | Theme: Forest
 [THEME] Control_InventoryTab_ComboBox_Part (ComboBox) - ForeColor: FormForeColor = Color [A=255, R=26, G=26, B=26] | Theme: Forest
 [THEME] Control_InventoryTab_Label_Loc (Label) - BackColor: FormBackColor = Color [A=255, R=240, G=248, B=240] | Theme: Forest
+[16:38:46.143] [MEDIUM] ✅ DB PROCEDURE COMPLETE: usr_users_Get_ByUser (43ms) - 1 rows
 [THEME] Control_InventoryTab_Label_Loc (Label) - ForeColor: FormForeColor = Color [A=255, R=26, G=26, B=26] | Theme: Forest
+[16:38:46.145] [MEDIUM]   ⬅️ EXITING Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync (133ms)
 [THEME] Control_InventoryTab_Label_Qty (Label) - BackColor: FormBackColor = Color [A=255, R=240, G=248, B=240] | Theme: Forest
+[16:38:46.148] [HIGH  ] ⏱️ PERFORMANCE COMPLETE: SP_usr_users_Get_ByUser (54ms)
 [THEME] Control_InventoryTab_Label_Qty (Label) - ForeColor: FormForeColor = Color [A=255, R=26, G=26, B=26] | Theme: Forest
+[16:38:46.150] [MEDIUM]   ⬅️ EXITING Dao_User.GetUserFullNameAsync (141ms)
 [THEME] Control_InventoryTab_Label_Op (Label) - BackColor: FormBackColor = Color [A=255, R=240, G=248, B=240] | Theme: Forest
 [THEME] Control_InventoryTab_Label_Op (Label) - ForeColor: FormForeColor = Color [A=255, R=26, G=26, B=26] | Theme: Forest
 [THEME] Control_InventoryTab_Label_Part (Label) - BackColor: FormBackColor = Color [A=255, R=240, G=248, B=240] | Theme: Forest
@@ -355,7 +360,6 @@ MTM_Inventory_Application.exe (34280): Loaded 'C:\Program Files\dotnet\shared\Mi
 [THEME] Control_InventoryTab_Button_Reset (Button) - BackColor: FormBackColor = Color [A=255, R=240, G=248, B=240] | Theme: Forest
 [THEME] Control_InventoryTab_Button_Reset (Button) - ForeColor: FormForeColor = Color [A=255, R=26, G=26, B=26] | Theme: Forest
 [THEME] MainForm_UserControl_AdvancedInventory (Control_AdvancedInventory) - BackColor: FormBackColor = Color [A=255, R=240, G=248, B=240] | Theme: Forest
-[19:05:35.784] [HIGH  ] ✅ PROCEDURE usr_users_Get_ByUser (60ms) - Status: 0
 [THEME] MainForm_UserControl_AdvancedInventory (Control_AdvancedInventory) - ForeColor: FormForeColor = Color [A=255, R=26, G=26, B=26] | Theme: Forest
 [THEME] AdvancedInventory_GroupBox_Main (GroupBox) - BackColor: FormBackColor = Color [A=255, R=240, G=248, B=240] | Theme: Forest
 [THEME] AdvancedInventory_GroupBox_Main (GroupBox) - ForeColor: FormForeColor = Color [A=255, R=26, G=26, B=26] | Theme: Forest
@@ -368,13 +372,9 @@ MTM_Inventory_Application.exe (34280): Loaded 'C:\Program Files\dotnet\shared\Mi
 [THEME] AdvancedInventory_Single_GroupBox_Right (GroupBox) - BackColor: FormBackColor = Color [A=255, R=240, G=248, B=240] | Theme: Forest
 [THEME] AdvancedInventory_Single_GroupBox_Right (GroupBox) - ForeColor: FormForeColor = Color [A=255, R=26, G=26, B=26] | Theme: Forest
 [THEME] AdvancedInventory_Single_TableLayout_Right (TableLayoutPanel) - BackColor: FormBackColor = Color [A=255, R=240, G=248, B=240] | Theme: Forest
-[19:05:35.798] [MEDIUM] ✅ DB PROCEDURE COMPLETE: usr_users_Get_ByUser (60ms) - 1 rows
 [THEME] AdvancedInventory_Single_TableLayout_Right (TableLayoutPanel) - ForeColor: FormForeColor = Color [A=255, R=26, G=26, B=26] | Theme: Forest
-[19:05:35.800] [MEDIUM]   ⬅️ EXITING Helper_Database_StoredProcedure.ExecuteDataTableWithStatus (191ms)
 [THEME] AdvancedInventory_Single_ListView (ListView) - BackColor: FormBackColor = Color [A=255, R=240, G=248, B=240] | Theme: Forest
-[19:05:35.802] [HIGH  ] ⏱️ PERFORMANCE COMPLETE: SP_usr_users_Get_ByUser (78ms)
 [THEME] AdvancedInventory_Single_ListView (ListView) - ForeColor: FormForeColor = Color [A=255, R=26, G=26, B=26] | Theme: Forest
-[Dao_User] GetUserFullNameAsync result: John Koll
 [THEME] AdvancedInventory_Single_TableLayout_LowerRight (TableLayoutPanel) - BackColor: FormBackColor = Color [A=255, R=240, G=248, B=240] | Theme: Forest
 [THEME] AdvancedInventory_Single_TableLayout_LowerRight (TableLayoutPanel) - ForeColor: FormForeColor = Color [A=255, R=26, G=26, B=26] | Theme: Forest
 [THEME] AdvancedInventory_Single_Button_Save (Button) - BackColor: FormBackColor = Color [A=255, R=240, G=248, B=240] | Theme: Forest
@@ -724,36 +724,40 @@ MTM_Inventory_Application.exe (34280): Loaded 'C:\Program Files\dotnet\shared\Mi
 [THEME]  (MdiClient) - BackColor: FormBackColor = Color [A=255, R=240, G=248, B=240] | Theme: Forest
 [THEME]  (MdiClient) - ForeColor: FormForeColor = Color [A=255, R=26, G=26, B=26] | Theme: Forest
 [DEBUG] [SplashScreenForm.UpdateProgress] Progress: 100, Status: Ready to start!
-[19:05:36.204] [HIGH  ] ✅ PROCEDURE usr_users_Get_ByUser (597ms) - Status: 0
-[19:05:36.205] [MEDIUM] ✅ DB PROCEDURE COMPLETE: usr_users_Get_ByUser (597ms) - 1 rows
-[19:05:36.207] [MEDIUM] ⬅️ EXITING Helper_Database_StoredProcedure.ExecuteDataTableWithStatus (479ms)
-[19:05:36.208] [HIGH  ] ⏱️ PERFORMANCE COMPLETE: SP_usr_users_Get_ByUser (601ms)
-[Dao_User] GetUserFullNameAsync result: John Koll
+[16:38:46.595] [HIGH  ] ✅ PROCEDURE usr_users_Get_ByUser (584ms) - Status: 0
+[16:38:46.596] [MEDIUM] ✅ DB PROCEDURE COMPLETE: usr_users_Get_ByUser (584ms) - 1 rows
+[16:38:46.598] [MEDIUM] ⬅️ EXITING Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync (502ms)
+[16:38:46.600] [HIGH  ] ⏱️ PERFORMANCE COMPLETE: SP_usr_users_Get_ByUser (589ms)
+[16:38:46.601] [MEDIUM] ⬅️ EXITING Dao_User.GetUserFullNameAsync (509ms)
+[16:38:47.625] [LOW   ] 🖱️ UI ACTION: QUICK_BUTTONS_LOAD_EVENT on Control_QuickButtons
 [DEBUG] [MainForm.ctor] MainForm Shown event triggered.
-[Dao_User] Entering GetUserFullNameAsync(user=JOHNK, useAsync=True)
-[19:05:37.971] [HIGH  ] ⏱️ PERFORMANCE START: SP_usr_users_Get_ByUser
-[19:05:37.972] [MEDIUM] ➡️ ENTERING Helper_Database_StoredProcedure.ExecuteDataTableWithStatus
-[19:05:37.973] [MEDIUM] 🗄️ DB PROCEDURE START: usr_users_Get_ByUser
-[19:05:37.989] [HIGH  ] ✅ PROCEDURE usr_users_Get_ByUser (18ms) - Status: 0
-[19:05:37.990] [MEDIUM] ✅ DB PROCEDURE COMPLETE: usr_users_Get_ByUser (18ms) - 1 rows
-[19:05:37.992] [MEDIUM] ⬅️ EXITING Helper_Database_StoredProcedure.ExecuteDataTableWithStatus (19ms)
-[19:05:37.993] [HIGH  ] ⏱️ PERFORMANCE COMPLETE: SP_usr_users_Get_ByUser (21ms)
-[Dao_User] GetUserFullNameAsync result: John Koll
+[16:38:47.656] [MEDIUM] ➡️ ENTERING Dao_User.GetUserFullNameAsync
+[16:38:47.657] [HIGH  ] ⏱️ PERFORMANCE START: SP_usr_users_Get_ByUser
+[16:38:47.658] [MEDIUM] ➡️ ENTERING Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync
+[16:38:47.659] [MEDIUM] 🗄️ DB PROCEDURE START: usr_users_Get_ByUser
+[16:38:47.682] [HIGH  ] ✅ PROCEDURE usr_users_Get_ByUser (25ms) - Status: 0
+[16:38:47.683] [MEDIUM] ✅ DB PROCEDURE COMPLETE: usr_users_Get_ByUser (25ms) - 1 rows
+[16:38:47.685] [MEDIUM] ⬅️ EXITING Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync (26ms)
+[16:38:47.686] [HIGH  ] ⏱️ PERFORMANCE COMPLETE: SP_usr_users_Get_ByUser (28ms)
+[16:38:47.688] [MEDIUM] ⬅️ EXITING Dao_User.GetUserFullNameAsync (31ms)
 [DEBUG] [MainForm.ctor] User full name loaded.
-[19:05:37.997] [MEDIUM] ➡️ ENTERING MainForm.ConfigureDevelopmentMenuVisibility
-[19:05:38.001] [MEDIUM] 📊 BUSINESS LOGIC: DEVELOPMENT_MENU_VISIBILITY
-[19:05:38.002] [LOW   ] 🖱️ UI ACTION: DEVELOPMENT_MENU_CONFIGURED on MainForm
-[19:05:38.003] [MEDIUM] ⬅️ EXITING MainForm.ConfigureDevelopmentMenuVisibility (5ms)
-[19:05:38.043] [HIGH  ] ⏱️ PERFORMANCE START: SP_sys_last_10_transactions_Get_ByUser
-[19:05:38.044] [MEDIUM] ➡️ ENTERING Helper_Database_StoredProcedure.ExecuteDataTableWithStatus
-[19:05:38.045] [MEDIUM] 🗄️ DB PROCEDURE START: sys_last_10_transactions_Get_ByUser
-[19:05:38.061] [HIGH  ] ✅ PROCEDURE sys_last_10_transactions_Get_ByUser (18ms) - Status: 0
-[19:05:38.062] [MEDIUM] ✅ DB PROCEDURE COMPLETE: sys_last_10_transactions_Get_ByUser (18ms) - 2 rows
-[19:05:38.064] [MEDIUM] ⬅️ EXITING Helper_Database_StoredProcedure.ExecuteDataTableWithStatus (19ms)
-[19:05:38.065] [HIGH  ] ⏱️ PERFORMANCE COMPLETE: SP_sys_last_10_transactions_Get_ByUser (21ms)
-Exception thrown: 'System.ArgumentException' in System.Data.Common.dll
+[16:38:47.692] [MEDIUM] ➡️ ENTERING MainForm.ConfigureDevelopmentMenuVisibility
+[16:38:47.695] [MEDIUM] 📊 BUSINESS LOGIC: DEVELOPMENT_MENU_VISIBILITY
+[16:38:47.696] [LOW   ] 🖱️ UI ACTION: DEVELOPMENT_MENU_CONFIGURED on MainForm
+[16:38:47.698] [MEDIUM] ⬅️ EXITING MainForm.ConfigureDevelopmentMenuVisibility (6ms)
+[16:38:47.734] [LOW   ] 🖱️ UI ACTION: QUICK_BUTTONS_LOAD_START on Control_QuickButtons
+[16:38:47.736] [MEDIUM] ➡️ ENTERING LoadLast10Transactions.Control_QuickButtons
+[16:38:47.738] [HIGH  ] ⏱️ PERFORMANCE START: SP_sys_last_10_transactions_Get_ByUser
+[16:38:47.739] [MEDIUM] ➡️ ENTERING Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync
+[16:38:47.740] [MEDIUM] 🗄️ DB PROCEDURE START: sys_last_10_transactions_Get_ByUser
+[16:38:47.761] [HIGH  ] ✅ PROCEDURE sys_last_10_transactions_Get_ByUser (23ms) - Status: 0
+[16:38:47.763] [MEDIUM] ✅ DB PROCEDURE COMPLETE: sys_last_10_transactions_Get_ByUser (23ms) - 2 rows
+[16:38:47.764] [MEDIUM] ⬅️ EXITING Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync (24ms)
+[16:38:47.765] [HIGH  ] ⏱️ PERFORMANCE COMPLETE: SP_sys_last_10_transactions_Get_ByUser (27ms)
+[16:38:47.770] [MEDIUM] 📊 BUSINESS LOGIC: QUICK_BUTTONS_DATA_RESULT
+[16:38:47.788] [MEDIUM] ⬅️ EXITING LoadLast10Transactions.Control_QuickButtons (50ms)
+[16:38:47.789] [LOW   ] 🖱️ UI ACTION: QUICK_BUTTONS_LOAD_COMPLETE on Control_QuickButtons
 [DEBUG] [MainForm.ctor] MainForm is now idle and ready.
-MTM_Inventory_Application.exe (34280): Loaded 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.20\System.Net.Ping.dll'. Cannot find or open the PDB file.
 [Trace] [Main] Application exiting Main().
 [Trace] [Main] Application exiting Main().
-The program '[34280] MTM_Inventory_Application.exe' has exited with code 0 (0x0).
+The program '[31104] MTM_Inventory_Application.exe' has exited with code 0 (0x0).

@@ -4,7 +4,7 @@
 -- File: Database/UpdatedDatabase/BATCH_SEQUENCE_TABLE_FIX.sql
 -- Purpose: Create missing inv_inventory_batch_seq table for proper batch number generation
 -- Created: January 27, 2025
--- Database: mtm_wip_application_test
+-- Database: mtm_wip_application_winforms_test
 -- MySQL Version: 5.7.24+ (MAMP Compatible)
 -- ================================================================================
 

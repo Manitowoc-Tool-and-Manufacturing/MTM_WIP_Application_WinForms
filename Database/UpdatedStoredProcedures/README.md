@@ -5,7 +5,7 @@
 # Purpose: Windows-focused deployment guide for stored procedures using .bat files
 # Created: August 13, 2025
 # Updated: August 13, 2025 - Windows .bat files only
-# Target Database: mtm_wip_application (production) / mtm_wip_application_test (development)
+# Target Database: mtm_wip_application (production) / mtm_wip_application_winforms_test (development)
 # MySQL Version: 5.7.24+ (MAMP Compatible)
 # Platform: Windows only
 # ================================================================================
@@ -81,7 +81,7 @@ final_verification.bat
 deploy.bat
 
 # Deploy to test database
-deploy.bat -d mtm_wip_application_test
+deploy.bat -d mtm_wip_application_winforms_test
 
 # Deploy with custom credentials
 deploy.bat -h localhost -u myuser -p mypass -d mydatabase
@@ -202,7 +202,7 @@ fix_and_reverify.bat
 ### **Development Environment** (Recommended)
 ```cmd
 # Deploy to test database for development
-deploy.bat -d mtm_wip_application_test
+deploy.bat -d mtm_wip_application_winforms_test
 
 # Analyze and verify development setup
 analyze.bat
@@ -317,7 +317,7 @@ The deployed procedures work with your .NET 8 application using:
 ```csharp
 // Automatic environment detection
 string connectionString = Helper_Database_Variables.GetConnectionString();
-string database = Model_Users.Database;        // mtm_wip_application or mtm_wip_application_test
+string database = Model_Users.Database;        // mtm_wip_application or mtm_wip_application_winforms_test
 string server = Model_Users.WipServerAddress;  // localhost or 172.16.1.104
 ```
 

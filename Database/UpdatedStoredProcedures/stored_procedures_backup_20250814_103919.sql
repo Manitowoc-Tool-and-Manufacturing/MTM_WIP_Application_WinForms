@@ -1,6 +1,6 @@
 -- MySQL dump 10.13  Distrib 5.7.24, for Win64 (x86_64)
 --
--- Host: localhost    Database: mtm_wip_application_test
+-- Host: localhost    Database: mtm_wip_application_winforms_test
 -- ------------------------------------------------------
 -- Server version	5.7.24
 
@@ -16,7 +16,7 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Dumping routines for database 'mtm_wip_application_test'
+-- Dumping routines for database 'mtm_wip_application_winforms_test'
 --
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 

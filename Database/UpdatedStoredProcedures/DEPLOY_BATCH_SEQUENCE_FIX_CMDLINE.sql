@@ -5,7 +5,7 @@
 -- Purpose: Complete deployment of the batch sequence fix using SOURCE commands
 -- Created: January 27, 2025
 -- Usage: Run this in MySQL command line client (not phpMyAdmin)
--- Command: mysql -h localhost -u root -p mtm_wip_application_test < DEPLOY_BATCH_SEQUENCE_FIX_CMDLINE.sql
+-- Command: mysql -h localhost -u root -p mtm_wip_application_winforms_test < DEPLOY_BATCH_SEQUENCE_FIX_CMDLINE.sql
 -- ================================================================================
 
 SELECT 'Starting Batch Sequence Table Fix Deployment (MySQL Command Line Version)...' as Status;

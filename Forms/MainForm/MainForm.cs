@@ -544,7 +544,7 @@ namespace MTM_Inventory_Application.Forms.MainForm
             try
             {
                 Model_AppVariables.UserFullName =
-                    await Dao_User.GetUserFullNameAsync(Model_AppVariables.User, true);
+                    await Dao_User.GetUserFullNameAsync(Model_AppVariables.User);
 
                 if (string.IsNullOrEmpty(Model_AppVariables.UserFullName))
                 {

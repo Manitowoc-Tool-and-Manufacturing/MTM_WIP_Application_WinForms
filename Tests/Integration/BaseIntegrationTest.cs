@@ -15,7 +15,7 @@ namespace MTM_Inventory_Application.Tests.Integration;
 /// <remarks>
 /// <para>
 /// <strong>Test Database Setup:</strong>
-/// Integration tests use the <c>mtm_wip_application_test</c> database (see <see cref="Helper_Database_Variables.TestDatabaseName"/>).
+/// Integration tests use the <c>mtm_wip_application_winforms_test</c> database (see <see cref="Helper_Database_Variables.TestDatabaseName"/>).
 /// This database must be created and schema-synchronized before running tests.
 /// </para>
 /// <para>
@@ -148,7 +148,7 @@ public abstract class BaseIntegrationTest
     /// <summary>
     /// Gets the connection string for the test database.
     /// </summary>
-    /// <returns>Connection string configured for <c>mtm_wip_application_test</c> database.</returns>
+    /// <returns>Connection string configured for <c>mtm_wip_application_winforms_test</c> database.</returns>
     /// <remarks>
     /// Uses <see cref="Helper_Database_Variables.GetConnectionString"/> with explicit
     /// database name override to target the test database instead of production.

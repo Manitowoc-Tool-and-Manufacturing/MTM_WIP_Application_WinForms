@@ -5,7 +5,7 @@
 -- Purpose: Error logging and management for comprehensive application monitoring
 -- Created: January 13, 2025
 -- Updated: August 10, 2025 - UNIFORM PARAMETER NAMING (WITH p_ prefixes)
--- Target Database: mtm_wip_application_test
+-- Target Database: mtm_wip_application_winforms_test
 -- MySQL Version: 5.7.24+ (MAMP Compatible)
 -- ================================================================================
 

@@ -239,7 +239,7 @@ internal static class LoggingUtility
         }
     }
 
-    public static void LogDatabaseError(Exception ex)
+    public static void LogDatabaseError(Exception ex, DatabaseErrorSeverity severity = DatabaseErrorSeverity.Error)
     {
         // Prevent recursive logging if database operation called from logging itself fails
         if (_isLoggingDatabaseError)
@@ -250,7 +250,7 @@ internal static class LoggingUtility
             // Try direct file logging as last resort
             try
             {
-                var fallbackEntry = $"{DateTime.Now:yyyy-MM-dd HH:mm:ss} - Database Error (Fallback) - {ex.Message}";
+                var fallbackEntry = $"{DateTime.Now:yyyy-MM-dd HH:mm:ss} - Database Error (Fallback) [{severity}] - {ex.Message}";
                 if (!string.IsNullOrEmpty(_dbErrorLogFile))
                 {
                     File.AppendAllText(_dbErrorLogFile, fallbackEntry + Environment.NewLine);
@@ -267,7 +267,15 @@ internal static class LoggingUtility
         {
             _isLoggingDatabaseError = true;
             
-            var errorEntry = $"{DateTime.Now:yyyy-MM-dd HH:mm:ss} - Database Error - {ex.Message}";
+            var severityLabel = severity switch
+            {
+                DatabaseErrorSeverity.Warning => "WARNING",
+                DatabaseErrorSeverity.Error => "ERROR",
+                DatabaseErrorSeverity.Critical => "CRITICAL",
+                _ => "ERROR"
+            };
+            
+            var errorEntry = $"{DateTime.Now:yyyy-MM-dd HH:mm:ss} - Database Error [{severityLabel}] - {ex.Message}";
             var stackEntry = $"{DateTime.Now:yyyy-MM-dd HH:mm:ss} - Stack Trace - {ex.StackTrace}";
             lock (LogLock)
             {

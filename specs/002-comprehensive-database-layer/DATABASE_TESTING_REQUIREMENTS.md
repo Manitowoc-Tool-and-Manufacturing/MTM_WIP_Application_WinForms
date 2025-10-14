@@ -472,7 +472,7 @@ public static class Helper_Database_Variables
     // Environment-aware database selection
     public static string DatabaseName =>
         Debugger.IsAttached
-            ? "mtm_wip_application_test"  // Development
+            ? "mtm_wip_application_winforms_test"  // Development
             : "mtm_wip_application";      // Production
     
     // Get connection string with specific database

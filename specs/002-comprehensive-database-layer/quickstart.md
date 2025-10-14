@@ -45,7 +45,7 @@ mysql -u root -proot mtm_wip_application_winform_test < Database/CurrentDatabase
 // Environment-aware database selection
 public static string DatabaseName =>
     Debugger.IsAttached
-        ? "mtm_wip_application_test" // Development
+        ? "mtm_wip_application_winforms_test" // Development
         : "mtm_wip_application";     // Production
 
 // Test database for integration tests (manual selection)

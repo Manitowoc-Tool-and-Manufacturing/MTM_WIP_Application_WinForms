@@ -22,7 +22,7 @@
 
 **Steps:**
 1. Open phpMyAdmin in your browser: `http://localhost/phpMyAdmin`
-2. Select your database (`mtm_wip_application_test` or `mtm_wip_application`)
+2. Select your database (`mtm_wip_application_winforms_test` or `mtm_wip_application`)
 3. Click the **SQL** tab
 4. Copy and paste the **ENTIRE CONTENTS** of `DEPLOY_BATCH_SEQUENCE_FIX.sql`
 5. Click **Go**
@@ -41,7 +41,7 @@
 **Steps:**
 1. Open Terminal/Command Prompt
 2. Navigate to the `Database/UpdatedDatabase/` directory
-3. Run: `mysql -h localhost -u root -p mtm_wip_application_test < DEPLOY_BATCH_SEQUENCE_FIX_CMDLINE.sql`
+3. Run: `mysql -h localhost -u root -p mtm_wip_application_winforms_test < DEPLOY_BATCH_SEQUENCE_FIX_CMDLINE.sql`
 4. Enter your MySQL password when prompted
 
 **Advantages:**  

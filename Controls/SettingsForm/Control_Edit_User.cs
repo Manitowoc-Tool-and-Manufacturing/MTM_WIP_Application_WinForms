@@ -144,21 +144,32 @@ namespace MTM_Inventory_Application.Controls.SettingsForm
         {
             if (Control_Edit_User_ComboBox_Users.Text is { } userName)
             {
-                DataRow? userRow = await Dao_User.GetUserByUsernameAsync(userName, true);
-                if (userRow != null)
+                var userResult = await Dao_User.GetUserByUsernameAsync(userName);
+                if (!userResult.IsSuccess || userResult.Data == null)
                 {
-                    string[] names = (userRow["Full Name"]?.ToString() ?? "").Split(' ');
-                    Control_Edit_User_TextBox_FirstName.Text = names.Length > 0 ? names[0] : "";
-                    Control_Edit_User_TextBox_LastName.Text = names.Length > 1 ? string.Join(" ", names.Skip(1)) : "";
-                    Control_Edit_User_TextBox_UserName.Text = userRow["p_User"]?.ToString() ?? "";
-                    Control_Edit_User_ComboBox_Shift.Text = userRow["Shift"]?.ToString() ?? "First";
-                    Control_Edit_User_TextBox_Pin.Text = userRow["Pin"]?.ToString() ?? "";
-                    Control_Edit_User_CheckBox_VisualAccess.Checked =
-                        !string.IsNullOrWhiteSpace(userRow["VisualUserName"]?.ToString());
-                    Control_Edit_User_TextBox_VisualUserName.Text = userRow["VisualUserName"]?.ToString() ?? "";
-                    Control_Edit_User_TextBox_VisualPassword.Text = userRow["VisualPassword"]?.ToString() ?? "";
-                    int userId = Convert.ToInt32(userRow["p_ID"]);
-                    int roleId = await Dao_User.GetUserRoleIdAsync(userId);
+                    StatusMessageChanged?.Invoke(this, $"Error loading user: {userResult.ErrorMessage}");
+                    if (userResult.Exception != null)
+                        LoggingUtility.LogApplicationError(userResult.Exception);
+                    return;
+                }
+
+                DataRow userRow = userResult.Data;
+                string[] names = (userRow["Full Name"]?.ToString() ?? "").Split(' ');
+                Control_Edit_User_TextBox_FirstName.Text = names.Length > 0 ? names[0] : "";
+                Control_Edit_User_TextBox_LastName.Text = names.Length > 1 ? string.Join(" ", names.Skip(1)) : "";
+                Control_Edit_User_TextBox_UserName.Text = userRow["p_User"]?.ToString() ?? "";
+                Control_Edit_User_ComboBox_Shift.Text = userRow["Shift"]?.ToString() ?? "First";
+                Control_Edit_User_TextBox_Pin.Text = userRow["Pin"]?.ToString() ?? "";
+                Control_Edit_User_CheckBox_VisualAccess.Checked =
+                    !string.IsNullOrWhiteSpace(userRow["VisualUserName"]?.ToString());
+                Control_Edit_User_TextBox_VisualUserName.Text = userRow["VisualUserName"]?.ToString() ?? "";
+                Control_Edit_User_TextBox_VisualPassword.Text = userRow["VisualPassword"]?.ToString() ?? "";
+                
+                int userId = Convert.ToInt32(userRow["p_ID"]);
+                var roleResult = await Dao_User.GetUserRoleIdAsync(userId);
+                if (roleResult.IsSuccess)
+                {
+                    int roleId = roleResult.Data;
                     Control_Edit_User_RadioButton_NormalUser.Checked = roleId == 3;
                     Control_Edit_User_RadioButton_Administrator.Checked = roleId == 1;
                     Control_Edit_User_RadioButton_ReadOnly.Checked = roleId == 2;
@@ -206,7 +217,8 @@ namespace MTM_Inventory_Application.Controls.SettingsForm
                     return;
                 }
 
-                await Dao_User.UpdateUserAsync(
+                // Update user with DaoResult pattern
+                var updateResult = await Dao_User.UpdateUserAsync(
                     userName,
                     Control_Edit_User_TextBox_FirstName.Text + " " + Control_Edit_User_TextBox_LastName.Text,
                     Control_Edit_User_ComboBox_Shift.Text,
@@ -214,10 +226,20 @@ namespace MTM_Inventory_Application.Controls.SettingsForm
                     Control_Edit_User_TextBox_VisualUserName.Text,
                     Control_Edit_User_TextBox_VisualPassword.Text
                 );
-                DataRow? userRow = await Dao_User.GetUserByUsernameAsync(userName, true);
-                if (userRow != null && userRow.Table.Columns.Contains("ID"))
+
+                if (!updateResult.IsSuccess)
                 {
-                    int userId = Convert.ToInt32(userRow["p_ID"]);
+                    StatusMessageChanged?.Invoke(this, $"Error updating user: {updateResult.ErrorMessage}");
+                    if (updateResult.Exception != null)
+                        LoggingUtility.LogApplicationError(updateResult.Exception);
+                    return;
+                }
+
+                // Get user ID and update role
+                var userResult = await Dao_User.GetUserByUsernameAsync(userName);
+                if (userResult.IsSuccess && userResult.Data != null && userResult.Data.Table.Columns.Contains("p_ID"))
+                {
+                    int userId = Convert.ToInt32(userResult.Data["p_ID"]);
                     int newRoleId = 3;
                     if (Control_Edit_User_RadioButton_Administrator.Checked)
                     {
@@ -228,7 +250,14 @@ namespace MTM_Inventory_Application.Controls.SettingsForm
                         newRoleId = 2;
                     }
 
-                    await Dao_User.SetUserRoleAsync(userId, newRoleId, Environment.UserName, true);
+                    var roleResult = await Dao_User.SetUserRoleAsync(userId, newRoleId, Environment.UserName);
+                    if (!roleResult.IsSuccess)
+                    {
+                        StatusMessageChanged?.Invoke(this, $"User updated but role change failed: {roleResult.ErrorMessage}");
+                        if (roleResult.Exception != null)
+                            LoggingUtility.LogApplicationError(roleResult.Exception);
+                        return;
+                    }
                 }
 
                 UserEdited?.Invoke(this, EventArgs.Empty);

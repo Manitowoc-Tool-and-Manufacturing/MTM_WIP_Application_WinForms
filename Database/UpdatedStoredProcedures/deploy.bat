@@ -6,13 +6,13 @@ REM File: deploy_procedures.bat
 REM Purpose: Deploy all stored procedures to the MTM WIP Application database
 REM Created: August 10, 2025
 REM Updated: January 27, 2025 - Updated for new database/environment logic
-REM Target Database: mtm_wip_application_test (development/test database)
+REM Target Database: mtm_wip_application_winforms_test (development/test database)
 REM MySQL Version: 5.7.24+ (MAMP Compatible)
 REM 
 REM ENVIRONMENT LOGIC:
-REM - This script deploys to the TEST database (mtm_wip_application_test)
+REM - This script deploys to the TEST database (mtm_wip_application_winforms_test)
 REM - For production deployment, use database name: mtm_wip_application
-REM - Debug Mode (C#): Uses mtm_wip_application_test and localhost or 172.16.1.104
+REM - Debug Mode (C#): Uses mtm_wip_application_winforms_test and localhost or 172.16.1.104
 REM - Release Mode (C#): Uses mtm_wip_application and always 172.16.1.104
 REM ================================================================================
 
@@ -21,7 +21,7 @@ setlocal enabledelayedexpansion
 REM Default MAMP configuration - UPDATED FOR TEST DATABASE
 set DB_HOST=localhost
 set DB_PORT=3306
-set DB_NAME=mtm_wip_application_test
+set DB_NAME=mtm_wip_application_winforms_test
 set DB_USER=root
 set DB_PASSWORD=root
 
@@ -337,7 +337,7 @@ echo   -h, --host HOST        Database host ^(default: localhost^)
 echo   -P, --port PORT        Database port ^(default: 3306^)
 echo   -u, --user USER        Database username ^(default: root^)
 echo   -p, --password PASS    Database password ^(default: root for MAMP^)
-echo   -d, --database DB      Database name ^(default: mtm_wip_application_test^)
+echo   -d, --database DB      Database name ^(default: mtm_wip_application_winforms_test^)
 echo   --mamp-path PATH       MAMP installation path ^(default: C:\MAMP^)
 echo   --help                 Show this help message
 echo.
@@ -355,7 +355,7 @@ echo   07_Changelog_Version_Procedures.sql   ^(3 procedures^)
 echo   08_Theme_Management_Procedures.sql    ^(8 procedures^)
 echo.
 echo MAMP Examples:
-echo   %0 -h localhost -u root -p root -d mtm_wip_application_test
+echo   %0 -h localhost -u root -p root -d mtm_wip_application_winforms_test
 echo   %0 --mamp-path "C:\MAMP" -p root
 echo   %0 -P 8889 -p root  ^(for older MAMP versions^)
 echo.

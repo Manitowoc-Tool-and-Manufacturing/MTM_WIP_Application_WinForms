@@ -37,7 +37,7 @@ This file defines MySQL 5.7 database patterns, connection management, and manufa
 - Server: `localhost`
 - Port: `3306` (default)
 - Database: `mtm_wip_application` (production)
-- Database: `mtm_wip_application_test` (development)
+- Database: `mtm_wip_application_winforms_test` (development)
 - Username: `root`
 - Password: `root`
 - Connection String: `Server=localhost;Database=mtm_wip_application;SslMode=none;AllowPublicKeyRetrieval=true;`
@@ -335,7 +335,7 @@ if (stopwatch.ElapsedMilliseconds > 1000)
 - Validate connection pooling behavior under load
 
 ### Integration Testing
-- Use test database (`mtm_wip_application_test`) for integration tests
+- Use test database (`mtm_wip_application_winforms_test`) for integration tests
 - Clean up test data after test execution
 - Test with realistic data volumes
 - Verify stored procedure results match expectations

@@ -158,7 +158,7 @@ MTM_Inventory_Application/
 The application implements environment-aware database and server selection:
 
 ### **Database Name Logic**
-- **Debug Mode (Development)**: Uses `mtm_wip_application_test`
+- **Debug Mode (Development)**: Uses `mtm_wip_application_winforms_test`
 - **Release Mode (Production)**: Uses `mtm_wip_application`
 
 ### **Server Address Logic**  
@@ -171,7 +171,7 @@ The application implements environment-aware database and server selection:
 ```csharp
 // Environment-aware database selection
 #if DEBUG
-    string database = "mtm_wip_application_test";     // Test database
+    string database = "mtm_wip_application_winforms_test";     // Test database
     string server = GetLocalIpAddress() == "172.16.1.104" ? "172.16.1.104" : "localhost";
 #else
     string database = "mtm_wip_application";          // Production database
@@ -370,7 +370,7 @@ The application follows modern UI design patterns inspired by the Transactions.h
 #### **Database Connection Issues**
 ```bash
 # Check environment configuration
-Environment: Debug → mtm_wip_application_test, localhost/172.16.1.104
+Environment: Debug → mtm_wip_application_winforms_test, localhost/172.16.1.104
 Environment: Release → mtm_wip_application, 172.16.1.104
 
 # Verify connection string in Helper_Database_Variables.GetConnectionString()
@@ -571,7 +571,7 @@ SET p_ErrorMsg = 'Database connection error: Unable to execute query';
 ```csharp
 // Verify environment-aware database selection:
 #if DEBUG
-    string database = "mtm_wip_application_test";     // Test database
+    string database = "mtm_wip_application_winforms_test";     // Test database
     string server = GetLocalIpAddress() == "172.16.1.104" ? "172.16.1.104" : "localhost";
 #else
     string database = "mtm_wip_application";          // Production database
@@ -580,7 +580,7 @@ SET p_ErrorMsg = 'Database connection error: Unable to execute query';
 ```
 
 ### **Deployment Verification Steps**
-1. **Test Database First**: Always deploy to `mtm_wip_application_test` for validation
+1. **Test Database First**: Always deploy to `mtm_wip_application_winforms_test` for validation
 2. **Parameter Verification**: Confirm all C# calls match MySQL parameter names (without p_)
 3. **Status Code Testing**: Test all error conditions return proper status codes
 4. **Performance Testing**: Verify query execution time meets performance requirements

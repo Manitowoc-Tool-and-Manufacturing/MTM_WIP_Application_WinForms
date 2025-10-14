@@ -5,7 +5,7 @@
 -- Purpose: Application theme management and user interface customization procedures
 -- Created: August 10, 2025
 -- Updated: August 12, 2025 - ALL COLOR SETTINGS INCLUDED
--- Target Database: mtm_wip_application_test
+-- Target Database: mtm_wip_application_winforms_test
 -- MySQL Version: 5.7.24+ (MAMP Compatible)
 -- ================================================================================
 

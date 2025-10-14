@@ -37,7 +37,7 @@ SELECT
     CREATE_TIME,
     TABLE_COMMENT
 FROM INFORMATION_SCHEMA.TABLES 
-WHERE TABLE_SCHEMA = 'mtm_wip_application_test'
+WHERE TABLE_SCHEMA = 'mtm_wip_application_winforms_test'
 ORDER BY TABLE_NAME;
 
 -- Expected Core Tables (from UpdatedDatabase.sql):
@@ -199,12 +199,12 @@ CREATE TABLE IF NOT EXISTS sys_quick_buttons (
 ```bash
 # Windows MAMP
 cd Database\UpdatedStoredProcedures
-deploy_procedures.bat -h localhost -u root -p root -d mtm_wip_application_test
+deploy_procedures.bat -h localhost -u root -p root -d mtm_wip_application_winforms_test
 
 # macOS/Linux MAMP
 cd Database/UpdatedStoredProcedures  
 chmod +x deploy_procedures.sh
-./deploy_procedures.sh -h localhost -u root -p root -d mtm_wip_application_test
+./deploy_procedures.sh -h localhost -u root -p root -d mtm_wip_application_winforms_test
 ```
 
 ### **Step 2B: Verify Deployment Success**
@@ -212,7 +212,7 @@ chmod +x deploy_procedures.sh
 -- Count total procedures deployed
 SELECT COUNT(*) AS 'Total_Procedures_Deployed'
 FROM INFORMATION_SCHEMA.ROUTINES 
-WHERE ROUTINE_SCHEMA = 'mtm_wip_application_test'
+WHERE ROUTINE_SCHEMA = 'mtm_wip_application_winforms_test'
 AND ROUTINE_TYPE = 'PROCEDURE';
 
 -- Expected Result: ~91 procedures
@@ -232,7 +232,7 @@ SELECT
     END AS Category,
     COUNT(*) AS Procedure_Count
 FROM INFORMATION_SCHEMA.ROUTINES 
-WHERE ROUTINE_SCHEMA = 'mtm_wip_application_test'
+WHERE ROUTINE_SCHEMA = 'mtm_wip_application_winforms_test'
 AND ROUTINE_TYPE = 'PROCEDURE'
 GROUP BY Category
 ORDER BY Category;
@@ -513,7 +513,7 @@ SELECT '==== VERIFICATION COMPLETE ====' AS Status;
 ### **Step 4B: Run Automated Verification**
 ```bash
 # Run the complete verification
-mysql -h localhost -P 3306 -u root -p mtm_wip_application_test < complete_procedure_verification.sql
+mysql -h localhost -P 3306 -u root -p mtm_wip_application_winforms_test < complete_procedure_verification.sql
 
 # Expected Output:
 # ? Total_Procedures: ~91
@@ -604,7 +604,7 @@ SELECT
     SQL_DATA_ACCESS,
     SECURITY_TYPE
 FROM INFORMATION_SCHEMA.ROUTINES 
-WHERE ROUTINE_SCHEMA = 'mtm_wip_application_test'
+WHERE ROUTINE_SCHEMA = 'mtm_wip_application_winforms_test'
 ORDER BY ROUTINE_NAME;
 
 -- Should show all procedures with recent creation/modification dates
@@ -638,7 +638,7 @@ SELECT @s1 as User_Status, @s2 as MasterData_Status,
 EOF
 
 # Run the ultimate test
-mysql -h localhost -P 3306 -u root -p mtm_wip_application_test < ultimate_test.sql
+mysql -h localhost -P 3306 -u root -p mtm_wip_application_winforms_test < ultimate_test.sql
 
 # Expected Result: "?? SYSTEM FULLY OPERATIONAL - ALL PROCEDURES WORKING! ??"
 ```

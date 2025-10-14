@@ -295,7 +295,7 @@ internal static class Dao_System
             // Attempt a simple SELECT query to validate connectivity
             var result = await Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync(
                 Model_AppVariables.ConnectionString,
-                "system_Get_AllThemes",  // Use existing stored procedure for validation
+                "sys_theme_GetAll",  // Use existing stored procedure for validation
                 null
             );
 

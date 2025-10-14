@@ -1,6 +1,6 @@
 -- MySQL dump 10.13  Distrib 5.7.24, for Win64 (x86_64)
 --
--- Host: localhost    Database: mtm_wip_application_test
+-- Host: localhost    Database: mtm_wip_application_winforms_test
 -- ------------------------------------------------------
 -- Server version	5.7.24
 
@@ -16,7 +16,7 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Dumping routines for database 'mtm_wip_application_test'
+-- Dumping routines for database 'mtm_wip_application_winforms_test'
 --
 /*!50003 DROP PROCEDURE IF EXISTS `app_themes_Add_Theme` */;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
@@ -3196,41 +3196,75 @@ DELIMITER ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-CREATE DEFINER=`root`@`localhost` PROCEDURE `sys_GetStoredProcedureInventory`(
-    OUT p_Status INT,
-    OUT p_ErrorMsg TEXT
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sys_GetStoredProcedureInventory`(
+
+    OUT p_Status INT,
+
+    OUT p_ErrorMsg TEXT
+
 )
-BEGIN
-    DECLARE v_ProcCount INT DEFAULT 0;
-    
-    DECLARE EXIT HANDLER FOR SQLEXCEPTION
-    BEGIN
-        SET p_Status = -1;
-        SET p_ErrorMsg = 'Database error occurred while retrieving procedure inventory';
-    END;
-    
-    SELECT COUNT(*) INTO v_ProcCount
-    FROM INFORMATION_SCHEMA.ROUTINES 
-    WHERE ROUTINE_SCHEMA = DATABASE()
-    AND ROUTINE_TYPE = 'PROCEDURE';
-    
-    -- Return detailed procedure information
-    SELECT 
-        ROUTINE_NAME as ProcedureName,
-        CREATED as Created,
-        LAST_ALTERED as LastModified,
-        SQL_DATA_ACCESS as DataAccess,
-        SECURITY_TYPE as SecurityType,
-        ROUTINE_COMMENT as Comment,
-        DEFINER as Definer
-    FROM INFORMATION_SCHEMA.ROUTINES 
-    WHERE ROUTINE_SCHEMA = DATABASE()
-    AND ROUTINE_TYPE = 'PROCEDURE'
-    ORDER BY ROUTINE_NAME;
-    
-    SET p_Status = 0;
-    SET p_ErrorMsg = CONCAT('Procedure inventory completed. Found ', v_ProcCount, ' stored procedures');
-    
+BEGIN
+
+    DECLARE v_ProcCount INT DEFAULT 0;
+
+    
+
+    DECLARE EXIT HANDLER FOR SQLEXCEPTION
+
+    BEGIN
+
+        SET p_Status = -1;
+
+        SET p_ErrorMsg = 'Database error occurred while retrieving procedure inventory';
+
+    END;
+
+    
+
+    SELECT COUNT(*) INTO v_ProcCount
+
+    FROM INFORMATION_SCHEMA.ROUTINES 
+
+    WHERE ROUTINE_SCHEMA = DATABASE()
+
+    AND ROUTINE_TYPE = 'PROCEDURE';
+
+    
+
+    -- Return detailed procedure information
+
+    SELECT 
+
+        ROUTINE_NAME as ProcedureName,
+
+        CREATED as Created,
+
+        LAST_ALTERED as LastModified,
+
+        SQL_DATA_ACCESS as DataAccess,
+
+        SECURITY_TYPE as SecurityType,
+
+        ROUTINE_COMMENT as Comment,
+
+        DEFINER as Definer
+
+    FROM INFORMATION_SCHEMA.ROUTINES 
+
+    WHERE ROUTINE_SCHEMA = DATABASE()
+
+    AND ROUTINE_TYPE = 'PROCEDURE'
+
+    ORDER BY ROUTINE_NAME;
+
+    
+
+    SET p_Status = 0;
+
+    SET p_ErrorMsg = CONCAT('Procedure inventory completed. Found ', v_ProcCount, ' stored procedures');
+
+    
+
 END ;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
@@ -4080,62 +4114,117 @@ DELIMITER ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-CREATE DEFINER=`root`@`localhost` PROCEDURE `sys_VerifyDatabaseSchema`(
-    OUT p_Status INT,
-    OUT p_ErrorMsg TEXT
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sys_VerifyDatabaseSchema`(
+
+    OUT p_Status INT,
+
+    OUT p_ErrorMsg TEXT
+
 )
-BEGIN
-    DECLARE v_TableCount INT DEFAULT 0;
-    DECLARE v_MissingTables TEXT DEFAULT '';
-    DECLARE v_Expected INT DEFAULT 0;
-    
-    DECLARE EXIT HANDLER FOR SQLEXCEPTION
-    BEGIN
-        SET p_Status = -1;
-        SET p_ErrorMsg = 'Database error occurred during schema verification';
-    END;
-    
-    -- Expected core tables from UpdatedDatabase.sql analysis
-    SET v_Expected = 11;
-    
-    -- Check for each required table
-    SELECT COUNT(*) INTO v_TableCount
-    FROM INFORMATION_SCHEMA.TABLES 
-    WHERE TABLE_SCHEMA = DATABASE()
-    AND TABLE_NAME IN (
-        'app_themes',
-        'debug_matching', 
-        'inv_inventory',
-        'inv_inventory_batch_seq',
-        'inv_transaction',
-        'usr_users',
-        'usr_ui_settings', 
-        'sys_user_roles',
-        'md_part_ids',
-        'md_locations', 
-        'md_operation_numbers'
-    );
-    
-    IF v_TableCount < v_Expected THEN
-        SET p_Status = 1;
-        SET p_ErrorMsg = CONCAT('Missing tables detected. Found ', v_TableCount, ' of ', v_Expected, ' required tables');
-    ELSE
-        SET p_Status = 0;
-        SET p_ErrorMsg = CONCAT('Schema validation passed. All ', v_TableCount, ' required tables found');
-    END IF;
-    
-    -- Return detailed table information
-    SELECT 
-        TABLE_NAME as TableName,
-        ENGINE as Engine,
-        TABLE_COLLATION as Collation,
-        CREATE_TIME as Created,
-        TABLE_COMMENT as Comment,
-        TABLE_ROWS as ApproxRows
-    FROM INFORMATION_SCHEMA.TABLES 
-    WHERE TABLE_SCHEMA = DATABASE()
-    ORDER BY TABLE_NAME;
-    
+BEGIN
+
+    DECLARE v_TableCount INT DEFAULT 0;
+
+    DECLARE v_MissingTables TEXT DEFAULT '';
+
+    DECLARE v_Expected INT DEFAULT 0;
+
+    
+
+    DECLARE EXIT HANDLER FOR SQLEXCEPTION
+
+    BEGIN
+
+        SET p_Status = -1;
+
+        SET p_ErrorMsg = 'Database error occurred during schema verification';
+
+    END;
+
+    
+
+    -- Expected core tables from UpdatedDatabase.sql analysis
+
+    SET v_Expected = 11;
+
+    
+
+    -- Check for each required table
+
+    SELECT COUNT(*) INTO v_TableCount
+
+    FROM INFORMATION_SCHEMA.TABLES 
+
+    WHERE TABLE_SCHEMA = DATABASE()
+
+    AND TABLE_NAME IN (
+
+        'app_themes',
+
+        'debug_matching', 
+
+        'inv_inventory',
+
+        'inv_inventory_batch_seq',
+
+        'inv_transaction',
+
+        'usr_users',
+
+        'usr_ui_settings', 
+
+        'sys_user_roles',
+
+        'md_part_ids',
+
+        'md_locations', 
+
+        'md_operation_numbers'
+
+    );
+
+    
+
+    IF v_TableCount < v_Expected THEN
+
+        SET p_Status = 1;
+
+        SET p_ErrorMsg = CONCAT('Missing tables detected. Found ', v_TableCount, ' of ', v_Expected, ' required tables');
+
+    ELSE
+
+        SET p_Status = 0;
+
+        SET p_ErrorMsg = CONCAT('Schema validation passed. All ', v_TableCount, ' required tables found');
+
+    END IF;
+
+    
+
+    -- Return detailed table information
+
+    SELECT 
+
+        TABLE_NAME as TableName,
+
+        ENGINE as Engine,
+
+        TABLE_COLLATION as Collation,
+
+        CREATE_TIME as Created,
+
+        TABLE_COMMENT as Comment,
+
+        TABLE_ROWS as ApproxRows
+
+    FROM INFORMATION_SCHEMA.TABLES 
+
+    WHERE TABLE_SCHEMA = DATABASE()
+
+    ORDER BY TABLE_NAME;
+
+    
+
 END ;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
@@ -4152,53 +4241,99 @@ DELIMITER ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-CREATE DEFINER=`root`@`localhost` PROCEDURE `sys_VerifyTableColumns`(
-    IN p_TableName VARCHAR(64),
-    OUT p_Status INT,
-    OUT p_ErrorMsg TEXT
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sys_VerifyTableColumns`(
+
+    IN p_TableName VARCHAR(64),
+
+    OUT p_Status INT,
+
+    OUT p_ErrorMsg TEXT
+
 )
-BEGIN
-    DECLARE v_ColumnCount INT DEFAULT 0;
-    DECLARE v_ExpectedColumns TEXT DEFAULT '';
-    
-    DECLARE EXIT HANDLER FOR SQLEXCEPTION
-    BEGIN
-        SET p_Status = -1;
-        SET p_ErrorMsg = CONCAT('Database error occurred while verifying columns for table: ', p_TableName);
-    END;
-    
-    -- Define expected columns for key tables based on UpdatedDatabase.sql
-    CASE p_TableName
-        WHEN 'inv_inventory' THEN
-            SET v_ExpectedColumns = 'ID,PartID,Location,Operation,Quantity,ItemType,ReceiveDate,LastUpdated,User,BatchNumber,Notes';
-        WHEN 'inv_transaction' THEN  
-            SET v_ExpectedColumns = 'ID,TransactionType,BatchNumber,PartID,FromLocation,ToLocation,Operation,Quantity,Notes,User,ItemType,ReceiveDate';
-        WHEN 'app_themes' THEN
-            SET v_ExpectedColumns = 'ThemeName,SettingsJson';
-        WHEN 'debug_matching' THEN
-            SET v_ExpectedColumns = 'id,in_id,in_part,in_loc,in_batch,out_id,out_part,out_loc,out_batch,matched_at';
-        ELSE
-            SET p_Status = 1;
-            SET p_ErrorMsg = CONCAT('Unknown table for verification: ', p_TableName);
-    END CASE;
-    
-    -- Return column information for manual verification
-    SELECT 
-        COLUMN_NAME as ColumnName,
-        DATA_TYPE as DataType,
-        IS_NULLABLE as Nullable,
-        COLUMN_DEFAULT as DefaultValue,
-        CHARACTER_MAXIMUM_LENGTH as MaxLength,
-        COLUMN_KEY as KeyType,
-        EXTRA as Extra
-    FROM INFORMATION_SCHEMA.COLUMNS
-    WHERE TABLE_SCHEMA = DATABASE()
-    AND TABLE_NAME = p_TableName
-    ORDER BY ORDINAL_POSITION;
-    
-    SET p_Status = 0;
-    SET p_ErrorMsg = CONCAT('Column verification completed for table: ', p_TableName);
-    
+BEGIN
+
+    DECLARE v_ColumnCount INT DEFAULT 0;
+
+    DECLARE v_ExpectedColumns TEXT DEFAULT '';
+
+    
+
+    DECLARE EXIT HANDLER FOR SQLEXCEPTION
+
+    BEGIN
+
+        SET p_Status = -1;
+
+        SET p_ErrorMsg = CONCAT('Database error occurred while verifying columns for table: ', p_TableName);
+
+    END;
+
+    
+
+    -- Define expected columns for key tables based on UpdatedDatabase.sql
+
+    CASE p_TableName
+
+        WHEN 'inv_inventory' THEN
+
+            SET v_ExpectedColumns = 'ID,PartID,Location,Operation,Quantity,ItemType,ReceiveDate,LastUpdated,User,BatchNumber,Notes';
+
+        WHEN 'inv_transaction' THEN  
+
+            SET v_ExpectedColumns = 'ID,TransactionType,BatchNumber,PartID,FromLocation,ToLocation,Operation,Quantity,Notes,User,ItemType,ReceiveDate';
+
+        WHEN 'app_themes' THEN
+
+            SET v_ExpectedColumns = 'ThemeName,SettingsJson';
+
+        WHEN 'debug_matching' THEN
+
+            SET v_ExpectedColumns = 'id,in_id,in_part,in_loc,in_batch,out_id,out_part,out_loc,out_batch,matched_at';
+
+        ELSE
+
+            SET p_Status = 1;
+
+            SET p_ErrorMsg = CONCAT('Unknown table for verification: ', p_TableName);
+
+    END CASE;
+
+    
+
+    -- Return column information for manual verification
+
+    SELECT 
+
+        COLUMN_NAME as ColumnName,
+
+        DATA_TYPE as DataType,
+
+        IS_NULLABLE as Nullable,
+
+        COLUMN_DEFAULT as DefaultValue,
+
+        CHARACTER_MAXIMUM_LENGTH as MaxLength,
+
+        COLUMN_KEY as KeyType,
+
+        EXTRA as Extra
+
+    FROM INFORMATION_SCHEMA.COLUMNS
+
+    WHERE TABLE_SCHEMA = DATABASE()
+
+    AND TABLE_NAME = p_TableName
+
+    ORDER BY ORDINAL_POSITION;
+
+    
+
+    SET p_Status = 0;
+
+    SET p_ErrorMsg = CONCAT('Column verification completed for table: ', p_TableName);
+
+    
+
 END ;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;

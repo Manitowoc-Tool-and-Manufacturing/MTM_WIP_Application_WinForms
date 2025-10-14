@@ -97,7 +97,7 @@ The project uses manual validation as the primary QA approach. Automated unit te
 Database connections MUST adapt automatically based on build configuration and machine environment.
 
 **Requirements**:
-- Debug builds MUST use `mtm_wip_application_test` database
+- Debug builds MUST use `mtm_wip_application_winforms_test` database
 - Release builds MUST use `mtm_wip_application` database
 - Server selection logic: Release always uses `172.16.1.104`; Debug uses `172.16.1.104` if current machine matches, otherwise `localhost`
 - Connection strings MUST be centralized in `Helper_Database_Variables` (no hardcoding)

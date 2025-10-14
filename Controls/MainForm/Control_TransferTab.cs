@@ -142,7 +142,7 @@ namespace MTM_Inventory_Application.Controls.MainForm
                 // Load user information asynchronously
                 try
                 {
-                    Model_AppVariables.UserFullName = await Dao_User.GetUserFullNameAsync(Model_AppVariables.User, true);
+                    Model_AppVariables.UserFullName = await Dao_User.GetUserFullNameAsync(Model_AppVariables.User);
                     LoggingUtility.Log($"User full name loaded: {Model_AppVariables.UserFullName}");
                 }
                 catch (Exception ex)

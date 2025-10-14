@@ -568,7 +568,7 @@ fix_and_reverify.bat
             <h3>Development Environment (Recommended)</h3>
             <div class="command-examples">
 <span class="comment"># Deploy to test database for development</span><br>
-deploy.bat -d mtm_wip_application_test<br>
+deploy.bat -d mtm_wip_application_winforms_test<br>
 <br>
 <span class="comment"># Analyze and verify development setup</span><br>
 analyze.bat<br>
@@ -775,7 +775,7 @@ MySQL 5.7.24 Compatibility: ✅ All files compatible
             <div class="code-block">
 // Automatic environment detection<br>
 string connectionString = Helper_Database_Variables.GetConnectionString();<br>
-string database = Model_Users.Database;        // mtm_wip_application or mtm_wip_application_test<br>
+string database = Model_Users.Database;        // mtm_wip_application or mtm_wip_application_winforms_test<br>
 string server = Model_Users.WipServerAddress;  // localhost or 172.16.1.104
             </div>
             

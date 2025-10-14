@@ -191,7 +191,7 @@ namespace MTM_Inventory_Application.Controls.MainForm
                 try
                 {
                     Model_AppVariables.UserFullName =
-                        await Dao_User.GetUserFullNameAsync(Model_AppVariables.User, true);
+                        await Dao_User.GetUserFullNameAsync(Model_AppVariables.User);
                     LoggingUtility.Log($"User full name loaded: {Model_AppVariables.UserFullName}");
                 }
                 catch (Exception ex)

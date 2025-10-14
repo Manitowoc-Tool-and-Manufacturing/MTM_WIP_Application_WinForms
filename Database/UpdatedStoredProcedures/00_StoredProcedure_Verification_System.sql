@@ -4,7 +4,7 @@
 -- File: 00_StoredProcedure_Verification_System.sql
 -- Purpose: Complete verification system for all stored procedures against UpdatedDatabase.sql
 -- Created: August 13, 2025
--- Target Database: mtm_wip_application_test
+-- Target Database: mtm_wip_application_winforms_test
 -- MySQL Version: 5.7.24+ (MAMP Compatible)
 -- ================================================================================
 

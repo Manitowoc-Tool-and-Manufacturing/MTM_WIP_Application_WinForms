@@ -169,7 +169,7 @@ This is the more aggressive but cleaner approach. The spec has been updated to r
 
 ### Test Database Name Clarification (Q8)
 
-Database name **MUST be** `mtm_wip_application_winform_test` (not `mtm_wip_application_test` which is already in use). This has been documented in FR-018.
+Database name **MUST be** `mtm_wip_application_winform_test` (not `mtm_wip_application_winforms_test` which is already in use). This has been documented in FR-018.
 
 ---
 
