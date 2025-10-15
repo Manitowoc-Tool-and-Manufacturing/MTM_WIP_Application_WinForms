@@ -1,0 +1,248 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "INFORMATION_SCHEMA Parameter Cache Contract",
+  "description": "Schema for stored procedure parameter metadata cached at application startup",
+  "query": {
+    "sql": "SELECT ROUTINE_NAME, PARAMETER_NAME, PARAMETER_MODE FROM INFORMATION_SCHEMA.PARAMETERS WHERE ROUTINE_SCHEMA = DATABASE() AND ROUTINE_TYPE = 'PROCEDURE' ORDER BY ROUTINE_NAME, ORDINAL_POSITION",
+    "executionTime": "~100-200ms for 60+ stored procedures",
+    "timing": "Application startup (Program.cs)",
+    "fallback": "Convention-based detection if query fails"
+  },
+  "resultSet": {
+    "type": "array",
+    "items": {
+      "type": "object",
+      "required": ["ROUTINE_NAME", "PARAMETER_NAME", "PARAMETER_MODE"],
+      "properties": {
+        "ROUTINE_NAME": {
+          "type": "string",
+          "description": "Stored procedure name without database prefix",
+          "examples": [
+            "inv_inventory_get_all",
+            "user_authenticate",
+            "inv_transaction_log"
+          ]
+        },
+        "PARAMETER_NAME": {
+          "type": "string",
+          "description": "Parameter name WITH prefix (p_, in_, o_)",
+          "pattern": "^(p_|in_|o_)[a-zA-Z0-9_]+$",
+          "examples": [
+            "p_UserID",
+            "p_PartNumber",
+            "in_FromLocation",
+            "in_ToLocation",
+            "o_Status",
+            "o_ErrorMsg"
+          ]
+        },
+        "PARAMETER_MODE": {
+          "type": "string",
+          "enum": ["IN", "OUT", "INOUT"],
+          "description": "Parameter direction"
+        }
+      }
+    }
+  },
+  "cacheStructure": {
+    "type": "object",
+    "description": "Dictionary<string, Dictionary<string, string>> - Two-level dictionary for fast lookup",
+    "outerKey": {
+      "type": "string",
+      "description": "Stored procedure name (ROUTINE_NAME)"
+    },
+    "innerDictionary": {
+      "key": {
+        "type": "string",
+        "description": "Parameter name with prefix (PARAMETER_NAME)"
+      },
+      "value": {
+        "type": "string",
+        "description": "Parameter mode (PARAMETER_MODE)",
+        "enum": ["IN", "OUT", "INOUT"]
+      }
+    },
+    "example": {
+      "inv_inventory_get_all": {
+        "p_LocationCode": "IN",
+        "p_IncludeInactive": "IN",
+        "o_Status": "OUT",
+        "o_ErrorMsg": "OUT"
+      },
+      "inv_transaction_log": {
+        "in_TransactionType": "IN",
+        "in_PartID": "IN",
+        "in_FromLocation": "IN",
+        "in_ToLocation": "IN",
+        "in_Quantity": "IN",
+        "in_User": "IN",
+        "o_Status": "OUT",
+        "o_ErrorMsg": "OUT"
+      }
+    }
+  },
+  "prefixDetection": {
+    "description": "Algorithm for detecting correct parameter prefix from cache",
+    "input": {
+      "procedureName": "Stored procedure name (e.g., 'inv_inventory_get_all')",
+      "parameterName": "Parameter name WITHOUT prefix (e.g., 'LocationCode')"
+    },
+    "output": {
+      "type": "string",
+      "description": "Detected prefix: 'p_', 'in_', or 'o_'"
+    },
+    "algorithm": [
+      "1. Look up procedureName in cache dictionary",
+      "2. If found, check if 'p_' + parameterName exists → return 'p_'",
+      "3. If not found, check if 'in_' + parameterName exists → return 'in_'",
+      "4. If not found, check if 'o_' + parameterName exists → return 'o_'",
+      "5. If procedure not in cache, use fallback convention"
+    ],
+    "fallback": {
+      "description": "Convention-based detection when cache lookup fails",
+      "rules": [
+        "If procedure name contains 'Transfer' or 'transaction': use 'in_' prefix",
+        "Otherwise: use 'p_' prefix (most common)"
+      ]
+    }
+  },
+  "standardParameters": {
+    "description": "Standard OUT parameters present in most stored procedures",
+    "parameters": [
+      {
+        "name": "p_Status",
+        "mode": "OUT",
+        "type": "INT",
+        "values": {
+          "0": "Success",
+          "1": "Success with no data (e.g., zero-row query)",
+          "-1": "Error (check p_ErrorMsg for details)"
+        }
+      },
+      {
+        "name": "p_ErrorMsg",
+        "mode": "OUT",
+        "type": "VARCHAR(500)",
+        "description": "User-friendly error message (empty/null on success)"
+      }
+    ]
+  },
+  "prefixConventions": {
+    "p_": {
+      "description": "Standard prefix for most stored procedures",
+      "usedBy": [
+        "inv_inventory_*",
+        "user_*",
+        "part_*",
+        "location_*",
+        "operation_*",
+        "itemtype_*",
+        "quickbutton_*",
+        "log_error_*",
+        "system_*"
+      ],
+      "examples": [
+        "p_UserID",
+        "p_PartNumber",
+        "p_LocationCode",
+        "p_Quantity"
+      ]
+    },
+    "in_": {
+      "description": "Alternative prefix used by transaction/transfer procedures",
+      "usedBy": [
+        "inv_transaction_log",
+        "inv_inventory_transfer",
+        "inv_inventory_add_with_transfer"
+      ],
+      "examples": [
+        "in_TransactionType",
+        "in_FromLocation",
+        "in_ToLocation",
+        "in_PartID"
+      ]
+    },
+    "o_": {
+      "description": "Rare prefix for output parameters (most use p_ for OUT params)",
+      "usedBy": [
+        "Some legacy procedures with multiple OUT parameters"
+      ],
+      "examples": [
+        "o_Status",
+        "o_ErrorMsg",
+        "o_GeneratedID"
+      ]
+    }
+  },
+  "implementation": {
+    "initializationLocation": "Program.cs - Application startup",
+    "initializationCode": {
+      "description": "Query INFORMATION_SCHEMA and populate cache dictionary",
+      "errorHandling": "Log error and continue with fallback convention if query fails",
+      "retryLogic": "No retry - single attempt at startup"
+    },
+    "lookupLocation": "Helper_Database_StoredProcedure - Before executing command",
+    "lookupCode": {
+      "description": "Detect prefix for each parameter using cache",
+      "performance": "O(1) dictionary lookup per parameter",
+      "fallback": "Convention-based detection if cache miss"
+    }
+  },
+  "validationRules": [
+    "All parameter names in MySQL MUST have a prefix (p_, in_, or o_)",
+    "C# Dictionary keys MUST NOT include the prefix",
+    "Helper automatically adds detected prefix when building MySqlCommand.Parameters",
+    "Callers MUST use PascalCase parameter names (e.g., 'UserID', not 'user_id')"
+  ],
+  "testCases": [
+    {
+      "description": "Standard procedure with p_ prefix",
+      "procedure": "inv_inventory_get_all",
+      "cSharpParameters": {
+        "LocationCode": "FLOOR",
+        "IncludeInactive": false
+      },
+      "detectedPrefixes": {
+        "LocationCode": "p_",
+        "IncludeInactive": "p_"
+      },
+      "mysqlParameters": {
+        "p_LocationCode": "FLOOR",
+        "p_IncludeInactive": false
+      }
+    },
+    {
+      "description": "Transaction procedure with in_ prefix",
+      "procedure": "inv_transaction_log",
+      "cSharpParameters": {
+        "TransactionType": "TRANSFER",
+        "FromLocation": "FLOOR",
+        "ToLocation": "SHIPPING"
+      },
+      "detectedPrefixes": {
+        "TransactionType": "in_",
+        "FromLocation": "in_",
+        "ToLocation": "in_"
+      },
+      "mysqlParameters": {
+        "in_TransactionType": "TRANSFER",
+        "in_FromLocation": "FLOOR",
+        "in_ToLocation": "SHIPPING"
+      }
+    },
+    {
+      "description": "Procedure not in cache (fallback)",
+      "procedure": "new_procedure_not_cached",
+      "cSharpParameters": {
+        "SomeParameter": "value"
+      },
+      "detectedPrefixes": {
+        "SomeParameter": "p_"
+      },
+      "mysqlParameters": {
+        "p_SomeParameter": "value"
+      },
+      "note": "Uses fallback convention (p_ default)"
+    }
+  ]
+}

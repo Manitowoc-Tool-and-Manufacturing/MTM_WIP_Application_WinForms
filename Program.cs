@@ -161,8 +161,9 @@ namespace MTM_Inventory_Application
                     }
                 }
 
-                // ENHANCED: Validate database connectivity using helper patterns BEFORE creating any forms
-                var connectivityResult = ValidateDatabaseConnectivityWithHelper();
+                // ENHANCED: Validate database connectivity using Dao_System.CheckConnectivityAsync per FR-014
+                // NOTE: Using .GetAwaiter().GetResult() in Main as it's synchronous entry point
+                var connectivityResult = Dao_System.CheckConnectivityAsync().GetAwaiter().GetResult();
                 if (!connectivityResult.IsSuccess)
                 {
                     LoggingUtility.Log($"[Startup] Database connectivity validation failed: {connectivityResult.StatusMessage}");
@@ -219,10 +220,50 @@ namespace MTM_Inventory_Application
 
                 LoggingUtility.Log("[Startup] Database connectivity validated successfully");
 
+                // Initialize INFORMATION_SCHEMA parameter cache for stored procedure prefix detection
+                try
+                {
+                    var stopwatch = System.Diagnostics.Stopwatch.StartNew();
+                    LoggingUtility.Log("[Startup] Initializing INFORMATION_SCHEMA parameter cache...");
+
+                    var cacheResult = InitializeParameterPrefixCache();
+                    stopwatch.Stop();
+
+                    if (cacheResult.IsSuccess)
+                    {
+                        LoggingUtility.Log($"[Startup] Parameter prefix cache initialized successfully in {stopwatch.ElapsedMilliseconds}ms. Cached {Model_ParameterPrefixCache.ProcedureCount} stored procedures.");
+                        Console.WriteLine($"[Startup] Parameter cache: {Model_ParameterPrefixCache.ProcedureCount} procedures cached in {stopwatch.ElapsedMilliseconds}ms");
+                    }
+                    else
+                    {
+                        LoggingUtility.Log($"[Startup] Warning: Parameter prefix cache initialization failed: {cacheResult.ErrorMessage}. Using fallback convention-based detection.");
+                        Console.WriteLine($"[Startup Warning] Parameter cache init failed: {cacheResult.ErrorMessage}");
+                        
+                        ShowNonCriticalError("Parameter Cache Warning",
+                            "The stored procedure parameter cache could not be initialized.\n\n" +
+                            $"Reason: {cacheResult.ErrorMessage}\n\n" +
+                            "The application will continue using convention-based parameter detection.\n" +
+                            "This may result in slower database operations or parameter errors for non-standard procedures.\n\n" +
+                            "Please contact your system administrator if this problem persists.");
+                    }
+                }
+                catch (Exception ex)
+                {
+                    LoggingUtility.LogApplicationError(ex);
+                    LoggingUtility.Log($"[Startup] Warning: Parameter prefix cache initialization threw exception: {ex.Message}. Using fallback convention-based detection.");
+                    Console.WriteLine($"[Startup Warning] Parameter cache exception: {ex.Message}");
+                    
+                    ShowNonCriticalError("Parameter Cache Error",
+                        $"An error occurred while initializing the parameter cache:\n\n{ex.Message}\n\n" +
+                        "The application will continue using convention-based parameter detection.\n" +
+                        "Some database operations may be slower or fail if procedures use non-standard parameter naming.\n\n" +
+                        "Please contact your system administrator.");
+                }
+
                 // Load user access permissions with error handling
                 try
                 {
-                    _ = Dao_System.System_UserAccessTypeAsync(true);
+                    _ = Dao_System.System_UserAccessTypeAsync();
                 }
                 catch (MySqlException ex)
                 {
@@ -529,6 +570,87 @@ namespace MTM_Inventory_Application
                     // Final fallback - just exit
                     Environment.Exit(1);
                 }
+            }
+        }
+
+        #endregion
+
+        #region Parameter Prefix Cache Initialization
+
+        /// <summary>
+        /// Initialize the INFORMATION_SCHEMA parameter cache for automatic prefix detection
+        /// </summary>
+        /// <returns>DaoResult indicating success or failure with timing information</returns>
+        /// <remarks>
+        /// Queries INFORMATION_SCHEMA.PARAMETERS to build a cache of all stored procedure parameters with their prefixes.
+        /// This cache enables automatic prefix detection (p_, in_, o_) when executing stored procedures,
+        /// eliminating MySQL parameter errors caused by incorrect prefix usage.
+        /// Expected execution time: ~100-200ms for 60+ stored procedures.
+        /// </remarks>
+        private static DaoResult InitializeParameterPrefixCache()
+        {
+            try
+            {
+                LoggingUtility.Log("[Startup] Querying INFORMATION_SCHEMA.PARAMETERS for stored procedure metadata");
+
+                // MySQL 5.7 uses SPECIFIC_NAME instead of ROUTINE_NAME
+                const string query = @"
+                    SELECT 
+                        SPECIFIC_NAME AS ROUTINE_NAME, 
+                        PARAMETER_NAME, 
+                        PARAMETER_MODE 
+                    FROM INFORMATION_SCHEMA.PARAMETERS 
+                    WHERE SPECIFIC_SCHEMA = DATABASE() 
+                    AND ROUTINE_TYPE = 'PROCEDURE' 
+                    ORDER BY SPECIFIC_NAME, ORDINAL_POSITION";
+
+                // Build cache dictionary structure
+                var cacheData = new Dictionary<string, Dictionary<string, string>>(StringComparer.OrdinalIgnoreCase);
+
+                using var connection = new MySqlConnection(Model_AppVariables.ConnectionString);
+                connection.Open();
+
+                using var command = new MySqlCommand(query, connection);
+                command.CommandTimeout = 10; // 10 second timeout for metadata query
+
+                using var reader = command.ExecuteReader();
+
+                int parameterCount = 0;
+                while (reader.Read())
+                {
+                    string routineName = reader.GetString("ROUTINE_NAME");
+                    string parameterName = reader.GetString("PARAMETER_NAME");
+                    string parameterMode = reader.GetString("PARAMETER_MODE");
+
+                    // Ensure procedure entry exists in outer dictionary
+                    if (!cacheData.ContainsKey(routineName))
+                    {
+                        cacheData[routineName] = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
+                    }
+
+                    // Add parameter to procedure's dictionary
+                    cacheData[routineName][parameterName] = parameterMode;
+                    parameterCount++;
+                }
+
+                // Initialize the cache with collected data
+                Model_ParameterPrefixCache.Initialize(cacheData);
+
+                LoggingUtility.Log($"[Startup] Parameter cache populated: {cacheData.Count} procedures, {parameterCount} total parameters");
+
+                return DaoResult.Success($"Parameter cache initialized: {cacheData.Count} procedures, {parameterCount} parameters");
+            }
+            catch (MySqlException ex)
+            {
+                string errorMsg = $"MySQL error querying INFORMATION_SCHEMA.PARAMETERS: {ex.Message}";
+                LoggingUtility.LogDatabaseError(ex);
+                return DaoResult.Failure(errorMsg, ex);
+            }
+            catch (Exception ex)
+            {
+                string errorMsg = $"Unexpected error initializing parameter cache: {ex.Message}";
+                LoggingUtility.LogApplicationError(ex);
+                return DaoResult.Failure(errorMsg, ex);
             }
         }
 

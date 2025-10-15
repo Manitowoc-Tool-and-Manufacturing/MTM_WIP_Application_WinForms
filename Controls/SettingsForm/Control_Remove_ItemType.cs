@@ -43,7 +43,7 @@ namespace MTM_Inventory_Application.Controls.SettingsForm
             catch (Exception ex)
             {
                 LoggingUtility.LogApplicationError(ex);
-                await Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex, true,
+                await Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex,
                     "SettingsForm / RemoveItemTypeControl_OnLoadOverRide");
             }
         }
@@ -77,7 +77,15 @@ namespace MTM_Inventory_Application.Controls.SettingsForm
             try
             {
                 string selectedType = itemTypesComboBox.Text ?? string.Empty;
-                _currentItemType = await Dao_ItemType.GetItemTypeByName(selectedType);
+                var getResult = await Dao_ItemType.GetItemTypeByName(selectedType);
+                if (!getResult.IsSuccess)
+                {
+                    MessageBox.Show($@"Error loading ItemType: {getResult.ErrorMessage}", @"Error",
+                        MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
+
+                _currentItemType = getResult.Data;
                 if (_currentItemType != null)
                 {
                     LoadItemTypeData();
@@ -115,7 +123,14 @@ namespace MTM_Inventory_Application.Controls.SettingsForm
                     MessageBoxDefaultButton.Button2);
                 if (result == DialogResult.Yes)
                 {
-                    await Dao_ItemType.DeleteItemType(itemType);
+                    var deleteResult = await Dao_ItemType.DeleteItemType(itemType);
+                    if (!deleteResult.IsSuccess)
+                    {
+                        MessageBox.Show($@"Error removing ItemType: {deleteResult.ErrorMessage}", @"Error",
+                            MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        return;
+                    }
+
                     LoadItemTypes();
                     ClearForm();
                     SetFormEnabled(false);

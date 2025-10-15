@@ -39,7 +39,7 @@
 
 ### Database Name Logic
 - **Debug Mode:**  
-  - Database name must be `mtm_wip_application_test`
+  - Database name must be `mtm_wip_application_winforms_test`
 - **Release Mode:**  
   - Database name must be `mtm_wip_application`
 
@@ -59,7 +59,7 @@
 
 ## 3. UpdatedDatabase and UpdatedStoredProcedures File Changes
 
-- All files in `Database\UpdatedDatabase` and `Database\UpdatedStoredProcedures` must use the database name `mtm_wip_application_test` (not `mtm_wip_application`).
+- All files in `Database\UpdatedDatabase` and `Database\UpdatedStoredProcedures` must use the database name `mtm_wip_application_winforms_test` (not `mtm_wip_application`).
 - Update any hardcoded references in these files to reflect the new test database name.
 - Ensure all deployment scripts (`deploy_procedures.bat`, `deploy_procedures.sh`) use the correct database name for test/dev environments.
 
@@ -67,7 +67,7 @@
 
 ## 4. Batch and Shell Script Updates
 
-- Update `deploy_procedures.bat` and `deploy_procedures.sh` to use `mtm_wip_application_test` for all operations.
+- Update `deploy_procedures.bat` and `deploy_procedures.sh` to use `mtm_wip_application_winforms_test` for all operations.
 - Add comments in these scripts explaining the environment logic and database name usage.
 
 ---
@@ -106,7 +106,7 @@
 
 - Updated `MTM_WIP_Application\README.md` and `Database\UpdatedStoredProcedures\README.md` with new structure, environment logic, and compliance notes.
 - Updated `.github\copilot-instructions.md` and `.github\ISSUE_TEMPLATE\online-refactor.yml` with new environment and file structure logic.
-- All `UpdatedDatabase` and `UpdatedStoredProcedures` files updated to use `mtm_wip_application_test`.
+- All `UpdatedDatabase` and `UpdatedStoredProcedures` files updated to use `mtm_wip_application_winforms_test`.
 - Updated batch and shell scripts for deployment.
 - All dependent files referenced by the README updated for compliance.
 - A summary of all changes, including before/after examples for environment logic and file structure.
@@ -117,7 +117,7 @@
 
 ```csharp
 #if DEBUG
-    string databaseName = "mtm_wip_application_test";
+    string databaseName = "mtm_wip_application_winforms_test";
     string serverAddress = (GetLocalIpAddress() == "172.16.1.104") ? "172.16.1.104" : "localhost";
 #else
     string databaseName = "mtm_wip_application";

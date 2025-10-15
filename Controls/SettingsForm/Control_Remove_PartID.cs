@@ -53,7 +53,7 @@ namespace MTM_Inventory_Application.Controls.SettingsForm
             catch (Exception ex)
             {
                 LoggingUtility.LogApplicationError(ex);
-                await Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex, true,
+                await Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex,
                     "SettingsForm / RemovePartControl_OnLoadOverRide");
             }
         }
@@ -88,7 +88,15 @@ namespace MTM_Inventory_Application.Controls.SettingsForm
             {
                 string selectedText = partsComboBox.Text;
                 string itemNumber = selectedText;
-                _currentPart = await Dao_Part.GetPartByNumber(itemNumber);
+                var getResult = await Dao_Part.GetPartByNumberAsync(itemNumber);
+                if (!getResult.IsSuccess)
+                {
+                    MessageBox.Show($@"Error loading part: {getResult.ErrorMessage}", @"Error",
+                        MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
+
+                _currentPart = getResult.Data;
                 if (_currentPart != null)
                 {
                     LoadPartData();
@@ -131,7 +139,14 @@ This action cannot be undone.",
 
             try
             {
-                await Dao_Part.DeletePart(itemNumber);
+                var deleteResult = await Dao_Part.DeletePartAsync(itemNumber);
+                if (!deleteResult.IsSuccess)
+                {
+                    MessageBox.Show($@"Error removing part: {deleteResult.ErrorMessage}", @"Error",
+                        MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
+
                 MessageBox.Show(@"Part removed successfully!", @"Success", MessageBoxButtons.OK,
                     MessageBoxIcon.Information);
                 LoadParts();

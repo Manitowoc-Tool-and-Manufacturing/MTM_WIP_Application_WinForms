@@ -105,7 +105,15 @@ namespace MTM_Inventory_Application.Controls.SettingsForm
                     return;
                 }
 
-                if (await Dao_Part.PartExists(itemNumberTextBox.Text.Trim()))
+                var existsResult = await Dao_Part.PartExistsAsync(itemNumberTextBox.Text.Trim());
+                if (!existsResult.IsSuccess)
+                {
+                    MessageBox.Show($@"Error checking part existence: {existsResult.ErrorMessage}", @"Error",
+                        MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
+
+                if (existsResult.Data)
                 {
                     MessageBox.Show($@"Part number '{itemNumberTextBox.Text.Trim()}' already exists.",
                         @"Duplicate Part Number", MessageBoxButtons.OK, MessageBoxIcon.Warning);
@@ -113,7 +121,14 @@ namespace MTM_Inventory_Application.Controls.SettingsForm
                     return;
                 }
 
-                await AddPartAsync();
+                var addResult = await AddPartAsync();
+                if (!addResult.IsSuccess)
+                {
+                    MessageBox.Show($@"Error adding part: {addResult.ErrorMessage}", @"Error",
+                        MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
+
                 MessageBox.Show(@"Part added successfully!", @"Success", MessageBoxButtons.OK,
                     MessageBoxIcon.Information);
                 ClearForm();
@@ -126,13 +141,13 @@ namespace MTM_Inventory_Application.Controls.SettingsForm
             }
         }
 
-        private async Task AddPartAsync()
+        private async Task<DaoResult> AddPartAsync()
         {
             string itemNumber = itemNumberTextBox.Text.Trim();
             string issuedBy = Model_AppVariables.User;
             string type = Control_Add_PartID_ComboBox_ItemType.Text ?? string.Empty;
-            // Removed customer and description parameters
-            await Dao_Part.AddPartWithStoredProcedure(itemNumber, null, null, issuedBy, type);
+            
+            return await Dao_Part.CreatePartAsync(itemNumber, string.Empty, string.Empty, issuedBy, type);
         }
 
         private void CancelButton_Click(object sender, EventArgs e) => ClearForm();

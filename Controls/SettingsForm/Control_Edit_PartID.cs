@@ -181,7 +181,17 @@ namespace MTM_Inventory_Application.Controls.SettingsForm
                     return;
                 }
 
-                _currentPart = await Dao_Part.GetPartByNumber(selectedText);
+                _currentPart = null;
+                var result = await Dao_Part.GetPartByNumberAsync(selectedText);
+                if (!result.IsSuccess)
+                {
+                    Service_ErrorHandler.HandleDatabaseError(
+                        result.Exception ?? new Exception(result.ErrorMessage),
+                        controlName: nameof(Control_Edit_PartID));
+                    return;
+                }
+                
+                _currentPart = result.Data;
                 if (_currentPart != null)
                 {
                     LoadPartData();
@@ -329,25 +339,38 @@ namespace MTM_Inventory_Application.Controls.SettingsForm
                         ["NumberChanged"] = originalItemNumber != newItemNumber
                     });
 
-                if (originalItemNumber != newItemNumber && await Dao_Part.PartExists(newItemNumber))
+                if (originalItemNumber != newItemNumber)
                 {
-                    Service_DebugTracer.TraceDataValidation("DUPLICATE_PART_CHECK",
-                        dataToValidate: new Dictionary<string, object>
-                        {
-                            ["NewPartNumber"] = newItemNumber,
-                            ["OriginalPartNumber"] = originalItemNumber ?? "NULL"
-                        },
-                        validationRules: new Dictionary<string, object> { ["MustBeUnique"] = true },
-                        isValid: false,
-                        errorMessages: new List<string> { $"Part number '{newItemNumber}' already exists" });
+                    var existsResult = await Dao_Part.PartExistsAsync(newItemNumber);
+                    if (!existsResult.IsSuccess)
+                    {
+                        Service_ErrorHandler.HandleDatabaseError(
+                            existsResult.Exception ?? new Exception(existsResult.ErrorMessage),
+                            controlName: nameof(Control_Edit_PartID));
+                        Service_DebugTracer.StopPerformanceTrace(performanceKey, new Dictionary<string, object> { ["Result"] = "DATABASE_ERROR" });
+                        return;
+                    }
 
-                    Service_ErrorHandler.HandleValidationError(
-                        $"Part number '{newItemNumber}' already exists. Please use a different part number.",
-                        "Duplicate Part Number", controlName: nameof(Control_Edit_PartID));
-                    itemNumberTextBox.Focus();
-                    
-                    Service_DebugTracer.StopPerformanceTrace(performanceKey, new Dictionary<string, object> { ["Result"] = "VALIDATION_FAILED", ["Field"] = "DuplicateCheck" });
-                    return;
+                    if (existsResult.Data)
+                    {
+                        Service_DebugTracer.TraceDataValidation("DUPLICATE_PART_CHECK",
+                            dataToValidate: new Dictionary<string, object>
+                            {
+                                ["NewPartNumber"] = newItemNumber,
+                                ["OriginalPartNumber"] = originalItemNumber ?? "NULL"
+                            },
+                            validationRules: new Dictionary<string, object> { ["MustBeUnique"] = true },
+                            isValid: false,
+                            errorMessages: new List<string> { $"Part number '{newItemNumber}' already exists" });
+
+                        Service_ErrorHandler.HandleValidationError(
+                            $"Part number '{newItemNumber}' already exists. Please use a different part number.",
+                            "Duplicate Part Number", controlName: nameof(Control_Edit_PartID));
+                        itemNumberTextBox.Focus();
+                        
+                        Service_DebugTracer.StopPerformanceTrace(performanceKey, new Dictionary<string, object> { ["Result"] = "VALIDATION_FAILED", ["Field"] = "DuplicateCheck" });
+                        return;
+                    }
                 }
 
                 Service_DebugTracer.TraceBusinessLogic("ALL_VALIDATIONS_PASSED",
@@ -509,7 +532,15 @@ namespace MTM_Inventory_Application.Controls.SettingsForm
             string description = descriptionTextBox.Text.Trim();
             string issuedBy = Model_AppVariables.User;
             string type = Control_Edit_PartID_ComboBox_ItemType.Text;
-            await Dao_Part.UpdatePartWithStoredProcedure(id, itemNumber, customer, description, issuedBy, type);
+            
+            var result = await Dao_Part.UpdatePartAsync(id, itemNumber, customer, description, issuedBy, type);
+            if (!result.IsSuccess)
+            {
+                Service_ErrorHandler.HandleDatabaseError(
+                    result.Exception ?? new Exception(result.ErrorMessage),
+                    controlName: nameof(Control_Edit_PartID));
+                throw new Exception($"Failed to update part: {result.ErrorMessage}");
+            }
         }
 
         private void ClearForm()

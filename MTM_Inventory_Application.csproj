@@ -12,6 +12,11 @@
         <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
         <!-- Allow building a Windows-targeting TFM on non-Windows build agents (fixes NETSDK1100) -->
         <EnableWindowsTargeting>true</EnableWindowsTargeting>
+        <!-- Disable duplicate assembly attribute generation -->
+        <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+        <GenerateTargetFrameworkAttribute>false</GenerateTargetFrameworkAttribute>
+        <!-- Suppress CA1416 warnings - this is a Windows-only WinForms application -->
+        <NoWarn>$(NoWarn);CA1416</NoWarn>
     </PropertyGroup>
 
     <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
@@ -64,6 +69,8 @@
         <PackageReference Include="ClosedXML" Version="0.105.0" />
         <PackageReference Include="Microsoft.TestPlatform" Version="17.14.1" />
         <PackageReference Include="Microsoft.Web.WebView2" Version="1.0.2792.45" />
+        <PackageReference Include="MSTest.TestAdapter" Version="3.7.0" />
+        <PackageReference Include="MSTest.TestFramework" Version="3.7.0" />
         <PackageReference Include="MySql.Data" Version="9.4.0" />
         <PackageReference Include="PlantUmlClassDiagramGenerator.SourceGenerator" Version="1.1.0">
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>

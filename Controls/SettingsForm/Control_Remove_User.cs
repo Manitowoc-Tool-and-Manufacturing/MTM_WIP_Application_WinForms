@@ -126,25 +126,33 @@ namespace MTM_Inventory_Application.Controls.SettingsForm
                 ShowProgress("Loading user details...");
                 UpdateProgress(20, $"Retrieving details for {userName}...");
 
-                DataRow? userRow = await Dao_User.GetUserByUsernameAsync(userName, true);
-                if (userRow != null)
+                var userResult = await Dao_User.GetUserByUsernameAsync(userName);
+                if (userResult.IsSuccess && userResult.Data != null)
                 {
                     UpdateProgress(60, "Processing user information...");
 
+                    DataRow userRow = userResult.Data;
                     RemoveUserControl_Label_FullName.Text = userRow["Full Name"]?.ToString() ?? "";
                     RemoveUserControl_Label_Shift.Text = userRow["Shift"]?.ToString() ?? "";
 
-                    if (userRow.Table.Columns.Contains("ID") && int.TryParse(userRow["p_ID"]?.ToString(), out int userId))
+                    if (userRow.Table.Columns.Contains("p_ID") && int.TryParse(userRow["p_ID"]?.ToString(), out int userId))
                     {
                         UpdateProgress(80, "Loading user role information...");
-                        int roleId = await Dao_User.GetUserRoleIdAsync(userId);
-                        RemoveUserControl_Label_Role.Text = roleId switch
+                        var roleResult = await Dao_User.GetUserRoleIdAsync(userId);
+                        if (roleResult.IsSuccess)
                         {
-                            1 => "Administrator",
-                            2 => "Read-Only User",
-                            3 => "Normal User",
-                            _ => "Unknown"
-                        };
+                            RemoveUserControl_Label_Role.Text = roleResult.Data switch
+                            {
+                                1 => "Administrator",
+                                2 => "Read-Only User",
+                                3 => "Normal User",
+                                _ => "Unknown"
+                            };
+                        }
+                        else
+                        {
+                            RemoveUserControl_Label_Role.Text = "Unknown";
+                        }
                     }
                     else
                     {
@@ -156,6 +164,13 @@ namespace MTM_Inventory_Application.Controls.SettingsForm
                     RemoveUserControl_Label_FullName.Text = "";
                     RemoveUserControl_Label_Role.Text = "";
                     RemoveUserControl_Label_Shift.Text = "";
+                    
+                    if (!userResult.IsSuccess)
+                    {
+                        UpdateStatus($"Error loading user: {userResult.ErrorMessage}");
+                        if (userResult.Exception != null)
+                            LoggingUtility.LogApplicationError(userResult.Exception);
+                    }
                 }
 
                 UpdateProgress(100, "User details loaded successfully");
@@ -192,25 +207,61 @@ namespace MTM_Inventory_Application.Controls.SettingsForm
                 await Task.Delay(100);
 
                 UpdateProgress(10, "Retrieving user information...");
-                DataRow? userRow = await Dao_User.GetUserByUsernameAsync(userName, true);
-                if (userRow != null && userRow.Table.Columns.Contains("ID"))
+                var userResult = await Dao_User.GetUserByUsernameAsync(userName);
+                if (!userResult.IsSuccess || userResult.Data == null)
+                {
+                    HideProgress();
+                    MessageBox.Show($@"Error retrieving user: {userResult.ErrorMessage}", @"Error", 
+                        MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    if (userResult.Exception != null)
+                        LoggingUtility.LogApplicationError(userResult.Exception);
+                    return;
+                }
+
+                DataRow userRow = userResult.Data;
+                if (userRow.Table.Columns.Contains("p_ID"))
                 {
                     UpdateProgress(20, "Validating user data...");
                     await Task.Delay(100);
 
                     UpdateProgress(30, "Deleting user settings...");
-                    await Dao_User.DeleteUserSettingsAsync(userName);
+                    var deleteSettingsResult = await Dao_User.DeleteUserSettingsAsync(userName);
+                    if (!deleteSettingsResult.IsSuccess)
+                    {
+                        HideProgress();
+                        MessageBox.Show($@"Error deleting user settings: {deleteSettingsResult.ErrorMessage}", 
+                            @"Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        if (deleteSettingsResult.Exception != null)
+                            LoggingUtility.LogApplicationError(deleteSettingsResult.Exception);
+                        return;
+                    }
 
                     int userId = Convert.ToInt32(userRow["p_ID"]);
 
                     UpdateProgress(45, "Retrieving user role information...");
-                    int roleId = await Dao_User.GetUserRoleIdAsync(userId);
-
-                    UpdateProgress(60, "Removing user role assignments...");
-                    await Dao_User.RemoveUserRoleAsync(userId, roleId);
+                    var roleResult = await Dao_User.GetUserRoleIdAsync(userId);
+                    if (roleResult.IsSuccess)
+                    {
+                        UpdateProgress(60, "Removing user role assignments...");
+                        var removeRoleResult = await Dao_User.RemoveUserRoleAsync(userId, roleResult.Data);
+                        if (!removeRoleResult.IsSuccess)
+                        {
+                            // Log warning but continue - role removal failure shouldn't block user deletion
+                            LoggingUtility.Log($"Warning: Failed to remove user role: {removeRoleResult.ErrorMessage}");
+                        }
+                    }
 
                     UpdateProgress(75, "Deleting user account...");
-                    await Dao_User.DeleteUserAsync(userName);
+                    var deleteUserResult = await Dao_User.DeleteUserAsync(userName);
+                    if (!deleteUserResult.IsSuccess)
+                    {
+                        HideProgress();
+                        MessageBox.Show($@"Error deleting user: {deleteUserResult.ErrorMessage}", @"Error", 
+                            MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        if (deleteUserResult.Exception != null)
+                            LoggingUtility.LogApplicationError(deleteUserResult.Exception);
+                        return;
+                    }
 
                     UpdateProgress(85, "Cleaning up user data...");
                     await Task.Delay(100);

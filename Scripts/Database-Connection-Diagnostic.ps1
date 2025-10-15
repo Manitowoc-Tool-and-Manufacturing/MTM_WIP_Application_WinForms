@@ -9,7 +9,7 @@
     
     Based on the code analysis, the app uses:
     - Server: localhost (or 172.16.1.104 in production)
-    - Database: mtm_wip_application_test (Debug) or mtm_wip_application (Release)
+    - Database: mtm_wip_application_winforms_test (Debug) or mtm_wip_application (Release)
     - Username: Environment.UserName (JOHNK)
     - No password in connection string
     - Allow User Variables=True
@@ -19,7 +19,7 @@
 $MySqlPath = "C:\MAMP\bin\mysql\bin\mysql.exe"
 $Server = "localhost"
 $Port = "3306"
-$DatabaseDebug = "mtm_wip_application_test"
+$DatabaseDebug = "mtm_wip_application_winforms_test"
 $DatabaseRelease = "mtm_wip_application"
 $Username = $env:USERNAME.ToUpper()
 

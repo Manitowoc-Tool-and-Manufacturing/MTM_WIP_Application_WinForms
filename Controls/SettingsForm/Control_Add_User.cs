@@ -4,6 +4,7 @@ using System.Data;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using MTM_Inventory_Application.Core;
+using MTM_Inventory_Application.Data;
 using MTM_Inventory_Application.Models;
 using MTM_Inventory_Application.Logging;
 using MTM_Inventory_Application.Helpers;
@@ -223,30 +224,22 @@ namespace MTM_Inventory_Application.Controls.SettingsForm
                 UpdateProgress(20, "Checking for existing user...");
                 await Task.Delay(100);
 
-                // Use enhanced stored procedure call with status reporting
-                var userExistsResult = await Helper_Database_StoredProcedure.ExecuteDataTableWithStatus(
-                    Model_AppVariables.ConnectionString,
-                    "usr_users_Exists",
-                    new Dictionary<string, object> { ["p_User"] = userName },
-                    _progressHelper,
-                    true
-                );
+                // Use enhanced DAO method with DaoResult pattern
+                var userExistsResult = await Dao_User.UserExistsAsync(userName);
 
                 if (!userExistsResult.IsSuccess)
                 {
                     ShowError($"Error checking user existence: {userExistsResult.ErrorMessage}");
+                    if (userExistsResult.Exception != null)
+                        LoggingUtility.LogApplicationError(userExistsResult.Exception);
                     return;
                 }
 
-                if (userExistsResult.Data != null && userExistsResult.Data.Rows.Count > 0)
+                if (userExistsResult.Data)
                 {
-                    int userExists = Convert.ToInt32(userExistsResult.Data.Rows[0]["UserExists"]);
-                    if (userExists > 0)
-                    {
-                        ShowError("User already exists");
-                        Control_Add_User_TextBox_UserName.Focus();
-                        return;
-                    }
+                    ShowError("User already exists");
+                    Control_Add_User_TextBox_UserName.Focus();
+                    return;
                 }
 
                 UpdateProgress(30, "Processing user information...");
@@ -256,49 +249,39 @@ namespace MTM_Inventory_Application.Controls.SettingsForm
 
                 UpdateProgress(40, "Creating user account...");
                 
-                // Use enhanced stored procedure call with status reporting
-                var createUserResult = await Helper_Database_StoredProcedure.ExecuteNonQueryWithStatus(
-                    Model_AppVariables.ConnectionString,
-                    "usr_users_Add_User",
-                    new Dictionary<string, object>
-                    {
-                        ["p_User"] = userName,
-                        ["FullName"] = fullName,
-                        ["Shift"] = Control_Add_User_ComboBox_Shift.Text,
-                        ["VitsUser"] = false,
-                        ["Pin"] = Control_Add_User_TextBox_Pin.Text,
-                        ["LastShownVersion"] = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version?.ToString() ?? string.Empty,
-                        ["HideChangeLog"] = "false",
-                        ["Theme_Name"] = "Default",
-                        ["Theme_FontSize"] = 9,
-                        ["VisualUserName"] = Control_Add_User_TextBox_VisualUserName.Text,
-                        ["VisualPassword"] = Control_Add_User_TextBox_VisualPassword.Text,
-                        ["WipServerAddress"] = Model_Users.WipServerAddress,
-                        ["WIPDatabase"] = Model_Users.Database,
-                        ["WipServerPort"] = Model_Users.WipServerPort
-                    },
-                    _progressHelper,
-                    true
+                // Use DAO method with DaoResult pattern
+                string lastShownVersion = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version?.ToString() ?? string.Empty;
+                var createUserResult = await Dao_User.CreateUserAsync(
+                    userName,
+                    fullName,
+                    Control_Add_User_ComboBox_Shift.Text,
+                    false, // VitsUser
+                    Control_Add_User_TextBox_Pin.Text,
+                    lastShownVersion,
+                    "false", // HideChangeLog
+                    "Default", // Theme_Name
+                    9, // Theme_FontSize
+                    Control_Add_User_TextBox_VisualUserName.Text,
+                    Control_Add_User_TextBox_VisualPassword.Text,
+                    Model_Users.WipServerAddress,
+                    Model_Users.Database,
+                    Model_Users.WipServerPort
                 );
 
                 if (!createUserResult.IsSuccess)
                 {
                     ShowError($"Error creating user: {createUserResult.ErrorMessage}");
+                    if (createUserResult.Exception != null)
+                        LoggingUtility.LogApplicationError(createUserResult.Exception);
                     return;
                 }
 
                 UpdateProgress(60, "Retrieving user information...");
                 
                 // Get the created user to retrieve the ID
-                var getUserResult = await Helper_Database_StoredProcedure.ExecuteDataTableWithStatus(
-                    Model_AppVariables.ConnectionString,
-                    "usr_users_Get_ByUser",
-                    new Dictionary<string, object> { ["p_User"] = userName },
-                    _progressHelper,
-                    true
-                );
+                var getUserResult = await Dao_User.GetUserByUsernameAsync(userName);
 
-                if (!getUserResult.IsSuccess || getUserResult.Data == null || getUserResult.Data.Rows.Count == 0)
+                if (!getUserResult.IsSuccess || getUserResult.Data == null)
                 {
                     ShowError("Could not retrieve new user ID after creation");
                     return;
@@ -307,7 +290,7 @@ namespace MTM_Inventory_Application.Controls.SettingsForm
                 UpdateProgress(70, "Processing user role assignment...");
                 await Task.Delay(100);
 
-                int userId = Convert.ToInt32(getUserResult.Data.Rows[0]["p_ID"]);
+                int userId = Convert.ToInt32(getUserResult.Data["p_ID"]);
                 int roleId = 3; // Default to Normal User
                 if (Control_Add_User_RadioButton_Administrator.Checked)
                 {
@@ -320,23 +303,14 @@ namespace MTM_Inventory_Application.Controls.SettingsForm
 
                 UpdateProgress(80, "Assigning user role...");
                 
-                // Add user role assignment
-                var addRoleResult = await Helper_Database_StoredProcedure.ExecuteNonQueryWithStatus(
-                    Model_AppVariables.ConnectionString,
-                    "sys_user_roles_Add",
-                    new Dictionary<string, object>
-                    {
-                        ["p_UserID"] = userId,
-                        ["RoleID"] = roleId,
-                        ["AssignedBy"] = Environment.UserName
-                    },
-                    _progressHelper,
-                    true
-                );
+                // Add user role assignment using DAO method
+                var addRoleResult = await Dao_User.AddUserRoleAsync(userId, roleId, Environment.UserName);
 
                 if (!addRoleResult.IsSuccess)
                 {
                     ShowError($"User created but role assignment failed: {addRoleResult.ErrorMessage}");
+                    if (addRoleResult.Exception != null)
+                        LoggingUtility.LogApplicationError(addRoleResult.Exception);
                     // Note: User was created successfully, but role assignment failed
                 }
 

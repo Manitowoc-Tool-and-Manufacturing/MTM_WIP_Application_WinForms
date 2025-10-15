@@ -17,7 +17,9 @@ internal static class Service_ErrorHandler
     #region Fields
     
     private static readonly Dictionary<string, int> _errorFrequency = new();
+    private static readonly Dictionary<string, DateTime> _lastErrorTimestamp = new();
     private static readonly object _errorLock = new();
+    private static readonly TimeSpan ErrorCooldownPeriod = TimeSpan.FromSeconds(5);
     
     #endregion
 
@@ -88,19 +90,30 @@ internal static class Service_ErrorHandler
         Dictionary<string, object>? contextData = null,
         [CallerMemberName] string callerName = "",
         string controlName = "",
-        string methodName = "")
+        string methodName = "",
+        DatabaseErrorSeverity dbSeverity = DatabaseErrorSeverity.Error)
     {
         // Add database-specific context
         var dbContextData = contextData ?? new Dictionary<string, object>();
         dbContextData["ErrorType"] = "Database";
         dbContextData["ConnectionString"] = "Hidden for security";
+        dbContextData["DatabaseSeverity"] = dbSeverity.ToString();
         
-        LoggingUtility.LogDatabaseError(ex);
+        LoggingUtility.LogDatabaseError(ex, dbSeverity);
         
         // Use methodName if provided, otherwise use callerName
         var effectiveCallerName = !string.IsNullOrEmpty(methodName) ? methodName : callerName;
         
-        return HandleException(ex, ErrorSeverity.High, retryAction, dbContextData, effectiveCallerName, controlName);
+        // Map database severity to general error severity for UI display
+        var uiSeverity = dbSeverity switch
+        {
+            DatabaseErrorSeverity.Warning => ErrorSeverity.Low,
+            DatabaseErrorSeverity.Error => ErrorSeverity.Medium,
+            DatabaseErrorSeverity.Critical => ErrorSeverity.High,
+            _ => ErrorSeverity.Medium
+        };
+        
+        return HandleException(ex, uiSeverity, retryAction, dbContextData, effectiveCallerName, controlName);
     }
 
     /// <summary>
@@ -271,6 +284,19 @@ internal static class Service_ErrorHandler
         }
     }
 
+    /// <summary>
+    /// Clear error cooldown state (useful for testing or after resolving known issues)
+    /// </summary>
+    public static void ClearErrorCooldownState()
+    {
+        lock (_errorLock)
+        {
+            _lastErrorTimestamp.Clear();
+            _errorFrequency.Clear();
+            LoggingUtility.Log("[ErrorCooldown] Cooldown state cleared");
+        }
+    }
+
     #endregion
 
     #region Legacy Compatibility Methods
@@ -354,16 +380,49 @@ internal static class Service_ErrorHandler
         lock (_errorLock)
         {
             var errorKey = $"{ex.GetType().Name}:{callerName}:{ex.Message.GetHashCode()}";
+            var now = DateTime.Now;
             
-            if (_errorFrequency.ContainsKey(errorKey))
+            // Check if this is a duplicate error within the cooldown period
+            if (_lastErrorTimestamp.TryGetValue(errorKey, out var lastTimestamp))
             {
-                _errorFrequency[errorKey]++;
-                // Suppress if we've seen this exact error more than 3 times in this session
-                return _errorFrequency[errorKey] > 3;
+                var timeSinceLastError = now - lastTimestamp;
+                
+                // Update frequency counter
+                if (_errorFrequency.ContainsKey(errorKey))
+                {
+                    _errorFrequency[errorKey]++;
+                }
+                else
+                {
+                    _errorFrequency[errorKey] = 1;
+                }
+                
+                // Log that we're suppressing the UI display but still logging to database
+                if (timeSinceLastError < ErrorCooldownPeriod)
+                {
+                    LoggingUtility.Log($"[ErrorCooldown] Suppressing duplicate UI error (shown {timeSinceLastError.TotalSeconds:F1}s ago): {errorKey}");
+                    // Update timestamp for next occurrence
+                    _lastErrorTimestamp[errorKey] = now;
+                    return true; // Suppress UI display
+                }
+                
+                // Cooldown period expired, allow display but check frequency
+                _lastErrorTimestamp[errorKey] = now;
+                
+                // Suppress if we've seen this error more than 10 times in this session (spam protection)
+                if (_errorFrequency[errorKey] > 10)
+                {
+                    LoggingUtility.Log($"[ErrorCooldown] Suppressing high-frequency error (occurrence #{_errorFrequency[errorKey]}): {errorKey}");
+                    return true;
+                }
+                
+                return false; // Allow UI display
             }
             
+            // First occurrence of this error
+            _lastErrorTimestamp[errorKey] = now;
             _errorFrequency[errorKey] = 1;
-            return false;
+            return false; // Allow UI display
         }
     }
 

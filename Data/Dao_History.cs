@@ -11,7 +11,7 @@ internal class Dao_History
 {
     #region History Methods
 
-    public static async Task AddTransactionHistoryAsync(Model_TransactionHistory history)
+    public static async Task<DaoResult> AddTransactionHistoryAsync(Model_TransactionHistory history)
     {
         try
         {
@@ -31,23 +31,26 @@ internal class Dao_History
                 ["in_ReceiveDate"] = history.DateTime
             };
 
-            var result = await Helper_Database_StoredProcedure.ExecuteNonQueryWithStatus(
+            var result = await Helper_Database_StoredProcedure.ExecuteNonQueryWithStatusAsync(
                 Model_AppVariables.ConnectionString,
                 "inv_transaction_Add",
                 parameters,
-                null, // No progress helper for this method
-                true  // Use async
+                null // No progress helper for this method
             );
 
             if (!result.IsSuccess)
             {
                 LoggingUtility.Log($"AddTransactionHistoryAsync failed: {result.ErrorMessage}");
+                return DaoResult.Failure(result.ErrorMessage ?? "Failed to add transaction history", result.Exception);
             }
+
+            return DaoResult.Success();
         }
         catch (Exception ex)
         {
             LoggingUtility.LogDatabaseError(ex);
-            await Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex, true, "AddTransactionHistoryAsync");
+            var errorResult = await Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex, callerName: "AddTransactionHistoryAsync");
+            return DaoResult.Failure("Failed to add transaction history", ex);
         }
     }
 

@@ -96,15 +96,49 @@ namespace MTM_Inventory_Application.Controls.MainForm
             {
                 try
                 {
+                    Service_DebugTracer.TraceUIAction("QUICK_BUTTONS_LOAD_EVENT", nameof(Control_QuickButtons),
+                        new Dictionary<string, object>
+                        {
+                            ["User"] = Model_AppVariables.User ?? "Unknown",
+                            ["Phase"] = "BEFORE_DELAY"
+                        });
+
                     await Task.Delay(100); // Small delay to ensure UI is fully ready
+
+                    Service_DebugTracer.TraceUIAction("QUICK_BUTTONS_LOAD_START", nameof(Control_QuickButtons),
+                        new Dictionary<string, object>
+                        {
+                            ["User"] = Model_AppVariables.User ?? "Unknown",
+                            ["Phase"] = "AFTER_DELAY"
+                        });
+
                     await LoadLast10Transactions(Model_AppVariables.User);
+
+                    Service_DebugTracer.TraceUIAction("QUICK_BUTTONS_LOAD_COMPLETE", nameof(Control_QuickButtons),
+                        new Dictionary<string, object>
+                        {
+                            ["User"] = Model_AppVariables.User ?? "Unknown",
+                            ["Success"] = true
+                        });
                 }
                 catch (Exception ex)
                 {
                     LoggingUtility.LogApplicationError(ex);
+                    Service_DebugTracer.TraceUIAction("QUICK_BUTTONS_LOAD_ERROR", nameof(Control_QuickButtons),
+                        new Dictionary<string, object>
+                        {
+                            ["User"] = Model_AppVariables.User ?? "Unknown",
+                            ["Error"] = ex.Message
+                        });
                 }
             };
             
+            Service_DebugTracer.TraceUIAction("QUICK_BUTTONS_POST_CONSTRUCTOR", nameof(Control_QuickButtons),
+                new Dictionary<string, object>
+                {
+                    ["Phase"] = "BEFORE_DPI_SCALING"
+                });
+
             Core_Themes.ApplyDpiScaling(this);
             Core_Themes.ApplyRuntimeLayoutAdjustments(this);
             menuItemRemove.Click += MenuItemRemove_Click;
@@ -119,20 +153,40 @@ namespace MTM_Inventory_Application.Controls.MainForm
         {
             try
             {
+                Service_DebugTracer.TraceMethodEntry(new Dictionary<string, object>
+                {
+                    ["CurrentUser"] = currentUser ?? "NULL",
+                    ["ConnectionString"] = Model_AppVariables.ConnectionString?.Substring(0, Math.Min(50, Model_AppVariables.ConnectionString?.Length ?? 0)) + "..."
+                }, nameof(Control_QuickButtons), nameof(LoadLast10Transactions));
+
+                LoggingUtility.Log($"[QuickButtons] Loading last 10 transactions for user: {currentUser}");
+
                 // FIXED: Use Helper_Database_StoredProcedure instead of direct MySqlConnection
                 // because the stored procedure has p_Status and p_ErrorMsg parameters
-                var dataResult = await Helper_Database_StoredProcedure.ExecuteDataTableWithStatus(
+                var dataResult = await Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync(
                     Model_AppVariables.ConnectionString,
                     "sys_last_10_transactions_Get_ByUser",
                     new Dictionary<string, object> { ["p_User"] = currentUser },
-                    null, // No progress helper for this method
-                    true  // Use async
+                    null // No progress helper for this method
                 );
+
+                Service_DebugTracer.TraceBusinessLogic("QUICK_BUTTONS_DATA_RESULT", 
+                    inputData: new { User = currentUser },
+                    outputData: new 
+                    { 
+                        IsSuccess = dataResult.IsSuccess,
+                        RowCount = dataResult.Data?.Rows.Count ?? 0,
+                        ErrorMessage = dataResult.ErrorMessage
+                    });
 
                 if (!dataResult.IsSuccess || dataResult.Data == null)
                 {
-                    LoggingUtility.Log($"Failed to load quick buttons for user {currentUser}: {dataResult.ErrorMessage}");
+                    LoggingUtility.Log($"[QuickButtons] ✗ Failed to load quick buttons for user {currentUser}: {dataResult.ErrorMessage}");
                     
+                    Service_DebugTracer.TraceBusinessLogic("QUICK_BUTTONS_LOAD_FAILED",
+                        inputData: new { User = currentUser },
+                        outputData: new { ErrorMessage = dataResult.ErrorMessage });
+
                     // Clear all buttons if no data can be loaded
                     if (quickButtons != null)
                     {
@@ -151,11 +205,15 @@ namespace MTM_Inventory_Application.Controls.MainForm
                         }
                         RefreshButtonLayout();
                     }
+
+                    Service_DebugTracer.TraceMethodExit(null, nameof(Control_QuickButtons), nameof(LoadLast10Transactions));
                     return;
                 }
 
                 var dataTable = dataResult.Data;
                 int i = 0;
+
+                LoggingUtility.Log($"[QuickButtons] ✓ Retrieved {dataTable.Rows.Count} transaction(s) from database for user {currentUser}");
                 
                 // Fill buttons with data from DB
                 foreach (System.Data.DataRow row in dataTable.Rows)
@@ -169,6 +227,8 @@ namespace MTM_Inventory_Application.Controls.MainForm
                     
                     // Always set position 1-10, no duplicates
                     int displayPosition = i + 1;
+
+                    LoggingUtility.Log($"[QuickButtons] Button {displayPosition}: Part={partId}, Op={operation}, Qty={quantity}");
                     string rawText = partId != null && operation != null && quantity != null
                         ? $"({operation}) - [{partId} x {quantity}]"
                         : string.Empty;
@@ -191,6 +251,8 @@ namespace MTM_Inventory_Application.Controls.MainForm
                     i++;
                 }
 
+                LoggingUtility.Log($"[QuickButtons] Filled {i} button(s) with data, clearing remaining {quickButtons?.Count - i} button(s)");
+
                 // Fill remaining buttons as empty but with unique position
                 if (quickButtons != null)
                 {
@@ -210,6 +272,10 @@ namespace MTM_Inventory_Application.Controls.MainForm
 
                     RefreshButtonLayout();
                 }
+
+                LoggingUtility.Log($"[QuickButtons] ✓ LoadLast10Transactions completed successfully for user {currentUser}");
+                Service_DebugTracer.TraceMethodExit(new { VisibleButtons = quickButtons?.Count(b => b.Visible) ?? 0 }, 
+                    nameof(Control_QuickButtons), nameof(LoadLast10Transactions));
             }
             catch (Exception ex)
             {
@@ -436,8 +502,17 @@ namespace MTM_Inventory_Application.Controls.MainForm
                 {
                     try
                     {
-                        await Dao_QuickButtons.UpdateQuickButtonAsync(user, idx, dlg.PartId, dlg.Operation,
+                        var result = await Dao_QuickButtons.UpdateQuickButtonAsync(user, idx, dlg.PartId, dlg.Operation,
                             dlg.Quantity);
+                        if (!result.IsSuccess)
+                        {
+                            LoggingUtility.LogDatabaseError(
+                                result.Exception ?? new Exception(result.ErrorMessage),
+                                DatabaseErrorSeverity.Error);
+                            MessageBox.Show($@"Failed to update quick button: {result.ErrorMessage}",
+                                @"Update Quick Button", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            return;
+                        }
                     }
                     catch (MySqlException ex)
                     {
@@ -460,7 +535,16 @@ namespace MTM_Inventory_Application.Controls.MainForm
                     int prevVisibleCount = quickButtons.Count(b => b.Visible);
                     try
                     {
-                        await Dao_QuickButtons.RemoveQuickButtonAndShiftAsync(user, idx);
+                        var result = await Dao_QuickButtons.RemoveQuickButtonAndShiftAsync(user, idx);
+                        if (!result.IsSuccess)
+                        {
+                            LoggingUtility.LogDatabaseError(
+                                result.Exception ?? new Exception(result.ErrorMessage),
+                                DatabaseErrorSeverity.Error);
+                            MessageBox.Show($@"Failed to remove quick button: {result.ErrorMessage}",
+                                @"Remove Quick Button", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            return;
+                        }
                     }
                     catch (MySqlException ex)
                     {
@@ -497,8 +581,19 @@ namespace MTM_Inventory_Application.Controls.MainForm
             {
                 List<Button> newOrder = dlg.GetButtonOrder();
                 string user = Model_AppVariables.User;
+                
                 // Remove all quick buttons for the user from the server
-                await Dao_QuickButtons.DeleteAllQuickButtonsForUserAsync(user);
+                var deleteResult = await Dao_QuickButtons.DeleteAllQuickButtonsForUserAsync(user);
+                if (!deleteResult.IsSuccess)
+                {
+                    LoggingUtility.LogDatabaseError(
+                        deleteResult.Exception ?? new Exception(deleteResult.ErrorMessage),
+                        DatabaseErrorSeverity.Error);
+                    MessageBox.Show($@"Failed to clear quick buttons: {deleteResult.ErrorMessage}",
+                        @"Clear Quick Buttons", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
+                
                 // Re-add them in the exact order shown in ListView
                 for (int i = 0; i < newOrder.Count; i++)
                 {
@@ -507,8 +602,18 @@ namespace MTM_Inventory_Application.Controls.MainForm
                     string partId = tag?.partId ?? string.Empty;
                     string operation = tag?.operation ?? string.Empty;
                     int quantity = tag?.quantity ?? 0;
+                    
                     // Use the new method that doesn't shift - directly insert at position i+1
-                    await Dao_QuickButtons.AddQuickButtonAtPositionAsync(user, partId, operation, quantity, i + 1);
+                    var addResult = await Dao_QuickButtons.AddQuickButtonAtPositionAsync(user, partId, operation, quantity, i + 1);
+                    if (!addResult.IsSuccess)
+                    {
+                        LoggingUtility.LogDatabaseError(
+                            addResult.Exception ?? new Exception(addResult.ErrorMessage),
+                            DatabaseErrorSeverity.Error);
+                        MessageBox.Show($@"Failed to add quick button at position {i + 1}: {addResult.ErrorMessage}",
+                            @"Add Quick Button", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        // Continue with remaining buttons despite error
+                    }
                 }
 
                 // Update UI

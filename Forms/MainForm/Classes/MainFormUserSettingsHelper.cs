@@ -34,7 +34,7 @@ public static class MainFormUserSettingsHelper
         Model_AppVariables.UserShift = null;
 
         var fontSize = await Dao_User.GetThemeFontSizeAsync(Model_AppVariables.User);
-        Model_AppVariables.ThemeFontSize = fontSize ?? 9;
+        Model_AppVariables.ThemeFontSize = fontSize.IsSuccess && fontSize.Data.HasValue ? fontSize.Data.Value : 9;
         Debug.WriteLine("[DEBUG] Finished loading user theme settings from DB");
     }
 
