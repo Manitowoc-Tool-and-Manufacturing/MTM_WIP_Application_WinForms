@@ -603,6 +603,113 @@ Severity level influences logging detail, user notification, and application beh
 
 ---
 
+**FR-022: Verbose Test Failure Diagnostics**  
+Integration tests MUST output comprehensive diagnostic information on failure:
+- Full exception message and stack trace
+- All input parameters (name/value pairs) passed to stored procedure
+- Expected output values (status codes, specific data rows)
+- Actual output values received
+- Procedure execution time in milliseconds
+- Relevant database state (row counts in affected tables before/after)
+- Test method name and timestamp
+- Format as structured JSON block for easy parsing
+
+Enables rapid diagnosis without re-running tests or attaching debugger, critical during Phase 2.5 refactoring when test failures common.
+
+---
+
+**FR-023: Developer Role and Development Tools Access**  
+System MUST implement Developer user role with restricted access to diagnostic tools:
+- Role hierarchy: Basic User < Admin < Developer (Developer inherits all Admin permissions)
+- Developer role requires Admin as prerequisite (cannot be granted independently)
+- Settings Form includes new "Development" TreeView category visible only to Developer role users
+- Development tools include: Parameter Prefix Maintenance, performance baseline tools, database connection diagnostics, stored procedure call history viewer, log file viewer with filtering, cache inspection and refresh tools
+- User management form updated with Developer checkbox (enabled only if Admin checked)
+- Role validation in Control base constructors for all Development tools
+
+Prevents accidental exposure of diagnostic tools to regular users while providing power-user capabilities for developers.
+
+---
+
+**FR-024: Concurrent Documentation Update System**  
+Documentation updates MUST occur concurrently with code/procedure refactoring:
+- When refactoring stored procedure, developer MUST immediately update: (1) Procedure header comments, (2) DAO XML documentation for calling method, (3) 00_STATUS_CODE_STANDARDS.md examples if procedure demonstrates new pattern, (4) quickstart.md if procedure commonly used
+- Documentation Update Matrix (`Documentation-Update-Matrix.md`) maps each T113-T118 refactoring task to required documentation updates
+- Matrix structure: Markdown table with columns: Task ID, Procedure Name, Header Comments (link), DAO XML Docs (link), Standards Update (Required/N/A), Quickstart Update (Required/N/A), Status (⬜/🔄/✅/⚠️)
+- T113-T118 task definitions include documentation checkboxes as deliverable requirements
+- Matrix becomes single source of truth for documentation completion tracking
+
+Prevents documentation drift and reduces end-of-phase documentation burden by integrating documentation as part of development workflow.
+
+---
+
+**FR-025: Schema Drift Detection and Re-Audit System**  
+System MUST detect and reconcile production database changes during Phase 2.5 implementation:
+- T101 baseline audit timestamped and versioned
+- T119b re-audit production procedures before test deployment to capture drift
+- Drift report categorizes each changed procedure: (A) Independent hotfix - preserve production logic, apply standards separately, (B) Conflicting change - manual three-way merge required, (C) New procedure - full Phase 2.5 refactoring required
+- Separate tasks handle each category: T119c refactors Category A, T119d merges Category B conflicts, T119e refactors Category C
+- T120 deployment uses post-reconciliation procedure set (refactored baseline + integrated production changes)
+- Reconciliation report documents all drift handling decisions as Phase 2.5 appendix
+
+Allows emergency hotfixes during Phase 2.5 (15-25 days) without blocking critical business operations while maintaining refactoring progress.
+
+---
+
+**FR-026: CSV Transaction Analysis and Review Workflow**  
+T103 audit MUST generate CSV file with procedure transaction strategy recommendations:
+- CSV structure: `ProcedureName, DetectedPattern, RecommendedStrategy, Confidence, Rationale, DeveloperCorrection, RefactoringNotes`
+- Detected patterns: single-step, multi-step, batch, reporting
+- Recommended strategies: explicit transaction, implicit transaction, none
+- Confidence levels: High/Medium/Low based on code analysis
+- Rationale explains why recommendation made based on detected code patterns
+- DeveloperCorrection column initially empty for developer review
+- Git-based review workflow: Commit CSV, assign domains to developers, developers fill corrections, create PR, peer review, merge
+- T106a task gates T113: CSV review and correction complete before refactoring begins
+- T114-T118 refactoring uses corrected CSV as authoritative source for transaction management decisions
+
+Structured documentation ensures correct transaction handling decisions with peer review validation before implementation.
+
+---
+
+**FR-027: Roslyn Analyzer for Database Access Compliance**  
+Custom Roslyn analyzer MUST enforce Helper routing compliance at compile-time:
+- Analyzer package name: `MTM.CodeAnalysis.DatabaseAccess`
+- Diagnostic rules: (1) Flag `new MySqlConnection()` outside Helper_Database_StoredProcedure.cs, (2) Flag `new MySqlCommand()` outside Helper classes, (3) Flag `MySqlDataAdapter`/`MySqlDataReader` outside Helper classes, (4) Provide code fix suggestions redirecting to Helper_Database_StoredProcedure methods
+- Phased severity enforcement: v1.0.0 emits Warnings during Phase 2.5 (allows refactoring), v2.0.0 emits Errors post-Phase 2.5 (prevents regression)
+- IDE integration: Real-time feedback (red squiggles) during development
+- CI/CD integration: Analyzer runs on every build, v2.0.0 blocks PR merge if violations detected
+
+Prevents direct MySQL API usage violations during development, not just detection during validation phase.
+
+---
+
+**FR-028: Parameter Prefix Override Database Table**  
+System MUST persist parameter prefix overrides in database for multi-user access:
+- Table name: `sys_parameter_prefix_override`
+- Columns: OverrideID (PK), ProcedureName, ParameterName, DetectedPrefix, OverridePrefix, Confidence, Reason, CreatedBy (User ID), CreatedDate, ModifiedBy, ModifiedDate, IsActive
+- Unique constraint: (ProcedureName, ParameterName)
+- Cache loads overrides from table at startup, merges with schema detection results
+- Parameter Prefix Maintenance form performs CRUD operations on override table
+- Export/import functionality allows transferring overrides between environments
+- Audit trail tracks who made changes and when for troubleshooting
+
+Provides persistent multi-user access to prefix overrides with complete audit trail, allows DBA to review override patterns and fix root causes in stored procedures.
+
+---
+
+**FR-029: Startup Parameter Prefix Retry Strategy**  
+Application startup MUST implement retry dialog for parameter prefix cache initialization failure:
+- INFORMATION_SCHEMA query failure shows MessageBox: "Failed to load database parameter metadata (Attempt X of 3). [Retry] [Quit]"
+- Display remaining attempts on each retry
+- After 3rd failed retry, show final message: "Unable to connect to database after 3 attempts. Application will close. Please check database connectivity and try again."
+- Application terminates if cache initialization fails (no fallback to convention-based guessing)
+- Logging captures retry attempts and final failure reason
+
+Prevents application from running with incomplete/fallback parameter data which could cause subtle bugs, ensures 100% accurate parameter metadata or refuses to start.
+
+---
+
 ### Key Entities
 
 **DaoResult**  
@@ -796,6 +903,89 @@ Application startup validates database connectivity and displays actionable erro
 - **Success Criteria**: Both scenarios complete within 3 seconds
 - **Error Message Quality**: Message includes server address, port, and troubleshooting guidance (not raw exception)
 - **User Experience**: Prevents confusion from half-loaded application with broken database layer
+
+---
+
+**SC-011: Verbose Test Failure Output Quality**  
+Integration test failures must include comprehensive diagnostic information in JSON format.
+- **Test 1**: Force test failure, verify output includes all required fields (exception, parameters, expected vs actual, execution time, database state)
+- **Test 2**: Parse JSON output programmatically, validate structure completeness
+- **Success Criteria**: 100% of test methods use base assertion helper producing structured diagnostics, all 7 required fields present on failure
+- **Developer Experience**: Failure output sufficient to diagnose issue without re-running test or attaching debugger
+- **Format Consistency**: All test failures follow identical JSON schema for tooling integration
+
+---
+
+**SC-012: Developer Role Access Control**  
+Development tools must be accessible only to users with Developer role (Admin + Developer privileges).
+- **Test 1 (Basic User)**: Log in as Basic User, verify Development TreeView node not visible in Settings Form
+- **Test 2 (Admin without Developer)**: Log in as Admin user without Developer flag, verify Development node not visible
+- **Test 3 (Developer Role)**: Log in as user with Admin + Developer flags, verify Development node visible and Parameter Prefix Maintenance form accessible
+- **Success Criteria**: Zero unauthorized access, all Development tools gated by role check
+- **Security**: Role validation enforced in Control base constructors, cannot be bypassed
+
+---
+
+**SC-013: Documentation Update Matrix Completeness**  
+All refactored procedures must have corresponding documentation updates tracked and validated.
+- **Test 1 (Matrix Generation)**: T129 generates Documentation-Update-Matrix.md with all T113-T118 procedures listed, file path links clickable
+- **Test 2 (Concurrent Updates)**: Developer refactors procedure, updates matrix status, validation confirms documentation files modified
+- **Test 3 (Completion Validation)**: T131 validation script passes only when all "Required" cells show "✅ Complete" status
+- **Success Criteria**: Zero undocumented procedures, 100% documentation synchronization with code changes
+- **Audit Trail**: Matrix commits show documentation progress alongside code commits
+
+---
+
+**SC-014: Schema Drift Detection Accuracy**  
+System must detect and categorize all production database changes during Phase 2.5 implementation.
+- **Test 1 (Hotfix Detection)**: Add new procedure to production during Phase 2.5, T119b re-audit detects and flags as Category C (new procedure)
+- **Test 2 (Modification Detection)**: Modify existing procedure in production, T119b detects and flags as Category A or B based on conflict status
+- **Test 3 (Reconciliation Completeness)**: Drift report accounts for all changes, no procedures missing from categorization
+- **Success Criteria**: 100% drift detection accuracy, all changes categorized and handled before T120 deployment
+- **Safety**: Prevents deploying stale procedures that overwrite critical production hotfixes
+
+---
+
+**SC-015: CSV Transaction Analysis Coverage**  
+Procedure transaction analysis CSV must cover all procedures with accurate recommendations.
+- **Test 1 (Coverage)**: T103 generates CSV with row for every stored procedure in database, no missing procedures
+- **Test 2 (Recommendation Quality)**: Review 20 procedures manually, verify DetectedPattern and RecommendedStrategy match code analysis
+- **Test 3 (Correction Workflow)**: Developer fills DeveloperCorrection column, commits via PR, T113 implementation references corrected CSV
+- **Success Criteria**: 100% procedure coverage, ≥90% detection accuracy (High/Medium confidence), developer corrections incorporated before refactoring
+- **Validation Gate**: T106a CSV review complete blocks T113 from starting until all procedures reviewed
+
+---
+
+**SC-016: Roslyn Analyzer Enforcement**  
+Custom Roslyn analyzer must detect and prevent direct MySQL API usage violations.
+- **Test 1 (Violation Detection)**: Add `new MySqlConnection()` in DAO class, verify analyzer shows warning (Phase 2.5) or error (post-Phase 2.5)
+- **Test 2 (Helper Exemption)**: Verify analyzer allows `new MySqlConnection()` in Helper_Database_StoredProcedure.cs without warning
+- **Test 3 (Code Fix Suggestions)**: Trigger analyzer rule, verify code fix suggestion offers Helper_Database_StoredProcedure alternative
+- **Test 4 (CI/CD Integration)**: Build with violations present, verify CI/CD pipeline fails post-Phase 2.5 (v2.0.0 analyzer)
+- **Success Criteria**: Zero false positives, 100% violation detection, code fixes functional and idiomatic
+- **Regression Prevention**: Post-Phase 2.5, impossible to merge PR with direct MySQL API usage
+
+---
+
+**SC-017: Parameter Prefix Override Persistence**  
+Parameter prefix overrides must persist in database with complete audit trail.
+- **Test 1 (CRUD Operations)**: Create override via maintenance form, verify saved to sys_parameter_prefix_override table
+- **Test 2 (Cache Integration)**: Add override, restart application, verify cache loads override and applies to procedure call
+- **Test 3 (Audit Trail)**: Create override, modify override, verify CreatedBy/CreatedDate and ModifiedBy/ModifiedDate populated correctly
+- **Test 4 (Multi-User Access)**: User A creates override, User B logs in, verify User B sees override in maintenance form
+- **Success Criteria**: 100% persistence across restarts, audit trail complete for all CRUD operations, no lost overrides
+- **Export/Import**: Verify export/import functionality transfers overrides between test and production environments
+
+---
+
+**SC-018: Startup Retry Strategy Behavior**  
+Application must handle parameter prefix cache initialization failure with clear retry options.
+- **Test 1 (First Failure)**: Block INFORMATION_SCHEMA access, launch app, verify MessageBox shows "Attempt 1 of 3" with Retry/Quit buttons
+- **Test 2 (Retry Success)**: Click Retry, unblock access, verify application continues startup successfully
+- **Test 3 (Exhausted Retries)**: Block access, exhaust 3 retries, verify application terminates with clear message
+- **Test 4 (Logging)**: Review logs after failed retry sequence, verify all attempts logged with failure reasons
+- **Success Criteria**: Zero crashes during retry sequence, clear user feedback on every attempt, accurate attempt counter, clean termination after 3 failures
+- **User Experience**: User understands what failed and has clear action path (fix database connectivity)
 
 ---
 

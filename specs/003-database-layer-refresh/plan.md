@@ -137,15 +137,18 @@
 - Production deployment requires DBA review and approval
 - Rollback plan documented (restore from backup)
 
-**2. Parameter Prefix Detection Failure (T100, FR-002)**  
-**Risk**: INFORMATION_SCHEMA query fails at startup, fallback convention inaccurate  
-**Impact**: MySQL parameter errors in production after deployment  
-**Mitigation**:
-- Fallback convention covers 95% of procedures (p_ default, in_ for Transfer*/transaction*)
-- T104 validates convention accuracy against actual procedures
-- Startup logs cache hit/miss rates for monitoring
+**2. Parameter Prefix Detection Failure (T100, FR-002, FR-029)** → **RISK REDUCED (HIGH → MEDIUM)**  
+**Risk**: INFORMATION_SCHEMA query fails at startup, parameter cache cannot populate  
+**Impact**: Application cannot start, requires manual intervention  
+**Mitigation** (Updated with retry strategy):
+- **Retry dialog** with 3 attempts (MessageBox with Retry/Quit buttons) gives users multiple chances during connection issues
+- **Clean termination** on failure (no fallback to potentially inaccurate convention - eliminates 95% coverage risk)
+- **Override table integration** (sys_parameter_prefix_override) allows manual prefix storage for edge cases
+- T104 validates cached prefixes against actual procedures (100% accuracy required)
+- Startup logs cache population success/failure for monitoring
 - Integration tests verify parameter binding for all procedures (T108-T112)
-- Manual verification of edge cases before deployment
+- Developer maintenance form (T113d) provides UI for managing override table
+- **Risk reduced**: Retry strategy eliminates inaccurate fallback risk, override table handles edge cases
 
 **3. Async Migration Breaking UI Thread Marshaling (FR-010)**  
 **Risk**: Forms update UI controls from background thread after awaiting async DAO calls  
@@ -167,7 +170,18 @@
 
 ### Medium-Risk Areas
 
-**5. Performance Regression from DaoResult Wrapping**  
+**5. Documentation Drift During Concurrent Development (FR-024)** → **RISK REDUCED (MEDIUM → LOW)**  
+**Risk**: Documentation updates lag behind code changes during T113-T116 refactoring, creating outdated docs  
+**Impact**: Inaccurate documentation, team confusion, rework required  
+**Mitigation** (Updated with concurrent documentation):
+- **Documentation-Update-Matrix.md** tracks 145+ documentation items with status (⬜/🔄/✅/⚠️)
+- **Concurrent updates** during T113-T116 (developers check procedure header comments + DAO XML as they refactor)
+- **Validation script** checks completeness before deployment (exit code 0 = 100% complete, exit code 1 = incomplete)
+- Duration increases 20% (T113: 20h→24h, T114: 10h→12h, T115: 15h→18h, T116: 20h→24h) account for documentation time
+- T130 completes any remaining backlog, T131 validates 100% completion
+- **Risk reduced**: Concurrent tracking prevents drift, validation enforces completeness
+
+**6. Performance Regression from DaoResult Wrapping**  
 **Risk**: Additional object allocation and method calls slow down operations  
 **Impact**: User-perceivable lag, timeout errors under load  
 **Mitigation**:
@@ -176,7 +190,7 @@
 - DaoResult is lightweight struct (~40 bytes per instance)
 - Connection pooling maintains baseline performance
 
-**6. Integration Test Flakiness from Shared Test Database**  
+**7. Integration Test Flakiness from Shared Test Database**  
 **Risk**: Parallel test runs interfere with each other, causing intermittent failures  
 **Impact**: False positives in CI/CD, developer frustration  
 **Mitigation**:
@@ -187,7 +201,7 @@
 
 ### Low-Risk Areas
 
-**7. Error Logging Recursion (FR-006)**  
+**8. Error Logging Recursion (FR-006)**  
 **Risk**: Error during error logging causes infinite loop  
 **Impact**: Application hang, log file growth  
 **Mitigation**:
@@ -195,7 +209,7 @@
 - Integration test validates recursive prevention (T111)
 - File fallback prevents loop even if database completely unavailable
 
-**8. Connection Pool Exhaustion Under Unexpected Load (FR-008)**  
+**9. Connection Pool Exhaustion Under Unexpected Load (FR-008)**  
 **Risk**: Sudden traffic spike exhausts 100 connection pool  
 **Impact**: Timeout errors, user-facing failures  
 **Mitigation**:
@@ -203,6 +217,53 @@
 - ConnectionTimeout=30s prevents indefinite waits
 - Load testing (SC-005) validates 100 concurrent operations
 - Monitoring alerts if pool >80% capacity
+
+### New Risks from Session 3 Changes
+
+**R-NEW-1: Developer Role Privilege Escalation**  
+**Risk**: Developer role grants excessive privileges, allowing unauthorized database changes  
+**Impact**: Data integrity violations, unauthorized schema modifications, audit trail bypass  
+**Severity**: HIGH  
+**Mitigation**:
+- Role hierarchy enforced: Developer role requires Admin=TRUE prerequisite (cannot grant Developer without Admin)
+- Parameter prefix override table (sys_parameter_prefix_override) includes audit trail (CreatedBy, CreatedDate, ModifiedBy, ModifiedDate)
+- Developer maintenance form (Control_Settings_ParameterPrefixMaintenance) gated by IsAdmin AND IsDeveloper check
+- T113c includes role validation helpers to prevent UI bypass
+- Security testing validates role enforcement before deployment
+
+**R-NEW-2: Schema Drift Reconciliation Complexity**  
+**Risk**: Category B conflicts (overlapping production and Phase 2.5 changes) fail three-way merge, require excessive manual intervention  
+**Impact**: Deployment delays, incorrect merge decisions, business logic regressions  
+**Severity**: MEDIUM  
+**Mitigation**:
+- T119b categorization identifies conflicts early (before deployment window)
+- T119d dedicates 0.25-0.5 days per conflict with systematic three-way merge process
+- Conflict resolution log documents merge decisions for review
+- Integration tests validate merged procedures thoroughly
+- DBA review includes drift reconciliation report approval
+- Typical conflict count expected: 1-3 procedures (low volume reduces risk)
+
+**R-NEW-3: CSV Transaction Analysis Review Bottleneck**  
+**Risk**: T106a CSV review takes longer than estimated (1-2 days), gates T113 refactoring start  
+**Impact**: Timeline delays, developer idle time, pressure to rush CSV review  
+**Severity**: MEDIUM  
+**Mitigation**:
+- Git-based PR workflow parallelizes review across 3 developers (domain assignment: inventory, user/transaction, master data)
+- Estimated 4-6 hours per developer (concurrent, not sequential)
+- CSV format with DeveloperCorrection column allows incremental corrections without full re-analysis
+- T103 automated pattern detection provides 90%+ accuracy baseline (minimal corrections needed)
+- If bottleneck occurs: Proceed with high-confidence procedures (≥95% confidence), defer low-confidence for T106a completion
+
+**R-NEW-4: Roslyn Analyzer False Positives**  
+**Risk**: MTM001-MTM004 diagnostic rules produce false positive warnings, causing developer friction  
+**Impact**: Developer frustration, disabled analyzer, compliance erosion  
+**Severity**: LOW  
+**Mitigation**:
+- v1.0.0 uses Warning severity (educational phase) - developers can ignore false positives initially
+- Code fix providers auto-generate correct Helper patterns - reduces manual coding errors
+- T124 validates analyzer against known-good codebase (Zero false positives required before v2.0.0 Error enforcement)
+- Phased severity rollout (v1.0.0 warnings → v2.0.0 errors after validation period)
+- Suppression mechanism for justified violations (e.g., test code, legacy compatibility)
 
 ---
 
@@ -212,14 +273,28 @@
 
 Phase 2.5 inserted as blocking prerequisite between Phase 2 (Foundation) and Phase 3 (DAO Refactoring). Original Phase 3-8 tasks depend on Phase 2.5 completion.
 
-**Timeline Estimates**:
-- **Single Developer**: 15-25 days (full-time)
-- **3 Developers (Parallel)**: 8-12 days (Parts A/B/C can parallelize)
+**Timeline Estimates** (Updated with Session 3 changes):
+- **Single Developer**: 19-30 days (was 15-25 days) - added 3.625-5.25 days for new tasks
+  - Additional time breakdown:
+    - T106a CSV review: +1-2 days
+    - T113c Developer role: +0.5 days (4 hours)
+    - T113d Maintenance form: +1 day (8 hours)
+    - T119b/c/d/e Drift reconciliation: +0.75-1.5 days
+    - T124a Roslyn analyzer: +0.125 days (2-3 hours)
+    - T113-T116 documentation time: +0.8 days (20% duration increase)
+    - Part F restructuring: -0.5 days (matrix generation vs bulk docs)
+- **3 Developers (Parallel)**: 10-15 days (was 8-12 days) - added 2-3 days for coordination
+  - Parts A/B/C can parallelize with documentation matrix tracking
+  - T106a CSV review parallelized across domains (4-6 hours per developer, concurrent)
+  - T119b/c/d/e drift reconciliation may extend deployment window by 1-2 days
 
-**Resource Allocation**:
-- **Developer 1**: Parts A + D (Discovery + Deployment) - 8 days
-- **Developer 2**: Parts B + E (Testing + Integration) - 10 days
-- **Developer 3**: Parts C + F (Refactoring + Documentation) - 9 days
+**Resource Allocation** (Updated):
+- **Developer 1**: Parts A + D (Discovery + Deployment + Drift) - 10-12 days
+  - Added: T106a CSV review (shared), T119b/c/d/e drift reconciliation
+- **Developer 2**: Parts B + E (Testing + Integration + Roslyn) - 11-13 days
+  - Added: T107 verbose helper (1h), T124a Roslyn analyzer (2-3h), T123 retry testing (1h)
+- **Developer 3**: Parts C + F (Refactoring + Documentation + Dev Tools) - 11-14 days
+  - Added: T113c Developer role (4h), T113d Maintenance form (8h), T113-T116 concurrent docs (+20% each)
 
 ---
 
@@ -262,16 +337,20 @@ Extract CREATE PROCEDURE statements and save as individual .sql files for versio
 - **Dependencies**: T101 (need procedure list)
 
 **T103: Audit All Procedures Against 00_STATUS_CODE_STANDARDS.md Template**  
-Compare each procedure signature and logic against standardized template to identify non-compliance.
+Compare each procedure signature and logic against standardized template to identify non-compliance AND generate transaction strategy recommendations.
 - **Method**: For each procedure, validate:
   - Has `OUT p_Status INT` parameter
   - Has `OUT p_ErrorMsg VARCHAR(500)` parameter
   - Uses status codes correctly (1=success with data, 0=success no data, -1 to -5=errors)
   - Handles exceptions properly (sets error status on failure)
   - Parameter naming follows PascalCase with consistent prefix (p_, in_, o_)
-- **Output**: `compliance-report.csv` with columns: ProcedureName, HasStatus, HasErrorMsg, StatusLogicCorrect, ParameterPrefixConsistent, ComplianceScore (0-100%)
-- **Deliverable**: Compliance report showing ~40-60% current compliance rate
-- **Duration**: 6 hours (manual review of 60+ procedures)
+  - **NEW**: Count INSERT/UPDATE/DELETE statements (multi-step detection)
+  - **NEW**: Analyze call graph for nested procedure calls
+  - **NEW**: Classify procedure pattern (single-step, multi-step, batch, reporting)
+- **Output 1**: `compliance-report.csv` with columns: ProcedureName, HasStatus, HasErrorMsg, StatusLogicCorrect, ParameterPrefixConsistent, ComplianceScore (0-100%)
+- **Output 2**: `procedure-transaction-analysis.csv` with columns: ProcedureName, DetectedPattern, RecommendedStrategy, Confidence, Rationale, DeveloperCorrection (empty), RefactoringNotes (empty)
+- **Deliverable**: Compliance report showing ~40-60% current compliance rate + Transaction analysis CSV for T106a review
+- **Duration**: 7 hours (manual review of 60+ procedures + pattern analysis)
 - **Dependencies**: T102 (need procedure source files)
 
 **T104: Document Parameter Prefix Conventions per Procedure Type**  
@@ -306,11 +385,26 @@ Map which procedures currently have integration tests vs those requiring new tes
 - **Duration**: 3 hours
 - **Dependencies**: T101 (need procedure list)
 
+**T106a: CSV Review and Correction - Transaction Strategy Validation**  
+Developer review of procedure-transaction-analysis.csv to validate and correct automated recommendations.
+- **Method**: Git-based review workflow
+  1. T103 commits procedure-transaction-analysis.csv to Database/AnalysisReports/
+  2. Tech lead assigns procedure domains to developers (Inventory, Users, Transactions, etc.)
+  3. Developers fill DeveloperCorrection column: Leave blank if correct, enter corrected strategy + rationale if wrong
+  4. Developers commit corrections, create PR with domain-specific changes
+  5. Peer developer reviews corrections for assigned domain
+  6. Merge corrected CSV after review approval
+- **Output**: Corrected CSV with all procedures reviewed and validated
+- **Deliverable**: Authoritative transaction strategy document for T113-T118 implementation
+- **Duration**: 1-2 days (parallelizable by domain: 4-6 hours per developer if 3 developers)
+- **Dependencies**: T103 (need CSV generation)
+- **Gates**: T113 cannot start until this review complete and CSV merged
+
 **Part A Summary**:
-- **Tasks**: 7 discovery and analysis tasks
-- **Duration**: 18 hours (~2.5 days single developer)
-- **Deliverables**: 6 reports/documents providing complete database layer inventory
-- **Critical Output**: Prioritized refactoring plan and gap analysis
+- **Tasks**: 8 discovery and analysis tasks (includes T106a)
+- **Duration**: 20-24 hours (~2.5-3 days single developer, ~1 day with 3 developers parallelizing T106a)
+- **Deliverables**: 7 reports/documents providing complete database layer inventory
+- **Critical Output**: Prioritized refactoring plan, validated transaction strategies, and gap analysis
 
 ---
 
@@ -321,7 +415,7 @@ Map which procedures currently have integration tests vs those requiring new tes
 **Tasks**:
 
 **T107: Create BaseIntegrationTest Class with Transaction Management**  
-Build reusable base class for integration tests with automatic transaction rollback.
+Build reusable base class for integration tests with automatic transaction rollback and verbose failure diagnostics.
 - **Implementation**:
   ```csharp
   public abstract class BaseIntegrationTest
@@ -352,26 +446,52 @@ Build reusable base class for integration tests with automatic transaction rollb
       {
           // Helper method executing procedure within test transaction
       }
+      
+      // NEW: Verbose failure diagnostic helper
+      protected void AssertProcedureResult(DaoResult result, bool expectedSuccess, string expectedMessagePattern = null)
+      {
+          if (result.IsSuccess != expectedSuccess)
+          {
+              var diagnostic = new {
+                  Exception = result.Exception?.ToString(),
+                  Parameters = TestCurrentParameters,  // Captured from test method
+                  Expected = new { IsSuccess = expectedSuccess, MessagePattern = expectedMessagePattern },
+                  Actual = new { IsSuccess = result.IsSuccess, Message = result.Message },
+                  ExecutionTimeMs = TestCurrentExecutionTime,
+                  DatabaseState = CaptureTableRowCounts(),
+                  TestMethod = TestContext.TestName,
+                  Timestamp = DateTime.Now
+              };
+              Assert.Fail($"Procedure result assertion failed.\n{JsonSerializer.Serialize(diagnostic, new JsonSerializerOptions { WriteIndented = true })}");
+          }
+      }
+      
+      protected Dictionary<string, int> CaptureTableRowCounts(params string[] tables)
+      {
+          // Query table row counts for before/after comparison
+      }
   }
   ```
-- **Deliverable**: BaseIntegrationTest.cs in Tests/Integration/ folder
-- **Duration**: 4 hours
+- **Deliverable**: BaseIntegrationTest.cs in Tests/Integration/ folder with verbose diagnostic helpers
+- **Duration**: 5 hours (includes verbose helper implementation)
 - **Dependencies**: None (foundational task)
 
 **T108: Generate Integration Tests for Inventory Procedures (15 procedures)**  
-Create test classes for all inv_inventory_* procedures following 4-test pattern.
+Create test classes for all inv_inventory_* procedures following 4-test pattern with verbose failures.
 - **Test Pattern** (per procedure):
   1. **Success with data**: Valid inputs → returns DaoResult.Success, Data populated
   2. **Success no data**: Valid inputs, no matching records → returns DaoResult.Success, Data empty
   3. **Validation error**: Invalid inputs (null required param) → returns DaoResult.Failure, error message clear
   4. **Database error**: Force constraint violation → returns DaoResult.Failure, exception logged
+- **All tests use AssertProcedureResult()** for verbose failure diagnostics (7 fields: exception, parameters, expected vs actual, execution time, database state, test method, timestamp)
 - **Scope**: 15 inventory procedures × 4 tests = 60 test methods
 - **Deliverable**: InventoryProcedures_IntegrationTests.cs (~800 LOC)
 - **Duration**: 12 hours
 - **Dependencies**: T107 (need BaseIntegrationTest)
 
 **T109: Generate Integration Tests for Transaction/User/Role Procedures (20 procedures)**  
-Create test classes for inv_transaction_*, sys_user_*, sys_role_* procedures.
+Create test classes for inv_transaction_*, sys_user_*, sys_role_* procedures with verbose failure diagnostics.
+- **All tests use AssertProcedureResult()** for structured JSON diagnostic output on failure
 - **Scope**: 20 procedures × 4 tests = 80 test methods
 - **Deliverable**: 3 test files:
   - TransactionProcedures_IntegrationTests.cs (~400 LOC)
@@ -381,7 +501,8 @@ Create test classes for inv_transaction_*, sys_user_*, sys_role_* procedures.
 - **Dependencies**: T107 (need BaseIntegrationTest)
 
 **T110: Generate Integration Tests for Master Data Procedures (20 procedures)**  
-Create test classes for md_part_ids_*, md_locations_*, md_operation_numbers_*, md_item_types_* procedures.
+Create test classes for md_part_ids_*, md_locations_*, md_operation_numbers_*, md_item_types_* procedures with verbose diagnostics.
+- **All tests use AssertProcedureResult()** for comprehensive failure information
 - **Scope**: 20 procedures × 4 tests = 80 test methods
 - **Deliverable**: MasterDataProcedures_IntegrationTests.cs (~800 LOC)
 - **Duration**: 12 hours
@@ -418,43 +539,106 @@ Verify integration tests don't interfere with each other when run in parallel.
 
 ### Phase 2.5 Part C: Stored Procedure Refactoring (T113-T118)
 
-**Objective**: Refactor all non-compliant stored procedures to match 00_STATUS_CODE_STANDARDS.md template.
+**Objective**: Refactor all non-compliant stored procedures to match 00_STATUS_CODE_STANDARDS.md template and create Developer role infrastructure.
 
 **Tasks**:
 
+**T113c: Create Developer User Role and Parameter Prefix Override Infrastructure**  
+Implement Developer role hierarchy and database table for parameter prefix management.
+- **Database Schema Changes**:
+  ```sql
+  -- Add Developer flag to sys_user table
+  ALTER TABLE sys_user ADD COLUMN IsDeveloper BOOLEAN DEFAULT FALSE AFTER IsAdmin;
+  
+  -- Create parameter prefix override table
+  CREATE TABLE sys_parameter_prefix_override (
+      OverrideID INT AUTO_INCREMENT PRIMARY KEY,
+      ProcedureName VARCHAR(100) NOT NULL,
+      ParameterName VARCHAR(100) NOT NULL,
+      DetectedPrefix VARCHAR(10),
+      OverridePrefix VARCHAR(10) NOT NULL,
+      Confidence DECIMAL(3,2),
+      Reason VARCHAR(500),
+      CreatedBy INT NOT NULL,
+      CreatedDate DATETIME DEFAULT CURRENT_TIMESTAMP,
+      ModifiedBy INT,
+      ModifiedDate DATETIME ON UPDATE CURRENT_TIMESTAMP,
+      IsActive BOOLEAN DEFAULT TRUE,
+      UNIQUE KEY unique_proc_param (ProcedureName, ParameterName),
+      FOREIGN KEY (CreatedBy) REFERENCES sys_user(UserID),
+      FOREIGN KEY (ModifiedBy) REFERENCES sys_user(UserID)
+  );
+  ```
+- **User Management UI Updates**:
+  - Add Developer checkbox to user management form (enabled only if Admin checked)
+  - Enforce role prerequisite: Developer requires IsAdmin = TRUE
+  - Update role permission matrix documentation
+- **Role Hierarchy**: Basic User < Admin < Developer (Developer inherits all Admin permissions)
+- **Deliverable**: Schema migration script, updated user management form, role validation helpers
+- **Duration**: 0.5 days (4 hours)
+- **Dependencies**: None (prerequisite for T113d)
+
+**T113d: Create Parameter Prefix Maintenance Form (Developer Tools)**  
+Build Settings Form UI for managing parameter prefix overrides.
+- **UserControl**: Control_Settings_ParameterPrefixMaintenance
+- **TreeView Location**: Settings Form → Development → Parameter Prefix Management
+- **UI Components**:
+  - DataGridView: Columns for ProcedureName, ParameterName, DetectedPrefix, OverridePrefix, Confidence, Reason
+  - Buttons: Add Override, Edit Override, Delete Override, Save All, Reload Cache, Export, Import
+  - Audit Log Panel: Shows recent changes (CreatedBy, ModifiedDate, Action)
+  - Filter Controls: Search by procedure name, filter by confidence level
+- **Functionality**:
+  - CRUD operations on sys_parameter_prefix_override table
+  - Export overrides to JSON file for environment transfer
+  - Import overrides from JSON file
+  - Reload button triggers cache refresh (calls Helper_Database_StoredProcedure.RefreshPrefixCache())
+  - Role validation: Visible only to users with IsAdmin=TRUE AND IsDeveloper=TRUE
+- **Deliverable**: Fully functional maintenance form with database persistence
+- **Duration**: 1 day (8 hours)
+- **Dependencies**: T113c (need database schema and role infrastructure)
+
 **T113: Refactor Top 20 Priority Procedures from T105 Matrix**  
-Standardize highest-priority procedures (most used, least compliant).
+Standardize highest-priority procedures (most used, least compliant) with concurrent documentation.
 - **Method**: For each procedure:
   1. Add `OUT p_Status INT, OUT p_ErrorMsg VARCHAR(500)` parameters if missing
-  2. Standardize parameter prefixes (p_ for CRUD, in_ for multi-step)
+  2. Standardize parameter prefixes (p_ for CRUD, in_ for multi-step per corrected CSV from T106a)
   3. Implement proper error handling (SET p_Status=-1, SET p_ErrorMsg='Error description')
   4. Add success status logic (SET p_Status=1 for data returned, SET p_Status=0 for no data)
-  5. Update procedure comments with parameter documentation
-  6. Save updated procedure to `Database/UpdatedStoredProcedures/<name>.sql`
+  5. Update procedure header comments with parameter documentation
+  6. **Concurrent documentation** (tracked in Documentation-Update-Matrix.md):
+     - ☐ Update procedure header comments
+     - ☐ Update DAO XML documentation for calling method
+     - ☐ Update 00_STATUS_CODE_STANDARDS.md if new pattern demonstrated
+     - ☐ Update quickstart.md if commonly used procedure
+  7. Save updated procedure to `Database/UpdatedStoredProcedures/<name>.sql`
+  8. Mark documentation checkboxes complete in matrix
 - **Scope**: Top 20 procedures from refactoring priority matrix
-- **Deliverable**: 20 refactored .sql files with standardized signatures
-- **Duration**: 20 hours (1 hour per procedure average, includes testing)
-- **Dependencies**: T105 (need priority matrix)
+- **Deliverable**: 20 refactored .sql files with standardized signatures + concurrent documentation updates
+- **Duration**: 24 hours (1.2 hours per procedure average, includes documentation)
+- **Dependencies**: T105 (need priority matrix), T106a (need corrected transaction strategy CSV)
 
-**T114: Refactor Remaining Inventory Procedures**  
+**T114: Refactor Remaining Inventory Procedures with Documentation**  
 Standardize all remaining inv_inventory_* and inv_transaction_* procedures not covered in T113.
+- **Includes concurrent documentation checkboxes** (same 4 items as T113)
 - **Scope**: ~10 remaining inventory/transaction procedures
-- **Deliverable**: 10 refactored .sql files
-- **Duration**: 10 hours
+- **Deliverable**: 10 refactored .sql files + documentation updates
+- **Duration**: 12 hours (includes documentation time)
 - **Dependencies**: T105, T113 (complete high-priority first)
 
-**T115: Refactor User/Role Management Procedures**  
+**T115: Refactor User/Role Management Procedures with Documentation**  
 Standardize all sys_user_*, sys_role_*, sys_user_role_* procedures.
+- **Includes concurrent documentation checkboxes** (tracked in matrix)
 - **Scope**: ~15 user/role management procedures
-- **Deliverable**: 15 refactored .sql files
-- **Duration**: 15 hours
+- **Deliverable**: 15 refactored .sql files + documentation updates
+- **Duration**: 18 hours (includes documentation time)
 - **Dependencies**: T105, T113
 
-**T116: Refactor Master Data Procedures**  
+**T116: Refactor Master Data Procedures with Documentation**  
 Standardize all md_part_ids_*, md_locations_*, md_operation_numbers_*, md_item_types_* procedures.
+- **Includes concurrent documentation checkboxes** (tracked in matrix)
 - **Scope**: ~20 master data procedures
-- **Deliverable**: 20 refactored .sql files
-- **Duration**: 20 hours
+- **Deliverable**: 20 refactored .sql files + documentation updates
+- **Duration**: 24 hours (includes documentation time)
 - **Dependencies**: T105, T113
 
 **T117: Refactor Logging/Quick Button/System Procedures**  
@@ -572,22 +756,83 @@ Build PowerShell script that wipes old procedures and installs new ones with saf
 - **Duration**: 6 hours (includes testing and documentation)
 - **Dependencies**: T113-T118 (need all refactored procedures ready)
 
+**T119b: Re-audit Production Procedures for Schema Drift Detection**  
+Run fresh audit of production database to detect changes made during Phase 2.5 implementation period.
+- **Method**:
+  1. Execute T101 audit steps against current production (same query, fresh timestamp)
+  2. Compare re-audit results to baseline audit from Phase 2.5 start
+  3. Identify drift: procedures added, modified, or deleted since baseline
+  4. Categorize each drifted procedure:
+     - **Category A - Independent Hotfix**: Production change unrelated to Phase 2.5 refactoring (preserve business logic, apply standards separately)
+     - **Category B - Conflicting Change**: Production change affects same procedure being refactored (manual three-way merge required)
+     - **Category C - New Procedure**: Procedure added to production during Phase 2.5 (full refactoring required)
+  5. Generate drift report with categorization
+- **Output**: Drift report CSV with columns: ProcedureName, DriftType (Added/Modified/Deleted), Category (A/B/C), BaselineVersion, CurrentVersion, ConflictRisk (Low/Medium/High)
+- **Deliverable**: Categorized drift report for T119c/d/e processing
+- **Duration**: 0.25 days (2 hours)
+- **Dependencies**: T113-T118 complete (need refactoring finished before comparing drift)
+
+**T119c: Refactor Category A Procedures (Independent Hotfixes)**  
+Apply Phase 2.5 standards to production hotfixes while preserving business logic changes.
+- **Method**:
+  1. For each Category A procedure, extract from current production (not baseline)
+  2. Apply 00_STATUS_CODE_STANDARDS.md template (add OUT params, standardize prefixes, error handling)
+  3. Preserve all production business logic changes (new queries, logic branches, parameter additions)
+  4. Document hotfix origin in procedure header comments: "HOTFIX: Applied during Phase 2.5, standardized YYYY-MM-DD"
+  5. Save to UpdatedStoredProcedures/ with _hotfix suffix temporarily for tracking
+  6. Test refactored hotfix procedures using integration tests
+- **Deliverable**: Category A procedures refactored and tested (typically 2-5 procedures)
+- **Duration**: 0.25-0.5 days (depends on hotfix count, 1-2 hours per procedure)
+- **Dependencies**: T119b (need categorized drift report)
+
+**T119d: Merge Category B Conflicts (Three-Way Merge)**  
+Manually resolve conflicts where production changes overlap with Phase 2.5 refactoring.
+- **Method**:
+  1. For each Category B procedure, gather three versions:
+     - **Baseline**: Original procedure from Phase 2.5 start (T102 extraction)
+     - **Refactored**: Phase 2.5 standardized version (from T113-T118)
+     - **Production**: Current production version with hotfix changes
+  2. Perform three-way merge using diff tool (VS Code, Beyond Compare, etc.)
+  3. Merge strategy:
+     - Keep Phase 2.5 standardization (OUT params, error handling, prefixes)
+     - Integrate production business logic changes
+     - Resolve conflicts favoring production business logic over baseline
+  4. Document merge decisions in conflict resolution log
+  5. Test merged procedures thoroughly (integration tests + manual validation)
+- **Deliverable**: Category B procedures merged with conflict resolution documentation (typically 1-3 procedures)
+- **Duration**: 0.25-0.5 days (depends on conflict count, 2-3 hours per conflict)
+- **Dependencies**: T119b (need categorized conflicts), T119c (resolve hotfixes first to reduce conflict surface)
+
+**T119e: Refactor Category C Procedures (New Procedures)**  
+Full Phase 2.5 treatment for procedures added to production during implementation.
+- **Method**:
+  1. Extract Category C procedures from current production
+  2. Run compliance audit (same checks as T103) to establish baseline scores
+  3. Apply full refactoring workflow: add OUT params, standardize prefixes, error handling, documentation
+  4. Create integration tests (4-test pattern from T108-T111)
+  5. Update Documentation-Update-Matrix.md with new procedure entries
+  6. Save to UpdatedStoredProcedures/ with standard organization
+- **Deliverable**: Category C procedures fully refactored, tested, and documented (typically 1-4 procedures)
+- **Duration**: 0.25-0.5 days (depends on new procedure count, 1-2 hours per procedure)
+- **Dependencies**: T119b (need categorized new procedures), T119c/d (handle conflicts first)
+
 **T120: Execute Test Database Deployment and Validation**  
-Deploy to mtm_wip_application_winforms_test and validate all procedures executable.
+Deploy to mtm_wip_application_winforms_test using post-reconciliation procedure set and validate all procedures executable.
 - **Method**:
   1. Run `Deploy-StoredProcedures.ps1 -Environment Test`
-  2. Execute all integration tests (T108-T111) against test database
-  3. Review deployment logs for errors or warnings
-  4. Manually test 5 high-priority procedures via DAO calls
-- **Success Criteria**: All integration tests pass (100% pass rate), no deployment errors
-- **Deliverable**: Test deployment validation report
+  2. **Deployment uses post-reconciliation procedures**: Refactored baseline (T113-T118) + Category A hotfixes (T119c) + Category B merged (T119d) + Category C new (T119e)
+  3. Execute all integration tests (T108-T111) against test database
+  4. Review deployment logs for errors or warnings
+  5. Manually test 5 high-priority procedures via DAO calls
+- **Success Criteria**: All integration tests pass (100% pass rate), no deployment errors, drift procedures properly integrated
+- **Deliverable**: Test deployment validation report with drift reconciliation confirmation
 - **Duration**: 4 hours
-- **Dependencies**: T119 (need deployment script), T108-T111 (need integration tests)
+- **Dependencies**: T119 (need deployment script), T119b/c/d/e (need reconciled procedures), T108-T111 (need integration tests)
 
 **T121: Execute Production Database Deployment (with DBA Review)**  
-Deploy to mtm_wip_application after DBA approval and backup verification.
+Deploy to mtm_wip_application after DBA approval, backup verification, and drift reconciliation review.
 - **Prerequisites**:
-  - DBA reviews deployment plan and refactored procedures
+  - DBA reviews deployment plan, refactored procedures, AND drift reconciliation report (T119b/c/d/e)
   - Full database backup created and validated (restore test)
   - Rollback plan documented (restore from backup + previous procedure SQL files)
   - Maintenance window scheduled (off-hours deployment)
@@ -608,8 +853,14 @@ Deploy to mtm_wip_application after DBA approval and backup verification.
 **Part D Summary**:
 - **Tasks**: 3 deployment tasks
 - **Duration**: 13 hours (~2 days including monitoring)
-- **Deliverables**: Production database with 100% standardized procedures
+- **Deliverables**: Production database with 100% standardized procedures, drift reconciliation complete
 - **Critical Output**: Safe, validated deployment with rollback capability
+
+**Part D Summary**:
+- **Tasks**: 7 (T119-T121 + T119b/c/d/e drift reconciliation)
+- **Duration**: 19-21 hours (2.5-3 days including drift reconciliation: 0.75-1.5 days)
+- **Key Deliverables**: Deployment script with safety checks, drift detection and categorization, hotfix/conflict/new procedure reconciliation, validated test deployment, production deployment with DBA approval
+- **Critical Success Factor**: Schema drift properly categorized and reconciled before deployment, all drift procedures (Category A/B/C) integrated into deployment set
 
 ---
 
@@ -628,30 +879,58 @@ Re-run complete integration test suite to validate refactored procedures behave 
 - **Duration**: 2 hours (includes analysis of any failures)
 - **Dependencies**: T120 (test database deployed)
 
-**T123: Test Parameter Prefix Detection Cache at Startup**  
-Validate INFORMATION_SCHEMA query populates parameter cache correctly at application startup.
+**T123: Test Parameter Prefix Detection and Retry Strategy at Startup**  
+Validate INFORMATION_SCHEMA query populates parameter cache correctly at application startup, with retry dialog on failure.
 - **Method**:
-  1. Enable Service_DebugTracer detailed logging
-  2. Launch application (triggers Program.cs cache initialization)
-  3. Review logs for cache population messages
-  4. Verify cache contains all 70 procedures with correct parameter prefixes
-  5. Test fallback: Temporarily block INFORMATION_SCHEMA access, verify fallback to convention
-- **Success Criteria**: Cache populates in <200ms, 100% accuracy for stored prefixes, fallback handles blocked scenario
-- **Deliverable**: Startup validation report with cache statistics
-- **Duration**: 3 hours
-- **Dependencies**: T120 (test deployment), FR-002 implementation
+  1. **Success path**: Enable Service_DebugTracer detailed logging, launch application (triggers Program.cs cache initialization), review logs for cache population messages, verify cache contains all 70+ procedures with correct parameter prefixes
+  2. **Retry dialog testing**: 
+     - Temporarily block INFORMATION_SCHEMA access (firewall rule or database permissions)
+     - Launch application, verify MessageBox appears with clear error message
+     - Test "Retry" button functionality (3 attempts total with connection retries)
+     - Test "Quit" button functionality (clean application termination, no fallback)
+     - Verify cache loads from sys_parameter_prefix_override table for stored overrides
+  3. **Override table integration**: Add 2-3 test entries to sys_parameter_prefix_override, verify cache prioritizes override values over INFORMATION_SCHEMA results
+- **Success Criteria**: Cache populates in <200ms on success, retry dialog appears within 5 seconds on failure, 3 retry attempts before termination, override table values correctly loaded and prioritized
+- **Deliverable**: Startup validation report with cache statistics, retry dialog screenshots, override integration confirmation
+- **Duration**: 4 hours (includes retry testing scenarios and override table validation)
+- **Dependencies**: T120 (test deployment), T113d (override table exists), FR-002 implementation, FR-029 (retry strategy)
 
 **T124: Validate DAO Method Calls Route Through Helper Correctly**  
 Confirm all 220 call sites use Helper_Database_StoredProcedure execution methods (no direct MySQL API).
 - **Method**:
-  1. Run static code analysis script from SC-002
-  2. Search Data/ folder for `MySqlConnection`, `MySqlCommand`, `MySqlDataAdapter` patterns
-  3. Review T100 callsite-inventory.csv for any non-Helper patterns
-  4. Manually inspect top 10 most-used DAOs (Dao_Inventory, Dao_User, Dao_Transactions)
-- **Success Criteria**: Zero direct MySQL API usage detected (100% Helper routing compliance)
-- **Deliverable**: Compliance validation report
+  1. **Roslyn analyzer execution**: Run MTM.CodeAnalysis.DatabaseAccess analyzer (from T124a) against entire solution
+  2. Review analyzer output for diagnostic violations (MTM001-MTM004 rules)
+  3. Search Data/ folder for `MySqlConnection`, `MySqlCommand`, `MySqlDataAdapter` patterns using grep
+  4. Review T100 callsite-inventory.csv for any non-Helper patterns
+  5. Manually inspect top 10 most-used DAOs (Dao_Inventory, Dao_User, Dao_Transactions)
+  6. Generate violation report with file locations, rule violations, suggested fixes
+- **Success Criteria**: Zero direct MySQL API usage detected (100% Helper routing compliance), Roslyn analyzer reports no violations
+- **Deliverable**: Compliance validation report with analyzer output
 - **Duration**: 3 hours
-- **Dependencies**: Phase 3-6 DAO refactoring (assume complete for this test)
+- **Dependencies**: T124a (Roslyn analyzer developed), Phase 3-6 DAO refactoring (assume complete for this test)
+
+**T124a: Develop Roslyn Analyzer for Database Access Compliance**  
+Create custom Roslyn analyzer to detect and fix database access violations in real-time during development.
+- **Method**:
+  1. **Project setup**: Create MTM.CodeAnalysis.DatabaseAccess class library project targeting .NET Standard 2.0 (Roslyn compatibility)
+  2. **Diagnostic rules** (4 rules):
+     - **MTM001**: Direct MySqlConnection usage detected → "Use Helper_Database_StoredProcedure.ExecuteDataTableWithStatus() instead"
+     - **MTM002**: Direct MySqlCommand usage detected → "Use Helper_Database_StoredProcedure for stored procedure execution"
+     - **MTM003**: Inline SQL detected (CommandText contains spaces/semicolons) → "Only stored procedures permitted, no inline SQL"
+     - **MTM004**: Missing p_Status/p_ErrorMsg output parameter check → "Stored procedure results must validate p_Status output"
+  3. **Code fix providers**: Implement CodeFixProvider for MTM001/MTM002 with "Convert to Helper_Database_StoredProcedure" quick action
+  4. **Severity configuration**: 
+     - **v1.0.0** (initial rollout): All rules as Warning severity (educational phase)
+     - **v2.0.0** (enforcement): MTM001/MTM002/MTM003 as Error severity, MTM004 remains Warning
+  5. **NuGet package**: Build and publish to internal feed or local source
+  6. **IDE integration**: Add `<PackageReference Include="MTM.CodeAnalysis.DatabaseAccess" Version="1.0.0" />` to MTM_Inventory_Application.csproj
+- **Deliverables**: 
+  - MTM.CodeAnalysis.DatabaseAccess.csproj with 4 diagnostic analyzers
+  - 2 code fix providers (MTM001/MTM002)
+  - NuGet package (1.0.0 warnings, 2.0.0 errors)
+  - Integration documentation in quickstart.md
+- **Duration**: 2-3 hours (analyzer development, testing, packaging)
+- **Dependencies**: None (prerequisite for T124)
 
 **T125: Test Error Logging with Recursive Prevention**  
 Force error logging failures to validate fallback to file logging and no infinite loops.
@@ -710,61 +989,65 @@ Execute performance benchmark suite to validate ±5% variance from baseline.
 - **Dependencies**: T120 (test deployment), baseline measurement
 
 **Part E Summary**:
-- **Tasks**: 7 integration testing tasks
-- **Duration**: 26 hours (~3.5 days single developer)
-- **Deliverables**: Complete validation covering technical, functional, and performance aspects
-- **Critical Output**: Confidence in production readiness
+- **Tasks**: 8 integration testing tasks (T122-T128 + T124a Roslyn analyzer development)
+- **Duration**: 28-29 hours (~3.5-4 days single developer)
+- **Deliverables**: Complete validation covering technical, functional, and performance aspects, Roslyn analyzer for ongoing compliance enforcement
+- **Critical Output**: Confidence in production readiness, automated compliance tooling
 
 ---
 
 ### Phase 2.5 Part F: Documentation and Knowledge Transfer (T129-T132)
 
-**Objective**: Update all documentation to reflect refactored database layer and enable team adoption.
+**Objective**: Update all documentation to reflect refactored database layer, enable concurrent documentation tracking, and ensure team adoption.
 
 **Tasks**:
 
-**T129: Update 00_STATUS_CODE_STANDARDS.md with Lessons Learned**  
-Enhance template document with best practices discovered during Phase 2.5.
-- **Additions**:
-  - **Common Pitfalls Section**: Document mistakes encountered during refactoring (forgotten error handlers, incorrect status codes, missing parameter prefixes)
-  - **Multi-Step Transaction Template**: Add example procedure with explicit BEGIN/COMMIT/ROLLBACK
-  - **Complex Parameter Scenarios**: Document edge cases (optional parameters, nullable types, multi-prefix procedures)
-  - **Testing Guidance**: Add section on writing integration tests for stored procedures
-- **Deliverable**: Updated 00_STATUS_CODE_STANDARDS.md with expanded guidance
-- **Duration**: 3 hours
-- **Dependencies**: T113-T118 (refactoring complete, lessons identified)
+**T129: Generate Documentation-Update-Matrix.md for Concurrent Tracking**  
+Create Markdown table to track documentation updates performed concurrently during T113-T116 refactoring.
+- **Method**:
+  1. Create `Documentation-Update-Matrix.md` in `specs/003-database-layer-refresh/` folder
+  2. Generate table with columns: File Path (clickable link), Status (⬜ Not Started, 🔄 In Progress, ✅ Complete, ⚠️ Needs Review), Last Updated, Assigned To, Notes
+  3. Populate rows for all documentation targets:
+     - **Per-procedure rows**: 70+ procedures × 2 files (procedure header comments, DAO XML documentation) = ~140 rows
+     - **Standards documents**: 00_STATUS_CODE_STANDARDS.md, DEVELOPMENT-STANDARDS.md updates
+     - **Quickstart documents**: quickstart.md sections for each DAO domain
+  4. Add validation script section: PowerShell script to check matrix completeness (exit code 0 if 100% complete, exit code 1 if any ⬜/🔄/⚠️ status)
+  5. Integrate into T113-T116 workflow: Developers check off matrix rows as they complete procedure refactoring
+- **Deliverable**: Documentation-Update-Matrix.md with ~145 trackable items, validation script
+- **Duration**: 2 hours (matrix generation, validation script development)
+- **Dependencies**: T113-T118 procedure list finalized (know what to track)
 
-**T130: Generate quickstart.md for New Database Operations**  
-Create step-by-step developer guide for implementing new database features using standardized patterns.
-- **Sections**:
-  1. **Creating New Stored Procedure** (5-minute guide)
-     - Copy template from 00_STATUS_CODE_STANDARDS.md
-     - Add business logic between BEGIN/END
-     - Add parameter validation
-     - Set status codes appropriately
-     - Test manually via MySQL Workbench
-  2. **Adding DAO Method** (5-minute guide)
-     - Add method to appropriate DAO class (Dao_Inventory for inventory operations, etc.)
-     - Build parameters dictionary (unprefixed keys)
-     - Call Helper_Database_StoredProcedure.ExecuteXxxWithStatusAsync
-     - Handle DaoResult (check IsSuccess, return Data or Message)
-     - Add XML documentation
-  3. **Writing Integration Test** (5-minute guide)
-     - Create test class inheriting from BaseIntegrationTest
-     - Write 4 test methods (success with data, success no data, validation error, database error)
-     - Run test, verify pass
-  4. **Calling from Form** (3-minute guide)
-     - Make event handler `async void`
-     - Await DAO method call
-     - Update UI controls with result (no Invoke needed after await)
-     - Show error dialog if IsSuccess=false
-- **Deliverable**: specs/003-database-layer-refresh/quickstart.md
-- **Duration**: 4 hours (includes examples and screenshots)
-- **Dependencies**: T113-T128 (all patterns finalized)
+**T130: Perform Bulk Documentation Updates from Matrix**  
+Complete any remaining documentation items from Documentation-Update-Matrix.md not finished during concurrent updates.
+- **Method**:
+  1. Run validation script from T129 to identify incomplete items (⬜/🔄/⚠️ status)
+  2. Review incomplete items, prioritize by importance (core procedures first)
+  3. Complete documentation updates:
+     - **Procedure header comments**: Add purpose, parameters, return codes, examples
+     - **DAO XML documentation**: Add comprehensive XML comments (summary, param, returns, exceptions)
+     - **Standards updates**: Incorporate lessons learned into 00_STATUS_CODE_STANDARDS.md (common pitfalls, multi-step transactions, complex parameters, testing guidance)
+     - **Quickstart sections**: Update quickstart.md with DAO-specific examples
+  4. Update matrix status to ✅ as items completed
+  5. Re-run validation script until exit code 0 (100% complete)
+- **Deliverable**: 100% complete Documentation-Update-Matrix.md (all ✅), updated standards and quickstart documents
+- **Duration**: 8 hours (completing concurrent documentation backlog)
+- **Dependencies**: T113-T118 (refactoring complete), T129 (matrix exists)
 
-**T131: Update All DAO Class XML Documentation**  
-Add comprehensive XML comments to all 12 DAO classes covering methods, parameters, returns, exceptions.
-- **Template**:
+**T131: Validate Documentation-Update-Matrix.md Completeness**  
+Run validation script to ensure all documentation items completed before final approval.
+- **Method**:
+  1. Execute validation script from T129 (PowerShell script in matrix document)
+  2. Script checks: all rows have ✅ status, all file path links valid, no ⬜/🔄/⚠️ status remaining
+  3. Generate completeness report: total items, completed items, completion percentage, list of incomplete items (if any)
+  4. If <100% complete: Loop back to T130, complete remaining items
+  5. If 100% complete: Generate final approval report, archive matrix as project artifact
+- **Success Criteria**: Exit code 0 (100% complete), all 145+ items marked ✅
+- **Deliverable**: Documentation completeness validation report
+- **Duration**: 1 hour (validation execution and report generation)
+- **Dependencies**: T130 (bulk updates complete)
+
+**T132: Create Phase 2.5 Comprehensive Implementation Guide**  
+Compile complete reference document covering all refactoring work, decisions, and outcomes.
   ```csharp
   /// <summary>
   /// Adds new inventory item to database with automatic transaction logging.
@@ -795,31 +1078,47 @@ Add comprehensive XML comments to all 12 DAO classes covering methods, parameter
 - **Duration**: 10 hours (detailed documentation takes time)
 - **Dependencies**: Phase 3-6 DAO refactoring (assume complete)
 
-**T132: Create Phase 2.5 Completion Report**  
-Summarize entire Phase 2.5 effort with metrics, outcomes, and lessons learned.
+**T132: Create Phase 2.5 Comprehensive Implementation Guide**  
+Compile complete reference document covering all refactoring work, decisions, and outcomes.
 - **Sections**:
-  1. **Executive Summary**: 2-paragraph overview of what was accomplished
+  1. **Executive Summary**: 2-paragraph overview of what was accomplished, including drift reconciliation
   2. **Metrics**:
-     - Stored Procedures Refactored: 70 (100% of database)
-     - Compliance Score: 100% (all procedures meet standards)
-     - Integration Tests Created: 280 test methods
-     - Test Pass Rate: 100%
-     - Parameter Prefix Errors: 0 (down from ~20/month)
-     - Performance Variance: ±3% (within ±5% tolerance)
+     - Stored Procedures Refactored: 70+ (100% of database layer)
+     - Schema Drift Procedures: Category A (hotfixes), Category B (conflicts), Category C (new procedures) - actual counts TBD during T119b
+     - Compliance Score: 100% (all procedures meet standards post-reconciliation)
+     - Integration Tests Created: 280+ test methods (4 per procedure)
+     - Test Pass Rate: 100% (verbose diagnostics enabled)
+     - Parameter Prefix Errors: 0 (down from ~20/month baseline)
+     - Performance Variance: ±3% (within ±5% tolerance per SC-004)
      - Database-Related Tickets: 92% reduction (baseline 50/month → current 4/month)
-  3. **Success Criteria Results**: Map each SC-001 through SC-010 to actual measured outcome
-  4. **Timeline**: Actual vs estimated (target: 8-12 days parallel, actual: ?)
-  5. **Lessons Learned**: Top 10 insights from refactoring (parameter prefix conventions, transaction management complexity, test isolation importance, etc.)
+     - Roslyn Analyzer Violations: 0 (100% Helper routing compliance)
+  3. **Success Criteria Results**: Map each SC-001 through SC-018 to actual measured outcome (includes new SC-011 through SC-018 from Session 3)
+  4. **Timeline**: Actual vs estimated (target: 10-15 days parallel with 3 developers, actual: TBD)
+  5. **Lessons Learned**: Top 15 insights from refactoring
+     - Parameter prefix conventions and override table benefits
+     - Transaction management complexity and rollback strategies
+     - Test isolation importance and verbose diagnostic value
+     - Schema drift reconciliation workflow (Category A/B/C classification)
+     - CSV transaction analysis accuracy and peer review benefits
+     - Concurrent documentation vs bulk documentation trade-offs
+     - Roslyn analyzer real-time feedback vs post-hoc validation
+     - Developer role infrastructure for maintenance tools
+     - Retry strategy vs fallback logic for critical startup operations
+     - Three-way merge techniques for Category B conflicts
   6. **Next Steps**: Phase 3-8 DAO refactoring can now proceed with confidence
-- **Deliverable**: specs/003-database-layer-refresh/phase-2.5-completion-report.md
-- **Duration**: 3 hours
-- **Dependencies**: T100-T131 (all Phase 2.5 work complete)
+  7. **Appendices**:
+     - **Appendix A**: Schema drift reconciliation detailed report (Category A/B/C procedures, resolution strategies, merge decisions)
+     - **Appendix B**: CSV transaction analysis summary (pattern detection accuracy, developer corrections, implementation outcomes)
+     - **Appendix C**: Roslyn analyzer integration guide (installation, configuration, custom rule development, severity phasing)
+- **Deliverable**: specs/003-database-layer-refresh/phase-2.5-completion-report.md with appendices
+- **Duration**: 4 hours (expanded to include drift reconciliation, CSV analysis, Roslyn integration documentation)
+- **Dependencies**: T100-T131 (all Phase 2.5 work complete including drift reconciliation)
 
 **Part F Summary**:
-- **Tasks**: 4 documentation tasks
-- **Duration**: 20 hours (~2.5 days single developer)
-- **Deliverables**: Comprehensive documentation enabling team adoption and future maintenance
-- **Critical Output**: Knowledge transfer and lessons learned captured
+- **Tasks**: 4 documentation tasks (T129-T132)
+- **Duration**: 15 hours (~2 days single developer)
+- **Deliverables**: Documentation-Update-Matrix.md with validation script, 100% complete documentation updates, completeness validation, comprehensive implementation guide with appendices
+- **Critical Output**: Concurrent documentation tracking, knowledge transfer, lessons learned captured, drift reconciliation documented
 
 ---
 
