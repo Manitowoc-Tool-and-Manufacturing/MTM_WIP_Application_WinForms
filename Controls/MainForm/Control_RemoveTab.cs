@@ -359,7 +359,11 @@ namespace MTM_Inventory_Application.Controls.MainForm
                                 BatchNumber = item.BatchNumber,
                                 DateTime = item.ReceiveDate
                             };
-                            await Dao_History.AddTransactionHistoryAsync(transaction);
+                            var historyResult = await Dao_History.AddTransactionHistoryAsync(transaction);
+                            if (!historyResult.IsSuccess)
+                            {
+                                LoggingUtility.Log($"Failed to log transaction history: {historyResult.ErrorMessage}");
+                            }
                         }
                     }
                 }

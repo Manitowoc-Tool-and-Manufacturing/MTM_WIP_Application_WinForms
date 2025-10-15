@@ -96,7 +96,7 @@ public class ValidationErrors_Tests : BaseIntegrationTest
 
         // Assert
         Assert.IsNotNull(errors, "Should return DataTable for empty user");
-        Assert.AreEqual(0, errors.Rows.Count, "Should return no errors for empty user string");
+        Assert.AreEqual(0, errors.RowsAffected, "Should return no errors for empty user string");
 
         Console.WriteLine("[Test Success] Empty user string handled correctly");
     }

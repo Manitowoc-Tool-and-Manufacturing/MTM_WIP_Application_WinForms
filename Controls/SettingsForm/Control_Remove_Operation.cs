@@ -63,7 +63,15 @@ namespace MTM_Inventory_Application.Controls.SettingsForm
             try
             {
                 string? selectedOperation = operationsComboBox.Text;
-                _currentOperation = await Dao_Operation.GetOperationByNumber(selectedOperation ?? string.Empty);
+                var getResult = await Dao_Operation.GetOperationByNumber(selectedOperation ?? string.Empty);
+                if (!getResult.IsSuccess)
+                {
+                    MessageBox.Show($@"Error loading operation: {getResult.ErrorMessage}", @"Error",
+                        MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
+
+                _currentOperation = getResult.Data;
                 if (_currentOperation != null)
                 {
                     operationValueLabel.Text = _currentOperation["p_Operation"]?.ToString() ?? string.Empty;
@@ -99,7 +107,14 @@ namespace MTM_Inventory_Application.Controls.SettingsForm
 
             try
             {
-                await Dao_Operation.DeleteOperation(operationNumber);
+                var deleteResult = await Dao_Operation.DeleteOperation(operationNumber);
+                if (!deleteResult.IsSuccess)
+                {
+                    MessageBox.Show($@"Error removing operation: {deleteResult.ErrorMessage}", @"Error",
+                        MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
+
                 LoadOperations();
                 ClearForm();
                 EnableControls(false);

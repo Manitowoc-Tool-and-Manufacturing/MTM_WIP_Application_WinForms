@@ -224,16 +224,15 @@ public static class Dao_Inventory
             }
 
             // MIGRATED: Use Helper_Database_StoredProcedure instead of Helper_Database_Core for procedures with output parameters
-            // NOTE: Stored procedure uses o_Operation prefix (not p_Operation)
             // IMPORTANT: Procedure name in database is "inv_inventory_Get_ByPartIDandOperation" with lowercase "and"
-            // IMPORTANT: Helper now preserves o_ prefixes as well as p_ prefixes
+            // IMPORTANT: Stored procedure parameter is p_Operation (not o_Operation)
             var result = await Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync(
                 Model_AppVariables.ConnectionString,
                 "inv_inventory_Get_ByPartIDandOperation",  // Fixed: lowercase "and" to match database
                 new Dictionary<string, object> 
                 { 
                     ["p_PartID"] = partId.Trim(),
-                    ["o_Operation"] = operation.Trim() 
+                    ["p_Operation"] = operation.Trim()  // Fixed: Changed from o_Operation to p_Operation
                 },
                 null // No progress helper for this method
             );

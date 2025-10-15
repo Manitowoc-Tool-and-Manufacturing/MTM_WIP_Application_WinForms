@@ -1,4 +1,4 @@
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using MTM_Inventory_Application.Data;
 using MTM_Inventory_Application.Helpers;
 using MTM_Inventory_Application.Models;
@@ -51,7 +51,7 @@ public class Dao_Inventory_Tests : BaseIntegrationTest
         // Insert test inventory record
         await Helper_Database_StoredProcedure.ExecuteNonQueryWithStatusAsync(
             GetTestConnectionString(),
-            "inv_inventory_Add",
+            "inv_inventory_Add_Item",
             new Dictionary<string, object>
             {
                 ["p_BatchNumber"] = "TEST-BATCH-001",
@@ -114,7 +114,7 @@ public class Dao_Inventory_Tests : BaseIntegrationTest
         // Insert test inventory records with different operations
         await Helper_Database_StoredProcedure.ExecuteNonQueryWithStatusAsync(
             GetTestConnectionString(),
-            "inv_inventory_Add",
+            "inv_inventory_Add_Item",
             new Dictionary<string, object>
             {
                 ["p_BatchNumber"] = "TEST-BATCH-002A",
@@ -127,7 +127,7 @@ public class Dao_Inventory_Tests : BaseIntegrationTest
         
         await Helper_Database_StoredProcedure.ExecuteNonQueryWithStatusAsync(
             GetTestConnectionString(),
-            "inv_inventory_Add",
+            "inv_inventory_Add_Item",
             new Dictionary<string, object>
             {
                 ["p_BatchNumber"] = "TEST-BATCH-002B",

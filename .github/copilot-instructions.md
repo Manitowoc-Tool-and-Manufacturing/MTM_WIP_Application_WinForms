@@ -9,6 +9,18 @@ Last updated: 2025-10-13
 - C# 12, .NET 8.0 (file-scoped namespaces, required members, pattern matching) + MySql.Data 8.x (MySqlConnection, MySqlCommand), System.Text.Json, Microsoft.Web.WebView2, ClosedXML (002-comprehensive-database-layer)
 - MySQL 5.7.24+ (MAMP compatible) - stored procedures only, no inline SQL permitted (002-comprehensive-database-layer)
 
+## Agent Communication Rules
+
+**CRITICAL**: Agents working on this project MUST follow these communication protocols:
+
+- **Remain silent** during work execution unless:
+  - Acknowledging the user's prompt at the start
+  - Asking clarifying questions when requirements are ambiguous
+  - Providing a brief summary at the end of the current run
+- **Keep chat summaries minimal** - one or two sentences maximum
+- **No explanations or updates** during task execution
+- **No unnecessary status updates** - let the code speak for itself
+
 ## Core Instruction Files
 
 GitHub Copilot will load these guidance files while generating code:

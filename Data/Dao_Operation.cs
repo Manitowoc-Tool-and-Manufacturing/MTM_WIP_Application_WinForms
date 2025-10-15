@@ -11,18 +11,17 @@ internal static class Dao_Operation
 {
     #region Delete
 
-    internal static async Task<DaoResult> DeleteOperation(string operationNumber, bool useAsync = false)
+    internal static async Task<DaoResult> DeleteOperation(string operationNumber)
     {
         try
         {
             var parameters = new Dictionary<string, object> { ["p_Operation"] = operationNumber }; // p_ prefix added automatically
 
-            var result = await Helper_Database_StoredProcedure.ExecuteNonQueryWithStatus(
+            var result = await Helper_Database_StoredProcedure.ExecuteNonQueryWithStatusAsync(
                 Model_AppVariables.ConnectionString,
                 "md_operation_numbers_Delete_ByOperation",
                 parameters,
-                null, // No progress helper for this method
-                useAsync
+                null // No progress helper for this method
             );
 
             if (result.IsSuccess)
@@ -46,7 +45,7 @@ internal static class Dao_Operation
 
     #region Insert
 
-    internal static async Task<DaoResult> InsertOperation(string operationNumber, string user, bool useAsync = false)
+    internal static async Task<DaoResult> InsertOperation(string operationNumber, string user)
     {
         try
         {
@@ -56,12 +55,11 @@ internal static class Dao_Operation
                 ["IssuedBy"] = user
             };
             
-            var result = await Helper_Database_StoredProcedure.ExecuteNonQueryWithStatus(
+            var result = await Helper_Database_StoredProcedure.ExecuteNonQueryWithStatusAsync(
                 Model_AppVariables.ConnectionString,
                 "md_operation_numbers_Add_Operation",
                 parameters,
-                null, // No progress helper for this method
-                useAsync
+                null // No progress helper for this method
             );
 
             if (result.IsSuccess)
@@ -85,8 +83,7 @@ internal static class Dao_Operation
 
     #region Update
 
-    internal static async Task<DaoResult> UpdateOperation(string oldOperation, string newOperationNumber, string user,
-        bool useAsync = false)
+    internal static async Task<DaoResult> UpdateOperation(string oldOperation, string newOperationNumber, string user)
     {
         try
         {
@@ -97,12 +94,11 @@ internal static class Dao_Operation
                 ["IssuedBy"] = user
             };
             
-            var result = await Helper_Database_StoredProcedure.ExecuteNonQueryWithStatus(
+            var result = await Helper_Database_StoredProcedure.ExecuteNonQueryWithStatusAsync(
                 Model_AppVariables.ConnectionString,
                 "md_operation_numbers_Update_Operation",
                 parameters,
-                null, // No progress helper for this method
-                useAsync
+                null // No progress helper for this method
             );
 
             if (result.IsSuccess)
@@ -126,16 +122,15 @@ internal static class Dao_Operation
 
     #region Read
 
-    internal static async Task<DaoResult<DataTable>> GetAllOperations(bool useAsync = false)
+    internal static async Task<DaoResult<DataTable>> GetAllOperations()
     {
         try
         {
-            var result = await Helper_Database_StoredProcedure.ExecuteDataTableWithStatus(
+            var result = await Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync(
                 Model_AppVariables.ConnectionString,
                 "md_operation_numbers_Get_All",
                 null, // No parameters needed
-                null, // No progress helper for this method
-                useAsync
+                null // No progress helper for this method
             );
                 
             if (result.IsSuccess && result.Data != null)
@@ -155,11 +150,11 @@ internal static class Dao_Operation
         }
     }
 
-    internal static async Task<DaoResult<DataRow>> GetOperationByNumber(string operationNumber, bool useAsync = false)
+    internal static async Task<DaoResult<DataRow>> GetOperationByNumber(string operationNumber)
     {
         try
         {
-            var allOperationsResult = await GetAllOperations(useAsync);
+            var allOperationsResult = await GetAllOperations();
             if (!allOperationsResult.IsSuccess)
             {
                 return DaoResult<DataRow>.Failure(allOperationsResult.ErrorMessage, allOperationsResult.Exception);
@@ -182,18 +177,17 @@ internal static class Dao_Operation
         }
     }
 
-    internal static async Task<DaoResult<bool>> OperationExists(string operationNumber, bool useAsync = false)
+    internal static async Task<DaoResult<bool>> OperationExists(string operationNumber)
     {
         try
         {
             var parameters = new Dictionary<string, object> { ["p_Operation"] = operationNumber }; // p_ prefix added automatically
 
-            var result = await Helper_Database_StoredProcedure.ExecuteScalarWithStatus(
+            var result = await Helper_Database_StoredProcedure.ExecuteScalarWithStatusAsync(
                 Model_AppVariables.ConnectionString,
                 "md_operation_numbers_Exists_ByOperation",
                 parameters,
-                null, // No progress helper for this method
-                useAsync
+                null // No progress helper for this method
             );
                 
             if (result.IsSuccess && result.Data != null)

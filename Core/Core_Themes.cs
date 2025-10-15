@@ -74,7 +74,8 @@ namespace MTM_Inventory_Application.Core
 
         public static async Task<Model_UserUiColors> GetUserThemeColorsAsync(string userId)
         {
-            Model_AppVariables.ThemeName = await Dao_User.GetSettingsJsonAsync("Theme_Name", userId) ?? "Default";
+            var themeNameResult = await Dao_User.GetThemeNameAsync(userId);
+            Model_AppVariables.ThemeName = themeNameResult.IsSuccess && themeNameResult.Data != null ? themeNameResult.Data : "Default";
             if (!Core_AppThemes.GetThemeNames().Contains(Model_AppVariables.ThemeName))
             {
                 await Core_AppThemes.LoadThemesFromDatabaseAsync();
@@ -2624,7 +2625,8 @@ namespace MTM_Inventory_Application.Core
                 try
                 {
                     // Get the user's saved theme preference
-                    string? themeName = await Dao_User.GetSettingsJsonAsync("Theme_Name", userId);
+                    var themeNameResult = await Dao_User.GetThemeNameAsync(userId);
+                    string? themeName = themeNameResult.IsSuccess ? themeNameResult.Data : null;
                     
                     // If no theme preference is saved, or it's null, set to "Default"
                     if (string.IsNullOrWhiteSpace(themeName))

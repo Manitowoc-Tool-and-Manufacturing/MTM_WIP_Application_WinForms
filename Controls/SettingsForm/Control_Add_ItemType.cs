@@ -47,7 +47,15 @@ namespace MTM_Inventory_Application.Controls.SettingsForm
 
                 string itemType = Control_Add_ItemType_TextBox_ItemType.Text.Trim();
 
-                if (await Dao_ItemType.ItemTypeExists(itemType))
+                var existsResult = await Dao_ItemType.ItemTypeExists(itemType);
+                if (!existsResult.IsSuccess)
+                {
+                    MessageBox.Show($@"Error checking PartID: {existsResult.ErrorMessage}", @"Error",
+                        MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
+
+                if (existsResult.Data)
                 {
                     MessageBox.Show($@"PartID '{itemType}' already exists.", @"Duplicate PartID", MessageBoxButtons.OK,
                         MessageBoxIcon.Warning);
@@ -55,7 +63,14 @@ namespace MTM_Inventory_Application.Controls.SettingsForm
                     return;
                 }
 
-                await Dao_ItemType.InsertItemType(itemType, Model_AppVariables.User ?? "Current User");
+                var insertResult = await Dao_ItemType.InsertItemType(itemType, Model_AppVariables.User ?? "Current User");
+                if (!insertResult.IsSuccess)
+                {
+                    MessageBox.Show($@"Error adding PartID: {insertResult.ErrorMessage}", @"Error",
+                        MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
+
                 ClearForm();
                 ItemTypeAdded?.Invoke(this, EventArgs.Empty);
                 MessageBox.Show(@"PartID added successfully!", @"Success", MessageBoxButtons.OK,

@@ -19,65 +19,144 @@ internal static class Dao_User
 {
     #region User Settings Getters/Setters
 
-    internal static async Task<string> GetLastShownVersionAsync(string user)
-    {
-        Service_DebugTracer.TraceMethodEntry(new Dictionary<string, object> { ["user"] = user }, controlName: "Dao_User");
-        
-        var result = await GetSettingsJsonAsync("LastShownVersion", user);
-        
-        Service_DebugTracer.TraceMethodExit(result, controlName: "Dao_User");
-        return result;
-    }
-
-    internal static async Task SetLastShownVersionAsync(string user, string value)
-    {
-        Service_DebugTracer.TraceMethodEntry(new Dictionary<string, object> { ["user"] = user, ["value"] = value }, controlName: "Dao_User");
-        
-        await SetUserSettingAsync("LastShownVersion", user, value);
-        
-        Service_DebugTracer.TraceMethodExit(controlName: "Dao_User");
-    }
-
-    internal static async Task<string> GetHideChangeLogAsync(string user)
-    {
-        Service_DebugTracer.TraceMethodEntry(new Dictionary<string, object> { ["user"] = user }, controlName: "Dao_User");
-        
-        var result = await GetSettingsJsonAsync("HideChangeLog", user);
-        
-        Service_DebugTracer.TraceMethodExit(result, controlName: "Dao_User");
-        return result;
-    }
-
-    internal static async Task SetHideChangeLogAsync(string user, string value)
-    {
-        Service_DebugTracer.TraceMethodEntry(new Dictionary<string, object> { ["user"] = user, ["value"] = value }, controlName: "Dao_User");
-        
-        await SetUserSettingAsync("HideChangeLog", user, value);
-        
-        Service_DebugTracer.TraceMethodExit(controlName: "Dao_User");
-    }
-
-    internal static async Task<string?> GetThemeNameAsync(string user)
-    {
-        Service_DebugTracer.TraceMethodEntry(new Dictionary<string, object> { ["user"] = user }, controlName: "Dao_User");
-        
-        var result = await GetSettingsJsonAsync("Theme_Name", user);
-        
-        Service_DebugTracer.TraceMethodExit(result, controlName: "Dao_User");
-        return result;
-    }
-
-    internal static async Task<int?> GetThemeFontSizeAsync(string user)
+    /// <summary>
+    /// Gets the last shown version for the specified user.
+    /// </summary>
+    /// <param name="user">The username.</param>
+    /// <returns>A DaoResult containing the last shown version string.</returns>
+    internal static async Task<DaoResult<string>> GetLastShownVersionAsync(string user)
     {
         Service_DebugTracer.TraceMethodEntry(new Dictionary<string, object> { ["user"] = user }, controlName: "Dao_User");
         
         try
         {
-            string str = await GetSettingsJsonAsync("Theme_FontSize", user);
+            var result = await GetSettingsJsonInternalAsync("LastShownVersion", user);
+            
+            Service_DebugTracer.TraceMethodExit(result, controlName: "Dao_User");
+            return DaoResult<string>.Success(result, $"Retrieved LastShownVersion for user {user}");
+        }
+        catch (Exception ex)
+        {
+            LoggingUtility.LogDatabaseError(ex);
+            Service_DebugTracer.TraceMethodExit(null, controlName: "Dao_User");
+            return DaoResult<string>.Failure($"Error retrieving LastShownVersion for user {user}", ex);
+        }
+    }
+
+    /// <summary>
+    /// Sets the last shown version for the specified user.
+    /// </summary>
+    /// <param name="user">The username.</param>
+    /// <param name="value">The version value to set.</param>
+    /// <returns>A DaoResult indicating success or failure.</returns>
+    internal static async Task<DaoResult> SetLastShownVersionAsync(string user, string value)
+    {
+        Service_DebugTracer.TraceMethodEntry(new Dictionary<string, object> { ["user"] = user, ["value"] = value }, controlName: "Dao_User");
+        
+        try
+        {
+            await SetUserSettingInternalAsync("LastShownVersion", user, value);
+            
+            Service_DebugTracer.TraceMethodExit(controlName: "Dao_User");
+            return DaoResult.Success($"Set LastShownVersion to {value} for user {user}");
+        }
+        catch (Exception ex)
+        {
+            LoggingUtility.LogDatabaseError(ex);
+            Service_DebugTracer.TraceMethodExit(null, controlName: "Dao_User");
+            return DaoResult.Failure($"Error setting LastShownVersion for user {user}", ex);
+        }
+    }
+
+    /// <summary>
+    /// Gets the HideChangeLog setting for the specified user.
+    /// </summary>
+    /// <param name="user">The username.</param>
+    /// <returns>A DaoResult containing the HideChangeLog value.</returns>
+    internal static async Task<DaoResult<string>> GetHideChangeLogAsync(string user)
+    {
+        Service_DebugTracer.TraceMethodEntry(new Dictionary<string, object> { ["user"] = user }, controlName: "Dao_User");
+        
+        try
+        {
+            var result = await GetSettingsJsonInternalAsync("HideChangeLog", user);
+            
+            Service_DebugTracer.TraceMethodExit(result, controlName: "Dao_User");
+            return DaoResult<string>.Success(result, $"Retrieved HideChangeLog for user {user}");
+        }
+        catch (Exception ex)
+        {
+            LoggingUtility.LogDatabaseError(ex);
+            Service_DebugTracer.TraceMethodExit(null, controlName: "Dao_User");
+            return DaoResult<string>.Failure($"Error retrieving HideChangeLog for user {user}", ex);
+        }
+    }
+
+    /// <summary>
+    /// Sets the HideChangeLog setting for the specified user.
+    /// </summary>
+    /// <param name="user">The username.</param>
+    /// <param name="value">The value to set.</param>
+    /// <returns>A DaoResult indicating success or failure.</returns>
+    internal static async Task<DaoResult> SetHideChangeLogAsync(string user, string value)
+    {
+        Service_DebugTracer.TraceMethodEntry(new Dictionary<string, object> { ["user"] = user, ["value"] = value }, controlName: "Dao_User");
+        
+        try
+        {
+            await SetUserSettingInternalAsync("HideChangeLog", user, value);
+            
+            Service_DebugTracer.TraceMethodExit(controlName: "Dao_User");
+            return DaoResult.Success($"Set HideChangeLog to {value} for user {user}");
+        }
+        catch (Exception ex)
+        {
+            LoggingUtility.LogDatabaseError(ex);
+            Service_DebugTracer.TraceMethodExit(null, controlName: "Dao_User");
+            return DaoResult.Failure($"Error setting HideChangeLog for user {user}", ex);
+        }
+    }
+
+    /// <summary>
+    /// Gets the theme name for the specified user.
+    /// </summary>
+    /// <param name="user">The username.</param>
+    /// <returns>A DaoResult containing the theme name.</returns>
+    internal static async Task<DaoResult<string?>> GetThemeNameAsync(string user)
+    {
+        Service_DebugTracer.TraceMethodEntry(new Dictionary<string, object> { ["user"] = user }, controlName: "Dao_User");
+        
+        try
+        {
+            var result = await GetSettingsJsonInternalAsync("Theme_Name", user);
+            
+            Service_DebugTracer.TraceMethodExit(result, controlName: "Dao_User");
+            return DaoResult<string?>.Success(result, $"Retrieved Theme_Name for user {user}");
+        }
+        catch (Exception ex)
+        {
+            LoggingUtility.LogDatabaseError(ex);
+            Service_DebugTracer.TraceMethodExit(null, controlName: "Dao_User");
+            return DaoResult<string?>.Failure($"Error retrieving Theme_Name for user {user}", ex);
+        }
+    }
+
+    /// <summary>
+    /// Gets the theme font size for the specified user.
+    /// </summary>
+    /// <param name="user">The username.</param>
+    /// <returns>A DaoResult containing the font size, or null if not set.</returns>
+    internal static async Task<DaoResult<int?>> GetThemeFontSizeAsync(string user)
+    {
+        Service_DebugTracer.TraceMethodEntry(new Dictionary<string, object> { ["user"] = user }, controlName: "Dao_User");
+        
+        try
+        {
+            string str = await GetSettingsJsonInternalAsync("Theme_FontSize", user);
             int? result = int.TryParse(str, out int val) ? val : null;
             
             Service_DebugTracer.TraceMethodExit(result, controlName: "Dao_User");
-            return result;
+            return DaoResult<int?>.Success(result, $"Retrieved Theme_FontSize for user {user}");
         }
         catch (Exception ex)
         {
@@ -85,130 +164,301 @@ internal static class Dao_User
             LoggingUtility.Log($"GetThemeFontSizeAsync failed with exception: {ex.Message}");
             
             Service_DebugTracer.TraceMethodExit(null, controlName: "Dao_User");
-            return null;
+            return DaoResult<int?>.Failure($"Error retrieving Theme_FontSize for user {user}", ex);
         }
     }
 
-    internal static async Task SetThemeFontSizeAsync(string user, int value)
+    /// <summary>
+    /// Sets the theme font size for the specified user.
+    /// </summary>
+    /// <param name="user">The username.</param>
+    /// <param name="value">The font size value.</param>
+    /// <returns>A DaoResult indicating success or failure.</returns>
+    internal static async Task<DaoResult> SetThemeFontSizeAsync(string user, int value)
     {
         Service_DebugTracer.TraceMethodEntry(new Dictionary<string, object> { ["user"] = user, ["value"] = value }, controlName: "Dao_User");
         
-        await SetUserSettingAsync("Theme_FontSize", user, value.ToString());
-        
-        Service_DebugTracer.TraceMethodExit(controlName: "Dao_User");
+        try
+        {
+            await SetUserSettingInternalAsync("Theme_FontSize", user, value.ToString());
+            
+            Service_DebugTracer.TraceMethodExit(controlName: "Dao_User");
+            return DaoResult.Success($"Set Theme_FontSize to {value} for user {user}");
+        }
+        catch (Exception ex)
+        {
+            LoggingUtility.LogDatabaseError(ex);
+            Service_DebugTracer.TraceMethodExit(null, controlName: "Dao_User");
+            return DaoResult.Failure($"Error setting Theme_FontSize for user {user}", ex);
+        }
     }
 
-    internal static async Task<string> GetVisualUserNameAsync(string user)
+    /// <summary>
+    /// Gets the Visual username for the specified user and updates Model_Users.
+    /// </summary>
+    /// <param name="user">The username.</param>
+    /// <returns>A DaoResult containing the Visual username.</returns>
+    internal static async Task<DaoResult<string>> GetVisualUserNameAsync(string user)
     {
         Service_DebugTracer.TraceMethodEntry(new Dictionary<string, object> { ["user"] = user }, controlName: "Dao_User");
         
-        string value = await GetSettingsJsonAsync("VisualUserName", user);
-        Model_Users.VisualUserName = value;
-        
-        Service_DebugTracer.TraceMethodExit(Model_Users.VisualUserName, controlName: "Dao_User");
-        return Model_Users.VisualUserName;
+        try
+        {
+            string value = await GetSettingsJsonInternalAsync("VisualUserName", user);
+            Model_Users.VisualUserName = value;
+            
+            Service_DebugTracer.TraceMethodExit(Model_Users.VisualUserName, controlName: "Dao_User");
+            return DaoResult<string>.Success(Model_Users.VisualUserName, $"Retrieved VisualUserName for user {user}");
+        }
+        catch (Exception ex)
+        {
+            LoggingUtility.LogDatabaseError(ex);
+            Service_DebugTracer.TraceMethodExit(null, controlName: "Dao_User");
+            return DaoResult<string>.Failure($"Error retrieving VisualUserName for user {user}", ex);
+        }
     }
 
-    internal static async Task SetVisualUserNameAsync(string user, string value)
+    /// <summary>
+    /// Sets the Visual username for the specified user.
+    /// </summary>
+    /// <param name="user">The username.</param>
+    /// <param name="value">The Visual username value.</param>
+    /// <returns>A DaoResult indicating success or failure.</returns>
+    internal static async Task<DaoResult> SetVisualUserNameAsync(string user, string value)
     {
         Service_DebugTracer.TraceMethodEntry(new Dictionary<string, object> { ["user"] = user, ["value"] = value }, controlName: "Dao_User");
         
-        await SetUserSettingAsync("VisualUserName", user, value);
-        
-        Service_DebugTracer.TraceMethodExit(controlName: "Dao_User");
+        try
+        {
+            await SetUserSettingInternalAsync("VisualUserName", user, value);
+            
+            Service_DebugTracer.TraceMethodExit(controlName: "Dao_User");
+            return DaoResult.Success($"Set VisualUserName to {value} for user {user}");
+        }
+        catch (Exception ex)
+        {
+            LoggingUtility.LogDatabaseError(ex);
+            Service_DebugTracer.TraceMethodExit(null, controlName: "Dao_User");
+            return DaoResult.Failure($"Error setting VisualUserName for user {user}", ex);
+        }
     }
 
-    internal static async Task<string> GetVisualPasswordAsync(string user)
+    /// <summary>
+    /// Gets the Visual password for the specified user and updates Model_Users.
+    /// </summary>
+    /// <param name="user">The username.</param>
+    /// <returns>A DaoResult containing the Visual password.</returns>
+    internal static async Task<DaoResult<string>> GetVisualPasswordAsync(string user)
     {
         Service_DebugTracer.TraceMethodEntry(new Dictionary<string, object> { ["user"] = user }, controlName: "Dao_User");
         
-        string value = await GetSettingsJsonAsync("VisualPassword", user);
-        Model_Users.VisualPassword = value;
-        
-        Service_DebugTracer.TraceMethodExit(Model_Users.VisualPassword, controlName: "Dao_User");
-        return Model_Users.VisualPassword;
+        try
+        {
+            string value = await GetSettingsJsonInternalAsync("VisualPassword", user);
+            Model_Users.VisualPassword = value;
+            
+            Service_DebugTracer.TraceMethodExit(Model_Users.VisualPassword, controlName: "Dao_User");
+            return DaoResult<string>.Success(Model_Users.VisualPassword, $"Retrieved VisualPassword for user {user}");
+        }
+        catch (Exception ex)
+        {
+            LoggingUtility.LogDatabaseError(ex);
+            Service_DebugTracer.TraceMethodExit(null, controlName: "Dao_User");
+            return DaoResult<string>.Failure($"Error retrieving VisualPassword for user {user}", ex);
+        }
     }
 
-    internal static async Task SetVisualPasswordAsync(string user, string value)
+    /// <summary>
+    /// Sets the Visual password for the specified user.
+    /// </summary>
+    /// <param name="user">The username.</param>
+    /// <param name="value">The Visual password value.</param>
+    /// <returns>A DaoResult indicating success or failure.</returns>
+    internal static async Task<DaoResult> SetVisualPasswordAsync(string user, string value)
     {
         Service_DebugTracer.TraceMethodEntry(new Dictionary<string, object> { ["user"] = user, ["value"] = value }, controlName: "Dao_User");
         
-        await SetUserSettingAsync("VisualPassword", user, value);
-        
-        Service_DebugTracer.TraceMethodExit(controlName: "Dao_User");
+        try
+        {
+            await SetUserSettingInternalAsync("VisualPassword", user, value);
+            
+            Service_DebugTracer.TraceMethodExit(controlName: "Dao_User");
+            return DaoResult.Success($"Set VisualPassword for user {user}");
+        }
+        catch (Exception ex)
+        {
+            LoggingUtility.LogDatabaseError(ex);
+            Service_DebugTracer.TraceMethodExit(null, controlName: "Dao_User");
+            return DaoResult.Failure($"Error setting VisualPassword for user {user}", ex);
+        }
     }
 
-    internal static async Task<string> GetWipServerAddressAsync(string user)
+    /// <summary>
+    /// Gets the WIP server address for the specified user and updates Model_Users.
+    /// </summary>
+    /// <param name="user">The username.</param>
+    /// <returns>A DaoResult containing the WIP server address.</returns>
+    internal static async Task<DaoResult<string>> GetWipServerAddressAsync(string user)
     {
         Service_DebugTracer.TraceMethodEntry(new Dictionary<string, object> { ["user"] = user }, controlName: "Dao_User");
         
-        string value = await GetSettingsJsonAsync("WipServerAddress", user);
-        Model_Users.WipServerAddress = value;
-        
-        Service_DebugTracer.TraceMethodExit(Model_Users.WipServerAddress, controlName: "Dao_User");
-        return Model_Users.WipServerAddress;
+        try
+        {
+            string value = await GetSettingsJsonInternalAsync("WipServerAddress", user);
+            Model_Users.WipServerAddress = value;
+            
+            Service_DebugTracer.TraceMethodExit(Model_Users.WipServerAddress, controlName: "Dao_User");
+            return DaoResult<string>.Success(Model_Users.WipServerAddress, $"Retrieved WipServerAddress for user {user}");
+        }
+        catch (Exception ex)
+        {
+            LoggingUtility.LogDatabaseError(ex);
+            Service_DebugTracer.TraceMethodExit(null, controlName: "Dao_User");
+            return DaoResult<string>.Failure($"Error retrieving WipServerAddress for user {user}", ex);
+        }
     }
 
-    internal static async Task SetWipServerAddressAsync(string user, string value)
+    /// <summary>
+    /// Sets the WIP server address for the specified user.
+    /// </summary>
+    /// <param name="user">The username.</param>
+    /// <param name="value">The server address value.</param>
+    /// <returns>A DaoResult indicating success or failure.</returns>
+    internal static async Task<DaoResult> SetWipServerAddressAsync(string user, string value)
     {
         Service_DebugTracer.TraceMethodEntry(new Dictionary<string, object> { ["user"] = user, ["value"] = value }, controlName: "Dao_User");
         
-        await SetUserSettingAsync("WipServerAddress", user, value);
-        
-        Service_DebugTracer.TraceMethodExit(controlName: "Dao_User");
+        try
+        {
+            await SetUserSettingInternalAsync("WipServerAddress", user, value);
+            
+            Service_DebugTracer.TraceMethodExit(controlName: "Dao_User");
+            return DaoResult.Success($"Set WipServerAddress to {value} for user {user}");
+        }
+        catch (Exception ex)
+        {
+            LoggingUtility.LogDatabaseError(ex);
+            Service_DebugTracer.TraceMethodExit(null, controlName: "Dao_User");
+            return DaoResult.Failure($"Error setting WipServerAddress for user {user}", ex);
+        }
     }
 
     #region Get/Set Database
 
-    internal static async Task<string> GetDatabaseAsync(string user)
+    /// <summary>
+    /// Gets the database name for the specified user and updates Model_Users.
+    /// </summary>
+    /// <param name="user">The username.</param>
+    /// <returns>A DaoResult containing the database name.</returns>
+    internal static async Task<DaoResult<string>> GetDatabaseAsync(string user)
     {
         Service_DebugTracer.TraceMethodEntry(new Dictionary<string, object> { ["user"] = user }, controlName: "Dao_User");
         
-        string value = await GetSettingsJsonAsync("WIPDatabase", user);
-        Model_Users.Database = value;
-        
-        Service_DebugTracer.TraceMethodExit(Model_Users.Database, controlName: "Dao_User");
-        return Model_Users.Database;
+        try
+        {
+            string value = await GetSettingsJsonInternalAsync("WIPDatabase", user);
+            Model_Users.Database = value;
+            
+            Service_DebugTracer.TraceMethodExit(Model_Users.Database, controlName: "Dao_User");
+            return DaoResult<string>.Success(Model_Users.Database, $"Retrieved WIPDatabase for user {user}");
+        }
+        catch (Exception ex)
+        {
+            LoggingUtility.LogDatabaseError(ex);
+            Service_DebugTracer.TraceMethodExit(null, controlName: "Dao_User");
+            return DaoResult<string>.Failure($"Error retrieving WIPDatabase for user {user}", ex);
+        }
     }
 
-    internal static async Task SetDatabaseAsync(string user, string value)
+    /// <summary>
+    /// Sets the database name for the specified user and updates Model_Users.
+    /// </summary>
+    /// <param name="user">The username.</param>
+    /// <param name="value">The database name value.</param>
+    /// <returns>A DaoResult indicating success or failure.</returns>
+    internal static async Task<DaoResult> SetDatabaseAsync(string user, string value)
     {
         Service_DebugTracer.TraceMethodEntry(new Dictionary<string, object> { ["user"] = user, ["value"] = value }, controlName: "Dao_User");
         
-        Model_Users.Database = value;
-        await SetUserSettingAsync("WIPDatabase", user, value);
-        
-        Service_DebugTracer.TraceMethodExit(controlName: "Dao_User");
+        try
+        {
+            Model_Users.Database = value;
+            await SetUserSettingInternalAsync("WIPDatabase", user, value);
+            
+            Service_DebugTracer.TraceMethodExit(controlName: "Dao_User");
+            return DaoResult.Success($"Set WIPDatabase to {value} for user {user}");
+        }
+        catch (Exception ex)
+        {
+            LoggingUtility.LogDatabaseError(ex);
+            Service_DebugTracer.TraceMethodExit(null, controlName: "Dao_User");
+            return DaoResult.Failure($"Error setting WIPDatabase for user {user}", ex);
+        }
     }
 
     #endregion
 
     #region Get/Set WipServerPort
 
-    internal static async Task<string> GetWipServerPortAsync(string user)
+    /// <summary>
+    /// Gets the WIP server port for the specified user and updates Model_Users.
+    /// </summary>
+    /// <param name="user">The username.</param>
+    /// <returns>A DaoResult containing the server port.</returns>
+    internal static async Task<DaoResult<string>> GetWipServerPortAsync(string user)
     {
         Service_DebugTracer.TraceMethodEntry(new Dictionary<string, object> { ["user"] = user }, controlName: "Dao_User");
         
-        string value = await GetSettingsJsonAsync("WipServerPort", user);
-        Model_Users.WipServerPort = value;
-        
-        Service_DebugTracer.TraceMethodExit(Model_Users.WipServerPort, controlName: "Dao_User");
-        return Model_Users.WipServerPort;
+        try
+        {
+            string value = await GetSettingsJsonInternalAsync("WipServerPort", user);
+            Model_Users.WipServerPort = value;
+            
+            Service_DebugTracer.TraceMethodExit(Model_Users.WipServerPort, controlName: "Dao_User");
+            return DaoResult<string>.Success(Model_Users.WipServerPort, $"Retrieved WipServerPort for user {user}");
+        }
+        catch (Exception ex)
+        {
+            LoggingUtility.LogDatabaseError(ex);
+            Service_DebugTracer.TraceMethodExit(null, controlName: "Dao_User");
+            return DaoResult<string>.Failure($"Error retrieving WipServerPort for user {user}", ex);
+        }
     }
 
-    internal static async Task SetWipServerPortAsync(string user, string value)
+    /// <summary>
+    /// Sets the WIP server port for the specified user and updates Model_Users.
+    /// </summary>
+    /// <param name="user">The username.</param>
+    /// <param name="value">The server port value.</param>
+    /// <returns>A DaoResult indicating success or failure.</returns>
+    internal static async Task<DaoResult> SetWipServerPortAsync(string user, string value)
     {
         Service_DebugTracer.TraceMethodEntry(new Dictionary<string, object> { ["user"] = user, ["value"] = value }, controlName: "Dao_User");
         
-        Model_Users.WipServerPort = value;
-        await SetUserSettingAsync("WipServerPort", user, value);
-        
-        Service_DebugTracer.TraceMethodExit(controlName: "Dao_User");
+        try
+        {
+            Model_Users.WipServerPort = value;
+            await SetUserSettingInternalAsync("WipServerPort", user, value);
+            
+            Service_DebugTracer.TraceMethodExit(controlName: "Dao_User");
+            return DaoResult.Success($"Set WipServerPort to {value} for user {user}");
+        }
+        catch (Exception ex)
+        {
+            LoggingUtility.LogDatabaseError(ex);
+            Service_DebugTracer.TraceMethodExit(null, controlName: "Dao_User");
+            return DaoResult.Failure($"Error setting WipServerPort for user {user}", ex);
+        }
     }
 
     #endregion
 
-    internal static async Task<string?> GetUserFullNameAsync(string user)
+    /// <summary>
+    /// Gets the full name for the specified user and updates Model_Users.
+    /// </summary>
+    /// <param name="user">The username.</param>
+    /// <returns>A DaoResult containing the user's full name.</returns>
+    internal static async Task<DaoResult<string?>> GetUserFullNameAsync(string user)
     {
         Service_DebugTracer.TraceMethodEntry(new Dictionary<string, object> { ["user"] = user }, controlName: "Dao_User");
         
@@ -229,11 +479,11 @@ internal static class Dao_User
                 Model_Users.FullName = fullName ?? string.Empty;
                 
                 Service_DebugTracer.TraceMethodExit(fullName, controlName: "Dao_User");
-                return fullName;
+                return DaoResult<string?>.Success(fullName, $"Retrieved full name for user {user}");
             }
             
             Service_DebugTracer.TraceMethodExit(null, controlName: "Dao_User");
-            return null;
+            return DaoResult<string?>.Success(null, $"No full name found for user {user}");
         }
         catch (Exception ex)
         {
@@ -241,11 +491,14 @@ internal static class Dao_User
             LoggingUtility.Log($"GetUserFullNameAsync failed with exception: {ex.Message}");
             
             Service_DebugTracer.TraceMethodExit(null, controlName: "Dao_User");
-            return null;
+            return DaoResult<string?>.Failure($"Error retrieving full name for user {user}", ex);
         }
     }
 
-    public static async Task<string> GetSettingsJsonAsync(string field, string user)
+    /// <summary>
+    /// Internal helper to get settings JSON field value.
+    /// </summary>
+    private static async Task<string> GetSettingsJsonInternalAsync(string field, string user)
     {
         Service_DebugTracer.TraceMethodEntry(new Dictionary<string, object> { ["field"] = field, ["user"] = user }, controlName: "Dao_User");
         
@@ -285,7 +538,7 @@ internal static class Dao_User
                         }
                         catch (JsonException ex)
                         {
-                            Debug.WriteLine($"[Dao_User] JSON parsing error in GetSettingsJsonAsync: {ex.Message}");
+                            Debug.WriteLine($"[Dao_User] JSON parsing error in GetSettingsJsonInternalAsync: {ex.Message}");
                         }
                     }
                 }
@@ -303,7 +556,13 @@ internal static class Dao_User
         }
     }
 
-    public static async Task SetSettingsJsonAsync(string userId, string themeJson)
+    /// <summary>
+    /// Sets theme JSON settings for the specified user.
+    /// </summary>
+    /// <param name="userId">The user ID.</param>
+    /// <param name="themeJson">The theme JSON to set.</param>
+    /// <returns>A DaoResult indicating success or failure.</returns>
+    public static async Task<DaoResult> SetSettingsJsonAsync(string userId, string themeJson)
     {
         Service_DebugTracer.TraceMethodEntry(new Dictionary<string, object> { ["userId"] = userId, ["themeJson"] = themeJson }, controlName: "Dao_User");
         
@@ -321,23 +580,35 @@ internal static class Dao_User
                 parameters
             );
 
-            if (!result.IsSuccess)
+            if (result.IsSuccess)
             {
-                throw new Exception(result.ErrorMessage ?? "Failed to set theme JSON");
+                Service_DebugTracer.TraceMethodExit(result, controlName: "Dao_User");
+                return DaoResult.Success($"Set theme JSON for user {userId}");
             }
-            
-            Service_DebugTracer.TraceMethodExit(controlName: "Dao_User");
+            else
+            {
+                Service_DebugTracer.TraceMethodExit(result, controlName: "Dao_User");
+                return DaoResult.Failure($"Failed to set theme JSON: {result.ErrorMessage}");
+            }
         }
         catch (Exception ex)
         {
             LoggingUtility.LogDatabaseError(ex);
             LoggingUtility.Log($"SetSettingsJsonAsync failed with exception: {ex.Message}");
             
-            Service_DebugTracer.TraceMethodExit(controlName: "Dao_User");
+            Service_DebugTracer.TraceMethodExit(null, controlName: "Dao_User");
+            return DaoResult.Failure($"Error setting theme JSON for user {userId}", ex);
         }
     }
 
-    public static async Task SetGridViewSettingsJsonAsync(string userId, string dgvName, string settingsJson)
+    /// <summary>
+    /// Sets grid view settings JSON for the specified user and DataGridView.
+    /// </summary>
+    /// <param name="userId">The user ID.</param>
+    /// <param name="dgvName">The DataGridView name.</param>
+    /// <param name="settingsJson">The settings JSON to set.</param>
+    /// <returns>A DaoResult indicating success or failure.</returns>
+    public static async Task<DaoResult> SetGridViewSettingsJsonAsync(string userId, string dgvName, string settingsJson)
     {
         Service_DebugTracer.TraceMethodEntry(new Dictionary<string, object> { ["userId"] = userId, ["dgvName"] = dgvName, ["settingsJson"] = settingsJson }, controlName: "Dao_User");
         
@@ -356,23 +627,33 @@ internal static class Dao_User
                 parameters
             );
 
-            if (!result.IsSuccess)
+            if (result.IsSuccess)
             {
-                throw new Exception(result.ErrorMessage ?? "Failed to set grid view settings JSON");
+                Service_DebugTracer.TraceMethodExit(result, controlName: "Dao_User");
+                return DaoResult.Success($"Set grid view settings for {dgvName}");
             }
-            
-            Service_DebugTracer.TraceMethodExit(controlName: "Dao_User");
+            else
+            {
+                Service_DebugTracer.TraceMethodExit(result, controlName: "Dao_User");
+                return DaoResult.Failure($"Failed to set grid view settings: {result.ErrorMessage}");
+            }
         }
         catch (Exception ex)
         {
             LoggingUtility.LogDatabaseError(ex);
             LoggingUtility.Log($"SetGridViewSettingsJsonAsync failed with exception: {ex.Message}");
             
-            Service_DebugTracer.TraceMethodExit(controlName: "Dao_User");
+            Service_DebugTracer.TraceMethodExit(null, controlName: "Dao_User");
+            return DaoResult.Failure($"Error setting grid view settings for {dgvName}", ex);
         }
     }
 
-    public static async Task<string> GetGridViewSettingsJsonAsync(string userId)
+    /// <summary>
+    /// Gets grid view settings JSON for the specified user.
+    /// </summary>
+    /// <param name="userId">The user ID.</param>
+    /// <returns>A DaoResult containing the grid view settings JSON.</returns>
+    public static async Task<DaoResult<string>> GetGridViewSettingsJsonAsync(string userId)
     {
         Service_DebugTracer.TraceMethodEntry(new Dictionary<string, object> { ["userId"] = userId }, controlName: "Dao_User");
         
@@ -390,11 +671,11 @@ internal static class Dao_User
                 string? json = result?.ToString();
                 
                 Service_DebugTracer.TraceMethodExit(json, controlName: "Dao_User");
-                return json ?? "";
+                return DaoResult<string>.Success(json ?? "", $"Retrieved grid view settings for user {userId}");
             }
             
             Service_DebugTracer.TraceMethodExit("", controlName: "Dao_User");
-            return "";
+            return DaoResult<string>.Success("", $"No grid view settings found for user {userId}");
         }
         catch (Exception ex)
         {
@@ -402,11 +683,14 @@ internal static class Dao_User
             LoggingUtility.Log($"GetGridViewSettingsJsonAsync failed with exception: {ex.Message}");
             
             Service_DebugTracer.TraceMethodExit("", controlName: "Dao_User");
-            return "";
+            return DaoResult<string>.Failure($"Error retrieving grid view settings for user {userId}", ex);
         }
     }
 
-    private static async Task SetUserSettingAsync(string field, string user, string value)
+    /// <summary>
+    /// Internal helper to set a user setting field value.
+    /// </summary>
+    private static async Task SetUserSettingInternalAsync(string field, string user, string value)
     {
         Service_DebugTracer.TraceMethodEntry(new Dictionary<string, object> { ["field"] = field, ["user"] = user, ["value"] = value }, controlName: "Dao_User");
         
@@ -425,7 +709,7 @@ internal static class Dao_User
 
             if (!result.IsSuccess)
             {
-                LoggingUtility.Log($"SetUserSettingAsync failed: {result.ErrorMessage}");
+                LoggingUtility.Log($"SetUserSettingInternalAsync failed: {result.ErrorMessage}");
             }
             
             Service_DebugTracer.TraceMethodExit(controlName: "Dao_User");
@@ -433,7 +717,7 @@ internal static class Dao_User
         catch (Exception ex)
         {
             LoggingUtility.LogDatabaseError(ex);
-            LoggingUtility.Log($"SetUserSettingAsync failed with exception: {ex.Message}");
+            LoggingUtility.Log($"SetUserSettingInternalAsync failed with exception: {ex.Message}");
             
             Service_DebugTracer.TraceMethodExit(controlName: "Dao_User");
         }
@@ -748,7 +1032,12 @@ internal static class Dao_User
 
     #region User UI Settings
 
-    internal static async Task<string> GetShortcutsJsonAsync(string userId)
+    /// <summary>
+    /// Gets the shortcuts JSON for the specified user.
+    /// </summary>
+    /// <param name="userId">The user ID.</param>
+    /// <returns>A DaoResult containing the shortcuts JSON.</returns>
+    internal static async Task<DaoResult<string>> GetShortcutsJsonAsync(string userId)
     {
         Service_DebugTracer.TraceMethodEntry(new Dictionary<string, object> { ["userId"] = userId }, controlName: "Dao_User");
         
@@ -765,11 +1054,11 @@ internal static class Dao_User
                 string? json = dataResult.Data.Rows[0]["SettingJson"]?.ToString();
                 
                 Service_DebugTracer.TraceMethodExit(json, controlName: "Dao_User");
-                return json ?? "";
+                return DaoResult<string>.Success(json ?? "", $"Retrieved shortcuts JSON for user {userId}");
             }
 
             Service_DebugTracer.TraceMethodExit("", controlName: "Dao_User");
-            return "";
+            return DaoResult<string>.Success("", $"No shortcuts JSON found for user {userId}");
         }
         catch (Exception ex)
         {
@@ -777,11 +1066,17 @@ internal static class Dao_User
             LoggingUtility.Log($"GetShortcutsJsonAsync failed with exception: {ex.Message}");
             
             Service_DebugTracer.TraceMethodExit("", controlName: "Dao_User");
-            return "";
+            return DaoResult<string>.Failure($"Error retrieving shortcuts JSON for user {userId}", ex);
         }
     }
 
-    internal static async Task SetShortcutsJsonAsync(string userId, string shortcutsJson)
+    /// <summary>
+    /// Sets the shortcuts JSON for the specified user.
+    /// </summary>
+    /// <param name="userId">The user ID.</param>
+    /// <param name="shortcutsJson">The shortcuts JSON to set.</param>
+    /// <returns>A DaoResult indicating success or failure.</returns>
+    internal static async Task<DaoResult> SetShortcutsJsonAsync(string userId, string shortcutsJson)
     {
         Service_DebugTracer.TraceMethodEntry(new Dictionary<string, object> { ["userId"] = userId, ["shortcutsJson"] = shortcutsJson }, controlName: "Dao_User");
         
@@ -799,39 +1094,51 @@ internal static class Dao_User
                 parameters
             );
 
-            if (!result.IsSuccess)
+            if (result.IsSuccess)
             {
-                throw new Exception(result.ErrorMessage ?? "Failed to set shortcuts JSON");
+                Service_DebugTracer.TraceMethodExit(result, controlName: "Dao_User");
+                return DaoResult.Success($"Set shortcuts JSON for user {userId}");
             }
-            
-            Service_DebugTracer.TraceMethodExit(controlName: "Dao_User");
+            else
+            {
+                Service_DebugTracer.TraceMethodExit(result, controlName: "Dao_User");
+                return DaoResult.Failure($"Failed to set shortcuts JSON: {result.ErrorMessage}");
+            }
         }
         catch (Exception ex)
         {
             LoggingUtility.LogDatabaseError(ex);
             LoggingUtility.Log($"SetShortcutsJsonAsync failed with exception: {ex.Message}");
             
-            Service_DebugTracer.TraceMethodExit(controlName: "Dao_User");
+            Service_DebugTracer.TraceMethodExit(null, controlName: "Dao_User");
+            return DaoResult.Failure($"Error setting shortcuts JSON for user {userId}", ex);
         }
     }
 
-    internal static async Task SetThemeNameAsync(string user, string themeName)
+    /// <summary>
+    /// Sets the theme name for the specified user.
+    /// </summary>
+    /// <param name="user">The username.</param>
+    /// <param name="themeName">The theme name to set.</param>
+    /// <returns>A DaoResult indicating success or failure.</returns>
+    internal static async Task<DaoResult> SetThemeNameAsync(string user, string themeName)
     {
         Service_DebugTracer.TraceMethodEntry(new Dictionary<string, object> { ["user"] = user, ["themeName"] = themeName }, controlName: "Dao_User");
         
         try
         {
-            await SetUserSettingAsync("Theme_Name", user, themeName);
+            await SetUserSettingInternalAsync("Theme_Name", user, themeName);
             
             Service_DebugTracer.TraceMethodExit(controlName: "Dao_User");
+            return DaoResult.Success($"Set theme name to {themeName} for user {user}");
         }
         catch (Exception ex)
         {
             LoggingUtility.LogDatabaseError(ex);
             LoggingUtility.Log($"SetThemeNameAsync failed with exception: {ex.Message}");
             
-            Service_DebugTracer.TraceMethodExit(controlName: "Dao_User");
-            throw;
+            Service_DebugTracer.TraceMethodExit(null, controlName: "Dao_User");
+            return DaoResult.Failure($"Error setting theme name for user {user}", ex);
         }
     }
 

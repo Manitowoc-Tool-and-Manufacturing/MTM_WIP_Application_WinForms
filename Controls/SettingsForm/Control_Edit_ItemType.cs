@@ -82,7 +82,15 @@ namespace MTM_Inventory_Application.Controls.SettingsForm
                     return;
                 }
 
-                _currentItemType = await Dao_ItemType.GetItemTypeByName(selectedType);
+                var getResult = await Dao_ItemType.GetItemTypeByName(selectedType);
+                if (!getResult.IsSuccess)
+                {
+                    MessageBox.Show($@"Error loading ItemType: {getResult.ErrorMessage}", @"Error",
+                        MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
+
+                _currentItemType = getResult.Data;
                 if (_currentItemType != null)
                 {
                     LoadItemTypeData();
@@ -118,7 +126,15 @@ namespace MTM_Inventory_Application.Controls.SettingsForm
                 string? currentItemType = _currentItemType["ItemType"]?.ToString();
                 if (!string.Equals(newItemType, currentItemType, StringComparison.OrdinalIgnoreCase))
                 {
-                    if (await Dao_ItemType.ItemTypeExists(newItemType))
+                    var existsResult = await Dao_ItemType.ItemTypeExists(newItemType);
+                    if (!existsResult.IsSuccess)
+                    {
+                        MessageBox.Show($@"Error checking ItemType: {existsResult.ErrorMessage}", @"Error",
+                            MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        return;
+                    }
+
+                    if (existsResult.Data)
                     {
                         MessageBox.Show($@"ItemType '{newItemType}' already exists.", @"Duplicate ItemType",
                             MessageBoxButtons.OK, MessageBoxIcon.Warning);
@@ -128,7 +144,14 @@ namespace MTM_Inventory_Application.Controls.SettingsForm
                 }
 
                 int itemTypeId = Convert.ToInt32(_currentItemType["p_ID"]);
-                await Dao_ItemType.UpdateItemType(itemTypeId, newItemType, Model_AppVariables.User ?? "Current User");
+                var updateResult = await Dao_ItemType.UpdateItemType(itemTypeId, newItemType, Model_AppVariables.User ?? "Current User");
+                if (!updateResult.IsSuccess)
+                {
+                    MessageBox.Show($@"Error updating ItemType: {updateResult.ErrorMessage}", @"Error",
+                        MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
+
                 LoadItemTypes();
                 ClearForm();
                 SetFormEnabled(false);

@@ -469,128 +469,85 @@ namespace MTM_Inventory_Application.Controls.MainForm
         {
             try
             {
-                // Show progress bar at the start
                 _progressHelper?.ShowProgress();
                 _progressHelper?.UpdateProgress(10, "Searching inventory...");
 
                 LoggingUtility.Log("TransferTab Search button clicked.");
+                
                 string partId = Control_TransferTab_ComboBox_Part.Text?.Trim() ?? "";
                 string op = Control_TransferTab_ComboBox_Operation.Text?.Trim() ?? "";
                 
                 if (string.IsNullOrWhiteSpace(partId) || Control_TransferTab_ComboBox_Part.SelectedIndex <= 0)
                 {
-                    MessageBox.Show(@"Please select a valid Part.", @"Validation Error", MessageBoxButtons.OK,
-                        MessageBoxIcon.Warning);
+                    Service_ErrorHandler.HandleValidationError("Please select a valid Part.", "Part Selection");
                     Control_TransferTab_ComboBox_Part.Focus();
                     return;
                 }
 
                 DataTable? results = null;
-                try
+
+                if (Control_TransferTab_ComboBox_Operation.SelectedIndex > 0 &&
+                    !string.IsNullOrWhiteSpace(op) && op != @"[ Enter Operation ]")
                 {
-                    if (Control_TransferTab_ComboBox_Operation.SelectedIndex > 0 &&
-                        !string.IsNullOrWhiteSpace(op) && op != @"[ Enter Operation ]")
+                    _progressHelper?.UpdateProgress(40, "Querying by part and operation...");
+                    var partOpResult = await Dao_Inventory.GetInventoryByPartIdAndOperationAsync(partId, op, true);
+                    if (partOpResult.IsSuccess)
                     {
-                        LoggingUtility.Log($"Searching inventory for Part ID: {partId} and Operation: {op}");
-                        _progressHelper?.UpdateProgress(40, "Querying by part and operation...");
-                        
-                        var daoResult = await Dao_Inventory.GetInventoryByPartIdAndOperationAsync(partId, op, true);
-                        if (daoResult.IsSuccess && daoResult.Data != null)
-                        {
-                            results = daoResult.Data;
-                        }
-                        else
-                        {
-                            LoggingUtility.Log($"Search failed: {daoResult.ErrorMessage}");
-                            MessageBox.Show($"Search failed: {daoResult.ErrorMessage}", "Search Error", 
-                                MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                            return;
-                        }
+                        results = partOpResult.Data!;
                     }
                     else
                     {
-                        LoggingUtility.Log($"Searching inventory for Part ID: {partId} without specific operation.");
-                        _progressHelper?.UpdateProgress(40, "Querying by part...");
-                        
-                        var daoResult = await Dao_Inventory.GetInventoryByPartIdAsync(partId, true);
-                        if (daoResult.IsSuccess && daoResult.Data != null)
-                        {
-                            results = daoResult.Data;
-                        }
-                        else
-                        {
-                            LoggingUtility.Log($"Search failed: {daoResult.ErrorMessage}");
-                            MessageBox.Show($"Search failed: {daoResult.ErrorMessage}", "Search Error", 
-                                MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                            return;
-                        }
+                        throw new Exception(partOpResult.ErrorMessage ?? "Failed to retrieve inventory by part and operation");
                     }
                 }
-                catch (Exception dbEx)
+                else
                 {
-                    LoggingUtility.LogApplicationError(dbEx);
-                    MessageBox.Show($"Database error during search: {dbEx.Message}", "Database Error", 
-                        MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    return;
-                }
-
-                // Safely update DataGridView with null checks
-                _progressHelper?.UpdateProgress(70, "Updating results...");
-                DataGridView dgv = Control_TransferTab_DataGridView_Main;
-                
-                try
-                {
-                    dgv.SuspendLayout();
-                    
-                    // Clear existing data source first
-                    dgv.DataSource = null;
-                    dgv.Refresh();
-                    
-                    // Set new data source
-                    if (results != null)
+                    _progressHelper?.UpdateProgress(40, "Querying by part...");
+                    var partResult = await Dao_Inventory.GetInventoryByPartIdAsync(partId, true);
+                    if (partResult.IsSuccess)
                     {
-                        dgv.DataSource = results;
-                        
-                        // Only configure columns if we have data and columns exist
-                        if (results.Rows.Count > 0 && dgv.Columns.Count > 0)
-                        {
-                            ConfigureDataGridViewColumns(dgv);
-                            
-                            // Apply theme and sizing
-                            Core_Themes.ApplyThemeToDataGridView(dgv);
-                            Core_Themes.SizeDataGrid(dgv);
-                            
-                            // Select first row if available
-                            if (dgv.Rows.Count > 0 && dgv.Rows[0] != null)
-                            {
-                                dgv.ClearSelection();
-                                dgv.Rows[0].Selected = true;
-                            }
-                        }
+                        results = partResult.Data!;
                     }
-                    
-                    // Update "nothing found" image visibility
-                    Control_TransferTab_Image_NothingFound.Visible = (results == null || results.Rows.Count == 0);
-                    
-                    // Update button states after data load
-                    Control_TransferTab_Update_ButtonStates();
+                    else
+                    {
+                        throw new Exception(partResult.ErrorMessage ?? "Failed to retrieve inventory by part");
+                    }
                 }
-                finally
+                
+                if (results == null)
                 {
-                    dgv.ResumeLayout();
-                    dgv.Refresh();
+                    throw new Exception("Failed to retrieve inventory data");
                 }
 
+                _progressHelper?.UpdateProgress(70, "Updating results...");
+                Control_TransferTab_DataGridView_Main.DataSource = results;
+                Control_TransferTab_DataGridView_Main.ClearSelection();
+
+                // Only show columns in this order: Location, PartID, Operation, Quantity, Notes
+                string[] columnsToShow = { "Location", "PartID", "Operation", "Quantity", "Notes" };
+                foreach (DataGridViewColumn column in Control_TransferTab_DataGridView_Main.Columns)
+                {
+                    column.Visible = columnsToShow.Contains(column.Name);
+                }
+
+                // Reorder columns
+                for (int i = 0; i < columnsToShow.Length; i++)
+                {
+                    if (Control_TransferTab_DataGridView_Main.Columns.Contains(columnsToShow[i]))
+                    {
+                        Control_TransferTab_DataGridView_Main.Columns[columnsToShow[i]].DisplayIndex = i;
+                    }
+                }
+
+                Core_Themes.ApplyThemeToDataGridView(Control_TransferTab_DataGridView_Main);
+                Core_Themes.SizeDataGrid(Control_TransferTab_DataGridView_Main);
+
+                Control_TransferTab_Image_NothingFound.Visible = results.Rows.Count == 0;
                 _progressHelper?.UpdateProgress(100, "Search complete");
-                
-                int rowCount = results?.Rows.Count ?? 0;
-                LoggingUtility.Log($"Search completed successfully. Found {rowCount} records.");
             }
             catch (Exception ex)
             {
                 LoggingUtility.LogApplicationError(ex);
-                MessageBox.Show($"An unexpected error occurred during search: {ex.Message}", "Search Error", 
-                    MessageBoxButtons.OK, MessageBoxIcon.Error);
                 await Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex,
                     new StringBuilder().Append("Control_TransferTab_Button_Search_Click").ToString());
             }
@@ -737,7 +694,7 @@ namespace MTM_Inventory_Application.Controls.MainForm
                     batchNumber, partId, operation, newLocation);
             }
 
-            await Dao_History.AddTransactionHistoryAsync(new Model_TransactionHistory
+            var historyResult = await Dao_History.AddTransactionHistoryAsync(new Model_TransactionHistory
             {
                 TransactionType = "TRANSFER",
                 PartId = partId,
@@ -751,6 +708,12 @@ namespace MTM_Inventory_Application.Controls.MainForm
                 BatchNumber = batchNumber,
                 DateTime = DateTime.Now
             });
+            
+            if (!historyResult.IsSuccess)
+            {
+                LoggingUtility.Log($"Failed to log transaction history: {historyResult.ErrorMessage}");
+            }
+            
             if (MainFormInstance != null)
             {
                 MainFormInstance.MainForm_StatusStrip_SavedStatus.Text =
@@ -792,7 +755,8 @@ namespace MTM_Inventory_Application.Controls.MainForm
                 // TransferPartSimpleAsync transfers entire quantity - no quantity parameter needed
                 await Dao_Inventory.TransferPartSimpleAsync(
                     batchNumber, partId, operation, newLocation);
-                await Dao_History.AddTransactionHistoryAsync(new Model_TransactionHistory
+                    
+                var historyResult = await Dao_History.AddTransactionHistoryAsync(new Model_TransactionHistory
                 {
                     TransactionType = "TRANSFER",
                     PartId = partId,
@@ -806,6 +770,12 @@ namespace MTM_Inventory_Application.Controls.MainForm
                     BatchNumber = batchNumber,
                     DateTime = DateTime.Now
                 });
+                
+                if (!historyResult.IsSuccess)
+                {
+                    LoggingUtility.Log($"Failed to log transaction history: {historyResult.ErrorMessage}");
+                }
+                
                 partIds.Add(partId);
                 operations.Add(operation);
                 fromLocations.Add(fromLocation);
@@ -903,6 +873,11 @@ namespace MTM_Inventory_Application.Controls.MainForm
 
         private void Control_TransferTab_Update_ButtonStates()
         {
+            var callStack = new System.Diagnostics.StackTrace();
+            var callerFrame = callStack.GetFrame(1);
+            var callerMethod = callerFrame?.GetMethod()?.Name ?? "Unknown";
+            LoggingUtility.Log($"[PERF] Update_ButtonStates called from: {callerMethod}");
+            
             try
             {
                 // Cache frequently accessed properties to avoid repeated lookups
@@ -915,7 +890,7 @@ namespace MTM_Inventory_Application.Controls.MainForm
 
                 // Update control states efficiently
                 Control_TransferTab_Button_Search.Enabled = hasPart;
-                Control_TransferTab_ComboBox_ToLocation.Enabled = hasData;
+                // ToLocation ComboBox stays enabled (respects user privileges from ApplyPrivileges)
                 Control_TransferTab_NumericUpDown_Quantity.Enabled = hasData && 
                     Control_TransferTab_DataGridView_Main.SelectedRows.Count <= 1;
 

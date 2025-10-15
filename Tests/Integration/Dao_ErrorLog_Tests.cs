@@ -65,7 +65,7 @@ namespace MTM_Inventory_Application.Tests.Integration
         #region GetAllErrors Tests
 
         /// <summary>
-        /// Tests GetAllErrorsAsync returns DataTable of all errors.
+        /// Tests GetAllErrorsAsync returns DaoResult with DataTable of all errors.
         /// </summary>
         [TestMethod]
         public async Task GetAllErrorsAsync_ReturnsDataTable()
@@ -74,10 +74,12 @@ namespace MTM_Inventory_Application.Tests.Integration
             var result = await Dao_ErrorLog.GetAllErrorsAsync();
 
             // Assert
-            Assert.IsNotNull(result, "DataTable should not be null");
-            Assert.IsInstanceOfType(result, typeof(DataTable));
+            Assert.IsNotNull(result, "Result should not be null");
+            Assert.IsTrue(result.IsSuccess, "Operation should succeed");
+            Assert.IsNotNull(result.Data, "DataTable should not be null");
+            Assert.IsInstanceOfType(result.Data, typeof(DataTable));
             // Verify expected columns exist
-            Assert.IsTrue(result.Columns.Contains("Id") || result.Columns.Contains("ErrorId") || result.Columns.Count >= 0,
+            Assert.IsTrue(result.Data.Columns.Contains("Id") || result.Data.Columns.Contains("ErrorId") || result.Data.Columns.Count >= 0,
                 "DataTable should have valid structure");
         }
 
@@ -91,8 +93,10 @@ namespace MTM_Inventory_Application.Tests.Integration
             var result = await Dao_ErrorLog.GetAllErrorsAsync();
 
             // Assert
-            Assert.IsNotNull(result, "DataTable should not be null in sync mode");
-            Assert.IsInstanceOfType(result, typeof(DataTable));
+            Assert.IsNotNull(result, "Result should not be null");
+            Assert.IsTrue(result.IsSuccess, "Operation should succeed");
+            Assert.IsNotNull(result.Data, "DataTable should not be null in sync mode");
+            Assert.IsInstanceOfType(result.Data, typeof(DataTable));
         }
 
         #endregion
@@ -112,8 +116,10 @@ namespace MTM_Inventory_Application.Tests.Integration
             var result = await Dao_ErrorLog.GetErrorsByUserAsync(testUser);
 
             // Assert
-            Assert.IsNotNull(result, "DataTable should not be null");
-            Assert.IsInstanceOfType(result, typeof(DataTable));
+            Assert.IsNotNull(result, "Result should not be null");
+            Assert.IsTrue(result.IsSuccess, "Operation should succeed");
+            Assert.IsNotNull(result.Data, "DataTable should not be null");
+            Assert.IsInstanceOfType(result.Data, typeof(DataTable));
         }
 
         /// <summary>
@@ -129,9 +135,11 @@ namespace MTM_Inventory_Application.Tests.Integration
             var result = await Dao_ErrorLog.GetErrorsByUserAsync(nonExistentUser);
 
             // Assert
-            Assert.IsNotNull(result, "DataTable should not be null even for non-existent user");
+            Assert.IsNotNull(result, "Result should not be null");
+            Assert.IsTrue(result.IsSuccess, "Operation should succeed even for non-existent user");
+            Assert.IsNotNull(result.Data, "DataTable should not be null even for non-existent user");
             // Should return empty DataTable, not null
-            Assert.AreEqual(0, result.Rows.Count, "Should return empty DataTable for non-existent user");
+            Assert.AreEqual(0, result.Data.Rows.Count, "Should return empty DataTable for non-existent user");
         }
 
         #endregion
@@ -152,8 +160,10 @@ namespace MTM_Inventory_Application.Tests.Integration
             var result = await Dao_ErrorLog.GetErrorsByDateRangeAsync(startDate, endDate);
 
             // Assert
-            Assert.IsNotNull(result, "DataTable should not be null");
-            Assert.IsInstanceOfType(result, typeof(DataTable));
+            Assert.IsNotNull(result, "Result should not be null");
+            Assert.IsTrue(result.IsSuccess, "Operation should succeed");
+            Assert.IsNotNull(result.Data, "DataTable should not be null");
+            Assert.IsInstanceOfType(result.Data, typeof(DataTable));
         }
 
         /// <summary>
@@ -170,8 +180,10 @@ namespace MTM_Inventory_Application.Tests.Integration
             var result = await Dao_ErrorLog.GetErrorsByDateRangeAsync(startDate, endDate);
 
             // Assert
-            Assert.IsNotNull(result, "DataTable should not be null");
-            Assert.AreEqual(0, result.Rows.Count, "Should return empty DataTable for future date range");
+            Assert.IsNotNull(result, "Result should not be null");
+            Assert.IsTrue(result.IsSuccess, "Operation should succeed");
+            Assert.IsNotNull(result.Data, "DataTable should not be null");
+            Assert.AreEqual(0, result.Data.Rows.Count, "Should return empty DataTable for future date range");
         }
 
         /// <summary>
@@ -188,7 +200,8 @@ namespace MTM_Inventory_Application.Tests.Integration
             var result = await Dao_ErrorLog.GetErrorsByDateRangeAsync(startDate, endDate);
 
             // Assert
-            Assert.IsNotNull(result, "Should handle inverted dates gracefully");
+            Assert.IsNotNull(result, "Result should not be null");
+            Assert.IsTrue(result.IsSuccess, "Should handle inverted dates gracefully");
             // Should return empty or handle gracefully, not throw
         }
 
@@ -206,11 +219,12 @@ namespace MTM_Inventory_Application.Tests.Integration
             // Arrange
             var nonExistentId = 999999;
 
-            // Act & Assert - Should not throw
-            await Dao_ErrorLog.DeleteErrorByIdAsync(nonExistentId);
+            // Act
+            var result = await Dao_ErrorLog.DeleteErrorByIdAsync(nonExistentId);
             
-            // If we get here without exception, test passes
-            Assert.IsTrue(true, "Delete operation should execute without throwing exception");
+            // Assert
+            Assert.IsNotNull(result, "Result should not be null");
+            Assert.IsTrue(result.IsSuccess, "Delete operation should execute without throwing exception");
         }
 
         /// <summary>
@@ -220,11 +234,12 @@ namespace MTM_Inventory_Application.Tests.Integration
         [TestMethod]
         public async Task DeleteAllErrorsAsync_ExecutesWithoutError()
         {
-            // Act & Assert - Should not throw
-            await Dao_ErrorLog.DeleteAllErrorsAsync();
+            // Act
+            var result = await Dao_ErrorLog.DeleteAllErrorsAsync();
             
-            // If we get here without exception, test passes
-            Assert.IsTrue(true, "Delete all operation should execute without throwing exception");
+            // Assert
+            Assert.IsNotNull(result, "Result should not be null");
+            Assert.IsTrue(result.IsSuccess, "Delete all operation should execute without throwing exception");
         }
 
         #endregion
@@ -378,9 +393,11 @@ namespace MTM_Inventory_Application.Tests.Integration
             var result = await Dao_ErrorLog.GetAllErrorsAsync();
 
             // Assert
-            Assert.IsNotNull(result, "DataTable should not be null");
-            Assert.IsNotNull(result.Columns, "DataTable should have Columns collection");
-            Assert.IsTrue(result.Columns.Count >= 0, "DataTable should have valid column count");
+            Assert.IsNotNull(result, "Result should not be null");
+            Assert.IsTrue(result.IsSuccess, "Operation should succeed");
+            Assert.IsNotNull(result.Data, "DataTable should not be null");
+            Assert.IsNotNull(result.Data.Columns, "DataTable should have Columns collection");
+            Assert.IsTrue(result.Data.Columns.Count >= 0, "DataTable should have valid column count");
         }
 
         #endregion
@@ -397,7 +414,9 @@ namespace MTM_Inventory_Application.Tests.Integration
             var result = await Dao_ErrorLog.GetErrorsByUserAsync(string.Empty);
 
             // Assert
-            Assert.IsNotNull(result, "Should return DataTable even for empty user string");
+            Assert.IsNotNull(result, "Result should not be null");
+            Assert.IsTrue(result.IsSuccess, "Operation should succeed even for empty user string");
+            Assert.IsNotNull(result.Data, "Should return DataTable even for empty user string");
         }
 
         /// <summary>
@@ -410,7 +429,9 @@ namespace MTM_Inventory_Application.Tests.Integration
             try
             {
                 var result = await Dao_ErrorLog.GetErrorsByUserAsync(null!);
-                Assert.IsNotNull(result, "Should return DataTable even for null user");
+                Assert.IsNotNull(result, "Result should not be null");
+                Assert.IsTrue(result.IsSuccess, "Operation should succeed even for null user");
+                Assert.IsNotNull(result.Data, "Should return DataTable even for null user");
             }
             catch (ArgumentNullException)
             {

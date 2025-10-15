@@ -502,8 +502,17 @@ namespace MTM_Inventory_Application.Controls.MainForm
                 {
                     try
                     {
-                        await Dao_QuickButtons.UpdateQuickButtonAsync(user, idx, dlg.PartId, dlg.Operation,
+                        var result = await Dao_QuickButtons.UpdateQuickButtonAsync(user, idx, dlg.PartId, dlg.Operation,
                             dlg.Quantity);
+                        if (!result.IsSuccess)
+                        {
+                            LoggingUtility.LogDatabaseError(
+                                result.Exception ?? new Exception(result.ErrorMessage),
+                                DatabaseErrorSeverity.Error);
+                            MessageBox.Show($@"Failed to update quick button: {result.ErrorMessage}",
+                                @"Update Quick Button", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            return;
+                        }
                     }
                     catch (MySqlException ex)
                     {
@@ -526,7 +535,16 @@ namespace MTM_Inventory_Application.Controls.MainForm
                     int prevVisibleCount = quickButtons.Count(b => b.Visible);
                     try
                     {
-                        await Dao_QuickButtons.RemoveQuickButtonAndShiftAsync(user, idx);
+                        var result = await Dao_QuickButtons.RemoveQuickButtonAndShiftAsync(user, idx);
+                        if (!result.IsSuccess)
+                        {
+                            LoggingUtility.LogDatabaseError(
+                                result.Exception ?? new Exception(result.ErrorMessage),
+                                DatabaseErrorSeverity.Error);
+                            MessageBox.Show($@"Failed to remove quick button: {result.ErrorMessage}",
+                                @"Remove Quick Button", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            return;
+                        }
                     }
                     catch (MySqlException ex)
                     {
@@ -563,8 +581,19 @@ namespace MTM_Inventory_Application.Controls.MainForm
             {
                 List<Button> newOrder = dlg.GetButtonOrder();
                 string user = Model_AppVariables.User;
+                
                 // Remove all quick buttons for the user from the server
-                await Dao_QuickButtons.DeleteAllQuickButtonsForUserAsync(user);
+                var deleteResult = await Dao_QuickButtons.DeleteAllQuickButtonsForUserAsync(user);
+                if (!deleteResult.IsSuccess)
+                {
+                    LoggingUtility.LogDatabaseError(
+                        deleteResult.Exception ?? new Exception(deleteResult.ErrorMessage),
+                        DatabaseErrorSeverity.Error);
+                    MessageBox.Show($@"Failed to clear quick buttons: {deleteResult.ErrorMessage}",
+                        @"Clear Quick Buttons", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
+                
                 // Re-add them in the exact order shown in ListView
                 for (int i = 0; i < newOrder.Count; i++)
                 {
@@ -573,8 +602,18 @@ namespace MTM_Inventory_Application.Controls.MainForm
                     string partId = tag?.partId ?? string.Empty;
                     string operation = tag?.operation ?? string.Empty;
                     int quantity = tag?.quantity ?? 0;
+                    
                     // Use the new method that doesn't shift - directly insert at position i+1
-                    await Dao_QuickButtons.AddQuickButtonAtPositionAsync(user, partId, operation, quantity, i + 1);
+                    var addResult = await Dao_QuickButtons.AddQuickButtonAtPositionAsync(user, partId, operation, quantity, i + 1);
+                    if (!addResult.IsSuccess)
+                    {
+                        LoggingUtility.LogDatabaseError(
+                            addResult.Exception ?? new Exception(addResult.ErrorMessage),
+                            DatabaseErrorSeverity.Error);
+                        MessageBox.Show($@"Failed to add quick button at position {i + 1}: {addResult.ErrorMessage}",
+                            @"Add Quick Button", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        // Continue with remaining buttons despite error
+                    }
                 }
 
                 // Update UI

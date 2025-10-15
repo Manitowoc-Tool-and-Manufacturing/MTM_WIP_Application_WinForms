@@ -62,7 +62,7 @@ public class ErrorCooldown_Tests : BaseIntegrationTest
         var testException = new InvalidOperationException(testErrorMessage);
 
         int errorCount = 10;
-        var beforeErrorsCount = (await Dao_ErrorLog.GetAllErrorsAsync()).Rows.Count;
+        var beforeErrorsCount = (await Dao_ErrorLog.GetAllErrorsAsync()).Data!.Rows.Count;
 
         // Act - Trigger same error 10 times rapidly (within 1 second)
         for (int i = 0; i < errorCount; i++)
@@ -78,7 +78,9 @@ public class ErrorCooldown_Tests : BaseIntegrationTest
         }
 
         // Assert - Verify all 10 errors were logged to database
-        var allErrors = await Dao_ErrorLog.GetAllErrorsAsync();
+        var allErrorsResult = await Dao_ErrorLog.GetAllErrorsAsync();
+        Assert.IsTrue(allErrorsResult.IsSuccess, "GetAllErrorsAsync should succeed");
+        var allErrors = allErrorsResult.Data!;
         var afterErrorsCount = allErrors.Rows.Count;
         
         int newErrorsLogged = afterErrorsCount - beforeErrorsCount;
@@ -136,7 +138,9 @@ public class ErrorCooldown_Tests : BaseIntegrationTest
         );
 
         // Assert - Both errors should be logged
-        var allErrors = await Dao_ErrorLog.GetAllErrorsAsync();
+        var allErrorsResult = await Dao_ErrorLog.GetAllErrorsAsync();
+        Assert.IsTrue(allErrorsResult.IsSuccess, "GetAllErrorsAsync should succeed");
+        var allErrors = allErrorsResult.Data!;
         var matchingErrors = allErrors.AsEnumerable()
             .Where(row => row.Field<string>("ErrorMessage")?.Contains(testErrorMessage) == true)
             .ToList();
@@ -170,7 +174,7 @@ public class ErrorCooldown_Tests : BaseIntegrationTest
         var error2 = new ArgumentNullException("Error type 2 - " + Guid.NewGuid().ToString());
         var error3 = new FormatException("Error type 3 - " + Guid.NewGuid().ToString());
 
-        var beforeErrorsCount = (await Dao_ErrorLog.GetAllErrorsAsync()).Rows.Count;
+        var beforeErrorsCount = (await Dao_ErrorLog.GetAllErrorsAsync()).Data!.Rows.Count;
 
         // Act - Trigger 3 different errors rapidly
         await Dao_ErrorLog.HandleException_GeneralError_CloseApp(error1, callerName: "DifferentErrors_Test", controlName: "Test1");
@@ -178,7 +182,9 @@ public class ErrorCooldown_Tests : BaseIntegrationTest
         await Dao_ErrorLog.HandleException_GeneralError_CloseApp(error3, callerName: "DifferentErrors_Test", controlName: "Test3");
 
         // Assert - All 3 different errors should be logged
-        var allErrors = await Dao_ErrorLog.GetAllErrorsAsync();
+        var allErrorsResult = await Dao_ErrorLog.GetAllErrorsAsync();
+        Assert.IsTrue(allErrorsResult.IsSuccess, "GetAllErrorsAsync should succeed");
+        var allErrors = allErrorsResult.Data!;
         var afterErrorsCount = allErrors.Rows.Count;
         
         int newErrorsLogged = afterErrorsCount - beforeErrorsCount;
@@ -206,7 +212,7 @@ public class ErrorCooldown_Tests : BaseIntegrationTest
         var generalError = new InvalidOperationException("General error - " + Guid.NewGuid().ToString());
         var sqlError = new InvalidOperationException("SQL error simulation - " + Guid.NewGuid().ToString());
 
-        var beforeErrorsCount = (await Dao_ErrorLog.GetAllErrorsAsync()).Rows.Count;
+        var beforeErrorsCount = (await Dao_ErrorLog.GetAllErrorsAsync()).Data!.Rows.Count;
 
         // Act - Trigger general error, then SQL error rapidly
         await Dao_ErrorLog.HandleException_GeneralError_CloseApp(
@@ -225,7 +231,9 @@ public class ErrorCooldown_Tests : BaseIntegrationTest
         );
 
         // Assert - Both errors should be logged (separate cooldown mechanisms)
-        var allErrors = await Dao_ErrorLog.GetAllErrorsAsync();
+        var allErrorsResult = await Dao_ErrorLog.GetAllErrorsAsync();
+        Assert.IsTrue(allErrorsResult.IsSuccess, "GetAllErrorsAsync should succeed");
+        var allErrors = allErrorsResult.Data!;
         var afterErrorsCount = allErrors.Rows.Count;
         
         int newErrorsLogged = afterErrorsCount - beforeErrorsCount;
@@ -250,7 +258,7 @@ public class ErrorCooldown_Tests : BaseIntegrationTest
         var testException = new InvalidOperationException(sharedErrorMessage);
 
         int concurrentCount = 20;
-        var beforeErrorsCount = (await Dao_ErrorLog.GetAllErrorsAsync()).Rows.Count;
+        var beforeErrorsCount = (await Dao_ErrorLog.GetAllErrorsAsync()).Data!.Rows.Count;
 
         // Act - Trigger same error from multiple concurrent tasks
         var tasks = Enumerable.Range(0, concurrentCount)
@@ -264,7 +272,9 @@ public class ErrorCooldown_Tests : BaseIntegrationTest
         await Task.WhenAll(tasks);
 
         // Assert - All errors should be logged to database
-        var allErrors = await Dao_ErrorLog.GetAllErrorsAsync();
+        var allErrorsResult = await Dao_ErrorLog.GetAllErrorsAsync();
+        Assert.IsTrue(allErrorsResult.IsSuccess, "GetAllErrorsAsync should succeed");
+        var allErrors = allErrorsResult.Data!;
         var afterErrorsCount = allErrors.Rows.Count;
         
         int newErrorsLogged = afterErrorsCount - beforeErrorsCount;
@@ -318,7 +328,9 @@ public class ErrorCooldown_Tests : BaseIntegrationTest
         stopwatch.Stop();
 
         // Assert - Both errors should be logged (verify cooldown tracking works)
-        var allErrors = await Dao_ErrorLog.GetAllErrorsAsync();
+        var allErrorsResult = await Dao_ErrorLog.GetAllErrorsAsync();
+        Assert.IsTrue(allErrorsResult.IsSuccess, "GetAllErrorsAsync should succeed");
+        var allErrors = allErrorsResult.Data!;
         var matchingErrors = allErrors.AsEnumerable()
             .Where(row => row.Field<string>("ErrorMessage")?.Contains(testErrorMessage) == true)
             .OrderBy(row => row.Field<DateTime>("ErrorTime"))

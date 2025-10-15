@@ -670,9 +670,17 @@ namespace MTM_Inventory_Application.Controls.MainForm
         }
 
         private static async Task AddToLast10TransactionsIfUniqueAsync(string user, string partId, string operation,
-            int quantity) =>
+            int quantity)
+        {
             // Use the proper Dao_QuickButtons method that handles positions correctly
-            await Dao_QuickButtons.AddOrShiftQuickButtonAsync(user, partId, operation, quantity);
+            var result = await Dao_QuickButtons.AddOrShiftQuickButtonAsync(user, partId, operation, quantity);
+            if (!result.IsSuccess)
+            {
+                LoggingUtility.LogDatabaseError(
+                    result.Exception ?? new Exception(result.ErrorMessage),
+                    DatabaseErrorSeverity.Warning); // Non-critical operation, log as warning
+            }
+        }
 
         private void Control_InventoryTab_Button_Toggle_RightPanel_Click(object sender, EventArgs e)
         {

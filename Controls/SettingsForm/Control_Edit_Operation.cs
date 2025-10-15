@@ -103,17 +103,35 @@ namespace MTM_Inventory_Application.Controls.SettingsForm
 
                 string newOperationNumber = operationTextBox.Text.Trim();
                 string originalOperationNumber = _currentOperation["p_Operation"]?.ToString() ?? string.Empty;
-                if (newOperationNumber != originalOperationNumber &&
-                    await Dao_Operation.OperationExists(newOperationNumber))
+                
+                if (newOperationNumber != originalOperationNumber)
                 {
-                    MessageBox.Show($@"Operation number '{newOperationNumber}' already exists.", @"Duplicate Operation",
-                        MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                    operationTextBox.Focus();
-                    return;
+                    var existsResult = await Dao_Operation.OperationExists(newOperationNumber);
+                    if (!existsResult.IsSuccess)
+                    {
+                        MessageBox.Show($@"Error checking operation: {existsResult.ErrorMessage}", @"Error",
+                            MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        return;
+                    }
+                    
+                    if (existsResult.Data)
+                    {
+                        MessageBox.Show($@"Operation number '{newOperationNumber}' already exists.", @"Duplicate Operation",
+                            MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        operationTextBox.Focus();
+                        return;
+                    }
                 }
 
-                await Dao_Operation.UpdateOperation(originalOperationNumber, newOperationNumber,
-                    Model_AppVariables.User ?? "Current User", true);
+                var updateResult = await Dao_Operation.UpdateOperation(originalOperationNumber, newOperationNumber,
+                    Model_AppVariables.User ?? "Current User");
+                if (!updateResult.IsSuccess)
+                {
+                    MessageBox.Show($@"Error updating operation: {updateResult.ErrorMessage}", @"Error",
+                        MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
+                
                 LoadOperations();
                 ClearForm();
                 EnableControls(false);
