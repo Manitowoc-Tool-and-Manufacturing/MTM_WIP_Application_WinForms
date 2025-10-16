@@ -1,0 +1,1300 @@
+{
+  "sys_user_roles_Add": [
+    {
+      "Status": "Called from UI",
+      "EventHandler": "Control_Add_User.cs.Control_Add_User_TextBox_NoSpaces_KeyPress",
+      "MethodChain": [],
+      "DAO": {
+        "Method": "AddUserRoleAsync",
+        "File": "Dao_User.cs"
+      },
+      "StoredProcedure": "sys_user_roles_Add",
+      "Tables": [
+        "usr_users",
+        "sys_roles",
+        "sys_user_roles"
+      ],
+      "ReturnType": "Task<DaoResult>",
+      "UIElementUpdated": {
+        "OnFailure": "None detected",
+        "OnSuccess": "ShowError"
+      }
+    }
+  ],
+  "log_error_Delete_All": [
+    {
+      "Status": "Called from DAO (no UI event handler traced)",
+      "DAO": {
+        "Method": "Unknown",
+        "File": "Dao_ErrorLog.cs"
+      },
+      "StoredProcedure": "log_error_Delete_All",
+      "Tables": "log_error",
+      "ReturnType": "Unknown"
+    }
+  ],
+  "sys_last_10_transactions_AddQuickButton_1": [
+    {
+      "Status": "Called from UI",
+      "EventHandler": "Control_QuickButtons.cs.MenuItemRemove_Click",
+      "MethodChain": [
+        "RemoveQuickButtonAndShiftAsync"
+      ],
+      "DAO": {
+        "Method": "AddOrShiftQuickButtonAsync",
+        "File": "Dao_QuickButtons.cs"
+      },
+      "StoredProcedure": "sys_last_10_transactions_AddQuickButton_1",
+      "Tables": "sys_last_10_transactions",
+      "ReturnType": "Task<DaoResult>",
+      "UIElementUpdated": {
+        "OnFailure": "None detected",
+        "OnSuccess": "None detected"
+      }
+    },
+    {
+      "Status": "Called from UI",
+      "EventHandler": "Control_QuickButtons.cs.ListView_DragDrop",
+      "MethodChain": [],
+      "DAO": {
+        "Method": "AddQuickButtonAtPositionAsync",
+        "File": "Dao_QuickButtons.cs"
+      },
+      "StoredProcedure": "sys_last_10_transactions_AddQuickButton_1",
+      "Tables": "sys_last_10_transactions",
+      "ReturnType": "Task<DaoResult>",
+      "UIElementUpdated": {
+        "OnFailure": "None detected",
+        "OnSuccess": "Show"
+      }
+    }
+  ],
+  "log_changelog_Get_Current": [
+    {
+      "Status": "Called from UI",
+      "EventHandler": "Transactions.cs.OnSmartSearchTextChanged",
+      "MethodChain": [
+        "Stop"
+      ],
+      "DAO": {
+        "Method": "VersionChecker",
+        "File": "Service_Timer_VersionChecker.cs"
+      },
+      "StoredProcedure": "log_changelog_Get_Current",
+      "Tables": "log_changelog",
+      "ReturnType": "void",
+      "UIElementUpdated": {
+        "OnFailure": "SetVersionLabel",
+        "OnSuccess": "None detected"
+      }
+    }
+  ],
+  "md_part_ids_Get_ByItemNumber": [
+    {
+      "Status": "Called from UI",
+      "EventHandler": "DebugDashboardForm.cs.CmbDebugLevel_SelectedIndexChanged",
+      "MethodChain": [
+        "nameof"
+      ],
+      "DAO": {
+        "Method": "GetPartByNumberAsync",
+        "File": "Dao_Part.cs"
+      },
+      "StoredProcedure": "md_part_ids_Get_ByItemNumber",
+      "Tables": "md_part_ids",
+      "ReturnType": "Task<DaoResult<DataRow>>",
+      "UIElementUpdated": {
+        "OnFailure": "ClearForm",
+        "OnSuccess": "None detected"
+      }
+    }
+  ],
+  "md_locations_Add_Location": [
+    {
+      "Status": "Called from UI",
+      "EventHandler": "Control_Add_Location.cs.Control_Add_Location_Button_Save_Click",
+      "MethodChain": [],
+      "DAO": {
+        "Method": "InsertLocation",
+        "File": "Dao_Location.cs"
+      },
+      "StoredProcedure": "md_locations_Add_Location",
+      "Tables": "md_locations",
+      "ReturnType": "Task<DaoResult>",
+      "UIElementUpdated": {
+        "OnFailure": "None detected",
+        "OnSuccess": "Show"
+      }
+    }
+  ],
+  "sys_role_GetIdByName": [
+    {
+      "Status": "Not called from C# code",
+      "StoredProcedure": "sys_role_GetIdByName",
+      "Tables": "sys_roles",
+      "Note": "May be legacy, unused, called from other stored procedures, or background services"
+    }
+  ],
+  "sp_ReassignBatchNumbers": [
+    {
+      "Status": "Not called from C# code",
+      "StoredProcedure": "sp_ReassignBatchNumbers",
+      "Tables": "mtm_wip_application",
+      "Note": "May be legacy, unused, called from other stored procedures, or background services"
+    }
+  ],
+  "md_operation_numbers_Get_All": [
+    {
+      "Status": "Called from DAO (no UI event handler traced)",
+      "DAO": {
+        "Method": "GetAllOperations",
+        "File": "Dao_Operation.cs"
+      },
+      "StoredProcedure": "md_operation_numbers_Get_All",
+      "Tables": "md_operation_numbers",
+      "ReturnType": "Task<DaoResult<DataTable>>"
+    },
+    {
+      "Status": "Called from DAO (no UI event handler traced)",
+      "DAO": {
+        "Method": "SetupOperationDataTable",
+        "File": "Helper_UI_ComboBoxes.cs"
+      },
+      "StoredProcedure": "md_operation_numbers_Get_All",
+      "Tables": "md_operation_numbers",
+      "ReturnType": "Unknown"
+    }
+  ],
+  "usr_users_Exists": [
+    {
+      "Status": "Called from UI",
+      "EventHandler": "Control_Add_User.cs.Control_Add_User_TextBox_NoSpaces_KeyPress",
+      "MethodChain": [],
+      "DAO": {
+        "Method": "UserExistsAsync",
+        "File": "Dao_User.cs"
+      },
+      "StoredProcedure": "usr_users_Exists",
+      "Tables": "usr_users",
+      "ReturnType": "Task<DaoResult<bool>>",
+      "UIElementUpdated": {
+        "OnFailure": "None detected",
+        "OnSuccess": "ShowError"
+      }
+    }
+  ],
+  "inv_inventory_Get_ByPartIDandOperation": [
+    {
+      "Status": "Called from UI",
+      "EventHandler": "Control_RemoveTab.cs.Control_RemoveTab_Button_Undo_Click",
+      "MethodChain": [],
+      "DAO": {
+        "Method": "GetInventoryByPartIdAndOperationAsync",
+        "File": "Dao_Inventory.cs"
+      },
+      "StoredProcedure": "inv_inventory_Get_ByPartIDandOperation",
+      "Tables": "inv_inventory",
+      "ReturnType": "Task<DaoResult<DataTable>>",
+      "UIElementUpdated": {
+        "OnFailure": "None detected",
+        "OnSuccess": "None detected"
+      }
+    },
+    {
+      "Status": "Called from UI",
+      "EventHandler": "Control_RemoveTab.cs.Control_RemoveTab_Button_Undo_Click",
+      "MethodChain": [],
+      "DAO": {
+        "Method": "GetInventoryByPartIdAndOperationAsync",
+        "File": "Dao_Inventory.cs"
+      },
+      "StoredProcedure": "inv_inventory_Get_ByPartIDandOperation",
+      "Tables": "inv_inventory",
+      "ReturnType": "Task<DaoResult<DataTable>>",
+      "UIElementUpdated": {
+        "OnFailure": "None detected",
+        "OnSuccess": "None detected"
+      }
+    }
+  ],
+  "sys_last_10_transactions_RemoveAndShift_ByUser": [
+    {
+      "Status": "Called from UI",
+      "EventHandler": "Control_QuickButtons.cs.ListView_DragDrop",
+      "MethodChain": [],
+      "DAO": {
+        "Method": "RemoveQuickButtonAndShiftAsync",
+        "File": "Dao_QuickButtons.cs"
+      },
+      "StoredProcedure": "sys_last_10_transactions_RemoveAndShift_ByUser",
+      "Tables": "sys_last_10_transactions",
+      "ReturnType": "Task<DaoResult>",
+      "UIElementUpdated": {
+        "OnFailure": "None detected",
+        "OnSuccess": "Show"
+      }
+    }
+  ],
+  "md_operation_numbers_Delete_ByOperation": [
+    {
+      "Status": "Called from DAO (no UI event handler traced)",
+      "DAO": {
+        "Method": "DeleteOperation",
+        "File": "Dao_Operation.cs"
+      },
+      "StoredProcedure": "md_operation_numbers_Delete_ByOperation",
+      "Tables": "md_operation_numbers",
+      "ReturnType": "Task<DaoResult>"
+    }
+  ],
+  "sys_GetUserAccessType": [
+    {
+      "Status": "Called from UI",
+      "EventHandler": "Control_QuickButtons.cs.MenuItemRemove_Click",
+      "MethodChain": [
+        "Exception"
+      ],
+      "DAO": {
+        "Method": "System_UserAccessTypeAsync",
+        "File": "Dao_System.cs"
+      },
+      "StoredProcedure": "sys_GetUserAccessType",
+      "Tables": [
+        "information_schema",
+        "usr_users"
+      ],
+      "ReturnType": "Task<DaoResult<List<Model_Users>>>",
+      "UIElementUpdated": {
+        "OnFailure": "None detected",
+        "OnSuccess": "None detected"
+      }
+    }
+  ],
+  "md_item_types_Delete_ByID": [
+    {
+      "Status": "Not called from C# code",
+      "StoredProcedure": "md_item_types_Delete_ByID",
+      "Tables": "md_item_types",
+      "Note": "May be legacy, unused, called from other stored procedures, or background services"
+    }
+  ],
+  "inv_inventory_Remove_Item": [
+    {
+      "Status": "Called from UI",
+      "EventHandler": "Control_Shortcuts.cs.ShortcutsDataGridView_CellValueChanged",
+      "MethodChain": [
+        "if"
+      ],
+      "DAO": {
+        "Method": "AddInventoryItemAsync",
+        "File": "Dao_Inventory.cs"
+      },
+      "StoredProcedure": "inv_inventory_Remove_Item",
+      "Tables": [
+        "inv_inventory",
+        "inv_transaction"
+      ],
+      "ReturnType": "Task<DaoResult<int>>",
+      "UIElementUpdated": {
+        "OnFailure": "None detected",
+        "OnSuccess": "None detected"
+      }
+    }
+  ],
+  "usr_users_Get_All": [
+    {
+      "Status": "Called from DAO (no UI event handler traced)",
+      "DAO": {
+        "Method": "GetAllUsersAsync",
+        "File": "Dao_User.cs"
+      },
+      "StoredProcedure": "usr_users_Get_All",
+      "Tables": "usr_users",
+      "ReturnType": "Task<DaoResult<DataTable>>"
+    },
+    {
+      "Status": "Called from UI",
+      "EventHandler": "Control_Remove_User.cs.RemoveUserControl_Button_Remove_Click",
+      "MethodChain": [],
+      "DAO": {
+        "Method": "SetupUserDataTable",
+        "File": "Helper_UI_ComboBoxes.cs"
+      },
+      "StoredProcedure": "usr_users_Get_All",
+      "Tables": "usr_users",
+      "ReturnType": "Unknown",
+      "UIElementUpdated": {
+        "OnFailure": "None detected",
+        "OnSuccess": "UpdateProgress"
+      }
+    }
+  ],
+  "sys_last_10_transactions_MoveToLast_ByUser": [
+    {
+      "Status": "Not called from C# code",
+      "StoredProcedure": "sys_last_10_transactions_MoveToLast_ByUser",
+      "Tables": [
+        "sys_last_10_transactions",
+        "transaction"
+      ],
+      "Note": "May be legacy, unused, called from other stored procedures, or background services"
+    }
+  ],
+  "inv_transactions_SmartSearch": [
+    {
+      "Status": "Called from UI",
+      "EventHandler": "Transactions.cs.Transactions_EnableSearchButtonIfValid",
+      "MethodChain": [],
+      "DAO": {
+        "Method": "SmartSearchAsync",
+        "File": "Dao_Transactions.cs"
+      },
+      "StoredProcedure": "inv_transactions_SmartSearch",
+      "Tables": "inv_transaction",
+      "ReturnType": "Task<DaoResult<List<Model_Transactions>>>",
+      "UIElementUpdated": {
+        "OnFailure": "None detected",
+        "OnSuccess": "None detected"
+      }
+    }
+  ],
+  "sys_last_10_transactions_Reorder_ByUser": [
+    {
+      "Status": "Not called from C# code",
+      "StoredProcedure": "sys_last_10_transactions_Reorder_ByUser",
+      "Tables": [
+        "tempDates",
+        "sys_last_10_transactions"
+      ],
+      "Note": "May be legacy, unused, called from other stored procedures, or background services"
+    }
+  ],
+  "md_operation_numbers_Add_Operation": [
+    {
+      "Status": "Called from UI",
+      "EventHandler": "Control_Add_Operation.cs.Control_Add_Operation_Button_Save_Click",
+      "MethodChain": [],
+      "DAO": {
+        "Method": "Control_Add_Operation_Button_Save_Click",
+        "File": "Control_Add_Operation.cs"
+      },
+      "StoredProcedure": "md_operation_numbers_Add_Operation",
+      "Tables": "md_operation_numbers",
+      "ReturnType": "void",
+      "UIElementUpdated": {
+        "OnFailure": "None detected",
+        "OnSuccess": "ShowError"
+      }
+    },
+    {
+      "Status": "Called from DAO (no UI event handler traced)",
+      "DAO": {
+        "Method": "InsertOperation",
+        "File": "Dao_Operation.cs"
+      },
+      "StoredProcedure": "md_operation_numbers_Add_Operation",
+      "Tables": "md_operation_numbers",
+      "ReturnType": "Task<DaoResult>"
+    }
+  ],
+  "sys_last_10_transactions_Update_ByUserAndDate": [
+    {
+      "Status": "Not called from C# code",
+      "StoredProcedure": "sys_last_10_transactions_Update_ByUserAndDate",
+      "Tables": [
+        "sys_last_10_transactions",
+        "transaction"
+      ],
+      "Note": "May be legacy, unused, called from other stored procedures, or background services"
+    }
+  ],
+  "md_part_ids_Get_All": [
+    {
+      "Status": "Called from DAO (no UI event handler traced)",
+      "DAO": {
+        "Method": "GetAllPartsAsync",
+        "File": "Dao_Part.cs"
+      },
+      "StoredProcedure": "md_part_ids_Get_All",
+      "Tables": "md_part_ids",
+      "ReturnType": "Task<DaoResult<DataTable>>"
+    },
+    {
+      "Status": "Called from DAO (no UI event handler traced)",
+      "DAO": {
+        "Method": "SetupPartDataTable",
+        "File": "Helper_UI_ComboBoxes.cs"
+      },
+      "StoredProcedure": "md_part_ids_Get_All",
+      "Tables": "md_part_ids",
+      "ReturnType": "Unknown"
+    }
+  ],
+  "inv_transactions_GetAnalytics": [
+    {
+      "Status": "Called from UI",
+      "EventHandler": "Transactions.cs.Transactions_EnableSearchButtonIfValid",
+      "MethodChain": [],
+      "DAO": {
+        "Method": "SmartSearchAsync",
+        "File": "Dao_Transactions.cs"
+      },
+      "StoredProcedure": "inv_transactions_GetAnalytics",
+      "Tables": "inv_transaction",
+      "ReturnType": "Task<DaoResult<List<Model_Transactions>>>",
+      "UIElementUpdated": {
+        "OnFailure": "None detected",
+        "OnSuccess": "None detected"
+      }
+    }
+  ],
+  "md_item_types_Update_ItemType": [
+    {
+      "Status": "Called from UI",
+      "EventHandler": "Control_Remove_PartID.cs.PartsComboBox_SelectedIndexChanged",
+      "MethodChain": [
+        "SetFormEnabled"
+      ],
+      "DAO": {
+        "Method": "UpdateItemType",
+        "File": "Dao_ItemType.cs"
+      },
+      "StoredProcedure": "md_item_types_Update_ItemType",
+      "Tables": "md_item_types",
+      "ReturnType": "Task<DaoResult>",
+      "UIElementUpdated": {
+        "OnFailure": "None detected",
+        "OnSuccess": "Show"
+      }
+    }
+  ],
+  "inv_inventory_Get_ByUser": [
+    {
+      "Status": "Called from UI",
+      "EventHandler": "Model_DaoResult.cs.btnDelete_Click",
+      "MethodChain": [],
+      "DAO": {
+        "Method": "GetAllInventoryAsync",
+        "File": "Dao_Inventory.cs"
+      },
+      "StoredProcedure": "inv_inventory_Get_ByUser",
+      "Tables": "inv_inventory",
+      "ReturnType": "Task<DaoResult<DataTable>>",
+      "UIElementUpdated": {
+        "OnFailure": "None detected",
+        "OnSuccess": "None detected"
+      }
+    }
+  ],
+  "usr_ui_settings_Get": [
+    {
+      "Status": "Called from DAO (no UI event handler traced)",
+      "DAO": {
+        "Method": "GetSettingsJsonInternalAsync",
+        "File": "Dao_User.cs"
+      },
+      "StoredProcedure": "usr_ui_settings_Get",
+      "Tables": "usr_ui_settings",
+      "ReturnType": "Task<string>"
+    }
+  ],
+  "sys_user_roles_Delete": [
+    {
+      "Status": "Called from UI",
+      "EventHandler": "Control_Remove_User.cs.RemoveUserControl_Button_Remove_Click",
+      "MethodChain": [],
+      "DAO": {
+        "Method": "RemoveUserRoleAsync",
+        "File": "Dao_User.cs"
+      },
+      "StoredProcedure": "sys_user_roles_Delete",
+      "Tables": [
+        "sys_user_roles",
+        "user"
+      ],
+      "ReturnType": "Task<DaoResult>",
+      "UIElementUpdated": {
+        "OnFailure": "None detected",
+        "OnSuccess": "None detected"
+      }
+    }
+  ],
+  "inv_inventory_Search_Advanced": [
+    {
+      "Status": "Called from UI",
+      "EventHandler": "Control_AdvancedRemove.cs.Control_AdvancedRemove_Button_Print_Click",
+      "MethodChain": [],
+      "DAO": {
+        "Method": "Control_AdvancedRemove_Button_Search_Click",
+        "File": "Control_AdvancedRemove.cs"
+      },
+      "StoredProcedure": "inv_inventory_Search_Advanced",
+      "Tables": [
+        "DATETIME",
+        "inv_inventory",
+        "IS"
+      ],
+      "ReturnType": "void",
+      "UIElementUpdated": {
+        "OnFailure": "None detected",
+        "OnSuccess": "Show"
+      }
+    }
+  ],
+  "usr_ui_settings_SetShortcutsJson": [
+    {
+      "Status": "Called from UI",
+      "EventHandler": "Control_Shortcuts.cs.ShortcutsDataGridView_CellValueChanged",
+      "MethodChain": [],
+      "DAO": {
+        "Method": "SetShortcutsJsonAsync",
+        "File": "Dao_User.cs"
+      },
+      "StoredProcedure": "usr_ui_settings_SetShortcutsJson",
+      "Tables": "usr_ui_settings",
+      "ReturnType": "Task<DaoResult>",
+      "UIElementUpdated": {
+        "OnFailure": "None detected",
+        "OnSuccess": "None detected"
+      }
+    }
+  ],
+  "md_locations_Update_Location": [
+    {
+      "Status": "Called from UI",
+      "EventHandler": "Control_Edit_Operation.cs.OperationsComboBox_SelectedIndexChanged",
+      "MethodChain": [
+        "EnableControls"
+      ],
+      "DAO": {
+        "Method": "UpdateLocation",
+        "File": "Dao_Location.cs"
+      },
+      "StoredProcedure": "md_locations_Update_Location",
+      "Tables": "md_locations",
+      "ReturnType": "Task<DaoResult>",
+      "UIElementUpdated": {
+        "OnFailure": "None detected",
+        "OnSuccess": "Show"
+      }
+    }
+  ],
+  "sys_last_10_transactions_SwapPositions_ByUser": [
+    {
+      "Status": "Not called from C# code",
+      "StoredProcedure": "sys_last_10_transactions_SwapPositions_ByUser",
+      "Tables": "sys_last_10_transactions",
+      "Note": "May be legacy, unused, called from other stored procedures, or background services"
+    }
+  ],
+  "md_item_types_Add_ItemType": [
+    {
+      "Status": "Called from UI",
+      "EventHandler": "Control_Edit_Operation.cs.OperationsComboBox_SelectedIndexChanged",
+      "MethodChain": [
+        "ClearForm"
+      ],
+      "DAO": {
+        "Method": "InsertItemType",
+        "File": "Dao_ItemType.cs"
+      },
+      "StoredProcedure": "md_item_types_Add_ItemType",
+      "Tables": "md_item_types",
+      "ReturnType": "Task<DaoResult>",
+      "UIElementUpdated": {
+        "OnFailure": "None detected",
+        "OnSuccess": "Show"
+      }
+    }
+  ],
+  "md_part_ids_Add_Part": [
+    {
+      "Status": "Called from UI",
+      "EventHandler": "Control_Add_PartID.cs.SaveButton_Click",
+      "MethodChain": [],
+      "DAO": {
+        "Method": "CreatePartAsync",
+        "File": "Dao_Part.cs"
+      },
+      "StoredProcedure": "md_part_ids_Add_Part",
+      "Tables": "md_part_ids",
+      "ReturnType": "Task<DaoResult>",
+      "UIElementUpdated": {
+        "OnFailure": "None detected",
+        "OnSuccess": "None detected"
+      }
+    }
+  ],
+  "inv_inventory_Add_Item": [
+    {
+      "Status": "Called from UI",
+      "EventHandler": "Control_Shortcuts.cs.ShortcutsDataGridView_CellValueChanged",
+      "MethodChain": [
+        "if"
+      ],
+      "DAO": {
+        "Method": "AddInventoryItemAsync",
+        "File": "Dao_Inventory.cs"
+      },
+      "StoredProcedure": "inv_inventory_Add_Item",
+      "Tables": [
+        "inv_inventory_batch_seq",
+        "inv_inventory",
+        "inv_transaction"
+      ],
+      "ReturnType": "Task<DaoResult<int>>",
+      "UIElementUpdated": {
+        "OnFailure": "None detected",
+        "OnSuccess": "None detected"
+      }
+    }
+  ],
+  "maint_InsertMissingUserUiSettings": [
+    {
+      "Status": "Not called from C# code",
+      "StoredProcedure": "maint_InsertMissingUserUiSettings",
+      "Tables": "mtm_wip_application",
+      "Note": "May be legacy, unused, called from other stored procedures, or background services"
+    }
+  ],
+  "md_part_ids_Update_Part": [
+    {
+      "Status": "Called from UI",
+      "EventHandler": "DebugDashboardForm.cs.CmbDebugLevel_SelectedIndexChanged",
+      "MethodChain": [
+        "nameof"
+      ],
+      "DAO": {
+        "Method": "UpdatePartAsync",
+        "File": "Dao_Part.cs"
+      },
+      "StoredProcedure": "md_part_ids_Update_Part",
+      "Tables": "md_part_ids",
+      "ReturnType": "Task<DaoResult>",
+      "UIElementUpdated": {
+        "OnFailure": "ClearForm",
+        "OnSuccess": "None detected"
+      }
+    }
+  ],
+  "usr_ui_settings_SetThemeJson": [
+    {
+      "Status": "Called from DAO (no UI event handler traced)",
+      "DAO": {
+        "Method": "SetSettingsJsonAsync",
+        "File": "Dao_User.cs"
+      },
+      "StoredProcedure": "usr_ui_settings_SetThemeJson",
+      "Tables": "usr_ui_settings",
+      "ReturnType": "Task<DaoResult>"
+    }
+  ],
+  "usr_ui_settings_SetJsonSetting": [
+    {
+      "Status": "Called from DAO (no UI event handler traced)",
+      "DAO": {
+        "Method": "SetGridViewSettingsJsonAsync",
+        "File": "Dao_User.cs"
+      },
+      "StoredProcedure": "usr_ui_settings_SetJsonSetting",
+      "Tables": "usr_ui_settings",
+      "ReturnType": "Task<DaoResult>"
+    }
+  ],
+  "md_locations_Get_All": [
+    {
+      "Status": "Called from DAO (no UI event handler traced)",
+      "DAO": {
+        "Method": "GetAllLocations",
+        "File": "Dao_Location.cs"
+      },
+      "StoredProcedure": "md_locations_Get_All",
+      "Tables": "md_locations",
+      "ReturnType": "Task<DaoResult<DataTable>>"
+    },
+    {
+      "Status": "Called from DAO (no UI event handler traced)",
+      "DAO": {
+        "Method": "SetupLocationDataTable",
+        "File": "Helper_UI_ComboBoxes.cs"
+      },
+      "StoredProcedure": "md_locations_Get_All",
+      "Tables": "md_locations",
+      "ReturnType": "Unknown"
+    }
+  ],
+  "log_error_Get_ByUser": [
+    {
+      "Status": "Called from DAO (no UI event handler traced)",
+      "DAO": {
+        "Method": "Unknown",
+        "File": "Dao_ErrorLog.cs"
+      },
+      "StoredProcedure": "log_error_Get_ByUser",
+      "Tables": "log_error",
+      "ReturnType": "Unknown"
+    }
+  ],
+  "sys_last_10_transactions_RemoveAndShift_ByUser_1": [
+    {
+      "Status": "Not called from C# code",
+      "StoredProcedure": "sys_last_10_transactions_RemoveAndShift_ByUser_1",
+      "Tables": "sys_last_10_transactions",
+      "Note": "May be legacy, unused, called from other stored procedures, or background services"
+    }
+  ],
+  "log_error_Delete_ById": [
+    {
+      "Status": "Called from DAO (no UI event handler traced)",
+      "DAO": {
+        "Method": "Unknown",
+        "File": "Dao_ErrorLog.cs"
+      },
+      "StoredProcedure": "log_error_Delete_ById",
+      "Tables": "log_error",
+      "ReturnType": "Unknown"
+    }
+  ],
+  "log_error_Get_ByDateRange": [
+    {
+      "Status": "Called from DAO (no UI event handler traced)",
+      "DAO": {
+        "Method": "Unknown",
+        "File": "Dao_ErrorLog.cs"
+      },
+      "StoredProcedure": "log_error_Get_ByDateRange",
+      "Tables": "log_error",
+      "ReturnType": "Unknown"
+    }
+  ],
+  "sys_roles_Get_ById": [
+    {
+      "Status": "Not called from C# code",
+      "StoredProcedure": "sys_roles_Get_ById",
+      "Tables": "sys_roles",
+      "Note": "May be legacy, unused, called from other stored procedures, or background services"
+    }
+  ],
+  "md_item_types_Delete_ByType": [
+    {
+      "Status": "Called from UI",
+      "EventHandler": "Control_Remove_ItemType.cs.RemoveButton_Click",
+      "MethodChain": [],
+      "DAO": {
+        "Method": "DeleteItemType",
+        "File": "Dao_ItemType.cs"
+      },
+      "StoredProcedure": "md_item_types_Delete_ByType",
+      "Tables": "md_item_types",
+      "ReturnType": "Task<DaoResult>",
+      "UIElementUpdated": {
+        "OnFailure": "None detected",
+        "OnSuccess": "Show"
+      }
+    }
+  ],
+  "inv_inventory_Transfer_Part": [
+    {
+      "Status": "Called from UI",
+      "EventHandler": "Control_TransferTab.cs.Control_TransferTab_Button_Toggle_RightPanel_Click",
+      "MethodChain": [],
+      "DAO": {
+        "Method": "TransferPartSimpleAsync",
+        "File": "Dao_Inventory.cs"
+      },
+      "StoredProcedure": "inv_inventory_Transfer_Part",
+      "Tables": "inv_inventory",
+      "ReturnType": "Task<DaoResult>",
+      "UIElementUpdated": {
+        "OnFailure": "None detected",
+        "OnSuccess": "None detected"
+      }
+    }
+  ],
+  "md_operation_numbers_Update_Operation": [
+    {
+      "Status": "Called from UI",
+      "EventHandler": "Control_Edit_Operation.cs.OperationsComboBox_SelectedIndexChanged",
+      "MethodChain": [],
+      "DAO": {
+        "Method": "UpdateOperation",
+        "File": "Dao_Operation.cs"
+      },
+      "StoredProcedure": "md_operation_numbers_Update_Operation",
+      "Tables": "md_operation_numbers",
+      "ReturnType": "Task<DaoResult>",
+      "UIElementUpdated": {
+        "OnFailure": "None detected",
+        "OnSuccess": "Show"
+      }
+    }
+  ],
+  "log_error_Add_Error": [
+    {
+      "Status": "Called from DAO (no UI event handler traced)",
+      "DAO": {
+        "Method": "LogErrorToDatabaseAsync",
+        "File": "Dao_ErrorLog.cs"
+      },
+      "StoredProcedure": "log_error_Add_Error",
+      "Tables": "log_error",
+      "ReturnType": "Task"
+    }
+  ],
+  "md_item_types_Get_All": [
+    {
+      "Status": "Called from DAO (no UI event handler traced)",
+      "DAO": {
+        "Method": "GetAllItemTypes",
+        "File": "Dao_ItemType.cs"
+      },
+      "StoredProcedure": "md_item_types_Get_All",
+      "Tables": "md_item_types",
+      "ReturnType": "Task<DaoResult<DataTable>>"
+    },
+    {
+      "Status": "Called from DAO (no UI event handler traced)",
+      "DAO": {
+        "Method": "SetupItemTypeDataTable",
+        "File": "Helper_UI_ComboBoxes.cs"
+      },
+      "StoredProcedure": "md_item_types_Get_All",
+      "Tables": "md_item_types",
+      "ReturnType": "Unknown"
+    }
+  ],
+  "migrate_user_roles_debug": [
+    {
+      "Status": "Not called from C# code",
+      "StoredProcedure": "migrate_user_roles_debug",
+      "Tables": [
+        "mtm",
+        "migration_debug_log",
+        "mtm_wip_application"
+      ],
+      "Note": "May be legacy, unused, called from other stored procedures, or background services"
+    }
+  ],
+  "sys_user_access_SetType": [
+    {
+      "Status": "Called from UI",
+      "EventHandler": "Control_QuickButtons.cs.MenuItemRemove_Click",
+      "MethodChain": [
+        "Exception"
+      ],
+      "DAO": {
+        "Method": "SetUserAccessTypeAsync",
+        "File": "Dao_System.cs"
+      },
+      "StoredProcedure": "sys_user_access_SetType",
+      "Tables": [
+        "usr_users",
+        "access"
+      ],
+      "ReturnType": "Task<DaoResult>",
+      "UIElementUpdated": {
+        "OnFailure": "None detected",
+        "OnSuccess": "None detected"
+      }
+    }
+  ],
+  "usr_users_Update_User": [
+    {
+      "Status": "Called from UI",
+      "EventHandler": "Control_Edit_User.cs.Control_Edit_User_CheckBox_VisualAccess_CheckedChanged",
+      "MethodChain": [],
+      "DAO": {
+        "Method": "UpdateUserAsync",
+        "File": "Dao_User.cs"
+      },
+      "StoredProcedure": "usr_users_Update_User",
+      "Tables": "usr_users",
+      "ReturnType": "Task<DaoResult>",
+      "UIElementUpdated": {
+        "OnFailure": "None detected",
+        "OnSuccess": "None detected"
+      }
+    }
+  ],
+  "sys_user_GetIdByName": [
+    {
+      "Status": "Called from UI",
+      "EventHandler": "Control_QuickButtons.cs.MenuItemRemove_Click",
+      "MethodChain": [
+        "Exception"
+      ],
+      "DAO": {
+        "Method": "GetUserIdByNameAsync",
+        "File": "Dao_System.cs"
+      },
+      "StoredProcedure": "sys_user_GetIdByName",
+      "Tables": "usr_users",
+      "ReturnType": "Task<DaoResult<int>>",
+      "UIElementUpdated": {
+        "OnFailure": "None detected",
+        "OnSuccess": "None detected"
+      }
+    }
+  ],
+  "usr_users_Add_User": [
+    {
+      "Status": "Called from UI",
+      "EventHandler": "Control_Add_User.cs.Control_Add_User_TextBox_NoSpaces_KeyPress",
+      "MethodChain": [],
+      "DAO": {
+        "Method": "CreateUserAsync",
+        "File": "Dao_User.cs"
+      },
+      "StoredProcedure": "usr_users_Add_User",
+      "Tables": "usr_users",
+      "ReturnType": "Task<DaoResult>",
+      "UIElementUpdated": {
+        "OnFailure": "None detected",
+        "OnSuccess": "ShowError"
+      }
+    }
+  ],
+  "log_error_Get_Unique": [
+    {
+      "Status": "Called from DAO (no UI event handler traced)",
+      "DAO": {
+        "Method": "Unknown",
+        "File": "Dao_ErrorLog.cs"
+      },
+      "StoredProcedure": "log_error_Get_Unique",
+      "Tables": "log_error",
+      "ReturnType": "Unknown"
+    }
+  ],
+  "md_part_ids_Delete_ByItemNumber": [
+    {
+      "Status": "Called from UI",
+      "EventHandler": "Control_Remove_PartID.cs.PartsComboBox_SelectedIndexChanged",
+      "MethodChain": [],
+      "DAO": {
+        "Method": "DeletePartAsync",
+        "File": "Dao_Part.cs"
+      },
+      "StoredProcedure": "md_part_ids_Delete_ByItemNumber",
+      "Tables": "md_part_ids",
+      "ReturnType": "Task<DaoResult>",
+      "UIElementUpdated": {
+        "OnFailure": "None detected",
+        "OnSuccess": "Show"
+      }
+    }
+  ],
+  "inv_inventory_Get_ByPartID": [
+    {
+      "Status": "Called from UI",
+      "EventHandler": "Control_RemoveTab.cs.Control_RemoveTab_Button_Undo_Click",
+      "MethodChain": [],
+      "DAO": {
+        "Method": "GetInventoryByPartIdAsync",
+        "File": "Dao_Inventory.cs"
+      },
+      "StoredProcedure": "inv_inventory_Get_ByPartID",
+      "Tables": "inv_inventory",
+      "ReturnType": "Task<DaoResult<DataTable>>",
+      "UIElementUpdated": {
+        "OnFailure": "None detected",
+        "OnSuccess": "None detected"
+      }
+    }
+  ],
+  "log_error_Get_All": [
+    {
+      "Status": "Called from DAO (no UI event handler traced)",
+      "DAO": {
+        "Method": "Unknown",
+        "File": "Dao_ErrorLog.cs"
+      },
+      "StoredProcedure": "log_error_Get_All",
+      "Tables": "log_error",
+      "ReturnType": "Unknown"
+    }
+  ],
+  "sys_user_GetByName": [
+    {
+      "Status": "Not called from C# code",
+      "StoredProcedure": "sys_user_GetByName",
+      "Tables": "usr_users",
+      "Note": "May be legacy, unused, called from other stored procedures, or background services"
+    }
+  ],
+  "sys_user_roles_Update": [
+    {
+      "Status": "Called from UI",
+      "EventHandler": "Control_Edit_User.cs.Control_Edit_User_CheckBox_VisualAccess_CheckedChanged",
+      "MethodChain": [],
+      "DAO": {
+        "Method": "SetUserRoleAsync",
+        "File": "Dao_User.cs"
+      },
+      "StoredProcedure": "sys_user_roles_Update",
+      "Tables": [
+        "usr_users",
+        "sys_roles",
+        "sys_user_roles",
+        "user"
+      ],
+      "ReturnType": "Task<DaoResult>",
+      "UIElementUpdated": {
+        "OnFailure": "None detected",
+        "OnSuccess": "None detected"
+      }
+    },
+    {
+      "Status": "Called from DAO (no UI event handler traced)",
+      "DAO": {
+        "Method": "SetUsersRoleAsync",
+        "File": "Dao_User.cs"
+      },
+      "StoredProcedure": "sys_user_roles_Update",
+      "Tables": [
+        "usr_users",
+        "sys_roles",
+        "sys_user_roles",
+        "user"
+      ],
+      "ReturnType": "Task<DaoResult>"
+    }
+  ],
+  "sys_theme_GetAll": [
+    {
+      "Status": "Called from UI",
+      "EventHandler": "Control_QuickButtons.cs.MenuItemRemove_Click",
+      "MethodChain": [
+        "Exception"
+      ],
+      "DAO": {
+        "Method": "CheckConnectivityAsync",
+        "File": "Dao_System.cs"
+      },
+      "StoredProcedure": "sys_theme_GetAll",
+      "Tables": "app_themes",
+      "ReturnType": "Task<DaoResult>",
+      "UIElementUpdated": {
+        "OnFailure": "None detected",
+        "OnSuccess": "None detected"
+      }
+    }
+  ],
+  "usr_users_Delete_User": [
+    {
+      "Status": "Called from UI",
+      "EventHandler": "Control_Remove_User.cs.RemoveUserControl_Button_Remove_Click",
+      "MethodChain": [],
+      "DAO": {
+        "Method": "DeleteUserAsync",
+        "File": "Dao_User.cs"
+      },
+      "StoredProcedure": "usr_users_Delete_User",
+      "Tables": "usr_users",
+      "ReturnType": "Task<DaoResult>",
+      "UIElementUpdated": {
+        "OnFailure": "None detected",
+        "OnSuccess": [
+          "HideProgress",
+          "Show"
+        ]
+      }
+    }
+  ],
+  "inv_inventory_Transfer_Quantity": [
+    {
+      "Status": "Called from UI",
+      "EventHandler": "Control_TransferTab.cs.Control_TransferTab_Button_Toggle_RightPanel_Click",
+      "MethodChain": [],
+      "DAO": {
+        "Method": "TransferInventoryQuantityAsync",
+        "File": "Dao_Inventory.cs"
+      },
+      "StoredProcedure": "inv_inventory_Transfer_Quantity",
+      "Tables": "inv_inventory",
+      "ReturnType": "Task<DaoResult>",
+      "UIElementUpdated": {
+        "OnFailure": "None detected",
+        "OnSuccess": "None detected"
+      }
+    }
+  ],
+  "sys_last_10_transactions_Get_ByUser": [
+    {
+      "Status": "Called from UI",
+      "EventHandler": "Control_QuickButtons.cs.ListView_DragDrop",
+      "MethodChain": [],
+      "DAO": {
+        "Method": "LoadLast10Transactions",
+        "File": "Control_QuickButtons.cs"
+      },
+      "StoredProcedure": "sys_last_10_transactions_Get_ByUser",
+      "Tables": "sys_last_10_transactions",
+      "ReturnType": "Task",
+      "UIElementUpdated": {
+        "OnFailure": [
+          "SetComboBoxes",
+          "SetTextBoxText"
+        ],
+        "OnSuccess": "None detected"
+      }
+    }
+  ],
+  "query_get_all_usernames_and_roles": [
+    {
+      "Status": "Not called from C# code",
+      "StoredProcedure": "query_get_all_usernames_and_roles",
+      "Tables": "mtm_wip_application",
+      "Note": "May be legacy, unused, called from other stored procedures, or background services"
+    }
+  ],
+  "md_locations_Delete_ByLocation": [
+    {
+      "Status": "Called from DAO (no UI event handler traced)",
+      "DAO": {
+        "Method": "DeleteLocation",
+        "File": "Dao_Location.cs"
+      },
+      "StoredProcedure": "md_locations_Delete_ByLocation",
+      "Tables": "md_locations",
+      "ReturnType": "Task<DaoResult>"
+    }
+  ],
+  "sys_last_10_transactions_Move_1": [
+    {
+      "Status": "Not called from C# code",
+      "StoredProcedure": "sys_last_10_transactions_Move_1",
+      "Tables": [
+        "position",
+        "sys_last_10_transactions"
+      ],
+      "Note": "May be legacy, unused, called from other stored procedures, or background services"
+    }
+  ],
+  "usr_users_Get_ByUser": [
+    {
+      "Status": "Called from UI",
+      "EventHandler": "Control_Database.cs.ResetButton_Click",
+      "MethodChain": [],
+      "DAO": {
+        "Method": "SetWipServerPortAsync",
+        "File": "Dao_User.cs"
+      },
+      "StoredProcedure": "usr_users_Get_ByUser",
+      "Tables": "usr_users",
+      "ReturnType": "Task<DaoResult>",
+      "UIElementUpdated": {
+        "OnFailure": "None detected",
+        "OnSuccess": "None detected"
+      }
+    },
+    {
+      "Status": "Called from UI",
+      "EventHandler": "Control_Edit_User.cs.Control_Edit_User_CheckBox_VisualAccess_CheckedChanged",
+      "MethodChain": [],
+      "DAO": {
+        "Method": "GetUserByUsernameAsync",
+        "File": "Dao_User.cs"
+      },
+      "StoredProcedure": "usr_users_Get_ByUser",
+      "Tables": "usr_users",
+      "ReturnType": "Task<DaoResult<DataRow>>",
+      "UIElementUpdated": {
+        "OnFailure": "None detected",
+        "OnSuccess": "None detected"
+      }
+    }
+  ],
+  "sys_last_10_transactions_Update_ByUserAndPosition_1": [
+    {
+      "Status": "Called from UI",
+      "EventHandler": "Control_QuickButtons.cs.ListView_DragDrop",
+      "MethodChain": [],
+      "DAO": {
+        "Method": "UpdateQuickButtonAsync",
+        "File": "Dao_QuickButtons.cs"
+      },
+      "StoredProcedure": "sys_last_10_transactions_Update_ByUserAndPosition_1",
+      "Tables": [
+        "sys_last_10_transactions",
+        "transaction"
+      ],
+      "ReturnType": "Task<DaoResult>",
+      "UIElementUpdated": {
+        "OnFailure": "None detected",
+        "OnSuccess": "Show"
+      }
+    }
+  ],
+  "sys_last_10_transactions_Get_ByUser_1": [
+    {
+      "Status": "Not called from C# code",
+      "StoredProcedure": "sys_last_10_transactions_Get_ByUser_1",
+      "Tables": "sys_last_10_transactions",
+      "Note": "May be legacy, unused, called from other stored procedures, or background services"
+    }
+  ],
+  "usr_ui_settings_GetShortcutsJson": [
+    {
+      "Status": "Called from UI",
+      "EventHandler": "Control_Shortcuts.cs.ShortcutsDataGridView_CellValueChanged",
+      "MethodChain": [],
+      "DAO": {
+        "Method": "GetShortcutsJsonAsync",
+        "File": "Dao_User.cs"
+      },
+      "StoredProcedure": "usr_ui_settings_GetShortcutsJson",
+      "Tables": "usr_ui_settings",
+      "ReturnType": "Task<DaoResult<string>>",
+      "UIElementUpdated": {
+        "OnFailure": "None detected",
+        "OnSuccess": "None detected"
+      }
+    }
+  ],
+  "inv_inventory_Fix_BatchNumbers": [
+    {
+      "Status": "Called from DAO (no UI event handler traced)",
+      "DAO": {
+        "Method": "FixBatchNumbersAsync",
+        "File": "Dao_Inventory.cs"
+      },
+      "StoredProcedure": "inv_inventory_Fix_BatchNumbers",
+      "Tables": [
+        "inv_inventory",
+        "inv_inventory_batch_seq"
+      ],
+      "ReturnType": "Task<DaoResult>"
+    }
+  ],
+  "maint_reload_part_ids_and_operation_numbers": [
+    {
+      "Status": "Not called from C# code",
+      "StoredProcedure": "maint_reload_part_ids_and_operation_numbers",
+      "Tables": [
+        "mtm_wip_application",
+        "mtm",
+        "JSON_UNQUOTE"
+      ],
+      "Note": "May be legacy, unused, called from other stored procedures, or background services"
+    }
+  ],
+  "inv_transaction_Add": [
+    {
+      "Status": "Called from UI",
+      "EventHandler": "Control_RemoveTab.cs.Control_RemoveTab_Button_Undo_Click",
+      "MethodChain": [],
+      "DAO": {
+        "Method": "AddTransactionHistoryAsync",
+        "File": "Dao_History.cs"
+      },
+      "StoredProcedure": "inv_transaction_Add",
+      "Tables": "inv_transaction",
+      "ReturnType": "Task<DaoResult>",
+      "UIElementUpdated": {
+        "OnFailure": "None detected",
+        "OnSuccess": "None detected"
+      }
+    }
+  ]
+}

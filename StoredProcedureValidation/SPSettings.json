@@ -1,0 +1,78 @@
+{
+  "ProjectSettings": {
+    "ProjectName": "MyProject",
+    "RootDirectory": "C:\\Users\\johnk\\source\\repos\\MTM_WIP_Application_WinForms",
+    "Description": "Stored procedure validation for MyProject"
+  },
+  "Paths": {
+    "StoredProceduresFolder": "..\\StoredProcedureValidation\\UpdatedStoredProcedures",
+    "CSharpCodeFolder": "..",
+    "ExcludeFolders": "obj,bin,Tests,.vs,.git,node_modules",
+    "OutputCSV": "procedure-transaction-analysis.csv",
+    "SQLOperationsJSON": "sql-operations-detailed.json",
+    "CallHierarchyJSON": "call-hierarchy-complete.json"
+  },
+  "DatabaseConnection": {
+    "Server": "localhost",
+    "Port": "3306",
+    "Database": "myapp_database",
+    "Username": "root",
+    "Password": "root",
+    "Description": "Development database credentials"
+  },
+  "AnalysisSettings": {
+    "EnableProgressBars": "y",
+    "RecursiveSearch": "y",
+    "DetectEventHandlers": "y",
+    "TraceCallHierarchy": "y",
+    "AnalyzeSQLOperations": "y",
+    "MaxCallDepth": 15,
+    "EventHandlerPatterns": "_Click,_SelectedIndexChanged,_TextChanged,_CheckedChanged,_ValueChanged,_Load,_KeyPress,_CellContentClick"
+  },
+  "DomainCategories": {
+    "Logging": [
+      "log_",
+      "err_",
+      "error_"
+    ],
+    "System": [
+      "sys_",
+      "system_"
+    ],
+    "Transactions": [
+      "trans_",
+      "transaction_"
+    ],
+    "Users": [
+      "usr_",
+      "user_",
+      "users_"
+    ],
+    "MasterData": "md_",
+    "Inventory": [
+      "inv_",
+      "inventory_"
+    ]
+  },
+  "FilePatterns": {
+    "DAOFiles": "Data\\Dao_*.cs",
+    "FormFiles": "Forms\\**\\*.cs,Controls\\**\\*.cs",
+    "HelperFiles": "Helpers\\Helper_*.cs",
+    "StoredProcedureFiles": "**\\*.sql"
+  },
+  "ValidationSettings": {
+    "RequireTransactionHandling": true,
+    "RequireValidation": true,
+    "CheckForSQLInjection": true,
+    "ValidateParameterNaming": true,
+    "EnforceNamingConventions": true
+  },
+  "HTMLViewerSettings": {
+    "DefaultTheme": "purple-gradient",
+    "EnableTooltips": true,
+    "ShowProgressBar": true,
+    "AutoSaveInterval": 10,
+    "EnableDragDrop": true,
+    "ShowSQLPreview": true
+  }
+}

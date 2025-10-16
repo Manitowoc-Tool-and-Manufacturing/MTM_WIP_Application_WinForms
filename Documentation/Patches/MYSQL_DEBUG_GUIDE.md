@@ -10,7 +10,7 @@ This guide provides comprehensive verification of ALL stored procedures against 
 
 ### **Core System Architecture (8 Files)**
 ```
-Database\UpdatedStoredProcedures\
+StoredProcedureValidation\UpdatedStoredProcedures\
 ??? 01_User_Management_Procedures.sql      [~17 procedures]
 ??? 02_System_Role_Procedures.sql          [~9 procedures] 
 ??? 03_Master_Data_Procedures.sql          [~22 procedures]
