@@ -248,6 +248,24 @@
     </template>
 
     <!-- Scripts -->
+    <script type="module">
+        import { initNavigation } from './js/navigation.js';
+        import { showSuccess } from './js/utils.js';
+        
+        // Initialize navigation
+        initNavigation('dml', () => {
+            showSuccess('DML operations auto-saved');
+        });
+        
+        // Add keyboard shortcuts
+        document.addEventListener('keydown', (e) => {
+            // Ctrl + S = Save
+            if (e.ctrlKey && e.key === 's') {
+                e.preventDefault();
+                document.getElementById('nav-btn-save')?.click();
+            }
+        });
+    </script>
     <script type="module" src="js/dml-operations-controller.js"></script>
 </body>
 </html>
