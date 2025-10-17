@@ -509,3 +509,146 @@ textarea.form-control {
     border-color: #fca5a5;
     color: #991b1b;
 }
+
+/* ============================================
+   Toast Notifications
+   ============================================ */
+.toast-notification {
+    position: fixed;
+    top: 2rem;
+    right: 2rem;
+    background-color: var(--color-bg);
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-lg);
+    padding: var(--spacing-md) var(--spacing-lg);
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-md);
+    z-index: 10000;
+    opacity: 0;
+    transform: translateX(100%);
+    transition: all var(--transition-normal);
+}
+
+.toast-notification.show {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+.toast-notification.success {
+    border-left: 4px solid var(--color-success);
+}
+
+.toast-notification.error {
+    border-left: 4px solid var(--color-danger);
+}
+
+.toast-notification.warning {
+    border-left: 4px solid var(--color-warning);
+}
+
+.toast-icon {
+    font-size: 1.5rem;
+    font-weight: bold;
+}
+
+.toast-notification.success .toast-icon {
+    color: var(--color-success);
+}
+
+.toast-notification.error .toast-icon {
+    color: var(--color-danger);
+}
+
+.toast-notification.warning .toast-icon {
+    color: var(--color-warning);
+}
+
+.toast-message {
+    font-weight: var(--font-weight-medium);
+}
+
+/* ============================================
+   Column Checklist Component
+   ============================================ */
+.column-checklist {
+    max-height: 400px;
+    overflow-y: auto;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    padding: var(--spacing-md);
+    background-color: var(--color-bg);
+}
+
+.column-checkbox-item {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+    padding: var(--spacing-sm);
+    border-radius: var(--radius-sm);
+    transition: background-color var(--transition-fast);
+}
+
+.column-checkbox-item:hover {
+    background-color: var(--color-bg-secondary);
+}
+
+.column-checkbox-item.disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.column-checkbox-item input[type="checkbox"] {
+    cursor: pointer;
+}
+
+.column-checkbox-item.disabled input[type="checkbox"] {
+    cursor: not-allowed;
+}
+
+.column-checkbox-item label {
+    flex: 1;
+    cursor: pointer;
+    margin: 0;
+}
+
+.column-checkbox-item.disabled label {
+    cursor: not-allowed;
+}
+
+.column-type {
+    color: var(--color-text-secondary);
+    font-size: var(--font-size-sm);
+    font-family: var(--font-mono);
+}
+
+.badge {
+    display: inline-block;
+    padding: 0.25em 0.5em;
+    font-size: 0.75rem;
+    font-weight: var(--font-weight-medium);
+    line-height: 1;
+    color: white;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: baseline;
+    border-radius: var(--radius-sm);
+}
+
+.badge.bg-primary {
+    background-color: var(--color-primary);
+}
+
+.badge.bg-warning {
+    background-color: var(--color-warning);
+    color: #000;
+}
+
+.badge.bg-success {
+    background-color: var(--color-success);
+}
+
+.badge.bg-danger {
+    background-color: var(--color-danger);
+}
+

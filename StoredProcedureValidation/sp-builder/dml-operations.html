@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DML Operations - MySQL 5.7 Builder</title>
+    
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/components.css">
+    
+    <style>
+        .operations-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .operation-toolbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: var(--spacing-lg);
+            background-color: var(--color-bg-secondary);
+            border-radius: var(--radius-md);
+            margin-bottom: var(--spacing-lg);
+        }
+
+        .operations-list {
+            display: flex;
+            flex-direction: column;
+            gap: var(--spacing-md);
+            margin-bottom: var(--spacing-xl);
+        }
+
+        .operation-card {
+            background-color: var(--color-bg);
+            border: 2px solid var(--color-border);
+            border-radius: var(--radius-md);
+            padding: var(--spacing-lg);
+            transition: all var(--transition-fast);
+        }
+
+        .operation-card:hover {
+            border-color: var(--color-primary);
+            box-shadow: var(--shadow-md);
+        }
+
+        .operation-card.editing {
+            border-color: var(--color-primary);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .operation-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--spacing-md);
+        }
+
+        .operation-type-badge {
+            padding: 0.25rem 0.75rem;
+            border-radius: var(--radius-sm);
+            font-weight: var(--font-weight-medium);
+            font-size: var(--font-size-sm);
+        }
+
+        .operation-type-badge.INSERT {
+            background-color: #dbeafe;
+            color: #1e40af;
+        }
+
+        .operation-type-badge.UPDATE {
+            background-color: #fef3c7;
+            color: #92400e;
+        }
+
+        .operation-type-badge.DELETE {
+            background-color: #fee2e2;
+            color: #991b1b;
+        }
+
+        .operation-type-badge.SELECT {
+            background-color: #d1fae5;
+            color: #065f46;
+        }
+
+        .operation-controls {
+            display: flex;
+            gap: var(--spacing-sm);
+        }
+
+        .operation-form {
+            display: none;
+            padding-top: var(--spacing-md);
+            border-top: 1px solid var(--color-border);
+        }
+
+        .operation-form.active {
+            display: block;
+        }
+
+        .column-mapping-list {
+            display: flex;
+            flex-direction: column;
+            gap: var(--spacing-sm);
+            margin-top: var(--spacing-md);
+        }
+
+        .column-mapping-item {
+            display: grid;
+            grid-template-columns: 1fr 1fr auto;
+            gap: var(--spacing-sm);
+            align-items: center;
+            padding: var(--spacing-sm);
+            background-color: var(--color-bg-secondary);
+            border-radius: var(--radius-sm);
+        }
+
+        .where-conditions-list {
+            display: flex;
+            flex-direction: column;
+            gap: var(--spacing-sm);
+            margin-top: var(--spacing-md);
+        }
+
+        .where-condition-item {
+            display: grid;
+            grid-template-columns: 1fr auto 1fr auto auto;
+            gap: var(--spacing-sm);
+            align-items: center;
+            padding: var(--spacing-sm);
+            background-color: var(--color-bg-secondary);
+            border-radius: var(--radius-sm);
+        }
+
+        .sql-preview-pane {
+            position: sticky;
+            top: 2rem;
+            max-height: 600px;
+            overflow-y: auto;
+            background-color: var(--color-bg-code);
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius-md);
+            padding: var(--spacing-lg);
+        }
+
+        .sql-preview-pane pre {
+            margin: 0;
+            font-family: var(--font-mono);
+            font-size: var(--font-size-sm);
+            line-height: 1.6;
+        }
+
+        .two-column-layout {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: var(--spacing-xl);
+        }
+
+        @media (max-width: 1024px) {
+            .two-column-layout {
+                grid-template-columns: 1fr;
+            }
+            
+            .sql-preview-pane {
+                position: relative;
+                top: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-content">
+            <h1>DML Operations Builder</h1>
+            <p>Add INSERT, UPDATE, DELETE, and SELECT operations</p>
+        </div>
+        <nav class="header-nav">
+            <a href="wizard.html" class="btn btn-sm btn-outline-secondary">← Back to Wizard</a>
+        </nav>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <div class="operations-container">
+            <div class="two-column-layout">
+                <!-- Left Column: Operations List -->
+                <div>
+                    <!-- Operation Toolbar -->
+                    <div class="operation-toolbar">
+                        <div>
+                            <label for="operation-type-select" class="form-label">Add Operation:</label>
+                            <select id="operation-type-select" class="form-select" style="display: inline-block; width: auto; margin-left: var(--spacing-sm);">
+                                <option value="">-- Select Type --</option>
+                                <option value="INSERT">INSERT</option>
+                                <option value="UPDATE">UPDATE</option>
+                                <option value="DELETE">DELETE</option>
+                                <option value="SELECT">SELECT</option>
+                            </select>
+                        </div>
+                        <button type="button" id="btn-add-operation" class="btn btn-primary">+ Add Operation</button>
+                    </div>
+
+                    <!-- Operations List -->
+                    <div id="operations-list" class="operations-list">
+                        <!-- Operation cards will be inserted here -->
+                        <div class="alert alert-info" id="no-operations-message">
+                            No operations added yet. Select an operation type above and click "Add Operation" to begin.
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right Column: Live SQL Preview -->
+                <div>
+                    <h3 style="margin-bottom: var(--spacing-md);">Live SQL Preview</h3>
+                    <div class="sql-preview-pane" id="sql-preview">
+                        <pre id="sql-preview-content">-- Add operations to see SQL preview</pre>
+                    </div>
+                    <button type="button" id="btn-copy-sql" class="btn btn-sm btn-outline-secondary mt-3" style="width: 100%;">
+                        📋 Copy SQL
+                    </button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Operation Template (Hidden) -->
+    <template id="operation-card-template">
+        <div class="operation-card" data-operation-id="">
+            <div class="operation-header">
+                <div>
+                    <span class="operation-type-badge">INSERT</span>
+                    <strong class="operation-table-name" style="margin-left: var(--spacing-md);"></strong>
+                </div>
+                <div class="operation-controls">
+                    <button type="button" class="btn btn-sm btn-outline-secondary btn-edit-operation">✏️ Edit</button>
+                    <button type="button" class="btn btn-sm btn-outline-secondary btn-move-up">↑</button>
+                    <button type="button" class="btn btn-sm btn-outline-secondary btn-move-down">↓</button>
+                    <button type="button" class="btn btn-sm btn-outline-danger btn-delete-operation">🗑️</button>
+                </div>
+            </div>
+            <div class="operation-summary"></div>
+            <div class="operation-form">
+                <!-- Form content will be dynamically generated based on operation type -->
+            </div>
+        </div>
+    </template>
+
+    <!-- Scripts -->
+    <script type="module" src="js/dml-operations-controller.js"></script>
+</body>
+</html>

@@ -168,6 +168,18 @@
                 </div>
             </div>
 
+            <!-- Metadata Toolbar -->
+            <div class="metadata-toolbar" style="display: flex; justify-content: space-between; align-items: center; padding: var(--spacing-md); background-color: var(--color-bg-secondary); border-radius: var(--radius-md); margin-bottom: var(--spacing-lg);">
+                <div class="metadata-info">
+                    <span class="metadata-label">Database Metadata:</span>
+                    <span id="metadata-timestamp" class="text-muted">Not loaded</span>
+                    <span id="metadata-stale" class="badge bg-warning ms-2" style="display: none;">Stale</span>
+                </div>
+                <button type="button" id="refresh-metadata-btn" class="btn btn-sm btn-outline-primary">
+                    🔄 Refresh Metadata
+                </button>
+            </div>
+
             <!-- Wizard Content -->
             <div class="wizard-content">
                 <!-- Step 1: Procedure Name -->
@@ -278,18 +290,106 @@
                     </div>
                 </div>
 
-                <!-- Step 3: Validation Rules (Placeholder) -->
+                <!-- Step 3: Validation Rules -->
                 <div class="wizard-step-content" id="step-3">
                     <h2>Step 3: Validation Rules</h2>
                     <p class="lead">Add validation checks that run before DML operations.</p>
-                    <p class="alert alert-info">Validation rules will be implemented in Phase 6.</p>
+                    
+                    <div class="alert alert-info">
+                        <strong>Validation Order:</strong> Rules execute in the order shown below. Drag to reorder or use ↑ ↓ buttons.
+                    </div>
+
+                    <!-- Validation Rule Palette -->
+                    <h3>Available Validations</h3>
+                    <div class="validation-palette" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: var(--spacing-md); margin-bottom: var(--spacing-xl);">
+                        <button type="button" class="btn btn-outline-secondary validation-card" data-rule-type="REQUIRED_FIELD">
+                            <div style="font-size: 2rem;">✓</div>
+                            <div style="font-weight: var(--font-weight-medium);">Required Field</div>
+                            <div style="font-size: var(--font-size-sm); color: var(--color-text-secondary);">Check if parameter is null/empty</div>
+                        </button>
+                        
+                        <button type="button" class="btn btn-outline-secondary validation-card" data-rule-type="POSITIVE_NUMBER">
+                            <div style="font-size: 2rem;">+</div>
+                            <div style="font-weight: var(--font-weight-medium);">Positive Number</div>
+                            <div style="font-size: var(--font-size-sm); color: var(--color-text-secondary);">Value must be > 0</div>
+                        </button>
+                        
+                        <button type="button" class="btn btn-outline-secondary validation-card" data-rule-type="DATE_RANGE">
+                            <div style="font-size: 2rem;">📅</div>
+                            <div style="font-weight: var(--font-weight-medium);">Date Range</div>
+                            <div style="font-size: var(--font-size-sm); color: var(--color-text-secondary);">Date between min and max</div>
+                        </button>
+                        
+                        <button type="button" class="btn btn-outline-secondary validation-card" data-rule-type="STRING_LENGTH">
+                            <div style="font-size: 2rem;">📏</div>
+                            <div style="font-weight: var(--font-weight-medium);">String Length</div>
+                            <div style="font-size: var(--font-size-sm); color: var(--color-text-secondary);">Length between min and max</div>
+                        </button>
+                        
+                        <button type="button" class="btn btn-outline-secondary validation-card" data-rule-type="FOREIGN_KEY_CHECK">
+                            <div style="font-size: 2rem;">🔗</div>
+                            <div style="font-weight: var(--font-weight-medium);">Foreign Key Check</div>
+                            <div style="font-size: var(--font-size-sm); color: var(--color-text-secondary);">Reference exists in table</div>
+                        </button>
+                        
+                        <button type="button" class="btn btn-outline-secondary validation-card" data-rule-type="ENUM_VALUE">
+                            <div style="font-size: 2rem;">📋</div>
+                            <div style="font-weight: var(--font-weight-medium);">Enum Value</div>
+                            <div style="font-size: var(--font-size-sm); color: var(--color-text-secondary);">Value in allowed list</div>
+                        </button>
+                        
+                        <button type="button" class="btn btn-outline-secondary validation-card" data-rule-type="CUSTOM_CONDITION">
+                            <div style="font-size: 2rem;">⚙️</div>
+                            <div style="font-weight: var(--font-weight-medium);">Custom Condition</div>
+                            <div style="font-size: var(--font-size-sm); color: var(--color-text-secondary);">Write your own SQL condition</div>
+                        </button>
+                    </div>
+
+                    <!-- Active Validation Rules -->
+                    <h3>Active Validation Rules <span id="validations-count" class="badge bg-primary">0</span></h3>
+                    <div id="wizard-validations-list">
+                        <p class="text-muted" id="no-validations-msg">No validation rules added yet. Click a card above to add your first validation.</p>
+                    </div>
                 </div>
 
-                <!-- Step 4: DML Operations (Placeholder) -->
+                <!-- Step 4: DML Operations -->
                 <div class="wizard-step-content" id="step-4">
                     <h2>Step 4: DML Operations</h2>
-                    <p class="lead">Define INSERT, UPDATE, DELETE, or SELECT operations.</p>
-                    <p class="alert alert-info">DML operations will be implemented in Phase 4.</p>
+                    <p class="lead">Define INSERT, UPDATE, DELETE, or SELECT operations for your procedure.</p>
+                    
+                    <div class="alert alert-info">
+                        <strong>Visual Operation Builder</strong><br>
+                        Use the visual builder to add database operations. Operations will be executed in the order they appear.
+                    </div>
+
+                    <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: var(--spacing-md); margin-bottom: var(--spacing-xl);">
+                        <button type="button" class="btn btn-outline-primary" id="btn-add-insert">
+                            <div style="font-size: 2rem;">➕</div>
+                            <div>INSERT</div>
+                        </button>
+                        <button type="button" class="btn btn-outline-primary" id="btn-add-update">
+                            <div style="font-size: 2rem;">✏️</div>
+                            <div>UPDATE</div>
+                        </button>
+                        <button type="button" class="btn btn-outline-primary" id="btn-add-delete">
+                            <div style="font-size: 2rem;">🗑️</div>
+                            <div>DELETE</div>
+                        </button>
+                        <button type="button" class="btn btn-outline-primary" id="btn-add-select">
+                            <div style="font-size: 2rem;">🔍</div>
+                            <div>SELECT</div>
+                        </button>
+                    </div>
+
+                    <h3>Operations <span id="operations-count" class="badge bg-primary">0</span></h3>
+                    <div id="wizard-operations-list">
+                        <p class="text-muted" id="no-operations-msg">No operations added yet. Click a button above to add your first operation.</p>
+                    </div>
+
+                    <div class="alert alert-warning" style="margin-top: var(--spacing-xl);">
+                        <strong>Advanced Builder:</strong> For complex operations with JOINs, subqueries, or multiple WHERE conditions, 
+                        <a href="dml-operations.html" target="_blank" class="alert-link">open the full DML Operations Builder →</a>
+                    </div>
                 </div>
 
                 <!-- Step 5: Flow Diagram (Placeholder) -->
@@ -306,30 +406,63 @@
                     <p class="alert alert-info">Advanced features will be implemented in Phase 10.</p>
                 </div>
 
-                <!-- Step 7: Preview -->
+                <!-- Step 7: Preview & Export -->
                 <div class="wizard-step-content" id="step-7">
-                    <h2>Step 7: SQL Preview</h2>
-                    <p class="lead">Review the generated SQL code with syntax highlighting.</p>
+                    <h2>Step 7: SQL Preview & Export</h2>
+                    <p class="lead">Review and export the generated SQL code.</p>
                     
-                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--spacing-lg);">
-                        <button id="btn-validate-syntax" class="btn btn-secondary">Validate Syntax</button>
-                        <button id="btn-copy-sql" class="btn btn-link">Copy to Clipboard</button>
+                    <!-- Export Actions -->
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--spacing-lg); flex-wrap: wrap; gap: var(--spacing-md);">
+                        <div style="display: flex; gap: var(--spacing-sm);">
+                            <button id="btn-export-file" class="btn btn-success">💾 Export SQL File</button>
+                            <button id="btn-copy-sql" class="btn btn-secondary">📋 Copy to Clipboard</button>
+                            <button id="btn-export-template" class="btn btn-outline-secondary">📝 Export as Template</button>
+                        </div>
+                        <button id="btn-validate-syntax" class="btn btn-outline-primary">✓ Validate Syntax</button>
                     </div>
 
+                    <!-- SQL Statistics -->
+                    <div id="sql-statistics" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: var(--spacing-md); padding: var(--spacing-md); background-color: var(--color-bg-secondary); border-radius: var(--radius-md); margin-bottom: var(--spacing-lg);">
+                        <div>
+                            <div style="font-size: var(--font-size-sm); color: var(--color-text-secondary);">Lines</div>
+                            <div id="stat-lines" style="font-size: var(--font-size-xl); font-weight: var(--font-weight-bold);">0</div>
+                        </div>
+                        <div>
+                            <div style="font-size: var(--font-size-sm); color: var(--color-text-secondary);">Size</div>
+                            <div id="stat-size" style="font-size: var(--font-size-xl); font-weight: var(--font-weight-bold);">0 KB</div>
+                        </div>
+                        <div>
+                            <div style="font-size: var(--font-size-sm); color: var(--color-text-secondary);">Parameters</div>
+                            <div id="stat-parameters" style="font-size: var(--font-size-xl); font-weight: var(--font-weight-bold);">0</div>
+                        </div>
+                        <div>
+                            <div style="font-size: var(--font-size-sm); color: var(--color-text-secondary);">Operations</div>
+                            <div id="stat-operations" style="font-size: var(--font-size-xl); font-weight: var(--font-weight-bold);">0</div>
+                        </div>
+                        <div>
+                            <div style="font-size: var(--font-size-sm); color: var(--color-text-secondary);">Validations</div>
+                            <div id="stat-validations" style="font-size: var(--font-size-xl); font-weight: var(--font-weight-bold);">0</div>
+                        </div>
+                    </div>
+
+                    <!-- SQL Preview -->
                     <pre><code id="sql-preview" class="language-sql">-- SQL will be generated here</code></pre>
                     
+                    <!-- Validation Results -->
                     <div id="syntax-errors" style="display: none;" class="alert alert-error">
-                        <h4>Syntax Errors:</h4>
+                        <h4>❌ Syntax Errors:</h4>
                         <ul id="error-list"></ul>
                     </div>
-                </div>
-
-                <!-- Step 8: Export (Placeholder) -->
-                <div class="wizard-step-content" id="step-8">
-                    <h2>Step 8: Export</h2>
-                    <p class="lead">Export your stored procedure as a .sql file.</p>
-                    <p class="alert alert-info">Export functionality will be implemented shortly.</p>
-                    <button id="btn-export" class="btn btn-success btn-lg">Export SQL File</button>
+                    
+                    <div id="syntax-warnings" style="display: none;" class="alert alert-warning">
+                        <h4>⚠️ Warnings:</h4>
+                        <ul id="warning-list"></ul>
+                    </div>
+                    
+                    <div id="syntax-success" style="display: none;" class="alert alert-success">
+                        <h4>✓ Validation Successful</h4>
+                        <p>No syntax errors detected. Ready to export and execute in MySQL 5.7.</p>
+                    </div>
                 </div>
             </div>
 

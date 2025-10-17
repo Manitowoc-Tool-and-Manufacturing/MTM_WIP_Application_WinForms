@@ -4,9 +4,12 @@
  * Manages wizard navigation, state persistence, and step validation
  */
 
-import { ProcedureDefinition, Parameter, DATA_TYPES } from './procedure-model.js';
+import { ProcedureDefinition, Parameter, DMLOperation, ValidationRule, VALIDATION_RULE_TYPES, DATA_TYPES } from './procedure-model.js';
 import { storageManager } from './storage-manager.js';
 import { sqlGenerator } from './sql-generator.js';
+import { exportManager } from './export-manager.js';
+import { dbMetadata } from './database-metadata.js';
+import { showError, showSuccess } from './utils.js';
 
 export class WizardController {
     constructor() {
@@ -49,12 +52,39 @@ export class WizardController {
         this.paramDescription = document.getElementById('param-description');
         this.btnAddParameter = document.getElementById('btn-add-parameter');
         this.parametersList = document.getElementById('parameters-list');
+        
+        // Step 3 elements  
+        this.validationCards = document.querySelectorAll('.validation-card');
+        this.validationsList = document.getElementById('wizard-validations-list');
+        this.validationsCount = document.getElementById('validations-count');
+        this.noValidationsMsg = document.getElementById('no-validations-msg');
+        
+        // Step 4 elements
+        this.btnAddInsert = document.getElementById('btn-add-insert');
+        this.btnAddUpdate = document.getElementById('btn-add-update');
+        this.btnAddDelete = document.getElementById('btn-add-delete');
+        this.btnAddSelect = document.getElementById('btn-add-select');
+        this.operationsList = document.getElementById('wizard-operations-list');
+        this.operationsCount = document.getElementById('operations-count');
+        this.noOperationsMsg = document.getElementById('no-operations-msg');
         this.paramLengthGroup = document.getElementById('param-length-group');
         
         // Step 7 elements
         this.sqlPreview = document.getElementById('sql-preview');
         this.btnValidateSyntax = document.getElementById('btn-validate-syntax');
         this.btnCopySql = document.getElementById('btn-copy-sql');
+        this.btnExportFile = document.getElementById('btn-export-file');
+        this.btnExportTemplate = document.getElementById('btn-export-template');
+        this.statLines = document.getElementById('stat-lines');
+        this.statSize = document.getElementById('stat-size');
+        this.statParameters = document.getElementById('stat-parameters');
+        this.statOperations = document.getElementById('stat-operations');
+        this.statValidations = document.getElementById('stat-validations');
+        this.syntaxErrors = document.getElementById('syntax-errors');
+        this.syntaxWarnings = document.getElementById('syntax-warnings');
+        this.syntaxSuccess = document.getElementById('syntax-success');
+        this.errorList = document.getElementById('error-list');
+        this.warningList = document.getElementById('warning-list');
     }
 
     /**
@@ -73,6 +103,26 @@ export class WizardController {
         // Step 2 - Parameter management
         this.btnAddParameter?.addEventListener('click', () => this.addParameter());
         this.paramDataType?.addEventListener('change', () => this.updateParameterForm());
+        
+        // Step 3 - Validation rules
+        this.validationCards?.forEach(card => {
+            card.addEventListener('click', () => {
+                const ruleType = card.getAttribute('data-rule-type');
+                this.quickAddValidation(ruleType);
+            });
+        });
+        
+        // Step 4 - Operations management
+        this.btnAddInsert?.addEventListener('click', () => this.quickAddOperation('INSERT'));
+        this.btnAddUpdate?.addEventListener('click', () => this.quickAddOperation('UPDATE'));
+        this.btnAddDelete?.addEventListener('click', () => this.quickAddOperation('DELETE'));
+        this.btnAddSelect?.addEventListener('click', () => this.quickAddOperation('SELECT'));
+        
+        // Step 7 - Export and validation
+        this.btnExportFile?.addEventListener('click', () => this.exportSQLFile());
+        this.btnCopySql?.addEventListener('click', () => this.copySQLToClipboard());
+        this.btnExportTemplate?.addEventListener('click', () => this.exportAsTemplate());
+        this.btnValidateSyntax?.addEventListener('click', () => this.validateSQLSyntax());
         
         // Keyboard shortcuts
         document.addEventListener('keydown', (e) => {
@@ -389,6 +439,16 @@ export class WizardController {
                 this.renderParametersList();
                 break;
                 
+            case 3:
+                // Render validations list
+                this.renderWizardValidations();
+                break;
+                
+            case 4:
+                // Render operations list
+                this.renderWizardOperations();
+                break;
+                
             case 7:
                 // Generate SQL preview
                 this.updateSQLPreview();
@@ -401,7 +461,7 @@ export class WizardController {
      */
     updateSQLPreview() {
         try {
-            // Simple SQL generation for now (full generator comes later)
+            // Generate SQL
             const sql = this.generateSimpleSQL();
             this.sqlPreview.textContent = sql;
             
@@ -409,6 +469,13 @@ export class WizardController {
             if (window.Prism) {
                 Prism.highlightElement(this.sqlPreview);
             }
+            
+            // Update statistics
+            this.updateSQLStatistics(sql);
+            
+            // Reset validation state
+            this.clearValidationResults();
+            
         } catch (error) {
             this.sqlPreview.textContent = `-- Error generating SQL: ${error.message}`;
         }
@@ -425,6 +492,145 @@ export class WizardController {
             console.error('Error generating SQL:', error);
             return `-- Error generating SQL: ${error.message}`;
         }
+    }
+
+    /**
+     * Update SQL statistics display
+     * @param {string} sql - SQL content
+     */
+    updateSQLStatistics(sql) {
+        if (!this.statLines) return;
+        
+        const stats = exportManager.getStatistics(sql);
+        
+        this.statLines.textContent = stats.lines;
+        this.statSize.textContent = stats.sizeFormatted;
+        this.statParameters.textContent = stats.parameters;
+        this.statOperations.textContent = stats.operations;
+        this.statValidations.textContent = stats.validations;
+    }
+
+    /**
+     * Export SQL to file
+     */
+    async exportSQLFile() {
+        try {
+            const sql = this.generateSimpleSQL();
+            
+            const success = await exportManager.exportToFile(sql, this.procedure.name, {
+                description: this.procedure.description,
+                author: this.procedure.author,
+                includeDrop: true,
+                includeDelimiter: true,
+                includeHeader: true
+            });
+            
+            if (success) {
+                // Success message already shown by exportManager
+            }
+            
+        } catch (error) {
+            showError({
+                error_type: 'export',
+                user_message: 'Failed to export SQL file',
+                technical_detail: error.message
+            });
+        }
+    }
+
+    /**
+     * Copy SQL to clipboard
+     */
+    async copySQLToClipboard() {
+        try {
+            const sql = this.generateSimpleSQL();
+            
+            await exportManager.copyToClipboard(sql, this.procedure.name, {
+                description: this.procedure.description,
+                author: this.procedure.author,
+                includeDrop: false,
+                includeDelimiter: true,
+                includeHeader: false
+            });
+            
+        } catch (error) {
+            showError({
+                error_type: 'clipboard',
+                user_message: 'Failed to copy to clipboard',
+                technical_detail: error.message
+            });
+        }
+    }
+
+    /**
+     * Export as template with placeholders
+     */
+    async exportAsTemplate() {
+        try {
+            const sql = this.generateSimpleSQL();
+            
+            await exportManager.exportAsTemplate(sql, this.procedure.name);
+            
+        } catch (error) {
+            showError({
+                error_type: 'export',
+                user_message: 'Failed to export template',
+                technical_detail: error.message
+            });
+        }
+    }
+
+    /**
+     * Validate SQL syntax
+     */
+    validateSQLSyntax() {
+        try {
+            const sql = this.generateSimpleSQL();
+            const result = exportManager.validateSQL(sql);
+            
+            this.displayValidationResults(result);
+            
+        } catch (error) {
+            showError({
+                error_type: 'validation',
+                user_message: 'Failed to validate SQL',
+                technical_detail: error.message
+            });
+        }
+    }
+
+    /**
+     * Display validation results
+     * @param {Object} result - Validation result from exportManager
+     */
+    displayValidationResults(result) {
+        this.clearValidationResults();
+        
+        if (result.errors.length > 0) {
+            // Show errors
+            this.syntaxErrors.style.display = 'block';
+            this.errorList.innerHTML = result.errors.map(err => `<li>${err}</li>`).join('');
+        }
+        
+        if (result.warnings.length > 0) {
+            // Show warnings
+            this.syntaxWarnings.style.display = 'block';
+            this.warningList.innerHTML = result.warnings.map(warn => `<li>${warn}</li>`).join('');
+        }
+        
+        if (result.valid && result.warnings.length === 0) {
+            // Show success
+            this.syntaxSuccess.style.display = 'block';
+        }
+    }
+
+    /**
+     * Clear validation results
+     */
+    clearValidationResults() {
+        if (this.syntaxErrors) this.syntaxErrors.style.display = 'none';
+        if (this.syntaxWarnings) this.syntaxWarnings.style.display = 'none';
+        if (this.syntaxSuccess) this.syntaxSuccess.style.display = 'none';
     }
 
     /**
@@ -483,9 +689,345 @@ export class WizardController {
             announcer.textContent = message;
         }
     }
+
+    /**
+     * Quick add validation rule from wizard
+     * @param {string} ruleType - Validation rule type
+     */
+    quickAddValidation(ruleType) {
+        // Get first IN parameter for smart default
+        const firstParam = this.procedure.parameters.find(p => p.direction === 'IN');
+        const paramName = firstParam ? firstParam.name : 'p_Value';
+        
+        // Create validation rule with smart defaults
+        const validation = new ValidationRule({
+            type: ruleType,
+            parameterName: paramName,
+            errorMessage: this.getSmartErrorMessage(ruleType, paramName),
+            errorStatusCode: -1,
+            order: this.procedure.validations.length
+        });
+        
+        this.procedure.validations.push(validation);
+        this.renderWizardValidations();
+        this.saveState();
+        showSuccess(`${this.getRuleTypeName(ruleType)} validation added`);
+    }
+
+    /**
+     * Get smart error message for validation rule
+     * @param {string} ruleType - Rule type
+     * @param {string} paramName - Parameter name
+     * @returns {string} Error message
+     */
+    getSmartErrorMessage(ruleType, paramName) {
+        // Remove p_ prefix for display
+        const displayName = paramName.replace(/^p_/, '').replace(/_/g, ' ');
+        
+        switch (ruleType) {
+            case 'REQUIRED_FIELD':
+                return `${displayName} is required`;
+            case 'POSITIVE_NUMBER':
+                return `${displayName} must be a positive number`;
+            case 'DATE_RANGE':
+                return `${displayName} must be within valid date range`;
+            case 'STRING_LENGTH':
+                return `${displayName} length is invalid`;
+            case 'FOREIGN_KEY_CHECK':
+                return `${displayName} reference not found`;
+            case 'ENUM_VALUE':
+                return `${displayName} must be a valid value`;
+            case 'CUSTOM_CONDITION':
+                return `${displayName} validation failed`;
+            default:
+                return 'Validation failed';
+        }
+    }
+
+    /**
+     * Get human-readable rule type name
+     * @param {string} ruleType - Rule type constant
+     * @returns {string} Display name
+     */
+    getRuleTypeName(ruleType) {
+        return ruleType.split('_').map(word => 
+            word.charAt(0) + word.slice(1).toLowerCase()
+        ).join(' ');
+    }
+
+    /**
+     * Render validations list in wizard
+     */
+    renderWizardValidations() {
+        if (!this.validationsList) return;
+        
+        if (this.procedure.validations.length === 0) {
+            if (this.noValidationsMsg) {
+                this.noValidationsMsg.style.display = 'block';
+            }
+            if (this.validationsCount) {
+                this.validationsCount.textContent = '0';
+            }
+            return;
+        }
+        
+        if (this.noValidationsMsg) {
+            this.noValidationsMsg.style.display = 'none';
+        }
+        
+        if (this.validationsCount) {
+            this.validationsCount.textContent = this.procedure.validations.length.toString();
+        }
+        
+        // Build validations list HTML
+        let html = '<div style="display: flex; flex-direction: column; gap: var(--spacing-md);">';
+        
+        this.procedure.validations.forEach((validation, index) => {
+            const ruleIcon = this.getRuleIcon(validation.type);
+            const ruleName = this.getRuleTypeName(validation.type);
+            
+            html += `
+                <div style="display: flex; justify-content: space-between; align-items: center; padding: var(--spacing-md); background-color: var(--color-bg-secondary); border-radius: var(--radius-md);">
+                    <div style="display: flex; align-items: center; gap: var(--spacing-md);">
+                        <span style="font-weight: var(--font-weight-medium);">${index + 1}.</span>
+                        <span style="font-size: 1.5rem;">${ruleIcon}</span>
+                        <div>
+                            <div style="font-weight: var(--font-weight-medium);">${ruleName}</div>
+                            <div style="font-size: var(--font-size-sm); color: var(--color-text-secondary);">${validation.parameterName}: ${validation.errorMessage}</div>
+                        </div>
+                    </div>
+                    <div style="display: flex; gap: var(--spacing-sm);">
+                        <button type="button" class="btn btn-sm btn-outline-secondary" onclick="window.wizardController.moveValidation(${index}, -1)" ${index === 0 ? 'disabled' : ''}>↑</button>
+                        <button type="button" class="btn btn-sm btn-outline-secondary" onclick="window.wizardController.moveValidation(${index}, 1)" ${index === this.procedure.validations.length - 1 ? 'disabled' : ''}>↓</button>
+                        <button type="button" class="btn btn-sm btn-outline-danger" onclick="window.wizardController.deleteValidation(${index})">🗑️</button>
+                    </div>
+                </div>
+            `;
+        });
+        
+        html += '</div>';
+        
+        // Find or create container
+        const container = this.validationsList.querySelector('.validations-container') || 
+                         document.createElement('div');
+        container.className = 'validations-container';
+        container.innerHTML = html;
+        
+        if (!this.validationsList.contains(container)) {
+            this.validationsList.appendChild(container);
+        }
+    }
+
+    /**
+     * Get icon for validation rule type
+     * @param {string} ruleType - Rule type
+     * @returns {string} Icon emoji
+     */
+    getRuleIcon(ruleType) {
+        switch (ruleType) {
+            case 'REQUIRED_FIELD': return '✓';
+            case 'POSITIVE_NUMBER': return '+';
+            case 'DATE_RANGE': return '📅';
+            case 'STRING_LENGTH': return '📏';
+            case 'FOREIGN_KEY_CHECK': return '🔗';
+            case 'ENUM_VALUE': return '📋';
+            case 'CUSTOM_CONDITION': return '⚙️';
+            default: return '❓';
+        }
+    }
+
+    /**
+     * Move validation up or down
+     * @param {number} index - Validation index
+     * @param {number} direction - -1 for up, 1 for down
+     */
+    moveValidation(index, direction) {
+        const newIndex = index + direction;
+        
+        if (newIndex < 0 || newIndex >= this.procedure.validations.length) {
+            return;
+        }
+        
+        // Swap validations
+        const temp = this.procedure.validations[index];
+        this.procedure.validations[index] = this.procedure.validations[newIndex];
+        this.procedure.validations[newIndex] = temp;
+        
+        // Update order property
+        this.procedure.validations.forEach((v, i) => v.order = i);
+        
+        this.renderWizardValidations();
+        this.saveState();
+        showSuccess('Validation reordered');
+    }
+
+    /**
+     * Delete validation by index
+     * @param {number} index - Validation index
+     */
+    deleteValidation(index) {
+        if (confirm('Are you sure you want to delete this validation rule?')) {
+            this.procedure.validations.splice(index, 1);
+            
+            // Update order property
+            this.procedure.validations.forEach((v, i) => v.order = i);
+            
+            this.renderWizardValidations();
+            this.saveState();
+            showSuccess('Validation deleted');
+        }
+    }
+
+    /**
+     * Quick add operation from wizard
+     * @param {string} type - Operation type (INSERT, UPDATE, DELETE, SELECT)
+     */
+    quickAddOperation(type) {
+        const operation = new DMLOperation({ type, order: this.procedure.operations.length });
+        this.procedure.operations.push(operation);
+        this.renderWizardOperations();
+        this.saveState();
+        showSuccess(`${type} operation added`);
+    }
+
+    /**
+     * Render operations list in wizard
+     */
+    renderWizardOperations() {
+        if (!this.operationsList) return;
+        
+        if (this.procedure.operations.length === 0) {
+            if (this.noOperationsMsg) {
+                this.noOperationsMsg.style.display = 'block';
+            }
+            if (this.operationsCount) {
+                this.operationsCount.textContent = '0';
+            }
+            return;
+        }
+        
+        if (this.noOperationsMsg) {
+            this.noOperationsMsg.style.display = 'none';
+        }
+        
+        if (this.operationsCount) {
+            this.operationsCount.textContent = this.procedure.operations.length.toString();
+        }
+        
+        // Build operations list HTML
+        let html = '<div style="display: flex; flex-direction: column; gap: var(--spacing-md);">';
+        
+        this.procedure.operations.forEach((op, index) => {
+            const typeBadge = `<span class="operation-type-badge ${op.type}" style="padding: 0.25rem 0.75rem; border-radius: var(--radius-sm); font-weight: var(--font-weight-medium); font-size: var(--font-size-sm);">${op.type}</span>`;
+            const tableText = op.targetTable || '<em style="color: var(--color-text-secondary);">(configure in full builder)</em>';
+            
+            html += `
+                <div style="display: flex; justify-content: space-between; align-items: center; padding: var(--spacing-md); background-color: var(--color-bg-secondary); border-radius: var(--radius-md);">
+                    <div>
+                        <span style="font-weight: var(--font-weight-medium); margin-right: var(--spacing-md);">${index + 1}.</span>
+                        ${typeBadge}
+                        <span style="margin-left: var(--spacing-md);">${tableText}</span>
+                    </div>
+                    <button type="button" class="btn btn-sm btn-outline-danger" onclick="window.wizardController.deleteOperation(${index})">
+                        🗑️
+                    </button>
+                </div>
+            `;
+        });
+        
+        html += '</div>';
+        
+        // Find or create container
+        const container = this.operationsList.querySelector('.operations-container') || 
+                         document.createElement('div');
+        container.className = 'operations-container';
+        container.innerHTML = html;
+        
+        if (!this.operationsList.contains(container)) {
+            this.operationsList.appendChild(container);
+        }
+    }
+
+    /**
+     * Delete operation by index
+     * @param {number} index - Operation index
+     */
+    deleteOperation(index) {
+        if (confirm('Are you sure you want to delete this operation?')) {
+            this.procedure.operations.splice(index, 1);
+            this.renderWizardOperations();
+            this.saveState();
+            showSuccess('Operation deleted');
+        }
+    }
+
+    /**
+     * Initialize database metadata
+     */
+    async initializeMetadata() {
+        const refreshBtn = document.getElementById('refresh-metadata-btn');
+        const timestampEl = document.getElementById('metadata-timestamp');
+        const staleEl = document.getElementById('metadata-stale');
+        
+        if (!refreshBtn) return;
+        
+        // Update display
+        const updateMetadataDisplay = () => {
+            if (dbMetadata.fetchedAt) {
+                timestampEl.textContent = dbMetadata.getAgeDisplay();
+                
+                if (dbMetadata.isStale()) {
+                    staleEl.style.display = 'inline';
+                } else {
+                    staleEl.style.display = 'none';
+                }
+            } else {
+                timestampEl.textContent = 'Not loaded';
+                staleEl.style.display = 'none';
+            }
+        };
+        
+        // Refresh button handler
+        refreshBtn.addEventListener('click', async () => {
+            refreshBtn.disabled = true;
+            refreshBtn.innerHTML = '⏳ Refreshing...';
+            
+            const result = await dbMetadata.refresh();
+            
+            if (result.success) {
+                showSuccess(`Refreshed ${dbMetadata.tables.length} tables`);
+                updateMetadataDisplay();
+            } else {
+                showError({
+                    error_type: 'database',
+                    user_message: 'Failed to refresh metadata',
+                    technical_detail: result.error
+                });
+            }
+            
+            refreshBtn.disabled = false;
+            refreshBtn.innerHTML = '🔄 Refresh Metadata';
+        });
+        
+        // Initial load if not cached
+        if (dbMetadata.tables.length === 0) {
+            const result = await dbMetadata.fetchTables();
+            if (result.success) {
+                console.log(`[Wizard] Loaded ${dbMetadata.tables.length} tables`);
+            }
+        }
+        
+        updateMetadataDisplay();
+        
+        // Update display every minute
+        setInterval(updateMetadataDisplay, 60000);
+    }
 }
 
 // Initialize wizard when DOM is ready
 document.addEventListener('DOMContentLoaded', () => {
     window.wizardController = new WizardController();
+    
+    // Initialize metadata after wizard
+    window.wizardController.initializeMetadata();
 });

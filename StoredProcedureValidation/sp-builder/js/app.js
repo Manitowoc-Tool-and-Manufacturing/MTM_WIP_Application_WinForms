@@ -6,6 +6,8 @@
 
 import { ProcedureDefinition } from './procedure-model.js';
 import { storageManager } from './storage-manager.js';
+import { sqlParser } from './sql-parser.js';
+import { showError, showSuccess } from './utils.js';
 
 class AppController {
     constructor() {
@@ -165,50 +167,58 @@ class AppController {
     /**
      * Parse SQL input
      */
-    parseSqlInput() {
+    async parseSqlInput() {
         const sql = this.sqlInput.value.trim();
         
         if (!sql) {
-            alert('Please enter SQL code or upload a file');
+            showError({
+                error_type: 'validation',
+                user_message: 'Please enter SQL code or upload a file'
+            });
             return;
         }
+        
+        // Show loading
+        const spinner = document.getElementById('loading-spinner');
+        if (spinner) spinner.style.display = 'flex';
         
         try {
-            // Parse SQL (placeholder - full parser will be implemented later)
-            this.parseSql(sql);
+            // Parse SQL using SQLParser
+            const result = sqlParser.parse(sql);
+            
+            if (!result.success) {
+                throw new Error(result.error);
+            }
+            
+            // Show warnings if any
+            if (result.warnings && result.warnings.length > 0) {
+                console.warn('Parser warnings:', result.warnings);
+                // Show warnings to user (non-blocking)
+                const warningsMsg = result.warnings.join('\n');
+                console.log(`Parsed with warnings:\n${warningsMsg}`);
+            }
+            
+            // Save procedure and navigate to wizard
+            this.storageManager.saveState(result.procedure.toJSON());
+            
+            showSuccess(`Successfully imported procedure: ${result.procedure.name}`);
+            
+            // Navigate to wizard after short delay
+            setTimeout(() => {
+                this.closeModal();
+                window.location.href = 'wizard.html';
+            }, 1000);
+            
         } catch (error) {
-            alert(`Error parsing SQL: ${error.message}`);
+            showError({
+                error_type: 'parse',
+                user_message: 'Failed to parse SQL',
+                technical_detail: error.message
+            });
+        } finally {
+            // Hide loading
+            if (spinner) spinner.style.display = 'none';
         }
-    }
-
-    /**
-     * Parse SQL and extract procedure definition
-     * @param {string} sql
-     */
-    parseSql(sql) {
-        // Simple regex-based parser (placeholder)
-        const procNameMatch = sql.match(/CREATE\s+PROCEDURE\s+(\w+)/i);
-        
-        if (!procNameMatch) {
-            alert('Could not find CREATE PROCEDURE statement');
-            return;
-        }
-        
-        const procedureName = procNameMatch[1];
-        
-        // Create new procedure with extracted name
-        const procedure = new ProcedureDefinition({
-            name: procedureName,
-            description: 'Imported from SQL file'
-        });
-        
-        // Save and navigate to wizard
-        this.storageManager.saveState(procedure.toJSON());
-        this.closeModal();
-        window.location.href = 'wizard.html';
-        
-        // Note: Full SQL parsing will be implemented in Phase 9
-        console.log('Simple SQL parse complete. Full parser coming in Phase 9.');
     }
 
     /**
