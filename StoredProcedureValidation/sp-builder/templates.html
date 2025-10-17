@@ -374,6 +374,8 @@
         import { templateManager } from './js/template-manager.js';
         import { storageManager } from './js/storage-manager.js';
         import { showSuccess, showError } from './js/utils.js';
+        import { initNavigation } from './js/navigation.js';
+        import { showLoading, hideLoading } from './js/loading.js';
 
         // Initialize
         let selectedCategory = 'CRUD';
@@ -398,8 +400,15 @@
             btnCancel: document.getElementById('btn-cancel')
         };
 
+        // Initialize navigation
+        initNavigation('templates', () => {
+            showSuccess('Templates are stored in browser');
+        });
+
         // Initialize template manager
+        showLoading('Loading templates...');
         await templateManager.initialize();
+        hideLoading();
 
         // Render categories
         function renderCategories() {

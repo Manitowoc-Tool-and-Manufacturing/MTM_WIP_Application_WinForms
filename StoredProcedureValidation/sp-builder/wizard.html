@@ -490,6 +490,44 @@
 
     <script src="lib/prism.js"></script>
     <script src="lib/prism-sql.js"></script>
+    <script type="module">
+        import { initNavigation } from './js/navigation.js';
+        import { storageManager } from './js/storage-manager.js';
+        import { showSuccess } from './js/utils.js';
+        
+        // Initialize navigation
+        initNavigation('wizard', () => {
+            // Save callback
+            const currentState = storageManager.loadState();
+            if (currentState) {
+                storageManager.saveState(currentState);
+                showSuccess('Progress saved!');
+            }
+        });
+        
+        // Add keyboard shortcuts for wizard navigation
+        document.addEventListener('keydown', (e) => {
+            // Ctrl + Right Arrow = Next step
+            if (e.ctrlKey && e.key === 'ArrowRight') {
+                e.preventDefault();
+                const nextBtn = document.querySelector('.btn-next:not(:disabled)');
+                if (nextBtn) nextBtn.click();
+            }
+            
+            // Ctrl + Left Arrow = Previous step
+            if (e.ctrlKey && e.key === 'ArrowLeft') {
+                e.preventDefault();
+                const prevBtn = document.querySelector('.btn-previous:not(:disabled)');
+                if (prevBtn) prevBtn.click();
+            }
+            
+            // Ctrl + S = Save
+            if (e.ctrlKey && e.key === 's') {
+                e.preventDefault();
+                document.getElementById('nav-btn-save')?.click();
+            }
+        });
+    </script>
     <script type="module" src="js/wizard-controller.js"></script>
 </body>
 </html>
