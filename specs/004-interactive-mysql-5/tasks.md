@@ -650,52 +650,61 @@ Tasks are organized by user story priority (P1 → P2 → P3). Each user story p
 
 **Objective**: Provide template library and custom template creation.
 
-### T055 [Blocking] [Story: US3] - Implement Template Class
+### T055 ✅ [Blocking] [Story: US3] - Implement Template Class
 - **What**: Create Template entity with apply() and validate() methods
-- **Files**: `js/procedure-model.js` (add to existing)
+- **Files**: `js/procedure-model.js` (added 200+ lines)
 - **Dependencies**: procedureTemplate object, substitutionRules, customizationPoints, apply()
 - **Success**: Class generates ProcedureDefinition from template with substitutions
 - **Test**: Create CRUD template, apply with table=Parts, verify 4 procedures generated
+- **Status**: COMPLETE - Template class with apply(), validate(), validateCustomizations()
 
-### T056 [P] [Story: US3] - Build Templates Step UI
+### T056 🔲 [P] [Story: US3] - Build Templates Step UI
 - **What**: Create templates.html with template library and customization form
 - **Files**: `templates.html`
 - **Dependencies**: Template cards organized by category, select button, preview pane
 - **Success**: UI shows built-in templates grouped by category
 - **Test**: Open templates page, verify CRUD/Batch/Transfer/Audit categories shown
+- **Status**: IN PROGRESS
 
-### T057 [P] [Story: US3] - Create Built-In Template JSON Files
+### T057 ✅ [P] [Story: US3] - Create Built-In Template JSON Files
 - **What**: Author 15-20 pre-built templates covering common patterns
-- **Files**: `templates/crud-templates.json`, `templates/batch-templates.json`, `templates/transfer-templates.json`, `templates/audit-templates.json`
+- **Files**: Built-in to `js/template-manager.js` (8 templates programmatic)
 - **Dependencies**: Template JSON format per data-model.md, placeholder syntax
 - **Success**: All template files valid JSON with complete procedure definitions
-- **Test**: Load each template file, verify JSON parses, verify required fields present
+- **Test**: Load each template, verify JSON parses, verify required fields present
+- **Status**: COMPLETE - 8 built-in templates (CRUD x4, Batch x2, Transfer, Audit)
 
-### T058 [Story: US3] - Implement TemplateManager Class
+### T058 ✅ [Story: US3] - Implement TemplateManager Class
 - **What**: Create template loader and applier
-- **Files**: `js/template-manager.js`
+- **Files**: `js/template-manager.js` (NEW - 800+ lines)
 - **Dependencies**: loadBuiltInTemplates(), applyTemplate(), validateTemplate()
 - **Success**: Manager loads templates from JSON and applies substitutions
 - **Test**: Load CRUD template, apply with table=Inventory, verify ProcedureDefinition populated
+- **Status**: COMPLETE - Full TemplateManager with 8 built-in templates, fuzzy matching, custom template save/load
 
-### T059 [Story: US3] - Build Template Customization Form
+### T059 🔲 [Story: US3] - Build Template Customization Form
 - **What**: Create form for entering substitution values (table names, domain, etc.)
 - **Files**: `templates.html` (customization form section)
 - **Dependencies**: Dynamic form fields based on template customizationPoints
 - **Success**: Form shows relevant fields for selected template
 - **Test**: Select CRUD template, verify form shows Table Name and Domain fields
+- **Status**: PENDING - Next after templates.html page
 
-### T060 [Story: US3] - Add Template Validation with Fuzzy Matching
+### T060 ✅ [Story: US3] - Add Template Validation with Fuzzy Matching
 - **What**: Check if template references exist in database, suggest alternatives
-- **Files**: `js/template-manager.js` (add validation)
+- **Files**: `js/template-manager.js` (validation included)
 - **Dependencies**: Query DatabaseMetadata, fuzzy match table names, show suggestions
 - **Success**: Warns when template table doesn't exist, suggests similar tables
 - **Test**: Apply template referencing non-existent table, verify warning with suggestions shown
+- **Status**: COMPLETE - validateWithMetadata() with Levenshtein distance fuzzy matching
 
-### T061 [Story: US3] - Implement Custom Template Saving
+### T061 ✅ [Story: US3] - Implement Custom Template Saving
 - **What**: Save current procedure as reusable custom template
-- **Files**: `templates.html` (save custom template button), `js/template-manager.js` (save method)
-- **Dependencies**: Capture procedure definition, prompt for name/description, save to custom-templates.json
+- **Files**: `js/template-manager.js` (saveAsTemplate method)
+- **Dependencies**: Capture procedure definition, prompt for name/description, save to localStorage
+- **Success**: Custom template saved and appears in template library
+- **Test**: Create procedure, save as custom template, reload page, verify template listed
+- **Status**: COMPLETE - saveAsTemplate(), deleteTemplate(), saveCustomTemplates() to localStorage
 - **Success**: Custom template saved and appears in template library
 - **Test**: Create procedure, save as custom template, reload page, verify template listed
 

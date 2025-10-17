@@ -1144,3 +1144,197 @@ END IF;`;
         return new ValidationRule(data);
     }
 }
+
+/**
+ * Template Categories
+ */
+export const TEMPLATE_CATEGORIES = [
+    'CRUD',
+    'BATCH',
+    'TRANSFER',
+    'AUDIT',
+    'REPORTING',
+    'CUSTOM'
+];
+
+/**
+ * Represents a stored procedure template
+ */
+export class Template {
+    constructor(config = {}) {
+        this.id = config.id || this._generateId();
+        this.name = config.name || 'Untitled Template';
+        this.description = config.description || '';
+        this.category = config.category || 'CUSTOM';
+        this.author = config.author || 'User';
+        this.version = config.version || 1;
+        this.tags = config.tags || [];
+        
+        // Template procedure definition (can have placeholders)
+        this.procedureTemplate = config.procedureTemplate || {
+            name: '{{PROCEDURE_NAME}}',
+            description: '{{DESCRIPTION}}',
+            parameters: [],
+            validations: [],
+            operations: []
+        };
+        
+        // Customization points - fields user must provide
+        this.customizationPoints = config.customizationPoints || [
+            { key: 'PROCEDURE_NAME', label: 'Procedure Name', type: 'text', required: true },
+            { key: 'TABLE_NAME', label: 'Table Name', type: 'text', required: true }
+        ];
+        
+        // Substitution rules for applying template
+        this.substitutionRules = config.substitutionRules || {};
+        
+        // Metadata
+        this.isBuiltIn = config.isBuiltIn || false;
+        this.usageCount = config.usageCount || 0;
+        this.createdDate = config.createdDate ? new Date(config.createdDate) : new Date();
+    }
+
+    _generateId() {
+        return `tmpl_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+    }
+
+    /**
+     * Apply template with user-provided values
+     * @param {Object} values - Substitution values (e.g., {TABLE_NAME: 'Parts', DOMAIN: 'Inventory'})
+     * @returns {ProcedureDefinition} New procedure from template
+     */
+    apply(values) {
+        // Start with template procedure structure
+        const procedureData = JSON.parse(JSON.stringify(this.procedureTemplate));
+        
+        // Apply substitutions to all string values recursively
+        const substituted = this._applySubstitutions(procedureData, values);
+        
+        // Create ProcedureDefinition from substituted data
+        return ProcedureDefinition.fromJSON(substituted);
+    }
+
+    /**
+     * Recursively apply substitutions to object
+     * @param {any} obj - Object to substitute
+     * @param {Object} values - Substitution values
+     * @returns {any} Object with substitutions applied
+     */
+    _applySubstitutions(obj, values) {
+        if (typeof obj === 'string') {
+            // Replace all {{PLACEHOLDERS}} in string
+            let result = obj;
+            for (const [key, value] of Object.entries(values)) {
+                const placeholder = `{{${key}}}`;
+                result = result.replace(new RegExp(placeholder, 'g'), value);
+            }
+            return result;
+        } else if (Array.isArray(obj)) {
+            return obj.map(item => this._applySubstitutions(item, values));
+        } else if (obj !== null && typeof obj === 'object') {
+            const result = {};
+            for (const [key, value] of Object.entries(obj)) {
+                result[key] = this._applySubstitutions(value, values);
+            }
+            return result;
+        } else {
+            return obj;
+        }
+    }
+
+    /**
+     * Validate template structure
+     * @returns {Array<string>} Error messages (empty if valid)
+     */
+    validate() {
+        const errors = [];
+        
+        if (!this.name) {
+            errors.push('Template name is required');
+        }
+        
+        if (!this.category || !TEMPLATE_CATEGORIES.includes(this.category)) {
+            errors.push('Valid category is required');
+        }
+        
+        if (!this.procedureTemplate) {
+            errors.push('Procedure template is required');
+        }
+        
+        if (!this.customizationPoints || this.customizationPoints.length === 0) {
+            errors.push('At least one customization point is required');
+        }
+        
+        // Check that all customization point keys are used in template
+        const templateStr = JSON.stringify(this.procedureTemplate);
+        for (const point of this.customizationPoints) {
+            if (point.required && !templateStr.includes(`{{${point.key}}}`)) {
+                errors.push(`Required customization point {{${point.key}}} not found in template`);
+            }
+        }
+        
+        return errors;
+    }
+
+    /**
+     * Get human-readable summary
+     * @returns {string} Summary
+     */
+    getSummary() {
+        const paramCount = this.procedureTemplate.parameters?.length || 0;
+        const validationCount = this.procedureTemplate.validations?.length || 0;
+        const operationCount = this.procedureTemplate.operations?.length || 0;
+        
+        return `${paramCount} parameters, ${validationCount} validations, ${operationCount} operations`;
+    }
+
+    /**
+     * Get required customization point values
+     * @returns {Array<Object>} Required customization points
+     */
+    getRequiredCustomizations() {
+        return this.customizationPoints.filter(cp => cp.required);
+    }
+
+    /**
+     * Check if all required values are provided
+     * @param {Object} values - User-provided values
+     * @returns {Object} {valid: boolean, missing: Array<string>}
+     */
+    validateCustomizations(values) {
+        const missing = [];
+        
+        for (const point of this.customizationPoints) {
+            if (point.required && !values[point.key]) {
+                missing.push(point.label);
+            }
+        }
+        
+        return {
+            valid: missing.length === 0,
+            missing: missing
+        };
+    }
+
+    toJSON() {
+        return {
+            id: this.id,
+            name: this.name,
+            description: this.description,
+            category: this.category,
+            author: this.author,
+            version: this.version,
+            tags: this.tags,
+            procedureTemplate: this.procedureTemplate,
+            customizationPoints: this.customizationPoints,
+            substitutionRules: this.substitutionRules,
+            isBuiltIn: this.isBuiltIn,
+            usageCount: this.usageCount,
+            createdDate: this.createdDate.toISOString()
+        };
+    }
+
+    static fromJSON(data) {
+        return new Template(data);
+    }
+}
