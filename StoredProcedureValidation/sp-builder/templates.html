@@ -1,0 +1,623 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Procedure Templates - MySQL 5.7 Stored Procedure Builder</title>
+    <link rel="stylesheet" href="css/variables.css">
+    <link rel="stylesheet" href="css/components.css">
+    <link rel="stylesheet" href="css/wizard.css">
+    <style>
+        .templates-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: var(--spacing-xl);
+        }
+
+        .templates-header {
+            margin-bottom: var(--spacing-xl);
+        }
+
+        .templates-layout {
+            display: grid;
+            grid-template-columns: 300px 1fr;
+            gap: var(--spacing-xl);
+            align-items: start;
+        }
+
+        /* Category Sidebar */
+        .category-sidebar {
+            position: sticky;
+            top: var(--spacing-xl);
+        }
+
+        .category-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .category-item {
+            margin-bottom: var(--spacing-sm);
+        }
+
+        .category-button {
+            width: 100%;
+            padding: var(--spacing-md) var(--spacing-lg);
+            background: var(--color-bg-secondary);
+            border: 2px solid transparent;
+            border-radius: var(--radius-md);
+            text-align: left;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .category-button:hover {
+            background: var(--color-bg-tertiary);
+            border-color: var(--color-border);
+        }
+
+        .category-button.active {
+            background: var(--color-primary);
+            color: white;
+            border-color: var(--color-primary);
+        }
+
+        .category-badge {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            padding: 2px 8px;
+            border-radius: var(--radius-full);
+            font-size: var(--font-size-sm);
+            font-weight: var(--font-weight-bold);
+        }
+
+        .category-button:not(.active) .category-badge {
+            background: var(--color-bg-tertiary);
+            color: var(--color-text-secondary);
+        }
+
+        /* Template Grid */
+        .template-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: var(--spacing-lg);
+        }
+
+        .template-card {
+            background: var(--color-bg-primary);
+            border: 2px solid var(--color-border);
+            border-radius: var(--radius-lg);
+            padding: var(--spacing-lg);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .template-card:hover {
+            border-color: var(--color-primary);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            transform: translateY(-2px);
+        }
+
+        .template-card.selected {
+            border-color: var(--color-primary);
+            background: var(--color-bg-secondary);
+        }
+
+        .template-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            margin-bottom: var(--spacing-md);
+        }
+
+        .template-icon {
+            font-size: 2rem;
+            margin-bottom: var(--spacing-sm);
+        }
+
+        .template-title {
+            font-size: var(--font-size-lg);
+            font-weight: var(--font-weight-bold);
+            margin-bottom: var(--spacing-xs);
+        }
+
+        .template-description {
+            color: var(--color-text-secondary);
+            font-size: var(--font-size-sm);
+            margin-bottom: var(--spacing-md);
+            line-height: 1.5;
+        }
+
+        .template-meta {
+            display: flex;
+            gap: var(--spacing-md);
+            font-size: var(--font-size-xs);
+            color: var(--color-text-secondary);
+            margin-bottom: var(--spacing-md);
+        }
+
+        .template-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: var(--spacing-xs);
+            margin-bottom: var(--spacing-md);
+        }
+
+        .tag {
+            background: var(--color-bg-secondary);
+            padding: 2px 8px;
+            border-radius: var(--radius-sm);
+            font-size: var(--font-size-xs);
+            color: var(--color-text-secondary);
+        }
+
+        .template-badge {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: var(--radius-sm);
+            font-size: var(--font-size-xs);
+            font-weight: var(--font-weight-bold);
+            background: var(--color-success);
+            color: white;
+        }
+
+        .template-badge.custom {
+            background: var(--color-info);
+        }
+
+        /* Customization Panel */
+        .customization-panel {
+            position: fixed;
+            right: -600px;
+            top: 0;
+            width: 600px;
+            height: 100vh;
+            background: var(--color-bg-primary);
+            box-shadow: -4px 0 20px rgba(0, 0, 0, 0.2);
+            transition: right 0.3s;
+            z-index: 1000;
+            overflow-y: auto;
+        }
+
+        .customization-panel.open {
+            right: 0;
+        }
+
+        .panel-header {
+            padding: var(--spacing-xl);
+            border-bottom: 1px solid var(--color-border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            background: var(--color-bg-primary);
+            z-index: 10;
+        }
+
+        .panel-content {
+            padding: var(--spacing-xl);
+        }
+
+        .form-group {
+            margin-bottom: var(--spacing-lg);
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: var(--spacing-sm);
+            font-weight: var(--font-weight-semibold);
+        }
+
+        .form-group label .required {
+            color: var(--color-error);
+        }
+
+        .form-group input[type="text"],
+        .form-group textarea {
+            width: 100%;
+            padding: var(--spacing-md);
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius-md);
+            font-family: inherit;
+        }
+
+        .form-group textarea {
+            min-height: 80px;
+            resize: vertical;
+        }
+
+        .validation-warning {
+            margin-top: var(--spacing-md);
+            padding: var(--spacing-md);
+            background: var(--color-warning-bg);
+            border-left: 4px solid var(--color-warning);
+            border-radius: var(--radius-md);
+        }
+
+        .validation-warning h4 {
+            margin: 0 0 var(--spacing-sm) 0;
+            color: var(--color-warning);
+        }
+
+        .suggestions-list {
+            list-style: none;
+            padding: 0;
+            margin: var(--spacing-sm) 0 0 0;
+        }
+
+        .suggestions-list li {
+            padding: var(--spacing-xs);
+            margin-bottom: var(--spacing-xs);
+            background: var(--color-bg-secondary);
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+        }
+
+        .suggestions-list li:hover {
+            background: var(--color-bg-tertiary);
+        }
+
+        .panel-actions {
+            display: flex;
+            gap: var(--spacing-md);
+            margin-top: var(--spacing-xl);
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: var(--spacing-xxl);
+            color: var(--color-text-secondary);
+        }
+
+        .empty-state-icon {
+            font-size: 4rem;
+            margin-bottom: var(--spacing-md);
+            opacity: 0.5;
+        }
+    </style>
+</head>
+<body>
+    <div class="templates-container">
+        <!-- Header -->
+        <div class="templates-header">
+            <h1>📚 Procedure Templates</h1>
+            <p class="lead">Start quickly with pre-built templates for common stored procedure patterns.</p>
+            
+            <div style="display: flex; gap: var(--spacing-md); margin-top: var(--spacing-lg);">
+                <button id="btn-back-to-wizard" class="btn btn-secondary">
+                    ← Back to Wizard
+                </button>
+                <button id="btn-save-as-template" class="btn btn-outline-primary">
+                    💾 Save Current as Template
+                </button>
+                <div style="flex: 1;"></div>
+                <input 
+                    type="search" 
+                    id="template-search" 
+                    placeholder="Search templates..." 
+                    style="padding: var(--spacing-md); border: 1px solid var(--color-border); border-radius: var(--radius-md); width: 300px;"
+                >
+            </div>
+        </div>
+
+        <!-- Main Layout -->
+        <div class="templates-layout">
+            <!-- Category Sidebar -->
+            <aside class="category-sidebar">
+                <h3>Categories</h3>
+                <ul class="category-list" id="category-list">
+                    <!-- Populated by JavaScript -->
+                </ul>
+            </aside>
+
+            <!-- Template Grid -->
+            <main>
+                <div id="template-grid" class="template-grid">
+                    <!-- Populated by JavaScript -->
+                </div>
+                
+                <div id="empty-state" class="empty-state" style="display: none;">
+                    <div class="empty-state-icon">📭</div>
+                    <h3>No Templates Found</h3>
+                    <p>Try selecting a different category or adjusting your search.</p>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <!-- Customization Panel (Slide-in) -->
+    <div id="customization-panel" class="customization-panel">
+        <div class="panel-header">
+            <div>
+                <h2 id="panel-title">Customize Template</h2>
+                <p id="panel-subtitle" style="color: var(--color-text-secondary); margin: 0;"></p>
+            </div>
+            <button id="btn-close-panel" class="btn btn-icon">✕</button>
+        </div>
+        
+        <div class="panel-content">
+            <form id="customization-form">
+                <!-- Form fields populated dynamically -->
+            </form>
+
+            <div id="validation-warnings" style="display: none;"></div>
+
+            <div class="panel-actions">
+                <button id="btn-apply-template" class="btn btn-primary btn-lg" style="flex: 1;">
+                    ✓ Apply Template to Wizard
+                </button>
+                <button id="btn-cancel" class="btn btn-secondary">
+                    Cancel
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Overlay for panel -->
+    <div id="panel-overlay" style="
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.5);
+        display: none;
+        z-index: 999;
+    "></div>
+
+    <script type="module">
+        import { templateManager } from './js/template-manager.js';
+        import { storageManager } from './js/storage-manager.js';
+        import { showSuccess, showError } from './js/utils.js';
+
+        // Initialize
+        let selectedCategory = 'CRUD';
+        let selectedTemplate = null;
+        let searchTerm = '';
+
+        const elements = {
+            categoryList: document.getElementById('category-list'),
+            templateGrid: document.getElementById('template-grid'),
+            emptyState: document.getElementById('empty-state'),
+            customizationPanel: document.getElementById('customization-panel'),
+            panelOverlay: document.getElementById('panel-overlay'),
+            panelTitle: document.getElementById('panel-title'),
+            panelSubtitle: document.getElementById('panel-subtitle'),
+            customizationForm: document.getElementById('customization-form'),
+            validationWarnings: document.getElementById('validation-warnings'),
+            templateSearch: document.getElementById('template-search'),
+            btnBackToWizard: document.getElementById('btn-back-to-wizard'),
+            btnSaveAsTemplate: document.getElementById('btn-save-as-template'),
+            btnClosePanel: document.getElementById('btn-close-panel'),
+            btnApplyTemplate: document.getElementById('btn-apply-template'),
+            btnCancel: document.getElementById('btn-cancel')
+        };
+
+        // Initialize template manager
+        await templateManager.initialize();
+
+        // Render categories
+        function renderCategories() {
+            const categories = templateManager.getCategories();
+            
+            elements.categoryList.innerHTML = categories.map(cat => `
+                <li class="category-item">
+                    <button 
+                        class="category-button ${cat.name === selectedCategory ? 'active' : ''}" 
+                        data-category="${cat.name}"
+                    >
+                        <span>${cat.name}</span>
+                        <span class="category-badge">${cat.count}</span>
+                    </button>
+                </li>
+            `).join('');
+
+            // Add event listeners
+            elements.categoryList.querySelectorAll('.category-button').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    selectedCategory = btn.getAttribute('data-category');
+                    renderCategories();
+                    renderTemplates();
+                });
+            });
+        }
+
+        // Render templates
+        function renderTemplates() {
+            let templates = templateManager.getTemplatesByCategory(selectedCategory);
+
+            // Apply search filter
+            if (searchTerm) {
+                templates = templates.filter(t => 
+                    t.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                    t.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                    t.tags.some(tag => tag.toLowerCase().includes(searchTerm.toLowerCase()))
+                );
+            }
+
+            if (templates.length === 0) {
+                elements.templateGrid.style.display = 'none';
+                elements.emptyState.style.display = 'block';
+                return;
+            }
+
+            elements.templateGrid.style.display = 'grid';
+            elements.emptyState.style.display = 'none';
+
+            elements.templateGrid.innerHTML = templates.map(template => {
+                const icons = {
+                    'CRUD': '📝',
+                    'BATCH': '📦',
+                    'TRANSFER': '🔄',
+                    'AUDIT': '📋',
+                    'REPORTING': '📊',
+                    'CUSTOM': '⭐'
+                };
+
+                return `
+                    <div class="template-card" data-template-id="${template.id}">
+                        <div class="template-header">
+                            <div class="template-icon">${icons[template.category] || '📄'}</div>
+                            ${template.isBuiltIn 
+                                ? '<span class="template-badge">Built-in</span>' 
+                                : '<span class="template-badge custom">Custom</span>'}
+                        </div>
+                        <h3 class="template-title">${template.name}</h3>
+                        <p class="template-description">${template.description}</p>
+                        <div class="template-meta">
+                            <span>📊 ${template.getSummary()}</span>
+                        </div>
+                        <div class="template-tags">
+                            ${template.tags.map(tag => `<span class="tag">${tag}</span>`).join('')}
+                        </div>
+                        <button class="btn btn-primary btn-sm" style="width: 100%;">
+                            Use Template →
+                        </button>
+                    </div>
+                `;
+            }).join('');
+
+            // Add click handlers
+            elements.templateGrid.querySelectorAll('.template-card').forEach(card => {
+                card.addEventListener('click', () => {
+                    const templateId = card.getAttribute('data-template-id');
+                    openCustomizationPanel(templateId);
+                });
+            });
+        }
+
+        // Open customization panel
+        function openCustomizationPanel(templateId) {
+            selectedTemplate = templateManager.getTemplateById(templateId);
+            if (!selectedTemplate) return;
+
+            elements.panelTitle.textContent = selectedTemplate.name;
+            elements.panelSubtitle.textContent = selectedTemplate.description;
+
+            // Build form
+            elements.customizationForm.innerHTML = selectedTemplate.customizationPoints.map(point => `
+                <div class="form-group">
+                    <label for="field-${point.key}">
+                        ${point.label}
+                        ${point.required ? '<span class="required">*</span>' : ''}
+                    </label>
+                    ${point.type === 'textarea' 
+                        ? `<textarea id="field-${point.key}" ${point.required ? 'required' : ''}></textarea>`
+                        : `<input type="${point.type || 'text'}" id="field-${point.key}" ${point.required ? 'required' : ''}>`
+                    }
+                </div>
+            `).join('');
+
+            // Show panel
+            elements.customizationPanel.classList.add('open');
+            elements.panelOverlay.style.display = 'block';
+        }
+
+        // Close panel
+        function closePanel() {
+            elements.customizationPanel.classList.remove('open');
+            elements.panelOverlay.style.display = 'none';
+            elements.validationWarnings.style.display = 'none';
+            selectedTemplate = null;
+        }
+
+        // Apply template
+        function applyTemplate() {
+            if (!selectedTemplate) return;
+
+            // Gather form values
+            const values = {};
+            selectedTemplate.customizationPoints.forEach(point => {
+                const field = document.getElementById(`field-${point.key}`);
+                if (field) {
+                    values[point.key] = field.value;
+                }
+            });
+
+            // Validate
+            const validation = selectedTemplate.validateCustomizations(values);
+            if (!validation.valid) {
+                showError({
+                    error_type: 'validation',
+                    user_message: 'Please fill in all required fields',
+                    technical_detail: validation.missing.join(', ')
+                });
+                return;
+            }
+
+            // Validate with metadata
+            const metadataValidation = templateManager.validateWithMetadata(selectedTemplate, values);
+            if (!metadataValidation.valid) {
+                // Show warnings with suggestions
+                elements.validationWarnings.style.display = 'block';
+                elements.validationWarnings.innerHTML = `
+                    <div class="validation-warning">
+                        <h4>⚠️ Validation Warnings</h4>
+                        <ul>
+                            ${metadataValidation.warnings.map(w => `<li>${w}</li>`).join('')}
+                        </ul>
+                        ${Object.keys(metadataValidation.suggestions).length > 0 ? `
+                            <p><strong>Suggestions:</strong></p>
+                            ${Object.entries(metadataValidation.suggestions).map(([key, suggestions]) => `
+                                <p>${key}:</p>
+                                <ul class="suggestions-list">
+                                    ${suggestions.map(s => `<li onclick="document.getElementById('field-${key}').value='${s}'">${s}</li>`).join('')}
+                                </ul>
+                            `).join('')}
+                        ` : ''}
+                        <p style="margin-top: var(--spacing-md);">
+                            <button class="btn btn-warning btn-sm" onclick="document.getElementById('btn-apply-template').click()">
+                                Continue Anyway
+                            </button>
+                        </p>
+                    </div>
+                `;
+                return;
+            }
+
+            // Apply template
+            const procedure = templateManager.applyTemplate(selectedTemplate.id, values);
+            if (procedure) {
+                // Save to storage
+                storageManager.saveState(procedure.toJSON());
+                
+                // Redirect to wizard
+                window.location.href = 'wizard.html';
+            }
+        }
+
+        // Event listeners
+        elements.btnBackToWizard.addEventListener('click', () => {
+            window.location.href = 'wizard.html';
+        });
+
+        elements.btnSaveAsTemplate.addEventListener('click', () => {
+            // TODO: Implement save current procedure as template
+            showError({
+                error_type: 'info',
+                user_message: 'Feature coming soon',
+                technical_detail: 'Save as template will be implemented shortly'
+            });
+        });
+
+        elements.templateSearch.addEventListener('input', (e) => {
+            searchTerm = e.target.value;
+            renderTemplates();
+        });
+
+        elements.btnClosePanel.addEventListener('click', closePanel);
+        elements.btnCancel.addEventListener('click', closePanel);
+        elements.panelOverlay.addEventListener('click', closePanel);
+        elements.btnApplyTemplate.addEventListener('click', applyTemplate);
+
+        // Initial render
+        renderCategories();
+        renderTemplates();
+    </script>
+</body>
+</html>
