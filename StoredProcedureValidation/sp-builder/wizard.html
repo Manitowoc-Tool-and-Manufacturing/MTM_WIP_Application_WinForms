@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stored Procedure Wizard - MySQL 5.7 Builder</title>
+    
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/components.css">
+    <link rel="stylesheet" href="lib/prism.css">
+    
+    <style>
+        /* Wizard-specific styles */
+        .wizard-container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .wizard-progress {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: var(--spacing-2xl);
+            position: relative;
+        }
+
+        .wizard-progress::before {
+            content: '';
+            position: absolute;
+            top: 1.5rem;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background-color: var(--color-border);
+            z-index: 0;
+        }
+
+        .wizard-step {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+            z-index: 1;
+            flex: 1;
+        }
+
+        .step-number {
+            width: 3rem;
+            height: 3rem;
+            border-radius: var(--radius-full);
+            background-color: var(--color-bg);
+            border: 2px solid var(--color-border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: var(--font-weight-bold);
+            color: var(--color-text-muted);
+            margin-bottom: var(--spacing-sm);
+            transition: all var(--transition-base);
+        }
+
+        .wizard-step.active .step-number {
+            background-color: var(--color-primary);
+            border-color: var(--color-primary);
+            color: white;
+        }
+
+        .wizard-step.completed .step-number {
+            background-color: var(--color-success);
+            border-color: var(--color-success);
+            color: white;
+        }
+
+        .step-label {
+            font-size: var(--font-size-sm);
+            color: var(--color-text-muted);
+            text-align: center;
+            max-width: 100px;
+        }
+
+        .wizard-step.active .step-label {
+            color: var(--color-primary);
+            font-weight: var(--font-weight-semibold);
+        }
+
+        .wizard-content {
+            background-color: var(--color-bg);
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius-lg);
+            padding: var(--spacing-2xl);
+            min-height: 400px;
+            margin-bottom: var(--spacing-xl);
+        }
+
+        .wizard-step-content {
+            display: none;
+        }
+
+        .wizard-step-content.active {
+            display: block;
+        }
+
+        .wizard-navigation {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .wizard-nav-buttons {
+            display: flex;
+            gap: var(--spacing-md);
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="app-header">
+        <div class="container">
+            <h1 class="app-title">
+                <span class="icon">🔧</span>
+                Stored Procedure Wizard
+            </h1>
+            <nav class="app-nav">
+                <a href="index.html" class="nav-link">Home</a>
+                <a href="wizard.html" class="nav-link active">Wizard</a>
+                <a href="templates.html" class="nav-link">Templates</a>
+                <a href="help.html" class="nav-link">Help</a>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <div class="wizard-container">
+            <!-- Progress Indicator -->
+            <div class="wizard-progress" id="wizard-progress">
+                <div class="wizard-step active" data-step="1">
+                    <div class="step-number">1</div>
+                    <div class="step-label">Name</div>
+                </div>
+                <div class="wizard-step" data-step="2">
+                    <div class="step-number">2</div>
+                    <div class="step-label">Parameters</div>
+                </div>
+                <div class="wizard-step" data-step="3">
+                    <div class="step-number">3</div>
+                    <div class="step-label">Validation</div>
+                </div>
+                <div class="wizard-step" data-step="4">
+                    <div class="step-number">4</div>
+                    <div class="step-label">Operations</div>
+                </div>
+                <div class="wizard-step" data-step="5">
+                    <div class="step-number">5</div>
+                    <div class="step-label">Flow</div>
+                </div>
+                <div class="wizard-step" data-step="6">
+                    <div class="step-number">6</div>
+                    <div class="step-label">Advanced</div>
+                </div>
+                <div class="wizard-step" data-step="7">
+                    <div class="step-number">7</div>
+                    <div class="step-label">Preview</div>
+                </div>
+                <div class="wizard-step" data-step="8">
+                    <div class="step-number">8</div>
+                    <div class="step-label">Export</div>
+                </div>
+            </div>
+
+            <!-- Wizard Content -->
+            <div class="wizard-content">
+                <!-- Step 1: Procedure Name -->
+                <div class="wizard-step-content active" id="step-1">
+                    <h2>Step 1: Procedure Name</h2>
+                    <p class="lead">Enter a name for your stored procedure following the pattern: <code>domain_table_action</code></p>
+                    
+                    <div class="form-group">
+                        <label class="form-label" for="procedure-name">
+                            Procedure Name *
+                            <span data-tooltip="Format: domain_table_action (e.g., inv_inventory_Add_Item)">ⓘ</span>
+                        </label>
+                        <input 
+                            type="text" 
+                            id="procedure-name" 
+                            class="form-control" 
+                            placeholder="e.g., inv_inventory_Add_Item"
+                            pattern="^[a-z]+_[a-z]+_[A-Z][a-zA-Z_]+$">
+                        <span class="form-help">
+                            Format: lowercase_lowercase_PascalCase<br>
+                            Example: <strong>inv_inventory_Add_Item</strong> (domain: inv, table: inventory, action: Add_Item)
+                        </span>
+                        <span class="form-error" id="name-error"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="procedure-description">
+                            Description *
+                        </label>
+                        <textarea 
+                            id="procedure-description" 
+                            class="form-control" 
+                            rows="3"
+                            placeholder="Brief description of what this procedure does..."></textarea>
+                        <span class="form-error" id="description-error"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="procedure-author">
+                            Author
+                        </label>
+                        <input 
+                            type="text" 
+                            id="procedure-author" 
+                            class="form-control" 
+                            placeholder="Your name">
+                    </div>
+                </div>
+
+                <!-- Step 2: Parameters -->
+                <div class="wizard-step-content" id="step-2">
+                    <h2>Step 2: Parameters</h2>
+                    <p class="lead">Define input and output parameters for your procedure.</p>
+
+                    <div class="alert alert-info">
+                        <strong>Note:</strong> Parameters <code>p_Status</code> (INT OUT) and <code>p_ErrorMsg</code> (VARCHAR(500) OUT) are automatically included and cannot be removed.
+                    </div>
+
+                    <!-- Parameter Form -->
+                    <div class="form-group" style="background-color: var(--color-bg-secondary); padding: var(--spacing-lg); border-radius: var(--radius-md); margin-bottom: var(--spacing-xl);">
+                        <h3>Add Parameter</h3>
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: var(--spacing-md);">
+                            <div class="form-group">
+                                <label class="form-label" for="param-name">Name</label>
+                                <input type="text" id="param-name" class="form-control" placeholder="PartNumber">
+                                <span class="form-help">p_ prefix added automatically</span>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="form-label" for="param-direction">Direction</label>
+                                <select id="param-direction" class="form-control">
+                                    <option value="IN">IN</option>
+                                    <option value="OUT">OUT</option>
+                                    <option value="INOUT">INOUT</option>
+                                </select>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="form-label" for="param-datatype">Data Type</label>
+                                <select id="param-datatype" class="form-control">
+                                    <option value="VARCHAR">VARCHAR</option>
+                                    <option value="INT">INT</option>
+                                    <option value="DECIMAL">DECIMAL</option>
+                                    <option value="DATETIME">DATETIME</option>
+                                    <option value="BOOLEAN">BOOLEAN</option>
+                                    <option value="TEXT">TEXT</option>
+                                </select>
+                            </div>
+                            
+                            <div class="form-group" id="param-length-group">
+                                <label class="form-label" for="param-length">Length</label>
+                                <input type="number" id="param-length" class="form-control" value="50">
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label" for="param-description">Description</label>
+                            <input type="text" id="param-description" class="form-control" placeholder="Parameter description">
+                        </div>
+                        
+                        <button id="btn-add-parameter" class="btn btn-primary">Add Parameter</button>
+                    </div>
+
+                    <!-- Parameters List -->
+                    <h3>Parameters</h3>
+                    <div id="parameters-list">
+                        <p class="text-muted">No parameters added yet. The mandatory p_Status and p_ErrorMsg will be added automatically.</p>
+                    </div>
+                </div>
+
+                <!-- Step 3: Validation Rules (Placeholder) -->
+                <div class="wizard-step-content" id="step-3">
+                    <h2>Step 3: Validation Rules</h2>
+                    <p class="lead">Add validation checks that run before DML operations.</p>
+                    <p class="alert alert-info">Validation rules will be implemented in Phase 6.</p>
+                </div>
+
+                <!-- Step 4: DML Operations (Placeholder) -->
+                <div class="wizard-step-content" id="step-4">
+                    <h2>Step 4: DML Operations</h2>
+                    <p class="lead">Define INSERT, UPDATE, DELETE, or SELECT operations.</p>
+                    <p class="alert alert-info">DML operations will be implemented in Phase 4.</p>
+                </div>
+
+                <!-- Step 5: Flow Diagram (Placeholder) -->
+                <div class="wizard-step-content" id="step-5">
+                    <h2>Step 5: Flow Diagram</h2>
+                    <p class="lead">Visual representation of operation sequence.</p>
+                    <p class="alert alert-info">Flow diagram will be implemented in Phase 7.</p>
+                </div>
+
+                <!-- Step 6: Advanced Features (Placeholder) -->
+                <div class="wizard-step-content" id="step-6">
+                    <h2>Step 6: Advanced Features</h2>
+                    <p class="lead">Cursors, loops, and nested procedure calls.</p>
+                    <p class="alert alert-info">Advanced features will be implemented in Phase 10.</p>
+                </div>
+
+                <!-- Step 7: Preview -->
+                <div class="wizard-step-content" id="step-7">
+                    <h2>Step 7: SQL Preview</h2>
+                    <p class="lead">Review the generated SQL code with syntax highlighting.</p>
+                    
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--spacing-lg);">
+                        <button id="btn-validate-syntax" class="btn btn-secondary">Validate Syntax</button>
+                        <button id="btn-copy-sql" class="btn btn-link">Copy to Clipboard</button>
+                    </div>
+
+                    <pre><code id="sql-preview" class="language-sql">-- SQL will be generated here</code></pre>
+                    
+                    <div id="syntax-errors" style="display: none;" class="alert alert-error">
+                        <h4>Syntax Errors:</h4>
+                        <ul id="error-list"></ul>
+                    </div>
+                </div>
+
+                <!-- Step 8: Export (Placeholder) -->
+                <div class="wizard-step-content" id="step-8">
+                    <h2>Step 8: Export</h2>
+                    <p class="lead">Export your stored procedure as a .sql file.</p>
+                    <p class="alert alert-info">Export functionality will be implemented shortly.</p>
+                    <button id="btn-export" class="btn btn-success btn-lg">Export SQL File</button>
+                </div>
+            </div>
+
+            <!-- Navigation -->
+            <div class="wizard-navigation">
+                <button id="btn-prev" class="btn btn-secondary" disabled>
+                    ← Previous
+                </button>
+                
+                <div class="wizard-nav-buttons">
+                    <button id="btn-save" class="btn btn-link">
+                        💾 Save Progress
+                    </button>
+                    <button id="btn-next" class="btn btn-primary">
+                        Next →
+                    </button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Scripts -->
+    <!-- Screen reader announcer (hidden) -->
+    <div id="sr-announcer" class="sr-only" role="status" aria-live="polite" aria-atomic="true"></div>
+
+    <script src="lib/prism.js"></script>
+    <script src="lib/prism-sql.js"></script>
+    <script type="module" src="js/wizard-controller.js"></script>
+</body>
+</html>

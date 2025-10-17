@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MySQL 5.7 Stored Procedure Builder</title>
+    
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/components.css">
+    <link rel="stylesheet" href="lib/prism.css">
+    
+    <!-- Preload JavaScript modules -->
+    <link rel="modulepreload" href="js/app.js">
+</head>
+<body>
+    <!-- Screen reader announcements -->
+    <div id="sr-announcer" class="sr-only" aria-live="polite" aria-atomic="true"></div>
+    
+    <!-- Header -->
+    <header class="app-header">
+        <div class="container">
+            <h1 class="app-title">
+                <span class="icon">🔧</span>
+                MySQL 5.7 Stored Procedure Builder
+            </h1>
+            <nav class="app-nav">
+                <a href="index.html" class="nav-link active">Home</a>
+                <a href="wizard.html" class="nav-link">Wizard</a>
+                <a href="templates.html" class="nav-link">Templates</a>
+                <a href="help.html" class="nav-link">Help</a>
+            </nav>
+        </div>
+    </header>
+    
+    <!-- Main Content -->
+    <main class="main-content">
+        <div class="container">
+            <!-- Welcome Section -->
+            <section class="welcome-section">
+                <h2>Welcome to the Stored Procedure Builder</h2>
+                <p class="lead">
+                    Build MySQL 5.7 stored procedures visually through a step-by-step wizard interface.
+                    Create procedures from scratch, use templates, or edit existing procedures.
+                </p>
+            </section>
+            
+            <!-- Quick Actions -->
+            <section class="quick-actions">
+                <div class="action-grid">
+                    <!-- Start New Procedure -->
+                    <div class="action-card">
+                        <div class="card-icon">📝</div>
+                        <h3>Start New Procedure</h3>
+                        <p>Create a stored procedure from scratch using the step-by-step wizard.</p>
+                        <button id="btn-new-procedure" class="btn btn-primary">
+                            Start Wizard
+                        </button>
+                    </div>
+                    
+                    <!-- Load Template -->
+                    <div class="action-card">
+                        <div class="card-icon">📋</div>
+                        <h3>Use Template</h3>
+                        <p>Choose from 15+ built-in templates for common patterns (CRUD, batch, transfer).</p>
+                        <button id="btn-load-template" class="btn btn-secondary">
+                            Browse Templates
+                        </button>
+                    </div>
+                    
+                    <!-- Import Existing -->
+                    <div class="action-card">
+                        <div class="card-icon">📂</div>
+                        <h3>Edit Existing</h3>
+                        <p>Import an existing .sql file to edit with visual tools.</p>
+                        <button id="btn-import-sql" class="btn btn-secondary">
+                            Import SQL
+                        </button>
+                    </div>
+                    
+                    <!-- Resume Session -->
+                    <div class="action-card" id="resume-card" style="display: none;">
+                        <div class="card-icon">⏱️</div>
+                        <h3>Resume Session</h3>
+                        <p id="resume-message">Resume your last editing session.</p>
+                        <button id="btn-resume-session" class="btn btn-success">
+                            Resume
+                        </button>
+                        <button id="btn-discard-session" class="btn btn-link">
+                            Discard
+                        </button>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- Features Overview -->
+            <section class="features-section">
+                <h2>Key Features</h2>
+                <div class="features-grid">
+                    <div class="feature-item">
+                        <span class="feature-icon">✅</span>
+                        <h4>Drag-Drop Validation Rules</h4>
+                        <p>Build validation logic visually with drag-and-drop cards</p>
+                    </div>
+                    <div class="feature-item">
+                        <span class="feature-icon">🔍</span>
+                        <h4>Live Database Metadata</h4>
+                        <p>Fetch tables and columns directly from your database</p>
+                    </div>
+                    <div class="feature-item">
+                        <span class="feature-icon">📊</span>
+                        <h4>Visual Flow Diagrams</h4>
+                        <p>See operation sequence as interactive flowchart</p>
+                    </div>
+                    <div class="feature-item">
+                        <span class="feature-icon">🔁</span>
+                        <h4>Version History</h4>
+                        <p>Track up to 5 versions with side-by-side comparison</p>
+                    </div>
+                    <div class="feature-item">
+                        <span class="feature-icon">⚡</span>
+                        <h4>Live SQL Preview</h4>
+                        <p>See generated SQL update in real-time with syntax highlighting</p>
+                    </div>
+                    <div class="feature-item">
+                        <span class="feature-icon">📚</span>
+                        <h4>Template Library</h4>
+                        <p>Start from built-in templates or save your own patterns</p>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- Recent Procedures -->
+            <section class="recent-section" id="recent-section" style="display: none;">
+                <h2>Recent Procedures</h2>
+                <div id="recent-list" class="recent-list">
+                    <!-- Populated by JavaScript -->
+                </div>
+            </section>
+        </div>
+    </main>
+    
+    <!-- Footer -->
+    <footer class="app-footer">
+        <div class="container">
+            <p>&copy; 2025 MTM WIP Application | MySQL 5.7 Stored Procedure Builder</p>
+            <p>
+                <a href="help.html">Help</a> |
+                <a href="help.html#tutorial">Tutorial</a> |
+                <a href="help.html#keyboard-shortcuts">Keyboard Shortcuts</a>
+            </p>
+        </div>
+    </footer>
+    
+    <!-- Import SQL Modal -->
+    <div id="import-modal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Import Existing Procedure</h2>
+                <button class="modal-close" aria-label="Close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="import-options">
+                    <div class="import-option">
+                        <h3>Paste SQL</h3>
+                        <textarea id="sql-input" rows="10" placeholder="Paste your CREATE PROCEDURE statement here..."></textarea>
+                        <button id="btn-parse-sql" class="btn btn-primary">Parse SQL</button>
+                    </div>
+                    <div class="import-divider">OR</div>
+                    <div class="import-option">
+                        <h3>Upload File</h3>
+                        <input type="file" id="file-input" accept=".sql" style="display: none;">
+                        <button id="btn-upload-file" class="btn btn-secondary">Choose .sql File</button>
+                        <p id="file-name" class="file-name"></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Loading Spinner -->
+    <div id="loading-spinner" class="spinner-overlay" style="display: none;">
+        <div class="spinner"></div>
+        <p>Loading...</p>
+    </div>
+    
+    <!-- Scripts -->
+    <script type="module" src="js/app.js"></script>
+</body>
+</html>
