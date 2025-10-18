@@ -17,22 +17,6 @@
     <!-- Screen reader announcements -->
     <div id="sr-announcer" class="sr-only" aria-live="polite" aria-atomic="true"></div>
     
-    <!-- Header -->
-    <header class="app-header">
-        <div class="container">
-            <h1 class="app-title">
-                <span class="icon">🔧</span>
-                MySQL 5.7 Stored Procedure Builder
-            </h1>
-            <nav class="app-nav">
-                <a href="index.html" class="nav-link active">Home</a>
-                <a href="wizard.html" class="nav-link">Wizard</a>
-                <a href="templates.html" class="nav-link">Templates</a>
-                <a href="help.html" class="nav-link">Help</a>
-            </nav>
-        </div>
-    </header>
-    
     <!-- Main Content -->
     <main class="main-content">
         <div class="container">
@@ -185,6 +169,10 @@
     </div>
     
     <!-- Scripts -->
+    <script type="module">
+        import { initNavigation } from './js/navigation.js';
+        initNavigation('home');
+    </script>
     <script type="module" src="js/app.js"></script>
 </body>
 </html>

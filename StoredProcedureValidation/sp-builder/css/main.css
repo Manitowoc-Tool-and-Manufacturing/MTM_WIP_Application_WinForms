@@ -200,23 +200,68 @@ pre code {
 }
 
 /* ============================================
-   Header
+   Header - Compact Tab Style
    ============================================ */
 .app-header {
     background-color: var(--color-bg);
     border-bottom: 1px solid var(--color-border);
-    padding: var(--spacing-md) 0;
+    padding: 0;
     position: sticky;
     top: 0;
-    z-index: var(--z-sticky);
+    z-index: 1100; /* Higher than content */
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
 }
 
 .app-header .container {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    padding: 0;
+    max-width: none;
 }
 
+.app-nav {
+    display: flex;
+    gap: 0;
+    align-items: center;
+}
+
+.nav-link {
+    padding: 0.75rem 1.25rem;
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-medium);
+    color: var(--color-text);
+    text-decoration: none;
+    border-bottom: 2px solid transparent;
+    transition: all 0.2s;
+    display: inline-block;
+}
+
+.nav-link:hover:not(.active) {
+    background-color: var(--color-bg-secondary);
+    border-bottom-color: var(--color-border);
+}
+
+.nav-link.active {
+    color: var(--color-primary);
+    border-bottom-color: var(--color-primary);
+    pointer-events: none; /* Make unclickable */
+    cursor: default;
+}
+
+.app-actions {
+    display: flex;
+    gap: var(--spacing-md);
+    align-items: center;
+    padding: 0.5rem 1rem;
+}
+
+.app-actions .btn {
+    font-size: var(--font-size-sm);
+    padding: 0.5rem 1rem;
+}
+
+/* Legacy styles for compatibility */
 .app-title {
     font-size: var(--font-size-xl);
     font-weight: var(--font-weight-bold);
@@ -229,11 +274,6 @@ pre code {
 
 .app-title .icon {
     font-size: var(--font-size-2xl);
-}
-
-.app-nav {
-    display: flex;
-    gap: var(--spacing-lg);
 }
 
 .nav-link {

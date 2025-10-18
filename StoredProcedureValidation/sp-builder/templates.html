@@ -4,9 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Procedure Templates - MySQL 5.7 Stored Procedure Builder</title>
-    <link rel="stylesheet" href="css/variables.css">
+    <link rel="stylesheet" href="css/main.css">
     <link rel="stylesheet" href="css/components.css">
-    <link rel="stylesheet" href="css/wizard.css">
     <style>
         .templates-container {
             max-width: 1400px;
@@ -159,8 +158,6 @@
             display: inline-block;
             padding: 2px 8px;
             border-radius: var(--radius-sm);
-            font-size: var(--font-size-xs);
-            font-weight: var(--font-weight-bold);
             background: var(--color-success);
             color: white;
         }
@@ -169,6 +166,13 @@
             background: var(--color-info);
         }
 
+        .metadata-warning {
+            font-size: 0.85rem;
+            color: var(--color-text-secondary);
+            margin-bottom: var(--spacing-sm);
+        }
+
+
         /* Customization Panel */
         .customization-panel {
             position: fixed;
@@ -176,10 +180,13 @@
             top: 0;
             width: 600px;
             height: 100vh;
-            background: var(--color-bg-primary);
+            background: #ffffff; /* Fallback */
+            background: var(--color-bg, #ffffff);
+            color: #1a1a1a; /* Ensure text is visible */
+            color: var(--color-text, #1a1a1a);
             box-shadow: -4px 0 20px rgba(0, 0, 0, 0.2);
             transition: right 0.3s;
-            z-index: 1000;
+            z-index: 1100; /* Higher than header (1020) and modals (1050) */
             overflow-y: auto;
         }
 
@@ -188,14 +195,15 @@
         }
 
         .panel-header {
-            padding: var(--spacing-xl);
-            border-bottom: 1px solid var(--color-border);
+            padding: var(--spacing-xl, 1.5rem);
+            border-bottom: 1px solid var(--color-border, #e0e0e0);
             display: flex;
             justify-content: space-between;
             align-items: center;
             position: sticky;
             top: 0;
-            background: var(--color-bg-primary);
+            background: #ffffff; /* Fallback */
+            background: var(--color-bg, #ffffff);
             z-index: 10;
         }
 
@@ -208,22 +216,46 @@
         }
 
         .form-group label {
-            display: block;
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-sm);
+            font-weight: var(--font-weight-medium);
             margin-bottom: var(--spacing-sm);
-            font-weight: var(--font-weight-semibold);
         }
 
         .form-group label .required {
             color: var(--color-error);
         }
 
+        .info-icon {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 20px;
+            height: 20px;
+            margin-left: var(--spacing-sm);
+            border-radius: 50%;
+            background-color: var(--color-bg-secondary);
+            color: var(--color-primary);
+            font-size: 0.75rem;
+            cursor: help;
+        }
+
+        .info-icon:hover {
+            background-color: var(--color-primary);
+            color: #fff;
+        }
+
         .form-group input[type="text"],
-        .form-group textarea {
+        .form-group textarea,
+        .form-group select {
             width: 100%;
-            padding: var(--spacing-md);
-            border: 1px solid var(--color-border);
-            border-radius: var(--radius-md);
+            padding: var(--spacing-md, 1rem);
+            border: 1px solid var(--color-border, #e0e0e0);
+            border-radius: var(--radius-md, 0.375rem);
             font-family: inherit;
+            background: #ffffff; /* Ensure white background */
+            color: #1a1a1a; /* Ensure dark text */
         }
 
         .form-group textarea {
@@ -282,56 +314,58 @@
     </style>
 </head>
 <body>
-    <div class="templates-container">
-        <!-- Header -->
-        <div class="templates-header">
-            <h1>📚 Procedure Templates</h1>
-            <p class="lead">Start quickly with pre-built templates for common stored procedure patterns.</p>
-            
-            <div style="display: flex; gap: var(--spacing-md); margin-top: var(--spacing-lg);">
-                <button id="btn-back-to-wizard" class="btn btn-secondary">
-                    ← Back to Wizard
-                </button>
-                <button id="btn-save-as-template" class="btn btn-outline-primary">
-                    💾 Save Current as Template
-                </button>
-                <div style="flex: 1;"></div>
-                <input 
-                    type="search" 
-                    id="template-search" 
-                    placeholder="Search templates..." 
-                    style="padding: var(--spacing-md); border: 1px solid var(--color-border); border-radius: var(--radius-md); width: 300px;"
-                >
+    <!-- Main Content -->
+    <main class="main-content">
+        <div class="templates-container">
+            <!-- Header -->
+            <div class="templates-header">
+                <h1>📚 Procedure Templates</h1>
+                <p class="lead">Start quickly with pre-built templates for common stored procedure patterns.</p>
+                
+                <div style="display: flex; gap: var(--spacing-md); margin-top: var(--spacing-lg);">
+                    <button id="btn-back-to-wizard" class="btn btn-secondary">
+                        ← Back to Wizard
+                    </button>
+                    <button id="btn-save-as-template" class="btn btn-outline-primary">
+                        💾 Save Current as Template
+                    </button>
+                    <div style="flex: 1;"></div>
+                    <input 
+                        type="search" 
+                        id="template-search" 
+                        placeholder="Search templates..." 
+                        style="padding: var(--spacing-md); border: 1px solid var(--color-border); border-radius: var(--radius-md); width: 300px;"
+                    >
+                </div>
+            </div>
+
+            <!-- Main Layout -->
+            <div class="templates-layout">
+                <!-- Category Sidebar -->
+                <aside class="category-sidebar">
+                    <h3>Categories</h3>
+                    <ul class="category-list" id="category-list">
+                        <!-- Populated by JavaScript -->
+                    </ul>
+                </aside>
+
+                <!-- Template Grid -->
+                <div>
+                    <div id="template-grid" class="template-grid">
+                        <!-- Populated by JavaScript -->
+                    </div>
+                    
+                    <div id="empty-state" class="empty-state" style="display: none;">
+                        <div class="empty-state-icon">📭</div>
+                        <h3>No Templates Found</h3>
+                        <p>Try selecting a different category or adjusting your search.</p>
+                    </div>
+                </div>
             </div>
         </div>
-
-        <!-- Main Layout -->
-        <div class="templates-layout">
-            <!-- Category Sidebar -->
-            <aside class="category-sidebar">
-                <h3>Categories</h3>
-                <ul class="category-list" id="category-list">
-                    <!-- Populated by JavaScript -->
-                </ul>
-            </aside>
-
-            <!-- Template Grid -->
-            <main>
-                <div id="template-grid" class="template-grid">
-                    <!-- Populated by JavaScript -->
-                </div>
-                
-                <div id="empty-state" class="empty-state" style="display: none;">
-                    <div class="empty-state-icon">📭</div>
-                    <h3>No Templates Found</h3>
-                    <p>Try selecting a different category or adjusting your search.</p>
-                </div>
-            </main>
-        </div>
-    </div>
-
-    <!-- Customization Panel (Slide-in) -->
-    <div id="customization-panel" class="customization-panel">
+        
+        <!-- Customization Panel (Slide-in) -->
+        <div id="customization-panel" class="customization-panel">
         <div class="panel-header">
             <div>
                 <h2 id="panel-title">Customize Template</h2>
@@ -356,31 +390,114 @@
                 </button>
             </div>
         </div>
-    </div>
+        </div>
 
-    <!-- Overlay for panel -->
-    <div id="panel-overlay" style="
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: rgba(0, 0, 0, 0.5);
-        display: none;
-        z-index: 999;
-    "></div>
+        <!-- Overlay for panel -->
+        <div id="panel-overlay" style="
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            display: none;
+            z-index: 1090;
+        "></div>
+    </main>
 
     <script type="module">
-        import { templateManager } from './js/template-manager.js';
-        import { storageManager } from './js/storage-manager.js';
-        import { showSuccess, showError } from './js/utils.js';
-        import { initNavigation } from './js/navigation.js';
-        import { showLoading, hideLoading } from './js/loading.js';
+    import { templateManager } from './js/template-manager.js';
+    import { storageManager } from './js/storage-manager.js';
+    import { showSuccess, showError } from './js/utils.js';
+    import { initNavigation } from './js/navigation.js';
+    import { showLoading, hideLoading } from './js/loading.js';
+    import { dbMetadata } from './js/database-metadata.js';
 
         // Initialize
         let selectedCategory = 'CRUD';
         let selectedTemplate = null;
         let searchTerm = '';
+
+        const escapeHtml = (value = '') => `${value}`
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;')
+            .replace(/'/g, '&#39;');
+
+        let tableNames = [];
+        let tableMetadataAvailable = false;
+        let metadataErrorShown = false;
+
+        async function ensureTableList() {
+            if (dbMetadata.tables.length === 0 || dbMetadata.isStale()) {
+                const result = await dbMetadata.fetchTables();
+
+                if (!result.success && dbMetadata.tables.length === 0 && !metadataErrorShown) {
+                    metadataErrorShown = true;
+                    showError({
+                        error_type: 'metadata',
+                        user_message: 'Unable to load table list from the database. Start MAMP and refresh, or type the table name manually.',
+                        technical_detail: result.error
+                    });
+                }
+            }
+
+            tableNames = (dbMetadata.tables || [])
+                .map(t => t.name)
+                .sort((a, b) => a.localeCompare(b));
+
+            tableMetadataAvailable = tableNames.length > 0;
+        }
+
+        const renderCustomizationField = (point) => {
+            const fieldId = `field-${point.key}`;
+            const requiredAttr = point.required ? 'required' : '';
+            const tooltipHtml = point.tooltip
+                ? `<span class="info-icon" title="${escapeHtml(point.tooltip)}" aria-label="${escapeHtml(point.tooltip)}">ⓘ</span>`
+                : '';
+            const requiredHtml = point.required ? '<span class="required" aria-hidden="true">*</span>' : '';
+
+            let inputHtml = '';
+
+            switch (point.type) {
+                case 'textarea':
+                    inputHtml = `<textarea id="${fieldId}" ${requiredAttr}></textarea>`;
+                    break;
+                case 'table-select':
+                    if (tableMetadataAvailable && tableNames.length > 0) {
+                        const optionsHtml = tableNames
+                            .map(name => `<option value="${escapeHtml(name)}">${escapeHtml(name)}</option>`)
+                            .join('');
+                        inputHtml = `
+                            <select id="${fieldId}" ${requiredAttr}>
+                                <option value="">Select a table...</option>
+                                ${optionsHtml}
+                            </select>
+                        `;
+                    } else {
+                        inputHtml = `
+                            <div class="metadata-warning">Table list unavailable. Enter the table name manually.</div>
+                            <input type="text" id="${fieldId}" ${requiredAttr} placeholder="Enter table name">
+                        `;
+                    }
+                    break;
+                default:
+                    inputHtml = `<input type="${point.type || 'text'}" id="${fieldId}" ${requiredAttr}>`;
+                    break;
+            }
+
+            return `
+                <div class="form-group">
+                    <label for="${fieldId}">
+                        <span>${escapeHtml(point.label)}</span>
+                        ${tooltipHtml}
+                        ${requiredHtml}
+                    </label>
+                    ${inputHtml}
+                </div>
+            `;
+        };
 
         const elements = {
             categoryList: document.getElementById('category-list'),
@@ -409,6 +526,18 @@
         showLoading('Loading templates...');
         await templateManager.initialize();
         hideLoading();
+
+        let metadataLoadingShown = false;
+        if (dbMetadata.tables.length === 0) {
+            metadataLoadingShown = true;
+            showLoading('Loading database metadata...');
+        }
+
+        await ensureTableList();
+
+        if (metadataLoadingShown) {
+            hideLoading();
+        }
 
         // Render categories
         function renderCategories() {
@@ -493,8 +622,17 @@
 
             // Add click handlers
             elements.templateGrid.querySelectorAll('.template-card').forEach(card => {
-                card.addEventListener('click', () => {
+                card.addEventListener('click', async () => {
                     const templateId = card.getAttribute('data-template-id');
+
+                    if (!tableMetadataAvailable) {
+                        showLoading('Loading database metadata...');
+                        await ensureTableList();
+                        hideLoading();
+                    } else if (dbMetadata.isStale()) {
+                        await ensureTableList();
+                    }
+
                     openCustomizationPanel(templateId);
                 });
             });
@@ -509,18 +647,9 @@
             elements.panelSubtitle.textContent = selectedTemplate.description;
 
             // Build form
-            elements.customizationForm.innerHTML = selectedTemplate.customizationPoints.map(point => `
-                <div class="form-group">
-                    <label for="field-${point.key}">
-                        ${point.label}
-                        ${point.required ? '<span class="required">*</span>' : ''}
-                    </label>
-                    ${point.type === 'textarea' 
-                        ? `<textarea id="field-${point.key}" ${point.required ? 'required' : ''}></textarea>`
-                        : `<input type="${point.type || 'text'}" id="field-${point.key}" ${point.required ? 'required' : ''}>`
-                    }
-                </div>
-            `).join('');
+            elements.customizationForm.innerHTML = selectedTemplate.customizationPoints
+                .map(renderCustomizationField)
+                .join('');
 
             // Show panel
             elements.customizationPanel.classList.add('open');
@@ -544,7 +673,11 @@
             selectedTemplate.customizationPoints.forEach(point => {
                 const field = document.getElementById(`field-${point.key}`);
                 if (field) {
-                    values[point.key] = field.value;
+                    let value = field.value;
+                    if (typeof value === 'string') {
+                        value = value.trim();
+                    }
+                    values[point.key] = value;
                 }
             });
 

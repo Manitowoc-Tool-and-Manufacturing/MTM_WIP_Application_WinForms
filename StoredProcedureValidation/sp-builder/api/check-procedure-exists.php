@@ -16,6 +16,7 @@ try {
     $conn = getDbConnection();
     
     // Query information_schema.ROUTINES for procedure
+    $dbName = DB_NAME; // Must use variable for bind_param reference
     $stmt = $conn->prepare("
         SELECT 
             ROUTINE_NAME,
@@ -30,7 +31,7 @@ try {
           AND ROUTINE_TYPE = 'PROCEDURE'
     ");
     
-    $stmt->bind_param('ss', DB_NAME, $procedureName);
+    $stmt->bind_param('ss', $dbName, $procedureName);
     $stmt->execute();
     $result = $stmt->get_result();
     

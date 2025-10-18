@@ -8,7 +8,7 @@
  */
 
 export class DatabaseMetadata {
-    constructor(apiBaseUrl = '../api') {
+    constructor(apiBaseUrl = '/sp-builder/api') {
         this.apiBaseUrl = apiBaseUrl;
         this.database = 'mtm_wip_application_winforms_test';
         this.tables = [];
@@ -104,6 +104,20 @@ export class DatabaseMetadata {
      */
     getTable(tableName) {
         return this.tables.find(t => t.name === tableName) || null;
+    }
+
+    /**
+     * Determine if a table exists in cached metadata
+     * @param {string} tableName - Table name to check
+     * @returns {boolean} True if table exists in metadata
+     */
+    tableExists(tableName) {
+        if (!tableName) {
+            return false;
+        }
+
+        const normalized = tableName.toLowerCase();
+        return this.tables.some(t => (t.name || '').toLowerCase() === normalized);
     }
     
     /**

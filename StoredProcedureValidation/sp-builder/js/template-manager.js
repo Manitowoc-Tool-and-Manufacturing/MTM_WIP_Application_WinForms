@@ -271,6 +271,10 @@ export class TemplateManager {
     validateWithMetadata(template, values) {
         const warnings = [];
         const suggestions = {};
+
+        if (!dbMetadata || typeof dbMetadata.tableExists !== 'function') {
+            return { valid: true, warnings, suggestions };
+        }
         
         // Check if referenced table exists
         if (values.TABLE_NAME) {
@@ -385,9 +389,27 @@ export class TemplateManager {
             isBuiltIn: true,
             tags: ['crud', 'insert', 'add'],
             customizationPoints: [
-                { key: 'DOMAIN', label: 'Domain Prefix (e.g., inv, usr)', type: 'text', required: true },
-                { key: 'TABLE_NAME', label: 'Table Name', type: 'text', required: true },
-                { key: 'ENTITY', label: 'Entity Name (singular)', type: 'text', required: true }
+                {
+                    key: 'DOMAIN',
+                    label: 'Domain Prefix (e.g., inv, usr)',
+                    type: 'text',
+                    required: true,
+                    tooltip: 'Lowercase prefix that namespaces the stored procedure name, such as inv for inventory or usr for users.'
+                },
+                {
+                    key: 'TABLE_NAME',
+                    label: 'Table Name',
+                    type: 'table-select',
+                    required: true,
+                    tooltip: 'Exact MySQL table the procedure will target. Use the table name without schema qualifiers.'
+                },
+                {
+                    key: 'ENTITY',
+                    label: 'Entity Name (singular)',
+                    type: 'text',
+                    required: true,
+                    tooltip: 'Friendly singular name for one record (for example Item or User). Used in messages and variable names.'
+                }
             ],
             procedureTemplate: {
                 name: '{{DOMAIN}}_{{TABLE_NAME}}_Add_{{ENTITY}}',
@@ -433,9 +455,27 @@ export class TemplateManager {
             isBuiltIn: true,
             tags: ['crud', 'update', 'modify'],
             customizationPoints: [
-                { key: 'DOMAIN', label: 'Domain Prefix', type: 'text', required: true },
-                { key: 'TABLE_NAME', label: 'Table Name', type: 'text', required: true },
-                { key: 'ENTITY', label: 'Entity Name', type: 'text', required: true }
+                {
+                    key: 'DOMAIN',
+                    label: 'Domain Prefix',
+                    type: 'text',
+                    required: true,
+                    tooltip: 'Lowercase prefix that namespaces the stored procedure name, such as inv for inventory or usr for users.'
+                },
+                {
+                    key: 'TABLE_NAME',
+                    label: 'Table Name',
+                    type: 'table-select',
+                    required: true,
+                    tooltip: 'Exact MySQL table the procedure will target. Use the table name without schema qualifiers.'
+                },
+                {
+                    key: 'ENTITY',
+                    label: 'Entity Name',
+                    type: 'text',
+                    required: true,
+                    tooltip: 'Friendly singular name for one record (for example Item or User). Used in messages and variable names.'
+                }
             ],
             procedureTemplate: {
                 name: '{{DOMAIN}}_{{TABLE_NAME}}_Update_{{ENTITY}}',
@@ -485,9 +525,27 @@ export class TemplateManager {
             isBuiltIn: true,
             tags: ['crud', 'delete', 'remove'],
             customizationPoints: [
-                { key: 'DOMAIN', label: 'Domain Prefix', type: 'text', required: true },
-                { key: 'TABLE_NAME', label: 'Table Name', type: 'text', required: true },
-                { key: 'ENTITY', label: 'Entity Name', type: 'text', required: true }
+                {
+                    key: 'DOMAIN',
+                    label: 'Domain Prefix',
+                    type: 'text',
+                    required: true,
+                    tooltip: 'Lowercase prefix that namespaces the stored procedure name, such as inv for inventory or usr for users.'
+                },
+                {
+                    key: 'TABLE_NAME',
+                    label: 'Table Name',
+                    type: 'table-select',
+                    required: true,
+                    tooltip: 'Exact MySQL table the procedure will target. Use the table name without schema qualifiers.'
+                },
+                {
+                    key: 'ENTITY',
+                    label: 'Entity Name',
+                    type: 'text',
+                    required: true,
+                    tooltip: 'Friendly singular name for one record (for example Item or User). Used in messages and variable names.'
+                }
             ],
             procedureTemplate: {
                 name: '{{DOMAIN}}_{{TABLE_NAME}}_Delete_{{ENTITY}}',
@@ -532,9 +590,27 @@ export class TemplateManager {
             isBuiltIn: true,
             tags: ['crud', 'select', 'get', 'read'],
             customizationPoints: [
-                { key: 'DOMAIN', label: 'Domain Prefix', type: 'text', required: true },
-                { key: 'TABLE_NAME', label: 'Table Name', type: 'text', required: true },
-                { key: 'ENTITY', label: 'Entity Name', type: 'text', required: true }
+                {
+                    key: 'DOMAIN',
+                    label: 'Domain Prefix',
+                    type: 'text',
+                    required: true,
+                    tooltip: 'Lowercase prefix that namespaces the stored procedure name, such as inv for inventory or usr for users.'
+                },
+                {
+                    key: 'TABLE_NAME',
+                    label: 'Table Name',
+                    type: 'table-select',
+                    required: true,
+                    tooltip: 'Exact MySQL table the procedure will target. Use the table name without schema qualifiers.'
+                },
+                {
+                    key: 'ENTITY',
+                    label: 'Entity Name',
+                    type: 'text',
+                    required: true,
+                    tooltip: 'Friendly singular name for one record (for example Item or User). Used in messages and variable names.'
+                }
             ],
             procedureTemplate: {
                 name: '{{DOMAIN}}_{{TABLE_NAME}}_Get_{{ENTITY}}',
@@ -581,9 +657,27 @@ export class TemplateManager {
             isBuiltIn: true,
             tags: ['batch', 'insert', 'bulk'],
             customizationPoints: [
-                { key: 'DOMAIN', label: 'Domain Prefix', type: 'text', required: true },
-                { key: 'TABLE_NAME', label: 'Table Name', type: 'text', required: true },
-                { key: 'ENTITY', label: 'Entity Name (plural)', type: 'text', required: true }
+                {
+                    key: 'DOMAIN',
+                    label: 'Domain Prefix',
+                    type: 'text',
+                    required: true,
+                    tooltip: 'Lowercase prefix that namespaces the stored procedure name, such as inv for inventory or usr for users.'
+                },
+                {
+                    key: 'TABLE_NAME',
+                    label: 'Table Name',
+                    type: 'table-select',
+                    required: true,
+                    tooltip: 'Exact MySQL table the procedure will target. Use the table name without schema qualifiers.'
+                },
+                {
+                    key: 'ENTITY',
+                    label: 'Entity Name (plural)',
+                    type: 'text',
+                    required: true,
+                    tooltip: 'Plural display name for multiple records (for example Items or Users). Used in descriptions and logging.'
+                }
             ],
             procedureTemplate: {
                 name: '{{DOMAIN}}_{{TABLE_NAME}}_Batch_Add_{{ENTITY}}',
@@ -620,9 +714,27 @@ export class TemplateManager {
             isBuiltIn: true,
             tags: ['batch', 'update', 'bulk'],
             customizationPoints: [
-                { key: 'DOMAIN', label: 'Domain Prefix', type: 'text', required: true },
-                { key: 'TABLE_NAME', label: 'Table Name', type: 'text', required: true },
-                { key: 'ENTITY', label: 'Entity Name (plural)', type: 'text', required: true }
+                {
+                    key: 'DOMAIN',
+                    label: 'Domain Prefix',
+                    type: 'text',
+                    required: true,
+                    tooltip: 'Lowercase prefix that namespaces the stored procedure name, such as inv for inventory or usr for users.'
+                },
+                {
+                    key: 'TABLE_NAME',
+                    label: 'Table Name',
+                    type: 'table-select',
+                    required: true,
+                    tooltip: 'Exact MySQL table the procedure will target. Use the table name without schema qualifiers.'
+                },
+                {
+                    key: 'ENTITY',
+                    label: 'Entity Name (plural)',
+                    type: 'text',
+                    required: true,
+                    tooltip: 'Plural display name for multiple records (for example Items or Users). Used in descriptions and logging.'
+                }
             ],
             procedureTemplate: {
                 name: '{{DOMAIN}}_{{TABLE_NAME}}_Batch_Update_{{ENTITY}}',
@@ -661,9 +773,27 @@ export class TemplateManager {
             isBuiltIn: true,
             tags: ['transfer', 'move', 'workflow'],
             customizationPoints: [
-                { key: 'DOMAIN', label: 'Domain Prefix', type: 'text', required: true },
-                { key: 'TABLE_NAME', label: 'Table Name', type: 'text', required: true },
-                { key: 'ENTITY', label: 'Entity Name', type: 'text', required: true }
+                {
+                    key: 'DOMAIN',
+                    label: 'Domain Prefix',
+                    type: 'text',
+                    required: true,
+                    tooltip: 'Lowercase prefix that namespaces the stored procedure name, such as inv for inventory or usr for users.'
+                },
+                {
+                    key: 'TABLE_NAME',
+                    label: 'Table Name',
+                    type: 'table-select',
+                    required: true,
+                    tooltip: 'Exact MySQL table the procedure will target. Use the table name without schema qualifiers.'
+                },
+                {
+                    key: 'ENTITY',
+                    label: 'Entity Name',
+                    type: 'text',
+                    required: true,
+                    tooltip: 'Friendly singular name for one record (for example Item or User). Used in messages and variable names.'
+                }
             ],
             procedureTemplate: {
                 name: '{{DOMAIN}}_{{TABLE_NAME}}_Transfer_{{ENTITY}}',
@@ -715,8 +845,20 @@ export class TemplateManager {
             isBuiltIn: true,
             tags: ['audit', 'log', 'history'],
             customizationPoints: [
-                { key: 'DOMAIN', label: 'Domain Prefix', type: 'text', required: true },
-                { key: 'ENTITY', label: 'Entity Name', type: 'text', required: true }
+                {
+                    key: 'DOMAIN',
+                    label: 'Domain Prefix',
+                    type: 'text',
+                    required: true,
+                    tooltip: 'Lowercase prefix that namespaces the stored procedure name, such as inv for inventory or usr for users.'
+                },
+                {
+                    key: 'ENTITY',
+                    label: 'Entity Name',
+                    type: 'text',
+                    required: true,
+                    tooltip: 'Friendly singular name for one record (for example Item or User). Used in messages and variable names.'
+                }
             ],
             procedureTemplate: {
                 name: '{{DOMAIN}}_Audit_Log_{{ENTITY}}_Activity',

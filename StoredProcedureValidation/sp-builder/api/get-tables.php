@@ -11,6 +11,7 @@ try {
     $conn = getDbConnection();
     
     // Query for tables in current database
+    $dbName = DB_NAME; // Must use variable for bind_param reference
     $stmt = $conn->prepare("
         SELECT TABLE_NAME, TABLE_TYPE, TABLE_COMMENT, CREATE_TIME, UPDATE_TIME
         FROM information_schema.TABLES
@@ -18,7 +19,7 @@ try {
         ORDER BY TABLE_NAME
     ");
     
-    $stmt->bind_param('s', DB_NAME);
+    $stmt->bind_param('s', $dbName);
     $stmt->execute();
     $result = $stmt->get_result();
     

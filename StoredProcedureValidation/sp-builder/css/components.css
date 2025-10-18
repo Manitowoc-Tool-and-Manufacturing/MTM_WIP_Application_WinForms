@@ -173,6 +173,7 @@
 }
 
 .modal-content {
+    background-color: #ffffff; /* Fallback */
     background-color: var(--color-bg);
     border-radius: var(--radius-xl);
     box-shadow: var(--shadow-xl);
@@ -180,6 +181,7 @@
     width: 90%;
     max-height: 90vh;
     overflow-y: auto;
+    color: var(--color-text, #1a1a1a); /* Ensure text is visible */
 }
 
 .modal-header {

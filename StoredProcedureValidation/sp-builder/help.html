@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Help - MySQL 5.7 Stored Procedure Builder</title>
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/components.css">
+</head>
+<body>
+    <!-- Main Content -->
+    <main class="main-content">
+        <div class="container">
+            <h1>📖 Help & Documentation</h1>
+            
+            <section style="margin-top: 2rem;">
+                <h2>Getting Started</h2>
+                <p>The MySQL 5.7 Stored Procedure Builder helps you create stored procedures visually through a step-by-step wizard interface.</p>
+                
+                <h3>Quick Start</h3>
+                <ol>
+                    <li>Click <strong>Start Wizard</strong> from the home page</li>
+                    <li>Enter your procedure name and description</li>
+                    <li>Add parameters (optional)</li>
+                    <li>Configure validation rules</li>
+                    <li>Add DML operations (INSERT, UPDATE, DELETE, SELECT)</li>
+                    <li>Review the generated SQL</li>
+                    <li>Export or copy your procedure</li>
+                </ol>
+                
+                <h3>Using Templates</h3>
+                <p>Browse pre-built templates for common patterns:</p>
+                <ul>
+                    <li><strong>CRUD Operations</strong>: Add, Update, Delete, Get records</li>
+                    <li><strong>Batch Processing</strong>: Process multiple records</li>
+                    <li><strong>Transfer Operations</strong>: Move data between tables</li>
+                    <li><strong>Audit Logging</strong>: Track changes with history</li>
+                </ul>
+                
+                <h2 id="keyboard-shortcuts">Keyboard Shortcuts</h2>
+                <table style="width: 100%; border-collapse: collapse; margin-top: 1rem;">
+                    <thead>
+                        <tr style="background: var(--color-bg-secondary);">
+                            <th style="padding: 0.75rem; text-align: left; border: 1px solid var(--color-border);">Shortcut</th>
+                            <th style="padding: 0.75rem; text-align: left; border: 1px solid var(--color-border);">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td style="padding: 0.75rem; border: 1px solid var(--color-border);"><code>Ctrl + S</code></td>
+                            <td style="padding: 0.75rem; border: 1px solid var(--color-border);">Save progress</td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 0.75rem; border: 1px solid var(--color-border);"><code>Ctrl + →</code></td>
+                            <td style="padding: 0.75rem; border: 1px solid var(--color-border);">Next step (wizard)</td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 0.75rem; border: 1px solid var(--color-border);"><code>Ctrl + ←</code></td>
+                            <td style="padding: 0.75rem; border: 1px solid var(--color-border);">Previous step (wizard)</td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 0.75rem; border: 1px solid var(--color-border);"><code>F1</code></td>
+                            <td style="padding: 0.75rem; border: 1px solid var(--color-border);">Show help</td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 0.75rem; border: 1px solid var(--color-border);"><code>Esc</code></td>
+                            <td style="padding: 0.75rem; border: 1px solid var(--color-border);">Close dialogs</td>
+                        </tr>
+                    </tbody>
+                </table>
+                
+                <h2>Database Connection</h2>
+                <p>The builder connects to MySQL via MAMP:</p>
+                <ul>
+                    <li><strong>Server:</strong> localhost</li>
+                    <li><strong>Port:</strong> 3306</li>
+                    <li><strong>Database:</strong> mtm_wip_application_winforms_test</li>
+                    <li><strong>User:</strong> root</li>
+                </ul>
+                
+                <h2>Need More Help?</h2>
+                <p>Return to the <a href="index.html">home page</a> to start building procedures.</p>
+            </section>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="app-footer">
+        <div class="container">
+            <p>&copy; 2025 MTM WIP Application | MySQL 5.7 Stored Procedure Builder</p>
+        </div>
+    </footer>
+
+    <script type="module">
+        import { initNavigation } from './js/navigation.js';
+        initNavigation('help');
+    </script>
+</body>
+</html>

@@ -1,0 +1,803 @@
+{
+  "tests": [
+    {
+      "id": "TEST-001",
+      "title": "Create New Stored Procedure from Scratch",
+      "userStory": "US1 - Create New Stored Procedure from Scratch",
+      "feature": "Interactive MySQL 5.7 Stored Procedure Builder",
+      "testType": "End-to-End Functional Test",
+      "estimatedDurationMinutes": 15,
+      "objective": "Verify that a developer can create a complete single-table stored procedure from scratch using the wizard interface, including parameter definition, validation rules, DML operations, and SQL export without writing manual SQL.",
+      "prerequisites": [
+        "MAMP running with MySQL 5.7 on localhost:3306",
+        "Database mtm_wip_application_winforms_test exists and is accessible",
+        "Chrome browser 86+ installed",
+        "Stored procedure builder available at http://localhost:8888/StoredProcedureValidation/sp-builder/",
+        "Inventory table exists in test database with required columns"
+      ],
+      "steps": [
+        {
+          "number": 1,
+          "title": "Access Application",
+          "actions": [
+            "Open Chrome browser",
+            "Navigate to http://localhost:8888/StoredProcedureValidation/sp-builder/",
+            "Confirm landing page loads"
+          ],
+          "expectedResults": [
+            "Navigation links Wizard, Templates, Help are visible",
+            "No JavaScript console errors",
+            "Database connection indicator reports Connected or prompts for connection"
+          ]
+        },
+        {
+          "number": 2,
+          "title": "Start Wizard",
+          "actions": [
+            "Select New Procedure or Start Wizard",
+            "Wait for wizard page to load"
+          ],
+          "expectedResults": [
+            "Wizard displays eight-step progress indicator",
+            "Step 1 Procedure Name is active",
+            "Progress indicator reflects Step 1 of 8"
+          ]
+        },
+        {
+          "number": 3,
+          "title": "Enter Procedure Name",
+          "actions": [
+            "Input inv_inventory_Adjust_Quantity",
+            "Move focus away from field"
+          ],
+          "expectedResults": [
+            "Name validates without error",
+            "Next button enables"
+          ]
+        },
+        {
+          "number": 4,
+          "title": "Negative Name Validation",
+          "actions": [
+            "Change name to InvalidName",
+            "Blur field",
+            "Revert to inv_inventory_Adjust_Quantity"
+          ],
+          "expectedResults": [
+            "Validation error displayed for invalid pattern",
+            "Next button disabled during invalid entry",
+            "Error clears after reverting"
+          ]
+        },
+        {
+          "number": 5,
+          "title": "Add Parameters",
+          "actions": [
+            "Advance to Step 2 Parameters",
+            "Confirm p_Status and p_ErrorMsg are prepopulated and locked",
+            "Add p_InventoryID INT IN",
+            "Add p_QuantityDelta INT IN",
+            "Add p_UserID INT IN"
+          ],
+          "expectedResults": [
+            "Parameter list shows five entries",
+            "System prepends p_ when omitted",
+            "Auto parameters cannot be removed"
+          ]
+        },
+        {
+          "number": 6,
+          "title": "Add Validation Rules",
+          "actions": [
+            "Proceed to Step 3 Validation Rules",
+            "Add Positive Number validation for p_QuantityDelta with status -1",
+            "Add Foreign Key check for p_InventoryID referencing Inventory.InventoryID with status -2"
+          ],
+          "expectedResults": [
+            "Two validation rules displayed with summaries",
+            "Rules can be reordered",
+            "SQL preview shows IF blocks with ROLLBACK"
+          ]
+        },
+        {
+          "number": 7,
+          "title": "Add UPDATE Operation",
+          "actions": [
+            "Navigate to Step 4 DML Operations",
+            "Add UPDATE operation targeting Inventory",
+            "Set Quantity to Quantity + p_QuantityDelta",
+            "Set LastUpdatedUser to p_UserID",
+            "Add WHERE InventoryID = p_InventoryID"
+          ],
+          "expectedResults": [
+            "Table metadata populates from database",
+            "Smart defaults appear for LastUpdatedUser",
+            "SQL preview renders UPDATE statement"
+          ]
+        },
+        {
+          "number": 8,
+          "title": "Review Flow Diagram",
+          "actions": [
+            "Open Step 5 Flow Diagram"
+          ],
+          "expectedResults": [
+            "Visual nodes represent validations and operation",
+            "Connections show execution order",
+            "Zoom and pan functional"
+          ]
+        },
+        {
+          "number": 9,
+          "title": "Preview Generated SQL",
+          "actions": [
+            "Skip optional advanced step if present",
+            "Navigate to Step 7 Preview",
+            "Inspect generated SQL"
+          ],
+          "expectedResults": [
+            "SQL includes DELIMITER statements, DROP PROCEDURE, CREATE PROCEDURE",
+            "START TRANSACTION, validation IF blocks, UPDATE, COMMIT present",
+            "Status set to 0 before COMMIT"
+          ]
+        },
+        {
+          "number": 10,
+          "title": "Validate SQL Syntax",
+          "actions": [
+            "Click Validate Syntax"
+          ],
+          "expectedResults": [
+            "Validation succeeds with MySQL 5.7 confirmation",
+            "Export button enabled"
+          ]
+        },
+        {
+          "number": 11,
+          "title": "Export SQL",
+          "actions": [
+            "Export procedure to file"
+          ],
+          "expectedResults": [
+            "File saved as inv_inventory_Adjust_Quantity.sql",
+            "Confirmation dialog references analysis script"
+          ]
+        },
+        {
+          "number": 12,
+          "title": "Execute Procedure in MySQL",
+          "actions": [
+            "Open exported file",
+            "Execute SQL against mtm_wip_application_winforms_test",
+            "Call procedure with sample parameters"
+          ],
+          "expectedResults": [
+            "Procedure created without errors",
+            "Calls respect validation logic"
+          ]
+        },
+        {
+          "number": 13,
+          "title": "Test Auto-Save Recovery",
+          "actions": [
+            "Modify procedure name to inv_inventory_Adjust_Quantity_v2",
+            "Wait for auto-save",
+            "Refresh browser and resume session"
+          ],
+          "expectedResults": [
+            "Resume prompt appears",
+            "Wizard restores previous state"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TEST-002",
+      "title": "Edit Existing Stored Procedure",
+      "userStory": "US2 - Edit Existing Stored Procedure",
+      "feature": "Interactive MySQL 5.7 Stored Procedure Builder",
+      "testType": "End-to-End Functional Test",
+      "estimatedDurationMinutes": 20,
+      "objective": "Verify import, parsing, modification, and export of an existing stored procedure with accurate side-by-side comparison.",
+      "prerequisites": [
+        "TEST-001 completed successfully",
+        "MAMP with MySQL 5.7 running on localhost:3306",
+        "Chrome browser 86+ installed",
+        "Sample procedure file inv_inventory_Add_Item.sql available",
+        "Stored procedure builder accessible"
+      ],
+      "steps": [
+        {
+          "number": 1,
+          "title": "Open Import Dialog",
+          "actions": [
+            "Launch builder index.html",
+            "Open Import Existing Procedure dialog"
+          ],
+          "expectedResults": [
+            "Dialog displays textarea, file upload control, Import button"
+          ]
+        },
+        {
+          "number": 2,
+          "title": "Import Procedure via File",
+          "actions": [
+            "Upload inv_inventory_Add_Item.sql",
+            "Trigger import"
+          ],
+          "expectedResults": [
+            "SQL loads into textarea without console errors",
+            "Parse/Continue button enabled"
+          ]
+        },
+        {
+          "number": 3,
+          "title": "Parse SQL",
+          "actions": [
+            "Execute Parse Procedure"
+          ],
+          "expectedResults": [
+            "Success message shown",
+            "Wizard populated with imported data"
+          ]
+        },
+        {
+          "number": 4,
+          "title": "Verify Procedure Name",
+          "actions": [
+            "Inspect Step 1 name field"
+          ],
+          "expectedResults": [
+            "Field set to inv_inventory_Add_Item and passes validation"
+          ]
+        },
+        {
+          "number": 5,
+          "title": "Verify Parameters",
+          "actions": [
+            "Open Step 2 Parameters",
+            "Review six parameters with proper types and directions"
+          ],
+          "expectedResults": [
+            "All parameter metadata matches source SQL"
+          ]
+        },
+        {
+          "number": 6,
+          "title": "Verify Local Variables",
+          "actions": [
+            "Locate declared variable v_Exists"
+          ],
+          "expectedResults": [
+            "Variable displayed with INT default 0"
+          ]
+        },
+        {
+          "number": 7,
+          "title": "Verify Validation Rules",
+          "actions": [
+            "Inspect Step 3 validation entries"
+          ],
+          "expectedResults": [
+            "Existing part existence validation represented with status -1 and rollback"
+          ]
+        },
+        {
+          "number": 8,
+          "title": "Verify DML Operations",
+          "actions": [
+            "Review Step 4 operations"
+          ],
+          "expectedResults": [
+            "Single INSERT operation with column mappings from source"
+          ]
+        },
+        {
+          "number": 9,
+          "title": "Verify Transaction Control",
+          "actions": [
+            "Confirm START TRANSACTION and COMMIT identified"
+          ],
+          "expectedResults": [
+            "Transaction flags enabled"
+          ]
+        },
+        {
+          "number": 10,
+          "title": "Add Quantity Validation",
+          "actions": [
+            "Add Positive Number rule for p_Quantity with status -2",
+            "Position rule before existing validation"
+          ],
+          "expectedResults": [
+            "New validation displayed first",
+            "SQL preview shows new IF block"
+          ]
+        },
+        {
+          "number": 11,
+          "title": "Review Side-by-Side Diff",
+          "actions": [
+            "Navigate to Preview and enable comparison"
+          ],
+          "expectedResults": [
+            "Diff view highlights added validation"
+          ]
+        },
+        {
+          "number": 12,
+          "title": "Validate Modified SQL",
+          "actions": [
+            "Run syntax validation"
+          ],
+          "expectedResults": [
+            "Validation succeeds for MySQL 5.7"
+          ]
+        },
+        {
+          "number": 13,
+          "title": "Export Modified Procedure",
+          "actions": [
+            "Export file as inv_inventory_Add_Item_modified.sql"
+          ],
+          "expectedResults": [
+            "File saved and confirmation shown"
+          ]
+        },
+        {
+          "number": 14,
+          "title": "Verify Header Comment",
+          "actions": [
+            "Inspect exported file header"
+          ],
+          "expectedResults": [
+            "Header lists metadata, parameters, tables accessed"
+          ]
+        },
+        {
+          "number": 15,
+          "title": "Execute Modified Procedure",
+          "actions": [
+            "Drop existing procedure",
+            "Run modified SQL",
+            "Call procedure with valid and negative quantity",
+            "Check status/message outputs"
+          ],
+          "expectedResults": [
+            "Procedure executes",
+            "Negative quantity triggers status -2 before part check"
+          ]
+        },
+        {
+          "number": 16,
+          "title": "Test Copy-Paste Import",
+          "actions": [
+            "Import same SQL via clipboard"
+          ],
+          "expectedResults": [
+            "Parsing identical to file import"
+          ]
+        },
+        {
+          "number": 17,
+          "title": "Test Invalid SQL Handling",
+          "actions": [
+            "Attempt parse of malformed SQL"
+          ],
+          "expectedResults": [
+            "Error displayed with guidance to correct"
+          ]
+        },
+        {
+          "number": 18,
+          "title": "Test Complex Procedure",
+          "actions": [
+            "Import procedure with multiple operations and advanced features"
+          ],
+          "expectedResults": [
+            "Parser handles complex structures per acceptance criteria"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TEST-003",
+      "title": "Database Metadata Integration",
+      "userStory": "US5 - Database Metadata Integration",
+      "feature": "Interactive MySQL 5.7 Stored Procedure Builder",
+      "testType": "Integration Test",
+      "estimatedDurationMinutes": 15,
+      "objective": "Verify metadata synchronization, smart defaults, caching, and failure handling when connecting to the live MySQL database.",
+      "prerequisites": [
+        "MAMP running with MySQL 5.7 on localhost:3306",
+        "Database mtm_wip_application_winforms_test accessible",
+        "Tables Inventory, Parts, Locations available",
+        "Chrome browser 86+",
+        "PHP backend endpoints operational"
+      ],
+      "steps": [
+        {
+          "number": 1,
+          "title": "Observe Connection Status",
+          "actions": [
+            "Open builder index.html"
+          ],
+          "expectedResults": [
+            "Status transitions from Connecting to Connected",
+            "No console connection errors"
+          ]
+        },
+        {
+          "number": 2,
+          "title": "Simulate Connection Failure",
+          "actions": [
+            "Stop MySQL service",
+            "Refresh builder or trigger metadata refresh"
+          ],
+          "expectedResults": [
+            "Status reports Connection Failed",
+            "Friendly dialog with retry guidance and technical detail"
+          ]
+        },
+        {
+          "number": 3,
+          "title": "Recover Connection",
+          "actions": [
+            "Restart MySQL",
+            "Use Retry Connection"
+          ],
+          "expectedResults": [
+            "Connection re-established and dialog closes"
+          ]
+        },
+        {
+          "number": 4,
+          "title": "Inspect Table Dropdown",
+          "actions": [
+            "Navigate to DML Step 4",
+            "Add INSERT operation and open table list"
+          ],
+          "expectedResults": [
+            "All database tables listed alphabetically without system schemas"
+          ]
+        },
+        {
+          "number": 5,
+          "title": "Verify Inventory Columns",
+          "actions": [
+            "Select Inventory table"
+          ],
+          "expectedResults": [
+            "All columns displayed with types, InventoryID locked"
+          ]
+        },
+        {
+          "number": 6,
+          "title": "Review Smart Defaults",
+          "actions": [
+            "Select common audit columns"
+          ],
+          "expectedResults": [
+            "Defaults suggest NOW(), p_UserID, and 1 appropriately"
+          ]
+        },
+        {
+          "number": 7,
+          "title": "Check Foreign Key Detection",
+          "actions": [
+            "Inspect LocationCode metadata"
+          ],
+          "expectedResults": [
+            "Foreign key badge referencing Locations.LocationCode"
+          ]
+        },
+        {
+          "number": 8,
+          "title": "Check Primary Key Detection",
+          "actions": [
+            "Confirm InventoryID indications"
+          ],
+          "expectedResults": [
+            "Primary key icon and insert restrictions"
+          ]
+        },
+        {
+          "number": 9,
+          "title": "Evaluate Caching",
+          "actions": [
+            "Switch between tables to compare initial and repeated load times"
+          ],
+          "expectedResults": [
+            "Subsequent loads served from cache without extra API calls"
+          ]
+        },
+        {
+          "number": 10,
+          "title": "Check Staleness Warning",
+          "actions": [
+            "Wait or simulate metadata older than 10 minutes"
+          ],
+          "expectedResults": [
+            "Warning banner prompts to refresh"
+          ]
+        },
+        {
+          "number": 11,
+          "title": "Refresh Metadata",
+          "actions": [
+            "Click Refresh Metadata"
+          ],
+          "expectedResults": [
+            "Spinner displays, timestamp updates, completes within 5 seconds"
+          ]
+        },
+        {
+          "number": 12,
+          "title": "Detect Schema Change",
+          "actions": [
+            "Add column TestColumn to Inventory",
+            "Refresh metadata"
+          ],
+          "expectedResults": [
+            "New column appears with correct type"
+          ]
+        },
+        {
+          "number": 13,
+          "title": "Handle Missing Table",
+          "actions": [
+            "Force selection of non-existent table"
+          ],
+          "expectedResults": [
+            "Error prevents use and suggests refreshing"
+          ]
+        },
+        {
+          "number": 14,
+          "title": "Large Schema Performance",
+          "actions": [
+            "Inspect dropdown with 50+ tables or simulated delay"
+          ],
+          "expectedResults": [
+            "UI remains responsive with search/virtual scrolling"
+          ]
+        },
+        {
+          "number": 15,
+          "title": "Verify Column Type Mapping",
+          "actions": [
+            "Create TypeTest table with various types",
+            "Inspect column metadata"
+          ],
+          "expectedResults": [
+            "All types represented accurately with lengths and scales"
+          ]
+        },
+        {
+          "number": 16,
+          "title": "Validate Metadata in Validation Builder",
+          "actions": [
+            "Configure Foreign Key validation"
+          ],
+          "expectedResults": [
+            "Reference table and column dropdowns populated correctly"
+          ]
+        },
+        {
+          "number": 17,
+          "title": "API Error Handling",
+          "actions": [
+            "Break metadata endpoint temporarily",
+            "Attempt refresh"
+          ],
+          "expectedResults": [
+            "Friendly error with technical details and retry option"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TEST-004",
+      "title": "DML Operation Builders",
+      "userStory": "US7 - DML Operation Builders with Auto-Complete",
+      "feature": "Interactive MySQL 5.7 Stored Procedure Builder",
+      "testType": "Functional Test",
+      "estimatedDurationMinutes": 25,
+      "objective": "Verify INSERT, UPDATE, DELETE, and SELECT builders leverage metadata, provide live SQL preview, enforce safety, and support advanced options.",
+      "prerequisites": [
+        "TEST-003 passed",
+        "MAMP with MySQL 5.7 running",
+        "Inventory, Parts, Locations tables populated",
+        "Wizard Steps 1-3 operational"
+      ],
+      "steps": [
+        {
+          "number": 1,
+          "title": "Build INSERT Operation",
+          "actions": [
+            "Open Step 4 DML",
+            "Add INSERT for Inventory",
+            "Select core columns and review defaults"
+          ],
+          "expectedResults": [
+            "InventoryID locked, defaults for audit columns, SQL preview renders INSERT"
+          ]
+        },
+        {
+          "number": 2,
+          "title": "Toggle Column Selection",
+          "actions": [
+            "Uncheck ReceivedDate, check LastUpdated"
+          ],
+          "expectedResults": [
+            "Preview updates with LastUpdated and matching VALUES"
+          ]
+        },
+        {
+          "number": 3,
+          "title": "Enable ON DUPLICATE KEY UPDATE",
+          "actions": [
+            "Enable toggle",
+            "Map Quantity and LastUpdated in update section"
+          ],
+          "expectedResults": [
+            "SQL appends ON DUPLICATE KEY UPDATE with mappings"
+          ]
+        },
+        {
+          "number": 4,
+          "title": "Build UPDATE Operation",
+          "actions": [
+            "Add UPDATE for Inventory",
+            "Set Quantity and LastUpdatedUser updates",
+            "Add WHERE InventoryID = p_InventoryID"
+          ],
+          "expectedResults": [
+            "SQL preview shows UPDATE with WHERE"
+          ]
+        },
+        {
+          "number": 5,
+          "title": "Add Multiple WHERE Conditions",
+          "actions": [
+            "Add IsActive = 1 and choose AND/OR"
+          ],
+          "expectedResults": [
+            "Conditions combined correctly with grouping"
+          ]
+        },
+        {
+          "number": 6,
+          "title": "Warn on UPDATE Without WHERE",
+          "actions": [
+            "Remove all WHERE conditions and attempt to save"
+          ],
+          "expectedResults": [
+            "Warning dialog with options to add WHERE or continue"
+          ]
+        },
+        {
+          "number": 7,
+          "title": "Track ROW_COUNT",
+          "actions": [
+            "Enable rows affected tracking"
+          ],
+          "expectedResults": [
+            "SQL adds SET v_RowsAffected = ROW_COUNT() and declares variable"
+          ]
+        },
+        {
+          "number": 8,
+          "title": "Build DELETE Operation",
+          "actions": [
+            "Create DELETE for Inventory with WHERE conditions"
+          ],
+          "expectedResults": [
+            "SQL preview shows DELETE with conditions"
+          ]
+        },
+        {
+          "number": 9,
+          "title": "Warn on DELETE Without WHERE",
+          "actions": [
+            "Remove WHERE and attempt save"
+          ],
+          "expectedResults": [
+            "Critical warning requiring confirmation"
+          ]
+        },
+        {
+          "number": 10,
+          "title": "Build SELECT Operation",
+          "actions": [
+            "Create SELECT on Parts",
+            "Select columns, add WHERE, ORDER BY, LIMIT"
+          ],
+          "expectedResults": [
+            "SQL renders SELECT with filters and limit"
+          ]
+        },
+        {
+          "number": 11,
+          "title": "Add JOIN to SELECT",
+          "actions": [
+            "Add INNER JOIN Locations and include column"
+          ],
+          "expectedResults": [
+            "SQL includes JOIN with aliases and ON clause"
+          ]
+        },
+        {
+          "number": 12,
+          "title": "Select INTO Variable",
+          "actions": [
+            "Enable SELECT INTO and set variable name"
+          ],
+          "expectedResults": [
+            "SQL uses SELECT ... INTO with declared variable"
+          ]
+        },
+        {
+          "number": 13,
+          "title": "Test Parameter Auto-Complete",
+          "actions": [
+            "Type p_ in value field"
+          ],
+          "expectedResults": [
+            "Dropdown suggests parameters for insertion"
+          ]
+        },
+        {
+          "number": 14,
+          "title": "Test Column Auto-Complete",
+          "actions": [
+            "Type column fragment in condition"
+          ],
+          "expectedResults": [
+            "Column suggestions appear with fuzzy matching"
+          ]
+        },
+        {
+          "number": 15,
+          "title": "Reorder Operations",
+          "actions": [
+            "Add multiple operations and reorder via controls"
+          ],
+          "expectedResults": [
+            "Operation order updates and preview reflects sequence"
+          ]
+        },
+        {
+          "number": 16,
+          "title": "Edit Existing Operation",
+          "actions": [
+            "Use Edit function to modify operation values"
+          ],
+          "expectedResults": [
+            "Changes persist and summaries refresh"
+          ]
+        },
+        {
+          "number": 17,
+          "title": "Delete Operation",
+          "actions": [
+            "Remove operation via delete control"
+          ],
+          "expectedResults": [
+            "Confirmation shown and operation removed"
+          ]
+        },
+        {
+          "number": 18,
+          "title": "Verify Preview Debounce",
+          "actions": [
+            "Rapidly modify value field"
+          ],
+          "expectedResults": [
+            "Preview updates after short delay without lag"
+          ]
+        }
+      ]
+    }
+  ]
+}

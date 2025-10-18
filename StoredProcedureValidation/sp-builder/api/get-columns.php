@@ -16,6 +16,7 @@ try {
     $conn = getDbConnection();
     
     // Query for column information
+    $dbName = DB_NAME; // Must use variable for bind_param reference
     $stmt = $conn->prepare("
         SELECT 
             COLUMN_NAME,
@@ -34,7 +35,7 @@ try {
         ORDER BY ORDINAL_POSITION
     ");
     
-    $stmt->bind_param('ss', DB_NAME, $tableName);
+    $stmt->bind_param('ss', $dbName, $tableName);
     $stmt->execute();
     $result = $stmt->get_result();
     

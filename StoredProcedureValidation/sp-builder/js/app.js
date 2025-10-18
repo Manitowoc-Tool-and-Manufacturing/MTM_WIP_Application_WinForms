@@ -4,17 +4,27 @@
  * Handles homepage interactions, session restoration, and navigation
  */
 
-import { ProcedureDefinition } from './procedure-model.js';
-import { storageManager } from './storage-manager.js';
-import { sqlParser } from './sql-parser.js';
-import { showError, showSuccess } from './utils.js';
+console.log('[app.js] Loading...');
+
+// Simple fallback functions if modules don't load
+const showError = (msg) => {
+    const message = typeof msg === 'string' ? msg : msg.user_message || 'An error occurred';
+    alert(message);
+    console.error('Error:', msg);
+};
+
+const showSuccess = (msg) => {
+    console.log('Success:', msg);
+};
 
 class AppController {
     constructor() {
-        this.storageManager = storageManager;
+        console.log('[AppController] Initializing...');
+        this.storageManager = null; // Will load dynamically
         this.initializeElements();
         this.attachEventListeners();
         this.checkForSavedSession();
+        console.log('[AppController] Initialization complete');
     }
 
     /**
@@ -72,6 +82,15 @@ class AppController {
      * Check for saved session and show resume card
      */
     checkForSavedSession() {
+        // Skip if storage manager not loaded
+        if (!this.storageManager) {
+            console.log('[AppController] StorageManager not loaded, skipping session check');
+            if (this.resumeCard) {
+                this.resumeCard.style.display = 'none';
+            }
+            return;
+        }
+        
         const session = this.storageManager.restoreSession();
         
         if (session) {
@@ -89,11 +108,16 @@ class AppController {
      * Start new procedure - navigate to wizard
      */
     startNewProcedure() {
-        // Clear any existing state
-        this.storageManager.clearAutoSave();
-        this.storageManager.saveState(null);
+        console.log('[AppController] Starting new procedure...');
+        
+        // Clear any existing state (if storage manager available)
+        if (this.storageManager) {
+            this.storageManager.clearAutoSave();
+            this.storageManager.saveState(null);
+        }
         
         // Navigate to wizard
+        console.log('[AppController] Navigating to wizard.html');
         window.location.href = 'wizard.html';
     }
 
