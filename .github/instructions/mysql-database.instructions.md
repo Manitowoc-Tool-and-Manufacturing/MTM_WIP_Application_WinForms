@@ -7,16 +7,6 @@ applyTo: 'Data/**/*.cs,Helpers/**/*.cs,Services/**/*.cs'
 
 # MySQL Database Patterns for MTM Manufacturing
 
-## Available MCP Tools for Database Work
-
-When working with database code, use these MCP tools from the **mtm-workflow** server:
-- `analyze_stored_procedures` - Validate stored procedure compliance
-- `generate_dao_wrapper` - Auto-generate DAO code from procedures
-- `validate_dao_patterns` - Verify DAO meets MTM standards
-- `check_security` - Scan for SQL injection vulnerabilities
-- `analyze_dependencies` - Map stored procedure call hierarchies
-- `compare_databases` - Detect schema drift
-
 ## Overview
 
 This file defines MySQL 5.7 database patterns, connection management, and manufacturing domain context for the MTM WIP Application. The application uses MySQL 5.7 via MAMP with the MySql.Data connector and custom helper classes for stored procedure execution.

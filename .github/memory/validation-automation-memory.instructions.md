@@ -95,6 +95,50 @@ if ($LASTEXITCODE -eq 0) {
 
 **Pattern**: Use format operator for predictable command building, capture stderr with `2>&1`, check `$LASTEXITCODE`.
 
+### Stored Procedure Definition Validation
+
+Validate procedure loaded successfully and extract definition for contract checks:
+
+```powershell
+# Execute SOURCE to load procedure
+$sourceCommand = 'USE `{0}`; SOURCE {1}; SHOW WARNINGS;' -f $Database, $escapedPath
+$sourceResult = Invoke-MySqlCommand -Command $sourceCommand
+
+# Retrieve definition to verify OUT parameters
+if ($sourceResult.ExitCode -eq 0) {
+    $showCreateCommand = 'USE `{0}`; SHOW CREATE PROCEDURE `{0}`.`{1}`\G' -f $Database, $procedureName
+    $showCreateResult = Invoke-MySqlCommand -Command $showCreateCommand
+    
+    if ($showCreateResult.ExitCode -eq 0 -and $showCreateResult.Output) {
+        $definition = $showCreateResult.Output -join "`n"
+        $hasStatusOut = $definition -match '(?i)OUT\s+`?p_Status`?'
+        $hasErrorOut = $definition -match '(?i)OUT\s+`?p_ErrorMsg`?'
+    }
+}
+```
+
+**Pattern**: Two-stage validation verifies both execution (SOURCE) and contract compliance (SHOW CREATE PROCEDURE).
+
+### Procedure Name Extraction
+
+Parse procedure names from SQL file content with delimiter handling:
+
+```powershell
+function Get-ProcedureName {
+    param($SqlContent, $File)
+    
+    # Match CREATE PROCEDURE with optional DEFINER and delimiter changes
+    if ($SqlContent -match '(?i)CREATE\s+(?:DEFINER\s*=\s*[^\s]+\s+)?PROCEDURE\s+`?([a-zA-Z0-9_]+)`?') {
+        return $Matches[1]
+    }
+    
+    # Fallback: derive from filename
+    return [System.IO.Path]::GetFileNameWithoutExtension($File.Name)
+}
+```
+
+**Pattern**: Regex extraction with fallback ensures procedure names are captured even with non-standard SQL formatting.
+
 ### Validation Coverage Matrix
 
 Track validation completeness across dimensions:
