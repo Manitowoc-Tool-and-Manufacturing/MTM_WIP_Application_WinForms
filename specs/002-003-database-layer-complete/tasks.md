@@ -23,8 +23,8 @@ This document consolidates the task inventory for Phase 2.5 (stored procedure re
 - [X] **T104** – Document parameter prefix conventions
 - [X] **T105** – Build refactoring priority matrix
 - [X] **T106** – Produce stored procedure test coverage matrix
-- [ ] **T106a** – *(Agent-run)* Review and correct transaction analysis CSV (gates refactoring) using provided discovery artifacts
-- [ ] **T106b** – *(Agent-run)* Complete stored procedure user validation checklist (75 procedures) with ReadyForVerification SQL set and supporting reports
+- [x] **T106a** – *(Agent-run)* Review and correct transaction analysis CSV (gates refactoring) using provided discovery artifacts
+- [x] **T106b** – *(Agent-run)* Complete stored procedure user validation checklist (75 procedures) with ReadyForVerification SQL set and supporting reports
 
 ### Part B – Test Implementation
 - [X] **T107** – Create BaseIntegrationTest with verbose diagnostics
