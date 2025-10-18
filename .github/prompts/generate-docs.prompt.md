@@ -6,6 +6,12 @@ description: 'Generate XML documentation comments and update markdown documentat
 
 Generate comprehensive XML documentation comments for code and update markdown documentation files following MTM standards.
 
+## Required MCP Tools
+
+This prompt can utilize the following MCP tools from the **mtm-workflow** server:
+- `check_xml_docs` - Analyze current XML documentation coverage
+- `validate_dao_patterns` - Verify code structure before documenting
+
 ## Prerequisites
 
 - Code file or documentation file to update
@@ -49,6 +55,17 @@ Create markdown documentation for technical concepts, patterns, or workflows.
 Document service interfaces, methods, and contracts.
 
 ## XML Documentation Generation
+
+### Step 0: Check Current Documentation Coverage
+
+**Before starting, assess the current state:**
+
+**USE MCP TOOL**: `mcp_mtm-workflow_check_xml_docs(source_dir: "path/to/code", min_coverage: 80, recursive: true)`
+
+This will show:
+- Current documentation coverage percentage
+- Which members are missing documentation
+- Priority files needing attention
 
 ### Step 1: Analyze Code Structure
 

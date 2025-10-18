@@ -6,6 +6,15 @@ description: 'Debugging workflow guidance for Avalonia, MVVM, and MySQL issues'
 
 Provide systematic debugging guidance for common MTM application issues including Avalonia UI problems, MVVM binding errors, and MySQL database connectivity.
 
+## Required MCP Tools
+
+This prompt can utilize the following MCP tools from the **mtm-workflow** server:
+- `validate_error_handling` - Check for proper error handling patterns in source code
+- `validate_dao_patterns` - Verify DAO implementation correctness
+- `check_security` - Scan for security vulnerabilities that might cause issues
+- `analyze_performance` - Identify performance bottlenecks causing slowdowns
+- `check_xml_docs` - Verify documentation coverage
+
 ## Prerequisites
 
 - Issue description or error message

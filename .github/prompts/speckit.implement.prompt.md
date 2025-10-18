@@ -2,6 +2,11 @@
 description: Execute the implementation plan by processing and executing all tasks defined in tasks.md
 ---
 
+## Required MCP Tools
+
+This prompt requires the following MCP tools from the **mtm-workflow** server:
+- `check_checklists` - Validate checklist completion status
+
 ## User Input
 
 ```text
@@ -15,22 +20,12 @@ You **MUST** consider the user input before proceeding (if not empty).
 1. Run `.specify/scripts/powershell/check-prerequisites.ps1 -Json -RequireTasks -IncludeTasks` from repo root and parse FEATURE_DIR and AVAILABLE_DOCS list. All paths must be absolute. For single quotes in args like "I'm Groot", use escape syntax: e.g 'I'\''m Groot' (or double-quote if possible: "I'm Groot").
 
 2. **Check checklists status** (if FEATURE_DIR/checklists/ exists):
-   - Scan all checklist files in the checklists/ directory
-   - For each checklist, count:
-     * Total items: All lines matching `- [ ]` or `- [X]` or `- [x]`
-     * Completed items: Lines matching `- [X]` or `- [x]`
-     * Incomplete items: Lines matching `- [ ]`
-   - Create a status table:
-     ```
-     | Checklist | Total | Completed | Incomplete | Status |
-     |-----------|-------|-----------|------------|--------|
-     | ux.md     | 12    | 12        | 0          | ✓ PASS |
-     | test.md   | 8     | 5         | 3          | ✗ FAIL |
-     | security.md | 6   | 6         | 0          | ✓ PASS |
-     ```
-   - Calculate overall status:
-     * **PASS**: All checklists have 0 incomplete items
-     * **FAIL**: One or more checklists have incomplete items
+   - **USE MCP TOOL**: `mcp_mtm-workflow_check_checklists(checklist_dir: "FEATURE_DIR/checklists")`
+   - The tool will automatically:
+     * Scan all checklist files in the directory
+     * Count total, completed, and incomplete items
+     * Generate a status table
+     * Calculate overall PASS/FAIL status
    
    - **If any checklist is incomplete**:
      * Display the table with incomplete item counts

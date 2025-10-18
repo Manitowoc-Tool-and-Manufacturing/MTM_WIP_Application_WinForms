@@ -6,6 +6,14 @@ description: 'Generate MySQL 5.7 stored procedure with MTM patterns'
 
 Generate MySQL 5.7 stored procedure following MTM database patterns with proper parameter handling, error management, and result set formatting.
 
+## Required MCP Tools
+
+This prompt can utilize the following MCP tools from the **mtm-workflow** server:
+- `analyze_stored_procedures` - Validate created procedure meets MTM standards
+- `compare_databases` - Check for naming conflicts and schema compatibility
+- `analyze_dependencies` - Understand call relationships if procedure calls others
+- `check_security` - Scan for SQL injection vulnerabilities
+
 ## Prerequisites
 
 - Database schema understanding

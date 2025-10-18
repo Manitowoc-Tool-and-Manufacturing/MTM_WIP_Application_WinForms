@@ -13,6 +13,16 @@ import * as path from "path";
 // Tool implementations
 import { checkChecklists } from "./tools/check-checklists.js";
 import { validateDaoPatterns } from "./tools/validate-dao-patterns.js";
+import { analyzeStoredProcedures } from "./tools/analyze-stored-procedures.js";
+import { compareDatabases } from "./tools/compare-databases.js";
+import { generateDaoWrapper } from "./tools/generate-dao-wrapper.js";
+import { validateErrorHandling } from "./tools/validate-error-handling.js";
+import { analyzeDependencies } from "./tools/analyze-dependencies.js";
+import { checkXmlDocs } from "./tools/check-xml-docs.js";
+import { suggestRefactoring } from "./tools/suggest-refactoring.js";
+import { generateUnitTests } from "./tools/generate-unit-tests.js";
+import { analyzePerformance } from "./tools/analyze-performance.js";
+import { checkSecurity } from "./tools/check-security.js";
 
 const server = new Server(
   {
@@ -63,6 +73,227 @@ const tools: Tool[] = [
       required: ["dao_dir"],
     },
   },
+  {
+    name: "analyze_stored_procedures",
+    description:
+      "Scan SQL stored procedure files for compliance with MTM standards. Checks for: required output parameters (p_Status, p_ErrorMsg), transaction management, error handling, parameter naming conventions (p_ prefix), and potential SQL injection vulnerabilities.",
+    inputSchema: {
+      type: "object",
+      properties: {
+        procedures_dir: {
+          type: "string",
+          description: "Absolute path to directory containing SQL procedure files",
+        },
+        recursive: {
+          type: "boolean",
+          description: "Whether to search subdirectories recursively",
+          default: true,
+        },
+      },
+      required: ["procedures_dir"],
+    },
+  },
+  {
+    name: "compare_databases",
+    description:
+      "Detect schema drift between Current and Updated database directories. Identifies added, removed, and modified tables and stored procedures. Useful for validating database migration changes.",
+    inputSchema: {
+      type: "object",
+      properties: {
+        current_dir: {
+          type: "string",
+          description: "Absolute path to current database directory",
+        },
+        updated_dir: {
+          type: "string",
+          description: "Absolute path to updated database directory",
+        },
+      },
+      required: ["current_dir", "updated_dir"],
+    },
+  },
+  {
+    name: "generate_dao_wrapper",
+    description:
+      "Auto-generate C# DAO wrapper code from a stored procedure file. Parses procedure parameters and creates a complete DAO method with proper Helper_Database_StoredProcedure usage, error handling, and XML documentation.",
+    inputSchema: {
+      type: "object",
+      properties: {
+        procedure_file: {
+          type: "string",
+          description: "Absolute path to SQL stored procedure file",
+        },
+        output_dir: {
+          type: "string",
+          description: "Optional: Directory to write generated DAO file",
+        },
+      },
+      required: ["procedure_file"],
+    },
+  },
+  {
+    name: "validate_error_handling",
+    description:
+      "Check C# source files for proper error handling patterns. Identifies usage of MessageBox.Show (anti-pattern), validates Service_ErrorHandler usage, checks try-catch blocks, and ensures async methods have proper error handling.",
+    inputSchema: {
+      type: "object",
+      properties: {
+        source_dir: {
+          type: "string",
+          description: "Absolute path to source code directory",
+        },
+        recursive: {
+          type: "boolean",
+          description: "Whether to search subdirectories recursively",
+          default: true,
+        },
+      },
+      required: ["source_dir"],
+    },
+  },
+  {
+    name: "analyze_dependencies",
+    description:
+      "Map stored procedure call hierarchies and dependency graphs. Identifies root procedures (entry points), leaf procedures (terminal operations), circular dependencies, and call depth statistics. Generates visual dependency tree.",
+    inputSchema: {
+      type: "object",
+      properties: {
+        procedures_dir: {
+          type: "string",
+          description: "Absolute path to directory containing SQL procedure files",
+        },
+      },
+      required: ["procedures_dir"],
+    },
+  },
+  {
+    name: "check_xml_docs",
+    description:
+      "Validate XML documentation coverage for C# code. Scans public classes, methods, properties, and fields for <summary> tags. Reports coverage percentage and identifies undocumented members.",
+    inputSchema: {
+      type: "object",
+      properties: {
+        source_dir: {
+          type: "string",
+          description: "Absolute path to source code directory",
+        },
+        recursive: {
+          type: "boolean",
+          description: "Whether to search subdirectories recursively",
+          default: true,
+        },
+        min_coverage: {
+          type: "number",
+          description: "Minimum required coverage percentage (default: 80)",
+          default: 80,
+        },
+      },
+      required: ["source_dir"],
+    },
+  },
+  {
+    name: "suggest_refactoring",
+    description:
+      "AI-powered refactoring suggestions for C# and SQL code. Identifies code smells, complexity issues, performance problems, and maintainability concerns. Provides prioritized recommendations with examples.",
+    inputSchema: {
+      type: "object",
+      properties: {
+        source_dir: {
+          type: "string",
+          description: "Absolute path to source code directory",
+        },
+        recursive: {
+          type: "boolean",
+          description: "Whether to search subdirectories recursively",
+          default: true,
+        },
+        file_type: {
+          type: "string",
+          description: "Type of files to analyze: csharp, sql, or all",
+          enum: ["csharp", "sql", "all"],
+          default: "all",
+        },
+      },
+      required: ["source_dir"],
+    },
+  },
+  {
+    name: "generate_unit_tests",
+    description:
+      "Auto-generate unit test scaffolding for C# classes. Analyzes public methods and creates test class with happy path, error case, and edge case tests. Supports xUnit, NUnit, and MSTest frameworks.",
+    inputSchema: {
+      type: "object",
+      properties: {
+        source_file: {
+          type: "string",
+          description: "Absolute path to C# source file to generate tests for",
+        },
+        output_dir: {
+          type: "string",
+          description: "Optional: Directory to write generated test file",
+        },
+        test_framework: {
+          type: "string",
+          description: "Test framework: xunit, nunit, or mstest (default: xunit)",
+          enum: ["xunit", "nunit", "mstest"],
+          default: "xunit",
+        },
+      },
+      required: ["source_file"],
+    },
+  },
+  {
+    name: "analyze_performance",
+    description:
+      "Identify performance bottlenecks in C# code. Checks for N+1 queries, blocking async operations, UI thread blocking, inefficient LINQ, string concatenation issues, and memory leaks. Provides performance score and recommendations.",
+    inputSchema: {
+      type: "object",
+      properties: {
+        source_dir: {
+          type: "string",
+          description: "Absolute path to source code directory",
+        },
+        recursive: {
+          type: "boolean",
+          description: "Whether to search subdirectories recursively",
+          default: true,
+        },
+        focus: {
+          type: "string",
+          description: "Focus area: database, ui, or all (default: all)",
+          enum: ["database", "ui", "all"],
+          default: "all",
+        },
+      },
+      required: ["source_dir"],
+    },
+  },
+  {
+    name: "check_security",
+    description:
+      "Security vulnerability scanner for C# and SQL code. Detects SQL injection, hardcoded credentials, path traversal, weak cryptography, command injection, missing authorization, and other OWASP vulnerabilities. Maps to CWE IDs.",
+    inputSchema: {
+      type: "object",
+      properties: {
+        source_dir: {
+          type: "string",
+          description: "Absolute path to source code directory",
+        },
+        recursive: {
+          type: "boolean",
+          description: "Whether to search subdirectories recursively",
+          default: true,
+        },
+        scan_type: {
+          type: "string",
+          description: "Scan type: code, config, or all (default: all)",
+          enum: ["code", "config", "all"],
+          default: "all",
+        },
+      },
+      required: ["source_dir"],
+    },
+  },
 ];
 
 // Register tool handlers
@@ -81,6 +312,56 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
       case "validate_dao_patterns":
         return await validateDaoPatterns(
           args as { dao_dir: string; recursive?: boolean }
+        );
+
+      case "analyze_stored_procedures":
+        return await analyzeStoredProcedures(
+          args as { procedures_dir: string; recursive?: boolean }
+        );
+
+      case "compare_databases":
+        return await compareDatabases(
+          args as { current_dir: string; updated_dir: string }
+        );
+
+      case "generate_dao_wrapper":
+        return await generateDaoWrapper(
+          args as { procedure_file: string; output_dir?: string }
+        );
+
+      case "validate_error_handling":
+        return await validateErrorHandling(
+          args as { source_dir: string; recursive?: boolean }
+        );
+
+      case "analyze_dependencies":
+        return await analyzeDependencies(
+          args as { procedures_dir: string }
+        );
+
+      case "check_xml_docs":
+        return await checkXmlDocs(
+          args as { source_dir: string; recursive?: boolean; min_coverage?: number }
+        );
+
+      case "suggest_refactoring":
+        return await suggestRefactoring(
+          args as { source_dir: string; recursive?: boolean; file_type?: "csharp" | "sql" | "all" }
+        );
+
+      case "generate_unit_tests":
+        return await generateUnitTests(
+          args as { source_file: string; output_dir?: string; test_framework?: "xunit" | "nunit" | "mstest" }
+        );
+
+      case "analyze_performance":
+        return await analyzePerformance(
+          args as { source_dir: string; recursive?: boolean; focus?: "database" | "ui" | "all" }
+        );
+
+      case "check_security":
+        return await checkSecurity(
+          args as { source_dir: string; recursive?: boolean; scan_type?: "code" | "config" | "all" }
         );
 
       default:
