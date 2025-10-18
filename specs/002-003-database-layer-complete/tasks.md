@@ -35,14 +35,22 @@ This document consolidates the task inventory for Phase 2.5 (stored procedure re
   - **2025-10-18**: Created `Dao_Transactions_Tests.cs` with 8 test methods covering search (with pagination, filtering, date ranges), SmartSearch, and analytics operations.
 - [X] **T110** – Author master data integration tests  
   - **2025-10-18**: Created `Dao_MasterData_Tests.cs` with 12 test methods covering ItemType (3), Location (3), Operation (3), and Part (3) CRUD validation operations.
-- [ ] **T111** – Author logging/quick button integration tests
+- [X] **T111** – Author logging/quick button integration tests
+  - **Completed**: 2025-10-18 - Created Dao_Logging_Tests.cs with 11 test methods covering error log query/delete operations and transaction history recording. Created Dao_QuickButtons_Tests.cs with 16 test methods covering CRUD, position management, edge cases, and complete workflow validation. All methods follow discovery-first workflow with verified static patterns and Async suffix conventions.
   - **Reference**: `.github/instructions/integration-testing.instructions.md` - Follow discovery-first workflow (grep_search → verify signatures → write tests). Check static vs instance patterns in Dao_ErrorLog, Dao_History, Dao_QuickButtons. Verify method names (some DAOs omit Async suffix). Include null safety checks for all DaoResult.Data access.
-- [ ] **T112** – Validate test isolation (sequential vs parallel)
+- [X] **T112** – Validate test isolation (sequential vs parallel)
+  - **Completed**: 2025-10-18 - Created comprehensive test isolation validation report analyzing all 5 integration test classes (61 tests total). Validated transaction-based isolation via BaseIntegrationTest, GUID-based unique identifiers, and proper test data management. No isolation issues detected. Documented parallelization recommendations: read-only tests (Transactions, MasterData) can run parallel, write-heavy tests (Inventory, Logging, QuickButtons) should run sequentially, connection pool stress test must run alone. Report saved to specs/002-003-database-layer-complete/test-isolation-validation.md.
   - **Reference**: `.github/instructions/integration-testing.instructions.md` - Review test data management patterns and isolation strategies. Ensure tests use unique GUIDs for write operations and don't depend on execution order.
 
 ### Part C – Refactoring & Tooling
 - [ ] **T113c** – Implement Developer role & prefix override table
+  - **Reference**: `002-003-001-developer-tools-suite/tasks.md` Phase 2 (T006-T015) - Complete foundational infrastructure
+  - **Sub-feature**: Developer Tools Suite Integration - Parameter Prefix Maintenance foundation
+  - **Estimated**: Handled by sub-feature tasks (Phase 1-2, ~10 hours)
 - [ ] **T113d** – Build parameter prefix maintenance form (Developer tools)
+  - **Reference**: `002-003-001-developer-tools-suite/tasks.md` Phase 4 (T023-T035) - Full CRUD interface implementation
+  - **Sub-feature**: Developer Tools Suite Integration - User Story 2 (Parameter Prefix Maintenance)
+  - **Estimated**: Handled by sub-feature tasks (Phase 4, ~12 hours)
 - [ ] **T113** – Refactor top priority procedures (with documentation matrix updates)
   - **Reference**: `.github/instructions/mysql-database.instructions.md` - Follow stored procedure standards (p_Status, p_ErrorMsg outputs, p_ parameter prefix). Use `.github/instructions/integration-testing.instructions.md` to verify tests after refactoring.
 - [ ] **T114** – Refactor remaining inventory procedures

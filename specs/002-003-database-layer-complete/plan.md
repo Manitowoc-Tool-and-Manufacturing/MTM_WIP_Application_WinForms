@@ -50,7 +50,11 @@ Parallel work by three developers can reduce Phase 2.5 and Phase 3–8 durations
 - Validate isolation by running suites sequentially and in parallel.
 
 #### Part C – Stored Procedure Refactoring & Tooling (T113c–T118)
-- Implement Developer role, override table, and maintenance UI (T113c/d).
+- **Sub-Feature**: Developer Tools Suite Integration (see `002-003-001-developer-tools-suite/`)
+  - Implement Developer role, parameter prefix override table and CRUD stored procedures (T113c) → Sub-feature Phase 2
+  - Build Parameter Prefix Maintenance UI in Settings → Developer (T113d) → Sub-feature Phase 4 (US2)
+  - **Optional**: Debug Dashboard, Schema Inspector, Procedure Call Hierarchy, Code Generator → Sub-feature Phases 3, 5-7
+  - **Integration Point**: Complete Phase 1-2 (Foundational) of sub-feature before starting T113. Complete Phase 4 (US2) before marking T113d complete.
 - Refactor procedures in priority order, updating documentation concurrently via matrix.
 - Add explicit transactions to multi-step operations.
 

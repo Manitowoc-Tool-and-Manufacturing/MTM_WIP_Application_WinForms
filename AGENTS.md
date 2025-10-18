@@ -1,6 +1,6 @@
 # MTM WIP Application - Agent Development Guidelines
 
-Auto-generated agent guidelines. Last updated: 2025-10-14
+Auto-generated agent guidelines. Last updated: 2025-10-18
 
 ## Agent Communication Rules
 
@@ -101,6 +101,152 @@ User=root;Password=root;SslMode=none;AllowPublicKeyRetrieval=true;
 **Server Selection Logic (Debug Mode):**
 - If current machine IP is `172.16.1.104` → connects to `172.16.1.104`
 - Otherwise → connects to `localhost`
+
+## Instruction Files System
+
+**Location**: `.github/instructions/`
+
+The project uses instruction files to provide authoritative guidance on coding patterns, best practices, and common pitfalls. **Always consult relevant instruction files before implementing tasks.**
+
+### Available Instruction Files
+
+1. **csharp-dotnet8.instructions.md** - C# and .NET 8 development guidelines
+   - Language features, naming conventions, WinForms patterns
+   - Async/await best practices, data access patterns
+   - File organization and code structure
+
+2. **mysql-database.instructions.md** - MySQL 5.7 database patterns
+   - Stored procedure standards (p_Status, p_ErrorMsg outputs)
+   - Connection management and pooling
+   - Parameter naming conventions (p_ prefix)
+   - Transaction management and retry logic
+
+3. **testing-standards.instructions.md** - Manual validation and testing
+   - Success criteria patterns
+   - Validation workflows and quality gates
+   - Manual testing approach
+
+4. **integration-testing.instructions.md** - Integration test development
+   - **Discovery-first workflow**: grep_search → verify signatures → write tests
+   - Method signature verification patterns
+   - Static vs instance method detection
+   - DaoResult null safety patterns
+   - Common pitfalls and how to avoid them
+
+5. **documentation.instructions.md** - Documentation standards
+   - XML documentation comments
+   - README structure, code comments
+   - Markdown conventions
+
+6. **markdown.instructions.md** - Markdown content creation standards
+   - Markdown formatting rules and structure
+   - Heading hierarchy, lists, code blocks
+   - Front matter requirements for documentation
+   - Validation requirements for markdown files
+
+7. **security-best-practices.instructions.md** - Security standards
+   - Input validation, SQL injection prevention
+   - Credential management, error handling
+   - Secure configuration practices
+
+8. **performance-optimization.instructions.md** - Performance guidelines
+   - Async/await patterns, connection pooling
+   - Memory management, caching strategies
+   - Collection optimization
+
+9. **code-review-standards.instructions.md** - Code review checklist
+   - Quality gates, review process
+   - Common issues to watch for
+
+### Using Instruction Files
+
+**When starting any task:**
+1. Check if task includes **Reference**: marker in tasks.md
+2. Read referenced instruction files BEFORE implementing
+3. Apply documented patterns
+4. Avoid documented pitfalls
+5. If conflict or ambiguity: Ask for clarification
+
+**Example task with reference:**
+```markdown
+- [ ] **T111** – Author logging/quick button integration tests
+  - **Reference**: .github/instructions/integration-testing.instructions.md - 
+    Follow discovery-first workflow (grep_search → verify signatures → write tests)
+```
+
+**Discovery-First Workflow (Integration Testing)**:
+```bash
+# 1. Find all methods in DAO
+grep_search(isRegexp=true, includePattern="Data/Dao_Target.cs", 
+            query="(public|internal) (static )?.*Task.*\\(")
+
+# 2. Read actual signatures
+read_file(filePath="Data/Dao_Target.cs", offset=lineNumber, limit=30)
+
+# 3. Verify patterns (static vs instance, Async suffix, parameter names)
+
+# 4. Write tests based on actual signatures (not assumptions)
+```
+
+## Memory Files (Pitfall Mediation)
+
+**Location**: `.github/memory/`
+
+Memory files capture lessons learned, common pitfalls, and evolving patterns discovered during development. They complement instruction files with real-world experience and debugging insights.
+
+### Available Memory Files
+
+1. **database-patterns.memory.instructions.md** - MySQL 5.7 patterns and limitations
+   - No CTEs (Common Table Expressions) - use subqueries instead
+   - Connection pooling pitfalls and recovery patterns
+   - Stored procedure debugging techniques
+   - Transaction isolation gotchas
+
+2. **database-ui-integration.memory.instructions.md** - Database-to-UI data flow
+   - DataGridView binding patterns
+   - Column mapping strategies
+   - Dynamic data display lessons
+   - Performance optimization for large datasets
+
+3. **html-css-forms.memory.instructions.md** - HTML/CSS form patterns
+   - Help system styling approaches
+   - Responsive design lessons
+   - Cross-browser compatibility fixes
+
+4. **javascript-modules.memory.instructions.md** - JavaScript module patterns
+   - ES6 module lessons learned
+   - WebView2 integration patterns
+   - Browser compatibility considerations
+
+5. **mcp-development-memory.instructions.md** - MCP server development
+   - Tool implementation workflows
+   - VS Code integration patterns
+   - Error handling strategies
+
+6. **spec-organization-memory.instructions.md** - Feature specification patterns
+   - Spec document organization
+   - Task breakdown strategies
+   - Requirement tracking approaches
+
+7. **validation-automation-memory.instructions.md** - Automation validation
+   - Quality gate patterns
+   - Automated validation workflows
+   - Test data management
+
+### Using Memory Files
+
+- **Read memory files alongside instruction files** to understand both the "right way" (instructions) and "learned lessons" (memory)
+- **Memory files are living documents** - updated as new pitfalls are discovered
+- **Pitfall mediation**: Memory files prevent repeating past mistakes
+- **Cross-reference with instruction files**: Memory files reference corresponding instruction files when applicable
+
+**Example workflow:**
+```bash
+# Working on database task?
+1. Read .github/instructions/mysql-database.instructions.md (patterns)
+2. Read .github/memory/database-patterns.memory.instructions.md (pitfalls)
+3. Implement with both pattern knowledge and pitfall awareness
+```
 
 ## Development Workflow
 

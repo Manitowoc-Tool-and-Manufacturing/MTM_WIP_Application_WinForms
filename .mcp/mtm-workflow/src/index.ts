@@ -24,6 +24,14 @@ import { generateUnitTests } from "./tools/generate-unit-tests.js";
 import { analyzePerformance } from "./tools/analyze-performance.js";
 import { checkSecurity } from "./tools/check-security.js";
 
+// Speckit tools
+import { parseTasks } from "./tools/speckit/parse-tasks.js";
+import { loadInstructions } from "./tools/speckit/load-instructions.js";
+import { markTaskComplete } from "./tools/speckit/mark-task-complete.js";
+import { validateBuild } from "./tools/speckit/validate-build.js";
+import { verifyIgnoreFiles } from "./tools/speckit/verify-ignore-files.js";
+import { analyzeSpecContext } from "./tools/speckit/analyze-spec-context.js";
+
 const server = new Server(
   {
     name: "mtm-workflow-mcp",
@@ -294,6 +302,129 @@ const tools: Tool[] = [
       required: ["source_dir"],
     },
   },
+  // Speckit implementation tools
+  {
+    name: "parse_tasks",
+    description:
+      "Parse tasks.md file and extract structured task information. Returns task phases, completion status, next actionable tasks, and dependencies. Essential for understanding implementation workflow.",
+    inputSchema: {
+      type: "object",
+      properties: {
+        tasks_file: {
+          type: "string",
+          description: "Absolute path to tasks.md file",
+        },
+      },
+      required: ["tasks_file"],
+    },
+  },
+  {
+    name: "load_instructions",
+    description:
+      "Load and analyze instruction file references from tasks.md. Identifies which instruction files are needed for which tasks, verifies file existence, and loads content for context. Critical for applying correct patterns during implementation.",
+    inputSchema: {
+      type: "object",
+      properties: {
+        tasks_file: {
+          type: "string",
+          description: "Absolute path to tasks.md file",
+        },
+        instructions_dir: {
+          type: "string",
+          description: "Absolute path to .github/instructions directory",
+        },
+      },
+      required: ["tasks_file", "instructions_dir"],
+    },
+  },
+  {
+    name: "mark_task_complete",
+    description:
+      "Mark one or more tasks as complete in tasks.md file. Automatically updates task status from [ ] to [X] and adds completion timestamp and notes. Essential for tracking implementation progress.",
+    inputSchema: {
+      type: "object",
+      properties: {
+        tasks_file: {
+          type: "string",
+          description: "Absolute path to tasks.md file",
+        },
+        task_ids: {
+          type: "array",
+          items: { type: "string" },
+          description: "Array of task IDs to mark complete (e.g., ['T100', 'T101'])",
+        },
+        note: {
+          type: "string",
+          description: "Optional note about task completion",
+        },
+      },
+      required: ["tasks_file", "task_ids"],
+    },
+  },
+  {
+    name: "validate_build",
+    description:
+      "Run dotnet build and validate compilation. Checks for errors, warnings, and optionally runs tests. Returns detailed build output with error/warning counts. Use after completing implementation tasks to ensure code compiles.",
+    inputSchema: {
+      type: "object",
+      properties: {
+        workspace_root: {
+          type: "string",
+          description: "Absolute path to workspace root",
+        },
+        project_file: {
+          type: "string",
+          description: "Optional: Absolute path to .csproj file (auto-detected if omitted)",
+        },
+        run_tests: {
+          type: "boolean",
+          description: "Whether to run tests after build (default: false)",
+          default: false,
+        },
+        check_errors: {
+          type: "boolean",
+          description: "Whether to scan for compilation errors (default: true)",
+          default: true,
+        },
+      },
+      required: ["workspace_root"],
+    },
+  },
+  {
+    name: "verify_ignore_files",
+    description:
+      "Verify .gitignore and other ignore files exist and contain essential patterns. Checks for missing critical patterns based on detected technology stack. Creates or updates ignore files with recommended patterns.",
+    inputSchema: {
+      type: "object",
+      properties: {
+        workspace_root: {
+          type: "string",
+          description: "Absolute path to workspace root",
+        },
+        tech_stack: {
+          type: "array",
+          items: { type: "string" },
+          description: "Optional: Technology stack tags (e.g., ['csharp', 'dotnet', 'mysql'])",
+        },
+      },
+      required: ["workspace_root"],
+    },
+  },
+  {
+    name: "analyze_spec_context",
+    description:
+      "Analyze feature specification directory and extract implementation context. Scans for standard spec files (spec.md, plan.md, tasks.md, etc.), extracts tech stack, entities, and contracts. Provides recommendations for missing documentation.",
+    inputSchema: {
+      type: "object",
+      properties: {
+        feature_dir: {
+          type: "string",
+          description: "Absolute path to feature specification directory",
+        },
+      },
+      required: ["feature_dir"],
+    },
+  },
 ];
 
 // Register tool handlers
@@ -363,6 +494,33 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
         return await checkSecurity(
           args as { source_dir: string; recursive?: boolean; scan_type?: "code" | "config" | "all" }
         );
+
+      // Speckit tools
+      case "parse_tasks":
+        return await parseTasks(args as { tasks_file: string });
+
+      case "load_instructions":
+        return await loadInstructions(
+          args as { tasks_file: string; instructions_dir: string }
+        );
+
+      case "mark_task_complete":
+        return await markTaskComplete(
+          args as { tasks_file: string; task_ids: string[]; note?: string }
+        );
+
+      case "validate_build":
+        return await validateBuild(
+          args as { workspace_root: string; project_file?: string; run_tests?: boolean; check_errors?: boolean }
+        );
+
+      case "verify_ignore_files":
+        return await verifyIgnoreFiles(
+          args as { workspace_root: string; tech_stack?: string[] }
+        );
+
+      case "analyze_spec_context":
+        return await analyzeSpecContext(args as { feature_dir: string });
 
       default:
         throw new Error(`Unknown tool: ${name}`);

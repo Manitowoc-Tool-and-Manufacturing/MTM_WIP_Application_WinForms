@@ -76,6 +76,55 @@ AGENTS.md is a Markdown file that serves as a "README for agents" - a dedicated,
 
 ### 3. Optional but Recommended Sections
 
+#### Instruction Files System
+
+- Document any `.github/instructions/` or similar instruction files
+- List available instruction files with brief descriptions
+- Explain how to use instruction files during development
+- Include discovery-first workflows or other key patterns
+- Show example task references to instruction files
+
+**Example format:**
+```markdown
+## Instruction Files System
+
+**Location**: `.github/instructions/`
+
+### Available Instruction Files
+1. **[domain].instructions.md** - [Brief description]
+2. **[another-domain].instructions.md** - [Brief description]
+
+### Using Instruction Files
+- Always check task references for relevant instruction files
+- Read instruction files BEFORE implementing
+- Apply documented patterns and avoid pitfalls
+```
+
+#### Memory Files System (Pitfall Mediation)
+
+- Document any `.github/memory/` memory files
+- List available memory files with their focus areas
+- Explain relationship between memory files and instruction files
+- Note that memory files capture lessons learned and pitfall patterns
+
+**Example format:**
+```markdown
+## Memory Files (Pitfall Mediation)
+
+**Location**: `.github/memory/`
+
+Memory files capture lessons learned, common pitfalls, and evolving patterns. They complement instruction files with real-world experience.
+
+### Available Memory Files
+1. **[domain].memory.instructions.md** - [Pitfalls and lessons learned]
+2. **[another-domain].memory.instructions.md** - [Patterns discovered in practice]
+
+### Using Memory Files
+- Read memory files to understand common pitfalls before starting work
+- Memory files are updated as new lessons are learned
+- Use with corresponding instruction files for complete guidance
+```
+
 #### Security Considerations
 
 - Security testing requirements
@@ -194,32 +243,246 @@ Here's a real example from the agents.md website:
 
 ## Implementation Steps
 
-1. **Analyze the project structure** to understand:
+### Step 1: Check for Existing AGENTS.md
+
+1. **Check if AGENTS.md exists** at repository root
+2. **If exists**: Enter UPDATE MODE (Step 2)
+3. **If missing**: Enter CREATE MODE (Step 3)
+
+### Step 2: UPDATE MODE - Verify and Update Existing AGENTS.md
+
+When AGENTS.md already exists, perform comprehensive verification and updates:
+
+#### 2.1 Read and Parse Current AGENTS.md
+- Read the entire existing AGENTS.md file
+- Parse all sections and their content
+- Extract all commands, paths, version numbers, and configurations
+- Identify the "Last updated" date if present
+
+#### 2.2 Verify Current Project State
+- **Scan project files** to determine actual state:
+  - Check package.json, *.csproj, requirements.txt, go.mod, etc. for actual dependencies
+  - Check .github/instructions/ for instruction files
+  - Check actual directory structure vs documented structure
+  - Verify build commands by checking project configuration files
+  - Check test frameworks and commands
+  - Verify database configurations
+  - Check CI/CD workflows
+
+#### 2.3 Identify Inaccuracies and Gaps
+Compare documented vs actual state:
+- **Outdated versions**: Framework versions, package versions, tool versions
+- **Wrong commands**: Commands that no longer work or have changed
+- **Missing sections**: New instruction files, new build steps, new testing approaches
+- **Incorrect paths**: File paths that have moved or been renamed
+- **Deprecated practices**: Old patterns that have been replaced
+- **Missing workflows**: New development patterns not documented
+
+#### 2.4 Update Strategy - 100% Replacement Rule
+**CRITICAL**: Never patch or comment out. Always replace completely.
+
+For each inaccuracy found:
+- **Outdated content**: Delete old content entirely, write new content from scratch
+- **Wrong information**: Replace entire paragraph/section with accurate information
+- **Missing sections**: Add complete new sections with full detail
+- **Incorrect examples**: Delete incorrect examples, provide new accurate examples
+- **Deprecated patterns**: Remove deprecated content entirely, add current patterns
+
+**Example of correct approach:**
+```
+❌ WRONG (Patching):
+## Testing
+<!-- OLD: npm test -->
+pnpm test
+
+✅ CORRECT (Complete replacement):
+## Testing
+
+**Test Framework**: Vitest with React Testing Library
+
+```powershell
+# Run all tests
+pnpm test
+
+# Run tests in watch mode
+pnpm test:watch
+
+# Run tests with coverage
+pnpm test:coverage
+
+# Run specific test file
+pnpm test path/to/test.spec.ts
+```
+```
+
+#### 2.5 Section-by-Section Verification Checklist
+
+For each section, verify:
+
+- [ ] **Project Overview**
+  - Accurate description of current project state
+  - Current key technologies (not outdated versions)
+  - Current architecture (reflect any refactoring)
+
+- [ ] **Instruction Files System** (if applicable)
+  - Scan .github/instructions/ directory
+  - List ALL instruction files (not just some)
+  - Verify each file still exists
+  - Add any new instruction files
+  - Remove references to deleted instruction files
+  - Update descriptions if file content has changed
+
+- [ ] **Memory Files System** (if applicable)
+  - Scan .github/memory/ directory
+  - List ALL memory files (pitfall mediation, lessons learned)
+  - Verify each memory file still exists
+  - Add any new memory files discovered
+  - Note which memory files complement which instruction files
+  - Update descriptions if patterns have evolved
+
+- [ ] **Setup Commands**
+  - Test each command works as documented
+  - Update package manager if changed (npm→pnpm, etc.)
+  - Verify database setup steps are current
+  - Check environment variable requirements
+
+- [ ] **Development Workflow**
+  - Verify start commands work
+  - Check build commands produce expected output
+  - Validate watch/hot-reload setup
+  - Update any changed development practices
+
+- [ ] **Testing Instructions**
+  - Verify test commands work
+  - Check test framework versions
+  - Update test file patterns if changed
+  - Validate coverage commands
+  - Update integration test procedures
+
+- [ ] **Code Style Guidelines**
+  - Check linter configuration is current
+  - Verify formatter settings
+  - Update naming conventions if changed
+  - Reflect any new coding standards
+
+- [ ] **Build and Deployment**
+  - Verify build commands work
+  - Check output directories are correct
+  - Update deployment procedures if changed
+  - Validate CI/CD information
+
+- [ ] **Database/Data Access Patterns** (if applicable)
+  - Verify connection patterns are current
+  - Check stored procedure conventions
+  - Update DAO patterns if refactored
+  - Validate migration procedures
+
+- [ ] **Security Considerations**
+  - Update credential management practices
+  - Check authentication patterns
+  - Verify secrets management approach
+
+- [ ] **Pull Request Guidelines**
+  - Verify PR title format is current
+  - Check required checks match CI/CD
+  - Update review process if changed
+
+#### 2.6 Perform Complete Rewrite
+Using verified information:
+- Delete the entire existing AGENTS.md file content
+- Write a completely new AGENTS.md from scratch using verified information
+- Update "Last updated" date to current date
+- Ensure NO outdated information survives
+- Include ALL relevant sections (don't skip sections that still apply)
+
+### Step 3: CREATE MODE - Generate New AGENTS.md
+
+When AGENTS.md doesn't exist, create from scratch:
+
+#### 3.1 Analyze the project structure to understand:
 
    - Programming languages and frameworks used
    - Package managers and build tools
    - Testing frameworks
    - Project architecture (monorepo, single package, etc.)
 
-2. **Identify key workflows** by examining:
+#### 3.2 Scan for instruction and memory files:
+   - Check .github/instructions/*.instructions.md (stable patterns)
+   - Check .github/memory/*.memory.instructions.md (pitfall mediation, lessons learned)
+   - Check .specify/instructions/*.instructions.md
+   - Check vscode-userdata references in copilot-instructions.md
+
+#### 3.3 Identify key workflows by examining:
 
    - package.json scripts
    - Makefile or other build files
    - CI/CD configuration files
    - Documentation files
 
-3. **Create comprehensive sections** covering:
+#### 3.4 Create comprehensive sections covering:
 
    - All essential setup and development commands
+   - Instruction files system (if instruction files exist)
    - Testing strategies and commands
    - Code style and conventions
    - Build and deployment processes
 
-4. **Include specific, actionable commands** that agents can execute directly
+#### 3.5 Include specific, actionable commands that agents can execute directly
 
-5. **Test the instructions** by ensuring all commands work as documented
+#### 3.6 Test the instructions by ensuring all commands work as documented
 
-6. **Keep it focused** on what agents need to know, not general project information
+#### 3.7 Keep it focused on what agents need to know, not general project information
+
+### Step 4: Final Validation
+
+Whether updating or creating:
+- **Verify all commands** can be executed successfully
+- **Check all file paths** exist
+- **Validate version numbers** match actual installed versions
+- **Test build procedures** work as documented
+- **Confirm instruction file references** point to existing files
+- **Confirm memory file references** point to existing files
+- **Update "Last updated" date** to current date
+
+### Step 5: Report Changes (UPDATE MODE only)
+
+If updating existing AGENTS.md, provide a summary of changes:
+- List sections that were updated
+- Note new sections added
+- List removed outdated content
+- Highlight any breaking changes in commands
+- Confirm total rewrite was performed (not patching)
+
+**Example report format:**
+```markdown
+## AGENTS.md Update Report
+
+**Previous version**: 2025-10-14
+**Current version**: 2025-10-18
+
+### Sections Updated
+- **Instruction Files System**: Added 1 new instruction file (integration-testing.instructions.md)
+- **Memory Files System**: NEW SECTION - Added documentation for 7 memory files
+- **Testing Instructions**: Updated test commands to reflect MSTest framework
+- **Database Operations Pattern**: Fixed incorrect stored procedure parameter naming
+
+### Sections Added
+- Memory Files (Pitfall Mediation) - Complete new section
+
+### Content Removed
+- Outdated Avalonia/MVVM references (replaced with WinForms patterns)
+- Incorrect connection string examples (replaced with environment-aware patterns)
+
+### Breaking Changes
+- None - all existing commands still work
+
+### Verification Status
+✅ All commands tested and verified
+✅ All file paths confirmed to exist
+✅ All instruction file references validated
+✅ All memory file references validated
+✅ Build procedures tested successfully
+```
 
 ## Best Practices
 

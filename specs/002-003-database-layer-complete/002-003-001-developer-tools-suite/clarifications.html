@@ -1,0 +1,1255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Developer Tools Suite - Clarification Questionnaire</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 20px;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 40px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+        }
+        
+        .header p {
+            font-size: 1.2em;
+            opacity: 0.9;
+        }
+        
+        .content {
+            padding: 40px;
+        }
+        
+        .intro {
+            background: #f8f9fa;
+            border-left: 5px solid #667eea;
+            padding: 20px;
+            margin-bottom: 30px;
+            border-radius: 5px;
+        }
+        
+        .intro h2 {
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+        
+        .question-section {
+            margin-bottom: 40px;
+            background: white;
+            border: 2px solid #e9ecef;
+            border-radius: 10px;
+            padding: 25px;
+            transition: all 0.3s ease;
+        }
+        
+        .question-section:hover {
+            border-color: #667eea;
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.1);
+        }
+        
+        .question-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #e9ecef;
+        }
+        
+        .question-number {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 1.2em;
+            margin-right: 15px;
+            flex-shrink: 0;
+        }
+        
+        .question-title {
+            flex: 1;
+        }
+        
+        .question-title h3 {
+            color: #2d3748;
+            font-size: 1.3em;
+            margin-bottom: 5px;
+        }
+        
+        .question-context {
+            color: #718096;
+            font-size: 0.9em;
+        }
+        
+        .options {
+            margin: 20px 0;
+        }
+        
+        .option {
+            background: #f8f9fa;
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 12px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: flex-start;
+        }
+        
+        .option:hover {
+            background: #e9ecef;
+            border-color: #667eea;
+            transform: translateX(5px);
+        }
+        
+        .option.selected {
+            background: #e6f0ff;
+            border-color: #667eea;
+            border-width: 3px;
+        }
+        
+        .option input[type="radio"] {
+            margin-right: 12px;
+            margin-top: 3px;
+            cursor: pointer;
+            width: 20px;
+            height: 20px;
+            flex-shrink: 0;
+        }
+        
+        .option-content {
+            flex: 1;
+        }
+        
+        .option-label {
+            font-weight: 600;
+            color: #2d3748;
+            margin-bottom: 5px;
+        }
+        
+        .option-description {
+            color: #718096;
+            font-size: 0.9em;
+        }
+        
+        .suggestion {
+            background: #d4edda;
+            border: 2px solid #c3e6cb;
+            border-radius: 8px;
+            padding: 15px;
+            margin-top: 15px;
+        }
+        
+        .suggestion strong {
+            color: #155724;
+            display: block;
+            margin-bottom: 8px;
+            font-size: 1.1em;
+        }
+        
+        .suggestion-reason {
+            color: #155724;
+            font-size: 0.95em;
+            line-height: 1.5;
+        }
+        
+        .custom-answer {
+            margin-top: 15px;
+            padding: 15px;
+            background: #fff3cd;
+            border: 2px solid #ffc107;
+            border-radius: 8px;
+        }
+        
+        .custom-answer label {
+            display: block;
+            font-weight: 600;
+            color: #856404;
+            margin-bottom: 8px;
+        }
+        
+        .custom-answer textarea {
+            width: 100%;
+            min-height: 80px;
+            padding: 10px;
+            border: 2px solid #ffc107;
+            border-radius: 5px;
+            font-family: inherit;
+            font-size: 0.95em;
+            resize: vertical;
+        }
+        
+        .actions {
+            background: #f8f9fa;
+            padding: 30px;
+            border-top: 3px solid #e9ecef;
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        
+        .btn {
+            padding: 15px 30px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
+        }
+        
+        .btn-secondary {
+            background: #6c757d;
+            color: white;
+        }
+        
+        .btn-secondary:hover {
+            background: #5a6268;
+            transform: translateY(-2px);
+        }
+        
+        .progress {
+            background: #e9ecef;
+            height: 30px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            overflow: hidden;
+        }
+        
+        .progress-bar {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+            transition: width 0.3s ease;
+        }
+        
+        .summary {
+            background: #e6f0ff;
+            border: 3px solid #667eea;
+            border-radius: 10px;
+            padding: 25px;
+            margin-top: 30px;
+            display: none;
+        }
+        
+        .summary.show {
+            display: block;
+        }
+        
+        .summary h2 {
+            color: #667eea;
+            margin-bottom: 20px;
+            font-size: 1.8em;
+        }
+        
+        .summary-item {
+            background: white;
+            padding: 15px;
+            margin-bottom: 10px;
+            border-radius: 5px;
+            border-left: 4px solid #667eea;
+        }
+        
+        .summary-item strong {
+            display: block;
+            color: #2d3748;
+            margin-bottom: 5px;
+        }
+        
+        .summary-item span {
+            color: #718096;
+        }
+        
+        @media print {
+            body {
+                background: white;
+                padding: 0;
+            }
+            
+            .container {
+                box-shadow: none;
+            }
+            
+            .actions {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🛠️ Developer Tools Suite</h1>
+            <p>Clarification Questionnaire - Stakeholder Decision Input</p>
+            <p style="font-size: 0.9em; margin-top: 10px;">Feature ID: 002-003-001 | Date: October 18, 2025</p>
+        </div>
+        
+        <div class="content">
+            <div class="intro">
+                <h2>📋 Instructions</h2>
+                <p><strong>Purpose:</strong> This questionnaire gathers your decisions on key implementation details for the Developer Tools Suite integration.</p>
+                <p style="margin-top: 10px;"><strong>How to use:</strong></p>
+                <ul style="margin-left: 20px; margin-top: 10px;">
+                    <li>Select your preferred option for each question (radio button)</li>
+                    <li>Review the <span style="color: #28a745; font-weight: 600;">suggested answer</span> and rationale</li>
+                    <li>Add custom answers in the provided text area if needed</li>
+                    <li>Click "Copy My Answers" to export your selections</li>
+                    <li>Click "Generate Summary" to see overview of decisions</li>
+                </ul>
+            </div>
+            
+            <div class="progress">
+                <div class="progress-bar" id="progressBar" style="width: 0%">0 of 15 answered</div>
+            </div>
+            
+            <!-- Question 1 -->
+            <div class="question-section" data-question="1">
+                <div class="question-header">
+                    <div class="question-number">1</div>
+                    <div class="question-title">
+                        <h3>Parameter Prefix Override Scope</h3>
+                        <p class="question-context">How should parameter prefix overrides be scoped across environments?</p>
+                    </div>
+                </div>
+                
+                <div class="options">
+                    <label class="option">
+                        <input type="radio" name="q1" value="database-specific">
+                        <div class="option-content">
+                            <div class="option-label">Database-specific (separate overrides per environment)</div>
+                            <div class="option-description">Each database (Development, Test, Production) maintains its own override table. Safer but requires manual synchronization.</div>
+                        </div>
+                    </label>
+                    
+                    <label class="option">
+                        <input type="radio" name="q1" value="shared-config">
+                        <div class="option-content">
+                            <div class="option-label">Shared configuration file</div>
+                            <div class="option-description">Overrides stored in appsettings.json and deployed with application. Version-controlled but less flexible.</div>
+                        </div>
+                    </label>
+                    
+                    <label class="option">
+                        <input type="radio" name="q1" value="hybrid">
+                        <div class="option-content">
+                            <div class="option-label">Hybrid (database + config file merge)</div>
+                            <div class="option-description">Load from config file first, then merge/override with database values. Most flexible but more complex.</div>
+                        </div>
+                    </label>
+                </div>
+                
+                <div class="suggestion">
+                    <strong>✅ Suggested Answer: Database-specific</strong>
+                    <div class="suggestion-reason">
+                        <strong>Rationale:</strong> Keeps overrides isolated per environment, preventing Production from being affected by Development experiments. Safer for Phase 2.5 deployment validation. Override synchronization can be handled through documented deployment checklist.
+                    </div>
+                </div>
+                
+                <div class="custom-answer">
+                    <label for="q1-custom">💡 Your Custom Answer (optional):</label>
+                    <textarea id="q1-custom" placeholder="Add your reasoning or alternative approach here..."></textarea>
+                </div>
+            </div>
+            
+            <!-- Question 2 -->
+            <div class="question-section" data-question="2">
+                <div class="question-header">
+                    <div class="question-number">2</div>
+                    <div class="question-title">
+                        <h3>Debug Dashboard Output Persistence</h3>
+                        <p class="question-context">Should Debug Dashboard output be saved between application sessions?</p>
+                    </div>
+                </div>
+                
+                <div class="options">
+                    <label class="option">
+                        <input type="radio" name="q2" value="ephemeral">
+                        <div class="option-content">
+                            <div class="option-label">Ephemeral only (cleared on close)</div>
+                            <div class="option-description">Output exists only during current session. Users can manually save to file if needed. Simpler implementation.</div>
+                        </div>
+                    </label>
+                    
+                    <label class="option">
+                        <input type="radio" name="q2" value="persist-file">
+                        <div class="option-content">
+                            <div class="option-label">Persist to file (automatic save on close)</div>
+                            <div class="option-description">Automatically save to dated log file in Logs/ directory. Useful for review but consumes disk space.</div>
+                        </div>
+                    </label>
+                    
+                    <label class="option">
+                        <input type="radio" name="q2" value="persist-database">
+                        <div class="option-content">
+                            <div class="option-label">Persist to database (queryable history)</div>
+                            <div class="option-description">Store debug output in database table. Allows searching/filtering but adds database overhead.</div>
+                        </div>
+                    </label>
+                </div>
+                
+                <div class="suggestion">
+                    <strong>✅ Suggested Answer: Ephemeral only</strong>
+                    <div class="suggestion-reason">
+                        <strong>Rationale:</strong> Debug Dashboard is for real-time monitoring during active development. Developers can manually save important logs via "Save Log" button. Avoids automatic file/database clutter. Aligns with LoggingUtility for persistent error logs.
+                    </div>
+                </div>
+                
+                <div class="custom-answer">
+                    <label for="q2-custom">💡 Your Custom Answer (optional):</label>
+                    <textarea id="q2-custom" placeholder="Add your reasoning or alternative approach here..."></textarea>
+                </div>
+            </div>
+            
+            <!-- Question 3 -->
+            <div class="question-section" data-question="3">
+                <div class="question-header">
+                    <div class="question-number">3</div>
+                    <div class="question-title">
+                        <h3>Schema Inspector Edit Capabilities</h3>
+                        <p class="question-context">Should Schema Inspector support editing schema or remain read-only?</p>
+                    </div>
+                </div>
+                
+                <div class="options">
+                    <label class="option">
+                        <input type="radio" name="q3" value="read-only">
+                        <div class="option-content">
+                            <div class="option-label">Read-only (view metadata only)</div>
+                            <div class="option-description">Display schema information without edit capabilities. Use MySQL Workbench or scripts for modifications. Safer and simpler.</div>
+                        </div>
+                    </label>
+                    
+                    <label class="option">
+                        <input type="radio" name="q3" value="limited-edit">
+                        <div class="option-content">
+                            <div class="option-label">Limited editing (comments/descriptions only)</div>
+                            <div class="option-description">Allow editing table/column comments but not structure. Useful for documentation but adds complexity.</div>
+                        </div>
+                    </label>
+                    
+                    <label class="option">
+                        <input type="radio" name="q3" value="full-edit">
+                        <div class="option-content">
+                            <div class="option-label">Full editing (create/alter/drop operations)</div>
+                            <div class="option-description">Complete schema management within application. Dangerous and duplicates existing tools. Not recommended.</div>
+                        </div>
+                    </label>
+                </div>
+                
+                <div class="suggestion">
+                    <strong>✅ Suggested Answer: Read-only</strong>
+                    <div class="suggestion-reason">
+                        <strong>Rationale:</strong> Schema Inspector is for information/inspection during development workflows. Schema changes should go through controlled migration scripts. Prevents accidental schema modifications. Developers already have MySQL Workbench for schema editing.
+                    </div>
+                </div>
+                
+                <div class="custom-answer">
+                    <label for="q3-custom">💡 Your Custom Answer (optional):</label>
+                    <textarea id="q3-custom" placeholder="Add your reasoning or alternative approach here..."></textarea>
+                </div>
+            </div>
+            
+            <!-- Question 4 -->
+            <div class="question-section" data-question="4">
+                <div class="question-header">
+                    <div class="question-number">4</div>
+                    <div class="question-title">
+                        <h3>Code Generator Scope</h3>
+                        <p class="question-context">Should Code Generator create entire DAO classes or just individual methods?</p>
+                    </div>
+                </div>
+                
+                <div class="options">
+                    <label class="option">
+                        <input type="radio" name="q4" value="methods-only">
+                        <div class="option-content">
+                            <div class="option-label">Methods only (add to existing DAOs)</div>
+                            <div class="option-description">Generate single method code to paste into existing DAO class. Safer, avoids overwriting existing code.</div>
+                        </div>
+                    </label>
+                    
+                    <label class="option">
+                        <input type="radio" name="q4" value="full-class">
+                        <div class="option-content">
+                            <div class="option-label">Full DAO class (complete file generation)</div>
+                            <div class="option-description">Generate entire DAO class with all methods for related procedures. Risk of overwriting existing code.</div>
+                        </div>
+                    </label>
+                    
+                    <label class="option">
+                        <input type="radio" name="q4" value="configurable">
+                        <div class="option-content">
+                            <div class="option-label">Configurable (user selects method or class)</div>
+                            <div class="option-description">Provide radio button option in UI to choose scope. Most flexible but more UI complexity.</div>
+                        </div>
+                    </label>
+                </div>
+                
+                <div class="suggestion">
+                    <strong>✅ Suggested Answer: Methods only</strong>
+                    <div class="suggestion-reason">
+                        <strong>Rationale:</strong> Safer approach that complements existing DAOs rather than replacing them. Developers can review generated method and paste into appropriate DAO class. Reduces risk of losing hand-written code. Aligns with incremental refactoring workflow of Phase 2.5.
+                    </div>
+                </div>
+                
+                <div class="custom-answer">
+                    <label for="q4-custom">💡 Your Custom Answer (optional):</label>
+                    <textarea id="q4-custom" placeholder="Add your reasoning or alternative approach here..."></textarea>
+                </div>
+            </div>
+            
+            <!-- Question 5 -->
+            <div class="question-section" data-question="5">
+                <div class="question-header">
+                    <div class="question-number">5</div>
+                    <div class="question-title">
+                        <h3>Developer Tools Availability in Production</h3>
+                        <p class="question-context">Should developer tools be accessible in Production mode or Development only?</p>
+                    </div>
+                </div>
+                
+                <div class="options">
+                    <label class="option">
+                        <input type="radio" name="q5" value="dev-only">
+                        <div class="option-content">
+                            <div class="option-label">Development only (disabled in Production)</div>
+                            <div class="option-description">Developer category hidden completely in Release builds. Safest but limits troubleshooting options.</div>
+                        </div>
+                    </label>
+                    
+                    <label class="option">
+                        <input type="radio" name="q5" value="warning-dialog">
+                        <div class="option-content">
+                            <div class="option-label">Available with warning dialog</div>
+                            <div class="option-description">Show warning when accessing in Production mode, require confirmation. Allows Production troubleshooting with clear intent.</div>
+                        </div>
+                    </label>
+                    
+                    <label class="option">
+                        <input type="radio" name="q5" value="always-available">
+                        <div class="option-content">
+                            <div class="option-label">Always available (no restrictions)</div>
+                            <div class="option-description">Full access regardless of mode. Most flexible but could lead to accidental Production changes.</div>
+                        </div>
+                    </label>
+                </div>
+                
+                <div class="suggestion">
+                    <strong>✅ Suggested Answer: Available with warning dialog</strong>
+                    <div class="suggestion-reason">
+                        <strong>Rationale:</strong> Balances safety with flexibility. Allows troubleshooting Production issues via Schema Inspector or Debug Dashboard when needed, but explicit warning makes intent clear. Parameter Prefix Maintenance could still be restricted (read-only in Production).
+                    </div>
+                </div>
+                
+                <div class="custom-answer">
+                    <label for="q5-custom">💡 Your Custom Answer (optional):</label>
+                    <textarea id="q5-custom" placeholder="Add your reasoning or alternative approach here..."></textarea>
+                </div>
+            </div>
+            
+            <!-- Question 6 -->
+            <div class="question-section" data-question="6">
+                <div class="question-header">
+                    <div class="question-number">6</div>
+                    <div class="question-title">
+                        <h3>Parameter Prefix Override Validation</h3>
+                        <p class="question-context">How should system validate parameter prefix overrides for non-existent procedures?</p>
+                    </div>
+                </div>
+                
+                <div class="options">
+                    <label class="option">
+                        <input type="radio" name="q6" value="block-save">
+                        <div class="option-content">
+                            <div class="option-label">Block save (validation error)</div>
+                            <div class="option-description">Prevent saving overrides for procedures that don't exist in INFORMATION_SCHEMA. Strictest validation.</div>
+                        </div>
+                    </label>
+                    
+                    <label class="option">
+                        <input type="radio" name="q6" value="warn-allow">
+                        <div class="option-content">
+                            <div class="option-label">Warn but allow save</div>
+                            <div class="option-description">Show warning dialog but allow override to be saved. Useful for procedures that will be created later.</div>
+                        </div>
+                    </label>
+                    
+                    <label class="option">
+                        <input type="radio" name="q6" value="no-validation">
+                        <div class="option-content">
+                            <div class="option-label">No validation (trust user input)</div>
+                            <div class="option-description">Save overrides without checking procedure existence. Fastest but error-prone.</div>
+                        </div>
+                    </label>
+                </div>
+                
+                <div class="suggestion">
+                    <strong>✅ Suggested Answer: Warn but allow save</strong>
+                    <div class="suggestion-reason">
+                        <strong>Rationale:</strong> Supports workflow where override is created before procedure deployment. Warning alerts developer to potential typo but doesn't block legitimate use case. System can flag unused overrides in diagnostic reports.
+                    </div>
+                </div>
+                
+                <div class="custom-answer">
+                    <label for="q6-custom">💡 Your Custom Answer (optional):</label>
+                    <textarea id="q6-custom" placeholder="Add your reasoning or alternative approach here..."></textarea>
+                </div>
+            </div>
+            
+            <!-- Question 7 -->
+            <div class="question-section" data-question="7">
+                <div class="question-header">
+                    <div class="question-number">7</div>
+                    <div class="question-title">
+                        <h3>Debug Dashboard Output Limit</h3>
+                        <p class="question-context">What should happen when Debug Dashboard output exceeds 1000 lines?</p>
+                    </div>
+                </div>
+                
+                <div class="options">
+                    <label class="option">
+                        <input type="radio" name="q7" value="auto-truncate">
+                        <div class="option-content">
+                            <div class="option-label">Auto-truncate oldest 100 lines</div>
+                            <div class="option-description">Automatically remove oldest entries when limit reached. Keeps recent activity visible without user action.</div>
+                        </div>
+                    </label>
+                    
+                    <label class="option">
+                        <input type="radio" name="q7" value="pause-prompt">
+                        <div class="option-content">
+                            <div class="option-label">Pause capture and prompt user</div>
+                            <div class="option-description">Stop capturing when limit reached, show dialog asking to clear or save. Preserves all data but requires user intervention.</div>
+                        </div>
+                    </label>
+                    
+                    <label class="option">
+                        <input type="radio" name="q7" value="circular-buffer">
+                        <div class="option-content">
+                            <div class="option-label">Circular buffer (rolling window)</div>
+                            <div class="option-description">Always show most recent 1000 lines, continuously overwriting oldest. Smooth UX but might lose important early messages.</div>
+                        </div>
+                    </label>
+                </div>
+                
+                <div class="suggestion">
+                    <strong>✅ Suggested Answer: Auto-truncate oldest 100 lines</strong>
+                    <div class="suggestion-reason">
+                        <strong>Rationale:</strong> Balances continuous capture with memory management. Removes old data in chunks rather than line-by-line for performance. User notices truncation (line count drops from 1000 to 900) but capture continues. Matches existing implementation pattern.
+                    </div>
+                </div>
+                
+                <div class="custom-answer">
+                    <label for="q7-custom">💡 Your Custom Answer (optional):</label>
+                    <textarea id="q7-custom" placeholder="Add your reasoning or alternative approach here..."></textarea>
+                </div>
+            </div>
+            
+            <!-- Question 8 -->
+            <div class="question-section" data-question="8">
+                <div class="question-header">
+                    <div class="question-number">8</div>
+                    <div class="question-title">
+                        <h3>Schema Inspector Connection Failure Handling</h3>
+                        <p class="question-context">How should Schema Inspector handle database connection failures?</p>
+                    </div>
+                </div>
+                
+                <div class="options">
+                    <label class="option">
+                        <input type="radio" name="q8" value="error-retry">
+                        <div class="option-content">
+                            <div class="option-label">Show error with retry button</div>
+                            <div class="option-description">Display Service_ErrorHandler dialog, provide "Retry" button to reload schema. Clear user feedback with recovery option.</div>
+                        </div>
+                    </label>
+                    
+                    <label class="option">
+                        <input type="radio" name="q8" value="cached-data">
+                        <div class="option-content">
+                            <div class="option-label">Fall back to cached schema data</div>
+                            <div class="option-description">Show last successfully loaded schema with warning banner. Allows offline viewing but data may be stale.</div>
+                        </div>
+                    </label>
+                    
+                    <label class="option">
+                        <input type="radio" name="q8" value="auto-retry">
+                        <div class="option-content">
+                            <div class="option-label">Automatic retry with exponential backoff</div>
+                            <div class="option-description">Retry connection 3 times before showing error. Handles transient failures but adds delay.</div>
+                        </div>
+                    </label>
+                </div>
+                
+                <div class="suggestion">
+                    <strong>✅ Suggested Answer: Show error with retry button</strong>
+                    <div class="suggestion-reason">
+                        <strong>Rationale:</strong> Immediate user feedback via Service_ErrorHandler aligns with application patterns. Retry button gives user control over when to attempt reconnection. No hidden automatic retries that could delay UI response. Matches manual refresh pattern already in Schema Inspector.
+                    </div>
+                </div>
+                
+                <div class="custom-answer">
+                    <label for="q8-custom">💡 Your Custom Answer (optional):</label>
+                    <textarea id="q8-custom" placeholder="Add your reasoning or alternative approach here..."></textarea>
+                </div>
+            </div>
+            
+            <!-- Question 9 -->
+            <div class="question-section" data-question="9">
+                <div class="question-header">
+                    <div class="question-number">9</div>
+                    <div class="question-title">
+                        <h3>Code Generator Complex Procedures</h3>
+                        <p class="question-context">How should Code Generator handle procedures with 10+ parameters?</p>
+                    </div>
+                </div>
+                
+                <div class="options">
+                    <label class="option">
+                        <input type="radio" name="q9" value="generate-warning">
+                        <div class="option-content">
+                            <div class="option-label">Generate with warning comment</div>
+                            <div class="option-description">Create code normally but add XML comment warning about complexity and manual review requirement.</div>
+                        </div>
+                    </label>
+                    
+                    <label class="option">
+                        <input type="radio" name="q9" value="suggest-dto">
+                        <div class="option-content">
+                            <div class="option-label">Suggest DTO pattern</div>
+                            <div class="option-description">Generate both direct parameter method AND DTO-based method. Developer chooses which to use.</div>
+                        </div>
+                    </label>
+                    
+                    <label class="option">
+                        <input type="radio" name="q9" value="refuse-generate">
+                        <div class="option-content">
+                            <div class="option-label">Refuse to generate (show message)</div>
+                            <div class="option-description">Display message suggesting manual implementation for complex procedures. Forces code review but less helpful.</div>
+                        </div>
+                    </label>
+                </div>
+                
+                <div class="suggestion">
+                    <strong>✅ Suggested Answer: Generate with warning comment</strong>
+                    <div class="suggestion-reason">
+                        <strong>Rationale:</strong> Generator should produce working code regardless of complexity. Warning comment alerts developer that method needs extra scrutiny. Procedure like inv_transactions_Search (17 parameters) is legitimate complexity, not code smell. Developer can refactor to DTO pattern manually if preferred.
+                    </div>
+                </div>
+                
+                <div class="custom-answer">
+                    <label for="q9-custom">💡 Your Custom Answer (optional):</label>
+                    <textarea id="q9-custom" placeholder="Add your reasoning or alternative approach here..."></textarea>
+                </div>
+            </div>
+            
+            <!-- Question 10 -->
+            <div class="question-section" data-question="10">
+                <div class="question-header">
+                    <div class="question-number">10</div>
+                    <div class="question-title">
+                        <h3>Procedure Call Hierarchy Missing Artifacts</h3>
+                        <p class="question-context">What should happen if call-hierarchy-complete.json file is missing or corrupted?</p>
+                    </div>
+                </div>
+                
+                <div class="options">
+                    <label class="option">
+                        <input type="radio" name="q10" value="graceful-message">
+                        <div class="option-content">
+                            <div class="option-label">Show message to regenerate artifacts</div>
+                            <div class="option-description">Display friendly error message with instructions to run analysis scripts. Graceful degradation without crash.</div>
+                        </div>
+                    </label>
+                    
+                    <label class="option">
+                        <input type="radio" name="q10" value="auto-regenerate">
+                        <div class="option-content">
+                            <div class="option-label">Automatically run regeneration scripts</div>
+                            <div class="option-description">Detect missing file and execute PowerShell scripts to rebuild. Convenient but adds complexity and execution time.</div>
+                        </div>
+                    </label>
+                    
+                    <label class="option">
+                        <input type="radio" name="q10" value="disable-control">
+                        <div class="option-content">
+                            <div class="option-label">Disable control entirely</div>
+                            <div class="option-description">Hide Procedure Call Hierarchy from Developer menu if artifacts missing. Cleanest UI but reduces discoverability.</div>
+                        </div>
+                    </label>
+                </div>
+                
+                <div class="suggestion">
+                    <strong>✅ Suggested Answer: Show message to regenerate artifacts</strong>
+                    <div class="suggestion-reason">
+                        <strong>Rationale:</strong> Control should be visible but display helpful error message with regeneration instructions. Developer tools are for developers who can run PowerShell scripts. Shows file path and script name to run. Avoids complexity of automatic script execution from C# code.
+                    </div>
+                </div>
+                
+                <div class="custom-answer">
+                    <label for="q10-custom">💡 Your Custom Answer (optional):</label>
+                    <textarea id="q10-custom" placeholder="Add your reasoning or alternative approach here..."></textarea>
+                </div>
+            </div>
+            
+            <!-- Question 11 -->
+            <div class="question-section" data-question="11">
+                <div class="question-header">
+                    <div class="question-number">11</div>
+                    <div class="question-title">
+                        <h3>Developer Role Check Timing</h3>
+                        <p class="question-context">When should application check for Developer role?</p>
+                    </div>
+                </div>
+                
+                <div class="options">
+                    <label class="option">
+                        <input type="radio" name="q11" value="settings-open">
+                        <div class="option-content">
+                            <div class="option-label">When Settings form opens</div>
+                            <div class="option-description">Check role once at Settings form initialization. TreeView structure built based on result. Simple and efficient.</div>
+                        </div>
+                    </label>
+                    
+                    <label class="option">
+                        <input type="radio" name="q11" value="control-load">
+                        <div class="option-content">
+                            <div class="option-label">When each developer control loads</div>
+                            <div class="option-description">Verify role every time a developer tool is accessed. More secure but redundant checks.</div>
+                        </div>
+                    </label>
+                    
+                    <label class="option">
+                        <input type="radio" name="q11" value="app-startup">
+                        <div class="option-content">
+                            <div class="option-label">At application startup</div>
+                            <div class="option-description">Check once at login and store in Model_AppVariables. Fastest but doesn't reflect runtime role changes.</div>
+                        </div>
+                    </label>
+                </div>
+                
+                <div class="suggestion">
+                    <strong>✅ Suggested Answer: When Settings form opens</strong>
+                    <div class="suggestion-reason">
+                        <strong>Rationale:</strong> Balances performance with freshness. User roles don't change during session (would require logout/login). Settings form initialization is natural checkpoint. Avoids redundant checks while ensuring accurate role state when accessing developer tools.
+                    </div>
+                </div>
+                
+                <div class="custom-answer">
+                    <label for="q11-custom">💡 Your Custom Answer (optional):</label>
+                    <textarea id="q11-custom" placeholder="Add your reasoning or alternative approach here..."></textarea>
+                </div>
+            </div>
+            
+            <!-- Question 12 -->
+            <div class="question-section" data-question="12">
+                <div class="question-header">
+                    <div class="question-number">12</div>
+                    <div class="question-title">
+                        <h3>Parameter Prefix Override Audit Trail</h3>
+                        <p class="question-context">How detailed should the audit trail be for parameter prefix overrides?</p>
+                    </div>
+                </div>
+                
+                <div class="options">
+                    <label class="option">
+                        <input type="radio" name="q12" value="basic-audit">
+                        <div class="option-content">
+                            <div class="option-label">Basic (CreatedBy, CreatedDate only)</div>
+                            <div class="option-description">Track who created override and when. No modification history. Simplest implementation.</div>
+                        </div>
+                    </label>
+                    
+                    <label class="option">
+                        <input type="radio" name="q12" value="full-audit">
+                        <div class="option-content">
+                            <div class="option-label">Full (Created + Modified tracking)</div>
+                            <div class="option-description">Track creation and modification (ModifiedBy, ModifiedDate). Shows last change but no complete history.</div>
+                        </div>
+                    </label>
+                    
+                    <label class="option">
+                        <input type="radio" name="q12" value="history-table">
+                        <div class="option-content">
+                            <div class="option-label">Complete history (separate audit table)</div>
+                            <div class="option-description">Store every change in sys_parameter_prefix_overrides_history table. Full audit trail but more complex queries.</div>
+                        </div>
+                    </label>
+                </div>
+                
+                <div class="suggestion">
+                    <strong>✅ Suggested Answer: Full (Created + Modified tracking)</strong>
+                    <div class="suggestion-reason">
+                        <strong>Rationale:</strong> Provides accountability without complexity of separate history table. Matches pattern used in other MTM tables (usr_users, etc.). Sufficient for troubleshooting "who changed this override" questions. Complete history not needed for this feature.
+                    </div>
+                </div>
+                
+                <div class="custom-answer">
+                    <label for="q12-custom">💡 Your Custom Answer (optional):</label>
+                    <textarea id="q12-custom" placeholder="Add your reasoning or alternative approach here..."></textarea>
+                </div>
+            </div>
+            
+            <!-- Question 13 -->
+            <div class="question-section" data-question="13">
+                <div class="question-header">
+                    <div class="question-number">13</div>
+                    <div class="question-title">
+                        <h3>Schema Inspector Refresh Frequency</h3>
+                        <p class="question-context">Should Schema Inspector auto-refresh or require manual refresh?</p>
+                    </div>
+                </div>
+                
+                <div class="options">
+                    <label class="option">
+                        <input type="radio" name="q13" value="manual-only">
+                        <div class="option-content">
+                            <div class="option-label">Manual refresh only (button click)</div>
+                            <div class="option-description">User clicks "Refresh" button to reload schema. Predictable behavior, no surprise database queries.</div>
+                        </div>
+                    </label>
+                    
+                    <label class="option">
+                        <input type="radio" name="q13" value="auto-interval">
+                        <div class="option-content">
+                            <div class="option-label">Auto-refresh every 60 seconds</div>
+                            <div class="option-description">Periodically reload schema in background. Shows recent changes but adds database load.</div>
+                        </div>
+                    </label>
+                    
+                    <label class="option">
+                        <input type="radio" name="q13" value="on-focus">
+                        <div class="option-content">
+                            <div class="option-label">Refresh when control receives focus</div>
+                            <div class="option-description">Reload whenever user switches to Schema Inspector. Fresh data without constant polling.</div>
+                        </div>
+                    </label>
+                </div>
+                
+                <div class="suggestion">
+                    <strong>✅ Suggested Answer: Manual refresh only</strong>
+                    <div class="suggestion-reason">
+                        <strong>Rationale:</strong> Schema changes are infrequent during normal development. Manual refresh gives developer control over when to query database. No background threads or timers needed. Clear F5 keyboard shortcut (standard refresh gesture). Matches file browser patterns developers already know.
+                    </div>
+                </div>
+                
+                <div class="custom-answer">
+                    <label for="q13-custom">💡 Your Custom Answer (optional):</label>
+                    <textarea id="q13-custom" placeholder="Add your reasoning or alternative approach here..."></textarea>
+                </div>
+            </div>
+            
+            <!-- Question 14 -->
+            <div class="question-section" data-question="14">
+                <div class="question-header">
+                    <div class="question-number">14</div>
+                    <div class="question-title">
+                        <h3>Code Generator Template Selection</h3>
+                        <p class="question-context">Should Code Generator support multiple code templates or single standard template?</p>
+                    </div>
+                </div>
+                
+                <div class="options">
+                    <label class="option">
+                        <input type="radio" name="q14" value="single-template">
+                        <div class="option-content">
+                            <div class="option-label">Single standard template (MTM pattern only)</div>
+                            <div class="option-description">Generate using one canonical pattern following all MTM standards. Consistent output, simpler implementation.</div>
+                        </div>
+                    </label>
+                    
+                    <label class="option">
+                        <input type="radio" name="q14" value="multiple-templates">
+                        <div class="option-content">
+                            <div class="option-label">Multiple templates (Query/Insert/Update/Delete)</div>
+                            <div class="option-description">Different templates based on procedure type. More contextual code but requires procedure classification.</div>
+                        </div>
+                    </label>
+                    
+                    <label class="option">
+                        <input type="radio" name="q14" value="custom-templates">
+                        <div class="option-content">
+                            <div class="option-label">User-customizable templates (load from files)</div>
+                            <div class="option-description">Allow developers to define their own templates. Maximum flexibility but complex to implement and maintain.</div>
+                        </div>
+                    </label>
+                </div>
+                
+                <div class="suggestion">
+                    <strong>✅ Suggested Answer: Single standard template</strong>
+                    <div class="suggestion-reason">
+                        <strong>Rationale:</strong> Phase 2.5 goal is standardization. Single template enforces consistency. All procedures should use same Helper_Database_StoredProcedure pattern regardless of operation type. Reduces code generator complexity. Developer can manually adjust generated code if needed.
+                    </div>
+                </div>
+                
+                <div class="custom-answer">
+                    <label for="q14-custom">💡 Your Custom Answer (optional):</label>
+                    <textarea id="q14-custom" placeholder="Add your reasoning or alternative approach here..."></textarea>
+                </div>
+            </div>
+            
+            <!-- Question 15 -->
+            <div class="question-section" data-question="15">
+                <div class="question-header">
+                    <div class="question-number">15</div>
+                    <div class="question-title">
+                        <h3>TreeView Category Ordering</h3>
+                        <p class="question-context">Where should Developer category appear in Settings TreeView hierarchy?</p>
+                    </div>
+                </div>
+                
+                <div class="options">
+                    <label class="option">
+                        <input type="radio" name="q15" value="after-about">
+                        <div class="option-content">
+                            <div class="option-label">After "About" (last in list)</div>
+                            <div class="option-description">Developer tools at bottom of TreeView. Keeps user-facing settings prominent, developer tools out of way.</div>
+                        </div>
+                    </label>
+                    
+                    <label class="option">
+                        <input type="radio" name="q15" value="before-about">
+                        <div class="option-content">
+                            <div class="option-label">Before "About" (after user settings)</div>
+                            <div class="option-description">Developer tools above About. More visible but still after user-focused categories.</div>
+                        </div>
+                    </label>
+                    
+                    <label class="option">
+                        <input type="radio" name="q15" value="top-level">
+                        <div class="option-content">
+                            <div class="option-label">At top level (first or second position)</div>
+                            <div class="option-description">Prioritize developer tools. Makes sense during Phase 2.5 development but might be jarring for normal users.</div>
+                        </div>
+                    </label>
+                </div>
+                
+                <div class="suggestion">
+                    <strong>✅ Suggested Answer: After "About"</strong>
+                    <div class="suggestion-reason">
+                        <strong>Rationale:</strong> Maintains logical grouping of user-facing settings first, then About/Developer at end. Developer role users can scroll to bottom easily. Doesn't disrupt existing Settings form layout for Admin/Normal users who don't have Developer role. Spec document already suggests this ordering.
+                    </div>
+                </div>
+                
+                <div class="custom-answer">
+                    <label for="q15-custom">💡 Your Custom Answer (optional):</label>
+                    <textarea id="q15-custom" placeholder="Add your reasoning or alternative approach here..."></textarea>
+                </div>
+            </div>
+        </div>
+        
+        <div class="summary" id="summary">
+            <h2>📊 Decision Summary</h2>
+            <div id="summaryContent"></div>
+        </div>
+        
+        <div class="actions">
+            <button class="btn btn-primary" onclick="copyAnswers()">📋 Copy My Answers</button>
+            <button class="btn btn-primary" onclick="generateSummary()">📊 Generate Summary</button>
+            <button class="btn btn-secondary" onclick="window.print()">🖨️ Print</button>
+            <button class="btn btn-secondary" onclick="resetForm()">🔄 Reset All</button>
+        </div>
+    </div>
+    
+    <script>
+        // Track answered questions
+        function updateProgress() {
+            const totalQuestions = 15;
+            let answeredCount = 0;
+            
+            for (let i = 1; i <= totalQuestions; i++) {
+                const radios = document.getElementsByName('q' + i);
+                for (let radio of radios) {
+                    if (radio.checked) {
+                        answeredCount++;
+                        break;
+                    }
+                }
+            }
+            
+            const percentage = (answeredCount / totalQuestions) * 100;
+            const progressBar = document.getElementById('progressBar');
+            progressBar.style.width = percentage + '%';
+            progressBar.textContent = `${answeredCount} of ${totalQuestions} answered`;
+        }
+        
+        // Add click handlers to options
+        document.querySelectorAll('.option').forEach(option => {
+            option.addEventListener('click', function() {
+                const radio = this.querySelector('input[type="radio"]');
+                radio.checked = true;
+                
+                // Remove selected class from siblings
+                const parent = this.parentElement;
+                parent.querySelectorAll('.option').forEach(opt => opt.classList.remove('selected'));
+                
+                // Add selected class to this option
+                this.classList.add('selected');
+                
+                updateProgress();
+            });
+        });
+        
+        function copyAnswers() {
+            const totalQuestions = 15;
+            let answers = '='.repeat(80) + '\n';
+            answers += 'DEVELOPER TOOLS SUITE - MY ANSWERS\n';
+            answers += '='.repeat(80) + '\n\n';
+            answers += 'Feature ID: 002-003-001\n';
+            answers += 'Date: ' + new Date().toLocaleDateString() + '\n';
+            answers += 'Respondent: [Your Name]\n\n';
+            answers += '='.repeat(80) + '\n\n';
+            
+            for (let i = 1; i <= totalQuestions; i++) {
+                const section = document.querySelector(`[data-question="${i}"]`);
+                const title = section.querySelector('.question-title h3').textContent;
+                const radios = document.getElementsByName('q' + i);
+                let selectedOption = 'NOT ANSWERED';
+                
+                for (let radio of radios) {
+                    if (radio.checked) {
+                        selectedOption = radio.parentElement.querySelector('.option-label').textContent;
+                        break;
+                    }
+                }
+                
+                const customAnswer = document.getElementById(`q${i}-custom`).value;
+                
+                answers += `Q${i}. ${title}\n`;
+                answers += '-'.repeat(80) + '\n';
+                answers += `Selected: ${selectedOption}\n`;
+                
+                if (customAnswer.trim()) {
+                    answers += `\nCustom Answer:\n${customAnswer}\n`;
+                }
+                
+                answers += '\n' + '='.repeat(80) + '\n\n';
+            }
+            
+            // Copy to clipboard
+            navigator.clipboard.writeText(answers).then(() => {
+                alert('✅ Your answers have been copied to clipboard!\n\nYou can now paste them into an email, document, or provide them to the development team.');
+            }).catch(() => {
+                // Fallback for older browsers
+                const textarea = document.createElement('textarea');
+                textarea.value = answers;
+                document.body.appendChild(textarea);
+                textarea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textarea);
+                alert('✅ Your answers have been copied to clipboard!');
+            });
+        }
+        
+        function generateSummary() {
+            const totalQuestions = 15;
+            const summaryContent = document.getElementById('summaryContent');
+            const summary = document.getElementById('summary');
+            
+            let html = '';
+            let answeredCount = 0;
+            
+            for (let i = 1; i <= totalQuestions; i++) {
+                const section = document.querySelector(`[data-question="${i}"]`);
+                const title = section.querySelector('.question-title h3').textContent;
+                const radios = document.getElementsByName('q' + i);
+                let selectedOption = 'NOT ANSWERED';
+                
+                for (let radio of radios) {
+                    if (radio.checked) {
+                        selectedOption = radio.parentElement.querySelector('.option-label').textContent;
+                        answeredCount++;
+                        break;
+                    }
+                }
+                
+                html += `
+                    <div class="summary-item">
+                        <strong>Q${i}. ${title}</strong>
+                        <span>${selectedOption}</span>
+                    </div>
+                `;
+            }
+            
+            html = `<p style="margin-bottom: 20px;"><strong>Progress:</strong> ${answeredCount} of ${totalQuestions} questions answered (${Math.round(answeredCount/totalQuestions*100)}% complete)</p>` + html;
+            
+            summaryContent.innerHTML = html;
+            summary.classList.add('show');
+            summary.scrollIntoView({ behavior: 'smooth' });
+        }
+        
+        function resetForm() {
+            if (confirm('Are you sure you want to reset all answers? This cannot be undone.')) {
+                const radios = document.querySelectorAll('input[type="radio"]');
+                radios.forEach(radio => radio.checked = false);
+                
+                const textareas = document.querySelectorAll('textarea');
+                textareas.forEach(textarea => textarea.value = '');
+                
+                document.querySelectorAll('.option').forEach(opt => opt.classList.remove('selected'));
+                
+                document.getElementById('summary').classList.remove('show');
+                
+                updateProgress();
+            }
+        }
+        
+        // Initialize progress on page load
+        updateProgress();
+    </script>
+</body>
+</html>

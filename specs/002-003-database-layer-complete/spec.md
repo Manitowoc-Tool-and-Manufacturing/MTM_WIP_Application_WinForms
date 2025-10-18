@@ -28,7 +28,7 @@ The effort creates a single source of truth for the combined scope under one spe
 9. **Stored procedure coverage** – Phase 2.5 is blocking. All procedures audited and refactored before DAO work.
 10. **Documentation workflow** – Documentation updated concurrently with refactoring. Tracking via Documentation Update Matrix.
 11. **Schema drift** – Allow production hotfixes during phase. Re-audit prior to deployment and reconcile (Category A/B/C) before go-live.
-12. **Developer tooling** – Introduce Developer role (Admin prerequisite) + parameter prefix maintenance form for overrides.
+12. **Developer tooling** – Introduce Developer role (Admin prerequisite) + parameter prefix maintenance form for overrides. Full developer tools suite specified in sub-feature: [`002-003-001-developer-tools-suite/`](./002-003-001-developer-tools-suite/).
 13. **CSV transaction analysis** – Automated detection of procedure transaction patterns with human review (T106a) before refactoring.
 14. **Verbose integration tests** – Base test helper outputs structured JSON diagnostics (seven fields) on failure.
 15. **Roslyn enforcement** – Custom analyzer (warnings → errors) ensures DAO code routes through helpers and checks status outputs.
@@ -194,9 +194,37 @@ The effort creates a single source of truth for the combined scope under one spe
 | Documentation backlog | Enforce concurrent updates via matrix and validation scripts |
 | Production outage during deployment | Pre-deployment backup + rollback script + off-hours window |
 
+## Sub-Features
+
+This specification includes one integrated sub-feature:
+
+### 002-003-001: Developer Tools Suite Integration
+
+**Location**: [`002-003-001-developer-tools-suite/`](./002-003-001-developer-tools-suite/)
+
+**Purpose**: Comprehensive developer tooling for database layer maintenance and debugging during Phase 2.5 standardization work.
+
+**User Stories** (5 total):
+1. **Debug Dashboard** (P1) - Real-time stored procedure execution tracing via Service_DebugTracer integration
+2. **Parameter Prefix Maintenance** (P1) - CRUD interface for managing parameter prefix overrides (completes T113c/T113d)
+3. **Schema Inspector** (P2) - Read-only database browser for tables and stored procedures
+4. **Procedure Call Hierarchy** (P2) - Visualization of DAO → stored procedure relationships
+5. **Code Generator** (P3) - Boilerplate DAO method generation from stored procedure signatures
+
+**Integration Points**:
+- **Blocks T113** (stored procedure refactoring) - Must complete Phase 2 (Foundational) and Phase 4 (US2)
+- **Settings Form** - All tools accessible via Settings → Developer (IsDeveloper role gate)
+- **Control_Database** - Schema Inspector also integrated into Settings → Database for non-developer access
+- **Helper_Database_StoredProcedure** - Parameter prefix override cache extends existing helper
+
+**Documentation**: See sub-feature [`spec.md`](./002-003-001-developer-tools-suite/spec.md), [`plan.md`](./002-003-001-developer-tools-suite/plan.md), [`tasks.md`](./002-003-001-developer-tools-suite/tasks.md)
+
+---
+
 ## References
 
 - Existing specs: `specs/002-comprehensive-database-layer/spec.md`, `specs/003-database-layer-refresh/spec.md`
 - Contracts: `specs/002-comprehensive-database-layer/contracts/*.json`
+- Sub-feature: `002-003-001-developer-tools-suite/` (Developer Tools Suite)
 - Checklists: `specs/003-database-layer-refresh/checklists/*.md`
 - Branch PR: https://github.com/Dorotel/MTM_WIP_Application_WinForms/pull/59

@@ -42,6 +42,22 @@ public static class Model_ParameterPrefixCache
     private static Dictionary<string, Dictionary<string, string>> _cache = new();
 
     /// <summary>
+    /// Parameter prefix overrides: Outer key = stored procedure name, Inner key = parameter name (WITHOUT prefix), Value = override prefix
+    /// Takes precedence over INFORMATION_SCHEMA cache for gradual stored procedure standardization.
+    /// Loaded from sys_parameter_prefix_overrides table at application startup.
+    /// </summary>
+    /// <example>
+    /// Override structure:
+    /// {
+    ///   "legacy_transfer_procedure": {
+    ///     "UserID": "in_",      // Override p_UserID → in_UserID
+    ///     "PartNumber": ""      // Override p_PartNumber → PartNumber (no prefix)
+    ///   }
+    /// }
+    /// </example>
+    private static Dictionary<string, Dictionary<string, string>> _overrides = new();
+
+    /// <summary>
     /// Thread-safe lock for cache initialization
     /// </summary>
     private static readonly object _lockObject = new();
@@ -50,6 +66,11 @@ public static class Model_ParameterPrefixCache
     /// Indicates whether the cache has been initialized
     /// </summary>
     private static bool _isInitialized = false;
+
+    /// <summary>
+    /// Indicates whether the override cache has been loaded
+    /// </summary>
+    private static bool _overridesLoaded = false;
 
     #endregion
 
@@ -61,9 +82,30 @@ public static class Model_ParameterPrefixCache
     public static bool IsInitialized => _isInitialized;
 
     /// <summary>
+    /// Gets whether the parameter prefix overrides have been loaded
+    /// </summary>
+    public static bool OverridesLoaded => _overridesLoaded;
+
+    /// <summary>
     /// Gets the number of stored procedures in the cache
     /// </summary>
     public static int ProcedureCount => _cache.Count;
+
+    /// <summary>
+    /// Gets the number of override entries loaded
+    /// </summary>
+    public static int OverrideCount
+    {
+        get
+        {
+            int count = 0;
+            foreach (var proc in _overrides.Values)
+            {
+                count += proc.Count;
+            }
+            return count;
+        }
+    }
 
     #endregion
 
@@ -92,18 +134,62 @@ public static class Model_ParameterPrefixCache
     }
 
     /// <summary>
+    /// Loads parameter prefix overrides from sys_parameter_prefix_overrides table.
+    /// Called after Initialize() during application startup.
+    /// </summary>
+    /// <param name="overrides">List of override records from Dao_ParameterPrefixOverrides.GetAllActiveAsync()</param>
+    /// <remarks>
+    /// Overrides take precedence over INFORMATION_SCHEMA cache for parameter prefix resolution.
+    /// This enables gradual stored procedure standardization without breaking existing DAO code.
+    /// </remarks>
+    public static void LoadOverrides(List<Model_ParameterPrefixOverride> overrides)
+    {
+        lock (_lockObject)
+        {
+            _overrides.Clear();
+
+            foreach (var @override in overrides)
+            {
+                if (!_overrides.ContainsKey(@override.ProcedureName))
+                {
+                    _overrides[@override.ProcedureName] = new Dictionary<string, string>();
+                }
+
+                // Store parameter name WITHOUT prefix → override prefix mapping
+                _overrides[@override.ProcedureName][@override.ParameterName] = @override.OverridePrefix;
+            }
+
+            _overridesLoaded = true;
+        }
+    }
+
+    /// <summary>
+    /// Reloads parameter prefix overrides from database (for runtime refresh after UI changes).
+    /// </summary>
+    /// <param name="overrides">Fresh list of override records</param>
+    public static void ReloadOverrides(List<Model_ParameterPrefixOverride> overrides)
+    {
+        lock (_lockObject)
+        {
+            _overridesLoaded = false;
+            LoadOverrides(overrides);
+        }
+    }
+
+    /// <summary>
     /// Detects the correct parameter prefix for a given stored procedure and parameter name
     /// </summary>
     /// <param name="procedureName">The stored procedure name (e.g., "inv_inventory_get_all")</param>
     /// <param name="parameterName">The parameter name WITHOUT prefix (e.g., "LocationCode")</param>
     /// <returns>The detected prefix: "p_", "in_", or "o_". Defaults to "p_" if not found in cache.</returns>
     /// <remarks>
-    /// Detection algorithm:
-    /// 1. Look up procedureName in cache dictionary
-    /// 2. If found, check if "p_" + parameterName exists → return "p_"
-    /// 3. If not found, check if "in_" + parameterName exists → return "in_"
-    /// 4. If not found, check if "o_" + parameterName exists → return "o_"
-    /// 5. If procedure not in cache or parameter not found, use fallback convention:
+    /// Detection algorithm (PRIORITY ORDER):
+    /// 1. **Check override cache first** - if override exists for procedure + parameter, use override prefix
+    /// 2. Look up procedureName in INFORMATION_SCHEMA cache dictionary
+    /// 3. If found, check if "p_" + parameterName exists → return "p_"
+    /// 4. If not found, check if "in_" + parameterName exists → return "in_"
+    /// 5. If not found, check if "o_" + parameterName exists → return "o_"
+    /// 6. If procedure not in cache or parameter not found, use fallback convention:
     ///    - If procedure name contains "Transfer" or "transaction": return "in_"
     ///    - Otherwise: return "p_" (most common prefix)
     /// </remarks>
@@ -113,10 +199,23 @@ public static class Model_ParameterPrefixCache
     /// 
     /// var prefix2 = GetParameterPrefix("inv_transaction_log", "FromLocation");
     /// // Returns "in_" because "in_FromLocation" exists in cache for this procedure
+    /// 
+    /// // With override:
+    /// // Override: inv_transaction_log.FromLocation → "" (no prefix)
+    /// var prefix3 = GetParameterPrefix("inv_transaction_log", "FromLocation");
+    /// // Returns "" because override takes precedence over cache
     /// </example>
     public static string GetParameterPrefix(string procedureName, string parameterName)
     {
-        // Check if cache has been initialized
+        // PRIORITY 1: Check override cache first
+        if (_overridesLoaded && 
+            _overrides.TryGetValue(procedureName, out var procOverrides) &&
+            procOverrides.TryGetValue(parameterName, out var overridePrefix))
+        {
+            return overridePrefix; // Override takes precedence
+        }
+
+        // PRIORITY 2: Check INFORMATION_SCHEMA cache
         if (!_isInitialized)
         {
             return ApplyFallbackConvention(procedureName);
@@ -138,7 +237,7 @@ public static class Model_ParameterPrefixCache
             }
         }
 
-        // Cache miss or parameter not found - use fallback convention
+        // PRIORITY 3: Cache miss or parameter not found - use fallback convention
         return ApplyFallbackConvention(procedureName);
     }
 
