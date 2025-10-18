@@ -20,7 +20,7 @@ BEGIN
         SET p_ErrorMsg = 'User is required';
         ROLLBACK;
     ELSE
-        SET @d := CONCAT('DROP USER IF EXISTS \\'', REPLACE(p_User, '\\'', '\\\\\\''), '\\'@\\'%\\';');
+        SET @d := CONCAT('DROP USER IF EXISTS ''', REPLACE(p_User, '''', ''''''), '''@''%'';');
         PREPARE stmt FROM @d;
         EXECUTE stmt;
         DEALLOCATE PREPARE stmt;

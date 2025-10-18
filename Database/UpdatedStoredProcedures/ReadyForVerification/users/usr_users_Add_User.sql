@@ -49,13 +49,13 @@ BEGIN
         SET v_RowCount = ROW_COUNT();
         IF v_RowCount > 0 THEN
             SET @createUserQuery := CONCAT(
-                'CREATE USER IF NOT EXISTS \\'', REPLACE(p_User, '\\'', '\\\\\\''), '\\'@\\'%\\''
+                'CREATE USER IF NOT EXISTS ''', REPLACE(p_User, '''', ''''''), '''@''%'''
             );
             PREPARE stmt FROM @createUserQuery;
             EXECUTE stmt;
             DEALLOCATE PREPARE stmt;
             SET @grantAllQuery := CONCAT(
-                'GRANT ALL PRIVILEGES ON *.* TO \\'', REPLACE(p_User, '\\'', '\\\\\\''), '\\'@\\'%\\';'
+                'GRANT ALL PRIVILEGES ON *.* TO ''', REPLACE(p_User, '''', ''''''), '''@''%'';'
             );
             PREPARE stmt FROM @grantAllQuery;
             EXECUTE stmt;

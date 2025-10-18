@@ -260,18 +260,39 @@ function Update-ChecklistNote {
     for ($i = 0; $i -lt $lines.Count; $i++) {
         if ($lines[$i] -like "*${ProcedureRelativePath}*") {
             $found = $true
-            if ($lines[$i] -match 'NOTE:') {
-                $lines[$i] = $lines[$i] -replace 'NOTE:.*$', "NOTE: $Note"
+
+            $currentNote = $null
+            $hasNote = $false
+            if ($lines[$i] -match 'NOTE:\s*(.*)$') {
+                $currentNote = $matches[1].Trim()
+                $hasNote = $true
+            }
+
+            $noteToWrite = $Note
+            if ($Note -like 'Validation complete*' -and $currentNote) {
+                $updateMatch = [regex]::Match($currentNote, 'CSV updated via auto-analysis at [0-9:\-\s]+')
+                if ($updateMatch.Success) {
+                    $noteToWrite = "{0} | {1}" -f $updateMatch.Value, $Note
+                }
+            }
+
+            if ($hasNote) {
+                $lines[$i] = $lines[$i] -replace 'NOTE:.*$', "NOTE: $noteToWrite"
             }
             else {
-                $lines[$i] = "$($lines[$i]) — NOTE: $Note"
+                $lines[$i] = "$($lines[$i]) — NOTE: $noteToWrite"
             }
             break
         }
     }
 
     if ($found) {
-        Set-Content -Path $checklistPath -Value $lines
+        try {
+            Set-Content -Path $checklistPath -Value $lines -Encoding UTF8 -Force
+        }
+        catch {
+            Write-Warning ("Failed to update checklist for {0}: {1}" -f $ProcedureRelativePath, $_.Exception.Message)
+        }
     }
     else {
         Write-Warning "Checklist entry for $ProcedureRelativePath not found."
@@ -306,11 +327,12 @@ $csvRows = Import-Csv -Path $csvPath
 
 foreach ($proc in $procedures) {
     Write-Host "Processing $($proc.Name)..."
+    $timestamp = Get-Date -Format 'yyyy-MM-dd HH:mm:ss'
 
     $execResult = Invoke-MySqlScript -File $proc
     if (-not $execResult) {
         $relativeChecklistPath = Get-ChecklistRelativePath -FileInfo $proc
-        Update-ChecklistNote -ProcedureRelativePath $relativeChecklistPath -Note "MySQL execution failed"
+        Update-ChecklistNote -ProcedureRelativePath $relativeChecklistPath -Note "MySQL execution failed at $timestamp"
         continue
     }
 
@@ -323,11 +345,11 @@ foreach ($proc in $procedures) {
     if ($changed) {
         $csvRows | Export-Csv -Path $csvPath -NoTypeInformation -UseQuotes AsNeeded
         $relative = Get-ChecklistRelativePath -FileInfo $proc
-        Update-ChecklistNote -ProcedureRelativePath $relative -Note "CSV updated to match auto-analysis"
+        Update-ChecklistNote -ProcedureRelativePath $relative -Note "CSV updated via auto-analysis at $timestamp"
         Write-Host "Updated CSV entry for $procedureName" -ForegroundColor Yellow
         continue
     }
 
     $relativePath = Get-ChecklistRelativePath -FileInfo $proc
-    Update-ChecklistNote -ProcedureRelativePath $relativePath -Note "Validation complete; no CSV changes"
+    Update-ChecklistNote -ProcedureRelativePath $relativePath -Note "Validation complete at $timestamp; no CSV changes"
 }
