@@ -3,7 +3,12 @@ using MTM_Inventory_Application.Helpers;
 using MTM_Inventory_Application.Models;
 using MySql.Data.MySqlClient;
 using System;
+using System.Collections.Generic;
 using System.Data;
+using System.Diagnostics;
+using System.Linq;
+using System.Text.Json;
+using System.Threading.Tasks;
 
 namespace MTM_Inventory_Application.Tests.Integration;
 
@@ -52,6 +57,8 @@ public abstract class BaseIntegrationTest
 {
     #region Fields
 
+    private readonly object _diagnosticSyncRoot = new();
+
     /// <summary>
     /// Database connection for the current test.
     /// Opened in <see cref="TestInitialize"/> and closed in <see cref="TestCleanup"/>.
@@ -63,6 +70,10 @@ public abstract class BaseIntegrationTest
     /// Begun in <see cref="TestInitialize"/> and rolled back in <see cref="TestCleanup"/>.
     /// </summary>
     private MySqlTransaction? _transaction;
+
+    private ProcedureDiagnosticContext? _diagnosticContext;
+
+    private static readonly IReadOnlyDictionary<string, object?> EmptyParameters = new Dictionary<string, object?>();
 
     #endregion
 
@@ -146,6 +157,12 @@ public abstract class BaseIntegrationTest
     #region Protected Helper Methods
 
     /// <summary>
+    /// Gets the MSTest context for the current test execution.
+    /// Populated automatically by MSTest before each test runs.
+    /// </summary>
+    public TestContext? TestContext { get; set; }
+
+    /// <summary>
     /// Gets the connection string for the test database.
     /// </summary>
     /// <returns>Connection string configured for <c>mtm_wip_application_winforms_test</c> database.</returns>
@@ -202,9 +219,229 @@ public abstract class BaseIntegrationTest
         return _transaction;
     }
 
+    /// <summary>
+    /// Captures row counts for selected tables in the test database.
+    /// </summary>
+    /// <param name="tables">Optional list of table names to inspect.</param>
+    /// <returns>Dictionary of table name to row count.</returns>
+    /// <remarks>
+    /// Executes counts within the current test transaction when available so diagnostics reflect uncommitted work.
+    /// </remarks>
+    protected IReadOnlyDictionary<string, int> CaptureTableRowCounts(params string[] tables)
+    {
+        if (tables == null || tables.Length == 0)
+        {
+            return new Dictionary<string, int>();
+        }
+
+        var distinctTables = new HashSet<string>(tables.Where(t => !string.IsNullOrWhiteSpace(t)), StringComparer.OrdinalIgnoreCase);
+        if (distinctTables.Count == 0)
+        {
+            return new Dictionary<string, int>();
+        }
+
+        var results = new Dictionary<string, int>(StringComparer.OrdinalIgnoreCase);
+        MySqlConnection? externalConnection = null;
+
+        try
+        {
+            var connection = _connection;
+            if (connection is null)
+            {
+                externalConnection = new MySqlConnection(GetTestConnectionString());
+                externalConnection.Open();
+                connection = externalConnection;
+            }
+
+            foreach (var table in distinctTables)
+            {
+                using var command = connection.CreateCommand();
+                command.CommandText = $"SELECT COUNT(*) FROM `{table}`";
+                if (_transaction != null && ReferenceEquals(connection, _connection))
+                {
+                    command.Transaction = _transaction;
+                }
+
+                try
+                {
+                    var count = Convert.ToInt32(command.ExecuteScalar());
+                    results[table] = count;
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"[Diagnostics] Failed to capture row count for {table}: {ex.Message}");
+                }
+            }
+        }
+        finally
+        {
+            externalConnection?.Dispose();
+        }
+
+        return results;
+    }
+
     #endregion
 
     #region Assertion Helpers
+
+    /// <summary>
+    /// Provides the most recent procedure parameter snapshot recorded for diagnostics.
+    /// </summary>
+    protected IReadOnlyDictionary<string, object?> CurrentProcedureParameters
+    {
+        get
+        {
+            lock (_diagnosticSyncRoot)
+            {
+                return _diagnosticContext?.Parameters ?? EmptyParameters;
+            }
+        }
+    }
+
+    /// <summary>
+    /// Exposes the last measured execution duration for diagnostics (milliseconds).
+    /// </summary>
+    protected long? CurrentExecutionTimeMs
+    {
+        get
+        {
+            lock (_diagnosticSyncRoot)
+            {
+                return _diagnosticContext?.ElapsedMilliseconds;
+            }
+        }
+    }
+
+    /// <summary>
+    /// Executes a stored procedure against the test database with automatic diagnostic capture.
+    /// </summary>
+    protected async Task<DaoResult<DataTable>> ExecuteTestProcedureAsync(
+        string procedureName,
+        Dictionary<string, object> parameters,
+        params string[] tablesToSnapshot)
+    {
+        if (string.IsNullOrWhiteSpace(procedureName))
+        {
+            throw new ArgumentException("Procedure name is required", nameof(procedureName));
+        }
+
+        if (parameters is null)
+        {
+            throw new ArgumentNullException(nameof(parameters));
+        }
+
+        using var diagnosticScope = BeginProcedureDiagnostics(
+            procedureName,
+            parameters,
+            tablesToSnapshot ?? Array.Empty<string>());
+
+        return await Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync(
+            GetTestConnectionString(),
+            procedureName,
+            parameters);
+    }
+
+    /// <summary>
+    /// Begins a diagnostic scope for manual DAO invocations.
+    /// </summary>
+    protected ProcedureDiagnosticScope BeginProcedureDiagnostics(
+        string procedureName,
+        IReadOnlyDictionary<string, object>? parameters = null,
+        params string[] tablesToSnapshot)
+    {
+        if (string.IsNullOrWhiteSpace(procedureName))
+        {
+            throw new ArgumentException("Procedure name is required", nameof(procedureName));
+        }
+
+        var context = new ProcedureDiagnosticContext(
+            procedureName,
+            parameters,
+            tablesToSnapshot ?? Array.Empty<string>());
+
+        lock (_diagnosticSyncRoot)
+        {
+            _diagnosticContext = context;
+        }
+
+    return ProcedureDiagnosticScope.Create(this, context);
+    }
+
+    /// <summary>
+    /// Updates the current diagnostic parameter snapshot. Useful when DAO helpers add defaults.
+    /// </summary>
+    protected void UpdateProcedureDiagnostics(IReadOnlyDictionary<string, object>? parameters)
+    {
+        if (parameters is null)
+        {
+            return;
+        }
+
+        lock (_diagnosticSyncRoot)
+        {
+            _diagnosticContext?.UpdateParameters(parameters);
+        }
+    }
+
+    /// <summary>
+    /// Clears any active diagnostic context.
+    /// </summary>
+    protected void ResetProcedureDiagnostics()
+    {
+        lock (_diagnosticSyncRoot)
+        {
+            _diagnosticContext = null;
+        }
+    }
+
+    /// <summary>
+    /// Asserts procedure results and emits verbose diagnostics if expectations are not met.
+    /// </summary>
+    protected void AssertProcedureResult(
+        DaoResult result,
+        bool expectedSuccess,
+        string? expectedMessageSubstring = null,
+        params string[] tablesToSnapshot)
+    {
+        if (result is null)
+        {
+            Assert.Fail("DaoResult was null; cannot validate outcome.");
+            return;
+        }
+
+        AssertProcedureResultCore(
+            result.IsSuccess,
+            result.ErrorMessage,
+            result.Exception,
+            expectedSuccess,
+            expectedMessageSubstring,
+            tablesToSnapshot);
+    }
+
+    /// <summary>
+    /// Asserts generic procedure results with verbose diagnostics.
+    /// </summary>
+    protected void AssertProcedureResult<T>(
+        DaoResult<T> result,
+        bool expectedSuccess,
+        string? expectedMessageSubstring = null,
+        params string[] tablesToSnapshot)
+    {
+        if (result is null)
+        {
+            Assert.Fail("DaoResult<T> was null; cannot validate outcome.");
+            return;
+        }
+
+        AssertProcedureResultCore(
+            result.IsSuccess,
+            result.ErrorMessage,
+            result.Exception,
+            expectedSuccess,
+            expectedMessageSubstring,
+            tablesToSnapshot);
+    }
 
     /// <summary>
     /// Asserts that a DaoResult operation succeeded.
@@ -298,6 +535,169 @@ public abstract class BaseIntegrationTest
         Assert.IsTrue(
             result.ErrorMessage.Contains(expectedMessageSubstring, StringComparison.OrdinalIgnoreCase),
             message ?? $"Expected error message to contain '{expectedMessageSubstring}', but got: {result.ErrorMessage}");
+    }
+
+    #endregion
+
+    #region Diagnostics
+
+    private void AssertProcedureResultCore(
+        bool actualSuccess,
+        string errorMessage,
+        Exception? exception,
+        bool expectedSuccess,
+        string? expectedMessageSubstring,
+        params string[] tablesToSnapshot)
+    {
+        var context = GetCurrentDiagnostics();
+
+        if (context != null)
+        {
+            CompleteDiagnostics(context);
+
+            if (tablesToSnapshot != null && tablesToSnapshot.Length > 0)
+            {
+                var counts = CaptureTableRowCounts(tablesToSnapshot);
+                context.SetRowCounts(counts);
+            }
+        }
+
+        var messageMatches = expectedMessageSubstring is null ||
+            (!string.IsNullOrWhiteSpace(errorMessage) &&
+             errorMessage.Contains(expectedMessageSubstring, StringComparison.OrdinalIgnoreCase));
+
+        if (actualSuccess != expectedSuccess || (expectedMessageSubstring != null && !messageMatches))
+        {
+            var diagnosticPayload = new
+            {
+                Procedure = context?.ProcedureName,
+                Expected = new { IsSuccess = expectedSuccess, MessageContains = expectedMessageSubstring },
+                Actual = new { IsSuccess = actualSuccess, Message = errorMessage },
+                Parameters = context?.Parameters,
+                ExecutionTimeMs = context?.ElapsedMilliseconds,
+                DatabaseState = context?.RowCounts,
+                Exception = exception?.ToString(),
+                TestMethod = TestContext?.TestName,
+                TimestampUtc = DateTime.UtcNow
+            };
+
+            var json = JsonSerializer.Serialize(diagnosticPayload, new JsonSerializerOptions
+            {
+                WriteIndented = true
+            });
+
+            Assert.Fail($"Procedure result assertion failed.{Environment.NewLine}{json}");
+        }
+
+        if (expectedMessageSubstring != null && !messageMatches)
+        {
+            Assert.Fail($"Expected error message to contain '{expectedMessageSubstring}', but got: {errorMessage}");
+        }
+    }
+
+    private ProcedureDiagnosticContext? GetCurrentDiagnostics()
+    {
+        lock (_diagnosticSyncRoot)
+        {
+            return _diagnosticContext;
+        }
+    }
+
+    private void CompleteDiagnostics(ProcedureDiagnosticContext context)
+    {
+        if (!context.Stopwatch.IsRunning)
+        {
+            return;
+        }
+
+        context.Stopwatch.Stop();
+        context.Complete(context.Stopwatch.ElapsedMilliseconds);
+
+        if (context.TablesToSnapshot.Length > 0 && context.RowCounts.Count == 0)
+        {
+            var counts = CaptureTableRowCounts(context.TablesToSnapshot);
+            context.SetRowCounts(counts);
+        }
+    }
+
+    protected sealed class ProcedureDiagnosticScope : IDisposable
+    {
+        private readonly BaseIntegrationTest _owner;
+        private readonly ProcedureDiagnosticContext _context;
+        private bool _disposed;
+
+        private ProcedureDiagnosticScope(BaseIntegrationTest owner, ProcedureDiagnosticContext context)
+        {
+            _owner = owner;
+            _context = context;
+        }
+
+        internal static ProcedureDiagnosticScope Create(BaseIntegrationTest owner, ProcedureDiagnosticContext context)
+        {
+            return new ProcedureDiagnosticScope(owner, context);
+        }
+
+        public void UpdateParameters(IReadOnlyDictionary<string, object>? parameters)
+        {
+            _owner.UpdateProcedureDiagnostics(parameters);
+        }
+
+        public void Dispose()
+        {
+            if (_disposed)
+            {
+                return;
+            }
+
+            _disposed = true;
+            _owner.CompleteDiagnostics(_context);
+        }
+    }
+
+    internal sealed class ProcedureDiagnosticContext
+    {
+        internal ProcedureDiagnosticContext(
+            string procedureName,
+            IReadOnlyDictionary<string, object>? parameters,
+            string[] tablesToSnapshot)
+        {
+            ProcedureName = procedureName;
+            Parameters = parameters?.ToDictionary(kvp => kvp.Key, kvp => (object?)kvp.Value, StringComparer.OrdinalIgnoreCase)
+                ?? new Dictionary<string, object?>(StringComparer.OrdinalIgnoreCase);
+            TablesToSnapshot = tablesToSnapshot?.Distinct(StringComparer.OrdinalIgnoreCase).ToArray()
+                ?? Array.Empty<string>();
+            Stopwatch = Stopwatch.StartNew();
+            RowCounts = new Dictionary<string, int>(StringComparer.OrdinalIgnoreCase);
+        }
+
+        internal string ProcedureName { get; }
+
+        internal Dictionary<string, object?> Parameters { get; private set; }
+
+        internal string[] TablesToSnapshot { get; }
+
+        internal Stopwatch Stopwatch { get; }
+
+        internal long? ElapsedMilliseconds { get; private set; }
+
+        internal Dictionary<string, int> RowCounts { get; private set; }
+
+        internal void UpdateParameters(IReadOnlyDictionary<string, object>? parameters)
+        {
+            Parameters = parameters?.ToDictionary(kvp => kvp.Key, kvp => (object?)kvp.Value, StringComparer.OrdinalIgnoreCase)
+                ?? new Dictionary<string, object?>(StringComparer.OrdinalIgnoreCase);
+        }
+
+        internal void Complete(long elapsedMilliseconds)
+        {
+            ElapsedMilliseconds = elapsedMilliseconds;
+        }
+
+        internal void SetRowCounts(IReadOnlyDictionary<string, int> counts)
+        {
+            RowCounts = counts?.ToDictionary(kvp => kvp.Key, kvp => kvp.Value, StringComparer.OrdinalIgnoreCase)
+                ?? new Dictionary<string, int>(StringComparer.OrdinalIgnoreCase);
+        }
     }
 
     #endregion

@@ -27,7 +27,7 @@ This document consolidates the task inventory for Phase 2.5 (stored procedure re
 - [ ] **T106b** – *(Agent-run)* Complete stored procedure user validation checklist (75 procedures) with ReadyForVerification SQL set and supporting reports
 
 ### Part B – Test Implementation
-- [ ] **T107** – Create BaseIntegrationTest with verbose diagnostics
+- [X] **T107** – Create BaseIntegrationTest with verbose diagnostics
 - [ ] **T108** – Author inventory procedure integration tests
 - [ ] **T109** – Author transaction/user/role integration tests
 - [ ] **T110** – Author master data integration tests
