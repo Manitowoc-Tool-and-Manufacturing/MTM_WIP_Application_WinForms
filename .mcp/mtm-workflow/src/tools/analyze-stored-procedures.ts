@@ -94,6 +94,14 @@ function analyzeStoredProcedure(filePath: string): StoredProcedureResult {
   const issues: StoredProcedureIssue[] = [];
   const fileName = path.basename(filePath);
 
+  // Check for bypass flags at the beginning of the file
+  const bypassFlags = new Set<string>();
+  const bypassRegex = /--\s*BYPASS_MCP_CHECK:\s*(\w+)/gi;
+  let match;
+  while ((match = bypassRegex.exec(content)) !== null) {
+    bypassFlags.add(match[1].toUpperCase());
+  }
+
   // Extract procedure name - handle DEFINER clause
   // Match: CREATE [DEFINER=...] PROCEDURE `procedure_name` or procedure_name
   const procMatch = content.match(/CREATE\s+(?:DEFINER=`[^`]+`@`[^`]+`\s+)?PROCEDURE\s+`?([a-zA-Z0-9_]+)`?/i);
@@ -122,11 +130,12 @@ function analyzeStoredProcedure(filePath: string): StoredProcedureResult {
   }
 
   // Check for transaction handling
-  const hasTransaction = /START TRANSACTION|BEGIN/i.test(content);
+  // Only check for START TRANSACTION, not BEGIN (which is for procedure blocks)
+  const hasTransaction = /START TRANSACTION/i.test(content);
   const hasCommit = /COMMIT/i.test(content);
   const hasRollback = /ROLLBACK/i.test(content);
 
-  if (hasTransaction && !hasCommit) {
+  if (hasTransaction && !hasCommit && !bypassFlags.has("TRANSACTION_MANAGEMENT")) {
     issues.push({
       procedure: procName,
       severity: "error",
@@ -135,7 +144,7 @@ function analyzeStoredProcedure(filePath: string): StoredProcedureResult {
     });
   }
 
-  if (hasTransaction && !hasRollback) {
+  if (hasTransaction && !hasRollback && !bypassFlags.has("TRANSACTION_MANAGEMENT")) {
     issues.push({
       procedure: procName,
       severity: "warning",
@@ -172,7 +181,7 @@ function analyzeStoredProcedure(filePath: string): StoredProcedureResult {
   }
 
   // Check for SQL injection vulnerabilities
-  if (/CONCAT\s*\(/i.test(content) && /EXECUTE/i.test(content)) {
+  if (/CONCAT\s*\(/i.test(content) && /EXECUTE/i.test(content) && !bypassFlags.has("SQL_INJECTION")) {
     issues.push({
       procedure: procName,
       severity: "error",

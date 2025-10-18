@@ -10,8 +10,6 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `inv_transactions_GetAnalytics`(
 )
 BEGIN
     DECLARE v_Count INT DEFAULT 0;
-    DECLARE v_ErrorMessage VARCHAR(500) DEFAULT '';
-    DECLARE v_WhereClause TEXT DEFAULT '';
     DECLARE EXIT HANDLER FOR SQLEXCEPTION
     BEGIN
         ROLLBACK;
@@ -23,35 +21,34 @@ BEGIN
         SET p_ErrorMsg = CONCAT('Database error: ', @text);
     END;
     START TRANSACTION;
-    SET v_WhereClause = 'WHERE 1=1 ';
-    IF NOT p_IsAdmin AND p_UserName IS NOT NULL AND LENGTH(TRIM(p_UserName)) > 0 THEN
-        SET v_WhereClause = CONCAT(v_WhereClause, 'AND User = ''', REPLACE(p_UserName, '''', ''''''), ''' ');
-    END IF;
-    IF p_FromDate IS NOT NULL THEN
-        SET v_WhereClause = CONCAT(v_WhereClause, 'AND ReceiveDate >= ''', p_FromDate, ''' ');
-    END IF;
-    IF p_ToDate IS NOT NULL THEN
-        SET v_WhereClause = CONCAT(v_WhereClause, 'AND ReceiveDate <= ''', p_ToDate, ''' ');
-    END IF;
-    SET @sql = CONCAT(
-        'SELECT ',
-        '    COUNT(*) as TotalTransactions, ',
-        '    SUM(CASE WHEN TransactionType = ''IN'' THEN 1 ELSE 0 END) as InTransactions, ',
-        '    SUM(CASE WHEN TransactionType = ''OUT'' THEN 1 ELSE 0 END) as OutTransactions, ',
-        '    SUM(CASE WHEN TransactionType = ''TRANSFER'' THEN 1 ELSE 0 END) as TransferTransactions, ',
-        '    COALESCE(SUM(Quantity), 0) as TotalQuantity, ',
-        '    COUNT(DISTINCT PartID) as UniquePartIds, ',
-        '    COUNT(DISTINCT User) as ActiveUsers, ',
-        '    COALESCE((SELECT PartID FROM inv_transaction t2 ', v_WhereClause, ' GROUP BY PartID ORDER BY SUM(Quantity) DESC LIMIT 1), '''') as TopPartId, ',
-        '    COALESCE((SELECT User FROM inv_transaction t3 ', v_WhereClause, ' GROUP BY User ORDER BY COUNT(*) DESC LIMIT 1), '''') as TopUser ',
-        'FROM inv_transaction t1 ',
-        v_WhereClause
-    );
-    PREPARE stmt FROM @sql;
-    EXECUTE stmt;
-    DEALLOCATE PREPARE stmt;
+    
+    -- Use parameterized query with proper WHERE conditions instead of dynamic SQL
+    SELECT 
+        COUNT(*) as TotalTransactions,
+        SUM(CASE WHEN TransactionType = 'IN' THEN 1 ELSE 0 END) as InTransactions,
+        SUM(CASE WHEN TransactionType = 'OUT' THEN 1 ELSE 0 END) as OutTransactions,
+        SUM(CASE WHEN TransactionType = 'TRANSFER' THEN 1 ELSE 0 END) as TransferTransactions,
+        COALESCE(SUM(Quantity), 0) as TotalQuantity,
+        COUNT(DISTINCT PartID) as UniquePartIds,
+        COUNT(DISTINCT User) as ActiveUsers,
+        (SELECT PartID FROM inv_transaction t2
+         WHERE (p_IsAdmin OR p_UserName IS NULL OR LENGTH(TRIM(p_UserName)) = 0 OR t2.User = p_UserName)
+           AND (p_FromDate IS NULL OR t2.ReceiveDate >= p_FromDate)
+           AND (p_ToDate IS NULL OR t2.ReceiveDate <= p_ToDate)
+         GROUP BY PartID ORDER BY SUM(Quantity) DESC LIMIT 1) as TopPartId,
+        (SELECT User FROM inv_transaction t3
+         WHERE (p_IsAdmin OR p_UserName IS NULL OR LENGTH(TRIM(p_UserName)) = 0 OR t3.User = p_UserName)
+           AND (p_FromDate IS NULL OR t3.ReceiveDate >= p_FromDate)
+           AND (p_ToDate IS NULL OR t3.ReceiveDate <= p_ToDate)
+         GROUP BY User ORDER BY COUNT(*) DESC LIMIT 1) as TopUser
+    FROM inv_transaction t1
+    WHERE (p_IsAdmin OR p_UserName IS NULL OR LENGTH(TRIM(p_UserName)) = 0 OR t1.User = p_UserName)
+      AND (p_FromDate IS NULL OR t1.ReceiveDate >= p_FromDate)
+      AND (p_ToDate IS NULL OR t1.ReceiveDate <= p_ToDate);
+    
     SELECT FOUND_ROWS() INTO v_Count;
     COMMIT;
+    
     IF v_Count > 0 THEN
         SET p_Status = 1;
         SET p_ErrorMsg = NULL;

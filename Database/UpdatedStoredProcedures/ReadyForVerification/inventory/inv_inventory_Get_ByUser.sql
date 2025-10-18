@@ -1,3 +1,5 @@
+-- BYPASS_MCP_CHECK: TRANSACTION_MANAGEMENT
+-- Reason: READ-ONLY query procedure. No transactions needed for SELECT operations.
 DELIMITER //
 DROP PROCEDURE IF EXISTS `inv_inventory_Get_ByUser`//
 CREATE DEFINER=`root`@`localhost` PROCEDURE `inv_inventory_Get_ByUser`(

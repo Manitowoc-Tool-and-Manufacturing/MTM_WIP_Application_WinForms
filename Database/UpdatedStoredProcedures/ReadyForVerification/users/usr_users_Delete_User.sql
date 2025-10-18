@@ -1,3 +1,7 @@
+-- BYPASS_MCP_CHECK: SQL_INJECTION
+-- Reason: MySQL user management requires dynamic SQL to DROP USER.
+-- Security: Username validated with REGEXP to allow only alphanumeric, underscore, and hyphen.
+-- Defense in depth: Additional escaping via REPLACE for single quotes.
 DELIMITER //
 DROP PROCEDURE IF EXISTS `usr_users_Delete_User`//
 CREATE DEFINER=`root`@`localhost` PROCEDURE `usr_users_Delete_User`(
@@ -20,20 +24,30 @@ BEGIN
         SET p_ErrorMsg = 'User is required';
         ROLLBACK;
     ELSE
-        SET @d := CONCAT('DROP USER IF EXISTS ''', REPLACE(p_User, '''', ''''''), '''@''%'';');
-        PREPARE stmt FROM @d;
-        EXECUTE stmt;
-        DEALLOCATE PREPARE stmt;
-        DELETE FROM usr_users WHERE `User` = p_User;
-        SET v_RowCount = ROW_COUNT();
-        IF v_RowCount > 0 THEN
-            SET p_Status = 1;
-            SET p_ErrorMsg = CONCAT('User "', p_User, '" deleted successfully');
-            COMMIT;
-        ELSE
-            SET p_Status = -4;
-            SET p_ErrorMsg = CONCAT('User "', p_User, '" not found');
+        -- Validate username contains only safe characters (alphanumeric, underscore, hyphen)
+        IF p_User REGEXP '[^A-Za-z0-9_-]' THEN
+            SET p_Status = -2;
+            SET p_ErrorMsg = 'Username contains invalid characters. Only alphanumeric, underscore, and hyphen allowed.';
             ROLLBACK;
+        ELSE
+            -- NOTE: Dynamic SQL required for MySQL user management
+            -- Username is validated above to contain only safe characters
+            -- Additional escaping applied via REPLACE for defense in depth
+            SET @d := CONCAT('DROP USER IF EXISTS ''', REPLACE(p_User, '''', ''''''), '''@''%'';');
+            PREPARE stmt FROM @d;
+            EXECUTE stmt;
+            DEALLOCATE PREPARE stmt;
+            DELETE FROM usr_users WHERE `User` = p_User;
+            SET v_RowCount = ROW_COUNT();
+            IF v_RowCount > 0 THEN
+                SET p_Status = 1;
+                SET p_ErrorMsg = CONCAT('User "', p_User, '" deleted successfully');
+                COMMIT;
+            ELSE
+                SET p_Status = -4;
+                SET p_ErrorMsg = CONCAT('User "', p_User, '" not found');
+                ROLLBACK;
+            END IF;
         END IF;
     END IF;
 END

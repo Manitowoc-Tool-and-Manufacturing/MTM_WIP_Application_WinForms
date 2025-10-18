@@ -1,3 +1,7 @@
+-- BYPASS_MCP_CHECK: SQL_INJECTION
+-- Reason: MySQL user management requires dynamic SQL to CREATE USER and GRANT privileges.
+-- Security: Username validated with REGEXP to allow only alphanumeric, underscore, and hyphen.
+-- Defense in depth: Additional escaping via REPLACE for single quotes.
 DELIMITER //
 DROP PROCEDURE IF EXISTS `usr_users_Add_User`//
 CREATE DEFINER=`root`@`localhost` PROCEDURE `usr_users_Add_User`(
@@ -37,37 +41,47 @@ BEGIN
         SET p_ErrorMsg = 'Full Name is required';
         ROLLBACK;
     ELSE
-        INSERT INTO usr_users (
-            `User`, `Full Name`, `Shift`, `VitsUser`, `Pin`, `LastShownVersion`, `HideChangeLog`,
-            `Theme_Name`, `Theme_FontSize`, `VisualUserName`, `VisualPassword`,
-            `WipServerAddress`, `WipDatabase`, `WipServerPort`
-        ) VALUES (
-            p_User, p_FullName, p_Shift, p_VitsUser, p_Pin, p_LastShownVersion, p_HideChangeLog,
-            p_Theme_Name, p_Theme_FontSize, p_VisualUserName, p_VisualPassword,
-            p_WipServerAddress, p_WipDatabase, p_WipServerPort
-        );
-        SET v_RowCount = ROW_COUNT();
-        IF v_RowCount > 0 THEN
-            SET @createUserQuery := CONCAT(
-                'CREATE USER IF NOT EXISTS ''', REPLACE(p_User, '''', ''''''), '''@''%'''
-            );
-            PREPARE stmt FROM @createUserQuery;
-            EXECUTE stmt;
-            DEALLOCATE PREPARE stmt;
-            SET @grantAllQuery := CONCAT(
-                'GRANT ALL PRIVILEGES ON *.* TO ''', REPLACE(p_User, '''', ''''''), '''@''%'';'
-            );
-            PREPARE stmt FROM @grantAllQuery;
-            EXECUTE stmt;
-            DEALLOCATE PREPARE stmt;
-            FLUSH PRIVILEGES;
-            SET p_Status = 1;
-            SET p_ErrorMsg = CONCAT('User "', p_User, '" added successfully');
-            COMMIT;
-        ELSE
-            SET p_Status = -3;
-            SET p_ErrorMsg = 'Failed to add user';
+        -- Validate username contains only safe characters (alphanumeric, underscore, hyphen)
+        IF p_User REGEXP '[^A-Za-z0-9_-]' THEN
+            SET p_Status = -2;
+            SET p_ErrorMsg = 'Username contains invalid characters. Only alphanumeric, underscore, and hyphen allowed.';
             ROLLBACK;
+        ELSE
+            INSERT INTO usr_users (
+                `User`, `Full Name`, `Shift`, `VitsUser`, `Pin`, `LastShownVersion`, `HideChangeLog`,
+                `Theme_Name`, `Theme_FontSize`, `VisualUserName`, `VisualPassword`,
+                `WipServerAddress`, `WipDatabase`, `WipServerPort`
+            ) VALUES (
+                p_User, p_FullName, p_Shift, p_VitsUser, p_Pin, p_LastShownVersion, p_HideChangeLog,
+                p_Theme_Name, p_Theme_FontSize, p_VisualUserName, p_VisualPassword,
+                p_WipServerAddress, p_WipDatabase, p_WipServerPort
+            );
+            SET v_RowCount = ROW_COUNT();
+            IF v_RowCount > 0 THEN
+                -- NOTE: Dynamic SQL required for MySQL user management
+                -- Username is validated above to contain only safe characters
+                -- Additional escaping applied via REPLACE for defense in depth
+                SET @createUserQuery := CONCAT(
+                    'CREATE USER IF NOT EXISTS ''', REPLACE(p_User, '''', ''''''), '''@''%'''
+                );
+                PREPARE stmt FROM @createUserQuery;
+                EXECUTE stmt;
+                DEALLOCATE PREPARE stmt;
+                SET @grantAllQuery := CONCAT(
+                    'GRANT ALL PRIVILEGES ON *.* TO ''', REPLACE(p_User, '''', ''''''), '''@''%'';'
+                );
+                PREPARE stmt FROM @grantAllQuery;
+                EXECUTE stmt;
+                DEALLOCATE PREPARE stmt;
+                FLUSH PRIVILEGES;
+                SET p_Status = 1;
+                SET p_ErrorMsg = CONCAT('User "', p_User, '" added successfully');
+                COMMIT;
+            ELSE
+                SET p_Status = -3;
+                SET p_ErrorMsg = 'Failed to add user';
+                ROLLBACK;
+            END IF;
         END IF;
     END IF;
 END

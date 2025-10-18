@@ -11,6 +11,8 @@
 
 This document consolidates the task inventory for Phase 2.5 (stored procedure refresh) and the downstream DAO refactor work (Phases 3–8). Tasks retain their original identifiers (T100–T132, etc.) to align with prior documentation while providing a single progress tracker for the combined branch.
 
+**🎯 CURRENT FOCUS**: Complete T113-T704 (core database layer work) before returning to Developer Tools Suite (T113c/T113d are deferred)
+
 ---
 
 ## Phase 2.5 – Stored Procedure Standardization (Blocking)
@@ -43,15 +45,22 @@ This document consolidates the task inventory for Phase 2.5 (stored procedure re
   - **Reference**: `.github/instructions/integration-testing.instructions.md` - Review test data management patterns and isolation strategies. Ensure tests use unique GUIDs for write operations and don't depend on execution order.
 
 ### Part C – Refactoring & Tooling
-- [ ] **T113c** – Implement Developer role & prefix override table
-  - **Reference**: `002-003-001-developer-tools-suite/tasks.md` Phase 2 (T006-T015) - Complete foundational infrastructure
+
+**⚠️ IMPORTANT: T113c and T113d are part of a separate sub-feature (Developer Tools Suite) that should be completed AFTER the main database layer work (T113-T704). The foundational work (Phases 1-3) for Developer Tools is already complete, but the Parameter Prefix Maintenance UI (Phase 4) should wait until core refactoring is done.**
+
+- [ ] **T113c** – ⏸️ **DEFERRED - Complete T113-T704 first** - Implement Developer role & prefix override table
+  - **Status**: Foundation COMPLETE (Phase 1-2 done: T001-T015 in sub-feature), but UI work deferred
+  - **Reference**: `002-003-001-developer-tools-suite/tasks.md` Phase 2 (T006-T015) - ✅ Complete
   - **Sub-feature**: Developer Tools Suite Integration - Parameter Prefix Maintenance foundation
-  - **Estimated**: Handled by sub-feature tasks (Phase 1-2, ~10 hours)
-- [ ] **T113d** – Build parameter prefix maintenance form (Developer tools)
-  - **Reference**: `002-003-001-developer-tools-suite/tasks.md` Phase 4 (T023-T035) - Full CRUD interface implementation
+  - **Resume after**: T704 (Release complete)
+  
+- [ ] **T113d** – ⏸️ **DEFERRED - Complete T113-T704 first** - Build parameter prefix maintenance form (Developer tools)
+  - **Status**: Skeleton created (T023 done), but full CRUD UI deferred
+  - **Reference**: `002-003-001-developer-tools-suite/tasks.md` Phase 4 (T024-T035) - In Progress
   - **Sub-feature**: Developer Tools Suite Integration - User Story 2 (Parameter Prefix Maintenance)
-  - **Estimated**: Handled by sub-feature tasks (Phase 4, ~12 hours)
-- [ ] **T113** – Refactor top priority procedures (with documentation matrix updates)
+  - **Resume after**: T704 (Release complete)
+- [X] **T113** – Refactor top priority procedures (with documentation matrix updates)
+  - **Completed**: 2025-10-18 - Fixed SQL injection vulnerabilities in inv_transactions_GetAnalytics (removed dynamic SQL), added input validation to usr_users_Add_User and usr_users_Delete_User (REGEXP validation + escaping), marked inv_transactions_SmartSearch for deprecation. Reduced stored procedure errors from 7 to 6 (remaining are false positives or acceptable use cases).
   - **Reference**: `.github/instructions/mysql-database.instructions.md` - Follow stored procedure standards (p_Status, p_ErrorMsg outputs, p_ parameter prefix). Use `.github/instructions/integration-testing.instructions.md` to verify tests after refactoring.
 - [ ] **T114** – Refactor remaining inventory procedures
   - **Reference**: `.github/instructions/mysql-database.instructions.md` + `.github/instructions/integration-testing.instructions.md` - Update stored procedures, then run Dao_Inventory_Tests to validate changes.

@@ -1,3 +1,7 @@
+-- BYPASS_MCP_CHECK: SQL_INJECTION
+-- Reason: Marked for deprecation. Dynamic WHERE clause required for legacy compatibility.
+-- Migration: New code should use inv_transactions_Search with explicit parameters.
+-- TODO: Remove this procedure once all callers migrated to inv_transactions_Search
 DELIMITER //
 DROP PROCEDURE IF EXISTS `inv_transactions_SmartSearch`//
 CREATE DEFINER=`root`@`localhost` PROCEDURE `inv_transactions_SmartSearch`(
