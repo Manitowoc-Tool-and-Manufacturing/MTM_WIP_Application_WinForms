@@ -299,16 +299,21 @@ public static class Dao_Inventory
             // Get item type if not provided
             if (string.IsNullOrWhiteSpace(itemType))
             {
-                var itemTypeResult = await Helper_Database_StoredProcedure.ExecuteScalarWithStatusAsync(
+                var itemTypeResult = await Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync(
                     Model_AppVariables.ConnectionString,
-                    "md_part_ids_GetItemType_ByPartID",
-                    new Dictionary<string, object> { ["p_PartID"] = partId }, // p_ prefix added automatically
+                    "md_part_ids_Get_ByItemNumber",
+                    new Dictionary<string, object> { ["ItemNumber"] = partId },
                     null // No progress helper for this method
                 );
 
-                itemType = itemTypeResult.IsSuccess && itemTypeResult.Data != null 
-                    ? itemTypeResult.Data.ToString() 
-                    : "None";
+                if (itemTypeResult.IsSuccess && itemTypeResult.Data != null && itemTypeResult.Data.Rows.Count > 0)
+                {
+                    itemType = itemTypeResult.Data.Rows[0]["ItemType"]?.ToString() ?? "None";
+                }
+                else
+                {
+                    itemType = "None";
+                }
             }
 
             // Generate batch number if not provided

@@ -1191,7 +1191,7 @@ internal static class Dao_User
         {
             var dataResult = await Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync(
                 Model_AppVariables.ConnectionString,
-                "usr_user_roles_GetRoleId_ByUserId",
+                "sys_user_roles_Get_ById",
                 new Dictionary<string, object> { ["UserID"] = userId }
             );
 

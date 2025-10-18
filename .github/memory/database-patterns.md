@@ -185,6 +185,24 @@ var parameters = new Dictionary<string, object>
 
 ---
 
+### Stored Procedure Validation Automation
+
+**Lesson**: Run `Database/Tools/Invoke-T106Validation.ps1` against `mtm_wip_application_winforms_test` whenever the ReadyForVerification scripts change so every procedure is linted and logged automatically.
+
+**Workflow**:
+1. `pwsh -NoLogo -NoProfile -File Database/Tools/Invoke-T106Validation.ps1 -All -UpdateChecklist`
+2. Inspect `Database/ValidationRuns/<timestamp>/` for:
+    - `procedure-logs/*.log` (MySQL output, warnings, `SHOW CREATE PROCEDURE`).
+    - `summary.csv` and `summary.json` (pass/fail snapshot for all procedures).
+    - `schema-post-run.json` vs `database-schema-snapshot.json` (drift detection).
+3. If a procedure fails, investigate the captured log, fix the SQL, rerun the validator, then update `Database/Checklists/T106a-T106b-Agent-Checklist.md`.
+
+**Why**: The script proves every stored procedure can be recreated on MySQL 5.7, surfaces missing `p_Status` / `p_ErrorMsg` outputs, and confirms no temp objects remain, giving a repeatable readiness gate before refactoring or deployment.
+
+**Discovered**: 2025-10-17 during T106b automation build-out.
+
+---
+
 ## Connection Pooling Patterns
 
 ### Connection String Configuration

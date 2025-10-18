@@ -29,6 +29,7 @@ This document consolidates the task inventory for Phase 2.5 (stored procedure re
 ### Part B – Test Implementation
 - [X] **T107** – Create BaseIntegrationTest with verbose diagnostics
 - [ ] **T108** – Author inventory procedure integration tests
+  - **2025-10-17 Progress**: Discovered 19 missing stored procedures via codebase scan. Created 15 new procedures in ReadyForVerification: `inv_inventory_Get_All`, `inv_inventory_GetNextBatchNumber`, `inv_transactions_Search` (complex 17-param search), `md_item_types_Exists_ByType`, `md_item_types_GetDistinct`, `md_locations_Exists_ByLocation`, `md_operation_numbers_Exists_ByOperation`, `sys_GetRoleIdByName`, `sys_last_10_transactions_Add_AtPosition`, `sys_last_10_transactions_DeleteAll_ByUser`, `sys_last_10_transactions_Delete_ByUserAndPosition_1`, `usr_ui_settings_Delete_ByUserId`, `usr_ui_settings_GetJsonSetting`, `usr_users_SetUserSetting_ByUserAndField`. Renamed 3 procedure calls in code: `md_part_ids_GetItemType_ByPartID`→`md_part_ids_Get_ByItemNumber`, `sys_last_10_transactions_Move`→`sys_last_10_transactions_Move_1`, `usr_user_roles_GetRoleId_ByUserId`→`sys_user_roles_Get_ById`. See `specs/002-003-database-layer-complete/missing-stored-procedures-action-plan.csv` for details. Ready to validate procedures and author integration tests.
 - [ ] **T109** – Author transaction/user/role integration tests
 - [ ] **T110** – Author master data integration tests
 - [ ] **T111** – Author logging/quick button integration tests

@@ -138,7 +138,7 @@ namespace MTM_Inventory_Application.Data
 
                 var result = await Helper_Database_StoredProcedure.ExecuteNonQueryWithStatusAsync(
                     Model_AppVariables.ConnectionString,
-                    "sys_last_10_transactions_Move",
+                    "sys_last_10_transactions_Move_1",
                     parameters,
                     progressHelper: null
                 );
