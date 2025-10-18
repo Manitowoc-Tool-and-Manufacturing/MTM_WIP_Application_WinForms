@@ -49,6 +49,33 @@ These guidelines describe how to structure and implement C# code within the MTM 
 - Never call `.Result` or `.Wait()` on tasks inside UI code; schedule continuation work with `await` or explicit callbacks.
 - Capture stored procedure outputs in POCO models located in `Models/`. Keep transformation logic close to the DAO when it is purely data shaping.
 
+### Refactoring to Use Existing Stored Procedures
+
+When a DAO calls a non-existent stored procedure, check if an existing procedure returns the needed data before creating a new one:
+
+```csharp
+// ❌ BEFORE: Calling non-existent scalar procedure
+var itemTypeResult = await Helper_Database_StoredProcedure.ExecuteScalarWithStatusAsync(
+    connectionString,
+    "md_part_ids_GetItemType_ByPartID",  // Doesn't exist
+    new Dictionary<string, object> { ["p_PartID"] = partId }
+);
+itemType = itemTypeResult.IsSuccess ? itemTypeResult.Data?.ToString() : "None";
+
+// ✅ AFTER: Using existing procedure that returns full record
+var itemTypeResult = await Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync(
+    connectionString,
+    "md_part_ids_Get_ByItemNumber",  // Existing procedure
+    new Dictionary<string, object> { ["ItemNumber"] = partId }
+);
+if (itemTypeResult.IsSuccess && itemTypeResult.Data.Rows.Count > 0)
+{
+    itemType = itemTypeResult.Data.Rows[0]["ItemType"]?.ToString() ?? "None";
+}
+```
+
+This pattern avoids creating duplicate procedures when existing ones already return the required data.
+
 ## Error Handling & Logging
 
 - Wrap external boundary calls (database, file system, interop) in try/catch blocks that log using `LoggingUtility` or `Service_DebugTracer`.

@@ -54,6 +54,22 @@ SERVER=<host>;DATABASE=<db>;UID=<user>;PASSWORD=<password>;Allow User Variables=
 
 ## Stored Procedure Execution Patterns
 
+### Discovering Missing Stored Procedures
+
+When refactoring or auditing the codebase for missing stored procedures:
+
+1. **Use regex scanning** to find all stored procedure references in C# code:
+   ```python
+   pattern = re.compile(r'"((?:inv|md|sys|log|usr|maint|query)_[A-Za-z0-9_]+)"')
+   ```
+2. **Cross-reference** found procedure names against SQL definitions in `UpdatedStoredProcedures/ReadyForVerification/`
+3. **Extract parameters** from code by parsing `ExecuteDataTableWithStatusAsync` calls and Dictionary initializers
+4. **Create action plan CSV** with columns: Procedure, Domain, CallFile, CallLine, Action (CREATE_NEW/RENAME_CALL/IGNORE), Parameters, ExpectedReturn, Notes, SimilarProcedure
+5. **Prioritize quick wins**: Rename code references to existing procedures before creating new ones
+6. **Use existing procedures as templates** when creating new stored procedures (check SimilarProcedure column)
+
+This systematic approach discovered 19 missing procedures in one session, preventing runtime errors and enabling comprehensive stored procedure inventory management.
+
 ### Helper_Database_StoredProcedure.ExecuteDataTableWithStatus
 This helper wraps stored procedure calls and returns a `StoredProcedureResult<DataTable>` along with the standard `p_Status` and `p_ErrorMsg` outputs.
 

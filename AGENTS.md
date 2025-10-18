@@ -492,6 +492,18 @@ _progressHelper = Helper_StoredProcedureProgress.Create(
 - User Guides: `Documentation/Guides/USER_GUIDE_COMPLETE.md`
 - Help System: `Documentation/Help/index.html`
 
+### Memory Files & Learning Resources
+
+**Workspace-Specific Memory:**
+- `.github/instructions/validation-automation-memory.instructions.md` (Automation validation patterns)
+
+**Global Cross-Project Memory:**
+- `vscode-userdata:/User/prompts/powershell-memory.instructions.md` (PowerShell scripting patterns)
+- `vscode-userdata:/User/prompts/debugging-memory.instructions.md` (Debugging workflows and troubleshooting)
+- `vscode-userdata:/User/prompts/memory.instructions.md` (Universal development patterns)
+
+**Note:** These memory files contain hard-won lessons and best practices from previous sessions. Always consult them when working with PowerShell automation, debugging issues, or implementing validation workflows.
+
 ### Performance Considerations
 
 - UI response target: Sub-100ms for interactions

@@ -107,7 +107,7 @@ Verify stored procedure standardization:
 
 **Objective**: Discover and audit all stored procedures, generate compliance reports.
 
-**Checklist Reference**: `specs/003-database-layer-refresh/checklists/discovery-quality.md`
+**Checklist Reference**: `specs/003-database-layer-refresh/task-helpers/discovery-quality.md`
 
 #### T100: Discover All Stored Procedure Call Sites (2 hours)
 
@@ -259,7 +259,7 @@ Map existing integration tests to procedures:
 
 **CRITICAL GATE**: This task processes ALL stored procedures based on user instructions in the CSV and MUST complete 100% before ANY refactoring begins.
 
-**Checklist Reference**: `specs/003-database-layer-refresh/checklists/stored-procedure-user-validation-quality.md` (75 procedures)
+**Checklist Reference**: `specs/003-database-layer-refresh/task-helpers/stored-procedure-user-validation-quality.md` (75 procedures)
 
 **Prerequisites**:
 - T106a complete (CSV reviewed and corrected by developers)
@@ -359,7 +359,7 @@ Map existing integration tests to procedures:
 
 **Objective**: Create comprehensive integration test suite (280+ tests) covering all procedures.
 
-**Checklist Reference**: `specs/003-database-layer-refresh/checklists/testing-quality.md`
+**Checklist Reference**: `specs/003-database-layer-refresh/task-helpers/testing-quality.md`
 
 #### T107: Create BaseIntegrationTest + Verbose Helper (5 hours)
 
@@ -477,9 +477,9 @@ Run all tests sequentially, then in parallel (4 threads), compare results.
 **Objective**: Refactor all non-compliant procedures to 100% standards compliance with concurrent documentation.
 
 **Checklist References**: 
-- `specs/003-database-layer-refresh/checklists/refactoring-quality.md`
-- `specs/003-database-layer-refresh/checklists/developer-role-quality.md`
-- `specs/003-database-layer-refresh/checklists/parameter-prefix-maintenance-quality.md`
+- `specs/003-database-layer-refresh/task-helpers/refactoring-quality.md`
+- `specs/003-database-layer-refresh/task-helpers/developer-role-quality.md`
+- `specs/003-database-layer-refresh/task-helpers/parameter-prefix-maintenance-quality.md`
 
 #### T113c: Developer Role Infrastructure (4 hours)
 
@@ -642,8 +642,8 @@ END;
 **Objective**: Deploy refactored procedures to test and production databases safely with schema drift reconciliation.
 
 **Checklist References**: 
-- `specs/003-database-layer-refresh/checklists/deployment-quality.md`
-- `specs/003-database-layer-refresh/checklists/schema-drift-quality.md`
+- `specs/003-database-layer-refresh/task-helpers/deployment-quality.md`
+- `specs/003-database-layer-refresh/task-helpers/schema-drift-quality.md`
 
 #### T119: Create Deployment Script (6 hours)
 
@@ -793,8 +793,8 @@ Deploy to `mtm_wip_application` after DBA approval:
 **Objective**: Validate refactored database layer works correctly in application context.
 
 **Checklist References**:
-- `specs/003-database-layer-refresh/checklists/integration-quality.md`
-- `specs/003-database-layer-refresh/checklists/roslyn-analyzer-quality.md`
+- `specs/003-database-layer-refresh/task-helpers/integration-quality.md`
+- `specs/003-database-layer-refresh/task-helpers/roslyn-analyzer-quality.md`
 
 #### T122: Execute All Integration Tests (2 hours)
 
@@ -965,8 +965,8 @@ Execute benchmark suite for 10 key operations (100 times each):
 **Objective**: Update all documentation with concurrent tracking, validate completeness, document lessons learned.
 
 **Checklist References**:
-- `specs/003-database-layer-refresh/checklists/documentation-quality.md`
-- `specs/003-database-layer-refresh/checklists/documentation-matrix-quality.md`
+- `specs/003-database-layer-refresh/task-helpers/documentation-quality.md`
+- `specs/003-database-layer-refresh/task-helpers/documentation-matrix-quality.md`
 
 #### T129: Generate Documentation-Update-Matrix.md (2 hours)
 

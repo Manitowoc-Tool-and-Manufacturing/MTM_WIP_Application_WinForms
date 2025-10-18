@@ -39,9 +39,16 @@ GitHub Copilot will load these guidance files while generating code:
 
 Cross-project lessons that remain relevant:
 
-- #file:memory/database-patterns.md (MySQL stored-procedure usage)
+**Workspace-Specific:**
+- #file:instructions/validation-automation-memory.instructions.md (Automation validation patterns and quality gates)
 
-All Avalonia/MVVM memories are being phased out; ignore any that reference AXAML or MVVM patterns.
+**Global (Cross-Project):**
+- `vscode-userdata:/User/prompts/powershell-memory.instructions.md` (PowerShell scripting patterns and pipeline behaviors)
+- `vscode-userdata:/User/prompts/debugging-memory.instructions.md` (Debugging workflows and troubleshooting strategies)
+- `vscode-userdata:/User/prompts/memory.instructions.md` (Universal development patterns)
+
+**Legacy (Being Phased Out):**
+- All Avalonia/MVVM memories are being retired; ignore any that reference AXAML or MVVM patterns
 
 ## Useful Prompts
 
