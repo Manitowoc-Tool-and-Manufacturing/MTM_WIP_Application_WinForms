@@ -7,6 +7,17 @@ applyTo: '**/*.cs'
 
 # Code Review Standards
 
+## Available MCP Tools for Code Review
+
+When performing code reviews, use these MCP tools from the **mtm-workflow** server:
+- `validate_dao_patterns` - Check DAO compliance with MTM patterns
+- `validate_error_handling` - Verify error handling correctness
+- `check_security` - Scan for security vulnerabilities
+- `analyze_performance` - Identify performance bottlenecks
+- `check_xml_docs` - Verify documentation coverage
+- `suggest_refactoring` - Get AI-powered refactoring suggestions
+- `analyze_stored_procedures` - Validate stored procedure compliance
+
 ## Overview
 
 This file defines code review standards, checklists, and quality gates for the MTM WIP Application to ensure consistent code quality and adherence to MTM patterns.

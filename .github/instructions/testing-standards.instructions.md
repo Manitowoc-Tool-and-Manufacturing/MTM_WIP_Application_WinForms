@@ -7,6 +7,14 @@ applyTo: '**/*.cs'
 
 # Testing Standards for MTM Application
 
+## Available MCP Tools for Testing
+
+When developing tests, use these MCP tools from the **mtm-workflow** server:
+- `generate_unit_tests` - Auto-generate test scaffolding for C# classes
+- `check_security` - Identify security test scenarios
+- `analyze_performance` - Create performance test cases
+- `validate_dao_patterns` - Verify code structure before testing
+
 ## Overview
 
 The MTM WIP Application uses manual validation testing approach. This file defines success criteria patterns, validation workflows, and quality assurance standards.

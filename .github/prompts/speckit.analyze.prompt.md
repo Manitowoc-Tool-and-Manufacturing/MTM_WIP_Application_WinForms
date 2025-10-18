@@ -2,6 +2,13 @@
 description: Perform a non-destructive cross-artifact consistency and quality analysis across spec.md, plan.md, and tasks.md after task generation.
 ---
 
+## Required MCP Tools
+
+This prompt can utilize the following MCP tools from the **mtm-workflow** server:
+- `check_checklists` - Validate checklist completion status
+- `analyze_dependencies` - Understand system relationships for analysis
+- `suggest_refactoring` - Identify potential improvements
+
 ## User Input
 
 ```text

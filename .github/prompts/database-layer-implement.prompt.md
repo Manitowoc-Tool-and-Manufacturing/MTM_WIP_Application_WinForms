@@ -2,6 +2,19 @@
 description: Execute comprehensive database layer standardization implementation for MTM WIP Application (002-003 combined)
 ---
 
+## Required MCP Tools
+
+This prompt requires the following MCP tools from the **mtm-workflow** server:
+- `analyze_stored_procedures` - Validate all stored procedures meet standards
+- `generate_dao_wrapper` - Auto-generate DAO wrappers from procedures
+- `validate_dao_patterns` - Verify DAO implementations follow MTM patterns  
+- `check_security` - Scan for SQL injection and security issues
+- `check_xml_docs` - Ensure proper XML documentation
+- `compare_databases` - Detect schema drift between versions
+- `validate_error_handling` - Check error handling patterns
+- `analyze_performance` - Identify performance bottlenecks
+- `check_checklists` - Validate phase completion status
+
 ## User Input
 
 ```text
