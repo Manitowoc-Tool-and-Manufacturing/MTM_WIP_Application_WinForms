@@ -28,6 +28,7 @@ GitHub Copilot will load these guidance files while generating code:
 - #file:instructions/csharp-dotnet8.instructions.md
 - #file:instructions/mysql-database.instructions.md
 - #file:instructions/testing-standards.instructions.md
+- #file:instructions/integration-testing.instructions.md (NEW: Integration test development patterns, method signature discovery workflow)
 - #file:instructions/documentation.instructions.md
 - #file:instructions/security-best-practices.instructions.md
 - #file:instructions/performance-optimization.instructions.md

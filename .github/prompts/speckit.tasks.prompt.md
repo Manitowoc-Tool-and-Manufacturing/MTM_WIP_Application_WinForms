@@ -25,6 +25,7 @@ You **MUST** consider the user input before proceeding (if not empty).
    - If data-model.md exists: Extract entities → map to user stories
    - If contracts/ exists: Each file → map endpoints to user stories
    - If research.md exists: Extract decisions → generate setup tasks
+   - **Scan .github/instructions/ for relevant instruction files** to reference in task descriptions
    - **Generate tasks ORGANIZED BY USER STORY**:
      - Setup tasks (shared infrastructure needed by all stories)
      - **Foundational tasks (prerequisites that must complete before ANY user story can start)**
@@ -33,6 +34,7 @@ You **MUST** consider the user input before proceeding (if not empty).
        - Include models, services, endpoints, UI components specific to that story
        - Mark which tasks are [P] parallelizable
        - If tests requested: Include tests specific to that story
+       - **Add instruction file references** for guidance on completing the task
      - Polish/Integration tasks (cross-cutting concerns)
    - **Tests are OPTIONAL**: Only generate test tasks if explicitly requested in the feature spec or user asks for TDD approach
    - Apply task rules:
@@ -53,12 +55,17 @@ You **MUST** consider the user input before proceeding (if not empty).
      - Clear [Story] labels (US1, US2, US3...) for each task
      - [P] markers for parallelizable tasks within each story
      - Checkpoint markers after each story phase
+     - **Reference**: Relevant `.github/instructions/*.instructions.md` files with specific guidance
    - Final Phase: Polish & cross-cutting concerns
    - Numbered tasks (T001, T002...) in execution order
    - Clear file paths for each task
    - Dependencies section showing story completion order
    - Parallel execution examples per story
    - Implementation strategy section (MVP first, incremental delivery)
+   
+   **Instruction File Reference Format**:
+   - Add after task description: `**Reference**: .github/instructions/[file].instructions.md - [Brief context on what to follow]`
+   - Example: `**Reference**: .github/instructions/integration-testing.instructions.md - Follow discovery-first workflow (grep_search → verify signatures → write tests)`
 
 5. **Report**: Output path to generated tasks.md and summary:
    - Total task count
@@ -66,6 +73,7 @@ You **MUST** consider the user input before proceeding (if not empty).
    - Parallel opportunities identified
    - Independent test criteria for each story
    - Suggested MVP scope (typically just User Story 1)
+   - List of instruction files referenced in tasks
 
 Context for task generation: $ARGUMENTS
 
@@ -85,6 +93,13 @@ The tasks.md should be immediately executable - each task must be specific enoug
      - Endpoints/UI needed for that story
      - If tests requested: Tests specific to that story
    - Mark story dependencies (most stories should be independent)
+   - **Add instruction file references** to guide implementation:
+     - Testing tasks → `.github/instructions/integration-testing.instructions.md` or `testing-standards.instructions.md`
+     - Database tasks → `.github/instructions/mysql-database.instructions.md`
+     - Code quality → `.github/instructions/csharp-dotnet8.instructions.md`
+     - Security → `.github/instructions/security-best-practices.instructions.md`
+     - Performance → `.github/instructions/performance-optimization.instructions.md`
+     - Documentation → `.github/instructions/documentation.instructions.md`
    
 2. **From Contracts**:
    - Map each contract/endpoint → to the user story it serves
