@@ -1,0 +1,132 @@
+-- =============================================
+-- Procedure: sys_user_roles_Delete
+-- Domain: system
+-- Extracted: 2025-10-17 20:49:21
+-- Source: mtm_wip_application on localhost:3306
+-- =============================================
+
+DELIMITER //
+
+DROP PROCEDURE IF EXISTS `sys_user_roles_Delete`//
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sys_user_roles_Delete`(
+
+    IN p_UserID INT, 
+
+    IN p_RoleID INT,
+
+    OUT p_Status INT,
+
+    OUT p_ErrorMsg VARCHAR(500)
+
+)
+BEGIN
+
+    DECLARE v_Exists INT DEFAULT 0;
+
+    DECLARE v_RowCount INT DEFAULT 0;
+
+    
+
+    DECLARE EXIT HANDLER FOR SQLEXCEPTION
+
+    BEGIN
+
+        GET DIAGNOSTICS CONDITION 1
+
+            p_ErrorMsg = MESSAGE_TEXT;
+
+        SET p_Status = -1;
+
+        ROLLBACK;
+
+    END;
+
+    
+
+    START TRANSACTION;
+
+    
+
+    -- Validate inputs
+
+    IF p_UserID IS NULL OR p_UserID <= 0 THEN
+
+        SET p_Status = -2;
+
+        SET p_ErrorMsg = 'Valid user ID is required';
+
+        ROLLBACK;
+
+    ELSEIF p_RoleID IS NULL OR p_RoleID <= 0 THEN
+
+        SET p_Status = -2;
+
+        SET p_ErrorMsg = 'Valid role ID is required';
+
+        ROLLBACK;
+
+    ELSE
+
+        -- Check if assignment exists
+
+        SELECT COUNT(*) INTO v_Exists 
+
+        FROM sys_user_roles 
+
+        WHERE UserID = p_UserID AND RoleID = p_RoleID;
+
+        
+
+        IF v_Exists = 0 THEN
+
+            SET p_Status = -4;
+
+            SET p_ErrorMsg = CONCAT('Role ', p_RoleID, ' not assigned to user ', p_UserID);
+
+            ROLLBACK;
+
+        ELSE
+
+            -- Delete user role
+
+            DELETE FROM sys_user_roles
+
+            WHERE UserID = p_UserID AND RoleID = p_RoleID;
+
+            
+
+            SET v_RowCount = ROW_COUNT();
+
+            
+
+            IF v_RowCount > 0 THEN
+
+                SET p_Status = 1;
+
+                SET p_ErrorMsg = CONCAT('Role ', p_RoleID, ' removed from user ', p_UserID);
+
+                COMMIT;
+
+            ELSE
+
+                SET p_Status = -3;
+
+                SET p_ErrorMsg = 'Failed to remove role';
+
+                ROLLBACK;
+
+            END IF;
+
+        END IF;
+
+    END IF;
+
+END
+//
+
+DELIMITER ;
+
+-- =============================================
+-- End of sys_user_roles_Delete
+-- =============================================

@@ -16,13 +16,13 @@ This document consolidates the task inventory for Phase 2.5 (stored procedure re
 ## Phase 2.5 – Stored Procedure Standardization (Blocking)
 
 ### Part A – Discovery & Analysis
-- [ ] **T100** – Discover all stored procedure call sites
-- [ ] **T101** – Extract complete database schema snapshot
-- [ ] **T102** – Generate individual SQL files for each stored procedure
-- [ ] **T103** – Audit procedures + generate transaction analysis CSV
-- [ ] **T104** – Document parameter prefix conventions
-- [ ] **T105** – Build refactoring priority matrix
-- [ ] **T106** – Produce stored procedure test coverage matrix
+- [X] **T100** – Discover all stored procedure call sites
+- [X] **T101** – Extract complete database schema snapshot
+- [X] **T102** – Generate individual SQL files for each stored procedure
+- [X] **T103** – Audit procedures + generate transaction analysis CSV
+- [X] **T104** – Document parameter prefix conventions
+- [X] **T105** – Build refactoring priority matrix
+- [X] **T106** – Produce stored procedure test coverage matrix
 - [ ] **T106a** – *(Agent-run)* Review and correct transaction analysis CSV (gates refactoring) using provided discovery artifacts
 - [ ] **T106b** – *(Agent-run)* Complete stored procedure user validation checklist (75 procedures) with ReadyForVerification SQL set and supporting reports
 
