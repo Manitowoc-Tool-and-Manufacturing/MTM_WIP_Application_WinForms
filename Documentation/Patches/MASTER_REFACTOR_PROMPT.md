@@ -3,7 +3,7 @@
 ## Meta
 - **Target Files:**  
   - `MTM_WIP_Application\README.md`  
-  - `StoredProcedureValidation\UpdatedStoredProcedures\README.md`  
+  - `UpdatedStoredProcedures\README.md`  
   - `.github\ISSUE_TEMPLATE\online-refactor.yml`  
   - All files referenced by `MTM_WIP_Application\README.md`  
   - All UpdatedDatabase and UpdatedStoredProcedures files  
@@ -29,7 +29,7 @@
 
 ### README and Documentation Updates
 - Update all documentation to clearly distinguish between "Current" (reference only) and "Updated" (active for repo/deployment).
-- In `MTM_WIP_Application\README.md` and `StoredProcedureValidation\UpdatedStoredProcedures\README.md`, add explicit notes and diagrams showing:
+- In `MTM_WIP_Application\README.md` and `UpdatedStoredProcedures\README.md`, add explicit notes and diagrams showing:
   - Which folders/files are mutable and which are locked.
   - The workflow for updating procedures and databases (always via Updated* folders).
 
@@ -104,7 +104,7 @@
 
 ## 8. Deliverables
 
-- Updated `MTM_WIP_Application\README.md` and `StoredProcedureValidation\UpdatedStoredProcedures\README.md` with new structure, environment logic, and compliance notes.
+- Updated `MTM_WIP_Application\README.md` and `UpdatedStoredProcedures\README.md` with new structure, environment logic, and compliance notes.
 - Updated `.github\copilot-instructions.md` and `.github\ISSUE_TEMPLATE\online-refactor.yml` with new environment and file structure logic.
 - All `UpdatedDatabase` and `UpdatedStoredProcedures` files updated to use `mtm_wip_application_winforms_test`.
 - Updated batch and shell scripts for deployment.

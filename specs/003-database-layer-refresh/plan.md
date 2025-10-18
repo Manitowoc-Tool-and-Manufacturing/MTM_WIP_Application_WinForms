@@ -741,7 +741,7 @@ Build PowerShell script that wipes old procedures and installs new ones with saf
   
   # 3. Install new procedures from UpdatedStoredProcedures/
   Write-Host "Installing new procedures..."
-  Get-ChildItem -Path "StoredProcedureValidation\UpdatedStoredProcedures\*.sql" -Recurse | ForEach-Object {
+  Get-ChildItem -Path "UpdatedStoredProcedures\*.sql" -Recurse | ForEach-Object {
       $content = Get-Content $_.FullName -Raw
       Execute-Query -Query $content
       Write-Host "Installed: $($_.Name)" -ForegroundColor Green
