@@ -26,7 +26,7 @@ internal static class Dao_System
 
             var result = await Helper_Database_StoredProcedure.ExecuteNonQueryWithStatusAsync(
                 Model_AppVariables.ConnectionString,
-                "sys_user_access_SetType",
+                "sys_SetUserAccessType",
                 parameters,
                 null // No progress helper for this method
             );

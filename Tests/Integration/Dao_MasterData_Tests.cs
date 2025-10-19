@@ -197,7 +197,7 @@ public class Dao_MasterData_Tests : BaseIntegrationTest
         // Arrange - Get an existing part
         var allParts = await Dao_Part.GetAllPartsAsync();
         Assert.IsTrue(allParts.IsSuccess && allParts.Data != null && allParts.Data.Rows.Count > 0, "Need at least one part for test");
-        var existingPartNumber = allParts.Data.Rows[0]["ItemNumber"].ToString();
+        var existingPartNumber = allParts.Data.Rows[0]["PartID"].ToString();  // Column is PartID, not ItemNumber
 
         // Act
         var result = await Dao_Part.GetPartByNumberAsync(existingPartNumber!);
@@ -216,7 +216,7 @@ public class Dao_MasterData_Tests : BaseIntegrationTest
         // Arrange - Get an existing part
         var allParts = await Dao_Part.GetAllPartsAsync();
         Assert.IsTrue(allParts.IsSuccess && allParts.Data != null && allParts.Data.Rows.Count > 0, "Need at least one part for test");
-        var existingPartNumber = allParts.Data.Rows[0]["ItemNumber"].ToString();
+        var existingPartNumber = allParts.Data.Rows[0]["PartID"].ToString();  // Column is PartID, not ItemNumber
 
         // Act
         var result = await Dao_Part.PartExistsAsync(existingPartNumber!);

@@ -21,9 +21,9 @@ BEGIN
         StackTrace,
         MethodName,
         ErrorType,
-        LoggedDate
+        ErrorTime
     FROM log_error
-    ORDER BY LoggedDate DESC;
+    ORDER BY ErrorTime DESC;
     SELECT FOUND_ROWS() INTO v_Count;
     IF v_Count > 0 THEN
         SET p_Status = 1;

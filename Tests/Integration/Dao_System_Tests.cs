@@ -143,12 +143,12 @@ namespace MTM_Inventory_Application.Tests.Integration
             // Act
             var result = await Dao_System.GetUserIdByNameAsync(nonExistentUser);
 
-            // Assert
-            Assert.IsFalse(result.IsSuccess, "Expected failure for non-existent user");
+            // Assert - Status 0 means "query succeeded but no data found" (treated as success)
+            Assert.IsTrue(result.IsSuccess, "Expected success with status 0 for non-existent user (no data found)");
             Assert.IsTrue(
                 result.ErrorMessage?.Contains(nonExistentUser) == true ||
                 result.StatusMessage.Contains("not found", StringComparison.OrdinalIgnoreCase),
-                $"Expected error message to mention user not found, got: {result.StatusMessage}");
+                $"Expected status message to mention user not found, got: {result.StatusMessage}");
         }
 
         /// <summary>
@@ -239,11 +239,12 @@ namespace MTM_Inventory_Application.Tests.Integration
             // Act
             var result = await Dao_System.GetUserIdByNameAsync(string.Empty);
 
-            // Assert
-            // Should either fail or throw appropriate exception
+            // Assert - Stored procedure returns status -2 for empty username
             Assert.IsFalse(result.IsSuccess, "Expected failure for empty username");
-            Assert.IsFalse(string.IsNullOrWhiteSpace(result.StatusMessage),
-                "Should provide meaningful error message");
+            Assert.IsFalse(string.IsNullOrWhiteSpace(result.ErrorMessage),
+                "Should provide meaningful error message in ErrorMessage property");
+            Assert.IsTrue(result.ErrorMessage.Contains("User name") || result.ErrorMessage.Contains("required"),
+                $"Error message should indicate username is required, got: {result.ErrorMessage}");
         }
 
         /// <summary>

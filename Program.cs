@@ -583,7 +583,7 @@ namespace MTM_Inventory_Application
         /// <returns>DaoResult indicating success or failure with timing information</returns>
         /// <remarks>
         /// Queries INFORMATION_SCHEMA.PARAMETERS to build a cache of all stored procedure parameters with their prefixes.
-        /// This cache enables automatic prefix detection (p_, in_, o_) when executing stored procedures,
+        /// This cache enables automatic prefix detection (p_, o_) when executing stored procedures,
         /// eliminating MySQL parameter errors caused by incorrect prefix usage.
         /// Expected execution time: ~100-200ms for 60+ stored procedures.
         /// </remarks>

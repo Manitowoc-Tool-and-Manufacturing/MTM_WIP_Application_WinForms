@@ -1,4 +1,5 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using MTM_Inventory_Application.Data;
 using MTM_Inventory_Application.Helpers;
 using MTM_Inventory_Application.Models;
 using MySql.Data.MySqlClient;
@@ -91,6 +92,9 @@ public abstract class BaseIntegrationTest
     {
         try
         {
+            // Enable test mode to suppress MessageBox dialogs
+            Dao_ErrorLog.IsTestMode = true;
+
             // Get connection string for test database
             var connectionString = GetTestConnectionString();
 

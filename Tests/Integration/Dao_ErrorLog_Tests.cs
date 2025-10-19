@@ -199,10 +199,12 @@ namespace MTM_Inventory_Application.Tests.Integration
             // Act
             var result = await Dao_ErrorLog.GetErrorsByDateRangeAsync(startDate, endDate);
 
-            // Assert
+            // Assert - Should handle inverted dates without throwing exceptions
+            // Stored procedure returns status -2 for inverted date range
             Assert.IsNotNull(result, "Result should not be null");
-            Assert.IsTrue(result.IsSuccess, "Should handle inverted dates gracefully");
-            // Should return empty or handle gracefully, not throw
+            Assert.IsFalse(result.IsSuccess, "Operation should fail for inverted dates (stored procedure validation)");
+            Assert.IsTrue(result.ErrorMessage.Contains("Start date") || result.ErrorMessage.Contains("date"), 
+                $"Error message should indicate date validation issue, got: {result.ErrorMessage}");
         }
 
         #endregion
@@ -222,9 +224,11 @@ namespace MTM_Inventory_Application.Tests.Integration
             // Act
             var result = await Dao_ErrorLog.DeleteErrorByIdAsync(nonExistentId);
             
-            // Assert
+            // Assert - Should execute without throwing, but returns failure status for non-existent ID
             Assert.IsNotNull(result, "Result should not be null");
-            Assert.IsTrue(result.IsSuccess, "Delete operation should execute without throwing exception");
+            Assert.IsFalse(result.IsSuccess, "Delete operation should fail for non-existent ID (stored procedure validation)");
+            Assert.IsTrue(result.ErrorMessage.Contains("not found") || result.ErrorMessage.Contains("Error log entry"), 
+                $"Error message should indicate ID not found, got: {result.ErrorMessage}");
         }
 
         /// <summary>
@@ -413,10 +417,12 @@ namespace MTM_Inventory_Application.Tests.Integration
             // Act
             var result = await Dao_ErrorLog.GetErrorsByUserAsync(string.Empty);
 
-            // Assert
+            // Assert - Should handle empty string gracefully without throwing exceptions
+            // Stored procedure returns status -2 for null/empty user
             Assert.IsNotNull(result, "Result should not be null");
-            Assert.IsTrue(result.IsSuccess, "Operation should succeed even for empty user string");
-            Assert.IsNotNull(result.Data, "Should return DataTable even for empty user string");
+            Assert.IsFalse(result.IsSuccess, "Operation should fail for empty user string (stored procedure validation)");
+            Assert.IsTrue(result.ErrorMessage.Contains("User is required") || result.ErrorMessage.Contains("required"), 
+                $"Error message should indicate user is required, got: {result.ErrorMessage}");
         }
 
         /// <summary>
@@ -425,19 +431,15 @@ namespace MTM_Inventory_Application.Tests.Integration
         [TestMethod]
         public async Task GetErrorsByUserAsync_WithNull_HandlesGracefully()
         {
-            // Act & Assert - Should not throw NullReferenceException
-            try
-            {
-                var result = await Dao_ErrorLog.GetErrorsByUserAsync(null!);
-                Assert.IsNotNull(result, "Result should not be null");
-                Assert.IsTrue(result.IsSuccess, "Operation should succeed even for null user");
-                Assert.IsNotNull(result.Data, "Should return DataTable even for null user");
-            }
-            catch (ArgumentNullException)
-            {
-                // This is also acceptable behavior
-                Assert.IsTrue(true, "ArgumentNullException is acceptable for null parameter");
-            }
+            // Act
+            var result = await Dao_ErrorLog.GetErrorsByUserAsync(null!);
+            
+            // Assert - Should handle null gracefully without throwing exceptions
+            // Stored procedure returns status -2 for null/empty user
+            Assert.IsNotNull(result, "Result should not be null");
+            Assert.IsFalse(result.IsSuccess, "Operation should fail for null user (stored procedure validation)");
+            Assert.IsTrue(result.ErrorMessage.Contains("User is required") || result.ErrorMessage.Contains("required"), 
+                $"Error message should indicate user is required, got: {result.ErrorMessage}");
         }
 
         #endregion

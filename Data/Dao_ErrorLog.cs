@@ -12,7 +12,15 @@ namespace MTM_Inventory_Application.Data;
 
 internal static class Dao_ErrorLog
 {
+    #region Test Mode Detection
 
+    /// <summary>
+    /// Set to true when running in test mode to suppress MessageBox dialogs.
+    /// Tests should set this flag in their setup to prevent blocking UI dialogs.
+    /// </summary>
+    public static bool IsTestMode { get; set; } = false;
+
+    #endregion
 
     #region Query Methods
 
@@ -161,6 +169,12 @@ internal static class Dao_ErrorLog
 
     private static bool ShouldShowErrorMessage(string message)
     {
+        // Suppress message boxes during test execution
+        if (IsTestMode)
+        {
+            return false;
+        }
+
         DateTime now = DateTime.Now;
         lock (typeof(Dao_ErrorLog))
         {
@@ -177,6 +191,12 @@ internal static class Dao_ErrorLog
 
     private static bool ShouldShowSqlErrorMessage(string message)
     {
+        // Suppress message boxes during test execution
+        if (IsTestMode)
+        {
+            return false;
+        }
+
         DateTime now = DateTime.Now;
         lock (typeof(Dao_ErrorLog))
         {

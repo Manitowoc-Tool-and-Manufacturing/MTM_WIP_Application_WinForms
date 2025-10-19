@@ -507,13 +507,13 @@ public static class Dao_Inventory
     {
         try
         {
-            // MIGRATED: Use Helper_Database_StoredProcedure with explicit in_ prefix
+            // Use explicit p_ prefix for transfer procedures (parameter cache may not be populated yet)
             Dictionary<string, object> parameters = new()
             {
-                ["in_BatchNumber"] = batchNumber,    // Explicit in_ prefix for transfer procedures
-                ["in_PartID"] = partId,
-                ["in_Operation"] = operation,
-                ["in_NewLocation"] = newLocation
+                ["p_BatchNumber"] = batchNumber,
+                ["p_PartID"] = partId,
+                ["p_Operation"] = operation,
+                ["p_NewLocation"] = newLocation
             };
 
             var result = await Helper_Database_StoredProcedure.ExecuteNonQueryWithStatusAsync(
@@ -550,16 +550,16 @@ public static class Dao_Inventory
     {
         try
         {
-            // MIGRATED: Use Helper_Database_StoredProcedure with explicit in_ prefix
+            // Use explicit p_ prefix for transfer procedures (parameter cache may not be populated yet)
             Dictionary<string, object> parameters = new()
             {
-                ["in_BatchNumber"] = batchNumber,        // Explicit in_ prefix for transfer procedures
-                ["in_PartID"] = partId,
-                ["in_Operation"] = operation,
-                ["in_TransferQuantity"] = transferQuantity,
-                ["in_OriginalQuantity"] = originalQuantity,
-                ["in_NewLocation"] = newLocation,
-                ["in_User"] = user
+                ["p_BatchNumber"] = batchNumber,
+                ["p_PartID"] = partId,
+                ["p_Operation"] = operation,
+                ["p_TransferQuantity"] = transferQuantity,
+                ["p_OriginalQuantity"] = originalQuantity,
+                ["p_NewLocation"] = newLocation,
+                ["p_User"] = user
             };
 
             var result = await Helper_Database_StoredProcedure.ExecuteNonQueryWithStatusAsync(
