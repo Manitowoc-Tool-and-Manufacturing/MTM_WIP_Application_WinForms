@@ -1,141 +1,57 @@
-# MCP Tools Reference for MTM Project
+# MTM Workflow MCP Server – Tool Reference
 
-**Generated:** 2025-10-18T16:56:00.722Z
-**Workspace:** c:\Users\johnk\source\repos\MTM_WIP_Application_WinForms
+This document is the authoritative catalog for MCP tools that ship with the MTM workflow server. Keep it in sync with the code in `.mcp/mtm-workflow` and with the live installation in `C:\.mcp`.
 
----
+## Directory Roles
 
-## MCP Extension Status
+- `.mcp/` inside the repository is the **development sandbox**. Create or modify tools here first, run tests, and validate output.
+- `C:\.mcp` is the **global runtime** used by VS Code. After every change, copy the updated `mtm-workflow` contents from the repo into `C:\.mcp` so both locations remain identical.
 
-```clojure
-{:found false, :message "MCP extension not found"}
+## Available Tools (mtm-workflow)
+
+| Tool | Purpose | Key Inputs |
+| --- | --- | --- |
+| `check_checklists` | Summarise Markdown checklist completion. | `checklist_dir` |
+| `validate_dao_patterns` | Enforce DAO coding standards. | `dao_dir`, `recursive` |
+| `analyze_stored_procedures` | Verify stored procedure contract compliance. | `procedures_dir`, `recursive` |
+| `compare_databases` | Spot schema drift between Current/Updated snapshots. | `current_dir`, `updated_dir` |
+| `generate_dao_wrapper` | Scaffold DAO wrappers from stored procedures. | `procedure_file`, `output_dir?` |
+| `validate_error_handling` | Audit Service_ErrorHandler usage and anti-patterns. | `source_dir`, `recursive` |
+| `analyze_dependencies` | Build stored procedure dependency graphs. | `procedures_dir` |
+| `check_xml_docs` | Report XML documentation coverage. | `source_dir`, `recursive`, `min_coverage` |
+| `generate_unit_tests` | Create unit test scaffolding for C# classes. | `source_file`, `output_dir?`, `test_framework?` |
+| `suggest_refactoring` | Surface refactoring opportunities in C#/SQL. | `source_dir`, `recursive`, `file_type` |
+| `analyze_performance` | Detect performance issues in C#. | `source_dir`, `recursive`, `focus` |
+| `check_security` | Perform security scans of C#/config files. | `source_dir`, `recursive`, `scan_type` |
+| `apply_ui_fixes` | Apply automated WinForms UI corrections from a JSON plan. | `fix_plan_file`, `backup_dir?`, `dry_run?` |
+| `generate_test_seed_sql` | Produce SQL seed script from JSON-defined datasets for integration testing. | `config_file`, `output_sql?` |
+| `verify_test_seed` | Validate seeded data against JSON expectations using MySQL. | `config_file`, `host?`, `port?`, `user?`, `password?`, `database?` |
+| `generate_ui_fix_plan` | Produce JSON fix plans for WinForms UI issues. | `source_dir`, `recursive`, `include_warnings?`, `output_file?` |
+| `validate_ui_scaling` | Validate DPI/layout consistency in WinForms files. | `source_dir`, `recursive`, `file_types` |
+| `analyze_spec_context` | Parse SpecKit feature specs for context. | `feature_dir` |
+| `load_instructions` | Load SpecKit instruction mappings. | `tasks_file`, `instructions_dir` |
+| `parse_tasks` | Parse SpecKit task lists into structured data. | `tasks_file` |
+| `mark_task_complete` | Mark SpecKit tasks complete with optional note. | `tasks_file`, `task_ids`, `note?` |
+| `validate_build` | Run `dotnet build` (optionally tests) to validate projects. | `workspace_root`, `project_file?`, `run_tests?`, `check_errors?` |
+| `verify_ignore_files` | Check /.gitignore style coverage for required patterns. | `workspace_root`, `tech_stack?` |
+
+> ℹ️ Optional parameters are marked with `?`. See TypeScript source in `src/tools` for exact signatures.
+
+## Adding a New Tool
+
+1. Author the tool in `mtm-workflow/src/tools/` and export it from `src/index.ts`.
+2. Update this reference table.
+3. Re-run `npm install` (if new deps) and `npm run build` inside `.mcp/mtm-workflow`.
+4. Sync the built server to `C:\.mcp` (see `GLOBAL-INSTALL.md`).
+5. Restart VS Code to pick up the changes.
+
+## Verifying Tool Availability
+
+After syncing, confirm tools are exposed:
+
+```powershell
+# From any PowerShell window
+node C:\.mcp\mtm-workflow\dist\index.js --list-tools
 ```
 
-## Configured MCP Servers
-
-```clojure
-{:awesome-copilot {:command "docker", :args ["run" "-i" "--rm" "ghcr.io/microsoft/mcp-dotnet-samples/awesome-copilot:latest"], :type "stdio"}, :mtm-workflow {:type "stdio", :command "node", :args ["C:/Users/johnk/source/repos/MTM_WIP_Application_WinForms/.mcp/mtm-workflow/dist/index.js"]}}
-```
-
-### Server Details:
-
-#### awesome-copilot
-- **Command:** `docker`
-- **Args:** ["run" "-i" "--rm" "ghcr.io/microsoft/mcp-dotnet-samples/awesome-copilot:latest"]
-- **Type:** stdio
-
-#### mtm-workflow
-- **Command:** `node`
-- **Args:** ["C:/Users/johnk/source/repos/MTM_WIP_Application_WinForms/.mcp/mtm-workflow/dist/index.js"]
-- **Type:** stdio
-
-## MCP-Related Extensions
-
-*No MCP-related extensions found*
-
-## Known MTM Workflow Tools
-
-### mtm-workflow Server
-
-#### check_checklists
-- **Purpose:** Analyze markdown checklist completion status
-- **Input:** `checklist_dir` (absolute path)
-- **Output:** Table with total/completed/incomplete counts
-- **Example:** `check_checklists("C:/...specs/.../checklists")`
-
-#### validate_dao_patterns
-- **Purpose:** Validate C# DAO files for MTM coding standards
-- **Input:** `dao_dir` (absolute path), `recursive` (bool)
-- **Output:** Validation results with issues by severity
-- **Checks:**
-  - Region organization
-  - Helper_Database_StoredProcedure usage
-  - Async/await patterns
-  - Service_ErrorHandler usage
-  - XML documentation
-  - Anti-patterns (MessageBox.Show, .Result, .Wait())
-
-#### analyze_stored_procedures ✨ NEW
-- **Purpose:** Scan SQL procedures for compliance with MTM standards
-- **Input:** `procedures_dir` (absolute path), `recursive` (bool)
-- **Output:** Compliance report with issues by severity
-- **Checks:**
-  - Required output parameters (p_Status, p_ErrorMsg)
-  - Transaction management (COMMIT/ROLLBACK)
-  - Error handling (DECLARE HANDLER)
-  - Parameter naming (p_ prefix)
-  - SQL injection risks
-
-#### compare_databases ✨ NEW
-- **Purpose:** Detect schema drift between Current and Updated databases
-- **Input:** `current_dir`, `updated_dir` (absolute paths)
-- **Output:** Detailed difference report
-- **Returns:**
-  - Tables/procedures added/removed/modified
-  - Content change detection
-  - Deployment recommendations
-
-#### generate_dao_wrapper ✨ NEW
-- **Purpose:** Auto-generate C# DAO code from stored procedure
-- **Input:** `procedure_file` (absolute path), `output_dir` (optional)
-- **Output:** Complete DAO method code
-- **Generates:**
-  - Helper_Database_StoredProcedure integration
-  - Parameter mapping
-  - Error handling
-  - XML documentation
-
-#### validate_error_handling ✨ NEW
-- **Purpose:** Check C# files for proper error handling patterns
-- **Input:** `source_dir` (absolute path), `recursive` (bool)
-- **Output:** Error handling statistics and issue report
-- **Checks:**
-  - MessageBox.Show usage (anti-pattern)
-  - Service_ErrorHandler usage
-  - Try-catch in async methods
-  - Empty catch blocks
-
-#### analyze_dependencies ✨ NEW
-- **Purpose:** Map stored procedure call hierarchies
-- **Input:** `procedures_dir` (absolute path)
-- **Output:** Dependency graph and statistics
-- **Returns:**
-  - Root/leaf procedure lists
-  - Circular dependency detection
-  - Visual dependency tree
-  - Call depth analysis
-
-#### check_xml_docs ✨ NEW
-- **Purpose:** Validate XML documentation coverage in C# code
-- **Input:** `source_dir` (absolute path), `recursive` (bool), `min_coverage` (number)
-- **Output:** Coverage report with missing documentation details
-- **Returns:**
-  - Per-file coverage percentage
-  - Undocumented member list
-  - Pass/fail based on threshold
-
----
-
-## Discovering More Tools
-
-To find tools from other MCP servers:
-
-1. Check the MCP output panel in VS Code (View → Output → MCP)
-2. Review server documentation
-3. Query server directly if it supports introspection
-
-## Potential Future Tools for MTM
-
-Based on project needs:
-
-- ~~**analyze_stored_procedures**~~ ✅ **IMPLEMENTED**
-- ~~**compare_databases**~~ ✅ **IMPLEMENTED**
-- ~~**generate_dao_wrapper**~~ ✅ **IMPLEMENTED**
-- ~~**validate_error_handling**~~ ✅ **IMPLEMENTED**
-- ~~**analyze_dependencies**~~ ✅ **IMPLEMENTED**
-- ~~**check_xml_docs**~~ ✅ **IMPLEMENTED**
-- **suggest_refactoring** - AI-powered refactoring suggestions
-- **generate_unit_tests** - Auto-generate test scaffolding
-- **analyze_performance** - Identify performance bottlenecks in DAOs
-- **check_security** - Security vulnerability scanning
-
+The list returned should match the table above. If it does not, rebuild and re-sync.

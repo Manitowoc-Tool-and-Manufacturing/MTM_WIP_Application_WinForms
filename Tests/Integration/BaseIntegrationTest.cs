@@ -307,6 +307,181 @@ public abstract class BaseIntegrationTest
     }
 
     /// <summary>
+    /// Determines whether the specified table exists in the test database.
+    /// </summary>
+    /// <param name="tableName">Name of the table to check (case-insensitive).
+    /// </param>
+    /// <returns><c>true</c> if the table exists; otherwise <c>false</c>.</returns>
+    /// <exception cref="ArgumentException">Thrown when <paramref name="tableName"/> is null or whitespace.</exception>
+    protected async Task<bool> TableExistsAsync(string tableName)
+    {
+        if (string.IsNullOrWhiteSpace(tableName))
+        {
+            throw new ArgumentException("Table name must be provided", nameof(tableName));
+        }
+
+        MySqlConnection? externalConnection = null;
+
+        try
+        {
+            var connection = _connection;
+            if (connection is null || connection.State != ConnectionState.Open)
+            {
+                externalConnection = new MySqlConnection(GetTestConnectionString());
+                await externalConnection.OpenAsync().ConfigureAwait(false);
+                connection = externalConnection;
+            }
+
+            await using var command = connection.CreateCommand();
+            command.CommandText = @"SELECT COUNT(*)
+                                    FROM information_schema.tables
+                                    WHERE table_schema = @schema AND table_name = @table
+                                    LIMIT 1";
+            command.Parameters.AddWithValue("@schema", Helper_Database_Variables.TestDatabaseName);
+            command.Parameters.AddWithValue("@table", tableName);
+
+            var result = await command.ExecuteScalarAsync().ConfigureAwait(false);
+            var count = Convert.ToInt32(result ?? 0);
+            return count > 0;
+        }
+        finally
+        {
+            if (externalConnection != null)
+            {
+                externalConnection.Close();
+                externalConnection.Dispose();
+            }
+        }
+    }
+
+    /// <summary>
+    /// Ensures that all specified tables exist; marks the test inconclusive when any are missing.
+    /// </summary>
+    /// <param name="reason">Additional context explaining why the tables are required.</param>
+    /// <param name="tableNames">Names of tables that must exist for the test to run.</param>
+    protected async Task EnsureTablesExistOrSkipAsync(string reason, params string[] tableNames)
+    {
+        if (tableNames == null || tableNames.Length == 0)
+        {
+            return;
+        }
+
+        var missing = new List<string>();
+        foreach (var table in tableNames)
+        {
+            if (string.IsNullOrWhiteSpace(table))
+            {
+                continue;
+            }
+
+            if (!await TableExistsAsync(table).ConfigureAwait(false))
+            {
+                missing.Add(table);
+            }
+        }
+
+        if (missing.Count > 0)
+        {
+            var tableList = string.Join(", ", missing);
+            var message = $"Skipping test: required table(s) {tableList} missing in '{Helper_Database_Variables.TestDatabaseName}'.";
+            if (!string.IsNullOrWhiteSpace(reason))
+            {
+                message += $" {reason}";
+            }
+
+            Assert.Inconclusive(message);
+        }
+    }
+
+    /// <summary>
+    /// Determines whether the specified stored procedure exists in the test database.
+    /// </summary>
+    /// <param name="procedureName">Name of the stored procedure to check (case-insensitive).</param>
+    /// <returns><c>true</c> if the stored procedure exists; otherwise <c>false</c>.</returns>
+    /// <exception cref="ArgumentException">Thrown when <paramref name="procedureName"/> is null or whitespace.</exception>
+    protected async Task<bool> StoredProcedureExistsAsync(string procedureName)
+    {
+        if (string.IsNullOrWhiteSpace(procedureName))
+        {
+            throw new ArgumentException("Procedure name must be provided", nameof(procedureName));
+        }
+
+        MySqlConnection? externalConnection = null;
+
+        try
+        {
+            var connection = _connection;
+            if (connection is null || connection.State != ConnectionState.Open)
+            {
+                externalConnection = new MySqlConnection(GetTestConnectionString());
+                await externalConnection.OpenAsync().ConfigureAwait(false);
+                connection = externalConnection;
+            }
+
+            await using var command = connection.CreateCommand();
+            command.CommandText = @"SELECT COUNT(*)
+                                    FROM information_schema.routines
+                                    WHERE routine_schema = @schema
+                                      AND routine_name = @procedure
+                                      AND routine_type = 'PROCEDURE'
+                                    LIMIT 1";
+            command.Parameters.AddWithValue("@schema", Helper_Database_Variables.TestDatabaseName);
+            command.Parameters.AddWithValue("@procedure", procedureName);
+
+            var result = await command.ExecuteScalarAsync().ConfigureAwait(false);
+            var count = Convert.ToInt32(result ?? 0);
+            return count > 0;
+        }
+        finally
+        {
+            if (externalConnection != null)
+            {
+                externalConnection.Close();
+                externalConnection.Dispose();
+            }
+        }
+    }
+
+    /// <summary>
+    /// Ensures that all specified stored procedures exist; marks the test inconclusive when any are missing.
+    /// </summary>
+    /// <param name="reason">Additional context explaining why the procedures are required.</param>
+    /// <param name="procedureNames">Names of stored procedures that must exist for the test to run.</param>
+    protected async Task EnsureStoredProceduresExistOrSkipAsync(string reason, params string[] procedureNames)
+    {
+        if (procedureNames == null || procedureNames.Length == 0)
+        {
+            return;
+        }
+
+        var missing = new List<string>();
+        foreach (var procedure in procedureNames)
+        {
+            if (string.IsNullOrWhiteSpace(procedure))
+            {
+                continue;
+            }
+
+            if (!await StoredProcedureExistsAsync(procedure).ConfigureAwait(false))
+            {
+                missing.Add(procedure);
+            }
+        }
+
+        if (missing.Count > 0)
+        {
+            var procList = string.Join(", ", missing);
+            var message = $"Skipping test: required stored procedure(s) {procList} missing in '{Helper_Database_Variables.TestDatabaseName}'.";
+            if (!string.IsNullOrWhiteSpace(reason))
+            {
+                message += $" {reason}";
+            }
+
+            Assert.Inconclusive(message);
+        }
+    }
+
+    /// <summary>
     /// Gets the active test transaction.
     /// </summary>
     /// <returns>Always returns null - transaction isolation has been removed.</returns>

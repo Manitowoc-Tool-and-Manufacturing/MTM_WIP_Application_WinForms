@@ -26,6 +26,8 @@ import { checkSecurity } from "./tools/check-security.js";
 import { validateUiScaling } from "./tools/validate-ui-scaling.js";
 import { generateUiFixPlan } from "./tools/generate-ui-fix-plan.js";
 import { applyUiFixes } from "./tools/apply-ui-fixes.js";
+import { generateTestSeedSql } from "./tools/generate-test-seed-sql.js";
+import { verifyTestSeed } from "./tools/verify-test-seed.js";
 
 // Speckit tools
 import { parseTasks } from "./tools/speckit/parse-tasks.js";
@@ -390,6 +392,75 @@ const tools: Tool[] = [
       required: ["fix_plan_file"],
     },
   },
+  {
+    name: "generate_test_seed_sql",
+    description:
+      "Generate SQL seed script for integration tests based on a configurable JSON file. Supports quick button rows, log entries, and transaction history seeds.",
+    inputSchema: {
+      type: "object",
+      properties: {
+        output_sql: {
+          type: "string",
+          description: "Optional: Absolute path to write generated SQL script",
+        },
+        database: {
+          type: "string",
+          description: "Target database name (defaults to mtm_wip_application_winforms_test)",
+        },
+        user: {
+          type: "string",
+          description: "Base user identifier used for default quick button seeds",
+        },
+        include_logging: {
+          type: "boolean",
+          description: "Include default log seed rows when no config file is supplied",
+        },
+        include_history: {
+          type: "boolean",
+          description: "Include default transaction history rows when no config file is supplied",
+        },
+        config_file: {
+          type: "string",
+          description: "Optional: Absolute path to JSON configuration file overriding defaults",
+        },
+      },
+    },
+  },
+  {
+    name: "verify_test_seed",
+    description:
+      "Verify seeded data against expected results defined in JSON configuration using a MySQL connection.",
+    inputSchema: {
+      type: "object",
+      properties: {
+        config_file: {
+          type: "string",
+          description: "Absolute path to JSON configuration used for verification",
+        },
+        host: {
+          type: "string",
+          description: "Optional MySQL host override",
+        },
+        port: {
+          type: "number",
+          description: "Optional MySQL port override",
+        },
+        user: {
+          type: "string",
+          description: "Optional MySQL user override",
+        },
+        password: {
+          type: "string",
+          description: "Optional MySQL password override",
+        },
+        database: {
+          type: "string",
+          description: "Optional database override",
+        },
+      },
+      required: ["config_file"],
+    },
+  },
   // Speckit implementation tools
   {
     name: "parse_tasks",
@@ -596,6 +667,30 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
       case "apply_ui_fixes":
         return await applyUiFixes(
           args as { fix_plan_file: string; backup_dir?: string; dry_run?: boolean; max_severity?: "critical" | "error" | "warning" | "info" }
+        );
+
+      case "generate_test_seed_sql":
+        return await generateTestSeedSql(
+          args as {
+            output_sql?: string;
+            database?: string;
+            user?: string;
+            include_logging?: boolean;
+            include_history?: boolean;
+            config_file?: string;
+          }
+        );
+
+      case "verify_test_seed":
+        return await verifyTestSeed(
+          args as {
+            config_file: string;
+            host?: string;
+            port?: number;
+            user?: string;
+            password?: string;
+            database?: string;
+          }
         );
 
       // Speckit tools

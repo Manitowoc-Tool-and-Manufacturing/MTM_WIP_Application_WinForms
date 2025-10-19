@@ -20,6 +20,25 @@ namespace MTM_Inventory_Application.Tests.Integration;
 [TestClass]
 public class Dao_QuickButtons_Tests : BaseIntegrationTest
 {
+    private async Task EnsureQuickButtonTableAsync()
+    {
+        await EnsureTablesExistOrSkipAsync(
+                "Quick button integration tests require the sys_last_10_transactions table. Run the UpdatedDatabase deployment scripts to provision it in the test database.",
+                "sys_last_10_transactions")
+            .ConfigureAwait(false);
+
+        await EnsureStoredProceduresExistOrSkipAsync(
+                "Quick button integration tests require the sys_last_10_transactions_* stored procedures. Run the UpdatedStoredProcedures deployment scripts to provision them in the test database.",
+                "sys_last_10_transactions_Update_ByUserAndPosition_1",
+                "sys_last_10_transactions_RemoveAndShift_ByUser",
+                "sys_last_10_transactions_Add_AtPosition",
+                "sys_last_10_transactions_Move_1",
+                "sys_last_10_transactions_DeleteAll_ByUser",
+                "sys_last_10_transactions_AddQuickButton_1",
+                "sys_last_10_transactions_Delete_ByUserAndPosition_1")
+            .ConfigureAwait(false);
+    }
+
     #region Test Data
 
     private const string TestUser = "TestUser_QB";
@@ -38,6 +57,8 @@ public class Dao_QuickButtons_Tests : BaseIntegrationTest
     [TestMethod]
     public async Task UpdateQuickButtonAsync_ValidData_UpdatesButton()
     {
+        await EnsureQuickButtonTableAsync();
+
         // Arrange
         int position = 1; // 1-based position
         string partId = TestPartId;
@@ -61,6 +82,8 @@ public class Dao_QuickButtons_Tests : BaseIntegrationTest
     [TestMethod]
     public async Task AddQuickButtonAsync_ValidData_AddsButton()
     {
+        await EnsureQuickButtonTableAsync();
+
         // Arrange
         int position = 5; // Mid-range position
         string partId = "TEST-PART-QB-002";
@@ -83,6 +106,8 @@ public class Dao_QuickButtons_Tests : BaseIntegrationTest
     [TestMethod]
     public async Task RemoveQuickButtonAndShiftAsync_ValidPosition_RemovesAndShifts()
     {
+        await EnsureQuickButtonTableAsync();
+
         // Arrange
         int position = 2; // 1-based position to remove
 
@@ -101,6 +126,8 @@ public class Dao_QuickButtons_Tests : BaseIntegrationTest
     [TestMethod]
     public async Task DeleteAllQuickButtonsForUserAsync_ValidUser_DeletesAllButtons()
     {
+        await EnsureQuickButtonTableAsync();
+
         // Act
         var result = await Dao_QuickButtons.DeleteAllQuickButtonsForUserAsync(TestUser);
 
@@ -120,6 +147,8 @@ public class Dao_QuickButtons_Tests : BaseIntegrationTest
     [TestMethod]
     public async Task MoveQuickButtonAsync_ValidPositions_MovesButton()
     {
+        await EnsureQuickButtonTableAsync();
+
         // Arrange
         int fromPosition = 3; // 1-based source position
         int toPosition = 7;   // 1-based target position
@@ -140,6 +169,8 @@ public class Dao_QuickButtons_Tests : BaseIntegrationTest
     [TestMethod]
     public async Task AddOrShiftQuickButtonAsync_ValidData_AddsOrShifts()
     {
+        await EnsureQuickButtonTableAsync();
+
         // Arrange
         string partId = "TEST-PART-QB-003";
         string operation = "120";
@@ -161,6 +192,8 @@ public class Dao_QuickButtons_Tests : BaseIntegrationTest
     [TestMethod]
     public async Task RemoveAndShiftQuickButtonAsync_ValidPosition_RemovesAndShifts()
     {
+        await EnsureQuickButtonTableAsync();
+
         // Arrange
         int position = 4; // 1-based position
 
@@ -179,6 +212,8 @@ public class Dao_QuickButtons_Tests : BaseIntegrationTest
     [TestMethod]
     public async Task AddQuickButtonAtPositionAsync_ValidData_AddsAtPosition()
     {
+        await EnsureQuickButtonTableAsync();
+
         // Arrange
         string partId = "TEST-PART-QB-004";
         string operation = "100";
@@ -205,6 +240,8 @@ public class Dao_QuickButtons_Tests : BaseIntegrationTest
     [TestMethod]
     public async Task UpdateQuickButtonAsync_Position1_UpdatesButton()
     {
+        await EnsureQuickButtonTableAsync();
+
         // Arrange
         int position = 1; // Lower bound
 
@@ -224,6 +261,8 @@ public class Dao_QuickButtons_Tests : BaseIntegrationTest
     [TestMethod]
     public async Task UpdateQuickButtonAsync_Position10_UpdatesButton()
     {
+        await EnsureQuickButtonTableAsync();
+
         // Arrange
         int position = 10; // Upper bound
 
@@ -243,6 +282,8 @@ public class Dao_QuickButtons_Tests : BaseIntegrationTest
     [TestMethod]
     public async Task MoveQuickButtonAsync_SamePosition_HandlesGracefully()
     {
+        await EnsureQuickButtonTableAsync();
+
         // Arrange
         int position = 5; // Same source and target
 
@@ -266,6 +307,8 @@ public class Dao_QuickButtons_Tests : BaseIntegrationTest
     [TestMethod]
     public async Task QuickButtonWorkflow_CompleteSequence_ExecutesSuccessfully()
     {
+        await EnsureQuickButtonTableAsync();
+
         // Arrange
         string workflowUser = "TestUser_Workflow";
         string partId = "TEST-PART-WORKFLOW";

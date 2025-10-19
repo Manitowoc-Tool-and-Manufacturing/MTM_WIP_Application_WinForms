@@ -26,6 +26,11 @@ namespace MTM_Inventory_Application.Tests.Integration;
 [TestClass]
 public class Dao_Logging_Tests : BaseIntegrationTest
 {
+    private Task EnsureLoggingTablesAsync() => EnsureTablesExistOrSkipAsync(
+        "Logging integration tests require log and transaction history tables. Run the UpdatedDatabase scripts against the mtm_wip_application_winforms_test database to provision them.",
+        "log_application_errors",
+        "inv_transaction");
+
     #region Error Log Query Tests
 
     /// <summary>
@@ -35,6 +40,8 @@ public class Dao_Logging_Tests : BaseIntegrationTest
     [TestMethod]
     public async Task GetUniqueErrorsAsync_Execution_ReturnsUniqueErrors()
     {
+        await EnsureLoggingTablesAsync();
+
         // Act
         var result = await Dao_ErrorLog.GetUniqueErrorsAsync();
 
@@ -51,14 +58,16 @@ public class Dao_Logging_Tests : BaseIntegrationTest
     [TestMethod]
     public async Task GetAllErrorsAsync_Execution_ReturnsAllErrors()
     {
+        await EnsureLoggingTablesAsync();
+
         // Act
         var result = await Dao_ErrorLog.GetAllErrorsAsync();
 
         // Assert
         AssertSuccessWithData(result, "Expected successful retrieval of all errors");
-        Assert.IsTrue(result.Data.Rows.Count >= 0,
-            "Expected non-negative row count");
-        Console.WriteLine($"GetAllErrorsAsync returned {result.Data.Rows.Count} error record(s)");
+        var totalRows = result.Data?.Rows.Count ?? 0;
+        Assert.IsTrue(totalRows >= 0, "Expected non-negative row count");
+        Console.WriteLine($"GetAllErrorsAsync returned {totalRows} error record(s)");
     }
 
     /// <summary>
@@ -68,6 +77,8 @@ public class Dao_Logging_Tests : BaseIntegrationTest
     [TestMethod]
     public async Task GetErrorsByUserAsync_ExistingUser_ReturnsUserErrors()
     {
+        await EnsureLoggingTablesAsync();
+
         // Arrange
         string testUser = "TestUser";
 
@@ -77,7 +88,8 @@ public class Dao_Logging_Tests : BaseIntegrationTest
         // Assert
         AssertSuccessWithData(result, "Expected successful retrieval of user errors");
         // Note: May return 0 rows if no errors exist for test user
-        Console.WriteLine($"GetErrorsByUserAsync returned {result.Data.Rows.Count} error(s) for user '{testUser}'");
+    var userRows = result.Data?.Rows.Count ?? 0;
+    Console.WriteLine($"GetErrorsByUserAsync returned {userRows} error(s) for user '{testUser}'");
     }
 
     /// <summary>
@@ -87,6 +99,8 @@ public class Dao_Logging_Tests : BaseIntegrationTest
     [TestMethod]
     public async Task GetErrorsByDateRangeAsync_ValidRange_ReturnsFilteredErrors()
     {
+        await EnsureLoggingTablesAsync();
+
         // Arrange
         DateTime start = DateTime.Now.AddDays(-7);
         DateTime end = DateTime.Now;
@@ -96,7 +110,8 @@ public class Dao_Logging_Tests : BaseIntegrationTest
 
         // Assert
         AssertSuccessWithData(result, "Expected successful retrieval of errors by date range");
-        Console.WriteLine($"GetErrorsByDateRangeAsync returned {result.Data.Rows.Count} error(s) " +
+        var rangeRows = result.Data?.Rows.Count ?? 0;
+        Console.WriteLine($"GetErrorsByDateRangeAsync returned {rangeRows} error(s) " +
             $"between {start:yyyy-MM-dd} and {end:yyyy-MM-dd}");
     }
 
@@ -111,6 +126,8 @@ public class Dao_Logging_Tests : BaseIntegrationTest
     [TestMethod]
     public async Task DeleteErrorByIdAsync_ValidId_DeletesError()
     {
+        await EnsureLoggingTablesAsync();
+
         // Arrange
         int testErrorId = 1; // Use existing ID or create test error first
 
@@ -129,6 +146,8 @@ public class Dao_Logging_Tests : BaseIntegrationTest
     [TestMethod]
     public async Task DeleteAllErrorsAsync_Execution_DeletesAllErrors()
     {
+        await EnsureLoggingTablesAsync();
+
         // Act
         var result = await Dao_ErrorLog.DeleteAllErrorsAsync();
 
@@ -148,6 +167,8 @@ public class Dao_Logging_Tests : BaseIntegrationTest
     [TestMethod]
     public async Task AddTransactionHistoryAsync_ValidHistory_AddsRecord()
     {
+        await EnsureLoggingTablesAsync();
+
         // Arrange
         var history = new Model_TransactionHistory
         {
@@ -179,6 +200,8 @@ public class Dao_Logging_Tests : BaseIntegrationTest
     [TestMethod]
     public async Task AddTransactionHistoryAsync_TransferTransaction_AddsRecord()
     {
+        await EnsureLoggingTablesAsync();
+
         // Arrange
         var history = new Model_TransactionHistory
         {
@@ -210,6 +233,8 @@ public class Dao_Logging_Tests : BaseIntegrationTest
     [TestMethod]
     public async Task AddTransactionHistoryAsync_MinimalFields_AddsRecord()
     {
+        await EnsureLoggingTablesAsync();
+
         // Arrange
         var history = new Model_TransactionHistory
         {
