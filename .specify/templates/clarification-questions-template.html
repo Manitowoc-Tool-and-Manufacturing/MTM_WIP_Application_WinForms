@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Feature Clarification Questions - [FEATURE_NAME]</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 20px;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+        
+        .header p {
+            font-size: 16px;
+            opacity: 0.9;
+        }
+        
+        .content {
+            padding: 30px;
+        }
+        
+        .question-card {
+            background: #f8f9fa;
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            padding: 25px;
+            margin-bottom: 25px;
+            transition: all 0.3s ease;
+        }
+        
+        .question-card:hover {
+            border-color: #667eea;
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.1);
+        }
+        
+        .question-card.answered {
+            border-color: #28a745;
+            background: #f0f9f4;
+        }
+        
+        .question-number {
+            display: inline-block;
+            background: #667eea;
+            color: white;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 14px;
+            margin-bottom: 15px;
+        }
+        
+        .question-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+        
+        .question-context {
+            background: white;
+            padding: 15px;
+            border-left: 4px solid #667eea;
+            margin-bottom: 15px;
+            border-radius: 4px;
+            font-size: 15px;
+            color: #555;
+        }
+        
+        .recommended-badge {
+            display: inline-block;
+            background: #ffc107;
+            color: #000;
+            padding: 4px 10px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: bold;
+            margin-left: 10px;
+        }
+        
+        .options {
+            margin: 20px 0;
+        }
+        
+        .option {
+            display: flex;
+            align-items: flex-start;
+            padding: 15px;
+            margin: 10px 0;
+            background: white;
+            border: 2px solid #dee2e6;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        
+        .option:hover {
+            border-color: #667eea;
+            background: #f8f9ff;
+        }
+        
+        .option.selected {
+            border-color: #667eea;
+            background: #e8ecff;
+            box-shadow: 0 2px 8px rgba(102, 126, 234, 0.2);
+        }
+        
+        .option.recommended {
+            border-color: #ffc107;
+            background: #fffbf0;
+        }
+        
+        .option input[type="radio"] {
+            margin: 5px 15px 0 5px;
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+        }
+        
+        .option-content {
+            flex: 1;
+        }
+        
+        .option-label {
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 5px;
+            font-size: 16px;
+        }
+        
+        .option-description {
+            color: #666;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+        
+        .custom-answer {
+            margin-top: 15px;
+            display: none;
+        }
+        
+        .custom-answer.visible {
+            display: block;
+        }
+        
+        .custom-answer label {
+            display: block;
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+        
+        .custom-answer input[type="text"],
+        .custom-answer textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #dee2e6;
+            border-radius: 6px;
+            font-size: 14px;
+            font-family: inherit;
+            transition: border-color 0.2s ease;
+        }
+        
+        .custom-answer input[type="text"]:focus,
+        .custom-answer textarea:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        
+        .custom-answer textarea {
+            min-height: 80px;
+            resize: vertical;
+        }
+        
+        .progress-bar {
+            background: #e9ecef;
+            height: 8px;
+            border-radius: 4px;
+            margin: 30px 0;
+            overflow: hidden;
+        }
+        
+        .progress-fill {
+            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+            height: 100%;
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+        
+        .progress-text {
+            text-align: center;
+            color: #666;
+            font-size: 14px;
+            margin-top: 10px;
+        }
+        
+        .save-button {
+            display: block;
+            width: 100%;
+            padding: 18px;
+            background: #28a745;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 30px;
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        
+        .save-button.enabled {
+            opacity: 1;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(40, 167, 69, 0.3);
+        }
+        
+        .save-button.enabled:hover {
+            background: #218838;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(40, 167, 69, 0.4);
+        }
+        
+        .save-button:active {
+            transform: translateY(0);
+        }
+        
+        .success-message {
+            display: none;
+            background: #d4edda;
+            border: 2px solid #28a745;
+            color: #155724;
+            padding: 15px;
+            border-radius: 6px;
+            text-align: center;
+            margin-top: 20px;
+            font-weight: 600;
+        }
+        
+        .success-message.visible {
+            display: block;
+        }
+        
+        .footer {
+            background: #f8f9fa;
+            padding: 20px;
+            text-align: center;
+            color: #666;
+            font-size: 14px;
+            border-top: 1px solid #dee2e6;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Feature Clarification Questions</h1>
+            <p>[FEATURE_NAME] - [DATE]</p>
+        </div>
+        
+        <div class="content">
+            <p style="margin-bottom: 25px; font-size: 16px; color: #555;">
+                Please answer the following questions to help us better understand your feature requirements. 
+                We've pre-selected the most common answers, but you can choose different options or provide your own answer.
+            </p>
+            
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressBar"></div>
+            </div>
+            <div class="progress-text" id="progressText">0 of [TOTAL_QUESTIONS] questions answered</div>
+            
+            <!-- QUESTIONS START HERE -->
+            [QUESTIONS_PLACEHOLDER]
+            <!-- QUESTIONS END HERE -->
+            
+            <button class="save-button" id="saveButton" disabled>
+                📋 Save Answers to Clipboard
+            </button>
+            
+            <div class="success-message" id="successMessage">
+                ✅ Answers copied to clipboard! You can now paste them into your conversation with the AI assistant.
+            </div>
+        </div>
+        
+        <div class="footer">
+            Generated by speckit.clarify workflow | Answer all questions to enable the save button
+        </div>
+    </div>
+    
+    <script>
+        // Question template format:
+        // Each question should have data-question-id="Q1", data-question-category="scope"
+        // Options should have value="A", "B", "C", "D", or "OTHER"
+        
+        const questions = document.querySelectorAll('.question-card');
+        const totalQuestions = questions.length;
+        let answeredCount = 0;
+        
+        function updateProgress() {
+            answeredCount = 0;
+            questions.forEach(q => {
+                const questionId = q.dataset.questionId;
+                const selected = document.querySelector(`input[name="${questionId}"]:checked`);
+                if (selected) {
+                    answeredCount++;
+                    q.classList.add('answered');
+                } else {
+                    q.classList.remove('answered');
+                }
+            });
+            
+            const percentage = (answeredCount / totalQuestions) * 100;
+            document.getElementById('progressBar').style.width = percentage + '%';
+            document.getElementById('progressText').textContent = 
+                `${answeredCount} of ${totalQuestions} questions answered`;
+            
+            const saveButton = document.getElementById('saveButton');
+            if (answeredCount === totalQuestions) {
+                saveButton.disabled = false;
+                saveButton.classList.add('enabled');
+            } else {
+                saveButton.disabled = true;
+                saveButton.classList.remove('enabled');
+            }
+        }
+        
+        // Handle option selection
+        document.querySelectorAll('.option').forEach(option => {
+            option.addEventListener('click', function(e) {
+                if (e.target.tagName !== 'INPUT') {
+                    const radio = this.querySelector('input[type="radio"]');
+                    radio.checked = true;
+                    radio.dispatchEvent(new Event('change'));
+                }
+            });
+        });
+        
+        // Handle radio button changes
+        document.querySelectorAll('input[type="radio"]').forEach(radio => {
+            radio.addEventListener('change', function() {
+                const questionCard = this.closest('.question-card');
+                const questionId = this.name;
+                const customAnswer = questionCard.querySelector('.custom-answer');
+                
+                // Update selected state
+                questionCard.querySelectorAll('.option').forEach(opt => {
+                    opt.classList.remove('selected');
+                });
+                this.closest('.option').classList.add('selected');
+                
+                // Show/hide custom answer field
+                if (this.value === 'OTHER') {
+                    customAnswer.classList.add('visible');
+                    customAnswer.querySelector('input, textarea').focus();
+                } else {
+                    customAnswer.classList.remove('visible');
+                }
+                
+                updateProgress();
+            });
+        });
+        
+        // Handle custom answer input
+        document.querySelectorAll('.custom-answer input, .custom-answer textarea').forEach(input => {
+            input.addEventListener('input', updateProgress);
+        });
+        
+        // Handle save button
+        document.getElementById('saveButton').addEventListener('click', function() {
+            if (this.disabled) return;
+            
+            const answers = [];
+            
+            questions.forEach(q => {
+                const questionId = q.dataset.questionId;
+                const questionCategory = q.dataset.questionCategory;
+                const questionText = q.dataset.questionText;
+                const technicalContext = q.dataset.technicalContext;
+                
+                const selected = document.querySelector(`input[name="${questionId}"]:checked`);
+                if (selected) {
+                    let answerValue;
+                    let answerText;
+                    
+                    if (selected.value === 'OTHER') {
+                        const customInput = q.querySelector('.custom-answer input, .custom-answer textarea');
+                        answerValue = 'CUSTOM';
+                        answerText = customInput.value;
+                    } else {
+                        answerValue = selected.value;
+                        answerText = selected.dataset.answerText;
+                    }
+                    
+                    answers.push({
+                        id: questionId,
+                        category: questionCategory,
+                        question: questionText,
+                        technicalContext: technicalContext,
+                        answer: answerValue,
+                        answerText: answerText
+                    });
+                }
+            });
+            
+            // Format for agent consumption
+            let output = '# Feature Clarification Answers\\n\\n';
+            output += '**Feature**: [FEATURE_NAME]\\n';
+            output += '**Date**: ' + new Date().toISOString().split('T')[0] + '\\n\\n';
+            output += '---\\n\\n';
+            
+            answers.forEach((a, index) => {
+                output += `## ${a.id}: ${a.category.charAt(0).toUpperCase() + a.category.slice(1)}\\n\\n`;
+                output += `**Question**: ${a.question}\\n\\n`;
+                output += `**Technical Context**: ${a.technicalContext}\\n\\n`;
+                output += `**Answer**: ${a.answer === 'CUSTOM' ? a.answerText : `Option ${a.answer} - ${a.answerText}`}\\n\\n`;
+                output += '---\\n\\n';
+            });
+            
+            // Copy to clipboard
+            navigator.clipboard.writeText(output).then(() => {
+                document.getElementById('successMessage').classList.add('visible');
+                setTimeout(() => {
+                    document.getElementById('successMessage').classList.remove('visible');
+                }, 5000);
+            }).catch(err => {
+                alert('Failed to copy to clipboard. Please try again.');
+            });
+        });
+        
+        // Initial progress update
+        updateProgress();
+    </script>
+</body>
+</html>

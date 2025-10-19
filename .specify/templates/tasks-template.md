@@ -15,6 +15,31 @@ description: "Task list template for feature implementation"
 - **[P]**: Can run in parallel (different files, no dependencies)
 - **[Story]**: Which user story this task belongs to (e.g., US1, US2, US3)
 - Include exact file paths in descriptions
+- **Reference**: Add instruction file references for guidance (e.g., `.github/instructions/integration-testing.instructions.md`)
+
+## Task Completion Tracking
+
+**⚠️ IMPORTANT - Premium Request Maximization**:
+- Agents are ENCOURAGED to jump between tasks to maximize work completed per session
+- When working on multiple tasks:
+  - **Partially completed tasks**: Add completion note with `**Completed**: YYYY-MM-DD - [description of work done]`
+  - **Fully completed tasks**: Mark with `[x]` and add `**Completed**: YYYY-MM-DD - [brief summary]`
+  - **Must maintain integrity**: Don't leave tasks in broken/non-functional state
+  - **Continue until checkpoint**: Work through related tasks until natural stopping point
+
+**Completion Note Format**:
+```markdown
+- [x] **T001** – Task description
+  - **Completed**: 2025-10-18 - Successfully implemented feature X, added tests, verified build
+  - **Reference**: .github/instructions/[file].instructions.md
+```
+
+**Partial Completion Format**:
+```markdown
+- [ ] **T002** – Task description  
+  - **Completed**: 2025-10-18 - Created base class and interface, wired up events. Still need: validation logic and error handling
+  - **Reference**: .github/instructions/[file].instructions.md
+```
 
 ## Path Conventions
 - **Single project**: `src/`, `tests/` at repository root
@@ -46,8 +71,11 @@ description: "Task list template for feature implementation"
 **Purpose**: Project initialization and basic structure
 
 - [ ] T001 Create project structure per implementation plan
+  - **Reference**: .github/instructions/[relevant-file].instructions.md
 - [ ] T002 Initialize [language] project with [framework] dependencies
+  - **Reference**: .github/instructions/[relevant-file].instructions.md
 - [ ] T003 [P] Configure linting and formatting tools
+  - **Reference**: .github/instructions/[relevant-file].instructions.md
 
 ---
 
@@ -60,11 +88,17 @@ description: "Task list template for feature implementation"
 Examples of foundational tasks (adjust based on your project):
 
 - [ ] T004 Setup database schema and migrations framework
+  - **Reference**: .github/instructions/mysql-database.instructions.md - Follow stored procedure patterns
 - [ ] T005 [P] Implement authentication/authorization framework
+  - **Reference**: .github/instructions/security-best-practices.instructions.md
 - [ ] T006 [P] Setup API routing and middleware structure
+  - **Reference**: .github/instructions/csharp-dotnet8.instructions.md
 - [ ] T007 Create base models/entities that all stories depend on
+  - **Reference**: .github/instructions/csharp-dotnet8.instructions.md
 - [ ] T008 Configure error handling and logging infrastructure
+  - **Reference**: .github/instructions/csharp-dotnet8.instructions.md - Use Service_ErrorHandler patterns
 - [ ] T009 Setup environment configuration management
+  - **Reference**: .github/instructions/security-best-practices.instructions.md
 
 **Checkpoint**: Foundation ready - user story implementation can now begin in parallel
 
@@ -81,16 +115,24 @@ Examples of foundational tasks (adjust based on your project):
 **NOTE: Write these tests FIRST, ensure they FAIL before implementation**
 
 - [ ] T010 [P] [US1] Contract test for [endpoint] in tests/contract/test_[name].py
+  - **Reference**: .github/instructions/integration-testing.instructions.md - Follow discovery-first workflow
 - [ ] T011 [P] [US1] Integration test for [user journey] in tests/integration/test_[name].py
+  - **Reference**: .github/instructions/testing-standards.instructions.md
 
 ### Implementation for User Story 1
 
 - [ ] T012 [P] [US1] Create [Entity1] model in src/models/[entity1].py
+  - **Reference**: .github/instructions/csharp-dotnet8.instructions.md - Follow naming conventions
 - [ ] T013 [P] [US1] Create [Entity2] model in src/models/[entity2].py
+  - **Reference**: .github/instructions/csharp-dotnet8.instructions.md
 - [ ] T014 [US1] Implement [Service] in src/services/[service].py (depends on T012, T013)
+  - **Reference**: .github/instructions/csharp-dotnet8.instructions.md - Async patterns
 - [ ] T015 [US1] Implement [endpoint/feature] in src/[location]/[file].py
+  - **Reference**: .github/instructions/mysql-database.instructions.md - Use Helper_Database_StoredProcedure
 - [ ] T016 [US1] Add validation and error handling
+  - **Reference**: .github/instructions/security-best-practices.instructions.md
 - [ ] T017 [US1] Add logging for user story 1 operations
+  - **Reference**: .github/instructions/csharp-dotnet8.instructions.md
 
 **Checkpoint**: At this point, User Story 1 should be fully functional and testable independently
 
@@ -105,14 +147,20 @@ Examples of foundational tasks (adjust based on your project):
 ### Tests for User Story 2 (OPTIONAL - only if tests requested) ⚠️
 
 - [ ] T018 [P] [US2] Contract test for [endpoint] in tests/contract/test_[name].py
+  - **Reference**: .github/instructions/integration-testing.instructions.md
 - [ ] T019 [P] [US2] Integration test for [user journey] in tests/integration/test_[name].py
+  - **Reference**: .github/instructions/testing-standards.instructions.md
 
 ### Implementation for User Story 2
 
 - [ ] T020 [P] [US2] Create [Entity] model in src/models/[entity].py
+  - **Reference**: .github/instructions/csharp-dotnet8.instructions.md
 - [ ] T021 [US2] Implement [Service] in src/services/[service].py
+  - **Reference**: .github/instructions/csharp-dotnet8.instructions.md
 - [ ] T022 [US2] Implement [endpoint/feature] in src/[location]/[file].py
+  - **Reference**: .github/instructions/mysql-database.instructions.md
 - [ ] T023 [US2] Integrate with User Story 1 components (if needed)
+  - **Reference**: .github/instructions/csharp-dotnet8.instructions.md
 
 **Checkpoint**: At this point, User Stories 1 AND 2 should both work independently
 
@@ -127,13 +175,18 @@ Examples of foundational tasks (adjust based on your project):
 ### Tests for User Story 3 (OPTIONAL - only if tests requested) ⚠️
 
 - [ ] T024 [P] [US3] Contract test for [endpoint] in tests/contract/test_[name].py
+  - **Reference**: .github/instructions/integration-testing.instructions.md
 - [ ] T025 [P] [US3] Integration test for [user journey] in tests/integration/test_[name].py
+  - **Reference**: .github/instructions/testing-standards.instructions.md
 
 ### Implementation for User Story 3
 
 - [ ] T026 [P] [US3] Create [Entity] model in src/models/[entity].py
+  - **Reference**: .github/instructions/csharp-dotnet8.instructions.md
 - [ ] T027 [US3] Implement [Service] in src/services/[service].py
+  - **Reference**: .github/instructions/csharp-dotnet8.instructions.md
 - [ ] T028 [US3] Implement [endpoint/feature] in src/[location]/[file].py
+  - **Reference**: .github/instructions/mysql-database.instructions.md
 
 **Checkpoint**: All user stories should now be independently functional
 
@@ -148,10 +201,15 @@ Examples of foundational tasks (adjust based on your project):
 **Purpose**: Improvements that affect multiple user stories
 
 - [ ] TXXX [P] Documentation updates in docs/
+  - **Reference**: .github/instructions/documentation.instructions.md
 - [ ] TXXX Code cleanup and refactoring
+  - **Reference**: .github/instructions/code-review-standards.instructions.md
 - [ ] TXXX Performance optimization across all stories
+  - **Reference**: .github/instructions/performance-optimization.instructions.md
 - [ ] TXXX [P] Additional unit tests (if requested) in tests/unit/
+  - **Reference**: .github/instructions/testing-standards.instructions.md
 - [ ] TXXX Security hardening
+  - **Reference**: .github/instructions/security-best-practices.instructions.md
 - [ ] TXXX Run quickstart.md validation
 
 ---
@@ -234,6 +292,60 @@ With multiple developers:
    - Developer B: User Story 2
    - Developer C: User Story 3
 3. Stories complete and integrate independently
+
+---
+
+## Instruction File References
+
+Tasks in this file reference instruction files from `.github/instructions/` for implementation guidance:
+
+- **integration-testing.instructions.md** - Discovery-first workflow, method signature verification, null safety patterns
+- **testing-standards.instructions.md** - Manual validation approach, success criteria patterns
+- **mysql-database.instructions.md** - Stored procedure standards, connection management, Helper patterns
+- **csharp-dotnet8.instructions.md** - Language features, naming conventions, async/await, WinForms patterns
+- **security-best-practices.instructions.md** - Input validation, SQL injection prevention, credential management
+- **performance-optimization.instructions.md** - Async I/O, connection pooling, memory management, caching
+- **documentation.instructions.md** - XML documentation, README structure, code comments
+- **code-review-standards.instructions.md** - Quality checklist, review process, anti-patterns
+
+**How to use instruction files**:
+1. Read referenced file BEFORE starting task implementation
+2. Apply documented patterns and avoid documented pitfalls
+3. If conflict or ambiguity: Ask for clarification rather than assume
+
+---
+
+## Available MCP Tools
+
+Agents implementing these tasks have access to MCP tools from the **mtm-workflow** server:
+
+### Validation Tools
+- `validate_dao_patterns` - Check DAO compliance with MTM standards
+- `validate_error_handling` - Verify Service_ErrorHandler usage
+- `check_xml_docs` - Validate documentation coverage
+- `analyze_stored_procedures` - Check SQL procedure compliance
+- `check_security` - Security vulnerability scanner
+- `analyze_performance` - Identify performance bottlenecks
+
+### Code Generation Tools
+- `generate_dao_wrapper` - Auto-generate DAO methods from stored procedures
+- `generate_unit_tests` - Scaffold test classes
+
+### Analysis Tools
+- `analyze_dependencies` - Map stored procedure call hierarchies
+- `compare_databases` - Detect schema drift
+- `suggest_refactoring` - AI-powered refactoring recommendations
+
+### Task Management Tools
+- `parse_tasks` - Parse this tasks.md file
+- `mark_task_complete` - Update task completion status with notes
+- `load_instructions` - Load instruction file references
+- `validate_build` - Verify compilation and tests
+
+**Use MCP tools strategically**:
+- Before implementation: Run validation tools to understand current patterns
+- During implementation: Use generation tools to create standardized code
+- After implementation: Run validation and build tools before committing
 
 ---
 

@@ -100,6 +100,27 @@
 - **[Entity 1]**: [What it represents, key attributes without implementation]
 - **[Entity 2]**: [What it represents, relationships to other entities]
 
+---
+
+## Relevant Instruction Files
+
+**Note**: These instruction files provide implementation guidance when this spec moves to the planning and task execution phases. They are listed here for reference but should not influence the specification itself (specs remain technology-agnostic).
+
+### For Implementation Phase:
+- `.github/instructions/csharp-dotnet8.instructions.md` - C# language features, naming conventions, WinForms patterns, async/await
+- `.github/instructions/mysql-database.instructions.md` - Stored procedure standards, connection management, parameter naming
+- `.github/instructions/testing-standards.instructions.md` - Manual validation approach, success criteria patterns
+- `.github/instructions/documentation.instructions.md` - XML documentation, README structure, code comments
+
+### For Quality Assurance:
+- `.github/instructions/security-best-practices.instructions.md` - Input validation, SQL injection prevention
+- `.github/instructions/performance-optimization.instructions.md` - Async I/O, connection pooling, caching
+- `.github/instructions/code-review-standards.instructions.md` - Quality checklist, review process
+
+**When to reference**: Implementation team should review relevant instruction files during `/speckit.plan` and `/speckit.tasks` phases.
+
+---
+
 ## Success Criteria *(mandatory)*
 
 <!--

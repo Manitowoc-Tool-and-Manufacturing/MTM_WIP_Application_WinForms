@@ -2,6 +2,28 @@
 description: Execute the implementation plan by processing and executing all tasks defined in tasks.md
 ---
 
+## Agent Communication Rules
+
+**⚠️ EXTREMELY IMPORTANT - Maximize Premium Request Value**:
+
+This prompt handles multi-phase implementation workflows. To maximize the value of each premium request:
+
+- **Work through multiple related tasks** in a single session rather than stopping after one
+- **Jump between tasks when beneficial** to maintain momentum and complete more work
+- **Document partial progress** using task completion notes when switching between tasks
+- **Mark completed tasks immediately** with [x] and timestamp
+- **Continue until natural checkpoint** (phase boundary, complex blocker, or significant user input needed)
+- **Maintain code integrity** - don't leave tasks in broken/non-functional state
+
+**Task Completion Tracking**:
+- Partially completed: Add note documenting what was done
+- Fully completed: Mark [x] and add completion summary
+- Use `mark_task_complete` MCP tool to update tasks.md automatically
+
+**Do NOT stop prematurely** just because one task is complete. Keep working through related tasks until reaching a natural stopping point.
+
+---
+
 ## Available MCP Tools
 
 This prompt has access to powerful MCP tools from the **mtm-workflow** server. These tools provide automated analysis, validation, and code generation capabilities specifically designed for the MTM project.
@@ -185,6 +207,11 @@ You **MUST** consider the user input before proceeding (if not empty).
    - **File-based coordination**: Tasks affecting the same files must run sequentially
    - **Validation checkpoints**: Verify each phase completion before proceeding
    - **Follow instruction file references**: For each task, read and apply guidance from referenced `.github/instructions/*.instructions.md` files before implementing
+   - **Maximize Premium Request value**: ⚠️ **EXTREMELY IMPORTANT**: It is ENCOURAGED to jump between tasks to maximize work completed in a single session. Complete multiple related tasks rather than stopping after one. When jumping between tasks:
+     * **MUST add completion notes**: For partially completed tasks, add a note in tasks.md documenting what work was completed
+     * **MUST check off completed tasks**: Use `[x]` marker and add completion timestamp for fully finished tasks
+     * **MUST maintain task integrity**: Don't leave tasks in broken/non-functional state
+     * **Continue until natural checkpoint**: Keep working through related tasks until significant complexity requires user input or a phase boundary is reached
    - **Use MCP tools strategically**:
      * Before DAO work: Run `validate_dao_patterns` on existing DAOs to understand current patterns
      * Before database changes: Run `analyze_stored_procedures` and `compare_databases` to assess impact
@@ -192,6 +219,7 @@ You **MUST** consider the user input before proceeding (if not empty).
      * During testing: Use `generate_unit_tests` to scaffold test structure
      * Before completion: Run `check_xml_docs`, `check_security`, and `analyze_performance` for quality gates
      * For refactoring: Use `analyze_dependencies` and `suggest_refactoring` to plan changes safely
+     * For task tracking: Use `mark_task_complete` to update tasks.md with completion notes and timestamps
 
 6. Implementation execution rules:
    - **Setup first**: Initialize project structure, dependencies, configuration

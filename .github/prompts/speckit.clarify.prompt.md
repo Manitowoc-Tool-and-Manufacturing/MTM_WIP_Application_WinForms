@@ -1,5 +1,21 @@
 ---
-description: Identify underspecified areas in the current feature spec by asking up to 5 highly targeted clarification questions and encoding answers back into the spec.
+description: Identify underspecified areas in the current feature spec by generating an HTML clarification form (up to 15 questions) with user-friendly language and encoding answers back into the spec.
+---
+
+## Agent Communication Rules
+
+**⚠️ EXTREMELY IMPORTANT - Maximize Premium Request Value**:
+
+This prompt involves multiple analysis and generation steps. To maximize the value of each premium request:
+
+- **Continue through ALL workflow steps** unless blocked by missing data or user input
+- **Generate complete HTML files** with all questions in a single session
+- **Process returned answers immediately** and update spec.md without stopping
+- **Only pause for user input** when waiting for clarification answers
+- **Document progress** if partial completion occurs (note which step completed)
+
+**Do NOT stop prematurely** after generating the HTML - continue to wait for answers and complete the spec update in the same session when possible.
+
 ---
 
 ## User Input
@@ -81,88 +97,164 @@ Execution steps:
    - Clarification would not materially change implementation or validation strategy
    - Information is better deferred to planning phase (note internally)
 
-3. Generate (internally) a prioritized queue of candidate clarification questions (maximum 5). Do NOT output them all at once. Apply these constraints:
-    - Maximum of 10 total questions across the whole session.
+3. Generate (internally) a prioritized queue of candidate clarification questions (**maximum 15** instead of 5). Do NOT output them all at once to chat. Instead, you will generate an HTML clarification form. Apply these constraints:
+    - Maximum of 15 total questions (increased from 5 for better coverage).
     - Each question must be answerable with EITHER:
-       * A short multiple‑choice selection (2–5 distinct, mutually exclusive options), OR
-       * A one-word / short‑phrase answer (explicitly constrain: "Answer in <=5 words").
+       * A multiple‑choice selection (4 distinct options: A, B, C, D), PLUS
+       * An "Other" option (E) that reveals a text input field for custom answers
    - Only include questions whose answers materially impact architecture, data modeling, task decomposition, test design, UX behavior, operational readiness, or compliance validation.
    - Ensure category coverage balance: attempt to cover the highest impact unresolved categories first; avoid asking two low-impact questions when a single high-impact area (e.g., security posture) is unresolved.
    - Exclude questions already answered, trivial stylistic preferences, or plan-level execution details (unless blocking correctness).
    - Favor clarifications that reduce downstream rework risk or prevent misaligned acceptance tests.
-   - If more than 5 categories remain unresolved, select the top 5 by (Impact * Uncertainty) heuristic.
+   - If more than 15 categories remain unresolved, select the top 15 by (Impact * Uncertainty) heuristic.
 
-4. Sequential questioning loop (interactive):
-    - Present EXACTLY ONE question at a time.
-    - For multiple‑choice questions:
-       * **Analyze all options** and determine the **most suitable option** based on:
-          - Best practices for the project type
-          - Common patterns in similar implementations
-          - Risk reduction (security, performance, maintainability)
-          - Alignment with any explicit project goals or constraints visible in the spec
-       * Present your **recommended option prominently** at the top with clear reasoning (1-2 sentences explaining why this is the best choice).
-       * Format as: `**Recommended:** Option [X] - <reasoning>`
-       * Then render all options as a Markdown table:
+4. **HTML Clarification Form Generation** (replaces sequential chat-based questioning):
+    
+    **CRITICAL CHANGE**: Instead of asking questions one-by-one in chat, generate an interactive HTML file that:
+    
+    a. **User-Friendly Language Requirements**:
+       - Write questions at 8th grade reading level (no technical jargon)
+       - Use plain language that non-programmers can understand
+       - Avoid terms like "architecture", "API", "database schema", "authentication mechanism"
+       - Instead use: "how it works", "where data is stored", "how people log in"
+       - Example transformations:
+         * ❌ "Should this implement OAuth2 or session-based authentication?"
+         * ✅ "How should people log into the system?"
+    
+    b. **HTML Structure** (use `.specify/templates/clarification-questions-template.html`):
+       - Load the template and replace `[FEATURE_NAME]`, `[DATE]`, `[TOTAL_QUESTIONS]`
+       - For each question, generate HTML question card with:
+         * Question number and category badge
+         * Plain-language question title (8th grade level)
+         * Context box explaining why we're asking (user-friendly)
+         * 4 main options (A, B, C, D) as selectable cards
+         * 5th "Other" option (E) that reveals text input when selected
+         * Default-select your recommended answer (mark with "RECOMMENDED" badge)
+         * Store technical details in data attributes (not visible to user):
+           - `data-question-id="Q1"`
+           - `data-question-category="scope"`
+           - `data-question-text="Plain language question"`
+           - `data-technical-context="Technical interpretation of question"`
+           - `data-answer-text="Technical meaning of this option"` (on each option)
+    
+    c. **Question Card HTML Format**:
+       ```html
+       <div class="question-card" data-question-id="Q1" data-question-category="scope" 
+            data-question-text="Should this work on phones and computers?" 
+            data-technical-context="Responsive design requirements and platform support">
+           <span class="question-number">Question 1</span>
+           <h2 class="question-title">Should this work on phones and computers, or just computers?</h2>
+           <div class="question-context">
+               We need to know if people will use this on their phones, or if it's only for computer screens.
+               This helps us design the right kind of interface.
+           </div>
+           
+           <div class="options">
+               <div class="option recommended">
+                   <input type="radio" name="Q1" value="A" id="Q1-A" checked>
+                   <div class="option-content">
+                       <div class="option-label">
+                           Just computers <span class="recommended-badge">RECOMMENDED</span>
+                       </div>
+                       <div class="option-description">
+                           This will only work on regular computer screens (laptops and desktops).
+                       </div>
+                   </div>
+               </div>
+               
+               <div class="option">
+                   <input type="radio" name="Q1" value="B" id="Q1-B"
+                          data-answer-text="Responsive design: mobile (320px+) and desktop (1024px+)">
+                   <div class="option-content">
+                       <div class="option-label">Both phones and computers</div>
+                       <div class="option-description">
+                           This will work on phone screens, tablets, and computer screens.
+                       </div>
+                   </div>
+               </div>
+               
+               <!-- Options C, D similar format -->
+               
+               <div class="option">
+                   <input type="radio" name="Q1" value="OTHER" id="Q1-OTHER">
+                   <div class="option-content">
+                       <div class="option-label">Other (type your answer)</div>
+                       <div class="option-description">
+                           None of these options work for you? Type your own answer below.
+                       </div>
+                   </div>
+               </div>
+           </div>
+           
+           <div class="custom-answer">
+               <label for="Q1-custom">Your answer:</label>
+               <input type="text" id="Q1-custom" placeholder="Type your answer here (keep it short)">
+           </div>
+       </div>
+       ```
+    
+    d. **Save to Clipboard Functionality**:
+       - Button remains disabled until ALL questions answered
+       - When enabled and clicked, generates agent-ready format:
+         * Technical question phrasing (not user-friendly version)
+         * Technical answer interpretation (not plain language)
+         * Includes all data attributes for agent parsing
+       - Uses `.specify/templates/clarification-answers-template.md` structure
+       - Copies to clipboard in markdown format ready for agent consumption
+    
+    e. **Progress Tracking**:
+       - Visual progress bar showing N of 15 answered
+       - Questions marked as "answered" get green highlight
+       - Clear indication when form is complete
+    
+    f. **Write HTML File**:
+       - Save to: `FEATURE_DIR/clarifications-[DATE].html`
+       - Report path to user
+       - Instruct user to: "Open this HTML file in your browser, answer the questions, click 'Save to Clipboard', then paste the answers back here."
 
-       | Option | Description |
-       |--------|-------------|
-       | A | <Option A description> |
-       | B | <Option B description> |
-       | C | <Option C description> | (add D/E as needed up to 5)
-       | Short | Provide a different short answer (<=5 words) | (Include only if free-form alternative is appropriate)
+5. **Wait for User Answers**:
+    - User will open HTML, answer questions, and paste clipboard content back
+    - Clipboard content will be in agent-ready markdown format from template
+    - Parse the pasted answers to extract:
+      * Question ID
+      * Selected option or custom text
+      * Technical interpretation from data attributes
 
-       * After the table, add: `You can reply with the option letter (e.g., "A"), accept the recommendation by saying "yes" or "recommended", or provide your own short answer.`
-    - For short‑answer style (no meaningful discrete options):
-       * Provide your **suggested answer** based on best practices and context.
-       * Format as: `**Suggested:** <your proposed answer> - <brief reasoning>`
-       * Then output: `Format: Short answer (<=5 words). You can accept the suggestion by saying "yes" or "suggested", or provide your own answer.`
-    - After the user answers:
-       * If the user replies with "yes", "recommended", or "suggested", use your previously stated recommendation/suggestion as the answer.
-       * Otherwise, validate the answer maps to one option or fits the <=5 word constraint.
-       * If ambiguous, ask for a quick disambiguation (count still belongs to same question; do not advance).
-       * Once satisfactory, record it in working memory (do not yet write to disk) and move to the next queued question.
-    - Stop asking further questions when:
-       * All critical ambiguities resolved early (remaining queued items become unnecessary), OR
-       * User signals completion ("done", "good", "no more"), OR
-       * You reach 5 asked questions.
-    - Never reveal future queued questions in advance.
-    - If no valid questions exist at start, immediately report no critical ambiguities.
-
-5. Integration after EACH accepted answer (incremental update approach):
+6. **Integration after receiving answers** (same as before, but batch process all 15):
     - Maintain in-memory representation of the spec (loaded once at start) plus the raw file contents.
-    - For the first integrated answer in this session:
-       * Ensure a `## Clarifications` section exists (create it just after the highest-level contextual/overview section per the spec template if missing).
-       * Under it, create (if not present) a `### Session YYYY-MM-DD` subheading for today.
-    - Append a bullet line immediately after acceptance: `- Q: <question> → A: <final answer>`.
-    - Then immediately apply the clarification to the most appropriate section(s):
-       * Functional ambiguity → Update or add a bullet in Functional Requirements.
-       * User interaction / actor distinction → Update User Stories or Actors subsection (if present) with clarified role, constraint, or scenario.
-       * Data shape / entities → Update Data Model (add fields, types, relationships) preserving ordering; note added constraints succinctly.
-       * Non-functional constraint → Add/modify measurable criteria in Non-Functional / Quality Attributes section (convert vague adjective to metric or explicit target).
-       * Edge case / negative flow → Add a new bullet under Edge Cases / Error Handling (or create such subsection if template provides placeholder for it).
-       * Terminology conflict → Normalize term across spec; retain original only if necessary by adding `(formerly referred to as "X")` once.
-    - If the clarification invalidates an earlier ambiguous statement, replace that statement instead of duplicating; leave no obsolete contradictory text.
-    - Save the spec file AFTER each integration to minimize risk of context loss (atomic overwrite).
-    - Preserve formatting: do not reorder unrelated sections; keep heading hierarchy intact.
-    - Keep each inserted clarification minimal and testable (avoid narrative drift).
+    - Ensure a `## Clarifications` section exists (create it just after the highest-level contextual/overview section per the spec template if missing).
+    - Under it, create (if not present) a `### Session YYYY-MM-DD` subheading for today.
+    - For each answer received:
+      * Append a bullet line: `- Q[N]: <plain question> → A: <selected option or custom answer>`
+      * Apply the technical interpretation to appropriate spec sections:
+        - Functional ambiguity → Update or add bullet in Functional Requirements
+        - User interaction / actor distinction → Update User Stories or Actors
+        - Data shape / entities → Update Data Model (add fields, types, relationships)
+        - Non-functional constraint → Add/modify in Non-Functional / Quality Attributes
+        - Edge case / negative flow → Add bullet under Edge Cases / Error Handling
+        - Terminology conflict → Normalize term across spec
+      * If clarification invalidates earlier ambiguous statement, replace (don't duplicate)
+    - Save the spec file AFTER all integrations (single atomic write)
+    - Preserve formatting: do not reorder unrelated sections; keep heading hierarchy intact
 
-6. Validation (performed after EACH write plus final pass):
-   - Clarifications session contains exactly one bullet per accepted answer (no duplicates).
-   - Total asked (accepted) questions ≤ 5.
-   - Updated sections contain no lingering vague placeholders the new answer was meant to resolve.
-   - No contradictory earlier statement remains (scan for now-invalid alternative choices removed).
-   - Markdown structure valid; only allowed new headings: `## Clarifications`, `### Session YYYY-MM-DD`.
-   - Terminology consistency: same canonical term used across all updated sections.
+7. Validation (performed after write):
+   - Clarifications session contains exactly one bullet per accepted answer (no duplicates)
+   - Total asked questions ≤ 15
+   - Updated sections contain no lingering vague placeholders the answers resolved
+   - No contradictory earlier statement remains
+   - Markdown structure valid
+   - Terminology consistency: same canonical term used across all updated sections
 
-7. Write the updated spec back to `FEATURE_SPEC`.
+8. Write the updated spec back to `FEATURE_SPEC`.
 
-8. Report completion (after questioning loop ends or early termination):
-   - Number of questions asked & answered.
-   - Path to updated spec.
-   - Sections touched (list names).
-   - Coverage summary table listing each taxonomy category with Status: Resolved (was Partial/Missing and addressed), Deferred (exceeds question quota or better suited for planning), Clear (already sufficient), Outstanding (still Partial/Missing but low impact).
-   - If any Outstanding or Deferred remain, recommend whether to proceed to `/speckit.plan` or run `/speckit.clarify` again later post-plan.
-   - Suggested next command.
+9. Report completion:
+   - Number of questions asked (out of 15 max)
+   - Path to HTML file generated
+   - Path to updated spec
+   - Sections touched (list names)
+   - Coverage summary table listing each taxonomy category with Status: Resolved, Deferred, Clear, Outstanding
+   - If any Outstanding or Deferred remain, recommend whether to proceed to `/speckit.plan`
+   - Suggested next command
 
 Behavior rules:
 - If no meaningful ambiguities found (or all potential questions would be low-impact), respond: "No critical ambiguities detected worth formal clarification." and suggest proceeding.

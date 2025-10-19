@@ -122,17 +122,23 @@ All user stories require completion of:
 
 - [x] **T023** – [US2] Create Control_Developer_ParameterPrefixMaintenance UserControl
   - **Reference**: `.github/instructions/csharp-dotnet8.instructions.md` (WinForms Patterns)
-- [ ] **T024** – [US2] Implement Add Override Dialog
+- [x] **T024** – [US2] Implement Add Override Dialog
+  - **Completed**: 2025-10-18 - Created Dialog_AddParameterOverride with autocomplete for procedures/parameters, validation, procedure existence checking. Created supporting stored procedures: query_get_all_stored_procedures, query_get_procedure_parameters, query_check_procedure_exists.
   - **Reference**: `.github/instructions/csharp-dotnet8.instructions.md`
-- [ ] **T025** – [US2] Implement Edit Override Dialog
+- [x] **T025** – [US2] Implement Edit Override Dialog
+  - **Completed**: 2025-10-18 - Created Dialog_EditParameterOverride with same autocomplete features as Add dialog, plus audit trail display (Created/Modified by/date). Reuses same query stored procedures.
   - **Reference**: `.github/instructions/csharp-dotnet8.instructions.md`
-- [ ] **T026** – [US2] Implement Delete Override Confirmation
+- [x] **T026** – [US2] Implement Delete Override Confirmation
+  - **Completed**: 2025-10-18 - Enhanced delete confirmation dialog with full override details (Procedure, Parameter, Prefix) and warning that action cannot be undone.
   - **Reference**: `.github/instructions/csharp-dotnet8.instructions.md`
-- [ ] **T027** – [US2] Wire Up Add/Edit/Delete Button Handlers
+- [x] **T027** – [US2] Wire Up Add/Edit/Delete Button Handlers
+  - **Completed**: 2025-10-18 - All button handlers implemented and wired up: BtnAdd_Click opens Dialog_AddParameterOverride, BtnEdit_Click opens Dialog_EditParameterOverride, BtnDelete_Click shows enhanced confirmation. All trigger OverridesModified event and reload grid.
   - **Reference**: `.github/instructions/csharp-dotnet8.instructions.md`
-- [ ] **T028** – [US2] Add Procedure Name Autocomplete
+- [x] **T028** – [US2] Add Procedure Name Autocomplete
+  - **Completed**: 2025-10-18 - Autocomplete fully implemented in both Add and Edit dialogs using query_get_all_stored_procedures SP. AutoCompleteMode set to SuggestAppend with CustomSource.
   - **Reference**: `.github/instructions/csharp-dotnet8.instructions.md` + `.github/instructions/performance-optimization.instructions.md`
-- [ ] **T029** – [US2] Add Parameter Name Autocomplete (Context-Aware)
+- [x] **T029** – [US2] Add Parameter Name Autocomplete (Context-Aware)
+  - **Completed**: 2025-10-18 - Context-aware autocomplete implemented - when procedure name changes, query_get_procedure_parameters SP loads parameters for that specific procedure. TextChanged event handler updates autocomplete dynamically.
   - **Reference**: `.github/instructions/csharp-dotnet8.instructions.md`
 - [ ] **T030** – [US2] Add TreeView Node for Parameter Prefix Maintenance
   - **Reference**: `.github/instructions/csharp-dotnet8.instructions.md`

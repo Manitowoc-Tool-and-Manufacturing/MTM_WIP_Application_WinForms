@@ -2,6 +2,67 @@
 description: Generate an actionable, dependency-ordered tasks.md for the feature based on available design artifacts.
 ---
 
+## Agent Communication Rules
+
+**⚠️ EXTREMELY IMPORTANT - Maximize Premium Request Value**:
+
+This prompt generates task breakdowns that will be executed across multiple sessions. To maximize value:
+
+- **Generate complete task lists** with all phases in a single session
+- **Include comprehensive instruction file references** so implementers have full context
+- **Add detailed task descriptions** with file paths and acceptance criteria
+- **Create parallel execution opportunities** to enable concurrent work
+- **Continue through all generation steps** without stopping prematurely
+- **Document task dependencies clearly** to enable efficient execution planning
+
+**Do NOT generate partial task lists** or stop after one phase. Complete the entire task breakdown including all user stories, dependencies, and parallel opportunities.
+
+---
+
+## Available MCP Tools
+
+This prompt has access to MCP tools from the **mtm-workflow** server for task generation and validation:
+
+### Speckit Task Tools
+
+**parse_tasks** - Parse and structure existing tasks.md files
+- **Input:** `tasks_file` (absolute path to tasks.md)
+- **Output:** Task phases, completion status, next actionable tasks, dependencies
+- **Use when:** Validating generated tasks, understanding existing task structure, checking for completeness
+
+**load_instructions** - Load instruction file references from tasks
+- **Input:** `tasks_file` (absolute path), `instructions_dir` (absolute path to .github/instructions)
+- **Output:** Instruction file mapping, existence checks, content loaded
+- **Use when:** Validating instruction file references in generated tasks, ensuring all referenced files exist
+
+**mark_task_complete** - Update task completion status
+- **Input:** `tasks_file` (absolute path), `task_ids` (array like ["T001", "T002"]), `note` (optional)
+- **Output:** Updated tasks.md with [X] markers and completion timestamps
+- **Use when:** Tracking task generation progress, marking meta-tasks complete
+
+**analyze_spec_context** - Extract implementation context from specs
+- **Input:** `feature_dir` (absolute path to specs directory)
+- **Output:** Available docs, tech stack, entities, contracts, recommendations
+- **Use when:** Understanding feature scope before task generation, identifying missing documentation
+
+### Usage in Task Generation
+
+```typescript
+// Before generating tasks - understand context
+analyze_spec_context(feature_dir: "/absolute/path/to/specs/feature-name")
+
+// After generating tasks - validate structure
+parse_tasks(tasks_file: "/absolute/path/to/specs/feature-name/tasks.md")
+
+// Validate instruction references
+load_instructions(
+  tasks_file: "/absolute/path/to/specs/feature-name/tasks.md",
+  instructions_dir: "/absolute/path/to/.github/instructions"
+)
+```
+
+---
+
 ## User Input
 
 ```text

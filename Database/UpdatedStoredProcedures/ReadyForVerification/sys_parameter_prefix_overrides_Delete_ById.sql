@@ -2,8 +2,6 @@
 -- Purpose: Soft-delete parameter prefix override
 -- Created: 2025-10-18
 
-USE mtm_wip_application_winforms_test;
-
 DROP PROCEDURE IF EXISTS sys_parameter_prefix_overrides_Delete_ById;
 
 DELIMITER $$

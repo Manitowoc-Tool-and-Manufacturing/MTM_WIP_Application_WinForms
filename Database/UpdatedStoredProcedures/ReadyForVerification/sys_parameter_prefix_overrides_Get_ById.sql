@@ -2,8 +2,6 @@
 -- Purpose: Retrieve single parameter prefix override by ID
 -- Created: 2025-10-18
 
-USE mtm_wip_application_winforms_test;
-
 DROP PROCEDURE IF EXISTS sys_parameter_prefix_overrides_Get_ById;
 
 DELIMITER $$

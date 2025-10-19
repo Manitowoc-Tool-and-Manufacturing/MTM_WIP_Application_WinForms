@@ -46,7 +46,7 @@ This document consolidates the task inventory for Phase 2.5 (stored procedure re
 
 ### Part C – Refactoring & Tooling
 
-**⚠️ IMPORTANT: T113c and T113d are part of a separate sub-feature (Developer Tools Suite) that should be completed AFTER the main database layer work (T113-T704). The foundational work (Phases 1-3) for Developer Tools is already complete, but the Parameter Prefix Maintenance UI (Phase 4) should wait until core refactoring is done.**
+**⚠️ IMPORTANT: T113c and T113d are part of a separate sub-feature (Developer Tools Suite) that should be completed BEFORE the main database layer work (T113-T704). The Parameter Prefix Maintenance UI (Phase 4) should be done first, then the core refactoring.**
 
 - [ ] **T113c** – ⏸️ **DEFERRED - Complete T113-T704 first** - Implement Developer role & prefix override table
   - **Status**: Foundation COMPLETE (Phase 1-2 done: T001-T015 in sub-feature), but UI work deferred

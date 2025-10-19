@@ -2,6 +2,64 @@
 description: Execute the implementation planning workflow using the plan template to generate design artifacts.
 ---
 
+## Agent Communication Rules
+
+**⚠️ EXTREMELY IMPORTANT - Maximize Premium Request Value**:
+
+This prompt handles planning workflow with research and design phases. To maximize value:
+
+- **Complete all phases** (Phase 0 research → Phase 1 design) in a single session when possible
+- **Generate all design artifacts** without stopping between files
+- **Resolve research questions** and create data models in one continuous workflow
+- **Run agent context updates** immediately after generating artifacts
+- **Continue through constitution checks** without pausing
+- **Only stop when blocked** by missing user input or external dependencies
+
+**Do NOT stop after Phase 0** - continue through Phase 1 design generation in the same session.
+
+---
+
+## Available MCP Tools
+
+This prompt has access to MCP tools from the **mtm-workflow** server for planning workflow:
+
+### Speckit Planning Tools
+
+**analyze_spec_context** - Extract implementation context from specification directory
+- **Input:** `feature_dir` (absolute path to specs directory)
+- **Output:** Available docs, tech stack, entities, contracts, recommendations
+- **Use when:** Beginning planning phase, understanding spec completeness, identifying what needs to be generated
+- **Returns:** List of existing files, tech stack from spec, entities to model, contract types needed
+
+**verify_ignore_files** - Check and update ignore files (.gitignore, etc.)
+- **Input:** `workspace_root` (absolute path), `tech_stack` (optional array like ["csharp", "dotnet", "mysql"])
+- **Output:** Ignore file status, missing patterns, recommendations for fixes
+- **Use when:** Phase 0 setup, ensuring proper file exclusions, project initialization
+- **Checks:** .gitignore existence, essential patterns (bin/, obj/, node_modules/, etc.), technology-specific patterns
+
+**check_checklists** - Validate checklist completion status
+- **Input:** `checklist_dir` (absolute path to checklists directory)
+- **Output:** Completion status with PASS/FAIL
+- **Use when:** After plan generation, validating constitution checks, verifying prerequisites
+
+### Usage in Planning Workflow
+
+```typescript
+// Before planning - understand current state
+analyze_spec_context(feature_dir: "/absolute/path/to/specs/feature-name")
+
+// During Phase 0 setup - verify ignore files
+verify_ignore_files(
+  workspace_root: "/absolute/path/to/workspace",
+  tech_stack: ["csharp", "dotnet", "mysql"]
+)
+
+// After generating plan - validate checklists
+check_checklists(checklist_dir: "/absolute/path/to/specs/feature-name/checklists")
+```
+
+---
+
 ## User Input
 
 ```text

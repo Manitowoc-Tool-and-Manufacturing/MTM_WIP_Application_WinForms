@@ -2,6 +2,52 @@
 description: Create or update the feature specification from a natural language feature description.
 ---
 
+## Agent Communication Rules
+
+**⚠️ EXTREMELY IMPORTANT - Maximize Premium Request Value**:
+
+This prompt handles spec generation and validation. To maximize the value of each premium request:
+
+- **Complete ALL validation steps** in a single session (generation → validation → clarification if needed)
+- **Generate complete specs** with all sections filled in one pass
+- **Run validation immediately** after generation without stopping
+- **Present all clarification questions together** (max 3) rather than sequentially
+- **Continue through quality checklist** without pausing between items
+- **Only stop for user input** when clarification answers are genuinely needed
+
+**Do NOT stop after generating the spec** - continue through validation and present any clarification needs in the same session.
+
+---
+
+## Available MCP Tools
+
+This prompt has access to MCP tools from the **mtm-workflow** server for specification analysis:
+
+### Speckit Specification Tools
+
+**analyze_spec_context** - Extract implementation context from specification directory
+- **Input:** `feature_dir` (absolute path to specs directory)
+- **Output:** Available docs, tech stack, entities, contracts, recommendations for missing documentation
+- **Use when:** Beginning spec generation, understanding what already exists, identifying gaps in documentation
+- **Returns:** List of existing files (spec.md, plan.md, tasks.md, etc.), extracted tech stack from plan.md, entities from data-model.md, contract types
+
+**check_checklists** - Validate checklist completion status
+- **Input:** `checklist_dir` (absolute path to checklists directory)
+- **Output:** Table with total/completed/incomplete counts, overall PASS/FAIL status
+- **Use when:** After generating requirements checklist, verifying spec quality gates before proceeding
+
+### Usage in Specification Workflow
+
+```typescript
+// After creating spec directory - check what exists
+analyze_spec_context(feature_dir: "/absolute/path/to/specs/feature-name")
+
+// After generating requirements checklist - validate it
+check_checklists(checklist_dir: "/absolute/path/to/specs/feature-name/checklists")
+```
+
+---
+
 ## User Input
 
 ```text

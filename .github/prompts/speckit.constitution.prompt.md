@@ -2,6 +2,23 @@
 description: Create or update the project constitution from interactive or provided principle inputs, ensuring all dependent templates stay in sync.
 ---
 
+## Agent Communication Rules
+
+**⚠️ EXTREMELY IMPORTANT - Maximize Premium Request Value**:
+
+This prompt handles constitution updates and template propagation. To maximize value:
+
+- **Complete all validation steps** (collect values → draft updates → consistency propagation) in a single session
+- **Update all dependent templates** immediately without stopping between files
+- **Generate complete sync report** with all impacted files listed
+- **Provide remediation suggestions** for template updates
+- **Continue through version bump** and change documentation
+- **Only stop for user input** when principle clarification needed or approval required
+
+**Do NOT stop after updating constitution** - continue through template consistency checks and generate full sync report.
+
+---
+
 ## User Input
 
 ```text

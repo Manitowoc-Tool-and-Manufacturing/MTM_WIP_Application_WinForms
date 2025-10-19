@@ -238,30 +238,62 @@ namespace MTM_Inventory_Application.Controls.SettingsForm
 
         private async void BtnAdd_Click(object? sender, EventArgs e)
         {
-            StatusMessageChanged?.Invoke(this, "Add Override feature not yet implemented");
-            // TODO: T024 - Implement Add Override Dialog
-            await Task.CompletedTask;
+            try
+            {
+                using var dialog = new Forms.Settings.Dialog_AddParameterOverride();
+                
+                if (dialog.ShowDialog(this.FindForm()) == DialogResult.OK && dialog.Result != null)
+                {
+                    StatusMessageChanged?.Invoke(this, "Override added successfully");
+                    OverridesModified?.Invoke(this, EventArgs.Empty);
+                    await ReloadAsync();
+                }
+            }
+            catch (Exception ex)
+            {
+                StatusMessageChanged?.Invoke(this, $"Error: {ex.Message}");
+                LoggingUtility.LogApplicationError(ex);
+            }
         }
 
         private async void BtnEdit_Click(object? sender, EventArgs e)
         {
             if (_selectedOverride == null) return;
 
-            StatusMessageChanged?.Invoke(this, "Edit Override feature not yet implemented");
-            // TODO: T025 - Implement Edit Override Dialog
-            await Task.CompletedTask;
+            try
+            {
+                using var dialog = new Forms.Settings.Dialog_EditParameterOverride(_selectedOverride);
+                
+                if (dialog.ShowDialog(this.FindForm()) == DialogResult.OK && dialog.Result != null)
+                {
+                    StatusMessageChanged?.Invoke(this, "Override updated successfully");
+                    OverridesModified?.Invoke(this, EventArgs.Empty);
+                    await ReloadAsync();
+                }
+            }
+            catch (Exception ex)
+            {
+                StatusMessageChanged?.Invoke(this, $"Error: {ex.Message}");
+                LoggingUtility.LogApplicationError(ex);
+            }
         }
 
         private async void BtnDelete_Click(object? sender, EventArgs e)
         {
             if (_selectedOverride == null) return;
 
+            // T026 - Delete Override Confirmation
             var confirmResult = MessageBox.Show(
-                $"Are you sure you want to delete the override for {_selectedOverride.ProcedureName}.{_selectedOverride.ParameterName}?\n\n" +
-                "This will restore default prefix detection for this parameter.",
-                "Confirm Delete",
+                $"Are you sure you want to delete the override for:\n\n" +
+                $"Procedure: {_selectedOverride.ProcedureName}\n" +
+                $"Parameter: {_selectedOverride.ParameterName}\n" +
+                $"Prefix: {(string.IsNullOrEmpty(_selectedOverride.OverridePrefix) ? "(none)" : _selectedOverride.OverridePrefix)}\n\n" +
+                "This will restore default prefix detection for this parameter.\n\n" +
+                "This action cannot be undone.",
+                "Confirm Delete Override",
                 MessageBoxButtons.YesNo,
-                MessageBoxIcon.Warning);
+                MessageBoxIcon.Warning,
+                MessageBoxDefaultButton.Button2);
 
             if (confirmResult != DialogResult.Yes) return;
 

@@ -3,8 +3,6 @@
 -- Created: 2025-10-18
 -- Returns: All active overrides ordered by ProcedureName, ParameterName
 
-USE mtm_wip_application_winforms_test;
-
 DROP PROCEDURE IF EXISTS sys_parameter_prefix_overrides_Get_All;
 
 DELIMITER $$

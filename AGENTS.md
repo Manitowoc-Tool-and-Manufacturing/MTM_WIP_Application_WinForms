@@ -13,6 +13,7 @@ Auto-generated agent guidelines. Last updated: 2025-10-18
 - **Keep chat summaries minimal** - one or two sentences maximum
 - **No explanations or updates** during task execution
 - **No unnecessary status updates** - let the code speak for itself
+- **Maximize Premium Request value** - ⚠️ **EXTREMELY IMPORTANT - NEVER SKIP THIS**: Strive to complete multiple related tasks in a single session rather than stopping after one task. Continue working through sequential or related tasks until a natural checkpoint is reached or significant complexity requires user input. DO NOT stop prematurely just because one task is complete
 
 ## Project Overview
 

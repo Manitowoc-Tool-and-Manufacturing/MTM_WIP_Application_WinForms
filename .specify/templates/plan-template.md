@@ -102,3 +102,35 @@ directories captured above]
 |-----------|------------|-------------------------------------|
 | [e.g., 4th project] | [current need] | [why 3 projects insufficient] |
 | [e.g., Repository pattern] | [specific problem] | [why direct DB access insufficient] |
+
+---
+
+## Relevant Instruction Files
+
+**Note**: These instruction files provide coding patterns and standards for implementation. Review relevant files when moving from planning to task execution.
+
+### Core Development:
+- `.github/instructions/csharp-dotnet8.instructions.md` - Language features, WinForms patterns, async/await, file organization
+- `.github/instructions/mysql-database.instructions.md` - Stored procedures, connection management, Helper_Database_StoredProcedure usage
+- `.github/instructions/documentation.instructions.md` - XML comments, README structure, code documentation
+
+### Quality & Security:
+- `.github/instructions/testing-standards.instructions.md` - Manual validation approach, success criteria, test scenarios
+- `.github/instructions/integration-testing.instructions.md` - Discovery-first workflow, method signature verification, DAO testing patterns
+- `.github/instructions/security-best-practices.instructions.md` - Input validation, credential management, SQL injection prevention
+- `.github/instructions/performance-optimization.instructions.md` - Async patterns, connection pooling, memory management, caching strategies
+- `.github/instructions/code-review-standards.instructions.md` - Quality gates, review process, common issues
+
+### When to Use:
+- **During task generation** (`/speckit.tasks`): Reference to add instruction file pointers to specific tasks
+- **During implementation** (`/speckit.implement`): Load instruction files to apply correct patterns
+- **During code review**: Validate compliance with documented standards
+
+**Instruction File Reference Format in Tasks**:
+```markdown
+- [ ] T100 - Implement DAO method for inventory queries
+  - **Reference**: .github/instructions/mysql-database.instructions.md - Use Helper_Database_StoredProcedure pattern
+  - **Reference**: .github/instructions/csharp-dotnet8.instructions.md - Follow async/await patterns
+```
+
+---

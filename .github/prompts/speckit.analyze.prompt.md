@@ -2,12 +2,71 @@
 description: Perform a non-destructive cross-artifact consistency and quality analysis across spec.md, plan.md, and tasks.md after task generation.
 ---
 
+## Agent Communication Rules
+
+**⚠️ EXTREMELY IMPORTANT - Maximize Premium Request Value**:
+
+This prompt performs comprehensive analysis across multiple artifacts. To maximize value:
+
+- **Run all detection passes** (duplication, ambiguity, underspecification, constitution, coverage, inconsistency) in a single session
+- **Generate complete analysis report** with all findings prioritized and categorized
+- **Provide remediation suggestions** without stopping between analysis types
+- **Continue through all validation steps** until complete report is generated
+- **Only stop when analysis complete** or when user input needed for remediation decisions
+
+**Do NOT stop after one detection pass** - complete all analysis types and generate full report in one session.
+
+---
+
 ## Required MCP Tools
 
 This prompt can utilize the following MCP tools from the **mtm-workflow** server:
-- `check_checklists` - Validate checklist completion status
-- `analyze_dependencies` - Understand system relationships for analysis
-- `suggest_refactoring` - Identify potential improvements
+
+**check_checklists** - Validate checklist completion status
+- **Input:** `checklist_dir` (absolute path)
+- **Output:** Completion status table with PASS/FAIL
+- **Use when:** Analyzing prerequisite completion, validating quality gates
+
+**analyze_dependencies** - Understand stored procedure relationships (if applicable)
+- **Input:** `procedures_dir` (absolute path)
+- **Output:** Dependency graph, circular dependencies, call hierarchies
+- **Use when:** Analyzing database layer relationships in plan, understanding component dependencies
+
+**suggest_refactoring** - AI-powered refactoring suggestions
+- **Input:** `source_dir` (absolute path), `file_type` (csharp/sql/all), `recursive` (bool)
+- **Output:** Prioritized refactoring recommendations
+- **Use when:** Identifying improvement opportunities in tasks, analyzing technical debt in plan
+
+**parse_tasks** - Parse and structure tasks.md
+- **Input:** `tasks_file` (absolute path)
+- **Output:** Task phases, dependencies, completion status
+- **Use when:** Understanding task structure for consistency analysis
+
+**analyze_spec_context** - Extract context from specs
+- **Input:** `feature_dir` (absolute path)
+- **Output:** Available docs, tech stack, entities, contracts
+- **Use when:** Loading artifacts for analysis, understanding feature scope
+
+### Usage in Analysis Workflow
+
+```typescript
+// Load spec context
+analyze_spec_context(feature_dir: "/absolute/path/to/specs/feature-name")
+
+// Parse tasks structure
+parse_tasks(tasks_file: "/absolute/path/to/specs/feature-name/tasks.md")
+
+// Check prerequisite checklists
+check_checklists(checklist_dir: "/absolute/path/to/specs/feature-name/checklists")
+
+// Analyze code dependencies if technical analysis needed
+analyze_dependencies(procedures_dir: "/absolute/path/to/Database/UpdatedStoredProcedures")
+
+// Get refactoring suggestions for improvement recommendations
+suggest_refactoring(source_dir: "/absolute/path/to/Data", file_type: "csharp", recursive: true)
+```
+
+---
 
 ## User Input
 
