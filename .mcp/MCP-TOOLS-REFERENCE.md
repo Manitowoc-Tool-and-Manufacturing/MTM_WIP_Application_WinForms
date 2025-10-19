@@ -26,6 +26,10 @@ This document is the authoritative catalog for MCP tools that ship with the MTM 
 | `apply_ui_fixes` | Apply automated WinForms UI corrections from a JSON plan. | `fix_plan_file`, `backup_dir?`, `dry_run?` |
 | `generate_test_seed_sql` | Produce SQL seed script from JSON-defined datasets for integration testing. | `config_file`, `output_sql?` |
 | `verify_test_seed` | Validate seeded data against JSON expectations using MySQL. | `config_file`, `host?`, `port?`, `user?`, `password?`, `database?` |
+| `install_stored_procedures` | Apply stored procedure scripts and flag drift based on config JSON. | `config_file`, `host?`, `port?`, `user?`, `password?`, `database?`, `dry_run?` |
+| `validate_schema` | Compare live schema with snapshot JSON and highlight missing tables/columns. | `config_file`, `host?`, `port?`, `user?`, `password?`, `database?` |
+| `run_integration_harness` | Execute scripted seed/test/teardown commands for integration workflows. | `config_file` |
+| `audit_database_cleanup` | Report and optionally delete residual test data rows defined in JSON rules. | `config_file`, `host?`, `port?`, `user?`, `password?`, `database?`, `dry_run?` |
 | `generate_ui_fix_plan` | Produce JSON fix plans for WinForms UI issues. | `source_dir`, `recursive`, `include_warnings?`, `output_file?` |
 | `validate_ui_scaling` | Validate DPI/layout consistency in WinForms files. | `source_dir`, `recursive`, `file_types` |
 | `analyze_spec_context` | Parse SpecKit feature specs for context. | `feature_dir` |

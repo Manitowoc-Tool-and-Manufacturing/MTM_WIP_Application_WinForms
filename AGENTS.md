@@ -249,6 +249,17 @@ Memory files capture lessons learned, common pitfalls, and evolving patterns dis
 3. Implement with both pattern knowledge and pitfall awareness
 ```
 
+## MCP Tooling
+
+All JSON samples live in `.mcp/samples/` (keep `C:\.mcp\samples` mirrored when pushing updates).
+
+- `generate_test_seed_sql` – produce repeatable seed SQL for integration fixtures.
+- `verify_test_seed` – validate seeded rows before/after suites run.
+- `install_stored_procedures` – highlight drift and apply scripts from `Database/UpdatedStoredProcedures/ReadyForVerification`.
+- `validate_schema` – ensure the test schema matches `Database/database-schema-snapshot.json` before DAO execution.
+- `run_integration_harness` – run end-to-end workflows (seed, install, schema check, DAO tests, cleanup) with JSON-defined steps.
+- `audit_database_cleanup` – preview and optionally remove `TEST-*` rows so suites remain isolated.
+
 ## Development Workflow
 
 ### Running the Application

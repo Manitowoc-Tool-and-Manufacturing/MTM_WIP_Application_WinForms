@@ -21,7 +21,13 @@ This folder stores the development copy of the MTM workflow Model Context Protoc
 
 ## Sample Artifacts
 
+Sample JSON configurations live under `.mcp/samples/`.
+
 - `seed-config.sample.json` – example configuration for the `generate_test_seed_sql` and `verify_test_seed` tools. Copy and modify for new test datasets and verification steps.
+- `stored-procedure-install.sample.json` – sample instructions for `install_stored_procedures`.
+- `schema-validate.sample.json` – schema validation recipe for `validate_schema`.
+- `integration-harness.sample.json` – orchestrated workflow for `run_integration_harness`.
+- `cleanup-audit.sample.json` – audit rules for `audit_database_cleanup`.
 - `artifacts/` – generated outputs (e.g., SQL scripts) are written here when running tools locally.
 
 ## Branch Safety

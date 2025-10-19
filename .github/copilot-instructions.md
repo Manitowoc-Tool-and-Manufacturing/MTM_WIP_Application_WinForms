@@ -62,6 +62,17 @@ Prompts that still apply to this WinForms solution:
 - `/debug-issue` – gather structured context when troubleshooting
 - `/write-tests` – outline manual validation scenarios for forms and workflows
 
+## MCP Tooling Quick Reference
+
+JSON configs for these tools live under `.mcp/samples/` (mirror to `C:\.mcp\samples` when syncing).
+
+- `generate_test_seed_sql` – build seed scripts for integration fixtures from declarative JSON.
+- `verify_test_seed` – check seeded records against expected rows before/after DAO runs.
+- `install_stored_procedures` – detect drift and apply `Database/UpdatedStoredProcedures/ReadyForVerification` scripts.
+- `validate_schema` – compare the live MySQL schema with `Database/database-schema-snapshot.json` before executing suites.
+- `run_integration_harness` – orchestrate end-to-end DAO workflows (seed → install → tests → cleanup) via JSON-defined steps.
+- `audit_database_cleanup` – report and optionally purge residual `TEST-*` style rows so each suite starts clean.
+
 (Other Avalonia-specific prompts should be removed or rewritten before reuse.)
 
 ## Project Structure

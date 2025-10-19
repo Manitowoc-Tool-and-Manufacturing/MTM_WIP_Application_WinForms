@@ -28,6 +28,10 @@ import { generateUiFixPlan } from "./tools/generate-ui-fix-plan.js";
 import { applyUiFixes } from "./tools/apply-ui-fixes.js";
 import { generateTestSeedSql } from "./tools/generate-test-seed-sql.js";
 import { verifyTestSeed } from "./tools/verify-test-seed.js";
+import { installStoredProcedures } from "./tools/install-stored-procedures.js";
+import { validateSchema } from "./tools/validate-schema.js";
+import { runIntegrationHarness } from "./tools/run-integration-harness.js";
+import { auditDatabaseCleanup } from "./tools/audit-database-cleanup.js";
 
 // Speckit tools
 import { parseTasks } from "./tools/speckit/parse-tasks.js";
@@ -461,6 +465,83 @@ const tools: Tool[] = [
       required: ["config_file"],
     },
   },
+  {
+    name: "install_stored_procedures",
+    description:
+      "Apply stored procedure scripts defined in JSON configuration and report drift versus live database.",
+    inputSchema: {
+      type: "object",
+      properties: {
+        config_file: {
+          type: "string",
+          description: "Absolute path to JSON configuration file controlling stored procedure installation",
+        },
+        host: { type: "string" },
+        port: { type: "number" },
+        user: { type: "string" },
+        password: { type: "string" },
+        database: { type: "string" },
+        dry_run: { type: "boolean" },
+      },
+      required: ["config_file"],
+    },
+  },
+  {
+    name: "validate_schema",
+    description:
+      "Compare live MySQL schema against a snapshot JSON file to detect missing tables or columns before running DAO suites.",
+    inputSchema: {
+      type: "object",
+      properties: {
+        config_file: {
+          type: "string",
+          description: "Absolute path to schema validation JSON config",
+        },
+        host: { type: "string" },
+        port: { type: "number" },
+        user: { type: "string" },
+        password: { type: "string" },
+        database: { type: "string" },
+      },
+      required: ["config_file"],
+    },
+  },
+  {
+    name: "run_integration_harness",
+    description:
+      "Execute integration test harness steps defined in JSON, including seeding, DAO test execution, and teardown commands.",
+    inputSchema: {
+      type: "object",
+      properties: {
+        config_file: {
+          type: "string",
+          description: "Absolute path to integration harness configuration JSON",
+        },
+      },
+      required: ["config_file"],
+    },
+  },
+  {
+    name: "audit_database_cleanup",
+    description:
+      "Inspect and optionally clear residual test data rows defined in JSON cleanup rules to keep test runs isolated.",
+    inputSchema: {
+      type: "object",
+      properties: {
+        config_file: {
+          type: "string",
+          description: "Absolute path to cleanup configuration JSON",
+        },
+        host: { type: "string" },
+        port: { type: "number" },
+        user: { type: "string" },
+        password: { type: "string" },
+        database: { type: "string" },
+        dry_run: { type: "boolean" },
+      },
+      required: ["config_file"],
+    },
+  },
   // Speckit implementation tools
   {
     name: "parse_tasks",
@@ -690,6 +771,51 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
             user?: string;
             password?: string;
             database?: string;
+          }
+        );
+
+      case "install_stored_procedures":
+        return await installStoredProcedures(
+          args as {
+            config_file: string;
+            host?: string;
+            port?: number;
+            user?: string;
+            password?: string;
+            database?: string;
+            dry_run?: boolean;
+          }
+        );
+
+      case "validate_schema":
+        return await validateSchema(
+          args as {
+            config_file: string;
+            host?: string;
+            port?: number;
+            user?: string;
+            password?: string;
+            database?: string;
+          }
+        );
+
+      case "run_integration_harness":
+        return await runIntegrationHarness(
+          args as {
+            config_file: string;
+          }
+        );
+
+      case "audit_database_cleanup":
+        return await auditDatabaseCleanup(
+          args as {
+            config_file: string;
+            host?: string;
+            port?: number;
+            user?: string;
+            password?: string;
+            database?: string;
+            dry_run?: boolean;
           }
         );
 
