@@ -14,6 +14,12 @@ When developing integration tests, use these MCP tools from the **mtm-workflow**
 - `check_security` - Identify security test scenarios
 - `analyze_performance` - Create performance test cases
 - `validate_dao_patterns` - Verify DAO structure before testing
+- `generate_test_seed_sql` - Produce repeatable seed scripts for arranging database state before each test run.
+- `verify_test_seed` - Assert seeded data still matches expectations after DAO execution.
+- `install_stored_procedures` - Deploy required SQL updates to the test database prior to executing suites.
+- `run_integration_harness` - Automate the full seed → install → test → cleanup pipeline defined later in this document.
+- `audit_database_cleanup` - Detect leftover `TEST-*` data and optionally purge it to maintain isolation.
+- `validate_schema` - Confirm the test schema matches the checked-in snapshot before trusting results.
 
 ## Overview
 
@@ -187,26 +193,17 @@ public async Task SearchItems_WithPagination_ReturnsPaginatedResults()
 [TestClass]
 public class Dao_Something_Tests : BaseIntegrationTest
 {
-    #region Query Methods Tests
-    
+    // Query Methods Tests
     [TestMethod]
     public async Task GetAll_Test() { }
-    
-    #endregion
-    
-    #region CRUD Methods Tests
-    
+
+    // CRUD Methods Tests
     [TestMethod]
     public async Task Create_Test() { }
-    
-    #endregion
-    
-    #region Validation Methods Tests
-    
+
+    // Validation Methods Tests
     [TestMethod]
     public async Task Exists_Test() { }
-    
-    #endregion
 }
 ```
 

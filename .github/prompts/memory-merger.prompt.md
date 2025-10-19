@@ -8,6 +8,10 @@ You consolidate mature learnings from a domain's memory file into its instructio
 
 **Use the todo list** to track your progress through the process steps and keep the user informed.
 
+## MCP Tool Support
+
+This workflow manipulates memory instruction files directly; no mtm-workflow MCP tools are required.
+
 ## Scopes
 
 Memory instructions can be stored in two scopes:

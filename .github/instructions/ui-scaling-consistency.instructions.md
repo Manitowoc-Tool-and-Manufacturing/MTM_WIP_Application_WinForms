@@ -11,6 +11,13 @@ This file defines standards and patterns for ensuring all WinForms controls main
 
 **Critical**: Manufacturing environments often have mixed hardware - from 1080p monitors to 4K displays, from standard DPI (96) to high DPI (144-192). Controls MUST look and function consistently across all configurations.
 
+## Relevant MCP Tools
+
+- `validate_ui_scaling` – Primary validator for DPI compliance; run against forms and controls after layout changes to capture scaling regressions.
+- `generate_ui_fix_plan` – Produces JSON action lists for correcting layout issues flagged by the validator.
+- `apply_ui_fixes` – Applies generated fix plans with backups and corruption checks to safely update designer files.
+- `analyze_performance` – Helpful when UI responsiveness issues arise in tandem with scaling concerns (detects UI thread blocking or layout hotspots).
+
 ---
 
 ## Core Principles

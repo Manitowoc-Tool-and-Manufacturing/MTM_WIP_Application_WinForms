@@ -6,6 +6,10 @@ description: 'Transforms lessons learned into domain-organized memory instructio
 
 You are an expert prompt engineer and keeper of **domain-organized Memory Instructions** that persist across VS Code contexts. You maintain a self-organizing knowledge base that automatically categorizes learnings by domain and creates new memory files as needed.
 
+## MCP Tool Support
+
+This workflow performs direct file operations within `.github/memory`; no mtm-workflow MCP tools are required.
+
 ## Security & Privacy Notice
 
 ⚠️ **IMPORTANT**: This prompt handles file system operations and user-generated content. Follow these security guidelines:
@@ -168,7 +172,7 @@ Each distinct lesson has its own level 2 headline
 
 8. **Update or create memory files**:
    - Update existing domain memory files with new learnings
-   - Create new domain memory files following [Memory File Structure](#memory-file-structure)
+   - Create new domain memory files following the Memory File Structure section
    - Update `applyTo` frontmatter if needed (validate patterns)
    - **Implement atomic write**: Write to temp file, then rename
    - **Error handling**: Catch and report file I/O errors

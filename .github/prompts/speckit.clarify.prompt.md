@@ -15,6 +15,13 @@ This prompt involves multiple analysis and generation steps. To maximize the val
 - **Document progress** if partial completion occurs (note which step completed)
 
 **Do NOT stop prematurely** after generating the HTML - continue to wait for answers and complete the spec update in the same session when possible.
+---
+
+## Required MCP Tools
+
+This prompt can utilize the following MCP tools from the **mtm-workflow** server:
+- `analyze_spec_context` – Inspect the feature directory up front to confirm which specification assets (spec.md, plan.md, tasks.md, etc.) are available before generating clarification questions.
+- `check_checklists` – Run after integrating answers to verify any clarification-driven checklist items in `FEATURE_DIR/checklists/` remain up to date.
 
 ---
 

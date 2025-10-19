@@ -2,6 +2,10 @@
 description: 'Prompt and workflow for generating conventional commit messages using a structured XML format. Guides users to create standardized, descriptive commit messages in line with the Conventional Commits specification, including instructions, examples, and validation.'
 ---
 
+## MCP Tool Support
+
+This workflow uses native Git commands only; no mtm-workflow MCP tools are required.
+
 ### Instructions
 
 ```xml
@@ -54,7 +58,7 @@ git commit -m "type(scope): description"
 
 ```xml
 <validation>
-	<type>Must be one of the allowed types. See <reference>https://www.conventionalcommits.org/en/v1.0.0/#specification</reference></type>
+	<type>Must be one of the allowed types (see the Conventional Commits specification for details).</type>
 	<scope>Optional, but recommended for clarity.</scope>
 	<description>Required. Use the imperative mood (e.g., "add", not "added").</description>
 	<body>Optional. Use for additional context.</body>

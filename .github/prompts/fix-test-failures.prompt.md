@@ -12,6 +12,18 @@
 
 ---
 
+## Required MCP Tools
+
+Leverage these mtm-workflow MCP tools while driving failures to green:
+- `validate_dao_patterns` – Confirm DAO updates follow the post-refactor transaction patterns.
+- `validate_error_handling` – Ensure Service_ErrorHandler usage stays consistent while fixing exceptions.
+- `analyze_stored_procedures` – Audit stored procedure changes triggered by test fixes.
+- `run_integration_harness` – Execute end-to-end DAO workflows after adjustments.
+- `validate_build` – Rebuild and optionally run tests to confirm no regressions remain.
+- `check_security` – Re-scan touched areas for injection or credential issues uncovered during fixes.
+
+---
+
 ## Current Blocker: DAO Transaction Architecture
 
 **Status**: 🔴 **CRITICAL BLOCKER** - 43 tests failing due to architectural issue

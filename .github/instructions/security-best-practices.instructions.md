@@ -11,6 +11,14 @@ applyTo: '**/*.cs,**/*.json'
 
 This file defines security standards and best practices for the MTM WIP Application to protect against common vulnerabilities and ensure secure manufacturing operations.
 
+## Relevant MCP Tools
+
+- `check_security` – Primary static analysis pass; run after security-sensitive updates to flag SQL injection, hardcoded credentials, and other issues listed below.
+- `analyze_stored_procedures` – Validate stored procedure signatures, error handling, and parameter naming when modifying database code referenced in this guide.
+- `audit_database_cleanup` – Ensure temporary or test data created during security validation is removed from MySQL instances.
+- `validate_error_handling` – Confirm Service_ErrorHandler usage replaces insecure MessageBox flows and that exception handling patterns remain consistent.
+- `verify_ignore_files` – Double-check that secrets, logs, and generated artifacts remain excluded from source control when adding new security-related assets.
+
 ## Core Principles
 
 ### Defense in Depth

@@ -9,6 +9,7 @@
   },
   "scripts": {
     "build": "tsc",
+    "lint": "eslint --ext .ts src",
     "watch": "tsc --watch",
     "dev": "tsc && node dist/index.js"
   },
@@ -30,6 +31,10 @@
   },
   "devDependencies": {
     "@types/node": "^22.0.0",
-    "typescript": "^5.6.0"
+    "@typescript-eslint/eslint-plugin": "^8.46.1",
+    "@typescript-eslint/parser": "^8.46.1",
+    "eslint": "^9.38.0",
+    "typescript": "^5.6.0",
+    "typescript-eslint": "^8.46.1"
   }
 }

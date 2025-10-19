@@ -11,6 +11,14 @@ applyTo: '**/*.cs'
 
 This file defines performance optimization standards and best practices for the MTM WIP Application to ensure responsive UI, efficient database operations, and optimal resource usage.
 
+## Relevant MCP Tools
+
+- `analyze_performance` – Primary performance scanner; run against the code you touch to detect N+1 loops, blocking awaits, and UI thread issues.
+- `suggest_refactoring` – Surfaces structural clean-up opportunities that often translate into performance wins (excessive nesting, duplicated logic, etc.).
+- `validate_ui_scaling` – Confirms DPI settings, font sizing, and layout responsiveness align with the UI performance rules documented here.
+- `generate_ui_fix_plan` – Produces actionable UI remediation plans with severity tagging; pair with `apply_ui_fixes` for safe automated edits.
+- `apply_ui_fixes` – Executes fix plans with backups and corruption checks when addressing layout/performance problems highlighted by the validators.
+
 ## Core Principles
 
 ### Performance by Design

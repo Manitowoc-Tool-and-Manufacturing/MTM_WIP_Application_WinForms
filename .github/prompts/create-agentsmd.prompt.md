@@ -9,6 +9,12 @@ You are a code agent. Your task is to create a complete, accurate AGENTS.md at t
 
 AGENTS.md is an open format designed to provide coding agents with the context and instructions they need to work effectively on a project.
 
+## Required MCP Tools
+
+This workflow can leverage the following mtm-workflow MCP tools:
+- `analyze_spec_context` – Capture existing specs, plans, and tasks so their highlights can be summarized inside AGENTS.md.
+- `verify_ignore_files` – Double-check that any generated artifacts or logs referenced in AGENTS.md remain excluded from version control.
+
 ## What is AGENTS.md?
 
 AGENTS.md is a Markdown file that serves as a "README for agents" - a dedicated, predictable place to provide context and instructions to help AI coding agents work on your project. It complements README.md by containing detailed technical context that coding agents need but might clutter a human-focused README.

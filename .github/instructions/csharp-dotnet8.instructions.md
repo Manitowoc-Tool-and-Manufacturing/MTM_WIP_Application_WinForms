@@ -11,6 +11,15 @@ applyTo: '**/*.cs'
 
 These guidelines describe how to structure and implement C# code within the MTM WinForms application. Favor consistency with the existing Forms/DAO/helpers architecture and .NET 8 language improvements that do not interfere with the WinForms designer.
 
+## Relevant MCP Tools
+
+- `validate_dao_patterns` – Run against `Data/` when creating or refactoring DAOs to confirm region layout, Helper_Database usage, async patterns, and XML docs match these rules.
+- `validate_error_handling` – Scan updated C# folders to verify Service_ErrorHandler adoption and to catch lingering MessageBox.Show calls.
+- `analyze_performance` – Target UI or database code paths during refactors to surface blocking awaits, N+1 loops, and other pitfalls called out in this guide.
+- `suggest_refactoring` – Generate prioritized clean-up opportunities before large rewrites so new code adheres to the architecture described here.
+- `check_xml_docs` – Confirm public APIs touched by your changes meet the documentation expectations outlined below.
+- `generate_unit_tests` – Produce scaffolding for helper/service classes when expanding coverage while staying within the mandated patterns.
+
 ## Core Principles
 
 - Target `.NET 8.0` across the solution; no multi-targeting is required.

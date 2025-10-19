@@ -16,6 +16,11 @@ This prompt handles constitution updates and template propagation. To maximize v
 - **Only stop for user input** when principle clarification needed or approval required
 
 **Do NOT stop after updating constitution** - continue through template consistency checks and generate full sync report.
+---
+
+## Required MCP Tools
+
+This workflow operates entirely on `.specify` templates and usually does not require mtm-workflow MCP tools. If governance checklists exist for the current feature, optionally run `check_checklists` against `.specify/checklists/` to confirm prerequisites remain satisfied after amendments.
 
 ---
 

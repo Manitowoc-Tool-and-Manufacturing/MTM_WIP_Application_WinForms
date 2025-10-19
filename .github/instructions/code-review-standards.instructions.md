@@ -17,6 +17,10 @@ When performing code reviews, use these MCP tools from the **mtm-workflow** serv
 - `check_xml_docs` - Verify documentation coverage
 - `suggest_refactoring` - Get AI-powered refactoring suggestions
 - `analyze_stored_procedures` - Validate stored procedure compliance
+- `analyze_dependencies` - Visualize stored procedure call chains when reviewing cross-procedure changes.
+- `compare_databases` - Highlight schema drift between baseline and proposed SQL updates.
+- `validate_schema` - Confirm live schemas match the expected snapshot before approving database migrations.
+- `generate_ui_fix_plan` & `validate_ui_scaling` - Assess UI-related diffs for DPI/scaling regressions.
 
 ## Overview
 

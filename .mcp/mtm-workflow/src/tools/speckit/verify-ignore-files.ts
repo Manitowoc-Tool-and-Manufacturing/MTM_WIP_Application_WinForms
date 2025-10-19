@@ -142,8 +142,8 @@ function checkIgnoreFile(
 ): IgnoreFileCheck {
   const exists = fs.existsSync(filePath);
   let content = "";
-  let missingPatterns: string[] = [];
-  let recommendations: string[] = [];
+  const missingPatterns: string[] = [];
+  const recommendations: string[] = [];
 
   if (exists) {
     content = fs.readFileSync(filePath, "utf-8");

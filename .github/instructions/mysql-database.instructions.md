@@ -11,6 +11,18 @@ applyTo: 'Data/**/*.cs,Helpers/**/*.cs,Services/**/*.cs'
 
 This file defines MySQL 5.7 database patterns, connection management, and manufacturing domain context for the MTM WIP Application. The application uses MySQL 5.7 via MAMP with the MySql.Data connector and custom helper classes for stored procedure execution.
 
+## Relevant MCP Tools
+
+- `analyze_stored_procedures` – Audit procedure files in `Database/UpdatedStoredProcedures/` for required `p_Status`/`p_ErrorMsg` outputs, transaction handling, and `p_` parameter naming whenever you modify SQL.
+- `analyze_dependencies` – Map CALL hierarchies before refactoring to understand impact and to confirm you are updating every dependent procedure mentioned here.
+- `compare_databases` – Run against the `Current*/Updated*` folders to spot schema drift that needs to be reconciled before promoting changes.
+- `install_stored_procedures` – Apply updated SQL to the test database using the JSON config as part of deployment dry runs.
+- `validate_schema` – Verify the live database matches `database-schema-snapshot.json` after migrations or before running integration suites.
+- `generate_dao_wrapper` – Produce DAO skeletons that follow the helper usage patterns documented below when introducing new stored procedures.
+- `generate_test_seed_sql` & `verify_test_seed` – Seed deterministic datasets and confirm results for integration tests exercising new procedures.
+- `audit_database_cleanup` – Check for and optionally remove `TEST-*` residues after suites that touch manufacturing tables.
+- `run_integration_harness` – Chain seeding, procedure installs, schema validation, DAO tests, and cleanup in a single scripted run that mirrors the workflows described in this guide.
+
 ## Core Principles
 
 ### Stored Procedure First

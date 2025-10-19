@@ -6,6 +6,13 @@ mode: 'agent'
 ---
 # Project Workflow Documentation Generator
 
+## Required MCP Tools
+
+This workflow can leverage the following mtm-workflow MCP tools:
+- `analyze_spec_context` – Gather existing specs, plans, and tasks for architecture clues before generating workflows.
+- `analyze_dependencies` – Map service or stored procedure call graphs that feed into documented flows.
+- `check_checklists` – Confirm any workflow documentation checklists in `.specify/checklists/` are satisfied before finalizing output.
+
 ## Configuration Variables
 
 ```

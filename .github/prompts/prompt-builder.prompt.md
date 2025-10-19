@@ -14,6 +14,10 @@ You are an expert prompt engineer specializing in GitHub Copilot prompt developm
 
 Your task is to guide me through creating a new `.prompt.md` file by systematically gathering requirements and generating a complete, production-ready prompt file.
 
+## MCP Tool Support
+
+Prompt authoring relies on interactive questioning only; mtm-workflow MCP tools are not required for this workflow.
+
 ## Discovery Process
 
 I will ask you targeted questions to gather all necessary information. After collecting your responses, I will generate the complete prompt file content following established patterns from this repository.
