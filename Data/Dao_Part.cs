@@ -3,6 +3,7 @@ using MTM_Inventory_Application.Helpers;
 using MTM_Inventory_Application.Logging;
 using MTM_Inventory_Application.Models;
 using MTM_Inventory_Application.Services;
+using MySql.Data.MySqlClient;
 
 namespace MTM_Inventory_Application.Data;
 
@@ -20,7 +21,7 @@ internal static class Dao_Part
     /// Retrieves all parts from the system.
     /// </summary>
     /// <returns>A DaoResult containing a DataTable with all parts.</returns>
-    internal static async Task<DaoResult<DataTable>> GetAllPartsAsync()
+    internal static async Task<DaoResult<DataTable>> GetAllPartsAsync(MySqlConnection? connection = null, MySqlTransaction? transaction = null)
     {
         Service_DebugTracer.TraceMethodEntry(controlName: "Dao_Part");
         
@@ -58,7 +59,7 @@ internal static class Dao_Part
     /// </summary>
     /// <param name="partNumber">The part number to search for.</param>
     /// <returns>A DaoResult containing the part data row.</returns>
-    internal static async Task<DaoResult<DataRow>> GetPartByNumberAsync(string partNumber)
+    internal static async Task<DaoResult<DataRow>> GetPartByNumberAsync(string partNumber, MySqlConnection? connection = null, MySqlTransaction? transaction = null)
     {
         Service_DebugTracer.TraceMethodEntry(new Dictionary<string, object> { ["partNumber"] = partNumber }, controlName: "Dao_Part");
         
@@ -69,7 +70,10 @@ internal static class Dao_Part
             var result = await Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync(
                 Model_AppVariables.ConnectionString,
                 "md_part_ids_Get_ByItemNumber",
-                parameters
+                parameters,
+                progressHelper: null,
+                connection: connection,
+                transaction: transaction
             );
 
             if (result.IsSuccess && result.Data != null && result.Data.Rows.Count > 0)
@@ -100,13 +104,13 @@ internal static class Dao_Part
     /// </summary>
     /// <param name="partNumber">The part number to check.</param>
     /// <returns>A DaoResult containing true if the part exists, false otherwise.</returns>
-    internal static async Task<DaoResult<bool>> PartExistsAsync(string partNumber)
+    internal static async Task<DaoResult<bool>> PartExistsAsync(string partNumber, MySqlConnection? connection = null, MySqlTransaction? transaction = null)
     {
         Service_DebugTracer.TraceMethodEntry(new Dictionary<string, object> { ["partNumber"] = partNumber }, controlName: "Dao_Part");
         
         try
         {
-            var result = await GetPartByNumberAsync(partNumber);
+            var result = await GetPartByNumberAsync(partNumber, connection, transaction);
             bool exists = result.IsSuccess;
             
             Service_DebugTracer.TraceMethodExit(exists, controlName: "Dao_Part");
@@ -163,14 +167,14 @@ internal static class Dao_Part
     /// </summary>
     /// <param name="searchTerm">The search term to match against part numbers.</param>
     /// <returns>A DaoResult containing a DataTable with matching parts.</returns>
-    internal static async Task<DaoResult<DataTable>> SearchPartsAsync(string searchTerm)
+    internal static async Task<DaoResult<DataTable>> SearchPartsAsync(string searchTerm, MySqlConnection? connection = null, MySqlTransaction? transaction = null)
     {
         Service_DebugTracer.TraceMethodEntry(new Dictionary<string, object> { ["searchTerm"] = searchTerm }, controlName: "Dao_Part");
         
         try
         {
             // Get all parts and filter in memory (unless there's a specific search stored procedure)
-            var allPartsResult = await GetAllPartsAsync();
+            var allPartsResult = await GetAllPartsAsync(connection, transaction);
             
             if (!allPartsResult.IsSuccess || allPartsResult.Data == null)
             {
@@ -333,7 +337,9 @@ internal static class Dao_Part
     /// <param name="partType">The new part type.</param>
     /// <param name="user">The user making the update.</param>
     /// <returns>A DaoResult indicating success or failure.</returns>
-    internal static async Task<DaoResult> UpdatePartByNumberAsync(string partNumber, string partType, string user)
+    internal static async Task<DaoResult> UpdatePartByNumberAsync(string partNumber, string partType, string user,
+        MySqlConnection? connection = null,
+        MySqlTransaction? transaction = null)
     {
         Service_DebugTracer.TraceMethodEntry(new Dictionary<string, object> 
         { 
@@ -345,7 +351,7 @@ internal static class Dao_Part
         try
         {
             // First get the part to update
-            var existingPart = await GetPartByNumberAsync(partNumber);
+            var existingPart = await GetPartByNumberAsync(partNumber, connection, transaction);
             if (!existingPart.IsSuccess || existingPart.Data == null)
             {
                 Service_DebugTracer.TraceMethodExit(existingPart, controlName: "Dao_Part");
@@ -380,7 +386,9 @@ internal static class Dao_Part
     /// </summary>
     /// <param name="partNumber">The part number to delete.</param>
     /// <returns>A DaoResult indicating success or failure.</returns>
-    internal static async Task<DaoResult> DeletePartAsync(string partNumber)
+    internal static async Task<DaoResult> DeletePartAsync(string partNumber,
+        MySqlConnection? connection = null,
+        MySqlTransaction? transaction = null)
     {
         Service_DebugTracer.TraceMethodEntry(new Dictionary<string, object> { ["partNumber"] = partNumber }, controlName: "Dao_Part");
         
@@ -450,18 +458,18 @@ internal static class Dao_Part
     /// Legacy method for getting all parts. Use GetAllPartsAsync instead.
     /// </summary>
     [Obsolete("Use GetAllPartsAsync instead. This method will be removed in a future version.")]
-    internal static async Task<DaoResult<DataTable>> GetAllParts(bool useAsync = false)
+    internal static async Task<DaoResult<DataTable>> GetAllParts(bool useAsync = false, MySqlConnection? connection = null, MySqlTransaction? transaction = null)
     {
-        return await GetAllPartsAsync();
+        return await GetAllPartsAsync(connection, transaction);
     }
 
     /// <summary>
     /// Legacy method for getting part by number. Use GetPartByNumberAsync instead.
     /// </summary>
     [Obsolete("Use GetPartByNumberAsync instead. This method will be removed in a future version.")]
-    internal static async Task<DaoResult<DataRow>> GetPartByNumber(string partNumber, bool useAsync = false)
+    internal static async Task<DaoResult<DataRow>> GetPartByNumber(string partNumber, bool useAsync = false, MySqlConnection? connection = null, MySqlTransaction? transaction = null)
     {
-        return await GetPartByNumberAsync(partNumber);
+        return await GetPartByNumberAsync(partNumber, connection, transaction);
     }
 
     /// <summary>
@@ -506,3 +514,4 @@ internal static class Dao_Part
 }
 
 #endregion
+

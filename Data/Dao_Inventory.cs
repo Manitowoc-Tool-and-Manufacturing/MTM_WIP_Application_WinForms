@@ -19,7 +19,7 @@ public static class Dao_Inventory
     /// </summary>
     /// <param name="useAsync">Whether to execute asynchronously</param>
     /// <returns>DaoResult containing DataTable with all inventory records</returns>
-    public static async Task<DaoResult<DataTable>> GetAllInventoryAsync(bool useAsync = true)
+    public static async Task<DaoResult<DataTable>> GetAllInventoryAsync(bool useAsync = true, MySqlConnection? connection = null, MySqlTransaction? transaction = null)
     {
         Service_DebugTracer.TraceMethodEntry(new Dictionary<string, object>
         {
@@ -33,7 +33,9 @@ public static class Dao_Inventory
                 Model_AppVariables.ConnectionString,
                 "inv_inventory_Get_ByUser",
                 new Dictionary<string, object> { ["p_User"] = "" },
-                null
+                progressHelper: null,
+                connection: connection,
+                transaction: transaction
             );
 
             if (result.IsSuccess && result.Data != null)
@@ -75,7 +77,7 @@ public static class Dao_Inventory
     /// <param name="searchTerm">Partial PartID to search for</param>
     /// <param name="useAsync">Whether to execute asynchronously</param>
     /// <returns>DaoResult containing DataTable with matching inventory records</returns>
-    public static async Task<DaoResult<DataTable>> SearchInventoryAsync(string searchTerm, bool useAsync = true)
+    public static async Task<DaoResult<DataTable>> SearchInventoryAsync(string searchTerm, bool useAsync = true, MySqlConnection? connection = null, MySqlTransaction? transaction = null)
     {
         Service_DebugTracer.TraceMethodEntry(new Dictionary<string, object>
         {
@@ -88,11 +90,11 @@ public static class Dao_Inventory
             if (string.IsNullOrWhiteSpace(searchTerm))
             {
                 // Return all inventory if search term is empty
-                return await GetAllInventoryAsync(useAsync);
+                return await GetAllInventoryAsync(useAsync, connection, transaction);
             }
 
             // Use GetInventoryByPartIdAsync which will match partial PartIDs
-            var result = await GetInventoryByPartIdAsync(searchTerm, useAsync);
+            var result = await GetInventoryByPartIdAsync(searchTerm, useAsync, connection, transaction);
 
             if (result.IsSuccess)
             {
@@ -704,7 +706,9 @@ public static class Dao_Inventory
         }
     }
 
-    public static async Task<DaoResult> FixBatchNumbersAsync()
+    public static async Task<DaoResult> FixBatchNumbersAsync(
+        MySqlConnection? connection = null,
+        MySqlTransaction? transaction = null)
     {
         try
         {

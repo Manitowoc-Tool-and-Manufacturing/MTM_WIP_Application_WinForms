@@ -2,6 +2,7 @@ using System.Data;
 using MTM_Inventory_Application.Helpers;
 using MTM_Inventory_Application.Models;
 using MTM_Inventory_Application.Logging;
+using MySql.Data.MySqlClient;
 
 namespace MTM_Inventory_Application.Data;
 
@@ -11,7 +12,9 @@ internal static class Dao_Operation
 {
     #region Delete
 
-    internal static async Task<DaoResult> DeleteOperation(string operationNumber)
+    internal static async Task<DaoResult> DeleteOperation(string operationNumber,
+        MySqlConnection? connection = null,
+        MySqlTransaction? transaction = null)
     {
         try
         {
@@ -45,7 +48,9 @@ internal static class Dao_Operation
 
     #region Insert
 
-    internal static async Task<DaoResult> InsertOperation(string operationNumber, string user)
+    internal static async Task<DaoResult> InsertOperation(string operationNumber, string user,
+        MySqlConnection? connection = null,
+        MySqlTransaction? transaction = null)
     {
         try
         {
@@ -83,7 +88,9 @@ internal static class Dao_Operation
 
     #region Update
 
-    internal static async Task<DaoResult> UpdateOperation(string oldOperation, string newOperationNumber, string user)
+    internal static async Task<DaoResult> UpdateOperation(string oldOperation, string newOperationNumber, string user,
+        MySqlConnection? connection = null,
+        MySqlTransaction? transaction = null)
     {
         try
         {
@@ -122,7 +129,7 @@ internal static class Dao_Operation
 
     #region Read
 
-    internal static async Task<DaoResult<DataTable>> GetAllOperations()
+    internal static async Task<DaoResult<DataTable>> GetAllOperations(MySqlConnection? connection = null, MySqlTransaction? transaction = null)
     {
         try
         {
@@ -150,11 +157,11 @@ internal static class Dao_Operation
         }
     }
 
-    internal static async Task<DaoResult<DataRow>> GetOperationByNumber(string operationNumber)
+    internal static async Task<DaoResult<DataRow>> GetOperationByNumber(string operationNumber, MySqlConnection? connection = null, MySqlTransaction? transaction = null)
     {
         try
         {
-            var allOperationsResult = await GetAllOperations();
+            var allOperationsResult = await GetAllOperations(connection, transaction);
             if (!allOperationsResult.IsSuccess)
             {
                 return DaoResult<DataRow>.Failure(allOperationsResult.ErrorMessage, allOperationsResult.Exception);
@@ -177,7 +184,7 @@ internal static class Dao_Operation
         }
     }
 
-    internal static async Task<DaoResult<bool>> OperationExists(string operationNumber)
+    internal static async Task<DaoResult<bool>> OperationExists(string operationNumber, MySqlConnection? connection = null, MySqlTransaction? transaction = null)
     {
         try
         {
@@ -187,7 +194,9 @@ internal static class Dao_Operation
                 Model_AppVariables.ConnectionString,
                 "md_operation_numbers_Exists_ByOperation",
                 parameters,
-                null // No progress helper for this method
+                progressHelper: null,
+                connection: connection,
+                transaction: transaction
             );
                 
             if (result.IsSuccess && result.Data != null)
@@ -212,3 +221,4 @@ internal static class Dao_Operation
 }
 
 #endregion
+

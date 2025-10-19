@@ -12,7 +12,7 @@ namespace MTM_Inventory_Application.Tests.Integration
     /// and properly roll back on failures without leaving partial updates.
     /// </summary>
     [TestClass]
-    public class TransactionManagement_Tests
+    public class TransactionManagement_Tests : BaseIntegrationTest
     {
         #region Test Context
 
@@ -40,11 +40,11 @@ namespace MTM_Inventory_Application.Tests.Integration
 
             var addResult = await Dao_Inventory.AddInventoryItemAsync(
                 partId, originalLocation, operation, originalQuantity, "Standard", 
-                "TxnTestUser", batchNumber, "Transaction test", true);
+                "TxnTestUser", batchNumber, "Transaction test", true, connection: GetTestConnection(), transaction: GetTestTransaction());
             Assert.IsTrue(addResult.IsSuccess, "Failed to add test inventory item");
 
             // Get baseline inventory state
-            var baselineSearch = await Dao_Inventory.GetInventoryByPartIdAndOperationAsync(partId, operation);
+            var baselineSearch = await Dao_Inventory.GetInventoryByPartIdAndOperationAsync(partId, operation, connection: GetTestConnection(), transaction: GetTestTransaction());
             Assert.IsTrue(baselineSearch.IsSuccess, "Failed to get baseline inventory state");
             var baselineRowCount = baselineSearch.Data?.Rows.Count ?? 0;
 
@@ -56,7 +56,7 @@ namespace MTM_Inventory_Application.Tests.Integration
             // Act - Attempt transfer to invalid location (should fail mid-operation)
             var transferResult = await Dao_Inventory.TransferInventoryQuantityAsync(
                 batchNumber, partId, operation, transferQuantity, originalQuantity, 
-                invalidLocation, "TxnTestUser");
+                invalidLocation, "TxnTestUser", connection: GetTestConnection(), transaction: GetTestTransaction());
 
             // Assert - Transfer should fail
             Assert.IsFalse(transferResult.IsSuccess, 
@@ -64,7 +64,7 @@ namespace MTM_Inventory_Application.Tests.Integration
             Console.WriteLine($"[Transaction Rollback Test] Transfer failed as expected: {transferResult.ErrorMessage}");
 
             // Verify complete rollback - no partial updates
-            var postFailureSearch = await Dao_Inventory.GetInventoryByPartIdAndOperationAsync(partId, operation);
+            var postFailureSearch = await Dao_Inventory.GetInventoryByPartIdAndOperationAsync(partId, operation, connection: GetTestConnection(), transaction: GetTestTransaction());
             Assert.IsTrue(postFailureSearch.IsSuccess, "Failed to get post-failure inventory state");
 
             var postFailureRowCount = postFailureSearch.Data?.Rows.Count ?? 0;
@@ -131,7 +131,7 @@ namespace MTM_Inventory_Application.Tests.Integration
 
             var addResult = await Dao_Inventory.AddInventoryItemAsync(
                 partId, originalLocation, operation, originalQuantity, "Standard",
-                "TxnTestUser", batchNumber, "Transaction test", true);
+                "TxnTestUser", batchNumber, "Transaction test", true, connection: GetTestConnection(), transaction: GetTestTransaction());
             Assert.IsTrue(addResult.IsSuccess, "Failed to add test inventory item");
 
             Console.WriteLine($"[Transaction Commit Test] Initial state:");
@@ -142,7 +142,7 @@ namespace MTM_Inventory_Application.Tests.Integration
             // Act - Perform valid transfer
             var transferResult = await Dao_Inventory.TransferInventoryQuantityAsync(
                 batchNumber, partId, operation, transferQuantity, originalQuantity,
-                newLocation, "TxnTestUser");
+                newLocation, "TxnTestUser", connection: GetTestConnection(), transaction: GetTestTransaction());
 
             // Assert - Transfer should succeed
             Assert.IsTrue(transferResult.IsSuccess,
@@ -150,7 +150,7 @@ namespace MTM_Inventory_Application.Tests.Integration
             Console.WriteLine($"[Transaction Commit Test] ✓ Transfer succeeded");
 
             // Verify atomic commit - both locations updated correctly
-            var postTransferSearch = await Dao_Inventory.GetInventoryByPartIdAndOperationAsync(partId, operation);
+            var postTransferSearch = await Dao_Inventory.GetInventoryByPartIdAndOperationAsync(partId, operation, connection: GetTestConnection(), transaction: GetTestTransaction());
             Assert.IsTrue(postTransferSearch.IsSuccess, "Failed to get post-transfer inventory state");
 
             bool foundAtOriginalLocation = false;
@@ -218,7 +218,7 @@ namespace MTM_Inventory_Application.Tests.Integration
 
             var addResult = await Dao_Inventory.AddInventoryItemAsync(
                 partId, originalLocation, operation, originalQuantity, "Standard",
-                "TxnTestUser", batchNumber, "Concurrent test", true);
+                "TxnTestUser", batchNumber, "Concurrent test", true, connection: GetTestConnection(), transaction: GetTestTransaction());
             Assert.IsTrue(addResult.IsSuccess, "Failed to add test inventory item");
 
             Console.WriteLine($"[Concurrent Transfer Test] Initial quantity: {originalQuantity}");
@@ -227,15 +227,15 @@ namespace MTM_Inventory_Application.Tests.Integration
             var transferTasks = new[]
             {
                 Dao_Inventory.TransferInventoryQuantityAsync(
-                    batchNumber, partId, operation, 10, originalQuantity, "SHIPPING", "TxnUser1"),
+                    batchNumber, partId, operation, 10, originalQuantity, "SHIPPING", "TxnUser1", connection: GetTestConnection(), transaction: GetTestTransaction()),
                 Dao_Inventory.TransferInventoryQuantityAsync(
-                    batchNumber, partId, operation, 10, originalQuantity, "RECEIVING", "TxnUser2"),
+                    batchNumber, partId, operation, 10, originalQuantity, "RECEIVING", "TxnUser2", connection: GetTestConnection(), transaction: GetTestTransaction()),
                 Dao_Inventory.TransferInventoryQuantityAsync(
-                    batchNumber, partId, operation, 10, originalQuantity, "STORAGE", "TxnUser3"),
+                    batchNumber, partId, operation, 10, originalQuantity, "STORAGE", "TxnUser3", connection: GetTestConnection(), transaction: GetTestTransaction()),
                 Dao_Inventory.TransferInventoryQuantityAsync(
-                    batchNumber, partId, operation, 10, originalQuantity, "INSPECTION", "TxnUser4"),
+                    batchNumber, partId, operation, 10, originalQuantity, "INSPECTION", "TxnUser4", connection: GetTestConnection(), transaction: GetTestTransaction()),
                 Dao_Inventory.TransferInventoryQuantityAsync(
-                    batchNumber, partId, operation, 10, originalQuantity, "HOLD", "TxnUser5")
+                    batchNumber, partId, operation, 10, originalQuantity, "HOLD", "TxnUser5", connection: GetTestConnection(), transaction: GetTestTransaction())
             };
 
             var results = await Task.WhenAll(transferTasks);
@@ -256,7 +256,7 @@ namespace MTM_Inventory_Application.Tests.Integration
             Console.WriteLine($"  Failed Transfers: {failureCount}");
 
             // Verify total quantity remains consistent
-            var finalSearch = await Dao_Inventory.GetInventoryByPartIdAndOperationAsync(partId, operation);
+            var finalSearch = await Dao_Inventory.GetInventoryByPartIdAndOperationAsync(partId, operation, connection: GetTestConnection(), transaction: GetTestTransaction());
             Assert.IsTrue(finalSearch.IsSuccess, "Failed to get final inventory state");
 
             int totalQuantity = 0;

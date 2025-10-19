@@ -24,7 +24,7 @@ internal static class Dao_ErrorLog
 
     #region Query Methods
 
-    internal static async Task<List<(string MethodName, string ErrorMessage)>> GetUniqueErrorsAsync()
+    internal static async Task<List<(string MethodName, string ErrorMessage)>> GetUniqueErrorsAsync(MySqlConnection? connection = null, MySqlTransaction? transaction = null)
     {
         List<(string MethodName, string ErrorMessage)> uniqueErrors = new();
         try
@@ -32,7 +32,10 @@ internal static class Dao_ErrorLog
             var dataResult = await Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync(
                 Model_AppVariables.ConnectionString,
                 "log_error_Get_Unique",
-                null // No parameters needed
+                null, // No parameters needed
+                progressHelper: null,
+                connection: connection,
+                transaction: transaction
             );
 
             if (dataResult.IsSuccess && dataResult.Data != null)
@@ -62,29 +65,38 @@ internal static class Dao_ErrorLog
         return uniqueErrors;
     }
 
-    internal static async Task<DaoResult<DataTable>> GetAllErrorsAsync() =>
-        await GetErrorsByStoredProcedureAsync("log_error_Get_All", null);
+    internal static async Task<DaoResult<DataTable>> GetAllErrorsAsync(MySqlConnection? connection = null, MySqlTransaction? transaction = null) =>
+        await GetErrorsByStoredProcedureAsync("log_error_Get_All", null, connection, transaction);
 
-    internal static async Task<DaoResult<DataTable>> GetErrorsByUserAsync(string user) =>
+    internal static async Task<DaoResult<DataTable>> GetErrorsByUserAsync(string user, MySqlConnection? connection = null, MySqlTransaction? transaction = null) =>
         await GetErrorsByStoredProcedureAsync(
             "log_error_Get_ByUser",
-            new Dictionary<string, object> { ["User"] = user });
+            new Dictionary<string, object> { ["User"] = user },
+            connection,
+            transaction);
 
     internal static async Task<DaoResult<DataTable>>
-        GetErrorsByDateRangeAsync(DateTime start, DateTime end) =>
+        GetErrorsByDateRangeAsync(DateTime start, DateTime end, MySqlConnection? connection = null, MySqlTransaction? transaction = null) =>
         await GetErrorsByStoredProcedureAsync(
             "log_error_Get_ByDateRange",
-            new Dictionary<string, object> { ["StartDate"] = start, ["EndDate"] = end });
+            new Dictionary<string, object> { ["StartDate"] = start, ["EndDate"] = end },
+            connection,
+            transaction);
 
     private static async Task<DaoResult<DataTable>> GetErrorsByStoredProcedureAsync(string procedureName, 
-        Dictionary<string, object>? parameters)
+        Dictionary<string, object>? parameters,
+        MySqlConnection? connection = null,
+        MySqlTransaction? transaction = null)
     {
         try
         {
             var dataResult = await Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync(
                 Model_AppVariables.ConnectionString,
                 procedureName,
-                parameters
+                parameters,
+                progressHelper: null,
+                connection: connection,
+                transaction: transaction
             );
 
             if (dataResult.IsSuccess && dataResult.Data != null)
@@ -110,22 +122,27 @@ internal static class Dao_ErrorLog
 
     #region Delete Methods
 
-    internal static async Task<DaoResult> DeleteErrorByIdAsync(int id) =>
+    internal static async Task<DaoResult> DeleteErrorByIdAsync(int id, MySqlConnection? connection = null, MySqlTransaction? transaction = null) =>
         await ExecuteStoredProcedureNonQueryAsync("log_error_Delete_ById",
-            new Dictionary<string, object> { ["Id"] = id });
+            new Dictionary<string, object> { ["Id"] = id }, connection, transaction);
 
-    internal static async Task<DaoResult> DeleteAllErrorsAsync() =>
-        await ExecuteStoredProcedureNonQueryAsync("log_error_Delete_All", null);
+    internal static async Task<DaoResult> DeleteAllErrorsAsync(MySqlConnection? connection = null, MySqlTransaction? transaction = null) =>
+        await ExecuteStoredProcedureNonQueryAsync("log_error_Delete_All", null, connection, transaction);
 
     private static async Task<DaoResult> ExecuteStoredProcedureNonQueryAsync(string procedureName, 
-        Dictionary<string, object>? parameters)
+        Dictionary<string, object>? parameters,
+        MySqlConnection? connection = null,
+        MySqlTransaction? transaction = null)
     {
         try
         {
             var result = await Helper_Database_StoredProcedure.ExecuteNonQueryWithStatusAsync(
                 Model_AppVariables.ConnectionString,
                 procedureName,
-                parameters
+                parameters,
+                progressHelper: null,
+                connection: connection,
+                transaction: transaction
             );
 
             if (!result.IsSuccess)
@@ -284,7 +301,9 @@ internal static class Dao_ErrorLog
         Exception ex,
         [System.Runtime.CompilerServices.CallerMemberName]
         string callerName = "",
-        string controlName = "")
+        string controlName = "",
+        MySqlConnection? connection = null,
+        MySqlTransaction? transaction = null)
     {
         try
         {
@@ -321,7 +340,9 @@ internal static class Dao_ErrorLog
                 ex.StackTrace,
                 "",
                 callerName,
-                controlName
+                controlName,
+                connection,
+                transaction
             );
 
             if (ShouldShowErrorMessage(message))
@@ -356,7 +377,9 @@ internal static class Dao_ErrorLog
         string? stackTrace,
         string moduleName,
         string methodName,
-        string? additionalInfo)
+        string? additionalInfo,
+        MySqlConnection? connection = null,
+        MySqlTransaction? transaction = null)
     {
         try
         {
@@ -379,7 +402,10 @@ internal static class Dao_ErrorLog
             var result = await Helper_Database_StoredProcedure.ExecuteNonQueryWithStatusAsync(
                 Model_AppVariables.ConnectionString,
                 "log_error_Add_Error",
-                parameters
+                parameters,
+                progressHelper: null,
+                connection: connection,
+                transaction: transaction
             );
 
             if (!result.IsSuccess)

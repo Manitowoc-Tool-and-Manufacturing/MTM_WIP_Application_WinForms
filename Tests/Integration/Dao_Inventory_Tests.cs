@@ -1,4 +1,4 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using MTM_Inventory_Application.Data;
 using MTM_Inventory_Application.Helpers;
 using MTM_Inventory_Application.Models;
@@ -63,7 +63,7 @@ public class Dao_Inventory_Tests : BaseIntegrationTest
         );
 
         // Act
-        var result = await Dao_Inventory.GetInventoryByPartIdAsync(partId);
+        var result = await Dao_Inventory.GetInventoryByPartIdAsync(partId, connection: GetTestConnection(), transaction: GetTestTransaction());
 
         // Assert
         Assert.IsTrue(result.IsSuccess, $"Expected success, got failure: {result.ErrorMessage}");
@@ -93,7 +93,7 @@ public class Dao_Inventory_Tests : BaseIntegrationTest
         var nonExistentPartId = "NONEXISTENT-PART-" + Guid.NewGuid().ToString();
 
         // Act
-        var result = await Dao_Inventory.GetInventoryByPartIdAsync(nonExistentPartId);
+        var result = await Dao_Inventory.GetInventoryByPartIdAsync(nonExistentPartId, connection: GetTestConnection(), transaction: GetTestTransaction());
 
         // Assert
         Assert.IsTrue(result.IsSuccess, $"Expected success even with no results, got failure: {result.ErrorMessage}");
@@ -139,7 +139,7 @@ public class Dao_Inventory_Tests : BaseIntegrationTest
         );
 
         // Act
-        var result = await Dao_Inventory.GetInventoryByPartIdAndOperationAsync(partId, operation);
+        var result = await Dao_Inventory.GetInventoryByPartIdAndOperationAsync(partId, operation, connection: GetTestConnection(), transaction: GetTestTransaction());
 
         // Assert
         Assert.IsTrue(result.IsSuccess, $"Expected success, got failure: {result.ErrorMessage}");
@@ -176,14 +176,15 @@ public class Dao_Inventory_Tests : BaseIntegrationTest
 
         // Act
         var result = await Dao_Inventory.AddInventoryItemAsync(
-            partId, location, operation, quantity, itemType, user, batchNumber, notes);
+            partId, location, operation, quantity, itemType, user, batchNumber, notes,
+            connection: GetTestConnection(), transaction: GetTestTransaction());
 
         // Assert
         Assert.IsTrue(result.IsSuccess, $"Expected success, got failure: {result.ErrorMessage}");
         Assert.IsTrue(result.Data > 0, "Expected positive inventory ID for new record");
         
         // Verify the record was inserted by searching for it
-        var searchResult = await Dao_Inventory.GetInventoryByPartIdAsync(partId);
+        var searchResult = await Dao_Inventory.GetInventoryByPartIdAsync(partId, connection: GetTestConnection(), transaction: GetTestTransaction());
         Assert.IsTrue(searchResult.IsSuccess, "Expected to find newly added inventory");
         Assert.IsNotNull(searchResult.Data, "Expected non-null DataTable");
         Assert.IsTrue(searchResult.Data!.Rows.Count > 0, "Expected at least one record");
@@ -250,7 +251,8 @@ public class Dao_Inventory_Tests : BaseIntegrationTest
 
         // Act
         var result = await Dao_Inventory.AddInventoryItemAsync(
-            partId, location, operation, 1, "Standard", "TestUser", batchNumber, "Test notes", true);
+            partId, location, operation, 1, "Standard", "TestUser", batchNumber, "Test notes", true,
+            connection: GetTestConnection(), transaction: GetTestTransaction());
 
         // Assert
         Assert.IsFalse(result.IsSuccess, "Expected failure with null PartID");
@@ -275,19 +277,21 @@ public class Dao_Inventory_Tests : BaseIntegrationTest
         var location = "FLOOR";
         
         var addResult = await Dao_Inventory.AddInventoryItemAsync(
-            partId, location, operation, 1, "Standard", "TestUser", batchNumber, "Test notes", true);
+            partId, location, operation, 1, "Standard", "TestUser", batchNumber, "Test notes", true,
+            connection: GetTestConnection(), transaction: GetTestTransaction());
         Assert.IsTrue(addResult.IsSuccess, "Failed to add test inventory item");
 
         // Act
         var removeResult = await Dao_Inventory.RemoveInventoryItemAsync(
-            partId, location, operation, 1, "Standard", "TestUser", batchNumber, "Removal test", true);
+            partId, location, operation, 1, "Standard", "TestUser", batchNumber, "Removal test", true,
+            connection: GetTestConnection(), transaction: GetTestTransaction());
 
         // Assert
         Assert.IsTrue(removeResult.IsSuccess, $"Expected success, got failure: {removeResult.ErrorMessage}");
         Assert.AreEqual(0, removeResult.Data.Status, "Expected status 0 for successful removal");
         
         // Verify the record no longer appears in search
-        var searchResult = await Dao_Inventory.GetInventoryByPartIdAsync(partId);
+        var searchResult = await Dao_Inventory.GetInventoryByPartIdAsync(partId, connection: GetTestConnection(), transaction: GetTestTransaction());
         Assert.IsTrue(searchResult.IsSuccess, "Search operation should succeed");
         
         bool recordStillExists = false;
@@ -316,7 +320,8 @@ public class Dao_Inventory_Tests : BaseIntegrationTest
 
         // Act
         var result = await Dao_Inventory.RemoveInventoryItemAsync(
-            nonExistentPartId, "FLOOR", "100", 1, "Standard", "TestUser", "BATCH-999", "Test removal", true);
+            nonExistentPartId, "FLOOR", "100", 1, "Standard", "TestUser", "BATCH-999", "Test removal", true,
+            connection: GetTestConnection(), transaction: GetTestTransaction());
 
         // Assert - Stored procedure may return success with status > 0, or failure
         // Either is acceptable as long as no exception occurs
@@ -341,7 +346,8 @@ public class Dao_Inventory_Tests : BaseIntegrationTest
         var newLocation = "SHIPPING";
         
         var addResult = await Dao_Inventory.AddInventoryItemAsync(
-            partId, originalLocation, operation, 1, "Standard", "TestUser", batchNumber, "Test notes", true);
+            partId, originalLocation, operation, 1, "Standard", "TestUser", batchNumber, "Test notes", true,
+            connection: GetTestConnection(), transaction: GetTestTransaction());
         Assert.IsTrue(addResult.IsSuccess, "Failed to add test inventory item");
 
         // Act
@@ -352,7 +358,7 @@ public class Dao_Inventory_Tests : BaseIntegrationTest
         Assert.IsTrue(transferResult.IsSuccess, $"Expected success, got failure: {transferResult.ErrorMessage}");
         
         // Verify the record now shows new location
-        var searchResult = await Dao_Inventory.GetInventoryByPartIdAndOperationAsync(partId, operation);
+        var searchResult = await Dao_Inventory.GetInventoryByPartIdAndOperationAsync(partId, operation, connection: GetTestConnection(), transaction: GetTestTransaction());
         Assert.IsTrue(searchResult.IsSuccess, "Search operation should succeed");
         Assert.IsTrue(searchResult.Data?.Rows.Count > 0, "Expected to find transferred inventory");
         
@@ -386,12 +392,13 @@ public class Dao_Inventory_Tests : BaseIntegrationTest
         var originalQuantity = 10;
         
         var addResult = await Dao_Inventory.AddInventoryItemAsync(
-            partId, originalLocation, operation, originalQuantity, "Standard", "TestUser", batchNumber, "Test notes", true);
+            partId, originalLocation, operation, originalQuantity, "Standard", "TestUser", batchNumber, "Test notes", true,
+            connection: GetTestConnection(), transaction: GetTestTransaction());
         Assert.IsTrue(addResult.IsSuccess, "Failed to add test inventory item");
 
         // Act
         var transferResult = await Dao_Inventory.TransferInventoryQuantityAsync(
-            batchNumber, partId, operation, transferQuantity, originalQuantity, newLocation, "TestUser");
+            batchNumber, partId, operation, transferQuantity, originalQuantity, newLocation, "TestUser", connection: GetTestConnection(), transaction: GetTestTransaction());
 
         // Assert
         Assert.IsTrue(transferResult.IsSuccess, $"Expected success, got failure: {transferResult.ErrorMessage}");
@@ -414,23 +421,24 @@ public class Dao_Inventory_Tests : BaseIntegrationTest
         var originalQuantity = 10;
         
         var addResult = await Dao_Inventory.AddInventoryItemAsync(
-            partId, originalLocation, operation, originalQuantity, "Standard", "TestUser", batchNumber, "Test notes", true);
+            partId, originalLocation, operation, originalQuantity, "Standard", "TestUser", batchNumber, "Test notes", true,
+            connection: GetTestConnection(), transaction: GetTestTransaction());
         Assert.IsTrue(addResult.IsSuccess, "Failed to add test inventory item");
         
         // Get initial inventory state
-        var initialSearchResult = await Dao_Inventory.GetInventoryByPartIdAndOperationAsync(partId, operation);
+        var initialSearchResult = await Dao_Inventory.GetInventoryByPartIdAndOperationAsync(partId, operation, connection: GetTestConnection(), transaction: GetTestTransaction());
         Assert.IsTrue(initialSearchResult.IsSuccess, "Failed to get initial inventory state");
         var initialRowCount = initialSearchResult.Data?.Rows.Count ?? 0;
 
         // Act - Attempt transfer with invalid location (should fail)
         var transferResult = await Dao_Inventory.TransferInventoryQuantityAsync(
-            batchNumber, partId, operation, transferQuantity, originalQuantity, invalidLocation, "TestUser");
+            batchNumber, partId, operation, transferQuantity, originalQuantity, invalidLocation, "TestUser", connection: GetTestConnection(), transaction: GetTestTransaction());
 
         // Assert - Transfer should fail
         Assert.IsFalse(transferResult.IsSuccess, "Expected transfer to fail with invalid location");
         
         // Verify rollback - inventory should remain unchanged
-        var postFailureSearchResult = await Dao_Inventory.GetInventoryByPartIdAndOperationAsync(partId, operation);
+        var postFailureSearchResult = await Dao_Inventory.GetInventoryByPartIdAndOperationAsync(partId, operation, connection: GetTestConnection(), transaction: GetTestTransaction());
         Assert.IsTrue(postFailureSearchResult.IsSuccess, "Failed to get post-failure inventory state");
         
         // Verify no partial updates occurred
@@ -485,7 +493,7 @@ public class Dao_Inventory_Tests : BaseIntegrationTest
     public async Task FixBatchNumbersAsync_Execution_CompletesSuccessfully()
     {
         // Act
-        var result = await Dao_Inventory.FixBatchNumbersAsync();
+        var result = await Dao_Inventory.FixBatchNumbersAsync(connection: GetTestConnection(), transaction: GetTestTransaction());
 
         // Assert
         Assert.IsTrue(result.IsSuccess, $"Expected success, got failure: {result.ErrorMessage}");

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using MTM_Inventory_Application.Data;
 using MTM_Inventory_Application.Helpers;
 using MTM_Inventory_Application.Models;
 
@@ -24,7 +25,7 @@ public class Helper_Database_StoredProcedure_Tests : BaseIntegrationTest
     public async Task ExecuteDataTableWithStatusAsync_WithP_Prefix_AppliesCorrectly()
     {
         // Arrange - Get a valid test user from the system
-        var usersResult = await MTM_Inventory_Application.Data.Dao_System.System_UserAccessTypeAsync();
+        var usersResult = await Dao_System.System_UserAccessTypeAsync(connection: GetTestConnection(), transaction: GetTestTransaction());
         AssertSuccessWithData(usersResult);
         var testUser = usersResult.Data![0].User;
 
@@ -51,7 +52,7 @@ public class Helper_Database_StoredProcedure_Tests : BaseIntegrationTest
     public async Task ExecuteScalarWithStatusAsync_WithP_Prefix_AppliesCorrectly()
     {
         // Arrange - Get a valid test user from the system
-        var usersResult = await MTM_Inventory_Application.Data.Dao_System.System_UserAccessTypeAsync();
+        var usersResult = await Dao_System.System_UserAccessTypeAsync(connection: GetTestConnection(), transaction: GetTestTransaction());
         AssertSuccessWithData(usersResult);
         var testUser = usersResult.Data![0].User;
 
@@ -127,7 +128,7 @@ public class Helper_Database_StoredProcedure_Tests : BaseIntegrationTest
     public async Task ExecuteDataTableWithStatusAsync_Success_ReturnsDaoResultSuccess()
     {
         // Arrange - Get a valid test user from the system
-        var usersResult = await MTM_Inventory_Application.Data.Dao_System.System_UserAccessTypeAsync();
+        var usersResult = await Dao_System.System_UserAccessTypeAsync(connection: GetTestConnection(), transaction: GetTestTransaction());
         AssertSuccessWithData(usersResult);
         var testUser = usersResult.Data![0].User;
 
@@ -140,7 +141,7 @@ public class Helper_Database_StoredProcedure_Tests : BaseIntegrationTest
         var result = await Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync(
             GetTestConnectionString(),
             "sys_user_GetByName",
-            parameters);
+            parameters, connection: GetTestConnection(), transaction: GetTestTransaction());
 
         // Assert
         Assert.IsTrue(result.IsSuccess, "IsSuccess should be true for valid operation");
@@ -167,7 +168,7 @@ public class Helper_Database_StoredProcedure_Tests : BaseIntegrationTest
         var result = await Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync(
             invalidConnectionString,
             "sys_user_GetByName",
-            parameters);
+            parameters, connection: GetTestConnection(), transaction: GetTestTransaction());
 
         // Assert
         Assert.IsFalse(result.IsSuccess, "IsSuccess should be false for connection failure");
@@ -189,7 +190,7 @@ public class Helper_Database_StoredProcedure_Tests : BaseIntegrationTest
         var result = await Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync(
             GetTestConnectionString(),
             "sys_theme_GetAll", // Procedure that takes no input parameters
-            parameters: null);
+            parameters: null, connection: GetTestConnection(), transaction: GetTestTransaction());
 
         // Assert
         AssertSuccessWithData(result);
@@ -209,7 +210,7 @@ public class Helper_Database_StoredProcedure_Tests : BaseIntegrationTest
         var result = await Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync(
             GetTestConnectionString(),
             "sys_theme_GetAll",
-            parameters);
+            parameters, connection: GetTestConnection(), transaction: GetTestTransaction());
 
         // Assert
         AssertSuccessWithData(result);
@@ -227,7 +228,7 @@ public class Helper_Database_StoredProcedure_Tests : BaseIntegrationTest
     public async Task ExecuteDataTableWithStatusAsync_AfterExecution_ConnectionDisposed()
     {
         // Arrange - Get a valid test user from the system
-        var usersResult = await MTM_Inventory_Application.Data.Dao_System.System_UserAccessTypeAsync();
+        var usersResult = await Dao_System.System_UserAccessTypeAsync(connection: GetTestConnection(), transaction: GetTestTransaction());
         AssertSuccessWithData(usersResult);
         var testUser = usersResult.Data![0].User;
 
@@ -240,13 +241,13 @@ public class Helper_Database_StoredProcedure_Tests : BaseIntegrationTest
         var result1 = await Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync(
             GetTestConnectionString(),
             "sys_user_GetByName",
-            parameters);
+            parameters, connection: GetTestConnection(), transaction: GetTestTransaction());
 
         // Act - Execute again immediately to verify connection pool healthy
         var result2 = await Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync(
             GetTestConnectionString(),
             "sys_user_GetByName",
-            parameters);
+            parameters, connection: GetTestConnection(), transaction: GetTestTransaction());
 
         // Assert - Both calls should succeed (connection properly released)
         AssertSuccessWithData(result1);
@@ -260,7 +261,7 @@ public class Helper_Database_StoredProcedure_Tests : BaseIntegrationTest
     public async Task ExecuteDataTableWithStatusAsync_ConcurrentOperations_ShareConnectionPool()
     {
         // Arrange - Get a valid test user from the system
-        var usersResult = await MTM_Inventory_Application.Data.Dao_System.System_UserAccessTypeAsync();
+        var usersResult = await Dao_System.System_UserAccessTypeAsync(connection: GetTestConnection(), transaction: GetTestTransaction());
         AssertSuccessWithData(usersResult);
         var testUser = usersResult.Data![0].User;
 
@@ -299,7 +300,7 @@ public class Helper_Database_StoredProcedure_Tests : BaseIntegrationTest
     public async Task ExecuteDataTableWithStatusAsync_CompletesWithinTimeout()
     {
         // Arrange - Get a valid test user from the system
-        var usersResult = await MTM_Inventory_Application.Data.Dao_System.System_UserAccessTypeAsync();
+        var usersResult = await Dao_System.System_UserAccessTypeAsync(connection: GetTestConnection(), transaction: GetTestTransaction());
         AssertSuccessWithData(usersResult);
         var testUser = usersResult.Data![0].User;
 
@@ -314,7 +315,7 @@ public class Helper_Database_StoredProcedure_Tests : BaseIntegrationTest
         var result = await Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync(
             GetTestConnectionString(),
             "sys_user_GetByName",
-            parameters);
+            parameters, connection: GetTestConnection(), transaction: GetTestTransaction());
 
         var elapsed = DateTime.UtcNow - startTime;
 

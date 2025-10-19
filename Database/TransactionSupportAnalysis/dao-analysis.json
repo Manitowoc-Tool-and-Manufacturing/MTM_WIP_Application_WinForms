@@ -1,0 +1,2220 @@
+{
+  "Dao_User": {
+    "FilePath": "\\Data\\Dao_User.cs",
+    "NeedsUpdate": true,
+    "MethodsNeedingUpdate": [
+      {
+        "LineNumber": 379,
+        "NeedsUpdate": true,
+        "Signature": "internal static async Task<DaoResult> SetDatabaseAsync(string user, string value)",
+        "CallsHelper": true,
+        "HelperCalls": [
+          {
+            "NeedsConnectionArg": true,
+            "NeedsTransactionArg": true,
+            "CallText": "",
+            "LineNumber": 468,
+            "MethodName": "ExecuteDataTableWithStatusAsync"
+          }
+        ],
+        "HasConnectionParam": false,
+        "Name": "SetDatabaseAsync",
+        "HasTransactionParam": false
+      },
+      {
+        "LineNumber": 434,
+        "NeedsUpdate": true,
+        "Signature": "internal static async Task<DaoResult> SetWipServerPortAsync(string user, string value)",
+        "CallsHelper": true,
+        "HelperCalls": [
+          {
+            "NeedsConnectionArg": true,
+            "NeedsTransactionArg": true,
+            "CallText": "",
+            "LineNumber": 468,
+            "MethodName": "ExecuteDataTableWithStatusAsync"
+          },
+          {
+            "NeedsConnectionArg": true,
+            "NeedsTransactionArg": true,
+            "CallText": "",
+            "LineNumber": 508,
+            "MethodName": "ExecuteDataTableWithStatusAsync"
+          }
+        ],
+        "HasConnectionParam": false,
+        "Name": "SetWipServerPortAsync",
+        "HasTransactionParam": false
+      },
+      {
+        "LineNumber": 565,
+        "NeedsUpdate": true,
+        "Signature": "public static async Task<DaoResult> SetSettingsJsonAsync(string userId, string themeJson)",
+        "CallsHelper": true,
+        "HelperCalls": [
+          {
+            "NeedsConnectionArg": true,
+            "NeedsTransactionArg": true,
+            "CallText": "",
+            "LineNumber": 578,
+            "MethodName": "ExecuteNonQueryWithStatusAsync"
+          },
+          {
+            "NeedsConnectionArg": true,
+            "NeedsTransactionArg": true,
+            "CallText": "",
+            "LineNumber": 625,
+            "MethodName": "ExecuteNonQueryWithStatusAsync"
+          },
+          {
+            "NeedsConnectionArg": true,
+            "NeedsTransactionArg": true,
+            "CallText": "",
+            "LineNumber": 663,
+            "MethodName": "ExecuteDataTableWithStatusAsync"
+          }
+        ],
+        "HasConnectionParam": false,
+        "Name": "SetSettingsJsonAsync",
+        "HasTransactionParam": false
+      },
+      {
+        "LineNumber": 611,
+        "NeedsUpdate": true,
+        "Signature": "public static async Task<DaoResult> SetGridViewSettingsJsonAsync(string userId, string dgvName, string settingsJson)",
+        "CallsHelper": true,
+        "HelperCalls": [
+          {
+            "NeedsConnectionArg": true,
+            "NeedsTransactionArg": true,
+            "CallText": "",
+            "LineNumber": 625,
+            "MethodName": "ExecuteNonQueryWithStatusAsync"
+          },
+          {
+            "NeedsConnectionArg": true,
+            "NeedsTransactionArg": true,
+            "CallText": "",
+            "LineNumber": 663,
+            "MethodName": "ExecuteDataTableWithStatusAsync"
+          },
+          {
+            "NeedsConnectionArg": true,
+            "NeedsTransactionArg": true,
+            "CallText": "",
+            "LineNumber": 700,
+            "MethodName": "ExecuteNonQueryWithStatusAsync"
+          }
+        ],
+        "HasConnectionParam": false,
+        "Name": "SetGridViewSettingsJsonAsync",
+        "HasTransactionParam": false
+      },
+      {
+        "LineNumber": 735,
+        "NeedsUpdate": true,
+        "Signature": "internal static async Task<DaoResult> DeleteUserSettingsAsync(string userName)",
+        "CallsHelper": true,
+        "HelperCalls": [
+          {
+            "NeedsConnectionArg": true,
+            "NeedsTransactionArg": true,
+            "CallText": "",
+            "LineNumber": 742,
+            "MethodName": "ExecuteNonQueryWithStatusAsync"
+          },
+          {
+            "NeedsConnectionArg": true,
+            "NeedsTransactionArg": true,
+            "CallText": "",
+            "LineNumber": 787,
+            "MethodName": "ExecuteNonQueryWithStatusAsync"
+          }
+        ],
+        "HasConnectionParam": false,
+        "Name": "DeleteUserSettingsAsync",
+        "HasTransactionParam": false
+      },
+      {
+        "LineNumber": 770,
+        "NeedsUpdate": true,
+        "Signature": "internal static async Task<DaoResult> CreateUserAsync(\n        string user, string fullName, string shift, bool vitsUser, string pin,\n        string lastShownVersion, string hideChangeLog, string themeName, int themeFontSize,\n        string visualUserName, string visualPassword, string wipServerAddress, string database,\n        string wipServerPort)",
+        "CallsHelper": true,
+        "HelperCalls": [
+          {
+            "NeedsConnectionArg": true,
+            "NeedsTransactionArg": true,
+            "CallText": "",
+            "LineNumber": 787,
+            "MethodName": "ExecuteNonQueryWithStatusAsync"
+          },
+          {
+            "NeedsConnectionArg": true,
+            "NeedsTransactionArg": true,
+            "CallText": "",
+            "LineNumber": 849,
+            "MethodName": "ExecuteNonQueryWithStatusAsync"
+          }
+        ],
+        "HasConnectionParam": false,
+        "Name": "CreateUserAsync",
+        "HasTransactionParam": false
+      },
+      {
+        "LineNumber": 831,
+        "NeedsUpdate": true,
+        "Signature": "internal static async Task<DaoResult> UpdateUserAsync(\n        string user,\n        string fullName,\n        string shift,\n        string pin,\n        string visualUserName,\n        string visualPassword)",
+        "CallsHelper": true,
+        "HelperCalls": [
+          {
+            "NeedsConnectionArg": true,
+            "NeedsTransactionArg": true,
+            "CallText": "",
+            "LineNumber": 849,
+            "MethodName": "ExecuteNonQueryWithStatusAsync"
+          },
+          {
+            "NeedsConnectionArg": true,
+            "NeedsTransactionArg": true,
+            "CallText": "",
+            "LineNumber": 892,
+            "MethodName": "ExecuteNonQueryWithStatusAsync"
+          },
+          {
+            "NeedsConnectionArg": true,
+            "NeedsTransactionArg": true,
+            "CallText": "",
+            "LineNumber": 932,
+            "MethodName": "ExecuteDataTableWithStatusAsync"
+          }
+        ],
+        "HasConnectionParam": false,
+        "Name": "UpdateUserAsync",
+        "HasTransactionParam": false
+      },
+      {
+        "LineNumber": 885,
+        "NeedsUpdate": true,
+        "Signature": "internal static async Task<DaoResult> DeleteUserAsync(string user)",
+        "CallsHelper": true,
+        "HelperCalls": [
+          {
+            "NeedsConnectionArg": true,
+            "NeedsTransactionArg": true,
+            "CallText": "",
+            "LineNumber": 892,
+            "MethodName": "ExecuteNonQueryWithStatusAsync"
+          },
+          {
+            "NeedsConnectionArg": true,
+            "NeedsTransactionArg": true,
+            "CallText": "",
+            "LineNumber": 932,
+            "MethodName": "ExecuteDataTableWithStatusAsync"
+          },
+          {
+            "NeedsConnectionArg": true,
+            "NeedsTransactionArg": true,
+            "CallText": "",
+            "LineNumber": 967,
+            "MethodName": "ExecuteDataTableWithStatusAsync"
+          }
+        ],
+        "HasConnectionParam": false,
+        "Name": "DeleteUserAsync",
+        "HasTransactionParam": false
+      },
+      {
+        "LineNumber": 1079,
+        "NeedsUpdate": true,
+        "Signature": "internal static async Task<DaoResult> SetShortcutsJsonAsync(string userId, string shortcutsJson)",
+        "CallsHelper": true,
+        "HelperCalls": [
+          {
+            "NeedsConnectionArg": true,
+            "NeedsTransactionArg": true,
+            "CallText": "",
+            "LineNumber": 1092,
+            "MethodName": "ExecuteNonQueryWithStatusAsync"
+          },
+          {
+            "NeedsConnectionArg": true,
+            "NeedsTransactionArg": true,
+            "CallText": "",
+            "LineNumber": 1156,
+            "MethodName": "ExecuteNonQueryWithStatusAsync"
+          }
+        ],
+        "HasConnectionParam": false,
+        "Name": "SetShortcutsJsonAsync",
+        "HasTransactionParam": false
+      },
+      {
+        "LineNumber": 1124,
+        "NeedsUpdate": true,
+        "Signature": "internal static async Task<DaoResult> SetThemeNameAsync(string user, string themeName)",
+        "CallsHelper": true,
+        "HelperCalls": [
+          {
+            "NeedsConnectionArg": true,
+            "NeedsTransactionArg": true,
+            "CallText": "",
+            "LineNumber": 1156,
+            "MethodName": "ExecuteNonQueryWithStatusAsync"
+          },
+          {
+            "NeedsConnectionArg": true,
+            "NeedsTransactionArg": true,
+            "CallText": "",
+            "LineNumber": 1193,
+            "MethodName": "ExecuteDataTableWithStatusAsync"
+          },
+          {
+            "NeedsConnectionArg": true,
+            "NeedsTransactionArg": true,
+            "CallText": "",
+            "LineNumber": 1226,
+            "MethodName": "ExecuteNonQueryWithStatusAsync"
+          }
+        ],
+        "HasConnectionParam": false,
+        "Name": "SetThemeNameAsync",
+        "HasTransactionParam": false
+      },
+      {
+        "LineNumber": 1148,
+        "NeedsUpdate": true,
+        "Signature": "internal static async Task<DaoResult> AddUserRoleAsync(int userId, int roleId, string assignedBy)",
+        "CallsHelper": true,
+        "HelperCalls": [
+          {
+            "NeedsConnectionArg": true,
+            "NeedsTransactionArg": true,
+            "CallText": "",
+            "LineNumber": 1156,
+            "MethodName": "ExecuteNonQueryWithStatusAsync"
+          },
+          {
+            "NeedsConnectionArg": true,
+            "NeedsTransactionArg": true,
+            "CallText": "",
+            "LineNumber": 1193,
+            "MethodName": "ExecuteDataTableWithStatusAsync"
+          },
+          {
+            "NeedsConnectionArg": true,
+            "NeedsTransactionArg": true,
+            "CallText": "",
+            "LineNumber": 1226,
+            "MethodName": "ExecuteNonQueryWithStatusAsync"
+          }
+        ],
+        "HasConnectionParam": false,
+        "Name": "AddUserRoleAsync",
+        "HasTransactionParam": false
+      },
+      {
+        "LineNumber": 1218,
+        "NeedsUpdate": true,
+        "Signature": "internal static async Task<DaoResult> SetUserRoleAsync(int userId, int newRoleId, string assignedBy)",
+        "CallsHelper": true,
+        "HelperCalls": [
+          {
+            "NeedsConnectionArg": true,
+            "NeedsTransactionArg": true,
+            "CallText": "",
+            "LineNumber": 1226,
+            "MethodName": "ExecuteNonQueryWithStatusAsync"
+          },
+          {
+            "NeedsConnectionArg": true,
+            "NeedsTransactionArg": true,
+            "CallText": "",
+            "LineNumber": 1267,
+            "MethodName": "ExecuteNonQueryWithStatusAsync"
+          },
+          {
+            "NeedsConnectionArg": true,
+            "NeedsTransactionArg": true,
+            "CallText": "",
+            "LineNumber": 1310,
+            "MethodName": "ExecuteNonQueryWithStatusAsync"
+          }
+        ],
+        "HasConnectionParam": false,
+        "Name": "SetUserRoleAsync",
+        "HasTransactionParam": false
+      },
+      {
+        "LineNumber": 1255,
+        "NeedsUpdate": true,
+        "Signature": "internal static async Task<DaoResult> SetUsersRoleAsync(IEnumerable<int> userIds, int newRoleId, string assignedBy)",
+        "CallsHelper": true,
+        "HelperCalls": [
+          {
+            "NeedsConnectionArg": true,
+            "NeedsTransactionArg": true,
+            "CallText": "",
+            "LineNumber": 1267,
+            "MethodName": "ExecuteNonQueryWithStatusAsync"
+          },
+          {
+            "NeedsConnectionArg": true,
+            "NeedsTransactionArg": true,
+            "CallText": "",
+            "LineNumber": 1310,
+            "MethodName": "ExecuteNonQueryWithStatusAsync"
+          }
+        ],
+        "HasConnectionParam": false,
+        "Name": "SetUsersRoleAsync",
+        "HasTransactionParam": false
+      },
+      {
+        "LineNumber": 1302,
+        "NeedsUpdate": true,
+        "Signature": "internal static async Task<DaoResult> RemoveUserRoleAsync(int userId, int roleId)",
+        "CallsHelper": true,
+        "HelperCalls": [
+          {
+            "NeedsConnectionArg": true,
+            "NeedsTransactionArg": true,
+            "CallText": "",
+            "LineNumber": 1310,
+            "MethodName": "ExecuteNonQueryWithStatusAsync"
+          }
+        ],
+        "HasConnectionParam": false,
+        "Name": "RemoveUserRoleAsync",
+        "HasTransactionParam": false
+      }
+    ],
+    "MethodsWithHelperCalls": [
+      {
+        "LineNumber": 379,
+        "NeedsUpdate": true,
+        "Signature": "internal static async Task<DaoResult> SetDatabaseAsync(string user, string value)",
+        "CallsHelper": true,
+        "HelperCalls": [
+          {
+            "NeedsConnectionArg": true,
+            "NeedsTransactionArg": true,
+            "CallText": "",
+            "LineNumber": 468,
+            "MethodName": "ExecuteDataTableWithStatusAsync"
+          }
+        ],
+        "HasConnectionParam": false,
+        "Name": "SetDatabaseAsync",
+        "HasTransactionParam": false
+      },
+      {
+        "LineNumber": 434,
+        "NeedsUpdate": true,
+        "Signature": "internal static async Task<DaoResult> SetWipServerPortAsync(string user, string value)",
+        "CallsHelper": true,
+        "HelperCalls": [
+          {
+            "NeedsConnectionArg": true,
+            "NeedsTransactionArg": true,
+            "CallText": "",
+            "LineNumber": 468,
+            "MethodName": "ExecuteDataTableWithStatusAsync"
+          },
+          {
+            "NeedsConnectionArg": true,
+            "NeedsTransactionArg": true,
+            "CallText": "",
+            "LineNumber": 508,
+            "MethodName": "ExecuteDataTableWithStatusAsync"
+          }
+        ],
+        "HasConnectionParam": false,
+        "Name": "SetWipServerPortAsync",
+        "HasTransactionParam": false
+      },
+      {
+        "LineNumber": 565,
+        "NeedsUpdate": true,
+        "Signature": "public static async Task<DaoResult> SetSettingsJsonAsync(string userId, string themeJson)",
+        "CallsHelper": true,
+        "HelperCalls": [
+          {
+            "NeedsConnectionArg": true,
+            "NeedsTransactionArg": true,
+            "CallText": "",
+            "LineNumber": 578,
+            "MethodName": "ExecuteNonQueryWithStatusAsync"
+          },
+          {
+            "NeedsConnectionArg": true,
+            "NeedsTransactionArg": true,
+            "CallText": "",
+            "LineNumber": 625,
+            "MethodName": "ExecuteNonQueryWithStatusAsync"
+          },
+          {
+            "NeedsConnectionArg": true,
+            "NeedsTransactionArg": true,
+            "CallText": "",
+            "LineNumber": 663,
+            "MethodName": "ExecuteDataTableWithStatusAsync"
+          }
+        ],
+        "HasConnectionParam": false,
+        "Name": "SetSettingsJsonAsync",
+        "HasTransactionParam": false
+      },
+      {
+        "LineNumber": 611,
+        "NeedsUpdate": true,
+        "Signature": "public static async Task<DaoResult> SetGridViewSettingsJsonAsync(string userId, string dgvName, string settingsJson)",
+        "CallsHelper": true,
+        "HelperCalls": [
+          {
+            "NeedsConnectionArg": true,
+            "NeedsTransactionArg": true,
+            "CallText": "",
+            "LineNumber": 625,
+            "MethodName": "ExecuteNonQueryWithStatusAsync"
+          },
+          {
+            "NeedsConnectionArg": true,
+            "NeedsTransactionArg": true,
+            "CallText": "",
+            "LineNumber": 663,
+            "MethodName": "ExecuteDataTableWithStatusAsync"
+          },
+          {
+            "NeedsConnectionArg": true,
+            "NeedsTransactionArg": true,
+            "CallText": "",
+            "LineNumber": 700,
+            "MethodName": "ExecuteNonQueryWithStatusAsync"
+          }
+        ],
+        "HasConnectionParam": false,
+        "Name": "SetGridViewSettingsJsonAsync",
+        "HasTransactionParam": false
+      },
+      {
+        "LineNumber": 735,
+        "NeedsUpdate": true,
+        "Signature": "internal static async Task<DaoResult> DeleteUserSettingsAsync(string userName)",
+        "CallsHelper": true,
+        "HelperCalls": [
+          {
+            "NeedsConnectionArg": true,
+            "NeedsTransactionArg": true,
+            "CallText": "",
+            "LineNumber": 742,
+            "MethodName": "ExecuteNonQueryWithStatusAsync"
+          },
+          {
+            "NeedsConnectionArg": true,
+            "NeedsTransactionArg": true,
+            "CallText": "",
+            "LineNumber": 787,
+            "MethodName": "ExecuteNonQueryWithStatusAsync"
+          }
+        ],
+        "HasConnectionParam": false,
+        "Name": "DeleteUserSettingsAsync",
+        "HasTransactionParam": false
+      },
+      {
+        "LineNumber": 770,
+        "NeedsUpdate": true,
+        "Signature": "internal static async Task<DaoResult> CreateUserAsync(\n        string user, string fullName, string shift, bool vitsUser, string pin,\n        string lastShownVersion, string hideChangeLog, string themeName, int themeFontSize,\n        string visualUserName, string visualPassword, string wipServerAddress, string database,\n        string wipServerPort)",
+        "CallsHelper": true,
+        "HelperCalls": [
+          {
+            "NeedsConnectionArg": true,
+            "NeedsTransactionArg": true,
+            "CallText": "",
+            "LineNumber": 787,
+            "MethodName": "ExecuteNonQueryWithStatusAsync"
+          },
+          {
+            "NeedsConnectionArg": true,
+            "NeedsTransactionArg": true,
+            "CallText": "",
+            "LineNumber": 849,
+            "MethodName": "ExecuteNonQueryWithStatusAsync"
+          }
+        ],
+        "HasConnectionParam": false,
+        "Name": "CreateUserAsync",
+        "HasTransactionParam": false
+      },
+      {
+        "LineNumber": 831,
+        "NeedsUpdate": true,
+        "Signature": "internal static async Task<DaoResult> UpdateUserAsync(\n        string user,\n        string fullName,\n        string shift,\n        string pin,\n        string visualUserName,\n        string visualPassword)",
+        "CallsHelper": true,
+        "HelperCalls": [
+          {
+            "NeedsConnectionArg": true,
+            "NeedsTransactionArg": true,
+            "CallText": "",
+            "LineNumber": 849,
+            "MethodName": "ExecuteNonQueryWithStatusAsync"
+          },
+          {
+            "NeedsConnectionArg": true,
+            "NeedsTransactionArg": true,
+            "CallText": "",
+            "LineNumber": 892,
+            "MethodName": "ExecuteNonQueryWithStatusAsync"
+          },
+          {
+            "NeedsConnectionArg": true,
+            "NeedsTransactionArg": true,
+            "CallText": "",
+            "LineNumber": 932,
+            "MethodName": "ExecuteDataTableWithStatusAsync"
+          }
+        ],
+        "HasConnectionParam": false,
+        "Name": "UpdateUserAsync",
+        "HasTransactionParam": false
+      },
+      {
+        "LineNumber": 885,
+        "NeedsUpdate": true,
+        "Signature": "internal static async Task<DaoResult> DeleteUserAsync(string user)",
+        "CallsHelper": true,
+        "HelperCalls": [
+          {
+            "NeedsConnectionArg": true,
+            "NeedsTransactionArg": true,
+            "CallText": "",
+            "LineNumber": 892,
+            "MethodName": "ExecuteNonQueryWithStatusAsync"
+          },
+          {
+            "NeedsConnectionArg": true,
+            "NeedsTransactionArg": true,
+            "CallText": "",
+            "LineNumber": 932,
+            "MethodName": "ExecuteDataTableWithStatusAsync"
+          },
+          {
+            "NeedsConnectionArg": true,
+            "NeedsTransactionArg": true,
+            "CallText": "",
+            "LineNumber": 967,
+            "MethodName": "ExecuteDataTableWithStatusAsync"
+          }
+        ],
+        "HasConnectionParam": false,
+        "Name": "DeleteUserAsync",
+        "HasTransactionParam": false
+      },
+      {
+        "LineNumber": 1079,
+        "NeedsUpdate": true,
+        "Signature": "internal static async Task<DaoResult> SetShortcutsJsonAsync(string userId, string shortcutsJson)",
+        "CallsHelper": true,
+        "HelperCalls": [
+          {
+            "NeedsConnectionArg": true,
+            "NeedsTransactionArg": true,
+            "CallText": "",
+            "LineNumber": 1092,
+            "MethodName": "ExecuteNonQueryWithStatusAsync"
+          },
+          {
+            "NeedsConnectionArg": true,
+            "NeedsTransactionArg": true,
+            "CallText": "",
+            "LineNumber": 1156,
+            "MethodName": "ExecuteNonQueryWithStatusAsync"
+          }
+        ],
+        "HasConnectionParam": false,
+        "Name": "SetShortcutsJsonAsync",
+        "HasTransactionParam": false
+      },
+      {
+        "LineNumber": 1124,
+        "NeedsUpdate": true,
+        "Signature": "internal static async Task<DaoResult> SetThemeNameAsync(string user, string themeName)",
+        "CallsHelper": true,
+        "HelperCalls": [
+          {
+            "NeedsConnectionArg": true,
+            "NeedsTransactionArg": true,
+            "CallText": "",
+            "LineNumber": 1156,
+            "MethodName": "ExecuteNonQueryWithStatusAsync"
+          },
+          {
+            "NeedsConnectionArg": true,
+            "NeedsTransactionArg": true,
+            "CallText": "",
+            "LineNumber": 1193,
+            "MethodName": "ExecuteDataTableWithStatusAsync"
+          },
+          {
+            "NeedsConnectionArg": true,
+            "NeedsTransactionArg": true,
+            "CallText": "",
+            "LineNumber": 1226,
+            "MethodName": "ExecuteNonQueryWithStatusAsync"
+          }
+        ],
+        "HasConnectionParam": false,
+        "Name": "SetThemeNameAsync",
+        "HasTransactionParam": false
+      },
+      {
+        "LineNumber": 1148,
+        "NeedsUpdate": true,
+        "Signature": "internal static async Task<DaoResult> AddUserRoleAsync(int userId, int roleId, string assignedBy)",
+        "CallsHelper": true,
+        "HelperCalls": [
+          {
+            "NeedsConnectionArg": true,
+            "NeedsTransactionArg": true,
+            "CallText": "",
+            "LineNumber": 1156,
+            "MethodName": "ExecuteNonQueryWithStatusAsync"
+          },
+          {
+            "NeedsConnectionArg": true,
+            "NeedsTransactionArg": true,
+            "CallText": "",
+            "LineNumber": 1193,
+            "MethodName": "ExecuteDataTableWithStatusAsync"
+          },
+          {
+            "NeedsConnectionArg": true,
+            "NeedsTransactionArg": true,
+            "CallText": "",
+            "LineNumber": 1226,
+            "MethodName": "ExecuteNonQueryWithStatusAsync"
+          }
+        ],
+        "HasConnectionParam": false,
+        "Name": "AddUserRoleAsync",
+        "HasTransactionParam": false
+      },
+      {
+        "LineNumber": 1218,
+        "NeedsUpdate": true,
+        "Signature": "internal static async Task<DaoResult> SetUserRoleAsync(int userId, int newRoleId, string assignedBy)",
+        "CallsHelper": true,
+        "HelperCalls": [
+          {
+            "NeedsConnectionArg": true,
+            "NeedsTransactionArg": true,
+            "CallText": "",
+            "LineNumber": 1226,
+            "MethodName": "ExecuteNonQueryWithStatusAsync"
+          },
+          {
+            "NeedsConnectionArg": true,
+            "NeedsTransactionArg": true,
+            "CallText": "",
+            "LineNumber": 1267,
+            "MethodName": "ExecuteNonQueryWithStatusAsync"
+          },
+          {
+            "NeedsConnectionArg": true,
+            "NeedsTransactionArg": true,
+            "CallText": "",
+            "LineNumber": 1310,
+            "MethodName": "ExecuteNonQueryWithStatusAsync"
+          }
+        ],
+        "HasConnectionParam": false,
+        "Name": "SetUserRoleAsync",
+        "HasTransactionParam": false
+      },
+      {
+        "LineNumber": 1255,
+        "NeedsUpdate": true,
+        "Signature": "internal static async Task<DaoResult> SetUsersRoleAsync(IEnumerable<int> userIds, int newRoleId, string assignedBy)",
+        "CallsHelper": true,
+        "HelperCalls": [
+          {
+            "NeedsConnectionArg": true,
+            "NeedsTransactionArg": true,
+            "CallText": "",
+            "LineNumber": 1267,
+            "MethodName": "ExecuteNonQueryWithStatusAsync"
+          },
+          {
+            "NeedsConnectionArg": true,
+            "NeedsTransactionArg": true,
+            "CallText": "",
+            "LineNumber": 1310,
+            "MethodName": "ExecuteNonQueryWithStatusAsync"
+          }
+        ],
+        "HasConnectionParam": false,
+        "Name": "SetUsersRoleAsync",
+        "HasTransactionParam": false
+      },
+      {
+        "LineNumber": 1302,
+        "NeedsUpdate": true,
+        "Signature": "internal static async Task<DaoResult> RemoveUserRoleAsync(int userId, int roleId)",
+        "CallsHelper": true,
+        "HelperCalls": [
+          {
+            "NeedsConnectionArg": true,
+            "NeedsTransactionArg": true,
+            "CallText": "",
+            "LineNumber": 1310,
+            "MethodName": "ExecuteNonQueryWithStatusAsync"
+          }
+        ],
+        "HasConnectionParam": false,
+        "Name": "RemoveUserRoleAsync",
+        "HasTransactionParam": false
+      }
+    ],
+    "TotalMethods": 14
+  },
+  "Dao_ErrorLog": {
+    "FilePath": "\\Data\\Dao_ErrorLog.cs",
+    "NeedsUpdate": true,
+    "MethodsNeedingUpdate": [
+      {
+        "LineNumber": 112,
+        "NeedsUpdate": true,
+        "Signature": "internal static async Task<DaoResult> DeleteErrorByIdAsync(int id) =>",
+        "CallsHelper": true,
+        "HelperCalls": [
+          {
+            "NeedsConnectionArg": true,
+            "NeedsTransactionArg": true,
+            "CallText": "",
+            "LineNumber": 126,
+            "MethodName": "ExecuteNonQueryWithStatusAsync"
+          }
+        ],
+        "HasConnectionParam": false,
+        "Name": "DeleteErrorByIdAsync",
+        "HasTransactionParam": false
+      },
+      {
+        "LineNumber": 116,
+        "NeedsUpdate": true,
+        "Signature": "internal static async Task<DaoResult> DeleteAllErrorsAsync() =>",
+        "CallsHelper": true,
+        "HelperCalls": [
+          {
+            "NeedsConnectionArg": true,
+            "NeedsTransactionArg": true,
+            "CallText": "",
+            "LineNumber": 126,
+            "MethodName": "ExecuteNonQueryWithStatusAsync"
+          }
+        ],
+        "HasConnectionParam": false,
+        "Name": "DeleteAllErrorsAsync",
+        "HasTransactionParam": false
+      },
+      {
+        "LineNumber": 282,
+        "NeedsUpdate": true,
+        "Signature": "internal static async Task<DaoResult> HandleException_GeneralError_CloseApp(\n        Exception ex,\n        [System.Runtime.CompilerServices.CallerMemberName]\n        string callerName = \"\",\n        string controlName = \"\")",
+        "CallsHelper": true,
+        "HelperCalls": [
+          {
+            "NeedsConnectionArg": true,
+            "NeedsTransactionArg": true,
+            "CallText": "",
+            "LineNumber": 380,
+            "MethodName": "ExecuteNonQueryWithStatusAsync"
+          }
+        ],
+        "HasConnectionParam": false,
+        "Name": "HandleException_GeneralError_CloseApp",
+        "HasTransactionParam": false
+      }
+    ],
+    "MethodsWithHelperCalls": [
+      {
+        "LineNumber": 112,
+        "NeedsUpdate": true,
+        "Signature": "internal static async Task<DaoResult> DeleteErrorByIdAsync(int id) =>",
+        "CallsHelper": true,
+        "HelperCalls": [
+          {
+            "NeedsConnectionArg": true,
+            "NeedsTransactionArg": true,
+            "CallText": "",
+            "LineNumber": 126,
+            "MethodName": "ExecuteNonQueryWithStatusAsync"
+          }
+        ],
+        "HasConnectionParam": false,
+        "Name": "DeleteErrorByIdAsync",
+        "HasTransactionParam": false
+      },
+      {
+        "LineNumber": 116,
+        "NeedsUpdate": true,
+        "Signature": "internal static async Task<DaoResult> DeleteAllErrorsAsync() =>",
+        "CallsHelper": true,
+        "HelperCalls": [
+          {
+            "NeedsConnectionArg": true,
+            "NeedsTransactionArg": true,
+            "CallText": "",
+            "LineNumber": 126,
+            "MethodName": "ExecuteNonQueryWithStatusAsync"
+          }
+        ],
+        "HasConnectionParam": false,
+        "Name": "DeleteAllErrorsAsync",
+        "HasTransactionParam": false
+      },
+      {
+        "LineNumber": 282,
+        "NeedsUpdate": true,
+        "Signature": "internal static async Task<DaoResult> HandleException_GeneralError_CloseApp(\n        Exception ex,\n        [System.Runtime.CompilerServices.CallerMemberName]\n        string callerName = \"\",\n        string controlName = \"\")",
+        "CallsHelper": true,
+        "HelperCalls": [
+          {
+            "NeedsConnectionArg": true,
+            "NeedsTransactionArg": true,
+            "CallText": "",
+            "LineNumber": 380,
+            "MethodName": "ExecuteNonQueryWithStatusAsync"
+          }
+        ],
+        "HasConnectionParam": false,
+        "Name": "HandleException_GeneralError_CloseApp",
+        "HasTransactionParam": false
+      }
+    ],
+    "TotalMethods": 3
+  },
+  "Dao_System": {
+    "FilePath": "\\Data\\Dao_System.cs",
+    "NeedsUpdate": true,
+    "MethodsNeedingUpdate": [
+      {
+        "LineNumber": 15,
+        "NeedsUpdate": true,
+        "Signature": "internal static async Task<DaoResult> SetUserAccessTypeAsync(string userName, string accessType)",
+        "CallsHelper": true,
+        "HelperCalls": [
+          {
+            "NeedsConnectionArg": true,
+            "NeedsTransactionArg": true,
+            "CallText": "",
+            "LineNumber": 28,
+            "MethodName": "ExecuteNonQueryWithStatusAsync"
+          },
+          {
+            "NeedsConnectionArg": true,
+            "NeedsTransactionArg": true,
+            "CallText": "",
+            "LineNumber": 82,
+            "MethodName": "ExecuteDataTableWithStatusAsync"
+          }
+        ],
+        "HasConnectionParam": false,
+        "Name": "SetUserAccessTypeAsync",
+        "HasTransactionParam": false
+      },
+      {
+        "LineNumber": 289,
+        "NeedsUpdate": true,
+        "Signature": "internal static async Task<DaoResult> CheckConnectivityAsync()",
+        "CallsHelper": true,
+        "HelperCalls": [
+          {
+            "NeedsConnectionArg": true,
+            "NeedsTransactionArg": true,
+            "CallText": "",
+            "LineNumber": 297,
+            "MethodName": "ExecuteDataTableWithStatusAsync"
+          }
+        ],
+        "HasConnectionParam": false,
+        "Name": "CheckConnectivityAsync",
+        "HasTransactionParam": false
+      }
+    ],
+    "MethodsWithHelperCalls": [
+      {
+        "LineNumber": 15,
+        "NeedsUpdate": true,
+        "Signature": "internal static async Task<DaoResult> SetUserAccessTypeAsync(string userName, string accessType)",
+        "CallsHelper": true,
+        "HelperCalls": [
+          {
+            "NeedsConnectionArg": true,
+            "NeedsTransactionArg": true,
+            "CallText": "",
+            "LineNumber": 28,
+            "MethodName": "ExecuteNonQueryWithStatusAsync"
+          },
+          {
+            "NeedsConnectionArg": true,
+            "NeedsTransactionArg": true,
+            "CallText": "",
+            "LineNumber": 82,
+            "MethodName": "ExecuteDataTableWithStatusAsync"
+          }
+        ],
+        "HasConnectionParam": false,
+        "Name": "SetUserAccessTypeAsync",
+        "HasTransactionParam": false
+      },
+      {
+        "LineNumber": 289,
+        "NeedsUpdate": true,
+        "Signature": "internal static async Task<DaoResult> CheckConnectivityAsync()",
+        "CallsHelper": true,
+        "HelperCalls": [
+          {
+            "NeedsConnectionArg": true,
+            "NeedsTransactionArg": true,
+            "CallText": "",
+            "LineNumber": 297,
+            "MethodName": "ExecuteDataTableWithStatusAsync"
+          }
+        ],
+        "HasConnectionParam": false,
+        "Name": "CheckConnectivityAsync",
+        "HasTransactionParam": false
+      }
+    ],
+    "TotalMethods": 2
+  },
+  "Dao_ParameterPrefixOverrides": {
+    "FilePath": "\\Data\\Dao_ParameterPrefixOverrides.cs",
+    "NeedsUpdate": true,
+    "MethodsNeedingUpdate": [
+      {
+        "LineNumber": 208,
+        "NeedsUpdate": true,
+        "Signature": "public static async Task<DaoResult> UpdateAsync(Model_ParameterPrefixOverride model)",
+        "CallsHelper": true,
+        "HelperCalls": [
+          {
+            "NeedsConnectionArg": true,
+            "NeedsTransactionArg": true,
+            "CallText": "",
+            "LineNumber": 242,
+            "MethodName": "ExecuteDataTableWithStatusAsync"
+          },
+          {
+            "NeedsConnectionArg": true,
+            "NeedsTransactionArg": true,
+            "CallText": "",
+            "LineNumber": 307,
+            "MethodName": "ExecuteDataTableWithStatusAsync"
+          }
+        ],
+        "HasConnectionParam": false,
+        "Name": "UpdateAsync",
+        "HasTransactionParam": false
+      },
+      {
+        "LineNumber": 291,
+        "NeedsUpdate": true,
+        "Signature": "public static async Task<DaoResult> DeleteAsync(int overrideId, string modifiedBy)",
+        "CallsHelper": true,
+        "HelperCalls": [
+          {
+            "NeedsConnectionArg": true,
+            "NeedsTransactionArg": true,
+            "CallText": "",
+            "LineNumber": 307,
+            "MethodName": "ExecuteDataTableWithStatusAsync"
+          }
+        ],
+        "HasConnectionParam": false,
+        "Name": "DeleteAsync",
+        "HasTransactionParam": false
+      }
+    ],
+    "MethodsWithHelperCalls": [
+      {
+        "LineNumber": 208,
+        "NeedsUpdate": true,
+        "Signature": "public static async Task<DaoResult> UpdateAsync(Model_ParameterPrefixOverride model)",
+        "CallsHelper": true,
+        "HelperCalls": [
+          {
+            "NeedsConnectionArg": true,
+            "NeedsTransactionArg": true,
+            "CallText": "",
+            "LineNumber": 242,
+            "MethodName": "ExecuteDataTableWithStatusAsync"
+          },
+          {
+            "NeedsConnectionArg": true,
+            "NeedsTransactionArg": true,
+            "CallText": "",
+            "LineNumber": 307,
+            "MethodName": "ExecuteDataTableWithStatusAsync"
+          }
+        ],
+        "HasConnectionParam": false,
+        "Name": "UpdateAsync",
+        "HasTransactionParam": false
+      },
+      {
+        "LineNumber": 291,
+        "NeedsUpdate": true,
+        "Signature": "public static async Task<DaoResult> DeleteAsync(int overrideId, string modifiedBy)",
+        "CallsHelper": true,
+        "HelperCalls": [
+          {
+            "NeedsConnectionArg": true,
+            "NeedsTransactionArg": true,
+            "CallText": "",
+            "LineNumber": 307,
+            "MethodName": "ExecuteDataTableWithStatusAsync"
+          }
+        ],
+        "HasConnectionParam": false,
+        "Name": "DeleteAsync",
+        "HasTransactionParam": false
+      }
+    ],
+    "TotalMethods": 2
+  },
+  "Dao_ItemType": {
+    "FilePath": "\\Data\\Dao_ItemType.cs",
+    "NeedsUpdate": true,
+    "MethodsNeedingUpdate": [
+      {
+        "LineNumber": 13,
+        "NeedsUpdate": true,
+        "Signature": "internal static async Task<DaoResult> DeleteItemType(string itemType)",
+        "CallsHelper": true,
+        "HelperCalls": [
+          {
+            "NeedsConnectionArg": true,
+            "NeedsTransactionArg": true,
+            "CallText": "",
+            "LineNumber": 21,
+            "MethodName": "ExecuteNonQueryWithStatusAsync"
+          },
+          {
+            "NeedsConnectionArg": true,
+            "NeedsTransactionArg": true,
+            "CallText": "",
+            "LineNumber": 55,
+            "MethodName": "ExecuteNonQueryWithStatusAsync"
+          },
+          {
+            "NeedsConnectionArg": true,
+            "NeedsTransactionArg": true,
+            "CallText": "",
+            "LineNumber": 94,
+            "MethodName": "ExecuteNonQueryWithStatusAsync"
+          }
+        ],
+        "HasConnectionParam": false,
+        "Name": "DeleteItemType",
+        "HasTransactionParam": false
+      },
+      {
+        "LineNumber": 43,
+        "NeedsUpdate": true,
+        "Signature": "internal static async Task<DaoResult> InsertItemType(string itemType, string user)",
+        "CallsHelper": true,
+        "HelperCalls": [
+          {
+            "NeedsConnectionArg": true,
+            "NeedsTransactionArg": true,
+            "CallText": "",
+            "LineNumber": 55,
+            "MethodName": "ExecuteNonQueryWithStatusAsync"
+          },
+          {
+            "NeedsConnectionArg": true,
+            "NeedsTransactionArg": true,
+            "CallText": "",
+            "LineNumber": 94,
+            "MethodName": "ExecuteNonQueryWithStatusAsync"
+          },
+          {
+            "NeedsConnectionArg": true,
+            "NeedsTransactionArg": true,
+            "CallText": "",
+            "LineNumber": 122,
+            "MethodName": "ExecuteDataTableWithStatusAsync"
+          }
+        ],
+        "HasConnectionParam": false,
+        "Name": "InsertItemType",
+        "HasTransactionParam": false
+      },
+      {
+        "LineNumber": 81,
+        "NeedsUpdate": true,
+        "Signature": "internal static async Task<DaoResult> UpdateItemType(int id, string newItemType, string user)",
+        "CallsHelper": true,
+        "HelperCalls": [
+          {
+            "NeedsConnectionArg": true,
+            "NeedsTransactionArg": true,
+            "CallText": "",
+            "LineNumber": 94,
+            "MethodName": "ExecuteNonQueryWithStatusAsync"
+          },
+          {
+            "NeedsConnectionArg": true,
+            "NeedsTransactionArg": true,
+            "CallText": "",
+            "LineNumber": 122,
+            "MethodName": "ExecuteDataTableWithStatusAsync"
+          },
+          {
+            "NeedsConnectionArg": true,
+            "NeedsTransactionArg": true,
+            "CallText": "",
+            "LineNumber": 183,
+            "MethodName": "ExecuteScalarWithStatusAsync"
+          }
+        ],
+        "HasConnectionParam": false,
+        "Name": "UpdateItemType",
+        "HasTransactionParam": false
+      }
+    ],
+    "MethodsWithHelperCalls": [
+      {
+        "LineNumber": 13,
+        "NeedsUpdate": true,
+        "Signature": "internal static async Task<DaoResult> DeleteItemType(string itemType)",
+        "CallsHelper": true,
+        "HelperCalls": [
+          {
+            "NeedsConnectionArg": true,
+            "NeedsTransactionArg": true,
+            "CallText": "",
+            "LineNumber": 21,
+            "MethodName": "ExecuteNonQueryWithStatusAsync"
+          },
+          {
+            "NeedsConnectionArg": true,
+            "NeedsTransactionArg": true,
+            "CallText": "",
+            "LineNumber": 55,
+            "MethodName": "ExecuteNonQueryWithStatusAsync"
+          },
+          {
+            "NeedsConnectionArg": true,
+            "NeedsTransactionArg": true,
+            "CallText": "",
+            "LineNumber": 94,
+            "MethodName": "ExecuteNonQueryWithStatusAsync"
+          }
+        ],
+        "HasConnectionParam": false,
+        "Name": "DeleteItemType",
+        "HasTransactionParam": false
+      },
+      {
+        "LineNumber": 43,
+        "NeedsUpdate": true,
+        "Signature": "internal static async Task<DaoResult> InsertItemType(string itemType, string user)",
+        "CallsHelper": true,
+        "HelperCalls": [
+          {
+            "NeedsConnectionArg": true,
+            "NeedsTransactionArg": true,
+            "CallText": "",
+            "LineNumber": 55,
+            "MethodName": "ExecuteNonQueryWithStatusAsync"
+          },
+          {
+            "NeedsConnectionArg": true,
+            "NeedsTransactionArg": true,
+            "CallText": "",
+            "LineNumber": 94,
+            "MethodName": "ExecuteNonQueryWithStatusAsync"
+          },
+          {
+            "NeedsConnectionArg": true,
+            "NeedsTransactionArg": true,
+            "CallText": "",
+            "LineNumber": 122,
+            "MethodName": "ExecuteDataTableWithStatusAsync"
+          }
+        ],
+        "HasConnectionParam": false,
+        "Name": "InsertItemType",
+        "HasTransactionParam": false
+      },
+      {
+        "LineNumber": 81,
+        "NeedsUpdate": true,
+        "Signature": "internal static async Task<DaoResult> UpdateItemType(int id, string newItemType, string user)",
+        "CallsHelper": true,
+        "HelperCalls": [
+          {
+            "NeedsConnectionArg": true,
+            "NeedsTransactionArg": true,
+            "CallText": "",
+            "LineNumber": 94,
+            "MethodName": "ExecuteNonQueryWithStatusAsync"
+          },
+          {
+            "NeedsConnectionArg": true,
+            "NeedsTransactionArg": true,
+            "CallText": "",
+            "LineNumber": 122,
+            "MethodName": "ExecuteDataTableWithStatusAsync"
+          },
+          {
+            "NeedsConnectionArg": true,
+            "NeedsTransactionArg": true,
+            "CallText": "",
+            "LineNumber": 183,
+            "MethodName": "ExecuteScalarWithStatusAsync"
+          }
+        ],
+        "HasConnectionParam": false,
+        "Name": "UpdateItemType",
+        "HasTransactionParam": false
+      }
+    ],
+    "TotalMethods": 3
+  },
+  "Dao_Operation": {
+    "FilePath": "\\Data\\Dao_Operation.cs",
+    "NeedsUpdate": true,
+    "MethodsNeedingUpdate": [
+      {
+        "LineNumber": 13,
+        "NeedsUpdate": true,
+        "Signature": "internal static async Task<DaoResult> DeleteOperation(string operationNumber)",
+        "CallsHelper": true,
+        "HelperCalls": [
+          {
+            "NeedsConnectionArg": true,
+            "NeedsTransactionArg": true,
+            "CallText": "",
+            "LineNumber": 21,
+            "MethodName": "ExecuteNonQueryWithStatusAsync"
+          },
+          {
+            "NeedsConnectionArg": true,
+            "NeedsTransactionArg": true,
+            "CallText": "",
+            "LineNumber": 59,
+            "MethodName": "ExecuteNonQueryWithStatusAsync"
+          },
+          {
+            "NeedsConnectionArg": true,
+            "NeedsTransactionArg": true,
+            "CallText": "",
+            "LineNumber": 98,
+            "MethodName": "ExecuteNonQueryWithStatusAsync"
+          }
+        ],
+        "HasConnectionParam": false,
+        "Name": "DeleteOperation",
+        "HasTransactionParam": false
+      },
+      {
+        "LineNumber": 47,
+        "NeedsUpdate": true,
+        "Signature": "internal static async Task<DaoResult> InsertOperation(string operationNumber, string user)",
+        "CallsHelper": true,
+        "HelperCalls": [
+          {
+            "NeedsConnectionArg": true,
+            "NeedsTransactionArg": true,
+            "CallText": "",
+            "LineNumber": 59,
+            "MethodName": "ExecuteNonQueryWithStatusAsync"
+          },
+          {
+            "NeedsConnectionArg": true,
+            "NeedsTransactionArg": true,
+            "CallText": "",
+            "LineNumber": 98,
+            "MethodName": "ExecuteNonQueryWithStatusAsync"
+          },
+          {
+            "NeedsConnectionArg": true,
+            "NeedsTransactionArg": true,
+            "CallText": "",
+            "LineNumber": 130,
+            "MethodName": "ExecuteDataTableWithStatusAsync"
+          }
+        ],
+        "HasConnectionParam": false,
+        "Name": "InsertOperation",
+        "HasTransactionParam": false
+      },
+      {
+        "LineNumber": 85,
+        "NeedsUpdate": true,
+        "Signature": "internal static async Task<DaoResult> UpdateOperation(string oldOperation, string newOperationNumber, string user)",
+        "CallsHelper": true,
+        "HelperCalls": [
+          {
+            "NeedsConnectionArg": true,
+            "NeedsTransactionArg": true,
+            "CallText": "",
+            "LineNumber": 98,
+            "MethodName": "ExecuteNonQueryWithStatusAsync"
+          },
+          {
+            "NeedsConnectionArg": true,
+            "NeedsTransactionArg": true,
+            "CallText": "",
+            "LineNumber": 130,
+            "MethodName": "ExecuteDataTableWithStatusAsync"
+          },
+          {
+            "NeedsConnectionArg": true,
+            "NeedsTransactionArg": true,
+            "CallText": "",
+            "LineNumber": 187,
+            "MethodName": "ExecuteScalarWithStatusAsync"
+          }
+        ],
+        "HasConnectionParam": false,
+        "Name": "UpdateOperation",
+        "HasTransactionParam": false
+      }
+    ],
+    "MethodsWithHelperCalls": [
+      {
+        "LineNumber": 13,
+        "NeedsUpdate": true,
+        "Signature": "internal static async Task<DaoResult> DeleteOperation(string operationNumber)",
+        "CallsHelper": true,
+        "HelperCalls": [
+          {
+            "NeedsConnectionArg": true,
+            "NeedsTransactionArg": true,
+            "CallText": "",
+            "LineNumber": 21,
+            "MethodName": "ExecuteNonQueryWithStatusAsync"
+          },
+          {
+            "NeedsConnectionArg": true,
+            "NeedsTransactionArg": true,
+            "CallText": "",
+            "LineNumber": 59,
+            "MethodName": "ExecuteNonQueryWithStatusAsync"
+          },
+          {
+            "NeedsConnectionArg": true,
+            "NeedsTransactionArg": true,
+            "CallText": "",
+            "LineNumber": 98,
+            "MethodName": "ExecuteNonQueryWithStatusAsync"
+          }
+        ],
+        "HasConnectionParam": false,
+        "Name": "DeleteOperation",
+        "HasTransactionParam": false
+      },
+      {
+        "LineNumber": 47,
+        "NeedsUpdate": true,
+        "Signature": "internal static async Task<DaoResult> InsertOperation(string operationNumber, string user)",
+        "CallsHelper": true,
+        "HelperCalls": [
+          {
+            "NeedsConnectionArg": true,
+            "NeedsTransactionArg": true,
+            "CallText": "",
+            "LineNumber": 59,
+            "MethodName": "ExecuteNonQueryWithStatusAsync"
+          },
+          {
+            "NeedsConnectionArg": true,
+            "NeedsTransactionArg": true,
+            "CallText": "",
+            "LineNumber": 98,
+            "MethodName": "ExecuteNonQueryWithStatusAsync"
+          },
+          {
+            "NeedsConnectionArg": true,
+            "NeedsTransactionArg": true,
+            "CallText": "",
+            "LineNumber": 130,
+            "MethodName": "ExecuteDataTableWithStatusAsync"
+          }
+        ],
+        "HasConnectionParam": false,
+        "Name": "InsertOperation",
+        "HasTransactionParam": false
+      },
+      {
+        "LineNumber": 85,
+        "NeedsUpdate": true,
+        "Signature": "internal static async Task<DaoResult> UpdateOperation(string oldOperation, string newOperationNumber, string user)",
+        "CallsHelper": true,
+        "HelperCalls": [
+          {
+            "NeedsConnectionArg": true,
+            "NeedsTransactionArg": true,
+            "CallText": "",
+            "LineNumber": 98,
+            "MethodName": "ExecuteNonQueryWithStatusAsync"
+          },
+          {
+            "NeedsConnectionArg": true,
+            "NeedsTransactionArg": true,
+            "CallText": "",
+            "LineNumber": 130,
+            "MethodName": "ExecuteDataTableWithStatusAsync"
+          },
+          {
+            "NeedsConnectionArg": true,
+            "NeedsTransactionArg": true,
+            "CallText": "",
+            "LineNumber": 187,
+            "MethodName": "ExecuteScalarWithStatusAsync"
+          }
+        ],
+        "HasConnectionParam": false,
+        "Name": "UpdateOperation",
+        "HasTransactionParam": false
+      }
+    ],
+    "TotalMethods": 3
+  },
+  "Dao_Part": {
+    "FilePath": "\\Data\\Dao_Part.cs",
+    "NeedsUpdate": true,
+    "MethodsNeedingUpdate": [
+      {
+        "LineNumber": 217,
+        "NeedsUpdate": true,
+        "Signature": "internal static async Task<DaoResult> CreatePartAsync(string itemNumber, string customer, string description,\n        string issuedBy, string type)",
+        "CallsHelper": true,
+        "HelperCalls": [
+          {
+            "NeedsConnectionArg": true,
+            "NeedsTransactionArg": true,
+            "CallText": "",
+            "LineNumber": 239,
+            "MethodName": "ExecuteNonQueryWithStatusAsync"
+          },
+          {
+            "NeedsConnectionArg": true,
+            "NeedsTransactionArg": true,
+            "CallText": "",
+            "LineNumber": 303,
+            "MethodName": "ExecuteNonQueryWithStatusAsync"
+          }
+        ],
+        "HasConnectionParam": false,
+        "Name": "CreatePartAsync",
+        "HasTransactionParam": false
+      },
+      {
+        "LineNumber": 279,
+        "NeedsUpdate": true,
+        "Signature": "internal static async Task<DaoResult> UpdatePartAsync(int id, string itemNumber, string customer,\n        string description, string issuedBy, string type)",
+        "CallsHelper": true,
+        "HelperCalls": [
+          {
+            "NeedsConnectionArg": true,
+            "NeedsTransactionArg": true,
+            "CallText": "",
+            "LineNumber": 303,
+            "MethodName": "ExecuteNonQueryWithStatusAsync"
+          }
+        ],
+        "HasConnectionParam": false,
+        "Name": "UpdatePartAsync",
+        "HasTransactionParam": false
+      },
+      {
+        "LineNumber": 336,
+        "NeedsUpdate": true,
+        "Signature": "internal static async Task<DaoResult> UpdatePartByNumberAsync(string partNumber, string partType, string user)",
+        "CallsHelper": true,
+        "HelperCalls": [
+          {
+            "NeedsConnectionArg": true,
+            "NeedsTransactionArg": true,
+            "CallText": "",
+            "LineNumber": 392,
+            "MethodName": "ExecuteNonQueryWithStatusAsync"
+          }
+        ],
+        "HasConnectionParam": false,
+        "Name": "UpdatePartByNumberAsync",
+        "HasTransactionParam": false
+      },
+      {
+        "LineNumber": 383,
+        "NeedsUpdate": true,
+        "Signature": "internal static async Task<DaoResult> DeletePartAsync(string partNumber)",
+        "CallsHelper": true,
+        "HelperCalls": [
+          {
+            "NeedsConnectionArg": true,
+            "NeedsTransactionArg": true,
+            "CallText": "",
+            "LineNumber": 392,
+            "MethodName": "ExecuteNonQueryWithStatusAsync"
+          }
+        ],
+        "HasConnectionParam": false,
+        "Name": "DeletePartAsync",
+        "HasTransactionParam": false
+      }
+    ],
+    "MethodsWithHelperCalls": [
+      {
+        "LineNumber": 217,
+        "NeedsUpdate": true,
+        "Signature": "internal static async Task<DaoResult> CreatePartAsync(string itemNumber, string customer, string description,\n        string issuedBy, string type)",
+        "CallsHelper": true,
+        "HelperCalls": [
+          {
+            "NeedsConnectionArg": true,
+            "NeedsTransactionArg": true,
+            "CallText": "",
+            "LineNumber": 239,
+            "MethodName": "ExecuteNonQueryWithStatusAsync"
+          },
+          {
+            "NeedsConnectionArg": true,
+            "NeedsTransactionArg": true,
+            "CallText": "",
+            "LineNumber": 303,
+            "MethodName": "ExecuteNonQueryWithStatusAsync"
+          }
+        ],
+        "HasConnectionParam": false,
+        "Name": "CreatePartAsync",
+        "HasTransactionParam": false
+      },
+      {
+        "LineNumber": 279,
+        "NeedsUpdate": true,
+        "Signature": "internal static async Task<DaoResult> UpdatePartAsync(int id, string itemNumber, string customer,\n        string description, string issuedBy, string type)",
+        "CallsHelper": true,
+        "HelperCalls": [
+          {
+            "NeedsConnectionArg": true,
+            "NeedsTransactionArg": true,
+            "CallText": "",
+            "LineNumber": 303,
+            "MethodName": "ExecuteNonQueryWithStatusAsync"
+          }
+        ],
+        "HasConnectionParam": false,
+        "Name": "UpdatePartAsync",
+        "HasTransactionParam": false
+      },
+      {
+        "LineNumber": 336,
+        "NeedsUpdate": true,
+        "Signature": "internal static async Task<DaoResult> UpdatePartByNumberAsync(string partNumber, string partType, string user)",
+        "CallsHelper": true,
+        "HelperCalls": [
+          {
+            "NeedsConnectionArg": true,
+            "NeedsTransactionArg": true,
+            "CallText": "",
+            "LineNumber": 392,
+            "MethodName": "ExecuteNonQueryWithStatusAsync"
+          }
+        ],
+        "HasConnectionParam": false,
+        "Name": "UpdatePartByNumberAsync",
+        "HasTransactionParam": false
+      },
+      {
+        "LineNumber": 383,
+        "NeedsUpdate": true,
+        "Signature": "internal static async Task<DaoResult> DeletePartAsync(string partNumber)",
+        "CallsHelper": true,
+        "HelperCalls": [
+          {
+            "NeedsConnectionArg": true,
+            "NeedsTransactionArg": true,
+            "CallText": "",
+            "LineNumber": 392,
+            "MethodName": "ExecuteNonQueryWithStatusAsync"
+          }
+        ],
+        "HasConnectionParam": false,
+        "Name": "DeletePartAsync",
+        "HasTransactionParam": false
+      }
+    ],
+    "TotalMethods": 4
+  },
+  "Dao_Location": {
+    "FilePath": "\\Data\\Dao_Location.cs",
+    "NeedsUpdate": true,
+    "MethodsNeedingUpdate": [
+      {
+        "LineNumber": 13,
+        "NeedsUpdate": true,
+        "Signature": "internal static async Task<DaoResult> DeleteLocation(string location)",
+        "CallsHelper": true,
+        "HelperCalls": [
+          {
+            "NeedsConnectionArg": true,
+            "NeedsTransactionArg": true,
+            "CallText": "",
+            "LineNumber": 21,
+            "MethodName": "ExecuteNonQueryWithStatusAsync"
+          },
+          {
+            "NeedsConnectionArg": true,
+            "NeedsTransactionArg": true,
+            "CallText": "",
+            "LineNumber": 60,
+            "MethodName": "ExecuteNonQueryWithStatusAsync"
+          },
+          {
+            "NeedsConnectionArg": true,
+            "NeedsTransactionArg": true,
+            "CallText": "",
+            "LineNumber": 100,
+            "MethodName": "ExecuteNonQueryWithStatusAsync"
+          }
+        ],
+        "HasConnectionParam": false,
+        "Name": "DeleteLocation",
+        "HasTransactionParam": false
+      },
+      {
+        "LineNumber": 47,
+        "NeedsUpdate": true,
+        "Signature": "internal static async Task<DaoResult> InsertLocation(string location, string building)",
+        "CallsHelper": true,
+        "HelperCalls": [
+          {
+            "NeedsConnectionArg": true,
+            "NeedsTransactionArg": true,
+            "CallText": "",
+            "LineNumber": 60,
+            "MethodName": "ExecuteNonQueryWithStatusAsync"
+          },
+          {
+            "NeedsConnectionArg": true,
+            "NeedsTransactionArg": true,
+            "CallText": "",
+            "LineNumber": 100,
+            "MethodName": "ExecuteNonQueryWithStatusAsync"
+          },
+          {
+            "NeedsConnectionArg": true,
+            "NeedsTransactionArg": true,
+            "CallText": "",
+            "LineNumber": 128,
+            "MethodName": "ExecuteDataTableWithStatusAsync"
+          }
+        ],
+        "HasConnectionParam": false,
+        "Name": "InsertLocation",
+        "HasTransactionParam": false
+      },
+      {
+        "LineNumber": 86,
+        "NeedsUpdate": true,
+        "Signature": "internal static async Task<DaoResult> UpdateLocation(string oldLocation, string newLocation, string building)",
+        "CallsHelper": true,
+        "HelperCalls": [
+          {
+            "NeedsConnectionArg": true,
+            "NeedsTransactionArg": true,
+            "CallText": "",
+            "LineNumber": 100,
+            "MethodName": "ExecuteNonQueryWithStatusAsync"
+          },
+          {
+            "NeedsConnectionArg": true,
+            "NeedsTransactionArg": true,
+            "CallText": "",
+            "LineNumber": 128,
+            "MethodName": "ExecuteDataTableWithStatusAsync"
+          },
+          {
+            "NeedsConnectionArg": true,
+            "NeedsTransactionArg": true,
+            "CallText": "",
+            "LineNumber": 189,
+            "MethodName": "ExecuteScalarWithStatusAsync"
+          }
+        ],
+        "HasConnectionParam": false,
+        "Name": "UpdateLocation",
+        "HasTransactionParam": false
+      }
+    ],
+    "MethodsWithHelperCalls": [
+      {
+        "LineNumber": 13,
+        "NeedsUpdate": true,
+        "Signature": "internal static async Task<DaoResult> DeleteLocation(string location)",
+        "CallsHelper": true,
+        "HelperCalls": [
+          {
+            "NeedsConnectionArg": true,
+            "NeedsTransactionArg": true,
+            "CallText": "",
+            "LineNumber": 21,
+            "MethodName": "ExecuteNonQueryWithStatusAsync"
+          },
+          {
+            "NeedsConnectionArg": true,
+            "NeedsTransactionArg": true,
+            "CallText": "",
+            "LineNumber": 60,
+            "MethodName": "ExecuteNonQueryWithStatusAsync"
+          },
+          {
+            "NeedsConnectionArg": true,
+            "NeedsTransactionArg": true,
+            "CallText": "",
+            "LineNumber": 100,
+            "MethodName": "ExecuteNonQueryWithStatusAsync"
+          }
+        ],
+        "HasConnectionParam": false,
+        "Name": "DeleteLocation",
+        "HasTransactionParam": false
+      },
+      {
+        "LineNumber": 47,
+        "NeedsUpdate": true,
+        "Signature": "internal static async Task<DaoResult> InsertLocation(string location, string building)",
+        "CallsHelper": true,
+        "HelperCalls": [
+          {
+            "NeedsConnectionArg": true,
+            "NeedsTransactionArg": true,
+            "CallText": "",
+            "LineNumber": 60,
+            "MethodName": "ExecuteNonQueryWithStatusAsync"
+          },
+          {
+            "NeedsConnectionArg": true,
+            "NeedsTransactionArg": true,
+            "CallText": "",
+            "LineNumber": 100,
+            "MethodName": "ExecuteNonQueryWithStatusAsync"
+          },
+          {
+            "NeedsConnectionArg": true,
+            "NeedsTransactionArg": true,
+            "CallText": "",
+            "LineNumber": 128,
+            "MethodName": "ExecuteDataTableWithStatusAsync"
+          }
+        ],
+        "HasConnectionParam": false,
+        "Name": "InsertLocation",
+        "HasTransactionParam": false
+      },
+      {
+        "LineNumber": 86,
+        "NeedsUpdate": true,
+        "Signature": "internal static async Task<DaoResult> UpdateLocation(string oldLocation, string newLocation, string building)",
+        "CallsHelper": true,
+        "HelperCalls": [
+          {
+            "NeedsConnectionArg": true,
+            "NeedsTransactionArg": true,
+            "CallText": "",
+            "LineNumber": 100,
+            "MethodName": "ExecuteNonQueryWithStatusAsync"
+          },
+          {
+            "NeedsConnectionArg": true,
+            "NeedsTransactionArg": true,
+            "CallText": "",
+            "LineNumber": 128,
+            "MethodName": "ExecuteDataTableWithStatusAsync"
+          },
+          {
+            "NeedsConnectionArg": true,
+            "NeedsTransactionArg": true,
+            "CallText": "",
+            "LineNumber": 189,
+            "MethodName": "ExecuteScalarWithStatusAsync"
+          }
+        ],
+        "HasConnectionParam": false,
+        "Name": "UpdateLocation",
+        "HasTransactionParam": false
+      }
+    ],
+    "TotalMethods": 3
+  },
+  "Dao_History": {
+    "FilePath": "\\Data\\Dao_History.cs",
+    "NeedsUpdate": true,
+    "MethodsNeedingUpdate": [
+      {
+        "LineNumber": 13,
+        "NeedsUpdate": true,
+        "Signature": "public static async Task<DaoResult> AddTransactionHistoryAsync(Model_TransactionHistory history)",
+        "CallsHelper": true,
+        "HelperCalls": [
+          {
+            "NeedsConnectionArg": true,
+            "NeedsTransactionArg": true,
+            "CallText": "",
+            "LineNumber": 35,
+            "MethodName": "ExecuteNonQueryWithStatusAsync"
+          }
+        ],
+        "HasConnectionParam": false,
+        "Name": "AddTransactionHistoryAsync",
+        "HasTransactionParam": false
+      }
+    ],
+    "MethodsWithHelperCalls": [
+      {
+        "LineNumber": 13,
+        "NeedsUpdate": true,
+        "Signature": "public static async Task<DaoResult> AddTransactionHistoryAsync(Model_TransactionHistory history)",
+        "CallsHelper": true,
+        "HelperCalls": [
+          {
+            "NeedsConnectionArg": true,
+            "NeedsTransactionArg": true,
+            "CallText": "",
+            "LineNumber": 35,
+            "MethodName": "ExecuteNonQueryWithStatusAsync"
+          }
+        ],
+        "HasConnectionParam": false,
+        "Name": "AddTransactionHistoryAsync",
+        "HasTransactionParam": false
+      }
+    ],
+    "TotalMethods": 1
+  },
+  "Dao_QuickButtons": {
+    "FilePath": "\\Data\\Dao_QuickButtons.cs",
+    "NeedsUpdate": false,
+    "MethodsNeedingUpdate": [],
+    "MethodsWithHelperCalls": [
+      {
+        "LineNumber": 13,
+        "NeedsUpdate": false,
+        "Signature": "public static async Task<DaoResult> UpdateQuickButtonAsync(\n            string user, \n            int position, \n            string partId, \n            string operation, \n            int quantity,\n            MySqlConnection? connection = null,\n            MySqlTransaction? transaction = null)",
+        "CallsHelper": true,
+        "HelperCalls": [
+          {
+            "NeedsConnectionArg": true,
+            "NeedsTransactionArg": true,
+            "CallText": "",
+            "LineNumber": 37,
+            "MethodName": "ExecuteNonQueryWithStatusAsync"
+          },
+          {
+            "NeedsConnectionArg": true,
+            "NeedsTransactionArg": true,
+            "CallText": "",
+            "LineNumber": 80,
+            "MethodName": "ExecuteNonQueryWithStatusAsync"
+          }
+        ],
+        "HasConnectionParam": true,
+        "Name": "UpdateQuickButtonAsync",
+        "HasTransactionParam": true
+      },
+      {
+        "LineNumber": 61,
+        "NeedsUpdate": false,
+        "Signature": "public static async Task<DaoResult> RemoveQuickButtonAndShiftAsync(\n            string user, \n            int position,\n            MySqlConnection? connection = null,\n            MySqlTransaction? transaction = null)",
+        "CallsHelper": true,
+        "HelperCalls": [
+          {
+            "NeedsConnectionArg": true,
+            "NeedsTransactionArg": true,
+            "CallText": "",
+            "LineNumber": 80,
+            "MethodName": "ExecuteNonQueryWithStatusAsync"
+          },
+          {
+            "NeedsConnectionArg": true,
+            "NeedsTransactionArg": true,
+            "CallText": "",
+            "LineNumber": 125,
+            "MethodName": "ExecuteNonQueryWithStatusAsync"
+          }
+        ],
+        "HasConnectionParam": true,
+        "Name": "RemoveQuickButtonAndShiftAsync",
+        "HasTransactionParam": true
+      },
+      {
+        "LineNumber": 103,
+        "NeedsUpdate": false,
+        "Signature": "public static async Task<DaoResult> AddQuickButtonAsync(\n            string user, \n            string partId, \n            string operation, \n            int quantity, \n            int position,\n            MySqlConnection? connection = null,\n            MySqlTransaction? transaction = null)",
+        "CallsHelper": true,
+        "HelperCalls": [
+          {
+            "NeedsConnectionArg": true,
+            "NeedsTransactionArg": true,
+            "CallText": "",
+            "LineNumber": 125,
+            "MethodName": "ExecuteNonQueryWithStatusAsync"
+          },
+          {
+            "NeedsConnectionArg": true,
+            "NeedsTransactionArg": true,
+            "CallText": "",
+            "LineNumber": 170,
+            "MethodName": "ExecuteNonQueryWithStatusAsync"
+          },
+          {
+            "NeedsConnectionArg": true,
+            "NeedsTransactionArg": true,
+            "CallText": "",
+            "LineNumber": 207,
+            "MethodName": "ExecuteNonQueryWithStatusAsync"
+          }
+        ],
+        "HasConnectionParam": true,
+        "Name": "AddQuickButtonAsync",
+        "HasTransactionParam": true
+      },
+      {
+        "LineNumber": 148,
+        "NeedsUpdate": false,
+        "Signature": "public static async Task<DaoResult> MoveQuickButtonAsync(\n            string user, \n            int fromPosition, \n            int toPosition,\n            MySqlConnection? connection = null,\n            MySqlTransaction? transaction = null)",
+        "CallsHelper": true,
+        "HelperCalls": [
+          {
+            "NeedsConnectionArg": true,
+            "NeedsTransactionArg": true,
+            "CallText": "",
+            "LineNumber": 170,
+            "MethodName": "ExecuteNonQueryWithStatusAsync"
+          },
+          {
+            "NeedsConnectionArg": true,
+            "NeedsTransactionArg": true,
+            "CallText": "",
+            "LineNumber": 207,
+            "MethodName": "ExecuteNonQueryWithStatusAsync"
+          },
+          {
+            "NeedsConnectionArg": true,
+            "NeedsTransactionArg": true,
+            "CallText": "",
+            "LineNumber": 253,
+            "MethodName": "ExecuteNonQueryWithStatusAsync"
+          }
+        ],
+        "HasConnectionParam": true,
+        "Name": "MoveQuickButtonAsync",
+        "HasTransactionParam": true
+      },
+      {
+        "LineNumber": 193,
+        "NeedsUpdate": false,
+        "Signature": "public static async Task<DaoResult> DeleteAllQuickButtonsForUserAsync(\n            string user,\n            MySqlConnection? connection = null,\n            MySqlTransaction? transaction = null)",
+        "CallsHelper": true,
+        "HelperCalls": [
+          {
+            "NeedsConnectionArg": true,
+            "NeedsTransactionArg": true,
+            "CallText": "",
+            "LineNumber": 207,
+            "MethodName": "ExecuteNonQueryWithStatusAsync"
+          },
+          {
+            "NeedsConnectionArg": true,
+            "NeedsTransactionArg": true,
+            "CallText": "",
+            "LineNumber": 253,
+            "MethodName": "ExecuteNonQueryWithStatusAsync"
+          },
+          {
+            "NeedsConnectionArg": true,
+            "NeedsTransactionArg": true,
+            "CallText": "",
+            "LineNumber": 295,
+            "MethodName": "ExecuteNonQueryWithStatusAsync"
+          }
+        ],
+        "HasConnectionParam": true,
+        "Name": "DeleteAllQuickButtonsForUserAsync",
+        "HasTransactionParam": true
+      },
+      {
+        "LineNumber": 230,
+        "NeedsUpdate": false,
+        "Signature": "public static async Task<DaoResult> AddOrShiftQuickButtonAsync(\n            string user, \n            string partId, \n            string operation, \n            int quantity,\n            MySqlConnection? connection = null,\n            MySqlTransaction? transaction = null)",
+        "CallsHelper": true,
+        "HelperCalls": [
+          {
+            "NeedsConnectionArg": true,
+            "NeedsTransactionArg": true,
+            "CallText": "",
+            "LineNumber": 253,
+            "MethodName": "ExecuteNonQueryWithStatusAsync"
+          },
+          {
+            "NeedsConnectionArg": true,
+            "NeedsTransactionArg": true,
+            "CallText": "",
+            "LineNumber": 295,
+            "MethodName": "ExecuteNonQueryWithStatusAsync"
+          }
+        ],
+        "HasConnectionParam": true,
+        "Name": "AddOrShiftQuickButtonAsync",
+        "HasTransactionParam": true
+      },
+      {
+        "LineNumber": 277,
+        "NeedsUpdate": false,
+        "Signature": "public static async Task<DaoResult> RemoveAndShiftQuickButtonAsync(\n            string user, \n            int position,\n            MySqlConnection? connection = null,\n            MySqlTransaction? transaction = null)",
+        "CallsHelper": true,
+        "HelperCalls": [
+          {
+            "NeedsConnectionArg": true,
+            "NeedsTransactionArg": true,
+            "CallText": "",
+            "LineNumber": 295,
+            "MethodName": "ExecuteNonQueryWithStatusAsync"
+          },
+          {
+            "NeedsConnectionArg": true,
+            "NeedsTransactionArg": true,
+            "CallText": "",
+            "LineNumber": 340,
+            "MethodName": "ExecuteNonQueryWithStatusAsync"
+          }
+        ],
+        "HasConnectionParam": true,
+        "Name": "RemoveAndShiftQuickButtonAsync",
+        "HasTransactionParam": true
+      },
+      {
+        "LineNumber": 318,
+        "NeedsUpdate": false,
+        "Signature": "public static async Task<DaoResult> AddQuickButtonAtPositionAsync(\n            string user, \n            string partId, \n            string operation, \n            int quantity, \n            int position,\n            MySqlConnection? connection = null,\n            MySqlTransaction? transaction = null)",
+        "CallsHelper": true,
+        "HelperCalls": [
+          {
+            "NeedsConnectionArg": true,
+            "NeedsTransactionArg": true,
+            "CallText": "",
+            "LineNumber": 340,
+            "MethodName": "ExecuteNonQueryWithStatusAsync"
+          }
+        ],
+        "HasConnectionParam": true,
+        "Name": "AddQuickButtonAtPositionAsync",
+        "HasTransactionParam": true
+      }
+    ],
+    "TotalMethods": 8
+  },
+  "Dao_Inventory": {
+    "FilePath": "\\Data\\Dao_Inventory.cs",
+    "NeedsUpdate": true,
+    "MethodsNeedingUpdate": [
+      {
+        "LineNumber": 706,
+        "NeedsUpdate": true,
+        "Signature": "public static async Task<DaoResult> FixBatchNumbersAsync()",
+        "CallsHelper": true,
+        "HelperCalls": [
+          {
+            "NeedsConnectionArg": true,
+            "NeedsTransactionArg": true,
+            "CallText": "",
+            "LineNumber": 713,
+            "MethodName": "ExecuteNonQueryWithStatusAsync"
+          }
+        ],
+        "HasConnectionParam": false,
+        "Name": "FixBatchNumbersAsync",
+        "HasTransactionParam": false
+      }
+    ],
+    "MethodsWithHelperCalls": [
+      {
+        "LineNumber": 588,
+        "NeedsUpdate": false,
+        "Signature": "public static async Task<DaoResult> TransferPartSimpleAsync(\n        string batchNumber, \n        string partId, \n        string operation, \n        string newLocation,\n        MySqlConnection? connection = null,\n        MySqlTransaction? transaction = null)",
+        "CallsHelper": true,
+        "HelperCalls": [
+          {
+            "NeedsConnectionArg": true,
+            "NeedsTransactionArg": true,
+            "CallText": "",
+            "LineNumber": 608,
+            "MethodName": "ExecuteNonQueryWithStatusAsync"
+          },
+          {
+            "NeedsConnectionArg": true,
+            "NeedsTransactionArg": true,
+            "CallText": "",
+            "LineNumber": 677,
+            "MethodName": "ExecuteNonQueryWithStatusAsync"
+          }
+        ],
+        "HasConnectionParam": true,
+        "Name": "TransferPartSimpleAsync",
+        "HasTransactionParam": true
+      },
+      {
+        "LineNumber": 651,
+        "NeedsUpdate": false,
+        "Signature": "public static async Task<DaoResult> TransferInventoryQuantityAsync(\n        string batchNumber, \n        string partId, \n        string operation,\n        int transferQuantity, \n        int originalQuantity, \n        string newLocation, \n        string user,\n        MySqlConnection? connection = null,\n        MySqlTransaction? transaction = null)",
+        "CallsHelper": true,
+        "HelperCalls": [
+          {
+            "NeedsConnectionArg": true,
+            "NeedsTransactionArg": true,
+            "CallText": "",
+            "LineNumber": 677,
+            "MethodName": "ExecuteNonQueryWithStatusAsync"
+          },
+          {
+            "NeedsConnectionArg": true,
+            "NeedsTransactionArg": true,
+            "CallText": "",
+            "LineNumber": 713,
+            "MethodName": "ExecuteNonQueryWithStatusAsync"
+          }
+        ],
+        "HasConnectionParam": true,
+        "Name": "TransferInventoryQuantityAsync",
+        "HasTransactionParam": true
+      },
+      {
+        "LineNumber": 706,
+        "NeedsUpdate": true,
+        "Signature": "public static async Task<DaoResult> FixBatchNumbersAsync()",
+        "CallsHelper": true,
+        "HelperCalls": [
+          {
+            "NeedsConnectionArg": true,
+            "NeedsTransactionArg": true,
+            "CallText": "",
+            "LineNumber": 713,
+            "MethodName": "ExecuteNonQueryWithStatusAsync"
+          }
+        ],
+        "HasConnectionParam": false,
+        "Name": "FixBatchNumbersAsync",
+        "HasTransactionParam": false
+      }
+    ],
+    "TotalMethods": 3
+  }
+}

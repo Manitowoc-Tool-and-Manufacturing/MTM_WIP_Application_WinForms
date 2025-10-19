@@ -2,6 +2,7 @@ using System.Data;
 using MTM_Inventory_Application.Helpers;
 using MTM_Inventory_Application.Models;
 using MTM_Inventory_Application.Logging;
+using MySql.Data.MySqlClient;
 
 namespace MTM_Inventory_Application.Data;
 
@@ -11,7 +12,9 @@ internal static class Dao_Location
 {
     #region Delete
 
-    internal static async Task<DaoResult> DeleteLocation(string location)
+    internal static async Task<DaoResult> DeleteLocation(string location,
+        MySqlConnection? connection = null,
+        MySqlTransaction? transaction = null)
     {
         try
         {
@@ -45,7 +48,9 @@ internal static class Dao_Location
 
     #region Insert
 
-    internal static async Task<DaoResult> InsertLocation(string location, string building)
+    internal static async Task<DaoResult> InsertLocation(string location, string building,
+        MySqlConnection? connection = null,
+        MySqlTransaction? transaction = null)
     {
         try
         {
@@ -84,7 +89,9 @@ internal static class Dao_Location
 
     #region Update
 
-    internal static async Task<DaoResult> UpdateLocation(string oldLocation, string newLocation, string building)
+    internal static async Task<DaoResult> UpdateLocation(string oldLocation, string newLocation, string building,
+        MySqlConnection? connection = null,
+        MySqlTransaction? transaction = null)
     {
         try
         {
@@ -120,7 +127,7 @@ internal static class Dao_Location
         }
     }
 
-    internal static async Task<DaoResult<DataTable>> GetAllLocations()
+    internal static async Task<DaoResult<DataTable>> GetAllLocations(MySqlConnection? connection = null, MySqlTransaction? transaction = null)
     {
         try
         {
@@ -148,11 +155,11 @@ internal static class Dao_Location
         }
     }
 
-    internal static async Task<DaoResult<DataRow>> GetLocationByName(string location)
+    internal static async Task<DaoResult<DataRow>> GetLocationByName(string location, MySqlConnection? connection = null, MySqlTransaction? transaction = null)
     {
         try
         {
-            var allLocationsResult = await GetAllLocations();
+            var allLocationsResult = await GetAllLocations(connection, transaction);
             if (!allLocationsResult.IsSuccess)
             {
                 return DaoResult<DataRow>.Failure(allLocationsResult.ErrorMessage, allLocationsResult.Exception);
@@ -179,7 +186,7 @@ internal static class Dao_Location
 
     #region Existence Check
 
-    internal static async Task<DaoResult<bool>> LocationExists(string location)
+    internal static async Task<DaoResult<bool>> LocationExists(string location, MySqlConnection? connection = null, MySqlTransaction? transaction = null)
     {
         try
         {
@@ -214,3 +221,5 @@ internal static class Dao_Location
 }
 
 #endregion
+
+

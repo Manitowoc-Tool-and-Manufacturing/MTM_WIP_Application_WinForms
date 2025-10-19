@@ -1,4 +1,4 @@
-﻿using System.Data;
+using System.Data;
 using System.Security.Principal;
 using MTM_Inventory_Application.Helpers;
 using MTM_Inventory_Application.Logging;
@@ -13,7 +13,9 @@ internal static class Dao_System
 {
     #region User Roles / Access
 
-    internal static async Task<DaoResult> SetUserAccessTypeAsync(string userName, string accessType)
+    internal static async Task<DaoResult> SetUserAccessTypeAsync(string userName, string accessType,
+        MySqlConnection? connection = null,
+        MySqlTransaction? transaction = null)
     {
         try
         {
@@ -66,7 +68,7 @@ internal static class Dao_System
         return user;
     }
 
-    internal static async Task<DaoResult<List<Model_Users>>> System_UserAccessTypeAsync()
+    internal static async Task<DaoResult<List<Model_Users>>> System_UserAccessTypeAsync(MySqlConnection? connection = null, MySqlTransaction? transaction = null)
     {
         var user = Model_AppVariables.User;
         try
@@ -82,7 +84,9 @@ internal static class Dao_System
                 Model_AppVariables.ConnectionString,
                 "sys_GetUserAccessType",
                 null, // No parameters needed
-                null // No progress helper for startup
+                progressHelper: null,
+                connection: connection,
+                transaction: transaction
             );
 
             if (!dataResult.IsSuccess)
@@ -166,7 +170,7 @@ internal static class Dao_System
         }
     }
 
-    internal static async Task<DaoResult<int>> GetUserIdByNameAsync(string userName)
+    internal static async Task<DaoResult<int>> GetUserIdByNameAsync(string userName, MySqlConnection? connection = null, MySqlTransaction? transaction = null)
     {
         try
         {
@@ -176,7 +180,9 @@ internal static class Dao_System
                 Model_AppVariables.ConnectionString,
                 "sys_user_GetIdByName",
                 parameters,
-                null // No progress helper for this method
+                progressHelper: null,
+                connection: connection,
+                transaction: transaction
             );
 
             if (result.IsSuccess && result.Data != null && int.TryParse(result.Data.ToString(), out int userId))
@@ -196,7 +202,7 @@ internal static class Dao_System
         }
     }
 
-    internal static async Task<DaoResult<int>> GetRoleIdByNameAsync(string roleName)
+    internal static async Task<DaoResult<int>> GetRoleIdByNameAsync(string roleName, MySqlConnection? connection = null, MySqlTransaction? transaction = null)
     {
         try
         {
@@ -206,7 +212,9 @@ internal static class Dao_System
                 Model_AppVariables.ConnectionString,
                 "sys_GetRoleIdByName",
                 parameters,
-                null // No progress helper for this method
+                progressHelper: null,
+                connection: connection,
+                transaction: transaction
             );
 
             if (result.IsSuccess && result.Data != null && int.TryParse(result.Data.ToString(), out int roleId))
@@ -234,28 +242,35 @@ internal static class Dao_System
     /// Retrieves all themes from the app_themes table.
     /// Alternative implementation that queries the table directly since app_themes_Get_All stored procedure doesn't exist.
     /// </summary>
+    /// <param name="connection">Optional external MySqlConnection to use instead of creating a new one</param>
+    /// <param name="transaction">Optional external MySqlTransaction to participate in</param>
     /// <returns>A DaoResult containing a DataTable with ThemeName and SettingsJson columns.</returns>
-    internal static async Task<DaoResult<DataTable>> GetAllThemesAsync()
+    internal static async Task<DaoResult<DataTable>> GetAllThemesAsync(
+        MySqlConnection? connection = null,
+        MySqlTransaction? transaction = null)
     {
         try
         {
-            // Direct SQL query since the stored procedure doesn't exist
-            const string query = "SELECT ThemeName, SettingsJson FROM app_themes ORDER BY ThemeName";
+            // Use stored procedure instead of direct SQL query
+            var result = await Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync(
+                Model_AppVariables.ConnectionString,
+                "sys_theme_GetAll",
+                null, // No parameters needed
+                progressHelper: null,
+                connection: connection,
+                transaction: transaction
+            );
 
-            using var connection = new MySql.Data.MySqlClient.MySqlConnection(Model_AppVariables.ConnectionString);
-            await connection.OpenAsync();
-
-            using var command = new MySql.Data.MySqlClient.MySqlCommand(query, connection)
+            if (result.IsSuccess)
             {
-                CommandType = CommandType.Text
-            };
-
-            var dataTable = new DataTable();
-            using var adapter = new MySql.Data.MySqlClient.MySqlDataAdapter(command);
-            await Task.Run(() => adapter.Fill(dataTable));
-
-            LoggingUtility.Log($"[Dao_System] Retrieved {dataTable.Rows.Count} themes from app_themes table");
-            return DaoResult<DataTable>.Success(dataTable, $"Successfully retrieved {dataTable.Rows.Count} themes");
+                LoggingUtility.Log($"[Dao_System] Retrieved {result.Data?.Rows.Count ?? 0} themes using stored procedure");
+                return DaoResult<DataTable>.Success(result.Data, $"Successfully retrieved {result.Data?.Rows.Count ?? 0} themes");
+            }
+            else
+            {
+                LoggingUtility.Log($"[Dao_System] Failed to retrieve themes: {result.ErrorMessage}");
+                return DaoResult<DataTable>.Failure($"Failed to retrieve themes: {result.ErrorMessage}");
+            }
         }
         catch (Exception ex)
         {
@@ -286,7 +301,9 @@ internal static class Dao_System
     /// Used for startup validation per FR-014.
     /// </summary>
     /// <returns>DaoResult indicating success or failure with actionable error message</returns>
-    internal static async Task<DaoResult> CheckConnectivityAsync()
+    internal static async Task<DaoResult> CheckConnectivityAsync(
+        MySqlConnection? connection = null,
+        MySqlTransaction? transaction = null)
     {
         try
         {

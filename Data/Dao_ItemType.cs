@@ -2,6 +2,7 @@ using System.Data;
 using MTM_Inventory_Application.Helpers;
 using MTM_Inventory_Application.Logging;
 using MTM_Inventory_Application.Models;
+using MySql.Data.MySqlClient;
 
 namespace MTM_Inventory_Application.Data;
 
@@ -11,7 +12,9 @@ internal static class Dao_ItemType
 {
     #region Delete
 
-    internal static async Task<DaoResult> DeleteItemType(string itemType)
+    internal static async Task<DaoResult> DeleteItemType(string itemType,
+        MySqlConnection? connection = null,
+        MySqlTransaction? transaction = null)
     {
         try
         {
@@ -41,7 +44,9 @@ internal static class Dao_ItemType
         }
     }
 
-    internal static async Task<DaoResult> InsertItemType(string itemType, string user)
+    internal static async Task<DaoResult> InsertItemType(string itemType, string user,
+        MySqlConnection? connection = null,
+        MySqlTransaction? transaction = null)
     {
         try
         {
@@ -79,7 +84,9 @@ internal static class Dao_ItemType
 
     #region Update
 
-    internal static async Task<DaoResult> UpdateItemType(int id, string newItemType, string user)
+    internal static async Task<DaoResult> UpdateItemType(int id, string newItemType, string user,
+        MySqlConnection? connection = null,
+        MySqlTransaction? transaction = null)
     {
         try
         {
@@ -114,7 +121,7 @@ internal static class Dao_ItemType
         }
     }
 
-    internal static async Task<DaoResult<DataTable>> GetAllItemTypes()
+    internal static async Task<DaoResult<DataTable>> GetAllItemTypes(MySqlConnection? connection = null, MySqlTransaction? transaction = null)
     {
         try
         {
@@ -122,7 +129,9 @@ internal static class Dao_ItemType
                 Model_AppVariables.ConnectionString,
                 "md_item_types_Get_All",
                 null, // No parameters needed
-                null // No progress helper for this method
+                progressHelper: null,
+                connection: connection,
+                transaction: transaction
             );
 
             if (result.IsSuccess && result.Data != null)
@@ -142,11 +151,11 @@ internal static class Dao_ItemType
         }
     }
 
-    internal static async Task<DaoResult<DataRow>> GetItemTypeByName(string itemType)
+    internal static async Task<DaoResult<DataRow>> GetItemTypeByName(string itemType, MySqlConnection? connection = null, MySqlTransaction? transaction = null)
     {
         try
         {
-            var allItemTypesResult = await GetAllItemTypes();
+            var allItemTypesResult = await GetAllItemTypes(connection, transaction);
             if (!allItemTypesResult.IsSuccess)
             {
                 return DaoResult<DataRow>.Failure(allItemTypesResult.ErrorMessage, allItemTypesResult.Exception);
@@ -173,7 +182,7 @@ internal static class Dao_ItemType
 
     #region Existence Check
 
-    internal static async Task<DaoResult<bool>> ItemTypeExists(string itemType)
+    internal static async Task<DaoResult<bool>> ItemTypeExists(string itemType, MySqlConnection? connection = null, MySqlTransaction? transaction = null)
     {
         try
         {
@@ -183,7 +192,9 @@ internal static class Dao_ItemType
                 Model_AppVariables.ConnectionString,
                 "md_item_types_Exists_ByType",
                 parameters,
-                null // No progress helper for this method
+                progressHelper: null,
+                connection: connection,
+                transaction: transaction
             );
 
             if (result.IsSuccess && result.Data != null)

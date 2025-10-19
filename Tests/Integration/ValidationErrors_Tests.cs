@@ -44,7 +44,7 @@ public class ValidationErrors_Tests : BaseIntegrationTest
         string? nullUser = null;
 
         // Act
-        var errors = await Dao_ErrorLog.GetErrorsByUserAsync(nullUser!);
+        var errors = await Dao_ErrorLog.GetErrorsByUserAsync(nullUser!, connection: GetTestConnection(), transaction: GetTestTransaction());
 
         // Assert
         // Note: Current implementation may return empty DataTable instead of validation error
@@ -68,7 +68,7 @@ public class ValidationErrors_Tests : BaseIntegrationTest
         DateTime end = DateTime.MinValue; // End before start - invalid range
 
         // Act
-        var errors = await Dao_ErrorLog.GetErrorsByDateRangeAsync(start, end);
+        var errors = await Dao_ErrorLog.GetErrorsByDateRangeAsync(start, end, connection: GetTestConnection(), transaction: GetTestTransaction());
 
         // Assert
         // Current implementation may return empty results
@@ -92,7 +92,7 @@ public class ValidationErrors_Tests : BaseIntegrationTest
         string emptyUser = string.Empty;
 
         // Act
-        var errors = await Dao_ErrorLog.GetErrorsByUserAsync(emptyUser);
+        var errors = await Dao_ErrorLog.GetErrorsByUserAsync(emptyUser, connection: GetTestConnection(), transaction: GetTestTransaction());
 
         // Assert
         Assert.IsNotNull(errors, "Should return DataTable for empty user");
@@ -117,7 +117,7 @@ public class ValidationErrors_Tests : BaseIntegrationTest
         // Act & Assert - Should not throw exception
         try
         {
-            await Dao_ErrorLog.DeleteErrorByIdAsync(nonExistentId);
+            await Dao_ErrorLog.DeleteErrorByIdAsync(nonExistentId, connection: GetTestConnection(), transaction: GetTestTransaction());
             
             // Success - no exception thrown
             Assert.IsTrue(true, "Delete with non-existent ID handled gracefully");
@@ -141,7 +141,7 @@ public class ValidationErrors_Tests : BaseIntegrationTest
         // Act & Assert
         try
         {
-            await Dao_ErrorLog.DeleteErrorByIdAsync(negativeId);
+            await Dao_ErrorLog.DeleteErrorByIdAsync(negativeId, connection: GetTestConnection(), transaction: GetTestTransaction());
             
             Assert.IsTrue(true, "Delete with negative ID handled gracefully");
             Console.WriteLine("[Test Success] Negative error ID handled without exception");
@@ -166,7 +166,7 @@ public class ValidationErrors_Tests : BaseIntegrationTest
         string? nullUsername = null;
 
         // Act
-        var result = await Dao_System.GetUserIdByNameAsync(nullUsername!);
+        var result = await Dao_System.GetUserIdByNameAsync(nullUsername!, connection: GetTestConnection(), transaction: GetTestTransaction());
 
         // Assert
         Assert.IsFalse(result.IsSuccess, "GetUserIdByName should fail with null username");
@@ -189,7 +189,7 @@ public class ValidationErrors_Tests : BaseIntegrationTest
         string emptyUsername = string.Empty;
 
         // Act
-        var result = await Dao_System.GetUserIdByNameAsync(emptyUsername);
+        var result = await Dao_System.GetUserIdByNameAsync(emptyUsername, connection: GetTestConnection(), transaction: GetTestTransaction());
 
         // Assert
         Assert.IsFalse(result.IsSuccess, "GetUserIdByName should fail with empty username");
@@ -207,7 +207,7 @@ public class ValidationErrors_Tests : BaseIntegrationTest
         string? nullRoleName = null;
 
         // Act
-        var result = await Dao_System.GetRoleIdByNameAsync(nullRoleName!);
+        var result = await Dao_System.GetRoleIdByNameAsync(nullRoleName!, connection: GetTestConnection(), transaction: GetTestTransaction());
 
         // Assert
         Assert.IsFalse(result.IsSuccess, "GetRoleIdByName should fail with null role name");
@@ -233,11 +233,8 @@ public class ValidationErrors_Tests : BaseIntegrationTest
     [TestMethod]
     public async Task DatabaseOperation_WithInvalidConnection_ReturnsUserFriendlyError()
     {
-        // Arrange
-        string invalidConnectionString = "Server=nonexistent;Port=3306;Database=invalid;User=root;Password=root;ConnectionTimeout=5;";
-
         // Act
-        var result = await Dao_System.CheckConnectivityAsync();
+        var result = await Dao_System.CheckConnectivityAsync(connection: GetTestConnection(), transaction: GetTestTransaction());
 
         // Assert
         // Note: This test uses default connection string, not the invalid one
@@ -276,7 +273,7 @@ public class ValidationErrors_Tests : BaseIntegrationTest
         try
         {
             // Act - Attempt connectivity check
-            var result = await Dao_System.CheckConnectivityAsync();
+            var result = await Dao_System.CheckConnectivityAsync(connection: GetTestConnection(), transaction: GetTestTransaction());
 
             // Assert
             if (!result.IsSuccess)
@@ -320,7 +317,7 @@ public class ValidationErrors_Tests : BaseIntegrationTest
         // This test verifies that the system handles method calls correctly
 
         // Act - Call method that returns user access type data
-        var result = await Dao_System.System_UserAccessTypeAsync();
+        var result = await Dao_System.System_UserAccessTypeAsync(connection: GetTestConnection(), transaction: GetTestTransaction());
 
         // Assert
         // Should either succeed or fail with clear error (not throw unhandled exception)
@@ -354,7 +351,7 @@ public class ValidationErrors_Tests : BaseIntegrationTest
         string veryLongUsername = new string('A', 500); // 500 characters
 
         // Act
-        var errors = await Dao_ErrorLog.GetErrorsByUserAsync(veryLongUsername);
+        var errors = await Dao_ErrorLog.GetErrorsByUserAsync(veryLongUsername, connection: GetTestConnection(), transaction: GetTestTransaction());
 
         // Assert
         // Should return empty results or handle gracefully, not throw exception
@@ -373,14 +370,14 @@ public class ValidationErrors_Tests : BaseIntegrationTest
         string specialCharUser = "Test'; DROP TABLE log_error; --"; // SQL injection attempt
 
         // Act
-        var errors = await Dao_ErrorLog.GetErrorsByUserAsync(specialCharUser);
+        var errors = await Dao_ErrorLog.GetErrorsByUserAsync(specialCharUser, connection: GetTestConnection(), transaction: GetTestTransaction());
 
         // Assert
         // Parameterized query should prevent SQL injection
         Assert.IsNotNull(errors, "Should handle SQL injection attempt safely");
         
         // Verify log_error table still exists by querying it
-        var allErrors = await Dao_ErrorLog.GetAllErrorsAsync();
+        var allErrors = await Dao_ErrorLog.GetAllErrorsAsync(connection: GetTestConnection(), transaction: GetTestTransaction());
         Assert.IsNotNull(allErrors, "log_error table should still exist - SQL injection prevented");
 
         Console.WriteLine("[Test Success] SQL injection attempt blocked by parameterized query");

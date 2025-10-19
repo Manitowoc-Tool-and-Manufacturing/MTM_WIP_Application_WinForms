@@ -52,7 +52,9 @@ internal class Dao_Transactions
         string sortColumn = "ReceiveDate",
         bool sortDescending = true,
         int page = 1,
-        int pageSize = 20
+        int pageSize = 20,
+        MySqlConnection? connection = null,
+        MySqlTransaction? transaction = null
     )
     {
         try
@@ -83,7 +85,9 @@ internal class Dao_Transactions
                 Model_AppVariables.ConnectionString,
                 "inv_transactions_Search",
                 parameters,
-                null // No progress helper for this method
+                progressHelper: null,
+                connection: connection,
+                transaction: transaction
             );
 
             if (!result.IsSuccess)
@@ -200,7 +204,9 @@ internal class Dao_Transactions
         string userName,
         bool isAdmin,
         int page = 1,
-        int pageSize = 20
+        int pageSize = 20,
+        MySqlConnection? connection = null,
+        MySqlTransaction? transaction = null
     )
     {
         try
@@ -330,7 +336,9 @@ internal class Dao_Transactions
                 Model_AppVariables.ConnectionString,
                 "inv_transactions_SmartSearch",
                 parameters,
-                null // No progress helper for this method
+                progressHelper: null,
+                connection: connection,
+                transaction: transaction
             );
 
             System.Diagnostics.Debug.WriteLine($"[DAO DEBUG] Stored procedure result: IsSuccess={result.IsSuccess}, ErrorMessage='{result.ErrorMessage}'");
@@ -382,7 +390,9 @@ internal class Dao_Transactions
     public async Task<DaoResult<Dictionary<string, object>>> GetTransactionAnalyticsAsync(
         string userName,
         bool isAdmin,
-        (DateTime? from, DateTime? to) timeRange
+        (DateTime? from, DateTime? to) timeRange,
+        MySqlConnection? connection = null,
+        MySqlTransaction? transaction = null
     )
     {
         try
@@ -400,7 +410,9 @@ internal class Dao_Transactions
                 Model_AppVariables.ConnectionString,
                 "inv_transactions_GetAnalytics",
                 parameters,
-                null // No progress helper for this method
+                progressHelper: null,
+                connection: connection,
+                transaction: transaction
             );
 
             if (!result.IsSuccess)
@@ -453,19 +465,19 @@ internal class Dao_Transactions
     private Model_Transactions MapTransactionFromDataRow(DataRow row) =>
         new()
         {
-            ID = Convert.ToInt32(row["p_ID"]),
+            ID = Convert.ToInt32(row["ID"]),
             TransactionType =
                 Enum.TryParse<TransactionType>(row["TransactionType"].ToString(), out TransactionType type)
                     ? type
                     : TransactionType.IN,
             BatchNumber = row["BatchNumber"] == DBNull.Value ? null : row["BatchNumber"].ToString(),
-            PartID = row["p_PartID"] == DBNull.Value ? null : row["p_PartID"].ToString(),
+            PartID = row["PartID"] == DBNull.Value ? null : row["PartID"].ToString(),
             FromLocation = row["FromLocation"] == DBNull.Value ? null : row["FromLocation"].ToString(),
             ToLocation = row["ToLocation"] == DBNull.Value ? null : row["ToLocation"].ToString(),
-            Operation = row["p_Operation"] == DBNull.Value ? null : row["p_Operation"].ToString(),
+            Operation = row["Operation"] == DBNull.Value ? null : row["Operation"].ToString(),
             Quantity = row["Quantity"] == DBNull.Value ? 0 : Convert.ToInt32(row["Quantity"]),
             Notes = row["Notes"] == DBNull.Value ? null : row["Notes"].ToString(),
-            User = row["p_User"] == DBNull.Value ? null : row["p_User"].ToString(),
+            User = row["User"] == DBNull.Value ? null : row["User"].ToString(),
             ItemType = row["ItemType"] == DBNull.Value ? null : row["ItemType"].ToString(),
             DateTime = row["ReceiveDate"] == DBNull.Value
                 ? DateTime.MinValue

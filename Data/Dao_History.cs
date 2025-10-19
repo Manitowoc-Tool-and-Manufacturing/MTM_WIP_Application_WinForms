@@ -1,7 +1,8 @@
-﻿using System.Data;
+using System.Data;
 using MTM_Inventory_Application.Helpers;
 using MTM_Inventory_Application.Models;
 using MTM_Inventory_Application.Logging;
+using MySql.Data.MySqlClient;
 
 namespace MTM_Inventory_Application.Data;
 
@@ -11,7 +12,9 @@ internal class Dao_History
 {
     #region History Methods
 
-    public static async Task<DaoResult> AddTransactionHistoryAsync(Model_TransactionHistory history)
+    public static async Task<DaoResult> AddTransactionHistoryAsync(Model_TransactionHistory history,
+        MySqlConnection? connection = null,
+        MySqlTransaction? transaction = null)
     {
         try
         {
@@ -35,7 +38,9 @@ internal class Dao_History
                 Model_AppVariables.ConnectionString,
                 "inv_transaction_Add",
                 parameters,
-                null // No progress helper for this method
+                progressHelper: null,
+                connection: connection,
+                transaction: transaction
             );
 
             if (!result.IsSuccess)

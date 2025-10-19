@@ -376,7 +376,9 @@ internal static class Dao_User
     /// <param name="user">The username.</param>
     /// <param name="value">The database name value.</param>
     /// <returns>A DaoResult indicating success or failure.</returns>
-    internal static async Task<DaoResult> SetDatabaseAsync(string user, string value)
+    internal static async Task<DaoResult> SetDatabaseAsync(string user, string value,
+        MySqlConnection? connection = null,
+        MySqlTransaction? transaction = null)
     {
         Service_DebugTracer.TraceMethodEntry(new Dictionary<string, object> { ["user"] = user, ["value"] = value }, controlName: "Dao_User");
         
@@ -431,7 +433,9 @@ internal static class Dao_User
     /// <param name="user">The username.</param>
     /// <param name="value">The server port value.</param>
     /// <returns>A DaoResult indicating success or failure.</returns>
-    internal static async Task<DaoResult> SetWipServerPortAsync(string user, string value)
+    internal static async Task<DaoResult> SetWipServerPortAsync(string user, string value,
+        MySqlConnection? connection = null,
+        MySqlTransaction? transaction = null)
     {
         Service_DebugTracer.TraceMethodEntry(new Dictionary<string, object> { ["user"] = user, ["value"] = value }, controlName: "Dao_User");
         
@@ -562,7 +566,9 @@ internal static class Dao_User
     /// <param name="userId">The user ID.</param>
     /// <param name="themeJson">The theme JSON to set.</param>
     /// <returns>A DaoResult indicating success or failure.</returns>
-    public static async Task<DaoResult> SetSettingsJsonAsync(string userId, string themeJson)
+    public static async Task<DaoResult> SetSettingsJsonAsync(string userId, string themeJson,
+        MySqlConnection? connection = null,
+        MySqlTransaction? transaction = null)
     {
         Service_DebugTracer.TraceMethodEntry(new Dictionary<string, object> { ["userId"] = userId, ["themeJson"] = themeJson }, controlName: "Dao_User");
         
@@ -608,7 +614,9 @@ internal static class Dao_User
     /// <param name="dgvName">The DataGridView name.</param>
     /// <param name="settingsJson">The settings JSON to set.</param>
     /// <returns>A DaoResult indicating success or failure.</returns>
-    public static async Task<DaoResult> SetGridViewSettingsJsonAsync(string userId, string dgvName, string settingsJson)
+    public static async Task<DaoResult> SetGridViewSettingsJsonAsync(string userId, string dgvName, string settingsJson,
+        MySqlConnection? connection = null,
+        MySqlTransaction? transaction = null)
     {
         Service_DebugTracer.TraceMethodEntry(new Dictionary<string, object> { ["userId"] = userId, ["dgvName"] = dgvName, ["settingsJson"] = settingsJson }, controlName: "Dao_User");
         
@@ -732,7 +740,9 @@ internal static class Dao_User
     /// </summary>
     /// <param name="userName">The username whose settings to delete.</param>
     /// <returns>A DaoResult indicating success or failure.</returns>
-    internal static async Task<DaoResult> DeleteUserSettingsAsync(string userName)
+    internal static async Task<DaoResult> DeleteUserSettingsAsync(string userName,
+        MySqlConnection? connection = null,
+        MySqlTransaction? transaction = null)
     {
         Service_DebugTracer.TraceMethodEntry(new Dictionary<string, object> { ["userName"] = userName }, controlName: "Dao_User");
         
@@ -882,7 +892,9 @@ internal static class Dao_User
     /// <summary>
     /// Deletes the specified user from the system.
     /// </summary>
-    internal static async Task<DaoResult> DeleteUserAsync(string user)
+    internal static async Task<DaoResult> DeleteUserAsync(string user,
+        MySqlConnection? connection = null,
+        MySqlTransaction? transaction = null)
     {
         Service_DebugTracer.TraceMethodEntry(new Dictionary<string, object> { ["user"] = user }, controlName: "Dao_User");
         
@@ -1076,7 +1088,9 @@ internal static class Dao_User
     /// <param name="userId">The user ID.</param>
     /// <param name="shortcutsJson">The shortcuts JSON to set.</param>
     /// <returns>A DaoResult indicating success or failure.</returns>
-    internal static async Task<DaoResult> SetShortcutsJsonAsync(string userId, string shortcutsJson)
+    internal static async Task<DaoResult> SetShortcutsJsonAsync(string userId, string shortcutsJson,
+        MySqlConnection? connection = null,
+        MySqlTransaction? transaction = null)
     {
         Service_DebugTracer.TraceMethodEntry(new Dictionary<string, object> { ["userId"] = userId, ["shortcutsJson"] = shortcutsJson }, controlName: "Dao_User");
         
@@ -1121,7 +1135,9 @@ internal static class Dao_User
     /// <param name="user">The username.</param>
     /// <param name="themeName">The theme name to set.</param>
     /// <returns>A DaoResult indicating success or failure.</returns>
-    internal static async Task<DaoResult> SetThemeNameAsync(string user, string themeName)
+    internal static async Task<DaoResult> SetThemeNameAsync(string user, string themeName,
+        MySqlConnection? connection = null,
+        MySqlTransaction? transaction = null)
     {
         Service_DebugTracer.TraceMethodEntry(new Dictionary<string, object> { ["user"] = user, ["themeName"] = themeName }, controlName: "Dao_User");
         
@@ -1146,7 +1162,9 @@ internal static class Dao_User
 
     #region User Roles
 
-    internal static async Task<DaoResult> AddUserRoleAsync(int userId, int roleId, string assignedBy)
+    internal static async Task<DaoResult> AddUserRoleAsync(int userId, int roleId, string assignedBy,
+        MySqlConnection? connection = null,
+        MySqlTransaction? transaction = null)
     {
         Service_DebugTracer.TraceMethodEntry(new Dictionary<string, object> { ["userId"] = userId, ["roleId"] = roleId, ["assignedBy"] = assignedBy }, controlName: "Dao_User");
         
@@ -1216,7 +1234,9 @@ internal static class Dao_User
         }
     }
 
-    internal static async Task<DaoResult> SetUserRoleAsync(int userId, int newRoleId, string assignedBy)
+    internal static async Task<DaoResult> SetUserRoleAsync(int userId, int newRoleId, string assignedBy,
+        MySqlConnection? connection = null,
+        MySqlTransaction? transaction = null)
     {
         Service_DebugTracer.TraceMethodEntry(new Dictionary<string, object> { ["userId"] = userId, ["newRoleId"] = newRoleId, ["assignedBy"] = assignedBy }, controlName: "Dao_User");
         
@@ -1253,7 +1273,9 @@ internal static class Dao_User
         }
     }
 
-    internal static async Task<DaoResult> SetUsersRoleAsync(IEnumerable<int> userIds, int newRoleId, string assignedBy)
+    internal static async Task<DaoResult> SetUsersRoleAsync(IEnumerable<int> userIds, int newRoleId, string assignedBy,
+        MySqlConnection? connection = null,
+        MySqlTransaction? transaction = null)
     {
         Service_DebugTracer.TraceMethodEntry(new Dictionary<string, object> { ["userIds"] = string.Join(",", userIds), ["newRoleId"] = newRoleId, ["assignedBy"] = assignedBy }, controlName: "Dao_User");
         
@@ -1300,7 +1322,9 @@ internal static class Dao_User
         }
     }
 
-    internal static async Task<DaoResult> RemoveUserRoleAsync(int userId, int roleId)
+    internal static async Task<DaoResult> RemoveUserRoleAsync(int userId, int roleId,
+        MySqlConnection? connection = null,
+        MySqlTransaction? transaction = null)
     {
         Service_DebugTracer.TraceMethodEntry(new Dictionary<string, object> { ["userId"] = userId, ["roleId"] = roleId }, controlName: "Dao_User");
         

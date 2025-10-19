@@ -25,7 +25,7 @@ namespace MTM_Inventory_Application.Tests.Integration
         public async Task GetUniqueErrorsAsync_ReturnsErrorList()
         {
             // Act
-            var result = await Dao_ErrorLog.GetUniqueErrorsAsync();
+            var result = await Dao_ErrorLog.GetUniqueErrorsAsync(connection: GetTestConnection(), transaction: GetTestTransaction());
 
             // Assert
             Assert.IsNotNull(result, "Result should not be null");
@@ -40,7 +40,7 @@ namespace MTM_Inventory_Application.Tests.Integration
         public async Task GetUniqueErrorsAsync_AsyncExecution_ReturnsErrorList()
         {
             // Act
-            var result = await Dao_ErrorLog.GetUniqueErrorsAsync();
+            var result = await Dao_ErrorLog.GetUniqueErrorsAsync(connection: GetTestConnection(), transaction: GetTestTransaction());
 
             // Assert
             Assert.IsNotNull(result, "Result should not be null");
@@ -71,7 +71,7 @@ namespace MTM_Inventory_Application.Tests.Integration
         public async Task GetAllErrorsAsync_ReturnsDataTable()
         {
             // Act
-            var result = await Dao_ErrorLog.GetAllErrorsAsync();
+            var result = await Dao_ErrorLog.GetAllErrorsAsync(connection: GetTestConnection(), transaction: GetTestTransaction());
 
             // Assert
             Assert.IsNotNull(result, "Result should not be null");
@@ -90,7 +90,7 @@ namespace MTM_Inventory_Application.Tests.Integration
         public async Task GetAllErrorsAsync_SyncMode_ReturnsDataTable()
         {
             // Act
-            var result = await Dao_ErrorLog.GetAllErrorsAsync();
+            var result = await Dao_ErrorLog.GetAllErrorsAsync(connection: GetTestConnection(), transaction: GetTestTransaction());
 
             // Assert
             Assert.IsNotNull(result, "Result should not be null");
@@ -113,7 +113,7 @@ namespace MTM_Inventory_Application.Tests.Integration
             var testUser = Model_AppVariables.User ?? "TestUser";
 
             // Act
-            var result = await Dao_ErrorLog.GetErrorsByUserAsync(testUser);
+            var result = await Dao_ErrorLog.GetErrorsByUserAsync(testUser, connection: GetTestConnection(), transaction: GetTestTransaction());
 
             // Assert
             Assert.IsNotNull(result, "Result should not be null");
@@ -132,7 +132,7 @@ namespace MTM_Inventory_Application.Tests.Integration
             var nonExistentUser = "NonExistentUser_" + Guid.NewGuid().ToString();
 
             // Act
-            var result = await Dao_ErrorLog.GetErrorsByUserAsync(nonExistentUser);
+            var result = await Dao_ErrorLog.GetErrorsByUserAsync(nonExistentUser, connection: GetTestConnection(), transaction: GetTestTransaction());
 
             // Assert
             Assert.IsNotNull(result, "Result should not be null");
@@ -157,7 +157,7 @@ namespace MTM_Inventory_Application.Tests.Integration
             var startDate = endDate.AddDays(-7); // Last 7 days
 
             // Act
-            var result = await Dao_ErrorLog.GetErrorsByDateRangeAsync(startDate, endDate);
+            var result = await Dao_ErrorLog.GetErrorsByDateRangeAsync(startDate, endDate, connection: GetTestConnection(), transaction: GetTestTransaction());
 
             // Assert
             Assert.IsNotNull(result, "Result should not be null");
@@ -177,7 +177,7 @@ namespace MTM_Inventory_Application.Tests.Integration
             var endDate = startDate.AddDays(7);
 
             // Act
-            var result = await Dao_ErrorLog.GetErrorsByDateRangeAsync(startDate, endDate);
+            var result = await Dao_ErrorLog.GetErrorsByDateRangeAsync(startDate, endDate, connection: GetTestConnection(), transaction: GetTestTransaction());
 
             // Assert
             Assert.IsNotNull(result, "Result should not be null");
@@ -197,7 +197,7 @@ namespace MTM_Inventory_Application.Tests.Integration
             var endDate = startDate.AddDays(-7); // End is before start
 
             // Act
-            var result = await Dao_ErrorLog.GetErrorsByDateRangeAsync(startDate, endDate);
+            var result = await Dao_ErrorLog.GetErrorsByDateRangeAsync(startDate, endDate, connection: GetTestConnection(), transaction: GetTestTransaction());
 
             // Assert - Should handle inverted dates without throwing exceptions
             // Stored procedure returns status -2 for inverted date range
@@ -222,7 +222,7 @@ namespace MTM_Inventory_Application.Tests.Integration
             var nonExistentId = 999999;
 
             // Act
-            var result = await Dao_ErrorLog.DeleteErrorByIdAsync(nonExistentId);
+            var result = await Dao_ErrorLog.DeleteErrorByIdAsync(nonExistentId, connection: GetTestConnection(), transaction: GetTestTransaction());
             
             // Assert - Should execute without throwing, but returns failure status for non-existent ID
             Assert.IsNotNull(result, "Result should not be null");
@@ -239,7 +239,7 @@ namespace MTM_Inventory_Application.Tests.Integration
         public async Task DeleteAllErrorsAsync_ExecutesWithoutError()
         {
             // Act
-            var result = await Dao_ErrorLog.DeleteAllErrorsAsync();
+            var result = await Dao_ErrorLog.DeleteAllErrorsAsync(connection: GetTestConnection(), transaction: GetTestTransaction());
             
             // Assert
             Assert.IsNotNull(result, "Result should not be null");
@@ -370,7 +370,7 @@ namespace MTM_Inventory_Application.Tests.Integration
         public async Task GetUniqueErrorsAsync_ReturnsDistinctErrors()
         {
             // Act
-            var result = await Dao_ErrorLog.GetUniqueErrorsAsync();
+            var result = await Dao_ErrorLog.GetUniqueErrorsAsync(connection: GetTestConnection(), transaction: GetTestTransaction());
 
             // Assert
             if (result.Count > 0)
@@ -394,7 +394,7 @@ namespace MTM_Inventory_Application.Tests.Integration
         public async Task GetAllErrorsAsync_ReturnsValidStructure()
         {
             // Act
-            var result = await Dao_ErrorLog.GetAllErrorsAsync();
+            var result = await Dao_ErrorLog.GetAllErrorsAsync(connection: GetTestConnection(), transaction: GetTestTransaction());
 
             // Assert
             Assert.IsNotNull(result, "Result should not be null");
@@ -415,7 +415,7 @@ namespace MTM_Inventory_Application.Tests.Integration
         public async Task GetErrorsByUserAsync_WithEmptyString_HandlesGracefully()
         {
             // Act
-            var result = await Dao_ErrorLog.GetErrorsByUserAsync(string.Empty);
+            var result = await Dao_ErrorLog.GetErrorsByUserAsync(string.Empty, connection: GetTestConnection(), transaction: GetTestTransaction());
 
             // Assert - Should handle empty string gracefully without throwing exceptions
             // Stored procedure returns status -2 for null/empty user
@@ -432,7 +432,7 @@ namespace MTM_Inventory_Application.Tests.Integration
         public async Task GetErrorsByUserAsync_WithNull_HandlesGracefully()
         {
             // Act
-            var result = await Dao_ErrorLog.GetErrorsByUserAsync(null!);
+            var result = await Dao_ErrorLog.GetErrorsByUserAsync(null!, connection: GetTestConnection(), transaction: GetTestTransaction());
             
             // Assert - Should handle null gracefully without throwing exceptions
             // Stored procedure returns status -2 for null/empty user

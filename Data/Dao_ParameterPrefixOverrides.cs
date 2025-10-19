@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using MTM_Inventory_Application.Helpers;
 using MTM_Inventory_Application.Models;
 using MTM_Inventory_Application.Logging;
+using MySql.Data.MySqlClient;
 
 namespace MTM_Inventory_Application.Data
 {
@@ -205,7 +206,9 @@ namespace MTM_Inventory_Application.Data
         /// </summary>
         /// <param name="model">The override with updated values.</param>
         /// <returns>DaoResult indicating success or failure.</returns>
-        public static async Task<DaoResult> UpdateAsync(Model_ParameterPrefixOverride model)
+        public static async Task<DaoResult> UpdateAsync(Model_ParameterPrefixOverride model,
+        MySqlConnection? connection = null,
+        MySqlTransaction? transaction = null)
         {
             try
             {
@@ -288,7 +291,9 @@ namespace MTM_Inventory_Application.Data
         /// <param name="overrideId">The ID of the override to delete.</param>
         /// <param name="modifiedBy">User performing the deletion.</param>
         /// <returns>DaoResult indicating success or failure.</returns>
-        public static async Task<DaoResult> DeleteAsync(int overrideId, string modifiedBy)
+        public static async Task<DaoResult> DeleteAsync(int overrideId, string modifiedBy,
+        MySqlConnection? connection = null,
+        MySqlTransaction? transaction = null)
         {
             try
             {
