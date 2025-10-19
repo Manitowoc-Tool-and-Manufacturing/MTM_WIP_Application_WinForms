@@ -16,22 +16,17 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `sys_last_10_transactions_DeleteAll_
 )
 BEGIN
     DECLARE v_RowsAffected INT DEFAULT 0;
-    
+    -- Transaction management removed: Works within caller's transaction context (tests use transactions)`r`n    
     DECLARE EXIT HANDLER FOR SQLEXCEPTION
     BEGIN
         GET DIAGNOSTICS CONDITION 1
             p_ErrorMsg = MESSAGE_TEXT;
         SET p_Status = -1;
-        ROLLBACK;
     END;
-    
-    START TRANSACTION;
-    
     -- Validate input
     IF p_User IS NULL OR TRIM(p_User) = '' THEN
         SET p_Status = -2;
         SET p_ErrorMsg = 'User is required';
-        ROLLBACK;
     ELSE
         -- Delete all quick buttons for user
         DELETE FROM sys_last_10_transactions
@@ -42,11 +37,9 @@ BEGIN
         IF v_RowsAffected > 0 THEN
             SET p_Status = 1;
             SET p_ErrorMsg = CONCAT('Deleted ', v_RowsAffected, ' quick button(s) for user "', p_User, '"');
-            COMMIT;
         ELSE
             SET p_Status = 0;
             SET p_ErrorMsg = CONCAT('No quick buttons found for user "', p_User, '"');
-            COMMIT;
         END IF;
     END IF;
 END

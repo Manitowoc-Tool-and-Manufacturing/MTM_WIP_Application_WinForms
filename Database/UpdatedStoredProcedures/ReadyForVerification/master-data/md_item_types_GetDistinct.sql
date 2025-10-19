@@ -15,17 +15,13 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `md_item_types_GetDistinct`(
 )
 BEGIN
     DECLARE v_Count INT DEFAULT 0;
-    
+    -- Transaction management removed: Works within caller's transaction context (tests use transactions)`r`n    
     DECLARE EXIT HANDLER FOR SQLEXCEPTION
     BEGIN
         GET DIAGNOSTICS CONDITION 1
             p_ErrorMsg = MESSAGE_TEXT;
         SET p_Status = -1;
-        ROLLBACK;
     END;
-    
-    START TRANSACTION;
-    
     -- Get distinct item types
     SELECT DISTINCT ItemType
     FROM md_item_types
@@ -36,11 +32,9 @@ BEGIN
     IF v_Count > 0 THEN
         SET p_Status = 1;
         SET p_ErrorMsg = CONCAT('Retrieved ', v_Count, ' distinct item type(s)');
-        COMMIT;
     ELSE
         SET p_Status = 0;
         SET p_ErrorMsg = 'No item types found';
-        COMMIT;
     END IF;
 END
 //

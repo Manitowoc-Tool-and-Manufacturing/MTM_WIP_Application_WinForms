@@ -11,9 +11,8 @@ BEGIN
     DECLARE nextBatch BIGINT;
     DECLARE cur CURSOR FOR SELECT ID FROM inv_inventory WHERE BatchNumber IS NULL ORDER BY ID;
     DECLARE CONTINUE HANDLER FOR NOT FOUND SET done = TRUE;
-    DECLARE EXIT HANDLER FOR SQLEXCEPTION
+    -- Transaction management removed: Works within caller's transaction context (tests use transactions)`r`n    DECLARE EXIT HANDLER FOR SQLEXCEPTION
     BEGIN
-        ROLLBACK;
         GET DIAGNOSTICS CONDITION 1
             @sqlstate = RETURNED_SQLSTATE,
             @errno = MYSQL_ERRNO,
@@ -21,7 +20,6 @@ BEGIN
         SET p_Status = -1;
         SET p_ErrorMsg = CONCAT('Database error: ', @text);
     END;
-    START TRANSACTION;
     SELECT last_batch_number INTO nextBatch FROM inv_inventory_batch_seq;
     OPEN cur;
     read_loop: LOOP
@@ -35,7 +33,6 @@ BEGIN
         UPDATE inv_inventory_batch_seq SET last_batch_number = nextBatch;
     END LOOP;
     CLOSE cur;
-    COMMIT;
     IF v_RowsAffected > 0 THEN
         SET p_Status = 1;
         SET p_ErrorMsg = CONCAT('Successfully fixed ', v_RowsAffected, ' batch number(s)');

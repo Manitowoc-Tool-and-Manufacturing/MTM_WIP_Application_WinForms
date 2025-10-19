@@ -14,27 +14,22 @@ BEGIN
     DECLARE v_CurDate DATETIME;
     DECLARE v_Counter INT;
     DECLARE v_BaseTime DATETIME;
-    DECLARE EXIT HANDLER FOR SQLEXCEPTION
+    -- Transaction management removed: Works within caller's transaction context (tests use transactions)`r`n    DECLARE EXIT HANDLER FOR SQLEXCEPTION
     BEGIN
         GET DIAGNOSTICS CONDITION 1
             p_ErrorMsg = MESSAGE_TEXT;
         SET p_Status = -1;
         DROP TEMPORARY TABLE IF EXISTS tempDates;
-        ROLLBACK;
     END;
-    START TRANSACTION;
     IF p_User IS NULL OR TRIM(p_User) = '' THEN
         SET p_Status = -2;
         SET p_ErrorMsg = 'User is required';
-        ROLLBACK;
     ELSEIF p_SrcReceiveDate IS NULL THEN
         SET p_Status = -2;
         SET p_ErrorMsg = 'Source receive date is required';
-        ROLLBACK;
     ELSEIF p_TargetIndex IS NULL OR p_TargetIndex < 0 THEN
         SET p_Status = -2;
         SET p_ErrorMsg = 'Valid target index is required';
-        ROLLBACK;
     ELSE
         CREATE TEMPORARY TABLE tempDates (idx INT AUTO_INCREMENT PRIMARY KEY, dt DATETIME);
         INSERT INTO tempDates (dt)
@@ -45,12 +40,10 @@ BEGIN
             SET p_Status = -4;
             SET p_ErrorMsg = 'Source transaction not found';
             DROP TEMPORARY TABLE tempDates;
-            ROLLBACK;
         ELSEIF v_SrcIdx = p_TargetIndex + 1 THEN
             SET p_Status = 0;
             SET p_ErrorMsg = 'Transaction already at target position';
             DROP TEMPORARY TABLE tempDates;
-            COMMIT;
         ELSE
             SELECT dt INTO v_SrcDate FROM tempDates WHERE idx = v_SrcIdx LIMIT 1;
             DELETE FROM tempDates WHERE idx = v_SrcIdx;
@@ -71,7 +64,6 @@ BEGIN
             DROP TEMPORARY TABLE tempDates;
             SET p_Status = 1;
             SET p_ErrorMsg = CONCAT('Transaction reordered to index ', p_TargetIndex);
-            COMMIT;
         END IF;
     END IF;
 END

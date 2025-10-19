@@ -7,18 +7,15 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `usr_users_Exists`(
 )
 BEGIN
     DECLARE v_Count INT DEFAULT 0;
-    DECLARE EXIT HANDLER FOR SQLEXCEPTION
+    -- Transaction management removed: Works within caller's transaction context (tests use transactions)`r`n    DECLARE EXIT HANDLER FOR SQLEXCEPTION
     BEGIN
         GET DIAGNOSTICS CONDITION 1
             p_ErrorMsg = MESSAGE_TEXT;
         SET p_Status = -1;
-        ROLLBACK;
     END;
-    START TRANSACTION;
     IF p_User IS NULL OR TRIM(p_User) = '' THEN
         SET p_Status = -2;
         SET p_ErrorMsg = 'User is required';
-        ROLLBACK;
     ELSE
         SELECT COUNT(*) AS UserExists INTO v_Count
         FROM usr_users
@@ -31,7 +28,6 @@ BEGIN
             SET p_Status = 0;
             SET p_ErrorMsg = CONCAT('User "', p_User, '" does not exist');
         END IF;
-        COMMIT;
     END IF;
 END
 //

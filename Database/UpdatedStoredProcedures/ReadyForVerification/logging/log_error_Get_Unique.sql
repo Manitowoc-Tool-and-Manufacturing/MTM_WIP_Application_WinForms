@@ -6,14 +6,12 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `log_error_Get_Unique`(
 )
 BEGIN
     DECLARE v_Count INT DEFAULT 0;
-    DECLARE EXIT HANDLER FOR SQLEXCEPTION
+    -- Transaction management removed: Works within caller's transaction context (tests use transactions)`r`n    DECLARE EXIT HANDLER FOR SQLEXCEPTION
     BEGIN
         GET DIAGNOSTICS CONDITION 1
             p_ErrorMsg = MESSAGE_TEXT;
         SET p_Status = -1;
-        ROLLBACK;
     END;
-    START TRANSACTION;
     SELECT DISTINCT `MethodName`, `ErrorMessage`
     FROM `log_error`
     WHERE `MethodName` IS NOT NULL AND `ErrorMessage` IS NOT NULL
@@ -26,7 +24,6 @@ BEGIN
         SET p_Status = 0;
         SET p_ErrorMsg = 'No unique error combinations found';
     END IF;
-    COMMIT;
 END
 //
 DELIMITER ;

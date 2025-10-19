@@ -5,14 +5,12 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `maint_reload_part_ids_and_operation
     OUT p_ErrorMsg VARCHAR(500)
 )
 BEGIN
-    DECLARE EXIT HANDLER FOR SQLEXCEPTION
+    -- Transaction management removed: Works within caller's transaction context (tests use transactions)`r`n    DECLARE EXIT HANDLER FOR SQLEXCEPTION
     BEGIN
         GET DIAGNOSTICS CONDITION 1
             p_ErrorMsg = MESSAGE_TEXT;
         SET p_Status = -1;
-        ROLLBACK;
     END;
-    START TRANSACTION;
     TRUNCATE TABLE mtm_wip_application.md_part_ids;
     INSERT INTO mtm_wip_application.md_part_ids (
         `PartID`,
@@ -50,8 +48,6 @@ BEGIN
             ID
     ) descs
     ON seqs.ID = descs.ID;
-    COMMIT;
-    START TRANSACTION;
     INSERT IGNORE INTO mtm_wip_application.md_operation_numbers (`Operation`)
     SELECT DISTINCT op_num
     FROM (
@@ -73,7 +69,6 @@ BEGIN
         WHERE mpi.Operations IS NOT NULL
     ) AS all_ops
     WHERE op_num IS NOT NULL AND op_num <> '';
-    COMMIT;
     SET p_Status = 1;
     SET p_ErrorMsg = 'Part IDs and operation numbers reloaded successfully';
 END

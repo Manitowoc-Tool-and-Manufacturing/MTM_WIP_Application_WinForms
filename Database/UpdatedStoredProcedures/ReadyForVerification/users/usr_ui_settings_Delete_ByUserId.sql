@@ -16,22 +16,17 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `usr_ui_settings_Delete_ByUserId`(
 )
 BEGIN
     DECLARE v_RowsAffected INT DEFAULT 0;
-    
+    -- Transaction management removed: Works within caller's transaction context (tests use transactions)`r`n    
     DECLARE EXIT HANDLER FOR SQLEXCEPTION
     BEGIN
         GET DIAGNOSTICS CONDITION 1
             p_ErrorMsg = MESSAGE_TEXT;
         SET p_Status = -1;
-        ROLLBACK;
     END;
-    
-    START TRANSACTION;
-    
     -- Validate input
     IF p_UserId IS NULL OR p_UserId <= 0 THEN
         SET p_Status = -2;
         SET p_ErrorMsg = 'Valid UserId is required';
-        ROLLBACK;
     ELSE
         -- Delete all UI settings for user
         DELETE FROM usr_ui_settings
@@ -42,11 +37,9 @@ BEGIN
         IF v_RowsAffected > 0 THEN
             SET p_Status = 1;
             SET p_ErrorMsg = CONCAT('Deleted ', v_RowsAffected, ' UI setting(s) for user ', p_UserId);
-            COMMIT;
         ELSE
             SET p_Status = 0;
             SET p_ErrorMsg = CONCAT('No UI settings found for user ', p_UserId);
-            COMMIT;
         END IF;
     END IF;
 END

@@ -15,9 +15,8 @@ BEGIN
     DECLARE v_RowsAffected INT DEFAULT 0;
     DECLARE nextBatch BIGINT;
     DECLARE batchStr VARCHAR(10);
-    DECLARE EXIT HANDLER FOR SQLEXCEPTION
+    -- Transaction management removed: Works within caller's transaction context (tests use transactions)`r`n    DECLARE EXIT HANDLER FOR SQLEXCEPTION
     BEGIN
-        ROLLBACK;
         GET DIAGNOSTICS CONDITION 1
             @sqlstate = RETURNED_SQLSTATE,
             @errno = MYSQL_ERRNO,
@@ -25,27 +24,21 @@ BEGIN
         SET p_Status = -1;
         SET p_ErrorMsg = CONCAT('Database error: ', @text);
     END;
-    START TRANSACTION;
     IF p_PartID IS NULL OR p_PartID = '' THEN
         SET p_Status = -2;
         SET p_ErrorMsg = 'PartID is required';
-        ROLLBACK;
     ELSEIF p_Location IS NULL OR p_Location = '' THEN
         SET p_Status = -2;
         SET p_ErrorMsg = 'Location is required';
-        ROLLBACK;
     ELSEIF p_Operation IS NULL OR p_Operation = '' THEN
         SET p_Status = -2;
         SET p_ErrorMsg = 'Operation is required';
-        ROLLBACK;
     ELSEIF p_Quantity IS NULL OR p_Quantity <= 0 THEN
         SET p_Status = -2;
         SET p_ErrorMsg = 'Quantity must be greater than 0';
-        ROLLBACK;
     ELSEIF p_User IS NULL OR p_User = '' THEN
         SET p_Status = -2;
         SET p_ErrorMsg = 'User is required';
-        ROLLBACK;
     ELSE
         SELECT last_batch_number INTO nextBatch FROM inv_inventory_batch_seq FOR UPDATE;
         SET nextBatch = nextBatch + 1;
@@ -83,11 +76,9 @@ BEGIN
                 p_ItemType
             );
         IF v_RowsAffected > 0 THEN
-            COMMIT;
             SET p_Status = 1;
             SET p_ErrorMsg = CONCAT('Successfully added inventory item with batch number ', batchStr);
         ELSE
-            ROLLBACK;
             SET p_Status = 0;
             SET p_ErrorMsg = 'No rows were affected';
         END IF;

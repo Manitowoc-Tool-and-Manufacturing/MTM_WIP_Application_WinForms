@@ -16,18 +16,15 @@ BEGIN
     DECLARE v_RowsAffected INT DEFAULT 0;
     DECLARE v_ErrorMessage TEXT DEFAULT '';
     DECLARE v_RecordCount INT DEFAULT 0;
-    DECLARE EXIT HANDLER FOR SQLEXCEPTION
+    -- Transaction management removed: Works within caller's transaction context (tests use transactions)`r`n    DECLARE EXIT HANDLER FOR SQLEXCEPTION
     BEGIN
         GET DIAGNOSTICS CONDITION 1 v_ErrorMessage = MESSAGE_TEXT;
         SET p_Status = -1;
         SET p_ErrorMsg = CONCAT('Database error occurred while removing inventory item for part: ', p_PartID);
-        ROLLBACK;
     END;
-    START TRANSACTION;
     IF p_Quantity <= 0 THEN
         SET p_Status = -2;
         SET p_ErrorMsg = 'Quantity must be greater than zero';
-        ROLLBACK;
     ELSE
         SELECT COUNT(*) INTO v_RecordCount FROM inv_inventory WHERE PartID = p_PartID AND Location = p_Location AND Operation = p_Operation;
         IF v_RecordCount = 0 THEN
@@ -52,7 +49,6 @@ BEGIN
                 SET p_ErrorMsg = CONCAT('No matching inventory item found for removal. Found ', v_RecordCount, ' records for PartID: ', p_PartID, ', Location: ', p_Location, ', Operation: ', p_Operation, ' but none matched Quantity: ', p_Quantity);
             END IF;
         END IF;
-        COMMIT;
     END IF;
 END
 //

@@ -17,9 +17,8 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `inv_transaction_Add`(
 )
 BEGIN
     DECLARE v_RowsAffected INT DEFAULT 0;
-    DECLARE EXIT HANDLER FOR SQLEXCEPTION
+    -- Transaction management removed: Works within caller's transaction context (tests use transactions)`r`n    DECLARE EXIT HANDLER FOR SQLEXCEPTION
     BEGIN
-        ROLLBACK;
         GET DIAGNOSTICS CONDITION 1
             @sqlstate = RETURNED_SQLSTATE,
             @errno = MYSQL_ERRNO,
@@ -27,19 +26,15 @@ BEGIN
         SET p_Status = -1;
         SET p_ErrorMsg = CONCAT('Database error: ', @text);
     END;
-    START TRANSACTION;
     IF p_TransactionType IS NULL THEN
         SET p_Status = -2;
         SET p_ErrorMsg = 'TransactionType is required';
-        ROLLBACK;
     ELSEIF p_PartID IS NULL OR p_PartID = '' THEN
         SET p_Status = -2;
         SET p_ErrorMsg = 'PartID is required';
-        ROLLBACK;
     ELSEIF p_Quantity IS NULL OR p_Quantity <= 0 THEN
         SET p_Status = -2;
         SET p_ErrorMsg = 'Quantity must be greater than zero';
-        ROLLBACK;
     ELSE
         INSERT INTO inv_transaction (
             TransactionType, PartID, `BatchNumber`, FromLocation, ToLocation,
@@ -50,11 +45,9 @@ BEGIN
         );
         SET v_RowsAffected = ROW_COUNT();
         IF v_RowsAffected > 0 THEN
-            COMMIT;
             SET p_Status = 1;
             SET p_ErrorMsg = 'Transaction added successfully';
         ELSE
-            ROLLBACK;
             SET p_Status = 0;
             SET p_ErrorMsg = 'No rows were affected';
         END IF;

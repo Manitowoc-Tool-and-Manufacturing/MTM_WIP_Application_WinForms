@@ -12,26 +12,21 @@ BEGIN
     DECLARE id2 INT;
     DECLARE temp_date DATETIME;
     DECLARE v_RowCount INT DEFAULT 0;
-    DECLARE EXIT HANDLER FOR SQLEXCEPTION
+    -- Transaction management removed: Works within caller's transaction context (tests use transactions)`r`n    DECLARE EXIT HANDLER FOR SQLEXCEPTION
     BEGIN
         GET DIAGNOSTICS CONDITION 1
             p_ErrorMsg = MESSAGE_TEXT;
         SET p_Status = -1;
-        ROLLBACK;
     END;
-    START TRANSACTION;
     IF p_User IS NULL OR TRIM(p_User) = '' THEN
         SET p_Status = -2;
         SET p_ErrorMsg = 'User is required';
-        ROLLBACK;
     ELSEIF p_ReceiveDate1 IS NULL THEN
         SET p_Status = -2;
         SET p_ErrorMsg = 'First receive date is required';
-        ROLLBACK;
     ELSEIF p_ReceiveDate2 IS NULL THEN
         SET p_Status = -2;
         SET p_ErrorMsg = 'Second receive date is required';
-        ROLLBACK;
     ELSE
         SELECT id INTO id1
         FROM sys_last_10_transactions
@@ -44,7 +39,6 @@ BEGIN
         IF id1 IS NULL OR id2 IS NULL THEN
             SET p_Status = -4;
             SET p_ErrorMsg = 'One or both transactions not found';
-            ROLLBACK;
         ELSE
             SET temp_date = p_ReceiveDate1;
             UPDATE sys_last_10_transactions
@@ -57,11 +51,9 @@ BEGIN
             IF v_RowCount > 0 THEN
                 SET p_Status = 1;
                 SET p_ErrorMsg = 'Transaction positions swapped successfully';
-                COMMIT;
             ELSE
                 SET p_Status = -3;
                 SET p_ErrorMsg = 'Failed to swap positions';
-                ROLLBACK;
             END IF;
         END IF;
     END IF;

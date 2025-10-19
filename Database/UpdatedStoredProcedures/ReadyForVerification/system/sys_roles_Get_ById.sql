@@ -7,18 +7,15 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `sys_roles_Get_ById`(
 )
 BEGIN
     DECLARE v_Count INT DEFAULT 0;
-    DECLARE EXIT HANDLER FOR SQLEXCEPTION
+    -- Transaction management removed: Works within caller's transaction context (tests use transactions)`r`n    DECLARE EXIT HANDLER FOR SQLEXCEPTION
     BEGIN
         GET DIAGNOSTICS CONDITION 1
             p_ErrorMsg = MESSAGE_TEXT;
         SET p_Status = -1;
-        ROLLBACK;
     END;
-    START TRANSACTION;
     IF p_ID IS NULL OR p_ID <= 0 THEN
         SET p_Status = -2;
         SET p_ErrorMsg = 'Valid role ID is required';
-        ROLLBACK;
     ELSE
         SELECT * FROM sys_roles WHERE ID = p_ID;
         SELECT FOUND_ROWS() INTO v_Count;
@@ -29,7 +26,6 @@ BEGIN
             SET p_Status = 0;
             SET p_ErrorMsg = CONCAT('Role ID ', p_ID, ' not found');
         END IF;
-        COMMIT;
     END IF;
 END
 //

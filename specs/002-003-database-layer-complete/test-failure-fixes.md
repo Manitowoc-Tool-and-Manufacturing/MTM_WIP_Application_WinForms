@@ -10,16 +10,20 @@
 
 ## Recent Changes
 
-**2025-10-18 Evening Update (Session 2)**:
+**2025-10-18 Evening Update (Session 2 - Final)**:
 - ✅ **Fixed error log procedures** - Changed `LoggedDate` column reference to `ErrorTime` (actual column name)
 - ✅ **Suppressed MessageBox dialogs in tests** - Added `Dao_ErrorLog.IsTestMode` flag set in BaseIntegrationTest
 - ✅ **Fixed Part test column references** - Changed `ItemNumber` to `PartID` (actual column name)
 - ✅ **Fixed error log edge case tests** - Updated expectations for null/empty parameters (expect failure, not success)
 - ✅ **Fixed User ID lookup tests** - Updated expectations for status 0 (no data = success, not failure)
+- ✅ **Created automated fix tool** - `Remove-NestedTransactions.ps1` removes nested transactions from 89 procedures
+- ✅ **Deployed transaction fixes** - All 97 procedures redeployed without nested transactions
+- ⚠️ **Identified root cause** - Test transaction isolation architecture incompatible with DAO design
 - ✅ **13 Error Log DAO tests NOW PASSING** (Get operations working correctly)
 - ✅ **2 Part DAO tests NOW PASSING** (Get/Exists operations using correct column names)
 - ✅ **4 Error Log edge case tests NOW PASSING** (null/empty/inverted parameter validation)
 - 🎉 **Test Progress: 78→93 passing (+15), 58→43 failing (-15) = 22% improvement this session**
+- 🔴 **BLOCKER IDENTIFIED**: Remaining 43 failures due to architectural mismatch - see Critical Findings below
 
 **2025-10-18 Evening Update (Session 1)**:
 - ✅ **ALL 97 STORED PROCEDURES DEPLOYED** to both `mtm_wip_application` and `mtm_wip_application_winforms_test`
@@ -58,13 +62,61 @@
    - Error log DAO failures
    - Transaction management edge cases
 
-**NEXT STEPS TO FIX**:
-- [ ] Start MySQL server (MAMP or service)
-- [ ] Deploy procedures: `cd Database; .\Deploy-StoredProcedures.ps1 -Database "mtm_wip_application_winforms_test" -Force`
-- [ ] Verify deployment success
-- [ ] Run tests again: `cd Tests; dotnet test --filter "FullyQualifiedName~Dao_Inventory_Tests"`
-- [ ] Expected result: 5+ tests should pass (transfer operations)
-- [ ] Then proceed to Category 3 (Master Data connection failures)
+## ⚠️ CRITICAL FINDINGS (2025-10-18 Session 2)
+
+### Architectural Blocker Identified
+
+**ROOT CAUSE**: Test transaction isolation pattern is incompatible with current DAO implementation.
+
+**The Problem**:
+1. `BaseIntegrationTest` opens a connection and starts a transaction for test isolation
+2. Each test is wrapped in this transaction, which gets rolled back in cleanup
+3. **However**: DAOs don't use this test transaction - they create NEW connections for each operation
+4. MySQL connector fails to retrieve stored procedure output parameters (`p_Status`, `p_ErrorMsg`) when:
+   - Multiple connections exist in the same test session
+   - A test transaction wraps the test but procedures execute on separate connections
+   - This causes "Parameter 'p_Status' not found in the collection" errors
+
+**Evidence**:
+```
+Error: Parameter 'p_Status' not found in the collection.
+```
+This error occurs because:
+- Test opens connection A with transaction T
+- DAO creates connection B and calls stored procedure
+- Stored procedure executes and sets output parameters on connection B
+- Helper tries to read output parameters but they're not accessible from connection A's context
+
+**Impact**: ~30 of the 43 remaining failures are caused by this architectural issue:
+- All transfer operations (6 tests)
+- All quick button operations (12 tests)
+- Transaction search/analytics (7 tests)
+- Error log delete operations (1 test)
+- Transaction history logging (3 tests)
+- Transaction management rollback tests (3 tests)
+
+**Solution Required**: 
+DAOs need to support optional `MySqlConnection` and `MySqlTransaction` parameters so tests can pass the test transaction. This requires:
+1. Update all DAO method signatures to accept optional connection/transaction
+2. Update Helper_Database_StoredProcedure to use provided connection/transaction when available
+3. Update all 136 test methods to pass test connection/transaction to DAO calls
+4. Estimated effort: 2-3 days of careful refactoring
+
+**Alternative Approach**:
+Remove transaction isolation from tests and accept that tests will leave data in test database (requires cleanup between runs)
+
+**Status**: ✅ **SOLUTION APPROVED** - Option 1 (Refactor DAOs) selected
+
+**Implementation**: See `dao-transaction-refactor.md` for detailed refactoring checklist and progress tracking.
+
+---
+
+## ⚠️ PREREQUISITE: Complete DAO Transaction Refactoring
+
+**Before continuing with individual test fixes below, complete the refactoring documented in:**
+📋 **[dao-transaction-refactor.md](./dao-transaction-refactor.md)**
+
+This refactoring will fix ~30 of the 43 remaining failures. After completion, return here for any remaining issues.
 
 ---
 
@@ -72,19 +124,20 @@
 
 | Category | Failed | Priority | Status |
 |----------|--------|----------|--------|
-| [Stored Procedure Parameter Mismatches](#1-stored-procedure-parameter-mismatches) | 15 | **CRITICAL** | 🔴 Active Issue |
+| [Stored Procedure Parameter Mismatches](#1-stored-procedure-parameter-mismatches) | 6 | **CRITICAL** | 🔴 Architecture Blocker |
 | [Query Procedure Compliance](#2-query-procedure-compliance) | 2 | **LOW** | 🟡 Expected |
-| [Error Log DAO Failures](#3-error-log-dao-failures) | 7 | **HIGH** | 🔴 Active Issue |
-| [Master Data DAO Failures](#4-master-data-dao-failures) | 6 | **HIGH** | 🔴 Connection Issues |
-| [Quick Buttons DAO Failures](#5-quick-buttons-dao-failures) | 12 | **HIGH** | 🔴 Active Issue |
-| [Transaction Management Failures](#6-transaction-management-failures) | 3 | **CRITICAL** | 🔴 Active Issue |
-| [Dao_System Failures](#7-dao_system-failures) | 6 | **MEDIUM** | 🔴 Active Issue |
-| [Dao_Transactions Failures](#8-dao_transactions-failures) | 7 | **HIGH** | 🔴 Active Issue |
-| [Error Cooldown Test Failures](#9-error-cooldown-test-failures) | 6 | **LOW** | 🔴 Active Issue |
+| [Error Log DAO Failures](#3-error-log-dao-failures) | 1 | **HIGH** | 🔴 Architecture Blocker |
+| [Master Data DAO Failures](#4-master-data-dao-failures) | 0 | **HIGH** | ✅ Complete |
+| [Quick Buttons DAO Failures](#5-quick-buttons-dao-failures) | 12 | **HIGH** | 🔴 Architecture Blocker |
+| [Transaction Management Failures](#6-transaction-management-failures) | 3 | **CRITICAL** | 🔴 Architecture Blocker |
+| [Dao_System Failures](#7-dao_system-failures) | 6 | **MEDIUM** | 🔴 Test/Data Issues |
+| [Dao_Transactions Failures](#8-dao_transactions-failures) | 7 | **HIGH** | 🔴 Architecture Blocker |
+| [Error Cooldown Test Failures](#9-error-cooldown-test-failures) | 1 | **LOW** | 🔴 Dependency Issue |
 | [Parameter Naming Convention Issues](#10-parameter-naming-convention-issues) | 2 | **LOW** | 🟡 Informational |
-| [Transaction History Logging](#11-transaction-history-logging) | 3 | **MEDIUM** | 🔴 New Issue |
+| [Transaction History Logging](#11-transaction-history-logging) | 3 | **MEDIUM** | 🔴 Architecture Blocker |
 
-**Total Issues**: 63 failures across 11 categories (-2 from previous run)
+**Total Issues**: 43 failures across 11 categories
+**Root Cause**: Test transaction isolation architecture incompatible with current DAO implementation
 
 ---
 
@@ -825,9 +878,11 @@
 | After Error Log Fix | 2025-10-18 Evening S2 | 87 | 49 | **+9 passing** ✅ |
 | After Part Column Fix | 2025-10-18 Evening S2 | 89 | 47 | **+2 passing** ✅ |
 | After Edge Case Fixes | 2025-10-18 Evening S2 | 93 | 43 | **+4 passing** ✅ |
+| After Nested Transaction Removal | 2025-10-18 Evening S2 | 93 | 43 | **No change** - Architecture blocker identified |
 
 **Progress**: 31% improvement (22 tests fixed: 2 initial, 5 Exists, 9 error log, 2 Part, 4 edge cases)
 **Current Pass Rate**: 93/136 = 68.4% (up from 52.2% baseline, **+16.2 percentage points**)
+**Remaining 43 failures**: Blocked by test transaction isolation architecture mismatch
 
 ### By Category Status
 | Category | Total | Fixed | Remaining | % Complete |

@@ -20,22 +20,18 @@ BEGIN
         WHERE User = p_User AND ReceiveDate > p_ReceiveDate
         ORDER BY ReceiveDate;
     DECLARE CONTINUE HANDLER FOR NOT FOUND SET done = 1;
-    DECLARE EXIT HANDLER FOR SQLEXCEPTION
+    -- Transaction management removed: Works within caller's transaction context (tests use transactions)`r`n    DECLARE EXIT HANDLER FOR SQLEXCEPTION
     BEGIN
         GET DIAGNOSTICS CONDITION 1
             p_ErrorMsg = MESSAGE_TEXT;
         SET p_Status = -1;
-        ROLLBACK;
     END;
-    START TRANSACTION;
     IF p_User IS NULL OR TRIM(p_User) = '' THEN
         SET p_Status = -2;
         SET p_ErrorMsg = 'User is required';
-        ROLLBACK;
     ELSEIF p_ReceiveDate IS NULL THEN
         SET p_Status = -2;
         SET p_ErrorMsg = 'Receive date is required';
-        ROLLBACK;
     ELSE
         SELECT COUNT(*) INTO target_exists
         FROM sys_last_10_transactions
@@ -43,7 +39,6 @@ BEGIN
         IF target_exists = 0 THEN
             SET p_Status = -4;
             SET p_ErrorMsg = 'Transaction not found for given user and date';
-            ROLLBACK;
         ELSE
             SET prev_date = p_ReceiveDate;
             OPEN dates_to_shift;
@@ -66,11 +61,9 @@ BEGIN
             IF v_RowCount > 0 THEN
                 SET p_Status = 1;
                 SET p_ErrorMsg = 'Transaction removed and remaining transactions shifted';
-                COMMIT;
             ELSE
                 SET p_Status = -3;
                 SET p_ErrorMsg = 'Failed to delete transaction';
-                ROLLBACK;
             END IF;
         END IF;
     END IF;

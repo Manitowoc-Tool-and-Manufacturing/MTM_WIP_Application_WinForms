@@ -3,6 +3,7 @@ using System.Data;
 using MTM_Inventory_Application.Helpers;
 using MTM_Inventory_Application.Logging;
 using MTM_Inventory_Application.Models;
+using MySql.Data.MySqlClient;
 
 namespace MTM_Inventory_Application.Data
 {
@@ -10,7 +11,14 @@ namespace MTM_Inventory_Application.Data
     {
         #region Quick Button Methods
 
-        public static async Task<DaoResult> UpdateQuickButtonAsync(string user, int position, string partId, string operation, int quantity)
+        public static async Task<DaoResult> UpdateQuickButtonAsync(
+            string user, 
+            int position, 
+            string partId, 
+            string operation, 
+            int quantity,
+            MySqlConnection? connection = null,
+            MySqlTransaction? transaction = null)
         {
             try
             {
@@ -29,7 +37,9 @@ namespace MTM_Inventory_Application.Data
                     Model_AppVariables.ConnectionString,
                     "sys_last_10_transactions_Update_ByUserAndPosition_1",
                     parameters,
-                    progressHelper: null
+                    progressHelper: null,
+                    connection: connection,
+                    transaction: transaction
                 );
 
                 if (!result.IsSuccess)
@@ -49,7 +59,11 @@ namespace MTM_Inventory_Application.Data
             }
         }
 
-        public static async Task<DaoResult> RemoveQuickButtonAndShiftAsync(string user, int position)
+        public static async Task<DaoResult> RemoveQuickButtonAndShiftAsync(
+            string user, 
+            int position,
+            MySqlConnection? connection = null,
+            MySqlTransaction? transaction = null)
         {
             try
             {
@@ -66,7 +80,9 @@ namespace MTM_Inventory_Application.Data
                     Model_AppVariables.ConnectionString,
                     "sys_last_10_transactions_RemoveAndShift_ByUser",
                     parameters,
-                    progressHelper: null
+                    progressHelper: null,
+                    connection: connection,
+                    transaction: transaction
                 );
 
                 if (!result.IsSuccess)
@@ -85,7 +101,14 @@ namespace MTM_Inventory_Application.Data
             }
         }
 
-        public static async Task<DaoResult> AddQuickButtonAsync(string user, string partId, string operation, int quantity, int position)
+        public static async Task<DaoResult> AddQuickButtonAsync(
+            string user, 
+            string partId, 
+            string operation, 
+            int quantity, 
+            int position,
+            MySqlConnection? connection = null,
+            MySqlTransaction? transaction = null)
         {
             try
             {
@@ -102,7 +125,9 @@ namespace MTM_Inventory_Application.Data
                     Model_AppVariables.ConnectionString,
                     "sys_last_10_transactions_Add_AtPosition",
                     parameters,
-                    progressHelper: null
+                    progressHelper: null,
+                    connection: connection,
+                    transaction: transaction
                 );
 
                 if (!result.IsSuccess)
@@ -121,7 +146,12 @@ namespace MTM_Inventory_Application.Data
             }
         }
 
-        public static async Task<DaoResult> MoveQuickButtonAsync(string user, int fromPosition, int toPosition)
+        public static async Task<DaoResult> MoveQuickButtonAsync(
+            string user, 
+            int fromPosition, 
+            int toPosition,
+            MySqlConnection? connection = null,
+            MySqlTransaction? transaction = null)
         {
             try
             {
@@ -140,7 +170,9 @@ namespace MTM_Inventory_Application.Data
                     Model_AppVariables.ConnectionString,
                     "sys_last_10_transactions_Move_1",
                     parameters,
-                    progressHelper: null
+                    progressHelper: null,
+                    connection: connection,
+                    transaction: transaction
                 );
 
                 if (!result.IsSuccess)
@@ -159,7 +191,10 @@ namespace MTM_Inventory_Application.Data
             }
         }
 
-        public static async Task<DaoResult> DeleteAllQuickButtonsForUserAsync(string user)
+        public static async Task<DaoResult> DeleteAllQuickButtonsForUserAsync(
+            string user,
+            MySqlConnection? connection = null,
+            MySqlTransaction? transaction = null)
         {
             try
             {
@@ -172,7 +207,9 @@ namespace MTM_Inventory_Application.Data
                     Model_AppVariables.ConnectionString,
                     "sys_last_10_transactions_DeleteAll_ByUser",
                     parameters,
-                    progressHelper: null
+                    progressHelper: null,
+                    connection: connection,
+                    transaction: transaction
                 );
 
                 if (!result.IsSuccess)
@@ -191,7 +228,13 @@ namespace MTM_Inventory_Application.Data
             }
         }
 
-        public static async Task<DaoResult> AddOrShiftQuickButtonAsync(string user, string partId, string operation, int quantity)
+        public static async Task<DaoResult> AddOrShiftQuickButtonAsync(
+            string user, 
+            string partId, 
+            string operation, 
+            int quantity,
+            MySqlConnection? connection = null,
+            MySqlTransaction? transaction = null)
         {
             try
             {
@@ -210,7 +253,9 @@ namespace MTM_Inventory_Application.Data
                     Model_AppVariables.ConnectionString,
                     "sys_last_10_transactions_AddQuickButton_1",
                     parameters,
-                    progressHelper: null
+                    progressHelper: null,
+                    connection: connection,
+                    transaction: transaction
                 );
 
                 if (!result.IsSuccess)
@@ -230,7 +275,11 @@ namespace MTM_Inventory_Application.Data
             }
         }
 
-        public static async Task<DaoResult> RemoveAndShiftQuickButtonAsync(string user, int position)
+        public static async Task<DaoResult> RemoveAndShiftQuickButtonAsync(
+            string user, 
+            int position,
+            MySqlConnection? connection = null,
+            MySqlTransaction? transaction = null)
         {
             try
             {
@@ -246,7 +295,9 @@ namespace MTM_Inventory_Application.Data
                     Model_AppVariables.ConnectionString,
                     "sys_last_10_transactions_Delete_ByUserAndPosition_1",
                     parameters,
-                    progressHelper: null
+                    progressHelper: null,
+                    connection: connection,
+                    transaction: transaction
                 );
 
                 if (!result.IsSuccess)
@@ -265,7 +316,14 @@ namespace MTM_Inventory_Application.Data
             }
         }
 
-        public static async Task<DaoResult> AddQuickButtonAtPositionAsync(string user, string partId, string operation, int quantity, int position)
+        public static async Task<DaoResult> AddQuickButtonAtPositionAsync(
+            string user, 
+            string partId, 
+            string operation, 
+            int quantity, 
+            int position,
+            MySqlConnection? connection = null,
+            MySqlTransaction? transaction = null)
         {
             try
             {
@@ -282,7 +340,9 @@ namespace MTM_Inventory_Application.Data
                     Model_AppVariables.ConnectionString,
                     "sys_last_10_transactions_AddQuickButton_1",
                     parameters,
-                    progressHelper: null
+                    progressHelper: null,
+                    connection: connection,
+                    transaction: transaction
                 );
 
                 if (!result.IsSuccess)

@@ -8,20 +8,17 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `usr_ui_settings_GetShortcutsJson`(
 )
 BEGIN
     DECLARE v_Count INT DEFAULT 0;
-    DECLARE EXIT HANDLER FOR SQLEXCEPTION
+    -- Transaction management removed: Works within caller's transaction context (tests use transactions)`r`n    DECLARE EXIT HANDLER FOR SQLEXCEPTION
     BEGIN
         GET DIAGNOSTICS CONDITION 1
             p_ErrorMsg = MESSAGE_TEXT;
         SET p_Status = -1;
         SET p_ShortcutsJson = NULL;
-        ROLLBACK;
     END;
-    START TRANSACTION;
     IF p_UserId IS NULL OR TRIM(p_UserId) = '' THEN
         SET p_Status = -2;
         SET p_ErrorMsg = 'UserId is required';
         SET p_ShortcutsJson = NULL;
-        ROLLBACK;
     ELSE
         SELECT ShortcutsJson INTO p_ShortcutsJson
         FROM usr_ui_settings
@@ -38,7 +35,6 @@ BEGIN
             SET p_Status = 0;
             SET p_ErrorMsg = CONCAT('User "', p_UserId, '" not found in settings');
         END IF;
-        COMMIT;
     END IF;
 END
 //

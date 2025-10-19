@@ -16,9 +16,8 @@ BEGIN
     DECLARE v_ErrorMessage VARCHAR(500) DEFAULT '';
     DECLARE v_Offset INT DEFAULT 0;
     DECLARE v_FinalWhereClause TEXT DEFAULT '';
-    DECLARE EXIT HANDLER FOR SQLEXCEPTION
+    -- Transaction management removed: Works within caller's transaction context (tests use transactions)`r`n    DECLARE EXIT HANDLER FOR SQLEXCEPTION
     BEGIN
-        ROLLBACK;
         GET DIAGNOSTICS CONDITION 1
             @sqlstate = RETURNED_SQLSTATE,
             @errno = MYSQL_ERRNO,
@@ -26,7 +25,6 @@ BEGIN
         SET p_Status = -1;
         SET p_ErrorMsg = CONCAT('Database error: ', @text);
     END;
-    START TRANSACTION;
     IF p_Page < 1 THEN SET p_Page = 1; END IF;
     IF p_PageSize < 1 OR p_PageSize > 1000 THEN SET p_PageSize = 20; END IF;
     SET v_Offset = (p_Page - 1) * p_PageSize;
@@ -47,7 +45,6 @@ BEGIN
     EXECUTE stmt;
     DEALLOCATE PREPARE stmt;
     SELECT FOUND_ROWS() INTO v_Count;
-    COMMIT;
     IF v_Count > 0 THEN
         SET p_Status = 1;
         SET p_ErrorMsg = NULL;

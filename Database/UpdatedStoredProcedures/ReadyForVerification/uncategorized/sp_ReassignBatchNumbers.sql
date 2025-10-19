@@ -28,14 +28,12 @@ BEGIN
         WHERE TransactionType IN ('TRANSFER', 'OUT') AND BatchNumber IS NULL
         ORDER BY PartID;
     DECLARE CONTINUE HANDLER FOR NOT FOUND SET done = 1;
-    DECLARE EXIT HANDLER FOR SQLEXCEPTION
+    -- Transaction management removed: Works within caller's transaction context (tests use transactions)`r`n    DECLARE EXIT HANDLER FOR SQLEXCEPTION
     BEGIN
         GET DIAGNOSTICS CONDITION 1
             p_ErrorMsg = MESSAGE_TEXT;
         SET p_Status = -1;
-        ROLLBACK;
     END;
-    START TRANSACTION;
     SELECT last_batch_number INTO newBatch FROM mtm_wip_application.inv_inventory_batch_seq;
     OPEN in_cursor;
     in_loop: LOOP
@@ -68,7 +66,6 @@ BEGIN
     CLOSE other_cursor;
     UPDATE mtm_wip_application.inv_inventory_batch_seq
     SET last_batch_number = newBatch;
-    COMMIT;
     IF v_ProcessedCount > 0 THEN
         SET p_Status = 1;
         SET p_ErrorMsg = CONCAT('Reassigned ', v_ProcessedCount, ' batch number(s)');

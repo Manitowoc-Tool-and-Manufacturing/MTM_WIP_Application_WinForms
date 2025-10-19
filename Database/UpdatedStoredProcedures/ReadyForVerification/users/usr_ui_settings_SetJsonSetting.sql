@@ -11,26 +11,21 @@ BEGIN
     DECLARE v_Existing INT DEFAULT 0;
     DECLARE v_CurrentJson JSON;
     DECLARE v_RowCount INT DEFAULT 0;
-    DECLARE EXIT HANDLER FOR SQLEXCEPTION
+    -- Transaction management removed: Works within caller's transaction context (tests use transactions)`r`n    DECLARE EXIT HANDLER FOR SQLEXCEPTION
     BEGIN
         GET DIAGNOSTICS CONDITION 1
             p_ErrorMsg = MESSAGE_TEXT;
         SET p_Status = -1;
-        ROLLBACK;
     END;
-    START TRANSACTION;
     IF p_UserId IS NULL OR TRIM(p_UserId) = '' THEN
         SET p_Status = -2;
         SET p_ErrorMsg = 'UserId is required';
-        ROLLBACK;
     ELSEIF p_DgvName IS NULL OR TRIM(p_DgvName) = '' THEN
         SET p_Status = -2;
         SET p_ErrorMsg = 'DgvName is required';
-        ROLLBACK;
     ELSEIF p_SettingJson IS NULL THEN
         SET p_Status = -2;
         SET p_ErrorMsg = 'SettingJson is required';
-        ROLLBACK;
     ELSE
         SELECT COUNT(*) INTO v_Existing
         FROM usr_ui_settings
@@ -54,11 +49,9 @@ BEGIN
         IF v_RowCount > 0 THEN
             SET p_Status = 1;
             SET p_ErrorMsg = CONCAT('JSON setting "', p_DgvName, '" saved for user "', p_UserId, '"');
-            COMMIT;
         ELSE
             SET p_Status = -3;
             SET p_ErrorMsg = 'Failed to save JSON setting';
-            ROLLBACK;
         END IF;
     END IF;
 END

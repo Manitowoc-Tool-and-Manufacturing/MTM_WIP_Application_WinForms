@@ -34,17 +34,13 @@ BEGIN
     DECLARE v_Count INT DEFAULT 0;
     DECLARE v_Offset INT DEFAULT 0;
     DECLARE v_OrderBy VARCHAR(200) DEFAULT 'ORDER BY ReceiveDate DESC';
-    
+    -- Transaction management removed: Works within caller's transaction context (tests use transactions)`r`n    
     DECLARE EXIT HANDLER FOR SQLEXCEPTION
     BEGIN
-        ROLLBACK;
         GET DIAGNOSTICS CONDITION 1
             p_ErrorMsg = MESSAGE_TEXT;
         SET p_Status = -1;
     END;
-    
-    START TRANSACTION;
-    
     -- Validate pagination parameters
     IF p_Page < 1 THEN SET p_Page = 1; END IF;
     IF p_PageSize < 1 OR p_PageSize > 1000 THEN SET p_PageSize = 20; END IF;
@@ -112,9 +108,6 @@ BEGIN
     LIMIT v_Offset, p_PageSize;
     
     SELECT FOUND_ROWS() INTO v_Count;
-    
-    COMMIT;
-    
     IF v_Count > 0 THEN
         SET p_Status = 1;
         SET p_ErrorMsg = CONCAT('Found ', v_Count, ' transaction(s) matching criteria');

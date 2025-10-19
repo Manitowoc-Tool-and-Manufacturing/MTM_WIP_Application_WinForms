@@ -40,16 +40,28 @@ public static class Helper_Database_StoredProcedure
     /// <param name="procedureName">Stored procedure name</param>
     /// <param name="parameters">Input parameters (WITHOUT prefix - prefixes added automatically)</param>
     /// <param name="progressHelper">Progress helper for visual feedback (optional)</param>
+    /// <param name="connection">Optional external connection (for test transaction support)</param>
+    /// <param name="transaction">Optional external transaction (for test transaction support)</param>
     /// <returns>DaoResult containing DataTable and status information</returns>
     /// <remarks>
+    /// <para>
     /// Async-only execution. Automatically detects and applies correct parameter prefixes (p_, in_, o_)
     /// using INFORMATION_SCHEMA cache. Includes retry logic for transient errors and performance monitoring.
+    /// </para>
+    /// <para>
+    /// <strong>Transaction Support</strong>: When <paramref name="connection"/> and <paramref name="transaction"/> 
+    /// are provided, the method uses the external connection/transaction instead of creating a new one. 
+    /// This enables proper test isolation with automatic rollback. The external connection is NOT disposed 
+    /// by this method - caller remains responsible for connection lifecycle.
+    /// </para>
     /// </remarks>
     public static async Task<DaoResult<DataTable>> ExecuteDataTableWithStatusAsync(
         string connectionString,
         string procedureName,
         Dictionary<string, object>? parameters = null,
-        Helper_StoredProcedureProgress? progressHelper = null)
+        Helper_StoredProcedureProgress? progressHelper = null,
+        MySqlConnection? connection = null,
+        MySqlTransaction? transaction = null)
     {
         var stopwatch = Stopwatch.StartNew();
         var performanceKey = Service_DebugTracer.StartPerformanceTrace($"SP_{procedureName}");
@@ -68,35 +80,49 @@ public static class Helper_Database_StoredProcedure
             {
                 progressHelper?.UpdateProgress(10, $"Connecting to database for {procedureName}...");
 
-                using var connection = new MySqlConnection(connectionString);
-                await connection.OpenAsync();
-
-                progressHelper?.UpdateProgress(30, $"Executing stored procedure {procedureName}...");
-
-                using var command = new MySqlCommand(procedureName, connection)
+                // Use provided connection or create new one
+                bool externalConnection = connection != null;
+                MySqlConnection activeConnection = connection ?? new MySqlConnection(connectionString);
+                
+                try
                 {
-                    CommandType = CommandType.StoredProcedure,
-                    CommandTimeout = Model_AppVariables.CommandTimeoutSeconds
-                };
+                    if (!externalConnection)
+                    {
+                        await activeConnection.OpenAsync();
+                    }
 
-                // Add input parameters with automatic prefix detection
-                var finalParameters = AddParametersWithPrefixDetection(command, procedureName, parameters);
+                    progressHelper?.UpdateProgress(30, $"Executing stored procedure {procedureName}...");
 
-                // Add standard output parameters
-                var (statusParam, errorMsgParam) = AddStandardOutputParameters(command, procedureName);
+                    using var command = new MySqlCommand(procedureName, activeConnection)
+                    {
+                        CommandType = CommandType.StoredProcedure,
+                        CommandTimeout = Model_AppVariables.CommandTimeoutSeconds
+                    };
 
-                progressHelper?.UpdateProgress(50, $"Retrieving data from {procedureName}...");
+                    // Associate with external transaction if provided
+                    if (transaction != null)
+                    {
+                        command.Transaction = transaction;
+                    }
 
-                var dataTable = new DataTable();
-                using (var adapter = new MySqlDataAdapter(command))
-                {
-                    await Task.Run(() => adapter.Fill(dataTable));
-                }
+                    // Add input parameters with automatic prefix detection
+                    var finalParameters = AddParametersWithPrefixDetection(command, procedureName, parameters);
 
-                progressHelper?.UpdateProgress(80, $"Processing results from {procedureName}...");
+                    // Add standard output parameters
+                    var (statusParam, errorMsgParam) = AddStandardOutputParameters(command, procedureName);
 
-                int status = Convert.ToInt32(statusParam.Value ?? 0);
-                string errorMessage = errorMsgParam.Value?.ToString() ?? string.Empty;
+                    progressHelper?.UpdateProgress(50, $"Retrieving data from {procedureName}...");
+
+                    var dataTable = new DataTable();
+                    using (var adapter = new MySqlDataAdapter(command))
+                    {
+                        await Task.Run(() => adapter.Fill(dataTable));
+                    }
+
+                    progressHelper?.UpdateProgress(80, $"Processing results from {procedureName}...");
+
+                    int status = Convert.ToInt32(statusParam.Value ?? 0);
+                    string errorMessage = errorMsgParam.Value?.ToString() ?? string.Empty;
 
                 progressHelper?.UpdateProgress(100, $"Completed {procedureName}");
 
@@ -154,6 +180,15 @@ public static class Helper_Database_StoredProcedure
                     
                     return result;
                 }
+                }
+                finally
+                {
+                    // Only dispose if we created the connection (not provided externally)
+                    if (!externalConnection)
+                    {
+                        activeConnection?.Dispose();
+                    }
+                }
             });
         }
         catch (Exception ex)
@@ -186,12 +221,19 @@ public static class Helper_Database_StoredProcedure
     /// <param name="procedureName">Stored procedure name</param>
     /// <param name="parameters">Input parameters (WITHOUT prefix - prefixes added automatically)</param>
     /// <param name="progressHelper">Progress helper for visual feedback (optional)</param>
+    /// <param name="connection">Optional external connection (for test transaction support)</param>
+    /// <param name="transaction">Optional external transaction (for test transaction support)</param>
     /// <returns>DaoResult containing scalar value and status information</returns>
+    /// <remarks>
+    /// When connection and transaction are provided, uses external connection for test isolation support.
+    /// </remarks>
     public static async Task<DaoResult<object>> ExecuteScalarWithStatusAsync(
         string connectionString,
         string procedureName,
         Dictionary<string, object>? parameters = null,
-        Helper_StoredProcedureProgress? progressHelper = null)
+        Helper_StoredProcedureProgress? progressHelper = null,
+        MySqlConnection? connection = null,
+        MySqlTransaction? transaction = null)
     {
         var stopwatch = Stopwatch.StartNew();
         
@@ -201,47 +243,70 @@ public static class Helper_Database_StoredProcedure
             {
                 progressHelper?.UpdateProgress(10, $"Connecting to database for {procedureName}...");
 
-                using var connection = new MySqlConnection(connectionString);
-                await connection.OpenAsync();
-
-                progressHelper?.UpdateProgress(30, $"Executing stored procedure {procedureName}...");
-
-                using var command = new MySqlCommand(procedureName, connection)
+                // Use provided connection or create new one
+                bool externalConnection = connection != null;
+                MySqlConnection activeConnection = connection ?? new MySqlConnection(connectionString);
+                
+                try
                 {
-                    CommandType = CommandType.StoredProcedure,
-                    CommandTimeout = Model_AppVariables.CommandTimeoutSeconds
-                };
+                    if (!externalConnection)
+                    {
+                        await activeConnection.OpenAsync();
+                    }
 
-                // Add input parameters with automatic prefix detection
-                AddParametersWithPrefixDetection(command, procedureName, parameters);
+                    progressHelper?.UpdateProgress(30, $"Executing stored procedure {procedureName}...");
 
-                // Add standard output parameters
-                var (statusParam, errorMsgParam) = AddStandardOutputParameters(command, procedureName);
+                    using var command = new MySqlCommand(procedureName, activeConnection)
+                    {
+                        CommandType = CommandType.StoredProcedure,
+                        CommandTimeout = Model_AppVariables.CommandTimeoutSeconds
+                    };
 
-                progressHelper?.UpdateProgress(50, $"Retrieving data from {procedureName}...");
+                    // Associate with external transaction if provided
+                    if (transaction != null)
+                    {
+                        command.Transaction = transaction;
+                    }
 
-                object? result = await command.ExecuteScalarAsync();
+                    // Add input parameters with automatic prefix detection
+                    AddParametersWithPrefixDetection(command, procedureName, parameters);
 
-                progressHelper?.UpdateProgress(80, $"Processing results from {procedureName}...");
+                    // Add standard output parameters
+                    var (statusParam, errorMsgParam) = AddStandardOutputParameters(command, procedureName);
 
-                int status = Convert.ToInt32(statusParam.Value ?? 0);
-                string errorMessage = errorMsgParam.Value?.ToString() ?? string.Empty;
+                    progressHelper?.UpdateProgress(50, $"Retrieving data from {procedureName}...");
 
-                progressHelper?.UpdateProgress(100, $"Completed {procedureName}");
-                progressHelper?.ProcessStoredProcedureResult(status, errorMessage);
+                    object? result = await command.ExecuteScalarAsync();
 
-                stopwatch.Stop();
-                LogPerformanceIfNeeded(procedureName, stopwatch.ElapsedMilliseconds, "Query");
+                    progressHelper?.UpdateProgress(80, $"Processing results from {procedureName}...");
 
-                // Handle null result properly
-                object safeResult = result ?? DBNull.Value;
+                    int status = Convert.ToInt32(statusParam.Value ?? 0);
+                    string errorMessage = errorMsgParam.Value?.ToString() ?? string.Empty;
 
-                if (status == 0)
-                    return DaoResult<object>.Success(safeResult, errorMessage);
-                else if (status == 1)
-                    return DaoResult<object>.Success(safeResult, errorMessage); // Warning treated as success
-                else
-                    return DaoResult<object>.Failure(errorMessage, null);
+                    progressHelper?.UpdateProgress(100, $"Completed {procedureName}");
+                    progressHelper?.ProcessStoredProcedureResult(status, errorMessage);
+
+                    stopwatch.Stop();
+                    LogPerformanceIfNeeded(procedureName, stopwatch.ElapsedMilliseconds, "Query");
+
+                    // Handle null result properly
+                    object safeResult = result ?? DBNull.Value;
+
+                    if (status == 0)
+                        return DaoResult<object>.Success(safeResult, errorMessage);
+                    else if (status == 1)
+                        return DaoResult<object>.Success(safeResult, errorMessage); // Warning treated as success
+                    else
+                        return DaoResult<object>.Failure(errorMessage, null);
+                }
+                finally
+                {
+                    // Only dispose if we created the connection (not provided externally)
+                    if (!externalConnection)
+                    {
+                        activeConnection?.Dispose();
+                    }
+                }
             });
         }
         catch (Exception ex)
@@ -262,11 +327,26 @@ public static class Helper_Database_StoredProcedure
     /// <param name="parameters">Input parameters (WITHOUT prefix - prefixes added automatically)</param>
     /// <param name="progressHelper">Progress helper for visual feedback (optional)</param>
     /// <returns>DaoResult containing operation status and rows affected</returns>
+    /// <summary>
+    /// Execute stored procedure that doesn't return data (INSERT, UPDATE, DELETE) with status output parameters
+    /// </summary>
+    /// <param name="connectionString">Database connection string</param>
+    /// <param name="procedureName">Stored procedure name</param>
+    /// <param name="parameters">Input parameters (WITHOUT prefix - prefixes added automatically)</param>
+    /// <param name="progressHelper">Progress helper for visual feedback (optional)</param>
+    /// <param name="connection">Optional external connection (for test transaction support)</param>
+    /// <param name="transaction">Optional external transaction (for test transaction support)</param>
+    /// <returns>DaoResult containing status and rows affected</returns>
+    /// <remarks>
+    /// When connection and transaction are provided, uses external connection for test isolation support.
+    /// </remarks>
     public static async Task<DaoResult> ExecuteNonQueryWithStatusAsync(
         string connectionString,
         string procedureName,
         Dictionary<string, object>? parameters = null,
-        Helper_StoredProcedureProgress? progressHelper = null)
+        Helper_StoredProcedureProgress? progressHelper = null,
+        MySqlConnection? connection = null,
+        MySqlTransaction? transaction = null)
     {
         var stopwatch = Stopwatch.StartNew();
         
@@ -276,30 +356,44 @@ public static class Helper_Database_StoredProcedure
             {
                 progressHelper?.UpdateProgress(10, $"Connecting to database for {procedureName}...");
 
-                using var connection = new MySqlConnection(connectionString);
-                await connection.OpenAsync();
-
-                progressHelper?.UpdateProgress(30, $"Executing stored procedure {procedureName}...");
-
-                using var command = new MySqlCommand(procedureName, connection)
+                // Use provided connection or create new one
+                bool externalConnection = connection != null;
+                MySqlConnection activeConnection = connection ?? new MySqlConnection(connectionString);
+                
+                try
                 {
-                    CommandType = CommandType.StoredProcedure,
-                    CommandTimeout = Model_AppVariables.CommandTimeoutSeconds
-                };
+                    if (!externalConnection)
+                    {
+                        await activeConnection.OpenAsync();
+                    }
 
-                // Add input parameters with automatic prefix detection
-                AddParametersWithPrefixDetection(command, procedureName, parameters);
+                    progressHelper?.UpdateProgress(30, $"Executing stored procedure {procedureName}...");
 
-                // Add standard output parameters
-                var (statusParam, errorMsgParam) = AddStandardOutputParameters(command, procedureName);
+                    using var command = new MySqlCommand(procedureName, activeConnection)
+                    {
+                        CommandType = CommandType.StoredProcedure,
+                        CommandTimeout = Model_AppVariables.CommandTimeoutSeconds
+                    };
 
-                progressHelper?.UpdateProgress(50, $"Executing {procedureName}...");
+                    // Associate with external transaction if provided
+                    if (transaction != null)
+                    {
+                        command.Transaction = transaction;
+                    }
 
-                int rowsAffected = await command.ExecuteNonQueryAsync();
+                    // Add input parameters with automatic prefix detection
+                    AddParametersWithPrefixDetection(command, procedureName, parameters);
 
-                progressHelper?.UpdateProgress(80, $"Processing results from {procedureName}...");
+                    // Add standard output parameters
+                    var (statusParam, errorMsgParam) = AddStandardOutputParameters(command, procedureName);
 
-                int status = Convert.ToInt32(statusParam.Value ?? 0);
+                    progressHelper?.UpdateProgress(50, $"Executing {procedureName}...");
+
+                    int rowsAffected = await command.ExecuteNonQueryAsync();
+
+                    progressHelper?.UpdateProgress(80, $"Processing results from {procedureName}...");
+
+                    int status = Convert.ToInt32(statusParam.Value ?? 0);
                 string errorMessage = errorMsgParam.Value?.ToString() ?? string.Empty;
 
                 progressHelper?.UpdateProgress(100, $"Completed {procedureName}");
@@ -315,6 +409,15 @@ public static class Helper_Database_StoredProcedure
                     return DaoResult.Success(errorMessage, rowsAffected); // Warning treated as success
                 else
                     return DaoResult.Failure(errorMessage, null);
+                }
+                finally
+                {
+                    // Only dispose if we created the connection (not provided externally)
+                    if (!externalConnection)
+                    {
+                        activeConnection?.Dispose();
+                    }
+                }
             });
         }
         catch (Exception ex)

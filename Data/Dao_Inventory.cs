@@ -3,6 +3,7 @@ using MTM_Inventory_Application.Helpers;
 using MTM_Inventory_Application.Models;
 using MTM_Inventory_Application.Logging;
 using MTM_Inventory_Application.Services;
+using MySql.Data.MySqlClient;
 
 namespace MTM_Inventory_Application.Data;
 
@@ -123,7 +124,19 @@ public static class Dao_Inventory
         }
     }
 
-    public static async Task<DaoResult<DataTable>> GetInventoryByPartIdAsync(string partId, bool useAsync = false)
+    /// <summary>
+    /// Gets inventory records for a specific part ID
+    /// </summary>
+    /// <param name="partId">Part ID to search for</param>
+    /// <param name="useAsync">Legacy parameter (ignored)</param>
+    /// <param name="connection">Optional connection for transaction support</param>
+    /// <param name="transaction">Optional transaction for rollback support</param>
+    /// <returns>DaoResult containing DataTable of inventory records</returns>
+    public static async Task<DaoResult<DataTable>> GetInventoryByPartIdAsync(
+        string partId, 
+        bool useAsync = false,
+        MySqlConnection? connection = null,
+        MySqlTransaction? transaction = null)
     {
         Service_DebugTracer.TraceMethodEntry(new Dictionary<string, object>
         {
@@ -144,7 +157,9 @@ public static class Dao_Inventory
                 Model_AppVariables.ConnectionString,
                 "inv_inventory_Get_ByPartID",
                 new Dictionary<string, object> { ["p_PartID"] = partId }, // p_ prefix added automatically
-                null // No progress helper for this method
+                progressHelper: null, // No progress helper for this method
+                connection: connection,
+                transaction: transaction
             );
                 
             if (result.IsSuccess && result.Data != null)
@@ -196,8 +211,21 @@ public static class Dao_Inventory
         }
     }
 
-    public static async Task<DaoResult<DataTable>> GetInventoryByPartIdAndOperationAsync(string partId, string operation,
-        bool useAsync = false)
+    /// <summary>
+    /// Gets inventory records for a specific part ID and operation
+    /// </summary>
+    /// <param name="partId">Part ID to search for</param>
+    /// <param name="operation">Operation number</param>
+    /// <param name="useAsync">Legacy parameter (ignored)</param>
+    /// <param name="connection">Optional connection for transaction support</param>
+    /// <param name="transaction">Optional transaction for rollback support</param>
+    /// <returns>DaoResult containing DataTable of inventory records</returns>
+    public static async Task<DaoResult<DataTable>> GetInventoryByPartIdAndOperationAsync(
+        string partId, 
+        string operation,
+        bool useAsync = false,
+        MySqlConnection? connection = null,
+        MySqlTransaction? transaction = null)
     {
         Service_DebugTracer.TraceMethodEntry(new Dictionary<string, object>
         {
@@ -234,7 +262,9 @@ public static class Dao_Inventory
                     ["p_PartID"] = partId.Trim(),
                     ["p_Operation"] = operation.Trim()  // Fixed: Changed from o_Operation to p_Operation
                 },
-                null // No progress helper for this method
+                progressHelper: null, // No progress helper for this method
+                connection: connection,
+                transaction: transaction
             );
                 
             if (result.IsSuccess && result.Data != null)
@@ -283,6 +313,21 @@ public static class Dao_Inventory
 
     #region Modification Methods
 
+    /// <summary>
+    /// Adds a new inventory item
+    /// </summary>
+    /// <param name="partId">Part ID</param>
+    /// <param name="location">Storage location</param>
+    /// <param name="operation">Operation number</param>
+    /// <param name="quantity">Quantity</param>
+    /// <param name="itemType">Item type (optional, will be looked up)</param>
+    /// <param name="user">User adding the item</param>
+    /// <param name="batchNumber">Batch number (optional, will be generated)</param>
+    /// <param name="notes">Notes</param>
+    /// <param name="useAsync">Legacy parameter (ignored)</param>
+    /// <param name="connection">Optional connection for transaction support</param>
+    /// <param name="transaction">Optional transaction for rollback support</param>
+    /// <returns>DaoResult with number of rows added</returns>
     public static async Task<DaoResult<int>> AddInventoryItemAsync(
         string partId,
         string location,
@@ -292,7 +337,9 @@ public static class Dao_Inventory
         string user,
         string? batchNumber,
         string notes,
-        bool useAsync = false)
+        bool useAsync = false,
+        MySqlConnection? connection = null,
+        MySqlTransaction? transaction = null)
     {
         try
         {
@@ -303,7 +350,9 @@ public static class Dao_Inventory
                     Model_AppVariables.ConnectionString,
                     "md_part_ids_Get_ByItemNumber",
                     new Dictionary<string, object> { ["ItemNumber"] = partId },
-                    null // No progress helper for this method
+                    progressHelper: null, // No progress helper for this method
+                    connection: connection,
+                    transaction: transaction
                 );
 
                 if (itemTypeResult.IsSuccess && itemTypeResult.Data != null && itemTypeResult.Data.Rows.Count > 0)
@@ -322,8 +371,10 @@ public static class Dao_Inventory
                 var batchNumberResult = await Helper_Database_StoredProcedure.ExecuteScalarWithStatusAsync(
                     Model_AppVariables.ConnectionString,
                     "inv_inventory_GetNextBatchNumber",
-                    null, // No parameters needed
-                    null // No progress helper for this method
+                    parameters: null, // No parameters needed
+                    progressHelper: null, // No progress helper for this method
+                    connection: connection,
+                    transaction: transaction
                 );
 
                 if (batchNumberResult.IsSuccess && batchNumberResult.Data != null && 
@@ -351,7 +402,9 @@ public static class Dao_Inventory
                     ["BatchNumber"] = batchNumber,
                     ["Notes"] = notes
                 },
-                null // No progress helper for this method
+                progressHelper: null, // No progress helper for this method
+                connection: connection,
+                transaction: transaction
             );
 
             // FIXED: Do NOT call FixBatchNumbersAsync() after inventory additions
@@ -435,6 +488,21 @@ public static class Dao_Inventory
         }
     }
 
+    /// <summary>
+    /// Removes an inventory item
+    /// </summary>
+    /// <param name="partId">Part ID</param>
+    /// <param name="location">Storage location</param>
+    /// <param name="operation">Operation number</param>
+    /// <param name="quantity">Quantity</param>
+    /// <param name="itemType">Item type</param>
+    /// <param name="user">User removing the item</param>
+    /// <param name="batchNumber">Batch number</param>
+    /// <param name="notes">Notes</param>
+    /// <param name="useAsync">Legacy parameter (ignored)</param>
+    /// <param name="connection">Optional connection for transaction support</param>
+    /// <param name="transaction">Optional transaction for rollback support</param>
+    /// <returns>DaoResult with tuple of (status code, error message)</returns>
     public static async Task<DaoResult<(int Status, string ErrorMsg)>> RemoveInventoryItemAsync(
         string partId,
         string location,
@@ -444,7 +512,9 @@ public static class Dao_Inventory
         string user,
         string batchNumber,
         string notes,
-        bool useAsync = false)
+        bool useAsync = false,
+        MySqlConnection? connection = null,
+        MySqlTransaction? transaction = null)
     {
         try
         {
@@ -465,7 +535,9 @@ public static class Dao_Inventory
                 Model_AppVariables.ConnectionString,
                 "inv_inventory_Remove_Item",
                 parameters,
-                null // No progress helper for this method
+                progressHelper: null, // No progress helper for this method
+                connection: connection,
+                transaction: transaction
             );
 
             // Check result success - ErrorMessage may contain "Item not found" if item doesn't exist
@@ -503,7 +575,23 @@ public static class Dao_Inventory
         }
     }
 
-    public static async Task<DaoResult> TransferPartSimpleAsync(string batchNumber, string partId, string operation, string newLocation)
+    /// <summary>
+    /// Transfers a part to a new location (simple transfer without quantity split)
+    /// </summary>
+    /// <param name="batchNumber">Batch number to transfer</param>
+    /// <param name="partId">Part ID</param>
+    /// <param name="operation">Current operation</param>
+    /// <param name="newLocation">Destination location</param>
+    /// <param name="connection">Optional connection for transaction support</param>
+    /// <param name="transaction">Optional transaction for rollback support</param>
+    /// <returns>DaoResult indicating success or failure</returns>
+    public static async Task<DaoResult> TransferPartSimpleAsync(
+        string batchNumber, 
+        string partId, 
+        string operation, 
+        string newLocation,
+        MySqlConnection? connection = null,
+        MySqlTransaction? transaction = null)
     {
         try
         {
@@ -520,7 +608,9 @@ public static class Dao_Inventory
                 Model_AppVariables.ConnectionString,
                 "inv_inventory_Transfer_Part",
                 parameters,
-                null // No progress helper for this method
+                progressHelper: null, // No progress helper for this method
+                connection: connection,
+                transaction: transaction
             );
 
             // FIXED: Do NOT call FixBatchNumbersAsync() after transfer operations
@@ -545,8 +635,29 @@ public static class Dao_Inventory
         }
     }
 
-    public static async Task<DaoResult> TransferInventoryQuantityAsync(string batchNumber, string partId, string operation,
-        int transferQuantity, int originalQuantity, string newLocation, string user)
+    /// <summary>
+    /// Transfers a specific quantity from one location to another (splits inventory if needed)
+    /// </summary>
+    /// <param name="batchNumber">Batch number</param>
+    /// <param name="partId">Part ID</param>
+    /// <param name="operation">Current operation</param>
+    /// <param name="transferQuantity">Quantity to transfer</param>
+    /// <param name="originalQuantity">Original total quantity</param>
+    /// <param name="newLocation">Destination location</param>
+    /// <param name="user">User performing transfer</param>
+    /// <param name="connection">Optional connection for transaction support</param>
+    /// <param name="transaction">Optional transaction for rollback support</param>
+    /// <returns>DaoResult indicating success or failure</returns>
+    public static async Task<DaoResult> TransferInventoryQuantityAsync(
+        string batchNumber, 
+        string partId, 
+        string operation,
+        int transferQuantity, 
+        int originalQuantity, 
+        string newLocation, 
+        string user,
+        MySqlConnection? connection = null,
+        MySqlTransaction? transaction = null)
     {
         try
         {
@@ -566,7 +677,9 @@ public static class Dao_Inventory
                 Model_AppVariables.ConnectionString,
                 "inv_inventory_transfer_quantity",
                 parameters,
-                null // No progress helper for this method
+                progressHelper: null, // No progress helper for this method
+                connection: connection,
+                transaction: transaction
             );
 
             // FIXED: Do NOT call FixBatchNumbersAsync() after quantity transfer operations

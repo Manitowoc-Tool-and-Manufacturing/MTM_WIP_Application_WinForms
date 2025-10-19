@@ -7,18 +7,15 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `sys_user_GetByName`(
 )
 BEGIN
     DECLARE v_Count INT DEFAULT 0;
-    DECLARE EXIT HANDLER FOR SQLEXCEPTION
+    -- Transaction management removed: Works within caller's transaction context (tests use transactions)`r`n    DECLARE EXIT HANDLER FOR SQLEXCEPTION
     BEGIN
         GET DIAGNOSTICS CONDITION 1
             p_ErrorMsg = MESSAGE_TEXT;
         SET p_Status = -1;
-        ROLLBACK;
     END;
-    START TRANSACTION;
     IF p_User IS NULL OR TRIM(p_User) = '' THEN
         SET p_Status = -2;
         SET p_ErrorMsg = 'User name is required';
-        ROLLBACK;
     ELSE
         SELECT * FROM usr_users WHERE User = p_User;
         SELECT FOUND_ROWS() INTO v_Count;
@@ -29,7 +26,6 @@ BEGIN
             SET p_Status = 0;
             SET p_ErrorMsg = CONCAT('User "', p_User, '" not found');
         END IF;
-        COMMIT;
     END IF;
 END
 //

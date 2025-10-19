@@ -11,24 +11,20 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `usr_users_Delete_User`(
 )
 BEGIN
     DECLARE v_RowCount INT DEFAULT 0;
-    DECLARE EXIT HANDLER FOR SQLEXCEPTION
+    -- Transaction management removed: Works within caller's transaction context (tests use transactions)`r`n    DECLARE EXIT HANDLER FOR SQLEXCEPTION
     BEGIN
         GET DIAGNOSTICS CONDITION 1
             p_ErrorMsg = MESSAGE_TEXT;
         SET p_Status = -1;
-        ROLLBACK;
     END;
-    START TRANSACTION;
     IF p_User IS NULL OR TRIM(p_User) = '' THEN
         SET p_Status = -2;
         SET p_ErrorMsg = 'User is required';
-        ROLLBACK;
     ELSE
         -- Validate username contains only safe characters (alphanumeric, underscore, hyphen)
         IF p_User REGEXP '[^A-Za-z0-9_-]' THEN
             SET p_Status = -2;
             SET p_ErrorMsg = 'Username contains invalid characters. Only alphanumeric, underscore, and hyphen allowed.';
-            ROLLBACK;
         ELSE
             -- NOTE: Dynamic SQL required for MySQL user management
             -- Username is validated above to contain only safe characters
@@ -42,11 +38,9 @@ BEGIN
             IF v_RowCount > 0 THEN
                 SET p_Status = 1;
                 SET p_ErrorMsg = CONCAT('User "', p_User, '" deleted successfully');
-                COMMIT;
             ELSE
                 SET p_Status = -4;
                 SET p_ErrorMsg = CONCAT('User "', p_User, '" not found');
-                ROLLBACK;
             END IF;
         END IF;
     END IF;

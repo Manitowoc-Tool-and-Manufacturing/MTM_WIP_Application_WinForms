@@ -9,9 +9,8 @@ CREATE PROCEDURE `query_get_procedure_parameters`(
 )
 BEGIN
     DECLARE v_Count INT DEFAULT 0;
-    DECLARE EXIT HANDLER FOR SQLEXCEPTION
+    -- Transaction management removed: Works within caller's transaction context (tests use transactions)`r`n    DECLARE EXIT HANDLER FOR SQLEXCEPTION
     BEGIN
-        ROLLBACK;
         GET DIAGNOSTICS CONDITION 1
             @sqlstate = RETURNED_SQLSTATE,
             @errno = MYSQL_ERRNO,
@@ -19,14 +18,10 @@ BEGIN
         SET p_Status = -1;
         SET p_ErrorMsg = CONCAT('Database error: ', @text);
     END;
-
-    START TRANSACTION;
-
     -- Validate input
     IF p_ProcedureName IS NULL OR p_ProcedureName = '' THEN
         SET p_Status = -2;
         SET p_ErrorMsg = 'Procedure name is required';
-        ROLLBACK;
     ELSE
         -- Returns list of input/inout parameters for a specific stored procedure
         SELECT 
@@ -44,9 +39,6 @@ BEGIN
         FROM INFORMATION_SCHEMA.PARAMETERS 
         WHERE SPECIFIC_SCHEMA = DATABASE() 
           AND SPECIFIC_NAME = p_ProcedureName;
-
-        COMMIT;
-
         IF v_Count > 0 THEN
             SET p_Status = 1;
             SET p_ErrorMsg = CONCAT('Found ', v_Count, ' parameters for procedure ', p_ProcedureName);

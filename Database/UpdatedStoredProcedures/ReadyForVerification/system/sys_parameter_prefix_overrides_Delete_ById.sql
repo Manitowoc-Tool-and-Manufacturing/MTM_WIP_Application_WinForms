@@ -13,30 +13,23 @@ CREATE PROCEDURE sys_parameter_prefix_overrides_Delete_ById(
     OUT p_ErrorMsg VARCHAR(500)
 )
 BEGIN
-    DECLARE EXIT HANDLER FOR SQLEXCEPTION
+    -- Transaction management removed: Works within caller's transaction context (tests use transactions)`r`n    DECLARE EXIT HANDLER FOR SQLEXCEPTION
     BEGIN
         GET DIAGNOSTICS CONDITION 1 p_ErrorMsg = MESSAGE_TEXT;
         SET p_Status = -1;
-        ROLLBACK;
     END;
-
-    START TRANSACTION;
-
     -- Validation
     IF p_OverrideId IS NULL OR p_OverrideId <= 0 THEN
         SET p_Status = -2;
         SET p_ErrorMsg = 'Invalid OverrideId';
-        ROLLBACK;
     ELSEIF p_ModifiedBy IS NULL OR TRIM(p_ModifiedBy) = '' THEN
         SET p_Status = -2;
         SET p_ErrorMsg = 'ModifiedBy is required';
-        ROLLBACK;
     ELSE
         -- Check if record exists
         IF NOT EXISTS (SELECT 1 FROM sys_parameter_prefix_overrides WHERE OverrideId = p_OverrideId) THEN
             SET p_Status = 1;
             SET p_ErrorMsg = 'Override not found';
-            ROLLBACK;
         ELSE
             -- Soft delete (idempotent - already deleted returns success)
             UPDATE sys_parameter_prefix_overrides
@@ -47,7 +40,6 @@ BEGIN
             
             SET p_Status = 0;
             SET p_ErrorMsg = 'Override deleted successfully';
-            COMMIT;
         END IF;
     END IF;
 END$$

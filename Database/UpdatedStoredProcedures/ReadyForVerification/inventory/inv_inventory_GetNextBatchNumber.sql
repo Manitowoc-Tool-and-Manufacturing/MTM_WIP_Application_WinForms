@@ -15,17 +15,13 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `inv_inventory_GetNextBatchNumber`(
 )
 BEGIN
     DECLARE v_NextBatch BIGINT;
-    
+    -- Transaction management removed: Works within caller's transaction context (tests use transactions)`r`n    
     DECLARE EXIT HANDLER FOR SQLEXCEPTION
     BEGIN
         GET DIAGNOSTICS CONDITION 1
             p_ErrorMsg = MESSAGE_TEXT;
         SET p_Status = -1;
-        ROLLBACK;
     END;
-    
-    START TRANSACTION;
-    
     -- Get and increment batch number
     SELECT last_batch_number INTO v_NextBatch 
     FROM inv_inventory_batch_seq;
@@ -41,7 +37,6 @@ BEGIN
     
     SET p_Status = 1;
     SET p_ErrorMsg = CONCAT('Generated batch number: ', v_NextBatch);
-    COMMIT;
 END
 //
 

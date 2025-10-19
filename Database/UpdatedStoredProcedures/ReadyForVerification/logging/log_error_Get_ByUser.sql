@@ -7,18 +7,15 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `log_error_Get_ByUser`(
 )
 BEGIN
     DECLARE v_Count INT DEFAULT 0;
-    DECLARE EXIT HANDLER FOR SQLEXCEPTION
+    -- Transaction management removed: Works within caller's transaction context (tests use transactions)`r`n    DECLARE EXIT HANDLER FOR SQLEXCEPTION
     BEGIN
         GET DIAGNOSTICS CONDITION 1
             p_ErrorMsg = MESSAGE_TEXT;
         SET p_Status = -1;
-        ROLLBACK;
     END;
-    START TRANSACTION;
     IF p_User IS NULL OR TRIM(p_User) = '' THEN
         SET p_Status = -2;
         SET p_ErrorMsg = 'User is required';
-        ROLLBACK;
     ELSE
         SELECT * FROM `log_error`
         WHERE `User` = p_User
@@ -31,7 +28,6 @@ BEGIN
             SET p_Status = 0;
             SET p_ErrorMsg = CONCAT('No error log entries found for user: ', p_User);
         END IF;
-        COMMIT;
     END IF;
 END
 //

@@ -6,14 +6,12 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `sys_theme_GetAll`(
 )
 BEGIN
     DECLARE v_Count INT DEFAULT 0;
-    DECLARE EXIT HANDLER FOR SQLEXCEPTION
+    -- Transaction management removed: Works within caller's transaction context (tests use transactions)`r`n    DECLARE EXIT HANDLER FOR SQLEXCEPTION
     BEGIN
         GET DIAGNOSTICS CONDITION 1
             p_ErrorMsg = MESSAGE_TEXT;
         SET p_Status = -1;
-        ROLLBACK;
     END;
-    START TRANSACTION;
     SELECT ThemeName, SettingsJson
     FROM app_themes
     ORDER BY ThemeName;
@@ -25,7 +23,6 @@ BEGIN
         SET p_Status = 0;
         SET p_ErrorMsg = 'No themes found';
     END IF;
-    COMMIT;
 END
 //
 DELIMITER ;

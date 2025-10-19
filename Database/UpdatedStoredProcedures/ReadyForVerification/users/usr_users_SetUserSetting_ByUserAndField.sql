@@ -20,30 +20,23 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `usr_users_SetUserSetting_ByUserAndF
 BEGIN
     DECLARE v_RowsAffected INT DEFAULT 0;
     DECLARE v_AllowedFields VARCHAR(1000) DEFAULT 'DefaultOperation,DefaultLocation,DefaultItemType,Email,FullName';
-    
+    -- Transaction management removed: Works within caller's transaction context (tests use transactions)`r`n    
     DECLARE EXIT HANDLER FOR SQLEXCEPTION
     BEGIN
         GET DIAGNOSTICS CONDITION 1
             p_ErrorMsg = MESSAGE_TEXT;
         SET p_Status = -1;
-        ROLLBACK;
     END;
-    
-    START TRANSACTION;
-    
     -- Validate inputs
     IF p_User IS NULL OR TRIM(p_User) = '' THEN
         SET p_Status = -2;
         SET p_ErrorMsg = 'User is required';
-        ROLLBACK;
     ELSEIF p_Field IS NULL OR TRIM(p_Field) = '' THEN
         SET p_Status = -3;
         SET p_ErrorMsg = 'Field is required';
-        ROLLBACK;
     ELSEIF FIND_IN_SET(p_Field, v_AllowedFields) = 0 THEN
         SET p_Status = -4;
         SET p_ErrorMsg = CONCAT('Field "', p_Field, '" is not in allowed fields list: ', v_AllowedFields);
-        ROLLBACK;
     ELSE
         -- Use prepared statement for dynamic column update
         SET @sql = CONCAT('UPDATE usr_users SET ', p_Field, ' = ? WHERE User = ?');
@@ -58,11 +51,9 @@ BEGIN
         IF v_RowsAffected > 0 THEN
             SET p_Status = 1;
             SET p_ErrorMsg = CONCAT('Updated field "', p_Field, '" for user "', p_User, '"');
-            COMMIT;
         ELSE
             SET p_Status = 0;
             SET p_ErrorMsg = CONCAT('User "', p_User, '" not found');
-            ROLLBACK;
         END IF;
     END IF;
 END

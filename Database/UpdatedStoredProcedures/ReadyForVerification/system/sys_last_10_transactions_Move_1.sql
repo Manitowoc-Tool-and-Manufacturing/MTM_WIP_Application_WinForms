@@ -12,26 +12,21 @@ BEGIN
     DECLARE tempOperation VARCHAR(255);
     DECLARE tempQuantity INT;
     DECLARE v_RowCount INT DEFAULT 0;
-    DECLARE EXIT HANDLER FOR SQLEXCEPTION
+    -- Transaction management removed: Works within caller's transaction context (tests use transactions)`r`n    DECLARE EXIT HANDLER FOR SQLEXCEPTION
     BEGIN
         GET DIAGNOSTICS CONDITION 1
             p_ErrorMsg = MESSAGE_TEXT;
         SET p_Status = -1;
-        ROLLBACK;
     END;
-    START TRANSACTION;
     IF p_User IS NULL OR TRIM(p_User) = '' THEN
         SET p_Status = -2;
         SET p_ErrorMsg = 'User is required';
-        ROLLBACK;
     ELSEIF p_FromPosition IS NULL OR p_FromPosition < 1 THEN
         SET p_Status = -2;
         SET p_ErrorMsg = 'Valid from position is required';
-        ROLLBACK;
     ELSEIF p_ToPosition IS NULL OR p_ToPosition < 1 THEN
         SET p_Status = -2;
         SET p_ErrorMsg = 'Valid to position is required';
-        ROLLBACK;
     ELSE
         SELECT PartID, Operation, Quantity
         INTO tempPartID, tempOperation, tempQuantity
@@ -41,7 +36,6 @@ BEGIN
         IF tempPartID IS NULL THEN
             SET p_Status = -4;
             SET p_ErrorMsg = CONCAT('No transaction found at position ', p_FromPosition, ' for user: ', p_User);
-            ROLLBACK;
         ELSE
             DELETE FROM sys_last_10_transactions
             WHERE User = p_User AND Position = p_FromPosition;
@@ -60,11 +54,9 @@ BEGIN
             IF v_RowCount > 0 THEN
                 SET p_Status = 1;
                 SET p_ErrorMsg = CONCAT('Moved transaction from position ', p_FromPosition, ' to ', p_ToPosition);
-                COMMIT;
             ELSE
                 SET p_Status = -3;
                 SET p_ErrorMsg = 'Failed to insert transaction at new position';
-                ROLLBACK;
             END IF;
         END IF;
     END IF;

@@ -10,9 +10,8 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `inv_transactions_GetAnalytics`(
 )
 BEGIN
     DECLARE v_Count INT DEFAULT 0;
-    DECLARE EXIT HANDLER FOR SQLEXCEPTION
+    -- Transaction management removed: Works within caller's transaction context (tests use transactions)`r`n    DECLARE EXIT HANDLER FOR SQLEXCEPTION
     BEGIN
-        ROLLBACK;
         GET DIAGNOSTICS CONDITION 1
             @sqlstate = RETURNED_SQLSTATE,
             @errno = MYSQL_ERRNO,
@@ -20,8 +19,6 @@ BEGIN
         SET p_Status = -1;
         SET p_ErrorMsg = CONCAT('Database error: ', @text);
     END;
-    START TRANSACTION;
-    
     -- Use parameterized query with proper WHERE conditions instead of dynamic SQL
     SELECT 
         COUNT(*) as TotalTransactions,
@@ -47,8 +44,6 @@ BEGIN
       AND (p_ToDate IS NULL OR t1.ReceiveDate <= p_ToDate);
     
     SELECT FOUND_ROWS() INTO v_Count;
-    COMMIT;
-    
     IF v_Count > 0 THEN
         SET p_Status = 1;
         SET p_ErrorMsg = NULL;

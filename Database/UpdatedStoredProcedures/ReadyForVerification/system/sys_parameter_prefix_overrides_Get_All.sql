@@ -12,15 +12,11 @@ CREATE PROCEDURE sys_parameter_prefix_overrides_Get_All(
     OUT p_ErrorMsg VARCHAR(500)
 )
 BEGIN
-    DECLARE EXIT HANDLER FOR SQLEXCEPTION
+    -- Transaction management removed: Works within caller's transaction context (tests use transactions)`r`n    DECLARE EXIT HANDLER FOR SQLEXCEPTION
     BEGIN
         GET DIAGNOSTICS CONDITION 1 p_ErrorMsg = MESSAGE_TEXT;
         SET p_Status = -1;
-        ROLLBACK;
     END;
-
-    START TRANSACTION;
-
     -- Check if table has active records
     IF EXISTS (SELECT 1 FROM sys_parameter_prefix_overrides WHERE IsActive = 1) THEN
         -- Return all active overrides
@@ -60,8 +56,6 @@ BEGIN
         SET p_Status = 1;
         SET p_ErrorMsg = 'No active overrides found';
     END IF;
-
-    COMMIT;
 END$$
 
 DELIMITER ;

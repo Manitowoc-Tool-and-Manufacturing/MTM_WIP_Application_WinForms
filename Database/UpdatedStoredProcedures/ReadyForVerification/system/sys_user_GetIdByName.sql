@@ -7,19 +7,16 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `sys_user_GetIdByName`(
 )
 BEGIN
     DECLARE v_UserId INT DEFAULT 0;
-    DECLARE EXIT HANDLER FOR SQLEXCEPTION
+    -- Transaction management removed: Works within caller's transaction context (tests use transactions)`r`n    DECLARE EXIT HANDLER FOR SQLEXCEPTION
     BEGIN
         GET DIAGNOSTICS CONDITION 1
             p_ErrorMsg = MESSAGE_TEXT;
         SET p_Status = -1;
-        ROLLBACK;
     END;
-    START TRANSACTION;
     IF p_UserName IS NULL OR TRIM(p_UserName) = '' THEN
         SET p_Status = -2;
         SET p_ErrorMsg = 'User name is required';
         SELECT 0 AS UserID;
-        ROLLBACK;
     ELSE
         SELECT ID INTO v_UserId FROM usr_users WHERE User = p_UserName LIMIT 1;
         IF v_UserId IS NULL OR v_UserId = 0 THEN
@@ -31,7 +28,6 @@ BEGIN
             SET p_ErrorMsg = CONCAT('User ID retrieved for "', p_UserName, '"');
             SELECT v_UserId AS UserID;
         END IF;
-        COMMIT;
     END IF;
 END
 //

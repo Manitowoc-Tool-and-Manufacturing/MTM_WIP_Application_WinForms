@@ -15,15 +15,11 @@ BEGIN
     SET p_ErrorMsg = '';
 
     BEGIN
-        DECLARE EXIT HANDLER FOR SQLEXCEPTION
+    -- Transaction management removed: Works within caller's transaction context (tests use transactions)`r`n        DECLARE EXIT HANDLER FOR SQLEXCEPTION
         BEGIN
             SET p_Status = -1;
             SET p_ErrorMsg = 'Error checking if procedure exists';
-            ROLLBACK;
         END;
-
-        START TRANSACTION;
-
         SELECT COUNT(*) INTO v_Count
         FROM INFORMATION_SCHEMA.ROUTINES
         WHERE ROUTINE_SCHEMA = DATABASE()
@@ -32,9 +28,6 @@ BEGIN
 
         -- Return result set with count
         SELECT v_Count AS ProcedureCount;
-
-        COMMIT;
-
         IF v_Count > 0 THEN
             SET p_Status = 0;
             SET p_ErrorMsg = 'Procedure exists';

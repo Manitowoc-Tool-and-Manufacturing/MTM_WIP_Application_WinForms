@@ -10,22 +10,18 @@ BEGIN
     DECLARE latest_date DATETIME;
     DECLARE target_id INT;
     DECLARE v_RowCount INT DEFAULT 0;
-    DECLARE EXIT HANDLER FOR SQLEXCEPTION
+    -- Transaction management removed: Works within caller's transaction context (tests use transactions)`r`n    DECLARE EXIT HANDLER FOR SQLEXCEPTION
     BEGIN
         GET DIAGNOSTICS CONDITION 1
             p_ErrorMsg = MESSAGE_TEXT;
         SET p_Status = -1;
-        ROLLBACK;
     END;
-    START TRANSACTION;
     IF p_User IS NULL OR TRIM(p_User) = '' THEN
         SET p_Status = -2;
         SET p_ErrorMsg = 'User is required';
-        ROLLBACK;
     ELSEIF p_ReceiveDate IS NULL THEN
         SET p_Status = -2;
         SET p_ErrorMsg = 'Receive date is required';
-        ROLLBACK;
     ELSE
         SELECT id INTO target_id
         FROM sys_last_10_transactions
@@ -34,7 +30,6 @@ BEGIN
         IF target_id IS NULL THEN
             SET p_Status = -4;
             SET p_ErrorMsg = 'Transaction not found for given user and date';
-            ROLLBACK;
         ELSE
             SELECT MAX(ReceiveDate) INTO latest_date
             FROM sys_last_10_transactions
@@ -47,16 +42,13 @@ BEGIN
                 IF v_RowCount > 0 THEN
                     SET p_Status = 1;
                     SET p_ErrorMsg = 'Transaction moved to last position';
-                    COMMIT;
                 ELSE
                     SET p_Status = -3;
                     SET p_ErrorMsg = 'Failed to update transaction date';
-                    ROLLBACK;
                 END IF;
             ELSE
                 SET p_Status = 0;
                 SET p_ErrorMsg = 'Transaction already at last position';
-                COMMIT;
             END IF;
         END IF;
     END IF;

@@ -6,32 +6,27 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `sys_GetUserAccessType`(
 )
 BEGIN
     DECLARE v_Count INT DEFAULT 0;
-    DECLARE EXIT HANDLER FOR SQLEXCEPTION
+    -- Transaction management removed: Works within caller's transaction context (tests use transactions)`r`n    DECLARE EXIT HANDLER FOR SQLEXCEPTION
     BEGIN
         GET DIAGNOSTICS CONDITION 1
             p_ErrorMsg = MESSAGE_TEXT;
         SET p_Status = -1;
-        ROLLBACK;
     END;
-    START TRANSACTION;
     IF NOT EXISTS (SELECT 1 FROM information_schema.tables
                    WHERE table_schema = DATABASE() AND table_name = 'usr_users') THEN
         SET p_Status = -1;
         SET p_ErrorMsg = 'Required table usr_users not found';
         SELECT NULL LIMIT 0;
-        ROLLBACK;
     ELSEIF NOT EXISTS (SELECT 1 FROM information_schema.tables
                        WHERE table_schema = DATABASE() AND table_name = 'sys_user_roles') THEN
         SET p_Status = -1;
         SET p_ErrorMsg = 'Required table sys_user_roles not found';
         SELECT NULL LIMIT 0;
-        ROLLBACK;
     ELSEIF NOT EXISTS (SELECT 1 FROM information_schema.tables
                        WHERE table_schema = DATABASE() AND table_name = 'sys_roles') THEN
         SET p_Status = -1;
         SET p_ErrorMsg = 'Required table sys_roles not found';
         SELECT NULL LIMIT 0;
-        ROLLBACK;
     ELSE
         SELECT
             u.ID AS UserID,
@@ -49,7 +44,6 @@ BEGIN
             SET p_Status = 0;
             SET p_ErrorMsg = 'No user access types found';
         END IF;
-        COMMIT;
     END IF;
 END
 //

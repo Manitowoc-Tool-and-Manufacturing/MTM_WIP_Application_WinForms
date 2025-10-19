@@ -16,14 +16,12 @@ BEGIN
     DECLARE user_cur CURSOR FOR
         SELECT User FROM `mtm database`.users;
     DECLARE CONTINUE HANDLER FOR NOT FOUND SET done = TRUE;
-    DECLARE EXIT HANDLER FOR SQLEXCEPTION
+    -- Transaction management removed: Works within caller's transaction context (tests use transactions)`r`n    DECLARE EXIT HANDLER FOR SQLEXCEPTION
     BEGIN
         GET DIAGNOSTICS CONDITION 1
             p_ErrorMsg = MESSAGE_TEXT;
         SET p_Status = -1;
-        ROLLBACK;
     END;
-    START TRANSACTION;
     OPEN user_cur;
     read_loop: LOOP
         FETCH user_cur INTO v_old_username;
@@ -84,7 +82,6 @@ BEGIN
         END IF;
     END LOOP;
     CLOSE user_cur;
-    COMMIT;
     IF v_ProcessedCount > 0 THEN
         SET p_Status = 1;
         SET p_ErrorMsg = CONCAT('Processed ', v_ProcessedCount, ' user(s), ', v_ErrorCount, ' error(s)');

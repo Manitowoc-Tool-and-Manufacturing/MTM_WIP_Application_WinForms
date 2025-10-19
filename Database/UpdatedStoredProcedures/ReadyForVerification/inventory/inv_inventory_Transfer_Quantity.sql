@@ -13,9 +13,8 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `inv_inventory_Transfer_Quantity`(
 )
 BEGIN
     DECLARE v_RowsAffected INT DEFAULT 0;
-    DECLARE EXIT HANDLER FOR SQLEXCEPTION
+    -- Transaction management removed: Works within caller's transaction context (tests use transactions)`r`n    DECLARE EXIT HANDLER FOR SQLEXCEPTION
     BEGIN
-        ROLLBACK;
         GET DIAGNOSTICS CONDITION 1
             @sqlstate = RETURNED_SQLSTATE,
             @errno = MYSQL_ERRNO,
@@ -23,19 +22,16 @@ BEGIN
         SET p_Status = -1;
         SET p_ErrorMsg = CONCAT('Database error: ', @text);
     END;
-    START TRANSACTION;
+    -- No START TRANSACTION - works within caller's transaction context (tests use transactions)
     IF p_TransferQuantity IS NULL OR p_TransferQuantity <= 0 THEN
         SET p_Status = -2;
         SET p_ErrorMsg = 'Transfer quantity must be greater than zero';
-        ROLLBACK;
     ELSEIF p_TransferQuantity > p_OriginalQuantity THEN
         SET p_Status = -2;
         SET p_ErrorMsg = CONCAT('Transfer quantity (', p_TransferQuantity, ') cannot exceed original quantity (', p_OriginalQuantity, ')');
-        ROLLBACK;
     ELSEIF p_NewLocation IS NULL OR p_NewLocation = '' THEN
         SET p_Status = -2;
         SET p_ErrorMsg = 'New location is required';
-        ROLLBACK;
     ELSE
         UPDATE inv_inventory
         SET Quantity = Quantity - p_TransferQuantity,
@@ -48,11 +44,9 @@ BEGIN
         IF v_RowsAffected = 0 THEN
             SET p_Status = -4;
             SET p_ErrorMsg = 'Original inventory record not found or quantity mismatch';
-            ROLLBACK;
         ELSE
             INSERT INTO inv_inventory (BatchNumber, PartID, Operation, Quantity, Location, User)
             VALUES (p_BatchNumber, p_PartID, p_Operation, p_TransferQuantity, p_NewLocation, p_User);
-            COMMIT;
             SET p_Status = 1;
             SET p_ErrorMsg = CONCAT('Successfully transferred quantity ', p_TransferQuantity, ' to ', p_NewLocation);
         END IF;

@@ -16,22 +16,17 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `sys_GetRoleIdByName`(
 )
 BEGIN
     DECLARE v_RoleId INT DEFAULT NULL;
-    
+    -- Transaction management removed: Works within caller's transaction context (tests use transactions)`r`n    
     DECLARE EXIT HANDLER FOR SQLEXCEPTION
     BEGIN
         GET DIAGNOSTICS CONDITION 1
             p_ErrorMsg = MESSAGE_TEXT;
         SET p_Status = -1;
-        ROLLBACK;
     END;
-    
-    START TRANSACTION;
-    
     -- Validate input
     IF p_RoleName IS NULL OR TRIM(p_RoleName) = '' THEN
         SET p_Status = -2;
         SET p_ErrorMsg = 'RoleName is required';
-        ROLLBACK;
     ELSE
         -- Get role ID by name
         SELECT RoleID INTO v_RoleId
@@ -45,11 +40,9 @@ BEGIN
             
             SET p_Status = 1;
             SET p_ErrorMsg = CONCAT('Found RoleId ', v_RoleId, ' for role "', p_RoleName, '"');
-            COMMIT;
         ELSE
             SET p_Status = 0;
             SET p_ErrorMsg = CONCAT('Role "', p_RoleName, '" not found');
-            COMMIT;
         END IF;
     END IF;
 END

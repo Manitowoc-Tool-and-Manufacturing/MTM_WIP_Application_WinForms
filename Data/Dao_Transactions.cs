@@ -3,6 +3,7 @@ using MTM_Inventory_Application.Models;
 using MTM_Inventory_Application.Helpers;
 using MTM_Inventory_Application.Logging;
 using System.Data;
+using MySql.Data.MySqlClient;
 
 namespace MTM_Inventory_Application.Data;
 

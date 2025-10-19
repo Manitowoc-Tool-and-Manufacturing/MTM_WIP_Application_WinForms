@@ -24,28 +24,23 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `usr_users_Add_User`(
 )
 BEGIN
     DECLARE v_RowCount INT DEFAULT 0;
-    DECLARE EXIT HANDLER FOR SQLEXCEPTION
+    -- Transaction management removed: Works within caller's transaction context (tests use transactions)`r`n    DECLARE EXIT HANDLER FOR SQLEXCEPTION
     BEGIN
         GET DIAGNOSTICS CONDITION 1
             p_ErrorMsg = MESSAGE_TEXT;
         SET p_Status = -1;
-        ROLLBACK;
     END;
-    START TRANSACTION;
     IF p_User IS NULL OR TRIM(p_User) = '' THEN
         SET p_Status = -2;
         SET p_ErrorMsg = 'User is required';
-        ROLLBACK;
     ELSEIF p_FullName IS NULL OR TRIM(p_FullName) = '' THEN
         SET p_Status = -2;
         SET p_ErrorMsg = 'Full Name is required';
-        ROLLBACK;
     ELSE
         -- Validate username contains only safe characters (alphanumeric, underscore, hyphen)
         IF p_User REGEXP '[^A-Za-z0-9_-]' THEN
             SET p_Status = -2;
             SET p_ErrorMsg = 'Username contains invalid characters. Only alphanumeric, underscore, and hyphen allowed.';
-            ROLLBACK;
         ELSE
             INSERT INTO usr_users (
                 `User`, `Full Name`, `Shift`, `VitsUser`, `Pin`, `LastShownVersion`, `HideChangeLog`,
@@ -76,11 +71,9 @@ BEGIN
                 FLUSH PRIVILEGES;
                 SET p_Status = 1;
                 SET p_ErrorMsg = CONCAT('User "', p_User, '" added successfully');
-                COMMIT;
             ELSE
                 SET p_Status = -3;
                 SET p_ErrorMsg = 'Failed to add user';
-                ROLLBACK;
             END IF;
         END IF;
     END IF;

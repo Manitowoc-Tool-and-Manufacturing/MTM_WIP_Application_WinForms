@@ -18,14 +18,12 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `log_error_Add_Error`(
 )
 BEGIN
     DECLARE v_RowCount INT DEFAULT 0;
-    DECLARE EXIT HANDLER FOR SQLEXCEPTION
+    -- Transaction management removed: Works within caller's transaction context (tests use transactions)`r`n    DECLARE EXIT HANDLER FOR SQLEXCEPTION
     BEGIN
         GET DIAGNOSTICS CONDITION 1
             p_ErrorMsg = MESSAGE_TEXT;
         SET p_Status = -1;
-        ROLLBACK;
     END;
-    START TRANSACTION;
     IF p_User IS NULL OR TRIM(p_User) = '' THEN
         SET p_User = 'Unknown';
     END IF;
@@ -38,7 +36,6 @@ BEGIN
     IF p_ErrorMessage IS NULL OR TRIM(p_ErrorMessage) = '' THEN
         SET p_Status = -2;
         SET p_ErrorMsg = 'Error message is required';
-        ROLLBACK;
     ELSE
         INSERT INTO `log_error` (
             `User`, `Severity`, `ErrorType`, `ErrorMessage`, `StackTrace`,
@@ -53,11 +50,9 @@ BEGIN
         IF v_RowCount > 0 THEN
             SET p_Status = 1;
             SET p_ErrorMsg = CONCAT('Error logged successfully for user: ', p_User);
-            COMMIT;
         ELSE
             SET p_Status = -3;
             SET p_ErrorMsg = 'Failed to create error log entry';
-            ROLLBACK;
         END IF;
     END IF;
 END

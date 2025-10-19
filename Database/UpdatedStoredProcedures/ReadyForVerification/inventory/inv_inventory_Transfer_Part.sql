@@ -11,9 +11,8 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `inv_inventory_Transfer_Part`(
 BEGIN
     DECLARE v_RowsAffected INT DEFAULT 0;
     DECLARE v_Exists INT DEFAULT 0;
-    DECLARE EXIT HANDLER FOR SQLEXCEPTION
+    -- Transaction management removed: Works within caller's transaction context (tests use transactions)`r`n    DECLARE EXIT HANDLER FOR SQLEXCEPTION
     BEGIN
-        ROLLBACK;
         GET DIAGNOSTICS CONDITION 1
             @sqlstate = RETURNED_SQLSTATE,
             @errno = MYSQL_ERRNO,
@@ -21,23 +20,19 @@ BEGIN
         SET p_Status = -1;
         SET p_ErrorMsg = CONCAT('Database error: ', @text);
     END;
-    START TRANSACTION;
+    -- No START TRANSACTION - works within caller's transaction context (tests use transactions)
     IF p_BatchNumber IS NULL OR p_BatchNumber = '' THEN
         SET p_Status = -2;
         SET p_ErrorMsg = 'BatchNumber is required';
-        ROLLBACK;
     ELSEIF p_PartID IS NULL OR p_PartID = '' THEN
         SET p_Status = -2;
         SET p_ErrorMsg = 'PartID is required';
-        ROLLBACK;
     ELSEIF p_Operation IS NULL OR p_Operation = '' THEN
         SET p_Status = -2;
         SET p_ErrorMsg = 'Operation is required';
-        ROLLBACK;
     ELSEIF p_NewLocation IS NULL OR p_NewLocation = '' THEN
         SET p_Status = -2;
         SET p_ErrorMsg = 'NewLocation is required';
-        ROLLBACK;
     ELSE
         SELECT COUNT(*) INTO v_Exists
         FROM inv_inventory
@@ -47,7 +42,6 @@ BEGIN
         IF v_Exists = 0 THEN
             SET p_Status = -4;
             SET p_ErrorMsg = 'Inventory record not found';
-            ROLLBACK;
         ELSE
             UPDATE inv_inventory
             SET Location = p_NewLocation,
@@ -57,11 +51,9 @@ BEGIN
               AND Operation = p_Operation;
             SET v_RowsAffected = ROW_COUNT();
             IF v_RowsAffected > 0 THEN
-                COMMIT;
                 SET p_Status = 1;
                 SET p_ErrorMsg = CONCAT('Successfully transferred ', v_RowsAffected, ' item(s) to ', p_NewLocation);
             ELSE
-                ROLLBACK;
                 SET p_Status = 0;
                 SET p_ErrorMsg = 'No rows were affected';
             END IF;

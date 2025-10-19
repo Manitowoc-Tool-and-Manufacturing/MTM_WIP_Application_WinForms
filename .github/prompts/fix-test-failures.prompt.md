@@ -6,14 +6,31 @@
 
 ## Mission
 
-Work through ALL 63 test failures documented in `#file:test-failure-fixes.md` systematically, fixing each category one at a time. After each fix, run tests to verify the solution worked before moving to the next issue.
+⚠️ **PREREQUISITE**: Before fixing individual test failures, complete the DAO Transaction Support refactoring documented in `specs/002-003-database-layer-complete/dao-transaction-refactor.md`. This refactoring is required to fix 43 of the 43 remaining test failures.
+
+**After DAO refactoring is complete**, work through any remaining test failures documented in `specs/002-003-database-layer-complete/test-failure-fixes.md` systematically.
+
+---
+
+## Current Blocker: DAO Transaction Architecture
+
+**Status**: 🔴 **CRITICAL BLOCKER** - 43 tests failing due to architectural issue
+
+**Problem**: Tests use transaction isolation but DAOs create new connections, causing "Parameter 'p_Status' not found in collection" errors.
+
+**Solution**: Follow `specs/002-003-database-layer-complete/dao-transaction-refactor.md` checklist to:
+1. Refactor Helper_Database_StoredProcedure to accept optional connection/transaction
+2. Update DAO methods to accept optional connection/transaction
+3. Update tests to pass test connection/transaction to DAOs
+
+**Once complete**, return to this workflow to fix any remaining issues.
 
 ---
 
 ## Workflow Instructions
 
 ### 1. Read Current State
-- Read `#file:test-failure-fixes.md` to understand all pending issues
+- Read `specs/002-003-database-layer-complete/test-failure-fixes.md` to understand all pending issues
 - Identify the highest priority category that's not yet complete
 - Focus on one category at a time to maintain clarity
 
