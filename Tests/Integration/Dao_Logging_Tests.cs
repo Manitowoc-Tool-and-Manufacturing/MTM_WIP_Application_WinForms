@@ -36,7 +36,7 @@ public class Dao_Logging_Tests : BaseIntegrationTest
     public async Task GetUniqueErrorsAsync_Execution_ReturnsUniqueErrors()
     {
         // Act
-        var result = await Dao_ErrorLog.GetUniqueErrorsAsync(connection: GetTestConnection(), transaction: GetTestTransaction());
+        var result = await Dao_ErrorLog.GetUniqueErrorsAsync();
 
         // Assert
         Assert.IsNotNull(result, "Expected non-null result list");
@@ -52,7 +52,7 @@ public class Dao_Logging_Tests : BaseIntegrationTest
     public async Task GetAllErrorsAsync_Execution_ReturnsAllErrors()
     {
         // Act
-        var result = await Dao_ErrorLog.GetAllErrorsAsync(connection: GetTestConnection(), transaction: GetTestTransaction());
+        var result = await Dao_ErrorLog.GetAllErrorsAsync();
 
         // Assert
         AssertSuccessWithData(result, "Expected successful retrieval of all errors");
@@ -72,7 +72,7 @@ public class Dao_Logging_Tests : BaseIntegrationTest
         string testUser = "TestUser";
 
         // Act
-        var result = await Dao_ErrorLog.GetErrorsByUserAsync(testUser, connection: GetTestConnection(), transaction: GetTestTransaction());
+        var result = await Dao_ErrorLog.GetErrorsByUserAsync(testUser);
 
         // Assert
         AssertSuccessWithData(result, "Expected successful retrieval of user errors");
@@ -92,7 +92,7 @@ public class Dao_Logging_Tests : BaseIntegrationTest
         DateTime end = DateTime.Now;
 
         // Act
-        var result = await Dao_ErrorLog.GetErrorsByDateRangeAsync(start, end, connection: GetTestConnection(), transaction: GetTestTransaction());
+        var result = await Dao_ErrorLog.GetErrorsByDateRangeAsync(start, end);
 
         // Assert
         AssertSuccessWithData(result, "Expected successful retrieval of errors by date range");
@@ -115,7 +115,7 @@ public class Dao_Logging_Tests : BaseIntegrationTest
         int testErrorId = 1; // Use existing ID or create test error first
 
         // Act
-        var result = await Dao_ErrorLog.DeleteErrorByIdAsync(testErrorId, connection: GetTestConnection(), transaction: GetTestTransaction());
+        var result = await Dao_ErrorLog.DeleteErrorByIdAsync(testErrorId);
 
         // Assert
         AssertSuccess(result, "Expected successful deletion of error by ID");
@@ -130,7 +130,7 @@ public class Dao_Logging_Tests : BaseIntegrationTest
     public async Task DeleteAllErrorsAsync_Execution_DeletesAllErrors()
     {
         // Act
-        var result = await Dao_ErrorLog.DeleteAllErrorsAsync(connection: GetTestConnection(), transaction: GetTestTransaction());
+        var result = await Dao_ErrorLog.DeleteAllErrorsAsync();
 
         // Assert
         AssertSuccess(result, "Expected successful deletion of all errors");
@@ -165,7 +165,7 @@ public class Dao_Logging_Tests : BaseIntegrationTest
         };
 
         // Act
-        var result = await Dao_History.AddTransactionHistoryAsync(history, connection: GetTestConnection(), transaction: GetTestTransaction());
+        var result = await Dao_History.AddTransactionHistoryAsync(history);
 
         // Assert
         AssertSuccess(result, "Expected successful addition of transaction history");
@@ -196,7 +196,7 @@ public class Dao_Logging_Tests : BaseIntegrationTest
         };
 
         // Act
-        var result = await Dao_History.AddTransactionHistoryAsync(history, connection: GetTestConnection(), transaction: GetTestTransaction());
+        var result = await Dao_History.AddTransactionHistoryAsync(history);
 
         // Assert
         AssertSuccess(result, "Expected successful addition of transfer transaction history");
@@ -227,7 +227,7 @@ public class Dao_Logging_Tests : BaseIntegrationTest
         };
 
         // Act
-        var result = await Dao_History.AddTransactionHistoryAsync(history, connection: GetTestConnection(), transaction: GetTestTransaction());
+        var result = await Dao_History.AddTransactionHistoryAsync(history);
 
         // Assert
         AssertSuccess(result, "Expected successful addition of transaction history with minimal fields");

@@ -238,7 +238,7 @@ namespace MTM_Inventory_Application.Controls.SettingsForm
             // Control_Developer_ParameterPrefixMaintenance
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.Controls.Add(this.tableLayoutPanel1);
             this.Name = "Control_Developer_ParameterPrefixMaintenance";
             this.Size = new System.Drawing.Size(800, 600);

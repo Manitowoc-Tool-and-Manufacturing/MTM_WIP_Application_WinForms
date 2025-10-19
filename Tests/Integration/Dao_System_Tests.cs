@@ -24,7 +24,7 @@ namespace MTM_Inventory_Application.Tests.Integration
         public async Task System_UserAccessTypeAsync_ReturnsUserList()
         {
             // Act
-            var result = await Dao_System.System_UserAccessTypeAsync(connection: GetTestConnection(), transaction: GetTestTransaction());
+            var result = await Dao_System.System_UserAccessTypeAsync();
 
             // Assert
             AssertSuccessWithData(result);
@@ -57,7 +57,7 @@ namespace MTM_Inventory_Application.Tests.Integration
         public async Task SetUserAccessTypeAsync_WithValidData_ExecutesSuccessfully()
         {
             // Arrange: Get a valid user from the system
-            var usersResult = await Dao_System.System_UserAccessTypeAsync(connection: GetTestConnection(), transaction: GetTestTransaction());
+            var usersResult = await Dao_System.System_UserAccessTypeAsync();
             AssertSuccessWithData(usersResult);
             Assert.IsNotNull(usersResult.Data, "User data should not be null");
             Assert.IsTrue(usersResult.Data!.Count > 0, "Need at least one user for this test");
@@ -66,7 +66,7 @@ namespace MTM_Inventory_Application.Tests.Integration
             var newAccessType = "Admin"; // Try to set to Admin
 
             // Act
-            var result = await Dao_System.SetUserAccessTypeAsync(firstUser.User, newAccessType, connection: GetTestConnection(), transaction: GetTestTransaction());
+            var result = await Dao_System.SetUserAccessTypeAsync(firstUser.User, newAccessType);
             // Assert
             Assert.IsTrue(result.IsSuccess, $"Expected success but got: {result.StatusMessage}");
         }
@@ -78,7 +78,7 @@ namespace MTM_Inventory_Application.Tests.Integration
         public async Task SetUserAccessTypeAsync_WithInvalidAccessType_ProvidesStatusMessage()
         {
             // Arrange
-            var usersResult = await Dao_System.System_UserAccessTypeAsync(connection: GetTestConnection(), transaction: GetTestTransaction());
+            var usersResult = await Dao_System.System_UserAccessTypeAsync();
             AssertSuccessWithData(usersResult);
             Assert.IsNotNull(usersResult.Data, "User data should not be null");
             Assert.IsTrue(usersResult.Data!.Count > 0, "Need at least one user for this test");
@@ -87,12 +87,7 @@ namespace MTM_Inventory_Application.Tests.Integration
             var invalidAccessType = "InvalidType_" + Guid.NewGuid().ToString();
 
             // Act
-            var result = await Dao_System.SetUserAccessTypeAsync(
-                firstUser.User,
-                invalidAccessType,
-                connection: GetTestConnection(),
-                transaction: GetTestTransaction()
-            );
+            var result = await Dao_System.SetUserAccessTypeAsync(firstUser.User, invalidAccessType);
 
             // Assert
             // Should either fail or succeed (depending on stored procedure validation)
@@ -113,7 +108,7 @@ namespace MTM_Inventory_Application.Tests.Integration
         {
             // Arrange
             // First get a valid user from the system
-            var usersResult = await Dao_System.System_UserAccessTypeAsync(connection: GetTestConnection(), transaction: GetTestTransaction());
+            var usersResult = await Dao_System.System_UserAccessTypeAsync();
             AssertSuccessWithData(usersResult);
             Assert.IsNotNull(usersResult.Data, "User data should not be null");
             Assert.IsTrue(usersResult.Data!.Count > 0, "Need at least one user for this test");
@@ -121,7 +116,7 @@ namespace MTM_Inventory_Application.Tests.Integration
             var testUserName = usersResult.Data[0].User;
 
             // Act
-            var result = await Dao_System.GetUserIdByNameAsync(testUserName, connection: GetTestConnection(), transaction: GetTestTransaction());
+            var result = await Dao_System.GetUserIdByNameAsync(testUserName);
 
             // Assert
             AssertSuccessWithData(result);
@@ -139,7 +134,7 @@ namespace MTM_Inventory_Application.Tests.Integration
             var nonExistentUser = "NonExistentUser_" + Guid.NewGuid().ToString();
 
             // Act
-            var result = await Dao_System.GetUserIdByNameAsync(nonExistentUser, connection: GetTestConnection(), transaction: GetTestTransaction());
+            var result = await Dao_System.GetUserIdByNameAsync(nonExistentUser);
 
             // Assert - Status 0 means "query succeeded but no data found" (treated as success)
             Assert.IsTrue(result.IsSuccess, "Expected success with status 0 for non-existent user (no data found)");
@@ -159,7 +154,7 @@ namespace MTM_Inventory_Application.Tests.Integration
             var validRoleName = "Admin"; // Assuming Admin role exists in test database
 
             // Act
-            var result = await Dao_System.GetRoleIdByNameAsync(validRoleName, connection: GetTestConnection(), transaction: GetTestTransaction());
+            var result = await Dao_System.GetRoleIdByNameAsync(validRoleName);
 
             // Assert
             AssertSuccessWithData(result);
@@ -177,7 +172,7 @@ namespace MTM_Inventory_Application.Tests.Integration
             var nonExistentRole = "NonExistentRole_" + Guid.NewGuid().ToString();
 
             // Act
-            var result = await Dao_System.GetRoleIdByNameAsync(nonExistentRole, connection: GetTestConnection(), transaction: GetTestTransaction());
+            var result = await Dao_System.GetRoleIdByNameAsync(nonExistentRole);
 
             // Assert
             Assert.IsFalse(result.IsSuccess, "Expected failure for non-existent role");
@@ -198,7 +193,7 @@ namespace MTM_Inventory_Application.Tests.Integration
         public async Task GetAllThemesAsync_ReturnsThemeData()
         {
             // Act
-            var result = await Dao_System.GetAllThemesAsync( connection: GetTestConnection(), transaction: GetTestTransaction());
+            var result = await Dao_System.GetAllThemesAsync( );
 
             // Assert
             AssertSuccessWithData(result);
@@ -216,7 +211,7 @@ namespace MTM_Inventory_Application.Tests.Integration
         public async Task GetAllThemesAsync_SyncMode_ReturnsThemeData()
         {
             // Act
-            var result = await Dao_System.GetAllThemesAsync( connection: GetTestConnection(), transaction: GetTestTransaction());
+            var result = await Dao_System.GetAllThemesAsync( );
 
             // Assert
             AssertSuccessWithData(result);
@@ -235,7 +230,7 @@ namespace MTM_Inventory_Application.Tests.Integration
         public async Task GetUserIdByNameAsync_WithEmptyUserName_HandlesGracefully()
         {
             // Act
-            var result = await Dao_System.GetUserIdByNameAsync(string.Empty, connection: GetTestConnection(), transaction: GetTestTransaction());
+            var result = await Dao_System.GetUserIdByNameAsync(string.Empty);
 
             // Assert - Stored procedure returns status -2 for empty username
             Assert.IsFalse(result.IsSuccess, "Expected failure for empty username");
@@ -256,7 +251,7 @@ namespace MTM_Inventory_Application.Tests.Integration
             // Both behaviors are acceptable for null parameters
             try
             {
-                var result = await Dao_System.SetUserAccessTypeAsync(null!, "Admin", connection: GetTestConnection(), transaction: GetTestTransaction());
+                var result = await Dao_System.SetUserAccessTypeAsync(null!, "Admin");
 
                 // If we get here, method returned a result instead of throwing
                 Assert.IsFalse(result.IsSuccess, "Expected failure for null username");
@@ -283,7 +278,7 @@ namespace MTM_Inventory_Application.Tests.Integration
         public async Task System_UserAccessTypeAsync_ReturnsDaoResultWithProperties()
         {
             // Act
-            var result = await Dao_System.System_UserAccessTypeAsync(connection: GetTestConnection(), transaction: GetTestTransaction());
+            var result = await Dao_System.System_UserAccessTypeAsync();
 
             // Assert
             Assert.IsNotNull(result, "DaoResult should not be null");
@@ -300,7 +295,7 @@ namespace MTM_Inventory_Application.Tests.Integration
         public async Task GetUserIdByNameAsync_IncludesDescriptiveStatusMessage()
         {
             // Arrange: Get a valid user first
-            var usersResult = await Dao_System.System_UserAccessTypeAsync(connection: GetTestConnection(), transaction: GetTestTransaction());
+            var usersResult = await Dao_System.System_UserAccessTypeAsync();
             AssertSuccessWithData(usersResult);
             Assert.IsNotNull(usersResult.Data, "User data should not be null");
             if (!usersResult.IsSuccess || usersResult.Data!.Count == 0)
@@ -312,7 +307,7 @@ namespace MTM_Inventory_Application.Tests.Integration
             var validUserName = usersResult.Data[0].User;
 
             // Act
-            var result = await Dao_System.GetUserIdByNameAsync(validUserName, connection: GetTestConnection(), transaction: GetTestTransaction());
+            var result = await Dao_System.GetUserIdByNameAsync(validUserName);
 
             // Assert
             AssertSuccessWithData(result);

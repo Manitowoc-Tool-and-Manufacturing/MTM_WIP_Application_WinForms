@@ -19,7 +19,7 @@ public class Dao_MasterData_Tests : BaseIntegrationTest
     public async Task GetAllItemTypes_Execution_ReturnsItemTypes()
     {
         // Act
-        var result = await Dao_ItemType.GetAllItemTypes(connection: GetTestConnection(), transaction: GetTestTransaction());
+        var result = await Dao_ItemType.GetAllItemTypes();
 
         // Assert
         Assert.IsTrue(result.IsSuccess, $"Expected success, got failure: {result.ErrorMessage}");
@@ -33,12 +33,12 @@ public class Dao_MasterData_Tests : BaseIntegrationTest
     public async Task ItemTypeExists_ExistingType_ReturnsTrue()
     {
         // Arrange - Get an existing item type
-        var allTypes = await Dao_ItemType.GetAllItemTypes(connection: GetTestConnection(), transaction: GetTestTransaction());
+        var allTypes = await Dao_ItemType.GetAllItemTypes();
         Assert.IsTrue(allTypes.IsSuccess && allTypes.Data != null && allTypes.Data.Rows.Count > 0, "Need at least one item type for test");
         var existingType = allTypes.Data.Rows[0]["ItemType"].ToString();
 
         // Act
-        var result = await Dao_ItemType.ItemTypeExists(existingType!, connection: GetTestConnection(), transaction: GetTestTransaction());
+        var result = await Dao_ItemType.ItemTypeExists(existingType!);
 
         // Assert
         Assert.IsTrue(result.IsSuccess, $"Expected success, got failure: {result.ErrorMessage}");
@@ -55,7 +55,7 @@ public class Dao_MasterData_Tests : BaseIntegrationTest
         var nonExistentType = "NonExistent_" + Guid.NewGuid().ToString();
 
         // Act
-        var result = await Dao_ItemType.ItemTypeExists(nonExistentType, connection: GetTestConnection(), transaction: GetTestTransaction());
+        var result = await Dao_ItemType.ItemTypeExists(nonExistentType);
 
         // Assert
         Assert.IsTrue(result.IsSuccess, $"Expected success, got failure: {result.ErrorMessage}");
@@ -73,7 +73,7 @@ public class Dao_MasterData_Tests : BaseIntegrationTest
     public async Task GetAllLocations_Execution_ReturnsLocations()
     {
         // Act
-        var result = await Dao_Location.GetAllLocations(connection: GetTestConnection(), transaction: GetTestTransaction());
+        var result = await Dao_Location.GetAllLocations();
 
         // Assert
         Assert.IsTrue(result.IsSuccess, $"Expected success, got failure: {result.ErrorMessage}");
@@ -87,12 +87,12 @@ public class Dao_MasterData_Tests : BaseIntegrationTest
     public async Task LocationExists_ExistingLocation_ReturnsTrue()
     {
         // Arrange - Get an existing location
-        var allLocations = await Dao_Location.GetAllLocations(connection: GetTestConnection(), transaction: GetTestTransaction());
+        var allLocations = await Dao_Location.GetAllLocations();
         Assert.IsTrue(allLocations.IsSuccess && allLocations.Data != null && allLocations.Data.Rows.Count > 0, "Need at least one location for test");
         var existingLocation = allLocations.Data.Rows[0]["Location"].ToString();
 
         // Act
-        var result = await Dao_Location.LocationExists(existingLocation!, connection: GetTestConnection(), transaction: GetTestTransaction());
+        var result = await Dao_Location.LocationExists(existingLocation!);
 
         // Assert
         Assert.IsTrue(result.IsSuccess, $"Expected success, got failure: {result.ErrorMessage}");
@@ -109,7 +109,7 @@ public class Dao_MasterData_Tests : BaseIntegrationTest
         var nonExistentLocation = "NonExistent_" + Guid.NewGuid().ToString();
 
         // Act
-        var result = await Dao_Location.LocationExists(nonExistentLocation, connection: GetTestConnection(), transaction: GetTestTransaction());
+        var result = await Dao_Location.LocationExists(nonExistentLocation);
 
         // Assert
         Assert.IsTrue(result.IsSuccess, $"Expected success, got failure: {result.ErrorMessage}");
@@ -127,7 +127,7 @@ public class Dao_MasterData_Tests : BaseIntegrationTest
     public async Task GetAllOperations_Execution_ReturnsOperations()
     {
         // Act
-        var result = await Dao_Operation.GetAllOperations(connection: GetTestConnection(), transaction: GetTestTransaction());
+        var result = await Dao_Operation.GetAllOperations();
 
         // Assert
         Assert.IsTrue(result.IsSuccess, $"Expected success, got failure: {result.ErrorMessage}");
@@ -141,12 +141,12 @@ public class Dao_MasterData_Tests : BaseIntegrationTest
     public async Task OperationExists_ExistingOperation_ReturnsTrue()
     {
         // Arrange - Get an existing operation
-        var allOperations = await Dao_Operation.GetAllOperations(connection: GetTestConnection(), transaction: GetTestTransaction());
+        var allOperations = await Dao_Operation.GetAllOperations();
         Assert.IsTrue(allOperations.IsSuccess && allOperations.Data != null && allOperations.Data.Rows.Count > 0, "Need at least one operation for test");
         var existingOperation = allOperations.Data.Rows[0]["Operation"].ToString();
 
         // Act
-        var result = await Dao_Operation.OperationExists(existingOperation!, connection: GetTestConnection(), transaction: GetTestTransaction());
+        var result = await Dao_Operation.OperationExists(existingOperation!);
 
         // Assert
         Assert.IsTrue(result.IsSuccess, $"Expected success, got failure: {result.ErrorMessage}");
@@ -163,7 +163,7 @@ public class Dao_MasterData_Tests : BaseIntegrationTest
         var nonExistentOperation = "999";
 
         // Act
-        var result = await Dao_Operation.OperationExists(nonExistentOperation, connection: GetTestConnection(), transaction: GetTestTransaction());
+        var result = await Dao_Operation.OperationExists(nonExistentOperation);
 
         // Assert
         Assert.IsTrue(result.IsSuccess, $"Expected success, got failure: {result.ErrorMessage}");
@@ -181,7 +181,7 @@ public class Dao_MasterData_Tests : BaseIntegrationTest
     public async Task GetAllPartsAsync_Execution_ReturnsParts()
     {
         // Act
-        var result = await Dao_Part.GetAllPartsAsync(connection: GetTestConnection(), transaction: GetTestTransaction());
+        var result = await Dao_Part.GetAllPartsAsync();
 
         // Assert
         Assert.IsTrue(result.IsSuccess, $"Expected success, got failure: {result.ErrorMessage}");
@@ -195,12 +195,12 @@ public class Dao_MasterData_Tests : BaseIntegrationTest
     public async Task GetPartByNumberAsync_ExistingPart_ReturnsPart()
     {
         // Arrange - Get an existing part
-        var allParts = await Dao_Part.GetAllPartsAsync(connection: GetTestConnection(), transaction: GetTestTransaction());
+        var allParts = await Dao_Part.GetAllPartsAsync();
         Assert.IsTrue(allParts.IsSuccess && allParts.Data != null && allParts.Data.Rows.Count > 0, "Need at least one part for test");
         var existingPartNumber = allParts.Data.Rows[0]["PartID"].ToString();  // Column is PartID, not ItemNumber
 
         // Act
-        var result = await Dao_Part.GetPartByNumberAsync(existingPartNumber!, connection: GetTestConnection(), transaction: GetTestTransaction());
+        var result = await Dao_Part.GetPartByNumberAsync(existingPartNumber!);
 
         // Assert
         Assert.IsTrue(result.IsSuccess, $"Expected success, got failure: {result.ErrorMessage}");
@@ -214,12 +214,12 @@ public class Dao_MasterData_Tests : BaseIntegrationTest
     public async Task PartExistsAsync_ExistingPart_ReturnsTrue()
     {
         // Arrange - Get an existing part
-        var allParts = await Dao_Part.GetAllPartsAsync(connection: GetTestConnection(), transaction: GetTestTransaction());
+        var allParts = await Dao_Part.GetAllPartsAsync();
         Assert.IsTrue(allParts.IsSuccess && allParts.Data != null && allParts.Data.Rows.Count > 0, "Need at least one part for test");
         var existingPartNumber = allParts.Data.Rows[0]["PartID"].ToString();  // Column is PartID, not ItemNumber
 
         // Act
-        var result = await Dao_Part.PartExistsAsync(existingPartNumber!, connection: GetTestConnection(), transaction: GetTestTransaction());
+        var result = await Dao_Part.PartExistsAsync(existingPartNumber!);
 
         // Assert
         Assert.IsTrue(result.IsSuccess, $"Expected success, got failure: {result.ErrorMessage}");
@@ -236,7 +236,7 @@ public class Dao_MasterData_Tests : BaseIntegrationTest
         var nonExistentPart = "NonExistent_" + Guid.NewGuid().ToString();
 
         // Act
-        var result = await Dao_Part.PartExistsAsync(nonExistentPart, connection: GetTestConnection(), transaction: GetTestTransaction());
+        var result = await Dao_Part.PartExistsAsync(nonExistentPart);
 
         // Assert
         Assert.IsTrue(result.IsSuccess, $"Expected success, got failure: {result.ErrorMessage}");

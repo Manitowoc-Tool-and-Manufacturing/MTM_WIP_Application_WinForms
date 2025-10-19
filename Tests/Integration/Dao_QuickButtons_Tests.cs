@@ -46,7 +46,7 @@ public class Dao_QuickButtons_Tests : BaseIntegrationTest
 
         // Act
         var result = await Dao_QuickButtons.UpdateQuickButtonAsync(
-            TestUser, position, partId, operation, quantity, connection: GetTestConnection(), transaction: GetTestTransaction());
+            TestUser, position, partId, operation, quantity);
 
         // Assert
         AssertSuccess(result, "Expected successful update of quick button");
@@ -69,7 +69,7 @@ public class Dao_QuickButtons_Tests : BaseIntegrationTest
 
         // Act
         var result = await Dao_QuickButtons.AddQuickButtonAsync(
-            TestUser, partId, operation, quantity, position, connection: GetTestConnection(), transaction: GetTestTransaction());
+            TestUser, partId, operation, quantity, position);
 
         // Assert
         AssertSuccess(result, "Expected successful addition of quick button");
@@ -87,7 +87,7 @@ public class Dao_QuickButtons_Tests : BaseIntegrationTest
         int position = 2; // 1-based position to remove
 
         // Act
-        var result = await Dao_QuickButtons.RemoveQuickButtonAndShiftAsync(TestUser, position, connection: GetTestConnection(), transaction: GetTestTransaction());
+        var result = await Dao_QuickButtons.RemoveQuickButtonAndShiftAsync(TestUser, position);
 
         // Assert
         AssertSuccess(result, "Expected successful removal and shift of quick button");
@@ -102,7 +102,7 @@ public class Dao_QuickButtons_Tests : BaseIntegrationTest
     public async Task DeleteAllQuickButtonsForUserAsync_ValidUser_DeletesAllButtons()
     {
         // Act
-        var result = await Dao_QuickButtons.DeleteAllQuickButtonsForUserAsync(TestUser, connection: GetTestConnection(), transaction: GetTestTransaction());
+        var result = await Dao_QuickButtons.DeleteAllQuickButtonsForUserAsync(TestUser);
 
         // Assert
         AssertSuccess(result, "Expected successful deletion of all quick buttons for user");
@@ -126,7 +126,7 @@ public class Dao_QuickButtons_Tests : BaseIntegrationTest
 
         // Act
         var result = await Dao_QuickButtons.MoveQuickButtonAsync(
-            TestUser, fromPosition, toPosition, connection: GetTestConnection(), transaction: GetTestTransaction());
+            TestUser, fromPosition, toPosition);
 
         // Assert
         AssertSuccess(result, "Expected successful move of quick button");
@@ -147,7 +147,7 @@ public class Dao_QuickButtons_Tests : BaseIntegrationTest
 
         // Act
         var result = await Dao_QuickButtons.AddOrShiftQuickButtonAsync(
-            TestUser, partId, operation, quantity, connection: GetTestConnection(), transaction: GetTestTransaction());
+            TestUser, partId, operation, quantity);
 
         // Assert
         AssertSuccess(result, "Expected successful add or shift of quick button");
@@ -165,7 +165,7 @@ public class Dao_QuickButtons_Tests : BaseIntegrationTest
         int position = 4; // 1-based position
 
         // Act
-        var result = await Dao_QuickButtons.RemoveAndShiftQuickButtonAsync(TestUser, position, connection: GetTestConnection(), transaction: GetTestTransaction());
+        var result = await Dao_QuickButtons.RemoveAndShiftQuickButtonAsync(TestUser, position);
 
         // Assert
         AssertSuccess(result, "Expected successful remove and shift of quick button");
@@ -187,7 +187,7 @@ public class Dao_QuickButtons_Tests : BaseIntegrationTest
 
         // Act
         var result = await Dao_QuickButtons.AddQuickButtonAtPositionAsync(
-            TestUser, partId, operation, quantity, position, connection: GetTestConnection(), transaction: GetTestTransaction());
+            TestUser, partId, operation, quantity, position);
 
         // Assert
         AssertSuccess(result, "Expected successful addition at specific position");
@@ -210,7 +210,7 @@ public class Dao_QuickButtons_Tests : BaseIntegrationTest
 
         // Act
         var result = await Dao_QuickButtons.UpdateQuickButtonAsync(
-            TestUser, position, TestPartId, TestOperation, TestQuantity, connection: GetTestConnection(), transaction: GetTestTransaction());
+            TestUser, position, TestPartId, TestOperation, TestQuantity);
 
         // Assert
         AssertSuccess(result, "Expected successful update at position 1 (lower bound)");
@@ -229,7 +229,7 @@ public class Dao_QuickButtons_Tests : BaseIntegrationTest
 
         // Act
         var result = await Dao_QuickButtons.UpdateQuickButtonAsync(
-            TestUser, position, TestPartId, TestOperation, TestQuantity, connection: GetTestConnection(), transaction: GetTestTransaction());
+            TestUser, position, TestPartId, TestOperation, TestQuantity);
 
         // Assert
         AssertSuccess(result, "Expected successful update at position 10 (upper bound)");
@@ -248,7 +248,7 @@ public class Dao_QuickButtons_Tests : BaseIntegrationTest
 
         // Act
         var result = await Dao_QuickButtons.MoveQuickButtonAsync(
-            TestUser, position, position, connection: GetTestConnection(), transaction: GetTestTransaction());
+            TestUser, position, position);
 
         // Assert
         AssertSuccess(result, "Expected successful handling of same-position move");
@@ -275,31 +275,31 @@ public class Dao_QuickButtons_Tests : BaseIntegrationTest
 
         // Step 1: Add quick button
         var addResult = await Dao_QuickButtons.AddQuickButtonAsync(
-            workflowUser, partId, operation, quantity, position, connection: GetTestConnection(), transaction: GetTestTransaction());
+            workflowUser, partId, operation, quantity, position);
         AssertSuccess(addResult, "Expected successful add in workflow");
         Console.WriteLine($"Workflow Step 1: Added button at position {position}");
 
         // Step 2: Update quick button
         var updateResult = await Dao_QuickButtons.UpdateQuickButtonAsync(
-            workflowUser, position, partId, operation, quantity + 5, connection: GetTestConnection(), transaction: GetTestTransaction());
+            workflowUser, position, partId, operation, quantity + 5);
         AssertSuccess(updateResult, "Expected successful update in workflow");
         Console.WriteLine($"Workflow Step 2: Updated button at position {position}");
 
         // Step 3: Move quick button
         int newPosition = 6;
         var moveResult = await Dao_QuickButtons.MoveQuickButtonAsync(
-            workflowUser, position, newPosition, connection: GetTestConnection(), transaction: GetTestTransaction());
+            workflowUser, position, newPosition);
         AssertSuccess(moveResult, "Expected successful move in workflow");
         Console.WriteLine($"Workflow Step 3: Moved button from {position} to {newPosition}");
 
         // Step 4: Remove quick button
         var removeResult = await Dao_QuickButtons.RemoveAndShiftQuickButtonAsync(
-            workflowUser, newPosition, connection: GetTestConnection(), transaction: GetTestTransaction());
+            workflowUser, newPosition);
         AssertSuccess(removeResult, "Expected successful remove in workflow");
         Console.WriteLine($"Workflow Step 4: Removed button at position {newPosition}");
 
         // Step 5: Clean up
-        var deleteResult = await Dao_QuickButtons.DeleteAllQuickButtonsForUserAsync(workflowUser, connection: GetTestConnection(), transaction: GetTestTransaction());
+        var deleteResult = await Dao_QuickButtons.DeleteAllQuickButtonsForUserAsync(workflowUser);
         AssertSuccess(deleteResult, "Expected successful cleanup in workflow");
         Console.WriteLine("Workflow Step 5: Cleaned up all buttons for workflow user");
     }

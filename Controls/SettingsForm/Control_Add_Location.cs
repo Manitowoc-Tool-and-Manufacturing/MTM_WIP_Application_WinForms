@@ -1,3 +1,4 @@
+using MTM_Inventory_Application.Core;
 using MTM_Inventory_Application.Data;
 using MTM_Inventory_Application.Models;
 
@@ -16,6 +17,8 @@ namespace MTM_Inventory_Application.Controls.SettingsForm
         public Control_Add_Location()
         {
             InitializeComponent();
+            Core_Themes.ApplyDpiScaling(this);
+            Core_Themes.ApplyRuntimeLayoutAdjustments(this);
             LoadBuildingOptions();
         }
 

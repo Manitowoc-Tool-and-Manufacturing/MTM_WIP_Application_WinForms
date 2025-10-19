@@ -25,6 +25,8 @@ namespace MTM_Inventory_Application.Controls.SettingsForm
         public Control_Edit_Location()
         {
             InitializeComponent();
+            Core_Themes.ApplyDpiScaling(this);
+            Core_Themes.ApplyRuntimeLayoutAdjustments(this);
             LoadBuildingOptions();
         }
 

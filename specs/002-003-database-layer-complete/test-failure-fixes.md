@@ -1,8 +1,8 @@
 # Test Failure Fixes - Systematic Resolution Checklist
 
 **Created**: 2025-10-19  
-**Last Updated**: 2025-10-18 (After DAO prefix standardization)  
-**Test Run**: 136 tests (73 passed, 63 failed - **no change from baseline**)  
+**Last Updated**: 2025-10-19 (After stored procedure deployment and connection pooling fixes)  
+**Test Run**: 136 tests (91 passed, 45 failed)  
 **Branch**: 002-003-database-layer-complete  
 **Priority**: High - Blocking deployment validation  
 
@@ -10,7 +10,12 @@
 
 ## Recent Changes
 
-**2025-10-18 Evening Update (Session 2 - Final)**:
+**2025-10-19 Update**:
+- ✅ **Deployed all 97 stored procedures** to `mtm_wip_application_winforms_test`
+- ✅ **Fixed ConnectionPooling_Tests** - removed shared connection usage (5 tests now passing)
+- ✅ **Identified MySqlDataAdapter limitation** - OUTPUT parameters not retrieved with Fill()
+- 🔴 **New blocker**: MySqlDataAdapter.Fill() doesn't populate OUTPUT parameters
+- 🎉 **Test Progress: 73→91 passing (+18), 63→45 failing (-18) = 25% improvement**
 - ✅ **Fixed error log procedures** - Changed `LoggedDate` column reference to `ErrorTime` (actual column name)
 - ✅ **Suppressed MessageBox dialogs in tests** - Added `Dao_ErrorLog.IsTestMode` flag set in BaseIntegrationTest
 - ✅ **Fixed Part test column references** - Changed `ItemNumber` to `PartID` (actual column name)

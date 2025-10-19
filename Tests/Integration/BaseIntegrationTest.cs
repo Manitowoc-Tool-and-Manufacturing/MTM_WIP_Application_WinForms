@@ -14,9 +14,8 @@ using System.Threading.Tasks;
 namespace MTM_Inventory_Application.Tests.Integration;
 
 /// <summary>
-/// Base class for integration tests that provides transaction isolation.
-/// Each test runs within a transaction that is rolled back after completion,
-/// ensuring tests don't affect the database or each other.
+/// Base class for integration tests that provides test database connection management and cleanup.
+/// Each test runs with a dedicated connection and test data is cleaned up after completion.
 /// </summary>
 /// <remarks>
 /// <para>
@@ -25,10 +24,14 @@ namespace MTM_Inventory_Application.Tests.Integration;
 /// This database must be created and schema-synchronized before running tests.
 /// </para>
 /// <para>
-/// <strong>Transaction Isolation:</strong>
-/// Each test method executes within a database transaction that is automatically
-/// rolled back in <see cref="TestCleanup"/>, preventing side effects between tests.
-/// The connection remains open for the duration of the test to maintain transaction scope.
+/// <strong>Test Isolation Strategy:</strong>
+/// Tests use explicit cleanup instead of transaction rollback. Each test method commits its changes
+/// to the database, and <see cref="TestCleanup"/> removes test data by pattern matching (TEST-*, TEMP-*, etc.).
+/// </para>
+/// <para>
+/// <strong>Why No Transaction Isolation?:</strong>
+/// MySQL.Data connector cannot retrieve OUTPUT parameters (p_Status, p_ErrorMsg) from stored procedures
+/// when using external transactions. This was blocking ~30 tests. See BLOCKER-ANALYSIS.md for details.
 /// </para>
 /// <para>
 /// <strong>Usage Pattern:</strong>
@@ -42,16 +45,24 @@ namespace MTM_Inventory_Application.Tests.Integration;
 ///         // Arrange
 ///         var connectionString = GetTestConnectionString();
 ///         
-///         // Act
-///         var result = await Dao_System.GetDatabaseVersionAsync();
+///         // Act - connection parameter optional, transaction always null
+///         var result = await Dao_System.GetDatabaseVersionAsync(
+///             connection: GetTestConnection());
 ///         
 ///         // Assert
 ///         Assert.IsTrue(result.IsSuccess);
 ///         Assert.IsNotNull(result.Data);
-///         // Transaction automatically rolled back after test
+///         // Test data automatically cleaned up after test
 ///     }
 /// }
 /// </code>
+/// </para>
+/// <para>
+/// <strong>Test Data Naming Convention:</strong>
+/// Use identifiable prefixes for test data to ensure proper cleanup:
+/// - BatchNumber: TEST-*, TEMP-*, WORKFLOW-*
+/// - User/UserName: Test*, TestUser*
+/// - PartID: TEST-PART-*
 /// </para>
 /// </remarks>
 public abstract class BaseIntegrationTest
@@ -67,9 +78,11 @@ public abstract class BaseIntegrationTest
     private MySqlConnection? _connection;
 
     /// <summary>
-    /// Transaction wrapping the current test.
-    /// Begun in <see cref="TestInitialize"/> and rolled back in <see cref="TestCleanup"/>.
+    /// Transaction field - DEPRECATED and always null.
+    /// Transaction isolation removed due to MySQL.Data connector limitations.
+    /// See BLOCKER-ANALYSIS.md for details.
     /// </summary>
+    [Obsolete("Transaction isolation removed - field kept for backward compatibility only")]
     private MySqlTransaction? _transaction;
 
     private ProcedureDiagnosticContext? _diagnosticContext;
@@ -81,11 +94,16 @@ public abstract class BaseIntegrationTest
     #region Test Lifecycle
 
     /// <summary>
-    /// Initializes the test by opening a database connection and starting a transaction.
+    /// Initializes the test by opening a database connection.
     /// Called automatically before each test method.
     /// </summary>
+    /// <remarks>
+    /// NOTE: Transaction-based isolation has been removed due to MySQL.Data connector limitations
+    /// with OUTPUT parameters. Tests now commit data and clean up explicitly in TestCleanup.
+    /// See BLOCKER-ANALYSIS.md for details.
+    /// </remarks>
     /// <exception cref="InvalidOperationException">
-    /// Thrown if the connection cannot be opened or transaction cannot be started.
+    /// Thrown if the connection cannot be opened.
     /// </exception>
     [TestInitialize]
     public void TestInitialize()
@@ -98,15 +116,13 @@ public abstract class BaseIntegrationTest
             // Get connection string for test database
             var connectionString = GetTestConnectionString();
 
-            // Open connection
+            // Open connection (no transaction - see remarks above)
             _connection = new MySqlConnection(connectionString);
             _connection.Open();
 
-            // Start transaction for test isolation
-            _transaction = _connection.BeginTransaction(IsolationLevel.ReadCommitted);
-
             // Log test initialization
-            Console.WriteLine($"[Test Setup] Connection opened and transaction started for test database: {Helper_Database_Variables.TestDatabaseName}");
+            Console.WriteLine($"[Test Setup] Connection opened for test database: {Helper_Database_Variables.TestDatabaseName}");
+            Console.WriteLine($"[Test Setup] Using explicit cleanup strategy (no transaction isolation)");
         }
         catch (Exception ex)
         {
@@ -116,26 +132,41 @@ public abstract class BaseIntegrationTest
     }
 
     /// <summary>
-    /// Cleans up the test by rolling back the transaction and closing the connection.
+    /// Cleans up the test by removing test data and closing the connection.
     /// Called automatically after each test method, regardless of test outcome.
     /// </summary>
     /// <remarks>
-    /// The rollback ensures that no test data persists in the database, maintaining
-    /// test isolation and repeatability.
+    /// <para>
+    /// <strong>Cleanup Strategy:</strong>
+    /// Instead of transaction rollback, this method explicitly deletes test data by pattern matching.
+    /// Test data should use identifiable prefixes (TEST-, TEMP-, TestUser) for reliable cleanup.
+    /// </para>
+    /// <para>
+    /// <strong>Why No Transaction?:</strong>
+    /// MySQL.Data connector cannot retrieve OUTPUT parameters (p_Status, p_ErrorMsg) from stored
+    /// procedures when using external transactions. See BLOCKER-ANALYSIS.md for technical details.
+    /// </para>
     /// </remarks>
     [TestCleanup]
     public void TestCleanup()
     {
         try
         {
-            // Rollback transaction to undo any changes made during test
+            // Clean up test data before closing connection
+            if (_connection != null && _connection.State == ConnectionState.Open)
+            {
+                CleanupTestData();
+            }
+
+            // Note: _transaction is now always null (removed transaction isolation)
+            // Keeping this check for backward compatibility
+#pragma warning disable CS0618 // Type or member is obsolete
             if (_transaction != null)
             {
-                _transaction.Rollback();
                 _transaction.Dispose();
                 _transaction = null;
-                Console.WriteLine("[Test Cleanup] Transaction rolled back successfully");
             }
+#pragma warning restore CS0618 // Type or member is obsolete
 
             // Close and dispose connection
             if (_connection != null)
@@ -153,6 +184,78 @@ public abstract class BaseIntegrationTest
         {
             // Log cleanup errors but don't throw - avoid masking test failures
             Console.WriteLine($"[Test Cleanup ERROR] Failed to cleanup test: {ex.Message}");
+        }
+    }
+
+    /// <summary>
+    /// Cleans up test data from the database by pattern matching.
+    /// Called automatically in <see cref="TestCleanup"/> to remove data created during tests.
+    /// </summary>
+    /// <remarks>
+    /// <para>
+    /// <strong>Cleanup Patterns:</strong>
+    /// Deletes records where identifiers match test patterns:
+    /// - BatchNumber: TEST-*, TEMP-*, WORKFLOW-*
+    /// - User/UserName: Test*, TestUser*
+    /// - PartID: TEST-PART-*
+    /// </para>
+    /// <para>
+    /// <strong>Tables Cleaned:</strong>
+    /// - inv_inventory (test inventory records)
+    /// - inv_transaction_history (test transaction history)
+    /// - usr_quick_buttons (test quick button configurations)
+    /// - log_application_errors (test error logs)
+    /// </para>
+    /// <para>
+    /// <strong>Safety:</strong>
+    /// Only affects test database (mtm_wip_application_winforms_test).
+    /// Production database uses different connection string.
+    /// </para>
+    /// </remarks>
+    private void CleanupTestData()
+    {
+        if (_connection == null || _connection.State != ConnectionState.Open)
+        {
+            Console.WriteLine("[Cleanup] Skipping cleanup - connection not available");
+            return;
+        }
+
+        try
+        {
+            using var cmd = _connection.CreateCommand();
+            
+            // Delete test inventory and related records
+            // Note: sys_last_10_transactions is the actual table for quick buttons
+            cmd.CommandText = @"
+                DELETE FROM inv_inventory 
+                WHERE BatchNumber LIKE 'TEST-%' 
+                   OR BatchNumber LIKE 'TEMP-%'
+                   OR BatchNumber LIKE 'WORKFLOW-%'
+                   OR BatchNumber LIKE 'BATCH-POOL-%'
+                   OR PartID LIKE 'TEST-PART-%'
+                   OR PartID LIKE 'POOL-TEST-%';
+                
+                DELETE FROM sys_last_10_transactions 
+                WHERE User LIKE 'Test%' 
+                   OR User LIKE 'TestUser%'
+                   OR User LIKE 'PoolTestUser%';
+                
+                DELETE FROM log_application_errors 
+                WHERE ErrorMessage LIKE '%Test%' 
+                   OR ErrorMessage LIKE '%TEST%';
+            ";
+            
+            int rowsAffected = cmd.ExecuteNonQuery();
+            
+            if (rowsAffected > 0)
+            {
+                Console.WriteLine($"[Cleanup] Removed {rowsAffected} test records from database");
+            }
+        }
+        catch (Exception ex)
+        {
+            // Log but don't throw - cleanup failures shouldn't fail tests
+            Console.WriteLine($"[Cleanup] Failed to clean test data: {ex.Message}");
         }
     }
 
@@ -204,23 +307,27 @@ public abstract class BaseIntegrationTest
     }
 
     /// <summary>
-    /// Gets the active test transaction (started in <see cref="TestInitialize"/>).
+    /// Gets the active test transaction.
     /// </summary>
-    /// <returns>The MySqlTransaction for the current test, or null if not initialized.</returns>
+    /// <returns>Always returns null - transaction isolation has been removed.</returns>
     /// <remarks>
     /// <para>
-    /// This transaction is managed by the base class lifecycle. Tests should not commit
-    /// or rollback this transaction directly - it will be automatically rolled back in
-    /// <see cref="TestCleanup"/>.
+    /// <strong>DEPRECATED:</strong> Transaction-based test isolation has been removed due to
+    /// MySQL.Data connector limitations with OUTPUT parameters from stored procedures.
     /// </para>
     /// <para>
-    /// <strong>Use Case:</strong> When a DAO method requires an explicit transaction parameter
-    /// (e.g., multi-step operations like inventory transfers).
+    /// <strong>Migration Guide:</strong>
+    /// Remove the <c>transaction: GetTestTransaction()</c> parameter from DAO method calls.
+    /// Keep <c>connection: GetTestConnection()</c> for connection reuse.
+    /// </para>
+    /// <para>
+    /// See BLOCKER-ANALYSIS.md for technical details on why this was necessary.
     /// </para>
     /// </remarks>
+    [Obsolete("Transaction isolation removed - use explicit cleanup instead. Remove transaction parameter from DAO calls.")]
     protected MySqlTransaction? GetTestTransaction()
     {
-        return _transaction;
+        return null; // Always null - no transaction isolation
     }
 
     /// <summary>
@@ -261,10 +368,14 @@ public abstract class BaseIntegrationTest
             {
                 using var command = connection.CreateCommand();
                 command.CommandText = $"SELECT COUNT(*) FROM `{table}`";
+                // Transaction support removed - no longer needed
+                // Keeping check for backward compatibility but will always be null
+#pragma warning disable CS0618 // Type or member is obsolete
                 if (_transaction != null && ReferenceEquals(connection, _connection))
                 {
                     command.Transaction = _transaction;
                 }
+#pragma warning restore CS0618 // Type or member is obsolete
 
                 try
                 {

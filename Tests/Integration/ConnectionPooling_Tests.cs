@@ -17,12 +17,6 @@ namespace MTM_Inventory_Application.Tests.Integration
     [TestClass]
     public class ConnectionPooling_Tests : BaseIntegrationTest
     {
-        #region Test Context
-
-        public TestContext? TestContext { get; set; }
-
-        #endregion
-
         #region Connection Pool Health Tests
 
         /// <summary>
@@ -38,6 +32,7 @@ namespace MTM_Inventory_Application.Tests.Integration
             var startTime = DateTime.Now;
 
             // Act - Launch 100 concurrent operations
+            // NOTE: Connection pooling tests must NOT share test connection - each needs its own from pool
             for (int i = 0; i < concurrentOperations; i++)
             {
                 var operationNumber = i + 1;
@@ -45,7 +40,7 @@ namespace MTM_Inventory_Application.Tests.Integration
                 {
                     try
                     {
-                        var result = await Dao_Inventory.GetAllInventoryAsync(connection: GetTestConnection(), transaction: GetTestTransaction());
+                        var result = await Dao_Inventory.GetAllInventoryAsync();
                         if (!result.IsSuccess)
                         {
                             Console.WriteLine($"[Operation {operationNumber}] Failed: {result.ErrorMessage}");
@@ -98,6 +93,7 @@ namespace MTM_Inventory_Application.Tests.Integration
             var startTime = DateTime.Now;
 
             // Act - Launch 50 concurrent read operations
+            // NOTE: Connection pooling tests must NOT share test connection
             for (int i = 0; i < readOperations; i++)
             {
                 var operationNumber = i + 1;
@@ -105,7 +101,7 @@ namespace MTM_Inventory_Application.Tests.Integration
                 {
                     try
                     {
-                        var result = await Dao_Inventory.GetAllInventoryAsync(connection: GetTestConnection(), transaction: GetTestTransaction());
+                        var result = await Dao_Inventory.GetAllInventoryAsync();
                         return result.IsSuccess;
                     }
                     catch
@@ -126,8 +122,7 @@ namespace MTM_Inventory_Application.Tests.Integration
                     {
                         var result = await Dao_Inventory.AddInventoryItemAsync(
                             partId, "FLOOR", "100", 1, "Standard", "PoolTestUser", 
-                            $"BATCH-POOL-{operationNumber:D3}", "Connection pool test", true,
-                            connection: GetTestConnection(), transaction: GetTestTransaction());
+                            $"BATCH-POOL-{operationNumber:D3}", "Connection pool test", true);
                         return result.IsSuccess;
                     }
                     catch
@@ -177,7 +172,7 @@ namespace MTM_Inventory_Application.Tests.Integration
             {
                 try
                 {
-                    var result = await Dao_Inventory.GetAllInventoryAsync(connection: GetTestConnection(), transaction: GetTestTransaction());
+                    var result = await Dao_Inventory.GetAllInventoryAsync();
                     if (result.IsSuccess)
                         successCount++;
                     else
@@ -230,7 +225,7 @@ namespace MTM_Inventory_Application.Tests.Integration
                     try
                     {
                         // Search for a common pattern that may return many results
-                        var result = await Dao_Inventory.SearchInventoryAsync("TEST", connection: GetTestConnection(), transaction: GetTestTransaction());
+                        var result = await Dao_Inventory.SearchInventoryAsync("TEST");
                         return (result.IsSuccess, result.IsSuccess ? "Success" : result.ErrorMessage);
                     }
                     catch (Exception ex)
@@ -284,7 +279,7 @@ namespace MTM_Inventory_Application.Tests.Integration
             Console.WriteLine("[Connection Pool Warmup] Executing 10 warmup operations...");
             for (int i = 0; i < warmupOperations; i++)
             {
-                await Dao_Inventory.GetAllInventoryAsync(connection: GetTestConnection(), transaction: GetTestTransaction());
+                await Dao_Inventory.GetAllInventoryAsync();
             }
 
             await Task.Delay(500); // Allow pool to stabilize
@@ -294,7 +289,7 @@ namespace MTM_Inventory_Application.Tests.Integration
             for (int i = 0; i < testOperations; i++)
             {
                 var opStart = DateTime.Now;
-                var result = await Dao_Inventory.GetAllInventoryAsync(connection: GetTestConnection(), transaction: GetTestTransaction());
+                var result = await Dao_Inventory.GetAllInventoryAsync();
                 var opEnd = DateTime.Now;
                 operationTimes.Add((opEnd - opStart).TotalMilliseconds);
 

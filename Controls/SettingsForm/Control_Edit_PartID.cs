@@ -1,4 +1,5 @@
 using System.Data;
+using MTM_Inventory_Application.Core;
 using MTM_Inventory_Application.Data;
 using MTM_Inventory_Application.Helpers;
 using MTM_Inventory_Application.Logging;
@@ -47,6 +48,8 @@ namespace MTM_Inventory_Application.Controls.SettingsForm
                     });
 
                 InitializeComponent();
+            Core_Themes.ApplyDpiScaling(this);
+            Core_Themes.ApplyRuntimeLayoutAdjustments(this);
                 
                 Service_DebugTracer.TraceUIAction("EVENT_HANDLERS_BINDING", nameof(Control_Edit_PartID),
                     new Dictionary<string, object>

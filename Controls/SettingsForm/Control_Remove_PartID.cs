@@ -1,4 +1,5 @@
 using System.Data;
+using MTM_Inventory_Application.Core;
 using MTM_Inventory_Application.Data;
 using MTM_Inventory_Application.Helpers;
 using MTM_Inventory_Application.Logging;
@@ -28,7 +29,11 @@ namespace MTM_Inventory_Application.Controls.SettingsForm
 
         #region Constructors
 
-        public Control_Remove_PartID() => InitializeComponent();
+                public Control_Remove_PartID()
+        {
+            InitializeComponent();
+            Core_Themes.ApplyDpiScaling(this);
+        }
 
         #endregion
 

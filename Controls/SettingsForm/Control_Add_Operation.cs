@@ -6,6 +6,7 @@ using MTM_Inventory_Application.Models;
 using MTM_Inventory_Application.Helpers;
 using MTM_Inventory_Application.Logging;
 using MTM_Inventory_Application.Services;
+using MTM_Inventory_Application.Core;
 
 namespace MTM_Inventory_Application.Controls.SettingsForm
 {
@@ -43,6 +44,8 @@ namespace MTM_Inventory_Application.Controls.SettingsForm
                 });
 
             InitializeComponent();
+            Core_Themes.ApplyDpiScaling(this);
+            Core_Themes.ApplyRuntimeLayoutAdjustments(this);
 
             Service_DebugTracer.TraceMethodExit(null, nameof(Control_Add_Operation), nameof(Control_Add_Operation));
         }

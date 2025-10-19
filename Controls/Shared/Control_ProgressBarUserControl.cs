@@ -60,6 +60,8 @@ namespace MTM_Inventory_Application.Controls.Shared
         public Control_ProgressBarUserControl()
         {
             InitializeComponent();
+            Core_Themes.ApplyDpiScaling(this);
+            Core_Themes.ApplyRuntimeLayoutAdjustments(this);
             InitializeControls();
             ApplyTheme();
         }

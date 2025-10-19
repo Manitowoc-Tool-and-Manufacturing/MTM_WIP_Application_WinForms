@@ -17,6 +17,8 @@ namespace MTM_Inventory_Application.Controls.SettingsForm
         public Control_Theme()
         {
             InitializeComponent();
+            Core_Themes.ApplyDpiScaling(this);
+            Core_Themes.ApplyRuntimeLayoutAdjustments(this);
             Control_Shortcuts_Button_Save.Click += SaveButton_Click;
             Control_Shortcuts_Button_Switch.Click += PreviewButton_Click;
             LoadThemeSettingsAsync();

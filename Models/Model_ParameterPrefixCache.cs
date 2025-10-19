@@ -207,6 +207,14 @@ public static class Model_ParameterPrefixCache
     /// </example>
     public static string GetParameterPrefix(string procedureName, string parameterName)
     {
+        // Standardize output parameter prefixes: all modern procedures expose p_Status/p_ErrorMsg
+        // This avoids fallback heuristics incorrectly selecting in_/o_ prefixes for OUT parameters.
+        if (string.Equals(parameterName, "Status", StringComparison.OrdinalIgnoreCase) ||
+            string.Equals(parameterName, "ErrorMsg", StringComparison.OrdinalIgnoreCase))
+        {
+            return "p_";
+        }
+
         // PRIORITY 1: Check override cache first
         if (_overridesLoaded && 
             _overrides.TryGetValue(procedureName, out var procOverrides) &&
@@ -284,14 +292,8 @@ public static class Model_ParameterPrefixCache
     /// </remarks>
     private static string ApplyFallbackConvention(string procedureName)
     {
-        // Transaction and transfer procedures typically use "in_" prefix
-        if (procedureName.Contains("Transfer", StringComparison.OrdinalIgnoreCase) ||
-            procedureName.Contains("transaction", StringComparison.OrdinalIgnoreCase))
-        {
-            return "in_";
-        }
-
-        // Default to "p_" prefix (most common)
+        // Default to modern convention: all stored procedures use p_ prefix for parameters
+        // Legacy procedures requiring alternative prefixes should define explicit overrides.
         return "p_";
     }
 

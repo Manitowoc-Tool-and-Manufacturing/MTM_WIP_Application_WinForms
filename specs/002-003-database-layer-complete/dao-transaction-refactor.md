@@ -1,9 +1,29 @@
 # DAO Transaction Support Refactoring
 
 **Created**: 2025-10-18  
-**Priority**: 🔴 **CRITICAL** - Blocks 43 test failures  
-**Estimated Effort**: 1-2 days  
-**Status**: In Progress - **25% Complete** (22/89 tasks)  
+**Updated**: 2025-10-18 (Evening - BLOCKER IDENTIFIED)  
+**Priority**: 🔴 **BLOCKED** - MySQL.Data connector limitation  
+**Estimated Effort**: 1-2 days (refactoring) + TBD (blocker resolution)  
+**Status**: ⛔ **BLOCKED** - **46% Complete** (41/89 tasks) - **CRITICAL BLOCKER FOUND**  
+
+---
+
+## 🔴 CRITICAL BLOCKER - STOP WORK
+
+**MySQL.Data Connector Limitation Discovered**:
+- External transactions with stored procedure OUTPUT parameters fail
+- Error: "Parameter 'p_Status' not found in the collection"
+- **Affects**: ~30-40 tests across ALL test classes with write operations
+- **Test Results**: 88/136 passing (65%) - worse than 93/136 baseline
+
+**Root Cause**: MySql.Data connector cannot reliably retrieve OUTPUT parameters from stored procedures when:
+1. An external `MySqlConnection` is provided
+2. An active `MySqlTransaction` is associated with the command
+3. The stored procedure has `OUT` parameters (p_Status, p_ErrorMsg)
+
+**Impact**: This architectural approach will NOT work without resolving this blocker first.
+
+**See**: [Blocker Resolution Options](#blocker-resolution-options) section below.
 
 ---
 
@@ -13,30 +33,26 @@
 |-------|--------|----------|---------|
 | [Phase 1: Helper Refactoring](#phase-1-update-helper_database_storedprocedure--complete) | ✅ **COMPLETE** | 6/6 (100%) | All helper methods updated |
 | [Phase 2: DAO Updates](#phase-2-update-high-priority-daos--complete) | ✅ **COMPLETE** | 35/35 (100%) | All DAOs updated with transaction support |
-| [Phase 3: Test Updates](#phase-3-update-tests-to-use-transaction-support--in-progress) | 🔄 **IN PROGRESS** | 0/43 (0%) | Ready to start |
-| [Phase 4: Verification](#phase-4-verification-and-documentation--pending) | ⏳ **PENDING** | 0/5 (0%) | Not started |
-| **TOTAL** | **46%** | **41/89** | **6.0h / 16h estimated** |
+| [Phase 3: Test Updates](#phase-3-update-tests-to-use-transaction-support--blocked) | ⛔ **BLOCKED** | 3/43 (7%) | Blocker prevents further progress |
+| [Phase 4: Verification](#phase-4-verification-and-documentation--blocked) | ⛔ **BLOCKED** | 0/5 (0%) | Cannot proceed until blocker resolved |
+| **TOTAL** | **46%** | **41/89** | **BLOCKED** |
 
 ### Completed Work
 - [x] Phase 1: Helper_Database_StoredProcedure refactoring (3 methods)
-- [x] Phase 2: Dao_Inventory (8 methods)
-- [x] Phase 2: Dao_System (4 methods)
-- [x] Phase 2: Dao_ItemType (3 methods)
-- [x] Phase 2: Dao_Location (3 methods)
-- [x] Phase 2: Dao_Operation (3 methods)
-- [x] Phase 2: Dao_Part (7 methods)
-- [x] Phase 2: Dao_ErrorLog (2 methods)
-- [x] Phase 2: Dao_QuickButtons (8 methods)
-- [x] Phase 2: Dao_Transactions (2 methods)
-- [x] Phase 2: Dao_History (1 method)
-- [x] Build verified: 0 errors, 74 warnings
+- [x] Phase 2: All DAO methods updated (35 methods across 11 DAOs)
+- [x] Phase 3: Dao_Inventory_Tests partially updated (2 tests fixed)
+- [x] Build verified: 0 errors, existing warnings only
+- [x] Blocker identified and documented
 
-### Remaining Work
-- [ ] Phase 3: Update all 43 failing tests to pass connection/transaction
-- [ ] Phase 4: Final verification and documentation
+### Work Blocked by Connector Issue
+- [x] Phase 3: Dao_Inventory_Tests - 8/12 passing (4 blocked by connector)
+- [ ] Phase 3: Dao_QuickButtons_Tests - 0/12 passing (all blocked)
+- [ ] Phase 3: Dao_Transactions_Tests - 0/7 passing (all blocked)
+- [ ] Phase 3: Other test files - multiple tests blocked
+- [ ] Phase 4: Final verification - cannot complete
 
-**Current Status**: Phase 2 COMPLETE! All DAOs have transaction support.
-**Test Status**: 82 passing / 54 failing (60% pass rate) - tests need updating
+**Current Status**: Phases 1 & 2 COMPLETE. Phase 3 BLOCKED by MySQL.Data connector limitation.
+**Test Status**: 88/136 passing (65%) - **REGRESSION from 93/136 baseline**
 
 ---
 
@@ -435,15 +451,151 @@ dotnet test --logger "console;verbosity=normal" --nologo
 
 ---
 
+## 🚨 Blocker Resolution Options
+
+### Option 1: Change Test Isolation Strategy (Recommended Short-term)
+
+**Approach**: Remove transaction-based isolation, accept committed test data
+
+**Pros**:
+- Quick to implement (1-2 hours)
+- No connector changes needed
+- Tests will pass immediately
+- Can continue with Phase 3 & 4
+
+**Cons**:
+- Test data persists in database
+- Need cleanup logic in TestCleanup
+- Potential for test interference if cleanup fails
+- Less pure test isolation
+
+**Implementation**:
+```csharp
+// Remove transaction from BaseIntegrationTest
+[TestInitialize]
+public void TestInitialize()
+{
+    _connection = new MySqlConnection(GetTestConnectionString());
+    _connection.Open();
+    // NO TRANSACTION - just open connection
+}
+
+[TestCleanup]
+public void TestCleanup()
+{
+    // Explicit cleanup of test data
+    CleanupTestData();
+    _connection?.Close();
+}
+```
+
+**Estimated Effort**: 2-4 hours
+
+---
+
+### Option 2: Investigate MySql.Data Connector Behavior (Medium-term)
+
+**Approach**: Research and potentially update MySql.Data package
+
+**Investigation Steps**:
+1. Test with different MySql.Data versions (current: 9.4.0)
+2. Review MySql.Data source code for transaction + output parameter handling
+3. Check MySQL documentation for transaction isolation + stored procedures
+4. Test alternative parameter retrieval methods (result sets instead of OUT params)
+5. Consider filing bug report with MySql.Data maintainers
+
+**Pros**:
+- Maintains pure transaction isolation
+- May benefit other MySQL + .NET projects
+- Could lead to connector improvement
+
+**Cons**:
+- Time-consuming investigation (4-8 hours)
+- May not find solution
+- Could require waiting for connector update
+- No guarantee of success
+
+**Estimated Effort**: 4-8 hours investigation + unknown resolution time
+
+---
+
+### Option 3: Change Stored Procedure Pattern (Long-term)
+
+**Approach**: Refactor all stored procedures to return result sets instead of OUT parameters
+
+**Implementation**:
+```sql
+-- OLD: Output parameters
+CREATE PROCEDURE sp_Example(IN p_Param VARCHAR(100), OUT p_Status INT, OUT p_ErrorMsg VARCHAR(500))
+
+-- NEW: Result set return
+CREATE PROCEDURE sp_Example(IN p_Param VARCHAR(100))
+BEGIN
+    -- Logic here
+    SELECT status AS Status, errorMsg AS ErrorMsg, data1, data2;
+END
+```
+
+```csharp
+// Helper changes to read first row as status
+var result = await ExecuteDataTableWithStatusAsync(...);
+if (result.Data.Rows.Count > 0)
+{
+    var statusRow = result.Data.Rows[0];
+    int status = Convert.ToInt32(statusRow["Status"]);
+    string message = statusRow["ErrorMsg"]?.ToString();
+    // ... process
+}
+```
+
+**Pros**:
+- Eliminates OUTPUT parameter issue permanently
+- May improve performance (fewer round trips)
+- More compatible with various MySQL connectors
+- Result sets work reliably with transactions
+
+**Cons**:
+- Requires modifying ALL 97 stored procedures
+- Must update Helper_Database_StoredProcedure significantly
+- All DAO methods need updates
+- Large refactoring effort (16-24 hours)
+- High risk of introducing bugs
+
+**Estimated Effort**: 16-24 hours + extensive testing
+
+---
+
+## Recommendation
+
+**⭐ Proceed with Option 1 (Change Test Isolation Strategy)** because:
+
+1. **Quick Resolution**: Can be implemented in 2-4 hours
+2. **Immediate Unblock**: Tests will work immediately
+3. **Reversible**: Can switch to Option 2 or 3 later if better solution found
+4. **Proven Pattern**: Many test frameworks use database cleanup over rollback
+5. **Low Risk**: Simple change with predictable behavior
+
+**Implementation Plan for Option 1**:
+1. Update `BaseIntegrationTest.TestInitialize` - remove transaction start
+2. Update `BaseIntegrationTest.TestCleanup` - add cleanup methods
+3. Create `CleanupTestData()` helper that deletes test records by pattern
+4. Update test data to use identifiable prefixes (e.g., "TEST-*", "TEMP-*")
+5. Run full test suite and verify ~120+ tests pass
+6. Document new test pattern in integration-testing.instructions.md
+
+---
+
 ## Progress Tracking
 
 | Phase | Tasks | Completed | Status | Time Spent |
 |-------|-------|-----------|--------|------------|
 | 1. Helper Refactoring | 6 | 6 | ✅ **COMPLETE** | 1.5h / 2h |
-| 2. DAO Updates | 35 | 16 | 🔄 In Progress (Dao_Inventory, Dao_System, master data DAOs complete) | 3.5h / 6h |
-| 3. Test Updates | 43 | 0 | ⏳ Pending | 0h / 6h |
-| 4. Verification | 5 | 0 | ⏳ Pending | 0h / 2h |
-| **TOTAL** | **89** | **22** | **25%** | **5.0h / 16h** |
+| 2. DAO Updates | 35 | 35 | ✅ **COMPLETE** | 4.5h / 6h |
+| 3. Test Updates | 43 | 3 | ⛔ **BLOCKED** | 1.0h / 6h |
+| 4. Verification | 5 | 0 | ⛔ **BLOCKED** | 0h / 2h |
+| **TOTAL** | **89** | **44** | **49% - BLOCKED** | **7.0h / 16h** |
+
+**Next Action**: Decision required on blocker resolution approach (recommend Option 1)
 
 ---
 

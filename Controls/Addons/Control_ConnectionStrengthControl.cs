@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel;
+using MTM_Inventory_Application.Core;
 using MTM_Inventory_Application.Models;
 
 namespace MTM_Inventory_Application.Controls.Addons
@@ -72,6 +73,8 @@ namespace MTM_Inventory_Application.Controls.Addons
         public Control_ConnectionStrengthControl()
         {
             InitializeComponent();
+            Core_Themes.ApplyDpiScaling(this);
+            Core_Themes.ApplyRuntimeLayoutAdjustments(this);
             Size = new Size(80, 14);
             SetStyle(ControlStyles.OptimizedDoubleBuffer | ControlStyles.AllPaintingInWmPaint | ControlStyles.UserPaint,
                 true);

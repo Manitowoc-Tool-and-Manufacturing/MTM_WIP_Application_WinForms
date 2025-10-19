@@ -21,7 +21,11 @@ namespace MTM_Inventory_Application.Controls.SettingsForm
 
         #region Constructors
 
-        public Control_Edit_Operation() => InitializeComponent();
+                public Control_Edit_Operation()
+        {
+            InitializeComponent();
+            Core.Core_Themes.ApplyDpiScaling(this);
+        }
 
         #endregion
 

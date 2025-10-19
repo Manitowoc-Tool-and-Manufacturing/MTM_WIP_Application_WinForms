@@ -1,5 +1,6 @@
 using System.Data;
 using System.Reflection;
+using MTM_Inventory_Application.Core;
 using MTM_Inventory_Application.Data;
 using MTM_Inventory_Application.Helpers;
 using MTM_Inventory_Application.Models;
@@ -36,6 +37,8 @@ namespace MTM_Inventory_Application.Controls.SettingsForm
                 });
 
             InitializeComponent();
+            Core_Themes.ApplyDpiScaling(this);
+            Core_Themes.ApplyRuntimeLayoutAdjustments(this);
 
             Service_DebugTracer.TraceUIAction("PART_TYPES_LOADING", nameof(Control_Add_PartID),
                 new Dictionary<string, object> { ["DataSource"] = "ItemTypes" });

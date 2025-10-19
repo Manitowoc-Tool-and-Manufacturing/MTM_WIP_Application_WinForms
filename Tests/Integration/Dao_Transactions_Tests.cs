@@ -29,7 +29,7 @@ public class Dao_Transactions_Tests : BaseIntegrationTest
         var result = await dao.SearchTransactionsAsync(
             userName: userName,
             isAdmin: isAdmin,
-            partID: "TEST", connection: GetTestConnection(), transaction: GetTestTransaction()
+            partID: "TEST"
         );
 
         // Assert
@@ -55,7 +55,7 @@ public class Dao_Transactions_Tests : BaseIntegrationTest
             userName: userName,
             isAdmin: isAdmin,
             page: page,
-            pageSize: pageSize, connection: GetTestConnection(), transaction: GetTestTransaction()
+            pageSize: pageSize
         );
 
         // Assert
@@ -81,7 +81,7 @@ public class Dao_Transactions_Tests : BaseIntegrationTest
         var result = await dao.SearchTransactionsAsync(
             userName: userName,
             isAdmin: isAdmin,
-            transactionType: transactionType, connection: GetTestConnection(), transaction: GetTestTransaction()
+            transactionType: transactionType
         );
 
         // Assert
@@ -114,7 +114,7 @@ public class Dao_Transactions_Tests : BaseIntegrationTest
             userName: userName,
             isAdmin: isAdmin,
             fromDate: fromDate,
-            toDate: toDate, connection: GetTestConnection(), transaction: GetTestTransaction()
+            toDate: toDate
         );
 
         // Assert
@@ -148,7 +148,7 @@ public class Dao_Transactions_Tests : BaseIntegrationTest
             timeRange: timeRange,
             locations: locations,
             userName: userName,
-            isAdmin: isAdmin, connection: GetTestConnection(), transaction: GetTestTransaction()
+            isAdmin: isAdmin
         );
 
         // Assert
@@ -175,7 +175,7 @@ public class Dao_Transactions_Tests : BaseIntegrationTest
         var result = await dao.GetTransactionAnalyticsAsync(
             userName: userName,
             isAdmin: isAdmin,
-            timeRange: (null, null), connection: GetTestConnection(), transaction: GetTestTransaction()
+            timeRange: (null, null)
         );
 
         // Assert
@@ -200,7 +200,7 @@ public class Dao_Transactions_Tests : BaseIntegrationTest
         var result = await dao.GetTransactionAnalyticsAsync(
             userName: userName,
             isAdmin: isAdmin,
-            timeRange: (fromDate, toDate), connection: GetTestConnection(), transaction: GetTestTransaction()
+            timeRange: (fromDate, toDate)
         );
 
         // Assert

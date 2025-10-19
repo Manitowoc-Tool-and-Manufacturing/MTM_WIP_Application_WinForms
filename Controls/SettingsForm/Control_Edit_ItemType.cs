@@ -1,4 +1,5 @@
 using System.Data;
+using MTM_Inventory_Application.Core;
 using MTM_Inventory_Application.Data;
 using MTM_Inventory_Application.Helpers;
 using MTM_Inventory_Application.Logging;
@@ -22,7 +23,11 @@ namespace MTM_Inventory_Application.Controls.SettingsForm
 
         #region Constructors
 
-        public Control_Edit_ItemType() => InitializeComponent();
+                public Control_Edit_ItemType()
+        {
+            InitializeComponent();
+            Core_Themes.ApplyDpiScaling(this);
+        }
 
         #endregion
 
