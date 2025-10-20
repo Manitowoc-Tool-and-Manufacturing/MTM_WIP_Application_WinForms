@@ -1,0 +1,11 @@
+{
+  "mcp.servers": {
+    "mtm-workflow": {
+      "command": "node",
+      "args": [
+        "C:/Users/johnk/source/repos/MTM_WIP_Application_WinForms/.mcp/mtm-workflow/dist/index.js"
+      ],
+      "cwd": "C:/Users/johnk/source/repos/MTM_WIP_Application_WinForms"
+    }
+  }
+}

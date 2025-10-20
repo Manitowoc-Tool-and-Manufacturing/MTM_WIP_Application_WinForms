@@ -1,0 +1,18 @@
+{
+  "snapshot_file": "../Database/database-schema-snapshot.json",
+  "connection": {
+    "host": "localhost",
+    "port": 3306,
+    "user": "root",
+    "password": "root",
+    "database": "mtm_wip_application_winforms_test"
+  },
+  "include_tables": [
+    "sys_last_10_transactions",
+    "log_error",
+    "inv_transaction"
+  ],
+  "fail_on_missing_table": false,
+  "fail_on_missing_column": false,
+  "fail_on_type_mismatch": false
+}

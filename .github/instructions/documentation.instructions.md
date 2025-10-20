@@ -7,6 +7,14 @@ applyTo: '**/*.cs,**/*.md'
 
 # Documentation Standards
 
+## Available MCP Tools for Documentation
+
+When working on documentation, use these MCP tools from the **mtm-workflow** server:
+- `check_xml_docs` - Analyze XML documentation coverage and identify missing docs
+- `validate_dao_patterns` - Verify code structure before documenting
+- `analyze_dependencies` - Map system architecture for documentation
+- `check_checklists` - Confirm quality-gate checklists referenced in documentation are complete before publishing.
+
 ## Overview
 
 This file defines documentation standards for code comments, XML documentation, README files, and markdown documentation for the MTM WIP Application.

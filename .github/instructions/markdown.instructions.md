@@ -3,6 +3,12 @@ description: 'Documentation and content creation standards'
 applyTo: '**/*.md'
 ---
 
+## Relevant MCP Tools
+
+- `check_checklists` – Use when producing documentation packs that reference project checklists to confirm required gates are complete before publishing.
+- `validate_build` – Run before exporting large documentation changes tied to release readiness so build status in release notes reflects current reality.
+- `verify_ignore_files` – Helpful when new docs introduce generated assets (screenshots, exports) to ensure ignore rules keep repositories clean.
+
 ## Markdown Content Rules
 
 The following markdown content rules are enforced in the validators:
@@ -21,11 +27,11 @@ The following markdown content rules are enforced in the validators:
 
 Follow these guidelines for formatting and structuring your markdown content:
 
-- **Headings**: Use `##` for H2 and `###` for H3. Ensure that headings are used in a hierarchical manner. Recommend restructuring if content includes H4, and more strongly recommend for H5.
+- **Headings**: Use double-hash symbols for H2 and triple-hash symbols for H3. Ensure that headings follow a clean hierarchy. Recommend restructuring if content includes H4, and more strongly recommend for H5.
 - **Lists**: Use `-` for bullet points and `1.` for numbered lists. Indent nested lists with two spaces.
-- **Code Blocks**: Use triple backticks (`) to create fenced code blocks. Specify the language after the opening backticks for syntax highlighting (e.g., `csharp).
-- **Links**: Use `[link text](URL)` for links. Ensure that the link text is descriptive and the URL is valid.
-- **Images**: Use `![alt text](image URL)` for images. Include a brief description of the image in the alt text.
+- **Code Blocks**: Use triple backticks to create fenced code blocks. Specify the language name immediately after the opening backticks for syntax highlighting.
+- **Links**: Format links with descriptive anchor text followed by the destination URL.
+- **Images**: Provide descriptive alt text alongside each image path or URL so content remains accessible.
 - **Tables**: Use `|` to create tables. Ensure that columns are properly aligned and headers are included.
 - **Line Length**: Break lines at 80 characters to improve readability. Use soft line breaks for long paragraphs.
 - **Whitespace**: Use blank lines to separate sections and improve readability. Avoid excessive whitespace.

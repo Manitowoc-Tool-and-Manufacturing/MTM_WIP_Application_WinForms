@@ -25,6 +25,8 @@ namespace MTM_Inventory_Application.Controls.SettingsForm
         public Control_Edit_Location()
         {
             InitializeComponent();
+            Core_Themes.ApplyDpiScaling(this);
+            Core_Themes.ApplyRuntimeLayoutAdjustments(this);
             LoadBuildingOptions();
         }
 
@@ -137,16 +139,35 @@ namespace MTM_Inventory_Application.Controls.SettingsForm
                 string newLocation = locationTextBox.Text.Trim();
                 string originalLocation = _currentLocation["Location"]?.ToString() ?? string.Empty;
                 string updatedBy = Core_WipAppVariables.User;
-                if (newLocation != originalLocation && await Dao_Location.LocationExists(newLocation))
+                
+                if (newLocation != originalLocation)
                 {
-                    MessageBox.Show($@"Location '{newLocation}' already exists.", @"Duplicate Location",
-                        MessageBoxButtons.OK,
-                        MessageBoxIcon.Warning);
-                    locationTextBox.Focus();
-                    return;
+                    var existsResult = await Dao_Location.LocationExists(newLocation);
+                    if (!existsResult.IsSuccess)
+                    {
+                        MessageBox.Show($@"Error checking location: {existsResult.ErrorMessage}", @"Error", MessageBoxButtons.OK,
+                            MessageBoxIcon.Error);
+                        return;
+                    }
+                    
+                    if (existsResult.Data)
+                    {
+                        MessageBox.Show($@"Location '{newLocation}' already exists.", @"Duplicate Location",
+                            MessageBoxButtons.OK,
+                            MessageBoxIcon.Warning);
+                        locationTextBox.Focus();
+                        return;
+                    }
                 }
 
-                await Dao_Location.UpdateLocation(originalLocation, newLocation, updatedBy, true);
+                var updateResult = await Dao_Location.UpdateLocation(originalLocation, newLocation, updatedBy);
+                if (!updateResult.IsSuccess)
+                {
+                    MessageBox.Show($@"Error updating location: {updateResult.ErrorMessage}", @"Error", MessageBoxButtons.OK,
+                        MessageBoxIcon.Error);
+                    return;
+                }
+                
                 LoadLocations();
                 ClearForm();
                 EnableControls(false);

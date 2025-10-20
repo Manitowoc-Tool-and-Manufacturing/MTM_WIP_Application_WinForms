@@ -66,6 +66,35 @@ namespace MTM_Inventory_Application.Models
 
         #endregion
 
+        #region Database Performance Thresholds
+
+        /// <summary>
+        /// Performance threshold for query operations (milliseconds). Default: 500ms
+        /// </summary>
+        public static long? QueryThresholdMs { get; set; } = 500;
+
+        /// <summary>
+        /// Performance threshold for modification operations (INSERT/UPDATE/DELETE) (milliseconds). Default: 1000ms
+        /// </summary>
+        public static long? ModificationThresholdMs { get; set; } = 1000;
+
+        /// <summary>
+        /// Performance threshold for batch operations (milliseconds). Default: 5000ms
+        /// </summary>
+        public static long? BatchThresholdMs { get; set; } = 5000;
+
+        /// <summary>
+        /// Performance threshold for report generation operations (milliseconds). Default: 2000ms
+        /// </summary>
+        public static long? ReportThresholdMs { get; set; } = 2000;
+
+        /// <summary>
+        /// Command timeout for stored procedure execution (seconds). Default: 30 seconds
+        /// </summary>
+        public static int CommandTimeoutSeconds { get; set; } = 30;
+
+        #endregion
+
         #region About Variables
 
         public static string ApplicationName { get; } = "Manitowoc Tool and Manufacturing WIP Application";

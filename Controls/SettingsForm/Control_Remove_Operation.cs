@@ -1,4 +1,5 @@
 using System.Data;
+using MTM_Inventory_Application.Core;
 using MTM_Inventory_Application.Data;
 using MTM_Inventory_Application.Helpers;
 
@@ -21,7 +22,11 @@ namespace MTM_Inventory_Application.Controls.SettingsForm
 
         #region Constructors
 
-        public Control_Remove_Operation() => InitializeComponent();
+                public Control_Remove_Operation()
+        {
+            InitializeComponent();
+            Core_Themes.ApplyDpiScaling(this);
+        }
 
         #endregion
 
@@ -63,10 +68,18 @@ namespace MTM_Inventory_Application.Controls.SettingsForm
             try
             {
                 string? selectedOperation = operationsComboBox.Text;
-                _currentOperation = await Dao_Operation.GetOperationByNumber(selectedOperation ?? string.Empty);
+                var getResult = await Dao_Operation.GetOperationByNumber(selectedOperation ?? string.Empty);
+                if (!getResult.IsSuccess)
+                {
+                    MessageBox.Show($@"Error loading operation: {getResult.ErrorMessage}", @"Error",
+                        MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
+
+                _currentOperation = getResult.Data;
                 if (_currentOperation != null)
                 {
-                    operationValueLabel.Text = _currentOperation["Operation"]?.ToString() ?? string.Empty;
+                    operationValueLabel.Text = _currentOperation["p_Operation"]?.ToString() ?? string.Empty;
                     issuedByValueLabel.Text = _currentOperation["IssuedBy"]?.ToString() ?? "Unknown";
                     EnableControls(true);
                 }
@@ -87,7 +100,7 @@ namespace MTM_Inventory_Application.Controls.SettingsForm
                 return;
             }
 
-            string operationNumber = _currentOperation["Operation"]?.ToString() ?? string.Empty;
+            string operationNumber = _currentOperation["p_Operation"]?.ToString() ?? string.Empty;
             DialogResult result =
                 MessageBox.Show(
                     $@"Are you sure you want to remove the operation number '{operationNumber}'?{Environment.NewLine}{Environment.NewLine}This action cannot be undone.",
@@ -99,7 +112,14 @@ namespace MTM_Inventory_Application.Controls.SettingsForm
 
             try
             {
-                await Dao_Operation.DeleteOperation(operationNumber);
+                var deleteResult = await Dao_Operation.DeleteOperation(operationNumber);
+                if (!deleteResult.IsSuccess)
+                {
+                    MessageBox.Show($@"Error removing operation: {deleteResult.ErrorMessage}", @"Error",
+                        MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
+
                 LoadOperations();
                 ClearForm();
                 EnableControls(false);

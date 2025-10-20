@@ -1,4 +1,5 @@
 using System.Data;
+using MTM_Inventory_Application.Core;
 using MTM_Inventory_Application.Data;
 using MTM_Inventory_Application.Helpers;
 
@@ -20,7 +21,11 @@ namespace MTM_Inventory_Application.Controls.SettingsForm
 
         #region Constructors
 
-        public Control_Remove_Location() => InitializeComponent();
+                public Control_Remove_Location()
+        {
+            InitializeComponent();
+            Core_Themes.ApplyDpiScaling(this);
+        }
 
         #endregion
 
@@ -62,7 +67,15 @@ namespace MTM_Inventory_Application.Controls.SettingsForm
             try
             {
                 string? selectedLocation = locationsComboBox.Text;
-                _currentLocation = await Dao_Location.GetLocationByName(selectedLocation ?? string.Empty);
+                var getResult = await Dao_Location.GetLocationByName(selectedLocation ?? string.Empty);
+                if (!getResult.IsSuccess)
+                {
+                    MessageBox.Show($@"Error loading location: {getResult.ErrorMessage}", @"Error",
+                        MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
+
+                _currentLocation = getResult.Data;
                 if (_currentLocation != null)
                 {
                     locationValueLabel.Text = _currentLocation["Location"]?.ToString() ?? string.Empty;
@@ -99,7 +112,14 @@ namespace MTM_Inventory_Application.Controls.SettingsForm
 
             try
             {
-                await Dao_Location.DeleteLocation(location);
+                var deleteResult = await Dao_Location.DeleteLocation(location);
+                if (!deleteResult.IsSuccess)
+                {
+                    MessageBox.Show($@"Error removing location: {deleteResult.ErrorMessage}", @"Error",
+                        MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
+
                 LoadLocations();
                 ClearForm();
                 EnableControls(false);

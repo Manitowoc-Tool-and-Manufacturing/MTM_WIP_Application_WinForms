@@ -1,4 +1,5 @@
 using System.Data;
+using MTM_Inventory_Application.Core;
 using MTM_Inventory_Application.Data;
 using MTM_Inventory_Application.Helpers;
 using MTM_Inventory_Application.Logging;
@@ -47,6 +48,8 @@ namespace MTM_Inventory_Application.Controls.SettingsForm
                     });
 
                 InitializeComponent();
+            Core_Themes.ApplyDpiScaling(this);
+            Core_Themes.ApplyRuntimeLayoutAdjustments(this);
                 
                 Service_DebugTracer.TraceUIAction("EVENT_HANDLERS_BINDING", nameof(Control_Edit_PartID),
                     new Dictionary<string, object>
@@ -181,7 +184,17 @@ namespace MTM_Inventory_Application.Controls.SettingsForm
                     return;
                 }
 
-                _currentPart = await Dao_Part.GetPartByNumber(selectedText);
+                _currentPart = null;
+                var result = await Dao_Part.GetPartByNumberAsync(selectedText);
+                if (!result.IsSuccess)
+                {
+                    Service_ErrorHandler.HandleDatabaseError(
+                        result.Exception ?? new Exception(result.ErrorMessage),
+                        controlName: nameof(Control_Edit_PartID));
+                    return;
+                }
+                
+                _currentPart = result.Data;
                 if (_currentPart != null)
                 {
                     LoadPartData();
@@ -201,7 +214,7 @@ namespace MTM_Inventory_Application.Controls.SettingsForm
             Service_DebugTracer.TraceMethodEntry(new Dictionary<string, object>
             {
                 ["HasCurrentPart"] = _currentPart != null,
-                ["OriginalPartID"] = _currentPart?["PartID"]?.ToString() ?? "NULL"
+                ["OriginalPartID"] = _currentPart?["p_PartID"]?.ToString() ?? "NULL"
             }, nameof(SaveButton_Click), nameof(Control_Edit_PartID));
 
             Service_DebugTracer.TraceUIAction("SAVE_BUTTON_CLICKED", nameof(Control_Edit_PartID),
@@ -318,7 +331,7 @@ namespace MTM_Inventory_Application.Controls.SettingsForm
                 }
 
                 // Check for duplicate part number
-                string? originalItemNumber = _currentPart["PartID"].ToString();
+                string? originalItemNumber = _currentPart["p_PartID"].ToString();
                 string newItemNumber = itemNumberTextBox.Text.Trim();
                 
                 Service_DebugTracer.TraceBusinessLogic("DUPLICATE_CHECK_LOGIC",
@@ -329,25 +342,38 @@ namespace MTM_Inventory_Application.Controls.SettingsForm
                         ["NumberChanged"] = originalItemNumber != newItemNumber
                     });
 
-                if (originalItemNumber != newItemNumber && await Dao_Part.PartExists(newItemNumber))
+                if (originalItemNumber != newItemNumber)
                 {
-                    Service_DebugTracer.TraceDataValidation("DUPLICATE_PART_CHECK",
-                        dataToValidate: new Dictionary<string, object>
-                        {
-                            ["NewPartNumber"] = newItemNumber,
-                            ["OriginalPartNumber"] = originalItemNumber ?? "NULL"
-                        },
-                        validationRules: new Dictionary<string, object> { ["MustBeUnique"] = true },
-                        isValid: false,
-                        errorMessages: new List<string> { $"Part number '{newItemNumber}' already exists" });
+                    var existsResult = await Dao_Part.PartExistsAsync(newItemNumber);
+                    if (!existsResult.IsSuccess)
+                    {
+                        Service_ErrorHandler.HandleDatabaseError(
+                            existsResult.Exception ?? new Exception(existsResult.ErrorMessage),
+                            controlName: nameof(Control_Edit_PartID));
+                        Service_DebugTracer.StopPerformanceTrace(performanceKey, new Dictionary<string, object> { ["Result"] = "DATABASE_ERROR" });
+                        return;
+                    }
 
-                    Service_ErrorHandler.HandleValidationError(
-                        $"Part number '{newItemNumber}' already exists. Please use a different part number.",
-                        "Duplicate Part Number", controlName: nameof(Control_Edit_PartID));
-                    itemNumberTextBox.Focus();
-                    
-                    Service_DebugTracer.StopPerformanceTrace(performanceKey, new Dictionary<string, object> { ["Result"] = "VALIDATION_FAILED", ["Field"] = "DuplicateCheck" });
-                    return;
+                    if (existsResult.Data)
+                    {
+                        Service_DebugTracer.TraceDataValidation("DUPLICATE_PART_CHECK",
+                            dataToValidate: new Dictionary<string, object>
+                            {
+                                ["NewPartNumber"] = newItemNumber,
+                                ["OriginalPartNumber"] = originalItemNumber ?? "NULL"
+                            },
+                            validationRules: new Dictionary<string, object> { ["MustBeUnique"] = true },
+                            isValid: false,
+                            errorMessages: new List<string> { $"Part number '{newItemNumber}' already exists" });
+
+                        Service_ErrorHandler.HandleValidationError(
+                            $"Part number '{newItemNumber}' already exists. Please use a different part number.",
+                            "Duplicate Part Number", controlName: nameof(Control_Edit_PartID));
+                        itemNumberTextBox.Focus();
+                        
+                        Service_DebugTracer.StopPerformanceTrace(performanceKey, new Dictionary<string, object> { ["Result"] = "VALIDATION_FAILED", ["Field"] = "DuplicateCheck" });
+                        return;
+                    }
                 }
 
                 Service_DebugTracer.TraceBusinessLogic("ALL_VALIDATIONS_PASSED",
@@ -462,7 +488,7 @@ namespace MTM_Inventory_Application.Controls.SettingsForm
                 return;
             }
 
-            itemNumberTextBox.Text = _currentPart["PartID"].ToString();
+            itemNumberTextBox.Text = _currentPart["p_PartID"].ToString();
             customerTextBox.Text = _currentPart["Customer"].ToString();
             descriptionTextBox.Text = _currentPart["Description"].ToString();
             string? partType = _currentPart["ItemType"].ToString();
@@ -503,13 +529,21 @@ namespace MTM_Inventory_Application.Controls.SettingsForm
                 return;
             }
 
-            int id = Convert.ToInt32(_currentPart["ID"]);
+            int id = Convert.ToInt32(_currentPart["p_ID"]);
             string itemNumber = itemNumberTextBox.Text.Trim();
             string customer = customerTextBox.Text.Trim();
             string description = descriptionTextBox.Text.Trim();
             string issuedBy = Model_AppVariables.User;
             string type = Control_Edit_PartID_ComboBox_ItemType.Text;
-            await Dao_Part.UpdatePartWithStoredProcedure(id, itemNumber, customer, description, issuedBy, type);
+            
+            var result = await Dao_Part.UpdatePartAsync(id, itemNumber, customer, description, issuedBy, type);
+            if (!result.IsSuccess)
+            {
+                Service_ErrorHandler.HandleDatabaseError(
+                    result.Exception ?? new Exception(result.ErrorMessage),
+                    controlName: nameof(Control_Edit_PartID));
+                throw new Exception($"Failed to update part: {result.ErrorMessage}");
+            }
         }
 
         private void ClearForm()

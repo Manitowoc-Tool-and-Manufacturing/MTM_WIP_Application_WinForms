@@ -1,4 +1,4 @@
-﻿using System.Data;
+using System.Data;
 using System.Diagnostics;
 using MTM_Inventory_Application.Forms.MainForm;
 using MTM_Inventory_Application.Helpers;
@@ -12,23 +12,30 @@ namespace MTM_Inventory_Application.Data;
 
 internal static class Dao_ErrorLog
 {
+    #region Test Mode Detection
 
+    /// <summary>
+    /// Set to true when running in test mode to suppress MessageBox dialogs.
+    /// Tests should set this flag in their setup to prevent blocking UI dialogs.
+    /// </summary>
+    public static bool IsTestMode { get; set; } = false;
+
+    #endregion
 
     #region Query Methods
 
-    internal static async Task<List<(string MethodName, string ErrorMessage)>> GetUniqueErrorsAsync(
-        bool useAsync = true) // Default to async for better performance
+    internal static async Task<List<(string MethodName, string ErrorMessage)>> GetUniqueErrorsAsync(MySqlConnection? connection = null, MySqlTransaction? transaction = null)
     {
         List<(string MethodName, string ErrorMessage)> uniqueErrors = new();
         try
         {
-            // FIXED: Use Helper_Database_StoredProcedure instead of Helper_Database_Core
-            var dataResult = await Helper_Database_StoredProcedure.ExecuteDataTableWithStatus(
+            var dataResult = await Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync(
                 Model_AppVariables.ConnectionString,
                 "log_error_Get_Unique",
                 null, // No parameters needed
-                null, // No progress helper for this method
-                useAsync
+                progressHelper: null,
+                connection: connection,
+                transaction: transaction
             );
 
             if (dataResult.IsSuccess && dataResult.Data != null)
@@ -58,42 +65,48 @@ internal static class Dao_ErrorLog
         return uniqueErrors;
     }
 
-    internal static async Task<DataTable> GetAllErrorsAsync(bool useAsync = false) =>
-        await GetErrorsByStoredProcedureAsync("log_error_Get_All", null, useAsync);
+    internal static async Task<DaoResult<DataTable>> GetAllErrorsAsync(MySqlConnection? connection = null, MySqlTransaction? transaction = null) =>
+        await GetErrorsByStoredProcedureAsync("log_error_Get_All", null, connection, transaction);
 
-    internal static async Task<DataTable> GetErrorsByUserAsync(string user, bool useAsync = false) =>
+    internal static async Task<DaoResult<DataTable>> GetErrorsByUserAsync(string user, MySqlConnection? connection = null, MySqlTransaction? transaction = null) =>
         await GetErrorsByStoredProcedureAsync(
             "log_error_Get_ByUser",
-            new Dictionary<string, object> { ["User"] = user }, useAsync); // FIXED: Remove p_ prefix
+            new Dictionary<string, object> { ["User"] = user },
+            connection,
+            transaction);
 
-    internal static async Task<DataTable>
-        GetErrorsByDateRangeAsync(DateTime start, DateTime end, bool useAsync = false) =>
+    internal static async Task<DaoResult<DataTable>>
+        GetErrorsByDateRangeAsync(DateTime start, DateTime end, MySqlConnection? connection = null, MySqlTransaction? transaction = null) =>
         await GetErrorsByStoredProcedureAsync(
             "log_error_Get_ByDateRange",
-            new Dictionary<string, object> { ["StartDate"] = start, ["EndDate"] = end }, useAsync); // FIXED: Remove p_ prefix
+            new Dictionary<string, object> { ["StartDate"] = start, ["EndDate"] = end },
+            connection,
+            transaction);
 
-    private static async Task<DataTable> GetErrorsByStoredProcedureAsync(string procedureName, 
-        Dictionary<string, object>? parameters, bool useAsync)
+    private static async Task<DaoResult<DataTable>> GetErrorsByStoredProcedureAsync(string procedureName, 
+        Dictionary<string, object>? parameters,
+        MySqlConnection? connection = null,
+        MySqlTransaction? transaction = null)
     {
         try
         {
-            // FIXED: Use Helper_Database_StoredProcedure for proper status handling
-            var dataResult = await Helper_Database_StoredProcedure.ExecuteDataTableWithStatus(
+            var dataResult = await Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync(
                 Model_AppVariables.ConnectionString,
                 procedureName,
                 parameters,
-                null, // No progress helper for these methods
-                useAsync
+                progressHelper: null,
+                connection: connection,
+                transaction: transaction
             );
 
             if (dataResult.IsSuccess && dataResult.Data != null)
             {
-                return dataResult.Data;
+                return DaoResult<DataTable>.Success(dataResult.Data);
             }
             else
             {
                 LoggingUtility.Log($"{procedureName} failed: {dataResult.ErrorMessage}");
-                return new DataTable();
+                return DaoResult<DataTable>.Failure(dataResult.ErrorMessage ?? "Unknown error", dataResult.Exception);
             }
         }
         catch (Exception ex)
@@ -101,7 +114,7 @@ internal static class Dao_ErrorLog
             LoggingUtility.LogApplicationError(ex);
             // Don't call HandleException_GeneralError_CloseApp here to avoid recursion during startup
             LoggingUtility.Log($"{procedureName} failed with exception: {ex.Message}");
-            return new DataTable();
+            return DaoResult<DataTable>.Failure($"{procedureName} failed", ex);
         }
     }
 
@@ -109,31 +122,36 @@ internal static class Dao_ErrorLog
 
     #region Delete Methods
 
-    internal static async Task DeleteErrorByIdAsync(int id, bool useAsync = false) =>
+    internal static async Task<DaoResult> DeleteErrorByIdAsync(int id, MySqlConnection? connection = null, MySqlTransaction? transaction = null) =>
         await ExecuteStoredProcedureNonQueryAsync("log_error_Delete_ById",
-            new Dictionary<string, object> { ["Id"] = id }, useAsync); // FIXED: Remove p_ prefix
+            new Dictionary<string, object> { ["Id"] = id }, connection, transaction);
 
-    internal static async Task DeleteAllErrorsAsync(bool useAsync = false) =>
-        await ExecuteStoredProcedureNonQueryAsync("log_error_Delete_All", null, useAsync);
+    internal static async Task<DaoResult> DeleteAllErrorsAsync(MySqlConnection? connection = null, MySqlTransaction? transaction = null) =>
+        await ExecuteStoredProcedureNonQueryAsync("log_error_Delete_All", null, connection, transaction);
 
-    private static async Task ExecuteStoredProcedureNonQueryAsync(string procedureName, 
-        Dictionary<string, object>? parameters, bool useAsync)
+    private static async Task<DaoResult> ExecuteStoredProcedureNonQueryAsync(string procedureName, 
+        Dictionary<string, object>? parameters,
+        MySqlConnection? connection = null,
+        MySqlTransaction? transaction = null)
     {
         try
         {
-            // FIXED: Use Helper_Database_StoredProcedure for proper status handling
-            var result = await Helper_Database_StoredProcedure.ExecuteNonQueryWithStatus(
+            var result = await Helper_Database_StoredProcedure.ExecuteNonQueryWithStatusAsync(
                 Model_AppVariables.ConnectionString,
                 procedureName,
                 parameters,
-                null, // No progress helper for these methods
-                useAsync
+                progressHelper: null,
+                connection: connection,
+                transaction: transaction
             );
 
             if (!result.IsSuccess)
             {
                 LoggingUtility.Log($"{procedureName} failed: {result.ErrorMessage}");
+                return DaoResult.Failure(result.ErrorMessage ?? "Unknown error", result.Exception);
             }
+
+            return DaoResult.Success();
         }
         catch (Exception ex)
         {
@@ -148,6 +166,7 @@ internal static class Dao_ErrorLog
 
             // Don't call HandleException_GeneralError_CloseApp here to avoid recursion during startup
             LoggingUtility.Log($"{procedureName} failed with exception: {ex.Message}");
+            return DaoResult.Failure($"{procedureName} failed", ex);
         }
     }
 
@@ -167,6 +186,12 @@ internal static class Dao_ErrorLog
 
     private static bool ShouldShowErrorMessage(string message)
     {
+        // Suppress message boxes during test execution
+        if (IsTestMode)
+        {
+            return false;
+        }
+
         DateTime now = DateTime.Now;
         lock (typeof(Dao_ErrorLog))
         {
@@ -183,6 +208,12 @@ internal static class Dao_ErrorLog
 
     private static bool ShouldShowSqlErrorMessage(string message)
     {
+        // Suppress message boxes during test execution
+        if (IsTestMode)
+        {
+            return false;
+        }
+
         DateTime now = DateTime.Now;
         lock (typeof(Dao_ErrorLog))
         {
@@ -199,9 +230,8 @@ internal static class Dao_ErrorLog
 
     #endregion
 
-    internal static async Task HandleException_SQLError_CloseApp(
+    internal static async Task<DaoResult> HandleException_SQLError_CloseApp(
         Exception ex,
-        bool useAsync = false,
         [System.Runtime.CompilerServices.CallerMemberName]
         string callerName = "",
         string controlName = "")
@@ -238,6 +268,7 @@ internal static class Dao_ErrorLog
                 }
 
                 Process.GetCurrentProcess().Kill();
+                return DaoResult.Failure("Database connection error - application terminated", ex);
             }
             else
             {
@@ -248,28 +279,31 @@ internal static class Dao_ErrorLog
                     ex.StackTrace,
                     "",
                     callerName,
-                    controlName,
-                    useAsync
+                    controlName
                 );
 
                 if (ShouldShowSqlErrorMessage(message))
                 {
                     MessageBox.Show(message, @"SQL Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
+
+                return DaoResult.Failure(message, ex);
             }
         }
         catch (Exception innerEx)
         {
             LoggingUtility.LogApplicationError(innerEx);
+            return DaoResult.Failure($"Error handling SQL exception: {innerEx.Message}", innerEx);
         }
     }
 
-    internal static async Task HandleException_GeneralError_CloseApp(
+    internal static async Task<DaoResult> HandleException_GeneralError_CloseApp(
         Exception ex,
-        bool useAsync = false,
         [System.Runtime.CompilerServices.CallerMemberName]
         string callerName = "",
-        string controlName = "")
+        string controlName = "",
+        MySqlConnection? connection = null,
+        MySqlTransaction? transaction = null)
     {
         try
         {
@@ -307,7 +341,8 @@ internal static class Dao_ErrorLog
                 "",
                 callerName,
                 controlName,
-                useAsync
+                connection,
+                transaction
             );
 
             if (ShouldShowErrorMessage(message))
@@ -317,6 +352,7 @@ internal static class Dao_ErrorLog
                     MessageBox.Show(message + "\n\nThe application will now close due to a critical error.",
                         @"Critical Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     Process.GetCurrentProcess().Kill();
+                    return DaoResult.Failure("Critical error - application terminated", ex);
                 }
                 else
                 {
@@ -325,11 +361,12 @@ internal static class Dao_ErrorLog
             }
 
             LoggingUtility.Log("HandleException_GeneralError_CloseApp executed successfully.");
+            return DaoResult.Success();
         }
         catch (Exception innerEx)
         {
             LoggingUtility.LogApplicationError(innerEx);
-            await HandleException_GeneralError_CloseApp(innerEx, useAsync, controlName: controlName);
+            return await HandleException_GeneralError_CloseApp(innerEx, controlName: controlName);
         }
     }
 
@@ -341,14 +378,14 @@ internal static class Dao_ErrorLog
         string moduleName,
         string methodName,
         string? additionalInfo,
-        bool useAsync)
+        MySqlConnection? connection = null,
+        MySqlTransaction? transaction = null)
     {
         try
         {
-            // FIXED: Use Helper_Database_StoredProcedure for proper status handling
             Dictionary<string, object> parameters = new()
             {
-                ["User"] = Model_AppVariables.User ?? "Unknown", // FIXED: Remove p_ prefix
+                ["p_User"] = Model_AppVariables.User ?? "Unknown", // FIXED: Remove p_ prefix
                 ["Severity"] = severity,
                 ["ErrorType"] = errorType,
                 ["ErrorMessage"] = errorMessage,
@@ -362,12 +399,13 @@ internal static class Dao_ErrorLog
                 ["ErrorTime"] = DateTime.Now
             };
 
-            var result = await Helper_Database_StoredProcedure.ExecuteNonQueryWithStatus(
+            var result = await Helper_Database_StoredProcedure.ExecuteNonQueryWithStatusAsync(
                 Model_AppVariables.ConnectionString,
                 "log_error_Add_Error",
                 parameters,
-                null, // No progress helper for this method
-                useAsync
+                progressHelper: null,
+                connection: connection,
+                transaction: transaction
             );
 
             if (!result.IsSuccess)
@@ -389,7 +427,7 @@ internal static class Dao_ErrorLog
     #region Synchronous Helpers
 
     internal static List<(string MethodName, string ErrorMessage)> GetUniqueErrors() =>
-        GetUniqueErrorsAsync(false).GetAwaiter().GetResult();
+        GetUniqueErrorsAsync().GetAwaiter().GetResult();
 
     internal static void LogErrorWithMethod(Exception ex,
         [System.Runtime.CompilerServices.CallerMemberName]

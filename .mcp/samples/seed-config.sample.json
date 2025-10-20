@@ -1,0 +1,73 @@
+{
+  "database": "mtm_wip_application_winforms_test",
+  "connection": {
+    "host": "127.0.0.1",
+    "port": 3306,
+    "user": "root",
+    "password": "root",
+    "database": "mtm_wip_application_winforms_test"
+  },
+  "variables": {
+    "@Now": "NOW()"
+  },
+  "cleanup": [
+    {
+      "comment": "Remove prior quick buttons for sample users",
+      "statement": "DELETE FROM sys_last_10_transactions WHERE User LIKE 'SampleUser%'"
+    }
+  ],
+  "inserts": [
+    {
+      "comment": "Seed quick button rows for SampleUser",
+      "table": "sys_last_10_transactions",
+      "columns": [
+        "User",
+        "PartID",
+        "Operation",
+        "Quantity",
+        "ReceiveDate",
+        "Position"
+      ],
+      "rows": [
+        ["SampleUser", "PART-001", "100", 5, { "raw": "@Now" }, 1],
+        ["SampleUser", "PART-002", "110", 10, { "raw": "@Now" }, 2]
+      ]
+    }
+  ],
+  "tablesTouched": [
+    "sys_last_10_transactions"
+  ],
+  "verification": [
+    {
+      "comment": "Quick button baseline rows exist",
+      "table": "sys_last_10_transactions",
+      "select": [
+        "User",
+        "PartID",
+        "Operation",
+        "Quantity",
+        "ReceiveDate",
+        "Position"
+      ],
+      "where": "User = 'SampleUser'",
+      "expectedRows": [
+        {
+          "User": "SampleUser",
+          "PartID": "PART-001",
+          "Operation": "100",
+          "Quantity": 5,
+          "Position": 1
+        },
+        {
+          "User": "SampleUser",
+          "PartID": "PART-002",
+          "Operation": "110",
+          "Quantity": 10,
+          "Position": 2
+        }
+      ],
+      "unordered": true,
+      "exactCount": 2
+    }
+  ]
+}

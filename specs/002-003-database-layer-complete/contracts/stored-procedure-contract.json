@@ -1,0 +1,213 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Stored Procedure Execution Contract",
+  "description": "Contract between the C# DAO layer and MySQL stored procedures",
+  "executionMethods": {
+    "ExecuteNonQueryWithStatus": {
+      "description": "Execute INSERT/UPDATE/DELETE stored procedures",
+      "signature": "public static async Task<DaoResult> ExecuteNonQueryWithStatus(string connectionString, string storedProcedureName, Dictionary<string, object> parameters, Helper_StoredProcedureProgress? progressHelper = null, bool useAsync = true)",
+      "returnType": "DaoResult",
+      "useCases": [
+        "Inventory additions (INSERT)",
+        "User updates (UPDATE)",
+        "Transaction logging (INSERT)",
+        "Part deletions (DELETE)"
+      ],
+      "inputContract": {
+        "connectionString": "Valid MySQL connection string with pooling configuration",
+        "storedProcedureName": "Stored procedure name (without database prefix)",
+        "parameters": "Dictionary with parameter names WITHOUT prefix (e.g., 'UserID', not 'p_UserID')",
+        "progressHelper": "Optional progress reporting helper (null for most operations)",
+        "useAsync": "Always true for new code (async-first)"
+      },
+      "outputContract": {
+        "IsSuccess": "True if p_Status = 0 or 1, false otherwise",
+        "Message": "Value from OUT p_ErrorMsg parameter or success message",
+        "Exception": "Exception object if operation threw, null otherwise"
+      }
+    },
+    "ExecuteDataTableWithStatus": {
+      "description": "Execute SELECT queries returning multiple rows",
+      "signature": "public static async Task<DaoResult<DataTable>> ExecuteDataTableWithStatus(string connectionString, string storedProcedureName, Dictionary<string, object> parameters, Helper_StoredProcedureProgress? progressHelper = null, bool useAsync = true)",
+      "returnType": "DaoResult<DataTable>",
+      "useCases": [
+        "Inventory searches (SELECT)",
+        "User lists (SELECT)",
+        "Transaction history (SELECT)",
+        "Reporting queries (SELECT with joins)"
+      ],
+      "inputContract": {
+        "connectionString": "Valid MySQL connection string",
+        "storedProcedureName": "Stored procedure name",
+        "parameters": "Dictionary with parameter names WITHOUT prefix",
+        "progressHelper": "Optional progress reporting",
+        "useAsync": "Always true"
+      },
+      "outputContract": {
+        "IsSuccess": "True if p_Status = 0 or 1",
+        "Message": "Row count message or error from p_ErrorMsg",
+        "Data": "DataTable with query results (may have zero rows)",
+        "Exception": "Exception if operation threw"
+      }
+    },
+    "ExecuteScalarWithStatus": {
+      "description": "Execute queries returning single scalar value",
+      "signature": "public static async Task<DaoResult<T>> ExecuteScalarWithStatus<T>(string connectionString, string storedProcedureName, Dictionary<string, object> parameters, Helper_StoredProcedureProgress? progressHelper = null, bool useAsync = true)",
+      "returnType": "DaoResult<T> where T is int, string, bool, DateTime, etc.",
+      "useCases": [
+        "Row counts (SELECT COUNT)",
+        "Existence checks (SELECT EXISTS)",
+        "ID lookups (SELECT ID)",
+        "Aggregate queries (SELECT SUM/MAX/MIN)"
+      ],
+      "inputContract": {
+        "connectionString": "Valid MySQL connection string",
+        "storedProcedureName": "Stored procedure name",
+        "parameters": "Dictionary with parameter names WITHOUT prefix",
+        "progressHelper": "Optional progress reporting",
+        "useAsync": "Always true"
+      },
+      "outputContract": {
+        "IsSuccess": "True if p_Status = 0 or 1",
+        "Message": "Success message or error from p_ErrorMsg",
+        "Data": "Scalar value (int, string, bool, etc.)",
+        "Exception": "Exception if operation threw"
+      }
+    },
+    "ExecuteWithCustomOutput": {
+      "description": "Execute procedures with non-standard output parameters",
+      "signature": "public static async Task<DaoResult<Dictionary<string, object>>> ExecuteWithCustomOutput(string connectionString, string storedProcedureName, Dictionary<string, object> parameters, string[] outputParameterNames, Helper_StoredProcedureProgress? progressHelper = null, bool useAsync = true)",
+      "returnType": "DaoResult<Dictionary<string, object>>",
+      "useCases": [
+        "Procedures returning multiple OUT parameters",
+        "Special operations with custom output structure"
+      ],
+      "inputContract": {
+        "connectionString": "Valid MySQL connection string",
+        "storedProcedureName": "Stored procedure name",
+        "parameters": "Dictionary with parameter names WITHOUT prefix",
+        "outputParameterNames": "Array of OUT parameter names WITHOUT prefix",
+        "progressHelper": "Optional progress reporting",
+        "useAsync": "Always true"
+      },
+      "outputContract": {
+        "IsSuccess": "True if p_Status = 0 or 1",
+        "Message": "Success message or error from p_ErrorMsg",
+        "Data": "Dictionary with output parameter values (keys WITHOUT prefix)",
+        "Exception": "Exception if operation threw"
+      }
+    }
+  },
+  "standardParameters": {
+    "p_Status": {
+      "direction": "OUT",
+      "type": "INT",
+      "required": true,
+      "description": "Operation status code",
+      "values": {
+        "0": {"meaning": "Success", "action": "IsSuccess = true"},
+        "1": {"meaning": "Success with no data", "action": "IsSuccess = true, Data = empty result"},
+        "-1": {"meaning": "Error", "action": "IsSuccess = false"}
+      }
+    },
+    "p_ErrorMsg": {
+      "direction": "OUT",
+      "type": "VARCHAR(500)",
+      "required": true,
+      "description": "User-friendly error message",
+      "values": {
+        "empty/null": "Operation succeeded",
+        "non-empty": "Error description"
+      }
+    }
+  },
+  "connectionPooling": {
+    "configuration": {
+      "MinPoolSize": 5,
+      "MaxPoolSize": 100,
+      "ConnectionTimeout": 30
+    },
+    "behavior": "Connections automatically returned to pool after use (using statement)",
+    "retryLogic": {
+      "transientErrors": ["1205", "1213", "2006", "2013"],
+      "maxRetries": 3,
+      "backoffStrategy": "Exponential (2^attempt seconds)"
+    }
+  },
+  "parameterBindingContract": {
+    "cSharpToMySQL": {
+      "description": "Helper adds detected prefix before execution",
+      "example": {
+        "cSharp": {
+          "UserID": 123,
+          "PartNumber": "ABC123"
+        },
+        "mysql": {
+          "p_UserID": 123,
+          "p_PartNumber": "ABC123"
+        }
+      }
+    },
+    "supportedTypes": {
+      "int": "INT",
+      "long": "BIGINT",
+      "string": "VARCHAR/TEXT",
+      "DateTime": "DATETIME",
+      "bool": "TINYINT(1)",
+      "decimal": "DECIMAL",
+      "null": "NULL"
+    },
+    "nullHandling": {
+      "cSharp": "Use null for optional parameters",
+      "mysql": "Translates to NULL",
+      "validation": "Stored procedure MUST handle NULL values gracefully"
+    }
+  },
+  "errorHandling": {
+    "levels": [
+      {"level": "Stored Procedure", "responsibility": "Validate inputs, handle SQL errors, set OUT parameters"},
+      {"level": "Helper_Database_StoredProcedure", "responsibility": "Execute, retry transient errors, wrap results"},
+      {"level": "DAO", "responsibility": "Catch/log exceptions, return DaoResult"},
+      {"level": "Calling Code", "responsibility": "Check IsSuccess, display Message, prompt user"}
+    ]
+  },
+  "performanceMonitoring": {
+    "thresholds": {
+      "Query": "500ms",
+      "Modification": "1000ms",
+      "Batch": "5000ms",
+      "Report": "2000ms"
+    },
+    "logging": "Warn when elapsed time exceeds threshold",
+    "categories": [
+      {"category": "Query", "procedures": ["*_get_*", "*_search_*"]},
+      {"category": "Modification", "procedures": ["*_add_*", "*_update_*", "*_delete_*"]},
+      {"category": "Batch", "procedures": ["*_batch_*", "*_bulk_*"]},
+      {"category": "Report", "procedures": ["*_report_*", "*_summary_*"]}
+    ]
+  },
+  "transactionManagement": {
+    "singleOperation": {
+      "behavior": "Auto-commit",
+      "rollback": "Automatic on exception"
+    },
+    "multipleOperations": {
+      "behavior": "Explicit MySqlTransaction scope",
+      "pattern": "BeginTransaction → Execute steps → Commit/rollback",
+      "requirements": ["Rollback on failure", "Log history after core steps succeed"]
+    }
+  },
+  "testingContract": {
+    "integrationTests": {
+      "database": "mtm_wip_application_winform_test",
+      "transactionScope": "BeginTransaction in TestInitialize, Rollback in TestCleanup",
+      "isolation": "Per test class"
+    },
+    "validation": {
+      "parameterDetection": "Verify prefix detection for every stored procedure",
+      "errorHandling": "Ensure DaoResult.Failure returned for SQL/connection errors",
+      "successPath": "Verify DaoResult.Success for valid operations",
+      "performanceMonitoring": "Assert slow-query warnings logged when thresholds exceeded"
+    }
+  }
+}

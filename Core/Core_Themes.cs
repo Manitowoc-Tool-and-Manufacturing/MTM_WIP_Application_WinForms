@@ -74,7 +74,8 @@ namespace MTM_Inventory_Application.Core
 
         public static async Task<Model_UserUiColors> GetUserThemeColorsAsync(string userId)
         {
-            Model_AppVariables.ThemeName = await Dao_User.GetSettingsJsonAsync("Theme_Name", userId, true) ?? "Default";
+            var themeNameResult = await Dao_User.GetThemeNameAsync(userId);
+            Model_AppVariables.ThemeName = themeNameResult.IsSuccess && themeNameResult.Data != null ? themeNameResult.Data : "Default";
             if (!Core_AppThemes.GetThemeNames().Contains(Model_AppVariables.ThemeName))
             {
                 await Core_AppThemes.LoadThemesFromDatabaseAsync();
@@ -2624,7 +2625,8 @@ namespace MTM_Inventory_Application.Core
                 try
                 {
                     // Get the user's saved theme preference
-                    string? themeName = await Dao_User.GetSettingsJsonAsync("Theme_Name", userId, true);
+                    var themeNameResult = await Dao_User.GetThemeNameAsync(userId);
+                    string? themeName = themeNameResult.IsSuccess ? themeNameResult.Data : null;
                     
                     // If no theme preference is saved, or it's null, set to "Default"
                     if (string.IsNullOrWhiteSpace(themeName))
@@ -2661,15 +2663,10 @@ namespace MTM_Inventory_Application.Core
                     
                     try
                     {
-                        LoggingUtility.Log("Attempting to load themes from database using app_themes_Get_All stored procedure...");
+                        LoggingUtility.Log("Attempting to load themes from database using Dao_System.GetAllThemesAsync...");
                         
-                        var dataResult = await Helper_Database_StoredProcedure.ExecuteDataTableWithStatus(
-                            Model_AppVariables.ConnectionString,
-                            "app_themes_Get_All",
-                            null,
-                            null,
-                            true
-                        );
+                        // UPDATED: Use Dao_System.GetAllThemesAsync instead of non-existent stored procedure
+                        var dataResult = await Dao_System.GetAllThemesAsync();
                         
                         if (dataResult.IsSuccess && dataResult.Data != null)
                         {
@@ -2684,7 +2681,12 @@ namespace MTM_Inventory_Application.Core
                                 {
                                     try
                                     {
-                                        JsonSerializerOptions options = new();
+                                        JsonSerializerOptions options = new()
+                                        {
+                                            AllowTrailingCommas = true,
+                                            ReadCommentHandling = System.Text.Json.JsonCommentHandling.Skip,
+                                            PropertyNameCaseInsensitive = false
+                                        };
                                         options.Converters.Add(new JsonColorConverter());
                                         
                                         // Directly deserialize the complete Model_UserUiColors from database
@@ -2694,17 +2696,23 @@ namespace MTM_Inventory_Application.Core
                                         if (colors != null)
                                         {
                                             themes[themeName] = new AppTheme { Colors = colors, FormFont = null };
-                                            LoggingUtility.Log($"Successfully loaded theme '{themeName}' directly from database JSON");
+                                            LoggingUtility.Log($"✓ Successfully loaded theme '{themeName}' from database");
                                         }
                                         else
                                         {
-                                            LoggingUtility.Log($"Failed to deserialize theme '{themeName}' - JSON returned null");
+                                            LoggingUtility.Log($"✗ Failed to deserialize theme '{themeName}' - JSON returned null");
                                         }
                                     }
                                     catch (JsonException jsonEx)
                                     {
                                         LoggingUtility.LogApplicationError(jsonEx);
-                                        LoggingUtility.Log($"JSON parsing error for theme '{themeName}': {jsonEx.Message}");
+                                        LoggingUtility.Log($"✗ JSON parsing error for theme '{themeName}': {jsonEx.Message}");
+                                        LoggingUtility.Log($"   JSON preview: {(settingsJson.Length > 200 ? settingsJson.Substring(0, 200) + "..." : settingsJson)}");
+                                    }
+                                    catch (Exception ex)
+                                    {
+                                        LoggingUtility.LogApplicationError(ex);
+                                        LoggingUtility.Log($"✗ Unexpected error loading theme '{themeName}': {ex.Message}");
                                     }
                                 }
                             }

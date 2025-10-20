@@ -6,6 +6,7 @@ using MTM_Inventory_Application.Models;
 using MTM_Inventory_Application.Helpers;
 using MTM_Inventory_Application.Logging;
 using MTM_Inventory_Application.Services;
+using MTM_Inventory_Application.Core;
 
 namespace MTM_Inventory_Application.Controls.SettingsForm
 {
@@ -43,6 +44,8 @@ namespace MTM_Inventory_Application.Controls.SettingsForm
                 });
 
             InitializeComponent();
+            Core_Themes.ApplyDpiScaling(this);
+            Core_Themes.ApplyRuntimeLayoutAdjustments(this);
 
             Service_DebugTracer.TraceMethodExit(null, nameof(Control_Add_Operation), nameof(Control_Add_Operation));
         }
@@ -96,12 +99,11 @@ namespace MTM_Inventory_Application.Controls.SettingsForm
                 _progressHelper?.UpdateProgress(30, "Checking for existing operation...");
 
                 // Check if operation already exists using enhanced stored procedure
-                var existsResult = await Helper_Database_StoredProcedure.ExecuteDataTableWithStatus(
+                var existsResult = await Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync(
                     Model_AppVariables.ConnectionString,
                     "md_operation_numbers_Exists_ByOperation",
-                    new Dictionary<string, object> { ["Operation"] = operationNumber },
-                    _progressHelper,
-                    true
+                    new Dictionary<string, object> { ["p_Operation"] = operationNumber },
+                    _progressHelper
                 );
 
                 if (!existsResult.IsSuccess)
@@ -124,16 +126,15 @@ namespace MTM_Inventory_Application.Controls.SettingsForm
                 _progressHelper?.UpdateProgress(60, "Creating operation...");
 
                 // Create the operation using enhanced stored procedure
-                var createResult = await Helper_Database_StoredProcedure.ExecuteNonQueryWithStatus(
+                var createResult = await Helper_Database_StoredProcedure.ExecuteNonQueryWithStatusAsync(
                     Model_AppVariables.ConnectionString,
                     "md_operation_numbers_Add_Operation",
                     new Dictionary<string, object>
                     {
-                        ["Operation"] = operationNumber,
+                        ["p_Operation"] = operationNumber,
                         ["IssuedBy"] = Model_AppVariables.User ?? "Current User"
                     },
-                    _progressHelper,
-                    true
+                    _progressHelper
                 );
 
                 if (!createResult.IsSuccess)

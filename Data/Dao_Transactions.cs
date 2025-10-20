@@ -3,6 +3,7 @@ using MTM_Inventory_Application.Models;
 using MTM_Inventory_Application.Helpers;
 using MTM_Inventory_Application.Logging;
 using System.Data;
+using MySql.Data.MySqlClient;
 
 namespace MTM_Inventory_Application.Data;
 
@@ -51,7 +52,9 @@ internal class Dao_Transactions
         string sortColumn = "ReceiveDate",
         bool sortDescending = true,
         int page = 1,
-        int pageSize = 20
+        int pageSize = 20,
+        MySqlConnection? connection = null,
+        MySqlTransaction? transaction = null
     )
     {
         try
@@ -60,30 +63,31 @@ internal class Dao_Transactions
             {
                 ["UserName"] = userName ?? "",
                 ["IsAdmin"] = isAdmin,
-                ["PartID"] = partID ?? "",
+                ["p_PartID"] = partID ?? "",
                 ["BatchNumber"] = batchNumber ?? "",
                 ["FromLocation"] = fromLocation ?? "",
                 ["ToLocation"] = toLocation ?? "",
-                ["Operation"] = operation ?? "",
+                ["p_Operation"] = operation ?? "",
                 ["TransactionType"] = transactionType?.ToString() ?? "",
-                ["Quantity"] = quantity,
+                ["Quantity"] = quantity ?? (object)DBNull.Value,
                 ["Notes"] = notes ?? "",
                 ["ItemType"] = itemType ?? "",
-                ["FromDate"] = fromDate,
-                ["ToDate"] = toDate,
+                ["FromDate"] = fromDate ?? (object)DBNull.Value,
+                ["ToDate"] = toDate ?? (object)DBNull.Value,
                 ["SortColumn"] = sortColumn,
                 ["SortDescending"] = sortDescending,
                 ["Page"] = page,
                 ["PageSize"] = pageSize
             };
 
-            // Use Helper_Database_StoredProcedure.ExecuteDataTableWithStatus for proper status handling
-            var result = await Helper_Database_StoredProcedure.ExecuteDataTableWithStatus(
+            // Use Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync for proper status handling
+            var result = await Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync(
                 Model_AppVariables.ConnectionString,
                 "inv_transactions_Search",
                 parameters,
-                null, // No progress helper for this method
-                true // Use async
+                progressHelper: null,
+                connection: connection,
+                transaction: transaction
             );
 
             if (!result.IsSuccess)
@@ -110,7 +114,7 @@ internal class Dao_Transactions
         catch (Exception ex)
         {
             LoggingUtility.LogDatabaseError(ex);
-            await Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex, true, "SearchTransactionsAsync");
+            await Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex, callerName: "SearchTransactionsAsync");
             return DaoResult<List<Model_Transactions>>.Failure(
                 "Failed to search transactions", ex
             );
@@ -169,7 +173,7 @@ internal class Dao_Transactions
         catch (Exception ex)
         {
             LoggingUtility.LogDatabaseError(ex);
-            _ = Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex, false, "SearchTransactions");
+            _ = Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex, callerName: "SearchTransactions");
             return DaoResult<List<Model_Transactions>>.Failure(
                 "Failed to search transactions (sync)", ex
             );
@@ -200,7 +204,9 @@ internal class Dao_Transactions
         string userName,
         bool isAdmin,
         int page = 1,
-        int pageSize = 20
+        int pageSize = 20,
+        MySqlConnection? connection = null,
+        MySqlTransaction? transaction = null
     )
     {
         try
@@ -325,13 +331,14 @@ internal class Dao_Transactions
             System.Diagnostics.Debug.WriteLine($"[DAO DEBUG] Full SQL will be: SELECT ... FROM inv_transaction WHERE {whereBuilder} ORDER BY ReceiveDate DESC LIMIT ...");
             System.Diagnostics.Debug.WriteLine($"[DAO DEBUG] === CALLING STORED PROCEDURE ===");
 
-            // Use Helper_Database_StoredProcedure.ExecuteDataTableWithStatus for proper status handling
-            var result = await Helper_Database_StoredProcedure.ExecuteDataTableWithStatus(
+            // Use Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync for proper status handling
+            var result = await Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync(
                 Model_AppVariables.ConnectionString,
                 "inv_transactions_SmartSearch",
                 parameters,
-                null, // No progress helper for this method
-                true // Use async
+                progressHelper: null,
+                connection: connection,
+                transaction: transaction
             );
 
             System.Diagnostics.Debug.WriteLine($"[DAO DEBUG] Stored procedure result: IsSuccess={result.IsSuccess}, ErrorMessage='{result.ErrorMessage}'");
@@ -366,7 +373,7 @@ internal class Dao_Transactions
             System.Diagnostics.Debug.WriteLine($"[DAO DEBUG] Stack trace: {ex.StackTrace}");
             
             LoggingUtility.LogDatabaseError(ex);
-            await Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex, true, "SmartSearchAsync");
+            await Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex, callerName: "SmartSearchAsync");
             return DaoResult<List<Model_Transactions>>.Failure(
                 "Smart search failed", ex
             );
@@ -383,7 +390,9 @@ internal class Dao_Transactions
     public async Task<DaoResult<Dictionary<string, object>>> GetTransactionAnalyticsAsync(
         string userName,
         bool isAdmin,
-        (DateTime? from, DateTime? to) timeRange
+        (DateTime? from, DateTime? to) timeRange,
+        MySqlConnection? connection = null,
+        MySqlTransaction? transaction = null
     )
     {
         try
@@ -392,17 +401,18 @@ internal class Dao_Transactions
             {
                 ["UserName"] = userName ?? "",
                 ["IsAdmin"] = isAdmin,
-                ["FromDate"] = timeRange.from,
-                ["ToDate"] = timeRange.to
+                ["FromDate"] = timeRange.from ?? (object)DBNull.Value,
+                ["ToDate"] = timeRange.to ?? (object)DBNull.Value
             };
 
-            // Use Helper_Database_StoredProcedure.ExecuteDataTableWithStatus for proper status handling
-            var result = await Helper_Database_StoredProcedure.ExecuteDataTableWithStatus(
+            // Use Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync for proper status handling
+            var result = await Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync(
                 Model_AppVariables.ConnectionString,
                 "inv_transactions_GetAnalytics",
                 parameters,
-                null, // No progress helper for this method
-                true // Use async
+                progressHelper: null,
+                connection: connection,
+                transaction: transaction
             );
 
             if (!result.IsSuccess)
@@ -436,7 +446,7 @@ internal class Dao_Transactions
         catch (Exception ex)
         {
             LoggingUtility.LogDatabaseError(ex);
-            await Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex, true, "GetTransactionAnalyticsAsync");
+            await Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex, callerName: "GetTransactionAnalyticsAsync");
             return DaoResult<Dictionary<string, object>>.Failure(
                 "Failed to retrieve transaction analytics", ex
             );

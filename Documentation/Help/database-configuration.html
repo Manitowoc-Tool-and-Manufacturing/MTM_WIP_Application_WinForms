@@ -42,7 +42,7 @@
                     <div class="env-item development">
                         <h3>🔧 Development Environment</h3>
                         <ul>
-                            <li><strong>Database:</strong> <code>mtm_wip_application_test</code></li>
+                            <li><strong>Database:</strong> <code>mtm_wip_application_winforms_test</code></li>
                             <li><strong>Server:</strong> <code>localhost</code> or <code>172.16.1.104</code></li>
                             <li><strong>Port:</strong> <code>3306</code></li>
                             <li><strong>Auto-Detection:</strong> Debug mode builds</li>
@@ -74,7 +74,7 @@ COLLATE utf8mb4_unicode_ci;</code></pre>
 
                 <div class="code-block">
                     <h4>🟡 Development Database</h4>
-                    <pre><code>CREATE DATABASE mtm_wip_application_test
+                    <pre><code>CREATE DATABASE mtm_wip_application_winforms_test
 CHARACTER SET utf8mb4 
 COLLATE utf8mb4_unicode_ci;</code></pre>
                 </div>
@@ -88,7 +88,7 @@ CREATE USER 'mtm_user'@'%' IDENTIFIED BY 'secure_password_here';
 
 -- Grant necessary privileges
 GRANT SELECT, INSERT, UPDATE, DELETE, EXECUTE ON mtm_wip_application.* TO 'mtm_user'@'%';
-GRANT SELECT, INSERT, UPDATE, DELETE, EXECUTE ON mtm_wip_application_test.* TO 'mtm_user'@'%';
+GRANT SELECT, INSERT, UPDATE, DELETE, EXECUTE ON mtm_wip_application_winforms_test.* TO 'mtm_user'@'%';
 
 -- Flush privileges
 FLUSH PRIVILEGES;</code></pre>
@@ -218,7 +218,7 @@ END IF;</code></pre>
                         <ul>
                             <li>If current IP matches 172.16.1.104 → use 172.16.1.104</li>
                             <li>Otherwise → use localhost</li>
-                            <li>Database: mtm_wip_application_test</li>
+                            <li>Database: mtm_wip_application_winforms_test</li>
                         </ul>
                     </div>
                     <div class="config-item">

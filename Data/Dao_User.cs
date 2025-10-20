@@ -1,1006 +1,1366 @@
-﻿using System.Data;
+using System.Data;
 using System.Diagnostics;
 using System.Text.Json;
 using MTM_Inventory_Application.Helpers;
 using MTM_Inventory_Application.Logging;
 using MTM_Inventory_Application.Models;
+using MTM_Inventory_Application.Services;
 using MySql.Data.MySqlClient;
 
-namespace MTM_Inventory_Application.Data
+namespace MTM_Inventory_Application.Data;
+
+#region Dao_User
+
+/// <summary>
+/// Data Access Object for user management and user settings operations.
+/// Implements DaoResult pattern with async/await and Service_DebugTracer integration.
+/// </summary>
+internal static class Dao_User
 {
-    #region Dao_User
+    #region User Settings Getters/Setters
 
-    internal static class Dao_User
+    /// <summary>
+    /// Gets the last shown version for the specified user.
+    /// </summary>
+    /// <param name="user">The username.</param>
+    /// <returns>A DaoResult containing the last shown version string.</returns>
+    internal static async Task<DaoResult<string>> GetLastShownVersionAsync(string user)
     {
-        #region User Settings Getters/Setters
-
-        internal static async Task<string> GetLastShownVersionAsync(string user, bool useAsync = false)
+        Service_DebugTracer.TraceMethodEntry(new Dictionary<string, object> { ["user"] = user }, controlName: "Dao_User");
+        
+        try
         {
-            Debug.WriteLine($"[Dao_User] Entering GetLastShownVersionAsync(user={user}, useAsync={useAsync})");
-            return await GetSettingsJsonAsync("LastShownVersion", user, useAsync);
+            var result = await GetSettingsJsonInternalAsync("LastShownVersion", user);
+            
+            Service_DebugTracer.TraceMethodExit(result, controlName: "Dao_User");
+            return DaoResult<string>.Success(result, $"Retrieved LastShownVersion for user {user}");
         }
-
-        internal static async Task SetLastShownVersionAsync(string user, string value, bool useAsync = false)
+        catch (Exception ex)
         {
-            Debug.WriteLine(
-                $"[Dao_User] Entering SetLastShownVersionAsync(user={user}, value={value}, useAsync={useAsync})");
-            await SetUserSettingAsync("LastShownVersion", user, value, useAsync);
+            LoggingUtility.LogDatabaseError(ex);
+            Service_DebugTracer.TraceMethodExit(null, controlName: "Dao_User");
+            return DaoResult<string>.Failure($"Error retrieving LastShownVersion for user {user}", ex);
         }
+    }
 
-        internal static async Task<string> GetHideChangeLogAsync(string user, bool useAsync = false)
+    /// <summary>
+    /// Sets the last shown version for the specified user.
+    /// </summary>
+    /// <param name="user">The username.</param>
+    /// <param name="value">The version value to set.</param>
+    /// <returns>A DaoResult indicating success or failure.</returns>
+    internal static async Task<DaoResult> SetLastShownVersionAsync(string user, string value)
+    {
+        Service_DebugTracer.TraceMethodEntry(new Dictionary<string, object> { ["user"] = user, ["value"] = value }, controlName: "Dao_User");
+        
+        try
         {
-            Debug.WriteLine($"[Dao_User] Entering GetHideChangeLogAsync(user={user}, useAsync={useAsync})");
-            return await GetSettingsJsonAsync("HideChangeLog", user, useAsync);
+            await SetUserSettingInternalAsync("LastShownVersion", user, value);
+            
+            Service_DebugTracer.TraceMethodExit(controlName: "Dao_User");
+            return DaoResult.Success($"Set LastShownVersion to {value} for user {user}");
         }
-
-        internal static async Task SetHideChangeLogAsync(string user, string value, bool useAsync = false)
+        catch (Exception ex)
         {
-            Debug.WriteLine(
-                $"[Dao_User] Entering SetHideChangeLogAsync(user={user}, value={value}, useAsync={useAsync})");
-            await SetUserSettingAsync("HideChangeLog", user, value, useAsync);
+            LoggingUtility.LogDatabaseError(ex);
+            Service_DebugTracer.TraceMethodExit(null, controlName: "Dao_User");
+            return DaoResult.Failure($"Error setting LastShownVersion for user {user}", ex);
         }
+    }
 
-        internal static async Task<string?> GetThemeNameAsync(string user, bool useAsync = false)
+    /// <summary>
+    /// Gets the HideChangeLog setting for the specified user.
+    /// </summary>
+    /// <param name="user">The username.</param>
+    /// <returns>A DaoResult containing the HideChangeLog value.</returns>
+    internal static async Task<DaoResult<string>> GetHideChangeLogAsync(string user)
+    {
+        Service_DebugTracer.TraceMethodEntry(new Dictionary<string, object> { ["user"] = user }, controlName: "Dao_User");
+        
+        try
         {
-            Debug.WriteLine($"[Dao_User] Entering GetThemeNameAsync(user={user}, useAsync={useAsync})");
-            return await GetSettingsJsonAsync("Theme_Name", user, true);
+            var result = await GetSettingsJsonInternalAsync("HideChangeLog", user);
+            
+            Service_DebugTracer.TraceMethodExit(result, controlName: "Dao_User");
+            return DaoResult<string>.Success(result, $"Retrieved HideChangeLog for user {user}");
         }
-
-        internal static async Task<int?> GetThemeFontSizeAsync(string user, bool useAsync = false)
+        catch (Exception ex)
         {
-            Debug.WriteLine($"[Dao_User] Entering GetThemeFontSizeAsync(user={user}, useAsync={useAsync})");
-            try
-            {
-                string str = await GetSettingsJsonAsync("Theme_FontSize", user, useAsync);
-                return int.TryParse(str, out int val) ? val : null;
-            }
-            catch (Exception ex)
-            {
-                Debug.WriteLine($"[Dao_User] Exception in GetThemeFontSizeAsync: {ex}");
-                LoggingUtility.LogDatabaseError(ex);
-                // Don't call error handlers here to avoid recursion during startup
-                LoggingUtility.Log($"GetThemeFontSizeAsync failed with exception: {ex.Message}");
-                return null;
-            }
+            LoggingUtility.LogDatabaseError(ex);
+            Service_DebugTracer.TraceMethodExit(null, controlName: "Dao_User");
+            return DaoResult<string>.Failure($"Error retrieving HideChangeLog for user {user}", ex);
         }
+    }
 
-        internal static async Task SetThemeFontSizeAsync(string user, int value, bool useAsync = false)
+    /// <summary>
+    /// Sets the HideChangeLog setting for the specified user.
+    /// </summary>
+    /// <param name="user">The username.</param>
+    /// <param name="value">The value to set.</param>
+    /// <returns>A DaoResult indicating success or failure.</returns>
+    internal static async Task<DaoResult> SetHideChangeLogAsync(string user, string value)
+    {
+        Service_DebugTracer.TraceMethodEntry(new Dictionary<string, object> { ["user"] = user, ["value"] = value }, controlName: "Dao_User");
+        
+        try
         {
-            Debug.WriteLine(
-                $"[Dao_User] Entering SetThemeFontSizeAsync(user={user}, value={value}, useAsync={useAsync})");
-            await SetUserSettingAsync("Theme_FontSize", user, value.ToString(), useAsync);
+            await SetUserSettingInternalAsync("HideChangeLog", user, value);
+            
+            Service_DebugTracer.TraceMethodExit(controlName: "Dao_User");
+            return DaoResult.Success($"Set HideChangeLog to {value} for user {user}");
         }
-
-        internal static async Task<string> GetVisualUserNameAsync(string user, bool useAsync = false)
+        catch (Exception ex)
         {
-            Debug.WriteLine($"[Dao_User] Entering GetVisualUserNameAsync(user={user}, useAsync={useAsync})");
-            string value = await GetSettingsJsonAsync("VisualUserName", user, useAsync);
+            LoggingUtility.LogDatabaseError(ex);
+            Service_DebugTracer.TraceMethodExit(null, controlName: "Dao_User");
+            return DaoResult.Failure($"Error setting HideChangeLog for user {user}", ex);
+        }
+    }
+
+    /// <summary>
+    /// Gets the theme name for the specified user.
+    /// </summary>
+    /// <param name="user">The username.</param>
+    /// <returns>A DaoResult containing the theme name.</returns>
+    internal static async Task<DaoResult<string?>> GetThemeNameAsync(string user)
+    {
+        Service_DebugTracer.TraceMethodEntry(new Dictionary<string, object> { ["user"] = user }, controlName: "Dao_User");
+        
+        try
+        {
+            var result = await GetSettingsJsonInternalAsync("Theme_Name", user);
+            
+            Service_DebugTracer.TraceMethodExit(result, controlName: "Dao_User");
+            return DaoResult<string?>.Success(result, $"Retrieved Theme_Name for user {user}");
+        }
+        catch (Exception ex)
+        {
+            LoggingUtility.LogDatabaseError(ex);
+            Service_DebugTracer.TraceMethodExit(null, controlName: "Dao_User");
+            return DaoResult<string?>.Failure($"Error retrieving Theme_Name for user {user}", ex);
+        }
+    }
+
+    /// <summary>
+    /// Gets the theme font size for the specified user.
+    /// </summary>
+    /// <param name="user">The username.</param>
+    /// <returns>A DaoResult containing the font size, or null if not set.</returns>
+    internal static async Task<DaoResult<int?>> GetThemeFontSizeAsync(string user)
+    {
+        Service_DebugTracer.TraceMethodEntry(new Dictionary<string, object> { ["user"] = user }, controlName: "Dao_User");
+        
+        try
+        {
+            string str = await GetSettingsJsonInternalAsync("Theme_FontSize", user);
+            int? result = int.TryParse(str, out int val) ? val : null;
+            
+            Service_DebugTracer.TraceMethodExit(result, controlName: "Dao_User");
+            return DaoResult<int?>.Success(result, $"Retrieved Theme_FontSize for user {user}");
+        }
+        catch (Exception ex)
+        {
+            LoggingUtility.LogDatabaseError(ex);
+            LoggingUtility.Log($"GetThemeFontSizeAsync failed with exception: {ex.Message}");
+            
+            Service_DebugTracer.TraceMethodExit(null, controlName: "Dao_User");
+            return DaoResult<int?>.Failure($"Error retrieving Theme_FontSize for user {user}", ex);
+        }
+    }
+
+    /// <summary>
+    /// Sets the theme font size for the specified user.
+    /// </summary>
+    /// <param name="user">The username.</param>
+    /// <param name="value">The font size value.</param>
+    /// <returns>A DaoResult indicating success or failure.</returns>
+    internal static async Task<DaoResult> SetThemeFontSizeAsync(string user, int value)
+    {
+        Service_DebugTracer.TraceMethodEntry(new Dictionary<string, object> { ["user"] = user, ["value"] = value }, controlName: "Dao_User");
+        
+        try
+        {
+            await SetUserSettingInternalAsync("Theme_FontSize", user, value.ToString());
+            
+            Service_DebugTracer.TraceMethodExit(controlName: "Dao_User");
+            return DaoResult.Success($"Set Theme_FontSize to {value} for user {user}");
+        }
+        catch (Exception ex)
+        {
+            LoggingUtility.LogDatabaseError(ex);
+            Service_DebugTracer.TraceMethodExit(null, controlName: "Dao_User");
+            return DaoResult.Failure($"Error setting Theme_FontSize for user {user}", ex);
+        }
+    }
+
+    /// <summary>
+    /// Gets the Visual username for the specified user and updates Model_Users.
+    /// </summary>
+    /// <param name="user">The username.</param>
+    /// <returns>A DaoResult containing the Visual username.</returns>
+    internal static async Task<DaoResult<string>> GetVisualUserNameAsync(string user)
+    {
+        Service_DebugTracer.TraceMethodEntry(new Dictionary<string, object> { ["user"] = user }, controlName: "Dao_User");
+        
+        try
+        {
+            string value = await GetSettingsJsonInternalAsync("VisualUserName", user);
             Model_Users.VisualUserName = value;
-            return Model_Users.VisualUserName;
+            
+            Service_DebugTracer.TraceMethodExit(Model_Users.VisualUserName, controlName: "Dao_User");
+            return DaoResult<string>.Success(Model_Users.VisualUserName, $"Retrieved VisualUserName for user {user}");
         }
-
-        internal static async Task SetVisualUserNameAsync(string user, string value, bool useAsync = false)
+        catch (Exception ex)
         {
-            Debug.WriteLine(
-                $"[Dao_User] Entering SetVisualUserNameAsync(user={user}, value={value}, useAsync={useAsync})");
-            await SetUserSettingAsync("VisualUserName", user, value, useAsync);
+            LoggingUtility.LogDatabaseError(ex);
+            Service_DebugTracer.TraceMethodExit(null, controlName: "Dao_User");
+            return DaoResult<string>.Failure($"Error retrieving VisualUserName for user {user}", ex);
         }
+    }
 
-        internal static async Task<string> GetVisualPasswordAsync(string user, bool useAsync = false)
+    /// <summary>
+    /// Sets the Visual username for the specified user.
+    /// </summary>
+    /// <param name="user">The username.</param>
+    /// <param name="value">The Visual username value.</param>
+    /// <returns>A DaoResult indicating success or failure.</returns>
+    internal static async Task<DaoResult> SetVisualUserNameAsync(string user, string value)
+    {
+        Service_DebugTracer.TraceMethodEntry(new Dictionary<string, object> { ["user"] = user, ["value"] = value }, controlName: "Dao_User");
+        
+        try
         {
-            Debug.WriteLine($"[Dao_User] Entering GetVisualPasswordAsync(user={user}, useAsync={useAsync})");
-            string value = await GetSettingsJsonAsync("VisualPassword", user, useAsync);
+            await SetUserSettingInternalAsync("VisualUserName", user, value);
+            
+            Service_DebugTracer.TraceMethodExit(controlName: "Dao_User");
+            return DaoResult.Success($"Set VisualUserName to {value} for user {user}");
+        }
+        catch (Exception ex)
+        {
+            LoggingUtility.LogDatabaseError(ex);
+            Service_DebugTracer.TraceMethodExit(null, controlName: "Dao_User");
+            return DaoResult.Failure($"Error setting VisualUserName for user {user}", ex);
+        }
+    }
+
+    /// <summary>
+    /// Gets the Visual password for the specified user and updates Model_Users.
+    /// </summary>
+    /// <param name="user">The username.</param>
+    /// <returns>A DaoResult containing the Visual password.</returns>
+    internal static async Task<DaoResult<string>> GetVisualPasswordAsync(string user)
+    {
+        Service_DebugTracer.TraceMethodEntry(new Dictionary<string, object> { ["user"] = user }, controlName: "Dao_User");
+        
+        try
+        {
+            string value = await GetSettingsJsonInternalAsync("VisualPassword", user);
             Model_Users.VisualPassword = value;
-            return Model_Users.VisualPassword;
+            
+            Service_DebugTracer.TraceMethodExit(Model_Users.VisualPassword, controlName: "Dao_User");
+            return DaoResult<string>.Success(Model_Users.VisualPassword, $"Retrieved VisualPassword for user {user}");
         }
-
-        internal static async Task SetVisualPasswordAsync(string user, string value, bool useAsync = false)
+        catch (Exception ex)
         {
-            Debug.WriteLine(
-                $"[Dao_User] Entering SetVisualPasswordAsync(user={user}, value={value}, useAsync={useAsync})");
-            await SetUserSettingAsync("VisualPassword", user, value, useAsync);
+            LoggingUtility.LogDatabaseError(ex);
+            Service_DebugTracer.TraceMethodExit(null, controlName: "Dao_User");
+            return DaoResult<string>.Failure($"Error retrieving VisualPassword for user {user}", ex);
         }
+    }
 
-        internal static async Task<string> GetWipServerAddressAsync(string user, bool useAsync = false)
+    /// <summary>
+    /// Sets the Visual password for the specified user.
+    /// </summary>
+    /// <param name="user">The username.</param>
+    /// <param name="value">The Visual password value.</param>
+    /// <returns>A DaoResult indicating success or failure.</returns>
+    internal static async Task<DaoResult> SetVisualPasswordAsync(string user, string value)
+    {
+        Service_DebugTracer.TraceMethodEntry(new Dictionary<string, object> { ["user"] = user, ["value"] = value }, controlName: "Dao_User");
+        
+        try
         {
-            Debug.WriteLine($"[Dao_User] Entering GetWipServerAddressAsync(user={user}, useAsync={useAsync})");
-            string value = await GetSettingsJsonAsync("WipServerAddress", user, useAsync);
+            await SetUserSettingInternalAsync("VisualPassword", user, value);
+            
+            Service_DebugTracer.TraceMethodExit(controlName: "Dao_User");
+            return DaoResult.Success($"Set VisualPassword for user {user}");
+        }
+        catch (Exception ex)
+        {
+            LoggingUtility.LogDatabaseError(ex);
+            Service_DebugTracer.TraceMethodExit(null, controlName: "Dao_User");
+            return DaoResult.Failure($"Error setting VisualPassword for user {user}", ex);
+        }
+    }
+
+    /// <summary>
+    /// Gets the WIP server address for the specified user and updates Model_Users.
+    /// </summary>
+    /// <param name="user">The username.</param>
+    /// <returns>A DaoResult containing the WIP server address.</returns>
+    internal static async Task<DaoResult<string>> GetWipServerAddressAsync(string user)
+    {
+        Service_DebugTracer.TraceMethodEntry(new Dictionary<string, object> { ["user"] = user }, controlName: "Dao_User");
+        
+        try
+        {
+            string value = await GetSettingsJsonInternalAsync("WipServerAddress", user);
             Model_Users.WipServerAddress = value;
-            return Model_Users.WipServerAddress;
+            
+            Service_DebugTracer.TraceMethodExit(Model_Users.WipServerAddress, controlName: "Dao_User");
+            return DaoResult<string>.Success(Model_Users.WipServerAddress, $"Retrieved WipServerAddress for user {user}");
         }
-
-        internal static async Task SetWipServerAddressAsync(string user, string value, bool useAsync = false)
+        catch (Exception ex)
         {
-            Debug.WriteLine(
-                $"[Dao_User] Entering SetWipServerAddressAsync(user={user}, value={value}, useAsync={useAsync})");
-            await SetUserSettingAsync("WipServerAddress", user, value, useAsync);
+            LoggingUtility.LogDatabaseError(ex);
+            Service_DebugTracer.TraceMethodExit(null, controlName: "Dao_User");
+            return DaoResult<string>.Failure($"Error retrieving WipServerAddress for user {user}", ex);
         }
+    }
 
-        #region Get/Set Database
-
-        internal static async Task<string> GetDatabaseAsync(string user, bool useAsync = false)
+    /// <summary>
+    /// Sets the WIP server address for the specified user.
+    /// </summary>
+    /// <param name="user">The username.</param>
+    /// <param name="value">The server address value.</param>
+    /// <returns>A DaoResult indicating success or failure.</returns>
+    internal static async Task<DaoResult> SetWipServerAddressAsync(string user, string value)
+    {
+        Service_DebugTracer.TraceMethodEntry(new Dictionary<string, object> { ["user"] = user, ["value"] = value }, controlName: "Dao_User");
+        
+        try
         {
-            Debug.WriteLine($"[Dao_User] Entering GetDatabaseAsync(user={user}, useAsync={useAsync})");
-            string value = await GetSettingsJsonAsync("WIPDatabase", user, useAsync);
+            await SetUserSettingInternalAsync("WipServerAddress", user, value);
+            
+            Service_DebugTracer.TraceMethodExit(controlName: "Dao_User");
+            return DaoResult.Success($"Set WipServerAddress to {value} for user {user}");
+        }
+        catch (Exception ex)
+        {
+            LoggingUtility.LogDatabaseError(ex);
+            Service_DebugTracer.TraceMethodExit(null, controlName: "Dao_User");
+            return DaoResult.Failure($"Error setting WipServerAddress for user {user}", ex);
+        }
+    }
+
+    #region Get/Set Database
+
+    /// <summary>
+    /// Gets the database name for the specified user and updates Model_Users.
+    /// </summary>
+    /// <param name="user">The username.</param>
+    /// <returns>A DaoResult containing the database name.</returns>
+    internal static async Task<DaoResult<string>> GetDatabaseAsync(string user)
+    {
+        Service_DebugTracer.TraceMethodEntry(new Dictionary<string, object> { ["user"] = user }, controlName: "Dao_User");
+        
+        try
+        {
+            string value = await GetSettingsJsonInternalAsync("WIPDatabase", user);
             Model_Users.Database = value;
-            return Model_Users.Database;
+            
+            Service_DebugTracer.TraceMethodExit(Model_Users.Database, controlName: "Dao_User");
+            return DaoResult<string>.Success(Model_Users.Database, $"Retrieved WIPDatabase for user {user}");
         }
-
-        internal static async Task SetDatabaseAsync(string user, string value, bool useAsync = false)
+        catch (Exception ex)
         {
-            Debug.WriteLine(
-                $"[Dao_User] Entering SetDatabaseAsync(user={user}, value={value}, useAsync={useAsync})");
+            LoggingUtility.LogDatabaseError(ex);
+            Service_DebugTracer.TraceMethodExit(null, controlName: "Dao_User");
+            return DaoResult<string>.Failure($"Error retrieving WIPDatabase for user {user}", ex);
+        }
+    }
+
+    /// <summary>
+    /// Sets the database name for the specified user and updates Model_Users.
+    /// </summary>
+    /// <param name="user">The username.</param>
+    /// <param name="value">The database name value.</param>
+    /// <returns>A DaoResult indicating success or failure.</returns>
+    internal static async Task<DaoResult> SetDatabaseAsync(string user, string value,
+        MySqlConnection? connection = null,
+        MySqlTransaction? transaction = null)
+    {
+        Service_DebugTracer.TraceMethodEntry(new Dictionary<string, object> { ["user"] = user, ["value"] = value }, controlName: "Dao_User");
+        
+        try
+        {
             Model_Users.Database = value;
-            await SetUserSettingAsync("WIPDatabase", user, value, useAsync);
+            await SetUserSettingInternalAsync("WIPDatabase", user, value);
+            
+            Service_DebugTracer.TraceMethodExit(controlName: "Dao_User");
+            return DaoResult.Success($"Set WIPDatabase to {value} for user {user}");
         }
-
-        #endregion
-
-        #region Get/Set WipServerPort
-
-        internal static async Task<string> GetWipServerPortAsync(string user, bool useAsync = false)
+        catch (Exception ex)
         {
-            Debug.WriteLine($"[Dao_User] Entering GetWipServerPortAsync(user={user}, useAsync={useAsync})");
-            string value = await GetSettingsJsonAsync("WipServerPort", user, useAsync);
+            LoggingUtility.LogDatabaseError(ex);
+            Service_DebugTracer.TraceMethodExit(null, controlName: "Dao_User");
+            return DaoResult.Failure($"Error setting WIPDatabase for user {user}", ex);
+        }
+    }
+
+    #endregion
+
+    #region Get/Set WipServerPort
+
+    /// <summary>
+    /// Gets the WIP server port for the specified user and updates Model_Users.
+    /// </summary>
+    /// <param name="user">The username.</param>
+    /// <returns>A DaoResult containing the server port.</returns>
+    internal static async Task<DaoResult<string>> GetWipServerPortAsync(string user)
+    {
+        Service_DebugTracer.TraceMethodEntry(new Dictionary<string, object> { ["user"] = user }, controlName: "Dao_User");
+        
+        try
+        {
+            string value = await GetSettingsJsonInternalAsync("WipServerPort", user);
             Model_Users.WipServerPort = value;
-            return Model_Users.WipServerPort;
+            
+            Service_DebugTracer.TraceMethodExit(Model_Users.WipServerPort, controlName: "Dao_User");
+            return DaoResult<string>.Success(Model_Users.WipServerPort, $"Retrieved WipServerPort for user {user}");
         }
-
-        internal static async Task SetWipServerPortAsync(string user, string value, bool useAsync = false)
+        catch (Exception ex)
         {
-            Debug.WriteLine(
-                $"[Dao_User] Entering SetWipServerPortAsync(user={user}, value={value}, useAsync={useAsync})");
+            LoggingUtility.LogDatabaseError(ex);
+            Service_DebugTracer.TraceMethodExit(null, controlName: "Dao_User");
+            return DaoResult<string>.Failure($"Error retrieving WipServerPort for user {user}", ex);
+        }
+    }
+
+    /// <summary>
+    /// Sets the WIP server port for the specified user and updates Model_Users.
+    /// </summary>
+    /// <param name="user">The username.</param>
+    /// <param name="value">The server port value.</param>
+    /// <returns>A DaoResult indicating success or failure.</returns>
+    internal static async Task<DaoResult> SetWipServerPortAsync(string user, string value,
+        MySqlConnection? connection = null,
+        MySqlTransaction? transaction = null)
+    {
+        Service_DebugTracer.TraceMethodEntry(new Dictionary<string, object> { ["user"] = user, ["value"] = value }, controlName: "Dao_User");
+        
+        try
+        {
             Model_Users.WipServerPort = value;
-            await SetUserSettingAsync("WipServerPort", user, value, useAsync);
+            await SetUserSettingInternalAsync("WipServerPort", user, value);
+            
+            Service_DebugTracer.TraceMethodExit(controlName: "Dao_User");
+            return DaoResult.Success($"Set WipServerPort to {value} for user {user}");
         }
-
-        #endregion
-
-        internal static async Task<string?> GetUserFullNameAsync(string user, bool useAsync = false)
+        catch (Exception ex)
         {
-            Debug.WriteLine($"[Dao_User] Entering GetUserFullNameAsync(user={user}, useAsync={useAsync})");
-            try
+            LoggingUtility.LogDatabaseError(ex);
+            Service_DebugTracer.TraceMethodExit(null, controlName: "Dao_User");
+            return DaoResult.Failure($"Error setting WipServerPort for user {user}", ex);
+        }
+    }
+
+    #endregion
+
+    /// <summary>
+    /// Gets the full name for the specified user and updates Model_Users.
+    /// </summary>
+    /// <param name="user">The username.</param>
+    /// <returns>A DaoResult containing the user's full name.</returns>
+    internal static async Task<DaoResult<string?>> GetUserFullNameAsync(string user)
+    {
+        Service_DebugTracer.TraceMethodEntry(new Dictionary<string, object> { ["user"] = user }, controlName: "Dao_User");
+        
+        try
+        {
+            var dataResult = await Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync(
+                Model_AppVariables.ConnectionString,
+                "usr_users_Get_ByUser",
+                new Dictionary<string, object> { ["User"] = user }
+            );
+
+            if (dataResult.IsSuccess && dataResult.Data != null && dataResult.Data.Rows.Count > 0)
             {
-                // FIXED: Use Helper_Database_StoredProcedure instead of Helper_Database_Core to avoid p_Status parameter errors
-                var dataResult = await Helper_Database_StoredProcedure.ExecuteDataTableWithStatus(
-                    Model_AppVariables.ConnectionString,
-                    "usr_users_GetFullName_ByUser",
-                    new Dictionary<string, object> { ["User"] = user }, // Remove p_ prefix - added automatically
-                    null, // No progress helper for this method
-                    useAsync
-                );
-
-                if (dataResult.IsSuccess && dataResult.Data != null && dataResult.Data.Rows.Count > 0)
-                {
-                    object? result = dataResult.Data.Rows[0][0]; // Get first column of first row
-                    Debug.WriteLine($"[Dao_User] GetUserFullNameAsync result: {result}");
-                    Model_Users.FullName = result?.ToString() ?? string.Empty;
-                    return result?.ToString();
-                }
+                DataRow row = dataResult.Data.Rows[0];
+                object? fullNameObj = row["Full Name"];
+                string? fullName = fullNameObj == DBNull.Value ? null : fullNameObj?.ToString();
                 
-                return null;
+                Model_Users.FullName = fullName ?? string.Empty;
+                
+                Service_DebugTracer.TraceMethodExit(fullName, controlName: "Dao_User");
+                return DaoResult<string?>.Success(fullName, $"Retrieved full name for user {user}");
             }
-            catch (Exception ex)
-            {
-                Debug.WriteLine($"[Dao_User] Exception in GetUserFullNameAsync: {ex}");
-                LoggingUtility.LogDatabaseError(ex);
-                // Don't call error handlers here to avoid recursion during startup
-                LoggingUtility.Log($"GetUserFullNameAsync failed with exception: {ex.Message}");
-                return null;
-            }
+            
+            Service_DebugTracer.TraceMethodExit(null, controlName: "Dao_User");
+            return DaoResult<string?>.Success(null, $"No full name found for user {user}");
         }
-
-        public static async Task<string> GetSettingsJsonAsync(string field, string user, bool useAsync)
+        catch (Exception ex)
         {
-            Debug.WriteLine(
-                $"[Dao_User] Entering GetSettingsJsonAsync(field={field}, user={user}, useAsync={useAsync})");
-            try
+            LoggingUtility.LogDatabaseError(ex);
+            LoggingUtility.Log($"GetUserFullNameAsync failed with exception: {ex.Message}");
+            
+            Service_DebugTracer.TraceMethodExit(null, controlName: "Dao_User");
+            return DaoResult<string?>.Failure($"Error retrieving full name for user {user}", ex);
+        }
+    }
+
+    /// <summary>
+    /// Internal helper to get settings JSON field value.
+    /// </summary>
+    private static async Task<string> GetSettingsJsonInternalAsync(string field, string user)
+    {
+        Service_DebugTracer.TraceMethodEntry(new Dictionary<string, object> { ["field"] = field, ["user"] = user }, controlName: "Dao_User");
+        
+        try
+        {
+            var dataResult = await Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync(
+                Model_AppVariables.ConnectionString,
+                "usr_ui_settings_Get",
+                new Dictionary<string, object> { ["UserId"] = user }
+            );
+
+            if (dataResult.IsSuccess && dataResult.Data != null && dataResult.Data.Rows.Count > 0)
             {
-                // FIXED: Use Helper_Database_StoredProcedure instead of Helper_Database_Core to avoid p_Status parameter errors
-                var dataResult = await Helper_Database_StoredProcedure.ExecuteDataTableWithStatus(
-                    Model_AppVariables.ConnectionString,
-                    "usr_ui_settings_GetSettingsJson_ByUserId",
-                    new Dictionary<string, object> { ["UserId"] = user }, // Remove p_ prefix - added automatically
-                    null, // No progress helper for this method
-                    useAsync
-                );
-
-                if (dataResult.IsSuccess && dataResult.Data != null && dataResult.Data.Rows.Count > 0)
+                object? result = dataResult.Data.Rows[0]["SettingsJson"];
+                if (result != null && result != DBNull.Value)
                 {
-                    object? result = dataResult.Data.Rows[0][0]; // Get first column of first row
-                    if (result != null && result != DBNull.Value)
+                    string? json = result.ToString();
+                    if (!string.IsNullOrWhiteSpace(json))
                     {
-                        string? json = result.ToString();
-                        if (!string.IsNullOrWhiteSpace(json))
+                        try
                         {
-                            try
+                            using JsonDocument doc = JsonDocument.Parse(json);
+                            if (doc.RootElement.TryGetProperty(field, out JsonElement fieldElement))
                             {
-                                using JsonDocument doc = JsonDocument.Parse(json);
-                                if (doc.RootElement.TryGetProperty(field, out JsonElement fieldElement))
+                                string? value = fieldElement.ValueKind switch
                                 {
-                                    string? value;
+                                    JsonValueKind.Number => fieldElement.ToString(),
+                                    JsonValueKind.String => fieldElement.GetString(),
+                                    JsonValueKind.True => "true",
+                                    JsonValueKind.False => "false",
+                                    _ => fieldElement.ToString()
+                                };
 
-                                    switch (fieldElement.ValueKind)
-                                    {
-                                        case JsonValueKind.Number:
-                                            value = fieldElement.ToString();
-                                            break;
-
-                                        case JsonValueKind.String:
-                                            value = fieldElement.GetString();
-                                            break;
-
-                                        case JsonValueKind.True:
-                                            value = "true";
-                                            break;
-
-                                        case JsonValueKind.False:
-                                            value = "false";
-                                            break;
-
-                                        default:
-                                            value = fieldElement.ToString();
-                                            break;
-                                    }
-
-                                    Debug.WriteLine($"[Dao_User] GetSettingsJsonAsync found value in JSON: {value}");
-                                    return value ?? string.Empty;
-                                }
+                                Service_DebugTracer.TraceMethodExit(value, controlName: "Dao_User");
+                                return value ?? string.Empty;
                             }
-                            catch (JsonException ex)
-                            {
-                                Debug.WriteLine($"[Dao_User] JSON parsing error in GetSettingsJsonAsync: {ex.Message}");
-                            }
+                        }
+                        catch (JsonException ex)
+                        {
+                            Debug.WriteLine($"[Dao_User] JSON parsing error in GetSettingsJsonInternalAsync: {ex.Message}");
                         }
                     }
                 }
-
-                // FIXED: Use Helper_Database_StoredProcedure for legacy fallback too
-                var legacyResult = await Helper_Database_StoredProcedure.ExecuteDataTableWithStatus(
-                    Model_AppVariables.ConnectionString,
-                    "usr_users_GetUserSetting_ByUserAndField",
-                    new Dictionary<string, object> 
-                    { 
-                        ["User"] = user,    // Remove p_ prefix - added automatically
-                        ["Field"] = field   // Remove p_ prefix - added automatically
-                    },
-                    null, // No progress helper for this method
-                    useAsync
-                );
-
-                if (legacyResult.IsSuccess && legacyResult.Data != null && legacyResult.Data.Rows.Count > 0)
-                {
-                    object? legacyValue = legacyResult.Data.Rows[0][0];
-                    Debug.WriteLine($"[Dao_User] GetSettingsJsonAsync legacy result: {legacyValue}");
-                    return legacyValue?.ToString() ?? string.Empty;
-                }
-
-                return string.Empty;
             }
-            catch (Exception ex)
+
+            Service_DebugTracer.TraceMethodExit(string.Empty, controlName: "Dao_User");
+            return string.Empty;
+        }
+        catch (Exception ex)
+        {
+            LoggingUtility.LogDatabaseError(ex);
+            
+            Service_DebugTracer.TraceMethodExit(string.Empty, controlName: "Dao_User");
+            return string.Empty;
+        }
+    }
+
+    /// <summary>
+    /// Sets theme JSON settings for the specified user.
+    /// </summary>
+    /// <param name="userId">The user ID.</param>
+    /// <param name="themeJson">The theme JSON to set.</param>
+    /// <returns>A DaoResult indicating success or failure.</returns>
+    public static async Task<DaoResult> SetSettingsJsonAsync(string userId, string themeJson,
+        MySqlConnection? connection = null,
+        MySqlTransaction? transaction = null)
+    {
+        Service_DebugTracer.TraceMethodEntry(new Dictionary<string, object> { ["userId"] = userId, ["themeJson"] = themeJson }, controlName: "Dao_User");
+        
+        try
+        {
+            Dictionary<string, object> parameters = new()
             {
-                Debug.WriteLine($"[Dao_User] Exception in GetSettingsJsonAsync: {ex}");
-                LoggingUtility.LogDatabaseError(ex);
-                // Don't call error handlers here to avoid recursion during startup
-                LoggingUtility.Log($"GetSettingsJsonAsync failed with exception: {ex.Message}");
-                return string.Empty;
+                ["UserId"] = userId,
+                ["ThemeJson"] = themeJson
+            };
+
+            var result = await Helper_Database_StoredProcedure.ExecuteNonQueryWithStatusAsync(
+                Model_AppVariables.ConnectionString,
+                "usr_ui_settings_SetThemeJson",
+                parameters
+            );
+
+            if (result.IsSuccess)
+            {
+                Service_DebugTracer.TraceMethodExit(result, controlName: "Dao_User");
+                return DaoResult.Success($"Set theme JSON for user {userId}");
+            }
+            else
+            {
+                Service_DebugTracer.TraceMethodExit(result, controlName: "Dao_User");
+                return DaoResult.Failure($"Failed to set theme JSON: {result.ErrorMessage}");
             }
         }
-
-        public static async Task SetSettingsJsonAsync(string userId, string themeJson)
+        catch (Exception ex)
         {
-            Debug.WriteLine($"[Dao_User] Entering SetSettingsJsonAsync(userId={userId})");
-            try
+            LoggingUtility.LogDatabaseError(ex);
+            LoggingUtility.Log($"SetSettingsJsonAsync failed with exception: {ex.Message}");
+            
+            Service_DebugTracer.TraceMethodExit(null, controlName: "Dao_User");
+            return DaoResult.Failure($"Error setting theme JSON for user {userId}", ex);
+        }
+    }
+
+    /// <summary>
+    /// Sets grid view settings JSON for the specified user and DataGridView.
+    /// </summary>
+    /// <param name="userId">The user ID.</param>
+    /// <param name="dgvName">The DataGridView name.</param>
+    /// <param name="settingsJson">The settings JSON to set.</param>
+    /// <returns>A DaoResult indicating success or failure.</returns>
+    public static async Task<DaoResult> SetGridViewSettingsJsonAsync(string userId, string dgvName, string settingsJson,
+        MySqlConnection? connection = null,
+        MySqlTransaction? transaction = null)
+    {
+        Service_DebugTracer.TraceMethodEntry(new Dictionary<string, object> { ["userId"] = userId, ["dgvName"] = dgvName, ["settingsJson"] = settingsJson }, controlName: "Dao_User");
+        
+        try
+        {
+            Dictionary<string, object> parameters = new()
             {
-                // FIXED: Use Helper_Database_StoredProcedure for proper status handling
-                Dictionary<string, object> parameters = new()
-                {
-                    ["UserId"] = userId,      // FIXED: Remove p_ prefix - added automatically
-                    ["ThemeJson"] = themeJson // FIXED: Remove p_ prefix - added automatically
-                };
+                ["UserId"] = userId,
+                ["DgvName"] = dgvName,
+                ["SettingJson"] = settingsJson
+            };
 
-                var result = await Helper_Database_StoredProcedure.ExecuteNonQueryWithStatus(
-                    Model_AppVariables.ConnectionString,
-                    "usr_ui_settings_SetThemeJson",
-                    parameters,
-                    null, // No progress helper needed for this method
-                    true  // Use async
-                );
+            var result = await Helper_Database_StoredProcedure.ExecuteNonQueryWithStatusAsync(
+                Model_AppVariables.ConnectionString,
+                "usr_ui_settings_SetJsonSetting",
+                parameters
+            );
 
-                Debug.WriteLine($"[Dao_User] SetSettingsJsonAsync status: {result.IsSuccess}, message: {result.ErrorMessage}");
-
-                if (!result.IsSuccess)
-                {
-                    throw new Exception(result.ErrorMessage ?? "Failed to set theme JSON");
-                }
+            if (result.IsSuccess)
+            {
+                Service_DebugTracer.TraceMethodExit(result, controlName: "Dao_User");
+                return DaoResult.Success($"Set grid view settings for {dgvName}");
             }
-            catch (Exception ex)
+            else
             {
-                Debug.WriteLine($"[Dao_User] Exception in SetSettingsJsonAsync: {ex}");
-                LoggingUtility.LogDatabaseError(ex);
-                // Don't call error handlers here to avoid recursion during startup
-                LoggingUtility.Log($"SetSettingsJsonAsync failed with exception: {ex.Message}");
+                Service_DebugTracer.TraceMethodExit(result, controlName: "Dao_User");
+                return DaoResult.Failure($"Failed to set grid view settings: {result.ErrorMessage}");
             }
         }
-
-        // Add method to support saving named settings JSON for grid view settings
-        public static async Task SetGridViewSettingsJsonAsync(string userId, string dgvName, string settingsJson)
+        catch (Exception ex)
         {
-            Debug.WriteLine($"[Dao_User] Entering SetGridViewSettingsJsonAsync(userId={userId})");
-            try
-            {
-                // FIXED: Use Helper_Database_StoredProcedure for proper status handling
-                Dictionary<string, object> parameters = new()
-                {
-                    ["UserId"] = userId,        // FIXED: Remove p_ prefix - added автоматически
-                    ["DgvName"] = dgvName,      // FIXED: Remove p_ prefix - added автоматически
-                    ["SettingJson"] = settingsJson // FIXED: Remove p_ prefix - added автоматически
-                };
-
-                var result = await Helper_Database_StoredProcedure.ExecuteNonQueryWithStatus(
-                    Model_AppVariables.ConnectionString,
-                    "usr_ui_settings_SetJsonSetting",
-                    parameters,
-                    null, // No progress helper needed for this method
-                    true  // Use async
-                );
-
-                Debug.WriteLine($"[Dao_User] SetGridViewSettingsJsonAsync status: {result.IsSuccess}, message: {result.ErrorMessage}");
-
-                if (!result.IsSuccess)
-                {
-                    throw new Exception(result.ErrorMessage ?? "Failed to set grid view settings JSON");
-                }
-            }
-            catch (Exception ex)
-            {
-                Debug.WriteLine($"[Dao_User] Exception in SetGridViewSettingsJsonAsync: {ex}");
-                LoggingUtility.LogDatabaseError(ex);
-                // Don't call error handlers here to avoid recursion during startup
-                LoggingUtility.Log($"SetGridViewSettingsJsonAsync failed with exception: {ex.Message}");
-            }
+            LoggingUtility.LogDatabaseError(ex);
+            LoggingUtility.Log($"SetGridViewSettingsJsonAsync failed with exception: {ex.Message}");
+            
+            Service_DebugTracer.TraceMethodExit(null, controlName: "Dao_User");
+            return DaoResult.Failure($"Error setting grid view settings for {dgvName}", ex);
         }
+    }
 
-        // Add method to load named settings JSON for grid view settings
-        public static async Task<string> GetGridViewSettingsJsonAsync(string userId)
+    /// <summary>
+    /// Gets grid view settings JSON for the specified user.
+    /// </summary>
+    /// <param name="userId">The user ID.</param>
+    /// <returns>A DaoResult containing the grid view settings JSON.</returns>
+    public static async Task<DaoResult<string>> GetGridViewSettingsJsonAsync(string userId)
+    {
+        Service_DebugTracer.TraceMethodEntry(new Dictionary<string, object> { ["userId"] = userId }, controlName: "Dao_User");
+        
+        try
         {
-            Debug.WriteLine($"[Dao_User] Entering GetGridViewSettingsJsonAsync(userId={userId})");
-            try
+            var dataResult = await Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync(
+                Model_AppVariables.ConnectionString,
+                "usr_ui_settings_GetJsonSetting",
+                new Dictionary<string, object> { ["UserId"] = userId }
+            );
+            
+            if (dataResult.IsSuccess && dataResult.Data != null && dataResult.Data.Rows.Count > 0)
             {
-                // FIXED: Use Helper_Database_StoredProcedure instead of Helper_Database_Core to avoid p_Status parameter errors
-                var dataResult = await Helper_Database_StoredProcedure.ExecuteDataTableWithStatus(
-                    Model_AppVariables.ConnectionString,
-                    "usr_ui_settings_GetJsonSetting",
-                    new Dictionary<string, object> { ["UserId"] = userId }, // Remove p_ prefix - added automatically
-                    null, // No progress helper for this method
-                    true
-                );
+                object? result = dataResult.Data.Rows[0][0];
+                string? json = result?.ToString();
                 
-                if (dataResult.IsSuccess && dataResult.Data != null && dataResult.Data.Rows.Count > 0)
-                {
-                    object? result = dataResult.Data.Rows[0][0]; // Get first column of first row
-                    string? json = result?.ToString();
-                    Debug.WriteLine($"[Dao_User] GetGridViewSettingsJsonAsync result: {json}");
-                    return json ?? "";
+                Service_DebugTracer.TraceMethodExit(json, controlName: "Dao_User");
+                return DaoResult<string>.Success(json ?? "", $"Retrieved grid view settings for user {userId}");
+            }
+            
+            Service_DebugTracer.TraceMethodExit("", controlName: "Dao_User");
+            return DaoResult<string>.Success("", $"No grid view settings found for user {userId}");
+        }
+        catch (Exception ex)
+        {
+            LoggingUtility.LogDatabaseError(ex);
+            LoggingUtility.Log($"GetGridViewSettingsJsonAsync failed with exception: {ex.Message}");
+            
+            Service_DebugTracer.TraceMethodExit("", controlName: "Dao_User");
+            return DaoResult<string>.Failure($"Error retrieving grid view settings for user {userId}", ex);
+        }
+    }
+
+    /// <summary>
+    /// Internal helper to set a user setting field value.
+    /// </summary>
+    private static async Task SetUserSettingInternalAsync(string field, string user, string value)
+    {
+        Service_DebugTracer.TraceMethodEntry(new Dictionary<string, object> { ["field"] = field, ["user"] = user, ["value"] = value }, controlName: "Dao_User");
+        
+        try
+        {
+            var result = await Helper_Database_StoredProcedure.ExecuteNonQueryWithStatusAsync(
+                Model_AppVariables.ConnectionString,
+                "usr_users_SetUserSetting_ByUserAndField",
+                new Dictionary<string, object> 
+                { 
+                    ["User"] = user,
+                    ["Field"] = field,
+                    ["Value"] = value
                 }
+            );
+
+            if (!result.IsSuccess)
+            {
+                LoggingUtility.Log($"SetUserSettingInternalAsync failed: {result.ErrorMessage}");
+            }
+            
+            Service_DebugTracer.TraceMethodExit(controlName: "Dao_User");
+        }
+        catch (Exception ex)
+        {
+            LoggingUtility.LogDatabaseError(ex);
+            LoggingUtility.Log($"SetUserSettingInternalAsync failed with exception: {ex.Message}");
+            
+            Service_DebugTracer.TraceMethodExit(controlName: "Dao_User");
+        }
+    }
+
+    #endregion
+
+    #region Add / Update / Delete
+
+    /// <summary>
+    /// Deletes all UI settings for the specified user.
+    /// </summary>
+    /// <param name="userName">The username whose settings to delete.</param>
+    /// <returns>A DaoResult indicating success or failure.</returns>
+    internal static async Task<DaoResult> DeleteUserSettingsAsync(string userName,
+        MySqlConnection? connection = null,
+        MySqlTransaction? transaction = null)
+    {
+        Service_DebugTracer.TraceMethodEntry(new Dictionary<string, object> { ["userName"] = userName }, controlName: "Dao_User");
+        
+        try
+        {
+            var result = await Helper_Database_StoredProcedure.ExecuteNonQueryWithStatusAsync(
+                Model_AppVariables.ConnectionString,
+                "usr_ui_settings_Delete_ByUserId",
+                new Dictionary<string, object> { ["UserId"] = userName }
+            );
+
+            Service_DebugTracer.TraceMethodExit(result, controlName: "Dao_User");
+            
+            if (result.IsSuccess)
+            {
+                return DaoResult.Success($"User settings for {userName} deleted successfully");
+            }
+            else
+            {
+                return DaoResult.Failure($"Failed to delete user settings: {result.ErrorMessage}");
+            }
+        }
+        catch (Exception ex)
+        {
+            LoggingUtility.LogDatabaseError(ex);
+            
+            Service_DebugTracer.TraceMethodExit(null, controlName: "Dao_User");
+            return DaoResult.Failure($"Error deleting user settings for {userName}", ex);
+        }
+    }
+
+    /// <summary>
+    /// Creates a new user with the specified details and default settings.
+    /// </summary>
+    internal static async Task<DaoResult> CreateUserAsync(
+        string user, string fullName, string shift, bool vitsUser, string pin,
+        string lastShownVersion, string hideChangeLog, string themeName, int themeFontSize,
+        string visualUserName, string visualPassword, string wipServerAddress, string database,
+        string wipServerPort)
+    {
+        Service_DebugTracer.TraceMethodEntry(new Dictionary<string, object> 
+        { 
+            ["user"] = user, 
+            ["fullName"] = fullName, 
+            ["shift"] = shift,
+            ["vitsUser"] = vitsUser 
+        }, controlName: "Dao_User");
+        
+        try
+        {
+            var result = await Helper_Database_StoredProcedure.ExecuteNonQueryWithStatusAsync(
+                Model_AppVariables.ConnectionString,
+                "usr_users_Add_User",
+                new Dictionary<string, object>
+                {
+                    ["User"] = user,
+                    ["FullName"] = fullName,
+                    ["Shift"] = shift,
+                    ["VitsUser"] = vitsUser,
+                    ["Pin"] = pin,
+                    ["LastShownVersion"] = lastShownVersion,
+                    ["HideChangeLog"] = hideChangeLog,
+                    ["Theme_Name"] = themeName,
+                    ["Theme_FontSize"] = themeFontSize,
+                    ["VisualUserName"] = visualUserName,
+                    ["VisualPassword"] = visualPassword,
+                    ["WipServerAddress"] = wipServerAddress,
+                    ["WIPDatabase"] = database,
+                    ["WipServerPort"] = wipServerPort
+                }
+            );
+
+            Service_DebugTracer.TraceMethodExit(result, controlName: "Dao_User");
+            
+            if (result.IsSuccess)
+            {
+                return DaoResult.Success($"User {user} created successfully");
+            }
+            else
+            {
+                return DaoResult.Failure($"Failed to create user: {result.ErrorMessage}");
+            }
+        }
+        catch (Exception ex)
+        {
+            LoggingUtility.LogDatabaseError(ex);
+            
+            Service_DebugTracer.TraceMethodExit(null, controlName: "Dao_User");
+            return DaoResult.Failure($"Error creating user {user}", ex);
+        }
+    }
+
+    /// <summary>
+    /// Updates an existing user's information.
+    /// </summary>
+    internal static async Task<DaoResult> UpdateUserAsync(
+        string user,
+        string fullName,
+        string shift,
+        string pin,
+        string visualUserName,
+        string visualPassword)
+    {
+        Service_DebugTracer.TraceMethodEntry(new Dictionary<string, object> 
+        { 
+            ["user"] = user, 
+            ["fullName"] = fullName, 
+            ["shift"] = shift
+        }, controlName: "Dao_User");
+        
+        try
+        {
+            var result = await Helper_Database_StoredProcedure.ExecuteNonQueryWithStatusAsync(
+                Model_AppVariables.ConnectionString,
+                "usr_users_Update_User",
+                new Dictionary<string, object>
+                {
+                    ["User"] = user,
+                    ["FullName"] = fullName,
+                    ["Shift"] = shift,
+                    ["Pin"] = pin,
+                    ["VisualUserName"] = visualUserName,
+                    ["VisualPassword"] = visualPassword
+                }
+            );
+
+            Service_DebugTracer.TraceMethodExit(result, controlName: "Dao_User");
+            
+            if (result.IsSuccess)
+            {
+                return DaoResult.Success($"User {user} updated successfully");
+            }
+            else
+            {
+                return DaoResult.Failure($"Failed to update user: {result.ErrorMessage}");
+            }
+        }
+        catch (Exception ex)
+        {
+            LoggingUtility.LogDatabaseError(ex);
+            
+            Service_DebugTracer.TraceMethodExit(null, controlName: "Dao_User");
+            return DaoResult.Failure($"Error updating user {user}", ex);
+        }
+    }
+
+    /// <summary>
+    /// Deletes the specified user from the system.
+    /// </summary>
+    internal static async Task<DaoResult> DeleteUserAsync(string user,
+        MySqlConnection? connection = null,
+        MySqlTransaction? transaction = null)
+    {
+        Service_DebugTracer.TraceMethodEntry(new Dictionary<string, object> { ["user"] = user }, controlName: "Dao_User");
+        
+        try
+        {
+            var result = await Helper_Database_StoredProcedure.ExecuteNonQueryWithStatusAsync(
+                Model_AppVariables.ConnectionString,
+                "usr_users_Delete_User",
+                new Dictionary<string, object> { ["User"] = user }
+            );
+
+            Service_DebugTracer.TraceMethodExit(result, controlName: "Dao_User");
+            
+            if (result.IsSuccess)
+            {
+                return DaoResult.Success($"User {user} deleted successfully");
+            }
+            else
+            {
+                return DaoResult.Failure($"Failed to delete user: {result.ErrorMessage}");
+            }
+        }
+        catch (Exception ex)
+        {
+            LoggingUtility.LogDatabaseError(ex);
+            
+            Service_DebugTracer.TraceMethodExit(null, controlName: "Dao_User");
+            return DaoResult.Failure($"Error deleting user {user}", ex);
+        }
+    }
+
+    #endregion
+
+    #region Queries
+
+    /// <summary>
+    /// Retrieves all users from the system.
+    /// </summary>
+    /// <returns>A DaoResult containing a DataTable with all users.</returns>
+    internal static async Task<DaoResult<DataTable>> GetAllUsersAsync()
+    {
+        Service_DebugTracer.TraceMethodEntry(controlName: "Dao_User");
+        
+        try
+        {
+            var dataResult = await Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync(
+                Model_AppVariables.ConnectionString,
+                "usr_users_Get_All",
+                null
+            );
+
+            Service_DebugTracer.TraceMethodExit(dataResult, controlName: "Dao_User");
+            
+            if (dataResult.IsSuccess && dataResult.Data != null)
+            {
+                return DaoResult<DataTable>.Success(dataResult.Data, $"Retrieved {dataResult.Data.Rows.Count} users");
+            }
+            else
+            {
+                return DaoResult<DataTable>.Failure($"Failed to retrieve users: {dataResult.ErrorMessage}");
+            }
+        }
+        catch (Exception ex)
+        {
+            LoggingUtility.LogDatabaseError(ex);
+            
+            Service_DebugTracer.TraceMethodExit(null, controlName: "Dao_User");
+            return DaoResult<DataTable>.Failure("Error retrieving users", ex);
+        }
+    }
+
+    /// <summary>
+    /// Retrieves a specific user by username.
+    /// </summary>
+    internal static async Task<DaoResult<DataRow>> GetUserByUsernameAsync(string user)
+    {
+        Service_DebugTracer.TraceMethodEntry(new Dictionary<string, object> { ["user"] = user }, controlName: "Dao_User");
+        
+        try
+        {
+            var dataResult = await Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync(
+                Model_AppVariables.ConnectionString,
+                "usr_users_Get_ByUser",
+                new Dictionary<string, object> { ["User"] = user }
+            );
+
+            if (dataResult.IsSuccess && dataResult.Data != null && dataResult.Data.Rows.Count > 0)
+            {
+                var row = dataResult.Data.Rows[0];
                 
-                return "";
+                Service_DebugTracer.TraceMethodExit(row, controlName: "Dao_User");
+                return DaoResult<DataRow>.Success(row, $"Found user {user}");
             }
-            catch (Exception ex)
+            else
             {
-                Debug.WriteLine($"[Dao_User] Exception in GetGridViewSettingsJsonAsync: {ex}");
-                LoggingUtility.LogDatabaseError(ex);
-                // Don't call error handlers here to avoid recursion during startup
-                LoggingUtility.Log($"GetGridViewSettingsJsonAsync failed with exception: {ex.Message}");
-                return "";
+                Service_DebugTracer.TraceMethodExit(null, controlName: "Dao_User");
+                return DaoResult<DataRow>.Failure($"User {user} not found");
             }
         }
-
-        private static async Task SetUserSettingAsync(string field, string user, string value, bool useAsync)
+        catch (Exception ex)
         {
-            Debug.WriteLine(
-                $"[Dao_User] Entering SetUserSettingAsync(field={field}, user={user}, value={value}, useAsync={useAsync})");
-            try
-            {
-                // FIXED: Use Helper_Database_StoredProcedure instead of Helper_Database_Core to avoid p_Status parameter errors
-                var result = await Helper_Database_StoredProcedure.ExecuteNonQueryWithStatus(
-                    Model_AppVariables.ConnectionString,
-                    "usr_users_SetUserSetting_ByUserAndField",
-                    new Dictionary<string, object> 
-                    { 
-                        ["User"] = user,    // Remove p_ prefix - added automatically
-                        ["Field"] = field,  // Remove p_ prefix - added automatically
-                        ["Value"] = value   // Remove p_ prefix - added automatically
-                    },
-                    null, // No progress helper for this method
-                    useAsync
-                );
+            LoggingUtility.LogDatabaseError(ex);
+            
+            Service_DebugTracer.TraceMethodExit(null, controlName: "Dao_User");
+            return DaoResult<DataRow>.Failure($"Error retrieving user {user}", ex);
+        }
+    }
 
-                if (result.IsSuccess)
-                {
-                    Debug.WriteLine("[Dao_User] SetUserSettingAsync completed successfully.");
-                }
-                else
-                {
-                    Debug.WriteLine($"[Dao_User] SetUserSettingAsync failed: {result.ErrorMessage}");
-                    LoggingUtility.Log($"SetUserSettingAsync failed: {result.ErrorMessage}");
-                }
-            }
-            catch (Exception ex)
+    /// <summary>
+    /// Checks if a user exists in the system.
+    /// </summary>
+    internal static async Task<DaoResult<bool>> UserExistsAsync(string user)
+    {
+        Service_DebugTracer.TraceMethodEntry(new Dictionary<string, object> { ["user"] = user }, controlName: "Dao_User");
+        
+        try
+        {
+            var dataResult = await Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync(
+                Model_AppVariables.ConnectionString,
+                "usr_users_Exists",
+                new Dictionary<string, object> { ["User"] = user }
+            );
+
+            if (dataResult.IsSuccess && dataResult.Data != null && dataResult.Data.Rows.Count > 0)
             {
-                Debug.WriteLine($"[Dao_User] Exception in SetUserSettingAsync: {ex}");
-                LoggingUtility.LogDatabaseError(ex);
-                // Don't call error handlers here to avoid recursion during startup
-                LoggingUtility.Log($"SetUserSettingAsync failed with exception: {ex.Message}");
+                bool exists = Convert.ToInt32(dataResult.Data.Rows[0]["UserExists"]) > 0;
+                
+                Service_DebugTracer.TraceMethodExit(exists, controlName: "Dao_User");
+                return DaoResult<bool>.Success(exists, exists ? $"User {user} exists" : $"User {user} does not exist");
+            }
+            else
+            {
+                Service_DebugTracer.TraceMethodExit(false, controlName: "Dao_User");
+                return DaoResult<bool>.Success(false, $"User {user} does not exist");
             }
         }
-
-        #endregion
-
-        #region Add / Update / Delete
-
-        internal static async Task DeleteUserSettingsAsync(string userName, bool useAsync = false)
+        catch (Exception ex)
         {
-            Debug.WriteLine($"[Dao_User] Entering DeleteUserSettingsAsync(userName={userName}, useAsync={useAsync})");
-            try
-            {
-                // FIXED: Use Helper_Database_StoredProcedure instead of Helper_Database_Core to avoid p_Status parameter errors
-                var result = await Helper_Database_StoredProcedure.ExecuteNonQueryWithStatus(
-                    Model_AppVariables.ConnectionString,
-                    "usr_ui_settings_Delete_ByUserId",
-                    new Dictionary<string, object> { ["UserId"] = userName }, // Remove p_ prefix - added automatically
-                    null, // No progress helper for this method
-                    useAsync
-                );
+            LoggingUtility.LogDatabaseError(ex);
+            
+            Service_DebugTracer.TraceMethodExit(false, controlName: "Dao_User");
+            return DaoResult<bool>.Failure($"Error checking if user {user} exists", ex);
+        }
+    }
 
-                if (result.IsSuccess)
-                {
-                    Debug.WriteLine("[Dao_User] DeleteUserSettingsAsync completed successfully.");
-                }
-                else
-                {
-                    Debug.WriteLine($"[Dao_User] DeleteUserSettingsAsync failed: {result.ErrorMessage}");
-                    LoggingUtility.Log($"DeleteUserSettingsAsync failed: {result.ErrorMessage}");
-                }
-            }
-            catch (Exception ex)
+    #endregion
+
+    #region User UI Settings
+
+    /// <summary>
+    /// Gets the shortcuts JSON for the specified user.
+    /// </summary>
+    /// <param name="userId">The user ID.</param>
+    /// <returns>A DaoResult containing the shortcuts JSON.</returns>
+    internal static async Task<DaoResult<string>> GetShortcutsJsonAsync(string userId)
+    {
+        Service_DebugTracer.TraceMethodEntry(new Dictionary<string, object> { ["userId"] = userId }, controlName: "Dao_User");
+        
+        try
+        {
+            var dataResult = await Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync(
+                Model_AppVariables.ConnectionString,
+                "usr_ui_settings_GetShortcutsJson",
+                new Dictionary<string, object> { ["UserId"] = userId }
+            );
+
+            if (dataResult.IsSuccess && dataResult.Data != null && dataResult.Data.Rows.Count > 0)
             {
-                Debug.WriteLine($"[Dao_User] Exception in DeleteUserSettingsAsync: {ex}");
-                LoggingUtility.LogDatabaseError(ex);
-                // Don't call error handlers here to avoid recursion during startup
-                LoggingUtility.Log($"DeleteUserSettingsAsync failed with exception: {ex.Message}");
+                string? json = dataResult.Data.Rows[0]["SettingJson"]?.ToString();
+                
+                Service_DebugTracer.TraceMethodExit(json, controlName: "Dao_User");
+                return DaoResult<string>.Success(json ?? "", $"Retrieved shortcuts JSON for user {userId}");
+            }
+
+            Service_DebugTracer.TraceMethodExit("", controlName: "Dao_User");
+            return DaoResult<string>.Success("", $"No shortcuts JSON found for user {userId}");
+        }
+        catch (Exception ex)
+        {
+            LoggingUtility.LogDatabaseError(ex);
+            LoggingUtility.Log($"GetShortcutsJsonAsync failed with exception: {ex.Message}");
+            
+            Service_DebugTracer.TraceMethodExit("", controlName: "Dao_User");
+            return DaoResult<string>.Failure($"Error retrieving shortcuts JSON for user {userId}", ex);
+        }
+    }
+
+    /// <summary>
+    /// Sets the shortcuts JSON for the specified user.
+    /// </summary>
+    /// <param name="userId">The user ID.</param>
+    /// <param name="shortcutsJson">The shortcuts JSON to set.</param>
+    /// <returns>A DaoResult indicating success or failure.</returns>
+    internal static async Task<DaoResult> SetShortcutsJsonAsync(string userId, string shortcutsJson,
+        MySqlConnection? connection = null,
+        MySqlTransaction? transaction = null)
+    {
+        Service_DebugTracer.TraceMethodEntry(new Dictionary<string, object> { ["userId"] = userId, ["shortcutsJson"] = shortcutsJson }, controlName: "Dao_User");
+        
+        try
+        {
+            Dictionary<string, object> parameters = new()
+            {
+                ["UserId"] = userId,
+                ["ShortcutsJson"] = shortcutsJson
+            };
+
+            var result = await Helper_Database_StoredProcedure.ExecuteNonQueryWithStatusAsync(
+                Model_AppVariables.ConnectionString,
+                "usr_ui_settings_SetShortcutsJson",
+                parameters
+            );
+
+            if (result.IsSuccess)
+            {
+                Service_DebugTracer.TraceMethodExit(result, controlName: "Dao_User");
+                return DaoResult.Success($"Set shortcuts JSON for user {userId}");
+            }
+            else
+            {
+                Service_DebugTracer.TraceMethodExit(result, controlName: "Dao_User");
+                return DaoResult.Failure($"Failed to set shortcuts JSON: {result.ErrorMessage}");
             }
         }
-
-        internal static async Task InsertUserAsync(
-            string user, string fullName, string shift, bool vitsUser, string pin,
-            string lastShownVersion, string hideChangeLog, string themeName, int themeFontSize,
-            string visualUserName, string visualPassword, string wipServerAddress, string database,
-            string wipServerPort,
-            bool useAsync = false)
+        catch (Exception ex)
         {
-            Debug.WriteLine(
-                $"[Dao_User] Entering InsertUserAsync(user={user}, fullName={fullName}, shift={shift}, vitsUser={vitsUser}, pin={pin}, lastShownVersion={lastShownVersion}, hideChangeLog={hideChangeLog}, themeName={themeName}, themeFontSize={themeFontSize}, visualUserName={visualUserName}, visualPassword={visualPassword}, wipServerAddress={wipServerAddress}, database = {database},wipServerPort={wipServerPort}, useAsync={useAsync})");
-            try
-            {
-                // FIXED: Use Helper_Database_StoredProcedure instead of Helper_Database_Core to avoid p_Status parameter errors
-                var result = await Helper_Database_StoredProcedure.ExecuteNonQueryWithStatus(
-                    Model_AppVariables.ConnectionString,
-                    "usr_users_Add_User",
-                    new Dictionary<string, object>
-                    {
-                        ["User"] = user,                           // Remove p_ prefix - added automatically
-                        ["FullName"] = fullName,
-                        ["Shift"] = shift,
-                        ["VitsUser"] = vitsUser,
-                        ["Pin"] = pin,
-                        ["LastShownVersion"] = lastShownVersion,
-                        ["HideChangeLog"] = hideChangeLog,
-                        ["Theme_Name"] = themeName,
-                        ["Theme_FontSize"] = themeFontSize,
-                        ["VisualUserName"] = visualUserName,
-                        ["VisualPassword"] = visualPassword,
-                        ["WipServerAddress"] = wipServerAddress,
-                        ["WIPDatabase"] = database,
-                        ["WipServerPort"] = wipServerPort
-                    },
-                    null, // No progress helper for this method
-                    useAsync
-                );
+            LoggingUtility.LogDatabaseError(ex);
+            LoggingUtility.Log($"SetShortcutsJsonAsync failed with exception: {ex.Message}");
+            
+            Service_DebugTracer.TraceMethodExit(null, controlName: "Dao_User");
+            return DaoResult.Failure($"Error setting shortcuts JSON for user {userId}", ex);
+        }
+    }
 
-                if (!result.IsSuccess)
+    /// <summary>
+    /// Sets the theme name for the specified user.
+    /// </summary>
+    /// <param name="user">The username.</param>
+    /// <param name="themeName">The theme name to set.</param>
+    /// <returns>A DaoResult indicating success or failure.</returns>
+    internal static async Task<DaoResult> SetThemeNameAsync(string user, string themeName,
+        MySqlConnection? connection = null,
+        MySqlTransaction? transaction = null)
+    {
+        Service_DebugTracer.TraceMethodEntry(new Dictionary<string, object> { ["user"] = user, ["themeName"] = themeName }, controlName: "Dao_User");
+        
+        try
+        {
+            await SetUserSettingInternalAsync("Theme_Name", user, themeName);
+            
+            Service_DebugTracer.TraceMethodExit(controlName: "Dao_User");
+            return DaoResult.Success($"Set theme name to {themeName} for user {user}");
+        }
+        catch (Exception ex)
+        {
+            LoggingUtility.LogDatabaseError(ex);
+            LoggingUtility.Log($"SetThemeNameAsync failed with exception: {ex.Message}");
+            
+            Service_DebugTracer.TraceMethodExit(null, controlName: "Dao_User");
+            return DaoResult.Failure($"Error setting theme name for user {user}", ex);
+        }
+    }
+
+    #endregion
+
+    #region User Roles
+
+    internal static async Task<DaoResult> AddUserRoleAsync(int userId, int roleId, string assignedBy,
+        MySqlConnection? connection = null,
+        MySqlTransaction? transaction = null)
+    {
+        Service_DebugTracer.TraceMethodEntry(new Dictionary<string, object> { ["userId"] = userId, ["roleId"] = roleId, ["assignedBy"] = assignedBy }, controlName: "Dao_User");
+        
+        try
+        {
+            var result = await Helper_Database_StoredProcedure.ExecuteNonQueryWithStatusAsync(
+                Model_AppVariables.ConnectionString,
+                "sys_user_roles_Add",
+                new Dictionary<string, object>
                 {
-                    Debug.WriteLine($"[Dao_User] InsertUserAsync failed: {result.ErrorMessage}");
-                    LoggingUtility.Log($"InsertUserAsync failed: {result.ErrorMessage}");
+                    ["UserID"] = userId,
+                    ["RoleID"] = roleId,
+                    ["AssignedBy"] = assignedBy
                 }
-            }
-            catch (Exception ex)
+            );
+
+            Service_DebugTracer.TraceMethodExit(result, controlName: "Dao_User");
+            
+            if (result.IsSuccess)
             {
-                Debug.WriteLine($"[Dao_User] Exception in InsertUserAsync: {ex}");
-                LoggingUtility.LogDatabaseError(ex);
-                // Don't call error handlers here to avoid recursion during startup
-                LoggingUtility.Log($"InsertUserAsync failed with exception: {ex.Message}");
+                return DaoResult.Success($"Role {roleId} assigned to user {userId} successfully");
+            }
+            else
+            {
+                return DaoResult.Failure($"Failed to add user role: {result.ErrorMessage}");
             }
         }
-
-        internal static async Task UpdateUserAsync(
-            string user,
-            string fullName,
-            string shift,
-            string pin,
-            string visualUserName,
-            string visualPassword,
-            bool useAsync = false)
+        catch (Exception ex)
         {
-            Debug.WriteLine(
-                $"[Dao_User] Entering UpdateUserAsync(user={user}, fullName={fullName}, shift={shift}, pin={pin}, visualUserName={visualUserName}, visualPassword={visualPassword}, useAsync={useAsync})");
-            try
-            {
-                // FIXED: Use Helper_Database_StoredProcedure вместо Helper_Database_Core для избежания ошибок параметра p_Status
-                var result = await Helper_Database_StoredProcedure.ExecuteNonQueryWithStatus(
-                    Model_AppVariables.ConnectionString,
-                    "usr_users_Update_User",
-                    new Dictionary<string, object>
-                    {
-                        ["User"] = user,                    // Remove p_ prefix - added automatically
-                        ["FullName"] = fullName,
-                        ["Shift"] = shift,
-                        ["Pin"] = pin,
-                        ["VisualUserName"] = visualUserName,
-                        ["VisualPassword"] = visualPassword
-                    },
-                    null, // No progress helper for this method
-                    useAsync
-                );
+            LoggingUtility.LogDatabaseError(ex);
+            
+            Service_DebugTracer.TraceMethodExit(null, controlName: "Dao_User");
+            return DaoResult.Failure($"Error adding role {roleId} to user {userId}", ex);
+        }
+    }
 
-                if (!result.IsSuccess)
+    internal static async Task<DaoResult<int>> GetUserRoleIdAsync(int userId)
+    {
+        Service_DebugTracer.TraceMethodEntry(new Dictionary<string, object> { ["userId"] = userId }, controlName: "Dao_User");
+        
+        try
+        {
+            var dataResult = await Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync(
+                Model_AppVariables.ConnectionString,
+                "sys_user_roles_Get_ById",
+                new Dictionary<string, object> { ["UserID"] = userId }
+            );
+
+            if (dataResult.IsSuccess && dataResult.Data != null && dataResult.Data.Rows.Count > 0)
+            {
+                if (int.TryParse(dataResult.Data.Rows[0]["RoleID"]?.ToString(), out int roleId))
                 {
-                    Debug.WriteLine($"[Dao_User] UpdateUserAsync failed: {result.ErrorMessage}");
-                    LoggingUtility.Log($"UpdateUserAsync failed: {result.ErrorMessage}");
+                    Service_DebugTracer.TraceMethodExit(roleId, controlName: "Dao_User");
+                    return DaoResult<int>.Success(roleId, $"Found role {roleId} for user {userId}");
                 }
             }
-            catch (Exception ex)
+
+            Service_DebugTracer.TraceMethodExit(0, controlName: "Dao_User");
+            return DaoResult<int>.Success(0, $"No role found for user {userId}");
+        }
+        catch (Exception ex)
+        {
+            LoggingUtility.LogDatabaseError(ex);
+            
+            Service_DebugTracer.TraceMethodExit(0, controlName: "Dao_User");
+            return DaoResult<int>.Failure($"Error retrieving role for user {userId}", ex);
+        }
+    }
+
+    internal static async Task<DaoResult> SetUserRoleAsync(int userId, int newRoleId, string assignedBy,
+        MySqlConnection? connection = null,
+        MySqlTransaction? transaction = null)
+    {
+        Service_DebugTracer.TraceMethodEntry(new Dictionary<string, object> { ["userId"] = userId, ["newRoleId"] = newRoleId, ["assignedBy"] = assignedBy }, controlName: "Dao_User");
+        
+        try
+        {
+            var result = await Helper_Database_StoredProcedure.ExecuteNonQueryWithStatusAsync(
+                Model_AppVariables.ConnectionString,
+                "sys_user_roles_Update",
+                new Dictionary<string, object>
+                {
+                    ["UserID"] = userId,
+                    ["NewRoleID"] = newRoleId,
+                    ["AssignedBy"] = assignedBy
+                }
+            );
+
+            Service_DebugTracer.TraceMethodExit(result, controlName: "Dao_User");
+            
+            if (result.IsSuccess)
             {
-                Debug.WriteLine($"[Dao_User] Exception in UpdateUserAsync: {ex}");
-                LoggingUtility.LogDatabaseError(ex);
-                // Don't call error handlers here to avoid recursion during startup
-                LoggingUtility.Log($"UpdateUserAsync failed with exception: {ex.Message}");
+                return DaoResult.Success($"User {userId} role updated to {newRoleId} successfully");
+            }
+            else
+            {
+                return DaoResult.Failure($"Failed to update user role: {result.ErrorMessage}");
             }
         }
-
-        internal static async Task DeleteUserAsync(string user, bool useAsync = false)
+        catch (Exception ex)
         {
-            Debug.WriteLine($"[Dao_User] Entering DeleteUserAsync(user={user}, useAsync={useAsync})");
-            try
-            {
-                // FIXED: Use Helper_Database_StoredProcedure вместо Helper_Database_Core для избежания ошибок параметра p_Status
-                var result = await Helper_Database_StoredProcedure.ExecuteNonQueryWithStatus(
-                    Model_AppVariables.ConnectionString,
-                    "usr_users_Delete_User",
-                    new Dictionary<string, object> { ["User"] = user }, // Remove p_ prefix - добавлено автоматически
-                    null, // No progress helper for this method
-                    useAsync
-                );
-
-                if (!result.IsSuccess)
-                {
-                    Debug.WriteLine($"[Dao_User] DeleteUserAsync failed: {result.ErrorMessage}");
-                    LoggingUtility.Log($"DeleteUserAsync failed: {result.ErrorMessage}");
-                }
-            }
-            catch (Exception ex)
-            {
-                Debug.WriteLine($"[Dao_User] Exception in DeleteUserAsync: {ex}");
-                LoggingUtility.LogDatabaseError(ex);
-                // Don't call error handlers here to avoid recursion during startup
-                LoggingUtility.Log($"DeleteUserAsync failed with exception: {ex.Message}");
-            }
+            LoggingUtility.LogDatabaseError(ex);
+            
+            Service_DebugTracer.TraceMethodExit(null, controlName: "Dao_User");
+            return DaoResult.Failure($"Error updating role for user {userId}", ex);
         }
+    }
 
-        #endregion
-
-        #region Queries
-
-        internal static async Task<DataTable> GetAllUsersAsync(bool useAsync = false)
+    internal static async Task<DaoResult> SetUsersRoleAsync(IEnumerable<int> userIds, int newRoleId, string assignedBy,
+        MySqlConnection? connection = null,
+        MySqlTransaction? transaction = null)
+    {
+        Service_DebugTracer.TraceMethodEntry(new Dictionary<string, object> { ["userIds"] = string.Join(",", userIds), ["newRoleId"] = newRoleId, ["assignedBy"] = assignedBy }, controlName: "Dao_User");
+        
+        try
         {
-            Debug.WriteLine($"[Dao_User] Entering GetAllUsersAsync(useAsync={useAsync})");
-            try
+            var errors = new List<string>();
+            
+            foreach (int userId in userIds)
             {
-                // FIXED: Use Helper_Database_StoredProcedure вместо Helper_Database_Core для избежания ошибок параметра p_Status
-                var dataResult = await Helper_Database_StoredProcedure.ExecuteDataTableWithStatus(
-                    Model_AppVariables.ConnectionString,
-                    "usr_users_Get_All",
-                    null, // No parameters needed
-                    null, // No progress helper for this method
-                    useAsync
-                );
-
-                if (dataResult.IsSuccess && dataResult.Data != null)
-                {
-                    return dataResult.Data;
-                }
-                else
-                {
-                    Debug.WriteLine($"[Dao_User] GetAllUsersAsync failed: {dataResult.ErrorMessage}");
-                    LoggingUtility.Log($"GetAllUsersAsync failed: {dataResult.ErrorMessage}");
-                    return new DataTable();
-                }
-            }
-            catch (Exception ex)
-            {
-                Debug.WriteLine($"[Dao_User] Exception in GetAllUsersAsync: {ex}");
-                LoggingUtility.LogDatabaseError(ex);
-                // Don't call error handlers here to avoid recursion during startup
-                LoggingUtility.Log($"GetAllUsersAsync failed with exception: {ex.Message}");
-                return new DataTable();
-            }
-        }
-
-        internal static async Task<DataRow?> GetUserByUsernameAsync(string user, bool useAsync = false)
-        {
-            Debug.WriteLine($"[Dao_User] Entering GetUserByUsernameAsync(user={user}, useAsync={useAsync})");
-            try
-            {
-                // FIXED: Use Helper_Database_StoredProcedure вместо Helper_Database_Core для избежания ошибок параметра p_Status
-                var dataResult = await Helper_Database_StoredProcedure.ExecuteDataTableWithStatus(
-                    Model_AppVariables.ConnectionString,
-                    "usr_users_Get_ByUser",
-                    new Dictionary<string, object> { ["User"] = user }, // Remove p_ prefix - добавлено автоматически
-                    null, // No progress helper for this method
-                    useAsync
-                );
-
-                if (dataResult.IsSuccess && dataResult.Data != null && dataResult.Data.Rows.Count > 0)
-                {
-                    Debug.WriteLine($"[Dao_User] GetUserByUsernameAsync result: {dataResult.Data.Rows.Count} rows");
-                    return dataResult.Data.Rows[0];
-                }
-                else
-                {
-                    Debug.WriteLine($"[Dao_User] GetUserByUsernameAsync failed or no results: {dataResult.ErrorMessage}");
-                    return null;
-                }
-            }
-            catch (Exception ex)
-            {
-                Debug.WriteLine($"[Dao_User] Exception in GetUserByUsernameAsync: {ex}");
-                LoggingUtility.LogDatabaseError(ex);
-                // Don't call error handlers here to avoid recursion during startup
-                LoggingUtility.Log($"GetUserByUsernameAsync failed with exception: {ex.Message}");
-                return null;
-            }
-        }
-
-        internal static async Task<bool> UserExistsAsync(string user, bool useAsync = false)
-        {
-            Debug.WriteLine($"[Dao_User] Entering UserExistsAsync(user={user}, useAsync={useAsync})");
-            try
-            {
-                // FIXED: Use Helper_Database_StoredProcedure вместо Helper_Database_Core для избежания ошибок параметра p_Status
-                var dataResult = await Helper_Database_StoredProcedure.ExecuteDataTableWithStatus(
-                    Model_AppVariables.ConnectionString,
-                    "usr_users_Exists",
-                    new Dictionary<string, object> { ["User"] = user }, // Remove p_ prefix - добавлено автоматически
-                    null, // No progress helper for this method
-                    useAsync
-                );
-
-                if (dataResult.IsSuccess && dataResult.Data != null && dataResult.Data.Rows.Count > 0)
-                {
-                    bool exists = Convert.ToInt32(dataResult.Data.Rows[0]["UserExists"]) > 0;
-                    Debug.WriteLine($"[Dao_User] UserExistsAsync result: {exists}");
-                    return exists;
-                }
-                else
-                {
-                    Debug.WriteLine($"[Dao_User] UserExistsAsync failed or no results: {dataResult.ErrorMessage}");
-                    return false;
-                }
-            }
-            catch (Exception ex)
-            {
-                Debug.WriteLine($"[Dao_User] Exception in UserExistsAsync: {ex}");
-                LoggingUtility.LogDatabaseError(ex);
-                // Don't call error handlers here to avoid recursion during startup
-                LoggingUtility.Log($"UserExistsAsync failed with exception: {ex.Message}");
-                return false;
-            }
-        }
-
-        #endregion
-
-        #region User UI Settings
-
-        internal static async Task<string> GetShortcutsJsonAsync(string userId)
-        {
-            Debug.WriteLine($"[Dao_User] Entering GetShortcutsJsonAsync(userId={userId})");
-            try
-            {
-                var inputParameters = new Dictionary<string, object>
-                {
-                    ["UserId"] = userId // No p_ prefix; helper adds it
-                };
-                var outputParameters = new Dictionary<string, MySqlDbType>
-                {
-                    ["SettingJson"] = MySqlDbType.VarChar,
-                    ["Status"] = MySqlDbType.Int32,
-                    ["ErrorMsg"] = MySqlDbType.VarChar
-                };
-
-                var result = await Helper_Database_StoredProcedure.ExecuteWithCustomOutput(
-                    Model_AppVariables.ConnectionString,
-                    "usr_ui_settings_GetShortcutsJson",
-                    inputParameters,
-                    outputParameters,
-                    null,
-                    true
-                );
-
-                if (result.IsSuccess && result.Data != null)
-                {
-                    string? json = result.Data["SettingJson"]?.ToString();
-                    Debug.WriteLine($"[Dao_User] GetShortcutsJsonAsync result: {json}");
-                    return json ?? "";
-                }
-
-                return "";
-            }
-            catch (Exception ex)
-            {
-                Debug.WriteLine($"[Dao_User] Exception in GetShortcutsJsonAsync: {ex}");
-                LoggingUtility.LogDatabaseError(ex);
-                LoggingUtility.Log($"GetShortcutsJsonAsync failed with exception: {ex.Message}");
-                return "";
-            }
-        }
-
-        internal static async Task SetShortcutsJsonAsync(string userId, string shortcutsJson)
-        {
-            Debug.WriteLine($"[Dao_User] Entering SetShortcutsJsonAsync(userId={userId})");
-            try
-            {
-                // FIXED: Use Helper_Database_StoredProcedure for proper status handling
-                Dictionary<string, object> parameters = new()
-                {
-                    ["UserId"] = userId,              // FIXED: Remove p_ prefix - добавлено автоматически
-                    ["ShortcutsJson"] = shortcutsJson // FIXED: Remove p_ prefix - добавлено автоматически
-                };
-
-                var result = await Helper_Database_StoredProcedure.ExecuteNonQueryWithStatus(
-                    Model_AppVariables.ConnectionString,
-                    "usr_ui_settings_SetShortcutsJson",
-                    parameters,
-                    null, // No progress helper needed for this method
-                    true  // Use async
-                );
-
-                Debug.WriteLine($"[Dao_User] SetShortcutsJsonAsync status: {result.IsSuccess}, message: {result.ErrorMessage}");
-
-                if (!result.IsSuccess)
-                {
-                    throw new Exception(result.ErrorMessage ?? "Failed to set shortcuts JSON");
-                }
-            }
-            catch (Exception ex)
-            {
-                Debug.WriteLine($"[Dao_User] Exception in SetShortcutsJsonAsync: {ex}");
-                LoggingUtility.LogDatabaseError(ex);
-                // Don't call error handlers here to avoid recursion during startup
-                LoggingUtility.Log($"SetShortcutsJsonAsync failed with exception: {ex.Message}");
-            }
-        }
-
-        internal static async Task SetThemeNameAsync(string user, string themeName, bool useAsync = false)
-        {
-            Debug.WriteLine($"[Dao_User] Entering SetThemeNameAsync(user={user}, themeName={themeName}, useAsync={useAsync})");
-            try
-            {
-                // FIXED: Use the existing SetUserSettingAsync method instead of non-existent app_themes_Set_UserTheme
-                // This calls usr_users_SetUserSetting_ByUserAndField which updates the Theme_Name field in usr_users table
-                await SetUserSettingAsync("Theme_Name", user, themeName, useAsync);
-                Debug.WriteLine($"[Dao_User] SetThemeNameAsync completed successfully for user {user}, theme {themeName}");
-            }
-            catch (Exception ex)
-            {
-                Debug.WriteLine($"[Dao_User] Exception in SetThemeNameAsync: {ex}");
-                LoggingUtility.LogDatabaseError(ex);
-                LoggingUtility.Log($"SetThemeNameAsync failed with exception: {ex.Message}");
-                throw; // Re-throw to let the UI handle the error
-            }
-        }
-
-        #endregion
-
-        #region User Roles
-
-        internal static async Task AddUserRoleAsync(int userId, int roleId, string assignedBy, bool useAsync = false)
-        {
-            Debug.WriteLine(
-                $"[Dao_User] Entering AddUserRoleAsync(userId={userId}, roleId={roleId}, assignedBy={assignedBy}, useAsync={useAsync})");
-            try
-            {
-                // FIXED: Use Helper_Database_StoredProcedure вместо Helper_Database_Core для избежания ошибок параметра p_Status
-                var result = await Helper_Database_StoredProcedure.ExecuteNonQueryWithStatus(
-                    Model_AppVariables.ConnectionString,
-                    "sys_user_roles_Add",
-                    new Dictionary<string, object>
-                    {
-                        ["UserID"] = userId,       // Remove p_ prefix - добавлено автоматически
-                        ["RoleID"] = roleId,
-                        ["AssignedBy"] = assignedBy
-                    },
-                    null, // No progress helper for this method
-                    useAsync
-                );
-
-                if (!result.IsSuccess)
-                {
-                    Debug.WriteLine($"[Dao_User] AddUserRoleAsync failed: {result.ErrorMessage}");
-                    LoggingUtility.Log($"AddUserRoleAsync failed: {result.ErrorMessage}");
-                }
-            }
-            catch (Exception ex)
-            {
-                Debug.WriteLine($"[Dao_User] Exception in AddUserRoleAsync: {ex}");
-                LoggingUtility.LogDatabaseError(ex);
-                // Don't call error handlers here to avoid recursion during startup
-                LoggingUtility.Log($"AddUserRoleAsync failed with exception: {ex.Message}");
-            }
-        }
-
-        internal static async Task<int> GetUserRoleIdAsync(int userId, bool useAsync = false)
-        {
-            Debug.WriteLine($"[Dao_User] Entering GetUserRoleIdAsync(userId={userId}, useAsync={useAsync})");
-            try
-            {
-                // FIXED: Use Helper_Database_StoredProcedure вместо Helper_Database_Core для избежания ошибок параметра p_Status
-                var dataResult = await Helper_Database_StoredProcedure.ExecuteDataTableWithStatus(
-                    Model_AppVariables.ConnectionString,
-                    "usr_user_roles_GetRoleId_ByUserId",
-                    new Dictionary<string, object> { ["UserID"] = userId }, // Remove p_ prefix - добавлено автоматически
-                    null, // No progress helper for this method
-                    useAsync
-                );
-
-                if (dataResult.IsSuccess && dataResult.Data != null && dataResult.Data.Rows.Count > 0)
-                {
-                    if (int.TryParse(dataResult.Data.Rows[0]["RoleID"]?.ToString(), out int roleId))
-                    {
-                        // Получить информацию о роли
-                        var roleResult = await Helper_Database_StoredProcedure.ExecuteDataTableWithStatus(
-                            Model_AppVariables.ConnectionString,
-                            "sys_roles_Get_ById",
-                            new Dictionary<string, object> { ["ID"] = roleId }, // Remove p_ prefix - добавлено автоматически
-                            null, // No progress helper for this method
-                            useAsync
-                        );
-                        
-                        return roleId;
-                    }
-                }
-
-                return 0;
-            }
-            catch (Exception ex)
-            {
-                Debug.WriteLine($"[Dao_User] Exception in GetUserRoleIdAsync: {ex}");
-                LoggingUtility.LogDatabaseError(ex);
-                // Don't call error handlers here to avoid recursion during startup
-                LoggingUtility.Log($"GetUserRoleIdAsync failed with exception: {ex.Message}");
-                return 0;
-            }
-        }
-
-        internal static async Task SetUserRoleAsync(int userId, int newRoleId, string assignedBy, bool useAsync = false)
-        {
-            Debug.WriteLine(
-                $"[Dao_User] Entering SetUserRoleAsync(userId={userId}, newRoleId={newRoleId}, assignedBy={assignedBy}, useAsync={useAsync})");
-            try
-            {
-                // FIXED: Use Helper_Database_StoredProcedure вместо Helper_Database_Core для избежания ошибок параметра p_Status
-                var result = await Helper_Database_StoredProcedure.ExecuteNonQueryWithStatus(
+                var result = await Helper_Database_StoredProcedure.ExecuteNonQueryWithStatusAsync(
                     Model_AppVariables.ConnectionString,
                     "sys_user_roles_Update",
                     new Dictionary<string, object>
                     {
-                        ["UserID"] = userId,          // Remove p_ prefix - добавлено автоматически
+                        ["UserID"] = userId,
                         ["NewRoleID"] = newRoleId,
                         ["AssignedBy"] = assignedBy
-                    },
-                    null, // No progress helper for this method
-                    useAsync
-                );
-
-                if (!result.IsSuccess)
-                {
-                    Debug.WriteLine($"[Dao_User] SetUserRoleAsync failed: {result.ErrorMessage}");
-                    LoggingUtility.Log($"SetUserRoleAsync failed: {result.ErrorMessage}");
-                }
-            }
-            catch (Exception ex)
-            {
-                Debug.WriteLine($"[Dao_User] Exception in SetUserRoleAsync: {ex}");
-                LoggingUtility.LogDatabaseError(ex);
-                // Don't call error handlers here to avoid recursion during startup
-                LoggingUtility.Log($"SetUserRoleAsync failed with exception: {ex.Message}");
-            }
-        }
-
-        internal static async Task SetUsersRoleAsync(IEnumerable<int> userIds, int newRoleId, string assignedBy,
-            bool useAsync = false)
-        {
-            Debug.WriteLine(
-                $"[Dao_User] Entering SetUsersRoleAsync(userIds=[{string.Join(",", userIds)}], newRoleId={newRoleId}, assignedBy={assignedBy}, useAsync={useAsync})");
-            try
-            {
-                foreach (int userId in userIds)
-                {
-                    // FIXED: Use Helper_Database_StoredProcedure вместо Helper_Database_Core для избежания ошибок параметра p_Status
-                    var result = await Helper_Database_StoredProcedure.ExecuteNonQueryWithStatus(
-                        Model_AppVariables.ConnectionString,
-                        "sys_user_roles_Update",
-                        new Dictionary<string, object>
-                        {
-                            ["UserID"] = userId,          // Remove p_ prefix - добавлено автоматически
-                            ["NewRoleID"] = newRoleId,
-                            ["AssignedBy"] = assignedBy
-                        },
-                        null, // No progress helper for this method
-                        useAsync
-                    );
-
-                    if (!result.IsSuccess)
-                    {
-                        Debug.WriteLine($"[Dao_User] SetUsersRoleAsync failed for user {userId}: {result.ErrorMessage}");
-                        LoggingUtility.Log($"SetUsersRoleAsync failed for user {userId}: {result.ErrorMessage}");
                     }
-                }
-            }
-            catch (Exception ex)
-            {
-                Debug.WriteLine($"[Dao_User] Exception in SetUsersRoleAsync: {ex}");
-                LoggingUtility.LogDatabaseError(ex);
-                // Don't call error handlers here to avoid recursion during startup
-                LoggingUtility.Log($"SetUsersRoleAsync failed with exception: {ex.Message}");
-            }
-        }
-
-        internal static async Task RemoveUserRoleAsync(int userId, int roleId, bool useAsync = false)
-        {
-            Debug.WriteLine(
-                $"[Dao_User] Entering RemoveUserRoleAsync(userId={userId}, roleId={roleId}, useAsync={useAsync})");
-            try
-            {
-                // FIXED: Use Helper_Database_StoredProcedure вместо Helper_Database_Core для избежания ошибок параметра p_Status
-                var result = await Helper_Database_StoredProcedure.ExecuteNonQueryWithStatus(
-                    Model_AppVariables.ConnectionString,
-                    "sys_user_roles_Delete",
-                    new Dictionary<string, object> 
-                    { 
-                        ["UserID"] = userId,  // Remove p_ prefix - добавлено автоматически
-                        ["RoleID"] = roleId   // Remove p_ prefix - добавлено автоматически
-                    },
-                    null, // No progress helper for this method
-                    useAsync
                 );
 
                 if (!result.IsSuccess)
                 {
-                    Debug.WriteLine($"[Dao_User] RemoveUserRoleAsync failed: {result.ErrorMessage}");
-                    LoggingUtility.Log($"RemoveUserRoleAsync failed: {result.ErrorMessage}");
+                    errors.Add($"User {userId}: {result.ErrorMessage}");
                 }
             }
-            catch (Exception ex)
+
+            if (errors.Any())
             {
-                Debug.WriteLine($"[Dao_User] Exception in RemoveUserRoleAsync: {ex}");
-                LoggingUtility.LogDatabaseError(ex);
-                // Don't call error handlers here to avoid recursion during startup
-                LoggingUtility.Log($"RemoveUserRoleAsync failed with exception: {ex.Message}");
+                var errorMessage = $"Failed to update {errors.Count} user(s): {string.Join("; ", errors)}";
+                
+                Service_DebugTracer.TraceMethodExit(errorMessage, controlName: "Dao_User");
+                return DaoResult.Failure(errorMessage);
+            }
+
+            Service_DebugTracer.TraceMethodExit("Success", controlName: "Dao_User");
+            return DaoResult.Success($"Updated role to {newRoleId} for {userIds.Count()} user(s) successfully");
+        }
+        catch (Exception ex)
+        {
+            LoggingUtility.LogDatabaseError(ex);
+            
+            Service_DebugTracer.TraceMethodExit(null, controlName: "Dao_User");
+            return DaoResult.Failure("Error updating roles for multiple users", ex);
+        }
+    }
+
+    internal static async Task<DaoResult> RemoveUserRoleAsync(int userId, int roleId,
+        MySqlConnection? connection = null,
+        MySqlTransaction? transaction = null)
+    {
+        Service_DebugTracer.TraceMethodEntry(new Dictionary<string, object> { ["userId"] = userId, ["roleId"] = roleId }, controlName: "Dao_User");
+        
+        try
+        {
+            var result = await Helper_Database_StoredProcedure.ExecuteNonQueryWithStatusAsync(
+                Model_AppVariables.ConnectionString,
+                "sys_user_roles_Delete",
+                new Dictionary<string, object> 
+                { 
+                    ["UserID"] = userId,
+                    ["RoleID"] = roleId
+                }
+            );
+
+            Service_DebugTracer.TraceMethodExit(result, controlName: "Dao_User");
+            
+            if (result.IsSuccess)
+            {
+                return DaoResult.Success($"Role {roleId} removed from user {userId} successfully");
+            }
+            else
+            {
+                return DaoResult.Failure($"Failed to remove user role: {result.ErrorMessage}");
             }
         }
-
-        #endregion
+        catch (Exception ex)
+        {
+            LoggingUtility.LogDatabaseError(ex);
+            
+            Service_DebugTracer.TraceMethodExit(null, controlName: "Dao_User");
+            return DaoResult.Failure($"Error removing role {roleId} from user {userId}", ex);
+        }
     }
 
     #endregion
 }
+
+#endregion

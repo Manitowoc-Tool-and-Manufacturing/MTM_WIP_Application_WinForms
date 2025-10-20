@@ -361,3 +361,17 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
+
+# Additional OS and IDE files
+.DS_Store
+Thumbs.db
+*.swp
+.vscode/
+.idea/
+
+# Developer Tools - Debug Dashboard logs
+Logs/DebugCapture_*.txt
+Logs/DebugDashboard_*.log
+
+# Developer Tools - Generated code samples
+Documentation/DeveloperTools/Examples/Generated_*.cs

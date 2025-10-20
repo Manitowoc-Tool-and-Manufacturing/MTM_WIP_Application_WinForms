@@ -3,6 +3,7 @@ using MTM_Inventory_Application.Helpers;
 using MTM_Inventory_Application.Models;
 using MTM_Inventory_Application.Logging;
 using MTM_Inventory_Application.Services;
+using MySql.Data.MySqlClient;
 
 namespace MTM_Inventory_Application.Data;
 
@@ -13,7 +14,131 @@ public static class Dao_Inventory
 
     #region Search Methods
 
-    public static async Task<DaoResult<DataTable>> GetInventoryByPartIdAsync(string partId, bool useAsync = false)
+    /// <summary>
+    /// Retrieves all inventory records from the database.
+    /// </summary>
+    /// <param name="useAsync">Whether to execute asynchronously</param>
+    /// <returns>DaoResult containing DataTable with all inventory records</returns>
+    public static async Task<DaoResult<DataTable>> GetAllInventoryAsync(bool useAsync = true, MySqlConnection? connection = null, MySqlTransaction? transaction = null)
+    {
+        Service_DebugTracer.TraceMethodEntry(new Dictionary<string, object>
+        {
+            ["useAsync"] = useAsync
+        }, nameof(GetAllInventoryAsync), "Dao_Inventory");
+
+        try
+        {
+            // Use inv_inventory_Get_ByUser with empty user to get all records
+            var result = await Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync(
+                Model_AppVariables.ConnectionString,
+                "inv_inventory_Get_ByUser",
+                new Dictionary<string, object> { ["p_User"] = "" },
+                progressHelper: null,
+                connection: connection,
+                transaction: transaction
+            );
+
+            if (result.IsSuccess && result.Data != null)
+            {
+                var successResult = DaoResult<DataTable>.Success(result.Data, 
+                    $"Retrieved {result.Data.Rows.Count} inventory records");
+
+                Service_DebugTracer.TraceBusinessLogic("INVENTORY_GET_ALL_COMPLETE",
+                    outputData: new Dictionary<string, object>
+                    {
+                        ["recordCount"] = result.Data.Rows.Count,
+                        ["hasData"] = result.Data.Rows.Count > 0
+                    });
+
+                Service_DebugTracer.TraceMethodExit(successResult, nameof(GetAllInventoryAsync), "Dao_Inventory");
+                return successResult;
+            }
+            else
+            {
+                var failureResult = DaoResult<DataTable>.Failure($"Failed to retrieve all inventory: {result.ErrorMessage}");
+                Service_DebugTracer.TraceMethodExit(failureResult, nameof(GetAllInventoryAsync), "Dao_Inventory");
+                return failureResult;
+            }
+        }
+        catch (Exception ex)
+        {
+            LoggingUtility.LogDatabaseError(ex);
+            await Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex, callerName: "GetAllInventoryAsync");
+
+            var errorResult = DaoResult<DataTable>.Failure("Failed to retrieve all inventory", ex);
+            Service_DebugTracer.TraceMethodExit(errorResult, nameof(GetAllInventoryAsync), "Dao_Inventory");
+            return errorResult;
+        }
+    }
+
+    /// <summary>
+    /// Searches inventory records by partial PartID match.
+    /// </summary>
+    /// <param name="searchTerm">Partial PartID to search for</param>
+    /// <param name="useAsync">Whether to execute asynchronously</param>
+    /// <returns>DaoResult containing DataTable with matching inventory records</returns>
+    public static async Task<DaoResult<DataTable>> SearchInventoryAsync(string searchTerm, bool useAsync = true, MySqlConnection? connection = null, MySqlTransaction? transaction = null)
+    {
+        Service_DebugTracer.TraceMethodEntry(new Dictionary<string, object>
+        {
+            ["searchTerm"] = searchTerm ?? "NULL",
+            ["useAsync"] = useAsync
+        }, nameof(SearchInventoryAsync), "Dao_Inventory");
+
+        try
+        {
+            if (string.IsNullOrWhiteSpace(searchTerm))
+            {
+                // Return all inventory if search term is empty
+                return await GetAllInventoryAsync(useAsync, connection, transaction);
+            }
+
+            // Use GetInventoryByPartIdAsync which will match partial PartIDs
+            var result = await GetInventoryByPartIdAsync(searchTerm, useAsync, connection, transaction);
+
+            if (result.IsSuccess)
+            {
+                Service_DebugTracer.TraceBusinessLogic("INVENTORY_SEARCH_COMPLETE",
+                    inputData: new Dictionary<string, object> { ["searchTerm"] = searchTerm },
+                    outputData: new Dictionary<string, object>
+                    {
+                        ["recordCount"] = result.Data?.Rows.Count ?? 0
+                    });
+
+                Service_DebugTracer.TraceMethodExit(result, nameof(SearchInventoryAsync), "Dao_Inventory");
+                return result;
+            }
+            else
+            {
+                var failureResult = DaoResult<DataTable>.Failure($"Failed to search inventory: {result.ErrorMessage}");
+                Service_DebugTracer.TraceMethodExit(failureResult, nameof(SearchInventoryAsync), "Dao_Inventory");
+                return failureResult;
+            }
+        }
+        catch (Exception ex)
+        {
+            LoggingUtility.LogDatabaseError(ex);
+            await Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex, callerName: "SearchInventoryAsync");
+
+            var errorResult = DaoResult<DataTable>.Failure($"Failed to search inventory for term '{searchTerm}'", ex);
+            Service_DebugTracer.TraceMethodExit(errorResult, nameof(SearchInventoryAsync), "Dao_Inventory");
+            return errorResult;
+        }
+    }
+
+    /// <summary>
+    /// Gets inventory records for a specific part ID
+    /// </summary>
+    /// <param name="partId">Part ID to search for</param>
+    /// <param name="useAsync">Legacy parameter (ignored)</param>
+    /// <param name="connection">Optional connection for transaction support</param>
+    /// <param name="transaction">Optional transaction for rollback support</param>
+    /// <returns>DaoResult containing DataTable of inventory records</returns>
+    public static async Task<DaoResult<DataTable>> GetInventoryByPartIdAsync(
+        string partId, 
+        bool useAsync = false,
+        MySqlConnection? connection = null,
+        MySqlTransaction? transaction = null)
     {
         Service_DebugTracer.TraceMethodEntry(new Dictionary<string, object>
         {
@@ -30,12 +155,13 @@ public static class Dao_Inventory
         try
         {
             // MIGRATED: Use Helper_Database_StoredProcedure instead of Helper_Database_Core for procedures with output parameters
-            var result = await Helper_Database_StoredProcedure.ExecuteDataTableWithStatus(
+            var result = await Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync(
                 Model_AppVariables.ConnectionString,
                 "inv_inventory_Get_ByPartID",
-                new Dictionary<string, object> { ["PartID"] = partId }, // p_ prefix added automatically
-                null, // No progress helper for this method
-                useAsync
+                new Dictionary<string, object> { ["p_PartID"] = partId }, // p_ prefix added automatically
+                progressHelper: null, // No progress helper for this method
+                connection: connection,
+                transaction: transaction
             );
                 
             if (result.IsSuccess && result.Data != null)
@@ -69,7 +195,7 @@ public static class Dao_Inventory
         catch (Exception ex)
         {
             LoggingUtility.LogDatabaseError(ex);
-            await Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex, useAsync, "GetInventoryByPartIdAsync");
+            await Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex, callerName: "GetInventoryByPartIdAsync");
             
             var errorResult = DaoResult<DataTable>.Failure($"Failed to retrieve inventory for part {partId}", ex);
             
@@ -87,34 +213,101 @@ public static class Dao_Inventory
         }
     }
 
-    public static async Task<DaoResult<DataTable>> GetInventoryByPartIdAndOperationAsync(string partId, string operation,
-        bool useAsync = false)
+    /// <summary>
+    /// Gets inventory records for a specific part ID and operation
+    /// </summary>
+    /// <param name="partId">Part ID to search for</param>
+    /// <param name="operation">Operation number</param>
+    /// <param name="useAsync">Legacy parameter (ignored)</param>
+    /// <param name="connection">Optional connection for transaction support</param>
+    /// <param name="transaction">Optional transaction for rollback support</param>
+    /// <returns>DaoResult containing DataTable of inventory records</returns>
+    public static async Task<DaoResult<DataTable>> GetInventoryByPartIdAndOperationAsync(
+        string partId, 
+        string operation,
+        bool useAsync = false,
+        MySqlConnection? connection = null,
+        MySqlTransaction? transaction = null)
     {
+        Service_DebugTracer.TraceMethodEntry(new Dictionary<string, object>
+        {
+            ["partId"] = partId ?? "NULL",
+            ["operation"] = operation ?? "NULL",
+            ["useAsync"] = useAsync
+        }, nameof(GetInventoryByPartIdAndOperationAsync), "Dao_Inventory");
+
         try
         {
+            // Validate input parameters to prevent ArgumentException
+            if (string.IsNullOrWhiteSpace(partId))
+            {
+                var validationResult = DaoResult<DataTable>.Failure("PartID cannot be null or empty");
+                Service_DebugTracer.TraceMethodExit(validationResult, nameof(GetInventoryByPartIdAndOperationAsync), "Dao_Inventory");
+                return validationResult;
+            }
+
+            if (string.IsNullOrWhiteSpace(operation))
+            {
+                var validationResult = DaoResult<DataTable>.Failure("Operation cannot be null or empty");
+                Service_DebugTracer.TraceMethodExit(validationResult, nameof(GetInventoryByPartIdAndOperationAsync), "Dao_Inventory");
+                return validationResult;
+            }
+
             // MIGRATED: Use Helper_Database_StoredProcedure instead of Helper_Database_Core for procedures with output parameters
-            var result = await Helper_Database_StoredProcedure.ExecuteDataTableWithStatus(
+            // IMPORTANT: Procedure name in database is "inv_inventory_Get_ByPartIDandOperation" with lowercase "and"
+            // IMPORTANT: Stored procedure parameter is p_Operation (not o_Operation)
+            var result = await Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync(
                 Model_AppVariables.ConnectionString,
-                "inv_inventory_Get_ByPartIDAndOperation",
-                new Dictionary<string, object> { ["PartID"] = partId, ["Operation"] = operation }, // p_ prefix added automatically
-                null, // No progress helper for this method
-                useAsync
+                "inv_inventory_Get_ByPartIDandOperation",  // Fixed: lowercase "and" to match database
+                new Dictionary<string, object> 
+                { 
+                    ["p_PartID"] = partId.Trim(),
+                    ["p_Operation"] = operation.Trim()  // Fixed: Changed from o_Operation to p_Operation
+                },
+                progressHelper: null, // No progress helper for this method
+                connection: connection,
+                transaction: transaction
             );
                 
             if (result.IsSuccess && result.Data != null)
             {
-                return DaoResult<DataTable>.Success(result.Data, $"Retrieved {result.Data.Rows.Count} inventory items for part {partId}, operation {operation}");
+                var successResult = DaoResult<DataTable>.Success(result.Data, $"Retrieved {result.Data.Rows.Count} inventory items for part {partId}, operation {operation}");
+                
+                Service_DebugTracer.TraceBusinessLogic("INVENTORY_SEARCH_BY_PART_AND_OP_COMPLETE", 
+                    inputData: new Dictionary<string, object> { ["partId"] = partId, ["operation"] = operation },
+                    outputData: new Dictionary<string, object> 
+                    { 
+                        ["recordCount"] = result.Data.Rows.Count,
+                        ["hasData"] = result.Data.Rows.Count > 0 
+                    });
+
+                Service_DebugTracer.TraceMethodExit(successResult, nameof(GetInventoryByPartIdAndOperationAsync), "Dao_Inventory");
+                return successResult;
             }
             else
             {
-                return DaoResult<DataTable>.Failure($"Failed to retrieve inventory for part {partId}, operation {operation}: {result.ErrorMessage}");
+                var failureResult = DaoResult<DataTable>.Failure($"Failed to retrieve inventory for part {partId}, operation {operation}: {result.ErrorMessage}");
+                Service_DebugTracer.TraceMethodExit(failureResult, nameof(GetInventoryByPartIdAndOperationAsync), "Dao_Inventory");
+                return failureResult;
             }
         }
         catch (Exception ex)
         {
             LoggingUtility.LogDatabaseError(ex);
-            await Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex, useAsync, "GetInventoryByPartIdAndOperationAsync");
-            return DaoResult<DataTable>.Failure($"Failed to retrieve inventory for part {partId}, operation {operation}", ex);
+            await Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex, callerName: "GetInventoryByPartIdAndOperationAsync");
+            
+            var errorResult = DaoResult<DataTable>.Failure($"Failed to retrieve inventory for part {partId}, operation {operation}", ex);
+            
+            Service_DebugTracer.TraceBusinessLogic("INVENTORY_SEARCH_BY_PART_AND_OP_ERROR",
+                inputData: new Dictionary<string, object> { ["partId"] = partId ?? "NULL", ["operation"] = operation ?? "NULL" },
+                validationResults: new Dictionary<string, object>
+                {
+                    ["exception"] = ex.GetType().Name,
+                    ["message"] = ex.Message
+                });
+
+            Service_DebugTracer.TraceMethodExit(errorResult, nameof(GetInventoryByPartIdAndOperationAsync), "Dao_Inventory");
+            return errorResult;
         }
     }
 
@@ -122,6 +315,21 @@ public static class Dao_Inventory
 
     #region Modification Methods
 
+    /// <summary>
+    /// Adds a new inventory item
+    /// </summary>
+    /// <param name="partId">Part ID</param>
+    /// <param name="location">Storage location</param>
+    /// <param name="operation">Operation number</param>
+    /// <param name="quantity">Quantity</param>
+    /// <param name="itemType">Item type (optional, will be looked up)</param>
+    /// <param name="user">User adding the item</param>
+    /// <param name="batchNumber">Batch number (optional, will be generated)</param>
+    /// <param name="notes">Notes</param>
+    /// <param name="useAsync">Legacy parameter (ignored)</param>
+    /// <param name="connection">Optional connection for transaction support</param>
+    /// <param name="transaction">Optional transaction for rollback support</param>
+    /// <returns>DaoResult with number of rows added</returns>
     public static async Task<DaoResult<int>> AddInventoryItemAsync(
         string partId,
         string location,
@@ -131,35 +339,44 @@ public static class Dao_Inventory
         string user,
         string? batchNumber,
         string notes,
-        bool useAsync = false)
+        bool useAsync = false,
+        MySqlConnection? connection = null,
+        MySqlTransaction? transaction = null)
     {
         try
         {
             // Get item type if not provided
             if (string.IsNullOrWhiteSpace(itemType))
             {
-                var itemTypeResult = await Helper_Database_StoredProcedure.ExecuteScalarWithStatus(
+                var itemTypeResult = await Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync(
                     Model_AppVariables.ConnectionString,
-                    "md_part_ids_GetItemType_ByPartID",
-                    new Dictionary<string, object> { ["PartID"] = partId }, // p_ prefix added automatically
-                    null, // No progress helper for this method
-                    useAsync
+                    "md_part_ids_Get_ByItemNumber",
+                    new Dictionary<string, object> { ["ItemNumber"] = partId },
+                    progressHelper: null, // No progress helper for this method
+                    connection: connection,
+                    transaction: transaction
                 );
 
-                itemType = itemTypeResult.IsSuccess && itemTypeResult.Data != null 
-                    ? itemTypeResult.Data.ToString() 
-                    : "None";
+                if (itemTypeResult.IsSuccess && itemTypeResult.Data != null && itemTypeResult.Data.Rows.Count > 0)
+                {
+                    itemType = itemTypeResult.Data.Rows[0]["ItemType"]?.ToString() ?? "None";
+                }
+                else
+                {
+                    itemType = "None";
+                }
             }
 
             // Generate batch number if not provided
             if (string.IsNullOrWhiteSpace(batchNumber))
             {
-                var batchNumberResult = await Helper_Database_StoredProcedure.ExecuteScalarWithStatus(
+                var batchNumberResult = await Helper_Database_StoredProcedure.ExecuteScalarWithStatusAsync(
                     Model_AppVariables.ConnectionString,
                     "inv_inventory_GetNextBatchNumber",
-                    null, // No parameters needed
-                    null, // No progress helper for this method
-                    useAsync
+                    parameters: null, // No parameters needed
+                    progressHelper: null, // No progress helper for this method
+                    connection: connection,
+                    transaction: transaction
                 );
 
                 if (batchNumberResult.IsSuccess && batchNumberResult.Data != null && 
@@ -173,22 +390,23 @@ public static class Dao_Inventory
                 }
             }
 
-            var result = await Helper_Database_StoredProcedure.ExecuteNonQueryWithStatus(
+            var result = await Helper_Database_StoredProcedure.ExecuteNonQueryWithStatusAsync(
                 Model_AppVariables.ConnectionString,
                 "inv_inventory_Add_Item",
                 new Dictionary<string, object>
                 {
-                    ["PartID"] = partId,         // p_ prefix added automatically
+                    ["p_PartID"] = partId,         // p_ prefix added automatically
                     ["Location"] = location,
-                    ["Operation"] = operation,
+                    ["p_Operation"] = operation,
                     ["Quantity"] = quantity,
-                    ["ItemType"] = itemType,
-                    ["User"] = user,
+                    ["ItemType"] = itemType ?? "None",
+                    ["p_User"] = user,
                     ["BatchNumber"] = batchNumber,
                     ["Notes"] = notes
                 },
-                null, // No progress helper for this method
-                useAsync
+                progressHelper: null, // No progress helper for this method
+                connection: connection,
+                transaction: transaction
             );
 
             // FIXED: Do NOT call FixBatchNumbersAsync() after inventory additions
@@ -208,7 +426,7 @@ public static class Dao_Inventory
         catch (Exception ex)
         {
             LoggingUtility.LogDatabaseError(ex);
-            await Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex, useAsync, "AddInventoryItemAsync");
+            await Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex, callerName: "AddInventoryItemAsync");
             return DaoResult<int>.Failure($"Failed to add inventory item for part {partId}", ex);
         }
     }
@@ -227,13 +445,13 @@ public static class Dao_Inventory
         {
             foreach (System.Windows.Forms.DataGridViewRow row in dgv.SelectedRows)
             {
-                string partId = row.Cells["PartID"].Value?.ToString() ?? "";
+                string partId = row.Cells["p_PartID"].Value?.ToString() ?? "";
                 string location = row.Cells["Location"].Value?.ToString() ?? "";
-                string operation = row.Cells["Operation"].Value?.ToString() ?? "";
+                string operation = row.Cells["p_Operation"].Value?.ToString() ?? "";
                 int quantity = int.TryParse(row.Cells["Quantity"].Value?.ToString(), out int qty) ? qty : 0;
                 string batchNumber = row.Cells["BatchNumber"].Value?.ToString() ?? "";
                 string itemType = row.Cells["ItemType"].Value?.ToString() ?? "";
-                string user = row.Cells["User"].Value?.ToString() ?? "";
+                string user = row.Cells["p_User"].Value?.ToString() ?? "";
                 string notes = row.Cells["Notes"].Value?.ToString() ?? "";
 
                 if (string.IsNullOrWhiteSpace(partId) || string.IsNullOrWhiteSpace(location) ||
@@ -267,11 +485,26 @@ public static class Dao_Inventory
         catch (Exception ex)
         {
             LoggingUtility.LogDatabaseError(ex);
-            await Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex, useAsync, "RemoveInventoryItemsFromDataGridViewAsync");
+            await Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex, callerName: "RemoveInventoryItemsFromDataGridViewAsync");
             return DaoResult<(int, List<string>)>.Failure("Failed to remove inventory items from DataGridView", ex);
         }
     }
 
+    /// <summary>
+    /// Removes an inventory item
+    /// </summary>
+    /// <param name="partId">Part ID</param>
+    /// <param name="location">Storage location</param>
+    /// <param name="operation">Operation number</param>
+    /// <param name="quantity">Quantity</param>
+    /// <param name="itemType">Item type</param>
+    /// <param name="user">User removing the item</param>
+    /// <param name="batchNumber">Batch number</param>
+    /// <param name="notes">Notes</param>
+    /// <param name="useAsync">Legacy parameter (ignored)</param>
+    /// <param name="connection">Optional connection for transaction support</param>
+    /// <param name="transaction">Optional transaction for rollback support</param>
+    /// <returns>DaoResult with tuple of (status code, error message)</returns>
     public static async Task<DaoResult<(int Status, string ErrorMsg)>> RemoveInventoryItemAsync(
         string partId,
         string location,
@@ -281,44 +514,53 @@ public static class Dao_Inventory
         string user,
         string batchNumber,
         string notes,
-        bool useAsync = false)
+        bool useAsync = false,
+        MySqlConnection? connection = null,
+        MySqlTransaction? transaction = null)
     {
         try
         {
             // MIGRATED: Use Helper_Database_StoredProcedure for proper status handling
             Dictionary<string, object> parameters = new()
             {
-                ["PartID"] = partId,             // p_ prefix added automatically
+                ["p_PartID"] = partId,             // p_ prefix added automatically
                 ["Location"] = location,
-                ["Operation"] = operation,
+                ["p_Operation"] = operation,
                 ["Quantity"] = quantity,
                 ["ItemType"] = itemType,
-                ["User"] = user,
+                ["p_User"] = user,
                 ["BatchNumber"] = batchNumber,
                 ["Notes"] = notes
             };
 
-            var result = await Helper_Database_StoredProcedure.ExecuteNonQueryWithStatus(
+            var result = await Helper_Database_StoredProcedure.ExecuteNonQueryWithStatusAsync(
                 Model_AppVariables.ConnectionString,
                 "inv_inventory_Remove_Item",
                 parameters,
-                null, // No progress helper for this method
-                useAsync
+                progressHelper: null, // No progress helper for this method
+                connection: connection,
+                transaction: transaction
             );
 
-            // FIXED: Check actual Status from stored procedure, not just IsSuccess
-            // Status 0 = success, Status 1 = not found, Status -1 = error
-            if (result.IsSuccess && result.Status == 0)
+            // Check result success - ErrorMessage may contain "Item not found" if item doesn't exist
+            if (result.IsSuccess)
             {
-                // Actual removal occurred
-                return DaoResult<(int, string)>.Success((1, result.ErrorMessage ?? ""), 
-                    $"Successfully removed inventory item: {partId}");
-            }
-            else if (result.IsSuccess && result.Status == 1)
-            {
-                // No matching item found for removal
-                return DaoResult<(int, string)>.Success((0, result.ErrorMessage ?? ""), 
-                    $"No inventory item found for removal: {result.ErrorMessage}");
+                // Check if ErrorMessage indicates "not found" scenario
+                bool notFound = !string.IsNullOrEmpty(result.ErrorMessage) && 
+                                result.ErrorMessage.Contains("not found", StringComparison.OrdinalIgnoreCase);
+                
+                if (notFound)
+                {
+                    // No matching item found for removal
+                    return DaoResult<(int, string)>.Success((0, result.ErrorMessage), 
+                        $"No inventory item found for removal: {result.ErrorMessage}");
+                }
+                else
+                {
+                    // Actual removal occurred
+                    return DaoResult<(int, string)>.Success((1, result.ErrorMessage ?? ""), 
+                        $"Successfully removed inventory item: {partId}");
+                }
             }
             else
             {
@@ -330,30 +572,47 @@ public static class Dao_Inventory
         catch (Exception ex)
         {
             LoggingUtility.LogDatabaseError(ex);
-            await Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex, useAsync, "RemoveInventoryItemAsync");
+            await Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex, callerName: "RemoveInventoryItemAsync");
             return DaoResult<(int, string)>.Failure($"Failed to remove inventory item for part {partId}", ex);
         }
     }
 
-    public static async Task<DaoResult> TransferPartSimpleAsync(string batchNumber, string partId, string operation, string quantity, string newLocation)
+    /// <summary>
+    /// Transfers a part to a new location (simple transfer without quantity split)
+    /// </summary>
+    /// <param name="batchNumber">Batch number to transfer</param>
+    /// <param name="partId">Part ID</param>
+    /// <param name="operation">Current operation</param>
+    /// <param name="newLocation">Destination location</param>
+    /// <param name="connection">Optional connection for transaction support</param>
+    /// <param name="transaction">Optional transaction for rollback support</param>
+    /// <returns>DaoResult indicating success or failure</returns>
+    public static async Task<DaoResult> TransferPartSimpleAsync(
+        string batchNumber, 
+        string partId, 
+        string operation, 
+        string newLocation,
+        MySqlConnection? connection = null,
+        MySqlTransaction? transaction = null)
     {
         try
         {
-            // MIGRATED: Use Helper_Database_StoredProcedure and correct parameter names (p_ prefix added automatically)
+            // Use explicit p_ prefix for transfer procedures (parameter cache may not be populated yet)
             Dictionary<string, object> parameters = new()
             {
-                ["BatchNumber"] = batchNumber,   // p_ prefix added automatically
-                ["PartID"] = partId,
-                ["Operation"] = operation,
-                ["NewLocation"] = newLocation
+                ["p_BatchNumber"] = batchNumber,
+                ["p_PartID"] = partId,
+                ["p_Operation"] = operation,
+                ["p_NewLocation"] = newLocation
             };
 
-            var result = await Helper_Database_StoredProcedure.ExecuteNonQueryWithStatus(
+            var result = await Helper_Database_StoredProcedure.ExecuteNonQueryWithStatusAsync(
                 Model_AppVariables.ConnectionString,
                 "inv_inventory_Transfer_Part",
                 parameters,
-                null, // No progress helper for this method
-                true
+                progressHelper: null, // No progress helper for this method
+                connection: connection,
+                transaction: transaction
             );
 
             // FIXED: Do NOT call FixBatchNumbersAsync() after transfer operations
@@ -373,34 +632,56 @@ public static class Dao_Inventory
         catch (Exception ex)
         {
             LoggingUtility.LogDatabaseError(ex);
-            await Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex, true, "TransferPartSimpleAsync");
+            await Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex, callerName: "TransferPartSimpleAsync");
             return DaoResult.Failure($"Failed to transfer part {partId}", ex);
         }
     }
 
-    public static async Task<DaoResult> TransferInventoryQuantityAsync(string batchNumber, string partId, string operation,
-        int transferQuantity, int originalQuantity, string newLocation, string user)
+    /// <summary>
+    /// Transfers a specific quantity from one location to another (splits inventory if needed)
+    /// </summary>
+    /// <param name="batchNumber">Batch number</param>
+    /// <param name="partId">Part ID</param>
+    /// <param name="operation">Current operation</param>
+    /// <param name="transferQuantity">Quantity to transfer</param>
+    /// <param name="originalQuantity">Original total quantity</param>
+    /// <param name="newLocation">Destination location</param>
+    /// <param name="user">User performing transfer</param>
+    /// <param name="connection">Optional connection for transaction support</param>
+    /// <param name="transaction">Optional transaction for rollback support</param>
+    /// <returns>DaoResult indicating success or failure</returns>
+    public static async Task<DaoResult> TransferInventoryQuantityAsync(
+        string batchNumber, 
+        string partId, 
+        string operation,
+        int transferQuantity, 
+        int originalQuantity, 
+        string newLocation, 
+        string user,
+        MySqlConnection? connection = null,
+        MySqlTransaction? transaction = null)
     {
         try
         {
-            // MIGRATED: Use Helper_Database_StoredProcedure and correct parameter names (p_ prefix added automatically)
+            // Use explicit p_ prefix for transfer procedures (parameter cache may not be populated yet)
             Dictionary<string, object> parameters = new()
             {
-                ["BatchNumber"] = batchNumber,       // p_ prefix added automatically
-                ["PartID"] = partId,
-                ["Operation"] = operation,
-                ["TransferQuantity"] = transferQuantity,
-                ["OriginalQuantity"] = originalQuantity,
-                ["NewLocation"] = newLocation,
-                ["User"] = user
+                ["p_BatchNumber"] = batchNumber,
+                ["p_PartID"] = partId,
+                ["p_Operation"] = operation,
+                ["p_TransferQuantity"] = transferQuantity,
+                ["p_OriginalQuantity"] = originalQuantity,
+                ["p_NewLocation"] = newLocation,
+                ["p_User"] = user
             };
 
-            var result = await Helper_Database_StoredProcedure.ExecuteNonQueryWithStatus(
+            var result = await Helper_Database_StoredProcedure.ExecuteNonQueryWithStatusAsync(
                 Model_AppVariables.ConnectionString,
                 "inv_inventory_transfer_quantity",
                 parameters,
-                null, // No progress helper for this method
-                true
+                progressHelper: null, // No progress helper for this method
+                connection: connection,
+                transaction: transaction
             );
 
             // FIXED: Do NOT call FixBatchNumbersAsync() after quantity transfer operations
@@ -420,22 +701,23 @@ public static class Dao_Inventory
         catch (Exception ex)
         {
             LoggingUtility.LogDatabaseError(ex);
-            await Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex, true, "TransferInventoryQuantityAsync");
+            await Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex, callerName: "TransferInventoryQuantityAsync");
             return DaoResult.Failure($"Failed to transfer quantity for part {partId}", ex);
         }
     }
 
-    public static async Task<DaoResult> FixBatchNumbersAsync()
+    public static async Task<DaoResult> FixBatchNumbersAsync(
+        MySqlConnection? connection = null,
+        MySqlTransaction? transaction = null)
     {
         try
         {
             // MIGRATED: Use Helper_Database_StoredProcedure for proper status handling
-            var result = await Helper_Database_StoredProcedure.ExecuteNonQueryWithStatus(
+            var result = await Helper_Database_StoredProcedure.ExecuteNonQueryWithStatusAsync(
                 Model_AppVariables.ConnectionString,
                 "inv_inventory_Fix_BatchNumbers",
                 new Dictionary<string, object>(), // No parameters needed
-                null, // No progress helper for this method
-                true  // Use async
+                null // No progress helper for this method
             );
 
             if (result.IsSuccess)
@@ -450,7 +732,7 @@ public static class Dao_Inventory
         catch (Exception ex)
         {
             LoggingUtility.LogDatabaseError(ex);
-            await Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex, true, "FixBatchNumbersAsync");
+            await Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex, callerName: "FixBatchNumbersAsync");
             return DaoResult.Failure("Failed to fix batch numbers", ex);
         }
     }

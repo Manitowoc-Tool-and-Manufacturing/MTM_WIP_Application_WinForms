@@ -1,4 +1,4 @@
-﻿using System.Data;
+using System.Data;
 using System.Diagnostics;
 using System.Drawing.Printing;
 using System.Text;
@@ -205,7 +205,7 @@ namespace MTM_Inventory_Application.Controls.MainForm
             catch (Exception ex)
             {
                 LoggingUtility.LogApplicationError(ex);
-                _ = Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex, false,
+                _ = Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex,
                     new StringBuilder().Append("Control_AdvancedRemove_Button_Normal_Click").ToString());
             }
         }
@@ -336,12 +336,11 @@ namespace MTM_Inventory_Application.Controls.MainForm
                     $"User='{(userSelected ? user : "NULL")}', FilterByDate={filterByDate}, " +
                     $"DateFrom={dateFrom}, DateTo={dateTo}");
 
-                var searchResult = await Helper_Database_StoredProcedure.ExecuteDataTableWithStatus(
+                var searchResult = await Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync(
                     Model_AppVariables.ConnectionString,
                     "inv_inventory_Search_Advanced",
                     searchParameters,
-                    _progressHelper,
-                    true);
+                    _progressHelper);
 
                 if (!searchResult.IsSuccess)
                 {
@@ -354,7 +353,7 @@ namespace MTM_Inventory_Application.Controls.MainForm
                 }
 
                 DataTable dt = searchResult.Data ?? new DataTable();
-                LoggingUtility.Log($"[SEARCH DEBUG] Search completed. Status: {searchResult.Status}, Rows: {dt.Rows.Count}");
+                LoggingUtility.Log($"[SEARCH DEBUG] Search completed. IsSuccess: {searchResult.IsSuccess}, Rows: {dt.Rows.Count}");
 
                 Control_AdvancedRemove_DataGridView_Results.DataSource = dt;
                 Control_AdvancedRemove_DataGridView_Results.ClearSelection();
@@ -404,12 +403,12 @@ namespace MTM_Inventory_Application.Controls.MainForm
                 _lastRemovedItems.Clear();
                 foreach (DataGridViewRow row in dgv.SelectedRows)
                 {
-                    string partId = row.Cells["PartID"].Value?.ToString() ?? "";
+                    string partId = row.Cells["p_PartID"].Value?.ToString() ?? "";
                     string location = row.Cells["Location"].Value?.ToString() ?? "";
-                    string operation = row.Cells["Operation"].Value?.ToString() ?? "";
+                    string operation = row.Cells["p_Operation"].Value?.ToString() ?? "";
                     int quantity = int.TryParse(row.Cells["Quantity"].Value?.ToString(), out int q) ? q : 0;
                     string itemType = row.Cells["ItemType"]?.Value?.ToString() ?? ""; // If you have this column
-                    string user = row.Cells["User"]?.Value?.ToString() ?? "";
+                    string user = row.Cells["p_User"]?.Value?.ToString() ?? "";
                     string batchNumber = row.Cells["BatchNumber"]?.Value?.ToString() ?? "";
 
                     _lastRemovedItems.Add(new Model_HistoryRemove
@@ -488,7 +487,7 @@ namespace MTM_Inventory_Application.Controls.MainForm
             catch (Exception ex)
             {
                 LoggingUtility.LogApplicationError(ex);
-                await Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex, true);
+                await Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex);
             }
         }
 
@@ -558,7 +557,7 @@ namespace MTM_Inventory_Application.Controls.MainForm
             {
                 Debug.WriteLine($"[ERROR] Exception in AdvancedRemove HardReset: {ex}");
                 LoggingUtility.LogApplicationError(ex);
-                _ = Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex, false, "Control_AdvancedRemove_HardReset");
+                _ = Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex, callerName: "Control_AdvancedRemove_HardReset");
             }
             finally
             {
@@ -633,7 +632,7 @@ namespace MTM_Inventory_Application.Controls.MainForm
             {
                 Debug.WriteLine($"[ERROR] Exception in AdvancedRemove SoftReset: {ex}");
                 LoggingUtility.LogApplicationError(ex);
-                _ = Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex, false, "Control_AdvancedRemove_SoftReset");
+                _ = Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex, callerName: "Control_AdvancedRemove_SoftReset");
             }
             finally
             {

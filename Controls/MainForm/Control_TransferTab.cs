@@ -1,4 +1,4 @@
-﻿using System.ComponentModel;
+using System.ComponentModel;
 using System.Data;
 using System.Diagnostics;
 using System.Drawing.Printing;
@@ -72,11 +72,49 @@ namespace MTM_Inventory_Application.Controls.MainForm
 
             Control_TransferTab_Initialize();
             ApplyPrivileges();
+            
+            // Initialize UI state immediately without heavy operations
+            InitializeImmediateUI();
+            
+            // Move heavy initialization to background thread
+            _ = Task.Run(async () =>
+            {
+                try
+                {
+                    await InitializeBackgroundOperationsAsync();
+                }
+                catch (Exception ex)
+                {
+                    LoggingUtility.LogApplicationError(ex);
+                    // If background initialization fails, still ensure basic functionality
+                    this.BeginInvoke(() => Control_TransferTab_Update_ButtonStates());
+                }
+            });
+
+            Service_DebugTracer.TraceUIAction("TRANSFER_TAB_INITIALIZATION", nameof(Control_TransferTab),
+                new Dictionary<string, object>
+                {
+                    ["Phase"] = "COMPLETE",
+                    ["ComponentType"] = "UserControl"
+                });
+        }
+
+        private void InitializeImmediateUI()
+        {
+            // Set immediate UI state that doesn't require database access
             Color errorColor = Model_AppVariables.UserUiColors.ComboBoxErrorForeColor ?? Color.Red;
             Control_TransferTab_ComboBox_Part.ForeColor = errorColor;
             Control_TransferTab_ComboBox_Operation.ForeColor = errorColor;
             Control_TransferTab_ComboBox_ToLocation.ForeColor = errorColor;
             Control_TransferTab_Image_NothingFound.Visible = false;
+
+            // Set initial button states
+            Control_TransferTab_Button_Transfer.Enabled = false;
+            Control_TransferTab_Button_Search.Enabled = false;
+            Control_TransferTab_NumericUpDown_Quantity.Enabled = false;
+
+            // Setup event handlers early
+            Control_TransferTab_OnStartup_WireUpEvents();
 
             // Use cached ToolTip
             SharedToolTip.SetToolTip(Control_TransferTab_Button_Search,
@@ -92,9 +130,49 @@ namespace MTM_Inventory_Application.Controls.MainForm
             Control_TransferTab_Button_Print.Click -= Control_TransferTab_Button_Print_Click;
             Control_TransferTab_Button_Print.Click += Control_TransferTab_Button_Print_Click;
             SharedToolTip.SetToolTip(Control_TransferTab_Button_Print, "Print the current results");
+        }
 
-            _ = Control_TransferTab_OnStartup_LoadComboBoxesAsync();
-            Control_TransferTab_Update_ButtonStates();
+        private async Task InitializeBackgroundOperationsAsync()
+        {
+            try
+            {
+                // Load ComboBoxes asynchronously in background
+                await Control_TransferTab_OnStartup_LoadDataComboBoxesAsync();
+                
+                // Load user information asynchronously
+                try
+                {
+                    Model_AppVariables.UserFullName = await Dao_User.GetUserFullNameAsync(Model_AppVariables.User);
+                    LoggingUtility.Log($"User full name loaded: {Model_AppVariables.UserFullName}");
+                }
+                catch (Exception ex)
+                {
+                    LoggingUtility.LogApplicationError(ex);
+                    await Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex, callerName: "Control_TransferTab_InitializeBackground_GetUserFullName");
+                }
+
+                // Update button states on UI thread after background operations complete
+                if (this.IsHandleCreated && !this.IsDisposed)
+                {
+                    this.BeginInvoke(() =>
+                    {
+                        try
+                        {
+                            Control_TransferTab_Update_ButtonStates();
+                            LoggingUtility.Log("Transfer tab background initialization completed successfully.");
+                        }
+                        catch (Exception ex)
+                        {
+                            LoggingUtility.LogApplicationError(ex);
+                        }
+                    });
+                }
+            }
+            catch (Exception ex)
+            {
+                LoggingUtility.LogApplicationError(ex);
+                await Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex, callerName: "Control_TransferTab_InitializeBackground");
+            }
         }
 
         #endregion
@@ -185,7 +263,7 @@ namespace MTM_Inventory_Application.Controls.MainForm
             catch (Exception ex)
             {
                 LoggingUtility.LogApplicationError(ex);
-                _ = Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex, false,
+                _ = Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex,
                     new StringBuilder().Append("MainForm_ProcessCmdKey").ToString());
                 return false;
             }
@@ -195,35 +273,7 @@ namespace MTM_Inventory_Application.Controls.MainForm
 
         #region Startup / ComboBox Loading
 
-        private async Task Control_TransferTab_OnStartup_LoadComboBoxesAsync()
-        {
-            try
-            {
-                await Control_TransferTab_OnStartup_LoadDataComboBoxesAsync();
-                Control_TransferTab_OnStartup_WireUpEvents();
-                LoggingUtility.Log("Initial setup of ComboBoxes in the Inventory Tab.");
-                Control_TransferTab_Button_Transfer.Enabled = false;
-                Control_TransferTab_Button_Search.Enabled = false;
-                try
-                {
-                    Model_AppVariables.UserFullName =
-                        await Dao_User.GetUserFullNameAsync(Model_AppVariables.User, true);
-                    LoggingUtility.Log($"User full name loaded: {Model_AppVariables.UserFullName}");
-                }
-                catch (Exception ex)
-                {
-                    LoggingUtility.LogApplicationError(ex);
-                    await Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex, true,
-                        new StringBuilder().Append("Control_TransferTab_OnStartup_GetUserFullName").ToString());
-                }
-            }
-            catch (Exception ex)
-            {
-                LoggingUtility.LogApplicationError(ex);
-                await Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex, true,
-                    new StringBuilder().Append("Control_TransferTab_OnStartup").ToString());
-            }
-        }
+
 
         public async Task Control_TransferTab_OnStartup_LoadDataComboBoxesAsync()
         {
@@ -237,7 +287,7 @@ namespace MTM_Inventory_Application.Controls.MainForm
             catch (Exception ex)
             {
                 LoggingUtility.LogApplicationError(ex);
-                await Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex, true,
+                await Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex,
                     new StringBuilder().Append("MainForm_LoadTransferTabComboBoxesAsync").ToString());
             }
         }
@@ -270,7 +320,7 @@ namespace MTM_Inventory_Application.Controls.MainForm
             {
                 Debug.WriteLine($"[ERROR] Exception in TransferTab Reset: {ex}");
                 LoggingUtility.LogApplicationError(ex);
-                _ = Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex, false,
+                _ = Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex,
                     new StringBuilder().Append("MainForm_Transfer_Button_Reset_Click").ToString());
             }
             finally
@@ -330,7 +380,7 @@ namespace MTM_Inventory_Application.Controls.MainForm
             {
                 Debug.WriteLine($"[ERROR] Exception in TransferTab HardReset: {ex}");
                 LoggingUtility.LogApplicationError(ex);
-                _ = Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex, false,
+                _ = Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex,
                     new StringBuilder().Append("MainForm_Transfer_HardReset").ToString());
             }
             finally
@@ -397,7 +447,7 @@ namespace MTM_Inventory_Application.Controls.MainForm
             {
                 Debug.WriteLine($"[ERROR] Exception in TransferTab SoftReset: {ex}");
                 LoggingUtility.LogApplicationError(ex);
-                _ = Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex, false,
+                _ = Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex,
                     new StringBuilder().Append("MainForm_Transfer_SoftReset").ToString());
             }
             finally
@@ -419,82 +469,86 @@ namespace MTM_Inventory_Application.Controls.MainForm
         {
             try
             {
-                // Show progress bar at the start
                 _progressHelper?.ShowProgress();
                 _progressHelper?.UpdateProgress(10, "Searching inventory...");
 
                 LoggingUtility.Log("TransferTab Search button clicked.");
-                string partId = Control_TransferTab_ComboBox_Part.Text;
-                string op = Control_TransferTab_ComboBox_Operation.Text;
+                
+                string partId = Control_TransferTab_ComboBox_Part.Text?.Trim() ?? "";
+                string op = Control_TransferTab_ComboBox_Operation.Text?.Trim() ?? "";
+                
                 if (string.IsNullOrWhiteSpace(partId) || Control_TransferTab_ComboBox_Part.SelectedIndex <= 0)
                 {
-                    MessageBox.Show(@"Please select a valid Part.", @"Validation Error", MessageBoxButtons.OK,
-                        MessageBoxIcon.Warning);
+                    Service_ErrorHandler.HandleValidationError("Please select a valid Part.", "Part Selection");
                     Control_TransferTab_ComboBox_Part.Focus();
                     return;
                 }
 
-                DataTable results;
+                DataTable? results = null;
+
                 if (Control_TransferTab_ComboBox_Operation.SelectedIndex > 0 &&
-                    Control_TransferTab_ComboBox_Operation.Text != @"[ Enter Operation ]")
+                    !string.IsNullOrWhiteSpace(op) && op != @"[ Enter Operation ]")
                 {
-                    LoggingUtility.Log($"Searching inventory for Part ID: {partId} and Operation: {op}");
-                    _progressHelper?.UpdateProgress(40,
-                        "Querying by part and operation...");
-                    results = await Dao_Inventory.GetInventoryByPartIdAndOperationAsync(partId, op, true);
+                    _progressHelper?.UpdateProgress(40, "Querying by part and operation...");
+                    var partOpResult = await Dao_Inventory.GetInventoryByPartIdAndOperationAsync(partId, op, true);
+                    if (partOpResult.IsSuccess)
+                    {
+                        results = partOpResult.Data!;
+                    }
+                    else
+                    {
+                        throw new Exception(partOpResult.ErrorMessage ?? "Failed to retrieve inventory by part and operation");
+                    }
                 }
                 else
                 {
-                    LoggingUtility.Log($"Searching inventory for Part ID: {partId} without specific operation.");
                     _progressHelper?.UpdateProgress(40, "Querying by part...");
-                    results = await Dao_Inventory.GetInventoryByPartIdAsync(partId, true);
+                    var partResult = await Dao_Inventory.GetInventoryByPartIdAsync(partId, true);
+                    if (partResult.IsSuccess)
+                    {
+                        results = partResult.Data!;
+                    }
+                    else
+                    {
+                        throw new Exception(partResult.ErrorMessage ?? "Failed to retrieve inventory by part");
+                    }
+                }
+                
+                if (results == null)
+                {
+                    throw new Exception("Failed to retrieve inventory data");
                 }
 
                 _progressHelper?.UpdateProgress(70, "Updating results...");
-                DataGridView? dgv = Control_TransferTab_DataGridView_Main;
-                dgv.SuspendLayout();
-                dgv.DataSource = results;
+                Control_TransferTab_DataGridView_Main.DataSource = results;
+                Control_TransferTab_DataGridView_Main.ClearSelection();
+
                 // Only show columns in this order: Location, PartID, Operation, Quantity, Notes
-                string[] columnsToShowArr = { "Location", "PartID", "Operation", "Quantity", "Notes" };
-                HashSet<string> columnsToShow = new(columnsToShowArr);
-                foreach (DataGridViewColumn column in dgv.Columns)
+                string[] columnsToShow = { "Location", "PartID", "Operation", "Quantity", "Notes" };
+                foreach (DataGridViewColumn column in Control_TransferTab_DataGridView_Main.Columns)
                 {
                     column.Visible = columnsToShow.Contains(column.Name);
                 }
 
-                // Reorder columns only if needed
-                for (int i = 0; i < columnsToShowArr.Length; i++)
+                // Reorder columns
+                for (int i = 0; i < columnsToShow.Length; i++)
                 {
-                    string colName = columnsToShowArr[i];
-                    if (dgv.Columns.Contains(colName) && dgv.Columns[colName].DisplayIndex != i)
+                    if (Control_TransferTab_DataGridView_Main.Columns.Contains(columnsToShow[i]))
                     {
-                        dgv.Columns[colName].DisplayIndex = i;
+                        Control_TransferTab_DataGridView_Main.Columns[columnsToShow[i]].DisplayIndex = i;
                     }
                 }
+
+                Core_Themes.ApplyThemeToDataGridView(Control_TransferTab_DataGridView_Main);
+                Core_Themes.SizeDataGrid(Control_TransferTab_DataGridView_Main);
 
                 Control_TransferTab_Image_NothingFound.Visible = results.Rows.Count == 0;
-                if (results.Rows.Count > 0)
-                {
-                    Core_Themes.ApplyThemeToDataGridView(dgv);
-                    Core_Themes.SizeDataGrid(dgv);
-                    if (dgv.Rows.Count > 0)
-                    {
-                        DataGridViewRow firstRow = dgv.Rows[0];
-                        if (!firstRow.Selected)
-                        {
-                            dgv.ClearSelection();
-                            firstRow.Selected = true;
-                        }
-                    }
-                }
-
-                dgv.ResumeLayout();
                 _progressHelper?.UpdateProgress(100, "Search complete");
             }
             catch (Exception ex)
             {
                 LoggingUtility.LogApplicationError(ex);
-                await Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex, true,
+                await Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex,
                     new StringBuilder().Append("Control_TransferTab_Button_Search_Click").ToString());
             }
             finally
@@ -546,7 +600,7 @@ namespace MTM_Inventory_Application.Controls.MainForm
             catch (Exception ex)
             {
                 LoggingUtility.LogApplicationError(ex);
-                await Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex, true,
+                await Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex,
                     new StringBuilder().Append("Control_TransferTab_Button_Transfer_Click").ToString());
             }
             finally
@@ -611,11 +665,11 @@ namespace MTM_Inventory_Application.Controls.MainForm
             }
 
             string batchNumber = drv["BatchNumber"]?.ToString() ?? "";
-            string partId = drv["PartID"]?.ToString() ?? "";
+            string partId = drv["p_PartID"]?.ToString() ?? "";
             string fromLocation = drv["Location"]?.ToString() ?? "";
             string itemType = drv.Row.Table.Columns.Contains("ItemType") ? drv["ItemType"]?.ToString() ?? "" : "";
             string notes = drv["Notes"]?.ToString() ?? "";
-            string operation = drv["Operation"]?.ToString() ?? "";
+            string operation = drv["p_Operation"]?.ToString() ?? "";
             string quantityStr = drv["Quantity"]?.ToString() ?? "";
             if (!int.TryParse(quantityStr, out int originalQuantity))
             {
@@ -635,11 +689,12 @@ namespace MTM_Inventory_Application.Controls.MainForm
             }
             else
             {
+                // TransferPartSimpleAsync transfers entire quantity - no quantity parameter needed
                 await Dao_Inventory.TransferPartSimpleAsync(
-                    batchNumber, partId, operation, quantityStr, newLocation);
+                    batchNumber, partId, operation, newLocation);
             }
 
-            await Dao_History.AddTransactionHistoryAsync(new Model_TransactionHistory
+            var historyResult = await Dao_History.AddTransactionHistoryAsync(new Model_TransactionHistory
             {
                 TransactionType = "TRANSFER",
                 PartId = partId,
@@ -653,6 +708,12 @@ namespace MTM_Inventory_Application.Controls.MainForm
                 BatchNumber = batchNumber,
                 DateTime = DateTime.Now
             });
+            
+            if (!historyResult.IsSuccess)
+            {
+                LoggingUtility.Log($"Failed to log transaction history: {historyResult.ErrorMessage}");
+            }
+            
             if (MainFormInstance != null)
             {
                 MainFormInstance.MainForm_StatusStrip_SavedStatus.Text =
@@ -676,10 +737,10 @@ namespace MTM_Inventory_Application.Controls.MainForm
                 }
 
                 string batchNumber = drv["BatchNumber"]?.ToString() ?? "";
-                string partId = drv["PartID"]?.ToString() ?? "";
+                string partId = drv["p_PartID"]?.ToString() ?? "";
                 string fromLocation = drv["Location"]?.ToString() ?? "";
                 string itemType = drv.Row.Table.Columns.Contains("ItemType") ? drv["ItemType"]?.ToString() ?? "" : "";
-                string operation = drv["Operation"]?.ToString() ?? "";
+                string operation = drv["p_Operation"]?.ToString() ?? "";
                 string quantityStr = drv["Quantity"]?.ToString() ?? "";
                 string notes = drv["Notes"]?.ToString() ?? "";
                 if (!int.TryParse(quantityStr, out int originalQuantity))
@@ -691,9 +752,11 @@ namespace MTM_Inventory_Application.Controls.MainForm
 
                 int transferQuantity =
                     Math.Min((int)Control_TransferTab_NumericUpDown_Quantity.Value, originalQuantity);
+                // TransferPartSimpleAsync transfers entire quantity - no quantity parameter needed
                 await Dao_Inventory.TransferPartSimpleAsync(
-                    batchNumber, partId, operation, quantityStr, newLocation);
-                await Dao_History.AddTransactionHistoryAsync(new Model_TransactionHistory
+                    batchNumber, partId, operation, newLocation);
+                    
+                var historyResult = await Dao_History.AddTransactionHistoryAsync(new Model_TransactionHistory
                 {
                     TransactionType = "TRANSFER",
                     PartId = partId,
@@ -707,6 +770,12 @@ namespace MTM_Inventory_Application.Controls.MainForm
                     BatchNumber = batchNumber,
                     DateTime = DateTime.Now
                 });
+                
+                if (!historyResult.IsSuccess)
+                {
+                    LoggingUtility.Log($"Failed to log transaction history: {historyResult.ErrorMessage}");
+                }
+                
                 partIds.Add(partId);
                 operations.Add(operation);
                 fromLocations.Add(fromLocation);
@@ -767,7 +836,7 @@ namespace MTM_Inventory_Application.Controls.MainForm
             catch (Exception ex)
             {
                 LoggingUtility.LogApplicationError(ex);
-                _ = Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex, false,
+                _ = Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex,
                     new StringBuilder().Append("MainForm_Inventory_ComboBox_Op").ToString());
             }
         }
@@ -797,48 +866,53 @@ namespace MTM_Inventory_Application.Controls.MainForm
             catch (Exception ex)
             {
                 LoggingUtility.LogApplicationError(ex);
-                _ = Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex, false,
+                _ = Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex,
                     new StringBuilder().Append("MainForm_Inventory_ComboBox_Part").ToString());
             }
         }
 
         private void Control_TransferTab_Update_ButtonStates()
         {
+            var callStack = new System.Diagnostics.StackTrace();
+            var callerFrame = callStack.GetFrame(1);
+            var callerMethod = callerFrame?.GetMethod()?.Name ?? "Unknown";
+            LoggingUtility.Log($"[PERF] Update_ButtonStates called from: {callerMethod}");
+            
             try
             {
-                Control_TransferTab_Button_Search.Enabled = Control_TransferTab_ComboBox_Part.SelectedIndex > 0;
+                // Cache frequently accessed properties to avoid repeated lookups
+                bool hasPart = Control_TransferTab_ComboBox_Part.SelectedIndex > 0;
                 bool hasData = Control_TransferTab_DataGridView_Main.Rows.Count > 0;
-                bool hasSelection = Control_TransferTab_DataGridView_Main.SelectedRows.Count > 0;
+                bool hasSelection = hasData && Control_TransferTab_DataGridView_Main.SelectedRows.Count > 0;
                 bool hasToLocation = Control_TransferTab_ComboBox_ToLocation.SelectedIndex > 0 &&
                                      !string.IsNullOrWhiteSpace(Control_TransferTab_ComboBox_ToLocation.Text);
-                bool hasPart = Control_TransferTab_ComboBox_Part.SelectedIndex > 0;
                 bool hasQuantity = Control_TransferTab_NumericUpDown_Quantity.Value > 0;
 
-                Control_TransferTab_ComboBox_ToLocation.Enabled = hasData;
-                Control_TransferTab_NumericUpDown_Quantity.Enabled =
-                    hasData && Control_TransferTab_DataGridView_Main.SelectedRows.Count <= 1;
+                // Update control states efficiently
+                Control_TransferTab_Button_Search.Enabled = hasPart;
+                // ToLocation ComboBox stays enabled (respects user privileges from ApplyPrivileges)
+                Control_TransferTab_NumericUpDown_Quantity.Enabled = hasData && 
+                    Control_TransferTab_DataGridView_Main.SelectedRows.Count <= 1;
 
+                // Check if destination location is same as source location (only if we have selection and destination)
                 bool toLocationIsSameAsRow = false;
                 if (hasSelection && hasToLocation)
                 {
-                    foreach (DataGridViewRow row in Control_TransferTab_DataGridView_Main.SelectedRows)
+                    // Optimize by only checking first selected row for performance
+                    var firstSelectedRow = Control_TransferTab_DataGridView_Main.SelectedRows[0];
+                    if (firstSelectedRow?.DataBoundItem is DataRowView drv)
                     {
-                        if (row.DataBoundItem is DataRowView drv)
-                        {
-                            string rowLocation = drv["Location"]?.ToString() ?? string.Empty;
-                            if (string.Equals(rowLocation, Control_TransferTab_ComboBox_ToLocation.Text,
-                                    StringComparison.OrdinalIgnoreCase))
-                            {
-                                toLocationIsSameAsRow = true;
-                                break;
-                            }
-                        }
+                        string rowLocation = drv["Location"]?.ToString() ?? string.Empty;
+                        toLocationIsSameAsRow = string.Equals(rowLocation, Control_TransferTab_ComboBox_ToLocation.Text,
+                            StringComparison.OrdinalIgnoreCase);
                     }
                 }
 
+                // Update transfer button state
                 Control_TransferTab_Button_Transfer.Enabled =
                     hasData && hasSelection && hasToLocation && hasPart && hasQuantity && !toLocationIsSameAsRow;
-                // Print button enable/disable
+                
+                // Update print button state if it exists
                 if (Control_TransferTab_Button_Print != null)
                 {
                     Control_TransferTab_Button_Print.Enabled = hasData;
@@ -847,7 +921,7 @@ namespace MTM_Inventory_Application.Controls.MainForm
             catch (Exception ex)
             {
                 LoggingUtility.LogApplicationError(ex);
-                _ = Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex, false,
+                _ = Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex,
                     new StringBuilder().Append("Control_TransferTab_Update_ButtonStates").ToString());
             }
         }
@@ -943,7 +1017,7 @@ namespace MTM_Inventory_Application.Controls.MainForm
             catch (Exception ex)
             {
                 LoggingUtility.LogApplicationError(ex);
-                _ = Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex, false,
+                _ = Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex,
                     new StringBuilder().Append("MainForm_WireUpTransferTabEvents").ToString());
             }
         }
@@ -952,23 +1026,32 @@ namespace MTM_Inventory_Application.Controls.MainForm
         {
             try
             {
-                if (Control_TransferTab_DataGridView_Main.SelectedRows.Count == 1)
+                var selectedRowCount = Control_TransferTab_DataGridView_Main.SelectedRows.Count;
+                
+                if (selectedRowCount == 1)
                 {
-                    DataGridViewRow row = Control_TransferTab_DataGridView_Main.SelectedRows[0];
-                    if (row.DataBoundItem is DataRowView drv && int.TryParse(drv["Quantity"]?.ToString(), out int qty))
+                    var row = Control_TransferTab_DataGridView_Main.SelectedRows[0];
+                    if (row?.DataBoundItem is DataRowView drv && 
+                        int.TryParse(drv["Quantity"]?.ToString(), out int qty) && qty > 0)
                     {
                         Control_TransferTab_NumericUpDown_Quantity.Maximum = qty;
                         Control_TransferTab_NumericUpDown_Quantity.Value = qty;
                         Control_TransferTab_NumericUpDown_Quantity.Enabled = true;
                     }
+                    else
+                    {
+                        Control_TransferTab_NumericUpDown_Quantity.Enabled = false;
+                    }
                 }
-                else if (Control_TransferTab_DataGridView_Main.SelectedRows.Count > 1)
+                else if (selectedRowCount > 1)
                 {
+                    // Multiple rows selected - disable quantity editing
                     Control_TransferTab_NumericUpDown_Quantity.Enabled = false;
                 }
                 else
                 {
-                    Control_TransferTab_NumericUpDown_Quantity.Enabled = true;
+                    // No rows selected
+                    Control_TransferTab_NumericUpDown_Quantity.Enabled = false;
                 }
             }
             catch (Exception ex)
@@ -1042,6 +1125,44 @@ namespace MTM_Inventory_Application.Controls.MainForm
             combo.ForeColor = valid
                 ? Model_AppVariables.UserUiColors.ComboBoxForeColor ?? Color.Black
                 : Model_AppVariables.UserUiColors.ComboBoxErrorForeColor ?? Color.Red;
+
+        /// <summary>
+        /// Efficiently configure DataGridView columns visibility and display order
+        /// </summary>
+        /// <param name="dgv">DataGridView to configure</param>
+        private void ConfigureDataGridViewColumns(DataGridView dgv)
+        {
+            try
+            {
+                // Only show columns in this order: Location, PartID, Operation, Quantity, Notes
+                string[] columnsToShowArr = { "Location", "PartID", "Operation", "Quantity", "Notes" };
+                HashSet<string> columnsToShow = new(columnsToShowArr);
+                
+                // Set column visibility efficiently
+                foreach (DataGridViewColumn column in dgv.Columns)
+                {
+                    if (column != null)
+                    {
+                        column.Visible = columnsToShow.Contains(column.Name);
+                    }
+                }
+
+                // Reorder columns only if needed and they exist
+                for (int i = 0; i < columnsToShowArr.Length; i++)
+                {
+                    string colName = columnsToShowArr[i];
+                    if (dgv.Columns.Contains(colName) && dgv.Columns[colName] != null && 
+                        dgv.Columns[colName].DisplayIndex != i)
+                    {
+                        dgv.Columns[colName].DisplayIndex = i;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                LoggingUtility.LogApplicationError(ex);
+            }
+        }
 
         #endregion
 

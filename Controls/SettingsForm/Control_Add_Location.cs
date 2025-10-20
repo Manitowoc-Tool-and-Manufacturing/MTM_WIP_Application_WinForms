@@ -1,3 +1,4 @@
+using MTM_Inventory_Application.Core;
 using MTM_Inventory_Application.Data;
 using MTM_Inventory_Application.Models;
 
@@ -16,6 +17,8 @@ namespace MTM_Inventory_Application.Controls.SettingsForm
         public Control_Add_Location()
         {
             InitializeComponent();
+            Core_Themes.ApplyDpiScaling(this);
+            Core_Themes.ApplyRuntimeLayoutAdjustments(this);
             LoadBuildingOptions();
         }
 
@@ -69,7 +72,15 @@ namespace MTM_Inventory_Application.Controls.SettingsForm
                 string location = Control_Add_Location_TextBox_Location.Text.Trim();
                 string building = Control_Add_Location_ComboBox_Building.Text ?? string.Empty;
 
-                if (await Dao_Location.LocationExists(location))
+                var existsResult = await Dao_Location.LocationExists(location);
+                if (!existsResult.IsSuccess)
+                {
+                    MessageBox.Show($@"Error checking location: {existsResult.ErrorMessage}", @"Error", MessageBoxButtons.OK,
+                        MessageBoxIcon.Error);
+                    return;
+                }
+                
+                if (existsResult.Data)
                 {
                     MessageBox.Show($@"Location '{location}' already exists.", @"Duplicate Location",
                         MessageBoxButtons.OK,
@@ -78,7 +89,14 @@ namespace MTM_Inventory_Application.Controls.SettingsForm
                     return;
                 }
 
-                await Dao_Location.InsertLocation(location, building, true);
+                var insertResult = await Dao_Location.InsertLocation(location, building);
+                if (!insertResult.IsSuccess)
+                {
+                    MessageBox.Show($@"Error adding location: {insertResult.ErrorMessage}", @"Error", MessageBoxButtons.OK,
+                        MessageBoxIcon.Error);
+                    return;
+                }
+                
                 ClearForm();
                 LocationAdded?.Invoke(this, EventArgs.Empty);
                 MessageBox.Show(@"Location added successfully!", @"Success", MessageBoxButtons.OK,

@@ -1,8 +1,9 @@
-﻿using System.Data;
+using System.Data;
 using System.Security.Principal;
 using MTM_Inventory_Application.Helpers;
 using MTM_Inventory_Application.Logging;
 using MTM_Inventory_Application.Models;
+using MySql.Data.MySqlClient;
 
 namespace MTM_Inventory_Application.Data;
 
@@ -12,7 +13,9 @@ internal static class Dao_System
 {
     #region User Roles / Access
 
-    internal static async Task<DaoResult> SetUserAccessTypeAsync(string userName, string accessType, bool useAsync = false)
+    internal static async Task<DaoResult> SetUserAccessTypeAsync(string userName, string accessType,
+        MySqlConnection? connection = null,
+        MySqlTransaction? transaction = null)
     {
         try
         {
@@ -23,12 +26,11 @@ internal static class Dao_System
                 ["AssignedBy"] = Model_AppVariables.User ?? "System"
             };
 
-            var result = await Helper_Database_StoredProcedure.ExecuteNonQueryWithStatus(
+            var result = await Helper_Database_StoredProcedure.ExecuteNonQueryWithStatusAsync(
                 Model_AppVariables.ConnectionString,
                 "sys_SetUserAccessType",
                 parameters,
-                null, // No progress helper for this method
-                useAsync
+                null // No progress helper for this method
             );
 
             if (result.IsSuccess)
@@ -48,7 +50,7 @@ internal static class Dao_System
         catch (Exception ex)
         {
             LoggingUtility.LogApplicationError(ex);
-            await HandleSystemDaoExceptionAsync(ex, "SetUserAccessType", useAsync);
+            await HandleSystemDaoExceptionAsync(ex, "SetUserAccessType");
             return DaoResult.Failure($"Failed to set user access type for {userName}", ex);
         }
     }
@@ -66,7 +68,7 @@ internal static class Dao_System
         return user;
     }
 
-    internal static async Task<DaoResult<List<Model_Users>>> System_UserAccessTypeAsync(bool useAsync = true)
+    internal static async Task<DaoResult<List<Model_Users>>> System_UserAccessTypeAsync(MySqlConnection? connection = null, MySqlTransaction? transaction = null)
     {
         var user = Model_AppVariables.User;
         try
@@ -78,12 +80,13 @@ internal static class Dao_System
 
             // MIGRATED: Use Helper_Database_StoredProcedure for proper status handling
             // This handles the case where stored procedures may not exist yet or have parameter issues
-            var dataResult = await Helper_Database_StoredProcedure.ExecuteDataTableWithStatus(
+            var dataResult = await Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync(
                 Model_AppVariables.ConnectionString,
                 "sys_GetUserAccessType",
                 null, // No parameters needed
-                null, // No progress helper for startup
-                useAsync
+                progressHelper: null,
+                connection: connection,
+                transaction: transaction
             );
 
             if (!dataResult.IsSuccess)
@@ -161,24 +164,25 @@ internal static class Dao_System
                 User = user
             };
             
-            await HandleSystemDaoExceptionAsync(ex, "System_UserAccessType", useAsync);
+            await HandleSystemDaoExceptionAsync(ex, "System_UserAccessType");
             return DaoResult<List<Model_Users>>.Success(new List<Model_Users> { fallbackUser }, 
                 $"Fallback admin access granted for user: {user}");
         }
     }
 
-    internal static async Task<DaoResult<int>> GetUserIdByNameAsync(string userName, bool useAsync = false)
+    internal static async Task<DaoResult<int>> GetUserIdByNameAsync(string userName, MySqlConnection? connection = null, MySqlTransaction? transaction = null)
     {
         try
         {
             Dictionary<string, object> parameters = new() { ["UserName"] = userName }; // p_ prefix added automatically
 
-            var result = await Helper_Database_StoredProcedure.ExecuteScalarWithStatus(
+            var result = await Helper_Database_StoredProcedure.ExecuteScalarWithStatusAsync(
                 Model_AppVariables.ConnectionString,
-                "sys_GetUserIdByName",
+                "sys_user_GetIdByName",
                 parameters,
-                null, // No progress helper for this method
-                useAsync
+                progressHelper: null,
+                connection: connection,
+                transaction: transaction
             );
 
             if (result.IsSuccess && result.Data != null && int.TryParse(result.Data.ToString(), out int userId))
@@ -193,23 +197,24 @@ internal static class Dao_System
         catch (Exception ex)
         {
             LoggingUtility.LogApplicationError(ex);
-            await HandleSystemDaoExceptionAsync(ex, "GetUserIdByName", useAsync);
+            await HandleSystemDaoExceptionAsync(ex, "GetUserIdByName");
             return DaoResult<int>.Failure($"Failed to get user ID for '{userName}'", ex);
         }
     }
 
-    internal static async Task<DaoResult<int>> GetRoleIdByNameAsync(string roleName, bool useAsync = false)
+    internal static async Task<DaoResult<int>> GetRoleIdByNameAsync(string roleName, MySqlConnection? connection = null, MySqlTransaction? transaction = null)
     {
         try
         {
             Dictionary<string, object> parameters = new() { ["RoleName"] = roleName }; // p_ prefix added automatically
 
-            var result = await Helper_Database_StoredProcedure.ExecuteScalarWithStatus(
+            var result = await Helper_Database_StoredProcedure.ExecuteScalarWithStatusAsync(
                 Model_AppVariables.ConnectionString,
                 "sys_GetRoleIdByName",
                 parameters,
-                null, // No progress helper for this method
-                useAsync
+                progressHelper: null,
+                connection: connection,
+                transaction: transaction
             );
 
             if (result.IsSuccess && result.Data != null && int.TryParse(result.Data.ToString(), out int roleId))
@@ -224,8 +229,54 @@ internal static class Dao_System
         catch (Exception ex)
         {
             LoggingUtility.LogApplicationError(ex);
-            await HandleSystemDaoExceptionAsync(ex, "GetRoleIdByName", useAsync);
+            await HandleSystemDaoExceptionAsync(ex, "GetRoleIdByName");
             return DaoResult<int>.Failure($"Failed to get role ID for '{roleName}'", ex);
+        }
+    }
+
+    #endregion
+
+    #region Themes
+
+    /// <summary>
+    /// Retrieves all themes from the app_themes table.
+    /// Alternative implementation that queries the table directly since app_themes_Get_All stored procedure doesn't exist.
+    /// </summary>
+    /// <param name="connection">Optional external MySqlConnection to use instead of creating a new one</param>
+    /// <param name="transaction">Optional external MySqlTransaction to participate in</param>
+    /// <returns>A DaoResult containing a DataTable with ThemeName and SettingsJson columns.</returns>
+    internal static async Task<DaoResult<DataTable>> GetAllThemesAsync(
+        MySqlConnection? connection = null,
+        MySqlTransaction? transaction = null)
+    {
+        try
+        {
+            // Use stored procedure instead of direct SQL query
+            var result = await Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync(
+                Model_AppVariables.ConnectionString,
+                "sys_theme_GetAll",
+                null, // No parameters needed
+                progressHelper: null,
+                connection: connection,
+                transaction: transaction
+            );
+
+            if (result.IsSuccess)
+            {
+                LoggingUtility.Log($"[Dao_System] Retrieved {result.Data?.Rows.Count ?? 0} themes using stored procedure");
+                return DaoResult<DataTable>.Success(result.Data, $"Successfully retrieved {result.Data?.Rows.Count ?? 0} themes");
+            }
+            else
+            {
+                LoggingUtility.Log($"[Dao_System] Failed to retrieve themes: {result.ErrorMessage}");
+                return DaoResult<DataTable>.Failure($"Failed to retrieve themes: {result.ErrorMessage}");
+            }
+        }
+        catch (Exception ex)
+        {
+            LoggingUtility.LogApplicationError(ex);
+            await HandleSystemDaoExceptionAsync(ex, "GetAllThemes");
+            return DaoResult<DataTable>.Failure("Failed to retrieve themes from database", ex);
         }
     }
 
@@ -233,12 +284,89 @@ internal static class Dao_System
 
     #region Helpers
 
-    private static async Task HandleSystemDaoExceptionAsync(Exception ex, string method, bool useAsync)
+    private static async Task HandleSystemDaoExceptionAsync(Exception ex, string method)
     {
         LoggingUtility.LogApplicationError(new Exception($"Error in {method}: {ex.Message}", ex));
         
         // ENHANCED: Pass method name to error handlers for better debugging
-        await Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex, useAsync, method);
+        await Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex, controlName: method);
+    }
+
+    #endregion
+
+    #region Database Connectivity Validation
+
+    /// <summary>
+    /// Validates database connectivity by attempting a simple query.
+    /// Used for startup validation per FR-014.
+    /// </summary>
+    /// <returns>DaoResult indicating success or failure with actionable error message</returns>
+    internal static async Task<DaoResult> CheckConnectivityAsync(
+        MySqlConnection? connection = null,
+        MySqlTransaction? transaction = null)
+    {
+        try
+        {
+            LoggingUtility.Log("[Dao_System] Checking database connectivity");
+
+            // Attempt a simple SELECT query to validate connectivity
+            var result = await Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync(
+                Model_AppVariables.ConnectionString,
+                "sys_theme_GetAll",  // Use existing stored procedure for validation
+                null
+            );
+
+            if (result.IsSuccess)
+            {
+                LoggingUtility.Log("[Dao_System] Database connectivity check passed");
+                return DaoResult.Success("Database connection successful");
+            }
+            else
+            {
+                // Helper already provides user-friendly error messages
+                LoggingUtility.Log($"[Dao_System] Database connectivity check failed: {result.ErrorMessage}");
+                return DaoResult.Failure(result.StatusMessage ?? result.ErrorMessage);
+            }
+        }
+        catch (MySqlException ex)
+        {
+            string userMessage = ex.Number switch
+            {
+                0 => "Cannot connect to MySQL server.\n\n" +
+                     "Please ensure:\n" +
+                     "• MySQL/MAMP is running\n" +
+                     "• Server is accessible at the configured address\n" +
+                     "• No firewall is blocking the connection",
+                1042 => "Cannot resolve MySQL server hostname.\n\n" +
+                        "Please verify the server address in your configuration.",
+                1044 => "Access denied to database.\n\n" +
+                        "Please verify:\n" +
+                        "• Database name is correct\n" +
+                        "• User has permissions to access the database",
+                1045 => "Access denied for user.\n\n" +
+                        "Please verify:\n" +
+                        "• Username is correct\n" +
+                        "• Password is correct\n" +
+                        "• User has necessary permissions",
+                1049 => "Database does not exist.\n\n" +
+                        "Please verify the database name in your configuration.",
+                2002 => "Cannot connect to MySQL server.\n\n" +
+                        "MySQL server may not be running or network is unreachable.",
+                2003 => "Cannot connect to MySQL server.\n\n" +
+                        "Connection refused. Please verify MySQL/MAMP is running.",
+                _ => $"MySQL Error ({ex.Number}): {ex.Message}\n\n" +
+                     "Please check the application logs for details."
+            };
+
+            LoggingUtility.LogDatabaseError(ex);
+            return DaoResult.Failure(userMessage, ex);
+        }
+        catch (Exception ex)
+        {
+            string userMessage = $"Database connectivity check failed: {ex.Message}";
+            LoggingUtility.LogApplicationError(ex);
+            return DaoResult.Failure(userMessage, ex);
+        }
     }
 
     #endregion

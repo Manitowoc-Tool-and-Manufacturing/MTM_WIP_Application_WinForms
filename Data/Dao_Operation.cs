@@ -1,7 +1,8 @@
-﻿using System.Data;
+using System.Data;
 using MTM_Inventory_Application.Helpers;
 using MTM_Inventory_Application.Models;
 using MTM_Inventory_Application.Logging;
+using MySql.Data.MySqlClient;
 
 namespace MTM_Inventory_Application.Data;
 
@@ -11,18 +12,19 @@ internal static class Dao_Operation
 {
     #region Delete
 
-    internal static async Task<DaoResult> DeleteOperation(string operationNumber, bool useAsync = false)
+    internal static async Task<DaoResult> DeleteOperation(string operationNumber,
+        MySqlConnection? connection = null,
+        MySqlTransaction? transaction = null)
     {
         try
         {
-            var parameters = new Dictionary<string, object> { ["Operation"] = operationNumber }; // p_ prefix added automatically
+            var parameters = new Dictionary<string, object> { ["p_Operation"] = operationNumber }; // p_ prefix added automatically
 
-            var result = await Helper_Database_StoredProcedure.ExecuteNonQueryWithStatus(
+            var result = await Helper_Database_StoredProcedure.ExecuteNonQueryWithStatusAsync(
                 Model_AppVariables.ConnectionString,
                 "md_operation_numbers_Delete_ByOperation",
                 parameters,
-                null, // No progress helper for this method
-                useAsync
+                null // No progress helper for this method
             );
 
             if (result.IsSuccess)
@@ -37,7 +39,7 @@ internal static class Dao_Operation
         catch (Exception ex)
         {
             LoggingUtility.LogDatabaseError(ex);
-            await Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex, useAsync, "DeleteOperation");
+            await Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex, callerName: "DeleteOperation");
             return DaoResult.Failure($"Error deleting operation {operationNumber}", ex);
         }
     }
@@ -46,22 +48,23 @@ internal static class Dao_Operation
 
     #region Insert
 
-    internal static async Task<DaoResult> InsertOperation(string operationNumber, string user, bool useAsync = false)
+    internal static async Task<DaoResult> InsertOperation(string operationNumber, string user,
+        MySqlConnection? connection = null,
+        MySqlTransaction? transaction = null)
     {
         try
         {
             var parameters = new Dictionary<string, object>
             {
-                ["Operation"] = operationNumber,   // p_ prefix added automatically
+                ["p_Operation"] = operationNumber,   // p_ prefix added automatically
                 ["IssuedBy"] = user
             };
             
-            var result = await Helper_Database_StoredProcedure.ExecuteNonQueryWithStatus(
+            var result = await Helper_Database_StoredProcedure.ExecuteNonQueryWithStatusAsync(
                 Model_AppVariables.ConnectionString,
                 "md_operation_numbers_Add_Operation",
                 parameters,
-                null, // No progress helper for this method
-                useAsync
+                null // No progress helper for this method
             );
 
             if (result.IsSuccess)
@@ -76,7 +79,7 @@ internal static class Dao_Operation
         catch (Exception ex)
         {
             LoggingUtility.LogDatabaseError(ex);
-            await Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex, useAsync, "InsertOperation");
+            await Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex, callerName: "InsertOperation");
             return DaoResult.Failure($"Error creating operation {operationNumber}", ex);
         }
     }
@@ -86,23 +89,23 @@ internal static class Dao_Operation
     #region Update
 
     internal static async Task<DaoResult> UpdateOperation(string oldOperation, string newOperationNumber, string user,
-        bool useAsync = false)
+        MySqlConnection? connection = null,
+        MySqlTransaction? transaction = null)
     {
         try
         {
             var parameters = new Dictionary<string, object>
             {
-                ["Operation"] = oldOperation,        // p_ prefix added automatically
+                ["p_Operation"] = oldOperation,        // p_ prefix added automatically
                 ["NewOperation"] = newOperationNumber,
                 ["IssuedBy"] = user
             };
             
-            var result = await Helper_Database_StoredProcedure.ExecuteNonQueryWithStatus(
+            var result = await Helper_Database_StoredProcedure.ExecuteNonQueryWithStatusAsync(
                 Model_AppVariables.ConnectionString,
                 "md_operation_numbers_Update_Operation",
                 parameters,
-                null, // No progress helper for this method
-                useAsync
+                null // No progress helper for this method
             );
 
             if (result.IsSuccess)
@@ -117,7 +120,7 @@ internal static class Dao_Operation
         catch (Exception ex)
         {
             LoggingUtility.LogDatabaseError(ex);
-            await Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex, useAsync, "UpdateOperation");
+            await Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex, callerName: "UpdateOperation");
             return DaoResult.Failure($"Error updating operation {oldOperation}", ex);
         }
     }
@@ -126,16 +129,15 @@ internal static class Dao_Operation
 
     #region Read
 
-    internal static async Task<DaoResult<DataTable>> GetAllOperations(bool useAsync = false)
+    internal static async Task<DaoResult<DataTable>> GetAllOperations(MySqlConnection? connection = null, MySqlTransaction? transaction = null)
     {
         try
         {
-            var result = await Helper_Database_StoredProcedure.ExecuteDataTableWithStatus(
+            var result = await Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync(
                 Model_AppVariables.ConnectionString,
                 "md_operation_numbers_Get_All",
                 null, // No parameters needed
-                null, // No progress helper for this method
-                useAsync
+                null // No progress helper for this method
             );
                 
             if (result.IsSuccess && result.Data != null)
@@ -150,16 +152,16 @@ internal static class Dao_Operation
         catch (Exception ex)
         {
             LoggingUtility.LogDatabaseError(ex);
-            await Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex, useAsync, "GetAllOperations");
+            await Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex, callerName: "GetAllOperations");
             return DaoResult<DataTable>.Failure("Error retrieving operations", ex);
         }
     }
 
-    internal static async Task<DaoResult<DataRow>> GetOperationByNumber(string operationNumber, bool useAsync = false)
+    internal static async Task<DaoResult<DataRow>> GetOperationByNumber(string operationNumber, MySqlConnection? connection = null, MySqlTransaction? transaction = null)
     {
         try
         {
-            var allOperationsResult = await GetAllOperations(useAsync);
+            var allOperationsResult = await GetAllOperations(connection, transaction);
             if (!allOperationsResult.IsSuccess)
             {
                 return DaoResult<DataRow>.Failure(allOperationsResult.ErrorMessage, allOperationsResult.Exception);
@@ -182,18 +184,19 @@ internal static class Dao_Operation
         }
     }
 
-    internal static async Task<DaoResult<bool>> OperationExists(string operationNumber, bool useAsync = false)
+    internal static async Task<DaoResult<bool>> OperationExists(string operationNumber, MySqlConnection? connection = null, MySqlTransaction? transaction = null)
     {
         try
         {
-            var parameters = new Dictionary<string, object> { ["Operation"] = operationNumber }; // p_ prefix added automatically
+            var parameters = new Dictionary<string, object> { ["p_Operation"] = operationNumber }; // p_ prefix added automatically
 
-            var result = await Helper_Database_StoredProcedure.ExecuteScalarWithStatus(
+            var result = await Helper_Database_StoredProcedure.ExecuteScalarWithStatusAsync(
                 Model_AppVariables.ConnectionString,
                 "md_operation_numbers_Exists_ByOperation",
                 parameters,
-                null, // No progress helper for this method
-                useAsync
+                progressHelper: null,
+                connection: connection,
+                transaction: transaction
             );
                 
             if (result.IsSuccess && result.Data != null)
@@ -209,7 +212,7 @@ internal static class Dao_Operation
         catch (Exception ex)
         {
             LoggingUtility.LogDatabaseError(ex);
-            await Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex, useAsync, "OperationExists");
+            await Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex, callerName: "OperationExists");
             return DaoResult<bool>.Failure($"Error checking operation {operationNumber}", ex);
         }
     }
@@ -218,3 +221,4 @@ internal static class Dao_Operation
 }
 
 #endregion
+

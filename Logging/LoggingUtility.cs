@@ -21,6 +21,12 @@ internal static class LoggingUtility
     private static string _logDirectory = string.Empty;
     private static string _normalLogFile = string.Empty;
     private static readonly Lock LogLock = new();
+    
+    /// <summary>
+    /// Thread-local flag to prevent recursive logging in LogDatabaseError when database operations fail.
+    /// </summary>
+    [ThreadStatic]
+    private static bool _isLoggingDatabaseError;
 
     #endregion
 
@@ -233,14 +239,53 @@ internal static class LoggingUtility
         }
     }
 
-    public static void LogDatabaseError(Exception ex)
+    public static void LogDatabaseError(Exception ex, DatabaseErrorSeverity severity = DatabaseErrorSeverity.Error)
     {
-        var errorEntry = $"{DateTime.Now:yyyy-MM-dd HH:mm:ss} - Database Error - {ex.Message}";
-        var stackEntry = $"{DateTime.Now:yyyy-MM-dd HH:mm:ss} - Stack Trace - {ex.StackTrace}";
-        lock (LogLock)
+        // Prevent recursive logging if database operation called from logging itself fails
+        if (_isLoggingDatabaseError)
         {
-            FlushLogEntryToDisk(_dbErrorLogFile, errorEntry);
-            FlushLogEntryToDisk(_dbErrorLogFile, stackEntry);
+            // Fallback to Debug output to avoid infinite recursion
+            Debug.WriteLine($"[DEBUG] Database error during logging (recursion prevented): {ex.Message}");
+            
+            // Try direct file logging as last resort
+            try
+            {
+                var fallbackEntry = $"{DateTime.Now:yyyy-MM-dd HH:mm:ss} - Database Error (Fallback) [{severity}] - {ex.Message}";
+                if (!string.IsNullOrEmpty(_dbErrorLogFile))
+                {
+                    File.AppendAllText(_dbErrorLogFile, fallbackEntry + Environment.NewLine);
+                }
+            }
+            catch
+            {
+                // Silently fail - we're already in error recovery mode
+            }
+            return;
+        }
+
+        try
+        {
+            _isLoggingDatabaseError = true;
+            
+            var severityLabel = severity switch
+            {
+                DatabaseErrorSeverity.Warning => "WARNING",
+                DatabaseErrorSeverity.Error => "ERROR",
+                DatabaseErrorSeverity.Critical => "CRITICAL",
+                _ => "ERROR"
+            };
+            
+            var errorEntry = $"{DateTime.Now:yyyy-MM-dd HH:mm:ss} - Database Error [{severityLabel}] - {ex.Message}";
+            var stackEntry = $"{DateTime.Now:yyyy-MM-dd HH:mm:ss} - Stack Trace - {ex.StackTrace}";
+            lock (LogLock)
+            {
+                FlushLogEntryToDisk(_dbErrorLogFile, errorEntry);
+                FlushLogEntryToDisk(_dbErrorLogFile, stackEntry);
+            }
+        }
+        finally
+        {
+            _isLoggingDatabaseError = false;
         }
     }
 

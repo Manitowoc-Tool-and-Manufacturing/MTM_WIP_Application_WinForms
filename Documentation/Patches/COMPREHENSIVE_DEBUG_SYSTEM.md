@@ -94,7 +94,7 @@ Service_DebugConfiguration.SetDatabaseTroubleshootingMode();
 ```
 🗄️ DB PROCEDURE START: inv_inventory_Get_ByPartID
    Parameters: {"p_PartID": "CARDBOARD (39X39)"}
-   Server: 172.16.1.104, Database: mtm_wip_application_test
+   Server: 172.16.1.104, Database: mtm_wip_application_winforms_test
 
 ✅ PROCEDURE inv_inventory_Get_ByPartID (45ms) - Status: 0
    InputParameters: {"p_PartID": "CARDBOARD (39X39)"}

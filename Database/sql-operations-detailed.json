@@ -1,0 +1,1536 @@
+{
+  "sys_user_roles_Update": {
+    "ProcedureName": "sys_user_roles_Update",
+    "TotalOperations": 2,
+    "Operations": [
+      {
+        "Index": 1,
+        "Type": "INSERT",
+        "Table": "sys_user_roles",
+        "Columns": [
+          "UserID",
+          "RoleID",
+          "AssignedBy"
+        ],
+        "Values": [
+          "p_UserID",
+          "p_NewRoleID",
+          "p_AssignedBy"
+        ],
+        "ColumnValuePairs": [
+          "UserID = p_UserID",
+          "RoleID = p_NewRoleID",
+          "AssignedBy = p_AssignedBy"
+        ],
+        "RawSQL": "INSERT INTO sys_user_roles (UserID, RoleID, AssignedBy)\n\n                VALUES (p_UserID, p_NewRoleID, p_AssignedBy)"
+      },
+      {
+        "Index": 2,
+        "Type": "DELETE",
+        "Table": "sys_user_roles",
+        "WhereConditions": "UserID = p_UserID",
+        "HasWhere": true,
+        "Warning": "",
+        "RawSQL": "DELETE FROM sys_user_roles WHERE UserID = p_UserID"
+      }
+    ]
+  },
+  "sys_last_10_transactions_Get_ByUser_1": {
+    "ProcedureName": "sys_last_10_transactions_Get_ByUser_1",
+    "TotalOperations": 0,
+    "Operations": []
+  },
+  "sys_last_10_transactions_SwapPositions_ByUser": {
+    "ProcedureName": "sys_last_10_transactions_SwapPositions_ByUser",
+    "TotalOperations": 2,
+    "Operations": [
+      {
+        "Index": 1,
+        "Type": "UPDATE",
+        "Table": "sys_last_10_transactions",
+        "SetClauses": "ReceiveDate = p_ReceiveDate2",
+        "WhereConditions": "id = id1",
+        "HasWhere": true,
+        "RawSQL": "UPDATE sys_last_10_transactions\n\n            SET ReceiveDate = p_ReceiveDate2\n\n            WHERE id = id1"
+      },
+      {
+        "Index": 2,
+        "Type": "UPDATE",
+        "Table": "sys_last_10_transactions",
+        "SetClauses": "ReceiveDate = temp_date",
+        "WhereConditions": "id = id2",
+        "HasWhere": true,
+        "RawSQL": "UPDATE sys_last_10_transactions\n\n            SET ReceiveDate = temp_date\n\n            WHERE id = id2"
+      }
+    ]
+  },
+  "md_operation_numbers_Delete_ByOperation": {
+    "ProcedureName": "md_operation_numbers_Delete_ByOperation",
+    "TotalOperations": 1,
+    "Operations": [
+      {
+        "Index": 1,
+        "Type": "DELETE",
+        "Table": "md_operation_numbers",
+        "WhereConditions": "`Operation` = p_Operation",
+        "HasWhere": true,
+        "Warning": "",
+        "RawSQL": "DELETE FROM `md_operation_numbers`\n\n        WHERE `Operation` = p_Operation"
+      }
+    ]
+  },
+  "usr_users_Exists": {
+    "ProcedureName": "usr_users_Exists",
+    "TotalOperations": 0,
+    "Operations": []
+  },
+  "usr_ui_settings_SetThemeJson": {
+    "ProcedureName": "usr_ui_settings_SetThemeJson",
+    "TotalOperations": 1,
+    "Operations": [
+      {
+        "Index": 1,
+        "Type": "UPDATE",
+        "Table": "usr_ui_settings",
+        "SetClauses": "SettingsJson = v_SettingsJson",
+        "WhereConditions": "UserId = p_UserId",
+        "HasWhere": true,
+        "RawSQL": "UPDATE usr_ui_settings\n\n            SET SettingsJson = v_SettingsJson\n\n            WHERE UserId = p_UserId"
+      }
+    ]
+  },
+  "md_operation_numbers_Update_Operation": {
+    "ProcedureName": "md_operation_numbers_Update_Operation",
+    "TotalOperations": 1,
+    "Operations": [
+      {
+        "Index": 1,
+        "Type": "UPDATE",
+        "Table": "md_operation_numbers",
+        "SetClauses": [
+          "`Operation` = p_NewOperation",
+          "`IssuedBy` = p_IssuedBy"
+        ],
+        "WhereConditions": "`Operation` = p_Operation",
+        "HasWhere": true,
+        "RawSQL": "UPDATE `md_operation_numbers`\n\n        SET `Operation` = p_NewOperation,\n\n            `IssuedBy` = p_IssuedBy\n\n        WHERE `Operation` = p_Operation"
+      }
+    ]
+  },
+  "log_error_Get_All": {
+    "ProcedureName": "log_error_Get_All",
+    "TotalOperations": 0,
+    "Operations": []
+  },
+  "inv_inventory_Transfer_Part": {
+    "ProcedureName": "inv_inventory_Transfer_Part",
+    "TotalOperations": 1,
+    "Operations": [
+      {
+        "Index": 1,
+        "Type": "UPDATE",
+        "Table": "inv_inventory",
+        "SetClauses": [
+          "Location = p_NewLocation",
+          "LastUpdated = CURRENT_TIMESTAMP"
+        ],
+        "WhereConditions": [
+          "BatchNumber = p_BatchNumber",
+          "PartID = p_PartID",
+          "Operation = p_Operation"
+        ],
+        "HasWhere": true,
+        "RawSQL": "UPDATE inv_inventory\n\n            SET Location = p_NewLocation,\n\n                LastUpdated = CURRENT_TIMESTAMP\n\n            WHERE BatchNumber = p_BatchNumber\n\n              AND PartID = p_PartID\n\n              AND Operation = p_Operation"
+      }
+    ]
+  },
+  "sys_last_10_transactions_RemoveAndShift_ByUser_1": {
+    "ProcedureName": "sys_last_10_transactions_RemoveAndShift_ByUser_1",
+    "TotalOperations": 2,
+    "Operations": [
+      {
+        "Index": 1,
+        "Type": "UPDATE",
+        "Table": "sys_last_10_transactions",
+        "SetClauses": "Position = Position - 1",
+        "WhereConditions": [
+          "User = p_User",
+          "Position > p_Position"
+        ],
+        "HasWhere": true,
+        "RawSQL": "UPDATE sys_last_10_transactions\n\n            SET Position = Position - 1\n\n            WHERE User = p_User AND Position > p_Position"
+      },
+      {
+        "Index": 2,
+        "Type": "DELETE",
+        "Table": "sys_last_10_transactions",
+        "WhereConditions": [
+          "User = p_User",
+          "Position = p_Position"
+        ],
+        "HasWhere": true,
+        "Warning": "",
+        "RawSQL": "DELETE FROM sys_last_10_transactions\n\n            WHERE User = p_User AND Position = p_Position"
+      }
+    ]
+  },
+  "sys_last_10_transactions_RemoveAndShift_ByUser": {
+    "ProcedureName": "sys_last_10_transactions_RemoveAndShift_ByUser",
+    "TotalOperations": 2,
+    "Operations": [
+      {
+        "Index": 1,
+        "Type": "UPDATE",
+        "Table": "sys_last_10_transactions",
+        "SetClauses": "ReceiveDate = prev_date",
+        "WhereConditions": "id = curr_id",
+        "HasWhere": true,
+        "RawSQL": "UPDATE sys_last_10_transactions\n\n                SET ReceiveDate = prev_date\n\n                WHERE id = curr_id"
+      },
+      {
+        "Index": 2,
+        "Type": "DELETE",
+        "Table": "sys_last_10_transactions",
+        "WhereConditions": [
+          "User = p_User",
+          "ReceiveDate = p_ReceiveDate LIMIT 1"
+        ],
+        "HasWhere": true,
+        "Warning": "",
+        "RawSQL": "DELETE FROM sys_last_10_transactions\n\n            WHERE User = p_User AND ReceiveDate = p_ReceiveDate\n\n            LIMIT 1"
+      }
+    ]
+  },
+  "usr_ui_settings_Get": {
+    "ProcedureName": "usr_ui_settings_Get",
+    "TotalOperations": 0,
+    "Operations": []
+  },
+  "sys_roles_Get_ById": {
+    "ProcedureName": "sys_roles_Get_ById",
+    "TotalOperations": 0,
+    "Operations": []
+  },
+  "migrate_user_roles_debug": {
+    "ProcedureName": "migrate_user_roles_debug",
+    "TotalOperations": 7,
+    "Operations": [
+      {
+        "Index": 1,
+        "Type": "INSERT",
+        "Table": "migration_debug_log",
+        "Columns": "message",
+        "Values": [
+          "CONCAT('Processing user: '",
+          "v_old_username"
+        ],
+        "ColumnValuePairs": [
+          "m = CONCAT('Processing user: '"
+        ],
+        "RawSQL": "INSERT INTO migration_debug_log (message) VALUES (CONCAT('Processing user: ', v_old_username)"
+      },
+      {
+        "Index": 2,
+        "Type": "INSERT",
+        "Table": "migration_debug_log",
+        "Columns": "message",
+        "Values": [
+          "CONCAT('User NOT found in new system: '",
+          "v_old_username"
+        ],
+        "ColumnValuePairs": [
+          "m = CONCAT('User NOT found in new system: '"
+        ],
+        "RawSQL": "INSERT INTO migration_debug_log (message) VALUES (CONCAT('User NOT found in new system: ', v_old_username)"
+      },
+      {
+        "Index": 3,
+        "Type": "INSERT",
+        "Table": "migration_debug_log",
+        "Columns": "message",
+        "Values": [
+          "CONCAT('Assigned role: '",
+          "v_rolename"
+        ],
+        "ColumnValuePairs": [
+          "m = CONCAT('Assigned role: '"
+        ],
+        "RawSQL": "INSERT INTO migration_debug_log (message) VALUES (CONCAT('Assigned role: ', v_rolename)"
+      },
+      {
+        "Index": 4,
+        "Type": "INSERT",
+        "Table": "migration_debug_log",
+        "Columns": "message",
+        "Values": [
+          "CONCAT('Role NOT found: '",
+          "v_rolename"
+        ],
+        "ColumnValuePairs": [
+          "m = CONCAT('Role NOT found: '"
+        ],
+        "RawSQL": "INSERT INTO migration_debug_log (message) VALUES (CONCAT('Role NOT found: ', v_rolename)"
+      },
+      {
+        "Index": 5,
+        "Type": "INSERT",
+        "Table": "migration_debug_log",
+        "Columns": "message",
+        "Values": [
+          "CONCAT('User-role already exists for: '",
+          "v_old_username",
+          "' | Role: '",
+          "v_rolename"
+        ],
+        "ColumnValuePairs": [
+          "m = CONCAT('User-role already exists for: '"
+        ],
+        "RawSQL": "INSERT INTO migration_debug_log (message) VALUES (CONCAT('User-role already exists for: ', v_old_username, ' | Role: ', v_rolename)"
+      },
+      {
+        "Index": 6,
+        "Type": "INSERT",
+        "Table": "migration_debug_log",
+        "Columns": "message",
+        "Values": [
+          "CONCAT('User-role updated for: '",
+          "v_old_username",
+          "' to role: '",
+          "v_rolename"
+        ],
+        "ColumnValuePairs": [
+          "m = CONCAT('User-role updated for: '"
+        ],
+        "RawSQL": "INSERT INTO migration_debug_log (message) VALUES (CONCAT('User-role updated for: ', v_old_username, ' to role: ', v_rolename)"
+      },
+      {
+        "Index": 7,
+        "Type": "INSERT",
+        "Table": "migration_debug_log",
+        "Columns": "message",
+        "Values": [
+          "CONCAT('Migrated user: '",
+          "v_old_username",
+          "' with role: '",
+          "v_rolename"
+        ],
+        "ColumnValuePairs": [
+          "m = CONCAT('Migrated user: '"
+        ],
+        "RawSQL": "INSERT INTO migration_debug_log (message) VALUES (CONCAT('Migrated user: ', v_old_username, ' with role: ', v_rolename)"
+      }
+    ]
+  },
+  "md_part_ids_Add_Part": {
+    "ProcedureName": "md_part_ids_Add_Part",
+    "TotalOperations": 1,
+    "Operations": [
+      {
+        "Index": 1,
+        "Type": "INSERT",
+        "Table": "md_part_ids",
+        "Columns": [
+          "PartID",
+          "Customer",
+          "Description",
+          "IssuedBy",
+          "ItemType"
+        ],
+        "Values": [
+          "p_ItemNumber",
+          "p_Customer",
+          "p_Description",
+          "p_IssuedBy",
+          "p_ItemType"
+        ],
+        "ColumnValuePairs": [
+          "PartID = p_ItemNumber",
+          "Customer = p_Customer",
+          "Description = p_Description",
+          "IssuedBy = p_IssuedBy",
+          "ItemType = p_ItemType"
+        ],
+        "RawSQL": "INSERT INTO `md_part_ids` (`PartID`, `Customer`, `Description`, `IssuedBy`, `ItemType`)\n\n        VALUES (p_ItemNumber, p_Customer, p_Description, p_IssuedBy, p_ItemType)"
+      }
+    ]
+  },
+  "sys_last_10_transactions_Reorder_ByUser": {
+    "ProcedureName": "sys_last_10_transactions_Reorder_ByUser",
+    "TotalOperations": 5,
+    "Operations": [
+      {
+        "Index": 1,
+        "Type": "INSERT",
+        "Table": "tempDates",
+        "Columns": [
+          "idx",
+          "dt"
+        ],
+        "Values": [
+          "p_TargetIndex + 1",
+          "v_SrcDate"
+        ],
+        "ColumnValuePairs": [
+          "idx = p_TargetIndex + 1",
+          "dt = v_SrcDate"
+        ],
+        "RawSQL": "INSERT INTO tempDates (idx, dt) VALUES (p_TargetIndex + 1, v_SrcDate)"
+      },
+      {
+        "Index": 2,
+        "Type": "UPDATE",
+        "Table": "tempDates",
+        "SetClauses": "idx = idx - 1",
+        "WhereConditions": "idx > v_SrcIdx",
+        "HasWhere": true,
+        "RawSQL": "UPDATE tempDates SET idx = idx - 1 WHERE idx > v_SrcIdx"
+      },
+      {
+        "Index": 3,
+        "Type": "UPDATE",
+        "Table": "tempDates",
+        "SetClauses": "idx = idx + 1",
+        "WhereConditions": "idx > p_TargetIndex",
+        "HasWhere": true,
+        "RawSQL": "UPDATE tempDates SET idx = idx + 1 WHERE idx > p_TargetIndex"
+      },
+      {
+        "Index": 4,
+        "Type": "UPDATE",
+        "Table": "sys_last_10_transactions",
+        "SetClauses": [
+          "ReceiveDate = DATE_ADD(v_BaseTime",
+          "INTERVAL v_Counter SECOND)"
+        ],
+        "WhereConditions": [
+          "User = p_User",
+          "ReceiveDate = v_CurDate"
+        ],
+        "HasWhere": true,
+        "RawSQL": "UPDATE sys_last_10_transactions\n\n                    SET ReceiveDate = DATE_ADD(v_BaseTime, INTERVAL v_Counter SECOND)\n\n                    WHERE User = p_User AND ReceiveDate = v_CurDate"
+      },
+      {
+        "Index": 5,
+        "Type": "DELETE",
+        "Table": "tempDates",
+        "WhereConditions": "idx = v_SrcIdx",
+        "HasWhere": true,
+        "Warning": "",
+        "RawSQL": "DELETE FROM tempDates WHERE idx = v_SrcIdx"
+      }
+    ]
+  },
+  "inv_inventory_Get_ByUser": {
+    "ProcedureName": "inv_inventory_Get_ByUser",
+    "TotalOperations": 0,
+    "Operations": []
+  },
+  "sys_user_roles_Add": {
+    "ProcedureName": "sys_user_roles_Add",
+    "TotalOperations": 1,
+    "Operations": [
+      {
+        "Index": 1,
+        "Type": "INSERT",
+        "Table": "sys_user_roles",
+        "Columns": [
+          "UserID",
+          "RoleID",
+          "AssignedBy"
+        ],
+        "Values": [
+          "p_UserID",
+          "p_RoleID",
+          "p_AssignedBy"
+        ],
+        "ColumnValuePairs": [
+          "UserID = p_UserID",
+          "RoleID = p_RoleID",
+          "AssignedBy = p_AssignedBy"
+        ],
+        "RawSQL": "INSERT INTO sys_user_roles (UserID, RoleID, AssignedBy)\n\n                    VALUES (p_UserID, p_RoleID, p_AssignedBy)"
+      }
+    ]
+  },
+  "log_error_Delete_ById": {
+    "ProcedureName": "log_error_Delete_ById",
+    "TotalOperations": 1,
+    "Operations": [
+      {
+        "Index": 1,
+        "Type": "DELETE",
+        "Table": "log_error",
+        "WhereConditions": "`ID` = p_Id",
+        "HasWhere": true,
+        "Warning": "",
+        "RawSQL": "DELETE FROM `log_error` WHERE `ID` = p_Id"
+      }
+    ]
+  },
+  "md_item_types_Update_ItemType": {
+    "ProcedureName": "md_item_types_Update_ItemType",
+    "TotalOperations": 1,
+    "Operations": [
+      {
+        "Index": 1,
+        "Type": "UPDATE",
+        "Table": "md_item_types",
+        "SetClauses": [
+          "`ItemType` = p_ItemType",
+          "`IssuedBy` = p_IssuedBy"
+        ],
+        "WhereConditions": "`ID` = p_ID",
+        "HasWhere": true,
+        "RawSQL": "UPDATE `md_item_types`\n\n        SET `ItemType` = p_ItemType,\n\n            `IssuedBy` = p_IssuedBy\n\n        WHERE `ID` = p_ID"
+      }
+    ]
+  },
+  "sys_last_10_transactions_Update_ByUserAndPosition_1": {
+    "ProcedureName": "sys_last_10_transactions_Update_ByUserAndPosition_1",
+    "TotalOperations": 1,
+    "Operations": [
+      {
+        "Index": 1,
+        "Type": "UPDATE",
+        "Table": "sys_last_10_transactions",
+        "SetClauses": [
+          "PartID = p_PartID",
+          "Operation = p_Operation",
+          "Quantity = p_Quantity"
+        ],
+        "WhereConditions": [
+          "User = p_User",
+          "Position = p_Position"
+        ],
+        "HasWhere": true,
+        "RawSQL": "UPDATE sys_last_10_transactions\n\n            SET PartID = p_PartID,\n\n                Operation = p_Operation,\n\n                Quantity = p_Quantity\n\n            WHERE User = p_User AND Position = p_Position"
+      }
+    ]
+  },
+  "log_error_Delete_All": {
+    "ProcedureName": "log_error_Delete_All",
+    "TotalOperations": 1,
+    "Operations": [
+      {
+        "Index": 1,
+        "Type": "DELETE",
+        "Table": "log_error",
+        "WhereConditions": null,
+        "HasWhere": false,
+        "Warning": "DELETE without WHERE - affects all rows!",
+        "RawSQL": "DELETE FROM `log_error`"
+      }
+    ]
+  },
+  "inv_inventory_Add_Item": {
+    "ProcedureName": "inv_inventory_Add_Item",
+    "TotalOperations": 3,
+    "Operations": [
+      {
+        "Index": 1,
+        "Type": "INSERT",
+        "Table": "inv_inventory",
+        "Columns": [
+          "PartID",
+          "Location",
+          "Operation",
+          "Quantity",
+          "ItemType",
+          "User",
+          "BatchNumber",
+          "Notes"
+        ],
+        "Values": [
+          "p_PartID",
+          "p_Location",
+          "p_Operation",
+          "p_Quantity",
+          "p_ItemType",
+          "p_User",
+          "batchStr",
+          "p_Notes"
+        ],
+        "ColumnValuePairs": [
+          "PartID = p_PartID",
+          "Location = p_Location",
+          "Operation = p_Operation",
+          "Quantity = p_Quantity",
+          "ItemType = p_ItemType",
+          "User = p_User",
+          "BatchNumber = batchStr",
+          "Notes = p_Notes"
+        ],
+        "RawSQL": "INSERT INTO inv_inventory\n\n            (PartID, Location, Operation, Quantity, ItemType, User, BatchNumber, Notes)\n\n        VALUES\n\n            (p_PartID, p_Location, p_Operation, p_Quantity, p_ItemType, p_User, batchStr, p_Notes)"
+      },
+      {
+        "Index": 2,
+        "Type": "INSERT",
+        "Table": "inv_transaction",
+        "Columns": [
+          "TransactionType",
+          "BatchNumber",
+          "PartID",
+          "FromLocation",
+          "ToLocation",
+          "Operation",
+          "Quantity",
+          "Notes",
+          "User",
+          "ItemType"
+        ],
+        "Values": [
+          "'IN'",
+          "batchStr",
+          "p_PartID",
+          "p_Location",
+          "NULL",
+          "p_Operation",
+          "p_Quantity",
+          "p_Notes",
+          "p_User",
+          "p_ItemType"
+        ],
+        "ColumnValuePairs": [
+          "TransactionType = 'IN'",
+          "BatchNumber = batchStr",
+          "PartID = p_PartID",
+          "FromLocation = p_Location",
+          "ToLocation = NULL",
+          "Operation = p_Operation",
+          "Quantity = p_Quantity",
+          "Notes = p_Notes",
+          "User = p_User",
+          "ItemType = p_ItemType"
+        ],
+        "RawSQL": "INSERT INTO inv_transaction\n\n            (\n\n                TransactionType, \n\n                BatchNumber, \n\n                PartID, \n\n                FromLocation, \n\n                ToLocation, \n\n                Operation, \n\n                Quantity, \n\n                Notes, \n\n                User, \n\n                ItemType\n\n            )\n\n        VALUES\n\n            (\n\n                'IN', \n\n                batchStr, \n\n                p_PartID, \n\n                p_Location, \n\n                NULL, \n\n                p_Operation, \n\n                p_Quantity, \n\n                p_Notes, \n\n                p_User, \n\n                p_ItemType\n\n            )"
+      },
+      {
+        "Index": 3,
+        "Type": "UPDATE",
+        "Table": "inv_inventory_batch_seq",
+        "SetClauses": "last_batch_number = nextBatch",
+        "WhereConditions": null,
+        "HasWhere": false,
+        "RawSQL": "UPDATE inv_inventory_batch_seq SET last_batch_number = nextBatch"
+      }
+    ]
+  },
+  "md_item_types_Get_All": {
+    "ProcedureName": "md_item_types_Get_All",
+    "TotalOperations": 0,
+    "Operations": []
+  },
+  "inv_inventory_Search_Advanced": {
+    "ProcedureName": "inv_inventory_Search_Advanced",
+    "TotalOperations": 0,
+    "Operations": []
+  },
+  "log_error_Get_ByUser": {
+    "ProcedureName": "log_error_Get_ByUser",
+    "TotalOperations": 0,
+    "Operations": []
+  },
+  "md_operation_numbers_Get_All": {
+    "ProcedureName": "md_operation_numbers_Get_All",
+    "TotalOperations": 0,
+    "Operations": []
+  },
+  "inv_inventory_Get_ByPartIDandOperation": {
+    "ProcedureName": "inv_inventory_Get_ByPartIDandOperation",
+    "TotalOperations": 0,
+    "Operations": []
+  },
+  "sys_GetUserAccessType": {
+    "ProcedureName": "sys_GetUserAccessType",
+    "TotalOperations": 0,
+    "Operations": []
+  },
+  "inv_transactions_GetAnalytics": {
+    "ProcedureName": "inv_transactions_GetAnalytics",
+    "TotalOperations": 0,
+    "Operations": []
+  },
+  "sys_user_GetIdByName": {
+    "ProcedureName": "sys_user_GetIdByName",
+    "TotalOperations": 0,
+    "Operations": []
+  },
+  "md_locations_Add_Location": {
+    "ProcedureName": "md_locations_Add_Location",
+    "TotalOperations": 1,
+    "Operations": [
+      {
+        "Index": 1,
+        "Type": "INSERT",
+        "Table": "md_locations",
+        "Columns": [
+          "Location",
+          "Building",
+          "IssuedBy"
+        ],
+        "Values": [
+          "p_Location",
+          "p_Building",
+          "p_IssuedBy"
+        ],
+        "ColumnValuePairs": [
+          "Location = p_Location",
+          "Building = p_Building",
+          "IssuedBy = p_IssuedBy"
+        ],
+        "RawSQL": "INSERT INTO `md_locations` (`Location`, `Building`, `IssuedBy`)\n\n        VALUES (p_Location, p_Building, p_IssuedBy)"
+      }
+    ]
+  },
+  "maint_InsertMissingUserUiSettings": {
+    "ProcedureName": "maint_InsertMissingUserUiSettings",
+    "TotalOperations": 0,
+    "Operations": []
+  },
+  "md_item_types_Add_ItemType": {
+    "ProcedureName": "md_item_types_Add_ItemType",
+    "TotalOperations": 1,
+    "Operations": [
+      {
+        "Index": 1,
+        "Type": "INSERT",
+        "Table": "md_item_types",
+        "Columns": [
+          "ItemType",
+          "IssuedBy"
+        ],
+        "Values": [
+          "p_ItemType",
+          "p_IssuedBy"
+        ],
+        "ColumnValuePairs": [
+          "ItemType = p_ItemType",
+          "IssuedBy = p_IssuedBy"
+        ],
+        "RawSQL": "INSERT INTO `md_item_types` (`ItemType`, `IssuedBy`)\n\n        VALUES (p_ItemType, p_IssuedBy)"
+      }
+    ]
+  },
+  "sys_last_10_transactions_Update_ByUserAndDate": {
+    "ProcedureName": "sys_last_10_transactions_Update_ByUserAndDate",
+    "TotalOperations": 1,
+    "Operations": [
+      {
+        "Index": 1,
+        "Type": "UPDATE",
+        "Table": "sys_last_10_transactions",
+        "SetClauses": [
+          "PartID = p_PartID",
+          "Operation = p_Operation",
+          "Quantity = p_Quantity",
+          "ReceiveDate = NOW()"
+        ],
+        "WhereConditions": [
+          "User = p_User",
+          "ReceiveDate = p_OldReceiveDate"
+        ],
+        "HasWhere": true,
+        "RawSQL": "UPDATE sys_last_10_transactions\n\n            SET PartID = p_PartID,\n\n                Operation = p_Operation,\n\n                Quantity = p_Quantity,\n\n                ReceiveDate = NOW()\n\n            WHERE User = p_User AND ReceiveDate = p_OldReceiveDate"
+      }
+    ]
+  },
+  "sys_user_access_SetType": {
+    "ProcedureName": "sys_user_access_SetType",
+    "TotalOperations": 1,
+    "Operations": [
+      {
+        "Index": 1,
+        "Type": "UPDATE",
+        "Table": "usr_users",
+        "SetClauses": "VitsUser = p_AccessType",
+        "WhereConditions": "User = p_User",
+        "HasWhere": true,
+        "RawSQL": "UPDATE usr_users SET VitsUser = p_AccessType WHERE User = p_User"
+      }
+    ]
+  },
+  "query_get_all_usernames_and_roles": {
+    "ProcedureName": "query_get_all_usernames_and_roles",
+    "TotalOperations": 0,
+    "Operations": []
+  },
+  "usr_users_Update_User": {
+    "ProcedureName": "usr_users_Update_User",
+    "TotalOperations": 1,
+    "Operations": [
+      {
+        "Index": 1,
+        "Type": "UPDATE",
+        "Table": "usr_users",
+        "SetClauses": [
+          "`Full Name` = p_FullName",
+          "`Shift` = p_Shift",
+          "`Pin` = p_Pin",
+          "`VisualUserName` = p_VisualUserName",
+          "`VisualPassword` = p_VisualPassword"
+        ],
+        "WhereConditions": "`User` = p_User",
+        "HasWhere": true,
+        "RawSQL": "UPDATE usr_users SET\n\n            `Full Name` = p_FullName,\n\n            `Shift` = p_Shift,\n\n            `Pin` = p_Pin,\n\n            `VisualUserName` = p_VisualUserName,\n\n            `VisualPassword` = p_VisualPassword\n\n        WHERE `User` = p_User"
+      }
+    ]
+  },
+  "md_item_types_Delete_ByID": {
+    "ProcedureName": "md_item_types_Delete_ByID",
+    "TotalOperations": 1,
+    "Operations": [
+      {
+        "Index": 1,
+        "Type": "DELETE",
+        "Table": "md_item_types",
+        "WhereConditions": "`ID` = p_ID",
+        "HasWhere": true,
+        "Warning": "",
+        "RawSQL": "DELETE FROM `md_item_types`\n\n        WHERE `ID` = p_ID"
+      }
+    ]
+  },
+  "sys_user_GetByName": {
+    "ProcedureName": "sys_user_GetByName",
+    "TotalOperations": 0,
+    "Operations": []
+  },
+  "inv_inventory_Remove_Item": {
+    "ProcedureName": "inv_inventory_Remove_Item",
+    "TotalOperations": 3,
+    "Operations": [
+      {
+        "Index": 1,
+        "Type": "INSERT",
+        "Table": "inv_transaction",
+        "Columns": [
+          "TransactionType",
+          "PartID",
+          "FromLocation",
+          "Operation",
+          "Quantity",
+          "ItemType",
+          "User",
+          "BatchNumber",
+          "Notes",
+          "ReceiveDate"
+        ],
+        "Values": [
+          "'OUT'",
+          "p_PartID",
+          "p_Location",
+          "p_Operation",
+          "p_Quantity",
+          "p_ItemType",
+          "p_User",
+          "p_BatchNumber",
+          "p_Notes",
+          "NOW("
+        ],
+        "ColumnValuePairs": [
+          "TransactionType = 'OUT'",
+          "PartID = p_PartID",
+          "FromLocation = p_Location",
+          "Operation = p_Operation",
+          "Quantity = p_Quantity",
+          "ItemType = p_ItemType",
+          "User = p_User",
+          "BatchNumber = p_BatchNumber",
+          "Notes = p_Notes",
+          "ReceiveDate = NOW("
+        ],
+        "RawSQL": "INSERT INTO inv_transaction (TransactionType, PartID, FromLocation, Operation, Quantity, ItemType, User, BatchNumber, Notes, ReceiveDate)\n\n\n\n                VALUES ('OUT', p_PartID, p_Location, p_Operation, p_Quantity, p_ItemType, p_User, p_BatchNumber, p_Notes, NOW()"
+      },
+      {
+        "Index": 2,
+        "Type": "DELETE",
+        "Table": "inv_inventory",
+        "WhereConditions": [
+          "PartID = p_PartID",
+          "Location = p_Location",
+          "Operation = p_Operation",
+          "Quantity = p_Quantity",
+          "(p_BatchNumber IS NULL",
+          "p_BatchNumber = ''",
+          "BatchNumber = p_BatchNumber)",
+          "(p_Notes IS NULL",
+          "p_Notes = ''",
+          "Notes IS NULL",
+          "Notes = ''",
+          "Notes = p_Notes) LIMIT 1"
+        ],
+        "HasWhere": true,
+        "Warning": "",
+        "RawSQL": "DELETE FROM inv_inventory WHERE PartID = p_PartID AND Location = p_Location AND Operation = p_Operation AND Quantity = p_Quantity\n\n\n\n                AND (p_BatchNumber IS NULL OR p_BatchNumber = '' OR BatchNumber = p_BatchNumber)\n\n\n\n                AND (p_Notes IS NULL OR p_Notes = '' OR Notes IS NULL OR Notes = '' OR Notes = p_Notes) LIMIT 1"
+      },
+      {
+        "Index": 3,
+        "Type": "DELETE",
+        "Table": "inv_inventory",
+        "WhereConditions": [
+          "PartID = p_PartID",
+          "Location = p_Location",
+          "Operation = p_Operation",
+          "Quantity = p_Quantity LIMIT 1"
+        ],
+        "HasWhere": true,
+        "Warning": "",
+        "RawSQL": "DELETE FROM inv_inventory WHERE PartID = p_PartID AND Location = p_Location AND Operation = p_Operation AND Quantity = p_Quantity LIMIT 1"
+      }
+    ]
+  },
+  "log_error_Get_ByDateRange": {
+    "ProcedureName": "log_error_Get_ByDateRange",
+    "TotalOperations": 0,
+    "Operations": []
+  },
+  "md_locations_Delete_ByLocation": {
+    "ProcedureName": "md_locations_Delete_ByLocation",
+    "TotalOperations": 1,
+    "Operations": [
+      {
+        "Index": 1,
+        "Type": "DELETE",
+        "Table": "md_locations",
+        "WhereConditions": "`Location` = p_Location",
+        "HasWhere": true,
+        "Warning": "",
+        "RawSQL": "DELETE FROM `md_locations`\n\n        WHERE `Location` = p_Location"
+      }
+    ]
+  },
+  "usr_ui_settings_SetShortcutsJson": {
+    "ProcedureName": "usr_ui_settings_SetShortcutsJson",
+    "TotalOperations": 1,
+    "Operations": [
+      {
+        "Index": 1,
+        "Type": "UPDATE",
+        "Table": "usr_ui_settings",
+        "SetClauses": "ShortcutsJson = p_ShortcutsJson",
+        "WhereConditions": "UserId = p_UserId",
+        "HasWhere": true,
+        "RawSQL": "UPDATE usr_ui_settings\n\n        SET ShortcutsJson = p_ShortcutsJson\n\n        WHERE UserId = p_UserId"
+      }
+    ]
+  },
+  "md_locations_Update_Location": {
+    "ProcedureName": "md_locations_Update_Location",
+    "TotalOperations": 1,
+    "Operations": [
+      {
+        "Index": 1,
+        "Type": "UPDATE",
+        "Table": "md_locations",
+        "SetClauses": [
+          "`Location` = p_Location",
+          "`Building` = p_Building",
+          "`IssuedBy` = p_IssuedBy"
+        ],
+        "WhereConditions": "`Location` = p_OldLocation",
+        "HasWhere": true,
+        "RawSQL": "UPDATE `md_locations`\n\n        SET `Location` = p_Location,\n\n            `Building` = p_Building,\n\n            `IssuedBy` = p_IssuedBy\n\n        WHERE `Location` = p_OldLocation"
+      }
+    ]
+  },
+  "usr_users_Add_User": {
+    "ProcedureName": "usr_users_Add_User",
+    "TotalOperations": 1,
+    "Operations": [
+      {
+        "Index": 1,
+        "Type": "INSERT",
+        "Table": "usr_users",
+        "Columns": [
+          "User",
+          "Full Name",
+          "Shift",
+          "VitsUser",
+          "Pin",
+          "LastShownVersion",
+          "HideChangeLog",
+          "Theme_Name",
+          "Theme_FontSize",
+          "VisualUserName",
+          "VisualPassword",
+          "WipServerAddress",
+          "WipDatabase",
+          "WipServerPort"
+        ],
+        "Values": [
+          "p_User",
+          "p_FullName",
+          "p_Shift",
+          "p_VitsUser",
+          "p_Pin",
+          "p_LastShownVersion",
+          "p_HideChangeLog",
+          "p_Theme_Name",
+          "p_Theme_FontSize",
+          "p_VisualUserName",
+          "p_VisualPassword",
+          "p_WipServerAddress",
+          "p_WipDatabase",
+          "p_WipServerPort"
+        ],
+        "ColumnValuePairs": [
+          "User = p_User",
+          "Full Name = p_FullName",
+          "Shift = p_Shift",
+          "VitsUser = p_VitsUser",
+          "Pin = p_Pin",
+          "LastShownVersion = p_LastShownVersion",
+          "HideChangeLog = p_HideChangeLog",
+          "Theme_Name = p_Theme_Name",
+          "Theme_FontSize = p_Theme_FontSize",
+          "VisualUserName = p_VisualUserName",
+          "VisualPassword = p_VisualPassword",
+          "WipServerAddress = p_WipServerAddress",
+          "WipDatabase = p_WipDatabase",
+          "WipServerPort = p_WipServerPort"
+        ],
+        "RawSQL": "INSERT INTO usr_users (\n\n            `User`, `Full Name`, `Shift`, `VitsUser`, `Pin`, `LastShownVersion`, `HideChangeLog`, \n\n            `Theme_Name`, `Theme_FontSize`, `VisualUserName`, `VisualPassword`, \n\n            `WipServerAddress`, `WipDatabase`, `WipServerPort`\n\n        ) VALUES (\n\n            p_User, p_FullName, p_Shift, p_VitsUser, p_Pin, p_LastShownVersion, p_HideChangeLog, \n\n            p_Theme_Name, p_Theme_FontSize, p_VisualUserName, p_VisualPassword, \n\n            p_WipServerAddress, p_WipDatabase, p_WipServerPort\n\n        )"
+      }
+    ]
+  },
+  "sp_ReassignBatchNumbers": {
+    "ProcedureName": "sp_ReassignBatchNumbers",
+    "TotalOperations": 0,
+    "Operations": []
+  },
+  "usr_users_Get_ByUser": {
+    "ProcedureName": "usr_users_Get_ByUser",
+    "TotalOperations": 0,
+    "Operations": []
+  },
+  "sys_last_10_transactions_Move_1": {
+    "ProcedureName": "sys_last_10_transactions_Move_1",
+    "TotalOperations": 4,
+    "Operations": [
+      {
+        "Index": 1,
+        "Type": "INSERT",
+        "Table": "sys_last_10_transactions",
+        "Columns": [
+          "User",
+          "PartID",
+          "Operation",
+          "Quantity",
+          "Position"
+        ],
+        "Values": [
+          "p_User",
+          "tempPartID",
+          "tempOperation",
+          "tempQuantity",
+          "p_ToPosition"
+        ],
+        "ColumnValuePairs": [
+          "User = p_User",
+          "PartID = tempPartID",
+          "Operation = tempOperation",
+          "Quantity = tempQuantity",
+          "Position = p_ToPosition"
+        ],
+        "RawSQL": "INSERT INTO sys_last_10_transactions (User, PartID, Operation, Quantity, Position)\n\n            VALUES (p_User, tempPartID, tempOperation, tempQuantity, p_ToPosition)"
+      },
+      {
+        "Index": 2,
+        "Type": "UPDATE",
+        "Table": "sys_last_10_transactions",
+        "SetClauses": "Position = Position - 1",
+        "WhereConditions": [
+          "User = p_User",
+          "Position > p_FromPosition",
+          "Position <= p_ToPosition"
+        ],
+        "HasWhere": true,
+        "RawSQL": "UPDATE sys_last_10_transactions\n\n                SET Position = Position - 1\n\n                WHERE User = p_User AND Position > p_FromPosition AND Position <= p_ToPosition"
+      },
+      {
+        "Index": 3,
+        "Type": "UPDATE",
+        "Table": "sys_last_10_transactions",
+        "SetClauses": "Position = Position + 1",
+        "WhereConditions": [
+          "User = p_User",
+          "Position >= p_ToPosition",
+          "Position < p_FromPosition"
+        ],
+        "HasWhere": true,
+        "RawSQL": "UPDATE sys_last_10_transactions\n\n                SET Position = Position + 1\n\n                WHERE User = p_User AND Position >= p_ToPosition AND Position < p_FromPosition"
+      },
+      {
+        "Index": 4,
+        "Type": "DELETE",
+        "Table": "sys_last_10_transactions",
+        "WhereConditions": [
+          "User = p_User",
+          "Position = p_FromPosition"
+        ],
+        "HasWhere": true,
+        "Warning": "",
+        "RawSQL": "DELETE FROM sys_last_10_transactions\n\n            WHERE User = p_User AND Position = p_FromPosition"
+      }
+    ]
+  },
+  "usr_ui_settings_GetShortcutsJson": {
+    "ProcedureName": "usr_ui_settings_GetShortcutsJson",
+    "TotalOperations": 0,
+    "Operations": []
+  },
+  "inv_transactions_SmartSearch": {
+    "ProcedureName": "inv_transactions_SmartSearch",
+    "TotalOperations": 0,
+    "Operations": []
+  },
+  "sys_role_GetIdByName": {
+    "ProcedureName": "sys_role_GetIdByName",
+    "TotalOperations": 0,
+    "Operations": []
+  },
+  "sys_last_10_transactions_MoveToLast_ByUser": {
+    "ProcedureName": "sys_last_10_transactions_MoveToLast_ByUser",
+    "TotalOperations": 1,
+    "Operations": [
+      {
+        "Index": 1,
+        "Type": "UPDATE",
+        "Table": "sys_last_10_transactions",
+        "SetClauses": [
+          "ReceiveDate = DATE_ADD(latest_date",
+          "INTERVAL 1 SECOND)"
+        ],
+        "WhereConditions": "id = target_id",
+        "HasWhere": true,
+        "RawSQL": "UPDATE sys_last_10_transactions\n\n                SET ReceiveDate = DATE_ADD(latest_date, INTERVAL 1 SECOND)\n\n                WHERE id = target_id"
+      }
+    ]
+  },
+  "inv_inventory_Get_ByPartID": {
+    "ProcedureName": "inv_inventory_Get_ByPartID",
+    "TotalOperations": 0,
+    "Operations": []
+  },
+  "inv_transaction_Add": {
+    "ProcedureName": "inv_transaction_Add",
+    "TotalOperations": 1,
+    "Operations": [
+      {
+        "Index": 1,
+        "Type": "INSERT",
+        "Table": "inv_transaction",
+        "Columns": [
+          "TransactionType",
+          "PartID",
+          "BatchNumber",
+          "FromLocation",
+          "ToLocation",
+          "Operation",
+          "Quantity",
+          "Notes",
+          "User",
+          "ItemType",
+          "ReceiveDate"
+        ],
+        "Values": [
+          "p_TransactionType",
+          "p_PartID",
+          "p_BatchNumber",
+          "p_FromLocation",
+          "p_ToLocation",
+          "p_Operation",
+          "p_Quantity",
+          "p_Notes",
+          "p_User",
+          "p_ItemType",
+          "p_ReceiveDate"
+        ],
+        "ColumnValuePairs": [
+          "TransactionType = p_TransactionType",
+          "PartID = p_PartID",
+          "BatchNumber = p_BatchNumber",
+          "FromLocation = p_FromLocation",
+          "ToLocation = p_ToLocation",
+          "Operation = p_Operation",
+          "Quantity = p_Quantity",
+          "Notes = p_Notes",
+          "User = p_User",
+          "ItemType = p_ItemType",
+          "ReceiveDate = p_ReceiveDate"
+        ],
+        "RawSQL": "INSERT INTO inv_transaction (\n\n            TransactionType, PartID, `BatchNumber`, FromLocation, ToLocation, \n\n            Operation, Quantity, Notes, User, ItemType, ReceiveDate\n\n        ) VALUES (\n\n            p_TransactionType, p_PartID, p_BatchNumber, p_FromLocation, p_ToLocation, \n\n            p_Operation, p_Quantity, p_Notes, p_User, p_ItemType, p_ReceiveDate\n\n        )"
+      }
+    ]
+  },
+  "maint_reload_part_ids_and_operation_numbers": {
+    "ProcedureName": "maint_reload_part_ids_and_operation_numbers",
+    "TotalOperations": 0,
+    "Operations": []
+  },
+  "md_part_ids_Get_All": {
+    "ProcedureName": "md_part_ids_Get_All",
+    "TotalOperations": 0,
+    "Operations": []
+  },
+  "sys_theme_GetAll": {
+    "ProcedureName": "sys_theme_GetAll",
+    "TotalOperations": 0,
+    "Operations": []
+  },
+  "md_part_ids_Update_Part": {
+    "ProcedureName": "md_part_ids_Update_Part",
+    "TotalOperations": 1,
+    "Operations": [
+      {
+        "Index": 1,
+        "Type": "UPDATE",
+        "Table": "md_part_ids",
+        "SetClauses": [
+          "`PartID` = p_ItemNumber",
+          "`Customer` = p_Customer",
+          "`Description` = p_Description",
+          "`IssuedBy` = p_IssuedBy",
+          "`ItemType` = p_ItemType"
+        ],
+        "WhereConditions": "`ID` = p_ID",
+        "HasWhere": true,
+        "RawSQL": "UPDATE `md_part_ids`\n\n        SET `PartID` = p_ItemNumber,\n\n            `Customer` = p_Customer,\n\n            `Description` = p_Description,\n\n            `IssuedBy` = p_IssuedBy,\n\n            `ItemType` = p_ItemType\n\n        WHERE `ID` = p_ID"
+      }
+    ]
+  },
+  "usr_users_Get_All": {
+    "ProcedureName": "usr_users_Get_All",
+    "TotalOperations": 0,
+    "Operations": []
+  },
+  "usr_users_Delete_User": {
+    "ProcedureName": "usr_users_Delete_User",
+    "TotalOperations": 1,
+    "Operations": [
+      {
+        "Index": 1,
+        "Type": "DELETE",
+        "Table": "usr_users",
+        "WhereConditions": "`User` = p_User",
+        "HasWhere": true,
+        "Warning": "",
+        "RawSQL": "DELETE FROM usr_users WHERE `User` = p_User"
+      }
+    ]
+  },
+  "sys_last_10_transactions_Get_ByUser": {
+    "ProcedureName": "sys_last_10_transactions_Get_ByUser",
+    "TotalOperations": 0,
+    "Operations": []
+  },
+  "usr_ui_settings_SetJsonSetting": {
+    "ProcedureName": "usr_ui_settings_SetJsonSetting",
+    "TotalOperations": 2,
+    "Operations": [
+      {
+        "Index": 1,
+        "Type": "INSERT",
+        "Table": "usr_ui_settings",
+        "Columns": [
+          "UserId",
+          "SettingsJson"
+        ],
+        "Values": [
+          "p_UserId",
+          "JSON_OBJECT(p_DgvName",
+          "p_SettingJson"
+        ],
+        "ColumnValuePairs": [
+          "UserId = p_UserId",
+          "SettingsJson = JSON_OBJECT(p_DgvName"
+        ],
+        "RawSQL": "INSERT INTO usr_ui_settings (UserId, SettingsJson)\n\n            VALUES (p_UserId, JSON_OBJECT(p_DgvName, p_SettingJson)"
+      },
+      {
+        "Index": 2,
+        "Type": "UPDATE",
+        "Table": "usr_ui_settings",
+        "SetClauses": [
+          "SettingsJson = v_CurrentJson",
+          "UpdatedAt = NOW()"
+        ],
+        "WhereConditions": "UserId = p_UserId",
+        "HasWhere": true,
+        "RawSQL": "UPDATE usr_ui_settings \n\n            SET SettingsJson = v_CurrentJson, UpdatedAt = NOW() \n\n            WHERE UserId = p_UserId"
+      }
+    ]
+  },
+  "log_changelog_Get_Current": {
+    "ProcedureName": "log_changelog_Get_Current",
+    "TotalOperations": 0,
+    "Operations": []
+  },
+  "inv_inventory_Transfer_Quantity": {
+    "ProcedureName": "inv_inventory_Transfer_Quantity",
+    "TotalOperations": 2,
+    "Operations": [
+      {
+        "Index": 1,
+        "Type": "INSERT",
+        "Table": "inv_inventory",
+        "Columns": [
+          "BatchNumber",
+          "PartID",
+          "Operation",
+          "Quantity",
+          "Location",
+          "User"
+        ],
+        "Values": [
+          "p_BatchNumber",
+          "p_PartID",
+          "p_Operation",
+          "p_TransferQuantity",
+          "p_NewLocation",
+          "p_User"
+        ],
+        "ColumnValuePairs": [
+          "BatchNumber = p_BatchNumber",
+          "PartID = p_PartID",
+          "Operation = p_Operation",
+          "Quantity = p_TransferQuantity",
+          "Location = p_NewLocation",
+          "User = p_User"
+        ],
+        "RawSQL": "INSERT INTO inv_inventory (BatchNumber, PartID, Operation, Quantity, Location, User)\n\n            VALUES (p_BatchNumber, p_PartID, p_Operation, p_TransferQuantity, p_NewLocation, p_User)"
+      },
+      {
+        "Index": 2,
+        "Type": "UPDATE",
+        "Table": "inv_inventory",
+        "SetClauses": [
+          "Quantity = Quantity - p_TransferQuantity",
+          "User = p_User"
+        ],
+        "WhereConditions": [
+          "BatchNumber = p_BatchNumber",
+          "PartID = p_PartID",
+          "Operation = p_Operation",
+          "Quantity = p_OriginalQuantity"
+        ],
+        "HasWhere": true,
+        "RawSQL": "UPDATE inv_inventory\n\n        SET Quantity = Quantity - p_TransferQuantity,\n\n            User = p_User\n\n        WHERE BatchNumber = p_BatchNumber\n\n          AND PartID = p_PartID\n\n          AND Operation = p_Operation\n\n          AND Quantity = p_OriginalQuantity"
+      }
+    ]
+  },
+  "md_part_ids_Delete_ByItemNumber": {
+    "ProcedureName": "md_part_ids_Delete_ByItemNumber",
+    "TotalOperations": 1,
+    "Operations": [
+      {
+        "Index": 1,
+        "Type": "DELETE",
+        "Table": "md_part_ids",
+        "WhereConditions": "`PartID` = p_ItemNumber",
+        "HasWhere": true,
+        "Warning": "",
+        "RawSQL": "DELETE FROM `md_part_ids`\n\n        WHERE `PartID` = p_ItemNumber"
+      }
+    ]
+  },
+  "sys_user_roles_Delete": {
+    "ProcedureName": "sys_user_roles_Delete",
+    "TotalOperations": 1,
+    "Operations": [
+      {
+        "Index": 1,
+        "Type": "DELETE",
+        "Table": "sys_user_roles",
+        "WhereConditions": [
+          "UserID = p_UserID",
+          "RoleID = p_RoleID"
+        ],
+        "HasWhere": true,
+        "Warning": "",
+        "RawSQL": "DELETE FROM sys_user_roles\n\n            WHERE UserID = p_UserID AND RoleID = p_RoleID"
+      }
+    ]
+  },
+  "inv_inventory_Fix_BatchNumbers": {
+    "ProcedureName": "inv_inventory_Fix_BatchNumbers",
+    "TotalOperations": 2,
+    "Operations": [
+      {
+        "Index": 1,
+        "Type": "UPDATE",
+        "Table": "inv_inventory",
+        "SetClauses": [
+          "BatchNumber = LPAD(nextBatch",
+          "10",
+          "'0')"
+        ],
+        "WhereConditions": "ID = null_id",
+        "HasWhere": true,
+        "RawSQL": "UPDATE inv_inventory SET BatchNumber = LPAD(nextBatch, 10, '0') WHERE ID = null_id"
+      },
+      {
+        "Index": 2,
+        "Type": "UPDATE",
+        "Table": "inv_inventory_batch_seq",
+        "SetClauses": "last_batch_number = nextBatch",
+        "WhereConditions": null,
+        "HasWhere": false,
+        "RawSQL": "UPDATE inv_inventory_batch_seq SET last_batch_number = nextBatch"
+      }
+    ]
+  },
+  "sys_last_10_transactions_AddQuickButton_1": {
+    "ProcedureName": "sys_last_10_transactions_AddQuickButton_1",
+    "TotalOperations": 2,
+    "Operations": [
+      {
+        "Index": 1,
+        "Type": "INSERT",
+        "Table": "sys_last_10_transactions",
+        "Columns": [
+          "User",
+          "PartID",
+          "Operation",
+          "Quantity",
+          "Position"
+        ],
+        "Values": [
+          "p_User",
+          "p_PartID",
+          "p_Operation",
+          "p_Quantity",
+          "p_Position"
+        ],
+        "ColumnValuePairs": [
+          "User = p_User",
+          "PartID = p_PartID",
+          "Operation = p_Operation",
+          "Quantity = p_Quantity",
+          "Position = p_Position"
+        ],
+        "RawSQL": "INSERT INTO sys_last_10_transactions (User, PartID, Operation, Quantity, Position)\n\n        VALUES (p_User, p_PartID, p_Operation, p_Quantity, p_Position)"
+      },
+      {
+        "Index": 2,
+        "Type": "UPDATE",
+        "Table": "sys_last_10_transactions",
+        "SetClauses": "Position = Position + 1",
+        "WhereConditions": [
+          "User = p_User",
+          "Position >= p_Position"
+        ],
+        "HasWhere": true,
+        "RawSQL": "UPDATE sys_last_10_transactions\n\n        SET Position = Position + 1\n\n        WHERE User = p_User AND Position >= p_Position"
+      }
+    ]
+  },
+  "md_operation_numbers_Add_Operation": {
+    "ProcedureName": "md_operation_numbers_Add_Operation",
+    "TotalOperations": 1,
+    "Operations": [
+      {
+        "Index": 1,
+        "Type": "INSERT",
+        "Table": "md_operation_numbers",
+        "Columns": [
+          "Operation",
+          "IssuedBy"
+        ],
+        "Values": [
+          "p_Operation",
+          "p_IssuedBy"
+        ],
+        "ColumnValuePairs": [
+          "Operation = p_Operation",
+          "IssuedBy = p_IssuedBy"
+        ],
+        "RawSQL": "INSERT INTO `md_operation_numbers` (`Operation`, `IssuedBy`)\n\n        VALUES (p_Operation, p_IssuedBy)"
+      }
+    ]
+  },
+  "md_item_types_Delete_ByType": {
+    "ProcedureName": "md_item_types_Delete_ByType",
+    "TotalOperations": 1,
+    "Operations": [
+      {
+        "Index": 1,
+        "Type": "DELETE",
+        "Table": "md_item_types",
+        "WhereConditions": "`ItemType` = p_ItemType",
+        "HasWhere": true,
+        "Warning": "",
+        "RawSQL": "DELETE FROM `md_item_types`\n\n        WHERE `ItemType` = p_ItemType"
+      }
+    ]
+  },
+  "md_locations_Get_All": {
+    "ProcedureName": "md_locations_Get_All",
+    "TotalOperations": 0,
+    "Operations": []
+  },
+  "md_part_ids_Get_ByItemNumber": {
+    "ProcedureName": "md_part_ids_Get_ByItemNumber",
+    "TotalOperations": 0,
+    "Operations": []
+  },
+  "log_error_Add_Error": {
+    "ProcedureName": "log_error_Add_Error",
+    "TotalOperations": 1,
+    "Operations": [
+      {
+        "Index": 1,
+        "Type": "INSERT",
+        "Table": "log_error",
+        "Columns": [
+          "User",
+          "Severity",
+          "ErrorType",
+          "ErrorMessage",
+          "StackTrace",
+          "ModuleName",
+          "MethodName",
+          "AdditionalInfo",
+          "MachineName",
+          "OSVersion",
+          "AppVersion",
+          "ErrorTime"
+        ],
+        "Values": [
+          "p_User",
+          "p_Severity",
+          "p_ErrorType",
+          "p_ErrorMessage",
+          "p_StackTrace",
+          "p_ModuleName",
+          "p_MethodName",
+          "p_AdditionalInfo",
+          "p_MachineName",
+          "p_OSVersion",
+          "p_AppVersion",
+          "p_ErrorTime"
+        ],
+        "ColumnValuePairs": [
+          "User = p_User",
+          "Severity = p_Severity",
+          "ErrorType = p_ErrorType",
+          "ErrorMessage = p_ErrorMessage",
+          "StackTrace = p_StackTrace",
+          "ModuleName = p_ModuleName",
+          "MethodName = p_MethodName",
+          "AdditionalInfo = p_AdditionalInfo",
+          "MachineName = p_MachineName",
+          "OSVersion = p_OSVersion",
+          "AppVersion = p_AppVersion",
+          "ErrorTime = p_ErrorTime"
+        ],
+        "RawSQL": "INSERT INTO `log_error` (\n\n            `User`, `Severity`, `ErrorType`, `ErrorMessage`, `StackTrace`, \n\n            `ModuleName`, `MethodName`, `AdditionalInfo`, `MachineName`, \n\n            `OSVersion`, `AppVersion`, `ErrorTime`\n\n        ) VALUES (\n\n            p_User, p_Severity, p_ErrorType, p_ErrorMessage, p_StackTrace,\n\n            p_ModuleName, p_MethodName, p_AdditionalInfo, p_MachineName,\n\n            p_OSVersion, p_AppVersion, p_ErrorTime\n\n        )"
+      }
+    ]
+  },
+  "log_error_Get_Unique": {
+    "ProcedureName": "log_error_Get_Unique",
+    "TotalOperations": 0,
+    "Operations": []
+  }
+}

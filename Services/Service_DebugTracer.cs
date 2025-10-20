@@ -239,7 +239,7 @@ internal static class Service_DebugTracer
         var logData = new Dictionary<string, object>
         {
             ["Action"] = "DATABASE_START",
-            ["Operation"] = operation,
+            ["p_Operation"] = operation,
             ["Target"] = target,
             ["Caller"] = callerName,
             ["Server"] = ExtractServerFromConnectionString(connectionString),
@@ -275,7 +275,7 @@ internal static class Service_DebugTracer
         var logData = new Dictionary<string, object>
         {
             ["Action"] = "DATABASE_COMPLETE",
-            ["Operation"] = operation,
+            ["p_Operation"] = operation,
             ["Target"] = target,
             ["Caller"] = callerName,
             ["RowsAffected"] = rowsAffected,
@@ -514,7 +514,7 @@ internal static class Service_DebugTracer
             LogTrace($"⏱️ PERFORMANCE START: {operationName}", DebugLevel.High, new Dictionary<string, object>
             {
                 ["Action"] = "PERFORMANCE_START",
-                ["Operation"] = operationName,
+                ["p_Operation"] = operationName,
                 ["Caller"] = callerName,
                 ["Key"] = key
             });
@@ -551,7 +551,7 @@ internal static class Service_DebugTracer
             var logData = new Dictionary<string, object>
             {
                 ["Action"] = "PERFORMANCE_COMPLETE",
-                ["Operation"] = operation,
+                ["p_Operation"] = operation,
                 ["ElapsedMs"] = elapsedMs,
                 ["Key"] = performanceKey
             };

@@ -11,6 +11,18 @@ applyTo: 'Data/**/*.cs,Helpers/**/*.cs,Services/**/*.cs'
 
 This file defines MySQL 5.7 database patterns, connection management, and manufacturing domain context for the MTM WIP Application. The application uses MySQL 5.7 via MAMP with the MySql.Data connector and custom helper classes for stored procedure execution.
 
+## Relevant MCP Tools
+
+- `analyze_stored_procedures` – Audit procedure files in `Database/UpdatedStoredProcedures/` for required `p_Status`/`p_ErrorMsg` outputs, transaction handling, and `p_` parameter naming whenever you modify SQL.
+- `analyze_dependencies` – Map CALL hierarchies before refactoring to understand impact and to confirm you are updating every dependent procedure mentioned here.
+- `compare_databases` – Run against the `Current*/Updated*` folders to spot schema drift that needs to be reconciled before promoting changes.
+- `install_stored_procedures` – Apply updated SQL to the test database using the JSON config as part of deployment dry runs.
+- `validate_schema` – Verify the live database matches `database-schema-snapshot.json` after migrations or before running integration suites.
+- `generate_dao_wrapper` – Produce DAO skeletons that follow the helper usage patterns documented below when introducing new stored procedures.
+- `generate_test_seed_sql` & `verify_test_seed` – Seed deterministic datasets and confirm results for integration tests exercising new procedures.
+- `audit_database_cleanup` – Check for and optionally remove `TEST-*` residues after suites that touch manufacturing tables.
+- `run_integration_harness` – Chain seeding, procedure installs, schema validation, DAO tests, and cleanup in a single scripted run that mirrors the workflows described in this guide.
+
 ## Core Principles
 
 ### Stored Procedure First
@@ -37,7 +49,7 @@ This file defines MySQL 5.7 database patterns, connection management, and manufa
 - Server: `localhost`
 - Port: `3306` (default)
 - Database: `mtm_wip_application` (production)
-- Database: `mtm_wip_application_test` (development)
+- Database: `mtm_wip_application_winforms_test` (development)
 - Username: `root`
 - Password: `root`
 - Connection String: `Server=localhost;Database=mtm_wip_application;SslMode=none;AllowPublicKeyRetrieval=true;`
@@ -53,6 +65,22 @@ SERVER=<host>;DATABASE=<db>;UID=<user>;PASSWORD=<password>;Allow User Variables=
 - Validate connection strings on startup using the helper methods in `Program.cs` to surface user-friendly errors.
 
 ## Stored Procedure Execution Patterns
+
+### Discovering Missing Stored Procedures
+
+When refactoring or auditing the codebase for missing stored procedures:
+
+1. **Use regex scanning** to find all stored procedure references in C# code:
+   ```python
+   pattern = re.compile(r'"((?:inv|md|sys|log|usr|maint|query)_[A-Za-z0-9_]+)"')
+   ```
+2. **Cross-reference** found procedure names against SQL definitions in `UpdatedStoredProcedures/ReadyForVerification/`
+3. **Extract parameters** from code by parsing `ExecuteDataTableWithStatusAsync` calls and Dictionary initializers
+4. **Create action plan CSV** with columns: Procedure, Domain, CallFile, CallLine, Action (CREATE_NEW/RENAME_CALL/IGNORE), Parameters, ExpectedReturn, Notes, SimilarProcedure
+5. **Prioritize quick wins**: Rename code references to existing procedures before creating new ones
+6. **Use existing procedures as templates** when creating new stored procedures (check SimilarProcedure column)
+
+This systematic approach discovered 19 missing procedures in one session, preventing runtime errors and enabling comprehensive stored procedure inventory management.
 
 ### Helper_Database_StoredProcedure.ExecuteDataTableWithStatus
 This helper wraps stored procedure calls and returns a `StoredProcedureResult<DataTable>` along with the standard `p_Status` and `p_ErrorMsg` outputs.
@@ -335,7 +363,7 @@ if (stopwatch.ElapsedMilliseconds > 1000)
 - Validate connection pooling behavior under load
 
 ### Integration Testing
-- Use test database (`mtm_wip_application_test`) for integration tests
+- Use test database (`mtm_wip_application_winforms_test`) for integration tests
 - Clean up test data after test execution
 - Test with realistic data volumes
 - Verify stored procedure results match expectations

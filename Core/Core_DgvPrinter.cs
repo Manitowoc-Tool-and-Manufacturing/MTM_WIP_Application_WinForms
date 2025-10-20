@@ -93,8 +93,8 @@ public class Core_DgvPrinter
         {
             LoggingUtility.LogApplicationError(ex);
             _ = Dao_ErrorLog.HandleException_GeneralError_CloseApp(
-                ex, false,
-                new System.Text.StringBuilder().Append("Core_DgvPrinter.Print").ToString());
+                ex,
+                callerName: new System.Text.StringBuilder().Append("Core_DgvPrinter.Print").ToString());
             throw;
         }
     }
@@ -269,8 +269,8 @@ public class Core_DgvPrinter
         {
             LoggingUtility.LogApplicationError(ex);
             _ = Dao_ErrorLog.HandleException_GeneralError_CloseApp(
-                ex, false,
-                new System.Text.StringBuilder().Append("Core_DgvPrinter.PrintPage").ToString());
+                ex,
+                callerName: new System.Text.StringBuilder().Append("Core_DgvPrinter.PrintPage").ToString());
             e.HasMorePages = false;
         }
     }

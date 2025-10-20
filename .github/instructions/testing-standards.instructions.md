@@ -7,6 +7,20 @@ applyTo: '**/*.cs'
 
 # Testing Standards for MTM Application
 
+## Available MCP Tools for Testing
+
+When developing tests, use these MCP tools from the **mtm-workflow** server:
+- `generate_unit_tests` - Auto-generate test scaffolding for C# classes
+- `check_security` - Identify security test scenarios
+- `analyze_performance` - Create performance test cases
+- `validate_dao_patterns` - Verify code structure before testing
+- `generate_test_seed_sql` - Build deterministic seed datasets for integration scenarios referenced in this guide.
+- `verify_test_seed` - Confirm seeded rows exist (or are cleaned up) before/after exercising DAO flows.
+- `install_stored_procedures` - Deploy updated SQL scripts to the test database prior to running suites.
+- `run_integration_harness` - Orchestrate seed → install → schema validation → DAO tests → cleanup as a single repeatable workflow.
+- `audit_database_cleanup` - Ensure previous runs did not leave residue that will pollute new validation cycles.
+- `validate_schema` - Double-check the test schema matches the expected snapshot before trusting results.
+
 ## Overview
 
 The MTM WIP Application uses manual validation testing approach. This file defines success criteria patterns, validation workflows, and quality assurance standards.

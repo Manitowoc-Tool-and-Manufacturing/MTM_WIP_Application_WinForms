@@ -6,6 +6,14 @@ description: 'Generate database operation code using stored procedures with MTM 
 
 Generate database operation code using stored procedures following MTM MySQL 5.7 patterns with Helper_Database_StoredProcedure and connection pooling.
 
+## Required MCP Tools
+
+This prompt can utilize the following MCP tools from the **mtm-workflow** server:
+- `analyze_stored_procedures` - Verify stored procedure compliance before integration
+- `generate_dao_wrapper` - Auto-generate DAO code from stored procedure files
+- `validate_dao_patterns` - Validate generated DAO code meets MTM standards
+- `check_security` - Scan for SQL injection and security vulnerabilities
+
 ## Prerequisites
 
 - Stored procedure name must be known
@@ -35,7 +43,17 @@ If arguments are incomplete, prompt for:
 
 ## Implementation Steps
 
-### Step 1: Identify Stored Procedure Pattern
+### Step 1: Identify and Validate Stored Procedure
+
+**If stored procedure file is available:**
+1. **USE MCP TOOL**: `mcp_mtm-workflow_analyze_stored_procedures(procedures_dir: "Database/UpdatedStoredProcedures", recursive: true)`
+   - Verify the procedure has required `p_Status` and `p_ErrorMsg` output parameters
+   - Check for proper transaction management
+   - Identify any security vulnerabilities
+
+2. **USE MCP TOOL**: `mcp_mtm-workflow_generate_dao_wrapper(procedure_file: "path/to/procedure.sql")`
+   - Auto-generate initial DAO wrapper code
+   - Use this as a starting template for your service method
 
 Common MTM stored procedures:
 - **usp_Get{Entity}**: Retrieve data (returns DataTable)
@@ -394,6 +412,19 @@ From appsettings.json MTM:DefaultLocations:
 
 ## Validation Checklist
 
+**After implementation, use MCP tools to validate:**
+
+1. **USE MCP TOOL**: `mcp_mtm-workflow_validate_dao_patterns(dao_dir: "Data", recursive: true)`
+   - Verify proper region organization
+   - Check async/await patterns
+   - Validate Service_ErrorHandler usage
+   - Ensure XML documentation
+
+2. **USE MCP TOOL**: `mcp_mtm-workflow_check_security(source_dir: "Data", scan_type: "code", recursive: true)`
+   - Scan for SQL injection vulnerabilities
+   - Check for hardcoded credentials
+   - Validate parameter sanitization
+
 Before completion, verify:
 
 - [ ] Uses Helper_Database_StoredProcedure.ExecuteDataTableWithStatus
@@ -406,6 +437,7 @@ Before completion, verify:
 - [ ] Uses connection string from configuration
 - [ ] Timeout set to 30 seconds
 - [ ] Manufacturing domain validation (operations, locations, transaction types)
+- [ ] **Passed MCP tool validation** (validate_dao_patterns and check_security)
 
 ## Anti-Patterns to Avoid
 

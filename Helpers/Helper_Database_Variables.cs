@@ -8,6 +8,15 @@ namespace MTM_Inventory_Application.Helpers
 
     public static class Helper_Database_Variables
     {
+        #region Database Configuration Constants
+
+        /// <summary>
+        /// Test database name for integration testing. Matches the database created during test setup.
+        /// </summary>
+        public const string TestDatabaseName = "mtm_wip_application_winforms_test";
+
+        #endregion
+
         #region Connection String
 
         public static string GetConnectionString(string? server, string? database, string? uid, string? password)
@@ -16,8 +25,9 @@ namespace MTM_Inventory_Application.Helpers
             {
                 server ??= Model_Users.WipServerAddress;
                 database ??= Model_Users.Database;
-                uid ??= Model_AppVariables.User.ToUpper();
-                return $"SERVER={server};DATABASE={database};UID={uid};Allow User Variables=True ;";
+                uid ??= "root";  // Use root user for MAMP MySQL
+                password ??= "root";  // Use root password for MAMP MySQL
+                return $"SERVER={server};DATABASE={database};UID={uid};PASSWORD={password};Allow User Variables=True;SslMode=none;AllowPublicKeyRetrieval=true;";
             }
             catch (Exception ex)
             {

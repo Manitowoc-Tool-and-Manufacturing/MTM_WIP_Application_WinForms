@@ -11,6 +11,15 @@ applyTo: '**/*.cs'
 
 These guidelines describe how to structure and implement C# code within the MTM WinForms application. Favor consistency with the existing Forms/DAO/helpers architecture and .NET 8 language improvements that do not interfere with the WinForms designer.
 
+## Relevant MCP Tools
+
+- `validate_dao_patterns` – Run against `Data/` when creating or refactoring DAOs to confirm region layout, Helper_Database usage, async patterns, and XML docs match these rules.
+- `validate_error_handling` – Scan updated C# folders to verify Service_ErrorHandler adoption and to catch lingering MessageBox.Show calls.
+- `analyze_performance` – Target UI or database code paths during refactors to surface blocking awaits, N+1 loops, and other pitfalls called out in this guide.
+- `suggest_refactoring` – Generate prioritized clean-up opportunities before large rewrites so new code adheres to the architecture described here.
+- `check_xml_docs` – Confirm public APIs touched by your changes meet the documentation expectations outlined below.
+- `generate_unit_tests` – Produce scaffolding for helper/service classes when expanding coverage while staying within the mandated patterns.
+
 ## Core Principles
 
 - Target `.NET 8.0` across the solution; no multi-targeting is required.
@@ -48,6 +57,33 @@ These guidelines describe how to structure and implement C# code within the MTM 
 - Prefer async DAO methods (`Task<Model>` or `Task<DaoResult>`) so callers can keep the UI responsive. Only block when a WinForms API requires synchronous completion.
 - Never call `.Result` or `.Wait()` on tasks inside UI code; schedule continuation work with `await` or explicit callbacks.
 - Capture stored procedure outputs in POCO models located in `Models/`. Keep transformation logic close to the DAO when it is purely data shaping.
+
+### Refactoring to Use Existing Stored Procedures
+
+When a DAO calls a non-existent stored procedure, check if an existing procedure returns the needed data before creating a new one:
+
+```csharp
+// ❌ BEFORE: Calling non-existent scalar procedure
+var itemTypeResult = await Helper_Database_StoredProcedure.ExecuteScalarWithStatusAsync(
+    connectionString,
+    "md_part_ids_GetItemType_ByPartID",  // Doesn't exist
+    new Dictionary<string, object> { ["p_PartID"] = partId }
+);
+itemType = itemTypeResult.IsSuccess ? itemTypeResult.Data?.ToString() : "None";
+
+// ✅ AFTER: Using existing procedure that returns full record
+var itemTypeResult = await Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync(
+    connectionString,
+    "md_part_ids_Get_ByItemNumber",  // Existing procedure
+    new Dictionary<string, object> { ["ItemNumber"] = partId }
+);
+if (itemTypeResult.IsSuccess && itemTypeResult.Data.Rows.Count > 0)
+{
+    itemType = itemTypeResult.Data.Rows[0]["ItemType"]?.ToString() ?? "None";
+}
+```
+
+This pattern avoids creating duplicate procedures when existing ones already return the required data.
 
 ## Error Handling & Logging
 

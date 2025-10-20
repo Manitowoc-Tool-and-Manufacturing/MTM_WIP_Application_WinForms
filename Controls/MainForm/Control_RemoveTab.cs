@@ -1,4 +1,4 @@
-﻿using System.ComponentModel;
+using System.ComponentModel;
 using System.Data;
 using System.Diagnostics;
 using System.Drawing.Printing;
@@ -191,20 +191,20 @@ namespace MTM_Inventory_Application.Controls.MainForm
                 try
                 {
                     Model_AppVariables.UserFullName =
-                        await Dao_User.GetUserFullNameAsync(Model_AppVariables.User, true);
+                        await Dao_User.GetUserFullNameAsync(Model_AppVariables.User);
                     LoggingUtility.Log($"User full name loaded: {Model_AppVariables.UserFullName}");
                 }
                 catch (Exception ex)
                 {
                     LoggingUtility.LogApplicationError(ex);
-                    await Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex, true,
+                    await Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex,
                         new StringBuilder().Append("Control_RemoveTab_OnStartup_GetUserFullName").ToString());
                 }
             }
             catch (Exception ex)
             {
                 LoggingUtility.LogApplicationError(ex);
-                await Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex, true,
+                await Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex,
                     new StringBuilder().Append("Control_RemoveTab_OnStartup").ToString());
             }
         }
@@ -220,7 +220,7 @@ namespace MTM_Inventory_Application.Controls.MainForm
             catch (Exception ex)
             {
                 LoggingUtility.LogApplicationError(ex);
-                await Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex, true,
+                await Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex,
                     new StringBuilder().Append("MainForm_LoadRemoveTabComboBoxesAsync").ToString());
             }
         }
@@ -270,7 +270,7 @@ namespace MTM_Inventory_Application.Controls.MainForm
             catch (Exception ex)
             {
                 LoggingUtility.LogApplicationError(ex);
-                _ = Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex, false,
+                _ = Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex,
                     new StringBuilder().Append("MainForm_ProcessCmdKey").ToString());
                 return false;
             }
@@ -320,13 +320,13 @@ namespace MTM_Inventory_Application.Controls.MainForm
                         attempted++;
                         Model_HistoryRemove item = new()
                         {
-                            PartId = drv["PartID"]?.ToString() ?? "",
+                            PartId = drv["p_PartID"]?.ToString() ?? "",
                             Location = drv["Location"]?.ToString() ?? "",
-                            Operation = drv["Operation"]?.ToString() ?? "",
+                            Operation = drv["p_Operation"]?.ToString() ?? "",
                             Quantity = TryParse(drv["Quantity"]?.ToString(), out int qty) ? qty : 0,
                             ItemType =
                                 drv.Row.Table.Columns.Contains("ItemType") ? drv["ItemType"]?.ToString() ?? "" : "",
-                            User = drv.Row.Table.Columns.Contains("User") ? drv["User"]?.ToString() ?? "" : "",
+                            User = drv.Row.Table.Columns.Contains("User") ? drv["p_User"]?.ToString() ?? "" : "",
                             BatchNumber =
                                 drv.Row.Table.Columns.Contains("BatchNumber")
                                     ? drv["BatchNumber"]?.ToString() ?? ""
@@ -359,7 +359,11 @@ namespace MTM_Inventory_Application.Controls.MainForm
                                 BatchNumber = item.BatchNumber,
                                 DateTime = item.ReceiveDate
                             };
-                            await Dao_History.AddTransactionHistoryAsync(transaction);
+                            var historyResult = await Dao_History.AddTransactionHistoryAsync(transaction);
+                            if (!historyResult.IsSuccess)
+                            {
+                                LoggingUtility.Log($"Failed to log transaction history: {historyResult.ErrorMessage}");
+                            }
                         }
                     }
                 }
@@ -403,7 +407,7 @@ namespace MTM_Inventory_Application.Controls.MainForm
             catch (Exception ex)
             {
                 LoggingUtility.LogApplicationError(ex);
-                await Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex, true,
+                await Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex,
                     new StringBuilder().Append("Control_RemoveTab_Button_Delete_Click").ToString());
             }
             finally
@@ -485,7 +489,7 @@ namespace MTM_Inventory_Application.Controls.MainForm
             catch (Exception ex)
             {
                 LoggingUtility.LogApplicationError(ex);
-                _ = Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex, false,
+                _ = Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex,
                     new StringBuilder().Append("MainForm_Remove_Button_Reset_Click").ToString());
             }
             finally
@@ -532,7 +536,7 @@ namespace MTM_Inventory_Application.Controls.MainForm
             catch (Exception ex)
             {
                 LoggingUtility.LogApplicationError(ex);
-                _ = Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex, false,
+                _ = Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex,
                     new StringBuilder().Append("MainForm_Remove_HardReset").ToString());
             }
             finally
@@ -576,7 +580,7 @@ namespace MTM_Inventory_Application.Controls.MainForm
             catch (Exception ex)
             {
                 LoggingUtility.LogApplicationError(ex);
-                _ = Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex, false,
+                _ = Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex,
                     new StringBuilder().Append("MainForm_Remove_SoftReset").ToString());
             }
             finally
@@ -647,7 +651,7 @@ namespace MTM_Inventory_Application.Controls.MainForm
             catch (Exception ex)
             {
                 LoggingUtility.LogApplicationError(ex);
-                _ = Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex, false,
+                _ = Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex,
                     new StringBuilder().Append("Control_RemoveTab_Button_AdvancedItemRemoval_Click").ToString());
             }
         }
@@ -675,7 +679,7 @@ namespace MTM_Inventory_Application.Controls.MainForm
             catch (Exception ex)
             {
                 LoggingUtility.LogApplicationError(ex);
-                _ = Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex, false,
+                _ = Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex,
                     new StringBuilder().Append("Control_RemoveTab_Button_Normal_Click").ToString());
             }
         }
@@ -758,7 +762,7 @@ namespace MTM_Inventory_Application.Controls.MainForm
             catch (Exception ex)
             {
                 LoggingUtility.LogApplicationError(ex);
-                await Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex, true,
+                await Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex,
                     new StringBuilder().Append("Control_RemoveTab_Button_Search_Click").ToString());
             }
             finally
@@ -847,7 +851,7 @@ namespace MTM_Inventory_Application.Controls.MainForm
             catch (Exception ex)
             {
                 LoggingUtility.LogApplicationError(ex);
-                _ = Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex, false,
+                _ = Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex,
                     new StringBuilder().Append("MainForm_Inventory_ComboBox_Op").ToString());
             }
         }
@@ -880,7 +884,7 @@ namespace MTM_Inventory_Application.Controls.MainForm
             catch (Exception ex)
             {
                 LoggingUtility.LogApplicationError(ex);
-                _ = Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex, false,
+                _ = Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex,
                     new StringBuilder().Append("MainForm_Inventory_ComboBox_Part").ToString());
             }
         }
@@ -902,7 +906,7 @@ namespace MTM_Inventory_Application.Controls.MainForm
             catch (Exception ex)
             {
                 LoggingUtility.LogApplicationError(ex);
-                _ = Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex, false,
+                _ = Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex,
                     new StringBuilder().Append("Control_RemoveTab_Update_ButtonStates").ToString());
             }
         }
@@ -990,7 +994,7 @@ namespace MTM_Inventory_Application.Controls.MainForm
             catch (Exception ex)
             {
                 LoggingUtility.LogApplicationError(ex);
-                _ = Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex, false,
+                _ = Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex,
                     new StringBuilder().Append("MainForm_WireUpRemoveTabEvents").ToString());
             }
         }
@@ -1027,12 +1031,11 @@ namespace MTM_Inventory_Application.Controls.MainForm
                 _progressHelper?.UpdateProgress(10, "Loading all inventory...");
 
                 // FIXED: Use inv_inventory_Get_All stored procedure instead of hardcoded SQL
-                var getAllResult = await Helper_Database_StoredProcedure.ExecuteDataTableWithStatus(
+                var getAllResult = await Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync(
                     Model_AppVariables.ConnectionString,
                     "inv_inventory_Get_All",
                     null,
-                    _progressHelper,
-                    true);
+                    _progressHelper);
 
                 if (!getAllResult.IsSuccess)
                 {
@@ -1046,7 +1049,7 @@ namespace MTM_Inventory_Application.Controls.MainForm
                 }
 
                 DataTable dt = getAllResult.Data ?? new DataTable();
-                LoggingUtility.Log($"[SHOW ALL DEBUG] Retrieved {dt.Rows.Count} inventory records. Status: {getAllResult.Status}");
+                LoggingUtility.Log($"[SHOW ALL DEBUG] Retrieved {dt.Rows.Count} inventory records. Success: {getAllResult.IsSuccess}");
 
                 Control_RemoveTab_DataGridView_Main.DataSource = dt;
                 Control_RemoveTab_DataGridView_Main.ClearSelection();
@@ -1096,7 +1099,7 @@ namespace MTM_Inventory_Application.Controls.MainForm
             {
                 if (row.DataBoundItem is DataRowView drv)
                 {
-                    string partId = drv["PartID"]?.ToString() ?? "";
+                    string partId = drv["p_PartID"]?.ToString() ?? "";
                     string location = drv["Location"]?.ToString() ?? "";
                     string quantityStr = drv["Quantity"]?.ToString() ?? "";
                     if (!TryParse(quantityStr, out int quantity))

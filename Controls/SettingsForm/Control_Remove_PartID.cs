@@ -1,4 +1,5 @@
 using System.Data;
+using MTM_Inventory_Application.Core;
 using MTM_Inventory_Application.Data;
 using MTM_Inventory_Application.Helpers;
 using MTM_Inventory_Application.Logging;
@@ -28,7 +29,11 @@ namespace MTM_Inventory_Application.Controls.SettingsForm
 
         #region Constructors
 
-        public Control_Remove_PartID() => InitializeComponent();
+                public Control_Remove_PartID()
+        {
+            InitializeComponent();
+            Core_Themes.ApplyDpiScaling(this);
+        }
 
         #endregion
 
@@ -53,7 +58,7 @@ namespace MTM_Inventory_Application.Controls.SettingsForm
             catch (Exception ex)
             {
                 LoggingUtility.LogApplicationError(ex);
-                await Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex, true,
+                await Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex,
                     "SettingsForm / RemovePartControl_OnLoadOverRide");
             }
         }
@@ -88,7 +93,15 @@ namespace MTM_Inventory_Application.Controls.SettingsForm
             {
                 string selectedText = partsComboBox.Text;
                 string itemNumber = selectedText;
-                _currentPart = await Dao_Part.GetPartByNumber(itemNumber);
+                var getResult = await Dao_Part.GetPartByNumberAsync(itemNumber);
+                if (!getResult.IsSuccess)
+                {
+                    MessageBox.Show($@"Error loading part: {getResult.ErrorMessage}", @"Error",
+                        MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
+
+                _currentPart = getResult.Data;
                 if (_currentPart != null)
                 {
                     LoadPartData();
@@ -109,7 +122,7 @@ namespace MTM_Inventory_Application.Controls.SettingsForm
                 return;
             }
 
-            string? itemNumber = _currentPart["PartID"]?.ToString();
+            string? itemNumber = _currentPart["p_PartID"]?.ToString();
             string? customer = _currentPart["Customer"]?.ToString();
             if (string.IsNullOrEmpty(itemNumber))
             {
@@ -131,7 +144,14 @@ This action cannot be undone.",
 
             try
             {
-                await Dao_Part.DeletePart(itemNumber);
+                var deleteResult = await Dao_Part.DeletePartAsync(itemNumber);
+                if (!deleteResult.IsSuccess)
+                {
+                    MessageBox.Show($@"Error removing part: {deleteResult.ErrorMessage}", @"Error",
+                        MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
+
                 MessageBox.Show(@"Part removed successfully!", @"Success", MessageBoxButtons.OK,
                     MessageBoxIcon.Information);
                 LoadParts();
@@ -164,7 +184,7 @@ This action cannot be undone.",
                 return;
             }
 
-            itemNumberValueLabel.Text = _currentPart["PartID"].ToString();
+            itemNumberValueLabel.Text = _currentPart["p_PartID"].ToString();
             customerValueLabel.Text = _currentPart["Customer"].ToString();
             descriptionValueLabel.Text = _currentPart["Description"].ToString();
             typeValueLabel.Text = _currentPart["ItemType"].ToString();

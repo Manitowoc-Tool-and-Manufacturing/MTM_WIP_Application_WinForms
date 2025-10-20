@@ -21,7 +21,11 @@ namespace MTM_Inventory_Application.Controls.SettingsForm
 
         #region Constructors
 
-        public Control_Edit_Operation() => InitializeComponent();
+                public Control_Edit_Operation()
+        {
+            InitializeComponent();
+            Core.Core_Themes.ApplyDpiScaling(this);
+        }
 
         #endregion
 
@@ -70,7 +74,7 @@ namespace MTM_Inventory_Application.Controls.SettingsForm
                 _currentOperation = await Dao_Operation.GetOperationByNumber(selectedOperation ?? string.Empty);
                 if (_currentOperation != null)
                 {
-                    operationTextBox.Text = _currentOperation["Operation"]?.ToString() ?? string.Empty;
+                    operationTextBox.Text = _currentOperation["p_Operation"]?.ToString() ?? string.Empty;
                     issuedByValueLabel.Text = _currentOperation["IssuedBy"]?.ToString() ?? "Current User";
                     EnableControls(true);
                 }
@@ -102,18 +106,36 @@ namespace MTM_Inventory_Application.Controls.SettingsForm
                 }
 
                 string newOperationNumber = operationTextBox.Text.Trim();
-                string originalOperationNumber = _currentOperation["Operation"]?.ToString() ?? string.Empty;
-                if (newOperationNumber != originalOperationNumber &&
-                    await Dao_Operation.OperationExists(newOperationNumber))
+                string originalOperationNumber = _currentOperation["p_Operation"]?.ToString() ?? string.Empty;
+                
+                if (newOperationNumber != originalOperationNumber)
                 {
-                    MessageBox.Show($@"Operation number '{newOperationNumber}' already exists.", @"Duplicate Operation",
-                        MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                    operationTextBox.Focus();
-                    return;
+                    var existsResult = await Dao_Operation.OperationExists(newOperationNumber);
+                    if (!existsResult.IsSuccess)
+                    {
+                        MessageBox.Show($@"Error checking operation: {existsResult.ErrorMessage}", @"Error",
+                            MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        return;
+                    }
+                    
+                    if (existsResult.Data)
+                    {
+                        MessageBox.Show($@"Operation number '{newOperationNumber}' already exists.", @"Duplicate Operation",
+                            MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        operationTextBox.Focus();
+                        return;
+                    }
                 }
 
-                await Dao_Operation.UpdateOperation(originalOperationNumber, newOperationNumber,
-                    Model_AppVariables.User ?? "Current User", true);
+                var updateResult = await Dao_Operation.UpdateOperation(originalOperationNumber, newOperationNumber,
+                    Model_AppVariables.User ?? "Current User");
+                if (!updateResult.IsSuccess)
+                {
+                    MessageBox.Show($@"Error updating operation: {updateResult.ErrorMessage}", @"Error",
+                        MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
+                
                 LoadOperations();
                 ClearForm();
                 EnableControls(false);
