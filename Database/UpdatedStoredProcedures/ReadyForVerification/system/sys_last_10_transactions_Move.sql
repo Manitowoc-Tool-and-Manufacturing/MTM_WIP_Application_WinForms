@@ -1,6 +1,6 @@
 DELIMITER //
-DROP PROCEDURE IF EXISTS `sys_last_10_transactions_Move_1`//
-CREATE DEFINER=`root`@`localhost` PROCEDURE `sys_last_10_transactions_Move_1`(
+DROP PROCEDURE IF EXISTS `sys_last_10_transactions_Move`//
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sys_last_10_transactions_Move`(
     IN p_User VARCHAR(255),
     IN p_FromPosition INT,
     IN p_ToPosition INT,
@@ -63,3 +63,4 @@ BEGIN
 END
 //
 DELIMITER ;
+

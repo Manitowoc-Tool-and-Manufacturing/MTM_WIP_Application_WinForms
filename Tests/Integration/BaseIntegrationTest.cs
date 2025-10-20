@@ -202,9 +202,9 @@ public abstract class BaseIntegrationTest
     /// <para>
     /// <strong>Tables Cleaned:</strong>
     /// - inv_inventory (test inventory records)
-    /// - inv_transaction_history (test transaction history)
-    /// - usr_quick_buttons (test quick button configurations)
-    /// - log_application_errors (test error logs)
+    /// - inv_transaction (test transaction history)
+    /// - sys_last_10_transactions (test quick button configurations)
+    /// - log_error (test error logs)
     /// </para>
     /// <para>
     /// <strong>Safety:</strong>
@@ -222,34 +222,74 @@ public abstract class BaseIntegrationTest
 
         try
         {
-            using var cmd = _connection.CreateCommand();
-            
-            // Delete test inventory and related records
-            // Note: sys_last_10_transactions is the actual table for quick buttons
-            cmd.CommandText = @"
-                DELETE FROM inv_inventory 
-                WHERE BatchNumber LIKE 'TEST-%' 
-                   OR BatchNumber LIKE 'TEMP-%'
-                   OR BatchNumber LIKE 'WORKFLOW-%'
-                   OR BatchNumber LIKE 'BATCH-POOL-%'
-                   OR PartID LIKE 'TEST-PART-%'
-                   OR PartID LIKE 'POOL-TEST-%';
-                
-                DELETE FROM sys_last_10_transactions 
-                WHERE User LIKE 'Test%' 
-                   OR User LIKE 'TestUser%'
-                   OR User LIKE 'PoolTestUser%';
-                
-                DELETE FROM log_application_errors 
-                WHERE ErrorMessage LIKE '%Test%' 
-                   OR ErrorMessage LIKE '%TEST%';
-            ";
-            
-            int rowsAffected = cmd.ExecuteNonQuery();
-            
-            if (rowsAffected > 0)
+            // Clean up test inventory records
+            try
             {
-                Console.WriteLine($"[Cleanup] Removed {rowsAffected} test records from database");
+                using var cmd1 = _connection.CreateCommand();
+                cmd1.CommandText = @"
+                    DELETE FROM inv_inventory 
+                    WHERE BatchNumber LIKE 'TEST-%' 
+                       OR BatchNumber LIKE 'TEMP-%'
+                       OR BatchNumber LIKE 'WORKFLOW-%'
+                       OR BatchNumber LIKE 'BATCH-POOL-%'
+                       OR PartID LIKE 'TEST-PART-%'
+                       OR PartID LIKE 'POOL-TEST-%';
+                ";
+                int rows1 = cmd1.ExecuteNonQuery();
+                if (rows1 > 0) Console.WriteLine($"[Cleanup] Removed {rows1} test inventory records");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"[Cleanup] Failed to clean inv_inventory: {ex.Message}");
+            }
+
+            // Clean up quick button test records
+            try
+            {
+                using var cmd2 = _connection.CreateCommand();
+                cmd2.CommandText = @"
+                    DELETE FROM sys_last_10_transactions 
+                    WHERE User LIKE 'Test%' 
+                       OR User LIKE 'TestUser%'
+                       OR User LIKE 'PoolTestUser%';
+                ";
+                int rows2 = cmd2.ExecuteNonQuery();
+                if (rows2 > 0) Console.WriteLine($"[Cleanup] Removed {rows2} quick button test records");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"[Cleanup] Failed to clean sys_last_10_transactions: {ex.Message}");
+            }
+
+            // Clean up error log test records (table may not exist in test database)
+            try
+            {
+                // First check if table exists
+                using var checkCmd = _connection.CreateCommand();
+                checkCmd.CommandText = @"
+                    SELECT COUNT(*) 
+                    FROM information_schema.tables 
+                    WHERE table_schema = DATABASE() 
+                      AND table_name = 'log_error'
+                ";
+                var tableExists = Convert.ToInt32(checkCmd.ExecuteScalar()) > 0;
+
+                if (tableExists)
+                {
+                    using var cmd3 = _connection.CreateCommand();
+                    cmd3.CommandText = @"
+                        DELETE FROM log_error 
+                        WHERE ErrorMessage LIKE '%Test%' 
+                           OR ErrorMessage LIKE '%TEST%';
+                    ";
+                    int rows3 = cmd3.ExecuteNonQuery();
+                    if (rows3 > 0) Console.WriteLine($"[Cleanup] Removed {rows3} test error log records");
+                }
+            }
+            catch (Exception ex)
+            {
+                // Silent fail - log_error table is optional in test database
+                Console.WriteLine($"[Cleanup] Skipped error log cleanup: {ex.Message}");
             }
         }
         catch (Exception ex)

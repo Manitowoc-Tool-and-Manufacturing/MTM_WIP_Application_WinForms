@@ -1,6 +1,6 @@
 DELIMITER //
-DROP PROCEDURE IF EXISTS `sys_last_10_transactions_AddQuickButton_1`//
-CREATE DEFINER=`root`@`localhost` PROCEDURE `sys_last_10_transactions_AddQuickButton_1`(
+DROP PROCEDURE IF EXISTS `sys_last_10_transactions_AddQuickButton`//
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sys_last_10_transactions_AddQuickButton`(
     IN p_User VARCHAR(255),
     IN p_PartID VARCHAR(255),
     IN p_Operation VARCHAR(255),
@@ -50,3 +50,4 @@ BEGIN
 END
 //
 DELIMITER ;
+

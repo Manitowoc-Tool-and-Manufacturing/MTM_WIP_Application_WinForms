@@ -1,6 +1,6 @@
 DELIMITER //
-DROP PROCEDURE IF EXISTS `sys_last_10_transactions_Update_ByUserAndPosition_1`//
-CREATE DEFINER=`root`@`localhost` PROCEDURE `sys_last_10_transactions_Update_ByUserAndPosition_1`(
+DROP PROCEDURE IF EXISTS `sys_last_10_transactions_Update_ByUserAndPosition`//
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sys_last_10_transactions_Update_ByUserAndPosition`(
     IN p_User VARCHAR(255),
     IN p_Position INT,
     IN p_PartID VARCHAR(255),
@@ -59,3 +59,4 @@ BEGIN
 END
 //
 DELIMITER ;
+

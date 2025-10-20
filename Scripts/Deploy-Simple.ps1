@@ -18,7 +18,8 @@ param(
 $env:PATH = "C:\MAMP\bin\mysql\bin;$env:PATH"
 
 # Get all SQL files recursively
-$sqlFiles = Get-ChildItem -Path "UpdatedStoredProcedures\ReadyForVerification" -Filter "*.sql" -Recurse
+$sqlPath = Join-Path $PSScriptRoot "..\Database\UpdatedStoredProcedures\ReadyForVerification"
+$sqlFiles = Get-ChildItem -Path $sqlPath -Filter "*.sql" -Recurse
 
 Write-Host "Found $($sqlFiles.Count) SQL files to deploy" -ForegroundColor Cyan
 

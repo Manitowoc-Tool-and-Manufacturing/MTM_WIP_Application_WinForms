@@ -1,7 +1,7 @@
 DELIMITER //
 DROP PROCEDURE IF EXISTS `sys_last_10_transactions_Get_ByUser`//
 CREATE DEFINER=`root`@`localhost` PROCEDURE `sys_last_10_transactions_Get_ByUser`(
-    IN p_User VARCHAR(100),
+    IN p_User VARCHAR(255),
     OUT p_Status INT,
     OUT p_ErrorMsg VARCHAR(500)
 )
@@ -17,25 +17,21 @@ BEGIN
         SET p_Status = -2;
         SET p_ErrorMsg = 'User is required';
     ELSE
-        SELECT
-            Position,
-            User,
-            PartID AS p_PartID,
-            Operation AS p_Operation,
-            Quantity,
-            ReceiveDate
+        SELECT *
         FROM sys_last_10_transactions
         WHERE User = p_User
-        ORDER BY Position;
+        ORDER BY Position ASC
+        LIMIT 10;
         SELECT FOUND_ROWS() INTO v_Count;
         IF v_Count > 0 THEN
             SET p_Status = 1;
-            SET p_ErrorMsg = CONCAT('Retrieved ', v_Count, ' quick button(s) for user: ', p_User);
+            SET p_ErrorMsg = CONCAT('Retrieved ', v_Count, ' transaction(s) for user: ', p_User);
         ELSE
             SET p_Status = 0;
-            SET p_ErrorMsg = CONCAT('No quick buttons found for user: ', p_User);
+            SET p_ErrorMsg = CONCAT('No transactions found for user: ', p_User);
         END IF;
     END IF;
 END
 //
 DELIMITER ;
+

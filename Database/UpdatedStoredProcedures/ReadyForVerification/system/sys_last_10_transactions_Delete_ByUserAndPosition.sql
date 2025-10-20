@@ -7,9 +7,9 @@
 
 DELIMITER //
 
-DROP PROCEDURE IF EXISTS `sys_last_10_transactions_Delete_ByUserAndPosition_1`//
+DROP PROCEDURE IF EXISTS `sys_last_10_transactions_Delete_ByUserAndPosition`//
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `sys_last_10_transactions_Delete_ByUserAndPosition_1`(
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sys_last_10_transactions_Delete_ByUserAndPosition`(
     IN p_User VARCHAR(100),
     IN p_Position INT,
     OUT p_Status INT,
@@ -60,3 +60,4 @@ DELIMITER ;
 -- =============================================
 -- End of sys_last_10_transactions_Delete_ByUserAndPosition_1
 -- =============================================
+

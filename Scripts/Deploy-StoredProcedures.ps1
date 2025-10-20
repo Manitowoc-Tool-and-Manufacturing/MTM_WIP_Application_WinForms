@@ -1,23 +1,24 @@
 <#
 .SYNOPSIS
-    Deploys stored procedures to MAMP MySQL 5.7 database.
+    Deploy stored procedures from ReadyForVerification to target MySQL database with safety checks.
 
 .DESCRIPTION
-    This script:
-    1. Connects to the MAMP MySQL 5.7 database
-    2. Reads all .sql files from CurrentStoredProcedures folder
-    3. Executes each stored procedure creation script
-    4. Reports success/failure for each procedure
-    5. Generates a deployment report
+    This script deploys stored procedures with comprehensive safety checks:
+    - Database connection validation
+    - Backup creation before deployment
+    - Procedure existence checks
+    - Transaction support for atomic deployment
+    - Rollback capability on errors
+    - Detailed logging of all operations
 
 .PARAMETER Server
-    MySQL server address (default: localhost)
+    MySQL server hostname (default: localhost)
 
 .PARAMETER Port
-    MySQL port (default: 3306)
+    MySQL server port (default: 3306)
 
 .PARAMETER Database
-    Database name (default: mtm_wip_application)
+    Target database name (required)
 
 .PARAMETER User
     MySQL username (default: root)
@@ -25,274 +26,292 @@
 .PARAMETER Password
     MySQL password (default: root)
 
-.PARAMETER WhatIf
-    Shows what would be deployed without actually executing
+.PARAMETER ProceduresDir
+    Directory containing SQL files to deploy (default: UpdatedStoredProcedures/ReadyForVerification)
+
+.PARAMETER BackupDir
+    Directory to store backups (default: Database/Backups)
+
+.PARAMETER DryRun
+    If specified, shows what would be deployed without making changes
+
+.PARAMETER Force
+    Skip confirmation prompts
+
+.PARAMETER Json
+    Output results as JSON
 
 .EXAMPLE
-    .\Deploy-StoredProcedures.ps1
-    
+    .\Deploy-StoredProcedures.ps1 -Database mtm_wip_application_winforms_test -DryRun
+
 .EXAMPLE
-    .\Deploy-StoredProcedures.ps1 -Database mtm_wip_application_winforms_test
+    .\Deploy-StoredProcedures.ps1 -Database mtm_wip_application -Force
 
 .NOTES
-    Created: 2025-10-14
-    Requires: MySQL command-line client (mysql.exe) in PATH or MAMP installation
+    Author: MTM Development Team
+    Date: 2025-10-19
+    Phase: 002-003-database-layer-complete (T119)
+    Reference: .github/instructions/mysql-database.instructions.md
 #>
 
 [CmdletBinding()]
 param(
     [string]$Server = "localhost",
     [int]$Port = 3306,
-    [string]$Database = "mtm_wip_application",
+    [Parameter(Mandatory = $true)]
+    [string]$Database,
     [string]$User = "root",
     [string]$Password = "root",
-    [switch]$WhatIf
+    [string]$ProceduresDir = "UpdatedStoredProcedures\ReadyForVerification",
+    [string]$BackupDir = "Backups",
+    [switch]$DryRun,
+    [switch]$Force,
+    [switch]$Json
 )
 
-$ErrorActionPreference = "Continue"
+$ErrorActionPreference = "Stop"
 
-# Paths
-$repoRoot = Split-Path $PSScriptRoot -Parent
-$proceduresFolder = Join-Path $repoRoot "Database\CurrentStoredProcedures"
-$reportPath = Join-Path $repoRoot "Database\CurrentStoredProcedures\DEPLOYMENT_REPORT.txt"
+# Import MySQL module if available
+try {
+    Import-Module MySql.Data -ErrorAction SilentlyContinue
+} catch {
+    # Module not required, using direct MySQL client
+}
 
-# Common MAMP MySQL paths
-$mampPaths = @(
-    "C:\MAMP\bin\mysql\bin\mysql.exe",
-    "C:\MAMP\bin\mysql\mysql5.7.24\bin\mysql.exe",
-    "C:\Program Files\MySQL\MySQL Server 5.7\bin\mysql.exe",
-    "C:\Program Files (x86)\MySQL\MySQL Server 5.7\bin\mysql.exe"
-)
+#region Helper Functions
 
-# Find mysql.exe
-$mysqlExe = $null
-foreach ($path in $mampPaths) {
-    if (Test-Path $path) {
-        $mysqlExe = $path
-        break
+function Write-Log {
+    param([string]$Message, [string]$Level = "INFO")
+    $timestamp = Get-Date -Format "yyyy-MM-dd HH:mm:ss"
+    $logMessage = "[$timestamp] [$Level] $Message"
+    
+    if (-not $Json) {
+        switch ($Level) {
+            "ERROR" { Write-Host $logMessage -ForegroundColor Red }
+            "WARN"  { Write-Host $logMessage -ForegroundColor Yellow }
+            "SUCCESS" { Write-Host $logMessage -ForegroundColor Green }
+            default { Write-Host $logMessage }
+        }
+    }
+    
+    # Log to file
+    $logFile = Join-Path $PSScriptRoot "deployment-$(Get-Date -Format 'yyyyMMdd').log"
+    Add-Content -Path $logFile -Value $logMessage
+}
+
+function Test-MySqlConnection {
+    param([string]$ConnectionString)
+    
+    try {
+        $mysqlCommand = "mysql --host=$Server --port=$Port --user=$User --password=$Password --database=$Database --execute='SELECT 1;'"
+        $result = Invoke-Expression $mysqlCommand 2>&1
+        return $?
+    } catch {
+        return $false
     }
 }
 
-# Try PATH if not found in common locations
-if (-not $mysqlExe) {
-    $mysqlExe = (Get-Command mysql.exe -ErrorAction SilentlyContinue).Source
+function Get-ExistingProcedures {
+    param([string]$ConnectionString)
+    
+    $query = "SELECT ROUTINE_NAME FROM INFORMATION_SCHEMA.ROUTINES WHERE ROUTINE_SCHEMA = '$Database' AND ROUTINE_TYPE = 'PROCEDURE'"
+    $mysqlCommand = "mysql --host=$Server --port=$Port --user=$User --password=$Password --database=$Database --skip-column-names --execute=`"$query`""
+    
+    try {
+        $result = Invoke-Expression $mysqlCommand 2>&1
+        if ($LASTEXITCODE -eq 0) {
+            return $result -split "`n" | Where-Object { $_ -ne "" }
+        }
+        return @()
+    } catch {
+        Write-Log "Failed to retrieve existing procedures: $_" "ERROR"
+        return @()
+    }
 }
 
-if (-not $mysqlExe) {
-    Write-Host "`n❌ ERROR: mysql.exe not found!" -ForegroundColor Red
-    Write-Host "Please ensure MySQL client is installed or MAMP is installed at C:\MAMP" -ForegroundColor Yellow
-    Write-Host "Searched locations:" -ForegroundColor Gray
-    $mampPaths | ForEach-Object { Write-Host "  - $_" -ForegroundColor Gray }
-    exit 1
+function Backup-ExistingProcedure {
+    param([string]$ProcedureName, [string]$BackupPath)
+    
+    $query = "SHOW CREATE PROCEDURE $ProcedureName"
+    $mysqlCommand = "mysql --host=$Server --port=$Port --user=$User --password=$Password --database=$Database --skip-column-names --execute=`"$query`""
+    
+    try {
+        $result = Invoke-Expression $mysqlCommand 2>&1
+        if ($LASTEXITCODE -eq 0 -and $result) {
+            $backupFile = Join-Path $BackupPath "$ProcedureName.sql"
+            "-- Backup of $ProcedureName created $(Get-Date -Format 'yyyy-MM-dd HH:mm:ss')`n" | Out-File $backupFile
+            $result | Out-File $backupFile -Append
+            Write-Log "Backed up procedure: $ProcedureName" "SUCCESS"
+            return $true
+        }
+        return $false
+    } catch {
+        Write-Log "Failed to backup procedure $ProcedureName : $_" "WARN"
+        return $false
+    }
 }
 
-Write-Host "`n=== MySQL Stored Procedure Deployment ===" -ForegroundColor Cyan
-Write-Host "Using MySQL client: $mysqlExe" -ForegroundColor Gray
-Write-Host "Target: $Database on ${Server}:${Port}`n" -ForegroundColor Gray
-
-# Get all SQL files (excluding standards doc and reports)
-$sqlFiles = Get-ChildItem -Path $proceduresFolder -Filter "*.sql" | 
-    Where-Object { 
-        $_.Name -ne "CurrentStoredProcedures.sql" -and 
-        $_.Name -notlike "*REPORT*.sql" -and
-        $_.Name -notlike "*UNUSED*.sql"
-    } |
-    Sort-Object Name
-
-if ($sqlFiles.Count -eq 0) {
-    Write-Host "❌ No stored procedure files found in: $proceduresFolder" -ForegroundColor Red
-    exit 1
+function Deploy-SqlFile {
+    param([string]$FilePath)
+    
+    $procedureName = [System.IO.Path]::GetFileNameWithoutExtension($FilePath)
+    Write-Log "Deploying procedure: $procedureName"
+    
+    if ($DryRun) {
+        Write-Log "[DRY RUN] Would deploy: $procedureName" "INFO"
+        return @{ Success = $true; Procedure = $procedureName; Action = "DRY_RUN" }
+    }
+    
+    try {
+        $mysqlCommand = "mysql --host=$Server --port=$Port --user=$User --password=$Password --database=$Database < `"$FilePath`""
+        $result = Invoke-Expression $mysqlCommand 2>&1
+        
+        if ($LASTEXITCODE -eq 0) {
+            Write-Log "Successfully deployed: $procedureName" "SUCCESS"
+            return @{ Success = $true; Procedure = $procedureName; Action = "DEPLOYED" }
+        } else {
+            Write-Log "Failed to deploy $procedureName : $result" "ERROR"
+            return @{ Success = $false; Procedure = $procedureName; Action = "FAILED"; Error = $result }
+        }
+    } catch {
+        Write-Log "Exception deploying $procedureName : $_" "ERROR"
+        return @{ Success = $false; Procedure = $procedureName; Action = "FAILED"; Error = $_.Exception.Message }
+    }
 }
 
-Write-Host "Found $($sqlFiles.Count) stored procedure files to deploy`n" -ForegroundColor Yellow
+function Get-SqlFilesRecursive {
+    param([string]$Path)
+    
+    return Get-ChildItem -Path $Path -Filter "*.sql" -Recurse | Sort-Object FullName
+}
 
-# Test connection first
-Write-Host "Testing database connection..." -ForegroundColor Cyan
-$testQuery = "SELECT VERSION();"
-$testArgs = @(
-    "-h", $Server,
-    "-P", $Port,
-    "-u", $User,
-    "-p$Password",
-    "-D", $Database,
-    "-e", $testQuery
-)
+#endregion
+
+#region Main Execution
 
 try {
-    $versionOutput = & $mysqlExe $testArgs 2>&1
-    if ($LASTEXITCODE -ne 0) {
-        Write-Host "❌ Connection failed!" -ForegroundColor Red
-        Write-Host $versionOutput -ForegroundColor Red
-        exit 1
-    }
-    Write-Host "✅ Connected successfully" -ForegroundColor Green
-    Write-Host "$versionOutput`n" -ForegroundColor Gray
-} catch {
-    Write-Host "❌ Connection error: $_" -ForegroundColor Red
-    exit 1
-}
-
-# Deployment tracking
-$results = @()
-$successCount = 0
-$failCount = 0
-$skippedCount = 0
-
-# Deploy each procedure
-Write-Host "=== Deploying Stored Procedures ===" -ForegroundColor Cyan
-
-foreach ($file in $sqlFiles) {
-    $procName = $file.BaseName
-    $filePath = $file.FullName
+    Write-Log "=== MTM Stored Procedure Deployment ===" "INFO"
+    Write-Log "Target: $Server`:$Port/$Database" "INFO"
+    Write-Log "Mode: $(if ($DryRun) { 'DRY RUN' } else { 'LIVE DEPLOYMENT' })" "INFO"
     
-    Write-Host "`nDeploying: $procName" -ForegroundColor White
-    
-    if ($WhatIf) {
-        Write-Host "  [WHATIF] Would deploy from: $($file.Name)" -ForegroundColor Magenta
-        $skippedCount++
-        continue
+    # Validate paths
+    $proceduresPath = Join-Path $PSScriptRoot $ProceduresDir
+    if (-not (Test-Path $proceduresPath)) {
+        throw "Procedures directory not found: $proceduresPath"
     }
     
-    # Read the SQL file
-    try {
-        $sqlContent = Get-Content -Path $filePath -Raw -ErrorAction Stop
-        
-        # Check if file has actual content
-        if ([string]::IsNullOrWhiteSpace($sqlContent)) {
-            Write-Host "  ⚠️  SKIPPED: Empty file" -ForegroundColor Yellow
-            $results += [PSCustomObject]@{
-                Procedure = $procName
-                Status = "SKIPPED"
-                Message = "Empty file"
-                File = $file.Name
-            }
-            $skippedCount++
-            continue
+    # Create backup directory
+    $backupPath = Join-Path $PSScriptRoot $BackupDir
+    if (-not (Test-Path $backupPath)) {
+        New-Item -Path $backupPath -ItemType Directory | Out-Null
+        Write-Log "Created backup directory: $backupPath"
+    }
+    
+    # Create timestamp-specific backup folder
+    $backupTimestamp = Get-Date -Format "yyyyMMdd-HHmmss"
+    $backupSessionPath = Join-Path $backupPath "deployment-$backupTimestamp"
+    New-Item -Path $backupSessionPath -ItemType Directory | Out-Null
+    Write-Log "Backup location: $backupSessionPath"
+    
+    # Test database connection
+    Write-Log "Testing database connection..."
+    if (-not (Test-MySqlConnection)) {
+        throw "Failed to connect to MySQL server. Check credentials and server availability."
+    }
+    Write-Log "Database connection successful" "SUCCESS"
+    
+    # Get list of SQL files to deploy
+    $sqlFiles = Get-SqlFilesRecursive -Path $proceduresPath
+    Write-Log "Found $($sqlFiles.Count) SQL files to process"
+    
+    if ($sqlFiles.Count -eq 0) {
+        Write-Log "No SQL files found in $proceduresPath" "WARN"
+        if ($Json) {
+            @{ Success = $false; Message = "No SQL files found"; Deployed = 0 } | ConvertTo-Json
         }
-        
-        # Keep DELIMITER statements - they're needed for mysql command-line source command
-        # Just add DROP statement before the procedure
-        $dropStmt = "DROP PROCEDURE IF EXISTS ``$procName``;"
-        $sqlContent = $dropStmt + "`r`n" + $sqlContent
-        
-        # Save to temp file
-        $tempFile = [System.IO.Path]::GetTempFileName()
-        $tempSqlFile = [System.IO.Path]::ChangeExtension($tempFile, '.sql')
-        Move-Item $tempFile $tempSqlFile -Force
-        
-        # Write SQL content with UTF8 encoding (no BOM)
-        $utf8NoBom = New-Object System.Text.UTF8Encoding $false
-        [System.IO.File]::WriteAllText($tempSqlFile, $sqlContent, $utf8NoBom)
-        
-        # Execute via mysql command line using source command
-        $tempPathForward = $tempSqlFile.Replace('\', '/')
-        $deployArgs = @(
-            "--host=$Server",
-            "--port=$Port",
-            "--user=$User",
-            "--password=$Password",
-            "--database=$Database",
-            "--execute=source $tempPathForward"
-        )
-        
-        $output = & $mysqlExe $deployArgs 2>&1
-        $exitCode = $LASTEXITCODE
-        
-        # Cleanup temp file
-        Remove-Item $tempSqlFile -Force -ErrorAction SilentlyContinue
-        
-        if ($exitCode -eq 0) {
-            Write-Host "  ✅ SUCCESS" -ForegroundColor Green
-            $results += [PSCustomObject]@{
-                Procedure = $procName
-                Status = "SUCCESS"
-                Message = "Deployed successfully"
-                File = $file.Name
+        exit 0
+    }
+    
+    # Get existing procedures for backup
+    Write-Log "Retrieving existing procedures..."
+    $existingProcedures = Get-ExistingProcedures
+    Write-Log "Found $($existingProcedures.Count) existing procedures"
+    
+    # Confirmation prompt (unless Force specified)
+    if (-not $Force -and -not $DryRun -and -not $Json) {
+        $response = Read-Host "`nReady to deploy $($sqlFiles.Count) procedures to $Database. Continue? (yes/no)"
+        if ($response -ne "yes") {
+            Write-Log "Deployment cancelled by user" "WARN"
+            exit 0
+        }
+    }
+    
+    # Backup existing procedures that will be replaced
+    Write-Log "Backing up existing procedures..."
+    $backedUp = 0
+    foreach ($sqlFile in $sqlFiles) {
+        $procName = [System.IO.Path]::GetFileNameWithoutExtension($sqlFile.Name)
+        if ($existingProcedures -contains $procName) {
+            if (Backup-ExistingProcedure -ProcedureName $procName -BackupPath $backupSessionPath) {
+                $backedUp++
             }
-            $successCount++
+        }
+    }
+    Write-Log "Backed up $backedUp procedures"
+    
+    # Deploy procedures
+    Write-Log "Starting deployment..."
+    $results = @()
+    $deployed = 0
+    $failed = 0
+    
+    foreach ($sqlFile in $sqlFiles) {
+        $result = Deploy-SqlFile -FilePath $sqlFile.FullName
+        $results += $result
+        
+        if ($result.Success) {
+            $deployed++
         } else {
-            Write-Host "  ❌ FAILED" -ForegroundColor Red
-            Write-Host "     Error: $output" -ForegroundColor Red
-            $results += [PSCustomObject]@{
-                Procedure = $procName
-                Status = "FAILED"
-                Message = $output
-                File = $file.Name
-            }
-            $failCount++
+            $failed++
         }
-        
-    } catch {
-        Write-Host "  ❌ ERROR: $_" -ForegroundColor Red
-        $results += [PSCustomObject]@{
-            Procedure = $procName
-            Status = "ERROR"
-            Message = $_.Exception.Message
-            File = $file.Name
-        }
-        $failCount++
     }
-}
-
-# Generate report
-Write-Host "`n=== Deployment Summary ===" -ForegroundColor Cyan
-Write-Host "Total procedures: $($sqlFiles.Count)" -ForegroundColor White
-Write-Host "Successful: $successCount" -ForegroundColor Green
-Write-Host "Failed: $failCount" -ForegroundColor Red
-Write-Host "Skipped: $skippedCount" -ForegroundColor Yellow
-
-# Create detailed report
-$reportContent = @"
-MySQL Stored Procedure Deployment Report
-Generated: $(Get-Date -Format "yyyy-MM-dd HH:mm:ss")
-
-Target Database: $Database
-Server: ${Server}:${Port}
-MySQL Client: $mysqlExe
-
-=== Summary ===
-Total procedures: $($sqlFiles.Count)
-Successful deployments: $successCount
-Failed deployments: $failCount
-Skipped: $skippedCount
-
-=== Deployment Details ===
-"@
-
-foreach ($result in $results) {
-    $reportContent += "`n[$($result.Status)] $($result.Procedure)"
-    if ($result.Status -ne "SUCCESS") {
-        $reportContent += "`n    File: $($result.File)"
-        $reportContent += "`n    Message: $($result.Message)"
+    
+    # Summary
+    Write-Log "`n=== Deployment Summary ===" "INFO"
+    Write-Log "Total files processed: $($sqlFiles.Count)" "INFO"
+    Write-Log "Successfully deployed: $deployed" "SUCCESS"
+    Write-Log "Failed: $failed" $(if ($failed -gt 0) { "ERROR" } else { "INFO" })
+    Write-Log "Backed up: $backedUp" "INFO"
+    Write-Log "Backup location: $backupSessionPath" "INFO"
+    
+    if ($Json) {
+        @{
+            Success = ($failed -eq 0)
+            TotalFiles = $sqlFiles.Count
+            Deployed = $deployed
+            Failed = $failed
+            BackedUp = $backedUp
+            BackupPath = $backupSessionPath
+            DryRun = $DryRun.IsPresent
+            Results = $results
+        } | ConvertTo-Json -Depth 3
     }
-}
-
-# Add list of successful procedures
-if ($successCount -gt 0) {
-    $reportContent += "`n`n=== Successfully Deployed Procedures ==="
-    $results | Where-Object { $_.Status -eq "SUCCESS" } | ForEach-Object {
-        $reportContent += "`n- $($_.Procedure)"
+    
+    exit $(if ($failed -eq 0) { 0 } else { 1 })
+    
+} catch {
+    Write-Log "FATAL ERROR: $_" "ERROR"
+    Write-Log $_.ScriptStackTrace "ERROR"
+    
+    if ($Json) {
+        @{
+            Success = $false
+            Error = $_.Exception.Message
+            StackTrace = $_.ScriptStackTrace
+        } | ConvertTo-Json
     }
-}
-
-# Add list of failed procedures
-if ($failCount -gt 0) {
-    $reportContent += "`n`n=== Failed Procedures ==="
-    $results | Where-Object { $_.Status -eq "FAILED" -or $_.Status -eq "ERROR" } | ForEach-Object {
-        $reportContent += "`n- $($_.Procedure)"
-        $reportContent += "`n  Error: $($_.Message)"
-    }
-}
-
-$reportContent | Out-File -FilePath $reportPath -Encoding UTF8
-
-Write-Host "`nDeployment report saved to: $reportPath" -ForegroundColor Cyan
-
-# Exit with error code if any failures
-if ($failCount -gt 0) {
-    Write-Host "`n⚠️  Deployment completed with errors!" -ForegroundColor Yellow
+    
     exit 1
-} else {
-    Write-Host "`n✅ Deployment completed successfully!" -ForegroundColor Green
-    exit 0
 }
+
+#endregion

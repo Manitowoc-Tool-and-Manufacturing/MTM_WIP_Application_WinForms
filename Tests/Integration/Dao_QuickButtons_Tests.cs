@@ -29,13 +29,13 @@ public class Dao_QuickButtons_Tests : BaseIntegrationTest
 
         await EnsureStoredProceduresExistOrSkipAsync(
                 "Quick button integration tests require the sys_last_10_transactions_* stored procedures. Run the UpdatedStoredProcedures deployment scripts to provision them in the test database.",
-                "sys_last_10_transactions_Update_ByUserAndPosition_1",
+                "sys_last_10_transactions_Update_ByUserAndPosition",
                 "sys_last_10_transactions_RemoveAndShift_ByUser",
                 "sys_last_10_transactions_Add_AtPosition",
-                "sys_last_10_transactions_Move_1",
+                "sys_last_10_transactions_Move",
                 "sys_last_10_transactions_DeleteAll_ByUser",
-                "sys_last_10_transactions_AddQuickButton_1",
-                "sys_last_10_transactions_Delete_ByUserAndPosition_1")
+                "sys_last_10_transactions_AddQuickButton",
+                "sys_last_10_transactions_Delete_ByUserAndPosition")
             .ConfigureAwait(false);
     }
 

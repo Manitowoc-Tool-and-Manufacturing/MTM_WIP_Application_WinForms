@@ -15,7 +15,7 @@ param(
 Set-StrictMode -Version Latest
 $ErrorActionPreference = 'Stop'
 
-$script:ReadyRoot = Join-Path $PSScriptRoot '..\UpdatedStoredProcedures\ReadyForVerification'
+$script:ReadyRoot = Join-Path $PSScriptRoot '..\Database\UpdatedStoredProcedures\ReadyForVerification'
 
 if (-not $Credential) {
     $defaultSecure = ConvertTo-SecureString 'root' -AsPlainText -Force

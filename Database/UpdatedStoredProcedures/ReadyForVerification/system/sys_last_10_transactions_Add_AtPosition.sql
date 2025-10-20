@@ -46,13 +46,13 @@ BEGIN
         WHERE User = p_User AND Position > 10;
         
         -- Insert new button at specified position
-        INSERT INTO sys_last_10_transactions (User, PartID, Operation, Quantity, Position, Date)
+        INSERT INTO sys_last_10_transactions (User, PartID, Operation, Quantity, Position, ReceiveDate)
         VALUES (p_User, p_PartID, p_Operation, p_Quantity, p_Position, NOW())
         ON DUPLICATE KEY UPDATE
             PartID = VALUES(PartID),
             Operation = VALUES(Operation),
             Quantity = VALUES(Quantity),
-            Date = NOW();
+            ReceiveDate = NOW();
         
         SET v_RowsAffected = ROW_COUNT();
         

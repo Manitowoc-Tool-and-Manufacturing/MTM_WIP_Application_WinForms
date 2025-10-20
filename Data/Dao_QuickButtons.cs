@@ -35,7 +35,7 @@ namespace MTM_Inventory_Application.Data
 
                 var result = await Helper_Database_StoredProcedure.ExecuteNonQueryWithStatusAsync(
                     Model_AppVariables.ConnectionString,
-                    "sys_last_10_transactions_Update_ByUserAndPosition_1",
+                    "sys_last_10_transactions_Update_ByUserAndPosition",
                     parameters,
                     progressHelper: null,
                     connection: connection,
@@ -168,7 +168,7 @@ namespace MTM_Inventory_Application.Data
 
                 var result = await Helper_Database_StoredProcedure.ExecuteNonQueryWithStatusAsync(
                     Model_AppVariables.ConnectionString,
-                    "sys_last_10_transactions_Move_1",
+                    "sys_last_10_transactions_Move",
                     parameters,
                     progressHelper: null,
                     connection: connection,
@@ -238,7 +238,7 @@ namespace MTM_Inventory_Application.Data
         {
             try
             {
-                // Use the existing stored procedure: sys_last_10_transactions_AddQuickButton_1
+                // Use the existing stored procedure: sys_last_10_transactions_AddQuickButton
                 // This adds a new QuickButton at position 1 (top of the list)
                 Dictionary<string, object> parameters = new()
                 {
@@ -251,7 +251,7 @@ namespace MTM_Inventory_Application.Data
 
                 var result = await Helper_Database_StoredProcedure.ExecuteNonQueryWithStatusAsync(
                     Model_AppVariables.ConnectionString,
-                    "sys_last_10_transactions_AddQuickButton_1",
+                    "sys_last_10_transactions_AddQuickButton",
                     parameters,
                     progressHelper: null,
                     connection: connection,
@@ -293,7 +293,7 @@ namespace MTM_Inventory_Application.Data
 
                 var result = await Helper_Database_StoredProcedure.ExecuteNonQueryWithStatusAsync(
                     Model_AppVariables.ConnectionString,
-                    "sys_last_10_transactions_Delete_ByUserAndPosition_1",
+                    "sys_last_10_transactions_Delete_ByUserAndPosition",
                     parameters,
                     progressHelper: null,
                     connection: connection,
@@ -338,7 +338,7 @@ namespace MTM_Inventory_Application.Data
 
                 var result = await Helper_Database_StoredProcedure.ExecuteNonQueryWithStatusAsync(
                     Model_AppVariables.ConnectionString,
-                    "sys_last_10_transactions_AddQuickButton_1",
+                    "sys_last_10_transactions_AddQuickButton",
                     parameters,
                     progressHelper: null,
                     connection: connection,

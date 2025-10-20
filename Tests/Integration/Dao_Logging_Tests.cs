@@ -28,7 +28,7 @@ public class Dao_Logging_Tests : BaseIntegrationTest
 {
     private Task EnsureLoggingTablesAsync() => EnsureTablesExistOrSkipAsync(
         "Logging integration tests require log and transaction history tables. Run the UpdatedDatabase scripts against the mtm_wip_application_winforms_test database to provision them.",
-        "log_application_errors",
+        "log_error",
         "inv_transaction");
 
     #region Error Log Query Tests
