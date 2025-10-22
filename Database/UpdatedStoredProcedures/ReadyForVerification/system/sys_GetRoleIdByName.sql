@@ -15,7 +15,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `sys_GetRoleIdByName`(
     OUT p_ErrorMsg VARCHAR(500)
 )
 BEGIN
-    DECLARE v_RoleId INT DEFAULT NULL;
+    DECLARE p_RoleId INT DEFAULT NULL;
     -- Transaction management removed: Works within caller's transaction context (tests use transactions)`r`n    
     DECLARE EXIT HANDLER FOR SQLEXCEPTION
     BEGIN
@@ -29,21 +29,22 @@ BEGIN
         SET p_ErrorMsg = 'RoleName is required';
     ELSE
         -- Get role ID by name
-        SELECT RoleID INTO v_RoleId
+        SELECT ID INTO p_RoleId
         FROM sys_roles
         WHERE RoleName = p_RoleName
         LIMIT 1;
         
-        IF v_RoleId IS NOT NULL THEN
-            -- Return role ID as scalar
-            SELECT v_RoleId AS RoleId;
-            
+        IF p_RoleId IS NOT NULL THEN
             SET p_Status = 1;
-            SET p_ErrorMsg = CONCAT('Found RoleId ', v_RoleId, ' for role "', p_RoleName, '"');
+            SET p_ErrorMsg = CONCAT('Found RoleId ', p_RoleId, ' for role "', p_RoleName, '"');
         ELSE
             SET p_Status = 0;
             SET p_ErrorMsg = CONCAT('Role "', p_RoleName, '" not found');
+            SET p_RoleId = 0;  -- Return 0 for not found
         END IF;
+        
+        -- Always return role ID as scalar (0 if not found)
+        SELECT p_RoleId AS RoleId;
     END IF;
 END
 //

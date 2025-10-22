@@ -20,6 +20,25 @@ namespace MTM_Inventory_Application.Tests.Integration;
 [TestClass]
 public class Dao_QuickButtons_Tests : BaseIntegrationTest
 {
+    /// <summary>
+    /// Sets up test data for quick button tests.
+    /// Creates test users and test quick buttons in the database.
+    /// Call this method at the start of each test that requires test data.
+    /// </summary>
+    /// <remarks>
+    /// This method is idempotent - it's safe to call multiple times.
+    /// It ensures that test data is available for quick button operations.
+    /// The base class TestInitialize handles connection setup automatically.
+    /// </remarks>
+    private async Task SetupTestDataAsync()
+    {
+        // Create test users and test quick buttons
+        await CreateTestUsersAsync();
+        await CreateTestQuickButtonsAsync();
+
+        Console.WriteLine("[Dao_QuickButtons_Tests] Test data setup complete");
+    }
+
     private async Task EnsureQuickButtonTableAsync()
     {
         await EnsureTablesExistOrSkipAsync(
@@ -42,6 +61,7 @@ public class Dao_QuickButtons_Tests : BaseIntegrationTest
     #region Test Data
 
     private const string TestUser = "TestUser_QB";
+    private const string TestUser2 = "TestUser_QB_2";
     private const string TestPartId = "TEST-PART-QB-001";
     private const string TestOperation = "100";
     private const int TestQuantity = 5;
@@ -57,7 +77,9 @@ public class Dao_QuickButtons_Tests : BaseIntegrationTest
     [TestMethod]
     public async Task UpdateQuickButtonAsync_ValidData_UpdatesButton()
     {
+        // Setup: Ensure table exists and create test data
         await EnsureQuickButtonTableAsync();
+        await SetupTestDataAsync();
 
         // Arrange
         int position = 1; // 1-based position
@@ -67,7 +89,8 @@ public class Dao_QuickButtons_Tests : BaseIntegrationTest
 
         // Act
         var result = await Dao_QuickButtons.UpdateQuickButtonAsync(
-            TestUser, position, partId, operation, quantity);
+            TestUser, position, partId, operation, quantity,
+            connectionString: GetTestConnectionString());
 
         // Assert
         AssertSuccess(result, "Expected successful update of quick button");
@@ -82,7 +105,9 @@ public class Dao_QuickButtons_Tests : BaseIntegrationTest
     [TestMethod]
     public async Task AddQuickButtonAsync_ValidData_AddsButton()
     {
+        // Setup: Ensure table exists and create test data
         await EnsureQuickButtonTableAsync();
+        await SetupTestDataAsync();
 
         // Arrange
         int position = 5; // Mid-range position
@@ -92,7 +117,8 @@ public class Dao_QuickButtons_Tests : BaseIntegrationTest
 
         // Act
         var result = await Dao_QuickButtons.AddQuickButtonAsync(
-            TestUser, partId, operation, quantity, position);
+            TestUser, partId, operation, quantity, position,
+            connectionString: GetTestConnectionString());
 
         // Assert
         AssertSuccess(result, "Expected successful addition of quick button");
@@ -106,13 +132,16 @@ public class Dao_QuickButtons_Tests : BaseIntegrationTest
     [TestMethod]
     public async Task RemoveQuickButtonAndShiftAsync_ValidPosition_RemovesAndShifts()
     {
+        // Setup: Ensure table exists and create test data
         await EnsureQuickButtonTableAsync();
+        await SetupTestDataAsync();
 
         // Arrange
         int position = 2; // 1-based position to remove
 
         // Act
-        var result = await Dao_QuickButtons.RemoveQuickButtonAndShiftAsync(TestUser, position);
+        var result = await Dao_QuickButtons.RemoveQuickButtonAndShiftAsync(TestUser, position,
+            connectionString: GetTestConnectionString());
 
         // Assert
         AssertSuccess(result, "Expected successful removal and shift of quick button");
@@ -126,7 +155,9 @@ public class Dao_QuickButtons_Tests : BaseIntegrationTest
     [TestMethod]
     public async Task DeleteAllQuickButtonsForUserAsync_ValidUser_DeletesAllButtons()
     {
+        // Setup: Ensure table exists and create test data
         await EnsureQuickButtonTableAsync();
+        await SetupTestDataAsync();
 
         // Act
         var result = await Dao_QuickButtons.DeleteAllQuickButtonsForUserAsync(TestUser);
@@ -147,7 +178,9 @@ public class Dao_QuickButtons_Tests : BaseIntegrationTest
     [TestMethod]
     public async Task MoveQuickButtonAsync_ValidPositions_MovesButton()
     {
+        // Setup: Ensure table exists and create test data
         await EnsureQuickButtonTableAsync();
+        await SetupTestDataAsync();
 
         // Arrange
         int fromPosition = 3; // 1-based source position
@@ -155,7 +188,8 @@ public class Dao_QuickButtons_Tests : BaseIntegrationTest
 
         // Act
         var result = await Dao_QuickButtons.MoveQuickButtonAsync(
-            TestUser, fromPosition, toPosition);
+            TestUser, fromPosition, toPosition,
+            connectionString: GetTestConnectionString());
 
         // Assert
         AssertSuccess(result, "Expected successful move of quick button");
@@ -169,7 +203,9 @@ public class Dao_QuickButtons_Tests : BaseIntegrationTest
     [TestMethod]
     public async Task AddOrShiftQuickButtonAsync_ValidData_AddsOrShifts()
     {
+        // Setup: Ensure table exists and create test data
         await EnsureQuickButtonTableAsync();
+        await SetupTestDataAsync();
 
         // Arrange
         string partId = "TEST-PART-QB-003";
@@ -178,7 +214,8 @@ public class Dao_QuickButtons_Tests : BaseIntegrationTest
 
         // Act
         var result = await Dao_QuickButtons.AddOrShiftQuickButtonAsync(
-            TestUser, partId, operation, quantity);
+            TestUser, partId, operation, quantity,
+            connectionString: GetTestConnectionString());
 
         // Assert
         AssertSuccess(result, "Expected successful add or shift of quick button");
@@ -192,13 +229,16 @@ public class Dao_QuickButtons_Tests : BaseIntegrationTest
     [TestMethod]
     public async Task RemoveAndShiftQuickButtonAsync_ValidPosition_RemovesAndShifts()
     {
+        // Setup: Ensure table exists and create test data
         await EnsureQuickButtonTableAsync();
+        await SetupTestDataAsync();
 
         // Arrange
         int position = 4; // 1-based position
 
         // Act
-        var result = await Dao_QuickButtons.RemoveAndShiftQuickButtonAsync(TestUser, position);
+        var result = await Dao_QuickButtons.RemoveAndShiftQuickButtonAsync(TestUser, position,
+            connectionString: GetTestConnectionString());
 
         // Assert
         AssertSuccess(result, "Expected successful remove and shift of quick button");
@@ -212,7 +252,9 @@ public class Dao_QuickButtons_Tests : BaseIntegrationTest
     [TestMethod]
     public async Task AddQuickButtonAtPositionAsync_ValidData_AddsAtPosition()
     {
+        // Setup: Ensure table exists and create test data
         await EnsureQuickButtonTableAsync();
+        await SetupTestDataAsync();
 
         // Arrange
         string partId = "TEST-PART-QB-004";
@@ -222,7 +264,8 @@ public class Dao_QuickButtons_Tests : BaseIntegrationTest
 
         // Act
         var result = await Dao_QuickButtons.AddQuickButtonAtPositionAsync(
-            TestUser, partId, operation, quantity, position);
+            TestUser, partId, operation, quantity, position,
+            connectionString: GetTestConnectionString());
 
         // Assert
         AssertSuccess(result, "Expected successful addition at specific position");
@@ -240,14 +283,17 @@ public class Dao_QuickButtons_Tests : BaseIntegrationTest
     [TestMethod]
     public async Task UpdateQuickButtonAsync_Position1_UpdatesButton()
     {
+        // Setup: Ensure table exists and create test data
         await EnsureQuickButtonTableAsync();
+        await SetupTestDataAsync();
 
         // Arrange
         int position = 1; // Lower bound
 
         // Act
         var result = await Dao_QuickButtons.UpdateQuickButtonAsync(
-            TestUser, position, TestPartId, TestOperation, TestQuantity);
+            TestUser, position, TestPartId, TestOperation, TestQuantity,
+            connectionString: GetTestConnectionString());
 
         // Assert
         AssertSuccess(result, "Expected successful update at position 1 (lower bound)");
@@ -261,14 +307,17 @@ public class Dao_QuickButtons_Tests : BaseIntegrationTest
     [TestMethod]
     public async Task UpdateQuickButtonAsync_Position10_UpdatesButton()
     {
+        // Setup: Ensure table exists and create test data
         await EnsureQuickButtonTableAsync();
+        await SetupTestDataAsync();
 
         // Arrange
         int position = 10; // Upper bound
 
         // Act
         var result = await Dao_QuickButtons.UpdateQuickButtonAsync(
-            TestUser, position, TestPartId, TestOperation, TestQuantity);
+            TestUser, position, TestPartId, TestOperation, TestQuantity,
+            connectionString: GetTestConnectionString());
 
         // Assert
         AssertSuccess(result, "Expected successful update at position 10 (upper bound)");
@@ -282,14 +331,17 @@ public class Dao_QuickButtons_Tests : BaseIntegrationTest
     [TestMethod]
     public async Task MoveQuickButtonAsync_SamePosition_HandlesGracefully()
     {
+        // Setup: Ensure table exists and create test data
         await EnsureQuickButtonTableAsync();
+        await SetupTestDataAsync();
 
         // Arrange
-        int position = 5; // Same source and target
+        int position = 2; // Same source and target - use position that has test data
 
         // Act
         var result = await Dao_QuickButtons.MoveQuickButtonAsync(
-            TestUser, position, position);
+            TestUser, position, position,
+            connectionString: GetTestConnectionString());
 
         // Assert
         AssertSuccess(result, "Expected successful handling of same-position move");
@@ -307,7 +359,9 @@ public class Dao_QuickButtons_Tests : BaseIntegrationTest
     [TestMethod]
     public async Task QuickButtonWorkflow_CompleteSequence_ExecutesSuccessfully()
     {
+        // Setup: Ensure table exists and create test data
         await EnsureQuickButtonTableAsync();
+        await SetupTestDataAsync();
 
         // Arrange
         string workflowUser = "TestUser_Workflow";
@@ -318,26 +372,30 @@ public class Dao_QuickButtons_Tests : BaseIntegrationTest
 
         // Step 1: Add quick button
         var addResult = await Dao_QuickButtons.AddQuickButtonAsync(
-            workflowUser, partId, operation, quantity, position);
+            workflowUser, partId, operation, quantity, position,
+            connectionString: GetTestConnectionString());
         AssertSuccess(addResult, "Expected successful add in workflow");
         Console.WriteLine($"Workflow Step 1: Added button at position {position}");
 
         // Step 2: Update quick button
         var updateResult = await Dao_QuickButtons.UpdateQuickButtonAsync(
-            workflowUser, position, partId, operation, quantity + 5);
+            workflowUser, position, partId, operation, quantity + 5,
+            connectionString: GetTestConnectionString());
         AssertSuccess(updateResult, "Expected successful update in workflow");
         Console.WriteLine($"Workflow Step 2: Updated button at position {position}");
 
         // Step 3: Move quick button
         int newPosition = 6;
         var moveResult = await Dao_QuickButtons.MoveQuickButtonAsync(
-            workflowUser, position, newPosition);
+            workflowUser, position, newPosition,
+            connectionString: GetTestConnectionString());
         AssertSuccess(moveResult, "Expected successful move in workflow");
         Console.WriteLine($"Workflow Step 3: Moved button from {position} to {newPosition}");
 
         // Step 4: Remove quick button
         var removeResult = await Dao_QuickButtons.RemoveAndShiftQuickButtonAsync(
-            workflowUser, newPosition);
+            workflowUser, newPosition,
+            connectionString: GetTestConnectionString());
         AssertSuccess(removeResult, "Expected successful remove in workflow");
         Console.WriteLine($"Workflow Step 4: Removed button at position {newPosition}");
 

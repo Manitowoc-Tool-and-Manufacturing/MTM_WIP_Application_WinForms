@@ -50,48 +50,46 @@ namespace MTM_Inventory_Application.Tests.Integration
 
         /// <summary>
         /// Tests SetUserAccessTypeAsync with valid data sets access type successfully.
-        /// Note: This test doesn't verify the actual change due to transaction rollback,
-        /// only that the stored procedure executes without error.
+        /// Note: Requires test users to exist in usr_users table.
         /// </summary>
         [TestMethod]
         public async Task SetUserAccessTypeAsync_WithValidData_ExecutesSuccessfully()
         {
-            // Arrange: Get a valid user from the system
-            var usersResult = await Dao_System.System_UserAccessTypeAsync();
-            AssertSuccessWithData(usersResult);
-            Assert.IsNotNull(usersResult.Data, "User data should not be null");
-            Assert.IsTrue(usersResult.Data!.Count > 0, "Need at least one user for this test");
-
-            var firstUser = usersResult.Data[0];
-            var newAccessType = "Admin"; // Try to set to Admin
+            // Arrange: Ensure test users exist
+            await CreateTestUsersAsync();
+            
+            var testUser = "TEST-USER";
+            var newAccessType = "Admin"; // Will be converted to INT 1
 
             // Act
-            var result = await Dao_System.SetUserAccessTypeAsync(firstUser.User, newAccessType);
+            var result = await Dao_System.SetUserAccessTypeAsync(testUser, newAccessType,
+                connectionString: GetTestConnectionString());
+            
             // Assert
-            Assert.IsTrue(result.IsSuccess, $"Expected success but got: {result.StatusMessage}");
+            Assert.IsTrue(result.IsSuccess, $"Expected success but got: {result.StatusMessage ?? result.ErrorMessage}");
+            Assert.IsTrue(result.StatusMessage.Contains(testUser), 
+                $"Expected status message to mention user '{testUser}', got: {result.StatusMessage}");
         }
 
         /// <summary>
         /// Tests SetUserAccessTypeAsync with invalid access type.
+        /// Note: Invalid access types default to 0 (standard user), so operation succeeds.
         /// </summary>
         [TestMethod]
         public async Task SetUserAccessTypeAsync_WithInvalidAccessType_ProvidesStatusMessage()
         {
-            // Arrange
-            var usersResult = await Dao_System.System_UserAccessTypeAsync();
-            AssertSuccessWithData(usersResult);
-            Assert.IsNotNull(usersResult.Data, "User data should not be null");
-            Assert.IsTrue(usersResult.Data!.Count > 0, "Need at least one user for this test");
-
-            var firstUser = usersResult.Data[0];
+            // Arrange: Ensure test users exist
+            await CreateTestUsersAsync();
+            
+            var testUser = "TEST-USER";
             var invalidAccessType = "InvalidType_" + Guid.NewGuid().ToString();
 
             // Act
-            var result = await Dao_System.SetUserAccessTypeAsync(firstUser.User, invalidAccessType);
+            var result = await Dao_System.SetUserAccessTypeAsync(testUser, invalidAccessType,
+                connectionString: GetTestConnectionString());
 
-            // Assert
-            // Should either fail or succeed (depending on stored procedure validation)
-            // But status message should be meaningful
+            // Assert - Invalid types default to 0 (standard user), so operation succeeds
+            Assert.IsTrue(result.IsSuccess, "Operation should succeed with invalid type (defaults to standard user)");
             Assert.IsFalse(string.IsNullOrWhiteSpace(result.StatusMessage),
                 "Status message should provide feedback about the operation");
         }
@@ -125,7 +123,8 @@ namespace MTM_Inventory_Application.Tests.Integration
         }
 
         /// <summary>
-        /// Tests GetUserIdByNameAsync with non-existent username returns failure.
+        /// Tests GetUserIdByNameAsync with non-existent username returns success with ID 0.
+        /// Note: Stored procedure returns status 0 (success, no data found) not failure for non-existent users.
         /// </summary>
         [TestMethod]
         public async Task GetUserIdByNameAsync_WithNonExistentUser_ReturnsFailure()
@@ -136,30 +135,37 @@ namespace MTM_Inventory_Application.Tests.Integration
             // Act
             var result = await Dao_System.GetUserIdByNameAsync(nonExistentUser);
 
-            // Assert - Status 0 means "query succeeded but no data found" (treated as success)
+            // Assert - Stored procedure returns status 0 (success, no data) with UserID = 0
+            // This is the actual SP behavior: success status but ID = 0 indicates "not found"
             Assert.IsTrue(result.IsSuccess, "Expected success with status 0 for non-existent user (no data found)");
+            Assert.AreEqual(0, result.Data, "Expected UserID = 0 for non-existent user");
             Assert.IsTrue(
-                result.ErrorMessage?.Contains(nonExistentUser) == true ||
+                result.StatusMessage.Contains(nonExistentUser) ||
                 result.StatusMessage.Contains("not found", StringComparison.OrdinalIgnoreCase),
-                $"Expected status message to mention user not found, got: {result.StatusMessage}");
+                $"Expected status message to mention user or 'not found', got: {result.StatusMessage}");
         }
 
         /// <summary>
         /// Tests GetRoleIdByNameAsync with valid role name returns role ID.
+        /// Requires sys_roles table to be seeded with test data.
         /// </summary>
         [TestMethod]
         public async Task GetRoleIdByNameAsync_WithValidRole_ReturnsRoleId()
         {
-            // Arrange
-            var validRoleName = "Admin"; // Assuming Admin role exists in test database
+            // Arrange - Ensure sys_roles table has test data
+            await EnsureUserTableAsync();
+            
+            var validRoleName = "Admin"; // Admin role seeded by EnsureUserTableAsync
 
             // Act
-            var result = await Dao_System.GetRoleIdByNameAsync(validRoleName);
+            var result = await Dao_System.GetRoleIdByNameAsync(validRoleName,
+                connectionString: GetTestConnectionString());
 
             // Assert
-            AssertSuccessWithData(result);
-            Assert.IsTrue(result.Data > 0, "Role ID should be greater than 0");
-            Assert.IsTrue(result.StatusMessage.Contains(validRoleName), "Status message should contain role name");
+            AssertSuccessWithData(result, $"Should find role '{validRoleName}'");
+            Assert.IsTrue(result.Data > 0, $"Role ID should be greater than 0, got: {result.Data}");
+            Assert.IsTrue(result.StatusMessage?.Contains(validRoleName) == true, 
+                $"Status message should contain role name '{validRoleName}', got: {result.StatusMessage}");
         }
 
         /// <summary>
@@ -225,46 +231,41 @@ namespace MTM_Inventory_Application.Tests.Integration
 
         /// <summary>
         /// Tests GetUserIdByNameAsync with empty username handles gracefully.
+        /// SP returns status -2 (validation error) for empty/null username.
         /// </summary>
         [TestMethod]
         public async Task GetUserIdByNameAsync_WithEmptyUserName_HandlesGracefully()
         {
             // Act
-            var result = await Dao_System.GetUserIdByNameAsync(string.Empty);
+            var result = await Dao_System.GetUserIdByNameAsync(string.Empty,
+                connectionString: GetTestConnectionString());
 
-            // Assert - Stored procedure returns status -2 for empty username
-            Assert.IsFalse(result.IsSuccess, "Expected failure for empty username");
+            // Assert - SP returns status -2 for empty username (validation error per convention)
+            // Status convention: 1=success with data, 0=success no data, negative=errors
+            Assert.IsFalse(result.IsSuccess, "SP returns failure (status -2) for empty username");
             Assert.IsFalse(string.IsNullOrWhiteSpace(result.ErrorMessage),
-                "Should provide meaningful error message in ErrorMessage property");
-            Assert.IsTrue(result.ErrorMessage.Contains("User name") || result.ErrorMessage.Contains("required"),
-                $"Error message should indicate username is required, got: {result.ErrorMessage}");
+                "Should provide meaningful error message");
+            Assert.IsTrue(result.ErrorMessage.Contains("required", StringComparison.OrdinalIgnoreCase),
+                $"Expected error message about username being required, got: {result.ErrorMessage}");
         }
 
         /// <summary>
         /// Tests SetUserAccessTypeAsync with null username handles gracefully.
+        /// Stored procedure returns status -2 with error message for null/empty username.
         /// </summary>
         [TestMethod]
         public async Task SetUserAccessTypeAsync_WithNullUserName_HandlesGracefully()
         {
-            // Act & Assert
-            // Should either throw ArgumentNullException or return graceful failure
-            // Both behaviors are acceptable for null parameters
-            try
-            {
-                var result = await Dao_System.SetUserAccessTypeAsync(null!, "Admin");
+            // Act
+            var result = await Dao_System.SetUserAccessTypeAsync(null!, "Admin");
 
-                // If we get here, method returned a result instead of throwing
-                Assert.IsFalse(result.IsSuccess, "Expected failure for null username");
-                Assert.IsTrue(
-                    result.StatusMessage.Contains("null", StringComparison.OrdinalIgnoreCase) ||
-                    result.StatusMessage.Contains("required", StringComparison.OrdinalIgnoreCase),
-                    $"Expected error message about null/required parameter, got: {result.StatusMessage}");
-            }
-            catch (ArgumentNullException)
-            {
-                // This is also acceptable behavior
-                Assert.IsTrue(true, "Method correctly threw ArgumentNullException for null parameter");
-            }
+            // Assert - Stored procedure returns status -2 for null/empty username
+            Assert.IsFalse(result.IsSuccess, "Expected failure for null username");
+            Assert.IsFalse(string.IsNullOrWhiteSpace(result.ErrorMessage),
+                "Should provide meaningful error message");
+            Assert.IsTrue(result.ErrorMessage.Contains("required", StringComparison.OrdinalIgnoreCase) ||
+                         result.ErrorMessage.Contains("User name", StringComparison.OrdinalIgnoreCase),
+                $"Expected error about required username, got: {result.ErrorMessage}");
         }
 
         #endregion

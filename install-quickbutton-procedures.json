@@ -1,0 +1,35 @@
+{
+  "database": {
+    "host": "localhost",
+    "port": 3306,
+    "user": "root",
+    "password": "root",
+    "database": "mtm_wip_application_winforms_test"
+  },
+  "procedures": [
+    {
+      "file": "Database/UpdatedStoredProcedures/ReadyForVerification/system/sys_last_10_transactions_Update_ByUserAndPosition.sql",
+      "name": "sys_last_10_transactions_Update_ByUserAndPosition"
+    },
+    {
+      "file": "Database/UpdatedStoredProcedures/ReadyForVerification/system/sys_last_10_transactions_RemoveAndShift_ByUser.sql",
+      "name": "sys_last_10_transactions_RemoveAndShift_ByUser"
+    },
+    {
+      "file": "Database/UpdatedStoredProcedures/ReadyForVerification/system/sys_last_10_transactions_Move.sql",
+      "name": "sys_last_10_transactions_Move"
+    },
+    {
+      "file": "Database/UpdatedStoredProcedures/ReadyForVerification/system/sys_last_10_transactions_AddQuickButton.sql",
+      "name": "sys_last_10_transactions_AddQuickButton"
+    },
+    {
+      "file": "Database/UpdatedStoredProcedures/ReadyForVerification/system/sys_last_10_transactions_DeleteAll_ByUser.sql",
+      "name": "sys_last_10_transactions_DeleteAll_ByUser"
+    },
+    {
+      "file": "Database/UpdatedStoredProcedures/ReadyForVerification/system/sys_last_10_transactions_Add_AtPosition.sql",
+      "name": "sys_last_10_transactions_Add_AtPosition"
+    }
+  ]
+}

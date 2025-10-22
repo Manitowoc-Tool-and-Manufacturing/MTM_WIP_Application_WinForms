@@ -17,6 +17,7 @@ namespace MTM_Inventory_Application.Data
             string partId, 
             string operation, 
             int quantity,
+            string? connectionString = null,
             MySqlConnection? connection = null,
             MySqlTransaction? transaction = null)
         {
@@ -34,7 +35,7 @@ namespace MTM_Inventory_Application.Data
                 };
 
                 var result = await Helper_Database_StoredProcedure.ExecuteNonQueryWithStatusAsync(
-                    Model_AppVariables.ConnectionString,
+                    connectionString ?? Model_AppVariables.ConnectionString,
                     "sys_last_10_transactions_Update_ByUserAndPosition",
                     parameters,
                     progressHelper: null,
@@ -44,8 +45,10 @@ namespace MTM_Inventory_Application.Data
 
                 if (!result.IsSuccess)
                 {
-                    LoggingUtility.Log($"UpdateQuickButtonAsync failed: {result.StatusMessage}");
-                    return DaoResult.Failure($"Failed to update quick button: {result.StatusMessage}");
+                    string detailedError = $"Status: {result.ErrorMessage}, Exception: {result.Exception?.Message ?? "none"}";
+                    LoggingUtility.Log($"UpdateQuickButtonAsync failed: {detailedError}");
+                    Console.WriteLine($"[DEBUG] UpdateQuickButtonAsync failure details: {detailedError}");
+                    return DaoResult.Failure($"Failed to update quick button: {result.ErrorMessage}");
                 }
                 
                 LoggingUtility.Log($"UpdateQuickButtonAsync succeeded: Updated position {position} with {partId} Op:{operation} Qty:{quantity} for user {user}");
@@ -62,13 +65,14 @@ namespace MTM_Inventory_Application.Data
         public static async Task<DaoResult> RemoveQuickButtonAndShiftAsync(
             string user, 
             int position,
+            string? connectionString = null,
             MySqlConnection? connection = null,
             MySqlTransaction? transaction = null)
         {
             try
             {
-                // Ensure position is always 1-10 (never 0)
-                int safePosition = Math.Max(1, Math.Min(10, position + 1));
+                // Note: position is already 1-based from the UI (1-10)
+                int safePosition = Math.Max(1, Math.Min(10, position));
                 
                 Dictionary<string, object> parameters = new()
                 {
@@ -77,7 +81,7 @@ namespace MTM_Inventory_Application.Data
                 };
 
                 var result = await Helper_Database_StoredProcedure.ExecuteNonQueryWithStatusAsync(
-                    Model_AppVariables.ConnectionString,
+                    connectionString ?? Model_AppVariables.ConnectionString,
                     "sys_last_10_transactions_RemoveAndShift_ByUser",
                     parameters,
                     progressHelper: null,
@@ -107,6 +111,7 @@ namespace MTM_Inventory_Application.Data
             string operation, 
             int quantity, 
             int position,
+            string? connectionString = null,
             MySqlConnection? connection = null,
             MySqlTransaction? transaction = null)
         {
@@ -122,7 +127,7 @@ namespace MTM_Inventory_Application.Data
                 };
 
                 var result = await Helper_Database_StoredProcedure.ExecuteNonQueryWithStatusAsync(
-                    Model_AppVariables.ConnectionString,
+                    connectionString ?? Model_AppVariables.ConnectionString,
                     "sys_last_10_transactions_Add_AtPosition",
                     parameters,
                     progressHelper: null,
@@ -150,14 +155,16 @@ namespace MTM_Inventory_Application.Data
             string user, 
             int fromPosition, 
             int toPosition,
+            string? connectionString = null,
             MySqlConnection? connection = null,
             MySqlTransaction? transaction = null)
         {
             try
             {
-                // Ensure positions are always 1-10 (never 0)
-                int safeFrom = Math.Max(1, Math.Min(10, fromPosition + 1));
-                int safeTo = Math.Max(1, Math.Min(10, toPosition + 1));
+                // Note: positions are already 1-based from the UI (1-10)
+                // Clamp to valid range 1-10
+                int safeFrom = Math.Max(1, Math.Min(10, fromPosition));
+                int safeTo = Math.Max(1, Math.Min(10, toPosition));
                 
                 Dictionary<string, object> parameters = new()
                 {
@@ -167,7 +174,7 @@ namespace MTM_Inventory_Application.Data
                 };
 
                 var result = await Helper_Database_StoredProcedure.ExecuteNonQueryWithStatusAsync(
-                    Model_AppVariables.ConnectionString,
+                    connectionString ?? Model_AppVariables.ConnectionString,
                     "sys_last_10_transactions_Move",
                     parameters,
                     progressHelper: null,
@@ -193,6 +200,7 @@ namespace MTM_Inventory_Application.Data
 
         public static async Task<DaoResult> DeleteAllQuickButtonsForUserAsync(
             string user,
+            string? connectionString = null,
             MySqlConnection? connection = null,
             MySqlTransaction? transaction = null)
         {
@@ -204,7 +212,7 @@ namespace MTM_Inventory_Application.Data
                 };
 
                 var result = await Helper_Database_StoredProcedure.ExecuteNonQueryWithStatusAsync(
-                    Model_AppVariables.ConnectionString,
+                    connectionString ?? Model_AppVariables.ConnectionString,
                     "sys_last_10_transactions_DeleteAll_ByUser",
                     parameters,
                     progressHelper: null,
@@ -233,6 +241,7 @@ namespace MTM_Inventory_Application.Data
             string partId, 
             string operation, 
             int quantity,
+            string? connectionString = null,
             MySqlConnection? connection = null,
             MySqlTransaction? transaction = null)
         {
@@ -250,7 +259,7 @@ namespace MTM_Inventory_Application.Data
                 };
 
                 var result = await Helper_Database_StoredProcedure.ExecuteNonQueryWithStatusAsync(
-                    Model_AppVariables.ConnectionString,
+                    connectionString ?? Model_AppVariables.ConnectionString,
                     "sys_last_10_transactions_AddQuickButton",
                     parameters,
                     progressHelper: null,
@@ -278,6 +287,7 @@ namespace MTM_Inventory_Application.Data
         public static async Task<DaoResult> RemoveAndShiftQuickButtonAsync(
             string user, 
             int position,
+            string? connectionString = null,
             MySqlConnection? connection = null,
             MySqlTransaction? transaction = null)
         {
@@ -292,7 +302,7 @@ namespace MTM_Inventory_Application.Data
                 };
 
                 var result = await Helper_Database_StoredProcedure.ExecuteNonQueryWithStatusAsync(
-                    Model_AppVariables.ConnectionString,
+                    connectionString ?? Model_AppVariables.ConnectionString,
                     "sys_last_10_transactions_Delete_ByUserAndPosition",
                     parameters,
                     progressHelper: null,
@@ -322,6 +332,7 @@ namespace MTM_Inventory_Application.Data
             string operation, 
             int quantity, 
             int position,
+            string? connectionString = null,
             MySqlConnection? connection = null,
             MySqlTransaction? transaction = null)
         {
@@ -337,7 +348,7 @@ namespace MTM_Inventory_Application.Data
                 };
 
                 var result = await Helper_Database_StoredProcedure.ExecuteNonQueryWithStatusAsync(
-                    Model_AppVariables.ConnectionString,
+                    connectionString ?? Model_AppVariables.ConnectionString,
                     "sys_last_10_transactions_AddQuickButton",
                     parameters,
                     progressHelper: null,

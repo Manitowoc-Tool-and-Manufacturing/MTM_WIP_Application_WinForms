@@ -14,23 +14,36 @@ internal static class Dao_System
     #region User Roles / Access
 
     internal static async Task<DaoResult> SetUserAccessTypeAsync(string userName, string accessType,
+        string? connectionString = null,
         MySqlConnection? connection = null,
         MySqlTransaction? transaction = null)
     {
         try
         {
+            // Convert string access type to INT for stored procedure
+            // Note: Stored procedure expects INT (0 = standard user, 1 = admin/vits user)
+            int accessTypeInt = accessType?.ToLower() switch
+            {
+                "admin" => 1,
+                "vitsuser" => 1,
+                "user" => 0,
+                "standard" => 0,
+                _ => 0 // Default to standard user
+            };
+
             Dictionary<string, object> parameters = new()
             {
-                ["UserName"] = userName,                     // p_ prefix added automatically
-                ["AccessType"] = accessType,
-                ["AssignedBy"] = Model_AppVariables.User ?? "System"
+                ["User"] = userName,           // p_ prefix added automatically
+                ["AccessType"] = accessTypeInt // INT not string
             };
 
             var result = await Helper_Database_StoredProcedure.ExecuteNonQueryWithStatusAsync(
-                Model_AppVariables.ConnectionString,
-                "sys_SetUserAccessType",
+                connectionString ?? Model_AppVariables.ConnectionString,
+                "sys_user_access_SetType",     // Correct procedure name
                 parameters,
-                null // No progress helper for this method
+                null, // No progress helper for this method
+                connection: connection,
+                transaction: transaction
             );
 
             if (result.IsSuccess)
@@ -44,7 +57,7 @@ internal static class Dao_System
             }
             else
             {
-                return DaoResult.Failure($"Failed to set user access type for {userName}: {result.ErrorMessage}");
+                return DaoResult.Failure($"Failed to set user access type for {userName}: {result.ErrorMessage}", result.Exception);
             }
         }
         catch (Exception ex)
@@ -170,14 +183,17 @@ internal static class Dao_System
         }
     }
 
-    internal static async Task<DaoResult<int>> GetUserIdByNameAsync(string userName, MySqlConnection? connection = null, MySqlTransaction? transaction = null)
+    internal static async Task<DaoResult<int>> GetUserIdByNameAsync(string userName,
+        string? connectionString = null,
+        MySqlConnection? connection = null, 
+        MySqlTransaction? transaction = null)
     {
         try
         {
             Dictionary<string, object> parameters = new() { ["UserName"] = userName }; // p_ prefix added automatically
 
             var result = await Helper_Database_StoredProcedure.ExecuteScalarWithStatusAsync(
-                Model_AppVariables.ConnectionString,
+                connectionString ?? Model_AppVariables.ConnectionString,
                 "sys_user_GetIdByName",
                 parameters,
                 progressHelper: null,
@@ -187,11 +203,16 @@ internal static class Dao_System
 
             if (result.IsSuccess && result.Data != null && int.TryParse(result.Data.ToString(), out int userId))
             {
-                return DaoResult<int>.Success(userId, $"Found user ID {userId} for {userName}");
+                return DaoResult<int>.Success(userId, result.StatusMessage ?? $"Found user ID {userId} for {userName}");
             }
             else
             {
-                return DaoResult<int>.Failure($"User '{userName}' not found");
+                // Preserve the stored procedure's error/status message (e.g., "User name is required" for validation errors)
+                // Note: For validation errors (status -2), message is in StatusMessage; for other errors it's in ErrorMessage
+                string errorMsg = !string.IsNullOrWhiteSpace(result.ErrorMessage) ? result.ErrorMessage :
+                                  !string.IsNullOrWhiteSpace(result.StatusMessage) ? result.StatusMessage :
+                                  $"User '{userName}' not found";
+                return DaoResult<int>.Failure(errorMsg);
             }
         }
         catch (Exception ex)
@@ -202,14 +223,17 @@ internal static class Dao_System
         }
     }
 
-    internal static async Task<DaoResult<int>> GetRoleIdByNameAsync(string roleName, MySqlConnection? connection = null, MySqlTransaction? transaction = null)
+    internal static async Task<DaoResult<int>> GetRoleIdByNameAsync(string roleName, 
+        string? connectionString = null,
+        MySqlConnection? connection = null, 
+        MySqlTransaction? transaction = null)
     {
         try
         {
             Dictionary<string, object> parameters = new() { ["RoleName"] = roleName }; // p_ prefix added automatically
 
             var result = await Helper_Database_StoredProcedure.ExecuteScalarWithStatusAsync(
-                Model_AppVariables.ConnectionString,
+                connectionString ?? Model_AppVariables.ConnectionString,
                 "sys_GetRoleIdByName",
                 parameters,
                 progressHelper: null,

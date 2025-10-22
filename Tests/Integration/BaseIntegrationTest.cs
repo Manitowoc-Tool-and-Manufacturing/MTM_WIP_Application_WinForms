@@ -243,7 +243,7 @@ public abstract class BaseIntegrationTest
                 Console.WriteLine($"[Cleanup] Failed to clean inv_inventory: {ex.Message}");
             }
 
-            // Clean up quick button test records
+            // Clean up quick button test records (sys_last_10_transactions)
             try
             {
                 using var cmd2 = _connection.CreateCommand();
@@ -259,6 +259,26 @@ public abstract class BaseIntegrationTest
             catch (Exception ex)
             {
                 Console.WriteLine($"[Cleanup] Failed to clean sys_last_10_transactions: {ex.Message}");
+            }
+
+            // Clean up test quick buttons (sys_quick_buttons) - new cleanup
+            try
+            {
+                CleanupTestQuickButtonsAsync().GetAwaiter().GetResult();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"[Cleanup] Failed to clean sys_quick_buttons: {ex.Message}");
+            }
+
+            // Clean up test users (usr_users) - new cleanup
+            try
+            {
+                CleanupTestUsersAsync().GetAwaiter().GetResult();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"[Cleanup] Failed to clean usr_users: {ex.Message}");
             }
 
             // Clean up error log test records (table may not exist in test database)
@@ -296,6 +316,351 @@ public abstract class BaseIntegrationTest
         {
             // Log but don't throw - cleanup failures shouldn't fail tests
             Console.WriteLine($"[Cleanup] Failed to clean test data: {ex.Message}");
+        }
+    }
+
+    #endregion
+
+    #region Test Data Setup Helpers
+
+    /// <summary>
+    /// Creates test users in the usr_users table for integration testing.
+    /// Uses ON DUPLICATE KEY UPDATE to make this method idempotent (safe to call multiple times).
+    /// </summary>
+    /// <returns>Task representing the async operation.</returns>
+    /// <remarks>
+    /// <para>
+    /// <strong>Test Users Created:</strong>
+    /// - TEST-USER: Regular active user (password: TestPass123)
+    /// - TEST-ADMIN: Admin user (password: AdminPass123)
+    /// - TEST-INACTIVE: Inactive user (password: password)
+    /// - TEST-USER-2: Second regular user for multi-user tests (password: TestPass456)
+    /// </para>
+    /// <para>
+    /// <strong>Usage Pattern:</strong>
+    /// Call this method in TestInitialize or at the start of tests that need test users.
+    /// The method is idempotent, so calling it multiple times is safe.
+    /// </para>
+    /// <para>
+    /// <strong>Cleanup:</strong>
+    /// Test users are automatically cleaned up by CleanupTestData() in TestCleanup.
+    /// Users with UserID starting with 'TEST-' are removed after each test.
+    /// </para>
+    /// </remarks>
+    protected async Task CreateTestUsersAsync()
+    {
+        if (_connection == null || _connection.State != ConnectionState.Open)
+        {
+            Console.WriteLine("[Test Setup] Cannot create test users - connection not available");
+            return;
+        }
+
+        try
+        {
+            using var cmd = _connection.CreateCommand();
+            // Note: usr_users table uses 'User' column (not 'UserID'), 'Full Name' column (with space)
+            // Table has minimal columns: ID (auto), User (unique), 'Full Name', Shift, VitsUser, Pin, etc.
+            cmd.CommandText = @"
+                INSERT INTO usr_users (
+                    `User`, `Full Name`, `Shift`, `VitsUser`, `Pin`
+                )
+                VALUES
+                    -- Regular active user
+                    ('TEST-USER', 'Test User', '1', 0, 'TestPass123'),
+                    -- Admin user
+                    ('TEST-ADMIN', 'Test Admin', '1', 1, 'AdminPass123'),
+                    -- Inactive user (for active/inactive filtering tests)
+                    ('TEST-INACTIVE', 'Test Inactive User', '1', 0, 'password'),
+                    -- Second regular user for multi-user scenarios
+                    ('TEST-USER-2', 'Test User Two', '1', 0, 'TestPass456')
+                ON DUPLICATE KEY UPDATE 
+                    `User` = VALUES(`User`);  -- No-op update to prevent errors on re-run
+            ";
+
+            int rowsAffected = await cmd.ExecuteNonQueryAsync();
+            Console.WriteLine($"[Test Setup] Created/verified {rowsAffected / 2} test users (TEST-USER, TEST-ADMIN, TEST-INACTIVE, TEST-USER-2)");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"[Test Setup ERROR] Failed to create test users: {ex.Message}");
+            // Don't throw - let tests fail naturally if users are required
+        }
+    }
+
+    /// <summary>
+    /// Creates test quick buttons in the sys_last_10_transactions table for integration testing.
+    /// Note: Despite the table name, this table stores quick button configurations, not transaction history.
+    /// Uses ON DUPLICATE KEY UPDATE to make this method idempotent (safe to call multiple times).
+    /// </summary>
+    /// <returns>Task representing the async operation.</returns>
+    /// <remarks>
+    /// <para>
+    /// <strong>Test Quick Buttons Created:</strong>
+    /// - 3 buttons for TEST-USER (positions 1, 2, 3)
+    /// - 1 button for TEST-USER-2 (position 1)
+    /// </para>
+    /// <para>
+    /// <strong>Prerequisites:</strong>
+    /// Test users must exist before calling this method. Call <see cref="CreateTestUsersAsync"/> first.
+    /// The sys_last_10_transactions table stores quick button data (User field, not UserID).
+    /// </para>
+    /// <para>
+    /// <strong>Usage Pattern:</strong>
+    /// Call this method after CreateTestUsersAsync() in TestInitialize or at the start of quick button tests.
+    /// </para>
+    /// <para>
+    /// <strong>Cleanup:</strong>
+    /// Test quick buttons are automatically cleaned up by CleanupTestData() in TestCleanup.
+    /// Buttons with User starting with 'TEST-' or 'Test' are removed after each test.
+    /// </para>
+    /// </remarks>
+    protected async Task CreateTestQuickButtonsAsync()
+    {
+        if (_connection == null || _connection.State != ConnectionState.Open)
+        {
+            Console.WriteLine("[Test Setup] Cannot create test quick buttons - connection not available");
+            return;
+        }
+
+        try
+        {
+            // Note: sys_last_10_transactions table stores quick buttons
+            // Check if table exists first
+            using var checkCmd = _connection.CreateCommand();
+            checkCmd.CommandText = @"
+                SELECT COUNT(*) 
+                FROM information_schema.tables 
+                WHERE table_schema = DATABASE() 
+                  AND table_name = 'sys_last_10_transactions'
+            ";
+            var tableExists = Convert.ToInt32(await checkCmd.ExecuteScalarAsync()) > 0;
+
+            if (!tableExists)
+            {
+                Console.WriteLine("[Test Setup] sys_last_10_transactions table not found - skipping quick button setup");
+                return;
+            }
+
+            // Check table structure to determine column names
+            using var colCmd = _connection.CreateCommand();
+            colCmd.CommandText = "DESCRIBE sys_last_10_transactions";
+            using var reader = await colCmd.ExecuteReaderAsync();
+            
+            var hasUserColumn = false;
+            var hasUserIDColumn = false;
+            while (await reader.ReadAsync())
+            {
+                var colName = reader.GetString(0);
+                if (colName.Equals("User", StringComparison.OrdinalIgnoreCase))
+                    hasUserColumn = true;
+                if (colName.Equals("UserID", StringComparison.OrdinalIgnoreCase))
+                    hasUserIDColumn = true;
+            }
+            reader.Close();
+
+            if (!hasUserColumn && !hasUserIDColumn)
+            {
+                Console.WriteLine("[Test Setup] sys_last_10_transactions table has no User or UserID column - cannot create test buttons");
+                return;
+            }
+
+            // Insert test quick buttons (structure depends on actual table schema)
+            using var cmd = _connection.CreateCommand();
+            
+            // First delete any existing test data to ensure clean slate
+            cmd.CommandText = "DELETE FROM sys_last_10_transactions WHERE `User` LIKE 'TestUser_QB%'";
+            await cmd.ExecuteNonQueryAsync();
+            
+            // Table columns: ID (auto), User, PartID, Operation, Quantity, ReceiveDate (auto), Position
+            // Create contiguous data at positions 1-10 for comprehensive testing
+            // Quick buttons must be contiguous - no gaps allowed
+            cmd.CommandText = @"
+                INSERT INTO sys_last_10_transactions (
+                    `User`, `PartID`, `Operation`, `Quantity`, `Position`
+                )
+                VALUES
+                    ('TestUser_QB', 'TEST-PART-QB-001', '100', 5, 1),
+                    ('TestUser_QB', 'TEST-PART-QB-002', '100', 10, 2),
+                    ('TestUser_QB', 'TEST-PART-QB-003', '110', 15, 3),
+                    ('TestUser_QB', 'TEST-PART-QB-004', '100', 20, 4),
+                    ('TestUser_QB', 'TEST-PART-QB-005', '110', 25, 5),
+                    ('TestUser_QB', 'TEST-PART-QB-006', '100', 30, 6),
+                    ('TestUser_QB', 'TEST-PART-QB-007', '110', 35, 7),
+                    ('TestUser_QB', 'TEST-PART-QB-008', '100', 40, 8),
+                    ('TestUser_QB', 'TEST-PART-QB-009', '110', 45, 9),
+                    ('TestUser_QB', 'TEST-PART-QB-010', '100', 50, 10),
+                    ('TestUser_QB_2', 'TEST-PART-QB-004', '100', 20, 1)
+            ";
+
+            int rowsAffected = await cmd.ExecuteNonQueryAsync();
+            Console.WriteLine($"[Test Setup] Created {rowsAffected} test quick buttons (TestUser_QB: positions 1-10 contiguous; TestUser_QB_2: pos 1)");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"[Test Setup ERROR] Failed to create test quick buttons: {ex.Message}");
+            // Don't throw - let tests fail naturally if buttons are required
+        }
+    }
+
+    /// <summary>
+    /// Cleans up test quick buttons from the sys_last_10_transactions table.
+    /// Note: This table stores quick button configurations despite its name.
+    /// Called automatically by TestCleanup, but can be called explicitly if needed.
+    /// </summary>
+    /// <returns>Task representing the async operation.</returns>
+    /// <remarks>
+    /// This method removes all quick buttons where User starts with 'Test' or 'TEST-'.
+    /// It's safe to call multiple times as it uses pattern matching for cleanup.
+    /// </remarks>
+    protected async Task CleanupTestQuickButtonsAsync()
+    {
+        if (_connection == null || _connection.State != ConnectionState.Open)
+        {
+            Console.WriteLine("[Cleanup] Cannot cleanup test quick buttons - connection not available");
+            return;
+        }
+
+        try
+        {
+            // Check if table exists
+            using var checkCmd = _connection.CreateCommand();
+            checkCmd.CommandText = @"
+                SELECT COUNT(*) 
+                FROM information_schema.tables 
+                WHERE table_schema = DATABASE() 
+                  AND table_name = 'sys_last_10_transactions'
+            ";
+            var tableExists = Convert.ToInt32(await checkCmd.ExecuteScalarAsync()) > 0;
+
+            if (!tableExists)
+            {
+                return; // Silently skip if table doesn't exist
+            }
+
+            using var cmd = _connection.CreateCommand();
+            cmd.CommandText = @"
+                DELETE FROM sys_last_10_transactions 
+                WHERE User LIKE 'Test%' 
+                   OR User LIKE 'TEST-%';
+            ";
+
+            int rowsDeleted = await cmd.ExecuteNonQueryAsync();
+            if (rowsDeleted > 0)
+            {
+                Console.WriteLine($"[Cleanup] Removed {rowsDeleted} test quick button records from sys_last_10_transactions");
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"[Cleanup ERROR] Failed to cleanup test quick buttons: {ex.Message}");
+        }
+    }
+
+    /// <summary>
+    /// Cleans up test users from the usr_users table.
+    /// Called automatically by TestCleanup, but can be called explicitly if needed.
+    /// </summary>
+    /// <returns>Task representing the async operation.</returns>
+    /// <remarks>
+    /// This method removes all users where UserID starts with 'TEST-'.
+    /// It automatically removes dependent records (quick buttons) first to avoid foreign key violations.
+    /// </remarks>
+    protected async Task CleanupTestUsersAsync()
+    {
+        if (_connection == null || _connection.State != ConnectionState.Open)
+        {
+            Console.WriteLine("[Cleanup] Cannot cleanup test users - connection not available");
+            return;
+        }
+
+        try
+        {
+            // First cleanup dependent records (quick buttons)
+            await CleanupTestQuickButtonsAsync();
+
+            // Then cleanup users (note: table uses 'User' column, not 'UserID')
+            using var cmd = _connection.CreateCommand();
+            cmd.CommandText = @"
+                DELETE FROM usr_users 
+                WHERE `User` LIKE 'TEST-%';
+            ";
+
+            int rowsDeleted = await cmd.ExecuteNonQueryAsync();
+            if (rowsDeleted > 0)
+            {
+                Console.WriteLine($"[Cleanup] Removed {rowsDeleted} test user records");
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"[Cleanup ERROR] Failed to cleanup test users: {ex.Message}");
+        }
+    }
+
+    /// <summary>
+    /// Seeds the sys_roles table with standard test role data.
+    /// Used by System DAO tests that need role lookup functionality.
+    /// Uses ON DUPLICATE KEY UPDATE to make this method idempotent (safe to call multiple times).
+    /// </summary>
+    /// <returns>Task representing the async operation.</returns>
+    /// <remarks>
+    /// <para>
+    /// <strong>Test Roles Created:</strong>
+    /// - Admin (RoleID=1): Administrator with full access
+    /// - ReadOnly (RoleID=2): Read-only access
+    /// - User (RoleID=3): Standard user access
+    /// </para>
+    /// <para>
+    /// <strong>Usage Pattern:</strong>
+    /// Call this method in TestInitialize for tests that use GetRoleIdByNameAsync or similar methods.
+    /// The method is idempotent, so calling it multiple times is safe.
+    /// </para>
+    /// </remarks>
+    protected async Task EnsureUserTableAsync()
+    {
+        if (_connection == null || _connection.State != ConnectionState.Open)
+        {
+            Console.WriteLine("[Test Setup] Cannot seed sys_roles - connection not available");
+            return;
+        }
+
+        try
+        {
+            // Check if sys_roles table exists
+            using var checkCmd = _connection.CreateCommand();
+            checkCmd.CommandText = @"
+                SELECT COUNT(*) 
+                FROM information_schema.tables 
+                WHERE table_schema = DATABASE() 
+                  AND table_name = 'sys_roles'
+            ";
+            var tableExists = Convert.ToInt32(await checkCmd.ExecuteScalarAsync()) > 0;
+
+            if (!tableExists)
+            {
+                Console.WriteLine("[Test Setup] sys_roles table not found - skipping role data setup");
+                return;
+            }
+
+            // Seed standard roles for testing
+            using var cmd = _connection.CreateCommand();
+            cmd.CommandText = @"
+                INSERT INTO sys_roles (ID, RoleName, Description, CreatedBy, IsSystem)
+                VALUES
+                    (1, 'Admin', 'Administrator with full access', 'TestSetup', 1),
+                    (2, 'ReadOnly', 'Read-only access', 'TestSetup', 1),
+                    (3, 'User', 'Standard user access', 'TestSetup', 1)
+                ON DUPLICATE KEY UPDATE 
+                    ID = VALUES(ID);  -- No-op update to prevent errors on re-run
+            ";
+
+            int rowsAffected = await cmd.ExecuteNonQueryAsync();
+            Console.WriteLine($"[Test Setup] Seeded/verified {rowsAffected / 2} standard roles (Admin, ReadOnly, User)");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"[Test Setup ERROR] Failed to seed sys_roles: {ex.Message}");
+            // Don't throw - let tests fail naturally if roles are required
         }
     }
 
@@ -788,7 +1153,12 @@ public abstract class BaseIntegrationTest
         var failureDetails = result.IsSuccess
             ? string.Empty
             : $"\nReason: {result.ErrorMessage}" +
-              (result.Exception != null ? $"\nException: {result.Exception.Message}" : string.Empty);
+              (result.Exception != null ? $"\nException: {result.Exception.Message}\nStackTrace: {result.Exception.StackTrace}" : string.Empty);
+
+        if (!result.IsSuccess)
+        {
+            Console.WriteLine($"[FAILURE DETAILS] {failureDetails}");
+        }
 
         Assert.IsTrue(
             result.IsSuccess,
