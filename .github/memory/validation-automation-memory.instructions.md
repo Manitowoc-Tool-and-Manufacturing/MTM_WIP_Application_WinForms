@@ -176,3 +176,82 @@ Preserve validation runs for audit and troubleshooting:
 - Tag runs with branch/commit metadata for traceability
 
 **Pattern**: Structured artifact directories enable compliance reporting and historical analysis.
+
+## Integration Test Infrastructure Patterns
+
+### Shared Test Data Setup Pattern
+
+Create reusable test data helpers in `BaseIntegrationTest` that multiple test classes can inherit and use.
+
+**Benefits:**
+- Reduces code duplication across test classes
+- Ensures consistent test data across suites
+- Simplifies maintenance (update once, affects all tests)
+- Enables test isolation and idempotency
+
+**Implementation Pattern:**
+```csharp
+// In BaseIntegrationTest.cs
+protected async Task CreateTestUsersAsync()
+{
+    // Idempotent: Check if data exists before creating
+    var existingUsers = await Dao_User.GetUserByUsernameAsync("TEST-USER");
+    if (existingUsers.IsSuccess && existingUsers.Data != null) return;
+    
+    // Create test users with known credentials
+    await Dao_User.AddUserAsync("TEST-USER", "Active", "Test", "User", ...);
+    await Dao_User.AddUserAsync("TEST-ADMIN", "Active", "Test", "Admin", ...);
+}
+
+protected async Task CleanupTestUsersAsync()
+{
+    // Delete in reverse order of foreign key dependencies
+    await Dao_User.DeleteUserAsync("TEST-USER");
+    await Dao_User.DeleteUserAsync("TEST-ADMIN");
+}
+```
+
+**Key Principles:**
+1. **Idempotency**: Safe to call multiple times without errors
+2. **Predictable naming**: Use `TEST-` prefix for easy identification
+3. **Foreign key awareness**: Clean up child records before parents
+4. **Error resilience**: Don't fail if cleanup finds nothing to delete
+
+### Test Documentation Update Workflow
+
+Update progress tracking documents at key workflow checkpoints to maintain accurate project status.
+
+**Update Triggers:**
+- Start of work session (mark tasks in-progress)
+- After completing implementation (mark tasks complete)
+- Before requesting review (update progress metrics)
+- End of work cycle (refresh all tracking docs)
+
+**Documents to Update Together:**
+```
+specs/test-fix-workspace/
+├── TOC.md              # Table of contents with overall progress
+├── DASHBOARD.md        # Metrics and status summary
+└── categories/
+    └── 01-*.md         # Detailed category status
+```
+
+**Pattern**: Batch documentation updates at workflow checkpoints (not after every small change).
+
+### Build-Verify-Document Cycle
+
+Follow consistent cycle for reliable test development:
+
+1. **Make changes** to test infrastructure or test methods
+2. **Build immediately** to catch compilation errors early
+   ```powershell
+   dotnet build MTM_Inventory_Application.csproj -c Debug
+   ```
+3. **Verify zero warnings** in files you edited
+4. **Run affected tests** to validate functionality
+5. **Update documentation** (TOC, DASHBOARD, category files)
+6. **Commit with clear message** referencing task IDs
+
+**Anti-Pattern**: Making multiple changes before building leads to cascading errors that are harder to debug.
+
+**Pattern**: Incremental validation catches issues early and maintains clean build state.

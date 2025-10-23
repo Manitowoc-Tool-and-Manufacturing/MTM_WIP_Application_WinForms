@@ -266,11 +266,12 @@ public class ParameterNaming_Tests : BaseIntegrationTest
         var connectionString = GetTestConnectionString();
         var validTypes = new HashSet<string>
         {
-            "int", "bigint", "tinyint", "smallint", "mediumint",
+            "int", "tinyint", "smallint", "mediumint", "bigint",
             "varchar", "char", "text", "mediumtext", "longtext",
             "decimal", "double", "float",
             "datetime", "date", "time", "timestamp",
-            "bit", "boolean", "bool"
+            "bit", "boolean", "bool",
+            "enum", "json" // enum maps to string in C#, json maps to string in C#
         };
         var invalidTypeParameters = new List<string>();
 

@@ -151,8 +151,10 @@ public class ErrorCooldown_Tests : BaseIntegrationTest
             "Expected both error occurrences logged after cooldown expired");
 
         // Verify time difference exceeds cooldown period
-        var firstErrorTime = matchingErrors[0].Field<DateTime>("ErrorTime");
-        var secondErrorTime = matchingErrors[1].Field<DateTime>("ErrorTime");
+        // Note: Errors may be in reverse chronological order, so find min/max times
+        var errorTimes = matchingErrors.Select(row => row.Field<DateTime>("ErrorTime")).OrderBy(t => t).ToList();
+        var firstErrorTime = errorTimes[0];
+        var secondErrorTime = errorTimes[1];
         var timeDifference = secondErrorTime - firstErrorTime;
 
         Assert.IsTrue(timeDifference >= ErrorCooldownPeriod,

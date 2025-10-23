@@ -82,11 +82,13 @@ public class Helper_Database_StoredProcedure_Tests : BaseIntegrationTest
         var usersResult = await MTM_Inventory_Application.Data.Dao_System.System_UserAccessTypeAsync();
         AssertSuccessWithData(usersResult);
         var testUser = usersResult.Data![0].User;
+        var currentAccessType = usersResult.Data![0].VitsUser;
+        var newAccessType = currentAccessType ? 0 : 1; // Toggle between 0 and 1 (valid tinyint(1) values)
 
         var parameters = new Dictionary<string, object>
         {
             ["User"] = testUser,
-            ["AccessType"] = 999 // Test value that will be rolled back
+            ["AccessType"] = newAccessType
         };
 
         // Act
@@ -95,8 +97,9 @@ public class Helper_Database_StoredProcedure_Tests : BaseIntegrationTest
             "sys_user_access_SetType", // This procedure uses p_ prefix
             parameters);
 
-        // Assert - Should succeed even though transaction will rollback
-        Assert.IsTrue(result.IsSuccess, $"Expected success but got: {result.StatusMessage}");
+        // Assert - Should succeed (updates access type successfully)
+        Console.WriteLine($"Result - IsSuccess: {result.IsSuccess}, Message: '{result.StatusMessage}', Error: '{result.ErrorMessage}'");
+        Assert.IsTrue(result.IsSuccess, $"Expected success but got Message='{result.StatusMessage}', Error='{result.ErrorMessage}'");
         // ExecuteNonQueryWithStatusAsync returns DaoResult (no Data property), not DaoResult<T>
     }
 

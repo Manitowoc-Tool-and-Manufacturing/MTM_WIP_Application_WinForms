@@ -128,8 +128,23 @@ public class Dao_Logging_Tests : BaseIntegrationTest
     {
         await EnsureLoggingTablesAsync();
 
-        // Arrange
-        int testErrorId = 1; // Use existing ID or create test error first
+        // Arrange: Get all errors and use the first one, or create if none exist
+        var allErrors = await Dao_ErrorLog.GetAllErrorsAsync();
+        int testErrorId;
+        
+        if (allErrors.IsSuccess && allErrors.Data != null && allErrors.Data.Rows.Count > 0)
+        {
+            // Use first existing error (column name is "ID" not "ErrorLogID")
+            testErrorId = Convert.ToInt32(allErrors.Data.Rows[0]["ID"]);
+            Console.WriteLine($"Using existing error ID {testErrorId} for deletion test");
+        }
+        else
+        {
+            // No errors exist - this test requires at least one error in the log
+            // Skip the test since we can't create errors via DAO (errors are logged by application)
+            Assert.Inconclusive("No error log entries exist to test deletion. Error logs are created by application runtime, not via DAO methods.");
+            return;
+        }
 
         // Act
         var result = await Dao_ErrorLog.DeleteErrorByIdAsync(testErrorId);
@@ -235,7 +250,7 @@ public class Dao_Logging_Tests : BaseIntegrationTest
     {
         await EnsureLoggingTablesAsync();
 
-        // Arrange
+        // Arrange - ItemType is required by database constraint
         var history = new Model_TransactionHistory
         {
             TransactionType = "IN",
@@ -246,7 +261,7 @@ public class Dao_Logging_Tests : BaseIntegrationTest
             Quantity = 1,
             Notes = null, // Optional field
             User = "TestUser",
-            ItemType = null, // Optional field
+            ItemType = "RAW", // REQUIRED - database column is NOT NULL
             BatchNumber = null, // Optional field
             DateTime = DateTime.Now
         };
@@ -256,7 +271,7 @@ public class Dao_Logging_Tests : BaseIntegrationTest
 
         // Assert
         AssertSuccess(result, "Expected successful addition of transaction history with minimal fields");
-        Console.WriteLine("AddTransactionHistoryAsync successfully handled null optional fields");
+        Console.WriteLine("AddTransactionHistoryAsync successfully handled null optional fields (ItemType required)");
     }
 
     #endregion

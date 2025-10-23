@@ -119,3 +119,51 @@ specs/[initiative-name]/
 - `clarification-questions.md` – Outstanding questions and answers
 
 **Pattern**: Core spec/plan/tasks trio provides consistent entry points; optional files add domain-specific depth as needed.
+
+## Multi-Feature Specification Strategy
+
+When multiple related features are identified together, create separate specifications rather than a single combined mega-spec.
+
+**Separate Specifications Enable:**
+- Independent implementation and deployment cycles
+- Parallel development by different team members
+- Focused testing with distinct success criteria
+- Flexible prioritization (ship high-priority first)
+- Manageable scope for review and estimation
+
+**Anti-Pattern: Combined Mega-Spec**
+Avoid combining unrelated features into single spec because it:
+- Creates 50+ page documents that overwhelm reviewers
+- Mixes HIGH and LOW priority work (can't ship incrementally)
+- Has unclear dependencies between unrelated features
+- Takes months to complete (all-or-nothing approach)
+- Becomes difficult to review and maintain
+
+**Recommended Workflow:**
+1. Identify all features and categorize by priority (HIGH/MEDIUM/LOW)
+2. Create one `/speckit.specify` command per feature
+3. Include complete requirements in each command (self-contained)
+4. Execute commands in priority order as resources allow
+5. Each spec gets own branch, development cycle, and deployment
+
+**Example Pattern:**
+```
+# Instead of one mega-spec:
+/speckit.specify Create analyzer, performance suite, regression tests, monitoring, and UI automation...
+
+# Use multiple focused specs:
+/speckit.specify Create Roslyn analyzer for database layer compliance...
+/speckit.specify Create performance benchmarking suite...
+/speckit.specify Create regression test plan...
+/speckit.specify Create monitoring dashboard...
+/speckit.specify Create UI test automation framework...
+```
+
+**Quality Indicator**: Each `/speckit.specify` command should:
+- Fit in 3-5 paragraphs
+- Address a single feature domain
+- Have independent success criteria
+- Be implementable in 1-4 weeks
+- Not depend on other pending specs
+
+**Pattern**: Organize by priority, develop in sequence, deploy incrementally.

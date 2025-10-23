@@ -12,8 +12,8 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `usr_users_Add_User`(
     IN p_Pin VARCHAR(50),
     IN p_LastShownVersion VARCHAR(50),
     IN p_HideChangeLog VARCHAR(50),
-    IN p_Theme_Name VARCHAR(50),
-    IN p_Theme_FontSize INT,
+    IN p_ThemeName VARCHAR(50),
+    IN p_ThemeFontSize INT,
     IN p_VisualUserName VARCHAR(50),
     IN p_VisualPassword VARCHAR(50),
     IN p_WipServerAddress VARCHAR(15),
@@ -48,7 +48,7 @@ BEGIN
                 `WipServerAddress`, `WipDatabase`, `WipServerPort`
             ) VALUES (
                 p_User, p_FullName, p_Shift, p_VitsUser, p_Pin, p_LastShownVersion, p_HideChangeLog,
-                p_Theme_Name, p_Theme_FontSize, p_VisualUserName, p_VisualPassword,
+                p_ThemeName, p_ThemeFontSize, p_VisualUserName, p_VisualPassword,
                 p_WipServerAddress, p_WipDatabase, p_WipServerPort
             );
             SET v_RowCount = ROW_COUNT();
