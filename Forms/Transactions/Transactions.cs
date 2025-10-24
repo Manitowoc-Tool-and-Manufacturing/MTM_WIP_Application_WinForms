@@ -355,13 +355,13 @@ namespace MTM_Inventory_Application.Forms.Transactions
                                 ? ttype
                                 : TransactionType.IN,
                         BatchNumber = row["BatchNumber"]?.ToString(),
-                        PartID = row["p_PartID"]?.ToString(),
+                        PartID = row["PartID"]?.ToString(),
                         FromLocation = row["FromLocation"]?.ToString(),
                         ToLocation = row["ToLocation"]?.ToString(),
-                        Operation = row["p_Operation"]?.ToString(),
+                        Operation = row["Operation"]?.ToString(),
                         Quantity = int.TryParse(row["Quantity"]?.ToString(), out int qty) ? qty : 0,
                         Notes = row["Notes"]?.ToString(),
-                        User = row["p_User"]?.ToString(),
+                        User = row["User"]?.ToString(),
                         ItemType = row["ItemType"]?.ToString(),
                         DateTime = DateTime.TryParse(row["ReceiveDate"]?.ToString(), out DateTime dtm)
                             ? dtm

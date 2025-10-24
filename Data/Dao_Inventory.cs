@@ -158,7 +158,7 @@ public static class Dao_Inventory
             var result = await Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync(
                 Model_AppVariables.ConnectionString,
                 "inv_inventory_Get_ByPartID",
-                new Dictionary<string, object> { ["p_PartID"] = partId }, // p_ prefix added automatically
+                new Dictionary<string, object> { ["PartID"] = partId }, // prefix applied by helper
                 progressHelper: null, // No progress helper for this method
                 connection: connection,
                 transaction: transaction
@@ -261,7 +261,7 @@ public static class Dao_Inventory
                 "inv_inventory_Get_ByPartIDandOperation",  // Fixed: lowercase "and" to match database
                 new Dictionary<string, object> 
                 { 
-                    ["p_PartID"] = partId.Trim(),
+                    ["PartID"] = partId.Trim(),
                     ["p_Operation"] = operation.Trim()  // Fixed: Changed from o_Operation to p_Operation
                 },
                 progressHelper: null, // No progress helper for this method
@@ -395,7 +395,7 @@ public static class Dao_Inventory
                 "inv_inventory_Add_Item",
                 new Dictionary<string, object>
                 {
-                    ["p_PartID"] = partId,         // p_ prefix added automatically
+                    ["PartID"] = partId,           // helper detects required prefix
                     ["Location"] = location,
                     ["p_Operation"] = operation,
                     ["Quantity"] = quantity,
@@ -445,13 +445,13 @@ public static class Dao_Inventory
         {
             foreach (System.Windows.Forms.DataGridViewRow row in dgv.SelectedRows)
             {
-                string partId = row.Cells["p_PartID"].Value?.ToString() ?? "";
+                string partId = row.Cells["PartID"].Value?.ToString() ?? "";
                 string location = row.Cells["Location"].Value?.ToString() ?? "";
-                string operation = row.Cells["p_Operation"].Value?.ToString() ?? "";
+                string operation = row.Cells["Operation"].Value?.ToString() ?? "";
                 int quantity = int.TryParse(row.Cells["Quantity"].Value?.ToString(), out int qty) ? qty : 0;
                 string batchNumber = row.Cells["BatchNumber"].Value?.ToString() ?? "";
                 string itemType = row.Cells["ItemType"].Value?.ToString() ?? "";
-                string user = row.Cells["p_User"].Value?.ToString() ?? "";
+                string user = row.Cells["User"].Value?.ToString() ?? "";
                 string notes = row.Cells["Notes"].Value?.ToString() ?? "";
 
                 if (string.IsNullOrWhiteSpace(partId) || string.IsNullOrWhiteSpace(location) ||
@@ -523,7 +523,7 @@ public static class Dao_Inventory
             // MIGRATED: Use Helper_Database_StoredProcedure for proper status handling
             Dictionary<string, object> parameters = new()
             {
-                ["p_PartID"] = partId,             // p_ prefix added automatically
+                ["PartID"] = partId,               // helper detects required prefix
                 ["Location"] = location,
                 ["p_Operation"] = operation,
                 ["Quantity"] = quantity,
@@ -601,7 +601,7 @@ public static class Dao_Inventory
             Dictionary<string, object> parameters = new()
             {
                 ["p_BatchNumber"] = batchNumber,
-                ["p_PartID"] = partId,
+                ["PartID"] = partId,
                 ["p_Operation"] = operation,
                 ["p_NewLocation"] = newLocation
             };
@@ -667,7 +667,7 @@ public static class Dao_Inventory
             Dictionary<string, object> parameters = new()
             {
                 ["p_BatchNumber"] = batchNumber,
-                ["p_PartID"] = partId,
+                ["PartID"] = partId,
                 ["p_Operation"] = operation,
                 ["p_TransferQuantity"] = transferQuantity,
                 ["p_OriginalQuantity"] = originalQuantity,

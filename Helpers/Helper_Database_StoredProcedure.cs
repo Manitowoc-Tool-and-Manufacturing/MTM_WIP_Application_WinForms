@@ -147,8 +147,10 @@ public static class Helper_Database_StoredProcedure
                 Service_DebugTracer.TraceDatabaseComplete("PROCEDURE", procedureName, 
                     $"DataTable with {dataTable.Rows.Count} rows", dataTable.Rows.Count, stopwatch.ElapsedMilliseconds);
 
-                if (status == 0)
+                // Status codes: 1=success with data, 0=success without data, negative=error
+                if (status >= 0)
                 {
+                    // Both status 0 and 1 are success (with or without data)
                     progressHelper?.ProcessStoredProcedureResult(status, errorMessage, 
                         $"Successfully retrieved {dataTable.Rows.Count} records");
                     
@@ -165,16 +167,15 @@ public static class Helper_Database_StoredProcedure
                 }
                 else
                 {
+                    // Negative status = error
                     progressHelper?.ProcessStoredProcedureResult(status, errorMessage);
                     
-                    var result = status == 1 
-                        ? DaoResult<DataTable>.Success(dataTable, errorMessage, dataTable.Rows.Count) // Warning treated as success with message
-                        : DaoResult<DataTable>.Failure(errorMessage, null);
+                    var result = DaoResult<DataTable>.Failure(errorMessage, null);
                     
                     Service_DebugTracer.TraceMethodExit(result, nameof(ExecuteDataTableWithStatusAsync), "Helper_Database_StoredProcedure");
                     Service_DebugTracer.StopPerformanceTrace(performanceKey, new Dictionary<string, object>
                     {
-                        ["Status"] = status == 1 ? "WARNING" : "ERROR",
+                        ["Status"] = "ERROR",
                         ["ErrorMessage"] = errorMessage
                     });
                     
@@ -292,10 +293,9 @@ public static class Helper_Database_StoredProcedure
                     // Handle null result properly
                     object safeResult = result ?? DBNull.Value;
 
-                    if (status == 0)
+                    // Status codes: 1=success with data, 0=success without data, negative=error
+                    if (status >= 0)
                         return DaoResult<object>.Success(safeResult, errorMessage);
-                    else if (status == 1)
-                        return DaoResult<object>.Success(safeResult, errorMessage); // Warning treated as success
                     else
                         return DaoResult<object>.Failure(errorMessage, null);
                 }
@@ -403,10 +403,9 @@ public static class Helper_Database_StoredProcedure
                 stopwatch.Stop();
                 LogPerformanceIfNeeded(procedureName, stopwatch.ElapsedMilliseconds, "Modification");
 
-                if (status == 0)
+                // Status codes: 1=success with data, 0=success without data, negative=error
+                if (status >= 0)
                     return DaoResult.Success(errorMessage, rowsAffected);
-                else if (status == 1)
-                    return DaoResult.Success(errorMessage, rowsAffected); // Warning treated as success
                 else
                     return DaoResult.Failure(errorMessage, null);
                 }
@@ -511,10 +510,9 @@ public static class Helper_Database_StoredProcedure
                 stopwatch.Stop();
                 LogPerformanceIfNeeded(procedureName, stopwatch.ElapsedMilliseconds, "Modification");
 
-                if (status == 0)
+                // Status codes: 1=success with data, 0=success without data, negative=error
+                if (status >= 0)
                     return DaoResult<Dictionary<string, object>>.Success(outputValues, errorMessage);
-                else if (status == 1)
-                    return DaoResult<Dictionary<string, object>>.Success(outputValues, errorMessage); // Warning treated as success
                 else
                     return DaoResult<Dictionary<string, object>>.Failure(errorMessage, null);
             });

@@ -403,12 +403,12 @@ namespace MTM_Inventory_Application.Controls.MainForm
                 _lastRemovedItems.Clear();
                 foreach (DataGridViewRow row in dgv.SelectedRows)
                 {
-                    string partId = row.Cells["p_PartID"].Value?.ToString() ?? "";
+                    string partId = row.Cells["PartID"].Value?.ToString() ?? "";
                     string location = row.Cells["Location"].Value?.ToString() ?? "";
-                    string operation = row.Cells["p_Operation"].Value?.ToString() ?? "";
+                    string operation = row.Cells["Operation"].Value?.ToString() ?? "";
                     int quantity = int.TryParse(row.Cells["Quantity"].Value?.ToString(), out int q) ? q : 0;
                     string itemType = row.Cells["ItemType"]?.Value?.ToString() ?? ""; // If you have this column
-                    string user = row.Cells["p_User"]?.Value?.ToString() ?? "";
+                    string user = row.Cells["User"]?.Value?.ToString() ?? "";
                     string batchNumber = row.Cells["BatchNumber"]?.Value?.ToString() ?? "";
 
                     _lastRemovedItems.Add(new Model_HistoryRemove

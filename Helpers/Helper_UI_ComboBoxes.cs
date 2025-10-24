@@ -2,6 +2,7 @@ using System.Data;
 using System.Diagnostics;
 using System.Reflection;
 using MTM_Inventory_Application.Controls.MainForm;
+using MTM_Inventory_Application.Logging;
 using MTM_Inventory_Application.Models;
 using MySql.Data.MySqlClient;
 using MethodInvoker = System.Windows.Forms.MethodInvoker;
@@ -64,7 +65,7 @@ namespace MTM_Inventory_Application.Helpers
                     ComboBoxPart_DataTable.Clear();
                     if (dataResult.IsSuccess && dataResult.Data != null)
                     {
-                        ComboBoxPart_DataTable.Merge(dataResult.Data);
+                        SafeMergeDataTable(ComboBoxPart_DataTable, dataResult.Data, "ComboBoxPart");
                     }
                 }
             }
@@ -97,7 +98,7 @@ namespace MTM_Inventory_Application.Helpers
                     ComboBoxOperation_DataTable.Clear();
                     if (dataResult.IsSuccess && dataResult.Data != null)
                     {
-                        ComboBoxOperation_DataTable.Merge(dataResult.Data);
+                        SafeMergeDataTable(ComboBoxOperation_DataTable, dataResult.Data, "ComboBoxOperation");
                     }
                 }
             }
@@ -130,7 +131,7 @@ namespace MTM_Inventory_Application.Helpers
                     ComboBoxLocation_DataTable.Clear();
                     if (dataResult.IsSuccess && dataResult.Data != null)
                     {
-                        ComboBoxLocation_DataTable.Merge(dataResult.Data);
+                        SafeMergeDataTable(ComboBoxLocation_DataTable, dataResult.Data, "ComboBoxLocation");
                     }
                 }
             }
@@ -163,13 +164,14 @@ namespace MTM_Inventory_Application.Helpers
                     ComboBoxUser_DataTable.Clear();
                     if (dataResult.IsSuccess && dataResult.Data != null)
                     {
-                        ComboBoxUser_DataTable.Merge(dataResult.Data);
+                        // Use safe merge with schema validation
+                        SafeMergeDataTable(ComboBoxUser_DataTable, dataResult.Data, "ComboBoxUser");
                         
                         // Remove any row where the User column contains '[ All Users ]' or similar
                         List<DataRow> rowsToRemove = new();
                         foreach (DataRow row in ComboBoxUser_DataTable.Rows)
                         {
-                            string userVal = row["p_User"]?.ToString() ?? string.Empty;
+                            string userVal = row["User"]?.ToString() ?? string.Empty;
                             if (userVal.Contains("All Users"))
                             {
                                 rowsToRemove.Add(row);
@@ -212,7 +214,7 @@ namespace MTM_Inventory_Application.Helpers
                     ComboBoxItemType_DataTable.Clear();
                     if (dataResult.IsSuccess && dataResult.Data != null)
                     {
-                        ComboBoxItemType_DataTable.Merge(dataResult.Data);
+                        SafeMergeDataTable(ComboBoxItemType_DataTable, dataResult.Data, "ComboBoxItemType");
                     }
                 }
             }
@@ -533,6 +535,95 @@ namespace MTM_Inventory_Application.Helpers
                     comboBox.SelectedIndex = 0;
                 }
 
+                return false;
+            }
+        }
+
+        #endregion
+
+        #region DataTable Merge Helpers
+
+        /// <summary>
+        /// Safely merges source DataTable into target with schema validation and error handling
+        /// </summary>
+        /// <param name="target">Target DataTable to merge into</param>
+        /// <param name="source">Source DataTable to merge from</param>
+        /// <param name="tableName">Name of the table for logging purposes</param>
+        /// <returns>True if merge was successful, false if replaced due to schema mismatch</returns>
+        private static bool SafeMergeDataTable(DataTable target, DataTable source, string tableName)
+        {
+            if (source == null || source.Rows.Count == 0)
+            {
+                LoggingUtility.Log($"[DataTable] {tableName}: Source DataTable is null or empty, skipping merge");
+                return true; // Not an error, just nothing to merge
+            }
+
+            try
+            {
+                // Extract schema information
+                var sourceSchema = source.Columns.Cast<DataColumn>()
+                    .Select(c => new { c.ColumnName, c.DataType })
+                    .ToList();
+                var targetSchema = target.Columns.Cast<DataColumn>()
+                    .Select(c => new { c.ColumnName, c.DataType })
+                    .ToList();
+
+                // Check if schemas match
+                bool schemaMatches = sourceSchema.Count == targetSchema.Count &&
+                    sourceSchema.All(sc => targetSchema.Any(tc => 
+                        tc.ColumnName.Equals(sc.ColumnName, StringComparison.OrdinalIgnoreCase) && 
+                        tc.DataType == sc.DataType));
+
+                if (!schemaMatches)
+                {
+                    // Log schema mismatch details
+                    var sourceColumns = string.Join(", ", sourceSchema.Select(c => $"{c.ColumnName}({c.DataType.Name})"));
+                    var targetColumns = string.Join(", ", targetSchema.Select(c => $"{c.ColumnName}({c.DataType.Name})"));
+                    
+                    LoggingUtility.Log($"[DataTable] {tableName}: Schema mismatch detected");
+                    LoggingUtility.Log($"[DataTable] {tableName}: Source schema: {sourceColumns}");
+                    LoggingUtility.Log($"[DataTable] {tableName}: Target schema: {targetColumns}");
+                    LoggingUtility.Log($"[DataTable] {tableName}: Replacing target table with source copy instead of merging");
+
+                    // Clear and replace with a copy of the source
+                    target.Clear();
+                    target.Columns.Clear();
+                    target.Merge(source.Copy());
+                    
+                    return false; // Indicates replacement occurred
+                }
+
+                // Schemas match, safe to merge
+                target.Merge(source);
+                LoggingUtility.Log($"[DataTable] {tableName}: Successfully merged {source.Rows.Count} rows");
+                return true;
+            }
+            catch (ArgumentException ex)
+            {
+                // Handle constraint violations during merge
+                LoggingUtility.Log($"[DataTable] {tableName}: ArgumentException during merge: {ex.Message}");
+                LoggingUtility.LogApplicationError(ex);
+                
+                // Fallback: Replace instead of merge
+                try
+                {
+                    target.Clear();
+                    target.Columns.Clear();
+                    target.Merge(source.Copy());
+                    LoggingUtility.Log($"[DataTable] {tableName}: Replaced table after merge failure");
+                    return false;
+                }
+                catch (Exception replaceEx)
+                {
+                    LoggingUtility.Log($"[DataTable] {tableName}: Failed to replace table: {replaceEx.Message}");
+                    LoggingUtility.LogApplicationError(replaceEx);
+                    return false;
+                }
+            }
+            catch (Exception ex)
+            {
+                LoggingUtility.Log($"[DataTable] {tableName}: Unexpected error during merge: {ex.Message}");
+                LoggingUtility.LogApplicationError(ex);
                 return false;
             }
         }
