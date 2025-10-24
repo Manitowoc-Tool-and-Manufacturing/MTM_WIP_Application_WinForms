@@ -122,7 +122,7 @@ namespace MTM_Inventory_Application.Controls.SettingsForm
                 return;
             }
 
-            string? itemNumber = _currentPart["p_PartID"]?.ToString();
+            string? itemNumber = _currentPart["PartID"]?.ToString();
             string? customer = _currentPart["Customer"]?.ToString();
             if (string.IsNullOrEmpty(itemNumber))
             {
@@ -184,7 +184,7 @@ This action cannot be undone.",
                 return;
             }
 
-            itemNumberValueLabel.Text = _currentPart["p_PartID"].ToString();
+            itemNumberValueLabel.Text = _currentPart["PartID"].ToString();
             customerValueLabel.Text = _currentPart["Customer"].ToString();
             descriptionValueLabel.Text = _currentPart["Description"].ToString();
             typeValueLabel.Text = _currentPart["ItemType"].ToString();

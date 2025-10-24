@@ -1,5 +1,6 @@
 using System.Data;
 using System.Security.Principal;
+using MTM_Inventory_Application.Core;
 using MTM_Inventory_Application.Helpers;
 using MTM_Inventory_Application.Logging;
 using MTM_Inventory_Application.Models;
@@ -288,7 +289,7 @@ internal static class Dao_System
             if (result.IsSuccess)
             {
                 LoggingUtility.Log($"[Dao_System] Retrieved {result.Data?.Rows.Count ?? 0} themes using stored procedure");
-                return DaoResult<DataTable>.Success(result.Data, $"Successfully retrieved {result.Data?.Rows.Count ?? 0} themes");
+                return DaoResult<DataTable>.Success(result.Data ?? new DataTable(), $"Successfully retrieved {result.Data?.Rows.Count ?? 0} themes");
             }
             else
             {
@@ -301,6 +302,170 @@ internal static class Dao_System
             LoggingUtility.LogApplicationError(ex);
             await HandleSystemDaoExceptionAsync(ex, "GetAllThemes");
             return DaoResult<DataTable>.Failure("Failed to retrieve themes from database", ex);
+        }
+    }
+
+    #endregion
+
+    #region JSON Validation
+
+    /// <summary>
+    /// Validates JSON settings in app_themes and usr_ui_settings tables
+    /// </summary>
+    /// <returns>DaoResult with validation report</returns>
+    internal static async Task<DaoResult<string>> ValidateJsonSettingsAsync()
+    {
+        try
+        {
+            LoggingUtility.Log("[Dao_System] Starting JSON validation for theme and user settings");
+            var report = new System.Text.StringBuilder();
+            int totalErrors = 0;
+            int totalChecked = 0;
+
+            // Validate theme settings
+            var themesResult = await GetAllThemesAsync();
+            if (themesResult.IsSuccess && themesResult.Data != null)
+            {
+                report.AppendLine("=== Theme Settings Validation ===");
+                foreach (DataRow row in themesResult.Data.Rows)
+                {
+                    totalChecked++;
+                    string themeName = row["ThemeName"]?.ToString() ?? "Unknown";
+                    string settingsJson = row["SettingsJson"]?.ToString() ?? "";
+
+                    if (string.IsNullOrWhiteSpace(settingsJson))
+                    {
+                        report.AppendLine($"⚠️  Theme '{themeName}': Empty JSON");
+                        totalErrors++;
+                        continue;
+                    }
+
+                    try
+                    {
+                        var options = new System.Text.Json.JsonSerializerOptions
+                        {
+                            AllowTrailingCommas = true,
+                            ReadCommentHandling = System.Text.Json.JsonCommentHandling.Skip,
+                            PropertyNameCaseInsensitive = false
+                        };
+                        options.Converters.Add(new JsonColorConverter());
+                        
+                        var colors = System.Text.Json.JsonSerializer.Deserialize<Models.Model_UserUiColors>(settingsJson, options);
+                        
+                        if (colors != null)
+                        {
+                            report.AppendLine($"✅ Theme '{themeName}': Valid JSON");
+                        }
+                        else
+                        {
+                            report.AppendLine($"❌ Theme '{themeName}': Deserialization returned null");
+                            totalErrors++;
+                        }
+                    }
+                    catch (System.Text.Json.JsonException jsonEx)
+                    {
+                        report.AppendLine($"❌ Theme '{themeName}': JSON Error - {jsonEx.Message}");
+                        report.AppendLine($"   Preview: {(settingsJson.Length > 100 ? settingsJson.Substring(0, 100) + "..." : settingsJson)}");
+                        totalErrors++;
+                        LoggingUtility.LogApplicationError(jsonEx);
+                    }
+                }
+                report.AppendLine();
+            }
+            else
+            {
+                report.AppendLine($"⚠️  Could not retrieve themes: {themesResult.ErrorMessage}");
+                report.AppendLine();
+            }
+
+            // Validate user UI settings
+            try
+            {
+                var userSettingsResult = await Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync(
+                    Model_AppVariables.ConnectionString,
+                    "usr_ui_settings_Get_All",
+                    null
+                );
+
+                if (userSettingsResult.IsSuccess && userSettingsResult.Data != null)
+                {
+                    report.AppendLine("=== User Settings Validation ===");
+                    foreach (DataRow row in userSettingsResult.Data.Rows)
+                    {
+                        totalChecked++;
+                        string userId = row["UserId"]?.ToString() ?? "Unknown";
+                        string settingsJson = row["SettingsJson"]?.ToString() ?? "";
+
+                        if (string.IsNullOrWhiteSpace(settingsJson))
+                        {
+                            report.AppendLine($"ℹ️  User '{userId}': Empty JSON (using defaults)");
+                            continue;
+                        }
+
+                        try
+                        {
+                        var options = new System.Text.Json.JsonSerializerOptions
+                        {
+                            AllowTrailingCommas = true,
+                            ReadCommentHandling = System.Text.Json.JsonCommentHandling.Skip,
+                            PropertyNameCaseInsensitive = true
+                        };
+                        options.Converters.Add(new JsonColorConverter());                            var colors = System.Text.Json.JsonSerializer.Deserialize<Models.Model_UserUiColors>(settingsJson, options);
+                            
+                            if (colors != null)
+                            {
+                                report.AppendLine($"✅ User '{userId}': Valid JSON");
+                            }
+                            else
+                            {
+                                report.AppendLine($"❌ User '{userId}': Deserialization returned null");
+                                totalErrors++;
+                            }
+                        }
+                        catch (System.Text.Json.JsonException jsonEx)
+                        {
+                            report.AppendLine($"❌ User '{userId}': JSON Error - {jsonEx.Message}");
+                            report.AppendLine($"   Preview: {(settingsJson.Length > 100 ? settingsJson.Substring(0, 100) + "..." : settingsJson)}");
+                            totalErrors++;
+                            LoggingUtility.LogApplicationError(jsonEx);
+                        }
+                    }
+                    report.AppendLine();
+                }
+                else
+                {
+                    report.AppendLine($"⚠️  Could not retrieve user settings: {userSettingsResult.ErrorMessage}");
+                    report.AppendLine();
+                }
+            }
+            catch (Exception ex)
+            {
+                report.AppendLine($"⚠️  Error checking user settings: {ex.Message}");
+                LoggingUtility.LogApplicationError(ex);
+            }
+
+            // Summary
+            report.AppendLine("=== Validation Summary ===");
+            report.AppendLine($"Total items checked: {totalChecked}");
+            report.AppendLine($"Total errors found: {totalErrors}");
+            report.AppendLine($"Success rate: {(totalChecked > 0 ? ((totalChecked - totalErrors) * 100.0 / totalChecked).ToString("F1") : "N/A")}%");
+
+            string finalReport = report.ToString();
+            LoggingUtility.Log($"[Dao_System] JSON validation complete:\n{finalReport}");
+
+            if (totalErrors > 0)
+            {
+                return DaoResult<string>.Failure($"Found {totalErrors} JSON validation errors. Report:\n{finalReport}", null);
+            }
+            else
+            {
+                return DaoResult<string>.Success(finalReport, $"All {totalChecked} JSON settings are valid");
+            }
+        }
+        catch (Exception ex)
+        {
+            LoggingUtility.LogApplicationError(ex);
+            return DaoResult<string>.Failure($"JSON validation failed: {ex.Message}", ex);
         }
     }
 

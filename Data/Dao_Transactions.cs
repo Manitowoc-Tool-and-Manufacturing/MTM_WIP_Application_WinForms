@@ -63,7 +63,7 @@ internal class Dao_Transactions
             {
                 ["UserName"] = userName ?? "",
                 ["IsAdmin"] = isAdmin,
-                ["p_PartID"] = partID ?? "",
+                ["PartID"] = partID ?? "",
                 ["BatchNumber"] = batchNumber ?? "",
                 ["FromLocation"] = fromLocation ?? "",
                 ["ToLocation"] = toLocation ?? "",

@@ -203,20 +203,50 @@ namespace MTM_Inventory_Application.Controls.MainForm
 
         public async Task Control_InventoryTab_OnStartup_LoadDataComboBoxesAsync()
         {
+            Service_DebugTracer.TraceMethodEntry(new Dictionary<string, object>
+            {
+                ["MethodName"] = nameof(Control_InventoryTab_OnStartup_LoadDataComboBoxesAsync),
+                ["ControlType"] = nameof(Control_InventoryTab)
+            }, nameof(Control_InventoryTab), nameof(Control_InventoryTab_OnStartup_LoadDataComboBoxesAsync));
+
             try
             {
+                _progressHelper?.ShowProgress();
+                _progressHelper?.UpdateProgress(10, "Loading part data...");
+                
                 await Helper_UI_ComboBoxes.FillPartComboBoxesAsync(Control_InventoryTab_ComboBox_Part);
+                
+                _progressHelper?.UpdateProgress(40, "Loading operation data...");
                 await Helper_UI_ComboBoxes.FillOperationComboBoxesAsync(Control_InventoryTab_ComboBox_Operation);
+                
+                _progressHelper?.UpdateProgress(70, "Loading location data...");
                 await Helper_UI_ComboBoxes.FillLocationComboBoxesAsync(Control_InventoryTab_ComboBox_Location);
 
+                _progressHelper?.UpdateProgress(100, "Combo boxes loaded");
                 await Task.Delay(100);
+                
                 LoggingUtility.Log("Inventory tab ComboBoxes loaded.");
+                Service_DebugTracer.TraceMethodExit("Success", nameof(Control_InventoryTab), nameof(Control_InventoryTab_OnStartup_LoadDataComboBoxesAsync));
             }
             catch (Exception ex)
             {
                 LoggingUtility.LogApplicationError(ex);
-                await Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex,
-                    "MainForm_LoadInventoryTabComboBoxesAsync");
+                Service_DebugTracer.TraceMethodExit(new { Exception = ex.Message }, nameof(Control_InventoryTab), nameof(Control_InventoryTab_OnStartup_LoadDataComboBoxesAsync));
+                
+                Service_ErrorHandler.HandleException(
+                    ex,
+                    ErrorSeverity.High,
+                    retryAction: () => { _ = Control_InventoryTab_OnStartup_LoadDataComboBoxesAsync(); return true; },
+                    contextData: new Dictionary<string, object>
+                    {
+                        ["MethodName"] = nameof(Control_InventoryTab_OnStartup_LoadDataComboBoxesAsync),
+                        ["ControlType"] = nameof(Control_InventoryTab)
+                    },
+                    controlName: nameof(Control_InventoryTab));
+            }
+            finally
+            {
+                _progressHelper?.HideProgress();
             }
         }
 
@@ -226,6 +256,12 @@ namespace MTM_Inventory_Application.Controls.MainForm
 
         protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
         {
+            Service_DebugTracer.TraceMethodEntry(new Dictionary<string, object>
+            {
+                ["KeyData"] = keyData.ToString(),
+                ["Visible"] = Visible
+            }, nameof(Control_InventoryTab), nameof(ProcessCmdKey));
+
             try
             {
                 if (Visible)
@@ -235,6 +271,7 @@ namespace MTM_Inventory_Application.Controls.MainForm
                         if (Control_InventoryTab_Button_Save.Visible && Control_InventoryTab_Button_Save.Enabled)
                         {
                             Control_InventoryTab_Button_Save.PerformClick();
+                            Service_DebugTracer.TraceMethodExit(new { KeyHandled = true, Action = "Save" }, nameof(Control_InventoryTab), nameof(ProcessCmdKey));
                             return true;
                         }
                     }
@@ -245,6 +282,7 @@ namespace MTM_Inventory_Application.Controls.MainForm
                             Control_InventoryTab_Button_AdvancedEntry.Enabled)
                         {
                             Control_InventoryTab_Button_AdvancedEntry.PerformClick();
+                            Service_DebugTracer.TraceMethodExit(new { KeyHandled = true, Action = "Advanced" }, nameof(Control_InventoryTab), nameof(ProcessCmdKey));
                             return true;
                         }
                     }
@@ -254,6 +292,7 @@ namespace MTM_Inventory_Application.Controls.MainForm
                         if (Control_InventoryTab_Button_Reset.Visible && Control_InventoryTab_Button_Reset.Enabled)
                         {
                             Control_InventoryTab_Button_Reset.PerformClick();
+                            Service_DebugTracer.TraceMethodExit(new { KeyHandled = true, Action = "Reset" }, nameof(Control_InventoryTab), nameof(ProcessCmdKey));
                             return true;
                         }
                     }
@@ -268,6 +307,7 @@ namespace MTM_Inventory_Application.Controls.MainForm
                         true,
                         true
                     );
+                    Service_DebugTracer.TraceMethodExit(new { KeyHandled = true, Action = "NextControl" }, nameof(Control_InventoryTab), nameof(ProcessCmdKey));
                     return true;
                 }
 
@@ -275,6 +315,7 @@ namespace MTM_Inventory_Application.Controls.MainForm
                     keyData == Core_WipAppVariables.Shortcut_Inventory_ToggleRightPanel_Right)
                 {
                     Control_InventoryTab_Button_Toggle_RightPanel.PerformClick();
+                    Service_DebugTracer.TraceMethodExit(new { KeyHandled = true, Action = "TogglePanelRight" }, nameof(Control_InventoryTab), nameof(ProcessCmdKey));
                     return true;
                 }
 
@@ -282,15 +323,28 @@ namespace MTM_Inventory_Application.Controls.MainForm
                     keyData == Core_WipAppVariables.Shortcut_Inventory_ToggleRightPanel_Left)
                 {
                     Control_InventoryTab_Button_Toggle_RightPanel.PerformClick();
+                    Service_DebugTracer.TraceMethodExit(new { KeyHandled = true, Action = "TogglePanelLeft" }, nameof(Control_InventoryTab), nameof(ProcessCmdKey));
                     return true;
                 }
 
+                Service_DebugTracer.TraceMethodExit(new { KeyHandled = false, PassedToBase = true }, nameof(Control_InventoryTab), nameof(ProcessCmdKey));
                 return base.ProcessCmdKey(ref msg, keyData);
             }
             catch (Exception ex)
             {
                 LoggingUtility.LogApplicationError(ex);
-                _ = Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex, callerName: "MainForm_ProcessCmdKey");
+                Service_DebugTracer.TraceMethodExit(new { Exception = ex.Message }, nameof(Control_InventoryTab), nameof(ProcessCmdKey));
+                
+                Service_ErrorHandler.HandleException(
+                    ex,
+                    ErrorSeverity.Medium,
+                    contextData: new Dictionary<string, object>
+                    {
+                        ["MethodName"] = nameof(ProcessCmdKey),
+                        ["KeyData"] = keyData.ToString()
+                    },
+                    controlName: nameof(Control_InventoryTab));
+                
                 return false;
             }
         }
@@ -301,11 +355,17 @@ namespace MTM_Inventory_Application.Controls.MainForm
 
         private static void Control_InventoryTab_Button_AdvancedEntry_Click()
         {
+            Service_DebugTracer.TraceMethodEntry(new Dictionary<string, object>
+            {
+                ["MainFormInstance"] = Service_Timer_VersionChecker.MainFormInstance != null
+            }, nameof(Control_InventoryTab), nameof(Control_InventoryTab_Button_AdvancedEntry_Click));
+
             try
             {
                 if (Service_Timer_VersionChecker.MainFormInstance is null)
                 {
                     LoggingUtility.Log("MainForm instance is null, cannot open Advanced Inventory Removal.");
+                    Service_DebugTracer.TraceMethodExit("MainForm instance null", nameof(Control_InventoryTab), nameof(Control_InventoryTab_Button_AdvancedEntry_Click));
                     return;
                 }
 
@@ -321,6 +381,7 @@ namespace MTM_Inventory_Application.Controls.MainForm
 
                 if (MainFormInstance?.MainForm_UserControl_AdvancedInventory is null)
                 {
+                    Service_DebugTracer.TraceMethodExit("AdvancedInventory control null", nameof(Control_InventoryTab), nameof(Control_InventoryTab_Button_AdvancedEntry_Click));
                     return;
                 }
 
@@ -382,17 +443,33 @@ namespace MTM_Inventory_Application.Controls.MainForm
                 {
                     tab.SelectedIndex = 0;
                 }
+
+                Service_DebugTracer.TraceMethodExit("Success", nameof(Control_InventoryTab), nameof(Control_InventoryTab_Button_AdvancedEntry_Click));
             }
             catch (Exception ex)
             {
                 LoggingUtility.LogApplicationError(ex);
-                _ = Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex,
-                    new StringBuilder().Append("Control_InventoryTab_Button_AdvancedEntry_Click").ToString());
+                Service_DebugTracer.TraceMethodExit(new { Exception = ex.Message }, nameof(Control_InventoryTab), nameof(Control_InventoryTab_Button_AdvancedEntry_Click));
+                
+                Service_ErrorHandler.HandleException(
+                    ex,
+                    ErrorSeverity.Medium,
+                    contextData: new Dictionary<string, object>
+                    {
+                        ["MethodName"] = nameof(Control_InventoryTab_Button_AdvancedEntry_Click)
+                    },
+                    controlName: nameof(Control_InventoryTab_Button_AdvancedEntry));
             }
         }
 
         private void Control_InventoryTab_Button_Reset_Click()
         {
+            Service_DebugTracer.TraceMethodEntry(new Dictionary<string, object>
+            {
+                ["MethodName"] = nameof(Control_InventoryTab_Button_Reset_Click),
+                ["ShiftKeyPressed"] = (ModifierKeys & Keys.Shift) == Keys.Shift
+            }, nameof(Control_InventoryTab), nameof(Control_InventoryTab_Button_Reset_Click));
+
             try
             {
                 _progressHelper?.ShowProgress();
@@ -400,10 +477,12 @@ namespace MTM_Inventory_Application.Controls.MainForm
                 if ((ModifierKeys & Keys.Shift) == Keys.Shift)
                 {
                     Control_InventoryTab_HardReset();
+                    Service_DebugTracer.TraceMethodExit(new { ResetType = "Hard" }, nameof(Control_InventoryTab), nameof(Control_InventoryTab_Button_Reset_Click));
                 }
                 else
                 {
                     Control_InventoryTab_SoftReset();
+                    Service_DebugTracer.TraceMethodExit(new { ResetType = "Soft" }, nameof(Control_InventoryTab), nameof(Control_InventoryTab_Button_Reset_Click));
                 }
 
                 _progressHelper?.UpdateProgress(100, "Reset complete");
@@ -411,8 +490,18 @@ namespace MTM_Inventory_Application.Controls.MainForm
             catch (Exception ex)
             {
                 LoggingUtility.LogApplicationError(ex);
-                _ = Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex,
-                    "MainForm_Inventory_Button_Reset_Click");
+                Service_DebugTracer.TraceMethodExit(new { Exception = ex.Message }, nameof(Control_InventoryTab), nameof(Control_InventoryTab_Button_Reset_Click));
+                
+                Service_ErrorHandler.HandleException(
+                    ex,
+                    ErrorSeverity.Medium,
+                    retryAction: () => { Control_InventoryTab_Button_Reset_Click(); return true; },
+                    contextData: new Dictionary<string, object>
+                    {
+                        ["MethodName"] = nameof(Control_InventoryTab_Button_Reset_Click),
+                        ["ShiftKeyPressed"] = (ModifierKeys & Keys.Shift) == Keys.Shift
+                    },
+                    controlName: nameof(Control_InventoryTab_Button_Reset));
             }
             finally
             {
@@ -422,6 +511,12 @@ namespace MTM_Inventory_Application.Controls.MainForm
 
         public async void Control_InventoryTab_HardReset()
         {
+            Service_DebugTracer.TraceMethodEntry(new Dictionary<string, object>
+            {
+                ["MethodName"] = nameof(Control_InventoryTab_HardReset),
+                ["ControlType"] = nameof(Control_InventoryTab)
+            }, nameof(Control_InventoryTab), nameof(Control_InventoryTab_HardReset));
+
             Control_InventoryTab_Button_Reset.Enabled = false;
             try
             {
@@ -469,12 +564,24 @@ namespace MTM_Inventory_Application.Controls.MainForm
 
                 Debug.WriteLine("[DEBUG] InventoryTab Reset button clicked - end");
                 _progressHelper?.UpdateProgress(100, "Reset complete");
+                Service_DebugTracer.TraceMethodExit("Success", nameof(Control_InventoryTab), nameof(Control_InventoryTab_HardReset));
             }
             catch (Exception ex)
             {
                 Debug.WriteLine($"[ERROR] Exception in InventoryTab Reset: {ex}");
                 LoggingUtility.LogApplicationError(ex);
-                _ = Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex, callerName: "MainForm_Inventory_Button_Reset");
+                Service_DebugTracer.TraceMethodExit(new { Exception = ex.Message }, nameof(Control_InventoryTab), nameof(Control_InventoryTab_HardReset));
+                
+                Service_ErrorHandler.HandleException(
+                    ex,
+                    ErrorSeverity.High,
+                    retryAction: () => { Control_InventoryTab_HardReset(); return true; },
+                    contextData: new Dictionary<string, object>
+                    {
+                        ["MethodName"] = nameof(Control_InventoryTab_HardReset),
+                        ["ControlType"] = nameof(Control_InventoryTab)
+                    },
+                    controlName: nameof(Control_InventoryTab_Button_Reset));
             }
             finally
             {
@@ -494,6 +601,12 @@ namespace MTM_Inventory_Application.Controls.MainForm
 
         private void Control_InventoryTab_SoftReset()
         {
+            Service_DebugTracer.TraceMethodEntry(new Dictionary<string, object>
+            {
+                ["MethodName"] = nameof(Control_InventoryTab_SoftReset),
+                ["ControlType"] = nameof(Control_InventoryTab)
+            }, nameof(Control_InventoryTab), nameof(Control_InventoryTab_SoftReset));
+
             Control_InventoryTab_Button_Reset.Enabled = false;
             try
             {
@@ -520,12 +633,24 @@ namespace MTM_Inventory_Application.Controls.MainForm
                     Model_AppVariables.UserUiColors.ErrorColor ?? Color.Red, "");
                 Control_InventoryTab_Button_Save.Enabled = false;
                 _progressHelper?.UpdateProgress(100, "Reset complete");
+                Service_DebugTracer.TraceMethodExit("Success", nameof(Control_InventoryTab), nameof(Control_InventoryTab_SoftReset));
             }
             catch (Exception ex)
             {
                 Debug.WriteLine($"[ERROR] Exception in InventoryTab SoftReset: {ex}");
                 LoggingUtility.LogApplicationError(ex);
-                _ = Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex, callerName: "MainForm_Inventory_SoftReset");
+                Service_DebugTracer.TraceMethodExit(new { Exception = ex.Message }, nameof(Control_InventoryTab), nameof(Control_InventoryTab_SoftReset));
+                
+                Service_ErrorHandler.HandleException(
+                    ex,
+                    ErrorSeverity.Medium,
+                    retryAction: () => { Control_InventoryTab_SoftReset(); return true; },
+                    contextData: new Dictionary<string, object>
+                    {
+                        ["MethodName"] = nameof(Control_InventoryTab_SoftReset),
+                        ["ControlType"] = nameof(Control_InventoryTab)
+                    },
+                    controlName: nameof(Control_InventoryTab_Button_Reset));
             }
             finally
             {
@@ -547,6 +672,12 @@ namespace MTM_Inventory_Application.Controls.MainForm
 
         private async Task Control_InventoryTab_Button_Save_Click_Async()
         {
+            Service_DebugTracer.TraceMethodEntry(new Dictionary<string, object>
+            {
+                ["MethodName"] = nameof(Control_InventoryTab_Button_Save_Click_Async),
+                ["ControlType"] = nameof(Control_InventoryTab)
+            }, nameof(Control_InventoryTab), nameof(Control_InventoryTab_Button_Save_Click_Async));
+
             try
             {
                 _progressHelper?.ShowProgress();
@@ -561,33 +692,41 @@ namespace MTM_Inventory_Application.Controls.MainForm
 
                 if (string.IsNullOrWhiteSpace(partId) || Control_InventoryTab_ComboBox_Part.SelectedIndex <= 0)
                 {
-                    MessageBox.Show(@"Please select a valid Part.", @"Validation Error", MessageBoxButtons.OK,
-                        MessageBoxIcon.Warning);
+                    Service_ErrorHandler.HandleValidationError(
+                        "Please select a valid Part.",
+                        nameof(Control_InventoryTab_ComboBox_Part));
                     Control_InventoryTab_ComboBox_Part.Focus();
+                    Service_DebugTracer.TraceMethodExit("Validation failed: Part invalid", nameof(Control_InventoryTab), nameof(Control_InventoryTab_Button_Save_Click_Async));
                     return;
                 }
 
                 if (string.IsNullOrWhiteSpace(op) || Control_InventoryTab_ComboBox_Operation.SelectedIndex <= 0)
                 {
-                    MessageBox.Show(@"Please select a valid Operation.", @"Validation Error", MessageBoxButtons.OK,
-                        MessageBoxIcon.Warning);
+                    Service_ErrorHandler.HandleValidationError(
+                        "Please select a valid Operation.",
+                        nameof(Control_InventoryTab_ComboBox_Operation));
                     Control_InventoryTab_ComboBox_Operation.Focus();
+                    Service_DebugTracer.TraceMethodExit("Validation failed: Operation invalid", nameof(Control_InventoryTab), nameof(Control_InventoryTab_Button_Save_Click_Async));
                     return;
                 }
 
                 if (string.IsNullOrWhiteSpace(loc) || Control_InventoryTab_ComboBox_Location.SelectedIndex <= 0)
                 {
-                    MessageBox.Show(@"Please select a valid Location.", @"Validation Error", MessageBoxButtons.OK,
-                        MessageBoxIcon.Warning);
+                    Service_ErrorHandler.HandleValidationError(
+                        "Please select a valid Location.",
+                        nameof(Control_InventoryTab_ComboBox_Location));
                     Control_InventoryTab_ComboBox_Location.Focus();
+                    Service_DebugTracer.TraceMethodExit("Validation failed: Location invalid", nameof(Control_InventoryTab), nameof(Control_InventoryTab_Button_Save_Click_Async));
                     return;
                 }
 
                 if (!int.TryParse(qtyText, out int qty) || qty <= 0)
                 {
-                    MessageBox.Show(@"Please enter a valid quantity.", @"Validation Error", MessageBoxButtons.OK,
-                        MessageBoxIcon.Warning);
+                    Service_ErrorHandler.HandleValidationError(
+                        "Please enter a valid quantity.",
+                        nameof(Control_InventoryTab_TextBox_Quantity));
                     Control_InventoryTab_TextBox_Quantity.Focus();
+                    Service_DebugTracer.TraceMethodExit("Validation failed: Quantity invalid", nameof(Control_InventoryTab), nameof(Control_InventoryTab_Button_Save_Click_Async));
                     return;
                 }
 
@@ -599,6 +738,15 @@ namespace MTM_Inventory_Application.Controls.MainForm
                 Model_AppVariables.User ??= Environment.UserName;
 
                 _progressHelper?.UpdateProgress(40, "Adding inventory item...");
+                
+                Service_DebugTracer.TraceMethodEntry(new Dictionary<string, object>
+                {
+                    ["PartId"] = partId,
+                    ["Location"] = loc,
+                    ["Operation"] = op,
+                    ["Quantity"] = qty,
+                    ["User"] = Model_AppVariables.User
+                }, nameof(Control_InventoryTab), "AddInventoryItemAsync");
                 
                 // Verify the transaction succeeded before proceeding
                 var inventoryResult = await Dao_Inventory.AddInventoryItemAsync(
@@ -612,12 +760,26 @@ namespace MTM_Inventory_Application.Controls.MainForm
                     notes,
                     true);
 
+                Service_DebugTracer.TraceMethodExit(new { IsSuccess = inventoryResult.IsSuccess, Message = inventoryResult.StatusMessage }, nameof(Control_InventoryTab), "AddInventoryItemAsync");
+
                 // Check if the inventory transaction was successful
                 if (!inventoryResult.IsSuccess)
                 {
                     LoggingUtility.LogApplicationError(new Exception($"Inventory transaction failed: {inventoryResult.ErrorMessage}"));
-                    MessageBox.Show($@"Failed to save inventory item: {inventoryResult.ErrorMessage}", @"Save Error", 
-                        MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    
+                    Service_ErrorHandler.HandleException(
+                        inventoryResult.Exception ?? new Exception(inventoryResult.ErrorMessage),
+                        ErrorSeverity.Medium,
+                        retryAction: () => { Control_InventoryTab_Button_Save.PerformClick(); return true; },
+                        contextData: new Dictionary<string, object>
+                        {
+                            ["PartId"] = partId,
+                            ["Operation"] = op,
+                            ["Location"] = loc,
+                            ["Quantity"] = qty,
+                            ["User"] = Model_AppVariables.User
+                        },
+                        controlName: nameof(Control_InventoryTab_Button_Save));
                     
                     // Update status to show failure
                     if (MainFormInstance != null)
@@ -625,6 +787,8 @@ namespace MTM_Inventory_Application.Controls.MainForm
                         MainFormInstance.MainForm_StatusStrip_SavedStatus.Text = 
                             $@"Failed to save inventory transaction @ {DateTime.Now:hh:mm tt}";
                     }
+                    
+                    Service_DebugTracer.TraceMethodExit("Save failed: DAO returned error", nameof(Control_InventoryTab), nameof(Control_InventoryTab_Button_Save_Click_Async));
                     return;
                 }
 
@@ -649,6 +813,7 @@ namespace MTM_Inventory_Application.Controls.MainForm
 
                 _progressHelper?.UpdateProgress(100, "Save complete");
                 LoggingUtility.Log("Inventory Save operation completed successfully.");
+                Service_DebugTracer.TraceMethodExit("Success", nameof(Control_InventoryTab), nameof(Control_InventoryTab_Button_Save_Click_Async));
             }
             catch (Exception ex)
             {
@@ -661,7 +826,18 @@ namespace MTM_Inventory_Application.Controls.MainForm
                         $@"Error occurred during save operation @ {DateTime.Now:hh:mm tt}";
                 }
                 
-                await Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex, callerName: "MainForm_Inventory_Button_Save");
+                Service_ErrorHandler.HandleException(
+                    ex,
+                    ErrorSeverity.High,
+                    retryAction: () => { Control_InventoryTab_Button_Save.PerformClick(); return true; },
+                    contextData: new Dictionary<string, object>
+                    {
+                        ["MethodName"] = nameof(Control_InventoryTab_Button_Save_Click_Async),
+                        ["ControlType"] = nameof(Control_InventoryTab)
+                    },
+                    controlName: nameof(Control_InventoryTab));
+                
+                Service_DebugTracer.TraceMethodExit(new { Exception = ex.Message }, nameof(Control_InventoryTab), nameof(Control_InventoryTab_Button_Save_Click_Async));
             }
             finally
             {
@@ -672,13 +848,34 @@ namespace MTM_Inventory_Application.Controls.MainForm
         private static async Task AddToLast10TransactionsIfUniqueAsync(string user, string partId, string operation,
             int quantity)
         {
-            // Use the proper Dao_QuickButtons method that handles positions correctly
-            var result = await Dao_QuickButtons.AddOrShiftQuickButtonAsync(user, partId, operation, quantity);
-            if (!result.IsSuccess)
+            Service_DebugTracer.TraceMethodEntry(new Dictionary<string, object>
             {
-                LoggingUtility.LogDatabaseError(
-                    result.Exception ?? new Exception(result.ErrorMessage),
-                    DatabaseErrorSeverity.Warning); // Non-critical operation, log as warning
+                ["User"] = user,
+                ["PartId"] = partId,
+                ["Operation"] = operation,
+                ["Quantity"] = quantity
+            }, nameof(Control_InventoryTab), nameof(AddToLast10TransactionsIfUniqueAsync));
+
+            try
+            {
+                // Use the proper Dao_QuickButtons method that handles positions correctly
+                var result = await Dao_QuickButtons.AddOrShiftQuickButtonAsync(user, partId, operation, quantity);
+                if (!result.IsSuccess)
+                {
+                    LoggingUtility.LogDatabaseError(
+                        result.Exception ?? new Exception(result.ErrorMessage),
+                        DatabaseErrorSeverity.Warning); // Non-critical operation, log as warning
+                    Service_DebugTracer.TraceMethodExit(new { Success = false, Error = result.ErrorMessage }, nameof(Control_InventoryTab), nameof(AddToLast10TransactionsIfUniqueAsync));
+                }
+                else
+                {
+                    Service_DebugTracer.TraceMethodExit(new { Success = true }, nameof(Control_InventoryTab), nameof(AddToLast10TransactionsIfUniqueAsync));
+                }
+            }
+            catch (Exception ex)
+            {
+                LoggingUtility.LogApplicationError(ex);
+                Service_DebugTracer.TraceMethodExit(new { Exception = ex.Message }, nameof(Control_InventoryTab), nameof(AddToLast10TransactionsIfUniqueAsync));
             }
         }
 
@@ -712,6 +909,12 @@ namespace MTM_Inventory_Application.Controls.MainForm
 
         private void Control_InventoryTab_ComboBox_Location_SelectedIndexChanged()
         {
+            Service_DebugTracer.TraceMethodEntry(new Dictionary<string, object>
+            {
+                ["SelectedIndex"] = Control_InventoryTab_ComboBox_Location.SelectedIndex,
+                ["SelectedText"] = Control_InventoryTab_ComboBox_Location.Text
+            }, nameof(Control_InventoryTab), nameof(Control_InventoryTab_ComboBox_Location_SelectedIndexChanged));
+
             try
             {
                 LoggingUtility.Log("Inventory Location ComboBox selection changed.");
@@ -721,6 +924,7 @@ namespace MTM_Inventory_Application.Controls.MainForm
                     Control_InventoryTab_ComboBox_Location.ForeColor =
                         Model_AppVariables.UserUiColors.ComboBoxForeColor ?? Color.Black;
                     Model_AppVariables.Location = Control_InventoryTab_ComboBox_Location.Text;
+                    Service_DebugTracer.TraceMethodExit(new { Valid = true, Location = Model_AppVariables.Location }, nameof(Control_InventoryTab), nameof(Control_InventoryTab_ComboBox_Location_SelectedIndexChanged));
                 }
                 else
                 {
@@ -733,17 +937,34 @@ namespace MTM_Inventory_Application.Controls.MainForm
                     }
 
                     Model_AppVariables.Location = null;
+                    Service_DebugTracer.TraceMethodExit(new { Valid = false }, nameof(Control_InventoryTab), nameof(Control_InventoryTab_ComboBox_Location_SelectedIndexChanged));
                 }
             }
             catch (Exception ex)
             {
                 LoggingUtility.LogApplicationError(ex);
-                _ = Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex, callerName: "MainForm_Inventory_ComboBox_Loc");
+                Service_DebugTracer.TraceMethodExit(new { Exception = ex.Message }, nameof(Control_InventoryTab), nameof(Control_InventoryTab_ComboBox_Location_SelectedIndexChanged));
+                
+                Service_ErrorHandler.HandleException(
+                    ex,
+                    ErrorSeverity.Low,
+                    contextData: new Dictionary<string, object>
+                    {
+                        ["MethodName"] = nameof(Control_InventoryTab_ComboBox_Location_SelectedIndexChanged),
+                        ["SelectedIndex"] = Control_InventoryTab_ComboBox_Location.SelectedIndex
+                    },
+                    controlName: nameof(Control_InventoryTab_ComboBox_Location));
             }
         }
 
         private void Control_InventoryTab_ComboBox_Operation_SelectedIndexChanged()
         {
+            Service_DebugTracer.TraceMethodEntry(new Dictionary<string, object>
+            {
+                ["SelectedIndex"] = Control_InventoryTab_ComboBox_Operation.SelectedIndex,
+                ["SelectedText"] = Control_InventoryTab_ComboBox_Operation.Text
+            }, nameof(Control_InventoryTab), nameof(Control_InventoryTab_ComboBox_Operation_SelectedIndexChanged));
+
             try
             {
                 LoggingUtility.Log("Inventory Op ComboBox selection changed.");
@@ -753,6 +974,7 @@ namespace MTM_Inventory_Application.Controls.MainForm
                     Control_InventoryTab_ComboBox_Operation.ForeColor =
                         Model_AppVariables.UserUiColors.ComboBoxForeColor ?? Color.Black;
                     Model_AppVariables.Operation = Control_InventoryTab_ComboBox_Operation.Text;
+                    Service_DebugTracer.TraceMethodExit(new { Valid = true, Operation = Model_AppVariables.Operation }, nameof(Control_InventoryTab), nameof(Control_InventoryTab_ComboBox_Operation_SelectedIndexChanged));
                 }
                 else
                 {
@@ -765,17 +987,34 @@ namespace MTM_Inventory_Application.Controls.MainForm
                     }
 
                     Model_AppVariables.Operation = null;
+                    Service_DebugTracer.TraceMethodExit(new { Valid = false }, nameof(Control_InventoryTab), nameof(Control_InventoryTab_ComboBox_Operation_SelectedIndexChanged));
                 }
             }
             catch (Exception ex)
             {
                 LoggingUtility.LogApplicationError(ex);
-                _ = Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex, callerName: "MainForm_Inventory_ComboBox_Op");
+                Service_DebugTracer.TraceMethodExit(new { Exception = ex.Message }, nameof(Control_InventoryTab), nameof(Control_InventoryTab_ComboBox_Operation_SelectedIndexChanged));
+                
+                Service_ErrorHandler.HandleException(
+                    ex,
+                    ErrorSeverity.Low,
+                    contextData: new Dictionary<string, object>
+                    {
+                        ["MethodName"] = nameof(Control_InventoryTab_ComboBox_Operation_SelectedIndexChanged),
+                        ["SelectedIndex"] = Control_InventoryTab_ComboBox_Operation.SelectedIndex
+                    },
+                    controlName: nameof(Control_InventoryTab_ComboBox_Operation));
             }
         }
 
         private void Control_InventoryTab_ComboBox_Part_SelectedIndexChanged()
         {
+            Service_DebugTracer.TraceMethodEntry(new Dictionary<string, object>
+            {
+                ["SelectedIndex"] = Control_InventoryTab_ComboBox_Part.SelectedIndex,
+                ["SelectedText"] = Control_InventoryTab_ComboBox_Part.Text
+            }, nameof(Control_InventoryTab), nameof(Control_InventoryTab_ComboBox_Part_SelectedIndexChanged));
+
             try
             {
                 LoggingUtility.Log("Inventory Part ComboBox selection changed.");
@@ -785,6 +1024,7 @@ namespace MTM_Inventory_Application.Controls.MainForm
                     Control_InventoryTab_ComboBox_Part.ForeColor =
                         Model_AppVariables.UserUiColors.ComboBoxForeColor ?? Color.Black;
                     Model_AppVariables.PartId = Control_InventoryTab_ComboBox_Part.Text;
+                    Service_DebugTracer.TraceMethodExit(new { Valid = true, PartId = Model_AppVariables.PartId }, nameof(Control_InventoryTab), nameof(Control_InventoryTab_ComboBox_Part_SelectedIndexChanged));
                 }
                 else
                 {
@@ -797,12 +1037,23 @@ namespace MTM_Inventory_Application.Controls.MainForm
                     }
 
                     Model_AppVariables.PartId = null;
+                    Service_DebugTracer.TraceMethodExit(new { Valid = false }, nameof(Control_InventoryTab), nameof(Control_InventoryTab_ComboBox_Part_SelectedIndexChanged));
                 }
             }
             catch (Exception ex)
             {
                 LoggingUtility.LogApplicationError(ex);
-                _ = Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex, callerName: "MainForm_Inventory_ComboBox_Part");
+                Service_DebugTracer.TraceMethodExit(new { Exception = ex.Message }, nameof(Control_InventoryTab), nameof(Control_InventoryTab_ComboBox_Part_SelectedIndexChanged));
+                
+                Service_ErrorHandler.HandleException(
+                    ex,
+                    ErrorSeverity.Low,
+                    contextData: new Dictionary<string, object>
+                    {
+                        ["MethodName"] = nameof(Control_InventoryTab_ComboBox_Part_SelectedIndexChanged),
+                        ["SelectedIndex"] = Control_InventoryTab_ComboBox_Part.SelectedIndex
+                    },
+                    controlName: nameof(Control_InventoryTab_ComboBox_Part));
             }
         }
 
@@ -836,7 +1087,15 @@ namespace MTM_Inventory_Application.Controls.MainForm
             catch (Exception ex)
             {
                 LoggingUtility.LogApplicationError(ex);
-                _ = Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex, callerName: "MainForm_Inventory_TextBox_Qty");
+                Service_ErrorHandler.HandleException(
+                    ex,
+                    ErrorSeverity.Low,
+                    contextData: new Dictionary<string, object>
+                    {
+                        ["MethodName"] = nameof(Control_InventoryTab_TextBox_Quantity_TextChanged),
+                        ["ControlName"] = nameof(Control_InventoryTab_TextBox_Quantity)
+                    },
+                    controlName: nameof(Control_InventoryTab_TextBox_Quantity));
             }
         }
 
@@ -856,8 +1115,14 @@ namespace MTM_Inventory_Application.Controls.MainForm
             catch (Exception ex)
             {
                 LoggingUtility.LogApplicationError(ex);
-                _ = Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex,
-                    "Control_InventoryTab_Update_SaveButtonState");
+                Service_ErrorHandler.HandleException(
+                    ex,
+                    ErrorSeverity.Low,
+                    contextData: new Dictionary<string, object>
+                    {
+                        ["MethodName"] = nameof(Control_InventoryTab_Update_SaveButtonState)
+                    },
+                    controlName: nameof(Control_InventoryTab));
             }
         }
 
@@ -934,7 +1199,14 @@ namespace MTM_Inventory_Application.Controls.MainForm
             catch (Exception ex)
             {
                 LoggingUtility.LogApplicationError(ex);
-                _ = Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex, callerName: "MainForm_WireUpInventoryTabEvents");
+                Service_ErrorHandler.HandleException(
+                    ex,
+                    ErrorSeverity.High,
+                    contextData: new Dictionary<string, object>
+                    {
+                        ["MethodName"] = nameof(Control_InventoryTab_OnStartup_WireUpEvents)
+                    },
+                    controlName: nameof(Control_InventoryTab));
             }
         }
 

@@ -665,11 +665,11 @@ namespace MTM_Inventory_Application.Controls.MainForm
             }
 
             string batchNumber = drv["BatchNumber"]?.ToString() ?? "";
-            string partId = drv["p_PartID"]?.ToString() ?? "";
+            string partId = drv["PartID"]?.ToString() ?? "";
             string fromLocation = drv["Location"]?.ToString() ?? "";
             string itemType = drv.Row.Table.Columns.Contains("ItemType") ? drv["ItemType"]?.ToString() ?? "" : "";
             string notes = drv["Notes"]?.ToString() ?? "";
-            string operation = drv["p_Operation"]?.ToString() ?? "";
+            string operation = drv["Operation"]?.ToString() ?? "";
             string quantityStr = drv["Quantity"]?.ToString() ?? "";
             if (!int.TryParse(quantityStr, out int originalQuantity))
             {
@@ -737,10 +737,10 @@ namespace MTM_Inventory_Application.Controls.MainForm
                 }
 
                 string batchNumber = drv["BatchNumber"]?.ToString() ?? "";
-                string partId = drv["p_PartID"]?.ToString() ?? "";
+                string partId = drv["PartID"]?.ToString() ?? "";
                 string fromLocation = drv["Location"]?.ToString() ?? "";
                 string itemType = drv.Row.Table.Columns.Contains("ItemType") ? drv["ItemType"]?.ToString() ?? "" : "";
-                string operation = drv["p_Operation"]?.ToString() ?? "";
+                string operation = drv["Operation"]?.ToString() ?? "";
                 string quantityStr = drv["Quantity"]?.ToString() ?? "";
                 string notes = drv["Notes"]?.ToString() ?? "";
                 if (!int.TryParse(quantityStr, out int originalQuantity))

@@ -344,7 +344,8 @@ internal static class Service_DebugTracer
             logData["ErrorMessage"] = errorMessage;
         }
 
-        var statusIcon = status == 0 ? "✅" : "❌";
+        // Status codes: 1=success with data, 0=success without data, negative=error
+        var statusIcon = status >= 0 ? "✅" : "❌";
         var performance = elapsedMs > 0 ? $" ({elapsedMs}ms)" : "";
         LogTrace($"{statusIcon} PROCEDURE {procedureName}{performance} - Status: {status}", DebugLevel.High, logData);
     }

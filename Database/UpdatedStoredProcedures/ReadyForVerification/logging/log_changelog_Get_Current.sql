@@ -9,10 +9,10 @@ BEGIN
     BEGIN
         SET p_Status = -1;
         SET p_ErrorMsg = 'Database error occurred while retrieving current changelog';
-        ROLLBACK;
     END;
+    
     IF (SELECT COUNT(*) FROM log_changelog) = 0 THEN
-        SET p_Status = 1;
+        SET p_Status = 0;
         SET p_ErrorMsg = 'No changelog entries found';
         SELECT
             '0.0.0.0' AS Version,
@@ -27,10 +27,9 @@ BEGIN
         FROM log_changelog
         ORDER BY Date DESC
         LIMIT 1;
-        SET p_Status = 0;
-        SET p_ErrorMsg = NULL;
+        SET p_Status = 1;
+        SET p_ErrorMsg = 'Retrieved current changelog version';
     END IF;
-    COMMIT;
 END
 //
 DELIMITER ;

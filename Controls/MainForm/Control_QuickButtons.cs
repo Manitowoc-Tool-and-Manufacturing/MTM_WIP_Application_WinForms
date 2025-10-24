@@ -220,8 +220,8 @@ namespace MTM_Inventory_Application.Controls.MainForm
                 {
                     if (i >= quickButtons?.Count) break;
                     
-                    string? partId = row["p_PartID"] == DBNull.Value ? null : row["p_PartID"].ToString();
-                    string? operation = row["p_Operation"] == DBNull.Value ? null : row["p_Operation"].ToString();
+                    string? partId = row["PartID"] == DBNull.Value ? null : row["PartID"].ToString();
+                    string? operation = row["Operation"] == DBNull.Value ? null : row["Operation"].ToString();
                     int? quantity = row["Quantity"] == DBNull.Value ? null :
                         row["Quantity"] is int q ? q : Convert.ToInt32(row["Quantity"]);
                     
