@@ -33,6 +33,8 @@ This release focuses on **database layer standardization and error handling mode
   - Expandable technical details for troubleshooting
   - Copy-to-clipboard functionality for error reporting
   - Contextual help links
+  - **Fixed sizing on high-DPI displays** - dialogs now appear at proper 560x400 size instead of fullscreen
+  - **Compact button layout** - reduced button panel height for cleaner appearance
 
 - **Improved Error Logging**: Error logs now reliably capture diagnostic information even during application shutdown or critical failures
 
@@ -64,6 +66,8 @@ This release focuses on **database layer standardization and error handling mode
 - ✅ `Controls/MainForm/Control_RemoveTab.cs` - 2 error handling improvements
 - ✅ `Program.cs` - 6 boot errors modernized
 - ✅ `Services/Service_OnStartup_StartupSplashApplicationContext.cs` - 6 violations fixed
+- ✅ `Forms/ErrorDialog/EnhancedErrorDialog.cs` - Layout and DPI scaling fixes
+- ✅ `Forms/ErrorDialog/EnhancedErrorDialog.Designer.cs` - Fixed fullscreen issue on high-DPI displays
 
 **Compliance Metrics**:
 - Boot files: 13% → 100% compliant (+87%)
@@ -99,6 +103,16 @@ This release focuses on **database layer standardization and error handling mode
 **🟡 Version Number Inconsistency**
 - **Issue**: Client showed 1.0.0.0, server showed 4.5.0.1 instead of 5.2.0.0
 - **Impact**: Confusion during support calls, version tracking issues
+
+**🟡 Error Dialog Display Issues** (EnhancedErrorDialog.cs, EnhancedErrorDialog.Designer.cs)
+- **Issue**: Error dialog appeared fullscreen on high-DPI displays and had oversized button panel
+- **Impact**: Error dialogs were difficult to read and unprofessional-looking, especially on 4K monitors or laptops with display scaling
+- **Fix**: 
+  - Changed AutoScaleMode from DPI to Font to prevent unintended scaling
+  - Disabled Core_Themes DPI scaling calls that conflicted with fixed dialog sizing
+  - Reduced button panel height from 48px to 40px for more compact layout
+  - Fixed tab control sizing to properly display error content
+- **Risk**: None - purely cosmetic improvements to existing error dialog
 - **Fix**: Created Properties/AssemblyInfo.cs and cleaned up database changelog table
 - **Risk**: None - cosmetic fix only
 

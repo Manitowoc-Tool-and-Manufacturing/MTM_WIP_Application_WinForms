@@ -84,6 +84,7 @@ namespace MTM_Inventory_Application.Forms.ErrorDialog
                 {
                     ["Components"] = new[] { "InitializeErrorDialog", "WireUpEvents", "ApplyTheme" }
                 });
+            // SetDialogSize(); // DISABLED: Causes layout issues - Designer size is used for all severities
             InitializeErrorDialog();
             WireUpEvents();
             ApplyTheme();
@@ -101,6 +102,22 @@ namespace MTM_Inventory_Application.Forms.ErrorDialog
         #endregion
 
         #region Initialization
+
+        private void SetDialogSize()
+        {
+            // Dynamic sizing based on error severity - smaller for less severe errors
+            this.ClientSize = _severity switch
+            {
+                ErrorSeverity.Low => new Size(480, 300),      // Compact for warnings
+                ErrorSeverity.Medium => new Size(560, 400),   // Standard size
+                ErrorSeverity.High => new Size(620, 450),     // Larger for critical
+                ErrorSeverity.Fatal => new Size(680, 500),    // Maximum for fatal
+                _ => new Size(560, 400)
+            };
+            
+            // Ensure minimum size is respected
+            this.MinimumSize = this.ClientSize;
+        }
 
         private void InitializeErrorDialog()
         {
@@ -125,42 +142,57 @@ namespace MTM_Inventory_Application.Forms.ErrorDialog
         {
             string severityText = _severity switch
             {
-                ErrorSeverity.Low => "⚠️ Application Warning",
-                ErrorSeverity.Medium => "🚨 Application Error", 
-                ErrorSeverity.High => "🚨 Critical Database Issue",
-                ErrorSeverity.Fatal => "💀 Fatal Application Error",
-                _ => "🚨 Application Error"
+                ErrorSeverity.Low => "Warning",
+                ErrorSeverity.Medium => "Error", 
+                ErrorSeverity.High => "Critical Database Issue",
+                ErrorSeverity.Fatal => "Fatal Application Error",
+                _ => "Error"
             };
 
             this.Text = $"MTM Inventory Application - {severityText}";
             
-            // Set the icon based on severity
-            var iconText = _severity switch
-            {
-                ErrorSeverity.Low => "⚠️",
-                ErrorSeverity.Medium => "❌",
-                ErrorSeverity.High => "🚨", 
-                ErrorSeverity.Fatal => "💀",
-                _ => "❌"
-            };
-
-            // Create a simple text-based icon (in a real implementation, you'd use proper icons)
+            // Use a simple, professional icon based on severity
             var bitmap = new Bitmap(48, 48);
             using (var g = Graphics.FromImage(bitmap))
             {
+                // Softer, more professional colors
                 var severityColor = _severity switch
                 {
-                    ErrorSeverity.Low => Color.Orange,
-                    ErrorSeverity.Medium => Color.Red,
-                    ErrorSeverity.High => Color.DarkRed,
-                    ErrorSeverity.Fatal => Color.Black,
-                    _ => Color.Red
+                    ErrorSeverity.Low => Color.FromArgb(255, 193, 7),      // Amber
+                    ErrorSeverity.Medium => Color.FromArgb(244, 67, 54),   // Red
+                    ErrorSeverity.High => Color.FromArgb(183, 28, 28),     // Dark Red
+                    ErrorSeverity.Fatal => Color.FromArgb(33, 33, 33),     // Near Black
+                    _ => Color.FromArgb(244, 67, 54)
                 };
-                g.Clear(severityColor);
-                using (var brush = new SolidBrush(Color.White))
-                using (var font = new Font("Segoe UI", 20, FontStyle.Bold))
+                
+                // Draw a clean circle with severity color
+                g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
+                using (var brush = new SolidBrush(severityColor))
                 {
-                    g.DrawString(iconText, font, brush, new PointF(4, 4));
+                    g.FillEllipse(brush, 4, 4, 40, 40);
+                }
+                
+                // Draw a simple icon/symbol in white
+                using (var pen = new Pen(Color.White, 3))
+                using (var font = new Font("Segoe UI", 18, FontStyle.Bold))
+                using (var textBrush = new SolidBrush(Color.White))
+                {
+                    // Draw appropriate symbol
+                    string symbol = _severity switch
+                    {
+                        ErrorSeverity.Low => "!",
+                        ErrorSeverity.Medium => "X",
+                        ErrorSeverity.High => "X",
+                        ErrorSeverity.Fatal => "X",
+                        _ => "!"
+                    };
+                    
+                    var format = new StringFormat
+                    {
+                        Alignment = StringAlignment.Center,
+                        LineAlignment = StringAlignment.Center
+                    };
+                    g.DrawString(symbol, font, textBrush, new RectangleF(0, 0, 48, 48), format);
                 }
             }
             pictureBoxIcon.Image = bitmap;
@@ -379,14 +411,24 @@ namespace MTM_Inventory_Application.Forms.ErrorDialog
         {
             string statusIcon = _severity switch
             {
-                ErrorSeverity.Low => "🟡",
-                ErrorSeverity.Medium => "🔴",
-                ErrorSeverity.High => "🔴",
-                ErrorSeverity.Fatal => "⚫",
-                _ => "🔴"
+                ErrorSeverity.Low => "●",      // Simple dot
+                ErrorSeverity.Medium => "●",
+                ErrorSeverity.High => "●",
+                ErrorSeverity.Fatal => "●",
+                _ => "●"
             };
             
-            toolStripStatusLabel.Text = $"{statusIcon} {GetSeverityDisplay(_severity)} | 🕐 {DateTime.Now:HH:mm:ss}";
+            var statusColor = _severity switch
+            {
+                ErrorSeverity.Low => Color.FromArgb(255, 193, 7),      // Amber
+                ErrorSeverity.Medium => Color.FromArgb(244, 67, 54),   // Red
+                ErrorSeverity.High => Color.FromArgb(183, 28, 28),     // Dark Red
+                ErrorSeverity.Fatal => Color.FromArgb(33, 33, 33),     // Near Black
+                _ => Color.FromArgb(244, 67, 54)
+            };
+            
+            toolStripStatusLabel.ForeColor = statusColor;
+            toolStripStatusLabel.Text = $"{statusIcon} {GetSeverityDisplay(_severity)} | {DateTime.Now:HH:mm:ss}";
         }
 
         private string GetSeverityDisplay(ErrorSeverity severity)
@@ -414,7 +456,7 @@ namespace MTM_Inventory_Application.Forms.ErrorDialog
             buttonClose.Click += ButtonClose_Click;
         }
 
-        private void ButtonRetry_Click(object sender, EventArgs e)
+        private void ButtonRetry_Click(object? sender, EventArgs e)
         {
             if (_retryAction != null)
             {
@@ -442,7 +484,7 @@ namespace MTM_Inventory_Application.Forms.ErrorDialog
             }
         }
 
-        private void ButtonCopyDetails_Click(object sender, EventArgs e)
+        private void ButtonCopyDetails_Click(object? sender, EventArgs e)
         {
             try
             {
@@ -465,7 +507,7 @@ namespace MTM_Inventory_Application.Forms.ErrorDialog
             }
         }
 
-        private void ButtonReportIssue_Click(object sender, EventArgs e)
+        private void ButtonReportIssue_Click(object? sender, EventArgs e)
         {
             try
             {
@@ -480,7 +522,7 @@ namespace MTM_Inventory_Application.Forms.ErrorDialog
             }
         }
 
-        private void ButtonViewLogs_Click(object sender, EventArgs e)
+        private void ButtonViewLogs_Click(object? sender, EventArgs e)
         {
             try
             {
@@ -495,7 +537,7 @@ namespace MTM_Inventory_Application.Forms.ErrorDialog
             }
         }
 
-        private void ButtonClose_Click(object sender, EventArgs e)
+        private void ButtonClose_Click(object? sender, EventArgs e)
         {
             ErrorDialogResult = DialogResult.Cancel;
             this.Close();
@@ -509,9 +551,12 @@ namespace MTM_Inventory_Application.Forms.ErrorDialog
         {
             try
             {
+                // DISABLED: DPI scaling causes fullscreen issues in error dialog
                 // Apply theme using the existing Core_Themes system
-                Core_Themes.ApplyDpiScaling(this);
-                Core_Themes.ApplyRuntimeLayoutAdjustments(this);
+                // Core_Themes.ApplyDpiScaling(this);
+                // Core_Themes.ApplyRuntimeLayoutAdjustments(this);
+                
+                // Error dialog uses fixed size - no theme adjustments needed
             }
             catch (Exception ex)
             {
