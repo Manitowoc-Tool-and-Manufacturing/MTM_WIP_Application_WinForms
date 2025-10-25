@@ -32,10 +32,16 @@ namespace MTM_Inventory_Application.Controls.MainForm
         #region Progress Control Methods
 
         /// <summary>
-        /// Set progress controls for visual feedback during operations
+        /// Sets progress controls for visual feedback during long-running inventory transfer operations.
         /// </summary>
-        /// <param name="progressBar">Progress bar control</param>
-        /// <param name="statusLabel">Status label control</param>
+        /// <param name="progressBar">The progress bar control to display operation progress (0-100%)</param>
+        /// <param name="statusLabel">The status label control to display operation status messages</param>
+        /// <exception cref="InvalidOperationException">Thrown when control is not added to a form</exception>
+        /// <remarks>
+        /// Must be called during initialization before any async operations that require progress feedback.
+        /// Progress helper is used by LoadDataComboBoxesAsync, Search, Transfer, Reset, and Print operations.
+        /// Provides visual feedback for database-intensive operations like inventory transfers and searches.
+        /// </remarks>
         public void SetProgressControls(ToolStripProgressBar progressBar, ToolStripStatusLabel statusLabel)
         {
             _progressHelper = Helper_StoredProcedureProgress.Create(progressBar, statusLabel, 
@@ -179,6 +185,14 @@ namespace MTM_Inventory_Application.Controls.MainForm
 
         #region Methods
 
+        /// <summary>
+        /// Initializes the Transfer tab UI components and applies focus highlighting theme.
+        /// </summary>
+        /// <remarks>
+        /// Called automatically during control construction.
+        /// Sets Reset button TabStop to false to improve tab navigation flow.
+        /// Applies Core_Themes focus highlighting for better keyboard navigation visibility.
+        /// </remarks>
         public void Control_TransferTab_Initialize()
         {
             Control_TransferTab_Button_Reset.TabStop = false;
@@ -275,6 +289,16 @@ namespace MTM_Inventory_Application.Controls.MainForm
 
 
 
+        /// <summary>
+        /// Asynchronously loads combo box data (Parts, Operations, and ToLocation) during Transfer tab initialization.
+        /// </summary>
+        /// <returns>A task that completes when all combo boxes are populated</returns>
+        /// <remarks>
+        /// This method is called automatically during control construction and should not be called directly.
+        /// Uses Helper_UI_ComboBoxes to populate combo boxes from master data tables.
+        /// Loads three combo boxes: Part (source part), Operation (source operation), and ToLocation (destination).
+        /// Handles errors with Dao_ErrorLog.HandleException_GeneralError_CloseApp for critical initialization failures.
+        /// </remarks>
         public async Task Control_TransferTab_OnStartup_LoadDataComboBoxesAsync()
         {
             try
@@ -568,16 +592,19 @@ namespace MTM_Inventory_Application.Controls.MainForm
                 DataGridViewSelectedRowCollection selectedRows = Control_TransferTab_DataGridView_Main.SelectedRows;
                 if (selectedRows.Count == 0)
                 {
-                    MessageBox.Show(@"Please select a row to transfer from.", @"Validation Error", MessageBoxButtons.OK,
-                        MessageBoxIcon.Warning);
+                    Service_ErrorHandler.HandleValidationError(
+                        "Please select a row to transfer from.",
+                        "Row Selection");
                     return;
                 }
 
                 if (Control_TransferTab_ComboBox_ToLocation.SelectedIndex < 0 ||
                     string.IsNullOrWhiteSpace(Control_TransferTab_ComboBox_ToLocation.Text))
                 {
-                    MessageBox.Show(@"Please select a valid destination location.", @"Validation Error",
-                        MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    Service_ErrorHandler.HandleValidationError(
+                        "Please select a valid destination location.",
+                        "Location Selection");
+                    Control_TransferTab_ComboBox_ToLocation?.Focus();
                     return;
                 }
 
@@ -619,7 +646,11 @@ namespace MTM_Inventory_Application.Controls.MainForm
             {
                 if (Control_TransferTab_DataGridView_Main.Rows.Count == 0)
                 {
-                    MessageBox.Show(@"No data to print.", @"Print", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    Service_ErrorHandler.ShowWarning(
+                        "No data to print.",
+                        "Print",
+                        MessageBoxButtons.OK,
+                        MessageBoxIcon.Information);
                     return;
                 }
 
@@ -644,8 +675,10 @@ namespace MTM_Inventory_Application.Controls.MainForm
             catch (Exception ex)
             {
                 LoggingUtility.LogApplicationError(ex);
-                MessageBox.Show($@"Print failed: {ex.Message}", @"Print Error", MessageBoxButtons.OK,
-                    MessageBoxIcon.Error);
+                Service_ErrorHandler.HandleException(
+                    ex,
+                    ErrorSeverity.Medium,
+                    controlName: nameof(Control_TransferTab_Button_Print));
             }
             finally
             {

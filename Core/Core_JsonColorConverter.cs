@@ -19,11 +19,42 @@ public class JsonColorConverter : JsonConverter<Color?>
     /// <returns>Nullable Color value</returns>
     public override Color? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
     {
-        var colorString = reader.GetString();
-        if (string.IsNullOrWhiteSpace(colorString)) return null;
-        if (colorString.Equals("Transparent", StringComparison.OrdinalIgnoreCase))
-            return Color.Transparent;
-        return ColorTranslator.FromHtml(colorString);
+        try
+        {
+            // Handle null token type explicitly
+            if (reader.TokenType == JsonTokenType.Null)
+            {
+                return null;
+            }
+
+            var colorString = reader.GetString();
+            if (string.IsNullOrWhiteSpace(colorString)) return null;
+            
+            if (colorString.Equals("Transparent", StringComparison.OrdinalIgnoreCase))
+                return Color.Transparent;
+            
+            // Validate color string before parsing to prevent MySql.Data NullReferenceException
+            if (!colorString.StartsWith("#") && !colorString.StartsWith("rgb", StringComparison.OrdinalIgnoreCase))
+            {
+                // Try to convert named colors
+                try
+                {
+                    return Color.FromName(colorString);
+                }
+                catch
+                {
+                    return null;
+                }
+            }
+            
+            return ColorTranslator.FromHtml(colorString);
+        }
+        catch (Exception ex)
+        {
+            // Log but don't throw - return null for invalid colors
+            System.Diagnostics.Debug.WriteLine($"[JsonColorConverter] Failed to parse color: {ex.Message}");
+            return null;
+        }
     }
 
     /// <summary>

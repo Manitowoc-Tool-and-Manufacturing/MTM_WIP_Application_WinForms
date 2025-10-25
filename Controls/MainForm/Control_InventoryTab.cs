@@ -28,10 +28,15 @@ namespace MTM_Inventory_Application.Controls.MainForm
         #region Progress Control Methods
 
         /// <summary>
-        /// Set progress controls for visual feedback during operations
+        /// Sets progress controls for visual feedback during long-running database operations.
         /// </summary>
-        /// <param name="progressBar">Progress bar control</param>
-        /// <param name="statusLabel">Status label control</param>
+        /// <param name="progressBar">The progress bar control to display operation progress (0-100%)</param>
+        /// <param name="statusLabel">The status label control to display operation status messages</param>
+        /// <exception cref="InvalidOperationException">Thrown when control is not added to a form</exception>
+        /// <remarks>
+        /// Must be called during initialization before any async operations that require progress feedback.
+        /// Progress helper is used by LoadDataComboBoxesAsync, Save, and Reset operations.
+        /// </remarks>
         public void SetProgressControls(ToolStripProgressBar progressBar, ToolStripStatusLabel statusLabel)
         {
             _progressHelper = Helper_StoredProcedureProgress.Create(progressBar, statusLabel, 
@@ -201,6 +206,15 @@ namespace MTM_Inventory_Application.Controls.MainForm
 
         #region Startup / ComboBox Loading
 
+        /// <summary>
+        /// Asynchronously loads all combo box data (Parts, Operations, Locations) during tab initialization.
+        /// </summary>
+        /// <returns>A task that completes when all combo boxes are populated</returns>
+        /// <remarks>
+        /// This method is called automatically during control construction and should not be called directly.
+        /// Uses Helper_UI_ComboBoxes to populate combo boxes from master data tables.
+        /// Displays progress updates during loading and handles errors with Service_ErrorHandler.
+        /// </remarks>
         public async Task Control_InventoryTab_OnStartup_LoadDataComboBoxesAsync()
         {
             Service_DebugTracer.TraceMethodEntry(new Dictionary<string, object>
@@ -509,6 +523,19 @@ namespace MTM_Inventory_Application.Controls.MainForm
             }
         }
 
+        /// <summary>
+        /// Performs a hard reset of the Inventory tab by refreshing all master data and resetting UI fields.
+        /// </summary>
+        /// <remarks>
+        /// Hard reset (Shift + Reset button):
+        /// - Refreshes all DataTables from the database (Parts, Operations, Locations)
+        /// - Refills all combo boxes with fresh data
+        /// - Resets all input fields to default placeholder values
+        /// - Resets focus to Part combo box
+        /// 
+        /// Use when master data may have changed or combo boxes are out of sync.
+        /// Triggered by: Shift + Click on Reset button or Shift + Keyboard shortcut.
+        /// </remarks>
         public async void Control_InventoryTab_HardReset()
         {
             Service_DebugTracer.TraceMethodEntry(new Dictionary<string, object>
@@ -1210,6 +1237,16 @@ namespace MTM_Inventory_Application.Controls.MainForm
             }
         }
 
+        /// <summary>
+        /// Updates the version label to display client and server version comparison.
+        /// </summary>
+        /// <param name="currentVersion">The current client application version</param>
+        /// <param name="serverVersion">The server database version retrieved from version check</param>
+        /// <remarks>
+        /// Thread-safe method that marshals to UI thread if called from background thread.
+        /// Updates label color to red if versions mismatch (out of date), otherwise uses default label color.
+        /// Called by Service_Timer_VersionChecker after periodic version checks.
+        /// </remarks>
         public void SetVersionLabel(string currentVersion, string serverVersion)
         {
             if (Control_InventoryTab_Label_Version.InvokeRequired)

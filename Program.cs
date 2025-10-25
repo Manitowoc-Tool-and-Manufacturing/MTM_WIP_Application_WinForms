@@ -178,44 +178,23 @@ namespace MTM_Inventory_Application
                                         ? connectivityResult.StatusMessage 
                                         : connectivityResult.ErrorMessage;
 
-                    // FIXED: Use a more specific title based on the error type
-                    string dialogTitle = "Database Connection Failed";
-                    if (errorMessage.Contains("does not exist"))
-                    {
-                        dialogTitle = "Database Does Not Exist";
-                    }
-                    else if (errorMessage.Contains("Cannot connect"))
-                    {
-                        dialogTitle = "Database Server Unavailable";
-                    }
-                    else if (errorMessage.Contains("Access denied"))
-                    {
-                        dialogTitle = "Database Access Denied";
-                    }
-                    else if (errorMessage.Contains("timeout"))
-                    {
-                        dialogTitle = "Database Connection Timeout";
-                    }
-
-                    var dialogResult = MessageBox.Show(
-                        errorMessage + "\n\n" +
-                        "Click 'Retry' to try connecting again, or 'Cancel' to exit the application.",
-                        dialogTitle,
-                        MessageBoxButtons.RetryCancel,
-                        MessageBoxIcon.Error);
-
-                    if (dialogResult == DialogResult.Retry)
-                    {
-                        // Recursive call to try again
-                        Main();
-                        return;
-                    }
-                    else
-                    {
-                        // User chose to exit
-                        LoggingUtility.Log("[Startup] User chose to exit after database connection failure");
-                        return;
-                    }
+                    // Use Service_ErrorHandler for consistent error UX with retry capability
+                    Service_ErrorHandler.HandleException(
+                        connectivityResult.Exception ?? new Exception(errorMessage),
+                        ErrorSeverity.Fatal,
+                        retryAction: () => { Main(); return true; },
+                        contextData: new Dictionary<string, object>
+                        {
+                            ["DatabaseName"] = Model_Users.Database,
+                            ["ServerAddress"] = Model_Users.WipServerAddress,
+                            ["MethodName"] = nameof(Main),
+                            ["ErrorType"] = "DatabaseConnectivityValidation"
+                        },
+                        controlName: "Program_Main_DatabaseConnectivity");
+                    
+                    // User chose to exit after error dialog (Service_ErrorHandler returns when dialog closes)
+                    LoggingUtility.Log("[Startup] Exiting after database connectivity error");
+                    return;
                 }
 
                 LoggingUtility.Log("[Startup] Database connectivity validated successfully");
@@ -270,70 +249,75 @@ namespace MTM_Inventory_Application
                     LoggingUtility.LogDatabaseError(ex);
                     string userMessage = GetDatabaseConnectionErrorMessage(ex);
 
-                    // FIXED: Show error with retry option instead of immediate exit
-                    var dialogResult = MessageBox.Show(
-                        userMessage + "\n\n" +
-                        "Click 'Retry' to try again, or 'Cancel' to exit the application.",
-                        "User Access Loading Failed",
-                        MessageBoxButtons.RetryCancel,
-                        MessageBoxIcon.Error);
-
-                    if (dialogResult == DialogResult.Retry)
-                    {
-                        Main();
-                        return;
-                    }
-                    else
-                    {
-                        LoggingUtility.Log("[Startup] User chose to exit after user access loading failure");
-                        return;
-                    }
+                    // Use Service_ErrorHandler for consistent error UX with retry capability
+                    Service_ErrorHandler.HandleException(
+                        ex,
+                        ErrorSeverity.Fatal,
+                        retryAction: () => { Main(); return true; },
+                        contextData: new Dictionary<string, object>
+                        {
+                            ["User"] = Model_AppVariables.User,
+                            ["DatabaseName"] = Model_Users.Database,
+                            ["ServerAddress"] = Model_Users.WipServerAddress,
+                            ["MethodName"] = "System_UserAccessTypeAsync",
+                            ["ErrorType"] = "UserAccessLoading_MySqlException"
+                        },
+                        controlName: "Program_Main_UserAccessLoading");
+                    
+                    LoggingUtility.Log("[Startup] Exiting after user access loading failure");
+                    return;
                 }
                 catch (TimeoutException ex)
                 {
                     LoggingUtility.LogApplicationError(ex);
-                    var dialogResult = MessageBox.Show(
-                        "The request to load user access permissions timed out.\n\n" +
-                        "This usually means:\n" +
-                        "• The database server is responding slowly\n" +
-                        "• Network connectivity issues\n" +
-                        "• The server is overloaded\n\n" +
-                        "Click 'Retry' to try again, or 'Cancel' to exit the application.",
-                        "User Access Timeout",
-                        MessageBoxButtons.RetryCancel,
-                        MessageBoxIcon.Exclamation);
-
-                    if (dialogResult == DialogResult.Retry)
-                    {
-                        Main();
-                        return;
-                    }
-                    else
-                    {
-                        return;
-                    }
+                    
+                    Service_ErrorHandler.HandleException(
+                        ex,
+                        ErrorSeverity.High,
+                        retryAction: () => { Main(); return true; },
+                        contextData: new Dictionary<string, object>
+                        {
+                            ["User"] = Model_AppVariables.User,
+                            ["MethodName"] = "System_UserAccessTypeAsync",
+                            ["ErrorType"] = "UserAccessLoading_Timeout"
+                        },
+                        controlName: "Program_Main_UserAccessTimeout");
+                    
+                    return;
                 }
                 catch (UnauthorizedAccessException ex)
                 {
                     LoggingUtility.LogApplicationError(ex);
-                    ShowSecurityError("Access Denied",
-                        $"Access denied while loading user permissions:\n\n{ex.Message}\n\n" +
-                        "This usually means:\n" +
-                        "• Your account doesn't have sufficient database permissions\n" +
-                        "• The user account configuration is incorrect\n\n" +
-                        "Please contact your system administrator.\n\n" +
-                        "The application will now exit.");
+                    
+                    Service_ErrorHandler.HandleException(
+                        ex,
+                        ErrorSeverity.Fatal,
+                        contextData: new Dictionary<string, object>
+                        {
+                            ["User"] = Model_AppVariables.User,
+                            ["MethodName"] = "System_UserAccessTypeAsync",
+                            ["ErrorType"] = "UserAccessLoading_UnauthorizedAccess"
+                        },
+                        controlName: "Program_Main_UnauthorizedAccess");
+                    
                     return;
                 }
                 catch (Exception ex)
                 {
                     LoggingUtility.LogApplicationError(ex);
-                    ShowFatalError("User Access Error",
-                        $"Unable to load user access permissions:\n\n{ex.Message}\n\n" +
-                        "Error Type: {ex.GetType().Name}\n\n" +
-                        "This is required for application security and cannot be bypassed.\n" +
-                        "Please contact your system administrator if this problem persists.\n\n" +
-                        "The application will now exit.");
+                    
+                    Service_ErrorHandler.HandleException(
+                        ex,
+                        ErrorSeverity.Fatal,
+                        contextData: new Dictionary<string, object>
+                        {
+                            ["User"] = Model_AppVariables.User,
+                            ["MethodName"] = "System_UserAccessTypeAsync",
+                            ["ErrorType"] = "UserAccessLoading_GeneralException",
+                            ["ExceptionType"] = ex.GetType().Name
+                        },
+                        controlName: "Program_Main_UserAccessError");
+                    
                     return;
                 }
 
@@ -465,17 +449,19 @@ namespace MTM_Inventory_Application
                 {
                     string userMessage = GetDatabaseConnectionErrorMessage(mysqlEx);
 
-                    var dialogResult = MessageBox.Show(
-                        userMessage + "\n\n" +
-                        "Click 'Retry' to try connecting again, or 'OK' to exit the application.",
-                        "Database Error",
-                        MessageBoxButtons.RetryCancel,
-                        MessageBoxIcon.Error);
-
-                    if (dialogResult == DialogResult.Retry)
-                    {
-                        Main();
-                    }
+                    Service_ErrorHandler.HandleException(
+                        mysqlEx,
+                        ErrorSeverity.Fatal,
+                        retryAction: () => { Main(); return true; },
+                        contextData: new Dictionary<string, object>
+                        {
+                            ["User"] = Model_AppVariables.User ?? "Unknown",
+                            ["DatabaseName"] = Model_Users.Database,
+                            ["ServerAddress"] = Model_Users.WipServerAddress,
+                            ["MethodName"] = "HandleGlobalException",
+                            ["ErrorType"] = "GlobalMySqlException"
+                        },
+                        controlName: "Program_GlobalExceptionHandler_MySQL");
                 }
                 else if (ex is InvalidOperationException && ex.Message.Contains("database"))
                 {

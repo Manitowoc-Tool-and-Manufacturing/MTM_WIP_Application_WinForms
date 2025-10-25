@@ -1,6 +1,8 @@
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Diagnostics;
+using System.Security;
 using System.Windows.Forms;
 using ClosedXML.Excel;
 using MTM_Inventory_Application.Core;
@@ -30,21 +32,25 @@ namespace MTM_Inventory_Application.Controls.MainForm
         #region Progress Control Methods
 
         /// <summary>
-        /// Set progress controls for visual feedback during operations
+        /// Sets progress controls for visual feedback during long-running advanced inventory operations.
         /// </summary>
-        /// <param name="progressBar">Progress bar control</param>
-        /// <param name="statusLabel">Status label control</param>
+        /// <param name="progressBar">The progress bar control to display operation progress (0-100%)</param>
+        /// <param name="statusLabel">The status label control to display operation status messages</param>
+        /// <exception cref="InvalidOperationException">Thrown when control is not added to a form</exception>
+        /// <remarks>
+        /// Must be called during initialization before any async operations that require progress feedback.
+        /// Progress helper is used by Excel import/export, multi-location saves, and batch operations.
+        /// Provides visual feedback for database-intensive operations and file I/O.
+        /// </remarks>
         public void SetProgressControls(ToolStripProgressBar progressBar, ToolStripStatusLabel statusLabel)
         {
-            _progressHelper = Helper_StoredProcedureProgress.Create(progressBar, statusLabel, 
+            _progressHelper = Helper_StoredProcedureProgress.Create(progressBar, statusLabel,
                 this.FindForm() ?? throw new InvalidOperationException("Control must be added to a form"));
         }
 
         #endregion
 
         #region Constructors
-
-        #region Constructor and Initialization
 
         public Control_AdvancedInventory()
         {
@@ -470,6 +476,17 @@ namespace MTM_Inventory_Application.Controls.MainForm
                 AdvancedInventory_MultiLoc_ListView_Preview.Items.Count > 0 && partValid && opValid;
         }
 
+        /// <summary>
+        /// Validates quantity input in TextBox and applies appropriate foreground color based on validation result.
+        /// </summary>
+        /// <param name="textBox">The TextBox control containing quantity input to validate</param>
+        /// <param name="placeholder">Placeholder text to display if input is invalid or empty</param>
+        /// <remarks>
+        /// Validation rules: Quantity must be a positive integer (> 0).
+        /// Valid input: Sets foreground to UserUiColors.TextBoxForeColor (black).
+        /// Invalid input: Sets foreground to UserUiColors.TextBoxErrorForeColor (red) and resets to placeholder.
+        /// Used for quantity validation in both single and multi-location inventory entry forms.
+        /// </remarks>
         public static void ValidateQtyTextBox(TextBox textBox, string placeholder)
         {
             string text = textBox.Text.Trim();
@@ -857,29 +874,39 @@ namespace MTM_Inventory_Application.Controls.MainForm
 
                 if (AdvancedInventory_Single_ListView.Items.Count == 0)
                 {
-                    Service_ErrorHandler.ShowWarning(@"No items to inventory. Please add at least one item to the list.", @"No Items");
+                    Service_ErrorHandler.ShowWarning(
+                        "No items to inventory. Please add at least one item to the list.",
+                        "No Items",
+                        MessageBoxButtons.OK,
+                        MessageBoxIcon.Warning);
                     return;
                 }
 
-                HashSet<string> partIds = new();
-                HashSet<string> operations = new();
-                HashSet<string> locations = new();
+                HashSet<string> partIds = new(StringComparer.OrdinalIgnoreCase);
+                HashSet<string> operations = new(StringComparer.OrdinalIgnoreCase);
+                HashSet<string> locations = new(StringComparer.OrdinalIgnoreCase);
+                List<ListViewItem> itemsToRemove = new();
                 int totalQty = 0;
                 int savedCount = 0;
+                bool anyFailure = false;
+
                 foreach (ListViewItem item in AdvancedInventory_Single_ListView.Items)
                 {
-                    // Always pass null/empty for batchNumber to ensure each transaction gets a unique batch number
-                    string partId = item.SubItems.Count > 0 ? item.SubItems[0].Text : "";
-                    string op = item.SubItems.Count > 1 ? item.SubItems[1].Text : "";
-                    string loc = item.SubItems.Count > 2 ? item.SubItems[2].Text : "";
-                    string qtyText = item.SubItems.Count > 3 ? item.SubItems[3].Text : "";
-                    string notes = item.SubItems.Count > 4 ? item.SubItems[4].Text : "";
+                    string partId = item.SubItems.Count > 0 ? item.SubItems[0].Text : string.Empty;
+                    string op = item.SubItems.Count > 1 ? item.SubItems[1].Text : string.Empty;
+                    string loc = item.SubItems.Count > 2 ? item.SubItems[2].Text : string.Empty;
+                    string qtyText = item.SubItems.Count > 3 ? item.SubItems[3].Text : string.Empty;
+                    string notes = item.SubItems.Count > 4 ? item.SubItems[4].Text : string.Empty;
 
                     if (string.IsNullOrWhiteSpace(partId) || string.IsNullOrWhiteSpace(op) ||
                         string.IsNullOrWhiteSpace(loc) || !int.TryParse(qtyText, out int qty) || qty <= 0)
                     {
-                        LoggingUtility.LogApplicationError(new Exception(
-                            $"Invalid data in ListView item: Part={partId}, Op={op}, Loc={loc}, Qty={qtyText}"));
+                        anyFailure = true;
+                        item.ForeColor = Model_AppVariables.UserUiColors.TextBoxErrorForeColor ?? Color.Red;
+                        Service_ErrorHandler.HandleValidationError(
+                            "Inventory list contains invalid data. Please review entries highlighted in red.",
+                            "Inventory List",
+                            controlName: nameof(Control_AdvancedInventory));
                         continue;
                     }
 
@@ -889,58 +916,99 @@ namespace MTM_Inventory_Application.Controls.MainForm
                     Model_AppVariables.Notes = notes;
                     Model_AppVariables.InventoryQuantity = qty;
                     Model_AppVariables.User ??= Environment.UserName;
-                    Model_AppVariables.PartType ??= "";
+                    Model_AppVariables.PartType ??= string.Empty;
 
-                    // Pass null/empty for batchNumber for unique batch per transaction
-                    await Dao_Inventory.AddInventoryItemAsync(
+                    DaoResult<int> addResult = await Dao_Inventory.AddInventoryItemAsync(
                         partId,
                         loc,
                         op,
                         qty,
-                        Model_AppVariables.PartType ?? "",
+                        Model_AppVariables.PartType ?? string.Empty,
                         Model_AppVariables.User,
-                        null, // <-- ensure unique batch number
+                        null,
                         notes,
                         true);
+
+                    if (!addResult.IsSuccess)
+                    {
+                        anyFailure = true;
+                        HandleDaoFailure(
+                            addResult,
+                            $"Failed to save inventory for part {partId} at {loc} ({op}).",
+                            CreateInventoryContext(partId, op, loc, qty, notes),
+                            nameof(AdvancedInventory_Single_Button_Save_Click));
+                        item.ForeColor = Model_AppVariables.UserUiColors.TextBoxErrorForeColor ?? Color.Red;
+                        continue;
+                    }
 
                     partIds.Add(partId);
                     operations.Add(op);
                     locations.Add(loc);
                     totalQty += qty;
                     savedCount++;
+                    itemsToRemove.Add(item);
                 }
 
-                MessageBox.Show(
-                    $@"{savedCount} inventory transaction(s) saved successfully.",
-                    @"Success",
-                    MessageBoxButtons.OK,
-                    MessageBoxIcon.Information);
-
-                LoggingUtility.Log(
-                    $"Saved {savedCount} inventory transaction(s) from ListView.");
-
-                if (MainFormInstance != null && savedCount > 0)
+                foreach (ListViewItem item in itemsToRemove)
                 {
-                    string time = DateTime.Now.ToString("hh:mm tt");
-                    string locDisplay = locations.Count > 1 ? "Multiple Locations" : locations.FirstOrDefault() ?? "";
-                    if (partIds.Count == 1 && operations.Count == 1)
+                    AdvancedInventory_Single_ListView.Items.Remove(item);
+                }
+
+                UpdateSingleSaveButtonState();
+
+                if (savedCount > 0)
+                {
+                    Service_ErrorHandler.ShowInformation(
+                        $"{savedCount} inventory transaction(s) saved successfully.",
+                        "Inventory Saved",
+                        controlName: nameof(Control_AdvancedInventory));
+
+                    LoggingUtility.Log($"Saved {savedCount} inventory transaction(s) from ListView.");
+
+                    if (MainFormInstance != null)
                     {
-                        MainFormInstance.MainForm_StatusStrip_SavedStatus.Text =
-                            $"Last Inventoried: {partIds.First()} (Op: {operations.First()}), Location: {locDisplay}, Quantity: {totalQty} @ {time}";
+                        string time = DateTime.Now.ToString("hh:mm tt");
+                        string locDisplay = locations.Count > 1 ? "Multiple Locations" : locations.FirstOrDefault() ?? string.Empty;
+
+                        if (partIds.Count == 1 && operations.Count == 1)
+                        {
+                            MainFormInstance.MainForm_StatusStrip_SavedStatus.Text =
+                                $"Last Inventoried: {partIds.First()} (Op: {operations.First()}), Location: {locDisplay}, Quantity: {totalQty} @ {time}";
+                        }
+                        else if (partIds.Count == 1 && operations.Count > 1)
+                        {
+                            MainFormInstance.MainForm_StatusStrip_SavedStatus.Text =
+                                $"Last Inventoried: {partIds.First()} (Multiple Ops), Location: {locDisplay}, Quantity: {totalQty} @ {time}";
+                        }
+                        else
+                        {
+                            MainFormInstance.MainForm_StatusStrip_SavedStatus.Text =
+                                $"Last Inventoried: Multiple Part IDs, Location: {locDisplay}, Quantity: Multiple @ {time}";
+                        }
                     }
-                    else if (partIds.Count == 1 && operations.Count > 1)
+
+                    if (AdvancedInventory_Single_ListView.Items.Count == 0)
                     {
-                        MainFormInstance.MainForm_StatusStrip_SavedStatus.Text =
-                            $"Last Inventoried: {partIds.First()} (Multiple Ops), Location: {locDisplay}, Quantity: {totalQty} @ {time}";
-                    }
-                    else
-                    {
-                        MainFormInstance.MainForm_StatusStrip_SavedStatus.Text =
-                            $"Last Inventoried: Multiple Part IDs, Location: {locDisplay}, Quantity: Multiple @ {time}";
+                        AdvancedInventory_Single_SoftReset();
                     }
                 }
 
-                AdvancedInventory_Single_Button_Reset_Click(null, EventArgs.Empty);
+                if (anyFailure && savedCount == 0)
+                {
+                    Service_ErrorHandler.ShowWarning(
+                        "No inventory transactions were saved. Resolve highlighted issues and try again.",
+                        "Inventory Save Failed",
+                        MessageBoxButtons.OK,
+                        MessageBoxIcon.Warning);
+                }
+                else if (anyFailure)
+                {
+                    Service_ErrorHandler.ShowWarning(
+                        "Some inventory transactions could not be saved. Review highlighted entries and logs before retrying.",
+                        "Partial Inventory Save",
+                        MessageBoxButtons.OK,
+                        MessageBoxIcon.Warning);
+                }
             }
             catch (Exception ex)
             {
@@ -996,9 +1064,9 @@ namespace MTM_Inventory_Application.Controls.MainForm
 
                 if (!int.TryParse(countText, out int count) || count <= 0)
                 {
-                    MessageBox.Show(@"Please enter a valid transaction count.", @"Validation Error",
-                        MessageBoxButtons.OK,
-                        MessageBoxIcon.Warning);
+                    Service_ErrorHandler.HandleValidationError(
+                        "Please enter a valid transaction count.",
+                        "Transaction Count");
                     AdvancedInventory_Single_TextBox_Count.Focus();
                     return;
                 }
@@ -1308,32 +1376,28 @@ namespace MTM_Inventory_Application.Controls.MainForm
 
                 if (string.IsNullOrWhiteSpace(partId) || AdvancedInventory_MultiLoc_ComboBox_Part.SelectedIndex <= 0)
                 {
-                    MessageBox.Show(@"Please select a valid Part.", @"Validation Error", MessageBoxButtons.OK,
-                        MessageBoxIcon.Warning);
+                    Service_ErrorHandler.HandleValidationError(@"Please select a valid Part.", nameof(AdvancedInventory_MultiLoc_ComboBox_Part));
                     AdvancedInventory_MultiLoc_ComboBox_Part.Focus();
                     return;
                 }
 
                 if (string.IsNullOrWhiteSpace(op) || AdvancedInventory_MultiLoc_ComboBox_Op.SelectedIndex <= 0)
                 {
-                    MessageBox.Show(@"Please select a valid Operation.", @"Validation Error", MessageBoxButtons.OK,
-                        MessageBoxIcon.Warning);
+                    Service_ErrorHandler.HandleValidationError(@"Please select a valid Operation.", nameof(AdvancedInventory_MultiLoc_ComboBox_Op));
                     AdvancedInventory_MultiLoc_ComboBox_Op.Focus();
                     return;
                 }
 
                 if (string.IsNullOrWhiteSpace(loc) || AdvancedInventory_MultiLoc_ComboBox_Loc.SelectedIndex <= 0)
                 {
-                    MessageBox.Show(@"Please select a valid Location.", @"Validation Error", MessageBoxButtons.OK,
-                        MessageBoxIcon.Warning);
+                    Service_ErrorHandler.HandleValidationError(@"Please select a valid Location.", nameof(AdvancedInventory_MultiLoc_ComboBox_Loc));
                     AdvancedInventory_MultiLoc_ComboBox_Loc.Focus();
                     return;
                 }
 
                 if (!int.TryParse(qtyText, out int qty) || qty <= 0)
                 {
-                    MessageBox.Show(@"Please enter a valid quantity.", @"Validation Error", MessageBoxButtons.OK,
-                        MessageBoxIcon.Warning);
+                    Service_ErrorHandler.HandleValidationError(@"Please enter a valid quantity.", nameof(AdvancedInventory_MultiLoc_TextBox_Qty));
                     AdvancedInventory_MultiLoc_TextBox_Qty.Focus();
                     return;
                 }
@@ -1343,9 +1407,7 @@ namespace MTM_Inventory_Application.Controls.MainForm
                     // Always pass null/empty for batchNumber to ensure each transaction gets a unique batch number
                     if (string.Equals(item.SubItems[0].Text, loc, StringComparison.OrdinalIgnoreCase))
                     {
-                        MessageBox.Show(@"This location has already been added.", @"Duplicate Entry",
-                            MessageBoxButtons.OK,
-                            MessageBoxIcon.Warning);
+                        Service_ErrorHandler.HandleValidationError(@"This location has already been added.", nameof(AdvancedInventory_MultiLoc_ComboBox_Loc));
                         AdvancedInventory_MultiLoc_ComboBox_Loc.Focus();
                         return;
                     }
@@ -1380,6 +1442,11 @@ namespace MTM_Inventory_Application.Controls.MainForm
             }
         }
 
+        private void AdvancedInventory_MultiLoc_Label_Notes_Click(object? sender, EventArgs e)
+        {
+            // Event handler for Notes label click - no action needed
+        }
+
         private async void AdvancedInventory_MultiLoc_Button_SaveAll_Click(object? sender, EventArgs e)
         {
             try
@@ -1388,8 +1455,7 @@ namespace MTM_Inventory_Application.Controls.MainForm
 
                 if (AdvancedInventory_MultiLoc_ListView_Preview.Items.Count == 0)
                 {
-                    MessageBox.Show(@"Please add at least one location entry before saving.", @"No Entries",
-                        MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    Service_ErrorHandler.HandleValidationError(@"Please add at least one location entry before saving.", nameof(AdvancedInventory_MultiLoc_ListView_Preview));
                     return;
                 }
 
@@ -1398,16 +1464,14 @@ namespace MTM_Inventory_Application.Controls.MainForm
 
                 if (string.IsNullOrWhiteSpace(partId) || AdvancedInventory_MultiLoc_ComboBox_Part.SelectedIndex <= 0)
                 {
-                    MessageBox.Show(@"Please select a valid Part.", @"Validation Error", MessageBoxButtons.OK,
-                        MessageBoxIcon.Warning);
+                    Service_ErrorHandler.HandleValidationError(@"Please select a valid Part.", nameof(AdvancedInventory_MultiLoc_ComboBox_Part));
                     AdvancedInventory_MultiLoc_ComboBox_Part.Focus();
                     return;
                 }
 
                 if (string.IsNullOrWhiteSpace(op) || AdvancedInventory_MultiLoc_ComboBox_Op.SelectedIndex <= 0)
                 {
-                    MessageBox.Show(@"Please select a valid Operation.", @"Validation Error", MessageBoxButtons.OK,
-                        MessageBoxIcon.Warning);
+                    Service_ErrorHandler.HandleValidationError(@"Please select a valid Operation.", nameof(AdvancedInventory_MultiLoc_ComboBox_Op));
                     AdvancedInventory_MultiLoc_ComboBox_Op.Focus();
                     return;
                 }
@@ -1454,11 +1518,9 @@ namespace MTM_Inventory_Application.Controls.MainForm
                     savedCount++;
                 }
 
-                MessageBox.Show(
+                Service_ErrorHandler.ShowInformation(
                     $@"{savedCount} inventory transaction(s) saved successfully.",
-                    @"Success",
-                    MessageBoxButtons.OK,
-                    MessageBoxIcon.Information);
+                    "Multi-Location Save Success");
 
                 LoggingUtility.Log(
                     $"Saved {savedCount} multi-location inventory transaction(s) for Part: {partId}, Op: {op}");
@@ -1489,10 +1551,24 @@ namespace MTM_Inventory_Application.Controls.MainForm
         {
             string? server = new MySqlConnectionStringBuilder(Model_AppVariables.ConnectionString).Server;
             string userName = Model_AppVariables.User ?? Environment.UserName;
+            
+            // Sanitize username to prevent path traversal
+            userName = Path.GetInvalidFileNameChars()
+                .Aggregate(userName, (current, c) => current.Replace(c.ToString(), "_"));
+            
             string logFilePath = await Helper_Database_Variables.GetLogFilePathAsync(server, userName);
             string logDir = Directory.GetParent(logFilePath)?.Parent?.FullName ?? "";
             string excelRoot = Path.Combine(logDir, "WIP App Excel Files");
             string userFolder = Path.Combine(excelRoot, userName);
+            
+            // Validate the path is within the expected directory (prevent directory traversal)
+            string fullExcelRoot = Path.GetFullPath(excelRoot);
+            string fullUserFolder = Path.GetFullPath(userFolder);
+            if (!fullUserFolder.StartsWith(fullExcelRoot, StringComparison.OrdinalIgnoreCase))
+            {
+                throw new SecurityException($"Path traversal detected: {userFolder}");
+            }
+            
             if (!Directory.Exists(userFolder))
             {
                 Directory.CreateDirectory(userFolder);
@@ -1504,8 +1580,24 @@ namespace MTM_Inventory_Application.Controls.MainForm
         private static async Task<string> GetUserExcelFilePathAsync()
         {
             string userFolder = await GetWipAppExcelUserFolderAsync();
-            string fileName = $"{Model_AppVariables.User ?? Environment.UserName}_import.xlsx";
-            return Path.Combine(userFolder, fileName);
+            string userName = Model_AppVariables.User ?? Environment.UserName;
+            
+            // Sanitize username for filename
+            userName = Path.GetInvalidFileNameChars()
+                .Aggregate(userName, (current, c) => current.Replace(c.ToString(), "_"));
+            
+            string fileName = $"{userName}_import.xlsx";
+            string filePath = Path.Combine(userFolder, fileName);
+            
+            // Validate the file path is within the user folder (prevent directory traversal)
+            string fullUserFolder = Path.GetFullPath(userFolder);
+            string fullFilePath = Path.GetFullPath(filePath);
+            if (!fullFilePath.StartsWith(fullUserFolder, StringComparison.OrdinalIgnoreCase))
+            {
+                throw new SecurityException($"Path traversal detected: {filePath}");
+            }
+            
+            return filePath;
         }
 
         // Fix for CS8600: Converting null literal or possible null value to non-nullable type.
@@ -1529,14 +1621,29 @@ namespace MTM_Inventory_Application.Controls.MainForm
 
                     string templatePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Controls",
                         "MainForm", "WIPAppTemplate.xlsx");
+                    
+                    // Validate template path is within application directory (prevent directory traversal)
+                    string fullBaseDir = Path.GetFullPath(AppDomain.CurrentDomain.BaseDirectory);
+                    string fullTemplatePath = Path.GetFullPath(templatePath);
+                    if (!fullTemplatePath.StartsWith(fullBaseDir, StringComparison.OrdinalIgnoreCase))
+                    {
+                        Service_ErrorHandler.HandleException(
+                            new SecurityException($"Template path validation failed: {templatePath}"),
+                            ErrorSeverity.High,
+                            controlName: nameof(AdvancedInventory_Import_Button_OpenExcel));
+                        return;
+                    }
+                    
                     if (File.Exists(templatePath))
                     {
                         File.Copy(templatePath, excelPath, false);
                     }
                     else
                     {
-                        MessageBox.Show($@"Excel template not found: {templatePath}", @"Template Not Found",
-                            MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        Service_ErrorHandler.HandleException(
+                            new FileNotFoundException($"Excel template not found: {templatePath}"),
+                            ErrorSeverity.Medium,
+                            controlName: nameof(AdvancedInventory_Import_Button_OpenExcel));
                         return;
                     }
                 }
@@ -1546,8 +1653,9 @@ namespace MTM_Inventory_Application.Controls.MainForm
             catch (Exception ex)
             {
                 LoggingUtility.LogApplicationError(ex);
-                MessageBox.Show($@"Failed to open Excel file: {ex.Message}", @"Error", MessageBoxButtons.OK,
-                    MessageBoxIcon.Error);
+                Service_ErrorHandler.HandleException(ex, ErrorSeverity.Medium,
+                    contextData: new Dictionary<string, object> { ["ExcelPath"] = await GetUserExcelFilePathAsync() },
+                    controlName: nameof(AdvancedInventory_Import_Button_OpenExcel));
             }
         }
 
@@ -1559,9 +1667,7 @@ namespace MTM_Inventory_Application.Controls.MainForm
                 string excelPath = await GetUserExcelFilePathAsync();
                 if (!File.Exists(excelPath))
                 {
-                    MessageBox.Show(@"Excel file not found. Please create or open the Excel file first.",
-                        @"File Not Found",
-                        MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    Service_ErrorHandler.HandleValidationError(@"Excel file not found. Please create or open the Excel file first.", nameof(AdvancedInventory_Import_Button_ImportExcel));
                     return;
                 }
 
@@ -1571,16 +1677,14 @@ namespace MTM_Inventory_Application.Controls.MainForm
                     IXLWorksheet? worksheet = workbook.Worksheet("Tab 1");
                     if (worksheet == null)
                     {
-                        MessageBox.Show(@"Worksheet 'Tab 1' not found in the Excel file.", @"Worksheet Not Found",
-                            MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        Service_ErrorHandler.HandleValidationError(@"Worksheet 'Tab 1' not found in the Excel file.", nameof(AdvancedInventory_Import_Button_ImportExcel));
                         return;
                     }
 
                     IXLRange? usedRange = worksheet.RangeUsed();
                     if (usedRange == null)
                     {
-                        MessageBox.Show(@"No data found in 'Tab 1'.", @"No Data", MessageBoxButtons.OK,
-                            MessageBoxIcon.Warning);
+                        Service_ErrorHandler.HandleValidationError(@"No data found in 'Tab 1'.", nameof(AdvancedInventory_Import_Button_ImportExcel));
                         return;
                     }
 
@@ -1613,8 +1717,7 @@ namespace MTM_Inventory_Application.Controls.MainForm
 
                 if (dt.Rows.Count == 0)
                 {
-                    MessageBox.Show(@"No data found in the Excel file to import.", @"No Data", MessageBoxButtons.OK,
-                        MessageBoxIcon.Warning);
+                    Service_ErrorHandler.HandleValidationError(@"No data found in the Excel file to import.", nameof(AdvancedInventory_Import_Button_ImportExcel));
                     return;
                 }
 
@@ -1623,8 +1726,9 @@ namespace MTM_Inventory_Application.Controls.MainForm
             catch (Exception ex)
             {
                 LoggingUtility.LogApplicationError(ex);
-                MessageBox.Show($@"Failed to import Excel data: {ex.Message}", @"Import Error", MessageBoxButtons.OK,
-                    MessageBoxIcon.Error);
+                Service_ErrorHandler.HandleException(ex, ErrorSeverity.Medium,
+                    contextData: new Dictionary<string, object> { ["ExcelPath"] = await GetUserExcelFilePathAsync() },
+                    controlName: nameof(AdvancedInventory_Import_Button_ImportExcel));
             }
         }
 
@@ -1773,8 +1877,7 @@ namespace MTM_Inventory_Application.Controls.MainForm
 
             if (!anyError)
             {
-                MessageBox.Show(@"All transactions saved successfully.", @"Success", MessageBoxButtons.OK,
-                    MessageBoxIcon.Information);
+                Service_ErrorHandler.ShowInformation(@"All transactions saved successfully.", "Import Success");
                 if (MainFormInstance != null)
                 {
                     MainFormInstance.MainForm_StatusStrip_SavedStatus.Text =
@@ -1783,9 +1886,7 @@ namespace MTM_Inventory_Application.Controls.MainForm
             }
             else
             {
-                MessageBox.Show(@"Some rows could not be saved. Please correct highlighted errors.",
-                    @"Validation Error",
-                    MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                Service_ErrorHandler.HandleValidationError(@"Some rows could not be saved. Please correct highlighted errors.", nameof(AdvancedInventory_Import_DataGridView));
             }
         }
 
@@ -1903,11 +2004,36 @@ namespace MTM_Inventory_Application.Controls.MainForm
 
         #endregion
 
-        private void AdvancedInventory_MultiLoc_Label_Notes_Click(object sender, EventArgs e)
-        {
+        #region Helpers
 
+        private static void HandleDaoFailure<T>(DaoResult<T> result, string fallbackMessage,
+            Dictionary<string, object> contextData, string callerName)
+        {
+            string message = string.IsNullOrWhiteSpace(result.ErrorMessage)
+                ? fallbackMessage
+                : result.ErrorMessage;
+
+            Service_ErrorHandler.HandleException(
+                new InvalidOperationException(message),
+                ErrorSeverity.Medium,
+                contextData: contextData,
+                callerName: callerName,
+                controlName: nameof(Control_AdvancedInventory));
         }
+
+        private static Dictionary<string, object> CreateInventoryContext(string partId, string operation,
+            string location, int quantity, string notes)
+        {
+            return new Dictionary<string, object>
+            {
+                ["PartID"] = partId,
+                ["Operation"] = operation,
+                ["Location"] = location,
+                ["Quantity"] = quantity,
+                ["Notes"] = notes
+            };
+        }
+
+        #endregion
     }
 }
-
-# endregion

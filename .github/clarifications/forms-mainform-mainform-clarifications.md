@@ -105,7 +105,7 @@ private void MainForm_MenuStrip_Exit_Click(object sender, EventArgs e)
 }
 ```
 
-**Answer**: _______________  
+**Answer**: A (Await all error logging calls)  
 **Resolved**: [x] Yes [ ] No
 
 ---
@@ -114,9 +114,9 @@ private void MainForm_MenuStrip_Exit_Click(object sender, EventArgs e)
 
 **Total Clarifications**: 1  
 **Resolved**: 1  
-**Pending**: 1
+**Pending**: 0
 
-**Ready to Proceed**: [ ] Yes [ ] No
+**Ready to Proceed**: [x] Yes [ ] No
 
 ---
 

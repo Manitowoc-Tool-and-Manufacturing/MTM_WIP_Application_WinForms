@@ -29,10 +29,16 @@ namespace MTM_Inventory_Application.Controls.MainForm
         #region Progress Control Methods
 
         /// <summary>
-        /// Set progress controls for visual feedback during operations
+        /// Sets progress controls for visual feedback during long-running inventory removal operations.
         /// </summary>
-        /// <param name="progressBar">Progress bar control</param>
-        /// <param name="statusLabel">Status label control</param>
+        /// <param name="progressBar">The progress bar control to display operation progress (0-100%)</param>
+        /// <param name="statusLabel">The status label control to display operation status messages</param>
+        /// <exception cref="InvalidOperationException">Thrown when control is not added to a form</exception>
+        /// <remarks>
+        /// Must be called during initialization before any async operations that require progress feedback.
+        /// Progress helper is used by LoadDataComboBoxesAsync, Delete, Search, and LoadInventory operations.
+        /// Provides visual feedback for database-intensive operations like bulk item searches and removals.
+        /// </remarks>
         public void SetProgressControls(ToolStripProgressBar progressBar, ToolStripStatusLabel statusLabel)
         {
             _progressHelper = Helper_StoredProcedureProgress.Create(progressBar, statusLabel, 
@@ -209,6 +215,16 @@ namespace MTM_Inventory_Application.Controls.MainForm
             }
         }
 
+        /// <summary>
+        /// Asynchronously loads combo box data (Parts and Operations) during Remove tab initialization.
+        /// </summary>
+        /// <returns>A task that completes when combo boxes are populated</returns>
+        /// <remarks>
+        /// This method is called automatically during control construction and should not be called directly.
+        /// Uses Helper_UI_ComboBoxes to populate combo boxes from master data tables.
+        /// Note: Location combo box is populated dynamically after Part/Operation selection from inventory search results.
+        /// Handles errors with Dao_ErrorLog.HandleException_GeneralError_CloseApp for critical initialization failures.
+        /// </remarks>
         public async Task Control_RemoveTab_OnStartup_LoadDataComboBoxesAsync()
         {
             try
@@ -703,34 +719,68 @@ namespace MTM_Inventory_Application.Controls.MainForm
                     return;
                 }
 
-                DataTable results;
+                DataTable? results = null;
 
                 if (!string.IsNullOrWhiteSpace(op) && (Control_RemoveTab_ComboBox_Operation?.SelectedIndex ?? -1) > 0)
                 {
                     _progressHelper?.UpdateProgress(40,
                         "Querying by part and operation...");
                     var partOpResult = await Dao_Inventory.GetInventoryByPartIdAndOperationAsync(partId, op, true);
-                    if (partOpResult.IsSuccess)
+                    if (partOpResult.IsSuccess && partOpResult.Data != null)
                     {
                         results = partOpResult.Data;
                     }
                     else
                     {
-                        throw new Exception(partOpResult.ErrorMessage ?? "Failed to retrieve inventory by part and operation");
+                        LoggingUtility.LogDatabaseError(
+                            partOpResult.Exception ?? new Exception(partOpResult.ErrorMessage),
+                            DatabaseErrorSeverity.Error);
+                        
+                        Service_ErrorHandler.HandleException(
+                            partOpResult.Exception ?? new Exception(partOpResult.ErrorMessage ?? "Failed to retrieve inventory by part and operation"),
+                            ErrorSeverity.High,
+                            retryAction: () => { Control_RemoveTab_Button_Search_Click(null, null); return true; },
+                            contextData: new Dictionary<string, object>
+                            {
+                                ["PartId"] = partId,
+                                ["Operation"] = op,
+                                ["MethodName"] = nameof(Control_RemoveTab_Button_Search_Click)
+                            },
+                            controlName: nameof(Control_RemoveTab_Button_Search));
+                        return;
                     }
                 }
                 else
                 {
                     _progressHelper?.UpdateProgress(40, "Querying by part...");
                     var partResult = await Dao_Inventory.GetInventoryByPartIdAsync(partId, true);
-                    if (partResult.IsSuccess)
+                    if (partResult.IsSuccess && partResult.Data != null)
                     {
                         results = partResult.Data;
                     }
                     else
                     {
-                        throw new Exception(partResult.ErrorMessage ?? "Failed to retrieve inventory by part");
+                        LoggingUtility.LogDatabaseError(
+                            partResult.Exception ?? new Exception(partResult.ErrorMessage),
+                            DatabaseErrorSeverity.Error);
+                        
+                        Service_ErrorHandler.HandleException(
+                            partResult.Exception ?? new Exception(partResult.ErrorMessage ?? "Failed to retrieve inventory by part"),
+                            ErrorSeverity.High,
+                            retryAction: () => { Control_RemoveTab_Button_Search_Click(null, null); return true; },
+                            contextData: new Dictionary<string, object>
+                            {
+                                ["PartId"] = partId,
+                                ["MethodName"] = nameof(Control_RemoveTab_Button_Search_Click)
+                            },
+                            controlName: nameof(Control_RemoveTab_Button_Search));
+                        return;
                     }
+                }
+
+                if (results == null)
+                {
+                    throw new Exception("No results returned from inventory query");
                 }
 
                 _progressHelper?.UpdateProgress(70, "Updating results...");

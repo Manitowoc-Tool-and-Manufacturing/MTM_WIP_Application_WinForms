@@ -637,6 +637,7 @@ internal static class Service_DebugTracer
         if (value is System.Data.DataTable dt2) return $"DataTable[{dt2.Rows.Count} rows, {dt2.Columns.Count} columns]";
         if (value is Exception ex) return $"Exception: {ex.Message}";
         if (value is Type type) return $"Type: {type.FullName}";
+        if (value is Color color) return $"Color[A={color.A}, R={color.R}, G={color.G}, B={color.B}]";
         
         // Handle common .NET types that might cause serialization issues
         if (value.GetType().IsValueType || value is string)

@@ -121,6 +121,8 @@ namespace MTM_Inventory_Application.Forms.MainForm
                         ["Exception"] = ex.Message
                     });
                 LoggingUtility.LogApplicationError(ex);
+                // NOTE: Fire-and-forget required here - constructors cannot be async.
+                // Error logging may be incomplete if application terminates immediately.
                 _ = Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex, callerName: nameof(MainForm));
             }
 
@@ -458,7 +460,7 @@ namespace MTM_Inventory_Application.Forms.MainForm
         {
             try
             {
-                MainForm_TabControl.SelectedIndexChanged += (s, e) =>
+                MainForm_TabControl.SelectedIndexChanged += async (s, e) =>
                 {
                     try
                     {
@@ -467,7 +469,7 @@ namespace MTM_Inventory_Application.Forms.MainForm
                     catch (Exception ex)
                     {
                         LoggingUtility.LogApplicationError(ex);
-                        _ = Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex, callerName: "MainForm_TabControl_SelectedIndexChanged_Handler");
+                        await Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex, callerName: "MainForm_TabControl_SelectedIndexChanged_Handler");
                     }
                 };
                 MainForm_TabControl.Selecting += MainForm_TabControl_Selecting;
@@ -559,7 +561,7 @@ namespace MTM_Inventory_Application.Forms.MainForm
             }
         }
 
-        private void MainForm_OnStartup_SetupConnectionStrengthControl()
+        private async void MainForm_OnStartup_SetupConnectionStrengthControl()
         {
             try
             {
@@ -580,7 +582,7 @@ namespace MTM_Inventory_Application.Forms.MainForm
             catch (Exception ex)
             {
                 LoggingUtility.LogApplicationError(ex);
-                _ = Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex,
+                await Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex,
                     nameof(MainForm_OnStartup_SetupConnectionStrengthControl));
             }
         }
@@ -870,7 +872,7 @@ namespace MTM_Inventory_Application.Forms.MainForm
 
         #region Form Closing
 
-        protected override void OnFormClosing(FormClosingEventArgs e)
+        protected override async void OnFormClosing(FormClosingEventArgs e)
         {
             try
             {
@@ -888,7 +890,7 @@ namespace MTM_Inventory_Application.Forms.MainForm
             catch (Exception ex)
             {
                 LoggingUtility.LogApplicationError(ex);
-                _ = Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex, callerName: "MainForm_OnFormClosing");
+                await Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex, callerName: "MainForm_OnFormClosing");
             }
 
             base.OnFormClosing(e);
@@ -898,7 +900,7 @@ namespace MTM_Inventory_Application.Forms.MainForm
 
         #region Menu Event Handlers
 
-        private void MainForm_MenuStrip_File_Settings_Click(object sender, EventArgs e)
+        private async void MainForm_MenuStrip_File_Settings_Click(object sender, EventArgs e)
         {
             Service_DebugTracer.TraceUIAction("SETTINGS_MENU_CLICK", nameof(MainForm),
                 new Dictionary<string, object>
@@ -945,7 +947,7 @@ namespace MTM_Inventory_Application.Forms.MainForm
                 Service_DebugTracer.TraceUIAction("SETTINGS_MENU_ERROR", nameof(MainForm),
                     new Dictionary<string, object> { ["Exception"] = ex.Message });
                 LoggingUtility.LogApplicationError(ex);
-                _ = Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex, callerName: nameof(MainForm_MenuStrip_File_Settings_Click));
+                await Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex, callerName: nameof(MainForm_MenuStrip_File_Settings_Click));
             }
 
             Service_DebugTracer.TraceMethodExit(null, nameof(MainForm_MenuStrip_File_Settings_Click), nameof(MainForm));
@@ -1012,7 +1014,7 @@ namespace MTM_Inventory_Application.Forms.MainForm
             Service_DebugTracer.TraceMethodExit(null, nameof(MainForm_MenuStrip_Exit_Click), nameof(MainForm));
         }
 
-        private void MainForm_MenuStrip_View_PersonalHistory_Click(object sender, EventArgs e)
+        private async void MainForm_MenuStrip_View_PersonalHistory_Click(object sender, EventArgs e)
         {
             try
             {
@@ -1025,13 +1027,13 @@ namespace MTM_Inventory_Application.Forms.MainForm
             catch (Exception ex)
             {
                 LoggingUtility.LogApplicationError(ex);
-                _ = Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex, callerName: nameof(MainForm_MenuStrip_View_PersonalHistory_Click));
+                await Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex, callerName: nameof(MainForm_MenuStrip_View_PersonalHistory_Click));
             }
         }
 
         #endregion
 
-        private void MainForm_MenuStrip_Development_DebugDashboard_Click(object sender, EventArgs e)
+        private async void MainForm_MenuStrip_Development_DebugDashboard_Click(object sender, EventArgs e)
         {
             try
             {
@@ -1041,11 +1043,11 @@ namespace MTM_Inventory_Application.Forms.MainForm
             catch (Exception ex)
             {
                 LoggingUtility.LogApplicationError(ex);
-                _ = Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex, callerName: nameof(MainForm_MenuStrip_Development_DebugDashboard_Click));
+                await Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex, callerName: nameof(MainForm_MenuStrip_Development_DebugDashboard_Click));
             }
         }
 
-        private void MainForm_MenuStrip_Development_Conversion_Click(object sender, EventArgs e)
+        private async void MainForm_MenuStrip_Development_Conversion_Click(object sender, EventArgs e)
         {
             try
             {
@@ -1055,7 +1057,7 @@ namespace MTM_Inventory_Application.Forms.MainForm
             catch (Exception ex)
             {
                 LoggingUtility.LogApplicationError(ex);
-                _ = Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex, callerName: nameof(MainForm_MenuStrip_Development_Conversion_Click));
+                await Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex, callerName: nameof(MainForm_MenuStrip_Development_Conversion_Click));
             }
         }
 
@@ -1168,7 +1170,7 @@ namespace MTM_Inventory_Application.Forms.MainForm
 
         #endregion
 
-        private void viewerToolStripMenuItem_Click(object sender, EventArgs e)
+        private async void viewerToolStripMenuItem_Click(object sender, EventArgs e)
         {
             try
             {
@@ -1178,7 +1180,7 @@ namespace MTM_Inventory_Application.Forms.MainForm
             catch (Exception ex)
             {
                 LoggingUtility.LogApplicationError(ex);
-                _ = Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex, callerName: nameof(viewerToolStripMenuItem_Click));
+                await Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex, callerName: nameof(viewerToolStripMenuItem_Click));
             }
         }
     }

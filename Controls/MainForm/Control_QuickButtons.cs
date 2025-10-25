@@ -506,11 +506,18 @@ namespace MTM_Inventory_Application.Controls.MainForm
                             dlg.Quantity);
                         if (!result.IsSuccess)
                         {
-                            LoggingUtility.LogDatabaseError(
+                            Service_ErrorHandler.HandleDatabaseError(
                                 result.Exception ?? new Exception(result.ErrorMessage),
-                                DatabaseErrorSeverity.Error);
-                            MessageBox.Show($@"Failed to update quick button: {result.ErrorMessage}",
-                                @"Update Quick Button", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                                contextData: new Dictionary<string, object>
+                                {
+                                    ["User"] = user,
+                                    ["ButtonIndex"] = idx,
+                                    ["PartId"] = dlg.PartId,
+                                    ["Operation"] = dlg.Operation,
+                                    ["Quantity"] = dlg.Quantity
+                                },
+                                methodName: nameof(MenuItemEdit_Click),
+                                dbSeverity: DatabaseErrorSeverity.Error);
                             return;
                         }
                     }
@@ -538,11 +545,15 @@ namespace MTM_Inventory_Application.Controls.MainForm
                         var result = await Dao_QuickButtons.RemoveQuickButtonAndShiftAsync(user, idx);
                         if (!result.IsSuccess)
                         {
-                            LoggingUtility.LogDatabaseError(
+                            Service_ErrorHandler.HandleDatabaseError(
                                 result.Exception ?? new Exception(result.ErrorMessage),
-                                DatabaseErrorSeverity.Error);
-                            MessageBox.Show($@"Failed to remove quick button: {result.ErrorMessage}",
-                                @"Remove Quick Button", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                                contextData: new Dictionary<string, object>
+                                {
+                                    ["User"] = user,
+                                    ["ButtonIndex"] = idx
+                                },
+                                methodName: nameof(MenuItemRemove_Click),
+                                dbSeverity: DatabaseErrorSeverity.Error);
                             return;
                         }
                     }
@@ -557,9 +568,9 @@ namespace MTM_Inventory_Application.Controls.MainForm
                     if (newVisibleCount == prevVisibleCount)
                     {
                         LoggingUtility.Log($"QuickButton removal failed or did not update UI for index {idx}.");
-                        MessageBox.Show(
-                            @"Failed to remove the quick button. Please try again or restart the application.",
-                            @"Remove Quick Button", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        Service_ErrorHandler.HandleValidationError(
+                            "Failed to remove the quick button. Please try again or restart the application.",
+                            "QuickButton Removal Verification");
                     }
                 }
                 else
@@ -586,11 +597,15 @@ namespace MTM_Inventory_Application.Controls.MainForm
                 var deleteResult = await Dao_QuickButtons.DeleteAllQuickButtonsForUserAsync(user);
                 if (!deleteResult.IsSuccess)
                 {
-                    LoggingUtility.LogDatabaseError(
+                    Service_ErrorHandler.HandleDatabaseError(
                         deleteResult.Exception ?? new Exception(deleteResult.ErrorMessage),
-                        DatabaseErrorSeverity.Error);
-                    MessageBox.Show($@"Failed to clear quick buttons: {deleteResult.ErrorMessage}",
-                        @"Clear Quick Buttons", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        contextData: new Dictionary<string, object>
+                        {
+                            ["User"] = user,
+                            ["Operation"] = "DeleteAllQuickButtons"
+                        },
+                        methodName: nameof(MenuItemReorder_Click),
+                        dbSeverity: DatabaseErrorSeverity.Error);
                     return;
                 }
                 
@@ -607,11 +622,18 @@ namespace MTM_Inventory_Application.Controls.MainForm
                     var addResult = await Dao_QuickButtons.AddQuickButtonAtPositionAsync(user, partId, operation, quantity, i + 1);
                     if (!addResult.IsSuccess)
                     {
-                        LoggingUtility.LogDatabaseError(
+                        Service_ErrorHandler.HandleDatabaseError(
                             addResult.Exception ?? new Exception(addResult.ErrorMessage),
-                            DatabaseErrorSeverity.Error);
-                        MessageBox.Show($@"Failed to add quick button at position {i + 1}: {addResult.ErrorMessage}",
-                            @"Add Quick Button", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            contextData: new Dictionary<string, object>
+                            {
+                                ["User"] = user,
+                                ["Position"] = i + 1,
+                                ["PartId"] = partId,
+                                ["Operation"] = operation,
+                                ["Quantity"] = quantity
+                            },
+                            methodName: nameof(MenuItemReorder_Click),
+                            dbSeverity: DatabaseErrorSeverity.Error);
                         // Continue with remaining buttons despite error
                     }
                 }

@@ -754,7 +754,6 @@ namespace MTM_Inventory_Application.Controls.MainForm
             AdvancedInventory_MultiLoc_Label_Notes.TabIndex = 6;
             AdvancedInventory_MultiLoc_Label_Notes.Text = "Notes";
             AdvancedInventory_MultiLoc_Label_Notes.TextAlign = ContentAlignment.BottomCenter;
-            AdvancedInventory_MultiLoc_Label_Notes.Click += AdvancedInventory_MultiLoc_Label_Notes_Click;
             // 
             // AdvancedInventory_MultiLoc_TextBox_Qty
             // 

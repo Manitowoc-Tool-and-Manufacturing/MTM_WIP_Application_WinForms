@@ -397,24 +397,24 @@ namespace MTM_Inventory_Application.Services
 
                 string userMessage = GetUserFriendlyConnectionError(ex);
 
-                // CRITICAL FIX: Ensure MessageBox is shown on UI thread and blocks splash screen closure
+                // Use Service_ErrorHandler for consistent error UX with proper UI thread handling
                 try
                 {
-                    if (_splashScreen?.InvokeRequired == true)
-                    {
-                        _splashScreen.Invoke(new Action(() =>
-                            MessageBox.Show(userMessage, "Database Connection Error",
-                                MessageBoxButtons.OK, MessageBoxIcon.Error)));
-                    }
-                    else
-                    {
-                        MessageBox.Show(userMessage, "Database Connection Error",
-                            MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    }
+                    Service_ErrorHandler.HandleException(
+                        ex,
+                        ErrorSeverity.Fatal,
+                        contextData: new Dictionary<string, object>
+                        {
+                            ["DatabaseName"] = Model_Users.Database,
+                            ["ServerAddress"] = Model_Users.WipServerAddress,
+                            ["MethodName"] = "ValidateConnectivityAsync",
+                            ["ErrorType"] = "MySqlException_StartupConnectivity"
+                        },
+                        controlName: "StartupSplash_DatabaseConnectivity");
                 }
                 catch (Exception msgBoxEx)
                 {
-                    // Fallback if MessageBox fails
+                    // Fallback if Service_ErrorHandler fails
                     LoggingUtility.LogApplicationError(msgBoxEx);
                     Console.WriteLine($"[CRITICAL] Failed to show error dialog: {msgBoxEx.Message}");
                     Console.WriteLine($"[CRITICAL] Original database error: {userMessage}");
@@ -431,26 +431,26 @@ namespace MTM_Inventory_Application.Services
                                    "Please check your network connection and database server status.\n" +
                                    "The application cannot start without database access.";
 
-                // CRITICAL FIX: Ensure MessageBox is shown on UI thread
+                // Use Service_ErrorHandler for consistent error UX
                 try
                 {
-                    if (_splashScreen?.InvokeRequired == true)
-                    {
-                        _splashScreen.Invoke(new Action(() =>
-                            MessageBox.Show(userMessage, "Database Connection Error",
-                                MessageBoxButtons.OK, MessageBoxIcon.Error)));
-                    }
-                    else
-                    {
-                        MessageBox.Show(userMessage, "Database Connection Error",
-                            MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    }
+                    Service_ErrorHandler.HandleException(
+                        ex,
+                        ErrorSeverity.Fatal,
+                        contextData: new Dictionary<string, object>
+                        {
+                            ["DatabaseName"] = Model_Users.Database,
+                            ["ServerAddress"] = Model_Users.WipServerAddress,
+                            ["MethodName"] = "ValidateConnectivityAsync",
+                            ["ErrorType"] = "GeneralException_StartupConnectivity"
+                        },
+                        controlName: "StartupSplash_ConnectivityValidation");
                 }
-                catch (Exception msgBoxEx)
+                catch (Exception handlerEx)
                 {
-                    // Fallback if MessageBox fails
-                    LoggingUtility.LogApplicationError(msgBoxEx);
-                    Console.WriteLine($"[CRITICAL] Failed to show error dialog: {msgBoxEx.Message}");
+                    // Fallback if Service_ErrorHandler fails
+                    LoggingUtility.LogApplicationError(handlerEx);
+                    Console.WriteLine($"[CRITICAL] Failed to show error dialog: {handlerEx.Message}");
                     Console.WriteLine($"[CRITICAL] Original error: {userMessage}");
                 }
 
@@ -597,7 +597,7 @@ namespace MTM_Inventory_Application.Services
         }
 
         /// <summary>
-        /// Show error dialog with proper thread handling
+        /// Show error dialog with proper thread handling using Service_ErrorHandler
         /// </summary>
         /// <param name="title">Dialog title</param>
         /// <param name="message">Error message</param>
@@ -605,15 +605,16 @@ namespace MTM_Inventory_Application.Services
         {
             try
             {
-                if (_splashScreen?.InvokeRequired == true)
-                {
-                    _splashScreen.Invoke(new Action(() =>
-                        MessageBox.Show(message, title, MessageBoxButtons.OK, MessageBoxIcon.Error)));
-                }
-                else
-                {
-                    MessageBox.Show(message, title, MessageBoxButtons.OK, MessageBoxIcon.Error);
-                }
+                Service_ErrorHandler.HandleException(
+                    new Exception(message),
+                    ErrorSeverity.High,
+                    contextData: new Dictionary<string, object>
+                    {
+                        ["Title"] = title,
+                        ["MethodName"] = "ShowErrorDialog",
+                        ["ErrorType"] = "StartupError"
+                    },
+                    controlName: "StartupSplash_ErrorDialog");
             }
             catch (Exception ex)
             {
