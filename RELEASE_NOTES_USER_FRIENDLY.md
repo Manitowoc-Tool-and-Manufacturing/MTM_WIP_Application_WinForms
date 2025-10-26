@@ -4,7 +4,45 @@
 
 ---
 
-## Latest Update - October 26, 2025 (Version 5.3.1)
+## Latest Update - October 26, 2025 (Version 5.4.0)
+
+**What Changed**: New error report management system for developers  
+**Do I Need To Do Anything?**: No - this is a developer-only feature
+
+---
+
+### 🎯 What This Means For You
+
+#### For IT Support and Developers: Manage User-Reported Issues
+
+**New "View Error Reports" feature** (accessible from Development menu):
+- **Browse all error reports** submitted by users in one place
+- **Search and filter** by date, user, machine, or error type
+- **View complete details** including what the user was doing, technical information, and error stack traces
+- **Track investigation progress** by marking reports as Reviewed or Resolved
+- **Add developer notes** to document your findings and solutions
+- **Export reports** to CSV or Excel for team analysis or management reporting
+
+**Why this helps**:
+- **Faster problem resolution**: See all error reports in one organized view instead of checking emails or logs
+- **Better prioritization**: Color-coded status (Red=New, Yellow=In Review, Green=Resolved) helps you focus on urgent issues
+- **Team coordination**: Developer notes prevent duplicate investigation efforts
+- **Pattern detection**: Filter and export tools help identify recurring issues
+- **Management reporting**: Export capabilities support monthly error trend reports
+
+**How to access**:
+1. Click **Development** menu in the main application
+2. Select **View Error Reports**
+3. Use filters to find specific reports or browse the full list
+
+**Status workflow**:
+- **New** (Red) → User just submitted, needs investigation
+- **Reviewed** (Yellow) → Developer is investigating or needs more info
+- **Resolved** (Green) → Issue fixed or documented
+
+---
+
+## Previous Update - October 26, 2025 (Version 5.3.1)
 
 **What Changed**: Display scaling improvements  
 **Do I Need To Do Anything?**: No - just click "Restart" when prompted if you move between monitors
@@ -74,6 +112,10 @@
 
 ### ✅ Do I Need To Update?
 
+**Version 5.4.0 (View Error Reports)**:
+- **IT Support & Developers**: Yes - this new feature helps you manage and investigate user-reported issues more efficiently
+- **Shop Floor Users**: No - this doesn't change anything you interact with daily
+
 **Version 5.3.1 (Display Fix)**:
 - **Most users**: No urgent need - update when convenient
 - **If you use multiple monitors or 4K displays**: Yes - this fixes annoying display issues
@@ -113,6 +155,18 @@ A: Yes - Contact John Koll at (ext. 323) or jkoll@mantoolmfg.com / Dan Smith at 
 **Q: What if I submit a report by accident?**  
 A: No problem - Contact John Koll at (ext. 323) or jkoll@mantoolmfg.com / Dan Smith at (ext. 311) or dsmith@mantoolmfg.com / Ka Lee at (ext. ___ ) or klee@mantoolmfg.com
 
+**Q: Who can access the View Error Reports feature?**  
+A: IT support staff and developers with access to the Development menu. This feature is for managing and investigating reported issues.
+
+**Q: How do I export error reports for management?**  
+A: In the View Error Reports window, use the filter panel to select the time period and criteria you want, then click "Export to CSV" or "Export to Excel". You can also select specific reports (Ctrl+Click) and use "Export Selected".
+
+**Q: What does each report status color mean?**  
+A: **Red** = New (just reported, needs attention), **Yellow** = Reviewed (investigation in progress), **Green** = Resolved (issue fixed or documented)
+
+**Q: Can I search for specific error messages?**  
+A: Yes - use the Search box in the filter panel. It searches across error summaries, user notes, and technical details to help you find specific issues.
+
 ---
 
 ### 🎉 Coming Soon
@@ -123,12 +177,10 @@ We're working on even more improvements:
 - **🌟 Improved Transaction Viewer (HIGHLY REQUESTED!)** - Better ways to view and search your inventory transaction history with advanced filtering, sorting, and export options. This has been one of the most requested features from shop floor staff!
 - **View Application Logs** - See what the application is doing behind the scenes (helpful for troubleshooting)
 - **Enhanced Developer Settings Menu** - More tools and options for IT staff and power users
-- View past error reports directly in the application
-- Search and filter error reports
+- Enhanced multi-monitor support and display scaling improvements
 - Better visual feedback during network issues
-- Enhanced multi-monitor support
 
 ---
 
-**Last Updated**: October 26, 2025  
+**Last Updated**: October 26, 2025 - Version 5.4.0  
 **Questions?** Contact John Koll at (ext. 323) or jkoll@mantoolmfg.com / Dan Smith at (ext. 311) or dsmith@mantoolmfg.com / Ka Lee at (ext. ___ ) or klee@mantoolmfg.com

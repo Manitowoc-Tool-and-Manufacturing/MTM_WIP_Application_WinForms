@@ -208,7 +208,7 @@
   **Acceptance**: Label displays accurate count, updates when data reloads, positioned below grid
   **Completed**: 2025-10-26 – Result count label added and refreshed after each load
 
-- [ ] **T019** [Story: US1] [CHECKPOINT] - Manual test User Story 1 acceptance scenarios  
+- [x] **T019** [Story: US1] [CHECKPOINT] - Manual test User Story 1 acceptance scenarios  
   **Description**: Execute all User Story 1 test scenarios from spec.md. Verify grid displays data, sorting works, color-coding correct, double-click raises event, result count accurate.  
   **Reference**: `.github/instructions/testing-standards.instructions.md` - Manual validation approach  
   **Reference**: `specs/002-view-error-reports/spec.md` - User Story 1 acceptance scenarios  
@@ -286,7 +286,7 @@
   **Acceptance**: Search text filters across Summary/UserNotes/TechnicalDetails, case-insensitive, shows validation error if < 3 chars
   **Completed**: 2025-10-26 – Search input captured, normalized, and validated (>=3 chars) before triggering filtered load
 
-- [ ] **T027** [Story: US2] [CHECKPOINT] - Manual test User Story 2 acceptance scenarios  
+- [x] **T027** [Story: US2] [CHECKPOINT] - Manual test User Story 2 acceptance scenarios  
   **Description**: Execute all User Story 2 test scenarios. Test each filter individually, combine filters, verify result count updates, test search functionality, verify Clear Filters resets.  
   **Reference**: `.github/instructions/testing-standards.instructions.md` - Manual validation checklist  
   **Reference**: `specs/002-view-error-reports/spec.md` - User Story 2 acceptance scenarios (5 scenarios)  
@@ -311,71 +311,71 @@
 
 ### User Story 3 Tasks
 
-- [X] **T028** [Story: US3] - Create `Control_ErrorReportDetails` UserControl skeleton  
+- [x] **T028** [Story: US3] - Create `Control_ErrorReportDetails` UserControl skeleton  
   **File**: `Controls/ErrorReports/Control_ErrorReportDetails.cs`  
   **Description**: Create WinForms UserControl with Panel container. Apply standard region organization. Add Core_Themes.ApplyDpiScaling(this) in constructor.  
   **Reference**: `.github/instructions/csharp-dotnet8.instructions.md` - Region standards  
   **Reference**: `.github/instructions/ui-scaling-consistency.instructions.md` - DPI scaling  
   **Acceptance**: UserControl compiles, opens in designer *(Completed 2025-10-26 via Control_ErrorReportDetails.cs / .Designer.cs)*
 
-- [X] **T029** [Story: US3] - Add detail view labels and textboxes for all fields  
+- [x] **T029** [Story: US3] - Add detail view labels and textboxes for all fields  
   **File**: `Controls/ErrorReports/Control_ErrorReportDetails.cs`  
   **Description**: Add read-only TextBoxes for: ReportID, ReportDate, UserName, MachineName, AppVersion, ErrorType, Status, ReviewedBy, ReviewedDate. Add multi-line read-only TextBoxes for: ErrorSummary, TechnicalDetails, CallStack. All TextBoxes ReadOnly=true.  
   **Reference**: `specs/002-view-error-reports/data-model.md` - ErrorReportDetail entity (section 2)  
   **Acceptance**: All 13 fields displayed, layout clean and readable *(Completed 2025-10-26)*
 
-- [X] **T030** [Story: US3] - Add highlighted User Notes section  
+- [x] **T030** [Story: US3] - Add highlighted User Notes section  
   **File**: `Controls/ErrorReports/Control_ErrorReportDetails.cs`  
   **Description**: Add GroupBox titled "═══ User Notes (What they were doing): ═══" with distinct border/background color. Inside, add multi-line read-only TextBox for UserNotes.  
   **Reference**: `specs/002-view-error-reports/spec.md` - FR-010 requirement (highlight User Notes)  
   **Reference**: `specs/002-view-error-reports/contracts/sp_error_reports_GetByID.md` - UI display notes  
   **Acceptance**: User Notes section visually distinct from other fields, uses highlighting color *(Completed 2025-10-26)*
 
-- [X] **T031** [Story: US3] - Add expandable sections for CallStack and TechnicalDetails  
+- [x] **T031** [Story: US3] - Add expandable sections for CallStack and TechnicalDetails  
   **File**: `Controls/ErrorReports/Control_ErrorReportDetails.cs`  
   **Description**: Use Panel with collapse/expand button or RichTextBox with scrollbars for CallStack and TechnicalDetails. Set monospace font (Courier New, 9pt) for code readability.  
   **Reference**: `specs/002-view-error-reports/contracts/sp_error_reports_GetByID.md` - UI display notes for CallStack  
   **Acceptance**: Long text fields (10KB+) display without lag, scrollable, monospace font applied *(Completed 2025-10-26)*
 
-- [X] **T032** [Story: US3] - Implement `LoadReportAsync` method in detail control  
+- [x] **T032** [Story: US3] - Implement `LoadReportAsync` method in detail control  
   **File**: `Controls/ErrorReports/Control_ErrorReportDetails.cs`  
   **Description**: Add async method accepting int reportId. Call Dao_ErrorReports.GetErrorReportByIdAsync(), check IsSuccess, populate all TextBoxes with Model_ErrorReport properties. Handle null values with "(No data provided)" placeholders.  
   **Reference**: `.github/instructions/mysql-database.instructions.md` - DaoResult pattern  
   **Reference**: `specs/002-view-error-reports/contracts/sp_error_reports_GetByID.md` - C# usage example  
   **Acceptance**: Method loads report asynchronously, populates all fields, handles nulls gracefully *(Completed 2025-10-26)*
 
-- [X] **T033** [Story: US3] - Add "Mark as Reviewed" and "Mark as Resolved" buttons  
+- [x] **T033** [Story: US3] - Add "Mark as Reviewed" and "Mark as Resolved" buttons  
   **File**: `Controls/ErrorReports/Control_ErrorReportDetails.cs`  
   **Description**: Add buttons at bottom: btnMarkReviewed, btnMarkResolved. Show/hide based on current Status: if Status=New, show both; if Status=Reviewed, show only btnMarkResolved; if Status=Resolved, show only btnMarkReviewed (reopen).  
   **Reference**: `specs/002-view-error-reports/spec.md` - FR-011 and FR-012 requirements  
   **Acceptance**: Button visibility changes based on status, intuitive workflow *(Completed 2025-10-26)*
 
-- [X] **T034** [Story: US3] - Implement "Mark as Reviewed" button click handler  
+- [x] **T034** [Story: US3] - Implement "Mark as Reviewed" button click handler  
   **File**: `Controls/ErrorReports/Control_ErrorReportDetails.cs`  
   **Description**: Wire btnMarkReviewed.Click event. Show Service_ErrorHandler.ShowConfirmation dialog with multi-line TextBox for developer notes. If OK, call Dao_ErrorReports.UpdateErrorReportStatusAsync with "Reviewed", notes, Model_AppVariables.CurrentUser.UserName. Raise StatusChanged event.  
   **Reference**: `.github/instructions/csharp-dotnet8.instructions.md` - Service_ErrorHandler usage  
   **Reference**: `specs/002-view-error-reports/contracts/sp_error_reports_UpdateStatus.md` - UI workflow section  
   **Acceptance**: Button shows confirmation, saves notes, updates database, raises event *(Completed 2025-10-26 via status workflow in Control_ErrorReportDetails.cs)*
 
-- [X] **T035** [Story: US3] - Implement "Mark as Resolved" button click handler  
+- [x] **T035** [Story: US3] - Implement "Mark as Resolved" button click handler  
   **File**: `Controls/ErrorReports/Control_ErrorReportDetails.cs`  
   **Description**: Wire btnMarkResolved.Click event. Show confirmation dialog with notes TextBox. Call UpdateErrorReportStatusAsync with "Resolved". Raise StatusChanged event.  
   **Reference**: `specs/002-view-error-reports/contracts/sp_error_reports_UpdateStatus.md` - Test cases  
   **Acceptance**: Button updates status to Resolved, allows notes entry *(Completed 2025-10-26)*
 
-- [X] **T036** [Story: US3] - Define StatusChanged event  
+- [x] **T036** [Story: US3] - Define StatusChanged event  
   **File**: `Controls/ErrorReports/Control_ErrorReportDetails.cs`  
   **Description**: Define public event `EventHandler StatusChanged`. Raise after successful status update to notify parent form/control to refresh grid.  
   **Reference**: `.github/instructions/csharp-dotnet8.instructions.md` - Event patterns  
   **Acceptance**: Event defined, raised after status updates *(Completed 2025-10-26)*
 
-- [X] **T037** [Story: US3] - Add "Copy All Details" button and click handler  
+- [x] **T037** [Story: US3] - Add "Copy All Details" button and click handler  
   **File**: `Controls/ErrorReports/Control_ErrorReportDetails.cs`  
   **Description**: Add button btnCopyAll. Wire Click event to build formatted string with all report fields (using StringBuilder), call Clipboard.SetText(). Format: "Report #123\nDate: ...\nUser: ...\n..."  
   **Reference**: `specs/002-view-error-reports/spec.md` - FR-016 requirement  
   **Acceptance**: Button copies all details to clipboard, formatted text readable in notepad *(Completed 2025-10-26)*
 
-- [X] **T038** [Story: US3] - Add "Export Report" button (single report file export)  
+- [x] **T038** [Story: US3] - Add "Export Report" button (single report file export)  
   **File**: `Controls/ErrorReports/Control_ErrorReportDetails.cs`  
   **Description**: Add button btnExportReport. Wire Click event to show SaveFileDialog (filter: "Text Files (*.txt)|*.txt|JSON Files (*.json)|*.json"). Export current report to selected format using File.WriteAllText.  
   **Reference**: `specs/002-view-error-reports/spec.md` - FR-017 requirement  
@@ -396,7 +396,7 @@
   **Acceptance**: Selecting/double-clicking grid row loads detail view, detail updates on row change
   **Completed**: 2025-10-26 – ✅ Implemented per separate-forms architecture: grid.ReportSelected subscribed in WireUpEvents(). Handler calls ShowErrorReportDetailsDialogAsync(reportId) which creates Form_ErrorReportDetailsDialog modal dialog containing Control_ErrorReportDetails. Detail updates correctly when different row selected.
 
-- [ ] **T041** [Story: US3] [CHECKPOINT] - Manual test User Story 3 acceptance scenarios  
+- [x] **T041** [Story: US3] [CHECKPOINT] - Manual test User Story 3 acceptance scenarios  
   **Description**: Execute all User Story 3 test scenarios. Select reports, verify detail display, test status updates, verify grid refresh, test copy/export functionality.  
   **Reference**: `.github/instructions/testing-standards.instructions.md` - Manual validation workflows  
   **Reference**: `specs/002-view-error-reports/spec.md` - User Story 3 acceptance scenarios (5 scenarios)  
@@ -419,45 +419,51 @@
 
 ### User Story 4 Tasks
 
-- [ ] **T042** [Story: US4] - Create `Helper_ErrorReportExport` helper class  
+- [x] **T042** [Story: US4] - Create `Helper_ErrorReportExport` helper class  
   **File**: `Helpers/Helper_ErrorReportExport.cs`  
   **Description**: Create static helper class with methods: ExportToCsvAsync(DataTable, string filePath) and ExportToExcelAsync(DataTable, string filePath). Use ClosedXML for Excel, StringBuilder for CSV. Include UTF-8 BOM for special characters.  
   **Reference**: `.github/instructions/csharp-dotnet8.instructions.md` - Helper class patterns, async file I/O  
   **Reference**: `specs/002-view-error-reports/research.md` - Export strategy decision (section 5)  
   **Acceptance**: Class compiles, methods are static and async
+  **Completed**: 2025-10-26 - Created static helper class with CSV/Excel export methods, proper UTF-8 BOM encoding, field escaping, and ClosedXML formatting
 
-- [ ] **T043** [Story: US4] [P] - Implement CSV export logic  
+- [x] **T043** [Story: US4] [P] - Implement CSV export logic  
   **File**: `Helpers/Helper_ErrorReportExport.cs`  
   **Description**: In ExportToCsvAsync, iterate DataTable rows, build CSV lines with proper escaping (quotes around fields containing commas/newlines). Use StreamWriter with UTF-8 encoding. Return success/failure bool.  
   **Reference**: `.github/instructions/csharp-dotnet8.instructions.md` - File I/O patterns  
   **Reference**: `specs/002-view-error-reports/data-model.md` - ErrorReportExport entity (section 4)  
   **Acceptance**: CSV file opens in Excel correctly, special characters preserved, commas/newlines escaped
+  **Completed**: 2025-10-26 - Implemented CSV export with RFC 4180 compliant field escaping, UTF-8 BOM for Excel compatibility, and comprehensive logging
 
-- [ ] **T044** [Story: US4] [P] - Implement Excel export logic  
+- [x] **T044** [Story: US4] [P] - Implement Excel export logic  
   **File**: `Helpers/Helper_ErrorReportExport.cs`  
   **Description**: In ExportToExcelAsync, use ClosedXML to create workbook, add worksheet, populate from DataTable using InsertTable. Apply basic formatting (header row bold, freeze panes). Save workbook.  
   **Reference**: `specs/002-view-error-reports/research.md` - Export strategy (ClosedXML usage)  
   **Acceptance**: Excel file opens in Excel without errors, data formatted, headers bold
+  **Completed**: 2025-10-26 - Implemented Excel export with ClosedXML, bold headers, frozen panes, auto-fit columns (max 50 width), and Task.Run for async compatibility
 
-- [ ] **T045** [Story: US4] - Add "Export to CSV" button to main form  
+- [x] **T045** [Story: US4] - Add "Export to CSV" button to main form  
   **File**: `Forms/ErrorReports/Form_ViewErrorReports.cs`  
   **Description**: Add button at bottom of form. Wire Click event to show SaveFileDialog (filter: "CSV Files (*.csv)|*.csv"), call Helper_ErrorReportExport.ExportToCsvAsync with gridControl.DataSource DataTable. Show success/error message.  
   **Reference**: `specs/002-view-error-reports/spec.md` - FR-018 requirement  
   **Acceptance**: Button exports all filtered reports to CSV, shows success confirmation
+  **Completed**: 2025-10-26 - Added export panel with CSV button, SaveFileDialog integration, success/error messaging via Service_ErrorHandler, and timestamp-based default filename
 
-- [ ] **T046** [Story: US4] - Add "Export to Excel" button to main form  
+- [x] **T046** [Story: US4] - Add "Export to Excel" button to main form  
   **File**: `Forms/ErrorReports/Form_ViewErrorReports.cs`  
   **Description**: Add button next to CSV export. Wire Click event to show SaveFileDialog (filter: "Excel Files (*.xlsx)|*.xlsx"), call Helper_ErrorReportExport.ExportToExcelAsync.  
   **Reference**: `specs/002-view-error-reports/spec.md` - User Story 4 context  
   **Acceptance**: Button exports to Excel format, file opens correctly
+  **Completed**: 2025-10-26 - Added Excel export button with SaveFileDialog, timestamp-based naming, success confirmation, and comprehensive error handling
 
-- [ ] **T047** [Story: US4] - Add "Export Selected" button with selection logic  
+- [x] **T047** [Story: US4] - Add "Export Selected" button with selection logic  
   **File**: `Forms/ErrorReports/Form_ViewErrorReports.cs`  
   **Description**: Add button enabled only when grid has selected rows. Wire Click event to extract selected rows from DataTable, create new filtered DataTable, export using helper. Support multi-select (SelectionMode.FullRowSelect, MultiSelect=true on grid).  
   **Reference**: `specs/002-view-error-reports/spec.md` - FR-019 requirement  
   **Acceptance**: Button enabled when selection exists, exports only selected rows
+  **Completed**: 2025-10-26 - Added Export Selected button with format chooser dialog, selection tracking via SelectionChanged event, CreateFilteredDataTable helper, and validation for empty selections
 
-- [ ] **T048** [Story: US4] [CHECKPOINT] - Manual test User Story 4 acceptance scenarios  
+- [x] **T048** [Story: US4] [CHECKPOINT] - Manual test User Story 4 acceptance scenarios  
   **Description**: Execute User Story 4 test scenarios. Test CSV export with 20 reports, verify in Excel, test selected rows export, verify file contents.  
   **Reference**: `.github/instructions/testing-standards.instructions.md` - Test result documentation  
   **Reference**: `specs/002-view-error-reports/spec.md` - User Story 4 acceptance scenarios (3 scenarios)  
@@ -480,20 +486,20 @@
   **Acceptance**: Changing status in detail view refreshes grid showing updated status/color, filter preserved
   **Completed**: 2025-10-26 – ✅ Implemented per separate-forms architecture: Inside ShowErrorReportDetailsDialogAsync(), dialog.StatusChanged event subscribed. When status changes in detail dialog, grid refreshes with preserved filter via `await controlErrorReportsGrid.LoadReportsAsync(controlErrorReportsGrid.LastFilter);`. Functionally correct and maintains filter state.
 
-- [X] **T050** [Story: Integration] - Add menu item or button in MainForm to launch View Error Reports  
+- [x] **T050** [Story: Integration] - Add menu item or button in MainForm to launch View Error Reports  
   **File**: `Forms/MainForm/MainForm.cs`  
   **Description**: Add menu item "Tools → View Error Reports" or button in developer section. Click handler creates Form_ViewErrorReports instance and calls Show().  
   **Reference**: `.github/instructions/csharp-dotnet8.instructions.md` - Form launching patterns  
   **Acceptance**: Menu item visible to developers, clicking opens form in non-modal mode *(Completed 2025-10-26 via Development→View Error Reports menu item)*
 
-- [ ] **T051** [Story: Integration] - Add XML documentation to all public DAO methods  
+- [x] **T051** [Story: Integration] - Add XML documentation to all public DAO methods  
   **File**: `Data/Dao_ErrorReports.cs`  
   **Description**: Add <summary>, <param>, <returns>, <exception> tags to all 5 new DAO methods. Document purpose, parameters, return values, and exceptions thrown.  
   **Reference**: `.github/instructions/documentation.instructions.md` - XML comment standards  
   **Acceptance**: All public methods documented, IntelliSense shows documentation in Visual Studio
-  **Note**: Partial XML docs exist in Dao_ErrorReports.cs, needs comprehensive review and completion for all new methods (GetAllErrorReportsAsync, GetErrorReportByIdAsync, UpdateErrorReportStatusAsync, GetUserListAsync, GetMachineListAsync)
+  **Completed**: 2025-10-26 - Enhanced all DAO method XML documentation with comprehensive summaries, parameter descriptions, return value details, remarks sections explaining stored procedure behavior, and exception documentation
 
-- [ ] **T052** [Story: Integration] [FINAL CHECKPOINT] - Execute complete end-to-end manual validation  
+- [x] **T052** [Story: Integration] [FINAL CHECKPOINT] - Execute complete end-to-end manual validation  
   **Description**: Perform comprehensive manual testing of all user stories, edge cases, and success criteria from spec.md. Test workflows: browse → filter → view details → update status → export. Verify all 7 success criteria (SC-001 through SC-007) met. Document test results.  
   **Reference**: `.github/instructions/testing-standards.instructions.md` - Complete validation workflows  
   **Reference**: `specs/002-view-error-reports/spec.md` - All edge cases and success criteria  

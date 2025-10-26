@@ -132,10 +132,18 @@ internal static class Dao_ErrorReports
 
     /// <summary>
     /// Retrieves error reports using the sp_error_reports_GetAll stored procedure with optional filters.
+    /// Supports filtering by date range, user, machine, status, and search text across multiple fields.
     /// </summary>
-    /// <param name="filter">Filter criteria; pass null to retrieve all error reports.</param>
+    /// <param name="filter">Filter criteria; pass null to retrieve all error reports. All filter properties are optional.</param>
     /// <param name="progressHelper">Optional progress helper for long-running operations.</param>
-    /// <returns>A DaoResult containing a DataTable of error reports when successful.</returns>
+    /// <returns>A DaoResult containing a DataTable of error reports when successful. Never null, but may be empty.</returns>
+    /// <remarks>
+    /// The stored procedure sp_error_reports_GetAll performs server-side filtering for optimal performance.
+    /// Search text filters across ErrorSummary, UserNotes, and TechnicalDetails fields using LIKE queries.
+    /// Date filters are inclusive (DateFrom >= ReportDate <= DateTo).
+    /// Results are ordered by ReportDate DESC (newest first).
+    /// </remarks>
+    /// <exception cref="InvalidOperationException">Thrown when filter validation fails (e.g., DateFrom > DateTo).</exception>
     public static async Task<DaoResult<DataTable>> GetAllErrorReportsAsync(
         Model_ErrorReportFilter? filter,
         Helper_StoredProcedureProgress? progressHelper = null)
@@ -192,10 +200,17 @@ internal static class Dao_ErrorReports
 
     /// <summary>
     /// Retrieves a single error report by ReportID using sp_error_reports_GetByID.
+    /// Returns complete report including all TEXT fields (CallStack, TechnicalDetails, UserNotes).
     /// </summary>
-    /// <param name="reportId">The report identifier to retrieve.</param>
+    /// <param name="reportId">The report identifier to retrieve. Must be greater than zero.</param>
     /// <param name="progressHelper">Optional progress helper for UI updates.</param>
-    /// <returns>DaoResult containing the populated Model_ErrorReport on success.</returns>
+    /// <returns>DaoResult containing the populated Model_ErrorReport on success, or error information if not found.</returns>
+    /// <remarks>
+    /// This method retrieves all 14 fields from the error_reports table including large TEXT fields.
+    /// The stored procedure includes validation for ReportID existence and returns appropriate status codes.
+    /// NULL fields are safely converted to empty strings or null as appropriate per the model.
+    /// </remarks>
+    /// <exception cref="InvalidOperationException">Thrown when reportId is less than or equal to zero.</exception>
     public static async Task<DaoResult<Model_ErrorReport>> GetErrorReportByIdAsync(
         int reportId,
         Helper_StoredProcedureProgress? progressHelper = null)
@@ -258,14 +273,26 @@ internal static class Dao_ErrorReports
     }
 
     /// <summary>
-    /// Updates the status of an error report via sp_error_reports_UpdateStatus.
+    /// Updates the status of an error report using sp_error_reports_UpdateStatus.
+    /// Automatically sets ReviewedDate to current timestamp when status changes.
+    /// Supports transitions between New, Reviewed, and Resolved states.
     /// </summary>
     /// <param name="reportId">Report identifier to update.</param>
-    /// <param name="newStatus">New status value (New, Reviewed, Resolved).</param>
-    /// <param name="developerNotes">Optional developer notes to store with the status change.</param>
-    /// <param name="reviewedBy">Username of the developer performing the update.</param>
+    /// <param name="newStatus">New status value (New, Reviewed, Resolved). Must match valid status enum.</param>
+    /// <param name="developerNotes">Optional developer notes to store with the status change. Saved to DeveloperNotes field.</param>
+    /// <param name="reviewedBy">Username of the developer performing the update. Required, cannot be empty.</param>
     /// <param name="progressHelper">Optional progress helper for UI feedback.</param>
     /// <returns>DaoResult indicating success or failure of the update operation.</returns>
+    /// <remarks>
+    /// The stored procedure validates:
+    /// - ReportID exists
+    /// - NewStatus is one of: New, Reviewed, Resolved
+    /// - ReviewedBy is not empty
+    /// 
+    /// Uses transactions to ensure atomicity of the update.
+    /// ReviewedDate is automatically set to NOW() by the stored procedure.
+    /// </remarks>
+    /// <exception cref="InvalidOperationException">Thrown when validation fails for reportId, newStatus, or reviewedBy.</exception>
     public static async Task<DaoResult<bool>> UpdateErrorReportStatusAsync(
         int reportId,
         string newStatus,
@@ -336,9 +363,15 @@ internal static class Dao_ErrorReports
     }
 
     /// <summary>
-    /// Retrieves the distinct list of usernames from error reports.
+    /// Retrieves the distinct list of usernames from error reports using sp_error_reports_GetUserList.
+    /// Returns alphabetically sorted list for populating filter dropdowns.
     /// </summary>
-    /// <returns>DaoResult containing the user list.</returns>
+    /// <returns>DaoResult containing the user list. Empty list if no reports exist.</returns>
+    /// <remarks>
+    /// Uses DISTINCT to eliminate duplicates and ORDER BY UserName for alphabetical sorting.
+    /// This method is typically called once when initializing filter controls.
+    /// The calling code should prepend UI options like "[ All Users ]".
+    /// </remarks>
     public static async Task<DaoResult<List<string>>> GetUserListAsync()
     {
         try
@@ -378,9 +411,16 @@ internal static class Dao_ErrorReports
     }
 
     /// <summary>
-    /// Retrieves the distinct list of machine names from error reports.
+    /// Retrieves the distinct list of machine names from error reports using sp_error_reports_GetMachineList.
+    /// Returns alphabetically sorted list excluding NULL/empty values for populating filter dropdowns.
     /// </summary>
-    /// <returns>DaoResult containing the machine list.</returns>
+    /// <returns>DaoResult containing the machine list. Empty list if no reports exist with machine names.</returns>
+    /// <remarks>
+    /// Uses DISTINCT with WHERE MachineName IS NOT NULL AND MachineName != '' to filter blanks.
+    /// Results are sorted alphabetically by MachineName.
+    /// This method is typically called once when initializing filter controls.
+    /// The calling code should prepend UI options like "[ All Machines ]".
+    /// </remarks>
     public static async Task<DaoResult<List<string>>> GetMachineListAsync()
     {
         try

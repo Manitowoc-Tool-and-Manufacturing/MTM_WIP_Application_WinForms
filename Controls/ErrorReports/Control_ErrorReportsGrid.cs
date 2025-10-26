@@ -226,6 +226,11 @@ namespace MTM_Inventory_Application.Controls.ErrorReports
             }
         }
 
+        private void dgvErrorReports_SelectionChanged(object? sender, EventArgs e)
+        {
+            SelectionChanged?.Invoke(this, EventArgs.Empty);
+        }
+
         #endregion
 
         #region Helpers
@@ -536,5 +541,31 @@ namespace MTM_Inventory_Application.Controls.ErrorReports
         #endregion
 
         public event EventHandler<int>? ReportSelected;
+        public event EventHandler? SelectionChanged;
+
+        /// <summary>
+        /// Gets the currently bound DataTable from the grid.
+        /// </summary>
+        public DataTable? GetCurrentDataTable()
+        {
+            return _bindingSource.DataSource as DataTable;
+        }
+
+        /// <summary>
+        /// Gets the row indices of currently selected rows in the grid.
+        /// </summary>
+        public int[] GetSelectedRowIndices()
+        {
+            return dgvErrorReports.SelectedRows
+                .Cast<DataGridViewRow>()
+                .Where(r => r.Index >= 0)
+                .Select(r => r.Index)
+                .ToArray();
+        }
+
+        /// <summary>
+        /// Gets whether any rows are currently selected.
+        /// </summary>
+        public bool HasSelectedRows => dgvErrorReports.SelectedRows.Count > 0;
     }
 }

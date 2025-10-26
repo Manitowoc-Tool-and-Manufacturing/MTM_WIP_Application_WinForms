@@ -294,6 +294,7 @@ namespace MTM_Inventory_Application.Controls.ErrorReports
             this.dgvErrorReports.TabIndex = 1;
             this.dgvErrorReports.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvErrorReports_CellDoubleClick);
             this.dgvErrorReports.CellFormatting += new System.Windows.Forms.DataGridViewCellFormattingEventHandler(this.dgvErrorReports_CellFormatting);
+            this.dgvErrorReports.SelectionChanged += new System.EventHandler(this.dgvErrorReports_SelectionChanged);
             // 
             // colReportId
             // 
