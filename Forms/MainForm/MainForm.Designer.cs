@@ -78,6 +78,7 @@ namespace MTM_Inventory_Application.Forms.MainForm
             MainForm_MenuStrip_View_PersonalHistory = new ToolStripMenuItem();
             MainForm_MenuStrip_View_Separator2 = new ToolStripSeparator();
             developmentToolStripMenuItem = new ToolStripMenuItem();
+            viewErrorReportsToolStripMenuItem = new ToolStripMenuItem();
             debugDashboardToolStripMenuItem = new ToolStripMenuItem();
             syncPendingReportsToolStripMenuItem = new ToolStripMenuItem();
             dependencyChartsToolStripMenuItem = new ToolStripMenuItem();
@@ -183,10 +184,17 @@ namespace MTM_Inventory_Application.Forms.MainForm
             // 
             // developmentToolStripMenuItem
             // 
-            developmentToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { debugDashboardToolStripMenuItem, syncPendingReportsToolStripMenuItem, dependencyChartsToolStripMenuItem });
+            developmentToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { viewErrorReportsToolStripMenuItem, debugDashboardToolStripMenuItem, syncPendingReportsToolStripMenuItem, dependencyChartsToolStripMenuItem });
             developmentToolStripMenuItem.Name = "developmentToolStripMenuItem";
             developmentToolStripMenuItem.Size = new Size(90, 24);
             developmentToolStripMenuItem.Text = "Development";
+            // 
+            // viewErrorReportsToolStripMenuItem
+            // 
+            viewErrorReportsToolStripMenuItem.Name = "viewErrorReportsToolStripMenuItem";
+            viewErrorReportsToolStripMenuItem.Size = new Size(250, 22);
+            viewErrorReportsToolStripMenuItem.Text = "📋 View Error Reports";
+            viewErrorReportsToolStripMenuItem.Click += MainForm_MenuStrip_Development_ViewErrorReports_Click;
             // 
             // debugDashboardToolStripMenuItem
             // 
@@ -552,8 +560,9 @@ namespace MTM_Inventory_Application.Forms.MainForm
         }
         private TableLayoutPanel tableLayoutPanel1;
         internal ToolTip MainForm_ToolTip;
-        private ToolStripMenuItem developmentToolStripMenuItem;
-        private ToolStripMenuItem debugDashboardToolStripMenuItem;
+    private ToolStripMenuItem developmentToolStripMenuItem;
+    private ToolStripMenuItem viewErrorReportsToolStripMenuItem;
+    private ToolStripMenuItem debugDashboardToolStripMenuItem;
         private ToolStripMenuItem syncPendingReportsToolStripMenuItem;
         private ToolStripMenuItem dependencyChartsToolStripMenuItem;
         private ToolStripMenuItem conversionToolStripMenuItem;

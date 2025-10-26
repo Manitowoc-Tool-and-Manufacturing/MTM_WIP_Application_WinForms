@@ -431,7 +431,7 @@ internal static class Dao_ErrorReports
             ["DateTo"] = filter.DateTo ?? (object)DBNull.Value,
             ["UserName"] = filter.UserName ?? (object)DBNull.Value,
             ["MachineName"] = filter.MachineName ?? (object)DBNull.Value,
-            ["Status"] = filter.Status ?? (object)DBNull.Value,
+            ["StatusFilter"] = filter.Status ?? (object)DBNull.Value,
             ["SearchText"] = filter.HasSearchText ? filter.SearchText! : (object)DBNull.Value
         };
     }

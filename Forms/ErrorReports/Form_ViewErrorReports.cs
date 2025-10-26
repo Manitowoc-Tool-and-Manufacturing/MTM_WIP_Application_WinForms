@@ -1,0 +1,109 @@
+using System;
+using System.Threading.Tasks;
+using System.Windows.Forms;
+using MTM_Inventory_Application.Controls.ErrorReports;
+using MTM_Inventory_Application.Core;
+using MTM_Inventory_Application.Models;
+using MTM_Inventory_Application.Services;
+
+namespace MTM_Inventory_Application.Forms.ErrorReports
+{
+    public partial class Form_ViewErrorReports : Form
+    {
+        #region Fields
+
+        private bool _isInitialized;
+
+        #endregion
+
+        #region Properties
+
+        internal Control_ErrorReportsGrid GridControl => controlErrorReportsGrid;
+
+        #endregion
+
+        #region Progress Control Methods
+
+        // Reserved for future progress integration
+
+        #endregion
+
+        #region Constructors
+
+        public Form_ViewErrorReports()
+        {
+            InitializeComponent();
+            SetStyle(ControlStyles.OptimizedDoubleBuffer, true);
+            Core_Themes.ApplyDpiScaling(this);
+            Core_Themes.ApplyRuntimeLayoutAdjustments(this);
+            WireUpEvents();
+        }
+
+        #endregion
+
+        #region Key Processing
+
+        private void WireUpEvents()
+        {
+            controlErrorReportsGrid.ReportSelected += ControlErrorReportsGrid_ReportSelected;
+            Shown += Form_ViewErrorReports_Shown;
+        }
+
+        #endregion
+
+        #region ComboBox & UI Events
+
+        private void Form_ViewErrorReports_Shown(object? sender, EventArgs e)
+        {
+            if (_isInitialized)
+            {
+                return;
+            }
+
+            _isInitialized = true;
+        }
+
+        private async void ControlErrorReportsGrid_ReportSelected(object? sender, int reportId)
+        {
+            await ShowErrorReportDetailsDialogAsync(reportId);
+        }
+
+        #endregion
+
+        #region Helpers
+
+        private async Task ShowErrorReportDetailsDialogAsync(int reportId)
+        {
+            try
+            {
+                using Form_ErrorReportDetailsDialog dialog = new(reportId);
+                dialog.StatusChanged += async (s, e) =>
+                {
+                    await controlErrorReportsGrid.LoadReportsAsync(controlErrorReportsGrid.LastFilter);
+                    controlErrorReportsGrid.SelectReportById(e.ReportId);
+                };
+
+                dialog.ShowDialog(this);
+            }
+            catch (Exception ex)
+            {
+                Service_ErrorHandler.HandleException(ex, ErrorSeverity.Medium, controlName: Name);
+            }
+        }
+
+        protected override void OnFormClosed(FormClosedEventArgs e)
+        {
+            controlErrorReportsGrid.ReportSelected -= ControlErrorReportsGrid_ReportSelected;
+            Shown -= Form_ViewErrorReports_Shown;
+            base.OnFormClosed(e);
+        }
+
+        #endregion
+
+        #region Cleanup
+
+        // Additional cleanup not required at this time
+
+        #endregion
+    }
+}

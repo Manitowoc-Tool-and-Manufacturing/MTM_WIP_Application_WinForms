@@ -85,11 +85,11 @@
 
 ### 🆘 Need Help?
 
-**Questions about the update**: Contact John Koll at (ext. 323) or jkoll@mantoolmfg.com
+**Questions about the update**: Contact John Koll at (ext. 323) or jkoll@mantoolmfg.com / Dan Smith at (ext. 311) or dsmith@mantoolmfg.com / Ka Lee at (ext. ___ ) or klee@mantoolmfg.com
 
 **Found a problem**: Use the new **"Report Issue"** button in error messages (that's what it's for!)
 
-**Can't login after update**: Contact John Koll at (ext. 323) or jkoll@mantoolmfg.com
+**Can't login after update**: Contact John Koll at (ext. 323) or jkoll@mantoolmfg.com / Dan Smith at (ext. 311) or dsmith@mantoolmfg.com / Ka Lee at (ext. ___ ) or klee@mantoolmfg.com
 
 ---
 
@@ -108,10 +108,10 @@ A: No, it's optional - but it helps us fix problems faster if you do
 A: Your username, what you were doing (if you tell us), the error details, and the date/time. No personal information or production data is sent.
 
 **Q: Can I see my submitted reports?**  
-A: Yes - Contact John Koll at (ext. 323) or jkoll@mantoolmfg.com and provide your Report ID number
+A: Yes - Contact John Koll at (ext. 323) or jkoll@mantoolmfg.com / Dan Smith at (ext. 311) or dsmith@mantoolmfg.com / Ka Lee at (ext. ___ ) or klee@mantoolmfg.com and provide your Report ID number
 
 **Q: What if I submit a report by accident?**  
-A: No problem - Contact John Koll at (ext. 323) or jkoll@mantoolmfg.com with the Report ID and we'll mark it as resolved
+A: No problem - Contact John Koll at (ext. 323) or jkoll@mantoolmfg.com / Dan Smith at (ext. 311) or dsmith@mantoolmfg.com / Ka Lee at (ext. ___ ) or klee@mantoolmfg.com
 
 ---
 
@@ -131,4 +131,4 @@ We're working on even more improvements:
 ---
 
 **Last Updated**: October 26, 2025  
-**Questions?** Contact MTM IT Help Desk - ext. 1234
+**Questions?** Contact John Koll at (ext. 323) or jkoll@mantoolmfg.com / Dan Smith at (ext. 311) or dsmith@mantoolmfg.com / Ka Lee at (ext. ___ ) or klee@mantoolmfg.com

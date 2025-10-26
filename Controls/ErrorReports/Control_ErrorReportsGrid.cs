@@ -462,6 +462,60 @@ namespace MTM_Inventory_Application.Controls.ErrorReports
             };
         }
 
+        /// <summary>
+        /// Programmatically selects and scrolls to the row containing the specified report ID.
+        /// </summary>
+        /// <param name="reportId">The error report ID to select.</param>
+        /// <remarks>
+        /// If the report ID is not found in the current grid data, no selection change occurs.
+        /// The method safely handles grid state and ensures the selected row is visible.
+        /// </remarks>
+        public void SelectReportById(int reportId)
+        {
+            if (dgvErrorReports.Rows.Count == 0)
+            {
+                return;
+            }
+
+            dgvErrorReports.ClearSelection();
+
+            foreach (DataGridViewRow row in dgvErrorReports.Rows)
+            {
+                object? value = row.Cells["colReportId"].Value;
+                if (value == null)
+                {
+                    continue;
+                }
+
+                int? currentId = value switch
+                {
+                    int id => id,
+                    long longId => (int)longId,
+                    _ => int.TryParse(value.ToString(), out int parsed) ? parsed : null
+                };
+
+                if (currentId == reportId)
+                {
+                    row.Selected = true;
+                    if (row.Index >= 0 && row.Index < dgvErrorReports.RowCount)
+                    {
+                        dgvErrorReports.CurrentCell = row.Cells["colReportId"];
+                        try
+                        {
+                            dgvErrorReports.FirstDisplayedScrollingRowIndex = row.Index;
+                        }
+                        catch (ArgumentOutOfRangeException)
+                        {
+                        }
+                        catch (InvalidOperationException)
+                        {
+                        }
+                    }
+                    break;
+                }
+            }
+        }
+
         private void OnReportSelected(int reportId)
         {
             ReportSelected?.Invoke(this, reportId);
