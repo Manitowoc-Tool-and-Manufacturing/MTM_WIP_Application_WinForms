@@ -213,6 +213,7 @@
   **Reference**: `.github/instructions/testing-standards.instructions.md` - Manual validation approach  
   **Reference**: `specs/002-view-error-reports/spec.md` - User Story 1 acceptance scenarios  
   **Acceptance**: All 4 acceptance scenarios pass, success criteria SC-001 and SC-006 met
+  **Note**: Implementation complete, needs manual validation testing
 
 ---
 
@@ -290,6 +291,7 @@
   **Reference**: `.github/instructions/testing-standards.instructions.md` - Manual validation checklist  
   **Reference**: `specs/002-view-error-reports/spec.md` - User Story 2 acceptance scenarios (5 scenarios)  
   **Acceptance**: All 5 acceptance scenarios pass, success criteria SC-002 and SC-005 met
+  **Note**: Filter implementation complete, needs manual validation testing
 
 ---
 
@@ -309,94 +311,95 @@
 
 ### User Story 3 Tasks
 
-- [ ] **T028** [Story: US3] - Create `Control_ErrorReportDetails` UserControl skeleton  
+- [X] **T028** [Story: US3] - Create `Control_ErrorReportDetails` UserControl skeleton  
   **File**: `Controls/ErrorReports/Control_ErrorReportDetails.cs`  
   **Description**: Create WinForms UserControl with Panel container. Apply standard region organization. Add Core_Themes.ApplyDpiScaling(this) in constructor.  
   **Reference**: `.github/instructions/csharp-dotnet8.instructions.md` - Region standards  
   **Reference**: `.github/instructions/ui-scaling-consistency.instructions.md` - DPI scaling  
-  **Acceptance**: UserControl compiles, opens in designer
+  **Acceptance**: UserControl compiles, opens in designer *(Completed 2025-10-26 via Control_ErrorReportDetails.cs / .Designer.cs)*
 
-- [ ] **T029** [Story: US3] - Add detail view labels and textboxes for all fields  
+- [X] **T029** [Story: US3] - Add detail view labels and textboxes for all fields  
   **File**: `Controls/ErrorReports/Control_ErrorReportDetails.cs`  
   **Description**: Add read-only TextBoxes for: ReportID, ReportDate, UserName, MachineName, AppVersion, ErrorType, Status, ReviewedBy, ReviewedDate. Add multi-line read-only TextBoxes for: ErrorSummary, TechnicalDetails, CallStack. All TextBoxes ReadOnly=true.  
   **Reference**: `specs/002-view-error-reports/data-model.md` - ErrorReportDetail entity (section 2)  
-  **Acceptance**: All 13 fields displayed, layout clean and readable
+  **Acceptance**: All 13 fields displayed, layout clean and readable *(Completed 2025-10-26)*
 
-- [ ] **T030** [Story: US3] - Add highlighted User Notes section  
+- [X] **T030** [Story: US3] - Add highlighted User Notes section  
   **File**: `Controls/ErrorReports/Control_ErrorReportDetails.cs`  
   **Description**: Add GroupBox titled "═══ User Notes (What they were doing): ═══" with distinct border/background color. Inside, add multi-line read-only TextBox for UserNotes.  
   **Reference**: `specs/002-view-error-reports/spec.md` - FR-010 requirement (highlight User Notes)  
   **Reference**: `specs/002-view-error-reports/contracts/sp_error_reports_GetByID.md` - UI display notes  
-  **Acceptance**: User Notes section visually distinct from other fields, uses highlighting color
+  **Acceptance**: User Notes section visually distinct from other fields, uses highlighting color *(Completed 2025-10-26)*
 
-- [ ] **T031** [Story: US3] - Add expandable sections for CallStack and TechnicalDetails  
+- [X] **T031** [Story: US3] - Add expandable sections for CallStack and TechnicalDetails  
   **File**: `Controls/ErrorReports/Control_ErrorReportDetails.cs`  
   **Description**: Use Panel with collapse/expand button or RichTextBox with scrollbars for CallStack and TechnicalDetails. Set monospace font (Courier New, 9pt) for code readability.  
   **Reference**: `specs/002-view-error-reports/contracts/sp_error_reports_GetByID.md` - UI display notes for CallStack  
-  **Acceptance**: Long text fields (10KB+) display without lag, scrollable, monospace font applied
+  **Acceptance**: Long text fields (10KB+) display without lag, scrollable, monospace font applied *(Completed 2025-10-26)*
 
-- [ ] **T032** [Story: US3] - Implement `LoadReportAsync` method in detail control  
+- [X] **T032** [Story: US3] - Implement `LoadReportAsync` method in detail control  
   **File**: `Controls/ErrorReports/Control_ErrorReportDetails.cs`  
   **Description**: Add async method accepting int reportId. Call Dao_ErrorReports.GetErrorReportByIdAsync(), check IsSuccess, populate all TextBoxes with Model_ErrorReport properties. Handle null values with "(No data provided)" placeholders.  
   **Reference**: `.github/instructions/mysql-database.instructions.md` - DaoResult pattern  
   **Reference**: `specs/002-view-error-reports/contracts/sp_error_reports_GetByID.md` - C# usage example  
-  **Acceptance**: Method loads report asynchronously, populates all fields, handles nulls gracefully
+  **Acceptance**: Method loads report asynchronously, populates all fields, handles nulls gracefully *(Completed 2025-10-26)*
 
-- [ ] **T033** [Story: US3] - Add "Mark as Reviewed" and "Mark as Resolved" buttons  
+- [X] **T033** [Story: US3] - Add "Mark as Reviewed" and "Mark as Resolved" buttons  
   **File**: `Controls/ErrorReports/Control_ErrorReportDetails.cs`  
   **Description**: Add buttons at bottom: btnMarkReviewed, btnMarkResolved. Show/hide based on current Status: if Status=New, show both; if Status=Reviewed, show only btnMarkResolved; if Status=Resolved, show only btnMarkReviewed (reopen).  
   **Reference**: `specs/002-view-error-reports/spec.md` - FR-011 and FR-012 requirements  
-  **Acceptance**: Button visibility changes based on status, intuitive workflow
+  **Acceptance**: Button visibility changes based on status, intuitive workflow *(Completed 2025-10-26)*
 
-- [ ] **T034** [Story: US3] - Implement "Mark as Reviewed" button click handler  
+- [X] **T034** [Story: US3] - Implement "Mark as Reviewed" button click handler  
   **File**: `Controls/ErrorReports/Control_ErrorReportDetails.cs`  
   **Description**: Wire btnMarkReviewed.Click event. Show Service_ErrorHandler.ShowConfirmation dialog with multi-line TextBox for developer notes. If OK, call Dao_ErrorReports.UpdateErrorReportStatusAsync with "Reviewed", notes, Model_AppVariables.CurrentUser.UserName. Raise StatusChanged event.  
   **Reference**: `.github/instructions/csharp-dotnet8.instructions.md` - Service_ErrorHandler usage  
   **Reference**: `specs/002-view-error-reports/contracts/sp_error_reports_UpdateStatus.md` - UI workflow section  
-  **Acceptance**: Button shows confirmation, saves notes, updates database, raises event
+  **Acceptance**: Button shows confirmation, saves notes, updates database, raises event *(Completed 2025-10-26 via status workflow in Control_ErrorReportDetails.cs)*
 
-- [ ] **T035** [Story: US3] - Implement "Mark as Resolved" button click handler  
+- [X] **T035** [Story: US3] - Implement "Mark as Resolved" button click handler  
   **File**: `Controls/ErrorReports/Control_ErrorReportDetails.cs`  
   **Description**: Wire btnMarkResolved.Click event. Show confirmation dialog with notes TextBox. Call UpdateErrorReportStatusAsync with "Resolved". Raise StatusChanged event.  
   **Reference**: `specs/002-view-error-reports/contracts/sp_error_reports_UpdateStatus.md` - Test cases  
-  **Acceptance**: Button updates status to Resolved, allows notes entry
+  **Acceptance**: Button updates status to Resolved, allows notes entry *(Completed 2025-10-26)*
 
-- [ ] **T036** [Story: US3] - Define StatusChanged event  
+- [X] **T036** [Story: US3] - Define StatusChanged event  
   **File**: `Controls/ErrorReports/Control_ErrorReportDetails.cs`  
   **Description**: Define public event `EventHandler StatusChanged`. Raise after successful status update to notify parent form/control to refresh grid.  
   **Reference**: `.github/instructions/csharp-dotnet8.instructions.md` - Event patterns  
-  **Acceptance**: Event defined, raised after status updates
+  **Acceptance**: Event defined, raised after status updates *(Completed 2025-10-26)*
 
-- [ ] **T037** [Story: US3] - Add "Copy All Details" button and click handler  
+- [X] **T037** [Story: US3] - Add "Copy All Details" button and click handler  
   **File**: `Controls/ErrorReports/Control_ErrorReportDetails.cs`  
   **Description**: Add button btnCopyAll. Wire Click event to build formatted string with all report fields (using StringBuilder), call Clipboard.SetText(). Format: "Report #123\nDate: ...\nUser: ...\n..."  
   **Reference**: `specs/002-view-error-reports/spec.md` - FR-016 requirement  
-  **Acceptance**: Button copies all details to clipboard, formatted text readable in notepad
+  **Acceptance**: Button copies all details to clipboard, formatted text readable in notepad *(Completed 2025-10-26)*
 
-- [ ] **T038** [Story: US3] - Add "Export Report" button (single report file export)  
+- [X] **T038** [Story: US3] - Add "Export Report" button (single report file export)  
   **File**: `Controls/ErrorReports/Control_ErrorReportDetails.cs`  
   **Description**: Add button btnExportReport. Wire Click event to show SaveFileDialog (filter: "Text Files (*.txt)|*.txt|JSON Files (*.json)|*.json"). Export current report to selected format using File.WriteAllText.  
   **Reference**: `specs/002-view-error-reports/spec.md` - FR-017 requirement  
-  **Acceptance**: Button exports single report to text or JSON file, user selects path
+  **Acceptance**: Button exports single report to text or JSON file, user selects path *(Completed 2025-10-26)*
 
-- [ ] **T039** [Story: US3] - Create `Form_ViewErrorReports` main form skeleton  
+- [X] **T039** [Story: US3] - Create `Form_ViewErrorReports` main form skeleton  
   **File**: `Forms/ErrorReports/Form_ViewErrorReports.cs`  
   **Description**: Create WinForms Form with SplitContainer (Orientation.Horizontal, SplitterDistance=60%). Add Control_ErrorReportsGrid to top panel, Control_ErrorReportDetails to bottom panel. Apply Core_Themes.ApplyDpiScaling(this).  
   **Reference**: `.github/instructions/csharp-dotnet8.instructions.md` - Form patterns, region organization  
   **Reference**: `specs/002-view-error-reports/research.md` - Master-detail layout decision (Option A)  
-  **Acceptance**: Form opens, split container divides space 60/40, controls embedded correctly
+  **Acceptance**: Form opens, split container divides space 60/40, controls embedded correctly *(Completed 2025-10-26 with split container hosting grid/detail controls)*
 
-- [ ] **T040** [Story: US3] - Wire grid ReportSelected event to detail control  
+- [X] **T040** [Story: US3] - Wire grid ReportSelected event to detail control  
   **File**: `Forms/ErrorReports/Form_ViewErrorReports.cs`  
   **Description**: In constructor, subscribe to gridControl.ReportSelected event. Handler calls detailControl.LoadReportAsync(reportId).  
   **Reference**: `.github/instructions/csharp-dotnet8.instructions.md` - Event subscription patterns  
-  **Acceptance**: Selecting/double-clicking grid row loads detail view, detail updates on row change
+  **Acceptance**: Selecting/double-clicking grid row loads detail view, detail updates on row change *(Completed 2025-10-26 via async handler in Form_ViewErrorReports.cs)*
 
 - [ ] **T041** [Story: US3] [CHECKPOINT] - Manual test User Story 3 acceptance scenarios  
   **Description**: Execute all User Story 3 test scenarios. Select reports, verify detail display, test status updates, verify grid refresh, test copy/export functionality.  
   **Reference**: `.github/instructions/testing-standards.instructions.md` - Manual validation workflows  
   **Reference**: `specs/002-view-error-reports/spec.md` - User Story 3 acceptance scenarios (5 scenarios)  
   **Acceptance**: All 5 acceptance scenarios pass, success criteria SC-003 and SC-007 met
+  **Note**: Detail view and status update implementation complete, needs manual validation testing
 
 ---
 
@@ -468,29 +471,31 @@
 
 ### Final Integration Tasks
 
-- [ ] **T049** [Story: Integration] - Wire StatusChanged event from detail control to refresh grid  
+- [X] **T049** [Story: Integration] - Wire StatusChanged event from detail control to refresh grid  
   **File**: `Forms/ErrorReports/Form_ViewErrorReports.cs`  
   **Description**: Subscribe to detailControl.StatusChanged event. Handler calls gridControl.LoadReportsAsync(currentFilter) to refresh grid after status updates, preserving current filter.  
   **Reference**: `.github/instructions/csharp-dotnet8.instructions.md` - Event-driven UI refresh patterns  
-  **Acceptance**: Changing status in detail view refreshes grid showing updated status/color, filter preserved
+  **Acceptance**: Changing status in detail view refreshes grid showing updated status/color, filter preserved *(Completed 2025-10-26 via Form_ViewErrorReports StatusChanged handler)*
 
-- [ ] **T050** [Story: Integration] - Add menu item or button in MainForm to launch View Error Reports  
+- [X] **T050** [Story: Integration] - Add menu item or button in MainForm to launch View Error Reports  
   **File**: `Forms/MainForm/MainForm.cs`  
   **Description**: Add menu item "Tools → View Error Reports" or button in developer section. Click handler creates Form_ViewErrorReports instance and calls Show().  
   **Reference**: `.github/instructions/csharp-dotnet8.instructions.md` - Form launching patterns  
-  **Acceptance**: Menu item visible to developers, clicking opens form in non-modal mode
+  **Acceptance**: Menu item visible to developers, clicking opens form in non-modal mode *(Completed 2025-10-26 via Development→View Error Reports menu item)*
 
 - [ ] **T051** [Story: Integration] - Add XML documentation to all public DAO methods  
   **File**: `Data/Dao_ErrorReports.cs`  
   **Description**: Add <summary>, <param>, <returns>, <exception> tags to all 5 new DAO methods. Document purpose, parameters, return values, and exceptions thrown.  
   **Reference**: `.github/instructions/documentation.instructions.md` - XML comment standards  
   **Acceptance**: All public methods documented, IntelliSense shows documentation in Visual Studio
+  **Note**: Partial XML docs exist in Dao_ErrorReports.cs, needs comprehensive review and completion for all new methods (GetAllErrorReportsAsync, GetErrorReportByIdAsync, UpdateErrorReportStatusAsync, GetUserListAsync, GetMachineListAsync)
 
 - [ ] **T052** [Story: Integration] [FINAL CHECKPOINT] - Execute complete end-to-end manual validation  
   **Description**: Perform comprehensive manual testing of all user stories, edge cases, and success criteria from spec.md. Test workflows: browse → filter → view details → update status → export. Verify all 7 success criteria (SC-001 through SC-007) met. Document test results.  
   **Reference**: `.github/instructions/testing-standards.instructions.md` - Complete validation workflows  
   **Reference**: `specs/002-view-error-reports/spec.md` - All edge cases and success criteria  
   **Acceptance**: All user stories pass, all success criteria met, edge cases handled, test report complete
+  **Note**: User Stories 1-3 implementation complete (T001-T041), User Story 4 (export) pending (T042-T048). DPI scaling enhancements completed (EnhancedErrorDialog, Form_ReportIssue, Form_ViewErrorReports, Form_ErrorReportDetailsDialog now use CenterScreen positioning). Release notes updated (RELEASE_NOTES.md v5.3.1, RELEASE_NOTES_USER_FRIENDLY.md created).
 
 ---
 

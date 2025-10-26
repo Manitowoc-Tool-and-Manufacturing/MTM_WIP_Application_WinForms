@@ -7,6 +7,7 @@ using MTM_Inventory_Application.Controls.Shared;
 using MTM_Inventory_Application.Core;
 using MTM_Inventory_Application.Data;
 using MTM_Inventory_Application.Forms.ErrorDialog;
+using MTM_Inventory_Application.Forms.ErrorReports;
 using MTM_Inventory_Application.Forms.Settings;
 using MTM_Inventory_Application.Helpers;
 using MTM_Inventory_Application.Logging;
@@ -27,6 +28,7 @@ namespace MTM_Inventory_Application.Forms.MainForm
         public Helper_Control_MySqlSignal ConnectionStrengthChecker = null!;
         private Helper_StoredProcedureProgress? _progressHelper;
         private Forms.Development.DebugDashboardForm? _debugDashboard;
+    private Form_ViewErrorReports? _viewErrorReportsForm;
 
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public Service_ConnectionRecoveryManager ConnectionRecoveryManager { get; private set; } = null!;
@@ -498,9 +500,11 @@ namespace MTM_Inventory_Application.Forms.MainForm
                 {
                     try
                     {
-                        // Refresh DPI scaling for all forms when display settings change
-                        Core_Themes.RefreshDpiScalingForAllForms();
-                        LoggingUtility.Log("Display settings changed - DPI scaling refreshed");
+                        // Prompt user to restart instead of auto-refresh
+                        LoggingUtility.Log("Display settings changed - prompting user for restart");
+                        
+                        // Note: We don't auto-refresh here because the DpiChanged event
+                        // on the form will handle it and prompt the user
                     }
                     catch (Exception ex)
                     {
@@ -526,13 +530,49 @@ namespace MTM_Inventory_Application.Forms.MainForm
             {
                 LoggingUtility.Log($"MainForm DPI changed from {e.DeviceDpiOld} to {e.DeviceDpiNew}");
 
-                // Use the Core_Themes DPI change handler
-                Core_Themes.HandleDpiChanged(this, e.DeviceDpiOld, e.DeviceDpiNew);
+                // Calculate scaling percentage for user-friendly message
+                int oldPercent = (int)Math.Round(e.DeviceDpiOld / 96.0 * 100);
+                int newPercent = (int)Math.Round(e.DeviceDpiNew / 96.0 * 100);
 
-                // Reapply theme after DPI change to ensure proper color scaling
-                Core_Themes.ApplyTheme(this);
+                // Prompt user for restart or auto-resize
+                var result = MessageBox.Show(
+                    $"Display scaling has changed from {oldPercent}% to {newPercent}%.\n\n" +
+                    "For the best appearance, it is recommended to restart the application.\n\n" +
+                    "Click 'Yes' to restart now (recommended)\n" +
+                    "Click 'No' to automatically resize all forms (may cause visual glitches)\n" +
+                    "Click 'Cancel' to continue without changes",
+                    "Display Scaling Changed",
+                    MessageBoxButtons.YesNoCancel,
+                    MessageBoxIcon.Question,
+                    MessageBoxDefaultButton.Button1);
 
-                LoggingUtility.Log("MainForm DPI change handling completed");
+                if (result == DialogResult.Yes)
+                {
+                    // User chose to restart - save state and restart application
+                    LoggingUtility.Log("User chose to restart application after DPI change");
+                    
+                    // Get the application executable path
+                    string appPath = Application.ExecutablePath;
+                    
+                    // Start new instance
+                    Process.Start(appPath);
+                    
+                    // Close current instance gracefully
+                    Application.Exit();
+                }
+                else if (result == DialogResult.No)
+                {
+                    // User chose auto-resize - use the Core_Themes DPI change handler
+                    LoggingUtility.Log("User chose auto-resize after DPI change");
+                    Core_Themes.HandleDpiChanged(this, e.DeviceDpiOld, e.DeviceDpiNew);
+                    Core_Themes.ApplyTheme(this);
+                    LoggingUtility.Log("MainForm DPI change handling completed");
+                }
+                else
+                {
+                    // User cancelled - do nothing
+                    LoggingUtility.Log("User cancelled DPI change handling");
+                }
             }
             catch (Exception ex)
             {
@@ -1115,6 +1155,33 @@ namespace MTM_Inventory_Application.Forms.MainForm
             {
                 LoggingUtility.LogApplicationError(ex);
                 await Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex, callerName: nameof(MainForm_MenuStrip_Development_Conversion_Click));
+            }
+        }
+
+        private void MainForm_MenuStrip_Development_ViewErrorReports_Click(object? sender, EventArgs e)
+        {
+            try
+            {
+                if (_viewErrorReportsForm is { IsDisposed: false })
+                {
+                    if (_viewErrorReportsForm.WindowState == FormWindowState.Minimized)
+                    {
+                        _viewErrorReportsForm.WindowState = FormWindowState.Normal;
+                    }
+
+                    _viewErrorReportsForm.BringToFront();
+                    _viewErrorReportsForm.Focus();
+                    return;
+                }
+
+                _viewErrorReportsForm = new Form_ViewErrorReports();
+                _viewErrorReportsForm.FormClosed += (_, _) => _viewErrorReportsForm = null;
+                _viewErrorReportsForm.Show(this);
+            }
+            catch (Exception ex)
+            {
+                LoggingUtility.LogApplicationError(ex);
+                Service_ErrorHandler.HandleException(ex, ErrorSeverity.Medium, controlName: nameof(MainForm_MenuStrip_Development_ViewErrorReports_Click));
             }
         }
 

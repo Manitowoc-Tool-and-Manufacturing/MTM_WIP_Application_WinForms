@@ -106,8 +106,8 @@ namespace MTM_Inventory_Application.Forms.ErrorDialog
             // Form_ReportIssue
             // 
             this.AcceptButton = this.btnSubmit;
-            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.CancelButton = this.btnCancel;
             this.ClientSize = new System.Drawing.Size(584, 314);
             this.Controls.Add(this.btnCancel);
@@ -120,7 +120,7 @@ namespace MTM_Inventory_Application.Forms.ErrorDialog
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "Form_ReportIssue";
-            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Report Issue";
             this.ResumeLayout(false);
             this.PerformLayout();
