@@ -147,58 +147,66 @@
 
 ### User Story 1 Tasks
 
-- [ ] **T011** [Story: US1] - Create `Control_ErrorReportsGrid` UserControl skeleton  
+- [x] **T011** [Story: US1] - Create `Control_ErrorReportsGrid` UserControl skeleton  
   **File**: `Controls/ErrorReports/Control_ErrorReportsGrid.cs`  
   **Description**: Create WinForms UserControl with DataGridView named `dgvErrorReports`. Apply standard region organization (Fields, Properties, Constructors, etc.). Add Core_Themes.ApplyDpiScaling(this) in constructor.  
   **Reference**: `.github/instructions/csharp-dotnet8.instructions.md` - Region organization standards, Core_Themes usage  
   **Reference**: `.github/instructions/ui-scaling-consistency.instructions.md` - DPI scaling requirements  
   **Acceptance**: UserControl compiles, opens in designer without errors, DPI scaling applied
+  **Completed**: 2025-10-26 – Created Control_ErrorReportsGrid partial class, layout, and DPI initialization
 
-- [ ] **T012** [Story: US1] - Configure DataGridView columns for error reports  
+- [x] **T012** [Story: US1] - Configure DataGridView columns for error reports  
   **File**: `Controls/ErrorReports/Control_ErrorReportsGrid.cs`  
   **Description**: In designer or constructor, configure dgvErrorReports with columns: ReportID, ReportDate, UserName, MachineName, ErrorType, ErrorSummary (width 200), Status. Set ReadOnly=true, AllowUserToAddRows=false, SelectionMode=FullRowSelect, MultiSelect=false.  
   **Reference**: `.github/instructions/csharp-dotnet8.instructions.md` - WinForms DataGridView configuration  
   **Reference**: `specs/002-view-error-reports/research.md` - DataGridView pattern section  
   **Acceptance**: Grid displays columns in correct order, all columns read-only, single row selection enabled
+  **Completed**: 2025-10-26 – Added predefined columns, read-only configuration, and selection settings
 
-- [ ] **T013** [Story: US1] - Implement `LoadReportsAsync` method in grid control  
+- [x] **T013** [Story: US1] - Implement `LoadReportsAsync` method in grid control  
   **File**: `Controls/ErrorReports/Control_ErrorReportsGrid.cs`  
   **Description**: Add async method accepting Model_ErrorReportFilter (nullable). Call Dao_ErrorReports.GetAllErrorReportsAsync(), check IsSuccess, bind DataTable to dgvErrorReports.DataSource. Add try/catch with Service_ErrorHandler.HandleException.  
   **Reference**: `.github/instructions/mysql-database.instructions.md` - DaoResult pattern and error handling  
   **Reference**: `.github/instructions/performance-optimization.instructions.md` - DataGridView binding performance  
   **Reference**: `specs/002-view-error-reports/research.md` - Key patterns section  
   **Acceptance**: Method loads data asynchronously, handles null filter (all reports), shows error dialog on failure
+  **Completed**: 2025-10-26 – Implemented async DAO call, binding source refresh, and failure handling
 
-- [ ] **T014** [Story: US1] - Implement color-coding via CellFormatting event  
+- [x] **T014** [Story: US1] - Implement color-coding via CellFormatting event  
   **File**: `Controls/ErrorReports/Control_ErrorReportsGrid.cs`  
   **Description**: Wire up dgvErrorReports.CellFormatting event handler. Check if column is Status column, apply BackColor based on value: "New"→Color.LightCoral, "Reviewed"→Color.LightGoldenrodYellow, "Resolved"→Color.LightGreen, default→Color.White.  
   **Reference**: `.github/instructions/csharp-dotnet8.instructions.md` - Event handler patterns  
   **Reference**: `specs/002-view-error-reports/research.md` - Color-coding pattern  
   **Acceptance**: Grid rows show correct colors, color updates when data changes, no flicker
+  **Completed**: 2025-10-26 – Added CellFormatting handler applying status colors per spec
 
-- [ ] **T015** [Story: US1] - Add ReportSelected event and double-click handler  
+- [x] **T015** [Story: US1] - Add ReportSelected event and double-click handler  
   **File**: `Controls/ErrorReports/Control_ErrorReportsGrid.cs`  
   **Description**: Define public event `EventHandler<int> ReportSelected`. Wire dgvErrorReports.CellDoubleClick to extract ReportID from selected row and raise ReportSelected event.  
   **Reference**: `.github/instructions/csharp-dotnet8.instructions.md` - Event definition patterns  
   **Acceptance**: Double-clicking row raises event with correct ReportID, handles empty selection gracefully
+  **Completed**: 2025-10-26 – Raised ReportSelected event from CellDoubleClick with safe parsing
 
-- [ ] **T016** [Story: US1] - Enable column sorting in DataGridView  
+- [x] **T016** [Story: US1] - Enable column sorting in DataGridView  
   **File**: `Controls/ErrorReports/Control_ErrorReportsGrid.cs`  
   **Description**: Set SortMode property for each DataGridViewColumn to Automatic. Verify sorting works by clicking column headers.  
   **Reference**: `.github/instructions/csharp-dotnet8.instructions.md` - DataGridView sorting configuration  
   **Acceptance**: Clicking column headers sorts ascending, clicking again sorts descending, all columns sortable
+  **Completed**: 2025-10-26 – Configured automatic sorting on all grid columns
 
-- [ ] **T017** [Story: US1] - Truncate Summary column display to 100 characters  
+- [x] **T017** [Story: US1] - Truncate Summary column display to 100 characters  
   **File**: `Controls/ErrorReports/Control_ErrorReportsGrid.cs`  
   **Description**: In CellFormatting event, check if column is ErrorSummary. If value length > 100, truncate to 100 chars and append "...". Store full value in cell.ToolTipText.  
   **Reference**: `specs/002-view-error-reports/research.md` - Grid column truncation note  
   **Acceptance**: Summary column shows first 100 chars with ellipsis, hovering shows full text in tooltip
+  **Completed**: 2025-10-26 – Added truncation logic with tooltip for full summary text
 
-- [ ] **T018** [Story: US1] - Add result count label to grid control  
+- [x] **T018** [Story: US1] - Add result count label to grid control  
   **File**: `Controls/ErrorReports/Control_ErrorReportsGrid.cs`  
   **Description**: Add Label control named `lblResultCount` at bottom of UserControl. Update text in LoadReportsAsync after binding: "Showing {count} reports".  
   **Reference**: `specs/002-view-error-reports/spec.md` - FR-008 requirement  
   **Acceptance**: Label displays accurate count, updates when data reloads, positioned below grid
+  **Completed**: 2025-10-26 – Result count label added and refreshed after each load
 
 - [ ] **T019** [Story: US1] [CHECKPOINT] - Manual test User Story 1 acceptance scenarios  
   **Description**: Execute all User Story 1 test scenarios from spec.md. Verify grid displays data, sorting works, color-coding correct, double-click raises event, result count accurate.  
@@ -224,51 +232,58 @@
 
 ### User Story 2 Tasks
 
-- [ ] **T020** [Story: US2] - Add filter panel to grid control  
+- [x] **T020** [Story: US2] - Add filter panel to grid control  
   **File**: `Controls/ErrorReports/Control_ErrorReportsGrid.cs`  
   **Description**: Add Panel control at top of UserControl with filter controls: DateTimePicker (From), DateTimePicker (To), ComboBox (User), ComboBox (Machine), ComboBox (Status), TextBox (Search), Button (Apply), Button (Clear).  
   **Reference**: `.github/instructions/csharp-dotnet8.instructions.md` - WinForms layout patterns  
   **Reference**: `.github/instructions/ui-scaling-consistency.instructions.md` - Responsive layout requirements  
   **Acceptance**: Filter panel displays above grid, controls aligned horizontally, responsive at different DPI settings
+  **Completed**: 2025-10-26 – Added flow layout filter panel with optional date checkboxes and DPI-aware sizing
 
-- [ ] **T021** [Story: US2] [P] - Populate User ComboBox dropdown  
+- [x] **T021** [Story: US2] [P] - Populate User ComboBox dropdown  
   **File**: `Controls/ErrorReports/Control_ErrorReportsGrid.cs`  
   **Description**: Add async method `PopulateUserFilterAsync()`. Call Dao_ErrorReports.GetUserListAsync(), add "[ All Users ]" as first item, then add returned users. Call in constructor or OnLoad.  
   **Reference**: `.github/instructions/mysql-database.instructions.md` - Async dropdown population  
   **Reference**: `specs/002-view-error-reports/contracts/sp_error_reports_GetUserList.md` - ComboBox population example  
   **Acceptance**: ComboBox shows "All Users" plus all distinct users alphabetically, handles empty list gracefully
+  **Completed**: 2025-10-26 – Async loader adds All Users + distinct DAO results with error handling fallback
 
-- [ ] **T022** [Story: US2] [P] - Populate Machine ComboBox dropdown  
+- [x] **T022** [Story: US2] [P] - Populate Machine ComboBox dropdown  
   **File**: `Controls/ErrorReports/Control_ErrorReportsGrid.cs`  
   **Description**: Add async method `PopulateMachineFilterAsync()`. Call Dao_ErrorReports.GetMachineListAsync(), add "[ All Machines ]" as first item, then add returned machines.  
   **Reference**: `specs/002-view-error-reports/contracts/sp_error_reports_GetMachineList.md` - ComboBox population example  
   **Acceptance**: ComboBox shows "All Machines" plus non-NULL machines alphabetically
+  **Completed**: 2025-10-26 – Async machine loader adds All Machines + sorted distinct names with low-severity error surfacing
 
-- [ ] **T023** [Story: US2] - Populate Status ComboBox with fixed values  
+- [x] **T023** [Story: US2] - Populate Status ComboBox with fixed values  
   **File**: `Controls/ErrorReports/Control_ErrorReportsGrid.cs`  
   **Description**: In constructor, populate Status ComboBox with: "[ All Statuses ]", "New", "Reviewed", "Resolved". Set DropDownStyle=DropDownList.  
   **Reference**: `specs/002-view-error-reports/data-model.md` - ReportStatus enum definition  
   **Acceptance**: ComboBox contains exactly 4 items, user cannot type custom values
+  **Completed**: 2025-10-26 – Status dropdown seeded with All + fixed options when control loads
 
-- [ ] **T024** [Story: US2] - Implement Apply Filters button click handler  
+- [x] **T024** [Story: US2] - Implement Apply Filters button click handler  
   **File**: `Controls/ErrorReports/Control_ErrorReportsGrid.cs`  
   **Description**: Wire btnApplyFilters.Click event. Collect values from all filter controls, build Model_ErrorReportFilter instance, handle "All" selections as null, validate date range (From <= To), call LoadReportsAsync(filter).  
   **Reference**: `.github/instructions/csharp-dotnet8.instructions.md` - Event handler patterns  
   **Reference**: `specs/002-view-error-reports/data-model.md` - Model_ErrorReportFilter validation rules  
   **Acceptance**: Button applies filters, shows validation error if From > To, passes nulls for "All" selections
+  **Completed**: 2025-10-26 – Apply handler builds filter model, honors "All" selections, and surfaces validation via Service_ErrorHandler
 
-- [ ] **T025** [Story: US2] - Implement Clear Filters button click handler  
+- [x] **T025** [Story: US2] - Implement Clear Filters button click handler  
   **File**: `Controls/ErrorReports/Control_ErrorReportsGrid.cs`  
   **Description**: Wire btnClearFilters.Click event. Reset all filter controls to defaults: DateTimePickers to today, ComboBoxes to index 0 ("All"), TextBox to empty. Call LoadReportsAsync(null).  
   **Reference**: `specs/002-view-error-reports/spec.md` - User Story 2 acceptance scenario 4  
   **Acceptance**: Button resets all controls, reloads full dataset
+  **Completed**: 2025-10-26 – Clear handler restores defaults, unchecks dates, and reloads the full grid
 
-- [ ] **T026** [Story: US2] - Implement search text filtering  
+- [x] **T026** [Story: US2] - Implement search text filtering  
   **File**: `Controls/ErrorReports/Control_ErrorReportsGrid.cs`  
   **Description**: In Apply Filters handler, extract search text from TextBox, add to Model_ErrorReportFilter.SearchText. Validate minimum 3 characters if not empty. Pass to stored procedure which handles LIKE queries.  
   **Reference**: `.github/instructions/security-best-practices.instructions.md` - Input validation patterns  
   **Reference**: `specs/002-view-error-reports/contracts/sp_error_reports_GetAll.md` - SearchText parameter behavior  
   **Acceptance**: Search text filters across Summary/UserNotes/TechnicalDetails, case-insensitive, shows validation error if < 3 chars
+  **Completed**: 2025-10-26 – Search input captured, normalized, and validated (>=3 chars) before triggering filtered load
 
 - [ ] **T027** [Story: US2] [CHECKPOINT] - Manual test User Story 2 acceptance scenarios  
   **Description**: Execute all User Story 2 test scenarios. Test each filter individually, combine filters, verify result count updates, test search functionality, verify Clear Filters resets.  
