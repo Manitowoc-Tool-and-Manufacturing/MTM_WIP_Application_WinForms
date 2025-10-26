@@ -53,6 +53,7 @@ internal static class Dao_ErrorReports
             var parameters = new Dictionary<string, object>
             {
                 ["UserName"] = report.UserName ?? string.Empty,
+                ["MachineName"] = report.MachineName ?? (object)DBNull.Value,
                 ["AppVersion"] = report.AppVersion ?? (object)DBNull.Value,
                 ["ErrorType"] = report.ErrorType ?? (object)DBNull.Value,
                 ["ErrorSummary"] = report.ErrorSummary ?? (object)DBNull.Value,

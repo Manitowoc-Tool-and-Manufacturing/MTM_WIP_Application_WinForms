@@ -69,6 +69,7 @@ CREATE TABLE error_reports (
     ReportID INT AUTO_INCREMENT PRIMARY KEY,
     ReportDate DATETIME NOT NULL,
     UserName VARCHAR(100) NOT NULL,
+    MachineName VARCHAR(100),
     AppVersion VARCHAR(50),
     ErrorType VARCHAR(255),
     ErrorSummary TEXT,
@@ -82,7 +83,8 @@ CREATE TABLE error_reports (
     
     INDEX idx_user (UserName),
     INDEX idx_date (ReportDate DESC),
-    INDEX idx_status (Status)
+    INDEX idx_status (Status),
+    INDEX idx_machine (MachineName)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 ```
 
@@ -93,6 +95,7 @@ CREATE TABLE error_reports (
 DELIMITER $$
 CREATE PROCEDURE sp_error_reports_Insert(
     IN p_UserName VARCHAR(100),
+    IN p_MachineName VARCHAR(100),
     IN p_AppVersion VARCHAR(50),
     IN p_ErrorType VARCHAR(255),
     IN p_ErrorSummary TEXT,
@@ -119,6 +122,7 @@ public class Model_ErrorReport
     public int ReportID { get; set; }
     public DateTime ReportDate { get; set; }
     public string UserName { get; set; } = string.Empty;
+    public string? MachineName { get; set; }
     public string? AppVersion { get; set; }
     public string? ErrorType { get; set; }
     public string? ErrorSummary { get; set; }
@@ -155,6 +159,7 @@ public static async Task<DaoResult<int>> InsertReportAsync(Model_ErrorReport rep
         var parameters = new Dictionary<string, object>
         {
             ["UserName"] = report.UserName,
+            ["MachineName"] = report.MachineName ?? (object)DBNull.Value,
             ["AppVersion"] = report.AppVersion ?? (object)DBNull.Value,
             ["ErrorType"] = report.ErrorType ?? (object)DBNull.Value,
             ["ErrorSummary"] = report.ErrorSummary ?? (object)DBNull.Value,
@@ -243,12 +248,14 @@ private static string GenerateSqlForReport(Model_ErrorReport report)
 
     return $@"-- Generated: {DateTime.Now:yyyy-MM-dd HH:mm:ss}
 -- User: {report.UserName}
+-- Machine: {report.MachineName}
 -- Error Type: {report.ErrorType}
 
 START TRANSACTION;
 
 CALL sp_error_reports_Insert(
     '{EscapeSql(report.UserName)}',
+    '{EscapeSql(report.MachineName)}',
     '{EscapeSql(report.AppVersion)}',
     '{EscapeSql(report.ErrorType)}',
     '{EscapeSql(report.ErrorSummary)}',

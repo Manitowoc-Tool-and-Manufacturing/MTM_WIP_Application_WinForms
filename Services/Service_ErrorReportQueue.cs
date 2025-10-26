@@ -98,6 +98,7 @@ internal static class Service_ErrorReportQueue
         // Call stored procedure
         sql.AppendLine("CALL sp_error_reports_Insert(");
         sql.AppendLine($"    {EscapeSqlString(report.UserName)},                    -- p_UserName");
+        sql.AppendLine($"    {EscapeSqlString(report.MachineName)},                 -- p_MachineName");
         sql.AppendLine($"    {EscapeSqlString(report.AppVersion)},                  -- p_AppVersion");
         sql.AppendLine($"    {EscapeSqlString(report.ErrorType)},                   -- p_ErrorType");
         sql.AppendLine($"    {EscapeSqlString(report.ErrorSummary)},                -- p_ErrorSummary");

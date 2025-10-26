@@ -9,6 +9,7 @@ CREATE TABLE IF NOT EXISTS error_reports (
     ReportID INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     ReportDate DATETIME NOT NULL,
     UserName VARCHAR(100) NOT NULL,
+    MachineName VARCHAR(200) NULL,
     AppVersion VARCHAR(50) NULL,
     ErrorType VARCHAR(255) NULL,
     ErrorSummary TEXT NULL,
@@ -23,6 +24,7 @@ CREATE TABLE IF NOT EXISTS error_reports (
 
 -- Create indexes for efficient querying
 CREATE INDEX idx_user ON error_reports(UserName);
+CREATE INDEX idx_machine ON error_reports(MachineName);
 CREATE INDEX idx_date ON error_reports(ReportDate DESC);
 CREATE INDEX idx_status ON error_reports(Status);
 
@@ -40,6 +42,10 @@ CREATE INDEX idx_status ON error_reports(Status);
 --   UserName (VARCHAR 100, NOT NULL, INDEXED)
 --     Windows username of user who encountered error
 --     Example: 'John.Smith'
+--   
+--   MachineName (VARCHAR 200, NULL, INDEXED)
+--     Computer name where error occurred
+--     Example: 'DESKTOP-ABC123', 'WORKSTATION-42'
 --   
 --   AppVersion (VARCHAR 50, NULL)
 --     Application version at time of error

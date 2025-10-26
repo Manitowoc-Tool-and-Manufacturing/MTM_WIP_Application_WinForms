@@ -515,6 +515,7 @@ namespace MTM_Inventory_Application.Forms.ErrorDialog
                 var report = new MTM_WIP_Application_WinForms.Models.Model_ErrorReport
                 {
                     UserName = Model_AppVariables.User,
+                    MachineName = Environment.MachineName,
                     AppVersion = Model_AppVariables.UserVersion,
                     ErrorType = _exception.GetType().Name,
                     ErrorSummary = _exception.Message,
