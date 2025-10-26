@@ -41,19 +41,27 @@ export async function loadInstructions(args: {
   for (let i = 0; i < lines.length; i++) {
     const line = lines[i];
 
-    // Detect task items
+    // Detect task items - more flexible pattern to match various formats
+    // Matches: - [ ] **T001** - Title
+    //          - [x] **T001** [Story: US1] - Title
+    //          - [X] **T001** [Story: US1] [P] - Title
     const taskMatch = line.match(
-      /^-\s+\[([ xX])\]\s+\*\*([T\d]+[a-z]?)\*\*\s+[–—-]\s+(.*)/
+      /^-\s+\[([ xX])\]\s+\*\*([T\d]+[a-z]?)\*\*/
     );
     if (taskMatch) {
       currentTaskId = taskMatch[2];
-      currentTaskTitle = taskMatch[3].trim();
+      // Extract title - everything after the task ID and optional tags
+      const titleMatch = line.match(/\*\*[T\d]+[a-z]?\*\*.*?[-–—]\s+(.*)/);
+      currentTaskTitle = titleMatch ? titleMatch[1].trim() : "";
       continue;
     }
 
-    // Detect reference lines
+    // Detect reference lines - support multiple formats
+    // Matches: **Reference**: `.github/instructions/file.md` - Description
+    //          **Reference**: .github/instructions/file.md
+    //          **Reference**: `.github/instructions/file.md`
     const refMatch = line.match(
-      /\*\*Reference\*\*:\s+`?\.github\/instructions\/([^`\s]+\.instructions\.md)`?/i
+      /\*\*Reference\*\*:\s+`?\.github\/instructions\/([a-zA-Z0-9_-]+\.instructions\.md)`?/i
     );
     if (refMatch && currentTaskId) {
       const instructionFile = refMatch[1];

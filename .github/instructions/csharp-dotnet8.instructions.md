@@ -45,11 +45,16 @@ These guidelines describe how to structure and implement C# code within the MTM 
 
 ## WinForms Patterns
 
+**Cross-Reference**: For responsive layout architecture, see `.github/instructions/winforms-responsive-layout.instructions.md`
+
 - Keep event handlers thin. Collect user input, call into helpers/DAOs/services, then update controls.
 - Avoid blocking the UI thread. Use background workers, `Task.Run`, or asynchronous DAO calls and marshal back to the UI thread with `BeginInvoke`/`Invoke`/`SynchronizationContext.Post` when updating controls.
 - Respect designer-generated code. Do not hand-edit `.Designer.cs` files; move logic into partial class files or helpers.
 - Centralize shared UI logic in `Controls/Shared` or helper classes rather than duplicating across forms.
 - Use `Model_AppVariables`, `Service_DebugTracer`, and logging helpers for shared application state and diagnostics instead of global statics scattered throughout the codebase.
+- **Layout**: Use TableLayoutPanel with mixed Absolute/Percent sizing for responsive designs (see winforms-responsive-layout.instructions.md)
+- **Spacing**: Add Padding (10px) to containers, Margin (5px) to controls for professional appearance
+- **Constraints**: Set MinimumSize on DataGridView and main content areas to prevent unusable collapse
 
 ## Data Access & Async
 

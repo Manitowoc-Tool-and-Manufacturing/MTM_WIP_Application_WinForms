@@ -150,7 +150,6 @@ CREATE TABLE `log_error` (
   `ModuleName` varchar(200) DEFAULT NULL,
   `MethodName` varchar(200) DEFAULT NULL,
   `AdditionalInfo` text,
-  `MachineName` varchar(100) DEFAULT NULL,
   `OSVersion` varchar(100) DEFAULT NULL,
   `AppVersion` varchar(50) DEFAULT NULL,
   `ErrorTime` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,

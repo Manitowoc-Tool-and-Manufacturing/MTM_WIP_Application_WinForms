@@ -1491,7 +1491,6 @@
           "ModuleName",
           "MethodName",
           "AdditionalInfo",
-          "MachineName",
           "OSVersion",
           "AppVersion",
           "ErrorTime"
@@ -1505,7 +1504,6 @@
           "p_ModuleName",
           "p_MethodName",
           "p_AdditionalInfo",
-          "p_MachineName",
           "p_OSVersion",
           "p_AppVersion",
           "p_ErrorTime"
@@ -1519,12 +1517,11 @@
           "ModuleName = p_ModuleName",
           "MethodName = p_MethodName",
           "AdditionalInfo = p_AdditionalInfo",
-          "MachineName = p_MachineName",
           "OSVersion = p_OSVersion",
           "AppVersion = p_AppVersion",
           "ErrorTime = p_ErrorTime"
         ],
-        "RawSQL": "INSERT INTO `log_error` (\n\n            `User`, `Severity`, `ErrorType`, `ErrorMessage`, `StackTrace`, \n\n            `ModuleName`, `MethodName`, `AdditionalInfo`, `MachineName`, \n\n            `OSVersion`, `AppVersion`, `ErrorTime`\n\n        ) VALUES (\n\n            p_User, p_Severity, p_ErrorType, p_ErrorMessage, p_StackTrace,\n\n            p_ModuleName, p_MethodName, p_AdditionalInfo, p_MachineName,\n\n            p_OSVersion, p_AppVersion, p_ErrorTime\n\n        )"
+        "RawSQL": "INSERT INTO `log_error` (\n\n            `User`, `Severity`, `ErrorType`, `ErrorMessage`, `StackTrace`, \n\n            `ModuleName`, `MethodName`, `AdditionalInfo`, \n\n            `OSVersion`, `AppVersion`, `ErrorTime`\n\n        ) VALUES (\n\n            p_User, p_Severity, p_ErrorType, p_ErrorMessage, p_StackTrace,\n\n            p_ModuleName, p_MethodName, p_AdditionalInfo,\n\n            p_OSVersion, p_AppVersion, p_ErrorTime\n\n        )"
       }
     ]
   },

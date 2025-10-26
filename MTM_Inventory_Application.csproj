@@ -122,10 +122,22 @@
             <Generator>ResXFileCodeGenerator</Generator>
             <LastGenOutput>Resources.Designer.cs</LastGenOutput>
         </EmbeddedResource>
+        <EmbeddedResource Update="Controls\ErrorReports\Control_ErrorReportsGrid.resx">
+            <SubType>Designer</SubType>
+            <DependentUpon>Control_ErrorReportsGrid.cs</DependentUpon>
+        </EmbeddedResource>
     </ItemGroup>
 
     <ItemGroup>
         <Folder Include="Documentation\PlantUML Files\" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <Compile Update="Controls\ErrorReports\Control_ErrorReportsGrid.Designer.cs">
+            <DependentUpon>Control_ErrorReportsGrid.cs</DependentUpon>
+            <DesignTime>True</DesignTime>
+            <AutoGen>True</AutoGen>
+        </Compile>
     </ItemGroup>
 
 </Project>

@@ -15,7 +15,19 @@ namespace MTM_Inventory_Application.Forms.ErrorDialog;
 /// <summary>
 /// Dialog form for reporting errors with user-provided contextual notes.
 /// Supports both online (direct database submission) and offline (queued file) reporting.
+/// Uses TableLayoutPanel for responsive grid-based layout.
 /// </summary>
+/// <remarks>
+/// Layout structure:
+/// - Row 1: Error Summary label (25px fixed)
+/// - Row 2: Error Summary textbox (90px fixed, read-only)
+/// - Row 3: User Notes label (25px fixed)
+/// - Row 4: User Notes textbox (Percent 100%, expandable)
+/// - Row 5: Button row (38px fixed)
+/// Column sizing: Single column (100%)
+/// Minimum size: 600x350
+/// Form is resizable to allow users to expand notes area as needed
+/// </remarks>
 public partial class Form_ReportIssue : Form
 {
     #region Fields
@@ -40,7 +52,9 @@ public partial class Form_ReportIssue : Form
         InitializeComponent();
         
         // Apply theme and scaling
+        SetStyle(ControlStyles.OptimizedDoubleBuffer, true);
         Core_Themes.ApplyDpiScaling(this);
+        Core_Themes.ApplyRuntimeLayoutAdjustments(this);
         
         // Populate error summary (read-only display of exception details)
         // DEBUG: Log what we're setting

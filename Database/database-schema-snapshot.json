@@ -2244,7 +2244,6 @@
       "SPECIFIC_NAME": "log_error_Add_Error",
       "ORDINAL_POSITION": "9",
       "PARAMETER_MODE": "IN",
-      "PARAMETER_NAME": "p_MachineName",
       "DATA_TYPE": "varchar",
       "CHARACTER_MAXIMUM_LENGTH": "100",
       "NUMERIC_PRECISION": null,
@@ -6350,7 +6349,6 @@
     {
       "TABLE_SCHEMA": "mtm_wip_application",
       "TABLE_NAME": "log_error",
-      "COLUMN_NAME": "MachineName",
       "ORDINAL_POSITION": "10",
       "COLUMN_DEFAULT": null,
       "IS_NULLABLE": "YES",

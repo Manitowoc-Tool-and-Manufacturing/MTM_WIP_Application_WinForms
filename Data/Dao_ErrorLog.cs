@@ -393,7 +393,6 @@ internal static class Dao_ErrorLog
                 ["ModuleName"] = moduleName ?? "",
                 ["MethodName"] = methodName ?? "",
                 ["AdditionalInfo"] = additionalInfo ?? "",
-                ["MachineName"] = Environment.MachineName,
                 ["OSVersion"] = Environment.OSVersion.ToString(),
                 ["AppVersion"] = Application.ProductVersion,
                 ["ErrorTime"] = DateTime.Now

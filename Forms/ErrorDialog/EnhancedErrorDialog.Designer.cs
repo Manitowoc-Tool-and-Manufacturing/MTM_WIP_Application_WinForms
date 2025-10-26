@@ -281,8 +281,8 @@
             // 
             // EnhancedErrorDialog
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.ClientSize = new System.Drawing.Size(560, 400);
             this.MaximumSize = new System.Drawing.Size(560, 400);
             this.MinimumSize = new System.Drawing.Size(560, 400);
@@ -292,7 +292,7 @@
             this.MinimizeBox = false;
             this.MinimumSize = new System.Drawing.Size(560, 400);
             this.Name = "EnhancedErrorDialog";
-            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "MTM Inventory Application - Enhanced Error Dialog";
             this.WindowState = System.Windows.Forms.FormWindowState.Normal;
             this.tableLayoutMain.ResumeLayout(false);

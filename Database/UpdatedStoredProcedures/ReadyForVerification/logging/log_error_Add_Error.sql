@@ -9,7 +9,6 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `log_error_Add_Error`(
     IN p_ModuleName VARCHAR(100),
     IN p_MethodName VARCHAR(100),
     IN p_AdditionalInfo TEXT,
-    IN p_MachineName VARCHAR(100),
     IN p_OSVersion VARCHAR(100),
     IN p_AppVersion VARCHAR(50),
     IN p_ErrorTime DATETIME,
@@ -39,11 +38,11 @@ BEGIN
     ELSE
         INSERT INTO `log_error` (
             `User`, `Severity`, `ErrorType`, `ErrorMessage`, `StackTrace`,
-            `ModuleName`, `MethodName`, `AdditionalInfo`, `MachineName`,
+            `ModuleName`, `MethodName`, `AdditionalInfo`,
             `OSVersion`, `AppVersion`, `ErrorTime`
         ) VALUES (
             p_User, p_Severity, p_ErrorType, p_ErrorMessage, p_StackTrace,
-            p_ModuleName, p_MethodName, p_AdditionalInfo, p_MachineName,
+            p_ModuleName, p_MethodName, p_AdditionalInfo,
             p_OSVersion, p_AppVersion, p_ErrorTime
         );
         SET v_RowCount = ROW_COUNT();

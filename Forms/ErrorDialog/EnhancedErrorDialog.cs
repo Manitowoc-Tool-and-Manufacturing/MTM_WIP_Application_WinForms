@@ -63,6 +63,8 @@ namespace MTM_Inventory_Application.Forms.ErrorDialog
                 });
 
             InitializeComponent();
+            Core_Themes.ApplyDpiScaling(this);
+            Core_Themes.ApplyRuntimeLayoutAdjustments(this);
 
             Service_DebugTracer.TraceBusinessLogic("ERROR_CONTEXT_SETUP",
                 inputData: new { exception.Message, callerName, controlName, severity },
