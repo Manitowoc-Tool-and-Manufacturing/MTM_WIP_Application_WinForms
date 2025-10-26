@@ -9,15 +9,7 @@ namespace MTM_Inventory_Application.Forms.ErrorReports
 {
     /// <summary>
     /// Modal dialog for displaying complete error report details with status update capabilities.
-    /// Uses TableLayoutPanel for responsive grid-based layout with proper spacing.
     /// </summary>
-    /// <remarks>
-    /// Layout structure:
-    /// - Single row/column TableLayoutPanel with 10px padding
-    /// - Control_ErrorReportDetails fills available space with Dock.Fill
-    /// - Minimum size: 670x470 (accounts for 10px padding on all sides)
-    /// - Responsive sizing: Form can be resized larger, minimum prevents unusable collapse
-    /// </remarks>
     public partial class Form_ErrorReportDetailsDialog : Form
     {
         #region Fields

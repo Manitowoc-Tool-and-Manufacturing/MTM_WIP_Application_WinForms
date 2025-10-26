@@ -155,18 +155,6 @@ A: Yes - Contact John Koll at (ext. 323) or jkoll@mantoolmfg.com / Dan Smith at 
 **Q: What if I submit a report by accident?**  
 A: No problem - Contact John Koll at (ext. 323) or jkoll@mantoolmfg.com / Dan Smith at (ext. 311) or dsmith@mantoolmfg.com / Ka Lee at (ext. ___ ) or klee@mantoolmfg.com
 
-**Q: Who can access the View Error Reports feature?**  
-A: IT support staff and developers with access to the Development menu. This feature is for managing and investigating reported issues.
-
-**Q: How do I export error reports for management?**  
-A: In the View Error Reports window, use the filter panel to select the time period and criteria you want, then click "Export to CSV" or "Export to Excel". You can also select specific reports (Ctrl+Click) and use "Export Selected".
-
-**Q: What does each report status color mean?**  
-A: **Red** = New (just reported, needs attention), **Yellow** = Reviewed (investigation in progress), **Green** = Resolved (issue fixed or documented)
-
-**Q: Can I search for specific error messages?**  
-A: Yes - use the Search box in the filter panel. It searches across error summaries, user notes, and technical details to help you find specific issues.
-
 ---
 
 ### 🎉 Coming Soon
@@ -182,5 +170,5 @@ We're working on even more improvements:
 
 ---
 
-**Last Updated**: October 26, 2025 - Version 5.4.0  
+**Last Updated**: October 26, 2025  
 **Questions?** Contact John Koll at (ext. 323) or jkoll@mantoolmfg.com / Dan Smith at (ext. 311) or dsmith@mantoolmfg.com / Ka Lee at (ext. ___ ) or klee@mantoolmfg.com
