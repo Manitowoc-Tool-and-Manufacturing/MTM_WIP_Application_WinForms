@@ -1,271 +1,251 @@
 # Research: View Error Reports Window
 
-**Feature**: 002-view-error-reports  
+**Feature**: View Error Reports Window  
 **Created**: 2025-10-25  
 **Status**: Complete
 
----
+## Research Questions from Technical Context
 
-## Research Questions
+All technical context items were resolved during planning. No unknowns requiring research agents.
 
-### Q1: DataGridView Performance with Large Datasets
+## Technology Decisions
 
-**Question**: How should we handle displaying 10,000+ error reports without UI lag?
+### 1. DataGridView Binding Strategy
 
-**Decision**: Implement server-side pagination with 100 records per page default
+**Decision**: Use `DataTable` binding with synchronous `DataSource` property assignment
 
 **Rationale**:
-- DataGridView performs poorly with >1000 rows loaded simultaneously
-- Server-side pagination keeps memory footprint low
-- Stored procedure already supports `@p_Page` and `@p_PageSize` parameters
-- Network transfer reduced to ~10KB per page vs. loading full dataset
+- Existing pattern throughout codebase (Control_AdvancedRemove, Control_History, etc.)
+- WinForms DataGridView works best with DataTable for dynamic columns
+- Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync returns DataTable directly
+- No need for ObservableCollection or custom binding since this is read-mostly grid
+- Color-coding via CellFormatting event handler based on Status column
 
 **Alternatives Considered**:
-- Virtual mode DataGridView: Complex state management, harder to debug
-- Client-side filtering: Still requires loading full dataset, memory issues persist
-- Lazy loading: Difficult UX with scrolling, unpredictable behavior
+- BindingList<T> with strongly-typed models: Rejected because filtering and sorting are handled server-side via stored procedure parameters, not client-side LINQ
+- Manual row-by-row population: Rejected due to performance overhead and complexity
 
-**Implementation Notes**:
-- Add pagination controls (Previous, Next, Page X of Y)
-- Show "Showing 1-100 of 10,243 reports" label
-- Persist page size preference in user settings
-- Jump to page dropdown for quick navigation
+### 2. Master-Detail Layout Approach
 
----
-
-### Q2: Stored Procedure Dependencies
-
-**Question**: Do required stored procedures exist from Feature 001?
-
-**Decision**: Reuse `sp_error_reports_*` procedures from 001-error-reporting-with
+**Decision**: Horizontal split (Option A from spec) with 60% grid / 40% detail panel
 
 **Rationale**:
-- Feature 001 already implemented complete error_reports table schema
-- Stored procedures follow `sp_error_reports_GetAll`, `sp_error_reports_UpdateStatus` pattern
-- No new procedures needed for basic viewing/filtering
-- Status update logic already implemented with audit trail
+- Matches existing WinForms patterns in application (SplitContainer with Orientation.Horizontal)
+- Grid requires horizontal space for multiple columns (ID, Date, User, Machine, Type, Summary, Status)
+- Detail view needs vertical space for long text fields (CallStack, TechnicalDetails)
+- User workflow: Browse list → select → view details (top-to-bottom reading pattern)
 
-**Available Procedures** (from 001):
-- `sp_error_reports_GetAll` - Supports filtering by date, user, status, machine
-- `sp_error_reports_GetByID` - Retrieve single report details
-- `sp_error_reports_UpdateStatus` - Change status, add developer notes
-- `sp_error_reports_GetUserList` - Populate user filter dropdown  
-- `sp_error_reports_GetMachineList` - Populate machine filter dropdown
+**Alternatives Considered**:
+- Option B (Vertical split with filter panel): Rejected because filters can be inline above grid (less screen real estate)
+- Option C (Modal popup): Rejected because context switching slows developer workflow
+- Option D (Three panels): Rejected due to complexity and cramped space per panel
 
-**Verification**: Confirmed in `Database/UpdatedStoredProcedures/ReadyForVerification/`
+### 3. Filter Implementation Pattern
 
----
-
-### Q3: Export Format Selection
-
-**Question**: Should export support CSV, Excel, or both?
-
-**Decision**: Support both CSV (ClosedXML) and Excel (.xlsx) formats
+**Decision**: Build filter parameters Dictionary and pass to stored procedure
 
 **Rationale**:
-- CSV: Lightweight, universal compatibility, easy parsing in scripts
-- Excel: Formatted columns, clickable links, better for management reports
-- ClosedXML library already in project dependencies from existing export features
-- Minimal additional code to support both formats
+- Stored procedure handles complex WHERE clause construction and SQL injection prevention
+- Existing pattern in Control_AdvancedRemove demonstrates successful approach
+- Parameters: DateFrom, DateTo, UserName, Status, MachineName, SearchText
+- Server-side filtering reduces data transfer and client-side processing
+- Search text applies via LIKE '%term%' on ErrorSummary, UserNotes, TechnicalDetails columns
 
-**Implementation Notes**:
-- Export button opens submenu: "Export as CSV" / "Export as Excel"
-- CSV: Use `System.IO.StreamWriter` with comma delimiter, quote strings
-- Excel: Use `ClosedXML.Excel.XLWorkbook`, apply column formatting
-- Include filters applied in export filename: `ErrorReports_New_2025-10-25.xlsx`
+**Alternatives Considered**:
+- Client-side DataTable filtering: Rejected due to performance with large datasets and complexity
+- Multiple stored procedures per filter combination: Rejected due to explosion of SP variants
 
----
+### 4. Stored Procedure Inventory
 
-### Q4: Detail View Implementation
+**Decision**: Need to create 4 additional stored procedures beyond existing sp_error_reports_Insert
 
-**Question**: Should detail view be side panel or modal dialog?
+**Required Procedures**:
+1. **sp_error_reports_GetAll** - Retrieve filtered reports
+   - IN: DateFrom, DateTo, UserName, Status, MachineName, SearchText (all optional)
+   - OUT: DataTable with columns matching grid (ID, Date, User, Machine, Type, Summary, Status)
+   - Logic: Dynamic WHERE clause construction, LIKE search across text fields
 
-**Decision**: Bottom detail panel (40% height) as specified in UI Option A
+2. **sp_error_reports_GetByID** - Get single report details
+   - IN: ReportID
+   - OUT: Single row with all fields including full CallStack and TechnicalDetails
 
-**Rationale**:
-- Spec explicitly selected "Option A: Master-Detail Horizontal Split"
-- Panel keeps context visible while showing details
-- No modal window management complexity
-- Consistent with existing MTM WinForms patterns (Transactions form uses similar layout)
-- Allows quick switching between reports without closing dialogs
+3. **sp_error_reports_UpdateStatus** - Change status and add developer notes
+   - IN: ReportID, NewStatus, DeveloperNotes, ReviewedBy, ReviewedDate
+   - OUT: Success/failure indicator
 
-**Implementation Notes**:
-- Use SplitContainer control with Orientation=Horizontal
-- Top panel: DataGridView (60% height, resizable)
-- Bottom panel: Detail controls in GroupBox
-- SelectionChanged event populates detail panel
-- Include collapsible sections for long text (Technical Details, Call Stack)
+4. **sp_error_reports_GetUserList** - Populate user filter dropdown
+   - OUT: Distinct UserName values from error_reports table
 
----
-
-### Q5: Color-Coding Implementation
-
-**Question**: How to implement status color-coding that respects themes?
-
-**Decision**: Use DataGridView row BackColor with light pastel colors
+5. **sp_error_reports_GetMachineList** - Populate machine filter dropdown
+   - OUT: Distinct MachineName values from error_reports table
 
 **Rationale**:
-- Spec requires: New=LightCoral, Reviewed=LightGoldenrodYellow, Resolved=LightGreen
-- WinForms DataGridView supports row-level BackColor property
-- Light colors remain readable with dark text in all themes
-- Core_Themes utility can adjust colors for theme compatibility if needed
+- Follows stored-procedure-only mandate from Constitution
+- Each procedure has single responsibility
+- GetAll handles filtering logic server-side for performance
+- GetByID avoids transferring 10KB+ call stacks until needed
 
-**Implementation Notes**:
+### 5. Export Strategy
+
+**Decision**: Use ClosedXML for Excel export, custom CSV writer for CSV
+
+**Rationale**:
+- ClosedXML already in project dependencies (seen in documentation references)
+- CSV export via StringBuilder for simplicity and performance
+- Export filtered dataset (DataTable from current grid binding)
+- Both formats support UTF-8 for special characters in error text
+- SaveFileDialog for user-chosen path
+
+**Alternatives Considered**:
+- EPPlus: Rejected because ClosedXML already available
+- System.IO.Packaging for Excel: Rejected due to complexity vs ClosedXML
+
+### 6. Status Management Workflow
+
+**Decision**: Confirmation dialog before status change, developer notes optional
+
+**Rationale**:
+- Prevents accidental status changes
+- Developer notes captured for audit trail
+- Status transitions: Any → Any (flexible workflow per edge case in spec)
+- Service_ErrorHandler.ShowConfirmation for consistency
+
+**Status Values**:
+- "New" (default) → Red background (LightCoral)
+- "Reviewed" → Yellow background (LightGoldenrodYellow)
+- "Resolved" → Green background (LightGreen)
+
+### 7. Performance Optimization Strategies
+
+**Decision**: Implement paging if result set exceeds 1000 records
+
+**Rationale**:
+- Spec mentions 10,000 reports as edge case
+- DataGridView performance degrades with >1000 rows
+- Add TOP N / LIMIT to stored procedure with offset parameter
+- Display "Showing X-Y of Z records" with navigation buttons
+- Initial implementation without paging acceptable if dataset stays <1000
+
+**Alternatives Considered**:
+- Virtual scrolling: Rejected due to WinForms complexity
+- Load all records: Acceptable for MVP, add paging if needed
+
+## Key Patterns from Codebase Analysis
+
+### DataGridView Pattern (from Control_AdvancedRemove)
+
 ```csharp
-private void ApplyRowColoring(DataGridViewRow row, string status)
+// Execute stored procedure
+var result = await Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync(
+    connectionString,
+    "procedureName",
+    parameters,
+    progressHelper);
+
+if (!result.IsSuccess)
 {
-    row.DefaultCellStyle.BackColor = status switch
+    Service_ErrorHandler.HandleException(
+        result.Exception, 
+        ErrorSeverity.Medium,
+        message: result.ErrorMessage);
+    return;
+}
+
+// Bind to grid
+DataTable dt = result.Data ?? new DataTable();
+myDataGridView.DataSource = dt;
+
+// Configure columns
+foreach (DataGridViewColumn column in myDataGridView.Columns)
+{
+    column.Visible = visibleColumns.Contains(column.Name);
+}
+
+// Color coding via event
+myDataGridView.CellFormatting += (s, e) =>
+{
+    if (e.ColumnIndex == statusColumnIndex && e.Value != null)
     {
-        "New" => Color.LightCoral,
-        "Reviewed" => Color.LightGoldenrodYellow,
-        "Resolved" => Color.LightGreen,
-        _ => Color.White
-    };
+        string status = e.Value.ToString();
+        e.CellStyle.BackColor = status switch
+        {
+            "New" => Color.LightCoral,
+            "Reviewed" => Color.LightGoldenrodYellow,
+            "Resolved" => Color.LightGreen,
+            _ => Color.White
+        };
+    }
+};
+```
+
+### Dao_ErrorReports Pattern
+
+Existing DAO has region structure:
+- Fields (none for static class)
+- Database Operations
+- Helpers
+
+Follow same pattern when adding methods:
+- GetAllErrorReportsAsync() → Database Operations region
+- GetErrorReportByIdAsync() → Database Operations region
+- UpdateErrorReportStatusAsync() → Database Operations region
+- Export methods → New Helper_ErrorReportExport class
+
+### Form Constructor Pattern
+
+```csharp
+public Form_ViewErrorReports()
+{
+    InitializeComponent();
+    Core_Themes.ApplyDpiScaling(this);
+    Core_Themes.ApplyRuntimeLayoutAdjustments(this);
+    WireUpEvents();
+    InitializeProgressHelper();
+    LoadInitialData();
 }
 ```
 
----
+## Implementation Notes
 
-### Q6: Filter Persistence
+1. **Grid Column Truncation**: Summary column shows first 100 characters with "..." ellipsis. Full text visible in detail panel.
 
-**Question**: Should applied filters persist between window opens?
+2. **Null Safety**: All text fields from database may be NULL. Use `?? string.Empty` or `DBNull.Value` checks.
 
-**Decision**: Yes, save filter state to user preferences
+3. **Progress Reporting**: Use `Helper_StoredProcedureProgress` for operations expected to take >1 second (initial load, bulk export).
 
-**Rationale**:
-- Developers typically work on same issues across multiple sessions
-- Reduces repetitive filter re-application
-- Improves workflow efficiency for common debugging scenarios
-- User preferences infrastructure already exists in project
+4. **Double-Click Handler**: Attach to DataGridView.CellDoubleClick event to show detail panel or dialog.
 
-**Implementation Notes**:
-- Save to Model_UserUiColors or create Model_UserPreferences extension
-- Persist: DateRange, SelectedUsers[], SelectedStatuses[], SearchText
-- Restore on form load if preferences exist
-- Add "Reset to Defaults" button to clear saved filters
+5. **Copy to Clipboard**: Use StringBuilder to format all fields, then `Clipboard.SetText()`.
 
----
+6. **Status Column**: Must be read-only in grid. Changes only via button clicks with confirmation.
 
-## Technology Stack Confirmation
+7. **Date Formatting**: Display as "yyyy-MM-dd HH:mm:ss" in grid, full DateTime in detail view.
 
-### Database Layer
-- MySQL 5.7.24 (MAMP compatible)
-- MySql.Data 9.4.0 connector
-- Stored procedures via `Helper_Database_StoredProcedure`
+8. **Search Behavior**: Apply filters clears previous selection. Search text case-insensitive.
 
-### WinForms Components
-- DataGridView (built-in, grid display)
-- SplitContainer (layout management)
-- DateTimePicker (date range filters)
-- ComboBox (dropdowns for user/status/machine)
-- TextBox (search input)
+## Dependencies Verified
 
-### Export Libraries
-- ClosedXML (Excel .xlsx generation)
-- System.IO.StreamWriter (CSV export)
+✅ MySql.Data 9.4.0 - Already in project  
+✅ ClosedXML - Referenced in documentation  
+✅ Helper_Database_StoredProcedure - Exists with ExecuteDataTableWithStatusAsync  
+✅ Service_ErrorHandler - Exists with HandleException and ShowConfirmation  
+✅ Core_Themes - Exists with ApplyDpiScaling  
+✅ Dao_ErrorReports - Exists, ready to extend  
+✅ Model_ErrorReport - Exists with all required fields
 
-### Existing Patterns
-- Dao_ErrorReports (already exists from Feature 001)
-- Model_ErrorReport (POCO model)
-- DaoResult<T> pattern for data access
-- Service_ErrorHandler for user-facing errors
-- Core_Themes for DPI/theming
+## Risk Assessment
 
----
+**Low Risk**:
+- DataGridView binding (proven pattern)
+- Stored procedure approach (standard)
+- Form/UserControl structure (existing conventions)
 
-## Architecture Decisions
+**Medium Risk**:
+- Performance with 10,000+ records (mitigated by paging plan)
+- Complex filtering logic in stored procedure (testable independently)
 
-### Form Structure
-```
-ViewErrorReportsForm : Form
-├── FilterPanel (GroupBox) - Top 15%
-│   ├── DateRangePickers
-│   ├── ComboBoxes (User, Status, Machine)
-│   ├── SearchTextBox
-│   └── Apply/Clear Buttons
-├── SplitContainer (85%)
-│   ├── Panel1: DataGridView (60%)
-│   └── Panel2: DetailPanel (40%)
-└── StatusStrip (Progress + Count Label)
-```
-
-### Data Flow
-```
-User Action → FilterPanel
-          ↓
-    Build Filter Criteria
-          ↓
-    Dao_ErrorReports.GetFilteredReportsAsync()
-          ↓
-    Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync()
-          ↓
-    sp_error_reports_GetAll (MySQL)
-          ↓
-    DataTable → List<Model_ErrorReport>
-          ↓
-    Bind to DataGridView
-          ↓
-    Apply Row Coloring
-```
-
-### State Management
-- Current page number
-- Page size (default 100)
-- Applied filters (FilterCriteria object)
-- Selected report (for detail panel)
-- Sort column and direction
-
----
-
-## Performance Targets
-
-- Initial load: < 1 second for 100 reports
-- Filter application: < 500ms for 1000 reports
-- Pagination navigation: < 200ms per page
-- Export 500 reports: < 2 seconds (CSV), < 4 seconds (Excel)
-- Status update: < 300ms including grid refresh
-- Search: < 400ms for text search across 1000 reports
-
----
-
-## Security Considerations
-
-- All database queries via parameterized stored procedures (SQL injection protected)
-- No inline SQL permitted per Constitution Principle I
-- Developer notes logged with timestamp and username for audit trail
-- Export permissions checked (admin-only configuration option available)
-- No sensitive data in exported files (validated in Dao layer)
-
----
-
-## Dependencies
-
-### From Feature 001
-- ✅ error_reports table schema
-- ✅ Dao_ErrorReports class
-- ✅ Model_ErrorReport POCO
-- ✅ All `sp_error_reports_*` stored procedures
-- ✅ Service_ErrorHandler integration
-
-### Existing Infrastructure
-- ✅ Helper_Database_StoredProcedure
-- ✅ Helper_Database_Variables
-- ✅ Core_Themes (DPI scaling)
-- ✅ LoggingUtility
-- ✅ ClosedXML library
-
----
-
-## Open Questions
-
-None - all research questions resolved.
-
----
+**High Risk**: None identified
 
 ## Next Steps
 
-1. Create data-model.md with entity relationships
-2. Generate plan.md with implementation architecture
-3. Create contracts/ directory with DAO interface definitions
-4. Generate quickstart.md for development workflow
-5. Run agent context update to add View Error Reports to AGENTS.md
+Proceed to Phase 1: Generate data-model.md and contracts/

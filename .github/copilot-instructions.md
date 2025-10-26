@@ -12,6 +12,8 @@ Last updated: 2025-10-13
 - MySQL 5.7+ via stored procedures only (error_reports table), local file system for offline queue (001-error-reporting-with)
 - [e.g., Python 3.11, Swift 5.9, Rust 1.75 or NEEDS CLARIFICATION] + [e.g., FastAPI, UIKit, LLVM or NEEDS CLARIFICATION] (005-transaction-viewer-form)
 - [if applicable, e.g., PostgreSQL, CoreData, files or N/A] (005-transaction-viewer-form)
+- C# 12 / .NET 8.0 Windows Forms + MySql.Data 9.4.0, System.Text.Json, ClosedXML (for export) (002-view-error-reports)
+- MySQL 5.7+ via stored procedures (error_reports table) (002-view-error-reports)
 
 ## Agent Communication Rules
 
