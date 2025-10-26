@@ -79,6 +79,7 @@ namespace MTM_Inventory_Application.Forms.MainForm
             MainForm_MenuStrip_View_Separator2 = new ToolStripSeparator();
             developmentToolStripMenuItem = new ToolStripMenuItem();
             debugDashboardToolStripMenuItem = new ToolStripMenuItem();
+            syncPendingReportsToolStripMenuItem = new ToolStripMenuItem();
             dependencyChartsToolStripMenuItem = new ToolStripMenuItem();
             conversionToolStripMenuItem = new ToolStripMenuItem();
             debugDashboardToolStripMenuItem = new ToolStripMenuItem();
@@ -182,16 +183,31 @@ namespace MTM_Inventory_Application.Forms.MainForm
             // 
             // developmentToolStripMenuItem
             // 
-            developmentToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { debugDashboardToolStripMenuItem, dependencyChartsToolStripMenuItem });
+            developmentToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { debugDashboardToolStripMenuItem, syncPendingReportsToolStripMenuItem, dependencyChartsToolStripMenuItem });
             developmentToolStripMenuItem.Name = "developmentToolStripMenuItem";
             developmentToolStripMenuItem.Size = new Size(90, 24);
             developmentToolStripMenuItem.Text = "Development";
+            // 
+            // debugDashboardToolStripMenuItem
+            // 
+            debugDashboardToolStripMenuItem.Name = "debugDashboardToolStripMenuItem";
+            debugDashboardToolStripMenuItem.ShortcutKeys = Keys.Control | Keys.Shift | Keys.D;
+            debugDashboardToolStripMenuItem.Size = new Size(250, 22);
+            debugDashboardToolStripMenuItem.Text = "🔍 Debug Dashboard";
+            debugDashboardToolStripMenuItem.Click += MainForm_MenuStrip_Development_DebugDashboard_Click;
+            // 
+            // syncPendingReportsToolStripMenuItem
+            // 
+            syncPendingReportsToolStripMenuItem.Name = "syncPendingReportsToolStripMenuItem";
+            syncPendingReportsToolStripMenuItem.Size = new Size(250, 22);
+            syncPendingReportsToolStripMenuItem.Text = "🔄 Sync Pending Error Reports";
+            syncPendingReportsToolStripMenuItem.Click += MainForm_MenuStrip_Development_SyncReports_Click;
             // 
             // dependencyChartsToolStripMenuItem
             // 
             dependencyChartsToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { conversionToolStripMenuItem, viewerToolStripMenuItem });
             dependencyChartsToolStripMenuItem.Name = "dependencyChartsToolStripMenuItem";
-            dependencyChartsToolStripMenuItem.Size = new Size(180, 22);
+            dependencyChartsToolStripMenuItem.Size = new Size(250, 22);
             dependencyChartsToolStripMenuItem.Text = "Dependency Charts";
             // 
             // conversionToolStripMenuItem
@@ -538,6 +554,7 @@ namespace MTM_Inventory_Application.Forms.MainForm
         internal ToolTip MainForm_ToolTip;
         private ToolStripMenuItem developmentToolStripMenuItem;
         private ToolStripMenuItem debugDashboardToolStripMenuItem;
+        private ToolStripMenuItem syncPendingReportsToolStripMenuItem;
         private ToolStripMenuItem dependencyChartsToolStripMenuItem;
         private ToolStripMenuItem conversionToolStripMenuItem;
         

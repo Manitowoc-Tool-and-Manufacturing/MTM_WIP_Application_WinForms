@@ -511,14 +511,38 @@ namespace MTM_Inventory_Application.Forms.ErrorDialog
         {
             try
             {
-                // In a real implementation, this would open an issue reporting system
-                var message = "This would typically open your issue reporting system or send an email to IT support.\n\n" +
-                             "For now, please copy the technical details and send them to your system administrator.";
-                MessageBox.Show(message, "Report Issue", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                // Create error report from current exception
+                var report = new MTM_WIP_Application_WinForms.Models.Model_ErrorReport
+                {
+                    UserName = Model_AppVariables.User,
+                    AppVersion = Model_AppVariables.UserVersion,
+                    ErrorType = _exception.GetType().Name,
+                    ErrorSummary = _exception.Message,
+                    TechnicalDetails = _exception.ToString(),
+                    CallStack = _exception.StackTrace ?? string.Empty,
+                    ReportDate = DateTime.Now
+                };
+
+                // Open Report Issue dialog
+                using (var reportDialog = new Form_ReportIssue(report))
+                {
+                    var result = reportDialog.ShowDialog(this);
+                    
+                    if (result == DialogResult.OK)
+                    {
+                        // Report was submitted successfully
+                        Service_ErrorHandler.ShowInformation(
+                            "Thank you for reporting this issue. The error details have been submitted to IT support.",
+                            "Issue Reported");
+                    }
+                }
             }
             catch (Exception ex)
             {
                 LoggingUtility.LogApplicationError(ex);
+                Service_ErrorHandler.ShowWarning(
+                    "Failed to open issue reporting dialog. Please contact IT support directly.",
+                    "Error");
             }
         }
 

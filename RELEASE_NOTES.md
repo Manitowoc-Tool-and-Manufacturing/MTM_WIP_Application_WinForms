@@ -4,6 +4,383 @@
 
 ---
 
+## Version 5.3.0 - October 26, 2025
+
+**Release Type**: Minor Release  
+**Build**: 5.3.0.0  
+**Release Date**: October 26, 2025  
+**Deployment Risk**: 🟡 Medium (new database table and stored procedure)
+
+---
+
+### 📋 Release Summary
+
+This release introduces a **comprehensive error reporting system with offline queue support**. Users can now submit error reports with contextual notes describing what they were doing when errors occurred. When the database is unavailable, reports are automatically queued locally and synchronized when connectivity is restored. This significantly improves our ability to diagnose and resolve production issues.
+
+**Key Highlights**:
+- ✅ New "Report Issue" dialog for submitting error reports with user notes
+- ✅ Automatic offline queueing when database is unavailable
+- ✅ Background synchronization of queued reports on application startup
+- ✅ Manual sync option in Developer Settings for immediate troubleshooting
+- ✅ Comprehensive error tracking with Report IDs for follow-up
+
+**Deployment Risk Assessment**: Medium - requires new database table and stored procedure installation. Feature is isolated and does not affect existing workflows. Easy rollback by reverting database changes.
+
+---
+
+### 🎉 What's New
+
+#### User-Friendly Error Reporting
+- **Report Issue Dialog**: When errors occur, users can click "Report Issue" to provide context about what they were doing
+  - Simple text box with guidance: "What were you doing when this error occurred?"
+  - Error summary displayed for reference
+  - Instant submission with Report ID confirmation
+  - Clean, professional interface sized appropriately for all screen resolutions
+
+#### Reliable Offline Support
+- **Automatic Queueing**: Error reports are never lost, even during database outages
+  - Reports saved locally as timestamped files
+  - User-friendly message: "Report will be submitted when connection restored"
+  - Queue stored in standard Windows AppData folder
+  - Files organized chronologically for proper processing order
+
+- **Smart Synchronization**: Background sync runs automatically on startup
+  - Non-blocking operation - application starts immediately
+  - Progress indicator for large queues (>5 reports)
+  - Files moved to archive after successful submission
+  - Failed files retained for retry on next startup
+
+#### Developer Tools
+- **Manual Sync Control**: Developers can trigger immediate synchronization
+  - "Sync Pending Reports" option in Developer Settings menu
+  - Shows pending count badge for visibility
+  - Progress notification shows "X of Y reports submitted"
+  - Useful for urgent issue investigation
+
+#### Robust Error Handling
+- **Idempotent Processing**: Prevents duplicate report submissions
+  - Timestamp-based duplicate detection (1-second tolerance)
+  - Safe to run sync multiple times
+  - Concurrent sync prevention with lock mechanism
+
+- **Corrupt File Management**: Graceful handling of malformed queue files
+  - Corrupted files renamed to `.corrupt` extension
+  - Other valid reports continue processing
+  - Comprehensive logging for troubleshooting
+
+---
+
+### 🔧 Technical Changes
+
+#### New Database Components
+
+**error_reports Table**:
+- Stores all submitted error reports with full context
+- 14 columns including ReportID (auto-increment), UserName, ErrorType, ErrorSummary, UserNotes, TechnicalDetails, CallStack
+- Status tracking: New, Reviewed, Resolved
+- Indexes on UserName, ReportDate (DESC), Status for efficient querying
+
+**sp_error_reports_Insert Stored Procedure**:
+- Parameterized insert with validation
+- Transaction management for atomicity
+- Standard OUTPUT parameters (p_Status, p_ErrorMsg, p_ReportID)
+- Returns generated ReportID on success
+
+#### New Application Components
+
+**Models** (Data Structures):
+- `Model_ErrorReport` - 14 properties mapping to database table
+- `Model_QueuedErrorReport` - Tracks pending offline reports
+- `ErrorReportStatus` enum - New, Reviewed, Resolved
+
+**Data Access Layer**:
+- `Dao_ErrorReports` - Database operations using Helper_Database_StoredProcedure pattern
+- InsertReportAsync method with proper error handling
+- DaoResult<int> return type for consistent error reporting
+
+**Services**:
+- `Service_ErrorReportQueue` - Offline queue management
+  - QueueReportAsync generates timestamped SQL files
+  - GenerateSqlForReport with proper SQL escaping
+  - SanitizeUsername for safe filenames
+  
+- `Service_ErrorReportSync` - Synchronization orchestration
+  - SyncOnStartupAsync with fire-and-forget pattern
+  - SyncManuallyAsync for developer control
+  - ProcessPendingFilesAsync with sequential processing
+  - ReportExistsAsync for idempotent duplicate checking
+  - HandleCorruptFile for error resilience
+  - CleanupOldReportsAsync for automatic maintenance
+
+**User Interface**:
+- `Form_ReportIssue` - WinForms dialog for error submission
+  - Read-only error summary display
+  - Multi-line user notes input
+  - Database connectivity check
+  - Integration with Service_ErrorHandler
+
+#### Configuration
+
+**Model_AppVariables.ErrorReporting**:
+- QueueDirectory: `%APPDATA%\MTM_Application\ErrorReports\Pending`
+- ArchiveDirectory: `%APPDATA%\MTM_Application\ErrorReports\Sent`
+- MaxPendingAgeDays: 30 (configurable retention)
+- MaxSentArchiveAgeDays: 30 (configurable cleanup)
+- EnableAutoSyncOnStartup: true
+- SyncProgressThreshold: 5 reports
+
+#### Integration Points
+
+**Program.cs Startup Sequence**:
+- Fire-and-forget sync after parameter cache initialization
+- Non-blocking background task
+- Comprehensive error logging
+
+**Control_DeveloperSettings**:
+- "Sync Pending Reports" menu item
+- GetPendingReportCount badge display
+- Manual sync with progress feedback
+
+**Service_ErrorHandler**:
+- "Report Issue" button in error dialog
+- Model_ErrorReport population from exception context
+- Form_ReportIssue dialog integration
+
+---
+
+### 🐛 Bug Fixes
+
+No bugs fixed in this release - this is a new feature implementation.
+
+---
+
+### ⚠️ Known Issues
+
+None - all manual validation completed successfully:
+- ✅ Online submission workflow verified
+- ✅ Offline queueing workflow verified
+- ✅ Startup sync workflow verified
+- ✅ Manual sync workflow verified
+- ✅ Corrupt file handling verified
+- ✅ Concurrent sync prevention verified
+- ✅ Special characters in user notes verified
+
+---
+
+### 📦 Deployment Notes
+
+#### Database Changes Required
+
+**1. Create error_reports table** (run in both test and production databases):
+
+```sql
+CREATE TABLE error_reports (
+    ReportID INT AUTO_INCREMENT PRIMARY KEY,
+    ReportDate DATETIME NOT NULL,
+    UserName VARCHAR(100) NOT NULL,
+    AppVersion VARCHAR(50),
+    ErrorType VARCHAR(255),
+    ErrorSummary TEXT,
+    UserNotes TEXT,
+    TechnicalDetails TEXT,
+    CallStack TEXT,
+    Status ENUM('New', 'Reviewed', 'Resolved') DEFAULT 'New',
+    ReviewedBy VARCHAR(100),
+    ReviewedDate DATETIME,
+    DeveloperNotes TEXT,
+    
+    INDEX idx_user (UserName),
+    INDEX idx_date (ReportDate DESC),
+    INDEX idx_status (Status)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+```
+
+**2. Create sp_error_reports_Insert stored procedure**:
+
+```sql
+-- See Database/UpdatedStoredProcedures/ReadyForVerification/sp_error_reports_Insert.sql
+-- Parameters: p_UserName (required), p_AppVersion, p_ErrorType, p_ErrorSummary, 
+--             p_UserNotes, p_TechnicalDetails, p_CallStack
+-- Outputs: p_ReportID, p_Status, p_ErrorMsg
+```
+
+#### Installation Steps
+
+**PowerShell Deployment**:
+
+```powershell
+# 1. Stop application if running
+Stop-Process -Name "MTM_Inventory_Application" -Force -ErrorAction SilentlyContinue
+
+# 2. Backup current version
+$backupPath = "C:\MTM_Backups\v5.2.0_$(Get-Date -Format 'yyyyMMdd_HHmmss')"
+Copy-Item "C:\Program Files\MTM_Application\*" -Destination $backupPath -Recurse
+
+# 3. Deploy new version
+Copy-Item "\\deployment\MTM_v5.3.0\*" -Destination "C:\Program Files\MTM_Application\" -Force -Recurse
+
+# 4. Run database scripts (in MySQL):
+# mysql -u root -p mtm_wip_application < Database/UpdatedDatabase/ReadyForVerification/create_error_reports_table.sql
+# mysql -u root -p mtm_wip_application < Database/UpdatedStoredProcedures/ReadyForVerification/sp_error_reports_Insert.sql
+
+# 5. Verify database changes
+# Query: SELECT COUNT(*) FROM error_reports; (should return 0)
+# Query: CALL sp_error_reports_Insert('TEST', NULL, NULL, NULL, 'Test', NULL, NULL, @id, @status, @msg);
+#        SELECT @status, @msg, @id; (should return 0, 'Success', 1)
+# Cleanup: DELETE FROM error_reports WHERE UserName = 'TEST';
+
+# 6. Start application
+Start-Process "C:\Program Files\MTM_Application\MTM_Inventory_Application.exe"
+```
+
+#### Rollback Procedure
+
+If issues arise, rollback is straightforward:
+
+```powershell
+# 1. Stop application
+Stop-Process -Name "MTM_Inventory_Application" -Force
+
+# 2. Restore previous version
+$latestBackup = Get-ChildItem "C:\MTM_Backups\v5.2.0*" | Sort-Object -Property CreationTime -Descending | Select-Object -First 1
+Copy-Item "$($latestBackup.FullName)\*" -Destination "C:\Program Files\MTM_Application\" -Force -Recurse
+
+# 3. Remove database changes (optional - feature is isolated)
+# DROP TABLE IF EXISTS error_reports;
+# DROP PROCEDURE IF EXISTS sp_error_reports_Insert;
+# Note: If table has production data, consider leaving it for future re-deployment
+
+# 4. Start application
+Start-Process "C:\Program Files\MTM_Application\MTM_Inventory_Application.exe"
+```
+
+**Rollback Risk**: 🟢 Low - New feature is completely isolated. Removing it does not affect existing workflows. Database table can be left in place if it contains production reports.
+
+---
+
+### ✅ Testing Checklist
+
+#### Pre-Deployment Validation
+
+**Build Verification**:
+- [x] Solution builds successfully with 0 compilation errors
+- [x] No new warnings introduced by error reporting feature
+- [x] All 26 implementation tasks completed and verified
+
+**Database Verification** (Test Environment):
+- [x] error_reports table created successfully
+- [x] All indexes present (idx_user, idx_date, idx_status)
+- [x] sp_error_reports_Insert executes successfully
+- [x] Test insert returns ReportID > 0
+- [x] Test insert with missing UserName returns Status = -2
+
+**Security Scan**:
+- [x] Form_ReportIssue: 99/100 security score (0 critical issues)
+- [x] Service_ErrorReportSync: 93/100 security score (0 critical issues)
+- [x] SQL escaping verified (EscapeSqlString handles single quotes correctly)
+- [x] No hardcoded credentials in code
+- [x] No path traversal vulnerabilities
+
+**Performance Validation**:
+- [x] Service_ErrorReportSync: 98/100 performance score
+- [x] Startup sync non-blocking (fire-and-forget pattern)
+- [x] Application starts immediately even with 10+ queued reports
+- [x] UI remains responsive during sync operations
+
+**Error Handling Validation**:
+- [x] Service_ErrorReportQueue: 0 MessageBox violations
+- [x] Service_ErrorReportSync: 0 MessageBox violations
+- [x] All exceptions logged via LoggingUtility
+- [x] User-friendly error messages throughout
+
+#### Post-Deployment Verification
+
+**Smoke Tests** (Run immediately after deployment):
+
+1. **Online Submission Test**:
+   - [ ] Trigger test error in application
+   - [ ] Click "Report Issue" button
+   - [ ] Enter notes: "Post-deployment validation test"
+   - [ ] Verify success message with Report ID
+   - [ ] Query database: `SELECT * FROM error_reports ORDER BY ReportID DESC LIMIT 1`
+   - [ ] Confirm UserNotes contains test message
+
+2. **Offline Queue Test**:
+   - [ ] Stop MySQL service temporarily
+   - [ ] Trigger test error
+   - [ ] Submit report with notes
+   - [ ] Verify message: "Report will be submitted when connection restored"
+   - [ ] Check `%APPDATA%\MTM_Application\ErrorReports\Pending\` for .sql file
+   - [ ] Restart MySQL service
+   - [ ] Restart application
+   - [ ] Verify pending file moved to Sent folder
+   - [ ] Confirm report in database
+
+3. **Manual Sync Test**:
+   - [ ] Create 2 offline reports (MySQL stopped)
+   - [ ] Restart MySQL
+   - [ ] Open Developer Settings
+   - [ ] Verify menu shows "Sync Pending Reports (2)"
+   - [ ] Click menu item
+   - [ ] Verify notification: "2 error reports submitted successfully"
+   - [ ] Confirm 2 new reports in database
+
+4. **Application Functionality Test**:
+   - [ ] Login works normally
+   - [ ] Inventory tab loads without errors
+   - [ ] Transaction history accessible
+   - [ ] No performance degradation noticed
+
+#### Monitoring (First 24 Hours)
+
+**Watch For**:
+- Error logs containing "Service_ErrorReportSync" or "Service_ErrorReportQueue"
+- Pending folder accumulating files (indicates sync failures)
+- .corrupt files appearing (indicates malformed queue files)
+- Database growth in error_reports table
+- User feedback on Report Issue dialog usability
+
+**Success Metrics**:
+- 0 crashes related to error reporting
+- 0 data loss incidents
+- >0 error reports submitted by users (feature adoption)
+- <5 second sync time for typical queue sizes
+- No duplicate report submissions
+
+---
+
+### 📚 Documentation
+
+**Technical Specifications**:
+- [Feature Specification](specs/001-error-reporting-with/spec.md) - Complete requirements and user stories
+- [Implementation Plan](specs/001-error-reporting-with/plan.md) - Technical architecture and design decisions
+- [Data Model](specs/001-error-reporting-with/data-model.md) - Database schema and entity relationships
+- [Tasks Tracking](specs/001-error-reporting-with/tasks.md) - All 26 tasks with completion notes
+- [Quickstart Guide](specs/001-error-reporting-with/quickstart.md) - Developer implementation guide
+- [Research Decisions](specs/001-error-reporting-with/research.md) - Technical research and Q&A
+
+**Database Documentation**:
+- [error_reports Table](Database/UpdatedDatabase/ReadyForVerification/create_error_reports_table.sql)
+- [sp_error_reports_Insert Procedure](Database/UpdatedStoredProcedures/ReadyForVerification/sp_error_reports_Insert.sql)
+- [Stored Procedure Contract](specs/001-error-reporting-with/contracts/sp_error_reports_Insert.sql)
+
+**Code Components**:
+- Models: `Model_ErrorReport`, `Model_QueuedErrorReport`
+- Data Access: `Dao_ErrorReports`
+- Services: `Service_ErrorReportQueue`, `Service_ErrorReportSync`
+- UI: `Form_ReportIssue`
+
+**MCP Tool Validation Reports**:
+- Security scan: check_security (99/100 Form, 93/100 Sync)
+- Performance analysis: analyze_performance (98/100)
+- Error handling: validate_error_handling (PASS)
+- Build validation: validate_build (SUCCESS)
+
+**Related PRs**:
+- [PR #62](https://github.com/Dorotel/MTM_WIP_Application_WinForms/pull/62) - Error Reporting System specification and implementation
+
+---
+
 ## Version 5.2.0 - October 25, 2025
 
 **Release Type**: Minor Release  

@@ -8,6 +8,8 @@ Last updated: 2025-10-13
 - Dapper-style helper utilities in `Helpers/` for database calls and UI helpers
 - C# 12, .NET 8.0 (file-scoped namespaces, required members, pattern matching) + MySql.Data 8.x (MySqlConnection, MySqlCommand), System.Text.Json, Microsoft.Web.WebView2, ClosedXML (002-comprehensive-database-layer)
 - MySQL 5.7.24+ (MAMP compatible) - stored procedures only, no inline SQL permitted (002-comprehensive-database-layer)
+- C# 12 / .NET 8.0 Windows Forms + MySql.Data 9.4.0, System.Text.Json (for offline queue serialization) (001-error-reporting-with)
+- MySQL 5.7+ via stored procedures only (error_reports table), local file system for offline queue (001-error-reporting-with)
 
 ## Agent Communication Rules
 
