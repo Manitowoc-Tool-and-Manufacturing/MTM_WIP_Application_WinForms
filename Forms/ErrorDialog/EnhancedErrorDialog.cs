@@ -263,7 +263,6 @@ namespace MTM_Inventory_Application.Forms.ErrorDialog
             technical.AppendLine($"Severity: {GetSeverityDisplay(_severity)}");
             technical.AppendLine($"Timestamp: {DateTime.Now:yyyy-MM-dd HH:mm:ss.fff}");
             technical.AppendLine($"User: {Environment.UserName}");
-            technical.AppendLine($"Machine: {Environment.MachineName}");
             technical.AppendLine();
             
             technical.AppendLine("LOCATION INFORMATION");
