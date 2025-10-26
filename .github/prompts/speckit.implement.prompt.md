@@ -6,6 +6,8 @@ description: Execute the implementation plan by processing and executing all tas
 
 **⚠️ EXTREMELY IMPORTANT - Maximize Premium Request Value**:
 
+Make sure you let the user know you will be working through multiple related tasks in a single session rather than stopping after one. Continue working through sequential or related tasks until a natural checkpoint is reached or significant complexity requires user input. DO NOT stop prematurely just because one task is complete.
+
 This prompt handles multi-phase implementation workflows. To maximize the value of each premium request:
 
 - **Work through multiple related tasks** in a single session rather than stopping after one

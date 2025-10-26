@@ -1047,6 +1047,63 @@ namespace MTM_Inventory_Application.Forms.MainForm
             }
         }
 
+        private async void MainForm_MenuStrip_Development_SyncReports_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                // Disable menu item during sync
+                if (sender is ToolStripMenuItem menuItem)
+                {
+                    menuItem.Enabled = false;
+                }
+
+                // Show progress indication
+                Cursor = Cursors.WaitCursor;
+
+                // Trigger manual sync
+                var result = await Service_ErrorReportSync.SyncManuallyAsync();
+
+                Cursor = Cursors.Default;
+
+                // Show result to user
+                if (result.IsSuccess)
+                {
+                    Service_ErrorHandler.ShowInformation(
+                        result.StatusMessage ?? $"Sync completed successfully. {result.Data} report(s) submitted.",
+                        "Sync Complete");
+                }
+                else
+                {
+                    Service_ErrorHandler.ShowWarning(
+                        result.ErrorMessage ?? "Failed to synchronize pending error reports.",
+                        "Sync Failed");
+                }
+            }
+            catch (Exception ex)
+            {
+                Cursor = Cursors.Default;
+                LoggingUtility.LogApplicationError(ex);
+                
+                Service_ErrorHandler.HandleException(
+                    ex,
+                    ErrorSeverity.Medium,
+                    contextData: new Dictionary<string, object>
+                    {
+                        ["Operation"] = "ManualSync",
+                        ["User"] = Model_AppVariables.User
+                    },
+                    controlName: nameof(MainForm_MenuStrip_Development_SyncReports_Click));
+            }
+            finally
+            {
+                // Re-enable menu item
+                if (sender is ToolStripMenuItem menuItem)
+                {
+                    menuItem.Enabled = true;
+                }
+            }
+        }
+
         private async void MainForm_MenuStrip_Development_Conversion_Click(object sender, EventArgs e)
         {
             try

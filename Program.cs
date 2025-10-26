@@ -239,6 +239,20 @@ namespace MTM_Inventory_Application
                         "Please contact your system administrator.");
                 }
 
+                // Synchronize pending error reports (non-blocking startup operation)
+                try
+                {
+                    _ = Service_ErrorReportSync.SyncOnStartupAsync();
+                    // Fire-and-forget: Don't wait for sync to complete during startup
+                    // Failures are logged internally and will retry on next startup
+                }
+                catch (Exception ex)
+                {
+                    // Sync failure should not block application startup
+                    LoggingUtility.Log($"[Startup] Error report sync initialization failed: {ex.Message}");
+                    LoggingUtility.LogApplicationError(ex);
+                }
+
                 // Load user access permissions with error handling
                 try
                 {

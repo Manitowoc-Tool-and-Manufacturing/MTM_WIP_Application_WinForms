@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Reflection;
 using MTM_Inventory_Application.Data;
 using MTM_Inventory_Application.Helpers;
@@ -105,6 +106,64 @@ namespace MTM_Inventory_Application.Models
 
         public static string ApplicationVersion { get; } =
             Assembly.GetExecutingAssembly().GetName().Version?.ToString() ?? "Unknown";
+
+        #endregion
+
+        #region Error Reporting Configuration
+
+        /// <summary>
+        /// Configuration for error reporting and offline queue functionality.
+        /// </summary>
+        public static ErrorReportingConfig ErrorReporting { get; } = new();
+
+        /// <summary>
+        /// Configuration class for error reporting system.
+        /// </summary>
+        public class ErrorReportingConfig
+        {
+            /// <summary>
+            /// Directory path for pending (not yet submitted) error reports.
+            /// Default: %APPDATA%\MTM_Application\ErrorReports\Pending
+            /// </summary>
+            public string QueueDirectory { get; set; } = 
+                Path.Combine(
+                    Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
+                    "MTM_Application", "ErrorReports", "Pending");
+
+            /// <summary>
+            /// Directory path for successfully submitted error reports archive.
+            /// Default: %APPDATA%\MTM_Application\ErrorReports\Sent
+            /// </summary>
+            public string ArchiveDirectory { get; set; } = 
+                Path.Combine(
+                    Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
+                    "MTM_Application", "ErrorReports", "Sent");
+
+            /// <summary>
+            /// Maximum age in days for pending reports before flagged as stale.
+            /// Default: 30 days
+            /// </summary>
+            public int MaxPendingAgeDays { get; set; } = 30;
+
+            /// <summary>
+            /// Maximum age in days for archived sent reports before deletion during cleanup.
+            /// Default: 30 days
+            /// </summary>
+            public int MaxSentArchiveAgeDays { get; set; } = 30;
+
+            /// <summary>
+            /// Whether to automatically sync pending reports on application startup.
+            /// Default: true
+            /// </summary>
+            public bool EnableAutoSyncOnStartup { get; set; } = true;
+
+            /// <summary>
+            /// Minimum number of pending reports to trigger progress indicator during sync.
+            /// If pending count exceeds this threshold, show progress UI.
+            /// Default: 5
+            /// </summary>
+            public int SyncProgressThreshold { get; set; } = 5;
+        }
 
         #endregion
     }

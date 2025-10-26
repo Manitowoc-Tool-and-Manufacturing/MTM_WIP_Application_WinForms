@@ -513,8 +513,11 @@ internal static class Dao_System
             else
             {
                 // Helper already provides user-friendly error messages
-                LoggingUtility.Log($"[Dao_System] Database connectivity check failed: {result.ErrorMessage}");
-                return DaoResult.Failure(result.StatusMessage ?? result.ErrorMessage);
+                string errorMessage = result.StatusMessage ?? result.ErrorMessage ?? "Unable to connect to database";
+                LoggingUtility.Log($"[Dao_System] Database connectivity check failed: {errorMessage}");
+                return DaoResult.Failure(
+                    errorMessage,
+                    exception: result.Exception ?? new Exception(errorMessage));
             }
         }
         catch (MySqlException ex)
