@@ -1,0 +1,317 @@
+# Feature Specification: View Error Reports Window
+
+**Feature Branch**: `feature/view-error-reports`  
+**Created**: 2025-10-25  
+**Status**: Draft  
+**Input**: Create comprehensive error report management window for developers to browse, filter, review, and manage user-submitted error reports
+
+---
+
+## User Scenarios & Testing *(mandatory)*
+
+### User Story 1 - Browse All Error Reports (Priority: P1)
+
+Developers need to see all error reports submitted by users in a sortable grid view with key information visible at a glance, enabling quick identification of critical issues.
+
+**Why this priority**: Core functionality for error tracking. Without ability to browse reports, the system provides no value to developers.
+
+**Independent Test**: Open View Error Reports window, verify DataGridView shows all reports from database with columns for ID, Date, User, Machine, Error Type, Summary, and Status. Click column headers to sort. Verify color-coding by status.
+
+**Acceptance Scenarios**:
+
+1. **Given** error_reports table contains 50 reports, **When** View Error Reports window opens, **Then** DataGridView displays all 50 rows with complete data
+2. **Given** grid is displayed, **When** user clicks "Date/Time" column header, **Then** grid sorts by date ascending, clicking again sorts descending
+3. **Given** grid contains reports with different statuses, **When** viewing grid, **Then** New=Red background, Reviewed=Yellow background, Resolved=Green background
+4. **Given** grid is loaded, **When** user double-clicks a row, **Then** detail view opens showing full report information
+
+---
+
+### User Story 2 - Filter and Search Reports (Priority: P1)
+
+Developers can filter error reports by date range, user, status, and machine name, plus search across text fields to quickly find specific issues or patterns.
+
+**Why this priority**: With hundreds of reports, filtering is essential for practical use. Developers need to focus on specific time periods, users, or error types.
+
+**Independent Test**: Apply date range filter (last 7 days), user filter (specific user), status filter (New only). Verify grid shows only matching reports. Use search box to find reports containing specific error text. Verify search works across Summary, UserNotes, and TechnicalDetails.
+
+**Acceptance Scenarios**:
+
+1. **Given** filter panel is visible, **When** user selects date range 2025-10-18 to 2025-10-25, **Then** grid shows only reports within that range
+2. **Given** date filter is active, **When** user selects "Status: New", **Then** grid shows only New reports within date range
+3. **Given** filters are applied, **When** user types "database" in search box and clicks Apply, **Then** grid shows only reports containing "database" in Summary, UserNotes, or TechnicalDetails
+4. **Given** multiple filters are active, **When** user clicks "Clear Filters", **Then** all filters reset and grid shows all reports
+5. **Given** filters are applied, **When** result count is displayed, **Then** label shows "Showing 15 of 243 reports"
+
+---
+
+### User Story 3 - View Report Details and Update Status (Priority: P1)
+
+Developers can view complete error details including user notes, technical info, and call stack, then mark reports as Reviewed or Resolved with optional developer notes.
+
+**Why this priority**: Core workflow for processing error reports. Developers need full context and ability to track investigation progress.
+
+**Independent Test**: Select report row, view detail panel showing all fields. Click "Mark as Reviewed", add developer notes "Investigating database timeout". Verify status updates in database and grid refreshes showing yellow background. Later mark as "Resolved" with notes "Fixed in v5.2.1". Verify status updates.
+
+**Acceptance Scenarios**:
+
+1. **Given** report row is selected, **When** detail view displays, **Then** shows Error Summary, User Notes (highlighted), Technical Details, Call Stack, Machine, App Version, Timestamp, Current Status
+2. **Given** report status is "New", **When** developer clicks "Mark as Reviewed" and adds notes, **Then** status updates to "Reviewed" in database, ReviewedBy=current user, ReviewedDate=now, DeveloperNotes saved
+3. **Given** report status is "Reviewed", **When** developer clicks "Mark as Resolved", **Then** status updates to "Resolved" in database
+4. **Given** detail view is open, **When** developer clicks "Copy All Details", **Then** all report information copies to clipboard in formatted text
+5. **Given** report is selected, **When** developer clicks "Export Report", **Then** single report exports to text or JSON file
+
+---
+
+### User Story 4 - Bulk Export Reports (Priority: P2)
+
+Developers can export multiple error reports to CSV or Excel for analysis in external tools, sharing with team, or archival purposes.
+
+**Why this priority**: Enables advanced analysis, reporting to management, and sharing with external support teams.
+
+**Independent Test**: Apply filter showing 20 reports. Click "Export to CSV". Verify CSV file contains all 20 reports with all columns. Open in Excel and confirm data integrity.
+
+**Acceptance Scenarios**:
+
+1. **Given** grid shows 20 filtered reports, **When** developer clicks "Export to CSV", **Then** SaveFileDialog opens, file saves with all 20 reports and all columns
+2. **Given** 5 reports are selected (Ctrl+Click), **When** developer clicks "Export Selected", **Then** only 5 selected reports are exported
+3. **Given** CSV file is created, **When** opened in Excel, **Then** columns match grid (ReportID, Date, User, Machine, ErrorType, Summary, Status) and data is formatted correctly
+
+---
+
+### Edge Cases
+
+- **Large result sets**: What if 10,000 reports match filters? Implement paging or limit display to 1000 with warning message.
+- **Long text fields**: What if error summary is 5000 characters? Truncate in grid to 100 chars, show full text in detail view.
+- **Concurrent updates**: What if two developers mark same report? Last write wins, log warning if ReviewedBy changes between load and update.
+- **Missing user notes**: What if user didn't provide notes? Show "(No user notes provided)" in detail view.
+- **Invalid status transitions**: Can reports go from Resolved back to New? Allow any status change, log audit trail.
+- **Export failures**: What if export path is inaccessible? Show error dialog, suggest alternative location.
+- **Grid sorting with null values**: How to sort when Machine or ReviewedBy is NULL? Sort nulls last.
+
+---
+
+## Requirements *(mandatory)*
+
+### Functional Requirements
+
+- **FR-001**: Window MUST display DataGridView showing all error reports from database
+- **FR-002**: DataGridView MUST include columns: ReportID, Date/Time, User, Machine, Error Type, Summary (truncated), Status
+- **FR-003**: DataGridView MUST support column sorting by clicking headers
+- **FR-004**: System MUST color-code rows by status: New=LightCoral, Reviewed=LightGoldenrodYellow, Resolved=LightGreen
+- **FR-005**: Window MUST provide filter panel with Date Range, User dropdown, Status dropdown, Machine dropdown, Search textbox
+- **FR-006**: User dropdown MUST populate from distinct UserName values in error_reports table
+- **FR-007**: Search MUST search across ErrorSummary, UserNotes, and TechnicalDetails columns (case-insensitive)
+- **FR-008**: System MUST display result count label showing "Showing X of Y reports"
+- **FR-009**: Double-clicking row MUST open detail view showing complete report information
+- **FR-010**: Detail view MUST highlight User Notes section distinctly from other fields
+- **FR-011**: System MUST provide "Mark as Reviewed" button when status is New or Resolved
+- **FR-012**: System MUST provide "Mark as Resolved" button when status is New or Reviewed
+- **FR-013**: Status update MUST require confirmation dialog before saving
+- **FR-014**: System MUST provide multi-line TextBox for developer notes when changing status
+- **FR-015**: System MUST save ReviewedBy as current username and ReviewedDate as current timestamp
+- **FR-016**: System MUST provide "Copy All Details" button to copy report to clipboard
+- **FR-017**: System MUST provide "Export Report" button to save single report to file
+- **FR-018**: System MUST provide "Export to CSV" button to export all filtered reports
+- **FR-019**: System MUST provide "Export Selected" button to export selected rows (when selection exists)
+- **FR-020**: System MUST refresh grid after status update to reflect changes
+- **FR-021**: System MUST handle database errors gracefully with user-friendly messages
+
+### Key Entities
+
+- **ErrorReportGridRow**: Represents row displayed in DataGridView
+  - Attributes: ReportID, DisplayDate, UserName, ErrorType, SummaryTruncated, Status, BackgroundColor
+  - Source: Populated from error_reports table via Dao_ErrorReports.GetAllErrorReports()
+
+- **ErrorReportDetailView**: Represents complete report displayed in detail panel/dialog
+  - Attributes: All fields from Model_ErrorReport including full Summary, UserNotes, TechnicalDetails, CallStack
+  - Actions: CopyToClipboard, ExportToFile, UpdateStatus
+
+---
+
+## Database Operations
+
+Uses these stored procedures (defined in error-reporting-system.md):
+- `sp_error_reports_GetAll` - Retrieve filtered reports
+- `sp_error_reports_GetByID` - Get single report details
+- `sp_error_reports_UpdateStatus` - Change status and add developer notes
+- `sp_error_reports_GetUserList` - Populate user filter dropdown
+- `sp_error_reports_GetMachineList` - Populate machine filter dropdown
+
+---
+
+## UI Mockups
+
+### OPTION A: Master-Detail Horizontal Split
+
+```
+┌──────────────────────────────────────────────────────────────┐
+│ View Error Reports                                       [X] │
+├──────────────────────────────────────────────────────────────┤
+│ Filters: [Date: Last 30 Days ▼] [User: All ▼] [Status: All ▼│
+│          [Search: ________________] [Apply] [Clear]          │
+├──────────────────────────────────────────────────────────────┤
+│ Grid (60% height):                    Showing 15 of 243 │
+│ ┌────────────────────────────────────────────────────────┐   │
+│ │ID │Date      │User    │Machine │Type      │Summary│St.│   │
+│ ├───┼──────────┼────────┼────────┼──────────┼───────┼───┤   │
+│ │123│10/25 9:15│jsmith  │DESK-01 │DBConn... │Datab..│New│   │
+│ │122│10/25 8:42│bjones  │DESK-02 │NullRef...│Error..│Rev│   │
+│ │121│10/24 4:33│ajohnson│DESK-03 │Timeout...│Reque..│Res│   │
+│ └────────────────────────────────────────────────────────┘   │
+├──────────────────────────────────────────────────────────────┤
+│ Details (40% height): Report #123                            │
+│ ┌────────────────────────────────────────────────────────┐   │
+│ │ Error Type: DatabaseConnectionException                │   │
+│ │ Date: 2025-10-25 09:15:33                             │   │
+│ │ User: jsmith    Machine: DESK-01    Version: 5.2.0    │   │
+│ │                                                        │   │
+│ │ Summary:                                               │   │
+│ │ Connection to database server lost unexpectedly...     │   │
+│ │                                                        │   │
+│ │ ═══ User Notes (What they were doing): ═══            │   │
+│ │ I was saving a transfer transaction when the error... │   │
+│ │                                                        │   │
+│ │ Technical Details: [View Full ▼]                      │   │
+│ │ Call Stack: [View Full ▼]                             │   │
+│ │                                                        │   │
+│ │ [Mark as Reviewed] [Copy All] [Export]                │   │
+│ └────────────────────────────────────────────────────────┘   │
+│                                                              │
+│ [Export to CSV] [Export Selected] [Refresh]          [Close]│
+└──────────────────────────────────────────────────────────────┘
+```
+
+### OPTION B: Master-Detail Vertical Split
+
+```
+┌─────────────────────────────────────────────────────────┐
+│ View Error Reports                                  [X] │
+├───────────────────────────┬─────────────────────────────┤
+│ Filters Panel (left 30%): │ Grid (right 70%):          │
+│                           │ Showing 15 of 243          │
+│ Date Range:               │ ┌─────────────────────────┐│
+│ From: [10/01/2025]        │ │ID│Date│User│Type│Status││
+│ To:   [10/25/2025]        │ ├──┼────┼────┼────┼──────┤│
+│                           │ │123│10/25│js│DB..│New  ││
+│ User:                     │ │122│10/25│bj│Null│Rev  ││
+│ [All Users      ▼]        │ │121│10/24│aj│Time│Res  ││
+│                           │ └─────────────────────────┘│
+│ Machine:                  │                            │
+│ [All Machines   ▼]        │ Details Below:             │
+│                           │ ┌─────────────────────────┐│
+│ Status:                   │ │Report #123 Details:     ││
+│ ☑ New                     │ │Error: DBConnException   ││
+│ ☑ Reviewed                │ │User Notes: I was saving ││
+│ ☑ Resolved                │ │a transfer when...       ││
+│                           │ │[Mark Reviewed] [Copy]   ││
+│ Search Text:              │ └─────────────────────────┘│
+│ [____________]            │                            │
+│                           │                            │
+│ [Apply Filters]           │ [Export CSV] [Refresh]     │
+│ [Clear Filters]           │                            │
+└───────────────────────────┴─────────────────────────────┘
+```
+
+### OPTION C: Modal Detail Popup
+
+```
+Main Window:
+┌──────────────────────────────────────────────────────────┐
+│ View Error Reports                                   [X] │
+├──────────────────────────────────────────────────────────┤
+│ Filters: [Date ▼] [User ▼] [Status ▼] [Search]  [Apply] │
+├──────────────────────────────────────────────────────────┤
+│ Grid (full height):               Showing 15 of 243      │
+│ ┌────────────────────────────────────────────────────┐   │
+│ │ID │Date      │User   │Machine│Type     │Summary│St│   │
+│ ├───┼──────────┼───────┼───────┼─────────┼───────┼──┤   │
+│ │123│10/25 9:15│jsmith │DESK-01│DBConn...│Datab.│N │   │ ← Double-click
+│ │122│10/25 8:42│bjones │DESK-02│NullRef..│Error.│R │   │
+│ │121│10/24 4:33│ajohnsn│DESK-03│Timeout..│Reque.│R │   │
+│ └────────────────────────────────────────────────────┘   │
+│ [Export CSV] [Export Selected] [Refresh]         [Close] │
+└──────────────────────────────────────────────────────────┘
+
+Popup Detail Dialog:
+┌──────────────────────────────────────────────┐
+│ Error Report #123                        [X] │
+├──────────────────────────────────────────────┤
+│ ┌──────────────────────────────────────────┐ │
+│ │ Error Type: DatabaseConnectionException  │ │
+│ │ Date: 2025-10-25 09:15:33               │ │
+│ │ User: jsmith  Machine: DESK-01          │ │
+│ │ Version: 5.2.0                          │ │
+│ │                                          │ │
+│ │ Summary:                                 │ │
+│ │ Connection to database server lost...    │ │
+│ │                                          │ │
+│ │ ═══ User Notes: ═══                     │ │
+│ │ I was saving a transfer when error...    │ │
+│ │                                          │ │
+│ │ Technical: [Show ▼]  Stack: [Show ▼]    │ │
+│ │                                          │ │
+│ │ Developer Notes:                         │ │
+│ │ [____________________________]           │ │
+│ │                                          │ │
+│ └──────────────────────────────────────────┘ │
+│ [Mark as Reviewed] [Mark as Resolved]       │
+│ [Copy All] [Export]                  [Close]│
+└──────────────────────────────────────────────┘
+```
+
+### OPTION D: Three-Panel Layout
+
+```
+┌────────────────────────────────────────────────────────────────┐
+│ View Error Reports                                         [X] │
+├──────────────────┬──────────────────┬──────────────────────────┤
+│ Grid (left 40%): │Summary (mid 30%):│Full Details (right 30%): │
+│ Showing 15 of 243│                  │                          │
+│ ┌──────────────┐ │Report #123       │Technical Details:        │
+│ │ID │Date│St.  │ │                  │                          │
+│ ├───┼────┼─────┤ │User: jsmith      │DatabaseConnection...     │
+│ │123│10/5│New  │→│Machine: DESK-01  │at System.Data...         │
+│ │122│10/5│Rev  │ │Type: DBConnEx    │at MTM.Data.Dao...       │
+│ │121│10/4│Res  │ │                  │                          │
+│ └──────────────┘ │Summary:          │Call Stack:               │
+│                  │Connection lost...│Line 42: Dao_Inventory    │
+│ Filters:         │                  │Line 156: SaveTransaction │
+│ [Date ▼] [User ▼]│User Notes:       │                          │
+│ [Status ▼]       │"I was saving a   │Developer Notes:          │
+│ [Search____]     │transfer when..." │[___________________]     │
+│ [Apply] [Clear]  │                  │                          │
+│                  │[Mark Reviewed]   │[Copy] [Export]           │
+├──────────────────┴──────────────────┴──────────────────────────┤
+│ [Export CSV] [Export Selected] [Refresh]                [Close]│
+└────────────────────────────────────────────────────────────────┘
+```
+
+
+
+---
+
+## Success Criteria *(mandatory)*
+
+### Measurable Outcomes
+
+- **SC-001**: Window loads and displays 100 error reports in under 1 second
+- **SC-002**: Filtering 1000 reports down to 50 matching records completes in under 500ms
+- **SC-003**: Status updates save to database and refresh grid within 300ms
+- **SC-004**: Exporting 500 reports to CSV completes within 2 seconds
+- **SC-005**: Search across text fields returns results within 400ms for 1000 reports
+- **SC-006**: Color-coding is applied correctly to 100% of rows based on status
+- **SC-007**: Detail view displays complete report information including 10KB call stack without lag
+
+---
+
+## Relevant Instruction Files
+
+### For Implementation Phase:
+- `.github/instructions/csharp-dotnet8.instructions.md` - WinForms DataGridView patterns, async operations
+- `.github/instructions/mysql-database.instructions.md` - Stored procedure execution, filtering
+- `.github/instructions/testing-standards.instructions.md` - Manual validation approach
+
+### For Quality Assurance:
+- `.github/instructions/performance-optimization.instructions.md` - DataGridView performance, memory management
+- `.github/instructions/code-review-standards.instructions.md` - Quality checklist
+
