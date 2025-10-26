@@ -253,7 +253,8 @@ namespace MTM_Inventory_Application.Controls.MainForm
             // 
             // Control_InventoryTab_TableLayout_BottomGroup
             // 
-            Control_InventoryTab_TableLayout_BottomGroup.AutoSize = true;
+            Control_InventoryTab_TableLayout_BottomGroup.AutoSize = false;
+            Control_InventoryTab_TableLayout_BottomGroup.AutoSizeMode = AutoSizeMode.GrowAndShrink;
             Control_InventoryTab_TableLayout_BottomGroup.ColumnCount = 5;
             Control_InventoryTab_TableLayout_BottomGroup.ColumnStyles.Add(new ColumnStyle());
             Control_InventoryTab_TableLayout_BottomGroup.ColumnStyles.Add(new ColumnStyle());
@@ -270,12 +271,14 @@ namespace MTM_Inventory_Application.Controls.MainForm
             Control_InventoryTab_TableLayout_BottomGroup.Name = "Control_InventoryTab_TableLayout_BottomGroup";
             Control_InventoryTab_TableLayout_BottomGroup.RowCount = 1;
             Control_InventoryTab_TableLayout_BottomGroup.RowStyles.Add(new RowStyle());
+            Control_InventoryTab_TableLayout_BottomGroup.MinimumSize = new Size(0, 35);
+            Control_InventoryTab_TableLayout_BottomGroup.MaximumSize = new Size(int.MaxValue, 35);
             Control_InventoryTab_TableLayout_BottomGroup.Size = new Size(1163, 35);
             Control_InventoryTab_TableLayout_BottomGroup.TabIndex = 27;
             // 
             // Control_InventoryTab_Button_Toggle_RightPanel
             // 
-            Control_InventoryTab_Button_Toggle_RightPanel.AutoSize = true;
+            Control_InventoryTab_Button_Toggle_RightPanel.AutoSize = false;
             Control_InventoryTab_Button_Toggle_RightPanel.Dock = DockStyle.Fill;
             Control_InventoryTab_Button_Toggle_RightPanel.Font = new Font("Segoe UI Emoji", 9.75F, FontStyle.Regular, GraphicsUnit.Point, 0);
             Control_InventoryTab_Button_Toggle_RightPanel.Location = new Point(1122, 3);
@@ -300,7 +303,7 @@ namespace MTM_Inventory_Application.Controls.MainForm
             // 
             // Control_InventoryTab_Button_Save
             // 
-            Control_InventoryTab_Button_Save.AutoSize = true;
+            Control_InventoryTab_Button_Save.AutoSize = false;
             Control_InventoryTab_Button_Save.Dock = DockStyle.Fill;
             Control_InventoryTab_Button_Save.Font = new Font("Segoe UI Emoji", 8F);
             Control_InventoryTab_Button_Save.Location = new Point(3, 3);
@@ -312,7 +315,7 @@ namespace MTM_Inventory_Application.Controls.MainForm
             // 
             // Control_InventoryTab_Button_AdvancedEntry
             // 
-            Control_InventoryTab_Button_AdvancedEntry.AutoSize = true;
+            Control_InventoryTab_Button_AdvancedEntry.AutoSize = false;
             Control_InventoryTab_Button_AdvancedEntry.Dock = DockStyle.Fill;
             Control_InventoryTab_Button_AdvancedEntry.ForeColor = Color.DarkRed;
             Control_InventoryTab_Button_AdvancedEntry.Location = new Point(69, 3);
@@ -324,7 +327,7 @@ namespace MTM_Inventory_Application.Controls.MainForm
             // 
             // Control_InventoryTab_Button_Reset
             // 
-            Control_InventoryTab_Button_Reset.AutoSize = true;
+            Control_InventoryTab_Button_Reset.AutoSize = false;
             Control_InventoryTab_Button_Reset.Dock = DockStyle.Fill;
             Control_InventoryTab_Button_Reset.Font = new Font("Segoe UI Emoji", 9F);
             Control_InventoryTab_Button_Reset.Location = new Point(1035, 3);
@@ -334,7 +337,7 @@ namespace MTM_Inventory_Application.Controls.MainForm
             Control_InventoryTab_Button_Reset.TabStop = false;
             Control_InventoryTab_Button_Reset.Text = "Reset";
             Control_InventoryTab_Button_Reset.UseVisualStyleBackColor = true;
-            // 
+             // 
             // Control_InventoryTab
             // 
             AutoScaleDimensions = new SizeF(96F, 96F);

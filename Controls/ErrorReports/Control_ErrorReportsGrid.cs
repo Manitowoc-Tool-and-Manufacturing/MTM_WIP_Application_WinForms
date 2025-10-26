@@ -8,6 +8,7 @@ using System.Windows.Forms;
 using MTM_Inventory_Application.Core;
 using MTM_Inventory_Application.Data;
 using MTM_Inventory_Application.Helpers;
+using MTM_Inventory_Application.Logging;
 using MTM_Inventory_Application.Models;
 using MTM_Inventory_Application.Services;
 using MTM_WIP_Application_WinForms.Models;
@@ -357,6 +358,9 @@ namespace MTM_Inventory_Application.Controls.ErrorReports
         {
             var filter = BuildFilterFromControls();
 
+            // Debug: Log filter state
+            LoggingUtility.Log($"[Filter] Applying filters: HasFilters={filter.HasFilters}, DateFrom={filter.DateFrom}, DateTo={filter.DateTo}, User={filter.UserName ?? "null"}, Machine={filter.MachineName ?? "null"}, Status={filter.Status ?? "null"}, Search={filter.SearchText ?? "null"}");
+
             if (!filter.TryValidate(out var validationMessage))
             {
                 Service_ErrorHandler.HandleValidationError(
@@ -368,10 +372,12 @@ namespace MTM_Inventory_Application.Controls.ErrorReports
 
             if (!filter.HasFilters)
             {
+                LoggingUtility.Log("[Filter] No filters applied, loading all reports");
                 await LoadReportsAsync(null);
                 return;
             }
 
+            LoggingUtility.Log("[Filter] Loading filtered reports");
             await LoadReportsAsync(filter);
         }
 

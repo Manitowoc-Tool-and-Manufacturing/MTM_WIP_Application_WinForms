@@ -28,111 +28,162 @@ namespace MTM_Inventory_Application.Forms.ErrorDialog
         /// </summary>
         private void InitializeComponent()
         {
-            this.lblErrorSummary = new System.Windows.Forms.Label();
-            this.txtErrorSummary = new System.Windows.Forms.TextBox();
-            this.lblUserNotes = new System.Windows.Forms.Label();
-            this.txtUserNotes = new System.Windows.Forms.TextBox();
-            this.btnSubmit = new System.Windows.Forms.Button();
-            this.btnCancel = new System.Windows.Forms.Button();
-            this.SuspendLayout();
+            tableLayoutPanelMain = new System.Windows.Forms.TableLayoutPanel();
+            lblErrorSummary = new System.Windows.Forms.Label();
+            txtErrorSummary = new System.Windows.Forms.TextBox();
+            lblUserNotes = new System.Windows.Forms.Label();
+            txtUserNotes = new System.Windows.Forms.TextBox();
+            tableLayoutPanelButtons = new System.Windows.Forms.TableLayoutPanel();
+            btnSubmit = new System.Windows.Forms.Button();
+            btnCancel = new System.Windows.Forms.Button();
+            tableLayoutPanelMain.SuspendLayout();
+            tableLayoutPanelButtons.SuspendLayout();
+            SuspendLayout();
+            // 
+            // tableLayoutPanelMain
+            // 
+            tableLayoutPanelMain.ColumnCount = 1;
+            tableLayoutPanelMain.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            tableLayoutPanelMain.Controls.Add(lblErrorSummary, 0, 0);
+            tableLayoutPanelMain.Controls.Add(txtErrorSummary, 0, 1);
+            tableLayoutPanelMain.Controls.Add(lblUserNotes, 0, 2);
+            tableLayoutPanelMain.Controls.Add(txtUserNotes, 0, 3);
+            tableLayoutPanelMain.Controls.Add(tableLayoutPanelButtons, 0, 4);
+            tableLayoutPanelMain.Dock = System.Windows.Forms.DockStyle.Fill;
+            tableLayoutPanelMain.Location = new System.Drawing.Point(0, 0);
+            tableLayoutPanelMain.Name = "tableLayoutPanelMain";
+            tableLayoutPanelMain.Padding = new System.Windows.Forms.Padding(10);
+            tableLayoutPanelMain.RowCount = 5;
+            tableLayoutPanelMain.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 25F));
+            tableLayoutPanelMain.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 90F));
+            tableLayoutPanelMain.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 25F));
+            tableLayoutPanelMain.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            tableLayoutPanelMain.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 38F));
+            tableLayoutPanelMain.Size = new System.Drawing.Size(584, 314);
+            tableLayoutPanelMain.TabIndex = 0;
             // 
             // lblErrorSummary
             // 
-            this.lblErrorSummary.AutoSize = true;
-            this.lblErrorSummary.Location = new System.Drawing.Point(12, 12);
-            this.lblErrorSummary.Name = "lblErrorSummary";
-            this.lblErrorSummary.Size = new System.Drawing.Size(89, 15);
-            this.lblErrorSummary.TabIndex = 0;
-            this.lblErrorSummary.Text = "Error Summary:";
+            lblErrorSummary.AutoSize = true;
+            lblErrorSummary.Dock = System.Windows.Forms.DockStyle.Fill;
+            lblErrorSummary.Location = new System.Drawing.Point(10, 10);
+            lblErrorSummary.Margin = new System.Windows.Forms.Padding(0);
+            lblErrorSummary.Name = "lblErrorSummary";
+            lblErrorSummary.Size = new System.Drawing.Size(564, 25);
+            lblErrorSummary.TabIndex = 0;
+            lblErrorSummary.Text = "Error Summary:";
+            lblErrorSummary.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
             // 
             // txtErrorSummary
             // 
-            this.txtErrorSummary.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.txtErrorSummary.BackColor = System.Drawing.SystemColors.Control;
-            this.txtErrorSummary.Location = new System.Drawing.Point(12, 30);
-            this.txtErrorSummary.Multiline = true;
-            this.txtErrorSummary.Name = "txtErrorSummary";
-            this.txtErrorSummary.ReadOnly = true;
-            this.txtErrorSummary.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.txtErrorSummary.Size = new System.Drawing.Size(560, 80);
-            this.txtErrorSummary.TabIndex = 1;
-            this.txtErrorSummary.TabStop = false;
+            txtErrorSummary.BackColor = System.Drawing.SystemColors.Control;
+            txtErrorSummary.Dock = System.Windows.Forms.DockStyle.Fill;
+            txtErrorSummary.Location = new System.Drawing.Point(10, 40);
+            txtErrorSummary.Margin = new System.Windows.Forms.Padding(0, 5, 0, 5);
+            txtErrorSummary.Multiline = true;
+            txtErrorSummary.Name = "txtErrorSummary";
+            txtErrorSummary.ReadOnly = true;
+            txtErrorSummary.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            txtErrorSummary.Size = new System.Drawing.Size(564, 80);
+            txtErrorSummary.TabIndex = 1;
+            txtErrorSummary.TabStop = false;
             // 
             // lblUserNotes
             // 
-            this.lblUserNotes.AutoSize = true;
-            this.lblUserNotes.Location = new System.Drawing.Point(12, 120);
-            this.lblUserNotes.Name = "lblUserNotes";
-            this.lblUserNotes.Size = new System.Drawing.Size(346, 15);
-            this.lblUserNotes.TabIndex = 2;
-            this.lblUserNotes.Text = "What were you doing when this error occurred? (optional):";
+            lblUserNotes.AutoSize = true;
+            lblUserNotes.Dock = System.Windows.Forms.DockStyle.Fill;
+            lblUserNotes.Location = new System.Drawing.Point(10, 125);
+            lblUserNotes.Margin = new System.Windows.Forms.Padding(0);
+            lblUserNotes.Name = "lblUserNotes";
+            lblUserNotes.Size = new System.Drawing.Size(564, 25);
+            lblUserNotes.TabIndex = 2;
+            lblUserNotes.Text = "What were you doing when this error occurred? (optional):";
+            lblUserNotes.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
             // 
             // txtUserNotes
             // 
-            this.txtUserNotes.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.txtUserNotes.Location = new System.Drawing.Point(12, 138);
-            this.txtUserNotes.Multiline = true;
-            this.txtUserNotes.Name = "txtUserNotes";
-            this.txtUserNotes.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.txtUserNotes.Size = new System.Drawing.Size(560, 120);
-            this.txtUserNotes.TabIndex = 3;
+            txtUserNotes.Dock = System.Windows.Forms.DockStyle.Fill;
+            txtUserNotes.Location = new System.Drawing.Point(10, 155);
+            txtUserNotes.Margin = new System.Windows.Forms.Padding(0, 5, 0, 5);
+            txtUserNotes.Multiline = true;
+            txtUserNotes.Name = "txtUserNotes";
+            txtUserNotes.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            txtUserNotes.Size = new System.Drawing.Size(564, 111);
+            txtUserNotes.TabIndex = 3;
+            // 
+            // tableLayoutPanelButtons
+            // 
+            tableLayoutPanelButtons.ColumnCount = 3;
+            tableLayoutPanelButtons.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            tableLayoutPanelButtons.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 81F));
+            tableLayoutPanelButtons.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 81F));
+            tableLayoutPanelButtons.Controls.Add(btnSubmit, 1, 0);
+            tableLayoutPanelButtons.Controls.Add(btnCancel, 2, 0);
+            tableLayoutPanelButtons.Dock = System.Windows.Forms.DockStyle.Fill;
+            tableLayoutPanelButtons.Location = new System.Drawing.Point(10, 271);
+            tableLayoutPanelButtons.Margin = new System.Windows.Forms.Padding(0);
+            tableLayoutPanelButtons.Name = "tableLayoutPanelButtons";
+            tableLayoutPanelButtons.RowCount = 1;
+            tableLayoutPanelButtons.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            tableLayoutPanelButtons.Size = new System.Drawing.Size(564, 33);
+            tableLayoutPanelButtons.TabIndex = 4;
             // 
             // btnSubmit
             // 
-            this.btnSubmit.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnSubmit.Location = new System.Drawing.Point(416, 274);
-            this.btnSubmit.Name = "btnSubmit";
-            this.btnSubmit.Size = new System.Drawing.Size(75, 28);
-            this.btnSubmit.TabIndex = 4;
-            this.btnSubmit.Text = "Submit";
-            this.btnSubmit.UseVisualStyleBackColor = true;
-            this.btnSubmit.Click += new System.EventHandler(this.btnSubmit_Click);
+            btnSubmit.Dock = System.Windows.Forms.DockStyle.Fill;
+            btnSubmit.Location = new System.Drawing.Point(405, 0);
+            btnSubmit.Margin = new System.Windows.Forms.Padding(3, 0, 3, 0);
+            btnSubmit.MinimumSize = new System.Drawing.Size(75, 28);
+            btnSubmit.Name = "btnSubmit";
+            btnSubmit.Size = new System.Drawing.Size(75, 33);
+            btnSubmit.TabIndex = 0;
+            btnSubmit.Text = "Submit";
+            btnSubmit.UseVisualStyleBackColor = true;
+            btnSubmit.Click += new System.EventHandler(btnSubmit_Click);
             // 
             // btnCancel
             // 
-            this.btnCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.btnCancel.Location = new System.Drawing.Point(497, 274);
-            this.btnCancel.Name = "btnCancel";
-            this.btnCancel.Size = new System.Drawing.Size(75, 28);
-            this.btnCancel.TabIndex = 5;
-            this.btnCancel.Text = "Cancel";
-            this.btnCancel.UseVisualStyleBackColor = true;
-            this.btnCancel.Click += new System.EventHandler(this.btnCancel_Click);
+            btnCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
+            btnCancel.Dock = System.Windows.Forms.DockStyle.Fill;
+            btnCancel.Location = new System.Drawing.Point(486, 0);
+            btnCancel.Margin = new System.Windows.Forms.Padding(3, 0, 0, 0);
+            btnCancel.MinimumSize = new System.Drawing.Size(75, 28);
+            btnCancel.Name = "btnCancel";
+            btnCancel.Size = new System.Drawing.Size(78, 33);
+            btnCancel.TabIndex = 1;
+            btnCancel.Text = "Cancel";
+            btnCancel.UseVisualStyleBackColor = true;
+            btnCancel.Click += new System.EventHandler(btnCancel_Click);
             // 
             // Form_ReportIssue
             // 
-            this.AcceptButton = this.btnSubmit;
-            this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
-            this.CancelButton = this.btnCancel;
-            this.ClientSize = new System.Drawing.Size(584, 314);
-            this.Controls.Add(this.btnCancel);
-            this.Controls.Add(this.btnSubmit);
-            this.Controls.Add(this.txtUserNotes);
-            this.Controls.Add(this.lblUserNotes);
-            this.Controls.Add(this.txtErrorSummary);
-            this.Controls.Add(this.lblErrorSummary);
-            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
-            this.MaximizeBox = false;
-            this.MinimizeBox = false;
-            this.Name = "Form_ReportIssue";
-            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "Report Issue";
-            this.ResumeLayout(false);
-            this.PerformLayout();
-
+            AcceptButton = btnSubmit;
+            AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
+            AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
+            CancelButton = btnCancel;
+            ClientSize = new System.Drawing.Size(584, 314);
+            Controls.Add(tableLayoutPanelMain);
+            FormBorderStyle = System.Windows.Forms.FormBorderStyle.Sizable;
+            MaximizeBox = false;
+            MinimizeBox = false;
+            MinimumSize = new System.Drawing.Size(600, 350);
+            Name = "Form_ReportIssue";
+            StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
+            Text = "Report Issue";
+            tableLayoutPanelMain.ResumeLayout(false);
+            tableLayoutPanelMain.PerformLayout();
+            tableLayoutPanelButtons.ResumeLayout(false);
+            ResumeLayout(false);
         }
 
         #endregion
 
+        private System.Windows.Forms.TableLayoutPanel tableLayoutPanelMain;
         private System.Windows.Forms.Label lblErrorSummary;
         private System.Windows.Forms.TextBox txtErrorSummary;
         private System.Windows.Forms.Label lblUserNotes;
         private System.Windows.Forms.TextBox txtUserNotes;
+        private System.Windows.Forms.TableLayoutPanel tableLayoutPanelButtons;
         private System.Windows.Forms.Button btnSubmit;
         private System.Windows.Forms.Button btnCancel;
     }

@@ -140,6 +140,70 @@ Context for task generation: $ARGUMENTS
 
 The tasks.md should be immediately executable - each task must be specific enough that an LLM can complete it without additional context.
 
+## Task Structure Requirements
+
+**⚠️ STRICT FORMAT**: Every task MUST follow this exact structure for MCP tool parsing:
+
+### Task Line Format
+
+```markdown
+- [ ] **TXXX** [Story: USX] [P] - Task title
+```
+
+**Required Elements**:
+1. **Checkbox**: `- [ ]` or `- [x]` or `- [X]`
+2. **Task ID**: `**TXXX**` where XXX is zero-padded number (T001, T002, etc.)
+3. **Story Tag** (optional): `[Story: Foundation]`, `[Story: US1]`, `[Story: US2]`, etc.
+4. **Parallel Tag** (optional): `[P]` if task can run in parallel with others
+5. **Separator**: Single hyphen `-` or em-dash `–` or `—`
+6. **Title**: Brief, descriptive task name
+
+**Valid Examples**:
+```markdown
+- [ ] **T001** - Create project structure
+- [x] **T042** [Story: US4] - Implement CSV export
+- [ ] **T015** [Story: US1] [P] - Create Entity model
+- [X] **T099** [Story: Integration] [CHECKPOINT] - Final validation
+```
+
+### Task Body Format
+
+**Required Fields** (in order):
+1. **File** (if applicable): `**File**: \`path/to/file.ext\``
+2. **Description**: `**Description**: Clear explanation of what to implement`
+3. **Reference** (one or more): `**Reference**: \`.github/instructions/file.instructions.md\` - Context`
+4. **Acceptance**: `**Acceptance**: How to verify task completion`
+5. **Completed** (optional): `**Completed**: YYYY-MM-DD – Summary of work`
+
+**Example Complete Task**:
+```markdown
+- [ ] **T007** [Story: Foundation] - Create User model
+  **File**: `Models/Model_User.cs`
+  **Description**: Implement User entity with properties for authentication and profile data. Include validation attributes and nullable reference handling.
+  **Reference**: `.github/instructions/csharp-dotnet8.instructions.md` - Follow naming conventions and nullable patterns
+  **Reference**: `.github/instructions/security-best-practices.instructions.md` - Password handling
+  **Acceptance**: Model compiles, has XML docs, nullable annotations correct
+```
+
+### Instruction File Reference Format
+
+**Required Pattern**: `**Reference**: \`.github/instructions/[filename].instructions.md\` - [Brief context]`
+
+**Rules**:
+- Always use backticks around path
+- Always start with `.github/instructions/`
+- Always end with `.instructions.md`
+- Include brief context after hyphen
+- Can have multiple Reference lines per task
+- Place after Description, before Acceptance
+
+**Valid Reference Examples**:
+```markdown
+**Reference**: `.github/instructions/mysql-database.instructions.md` - Follow stored procedure standards
+**Reference**: `.github/instructions/integration-testing.instructions.md` - Discovery-first workflow
+**Reference**: `.github/instructions/csharp-dotnet8.instructions.md` - Async patterns and error handling
+```
+
 ## Task Generation Rules
 
 **IMPORTANT**: Tests are optional. Only generate test tasks if the user explicitly requested testing or TDD approach in the feature specification.

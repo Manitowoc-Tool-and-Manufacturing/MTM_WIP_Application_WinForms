@@ -11,6 +11,114 @@ description: "Task list template for feature implementation"
 
 **Organization**: Tasks are grouped by user story to enable independent implementation and testing of each story.
 
+---
+
+## Task Structure Standards
+
+**⚠️ CRITICAL**: All tasks MUST follow this exact format for MCP tool parsing and agent execution.
+
+### Task Line Format
+
+```markdown
+- [ ] **TXXX** [Story: USX] [P] - Task title
+```
+
+**Components** (in order):
+1. **Checkbox**: `- [ ]` (not started), `- [x]` (completed), or `- [X]` (completed)
+2. **Task ID**: `**TXXX**` where XXX is zero-padded sequential number (T001, T002, T010, T100)
+3. **Story Tag** (optional): `[Story: Foundation]`, `[Story: US1]`, `[Story: US2]`, `[Story: Integration]`
+4. **Parallel Marker** (optional): `[P]` indicates task can run in parallel with others in same phase
+5. **Checkpoint Marker** (optional): `[CHECKPOINT]` for manual validation milestones
+6. **Separator**: Single hyphen `-` (or em-dash `–` or `—`)
+7. **Title**: Clear, action-oriented task description
+
+**Valid Examples**:
+```markdown
+- [ ] **T001** - Initialize project structure
+- [x] **T015** [Story: US1] [P] - Create Entity1 model
+- [ ] **T042** [Story: US4] - Implement CSV export helper
+- [ ] **T099** [Story: Integration] [CHECKPOINT] - Execute end-to-end validation
+```
+
+### Task Body Structure
+
+**Required Fields** (must appear in this order):
+
+1. **File** (if task creates/edits specific file):
+   ```markdown
+   **File**: `path/to/file.ext`
+   ```
+
+2. **Description** (always required):
+   ```markdown
+   **Description**: Clear, detailed explanation of implementation requirements. Include specific classes, methods, parameters, or configuration details needed.
+   ```
+
+3. **Reference** (one or more instruction files):
+   ```markdown
+   **Reference**: `.github/instructions/[filename].instructions.md` - Brief context on what to follow
+   ```
+
+4. **Acceptance** (always required):
+   ```markdown
+   **Acceptance**: Specific, testable criteria for task completion
+   ```
+
+5. **Completed** (optional, added when task finishes):
+   ```markdown
+   **Completed**: YYYY-MM-DD – Brief summary of work completed
+   ```
+
+6. **Note** (optional, for context or warnings):
+   ```markdown
+   **Note**: Additional context, dependencies, or implementation notes
+   ```
+
+### Complete Task Example
+
+```markdown
+- [ ] **T007** [Story: Foundation] - Extend Dao_ErrorReports with GetAllErrorReportsAsync
+  **File**: `Data/Dao_ErrorReports.cs`
+  **Description**: Add async method accepting Model_ErrorReportFilter parameter. Build Dictionary with DBNull.Value for null filters. Call sp_error_reports_GetAll via Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync. Return DaoResult<DataTable>. Add to #region Database Operations.
+  **Reference**: `.github/instructions/mysql-database.instructions.md` - Helper_Database_StoredProcedure usage pattern
+  **Reference**: `.github/instructions/csharp-dotnet8.instructions.md` - Async/await patterns and region organization
+  **Acceptance**: Method compiles, uses async correctly, returns DaoResult<DataTable>, handles null filters with DBNull.Value
+  **Note**: This method is called by the grid control's LoadReportsAsync method
+```
+
+### Instruction File Reference Rules
+
+**Pattern**: `**Reference**: \`.github/instructions/[filename].instructions.md\` - [Context]`
+
+**Requirements**:
+- Always wrap path in backticks
+- Always use `.github/instructions/` prefix
+- Always use `.instructions.md` suffix
+- Include hyphen followed by brief context (what pattern/guidance to follow)
+- Can include multiple Reference lines per task
+- Place after Description, before Acceptance
+
+**Available Instruction Files**:
+- `integration-testing.instructions.md` - Test development, discovery-first workflow, null safety
+- `testing-standards.instructions.md` - Manual validation, success criteria, test scenarios
+- `mysql-database.instructions.md` - Stored procedures, connection management, Helper patterns
+- `csharp-dotnet8.instructions.md` - Language features, async/await, region organization, WinForms
+- `security-best-practices.instructions.md` - Input validation, SQL injection prevention
+- `performance-optimization.instructions.md` - Async I/O, connection pooling, memory management
+- `documentation.instructions.md` - XML docs, README structure, code comments
+- `code-review-standards.instructions.md` - Quality checklist, review process
+- `ui-scaling-consistency.instructions.md` - DPI scaling, WinForms layout, theme application
+
+**Reference Example Patterns**:
+```markdown
+**Reference**: `.github/instructions/mysql-database.instructions.md` - Follow stored procedure standards (p_ prefix, OUT parameters)
+**Reference**: `.github/instructions/integration-testing.instructions.md` - Discovery-first workflow (grep_search → verify signatures → write tests)
+**Reference**: `.github/instructions/csharp-dotnet8.instructions.md` - Use async Task<T>, proper region organization
+**Reference**: `.github/instructions/security-best-practices.instructions.md` - Input validation and parameterized queries
+```
+
+---
+
 ## Format: `[ID] [P?] [Story] Description`
 - **[P]**: Can run in parallel (different files, no dependencies)
 - **[Story]**: Which user story this task belongs to (e.g., US1, US2, US3)

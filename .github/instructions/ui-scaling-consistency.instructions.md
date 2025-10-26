@@ -5,6 +5,8 @@ applyTo: '**/*.cs,**/*.Designer.cs'
 
 # UI Scaling and DPI Consistency Standards
 
+**Cross-Reference**: This file works with `.github/instructions/winforms-responsive-layout.instructions.md` which covers layout architecture patterns. This file focuses specifically on DPI scaling and size consistency.
+
 ## Overview
 
 This file defines standards and patterns for ensuring all WinForms controls maintain consistent visual appearance, aspect ratios, and usability across different screen sizes, resolutions, and DPI settings in Windows.
