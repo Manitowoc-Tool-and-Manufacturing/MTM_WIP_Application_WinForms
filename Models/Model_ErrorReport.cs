@@ -28,6 +28,12 @@ public class Model_ErrorReport
     public string UserName { get; set; } = string.Empty;
 
     /// <summary>
+    /// Computer name where the error occurred.
+    /// Example: "DESKTOP-ABC123", "WORKSTATION-42"
+    /// </summary>
+    public string? MachineName { get; set; }
+
+    /// <summary>
     /// Application version at the time of the error.
     /// Example: "5.0.0.142"
     /// </summary>

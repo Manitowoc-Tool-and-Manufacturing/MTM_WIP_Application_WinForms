@@ -226,7 +226,7 @@ Step 2: Add Context
 │ An unexpected error occurred during         │
 │ operation processing.                       │
 │                                             │
-│ Occurred at: 2025-10-25 14:32:15            │
+│ Occurred at: 2025-10-25 14:32:15           │
 │ User: John Smith                            │
 │ Machine: WORKSTATION-01                     │
 │                                             │

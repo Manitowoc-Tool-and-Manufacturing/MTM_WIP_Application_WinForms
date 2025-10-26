@@ -9,6 +9,7 @@ DELIMITER $$
 
 CREATE PROCEDURE sp_error_reports_Insert(
     IN p_UserName VARCHAR(100),
+    IN p_MachineName VARCHAR(100),
     IN p_AppVersion VARCHAR(50),
     IN p_ErrorType VARCHAR(255),
     IN p_ErrorSummary TEXT,
@@ -41,6 +42,7 @@ BEGIN
         INSERT INTO error_reports (
             ReportDate,
             UserName,
+            MachineName,
             AppVersion,
             ErrorType,
             ErrorSummary,
@@ -51,6 +53,7 @@ BEGIN
         ) VALUES (
             NOW(),
             p_UserName,
+            p_MachineName,
             p_AppVersion,
             p_ErrorType,
             p_ErrorSummary,
@@ -81,6 +84,10 @@ DELIMITER ;
 --   p_UserName (VARCHAR 100, REQUIRED)
 --     Windows username of user submitting report
 --     Example: 'John.Smith'
+--
+--   p_MachineName (VARCHAR 100, OPTIONAL)
+--     Computer name where error occurred
+--     Example: 'WORKSTATION-05'
 --
 --   p_AppVersion (VARCHAR 50, OPTIONAL)
 --     Application version at time of error
@@ -127,6 +134,7 @@ DELIMITER ;
 -- USAGE EXAMPLE (Direct Call):
 --   CALL sp_error_reports_Insert(
 --       'John.Smith',                              -- p_UserName
+--       'WORKSTATION-05',                          -- p_MachineName
 --       '5.0.0.142',                               -- p_AppVersion
 --       'NullReferenceException',                  -- p_ErrorType
 --       'Object reference not set...',             -- p_ErrorSummary
@@ -143,6 +151,7 @@ DELIMITER ;
 --   var parameters = new Dictionary<string, object>
 --   {
 --       ["UserName"] = userName,          // No p_ prefix in C#
+--       ["MachineName"] = machineName,
 --       ["AppVersion"] = appVersion,
 --       ["ErrorType"] = errorType,
 --       ["ErrorSummary"] = errorSummary,

@@ -33,6 +33,7 @@ START TRANSACTION;
 
 CALL sp_error_reports_Insert(
     'John.Smith',                    -- p_UserName
+    'WORKSTATION-05',                -- p_MachineName
     '5.0.0.142',                     -- p_AppVersion
     'NullReferenceException',        -- p_ErrorType
     'Object reference not set...',   -- p_ErrorSummary
