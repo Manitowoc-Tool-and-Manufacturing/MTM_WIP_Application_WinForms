@@ -95,6 +95,20 @@ namespace MTM_Inventory_Application.Controls.ErrorReports
             // 
             this.flowLayoutFilters.AutoSize = true;
             this.flowLayoutFilters.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.flowLayoutFilters.Controls.Add(this.lblDateFrom);
+            this.flowLayoutFilters.Controls.Add(this.dtpDateFrom);
+            this.flowLayoutFilters.Controls.Add(this.lblDateTo);
+            this.flowLayoutFilters.Controls.Add(this.dtpDateTo);
+            this.flowLayoutFilters.Controls.Add(this.lblUser);
+            this.flowLayoutFilters.Controls.Add(this.cboUser);
+            this.flowLayoutFilters.Controls.Add(this.lblMachine);
+            this.flowLayoutFilters.Controls.Add(this.cboMachine);
+            this.flowLayoutFilters.Controls.Add(this.lblStatus);
+            this.flowLayoutFilters.Controls.Add(this.cboStatus);
+            this.flowLayoutFilters.Controls.Add(this.lblSearch);
+            this.flowLayoutFilters.Controls.Add(this.txtSearch);
+            this.flowLayoutFilters.Controls.Add(this.btnApplyFilters);
+            this.flowLayoutFilters.Controls.Add(this.btnClearFilters);
             this.flowLayoutFilters.Dock = System.Windows.Forms.DockStyle.Fill;
             this.flowLayoutFilters.FlowDirection = System.Windows.Forms.FlowDirection.LeftToRight;
             this.flowLayoutFilters.Location = new System.Drawing.Point(0, 0);

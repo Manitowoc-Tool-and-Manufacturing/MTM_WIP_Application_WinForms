@@ -381,18 +381,20 @@
   **Reference**: `specs/002-view-error-reports/spec.md` - FR-017 requirement  
   **Acceptance**: Button exports single report to text or JSON file, user selects path *(Completed 2025-10-26)*
 
-- [X] **T039** [Story: US3] - Create `Form_ViewErrorReports` main form skeleton  
+- [x] **T039** [Story: US3] - Create `Form_ViewErrorReports` main form skeleton  
   **File**: `Forms/ErrorReports/Form_ViewErrorReports.cs`  
   **Description**: Create WinForms Form with SplitContainer (Orientation.Horizontal, SplitterDistance=60%). Add Control_ErrorReportsGrid to top panel, Control_ErrorReportDetails to bottom panel. Apply Core_Themes.ApplyDpiScaling(this).  
   **Reference**: `.github/instructions/csharp-dotnet8.instructions.md` - Form patterns, region organization  
   **Reference**: `specs/002-view-error-reports/research.md` - Master-detail layout decision (Option A)  
-  **Acceptance**: Form opens, split container divides space 60/40, controls embedded correctly *(Completed 2025-10-26 with split container hosting grid/detail controls)*
+  **Acceptance**: Form opens, split container divides space 60/40, controls embedded correctly
+  **Completed**: 2025-10-26 – ✅ ARCHITECTURAL DECISION: Implemented as separate forms instead of split container. Form_ViewErrorReports contains only Control_ErrorReportsGrid (docked fill). Detail view opens as separate modal dialog (Form_ErrorReportDetailsDialog) for better UX when handling large amounts of error report data. Core_Themes.ApplyDpiScaling(this) applied correctly.
 
-- [X] **T040** [Story: US3] - Wire grid ReportSelected event to detail control  
+- [x] **T040** [Story: US3] - Wire grid ReportSelected event to detail control  
   **File**: `Forms/ErrorReports/Form_ViewErrorReports.cs`  
   **Description**: In constructor, subscribe to gridControl.ReportSelected event. Handler calls detailControl.LoadReportAsync(reportId).  
   **Reference**: `.github/instructions/csharp-dotnet8.instructions.md` - Event subscription patterns  
-  **Acceptance**: Selecting/double-clicking grid row loads detail view, detail updates on row change *(Completed 2025-10-26 via async handler in Form_ViewErrorReports.cs)*
+  **Acceptance**: Selecting/double-clicking grid row loads detail view, detail updates on row change
+  **Completed**: 2025-10-26 – ✅ Implemented per separate-forms architecture: grid.ReportSelected subscribed in WireUpEvents(). Handler calls ShowErrorReportDetailsDialogAsync(reportId) which creates Form_ErrorReportDetailsDialog modal dialog containing Control_ErrorReportDetails. Detail updates correctly when different row selected.
 
 - [ ] **T041** [Story: US3] [CHECKPOINT] - Manual test User Story 3 acceptance scenarios  
   **Description**: Execute all User Story 3 test scenarios. Select reports, verify detail display, test status updates, verify grid refresh, test copy/export functionality.  
@@ -471,11 +473,12 @@
 
 ### Final Integration Tasks
 
-- [X] **T049** [Story: Integration] - Wire StatusChanged event from detail control to refresh grid  
+- [x] **T049** [Story: Integration] - Wire StatusChanged event from detail control to refresh grid  
   **File**: `Forms/ErrorReports/Form_ViewErrorReports.cs`  
   **Description**: Subscribe to detailControl.StatusChanged event. Handler calls gridControl.LoadReportsAsync(currentFilter) to refresh grid after status updates, preserving current filter.  
   **Reference**: `.github/instructions/csharp-dotnet8.instructions.md` - Event-driven UI refresh patterns  
-  **Acceptance**: Changing status in detail view refreshes grid showing updated status/color, filter preserved *(Completed 2025-10-26 via Form_ViewErrorReports StatusChanged handler)*
+  **Acceptance**: Changing status in detail view refreshes grid showing updated status/color, filter preserved
+  **Completed**: 2025-10-26 – ✅ Implemented per separate-forms architecture: Inside ShowErrorReportDetailsDialogAsync(), dialog.StatusChanged event subscribed. When status changes in detail dialog, grid refreshes with preserved filter via `await controlErrorReportsGrid.LoadReportsAsync(controlErrorReportsGrid.LastFilter);`. Functionally correct and maintains filter state.
 
 - [X] **T050** [Story: Integration] - Add menu item or button in MainForm to launch View Error Reports  
   **File**: `Forms/MainForm/MainForm.cs`  
