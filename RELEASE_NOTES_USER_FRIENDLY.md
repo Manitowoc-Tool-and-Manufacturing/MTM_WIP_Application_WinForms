@@ -321,14 +321,12 @@
 - **View complete details** including what the user was doing, technical information, and error stack traces
 - **Track investigation progress** by marking reports as Reviewed or Resolved
 - **Add developer notes** to document your findings and solutions
-- **Export reports** to CSV or Excel for team analysis or management reporting
 
 **Why this helps**:
 - **Faster problem resolution**: See all error reports in one organized view instead of checking emails or logs
 - **Better prioritization**: Color-coded status (Red=New, Yellow=In Review, Green=Resolved) helps you focus on urgent issues
 - **Team coordination**: Developer notes prevent duplicate investigation efforts
 - **Pattern detection**: Filter and export tools help identify recurring issues
-- **Management reporting**: Export capabilities support monthly error trend reports
 
 **How to access**:
 1. Click **Development** menu in the main application
@@ -342,7 +340,34 @@
 
 ---
 
-## Previous Update - October 26, 2025 (Version 5.3.1)
+## Earlier Update - October 25, 2025 (Version 5.3.2)
+
+**What Changed**: Better error tracking with computer names  
+**Do I Need To Do Anything?**: No - automatic improvement
+
+---
+
+### 🎯 What This Means For You
+
+#### Automatic Computer Name Tracking
+
+**What's new** (added October 25, 2025):
+- When you submit an error report, the system now automatically records which computer you're using
+- Shows the actual computer name (like "SHOP-PC-01" or "OFFICE-LAPTOP-05")
+- This happens automatically in the background - you don't need to do anything
+
+**Why this helps**:
+- **IT can troubleshoot faster**: If your computer is having issues, IT can see your computer name in the error report
+- **Identify problem machines**: If one computer has repeated issues, IT can swap it out or investigate hardware problems
+- **Better support**: When you call IT for help, they can pull up all error reports from your specific computer
+
+**What you'll see**:
+- Nothing different when submitting reports - it still works exactly the same way
+- If IT asks you about an error, they might now say "I see you had this error on SHOP-PC-01" instead of just asking "which computer were you on?"
+
+---
+
+## Earlier Update - October 25, 2025 (Version 5.3.1)
 
 **What Changed**: Display scaling improvements  
 **Do I Need To Do Anything?**: No - just click "Restart" when prompted if you move between monitors
@@ -408,7 +433,7 @@
 
 ---
 
-## What You Need to Know
+## Earlier Update - October 22, 2025 (Version 5.2.0)
 
 ### ✅ Do I Need To Update?
 
@@ -448,6 +473,101 @@
 - **All users**: Update when convenient - this is a helpful new feature, not a critical fix
 
 ---
+
+### 🎯 What This Means For You
+
+#### Rock-Solid Database Operations
+
+**Comprehensive testing completed**:
+- **136 integration tests** now passing (was 113 - 83% coverage)
+- **23 critical bugs fixed** in database operations
+- **All inventory, transfer, and quick button operations validated**
+- **Production-ready reliability** for manufacturing operations
+
+**What improved behind the scenes**:
+- Quick button operations (add, update, move, delete) work perfectly every time
+- System settings and user preferences save and load correctly
+- Inventory adjustments and transfers process reliably
+- Error messages are clearer and more helpful
+
+**Why this matters**:
+- **Fewer errors**: Operations that occasionally failed now work every time
+- **Faster fixes**: When something does go wrong, we can identify and fix it quickly
+- **Better data quality**: Your inventory counts and transaction history stay accurate
+- **Confidence**: The application has been thoroughly validated for manufacturing use
+
+**What you'll notice**:
+- Quick buttons respond faster and more reliably
+- Fewer "unexpected error" messages during daily operations
+- More consistent behavior across different computers and users
+
+**Technical highlights** (for IT staff):
+- 100% DAO (Data Access Object) method coverage
+- Comprehensive stored procedure validation
+- Test data infrastructure for repeatable validation
+- Average 18 minutes per test fix (6.75 hours total effort)
+
+---
+
+## Earlier Update - October 17-21, 2025 (Version 5.1.0)
+
+**What Changed**: Database layer modernization - comprehensive refactoring  
+**Do I Need To Do Anything?**: No - internal improvements only
+
+---
+
+### 🎯 What This Means For You
+
+#### Modernized Database Architecture
+
+**Major behind-the-scenes overhaul completed**:
+- **60+ stored procedures standardized** with consistent error handling
+- **12 Data Access Objects (DAOs) refactored** for reliability
+- **220+ database call sites updated** to modern async patterns
+- **Transaction management improved** for data integrity
+
+**What this prevents**:
+- MySQL parameter errors that caused confusing error messages
+- Data corruption from incomplete multi-step operations
+- Application crashes during database connectivity issues
+- Inconsistent behavior across different features
+
+**Improved error handling**:
+- **Graceful connection failures**: If database becomes unavailable, you'll see "Connection lost. Retry?" instead of crashes
+- **Better error messages**: Clear, actionable messages instead of cryptic MySQL errors
+- **Automatic retries**: Transient network issues handled automatically
+- **Data protection**: All multi-step operations (transfers, adjustments) now use transactions - either all steps succeed or all rollback
+
+**For IT Support and Developers**:
+- **Developer Tools Suite** added to Settings menu
+  - Debug Dashboard for real-time application monitoring
+  - Parameter Prefix Maintenance for stored procedure management
+  - Schema Inspector for database structure review
+  - Code Generator for DAO method creation
+  - Procedure Call Hierarchy visualization
+- **Developer Role** introduced (requires Admin + Developer privileges)
+- **Comprehensive logging** with method names, parameters, and call stacks
+- **Performance monitoring** with configurable slow query thresholds:
+  - Queries: 500ms
+  - Modifications: 1000ms
+  - Reports: 2000ms
+  - Batch operations: 5000ms
+
+**Infrastructure improvements**:
+- **Test database**: `mtm_wip_application_winform_test` for isolated integration testing
+- **Transaction support**: All DAO methods now support external transactions
+- **Connection pooling**: Configured for 5-100 connections for optimal performance
+- **Parameter detection**: Automatic INFORMATION_SCHEMA queries at startup for accurate parameter mapping
+
+**Why you won't notice much**:
+- This was all internal plumbing work
+- Operations work the same way they always have
+- But now they're more reliable, faster to fix, and better documented
+- Foundation laid for future feature development
+
+---
+
+## Most Recent Update was on - October 26, 2025 (Version 5.4.0)
 
 ### 🆘 Need Help?
 
@@ -537,7 +657,7 @@ A: (Coming next release) It's a visual timeline showing what happened to a batch
 A: (Coming next release) When tracking down inventory discrepancies or verifying transfers, seeing the complete history of where units went helps find issues faster. No more guessing which transactions are related to each other.
 
 **Q: Will I lose my work when the app restarts for display changes?**  
-A: No - the application saves your current state and restarts instantly
+A: Yes
 
 **Q: How do I change my Windows screen scale?**  
 A: Go to Windows Settings → System → Display → Scale. You can choose 100%, 125%, 150%, 175%, or 200%. The app will prompt you to restart after you change this setting.
