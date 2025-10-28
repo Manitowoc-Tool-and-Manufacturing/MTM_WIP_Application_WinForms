@@ -1,12 +1,12 @@
 <#
 .SYNOPSIS
-    Creates test user log directories with sample log files for testing the View Application Logs feature.
+    Creates test user log directories with sample CSV log files for testing the View Application Logs feature.
 
 .DESCRIPTION
-    Generates multiple test users (TESTUSER1, TESTUSER2, TESTUSER3) with various log files
-    in the structured format: [TIMESTAMP]|LEVEL|SOURCE|MESSAGE
+    Generates multiple test users (TESTUSER1, TESTUSER2, TESTUSER3) with various CSV log files.
+    CSV format: Timestamp,Level,Source,Message,Details
     
-    Creates logs in both locations:
+    Deletes any existing .log files and creates new .csv files in both locations:
     - C:\Users\johnk\OneDrive\Documents\Work Folder\WIP App Logs\{username}\
     - X:\MH_RESOURCE\Material_Handler\MTM WIP App\Logs\{username}\ (if accessible)
 
@@ -26,29 +26,50 @@ $networkLogDir = "X:\MH_RESOURCE\Material_Handler\MTM WIP App\Logs"
 # Test users to create
 $testUsers = @("TESTUSER1", "TESTUSER2", "TESTUSER3")
 
-# Function to create a log file with structured entries
-function New-StructuredLogFile {
+# Function to escape CSV value (enclose in quotes if contains comma, quote, or newline)
+function ConvertTo-CsvValue {
+    param([string]$Value)
+    
+    if ([string]::IsNullOrEmpty($Value)) {
+        return ""
+    }
+    
+    # If value contains comma, quote, or newline, enclose in quotes and escape internal quotes
+    if ($Value.Contains(',') -or $Value.Contains('"') -or $Value.Contains("`n") -or $Value.Contains("`r")) {
+        return "`"$($Value.Replace('"', '""'))`""
+    }
+    
+    return $Value
+}
+
+# Function to create a CSV log file with proper format
+function New-CsvLogFile {
     param(
         [string]$FilePath,
         [string]$LogType,  # normal, app_error, db_error
         [int]$EntryCount = 10
     )
 
-    $timestamp = Get-Date -Format "yyyy-MM-dd HH:mm:ss"
     $entries = @()
+    
+    # Add CSV header
+    $entries += "Timestamp,Level,Source,Message,Details"
 
     switch ($LogType) {
         "normal" {
             for ($i = 1; $i -le $EntryCount; $i++) {
                 $time = (Get-Date).AddMinutes(-$i).ToString("yyyy-MM-dd HH:mm:ss")
-                $entries += "[$time]|INFO|Application|Test log message #$i from normal log"
+                $message = "Test log message #$i from normal log"
+                $entries += "$(ConvertTo-CsvValue $time),$(ConvertTo-CsvValue 'INFO'),$(ConvertTo-CsvValue 'Application'),$(ConvertTo-CsvValue $message),"
                 
                 # Add some variety
                 if ($i % 3 -eq 0) {
-                    $entries += "[$time]|DEBUG|Database|Query executed successfully in $($i * 10)ms"
+                    $dbMsg = "Query executed successfully in $($i * 10)ms"
+                    $entries += "$(ConvertTo-CsvValue $time),$(ConvertTo-CsvValue 'DEBUG'),$(ConvertTo-CsvValue 'Database'),$(ConvertTo-CsvValue $dbMsg),"
                 }
                 if ($i % 5 -eq 0) {
-                    $entries += "[$time]|WARN|Application|Low disk space warning - 15% remaining"
+                    $warnMsg = "Low disk space warning - 15% remaining"
+                    $entries += "$(ConvertTo-CsvValue $time),$(ConvertTo-CsvValue 'WARN'),$(ConvertTo-CsvValue 'Application'),$(ConvertTo-CsvValue $warnMsg),"
                 }
             }
         }
@@ -62,10 +83,9 @@ function New-StructuredLogFile {
                     "FileNotFoundException: Could not find file 'test.dat'"
                 )
                 $ex = $exceptions[$i % $exceptions.Count]
+                $stackTrace = "   at MTM.Application.TestMethod() in TestFile.cs:line $($i * 10)`n   at MTM.Application.Main() in Program.cs:line $($i * 5)"
                 
-                $entries += "[$time]|ERROR|Application|$ex"
-                $entries += "[$time]|DETAIL|StackTrace|   at MTM.Application.TestMethod() in TestFile.cs:line $($i * 10)"
-                $entries += "[$time]|DETAIL|StackTrace|   at MTM.Application.Main() in Program.cs:line $($i * 5)"
+                $entries += "$(ConvertTo-CsvValue $time),$(ConvertTo-CsvValue 'ERROR'),$(ConvertTo-CsvValue 'Application'),$(ConvertTo-CsvValue $ex),$(ConvertTo-CsvValue $stackTrace)"
             }
         }
         "db_error" {
@@ -82,22 +102,35 @@ function New-StructuredLogFile {
                 )
                 $err = $dbErrors[$i % $dbErrors.Count]
                 
-                $entries += "[$time]|$severity|Database|$err"
-                
+                $details = ""
                 if ($severity -ne "WARNING") {
-                    $entries += "[$time]|DETAIL|StackTrace|   at MySql.Data.MySqlClient.MySqlCommand.ExecuteReader()"
-                    $entries += "[$time]|DETAIL|StackTrace|   at MTM.Data.Dao_Inventory.GetInventoryAsync()"
+                    $details = "   at MySql.Data.MySqlClient.MySqlCommand.ExecuteReader()`n   at MTM.Data.Dao_Inventory.GetInventoryAsync()"
                 }
+                
+                $entries += "$(ConvertTo-CsvValue $time),$(ConvertTo-CsvValue $severity),$(ConvertTo-CsvValue 'Database'),$(ConvertTo-CsvValue $err),$(ConvertTo-CsvValue $details)"
             }
         }
     }
 
     # Write all entries to file
     $entries | Out-File -FilePath $FilePath -Encoding UTF8
-    Write-Host "  Created: $FilePath ($($entries.Count) entries)" -ForegroundColor Green
+    Write-Host "  Created: $FilePath ($($entries.Count - 1) entries)" -ForegroundColor Green
 }
 
-# Function to create test user directories and log files
+# Function to delete old .log files from a directory
+function Remove-OldLogFiles {
+    param([string]$UserDir)
+    
+    if (Test-Path $UserDir) {
+        $oldLogs = Get-ChildItem -Path $UserDir -Filter "*.log" -File
+        if ($oldLogs.Count -gt 0) {
+            Write-Host "  Deleting $($oldLogs.Count) old .log files..." -ForegroundColor Yellow
+            $oldLogs | Remove-Item -Force
+        }
+    }
+}
+
+# Function to create test user directories and CSV log files
 function New-TestUserLogs {
     param(
         [string]$BaseDir,
@@ -111,35 +144,38 @@ function New-TestUserLogs {
         New-Item -ItemType Directory -Path $userDir -Force | Out-Null
         Write-Host "Created directory: $userDir" -ForegroundColor Cyan
     }
+    
+    # Delete old .log files
+    Remove-OldLogFiles -UserDir $userDir
 
     $now = Get-Date
     
-    # Create normal log files (3 files with varying dates)
+    # Create normal CSV log files (3 files with varying dates)
     for ($days = 0; $days -lt 3; $days++) {
         $date = $now.AddDays(-$days)
-        $filename = "$Username {0:MM-dd-yyyy} @ {0:h-mm} {0:tt}_normal.log" -f $date
+        $filename = "$Username {0:MM-dd-yyyy} @ {0:h-mm} {0:tt}_normal.csv" -f $date
         $filepath = Join-Path $userDir $filename
-        New-StructuredLogFile -FilePath $filepath -LogType "normal" -EntryCount (15 - $days * 3)
+        New-CsvLogFile -FilePath $filepath -LogType "normal" -EntryCount (15 - $days * 3)
     }
 
-    # Create app error log files (2 files)
+    # Create app error CSV log files (2 files)
     for ($days = 0; $days -lt 2; $days++) {
         $date = $now.AddDays(-$days)
-        $filename = "$Username {0:MM-dd-yyyy} @ {0:h-mm} {0:tt}_app_error.log" -f $date
+        $filename = "$Username {0:MM-dd-yyyy} @ {0:h-mm} {0:tt}_app_error.csv" -f $date
         $filepath = Join-Path $userDir $filename
-        New-StructuredLogFile -FilePath $filepath -LogType "app_error" -EntryCount (8 - $days * 2)
+        New-CsvLogFile -FilePath $filepath -LogType "app_error" -EntryCount (8 - $days * 2)
     }
 
-    # Create db error log files (2 files)
+    # Create db error CSV log files (2 files)
     for ($days = 0; $days -lt 2; $days++) {
         $date = $now.AddDays(-$days * 2)
-        $filename = "$Username {0:MM-dd-yyyy} @ {0:h-mm} {0:tt}_db_error.log" -f $date
+        $filename = "$Username {0:MM-dd-yyyy} @ {0:h-mm} {0:tt}_db_error.csv" -f $date
         $filepath = Join-Path $userDir $filename
-        New-StructuredLogFile -FilePath $filepath -LogType "db_error" -EntryCount (6 - $days)
+        New-CsvLogFile -FilePath $filepath -LogType "db_error" -EntryCount (6 - $days)
     }
 
     # Create an empty file (should be skipped by viewer)
-    $emptyFile = Join-Path $userDir "$Username empty_file_normal.log"
+    $emptyFile = Join-Path $userDir "$Username empty_file_normal.csv"
     New-Item -ItemType File -Path $emptyFile -Force | Out-Null
     Write-Host "  Created empty file (should be hidden): $emptyFile" -ForegroundColor Yellow
 }

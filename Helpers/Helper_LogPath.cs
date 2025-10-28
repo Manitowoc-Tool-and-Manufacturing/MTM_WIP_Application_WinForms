@@ -319,4 +319,87 @@ public static class Helper_LogPath
     }
 
     #endregion
+
+    #region Prompt Fixes Directory Management
+
+    /// <summary>
+    /// Gets the central Prompt Fixes directory path where all generated prompts are stored.
+    /// </summary>
+    /// <returns>Full path to the Prompt Fixes directory.</returns>
+    public static string GetPromptFixesDirectory()
+    {
+        return Path.Combine(GetBaseLogDirectory(), "Prompt Fixes");
+    }
+
+    /// <summary>
+    /// Ensures the Prompt Fixes directory exists, creating it if necessary.
+    /// </summary>
+    /// <returns>True if directory exists or was created successfully; false otherwise.</returns>
+    public static bool CreatePromptFixesDirectory()
+    {
+        try
+        {
+            string promptFixesDir = GetPromptFixesDirectory();
+            
+            // Validate the constructed path for security
+            if (!IsDirectorySafe(promptFixesDir))
+            {
+                LoggingUtility.Log($"[Helper_LogPath] Prompt Fixes directory failed security check: {promptFixesDir}");
+                return false;
+            }
+
+            if (!Directory.Exists(promptFixesDir))
+            {
+                Directory.CreateDirectory(promptFixesDir);
+                LoggingUtility.Log($"[Helper_LogPath] Created Prompt Fixes directory: {promptFixesDir}");
+            }
+            
+            return true;
+        }
+        catch (Exception ex)
+        {
+            LoggingUtility.Log("[Helper_LogPath] Failed to create Prompt Fixes directory");
+            LoggingUtility.LogApplicationError(ex);
+            return false;
+        }
+    }
+
+    /// <summary>
+    /// Constructs a safe file path for a prompt fix file based on method name.
+    /// Sanitizes the method name to create a valid filename.
+    /// </summary>
+    /// <param name="methodName">Method name to create prompt file for.</param>
+    /// <returns>Full path to the prompt file, or null if validation fails.</returns>
+    public static string? GetPromptFilePath(string methodName)
+    {
+        if (string.IsNullOrWhiteSpace(methodName))
+        {
+            LoggingUtility.Log("[Helper_LogPath] GetPromptFilePath failed: Method name is null or empty");
+            return null;
+        }
+
+        // Sanitize method name for filesystem (remove invalid characters)
+        string safeMethodName = SanitizeFilename(methodName);
+
+        if (string.IsNullOrWhiteSpace(safeMethodName))
+        {
+            LoggingUtility.Log($"[Helper_LogPath] GetPromptFilePath failed: Method name contains only invalid characters: {methodName}");
+            return null;
+        }
+
+        // Construct prompt file path with .md extension
+        string promptFixesDir = GetPromptFixesDirectory();
+        string filePath = Path.Combine(promptFixesDir, $"{safeMethodName}.md");
+
+        // Validate the constructed path
+        if (!IsPathSafe(filePath))
+        {
+            LoggingUtility.Log($"[Helper_LogPath] GetPromptFilePath failed security check: {filePath}");
+            return null;
+        }
+
+        return filePath;
+    }
+
+    #endregion
 }

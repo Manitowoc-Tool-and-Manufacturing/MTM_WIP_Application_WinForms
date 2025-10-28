@@ -17,6 +17,7 @@ namespace MTM_Inventory_Application.Forms.ViewLogs
         {
             this.tableLayoutMain = new System.Windows.Forms.TableLayoutPanel();
             this.panelUserSelection = new System.Windows.Forms.Panel();
+            this.chkAutoRefresh = new System.Windows.Forms.CheckBox();
             this.lblUserCount = new System.Windows.Forms.Label();
             this.btnRefresh = new System.Windows.Forms.Button();
             this.cmbUsers = new System.Windows.Forms.ComboBox();
@@ -35,7 +36,17 @@ namespace MTM_Inventory_Application.Forms.ViewLogs
             this.lblEntryPosition = new System.Windows.Forms.Label();
             this.btnPrevious = new System.Windows.Forms.Button();
             this.txtRawView = new System.Windows.Forms.TextBox();
-            this.txtEntryDisplay = new System.Windows.Forms.TextBox();
+            this.tableLayoutEntryDisplay = new System.Windows.Forms.TableLayoutPanel();
+            this.lblEntryTimestamp = new System.Windows.Forms.Label();
+            this.txtTimestamp = new System.Windows.Forms.TextBox();
+            this.lblEntryLevel = new System.Windows.Forms.Label();
+            this.txtLevel = new System.Windows.Forms.TextBox();
+            this.lblEntrySource = new System.Windows.Forms.Label();
+            this.txtEntrySource = new System.Windows.Forms.TextBox();
+            this.lblEntryMessage = new System.Windows.Forms.Label();
+            this.txtEntryMessage = new System.Windows.Forms.TextBox();
+            this.lblEntryDetails = new System.Windows.Forms.Label();
+            this.txtEntryDetails = new System.Windows.Forms.TextBox();
             this.lblStatus = new System.Windows.Forms.Label();
             this.panelFilters = new System.Windows.Forms.Panel();
             this.tableLayoutFilters = new System.Windows.Forms.TableLayoutPanel();
@@ -63,6 +74,7 @@ namespace MTM_Inventory_Application.Forms.ViewLogs
             this.panelUserSelection.SuspendLayout();
             this.panelFileList.SuspendLayout();
             this.panelEntryDisplay.SuspendLayout();
+            this.tableLayoutEntryDisplay.SuspendLayout();
             this.panelNavigation.SuspendLayout();
             this.panelFilters.SuspendLayout();
             this.tableLayoutFilters.SuspendLayout();
@@ -91,6 +103,7 @@ namespace MTM_Inventory_Application.Forms.ViewLogs
             // 
             // panelUserSelection
             // 
+            this.panelUserSelection.Controls.Add(this.chkAutoRefresh);
             this.panelUserSelection.Controls.Add(this.lblUserCount);
             this.panelUserSelection.Controls.Add(this.btnRefresh);
             this.panelUserSelection.Controls.Add(this.cmbUsers);
@@ -120,6 +133,16 @@ namespace MTM_Inventory_Application.Forms.ViewLogs
             this.btnRefresh.TabIndex = 2;
             this.btnRefresh.Text = "Refresh";
             this.btnRefresh.UseVisualStyleBackColor = true;
+            // 
+            // chkAutoRefresh
+            // 
+            this.chkAutoRefresh.AutoSize = true;
+            this.chkAutoRefresh.Location = new System.Drawing.Point(550, 18);
+            this.chkAutoRefresh.Name = "chkAutoRefresh";
+            this.chkAutoRefresh.Size = new System.Drawing.Size(96, 19);
+            this.chkAutoRefresh.TabIndex = 4;
+            this.chkAutoRefresh.Text = "Auto Refresh";
+            this.chkAutoRefresh.UseVisualStyleBackColor = true;
             // 
             // cmbUsers
             // 
@@ -209,7 +232,7 @@ namespace MTM_Inventory_Application.Forms.ViewLogs
             // panelEntryDisplay
             // 
             this.panelEntryDisplay.Controls.Add(this.txtRawView);
-            this.panelEntryDisplay.Controls.Add(this.txtEntryDisplay);
+            this.panelEntryDisplay.Controls.Add(this.tableLayoutEntryDisplay);
             this.panelEntryDisplay.Controls.Add(this.panelFilters);
             this.panelEntryDisplay.Controls.Add(this.panelNavigation);
             this.panelEntryDisplay.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -524,21 +547,155 @@ namespace MTM_Inventory_Application.Forms.ViewLogs
             this.btnToday.Text = "Today";
             this.btnToday.UseVisualStyleBackColor = true;
             // 
-            // txtEntryDisplay
+            // tableLayoutEntryDisplay
             // 
-            this.txtEntryDisplay.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            this.tableLayoutEntryDisplay.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.txtEntryDisplay.Font = new System.Drawing.Font("Consolas", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.txtEntryDisplay.Location = new System.Drawing.Point(13, 146);
-            this.txtEntryDisplay.Multiline = true;
-            this.txtEntryDisplay.Name = "txtEntryDisplay";
-            this.txtEntryDisplay.ReadOnly = true;
-            this.txtEntryDisplay.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.txtEntryDisplay.Size = new System.Drawing.Size(1168, 190);
-            this.txtEntryDisplay.TabIndex = 2;
-            this.txtEntryDisplay.Text = "Select a file to view entries";
-            this.txtEntryDisplay.WordWrap = true;
+            this.tableLayoutEntryDisplay.ColumnCount = 2;
+            this.tableLayoutEntryDisplay.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 100F));
+            this.tableLayoutEntryDisplay.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tableLayoutEntryDisplay.Controls.Add(this.lblEntryTimestamp, 0, 0);
+            this.tableLayoutEntryDisplay.Controls.Add(this.txtTimestamp, 1, 0);
+            this.tableLayoutEntryDisplay.Controls.Add(this.lblEntryLevel, 0, 1);
+            this.tableLayoutEntryDisplay.Controls.Add(this.txtLevel, 1, 1);
+            this.tableLayoutEntryDisplay.Controls.Add(this.lblEntrySource, 0, 2);
+            this.tableLayoutEntryDisplay.Controls.Add(this.txtEntrySource, 1, 2);
+            this.tableLayoutEntryDisplay.Controls.Add(this.lblEntryMessage, 0, 3);
+            this.tableLayoutEntryDisplay.Controls.Add(this.txtEntryMessage, 1, 3);
+            this.tableLayoutEntryDisplay.Controls.Add(this.lblEntryDetails, 0, 4);
+            this.tableLayoutEntryDisplay.Controls.Add(this.txtEntryDetails, 1, 4);
+            this.tableLayoutEntryDisplay.Location = new System.Drawing.Point(13, 146);
+            this.tableLayoutEntryDisplay.Name = "tableLayoutEntryDisplay";
+            this.tableLayoutEntryDisplay.RowCount = 5;
+            this.tableLayoutEntryDisplay.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 32F));
+            this.tableLayoutEntryDisplay.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 32F));
+            this.tableLayoutEntryDisplay.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 32F));
+            this.tableLayoutEntryDisplay.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableLayoutEntryDisplay.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableLayoutEntryDisplay.Size = new System.Drawing.Size(1168, 190);
+            this.tableLayoutEntryDisplay.TabIndex = 2;
+            // 
+            // lblEntryTimestamp
+            // 
+            this.lblEntryTimestamp.AutoSize = true;
+            this.lblEntryTimestamp.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lblEntryTimestamp.Location = new System.Drawing.Point(3, 0);
+            this.lblEntryTimestamp.Name = "lblEntryTimestamp";
+            this.lblEntryTimestamp.Size = new System.Drawing.Size(94, 32);
+            this.lblEntryTimestamp.TabIndex = 0;
+            this.lblEntryTimestamp.Text = "Timestamp:";
+            this.lblEntryTimestamp.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // txtTimestamp
+            // 
+            this.txtTimestamp.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.txtTimestamp.Font = new System.Drawing.Font("Consolas", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.txtTimestamp.Location = new System.Drawing.Point(103, 5);
+            this.txtTimestamp.Margin = new System.Windows.Forms.Padding(3, 5, 3, 3);
+            this.txtTimestamp.Name = "txtTimestamp";
+            this.txtTimestamp.ReadOnly = true;
+            this.txtTimestamp.Size = new System.Drawing.Size(1062, 22);
+            this.txtTimestamp.TabIndex = 1;
+            this.txtTimestamp.TabStop = false;
+            // 
+            // lblEntryLevel
+            // 
+            this.lblEntryLevel.AutoSize = true;
+            this.lblEntryLevel.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lblEntryLevel.Location = new System.Drawing.Point(3, 32);
+            this.lblEntryLevel.Name = "lblEntryLevel";
+            this.lblEntryLevel.Size = new System.Drawing.Size(94, 32);
+            this.lblEntryLevel.TabIndex = 2;
+            this.lblEntryLevel.Text = "Level:";
+            this.lblEntryLevel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // txtLevel
+            // 
+            this.txtLevel.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.txtLevel.Font = new System.Drawing.Font("Consolas", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            this.txtLevel.Location = new System.Drawing.Point(103, 37);
+            this.txtLevel.Margin = new System.Windows.Forms.Padding(3, 5, 3, 3);
+            this.txtLevel.Name = "txtLevel";
+            this.txtLevel.ReadOnly = true;
+            this.txtLevel.Size = new System.Drawing.Size(1062, 22);
+            this.txtLevel.TabIndex = 3;
+            this.txtLevel.TabStop = false;
+            // 
+            // lblEntrySource
+            // 
+            this.lblEntrySource.AutoSize = true;
+            this.lblEntrySource.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lblEntrySource.Location = new System.Drawing.Point(3, 64);
+            this.lblEntrySource.Name = "lblEntrySource";
+            this.lblEntrySource.Size = new System.Drawing.Size(94, 32);
+            this.lblEntrySource.TabIndex = 4;
+            this.lblEntrySource.Text = "Source:";
+            this.lblEntrySource.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // txtEntrySource
+            // 
+            this.txtEntrySource.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.txtEntrySource.Font = new System.Drawing.Font("Consolas", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.txtEntrySource.Location = new System.Drawing.Point(103, 69);
+            this.txtEntrySource.Margin = new System.Windows.Forms.Padding(3, 5, 3, 3);
+            this.txtEntrySource.Name = "txtEntrySource";
+            this.txtEntrySource.ReadOnly = true;
+            this.txtEntrySource.Size = new System.Drawing.Size(1062, 22);
+            this.txtEntrySource.TabIndex = 5;
+            this.txtEntrySource.TabStop = false;
+            // 
+            // lblEntryMessage
+            // 
+            this.lblEntryMessage.AutoSize = true;
+            this.lblEntryMessage.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lblEntryMessage.Location = new System.Drawing.Point(3, 96);
+            this.lblEntryMessage.Name = "lblEntryMessage";
+            this.lblEntryMessage.Size = new System.Drawing.Size(94, 47);
+            this.lblEntryMessage.TabIndex = 6;
+            this.lblEntryMessage.Text = "Message:";
+            this.lblEntryMessage.TextAlign = System.Drawing.ContentAlignment.TopLeft;
+            // 
+            // txtEntryMessage
+            // 
+            this.txtEntryMessage.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.txtEntryMessage.Font = new System.Drawing.Font("Consolas", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.txtEntryMessage.Location = new System.Drawing.Point(103, 101);
+            this.txtEntryMessage.Margin = new System.Windows.Forms.Padding(3, 5, 3, 3);
+            this.txtEntryMessage.Multiline = true;
+            this.txtEntryMessage.Name = "txtEntryMessage";
+            this.txtEntryMessage.ReadOnly = true;
+            this.txtEntryMessage.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            this.txtEntryMessage.Size = new System.Drawing.Size(1062, 39);
+            this.txtEntryMessage.TabIndex = 7;
+            this.txtEntryMessage.TabStop = false;
+            this.txtEntryMessage.WordWrap = true;
+            // 
+            // lblEntryDetails
+            // 
+            this.lblEntryDetails.AutoSize = true;
+            this.lblEntryDetails.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lblEntryDetails.Location = new System.Drawing.Point(3, 143);
+            this.lblEntryDetails.Name = "lblEntryDetails";
+            this.lblEntryDetails.Size = new System.Drawing.Size(94, 47);
+            this.lblEntryDetails.TabIndex = 8;
+            this.lblEntryDetails.Text = "Details:";
+            this.lblEntryDetails.TextAlign = System.Drawing.ContentAlignment.TopLeft;
+            // 
+            // txtEntryDetails
+            // 
+            this.txtEntryDetails.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.txtEntryDetails.Font = new System.Drawing.Font("Consolas", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.txtEntryDetails.Location = new System.Drawing.Point(103, 148);
+            this.txtEntryDetails.Margin = new System.Windows.Forms.Padding(3, 5, 3, 3);
+            this.txtEntryDetails.Multiline = true;
+            this.txtEntryDetails.Name = "txtEntryDetails";
+            this.txtEntryDetails.ReadOnly = true;
+            this.txtEntryDetails.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            this.txtEntryDetails.Size = new System.Drawing.Size(1062, 39);
+            this.txtEntryDetails.TabIndex = 9;
+            this.txtEntryDetails.TabStop = false;
+            this.txtEntryDetails.WordWrap = true;
             // 
             // txtRawView
             // 
@@ -603,6 +760,7 @@ namespace MTM_Inventory_Application.Forms.ViewLogs
         private System.Windows.Forms.Label lblSelectUser;
         private System.Windows.Forms.ComboBox cmbUsers;
         private System.Windows.Forms.Button btnRefresh;
+        private System.Windows.Forms.CheckBox chkAutoRefresh;
         private System.Windows.Forms.Label lblUserCount;
         private System.Windows.Forms.Panel panelFileList;
         private System.Windows.Forms.Label lblLogFiles;
@@ -617,7 +775,17 @@ namespace MTM_Inventory_Application.Forms.ViewLogs
         private System.Windows.Forms.Label lblEntryPosition;
         private System.Windows.Forms.Button btnNext;
         private System.Windows.Forms.Button btnToggleView;
-        private System.Windows.Forms.TextBox txtEntryDisplay;
+        private System.Windows.Forms.TableLayoutPanel tableLayoutEntryDisplay;
+        private System.Windows.Forms.Label lblEntryTimestamp;
+        private System.Windows.Forms.TextBox txtTimestamp;
+        private System.Windows.Forms.Label lblEntryLevel;
+        private System.Windows.Forms.TextBox txtLevel;
+        private System.Windows.Forms.Label lblEntrySource;
+        private System.Windows.Forms.TextBox txtEntrySource;
+        private System.Windows.Forms.Label lblEntryMessage;
+        private System.Windows.Forms.TextBox txtEntryMessage;
+        private System.Windows.Forms.Label lblEntryDetails;
+        private System.Windows.Forms.TextBox txtEntryDetails;
         private System.Windows.Forms.TextBox txtRawView;
         private System.Windows.Forms.Label lblStatus;
         private System.Windows.Forms.Panel panelFilters;

@@ -3,6 +3,7 @@ using MTM_Inventory_Application.Helpers;
 using MTM_Inventory_Application.Logging;
 using MTM_Inventory_Application.Models;
 using MTM_Inventory_Application.Services;
+using System.Text;
 
 namespace MTM_Inventory_Application.Forms.ViewLogs;
 
@@ -22,7 +23,6 @@ public partial class ViewApplicationLogsForm : Form
     private Model_LogFile? _selectedLogFile;
     private bool _isParsedView = true; // True = parsed fields, False = raw text
     private System.Windows.Forms.Timer? _autoRefreshTimer; // T047: Auto-refresh timer
-    private bool _autoRefreshEnabled = true; // T047: Auto-refresh state
 
     #endregion
 
@@ -50,6 +50,7 @@ public partial class ViewApplicationLogsForm : Form
         InitializeComponent();
         Core_Themes.ApplyDpiScaling(this);
         Core_Themes.ApplyRuntimeLayoutAdjustments(this);
+        Core_Themes.ApplyFocusHighlighting(this);
         WireUpEvents();
         InitializeAutoRefreshTimer(); // T047
     }
@@ -85,7 +86,7 @@ public partial class ViewApplicationLogsForm : Form
     /// </summary>
     private async void AutoRefreshTimer_Tick(object? sender, EventArgs e)
     {
-        if (!_autoRefreshEnabled || string.IsNullOrWhiteSpace(_selectedUsername))
+        if (!chkAutoRefresh.Checked || string.IsNullOrWhiteSpace(_selectedUsername))
         {
             return;
         }
@@ -107,7 +108,7 @@ public partial class ViewApplicationLogsForm : Form
         finally
         {
             // Resume timer if still enabled
-            if (_autoRefreshEnabled && _autoRefreshTimer != null)
+            if (chkAutoRefresh.Checked && _autoRefreshTimer != null)
             {
                 _autoRefreshTimer.Start();
             }
@@ -125,6 +126,9 @@ public partial class ViewApplicationLogsForm : Form
     {
         try
         {
+            // Apply theme colors to form and controls
+            Core_Themes.ApplyTheme(this);
+            
             await LoadUserListAsync();
 
             // If username was pre-selected via constructor, select it now
@@ -157,6 +161,9 @@ public partial class ViewApplicationLogsForm : Form
 
         try
         {
+            // Save current selection before clearing
+            string? previouslySelectedUser = cmbUsers.SelectedItem as string;
+            
             cmbUsers.Items.Clear();
 
             // Get all base log directories (primary and fallback)
@@ -222,6 +229,21 @@ public partial class ViewApplicationLogsForm : Form
             if (cmbUsers.Items.Count > 0)
             {
                 lblUserCount.Text = $"{cmbUsers.Items.Count} users";
+                
+                // Restore previous user selection if it still exists
+                if (!string.IsNullOrWhiteSpace(previouslySelectedUser))
+                {
+                    int index = cmbUsers.Items.IndexOf(previouslySelectedUser);
+                    if (index >= 0)
+                    {
+                        // Temporarily disable event to prevent reload
+                        cmbUsers.SelectedIndexChanged -= cmbUsers_SelectedIndexChanged;
+                        cmbUsers.SelectedIndex = index;
+                        cmbUsers.SelectedIndexChanged += cmbUsers_SelectedIndexChanged;
+                        
+                        LoggingUtility.Log($"[ViewApplicationLogsForm] Restored user selection: {previouslySelectedUser}");
+                    }
+                }
             }
             else
             {
@@ -253,6 +275,7 @@ public partial class ViewApplicationLogsForm : Form
         Resize += ViewApplicationLogsForm_Resize; // T047: Pause/resume timer on minimize/restore
         cmbUsers.SelectedIndexChanged += cmbUsers_SelectedIndexChanged;
         btnRefresh.Click += btnRefresh_Click;
+        chkAutoRefresh.CheckedChanged += chkAutoRefresh_CheckedChanged;
         lstLogFiles.SelectedIndexChanged += lstLogFiles_SelectedIndexChanged;
         btnPrevious.Click += btnPrevious_Click;
         btnNext.Click += btnNext_Click;
@@ -280,8 +303,8 @@ public partial class ViewApplicationLogsForm : Form
         }
         else if (WindowState == FormWindowState.Normal || WindowState == FormWindowState.Maximized)
         {
-            // Resume auto-refresh when restored
-            if (_autoRefreshEnabled && !string.IsNullOrWhiteSpace(_selectedUsername))
+            // Resume auto-refresh when restored (only if checkbox is checked)
+            if (chkAutoRefresh.Checked && !string.IsNullOrWhiteSpace(_selectedUsername))
             {
                 _autoRefreshTimer.Start();
                 LoggingUtility.Log("[ViewApplicationLogsForm] Auto-refresh resumed (form restored)");
@@ -461,23 +484,20 @@ public partial class ViewApplicationLogsForm : Form
 
     /// <summary>
     /// Displays the current log entry in the entry display panel with formatting enhancements.
+    /// T056-T058: Uses structured textbox display with labeled fields.
     /// </summary>
     private void ShowCurrentEntry()
     {
         if (_currentEntries == null || _currentEntries.Count == 0)
         {
-            txtEntryDisplay.Text = "No entries loaded";
-            txtRawView.Text = "No entries loaded";
-            txtEntryDisplay.BackColor = SystemColors.Control;
+            ClearEntryDisplay("No entries loaded");
             return;
         }
 
         if (_currentEntryIndex < 0 || _currentEntryIndex >= _currentEntries.Count)
         {
             LoggingUtility.Log($"[ViewApplicationLogsForm] Invalid entry index: {_currentEntryIndex}");
-            txtEntryDisplay.Text = "Invalid entry index";
-            txtRawView.Text = "Invalid entry index";
-            txtEntryDisplay.BackColor = SystemColors.Control;
+            ClearEntryDisplay("Invalid entry index");
             return;
         }
 
@@ -488,7 +508,7 @@ public partial class ViewApplicationLogsForm : Form
         {
             _isParsedView = false;
             btnToggleView.Text = "Show Parsed View";
-            txtEntryDisplay.Visible = false;
+            tableLayoutEntryDisplay.Visible = false;
             txtRawView.Visible = true;
             txtRawView.Text = $"═══ Parse Failed - Showing Raw Text ═══\n\n{entry.RawText}";
             lblStatus.Text = "Parse failed - showing raw view";
@@ -503,68 +523,93 @@ public partial class ViewApplicationLogsForm : Form
         // T038/T039: Handle view mode toggle
         if (_isParsedView)
         {
-            // Build formatted display based on log type (Parsed View)
-            var display = new System.Text.StringBuilder();
-            display.AppendLine($"═══ Entry {_currentEntryIndex + 1} of {_currentEntries.Count} ═══");
-            display.AppendLine($"Format: {entry.LogType}");
-            display.AppendLine();
+            // Structured view - populate individual textboxes
+            tableLayoutEntryDisplay.Visible = true;
+            txtRawView.Visible = false;
 
-            switch (entry.LogType)
-            {
-                case LogFormat.Normal:
-                    display.AppendLine($"Timestamp: {entry.Timestamp:yyyy-MM-dd HH:mm:ss}");
-                    display.AppendLine($"Level: {entry.Level ?? "N/A"} {GetEmojiDisplay(entry.Emoji)}"); // T028
-                    display.AppendLine($"Source: {entry.Source ?? "N/A"}");
-                    display.AppendLine($"Message: {entry.Message ?? "N/A"}");
-                    if (!string.IsNullOrWhiteSpace(entry.Details))
-                    {
-                        display.AppendLine($"Details:");
-                        display.AppendLine(FormatJsonDetails(entry.Details)); // T027
-                    }
-                    break;
-
-                case LogFormat.ApplicationError:
-                    display.AppendLine($"Timestamp: {entry.Timestamp:yyyy-MM-dd HH:mm:ss}");
-                    display.AppendLine($"Error Type: {entry.Level ?? "N/A"}");
-                    display.AppendLine($"Exception: {entry.Message ?? "N/A"}");
-                    if (!string.IsNullOrWhiteSpace(entry.StackTrace))
-                    {
-                        display.AppendLine();
-                        display.AppendLine("Stack Trace:");
-                        display.AppendLine(entry.StackTrace);
-                    }
-                    break;
-
-                case LogFormat.DatabaseError:
-                    display.AppendLine($"Timestamp: {entry.Timestamp:yyyy-MM-dd HH:mm:ss}");
-                    display.AppendLine($"Severity: {entry.Level ?? "N/A"}");
-                    display.AppendLine($"Message: {entry.Message ?? "N/A"}");
-                    if (!string.IsNullOrWhiteSpace(entry.StackTrace))
-                    {
-                        display.AppendLine();
-                        display.AppendLine("Stack Trace:");
-                        display.AppendLine(entry.StackTrace);
-                    }
-                    break;
-
-                case LogFormat.Unknown:
-                default:
-                    display.AppendLine($"Raw Entry:");
-                    display.AppendLine(entry.RawText);
-                    break;
-            }
-
-            txtEntryDisplay.Text = display.ToString();
+            // Populate structured fields based on log type
+            PopulateStructuredDisplay(entry);
         }
         else
         {
             // Raw View - show exact file content
+            tableLayoutEntryDisplay.Visible = false;
+            txtRawView.Visible = true;
             txtRawView.Text = $"═══ Raw Text - Entry {_currentEntryIndex + 1} of {_currentEntries.Count} ═══\n\n{entry.RawText}";
         }
 
         UpdateNavigationButtons();
 
         LoggingUtility.Log($"[ViewApplicationLogsForm] Showing entry {_currentEntryIndex + 1} of {_currentEntries.Count} in {(_isParsedView ? "parsed" : "raw")} view");
+    }
+
+    /// <summary>
+    /// Clears the entry display with a specified message.
+    /// </summary>
+    private void ClearEntryDisplay(string message)
+    {
+        txtTimestamp.Text = string.Empty;
+        txtLevel.Text = string.Empty;
+        txtEntrySource.Text = string.Empty;
+        txtEntryMessage.Text = string.Empty;
+        txtEntryDetails.Text = string.Empty;
+        txtRawView.Text = message;
+        txtLevel.BackColor = SystemColors.Control;
+        lblStatus.Text = message;
+    }
+
+    /// <summary>
+    /// Populates the structured textbox display from a log entry.
+    /// T057: Maps log entry fields to corresponding textboxes.
+    /// </summary>
+    private void PopulateStructuredDisplay(Model_LogEntry entry)
+    {
+        // Common fields for all log types
+        txtTimestamp.Text = entry.Timestamp.ToString("yyyy-MM-dd HH:mm:ss");
+
+        switch (entry.LogType)
+        {
+            case LogFormat.Normal:
+                txtLevel.Text = $"{entry.Level ?? "N/A"} {GetEmojiDisplay(entry.Emoji)}";
+                txtEntrySource.Text = entry.Source ?? "N/A";
+                txtEntryMessage.Text = entry.Message ?? "N/A";
+                
+                // Format details with JSON formatting if applicable
+                if (!string.IsNullOrWhiteSpace(entry.Details))
+                {
+                    txtEntryDetails.Text = FormatJsonDetails(entry.Details);
+                }
+                else
+                {
+                    txtEntryDetails.Text = string.Empty;
+                }
+                break;
+
+            case LogFormat.ApplicationError:
+                txtLevel.Text = $"ERROR - {entry.ErrorType ?? "Unknown"}";
+                txtEntrySource.Text = "Application Error";
+                txtEntryMessage.Text = entry.Message ?? "N/A";
+                txtEntryDetails.Text = entry.StackTrace ?? string.Empty;
+                break;
+
+            case LogFormat.DatabaseError:
+                txtLevel.Text = $"{entry.Severity ?? "ERROR"}";
+                txtEntrySource.Text = "Database Error";
+                txtEntryMessage.Text = entry.Message ?? "N/A";
+                txtEntryDetails.Text = entry.StackTrace ?? string.Empty;
+                break;
+
+            case LogFormat.Unknown:
+            default:
+                txtLevel.Text = "UNKNOWN";
+                txtEntrySource.Text = "Unknown Format";
+                txtEntryMessage.Text = entry.RawText;
+                txtEntryDetails.Text = string.Empty;
+                break;
+        }
+
+        // Update status bar
+        lblStatus.Text = $"Entry {_currentEntryIndex + 1} of {_currentEntries.Count} - {entry.LogType}";
     }
 
     #endregion
@@ -576,13 +621,53 @@ public partial class ViewApplicationLogsForm : Form
     #region Button Clicks
 
     /// <summary>
-    /// Handles Refresh button click. Reloads current user's log files.
+    /// Handles Refresh button click. Reloads current user's log files while preserving selection state.
     /// </summary>
     private async void btnRefresh_Click(object sender, EventArgs e)
     {
         if (!string.IsNullOrWhiteSpace(_selectedUsername))
         {
+            // Save current state
+            string? selectedFileName = lstLogFiles.SelectedItems.Count > 0 
+                ? (lstLogFiles.SelectedItems[0].Tag as Model_LogFile)?.FileName 
+                : null;
+            int currentEntryIndex = _currentEntryIndex;
+            
+            // Reload files
             await LoadLogFilesAsync(_selectedUsername);
+            
+            // Restore file selection if it still exists
+            if (!string.IsNullOrWhiteSpace(selectedFileName))
+            {
+                RestoreFileSelection(selectedFileName, currentEntryIndex);
+            }
+        }
+    }
+
+    /// <summary>
+    /// Handles Auto Refresh checkbox change. Enables/disables the auto-refresh timer.
+    /// </summary>
+    private void chkAutoRefresh_CheckedChanged(object? sender, EventArgs e)
+    {
+        if (_autoRefreshTimer == null)
+        {
+            return;
+        }
+
+        if (chkAutoRefresh.Checked)
+        {
+            // Enable auto-refresh (if not minimized)
+            if (WindowState != FormWindowState.Minimized)
+            {
+                _autoRefreshTimer.Start();
+                LoggingUtility.Log("[ViewApplicationLogsForm] Auto-refresh enabled");
+            }
+        }
+        else
+        {
+            // Disable auto-refresh
+            _autoRefreshTimer.Stop();
+            LoggingUtility.Log("[ViewApplicationLogsForm] Auto-refresh disabled");
         }
     }
 
@@ -641,7 +726,7 @@ public partial class ViewApplicationLogsForm : Form
         btnToggleView.Text = _isParsedView ? "Show Raw View" : "Show Parsed View";
 
         // Toggle control visibility
-        txtEntryDisplay.Visible = _isParsedView;
+        tableLayoutEntryDisplay.Visible = _isParsedView;
         txtRawView.Visible = !_isParsedView;
 
         // Refresh the display with current entry
@@ -802,8 +887,8 @@ public partial class ViewApplicationLogsForm : Form
         _selectedUsername = username;
         await LoadLogFilesAsync(username);
 
-        // T047: Start auto-refresh timer when user is selected
-        if (_autoRefreshEnabled && _autoRefreshTimer != null && WindowState != FormWindowState.Minimized)
+        // T047: Start auto-refresh timer when user is selected (if checkbox is checked)
+        if (chkAutoRefresh.Checked && _autoRefreshTimer != null && WindowState != FormWindowState.Minimized)
         {
             _autoRefreshTimer.Start();
             LoggingUtility.Log("[ViewApplicationLogsForm] Auto-refresh timer started");
@@ -871,6 +956,41 @@ public partial class ViewApplicationLogsForm : Form
     }
 
     /// <summary>
+    /// Restores file selection and entry position after refresh.
+    /// </summary>
+    /// <param name="fileName">The filename to restore selection for.</param>
+    /// <param name="entryIndex">The entry index to restore.</param>
+    private void RestoreFileSelection(string fileName, int entryIndex)
+    {
+        // Find the matching file in the ListView
+        foreach (ListViewItem item in lstLogFiles.Items)
+        {
+            if (item.Tag is Model_LogFile logFile && 
+                logFile.FileName.Equals(fileName, StringComparison.OrdinalIgnoreCase))
+            {
+                // Temporarily disable event to prevent reload
+                lstLogFiles.SelectedIndexChanged -= lstLogFiles_SelectedIndexChanged;
+                
+                item.Selected = true;
+                item.EnsureVisible();
+                
+                // Re-enable event
+                lstLogFiles.SelectedIndexChanged += lstLogFiles_SelectedIndexChanged;
+                
+                // Restore entry position if valid
+                if (entryIndex >= 0 && entryIndex < _currentEntries.Count)
+                {
+                    _currentEntryIndex = entryIndex;
+                    ShowCurrentEntry();
+                }
+                
+                LoggingUtility.Log($"[ViewApplicationLogsForm] Restored selection: {fileName} at entry {entryIndex}");
+                break;
+            }
+        }
+    }
+
+    /// <summary>
     /// Applies severity-based color coding to the entry display label.
     /// Implements FR-015 severity color coding specification.
     /// </summary>
@@ -915,7 +1035,7 @@ public partial class ViewApplicationLogsForm : Form
                 break;
         }
 
-        txtEntryDisplay.BackColor = backColor;
+        txtLevel.BackColor = backColor;
     }
 
     /// <summary>
@@ -1200,8 +1320,26 @@ public partial class ViewApplicationLogsForm : Form
 
         try
         {
-            // Get the text currently displayed in the textbox
-            string textToCopy = txtEntryDisplay.Text;
+            // Build text from structured display or raw view depending on mode
+            string textToCopy;
+            if (_isParsedView)
+            {
+                var sb = new StringBuilder();
+                sb.AppendLine($"Timestamp: {txtTimestamp.Text}");
+                sb.AppendLine($"Level: {txtLevel.Text}");
+                sb.AppendLine($"Source: {txtEntrySource.Text}");
+                sb.AppendLine($"Message: {txtEntryMessage.Text}");
+                if (!string.IsNullOrWhiteSpace(txtEntryDetails.Text))
+                {
+                    sb.AppendLine($"Details:");
+                    sb.AppendLine(txtEntryDetails.Text);
+                }
+                textToCopy = sb.ToString();
+            }
+            else
+            {
+                textToCopy = txtRawView.Text;
+            }
 
             if (!string.IsNullOrWhiteSpace(textToCopy))
             {

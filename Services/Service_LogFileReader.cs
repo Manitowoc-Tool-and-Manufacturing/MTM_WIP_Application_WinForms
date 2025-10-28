@@ -181,15 +181,78 @@ public class Service_LogFileReader
 
     #endregion
 
+    #region CSV Parsing Helper
+
+    /// <summary>
+    /// Reads a single CSV line, handling quoted fields with embedded commas and newlines.
+    /// Continues reading multiple lines if within a quoted field.
+    /// </summary>
+    /// <param name="reader">StreamReader to read from.</param>
+    /// <returns>Complete CSV line (may span multiple physical lines), or null if end of stream.</returns>
+    private static async Task<string?> ReadCsvLineAsync(StreamReader reader)
+    {
+        if (reader.EndOfStream)
+        {
+            return null;
+        }
+
+        var lineBuilder = new StringBuilder();
+        bool inQuotes = false;
+        
+        while (!reader.EndOfStream)
+        {
+            string? physicalLine = await reader.ReadLineAsync().ConfigureAwait(false);
+            if (physicalLine == null)
+            {
+                break;
+            }
+
+            if (lineBuilder.Length > 0)
+            {
+                lineBuilder.AppendLine(); // Preserve newline within quoted field
+            }
+            
+            lineBuilder.Append(physicalLine);
+
+            // Count quotes in this line to determine if we're inside a quoted field
+            for (int i = 0; i < physicalLine.Length; i++)
+            {
+                if (physicalLine[i] == '"')
+                {
+                    // Check if this is an escaped quote ("")
+                    if (i + 1 < physicalLine.Length && physicalLine[i + 1] == '"')
+                    {
+                        i++; // Skip the escaped quote
+                    }
+                    else
+                    {
+                        inQuotes = !inQuotes; // Toggle quote state
+                    }
+                }
+            }
+
+            // If we're not inside quotes, this CSV record is complete
+            if (!inQuotes)
+            {
+                break;
+            }
+        }
+
+        return lineBuilder.Length > 0 ? lineBuilder.ToString() : null;
+    }
+
+    #endregion
+
     #region Entry Loading
 
     /// <summary>
-    /// Loads log entries from a file asynchronously with windowing support for large files.
+    /// Loads log entries from a CSV file asynchronously with windowing support for large files.
+    /// Handles multi-line quoted CSV fields properly.
     /// </summary>
-    /// <param name="filePath">Full path to the log file.</param>
-    /// <param name="startIndex">Starting entry index (0-based).</param>
+    /// <param name="filePath">Full path to the CSV log file.</param>
+    /// <param name="startIndex">Starting entry index (0-based, excludes header row).</param>
     /// <param name="count">Number of entries to load (default: DefaultWindowSize).</param>
-    /// <returns>List of raw log entry lines.</returns>
+    /// <returns>List of raw CSV entry lines.</returns>
     /// <exception cref="ArgumentException">Thrown if filePath is invalid.</exception>
     /// <exception cref="UnauthorizedAccessException">Thrown if file access is denied.</exception>
     /// <exception cref="FileNotFoundException">Thrown if file does not exist.</exception>
@@ -238,31 +301,49 @@ public class Service_LogFileReader
 
             using var reader = new StreamReader(stream, Encoding.UTF8);
 
+            // Skip CSV header if present
+            if (!reader.EndOfStream)
+            {
+                string? header = await ReadCsvLineAsync(reader).ConfigureAwait(false);
+                if (header != null && header.StartsWith("Timestamp,", StringComparison.OrdinalIgnoreCase))
+                {
+                    LoggingUtility.Log($"[Service_LogFileReader] Skipped CSV header in {Path.GetFileName(filePath)}");
+                }
+                else
+                {
+                    // Not a header, treat as first data row
+                    if (startIndex == 0 && header != null)
+                    {
+                        entries.Add(header);
+                    }
+                }
+            }
+
             int currentIndex = 0;
-            int loadedCount = 0;
+            int loadedCount = entries.Count; // May be 1 if we added header-as-data
 
             while (!reader.EndOfStream && loadedCount < count)
             {
-                string? line = await reader.ReadLineAsync().ConfigureAwait(false);
+                string? csvLine = await ReadCsvLineAsync(reader).ConfigureAwait(false);
 
-                if (line == null)
+                if (csvLine == null)
                 {
                     break;
                 }
 
-                // Skip lines until we reach startIndex
+                // Skip entries until we reach startIndex
                 if (currentIndex < startIndex)
                 {
                     currentIndex++;
                     continue;
                 }
 
-                entries.Add(line);
+                entries.Add(csvLine);
                 loadedCount++;
                 currentIndex++;
             }
 
-            LoggingUtility.Log($"[Service_LogFileReader] Loaded {entries.Count} entries from {Path.GetFileName(filePath)} (start: {startIndex}, requested: {count})");
+            LoggingUtility.Log($"[Service_LogFileReader] Loaded {entries.Count} CSV entries from {Path.GetFileName(filePath)} (start: {startIndex}, requested: {count})");
         }
         catch (UnauthorizedAccessException ex)
         {
@@ -272,7 +353,7 @@ public class Service_LogFileReader
         }
         catch (Exception ex)
         {
-            LoggingUtility.Log($"[Service_LogFileReader] Error loading entries from file: {filePath}");
+            LoggingUtility.Log($"[Service_LogFileReader] Error loading CSV entries from file: {filePath}");
             LoggingUtility.LogApplicationError(ex);
             throw;
         }
@@ -281,10 +362,10 @@ public class Service_LogFileReader
     }
 
     /// <summary>
-    /// Gets the total number of log entries (lines) in a file asynchronously.
+    /// Gets the total number of log entries (data rows, excluding header) in a CSV file asynchronously.
     /// </summary>
-    /// <param name="filePath">Full path to the log file.</param>
-    /// <returns>Total number of entries in the file.</returns>
+    /// <param name="filePath">Full path to the CSV log file.</param>
+    /// <returns>Total number of data entries in the file.</returns>
     /// <exception cref="ArgumentException">Thrown if filePath is invalid.</exception>
     /// <exception cref="UnauthorizedAccessException">Thrown if file access is denied.</exception>
     /// <exception cref="FileNotFoundException">Thrown if file does not exist.</exception>
@@ -306,7 +387,7 @@ public class Service_LogFileReader
             throw new FileNotFoundException($"Log file not found: {filePath}");
         }
 
-        int lineCount = 0;
+        int entryCount = 0;
 
         try
         {
@@ -320,22 +401,38 @@ public class Service_LogFileReader
 
             using var reader = new StreamReader(stream, Encoding.UTF8);
 
-            while (!reader.EndOfStream)
+            // Skip CSV header if present
+            bool skippedHeader = false;
+            if (!reader.EndOfStream)
             {
-                await reader.ReadLineAsync().ConfigureAwait(false);
-                lineCount++;
+                string? firstLine = await ReadCsvLineAsync(reader).ConfigureAwait(false);
+                if (firstLine != null && firstLine.StartsWith("Timestamp,", StringComparison.OrdinalIgnoreCase))
+                {
+                    skippedHeader = true;
+                }
+                else
+                {
+                    // Not a header, count it as data
+                    entryCount = 1;
+                }
             }
 
-            LoggingUtility.Log($"[Service_LogFileReader] Counted {lineCount} entries in {Path.GetFileName(filePath)}");
+            while (!reader.EndOfStream)
+            {
+                await ReadCsvLineAsync(reader).ConfigureAwait(false);
+                entryCount++;
+            }
+
+            LoggingUtility.Log($"[Service_LogFileReader] Counted {entryCount} CSV entries in {Path.GetFileName(filePath)}{(skippedHeader ? " (header excluded)" : "")}");
         }
         catch (Exception ex)
         {
-            LoggingUtility.Log($"[Service_LogFileReader] Error counting entries in file: {filePath}");
+            LoggingUtility.Log($"[Service_LogFileReader] Error counting CSV entries in file: {filePath}");
             LoggingUtility.LogApplicationError(ex);
             throw;
         }
 
-        return lineCount;
+        return entryCount;
     }
 
     #endregion
