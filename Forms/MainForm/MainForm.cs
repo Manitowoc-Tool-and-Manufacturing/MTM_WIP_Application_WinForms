@@ -29,6 +29,7 @@ namespace MTM_WIP_Application_Winforms.Forms.MainForm
         private Helper_StoredProcedureProgress? _progressHelper;
         private Forms.Development.DebugDashboardForm? _debugDashboard;
     private Form_ViewErrorReports? _viewErrorReportsForm;
+    private Forms.ViewLogs.ViewApplicationLogsForm? _viewApplicationLogsForm;
 
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public Service_ConnectionRecoveryManager ConnectionRecoveryManager { get; private set; } = null!;
@@ -1005,6 +1006,22 @@ namespace MTM_WIP_Application_Winforms.Forms.MainForm
                     _debugDashboard.Close();
                     _debugDashboard.Dispose();
                     _debugDashboard = null;
+                }
+
+                // Close View Error Reports form if it's open
+                if (_viewErrorReportsForm != null && !_viewErrorReportsForm.IsDisposed)
+                {
+                    _viewErrorReportsForm.Close();
+                    _viewErrorReportsForm.Dispose();
+                    _viewErrorReportsForm = null;
+                }
+
+                // Close View Application Logs form if it's open
+                if (_viewApplicationLogsForm != null && !_viewApplicationLogsForm.IsDisposed)
+                {
+                    _viewApplicationLogsForm.Close();
+                    _viewApplicationLogsForm.Dispose();
+                    _viewApplicationLogsForm = null;
                 }
             }
             catch (Exception ex)

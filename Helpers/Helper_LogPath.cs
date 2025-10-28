@@ -11,12 +11,38 @@ public static class Helper_LogPath
     #region Constants
 
     /// <summary>
-    /// Base log directory path. All log paths must be within this directory tree.
+    /// Primary log directory path (production location).
     /// </summary>
-    private static readonly string BaseLogDirectory = Path.Combine(
+    private static readonly string PrimaryLogDirectory = Environment.UserName.Equals("johnk", StringComparison.OrdinalIgnoreCase)
+        ? @"C:\Users\johnk\OneDrive\Documents\Work Folder\WIP App Logs"
+        : @"X:\MH_RESOURCE\Material_Handler\MTM WIP App\Logs";
+
+    /// <summary>
+    /// Fallback log directory path (CommonApplicationData).
+    /// Used when primary location is unavailable.
+    /// </summary>
+    private static readonly string FallbackLogDirectory = Path.Combine(
         Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData),
         "MTM_Inventory_Application",
         "Logs");
+
+    /// <summary>
+    /// Gets the base log directory, preferring primary location if it exists.
+    /// </summary>
+    private static string BaseLogDirectory
+    {
+        get
+        {
+            // Check if primary directory exists or is accessible
+            if (Directory.Exists(PrimaryLogDirectory))
+            {
+                return PrimaryLogDirectory;
+            }
+
+            // Fall back to CommonApplicationData if primary is unavailable
+            return FallbackLogDirectory;
+        }
+    }
 
     #endregion
 
@@ -25,6 +51,7 @@ public static class Helper_LogPath
     /// <summary>
     /// Validates that a file path is within the allowed log directory structure
     /// and does not contain directory traversal attempts.
+    /// Checks both primary and fallback log directories.
     /// </summary>
     /// <param name="filePath">Path to validate.</param>
     /// <returns>True if path is safe and within allowed directory; false otherwise.</returns>
@@ -40,17 +67,19 @@ public static class Helper_LogPath
         {
             // Get fully qualified paths for comparison
             string fullPath = Path.GetFullPath(filePath);
-            string baseFullPath = Path.GetFullPath(BaseLogDirectory);
+            string primaryFullPath = Path.GetFullPath(PrimaryLogDirectory);
+            string fallbackFullPath = Path.GetFullPath(FallbackLogDirectory);
 
-            // Ensure the path starts with the base log directory
-            bool isWithinBase = fullPath.StartsWith(baseFullPath, StringComparison.OrdinalIgnoreCase);
+            // Ensure the path starts with either primary or fallback log directory
+            bool isWithinPrimary = fullPath.StartsWith(primaryFullPath, StringComparison.OrdinalIgnoreCase);
+            bool isWithinFallback = fullPath.StartsWith(fallbackFullPath, StringComparison.OrdinalIgnoreCase);
 
-            if (!isWithinBase)
+            if (!isWithinPrimary && !isWithinFallback)
             {
-                LoggingUtility.Log($"[Helper_LogPath] Validation failed: Path outside base directory. Path: {fullPath}, Base: {baseFullPath}");
+                LoggingUtility.Log($"[Helper_LogPath] Validation failed: Path outside allowed directories. Path: {fullPath}, Primary: {primaryFullPath}, Fallback: {fallbackFullPath}");
             }
 
-            return isWithinBase;
+            return isWithinPrimary || isWithinFallback;
         }
         catch (Exception ex)
         {
@@ -72,6 +101,7 @@ public static class Helper_LogPath
 
     /// <summary>
     /// Gets the base log directory path where all user logs are stored.
+    /// Returns primary location if accessible, otherwise fallback location.
     /// </summary>
     /// <returns>Full path to the base log directory.</returns>
     public static string GetBaseLogDirectory()
@@ -80,7 +110,38 @@ public static class Helper_LogPath
     }
 
     /// <summary>
+    /// Gets all possible base log directories (primary and fallback).
+    /// Used for enumerating users across both locations.
+    /// </summary>
+    /// <returns>Array of base log directory paths.</returns>
+    public static string[] GetAllBaseLogDirectories()
+    {
+        var directories = new List<string>();
+
+        // Add primary if it exists
+        if (Directory.Exists(PrimaryLogDirectory))
+        {
+            directories.Add(PrimaryLogDirectory);
+        }
+
+        // Add fallback if it exists
+        if (Directory.Exists(FallbackLogDirectory))
+        {
+            directories.Add(FallbackLogDirectory);
+        }
+
+        // If neither exist, return the preferred one
+        if (directories.Count == 0)
+        {
+            directories.Add(BaseLogDirectory);
+        }
+
+        return directories.ToArray();
+    }
+
+    /// <summary>
     /// Constructs a safe log directory path for a specific username.
+    /// Checks both primary and fallback locations, returning the one that exists.
     /// </summary>
     /// <param name="username">Username to create directory path for.</param>
     /// <returns>Full path to the user's log directory, or null if username is invalid.</returns>
@@ -101,6 +162,21 @@ public static class Helper_LogPath
             return null;
         }
 
+        // Check primary location first
+        string primaryUserDirectory = Path.Combine(PrimaryLogDirectory, safeUsername);
+        if (Directory.Exists(primaryUserDirectory) && IsDirectorySafe(primaryUserDirectory))
+        {
+            return primaryUserDirectory;
+        }
+
+        // Check fallback location
+        string fallbackUserDirectory = Path.Combine(FallbackLogDirectory, safeUsername);
+        if (Directory.Exists(fallbackUserDirectory) && IsDirectorySafe(fallbackUserDirectory))
+        {
+            return fallbackUserDirectory;
+        }
+
+        // If neither exists, return the preferred location (for creation)
         string userDirectory = Path.Combine(BaseLogDirectory, safeUsername);
 
         // Validate the constructed path

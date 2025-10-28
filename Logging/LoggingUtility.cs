@@ -43,7 +43,7 @@ internal static class LoggingUtility
             {
                 try
                 {
-                    var logFiles = Directory.GetFiles(logDirectory, "*.log")
+                    var logFiles = Directory.GetFiles(logDirectory, "*.csv")
                         .OrderByDescending(File.GetCreationTime)
                         .ToList();
 
@@ -99,7 +99,28 @@ internal static class LoggingUtility
 
     #region LogFileWriting
 
-    private static void FlushLogEntryToDisk(string filePath, string logEntry)
+    /// <summary>
+    /// Escapes a value for CSV format by enclosing in quotes if it contains comma, quote, or newline.
+    /// Doubles any internal quotes.
+    /// </summary>
+    private static string EscapeCsvValue(string? value)
+    {
+        if (string.IsNullOrEmpty(value))
+            return string.Empty;
+
+        // If value contains comma, quote, or newline, enclose in quotes and escape internal quotes
+        if (value.Contains(',') || value.Contains('"') || value.Contains('\n') || value.Contains('\r'))
+        {
+            return $"\"{value.Replace("\"", "\"\"")}\"";
+        }
+
+        return value;
+    }
+
+    /// <summary>
+    /// Writes a CSV log entry to disk asynchronously with retry logic.
+    /// </summary>
+    private static void FlushLogEntryToDisk(string filePath, string timestamp, string level, string source, string message, string? details = null)
     {
         try
         {
@@ -114,10 +135,22 @@ internal static class LoggingUtility
                     {
                         try
                         {
+                            // Check if file exists and needs header
+                            bool needsHeader = !File.Exists(filePath);
+
                             // Use FileStream with FileShare.Write to allow multiple processes to write
                             await using var fs = new FileStream(filePath, FileMode.Append, FileAccess.Write, FileShare.Write);
                             await using var writer = new StreamWriter(fs);
-                            await writer.WriteLineAsync(logEntry);
+
+                            // Write header if this is a new file
+                            if (needsHeader)
+                            {
+                                await writer.WriteLineAsync("Timestamp,Level,Source,Message,Details");
+                            }
+
+                            // Write CSV row
+                            var csvLine = $"{EscapeCsvValue(timestamp)},{EscapeCsvValue(level)},{EscapeCsvValue(source)},{EscapeCsvValue(message)},{EscapeCsvValue(details)}";
+                            await writer.WriteLineAsync(csvLine);
                             break; // Success
                         }
                         catch (IOException) when (attempt < maxRetries)
@@ -175,9 +208,9 @@ internal static class LoggingUtility
 
             _logDirectory = Path.GetDirectoryName(logFilePath) ?? "";
             var baseFileName = Path.GetFileNameWithoutExtension(logFilePath);
-            _normalLogFile = Path.Combine(_logDirectory, $"{baseFileName}_normal.log");
-            _dbErrorLogFile = Path.Combine(_logDirectory, $"{baseFileName}_db_error.log");
-            _appErrorLogFile = Path.Combine(_logDirectory, $"{baseFileName}_app_error.log");
+            _normalLogFile = Path.Combine(_logDirectory, $"{baseFileName}_normal.csv");
+            _dbErrorLogFile = Path.Combine(_logDirectory, $"{baseFileName}_db_error.csv");
+            _appErrorLogFile = Path.Combine(_logDirectory, $"{baseFileName}_app_error.csv");
 
             Debug.WriteLine($"[DEBUG] Log directory: {_logDirectory}");
             Debug.WriteLine($"[DEBUG] Normal log file: {_normalLogFile}");
@@ -219,6 +252,9 @@ internal static class LoggingUtility
 
     #region LoggingMethods
 
+    /// <summary>
+    /// Logs a normal message with consistent CSV format.
+    /// </summary>
     public static void Log(string message)
     {
         var logEntry = $"{DateTime.Now:yyyy-MM-dd HH:mm:ss} - {message}";
@@ -228,10 +264,13 @@ internal static class LoggingUtility
         
         lock (LogLock)
         {
-            FlushLogEntryToDisk(_normalLogFile, logEntry);
+            FlushLogEntryToDisk(_normalLogFile, timestamp, "INFO", "Application", message);
         }
     }
 
+    /// <summary>
+    /// Logs an application error with consistent CSV format
+    /// </summary>
     public static void LogApplicationError(Exception ex)
     {
         var errorEntry = $"{DateTime.Now:yyyy-MM-dd HH:mm:ss} - Application Error - {ex.Message}";
@@ -243,8 +282,7 @@ internal static class LoggingUtility
         
         lock (LogLock)
         {
-            FlushLogEntryToDisk(_appErrorLogFile, errorEntry);
-            FlushLogEntryToDisk(_appErrorLogFile, stackEntry);
+            FlushLogEntryToDisk(_appErrorLogFile, timestamp, "ERROR", "Application", message, details);
         }
     }
 
@@ -259,7 +297,8 @@ internal static class LoggingUtility
             // Try direct file logging as last resort
             try
             {
-                var fallbackEntry = $"{DateTime.Now:yyyy-MM-dd HH:mm:ss} - Database Error (Fallback) [{severity}] - {ex.Message}";
+                var timestamp = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
+                var fallbackEntry = $"[{timestamp}]|{severity.ToString().ToUpper()}|Database|{ex.Message}";
                 if (!string.IsNullOrEmpty(_dbErrorLogFile))
                 {
                     File.AppendAllText(_dbErrorLogFile, fallbackEntry + Environment.NewLine);
@@ -293,8 +332,7 @@ internal static class LoggingUtility
             
             lock (LogLock)
             {
-                FlushLogEntryToDisk(_dbErrorLogFile, errorEntry);
-                FlushLogEntryToDisk(_dbErrorLogFile, stackEntry);
+                FlushLogEntryToDisk(_dbErrorLogFile, timestamp, severityLabel, "Database", message, details);
             }
         }
         finally
@@ -303,6 +341,9 @@ internal static class LoggingUtility
         }
     }
 
+    /// <summary>
+    /// Logs application information with consistent CSV format
+    /// </summary>
     public static void LogApplicationInfo(string message)
     {
         var infoEntry = $"{DateTime.Now:yyyy-MM-dd HH:mm:ss} - Application Info - {message}";
@@ -312,7 +353,7 @@ internal static class LoggingUtility
         
         lock (LogLock)
         {
-            FlushLogEntryToDisk(_normalLogFile, infoEntry);
+            FlushLogEntryToDisk(_normalLogFile, timestamp, "INFO", "Application", message);
         }
     }
 
@@ -322,12 +363,13 @@ internal static class LoggingUtility
 
     private static void OnProcessExit(object? sender, EventArgs e)
     {
-        var shutdownMsg = $"{DateTime.Now:yyyy-MM-dd HH:mm:ss} - Application exiting.";
+        var timestamp = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
+        var shutdownMsg = "Application exiting";
         lock (LogLock)
         {
-            FlushLogEntryToDisk(_normalLogFile, shutdownMsg);
-            FlushLogEntryToDisk(_dbErrorLogFile, shutdownMsg);
-            FlushLogEntryToDisk(_appErrorLogFile, shutdownMsg);
+            FlushLogEntryToDisk(_normalLogFile, timestamp, "INFO", "Application", shutdownMsg);
+            FlushLogEntryToDisk(_dbErrorLogFile, timestamp, "INFO", "Application", shutdownMsg);
+            FlushLogEntryToDisk(_appErrorLogFile, timestamp, "INFO", "Application", shutdownMsg);
         }
     }
 

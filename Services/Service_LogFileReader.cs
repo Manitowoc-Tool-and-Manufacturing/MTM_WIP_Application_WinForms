@@ -20,19 +20,22 @@ public class Service_LogFileReader
     private const int DefaultWindowSize = 500;
 
     /// <summary>
-    /// Regex pattern for detecting normal log filename format: YYYY_MM_DD.log
+    /// Regex pattern for detecting normal log filename format: 
+    /// - USERNAME YYYY-MM-DD @ H-MM [AM/PM]_normal.csv
     /// </summary>
-    private static readonly Regex NormalLogPattern = new(@"^\d{4}_\d{2}_\d{2}\.log$", RegexOptions.Compiled);
+    private static readonly Regex NormalLogPattern = new(@"_normal\.csv$", RegexOptions.Compiled | RegexOptions.IgnoreCase);
 
     /// <summary>
-    /// Regex pattern for detecting application error filename format: AppError_YYYY_MM_DD.log
+    /// Regex pattern for detecting application error filename format: 
+    /// - USERNAME YYYY-MM-DD @ H-MM [AM/PM]_app_error.csv
     /// </summary>
-    private static readonly Regex AppErrorPattern = new(@"^AppError_\d{4}_\d{2}_\d{2}\.log$", RegexOptions.Compiled);
+    private static readonly Regex AppErrorPattern = new(@"_app_error\.csv$", RegexOptions.Compiled | RegexOptions.IgnoreCase);
 
     /// <summary>
-    /// Regex pattern for detecting database error filename format: DatabaseError_YYYY_MM_DD.log
+    /// Regex pattern for detecting database error filename format: 
+    /// - USERNAME YYYY-MM-DD @ H-MM [AM/PM]_db_error.csv
     /// </summary>
-    private static readonly Regex DbErrorPattern = new(@"^DatabaseError_\d{4}_\d{2}_\d{2}\.log$", RegexOptions.Compiled);
+    private static readonly Regex DbErrorPattern = new(@"_db_error\.csv$", RegexOptions.Compiled | RegexOptions.IgnoreCase);
 
     #endregion
 
@@ -74,7 +77,7 @@ public class Service_LogFileReader
             // Enumerate files asynchronously
             await Task.Run(() =>
             {
-                var files = Directory.GetFiles(userDirectory, "*.log", SearchOption.TopDirectoryOnly);
+                var files = Directory.GetFiles(userDirectory, "*.csv", SearchOption.TopDirectoryOnly);
 
                 foreach (var filePath in files)
                 {
@@ -90,6 +93,13 @@ public class Service_LogFileReader
                         var fileInfo = new FileInfo(filePath);
                         if (!fileInfo.Exists)
                         {
+                            continue;
+                        }
+
+                        // Skip empty files - don't show them in the viewer
+                        if (fileInfo.Length == 0)
+                        {
+                            LoggingUtility.Log($"[Service_LogFileReader] Skipping empty file: {fileInfo.Name}");
                             continue;
                         }
 

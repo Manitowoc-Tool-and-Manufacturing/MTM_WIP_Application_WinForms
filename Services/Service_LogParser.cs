@@ -23,27 +23,13 @@ public static class Service_LogParser
     #region Compiled Regex Patterns
 
     /// <summary>
-    /// Pattern for Normal log format: [yyyy-MM-dd HH:mm:ss] LEVEL emoji [SOURCE] Message
+    /// Pattern for structured log format: [TIMESTAMP]|LEVEL|SOURCE|MESSAGE
+    /// This is the new standardized format that all logs use.
+    /// Example: [2025-10-28 14:30:45]|INFO|Application|Starting application
     /// </summary>
-    private static readonly Regex NormalLogPattern = new(
-        @"^\[(\d{4}-\d{2}-\d{2}\s+\d{2}:\d{2}:\d{2})\]\s+(\w+)\s+([\p{So}\u200D]+)?\s*\[([^\]]+)\]\s+(.+)$",
+    private static readonly Regex StructuredLogPattern = new(
+        @"^\[(\d{4}-\d{2}-\d{2}\s+\d{2}:\d{2}:\d{2})\]\|([A-Z]+)\|([^\|]+)\|(.*)$",
         RegexOptions.Compiled,
-        RegexTimeout);
-
-    /// <summary>
-    /// Pattern for detecting Application Error format: ERROR TYPE: ...
-    /// </summary>
-    private static readonly Regex AppErrorDetectionPattern = new(
-        @"^\[(\d{4}-\d{2}-\d{2}\s+\d{2}:\d{2}:\d{2})\]\s+ERROR\s+TYPE:",
-        RegexOptions.Compiled,
-        RegexTimeout);
-
-    /// <summary>
-    /// Pattern for detecting Database Error format: [timestamp] SEVERITY Database Error
-    /// </summary>
-    private static readonly Regex DbErrorDetectionPattern = new(
-        @"^\[(\d{4}-\d{2}-\d{2}\s+\d{2}:\d{2}:\d{2})\]\s+(WARNING|ERROR|CRITICAL)\s+Database\s+Error",
-        RegexOptions.Compiled | RegexOptions.IgnoreCase,
         RegexTimeout);
 
     #endregion
@@ -52,9 +38,10 @@ public static class Service_LogParser
 
     /// <summary>
     /// Detects the log format type by analyzing the first line of a log entry.
+    /// All logs now use structured format: [TIMESTAMP]|LEVEL|SOURCE|MESSAGE
     /// </summary>
     /// <param name="firstLine">First line of the log entry to analyze.</param>
-    /// <returns>Detected LogFormat or Unknown if pattern doesn't match any known format.</returns>
+    /// <returns>Detected LogFormat based on SOURCE field.</returns>
     public static LogFormat DetectFormat(string firstLine)
     {
         if (string.IsNullOrWhiteSpace(firstLine))
@@ -64,26 +51,33 @@ public static class Service_LogParser
 
         try
         {
-            // Check for Application Error format first (most specific)
-            if (AppErrorDetectionPattern.IsMatch(firstLine))
+            // Try to match structured format
+            var match = StructuredLogPattern.Match(firstLine);
+            if (!match.Success)
             {
-                return LogFormat.ApplicationError;
+                return LogFormat.Unknown;
             }
 
-            // Check for Database Error format
-            if (DbErrorDetectionPattern.IsMatch(firstLine))
+            // Determine format based on SOURCE field (Group 3)
+            string source = match.Groups[3].Value.ToLowerInvariant();
+            
+            if (source.Contains("database"))
             {
                 return LogFormat.DatabaseError;
             }
-
-            // Check for Normal log format
-            if (NormalLogPattern.IsMatch(firstLine))
+            
+            string level = match.Groups[2].Value.ToUpperInvariant();
+            if (level == "ERROR" || level == "CRITICAL" || level == "WARNING")
             {
-                return LogFormat.Normal;
+                // Check if it's from Application source
+                if (source == "application")
+                {
+                    return LogFormat.ApplicationError;
+                }
+                return LogFormat.DatabaseError;
             }
 
-            // No match found
-            return LogFormat.Unknown;
+            return LogFormat.Normal;
         }
         catch (RegexMatchTimeoutException ex)
         {
@@ -104,7 +98,7 @@ public static class Service_LogParser
     #region Parsing Methods
 
     /// <summary>
-    /// Parses a Normal log entry with format: [timestamp] LEVEL emoji [SOURCE] Message.
+    /// Parses a log entry with structured format: [TIMESTAMP]|LEVEL|SOURCE|MESSAGE
     /// </summary>
     /// <param name="rawText">Raw log text to parse.</param>
     /// <returns>Parsed Model_LogEntry or raw entry if parsing fails.</returns>
@@ -124,40 +118,43 @@ public static class Service_LogParser
             }
 
             var firstLine = lines[0];
-            var match = NormalLogPattern.Match(firstLine);
+            var match = StructuredLogPattern.Match(firstLine);
 
             if (!match.Success)
             {
-                LoggingUtility.Log($"[Service_LogParser] Failed to parse Normal log format");
+                LoggingUtility.Log($"[Service_LogParser] Failed to parse structured log format: {firstLine.Substring(0, Math.Min(50, firstLine.Length))}...");
                 return Model_LogEntry.CreateRawEntry(DateTime.Now, rawText);
             }
 
-            // Extract components
+            // Extract structured components
             DateTime timestamp = DateTime.Parse(match.Groups[1].Value);
             string level = match.Groups[2].Value;
-            string emoji = match.Groups[3].Success ? match.Groups[3].Value : string.Empty;
-            string source = match.Groups[4].Value;
-            string message = match.Groups[5].Value;
+            string source = match.Groups[3].Value;
+            string message = match.Groups[4].Value;
 
-            // Look for "Details:" section in remaining lines
+            // Check for detail lines (DETAIL level indicates stack traces, etc.)
             string? details = null;
             if (lines.Length > 1)
             {
-                var detailsLine = Array.Find(lines, line => line.Trim().StartsWith("Details:", StringComparison.OrdinalIgnoreCase));
-                if (detailsLine != null)
-                {
-                    int detailsIndex = Array.IndexOf(lines, detailsLine);
-                    if (detailsIndex >= 0 && detailsIndex < lines.Length - 1)
+                var detailLines = lines.Skip(1)
+                    .Where(line => line.Contains("|DETAIL|"))
+                    .Select(line =>
                     {
-                        details = string.Join(Environment.NewLine, lines.Skip(detailsIndex + 1));
-                    }
+                        var detailMatch = StructuredLogPattern.Match(line);
+                        return detailMatch.Success ? detailMatch.Groups[4].Value : line;
+                    })
+                    .ToList();
+
+                if (detailLines.Any())
+                {
+                    details = string.Join(Environment.NewLine, detailLines);
                 }
             }
 
             return Model_LogEntry.CreateNormalEntry(
                 timestamp,
                 level,
-                emoji,
+                string.Empty, // No emoji in new format
                 source,
                 message,
                 details,
@@ -171,17 +168,14 @@ public static class Service_LogParser
         }
         catch (Exception ex)
         {
-            LoggingUtility.Log($"[Service_LogParser] Error parsing Normal log");
+            LoggingUtility.Log($"[Service_LogParser] Error parsing Normal log: {ex.Message}");
             LoggingUtility.LogApplicationError(ex);
             return Model_LogEntry.CreateRawEntry(DateTime.Now, rawText);
         }
     }
 
     /// <summary>
-    /// Parses an Application Error log entry with two-line paired format.
-    /// Format: [timestamp] ERROR TYPE: ErrorType
-    ///         Exception Message: Message
-    ///         [optional] Stack Trace: ...
+    /// Parses an Application Error log entry with structured format: [TIMESTAMP]|ERROR|Application|MESSAGE
     /// </summary>
     /// <param name="rawText">Raw log text to parse.</param>
     /// <returns>Parsed Model_LogEntry or raw entry if parsing fails.</returns>
@@ -195,36 +189,50 @@ public static class Service_LogParser
         try
         {
             var lines = rawText.Split(new[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries);
-            if (lines.Length < 2)
+            if (lines.Length == 0)
             {
-                LoggingUtility.Log($"[Service_LogParser] Application Error log has insufficient lines");
+                LoggingUtility.Log($"[Service_LogParser] Application Error log has no lines");
                 return Model_LogEntry.CreateRawEntry(DateTime.Now, rawText);
             }
 
-            // Parse first line: [timestamp] ERROR TYPE: ErrorType
-            var firstLineMatch = AppErrorDetectionPattern.Match(lines[0]);
-            if (!firstLineMatch.Success)
+            var firstLine = lines[0];
+            var match = StructuredLogPattern.Match(firstLine);
+
+            if (!match.Success)
             {
-                LoggingUtility.Log($"[Service_LogParser] Failed to parse Application Error first line");
+                LoggingUtility.Log($"[Service_LogParser] Failed to parse Application Error format: {firstLine.Substring(0, Math.Min(50, firstLine.Length))}...");
                 return Model_LogEntry.CreateRawEntry(DateTime.Now, rawText);
             }
 
-            DateTime timestamp = DateTime.Parse(firstLineMatch.Groups[1].Value);
-            string errorType = lines[0].Substring(lines[0].IndexOf("ERROR TYPE:") + "ERROR TYPE:".Length).Trim();
+            DateTime timestamp = DateTime.Parse(match.Groups[1].Value);
+            string message = match.Groups[4].Value;
 
-            // Parse second line: Exception Message: Message
-            string message = string.Empty;
-            if (lines.Length > 1 && lines[1].Contains("Exception Message:"))
+            // Extract error type from message (format: ExceptionType: Message)
+            string errorType = "ApplicationException";
+            if (message.Contains(":"))
             {
-                message = lines[1].Substring(lines[1].IndexOf("Exception Message:") + "Exception Message:".Length).Trim();
+                int colonIndex = message.IndexOf(':');
+                errorType = message.Substring(0, colonIndex).Trim();
+                message = message.Substring(colonIndex + 1).Trim();
             }
 
-            // Look for Stack Trace section
+            // Look for stack trace in detail lines
             string? stackTrace = null;
-            var stackTraceIndex = Array.FindIndex(lines, line => line.Trim().StartsWith("Stack Trace:", StringComparison.OrdinalIgnoreCase));
-            if (stackTraceIndex >= 0 && stackTraceIndex < lines.Length - 1)
+            if (lines.Length > 1)
             {
-                stackTrace = string.Join(Environment.NewLine, lines.Skip(stackTraceIndex + 1));
+                var stackLines = lines.Skip(1)
+                    .Where(line => line.Contains("|DETAIL|StackTrace|"))
+                    .Select(line =>
+                    {
+                        var detailMatch = StructuredLogPattern.Match(line);
+                        return detailMatch.Success ? detailMatch.Groups[4].Value : line;
+                    })
+                    .ToList();
+
+                if (stackLines.Any())
+                {
+                    stackTrace = string.Join(Environment.NewLine, stackLines);
+                }
             }
 
             return Model_LogEntry.CreateApplicationErrorEntry(
@@ -242,16 +250,14 @@ public static class Service_LogParser
         }
         catch (Exception ex)
         {
-            LoggingUtility.Log($"[Service_LogParser] Error parsing Application Error");
+            LoggingUtility.Log($"[Service_LogParser] Error parsing Application Error: {ex.Message}");
             LoggingUtility.LogApplicationError(ex);
             return Model_LogEntry.CreateRawEntry(DateTime.Now, rawText);
         }
     }
 
     /// <summary>
-    /// Parses a Database Error log entry with severity prefix.
-    /// Format: [timestamp] SEVERITY Database Error: Message
-    ///         [optional] Stack Trace: ...
+    /// Parses a Database Error log entry with structured format: [TIMESTAMP]|ERROR|Database|MESSAGE
     /// </summary>
     /// <param name="rawText">Raw log text to parse.</param>
     /// <returns>Parsed Model_LogEntry or raw entry if parsing fails.</returns>
@@ -271,32 +277,41 @@ public static class Service_LogParser
             }
 
             var firstLine = lines[0];
-            var match = DbErrorDetectionPattern.Match(firstLine);
+            var match = StructuredLogPattern.Match(firstLine);
 
             if (!match.Success)
             {
-                LoggingUtility.Log($"[Service_LogParser] Failed to parse Database Error format");
+                LoggingUtility.Log($"[Service_LogParser] Failed to parse Database Error format: {firstLine.Substring(0, Math.Min(50, firstLine.Length))}...");
                 return Model_LogEntry.CreateRawEntry(DateTime.Now, rawText);
             }
 
             DateTime timestamp = DateTime.Parse(match.Groups[1].Value);
             string severity = match.Groups[2].Value.ToUpperInvariant();
+            string message = match.Groups[4].Value;
 
-            // Extract message after "Database Error:"
-            string message = firstLine.Contains("Database Error:")
-                ? firstLine.Substring(firstLine.IndexOf("Database Error:") + "Database Error:".Length).Trim()
-                : string.Empty;
+            // Extract error type from message (format: ExceptionType: Message)
+            if (message.Contains(":"))
+            {
+                int colonIndex = message.IndexOf(':');
+                message = message.Substring(colonIndex + 1).Trim();
+            }
 
-            // Look for additional details in subsequent lines (before Stack Trace)
+            // Look for detail lines
             string? details = null;
-            var stackTraceIndex = Array.FindIndex(lines, line => line.Trim().StartsWith("Stack Trace:", StringComparison.OrdinalIgnoreCase));
-
             if (lines.Length > 1)
             {
-                int endIndex = stackTraceIndex > 0 ? stackTraceIndex : lines.Length;
-                if (endIndex > 1)
+                var detailLines = lines.Skip(1)
+                    .Where(line => line.Contains("|DETAIL|"))
+                    .Select(line =>
+                    {
+                        var detailMatch = StructuredLogPattern.Match(line);
+                        return detailMatch.Success ? detailMatch.Groups[4].Value : line;
+                    })
+                    .ToList();
+
+                if (detailLines.Any())
                 {
-                    details = string.Join(Environment.NewLine, lines.Skip(1).Take(endIndex - 1));
+                    details = string.Join(Environment.NewLine, detailLines);
                 }
             }
 
@@ -315,7 +330,7 @@ public static class Service_LogParser
         }
         catch (Exception ex)
         {
-            LoggingUtility.Log($"[Service_LogParser] Error parsing Database Error");
+            LoggingUtility.Log($"[Service_LogParser] Error parsing Database Error: {ex.Message}");
             LoggingUtility.LogApplicationError(ex);
             return Model_LogEntry.CreateRawEntry(DateTime.Now, rawText);
         }

@@ -554,14 +554,28 @@ namespace MTM_WIP_Application_Winforms.Forms.ErrorDialog
         {
             try
             {
-                // In a real implementation, this would open the log viewer
-                var message = "This would typically open the application log viewer.\n\n" +
-                             "For now, please check the application's log directory for detailed logs.";
-                MessageBox.Show(message, "View Logs", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                // T046: Open log viewer with current user pre-selected
+                string currentUsername = Model_AppVariables.EnteredUser;
+                
+                if (string.IsNullOrWhiteSpace(currentUsername) || currentUsername == "Default User")
+                {
+                    LoggingUtility.Log("[EnhancedErrorDialog] Cannot open log viewer: No valid user logged in");
+                    MessageBox.Show("Unable to determine current user. Please log in and try again.",
+                        "View Logs", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
+                }
+
+                // Create and show log viewer with user pre-selected (AS 7.1, AS 7.2)
+                var logViewerForm = new ViewLogs.ViewApplicationLogsForm(currentUsername);
+                logViewerForm.Show();
+                
+                LoggingUtility.Log($"[EnhancedErrorDialog] Opened log viewer for user: {currentUsername}");
             }
             catch (Exception ex)
             {
                 LoggingUtility.LogApplicationError(ex);
+                MessageBox.Show($"Error opening log viewer: {ex.Message}", 
+                    "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 

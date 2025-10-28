@@ -159,26 +159,48 @@ public partial class ViewApplicationLogsForm : Form
         {
             cmbUsers.Items.Clear();
 
-            // Get base log directory
-            string baseLogDir = Helper_LogPath.GetBaseLogDirectory();
+            // Get all base log directories (primary and fallback)
+            string[] baseLogDirs = Helper_LogPath.GetAllBaseLogDirectories();
 
-            if (!Directory.Exists(baseLogDir))
+            if (baseLogDirs.Length == 0 || !baseLogDirs.Any(Directory.Exists))
             {
-                LoggingUtility.Log($"[ViewApplicationLogsForm] Base log directory does not exist: {baseLogDir}");
+                LoggingUtility.Log($"[ViewApplicationLogsForm] No log directories found");
                 Service_ErrorHandler.ShowInformation(
                     "No log directory found. Logs will be created when the application generates its first log entry.",
                     "No Logs Available");
                 return;
             }
 
-            // Enumerate user directories asynchronously
+            // Enumerate user directories from all locations asynchronously
             var userDirectories = await Task.Run(() =>
             {
-                return Directory.GetDirectories(baseLogDir)
-                    .Select(dir => Path.GetFileName(dir))
-                    .Where(name => !string.IsNullOrWhiteSpace(name))
-                    .OrderBy(name => name)
-                    .ToList();
+                var allUsers = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+
+                foreach (var baseLogDir in baseLogDirs)
+                {
+                    if (Directory.Exists(baseLogDir))
+                    {
+                        try
+                        {
+                            var users = Directory.GetDirectories(baseLogDir)
+                                .Select(dir => Path.GetFileName(dir))
+                                .Where(name => !string.IsNullOrWhiteSpace(name));
+
+                            foreach (var user in users)
+                            {
+                                allUsers.Add(user!);
+                            }
+
+                            LoggingUtility.Log($"[ViewApplicationLogsForm] Found {users.Count()} users in {baseLogDir}");
+                        }
+                        catch (Exception ex)
+                        {
+                            LoggingUtility.Log($"[ViewApplicationLogsForm] Error enumerating {baseLogDir}: {ex.Message}");
+                        }
+                    }
+                }
+
+                return allUsers.OrderBy(name => name).ToList();
             }).ConfigureAwait(true);
 
             // Populate combo box on UI thread
@@ -195,7 +217,7 @@ public partial class ViewApplicationLogsForm : Form
                 LoggingUtility.Log($"[Performance] LoadUserListAsync took {stopwatch.ElapsedMilliseconds}ms for {userDirectories.Count} users (target <500ms)");
             }
 
-            LoggingUtility.Log($"[ViewApplicationLogsForm] Loaded {userDirectories.Count} users with log directories in {stopwatch.ElapsedMilliseconds}ms");
+            LoggingUtility.Log($"[ViewApplicationLogsForm] Loaded {userDirectories.Count} users with log directories in {stopwatch.ElapsedMilliseconds}ms from {baseLogDirs.Length} locations");
 
             if (cmbUsers.Items.Count > 0)
             {
@@ -395,8 +417,7 @@ public partial class ViewApplicationLogsForm : Form
                     {
                         file.FileName,
                         file.ModifiedDate.ToString("yyyy-MM-dd HH:mm:ss"),
-                        file.FileSizeDisplay,
-                        file.EntryCount?.ToString() ?? "?"
+                        file.FileSizeDisplay
                     });
                     item.Tag = file;
                     lstLogFiles.Items.Add(item);

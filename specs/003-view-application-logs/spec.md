@@ -2,14 +2,15 @@
 
 **Feature Branch**: `003-view-application-logs`  
 **Created**: 2025-10-25  
-**Last Updated**: 2025-10-26  
+**Last Updated**: 2025-10-28  
 **Status**: Active Development  
-**Input**: Create log viewer window with user selection, log type filtering (Normal/Application Error/Database Error), file browsing, parsed log entry display, and filtering capabilities for accessing logs from network storage
+**Input**: Create log viewer window with user selection, log type filtering (Normal/Application Error/Database Error), file browsing, parsed log entry display, filtering capabilities, Copilot prompt generation, and statistical analysis for accessing logs from network storage
 
 **Log File Context**:
-- `*_normal.log` - Normal application logging (Service_DebugTracer output with JSON and emoji markers)
-- `*_app_error.log` - Application error logging (exceptions with stack traces)
-- `*_db_error.log` - Database error logging (MySQL exceptions with severity levels)
+- `*_normal.csv` - Normal application logging (CSV format: Timestamp,Level,Source,Message,Details with Service_DebugTracer output, JSON details, and emoji markers)
+- `*_app_error.csv` - Application error logging (CSV format with exceptions and stack traces)
+- `*_db_error.csv` - Database error logging (CSV format with MySQL exceptions and severity levels)
+- **Note**: CSV format provides 100% reliable parsing. All log files migrated from .log to .csv format as of 2025-10-28.
 
 ---
 
@@ -160,6 +161,180 @@ Users who click "View Logs" from error dialog have the log viewer open with thei
 
 ---
 
+### User Story 8 - CSV Log Format with Structured Display (Priority: P1)
+
+Developers view log entries in labeled, read-only textboxes with CSV-based format for 100% reliable parsing and clear field separation.
+
+**Why this priority**: Text-based parsing has failures. CSV format eliminates parsing errors and improves data reliability. Structured textbox display makes fields visually distinct and easier to read.
+
+**Independent Test**: Generate new CSV log. Open log viewer. Load CSV log file. Verify fields display in labeled textboxes (Timestamp:, Level:, Source:, Message:, Details:). Verify Message and Details textboxes are multiline with scrollbars. Open CSV file in Excel to verify structure matches expected format (Timestamp,Level,Source,Message,Details).
+
+**Acceptance Scenarios**:
+
+1. **Given** application generates logs, **When** log file created, **Then** file has .csv extension and contains CSV header row
+2. **Given** CSV log entry, **When** parsed, **Then** 100% parse success (no parse failures)
+3. **Given** entry contains commas in message, **When** written to CSV, **Then** message is properly quoted
+4. **Given** entry contains newlines in stack trace, **When** written to CSV, **Then** newlines preserved within quoted field
+5. **Given** CSV log loaded, **When** entry displayed, **Then** fields appear in labeled textboxes (Label + ReadOnly TextBox pairs)
+6. **Given** message is 500 characters, **When** displayed, **Then** Message textbox shows full text with vertical scrollbar
+7. **Given** details contains stack trace, **When** displayed, **Then** Details textbox shows full trace with line breaks preserved
+8. **Given** entry selected, **When** user tries to edit textbox, **Then** textbox is read-only and cannot be modified
+
+---
+
+### User Story 9 - Generate Copilot Fix Prompts (Priority: P2)
+
+Developers generate template-based Copilot prompts for error fixes, with one prompt per unique method stored in central location shared across all users.
+
+**Why this priority**: Accelerates error resolution. Provides consistent, detailed prompts for Copilot analysis. Central storage prevents duplicate prompt generation.
+
+**Independent Test**: Load error log with NullReferenceException in Control_InventoryTab_Button_Save_Click. Click "Create Prompt" button. Verify prompt file created in central Prompt Fixes folder with method name. Open prompt file, verify contains error type, message, stack trace, file reference, and Copilot prompt text. Attempt to generate same prompt again as different user, verify shows "already exists" dialog.
+
+**Acceptance Scenarios**:
+
+1. **Given** viewing INFO/WARNING log entry, **When** displayed, **Then** "Create Prompt" button is disabled
+2. **Given** viewing ERROR/CRITICAL log entry, **When** displayed, **Then** "Create Prompt" button is enabled
+3. **Given** "Create Prompt" clicked, **When** processing, **Then** method name extracted from stack trace first application method (not System/Microsoft)
+4. **Given** method name extracted, **When** prompt generated, **Then** file named "Prompt_Fix_{MethodName}.md" in central Prompt Fixes folder
+5. **Given** prompt generated, **When** file created, **Then** contains: Error Information section (timestamp, type, message, location, method), Stack Trace section, Copilot Prompt section with #file: reference
+6. **Given** error is NullReferenceException, **When** prompt generated, **Then** includes suggested fix "Add null checks before accessing object properties"
+7. **Given** prompt file already exists, **When** "Create Prompt" clicked, **Then** shows dialog "A prompt fix for this error has already been generated: {MethodName}"
+8. **Given** existing prompt dialog shown, **When** "Open Existing Prompt" clicked, **Then** opens prompt file in default markdown editor
+9. **Given** existing prompt dialog shown, **When** "Cancel" clicked, **Then** dialog closes without generating new prompt
+
+---
+
+### User Story 10 - Batch Prompt Generation (Priority: P2)
+
+Developers hold Shift key to change "Create Prompt" button to "Batch Creation" and generate prompts for all unique errors in current file with summary report.
+
+**Why this priority**: Efficiency. Log files often contain dozens of unique errors. Batch generation processes all at once instead of one-by-one.
+
+**Independent Test**: Load error log with 50 error entries (15 unique methods, 3 already have prompts). Hold Shift key, verify button text changes to "Batch Creation". Shift+Click button. Verify batch processing completes and summary shows: "✅ Created: 12 new prompts, ⚠️ Skipped: 3 already exist". Click "View Created Prompts", verify Prompt Fixes folder opens.
+
+**Acceptance Scenarios**:
+
+1. **Given** mouse hovers over "Create Prompt" button, **When** Shift key pressed, **Then** button text changes to "Batch Creation"
+2. **Given** mouse leaves button, **When** Shift key released, **Then** button text reverts to "Create Prompt"
+3. **Given** Shift+Click on button, **When** batch processing starts, **Then** scans all error entries in current log file
+4. **Given** batch scanning, **When** unique method names identified, **Then** groups errors by ErrorType + MethodName
+5. **Given** batch generating, **When** checking prompts, **Then** only creates prompt if file doesn't already exist
+6. **Given** batch completes, **When** summary dialog shown, **Then** displays created count, skipped count, failed count
+7. **Given** 5 prompts failed to generate, **When** "View Details" clicked, **Then** shows DataGridView with per-prompt status and failure reasons
+8. **Given** summary dialog shown, **When** "View Created Prompts" clicked, **Then** opens Prompt Fixes folder in Windows Explorer
+
+---
+
+### User Story 11 - Prompt Status Tracking (Priority: P2)
+
+Developers track prompt status (New/In Progress/Fixed/Won't Fix) with assignee and notes, viewable and editable through Developer UI.
+
+**Why this priority**: Visibility into fix progress. Prevents duplicate work. Enables prioritization and workload management.
+
+**Independent Test**: Open "Manage Prompt Status" dialog. Verify shows all generated prompts with current status. Change status from "New" to "In Progress" for 3 prompts. Set assignee to "johnk". Add notes "Investigating null reference". Click Save. Close dialog. Reopen dialog, verify changes persisted.
+
+**Acceptance Scenarios**:
+
+1. **Given** prompt files exist, **When** Prompt_Status.json doesn't exist, **Then** initializes empty JSON with prompts array
+2. **Given** "Manage Prompt Status" menu clicked, **When** dialog opens, **Then** displays DataGridView with all prompts
+3. **Given** status dialog open, **When** viewing prompts, **Then** columns show: Method Name, Status (dropdown), Assignee (editable), Notes (editable), Created Date, Last Updated
+4. **Given** status is "New", **When** displayed in grid, **Then** row background is light blue
+5. **Given** status is "In Progress", **When** displayed in grid, **Then** row background is yellow
+6. **Given** status is "Fixed", **When** displayed in grid, **Then** row background is light green
+7. **Given** status is "Won't Fix", **When** displayed in grid, **Then** row background is light gray
+8. **Given** changes made in grid, **When** "Save" clicked, **Then** updates written to Prompt_Status.json
+9. **Given** status JSON updated, **When** reopening dialog, **Then** shows latest changes from JSON file
+
+---
+
+### User Story 12 - Error Grouping and Deduplication (Priority: P3)
+
+Developers enable error grouping to see unique errors with occurrence counts, reducing navigation noise when investigating logs with many duplicate errors.
+
+**Why this priority**: Quality of life. Logs often have same error repeated 50+ times. Grouping reduces navigation from 1000 entries to 20 unique errors.
+
+**Independent Test**: Load log with 1000 entries (50 unique errors, some occurring 30+ times each). Enable "Group Errors" option. Verify entry count shows "Entry 1 of 50 (1000 total)". Navigate to grouped error, verify shows "NullReferenceException in Button_Save_Click (32 occurrences)". Click "Show All Occurrences", verify expands to show all 32 instances.
+
+**Acceptance Scenarios**:
+
+1. **Given** "Group Errors" checkbox unchecked, **When** navigating, **Then** shows all individual entries sequentially
+2. **Given** "Group Errors" checkbox checked, **When** grouping applied, **Then** groups entries by ErrorType + MethodName
+3. **Given** grouping enabled, **When** viewing entry, **Then** displays occurrence count in position label
+4. **Given** grouped entry shown, **When** "Next" clicked, **Then** jumps to next unique error (not next occurrence)
+5. **Given** grouped entry shown, **When** "Show All Occurrences" clicked, **Then** expands to list all indices for this error
+6. **Given** occurrences list shown, **When** occurrence clicked, **Then** navigates to that specific entry
+7. **Given** grouping enabled with 1000 total entries and 50 unique, **When** position label updates, **Then** shows "Entry X of 50 (1000 total)"
+
+---
+
+### User Story 13 - Quick Fix Templates and Copy Context (Priority: P3)
+
+Developers benefit from pre-defined fix suggestions for common errors in generated prompts, and can Shift+Click copy button to copy formatted error context for Copilot Chat.
+
+**Why this priority**: Speeds error resolution. Templates provide immediate fix guidance. Copy context creates ready-to-paste Copilot prompts.
+
+**Independent Test**: Generate prompt for NullReferenceException. Open prompt file, verify "Suggested Fix Approach: Add null checks before accessing object properties" appears. Load error entry. Hold Shift, verify copy button text changes to "Copy Context". Shift+Click, paste into notepad, verify formatted context with error details and #file: reference appears.
+
+**Acceptance Scenarios**:
+
+1. **Given** generating prompt for NullReferenceException, **When** template applied, **Then** prompt includes "Add null checks before accessing object properties"
+2. **Given** generating prompt for TimeoutException, **When** template applied, **Then** prompt includes "Increase timeout value or optimize query performance"
+3. **Given** generating prompt for FileNotFoundException, **When** template applied, **Then** prompt includes "Validate file path exists before attempting to access"
+4. **Given** QuickFixTemplates.json exists in Prompt Fixes folder, **When** loading templates, **Then** merges custom templates with built-in templates
+5. **Given** viewing error entry, **When** Shift key held, **Then** copy button text changes to "Copy Context"
+6. **Given** Shift+Click copy button, **When** formatting context, **Then** includes: Error Type, Method, File/Line, Message, Stack Trace, #file: reference, "Please analyze this error and suggest a fix"
+7. **Given** context copied, **When** pasted into Copilot Chat, **Then** formatted text is ready for analysis without editing
+8. **Given** copy completes, **When** returning to UI, **Then** toast notification shows "Error context copied to clipboard"
+
+---
+
+### User Story 14 - Color Indicators and Status Filtering (Priority: P3)
+
+Developers see visual color coding throughout the UI for error severity and can filter logs to show only errors needing attention (without prompts or with specific status).
+
+**Why this priority**: Visual clarity. Quickly identify critical errors. Focus on errors that need fixes.
+
+**Independent Test**: Load mixed log file. Verify file list shows color-coded rows (Normal=LightBlue, AppError=LightCoral, DbError=LightYellow). View critical error, verify entry panel has dark red border. Enable "Only errors without prompts" filter, verify navigation only includes errors lacking prompt files. Change filter to "Only 'In Progress' status", verify shows only errors with In Progress status in Prompt_Status.json.
+
+**Acceptance Scenarios**:
+
+1. **Given** file list displays, **When** viewing normal log file row, **Then** background color is light blue
+2. **Given** file list displays, **When** viewing app error log file row, **Then** background color is light coral
+3. **Given** file list displays, **When** viewing db error log file row, **Then** background color is light yellow
+4. **Given** viewing critical error entry, **When** displayed, **Then** entry panel border is dark red
+5. **Given** viewing error entry, **When** displayed, **Then** entry panel border is red
+6. **Given** viewing warning entry, **When** displayed, **Then** entry panel border is yellow
+7. **Given** viewing info entry, **When** displayed, **Then** entry panel border is blue
+8. **Given** entry position label, **When** critical error shown, **Then** prefixes with 🔴 emoji
+9. **Given** filter panel, **When** "Only errors without prompts" checked, **Then** filtered navigation only includes errors lacking prompt files
+10. **Given** filter panel, **When** "Only 'In Progress' status" checked, **Then** filtered navigation only includes errors with InProgress status in JSON
+11. **Given** multiple status filters checked, **When** applied, **Then** combines with AND logic (must match all selected filters)
+
+---
+
+### User Story 15 - Statistical Error Analysis Dashboard (Priority: P3)
+
+Developers generate comprehensive error analysis reports showing most frequent errors, trends over time, prompt coverage statistics, and priority recommendations with progress indication during analysis.
+
+**Why this priority**: Strategic error management. Identifies patterns. Prioritizes fixes. Tracks prompt coverage. Helps allocate development resources effectively.
+
+**Independent Test**: Click "Generate Error Report" button. Verify progress bar shows during analysis (150 files). Verify report displays: Top 10 most frequent errors table, Error trends chart (last 30 days), Prompt coverage pie chart (51% with prompts), Priority recommendations list (22 errors without prompts). Export report as HTML, verify opens in browser with styling.
+
+**Acceptance Scenarios**:
+
+1. **Given** "Generate Error Report" clicked, **When** analysis starts, **Then** shows progress bar with "Analyzing logs... X of Y files processed"
+2. **Given** analysis running, **When** cancel button clicked, **Then** stops processing and shows partial results or cancellation message
+3. **Given** analysis completes, **When** report displays, **Then** "Most Frequent Errors" section shows top 10 errors with occurrence counts and percentages
+4. **Given** report displays, **When** viewing trends, **Then** "Error Trends Over Time" shows bar chart for last 30 days
+5. **Given** report displays, **When** viewing coverage, **Then** "Prompt Coverage" shows: Total unique errors, With prompts (%), Without prompts (%), By status breakdown
+6. **Given** report displays, **When** viewing priorities, **Then** "Priority Recommendations" lists errors without prompts sorted by frequency descending
+7. **Given** report displayed, **When** "Export HTML" clicked, **Then** generates styled HTML file with embedded CSS, tables, and charts
+8. **Given** report displayed, **When** "Export CSV" clicked, **Then** generates ZIP containing CSV file for each report section
+9. **Given** report displayed, **When** "Copy to Clipboard" clicked, **Then** formats as plain text with ASCII tables
+10. **Given** report generated, **When** generating again within 1 hour, **Then** uses cached results unless file modifications detected
+
+---
+
 ### Edge Cases
 
 - During Planning Phase if the agent thinks of any new clarifcation questions first reference spec-old.md in this feature folder to see if the answer is there, otherwise stop and ask.
@@ -247,6 +422,51 @@ Users who click "View Logs" from error dialog have the log viewer open with thei
 - **FR-049**: Constructed file paths MUST be validated against base directory to prevent path traversal
 - **FR-050**: Search regex patterns MUST have timeout (1 second) to prevent ReDoS attacks
 - **FR-051**: Error messages to users MUST NOT reveal internal path structure or sensitive information
+
+#### CSV Log Format and Structured Display
+- **FR-058**: Log files MUST use CSV format with header row: Timestamp,Level,Source,Message,Details
+- **FR-059**: CSV values MUST be properly escaped (quoted fields for commas, quotes, newlines)
+- **FR-060**: Log file extensions MUST be .csv (not .log)
+- **FR-061**: CSV parsing MUST achieve 100% success rate (no parse failures)
+- **FR-062**: Entry display MUST use labeled, read-only textboxes for each field (Timestamp, Level, Source, Message, Details)
+- **FR-063**: Message and Details textboxes MUST be multiline with vertical scrollbars
+- **FR-064**: Textboxes MUST be ReadOnly=true and TabStop=false to prevent editing
+
+#### Copilot Prompt Generation
+- **FR-065**: System MUST provide "Create Prompt" button enabled only for ERROR/CRITICAL logs
+- **FR-066**: Prompt files MUST be stored in central "Prompt Fixes" directory (not per-user)
+- **FR-067**: Prompt files MUST be named "Prompt_Fix_{MethodName}.md" based on stack trace method extraction
+- **FR-068**: Method name extraction MUST use first application method (exclude System/Microsoft namespaces)
+- **FR-069**: Prompt template MUST include: Error Information, Stack Trace, Copilot Prompt with #file: reference
+- **FR-070**: System MUST detect existing prompts and show dialog with "Open Existing Prompt" option
+- **FR-071**: Shift+Click MUST trigger batch prompt generation for all unique errors in current file
+- **FR-072**: Batch generation MUST show summary report: created count, skipped count, failed count
+- **FR-073**: Quick Fix Templates MUST be applied for common error types (NullReference, Timeout, FileNotFound, SqlException, InvalidOperation)
+- **FR-074**: Shift+Click copy MUST format error context for Copilot Chat with #file: reference
+
+#### Prompt Status Tracking
+- **FR-075**: System MUST maintain Prompt_Status.json with: PromptFile, MethodName, Status, CreatedDate, LastUpdated, Assignee, Notes
+- **FR-076**: Status values MUST be: New, InProgress, Fixed, WontFix
+- **FR-077**: Developer UI MUST allow viewing and editing all prompt statuses via DataGridView
+- **FR-078**: Status changes MUST persist to JSON file
+- **FR-079**: Status UI MUST color-code rows (New=Blue, InProgress=Yellow, Fixed=Green, WontFix=Gray)
+
+#### Error Grouping and Analysis
+- **FR-080**: System MUST provide optional error grouping by ErrorType + MethodName
+- **FR-081**: Grouped navigation MUST show occurrence counts and unique error count
+- **FR-082**: System MUST allow expanding grouped errors to view all occurrences
+- **FR-083**: Statistical dashboard MUST generate: Most Frequent Errors (top 10), Error Trends (30 days), Prompt Coverage stats, Priority Recommendations
+- **FR-084**: Dashboard generation MUST show progress bar during analysis
+- **FR-085**: Dashboard MUST support cancellation during analysis
+- **FR-086**: Dashboard results MUST be cached for 1 hour with file modification detection
+- **FR-087**: Dashboard MUST export to HTML (styled), CSV (zipped sections), and Clipboard (plain text)
+
+#### Visual Indicators and Filtering
+- **FR-088**: File list MUST color-code rows by log type (Normal=LightBlue, AppError=LightCoral, DbError=LightYellow)
+- **FR-089**: Entry display MUST show border color based on severity (Critical=DarkRed, Error=Red, Warning=Yellow, Info=Blue)
+- **FR-090**: Entry position label MUST show emoji prefix (🔴🟠🟡🔵) for severity
+- **FR-091**: Filter panel MUST allow filtering by prompt existence (errors without prompts)
+- **FR-092**: Filter panel MUST allow filtering by prompt status (New, InProgress, Fixed)
 
 #### UI Scaling and DPI Compliance
 - **FR-052**: Form MUST use AutoScaleMode.Dpi for proper scaling across different screen DPI settings
@@ -574,3 +794,20 @@ Add to `Model_Application_Variables` or appsettings.json:
 - **SC-010**: Memory usage remains stable during extended sessions (no leaks after viewing 50+ files)
 - **SC-011**: Network path access failures provide clear user guidance within 100ms
 - **SC-012**: 90% of developers can complete primary task (view user's error logs) on first attempt without assistance
+
+### Enhancement Success Criteria
+
+- **SC-013**: CSV log parsing achieves 100% success rate (no parse failures)
+- **SC-014**: Structured textbox display renders all fields correctly at 96/120/144 DPI
+- **SC-015**: Prompt generation completes within 500ms for single error entry
+- **SC-016**: Batch prompt generation processes 50 unique errors within 10 seconds
+- **SC-017**: Method name extraction succeeds for 95%+ of stack traces (handles async, lambdas)
+- **SC-018**: Existing prompt detection responds within 100ms
+- **SC-019**: Prompt Status JSON loads and saves within 200ms
+- **SC-020**: Developer UI displays 100+ prompts with smooth scrolling (no lag)
+- **SC-021**: Error grouping reduces navigation from 1000 entries to <100 unique errors
+- **SC-022**: Statistical dashboard analyzes 150 log files within 30 seconds
+- **SC-023**: Dashboard progress bar updates smoothly (every 10 files, no UI freeze)
+- **SC-024**: Dashboard cancellation stops analysis within 1 second
+- **SC-025**: Color indicators are visible and accessible in high contrast mode
+- **SC-026**: Filter by prompt status applies within 300ms for 1000 entries

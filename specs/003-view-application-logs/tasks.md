@@ -350,7 +350,7 @@ This provides core log viewing capability. US4-US7 are enhancements that can be 
 
 ### UI Components - Filter Panel
 
-- [ ] **T030** [Story: US4] - Implement filter panel layout
+- [x] **T030** [Story: US4] - Implement filter panel layout
   **File**: `Forms/ViewLogs/ViewApplicationLogsForm.cs` (designer)
   **Description**: Add filter panel to entry display area with TableLayoutPanel: Date range pickers (StartDate, EndDate), Log type dropdown, Severity checkboxes (dynamic), Source dropdown, Search textbox, Clear Filters button, quick filter buttons (Errors Only, Performance, Today).
   **Reference**: `.github/instructions/ui-scaling-consistency.instructions.md` - Control sizing and spacing
@@ -500,7 +500,7 @@ This provides core log viewing capability. US4-US7 are enhancements that can be 
   **Acceptance**: Constructor accepts username parameter, both constructors call Core_Themes methods, pre-selection logic works (FR-037)
   **Note**: Already implemented - constructor stores _selectedUsername and ViewApplicationLogsForm_Load pre-selects from combo box
 
-- [ ] **T046** [Story: US7] - Integrate View Logs button into Error Dialog
+- [x] **T046** [Story: US7] - Integrate View Logs button into Error Dialog
   **File**: `Forms/ErrorDialog/ErrorDialog.cs` (existing file)
   **Description**: Add "View Logs" button to error dialog form. Implement btnViewLogs_Click handler that gets current username from Model_AppVariables.CurrentUser?.Username, creates new ViewApplicationLogsForm(username), calls Show(). Position button appropriately in error dialog layout.
   **Reference**: `.github/instructions/csharp-dotnet8.instructions.md` - Form instantiation, inter-form communication
@@ -646,17 +646,300 @@ Tasks reference the following instruction files for implementation guidance:
 
 ---
 
+---
+
+## Phase 11: CSV Log Format Migration (Foundation Enhancement)
+
+**Goal**: Replace text-based .log files with structured CSV format for 100% reliable parsing
+
+### LoggingUtility Updates
+
+- [ ] **T052** [Story: CSV Migration] - Update LoggingUtility to write CSV format with proper escaping
+  **File**: `Logging/LoggingUtility.cs`
+  **Description**: Replace pipe-delimited format with CSV format. Implement EscapeCsvValue(string) method that handles commas, quotes, and newlines. Update FlushLogEntryToDisk to write CSV header (Timestamp,Level,Source,Message,Details) on new files, then write CSV rows. Update all Log methods (Log, LogApplicationError, LogDatabaseError, LogApplicationInfo) to pass individual fields instead of formatted strings. Change file extensions from .log to .csv in initialization.
+  **Reference**: `.github/instructions/csharp-dotnet8.instructions.md` - String handling, file I/O patterns
+  **Reference**: `.github/instructions/security-best-practices.instructions.md` - Input sanitization, CSV injection prevention
+  **Reference**: `.github/instructions/performance-optimization.instructions.md` - Efficient string operations
+  **Acceptance**: CSV files created with proper headers, values escaped correctly (commas/quotes/newlines), all log methods write CSV format, file extensions are .csv
+
+- [ ] **T053** [Story: CSV Migration] - Update Service_LogFileReader to read CSV files
+  **File**: `Services/Service_LogFileReader.cs`
+  **Description**: Change file pattern from "*.log" to "*.csv". Update filename regex patterns (NormalLogPattern, AppErrorPattern, DbErrorPattern) to match _normal.csv, _app_error.csv, _db_error.csv. Update LoadEntriesAsync to use CSV parsing instead of text parsing. Add CSV reader helper method ReadCsvLine that handles quoted fields and escaped characters.
+  **Reference**: `.github/instructions/csharp-dotnet8.instructions.md` - File I/O, CSV parsing patterns
+  **Reference**: `.github/instructions/performance-optimization.instructions.md` - Efficient file reading
+  **Acceptance**: Reads .csv files correctly, handles quoted CSV fields, parses multi-line details in quotes, file enumeration works with new extensions
+
+- [ ] **T054** [Story: CSV Migration] - Simplify Service_LogParser to parse CSV rows
+  **File**: `Services/Service_LogParser.cs`
+  **Description**: Remove complex regex patterns for log parsing. Replace with simple CSV row parser. Update ParseEntry to split CSV row into fields (Timestamp, Level, Source, Message, Details), create Model_LogEntry from fields. Remove DetectFormat method (format determined by file type). Update ParseNormalLog, ParseApplicationError, ParseDatabaseError to work with pre-split CSV fields instead of regex extraction.
+  **Reference**: `.github/instructions/csharp-dotnet8.instructions.md` - String manipulation, simplification patterns
+  **Reference**: `.github/instructions/performance-optimization.instructions.md` - Simplified parsing performance
+  **Acceptance**: CSV parsing is simple and fast, no regex needed, 100% parse success rate, handles all log types correctly
+
+- [ ] **T055** [Story: CSV Migration] - Delete old test log data and create CSV test data
+  **File**: `Scripts/Create-TestLogUsers.ps1` (update existing)
+  **Description**: Update PowerShell script to delete all existing .log files in test user directories. Change script to generate .csv files with proper CSV format (quoted fields, escaped commas). Update test data generation to write CSV headers and properly formatted CSV rows. Generate same test scenarios (3 users, 3 normal logs, 2 app error logs, 2 db error logs each) but in CSV format.
+  **Reference**: `.github/instructions/csharp-dotnet8.instructions.md` - PowerShell integration
+  **Acceptance**: Script deletes old .log files, generates .csv files with proper format, test users have CSV logs, logs are readable in Excel for validation
+
+### [CHECKPOINT] CSV Migration Complete
+*All logging now uses CSV format. Parser is simplified and 100% reliable. Ready for UI enhancements.*
+
+---
+
+## Phase 12: Structured Textbox Display
+
+**Goal**: Replace single text display with labeled, read-only textboxes for each field
+
+### UI Redesign
+
+- [ ] **T056** [Story: Structured Display] - Redesign entry display panel with labeled textboxes
+  **File**: `Forms/ViewLogs/ViewApplicationLogsForm.Designer.cs`
+  **Description**: Replace existing txtEntryDisplay with TableLayoutPanel containing label/textbox pairs. Add: lblTimestamp + txtTimestamp, lblLevel + txtLevel, lblSource + txtSource, lblMessage + txtMessage (multiline), lblDetails + txtDetails (multiline). Set all textboxes ReadOnly=true, TabStop=false. Configure Message and Details textboxes with Multiline=true, ScrollBars=Vertical, WordWrap=true. Use vertical stack layout with proper spacing (5px margins).
+  **Reference**: `.github/instructions/ui-scaling-consistency.instructions.md` - Control sizing, spacing, DPI awareness
+  **Reference**: `.github/instructions/winforms-responsive-layout.instructions.md` - TableLayoutPanel layout patterns
+  **Acceptance**: Layout shows labeled textboxes vertically stacked, all textboxes are read-only, multiline fields scroll properly, responsive to resize
+
+- [ ] **T057** [Story: Structured Display] - Wire up textbox population from CSV data
+  **File**: `Forms/ViewLogs/ViewApplicationLogsForm.cs`
+  **Description**: Update ShowCurrentEntry method to populate individual textboxes from Model_LogEntry fields. Set txtTimestamp.Text = entry.Timestamp, txtLevel.Text = entry.Level, txtSource.Text = entry.Source, txtMessage.Text = entry.Message, txtDetails.Text = entry.Details. Apply color coding to txtLevel background based on severity. Show/hide txtDetails if Details field is empty.
+  **Reference**: `.github/instructions/csharp-dotnet8.instructions.md` - Control property manipulation
+  **Reference**: `.github/instructions/ui-scaling-consistency.instructions.md` - Color accessibility
+  **Acceptance**: All fields populate correctly from CSV data, colors apply to severity levels, empty details field hidden, text is selectable for copying
+
+- [ ] **T058** [Story: Structured Display] - Test multi-line display and scrolling behavior
+  **File**: `Forms/ViewLogs/ViewApplicationLogsForm.cs`
+  **Description**: Manual testing task. Load log entries with: 500-character messages, stack traces with 20+ lines, messages with newlines/special characters. Verify Message textbox shows full text with scrollbar when needed. Verify Details textbox shows full stack trace with preserved line breaks. Verify horizontal scrollbar does not appear (WordWrap=true). Test at 96/120/144 DPI.
+  **Reference**: `.github/instructions/testing-standards.instructions.md` - Manual validation approach
+  **Reference**: `.github/instructions/ui-scaling-consistency.instructions.md` - DPI testing
+  **Acceptance**: Long messages scroll vertically, line breaks preserved in stack traces, no horizontal scroll, readable at all DPI settings
+
+### [CHECKPOINT] Structured Display Complete
+*Entry display now uses labeled textboxes. Fields are clearly separated and easy to read. Ready for prompt generation.*
+
+---
+
+## Phase 13: Copilot Prompt Generation Core
+
+**Goal**: Generate template-based Copilot prompts for error fixes with central storage
+
+### Infrastructure
+
+- [ ] **T059** [Story: Prompt Generation] - Create Prompt Fixes central directory structure
+  **File**: `Helpers/Helper_LogPath.cs`
+  **Description**: Add GetPromptFixesDirectory() method that returns central prompt fixes path (BaseLogPath + "Prompt Fixes"). Add CreatePromptFixesDirectory() method that creates directory if it doesn't exist. Add GetPromptFilePath(methodName) that constructs path for specific prompt file. Implement security validation (no path traversal).
+  **Reference**: `.github/instructions/security-best-practices.instructions.md` - Path validation, directory creation security
+  **Reference**: `.github/instructions/csharp-dotnet8.instructions.md` - Static helper patterns
+  **Acceptance**: Central "Prompt Fixes" directory created, method name sanitized for filename, paths validated, directory permissions correct
+
+- [ ] **T060** [Story: Prompt Generation] - Implement error method name extraction from stack traces
+  **File**: `Services/Service_PromptGenerator.cs` (new file)
+  **Description**: Create Service_PromptGenerator static class. Implement ExtractMethodName(stackTrace) that parses stack trace to find first application method (not System/Microsoft namespaces). Use regex to match "at {Namespace}.{Class}.{Method}({params})" pattern with 100ms timeout. Handle missing line numbers, async methods, lambda expressions. Return sanitized method name suitable for filename.
+  **Reference**: `.github/instructions/csharp-dotnet8.instructions.md` - Regex patterns, static classes
+  **Reference**: `.github/instructions/security-best-practices.instructions.md` - Regex timeout (ReDoS prevention), filename sanitization
+  **Acceptance**: Extracts correct method name from stack traces, handles edge cases (lambdas/async), sanitizes for filesystem, regex has timeout protection
+
+- [ ] **T061** [Story: Prompt Generation] - Create prompt template engine
+  **File**: `Services/Service_PromptGenerator.cs`
+  **Description**: Implement GeneratePrompt(logEntry) method that creates markdown prompt from template. Extract: timestamp, errorType, message, fileName, lineNumber, methodName, stackTrace from logEntry. Load QuickFixTemplates dictionary for common error types (NullReferenceException, TimeoutException, FileNotFoundException, SqlException, InvalidOperationException). Substitute variables into template. Return formatted markdown string ready to write to file.
+  **Reference**: `.github/instructions/csharp-dotnet8.instructions.md` - String templates, dictionary usage
+  **Reference**: `.github/instructions/documentation.instructions.md` - Markdown formatting
+  **Acceptance**: Template generates valid markdown, all variables substituted correctly, quick fix suggestions included for known error types, output ready for Copilot
+
+### UI Integration
+
+- [ ] **T062** [Story: Prompt Generation] - Implement "Create Prompt" button with error-only activation
+  **File**: `Forms/ViewLogs/ViewApplicationLogsForm.cs` (Designer and code-behind)
+  **Description**: Add btnCreatePrompt button to navigation panel, position next to navigation buttons. Initially disabled. In ShowCurrentEntry, enable button only when current entry is ERROR or CRITICAL severity (check entry.Level for app errors or entry.Severity for db errors). Implement btnCreatePrompt_Click handler that calls Service_PromptGenerator.GeneratePrompt, writes to file, shows success message.
+  **Reference**: `.github/instructions/ui-scaling-consistency.instructions.md` - Button sizing, touch targets
+  **Reference**: `.github/instructions/csharp-dotnet8.instructions.md` - Button event handlers, conditional enabling
+  **Acceptance**: Button disabled for INFO/WARNING logs, enabled for ERROR/CRITICAL logs, click generates prompt file, success message shows
+
+- [ ] **T063** [Story: Prompt Generation] - Check for existing prompts and show dialog
+  **File**: `Forms/ViewLogs/ViewApplicationLogsForm.cs`
+  **Description**: In btnCreatePrompt_Click, before generating prompt, check if file already exists using Helper_LogPath.GetPromptFilePath(methodName). If exists, show custom dialog with message "A prompt fix for this error has already been generated: {MethodName}" and buttons [Open Existing Prompt] [Cancel]. If Cancel, return. If Open Existing Prompt, call Process.Start with prompt file path to open in default markdown editor.
+  **Reference**: `.github/instructions/csharp-dotnet8.instructions.md` - File existence checks, dialog patterns
+  **Reference**: `.github/instructions/security-best-practices.instructions.md` - Secure process launching
+  **Acceptance**: Existing prompt detection works, dialog shows with correct message, Open button launches markdown editor, Cancel aborts operation
+
+### [CHECKPOINT] Prompt Generation Core Complete
+*Basic prompt generation working. One prompt per method. Existing prompts detected. Ready for advanced features.*
+
+---
+
+## Phase 14: Enhanced Features Set 1
+
+**Goal**: Add status tracking, batch generation, grouping, templates, and copy features
+
+### Status Tracking
+
+- [ ] **T064** [Story: Status Tracking] - Implement Prompt Status JSON management
+  **File**: `Models/Model_PromptStatus.cs` (new file), `Services/Service_PromptStatusManager.cs` (new file)
+  **Description**: Create Model_PromptStatus with properties: PromptFile, MethodName, Status (enum: New/InProgress/Fixed/WontFix), CreatedDate, LastUpdated, Assignee, Notes. Create Service_PromptStatusManager with methods: LoadStatus() (reads JSON), SaveStatus() (writes JSON), GetStatus(methodName), UpdateStatus(methodName, status, assignee, notes), GetAllStatuses(). Initialize empty JSON if file doesn't exist.
+  **Reference**: `.github/instructions/csharp-dotnet8.instructions.md` - JSON serialization with System.Text.Json, enum handling
+  **Reference**: `.github/instructions/security-best-practices.instructions.md` - Secure file access
+  **Reference**: `.github/instructions/performance-optimization.instructions.md` - JSON performance
+  **Acceptance**: JSON serializes/deserializes correctly, file created on first use, status updates persist, concurrent access handled safely
+
+- [ ] **T065** [Story: Status Tracking] - Create Developer UI for status management
+  **File**: `Forms/ViewLogs/PromptStatusManagerDialog.cs` (new form), `PromptStatusManagerDialog.Designer.cs`, `PromptStatusManagerDialog.resx`
+  **Description**: Create modal dialog form with DataGridView showing all prompts. Columns: Method Name, Status (ComboBox), Assignee (TextBox), Notes (TextBox), Created Date, Last Updated. Add Refresh button, Save button, Close button. Populate DataGridView from Service_PromptStatusManager.GetAllStatuses(). On Save, call UpdateStatus for each modified row. Apply color coding to Status column (New=Blue, InProgress=Yellow, Fixed=Green, WontFix=Gray).
+  **Reference**: `.github/instructions/ui-scaling-consistency.instructions.md` - DataGridView sizing, dialog layout
+  **Reference**: `.github/instructions/winforms-responsive-layout.instructions.md` - Form responsive design
+  **Reference**: `.github/instructions/csharp-dotnet8.instructions.md` - DataGridView patterns, modal dialogs
+  **Acceptance**: Dialog opens from main form, displays all prompts, edits save correctly, color coding visible, responsive at all DPI settings
+
+### Batch Generation
+
+- [ ] **T066** [Story: Batch Generation] - Implement Shift+Click batch prompt generation
+  **File**: `Forms/ViewLogs/ViewApplicationLogsForm.cs`
+  **Description**: Detect Shift key state in btnCreatePrompt_MouseEnter, btnCreatePrompt_MouseLeave, and btnCreatePrompt_Click. On Shift+Enter: Change button text from "Create Prompt" to "Batch Creation". On Shift+Click: Scan all entries in _currentEntries where ParseSuccess==true and (Level==ERROR or Severity==ERROR/CRITICAL). Extract unique method names. For each unique method, check if prompt exists, generate if not, track results (created/skipped/failed). Show summary dialog after completion.
+  **Reference**: `.github/instructions/csharp-dotnet8.instructions.md` - Modifier key detection, async batch processing
+  **Reference**: `.github/instructions/performance-optimization.instructions.md` - Batch operations with progress
+  **Acceptance**: Shift key changes button text, batch processes all errors, unique method detection works, doesn't regenerate existing prompts
+
+- [ ] **T067** [Story: Batch Generation] - Create batch generation summary report dialog
+  **File**: `Forms/ViewLogs/BatchGenerationReportDialog.cs` (new form)
+  **Description**: Create modal dialog showing batch results. Display: "✅ Created: X new prompts", "⚠️ Skipped: Y already exist", "❌ Failed: Z (couldn't parse stack trace)". Add [View Created Prompts] button that opens Prompt Fixes folder in Explorer. Add [View Details] button showing DataGridView with per-prompt status (Method Name, Action, Reason). Add [Close] button.
+  **Reference**: `.github/instructions/ui-scaling-consistency.instructions.md` - Dialog sizing, button layout
+  **Reference**: `.github/instructions/csharp-dotnet8.instructions.md` - Modal dialog patterns
+  **Acceptance**: Summary counts accurate, View Created Prompts opens folder, View Details shows breakdown, dialog closes properly
+
+### Grouping and Templates
+
+- [ ] **T068** [Story: Error Grouping] - Implement error grouping/deduplication
+  **File**: `Forms/ViewLogs/LogEntryNavigator.cs`
+  **Description**: Add GroupingEnabled property (bool, default false). Add GroupedEntries dictionary (Dictionary<string, List<int>>) keyed by "ErrorType_MethodName". Implement GroupEntries() method that scans filtered indices, extracts error type and method name, groups identical errors, stores occurrence indices. Update CurrentEntry getter to return first occurrence when in grouping mode. Add GetOccurrenceCount(index) method. Add ExpandGroup(groupKey) that switches to showing all occurrences.
+  **Reference**: `.github/instructions/csharp-dotnet8.instructions.md` - Dictionary grouping, LINQ patterns
+  **Reference**: `.github/instructions/performance-optimization.instructions.md` - Efficient grouping operations
+  **Acceptance**: Grouping reduces navigation items, occurrence count tracked, expanding shows all instances, performance acceptable for 1000+ entries
+
+- [ ] **T069** [Story: Quick Fix Templates] - Implement Quick Fix Templates system
+  **File**: `Services/Service_PromptGenerator.cs`
+  **Description**: In GeneratePrompt method, after extracting errorType, lookup QuickFixTemplates[errorType]. If found, add "Suggested Fix Approach:" section to prompt with template text. Update templates dictionary with additional common errors: IndexOutOfRangeException, ArgumentNullException, ObjectDisposedException, UnauthorizedAccessException, FormatException. Make templates extensible by loading from external JSON file if exists (QuickFixTemplates.json in Prompt Fixes folder).
+  **Reference**: `.github/instructions/csharp-dotnet8.instructions.md` - Dictionary lookups, optional JSON loading
+  **Reference**: `.github/instructions/documentation.instructions.md` - Template documentation
+  **Acceptance**: Templates apply to matching error types, custom templates load from JSON if present, template text appears in generated prompts
+
+### Copy Enhancement
+
+- [ ] **T070** [Story: Copy Context] - Implement Shift+Copy error context
+  **File**: `Forms/ViewLogs/ViewApplicationLogsForm.cs`
+  **Description**: Add btnCopyContext button or enhance existing copy button. Detect Shift key state. On Shift+Hold: Change button text to "Copy Context". On Shift+Click: Format current error entry with template: "Error Context for Copilot Analysis\n===\nError Type: {type}\nMethod: {method}\nFile: {file}, Line {line}\n\nMessage:\n{message}\n\nStack Trace:\n{trace}\n\n#file:{file}\n\nPlease analyze this error and suggest a fix." Copy formatted text to Clipboard. Show toast notification "Error context copied to clipboard".
+  **Reference**: `.github/instructions/csharp-dotnet8.instructions.md` - Clipboard operations, string formatting
+  **Reference**: `.github/instructions/ui-scaling-consistency.instructions.md` - Toast notifications
+  **Acceptance**: Shift key changes button text, formatted context copies to clipboard, paste into Copilot Chat works, toast notification shows
+
+### [CHECKPOINT] Enhanced Features Set 1 Complete
+*Status tracking, batch generation, grouping, templates, and copy enhancements all working. Ready for visual and reporting features.*
+
+---
+
+## Phase 15: Enhanced Features Set 2
+
+**Goal**: Add color indicators, status filtering, and statistical dashboard
+
+### Visual Enhancements
+
+- [ ] **T071** [Story: Color Indicators] - Add error severity color indicators
+  **File**: `Forms/ViewLogs/ViewApplicationLogsForm.cs`
+  **Description**: Apply color coding throughout UI. File list (lstLogFiles): Set BackColor for each row based on log type (Normal=LightBlue, AppError=LightCoral, DbError=LightYellow). Entry display panel: Set border color or background based on current entry severity (Critical=DarkRed, Error=Red, Warning=Yellow, Info=Blue). Entry position label: Add emoji prefix based on severity (🔴 Critical, 🟠 Error, 🟡 Warning, 🔵 Info).
+  **Reference**: `.github/instructions/ui-scaling-consistency.instructions.md` - Color accessibility, high contrast support
+  **Reference**: `.github/instructions/csharp-dotnet8.instructions.md` - Dynamic control styling
+  **Acceptance**: Colors visible and meaningful, accessible in high contrast mode, emoji indicators show correctly, color coding consistent throughout UI
+
+### Filtering Enhancement
+
+- [ ] **T072** [Story: Prompt Status Filter] - Implement "Filter by Prompt Status" options
+  **File**: `Forms/ViewLogs/ViewApplicationLogsForm.cs`
+  **Description**: Add to filter panel: CheckBox "Only errors without prompts", CheckBox "Only 'New' status", CheckBox "Only 'In Progress' status", CheckBox "Show all statuses". In ApplyFilter method, after existing filters, add prompt status filtering. For each filtered entry, if it's an error, extract method name, check if prompt file exists, load status from JSON, include/exclude based on checkbox selection. Update filtered count label.
+  **Reference**: `.github/instructions/csharp-dotnet8.instructions.md` - Checkbox filtering, JSON integration
+  **Reference**: `.github/instructions/performance-optimization.instructions.md` - Efficient filtering with file checks
+  **Acceptance**: Filter by prompt existence works, filter by status works, multiple filters combine correctly (AND logic), performance acceptable
+
+### Statistical Dashboard
+
+- [ ] **T073** [Story: Dashboard] - Create Statistical Dashboard report generator
+  **File**: `Forms/ViewLogs/ErrorAnalysisReportDialog.cs` (new form), `Services/Service_ErrorAnalyzer.cs` (new service)
+  **Description**: Create Service_ErrorAnalyzer with GenerateReport(allLogFiles) method. Scan all users' log files, extract and parse error entries, group by ErrorType+MethodName, count occurrences, calculate frequencies, generate report data. Create modal dialog displaying: (1) Most Frequent Errors table (top 10), (2) Error Trends chart (last 30 days - use simple bar chart), (3) Prompt Coverage stats (total errors, with/without prompts, status breakdown), (4) Priority Recommendations list (errors without prompts sorted by frequency). Add Export buttons (HTML, CSV, Clipboard).
+  **Reference**: `.github/instructions/csharp-dotnet8.instructions.md` - Data analysis, report generation
+  **Reference**: `.github/instructions/performance-optimization.instructions.md` - Large dataset processing
+  **Reference**: `.github/instructions/ui-scaling-consistency.instructions.md` - Report dialog layout
+  **Acceptance**: Report generates with accurate statistics, trends show correctly, export functions work, report layout readable
+
+- [ ] **T074** [Story: Dashboard] - Implement progress bar for dashboard analysis
+  **File**: `Forms/ViewLogs/ErrorAnalysisReportDialog.cs`
+  **Description**: Add progress bar and status label to dashboard generation. Show "Analyzing logs... X of Y files processed" during Service_ErrorAnalyzer.GenerateReport. Support cancellation via CancellationTokenSource. Update progress every 10 files to avoid excessive UI updates. On cancel, show partial results or "Analysis cancelled" message. Cache results for 1 hour using file modification times to detect changes.
+  **Reference**: `.github/instructions/performance-optimization.instructions.md` - Long-running operations with progress
+  **Reference**: `.github/instructions/csharp-dotnet8.instructions.md` - CancellationToken usage, progress reporting
+  **Acceptance**: Progress bar updates smoothly, cancellation works immediately, partial results available, caching reduces regeneration time
+
+- [ ] **T075** [Story: Dashboard] - Add report export options
+  **File**: `Forms/ViewLogs/ErrorAnalysisReportDialog.cs`
+  **Description**: Implement export functionality. HTML export: Generate styled HTML with embedded CSS, tables for statistics, charts as SVG or data tables. CSV export: Create multiple CSV files (one per report section) zipped together. Clipboard export: Format as plain text with ASCII tables. Use SaveFileDialog for file location. Show success message with file path after export.
+  **Reference**: `.github/instructions/csharp-dotnet8.instructions.md` - File export, HTML generation
+  **Reference**: `.github/instructions/security-best-practices.instructions.md` - Secure file writing
+  **Acceptance**: HTML export includes styling and is readable in browser, CSV export opens in Excel, clipboard export pastes cleanly, file dialogs work correctly
+
+### [CHECKPOINT] Enhanced Features Set 2 Complete
+*Color indicators, status filtering, and statistical dashboard all implemented. All enhancement features complete.*
+
+---
+
+## Phase 16: Integration and Polish
+
+**Goal**: Wire all features together, add menu items, update documentation, create comprehensive test file
+
+### Integration
+
+- [ ] **T076** [Story: Integration] - Add menu items for new features
+  **File**: `Forms/ViewLogs/ViewApplicationLogsForm.cs` (Designer)
+  **Description**: Add to main menu or toolbar: "Manage Prompt Status" button that opens PromptStatusManagerDialog, "Generate Error Report" button that opens ErrorAnalysisReportDialog, "Open Prompt Fixes Folder" button that opens Prompt Fixes directory in Explorer. Position logically near other action buttons. Add keyboard shortcuts (Ctrl+P for Prompt Status, Ctrl+R for Report, Ctrl+Shift+F for Folder).
+  **Reference**: `.github/instructions/ui-scaling-consistency.instructions.md` - Menu/toolbar layout
+  **Reference**: `.github/instructions/csharp-dotnet8.instructions.md` - Menu event handlers, keyboard shortcuts
+  **Acceptance**: Menu items visible and accessible, keyboard shortcuts work, buttons launch correct dialogs
+
+- [ ] **T077** [Story: Integration] - Update existing documentation for CSV format changes
+  **File**: `specs/003-view-application-logs/spec.md`, `specs/003-view-application-logs/plan.md`, `specs/003-view-application-logs/data-model.md`
+  **Description**: Update all spec files to reflect CSV format instead of text-based logs. Update log file context sections to show CSV structure. Update parsing sections to remove regex references. Add sections for new features: structured textbox display, prompt generation, status tracking, batch generation, error grouping, quick fix templates, copy context, color indicators, status filtering, statistical dashboard. Update examples and acceptance criteria to match new functionality.
+  **Reference**: `.github/instructions/documentation.instructions.md` - Documentation standards, markdown formatting
+  **Reference**: `.github/instructions/markdown.instructions.md` - Markdown structure
+  **Acceptance**: All spec files updated with CSV format, new features documented, old text-based format references removed, examples accurate
+
+- [ ] **T078** [Story: Integration] - Create comprehensive manual test file
+  **File**: `Tests/Manual/ViewApplicationLogs_ComprehensiveTestPlan.md` (new file)
+  **Description**: Create detailed test plan covering ALL features with step-by-step instructions. Include test sections for: (1) CSV Log Format Validation, (2) Structured Textbox Display, (3) Prompt Generation (single/batch), (4) Status Tracking and Management, (5) Error Grouping, (6) Quick Fix Templates, (7) Copy Context, (8) Color Indicators, (9) Status Filtering, (10) Statistical Dashboard, (11) Integration Testing (all features together), (12) DPI/Scaling Testing, (13) Performance Testing, (14) Error Scenarios. Each test includes: Prerequisites, Steps, Expected Results, Pass/Fail Criteria. Format as markdown checklist with checkboxes for tracking.
+  **Reference**: `.github/instructions/testing-standards.instructions.md` - Manual validation documentation standards
+  **Reference**: `.github/instructions/markdown.instructions.md` - Markdown checklist formatting
+  **Reference**: `.github/instructions/documentation.instructions.md` - Clear, actionable documentation
+  **Acceptance**: Test file covers all features comprehensively, steps are clear and actionable, expected results are specific, pass/fail criteria are objective, checkboxes allow progress tracking
+
+### [CHECKPOINT] Integration Complete
+*All features integrated, documentation updated, comprehensive test plan created. Ready for final validation.*
+
+---
+
 ## Task Validation
 
-**Total Tasks**: 51  
-**Tasks with Instruction References**: 51 (100%)  
-**Tasks with File Paths**: 48 (94% - setup tasks don't need files)  
-**Tasks with Acceptance Criteria**: 51 (100%)  
-**Tasks with Story Tags**: 51 (100%)
+**Total Tasks**: 78 (51 original + 27 new enhancement tasks)
+**Tasks with Instruction References**: 78 (100%)  
+**Tasks with File Paths**: 75 (96% - some are testing/validation tasks)  
+**Tasks with Acceptance Criteria**: 78 (100%)  
+**Tasks with Story Tags**: 78 (100%)
+
+**Enhancement Task Breakdown**:
+- Phase 11 (CSV Migration): 4 tasks
+- Phase 12 (Structured Display): 3 tasks
+- Phase 13 (Prompt Generation Core): 5 tasks
+- Phase 14 (Enhanced Features Set 1): 7 tasks
+- Phase 15 (Enhanced Features Set 2): 5 tasks
+- Phase 16 (Integration & Testing): 3 tasks
 
 **Ready for Implementation**: ✅ Yes
 
 All tasks follow the required structure with Task ID, Story tag, Parallel marker (where applicable), File path, Description, Reference(s), and Acceptance criteria.
+
+
 
 
 

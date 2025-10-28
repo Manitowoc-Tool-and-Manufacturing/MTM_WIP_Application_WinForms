@@ -79,6 +79,7 @@ namespace MTM_WIP_Application_Winforms.Forms.MainForm
             MainForm_MenuStrip_View_Separator2 = new ToolStripSeparator();
             developmentToolStripMenuItem = new ToolStripMenuItem();
             viewErrorReportsToolStripMenuItem = new ToolStripMenuItem();
+            viewApplicationLogsToolStripMenuItem = new ToolStripMenuItem();
             debugDashboardToolStripMenuItem = new ToolStripMenuItem();
             syncPendingReportsToolStripMenuItem = new ToolStripMenuItem();
             dependencyChartsToolStripMenuItem = new ToolStripMenuItem();
@@ -185,7 +186,7 @@ namespace MTM_WIP_Application_Winforms.Forms.MainForm
             // 
             // developmentToolStripMenuItem
             // 
-            developmentToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { viewErrorReportsToolStripMenuItem, debugDashboardToolStripMenuItem, syncPendingReportsToolStripMenuItem, dependencyChartsToolStripMenuItem });
+            developmentToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { viewErrorReportsToolStripMenuItem, viewApplicationLogsToolStripMenuItem, debugDashboardToolStripMenuItem, syncPendingReportsToolStripMenuItem, dependencyChartsToolStripMenuItem });
             developmentToolStripMenuItem.Name = "developmentToolStripMenuItem";
             developmentToolStripMenuItem.Size = new Size(90, 24);
             developmentToolStripMenuItem.Text = "Development";
@@ -196,6 +197,14 @@ namespace MTM_WIP_Application_Winforms.Forms.MainForm
             viewErrorReportsToolStripMenuItem.Size = new Size(250, 22);
             viewErrorReportsToolStripMenuItem.Text = "📋 View Error Reports";
             viewErrorReportsToolStripMenuItem.Click += MainForm_MenuStrip_Development_ViewErrorReports_Click;
+            // 
+            // viewApplicationLogsToolStripMenuItem
+            // 
+            viewApplicationLogsToolStripMenuItem.Name = "viewApplicationLogsToolStripMenuItem";
+            viewApplicationLogsToolStripMenuItem.ShortcutKeys = Keys.Control | Keys.Shift | Keys.L;
+            viewApplicationLogsToolStripMenuItem.Size = new Size(250, 22);
+            viewApplicationLogsToolStripMenuItem.Text = "📄 View Application Logs";
+            viewApplicationLogsToolStripMenuItem.Click += MainForm_MenuStrip_Development_ViewApplicationLogs_Click;
             // 
             // debugDashboardToolStripMenuItem
             // 
@@ -565,6 +574,7 @@ namespace MTM_WIP_Application_Winforms.Forms.MainForm
         internal ToolTip MainForm_ToolTip;
     private ToolStripMenuItem developmentToolStripMenuItem;
     private ToolStripMenuItem viewErrorReportsToolStripMenuItem;
+    private ToolStripMenuItem viewApplicationLogsToolStripMenuItem;
     private ToolStripMenuItem debugDashboardToolStripMenuItem;
         private ToolStripMenuItem syncPendingReportsToolStripMenuItem;
         private ToolStripMenuItem dependencyChartsToolStripMenuItem;

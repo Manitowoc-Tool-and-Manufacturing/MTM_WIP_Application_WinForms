@@ -26,7 +26,6 @@ namespace MTM_Inventory_Application.Forms.ViewLogs
             this.colFileName = new System.Windows.Forms.ColumnHeader();
             this.colModified = new System.Windows.Forms.ColumnHeader();
             this.colSize = new System.Windows.Forms.ColumnHeader();
-            this.colEntries = new System.Windows.Forms.ColumnHeader();
             this.lblFileCount = new System.Windows.Forms.Label();
             this.lblLogFiles = new System.Windows.Forms.Label();
             this.panelEntryDisplay = new System.Windows.Forms.Panel();
@@ -161,8 +160,7 @@ namespace MTM_Inventory_Application.Forms.ViewLogs
             this.lstLogFiles.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.colFileName,
             this.colModified,
-            this.colSize,
-            this.colEntries});
+            this.colSize});
             this.lstLogFiles.FullRowSelect = true;
             this.lstLogFiles.GridLines = true;
             this.lstLogFiles.HideSelection = false;
@@ -188,11 +186,6 @@ namespace MTM_Inventory_Application.Forms.ViewLogs
             // 
             this.colSize.Text = "Size";
             this.colSize.Width = 100;
-            // 
-            // colEntries
-            // 
-            this.colEntries.Text = "Entries";
-            this.colEntries.Width = 80;
             // 
             // lblFileCount
             // 
@@ -537,12 +530,12 @@ namespace MTM_Inventory_Application.Forms.ViewLogs
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.txtEntryDisplay.Font = new System.Drawing.Font("Consolas", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.txtEntryDisplay.Location = new System.Drawing.Point(13, 56);
+            this.txtEntryDisplay.Location = new System.Drawing.Point(13, 146);
             this.txtEntryDisplay.Multiline = true;
             this.txtEntryDisplay.Name = "txtEntryDisplay";
             this.txtEntryDisplay.ReadOnly = true;
             this.txtEntryDisplay.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.txtEntryDisplay.Size = new System.Drawing.Size(1168, 280);
+            this.txtEntryDisplay.Size = new System.Drawing.Size(1168, 190);
             this.txtEntryDisplay.TabIndex = 2;
             this.txtEntryDisplay.Text = "Select a file to view entries";
             this.txtEntryDisplay.WordWrap = true;
@@ -553,12 +546,12 @@ namespace MTM_Inventory_Application.Forms.ViewLogs
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.txtRawView.Font = new System.Drawing.Font("Consolas", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.txtRawView.Location = new System.Drawing.Point(13, 56);
+            this.txtRawView.Location = new System.Drawing.Point(13, 146);
             this.txtRawView.Multiline = true;
             this.txtRawView.Name = "txtRawView";
             this.txtRawView.ReadOnly = true;
             this.txtRawView.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-            this.txtRawView.Size = new System.Drawing.Size(1168, 280);
+            this.txtRawView.Size = new System.Drawing.Size(1168, 190);
             this.txtRawView.TabIndex = 3;
             this.txtRawView.Visible = false;
             this.txtRawView.WordWrap = true;
@@ -593,6 +586,12 @@ namespace MTM_Inventory_Application.Forms.ViewLogs
             this.panelEntryDisplay.PerformLayout();
             this.panelNavigation.ResumeLayout(false);
             this.panelNavigation.PerformLayout();
+            this.panelFilters.ResumeLayout(false);
+            this.tableLayoutFilters.ResumeLayout(false);
+            this.tableLayoutFilters.PerformLayout();
+            this.panelSeverityChecks.ResumeLayout(false);
+            this.panelSeverityChecks.PerformLayout();
+            this.panelQuickFilters.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -611,7 +610,6 @@ namespace MTM_Inventory_Application.Forms.ViewLogs
         private System.Windows.Forms.ColumnHeader colFileName;
         private System.Windows.Forms.ColumnHeader colModified;
         private System.Windows.Forms.ColumnHeader colSize;
-        private System.Windows.Forms.ColumnHeader colEntries;
         private System.Windows.Forms.Label lblFileCount;
         private System.Windows.Forms.Panel panelEntryDisplay;
         private System.Windows.Forms.Panel panelNavigation;
