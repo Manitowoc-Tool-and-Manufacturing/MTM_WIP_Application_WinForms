@@ -302,9 +302,11 @@
 - PDF export option
 - All current filters applied to exports
 
+<div style="page-break-after: always;"></div>
+
 ---
 
-## Previous Update - October 26, 2025 (Version 5.4.0)
+## Update - October 26, 2025 (Version 5.4.0)
 
 **What Changed**: New error report management system for developers  
 **Do I Need To Do Anything?**: No - this is a developer-only feature
@@ -338,9 +340,43 @@
 - **Reviewed** (Yellow) → Developer is investigating or needs more info
 - **Resolved** (Green) → Issue fixed or documented
 
+<div style="page-break-after: always;"></div>
+
 ---
 
-## Earlier Update - October 25, 2025 (Version 5.3.2)
+## Update - October 26, 2025 (Version 5.3.0)
+
+**What Changed**: New error reporting feature  
+**Do I Need To Do Anything?**: No - but you can now help us fix problems faster!
+
+---
+
+### 🎯 What This Means For You
+
+#### Help Us Fix Problems Faster
+
+**New "Report Issue" button** in error messages:
+- When something goes wrong, you'll see a **"Report Issue"** button
+- Click it to tell us what you were doing when the error happened
+- Just type a quick note like "I was trying to transfer part #12345 to location B"
+- Your report gets a tracking number so we can follow up with you
+
+**Why this helps**: We can fix problems faster because we know exactly what you were doing when things went wrong.
+
+#### Works Even When Network is Down
+
+**Don't worry about losing reports**:
+- If the network is down, your report is saved locally
+- When the network comes back, reports are sent automatically
+- You'll never lose a report due to network issues
+
+**What you'll see**: If network is down, you'll see a message like "Report saved and will be sent when connection is restored"
+
+<div style="page-break-after: always;"></div>
+
+---
+
+## Update - October 25, 2025 (Version 5.3.2)
 
 **What Changed**: Better error tracking with computer names  
 **Do I Need To Do Anything?**: No - automatic improvement
@@ -365,9 +401,11 @@
 - Nothing different when submitting reports - it still works exactly the same way
 - If IT asks you about an error, they might now say "I see you had this error on SHOP-PC-01" instead of just asking "which computer were you on?"
 
+<div style="page-break-after: always;"></div>
+
 ---
 
-## Earlier Update - October 25, 2025 (Version 5.3.1)
+## Update - October 25, 2025 (Version 5.3.1)
 
 **What Changed**: Display scaling improvements  
 **Do I Need To Do Anything?**: No - just click "Restart" when prompted if you move between monitors
@@ -401,39 +439,11 @@
 
 **What you'll notice**: When errors happen, the message fits nicely on your screen with all buttons visible and clickable
 
----
-
-## Recent Update - October 26, 2025 (Version 5.3.0)
-
-**What Changed**: New error reporting feature  
-**Do I Need To Do Anything?**: No - but you can now help us fix problems faster!
+<div style="page-break-after: always;"></div>
 
 ---
 
-### 🎯 What This Means For You
-
-#### Help Us Fix Problems Faster
-
-**New "Report Issue" button** in error messages:
-- When something goes wrong, you'll see a **"Report Issue"** button
-- Click it to tell us what you were doing when the error happened
-- Just type a quick note like "I was trying to transfer part #12345 to location B"
-- Your report gets a tracking number so we can follow up with you
-
-**Why this helps**: We can fix problems faster because we know exactly what you were doing when things went wrong.
-
-#### Works Even When Network is Down
-
-**Don't worry about losing reports**:
-- If the network is down, your report is saved locally
-- When the network comes back, reports are sent automatically
-- You'll never lose a report due to network issues
-
-**What you'll see**: If network is down, you'll see a message like "Report saved and will be sent when connection is restored"
-
----
-
-## Earlier Update - October 22, 2025 (Version 5.2.0)
+## Update - October 22, 2025 (Version 5.2.0)
 
 ### ✅ Do I Need To Update?
 
@@ -507,9 +517,11 @@
 - Test data infrastructure for repeatable validation
 - Average 18 minutes per test fix (6.75 hours total effort)
 
+<div style="page-break-after: always;"></div>
+
 ---
 
-## Earlier Update - October 17-21, 2025 (Version 5.1.0)
+## Update - October 17-21, 2025 (Version 5.1.0)
 
 **What Changed**: Database layer modernization - comprehensive refactoring  
 **Do I Need To Do Anything?**: No - internal improvements only
@@ -565,11 +577,11 @@
 - But now they're more reliable, faster to fix, and better documented
 - Foundation laid for future feature development
 
+<div style="page-break-after: always;"></div>
+
 ---
 
-## Most Recent Update was on - October 26, 2025 (Version 5.4.0)
-
-### 🆘 Need Help?
+## 🆘 Need Help?
 
 **Questions about the update**: Contact John Koll at (ext. 323) or jkoll@mantoolmfg.com / Dan Smith at (ext. 311) or dsmith@mantoolmfg.com / Ka Lee at (ext. ___ ) or klee@mantoolmfg.com
 
@@ -673,6 +685,9 @@ A: Yes - Contact John Koll at (ext. 323) or jkoll@mantoolmfg.com / Dan Smith at 
 
 **Q: What if I submit a report by accident?**  
 A: No problem - Contact John Koll at (ext. 323) or jkoll@mantoolmfg.com / Dan Smith at (ext. 311) or dsmith@mantoolmfg.com / Ka Lee at (ext. ___ ) or klee@mantoolmfg.com
+
+
+<div style="page-break-after: always;"></div>
 
 ---
 

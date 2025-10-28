@@ -357,47 +357,49 @@ This provides core log viewing capability. US4-US7 are enhancements that can be 
   **Reference**: `.github/instructions/winforms-responsive-layout.instructions.md` - Filter panel layout patterns
   **Acceptance**: Filter panel fits in allocated space, all controls accessible, proper padding/margins
 
-- [ ] **T031** [Story: US4] - Implement LogEntryNavigator class for filtering
-  **File**: `Forms/ViewLogs/ViewApplicationLogsForm.cs` (new nested class or separate file)
+- [x] **T031** [Story: US4] - Implement LogEntryNavigator class for filtering
+  **Completed**: 2025-10-28
+  **File**: `Forms/ViewLogs/LogEntryNavigator.cs` (separate file)
   **Description**: Create LogEntryNavigator class that manages _allEntries, _filteredIndices (List<int>), _currentFilteredIndex, _activeFilter (Model_LogFilter). Implement ApplyFilter(filter) method using LINQ predicates for date range, log type, severity, source, search text. Map filtered indices to original entry positions.
   **Reference**: `.github/instructions/csharp-dotnet8.instructions.md` - LINQ patterns, collection filtering
   **Reference**: `.github/instructions/performance-optimization.instructions.md` - Efficient filtering (<300ms per SC-005)
   **Reference**: `.github/instructions/security-best-practices.instructions.md` - Regex timeout for search patterns
   **Acceptance**: Filtering 5000→100 entries completes in <300ms (SC-005), filtered indices track correctly, search regex has timeout
+  **Note**: Implemented LogEntryNavigator class with comprehensive filtering (date, log type, severity, source, search text), LINQ-based queries for performance (<300ms for 5000→100 entries), Regex timeout protection (100ms) to prevent ReDoS attacks, and indexed navigation maintaining separation between all entries and filtered view.
 
-- [ ] **T032** [Story: US4] - Implement dynamic severity checkbox adaptation
+- [x] **T032** [Story: US4] - Implement dynamic severity checkbox adaptation
   **File**: `Forms/ViewLogs/ViewApplicationLogsForm.cs`
   **Description**: In Helpers region, implement UpdateSeverityOptions() method that shows/hides severity checkboxes based on current log type. Normal: LOW/MEDIUM/HIGH/DATA. DB Error: WARNING/ERROR/CRITICAL. App Error: none. Call when log type changes.
   **Reference**: `.github/instructions/csharp-dotnet8.instructions.md` - Dynamic control management
   **Reference**: `.github/instructions/ui-scaling-consistency.instructions.md` - Control visibility patterns
   **Acceptance**: Severity options adapt correctly (AS 4.3, 4.4), checkboxes appear/disappear appropriately
 
-- [ ] **T033** [Story: US4] - Implement source component dropdown population
+- [x] **T033** [Story: US4] - Implement source component dropdown population
   **File**: `Forms/ViewLogs/ViewApplicationLogsForm.cs`
   **Description**: In Helpers region, implement PopulateSourceDropdown() method that extracts unique Source values from _currentEntries, populates source filter dropdown. Call after loading entries. Include "All Sources" option.
   **Reference**: `.github/instructions/csharp-dotnet8.instructions.md` - ComboBox data binding, LINQ distinct
   **Acceptance**: Source dropdown populated from actual log data (FR-024), "All Sources" option present
 
-- [ ] **T034** [Story: US4] - Wire up filter control event handlers
+- [x] **T034** [Story: US4] - Wire up filter control event handlers
   **File**: `Forms/ViewLogs/ViewApplicationLogsForm.cs`
   **Description**: In ComboBox & UI Events region, implement event handlers for: dtpStartDate_ValueChanged, dtpEndDate_ValueChanged, cmbLogType_SelectedIndexChanged, severity checkbox CheckedChanged events, cmbSource_SelectedIndexChanged, txtSearch_TextChanged. Each handler updates _activeFilter and calls ApplyFilter().
   **Reference**: `.github/instructions/csharp-dotnet8.instructions.md` - Event handler patterns
   **Reference**: `.github/instructions/performance-optimization.instructions.md` - Debouncing search input
   **Acceptance**: Filter changes trigger re-filtering, entry count updates (FR-026), navigation reflects filtered results
 
-- [ ] **T035** [Story: US4] - Implement Clear Filters button
+- [x] **T035** [Story: US4] - Implement Clear Filters button
   **File**: `Forms/ViewLogs/ViewApplicationLogsForm.cs`
   **Description**: In Button Clicks region, implement btnClearFilters_Click that calls _activeFilter.Clear(), resets all filter controls to defaults, calls ApplyFilter() to restore full entry list.
   **Reference**: `.github/instructions/csharp-dotnet8.instructions.md` - Control reset patterns
   **Acceptance**: All filters reset (FR-027), all entries become navigable, controls return to default state
 
-- [ ] **T036** [Story: US4] - Implement quick filter buttons
+- [x] **T036** [Story: US4] - Implement quick filter buttons
   **File**: `Forms/ViewLogs/ViewApplicationLogsForm.cs`
   **Description**: In Button Clicks region, implement btnErrorsOnly_Click (filters to ERROR/CRITICAL severity only), btnPerformance_Click (filters Normal logs with HIGH level), btnToday_Click (filters to today's date range). Each updates _activeFilter and calls ApplyFilter().
   **Reference**: `.github/instructions/csharp-dotnet8.instructions.md` - Filter preset patterns
   **Acceptance**: Quick filters work correctly (FR-029), provide convenient shortcuts for common scenarios
 
-- [ ] **T037** [Story: US4] - Implement filter state persistence across same log type
+- [x] **T037** [Story: US4] - Implement filter state persistence across same log type
   **File**: `Forms/ViewLogs/ViewApplicationLogsForm.cs`
   **Description**: In File Operations region, update LoadLogFileAsync to check if new file has same LogType as previous, preserve _activeFilter if so, re-apply filter after loading entries. Clear filter if log type changes.
   **Reference**: `.github/instructions/csharp-dotnet8.instructions.md` - State management patterns
@@ -416,20 +418,20 @@ This provides core log viewing capability. US4-US7 are enhancements that can be 
 
 ### UI Components - View Toggle
 
-- [ ] **T038** [Story: US5] - Implement Raw View textbox
+- [x] **T038** [Story: US5] - Implement Raw View textbox
   **File**: `Forms/ViewLogs/ViewApplicationLogsForm.cs` (designer)
   **Description**: Add multiline textbox to entry display area for raw view, initially hidden. Configure with ReadOnly=True, ScrollBars=Both, WordWrap=True, Font=Monospace. Position to occupy same space as parsed view fields.
   **Reference**: `.github/instructions/ui-scaling-consistency.instructions.md` - Textbox sizing and fonts
   **Reference**: `.github/instructions/winforms-responsive-layout.instructions.md` - Overlapping layout patterns
   **Acceptance**: Raw view textbox sized appropriately, monospace font preserves formatting, hidden by default
 
-- [ ] **T039** [Story: US5] - Implement Toggle View button and logic
+- [x] **T039** [Story: US5] - Implement Toggle View button and logic
   **File**: `Forms/ViewLogs/ViewApplicationLogsForm.cs`
   **Description**: In Button Clicks region, implement btnToggleView_Click that toggles _isParsedView boolean, shows/hides appropriate controls (parsed fields vs raw textbox), updates button text ("Show Raw View" / "Show Parsed View"). Update ShowCurrentEntry to populate raw textbox when in raw mode.
   **Reference**: `.github/instructions/csharp-dotnet8.instructions.md` - Control visibility toggling, state management
   **Acceptance**: Toggle switches views correctly (AS 5.1, 5.2), raw text displays exactly as in file (FR-031), button text updates
 
-- [ ] **T040** [Story: US5] - Implement automatic raw view fallback for parse failures
+- [x] **T040** [Story: US5] - Implement automatic raw view fallback for parse failures
   **File**: `Forms/ViewLogs/ViewApplicationLogsForm.cs`
   **Description**: In ShowCurrentEntry method, check Model_LogEntry.ParseSuccess flag. If false, automatically switch to raw view, show "Parse failed" notification, populate raw textbox with Model_LogEntry.RawText.
   **Reference**: `.github/instructions/csharp-dotnet8.instructions.md` - Conditional logic, user notifications
@@ -448,14 +450,14 @@ This provides core log viewing capability. US4-US7 are enhancements that can be 
 
 ### UI Components - Export and Copy
 
-- [ ] **T041** [Story: US6] - Implement Export Visible button
+- [x] **T041** [Story: US6] - Implement Export Visible button
   **File**: `Forms/ViewLogs/ViewApplicationLogsForm.cs`
   **Description**: In Button Clicks region, implement async btnExport_Click that shows SaveFileDialog, gets filtered entries from LogEntryNavigator, calls FormatEntriesForExport helper, writes to file asynchronously. Track performance (SC-006: 500 entries in <1s).
   **Reference**: `.github/instructions/csharp-dotnet8.instructions.md` - Async file I/O, SaveFileDialog usage
   **Reference**: `.github/instructions/performance-optimization.instructions.md` - File writing performance
   **Acceptance**: Export completes within 1s for 500 entries (SC-006), SaveFileDialog shows, file created with readable format (AS 6.1)
 
-- [ ] **T042** [Story: US6] - Implement FormatEntriesForExport helper method
+- [x] **T042** [Story: US6] - Implement FormatEntriesForExport helper method
   **File**: `Forms/ViewLogs/ViewApplicationLogsForm.cs`
   **Description**: In Helpers region, implement FormatEntriesForExport(entries) that formats each Model_LogEntry with structured text: "Timestamp: ...\nLevel: ...\nMessage: ...\n---". Handle different log types appropriately (Normal/App Error/DB Error fields).
   **Reference**: `.github/instructions/csharp-dotnet8.instructions.md` - String formatting, StringBuilder usage
@@ -470,7 +472,7 @@ This provides core log viewing capability. US4-US7 are enhancements that can be 
   **Acceptance**: Copy works in both parsed and raw views (AS 6.2, 6.3, 6.4), paste into external app succeeds
   **Note**: Implemented as Ctrl+C keyboard shortcut via ViewApplicationLogsForm_KeyDown - copies current txtEntryDisplay text to clipboard with status feedback
 
-- [ ] **T044** [Story: US6] - Implement Open Log Directory button
+- [x] **T044** [Story: US6] - Implement Open Log Directory button
   **File**: `Forms/ViewLogs/ViewApplicationLogsForm.cs`
   **Description**: In Button Clicks region, implement btnOpenDirectory_Click that gets selected user's log directory from Helper_LogPath.GetUserLogDirectory, launches Windows Explorer with Process.Start("explorer.exe", path). Handle errors with Service_ErrorHandler.
   **Reference**: `.github/instructions/csharp-dotnet8.instructions.md` - Process.Start usage, error handling
@@ -514,14 +516,14 @@ This provides core log viewing capability. US4-US7 are enhancements that can be 
 
 ### Performance Optimization
 
-- [ ] **T047** [Story: Integration] - Implement auto-refresh timer with pause logic
+- [x] **T047** [Story: Integration] - Implement auto-refresh timer with pause logic
   **File**: `Forms/ViewLogs/ViewApplicationLogsForm.cs`
   **Description**: In Fields region, add System.Windows.Forms.Timer _autoRefreshTimer. In Initialization region, configure timer with 5-second interval (FR-033). Wire Tick event to RefreshFileListAsync. In Form Resize event, pause timer when minimized, resume when restored (FR-046). Add Auto-Refresh checkbox to enable/disable.
   **Reference**: `.github/instructions/csharp-dotnet8.instructions.md` - Timer usage, form state events
   **Reference**: `.github/instructions/performance-optimization.instructions.md` - Background timer management
   **Acceptance**: Auto-refresh updates every 5s (SC-007), pauses when minimized (FR-046), checkbox controls behavior
 
-- [ ] **T048** [Story: Integration] - Add performance logging for slow operations
+- [x] **T048** [Story: Integration] - Add performance logging for slow operations
   **File**: `Forms/ViewLogs/ViewApplicationLogsForm.cs`, `Services/Service_LogFileReader.cs`, `Services/Service_LogParser.cs`
   **Description**: In key methods (LoadUserListAsync, LoadLogFilesAsync, LoadEntriesAsync, ApplyFilter), wrap operations with Stopwatch. Log warnings when operations exceed thresholds (SC-001 through SC-007 targets). Use LoggingUtility.Log with [Performance] prefix.
   **Reference**: `.github/instructions/performance-optimization.instructions.md` - Performance monitoring patterns
@@ -530,13 +532,6 @@ This provides core log viewing capability. US4-US7 are enhancements that can be 
 
 ### Cleanup and Disposal
 
-- [ ] **T049** [Story: Integration] - Implement proper resource disposal
-  **File**: `Forms/ViewLogs/ViewApplicationLogsForm.cs`
-  **Description**: In Cleanup region, override Dispose(bool disposing) method. Dispose _logFileReader, _autoRefreshTimer, _progressHelper. Call base.Dispose(disposing). Ensure all file streams closed. Add XML documentation.
-  **Reference**: `.github/instructions/csharp-dotnet8.instructions.md` - IDisposable pattern, resource cleanup
-  **Reference**: `.github/instructions/performance-optimization.instructions.md` - Memory management
-  **Acceptance**: All resources disposed properly (FR-045), no memory leaks during extended use (SC-010)
-
 - [x] **T049** [Story: Integration] - Implement proper resource disposal
   **Completed**: 2025-10-26
   **File**: `Forms/ViewLogs/ViewApplicationLogsForm.cs`
@@ -544,7 +539,7 @@ This provides core log viewing capability. US4-US7 are enhancements that can be 
   **Reference**: `.github/instructions/csharp-dotnet8.instructions.md` - IDisposable pattern, resource cleanup
   **Reference**: `.github/instructions/performance-optimization.instructions.md` - Memory management
   **Acceptance**: All resources disposed properly (FR-045), no memory leaks during extended use (SC-010)
-  **Note**: Enhanced Dispose to clear collections and log disposal, documented future timer cleanup
+  **Note**: Enhanced Dispose to clear collections and log disposal, timer disposal added in T047
 
 ### Documentation
 
@@ -557,7 +552,7 @@ This provides core log viewing capability. US4-US7 are enhancements that can be 
   **Acceptance**: All public APIs have XML docs, IntelliSense shows descriptions, documentation is clear and accurate
   **Note**: Verified 100% XML doc coverage on all log viewer components (Form, Services, Models)
 
-- [ ] **T051** [Story: Integration] - Create manual validation test scenarios document
+- [x] **T051** [Story: Integration] - Create manual validation test scenarios document
   **File**: `Tests/Manual/ViewApplicationLogs_TestScenarios.md`
   **Description**: Document all 7 user story test scenarios from spec.md with step-by-step instructions, expected results, pass/fail criteria. Include edge case testing procedures. Format as markdown checklist.
   **Reference**: `.github/instructions/testing-standards.instructions.md` - Manual validation documentation
@@ -662,3 +657,8 @@ Tasks reference the following instruction files for implementation guidance:
 **Ready for Implementation**: ✅ Yes
 
 All tasks follow the required structure with Task ID, Story tag, Parallel marker (where applicable), File path, Description, Reference(s), and Acceptance criteria.
+
+
+
+
+
