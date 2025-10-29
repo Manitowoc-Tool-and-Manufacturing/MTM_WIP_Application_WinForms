@@ -32,6 +32,7 @@ namespace MTM_Inventory_Application.Forms.ViewLogs
             this.panelEntryDisplay = new System.Windows.Forms.Panel();
             this.panelNavigation = new System.Windows.Forms.Panel();
             this.btnToggleView = new System.Windows.Forms.Button();
+            this.btnCreatePrompt = new System.Windows.Forms.Button();
             this.btnNext = new System.Windows.Forms.Button();
             this.lblEntryPosition = new System.Windows.Forms.Label();
             this.btnPrevious = new System.Windows.Forms.Button();
@@ -93,6 +94,7 @@ namespace MTM_Inventory_Application.Forms.ViewLogs
             this.tableLayoutMain.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayoutMain.Location = new System.Drawing.Point(0, 0);
             this.tableLayoutMain.Name = "tableLayoutMain";
+            this.tableLayoutMain.Padding = new System.Windows.Forms.Padding(10);
             this.tableLayoutMain.RowCount = 4;
             this.tableLayoutMain.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 60F));
             this.tableLayoutMain.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
@@ -109,10 +111,11 @@ namespace MTM_Inventory_Application.Forms.ViewLogs
             this.panelUserSelection.Controls.Add(this.cmbUsers);
             this.panelUserSelection.Controls.Add(this.lblSelectUser);
             this.panelUserSelection.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panelUserSelection.Location = new System.Drawing.Point(3, 3);
+            this.panelUserSelection.Location = new System.Drawing.Point(13, 13);
+            this.panelUserSelection.Margin = new System.Windows.Forms.Padding(3, 3, 3, 5);
             this.panelUserSelection.Name = "panelUserSelection";
             this.panelUserSelection.Padding = new System.Windows.Forms.Padding(10);
-            this.panelUserSelection.Size = new System.Drawing.Size(1194, 54);
+            this.panelUserSelection.Size = new System.Drawing.Size(1174, 52);
             this.panelUserSelection.TabIndex = 0;
             // 
             // lblUserCount
@@ -169,10 +172,11 @@ namespace MTM_Inventory_Application.Forms.ViewLogs
             this.panelFileList.Controls.Add(this.lblFileCount);
             this.panelFileList.Controls.Add(this.lblLogFiles);
             this.panelFileList.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panelFileList.Location = new System.Drawing.Point(3, 63);
+            this.panelFileList.Location = new System.Drawing.Point(13, 73);
+            this.panelFileList.Margin = new System.Windows.Forms.Padding(3, 3, 3, 5);
             this.panelFileList.Name = "panelFileList";
             this.panelFileList.Padding = new System.Windows.Forms.Padding(10);
-            this.panelFileList.Size = new System.Drawing.Size(1194, 349);
+            this.panelFileList.Size = new System.Drawing.Size(1174, 342);
             this.panelFileList.TabIndex = 1;
             // 
             // lstLogFiles
@@ -188,9 +192,10 @@ namespace MTM_Inventory_Application.Forms.ViewLogs
             this.lstLogFiles.GridLines = true;
             this.lstLogFiles.HideSelection = false;
             this.lstLogFiles.Location = new System.Drawing.Point(13, 40);
+            this.lstLogFiles.Margin = new System.Windows.Forms.Padding(3, 5, 3, 3);
             this.lstLogFiles.MinimumSize = new System.Drawing.Size(400, 200);
             this.lstLogFiles.Name = "lstLogFiles";
-            this.lstLogFiles.Size = new System.Drawing.Size(1168, 296);
+            this.lstLogFiles.Size = new System.Drawing.Size(1148, 289);
             this.lstLogFiles.TabIndex = 2;
             this.lstLogFiles.UseCompatibleStateImageBehavior = false;
             this.lstLogFiles.View = System.Windows.Forms.View.Details;
@@ -233,18 +238,20 @@ namespace MTM_Inventory_Application.Forms.ViewLogs
             // 
             this.panelEntryDisplay.Controls.Add(this.txtRawView);
             this.panelEntryDisplay.Controls.Add(this.tableLayoutEntryDisplay);
-            this.panelEntryDisplay.Controls.Add(this.panelFilters);
+            // panelFilters removed - filtering not needed for single-day log files
             this.panelEntryDisplay.Controls.Add(this.panelNavigation);
             this.panelEntryDisplay.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panelEntryDisplay.Location = new System.Drawing.Point(3, 418);
+            this.panelEntryDisplay.Location = new System.Drawing.Point(13, 423);
+            this.panelEntryDisplay.Margin = new System.Windows.Forms.Padding(3, 3, 3, 5);
             this.panelEntryDisplay.Name = "panelEntryDisplay";
             this.panelEntryDisplay.Padding = new System.Windows.Forms.Padding(10);
-            this.panelEntryDisplay.Size = new System.Drawing.Size(1194, 349);
+            this.panelEntryDisplay.Size = new System.Drawing.Size(1174, 342);
             this.panelEntryDisplay.TabIndex = 2;
             // 
             // panelNavigation
             // 
             this.panelNavigation.Controls.Add(this.btnToggleView);
+            this.panelNavigation.Controls.Add(this.btnCreatePrompt);
             this.panelNavigation.Controls.Add(this.btnPrevious);
             this.panelNavigation.Controls.Add(this.lblEntryPosition);
             this.panelNavigation.Controls.Add(this.btnNext);
@@ -292,6 +299,17 @@ namespace MTM_Inventory_Application.Forms.ViewLogs
             this.btnToggleView.TabIndex = 3;
             this.btnToggleView.Text = "Show Raw View";
             this.btnToggleView.UseVisualStyleBackColor = true;
+            // 
+            // btnCreatePrompt
+            // 
+            this.btnCreatePrompt.Enabled = false;
+            this.btnCreatePrompt.Location = new System.Drawing.Point(430, 5);
+            this.btnCreatePrompt.MinimumSize = new System.Drawing.Size(100, 30);
+            this.btnCreatePrompt.Name = "btnCreatePrompt";
+            this.btnCreatePrompt.Size = new System.Drawing.Size(120, 30);
+            this.btnCreatePrompt.TabIndex = 4;
+            this.btnCreatePrompt.Text = "Create Prompt";
+            this.btnCreatePrompt.UseVisualStyleBackColor = true;
             // 
             // panelFilters
             // 
@@ -565,7 +583,8 @@ namespace MTM_Inventory_Application.Forms.ViewLogs
             this.tableLayoutEntryDisplay.Controls.Add(this.txtEntryMessage, 1, 3);
             this.tableLayoutEntryDisplay.Controls.Add(this.lblEntryDetails, 0, 4);
             this.tableLayoutEntryDisplay.Controls.Add(this.txtEntryDetails, 1, 4);
-            this.tableLayoutEntryDisplay.Location = new System.Drawing.Point(13, 146);
+            this.tableLayoutEntryDisplay.Location = new System.Drawing.Point(13, 56);
+            this.tableLayoutEntryDisplay.Margin = new System.Windows.Forms.Padding(3, 5, 3, 3);
             this.tableLayoutEntryDisplay.Name = "tableLayoutEntryDisplay";
             this.tableLayoutEntryDisplay.RowCount = 5;
             this.tableLayoutEntryDisplay.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 32F));
@@ -573,7 +592,7 @@ namespace MTM_Inventory_Application.Forms.ViewLogs
             this.tableLayoutEntryDisplay.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 32F));
             this.tableLayoutEntryDisplay.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
             this.tableLayoutEntryDisplay.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutEntryDisplay.Size = new System.Drawing.Size(1168, 190);
+            this.tableLayoutEntryDisplay.Size = new System.Drawing.Size(1148, 273);
             this.tableLayoutEntryDisplay.TabIndex = 2;
             // 
             // lblEntryTimestamp
@@ -703,12 +722,13 @@ namespace MTM_Inventory_Application.Forms.ViewLogs
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.txtRawView.Font = new System.Drawing.Font("Consolas", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.txtRawView.Location = new System.Drawing.Point(13, 146);
+            this.txtRawView.Location = new System.Drawing.Point(13, 56);
+            this.txtRawView.Margin = new System.Windows.Forms.Padding(3, 5, 3, 3);
             this.txtRawView.Multiline = true;
             this.txtRawView.Name = "txtRawView";
             this.txtRawView.ReadOnly = true;
             this.txtRawView.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-            this.txtRawView.Size = new System.Drawing.Size(1168, 190);
+            this.txtRawView.Size = new System.Drawing.Size(1148, 273);
             this.txtRawView.TabIndex = 3;
             this.txtRawView.Visible = false;
             this.txtRawView.WordWrap = true;
@@ -717,10 +737,11 @@ namespace MTM_Inventory_Application.Forms.ViewLogs
             // 
             this.lblStatus.AutoSize = true;
             this.lblStatus.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.lblStatus.Location = new System.Drawing.Point(3, 770);
+            this.lblStatus.Location = new System.Drawing.Point(13, 770);
+            this.lblStatus.Margin = new System.Windows.Forms.Padding(3, 0, 3, 0);
             this.lblStatus.Name = "lblStatus";
             this.lblStatus.Padding = new System.Windows.Forms.Padding(10, 5, 5, 5);
-            this.lblStatus.Size = new System.Drawing.Size(1194, 30);
+            this.lblStatus.Size = new System.Drawing.Size(1174, 20);
             this.lblStatus.TabIndex = 3;
             this.lblStatus.Text = "Ready";
             // 
@@ -775,6 +796,7 @@ namespace MTM_Inventory_Application.Forms.ViewLogs
         private System.Windows.Forms.Label lblEntryPosition;
         private System.Windows.Forms.Button btnNext;
         private System.Windows.Forms.Button btnToggleView;
+        private System.Windows.Forms.Button btnCreatePrompt;
         private System.Windows.Forms.TableLayoutPanel tableLayoutEntryDisplay;
         private System.Windows.Forms.Label lblEntryTimestamp;
         private System.Windows.Forms.TextBox txtTimestamp;

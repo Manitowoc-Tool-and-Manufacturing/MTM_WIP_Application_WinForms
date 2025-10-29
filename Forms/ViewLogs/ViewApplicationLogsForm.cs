@@ -24,6 +24,12 @@ public partial class ViewApplicationLogsForm : Form
     private bool _isParsedView = true; // True = parsed fields, False = raw text
     private System.Windows.Forms.Timer? _autoRefreshTimer; // T047: Auto-refresh timer
 
+    // T072: Prompt status filter controls
+    private CheckBox? _chkFilterNoPrompts;
+    private CheckBox? _chkFilterNewStatus;
+    private CheckBox? _chkFilterInProgressStatus;
+    private CheckBox? _chkFilterShowAllStatus;
+
     #endregion
 
     #region Properties
@@ -48,11 +54,17 @@ public partial class ViewApplicationLogsForm : Form
     public ViewApplicationLogsForm()
     {
         InitializeComponent();
+        
+        // Performance optimization
+        SetStyle(ControlStyles.OptimizedDoubleBuffer | ControlStyles.AllPaintingInWmPaint | ControlStyles.UserPaint, true);
+        UpdateStyles();
+        
         Core_Themes.ApplyDpiScaling(this);
         Core_Themes.ApplyRuntimeLayoutAdjustments(this);
         Core_Themes.ApplyFocusHighlighting(this);
         WireUpEvents();
         InitializeAutoRefreshTimer(); // T047
+        InitializePromptStatusFilters(); // T072
     }
 
     /// <summary>
@@ -78,6 +90,119 @@ public partial class ViewApplicationLogsForm : Form
         _autoRefreshTimer.Tick += AutoRefreshTimer_Tick;
 
         LoggingUtility.Log("[ViewApplicationLogsForm] Auto-refresh timer initialized with 5s interval");
+    }
+
+    /// <summary>
+    /// Initializes the prompt status filter controls.
+    /// Implements T072 - Filter by Prompt Status options.
+    /// Creates checkboxes for filtering errors by prompt existence and status.
+    /// </summary>
+    private void InitializePromptStatusFilters()
+    {
+        // Create a new panel for prompt status filters
+        var panelPromptFilters = new Panel
+        {
+            Dock = DockStyle.Top,
+            Height = 35,
+            Padding = new Padding(10, 5, 10, 5)
+        };
+
+        // Label
+        var lblPromptStatus = new Label
+        {
+            Text = "Prompt Status:",
+            AutoSize = true,
+            Location = new Point(5, 8)
+        };
+
+        // Checkbox: Only errors without prompts
+        _chkFilterNoPrompts = new CheckBox
+        {
+            Text = "Without Prompts",
+            AutoSize = true,
+            Location = new Point(110, 8),
+            Checked = false
+        };
+        _chkFilterNoPrompts.CheckedChanged += (s, e) => OnPromptStatusFilterChanged();
+
+        // Checkbox: Only "New" status
+        _chkFilterNewStatus = new CheckBox
+        {
+            Text = "New",
+            AutoSize = true,
+            Location = new Point(240, 8),
+            Checked = false
+        };
+        _chkFilterNewStatus.CheckedChanged += (s, e) => OnPromptStatusFilterChanged();
+
+        // Checkbox: Only "In Progress" status
+        _chkFilterInProgressStatus = new CheckBox
+        {
+            Text = "In Progress",
+            AutoSize = true,
+            Location = new Point(300, 8),
+            Checked = false
+        };
+        _chkFilterInProgressStatus.CheckedChanged += (s, e) => OnPromptStatusFilterChanged();
+
+        // Checkbox: Show all statuses (default)
+        _chkFilterShowAllStatus = new CheckBox
+        {
+            Text = "Show All",
+            AutoSize = true,
+            Location = new Point(400, 8),
+            Checked = true
+        };
+        _chkFilterShowAllStatus.CheckedChanged += (s, e) => OnPromptStatusFilterChanged();
+
+        // Add controls to panel
+        panelPromptFilters.Controls.Add(lblPromptStatus);
+        panelPromptFilters.Controls.Add(_chkFilterNoPrompts);
+        panelPromptFilters.Controls.Add(_chkFilterNewStatus);
+        panelPromptFilters.Controls.Add(_chkFilterInProgressStatus);
+        panelPromptFilters.Controls.Add(_chkFilterShowAllStatus);
+
+        // Insert panel below existing filters (panelFilters)
+        panelPromptFilters.Parent = panelEntryDisplay;
+        panelPromptFilters.BringToFront();
+        
+        LoggingUtility.Log("[ViewApplicationLogsForm] Prompt status filter controls initialized");
+    }
+
+    /// <summary>
+    /// Handles changes to prompt status filter checkboxes.
+    /// Implements T072 - mutual exclusion logic for filter options.
+    /// </summary>
+    private void OnPromptStatusFilterChanged()
+    {
+        if (_chkFilterShowAllStatus == null || _chkFilterNoPrompts == null || 
+            _chkFilterNewStatus == null || _chkFilterInProgressStatus == null)
+        {
+            return;
+        }
+
+        // Mutual exclusion logic: "Show All" vs specific filters
+        if (_chkFilterShowAllStatus.Checked)
+        {
+            // If Show All is checked, uncheck specific filters
+            _chkFilterNoPrompts.Checked = false;
+            _chkFilterNewStatus.Checked = false;
+            _chkFilterInProgressStatus.Checked = false;
+        }
+        else if (_chkFilterNoPrompts.Checked || _chkFilterNewStatus.Checked || _chkFilterInProgressStatus.Checked)
+        {
+            // If any specific filter is checked, uncheck Show All
+            _chkFilterShowAllStatus.Checked = false;
+        }
+        else
+        {
+            // If all specific filters are unchecked, re-enable Show All
+            _chkFilterShowAllStatus.Checked = true;
+        }
+
+        LoggingUtility.Log($"[ViewApplicationLogsForm] Prompt status filter changed: " +
+            $"ShowAll={_chkFilterShowAllStatus.Checked}, NoPrompts={_chkFilterNoPrompts.Checked}, " +
+            $"New={_chkFilterNewStatus.Checked}, InProgress={_chkFilterInProgressStatus.Checked}");
     }
 
     /// <summary>
@@ -280,6 +405,7 @@ public partial class ViewApplicationLogsForm : Form
         btnPrevious.Click += btnPrevious_Click;
         btnNext.Click += btnNext_Click;
         btnToggleView.Click += btnToggleView_Click;
+        btnCreatePrompt.Click += btnCreatePrompt_Click; // T062: Create Prompt button
         KeyDown += ViewApplicationLogsForm_KeyDown;
         KeyPreview = true; // Enable form-level keyboard handling
     }
@@ -338,13 +464,17 @@ public partial class ViewApplicationLogsForm : Form
             lblStatus.Text = $"Loading entries from {Path.GetFileName(filePath)}...";
             Application.DoEvents();
 
+            // Determine log format from selected file
+            LogFormat logFormat = _selectedLogFile?.LogType ?? LogFormat.Normal;
+            LoggingUtility.Log($"[ViewApplicationLogsForm] LoadLogFileAsync: Using LogFormat={logFormat} for parsing");
+
             // Load first 1000 entries (windowed loading per FR-044)
             var rawEntries = await Service_LogFileReader.LoadEntriesAsync(filePath, 0, 1000).ConfigureAwait(true);
 
             // Parse raw entries into Model_LogEntry objects
             foreach (var rawEntry in rawEntries)
             {
-                var parsedEntry = Service_LogParser.ParseEntry(rawEntry);
+                var parsedEntry = Service_LogParser.ParseEntry(rawEntry, logFormat);
                 _currentEntries.Add(parsedEntry);
             }
 
@@ -390,6 +520,7 @@ public partial class ViewApplicationLogsForm : Form
 
     /// <summary>
     /// Loads log files for the specified username asynchronously.
+    /// T071: Applies color coding to file list items based on log type.
     /// </summary>
     /// <param name="username">Username to load log files for.</param>
     private async Task LoadLogFilesAsync(string username)
@@ -433,7 +564,7 @@ public partial class ViewApplicationLogsForm : Form
                 headerItem.Tag = null; // No associated file
                 lstLogFiles.Items.Add(headerItem);
 
-                // Add files in group
+                // Add files in group with color coding (T071)
                 foreach (var file in group.OrderByDescending(f => f.ModifiedDate))
                 {
                     var item = new ListViewItem(new[]
@@ -443,6 +574,9 @@ public partial class ViewApplicationLogsForm : Form
                         file.FileSizeDisplay
                     });
                     item.Tag = file;
+
+                    // Color coding removed - applied to entry display panel instead (T071)
+
                     lstLogFiles.Items.Add(item);
                 }
             }
@@ -485,12 +619,14 @@ public partial class ViewApplicationLogsForm : Form
     /// <summary>
     /// Displays the current log entry in the entry display panel with formatting enhancements.
     /// T056-T058: Uses structured textbox display with labeled fields.
+    /// T062: Enables/disables Create Prompt button based on entry severity.
     /// </summary>
     private void ShowCurrentEntry()
     {
         if (_currentEntries == null || _currentEntries.Count == 0)
         {
             ClearEntryDisplay("No entries loaded");
+            btnCreatePrompt.Enabled = false; // T062: Disable for no entries
             return;
         }
 
@@ -498,10 +634,15 @@ public partial class ViewApplicationLogsForm : Form
         {
             LoggingUtility.Log($"[ViewApplicationLogsForm] Invalid entry index: {_currentEntryIndex}");
             ClearEntryDisplay("Invalid entry index");
+            btnCreatePrompt.Enabled = false; // T062: Disable for invalid index
             return;
         }
 
         var entry = _currentEntries[_currentEntryIndex];
+
+        // T062: Enable Create Prompt button only for ERROR/CRITICAL entries
+        bool isErrorEntry = IsErrorOrCriticalEntry(entry);
+        btnCreatePrompt.Enabled = isErrorEntry;
 
         // T040: Automatic raw view fallback for parse failures
         if (!entry.ParseSuccess)
@@ -529,6 +670,9 @@ public partial class ViewApplicationLogsForm : Form
 
             // Populate structured fields based on log type
             PopulateStructuredDisplay(entry);
+            
+            // T071: Apply color to txtLevel AFTER text is populated
+            ApplyEntryDisplayPanelBorder(entry);
         }
         else
         {
@@ -853,6 +997,132 @@ public partial class ViewApplicationLogsForm : Form
         }
     }
 
+    /// <summary>
+    /// Handles Create Prompt button click. Generates a Copilot prompt file from current error entry.
+    /// Implements T062 - Create Prompt button functionality.
+    /// Only enabled for ERROR or CRITICAL severity entries (Application/Database errors).
+    /// </summary>
+    private async void btnCreatePrompt_Click(object? sender, EventArgs e)
+    {
+        if (_currentEntries == null || _currentEntries.Count == 0)
+        {
+            lblStatus.Text = "No entry loaded";
+            return;
+        }
+
+        if (_currentEntryIndex < 0 || _currentEntryIndex >= _currentEntries.Count)
+        {
+            lblStatus.Text = "Invalid entry index";
+            return;
+        }
+
+        var entry = _currentEntries[_currentEntryIndex];
+
+        try
+        {
+            // Extract method name from stack trace
+            string? methodName = Service_PromptGenerator.ExtractMethodName(entry.StackTrace);
+            
+            if (string.IsNullOrWhiteSpace(methodName))
+            {
+                lblStatus.Text = "Could not extract method name from error";
+                Service_ErrorHandler.ShowWarning(
+                    "Unable to extract method name from the error's stack trace. Cannot generate prompt.",
+                    "Method Name Not Found");
+                return;
+            }
+
+            // T063: Check if prompt already exists
+            string? promptFilePath = Helper_LogPath.GetPromptFilePath(methodName);
+            
+            if (promptFilePath != null && File.Exists(promptFilePath))
+            {
+                // Show custom dialog with options
+                var result = MessageBox.Show(
+                    $"A prompt fix for this error has already been generated:\n\n{methodName}\n\nDo you want to open the existing prompt file?",
+                    "Prompt Already Exists",
+                    MessageBoxButtons.YesNo,
+                    MessageBoxIcon.Information);
+
+                if (result == DialogResult.Yes)
+                {
+                    // Open existing prompt in default markdown editor
+                    try
+                    {
+                        System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo
+                        {
+                            FileName = promptFilePath,
+                            UseShellExecute = true
+                        });
+                        
+                        lblStatus.Text = $"Opened existing prompt: {methodName}";
+                        LoggingUtility.Log($"[ViewApplicationLogsForm] Opened existing prompt file: {promptFilePath}");
+                    }
+                    catch (Exception ex)
+                    {
+                        LoggingUtility.Log($"[ViewApplicationLogsForm] Error opening prompt file: {promptFilePath}");
+                        LoggingUtility.LogApplicationError(ex);
+                        Service_ErrorHandler.HandleException(ex, ErrorSeverity.Low,
+                            contextData: new Dictionary<string, object> { ["FilePath"] = promptFilePath },
+                            controlName: nameof(ViewApplicationLogsForm));
+                    }
+                }
+                
+                return;
+            }
+
+            // Generate the prompt
+            string? promptContent = Service_PromptGenerator.GeneratePrompt(entry);
+            
+            if (string.IsNullOrWhiteSpace(promptContent))
+            {
+                lblStatus.Text = "Failed to generate prompt";
+                Service_ErrorHandler.ShowWarning(
+                    "Unable to generate prompt from the log entry. Check that the entry contains valid error information.",
+                    "Prompt Generation Failed");
+                return;
+            }
+
+            // Write prompt to file
+            bool success = Service_PromptGenerator.WritePromptToFile(methodName, promptContent);
+            
+            if (success)
+            {
+                lblStatus.Text = $"Prompt created for method: {methodName}";
+                Service_ErrorHandler.ShowInformation(
+                    $"Copilot prompt file has been created successfully:\n\nMethod: {methodName}\nLocation: {promptFilePath ?? "Prompt Fixes directory"}",
+                    "Prompt Created");
+                
+                LoggingUtility.Log($"[ViewApplicationLogsForm] Created prompt file for method: {methodName}");
+            }
+            else
+            {
+                lblStatus.Text = "Failed to write prompt file";
+                Service_ErrorHandler.ShowWarning(
+                    "The prompt was generated but could not be saved to file. Check that you have write permissions to the application directory.",
+                    "File Write Failed");
+            }
+        }
+        catch (Exception ex)
+        {
+            LoggingUtility.Log($"[ViewApplicationLogsForm] Error creating prompt");
+            LoggingUtility.LogApplicationError(ex);
+            lblStatus.Text = "Error creating prompt";
+            Service_ErrorHandler.HandleException(ex, ErrorSeverity.Medium, 
+                contextData: new Dictionary<string, object>
+                {
+                    ["Operation"] = "CreatePrompt",
+                    ["EntryIndex"] = _currentEntryIndex,
+                    ["LogType"] = entry.LogType.ToString()
+                },
+                controlName: nameof(ViewApplicationLogsForm));
+        }
+    }
+
+    /// <summary>
+    /// Handles Apply Filter button click. Applies active filter to current entries.
+    /// Implements T072 - Filter by Prompt Status functionality.
+    /// </summary>
     #endregion
 
     #region ComboBox & UI Events
@@ -939,6 +1209,7 @@ public partial class ViewApplicationLogsForm : Form
 
     /// <summary>
     /// Updates the state of navigation buttons based on current entry position.
+    /// T071: Adds emoji prefix to entry position label based on severity.
     /// </summary>
     private void UpdateNavigationButtons()
     {
@@ -952,7 +1223,10 @@ public partial class ViewApplicationLogsForm : Form
 
         btnPrevious.Enabled = _currentEntryIndex > 0;
         btnNext.Enabled = _currentEntryIndex < _currentEntries.Count - 1;
-        lblEntryPosition.Text = $"Entry {_currentEntryIndex + 1} of {_currentEntries.Count}";
+
+        // T071: Add emoji severity indicator to entry position label
+        string emoji = GetSeverityEmoji(_currentEntries[_currentEntryIndex]);
+        lblEntryPosition.Text = $"{emoji} Entry {_currentEntryIndex + 1} of {_currentEntries.Count}";
     }
 
     /// <summary>
@@ -1444,6 +1718,177 @@ public partial class ViewApplicationLogsForm : Form
         output.AppendLine("═══════════════════════════════════════════════");
 
         return output.ToString();
+    }
+
+    /// <summary>
+    /// Determines if a log entry represents an ERROR or CRITICAL severity issue.
+    /// Used to enable/disable the Create Prompt button (T062).
+    /// </summary>
+    /// <param name="entry">Log entry to check.</param>
+    /// <returns>True if entry is ERROR or CRITICAL severity; false otherwise.</returns>
+    private bool IsErrorOrCriticalEntry(Model_LogEntry entry)
+    {
+        if (entry == null)
+        {
+            return false;
+        }
+
+        // ApplicationError logs are always errors
+        if (entry.LogType == LogFormat.ApplicationError)
+        {
+            return true;
+        }
+
+        // DatabaseError logs - check severity
+        if (entry.LogType == LogFormat.DatabaseError)
+        {
+            string? severity = entry.Severity?.ToUpperInvariant();
+            return severity == "ERROR" || severity == "CRITICAL";
+        }
+
+        // Normal logs - check level (though they rarely have ERROR level)
+        if (entry.LogType == LogFormat.Normal)
+        {
+            string? level = entry.Level?.ToUpperInvariant();
+            return level == "ERROR" || level == "CRITICAL";
+        }
+
+        return false;
+    }
+
+    /// <summary>
+    /// Gets the appropriate emoji indicator for a log entry's severity.
+    /// Implements T071 - emoji severity indicators in UI.
+    /// </summary>
+    /// <param name="entry">Log entry to get emoji for.</param>
+    /// <returns>Emoji string (🔴 Critical, 🟠 Error, 🟡 Warning, 🔵 Info).</returns>
+    private string GetSeverityEmoji(Model_LogEntry entry)
+    {
+        if (entry == null)
+        {
+            return "⚪"; // White circle for null/unknown
+        }
+
+        // ApplicationError logs are always error severity
+        if (entry.LogType == LogFormat.ApplicationError)
+        {
+            return "🔴"; // Red circle for application errors
+        }
+
+        // DatabaseError logs - check severity
+        if (entry.LogType == LogFormat.DatabaseError)
+        {
+            string? severity = entry.Severity?.ToUpperInvariant();
+            return severity switch
+            {
+                "CRITICAL" => "🔴", // Red circle
+                "ERROR" => "🟠",    // Orange circle
+                "WARNING" => "🟡",  // Yellow circle
+                _ => "🔵"           // Blue circle for info/unknown
+            };
+        }
+
+        // Normal logs - check level
+        if (entry.LogType == LogFormat.Normal)
+        {
+            string? level = entry.Level?.ToUpperInvariant();
+            return level switch
+            {
+                "HIGH" => "🟢",     // Green circle
+                "MEDIUM" => "🔵",   // Blue circle
+                "LOW" => "⚪",       // White circle
+                "DATA" => "🟣",     // Purple circle
+                _ => "⚪"            // White circle for unknown
+            };
+        }
+
+        return "⚪"; // White circle for unknown format
+    }
+
+    /// <summary>
+    /// Applies background color to the Level textbox based on entry severity.
+    /// Implements T071 - visual severity indicators throughout UI.
+    /// Now uses intelligent level detection from enhanced logging.
+    /// </summary>
+    /// <param name="entry">Log entry to determine color from.</param>
+    private void ApplyEntryDisplayPanelBorder(Model_LogEntry entry)
+    {
+        if (entry == null || txtLevel == null)
+        {
+            if (txtLevel != null)
+                txtLevel.BackColor = SystemColors.Window;
+            return;
+        }
+
+        // Get the actual text in txtLevel to determine color
+        string levelText = txtLevel.Text?.ToUpperInvariant() ?? "";
+        
+        // Determine background color based on level text content
+        Color backgroundColor = SystemColors.Window; // Default white
+
+        // Critical/Fatal errors - Darkest Red
+        if (levelText.Contains("CRITICAL") || levelText.Contains("FATAL"))
+        {
+            backgroundColor = Color.FromArgb(255, 180, 180);
+        }
+        // Errors - Red
+        else if (levelText.Contains("ERROR"))
+        {
+            backgroundColor = Color.FromArgb(255, 200, 200);
+        }
+        // Warnings - Orange/Yellow
+        else if (levelText.Contains("WARNING") || levelText.Contains("WARN"))
+        {
+            backgroundColor = Color.FromArgb(255, 240, 200);
+        }
+        // Success - Light Green
+        else if (levelText.Contains("SUCCESS") || levelText.Contains("COMPLETED"))
+        {
+            backgroundColor = Color.FromArgb(200, 255, 200);
+        }
+        // Performance - Light Purple
+        else if (levelText.Contains("PERFORMANCE"))
+        {
+            backgroundColor = Color.FromArgb(230, 200, 255);
+        }
+        // Debug - Light Gray
+        else if (levelText.Contains("DEBUG") || levelText.Contains("TRACE"))
+        {
+            backgroundColor = Color.FromArgb(240, 240, 240);
+        }
+        // Info (default) - Light Blue
+        else if (levelText.Contains("INFO"))
+        {
+            backgroundColor = Color.FromArgb(200, 220, 255);
+        }
+        // High priority - Green
+        else if (levelText.Contains("HIGH"))
+        {
+            backgroundColor = Color.FromArgb(200, 255, 200);
+        }
+        // Medium priority - Light Blue
+        else if (levelText.Contains("MEDIUM"))
+        {
+            backgroundColor = Color.FromArgb(200, 220, 255);
+        }
+        // Low priority - Very Light Gray
+        else if (levelText.Contains("LOW"))
+        {
+            backgroundColor = Color.FromArgb(240, 240, 240);
+        }
+        // Data - Light Purple
+        else if (levelText.Contains("DATA"))
+        {
+            backgroundColor = Color.FromArgb(230, 200, 255);
+        }
+        // Default for any other content - Light Blue
+        else if (!string.IsNullOrWhiteSpace(levelText))
+        {
+            backgroundColor = Color.FromArgb(200, 220, 255);
+        }
+
+        // Apply background color to txtLevel textbox
+        txtLevel.BackColor = backgroundColor;
     }
 
     #endregion

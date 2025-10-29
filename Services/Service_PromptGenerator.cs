@@ -40,9 +40,10 @@ public static class Service_PromptGenerator
     /// Pattern to match stack trace lines in the format:
     /// "at Namespace.Class.Method(Parameters) in FileName:line LineNumber"
     /// Also handles async methods and lambda expressions.
+    /// Handles both full paths (Namespace.Class.Method) and simple paths (Class.Method).
     /// </summary>
     private static readonly Regex StackTracePattern = new(
-        @"at\s+(?<namespace>[\w\.]+)\.(?<class>[\w<>]+)\.(?<method>[\w<>]+)\s*\(",
+        @"at\s+(?<fullpath>[\w\.]+)\.(?<method>[\w<>]+)\s*\(",
         RegexOptions.Compiled | RegexOptions.Multiline,
         RegexTimeout);
 
@@ -75,18 +76,29 @@ public static class Service_PromptGenerator
                     continue;
                 }
 
-                string fullNamespace = match.Groups["namespace"].Value;
-                string className = match.Groups["class"].Value;
-                string methodName = match.Groups["method"].Value;
+                string fullPath = match.Groups["fullpath"].Value; // e.g., "MTM.Application.TestFile" or "TestFile"
+                string methodName = match.Groups["method"].Value; // e.g., "TestMethod"
 
-                // Check if this is a framework/library namespace
+                // Split the full path to get namespace parts and class name
+                var parts = fullPath.Split('.');
+                
+                if (parts.Length == 0)
+                {
+                    continue;
+                }
+
+                // Check if this is a framework/library namespace (first part of path)
+                string rootNamespace = parts[0];
                 bool isExcluded = ExcludedNamespaces.Any(excluded => 
-                    fullNamespace.StartsWith(excluded, StringComparison.OrdinalIgnoreCase));
+                    rootNamespace.StartsWith(excluded, StringComparison.OrdinalIgnoreCase));
 
                 if (isExcluded)
                 {
                     continue; // Skip framework methods
                 }
+
+                // Get the class name (last part before method)
+                string className = parts[^1]; // Last element
 
                 // Found an application method - construct full method name
                 string fullMethodName = $"{className}.{methodName}";
@@ -102,7 +114,7 @@ public static class Service_PromptGenerator
 
                 if (!string.IsNullOrWhiteSpace(sanitized))
                 {
-                    LoggingUtility.Log($"[Service_PromptGenerator] Extracted method name: {sanitized}");
+                    LoggingUtility.Log($"[Service_PromptGenerator] Extracted method name: {sanitized} from path: {fullPath}");
                     return sanitized;
                 }
             }
@@ -431,6 +443,7 @@ public static class Service_PromptGenerator
     /// <summary>
     /// Writes a generated prompt to a file in the Prompt Fixes directory.
     /// Creates the directory if it doesn't exist.
+    /// Automatically creates a "New" status entry via Service_PromptStatusManager (T064).
     /// </summary>
     /// <param name="methodName">Method name to use for filename.</param>
     /// <param name="promptContent">Prompt content to write.</param>
@@ -463,6 +476,23 @@ public static class Service_PromptGenerator
             // Write prompt to file
             File.WriteAllText(filePath, promptContent, Encoding.UTF8);
             LoggingUtility.Log($"[Service_PromptGenerator] Wrote prompt file: {filePath}");
+            
+            // T064: Create status record with "New" status
+            bool statusCreated = Service_PromptStatusManager.UpdateStatus(
+                methodName, 
+                PromptStatusEnum.New, 
+                assignee: null, 
+                notes: "Prompt automatically generated");
+            
+            if (statusCreated)
+            {
+                LoggingUtility.Log($"[Service_PromptGenerator] Created status record for method: {methodName}");
+            }
+            else
+            {
+                LoggingUtility.Log($"[Service_PromptGenerator] Warning: Failed to create status record for method: {methodName}");
+                // Don't fail the entire operation if status creation fails
+            }
             
             return true;
         }

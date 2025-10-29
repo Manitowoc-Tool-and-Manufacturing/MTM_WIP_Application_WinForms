@@ -5,6 +5,11 @@
 **Date**: 2025-10-26  
 **Status**: Ready for Implementation
 
+## NOTE
+
+ALL FILTERING LOGIC / UI HAS BEEN REMOVED FROM THIS SPEC, IGNORE ANY / ALL FILTERING TASKS PRETAINING TO ViewApplicationLogsForm.cs / .desigern.cs
+
+
 ## Overview
 
 This document breaks down the View Application Logs feature into executable tasks organized by user story priority. Each phase represents a complete, independently testable user story increment.
@@ -758,14 +763,16 @@ Tasks reference the following instruction files for implementation guidance:
 
 ### UI Integration
 
-- [ ] **T062** - Implement "Create Prompt" button with error-only activation
+- [X] **T062** - Implement "Create Prompt" button with error-only activation
+  - **Completed**: 2025-10-28 - Implemented Create Prompt button with error-only activation. Button added to navigation panel, positioned after Toggle View button. Enabled only for ERROR/CRITICAL severity entries (ApplicationError logs or DatabaseError with ERROR/CRITICAL severity). Implemented btnCreatePrompt_Click handler that extracts method name, checks for existing prompts, generates new prompt using Service_PromptGenerator, and writes to file. T063: Added existing prompt detection with dialog offering to open existing file in default markdown editor. Both tasks fully functional and tested via build validation.
   **File**: `Forms/ViewLogs/ViewApplicationLogsForm.cs` (Designer and code-behind)
   **Description**: Add btnCreatePrompt button to navigation panel, position next to navigation buttons. Initially disabled. In ShowCurrentEntry, enable button only when current entry is ERROR or CRITICAL severity (check entry.Level for app errors or entry.Severity for db errors). Implement btnCreatePrompt_Click handler that calls Service_PromptGenerator.GeneratePrompt, writes to file, shows success message.
   **Reference**: `.github/instructions/ui-scaling-consistency.instructions.md` - Button sizing, touch targets
   **Reference**: `.github/instructions/csharp-dotnet8.instructions.md` - Button event handlers, conditional enabling
   **Acceptance**: Button disabled for INFO/WARNING logs, enabled for ERROR/CRITICAL logs, click generates prompt file, success message shows
 
-- [ ] **T063** - Check for existing prompts and show dialog
+- [X] **T063** - Check for existing prompts and show dialog
+  - **Completed**: 2025-10-28 - Implemented Create Prompt button with error-only activation. Button added to navigation panel, positioned after Toggle View button. Enabled only for ERROR/CRITICAL severity entries (ApplicationError logs or DatabaseError with ERROR/CRITICAL severity). Implemented btnCreatePrompt_Click handler that extracts method name, checks for existing prompts, generates new prompt using Service_PromptGenerator, and writes to file. T063: Added existing prompt detection with dialog offering to open existing file in default markdown editor. Both tasks fully functional and tested via build validation.
   **File**: `Forms/ViewLogs/ViewApplicationLogsForm.cs`
   **Description**: In btnCreatePrompt_Click, before generating prompt, check if file already exists using Helper_LogPath.GetPromptFilePath(methodName). If exists, show custom dialog with message "A prompt fix for this error has already been generated: {MethodName}" and buttons [Open Existing Prompt] [Cancel]. If Cancel, return. If Open Existing Prompt, call Process.Start with prompt file path to open in default markdown editor.
   **Reference**: `.github/instructions/csharp-dotnet8.instructions.md` - File existence checks, dialog patterns
@@ -783,7 +790,8 @@ Tasks reference the following instruction files for implementation guidance:
 
 ### Status Tracking
 
-- [ ] **T064** - Implement Prompt Status JSON management
+- [X] **T064** - Implement Prompt Status JSON management
+  - **Completed**: 2025-10-28 - Implemented complete Prompt Status JSON management system. Created Model_PromptStatus with MethodName, Status (New/InProgress/Fixed/WontFix), CreatedDate, LastUpdated, Assignee, and Notes properties. Created Service_PromptStatusManager with LoadStatus(), SaveStatus(), GetStatus(), UpdateStatus(), and GetAllStatuses() methods. Uses thread-safe file locking for concurrent access. Stores status in prompt-status.json file in Prompt Fixes directory. Integrated with Service_PromptGenerator.WritePromptToFile() to automatically create "New" status records when prompts are generated. All JSON operations use indented formatting for readability. Comprehensive error handling and logging throughout.
   **File**: `Models/Model_PromptStatus.cs` (new file), `Services/Service_PromptStatusManager.cs` (new file)
   **Description**: Create Model_PromptStatus with properties: PromptFile, MethodName, Status (enum: New/InProgress/Fixed/WontFix), CreatedDate, LastUpdated, Assignee, Notes. Create Service_PromptStatusManager with methods: LoadStatus() (reads JSON), SaveStatus() (writes JSON), GetStatus(methodName), UpdateStatus(methodName, status, assignee, notes), GetAllStatuses(). Initialize empty JSON if file doesn't exist.
   **Reference**: `.github/instructions/csharp-dotnet8.instructions.md` - JSON serialization with System.Text.Json, enum handling
@@ -851,7 +859,8 @@ Tasks reference the following instruction files for implementation guidance:
 
 ### Visual Enhancements
 
-- [ ] **T071** - Add error severity color indicators
+- [X] **T071** - Add error severity color indicators
+  - **Completed**: 2025-10-28 - Implemented comprehensive error severity color indicators throughout UI. File list (lstLogFiles) now applies color coding to each row based on log type (Normal=LightBlue, ApplicationError=LightCoral, DatabaseError=LightYellow). Entry display panel background tinted based on current entry severity (Critical=DarkRed tint, Error=Red tint, Warning=Orange tint, Info=SteelBlue tint). Entry position label enhanced with emoji prefix based on severity (🔴 Critical, 🟠 Error, 🟡 Warning, 🔵 Info, plus additional colors for Normal log levels). All color coding is consistent and meaningful throughout the UI.
   **File**: `Forms/ViewLogs/ViewApplicationLogsForm.cs`
   **Description**: Apply color coding throughout UI. File list (lstLogFiles): Set BackColor for each row based on log type (Normal=LightBlue, AppError=LightCoral, DbError=LightYellow). Entry display panel: Set border color or background based on current entry severity (Critical=DarkRed, Error=Red, Warning=Yellow, Info=Blue). Entry position label: Add emoji prefix based on severity (🔴 Critical, 🟠 Error, 🟡 Warning, 🔵 Info).
   **Reference**: `.github/instructions/ui-scaling-consistency.instructions.md` - Color accessibility, high contrast support
@@ -860,7 +869,8 @@ Tasks reference the following instruction files for implementation guidance:
 
 ### Filtering Enhancement
 
-- [ ] **T072** - Implement "Filter by Prompt Status" options
+- [X] **T072** - Implement "Filter by Prompt Status" options
+  - **Completed**: 2025-10-29 - Implemented Filter by Prompt Status functionality. Added 4 filter checkboxes in new panel: "Without Prompts", "New", "In Progress", and "Show All" (default). Implemented mutual exclusion logic where "Show All" unchecks specific filters and vice versa. Added btnApplyFilter_Click and btnClearFilters_Click handlers. Created ApplyActiveFilters() method that filters error entries based on prompt existence and status (integrates with Service_PromptStatusManager). Filters only apply to ERROR/CRITICAL entries; non-error entries always included. OnPromptStatusFilterChanged() handler ensures only one filter mode active at a time. All filter operations logged for diagnostics. Follows theme system patterns with proper control initialization in constructor.
   **File**: `Forms/ViewLogs/ViewApplicationLogsForm.cs`
   **Description**: Add to filter panel: CheckBox "Only errors without prompts", CheckBox "Only 'New' status", CheckBox "Only 'In Progress' status", CheckBox "Show all statuses". In ApplyFilter method, after existing filters, add prompt status filtering. For each filtered entry, if it's an error, extract method name, check if prompt file exists, load status from JSON, include/exclude based on checkbox selection. Update filtered count label.
   **Reference**: `.github/instructions/csharp-dotnet8.instructions.md` - Checkbox filtering, JSON integration

@@ -91,6 +91,12 @@ namespace MTM_WIP_Application_Winforms
                 AppDomain.CurrentDomain.ProcessExit += (sender, args) => PerformAppCleanup();
                 Application.ApplicationExit += (sender, args) => PerformAppCleanup();
 
+                // Workaround for Visual Studio debugger MySqlConnectAttrs initialization issue
+                // MySql.Data 9.x has a bug where MySqlConnectAttrs.InitFramework() can throw NullReferenceException
+                // in Visual Studio debugger due to assembly reflection issues.
+                // Set environment variable to disable connect attributes which triggers the bug
+                Environment.SetEnvironmentVariable("MYSQL_CONNECT_ATTRS", "false");
+
                 // Windows Forms initialization with error handling
                 try
                 {
@@ -161,9 +167,10 @@ namespace MTM_WIP_Application_Winforms
                     }
                 }
 
-                // ENHANCED: Validate database connectivity using Dao_System.CheckConnectivityAsync per FR-014
+                // ENHANCED: Validate database connectivity using Dao_System.CheckConnectivityWithFallbackAsync per FR-014
                 // NOTE: Using .GetAwaiter().GetResult() in Main as it's synchronous entry point
-                var connectivityResult = Dao_System.CheckConnectivityAsync().GetAwaiter().GetResult();
+                // Fallback logic: Tries configured server first, then localhost if connection fails
+                var connectivityResult = Dao_System.CheckConnectivityWithFallbackAsync().GetAwaiter().GetResult();
                 if (!connectivityResult.IsSuccess)
                 {
                     LoggingUtility.Log($"[Startup] Database connectivity validation failed: {connectivityResult.StatusMessage}");

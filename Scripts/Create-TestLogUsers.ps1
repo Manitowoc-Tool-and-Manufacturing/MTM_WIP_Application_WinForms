@@ -3,8 +3,13 @@
     Creates test user log directories with sample CSV log files for testing the View Application Logs feature.
 
 .DESCRIPTION
-    Generates multiple test users (TESTUSER1, TESTUSER2, TESTUSER3) with various CSV log files.
-    CSV format: Timestamp,Level,Source,Message,Details
+    Generates multiple test users (TESTUSER1, TESTUSER2, TESTUSER3) with various CSV log files using the enhanced logging format.
+    
+    Enhanced CSV format: Timestamp,Level,Source,Message,Details
+    - Source: FileName.MethodName:LineNumber (e.g., ViewApplicationLogsForm.LoadLogFileAsync:448)
+    - Level: INFO, SUCCESS, PERFORMANCE, WARNING, ERROR, DEBUG, CRITICAL
+    - Message: Includes inner exceptions for errors
+    - Details: Full stack traces with file paths and line numbers
     
     Deletes any existing .log files and creates new .csv files in both locations:
     - C:\Users\johnk\OneDrive\Documents\Work Folder\WIP App Logs\{username}\
@@ -57,57 +62,108 @@ function New-CsvLogFile {
 
     switch ($LogType) {
         "normal" {
+            # Generate realistic log entries with new enhanced format
+            $files = @("ViewApplicationLogsForm", "MainForm", "SettingsForm", "Control_QuickButtons")
+            $methods = @("LoadLogFileAsync", "OnFormLoad", "SaveSettingsAsync", "RefreshButtons")
+            
             for ($i = 1; $i -le $EntryCount; $i++) {
                 $time = (Get-Date).AddMinutes(-$i).ToString("yyyy-MM-dd HH:mm:ss")
-                $message = "Test log message #$i from normal log"
-                $entries += "$(ConvertTo-CsvValue $time),$(ConvertTo-CsvValue 'INFO'),$(ConvertTo-CsvValue 'Application'),$(ConvertTo-CsvValue $message),"
+                $file = $files[$i % $files.Count]
+                $method = $methods[$i % $methods.Count]
+                $line = (Get-Random -Minimum 100 -Maximum 999)
+                $source = "$file.$method`:$line"
                 
-                # Add some variety
-                if ($i % 3 -eq 0) {
-                    $dbMsg = "Query executed successfully in $($i * 10)ms"
-                    $entries += "$(ConvertTo-CsvValue $time),$(ConvertTo-CsvValue 'DEBUG'),$(ConvertTo-CsvValue 'Database'),$(ConvertTo-CsvValue $dbMsg),"
+                # Mix of different log levels with realistic messages
+                $levelType = $i % 7
+                switch ($levelType) {
+                    0 {
+                        $level = "INFO"
+                        $message = "[$file] User session started successfully"
+                    }
+                    1 {
+                        $level = "SUCCESS"
+                        $message = "[$file] Loaded $($i * 10) entries from database in $(Get-Random -Minimum 50 -Maximum 300)ms"
+                    }
+                    2 {
+                        $level = "PERFORMANCE"
+                        $message = "[Performance] LoadUserListAsync took $($i * 15)ms for $(Get-Random -Minimum 10 -Maximum 50) users (target <500ms)"
+                    }
+                    3 {
+                        $level = "WARNING"
+                        $message = "[$file] Slow query detected - operation took $($i * 100)ms (threshold: 1000ms)"
+                    }
+                    4 {
+                        $level = "DEBUG"
+                        $message = "[$file] Cache hit for key: user_preferences_$($i)"
+                    }
+                    5 {
+                        $level = "INFO"
+                        $message = "[$file] Auto-refresh completed successfully"
+                    }
+                    6 {
+                        $level = "SUCCESS"
+                        $message = "[$file] Transaction processed - InventoryID: $(Get-Random -Minimum 1000 -Maximum 9999)"
+                    }
                 }
-                if ($i % 5 -eq 0) {
-                    $warnMsg = "Low disk space warning - 15% remaining"
-                    $entries += "$(ConvertTo-CsvValue $time),$(ConvertTo-CsvValue 'WARN'),$(ConvertTo-CsvValue 'Application'),$(ConvertTo-CsvValue $warnMsg),"
-                }
+                
+                $entries += "$(ConvertTo-CsvValue $time),$(ConvertTo-CsvValue $level),$(ConvertTo-CsvValue $source),$(ConvertTo-CsvValue $message),"
             }
         }
         "app_error" {
+            # Generate realistic application error entries with enhanced format
+            $files = @("ViewApplicationLogsForm", "Dao_Inventory", "Service_ErrorHandler", "Control_TransactionEntry")
+            $methods = @("LoadLogFileAsync", "GetInventoryAsync", "HandleException", "SaveTransactionAsync")
+            
             for ($i = 1; $i -le $EntryCount; $i++) {
                 $time = (Get-Date).AddMinutes(-$i * 2).ToString("yyyy-MM-dd HH:mm:ss")
+                $file = $files[$i % $files.Count]
+                $method = $methods[$i % $methods.Count]
+                $line = (Get-Random -Minimum 100 -Maximum 999)
+                $source = "$file.$method`:$line"
+                
                 $exceptions = @(
-                    "NullReferenceException: Object reference not set to an instance of an object",
-                    "ArgumentException: Invalid parameter value provided",
+                    "NullReferenceException: Object reference not set to an instance of an object | Inner[1]: ArgumentNullException: Value cannot be null. (Parameter 'inventoryItem')",
+                    "ArgumentException: Invalid parameter value provided | Inner[1]: FormatException: Input string was not in a correct format.",
                     "InvalidOperationException: Operation is not valid due to the current state",
-                    "FileNotFoundException: Could not find file 'test.dat'"
+                    "FileNotFoundException: Could not find file 'C:\temp\export_$(Get-Random -Minimum 1000 -Maximum 9999).xlsx'",
+                    "UnauthorizedAccessException: Access to the path is denied | Inner[1]: IOException: The process cannot access the file because it is being used by another process."
                 )
                 $ex = $exceptions[$i % $exceptions.Count]
-                $stackTrace = "   at MTM.Application.TestMethod() in TestFile.cs:line $($i * 10)`n   at MTM.Application.Main() in Program.cs:line $($i * 5)"
+                $stackTrace = "   at MTM_Inventory_Application.$file.$method() in $file.cs:line $line`n   at System.Windows.Forms.Control.InvokeMarshaledCallbacks()`n   at MTM_Inventory_Application.Program.Main() in Program.cs:line $(Get-Random -Minimum 20 -Maximum 50)"
                 
-                $entries += "$(ConvertTo-CsvValue $time),$(ConvertTo-CsvValue 'ERROR'),$(ConvertTo-CsvValue 'Application'),$(ConvertTo-CsvValue $ex),$(ConvertTo-CsvValue $stackTrace)"
+                $entries += "$(ConvertTo-CsvValue $time),$(ConvertTo-CsvValue 'ERROR'),$(ConvertTo-CsvValue $source),$(ConvertTo-CsvValue $ex),$(ConvertTo-CsvValue $stackTrace)"
             }
         }
         "db_error" {
+            # Generate realistic database error entries with enhanced format
+            $files = @("Dao_Inventory", "Dao_Transactions", "Dao_QuickButtons", "Helper_Database_StoredProcedure")
+            $methods = @("GetInventoryAsync", "SearchTransactionsAsync", "SaveQuickButtonAsync", "ExecuteDataTableWithStatusAsync")
+            
             for ($i = 1; $i -le $EntryCount; $i++) {
                 $time = (Get-Date).AddMinutes(-$i * 3).ToString("yyyy-MM-dd HH:mm:ss")
+                $file = $files[$i % $files.Count]
+                $method = $methods[$i % $methods.Count]
+                $line = (Get-Random -Minimum 100 -Maximum 999)
+                $source = "$file.$method`:$line"
+                
                 $severities = @("WARNING", "ERROR", "CRITICAL")
                 $severity = $severities[$i % $severities.Count]
                 
                 $dbErrors = @(
-                    "MySqlException: Unable to connect to database server",
-                    "TimeoutException: Command timeout expired",
-                    "MySqlException: Deadlock found when trying to get lock",
-                    "MySqlException: Table 'test_table' doesn't exist"
+                    "MySqlException: Unable to connect to any of the specified MySQL hosts | Inner[1]: SocketException: No connection could be made because the target machine actively refused it",
+                    "TimeoutException: Connection timeout expired. The timeout period elapsed while attempting to consume the pre-login handshake acknowledgement",
+                    "MySqlException: Deadlock found when trying to get lock; try restarting transaction",
+                    "MySqlException: Table 'mtm_wip_application.inventory_temp' doesn't exist",
+                    "MySqlException: Duplicate entry 'INV-$(Get-Random -Minimum 1000 -Maximum 9999)' for key 'PRIMARY'"
                 )
                 $err = $dbErrors[$i % $dbErrors.Count]
                 
                 $details = ""
                 if ($severity -ne "WARNING") {
-                    $details = "   at MySql.Data.MySqlClient.MySqlCommand.ExecuteReader()`n   at MTM.Data.Dao_Inventory.GetInventoryAsync()"
+                    $details = "   at MySql.Data.MySqlClient.MySqlCommand.ExecuteReader() in MySqlCommand.cs:line 425`n   at MTM_Inventory_Application.Helpers.Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync() in Helper_Database_StoredProcedure.cs:line $(Get-Random -Minimum 200 -Maximum 400)`n   at MTM_Inventory_Application.Data.$file.$method() in $file.cs:line $line"
                 }
                 
-                $entries += "$(ConvertTo-CsvValue $time),$(ConvertTo-CsvValue $severity),$(ConvertTo-CsvValue 'Database'),$(ConvertTo-CsvValue $err),$(ConvertTo-CsvValue $details)"
+                $entries += "$(ConvertTo-CsvValue $time),$(ConvertTo-CsvValue $severity),$(ConvertTo-CsvValue $source),$(ConvertTo-CsvValue $err),$(ConvertTo-CsvValue $details)"
             }
         }
     }

@@ -254,8 +254,12 @@ internal static class LoggingUtility
 
     /// <summary>
     /// Logs a normal message with consistent CSV format.
+    /// Automatically captures caller information for better debugging context.
     /// </summary>
-    public static void Log(string message)
+    public static void Log(string message,
+        [System.Runtime.CompilerServices.CallerMemberName] string callerMember = "",
+        [System.Runtime.CompilerServices.CallerFilePath] string callerFilePath = "",
+        [System.Runtime.CompilerServices.CallerLineNumber] int callerLineNumber = 0)
     {
         var logEntry = $"{DateTime.Now:yyyy-MM-dd HH:mm:ss} - {message}";
         
@@ -264,14 +268,18 @@ internal static class LoggingUtility
         
         lock (LogLock)
         {
-            FlushLogEntryToDisk(_normalLogFile, timestamp, "INFO", "Application", message);
+            FlushLogEntryToDisk(_normalLogFile, timestamp, level, enhancedSource, message);
         }
     }
 
     /// <summary>
-    /// Logs an application error with consistent CSV format
+    /// Logs an application error with consistent CSV format.
+    /// Automatically captures caller information and extracts method from stack trace.
     /// </summary>
-    public static void LogApplicationError(Exception ex)
+    public static void LogApplicationError(Exception ex,
+        [System.Runtime.CompilerServices.CallerMemberName] string callerMember = "",
+        [System.Runtime.CompilerServices.CallerFilePath] string callerFilePath = "",
+        [System.Runtime.CompilerServices.CallerLineNumber] int callerLineNumber = 0)
     {
         var errorEntry = $"{DateTime.Now:yyyy-MM-dd HH:mm:ss} - Application Error - {ex.Message}";
         var stackEntry = $"{DateTime.Now:yyyy-MM-dd HH:mm:ss} - Stack Trace - {ex.StackTrace}";
@@ -282,7 +290,7 @@ internal static class LoggingUtility
         
         lock (LogLock)
         {
-            FlushLogEntryToDisk(_appErrorLogFile, timestamp, "ERROR", "Application", message, details);
+            FlushLogEntryToDisk(_appErrorLogFile, timestamp, "ERROR", enhancedSource, message, details);
         }
     }
 
@@ -332,7 +340,7 @@ internal static class LoggingUtility
             
             lock (LogLock)
             {
-                FlushLogEntryToDisk(_dbErrorLogFile, timestamp, severityLabel, "Database", message, details);
+                FlushLogEntryToDisk(_dbErrorLogFile, timestamp, severityLabel, enhancedSource, message, details);
             }
         }
         finally
@@ -342,9 +350,13 @@ internal static class LoggingUtility
     }
 
     /// <summary>
-    /// Logs application information with consistent CSV format
+    /// Logs application information with consistent CSV format.
+    /// Automatically captures caller information for better debugging context.
     /// </summary>
-    public static void LogApplicationInfo(string message)
+    public static void LogApplicationInfo(string message,
+        [System.Runtime.CompilerServices.CallerMemberName] string callerMember = "",
+        [System.Runtime.CompilerServices.CallerFilePath] string callerFilePath = "",
+        [System.Runtime.CompilerServices.CallerLineNumber] int callerLineNumber = 0)
     {
         var infoEntry = $"{DateTime.Now:yyyy-MM-dd HH:mm:ss} - Application Info - {message}";
         
@@ -353,8 +365,70 @@ internal static class LoggingUtility
         
         lock (LogLock)
         {
-            FlushLogEntryToDisk(_normalLogFile, timestamp, "INFO", "Application", message);
+            FlushLogEntryToDisk(_normalLogFile, timestamp, "INFO", enhancedSource, message);
         }
+    }
+
+    /// <summary>
+    /// Determines log level from message content keywords.
+    /// </summary>
+    private static string DetermineLogLevel(string message)
+    {
+        if (string.IsNullOrEmpty(message))
+            return "INFO";
+
+        var msgUpper = message.ToUpperInvariant();
+        
+        // Performance logging
+        if (msgUpper.Contains("[PERFORMANCE]") || msgUpper.Contains("TOOK") || msgUpper.Contains("MS"))
+            return "PERFORMANCE";
+        
+        // Error indicators
+        if (msgUpper.Contains("ERROR") || msgUpper.Contains("FAILED") || msgUpper.Contains("EXCEPTION"))
+            return "ERROR";
+        
+        // Warning indicators
+        if (msgUpper.Contains("WARNING") || msgUpper.Contains("WARN"))
+            return "WARNING";
+        
+        // Success indicators
+        if (msgUpper.Contains("SUCCESS") || msgUpper.Contains("COMPLETED") || msgUpper.Contains("LOADED"))
+            return "SUCCESS";
+        
+        // Debug/trace indicators
+        if (msgUpper.Contains("[DEBUG]") || msgUpper.Contains("TRACE"))
+            return "DEBUG";
+
+        return "INFO";
+    }
+
+    /// <summary>
+    /// Builds a comprehensive exception message including inner exceptions.
+    /// </summary>
+    private static string BuildExceptionMessage(Exception ex)
+    {
+        var parts = new List<string>
+        {
+            $"{ex.GetType().Name}: {ex.Message}"
+        };
+
+        // Add inner exceptions
+        var innerEx = ex.InnerException;
+        int depth = 1;
+        while (innerEx != null && depth <= 3) // Limit to 3 levels to prevent excessive data
+        {
+            parts.Add($"Inner[{depth}]: {innerEx.GetType().Name}: {innerEx.Message}");
+            innerEx = innerEx.InnerException;
+            depth++;
+        }
+
+        // Add special handling for aggregate exceptions
+        if (ex is AggregateException aggEx && aggEx.InnerExceptions.Count > 0)
+        {
+            parts.Add($"AggregateException with {aggEx.InnerExceptions.Count} inner exceptions");
+        }
+
+        return string.Join(" | ", parts);
     }
 
     #endregion
