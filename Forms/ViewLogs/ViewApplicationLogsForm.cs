@@ -30,6 +30,14 @@ public partial class ViewApplicationLogsForm : Form
     private CheckBox? _chkFilterInProgressStatus;
     private CheckBox? _chkFilterShowAllStatus;
 
+    // T068: Error grouping fields
+    private bool _groupingEnabled = false;
+    private Dictionary<string, List<int>> _groupedEntries = new();
+    private List<string> _groupKeys = new();
+    private int _currentGroupIndex = 0;
+    private bool _showingAllOccurrences = false;
+    private string? _currentExpandedGroupKey;
+
     #endregion
 
     #region Properties
@@ -401,11 +409,17 @@ public partial class ViewApplicationLogsForm : Form
         cmbUsers.SelectedIndexChanged += cmbUsers_SelectedIndexChanged;
         btnRefresh.Click += btnRefresh_Click;
         chkAutoRefresh.CheckedChanged += chkAutoRefresh_CheckedChanged;
+        chkGroupErrors.CheckedChanged += chkGroupErrors_CheckedChanged; // T068: Error grouping
         lstLogFiles.SelectedIndexChanged += lstLogFiles_SelectedIndexChanged;
         btnPrevious.Click += btnPrevious_Click;
         btnNext.Click += btnNext_Click;
         btnToggleView.Click += btnToggleView_Click;
         btnCreatePrompt.Click += btnCreatePrompt_Click; // T062: Create Prompt button
+        btnCreatePrompt.MouseEnter += btnCreatePrompt_MouseEnter; // T066: Batch generation hover
+        btnCreatePrompt.MouseLeave += btnCreatePrompt_MouseLeave; // T066: Batch generation hover
+        btnManagePromptStatus.Click += BtnManagePromptStatus_Click; // T076: Manage Prompt Status
+        btnGenerateErrorReport.Click += BtnGenerateErrorReport_Click; // T076: Generate Error Report
+        btnOpenPromptFolder.Click += BtnOpenPromptFolder_Click; // T076: Open Prompt Fixes Folder
         KeyDown += ViewApplicationLogsForm_KeyDown;
         KeyPreview = true; // Enable form-level keyboard handling
     }
@@ -825,11 +839,23 @@ public partial class ViewApplicationLogsForm : Form
             return;
         }
 
-        if (_currentEntryIndex > 0)
+        // T068: Handle grouping mode navigation
+        if (_groupingEnabled && !_showingAllOccurrences)
         {
-            _currentEntryIndex--;
-            ShowCurrentEntry();
-            UpdateNavigationButtons();
+            if (_currentGroupIndex > 0)
+            {
+                NavigateToGroup(_currentGroupIndex - 1);
+                UpdateNavigationButtons();
+            }
+        }
+        else
+        {
+            if (_currentEntryIndex > 0)
+            {
+                _currentEntryIndex--;
+                ShowCurrentEntry();
+                UpdateNavigationButtons();
+            }
         }
     }
 
@@ -843,11 +869,23 @@ public partial class ViewApplicationLogsForm : Form
             return;
         }
 
-        if (_currentEntryIndex < _currentEntries.Count - 1)
+        // T068: Handle grouping mode navigation
+        if (_groupingEnabled && !_showingAllOccurrences)
         {
-            _currentEntryIndex++;
-            ShowCurrentEntry();
-            UpdateNavigationButtons();
+            if (_currentGroupIndex < _groupKeys.Count - 1)
+            {
+                NavigateToGroup(_currentGroupIndex + 1);
+                UpdateNavigationButtons();
+            }
+        }
+        else
+        {
+            if (_currentEntryIndex < _currentEntries.Count - 1)
+            {
+                _currentEntryIndex++;
+                ShowCurrentEntry();
+                UpdateNavigationButtons();
+            }
         }
     }
 
@@ -985,13 +1023,45 @@ public partial class ViewApplicationLogsForm : Form
 
     /// <summary>
     /// Handles form-level keyboard shortcuts including Ctrl+C for copy.
+    /// T070: Shift+Ctrl+C for enhanced error context copy.
     /// </summary>
     private void ViewApplicationLogsForm_KeyDown(object? sender, KeyEventArgs e)
     {
+        // Shift+Ctrl+C - Copy error context for Copilot (T070)
+        if (e.Control && e.Shift && e.KeyCode == Keys.C)
+        {
+            CopyErrorContext();
+            e.Handled = true;
+            e.SuppressKeyPress = true;
+        }
         // Ctrl+C - Copy current entry to clipboard
-        if (e.Control && e.KeyCode == Keys.C)
+        else if (e.Control && e.KeyCode == Keys.C)
         {
             CopyCurrentEntry();
+            e.Handled = true;
+            e.SuppressKeyPress = true;
+        }
+        
+        // Ctrl+P - Manage Prompt Status (T076)
+        if (e.Control && e.KeyCode == Keys.P)
+        {
+            BtnManagePromptStatus_Click(sender, e);
+            e.Handled = true;
+            e.SuppressKeyPress = true;
+        }
+        
+        // Ctrl+R - Generate Error Report (T076)
+        if (e.Control && e.KeyCode == Keys.R)
+        {
+            BtnGenerateErrorReport_Click(sender, e);
+            e.Handled = true;
+            e.SuppressKeyPress = true;
+        }
+        
+        // Ctrl+Shift+F - Open Prompt Fixes Folder (T076)
+        if (e.Control && e.Shift && e.KeyCode == Keys.F)
+        {
+            BtnOpenPromptFolder_Click(sender, e);
             e.Handled = true;
             e.SuppressKeyPress = true;
         }
@@ -1000,10 +1070,19 @@ public partial class ViewApplicationLogsForm : Form
     /// <summary>
     /// Handles Create Prompt button click. Generates a Copilot prompt file from current error entry.
     /// Implements T062 - Create Prompt button functionality.
+    /// T066 - Shift+Click for batch generation.
     /// Only enabled for ERROR or CRITICAL severity entries (Application/Database errors).
     /// </summary>
     private async void btnCreatePrompt_Click(object? sender, EventArgs e)
     {
+        // T066: Check if Shift key is pressed for batch generation
+        if (ModifierKeys.HasFlag(Keys.Shift))
+        {
+            await PerformBatchPromptGeneration();
+            return;
+        }
+
+        // Single prompt generation (existing T062 logic)
         if (_currentEntries == null || _currentEntries.Count == 0)
         {
             lblStatus.Text = "No entry loaded";
@@ -1049,21 +1128,102 @@ public partial class ViewApplicationLogsForm : Form
                     // Open existing prompt in default markdown editor
                     try
                     {
-                        System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo
-                        {
-                            FileName = promptFilePath,
-                            UseShellExecute = true
-                        });
+                        LoggingUtility.Log($"[ViewApplicationLogsForm] Attempting to open prompt file: {promptFilePath}");
                         
-                        lblStatus.Text = $"Opened existing prompt: {methodName}";
-                        LoggingUtility.Log($"[ViewApplicationLogsForm] Opened existing prompt file: {promptFilePath}");
+                        // Verify file exists before opening
+                        if (!File.Exists(promptFilePath))
+                        {
+                            lblStatus.Text = "Prompt file not found";
+                            Service_ErrorHandler.ShowWarning(
+                                $"The prompt file was expected but could not be found:\n\n{promptFilePath}\n\nIt may have been deleted or moved.",
+                                "File Not Found");
+                            return;
+                        }
+                        
+                        // Try multiple approaches to open the file (Windows may not have .md association)
+                        bool opened = false;
+                        
+                        // Approach 1: Try using explorer.exe with /select (most reliable)
+                        try
+                        {
+                            var explorerInfo = new System.Diagnostics.ProcessStartInfo
+                            {
+                                FileName = "explorer.exe",
+                                Arguments = $"/select,\"{promptFilePath}\"",
+                                UseShellExecute = false
+                            };
+                            System.Diagnostics.Process.Start(explorerInfo);
+                            opened = true;
+                            lblStatus.Text = $"Opened folder with prompt file: {methodName}";
+                            LoggingUtility.Log($"[ViewApplicationLogsForm] Opened explorer with file selected: {promptFilePath}");
+                        }
+                        catch (Exception explorerEx)
+                        {
+                            LoggingUtility.Log($"[ViewApplicationLogsForm] Explorer approach failed: {explorerEx.Message}");
+                            
+                            // Approach 2: Try direct file association
+                            try
+                            {
+                                var startInfo = new System.Diagnostics.ProcessStartInfo
+                                {
+                                    FileName = promptFilePath,
+                                    UseShellExecute = true,
+                                    Verb = "open"
+                                };
+                                
+                                var process = System.Diagnostics.Process.Start(startInfo);
+                                opened = (process != null);
+                                
+                                if (opened)
+                                {
+                                    lblStatus.Text = $"Opened existing prompt: {methodName}";
+                                    LoggingUtility.Log($"[ViewApplicationLogsForm] Opened prompt file directly: {promptFilePath}");
+                                }
+                            }
+                            catch (Exception directEx)
+                            {
+                                LoggingUtility.Log($"[ViewApplicationLogsForm] Direct file open failed: {directEx.Message}");
+                            }
+                        }
+                        
+                        if (!opened)
+                        {
+                            // Last resort: show the file path and offer to open directory
+                            lblStatus.Text = "File location shown";
+                            var fallbackResult = MessageBox.Show(
+                                $"The prompt file exists but could not be opened automatically.\n\nFile location:\n{promptFilePath}\n\nWould you like to open the Prompt Fixes folder?",
+                                "Manual Action Required",
+                                MessageBoxButtons.YesNo,
+                                MessageBoxIcon.Information);
+                            
+                            if (fallbackResult == DialogResult.Yes)
+                            {
+                                string? directory = Path.GetDirectoryName(promptFilePath);
+                                if (!string.IsNullOrWhiteSpace(directory) && Directory.Exists(directory))
+                                {
+                                    System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo
+                                    {
+                                        FileName = directory,
+                                        UseShellExecute = true,
+                                        Verb = "open"
+                                    });
+                                }
+                            }
+                        }
                     }
                     catch (Exception ex)
                     {
                         LoggingUtility.Log($"[ViewApplicationLogsForm] Error opening prompt file: {promptFilePath}");
                         LoggingUtility.LogApplicationError(ex);
+                        lblStatus.Text = "Error opening file";
+                        
                         Service_ErrorHandler.HandleException(ex, ErrorSeverity.Low,
-                            contextData: new Dictionary<string, object> { ["FilePath"] = promptFilePath },
+                            retryAction: null,
+                            contextData: new Dictionary<string, object> 
+                            { 
+                                ["FilePath"] = promptFilePath,
+                                ["MethodName"] = methodName
+                            },
                             controlName: nameof(ViewApplicationLogsForm));
                     }
                 }
@@ -1120,9 +1280,320 @@ public partial class ViewApplicationLogsForm : Form
     }
 
     /// <summary>
-    /// Handles Apply Filter button click. Applies active filter to current entries.
-    /// Implements T072 - Filter by Prompt Status functionality.
+    /// Handles Manage Prompt Status button click. Opens the PromptStatusManagerDialog.
+    /// Implements T076 - Add menu items for new features (Manage Prompt Status).
+    /// Keyboard shortcut: Ctrl+P
     /// </summary>
+    private void BtnManagePromptStatus_Click(object? sender, EventArgs e)
+    {
+        try
+        {
+            using var dialog = new PromptStatusManagerDialog();
+            dialog.ShowDialog(this);
+            
+            LoggingUtility.Log("[ViewApplicationLogsForm] Manage Prompt Status dialog closed");
+        }
+        catch (Exception ex)
+        {
+            LoggingUtility.LogApplicationError(ex);
+            Service_ErrorHandler.HandleException(ex, ErrorSeverity.Medium,
+                contextData: new Dictionary<string, object> { ["Operation"] = "OpenPromptStatusManager" },
+                controlName: nameof(ViewApplicationLogsForm));
+        }
+    }
+
+    /// <summary>
+    /// Handles Generate Error Report button click. Opens the ErrorAnalysisReportDialog.
+    /// Implements T076 - Add menu items for new features (Generate Error Report).
+    /// Keyboard shortcut: Ctrl+R
+    /// Note: ErrorAnalysisReportDialog will be implemented in T073.
+    /// </summary>
+    private void BtnGenerateErrorReport_Click(object? sender, EventArgs e)
+    {
+        try
+        {
+            // T073, T074, T075: Open Error Analysis Report Dialog with progress, caching, and export
+            if (_selectedUsername == null)
+            {
+                Service_ErrorHandler.ShowWarning("Please select a user first.", "Generate Error Report");
+                return;
+            }
+
+            string logBasePath = Helper_LogPath.GetUserLogDirectory(_selectedUsername);
+            if (!Directory.Exists(logBasePath))
+            {
+                Service_ErrorHandler.ShowWarning("No log directory found for selected user.", "Generate Error Report");
+                return;
+            }
+
+            using var dialog = new ErrorAnalysisReportDialog(logBasePath);
+            dialog.ShowDialog(this);
+            
+            lblStatus.Text = "Error analysis report dialog closed";
+            LoggingUtility.Log("[ViewApplicationLogsForm] Error Analysis Report dialog opened");
+        }
+        catch (Exception ex)
+        {
+            LoggingUtility.LogApplicationError(ex);
+            Service_ErrorHandler.HandleException(ex, ErrorSeverity.Low,
+                contextData: new Dictionary<string, object> { ["Operation"] = "OpenErrorReport" },
+                controlName: nameof(ViewApplicationLogsForm));
+        }
+    }
+
+    /// <summary>
+    /// Handles Open Prompt Fixes Folder button click. Opens the Prompt Fixes directory in File Explorer.
+    /// Implements T076 - Add menu items for new features (Open Prompt Fixes Folder).
+    /// Keyboard shortcut: Ctrl+Shift+F
+    /// </summary>
+    private void BtnOpenPromptFolder_Click(object? sender, EventArgs e)
+    {
+        try
+        {
+            string? promptDirectory = Helper_LogPath.GetPromptFixesDirectory();
+            
+            if (string.IsNullOrWhiteSpace(promptDirectory))
+            {
+                lblStatus.Text = "Prompt Fixes directory not configured";
+                Service_ErrorHandler.ShowWarning(
+                    "The Prompt Fixes directory path could not be determined. Check application configuration.",
+                    "Directory Not Found");
+                return;
+            }
+
+            // Ensure directory exists
+            if (!Directory.Exists(promptDirectory))
+            {
+                bool created = Helper_LogPath.CreatePromptFixesDirectory();
+                if (!created)
+                {
+                    lblStatus.Text = "Failed to create Prompt Fixes directory";
+                    Service_ErrorHandler.ShowWarning(
+                        "The Prompt Fixes directory does not exist and could not be created. Check file permissions.",
+                        "Directory Creation Failed");
+                    return;
+                }
+            }
+
+            // Open in File Explorer
+            System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo
+            {
+                FileName = promptDirectory,
+                UseShellExecute = true,
+                Verb = "open"
+            });
+            
+            lblStatus.Text = $"Opened Prompt Fixes folder";
+            LoggingUtility.Log($"[ViewApplicationLogsForm] Opened Prompt Fixes directory: {promptDirectory}");
+        }
+        catch (Exception ex)
+        {
+            LoggingUtility.LogApplicationError(ex);
+            Service_ErrorHandler.HandleException(ex, ErrorSeverity.Medium,
+                contextData: new Dictionary<string, object> { ["Operation"] = "OpenPromptFolder" },
+                controlName: nameof(ViewApplicationLogsForm));
+        }
+    }
+
+    /// <summary>
+    /// T066: Handles mouse enter on Create Prompt button. Changes text if Shift key is held.
+    /// </summary>
+    private void btnCreatePrompt_MouseEnter(object? sender, EventArgs e)
+    {
+        if (ModifierKeys.HasFlag(Keys.Shift))
+        {
+            btnCreatePrompt.Text = "Batch Creation";
+        }
+    }
+
+    /// <summary>
+    /// T066: Handles mouse leave on Create Prompt button. Restores original text.
+    /// </summary>
+    private void btnCreatePrompt_MouseLeave(object? sender, EventArgs e)
+    {
+        btnCreatePrompt.Text = "Create Prompt";
+    }
+
+    /// <summary>
+    /// T066: Performs batch prompt generation for all unique errors in current log file.
+    /// T067: Collects detailed results and shows batch report dialog.
+    /// Scans all ERROR/CRITICAL entries, extracts unique method names, generates prompts for new errors only.
+    /// </summary>
+    private async Task PerformBatchPromptGeneration()
+    {
+        if (_currentEntries == null || _currentEntries.Count == 0)
+        {
+            lblStatus.Text = "No entries loaded";
+            Service_ErrorHandler.ShowWarning("No log entries are currently loaded. Load a log file first.", "No Entries");
+            return;
+        }
+
+        try
+        {
+            lblStatus.Text = "Scanning for errors...";
+            LoggingUtility.Log("[ViewApplicationLogsForm] Starting batch prompt generation");
+
+            // Find all error entries (ERROR or CRITICAL)
+            var errorEntries = _currentEntries.Where(entry =>
+            {
+                bool isError = entry.LogType == LogFormat.ApplicationError;
+                bool isCritical = entry.LogType == LogFormat.DatabaseError &&
+                                 (entry.Severity?.Equals("ERROR", StringComparison.OrdinalIgnoreCase) == true ||
+                                  entry.Severity?.Equals("CRITICAL", StringComparison.OrdinalIgnoreCase) == true);
+                return isError || isCritical;
+            }).ToList();
+
+            if (errorEntries.Count == 0)
+            {
+                lblStatus.Text = "No error entries found";
+                Service_ErrorHandler.ShowInformation(
+                    "No ERROR or CRITICAL entries found in the current log file.",
+                    "No Errors");
+                return;
+            }
+
+            lblStatus.Text = $"Found {errorEntries.Count} error entries, extracting method names...";
+
+            // Extract unique method names
+            var uniqueMethods = new Dictionary<string, Model_LogEntry>();
+            foreach (var entry in errorEntries)
+            {
+                string? methodName = Service_PromptGenerator.ExtractMethodName(entry.StackTrace);
+                if (!string.IsNullOrWhiteSpace(methodName) && !uniqueMethods.ContainsKey(methodName))
+                {
+                    uniqueMethods[methodName] = entry;
+                }
+            }
+
+            if (uniqueMethods.Count == 0)
+            {
+                lblStatus.Text = "No methods extracted";
+                Service_ErrorHandler.ShowWarning(
+                    "Could not extract method names from any of the error stack traces.",
+                    "No Methods Found");
+                return;
+            }
+
+            lblStatus.Text = $"Found {uniqueMethods.Count} unique errors, generating prompts...";
+            LoggingUtility.Log($"[ViewApplicationLogsForm] Found {uniqueMethods.Count} unique methods for batch generation");
+
+            int created = 0;
+            int skipped = 0;
+            int failed = 0;
+            
+            // T067: Collect detailed results
+            var detailedResults = new List<BatchPromptResult>();
+
+            // Generate prompts for each unique method
+            foreach (var kvp in uniqueMethods)
+            {
+                string methodName = kvp.Key;
+                Model_LogEntry entry = kvp.Value;
+
+                try
+                {
+                    // Check if prompt already exists
+                    string? promptFilePath = Helper_LogPath.GetPromptFilePath(methodName);
+                    if (promptFilePath != null && File.Exists(promptFilePath))
+                    {
+                        skipped++;
+                        LoggingUtility.Log($"[ViewApplicationLogsForm] Skipped existing prompt: {methodName}");
+                        
+                        // T067: Track skipped result
+                        detailedResults.Add(new BatchPromptResult
+                        {
+                            MethodName = methodName,
+                            Action = "Skipped",
+                            Reason = "Prompt file already exists"
+                        });
+                        continue;
+                    }
+
+                    // Generate prompt
+                    string? promptContent = Service_PromptGenerator.GeneratePrompt(entry);
+                    if (string.IsNullOrWhiteSpace(promptContent))
+                    {
+                        failed++;
+                        LoggingUtility.Log($"[ViewApplicationLogsForm] Failed to generate prompt content: {methodName}");
+                        
+                        // T067: Track failed result
+                        detailedResults.Add(new BatchPromptResult
+                        {
+                            MethodName = methodName,
+                            Action = "Failed",
+                            Reason = "Could not generate prompt content"
+                        });
+                        continue;
+                    }
+
+                    // Write prompt to file
+                    bool success = Service_PromptGenerator.WritePromptToFile(methodName, promptContent);
+                    if (success)
+                    {
+                        created++;
+                        LoggingUtility.Log($"[ViewApplicationLogsForm] Created prompt: {methodName}");
+                        
+                        // T067: Track created result
+                        detailedResults.Add(new BatchPromptResult
+                        {
+                            MethodName = methodName,
+                            Action = "Created",
+                            Reason = "Prompt file generated successfully"
+                        });
+                    }
+                    else
+                    {
+                        failed++;
+                        LoggingUtility.Log($"[ViewApplicationLogsForm] Failed to write prompt file: {methodName}");
+                        
+                        // T067: Track failed result
+                        detailedResults.Add(new BatchPromptResult
+                        {
+                            MethodName = methodName,
+                            Action = "Failed",
+                            Reason = "Could not write prompt file to disk"
+                        });
+                    }
+                }
+                catch (Exception ex)
+                {
+                    failed++;
+                    LoggingUtility.Log($"[ViewApplicationLogsForm] Exception generating prompt for {methodName}: {ex.Message}");
+                    LoggingUtility.LogApplicationError(ex);
+                    
+                    // T067: Track exception result
+                    detailedResults.Add(new BatchPromptResult
+                    {
+                        MethodName = methodName,
+                        Action = "Failed",
+                        Reason = $"Exception: {ex.Message}"
+                    });
+                }
+
+                // Update status during processing
+                lblStatus.Text = $"Generated {created + skipped + failed} of {uniqueMethods.Count} prompts...";
+                Application.DoEvents(); // Allow UI to update
+            }
+
+            lblStatus.Text = $"Batch generation complete: {created} created, {skipped} skipped, {failed} failed";
+            LoggingUtility.Log($"[ViewApplicationLogsForm] Batch generation complete - Created: {created}, Skipped: {skipped}, Failed: {failed}");
+
+            // T067: Show detailed batch report dialog
+            using (var reportDialog = new BatchGenerationReportDialog(detailedResults, created, skipped, failed))
+            {
+                reportDialog.ShowDialog(this);
+            }
+        }
+        catch (Exception ex)
+        {
+            lblStatus.Text = "Batch generation error";
+            LoggingUtility.LogApplicationError(ex);
+            Service_ErrorHandler.HandleException(ex, ErrorSeverity.Medium,
+                contextData: new Dictionary<string, object> { ["Operation"] = "BatchPromptGeneration" },
+                controlName: nameof(ViewApplicationLogsForm));
+        }
+    }
+
     #endregion
 
     #region ComboBox & UI Events
@@ -1226,7 +1697,192 @@ public partial class ViewApplicationLogsForm : Form
 
         // T071: Add emoji severity indicator to entry position label
         string emoji = GetSeverityEmoji(_currentEntries[_currentEntryIndex]);
-        lblEntryPosition.Text = $"{emoji} Entry {_currentEntryIndex + 1} of {_currentEntries.Count}";
+        
+        // T068: Update label format based on grouping mode
+        if (_groupingEnabled && !_showingAllOccurrences)
+        {
+            int totalEntries = _currentEntries.Count;
+            int uniqueCount = _groupKeys.Count;
+            lblEntryPosition.Text = $"{emoji} Entry {_currentGroupIndex + 1} of {uniqueCount} ({totalEntries} total)";
+        }
+        else
+        {
+            lblEntryPosition.Text = $"{emoji} Entry {_currentEntryIndex + 1} of {_currentEntries.Count}";
+        }
+    }
+
+    /// <summary>
+    /// T068: Event handler for Group Errors checkbox change.
+    /// Enables or disables error grouping functionality.
+    /// </summary>
+    private void chkGroupErrors_CheckedChanged(object? sender, EventArgs e)
+    {
+        try
+        {
+            _groupingEnabled = chkGroupErrors.Checked;
+            _showingAllOccurrences = false;
+            _currentExpandedGroupKey = null;
+
+            if (_groupingEnabled)
+            {
+                GroupEntries();
+                if (_groupKeys.Count > 0)
+                {
+                    _currentGroupIndex = 0;
+                    NavigateToGroup(0);
+                }
+            }
+            else
+            {
+                _groupedEntries.Clear();
+                _groupKeys.Clear();
+                _currentGroupIndex = 0;
+                ShowCurrentEntry();
+            }
+        }
+        catch (Exception ex)
+        {
+            LoggingUtility.LogApplicationError(ex);
+            Service_ErrorHandler.HandleException(ex, ErrorSeverity.Low,
+                contextData: new Dictionary<string, object> { ["Operation"] = "ToggleGrouping" },
+                controlName: nameof(ViewApplicationLogsForm));
+        }
+    }
+
+    /// <summary>
+    /// T068: Groups entries by ErrorType + MethodName combination.
+    /// Only groups ERROR and CRITICAL entries.
+    /// </summary>
+    private void GroupEntries()
+    {
+        _groupedEntries.Clear();
+        _groupKeys.Clear();
+
+        for (int i = 0; i < _currentEntries.Count; i++)
+        {
+            var entry = _currentEntries[i];
+            
+            // Only group ERROR and CRITICAL entries
+            if (entry.Level != "ERROR" && entry.Level != "CRITICAL")
+            {
+                continue;
+            }
+
+            // Extract error type and method name from message or details
+            string errorType = ExtractErrorType(entry);
+            string methodName = ExtractMethodNameFromEntry(entry);
+            string groupKey = $"{errorType}_{methodName}";
+
+            if (!_groupedEntries.ContainsKey(groupKey))
+            {
+                _groupedEntries[groupKey] = new List<int>();
+                _groupKeys.Add(groupKey);
+            }
+
+            _groupedEntries[groupKey].Add(i);
+        }
+
+        LoggingUtility.Log($"[ViewApplicationLogsForm] Grouped {_currentEntries.Count} entries into {_groupKeys.Count} unique errors");
+    }
+
+    /// <summary>
+    /// T068: Navigates to a specific group by index.
+    /// </summary>
+    private void NavigateToGroup(int groupIndex)
+    {
+        if (groupIndex < 0 || groupIndex >= _groupKeys.Count)
+        {
+            return;
+        }
+
+        _currentGroupIndex = groupIndex;
+        string groupKey = _groupKeys[groupIndex];
+        List<int> indices = _groupedEntries[groupKey];
+
+        // Navigate to first occurrence of this group
+        if (indices.Count > 0)
+        {
+            _currentEntryIndex = indices[0];
+            ShowCurrentEntry();
+        }
+    }
+
+    /// <summary>
+    /// T068: Extracts error type from entry message or details.
+    /// </summary>
+    private string ExtractErrorType(Model_LogEntry entry)
+    {
+        string text = entry.Message + " " + entry.Details;
+        
+        // Common exception patterns
+        var exceptionTypes = new[] { 
+            "NullReferenceException", "ArgumentNullException", "ArgumentException",
+            "InvalidOperationException", "TimeoutException", "SqlException",
+            "FileNotFoundException", "DirectoryNotFoundException", "IOException",
+            "UnauthorizedAccessException", "FormatException", "IndexOutOfRangeException",
+            "ArgumentOutOfRangeException", "ObjectDisposedException", "NotImplementedException"
+        };
+
+        foreach (var exType in exceptionTypes)
+        {
+            if (text.Contains(exType, StringComparison.OrdinalIgnoreCase))
+            {
+                return exType;
+            }
+        }
+
+        // If no specific type found, use first word of message
+        var words = (entry.Message ?? "").Split(' ', StringSplitOptions.RemoveEmptyEntries);
+        return words.Length > 0 ? words[0] : "UnknownError";
+    }
+
+    /// <summary>
+    /// T068: Extracts method name from entry source or stack trace.
+    /// Reuses logic from Service_PromptGenerator for consistency.
+    /// </summary>
+    private string ExtractMethodNameFromEntry(Model_LogEntry entry)
+    {
+        // Try to extract from Source field first
+        if (!string.IsNullOrWhiteSpace(entry.Source))
+        {
+            // Source often contains "ClassName.MethodName"
+            var parts = entry.Source.Split('.', StringSplitOptions.RemoveEmptyEntries);
+            if (parts.Length >= 2)
+            {
+                return parts[^1]; // Last part is usually the method name
+            }
+            return entry.Source;
+        }
+
+        // Fall back to extracting from stack trace in Details
+        if (!string.IsNullOrWhiteSpace(entry.Details))
+        {
+            var lines = entry.Details.Split('\n', StringSplitOptions.RemoveEmptyEntries);
+            foreach (var line in lines)
+            {
+                if (line.Contains(" at ") && line.Contains("MTM_"))
+                {
+                    // Extract method name from stack trace line
+                    int atIndex = line.IndexOf(" at ");
+                    if (atIndex >= 0)
+                    {
+                        string methodPart = line.Substring(atIndex + 4);
+                        int parenIndex = methodPart.IndexOf('(');
+                        if (parenIndex > 0)
+                        {
+                            methodPart = methodPart.Substring(0, parenIndex).Trim();
+                            var parts = methodPart.Split('.', StringSplitOptions.RemoveEmptyEntries);
+                            if (parts.Length > 0)
+                            {
+                                return parts[^1];
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        return "UnknownMethod";
     }
 
     /// <summary>
@@ -1628,6 +2284,125 @@ public partial class ViewApplicationLogsForm : Form
             LoggingUtility.LogApplicationError(ex);
             Service_ErrorHandler.HandleException(ex, ErrorSeverity.Low,
                 contextData: new Dictionary<string, object> { ["Operation"] = "CopyEntry" },
+                controlName: nameof(ViewApplicationLogsForm));
+        }
+    }
+
+    /// <summary>
+    /// T070: Copies formatted error context to clipboard for Copilot Chat analysis.
+    /// Only works for ERROR or CRITICAL severity entries.
+    /// Creates structured format with #file: reference for easy Copilot integration.
+    /// </summary>
+    private void CopyErrorContext()
+    {
+        if (_currentEntries == null || _currentEntries.Count == 0)
+        {
+            lblStatus.Text = "No entry loaded";
+            return;
+        }
+
+        if (_currentEntryIndex < 0 || _currentEntryIndex >= _currentEntries.Count)
+        {
+            lblStatus.Text = "Invalid entry index";
+            return;
+        }
+
+        var entry = _currentEntries[_currentEntryIndex];
+
+        // Only works for error entries
+        bool isError = entry.LogType == LogFormat.ApplicationError;
+        bool isCritical = entry.LogType == LogFormat.DatabaseError &&
+                         (entry.Severity?.Equals("ERROR", StringComparison.OrdinalIgnoreCase) == true ||
+                          entry.Severity?.Equals("CRITICAL", StringComparison.OrdinalIgnoreCase) == true);
+
+        if (!isError && !isCritical)
+        {
+            lblStatus.Text = "Error context copy only available for ERROR/CRITICAL entries";
+            Service_ErrorHandler.ShowInformation(
+                "Error context copying is only available for ERROR or CRITICAL log entries.\n\nUse regular Ctrl+C for normal log entries.",
+                "Feature Not Available");
+            return;
+        }
+
+        try
+        {
+            // Extract method name and file info from stack trace
+            string? methodName = Service_PromptGenerator.ExtractMethodName(entry.StackTrace);
+            string fileName = "UnknownFile";
+            string lineNumber = "?";
+
+            // Try to extract file and line from stack trace
+            if (!string.IsNullOrWhiteSpace(entry.StackTrace))
+            {
+                var fileMatch = System.Text.RegularExpressions.Regex.Match(
+                    entry.StackTrace,
+                    @" in ([^:]+):line (\d+)",
+                    System.Text.RegularExpressions.RegexOptions.None,
+                    TimeSpan.FromMilliseconds(100));
+
+                if (fileMatch.Success)
+                {
+                    string fullPath = fileMatch.Groups[1].Value;
+                    fileName = Path.GetFileName(fullPath);
+                    lineNumber = fileMatch.Groups[2].Value;
+                }
+            }
+
+            // Build Copilot-ready error context
+            var context = new StringBuilder();
+            context.AppendLine("Error Context for Copilot Analysis");
+            context.AppendLine("===================================");
+            context.AppendLine();
+            context.AppendLine($"**Error Type**: {entry.ErrorType ?? "Unknown"}");
+            context.AppendLine($"**Method**: {methodName ?? "Could not extract"}");
+            context.AppendLine($"**File**: {fileName}, Line {lineNumber}");
+            context.AppendLine($"**Timestamp**: {entry.Timestamp:yyyy-MM-dd HH:mm:ss}");
+            context.AppendLine();
+            context.AppendLine("**Message**:");
+            context.AppendLine(entry.Message ?? "No message available");
+            context.AppendLine();
+            
+            if (!string.IsNullOrWhiteSpace(entry.StackTrace))
+            {
+                context.AppendLine("**Stack Trace**:");
+                context.AppendLine("```");
+                context.AppendLine(entry.StackTrace);
+                context.AppendLine("```");
+                context.AppendLine();
+            }
+
+            // Add #file: reference for Copilot workspace context
+            if (fileName != "UnknownFile")
+            {
+                context.AppendLine($"#file:{fileName}");
+                context.AppendLine();
+            }
+
+            context.AppendLine("**Request**:");
+            context.AppendLine("Please analyze this error and suggest a fix. Consider:");
+            context.AppendLine("1. What is the root cause of this error?");
+            context.AppendLine("2. What code changes would prevent this error?");
+            context.AppendLine("3. Are there any related issues or edge cases to address?");
+
+            string contextText = context.ToString();
+            
+            Clipboard.SetText(contextText);
+            lblStatus.Text = "Error context copied to clipboard (ready for Copilot)";
+            
+            // T070: Show toast-style notification
+            Service_ErrorHandler.ShowInformation(
+                "Error context has been copied to your clipboard.\n\nYou can now paste it into Copilot Chat for analysis.",
+                "Error Context Copied");
+            
+            LoggingUtility.Log($"[ViewApplicationLogsForm] Error context copied for entry {_currentEntryIndex + 1}, method: {methodName}");
+        }
+        catch (Exception ex)
+        {
+            LoggingUtility.Log($"[ViewApplicationLogsForm] Error copying error context");
+            LoggingUtility.LogApplicationError(ex);
+            lblStatus.Text = "Error copying context";
+            Service_ErrorHandler.HandleException(ex, ErrorSeverity.Low,
+                contextData: new Dictionary<string, object> { ["Operation"] = "CopyErrorContext" },
                 controlName: nameof(ViewApplicationLogsForm));
         }
     }

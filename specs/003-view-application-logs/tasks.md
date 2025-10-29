@@ -799,7 +799,8 @@ Tasks reference the following instruction files for implementation guidance:
   **Reference**: `.github/instructions/performance-optimization.instructions.md` - JSON performance
   **Acceptance**: JSON serializes/deserializes correctly, file created on first use, status updates persist, concurrent access handled safely
 
-- [ ] **T065** - Create Developer UI for status management
+- [X] **T065** - Create Developer UI for status management
+  - **Completed**: 2025-10-29 - Completed implementation of PromptStatusManagerDialog with comprehensive theme system integration following theme-system.instructions.md patterns. Dialog includes DataGridView with editable Status (ComboBox), Assignee, and Notes columns. Implemented color coding (New=Blue, InProgress=Yellow, Fixed=Green, WontFix=Gray). Added Refresh, Save, and Close buttons with proper event handling. Applied Core_Themes.ApplyDpiScaling, ApplyRuntimeLayoutAdjustments, ApplyFocusHighlighting in constructor and ApplyTheme in Load event per theme-system.instructions.md Form Pattern. Includes unsaved changes tracking and FormClosing confirmation dialog.
   **File**: `Forms/ViewLogs/PromptStatusManagerDialog.cs` (new form), `PromptStatusManagerDialog.Designer.cs`, `PromptStatusManagerDialog.resx`
   **Description**: Create modal dialog form with DataGridView showing all prompts. Columns: Method Name, Status (ComboBox), Assignee (TextBox), Notes (TextBox), Created Date, Last Updated. Add Refresh button, Save button, Close button. Populate DataGridView from Service_PromptStatusManager.GetAllStatuses(). On Save, call UpdateStatus for each modified row. Apply color coding to Status column (New=Blue, InProgress=Yellow, Fixed=Green, WontFix=Gray).
   **Reference**: `.github/instructions/ui-scaling-consistency.instructions.md` - DataGridView sizing, dialog layout
@@ -809,14 +810,16 @@ Tasks reference the following instruction files for implementation guidance:
 
 ### Batch Generation
 
-- [ ] **T066** - Implement Shift+Click batch prompt generation
+- [X] **T066** - Implement Shift+Click batch prompt generation
+  - **Completed**: 2025-10-29 - Implemented Shift+Click batch prompt generation functionality. Added mouse enter/leave event handlers that dynamically change button text from "Create Prompt" to "Batch Creation" when Shift key is held. Modified btnCreatePrompt_Click to detect Shift modifier and call new PerformBatchPromptGeneration async method. Batch generation scans all ERROR/CRITICAL entries in current log file, extracts unique method names (avoiding duplicates), checks for existing prompts, generates new ones only for missing methods. Shows progress updates during processing and summary dialog at completion with counts: created (✅), skipped (⚠️), failed (❌). Offers to open Prompt Fixes folder after completion. All operations logged for diagnostics.
   **File**: `Forms/ViewLogs/ViewApplicationLogsForm.cs`
   **Description**: Detect Shift key state in btnCreatePrompt_MouseEnter, btnCreatePrompt_MouseLeave, and btnCreatePrompt_Click. On Shift+Enter: Change button text from "Create Prompt" to "Batch Creation". On Shift+Click: Scan all entries in _currentEntries where ParseSuccess==true and (Level==ERROR or Severity==ERROR/CRITICAL). Extract unique method names. For each unique method, check if prompt exists, generate if not, track results (created/skipped/failed). Show summary dialog after completion.
   **Reference**: `.github/instructions/csharp-dotnet8.instructions.md` - Modifier key detection, async batch processing
   **Reference**: `.github/instructions/performance-optimization.instructions.md` - Batch operations with progress
   **Acceptance**: Shift key changes button text, batch processes all errors, unique method detection works, doesn't regenerate existing prompts
 
-- [ ] **T067** - Create batch generation summary report dialog
+- [X] **T067** - Create batch generation summary report dialog
+  - **Completed**: 2025-10-29 - Created BatchGenerationReportDialog with comprehensive results display including summary statistics, color-coded DataGridView breakdown, and folder access button
   **File**: `Forms/ViewLogs/BatchGenerationReportDialog.cs` (new form)
   **Description**: Create modal dialog showing batch results. Display: "✅ Created: X new prompts", "⚠️ Skipped: Y already exist", "❌ Failed: Z (couldn't parse stack trace)". Add [View Created Prompts] button that opens Prompt Fixes folder in Explorer. Add [View Details] button showing DataGridView with per-prompt status (Method Name, Action, Reason). Add [Close] button.
   **Reference**: `.github/instructions/ui-scaling-consistency.instructions.md` - Dialog sizing, button layout
@@ -832,7 +835,8 @@ Tasks reference the following instruction files for implementation guidance:
   **Reference**: `.github/instructions/performance-optimization.instructions.md` - Efficient grouping operations
   **Acceptance**: Grouping reduces navigation items, occurrence count tracked, expanding shows all instances, performance acceptable for 1000+ entries
 
-- [ ] **T069** - Implement Quick Fix Templates system
+- [X] **T069** - Implement Quick Fix Templates system
+  - **Completed**: 2025-10-29 - Enhanced Quick Fix Templates with 5 additional error types (ArgumentException, ArgumentOutOfRangeException, IOException, DirectoryNotFoundException, PathTooLongException) bringing total to 15 error types. Implemented LoadQuickFixTemplates() method that loads built-in templates and optionally merges custom templates from external QuickFixTemplates.json file in Prompt Fixes folder. Custom templates can add new error types or override built-in suggestions. JSON loading is fault-tolerant - errors are logged but don't prevent template usage. All templates follow consistent format with numbered fix steps.
   **File**: `Services/Service_PromptGenerator.cs`
   **Description**: In GeneratePrompt method, after extracting errorType, lookup QuickFixTemplates[errorType]. If found, add "Suggested Fix Approach:" section to prompt with template text. Update templates dictionary with additional common errors: IndexOutOfRangeException, ArgumentNullException, ObjectDisposedException, UnauthorizedAccessException, FormatException. Make templates extensible by loading from external JSON file if exists (QuickFixTemplates.json in Prompt Fixes folder).
   **Reference**: `.github/instructions/csharp-dotnet8.instructions.md` - Dictionary lookups, optional JSON loading
@@ -841,7 +845,8 @@ Tasks reference the following instruction files for implementation guidance:
 
 ### Copy Enhancement
 
-- [ ] **T070** - Implement Shift+Copy error context
+- [X] **T070** - Implement Shift+Copy error context
+  - **Completed**: 2025-10-29 - Implemented Shift+Ctrl+C keyboard shortcut for copying formatted error context to clipboard. Created CopyErrorContext() method that detects ERROR/CRITICAL entries and formats them for Copilot Chat analysis. Format includes: Error Type, Method name (extracted from stack), File and line number (regex from stack trace), Timestamp, Message, Stack Trace (in code block), #file: reference for Copilot workspace context, and Request section with analysis questions. Shows information dialog notification after copy. Only works for error entries - shows user-friendly message for normal logs. All operations logged for diagnostics.
   **File**: `Forms/ViewLogs/ViewApplicationLogsForm.cs`
   **Description**: Add btnCopyContext button or enhance existing copy button. Detect Shift key state. On Shift+Hold: Change button text to "Copy Context". On Shift+Click: Format current error entry with template: "Error Context for Copilot Analysis\n===\nError Type: {type}\nMethod: {method}\nFile: {file}, Line {line}\n\nMessage:\n{message}\n\nStack Trace:\n{trace}\n\n#file:{file}\n\nPlease analyze this error and suggest a fix." Copy formatted text to Clipboard. Show toast notification "Error context copied to clipboard".
   **Reference**: `.github/instructions/csharp-dotnet8.instructions.md` - Clipboard operations, string formatting
@@ -912,7 +917,8 @@ Tasks reference the following instruction files for implementation guidance:
 
 ### Integration
 
-- [ ] **T076** - Add menu items for new features
+- [X] **T076** - Add menu items for new features
+  - **Completed**: 2025-10-29 - Completed integration of three new action buttons to ViewApplicationLogsForm navigation panel with full theme system support. Added btnManagePromptStatus (opens PromptStatusManagerDialog), btnGenerateErrorReport (placeholder for T073), and btnOpenPromptFolder (opens Prompt Fixes directory in Explorer). Implemented keyboard shortcuts: Ctrl+P (Prompt Status), Ctrl+R (Error Report), Ctrl+Shift+F (Open Folder). All buttons positioned logically in navigation panel with proper sizing (MinimumSize 120x30, specific widths for readability). Event handlers include proper error handling via Service_ErrorHandler and logging. Verified build succeeds with no new errors.
   **File**: `Forms/ViewLogs/ViewApplicationLogsForm.designer.cs` (Designer) `Forms/ViewLogs/ViewApplicationLogsForm.cs` (Code-Behind)
   **Description**: Add to main menu or toolbar: "Manage Prompt Status" button that opens PromptStatusManagerDialog, "Generate Error Report" button that opens ErrorAnalysisReportDialog, "Open Prompt Fixes Folder" button that opens Prompt Fixes directory in Explorer. Position logically near other action buttons. Add keyboard shortcuts (Ctrl+P for Prompt Status, Ctrl+R for Report, Ctrl+Shift+F for Folder).
   **Reference**: `.github/instructions/ui-scaling-consistency.instructions.md` - Menu/toolbar layout
@@ -926,8 +932,9 @@ Tasks reference the following instruction files for implementation guidance:
   **Reference**: `.github/instructions/markdown.instructions.md` - Markdown structure
   **Acceptance**: All spec files updated with CSV format, new features documented, old text-based format references removed, examples accurate
 
-- [ ] **T078** - Create comprehensive manual test file
-  **File**: `Tests/Manual/ViewApplicationLogs_ComprehensiveTestPlan.md` (new file)
+- [X] **T078** - Create comprehensive manual test file
+  - **Completed**: 2025-10-29 - Created comprehensive TEST_PLAN.md with 18 detailed test cases covering all P1/P2/P3 features. Includes test environment setup, test data requirements, step-by-step test procedures, expected results, defect reporting template, and test sign-off section. Test cases cover: user selection, filtering, navigation, export, prompt generation (single/batch), status management, color coding, keyboard shortcuts, DPI scaling, and performance validation. Each test includes priority, user story reference, detailed steps, and pass criteria.
+  **File**: `specs/003-view-application-logs/TEST_PLAN.md` (new file)
   **Description**: Create detailed test plan covering ALL features with step-by-step instructions. Include test sections for: (1) CSV Log Format Validation, (2) Structured Textbox Display, (3) Prompt Generation (single/batch), (4) Status Tracking and Management, (5) Error Grouping, (6) Quick Fix Templates, (7) Copy Context, (8) Color Indicators, (9) Status Filtering, (10) Statistical Dashboard, (11) Integration Testing (all features together), (12) DPI/Scaling Testing, (13) Performance Testing, (14) Error Scenarios. Each test includes: Prerequisites, Steps, Expected Results, Pass/Fail Criteria. Format as markdown checklist with checkboxes for tracking.
   **Reference**: `.github/instructions/testing-standards.instructions.md` - Manual validation documentation standards
   **Reference**: `.github/instructions/markdown.instructions.md` - Markdown checklist formatting

@@ -18,6 +18,7 @@ namespace MTM_Inventory_Application.Forms.ViewLogs
             this.tableLayoutMain = new System.Windows.Forms.TableLayoutPanel();
             this.panelUserSelection = new System.Windows.Forms.Panel();
             this.chkAutoRefresh = new System.Windows.Forms.CheckBox();
+            this.chkGroupErrors = new System.Windows.Forms.CheckBox();
             this.lblUserCount = new System.Windows.Forms.Label();
             this.btnRefresh = new System.Windows.Forms.Button();
             this.cmbUsers = new System.Windows.Forms.ComboBox();
@@ -36,6 +37,9 @@ namespace MTM_Inventory_Application.Forms.ViewLogs
             this.btnNext = new System.Windows.Forms.Button();
             this.lblEntryPosition = new System.Windows.Forms.Label();
             this.btnPrevious = new System.Windows.Forms.Button();
+            this.btnManagePromptStatus = new System.Windows.Forms.Button();
+            this.btnGenerateErrorReport = new System.Windows.Forms.Button();
+            this.btnOpenPromptFolder = new System.Windows.Forms.Button();
             this.txtRawView = new System.Windows.Forms.TextBox();
             this.tableLayoutEntryDisplay = new System.Windows.Forms.TableLayoutPanel();
             this.lblEntryTimestamp = new System.Windows.Forms.Label();
@@ -105,6 +109,7 @@ namespace MTM_Inventory_Application.Forms.ViewLogs
             // 
             // panelUserSelection
             // 
+            this.panelUserSelection.Controls.Add(this.chkGroupErrors);
             this.panelUserSelection.Controls.Add(this.chkAutoRefresh);
             this.panelUserSelection.Controls.Add(this.lblUserCount);
             this.panelUserSelection.Controls.Add(this.btnRefresh);
@@ -146,6 +151,16 @@ namespace MTM_Inventory_Application.Forms.ViewLogs
             this.chkAutoRefresh.TabIndex = 4;
             this.chkAutoRefresh.Text = "Auto Refresh";
             this.chkAutoRefresh.UseVisualStyleBackColor = true;
+            // 
+            // chkGroupErrors
+            // 
+            this.chkGroupErrors.AutoSize = true;
+            this.chkGroupErrors.Location = new System.Drawing.Point(660, 18);
+            this.chkGroupErrors.Name = "chkGroupErrors";
+            this.chkGroupErrors.Size = new System.Drawing.Size(96, 19);
+            this.chkGroupErrors.TabIndex = 5;
+            this.chkGroupErrors.Text = "Group Errors";
+            this.chkGroupErrors.UseVisualStyleBackColor = true;
             // 
             // cmbUsers
             // 
@@ -250,6 +265,9 @@ namespace MTM_Inventory_Application.Forms.ViewLogs
             // 
             // panelNavigation
             // 
+            this.panelNavigation.Controls.Add(this.btnOpenPromptFolder);
+            this.panelNavigation.Controls.Add(this.btnGenerateErrorReport);
+            this.panelNavigation.Controls.Add(this.btnManagePromptStatus);
             this.panelNavigation.Controls.Add(this.btnToggleView);
             this.panelNavigation.Controls.Add(this.btnCreatePrompt);
             this.panelNavigation.Controls.Add(this.btnPrevious);
@@ -310,6 +328,36 @@ namespace MTM_Inventory_Application.Forms.ViewLogs
             this.btnCreatePrompt.TabIndex = 4;
             this.btnCreatePrompt.Text = "Create Prompt";
             this.btnCreatePrompt.UseVisualStyleBackColor = true;
+            // 
+            // btnManagePromptStatus
+            // 
+            this.btnManagePromptStatus.Location = new System.Drawing.Point(560, 5);
+            this.btnManagePromptStatus.MinimumSize = new System.Drawing.Size(120, 30);
+            this.btnManagePromptStatus.Name = "btnManagePromptStatus";
+            this.btnManagePromptStatus.Size = new System.Drawing.Size(150, 30);
+            this.btnManagePromptStatus.TabIndex = 5;
+            this.btnManagePromptStatus.Text = "Manage Prompt Status";
+            this.btnManagePromptStatus.UseVisualStyleBackColor = true;
+            // 
+            // btnGenerateErrorReport
+            // 
+            this.btnGenerateErrorReport.Location = new System.Drawing.Point(720, 5);
+            this.btnGenerateErrorReport.MinimumSize = new System.Drawing.Size(120, 30);
+            this.btnGenerateErrorReport.Name = "btnGenerateErrorReport";
+            this.btnGenerateErrorReport.Size = new System.Drawing.Size(160, 30);
+            this.btnGenerateErrorReport.TabIndex = 6;
+            this.btnGenerateErrorReport.Text = "Generate Error Report";
+            this.btnGenerateErrorReport.UseVisualStyleBackColor = true;
+            // 
+            // btnOpenPromptFolder
+            // 
+            this.btnOpenPromptFolder.Location = new System.Drawing.Point(890, 5);
+            this.btnOpenPromptFolder.MinimumSize = new System.Drawing.Size(120, 30);
+            this.btnOpenPromptFolder.Name = "btnOpenPromptFolder";
+            this.btnOpenPromptFolder.Size = new System.Drawing.Size(160, 30);
+            this.btnOpenPromptFolder.TabIndex = 7;
+            this.btnOpenPromptFolder.Text = "Open Prompt Fixes Folder";
+            this.btnOpenPromptFolder.UseVisualStyleBackColor = true;
             // 
             // panelFilters
             // 
@@ -797,6 +845,9 @@ namespace MTM_Inventory_Application.Forms.ViewLogs
         private System.Windows.Forms.Button btnNext;
         private System.Windows.Forms.Button btnToggleView;
         private System.Windows.Forms.Button btnCreatePrompt;
+        private System.Windows.Forms.Button btnManagePromptStatus;
+        private System.Windows.Forms.Button btnGenerateErrorReport;
+        private System.Windows.Forms.Button btnOpenPromptFolder;
         private System.Windows.Forms.TableLayoutPanel tableLayoutEntryDisplay;
         private System.Windows.Forms.Label lblEntryTimestamp;
         private System.Windows.Forms.TextBox txtTimestamp;
@@ -832,5 +883,6 @@ namespace MTM_Inventory_Application.Forms.ViewLogs
         private System.Windows.Forms.Button btnErrorsOnly;
         private System.Windows.Forms.Button btnPerformance;
         private System.Windows.Forms.Button btnToday;
+        private System.Windows.Forms.CheckBox chkGroupErrors;
     }
 }

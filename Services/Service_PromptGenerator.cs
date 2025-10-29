@@ -231,38 +231,49 @@ public static class Service_PromptGenerator
 
     /// <summary>
     /// Dictionary of common error types with suggested fix approaches.
+    /// Loaded from built-in templates with optional external QuickFixTemplates.json override.
+    /// T069: Enhanced with additional error types and external JSON loading support.
     /// </summary>
-    private static readonly Dictionary<string, string> QuickFixTemplates = new()
+    private static readonly Dictionary<string, string> QuickFixTemplates = LoadQuickFixTemplates();
+
+    /// <summary>
+    /// T069: Loads quick fix templates from built-in dictionary and optional external JSON file.
+    /// External JSON file (QuickFixTemplates.json) in Prompt Fixes folder can add or override templates.
+    /// </summary>
+    private static Dictionary<string, string> LoadQuickFixTemplates()
     {
-        ["NullReferenceException"] = @"
+        // Start with built-in templates
+        var templates = new Dictionary<string, string>
+        {
+            ["NullReferenceException"] = @"
 **Suggested Fix Approach:**
 1. Add null checks before accessing the object
 2. Use null-conditional operator (?.) or null-coalescing operator (??)
 3. Ensure object is initialized before use
 4. Check if the object is properly retrieved from the data source",
 
-        ["ArgumentNullException"] = @"
+            ["ArgumentNullException"] = @"
 **Suggested Fix Approach:**
 1. Add parameter validation at method entry
 2. Use `ArgumentNullException.ThrowIfNull(parameter)` in .NET 6+
 3. Consider using nullable reference types
 4. Document which parameters cannot be null",
 
-        ["TimeoutException"] = @"
+            ["TimeoutException"] = @"
 **Suggested Fix Approach:**
 1. Increase timeout value if operation is legitimately slow
 2. Optimize slow database queries or operations
 3. Add retry logic with exponential backoff
 4. Check network connectivity and server health",
 
-        ["FileNotFoundException"] = @"
+            ["FileNotFoundException"] = @"
 **Suggested Fix Approach:**
 1. Verify file path is correct
 2. Check file exists before accessing: `File.Exists(path)`
 3. Ensure proper file permissions
 4. Handle file not found scenario gracefully",
 
-        ["MySqlException"] = @"
+            ["MySqlException"] = @"
 **Suggested Fix Approach:**
 1. Check connection string is valid
 2. Verify database server is accessible
@@ -270,41 +281,112 @@ public static class Service_PromptGenerator
 4. Add retry logic for transient database errors
 5. Check for deadlocks or connection pool exhaustion",
 
-        ["InvalidOperationException"] = @"
+            ["InvalidOperationException"] = @"
 **Suggested Fix Approach:**
 1. Review operation prerequisites
 2. Check object state before operation
 3. Ensure UI operations run on UI thread
 4. Verify collection is not modified during enumeration",
 
-        ["IndexOutOfRangeException"] = @"
+            ["IndexOutOfRangeException"] = @"
 **Suggested Fix Approach:**
 1. Validate array/list indices before access
 2. Use LINQ methods like `.ElementAtOrDefault()`
 3. Check collection Count/Length before indexing
 4. Use foreach instead of index-based loops when possible",
 
-        ["ObjectDisposedException"] = @"
+            ["ObjectDisposedException"] = @"
 **Suggested Fix Approach:**
 1. Check if object is disposed before use
 2. Don't use object after calling Dispose()
 3. Review object lifetime management
 4. Consider using `using` statements for IDisposable objects",
 
-        ["UnauthorizedAccessException"] = @"
+            ["UnauthorizedAccessException"] = @"
 **Suggested Fix Approach:**
 1. Check file/directory permissions
 2. Run application with appropriate privileges
 3. Verify user has access to the resource
 4. Handle permission errors gracefully",
 
-        ["FormatException"] = @"
+            ["FormatException"] = @"
 **Suggested Fix Approach:**
 1. Validate input format before parsing
 2. Use `TryParse` instead of `Parse`
 3. Provide clear format requirements to users
-4. Sanitize input data before processing"
-    };
+4. Sanitize input data before processing",
+
+            // T069: Additional error types
+            ["ArgumentException"] = @"
+**Suggested Fix Approach:**
+1. Validate argument values before use
+2. Check for invalid combinations of arguments
+3. Provide clear error messages about what's invalid
+4. Document valid argument ranges/values",
+
+            ["ArgumentOutOfRangeException"] = @"
+**Suggested Fix Approach:**
+1. Validate numeric arguments are within valid range
+2. Check array/collection indices are valid
+3. Use guard clauses at method entry
+4. Document acceptable parameter ranges",
+
+            ["IOException"] = @"
+**Suggested Fix Approach:**
+1. Check file/directory exists before operations
+2. Ensure proper file permissions
+3. Handle file locking and sharing issues
+4. Implement retry logic for transient I/O failures",
+
+            ["DirectoryNotFoundException"] = @"
+**Suggested Fix Approach:**
+1. Verify directory path is correct
+2. Create directory if it doesn't exist: `Directory.CreateDirectory()`
+3. Check for path length limitations
+4. Handle relative vs absolute paths correctly",
+
+            ["PathTooLongException"] = @"
+**Suggested Fix Approach:**
+1. Use shorter file/directory names
+2. Move files closer to root directory
+3. Enable long path support in Windows 10+
+4. Consider using file IDs instead of full paths"
+        };
+
+        // T069: Try to load external templates from JSON file
+        try
+        {
+            string? promptDirectory = Helper_LogPath.GetPromptFixesDirectory();
+            if (!string.IsNullOrWhiteSpace(promptDirectory))
+            {
+                string customTemplatesPath = Path.Combine(promptDirectory, "QuickFixTemplates.json");
+                
+                if (File.Exists(customTemplatesPath))
+                {
+                    string jsonContent = File.ReadAllText(customTemplatesPath);
+                    var customTemplates = System.Text.Json.JsonSerializer.Deserialize<Dictionary<string, string>>(jsonContent);
+                    
+                    if (customTemplates != null)
+                    {
+                        // Merge custom templates (they override built-in ones)
+                        foreach (var kvp in customTemplates)
+                        {
+                            templates[kvp.Key] = kvp.Value;
+                        }
+                        
+                        LoggingUtility.Log($"[Service_PromptGenerator] Loaded {customTemplates.Count} custom templates from QuickFixTemplates.json");
+                    }
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            // Log but don't fail - just use built-in templates
+            LoggingUtility.Log($"[Service_PromptGenerator] Could not load custom templates: {ex.Message}");
+        }
+
+        return templates;
+    }
 
     #endregion
 
