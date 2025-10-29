@@ -180,6 +180,70 @@ internal class Dao_Transactions
         }
     }
 
+    /// <summary>
+    /// Searches for transactions using a structured criteria object.
+    /// Wrapper around SearchTransactionsAsync for cleaner API.
+    /// </summary>
+    /// <param name="criteria">Search criteria encapsulating all filter parameters</param>
+    /// <param name="userName">User performing the search</param>
+    /// <param name="isAdmin">Whether user has admin privileges</param>
+    /// <param name="page">Page number for pagination (1-based)</param>
+    /// <param name="pageSize">Number of records per page</param>
+    /// <returns>DaoResult containing list of transactions matching criteria</returns>
+    public async Task<DaoResult<List<Model_Transactions>>> SearchAsync(
+        TransactionSearchCriteria criteria,
+        string userName,
+        bool isAdmin,
+        int page = 1,
+        int pageSize = 50)
+    {
+        try
+        {
+            if (criteria == null)
+            {
+                return DaoResult<List<Model_Transactions>>.Failure("Search criteria cannot be null");
+            }
+
+            // Map criteria properties to individual parameters for existing method
+            TransactionType? transactionType = null;
+            if (!string.IsNullOrWhiteSpace(criteria.TransactionType))
+            {
+                if (Enum.TryParse<TransactionType>(criteria.TransactionType, out var type))
+                {
+                    transactionType = type;
+                }
+            }
+
+            return await SearchTransactionsAsync(
+                userName: userName,
+                isAdmin: isAdmin,
+                partID: criteria.PartID ?? "",
+                batchNumber: "",  // Not in criteria model
+                fromLocation: criteria.FromLocation ?? "",
+                toLocation: criteria.ToLocation ?? "",
+                operation: criteria.Operation ?? "",
+                transactionType: transactionType,
+                quantity: null,  // Not in criteria model
+                notes: criteria.Notes ?? "",
+                itemType: "",  // Not in criteria model
+                fromDate: criteria.DateFrom,
+                toDate: criteria.DateTo,
+                sortColumn: "ReceiveDate",
+                sortDescending: true,
+                page: page,
+                pageSize: pageSize
+            ).ConfigureAwait(false);
+        }
+        catch (Exception ex)
+        {
+            LoggingUtility.LogDatabaseError(ex);
+            await Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex, callerName: "SearchAsync");
+            return DaoResult<List<Model_Transactions>>.Failure(
+                "Failed to search transactions with criteria", ex
+            );
+        }
+    }
+
     #endregion
 
     #region Smart Search Methods
@@ -483,6 +547,14 @@ internal class Dao_Transactions
                 ? DateTime.MinValue
                 : Convert.ToDateTime(row["ReceiveDate"])
         };
+
+    /// <summary>
+    /// Maps a DataRow to Model_Transactions object.
+    /// Alias for MapTransactionFromDataRow for consistency with task naming conventions.
+    /// </summary>
+    /// <param name="row">DataRow from stored procedure result</param>
+    /// <returns>Mapped Model_Transactions object</returns>
+    private Model_Transactions MapDataRowToModel(DataRow row) => MapTransactionFromDataRow(row);
 
     #endregion
 }

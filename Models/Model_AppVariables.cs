@@ -94,6 +94,11 @@ namespace MTM_Inventory_Application.Models
         /// </summary>
         public static int CommandTimeoutSeconds { get; set; } = 30;
 
+        /// <summary>
+        /// Page size for transaction viewer pagination. Default: 50 records per page
+        /// </summary>
+        public static int TransactionPageSize { get; set; } = 50;
+
         #endregion
 
         #region About Variables
