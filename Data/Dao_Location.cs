@@ -1,10 +1,10 @@
 using System.Data;
-using MTM_Inventory_Application.Helpers;
-using MTM_Inventory_Application.Models;
-using MTM_Inventory_Application.Logging;
+using MTM_WIP_Application_Winforms.Helpers;
+using MTM_WIP_Application_Winforms.Models;
+using MTM_WIP_Application_Winforms.Logging;
 using MySql.Data.MySqlClient;
 
-namespace MTM_Inventory_Application.Data;
+namespace MTM_WIP_Application_Winforms.Data;
 
 #region Dao_Location
 
@@ -60,7 +60,7 @@ internal static class Dao_Location
                 ["IssuedBy"] = Model_AppVariables.User ?? "System",
                 ["Building"] = building
             };
-            
+
             var result = await Helper_Database_StoredProcedure.ExecuteNonQueryWithStatusAsync(
                 Model_AppVariables.ConnectionString,
                 "md_locations_Add_Location",
@@ -102,7 +102,7 @@ internal static class Dao_Location
                 ["IssuedBy"] = Model_AppVariables.User ?? "System",
                 ["Building"] = building
             };
-            
+
             var result = await Helper_Database_StoredProcedure.ExecuteNonQueryWithStatusAsync(
                 Model_AppVariables.ConnectionString,
                 "md_locations_Update_Location",
@@ -137,7 +137,7 @@ internal static class Dao_Location
                 null, // No parameters needed
                 null // No progress helper for this method
             );
-                
+
             if (result.IsSuccess && result.Data != null)
             {
                 return DaoResult<DataTable>.Success(result.Data, $"Retrieved {result.Data.Rows.Count} locations");
@@ -167,7 +167,7 @@ internal static class Dao_Location
 
             var table = allLocationsResult.Data!;
             var rows = table.Select($"Location = '{location.Replace("'", "''")}'");
-            
+
             if (rows.Length > 0)
             {
                 return DaoResult<DataRow>.Success(rows[0], $"Found location {location}");
@@ -198,7 +198,7 @@ internal static class Dao_Location
                 parameters,
                 null // No progress helper for this method
             );
-                
+
             if (result.IsSuccess && result.Data != null)
             {
                 bool exists = Convert.ToInt32(result.Data) > 0;

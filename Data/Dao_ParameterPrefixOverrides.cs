@@ -2,12 +2,12 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Threading.Tasks;
-using MTM_Inventory_Application.Helpers;
-using MTM_Inventory_Application.Models;
-using MTM_Inventory_Application.Logging;
+using MTM_WIP_Application_Winforms.Helpers;
+using MTM_WIP_Application_Winforms.Models;
+using MTM_WIP_Application_Winforms.Logging;
 using MySql.Data.MySqlClient;
 
-namespace MTM_Inventory_Application.Data
+namespace MTM_WIP_Application_Winforms.Data
 {
     /// <summary>
     /// Data Access Object for parameter prefix override management.
@@ -27,7 +27,7 @@ namespace MTM_Inventory_Application.Data
             try
             {
                 var connectionString = Helper_Database_Variables.GetConnectionString(null, null, null, null);
-                
+
                 var result = await Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync(
                     connectionString,
                     "sys_parameter_prefix_overrides_Get_All",
@@ -44,7 +44,7 @@ namespace MTM_Inventory_Application.Data
                 }
 
                 var overrides = new List<Model_ParameterPrefixOverride>();
-                
+
                 if (result.Data != null && result.Data.Rows.Count > 0)
                 {
                     foreach (DataRow row in result.Data.Rows)
@@ -54,7 +54,7 @@ namespace MTM_Inventory_Application.Data
                 }
 
                 return DaoResult<List<Model_ParameterPrefixOverride>>.Success(
-                    overrides, 
+                    overrides,
                     $"Retrieved {overrides.Count} active override(s)");
             }
             catch (Exception ex)
@@ -79,7 +79,7 @@ namespace MTM_Inventory_Application.Data
                 }
 
                 var connectionString = Helper_Database_Variables.GetConnectionString(null, null, null, null);
-                
+
                 var result = await Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync(
                     connectionString,
                     "sys_parameter_prefix_overrides_Get_ById",
@@ -147,7 +147,7 @@ namespace MTM_Inventory_Application.Data
                 }
 
                 var connectionString = Helper_Database_Variables.GetConnectionString(null, null, null, null);
-                
+
                 var result = await Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync(
                     connectionString,
                     "sys_parameter_prefix_overrides_Add",
@@ -167,13 +167,13 @@ namespace MTM_Inventory_Application.Data
                     {
                         LoggingUtility.LogApplicationError(result.Exception);
                     }
-                    
+
                     // Check error message for duplicate
                     if (result.ErrorMessage.Contains("already exists"))
                     {
                         return DaoResult<int>.Failure("Override already exists for this procedure-parameter combination");
                     }
-                    
+
                     return DaoResult<int>.Failure(result.ErrorMessage);
                 }
 
@@ -181,10 +181,10 @@ namespace MTM_Inventory_Application.Data
                 var getAllResult = await GetAllActiveAsync();
                 if (getAllResult.IsSuccess && getAllResult.Data != null)
                 {
-                    var newOverride = getAllResult.Data.Find(o => 
-                        o.ProcedureName == model.ProcedureName && 
+                    var newOverride = getAllResult.Data.Find(o =>
+                        o.ProcedureName == model.ProcedureName &&
                         o.ParameterName == model.ParameterName);
-                    
+
                     if (newOverride != null)
                     {
                         model.OverrideId = newOverride.OverrideId;
@@ -240,7 +240,7 @@ namespace MTM_Inventory_Application.Data
                 }
 
                 var connectionString = Helper_Database_Variables.GetConnectionString(null, null, null, null);
-                
+
                 var result = await Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync(
                     connectionString,
                     "sys_parameter_prefix_overrides_Update_ById",
@@ -261,7 +261,7 @@ namespace MTM_Inventory_Application.Data
                     {
                         LoggingUtility.LogApplicationError(result.Exception);
                     }
-                    
+
                     // Check specific error conditions
                     if (result.ErrorMessage.Contains("already exists"))
                     {
@@ -271,7 +271,7 @@ namespace MTM_Inventory_Application.Data
                     {
                         return DaoResult.Failure($"Override {model.OverrideId} not found");
                     }
-                    
+
                     return DaoResult.Failure(result.ErrorMessage);
                 }
 
@@ -307,7 +307,7 @@ namespace MTM_Inventory_Application.Data
                 }
 
                 var connectionString = Helper_Database_Variables.GetConnectionString(null, null, null, null);
-                
+
                 var result = await Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync(
                     connectionString,
                     "sys_parameter_prefix_overrides_Delete_ById",
@@ -324,12 +324,12 @@ namespace MTM_Inventory_Application.Data
                     {
                         LoggingUtility.LogApplicationError(result.Exception);
                     }
-                    
+
                     if (result.ErrorMessage.Contains("not found"))
                     {
                         return DaoResult.Failure($"Override {overrideId} not found");
                     }
-                    
+
                     return DaoResult.Failure(result.ErrorMessage);
                 }
 

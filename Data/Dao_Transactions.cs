@@ -1,11 +1,11 @@
 using System.Text;
-using MTM_Inventory_Application.Models;
-using MTM_Inventory_Application.Helpers;
-using MTM_Inventory_Application.Logging;
+using MTM_WIP_Application_Winforms.Models;
+using MTM_WIP_Application_Winforms.Helpers;
+using MTM_WIP_Application_Winforms.Logging;
 using System.Data;
 using MySql.Data.MySqlClient;
 
-namespace MTM_Inventory_Application.Data;
+namespace MTM_WIP_Application_Winforms.Data;
 
 /// <summary>
 /// Data access object for transaction operations
@@ -285,13 +285,13 @@ internal class Dao_Transactions
 
             // Build WHERE clause in application using StringBuilder for full control
             var whereBuilder = new StringBuilder("1=1");
-            
+
             System.Diagnostics.Debug.WriteLine($"[DAO DEBUG] Starting WHERE clause build: '{whereBuilder}'");
-            
+
             // User filtering logic - only apply if user is not admin AND no specific search terms
             bool hasSpecificSearchTerms = searchTerms.Count > 0;
             System.Diagnostics.Debug.WriteLine($"[DAO DEBUG] hasSpecificSearchTerms: {hasSpecificSearchTerms}");
-            
+
             if (!isAdmin && !hasSpecificSearchTerms && !string.IsNullOrWhiteSpace(userName))
             {
                 whereBuilder.Append($" AND User = '{userName.Replace("'", "''")}'");
@@ -301,50 +301,50 @@ internal class Dao_Transactions
             {
                 System.Diagnostics.Debug.WriteLine($"[DAO DEBUG] No user filter applied - isAdmin: {isAdmin}, hasSpecificSearchTerms: {hasSpecificSearchTerms}, userName: '{userName}'");
             }
-            
+
             // Add specific search term filters
             if (searchTerms.ContainsKey("partid") && !string.IsNullOrWhiteSpace(searchTerms["partid"]))
             {
                 whereBuilder.Append($" AND PartID = '{searchTerms["partid"].Replace("'", "''")}'");
                 System.Diagnostics.Debug.WriteLine($"[DAO DEBUG] Added partid filter - WHERE clause now: '{whereBuilder}'");
             }
-            
+
             if (searchTerms.ContainsKey("batch") && !string.IsNullOrWhiteSpace(searchTerms["batch"]))
             {
                 whereBuilder.Append($" AND BatchNumber = '{searchTerms["batch"].Replace("'", "''")}'");
                 System.Diagnostics.Debug.WriteLine($"[DAO DEBUG] Added batch filter - WHERE clause now: '{whereBuilder}'");
             }
-            
+
             if (searchTerms.ContainsKey("operation") && !string.IsNullOrWhiteSpace(searchTerms["operation"]))
             {
                 whereBuilder.Append($" AND Operation = '{searchTerms["operation"].Replace("'", "''")}'");
                 System.Diagnostics.Debug.WriteLine($"[DAO DEBUG] Added operation filter - WHERE clause now: '{whereBuilder}'");
             }
-            
+
             if (searchTerms.ContainsKey("notes") && !string.IsNullOrWhiteSpace(searchTerms["notes"]))
             {
                 whereBuilder.Append($" AND Notes LIKE '%{searchTerms["notes"].Replace("'", "''")}%'");
                 System.Diagnostics.Debug.WriteLine($"[DAO DEBUG] Added notes filter - WHERE clause now: '{whereBuilder}'");
             }
-            
+
             if (searchTerms.ContainsKey("user") && !string.IsNullOrWhiteSpace(searchTerms["user"]))
             {
                 whereBuilder.Append($" AND User = '{searchTerms["user"].Replace("'", "''")}'");
                 System.Diagnostics.Debug.WriteLine($"[DAO DEBUG] Added specific user filter - WHERE clause now: '{whereBuilder}'");
             }
-            
+
             if (searchTerms.ContainsKey("itemtype") && !string.IsNullOrWhiteSpace(searchTerms["itemtype"]))
             {
                 whereBuilder.Append($" AND ItemType = '{searchTerms["itemtype"].Replace("'", "''")}'");
                 System.Diagnostics.Debug.WriteLine($"[DAO DEBUG] Added itemtype filter - WHERE clause now: '{whereBuilder}'");
             }
-            
+
             if (searchTerms.ContainsKey("quantity") && int.TryParse(searchTerms["quantity"], out int qty))
             {
                 whereBuilder.Append($" AND Quantity = {qty}");
                 System.Diagnostics.Debug.WriteLine($"[DAO DEBUG] Added quantity filter - WHERE clause now: '{whereBuilder}'");
             }
-            
+
             // Handle transaction types filter
             if (transactionTypes.Count > 0 && transactionTypes.Count < 3) // Only filter if not all types selected
             {
@@ -352,20 +352,20 @@ internal class Dao_Transactions
                 whereBuilder.Append($" AND TransactionType IN ({typeList})");
                 System.Diagnostics.Debug.WriteLine($"[DAO DEBUG] Added transaction type filter - WHERE clause now: '{whereBuilder}'");
             }
-            
+
             // Handle time range filter
             if (timeRange.from.HasValue)
             {
                 whereBuilder.Append($" AND ReceiveDate >= '{timeRange.from.Value:yyyy-MM-dd HH:mm:ss}'");
                 System.Diagnostics.Debug.WriteLine($"[DAO DEBUG] Added from date filter - WHERE clause now: '{whereBuilder}'");
             }
-            
+
             if (timeRange.to.HasValue)
             {
                 whereBuilder.Append($" AND ReceiveDate <= '{timeRange.to.Value:yyyy-MM-dd HH:mm:ss}'");
                 System.Diagnostics.Debug.WriteLine($"[DAO DEBUG] Added to date filter - WHERE clause now: '{whereBuilder}'");
             }
-            
+
             // Handle locations filter
             if (locations.Count > 0)
             {
@@ -373,7 +373,7 @@ internal class Dao_Transactions
                 whereBuilder.Append($" AND FromLocation IN ({locationList})");
                 System.Diagnostics.Debug.WriteLine($"[DAO DEBUG] Added location filter - WHERE clause now: '{whereBuilder}'");
             }
-            
+
             // Handle general search term (searches across multiple fields)
             if (searchTerms.ContainsKey("general") && !string.IsNullOrWhiteSpace(searchTerms["general"]))
             {
@@ -381,7 +381,7 @@ internal class Dao_Transactions
                 whereBuilder.Append($" AND (PartID LIKE '%{generalTerm}%' OR BatchNumber LIKE '%{generalTerm}%' OR Operation LIKE '%{generalTerm}%' OR Notes LIKE '%{generalTerm}%' OR User LIKE '%{generalTerm}%' OR ItemType LIKE '%{generalTerm}%' OR FromLocation LIKE '%{generalTerm}%' OR ToLocation LIKE '%{generalTerm}%')");
                 System.Diagnostics.Debug.WriteLine($"[DAO DEBUG] Added general search filter - WHERE clause now: '{whereBuilder}'");
             }
-            
+
             // Build parameters for the simplified stored procedure
             var parameters = new Dictionary<string, object>
             {
@@ -435,7 +435,7 @@ internal class Dao_Transactions
         {
             System.Diagnostics.Debug.WriteLine($"[DAO DEBUG] Exception in SmartSearchAsync: {ex.Message}");
             System.Diagnostics.Debug.WriteLine($"[DAO DEBUG] Stack trace: {ex.StackTrace}");
-            
+
             LoggingUtility.LogDatabaseError(ex);
             await Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex, callerName: "SmartSearchAsync");
             return DaoResult<List<Model_Transactions>>.Failure(

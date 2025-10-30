@@ -13,7 +13,7 @@
 .PARAMETER Port
     MySQL server port (default: 3306)
 .PARAMETER Database
-    Target database name (default: mtm_wip_application)
+    Target database name (default: MTM_WIP_Application_Winforms)
 .PARAMETER User
     MySQL username (default: root)
 .PARAMETER Password
@@ -28,7 +28,7 @@ param(
     [string]$OutputDir = ".\UpdatedStoredProcedures\ReadyForVerification",
     [string]$Server = "localhost",
     [int]$Port = 3306,
-    [string]$Database = "mtm_wip_application",
+    [string]$Database = "MTM_WIP_Application_Winforms",
     [string]$User = "root",
     [SecureString]$Password = (ConvertTo-SecureString "root" -AsPlainText -Force)
 )
@@ -84,13 +84,13 @@ $domainMapping = @{
 
 function Get-ProcedureDomain {
     param([string]$ProcedureName)
-    
+
     foreach ($prefix in $domainMapping.Keys) {
         if ($ProcedureName.StartsWith($prefix)) {
             return $domainMapping[$prefix]
         }
     }
-    
+
     # Default to 'uncategorized' for unknown prefixes
     return "uncategorized"
 }
@@ -105,10 +105,10 @@ function Get-ProcedureDefinition {
         [string]$User,
         [string]$Password
     )
-    
+
     try {
         $query = "SHOW CREATE PROCEDURE ``$ProcedureName``;"
-        
+
         $mysqlArgs = @(
             "-h", $Server,
             "-P", $Port,
@@ -119,37 +119,37 @@ function Get-ProcedureDefinition {
             "--skip-column-names",
             "-e", $query
         )
-        
+
         # Redirect stderr to null to suppress password warning
         $output = & $MysqlPath @mysqlArgs 2>$null
-        
+
         if ($LASTEXITCODE -ne 0) {
             Write-Host "  ✗ Failed to extract $ProcedureName" -ForegroundColor Red
             return $null
         }
-        
+
         # Parse output: SHOW CREATE PROCEDURE returns 3 tab-separated columns:
         # Column 1: Procedure name
         # Column 2: sql_mode (e.g., NO_AUTO_VALUE_ON_ZERO)
         # Column 3: CREATE PROCEDURE statement
-        
+
         $outputText = $output -join "`n"
         $columns = $outputText -split "`t"
-        
+
         if ($columns.Count -lt 3) {
             Write-Host "  ✗ Unexpected output format for $ProcedureName" -ForegroundColor Red
             return $null
         }
-        
+
         # Extract the CREATE PROCEDURE statement (3rd column)
         $definition = $columns[2]
-        
+
         # Replace literal \n with actual newlines for readability
         $definition = $definition -replace '\\n', "`n"
         $definition = $definition -replace '\\t', "    "  # Replace \t with spaces
-        
+
         return $definition
-        
+
     } catch {
         Write-Host "  ✗ Error extracting $ProcedureName`: $_" -ForegroundColor Red
         return $null
@@ -187,13 +187,13 @@ $progress = 0
 foreach ($routine in $routines) {
     $progress++
     $procedureName = $routine.ROUTINE_NAME
-    
+
     Write-Host "[$progress/$totalCount] $procedureName..." -NoNewline
-    
+
     # Get domain
     $domain = Get-ProcedureDomain -ProcedureName $procedureName
     $domainPath = Join-Path $OutputDir $domain
-    
+
     # Get procedure definition
     $definition = Get-ProcedureDefinition `
         -ProcedureName $procedureName `
@@ -203,13 +203,13 @@ foreach ($routine in $routines) {
         -Database $Database `
         -User $User `
         -Password $PlainPassword
-    
+
     if ($null -eq $definition -or $definition.Trim() -eq "") {
         Write-Host " FAILED" -ForegroundColor Red
         $failureCount++
         continue
     }
-    
+
     # Build SQL file content with header
     $fileHeader = @"
 -- =============================================
@@ -224,7 +224,7 @@ DELIMITER //
 DROP PROCEDURE IF EXISTS ``$procedureName``//
 
 "@
-    
+
     $fileFooter = @"
 
 //
@@ -235,13 +235,13 @@ DELIMITER ;
 -- End of $procedureName
 -- =============================================
 "@
-    
+
     $fullContent = $fileHeader + "`n" + $definition + $fileFooter
-    
+
     # Save to file
     $outputFile = Join-Path $domainPath "$procedureName.sql"
     $fullContent | Out-File -FilePath $outputFile -Encoding UTF8 -Force
-    
+
     Write-Host " ✓ $domain/$procedureName.sql" -ForegroundColor Green
     $successCount++
 }

@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using System.Data;
 using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using MTM_Inventory_Application.Data;
-using MTM_Inventory_Application.Helpers;
-using MTM_Inventory_Application.Models;
+using MTM_WIP_Application_Winforms.Data;
+using MTM_WIP_Application_Winforms.Helpers;
+using MTM_WIP_Application_Winforms.Models;
 
-namespace MTM_Inventory_Application.Tests.Integration;
+namespace MTM_WIP_Application_Winforms.Tests.Integration;
 
 /// <summary>
 /// Integration tests for Helper_Database_StoredProcedure with focus on parameter prefix detection,
@@ -79,7 +79,7 @@ public class Helper_Database_StoredProcedure_Tests : BaseIntegrationTest
     public async Task ExecuteNonQueryWithStatusAsync_WithP_Prefix_AppliesCorrectly()
     {
         // Arrange - Get a valid test user from the system
-        var usersResult = await MTM_Inventory_Application.Data.Dao_System.System_UserAccessTypeAsync();
+        var usersResult = await MTM_WIP_Application_Winforms.Data.Dao_System.System_UserAccessTypeAsync();
         AssertSuccessWithData(usersResult);
         var testUser = usersResult.Data![0].User;
         var currentAccessType = usersResult.Data![0].VitsUser;

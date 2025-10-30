@@ -1,9 +1,9 @@
 ﻿
 
-using MTM_Inventory_Application.Core;
-using MTM_Inventory_Application.Forms.MainForm;
+using MTM_WIP_Application_Winforms.Core;
+using MTM_WIP_Application_Winforms.Forms.MainForm;
 
-namespace MTM_Inventory_Application.Helpers;
+namespace MTM_WIP_Application_Winforms.Helpers;
 
 internal class Helper_UI_Shortcuts
 {

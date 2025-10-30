@@ -24,35 +24,39 @@ This guide helps developers quickly understand and use the refactored database a
 
 ### Prerequisites
 
-- Visual Studio 2022 with .NET 8.0 SDK installed
-- MySQL 5.7.24+ running locally (MAMP recommended)
-- Test database `mtm_wip_application_winform_test` created and populated
+-   Visual Studio 2022 with .NET 8.0 SDK installed
+-   MySQL 5.7.24+ running locally (MAMP recommended)
+-   Test database `mtm_wip_application_winform_test` created and populated
 
 ### Test Database Setup
 
 **1. Create test database**:
+
 ```sql
 CREATE DATABASE mtm_wip_application_winform_test;
 ```
 
-**2. Import schema** from `Database/CurrentDatabase/mtm_wip_application.sql`:
+**2. Import schema** from `Database/CurrentDatabase/MTM_WIP_Application_Winforms.sql`:
+
 ```powershell
-mysql -u root -proot mtm_wip_application_winform_test < Database/CurrentDatabase/mtm_wip_application.sql
+mysql -u root -proot mtm_wip_application_winform_test < Database/CurrentDatabase/MTM_WIP_Application_Winforms.sql
 ```
 
 **3. Verify connection** in `Helper_Database_Variables.cs`:
+
 ```csharp
 // Environment-aware database selection
 public static string DatabaseName =>
     Debugger.IsAttached
         ? "mtm_wip_application_winforms_test" // Development
-        : "mtm_wip_application";     // Production
+        : "MTM_WIP_Application_Winforms";     // Production
 
 // Test database for integration tests (manual selection)
 public const string TestDatabaseName = "mtm_wip_application_winform_test";
 ```
 
 **4. Update connection string** for tests:
+
 ```csharp
 var connectionString = Helper_Database_Variables.GetConnectionString(
     databaseName: Helper_Database_Variables.TestDatabaseName);
@@ -177,7 +181,7 @@ public static async Task<DaoResult> PerformMultiStepOperationAsync(
     await connection.OpenAsync();
 
     using var transaction = await connection.BeginTransactionAsync();
-    
+
     try
     {
         // Step 1: First operation
@@ -254,10 +258,10 @@ public class Dao_InventoryTests
         // Use test database connection
         var connectionString = Helper_Database_Variables.GetConnectionString(
             databaseName: Helper_Database_Variables.TestDatabaseName);
-        
+
         _connection = new MySqlConnection(connectionString);
         await _connection.OpenAsync();
-        
+
         // Begin transaction for test isolation
         _transaction = await _connection.BeginTransactionAsync();
     }
@@ -367,9 +371,9 @@ private async void btnSave_Click(object sender, EventArgs e)
         // Update UI based on result
         if (result.IsSuccess)
         {
-            MessageBox.Show(result.Message, "Success", 
+            MessageBox.Show(result.Message, "Success",
                 MessageBoxButtons.OK, MessageBoxIcon.Information);
-            
+
             // Refresh data
             await LoadInventoryAsync();
         }
@@ -406,7 +410,7 @@ public partial class InventoryControl : UserControl
     public InventoryControl()
     {
         InitializeComponent();
-        
+
         // Subscribe to Load event for async initialization
         Load += InventoryControl_Load;
     }
@@ -421,7 +425,7 @@ public partial class InventoryControl : UserControl
         try
         {
             var result = await Dao_Inventory.GetAllInventoryAsync();
-            
+
             if (result.IsSuccess)
             {
                 dgvInventory.DataSource = result.Data;
@@ -465,7 +469,7 @@ public class InventoryMonitoringService
         try
         {
             var result = await Dao_Inventory.GetLowStockItemsAsync();
-            
+
             if (result.IsSuccess && result.Data.Rows.Count > 0)
             {
                 // Send alerts for low stock items
@@ -496,7 +500,7 @@ public class InventoryMonitoringService
 private async void btnExport_Click(object sender, EventArgs e)
 {
     var progressHelper = new Helper_StoredProcedureProgress();
-    
+
     // Subscribe to progress events
     progressHelper.ProgressChanged += (sender, progress) =>
     {
@@ -511,7 +515,7 @@ private async void btnExport_Click(object sender, EventArgs e)
     try
     {
         var result = await Dao_Inventory.ExportInventoryAsync(progressHelper);
-        
+
         if (result.IsSuccess)
         {
             MessageBox.Show("Export completed successfully", "Success",
@@ -536,20 +540,21 @@ private async void btnExport_Click(object sender, EventArgs e)
 
 ### Issue 1: "Parameter prefix not found" Error
 
-**Symptom**: Error message indicates parameter prefix (p_, in_, o_) could not be detected.
+**Symptom**: Error message indicates parameter prefix (p*, in*, o\_) could not be detected.
 
 **Cause**: Parameter not in INFORMATION_SCHEMA cache and fallback convention failed.
 
 **Solution**:
+
 1. Verify stored procedure exists in database
 2. Check parameter name spelling in C# code matches stored procedure
 3. Run INFORMATION_SCHEMA query manually to verify parameter name:
-   ```sql
-   SELECT ROUTINE_NAME, PARAMETER_NAME, PARAMETER_MODE
-   FROM INFORMATION_SCHEMA.PARAMETERS
-   WHERE ROUTINE_SCHEMA = DATABASE()
-     AND ROUTINE_NAME = '[your_procedure_name]';
-   ```
+    ```sql
+    SELECT ROUTINE_NAME, PARAMETER_NAME, PARAMETER_MODE
+    FROM INFORMATION_SCHEMA.PARAMETERS
+    WHERE ROUTINE_SCHEMA = DATABASE()
+      AND ROUTINE_NAME = '[your_procedure_name]';
+    ```
 4. If parameter has non-standard prefix, update fallback convention in `Helper_Database_StoredProcedure.GetParameterPrefix()`
 
 ### Issue 2: "Async method is blocking UI thread" Error
@@ -559,6 +564,7 @@ private async void btnExport_Click(object sender, EventArgs e)
 **Cause**: Using `.Result` or `.Wait()` instead of `await`.
 
 **Solution**:
+
 ```csharp
 // ❌ BAD: Blocks UI thread
 var result = Dao_Inventory.GetInventoryAsync().Result;
@@ -574,6 +580,7 @@ var result = await Dao_Inventory.GetInventoryAsync();
 **Cause**: One step failed but error not properly checked.
 
 **Solution**:
+
 ```csharp
 // Always check IsSuccess after each step
 var step1Result = await ExecuteStep1Async();
@@ -599,6 +606,7 @@ if (!step2Result.IsSuccess)
 **Cause**: Connections not properly disposed.
 
 **Solution**:
+
 ```csharp
 // ❌ BAD: Connection not disposed
 var connection = new MySqlConnection(connectionString);
@@ -621,10 +629,11 @@ using (var connection = new MySqlConnection(connectionString))
 **Cause**: Query took longer than configured threshold (500ms for Query, 1000ms for Modification, etc.).
 
 **Solution**:
+
 1. Review stored procedure execution plan:
-   ```sql
-   EXPLAIN [your_stored_procedure_call];
-   ```
+    ```sql
+    EXPLAIN [your_stored_procedure_call];
+    ```
 2. Add indexes for columns in WHERE/JOIN clauses
 3. Limit result set with appropriate filters
 4. Consider paginating large result sets
@@ -637,6 +646,7 @@ using (var connection = new MySqlConnection(connectionString))
 **Cause**: Not checking `IsSuccess` before accessing `Data`.
 
 **Solution**:
+
 ```csharp
 // ❌ BAD: Data might be null
 var result = await Dao_Inventory.GetInventoryAsync();
@@ -658,7 +668,7 @@ else
 
 ## Next Steps
 
-- Review [data-model.md](./data-model.md) for entity structure and relationships
-- Review [contracts/](./contracts/) for detailed API schemas
-- Review [plan.md](./plan.md) for implementation phases and architecture
-- Consult [.github/instructions/mysql-database.instructions.md](../../.github/instructions/mysql-database.instructions.md) for MySQL best practices
+-   Review [data-model.md](./data-model.md) for entity structure and relationships
+-   Review [contracts/](./contracts/) for detailed API schemas
+-   Review [plan.md](./plan.md) for implementation phases and architecture
+-   Consult [.github/instructions/mysql-database.instructions.md](../../.github/instructions/mysql-database.instructions.md) for MySQL best practices

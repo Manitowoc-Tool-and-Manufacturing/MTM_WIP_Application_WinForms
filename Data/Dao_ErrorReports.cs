@@ -3,12 +3,12 @@ using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
-using MTM_Inventory_Application.Helpers;
-using MTM_Inventory_Application.Logging;
-using MTM_Inventory_Application.Models;
+using MTM_WIP_Application_Winforms.Helpers;
+using MTM_WIP_Application_Winforms.Logging;
+using MTM_WIP_Application_Winforms.Models;
 using MTM_WIP_Application_WinForms.Models;
 
-namespace MTM_Inventory_Application.Data;
+namespace MTM_WIP_Application_Winforms.Data;
 
 /// <summary>
 /// Data Access Object for error_reports table operations.
@@ -38,7 +38,7 @@ internal static class Dao_ErrorReports
     /// - Sets ReportDate to current timestamp
     /// - Generates a unique ReportID
     /// - Sets Status to 'New' by default
-    /// 
+    ///
     /// The stored procedure uses transactions to ensure atomicity.
     /// On success, the ReportID is extracted from output parameters.
     /// </remarks>
@@ -77,21 +77,21 @@ internal static class Dao_ErrorReports
                 // but we need to extract ReportID from a SELECT statement or use LAST_INSERT_ID()
                 // For now, since the stored procedure returns the ReportID via OUT parameter,
                 // we'll query the last insert ID from the result set or StatusMessage
-                
+
                 // Check if we have a DataTable with results (some SPs return SELECT results)
                 int reportID = 0;
                 if (result.Data != null && result.Data.Rows.Count > 0 && result.Data.Columns.Contains("ReportID"))
                 {
                     reportID = Convert.ToInt32(result.Data.Rows[0]["ReportID"]);
                 }
-                
+
                 if (reportID > 0)
                 {
                     LoggingUtility.LogApplicationInfo(
                         $"[Dao_ErrorReports] Successfully inserted error report. ReportID: {reportID}, User: {report.UserName}");
-                    
+
                     return DaoResult<int>.Success(
-                        reportID, 
+                        reportID,
                         $"Error report submitted successfully. Report ID: {reportID}");
                 }
                 else
@@ -99,7 +99,7 @@ internal static class Dao_ErrorReports
                     // Success but no ReportID returned - log and return generic success
                     LoggingUtility.Log(
                         "[Dao_ErrorReports] Warning: Error report inserted but ReportID not returned from stored procedure");
-                    
+
                     return DaoResult<int>.Success(
                         0,
                         "Error report submitted successfully.");
@@ -116,7 +116,7 @@ internal static class Dao_ErrorReports
                 {
                     LoggingUtility.Log($"[Dao_ErrorReports] Failed to insert error report: {result.StatusMessage}");
                 }
-                
+
                 return DaoResult<int>.Failure(
                     result.StatusMessage ?? "Failed to submit error report.");
             }
@@ -124,7 +124,7 @@ internal static class Dao_ErrorReports
         catch (Exception ex)
         {
             LoggingUtility.LogApplicationError(ex);
-            
+
             return DaoResult<int>.Failure(
                 "An unexpected error occurred while submitting the error report.");
         }
@@ -288,7 +288,7 @@ internal static class Dao_ErrorReports
     /// - ReportID exists
     /// - NewStatus is one of: New, Reviewed, Resolved
     /// - ReviewedBy is not empty
-    /// 
+    ///
     /// Uses transactions to ensure atomicity of the update.
     /// ReviewedDate is automatically set to NOW() by the stored procedure.
     /// </remarks>

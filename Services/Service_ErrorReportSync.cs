@@ -6,13 +6,13 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
-using MTM_Inventory_Application.Helpers;
-using MTM_Inventory_Application.Logging;
-using MTM_Inventory_Application.Models;
+using MTM_WIP_Application_Winforms.Helpers;
+using MTM_WIP_Application_Winforms.Logging;
+using MTM_WIP_Application_Winforms.Models;
 using MTM_WIP_Application_WinForms.Models;
 using MySql.Data.MySqlClient;
 
-namespace MTM_Inventory_Application.Services;
+namespace MTM_WIP_Application_Winforms.Services;
 
 /// <summary>
 /// Service for synchronizing queued error reports with the database.
@@ -39,7 +39,7 @@ internal static class Service_ErrorReportSync
     {
         // Try to acquire lock immediately without waiting
         bool lockAcquired = await _syncLock.WaitAsync(0);
-        
+
         if (!lockAcquired)
         {
             LoggingUtility.Log("[Service_ErrorReportSync] Sync already in progress, skipping startup sync");
@@ -62,7 +62,7 @@ internal static class Service_ErrorReportSync
 
             return DaoResult<int>.Success(
                 successCount,
-                successCount > 0 
+                successCount > 0
                     ? $"Successfully submitted {successCount} pending error report(s)"
                     : "No pending error reports to sync");
         }
@@ -86,7 +86,7 @@ internal static class Service_ErrorReportSync
     {
         // Try to acquire lock immediately
         bool lockAcquired = await _syncLock.WaitAsync(0);
-        
+
         if (!lockAcquired)
         {
             return DaoResult<int>.Failure("Another sync operation is already in progress. Please wait and try again.");
@@ -102,7 +102,7 @@ internal static class Service_ErrorReportSync
 
             // Get pending count for progress indication
             int pendingCount = GetPendingReportCount();
-            
+
             if (pendingCount == 0)
             {
                 return DaoResult<int>.Success(0, "No pending error reports to sync");
@@ -110,7 +110,7 @@ internal static class Service_ErrorReportSync
 
             // Show progress indicator if count exceeds threshold
             bool showProgress = pendingCount > Model_AppVariables.ErrorReporting.SyncProgressThreshold;
-            
+
             if (showProgress)
             {
                 LoggingUtility.Log($"[Service_ErrorReportSync] Starting manual sync of {pendingCount} reports (progress will be shown)");
@@ -190,7 +190,7 @@ internal static class Service_ErrorReportSync
         foreach (string filePath in sqlFiles)
         {
             bool success = await ExecuteSqlFileAsync(filePath);
-            
+
             if (success)
             {
                 successCount++;
@@ -226,7 +226,7 @@ internal static class Service_ErrorReportSync
             if (await ReportExistsAsync(userName, timestamp))
             {
                 LoggingUtility.Log($"[Service_ErrorReportSync] Report already exists, skipping: {Path.GetFileName(filePath)}");
-                
+
                 // Move to archive to prevent reprocessing
                 MoveToArchive(filePath);
                 return true;
@@ -234,50 +234,50 @@ internal static class Service_ErrorReportSync
 
             // Execute SQL file
             string connectionString = Helper_Database_Variables.GetConnectionString(null, null, null, null);
-            
+
             using (var connection = new MySqlConnection(connectionString))
             {
                 await connection.OpenAsync();
-                
+
                 using (var command = connection.CreateCommand())
                 {
                     command.CommandText = sqlContent;
                     command.CommandTimeout = Model_AppVariables.CommandTimeoutSeconds;
-                    
+
                     await command.ExecuteNonQueryAsync();
                 }
             }
 
             // Success - move to archive
             MoveToArchive(filePath);
-            
+
             LoggingUtility.Log($"[Service_ErrorReportSync] Successfully processed: {Path.GetFileName(filePath)}");
-            
+
             return true;
         }
         catch (MySqlException ex)
         {
             LoggingUtility.LogApplicationError(ex);
-            
+
             // SQL execution failed - mark as corrupt
             HandleCorruptFile(filePath, ex);
-            
+
             return false;
         }
         catch (IOException ex)
         {
             // File move failure - log but leave in pending for retry
             LoggingUtility.Log($"[Service_ErrorReportSync] File operation failed for {Path.GetFileName(filePath)}: {ex.Message}");
-            
+
             return false;
         }
         catch (Exception ex)
         {
             LoggingUtility.LogApplicationError(ex);
-            
+
             // Unexpected error - mark as corrupt
             HandleCorruptFile(filePath, ex);
-            
+
             return false;
         }
     }
@@ -298,25 +298,25 @@ internal static class Service_ErrorReportSync
         try
         {
             string connectionString = Helper_Database_Variables.GetConnectionString(null, null, null, null);
-            
+
             using (var connection = new MySqlConnection(connectionString))
             {
                 await connection.OpenAsync();
-                
+
                 using (var command = connection.CreateCommand())
                 {
                     // Query with 1-second tolerance for timestamp matching
                     command.CommandText = @"
-                        SELECT COUNT(*) 
-                        FROM error_reports 
-                        WHERE UserName = @userName 
+                        SELECT COUNT(*)
+                        FROM error_reports
+                        WHERE UserName = @userName
                         AND ABS(TIMESTAMPDIFF(SECOND, ReportDate, @reportDate)) <= 1";
-                    
+
                     command.Parameters.AddWithValue("@userName", userName);
                     command.Parameters.AddWithValue("@reportDate", reportDate);
-                    
+
                     long count = (long)await command.ExecuteScalarAsync();
-                    
+
                     return count > 0;
                 }
             }
@@ -324,7 +324,7 @@ internal static class Service_ErrorReportSync
         catch (Exception ex)
         {
             LoggingUtility.Log($"[Service_ErrorReportSync] Error checking for duplicate report: {ex.Message}");
-            
+
             // On error, assume report doesn't exist to allow retry
             return false;
         }
@@ -339,17 +339,17 @@ internal static class Service_ErrorReportSync
         try
         {
             string connectionString = Helper_Database_Variables.GetConnectionString(null, null, null, null);
-            
+
             using (var connection = new MySqlConnection(connectionString))
             {
                 await connection.OpenAsync();
-                
+
                 using (var command = connection.CreateCommand())
                 {
                     command.CommandText = "SELECT 1";
                     await command.ExecuteScalarAsync();
                 }
-                
+
                 return true;
             }
         }
@@ -369,16 +369,16 @@ internal static class Service_ErrorReportSync
         try
         {
             string corruptPath = Path.ChangeExtension(filePath, ".corrupt");
-            
+
             // If corrupt file already exists, append timestamp
             if (File.Exists(corruptPath))
             {
                 string timestamp = DateTime.Now.ToString("yyyyMMddHHmmss");
                 corruptPath = Path.ChangeExtension(filePath, $".corrupt.{timestamp}");
             }
-            
+
             File.Move(filePath, corruptPath);
-            
+
             LoggingUtility.Log($"[Service_ErrorReportSync] Marked file as corrupt: {Path.GetFileName(corruptPath)}");
             LoggingUtility.LogApplicationError(ex);
         }
@@ -399,21 +399,21 @@ internal static class Service_ErrorReportSync
         try
         {
             string filename = Path.GetFileNameWithoutExtension(filePath);
-            
+
             // Pattern: ErrorReport_YYYYMMDD_HHMMSS_UserName_GUID
             var match = Regex.Match(filename, @"ErrorReport_(\d{8})_(\d{6})_(.+?)_[a-f0-9]+$");
-            
+
             if (match.Success)
             {
                 string dateStr = match.Groups[1].Value;
                 string timeStr = match.Groups[2].Value;
                 string userName = match.Groups[3].Value;
-                
+
                 DateTime timestamp = DateTime.ParseExact(
                     $"{dateStr}{timeStr}",
                     "yyyyMMddHHmmss",
                     System.Globalization.CultureInfo.InvariantCulture);
-                
+
                 return (userName, timestamp);
             }
         }
@@ -421,7 +421,7 @@ internal static class Service_ErrorReportSync
         {
             LoggingUtility.Log($"[Service_ErrorReportSync] Error parsing filename {Path.GetFileName(filePath)}: {ex.Message}");
         }
-        
+
         // Return defaults on parse failure
         return ("Unknown", DateTime.UtcNow);
     }
@@ -435,10 +435,10 @@ internal static class Service_ErrorReportSync
         try
         {
             Directory.CreateDirectory(ArchiveDirectory);
-            
+
             string filename = Path.GetFileName(filePath);
             string archivePath = Path.Combine(ArchiveDirectory, filename);
-            
+
             // If file already exists in archive, append timestamp
             if (File.Exists(archivePath))
             {
@@ -447,7 +447,7 @@ internal static class Service_ErrorReportSync
                 string ext = Path.GetExtension(filename);
                 archivePath = Path.Combine(ArchiveDirectory, $"{filenameWithoutExt}_{timestamp}{ext}");
             }
-            
+
             File.Move(filePath, archivePath);
         }
         catch (IOException ex)

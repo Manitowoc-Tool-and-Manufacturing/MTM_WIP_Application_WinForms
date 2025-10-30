@@ -145,13 +145,13 @@ For each fix group:
 
 ```powershell
 # Run all tests together
-dotnet test MTM_Inventory_Application.csproj `
+dotnet test MTM_WIP_Application_Winforms.csproj `
   --filter "FullyQualifiedName~Integration.Dao_QuickButtons_Tests"
 
 # Expected: Passed! - Failed: 0, Passed: 10, Skipped: 0
 
 # Run multiple times to verify idempotency
-dotnet test MTM_Inventory_Application.csproj `
+dotnet test MTM_WIP_Application_Winforms.csproj `
   --filter "FullyQualifiedName~Integration.Dao_QuickButtons_Tests"
 
 # Expected: Same results (all passing)
@@ -282,11 +282,11 @@ Category 2 is complete when:
 
 ```powershell
 # Run all Category 1 tests
-dotnet test MTM_Inventory_Application.csproj `
+dotnet test MTM_WIP_Application_Winforms.csproj `
   --filter "FullyQualifiedName~Integration.Dao_QuickButtons_Tests"
 
 # Run single test for debugging
-dotnet test MTM_Inventory_Application.csproj `
+dotnet test MTM_WIP_Application_Winforms.csproj `
   --filter "FullyQualifiedName~UpdateQuickButtonAsync_ValidData_UpdatesButton"
 
 # Build and check warnings

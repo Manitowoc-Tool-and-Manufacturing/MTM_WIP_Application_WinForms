@@ -1,10 +1,10 @@
-﻿using System;
+using System;
 using System.IO;
 using System.Reflection;
-using MTM_Inventory_Application.Data;
-using MTM_Inventory_Application.Helpers;
+using MTM_WIP_Application_Winforms.Data;
+using MTM_WIP_Application_Winforms.Helpers;
 
-namespace MTM_Inventory_Application.Models
+namespace MTM_WIP_Application_Winforms.Models
 {
     #region Model_AppVariables
 
@@ -47,13 +47,13 @@ namespace MTM_Inventory_Application.Models
         public static string? ThemeName { get; set; } = "Default";
         public static float ThemeFontSize { get; set; } = 9f;
         public static string? WipDataGridTheme { get; set; } = "Default";
-        public static string? WipServerAddress 
-        { 
+        public static string? WipServerAddress
+        {
             get
             {
                 return Model_Users.WipServerAddress;
             }
-            set 
+            set
             {
                 // For compatibility, but the logic is now in Model_Users
             }
@@ -130,7 +130,7 @@ namespace MTM_Inventory_Application.Models
             /// Directory path for pending (not yet submitted) error reports.
             /// Default: %APPDATA%\MTM_Application\ErrorReports\Pending
             /// </summary>
-            public string QueueDirectory { get; set; } = 
+            public string QueueDirectory { get; set; } =
                 Path.Combine(
                     Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
                     "MTM_Application", "ErrorReports", "Pending");
@@ -139,7 +139,7 @@ namespace MTM_Inventory_Application.Models
             /// Directory path for successfully submitted error reports archive.
             /// Default: %APPDATA%\MTM_Application\ErrorReports\Sent
             /// </summary>
-            public string ArchiveDirectory { get; set; } = 
+            public string ArchiveDirectory { get; set; } =
                 Path.Combine(
                     Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
                     "MTM_Application", "ErrorReports", "Sent");

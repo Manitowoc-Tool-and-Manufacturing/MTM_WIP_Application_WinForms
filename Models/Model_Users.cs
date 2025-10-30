@@ -1,4 +1,4 @@
-﻿namespace MTM_Inventory_Application.Models
+namespace MTM_WIP_Application_Winforms.Models
 {
     internal class Model_Users
     {
@@ -20,9 +20,9 @@
         {
             get => _database ?? (
 #if DEBUG
-                "mtm_wip_application"  // Changed to use main database in debug mode
+                "MTM_WIP_Application_Winforms"  // Changed to use main database in debug mode
 #else
-        "mtm_wip_application"
+        "MTM_WIP_Application_Winforms"
 #endif
             );
             set => _database = value;
@@ -53,7 +53,7 @@
         {
             try
             {
-                using var socket = new System.Net.Sockets.Socket(System.Net.Sockets.AddressFamily.InterNetwork, 
+                using var socket = new System.Net.Sockets.Socket(System.Net.Sockets.AddressFamily.InterNetwork,
                     System.Net.Sockets.SocketType.Dgram, 0);
                 socket.Connect("8.8.8.8", 65530);
                 var endPoint = socket.LocalEndPoint as System.Net.IPEndPoint;

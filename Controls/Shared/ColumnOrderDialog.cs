@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
-using MTM_Inventory_Application.Core;
+using MTM_WIP_Application_Winforms.Core;
 
-namespace MTM_Inventory_Application.Controls.Shared
+namespace MTM_WIP_Application_Winforms.Controls.Shared
 {
     /// <summary>
     /// Dialog for reordering DataGridView columns via drag-and-drop

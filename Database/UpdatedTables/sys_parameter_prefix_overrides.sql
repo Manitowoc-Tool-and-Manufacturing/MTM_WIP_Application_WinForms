@@ -1,6 +1,6 @@
 -- =============================================
 -- Table: sys_parameter_prefix_overrides
--- Database: ALL (mtm_wip_application, mtm_wip_application_winforms_test)
+-- Database: ALL (MTM_WIP_Application_Winforms, mtm_wip_application_winforms_test)
 -- Created: 2025-10-19
 -- Purpose: Stores parameter prefix overrides for stored procedure execution
 --          Allows fine-grained control over parameter naming conventions
@@ -32,7 +32,7 @@ CREATE TABLE `sys_parameter_prefix_overrides` (
 -- =============================================
 
 -- Example override entries (uncomment to use):
--- INSERT INTO `sys_parameter_prefix_overrides` 
+-- INSERT INTO `sys_parameter_prefix_overrides`
 --   (`ProcedureName`, `ParameterName`, `OverridePrefix`, `Reason`, `CreatedBy`, `IsActive`)
 -- VALUES
 --   ('inv_inventory_Add', 'PartNumber', 'in_', 'Legacy procedure uses in_ prefix', 'SYSTEM', 1),

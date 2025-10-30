@@ -1,6 +1,6 @@
 using System;
 
-namespace MTM_Inventory_Application.Models
+namespace MTM_WIP_Application_Winforms.Models
 {
     #region DAO Result Models
 
@@ -40,10 +40,10 @@ namespace MTM_Inventory_Application.Models
     ///     try
     ///     {
     ///         var result = await Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync(...);
-    ///         
+    ///
     ///         if (!result.IsSuccess)
     ///             return DaoResult&lt;List&lt;Model_CurrentInventory&gt;&gt;.Failure(result.StatusMessage);
-    ///         
+    ///
     ///         var inventory = MapDataTableToInventory(result.Payload);
     ///         return DaoResult&lt;List&lt;Model_CurrentInventory&gt;&gt;.Success(inventory, "Retrieved inventory successfully");
     ///     }
@@ -52,12 +52,12 @@ namespace MTM_Inventory_Application.Models
     ///         return DaoResult&lt;List&lt;Model_CurrentInventory&gt;&gt;.Failure(ex);
     ///     }
     /// }
-    /// 
+    ///
     /// // UI Layer (Forms/MainForm/MainForm.cs)
     /// private async void LoadInventory()
     /// {
     ///     var result = await Dao_Inventory.GetAllInventoryAsync();
-    ///     
+    ///
     ///     if (result.IsSuccess)
     ///     {
     ///         // Access data via result.Data
@@ -179,7 +179,7 @@ namespace MTM_Inventory_Application.Models
         /// <code>
         /// if (string.IsNullOrEmpty(partNumber))
         ///     return DaoResult&lt;Model_Part&gt;.Failure("Part number is required");
-        /// 
+        ///
         /// // With exception for logging
         /// catch (MySqlException ex)
         /// {
@@ -252,7 +252,7 @@ namespace MTM_Inventory_Application.Models
         /// // Implicit conversion (use cautiously)
         /// DaoResult&lt;string&gt; result = GetUserName();
         /// string? userName = result; // Implicit conversion, could be null if failed
-        /// 
+        ///
         /// // Preferred pattern (explicit checking)
         /// if (result.IsSuccess)
         /// {
@@ -276,7 +276,7 @@ namespace MTM_Inventory_Application.Models
         /// <code>
         /// var result = DaoResult&lt;int&gt;.Success(42, "Retrieved count", rowsAffected: 1);
         /// Console.WriteLine(result); // Output: "Success: Retrieved count (Rows: 1)"
-        /// 
+        ///
         /// var failResult = DaoResult&lt;int&gt;.Failure("Database timeout");
         /// Console.WriteLine(failResult); // Output: "Failed: Database timeout"
         /// </code>
@@ -337,16 +337,16 @@ namespace MTM_Inventory_Application.Models
     ///         {
     ///             ["InventoryId"] = inventoryId
     ///         };
-    ///         
+    ///
     ///         var result = await Helper_Database_StoredProcedure.ExecuteNonQueryWithStatusAsync(
     ///             Model_AppVariables.ConnectionString,
     ///             "inventory_Delete_ById",
     ///             parameters
     ///         );
-    ///         
+    ///
     ///         if (!result.IsSuccess)
     ///             return DaoResult.Failure(result.StatusMessage);
-    ///         
+    ///
     ///         return DaoResult.Success("Inventory deleted successfully", rowsAffected: 1);
     ///     }
     ///     catch (MySqlException ex)
@@ -354,12 +354,12 @@ namespace MTM_Inventory_Application.Models
     ///         return DaoResult.Failure($"Failed to delete inventory: {ex.Message}", ex);
     ///     }
     /// }
-    /// 
+    ///
     /// // UI Layer (Forms/MainForm/MainForm.cs)
     /// private async void btnDelete_Click(object sender, EventArgs e)
     /// {
     ///     var result = await Dao_Inventory.DeleteInventoryAsync(selectedId);
-    ///     
+    ///
     ///     if (result.IsSuccess)
     ///     {
     ///         MessageBox.Show(result.StatusMessage, "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
@@ -429,7 +429,7 @@ namespace MTM_Inventory_Application.Models
         /// <code>
         /// // Simple success
         /// return DaoResult.Success("Operation completed");
-        /// 
+        ///
         /// // Success with row count
         /// return DaoResult.Success("Updated inventory", rowsAffected: 5);
         /// </code>
@@ -455,7 +455,7 @@ namespace MTM_Inventory_Application.Models
         /// // Validation failure
         /// if (string.IsNullOrEmpty(userName))
         ///     return DaoResult.Failure("Username is required");
-        /// 
+        ///
         /// // Database error with exception
         /// catch (MySqlException ex)
         /// {
@@ -490,7 +490,7 @@ namespace MTM_Inventory_Application.Models
         ///     // Exception message is user-friendly
         ///     return DaoResult.Failure(ex);
         /// }
-        /// 
+        ///
         /// catch (MySqlException ex)
         /// {
         ///     // Prefer wrapping with context
@@ -537,7 +537,7 @@ namespace MTM_Inventory_Application.Models
         /// {
         ///     Console.WriteLine("Updated successfully");
         /// }
-        /// 
+        ///
         /// // Explicit checking (clear)
         /// if (result.IsSuccess)
         /// {
@@ -565,10 +565,10 @@ namespace MTM_Inventory_Application.Models
         /// <code>
         /// var result = DaoResult.Success("Updated inventory", rowsAffected: 3);
         /// Console.WriteLine(result); // Output: "Success: Updated inventory (Rows: 3)"
-        /// 
+        ///
         /// var failResult = DaoResult.Failure("Connection timeout");
         /// Console.WriteLine(failResult); // Output: "Failed: Connection timeout"
-        /// 
+        ///
         /// // Useful for logging
         /// LoggingUtility.Log($"[DAO] {result}");
         /// </code>

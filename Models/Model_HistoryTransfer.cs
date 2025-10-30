@@ -1,6 +1,6 @@
-﻿
 
-namespace MTM_Inventory_Application.Models;
+
+namespace MTM_WIP_Application_Winforms.Models;
 
 internal class Model_HistoryTransfer
 {

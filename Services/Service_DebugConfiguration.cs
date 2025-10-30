@@ -1,8 +1,8 @@
 using System;
 using System.Collections.Generic;
-using MTM_Inventory_Application.Models;
+using MTM_WIP_Application_Winforms.Models;
 
-namespace MTM_Inventory_Application.Services;
+namespace MTM_WIP_Application_Winforms.Services;
 
 /// <summary>
 /// Debug configuration management for comprehensive application tracing
@@ -14,7 +14,7 @@ internal static class Service_DebugConfiguration
 
     private static readonly Dictionary<string, bool> _componentTracing = new();
     private static readonly Dictionary<string, DebugLevel> _componentLevels = new();
-    
+
     #endregion
 
     #region Initialization
@@ -43,7 +43,7 @@ internal static class Service_DebugConfiguration
         _componentLevels["ErrorHandling"] = DebugLevel.High;
         _componentLevels["BusinessLogic"] = DebugLevel.Medium;
 
-        Service_DebugTracer.TraceUIAction("DEBUG_CONFIGURATION_INITIALIZED", "Service_DebugConfiguration", 
+        Service_DebugTracer.TraceUIAction("DEBUG_CONFIGURATION_INITIALIZED", "Service_DebugConfiguration",
             new Dictionary<string, object>
             {
                 ["ComponentCount"] = _componentTracing.Count,
@@ -85,7 +85,7 @@ internal static class Service_DebugConfiguration
     public static void SetComponentTracing(string componentName, bool enabled)
     {
         _componentTracing[componentName] = enabled;
-        
+
         Service_DebugTracer.TraceUIAction("COMPONENT_TRACING_CHANGED", "Service_DebugConfiguration",
             new Dictionary<string, object>
             {
@@ -102,7 +102,7 @@ internal static class Service_DebugConfiguration
     public static void SetComponentLevel(string componentName, DebugLevel level)
     {
         _componentLevels[componentName] = level;
-        
+
         Service_DebugTracer.TraceUIAction("COMPONENT_LEVEL_CHANGED", "Service_DebugConfiguration",
             new Dictionary<string, object>
             {

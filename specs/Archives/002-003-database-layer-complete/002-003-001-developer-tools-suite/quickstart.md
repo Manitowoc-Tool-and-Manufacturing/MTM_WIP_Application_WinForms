@@ -22,12 +22,12 @@ You must have **Admin + Developer** permissions to access developer tools.
 #### Check Your Current Role
 
 ```sql
--- Run against: mtm_wip_application_winforms_test or mtm_wip_application
-SELECT 
-    UserName, 
-    IsAdmin, 
+-- Run against: mtm_wip_application_winforms_test or MTM_WIP_Application_Winforms
+SELECT
+    UserName,
+    IsAdmin,
     IsDeveloper,
-    CASE 
+    CASE
         WHEN IsAdmin = 1 AND IsDeveloper = 1 THEN 'Full Developer Access'
         WHEN IsAdmin = 1 THEN 'Admin Only (No Developer Tools)'
         ELSE 'No Access'
@@ -43,7 +43,7 @@ WHERE UserName = 'JOHNK'; -- Replace with your username
 -- Run against: mtm_wip_application_winforms_test (Development only)
 
 UPDATE usr_users
-SET 
+SET
     IsAdmin = 1,
     IsDeveloper = 1,
     ModifiedBy = 'SYSTEM',
@@ -51,8 +51,8 @@ SET
 WHERE UserName = 'JOHNK'; -- Replace with your username
 
 -- Verify
-SELECT UserName, IsAdmin, IsDeveloper 
-FROM usr_users 
+SELECT UserName, IsAdmin, IsDeveloper
+FROM usr_users
 WHERE UserName = 'JOHNK';
 ```
 
@@ -81,54 +81,60 @@ cd Database
 ## Accessing Developer Tools
 
 ### Step 1: Launch Application
+
 ```powershell
 cd C:\Users\johnk\source\repos\MTM_WIP_Application_WinForms
-dotnet run --project MTM_Inventory_Application.csproj
+dotnet run --project MTM_WIP_Application_Winforms.csproj
 ```
 
 ### Step 2: Login with Developer Credentials
-- Username: `JOHNK` (or your developer account)
-- Password: `[your password]`
+
+-   Username: `JOHNK` (or your developer account)
+-   Password: `[your password]`
 
 ### Step 3: Open Settings Form
-- Click **Settings** button in MainForm toolbar
-- OR press **F10** keyboard shortcut
+
+-   Click **Settings** button in MainForm toolbar
+-   OR press **F10** keyboard shortcut
 
 ### Step 4: Navigate to Developer Category
-- Settings form opens with TreeView on left
-- Expand **Developer** node (appears after "About" category)
-- Six tools available:
-  - 🐛 Debug Dashboard
-  - 📝 Parameter Prefix Maintenance
-  - 📊 Schema Inspector
-  - 🔗 Procedure Call Hierarchy
-  - 💻 Code Generator
-  - 🔌 Database (connection monitor)
+
+-   Settings form opens with TreeView on left
+-   Expand **Developer** node (appears after "About" category)
+-   Six tools available:
+    -   🐛 Debug Dashboard
+    -   📝 Parameter Prefix Maintenance
+    -   📊 Schema Inspector
+    -   🔗 Procedure Call Hierarchy
+    -   💻 Code Generator
+    -   🔌 Database (connection monitor)
 
 ---
 
 ## Tool #1: Debug Dashboard
 
 ### Purpose
+
 Real-time monitoring of application activity for debugging stored procedure execution, tracing business logic, and diagnosing performance issues.
 
 ### Quick Start
 
 1. **Navigate**: Settings → Developer → Debug Dashboard
 2. **Enable Tracing**: Check boxes for desired trace categories
-   - ✅ Database Operations (stored procedure calls)
-   - ✅ Business Logic (DAO methods, service layer)
-   - ✅ UI Actions (button clicks, form events)
-   - ✅ Performance (slow operations, timing)
+    - ✅ Database Operations (stored procedure calls)
+    - ✅ Business Logic (DAO methods, service layer)
+    - ✅ UI Actions (button clicks, form events)
+    - ✅ Performance (slow operations, timing)
 3. **Set Debug Level**: Select from dropdown
-   - Low: Only critical operations
-   - Medium: Standard development logging
-   - High: Verbose diagnostic output
+    - Low: Only critical operations
+    - Medium: Standard development logging
+    - High: Verbose diagnostic output
 4. **Watch Output**: Black console shows green text with timestamps
 
 ### Common Tasks
 
 #### Trace a Stored Procedure Execution
+
 ```text
 1. Enable "Database Operations" tracing
 2. Set Debug Level to "High"
@@ -141,6 +147,7 @@ Real-time monitoring of application activity for debugging stored procedure exec
 ```
 
 #### Save Debug Log for Analysis
+
 ```text
 1. Reproduce issue while capturing
 2. Click "Pause Capture" to freeze output
@@ -150,6 +157,7 @@ Real-time monitoring of application activity for debugging stored procedure exec
 ```
 
 #### Find Performance Bottlenecks
+
 ```text
 1. Enable "Performance" tracing
 2. Perform slow operation
@@ -159,17 +167,19 @@ Real-time monitoring of application activity for debugging stored procedure exec
 ```
 
 ### Keyboard Shortcuts
-- **F5**: Refresh display
-- **Ctrl+P**: Pause/Resume capture
-- **Ctrl+S**: Save log
-- **Ctrl+L**: Clear output
+
+-   **F5**: Refresh display
+-   **Ctrl+P**: Pause/Resume capture
+-   **Ctrl+S**: Save log
+-   **Ctrl+L**: Clear output
 
 ---
 
 ## Tool #2: Parameter Prefix Maintenance
 
 ### Purpose
-Manage parameter prefix overrides for stored procedures that don't follow the p_ convention, enabling gradual standardization during Phase 2.5.
+
+Manage parameter prefix overrides for stored procedures that don't follow the p\_ convention, enabling gradual standardization during Phase 2.5.
 
 ### Quick Start
 
@@ -220,17 +230,17 @@ Manage parameter prefix overrides for stored procedures that don't follow the p_
 
 ```text
 1. Run SQL query to find non-standard parameters:
-   
-   SELECT 
+
+   SELECT
        SPECIFIC_NAME AS ProcedureName,
        PARAMETER_NAME,
-       CASE 
+       CASE
            WHEN PARAMETER_NAME LIKE 'p\\_%' THEN 'Standard (p_)'
            WHEN PARAMETER_NAME LIKE 'in\\_%' THEN 'Legacy (in_)'
            ELSE 'No Prefix'
        END AS PrefixStatus
    FROM INFORMATION_SCHEMA.PARAMETERS
-   WHERE SPECIFIC_SCHEMA = 'mtm_wip_application'
+   WHERE SPECIFIC_SCHEMA = 'MTM_WIP_Application_Winforms'
    AND PARAMETER_MODE = 'IN'
    AND PARAMETER_NAME NOT LIKE 'p\\_%'
    ORDER BY SPECIFIC_NAME;
@@ -243,19 +253,22 @@ Manage parameter prefix overrides for stored procedures that don't follow the p_
 
 **Warning Message**: "Procedure 'xyz' not found in INFORMATION_SCHEMA. Continue anyway?"
 
-**What This Means**: 
-- Procedure doesn't exist in current database
-- Could be typo, or future procedure, or Production-only procedure
+**What This Means**:
+
+-   Procedure doesn't exist in current database
+-   Could be typo, or future procedure, or Production-only procedure
 
 **What To Do**:
-- Click "Yes" if you're sure procedure name is correct (e.g., Production hotfix)
-- Click "No" to fix typo and try again
+
+-   Click "Yes" if you're sure procedure name is correct (e.g., Production hotfix)
+-   Click "No" to fix typo and try again
 
 ---
 
 ## Tool #3: Schema Inspector
 
 ### Purpose
+
 Read-only browser for database schema metadata (tables, columns, stored procedures, parameters) without needing MySQL Workbench.
 
 ### Quick Start
@@ -318,6 +331,7 @@ Schema Inspector queries INFORMATION_SCHEMA views, which can be slow on large da
 ## Tool #4: Procedure Call Hierarchy
 
 ### Purpose
+
 Visualize stored procedure dependencies and C# call sites to understand impact of refactoring changes.
 
 ### Quick Start
@@ -388,6 +402,7 @@ Visualize stored procedure dependencies and C# call sites to understand impact o
 ## Tool #5: Code Generator
 
 ### Purpose
+
 Quickly scaffold C# DAO method code from stored procedure definitions, reducing boilerplate and ensuring MTM pattern compliance.
 
 ### Quick Start
@@ -503,26 +518,27 @@ public static async Task<DaoResult<DataTable>> SearchTransactionsAsync(
 
 ### Best Practices
 
-- **Always Review Generated Code**: Generator provides 95% solution, but verify error handling and return types
-- **Update XML Comments**: Add specific business rules to `<summary>` tag
-- **Test Compilation**: Build project after pasting to catch any type mismatches
-- **Version Control**: Commit generated code separately from manual changes for easier review
+-   **Always Review Generated Code**: Generator provides 95% solution, but verify error handling and return types
+-   **Update XML Comments**: Add specific business rules to `<summary>` tag
+-   **Test Compilation**: Build project after pasting to catch any type mismatches
+-   **Version Control**: Commit generated code separately from manual changes for easier review
 
 ---
 
 ## Tool #6: Database Connection Monitor
 
 ### Purpose
+
 Monitor database connection health and strength (existing tool, moved from Database category to Developer category).
 
 ### Quick Start
 
 1. **Navigate**: Settings → Developer → Database
 2. **View Connection Strength**: Colored indicator shows connection health
-   - 🟢 Green: Excellent (< 50ms ping)
-   - 🟡 Yellow: Good (50-100ms ping)
-   - 🟠 Orange: Fair (100-200ms ping)
-   - 🔴 Red: Poor (> 200ms ping or connection failure)
+    - 🟢 Green: Excellent (< 50ms ping)
+    - 🟡 Yellow: Good (50-100ms ping)
+    - 🟠 Orange: Fair (100-200ms ping)
+    - 🔴 Red: Poor (> 200ms ping or connection failure)
 3. **Test Connection**: Click "Test Connection" button to refresh
 4. **View Details**: Hover over indicator for ping time and server info
 
@@ -644,10 +660,12 @@ Monitor database connection health and strength (existing tool, moved from Datab
 **Symptoms**: Settings form opens but no Developer node in TreeView.
 
 **Causes**:
+
 1. User lacks Developer role
 2. Application not restarted after granting Developer role
 
 **Solutions**:
+
 ```sql
 -- 1. Verify role
 SELECT UserName, IsAdmin, IsDeveloper FROM usr_users WHERE UserName = 'JOHNK';
@@ -665,11 +683,13 @@ UPDATE usr_users SET IsDeveloper = 1 WHERE UserName = 'JOHNK';
 **Symptoms**: "Call hierarchy artifacts not found. Click Regenerate to create them."
 
 **Causes**:
+
 1. First-time use (artifacts never generated)
 2. Artifacts deleted or moved
 3. Running from different directory
 
 **Solutions**:
+
 ```powershell
 # Option 1: Click "Regenerate" button in UI (easiest)
 
@@ -691,11 +711,13 @@ Test-Path "Database/STORED_PROCEDURE_CALLSITES.csv"
 **Symptoms**: "Failed to load schema metadata. Retry?"
 
 **Causes**:
+
 1. Database server offline
 2. Connection string incorrect
 3. Network issue
 
 **Solutions**:
+
 ```text
 1. Check Database Connection Monitor (Settings → Developer → Database)
 2. If Red indicator:
@@ -712,11 +734,13 @@ Test-Path "Database/STORED_PROCEDURE_CALLSITES.csv"
 **Symptoms**: Generated code has build errors after pasting into DAO.
 
 **Causes**:
+
 1. Return type mismatch (procedure returns multiple result sets)
 2. Parameter types don't match C# types
 3. Missing namespace imports
 
 **Solutions**:
+
 ```csharp
 // 1. Check return type - may need adjustment
 // If procedure returns multiple result sets:
@@ -731,9 +755,9 @@ public static async Task<DaoResult<DataSet>> MethodAsync(...) // Use DataSet not
 
 // 3. Add missing usings at top of file:
 using System.Data;
-using MTM_Inventory_Application.Models;
-using MTM_Inventory_Application.Helpers;
-using MTM_Inventory_Application.Logging;
+using MTM_WIP_Application_Winforms.Models;
+using MTM_WIP_Application_Winforms.Helpers;
+using MTM_WIP_Application_Winforms.Logging;
 ```
 
 ### Issue: Parameter Prefix Override Not Taking Effect
@@ -741,11 +765,13 @@ using MTM_Inventory_Application.Logging;
 **Symptoms**: Added override but stored procedure call still fails with "Unknown column" error.
 
 **Causes**:
+
 1. Application not restarted after adding override
 2. Override cache not refreshed
 3. Typo in procedure or parameter name
 
 **Solutions**:
+
 ```text
 1. Restart application (override cache loads at startup)
 2. Verify override details match exactly:
@@ -771,11 +797,13 @@ using MTM_Inventory_Application.Logging;
 ## Security Notes
 
 ### Developer Role Access Control
-- Developer tools intentionally hidden from non-developers
-- Production databases should have minimal Developer role grants
-- Override table allows tracking who added/modified each override (audit trail)
+
+-   Developer tools intentionally hidden from non-developers
+-   Production databases should have minimal Developer role grants
+-   Override table allows tracking who added/modified each override (audit trail)
 
 ### Production Warning Dialog
+
 When accessing developer tools in Production (Release build):
 
 ```text
@@ -788,9 +816,10 @@ Continue?  [Yes] [No]
 ```
 
 ### Sensitive Data
-- Debug Dashboard output may contain business data (UserID, part numbers, etc.)
-- Debug logs should be treated as sensitive - don't commit to source control
-- Schema Inspector reveals database structure - acceptable for authorized developers only
+
+-   Debug Dashboard output may contain business data (UserID, part numbers, etc.)
+-   Debug logs should be treated as sensitive - don't commit to source control
+-   Schema Inspector reveals database structure - acceptable for authorized developers only
 
 ---
 
@@ -806,17 +835,18 @@ Continue?  [Yes] [No]
 
 ## Additional Resources
 
-- **Phase 2.5 Specification**: `specs/002-003-database-layer-complete/spec.md`
-- **Developer Tools Specification**: `specs/002-003-database-layer-complete/002-003-001-developer-tools-suite/spec.md`
-- **Data Model Documentation**: `specs/002-003-database-layer-complete/002-003-001-developer-tools-suite/data-model.md`
-- **Stored Procedure Contracts**: `specs/002-003-database-layer-complete/002-003-001-developer-tools-suite/contracts/stored-procedures.md`
-- **UserControl API Documentation**: `specs/002-003-database-layer-complete/002-003-001-developer-tools-suite/contracts/usercontrol-api.md`
+-   **Phase 2.5 Specification**: `specs/002-003-database-layer-complete/spec.md`
+-   **Developer Tools Specification**: `specs/002-003-database-layer-complete/002-003-001-developer-tools-suite/spec.md`
+-   **Data Model Documentation**: `specs/002-003-database-layer-complete/002-003-001-developer-tools-suite/data-model.md`
+-   **Stored Procedure Contracts**: `specs/002-003-database-layer-complete/002-003-001-developer-tools-suite/contracts/stored-procedures.md`
+-   **UserControl API Documentation**: `specs/002-003-database-layer-complete/002-003-001-developer-tools-suite/contracts/usercontrol-api.md`
 
 ---
 
 ## Support
 
 For issues with developer tools:
+
 1. Check this quickstart guide first
 2. Review error messages in Debug Dashboard
 3. Check AGENTS.md for general troubleshooting patterns

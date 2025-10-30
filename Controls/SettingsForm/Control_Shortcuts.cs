@@ -3,12 +3,12 @@ using System.Collections.Generic;
 using System.Text.Json;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using MTM_Inventory_Application.Core;
-using MTM_Inventory_Application.Data;
-using MTM_Inventory_Application.Helpers;
-using MTM_Inventory_Application.Logging;
+using MTM_WIP_Application_Winforms.Core;
+using MTM_WIP_Application_Winforms.Data;
+using MTM_WIP_Application_Winforms.Helpers;
+using MTM_WIP_Application_Winforms.Logging;
 
-namespace MTM_Inventory_Application.Controls.SettingsForm
+namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
 {
     public partial class Control_Shortcuts : UserControl
     {

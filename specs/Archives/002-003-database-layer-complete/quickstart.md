@@ -24,40 +24,43 @@ Help developers adopt the standardized DAO, helper, and stored procedure pattern
 
 ### Prerequisites
 
-- Visual Studio 2022 with .NET 8.0 SDK
-- MySQL 5.7.24+ running locally (MAMP or equivalent)
-- Test database `mtm_wip_application_winform_test`
-- Access to supporting discovery artifacts in `Database/`
+-   Visual Studio 2022 with .NET 8.0 SDK
+-   MySQL 5.7.24+ running locally (MAMP or equivalent)
+-   Test database `mtm_wip_application_winform_test`
+-   Access to supporting discovery artifacts in `Database/`
 
 ### Test Database Setup
 
 1. **Create the schema**
-   ```sql
-   CREATE DATABASE mtm_wip_application_winform_test;
-   ```
+
+    ```sql
+    CREATE DATABASE mtm_wip_application_winform_test;
+    ```
 
 2. **Import baseline schema**
-   ```powershell
-   mysql -u root -proot mtm_wip_application_winform_test < Database/CurrentDatabase/mtm_wip_application.sql
-   ```
+
+    ```powershell
+    mysql -u root -proot mtm_wip_application_winform_test < Database/CurrentDatabase/MTM_WIP_Application_Winforms.sql
+    ```
 
 3. **Configure helper to target test database** (excerpt)
-   ```csharp
-   public static string DatabaseName =>
-#if DEBUG
-       "mtm_wip_application_winform_test";
-#else
-       "mtm_wip_application";
-#endif
 
-   public const string TestDatabaseName = "mtm_wip_application_winform_test";
-   ```
+    ```csharp
+    public static string DatabaseName =>
+    #if DEBUG
+        "mtm_wip_application_winform_test";
+    #else
+        "MTM_WIP_Application_Winforms";
+    #endif
+
+    public const string TestDatabaseName = "mtm_wip_application_winform_test";
+    ```
 
 4. **Verify connection**
-   ```csharp
-   var connectionString = Helper_Database_Variables.GetConnectionString(
-       databaseName: Helper_Database_Variables.TestDatabaseName);
-   ```
+    ```csharp
+    var connectionString = Helper_Database_Variables.GetConnectionString(
+        databaseName: Helper_Database_Variables.TestDatabaseName);
+    ```
 
 > **Reminder**: The automation agent handles T106a/T106b validation using the curated artifact set. Developers can review outputs in `Database/AnalysisReports/` before proceeding with refactors.
 
@@ -345,20 +348,20 @@ public async Task ExportInventoryAsync()
 
 ## Troubleshooting
 
-| Issue | Likely Cause | Resolution |
-|-------|--------------|------------|
+| Issue                        | Likely Cause                                       | Resolution                                                                         |
+| ---------------------------- | -------------------------------------------------- | ---------------------------------------------------------------------------------- |
 | "Parameter prefix not found" | Parameter absent from cache and fallback ambiguous | Confirm stored procedure signature, update overrides via Developer tools if needed |
-| UI freeze | `.Result` / `.Wait()` used on async method | Convert entire call chain to async/await |
-| Transaction rolled back | Step failure not short-circuiting | Validate each step and return immediately on failure |
-| Connection pool exhausted | Undisposed MySqlConnection | Use `await using` or `using` statements for all connections/commands |
-| Slow query warning | Execution time exceeded threshold | Analyze stored procedure (EXPLAIN), review indexes, adjust strategy |
-| `DaoResult.Data` null access | Caller skipped `IsSuccess` check | Guard access with `if (result.IsSuccess)` |
+| UI freeze                    | `.Result` / `.Wait()` used on async method         | Convert entire call chain to async/await                                           |
+| Transaction rolled back      | Step failure not short-circuiting                  | Validate each step and return immediately on failure                               |
+| Connection pool exhausted    | Undisposed MySqlConnection                         | Use `await using` or `using` statements for all connections/commands               |
+| Slow query warning           | Execution time exceeded threshold                  | Analyze stored procedure (EXPLAIN), review indexes, adjust strategy                |
+| `DaoResult.Data` null access | Caller skipped `IsSuccess` check                   | Guard access with `if (result.IsSuccess)`                                          |
 
 ---
 
 ## Next Steps
 
-- Consult [data-model.md](./data-model.md) for entity details.
-- Review `/contracts/` for DaoResult and stored procedure contracts.
-- Track documentation obligations via the Documentation Update Matrix once generated.
-- Reference the plan and tasks files for phase sequencing and automation gates.
+-   Consult [data-model.md](./data-model.md) for entity details.
+-   Review `/contracts/` for DaoResult and stored procedure contracts.
+-   Track documentation obligations via the Documentation Update Matrix once generated.
+-   Reference the plan and tasks files for phase sequencing and automation gates.

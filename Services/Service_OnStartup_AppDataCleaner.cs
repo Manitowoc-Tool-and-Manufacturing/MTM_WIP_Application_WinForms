@@ -1,6 +1,6 @@
-﻿using MTM_Inventory_Application.Logging;
+﻿using MTM_WIP_Application_Winforms.Logging;
 
-namespace MTM_Inventory_Application.Services
+namespace MTM_WIP_Application_Winforms.Services
 {
     internal static class Service_OnStartup_AppDataCleaner
     {
@@ -34,16 +34,16 @@ namespace MTM_Inventory_Application.Services
             try
             {
                 string appDataPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
-                    "MTM_WIP_APP");
+                    "MTM_WIP_Application_Winforms");
                 string localAppDataPath =
                     Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
-                        "MTM_WIP_APP");
+                        "MTM_WIP_Application_Winforms");
                 DeleteDirectoryIfExists(appDataPath);
                 DeleteDirectoryIfExists(localAppDataPath);
             }
             catch (Exception ex)
             {
-                LoggingUtility.Log($"Error wiping MTM_WIP_APP folders: {ex.Message}");
+                LoggingUtility.Log($"Error wiping MTM_WIP_Application_Winforms folders: {ex.Message}");
             }
         }
 

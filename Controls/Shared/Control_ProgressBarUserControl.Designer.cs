@@ -1,4 +1,4 @@
-namespace MTM_Inventory_Application.Controls.Shared
+namespace MTM_WIP_Application_Winforms.Controls.Shared
 {
     partial class Control_ProgressBarUserControl
     {

@@ -4,11 +4,11 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Windows.Forms;
-using MTM_Inventory_Application.Models;
-using MTM_Inventory_Application.Services;
+using MTM_WIP_Application_Winforms.Models;
+using MTM_WIP_Application_Winforms.Services;
 using Timer = System.Windows.Forms.Timer;
 
-namespace MTM_Inventory_Application.Forms.Development
+namespace MTM_WIP_Application_Winforms.Forms.Development
 {
     /// <summary>
     /// Real-time debugging dashboard for monitoring application activity

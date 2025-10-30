@@ -1,36 +1,36 @@
-﻿using System.Collections.Concurrent;
+using System.Collections.Concurrent;
 using System.Data;
 using System.Diagnostics;
 using System.Text.Json;
-using MTM_Inventory_Application.Controls.Addons;
-using MTM_Inventory_Application.Controls.MainForm;
-using MTM_Inventory_Application.Controls.SettingsForm;
-using MTM_Inventory_Application.Controls.Shared;
-using MTM_Inventory_Application.Data;
-using MTM_Inventory_Application.Helpers;
-using MTM_Inventory_Application.Logging;
-using MTM_Inventory_Application.Models;
+using MTM_WIP_Application_Winforms.Controls.Addons;
+using MTM_WIP_Application_Winforms.Controls.MainForm;
+using MTM_WIP_Application_Winforms.Controls.SettingsForm;
+using MTM_WIP_Application_Winforms.Controls.Shared;
+using MTM_WIP_Application_Winforms.Data;
+using MTM_WIP_Application_Winforms.Helpers;
+using MTM_WIP_Application_Winforms.Logging;
+using MTM_WIP_Application_Winforms.Models;
 using System.Reflection;
 
-namespace MTM_Inventory_Application.Core
+namespace MTM_WIP_Application_Winforms.Core
 {
     /// <summary>
     /// Core theming system that provides comprehensive DPI scaling and UI responsiveness.
-    /// 
+    ///
     /// This class handles:
     /// 1. Runtime DPI scaling for all forms and controls (per Telerik WinForms DPI scaling article)
     /// 2. Async/await UI responsiveness improvements (per Grant Winney async WinForms article)
     /// 3. Theme application with proper color handling
     /// 4. Runtime layout adjustments moved from designer files
     /// 5. Dynamic DPI change handling for multi-monitor scenarios
-    /// 
+    ///
     /// Key Features:
     /// - AutoScaleMode.Dpi set on all forms and controls for proper DPI scaling
     /// - Runtime margin/padding adjustments for TableLayoutPanel, GroupBox, Panel
     /// - SplitContainer distance calculations based on DPI scale
     /// - Event-driven DPI change handling for monitor switching
     /// - Comprehensive control hierarchy traversal for complete coverage
-    /// 
+    ///
     /// References:
     /// - https://www.telerik.com/blogs/winforms-scaling-at-large-dpi-settings-is-it-even-possible-
     /// - https://grantwinney.com/using-async-await-and-task-to-keep-the-winforms-ui-more-responsive/
@@ -2627,7 +2627,7 @@ namespace MTM_Inventory_Application.Core
                     // Get the user's saved theme preference
                     var themeNameResult = await Dao_User.GetThemeNameAsync(userId);
                     string? themeName = themeNameResult.IsSuccess ? themeNameResult.Data : null;
-                    
+
                     // If no theme preference is saved, or it's null, set to "Default"
                     if (string.IsNullOrWhiteSpace(themeName))
                     {
@@ -2638,10 +2638,10 @@ namespace MTM_Inventory_Application.Core
                     {
                         LoggingUtility.Log($"Loaded theme preference for user {userId}: {themeName}");
                     }
-                    
+
                     // Set the theme name in Model_AppVariables
                     Model_AppVariables.ThemeName = themeName;
-                    
+
                     LoggingUtility.Log($"Set Model_AppVariables.ThemeName to: {themeName}");
                     return themeName;
                 }
@@ -2660,19 +2660,19 @@ namespace MTM_Inventory_Application.Core
                 try
                 {
                     Dictionary<string, AppTheme> themes = new();
-                    
+
                     try
                     {
                         LoggingUtility.Log("Attempting to load themes from database using Dao_System.GetAllThemesAsync...");
-                        
+
                         // UPDATED: Use Dao_System.GetAllThemesAsync instead of non-existent stored procedure
                         var dataResult = await Dao_System.GetAllThemesAsync();
-                        
+
                         if (dataResult.IsSuccess && dataResult.Data != null)
                         {
                             DataTable dt = dataResult.Data;
                             LoggingUtility.Log($"Successfully loaded {dt.Rows.Count} themes from database");
-                            
+
                             foreach (DataRow row in dt.Rows)
                             {
                                 string? themeName = row["ThemeName"]?.ToString();
@@ -2688,11 +2688,11 @@ namespace MTM_Inventory_Application.Core
                                             PropertyNameCaseInsensitive = false
                                         };
                                         options.Converters.Add(new JsonColorConverter());
-                                        
+
                                         // Directly deserialize the complete Model_UserUiColors from database
                                         // The database should contain the full JSON with all color properties
                                         Model_UserUiColors? colors = JsonSerializer.Deserialize<Model_UserUiColors>(settingsJson, options);
-                                        
+
                                         if (colors != null)
                                         {
                                             themes[themeName] = new AppTheme { Colors = colors, FormFont = null };
@@ -2838,15 +2838,15 @@ namespace MTM_Inventory_Application.Core
                 {
                     // First load all available themes from database
                     await LoadThemesFromDatabaseAsync();
-                    
+
                     // Then try to get the user's theme preference
                     string? userThemeName = await LoadAndSetUserThemeNameAsync(userId);
-                    
+
                     // Check if the user's preferred theme actually exists in our loaded themes
                     if (!string.IsNullOrWhiteSpace(userThemeName) && !Themes.ContainsKey(userThemeName))
                     {
                         LoggingUtility.Log($"User {userId} has theme preference '{userThemeName}' but this theme doesn't exist in database. Available themes: {string.Join(", ", Themes.Keys)}");
-                        
+
                         // Try to find a suitable fallback theme from available database themes
                         string fallbackTheme = "Default";
                         if (Themes.ContainsKey("Default"))
@@ -2865,7 +2865,7 @@ namespace MTM_Inventory_Application.Core
                         {
                             fallbackTheme = Themes.Keys.First();
                         }
-                        
+
                         LoggingUtility.Log($"Using fallback theme '{fallbackTheme}' for user {userId}");
                         Model_AppVariables.ThemeName = fallbackTheme;
                     }
@@ -2909,7 +2909,7 @@ namespace MTM_Inventory_Application.Core
             private static Dictionary<string, AppTheme> CreateDefaultThemes()
             {
                 var themes = new Dictionary<string, AppTheme>();
-                
+
                 // Default Light Theme
                 var defaultColors = new Model_UserUiColors
                 {
@@ -2935,9 +2935,9 @@ namespace MTM_Inventory_Application.Core
                     DataGridSelectionBackColor = SystemColors.Highlight,
                     DataGridSelectionForeColor = SystemColors.HighlightText
                 };
-                
+
                 themes["Default"] = new AppTheme { Colors = defaultColors, FormFont = null };
-                
+
                 // Dark Theme
                 var darkColors = new Model_UserUiColors
                 {
@@ -2963,9 +2963,9 @@ namespace MTM_Inventory_Application.Core
                     DataGridSelectionBackColor = Color.FromArgb(51, 153, 255),
                     DataGridSelectionForeColor = Color.White
                 };
-                
+
                 themes["Dark"] = new AppTheme { Colors = darkColors, FormFont = null };
-                
+
                 // Blue Theme
                 var blueColors = new Model_UserUiColors
                 {
@@ -2991,7 +2991,7 @@ namespace MTM_Inventory_Application.Core
                     DataGridSelectionBackColor = Color.FromArgb(70, 130, 180),
                     DataGridSelectionForeColor = Color.White
                 };
-                
+
                 themes["Blue"] = new AppTheme { Colors = blueColors, FormFont = null };
 
                 LoggingUtility.Log("Created fallback theme collection with Default, Dark, and Blue themes.");

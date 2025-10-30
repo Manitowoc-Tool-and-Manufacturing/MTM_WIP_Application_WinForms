@@ -5,22 +5,22 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using MTM_Inventory_Application.Forms.ErrorDialog;
-using MTM_Inventory_Application.Forms.MainForm;
-using MTM_Inventory_Application.Logging;
-using MTM_Inventory_Application.Models;
+using MTM_WIP_Application_Winforms.Forms.ErrorDialog;
+using MTM_WIP_Application_Winforms.Forms.MainForm;
+using MTM_WIP_Application_Winforms.Logging;
+using MTM_WIP_Application_Winforms.Models;
 
-namespace MTM_Inventory_Application.Services;
+namespace MTM_WIP_Application_Winforms.Services;
 
 internal static class Service_ErrorHandler
 {
     #region Fields
-    
+
     private static readonly Dictionary<string, int> _errorFrequency = new();
     private static readonly Dictionary<string, DateTime> _lastErrorTimestamp = new();
     private static readonly object _errorLock = new();
     private static readonly TimeSpan ErrorCooldownPeriod = TimeSpan.FromSeconds(5);
-    
+
     #endregion
 
     #region Public Methods - Enhanced Error Handling
@@ -35,7 +35,7 @@ internal static class Service_ErrorHandler
     /// <param name="callerName">Automatically filled caller method name</param>
     /// <param name="controlName">Name of the control or form where error occurred</param>
     /// <returns>True if user chose to retry and retry succeeded, false otherwise</returns>
-    public static bool HandleException(Exception ex, 
+    public static bool HandleException(Exception ex,
         ErrorSeverity severity = ErrorSeverity.Medium,
         Func<bool>? retryAction = null,
         Dictionary<string, object>? contextData = null,
@@ -47,30 +47,30 @@ internal static class Service_ErrorHandler
             // Always log the error first
             LoggingUtility.LogApplicationError(ex);
             LogErrorContext(ex, callerName, controlName, contextData);
-            
+
             // Handle connection recovery if it's a database error
             if (IsDatabaseError(ex))
             {
                 HandleConnectionRecovery();
             }
-            
+
             // Check error frequency to prevent spam
             if (ShouldSuppressError(ex, callerName))
             {
                 return false;
             }
-            
+
             // Show enhanced error dialog
             using var errorDialog = new EnhancedErrorDialog(ex, callerName, controlName, severity, retryAction, contextData);
             var result = errorDialog.ShowDialog();
-            
+
             // Handle critical errors that should terminate the application
             if (severity == ErrorSeverity.Fatal || IsFatalError(ex))
             {
                 HandleFatalError(ex, callerName, controlName);
                 return false;
             }
-            
+
             return errorDialog.ShouldRetry && result == DialogResult.Retry;
         }
         catch (Exception innerEx)
@@ -98,12 +98,12 @@ internal static class Service_ErrorHandler
         dbContextData["ErrorType"] = "Database";
         dbContextData["ConnectionString"] = "Hidden for security";
         dbContextData["DatabaseSeverity"] = dbSeverity.ToString();
-        
+
         LoggingUtility.LogDatabaseError(ex, dbSeverity);
-        
+
         // Use methodName if provided, otherwise use callerName
         var effectiveCallerName = !string.IsNullOrEmpty(methodName) ? methodName : callerName;
-        
+
         // Map database severity to general error severity for UI display
         var uiSeverity = dbSeverity switch
         {
@@ -112,21 +112,21 @@ internal static class Service_ErrorHandler
             DatabaseErrorSeverity.Critical => ErrorSeverity.High,
             _ => ErrorSeverity.Medium
         };
-        
+
         return HandleException(ex, uiSeverity, retryAction, dbContextData, effectiveCallerName, controlName);
     }
 
     /// <summary>
     /// Handle validation errors (user input errors)
     /// </summary>
-    public static void HandleValidationError(string message, string field = "", 
+    public static void HandleValidationError(string message, string field = "",
         [CallerMemberName] string callerName = "",
         string controlName = "")
     {
         try
         {
             LoggingUtility.Log($"Validation error in {callerName}: {message}");
-            
+
             var validationEx = new ArgumentException($"Validation failed for {field}: {message}");
             var contextData = new Dictionary<string, object>
             {
@@ -134,7 +134,7 @@ internal static class Service_ErrorHandler
                 ["Field"] = field,
                 ["UserMessage"] = message
             };
-            
+
             HandleException(validationEx, ErrorSeverity.Low, null, contextData, callerName, controlName);
         }
         catch (Exception ex)
@@ -154,14 +154,14 @@ internal static class Service_ErrorHandler
         {
             var unauthorizedEx = new UnauthorizedAccessException(
                 $"Access denied for operation: {operation}. Please check your permissions or run as administrator.");
-            
+
             var contextData = new Dictionary<string, object>
             {
                 ["p_Operation"] = operation,
                 ["UserName"] = Environment.UserName,
                 ["IsAdmin"] = IsRunningAsAdministrator()
             };
-            
+
             HandleException(unauthorizedEx, ErrorSeverity.Medium, null, contextData, callerName, controlName);
         }
         catch (Exception ex)
@@ -186,7 +186,7 @@ internal static class Service_ErrorHandler
                 ["FileExists"] = !string.IsNullOrEmpty(filePath) && System.IO.File.Exists(filePath),
                 ["ErrorType"] = "File Operation"
             };
-            
+
             return HandleException(ex, ErrorSeverity.Medium, retryAction, contextData, callerName, controlName);
         }
         catch (Exception innerEx)
@@ -211,7 +211,7 @@ internal static class Service_ErrorHandler
                 ["ErrorType"] = "Network/Connectivity",
                 ["NetworkAvailable"] = System.Net.NetworkInformation.NetworkInterface.GetIsNetworkAvailable()
             };
-            
+
             return HandleException(ex, ErrorSeverity.High, retryAction, contextData, callerName, controlName);
         }
         catch (Exception innerEx)
@@ -243,7 +243,7 @@ internal static class Service_ErrorHandler
     /// <summary>
     /// Show a warning dialog (not an error - just a user warning)
     /// </summary>
-    public static DialogResult ShowWarning(string message, string title = "Warning", 
+    public static DialogResult ShowWarning(string message, string title = "Warning",
         MessageBoxButtons buttons = MessageBoxButtons.OKCancel,
         MessageBoxIcon icon = MessageBoxIcon.Warning)
     {
@@ -262,7 +262,7 @@ internal static class Service_ErrorHandler
     /// <summary>
     /// Show an information dialog (not an error - just informational message)
     /// </summary>
-    public static DialogResult ShowInformation(string message, string title = "Information", 
+    public static DialogResult ShowInformation(string message, string title = "Information",
         MessageBoxButtons buttons = MessageBoxButtons.OK,
         MessageBoxIcon icon = MessageBoxIcon.Information,
         string controlName = "")
@@ -314,7 +314,7 @@ internal static class Service_ErrorHandler
         HandleException(ex, ErrorSeverity.Medium);
     }
 
-    [Obsolete("Use HandleUnauthorizedAccess instead", false)]  
+    [Obsolete("Use HandleUnauthorizedAccess instead", false)]
     public static void HandleUnauthorizedAccessException(UnauthorizedAccessException ex)
     {
         HandleUnauthorizedAccess(ex.Message);
@@ -381,12 +381,12 @@ internal static class Service_ErrorHandler
         {
             var errorKey = $"{ex.GetType().Name}:{callerName}:{ex.Message.GetHashCode()}";
             var now = DateTime.Now;
-            
+
             // Check if this is a duplicate error within the cooldown period
             if (_lastErrorTimestamp.TryGetValue(errorKey, out var lastTimestamp))
             {
                 var timeSinceLastError = now - lastTimestamp;
-                
+
                 // Update frequency counter
                 if (_errorFrequency.ContainsKey(errorKey))
                 {
@@ -396,7 +396,7 @@ internal static class Service_ErrorHandler
                 {
                     _errorFrequency[errorKey] = 1;
                 }
-                
+
                 // Log that we're suppressing the UI display but still logging to database
                 if (timeSinceLastError < ErrorCooldownPeriod)
                 {
@@ -405,20 +405,20 @@ internal static class Service_ErrorHandler
                     _lastErrorTimestamp[errorKey] = now;
                     return true; // Suppress UI display
                 }
-                
+
                 // Cooldown period expired, allow display but check frequency
                 _lastErrorTimestamp[errorKey] = now;
-                
+
                 // Suppress if we've seen this error more than 10 times in this session (spam protection)
                 if (_errorFrequency[errorKey] > 10)
                 {
                     LoggingUtility.Log($"[ErrorCooldown] Suppressing high-frequency error (occurrence #{_errorFrequency[errorKey]}): {errorKey}");
                     return true;
                 }
-                
+
                 return false; // Allow UI display
             }
-            
+
             // First occurrence of this error
             _lastErrorTimestamp[errorKey] = now;
             _errorFrequency[errorKey] = 1;
@@ -431,15 +431,15 @@ internal static class Service_ErrorHandler
         try
         {
             LoggingUtility.Log($"Fatal error occurred in {callerName} ({controlName}). Application will terminate.");
-            
+
             // Give user a chance to save work or see what happened
             var message = $"A fatal error has occurred and the application must close.\n\n" +
                          $"Error: {ex.Message}\n\n" +
                          $"Location: {callerName}\n" +
                          $"The error details have been logged for analysis.";
-            
+
             MessageBox.Show(message, "Fatal Application Error", MessageBoxButtons.OK, MessageBoxIcon.Stop);
-            
+
             // Force application termination
             Environment.Exit(1);
         }

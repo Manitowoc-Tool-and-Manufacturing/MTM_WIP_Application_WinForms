@@ -1,8 +1,8 @@
 ﻿using System.Diagnostics;
-using MTM_Inventory_Application.Logging;
-using MTM_Inventory_Application.Models;
+using MTM_WIP_Application_Winforms.Logging;
+using MTM_WIP_Application_Winforms.Models;
 
-namespace MTM_Inventory_Application.Helpers
+namespace MTM_WIP_Application_Winforms.Helpers
 {
     #region Helper_Database_Variables
 

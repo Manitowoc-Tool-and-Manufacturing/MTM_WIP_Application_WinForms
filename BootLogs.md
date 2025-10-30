@@ -3,71 +3,71 @@ You may only use the Microsoft Visual Studio .NET/C/C++ Debugger (vsdbg) with
 Visual Studio Code, Visual Studio or Visual Studio for Mac software to help you
 develop and test your applications.
 ------------------------------------------------------------------------------
-MTM_Inventory_Application.exe (13592): Loaded 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.21\System.Private.CoreLib.dll'. Cannot find or open the PDB file.
-MTM_Inventory_Application.exe (13592): Loaded 'c:\Users\johnk\source\repos\MTM_WIP_Application_WinForms\bin\Debug\net8.0-windows\MTM_Inventory_Application.dll'. Symbols loaded.
-MTM_Inventory_Application.exe (13592): Loaded 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.21\System.Runtime.dll'. Cannot find or open the PDB file.
-MTM_Inventory_Application.exe (13592): Loaded 'c:\Users\johnk\source\repos\MTM_WIP_Application_WinForms\bin\Debug\net8.0-windows\MySql.Data.dll'. Cannot find or open the PDB file.
-MTM_Inventory_Application.exe (13592): Loaded 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.21\System.Data.Common.dll'. Cannot find or open the PDB file.
-MTM_Inventory_Application.exe (13592): Loaded 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.21\System.Collections.dll'. Cannot find or open the PDB file.
-MTM_Inventory_Application.exe (13592): Loaded 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.21\System.Threading.Thread.dll'. Cannot find or open the PDB file.
-MTM_Inventory_Application.exe (13592): Loaded 'C:\Program Files\dotnet\shared\Microsoft.WindowsDesktop.App\8.0.21\System.Windows.Forms.dll'. Cannot find or open the PDB file.
-MTM_Inventory_Application.exe (13592): Loaded 'C:\Program Files\dotnet\shared\Microsoft.WindowsDesktop.App\8.0.21\System.Windows.Forms.Primitives.dll'. Cannot find or open the PDB file.
-MTM_Inventory_Application.exe (13592): Loaded 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.21\System.Console.dll'. Cannot find or open the PDB file.
-MTM_Inventory_Application.exe (13592): Loaded 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.21\System.Diagnostics.TraceSource.dll'. Cannot find or open the PDB file.
-MTM_Inventory_Application.exe (13592): Loaded 'c:\Users\johnk\source\repos\MTM_WIP_Application_WinForms\bin\Debug\net8.0-windows\System.Text.Json.dll'. Symbols loaded.
-MTM_Inventory_Application.exe (13592): Loaded 'c:\Users\johnk\source\repos\MTM_WIP_Application_WinForms\bin\Debug\net8.0-windows\System.Text.Encodings.Web.dll'. Cannot find or open the PDB file.
-MTM_Inventory_Application.exe (13592): Loaded 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.21\System.Linq.dll'. Cannot find or open the PDB file.
+MTM_WIP_Application_Winforms.exe (13592): Loaded 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.21\System.Private.CoreLib.dll'. Cannot find or open the PDB file.
+MTM_WIP_Application_Winforms.exe (13592): Loaded 'c:\Users\johnk\source\repos\MTM_WIP_Application_WinForms\bin\Debug\net8.0-windows\MTM_WIP_Application_Winforms.dll'. Symbols loaded.
+MTM_WIP_Application_Winforms.exe (13592): Loaded 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.21\System.Runtime.dll'. Cannot find or open the PDB file.
+MTM_WIP_Application_Winforms.exe (13592): Loaded 'c:\Users\johnk\source\repos\MTM_WIP_Application_WinForms\bin\Debug\net8.0-windows\MySql.Data.dll'. Cannot find or open the PDB file.
+MTM_WIP_Application_Winforms.exe (13592): Loaded 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.21\System.Data.Common.dll'. Cannot find or open the PDB file.
+MTM_WIP_Application_Winforms.exe (13592): Loaded 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.21\System.Collections.dll'. Cannot find or open the PDB file.
+MTM_WIP_Application_Winforms.exe (13592): Loaded 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.21\System.Threading.Thread.dll'. Cannot find or open the PDB file.
+MTM_WIP_Application_Winforms.exe (13592): Loaded 'C:\Program Files\dotnet\shared\Microsoft.WindowsDesktop.App\8.0.21\System.Windows.Forms.dll'. Cannot find or open the PDB file.
+MTM_WIP_Application_Winforms.exe (13592): Loaded 'C:\Program Files\dotnet\shared\Microsoft.WindowsDesktop.App\8.0.21\System.Windows.Forms.Primitives.dll'. Cannot find or open the PDB file.
+MTM_WIP_Application_Winforms.exe (13592): Loaded 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.21\System.Console.dll'. Cannot find or open the PDB file.
+MTM_WIP_Application_Winforms.exe (13592): Loaded 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.21\System.Diagnostics.TraceSource.dll'. Cannot find or open the PDB file.
+MTM_WIP_Application_Winforms.exe (13592): Loaded 'c:\Users\johnk\source\repos\MTM_WIP_Application_WinForms\bin\Debug\net8.0-windows\System.Text.Json.dll'. Symbols loaded.
+MTM_WIP_Application_Winforms.exe (13592): Loaded 'c:\Users\johnk\source\repos\MTM_WIP_Application_WinForms\bin\Debug\net8.0-windows\System.Text.Encodings.Web.dll'. Cannot find or open the PDB file.
+MTM_WIP_Application_Winforms.exe (13592): Loaded 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.21\System.Linq.dll'. Cannot find or open the PDB file.
 [12:13:09.609] [LOW   ] 🚀 DEBUG TRACER INITIALIZED
-MTM_Inventory_Application.exe (13592): Loaded 'c:\Users\johnk\source\repos\MTM_WIP_Application_WinForms\bin\Debug\net8.0-windows\DocumentFormat.OpenXml.dll'. Cannot find or open the PDB file.
-MTM_Inventory_Application.exe (13592): Loaded 'c:\Users\johnk\source\repos\MTM_WIP_Application_WinForms\bin\Debug\net8.0-windows\DocumentFormat.OpenXml.Framework.dll'. Cannot find or open the PDB file.
-MTM_Inventory_Application.exe (13592): Loaded 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.21\System.Threading.dll'. Cannot find or open the PDB file.
-MTM_Inventory_Application.exe (13592): Loaded 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.21\System.ComponentModel.TypeConverter.dll'. Cannot find or open the PDB file.
-MTM_Inventory_Application.exe (13592): Loaded 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.21\System.ComponentModel.Primitives.dll'. Cannot find or open the PDB file.
-MTM_Inventory_Application.exe (13592): Loaded 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.21\System.ComponentModel.dll'. Cannot find or open the PDB file.
-MTM_Inventory_Application.exe (13592): Loaded 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.21\System.Xml.ReaderWriter.dll'. Cannot find or open the PDB file.
-MTM_Inventory_Application.exe (13592): Loaded 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.21\System.Private.Xml.dll'. Cannot find or open the PDB file.
-MTM_Inventory_Application.exe (13592): Loaded 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.21\System.Drawing.Primitives.dll'. Cannot find or open the PDB file.
+MTM_WIP_Application_Winforms.exe (13592): Loaded 'c:\Users\johnk\source\repos\MTM_WIP_Application_WinForms\bin\Debug\net8.0-windows\DocumentFormat.OpenXml.dll'. Cannot find or open the PDB file.
+MTM_WIP_Application_Winforms.exe (13592): Loaded 'c:\Users\johnk\source\repos\MTM_WIP_Application_WinForms\bin\Debug\net8.0-windows\DocumentFormat.OpenXml.Framework.dll'. Cannot find or open the PDB file.
+MTM_WIP_Application_Winforms.exe (13592): Loaded 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.21\System.Threading.dll'. Cannot find or open the PDB file.
+MTM_WIP_Application_Winforms.exe (13592): Loaded 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.21\System.ComponentModel.TypeConverter.dll'. Cannot find or open the PDB file.
+MTM_WIP_Application_Winforms.exe (13592): Loaded 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.21\System.ComponentModel.Primitives.dll'. Cannot find or open the PDB file.
+MTM_WIP_Application_Winforms.exe (13592): Loaded 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.21\System.ComponentModel.dll'. Cannot find or open the PDB file.
+MTM_WIP_Application_Winforms.exe (13592): Loaded 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.21\System.Xml.ReaderWriter.dll'. Cannot find or open the PDB file.
+MTM_WIP_Application_Winforms.exe (13592): Loaded 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.21\System.Private.Xml.dll'. Cannot find or open the PDB file.
+MTM_WIP_Application_Winforms.exe (13592): Loaded 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.21\System.Drawing.Primitives.dll'. Cannot find or open the PDB file.
 [12:13:09.661] [LOW   ] 🖱️ UI ACTION: DEBUG_CONFIGURATION_INITIALIZED on Service_DebugConfiguration
 [12:13:09.663] [LOW   ] 🖱️ UI ACTION: DEBUG_MODE_SET on Service_DebugConfiguration
 [12:13:09.664] [LOW   ] 🖱️ UI ACTION: APPLICATION_STARTUP on Program
-MTM_Inventory_Application.exe (13592): Loaded 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.21\System.Collections.Specialized.dll'. Cannot find or open the PDB file.
-MTM_Inventory_Application.exe (13592): Loaded 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.21\System.Runtime.InteropServices.dll'. Cannot find or open the PDB file.
-MTM_Inventory_Application.exe (13592): Loaded 'C:\Program Files\dotnet\shared\Microsoft.WindowsDesktop.App\8.0.21\System.Drawing.Common.dll'. Cannot find or open the PDB file.
-MTM_Inventory_Application.exe (13592): Loaded 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.21\System.Security.Principal.Windows.dll'. Cannot find or open the PDB file.
-MTM_Inventory_Application.exe (13592): Loaded 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.21\System.Security.Claims.dll'. Cannot find or open the PDB file.
-MTM_Inventory_Application.exe (13592): Loaded 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.21\Microsoft.Win32.Primitives.dll'. Cannot find or open the PDB file.
-MTM_Inventory_Application.exe (13592): Loaded 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.21\System.Transactions.Local.dll'. Cannot find or open the PDB file.
-MTM_Inventory_Application.exe (13592): Loaded 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.21\System.Net.Sockets.dll'. Cannot find or open the PDB file.
-MTM_Inventory_Application.exe (13592): Loaded 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.21\System.Net.Primitives.dll'. Cannot find or open the PDB file.
-MTM_Inventory_Application.exe (13592): Loaded 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.21\System.Diagnostics.Tracing.dll'. Cannot find or open the PDB file.
-MTM_Inventory_Application.exe (13592): Loaded 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.21\System.Memory.dll'. Cannot find or open the PDB file.
+MTM_WIP_Application_Winforms.exe (13592): Loaded 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.21\System.Collections.Specialized.dll'. Cannot find or open the PDB file.
+MTM_WIP_Application_Winforms.exe (13592): Loaded 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.21\System.Runtime.InteropServices.dll'. Cannot find or open the PDB file.
+MTM_WIP_Application_Winforms.exe (13592): Loaded 'C:\Program Files\dotnet\shared\Microsoft.WindowsDesktop.App\8.0.21\System.Drawing.Common.dll'. Cannot find or open the PDB file.
+MTM_WIP_Application_Winforms.exe (13592): Loaded 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.21\System.Security.Principal.Windows.dll'. Cannot find or open the PDB file.
+MTM_WIP_Application_Winforms.exe (13592): Loaded 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.21\System.Security.Claims.dll'. Cannot find or open the PDB file.
+MTM_WIP_Application_Winforms.exe (13592): Loaded 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.21\Microsoft.Win32.Primitives.dll'. Cannot find or open the PDB file.
+MTM_WIP_Application_Winforms.exe (13592): Loaded 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.21\System.Transactions.Local.dll'. Cannot find or open the PDB file.
+MTM_WIP_Application_Winforms.exe (13592): Loaded 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.21\System.Net.Sockets.dll'. Cannot find or open the PDB file.
+MTM_WIP_Application_Winforms.exe (13592): Loaded 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.21\System.Net.Primitives.dll'. Cannot find or open the PDB file.
+MTM_WIP_Application_Winforms.exe (13592): Loaded 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.21\System.Diagnostics.Tracing.dll'. Cannot find or open the PDB file.
+MTM_WIP_Application_Winforms.exe (13592): Loaded 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.21\System.Memory.dll'. Cannot find or open the PDB file.
 [12:13:09.720] [HIGH  ] ⏱️ PERFORMANCE START: SP_sys_theme_GetAll
-MTM_Inventory_Application.exe (13592): Loaded 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.21\System.Runtime.Intrinsics.dll'. Cannot find or open the PDB file.
-MTM_Inventory_Application.exe (13592): Loaded 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.21\System.Numerics.Vectors.dll'. Cannot find or open the PDB file.
-MTM_Inventory_Application.exe (13592): Loaded 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.21\System.Text.Encoding.Extensions.dll'. Cannot find or open the PDB file.
-MTM_Inventory_Application.exe (13592): Loaded 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.21\System.Collections.Concurrent.dll'. Cannot find or open the PDB file.
-MTM_Inventory_Application.exe (13592): Loaded 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.21\System.Private.Uri.dll'. Cannot find or open the PDB file.
-MTM_Inventory_Application.exe (13592): Loaded 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.21\System.Reflection.Emit.ILGeneration.dll'. Cannot find or open the PDB file.
-MTM_Inventory_Application.exe (13592): Loaded 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.21\System.Reflection.Emit.Lightweight.dll'. Cannot find or open the PDB file.
-MTM_Inventory_Application.exe (13592): Loaded 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.21\System.Reflection.Primitives.dll'. Cannot find or open the PDB file.
-MTM_Inventory_Application.exe (13592): Loaded 'c:\Users\johnk\source\repos\MTM_WIP_Application_WinForms\bin\Debug\net8.0-windows\System.IO.Pipelines.dll'. Cannot find or open the PDB file.
-MTM_Inventory_Application.exe (13592): Loaded 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.21\System.Collections.NonGeneric.dll'. Cannot find or open the PDB file.
+MTM_WIP_Application_Winforms.exe (13592): Loaded 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.21\System.Runtime.Intrinsics.dll'. Cannot find or open the PDB file.
+MTM_WIP_Application_Winforms.exe (13592): Loaded 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.21\System.Numerics.Vectors.dll'. Cannot find or open the PDB file.
+MTM_WIP_Application_Winforms.exe (13592): Loaded 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.21\System.Text.Encoding.Extensions.dll'. Cannot find or open the PDB file.
+MTM_WIP_Application_Winforms.exe (13592): Loaded 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.21\System.Collections.Concurrent.dll'. Cannot find or open the PDB file.
+MTM_WIP_Application_Winforms.exe (13592): Loaded 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.21\System.Private.Uri.dll'. Cannot find or open the PDB file.
+MTM_WIP_Application_Winforms.exe (13592): Loaded 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.21\System.Reflection.Emit.ILGeneration.dll'. Cannot find or open the PDB file.
+MTM_WIP_Application_Winforms.exe (13592): Loaded 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.21\System.Reflection.Emit.Lightweight.dll'. Cannot find or open the PDB file.
+MTM_WIP_Application_Winforms.exe (13592): Loaded 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.21\System.Reflection.Primitives.dll'. Cannot find or open the PDB file.
+MTM_WIP_Application_Winforms.exe (13592): Loaded 'c:\Users\johnk\source\repos\MTM_WIP_Application_WinForms\bin\Debug\net8.0-windows\System.IO.Pipelines.dll'. Cannot find or open the PDB file.
+MTM_WIP_Application_Winforms.exe (13592): Loaded 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.21\System.Collections.NonGeneric.dll'. Cannot find or open the PDB file.
 [12:13:09.786] [MEDIUM] ➡️ ENTERING Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync
 [12:13:09.787] [MEDIUM] 🗄️ DB PROCEDURE START: sys_theme_GetAll
-MTM_Inventory_Application.exe (13592): Loaded 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.21\System.Text.RegularExpressions.dll'. Cannot find or open the PDB file.
-MTM_Inventory_Application.exe (13592): Loaded 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.21\System.Diagnostics.DiagnosticSource.dll'. Cannot find or open the PDB file.
-MTM_Inventory_Application.exe (13592): Loaded 'C:\Program Files\dotnet\shared\Microsoft.WindowsDesktop.App\8.0.21\System.Security.Permissions.dll'. Cannot find or open the PDB file.
-MTM_Inventory_Application.exe (13592): Loaded 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.21\System.Runtime.Loader.dll'. Cannot find or open the PDB file.
-MTM_Inventory_Application.exe (13592): Loaded 'C:\Program Files\dotnet\shared\Microsoft.WindowsDesktop.App\8.0.21\System.Configuration.ConfigurationManager.dll'. Cannot find or open the PDB file.
-MTM_Inventory_Application.exe (13592): Loaded 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.21\System.Net.WebClient.dll'. Cannot find or open the PDB file.
-MTM_Inventory_Application.exe (13592): Loaded 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.21\System.Security.Cryptography.dll'. Cannot find or open the PDB file.
-MTM_Inventory_Application.exe (13592): Loaded 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.21\System.Net.NameResolution.dll'. Cannot find or open the PDB file.
-MTM_Inventory_Application.exe (13592): Loaded 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.21\System.Threading.ThreadPool.dll'. Cannot find or open the PDB file.
-MTM_Inventory_Application.exe (13592): Loaded 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.21\System.Threading.Overlapped.dll'. Cannot find or open the PDB file.
+MTM_WIP_Application_Winforms.exe (13592): Loaded 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.21\System.Text.RegularExpressions.dll'. Cannot find or open the PDB file.
+MTM_WIP_Application_Winforms.exe (13592): Loaded 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.21\System.Diagnostics.DiagnosticSource.dll'. Cannot find or open the PDB file.
+MTM_WIP_Application_Winforms.exe (13592): Loaded 'C:\Program Files\dotnet\shared\Microsoft.WindowsDesktop.App\8.0.21\System.Security.Permissions.dll'. Cannot find or open the PDB file.
+MTM_WIP_Application_Winforms.exe (13592): Loaded 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.21\System.Runtime.Loader.dll'. Cannot find or open the PDB file.
+MTM_WIP_Application_Winforms.exe (13592): Loaded 'C:\Program Files\dotnet\shared\Microsoft.WindowsDesktop.App\8.0.21\System.Configuration.ConfigurationManager.dll'. Cannot find or open the PDB file.
+MTM_WIP_Application_Winforms.exe (13592): Loaded 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.21\System.Net.WebClient.dll'. Cannot find or open the PDB file.
+MTM_WIP_Application_Winforms.exe (13592): Loaded 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.21\System.Security.Cryptography.dll'. Cannot find or open the PDB file.
+MTM_WIP_Application_Winforms.exe (13592): Loaded 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.21\System.Net.NameResolution.dll'. Cannot find or open the PDB file.
+MTM_WIP_Application_Winforms.exe (13592): Loaded 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.21\System.Threading.ThreadPool.dll'. Cannot find or open the PDB file.
+MTM_WIP_Application_Winforms.exe (13592): Loaded 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.21\System.Threading.Overlapped.dll'. Cannot find or open the PDB file.
 Exception thrown: 'System.NullReferenceException' in MySql.Data.dll
-MTM_Inventory_Application.exe (13592): Loaded 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.21\System.Diagnostics.Process.dll'. Cannot find or open the PDB file.
-MTM_Inventory_Application.exe (13592): Loaded 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.21\System.Text.Encoding.CodePages.dll'. Cannot find or open the PDB file.
-MTM_Inventory_Application.exe (13592): Loaded 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.21\System.Runtime.Numerics.dll'. Cannot find or open the PDB file.
+MTM_WIP_Application_Winforms.exe (13592): Loaded 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.21\System.Diagnostics.Process.dll'. Cannot find or open the PDB file.
+MTM_WIP_Application_Winforms.exe (13592): Loaded 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.21\System.Text.Encoding.CodePages.dll'. Cannot find or open the PDB file.
+MTM_WIP_Application_Winforms.exe (13592): Loaded 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.21\System.Runtime.Numerics.dll'. Cannot find or open the PDB file.
 [12:13:09.977] [HIGH  ] ✅ PROCEDURE sys_theme_GetAll (256ms) - Status: 1
 [12:13:09.989] [MEDIUM] ✅ DB PROCEDURE COMPLETE: sys_theme_GetAll (256ms) - 9 rows
 [12:13:09.991] [MEDIUM] ⬅️ EXITING Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync (204ms)
@@ -78,20 +78,20 @@ MTM_Inventory_Application.exe (13592): Loaded 'C:\Program Files\dotnet\shared\Mi
 [12:13:10.020] [MEDIUM] 🗄️ DB PROCEDURE START: sys_GetUserAccessType
 [Trace] [Main] Application starting...
 [Trace] [Main] Application starting...
-MTM_Inventory_Application.exe (13592): Loaded 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.21\System.ComponentModel.EventBasedAsync.dll'. Cannot find or open the PDB file.
-MTM_Inventory_Application.exe (13592): Loaded 'C:\Program Files\dotnet\shared\Microsoft.WindowsDesktop.App\8.0.21\Accessibility.dll'. Module was built without symbols.
+MTM_WIP_Application_Winforms.exe (13592): Loaded 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.21\System.ComponentModel.EventBasedAsync.dll'. Cannot find or open the PDB file.
+MTM_WIP_Application_Winforms.exe (13592): Loaded 'C:\Program Files\dotnet\shared\Microsoft.WindowsDesktop.App\8.0.21\Accessibility.dll'. Module was built without symbols.
 [12:13:10.044] [MEDIUM] ➡️ ENTERING SplashScreenForm.SplashScreenForm
 [DEBUG] [SplashScreenForm.ctor] Constructing SplashScreenForm...
 [12:13:10.046] [LOW   ] 🖱️ UI ACTION: SPLASH_FORM_INITIALIZATION on SplashScreenForm
-MTM_Inventory_Application.exe (13592): Loaded 'C:\Program Files\dotnet\shared\Microsoft.WindowsDesktop.App\8.0.21\Microsoft.Win32.SystemEvents.dll'. Cannot find or open the PDB file.
+MTM_WIP_Application_Winforms.exe (13592): Loaded 'C:\Program Files\dotnet\shared\Microsoft.WindowsDesktop.App\8.0.21\Microsoft.Win32.SystemEvents.dll'. Cannot find or open the PDB file.
 [12:13:10.058] [HIGH  ] ✅ PROCEDURE sys_GetUserAccessType (39ms) - Status: 1
 [12:13:10.058] [MEDIUM] ✅ DB PROCEDURE COMPLETE: sys_GetUserAccessType (39ms) - 89 rows
 [12:13:10.059] [MEDIUM] ⬅️ EXITING Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync (39ms)
 [12:13:10.060] [HIGH  ] ⏱️ PERFORMANCE COMPLETE: SP_sys_GetUserAccessType (41ms)
-MTM_Inventory_Application.exe (13592): Loaded 'C:\Program Files\dotnet\shared\Microsoft.WindowsDesktop.App\8.0.21\System.Resources.Extensions.dll'. Cannot find or open the PDB file.
-MTM_Inventory_Application.exe (13592): Loaded 'C:\Program Files\dotnet\shared\Microsoft.WindowsDesktop.App\8.0.21\System.Drawing.dll'. Cannot find or open the PDB file.
+MTM_WIP_Application_Winforms.exe (13592): Loaded 'C:\Program Files\dotnet\shared\Microsoft.WindowsDesktop.App\8.0.21\System.Resources.Extensions.dll'. Cannot find or open the PDB file.
+MTM_WIP_Application_Winforms.exe (13592): Loaded 'C:\Program Files\dotnet\shared\Microsoft.WindowsDesktop.App\8.0.21\System.Drawing.dll'. Cannot find or open the PDB file.
 [12:13:10.071] [LOW   ] 🖱️ UI ACTION: THEME_APPLICATION on SplashScreenForm
-MTM_Inventory_Application.exe (13592): Loaded 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.21\System.ObjectModel.dll'. Cannot find or open the PDB file.
+MTM_WIP_Application_Winforms.exe (13592): Loaded 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.21\System.ObjectModel.dll'. Cannot find or open the PDB file.
 Exception thrown: 'System.Text.Json.JsonException' in System.Text.Json.dll
 Exception thrown: 'System.Text.Json.JsonException' in System.Text.Json.dll
 Exception thrown: 'System.Text.Json.JsonException' in System.Text.Json.dll
@@ -231,7 +231,7 @@ Version labels updated - App: 5.2.0.0, DB: 5.2.0.0
 [12:13:11.610] [LOW   ] 🖱️ UI ACTION: FORM_INITIALIZATION on MainForm
 [12:13:11.635] [MEDIUM] ➡️ ENTERING Control_InventoryTab.Control_InventoryTab
 [12:13:11.636] [LOW   ] 🖱️ UI ACTION: INVENTORY_TAB_INITIALIZATION on Control_InventoryTab
-MTM_Inventory_Application.exe (13592): Loaded 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.21\System.Diagnostics.FileVersionInfo.dll'. Cannot find or open the PDB file.
+MTM_WIP_Application_Winforms.exe (13592): Loaded 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.21\System.Diagnostics.FileVersionInfo.dll'. Cannot find or open the PDB file.
 [12:13:11.647] [LOW   ] 🖱️ UI ACTION: THEME_APPLICATION on Control_InventoryTab
 [12:13:11.659] [LOW   ] 🖱️ UI ACTION: TOOLTIPS_SETUP on Control_InventoryTab
 [12:13:11.661] [LOW   ] 🖱️ UI ACTION: VERSION_TIMER_SETUP on Control_InventoryTab
@@ -269,7 +269,7 @@ MTM_Inventory_Application.exe (13592): Loaded 'C:\Program Files\dotnet\shared\Mi
 [12:13:11.813] [MEDIUM] ➡️ ENTERING Control_QuickButtons.Control_QuickButtons
 [12:13:11.814] [LOW   ] 🖱️ UI ACTION: QUICK_BUTTONS_INITIALIZATION on Control_QuickButtons
 [12:13:11.817] [LOW   ] 🖱️ UI ACTION: TABLE_LAYOUT_SETUP on Control_QuickButtons
-MTM_Inventory_Application.exe (13592): Loaded 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.21\System.Diagnostics.StackTrace.dll'. Cannot find or open the PDB file.
+MTM_WIP_Application_Winforms.exe (13592): Loaded 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.21\System.Diagnostics.StackTrace.dll'. Cannot find or open the PDB file.
 [12:13:11.828] [LOW   ] 🖱️ UI ACTION: QUICK_BUTTONS_POST_CONSTRUCTOR on Control_QuickButtons
 [12:13:11.850] [LOW   ] 🖱️ UI ACTION: THEME_APPLICATION on MainForm
 [DEBUG] [MainForm.ctor] InitializeComponent complete.
@@ -772,7 +772,7 @@ MTM_Inventory_Application.exe (13592): Loaded 'C:\Program Files\dotnet\shared\Mi
 [12:13:13.772] [MEDIUM] ⬅️ EXITING LoadLast10Transactions.Control_QuickButtons (69ms)
 [12:13:13.773] [LOW   ] 🖱️ UI ACTION: QUICK_BUTTONS_LOAD_COMPLETE on Control_QuickButtons
 [DEBUG] [MainForm.ctor] MainForm is now idle and ready.
-MTM_Inventory_Application.exe (13592): Loaded 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.21\System.Net.Ping.dll'. Cannot find or open the PDB file.
+MTM_WIP_Application_Winforms.exe (13592): Loaded 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.21\System.Net.Ping.dll'. Cannot find or open the PDB file.
 [12:13:17.123] [HIGH  ] ⏱️ PERFORMANCE START: SP_sp_error_reports_GetUserList
 [12:13:17.124] [MEDIUM] ➡️ ENTERING Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync
 [12:13:17.125] [MEDIUM] 🗄️ DB PROCEDURE START: sp_error_reports_GetUserList
@@ -793,13 +793,13 @@ MTM_Inventory_Application.exe (13592): Loaded 'C:\Program Files\dotnet\shared\Mi
 Exception thrown: 'MySql.Data.MySqlClient.MySqlException' in MySql.Data.dll
 Exception thrown: 'MySql.Data.MySqlClient.MySqlException' in System.Private.CoreLib.dll
 Exception thrown: 'MySql.Data.MySqlClient.MySqlException' in System.Private.CoreLib.dll
-MTM_Inventory_Application.exe (13592): Loaded 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.21\System.Reflection.Metadata.dll'. Cannot find or open the PDB file.
-MTM_Inventory_Application.exe (13592): Loaded 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.21\System.Collections.Immutable.dll'. Cannot find or open the PDB file.
-MTM_Inventory_Application.exe (13592): Loaded 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.21\System.IO.MemoryMappedFiles.dll'. Cannot find or open the PDB file.
+MTM_WIP_Application_Winforms.exe (13592): Loaded 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.21\System.Reflection.Metadata.dll'. Cannot find or open the PDB file.
+MTM_WIP_Application_Winforms.exe (13592): Loaded 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.21\System.Collections.Immutable.dll'. Cannot find or open the PDB file.
+MTM_WIP_Application_Winforms.exe (13592): Loaded 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.21\System.IO.MemoryMappedFiles.dll'. Cannot find or open the PDB file.
 [12:13:17.321] [MEDIUM] ✅ DB PROCEDURE COMPLETE: sp_error_reports_GetAll (53ms) - 0 rows
 [12:13:17.322] [MEDIUM] ⬅️ EXITING Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync (70ms)
 [12:13:17.324] [HIGH  ] ⏱️ PERFORMANCE COMPLETE: SP_sp_error_reports_GetAll (72ms)
-MTM_Inventory_Application.exe (13592): Loaded 'C:\Program Files\dotnet\shared\Microsoft.WindowsDesktop.App\8.0.21\System.Windows.Extensions.dll'. Cannot find or open the PDB file.
+MTM_WIP_Application_Winforms.exe (13592): Loaded 'C:\Program Files\dotnet\shared\Microsoft.WindowsDesktop.App\8.0.21\System.Windows.Extensions.dll'. Cannot find or open the PDB file.
 [12:13:18.418] [MEDIUM] ➡️ ENTERING EnhancedErrorDialog.EnhancedErrorDialog
 [12:13:18.419] [LOW   ] 🖱️ UI ACTION: ERROR_DIALOG_INITIALIZATION on EnhancedErrorDialog
 [12:13:18.429] [MEDIUM] 📊 BUSINESS LOGIC: ERROR_CONTEXT_SETUP
@@ -927,7 +927,7 @@ Running VersionChecker...
 [12:15:10.942] [HIGH  ] ⏱️ PERFORMANCE COMPLETE: SP_log_changelog_Get_Current (14ms)
 Database version retrieved: 5.2.0.0
 Version labels updated - App: 5.2.0.0, DB: 5.2.0.0
-MTM_Inventory_Application.exe (13592): Loaded 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.21\System.Runtime.Serialization.Formatters.dll'. Cannot find or open the PDB file.
+MTM_WIP_Application_Winforms.exe (13592): Loaded 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.21\System.Runtime.Serialization.Formatters.dll'. Cannot find or open the PDB file.
 [Trace] [Main] Application exiting Main().
 [Trace] [Main] Application exiting Main().
-The program '[13592] MTM_Inventory_Application.exe' has exited with code 0 (0x0).
+The program '[13592] MTM_WIP_Application_Winforms.exe' has exited with code 0 (0x0).

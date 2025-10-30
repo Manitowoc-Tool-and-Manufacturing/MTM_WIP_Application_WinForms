@@ -1,6 +1,6 @@
 # Extract-DatabaseSchema.ps1
 # Phase 2.5 Task T101: Extract complete database schema snapshot
-# 
+#
 # Queries INFORMATION_SCHEMA for:
 # - ROUTINES (stored procedures)
 # - PARAMETERS (procedure parameters with prefixes)
@@ -12,7 +12,7 @@
 param(
     [string]$Server = "localhost",
     [int]$Port = 3306,
-    [string]$Database = "mtm_wip_application",
+    [string]$Database = "MTM_WIP_Application_Winforms",
     [string]$User = "root",
     [SecureString]$Password
 )
@@ -36,12 +36,12 @@ Add-Type -Path "C:\Program Files (x86)\MySQL\MySQL Connector NET 8.4.0\MySql.Dat
 # Helper function to execute query and return DataTable
 function Invoke-MySqlQuery {
     param([string]$Query)
-    
+
     $connection = New-Object MySql.Data.MySqlClient.MySqlConnection($connectionString)
     $command = New-Object MySql.Data.MySqlClient.MySqlCommand($Query, $connection)
     $adapter = New-Object MySql.Data.MySqlClient.MySqlDataAdapter($command)
     $dataTable = New-Object System.Data.DataTable
-    
+
     try {
         $connection.Open()
         [void]$adapter.Fill($dataTable)
@@ -55,7 +55,7 @@ function Invoke-MySqlQuery {
 # 1. Extract ROUTINES (stored procedures)
 Write-Host "[1/4] Querying INFORMATION_SCHEMA.ROUTINES..." -ForegroundColor Green
 $routinesQuery = @"
-SELECT 
+SELECT
     ROUTINE_SCHEMA,
     ROUTINE_NAME,
     ROUTINE_TYPE,
@@ -70,7 +70,7 @@ SELECT
     CHARACTER_SET_CLIENT,
     COLLATION_CONNECTION,
     DATABASE_COLLATION
-FROM INFORMATION_SCHEMA.ROUTINES 
+FROM INFORMATION_SCHEMA.ROUTINES
 WHERE ROUTINE_SCHEMA = '$Database'
 ORDER BY ROUTINE_NAME;
 "@
@@ -81,7 +81,7 @@ Write-Host "  Found $($routines.Rows.Count) stored procedures" -ForegroundColor 
 # 2. Extract PARAMETERS
 Write-Host "[2/4] Querying INFORMATION_SCHEMA.PARAMETERS..." -ForegroundColor Green
 $parametersQuery = @"
-SELECT 
+SELECT
     SPECIFIC_SCHEMA,
     SPECIFIC_NAME,
     ORDINAL_POSITION,
@@ -92,7 +92,7 @@ SELECT
     NUMERIC_PRECISION,
     NUMERIC_SCALE,
     DTD_IDENTIFIER
-FROM INFORMATION_SCHEMA.PARAMETERS 
+FROM INFORMATION_SCHEMA.PARAMETERS
 WHERE SPECIFIC_SCHEMA = '$Database'
   AND PARAMETER_NAME IS NOT NULL
 ORDER BY SPECIFIC_NAME, ORDINAL_POSITION;
@@ -104,7 +104,7 @@ Write-Host "  Found $($parameters.Rows.Count) procedure parameters" -ForegroundC
 # 3. Extract TABLES
 Write-Host "[3/4] Querying INFORMATION_SCHEMA.TABLES..." -ForegroundColor Green
 $tablesQuery = @"
-SELECT 
+SELECT
     TABLE_SCHEMA,
     TABLE_NAME,
     TABLE_TYPE,
@@ -125,7 +125,7 @@ SELECT
     CHECKSUM,
     CREATE_OPTIONS,
     TABLE_COMMENT
-FROM INFORMATION_SCHEMA.TABLES 
+FROM INFORMATION_SCHEMA.TABLES
 WHERE TABLE_SCHEMA = '$Database'
 ORDER BY TABLE_NAME;
 "@
@@ -136,7 +136,7 @@ Write-Host "  Found $($tables.Rows.Count) tables" -ForegroundColor White
 # 4. Extract COLUMNS
 Write-Host "[4/4] Querying INFORMATION_SCHEMA.COLUMNS..." -ForegroundColor Green
 $columnsQuery = @"
-SELECT 
+SELECT
     TABLE_SCHEMA,
     TABLE_NAME,
     COLUMN_NAME,
@@ -155,7 +155,7 @@ SELECT
     EXTRA,
     PRIVILEGES,
     COLUMN_COMMENT
-FROM INFORMATION_SCHEMA.COLUMNS 
+FROM INFORMATION_SCHEMA.COLUMNS
 WHERE TABLE_SCHEMA = '$Database'
 ORDER BY TABLE_NAME, ORDINAL_POSITION;
 "@
@@ -166,7 +166,7 @@ Write-Host "  Found $($columns.Rows.Count) table columns`n" -ForegroundColor Whi
 # Convert DataTables to JSON-friendly objects
 function ConvertTo-JsonObject {
     param($DataTable)
-    
+
     $rows = @()
     foreach ($row in $DataTable.Rows) {
         $obj = @{}

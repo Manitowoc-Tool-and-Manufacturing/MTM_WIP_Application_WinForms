@@ -1,10 +1,10 @@
 using System.Data;
-using MTM_Inventory_Application.Core;
-using MTM_Inventory_Application.Data;
-using MTM_Inventory_Application.Helpers;
-using MTM_Inventory_Application.Models;
+using MTM_WIP_Application_Winforms.Core;
+using MTM_WIP_Application_Winforms.Data;
+using MTM_WIP_Application_Winforms.Helpers;
+using MTM_WIP_Application_Winforms.Models;
 
-namespace MTM_Inventory_Application.Controls.SettingsForm
+namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
 {
     public partial class Control_Edit_Location : UserControl
     {

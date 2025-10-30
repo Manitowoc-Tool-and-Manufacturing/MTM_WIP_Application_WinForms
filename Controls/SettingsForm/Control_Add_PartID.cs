@@ -1,12 +1,12 @@
 using System.Data;
 using System.Reflection;
-using MTM_Inventory_Application.Core;
-using MTM_Inventory_Application.Data;
-using MTM_Inventory_Application.Helpers;
-using MTM_Inventory_Application.Models;
-using MTM_Inventory_Application.Services;
+using MTM_WIP_Application_Winforms.Core;
+using MTM_WIP_Application_Winforms.Data;
+using MTM_WIP_Application_Winforms.Helpers;
+using MTM_WIP_Application_Winforms.Models;
+using MTM_WIP_Application_Winforms.Services;
 
-namespace MTM_Inventory_Application.Controls.SettingsForm
+namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
 {
     public partial class Control_Add_PartID : UserControl
     {

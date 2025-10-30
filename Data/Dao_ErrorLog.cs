@@ -1,12 +1,12 @@
 using System.Data;
 using System.Diagnostics;
-using MTM_Inventory_Application.Forms.MainForm;
-using MTM_Inventory_Application.Helpers;
-using MTM_Inventory_Application.Logging;
-using MTM_Inventory_Application.Models;
+using MTM_WIP_Application_Winforms.Forms.MainForm;
+using MTM_WIP_Application_Winforms.Helpers;
+using MTM_WIP_Application_Winforms.Logging;
+using MTM_WIP_Application_Winforms.Models;
 using MySql.Data.MySqlClient;
 
-namespace MTM_Inventory_Application.Data;
+namespace MTM_WIP_Application_Winforms.Data;
 
 #region Dao_ErrorLog
 
@@ -43,7 +43,7 @@ internal static class Dao_ErrorLog
                 foreach (DataRow row in dataResult.Data.Rows)
                 {
                     uniqueErrors.Add((
-                        row["MethodName"]?.ToString() ?? "", 
+                        row["MethodName"]?.ToString() ?? "",
                         row["ErrorMessage"]?.ToString() ?? ""
                     ));
                 }
@@ -83,7 +83,7 @@ internal static class Dao_ErrorLog
             connection,
             transaction);
 
-    private static async Task<DaoResult<DataTable>> GetErrorsByStoredProcedureAsync(string procedureName, 
+    private static async Task<DaoResult<DataTable>> GetErrorsByStoredProcedureAsync(string procedureName,
         Dictionary<string, object>? parameters,
         MySqlConnection? connection = null,
         MySqlTransaction? transaction = null)
@@ -129,7 +129,7 @@ internal static class Dao_ErrorLog
     internal static async Task<DaoResult> DeleteAllErrorsAsync(MySqlConnection? connection = null, MySqlTransaction? transaction = null) =>
         await ExecuteStoredProcedureNonQueryAsync("log_error_Delete_All", null, connection, transaction);
 
-    private static async Task<DaoResult> ExecuteStoredProcedureNonQueryAsync(string procedureName, 
+    private static async Task<DaoResult> ExecuteStoredProcedureNonQueryAsync(string procedureName,
         Dictionary<string, object>? parameters,
         MySqlConnection? connection = null,
         MySqlTransaction? transaction = null)

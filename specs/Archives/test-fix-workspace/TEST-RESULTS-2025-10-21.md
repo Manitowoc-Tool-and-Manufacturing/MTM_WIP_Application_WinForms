@@ -1,6 +1,6 @@
 # Test Results - Category 1: Quick Button Tests
 **Run Date**: 2025-10-21  
-**Test Project**: Tests\MTM_Inventory_Application.Tests.csproj
+**Test Project**: Tests\MTM_WIP_Application_Winforms.Tests.csproj
 
 ## Summary
 - **Total Tests**: 12

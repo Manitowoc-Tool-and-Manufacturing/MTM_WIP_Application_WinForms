@@ -1,14 +1,14 @@
-﻿using MTM_Inventory_Application.Controls.MainForm;
-using MTM_Inventory_Application.Core;
-using MTM_Inventory_Application.Data;
-using MTM_Inventory_Application.Forms.MainForm;
-using MTM_Inventory_Application.Forms.Splash;
-using MTM_Inventory_Application.Helpers;
-using MTM_Inventory_Application.Logging;
-using MTM_Inventory_Application.Models;
+﻿using MTM_WIP_Application_Winforms.Controls.MainForm;
+using MTM_WIP_Application_Winforms.Core;
+using MTM_WIP_Application_Winforms.Data;
+using MTM_WIP_Application_Winforms.Forms.MainForm;
+using MTM_WIP_Application_Winforms.Forms.Splash;
+using MTM_WIP_Application_Winforms.Helpers;
+using MTM_WIP_Application_Winforms.Logging;
+using MTM_WIP_Application_Winforms.Models;
 using MySql.Data.MySqlClient;
 
-namespace MTM_Inventory_Application.Services
+namespace MTM_WIP_Application_Winforms.Services
 {
     public class Service_Onstartup_StartupSplashApplicationContext : ApplicationContext
     {

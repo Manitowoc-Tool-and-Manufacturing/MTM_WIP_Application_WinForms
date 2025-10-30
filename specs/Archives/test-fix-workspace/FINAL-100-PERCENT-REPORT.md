@@ -280,7 +280,7 @@ This milestone represents **production-ready database layer validation** with co
 3. **✅ Final Regression Test**
    ```powershell
    # Run full suite one more time before merge
-   dotnet test Tests/MTM_Inventory_Application.Tests.csproj
+   dotnet test Tests/MTM_WIP_Application_Winforms.Tests.csproj
    # Expected: Passed! - Failed: 0, Passed: 136
    ```
 

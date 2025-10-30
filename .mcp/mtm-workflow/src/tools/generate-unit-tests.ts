@@ -171,10 +171,10 @@ function generateTestCode(
   let code = `using System;
 using System.Threading.Tasks;
 ${getFrameworkUsings(framework)}
-using MTM_Inventory_Application.Data;
-using MTM_Inventory_Application.Models;
+using MTM_WIP_Application_Winforms.Data;
+using MTM_WIP_Application_Winforms.Models;
 
-namespace MTM_Inventory_Application.Tests;
+namespace MTM_WIP_Application_Winforms.Tests;
 
 /// <summary>
 /// Unit tests for ${className} class.

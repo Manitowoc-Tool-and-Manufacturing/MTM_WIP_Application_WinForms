@@ -197,7 +197,7 @@ dotnet test --filter "FullyQualifiedName~Helper_Tests" --logger "console;verbosi
 dotnet test --filter "FullyQualifiedName~Helper_Tests.DateTimeHelper_ParseDate" --logger "console;verbosity=detailed" --collect:"XPlat Code Coverage"
 
 # Build in debug mode for better debugging
-dotnet build MTM_Inventory_Application.csproj -c Debug
+dotnet build MTM_WIP_Application_Winforms.csproj -c Debug
 ```
 
 ---

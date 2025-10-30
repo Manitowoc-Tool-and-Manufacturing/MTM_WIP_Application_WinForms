@@ -1,8 +1,8 @@
 using System.Drawing;
 using System.Windows.Forms;
-using MTM_Inventory_Application.Controls.ErrorReports;
+using MTM_WIP_Application_Winforms.Controls.ErrorReports;
 
-namespace MTM_Inventory_Application.Forms.ErrorReports
+namespace MTM_WIP_Application_Winforms.Forms.ErrorReports
 {
     partial class Form_ErrorReportDetailsDialog : Form
     {

@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using MTM_Inventory_Application.Core;
-using MTM_Inventory_Application.Data;
-using MTM_Inventory_Application.Models;
-using MTM_Inventory_Application.Logging;
+using MTM_WIP_Application_Winforms.Core;
+using MTM_WIP_Application_Winforms.Data;
+using MTM_WIP_Application_Winforms.Models;
+using MTM_WIP_Application_Winforms.Logging;
 
-namespace MTM_Inventory_Application.Controls.SettingsForm
+namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
 {
     public partial class Control_Database : UserControl
     {
@@ -41,7 +41,7 @@ namespace MTM_Inventory_Application.Controls.SettingsForm
                 Control_Database_TextBox_Server.Text =
                     await Dao_User.GetWipServerAddressAsync(user) ?? "localhost";
                 Control_Database_TextBox_Port.Text = await Dao_User.GetWipServerPortAsync(user) ?? "3306";
-                Control_Database_TextBox_Database.Text = await Dao_User.GetDatabaseAsync(user) ?? "mtm_wip_application";
+                Control_Database_TextBox_Database.Text = await Dao_User.GetDatabaseAsync(user) ?? "MTM_WIP_Application_Winforms";
 
                 StatusMessageChanged?.Invoke(this, "Database settings loaded successfully.");
             }
@@ -53,7 +53,7 @@ namespace MTM_Inventory_Application.Controls.SettingsForm
                 // Set default values as fallback
                 Control_Database_TextBox_Server.Text = "localhost";
                 Control_Database_TextBox_Port.Text = "3306";
-                Control_Database_TextBox_Database.Text = "mtm_wip_application";
+                Control_Database_TextBox_Database.Text = "MTM_WIP_Application_Winforms";
             }
         }
 
@@ -125,7 +125,7 @@ namespace MTM_Inventory_Application.Controls.SettingsForm
                 // Reset to default values
                 Control_Database_TextBox_Server.Text = "localhost";
                 Control_Database_TextBox_Port.Text = "3306";
-                Control_Database_TextBox_Database.Text = "mtm_wip_application";
+                Control_Database_TextBox_Database.Text = "MTM_WIP_Application_Winforms";
 
                 StatusMessageChanged?.Invoke(this, "Database settings reset to defaults.");
             }

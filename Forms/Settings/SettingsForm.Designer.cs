@@ -1,4 +1,4 @@
-﻿namespace MTM_Inventory_Application.Forms.Settings
+﻿namespace MTM_WIP_Application_Winforms.Forms.Settings
 {
     partial class SettingsForm
     {

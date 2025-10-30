@@ -1,12 +1,12 @@
 ﻿using System.Drawing.Printing;
 using System.Drawing;
 using System.Drawing.Imaging;
-using MTM_Inventory_Application.Data;
-using MTM_Inventory_Application.Logging;
-using MTM_Inventory_Application.Properties;
-using MTM_Inventory_Application.Core; // For Core_Themes
+using MTM_WIP_Application_Winforms.Data;
+using MTM_WIP_Application_Winforms.Logging;
+using MTM_WIP_Application_Winforms.Properties;
+using MTM_WIP_Application_Winforms.Core; // For Core_Themes
 
-namespace MTM_Inventory_Application.Core;
+namespace MTM_WIP_Application_Winforms.Core;
 
 #region Core_DgvPrinter
 

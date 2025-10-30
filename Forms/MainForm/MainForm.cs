@@ -2,21 +2,21 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.Reflection;
 using Microsoft.Win32;
-using MTM_Inventory_Application.Controls.MainForm;
-using MTM_Inventory_Application.Controls.Shared;
-using MTM_Inventory_Application.Core;
-using MTM_Inventory_Application.Data;
-using MTM_Inventory_Application.Forms.ErrorDialog;
-using MTM_Inventory_Application.Forms.ErrorReports;
-using MTM_Inventory_Application.Forms.Settings;
-using MTM_Inventory_Application.Helpers;
-using MTM_Inventory_Application.Logging;
-using MTM_Inventory_Application.Models;
-using MTM_Inventory_Application.Services;
+using MTM_WIP_Application_Winforms.Controls.MainForm;
+using MTM_WIP_Application_Winforms.Controls.Shared;
+using MTM_WIP_Application_Winforms.Core;
+using MTM_WIP_Application_Winforms.Data;
+using MTM_WIP_Application_Winforms.Forms.ErrorDialog;
+using MTM_WIP_Application_Winforms.Forms.ErrorReports;
+using MTM_WIP_Application_Winforms.Forms.Settings;
+using MTM_WIP_Application_Winforms.Helpers;
+using MTM_WIP_Application_Winforms.Logging;
+using MTM_WIP_Application_Winforms.Models;
+using MTM_WIP_Application_Winforms.Services;
 using MySql.Data.MySqlClient;
 using Timer = System.Windows.Forms.Timer;
 
-namespace MTM_Inventory_Application.Forms.MainForm
+namespace MTM_WIP_Application_Winforms.Forms.MainForm
 {
     #region MainForm
 
@@ -129,7 +129,7 @@ namespace MTM_Inventory_Application.Forms.MainForm
             }
 
             Debug.WriteLine("[DEBUG] [MainForm.ctor] MainForm constructed.");
-            
+
             Service_DebugTracer.TraceMethodExit(null, nameof(MainForm), nameof(MainForm));
         }
 
@@ -154,13 +154,13 @@ namespace MTM_Inventory_Application.Forms.MainForm
                     ["Privilege"] = privilege,
                     ["Title"] = $"Manitowoc Tool and Manufacturing WIP Inventory System | {Model_AppVariables.User} | {privilege}"
                 };
-                
-                Service_DebugTracer.TraceBusinessLogic("FORM_TITLE_GENERATION", 
+
+                Service_DebugTracer.TraceBusinessLogic("FORM_TITLE_GENERATION",
                     inputData: new { User = Model_AppVariables.User, UserType = privilege },
                     outputData: formTitleData["Title"]);
 
                 Text = formTitleData["Title"].ToString();
-                
+
                 Service_DebugTracer.TraceUIAction("FORM_TITLE_SET", nameof(MainForm), formTitleData);
             }
             catch (Exception ex)
@@ -193,7 +193,7 @@ namespace MTM_Inventory_Application.Forms.MainForm
                 privilege = "Unknown";
 
             Service_DebugTracer.TraceBusinessLogic("USER_PRIVILEGE_DETERMINATION",
-                inputData: new { 
+                inputData: new {
                     Admin = Model_AppVariables.UserTypeAdmin,
                     Normal = Model_AppVariables.UserTypeNormal,
                     ReadOnly = Model_AppVariables.UserTypeReadOnly
@@ -227,8 +227,8 @@ namespace MTM_Inventory_Application.Forms.MainForm
                 Debug.WriteLine("[DEBUG] [MainForm.ctor] DPI change events wired up.");
 
                 Service_DebugTracer.TraceUIAction("STARTUP_COMPONENTS", nameof(MainForm),
-                    new Dictionary<string, object> 
-                    { 
+                    new Dictionary<string, object>
+                    {
                         ["Phase"] = "COMPLETE",
                         ["ComponentsInitialized"] = new[] { "ConnectionStrength", "Events", "DpiChangeEvents" }
                     });
@@ -299,8 +299,8 @@ namespace MTM_Inventory_Application.Forms.MainForm
                 {
                     developmentToolStripMenuItem.Visible = isDeveloper;
 
-                    Service_DebugTracer.TraceBusinessLogic("DEVELOPMENT_MENU_VISIBILITY", 
-                        inputData: new { 
+                    Service_DebugTracer.TraceBusinessLogic("DEVELOPMENT_MENU_VISIBILITY",
+                        inputData: new {
                             User = Model_AppVariables.User,
                             UserUpperCase = currentUser,
                             IsDeveloper = isDeveloper
@@ -334,12 +334,12 @@ namespace MTM_Inventory_Application.Forms.MainForm
             {
                 Service_DebugTracer.TraceUIAction("DEVELOPMENT_MENU_CONFIG_ERROR", nameof(MainForm),
                     new Dictionary<string, object> { ["Exception"] = ex.Message });
-        
+
                 LoggingUtility.LogApplicationError(ex);
                 Service_ErrorHandler.HandleException(ex, ErrorSeverity.Low,
                     controlName: nameof(MainForm),
-                    contextData: new Dictionary<string, object> 
-                    { 
+                    contextData: new Dictionary<string, object>
+                    {
                         ["Method"] = nameof(ConfigureDevelopmentMenuVisibility),
                         ["p_User"] = Model_AppVariables.User ?? "Unknown"
                     });
@@ -502,7 +502,7 @@ namespace MTM_Inventory_Application.Forms.MainForm
                     {
                         // Prompt user to restart instead of auto-refresh
                         LoggingUtility.Log("Display settings changed - prompting user for restart");
-                        
+
                         // Note: We don't auto-refresh here because the DpiChanged event
                         // on the form will handle it and prompt the user
                     }
@@ -550,13 +550,13 @@ namespace MTM_Inventory_Application.Forms.MainForm
                 {
                     // User chose to restart - save state and restart application
                     LoggingUtility.Log("User chose to restart application after DPI change");
-                    
+
                     // Get the application executable path
                     string appPath = Application.ExecutablePath;
-                    
+
                     // Start new instance
                     Process.Start(appPath);
-                    
+
                     // Close current instance gracefully
                     Application.Exit();
                 }
@@ -918,7 +918,7 @@ namespace MTM_Inventory_Application.Forms.MainForm
             {
                 _connectionStrengthTimer?.Stop();
                 _connectionStrengthTimer?.Dispose();
-                
+
                 // Close Debug Dashboard if it's open
                 if (_debugDashboard != null && !_debugDashboard.IsDisposed)
                 {
@@ -969,8 +969,8 @@ namespace MTM_Inventory_Application.Forms.MainForm
                 }
 
                 Service_DebugTracer.TraceUIAction("SETTINGS_FORM_ACCEPTED", nameof(MainForm),
-                    new Dictionary<string, object> 
-                    { 
+                    new Dictionary<string, object>
+                    {
                         ["UserAction"] = "ACCEPTED",
                         ["RequiredOperations"] = new[] { "HardReset", "ThemeApply" }
                     });
@@ -1123,7 +1123,7 @@ namespace MTM_Inventory_Application.Forms.MainForm
             {
                 Cursor = Cursors.Default;
                 LoggingUtility.LogApplicationError(ex);
-                
+
                 Service_ErrorHandler.HandleException(
                     ex,
                     ErrorSeverity.Medium,
@@ -1238,7 +1238,7 @@ namespace MTM_Inventory_Application.Forms.MainForm
                                   $"© 2025 Manitowoc Tool and Manufacturing\n\n" +
                                   $"Built with .NET 8 and Windows Forms\n" +
                                   $"Database: MySQL with stored procedures\n" +
-                                  $"Environment: {(Model_Users.Database == "mtm_wip_application" ? "Release" : "Debug")}";
+                                  $"Environment: {(Model_Users.Database == "MTM_WIP_Application_Winforms" ? "Release" : "Debug")}";
 
                 Service_ErrorHandler.ShowInformation("About MTM Inventory", aboutMessage);
             }
@@ -1300,7 +1300,7 @@ namespace MTM_Inventory_Application.Forms.MainForm
             {
                 using var viewerForm = new Forms.Development.DependencyChartConverter.DependencyChartViewerForm();
                 viewerForm.ShowDialog(this);
-            }   
+            }
             catch (Exception ex)
             {
                 LoggingUtility.LogApplicationError(ex);

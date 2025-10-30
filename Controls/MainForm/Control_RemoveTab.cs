@@ -3,17 +3,17 @@ using System.Data;
 using System.Diagnostics;
 using System.Drawing.Printing;
 using System.Text;
-using MTM_Inventory_Application.Core;
-using MTM_Inventory_Application.Data;
-using MTM_Inventory_Application.Forms.ErrorDialog;
-using MTM_Inventory_Application.Forms.MainForm.Classes;
-using MTM_Inventory_Application.Helpers;
-using MTM_Inventory_Application.Logging;
-using MTM_Inventory_Application.Models;
-using MTM_Inventory_Application.Services;
+using MTM_WIP_Application_Winforms.Core;
+using MTM_WIP_Application_Winforms.Data;
+using MTM_WIP_Application_Winforms.Forms.ErrorDialog;
+using MTM_WIP_Application_Winforms.Forms.MainForm.Classes;
+using MTM_WIP_Application_Winforms.Helpers;
+using MTM_WIP_Application_Winforms.Logging;
+using MTM_WIP_Application_Winforms.Models;
+using MTM_WIP_Application_Winforms.Services;
 using static System.Int32;
 
-namespace MTM_Inventory_Application.Controls.MainForm
+namespace MTM_WIP_Application_Winforms.Controls.MainForm
 {
     #region RemoveTab
 

@@ -4,11 +4,11 @@ using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using MTM_Inventory_Application.Core;
-using MTM_Inventory_Application.Logging;
-using MTM_Inventory_Application.Models;
+using MTM_WIP_Application_Winforms.Core;
+using MTM_WIP_Application_Winforms.Logging;
+using MTM_WIP_Application_Winforms.Models;
 
-namespace MTM_Inventory_Application.Controls.SettingsForm
+namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
 {
     public partial class Control_About : UserControl
     {
@@ -103,7 +103,7 @@ namespace MTM_Inventory_Application.Controls.SettingsForm
             {
                 // First, try to get from embedded resource
                 var resourceStream = Assembly.GetExecutingAssembly()
-                    .GetManifestResourceStream("MTM_Inventory_Application.Resources.CHANGELOG.pdf");
+                    .GetManifestResourceStream("MTM_WIP_Application_Winforms.Resources.CHANGELOG.pdf");
 
                 if (resourceStream != null)
                 {

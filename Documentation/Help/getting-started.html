@@ -12,7 +12,7 @@
             <h1>🚀 Getting Started</h1>
             <p>Welcome to the MTM Inventory Application - Your complete WIP inventory management solution</p>
         </div>
-        
+
         <div class="help-nav">
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb">
@@ -22,16 +22,16 @@
             </nav>
             <input type="text" class="search-box" placeholder="Search help topics..." id="searchBox">
         </div>
-        
+
         <div class="help-content">
             <div class="alert alert-info">
                 <strong>New User?</strong> This guide will get you up and running with the MTM Inventory Application in just a few minutes.
             </div>
-            
+
             <div class="help-section">
                 <h2>Application Overview</h2>
                 <p>The MTM Inventory Application is a comprehensive Work-In-Progress (WIP) inventory management system built with Windows Forms (.NET 8) and MySQL database backend. It provides:</p>
-                
+
                 <div class="help-card">
                     <h4>🎯 Core Features</h4>
                     <ul class="help-list">
@@ -44,10 +44,10 @@
                     </ul>
                 </div>
             </div>
-            
+
             <div class="help-section">
                 <h2>First Time Setup</h2>
-                
+
                 <div class="help-card">
                     <h4>1. System Requirements</h4>
                     <p>Before starting, ensure your system meets the requirements:</p>
@@ -60,15 +60,15 @@
                     </ul>
                     <p><a href="system-requirements.html" class="help-btn help-btn-outline-primary">View Detailed Requirements</a></p>
                 </div>
-                
+
                 <div class="help-card">
                     <h4>2. Database Configuration</h4>
                     <p>The application automatically detects your environment and configures the database connection:</p>
-                    
+
                     <div class="alert alert-info">
-                        <strong>Environment Detection:</strong> The application uses <span class="inline-code">Model_Users.Database</span> and <span class="inline-code">Model_Users.WipServerAddress</span> properties to automatically determine whether to use Release Mode (<span class="inline-code">mtm_wip_application</span>) or Debug Mode (<span class="inline-code">mtm_wip_application_winforms_test</span>) database.
+                        <strong>Environment Detection:</strong> The application uses <span class="inline-code">Model_Users.Database</span> and <span class="inline-code">Model_Users.WipServerAddress</span> properties to automatically determine whether to use Release Mode (<span class="inline-code">MTM_WIP_Application_Winforms</span>) or Debug Mode (<span class="inline-code">mtm_wip_application_winforms_test</span>) database.
                     </div>
-                    
+
                     <table class="help-table">
                         <thead>
                             <tr>
@@ -81,7 +81,7 @@
                         <tbody>
                             <tr>
                                 <td>Release Mode</td>
-                                <td><span class="inline-code">mtm_wip_application</span></td>
+                                <td><span class="inline-code">MTM_WIP_Application_Winforms</span></td>
                                 <td><span class="inline-code">172.16.1.104</span></td>
                                 <td>Production environment</td>
                             </tr>
@@ -93,10 +93,10 @@
                             </tr>
                         </tbody>
                     </table>
-                    
+
                     <p><a href="database-configuration.html" class="help-btn help-btn-outline-primary">Complete Database Setup Guide</a></p>
                 </div>
-                
+
                 <div class="help-card">
                     <h4>3. First Launch</h4>
                     <p>When you first launch the application:</p>
@@ -109,14 +109,14 @@
                     </ol>
                 </div>
             </div>
-            
+
             <div class="help-section">
                 <h2>Main Interface Overview</h2>
-                
+
                 <div class="help-card">
                     <h4>🖥️ Main Window Layout</h4>
                     <p>The main window consists of several key areas:</p>
-                    
+
                     <div style="background: #f8f9fa; padding: 1rem; border-radius: 8px; margin: 1rem 0;">
                         <pre style="margin: 0; font-family: 'Consolas', monospace; font-size: 0.875rem;">
 ┌─ Menu Bar ──────────────────────────────────────────────────┐
@@ -132,7 +132,7 @@
 └─────────────────────────────────────────────────────────────┘</pre>
                     </div>
                 </div>
-                
+
                 <div class="help-card">
                     <h4>📋 Primary Tabs</h4>
                     <ul class="help-list">
@@ -144,10 +144,10 @@
                     </ul>
                 </div>
             </div>
-            
+
             <div class="help-section">
                 <h2>Essential Keyboard Shortcuts</h2>
-                
+
                 <div class="help-card">
                     <h4>⌨️ Most Important Shortcuts</h4>
                     <table class="help-table">
@@ -191,14 +191,14 @@
                             </tr>
                         </tbody>
                     </table>
-                    
+
                     <p><a href="keyboard-shortcuts.html" class="help-btn help-btn-outline-primary">Complete Shortcuts Reference</a></p>
                 </div>
             </div>
-            
+
             <div class="help-section">
                 <h2>Your First Operations</h2>
-                
+
                 <div class="help-card">
                     <h4>1. Adding Inventory (Inventory Tab)</h4>
                     <ol class="help-list">
@@ -210,14 +210,14 @@
                         <li>Add any <strong>Notes</strong> or descriptions if needed</li>
                         <li>Click <strong>Save</strong> or press <kbd>Ctrl</kbd> + <kbd>S</kbd></li>
                     </ol>
-                    
+
                     <div class="alert alert-success">
                         <strong>Success!</strong> Your first inventory item has been added. You'll see confirmation in the status bar and the operation will appear in QuickButtons for easy repeat.
                     </div>
-                    
+
                     <p><a href="inventory-operations.html" class="help-btn help-btn-primary">Complete Inventory Guide</a></p>
                 </div>
-                
+
                 <div class="help-card">
                     <h4>2. Viewing Recent Operations (QuickButtons)</h4>
                     <ol class="help-list">
@@ -227,10 +227,10 @@
                         <li>Modify quantities or details as needed</li>
                         <li>Save to complete the repeat operation</li>
                     </ol>
-                    
+
                     <p><a href="quickbuttons.html" class="help-btn help-btn-primary">QuickButtons Guide</a></p>
                 </div>
-                
+
                 <div class="help-card">
                     <h4>3. Removing Inventory (Remove Tab)</h4>
                     <ol class="help-list">
@@ -241,14 +241,14 @@
                         <li>Click <strong>Remove Selected</strong> and confirm</li>
                         <li>View transaction history for audit trail</li>
                     </ol>
-                    
+
                     <p><a href="remove-operations.html" class="help-btn help-btn-primary">Remove Operations Guide</a></p>
                 </div>
             </div>
-            
+
             <div class="help-section">
                 <h2>Next Steps</h2>
-                
+
                 <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1rem;">
                     <div class="help-card">
                         <h4>📚 Learn Core Operations</h4>
@@ -258,7 +258,7 @@
                             <li><a href="transfer-operations.html">• Transfer Operations</a></li>
                         </ul>
                     </div>
-                    
+
                     <div class="help-card">
                         <h4>⚡ Explore Advanced Features</h4>
                         <ul class="help-list-unstyled">
@@ -267,7 +267,7 @@
                             <li><a href="transaction-history.html">• Transaction History</a></li>
                         </ul>
                     </div>
-                    
+
                     <div class="help-card">
                         <h4>⚙️ Customize Your Experience</h4>
                         <ul class="help-list-unstyled">
@@ -276,7 +276,7 @@
                             <li><a href="database-configuration.html">• Database Configuration</a></li>
                         </ul>
                     </div>
-                    
+
                     <div class="help-card">
                         <h4>🔧 Get Support</h4>
                         <ul class="help-list-unstyled">
@@ -287,10 +287,10 @@
                     </div>
                 </div>
             </div>
-            
+
             <div class="help-section">
                 <h2>Quick Tips</h2>
-                
+
                 <div class="alert alert-info">
                     <h5>💡 Pro Tips for New Users</h5>
                     <ul class="help-list">
@@ -304,13 +304,13 @@
                 </div>
             </div>
         </div>
-        
+
         <div class="help-footer">
             <p>MTM Inventory Application v5.0.1.2 | Getting Started Guide</p>
             <p>Need more help? <a href="troubleshooting.html" style="color: #fff;">View Troubleshooting</a> | <a href="index.html" style="color: #fff;">Back to Help Home</a></p>
         </div>
     </div>
-    
+
     <script src="js/help-navigation.js"></script>
 </body>
 </html>

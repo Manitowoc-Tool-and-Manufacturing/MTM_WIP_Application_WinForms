@@ -1,10 +1,10 @@
 JDKoll1982: Follow instructions in [speckit.plan.prompt.md](file:///c%3A/Users/johnk/source/repos/MTM_WIP_Application_WinForms/.github/prompts/speckit.plan.prompt.md).
 
-GitHub Copilot: I'll execute the planning workflow according to the speckit.plan.prompt.md instructions. 
+GitHub Copilot: I'll execute the planning workflow according to the speckit.plan.prompt.md instructions.
 
 Ran terminal command: .specify/scripts/powershell/setup-plan.ps1 -Json
 
-Let me parse that JSON and read the necessary files: 
+Let me parse that JSON and read the necessary files:
 
 Read [](file:///c%3A/Users/johnk/source/repos/MTM_WIP_Application_WinForms/specs/002-view-error-reports/spec.md)
 
@@ -12,36 +12,32 @@ Read [](file:///c%3A/Users/johnk/source/repos/MTM_WIP_Application_WinForms/.spec
 
 Read [](file:///c%3A/Users/johnk/source/repos/MTM_WIP_Application_WinForms/specs/002-view-error-reports/plan.md)
 
-Ran `analyze_spec_context` 
+Ran `analyze_spec_context`
 Completed with input: {
-  "feature_dir": "c:\\Users\\johnk\\source\\repos\\MTM_WIP_Application_WinForms\\specs\\002-view-error-reports"
+"feature_dir": "c:\\Users\\johnk\\source\\repos\\MTM_WIP_Application_WinForms\\specs\\002-view-error-reports"
 }
 
-Now I'll proceed with the planning workflow. Let me start by filling in the Technical Context and Constitution Check sections of plan.md: 
+Now I'll proceed with the planning workflow. Let me start by filling in the Technical Context and Constitution Check sections of plan.md:
 
 Using "Replace String in File"
 
-
 ```
 
 ```
-
 
 Using "Replace String in File"
 
-
 ```
 
 ```
-
 
 Using "Replace String in File"
 
-
 ```
 
 ```
-Now let me proceed with Phase 0: Generate research.md to resolve any unknowns: 
+
+Now let me proceed with Phase 0: Generate research.md to resolve any unknowns:
 
 Searched text for `class Dao_ErrorReports` (`**/Data/Dao_ErrorReports.cs`), 1 result
 
@@ -59,15 +55,15 @@ Read [](file:///c%3A/Users/johnk/source/repos/MTM_WIP_Application_WinForms/Datab
 
 Read [](file:///c%3A/Users/johnk/source/repos/MTM_WIP_Application_WinForms/Controls/MainForm/Control_AdvancedRemove.cs#250-250), lines 250 to 370
 
-Now I'll create the research.md document: 
+Now I'll create the research.md document:
 
 Created [](file:///c%3A/Users/johnk/source/repos/MTM_WIP_Application_WinForms/specs/002-view-error-reports/research.md)
 
-Now proceeding to Phase 1: Generate data-model.md: 
+Now proceeding to Phase 1: Generate data-model.md:
 
 Created [](file:///c%3A/Users/johnk/source/repos/MTM_WIP_Application_WinForms/specs/002-view-error-reports/data-model.md)
 
-Now I'll create the contracts directory with stored procedure contracts: 
+Now I'll create the contracts directory with stored procedure contracts:
 
 Created [](file:///c%3A/Users/johnk/source/repos/MTM_WIP_Application_WinForms/specs/002-view-error-reports/contracts)
 
@@ -81,43 +77,43 @@ Created [](file:///c%3A/Users/johnk/source/repos/MTM_WIP_Application_WinForms/sp
 
 Created [](file:///c%3A/Users/johnk/source/repos/MTM_WIP_Application_WinForms/specs/002-view-error-reports/contracts/sp_error_reports_GetMachineList.md)
 
-Now let me create the quickstart.md file: 
+Now let me create the quickstart.md file:
 
 Created [](file:///c%3A/Users/johnk/source/repos/MTM_WIP_Application_WinForms/specs/002-view-error-reports/quickstart.md)
 
-Now let me run the agent context update script: 
+Now let me run the agent context update script:
 
 Ran terminal command: .specify/scripts/powershell/update-agent-context.ps1 -AgentType copilot
 
-Perfect! Now let me re-check the constitution after Phase 1 design and update the plan.md: 
+Perfect! Now let me re-check the constitution after Phase 1 design and update the plan.md:
 
 Using "Replace String in File"
 
-
 ```
 
 ```
-Now let me verify the .gitignore file per the workflow: 
 
-Ran `verify_ignore_files` 
+Now let me verify the .gitignore file per the workflow:
+
+Ran `verify_ignore_files`
 Completed with input: {
-  "workspace_root": "c:\\Users\\johnk\\source\\repos\\MTM_WIP_Application_WinForms",
-  "tech_stack": [
-    "csharp",
-    "dotnet",
-    "mysql"
-  ]
+"workspace_root": "c:\\Users\\johnk\\source\\repos\\MTM_WIP_Application_WinForms",
+"tech_stack": [
+"csharp",
+"dotnet",
+"mysql"
+]
 }
 
-The .gitignore already has bin/ and obj/ patterns based on the standard .NET template. Let me create a summary and mark the planning complete. First, let me update the Complexity Tracking section since we have no violations: 
+The .gitignore already has bin/ and obj/ patterns based on the standard .NET template. Let me create a summary and mark the planning complete. First, let me update the Complexity Tracking section since we have no violations:
 
 Using "Replace String in File"
 
-
 ```
 
 ```
-Perfect! Now let me read the final plan.md to provide a complete summary: 
+
+Perfect! Now let me read the final plan.md to provide a complete summary:
 
 Read [](file:///c%3A/Users/johnk/source/repos/MTM_WIP_Application_WinForms/specs/002-view-error-reports/plan.md)
 
@@ -130,32 +126,36 @@ Successfully completed all phases of the `/speckit.plan` workflow for feature **
 ### Generated Artifacts
 
 **Phase 0: Research**
-- ✅ `research.md` - Technology decisions, DataGridView binding strategy, stored procedure inventory, performance optimization strategies
+
+-   ✅ `research.md` - Technology decisions, DataGridView binding strategy, stored procedure inventory, performance optimization strategies
 
 **Phase 1: Design**
-- ✅ `data-model.md` - 4 entity definitions (ErrorReportGridRow, ErrorReportDetail, ErrorReportFilter, ErrorReportExport) with validation rules
-- ✅ `contracts/` directory with 5 stored procedure contracts:
-  - `sp_error_reports_GetAll.md` - Filter and retrieve reports
-  - `sp_error_reports_GetByID.md` - Single report details
-  - `sp_error_reports_UpdateStatus.md` - Status updates with developer notes
-  - `sp_error_reports_GetUserList.md` - User filter dropdown
-  - `sp_error_reports_GetMachineList.md` - Machine filter dropdown
-- ✅ `quickstart.md` - Developer implementation guide with 6-phase workflow
+
+-   ✅ `data-model.md` - 4 entity definitions (ErrorReportGridRow, ErrorReportDetail, ErrorReportFilter, ErrorReportExport) with validation rules
+-   ✅ `contracts/` directory with 5 stored procedure contracts:
+    -   `sp_error_reports_GetAll.md` - Filter and retrieve reports
+    -   `sp_error_reports_GetByID.md` - Single report details
+    -   `sp_error_reports_UpdateStatus.md` - Status updates with developer notes
+    -   `sp_error_reports_GetUserList.md` - User filter dropdown
+    -   `sp_error_reports_GetMachineList.md` - Machine filter dropdown
+-   ✅ `quickstart.md` - Developer implementation guide with 6-phase workflow
 
 **Phase 1: Agent Context**
-- ✅ Updated copilot-instructions.md with new technologies
+
+-   ✅ Updated copilot-instructions.md with new technologies
 
 ### Constitution Compliance: 8/8 ✅
 
 All constitution principles verified compliant:
-- ✅ Stored procedure only database access (5 procedures defined)
-- ✅ DaoResult<T> wrapper pattern
-- ✅ Region organization standards
-- ✅ Manual validation testing approach
-- ✅ Environment-aware database selection
-- ✅ Async-first UI responsiveness
-- ✅ Centralized error handling (Service_ErrorHandler)
-- ✅ XML documentation requirements
+
+-   ✅ Stored procedure only database access (5 procedures defined)
+-   ✅ DaoResult<T> wrapper pattern
+-   ✅ Region organization standards
+-   ✅ Manual validation testing approach
+-   ✅ Environment-aware database selection
+-   ✅ Async-first UI responsiveness
+-   ✅ Centralized error handling (Service_ErrorHandler)
+-   ✅ XML documentation requirements
 
 ### Repository Info
 
@@ -170,11 +170,11 @@ All constitution principles verified compliant:
 
 ### Key Highlights
 
-- **5 stored procedures** extend existing error-reporting-system
-- **Master-detail WinForms UI** with 60/40 horizontal split
-- **Existing patterns reused**: DataGridView binding from Control_AdvancedRemove, DAO structure from Dao_ErrorReports
-- **Performance targets**: <1s load, <500ms filtering, <300ms status updates
-- **Export capabilities**: CSV and Excel via ClosedXML
+-   **5 stored procedures** extend existing error-reporting-system
+-   **Master-detail WinForms UI** with 60/40 horizontal split
+-   **Existing patterns reused**: DataGridView binding from Control_AdvancedRemove, DAO structure from Dao_ErrorReports
+-   **Performance targets**: <1s load, <500ms filtering, <300ms status updates
+-   **Export capabilities**: CSV and Excel via ClosedXML
 
 All documentation complete and ready for implementation phase! 🚀
 
@@ -182,49 +182,49 @@ Made changes.
 
 JDKoll1982: Follow instructions in [speckit.plan.prompt.md](file:///c%3A/Users/johnk/source/repos/MTM_WIP_Application_WinForms/.github/prompts/speckit.plan.prompt.md).
 
-GitHub Copilot: 
+GitHub Copilot:
 
 JDKoll1982: Follow instructions in [speckit.tasks.prompt.md](file:///c%3A/Users/johnk/source/repos/MTM_WIP_Application_WinForms/.github/prompts/speckit.tasks.prompt.md).
 
-GitHub Copilot: I'll execute the task generation workflow according to speckit.tasks.prompt.md instructions. 
+GitHub Copilot: I'll execute the task generation workflow according to speckit.tasks.prompt.md instructions.
 
 Ran terminal command: .specify/scripts/powershell/check-prerequisites.ps1 -Json
 
-Now let me load all the design documents and analyze the spec: 
+Now let me load all the design documents and analyze the spec:
 
 Read [](file:///c%3A/Users/johnk/source/repos/MTM_WIP_Application_WinForms/specs/002-view-error-reports/spec.md)
 
 Read [](file:///c%3A/Users/johnk/source/repos/MTM_WIP_Application_WinForms/specs/002-view-error-reports/plan.md)
 
-Ran `analyze_spec_context` 
+Ran `analyze_spec_context`
 Completed with input: {
-  "feature_dir": "c:\\Users\\johnk\\source\\repos\\MTM_WIP_Application_WinForms\\specs\\002-view-error-reports"
+"feature_dir": "c:\\Users\\johnk\\source\\repos\\MTM_WIP_Application_WinForms\\specs\\002-view-error-reports"
 }
 
 Searched for files matching `**/.github/instructions/*.instructions.md`, 20 matches
 
-Now let me read the contracts to understand the API surface: 
+Now let me read the contracts to understand the API surface:
 
 Read [](file:///c%3A/Users/johnk/source/repos/MTM_WIP_Application_WinForms/specs/002-view-error-reports/contracts)
 
-Perfect! Now I'll generate the comprehensive tasks.md file organized by user stories: 
+Perfect! Now I'll generate the comprehensive tasks.md file organized by user stories:
 
 Created [](file:///c%3A/Users/johnk/source/repos/MTM_WIP_Application_WinForms/specs/002-view-error-reports/tasks.md)
 
-Now let me validate the generated tasks using the MCP tools: 
+Now let me validate the generated tasks using the MCP tools:
 
-Ran `parse_tasks` 
+Ran `parse_tasks`
 Completed with input: {
-  "tasks_file": "c:\\Users\\johnk\\source\\repos\\MTM_WIP_Application_WinForms\\specs\\002-view-error-reports\\tasks.md"
+"tasks_file": "c:\\Users\\johnk\\source\\repos\\MTM_WIP_Application_WinForms\\specs\\002-view-error-reports\\tasks.md"
 }
 
-Ran `load_instructions` 
+Ran `load_instructions`
 Completed with input: {
-  "tasks_file": "c:\\Users\\johnk\\source\\repos\\MTM_WIP_Application_WinForms\\specs\\002-view-error-reports\\tasks.md",
-  "instructions_dir": "c:\\Users\\johnk\\source\\repos\\MTM_WIP_Application_WinForms\\.github\\instructions"
+"tasks_file": "c:\\Users\\johnk\\source\\repos\\MTM_WIP_Application_WinForms\\specs\\002-view-error-reports\\tasks.md",
+"instructions_dir": "c:\\Users\\johnk\\source\\repos\\MTM_WIP_Application_WinForms\\.github\\instructions"
 }
 
-The MCP tool parsing didn't recognize the task format. Let me update the agent context now that tasks.md is generated: 
+The MCP tool parsing didn't recognize the task format. Let me update the agent context now that tasks.md is generated:
 
 Ran terminal command: .specify/scripts/powershell/update-agent-context.ps1 -AgentType copilot
 
@@ -247,38 +247,44 @@ Successfully generated comprehensive task breakdown for feature **002-view-error
 ### Organization by User Story
 
 #### Phase 1: Setup & Foundation (T001-T010)
-- **10 tasks** - Database layer, models, DAO methods
-- **Goal**: Establish shared infrastructure needed by all user stories
-- **Deliverables**: 5 stored procedures, Model_ErrorReportFilter, 5 DAO methods
-- **Parallel opportunities**: 6 tasks can be done simultaneously
+
+-   **10 tasks** - Database layer, models, DAO methods
+-   **Goal**: Establish shared infrastructure needed by all user stories
+-   **Deliverables**: 5 stored procedures, Model_ErrorReportFilter, 5 DAO methods
+-   **Parallel opportunities**: 6 tasks can be done simultaneously
 
 #### Phase 2: User Story 1 - Browse Reports (P1) (T011-T019)
-- **9 tasks** - Grid control with DataGridView, color-coding, sorting
-- **Goal**: View all error reports in sortable grid
-- **Deliverables**: Control_ErrorReportsGrid with full functionality
-- **MVP Scope**: ⭐ Recommended first delivery for immediate value
+
+-   **9 tasks** - Grid control with DataGridView, color-coding, sorting
+-   **Goal**: View all error reports in sortable grid
+-   **Deliverables**: Control_ErrorReportsGrid with full functionality
+-   **MVP Scope**: ⭐ Recommended first delivery for immediate value
 
 #### Phase 3: User Story 2 - Filtering (P1) (T020-T027)
-- **8 tasks** - Filter panel with date, user, machine, status, search
-- **Goal**: Filter and search reports
-- **Deliverables**: Complete filter UI with dropdown population
-- **Parallel opportunities**: 3 tasks for dropdown population
+
+-   **8 tasks** - Filter panel with date, user, machine, status, search
+-   **Goal**: Filter and search reports
+-   **Deliverables**: Complete filter UI with dropdown population
+-   **Parallel opportunities**: 3 tasks for dropdown population
 
 #### Phase 4: User Story 3 - Details & Status (P1) (T028-T041)
-- **14 tasks** - Detail view control, status update buttons, main form integration
-- **Goal**: View complete reports and update status
-- **Deliverables**: Control_ErrorReportDetails, Form_ViewErrorReports, status workflow
+
+-   **14 tasks** - Detail view control, status update buttons, main form integration
+-   **Goal**: View complete reports and update status
+-   **Deliverables**: Control_ErrorReportDetails, Form_ViewErrorReports, status workflow
 
 #### Phase 5: User Story 4 - Export (P2) (T042-T048)
-- **7 tasks** - Export helper class, CSV/Excel export, bulk operations
-- **Goal**: Export reports for external analysis
-- **Deliverables**: Helper_ErrorReportExport with CSV and Excel support
-- **Parallel opportunities**: 2 export methods simultaneously
+
+-   **7 tasks** - Export helper class, CSV/Excel export, bulk operations
+-   **Goal**: Export reports for external analysis
+-   **Deliverables**: Helper_ErrorReportExport with CSV and Excel support
+-   **Parallel opportunities**: 2 export methods simultaneously
 
 #### Phase 6: Polish & Integration (T049-T052)
-- **4 tasks** - Event wiring, menu integration, documentation, final testing
-- **Goal**: Complete end-to-end integration
-- **Deliverables**: Fully integrated feature with documentation
+
+-   **4 tasks** - Event wiring, menu integration, documentation, final testing
+-   **Goal**: Complete end-to-end integration
+-   **Deliverables**: Fully integrated feature with documentation
 
 ### Key Features of Generated Tasks
 
@@ -294,11 +300,13 @@ Successfully generated comprehensive task breakdown for feature **002-view-error
 ### Implementation Strategy
 
 **MVP Delivery** (Tasks T001-T019):
-- Foundation + User Story 1 (Browse Reports)
-- 8-12 hours estimated
-- Provides immediate value: view and sort error reports with color-coding
+
+-   Foundation + User Story 1 (Browse Reports)
+-   8-12 hours estimated
+-   Provides immediate value: view and sort error reports with color-coding
 
 **Incremental Iterations**:
+
 1. MVP: Browse (T001-T019) - 8-12 hours
 2. Filtering (T020-T027) - 4-6 hours
 3. Details & Status (T028-T041) - 8-12 hours
@@ -310,45 +318,50 @@ Successfully generated comprehensive task breakdown for feature **002-view-error
 ### Parallel Development Opportunities
 
 **3-Developer Team** (2-3 day completion):
-- **Developer 1**: Database & DAO (T001-T010) - 8 hours
-- **Developer 2**: Grid & Filters (T011-T027) - 12 hours
-- **Developer 3**: Details & Export (T028-T048) - 16 hours
-- **All**: Integration & testing (T049-T052) - 4 hours
+
+-   **Developer 1**: Database & DAO (T001-T010) - 8 hours
+-   **Developer 2**: Grid & Filters (T011-T027) - 12 hours
+-   **Developer 3**: Details & Export (T028-T048) - 16 hours
+-   **All**: Integration & testing (T049-T052) - 4 hours
 
 **Single Developer** (4-5 day completion):
-- Follow sequential user story order (P1 → P2)
-- Deliver MVP first for early feedback
+
+-   Follow sequential user story order (P1 → P2)
+-   Deliver MVP first for early feedback
 
 ### Instruction Files Referenced
 
 Each task includes specific references to:
-- csharp-dotnet8.instructions.md - 27 references
-- mysql-database.instructions.md - 15 references
-- testing-standards.instructions.md - 6 references
-- performance-optimization.instructions.md - 3 references
-- security-best-practices.instructions.md - 2 references
-- documentation.instructions.md - 2 references
-- ui-scaling-consistency.instructions.md - 4 references
+
+-   csharp-dotnet8.instructions.md - 27 references
+-   mysql-database.instructions.md - 15 references
+-   testing-standards.instructions.md - 6 references
+-   performance-optimization.instructions.md - 3 references
+-   security-best-practices.instructions.md - 2 references
+-   documentation.instructions.md - 2 references
+-   ui-scaling-consistency.instructions.md - 4 references
 
 ### Contract Files Referenced
 
 Database tasks reference all 5 stored procedure contracts:
-- `contracts/sp_error_reports_GetAll.md`
-- `contracts/sp_error_reports_GetByID.md`
-- `contracts/sp_error_reports_UpdateStatus.md`
-- `contracts/sp_error_reports_GetUserList.md`
-- `contracts/sp_error_reports_GetMachineList.md`
+
+-   `contracts/sp_error_reports_GetAll.md`
+-   `contracts/sp_error_reports_GetByID.md`
+-   `contracts/sp_error_reports_UpdateStatus.md`
+-   `contracts/sp_error_reports_GetUserList.md`
+-   `contracts/sp_error_reports_GetMachineList.md`
 
 ### Success Criteria Alignment
 
 All 7 success criteria from spec.md mapped to tasks:
-- ✅ SC-001 (Grid load <1s) → T013, T007
-- ✅ SC-002 (Filtering <500ms) → T024, T001
-- ✅ SC-003 (Status update <300ms) → T034, T035, T009
-- ✅ SC-004 (Export <2s) → T043, T044
-- ✅ SC-005 (Search <400ms) → T026, T001
-- ✅ SC-006 (Color-coding 100%) → T014
-- ✅ SC-007 (10KB callstack no lag) → T031, T032
+
+-   ✅ SC-001 (Grid load <1s) → T013, T007
+-   ✅ SC-002 (Filtering <500ms) → T024, T001
+-   ✅ SC-003 (Status update <300ms) → T034, T035, T009
+-   ✅ SC-004 (Export <2s) → T043, T044
+-   ✅ SC-005 (Search <400ms) → T026, T001
+-   ✅ SC-006 (Color-coding 100%) → T014
+-   ✅ SC-007 (10KB callstack no lag) → T031, T032
 
 ### Next Steps
 
@@ -361,13 +374,14 @@ All 7 success criteria from spec.md mapped to tasks:
 ---
 
 **Feature Status**: Ready for implementation! All planning artifacts complete:
-- ✅ spec.md (User stories and requirements)
-- ✅ plan.md (Technical context and constitution compliance)
-- ✅ research.md (Technology decisions)
-- ✅ data-model.md (Entity definitions)
-- ✅ contracts/ (5 stored procedure contracts)
-- ✅ quickstart.md (Developer guide)
-- ✅ tasks.md (52 implementation tasks) ← **Just completed**
+
+-   ✅ spec.md (User stories and requirements)
+-   ✅ plan.md (Technical context and constitution compliance)
+-   ✅ research.md (Technology decisions)
+-   ✅ data-model.md (Entity definitions)
+-   ✅ contracts/ (5 stored procedure contracts)
+-   ✅ quickstart.md (Developer guide)
+-   ✅ tasks.md (52 implementation tasks) ← **Just completed**
 
 The task breakdown is immediately executable with clear dependencies, acceptance criteria, and instruction file references for every task! 🚀
 
@@ -377,32 +391,32 @@ JDKoll1982: Follow instructions in [speckit.implement.prompt.md](file:///c%3A/Us
 
 GitHub Copilot: Ran terminal command: .specify/scripts/powershell/check-prerequisites.ps1 -Json -RequireTasks -IncludeTasks
 
-Ran `analyze_spec_context` 
+Ran `analyze_spec_context`
 Completed with input: {
-  "feature_dir": "c:\\Users\\johnk\\source\\repos\\MTM_WIP_Application_WinForms\\specs\\002-view-error-reports"
+"feature_dir": "c:\\Users\\johnk\\source\\repos\\MTM_WIP_Application_WinForms\\specs\\002-view-error-reports"
 }
 
 Read [](file:///c%3A/Users/johnk/source/repos/MTM_WIP_Application_WinForms/specs/002-view-error-reports)
 
-Ran `parse_tasks` 
+Ran `parse_tasks`
 Completed with input: {
-  "tasks_file": "c:\\Users\\johnk\\source\\repos\\MTM_WIP_Application_WinForms\\specs\\002-view-error-reports\\tasks.md"
+"tasks_file": "c:\\Users\\johnk\\source\\repos\\MTM_WIP_Application_WinForms\\specs\\002-view-error-reports\\tasks.md"
 }
 
-Ran `load_instructions` 
+Ran `load_instructions`
 Completed with input: {
-  "tasks_file": "c:\\Users\\johnk\\source\\repos\\MTM_WIP_Application_WinForms\\specs\\002-view-error-reports\\tasks.md",
-  "instructions_dir": "c:\\Users\\johnk\\source\\repos\\MTM_WIP_Application_WinForms\\.github\\instructions"
+"tasks_file": "c:\\Users\\johnk\\source\\repos\\MTM_WIP_Application_WinForms\\specs\\002-view-error-reports\\tasks.md",
+"instructions_dir": "c:\\Users\\johnk\\source\\repos\\MTM_WIP_Application_WinForms\\.github\\instructions"
 }
 
-Ran `verify_ignore_files` 
+Ran `verify_ignore_files`
 Completed with input: {
-  "workspace_root": "c:\\Users\\johnk\\source\\repos\\MTM_WIP_Application_WinForms",
-  "tech_stack": [
-    "csharp",
-    "dotnet",
-    "mysql"
-  ]
+"workspace_root": "c:\\Users\\johnk\\source\\repos\\MTM_WIP_Application_WinForms",
+"tech_stack": [
+"csharp",
+"dotnet",
+"mysql"
+]
 }
 
 Read [](file:///c%3A/Users/johnk/source/repos/MTM_WIP_Application_WinForms/.gitignore#1-1), lines 1 to 201
@@ -435,11 +449,9 @@ Created [](file:///c%3A/Users/johnk/source/repos/MTM_WIP_Application_WinForms/Da
 
 Using "Apply Patch"
 
-
 ```
 
 ```
-
 
 Created [](file:///c%3A/Users/johnk/source/repos/MTM_WIP_Application_WinForms/Database/UpdatedStoredProcedures/ReadyForVerification/error-reports/sp_error_reports_GetByID.sql)
 
@@ -449,33 +461,31 @@ Created [](file:///c%3A/Users/johnk/source/repos/MTM_WIP_Application_WinForms/Da
 
 Created [](file:///c%3A/Users/johnk/source/repos/MTM_WIP_Application_WinForms/Database/UpdatedStoredProcedures/ReadyForVerification/error-reports/sp_error_reports_GetMachineList.sql)
 
-Ran `analyze_stored_procedures` 
+Ran `analyze_stored_procedures`
 Completed with input: {
-  "procedures_dir": "c:\\Users\\johnk\\source\\repos\\MTM_WIP_Application_WinForms\\Database\\UpdatedStoredProcedures\\ReadyForVerification\\error-reports"
+"procedures_dir": "c:\\Users\\johnk\\source\\repos\\MTM_WIP_Application_WinForms\\Database\\UpdatedStoredProcedures\\ReadyForVerification\\error-reports"
 }
 
-Ran `mark_task_complete` 
+Ran `mark_task_complete`
 Completed with input: {
-  "tasks_file": "c:\\Users\\johnk\\source\\repos\\MTM_WIP_Application_WinForms\\specs\\002-view-error-reports\\tasks.md",
-  "task_ids": [
-    "T001",
-    "T002",
-    "T003",
-    "T004",
-    "T005"
-  ],
-  "note": "Created error report stored procedures in Database/UpdatedStoredProcedures/ReadyForVerification/error-reports, covering filtered retrieval, detail lookup, status updates, and distinct user/machine lists. Verified compliance with analyze_stored_procedures (no errors)."
+"tasks_file": "c:\\Users\\johnk\\source\\repos\\MTM_WIP_Application_WinForms\\specs\\002-view-error-reports\\tasks.md",
+"task_ids": [
+"T001",
+"T002",
+"T003",
+"T004",
+"T005"
+],
+"note": "Created error report stored procedures in Database/UpdatedStoredProcedures/ReadyForVerification/error-reports, covering filtered retrieval, detail lookup, status updates, and distinct user/machine lists. Verified compliance with analyze_stored_procedures (no errors)."
 }
 
 Read [](file:///c%3A/Users/johnk/source/repos/MTM_WIP_Application_WinForms/specs/002-view-error-reports/tasks.md#30-30), lines 30 to 150
 
 Using "Apply Patch"
 
-
 ```
 
 ```
-
 
 Read [](file:///c%3A/Users/johnk/source/repos/MTM_WIP_Application_WinForms/Models/Model_AppVariables.cs)
 
@@ -485,11 +495,9 @@ Created [](file:///c%3A/Users/johnk/source/repos/MTM_WIP_Application_WinForms/Mo
 
 Using "Apply Patch"
 
-
 ```
 
 ```
-
 
 Read [](file:///c%3A/Users/johnk/source/repos/MTM_WIP_Application_WinForms/Data/Dao_ErrorReports.cs)
 
@@ -499,67 +507,62 @@ Read [](file:///c%3A/Users/johnk/source/repos/MTM_WIP_Application_WinForms/Model
 
 Using "Apply Patch"
 
-
 ```
 
 ```
-
 
 Using "Apply Patch"
 
-
 ```
 
 ```
 
+Ran terminal command: dotnet build MTM_WIP_Application_Winforms.csproj -c Debug
 
-Ran terminal command: dotnet build MTM_Inventory_Application.csproj -c Debug
-
-Ran `validate_dao_patterns` 
+Ran `validate_dao_patterns`
 Completed with input: {
-  "dao_dir": "c:\\Users\\johnk\\source\\repos\\MTM_WIP_Application_WinForms\\Data\\Dao_ErrorReports.cs"
+"dao_dir": "c:\\Users\\johnk\\source\\repos\\MTM_WIP_Application_WinForms\\Data\\Dao_ErrorReports.cs"
 }
 
-Ran `validate_dao_patterns` 
+Ran `validate_dao_patterns`
 Completed with input: {
-  "dao_dir": "c:\\Users\\johnk\\source\\repos\\MTM_WIP_Application_WinForms\\Data",
-  "recursive": false
+"dao_dir": "c:\\Users\\johnk\\source\\repos\\MTM_WIP_Application_WinForms\\Data",
+"recursive": false
 }
 
 Using "Apply Patch"
 
-
 ```
 
 ```
-
 
 Ran terminal command: git status -sb
 
 Implemented the Phase 1 foundation (T001–T010) for the View Error Reports feature.
 
-- Added five new stored procedures under error-reports to deliver filtered grid data, detailed report retrieval, status updates, and distinct user/machine lists, following the contracts and MySQL guidelines (validated with `analyze_stored_procedures` – only p_-naming info notes reported).
-- Introduced Model_ErrorReportFilter.cs with normalization helpers and validation so UI/DAO callers can enforce date, status, and search rules before hitting the database.
-- Expanded Dao_ErrorReports.cs with async methods for listing, detail lookup, status updates, and dropdown sources, including mapping helpers, guard clauses, and reuse of the new stored procedures (checked with `validate_dao_patterns`; existing project-wide MessageBox warnings remain).
+-   Added five new stored procedures under error-reports to deliver filtered grid data, detailed report retrieval, status updates, and distinct user/machine lists, following the contracts and MySQL guidelines (validated with `analyze_stored_procedures` – only p\_-naming info notes reported).
+-   Introduced Model_ErrorReportFilter.cs with normalization helpers and validation so UI/DAO callers can enforce date, status, and search rules before hitting the database.
+-   Expanded Dao_ErrorReports.cs with async methods for listing, detail lookup, status updates, and dropdown sources, including mapping helpers, guard clauses, and reuse of the new stored procedures (checked with `validate_dao_patterns`; existing project-wide MessageBox warnings remain).
 
 **Validation**
-- `dotnet build MTM_Inventory_Application.csproj -c Debug`
-- `analyze_stored_procedures` on the new error-report procs
-- `validate_dao_patterns` on Data (pre-existing MessageBox warnings in other DAOs still outstanding)
+
+-   `dotnet build MTM_WIP_Application_Winforms.csproj -c Debug`
+-   `analyze_stored_procedures` on the new error-report procs
+-   `validate_dao_patterns` on Data (pre-existing MessageBox warnings in other DAOs still outstanding)
 
 Natural next step is Phase 2 (User Story 1) to build the error report grid UI.
 
 Made changes.
 
-JDKoll1982: PS C:\Users\johnk\source\repos\MTM_WIP_Application_WinForms> dotnet build [MTM_Inventory_Application.csproj](http://_vscodecontentref_/3) -c Debug
+JDKoll1982: PS C:\Users\johnk\source\repos\MTM*WIP_Application_WinForms> dotnet build [MTM_WIP_Application_Winforms.csproj](http://\_vscodecontentref*/3) -c Debug
 http://_vscodecontentref_/3: The term 'http://_vscodecontentref_/3' is not recognized as a name of a cmdlet, function, script file, or executable program.
 Check the spelling of the name, or if a path was included, verify that the path is correct and try again.
 
-GitHub Copilot: Ran terminal command: dotnet build MTM_Inventory_Application.csproj -c Debug
+GitHub Copilot: Ran terminal command: dotnet build MTM_WIP_Application_Winforms.csproj -c Debug
 
 The shell treated the markdown link as part of the command. Use plain text:
 
-- `dotnet build MTM_Inventory_Application.csproj -c Debug`
+-   `dotnet build MTM_WIP_Application_Winforms.csproj -c Debug`
 
 I already ran it for you; build succeeded (only existing warnings remain on other files).
 
@@ -567,32 +570,32 @@ JDKoll1982: Follow instructions in [speckit.implement.prompt.md](file:///c%3A/Us
 
 GitHub Copilot: Ran terminal command: .specify/scripts/powershell/check-prerequisites.ps1 -Json -RequireTasks -IncludeTasks
 
-Ran `analyze_spec_context` 
+Ran `analyze_spec_context`
 Completed with input: {
-  "feature_dir": "c:\\Users\\johnk\\source\\repos\\MTM_WIP_Application_WinForms\\specs\\002-view-error-reports"
+"feature_dir": "c:\\Users\\johnk\\source\\repos\\MTM_WIP_Application_WinForms\\specs\\002-view-error-reports"
 }
 
 Read [](file:///c%3A/Users/johnk/source/repos/MTM_WIP_Application_WinForms/specs/002-view-error-reports)
 
-Ran `parse_tasks` 
+Ran `parse_tasks`
 Completed with input: {
-  "tasks_file": "c:\\Users\\johnk\\source\\repos\\MTM_WIP_Application_WinForms\\specs\\002-view-error-reports\\tasks.md"
+"tasks_file": "c:\\Users\\johnk\\source\\repos\\MTM_WIP_Application_WinForms\\specs\\002-view-error-reports\\tasks.md"
 }
 
-Ran `load_instructions` 
+Ran `load_instructions`
 Completed with input: {
-  "tasks_file": "c:\\Users\\johnk\\source\\repos\\MTM_WIP_Application_WinForms\\specs\\002-view-error-reports\\tasks.md",
-  "instructions_dir": "c:\\Users\\johnk\\source\\repos\\MTM_WIP_Application_WinForms\\.github\\instructions"
+"tasks_file": "c:\\Users\\johnk\\source\\repos\\MTM_WIP_Application_WinForms\\specs\\002-view-error-reports\\tasks.md",
+"instructions_dir": "c:\\Users\\johnk\\source\\repos\\MTM_WIP_Application_WinForms\\.github\\instructions"
 }
 
-Ran `verify_ignore_files` 
+Ran `verify_ignore_files`
 Completed with input: {
-  "workspace_root": "c:\\Users\\johnk\\source\\repos\\MTM_WIP_Application_WinForms",
-  "tech_stack": [
-    "csharp",
-    "dotnet",
-    "mysql"
-  ]
+"workspace_root": "c:\\Users\\johnk\\source\\repos\\MTM_WIP_Application_WinForms",
+"tech_stack": [
+"csharp",
+"dotnet",
+"mysql"
+]
 }
 
 Read [](file:///c%3A/Users/johnk/source/repos/MTM_WIP_Application_WinForms/specs/002-view-error-reports/tasks.md#150-150), lines 150 to 390
@@ -619,75 +622,66 @@ Created [](file:///c%3A/Users/johnk/source/repos/MTM_WIP_Application_WinForms/Co
 
 Using "Apply Patch"
 
-
 ```
 
 ```
-
 
 Created [](file:///c%3A/Users/johnk/source/repos/MTM_WIP_Application_WinForms/Controls/ErrorReports/Control_ErrorReportsGrid.resx)
 
 Using "Apply Patch"
 
-
 ```
 
 ```
-
 
 Using "Apply Patch"
 
-
 ```
 
 ```
 
+Ran terminal command: dotnet build MTM_WIP_Application_Winforms.csproj -c Debug
 
-Ran terminal command: dotnet build MTM_Inventory_Application.csproj -c Debug
-
-Ran `mark_task_complete` 
+Ran `mark_task_complete`
 Completed with input: {
-  "tasks_file": "c:\\Users\\johnk\\source\\repos\\MTM_WIP_Application_WinForms\\specs\\002-view-error-reports\\tasks.md",
-  "task_ids": [
-    "T011",
-    "T012",
-    "T013",
-    "T014",
-    "T015",
-    "T016",
-    "T017",
-    "T018"
-  ],
-  "note": "Implemented Control_ErrorReportsGrid with configured DataGridView, async loading, formatting, event wiring, and result count label (build verified)."
+"tasks_file": "c:\\Users\\johnk\\source\\repos\\MTM_WIP_Application_WinForms\\specs\\002-view-error-reports\\tasks.md",
+"task_ids": [
+"T011",
+"T012",
+"T013",
+"T014",
+"T015",
+"T016",
+"T017",
+"T018"
+],
+"note": "Implemented Control_ErrorReportsGrid with configured DataGridView, async loading, formatting, event wiring, and result count label (build verified)."
 }
 
 Using "Apply Patch"
 
-
 ```
 
 ```
 
-
-Read [](file:///c%3A/Users/johnk/source/repos/MTM_WIP_Application_WinForms/MTM_Inventory_Application.csproj)
+Read [](file:///c%3A/Users/johnk/source/repos/MTM_WIP_Application_WinForms/MTM_WIP_Application_Winforms.csproj)
 
 Using "Apply Patch"
 
-
 ```
 
 ```
 
-
-Ran terminal command: dotnet build MTM_Inventory_Application.csproj -c Debug
+Ran terminal command: dotnet build MTM_WIP_Application_Winforms.csproj -c Debug
 
 Implemented the `Control_ErrorReportsGrid` foundation (T011–T018): the new control initializes with DPI-safe layout, preconfigured columns, async `LoadReportsAsync`, status-based row coloring, summary truncation/tooltip handling, a `ReportSelected` double-click event, and a live result count label. Key changes:
-- Control_ErrorReportsGrid.cs – added region-organized logic, binding source management, formatting handlers, and event emission.
-- Control_ErrorReportsGrid.Designer.cs & `.resx` – defined table layout, DataGridView column schema, and default resources.
-- MTM_Inventory_Application.csproj – nested designer/resource assets so the new control appears correctly in the project.
-- tasks.md – marked T011–T018 complete with notes.
 
-Validation: `dotnet build MTM_Inventory_Application.csproj -c Debug`.
+-   Control_ErrorReportsGrid.cs – added region-organized logic, binding source management, formatting handlers, and event emission.
+-   Control_ErrorReportsGrid.Designer.cs & `.resx` – defined table layout, DataGridView column schema, and default resources.
+-   MTM_WIP_Application_Winforms.csproj – nested designer/resource assets so the new control appears correctly in the project.
+-   tasks.md – marked T011–T018 complete with notes.
+
+Validation: `dotnet build MTM_WIP_Application_Winforms.csproj -c Debug`.
 
 Next up: Phase 3 tasks (T020–T027) to implement the filter/search panel and wiring, followed by User Story 3 detail form work.
 
@@ -701,11 +695,9 @@ Read [](file:///c%3A/Users/johnk/source/repos/MTM_WIP_Application_WinForms/.giti
 
 Using "Apply Patch"
 
-
 ```
 
 ```
-
 
 Searched text for `GetUserList` (`**/Data/Dao_ErrorReports.cs`), 3 results
 
@@ -717,11 +709,9 @@ Searched text for `DateTimePicker` (`**/specs/002-view-error-reports/spec.md`), 
 
 Using "Apply Patch"
 
-
 ```
 
 ```
-
 
 Using "Apply Patch"
 
@@ -729,87 +719,73 @@ Read [](file:///c%3A/Users/johnk/source/repos/MTM_WIP_Application_WinForms/Contr
 
 Using "Apply Patch"
 
-
 ```
 
 ```
-
 
 Using "Apply Patch"
 
-
 ```
 
 ```
-
 
 Using "Apply Patch"
 
-
 ```
 
 ```
-
 
 Using "Apply Patch"
 
 Using "Apply Patch"
 
-
 ```
 
 ```
-
 
 Using "Apply Patch"
 
-
 ```
 
 ```
-
 
 Read [](file:///c%3A/Users/johnk/source/repos/MTM_WIP_Application_WinForms/Models/Model_DaoResult.cs#1-1), lines 1 to 201
 
 Using "Apply Patch"
 
-
 ```
 
 ```
 
-
-Ran terminal command: dotnet build MTM_Inventory_Application.csproj -c Debug
+Ran terminal command: dotnet build MTM_WIP_Application_Winforms.csproj -c Debug
 
 Read [](file:///c%3A/Users/johnk/source/repos/MTM_WIP_Application_WinForms/specs/002-view-error-reports/tasks.md#1-1), lines 1 to 321
 
 Using "Apply Patch"
 
-
 ```
 
 ```
 
-
-Ran `mark_task_complete` 
+Ran `mark_task_complete`
 Completed with input: {
-  "tasks_file": "c:\\Users\\johnk\\source\\repos\\MTM_WIP_Application_WinForms\\specs\\002-view-error-reports\\tasks.md",
-  "task_ids": [
-    "T020",
-    "T021",
-    "T022",
-    "T023",
-    "T024",
-    "T025",
-    "T026"
-  ],
-  "note": "Filter panel added, dropdowns populated asynchronously, apply/clear/search handlers implemented (build verified)."
+"tasks_file": "c:\\Users\\johnk\\source\\repos\\MTM_WIP_Application_WinForms\\specs\\002-view-error-reports\\tasks.md",
+"task_ids": [
+"T020",
+"T021",
+"T022",
+"T023",
+"T024",
+"T025",
+"T026"
+],
+"note": "Filter panel added, dropdowns populated asynchronously, apply/clear/search handlers implemented (build verified)."
 }
 
-- Filter panel now lives at the top of Control_ErrorReportsGrid.cs, with optional date pickers (checkbox-enabled), combo boxes for user/machine/status, search box, and Apply/Clear buttons wired into async handlers that build `Model_ErrorReportFilter`, validate via `Service_ErrorHandler`, and reload the grid; Clear resets controls and reloads all data.  
-- Added flow-layout markup in Control_ErrorReportsGrid.Designer.cs plus `Control_ErrorReportsGrid.resx`, updated project nesting in MTM_Inventory_Application.csproj, and extended the code-behind with async population helpers for users/machines, fixed status seeding, and search handling (≥3 chars).  
-- Updated .gitignore to include bin, obj, and `packages/` entries, and marked T020–T026 complete in tasks.md.  
-- Ran `dotnet build MTM_Inventory_Application.csproj -c Debug` (58 existing warnings).
+-   Filter panel now lives at the top of Control_ErrorReportsGrid.cs, with optional date pickers (checkbox-enabled), combo boxes for user/machine/status, search box, and Apply/Clear buttons wired into async handlers that build `Model_ErrorReportFilter`, validate via `Service_ErrorHandler`, and reload the grid; Clear resets controls and reloads all data.
+-   Added flow-layout markup in Control_ErrorReportsGrid.Designer.cs plus `Control_ErrorReportsGrid.resx`, updated project nesting in MTM_WIP_Application_Winforms.csproj, and extended the code-behind with async population helpers for users/machines, fixed status seeding, and search handling (≥3 chars).
+-   Updated .gitignore to include bin, obj, and `packages/` entries, and marked T020–T026 complete in tasks.md.
+-   Ran `dotnet build MTM_WIP_Application_Winforms.csproj -c Debug` (58 existing warnings).
 
 Next steps: tackle T027 manual validation for filtering, then move into User Story 3 detail panel work.
 
@@ -837,62 +813,50 @@ Read [](file:///c%3A/Users/johnk/source/repos/MTM_WIP_Application_WinForms/Forms
 
 Using "Apply Patch"
 
-
 ```
 
 ```
-
 
 Using "Apply Patch"
 
-
 ```
 
 ```
-
 
 Using "Apply Patch"
 
-
 ```
 
 ```
-
 
 Using "Apply Patch"
 
-
 ```
 
 ```
-
 
 Using "Apply Patch"
 
-
 ```
 
 ```
-
 
 Created [](file:///c%3A/Users/johnk/source/repos/MTM_WIP_Application_WinForms/Forms/Development/ErrorReportsViewerForm.cs)
 
-Ran terminal command: dotnet build MTM_Inventory_Application.csproj -c Debug
+Ran terminal command: dotnet build MTM_WIP_Application_Winforms.csproj -c Debug
 
 Using "Apply Patch"
 
-
 ```
 
 ```
 
+Ran terminal command: dotnet build MTM_WIP_Application_Winforms.csproj -c Debug
 
-Ran terminal command: dotnet build MTM_Inventory_Application.csproj -c Debug
+-   Hooked the Development menu (MainForm.Designer.cs, MainForm.cs) with a new “🧪 Error Reports Grid (Preview)” item that opens the viewer for quick testing.
+-   Added ErrorReportsViewerForm.cs, a lightweight host form that wraps `Control_ErrorReportsGrid` with DPI adjustments so the grid loads immediately in a standalone window.
 
-- Hooked the Development menu (MainForm.Designer.cs, MainForm.cs) with a new “🧪 Error Reports Grid (Preview)” item that opens the viewer for quick testing.
-- Added ErrorReportsViewerForm.cs, a lightweight host form that wraps `Control_ErrorReportsGrid` with DPI adjustments so the grid loads immediately in a standalone window.
-
-Tests: `dotnet build MTM_Inventory_Application.csproj -c Debug`
+Tests: `dotnet build MTM_WIP_Application_Winforms.csproj -c Debug`
 
 Next steps: Launch the app, sign in under a dev user, and open Development → 🧪 Error Reports Grid (Preview) to smoke-test filtering and data load.
 
@@ -902,34 +866,33 @@ JDKoll1982: MTM Inventory Application Error Report
 Generated: 2025-10-26 11:33:42
 ============================================================
 
-ERROR INFORMATION
-==================================================
+# ERROR INFORMATION
+
 Error Type: InvalidOperationException
 Severity: Medium (Recoverable Error)
 Timestamp: 2025-10-26 11:33:31.142
 User: johnk
 Machine: JOHNSPC
 
-LOCATION INFORMATION
-==================================================
+# LOCATION INFORMATION
+
 Calling Method: HandleLoadFailure
 Control/Form: Control_ErrorReportsGrid
 
-ERROR MESSAGE
-==================================================
+# ERROR MESSAGE
+
 Unable to connect to database while executing 'sp_error_reports_GetAll'. Please check network connectivity.
 
-STACK TRACE
-==================================================
+# STACK TRACE
+
 No stack trace available
 
+GitHub Copilot: - That envelope means `Dao_ErrorReports.GetAllErrorReportsAsync` couldn’t reach MySQL when `Control_ErrorReportsGrid` called `HandleLoadFailure`. Start by confirming the app picked up the correct debug connection string (`Helper_Database_Variables.GetConnectionString` should yield the `mtm_wip_application_winforms_test` DSN).
 
-
-GitHub Copilot: - That envelope means `Dao_ErrorReports.GetAllErrorReportsAsync` couldn’t reach MySQL when `Control_ErrorReportsGrid` called `HandleLoadFailure`. Start by confirming the app picked up the correct debug connection string (`Helper_Database_Variables.GetConnectionString` should yield the `mtm_wip_application_winforms_test` DSN).  
-- From the shell, run `mysql -h localhost -P 3306 -u root -p` to verify the server is reachable and credentials still work; if you’re on a remote subnet, make sure the IP fallback in `Helper_Database_Variables` resolves to `172.16.1.104`.  
-- If MySQL is up, open MySQL Workbench and execute `CALL sp_error_reports_GetAll(NULL, NULL, NULL, NULL, NULL, NULL, @p_Status, @p_ErrorMsg); SELECT @p_Status, @p_ErrorMsg;` to ensure the stored procedure returns successfully outside the app.  
-- Capture the failing JSON from `Service_DebugTracer` and check Windows Firewall/Antivirus rules if the call keeps timing out—the progress helper will surface more detail when the grid reloads.  
-- After resolving connectivity, relaunch the viewer from Development → 🧪 Error Reports Grid (Preview) to confirm reports load without `HandleLoadFailure` firing.
+-   From the shell, run `mysql -h localhost -P 3306 -u root -p` to verify the server is reachable and credentials still work; if you’re on a remote subnet, make sure the IP fallback in `Helper_Database_Variables` resolves to `172.16.1.104`.
+-   If MySQL is up, open MySQL Workbench and execute `CALL sp_error_reports_GetAll(NULL, NULL, NULL, NULL, NULL, NULL, @p_Status, @p_ErrorMsg); SELECT @p_Status, @p_ErrorMsg;` to ensure the stored procedure returns successfully outside the app.
+-   Capture the failing JSON from `Service_DebugTracer` and check Windows Firewall/Antivirus rules if the call keeps timing out—the progress helper will surface more detail when the grid reloads.
+-   After resolving connectivity, relaunch the viewer from Development → 🧪 Error Reports Grid (Preview) to confirm reports load without `HandleLoadFailure` firing.
 
 JDKoll1982: i undid the last edits you performed on MainForm and removed the file you created, for now just continue with implementation and forget the last to messages i posted
 
@@ -953,11 +916,9 @@ Created [](file:///c%3A/Users/johnk/source/repos/MTM_WIP_Application_WinForms/Co
 
 Using "Apply Patch"
 
-
 ```
 
 ```
-
 
 Using "Apply Patch"
 
@@ -965,65 +926,53 @@ Read [](file:///c%3A/Users/johnk/source/repos/MTM_WIP_Application_WinForms/Contr
 
 Using "Apply Patch"
 
-
 ```
 
 ```
-
 
 Using "Apply Patch"
 
-
 ```
 
 ```
-
 
 Using "Apply Patch"
 
-
 ```
 
 ```
 
-
-Ran terminal command: dotnet build MTM_Inventory_Application.csproj -c Debug
+Ran terminal command: dotnet build MTM_WIP_Application_Winforms.csproj -c Debug
 
 Using "Apply Patch"
 
-
 ```
 
 ```
-
 
 Read [](file:///c%3A/Users/johnk/source/repos/MTM_WIP_Application_WinForms/specs/002-view-error-reports/tasks.md#312-312), lines 312 to 432
 
 Using "Apply Patch"
 
-
 ```
 
 ```
-
 
 Using "Apply Patch"
 
-
 ```
 
 ```
-
 
 Using "Apply Patch"
 
-
 ```
 
 ```
+
 Implemented the new `Control_ErrorReportDetails` master-detail panel with complete metadata, highlighted user notes, rich-text technical sections, async `LoadReportAsync`, status-aware action buttons, and clipboard/export tooling (covers T028–T033, T037, T038). Updated tasks.md to reflect the completed work and wired a `StatusChangeRequested` event so the parent form can process updates later.
 
-Tests: `dotnet build MTM_Inventory_Application.csproj -c Debug`
+Tests: `dotnet build MTM_WIP_Application_Winforms.csproj -c Debug`
 
 Next up you can wire the grid selection into this control and implement the DAO-backed status update flows (T034–T036).
 
@@ -1033,35 +982,35 @@ JDKoll1982: Follow instructions in [speckit.implement.prompt.md](file:///c%3A/Us
 
 GitHub Copilot: Ran terminal command: .\.specify\scripts\powershell\check-prerequisites.ps1 -Json -RequireTasks -IncludeTasks
 
-Ran `analyze_spec_context` 
+Ran `analyze_spec_context`
 Completed with input: {
-  "feature_dir": "C:\\Users\\johnk\\source\\repos\\MTM_WIP_Application_WinForms\\specs\\002-view-error-reports"
+"feature_dir": "C:\\Users\\johnk\\source\\repos\\MTM_WIP_Application_WinForms\\specs\\002-view-error-reports"
 }
 
-Ran `check_checklists` 
+Ran `check_checklists`
 Completed with input: {
-  "checklist_dir": "C:\\Users\\johnk\\source\\repos\\MTM_WIP_Application_WinForms\\specs\\002-view-error-reports\\checklists"
+"checklist_dir": "C:\\Users\\johnk\\source\\repos\\MTM_WIP_Application_WinForms\\specs\\002-view-error-reports\\checklists"
 }
 
-Ran `parse_tasks` 
+Ran `parse_tasks`
 Completed with input: {
-  "tasks_file": "C:\\Users\\johnk\\source\\repos\\MTM_WIP_Application_WinForms\\specs\\002-view-error-reports\\tasks.md"
+"tasks_file": "C:\\Users\\johnk\\source\\repos\\MTM_WIP_Application_WinForms\\specs\\002-view-error-reports\\tasks.md"
 }
 
-Ran `load_instructions` 
+Ran `load_instructions`
 Completed with input: {
-  "tasks_file": "C:\\Users\\johnk\\source\\repos\\MTM_WIP_Application_WinForms\\specs\\002-view-error-reports\\tasks.md",
-  "instructions_dir": "C:\\Users\\johnk\\source\\repos\\MTM_WIP_Application_WinForms\\.github\\instructions"
+"tasks_file": "C:\\Users\\johnk\\source\\repos\\MTM_WIP_Application_WinForms\\specs\\002-view-error-reports\\tasks.md",
+"instructions_dir": "C:\\Users\\johnk\\source\\repos\\MTM_WIP_Application_WinForms\\.github\\instructions"
 }
 
-Ran `verify_ignore_files` 
+Ran `verify_ignore_files`
 Completed with input: {
-  "workspace_root": "C:\\Users\\johnk\\source\\repos\\MTM_WIP_Application_WinForms",
-  "tech_stack": [
-    "csharp",
-    "dotnet",
-    "mysql"
-  ]
+"workspace_root": "C:\\Users\\johnk\\source\\repos\\MTM_WIP_Application_WinForms",
+"tech_stack": [
+"csharp",
+"dotnet",
+"mysql"
+]
 }
 
 Searched text for `ShowConfirmation` (`**/*.cs`), 5 results
@@ -1088,19 +1037,15 @@ Read [](file:///c%3A/Users/johnk/source/repos/MTM_WIP_Application_WinForms/Contr
 
 Using "Apply Patch"
 
-
 ```
 
 ```
-
 
 Using "Apply Patch"
 
-
 ```
 
 ```
-
 
 Read [](file:///c%3A/Users/johnk/source/repos/MTM_WIP_Application_WinForms/Controls/ErrorReports/Control_ErrorReportDetails.cs#200-200), lines 200 to 460
 
@@ -1108,60 +1053,53 @@ Read [](file:///c%3A/Users/johnk/source/repos/MTM_WIP_Application_WinForms/Contr
 
 Using "Apply Patch"
 
-
 ```
 
 ```
-
 
 Using "Apply Patch"
 
-
 ```
 
 ```
-
 
 Using "Apply Patch"
 
-
 ```
 
 ```
 
+Ran terminal command: dotnet build MTM_WIP_Application_Winforms.csproj -c Debug
 
-Ran terminal command: dotnet build MTM_Inventory_Application.csproj -c Debug
-
-Ran `mark_task_complete` 
+Ran `mark_task_complete`
 Completed with input: {
-  "tasks_file": "C:\\Users\\johnk\\source\\repos\\MTM_WIP_Application_WinForms\\specs\\002-view-error-reports\\tasks.md",
-  "task_ids": [
-    "T034",
-    "T035",
-    "T036"
-  ],
-  "note": "Implemented status update workflow in `Control_ErrorReportDetails` including confirmation dialog, developer notes prompt, DAO call, and StatusChanged event notifications (2025-10-26)."
+"tasks_file": "C:\\Users\\johnk\\source\\repos\\MTM_WIP_Application_WinForms\\specs\\002-view-error-reports\\tasks.md",
+"task_ids": [
+"T034",
+"T035",
+"T036"
+],
+"note": "Implemented status update workflow in `Control_ErrorReportDetails` including confirmation dialog, developer notes prompt, DAO call, and StatusChanged event notifications (2025-10-26)."
 }
 
 Read [](file:///c%3A/Users/johnk/source/repos/MTM_WIP_Application_WinForms/specs/002-view-error-reports/tasks.md#348-348), lines 348 to 528
 
 Using "Apply Patch"
 
-
 ```
 
 ```
-
 
 Searched text for `StatusChangeRequested` (`**/*.cs`), no results
 
-- Implemented end-to-end status update workflow in Control_ErrorReportDetails.cs: confirmation dialog, themed notes prompt, DAO call, UI refresh, and new `StatusChanged` event payload so parent views can react.
-- Updated `UpdateStatusButtons` messaging (“Reopen” label) and ensured developer notes dialog respects DPI scaling; cleared header when no report and refreshed tasks (tasks.md) for T034–T036.
+-   Implemented end-to-end status update workflow in Control_ErrorReportDetails.cs: confirmation dialog, themed notes prompt, DAO call, UI refresh, and new `StatusChanged` event payload so parent views can react.
+-   Updated `UpdateStatusButtons` messaging (“Reopen” label) and ensured developer notes dialog respects DPI scaling; cleared header when no report and refreshed tasks (tasks.md) for T034–T036.
 
-Tests: `dotnet build MTM_Inventory_Application.csproj -c Debug`
+Tests: `dotnet build MTM_WIP_Application_Winforms.csproj -c Debug`
 
-Next up consider:  
-1. Scaffold `Form_ViewErrorReports` (T039/T040) and hook up the new `StatusChanged` event (T049).  
+Next up consider:
+
+1. Scaffold `Form_ViewErrorReports` (T039/T040) and hook up the new `StatusChanged` event (T049).
 2. Add DAO integration tests or manual validation coverage once the form wiring is ready (T041).
 
 Made changes.
@@ -1188,40 +1126,34 @@ Created [](file:///c%3A/Users/johnk/source/repos/MTM_WIP_Application_WinForms/Fo
 
 Using "Apply Patch"
 
-
 ```
 
 ```
-
 
 Created [](file:///c%3A/Users/johnk/source/repos/MTM_WIP_Application_WinForms/Forms/ErrorReports/Form_ViewErrorReports.cs)
 
 Using "Apply Patch"
 
-
 ```
 
 ```
 
-
-Ran terminal command: dotnet build MTM_Inventory_Application.csproj -c Debug
+Ran terminal command: dotnet build MTM_WIP_Application_Winforms.csproj -c Debug
 
 Using "Apply Patch"
 
-
 ```
 
 ```
 
-
-Ran `parse_tasks` 
+Ran `parse_tasks`
 Completed with input: {
-  "tasks_file": "C:\\Users\\johnk\\source\\repos\\MTM_WIP_Application_WinForms\\specs\\002-view-error-reports\\tasks.md"
+"tasks_file": "C:\\Users\\johnk\\source\\repos\\MTM_WIP_Application_WinForms\\specs\\002-view-error-reports\\tasks.md"
 }
 
-- Added new Form_ViewErrorReports.cs (+ designer) with split-container master/detail layout, applied `Core_Themes` runtime adjustments, and exposed grid/detail controls while handling async detail loading safely.
-- Subscribed the form to `Control_ErrorReportsGrid.ReportSelected` so double-click/selection immediately calls `Control_ErrorReportDetails.LoadReportAsync`, completing T039–T040 and updating tasks.md.
-- Build stayed green: `dotnet build MTM_Inventory_Application.csproj -c Debug`.
+-   Added new Form_ViewErrorReports.cs (+ designer) with split-container master/detail layout, applied `Core_Themes` runtime adjustments, and exposed grid/detail controls while handling async detail loading safely.
+-   Subscribed the form to `Control_ErrorReportsGrid.ReportSelected` so double-click/selection immediately calls `Control_ErrorReportDetails.LoadReportAsync`, completing T039–T040 and updating tasks.md.
+-   Build stayed green: `dotnet build MTM_WIP_Application_Winforms.csproj -c Debug`.
 
 Next you can hook the detail control’s `StatusChanged` event to refresh the grid (T049) and schedule the User Story 3 manual test pass (T041).
 
@@ -1231,41 +1163,35 @@ JDKoll1982: Follow instructions in [speckit.implement.prompt.md](file:///c%3A/Us
 
 GitHub Copilot: Using "Apply Patch"
 
-
 ```
 
 ```
-
 
 Using "Apply Patch"
 
-
 ```
 
 ```
-
 
 Using "Apply Patch"
 
-
 ```
 
 ```
 
-
-Ran terminal command: dotnet build MTM_Inventory_Application.csproj -c Debug
+Ran terminal command: dotnet build MTM_WIP_Application_Winforms.csproj -c Debug
 
 Using "Apply Patch"
 
-
 ```
 
 ```
-- Wired the new Form_ViewErrorReports.cs master/detail form into the workflow: subscribed to `ReportSelected` and `StatusChanged`, reloaded the grid with the saved filter, reselected the updated row, and reloaded details so status changes reflect immediately.
-- Extended Control_ErrorReportsGrid.cs with `SelectReportById` to programmatically restore selection after refresh, handling scroll positioning safely.
-- Recorded completion notes for T039–T040 (form skeleton + wiring) and T049 (grid refresh integration) in tasks.md.
 
-Tests: `dotnet build MTM_Inventory_Application.csproj -c Debug`
+-   Wired the new Form_ViewErrorReports.cs master/detail form into the workflow: subscribed to `ReportSelected` and `StatusChanged`, reloaded the grid with the saved filter, reselected the updated row, and reloaded details so status changes reflect immediately.
+-   Extended Control_ErrorReportsGrid.cs with `SelectReportById` to programmatically restore selection after refresh, handling scroll positioning safely.
+-   Recorded completion notes for T039–T040 (form skeleton + wiring) and T049 (grid refresh integration) in tasks.md.
+
+Tests: `dotnet build MTM_WIP_Application_Winforms.csproj -c Debug`
 
 Next up consider running the User Story 3 manual validation pass (T041) and exposing the new form from `MainForm` (T050).
 
@@ -1289,29 +1215,23 @@ Read [](file:///c%3A/Users/johnk/source/repos/MTM_WIP_Application_WinForms/Forms
 
 Using "Apply Patch"
 
-
 ```
 
 ```
-
 
 Using "Apply Patch"
 
-
 ```
 
 ```
-
 
 Read [](file:///c%3A/Users/johnk/source/repos/MTM_WIP_Application_WinForms/Forms/MainForm/MainForm.Designer.cs#1-1), lines 1 to 121
 
 Using "Apply Patch"
 
-
 ```
 
 ```
-
 
 Using "Apply Patch"
 
@@ -1319,57 +1239,53 @@ Read [](file:///c%3A/Users/johnk/source/repos/MTM_WIP_Application_WinForms/Forms
 
 Using "Apply Patch"
 
-
 ```
 
 ```
 
-
-Ran terminal command: dotnet build MTM_Inventory_Application.csproj -c Debug
+Ran terminal command: dotnet build MTM_WIP_Application_Winforms.csproj -c Debug
 
 Using "Apply Patch"
 
-
 ```
 
 ```
-- Extended Control_ErrorReportsGrid.cs with `SelectReportById` so the grid reselects the updated report after a status change refresh.
-- Updated Form_ViewErrorReports.cs to listen for `StatusChanged`, reload the grid with the prior filter, reselect the row, and reopen the detail view to keep UI state consistent.
-- Added a reusable instance-backed handler in MainForm.cs plus designer wiring so developers can launch `Form_ViewErrorReports` from the new Development → “📋 View Error Reports” menu item without spawning duplicates.
-- Marked T039, T040, T049, and T050 complete in tasks.md with completion notes.
 
-Tests: `dotnet build MTM_Inventory_Application.csproj -c Debug`
+-   Extended Control_ErrorReportsGrid.cs with `SelectReportById` so the grid reselects the updated report after a status change refresh.
+-   Updated Form_ViewErrorReports.cs to listen for `StatusChanged`, reload the grid with the prior filter, reselect the row, and reopen the detail view to keep UI state consistent.
+-   Added a reusable instance-backed handler in MainForm.cs plus designer wiring so developers can launch `Form_ViewErrorReports` from the new Development → “📋 View Error Reports” menu item without spawning duplicates.
+-   Marked T039, T040, T049, and T050 complete in tasks.md with completion notes.
+
+Tests: `dotnet build MTM_WIP_Application_Winforms.csproj -c Debug`
 
 Next up: run the User Story 3 manual validation checklist (T041) and start the export-focused work items (T045–T047) once validation passes.
 
 Made changes.
 
-JDKoll1982: I already pushed #file:error-reports stored procedures to both production and test databases.  ERROR.  MTM Inventory Application Error Report
+JDKoll1982: I already pushed #file:error-reports stored procedures to both production and test databases. ERROR. MTM Inventory Application Error Report
 Generated: 2025-10-26 12:15:17
 ============================================================
 
-ERROR INFORMATION
-==================================================
+# ERROR INFORMATION
+
 Error Type: InvalidOperationException
 Severity: Medium (Recoverable Error)
 Timestamp: 2025-10-26 12:15:07.544
 User: johnk
 Machine: JOHNSPC
 
-LOCATION INFORMATION
-==================================================
+# LOCATION INFORMATION
+
 Calling Method: HandleLoadFailure
 Control/Form: controlErrorReportsGrid
 
-ERROR MESSAGE
-==================================================
+# ERROR MESSAGE
+
 Unable to connect to database while executing 'sp_error_reports_GetAll'. Please check network connectivity.
 
-STACK TRACE
-==================================================
+# STACK TRACE
+
 No stack trace available
-
-
 
 GitHub Copilot: Read [](file:///c%3A/Users/johnk/source/repos/MTM_WIP_Application_WinForms/Data/Dao_ErrorReports.cs#1-1), lines 1 to 401
 
@@ -1425,10 +1341,10 @@ GitHub Copilot: Read [](file:///c%3A/Users/johnk/source/repos/MTM_WIP_Applicatio
 
 Using "Apply Patch"
 
-
 ```
 
 ```
+
 Adjusted Dao_ErrorReports.cs so the filter dictionary now sends `StatusFilter`, matching the stored procedure. This resolves the MySqlException seen in BootLogs.md when `sp_error_reports_GetAll` ran. Please rebuild and rerun the View Error Reports flow to confirm the grid loads without the error dialog.
 
 Made changes.
@@ -1443,7 +1359,7 @@ Read [](file:///c%3A/Users/johnk/source/repos/MTM_WIP_Application_WinForms/Forms
 
 JDKoll1982: found it, it does it on dobuloe click, change to to do it when the selected index changes
 
-GitHub Copilot: 
+GitHub Copilot:
 
 JDKoll1982: also add the ability for the user to change the current status of a selected error report
 
@@ -1457,9 +1373,9 @@ Read [](file:///c%3A/Users/johnk/source/repos/MTM_WIP_Application_WinForms/Contr
 
 JDKoll1982: the dobule click needs to stay the same, the details needs to a model popup window instead of being attached to the main error report form as its too much for the small space to handle
 
-GitHub Copilot: 
+GitHub Copilot:
 
-JDKoll1982: redeising the entire UI to properly follow #file:spec.md 
+JDKoll1982: redeising the entire UI to properly follow #file:spec.md
 
 GitHub Copilot: I'll redesign the UI to properly follow the spec by:
 
@@ -1468,33 +1384,31 @@ GitHub Copilot: I'll redesign the UI to properly follow the spec by:
 3. **Creating a modal dialog** for error report details
 4. **Changing double-click to show the modal dialog**
 
-Let me start by modifying the forms and controls: 
+Let me start by modifying the forms and controls:
 
 Using "Replace String in File"
 
-
 ```
 
 ```
-
 
 Using "Replace String in File"
 
-
 ```
 
 ```
-Now I need to create the modal dialog form for error report details: 
+
+Now I need to create the modal dialog form for error report details:
 
 Made changes.
 
 JDKoll1982: @agent Try Again
 
-GitHub Copilot: I need to create the modal dialog form for error report details. Let me create that new form: 
+GitHub Copilot: I need to create the modal dialog form for error report details. Let me create that new form:
 
 JDKoll1982: @agent Try Again
 
-GitHub Copilot: I'll create a new modal dialog form for the error report details and update the main form to use it properly. 
+GitHub Copilot: I'll create a new modal dialog form for the error report details and update the main form to use it properly.
 
 JDKoll1982: 2025-10-26 11:57:52.288 [info] Successfully activated the GitHub.vscode-pull-request-github extension.
 2025-10-26 11:57:52.288 [info] [githubTitleAndDescriptionProvider] Initializing GitHub PR title and description provider provider.
@@ -1505,7 +1419,7 @@ JDKoll1982: 2025-10-26 11:57:52.288 [info] Successfully activated the GitHub.vsc
 2025-10-26 11:58:23.648 [info] ccreq:6a62c78e.copilotmd | success | gpt-5-codex | 3397ms | [panel/editAgent]
 2025-10-26 11:58:37.093 [info] ccreq:d5daa2aa.copilotmd | success | gpt-5-codex | 9316ms | [panel/editAgent]
 2025-10-26 11:58:37.151 [error] Error from tool read_file with args {"filePath":"c:\\Users\\johnk\\source\\repos\\MTM_WIP_Application_WinForms\\Forms\\ErrorDialog\\Form_ErrorDialog.cs","offset":1,"limit":200}: cannot open file:///c%3A/Users/johnk/source/repos/MTM_WIP_Application_WinForms/Forms/ErrorDialog/Form_ErrorDialog.cs. Detail: Unable to read file 'c:\Users\johnk\source\repos\MTM_WIP_Application_WinForms\Forms\ErrorDialog\Form_ErrorDialog.cs' (Error: Unable to resolve nonexistent file 'c:\Users\johnk\source\repos\MTM_WIP_Application_WinForms\Forms\ErrorDialog\Form_ErrorDialog.cs'): CodeExpectedError: cannot open file:///c%3A/Users/johnk/source/repos/MTM_WIP_Application_WinForms/Forms/ErrorDialog/Form_ErrorDialog.cs. Detail: Unable to read file 'c:\Users\johnk\source\repos\MTM_WIP_Application_WinForms\Forms\ErrorDialog\Form_ErrorDialog.cs' (Error: Unable to resolve nonexistent file 'c:\Users\johnk\source\repos\MTM_WIP_Application_WinForms\Forms\ErrorDialog\Form_ErrorDialog.cs')
-    at w9e.$tryOpenDocument (vscode-file://vscode-app/c:/Users/johnk/AppData/Local/Programs/Microsoft%20VS%20Code/resources/app/out/vs/workbench/workbench.desktop.main.js:531:10721)
+at w9e.$tryOpenDocument (vscode-file://vscode-app/c:/Users/johnk/AppData/Local/Programs/Microsoft%20VS%20Code/resources/app/out/vs/workbench/workbench.desktop.main.js:531:10721)
 2025-10-26 11:58:49.141 [info] ccreq:745493cc.copilotmd | success | gpt-5-codex | 8106ms | [panel/editAgent]
 2025-10-26 11:58:59.656 [info] ccreq:e44dea94.copilotmd | success | gpt-5-codex | 6472ms | [panel/editAgent]
 2025-10-26 11:59:10.423 [info] ccreq:7c419b7d.copilotmd | success | gpt-5-codex | 6846ms | [panel/editAgent]
@@ -1675,4 +1589,4 @@ JDKoll1982: 2025-10-26 11:57:52.288 [info] Successfully activated the GitHub.vsc
 2025-10-26 12:32:20.469 [info] request done: requestId: [a507487f-a0d3-45cc-8d66-996e339869e4] model deployment ID: []
 2025-10-26 12:32:20.469 [info] ccreq:7b449924.copilotmd | unknown | claude-sonnet-4.5 | 10398ms | [panel/editAgent]
 
-GitHub Copilot: I'll create a new modal dialog form for error report details and update the main form to use it properly. 
+GitHub Copilot: I'll create a new modal dialog form for error report details and update the main form to use it properly.

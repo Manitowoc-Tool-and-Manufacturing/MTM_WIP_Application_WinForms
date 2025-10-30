@@ -1,14 +1,14 @@
-﻿// Licensed to the .NET Foundation under one or more agreements.
+// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
 using System.Diagnostics;
 using DocumentFormat.OpenXml.Vml.Office;
-using MTM_Inventory_Application.Helpers;
-using MTM_Inventory_Application.Models;
-using MTM_Inventory_Application.Services;
+using MTM_WIP_Application_Winforms.Helpers;
+using MTM_WIP_Application_Winforms.Models;
+using MTM_WIP_Application_Winforms.Services;
 using MySql.Data.MySqlClient;
 
-namespace MTM_Inventory_Application.Logging;
+namespace MTM_WIP_Application_Winforms.Logging;
 
 #region LoggingUtility
 
@@ -21,7 +21,7 @@ internal static class LoggingUtility
     private static string _logDirectory = string.Empty;
     private static string _normalLogFile = string.Empty;
     private static readonly Lock LogLock = new();
-    
+
     /// <summary>
     /// Thread-local flag to prevent recursive logging in LogDatabaseError when database operations fail.
     /// </summary>
@@ -38,7 +38,7 @@ internal static class LoggingUtility
         {
             // Run the file operations on a background thread with proper timeout
             using var cts = new CancellationTokenSource(TimeSpan.FromSeconds(10));
-            
+
             await Task.Run(() =>
             {
                 try
@@ -46,7 +46,7 @@ internal static class LoggingUtility
                     var logFiles = Directory.GetFiles(logDirectory, "*.log")
                         .OrderByDescending(File.GetCreationTime)
                         .ToList();
-                        
+
                     if (logFiles.Count > maxLogs)
                     {
                         var filesToDelete = logFiles.Skip(maxLogs).ToList();
@@ -71,10 +71,10 @@ internal static class LoggingUtility
 
             // Clean up application data directories
             var appDataPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
-                "MTM_WIP_APP");
+                "MTM_WIP_Application_Winforms");
             var localAppDataPath =
-                Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "MTM_WIP_APP");
-            
+                Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "MTM_WIP_Application_Winforms");
+
             // Run directory cleanup operations asynchronously
             await Task.Run(() =>
             {
@@ -157,7 +157,7 @@ internal static class LoggingUtility
 
             // Add timeout for log path operations with proper async pattern
             using var cts = new CancellationTokenSource(TimeSpan.FromSeconds(10));
-            
+
             string logFilePath;
             try
             {
@@ -167,7 +167,7 @@ internal static class LoggingUtility
             {
                 Debug.WriteLine("[DEBUG] Log path creation timed out, using fallback");
                 // Fallback to local temp directory
-                var tempDir = Path.Combine(Path.GetTempPath(), "MTM_WIP_APP", "Logs", userName);
+                var tempDir = Path.Combine(Path.GetTempPath(), "MTM_WIP_Application_Winforms", "Logs", userName);
                 Directory.CreateDirectory(tempDir);
                 var timestamp = DateTime.Now.ToString("MM-dd-yyyy @ h-mm tt");
                 logFilePath = Path.Combine(tempDir, $"{userName} {timestamp}.log");
@@ -193,7 +193,7 @@ internal static class LoggingUtility
             // Create fallback logging to temp directory
             try
             {
-                var tempDir = Path.Combine(Path.GetTempPath(), "MTM_WIP_APP", "Logs");
+                var tempDir = Path.Combine(Path.GetTempPath(), "MTM_WIP_Application_Winforms", "Logs");
                 Directory.CreateDirectory(tempDir);
                 var timestamp = DateTime.Now.ToString("MM-dd-yyyy @ h-mm tt");
                 var fallbackFile = Path.Combine(tempDir, $"fallback_{timestamp}.log");
@@ -246,7 +246,7 @@ internal static class LoggingUtility
         {
             // Fallback to Debug output to avoid infinite recursion
             Debug.WriteLine($"[DEBUG] Database error during logging (recursion prevented): {ex.Message}");
-            
+
             // Try direct file logging as last resort
             try
             {
@@ -266,7 +266,7 @@ internal static class LoggingUtility
         try
         {
             _isLoggingDatabaseError = true;
-            
+
             var severityLabel = severity switch
             {
                 DatabaseErrorSeverity.Warning => "WARNING",
@@ -274,7 +274,7 @@ internal static class LoggingUtility
                 DatabaseErrorSeverity.Critical => "CRITICAL",
                 _ => "ERROR"
             };
-            
+
             var errorEntry = $"{DateTime.Now:yyyy-MM-dd HH:mm:ss} - Database Error [{severityLabel}] - {ex.Message}";
             var stackEntry = $"{DateTime.Now:yyyy-MM-dd HH:mm:ss} - Stack Trace - {ex.StackTrace}";
             lock (LogLock)

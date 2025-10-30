@@ -9,32 +9,37 @@
 ### Environment Setup
 
 **Required Software**:
-- Visual Studio 2022 (or VS Code with C# DevKit)
-- .NET 8.0 SDK
-- MySQL 5.7+ (MAMP or standalone)
-- Git for version control
+
+-   Visual Studio 2022 (or VS Code with C# DevKit)
+-   .NET 8.0 SDK
+-   MySQL 5.7+ (MAMP or standalone)
+-   Git for version control
 
 **Database Access**:
-- **Development**: `mtm_wip_application_winforms_test` on `localhost` or `172.16.1.104`
-- **Production**: `mtm_wip_application` on `172.16.1.104` (Release builds only)
+
+-   **Development**: `mtm_wip_application_winforms_test` on `localhost` or `172.16.1.104`
+-   **Production**: `MTM_WIP_Application_Winforms` on `172.16.1.104` (Release builds only)
 
 **Test Data**:
-- Test database contains 24,000+ transaction records
-- Sample transactions available from 2024-01-01 to present
-- Test user: `JOHNK` (or create your own via usr_users table)
+
+-   Test database contains 24,000+ transaction records
+-   Sample transactions available from 2024-01-01 to present
+-   Test user: `JOHNK` (or create your own via usr_users table)
 
 ### Documentation Review
 
 **Read these files BEFORE coding**:
+
 1. `specs/005-transaction-viewer-form/spec.md` - Feature specification (52 KB)
 2. `specs/005-transaction-viewer-form/research.md` - Technical decisions (current file's sibling)
 3. `specs/005-transaction-viewer-form/data-model.md` - Entity definitions (current file's sibling)
 4. `.specify/memory/constitution.md` - Constitution principles
 
 **Reference during coding**:
-- `.github/instructions/csharp-dotnet8.instructions.md` - Language patterns
-- `.github/instructions/mysql-database.instructions.md` - Database patterns
-- `.github/instructions/testing-standards.instructions.md` - Manual validation approach
+
+-   `.github/instructions/csharp-dotnet8.instructions.md` - Language patterns
+-   `.github/instructions/mysql-database.instructions.md` - Database patterns
+-   `.github/instructions/testing-standards.instructions.md` - Manual validation approach
 
 ---
 
@@ -50,10 +55,10 @@ cd C:\Users\johnk\source\repos\MTM_WIP_Application_WinForms
 dotnet restore
 
 # Build Debug configuration (uses test database)
-dotnet build MTM_Inventory_Application.csproj -c Debug
+dotnet build MTM_WIP_Application_Winforms.csproj -c Debug
 
 # Run application
-dotnet run --project MTM_Inventory_Application.csproj
+dotnet run --project MTM_WIP_Application_Winforms.csproj
 ```
 
 ### Verify Existing Form
@@ -88,7 +93,7 @@ git checkout 005-transaction-viewer-form
 **File**: `Models/TransactionSearchCriteria.cs`
 
 ```csharp
-namespace MTM_Inventory_Application.Models;
+namespace MTM_WIP_Application_Winforms.Models;
 
 /// <summary>
 /// Encapsulates search criteria for transaction queries.
@@ -114,7 +119,7 @@ internal class TransactionSearchCriteria
 **File**: `Models/TransactionSearchResult.cs`
 
 ```csharp
-namespace MTM_Inventory_Application.Models;
+namespace MTM_WIP_Application_Winforms.Models;
 
 /// <summary>
 /// Represents search results with pagination metadata.
@@ -137,7 +142,7 @@ internal class TransactionSearchResult
 **File**: `Models/TransactionViewModel.cs`
 
 ```csharp
-namespace MTM_Inventory_Application.Models;
+namespace MTM_WIP_Application_Winforms.Models;
 
 /// <summary>
 /// Business logic and state management for transaction viewer.
@@ -200,7 +205,7 @@ internal class TransactionViewModel
 **File**: `Controls/Transactions/TransactionSearchControl.cs`
 
 ```csharp
-namespace MTM_Inventory_Application.Controls.Transactions;
+namespace MTM_WIP_Application_Winforms.Controls.Transactions;
 
 /// <summary>
 /// Search filter UI for transaction viewer.
@@ -251,15 +256,16 @@ public partial class TransactionSearchControl : UserControl
 **Target**: 300 lines or less
 
 **Similar pattern for**:
-- `TransactionGridControl.cs` (DataGridView + pagination, 300 lines)
-- `TransactionDetailPanel.cs` (Detail display, 200 lines)
+
+-   `TransactionGridControl.cs` (DataGridView + pagination, 300 lines)
+-   `TransactionDetailPanel.cs` (Detail display, 200 lines)
 
 ### Step 5: Refactor Main Form
 
 **File**: `Forms/Transactions/Transactions.cs`
 
 ```csharp
-namespace MTM_Inventory_Application.Forms.Transactions;
+namespace MTM_WIP_Application_Winforms.Forms.Transactions;
 
 /// <summary>
 /// Main transaction viewer form - orchestration only.
@@ -277,7 +283,7 @@ public partial class Transactions : Form
         InitializeComponent();
         Core_Themes.ApplyDpiScaling(this);
         Core_Themes.ApplyRuntimeLayoutAdjustments(this);
-        
+
         InitializeViewModel();
         InitializeProgressReporting();
         WireUpEvents();
@@ -329,7 +335,7 @@ public partial class Transactions : Form
         try
         {
             var result = await _viewModel.SearchTransactionsAsync(criteria, page, 50, _progressHelper);
-            
+
             if (result.IsSuccess && result.Data != null)
             {
                 gridControl.DisplayResults(result.Data);
@@ -510,11 +516,13 @@ public class Dao_Transactions_IntegrationTests : BaseIntegrationTest
 ### 1. Inline SQL
 
 ❌ **WRONG**:
+
 ```csharp
 var query = $"SELECT * FROM inv_transaction WHERE PartID = '{partId}'";
 ```
 
 ✅ **CORRECT**:
+
 ```csharp
 var parameters = new Dictionary<string, object> { ["PartID"] = partId };
 var result = await Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync(
@@ -524,24 +532,28 @@ var result = await Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsy
 ### 2. MessageBox.Show()
 
 ❌ **WRONG**:
+
 ```csharp
 MessageBox.Show("Error: " + ex.Message);
 ```
 
 ✅ **CORRECT**:
+
 ```csharp
-Service_ErrorHandler.HandleException(ex, ErrorSeverity.Medium, 
+Service_ErrorHandler.HandleException(ex, ErrorSeverity.Medium,
     retryAction: () => RetryOperation(), controlName: nameof(Transactions));
 ```
 
 ### 3. Blocking Async Calls
 
 ❌ **WRONG**:
+
 ```csharp
 var result = dao.SearchAsync(criteria).Result; // Deadlock risk!
 ```
 
 ✅ **CORRECT**:
+
 ```csharp
 var result = await dao.SearchAsync(criteria);
 ```
@@ -549,11 +561,13 @@ var result = await dao.SearchAsync(criteria);
 ### 4. Parameter Prefix
 
 ❌ **WRONG**:
+
 ```csharp
 ["p_PartID"] = partId // Helper adds p_ automatically
 ```
 
 ✅ **CORRECT**:
+
 ```csharp
 ["PartID"] = partId // No p_ prefix in C#
 ```
@@ -561,6 +575,7 @@ var result = await dao.SearchAsync(criteria);
 ### 5. Missing DPI Scaling
 
 ❌ **WRONG**:
+
 ```csharp
 public MyControl()
 {
@@ -569,6 +584,7 @@ public MyControl()
 ```
 
 ✅ **CORRECT**:
+
 ```csharp
 public MyControl()
 {
@@ -625,12 +641,13 @@ mcp_mtm-workflow_validate_build(
 ```
 
 **Expected Results**:
-- ✅ 0 MessageBox.Show calls
-- ✅ 0 inline SQL statements
-- ✅ 95%+ XML documentation coverage
-- ✅ No HIGH severity performance issues
-- ✅ No CRITICAL/HIGH security vulnerabilities
-- ✅ Clean build (0 errors, 0 warnings)
+
+-   ✅ 0 MessageBox.Show calls
+-   ✅ 0 inline SQL statements
+-   ✅ 95%+ XML documentation coverage
+-   ✅ No HIGH severity performance issues
+-   ✅ No CRITICAL/HIGH security vulnerabilities
+-   ✅ Clean build (0 errors, 0 warnings)
 
 ---
 
@@ -652,14 +669,14 @@ docs: update XML comments for TransactionViewModel
 
 Before submitting PR:
 
-- [ ] All files under line count limits (Form <500, UserControls <300)
-- [ ] Constitution Check passes (all 8 principles)
-- [ ] MCP validation tools pass (listed above)
-- [ ] Manual test scenarios completed (8 scenarios)
-- [ ] XML documentation coverage >95%
-- [ ] Build succeeds with 0 errors, 0 warnings
-- [ ] Feature branch up-to-date with master
-- [ ] Commit history clean (squash if needed)
+-   [ ] All files under line count limits (Form <500, UserControls <300)
+-   [ ] Constitution Check passes (all 8 principles)
+-   [ ] MCP validation tools pass (listed above)
+-   [ ] Manual test scenarios completed (8 scenarios)
+-   [ ] XML documentation coverage >95%
+-   [ ] Build succeeds with 0 errors, 0 warnings
+-   [ ] Feature branch up-to-date with master
+-   [ ] Commit history clean (squash if needed)
 
 ---
 
@@ -670,6 +687,7 @@ Before submitting PR:
 **Symptom**: "Unable to connect to MySQL server"
 
 **Solution**:
+
 1. Verify MAMP is running (or standalone MySQL service)
 2. Check `Helper_Database_Variables.GetConnectionString()` returns correct server
 3. Debug configuration should use `localhost` or `172.16.1.104`
@@ -680,6 +698,7 @@ Before submitting PR:
 **Symptom**: "Procedure inv_transactions_Search does not exist"
 
 **Solution**:
+
 1. Verify you're connected to test database: `mtm_wip_application_winforms_test`
 2. Check stored procedures exist: `SHOW PROCEDURE STATUS WHERE Db = 'mtm_wip_application_winforms_test';`
 3. If missing, run SQL scripts from `Database/UpdatedStoredProcedures/ReadyForVerification/`
@@ -689,6 +708,7 @@ Before submitting PR:
 **Symptom**: "The designer could not be shown for this file"
 
 **Solution**:
+
 1. Rebuild solution: `dotnet build -c Debug`
 2. Close and reopen Visual Studio
 3. Check for compilation errors in `.Designer.cs` files
@@ -699,6 +719,7 @@ Before submitting PR:
 **Symptom**: UI elements too small/large at different DPI settings
 
 **Solution**:
+
 1. Verify `Core_Themes.ApplyDpiScaling(this)` called in constructor
 2. Check `AutoScaleMode = AutoScaleMode.Dpi` set on form/control
 3. Test at 100%, 125%, 150%, 200% scaling
@@ -721,27 +742,31 @@ After completing development:
 ## Resources
 
 ### Documentation
-- Feature Specification: `specs/005-transaction-viewer-form/spec.md`
-- Research Decisions: `specs/005-transaction-viewer-form/research.md`
-- Data Models: `specs/005-transaction-viewer-form/data-model.md`
-- Constitution: `.specify/memory/constitution.md`
+
+-   Feature Specification: `specs/005-transaction-viewer-form/spec.md`
+-   Research Decisions: `specs/005-transaction-viewer-form/research.md`
+-   Data Models: `specs/005-transaction-viewer-form/data-model.md`
+-   Constitution: `.specify/memory/constitution.md`
 
 ### Instruction Files
-- C# Patterns: `.github/instructions/csharp-dotnet8.instructions.md`
-- Database Patterns: `.github/instructions/mysql-database.instructions.md`
-- Testing Standards: `.github/instructions/testing-standards.instructions.md`
-- Integration Testing: `.github/instructions/integration-testing.instructions.md`
+
+-   C# Patterns: `.github/instructions/csharp-dotnet8.instructions.md`
+-   Database Patterns: `.github/instructions/mysql-database.instructions.md`
+-   Testing Standards: `.github/instructions/testing-standards.instructions.md`
+-   Integration Testing: `.github/instructions/integration-testing.instructions.md`
 
 ### Tools
-- MCP Server: `mtm-workflow` (installed)
-- Excel Library: ClosedXML (already included)
-- Progress Reporting: `Helper_StoredProcedureProgress`
-- Error Handling: `Service_ErrorHandler`
+
+-   MCP Server: `mtm-workflow` (installed)
+-   Excel Library: ClosedXML (already included)
+-   Progress Reporting: `Helper_StoredProcedureProgress`
+-   Error Handling: `Service_ErrorHandler`
 
 ### Support
-- GitHub Issues: Report bugs and feature requests
-- Code Review: Submit PR for team review
-- Documentation: Update this quickstart as patterns evolve
+
+-   GitHub Issues: Report bugs and feature requests
+-   Code Review: Submit PR for team review
+-   Documentation: Update this quickstart as patterns evolve
 
 ---
 

@@ -1,10 +1,10 @@
 using System.Data;
-using MTM_Inventory_Application.Helpers;
-using MTM_Inventory_Application.Models;
-using MTM_Inventory_Application.Logging;
+using MTM_WIP_Application_Winforms.Helpers;
+using MTM_WIP_Application_Winforms.Models;
+using MTM_WIP_Application_Winforms.Logging;
 using MySql.Data.MySqlClient;
 
-namespace MTM_Inventory_Application.Data;
+namespace MTM_WIP_Application_Winforms.Data;
 
 #region Dao_Operation
 
@@ -59,7 +59,7 @@ internal static class Dao_Operation
                 ["p_Operation"] = operationNumber,   // p_ prefix added automatically
                 ["IssuedBy"] = user
             };
-            
+
             var result = await Helper_Database_StoredProcedure.ExecuteNonQueryWithStatusAsync(
                 Model_AppVariables.ConnectionString,
                 "md_operation_numbers_Add_Operation",
@@ -100,7 +100,7 @@ internal static class Dao_Operation
                 ["NewOperation"] = newOperationNumber,
                 ["IssuedBy"] = user
             };
-            
+
             var result = await Helper_Database_StoredProcedure.ExecuteNonQueryWithStatusAsync(
                 Model_AppVariables.ConnectionString,
                 "md_operation_numbers_Update_Operation",
@@ -139,7 +139,7 @@ internal static class Dao_Operation
                 null, // No parameters needed
                 null // No progress helper for this method
             );
-                
+
             if (result.IsSuccess && result.Data != null)
             {
                 return DaoResult<DataTable>.Success(result.Data, $"Retrieved {result.Data.Rows.Count} operations");
@@ -169,7 +169,7 @@ internal static class Dao_Operation
 
             var table = allOperationsResult.Data!;
             var rows = table.Select($"Operation = '{operationNumber.Replace("'", "''")}'");
-            
+
             if (rows.Length > 0)
             {
                 return DaoResult<DataRow>.Success(rows[0], $"Found operation {operationNumber}");
@@ -198,7 +198,7 @@ internal static class Dao_Operation
                 connection: connection,
                 transaction: transaction
             );
-                
+
             if (result.IsSuccess && result.Data != null)
             {
                 bool exists = Convert.ToInt32(result.Data) > 0;

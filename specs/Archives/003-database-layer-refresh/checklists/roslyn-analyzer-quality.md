@@ -51,7 +51,7 @@ This checklist validates the **quality of Roslyn analyzer requirements** as defi
 - [ ] **NuGet package name**: MTM.CodeAnalysis.DatabaseParameters
 - [ ] **Target framework**: .NET Standard 2.0 (compatible with Visual Studio 2019+, Rider, VS Code OmniSharp)
 - [ ] **Package dependencies**: Microsoft.CodeAnalysis.CSharp v4.0.1 (Roslyn SDK), Microsoft.CodeAnalysis.Analyzers v3.3.3
-- [ ] **Installation method**: Add `<PackageReference Include="MTM.CodeAnalysis.DatabaseParameters" Version="1.0.0" />` to MTM_Inventory_Application.csproj
+- [ ] **Installation method**: Add `<PackageReference Include="MTM.CodeAnalysis.DatabaseParameters" Version="1.0.0" />` to MTM_WIP_Application_Winforms.csproj
 
 **Score**: ___ / 4 (requires ≥3 pass)
 

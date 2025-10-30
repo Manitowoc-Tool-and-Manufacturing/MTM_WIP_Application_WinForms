@@ -6,12 +6,12 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Windows.Forms;
-using MTM_Inventory_Application.Core;
-using MTM_Inventory_Application.Logging;
-using MTM_Inventory_Application.Models;
-using MTM_Inventory_Application.Services;
+using MTM_WIP_Application_Winforms.Core;
+using MTM_WIP_Application_Winforms.Logging;
+using MTM_WIP_Application_Winforms.Models;
+using MTM_WIP_Application_Winforms.Services;
 
-namespace MTM_Inventory_Application.Forms.ErrorDialog
+namespace MTM_WIP_Application_Winforms.Forms.ErrorDialog
 {
     #region EnhancedErrorDialog
 
@@ -338,7 +338,7 @@ namespace MTM_Inventory_Application.Forms.ErrorDialog
                     node.Tag = frame;
                     
                     // Color code by component type
-                    if (method.DeclaringType?.Namespace?.Contains("MTM_Inventory_Application") == true)
+                    if (method.DeclaringType?.Namespace?.Contains("MTM_WIP_Application_Winforms") == true)
                     {
                         if (method.DeclaringType.Name.StartsWith("Control_"))
                             node.ForeColor = Color.Purple;

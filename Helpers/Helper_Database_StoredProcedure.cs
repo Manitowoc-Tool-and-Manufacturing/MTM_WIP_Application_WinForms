@@ -3,12 +3,12 @@ using System.Collections.Generic;
 using System.Data;
 using System.Diagnostics;
 using System.Threading.Tasks;
-using MTM_Inventory_Application.Logging;
-using MTM_Inventory_Application.Models;
-using MTM_Inventory_Application.Services;
+using MTM_WIP_Application_Winforms.Logging;
+using MTM_WIP_Application_Winforms.Models;
+using MTM_WIP_Application_Winforms.Services;
 using MySql.Data.MySqlClient;
 
-namespace MTM_Inventory_Application.Helpers;
+namespace MTM_WIP_Application_Winforms.Helpers;
 
 /// <summary>
 /// Enhanced database helper for stored procedures with comprehensive status reporting.
@@ -25,7 +25,7 @@ public static class Helper_Database_StoredProcedure
 
     private const int MAX_RETRY_ATTEMPTS = 3;
     private const int BASE_RETRY_DELAY_MS = 500;
-    
+
     // Transient MySQL error codes that warrant retry
     private static readonly int[] TransientErrorCodes = { 1205, 1213, 2006, 2013 };
 
@@ -49,9 +49,9 @@ public static class Helper_Database_StoredProcedure
     /// using INFORMATION_SCHEMA cache. Includes retry logic for transient errors and performance monitoring.
     /// </para>
     /// <para>
-    /// <strong>Transaction Support</strong>: When <paramref name="connection"/> and <paramref name="transaction"/> 
-    /// are provided, the method uses the external connection/transaction instead of creating a new one. 
-    /// This enables proper test isolation with automatic rollback. The external connection is NOT disposed 
+    /// <strong>Transaction Support</strong>: When <paramref name="connection"/> and <paramref name="transaction"/>
+    /// are provided, the method uses the external connection/transaction instead of creating a new one.
+    /// This enables proper test isolation with automatic rollback. The external connection is NOT disposed
     /// by this method - caller remains responsible for connection lifecycle.
     /// </para>
     /// </remarks>
@@ -65,7 +65,7 @@ public static class Helper_Database_StoredProcedure
     {
         var stopwatch = Stopwatch.StartNew();
         var performanceKey = Service_DebugTracer.StartPerformanceTrace($"SP_{procedureName}");
-        
+
         Service_DebugTracer.TraceMethodEntry(new Dictionary<string, object>
         {
             ["procedureName"] = procedureName,
@@ -83,7 +83,7 @@ public static class Helper_Database_StoredProcedure
                 // Use provided connection or create new one
                 bool externalConnection = connection != null;
                 MySqlConnection activeConnection = connection ?? new MySqlConnection(connectionString);
-                
+
                 try
                 {
                     if (!externalConnection)
@@ -127,10 +127,10 @@ public static class Helper_Database_StoredProcedure
                 progressHelper?.UpdateProgress(100, $"Completed {procedureName}");
 
                 stopwatch.Stop();
-                
+
                 // Log performance if threshold exceeded
                 LogPerformanceIfNeeded(procedureName, stopwatch.ElapsedMilliseconds, "Query");
-                
+
                 Service_DebugTracer.TraceStoredProcedure(
                     procedureName,
                     finalParameters,
@@ -144,41 +144,41 @@ public static class Helper_Database_StoredProcedure
                     errorMessage,
                     stopwatch.ElapsedMilliseconds);
 
-                Service_DebugTracer.TraceDatabaseComplete("PROCEDURE", procedureName, 
+                Service_DebugTracer.TraceDatabaseComplete("PROCEDURE", procedureName,
                     $"DataTable with {dataTable.Rows.Count} rows", dataTable.Rows.Count, stopwatch.ElapsedMilliseconds);
 
                 // Status codes: 1=success with data, 0=success without data, negative=error
                 if (status >= 0)
                 {
                     // Both status 0 and 1 are success (with or without data)
-                    progressHelper?.ProcessStoredProcedureResult(status, errorMessage, 
+                    progressHelper?.ProcessStoredProcedureResult(status, errorMessage,
                         $"Successfully retrieved {dataTable.Rows.Count} records");
-                    
+
                     var result = DaoResult<DataTable>.Success(dataTable, errorMessage, dataTable.Rows.Count);
-                    
+
                     Service_DebugTracer.TraceMethodExit(result, nameof(ExecuteDataTableWithStatusAsync), "Helper_Database_StoredProcedure");
                     Service_DebugTracer.StopPerformanceTrace(performanceKey, new Dictionary<string, object>
                     {
                         ["Status"] = "SUCCESS",
                         ["RowCount"] = dataTable.Rows.Count
                     });
-                    
+
                     return result;
                 }
                 else
                 {
                     // Negative status = error
                     progressHelper?.ProcessStoredProcedureResult(status, errorMessage);
-                    
+
                     var result = DaoResult<DataTable>.Failure(errorMessage, null);
-                    
+
                     Service_DebugTracer.TraceMethodExit(result, nameof(ExecuteDataTableWithStatusAsync), "Helper_Database_StoredProcedure");
                     Service_DebugTracer.StopPerformanceTrace(performanceKey, new Dictionary<string, object>
                     {
                         ["Status"] = "ERROR",
                         ["ErrorMessage"] = errorMessage
                     });
-                    
+
                     return result;
                 }
                 }
@@ -198,19 +198,19 @@ public static class Helper_Database_StoredProcedure
             string userFriendlyMessage = GetUserFriendlyConnectionError(ex, procedureName);
             LoggingUtility.LogDatabaseError(ex);
             progressHelper?.ShowError(userFriendlyMessage);
-            
-            Service_DebugTracer.TraceDatabaseComplete("PROCEDURE", procedureName, 
+
+            Service_DebugTracer.TraceDatabaseComplete("PROCEDURE", procedureName,
                 $"EXCEPTION: {ex.Message}", 0, stopwatch.ElapsedMilliseconds);
-                
+
             var result = DaoResult<DataTable>.Failure(userFriendlyMessage, ex);
-            
+
             Service_DebugTracer.TraceMethodExit(result, nameof(ExecuteDataTableWithStatusAsync), "Helper_Database_StoredProcedure");
             Service_DebugTracer.StopPerformanceTrace(performanceKey, new Dictionary<string, object>
             {
                 ["Status"] = "EXCEPTION",
                 ["ExceptionMessage"] = ex.Message
             });
-            
+
             return result;
         }
     }
@@ -237,7 +237,7 @@ public static class Helper_Database_StoredProcedure
         MySqlTransaction? transaction = null)
     {
         var stopwatch = Stopwatch.StartNew();
-        
+
         try
         {
             return await ExecuteWithRetryAsync(async () =>
@@ -247,7 +247,7 @@ public static class Helper_Database_StoredProcedure
                 // Use provided connection or create new one
                 bool externalConnection = connection != null;
                 MySqlConnection activeConnection = connection ?? new MySqlConnection(connectionString);
-                
+
                 try
                 {
                     if (!externalConnection)
@@ -349,7 +349,7 @@ public static class Helper_Database_StoredProcedure
         MySqlTransaction? transaction = null)
     {
         var stopwatch = Stopwatch.StartNew();
-        
+
         try
         {
             return await ExecuteWithRetryAsync(async () =>
@@ -359,7 +359,7 @@ public static class Helper_Database_StoredProcedure
                 // Use provided connection or create new one
                 bool externalConnection = connection != null;
                 MySqlConnection activeConnection = connection ?? new MySqlConnection(connectionString);
-                
+
                 try
                 {
                     if (!externalConnection)
@@ -397,7 +397,7 @@ public static class Helper_Database_StoredProcedure
                 string errorMessage = errorMsgParam.Value?.ToString() ?? string.Empty;
 
                 progressHelper?.UpdateProgress(100, $"Completed {procedureName}");
-                progressHelper?.ProcessStoredProcedureResult(status, errorMessage, 
+                progressHelper?.ProcessStoredProcedureResult(status, errorMessage,
                     $"Operation completed successfully ({rowsAffected} rows affected)");
 
                 stopwatch.Stop();
@@ -446,7 +446,7 @@ public static class Helper_Database_StoredProcedure
         Helper_StoredProcedureProgress? progressHelper = null)
     {
         var stopwatch = Stopwatch.StartNew();
-        
+
         try
         {
             return await ExecuteWithRetryAsync(async () =>
@@ -478,7 +478,7 @@ public static class Helper_Database_StoredProcedure
                     {
                         string prefix = Model_ParameterPrefixCache.GetParameterPrefix(procedureName, paramName);
                         string fullParamName = prefix + paramName;
-                        
+
                         var param = new MySqlParameter(fullParamName, MySqlDbType.VarChar, 500)
                         {
                             Direction = ParameterDirection.Output
@@ -546,7 +546,7 @@ public static class Helper_Database_StoredProcedure
         CommandType commandType = CommandType.StoredProcedure)
     {
         var connection = new MySqlConnection(connectionString);
-        
+
         try
         {
             await connection.OpenAsync();
@@ -565,7 +565,7 @@ public static class Helper_Database_StoredProcedure
         catch (Exception ex)
         {
             connection.Dispose();
-            
+
             // Re-throw with user-friendly message for connection errors
             if (IsConnectionRelatedError(ex))
             {
@@ -573,7 +573,7 @@ public static class Helper_Database_StoredProcedure
                 LoggingUtility.LogDatabaseError(ex);
                 throw new InvalidOperationException(userFriendlyMessage, ex);
             }
-            
+
             throw;
         }
     }
@@ -601,10 +601,10 @@ public static class Helper_Database_StoredProcedure
             foreach (var param in parameters)
             {
                 string paramName = param.Key;
-                
+
                 // Check if parameter already has a prefix
-                bool hasPrefix = paramName.StartsWith("p_") || 
-                                paramName.StartsWith("in_") || 
+                bool hasPrefix = paramName.StartsWith("p_") ||
+                                paramName.StartsWith("in_") ||
                                 paramName.StartsWith("o_");
 
                 string fullParamName;
@@ -650,7 +650,7 @@ public static class Helper_Database_StoredProcedure
         {
             Direction = ParameterDirection.Output
         };
-        
+
         command.Parameters.Add(statusParam);
         command.Parameters.Add(errorMsgParam);
 
@@ -682,11 +682,11 @@ public static class Helper_Database_StoredProcedure
             {
                 attempt++;
                 lastException = ex;
-                
+
                 int delayMs = BASE_RETRY_DELAY_MS * (int)Math.Pow(2, attempt - 1); // Exponential backoff
-                
+
                 LoggingUtility.Log($"[Database] Transient error detected (attempt {attempt}/{MAX_RETRY_ATTEMPTS}): {ex.Message}. Retrying in {delayMs}ms...");
-                
+
                 await Task.Delay(delayMs);
             }
         }
@@ -807,13 +807,13 @@ public static class Helper_Database_StoredProcedure
         if (daoResult.IsSuccess)
         {
             return StoredProcedureResult<DataTable>.Success(
-                daoResult.Data ?? new DataTable(), 
+                daoResult.Data ?? new DataTable(),
                 daoResult.StatusMessage ?? "SUCCESS");
         }
         else
         {
             return StoredProcedureResult<DataTable>.Error(
-                daoResult.ErrorMessage ?? "Unknown error", 
+                daoResult.ErrorMessage ?? "Unknown error",
                 daoResult.Exception,
                 daoResult.Data ?? new DataTable());
         }
@@ -892,8 +892,8 @@ public static class Helper_Database_StoredProcedure
         bool useAsync = false) // Ignored - always async
     {
         // Convert Dictionary<string, MySqlDbType> to List<string> for new signature
-        List<string>? outputParamNames = customOutputParameters != null 
-            ? new List<string>(customOutputParameters.Keys) 
+        List<string>? outputParamNames = customOutputParameters != null
+            ? new List<string>(customOutputParameters.Keys)
             : null;
 
         // Forward to new async method

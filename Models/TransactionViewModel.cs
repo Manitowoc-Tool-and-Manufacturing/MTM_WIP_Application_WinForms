@@ -1,8 +1,8 @@
-using MTM_Inventory_Application.Data;
-using MTM_Inventory_Application.Logging;
+using MTM_WIP_Application_Winforms.Data;
+using MTM_WIP_Application_Winforms.Logging;
 using System.Data;
 
-namespace MTM_Inventory_Application.Models;
+namespace MTM_WIP_Application_Winforms.Models;
 
 /// <summary>
 /// ViewModel for transaction viewer form, handling business logic and state management.
@@ -239,7 +239,7 @@ internal sealed class TransactionViewModel
             else
             {
                 // Regular users see only themselves
-                filteredUsers = users.Where(u => 
+                filteredUsers = users.Where(u =>
                     u.Equals(currentUser, StringComparison.OrdinalIgnoreCase)
                 ).ToList();
             }

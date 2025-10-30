@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace MTM_Inventory_Application.Models;
+namespace MTM_WIP_Application_Winforms.Models;
 
 /// <summary>
 /// Provides caching and lookup functionality for stored procedure parameter prefixes.
@@ -196,10 +196,10 @@ public static class Model_ParameterPrefixCache
     /// <example>
     /// var prefix = GetParameterPrefix("inv_inventory_get_all", "LocationCode");
     /// // Returns "p_" because "p_LocationCode" exists in cache for this procedure
-    /// 
+    ///
     /// var prefix2 = GetParameterPrefix("inv_transaction_log", "FromLocation");
     /// // Returns "in_" because "in_FromLocation" exists in cache for this procedure
-    /// 
+    ///
     /// // With override:
     /// // Override: inv_transaction_log.FromLocation → "" (no prefix)
     /// var prefix3 = GetParameterPrefix("inv_transaction_log", "FromLocation");
@@ -216,7 +216,7 @@ public static class Model_ParameterPrefixCache
         }
 
         // PRIORITY 1: Check override cache first
-        if (_overridesLoaded && 
+        if (_overridesLoaded &&
             _overrides.TryGetValue(procedureName, out var procOverrides) &&
             procOverrides.TryGetValue(parameterName, out var overridePrefix))
         {

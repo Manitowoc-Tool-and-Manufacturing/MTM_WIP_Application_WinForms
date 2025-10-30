@@ -6,10 +6,10 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
-using MTM_Inventory_Application.Logging;
-using MTM_Inventory_Application.Models;
+using MTM_WIP_Application_Winforms.Logging;
+using MTM_WIP_Application_Winforms.Models;
 
-namespace MTM_Inventory_Application.Services;
+namespace MTM_WIP_Application_Winforms.Services;
 
 /// <summary>
 /// Comprehensive debugging and tracing service for MTM Inventory Application
@@ -23,7 +23,7 @@ internal static class Service_DebugTracer
     private static readonly Dictionary<string, int> _callDepth = new();
     private static readonly object _traceLock = new();
     private static bool _isInitialized = false;
-    
+
     // Configuration
     private static DebugLevel _currentLevel = DebugLevel.Medium;
     private static bool _traceDatabase = true;
@@ -229,7 +229,7 @@ internal static class Service_DebugTracer
     /// <param name="parameters">SQL parameters</param>
     /// <param name="connectionString">Connection string (sanitized for logging)</param>
     /// <param name="callerName">Method name (auto-filled)</param>
-    public static void TraceDatabaseStart(string operation, string target, 
+    public static void TraceDatabaseStart(string operation, string target,
         Dictionary<string, object>? parameters = null,
         string connectionString = "",
         [CallerMemberName] string callerName = "")
@@ -548,7 +548,7 @@ internal static class Service_DebugTracer
         {
             var parts = performanceKey.Split(':');
             var operation = parts.Length > 1 ? parts[1] : "Unknown";
-            
+
             var logData = new Dictionary<string, object>
             {
                 ["Action"] = "PERFORMANCE_COMPLETE",
@@ -599,8 +599,8 @@ internal static class Service_DebugTracer
             {
                 try
                 {
-                    var jsonData = JsonSerializer.Serialize(data, new JsonSerializerOptions 
-                    { 
+                    var jsonData = JsonSerializer.Serialize(data, new JsonSerializerOptions
+                    {
                         WriteIndented = true,
                         DefaultIgnoreCondition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull,
                         Encoder = System.Text.Encodings.Web.JavaScriptEncoder.UnsafeRelaxedJsonEscaping // Prevent Unicode escaping
@@ -638,41 +638,41 @@ internal static class Service_DebugTracer
         if (value is Exception ex) return $"Exception: {ex.Message}";
         if (value is Type type) return $"Type: {type.FullName}";
         if (value is Color color) return $"Color[A={color.A}, R={color.R}, G={color.G}, B={color.B}]";
-        
+
         // Handle common .NET types that might cause serialization issues
         if (value.GetType().IsValueType || value is string)
         {
             return value.ToString() ?? "NULL";
         }
-        
+
         // Handle complex objects that might contain unsupported types
         try
         {
             var valueType = value.GetType();
-            
+
             // Check if this is a result type (StoredProcedureResult, etc.)
             if (valueType.IsGenericType)
             {
                 var genericTypeDef = valueType.GetGenericTypeDefinition();
                 var typeName = genericTypeDef.Name;
-                
+
                 if (typeName.Contains("Result") || typeName.Contains("StoredProcedure"))
                 {
                     // Create a safe representation of the result object
                     return CreateSafeResultRepresentation(value);
                 }
             }
-            
+
             // For other objects, try safe JSON serialization with protection
-            var options = new JsonSerializerOptions 
-            { 
+            var options = new JsonSerializerOptions
+            {
                 WriteIndented = false,
                 DefaultIgnoreCondition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull,
                 ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.IgnoreCycles,
                 MaxDepth = 2, // Limit depth to prevent issues
                 Encoder = System.Text.Encodings.Web.JavaScriptEncoder.UnsafeRelaxedJsonEscaping // Prevent Unicode escaping
             };
-            
+
             return JsonSerializer.Serialize(value, options);
         }
         catch (NotSupportedException)
@@ -701,7 +701,7 @@ internal static class Service_DebugTracer
                 {
                     var propValue = prop.GetValue(result);
                     string safeName = prop.Name;
-                    
+
                     if (propValue == null)
                     {
                         safeDict[safeName] = "NULL";

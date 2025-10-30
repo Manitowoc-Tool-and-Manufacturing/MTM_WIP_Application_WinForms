@@ -1,13 +1,13 @@
-﻿using System.Diagnostics;
+using System.Diagnostics;
 using System.Timers;
-using MTM_Inventory_Application.Controls.MainForm;
-using MTM_Inventory_Application.Forms.MainForm;
-using MTM_Inventory_Application.Helpers;
-using MTM_Inventory_Application.Logging;
-using MTM_Inventory_Application.Models;
+using MTM_WIP_Application_Winforms.Controls.MainForm;
+using MTM_WIP_Application_Winforms.Forms.MainForm;
+using MTM_WIP_Application_Winforms.Helpers;
+using MTM_WIP_Application_Winforms.Logging;
+using MTM_WIP_Application_Winforms.Models;
 using Timer = System.Timers.Timer;
 
-namespace MTM_Inventory_Application.Services
+namespace MTM_WIP_Application_Winforms.Services
 {
     /// <summary>
     /// Version checking service that periodically checks database for version information
@@ -63,7 +63,7 @@ namespace MTM_Inventory_Application.Services
         {
             Debug.WriteLine("Running VersionChecker...");
             LoggingUtility.Log("Running VersionChecker - checking database version information.");
-            
+
             try
             {
                 // Updated to work with uniform parameter naming system (p_ prefixes)
@@ -75,22 +75,22 @@ namespace MTM_Inventory_Application.Services
                     null, // No progress helper for background service
                     true  // Use async execution
                 );
-                
+
                 // Handle successful execution
                 if (dataResult.IsSuccess && dataResult.Data != null && dataResult.Data.Rows.Count > 0)
                 {
                     // Extract version information from first row
                     string? databaseVersion = dataResult.Data.Rows[0]["Version"]?.ToString();
                     LastCheckedDatabaseVersion = databaseVersion ?? "Unknown Version";
-                    
+
                     Debug.WriteLine($"Database version retrieved: {LastCheckedDatabaseVersion}");
                     LoggingUtility.Log($"Version check successful - Database version: {LastCheckedDatabaseVersion}");
-                    
+
                     // Update UI with version information (thread-safe)
                     UpdateVersionLabel(Model_AppVariables.UserVersion, LastCheckedDatabaseVersion);
                     return;
                 }
-                
+
                 // Handle case where procedure succeeds but returns no data
                 if (dataResult.IsSuccess && (dataResult.Data == null || dataResult.Data.Rows.Count == 0))
                 {
@@ -99,7 +99,7 @@ namespace MTM_Inventory_Application.Services
                     UpdateVersionLabel(Model_AppVariables.UserVersion, "No Version Data");
                     return;
                 }
-                
+
                 // Handle warning status (Status = 1)
                 if (dataResult.Status == 1)
                 {
@@ -108,7 +108,7 @@ namespace MTM_Inventory_Application.Services
                     UpdateVersionLabel(Model_AppVariables.UserVersion, "Database Version Warning");
                     return;
                 }
-                
+
                 // Handle error status (Status = -1)
                 LoggingUtility.Log($"VersionChecker: Stored procedure returned error - {dataResult.ErrorMessage}");
                 LastCheckedDatabaseVersion = "Database Version Error";
@@ -121,7 +121,7 @@ namespace MTM_Inventory_Application.Services
                 LastCheckedDatabaseVersion = "Deploy Procedures Required";
                 UpdateVersionLabel(Model_AppVariables.UserVersion, "Deploy Procedures Required");
             }
-            catch (MySql.Data.MySqlClient.MySqlException ex) when (ex.Number == 1054) // Column doesn't exist  
+            catch (MySql.Data.MySqlClient.MySqlException ex) when (ex.Number == 1054) // Column doesn't exist
             {
                 LoggingUtility.Log($"VersionChecker: Column not found in log_changelog table - {ex.Message}. This may indicate the table structure needs updating.");
                 LastCheckedDatabaseVersion = "Database Schema Issue";
@@ -161,7 +161,7 @@ namespace MTM_Inventory_Application.Services
                 {
                     if (ControlInventoryInstance.InvokeRequired)
                     {
-                        ControlInventoryInstance.Invoke(new Action(() => 
+                        ControlInventoryInstance.Invoke(new Action(() =>
                             ControlInventoryInstance.SetVersionLabel(appVersion, dbVersion)));
                     }
                     else
@@ -169,7 +169,7 @@ namespace MTM_Inventory_Application.Services
                         ControlInventoryInstance.SetVersionLabel(appVersion, dbVersion);
                     }
                 }
-                
+
                 Debug.WriteLine($"Version labels updated - App: {appVersion}, DB: {dbVersion}");
             }
             catch (Exception ex)

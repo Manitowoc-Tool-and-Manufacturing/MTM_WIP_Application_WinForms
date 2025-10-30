@@ -1,9 +1,9 @@
 using System.ComponentModel;
-using MTM_Inventory_Application.Core;
-using MTM_Inventory_Application.Models;
+using MTM_WIP_Application_Winforms.Core;
+using MTM_WIP_Application_Winforms.Models;
 using Timer = System.Windows.Forms.Timer;
 
-namespace MTM_Inventory_Application.Controls.Shared
+namespace MTM_WIP_Application_Winforms.Controls.Shared
 {
     public partial class Control_ProgressBarUserControl : UserControl
     {

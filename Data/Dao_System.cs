@@ -1,12 +1,12 @@
 using System.Data;
 using System.Security.Principal;
-using MTM_Inventory_Application.Core;
-using MTM_Inventory_Application.Helpers;
-using MTM_Inventory_Application.Logging;
-using MTM_Inventory_Application.Models;
+using MTM_WIP_Application_Winforms.Core;
+using MTM_WIP_Application_Winforms.Helpers;
+using MTM_WIP_Application_Winforms.Logging;
+using MTM_WIP_Application_Winforms.Models;
 using MySql.Data.MySqlClient;
 
-namespace MTM_Inventory_Application.Data;
+namespace MTM_WIP_Application_Winforms.Data;
 
 #region Dao_System
 
@@ -107,18 +107,18 @@ internal static class Dao_System
             {
                 // If stored procedure fails, create a default admin user
                 LoggingUtility.Log($"sys_GetUserAccessType failed: {dataResult.ErrorMessage}. Creating default admin user.");
-                
+
                 // Set current user as admin by default when stored procedures have issues
                 Model_AppVariables.UserTypeAdmin = true;
                 Model_AppVariables.UserTypeReadOnly = false;
-                
+
                 var defaultUser = new Model_Users
                 {
                     Id = 1,
                     User = user
                 };
                 result.Add(defaultUser);
-                
+
                 return DaoResult<List<Model_Users>>.Success(result, $"Default admin access granted for user: {user}");
             }
 
@@ -151,7 +151,7 @@ internal static class Dao_System
                 LoggingUtility.Log($"No users found in sys_GetUserAccessType. Creating default admin user: {user}");
                 Model_AppVariables.UserTypeAdmin = true;
                 Model_AppVariables.UserTypeReadOnly = false;
-                
+
                 var defaultUser = new Model_Users
                 {
                     Id = 1,
@@ -166,27 +166,27 @@ internal static class Dao_System
         catch (Exception ex)
         {
             LoggingUtility.LogApplicationError(ex);
-            
+
             // FALLBACK: If everything fails, grant default admin access to prevent application lockup
             LoggingUtility.Log($"System_UserAccessType fallback: Granting default admin access to user: {user}");
             Model_AppVariables.UserTypeAdmin = true;
             Model_AppVariables.UserTypeReadOnly = false;
-            
+
             var fallbackUser = new Model_Users
             {
                 Id = 1,
                 User = user
             };
-            
+
             await HandleSystemDaoExceptionAsync(ex, "System_UserAccessType");
-            return DaoResult<List<Model_Users>>.Success(new List<Model_Users> { fallbackUser }, 
+            return DaoResult<List<Model_Users>>.Success(new List<Model_Users> { fallbackUser },
                 $"Fallback admin access granted for user: {user}");
         }
     }
 
     internal static async Task<DaoResult<int>> GetUserIdByNameAsync(string userName,
         string? connectionString = null,
-        MySqlConnection? connection = null, 
+        MySqlConnection? connection = null,
         MySqlTransaction? transaction = null)
     {
         try
@@ -224,9 +224,9 @@ internal static class Dao_System
         }
     }
 
-    internal static async Task<DaoResult<int>> GetRoleIdByNameAsync(string roleName, 
+    internal static async Task<DaoResult<int>> GetRoleIdByNameAsync(string roleName,
         string? connectionString = null,
-        MySqlConnection? connection = null, 
+        MySqlConnection? connection = null,
         MySqlTransaction? transaction = null)
     {
         try
@@ -349,9 +349,9 @@ internal static class Dao_System
                             PropertyNameCaseInsensitive = false
                         };
                         options.Converters.Add(new JsonColorConverter());
-                        
+
                         var colors = System.Text.Json.JsonSerializer.Deserialize<Models.Model_UserUiColors>(settingsJson, options);
-                        
+
                         if (colors != null)
                         {
                             report.AppendLine($"✅ Theme '{themeName}': Valid JSON");
@@ -411,7 +411,7 @@ internal static class Dao_System
                             PropertyNameCaseInsensitive = true
                         };
                         options.Converters.Add(new JsonColorConverter());                            var colors = System.Text.Json.JsonSerializer.Deserialize<Models.Model_UserUiColors>(settingsJson, options);
-                            
+
                             if (colors != null)
                             {
                                 report.AppendLine($"✅ User '{userId}': Valid JSON");
@@ -476,7 +476,7 @@ internal static class Dao_System
     private static async Task HandleSystemDaoExceptionAsync(Exception ex, string method)
     {
         LoggingUtility.LogApplicationError(new Exception($"Error in {method}: {ex.Message}", ex));
-        
+
         // ENHANCED: Pass method name to error handlers for better debugging
         await Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex, controlName: method);
     }

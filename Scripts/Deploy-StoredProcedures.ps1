@@ -45,7 +45,7 @@
     .\Deploy-StoredProcedures.ps1 -Database mtm_wip_application_winforms_test -DryRun
 
 .EXAMPLE
-    .\Deploy-StoredProcedures.ps1 -Database mtm_wip_application -Force
+    .\Deploy-StoredProcedures.ps1 -Database MTM_WIP_Application_Winforms -Force
 
 .NOTES
     Author: MTM Development Team
@@ -84,7 +84,7 @@ function Write-Log {
     param([string]$Message, [string]$Level = "INFO")
     $timestamp = Get-Date -Format "yyyy-MM-dd HH:mm:ss"
     $logMessage = "[$timestamp] [$Level] $Message"
-    
+
     if (-not $Json) {
         switch ($Level) {
             "ERROR" { Write-Host $logMessage -ForegroundColor Red }
@@ -93,7 +93,7 @@ function Write-Log {
             default { Write-Host $logMessage }
         }
     }
-    
+
     # Log to file
     $logFile = Join-Path $PSScriptRoot "deployment-$(Get-Date -Format 'yyyyMMdd').log"
     Add-Content -Path $logFile -Value $logMessage
@@ -101,7 +101,7 @@ function Write-Log {
 
 function Test-MySqlConnection {
     param([string]$ConnectionString)
-    
+
     try {
         $mysqlCommand = "mysql --host=$Server --port=$Port --user=$User --password=$Password --database=$Database --execute='SELECT 1;'"
         $result = Invoke-Expression $mysqlCommand 2>&1
@@ -113,10 +113,10 @@ function Test-MySqlConnection {
 
 function Get-ExistingProcedures {
     param([string]$ConnectionString)
-    
+
     $query = "SELECT ROUTINE_NAME FROM INFORMATION_SCHEMA.ROUTINES WHERE ROUTINE_SCHEMA = '$Database' AND ROUTINE_TYPE = 'PROCEDURE'"
     $mysqlCommand = "mysql --host=$Server --port=$Port --user=$User --password=$Password --database=$Database --skip-column-names --execute=`"$query`""
-    
+
     try {
         $result = Invoke-Expression $mysqlCommand 2>&1
         if ($LASTEXITCODE -eq 0) {
@@ -131,10 +131,10 @@ function Get-ExistingProcedures {
 
 function Backup-ExistingProcedure {
     param([string]$ProcedureName, [string]$BackupPath)
-    
+
     $query = "SHOW CREATE PROCEDURE $ProcedureName"
     $mysqlCommand = "mysql --host=$Server --port=$Port --user=$User --password=$Password --database=$Database --skip-column-names --execute=`"$query`""
-    
+
     try {
         $result = Invoke-Expression $mysqlCommand 2>&1
         if ($LASTEXITCODE -eq 0 -and $result) {
@@ -153,19 +153,19 @@ function Backup-ExistingProcedure {
 
 function Deploy-SqlFile {
     param([string]$FilePath)
-    
+
     $procedureName = [System.IO.Path]::GetFileNameWithoutExtension($FilePath)
     Write-Log "Deploying procedure: $procedureName"
-    
+
     if ($DryRun) {
         Write-Log "[DRY RUN] Would deploy: $procedureName" "INFO"
         return @{ Success = $true; Procedure = $procedureName; Action = "DRY_RUN" }
     }
-    
+
     try {
         $mysqlCommand = "mysql --host=$Server --port=$Port --user=$User --password=$Password --database=$Database < `"$FilePath`""
         $result = Invoke-Expression $mysqlCommand 2>&1
-        
+
         if ($LASTEXITCODE -eq 0) {
             Write-Log "Successfully deployed: $procedureName" "SUCCESS"
             return @{ Success = $true; Procedure = $procedureName; Action = "DEPLOYED" }
@@ -181,7 +181,7 @@ function Deploy-SqlFile {
 
 function Get-SqlFilesRecursive {
     param([string]$Path)
-    
+
     return Get-ChildItem -Path $Path -Filter "*.sql" -Recurse | Sort-Object FullName
 }
 
@@ -193,37 +193,37 @@ try {
     Write-Log "=== MTM Stored Procedure Deployment ===" "INFO"
     Write-Log "Target: $Server`:$Port/$Database" "INFO"
     Write-Log "Mode: $(if ($DryRun) { 'DRY RUN' } else { 'LIVE DEPLOYMENT' })" "INFO"
-    
+
     # Validate paths
     $proceduresPath = Join-Path $PSScriptRoot $ProceduresDir
     if (-not (Test-Path $proceduresPath)) {
         throw "Procedures directory not found: $proceduresPath"
     }
-    
+
     # Create backup directory
     $backupPath = Join-Path $PSScriptRoot $BackupDir
     if (-not (Test-Path $backupPath)) {
         New-Item -Path $backupPath -ItemType Directory | Out-Null
         Write-Log "Created backup directory: $backupPath"
     }
-    
+
     # Create timestamp-specific backup folder
     $backupTimestamp = Get-Date -Format "yyyyMMdd-HHmmss"
     $backupSessionPath = Join-Path $backupPath "deployment-$backupTimestamp"
     New-Item -Path $backupSessionPath -ItemType Directory | Out-Null
     Write-Log "Backup location: $backupSessionPath"
-    
+
     # Test database connection
     Write-Log "Testing database connection..."
     if (-not (Test-MySqlConnection)) {
         throw "Failed to connect to MySQL server. Check credentials and server availability."
     }
     Write-Log "Database connection successful" "SUCCESS"
-    
+
     # Get list of SQL files to deploy
     $sqlFiles = Get-SqlFilesRecursive -Path $proceduresPath
     Write-Log "Found $($sqlFiles.Count) SQL files to process"
-    
+
     if ($sqlFiles.Count -eq 0) {
         Write-Log "No SQL files found in $proceduresPath" "WARN"
         if ($Json) {
@@ -231,12 +231,12 @@ try {
         }
         exit 0
     }
-    
+
     # Get existing procedures for backup
     Write-Log "Retrieving existing procedures..."
     $existingProcedures = Get-ExistingProcedures
     Write-Log "Found $($existingProcedures.Count) existing procedures"
-    
+
     # Confirmation prompt (unless Force specified)
     if (-not $Force -and -not $DryRun -and -not $Json) {
         $response = Read-Host "`nReady to deploy $($sqlFiles.Count) procedures to $Database. Continue? (yes/no)"
@@ -245,7 +245,7 @@ try {
             exit 0
         }
     }
-    
+
     # Backup existing procedures that will be replaced
     Write-Log "Backing up existing procedures..."
     $backedUp = 0
@@ -258,24 +258,24 @@ try {
         }
     }
     Write-Log "Backed up $backedUp procedures"
-    
+
     # Deploy procedures
     Write-Log "Starting deployment..."
     $results = @()
     $deployed = 0
     $failed = 0
-    
+
     foreach ($sqlFile in $sqlFiles) {
         $result = Deploy-SqlFile -FilePath $sqlFile.FullName
         $results += $result
-        
+
         if ($result.Success) {
             $deployed++
         } else {
             $failed++
         }
     }
-    
+
     # Summary
     Write-Log "`n=== Deployment Summary ===" "INFO"
     Write-Log "Total files processed: $($sqlFiles.Count)" "INFO"
@@ -283,7 +283,7 @@ try {
     Write-Log "Failed: $failed" $(if ($failed -gt 0) { "ERROR" } else { "INFO" })
     Write-Log "Backed up: $backedUp" "INFO"
     Write-Log "Backup location: $backupSessionPath" "INFO"
-    
+
     if ($Json) {
         @{
             Success = ($failed -eq 0)
@@ -296,13 +296,13 @@ try {
             Results = $results
         } | ConvertTo-Json -Depth 3
     }
-    
+
     exit $(if ($failed -eq 0) { 0 } else { 1 })
-    
+
 } catch {
     Write-Log "FATAL ERROR: $_" "ERROR"
     Write-Log $_.ScriptStackTrace "ERROR"
-    
+
     if ($Json) {
         @{
             Success = $false
@@ -310,7 +310,7 @@ try {
             StackTrace = $_.ScriptStackTrace
         } | ConvertTo-Json
     }
-    
+
     exit 1
 }
 

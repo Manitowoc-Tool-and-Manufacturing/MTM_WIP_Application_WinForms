@@ -1,11 +1,11 @@
 using System.Data;
-using MTM_Inventory_Application.Helpers;
-using MTM_Inventory_Application.Logging;
-using MTM_Inventory_Application.Models;
-using MTM_Inventory_Application.Services;
+using MTM_WIP_Application_Winforms.Helpers;
+using MTM_WIP_Application_Winforms.Logging;
+using MTM_WIP_Application_Winforms.Models;
+using MTM_WIP_Application_Winforms.Services;
 using MySql.Data.MySqlClient;
 
-namespace MTM_Inventory_Application.Data;
+namespace MTM_WIP_Application_Winforms.Data;
 
 #region Dao_Part
 
@@ -24,7 +24,7 @@ internal static class Dao_Part
     internal static async Task<DaoResult<DataTable>> GetAllPartsAsync(MySqlConnection? connection = null, MySqlTransaction? transaction = null)
     {
         Service_DebugTracer.TraceMethodEntry(controlName: "Dao_Part");
-        
+
         try
         {
             var result = await Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync(
@@ -32,7 +32,7 @@ internal static class Dao_Part
                 "md_part_ids_Get_All",
                 null
             );
-            
+
             if (result.IsSuccess && result.Data != null)
             {
                 Service_DebugTracer.TraceMethodExit(result, controlName: "Dao_Part");
@@ -48,7 +48,7 @@ internal static class Dao_Part
         {
             LoggingUtility.LogDatabaseError(ex);
             await Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex, callerName: "GetAllPartsAsync");
-            
+
             Service_DebugTracer.TraceMethodExit(null, controlName: "Dao_Part");
             return DaoResult<DataTable>.Failure("Error retrieving parts", ex);
         }
@@ -62,7 +62,7 @@ internal static class Dao_Part
     internal static async Task<DaoResult<DataRow>> GetPartByNumberAsync(string partNumber, MySqlConnection? connection = null, MySqlTransaction? transaction = null)
     {
         Service_DebugTracer.TraceMethodEntry(new Dictionary<string, object> { ["partNumber"] = partNumber }, controlName: "Dao_Part");
-        
+
         try
         {
             Dictionary<string, object> parameters = new() { ["ItemNumber"] = partNumber };
@@ -79,7 +79,7 @@ internal static class Dao_Part
             if (result.IsSuccess && result.Data != null && result.Data.Rows.Count > 0)
             {
                 var row = result.Data.Rows[0];
-                
+
                 Service_DebugTracer.TraceMethodExit(row, controlName: "Dao_Part");
                 return DaoResult<DataRow>.Success(row, $"Found part {partNumber}");
             }
@@ -93,7 +93,7 @@ internal static class Dao_Part
         {
             LoggingUtility.LogDatabaseError(ex);
             await Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex, callerName: "GetPartByNumberAsync");
-            
+
             Service_DebugTracer.TraceMethodExit(null, controlName: "Dao_Part");
             return DaoResult<DataRow>.Failure($"Error retrieving part {partNumber}", ex);
         }
@@ -107,19 +107,19 @@ internal static class Dao_Part
     internal static async Task<DaoResult<bool>> PartExistsAsync(string partNumber, MySqlConnection? connection = null, MySqlTransaction? transaction = null)
     {
         Service_DebugTracer.TraceMethodEntry(new Dictionary<string, object> { ["partNumber"] = partNumber }, controlName: "Dao_Part");
-        
+
         try
         {
             var result = await GetPartByNumberAsync(partNumber, connection, transaction);
             bool exists = result.IsSuccess;
-            
+
             Service_DebugTracer.TraceMethodExit(exists, controlName: "Dao_Part");
             return DaoResult<bool>.Success(exists, exists ? $"Part {partNumber} exists" : $"Part {partNumber} does not exist");
         }
         catch (Exception ex)
         {
             LoggingUtility.LogApplicationError(ex);
-            
+
             Service_DebugTracer.TraceMethodExit(false, controlName: "Dao_Part");
             return DaoResult<bool>.Failure($"Error checking if part {partNumber} exists", ex);
         }
@@ -132,7 +132,7 @@ internal static class Dao_Part
     internal static async Task<DaoResult<DataTable>> GetPartTypesAsync()
     {
         Service_DebugTracer.TraceMethodEntry(controlName: "Dao_Part");
-        
+
         try
         {
             var result = await Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync(
@@ -140,7 +140,7 @@ internal static class Dao_Part
                 "md_item_types_GetDistinct",
                 null
             );
-                
+
             if (result.IsSuccess && result.Data != null)
             {
                 Service_DebugTracer.TraceMethodExit(result, controlName: "Dao_Part");
@@ -156,7 +156,7 @@ internal static class Dao_Part
         {
             LoggingUtility.LogDatabaseError(ex);
             await Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex, callerName: "GetPartTypesAsync");
-            
+
             Service_DebugTracer.TraceMethodExit(null, controlName: "Dao_Part");
             return DaoResult<DataTable>.Failure("Error retrieving part types", ex);
         }
@@ -170,12 +170,12 @@ internal static class Dao_Part
     internal static async Task<DaoResult<DataTable>> SearchPartsAsync(string searchTerm, MySqlConnection? connection = null, MySqlTransaction? transaction = null)
     {
         Service_DebugTracer.TraceMethodEntry(new Dictionary<string, object> { ["searchTerm"] = searchTerm }, controlName: "Dao_Part");
-        
+
         try
         {
             // Get all parts and filter in memory (unless there's a specific search stored procedure)
             var allPartsResult = await GetAllPartsAsync(connection, transaction);
-            
+
             if (!allPartsResult.IsSuccess || allPartsResult.Data == null)
             {
                 Service_DebugTracer.TraceMethodExit(allPartsResult, controlName: "Dao_Part");
@@ -199,7 +199,7 @@ internal static class Dao_Part
         {
             LoggingUtility.LogDatabaseError(ex);
             await Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex, callerName: "SearchPartsAsync");
-            
+
             Service_DebugTracer.TraceMethodExit(null, controlName: "Dao_Part");
             return DaoResult<DataTable>.Failure($"Error searching for parts with term '{searchTerm}'", ex);
         }
@@ -221,13 +221,13 @@ internal static class Dao_Part
     internal static async Task<DaoResult> CreatePartAsync(string itemNumber, string customer, string description,
         string issuedBy, string type)
     {
-        Service_DebugTracer.TraceMethodEntry(new Dictionary<string, object> 
-        { 
-            ["itemNumber"] = itemNumber, 
-            ["customer"] = customer, 
-            ["type"] = type 
+        Service_DebugTracer.TraceMethodEntry(new Dictionary<string, object>
+        {
+            ["itemNumber"] = itemNumber,
+            ["customer"] = customer,
+            ["type"] = type
         }, controlName: "Dao_Part");
-        
+
         try
         {
             Dictionary<string, object> parameters = new()
@@ -244,7 +244,7 @@ internal static class Dao_Part
                 "md_part_ids_Add_Part",
                 parameters
             );
-                
+
             if (result.IsSuccess)
             {
                 Service_DebugTracer.TraceMethodExit(result, controlName: "Dao_Part");
@@ -260,7 +260,7 @@ internal static class Dao_Part
         {
             LoggingUtility.LogDatabaseError(ex);
             await Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex, callerName: "CreatePartAsync");
-            
+
             Service_DebugTracer.TraceMethodExit(null, controlName: "Dao_Part");
             return DaoResult.Failure($"Error adding part {itemNumber}", ex);
         }
@@ -283,14 +283,14 @@ internal static class Dao_Part
     internal static async Task<DaoResult> UpdatePartAsync(int id, string itemNumber, string customer,
         string description, string issuedBy, string type)
     {
-        Service_DebugTracer.TraceMethodEntry(new Dictionary<string, object> 
-        { 
+        Service_DebugTracer.TraceMethodEntry(new Dictionary<string, object>
+        {
             ["id"] = id,
-            ["itemNumber"] = itemNumber, 
-            ["customer"] = customer, 
-            ["type"] = type 
+            ["itemNumber"] = itemNumber,
+            ["customer"] = customer,
+            ["type"] = type
         }, controlName: "Dao_Part");
-        
+
         try
         {
             Dictionary<string, object> parameters = new()
@@ -308,7 +308,7 @@ internal static class Dao_Part
                 "md_part_ids_Update_Part",
                 parameters
             );
-                
+
             if (result.IsSuccess)
             {
                 Service_DebugTracer.TraceMethodExit(result, controlName: "Dao_Part");
@@ -324,7 +324,7 @@ internal static class Dao_Part
         {
             LoggingUtility.LogDatabaseError(ex);
             await Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex, callerName: "UpdatePartAsync");
-            
+
             Service_DebugTracer.TraceMethodExit(null, controlName: "Dao_Part");
             return DaoResult.Failure($"Error updating part {itemNumber}", ex);
         }
@@ -341,13 +341,13 @@ internal static class Dao_Part
         MySqlConnection? connection = null,
         MySqlTransaction? transaction = null)
     {
-        Service_DebugTracer.TraceMethodEntry(new Dictionary<string, object> 
-        { 
-            ["partNumber"] = partNumber, 
-            ["partType"] = partType, 
-            ["user"] = user 
+        Service_DebugTracer.TraceMethodEntry(new Dictionary<string, object>
+        {
+            ["partNumber"] = partNumber,
+            ["partType"] = partType,
+            ["user"] = user
         }, controlName: "Dao_Part");
-        
+
         try
         {
             // First get the part to update
@@ -363,7 +363,7 @@ internal static class Dao_Part
             string description = existingPart.Data["Description"]?.ToString() ?? "";
 
             var result = await UpdatePartAsync(id, partNumber, customer, description, user, partType);
-            
+
             Service_DebugTracer.TraceMethodExit(result, controlName: "Dao_Part");
             return result;
         }
@@ -371,7 +371,7 @@ internal static class Dao_Part
         {
             LoggingUtility.LogDatabaseError(ex);
             await Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex, callerName: "UpdatePartByNumberAsync");
-            
+
             Service_DebugTracer.TraceMethodExit(null, controlName: "Dao_Part");
             return DaoResult.Failure($"Error updating part {partNumber}", ex);
         }
@@ -391,7 +391,7 @@ internal static class Dao_Part
         MySqlTransaction? transaction = null)
     {
         Service_DebugTracer.TraceMethodEntry(new Dictionary<string, object> { ["partNumber"] = partNumber }, controlName: "Dao_Part");
-        
+
         try
         {
             Dictionary<string, object> parameters = new() { ["ItemNumber"] = partNumber };
@@ -417,7 +417,7 @@ internal static class Dao_Part
         {
             LoggingUtility.LogDatabaseError(ex);
             await Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex, callerName: "DeletePartAsync");
-            
+
             Service_DebugTracer.TraceMethodExit(null, controlName: "Dao_Part");
             return DaoResult.Failure($"Error deleting part {partNumber}", ex);
         }

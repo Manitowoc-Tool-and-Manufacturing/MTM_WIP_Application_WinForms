@@ -78,7 +78,7 @@ Follow this sequence to build the feature incrementally:
 
 1. **Create Model_ErrorReportFilter.cs** (in Models/)
    ```csharp
-   namespace MTM_Inventory_Application.Models;
+   namespace MTM_WIP_Application_Winforms.Models;
    
    public class Model_ErrorReportFilter
    {

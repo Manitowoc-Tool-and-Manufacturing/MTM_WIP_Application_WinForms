@@ -1,7 +1,7 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using MTM_Inventory_Application.Data;
+using MTM_WIP_Application_Winforms.Data;
 
-namespace MTM_Inventory_Application.Tests.Integration;
+namespace MTM_WIP_Application_Winforms.Tests.Integration;
 
 /// <summary>
 /// Integration tests for master data DAO operations (ItemType, Location, Operation, Part).

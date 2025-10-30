@@ -3,7 +3,7 @@
 **Purpose**: Retrieve distinct list of machine names from error_reports table for filter dropdown population.
 
 **Created**: 2025-10-25  
-**Database**: mtm_wip_application (Release) / mtm_wip_application_winforms_test (Debug)  
+**Database**: MTM_WIP_Application_Winforms (Release) / mtm_wip_application_winforms_test (Debug)  
 **Table**: error_reports
 
 ---
@@ -16,9 +16,9 @@ None.
 
 ## Output Parameters
 
-| Parameter | Type | Description | Values |
-|-----------|------|-------------|--------|
-| p_Status | INT | Operation result code | 0 = Success<br>1 = Success (no data)<br>-1 = Database error |
+| Parameter  | Type         | Description                   | Values                                                                            |
+| ---------- | ------------ | ----------------------------- | --------------------------------------------------------------------------------- |
+| p_Status   | INT          | Operation result code         | 0 = Success<br>1 = Success (no data)<br>-1 = Database error                       |
 | p_ErrorMsg | VARCHAR(500) | Human-readable status message | 'Retrieved N unique machines'<br>'No machines found'<br>'Database error occurred' |
 
 ---
@@ -27,9 +27,9 @@ None.
 
 Returns a DataTable with a single column:
 
-| Column | Type | Nullable | Description | Notes |
-|--------|------|----------|-------------|-------|
-| MachineName | VARCHAR(200) | No | Distinct machine name values | Excludes NULLs, sorted alphabetically |
+| Column      | Type         | Nullable | Description                  | Notes                                 |
+| ----------- | ------------ | -------- | ---------------------------- | ------------------------------------- |
+| MachineName | VARCHAR(200) | No       | Distinct machine name values | Excludes NULLs, sorted alphabetically |
 
 ---
 
@@ -52,15 +52,17 @@ END IF;
 ```
 
 **Logic Notes**:
-- Excludes NULL MachineName values (reports without machine info)
-- DISTINCT removes duplicates
-- ORDER BY ensures consistent dropdown ordering
-- Alphabetical sorting helps developers find machines quickly
+
+-   Excludes NULL MachineName values (reports without machine info)
+-   DISTINCT removes duplicates
+-   ORDER BY ensures consistent dropdown ordering
+-   Alphabetical sorting helps developers find machines quickly
 
 **Performance Notes**:
-- Uses index on MachineName column for fast DISTINCT query
-- Result set typically small (< 50 machine names)
-- WHERE MachineName IS NOT NULL may slightly reduce performance but improves user experience
+
+-   Uses index on MachineName column for fast DISTINCT query
+-   Result set typically small (< 50 machine names)
+-   WHERE MachineName IS NOT NULL may slightly reduce performance but improves user experience
 
 ---
 
@@ -72,34 +74,34 @@ public static async Task<DaoResult<List<string>>> GetMachineListAsync()
     try
     {
         string connectionString = Helper_Database_Variables.GetConnectionString();
-        
+
         var result = await Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync(
             connectionString,
             "sp_error_reports_GetMachineList",
             parameters: null,
             progressHelper: null);
-        
+
         if (!result.IsSuccess)
         {
             LoggingUtility.Log($"[Dao_ErrorReports] Failed to retrieve machine list: {result.StatusMessage}");
             return DaoResult<List<string>>.Failure(result.StatusMessage);
         }
-        
+
         if (result.Data == null || result.Data.Rows.Count == 0)
         {
             return DaoResult<List<string>>.Success(
-                new List<string>(), 
+                new List<string>(),
                 "No machines found");
         }
-        
+
         // Convert DataTable to List<string>
         var machines = result.Data.AsEnumerable()
             .Select(row => row["MachineName"].ToString() ?? string.Empty)
             .Where(machine => !string.IsNullOrEmpty(machine))
             .ToList();
-        
+
         return DaoResult<List<string>>.Success(
-            machines, 
+            machines,
             $"Retrieved {machines.Count} machines");
     }
     catch (Exception ex)
@@ -121,17 +123,17 @@ public static async Task<DaoResult<List<string>>> GetMachineListAsync()
 private async void PopulateMachineFilterComboBox()
 {
     var result = await Dao_ErrorReports.GetMachineListAsync();
-    
+
     if (result.IsSuccess)
     {
         cmbMachineFilter.Items.Clear();
         cmbMachineFilter.Items.Add("[ All Machines ]"); // Default option
-        
+
         foreach (string machine in result.Data)
         {
             cmbMachineFilter.Items.Add(machine);
         }
-        
+
         cmbMachineFilter.SelectedIndex = 0; // Select "All Machines" by default
     }
     else
@@ -140,7 +142,7 @@ private async void PopulateMachineFilterComboBox()
             result.Exception,
             ErrorSeverity.Low,
             message: "Failed to load machine list for filter");
-        
+
         // Fallback: Add "All Machines" only
         cmbMachineFilter.Items.Clear();
         cmbMachineFilter.Items.Add("[ All Machines ]");
@@ -155,19 +157,19 @@ private async void PopulateMachineFilterComboBox()
 private void ApplyFilters()
 {
     string selectedMachine = cmbMachineFilter.Text;
-    
+
     // If "All Machines" selected, pass NULL to stored procedure
-    string machineFilter = (selectedMachine == "[ All Machines ]") 
-        ? null 
+    string machineFilter = (selectedMachine == "[ All Machines ]")
+        ? null
         : selectedMachine;
-    
+
     // Build filter object
     var filter = new Model_ErrorReportFilter
     {
         MachineName = machineFilter,
         // ... other filters
     };
-    
+
     // Apply filter via GetAllErrorReportsAsync()
 }
 ```
@@ -177,27 +179,32 @@ private void ApplyFilters()
 ## Test Cases
 
 ### Test Case 1: Multiple Machines Exist
+
 **Input**: None  
 **Expected Output**: DataTable with multiple MachineName rows, sorted alphabetically  
 **Expected Status**: 0 (Success)  
 **Example**: "DESK-01", "DESK-02", "LAPTOP-ABC", "WORKSTATION-42"
 
 ### Test Case 2: Single Machine Exists
+
 **Input**: None  
 **Expected Output**: DataTable with single MachineName row  
 **Expected Status**: 0 (Success)
 
 ### Test Case 3: No Machines Exist (All NULL)
+
 **Input**: error_reports table has reports but all MachineName values are NULL  
 **Expected Output**: Empty DataTable  
 **Expected Status**: 1 (Success, no data)
 
 ### Test Case 4: Duplicate Machine Name Handling
+
 **Input**: error_reports has 20 reports from "DESK-01"  
 **Expected Output**: Single row with "DESK-01" (DISTINCT behavior)  
 **Expected Status**: 0 (Success)
 
 ### Test Case 5: Mixed NULL and Non-NULL
+
 **Input**: error_reports has 10 reports with MachineName, 5 with NULL  
 **Expected Output**: Only non-NULL machine names (10 distinct values)  
 **Expected Status**: 0 (Success)
@@ -216,22 +223,24 @@ private void ApplyFilters()
 
 ## Error Handling
 
-- **Database connection failure**: Returns p_Status=-1, empty result set
-- **No data**: Returns p_Status=1, empty result set (not an error)
-- **Success**: Returns p_Status=0, populated result set
+-   **Database connection failure**: Returns p_Status=-1, empty result set
+-   **No data**: Returns p_Status=1, empty result set (not an error)
+-   **Success**: Returns p_Status=0, populated result set
 
 ---
 
 ## Performance Benchmarks
 
 **Target Performance**:
-- Retrieve 50 distinct machines: < 100ms
+
+-   Retrieve 50 distinct machines: < 100ms
 
 **Optimization Notes**:
-- Index on MachineName column ensures fast DISTINCT query
-- WHERE MachineName IS NOT NULL uses index efficiently
-- Result set size limited by number of unique machines (typically < 50)
-- No JOINs or complex logic
+
+-   Index on MachineName column ensures fast DISTINCT query
+-   WHERE MachineName IS NOT NULL uses index efficiently
+-   Result set size limited by number of unique machines (typically < 50)
+-   No JOINs or complex logic
 
 ---
 
@@ -239,24 +248,24 @@ private void ApplyFilters()
 
 ### ComboBox Display
 
-- **Default item**: "[ All Machines ]" (indicates no filter)
-- **Item format**: Plain machine name (e.g., "DESK-01")
-- **Selection behavior**: SelectedIndexChanged triggers filter re-application
-- **Placeholder**: Use Helper_UI_ComboBoxes.ValidateComboBoxItem() pattern
-- **Tooltip**: Consider showing full machine name if truncated in ComboBox
+-   **Default item**: "[ All Machines ]" (indicates no filter)
+-   **Item format**: Plain machine name (e.g., "DESK-01")
+-   **Selection behavior**: SelectedIndexChanged triggers filter re-application
+-   **Placeholder**: Use Helper_UI_ComboBoxes.ValidateComboBoxItem() pattern
+-   **Tooltip**: Consider showing full machine name if truncated in ComboBox
 
 ### Refresh Strategy
 
-- **On window load**: Populate ComboBox once
-- **On data changes**: Refresh if new error reports added with new machines (rare)
-- **Manual refresh**: Optional "Refresh Filters" button
+-   **On window load**: Populate ComboBox once
+-   **On data changes**: Refresh if new error reports added with new machines (rare)
+-   **Manual refresh**: Optional "Refresh Filters" button
 
 ### NULL Handling in UI
 
-- **Spec note**: "Grid sorting with null values: How to sort when Machine or ReviewedBy is NULL? Sort nulls last."
-- ComboBox excludes NULLs (only shows machines with names)
-- Grid filter "All Machines" includes reports with NULL MachineName
-- Grid sorting: NULL MachineNames sort last (handled in grid CellFormatting or sort comparer)
+-   **Spec note**: "Grid sorting with null values: How to sort when Machine or ReviewedBy is NULL? Sort nulls last."
+-   ComboBox excludes NULLs (only shows machines with names)
+-   Grid filter "All Machines" includes reports with NULL MachineName
+-   Grid sorting: NULL MachineNames sort last (handled in grid CellFormatting or sort comparer)
 
 ---
 
@@ -265,6 +274,7 @@ private void ApplyFilters()
 ### Option A: Include "(Unknown)" for NULL Machine Names
 
 **Modified SQL**:
+
 ```sql
 SELECT DISTINCT COALESCE(MachineName, '(Unknown)') AS MachineName
 FROM error_reports
@@ -281,6 +291,7 @@ ORDER BY MachineName ASC;
 ### Option B: Include Report Count per Machine
 
 **Modified SQL**:
+
 ```sql
 SELECT MachineName, COUNT(*) AS ReportCount
 FROM error_reports
@@ -300,6 +311,6 @@ ORDER BY MachineName ASC;
 
 ## Change History
 
-| Date | Version | Changes | Author |
-|------|---------|---------|--------|
-| 2025-10-25 | 1.0.0 | Initial contract definition | AI Planning Agent |
+| Date       | Version | Changes                     | Author            |
+| ---------- | ------- | --------------------------- | ----------------- |
+| 2025-10-25 | 1.0.0   | Initial contract definition | AI Planning Agent |

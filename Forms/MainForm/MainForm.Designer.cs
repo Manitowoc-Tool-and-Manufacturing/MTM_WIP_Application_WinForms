@@ -1,9 +1,9 @@
 ﻿using System.Drawing;
 using System.Windows.Forms;
-using MTM_Inventory_Application.Controls.Addons;
-using MTM_Inventory_Application.Controls.MainForm;
+using MTM_WIP_Application_Winforms.Controls.Addons;
+using MTM_WIP_Application_Winforms.Controls.MainForm;
 
-namespace MTM_Inventory_Application.Forms.MainForm
+namespace MTM_WIP_Application_Winforms.Forms.MainForm
 {
     public partial class MainForm : Form
     {

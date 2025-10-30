@@ -14,12 +14,13 @@
 **Context**: Codebase references stored procedures, but production vs test database may have different procedures.
 
 **Options**:
-1. Production database only (`mtm_wip_application` on 172.16.1.104)
+
+1. Production database only (`MTM_WIP_Application_Winforms` on 172.16.1.104)
 2. Test database only (`mtm_wip_application_winforms_test` on localhost)
 3. Both databases (audit both, reconcile differences)
 4. Code analysis only (discover procedures from C# call sites)
 
-**User Response**: Production database (`mtm_wip_application`) as source of truth. Test database should mirror production after deployment. Code analysis (T100) validates call sites match actual procedures.
+**User Response**: Production database (`MTM_WIP_Application_Winforms`) as source of truth. Test database should mirror production after deployment. Code analysis (T100) validates call sites match actual procedures.
 
 **Decision Impact**: T101 queries production INFORMATION_SCHEMA, T102 extracts from production, T120 deploys to test first for validation before T121 production deployment.
 
@@ -30,6 +31,7 @@
 **Context**: Refactoring 60-100 procedures requires deployment strategy balancing safety vs completeness.
 
 **Options**:
+
 1. **Complete wipe and reinstall**: Drop all procedures, install fresh from UpdatedStoredProcedures/ (destructive but clean)
 2. **Incremental ALTER**: Update only modified procedures, leave unchanged procedures intact (safer but complex)
 3. **Blue/green deployment**: Create parallel schema with new procedures, cutover at once (zero downtime but double storage)
@@ -46,6 +48,7 @@
 **Context**: Creating integration tests for 60-100 procedures requires significant effort. MVP approach tests critical procedures first.
 
 **Options**:
+
 1. **MVP coverage**: Test top 20 critical procedures (high usage, low compliance), defer remaining tests (fast initial deployment)
 2. **Comprehensive coverage**: Test ALL procedures before deployment (100% safety net, longer timeline)
 3. **Phased testing**: Test procedures as refactored, deploy in batches (balanced approach)
@@ -62,6 +65,7 @@
 **Context**: Not all procedures equal priority. Scoring system determines refactoring sequence within Part C.
 
 **Options**:
+
 1. **Usage-based**: High call site count = high priority (addresses most errors first)
 2. **Compliance-based**: Low compliance score = high priority (worst procedures first)
 3. **Hybrid scoring**: Combine usage and compliance with weighted formula (balanced approach)
@@ -78,6 +82,7 @@
 **Context**: Database wipe requires maintenance window. Timing affects user impact and rollback options.
 
 **Options**:
+
 1. **Off-hours deployment** (evening/weekend): Minimal user impact, requires on-call staff
 2. **Business hours deployment**: Staff available immediately, affects active users
 3. **Phased deployment**: Deploy to subset of users first (A/B testing approach)
@@ -94,6 +99,7 @@
 **Context**: `00_STATUS_CODE_STANDARDS.md` defines template patterns. Some procedures may have legitimate deviations.
 
 **Options**:
+
 1. **Strict 100% compliance**: All procedures match template exactly, no exceptions (uniform but may force awkward refactors)
 2. **Flexible interpretation**: Allow deviations if documented and justified (pragmatic but risks inconsistency)
 3. **Core requirements only**: Enforce OUT p_Status and OUT p_ErrorMsg, allow flexibility elsewhere (balanced) - **Make testing return verbose results on failure for easier troubleshooting**
@@ -110,8 +116,9 @@
 **Context**: FR-002 requires parameter prefix detection at startup. Fallback needed if database unreachable or permissions insufficient.
 
 **Options**:
+
 1. **Retry Strategy**: Stop startup process with MessageBox allowing user to retry or quit. After 3rd failed retry, close app showing remaining attempts (chosen)
-2. **Convention fallback**: Use naming conventions (p_ default, in_ for Transfer*/transaction*) if query fails (graceful degradation)
+2. **Convention fallback**: Use naming conventions (p* default, in* for Transfer*/transaction*) if query fails (graceful degradation)
 3. **Ask user**: Prompt DBA for database connection fix during startup (interactive but blocks startup)
 4. **Offline cache**: Ship application with pre-built cache file, refresh periodically (robust but requires maintenance)
 
@@ -126,6 +133,7 @@
 **Context**: FR-018 specifies transaction management for test isolation. Granularity affects test complexity and safety.
 
 **Options**:
+
 1. **Per-test transactions**: Begin/rollback in [TestInitialize]/[TestCleanup] (finest isolation but slower)
 2. **Per-class transactions**: Begin in [ClassInitialize], rollback in [ClassCleanup] (faster but tests share transaction)
 3. **Manual transaction management**: Tests explicitly manage transactions when needed (flexible but error-prone)
@@ -142,6 +150,7 @@
 **Context**: SC-004 requires ±5% performance variance from baseline. Baseline must be measured before refactoring begins.
 
 **Options**:
+
 1. **Before Phase 2.5 begins**: Measure now, use as definitive baseline (most accurate)
 2. **Before deployment**: Measure just before T120 test deployment (captures any recent changes)
 3. **Historical data**: Use existing performance logs as baseline (no new measurement needed but may be outdated)
@@ -158,6 +167,7 @@
 **Context**: Phase 2.5 affects multiple documentation files. Scope determines documentation effort.
 
 **Options**:
+
 1. **Minimal updates**: Update only 00_STATUS_CODE_STANDARDS.md and quickstart.md (fast but incomplete)
 2. **Comprehensive updates**: Update all docs (standards, quickstart, DAO XML comments, README, AGENTS.md) (thorough but time-consuming)
 3. **Prioritized updates**: Update developer-facing docs (quickstart, DAO comments), defer user docs (README) (balanced)
@@ -172,18 +182,18 @@
 
 ## Summary of Decisions
 
-| Question | Decision | Rationale |
-|----------|----------|-----------|
-| Q1: Database Source | Production database | Source of truth, test mirrors production |
-| Q2: Deployment Strategy | Complete wipe with safety | Clean slate, eliminates legacy code |
-| Q3: Testing Scope | Comprehensive coverage | 100% safety net, accepts longer timeline |
-| Q4: Priority Determination | Hybrid scoring (usage + compliance) | Balanced approach, addresses critical errors first |
-| Q5: Deployment Timing | Off-hours with maintenance window | Minimal user impact, rollback support |
-| Q6: Compliance Standards | Core requirements + verbose testing | Mandatory outputs with flexible implementation, verbose test failures for troubleshooting |
-| Q7: Parameter Prefix Fallback | Retry with app termination | 3 retry attempts with user choice, prevents running with incomplete data |
-| Q8: Test Isolation | Per-test transactions | Guaranteed isolation, acceptable overhead |
-| Q9: Performance Baseline | Before Phase 2.5 begins | Captures pre-refactor state accurately |
-| Q10: Documentation Scope | Concurrent with code changes + checklist | Updates synchronized with refactoring, prevents documentation drift |
+| Question                      | Decision                                 | Rationale                                                                                 |
+| ----------------------------- | ---------------------------------------- | ----------------------------------------------------------------------------------------- |
+| Q1: Database Source           | Production database                      | Source of truth, test mirrors production                                                  |
+| Q2: Deployment Strategy       | Complete wipe with safety                | Clean slate, eliminates legacy code                                                       |
+| Q3: Testing Scope             | Comprehensive coverage                   | 100% safety net, accepts longer timeline                                                  |
+| Q4: Priority Determination    | Hybrid scoring (usage + compliance)      | Balanced approach, addresses critical errors first                                        |
+| Q5: Deployment Timing         | Off-hours with maintenance window        | Minimal user impact, rollback support                                                     |
+| Q6: Compliance Standards      | Core requirements + verbose testing      | Mandatory outputs with flexible implementation, verbose test failures for troubleshooting |
+| Q7: Parameter Prefix Fallback | Retry with app termination               | 3 retry attempts with user choice, prevents running with incomplete data                  |
+| Q8: Test Isolation            | Per-test transactions                    | Guaranteed isolation, acceptable overhead                                                 |
+| Q9: Performance Baseline      | Before Phase 2.5 begins                  | Captures pre-refactor state accurately                                                    |
+| Q10: Documentation Scope      | Concurrent with code changes + checklist | Updates synchronized with refactoring, prevents documentation drift                       |
 
 ---
 
@@ -196,6 +206,7 @@
 **Context**: Phase 2.5 takes 15-25 days. Production database may change during this period (hotfixes, emergency procedures).
 
 **Options**:
+
 1. **Schema freeze**: No production changes during Phase 2.5 (simplest but blocks hotfixes)
 2. **Version control integration**: Track procedure versions in Git, merge conflicts manually (flexible but complex)
 3. **Timestamp-based validation**: Record procedure modified dates, detect drift during deployment (automated detection)
@@ -212,6 +223,7 @@
 **Context**: T127 requires validation of transaction rollback completeness. Need systematic approach to verify data integrity.
 
 **Options**:
+
 1. **Manual query verification**: Run SELECT queries after forced rollback, inspect results (simple but error-prone)
 2. **Database snapshots**: Compare pre-operation and post-rollback snapshots (thorough but storage-intensive)
 3. **Checksum validation**: Calculate table checksums before/after, verify match (fast but doesn't show what changed)
@@ -228,7 +240,8 @@
 **Context**: Q7 specified retry strategy with app termination on failure. This question now addresses maintenance/development tool needs.
 
 **Options**:
-1. **Universal p_ prefix**: All parameters use `p_` prefix (simplest but may cause errors for Transfer/Transaction procedures)
+
+1. **Universal p\_ prefix**: All parameters use `p_` prefix (simplest but may cause errors for Transfer/Transaction procedures)
 2. **Pattern-based detection**: Procedures matching `*Transfer*` or `*Transaction*` use `in_`, others use `p_` (heuristic-based)
 3. **Development maintenance form**: Implement maintenance UI in Settings Form as new child UserControl under "Development" TreeView category. **User must have Developer role** (Admin + Developer privileges) to access (controlled management) - **Selected**
 4. **First-call learning**: Attempt `p_`, if fails try `in_`, cache successful prefix (adaptive but requires error tolerance)
@@ -236,10 +249,11 @@
 **User Response**: **Development maintenance form** (Option 3) - Implement comprehensive parameter prefix management UI as new UserControl under Settings Form. **New TreeView category "Development"** with child node "Parameter Prefix Management". Access requires **new Developer user role** (= Admin privileges + Developer flag in database). Form displays all procedures with current prefix mappings, allows manual override, shows detection confidence scores, provides bulk re-detection button, and logs all changes for audit. Prevents need for app restart when fixing prefix mismatches. Power-user tool for development and troubleshooting.
 
 **Decision Impact**: New tasks required in Phase 2.5:
-- **T113c - Create Developer User Role**: Add `IsDeveloper` BOOLEAN column to `sys_user` table, update user management UI to assign role, restrict Development TreeView node visibility to Developer role
-- **T113d - Create Parameter Prefix Maintenance Form**: New UserControl `Control_Settings_ParameterPrefixMaintenance` with DataGridView showing all procedures/parameters, prefix columns (detected vs override), confidence score column, Save/Reload buttons, and audit log panel
-- **T123 update**: Parameter cache implements reload mechanism called from maintenance form, validates prefix changes before applying
-- Settings Form TreeView includes gated Development category (visible only to Developer role users)
+
+-   **T113c - Create Developer User Role**: Add `IsDeveloper` BOOLEAN column to `sys_user` table, update user management UI to assign role, restrict Development TreeView node visibility to Developer role
+-   **T113d - Create Parameter Prefix Maintenance Form**: New UserControl `Control_Settings_ParameterPrefixMaintenance` with DataGridView showing all procedures/parameters, prefix columns (detected vs override), confidence score column, Save/Reload buttons, and audit log panel
+-   **T123 update**: Parameter cache implements reload mechanism called from maintenance form, validates prefix changes before applying
+-   Settings Form TreeView includes gated Development category (visible only to Developer role users)
 
 ---
 
@@ -248,6 +262,7 @@
 **Context**: Q4 specified hybrid priority formula with "ComplianceDeficiency" factor. Need precise definition for T105 priority matrix calculation.
 
 **Options**:
+
 1. **Binary scoring**: Compliant (0) or Non-Compliant (100) based on OUT parameters only (simple but coarse)
 2. **Multi-factor scoring**: Weighted factors (missing OUT params 40%, wrong status codes 30%, no error handling 20%, parameter prefix issues 10%) (detailed but complex)
 3. **Violation count**: Count total violations (0-10 scale), normalize to 0-100 (straightforward)
@@ -264,6 +279,7 @@
 **Context**: T108-T111 require test data for integration tests. Production data may contain sensitive information (part numbers, customer info).
 
 **Options**:
+
 1. **Synthetic data generation**: Script generates random part numbers, locations, users (safe but unrealistic)
 2. **Production data anonymization**: Copy production, scramble sensitive fields (realistic but complex)
 3. **Manual test data creation**: Developers create small dataset manually (controlled but limited scale)
@@ -280,6 +296,7 @@
 **Context**: T125 must validate recursive prevention, but dropping log_error table in production unacceptable.
 
 **Options**:
+
 1. **Test database only**: Drop log_error in test database temporarily (safe but doesn't validate production behavior)
 2. **Mock implementation**: Unit test with mocked MySqlConnection throwing exceptions (fast but not integration test)
 3. **Temporary rename**: RENAME TABLE log_error TO log_error_temp during test, restore after (reversible in production)
@@ -296,6 +313,7 @@
 **Context**: FR-020 defines category-based thresholds (Query=500ms, Modification=1000ms, Batch=5000ms, Report=2000ms). Storage location affects runtime adjustability.
 
 **Options**:
+
 1. **Hardcoded constants**: Define in `Model_AppVariables.cs` as const fields (fastest but requires recompile to change)
 2. **appsettings.json**: Store in configuration file (adjustable without recompile but requires app restart)
 3. **Database configuration table**: `sys_configuration` table with key-value pairs (runtime adjustable, no restart)
@@ -312,6 +330,7 @@
 **Context**: T102 extracts procedures from production. File organization affects maintainability and deployment.
 
 **Options**:
+
 1. **Individual files**: One .sql file per procedure in domain folders (organized but many files)
 2. **Domain aggregation**: One file per domain (inv_inventory.sql, sys_user.sql) with all procedures (fewer files but large)
 3. **Single monolithic file**: All procedures in ALL_PROCEDURES.sql (simplest deployment but hard to navigate)
@@ -328,6 +347,7 @@
 **Context**: T108-T111 create 280 tests. Execution environment affects database access, configuration, and reporting.
 
 **Options**:
+
 1. **Local only**: Developers run tests on localhost test database (fast feedback but inconsistent environments)
 2. **CI/CD only**: Tests run in GitHub Actions/Azure DevOps pipeline (consistent but slower feedback)
 3. **Hybrid**: Developers run locally, CI/CD gates deployment (best of both but requires dual configuration)
@@ -344,6 +364,7 @@
 **Context**: T120 and T121 require backup validation before deployment. Thoroughness vs speed tradeoff.
 
 **Options**:
+
 1. **File size check only**: Verify backup file >1MB (fast but weak validation)
 2. **Procedure count validation**: Restore to temp database, count procedures, compare to production (moderate validation)
 3. **Full restore test**: Restore to temp database, run smoke tests, verify functionality (thorough but slow)
@@ -360,6 +381,7 @@
 **Context**: FR-011 requires explicit transactions for multi-step operations. T114 needs criteria to identify these procedures.
 
 **Options**:
+
 1. **Manual inspection**: Developer reviews each procedure, tags multi-step (accurate but time-consuming)
 2. **Pattern detection**: Scan for multiple INSERT/UPDATE/DELETE statements (automated but may miss complex logic)
 3. **Call graph analysis**: Trace procedures that call other procedures (detects indirect multi-step)
@@ -367,12 +389,13 @@
 
 **User Response**: **CSV generation with recommendations** (Option 4) - T103 audit must generate CSV file for EVERY stored procedure containing: (1) Procedure name, (2) Detected pattern (single-step, multi-step, batch, reporting), (3) Recommended transaction strategy (explicit, implicit, none), (4) Detection confidence (High/Medium/Low), (5) Rationale (why recommendation made based on code patterns), (6) **Correction column** (initially empty for developer review). Developer reviews CSV, fills correction column where automated detection wrong, returns corrected CSV as input to T114 refactoring. **Must be complete before first stored procedure refactor is complete** (gates T113).
 
-**Decision Impact**: 
-- T103 deliverable expanded: Audit produces `procedure-transaction-analysis.csv` alongside compliance report
-- CSV structure: `ProcedureName, DetectedPattern, RecommendedStrategy, Confidence, Rationale, DeveloperCorrection, RefactoringNotes`
-- New gate between T103 and T113: Developer review checkpoint requiring completed CSV with corrections
-- T114-T118 refactoring uses corrected CSV as authoritative source for transaction management decisions
-- T129 Documentation Update Matrix references CSV for procedure classification
+**Decision Impact**:
+
+-   T103 deliverable expanded: Audit produces `procedure-transaction-analysis.csv` alongside compliance report
+-   CSV structure: `ProcedureName, DetectedPattern, RecommendedStrategy, Confidence, Rationale, DeveloperCorrection, RefactoringNotes`
+-   New gate between T103 and T113: Developer review checkpoint requiring completed CSV with corrections
+-   T114-T118 refactoring uses corrected CSV as authoritative source for transaction management decisions
+-   T129 Documentation Update Matrix references CSV for procedure classification
 
 ---
 
@@ -381,6 +404,7 @@
 **Context**: Existing DAOs have mixed naming (GetByName, Get_ByName, GetInventoryByPartId, FetchUser). T113-T118 refactoring opportunity to standardize.
 
 **Options**:
+
 1. **Preserve existing names**: No renaming, maintain backward compatibility (safest but inconsistent)
 2. **PascalCase with descriptive verbs**: GetByName, AddInventory, UpdateUser (standard C# convention)
 3. **CRUD prefix convention**: CreateUser, ReadInventory, UpdatePart, DeleteTransaction (explicit CRUD)
@@ -397,6 +421,7 @@
 **Context**: FR-013 centralizes connection strings in configuration. Production credentials need protection.
 
 **Options**:
+
 1. **User Secrets**: ASP.NET Core User Secrets for development (dev-only, not applicable to WinForms)
 2. **Environment variables**: Read connection string from OS environment (deployment-specific but visible in process list)
 3. **Encrypted configuration**: Encrypt appsettings.json sections using DPAPI (secure but complex key management)
@@ -405,12 +430,13 @@
 
 **User Response**: **Current implementation unchanged** (Option 5) - Do NOT change existing credential management. Current system where users don't need to enter credentials on application startup works well. Helper_Database_Variables already handles connection string assembly securely using environment-specific configuration. No need to introduce additional complexity (environment variables, encryption, Key Vault) for credential management. Maintain status quo - existing approach sufficient for current deployment model.
 
-**Decision Impact**: 
-- FR-013 connection string centralization focuses on **code organization** not credential management changes
-- T013 refactoring consolidates scattered connection string assembly code into Helper_Database_Variables without changing underlying security model
-- No new tasks for credential encryption/Key Vault integration
-- Documentation clarifies that connection string centralization improves maintainability without altering credential protection approach
-- Current appsettings.json structure retained with existing credential storage pattern
+**Decision Impact**:
+
+-   FR-013 connection string centralization focuses on **code organization** not credential management changes
+-   T013 refactoring consolidates scattered connection string assembly code into Helper_Database_Variables without changing underlying security model
+-   No new tasks for credential encryption/Key Vault integration
+-   Documentation clarifies that connection string centralization improves maintainability without altering credential protection approach
+-   Current appsettings.json structure retained with existing credential storage pattern
 
 ---
 
@@ -419,12 +445,14 @@
 **Context**: T124 validates 100% Helper routing (no direct MySQL API usage). Tool choice affects accuracy and automation.
 
 **Options**:
+
 1. **Grep/ripgrep**: Simple text search for "new MySqlConnection", "new MySqlCommand" (fast but may miss dynamic usage)
 2. **Roslyn analyzers**: Custom C# code analyzer with IDE integration (accurate but requires development) - **Selected**
 3. **PowerShell script**: AST parsing with Get-Content and regex (scriptable and adequate accuracy)
 4. **SonarQube rules**: Configure code quality rules to flag violations (enterprise but requires infrastructure)
 
 **User Response**: **Roslyn analyzers** (Option 2) - Invest in custom Roslyn analyzer for accurate compile-time detection of direct MySQL API usage. Analyzer rules:
+
 1. Flag `new MySqlConnection()` outside Helper_Database_StoredProcedure.cs
 2. Flag `new MySqlCommand()` outside Helper classes
 3. Flag `MySqlDataAdapter`, `MySqlDataReader` outside Helper classes
@@ -432,12 +460,13 @@
 
 Benefits over PowerShell script: Real-time IDE feedback (red squiggles), prevents violations during development not just detection during validation, integrates with CI/CD build process, reduces false positives through semantic analysis.
 
-**Decision Impact**: 
-- New task **T124a - Develop Roslyn Analyzer**: Create custom analyzer package `MTM.CodeAnalysis.DatabaseAccess` with 4 diagnostic rules (2-3 hours development)
-- T124 becomes analyzer validation task: Run analyzer across codebase, generate compliance report, fix any violations
-- Analyzer deployed via NuGet package reference in .csproj file
-- CI/CD integration: Analyzer runs on every build, treats violations as warnings (non-blocking initially, error-level post-Phase 2.5)
-- Developer onboarding improved: New developers see violations immediately in IDE
+**Decision Impact**:
+
+-   New task **T124a - Develop Roslyn Analyzer**: Create custom analyzer package `MTM.CodeAnalysis.DatabaseAccess` with 4 diagnostic rules (2-3 hours development)
+-   T124 becomes analyzer validation task: Run analyzer across codebase, generate compliance report, fix any violations
+-   Analyzer deployed via NuGet package reference in .csproj file
+-   CI/CD integration: Analyzer runs on every build, treats violations as warnings (non-blocking initially, error-level post-Phase 2.5)
+-   Developer onboarding improved: New developers see violations immediately in IDE
 
 ---
 
@@ -446,6 +475,7 @@ Benefits over PowerShell script: Real-time IDE feedback (red squiggles), prevent
 **Context**: T121 deployment may encounter issues. Need clear criteria for rollback vs forward-fix decision.
 
 **Options**:
+
 1. **Zero tolerance**: Any error triggers immediate rollback (safest but may rollback for minor issues)
 2. **Critical errors only**: Rollback only for data integrity risks or crashes (pragmatic but judgment call)
 3. **Time-based**: Rollback if not resolved within 15 minutes (RTO enforcement)
@@ -459,29 +489,29 @@ Benefits over PowerShell script: Real-time IDE feedback (red squiggles), prevent
 
 ## Summary of Additional Decisions
 
-| Question | Decision | Rationale |
-|----------|----------|-----------|
-| Q11: Schema Evolution | Accept drift and re-audit | Allows emergency hotfixes, fresh audit before deployment |
-| Q12: Rollback Testing | Audit table inspection | Leverages existing audit trail efficiently |
-| Q13: Prefix Conventions | Development maintenance form (Developer role) | UI-based management, requires Developer role access |
-| Q14: Compliance Scoring | Multi-factor weighted scoring | Detailed prioritization of violations |
-| Q15: Test Data | Seed data scripts | Repeatable, safe, version-controlled |
-| Q16: File Fallback Testing | Test DB with manual prod validation | Safe automation + documented prod verification |
-| Q17: Threshold Storage | appsettings.json | Adjustable without recompile, restart acceptable |
-| Q18: Procedure Files | Individual files by domain | Git-friendly, code review granularity |
-| Q19: Test Execution | Hybrid local + CI/CD | Fast feedback + consistent validation |
-| Q20: Backup Validation | Count for test, full for prod | Balanced speed vs thoroughness |
-| Q21: Multi-Step Detection | CSV generation with recommendations | Structured documentation, developer review checkpoint |
-| Q22: DAO Naming | PascalCase + Async suffix | Standard C# convention, clear intent |
-| Q23: Credential Security | Current implementation unchanged | Existing approach sufficient, no changes needed |
-| Q24: Static Analysis Tool | Roslyn analyzers | Real-time IDE feedback, accurate semantic analysis |
-| Q25: Rollback Criteria | Smoke test gated + 15min window | Objective criteria, time-bounded investigation |
+| Question                   | Decision                                      | Rationale                                                |
+| -------------------------- | --------------------------------------------- | -------------------------------------------------------- |
+| Q11: Schema Evolution      | Accept drift and re-audit                     | Allows emergency hotfixes, fresh audit before deployment |
+| Q12: Rollback Testing      | Audit table inspection                        | Leverages existing audit trail efficiently               |
+| Q13: Prefix Conventions    | Development maintenance form (Developer role) | UI-based management, requires Developer role access      |
+| Q14: Compliance Scoring    | Multi-factor weighted scoring                 | Detailed prioritization of violations                    |
+| Q15: Test Data             | Seed data scripts                             | Repeatable, safe, version-controlled                     |
+| Q16: File Fallback Testing | Test DB with manual prod validation           | Safe automation + documented prod verification           |
+| Q17: Threshold Storage     | appsettings.json                              | Adjustable without recompile, restart acceptable         |
+| Q18: Procedure Files       | Individual files by domain                    | Git-friendly, code review granularity                    |
+| Q19: Test Execution        | Hybrid local + CI/CD                          | Fast feedback + consistent validation                    |
+| Q20: Backup Validation     | Count for test, full for prod                 | Balanced speed vs thoroughness                           |
+| Q21: Multi-Step Detection  | CSV generation with recommendations           | Structured documentation, developer review checkpoint    |
+| Q22: DAO Naming            | PascalCase + Async suffix                     | Standard C# convention, clear intent                     |
+| Q23: Credential Security   | Current implementation unchanged              | Existing approach sufficient, no changes needed          |
+| Q24: Static Analysis Tool  | Roslyn analyzers                              | Real-time IDE feedback, accurate semantic analysis       |
+| Q25: Rollback Criteria     | Smoke test gated + 15min window               | Objective criteria, time-bounded investigation           |
 
 ---
 
 ## Open Questions
 
-*None* - All clarifications resolved during Sessions 1-2 (2025-10-15).
+_None_ - All clarifications resolved during Sessions 1-2 (2025-10-15).
 
 ---
 
@@ -492,12 +522,14 @@ Benefits over PowerShell script: Real-time IDE feedback (red squiggles), prevent
 **Context**: Q6 updated to require verbose test output on failure. Need to define exact output format for consistency.
 
 **Options**:
+
 1. **Exception-only**: Just exception message and stack trace (minimal)
 2. **Parameters-included**: Exception + input parameters used (good for reproduction)
 3. **Comprehensive diagnostic**: Exception + parameters + expected vs actual + execution time + database state snapshot (thorough)
 4. **Custom assertion messages**: Hand-crafted messages per test with context-specific details (flexible but inconsistent)
 
 **User Response**: **Comprehensive diagnostic** (Option 3) - Every integration test failure must output:
+
 1. Exception message and full stack trace
 2. All input parameters (name/value pairs) passed to stored procedure
 3. Expected output values (status code, specific data rows)
@@ -517,27 +549,30 @@ Format as structured JSON block for easy parsing. Enables rapid diagnosis withou
 **Context**: Q13 introduced Developer role for parameter prefix maintenance form. Need to define complete permission scope.
 
 **Options**:
+
 1. **Single-purpose**: Only access to Parameter Prefix Maintenance form (narrowest scope)
 2. **Development tools category**: Access to all Development TreeView tools (logging viewer, cache management, diagnostic tools)
 3. **Admin+Debug features**: All Admin permissions plus debug/diagnostic features (broader scope)
 4. **Configurable permissions**: Admin can grant specific developer permissions per-user (most flexible)
 
 **User Response**: **Development tools category** (Option 2) - Developer role grants access to entire Development TreeView category including:
-- Parameter Prefix Maintenance (primary tool from Q13)
-- Performance baseline measurement tools (future)
-- Database connection diagnostics
-- Stored procedure call history viewer
-- Log file viewer with filtering
-- Cache inspection and refresh tools
+
+-   Parameter Prefix Maintenance (primary tool from Q13)
+-   Performance baseline measurement tools (future)
+-   Database connection diagnostics
+-   Stored procedure call history viewer
+-   Log file viewer with filtering
+-   Cache inspection and refresh tools
 
 Role hierarchy: Basic User < Admin < Developer. Developer inherits all Admin permissions plus Development tools. Cannot be granted independently - user must be Admin first, then granted Developer flag. Prevents accidental exposure of diagnostic tools to regular users.
 
 **Decision Impact**: T113c Developer role implementation includes:
-- Database flag `IsDeveloper` BOOLEAN (requires `IsAdmin = TRUE` as prerequisite)
-- Settings Form TreeView "Development" node visibility check: `CurrentUser.IsAdmin && CurrentUser.IsDeveloper`
-- User management form updated with Developer checkbox (enabled only if Admin checked)
-- Role validation in Control base constructors for all Development tools
-- Documentation updated with role permission matrix
+
+-   Database flag `IsDeveloper` BOOLEAN (requires `IsAdmin = TRUE` as prerequisite)
+-   Settings Form TreeView "Development" node visibility check: `CurrentUser.IsAdmin && CurrentUser.IsDeveloper`
+-   User management form updated with Developer checkbox (enabled only if Admin checked)
+-   Role validation in Control base constructors for all Development tools
+-   Documentation updated with role permission matrix
 
 ---
 
@@ -546,6 +581,7 @@ Role hierarchy: Basic User < Admin < Developer. Developer inherits all Admin per
 **Context**: Q10 changed documentation approach to concurrent updates with checklist. Need to define checklist structure.
 
 **Options**:
+
 1. **Simple checkbox list**: Flat list of documentation items per task (easy but lacks context)
 2. **Spreadsheet matrix**: Rows=tasks, Columns=doc types, Cells=checkboxes (visual but manual maintenance)
 3. **Markdown table with links**: Task ID → Doc types with file path links (version-controllable and navigable)
@@ -554,10 +590,10 @@ Role hierarchy: Basic User < Admin < Developer. Developer inherits all Admin per
 **User Response**: **Markdown table with links** (Option 3) - Create `Documentation-Update-Matrix.md` in 003-database-layer-refresh folder with structure:
 
 ```markdown
-| Task ID | Procedure Name | Header Comments | DAO XML Docs | Standards Update | Quickstart Update | Status |
-|---------|----------------|-----------------|--------------|------------------|-------------------|--------|
-| T113-1  | inv_inventory_Add | [Link](../Database/UpdatedStoredProcedures/Inventory/inv_inventory_Add.sql) | [Link](../Data/Dao_Inventory.cs#L45) | N/A | N/A | ⬜ Not Started |
-| T113-2  | inv_inventory_Update | [Link](...) | [Link](...) | Required | N/A | ⬜ Not Started |
+| Task ID | Procedure Name       | Header Comments                                                             | DAO XML Docs                         | Standards Update | Quickstart Update | Status         |
+| ------- | -------------------- | --------------------------------------------------------------------------- | ------------------------------------ | ---------------- | ----------------- | -------------- |
+| T113-1  | inv_inventory_Add    | [Link](../Database/UpdatedStoredProcedures/Inventory/inv_inventory_Add.sql) | [Link](../Data/Dao_Inventory.cs#L45) | N/A              | N/A               | ⬜ Not Started |
+| T113-2  | inv_inventory_Update | [Link](...)                                                                 | [Link](...)                          | Required         | N/A               | ⬜ Not Started |
 ```
 
 Status values: ⬜ Not Started, 🔄 In Progress, ✅ Complete, ⚠️ Needs Review
@@ -573,20 +609,23 @@ Each cell contains file path link (clickable in VS Code/GitHub). "Required"/"N/A
 **Context**: Q11 changed to accept drift with re-audit. Need process for reconciling baseline audit vs pre-deployment audit differences.
 
 **Options**:
+
 1. **Manual merge**: Developer reviews diff, manually integrates changes into refactored procedures (accurate but time-consuming)
 2. **Automated three-way merge**: Script compares baseline, refactored, and production versions, flags conflicts (faster but may miss semantic conflicts)
 3. **Override with production**: If production changed, use production version, discard refactored version (safest but loses refactoring work)
 4. **Staged reconciliation**: Tag production changes as "hotfix", refactor separately, merge last (organized but adds phase)
 
 **User Response**: **Staged reconciliation** (Option 4) - T119b re-audit produces drift report identifying procedures added/modified after baseline. Developer categorizes each drifted procedure:
-- **Category A - Independent hotfix**: Production change unrelated to Phase 2.5 refactoring (keep production version as-is, apply Phase 2.5 standards separately)
-- **Category B - Conflicting change**: Production change affects same procedure being refactored (manual three-way merge required)
-- **Category C - New procedure**: Procedure added to production during Phase 2.5 (refactor according to standards before deployment)
+
+-   **Category A - Independent hotfix**: Production change unrelated to Phase 2.5 refactoring (keep production version as-is, apply Phase 2.5 standards separately)
+-   **Category B - Conflicting change**: Production change affects same procedure being refactored (manual three-way merge required)
+-   **Category C - New procedure**: Procedure added to production during Phase 2.5 (refactor according to standards before deployment)
 
 Each category gets separate task:
-- **T119c - Refactor Category A procedures**: Apply standards to hotfixes (preserve business logic changes)
-- **T119d - Merge Category B conflicts**: Manual merge with conflict resolution documentation
-- **T119e - Refactor Category C procedures**: New procedures get full Phase 2.5 treatment
+
+-   **T119c - Refactor Category A procedures**: Apply standards to hotfixes (preserve business logic changes)
+-   **T119d - Merge Category B conflicts**: Manual merge with conflict resolution documentation
+-   **T119e - Refactor Category C procedures**: New procedures get full Phase 2.5 treatment
 
 All three complete before T120 test deployment. Reconciliation report documents all drift handling decisions.
 
@@ -599,6 +638,7 @@ All three complete before T120 test deployment. Reconciliation report documents 
 **Context**: Q21 requires CSV generation with correction column. Need workflow for developer review and correction process.
 
 **Options**:
+
 1. **Email review**: Send CSV via email, developer returns corrections (informal but simple)
 2. **Spreadsheet collaboration**: Share Google Sheet or Excel Online for real-time editing (collaborative but requires external tool)
 3. **Git-based review**: Commit CSV to Git, developer creates PR with corrections, merge after review (version-controlled)
@@ -609,8 +649,8 @@ All three complete before T120 test deployment. Reconciliation report documents 
 1. **T103 completion**: Developer commits `procedure-transaction-analysis.csv` to `Database/AnalysisReports/` folder
 2. **Review assignment**: Tech lead assigns procedure domains to developers (e.g., Developer A reviews Inventory procedures, Developer B reviews User procedures)
 3. **Correction process**: Developers checkout branch, open CSV in Excel/VS Code, fill `DeveloperCorrection` column with corrections:
-   - If detection correct: Leave blank or enter "✓ Confirmed"
-   - If detection wrong: Enter corrected value + rationale (e.g., "Multi-step: Also updates transaction log")
+    - If detection correct: Leave blank or enter "✓ Confirmed"
+    - If detection wrong: Enter corrected value + rationale (e.g., "Multi-step: Also updates transaction log")
 4. **Commit corrections**: Developers commit corrected CSV rows, create PR
 5. **Peer review**: Second developer reviews corrections, approves PR
 6. **Gate T113**: T113 cannot start until CSV PR merged and all procedures have reviewed correction status
@@ -626,6 +666,7 @@ Leverage existing Git workflow, provides audit trail of all corrections, peer re
 **Context**: Q24 selected Roslyn analyzer. Need to decide diagnostic severity levels.
 
 **Options**:
+
 1. **Errors always**: All violations block build (strictest enforcement)
 2. **Warnings during Phase 2.5, errors after**: Gradual enforcement to allow refactoring (balanced)
 3. **Configurable per-project**: .editorconfig controls severity (flexible but inconsistent)
@@ -634,14 +675,16 @@ Leverage existing Git workflow, provides audit trail of all corrections, peer re
 **User Response**: **Warnings during Phase 2.5, errors after** (Option 2) - Phased enforcement approach:
 
 **Phase 2.5 (T124a-T132)**: Diagnostics emit **Warnings**
-- Allows developers to see violations without blocking builds during active refactoring
-- Existing violations visible but don't prevent compilation/testing
-- T124 validation generates warning report, creates remediation tasks
+
+-   Allows developers to see violations without blocking builds during active refactoring
+-   Existing violations visible but don't prevent compilation/testing
+-   T124 validation generates warning report, creates remediation tasks
 
 **Post-Phase 2.5 (T133 onwards)**: Diagnostics emit **Errors**
-- After T124 validation confirms zero violations, upgrade severity to Error
-- New violations block build, prevent regression
-- CI/CD pipeline fails on any direct MySQL API usage outside Helpers
+
+-   After T124 validation confirms zero violations, upgrade severity to Error
+-   New violations block build, prevent regression
+-   CI/CD pipeline fails on any direct MySQL API usage outside Helpers
 
 Configuration via analyzer package version: v1.0.0 (warnings) during Phase 2.5, v2.0.0 (errors) post-completion. .csproj file updated in T124 completion task.
 
@@ -654,6 +697,7 @@ Configuration via analyzer package version: v1.0.0 (warnings) during Phase 2.5, 
 **Context**: Q13 introduced maintenance form for parameter prefix management. Need storage mechanism for user modifications.
 
 **Options**:
+
 1. **Database table**: `sys_parameter_prefix_override` table (persistent, multi-user access)
 2. **JSON configuration file**: `parameter-prefix-overrides.json` (simple, version-controllable)
 3. **In-memory cache only**: No persistence, reloads from schema on restart (no storage needed)
@@ -662,6 +706,7 @@ Configuration via analyzer package version: v1.0.0 (warnings) during Phase 2.5, 
 **User Response**: **Database table** (Option 1) - Persistent storage in database for multi-user environment:
 
 Table structure:
+
 ```sql
 CREATE TABLE sys_parameter_prefix_override (
     OverrideID INT AUTO_INCREMENT PRIMARY KEY,
@@ -688,15 +733,15 @@ Cache loads overrides from table at startup, maintenance form updates table dire
 
 ## Summary of Session 3 Decisions
 
-| Question | Decision | Rationale |
-|----------|----------|-----------|
-| Q26: Verbose Test Output | Comprehensive diagnostic (JSON format) | Enables rapid diagnosis without re-running tests |
-| Q27: Developer Role Scope | Development tools category (inherits Admin) | Complete diagnostic toolset, hierarchical permissions |
-| Q28: Documentation Matrix | Markdown table with links | Version-controllable, navigable, single source of truth |
-| Q29: Drift Reconciliation | Staged reconciliation (categorize + separate tasks) | Organized handling of hotfixes, new procedures, conflicts |
-| Q30: CSV Correction Workflow | Git-based review with PR process | Audit trail, peer review, leverages existing workflow |
-| Q31: Analyzer Severity | Warnings during Phase 2.5, errors after | Gradual enforcement, prevents regression post-completion |
-| Q32: Prefix Override Storage | Database table with audit trail | Persistent, multi-user, tracks change history |
+| Question                     | Decision                                            | Rationale                                                 |
+| ---------------------------- | --------------------------------------------------- | --------------------------------------------------------- |
+| Q26: Verbose Test Output     | Comprehensive diagnostic (JSON format)              | Enables rapid diagnosis without re-running tests          |
+| Q27: Developer Role Scope    | Development tools category (inherits Admin)         | Complete diagnostic toolset, hierarchical permissions     |
+| Q28: Documentation Matrix    | Markdown table with links                           | Version-controllable, navigable, single source of truth   |
+| Q29: Drift Reconciliation    | Staged reconciliation (categorize + separate tasks) | Organized handling of hotfixes, new procedures, conflicts |
+| Q30: CSV Correction Workflow | Git-based review with PR process                    | Audit trail, peer review, leverages existing workflow     |
+| Q31: Analyzer Severity       | Warnings during Phase 2.5, errors after             | Gradual enforcement, prevents regression post-completion  |
+| Q32: Prefix Override Storage | Database table with audit trail                     | Persistent, multi-user, tracks change history             |
 
 ---
 

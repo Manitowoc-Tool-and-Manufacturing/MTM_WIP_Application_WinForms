@@ -286,10 +286,10 @@ oldString: """
     {
         // Arrange
         var testData = "data";
-        
+
         // Act
         var result = await Dao_Something.Method();
-        
+
         // Assert
 """
 ```
@@ -303,7 +303,7 @@ oldString: """
 var connectionString = GetTestConnectionString();
 
 // Points to: mtm_wip_application_winforms_test (Debug)
-//         or mtm_wip_application (Release - production)
+//         or MTM_WIP_Application_Winforms (Release - production)
 ```
 
 ### Test Data Cleanup
@@ -314,12 +314,12 @@ public async Task CreateItem_ValidData_CreatesItem()
 {
     // Arrange
     var testItem = "Test_" + Guid.NewGuid().ToString().Substring(0, 8);
-    
+
     try
     {
         // Act
         var result = await Dao_Item.CreateItemAsync(testItem, ...);
-        
+
         // Assert
         Assert.IsTrue(result.IsSuccess);
     }
@@ -337,7 +337,7 @@ public async Task CreateItem_ValidData_CreatesItem()
 
 ```csharp
 // Always check IsSuccess first
-Assert.IsTrue(result.IsSuccess, 
+Assert.IsTrue(result.IsSuccess,
     $"Expected success, got failure: {result.ErrorMessage}");
 
 // Then validate payload
@@ -348,9 +348,9 @@ Assert.IsNotNull(result.Data, "Expected non-null data");
 
 ```csharp
 // For expected failures
-Assert.IsFalse(result.IsSuccess, 
+Assert.IsFalse(result.IsSuccess,
     "Expected failure with invalid input");
-Assert.IsNotNull(result.ErrorMessage, 
+Assert.IsNotNull(result.ErrorMessage,
     "Expected error message");
 ```
 
@@ -359,7 +359,7 @@ Assert.IsNotNull(result.ErrorMessage,
 ```csharp
 // DataTable results
 Assert.IsNotNull(result.Data, "Expected DataTable");
-Assert.IsTrue(result.Data.Rows.Count > 0, 
+Assert.IsTrue(result.Data.Rows.Count > 0,
     "Expected at least one row");
 
 // List results
@@ -396,7 +396,7 @@ public void GetData_Execution_ReturnsData()
 
 1. **List methods**:
    ```bash
-   grep_search(isRegexp=true, 
+   grep_search(isRegexp=true,
                includePattern="Data/Dao_Target.cs",
                query="(public|internal).*Task.*\\(")
    ```
@@ -480,7 +480,7 @@ dotnet test --filter "FullyQualifiedName~Dao_Inventory_Tests.GetAllInventory"
 
 ```bash
 # Always build before running tests
-dotnet build MTM_Inventory_Application.csproj -c Debug
+dotnet build MTM_WIP_Application_Winforms.csproj -c Debug
 
 # Check for specific file errors
 get_errors(filePaths=["Tests/Integration/Dao_Something_Tests.cs"])

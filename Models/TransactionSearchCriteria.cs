@@ -1,4 +1,4 @@
-namespace MTM_Inventory_Application.Models;
+namespace MTM_WIP_Application_Winforms.Models;
 
 /// <summary>
 /// Encapsulates search criteria for transaction queries with validation methods.

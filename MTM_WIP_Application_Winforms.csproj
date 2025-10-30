@@ -42,7 +42,7 @@
     </ItemGroup>
 
     <ItemGroup>
-        <CompilerVisibleProperty Include="C:\Users\jkoll\source\repos\MTM_WIP_Application\PlantUMLFiles" />
+        <CompilerVisibleProperty Include="C:\Users\jkoll\source\repos\MTM_WIP_Application_Winforms\PlantUMLFiles" />
     </ItemGroup>
 
     <PropertyGroup>
@@ -53,7 +53,7 @@
         <Product>Manitowoc Tool and Manufacturing WIP Application</Product>
         <Copyright>Manitowoc Tool and Manufacturing</Copyright>
         <PackageIcon>MTM Logo.png</PackageIcon>
-        <RepositoryUrl>https://github.com/Dorotel/MTM_WIP_Application</RepositoryUrl>
+        <RepositoryUrl>https://github.com/Dorotel/MTM_WIP_Application_Winforms</RepositoryUrl>
         <RepositoryType>git</RepositoryType>
     </PropertyGroup>
 

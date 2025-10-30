@@ -1,13 +1,13 @@
 -- Seed Test Data for error_reports table
 -- Purpose: Add diverse error reports for filter testing
 -- Created: 2025-10-26
--- Database: mtm_wip_application_winforms_test (or mtm_wip_application)
+-- Database: mtm_wip_application_winforms_test (or MTM_WIP_Application_Winforms)
 
 USE mtm_wip_application_winforms_test;
 
 -- Insert 50 diverse error reports spanning different dates, users, machines, statuses, and error types
 
-INSERT INTO error_reports 
+INSERT INTO error_reports
 (ReportDate, UserName, MachineName, AppVersion, ErrorType, ErrorSummary, UserNotes, TechnicalDetails, CallStack, Status, ReviewedBy, ReviewedDate, DeveloperNotes)
 VALUES
 
@@ -75,7 +75,7 @@ VALUES
 ('2025-10-02 11:30:45', 'MIKEC', 'SHIPPING-PC-01', '5.1.7', 'ValidationError', 'Shipping address incomplete', 'Required address fields missing', 'System.ValidationException: Address validation failed', '(No data provided)', 'Reviewed', 'JOHNK', '2025-10-02 12:00:00', 'Added address field validation to UI');
 
 -- Verify the inserts
-SELECT 
+SELECT
     COUNT(*) as TotalReports,
     COUNT(CASE WHEN Status = 'New' THEN 1 END) as NewCount,
     COUNT(CASE WHEN Status = 'Reviewed' THEN 1 END) as ReviewedCount,
@@ -88,7 +88,7 @@ FROM error_reports;
 
 -- Show sample of different filters
 SELECT 'Recent New Reports (Last 7 days)' as TestCase, COUNT(*) as Count
-FROM error_reports 
+FROM error_reports
 WHERE Status = 'New' AND ReportDate >= DATE_SUB(NOW(), INTERVAL 7 DAY)
 UNION ALL
 SELECT 'JOHNK Reports', COUNT(*)
@@ -101,7 +101,7 @@ SELECT 'DatabaseError Type', COUNT(*)
 FROM error_reports WHERE ErrorType = 'DatabaseError'
 UNION ALL
 SELECT 'Contains "database" in text', COUNT(*)
-FROM error_reports 
-WHERE ErrorSummary LIKE '%database%' 
-   OR UserNotes LIKE '%database%' 
+FROM error_reports
+WHERE ErrorSummary LIKE '%database%'
+   OR UserNotes LIKE '%database%'
    OR TechnicalDetails LIKE '%database%';

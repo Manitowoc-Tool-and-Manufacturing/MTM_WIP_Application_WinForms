@@ -1,7 +1,7 @@
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
-namespace MTM_Inventory_Application.Core;
+namespace MTM_WIP_Application_Winforms.Core;
 
 /// <summary>
 /// JSON converter for nullable Color types
@@ -29,10 +29,10 @@ public class JsonColorConverter : JsonConverter<Color?>
 
             var colorString = reader.GetString();
             if (string.IsNullOrWhiteSpace(colorString)) return null;
-            
+
             if (colorString.Equals("Transparent", StringComparison.OrdinalIgnoreCase))
                 return Color.Transparent;
-            
+
             // Validate color string before parsing to prevent MySql.Data NullReferenceException
             if (!colorString.StartsWith("#") && !colorString.StartsWith("rgb", StringComparison.OrdinalIgnoreCase))
             {
@@ -46,7 +46,7 @@ public class JsonColorConverter : JsonConverter<Color?>
                     return null;
                 }
             }
-            
+
             return ColorTranslator.FromHtml(colorString);
         }
         catch (Exception ex)

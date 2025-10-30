@@ -139,7 +139,7 @@ specs/002-comprehensive-database-layer/
 ### Source Code (repository root)
 
 ```
-MTM_Inventory_Application/
+MTM_WIP_Application_Winforms/
 ├── Data/                           # DAO classes (PRIMARY REFACTOR TARGET)
 │   ├── Dao_Inventory.cs            # Inventory operations (transfers, adds, removes)
 │   ├── Dao_User.cs                 # User authentication and management

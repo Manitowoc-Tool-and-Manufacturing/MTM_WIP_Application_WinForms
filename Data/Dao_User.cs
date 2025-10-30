@@ -1,13 +1,13 @@
 using System.Data;
 using System.Diagnostics;
 using System.Text.Json;
-using MTM_Inventory_Application.Helpers;
-using MTM_Inventory_Application.Logging;
-using MTM_Inventory_Application.Models;
-using MTM_Inventory_Application.Services;
+using MTM_WIP_Application_Winforms.Helpers;
+using MTM_WIP_Application_Winforms.Logging;
+using MTM_WIP_Application_Winforms.Models;
+using MTM_WIP_Application_Winforms.Services;
 using MySql.Data.MySqlClient;
 
-namespace MTM_Inventory_Application.Data;
+namespace MTM_WIP_Application_Winforms.Data;
 
 #region Dao_User
 
@@ -27,11 +27,11 @@ internal static class Dao_User
     internal static async Task<DaoResult<string>> GetLastShownVersionAsync(string user)
     {
         Service_DebugTracer.TraceMethodEntry(new Dictionary<string, object> { ["user"] = user }, controlName: "Dao_User");
-        
+
         try
         {
             var result = await GetSettingsJsonInternalAsync("LastShownVersion", user);
-            
+
             Service_DebugTracer.TraceMethodExit(result, controlName: "Dao_User");
             return DaoResult<string>.Success(result, $"Retrieved LastShownVersion for user {user}");
         }
@@ -52,11 +52,11 @@ internal static class Dao_User
     internal static async Task<DaoResult> SetLastShownVersionAsync(string user, string value)
     {
         Service_DebugTracer.TraceMethodEntry(new Dictionary<string, object> { ["user"] = user, ["value"] = value }, controlName: "Dao_User");
-        
+
         try
         {
             await SetUserSettingInternalAsync("LastShownVersion", user, value);
-            
+
             Service_DebugTracer.TraceMethodExit(controlName: "Dao_User");
             return DaoResult.Success($"Set LastShownVersion to {value} for user {user}");
         }
@@ -76,11 +76,11 @@ internal static class Dao_User
     internal static async Task<DaoResult<string>> GetHideChangeLogAsync(string user)
     {
         Service_DebugTracer.TraceMethodEntry(new Dictionary<string, object> { ["user"] = user }, controlName: "Dao_User");
-        
+
         try
         {
             var result = await GetSettingsJsonInternalAsync("HideChangeLog", user);
-            
+
             Service_DebugTracer.TraceMethodExit(result, controlName: "Dao_User");
             return DaoResult<string>.Success(result, $"Retrieved HideChangeLog for user {user}");
         }
@@ -101,11 +101,11 @@ internal static class Dao_User
     internal static async Task<DaoResult> SetHideChangeLogAsync(string user, string value)
     {
         Service_DebugTracer.TraceMethodEntry(new Dictionary<string, object> { ["user"] = user, ["value"] = value }, controlName: "Dao_User");
-        
+
         try
         {
             await SetUserSettingInternalAsync("HideChangeLog", user, value);
-            
+
             Service_DebugTracer.TraceMethodExit(controlName: "Dao_User");
             return DaoResult.Success($"Set HideChangeLog to {value} for user {user}");
         }
@@ -125,11 +125,11 @@ internal static class Dao_User
     internal static async Task<DaoResult<string?>> GetThemeNameAsync(string user)
     {
         Service_DebugTracer.TraceMethodEntry(new Dictionary<string, object> { ["user"] = user }, controlName: "Dao_User");
-        
+
         try
         {
             var result = await GetSettingsJsonInternalAsync("Theme_Name", user);
-            
+
             Service_DebugTracer.TraceMethodExit(result, controlName: "Dao_User");
             return DaoResult<string?>.Success(result, $"Retrieved Theme_Name for user {user}");
         }
@@ -149,12 +149,12 @@ internal static class Dao_User
     internal static async Task<DaoResult<int?>> GetThemeFontSizeAsync(string user)
     {
         Service_DebugTracer.TraceMethodEntry(new Dictionary<string, object> { ["user"] = user }, controlName: "Dao_User");
-        
+
         try
         {
             string str = await GetSettingsJsonInternalAsync("Theme_FontSize", user);
             int? result = int.TryParse(str, out int val) ? val : null;
-            
+
             Service_DebugTracer.TraceMethodExit(result, controlName: "Dao_User");
             return DaoResult<int?>.Success(result, $"Retrieved Theme_FontSize for user {user}");
         }
@@ -162,7 +162,7 @@ internal static class Dao_User
         {
             LoggingUtility.LogDatabaseError(ex);
             LoggingUtility.Log($"GetThemeFontSizeAsync failed with exception: {ex.Message}");
-            
+
             Service_DebugTracer.TraceMethodExit(null, controlName: "Dao_User");
             return DaoResult<int?>.Failure($"Error retrieving Theme_FontSize for user {user}", ex);
         }
@@ -177,11 +177,11 @@ internal static class Dao_User
     internal static async Task<DaoResult> SetThemeFontSizeAsync(string user, int value)
     {
         Service_DebugTracer.TraceMethodEntry(new Dictionary<string, object> { ["user"] = user, ["value"] = value }, controlName: "Dao_User");
-        
+
         try
         {
             await SetUserSettingInternalAsync("Theme_FontSize", user, value.ToString());
-            
+
             Service_DebugTracer.TraceMethodExit(controlName: "Dao_User");
             return DaoResult.Success($"Set Theme_FontSize to {value} for user {user}");
         }
@@ -201,12 +201,12 @@ internal static class Dao_User
     internal static async Task<DaoResult<string>> GetVisualUserNameAsync(string user)
     {
         Service_DebugTracer.TraceMethodEntry(new Dictionary<string, object> { ["user"] = user }, controlName: "Dao_User");
-        
+
         try
         {
             string value = await GetSettingsJsonInternalAsync("VisualUserName", user);
             Model_Users.VisualUserName = value;
-            
+
             Service_DebugTracer.TraceMethodExit(Model_Users.VisualUserName, controlName: "Dao_User");
             return DaoResult<string>.Success(Model_Users.VisualUserName, $"Retrieved VisualUserName for user {user}");
         }
@@ -227,11 +227,11 @@ internal static class Dao_User
     internal static async Task<DaoResult> SetVisualUserNameAsync(string user, string value)
     {
         Service_DebugTracer.TraceMethodEntry(new Dictionary<string, object> { ["user"] = user, ["value"] = value }, controlName: "Dao_User");
-        
+
         try
         {
             await SetUserSettingInternalAsync("VisualUserName", user, value);
-            
+
             Service_DebugTracer.TraceMethodExit(controlName: "Dao_User");
             return DaoResult.Success($"Set VisualUserName to {value} for user {user}");
         }
@@ -251,12 +251,12 @@ internal static class Dao_User
     internal static async Task<DaoResult<string>> GetVisualPasswordAsync(string user)
     {
         Service_DebugTracer.TraceMethodEntry(new Dictionary<string, object> { ["user"] = user }, controlName: "Dao_User");
-        
+
         try
         {
             string value = await GetSettingsJsonInternalAsync("VisualPassword", user);
             Model_Users.VisualPassword = value;
-            
+
             Service_DebugTracer.TraceMethodExit(Model_Users.VisualPassword, controlName: "Dao_User");
             return DaoResult<string>.Success(Model_Users.VisualPassword, $"Retrieved VisualPassword for user {user}");
         }
@@ -277,11 +277,11 @@ internal static class Dao_User
     internal static async Task<DaoResult> SetVisualPasswordAsync(string user, string value)
     {
         Service_DebugTracer.TraceMethodEntry(new Dictionary<string, object> { ["user"] = user, ["value"] = value }, controlName: "Dao_User");
-        
+
         try
         {
             await SetUserSettingInternalAsync("VisualPassword", user, value);
-            
+
             Service_DebugTracer.TraceMethodExit(controlName: "Dao_User");
             return DaoResult.Success($"Set VisualPassword for user {user}");
         }
@@ -301,12 +301,12 @@ internal static class Dao_User
     internal static async Task<DaoResult<string>> GetWipServerAddressAsync(string user)
     {
         Service_DebugTracer.TraceMethodEntry(new Dictionary<string, object> { ["user"] = user }, controlName: "Dao_User");
-        
+
         try
         {
             string value = await GetSettingsJsonInternalAsync("WipServerAddress", user);
             Model_Users.WipServerAddress = value;
-            
+
             Service_DebugTracer.TraceMethodExit(Model_Users.WipServerAddress, controlName: "Dao_User");
             return DaoResult<string>.Success(Model_Users.WipServerAddress, $"Retrieved WipServerAddress for user {user}");
         }
@@ -327,11 +327,11 @@ internal static class Dao_User
     internal static async Task<DaoResult> SetWipServerAddressAsync(string user, string value)
     {
         Service_DebugTracer.TraceMethodEntry(new Dictionary<string, object> { ["user"] = user, ["value"] = value }, controlName: "Dao_User");
-        
+
         try
         {
             await SetUserSettingInternalAsync("WipServerAddress", user, value);
-            
+
             Service_DebugTracer.TraceMethodExit(controlName: "Dao_User");
             return DaoResult.Success($"Set WipServerAddress to {value} for user {user}");
         }
@@ -353,12 +353,12 @@ internal static class Dao_User
     internal static async Task<DaoResult<string>> GetDatabaseAsync(string user)
     {
         Service_DebugTracer.TraceMethodEntry(new Dictionary<string, object> { ["user"] = user }, controlName: "Dao_User");
-        
+
         try
         {
             string value = await GetSettingsJsonInternalAsync("WIPDatabase", user);
             Model_Users.Database = value;
-            
+
             Service_DebugTracer.TraceMethodExit(Model_Users.Database, controlName: "Dao_User");
             return DaoResult<string>.Success(Model_Users.Database, $"Retrieved WIPDatabase for user {user}");
         }
@@ -381,12 +381,12 @@ internal static class Dao_User
         MySqlTransaction? transaction = null)
     {
         Service_DebugTracer.TraceMethodEntry(new Dictionary<string, object> { ["user"] = user, ["value"] = value }, controlName: "Dao_User");
-        
+
         try
         {
             Model_Users.Database = value;
             await SetUserSettingInternalAsync("WIPDatabase", user, value);
-            
+
             Service_DebugTracer.TraceMethodExit(controlName: "Dao_User");
             return DaoResult.Success($"Set WIPDatabase to {value} for user {user}");
         }
@@ -410,12 +410,12 @@ internal static class Dao_User
     internal static async Task<DaoResult<string>> GetWipServerPortAsync(string user)
     {
         Service_DebugTracer.TraceMethodEntry(new Dictionary<string, object> { ["user"] = user }, controlName: "Dao_User");
-        
+
         try
         {
             string value = await GetSettingsJsonInternalAsync("WipServerPort", user);
             Model_Users.WipServerPort = value;
-            
+
             Service_DebugTracer.TraceMethodExit(Model_Users.WipServerPort, controlName: "Dao_User");
             return DaoResult<string>.Success(Model_Users.WipServerPort, $"Retrieved WipServerPort for user {user}");
         }
@@ -438,12 +438,12 @@ internal static class Dao_User
         MySqlTransaction? transaction = null)
     {
         Service_DebugTracer.TraceMethodEntry(new Dictionary<string, object> { ["user"] = user, ["value"] = value }, controlName: "Dao_User");
-        
+
         try
         {
             Model_Users.WipServerPort = value;
             await SetUserSettingInternalAsync("WipServerPort", user, value);
-            
+
             Service_DebugTracer.TraceMethodExit(controlName: "Dao_User");
             return DaoResult.Success($"Set WipServerPort to {value} for user {user}");
         }
@@ -465,7 +465,7 @@ internal static class Dao_User
     internal static async Task<DaoResult<string?>> GetUserFullNameAsync(string user)
     {
         Service_DebugTracer.TraceMethodEntry(new Dictionary<string, object> { ["user"] = user }, controlName: "Dao_User");
-        
+
         try
         {
             var dataResult = await Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync(
@@ -479,13 +479,13 @@ internal static class Dao_User
                 DataRow row = dataResult.Data.Rows[0];
                 object? fullNameObj = row["Full Name"];
                 string? fullName = fullNameObj == DBNull.Value ? null : fullNameObj?.ToString();
-                
+
                 Model_Users.FullName = fullName ?? string.Empty;
-                
+
                 Service_DebugTracer.TraceMethodExit(fullName, controlName: "Dao_User");
                 return DaoResult<string?>.Success(fullName, $"Retrieved full name for user {user}");
             }
-            
+
             Service_DebugTracer.TraceMethodExit(null, controlName: "Dao_User");
             return DaoResult<string?>.Success(null, $"No full name found for user {user}");
         }
@@ -493,7 +493,7 @@ internal static class Dao_User
         {
             LoggingUtility.LogDatabaseError(ex);
             LoggingUtility.Log($"GetUserFullNameAsync failed with exception: {ex.Message}");
-            
+
             Service_DebugTracer.TraceMethodExit(null, controlName: "Dao_User");
             return DaoResult<string?>.Failure($"Error retrieving full name for user {user}", ex);
         }
@@ -505,7 +505,7 @@ internal static class Dao_User
     private static async Task<string> GetSettingsJsonInternalAsync(string field, string user)
     {
         Service_DebugTracer.TraceMethodEntry(new Dictionary<string, object> { ["field"] = field, ["user"] = user }, controlName: "Dao_User");
-        
+
         try
         {
             var dataResult = await Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync(
@@ -554,7 +554,7 @@ internal static class Dao_User
         catch (Exception ex)
         {
             LoggingUtility.LogDatabaseError(ex);
-            
+
             Service_DebugTracer.TraceMethodExit(string.Empty, controlName: "Dao_User");
             return string.Empty;
         }
@@ -571,7 +571,7 @@ internal static class Dao_User
         MySqlTransaction? transaction = null)
     {
         Service_DebugTracer.TraceMethodEntry(new Dictionary<string, object> { ["userId"] = userId, ["themeJson"] = themeJson }, controlName: "Dao_User");
-        
+
         try
         {
             Dictionary<string, object> parameters = new()
@@ -601,7 +601,7 @@ internal static class Dao_User
         {
             LoggingUtility.LogDatabaseError(ex);
             LoggingUtility.Log($"SetSettingsJsonAsync failed with exception: {ex.Message}");
-            
+
             Service_DebugTracer.TraceMethodExit(null, controlName: "Dao_User");
             return DaoResult.Failure($"Error setting theme JSON for user {userId}", ex);
         }
@@ -619,7 +619,7 @@ internal static class Dao_User
         MySqlTransaction? transaction = null)
     {
         Service_DebugTracer.TraceMethodEntry(new Dictionary<string, object> { ["userId"] = userId, ["dgvName"] = dgvName, ["settingsJson"] = settingsJson }, controlName: "Dao_User");
-        
+
         try
         {
             Dictionary<string, object> parameters = new()
@@ -650,7 +650,7 @@ internal static class Dao_User
         {
             LoggingUtility.LogDatabaseError(ex);
             LoggingUtility.Log($"SetGridViewSettingsJsonAsync failed with exception: {ex.Message}");
-            
+
             Service_DebugTracer.TraceMethodExit(null, controlName: "Dao_User");
             return DaoResult.Failure($"Error setting grid view settings for {dgvName}", ex);
         }
@@ -664,7 +664,7 @@ internal static class Dao_User
     public static async Task<DaoResult<string>> GetGridViewSettingsJsonAsync(string userId)
     {
         Service_DebugTracer.TraceMethodEntry(new Dictionary<string, object> { ["userId"] = userId }, controlName: "Dao_User");
-        
+
         try
         {
             var dataResult = await Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync(
@@ -672,16 +672,16 @@ internal static class Dao_User
                 "usr_ui_settings_GetJsonSetting",
                 new Dictionary<string, object> { ["UserId"] = userId }
             );
-            
+
             if (dataResult.IsSuccess && dataResult.Data != null && dataResult.Data.Rows.Count > 0)
             {
                 object? result = dataResult.Data.Rows[0][0];
                 string? json = result?.ToString();
-                
+
                 Service_DebugTracer.TraceMethodExit(json, controlName: "Dao_User");
                 return DaoResult<string>.Success(json ?? "", $"Retrieved grid view settings for user {userId}");
             }
-            
+
             Service_DebugTracer.TraceMethodExit("", controlName: "Dao_User");
             return DaoResult<string>.Success("", $"No grid view settings found for user {userId}");
         }
@@ -689,7 +689,7 @@ internal static class Dao_User
         {
             LoggingUtility.LogDatabaseError(ex);
             LoggingUtility.Log($"GetGridViewSettingsJsonAsync failed with exception: {ex.Message}");
-            
+
             Service_DebugTracer.TraceMethodExit("", controlName: "Dao_User");
             return DaoResult<string>.Failure($"Error retrieving grid view settings for user {userId}", ex);
         }
@@ -701,14 +701,14 @@ internal static class Dao_User
     private static async Task SetUserSettingInternalAsync(string field, string user, string value)
     {
         Service_DebugTracer.TraceMethodEntry(new Dictionary<string, object> { ["field"] = field, ["user"] = user, ["value"] = value }, controlName: "Dao_User");
-        
+
         try
         {
             var result = await Helper_Database_StoredProcedure.ExecuteNonQueryWithStatusAsync(
                 Model_AppVariables.ConnectionString,
                 "usr_users_SetUserSetting_ByUserAndField",
-                new Dictionary<string, object> 
-                { 
+                new Dictionary<string, object>
+                {
                     ["User"] = user,
                     ["Field"] = field,
                     ["Value"] = value
@@ -719,14 +719,14 @@ internal static class Dao_User
             {
                 LoggingUtility.Log($"SetUserSettingInternalAsync failed: {result.ErrorMessage}");
             }
-            
+
             Service_DebugTracer.TraceMethodExit(controlName: "Dao_User");
         }
         catch (Exception ex)
         {
             LoggingUtility.LogDatabaseError(ex);
             LoggingUtility.Log($"SetUserSettingInternalAsync failed with exception: {ex.Message}");
-            
+
             Service_DebugTracer.TraceMethodExit(controlName: "Dao_User");
         }
     }
@@ -745,7 +745,7 @@ internal static class Dao_User
         MySqlTransaction? transaction = null)
     {
         Service_DebugTracer.TraceMethodEntry(new Dictionary<string, object> { ["userName"] = userName }, controlName: "Dao_User");
-        
+
         try
         {
             var result = await Helper_Database_StoredProcedure.ExecuteNonQueryWithStatusAsync(
@@ -755,7 +755,7 @@ internal static class Dao_User
             );
 
             Service_DebugTracer.TraceMethodExit(result, controlName: "Dao_User");
-            
+
             if (result.IsSuccess)
             {
                 return DaoResult.Success($"User settings for {userName} deleted successfully");
@@ -768,7 +768,7 @@ internal static class Dao_User
         catch (Exception ex)
         {
             LoggingUtility.LogDatabaseError(ex);
-            
+
             Service_DebugTracer.TraceMethodExit(null, controlName: "Dao_User");
             return DaoResult.Failure($"Error deleting user settings for {userName}", ex);
         }
@@ -783,14 +783,14 @@ internal static class Dao_User
         string visualUserName, string visualPassword, string wipServerAddress, string database,
         string wipServerPort)
     {
-        Service_DebugTracer.TraceMethodEntry(new Dictionary<string, object> 
-        { 
-            ["user"] = user, 
-            ["fullName"] = fullName, 
+        Service_DebugTracer.TraceMethodEntry(new Dictionary<string, object>
+        {
+            ["user"] = user,
+            ["fullName"] = fullName,
             ["shift"] = shift,
-            ["vitsUser"] = vitsUser 
+            ["vitsUser"] = vitsUser
         }, controlName: "Dao_User");
-        
+
         try
         {
             var result = await Helper_Database_StoredProcedure.ExecuteNonQueryWithStatusAsync(
@@ -816,7 +816,7 @@ internal static class Dao_User
             );
 
             Service_DebugTracer.TraceMethodExit(result, controlName: "Dao_User");
-            
+
             if (result.IsSuccess)
             {
                 return DaoResult.Success($"User {user} created successfully");
@@ -829,7 +829,7 @@ internal static class Dao_User
         catch (Exception ex)
         {
             LoggingUtility.LogDatabaseError(ex);
-            
+
             Service_DebugTracer.TraceMethodExit(null, controlName: "Dao_User");
             return DaoResult.Failure($"Error creating user {user}", ex);
         }
@@ -846,13 +846,13 @@ internal static class Dao_User
         string visualUserName,
         string visualPassword)
     {
-        Service_DebugTracer.TraceMethodEntry(new Dictionary<string, object> 
-        { 
-            ["user"] = user, 
-            ["fullName"] = fullName, 
+        Service_DebugTracer.TraceMethodEntry(new Dictionary<string, object>
+        {
+            ["user"] = user,
+            ["fullName"] = fullName,
             ["shift"] = shift
         }, controlName: "Dao_User");
-        
+
         try
         {
             var result = await Helper_Database_StoredProcedure.ExecuteNonQueryWithStatusAsync(
@@ -870,7 +870,7 @@ internal static class Dao_User
             );
 
             Service_DebugTracer.TraceMethodExit(result, controlName: "Dao_User");
-            
+
             if (result.IsSuccess)
             {
                 return DaoResult.Success($"User {user} updated successfully");
@@ -883,7 +883,7 @@ internal static class Dao_User
         catch (Exception ex)
         {
             LoggingUtility.LogDatabaseError(ex);
-            
+
             Service_DebugTracer.TraceMethodExit(null, controlName: "Dao_User");
             return DaoResult.Failure($"Error updating user {user}", ex);
         }
@@ -897,7 +897,7 @@ internal static class Dao_User
         MySqlTransaction? transaction = null)
     {
         Service_DebugTracer.TraceMethodEntry(new Dictionary<string, object> { ["user"] = user }, controlName: "Dao_User");
-        
+
         try
         {
             var result = await Helper_Database_StoredProcedure.ExecuteNonQueryWithStatusAsync(
@@ -907,7 +907,7 @@ internal static class Dao_User
             );
 
             Service_DebugTracer.TraceMethodExit(result, controlName: "Dao_User");
-            
+
             if (result.IsSuccess)
             {
                 return DaoResult.Success($"User {user} deleted successfully");
@@ -920,7 +920,7 @@ internal static class Dao_User
         catch (Exception ex)
         {
             LoggingUtility.LogDatabaseError(ex);
-            
+
             Service_DebugTracer.TraceMethodExit(null, controlName: "Dao_User");
             return DaoResult.Failure($"Error deleting user {user}", ex);
         }
@@ -937,7 +937,7 @@ internal static class Dao_User
     internal static async Task<DaoResult<DataTable>> GetAllUsersAsync()
     {
         Service_DebugTracer.TraceMethodEntry(controlName: "Dao_User");
-        
+
         try
         {
             var dataResult = await Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync(
@@ -947,7 +947,7 @@ internal static class Dao_User
             );
 
             Service_DebugTracer.TraceMethodExit(dataResult, controlName: "Dao_User");
-            
+
             if (dataResult.IsSuccess && dataResult.Data != null)
             {
                 return DaoResult<DataTable>.Success(dataResult.Data, $"Retrieved {dataResult.Data.Rows.Count} users");
@@ -960,7 +960,7 @@ internal static class Dao_User
         catch (Exception ex)
         {
             LoggingUtility.LogDatabaseError(ex);
-            
+
             Service_DebugTracer.TraceMethodExit(null, controlName: "Dao_User");
             return DaoResult<DataTable>.Failure("Error retrieving users", ex);
         }
@@ -972,7 +972,7 @@ internal static class Dao_User
     internal static async Task<DaoResult<DataRow>> GetUserByUsernameAsync(string user)
     {
         Service_DebugTracer.TraceMethodEntry(new Dictionary<string, object> { ["user"] = user }, controlName: "Dao_User");
-        
+
         try
         {
             var dataResult = await Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync(
@@ -984,7 +984,7 @@ internal static class Dao_User
             if (dataResult.IsSuccess && dataResult.Data != null && dataResult.Data.Rows.Count > 0)
             {
                 var row = dataResult.Data.Rows[0];
-                
+
                 Service_DebugTracer.TraceMethodExit(row, controlName: "Dao_User");
                 return DaoResult<DataRow>.Success(row, $"Found user {user}");
             }
@@ -997,7 +997,7 @@ internal static class Dao_User
         catch (Exception ex)
         {
             LoggingUtility.LogDatabaseError(ex);
-            
+
             Service_DebugTracer.TraceMethodExit(null, controlName: "Dao_User");
             return DaoResult<DataRow>.Failure($"Error retrieving user {user}", ex);
         }
@@ -1009,7 +1009,7 @@ internal static class Dao_User
     internal static async Task<DaoResult<bool>> UserExistsAsync(string user)
     {
         Service_DebugTracer.TraceMethodEntry(new Dictionary<string, object> { ["user"] = user }, controlName: "Dao_User");
-        
+
         try
         {
             var dataResult = await Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync(
@@ -1021,7 +1021,7 @@ internal static class Dao_User
             if (dataResult.IsSuccess && dataResult.Data != null && dataResult.Data.Rows.Count > 0)
             {
                 bool exists = Convert.ToInt32(dataResult.Data.Rows[0]["UserExists"]) > 0;
-                
+
                 Service_DebugTracer.TraceMethodExit(exists, controlName: "Dao_User");
                 return DaoResult<bool>.Success(exists, exists ? $"User {user} exists" : $"User {user} does not exist");
             }
@@ -1034,7 +1034,7 @@ internal static class Dao_User
         catch (Exception ex)
         {
             LoggingUtility.LogDatabaseError(ex);
-            
+
             Service_DebugTracer.TraceMethodExit(false, controlName: "Dao_User");
             return DaoResult<bool>.Failure($"Error checking if user {user} exists", ex);
         }
@@ -1052,7 +1052,7 @@ internal static class Dao_User
     internal static async Task<DaoResult<string>> GetShortcutsJsonAsync(string userId)
     {
         Service_DebugTracer.TraceMethodEntry(new Dictionary<string, object> { ["userId"] = userId }, controlName: "Dao_User");
-        
+
         try
         {
             var dataResult = await Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync(
@@ -1064,7 +1064,7 @@ internal static class Dao_User
             if (dataResult.IsSuccess && dataResult.Data != null && dataResult.Data.Rows.Count > 0)
             {
                 string? json = dataResult.Data.Rows[0]["SettingJson"]?.ToString();
-                
+
                 Service_DebugTracer.TraceMethodExit(json, controlName: "Dao_User");
                 return DaoResult<string>.Success(json ?? "", $"Retrieved shortcuts JSON for user {userId}");
             }
@@ -1076,7 +1076,7 @@ internal static class Dao_User
         {
             LoggingUtility.LogDatabaseError(ex);
             LoggingUtility.Log($"GetShortcutsJsonAsync failed with exception: {ex.Message}");
-            
+
             Service_DebugTracer.TraceMethodExit("", controlName: "Dao_User");
             return DaoResult<string>.Failure($"Error retrieving shortcuts JSON for user {userId}", ex);
         }
@@ -1093,7 +1093,7 @@ internal static class Dao_User
         MySqlTransaction? transaction = null)
     {
         Service_DebugTracer.TraceMethodEntry(new Dictionary<string, object> { ["userId"] = userId, ["shortcutsJson"] = shortcutsJson }, controlName: "Dao_User");
-        
+
         try
         {
             Dictionary<string, object> parameters = new()
@@ -1123,7 +1123,7 @@ internal static class Dao_User
         {
             LoggingUtility.LogDatabaseError(ex);
             LoggingUtility.Log($"SetShortcutsJsonAsync failed with exception: {ex.Message}");
-            
+
             Service_DebugTracer.TraceMethodExit(null, controlName: "Dao_User");
             return DaoResult.Failure($"Error setting shortcuts JSON for user {userId}", ex);
         }
@@ -1140,11 +1140,11 @@ internal static class Dao_User
         MySqlTransaction? transaction = null)
     {
         Service_DebugTracer.TraceMethodEntry(new Dictionary<string, object> { ["user"] = user, ["themeName"] = themeName }, controlName: "Dao_User");
-        
+
         try
         {
             await SetUserSettingInternalAsync("Theme_Name", user, themeName);
-            
+
             Service_DebugTracer.TraceMethodExit(controlName: "Dao_User");
             return DaoResult.Success($"Set theme name to {themeName} for user {user}");
         }
@@ -1152,7 +1152,7 @@ internal static class Dao_User
         {
             LoggingUtility.LogDatabaseError(ex);
             LoggingUtility.Log($"SetThemeNameAsync failed with exception: {ex.Message}");
-            
+
             Service_DebugTracer.TraceMethodExit(null, controlName: "Dao_User");
             return DaoResult.Failure($"Error setting theme name for user {user}", ex);
         }
@@ -1167,7 +1167,7 @@ internal static class Dao_User
         MySqlTransaction? transaction = null)
     {
         Service_DebugTracer.TraceMethodEntry(new Dictionary<string, object> { ["userId"] = userId, ["roleId"] = roleId, ["assignedBy"] = assignedBy }, controlName: "Dao_User");
-        
+
         try
         {
             var result = await Helper_Database_StoredProcedure.ExecuteNonQueryWithStatusAsync(
@@ -1182,7 +1182,7 @@ internal static class Dao_User
             );
 
             Service_DebugTracer.TraceMethodExit(result, controlName: "Dao_User");
-            
+
             if (result.IsSuccess)
             {
                 return DaoResult.Success($"Role {roleId} assigned to user {userId} successfully");
@@ -1195,7 +1195,7 @@ internal static class Dao_User
         catch (Exception ex)
         {
             LoggingUtility.LogDatabaseError(ex);
-            
+
             Service_DebugTracer.TraceMethodExit(null, controlName: "Dao_User");
             return DaoResult.Failure($"Error adding role {roleId} to user {userId}", ex);
         }
@@ -1204,7 +1204,7 @@ internal static class Dao_User
     internal static async Task<DaoResult<int>> GetUserRoleIdAsync(int userId)
     {
         Service_DebugTracer.TraceMethodEntry(new Dictionary<string, object> { ["userId"] = userId }, controlName: "Dao_User");
-        
+
         try
         {
             var dataResult = await Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync(
@@ -1228,7 +1228,7 @@ internal static class Dao_User
         catch (Exception ex)
         {
             LoggingUtility.LogDatabaseError(ex);
-            
+
             Service_DebugTracer.TraceMethodExit(0, controlName: "Dao_User");
             return DaoResult<int>.Failure($"Error retrieving role for user {userId}", ex);
         }
@@ -1239,7 +1239,7 @@ internal static class Dao_User
         MySqlTransaction? transaction = null)
     {
         Service_DebugTracer.TraceMethodEntry(new Dictionary<string, object> { ["userId"] = userId, ["newRoleId"] = newRoleId, ["assignedBy"] = assignedBy }, controlName: "Dao_User");
-        
+
         try
         {
             var result = await Helper_Database_StoredProcedure.ExecuteNonQueryWithStatusAsync(
@@ -1254,7 +1254,7 @@ internal static class Dao_User
             );
 
             Service_DebugTracer.TraceMethodExit(result, controlName: "Dao_User");
-            
+
             if (result.IsSuccess)
             {
                 return DaoResult.Success($"User {userId} role updated to {newRoleId} successfully");
@@ -1267,7 +1267,7 @@ internal static class Dao_User
         catch (Exception ex)
         {
             LoggingUtility.LogDatabaseError(ex);
-            
+
             Service_DebugTracer.TraceMethodExit(null, controlName: "Dao_User");
             return DaoResult.Failure($"Error updating role for user {userId}", ex);
         }
@@ -1278,11 +1278,11 @@ internal static class Dao_User
         MySqlTransaction? transaction = null)
     {
         Service_DebugTracer.TraceMethodEntry(new Dictionary<string, object> { ["userIds"] = string.Join(",", userIds), ["newRoleId"] = newRoleId, ["assignedBy"] = assignedBy }, controlName: "Dao_User");
-        
+
         try
         {
             var errors = new List<string>();
-            
+
             foreach (int userId in userIds)
             {
                 var result = await Helper_Database_StoredProcedure.ExecuteNonQueryWithStatusAsync(
@@ -1305,7 +1305,7 @@ internal static class Dao_User
             if (errors.Any())
             {
                 var errorMessage = $"Failed to update {errors.Count} user(s): {string.Join("; ", errors)}";
-                
+
                 Service_DebugTracer.TraceMethodExit(errorMessage, controlName: "Dao_User");
                 return DaoResult.Failure(errorMessage);
             }
@@ -1316,7 +1316,7 @@ internal static class Dao_User
         catch (Exception ex)
         {
             LoggingUtility.LogDatabaseError(ex);
-            
+
             Service_DebugTracer.TraceMethodExit(null, controlName: "Dao_User");
             return DaoResult.Failure("Error updating roles for multiple users", ex);
         }
@@ -1327,21 +1327,21 @@ internal static class Dao_User
         MySqlTransaction? transaction = null)
     {
         Service_DebugTracer.TraceMethodEntry(new Dictionary<string, object> { ["userId"] = userId, ["roleId"] = roleId }, controlName: "Dao_User");
-        
+
         try
         {
             var result = await Helper_Database_StoredProcedure.ExecuteNonQueryWithStatusAsync(
                 Model_AppVariables.ConnectionString,
                 "sys_user_roles_Delete",
-                new Dictionary<string, object> 
-                { 
+                new Dictionary<string, object>
+                {
                     ["UserID"] = userId,
                     ["RoleID"] = roleId
                 }
             );
 
             Service_DebugTracer.TraceMethodExit(result, controlName: "Dao_User");
-            
+
             if (result.IsSuccess)
             {
                 return DaoResult.Success($"Role {roleId} removed from user {userId} successfully");
@@ -1354,7 +1354,7 @@ internal static class Dao_User
         catch (Exception ex)
         {
             LoggingUtility.LogDatabaseError(ex);
-            
+
             Service_DebugTracer.TraceMethodExit(null, controlName: "Dao_User");
             return DaoResult.Failure($"Error removing role {roleId} from user {userId}", ex);
         }

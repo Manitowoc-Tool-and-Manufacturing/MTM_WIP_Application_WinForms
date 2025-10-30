@@ -2,16 +2,16 @@ using System.ComponentModel;
 using System.Data;
 using System.Text;
 using MySql.Data.MySqlClient;
-using MTM_Inventory_Application.Core;
-using MTM_Inventory_Application.Data;
-using MTM_Inventory_Application.Helpers;
-using MTM_Inventory_Application.Models;
+using MTM_WIP_Application_Winforms.Core;
+using MTM_WIP_Application_Winforms.Data;
+using MTM_WIP_Application_Winforms.Helpers;
+using MTM_WIP_Application_Winforms.Models;
 using System.Drawing.Printing;
-using MTM_Inventory_Application.Controls.Shared;
-using MTM_Inventory_Application.Services;
+using MTM_WIP_Application_Winforms.Controls.Shared;
+using MTM_WIP_Application_Winforms.Services;
 using System.Drawing.Drawing2D;
 
-namespace MTM_Inventory_Application.Forms.Transactions
+namespace MTM_WIP_Application_Winforms.Forms.Transactions
 {
     public partial class Transactions : Form
     {
@@ -915,7 +915,7 @@ namespace MTM_Inventory_Application.Forms.Transactions
 
                 _progressHelper?.UpdateProgress(60, "Processing results...");
 
-                // CS0029 Fix: Convert List<MTM_Inventory_Application.Models.Model_Transactions> to List<Model_Transactions>
+                // CS0029 Fix: Convert List<MTM_WIP_Application_Winforms.Models.Model_Transactions> to List<Model_Transactions>
                 // IDE0028 Fix: Use collection initializer
                 List<Model_Transactions> results = searchResult.Data != null
                     ? searchResult.Data.Select(x => new Model_Transactions
@@ -1113,7 +1113,7 @@ namespace MTM_Inventory_Application.Forms.Transactions
 
                 // Convert transaction types to Models.TransactionType for DAO
                 var transactionTypes = GetSelectedTransactionTypes()
-                    .Select(t => (MTM_Inventory_Application.Models.TransactionType)t)
+                    .Select(t => (MTM_WIP_Application_Winforms.Models.TransactionType)t)
                     .ToList();
 
                 var timeRange = GetSelectedTimeRange();
@@ -1153,7 +1153,7 @@ namespace MTM_Inventory_Application.Forms.Transactions
                     // DEBUG: Show results received from DAO
                     System.Diagnostics.Debug.WriteLine($"[SMART SEARCH DEBUG] DAO returned {searchResult.Data.Count} results");
 
-                    // CS1503 Fix: Convert List<MTM_Inventory_Application.Models.Model_Transactions> to List<Model_Transactions>
+                    // CS1503 Fix: Convert List<MTM_WIP_Application_Winforms.Models.Model_Transactions> to List<Model_Transactions>
                     var convertedList = searchResult.Data
                         .Select(x => new Model_Transactions
                         {

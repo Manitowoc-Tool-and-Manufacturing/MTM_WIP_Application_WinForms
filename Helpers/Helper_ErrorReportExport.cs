@@ -5,9 +5,9 @@ using System.IO;
 using System.Text;
 using System.Threading.Tasks;
 using ClosedXML.Excel;
-using MTM_Inventory_Application.Logging;
+using MTM_WIP_Application_Winforms.Logging;
 
-namespace MTM_Inventory_Application.Helpers
+namespace MTM_WIP_Application_Winforms.Helpers
 {
     /// <summary>
     /// Helper class for exporting error report data to various file formats.
@@ -117,28 +117,28 @@ namespace MTM_Inventory_Application.Helpers
                     {
                         // Add worksheet with data
                         var worksheet = workbook.Worksheets.Add("Error Reports");
-                        
+
                         // Insert data table
                         var table = worksheet.Cell(1, 1).InsertTable(dataTable);
-                        
+
                         // Format header row
                         var headerRow = table.HeadersRow();
                         headerRow.Style.Font.Bold = true;
                         headerRow.Style.Fill.BackgroundColor = XLColor.LightGray;
-                        
+
                         // Freeze header row
                         worksheet.SheetView.FreezeRows(1);
-                        
+
                         // Auto-fit columns for readability
                         worksheet.Columns().AdjustToContents();
-                        
+
                         // Limit max column width to prevent overly wide columns
                         foreach (var column in worksheet.ColumnsUsed())
                         {
                             if (column.Width > 50)
                                 column.Width = 50;
                         }
-                        
+
                         // Save workbook
                         workbook.SaveAs(filePath);
                     }

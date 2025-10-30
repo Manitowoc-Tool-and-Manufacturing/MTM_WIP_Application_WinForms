@@ -1,4 +1,4 @@
-namespace MTM_Inventory_Application.Models;
+namespace MTM_WIP_Application_Winforms.Models;
 
 /// <summary>
 /// Defines the severity levels for error handling in the MTM Inventory Application
@@ -9,17 +9,17 @@ public enum ErrorSeverity
     /// Low severity - Information/Warning level, application continues normally
     /// </summary>
     Low = 0,
-    
+
     /// <summary>
     /// Medium severity - Recoverable error, operation failed but can be retried
     /// </summary>
     Medium = 1,
-    
+
     /// <summary>
     /// High severity - Critical error, data integrity or major functionality affected
     /// </summary>
     High = 2,
-    
+
     /// <summary>
     /// Fatal severity - Application termination required, unrecoverable error
     /// </summary>

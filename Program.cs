@@ -1,16 +1,16 @@
 using System.Diagnostics;
-using MTM_Inventory_Application.Controls.SettingsForm;
-using MTM_Inventory_Application.Data;
-using MTM_Inventory_Application.Forms.ErrorDialog;
-using MTM_Inventory_Application.Logging;
-using MTM_Inventory_Application.Models;
-using MTM_Inventory_Application.Services;
+using MTM_WIP_Application_Winforms.Controls.SettingsForm;
+using MTM_WIP_Application_Winforms.Data;
+using MTM_WIP_Application_Winforms.Forms.ErrorDialog;
+using MTM_WIP_Application_Winforms.Logging;
+using MTM_WIP_Application_Winforms.Models;
+using MTM_WIP_Application_Winforms.Services;
 using MySql.Data.MySqlClient;
 using System.IO;
 using System.Runtime.InteropServices;
 using System.Security;
 
-namespace MTM_Inventory_Application
+namespace MTM_WIP_Application_Winforms
 {
     internal static class Program
     {
@@ -49,7 +49,7 @@ namespace MTM_Inventory_Application
                         ["ExceptionType"] = args.Exception.GetType().Name,
                         ["ExceptionMessage"] = args.Exception.Message
                     }, "ThreadExceptionHandler", "Program");
-                    
+
                     try
                     {
                         LoggingUtility.LogApplicationError(args.Exception);
@@ -73,7 +73,7 @@ namespace MTM_Inventory_Application
                             ["ExceptionMessage"] = ex.Message,
                             ["IsTerminating"] = args.IsTerminating
                         }, "UnhandledExceptionHandler", "Program");
-                        
+
                         try
                         {
                             LoggingUtility.LogApplicationError(ex);
@@ -173,9 +173,9 @@ namespace MTM_Inventory_Application
                     Console.WriteLine($"[DEBUG] connectivityResult.ErrorMessage: '{connectivityResult.ErrorMessage}'");
 
                     // Use ErrorMessage if StatusMessage is generic
-                    string errorMessage = !string.IsNullOrEmpty(connectivityResult.StatusMessage) && 
+                    string errorMessage = !string.IsNullOrEmpty(connectivityResult.StatusMessage) &&
                                         connectivityResult.StatusMessage != "Database connectivity validation failed"
-                                        ? connectivityResult.StatusMessage 
+                                        ? connectivityResult.StatusMessage
                                         : connectivityResult.ErrorMessage;
 
                     // Use Service_ErrorHandler for consistent error UX with retry capability
@@ -191,7 +191,7 @@ namespace MTM_Inventory_Application
                             ["ErrorType"] = "DatabaseConnectivityValidation"
                         },
                         controlName: "Program_Main_DatabaseConnectivity");
-                    
+
                     // User chose to exit after error dialog (Service_ErrorHandler returns when dialog closes)
                     LoggingUtility.Log("[Startup] Exiting after database connectivity error");
                     return;
@@ -217,7 +217,7 @@ namespace MTM_Inventory_Application
                     {
                         LoggingUtility.Log($"[Startup] Warning: Parameter prefix cache initialization failed: {cacheResult.ErrorMessage}. Using fallback convention-based detection.");
                         Console.WriteLine($"[Startup Warning] Parameter cache init failed: {cacheResult.ErrorMessage}");
-                        
+
                         ShowNonCriticalError("Parameter Cache Warning",
                             "The stored procedure parameter cache could not be initialized.\n\n" +
                             $"Reason: {cacheResult.ErrorMessage}\n\n" +
@@ -231,7 +231,7 @@ namespace MTM_Inventory_Application
                     LoggingUtility.LogApplicationError(ex);
                     LoggingUtility.Log($"[Startup] Warning: Parameter prefix cache initialization threw exception: {ex.Message}. Using fallback convention-based detection.");
                     Console.WriteLine($"[Startup Warning] Parameter cache exception: {ex.Message}");
-                    
+
                     ShowNonCriticalError("Parameter Cache Error",
                         $"An error occurred while initializing the parameter cache:\n\n{ex.Message}\n\n" +
                         "The application will continue using convention-based parameter detection.\n" +
@@ -277,14 +277,14 @@ namespace MTM_Inventory_Application
                             ["ErrorType"] = "UserAccessLoading_MySqlException"
                         },
                         controlName: "Program_Main_UserAccessLoading");
-                    
+
                     LoggingUtility.Log("[Startup] Exiting after user access loading failure");
                     return;
                 }
                 catch (TimeoutException ex)
                 {
                     LoggingUtility.LogApplicationError(ex);
-                    
+
                     Service_ErrorHandler.HandleException(
                         ex,
                         ErrorSeverity.High,
@@ -296,13 +296,13 @@ namespace MTM_Inventory_Application
                             ["ErrorType"] = "UserAccessLoading_Timeout"
                         },
                         controlName: "Program_Main_UserAccessTimeout");
-                    
+
                     return;
                 }
                 catch (UnauthorizedAccessException ex)
                 {
                     LoggingUtility.LogApplicationError(ex);
-                    
+
                     Service_ErrorHandler.HandleException(
                         ex,
                         ErrorSeverity.Fatal,
@@ -313,13 +313,13 @@ namespace MTM_Inventory_Application
                             ["ErrorType"] = "UserAccessLoading_UnauthorizedAccess"
                         },
                         controlName: "Program_Main_UnauthorizedAccess");
-                    
+
                     return;
                 }
                 catch (Exception ex)
                 {
                     LoggingUtility.LogApplicationError(ex);
-                    
+
                     Service_ErrorHandler.HandleException(
                         ex,
                         ErrorSeverity.Fatal,
@@ -331,7 +331,7 @@ namespace MTM_Inventory_Application
                             ["ExceptionType"] = ex.GetType().Name
                         },
                         controlName: "Program_Main_UserAccessError");
-                    
+
                     return;
                 }
 
@@ -595,13 +595,13 @@ namespace MTM_Inventory_Application
 
                 // MySQL 5.7 uses SPECIFIC_NAME instead of ROUTINE_NAME
                 const string query = @"
-                    SELECT 
-                        SPECIFIC_NAME AS ROUTINE_NAME, 
-                        PARAMETER_NAME, 
-                        PARAMETER_MODE 
-                    FROM INFORMATION_SCHEMA.PARAMETERS 
-                    WHERE SPECIFIC_SCHEMA = DATABASE() 
-                    AND ROUTINE_TYPE = 'PROCEDURE' 
+                    SELECT
+                        SPECIFIC_NAME AS ROUTINE_NAME,
+                        PARAMETER_NAME,
+                        PARAMETER_MODE
+                    FROM INFORMATION_SCHEMA.PARAMETERS
+                    WHERE SPECIFIC_SCHEMA = DATABASE()
+                    AND ROUTINE_TYPE = 'PROCEDURE'
                     ORDER BY SPECIFIC_NAME, ORDINAL_POSITION";
 
                 // Build cache dictionary structure
@@ -764,9 +764,9 @@ namespace MTM_Inventory_Application
 
                 // Test if critical stored procedures exist
                 const string checkProcedureQuery = @"
-                    SELECT COUNT(*) 
-                    FROM INFORMATION_SCHEMA.ROUTINES 
-                    WHERE ROUTINE_SCHEMA = DATABASE() 
+                    SELECT COUNT(*)
+                    FROM INFORMATION_SCHEMA.ROUTINES
+                    WHERE ROUTINE_SCHEMA = DATABASE()
                     AND ROUTINE_NAME IN ('sys_GetUserAccessType', 'sys_SetUserAccessType')";
 
                 using var command = new MySqlCommand(checkProcedureQuery, connection);

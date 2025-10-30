@@ -1,25 +1,25 @@
 # =============================================
 # Deploy-Tables.ps1
 # Purpose: Deploy table creation scripts to specified database
-# Usage: .\Deploy-Tables.ps1 -Database "mtm_wip_application"
+# Usage: .\Deploy-Tables.ps1 -Database "MTM_WIP_Application_Winforms"
 # =============================================
 
 param(
     [Parameter(Mandatory=$false)]
-    [string]$Database = "mtm_wip_application",
-    
+    [string]$Database = "MTM_WIP_Application_Winforms",
+
     [Parameter(Mandatory=$false)]
     [string]$Server = "localhost",
-    
+
     [Parameter(Mandatory=$false)]
     [int]$Port = 3306,
-    
+
     [Parameter(Mandatory=$false)]
     [string]$User = "root",
-    
+
     [Parameter(Mandatory=$false)]
     [string]$Password = "root",
-    
+
     [Parameter(Mandatory=$false)]
     [string]$TablePattern = "*.sql"
 )
@@ -65,21 +65,21 @@ $failedFiles = @()
 
 foreach ($file in $sqlFiles) {
     Write-Host "Deploying: $($file.Name)..." -NoNewline
-    
+
     try {
         if ($useDotNet) {
             # Use .NET MySql.Data connector
             Add-Type -Path "C:\Program Files (x86)\MySQL\MySQL Connector Net 8.0.30\Assemblies\v4.5.2\MySql.Data.dll" -ErrorAction SilentlyContinue
-            
+
             $connectionString = "Server=$Server;Port=$Port;Database=$Database;Uid=$User;Pwd=$Password;SslMode=none;AllowPublicKeyRetrieval=true;"
             $connection = New-Object MySql.Data.MySqlClient.MySqlConnection($connectionString)
             $connection.Open()
-            
+
             $sql = Get-Content $file.FullName -Raw
             $command = $connection.CreateCommand()
             $command.CommandText = $sql
             $command.ExecuteNonQuery() | Out-Null
-            
+
             $connection.Close()
             Write-Host " SUCCESS" -ForegroundColor Green
             $successCount++
@@ -88,7 +88,7 @@ foreach ($file in $sqlFiles) {
             $sql = Get-Content $file.FullName -Raw
             $tempFile = [System.IO.Path]::GetTempFileName()
             Set-Content -Path $tempFile -Value $sql -Encoding UTF8
-            
+
             $arguments = @(
                 "-h", $Server,
                 "-P", $Port,
@@ -97,10 +97,10 @@ foreach ($file in $sqlFiles) {
                 $Database,
                 "-e", "source $tempFile"
             )
-            
+
             $process = Start-Process -FilePath $mysqlPath -ArgumentList $arguments -NoNewWindow -Wait -PassThru
             Remove-Item $tempFile -Force
-            
+
             if ($process.ExitCode -eq 0) {
                 Write-Host " SUCCESS" -ForegroundColor Green
                 $successCount++

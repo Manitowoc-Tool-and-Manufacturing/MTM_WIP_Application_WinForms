@@ -1,7 +1,7 @@
 ﻿using System.Drawing;
 using System.Windows.Forms;
 
-namespace MTM_Inventory_Application.Controls.MainForm
+namespace MTM_WIP_Application_Winforms.Controls.MainForm
 {
     partial class Control_AdvancedInventory
     {

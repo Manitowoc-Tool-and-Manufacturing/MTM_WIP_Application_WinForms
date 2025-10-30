@@ -9,7 +9,7 @@
 .PARAMETER Port
     MySQL server port (default: 3306)
 .PARAMETER Database
-    Target database name (default: mtm_wip_application)
+    Target database name (default: MTM_WIP_Application_Winforms)
 .PARAMETER User
     MySQL username (default: root)
 .PARAMETER Password
@@ -22,7 +22,7 @@
 param(
     [string]$Server = "localhost",
     [int]$Port = 3306,
-    [string]$Database = "mtm_wip_application",
+    [string]$Database = "MTM_WIP_Application_Winforms",
     [string]$User = "root",
     [SecureString]$Password = (ConvertTo-SecureString "root" -AsPlainText -Force)
 )
@@ -59,9 +59,9 @@ function Invoke-MySqlCliQuery {
         [string]$Query,
         [string]$Description
     )
-    
+
     Write-Host "Executing: $Description..." -ForegroundColor Gray
-    
+
     try {
         # Execute query with JSON output format
         $mysqlArgs = @(
@@ -74,25 +74,25 @@ function Invoke-MySqlCliQuery {
             "--skip-column-names",
             "-e", $Query
         )
-        
+
         $output = & $mysqlPath @mysqlArgs 2>&1
-        
+
         if ($LASTEXITCODE -ne 0) {
             Write-Host "  ✗ Query failed: $output" -ForegroundColor Red
             return @()
         }
-        
+
         # Parse tab-delimited output into objects
         $lines = $output -split "`n" | Where-Object { $_.Trim() -ne "" }
-        
+
         if ($lines.Count -eq 0) {
             Write-Host "  ⚠ No results" -ForegroundColor Yellow
             return @()
         }
-        
+
         Write-Host "  ✓ Retrieved $($lines.Count) rows" -ForegroundColor Green
         return $lines
-        
+
     } catch {
         Write-Host "  ✗ Error: $_" -ForegroundColor Red
         return @()
@@ -102,7 +102,7 @@ function Invoke-MySqlCliQuery {
 # Query 1: INFORMATION_SCHEMA.ROUTINES (Stored Procedures)
 Write-Host "`n[1/4] Extracting stored procedures..." -ForegroundColor Cyan
 $routinesQuery = @"
-SELECT 
+SELECT
     ROUTINE_SCHEMA,
     ROUTINE_NAME,
     ROUTINE_TYPE,
@@ -116,7 +116,7 @@ SELECT
     CHARACTER_SET_CLIENT,
     COLLATION_CONNECTION,
     DATABASE_COLLATION
-FROM INFORMATION_SCHEMA.ROUTINES 
+FROM INFORMATION_SCHEMA.ROUTINES
 WHERE ROUTINE_SCHEMA = '$Database'
 ORDER BY ROUTINE_NAME;
 "@
@@ -149,7 +149,7 @@ foreach ($line in $routinesRaw) {
 # Query 2: INFORMATION_SCHEMA.PARAMETERS (Procedure Parameters)
 Write-Host "`n[2/4] Extracting procedure parameters..." -ForegroundColor Cyan
 $parametersQuery = @"
-SELECT 
+SELECT
     SPECIFIC_SCHEMA,
     SPECIFIC_NAME,
     ORDINAL_POSITION,
@@ -160,7 +160,7 @@ SELECT
     NUMERIC_PRECISION,
     NUMERIC_SCALE,
     DTD_IDENTIFIER
-FROM INFORMATION_SCHEMA.PARAMETERS 
+FROM INFORMATION_SCHEMA.PARAMETERS
 WHERE SPECIFIC_SCHEMA = '$Database'
   AND PARAMETER_NAME IS NOT NULL
 ORDER BY SPECIFIC_NAME, ORDINAL_POSITION;
@@ -191,7 +191,7 @@ foreach ($line in $parametersRaw) {
 # Query 3: INFORMATION_SCHEMA.TABLES (All Tables)
 Write-Host "`n[3/4] Extracting table metadata..." -ForegroundColor Cyan
 $tablesQuery = @"
-SELECT 
+SELECT
     TABLE_SCHEMA,
     TABLE_NAME,
     TABLE_TYPE,
@@ -212,7 +212,7 @@ SELECT
     CHECKSUM,
     CREATE_OPTIONS,
     TABLE_COMMENT
-FROM INFORMATION_SCHEMA.TABLES 
+FROM INFORMATION_SCHEMA.TABLES
 WHERE TABLE_SCHEMA = '$Database'
 ORDER BY TABLE_NAME;
 "@
@@ -252,7 +252,7 @@ foreach ($line in $tablesRaw) {
 # Query 4: INFORMATION_SCHEMA.COLUMNS (Table Columns)
 Write-Host "`n[4/4] Extracting column metadata..." -ForegroundColor Cyan
 $columnsQuery = @"
-SELECT 
+SELECT
     TABLE_SCHEMA,
     TABLE_NAME,
     COLUMN_NAME,
@@ -267,7 +267,7 @@ SELECT
     COLUMN_KEY,
     EXTRA,
     COLUMN_COMMENT
-FROM INFORMATION_SCHEMA.COLUMNS 
+FROM INFORMATION_SCHEMA.COLUMNS
 WHERE TABLE_SCHEMA = '$Database'
 ORDER BY TABLE_NAME, ORDINAL_POSITION;
 "@

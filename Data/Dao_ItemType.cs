@@ -1,10 +1,10 @@
 using System.Data;
-using MTM_Inventory_Application.Helpers;
-using MTM_Inventory_Application.Logging;
-using MTM_Inventory_Application.Models;
+using MTM_WIP_Application_Winforms.Helpers;
+using MTM_WIP_Application_Winforms.Logging;
+using MTM_WIP_Application_Winforms.Models;
 using MySql.Data.MySqlClient;
 
-namespace MTM_Inventory_Application.Data;
+namespace MTM_WIP_Application_Winforms.Data;
 
 #region Dao_ItemType
 
@@ -163,7 +163,7 @@ internal static class Dao_ItemType
 
             var table = allItemTypesResult.Data!;
             var rows = table.Select($"ItemType = '{itemType.Replace("'", "''")}'");
-            
+
             if (rows.Length > 0)
             {
                 return DaoResult<DataRow>.Success(rows[0], $"Found item type {itemType}");

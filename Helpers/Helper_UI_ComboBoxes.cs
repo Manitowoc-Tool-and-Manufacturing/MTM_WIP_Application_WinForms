@@ -1,13 +1,13 @@
 using System.Data;
 using System.Diagnostics;
 using System.Reflection;
-using MTM_Inventory_Application.Controls.MainForm;
-using MTM_Inventory_Application.Logging;
-using MTM_Inventory_Application.Models;
+using MTM_WIP_Application_Winforms.Controls.MainForm;
+using MTM_WIP_Application_Winforms.Logging;
+using MTM_WIP_Application_Winforms.Models;
 using MySql.Data.MySqlClient;
 using MethodInvoker = System.Windows.Forms.MethodInvoker;
 
-namespace MTM_Inventory_Application.Helpers
+namespace MTM_WIP_Application_Winforms.Helpers
 {
     #region Helper_UI_ComboBoxes
 
@@ -59,7 +59,7 @@ namespace MTM_Inventory_Application.Helpers
                     null, // No progress helper for this method
                     true  // Use async
                 );
-                
+
                 lock (PartDataLock)
                 {
                     ComboBoxPart_DataTable.Clear();
@@ -92,7 +92,7 @@ namespace MTM_Inventory_Application.Helpers
                     null, // No progress helper for this method
                     true  // Use async
                 );
-                
+
                 lock (OperationDataLock)
                 {
                     ComboBoxOperation_DataTable.Clear();
@@ -125,7 +125,7 @@ namespace MTM_Inventory_Application.Helpers
                     null, // No progress helper for this method
                     true  // Use async
                 );
-                
+
                 lock (LocationDataLock)
                 {
                     ComboBoxLocation_DataTable.Clear();
@@ -158,7 +158,7 @@ namespace MTM_Inventory_Application.Helpers
                     null, // No progress helper for this method
                     true  // Use async
                 );
-                
+
                 lock (UserDataLock)
                 {
                     ComboBoxUser_DataTable.Clear();
@@ -166,7 +166,7 @@ namespace MTM_Inventory_Application.Helpers
                     {
                         // Use safe merge with schema validation
                         SafeMergeDataTable(ComboBoxUser_DataTable, dataResult.Data, "ComboBoxUser");
-                        
+
                         // Remove any row where the User column contains '[ All Users ]' or similar
                         List<DataRow> rowsToRemove = new();
                         foreach (DataRow row in ComboBoxUser_DataTable.Rows)
@@ -208,7 +208,7 @@ namespace MTM_Inventory_Application.Helpers
                     null, // No progress helper for this method
                     true  // Use async
                 );
-                
+
                 lock (ItemTypeDataLock)
                 {
                     ComboBoxItemType_DataTable.Clear();
@@ -570,8 +570,8 @@ namespace MTM_Inventory_Application.Helpers
 
                 // Check if schemas match
                 bool schemaMatches = sourceSchema.Count == targetSchema.Count &&
-                    sourceSchema.All(sc => targetSchema.Any(tc => 
-                        tc.ColumnName.Equals(sc.ColumnName, StringComparison.OrdinalIgnoreCase) && 
+                    sourceSchema.All(sc => targetSchema.Any(tc =>
+                        tc.ColumnName.Equals(sc.ColumnName, StringComparison.OrdinalIgnoreCase) &&
                         tc.DataType == sc.DataType));
 
                 if (!schemaMatches)
@@ -579,7 +579,7 @@ namespace MTM_Inventory_Application.Helpers
                     // Log schema mismatch details
                     var sourceColumns = string.Join(", ", sourceSchema.Select(c => $"{c.ColumnName}({c.DataType.Name})"));
                     var targetColumns = string.Join(", ", targetSchema.Select(c => $"{c.ColumnName}({c.DataType.Name})"));
-                    
+
                     LoggingUtility.Log($"[DataTable] {tableName}: Schema mismatch detected");
                     LoggingUtility.Log($"[DataTable] {tableName}: Source schema: {sourceColumns}");
                     LoggingUtility.Log($"[DataTable] {tableName}: Target schema: {targetColumns}");
@@ -589,7 +589,7 @@ namespace MTM_Inventory_Application.Helpers
                     target.Clear();
                     target.Columns.Clear();
                     target.Merge(source.Copy());
-                    
+
                     return false; // Indicates replacement occurred
                 }
 
@@ -603,7 +603,7 @@ namespace MTM_Inventory_Application.Helpers
                 // Handle constraint violations during merge
                 LoggingUtility.Log($"[DataTable] {tableName}: ArgumentException during merge: {ex.Message}");
                 LoggingUtility.LogApplicationError(ex);
-                
+
                 // Fallback: Replace instead of merge
                 try
                 {

@@ -6,7 +6,7 @@ Write-Host "Category 1: Quick Button Tests" -ForegroundColor Cyan
 Write-Host "========================================`n" -ForegroundColor Cyan
 
 # Run tests and capture output
-$testOutput = dotnet test MTM_Inventory_Application.csproj `
+$testOutput = dotnet test MTM_WIP_Application_Winforms.csproj `
     --filter "FullyQualifiedName~Integration.Dao_QuickButtons_Tests" `
     --logger:"console;verbosity=normal" `
     2>&1

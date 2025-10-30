@@ -245,7 +245,7 @@ Follow consistent cycle for reliable test development:
 1. **Make changes** to test infrastructure or test methods
 2. **Build immediately** to catch compilation errors early
    ```powershell
-   dotnet build MTM_Inventory_Application.csproj -c Debug
+   dotnet build MTM_WIP_Application_Winforms.csproj -c Debug
    ```
 3. **Verify zero warnings** in files you edited
 4. **Run affected tests** to validate functionality

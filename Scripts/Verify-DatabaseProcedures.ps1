@@ -1,25 +1,25 @@
 <#
 .SYNOPSIS
     Verifies that all required stored procedures exist in the database and have proper status code compliance
-    
+
 .DESCRIPTION
     Queries MySQL to check:
     1. All 75 required stored procedures exist
     2. Each procedure has OUT p_Status INT and OUT p_ErrorMsg VARCHAR(500)
     3. Compares test vs production database
-    
+
 .PARAMETER Database
     Database name to check (default: mtm_wip_application_winforms_test)
-    
+
 .PARAMETER MySqlPath
     Path to mysql.exe (default: C:\MAMP\bin\mysql\bin\mysql.exe)
-    
+
 .EXAMPLE
     .\Scripts\Verify-DatabaseProcedures.ps1
     Verifies test database procedures
-    
+
 .EXAMPLE
-    .\Scripts\Verify-DatabaseProcedures.ps1 -Database mtm_wip_application
+    .\Scripts\Verify-DatabaseProcedures.ps1 -Database MTM_WIP_Application_Winforms
     Verifies production database procedures
 #>
 
@@ -60,7 +60,7 @@ $expectedProcedures = @(
     "inv_transaction_Add",
     "inv_transactions_GetAnalytics",
     "inv_transactions_SmartSearch",
-    
+
     # Error Logging (7)
     "log_error_Add_Error",
     "log_error_Delete_All",
@@ -69,49 +69,49 @@ $expectedProcedures = @(
     "log_error_Get_ByDateRange",
     "log_error_Get_ByUser",
     "log_error_Get_Unique",
-    
+
     # Changelog (1)
     "log_changelog_Get_Current",
-    
+
     # Maintenance (2)
     "maint_InsertMissingUserUiSettings",
     "maint_reload_part_ids_and_operation_numbers",
-    
+
     # Master Data - Item Types (5)
     "md_item_types_Add_ItemType",
     "md_item_types_Delete_ByID",
     "md_item_types_Delete_ByType",
     "md_item_types_Get_All",
     "md_item_types_Update_ItemType",
-    
+
     # Master Data - Locations (4)
     "md_locations_Add_Location",
     "md_locations_Delete_ByLocation",
     "md_locations_Get_All",
     "md_locations_Update_Location",
-    
+
     # Master Data - Operations (4)
     "md_operation_numbers_Add_Operation",
     "md_operation_numbers_Delete_ByOperation",
     "md_operation_numbers_Get_All",
     "md_operation_numbers_Update_Operation",
-    
+
     # Master Data - Parts (5)
     "md_part_ids_Add_Part",
     "md_part_ids_Delete_ByItemNumber",
     "md_part_ids_Get_All",
     "md_part_ids_Get_ByItemNumber",
     "md_part_ids_Update_Part",
-    
+
     # Migration (1)
     "migrate_user_roles_debug",
-    
+
     # Query (1)
     "query_get_all_usernames_and_roles",
-    
+
     # Batch Reassignment (1)
     "sp_ReassignBatchNumbers",
-    
+
     # System (21)
     "sys_GetUserAccessType",
     "sys_last_10_transactions_AddQuickButton_1",
@@ -134,7 +134,7 @@ $expectedProcedures = @(
     "sys_user_roles_Add",
     "sys_user_roles_Delete",
     "sys_user_roles_Update",
-    
+
     # Users/UI Settings (11)
     "usr_ui_settings_Get",
     "usr_ui_settings_GetShortcutsJson",
@@ -177,8 +177,8 @@ Write-Host "Step 2: Checking Individual Procedures" -ForegroundColor White
 Write-Host "═══════════════════════════════════════════════════════════════`n" -ForegroundColor Cyan
 
 $listQuery = "SELECT ROUTINE_NAME FROM INFORMATION_SCHEMA.ROUTINES WHERE ROUTINE_SCHEMA = '$Database' AND ROUTINE_TYPE = 'PROCEDURE' ORDER BY ROUTINE_NAME;"
-$actualProcedures = & $MySqlPath --host=$ServerHost --port=$Port --user=$User --password=$Pass --database=$Database --execute=$listQuery 2>&1 | 
-    Select-Object -Skip 1 | 
+$actualProcedures = & $MySqlPath --host=$ServerHost --port=$Port --user=$User --password=$Pass --database=$Database --execute=$listQuery 2>&1 |
+    Select-Object -Skip 1 |
     Where-Object { $_ -match '\S' -and $_ -notmatch 'ROUTINE_NAME' } |
     ForEach-Object { $_.Trim() }
 
@@ -228,10 +228,10 @@ foreach ($proc in $sampleProcedures) {
         $createQuery = "SHOW CREATE PROCEDURE $proc"
         $createResult = & $MySqlPath --host=$ServerHost --port=$Port --user=$User --password=$Pass --database=$Database --execute=$createQuery 2>&1 |
             Out-String
-        
+
         $hasStatus = $createResult -match "OUT p_Status INT"
         $hasErrorMsg = $createResult -match "OUT p_ErrorMsg VARCHAR\(500\)"
-        
+
         if ($hasStatus -and $hasErrorMsg) {
             Write-Host "  ✓ " -NoNewline -ForegroundColor Green
             Write-Host "$proc - Status Code Compliant" -ForegroundColor White

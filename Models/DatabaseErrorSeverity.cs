@@ -1,4 +1,4 @@
-namespace MTM_Inventory_Application.Models;
+namespace MTM_WIP_Application_Winforms.Models;
 
 /// <summary>
 /// Defines the severity levels for database errors in the MTM Inventory Application.
@@ -11,13 +11,13 @@ public enum DatabaseErrorSeverity
     /// Examples: Slow query performance, non-critical validation warnings, deprecated feature usage.
     /// </summary>
     Warning = 0,
-    
+
     /// <summary>
     /// Error - Operation failed but system integrity maintained, user can retry or use alternative approach.
     /// Examples: Failed insert due to business rules, connection timeout, query returned no results unexpectedly.
     /// </summary>
     Error = 1,
-    
+
     /// <summary>
     /// Critical - Data integrity risk or major system functionality compromised, immediate attention required.
     /// Examples: Transaction rollback failure, data corruption detected, foreign key constraint violated, deadlock.

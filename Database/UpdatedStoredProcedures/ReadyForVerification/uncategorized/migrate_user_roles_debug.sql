@@ -31,7 +31,7 @@ BEGIN
         INSERT INTO migration_debug_log (message) VALUES (CONCAT('Processing user: ', v_old_username));
         SET v_new_userid = NULL;
         SELECT ID INTO v_new_userid
-        FROM mtm_wip_application.usr_users
+        FROM MTM_WIP_Application_Winforms.usr_users
         WHERE User = v_old_username
         LIMIT 1;
         IF v_new_userid IS NULL THEN
@@ -49,7 +49,7 @@ BEGIN
         INSERT INTO migration_debug_log (message) VALUES (CONCAT('Assigned role: ', v_rolename));
         SET v_roleid = NULL;
         SELECT ID INTO v_roleid
-        FROM mtm_wip_application.sys_roles
+        FROM MTM_WIP_Application_Winforms.sys_roles
         WHERE RoleName = v_rolename
         LIMIT 1;
         IF v_roleid IS NULL THEN
@@ -59,21 +59,21 @@ BEGIN
         END IF;
         SET v_existing_roleid = NULL;
         SELECT RoleID INTO v_existing_roleid
-        FROM mtm_wip_application.sys_user_roles
+        FROM MTM_WIP_Application_Winforms.sys_user_roles
         WHERE UserID = v_new_userid
         LIMIT 1;
         IF v_existing_roleid IS NOT NULL THEN
             IF v_existing_roleid = v_roleid THEN
                 INSERT INTO migration_debug_log (message) VALUES (CONCAT('User-role already exists for: ', v_old_username, ' | Role: ', v_rolename));
             ELSE
-                UPDATE mtm_wip_application.sys_user_roles
+                UPDATE MTM_WIP_Application_Winforms.sys_user_roles
                 SET RoleID = v_roleid, AssignedBy = '[ System Migration ]', AssignedAt = NOW()
                 WHERE UserID = v_new_userid;
                 INSERT INTO migration_debug_log (message) VALUES (CONCAT('User-role updated for: ', v_old_username, ' to role: ', v_rolename));
                 SET v_ProcessedCount = v_ProcessedCount + 1;
             END IF;
         ELSE
-            INSERT INTO mtm_wip_application.sys_user_roles
+            INSERT INTO MTM_WIP_Application_Winforms.sys_user_roles
                 (UserID, RoleID, AssignedBy, AssignedAt)
             VALUES
                 (v_new_userid, v_roleid, '[ System Migration ]', NOW());

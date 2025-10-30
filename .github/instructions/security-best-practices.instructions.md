@@ -53,13 +53,13 @@ public ServiceResult ValidatePartNumber(string partNumber)
 {
     if (string.IsNullOrWhiteSpace(partNumber))
         return ServiceResult.Failure("Part number is required");
-    
+
     if (partNumber.Length > 50)
         return ServiceResult.Failure("Part number exceeds maximum length");
-    
+
     if (!Regex.IsMatch(partNumber, @"^[A-Z0-9-]+$"))
         return ServiceResult.Failure("Part number contains invalid characters");
-    
+
     return ServiceResult.Success();
 }
 ```
@@ -135,7 +135,7 @@ var unsafeSql = $"SELECT * FROM Inventory WHERE LocationCode = '{locationCode}'"
 ```json
 {
   "ConnectionStrings": {
-    "DefaultConnection": "Server=localhost;Database=mtm_wip_application;User=root;Password=root;SslMode=none;AllowPublicKeyRetrieval=true"
+    "DefaultConnection": "Server=localhost;Database=MTM_WIP_Application_Winforms;User=root;Password=root;SslMode=none;AllowPublicKeyRetrieval=true"
   }
 }
 ```
@@ -207,7 +207,7 @@ LoggingUtility.LogApplicationError(ex);
   "ConnectionStrings": {
     "DefaultConnection": "Server=localhost;Database=mtm_test;User=root;Password=root"
   },
-  
+
   // ❌ Never commit production credentials
   "ConnectionStrings": {
     "DefaultConnection": "Server=prod-server;Database=mtm_prod;User=sa;Password=RealProdPassword123"

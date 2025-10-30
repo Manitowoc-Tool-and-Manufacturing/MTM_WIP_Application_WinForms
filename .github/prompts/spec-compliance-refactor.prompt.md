@@ -299,7 +299,7 @@ mcp_mtm-workflow_check_security(source_dir=".", scan_type="all")
 
 ```bash
 run_in_terminal(
-  command="dotnet build MTM_Inventory_Application.csproj -c Debug",
+  command="dotnet build MTM_WIP_Application_Winforms.csproj -c Debug",
   explanation="Verify all changes compile successfully"
 )
 

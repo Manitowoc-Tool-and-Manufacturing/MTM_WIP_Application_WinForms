@@ -60,7 +60,7 @@ DROP TEMPORARY TABLE IF EXISTS TotalInventory;
 **Workaround Pattern** (variables for ranking):
 ```sql
 -- ❌ Won't work in MySQL 5.7
-SELECT 
+SELECT
     PartNumber,
     Quantity,
     ROW_NUMBER() OVER (PARTITION BY LocationCode ORDER BY Quantity DESC) AS RowNum
@@ -70,7 +70,7 @@ FROM Inventory;
 SET @row_num = 0;
 SET @current_location = '';
 
-SELECT 
+SELECT
     PartNumber,
     Quantity,
     @row_num := IF(@current_location = LocationCode, @row_num + 1, 1) AS RowNum,
@@ -162,7 +162,7 @@ CREATE PROCEDURE usp_GetInventory(
     IN IncludeInactive BOOLEAN
 )
 BEGIN
-    SELECT * FROM Inventory 
+    SELECT * FROM Inventory
     WHERE PartNumber = PartNumber
       AND LocationCode = LocationCode
       AND (IsActive = 1 OR IncludeInactive = 1);
@@ -213,7 +213,7 @@ var parameters = new Dictionary<string, object>
 ```json
 {
   "ConnectionStrings": {
-    "DefaultConnection": "Server=localhost;Port=3306;Database=mtm_wip_application;User=root;Password=root;SslMode=none;AllowPublicKeyRetrieval=true;MinPoolSize=5;MaxPoolSize=100;ConnectionTimeout=30;"
+    "DefaultConnection": "Server=localhost;Port=3306;Database=MTM_WIP_Application_Winforms;User=root;Password=root;SslMode=none;AllowPublicKeyRetrieval=true;MinPoolSize=5;MaxPoolSize=100;ConnectionTimeout=30;"
   }
 }
 ```
@@ -281,13 +281,13 @@ using (var connection = new MySqlConnection(_connectionString))
                 { "PartNumber", partNumber },
                 { "NewQuantity", quantity }
             };
-            
+
             var (result1, status1, error1) = Helper_Database_StoredProcedure
                 .ExecuteDataTableWithStatus(_connectionString, "usp_UpdateInventory", updateParams, 30);
-            
+
             if (status1 != "SUCCESS")
                 throw new Exception(error1);
-            
+
             // Step 2: Log transaction
             var logParams = new Dictionary<string, object>
             {
@@ -295,13 +295,13 @@ using (var connection = new MySqlConnection(_connectionString))
                 { "Action", "UPDATE" },
                 { "UserID", userId }
             };
-            
+
             var (result2, status2, error2) = Helper_Database_StoredProcedure
                 .ExecuteDataTableWithStatus(_connectionString, "usp_LogTransaction", logParams, 30);
-            
+
             if (status2 != "SUCCESS")
                 throw new Exception(error2);
-            
+
             transaction.Commit();
             _logger.LogInformation("Transaction completed successfully");
         }
@@ -443,9 +443,9 @@ BEGIN
         SET ErrorMessage = 'Database error occurred';
         ROLLBACK;
     END;
-    
+
     START TRANSACTION;
-    
+
     -- Validation
     IF PartNumber IS NULL OR PartNumber = '' THEN
         SET Status = 'ERROR';
@@ -456,7 +456,7 @@ BEGIN
         INSERT INTO Inventory (PartNumber, LocationCode, Quantity)
         VALUES (PartNumber, LocationCode, Quantity)
         ON DUPLICATE KEY UPDATE Quantity = Quantity;
-        
+
         SET Status = 'SUCCESS';
         SET ErrorMessage = NULL;
         COMMIT;
@@ -510,7 +510,7 @@ private async Task<ServiceResult<T>> ExecuteWithRetryAsync<T>(
             _logger.LogWarning(
                 "Transient database error on attempt {Attempt}/{MaxRetries}: {Error}",
                 attempt, maxRetries, ex.Message);
-            
+
             await Task.Delay(TimeSpan.FromSeconds(Math.Pow(2, attempt))); // Exponential backoff
         }
     }
@@ -569,8 +569,8 @@ CREATE INDEX idx_transaction_operation ON InventoryTransaction(OperationNumber);
 
 **Pattern**:
 ```sql
-EXPLAIN SELECT * FROM Inventory 
-WHERE PartNumber = 'ABC123' 
+EXPLAIN SELECT * FROM Inventory
+WHERE PartNumber = 'ABC123'
   AND LocationCode = 'FLOOR';
 
 -- Look for:
@@ -655,7 +655,7 @@ CREATE TABLE Inventory (
 
 ## Memory File Maintenance
 
-**Last Updated**: 2025-10-10  
+**Last Updated**: 2025-10-10
 **Maintainer**: GitHub Copilot (via user input)
 
 **How to Add Lessons**:
