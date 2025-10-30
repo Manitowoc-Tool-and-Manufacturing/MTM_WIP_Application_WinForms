@@ -1,7 +1,7 @@
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
-namespace MTM_Inventory_Application.Core;
+namespace MTM_WIP_Application_Winforms.Core;
 
 /// <summary>
 /// JSON converter for nullable Color types

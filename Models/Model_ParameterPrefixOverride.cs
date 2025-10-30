@@ -1,6 +1,6 @@
 using System;
 
-namespace MTM_Inventory_Application.Models
+namespace MTM_WIP_Application_Winforms.Models
 {
     /// <summary>
     /// Represents a parameter prefix override for stored procedure execution.

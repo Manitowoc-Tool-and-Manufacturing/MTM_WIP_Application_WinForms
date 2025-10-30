@@ -206,7 +206,7 @@
       "Tables": [
         "mtm",
         "migration_debug_log",
-        "mtm_wip_application",
+        "MTM_WIP_Application_Winforms",
         "role"
       ],
       "Note": "May be legacy, unused, called from other stored procedures, or background services"
@@ -575,7 +575,7 @@
     {
       "Status": "Not called from C# code",
       "StoredProcedure": "maint_InsertMissingUserUiSettings",
-      "Tables": "mtm_wip_application",
+      "Tables": "MTM_WIP_Application_Winforms",
       "Note": "May be legacy, unused, called from other stored procedures, or background services"
     }
   ],
@@ -638,7 +638,7 @@
     {
       "Status": "Not called from C# code",
       "StoredProcedure": "query_get_all_usernames_and_roles",
-      "Tables": "mtm_wip_application",
+      "Tables": "MTM_WIP_Application_Winforms",
       "Note": "May be legacy, unused, called from other stored procedures, or background services"
     }
   ],
@@ -798,7 +798,7 @@
       "Status": "Not called from C# code",
       "StoredProcedure": "sp_ReassignBatchNumbers",
       "Tables": [
-        "mtm_wip_application",
+        "MTM_WIP_Application_Winforms",
         "batch"
       ],
       "Note": "May be legacy, unused, called from other stored procedures, or background services"
@@ -948,7 +948,7 @@
       "Status": "Not called from C# code",
       "StoredProcedure": "maint_reload_part_ids_and_operation_numbers",
       "Tables": [
-        "mtm_wip_application",
+        "MTM_WIP_Application_Winforms",
         "mtm",
         "JSON_UNQUOTE"
       ],

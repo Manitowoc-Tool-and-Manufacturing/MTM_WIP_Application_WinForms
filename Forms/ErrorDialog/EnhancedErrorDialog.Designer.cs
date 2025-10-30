@@ -1,4 +1,4 @@
-﻿namespace MTM_Inventory_Application.Forms.ErrorDialog
+﻿namespace MTM_WIP_Application_Winforms.Forms.ErrorDialog
 {
     partial class EnhancedErrorDialog
     {

@@ -127,7 +127,7 @@ cd C:\Users\johnk\source\repos\MTM_WIP_Application_WinForms\Database
 
 ```powershell
 cd C:\Users\johnk\source\repos\MTM_WIP_Application_WinForms\Tests
-dotnet test MTM_Inventory_Application.Tests.csproj --logger "console;verbosity=normal"
+dotnet test MTM_WIP_Application_Winforms.Tests.csproj --logger "console;verbosity=normal"
 ```
 
 ### 3. Analyze Remaining Failures

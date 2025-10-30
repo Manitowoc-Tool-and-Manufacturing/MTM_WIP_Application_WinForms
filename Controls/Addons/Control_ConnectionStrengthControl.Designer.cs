@@ -1,4 +1,4 @@
-﻿namespace MTM_Inventory_Application.Controls.Addons
+﻿namespace MTM_WIP_Application_Winforms.Controls.Addons
 {
     partial class Control_ConnectionStrengthControl
     {

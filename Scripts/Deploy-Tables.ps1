@@ -1,12 +1,12 @@
 # =============================================
 # Deploy-Tables.ps1
 # Purpose: Deploy table creation scripts to specified database
-# Usage: .\Deploy-Tables.ps1 -Database "mtm_wip_application"
+# Usage: .\Deploy-Tables.ps1 -Database "MTM_WIP_Application_Winforms"
 # =============================================
 
 param(
     [Parameter(Mandatory=$false)]
-    [string]$Database = "mtm_wip_application",
+    [string]$Database = "MTM_WIP_Application_Winforms",
     
     [Parameter(Mandatory=$false)]
     [string]$Server = "localhost",

@@ -1,16 +1,16 @@
 using System.Diagnostics;
-using MTM_Inventory_Application.Controls.SettingsForm;
-using MTM_Inventory_Application.Data;
-using MTM_Inventory_Application.Forms.ErrorDialog;
-using MTM_Inventory_Application.Logging;
-using MTM_Inventory_Application.Models;
-using MTM_Inventory_Application.Services;
+using MTM_WIP_Application_Winforms.Controls.SettingsForm;
+using MTM_WIP_Application_Winforms.Data;
+using MTM_WIP_Application_Winforms.Forms.ErrorDialog;
+using MTM_WIP_Application_Winforms.Logging;
+using MTM_WIP_Application_Winforms.Models;
+using MTM_WIP_Application_Winforms.Services;
 using MySql.Data.MySqlClient;
 using System.IO;
 using System.Runtime.InteropServices;
 using System.Security;
 
-namespace MTM_Inventory_Application
+namespace MTM_WIP_Application_Winforms
 {
     internal static class Program
     {

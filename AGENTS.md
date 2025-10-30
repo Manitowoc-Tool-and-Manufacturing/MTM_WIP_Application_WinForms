@@ -36,7 +36,7 @@ Auto-generated agent guidelines. Last updated: 2025-10-18
 ## Project Structure
 
 ```
-MTM_Inventory_Application/
+MTM_WIP_Application_Winforms/
 ├── Controls/              # UserControl implementations
 │   ├── Addons/           # Specialized controls (connection strength, etc.)
 │   ├── MainForm/         # Main application tabs
@@ -81,21 +81,21 @@ cd MTM_WIP_Application_WinForms
 dotnet restore
 
 # Build Debug configuration (uses test database)
-dotnet build MTM_Inventory_Application.csproj -c Debug
+dotnet build MTM_WIP_Application_Winforms.csproj -c Debug
 
 # Build Release configuration (uses production database)
-dotnet build MTM_Inventory_Application.csproj -c Release
+dotnet build MTM_WIP_Application_Winforms.csproj -c Release
 ```
 
 ### Database Setup
 
 **Environment-Aware Database Selection:**
 - **Debug Mode**: `mtm_wip_application_winforms_test` on `localhost` or `172.16.1.104`
-- **Release Mode**: `mtm_wip_application` on `172.16.1.104` (production)
+- **Release Mode**: `MTM_WIP_Application_Winforms` on `172.16.1.104` (production)
 
 **Connection String Template:**
 ```
-Server=localhost;Port=3306;Database=mtm_wip_application;
+Server=localhost;Port=3306;Database=MTM_WIP_Application_Winforms;
 User=root;Password=root;SslMode=none;AllowPublicKeyRetrieval=true;
 ```
 
@@ -266,11 +266,11 @@ All JSON samples live in `.mcp/samples/` (keep `C:\.mcp\samples` mirrored when p
 
 ```powershell
 # Run in Debug mode (development)
-dotnet run --project MTM_Inventory_Application.csproj
+dotnet run --project MTM_WIP_Application_Winforms.csproj
 
 # Build and run in Release mode
 dotnet build -c Release
-dotnet run --project MTM_Inventory_Application.csproj -c Release
+dotnet run --project MTM_WIP_Application_Winforms.csproj -c Release
 ```
 
 ### Code Organization Requirements
@@ -390,10 +390,10 @@ public Control_Example()
 **Common Test Scenarios:**
 ```powershell
 # Build and verify no errors
-dotnet build MTM_Inventory_Application.csproj -c Debug
+dotnet build MTM_WIP_Application_Winforms.csproj -c Debug
 
 # Check for warnings
-dotnet build MTM_Inventory_Application.csproj -c Debug > build-warnings.txt
+dotnet build MTM_WIP_Application_Winforms.csproj -c Debug > build-warnings.txt
 
 # Run application and test workflows:
 # - Login and session management
@@ -463,10 +463,10 @@ dotnet clean
 dotnet restore
 
 # Build Debug (test database)
-dotnet build MTM_Inventory_Application.csproj -c Debug
+dotnet build MTM_WIP_Application_Winforms.csproj -c Debug
 
 # Build Release (production database)
-dotnet build MTM_Inventory_Application.csproj -c Release
+dotnet build MTM_WIP_Application_Winforms.csproj -c Release
 
 # Build with specific framework
 dotnet build -p:TargetFramework=net8.0-windows -p:Configuration=Debug
@@ -506,10 +506,10 @@ Examples:
 
 ```powershell
 # Build must succeed
-dotnet build MTM_Inventory_Application.csproj -c Debug
+dotnet build MTM_WIP_Application_Winforms.csproj -c Debug
 
 # Check for warnings
-dotnet build MTM_Inventory_Application.csproj -c Debug 2>&1 | Select-String "warning"
+dotnet build MTM_WIP_Application_Winforms.csproj -c Debug 2>&1 | Select-String "warning"
 
 # Manual validation testing
 # - Run application
@@ -547,7 +547,7 @@ dotnet build MTM_Inventory_Application.csproj -c Debug 2>&1 | Select-String "war
 string connectionString = Helper_Database_Variables.GetConnectionString();
 
 // ❌ WRONG: Hardcoded connection string
-string connectionString = "Server=172.16.1.104;Database=mtm_wip_application;User=root;Password=root";
+string connectionString = "Server=172.16.1.104;Database=MTM_WIP_Application_Winforms;User=root;Password=root";
 ```
 
 ### SQL Injection Prevention
@@ -579,7 +579,7 @@ mysql -h localhost -P 3306 -u root -p
 
 # Check environment configuration
 # Debug mode should use: mtm_wip_application_winforms_test
-# Release mode should use: mtm_wip_application
+# Release mode should use: MTM_WIP_Application_Winforms
 ```
 
 ### Build Issues
@@ -588,7 +588,7 @@ mysql -h localhost -P 3306 -u root -p
 # Clean and rebuild
 dotnet clean
 dotnet restore
-dotnet build MTM_Inventory_Application.csproj -c Debug
+dotnet build MTM_WIP_Application_Winforms.csproj -c Debug
 
 # Check for missing dependencies
 dotnet list package --outdated
@@ -635,7 +635,7 @@ _progressHelper = Helper_StoredProcedureProgress.Create(
     string database = "mtm_wip_application_winforms_test";
     string server = GetLocalIpAddress() == "172.16.1.104" ? "172.16.1.104" : "localhost";
 #else
-    string database = "mtm_wip_application";
+    string database = "MTM_WIP_Application_Winforms";
     string server = "172.16.1.104";  // Production server only
 #endif
 ```
@@ -701,7 +701,7 @@ dotnet restore && dotnet build -c Debug
 dotnet clean && dotnet restore && dotnet build -c Debug
 
 # Run application
-dotnet run --project MTM_Inventory_Application.csproj
+dotnet run --project MTM_WIP_Application_Winforms.csproj
 
 # Build for production
 dotnet build -c Release

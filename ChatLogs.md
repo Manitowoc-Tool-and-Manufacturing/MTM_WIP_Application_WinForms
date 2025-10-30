@@ -513,7 +513,7 @@ Using "Apply Patch"
 ```
 
 
-Ran terminal command: dotnet build MTM_Inventory_Application.csproj -c Debug
+Ran terminal command: dotnet build MTM_WIP_Application_Winforms.csproj -c Debug
 
 Ran `validate_dao_patterns` 
 Completed with input: {
@@ -543,7 +543,7 @@ Implemented the Phase 1 foundation (T001–T010) for the View Error Reports fe
 - Expanded Dao_ErrorReports.cs with async methods for listing, detail lookup, status updates, and dropdown sources, including mapping helpers, guard clauses, and reuse of the new stored procedures (checked with `validate_dao_patterns`; existing project-wide MessageBox warnings remain).
 
 **Validation**
-- `dotnet build MTM_Inventory_Application.csproj -c Debug`
+- `dotnet build MTM_WIP_Application_Winforms.csproj -c Debug`
 - `analyze_stored_procedures` on the new error-report procs
 - `validate_dao_patterns` on Data (pre-existing MessageBox warnings in other DAOs still outstanding)
 
@@ -551,15 +551,15 @@ Natural next step is Phase 2 (User Story 1) to build the error report grid U
 
 Made changes.
 
-JDKoll1982: PS C:\Users\johnk\source\repos\MTM_WIP_Application_WinForms> dotnet build [MTM_Inventory_Application.csproj](http://_vscodecontentref_/3) -c Debug
+JDKoll1982: PS C:\Users\johnk\source\repos\MTM_WIP_Application_WinForms> dotnet build [MTM_WIP_Application_Winforms.csproj](http://_vscodecontentref_/3) -c Debug
 http://_vscodecontentref_/3: The term 'http://_vscodecontentref_/3' is not recognized as a name of a cmdlet, function, script file, or executable program.
 Check the spelling of the name, or if a path was included, verify that the path is correct and try again.
 
-GitHub Copilot: Ran terminal command: dotnet build MTM_Inventory_Application.csproj -c Debug
+GitHub Copilot: Ran terminal command: dotnet build MTM_WIP_Application_Winforms.csproj -c Debug
 
 The shell treated the markdown link as part of the command. Use plain text:
 
-- `dotnet build MTM_Inventory_Application.csproj -c Debug`
+- `dotnet build MTM_WIP_Application_Winforms.csproj -c Debug`
 
 I already ran it for you; build succeeded (only existing warnings remain on other files).
 
@@ -643,7 +643,7 @@ Using "Apply Patch"
 ```
 
 
-Ran terminal command: dotnet build MTM_Inventory_Application.csproj -c Debug
+Ran terminal command: dotnet build MTM_WIP_Application_Winforms.csproj -c Debug
 
 Ran `mark_task_complete` 
 Completed with input: {
@@ -669,7 +669,7 @@ Using "Apply Patch"
 ```
 
 
-Read [](file:///c%3A/Users/johnk/source/repos/MTM_WIP_Application_WinForms/MTM_Inventory_Application.csproj)
+Read [](file:///c%3A/Users/johnk/source/repos/MTM_WIP_Application_WinForms/MTM_WIP_Application_Winforms.csproj)
 
 Using "Apply Patch"
 
@@ -679,15 +679,15 @@ Using "Apply Patch"
 ```
 
 
-Ran terminal command: dotnet build MTM_Inventory_Application.csproj -c Debug
+Ran terminal command: dotnet build MTM_WIP_Application_Winforms.csproj -c Debug
 
 Implemented the `Control_ErrorReportsGrid` foundation (T011–T018): the new control initializes with DPI-safe layout, preconfigured columns, async `LoadReportsAsync`, status-based row coloring, summary truncation/tooltip handling, a `ReportSelected` double-click event, and a live result count label. Key changes:
 - Control_ErrorReportsGrid.cs – added region-organized logic, binding source management, formatting handlers, and event emission.
 - Control_ErrorReportsGrid.Designer.cs & `.resx` – defined table layout, DataGridView column schema, and default resources.
-- MTM_Inventory_Application.csproj – nested designer/resource assets so the new control appears correctly in the project.
+- MTM_WIP_Application_Winforms.csproj – nested designer/resource assets so the new control appears correctly in the project.
 - tasks.md – marked T011–T018 complete with notes.
 
-Validation: `dotnet build MTM_Inventory_Application.csproj -c Debug`.
+Validation: `dotnet build MTM_WIP_Application_Winforms.csproj -c Debug`.
 
 Next up: Phase 3 tasks (T020–T027) to implement the filter/search panel and wiring, followed by User Story 3 detail form work.
 
@@ -779,7 +779,7 @@ Using "Apply Patch"
 ```
 
 
-Ran terminal command: dotnet build MTM_Inventory_Application.csproj -c Debug
+Ran terminal command: dotnet build MTM_WIP_Application_Winforms.csproj -c Debug
 
 Read [](file:///c%3A/Users/johnk/source/repos/MTM_WIP_Application_WinForms/specs/002-view-error-reports/tasks.md#1-1), lines 1 to 321
 
@@ -807,9 +807,9 @@ Completed with input: {
 }
 
 - Filter panel now lives at the top of Control_ErrorReportsGrid.cs, with optional date pickers (checkbox-enabled), combo boxes for user/machine/status, search box, and Apply/Clear buttons wired into async handlers that build `Model_ErrorReportFilter`, validate via `Service_ErrorHandler`, and reload the grid; Clear resets controls and reloads all data.  
-- Added flow-layout markup in Control_ErrorReportsGrid.Designer.cs plus `Control_ErrorReportsGrid.resx`, updated project nesting in MTM_Inventory_Application.csproj, and extended the code-behind with async population helpers for users/machines, fixed status seeding, and search handling (≥3 chars).  
+- Added flow-layout markup in Control_ErrorReportsGrid.Designer.cs plus `Control_ErrorReportsGrid.resx`, updated project nesting in MTM_WIP_Application_Winforms.csproj, and extended the code-behind with async population helpers for users/machines, fixed status seeding, and search handling (≥3 chars).  
 - Updated .gitignore to include bin, obj, and `packages/` entries, and marked T020–T026 complete in tasks.md.  
-- Ran `dotnet build MTM_Inventory_Application.csproj -c Debug` (58 existing warnings).
+- Ran `dotnet build MTM_WIP_Application_Winforms.csproj -c Debug` (58 existing warnings).
 
 Next steps: tackle T027 manual validation for filtering, then move into User Story 3 detail panel work.
 
@@ -877,7 +877,7 @@ Using "Apply Patch"
 
 Created [](file:///c%3A/Users/johnk/source/repos/MTM_WIP_Application_WinForms/Forms/Development/ErrorReportsViewerForm.cs)
 
-Ran terminal command: dotnet build MTM_Inventory_Application.csproj -c Debug
+Ran terminal command: dotnet build MTM_WIP_Application_Winforms.csproj -c Debug
 
 Using "Apply Patch"
 
@@ -887,12 +887,12 @@ Using "Apply Patch"
 ```
 
 
-Ran terminal command: dotnet build MTM_Inventory_Application.csproj -c Debug
+Ran terminal command: dotnet build MTM_WIP_Application_Winforms.csproj -c Debug
 
 - Hooked the Development menu (MainForm.Designer.cs, MainForm.cs) with a new “🧪 Error Reports Grid (Preview)” item that opens the viewer for quick testing.
 - Added ErrorReportsViewerForm.cs, a lightweight host form that wraps `Control_ErrorReportsGrid` with DPI adjustments so the grid loads immediately in a standalone window.
 
-Tests: `dotnet build MTM_Inventory_Application.csproj -c Debug`
+Tests: `dotnet build MTM_WIP_Application_Winforms.csproj -c Debug`
 
 Next steps: Launch the app, sign in under a dev user, and open Development → 🧪 Error Reports Grid (Preview) to smoke-test filtering and data load.
 
@@ -987,7 +987,7 @@ Using "Apply Patch"
 ```
 
 
-Ran terminal command: dotnet build MTM_Inventory_Application.csproj -c Debug
+Ran terminal command: dotnet build MTM_WIP_Application_Winforms.csproj -c Debug
 
 Using "Apply Patch"
 
@@ -1023,7 +1023,7 @@ Using "Apply Patch"
 ```
 Implemented the new `Control_ErrorReportDetails` master-detail panel with complete metadata, highlighted user notes, rich-text technical sections, async `LoadReportAsync`, status-aware action buttons, and clipboard/export tooling (covers T028–T033, T037, T038). Updated tasks.md to reflect the completed work and wired a `StatusChangeRequested` event so the parent form can process updates later.
 
-Tests: `dotnet build MTM_Inventory_Application.csproj -c Debug`
+Tests: `dotnet build MTM_WIP_Application_Winforms.csproj -c Debug`
 
 Next up you can wire the grid selection into this control and implement the DAO-backed status update flows (T034–T036).
 
@@ -1130,7 +1130,7 @@ Using "Apply Patch"
 ```
 
 
-Ran terminal command: dotnet build MTM_Inventory_Application.csproj -c Debug
+Ran terminal command: dotnet build MTM_WIP_Application_Winforms.csproj -c Debug
 
 Ran `mark_task_complete` 
 Completed with input: {
@@ -1158,7 +1158,7 @@ Searched text for `StatusChangeRequested` (`**/*.cs`), no results
 - Implemented end-to-end status update workflow in Control_ErrorReportDetails.cs: confirmation dialog, themed notes prompt, DAO call, UI refresh, and new `StatusChanged` event payload so parent views can react.
 - Updated `UpdateStatusButtons` messaging (“Reopen” label) and ensured developer notes dialog respects DPI scaling; cleared header when no report and refreshed tasks (tasks.md) for T034–T036.
 
-Tests: `dotnet build MTM_Inventory_Application.csproj -c Debug`
+Tests: `dotnet build MTM_WIP_Application_Winforms.csproj -c Debug`
 
 Next up consider:  
 1. Scaffold `Form_ViewErrorReports` (T039/T040) and hook up the new `StatusChanged` event (T049).  
@@ -1204,7 +1204,7 @@ Using "Apply Patch"
 ```
 
 
-Ran terminal command: dotnet build MTM_Inventory_Application.csproj -c Debug
+Ran terminal command: dotnet build MTM_WIP_Application_Winforms.csproj -c Debug
 
 Using "Apply Patch"
 
@@ -1221,7 +1221,7 @@ Completed with input: {
 
 - Added new Form_ViewErrorReports.cs (+ designer) with split-container master/detail layout, applied `Core_Themes` runtime adjustments, and exposed grid/detail controls while handling async detail loading safely.
 - Subscribed the form to `Control_ErrorReportsGrid.ReportSelected` so double-click/selection immediately calls `Control_ErrorReportDetails.LoadReportAsync`, completing T039–T040 and updating tasks.md.
-- Build stayed green: `dotnet build MTM_Inventory_Application.csproj -c Debug`.
+- Build stayed green: `dotnet build MTM_WIP_Application_Winforms.csproj -c Debug`.
 
 Next you can hook the detail control’s `StatusChanged` event to refresh the grid (T049) and schedule the User Story 3 manual test pass (T041).
 
@@ -1253,7 +1253,7 @@ Using "Apply Patch"
 ```
 
 
-Ran terminal command: dotnet build MTM_Inventory_Application.csproj -c Debug
+Ran terminal command: dotnet build MTM_WIP_Application_Winforms.csproj -c Debug
 
 Using "Apply Patch"
 
@@ -1265,7 +1265,7 @@ Using "Apply Patch"
 - Extended Control_ErrorReportsGrid.cs with `SelectReportById` to programmatically restore selection after refresh, handling scroll positioning safely.
 - Recorded completion notes for T039–T040 (form skeleton + wiring) and T049 (grid refresh integration) in tasks.md.
 
-Tests: `dotnet build MTM_Inventory_Application.csproj -c Debug`
+Tests: `dotnet build MTM_WIP_Application_Winforms.csproj -c Debug`
 
 Next up consider running the User Story 3 manual validation pass (T041) and exposing the new form from `MainForm` (T050).
 
@@ -1325,7 +1325,7 @@ Using "Apply Patch"
 ```
 
 
-Ran terminal command: dotnet build MTM_Inventory_Application.csproj -c Debug
+Ran terminal command: dotnet build MTM_WIP_Application_Winforms.csproj -c Debug
 
 Using "Apply Patch"
 
@@ -1338,7 +1338,7 @@ Using "Apply Patch"
 - Added a reusable instance-backed handler in MainForm.cs plus designer wiring so developers can launch `Form_ViewErrorReports` from the new Development → “📋 View Error Reports” menu item without spawning duplicates.
 - Marked T039, T040, T049, and T050 complete in tasks.md with completion notes.
 
-Tests: `dotnet build MTM_Inventory_Application.csproj -c Debug`
+Tests: `dotnet build MTM_WIP_Application_Winforms.csproj -c Debug`
 
 Next up: run the User Story 3 manual validation checklist (T041) and start the export-focused work items (T045–T047) once validation passes.
 

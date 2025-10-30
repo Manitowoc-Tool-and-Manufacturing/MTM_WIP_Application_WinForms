@@ -1,6 +1,6 @@
 ﻿
 
-namespace MTM_Inventory_Application.Forms.MainForm.Classes;
+namespace MTM_WIP_Application_Winforms.Forms.MainForm.Classes;
 
 public static class MainFormTabResetHelper
 {

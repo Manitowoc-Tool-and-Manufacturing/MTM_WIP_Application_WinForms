@@ -3,12 +3,12 @@
 
 using System.Diagnostics;
 using DocumentFormat.OpenXml.Vml.Office;
-using MTM_Inventory_Application.Helpers;
-using MTM_Inventory_Application.Models;
-using MTM_Inventory_Application.Services;
+using MTM_WIP_Application_Winforms.Helpers;
+using MTM_WIP_Application_Winforms.Models;
+using MTM_WIP_Application_Winforms.Services;
 using MySql.Data.MySqlClient;
 
-namespace MTM_Inventory_Application.Logging;
+namespace MTM_WIP_Application_Winforms.Logging;
 
 #region LoggingUtility
 
@@ -71,9 +71,9 @@ internal static class LoggingUtility
 
             // Clean up application data directories
             var appDataPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
-                "MTM_WIP_APP");
+                "MTM_WIP_Application_Winforms");
             var localAppDataPath =
-                Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "MTM_WIP_APP");
+                Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "MTM_WIP_Application_Winforms");
             
             // Run directory cleanup operations asynchronously
             await Task.Run(() =>
@@ -167,7 +167,7 @@ internal static class LoggingUtility
             {
                 Debug.WriteLine("[DEBUG] Log path creation timed out, using fallback");
                 // Fallback to local temp directory
-                var tempDir = Path.Combine(Path.GetTempPath(), "MTM_WIP_APP", "Logs", userName);
+                var tempDir = Path.Combine(Path.GetTempPath(), "MTM_WIP_Application_Winforms", "Logs", userName);
                 Directory.CreateDirectory(tempDir);
                 var timestamp = DateTime.Now.ToString("MM-dd-yyyy @ h-mm tt");
                 logFilePath = Path.Combine(tempDir, $"{userName} {timestamp}.log");
@@ -193,7 +193,7 @@ internal static class LoggingUtility
             // Create fallback logging to temp directory
             try
             {
-                var tempDir = Path.Combine(Path.GetTempPath(), "MTM_WIP_APP", "Logs");
+                var tempDir = Path.Combine(Path.GetTempPath(), "MTM_WIP_Application_Winforms", "Logs");
                 Directory.CreateDirectory(tempDir);
                 var timestamp = DateTime.Now.ToString("MM-dd-yyyy @ h-mm tt");
                 var fallbackFile = Path.Combine(tempDir, $"fallback_{timestamp}.log");

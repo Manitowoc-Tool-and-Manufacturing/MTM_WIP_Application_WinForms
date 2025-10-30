@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace MTM_Inventory_Application.Models;
+namespace MTM_WIP_Application_Winforms.Models;
 
 /// <summary>
 /// Provides caching and lookup functionality for stored procedure parameter prefixes.

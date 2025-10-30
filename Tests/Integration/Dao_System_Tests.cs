@@ -1,12 +1,12 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using MTM_Inventory_Application.Data;
-using MTM_Inventory_Application.Models;
+using MTM_WIP_Application_Winforms.Data;
+using MTM_WIP_Application_Winforms.Models;
 using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Threading.Tasks;
 
-namespace MTM_Inventory_Application.Tests.Integration
+namespace MTM_WIP_Application_Winforms.Tests.Integration
 {
     /// <summary>
     /// Integration tests for Dao_System database operations.

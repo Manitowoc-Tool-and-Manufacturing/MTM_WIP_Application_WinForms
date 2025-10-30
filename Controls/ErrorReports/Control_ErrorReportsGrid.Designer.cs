@@ -1,6 +1,6 @@
 using System.ComponentModel;
 
-namespace MTM_Inventory_Application.Controls.ErrorReports
+namespace MTM_WIP_Application_Winforms.Controls.ErrorReports
 {
     partial class Control_ErrorReportsGrid
     {

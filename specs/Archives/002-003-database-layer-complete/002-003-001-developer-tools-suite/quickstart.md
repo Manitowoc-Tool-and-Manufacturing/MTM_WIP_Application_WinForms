@@ -22,7 +22,7 @@ You must have **Admin + Developer** permissions to access developer tools.
 #### Check Your Current Role
 
 ```sql
--- Run against: mtm_wip_application_winforms_test or mtm_wip_application
+-- Run against: mtm_wip_application_winforms_test or MTM_WIP_Application_Winforms
 SELECT 
     UserName, 
     IsAdmin, 
@@ -83,7 +83,7 @@ cd Database
 ### Step 1: Launch Application
 ```powershell
 cd C:\Users\johnk\source\repos\MTM_WIP_Application_WinForms
-dotnet run --project MTM_Inventory_Application.csproj
+dotnet run --project MTM_WIP_Application_Winforms.csproj
 ```
 
 ### Step 2: Login with Developer Credentials
@@ -230,7 +230,7 @@ Manage parameter prefix overrides for stored procedures that don't follow the p_
            ELSE 'No Prefix'
        END AS PrefixStatus
    FROM INFORMATION_SCHEMA.PARAMETERS
-   WHERE SPECIFIC_SCHEMA = 'mtm_wip_application'
+   WHERE SPECIFIC_SCHEMA = 'MTM_WIP_Application_Winforms'
    AND PARAMETER_MODE = 'IN'
    AND PARAMETER_NAME NOT LIKE 'p\\_%'
    ORDER BY SPECIFIC_NAME;
@@ -731,9 +731,9 @@ public static async Task<DaoResult<DataSet>> MethodAsync(...) // Use DataSet not
 
 // 3. Add missing usings at top of file:
 using System.Data;
-using MTM_Inventory_Application.Models;
-using MTM_Inventory_Application.Helpers;
-using MTM_Inventory_Application.Logging;
+using MTM_WIP_Application_Winforms.Models;
+using MTM_WIP_Application_Winforms.Helpers;
+using MTM_WIP_Application_Winforms.Logging;
 ```
 
 ### Issue: Parameter Prefix Override Not Taking Effect

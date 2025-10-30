@@ -98,7 +98,7 @@ Database connections MUST adapt automatically based on build configuration and m
 
 **Requirements**:
 - Debug builds MUST use `mtm_wip_application_winforms_test` database
-- Release builds MUST use `mtm_wip_application` database
+- Release builds MUST use `MTM_WIP_Application_Winforms` database
 - Server selection logic: Release always uses `172.16.1.104`; Debug uses `172.16.1.104` if current machine matches, otherwise `localhost`
 - Connection strings MUST be centralized in `Helper_Database_Variables` (no hardcoding)
 - Test database name for new features: `mtm_wip_application_winform_test`

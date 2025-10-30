@@ -1,9 +1,9 @@
 using System.Drawing.Imaging;
-using MTM_Inventory_Application.Core;
-using MTM_Inventory_Application.Models;
-using MTM_Inventory_Application.Services;
+using MTM_WIP_Application_Winforms.Core;
+using MTM_WIP_Application_Winforms.Models;
+using MTM_WIP_Application_Winforms.Services;
 
-namespace MTM_Inventory_Application.Forms.Splash
+namespace MTM_WIP_Application_Winforms.Forms.Splash
 {
     public partial class SplashScreenForm : Form
     {

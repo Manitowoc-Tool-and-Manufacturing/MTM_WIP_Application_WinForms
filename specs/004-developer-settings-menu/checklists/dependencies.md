@@ -29,7 +29,7 @@ This feature depends on the following completed features:
 Test-Path "Forms\ErrorDialog\ViewErrorReportsForm.cs"
 
 # Check if form compiles
-dotnet build MTM_Inventory_Application.csproj -c Debug
+dotnet build MTM_WIP_Application_Winforms.csproj -c Debug
 ```
 
 ---
@@ -53,7 +53,7 @@ dotnet build MTM_Inventory_Application.csproj -c Debug
 Test-Path "Forms\Development\ViewApplicationLogsForm.cs"
 
 # Check if form compiles
-dotnet build MTM_Inventory_Application.csproj -c Debug
+dotnet build MTM_WIP_Application_Winforms.csproj -c Debug
 ```
 
 ---

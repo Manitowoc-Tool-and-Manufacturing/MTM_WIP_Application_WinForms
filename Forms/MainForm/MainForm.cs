@@ -2,21 +2,21 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.Reflection;
 using Microsoft.Win32;
-using MTM_Inventory_Application.Controls.MainForm;
-using MTM_Inventory_Application.Controls.Shared;
-using MTM_Inventory_Application.Core;
-using MTM_Inventory_Application.Data;
-using MTM_Inventory_Application.Forms.ErrorDialog;
-using MTM_Inventory_Application.Forms.ErrorReports;
-using MTM_Inventory_Application.Forms.Settings;
-using MTM_Inventory_Application.Helpers;
-using MTM_Inventory_Application.Logging;
-using MTM_Inventory_Application.Models;
-using MTM_Inventory_Application.Services;
+using MTM_WIP_Application_Winforms.Controls.MainForm;
+using MTM_WIP_Application_Winforms.Controls.Shared;
+using MTM_WIP_Application_Winforms.Core;
+using MTM_WIP_Application_Winforms.Data;
+using MTM_WIP_Application_Winforms.Forms.ErrorDialog;
+using MTM_WIP_Application_Winforms.Forms.ErrorReports;
+using MTM_WIP_Application_Winforms.Forms.Settings;
+using MTM_WIP_Application_Winforms.Helpers;
+using MTM_WIP_Application_Winforms.Logging;
+using MTM_WIP_Application_Winforms.Models;
+using MTM_WIP_Application_Winforms.Services;
 using MySql.Data.MySqlClient;
 using Timer = System.Windows.Forms.Timer;
 
-namespace MTM_Inventory_Application.Forms.MainForm
+namespace MTM_WIP_Application_Winforms.Forms.MainForm
 {
     #region MainForm
 
@@ -1238,7 +1238,7 @@ namespace MTM_Inventory_Application.Forms.MainForm
                                   $"© 2025 Manitowoc Tool and Manufacturing\n\n" +
                                   $"Built with .NET 8 and Windows Forms\n" +
                                   $"Database: MySQL with stored procedures\n" +
-                                  $"Environment: {(Model_Users.Database == "mtm_wip_application" ? "Release" : "Debug")}";
+                                  $"Environment: {(Model_Users.Database == "MTM_WIP_Application_Winforms" ? "Release" : "Debug")}";
 
                 Service_ErrorHandler.ShowInformation("About MTM Inventory", aboutMessage);
             }

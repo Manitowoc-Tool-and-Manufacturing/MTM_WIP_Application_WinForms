@@ -88,7 +88,7 @@ VALUES
 **Properties**:
 
 ```csharp
-namespace MTM_Inventory_Application.Models
+namespace MTM_WIP_Application_Winforms.Models
 {
     /// <summary>
     /// Represents a parameter prefix override for a stored procedure parameter.
@@ -182,7 +182,7 @@ public class Model_SchemaTable
 }
 ```
 
-**Data Source**: `SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = 'mtm_wip_application'`
+**Data Source**: `SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = 'MTM_WIP_Application_Winforms'`
 
 ---
 
@@ -209,7 +209,7 @@ public class Model_SchemaColumn
 }
 ```
 
-**Data Source**: `SELECT * FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA = 'mtm_wip_application' AND TABLE_NAME = @TableName`
+**Data Source**: `SELECT * FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA = 'MTM_WIP_Application_Winforms' AND TABLE_NAME = @TableName`
 
 ---
 
@@ -232,7 +232,7 @@ public class Model_StoredProcedure
 }
 ```
 
-**Data Source**: `SELECT * FROM INFORMATION_SCHEMA.ROUTINES WHERE ROUTINE_SCHEMA = 'mtm_wip_application' AND ROUTINE_TYPE = 'PROCEDURE'`
+**Data Source**: `SELECT * FROM INFORMATION_SCHEMA.ROUTINES WHERE ROUTINE_SCHEMA = 'MTM_WIP_Application_Winforms' AND ROUTINE_TYPE = 'PROCEDURE'`
 
 ---
 
@@ -256,7 +256,7 @@ public class Model_ProcedureParameter
 }
 ```
 
-**Data Source**: `SELECT * FROM INFORMATION_SCHEMA.PARAMETERS WHERE SPECIFIC_SCHEMA = 'mtm_wip_application' AND SPECIFIC_NAME = @ProcedureName ORDER BY ORDINAL_POSITION`
+**Data Source**: `SELECT * FROM INFORMATION_SCHEMA.PARAMETERS WHERE SPECIFIC_SCHEMA = 'MTM_WIP_Application_Winforms' AND SPECIFIC_NAME = @ProcedureName ORDER BY ORDINAL_POSITION`
 
 **Computed Field**: `DetectedPrefix` extracts prefix from ParameterName (e.g., "p_UserID" → "p_")
 
@@ -595,7 +595,7 @@ SELECT DISTINCT spo.ProcedureName
 FROM sys_parameter_prefix_overrides spo
 LEFT JOIN INFORMATION_SCHEMA.ROUTINES r 
     ON spo.ProcedureName = r.ROUTINE_NAME 
-    AND r.ROUTINE_SCHEMA = 'mtm_wip_application'
+    AND r.ROUTINE_SCHEMA = 'MTM_WIP_Application_Winforms'
 WHERE spo.IsActive = 1 
 AND r.ROUTINE_NAME IS NULL;
 ```

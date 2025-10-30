@@ -5,15 +5,15 @@ using System.Drawing;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using MTM_Inventory_Application.Core;
-using MTM_Inventory_Application.Data;
-using MTM_Inventory_Application.Helpers;
-using MTM_Inventory_Application.Logging;
-using MTM_Inventory_Application.Models;
-using MTM_Inventory_Application.Services;
+using MTM_WIP_Application_Winforms.Core;
+using MTM_WIP_Application_Winforms.Data;
+using MTM_WIP_Application_Winforms.Helpers;
+using MTM_WIP_Application_Winforms.Logging;
+using MTM_WIP_Application_Winforms.Models;
+using MTM_WIP_Application_Winforms.Services;
 using MTM_WIP_Application_WinForms.Models;
 
-namespace MTM_Inventory_Application.Controls.ErrorReports
+namespace MTM_WIP_Application_Winforms.Controls.ErrorReports
 {
     public partial class Control_ErrorReportsGrid : UserControl
     {

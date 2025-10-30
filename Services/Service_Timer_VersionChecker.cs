@@ -1,13 +1,13 @@
 ﻿using System.Diagnostics;
 using System.Timers;
-using MTM_Inventory_Application.Controls.MainForm;
-using MTM_Inventory_Application.Forms.MainForm;
-using MTM_Inventory_Application.Helpers;
-using MTM_Inventory_Application.Logging;
-using MTM_Inventory_Application.Models;
+using MTM_WIP_Application_Winforms.Controls.MainForm;
+using MTM_WIP_Application_Winforms.Forms.MainForm;
+using MTM_WIP_Application_Winforms.Helpers;
+using MTM_WIP_Application_Winforms.Logging;
+using MTM_WIP_Application_Winforms.Models;
 using Timer = System.Timers.Timer;
 
-namespace MTM_Inventory_Application.Services
+namespace MTM_WIP_Application_Winforms.Services
 {
     /// <summary>
     /// Version checking service that periodically checks database for version information

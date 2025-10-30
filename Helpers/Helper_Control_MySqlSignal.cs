@@ -1,7 +1,7 @@
 using System.Net.NetworkInformation;
 using MySql.Data.MySqlClient;
 
-namespace MTM_Inventory_Application.Helpers;
+namespace MTM_WIP_Application_Winforms.Helpers;
 
 public class Helper_Control_MySqlSignal
 {

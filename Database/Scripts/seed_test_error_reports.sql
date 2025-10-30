@@ -1,7 +1,7 @@
 -- Seed Test Data for error_reports table
 -- Purpose: Add diverse error reports for filter testing
 -- Created: 2025-10-26
--- Database: mtm_wip_application_winforms_test (or mtm_wip_application)
+-- Database: mtm_wip_application_winforms_test (or MTM_WIP_Application_Winforms)
 
 USE mtm_wip_application_winforms_test;
 

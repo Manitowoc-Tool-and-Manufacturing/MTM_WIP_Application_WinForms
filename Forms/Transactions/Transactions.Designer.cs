@@ -1,7 +1,7 @@
 ﻿using System.Drawing;
 using System.Windows.Forms;
 
-namespace MTM_Inventory_Application.Forms.Transactions
+namespace MTM_WIP_Application_Winforms.Forms.Transactions
 {
     partial class Transactions : Form
     {

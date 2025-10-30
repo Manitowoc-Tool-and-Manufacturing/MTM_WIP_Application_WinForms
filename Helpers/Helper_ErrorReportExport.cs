@@ -5,9 +5,9 @@ using System.IO;
 using System.Text;
 using System.Threading.Tasks;
 using ClosedXML.Excel;
-using MTM_Inventory_Application.Logging;
+using MTM_WIP_Application_Winforms.Logging;
 
-namespace MTM_Inventory_Application.Helpers
+namespace MTM_WIP_Application_Winforms.Helpers
 {
     /// <summary>
     /// Helper class for exporting error report data to various file formats.

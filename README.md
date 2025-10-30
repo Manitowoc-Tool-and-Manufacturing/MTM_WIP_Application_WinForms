@@ -1,7 +1,7 @@
-﻿# Copilot Reference: MTM_WIP_Application (MTM Inventory Application)
+﻿# Copilot Reference: MTM_WIP_Application_Winforms (MTM Inventory Application)
 
 Last updated: 2025-01-27 14:30:00 UTC  
-Repository: Dorotel/MTM_WIP_Application  
+Repository: Dorotel/MTM_WIP_Application_Winforms  
 Primary language: C# (.NET 8, Windows Forms)  
 Version: 5.0.1.2
 
@@ -116,7 +116,7 @@ public partial class Control_ExampleTab : UserControl
 
 Authoritative directory structure
 ```
-MTM_Inventory_Application/
+MTM_WIP_Application_Winforms/
 ├─ Controls/                     # All UserControl implementations
 │  ├─ Addons/                    # Specialized controls (Connection strength, etc.)
 │  ├─ MainForm/                  # Main application tabs and controls
@@ -159,7 +159,7 @@ The application implements environment-aware database and server selection:
 
 ### **Database Name Logic**
 - **Debug Mode (Development)**: Uses `mtm_wip_application_winforms_test`
-- **Release Mode (Production)**: Uses `mtm_wip_application`
+- **Release Mode (Production)**: Uses `MTM_WIP_Application_Winforms`
 
 ### **Server Address Logic**  
 - **Release Mode**: Always connects to `172.16.1.104` (production server)
@@ -174,7 +174,7 @@ The application implements environment-aware database and server selection:
     string database = "mtm_wip_application_winforms_test";     // Test database
     string server = GetLocalIpAddress() == "172.16.1.104" ? "172.16.1.104" : "localhost";
 #else
-    string database = "mtm_wip_application";          // Production database
+    string database = "MTM_WIP_Application_Winforms";          // Production database
     string server = "172.16.1.104";                  // Always production server
 #endif
 ```
@@ -371,7 +371,7 @@ The application follows modern UI design patterns inspired by the Transactions.h
 ```bash
 # Check environment configuration
 Environment: Debug → mtm_wip_application_winforms_test, localhost/172.16.1.104
-Environment: Release → mtm_wip_application, 172.16.1.104
+Environment: Release → MTM_WIP_Application_Winforms, 172.16.1.104
 
 # Verify connection string in Helper_Database_Variables.GetConnectionString()
 # Check MySQL service status and credentials
@@ -574,7 +574,7 @@ SET p_ErrorMsg = 'Database connection error: Unable to execute query';
     string database = "mtm_wip_application_winforms_test";     // Test database
     string server = GetLocalIpAddress() == "172.16.1.104" ? "172.16.1.104" : "localhost";
 #else
-    string database = "mtm_wip_application";          // Production database
+    string database = "MTM_WIP_Application_Winforms";          // Production database
     string server = "172.16.1.104";                  // Always production server
 #endif
 ```

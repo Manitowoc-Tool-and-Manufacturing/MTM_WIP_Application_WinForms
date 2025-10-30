@@ -101,24 +101,24 @@ JSON configs for these tools live under `.mcp/samples/` (mirror to `C:\.mcp\samp
 dotnet restore
 
 # Build WinForms project (Debug)
-dotnet build MTM_Inventory_Application.csproj -c Debug
+dotnet build MTM_WIP_Application_Winforms.csproj -c Debug
 
 # Build Release when preparing deployments
-dotnet build MTM_Inventory_Application.csproj -c Release
+dotnet build MTM_WIP_Application_Winforms.csproj -c Release
 
 # Launch application (opens WinForms UI)
-dotnet run --project MTM_Inventory_Application.csproj
+dotnet run --project MTM_WIP_Application_Winforms.csproj
 ```
 
 ## Database Connection
 ```
 Server: localhost
 Port:   3306
-Database: mtm_wip_application
+Database: MTM_WIP_Application_Winforms
 Username: root
 Password: root
 Connection string template:
-  Server=localhost;Port=3306;Database=mtm_wip_application;
+  Server=localhost;Port=3306;Database=MTM_WIP_Application_Winforms;
   User=root;Password=root;SslMode=none;AllowPublicKeyRetrieval=true;
 ```
 

@@ -34,10 +34,10 @@ dotnet clean && dotnet restore
 
 ```powershell
 # Build Debug configuration (uses test database)
-dotnet build MTM_Inventory_Application.csproj -c Debug
+dotnet build MTM_WIP_Application_Winforms.csproj -c Debug
 
 # Build Release configuration (uses production database)
-dotnet build MTM_Inventory_Application.csproj -c Release
+dotnet build MTM_WIP_Application_Winforms.csproj -c Release
 
 # Build with specific framework
 dotnet build -p:TargetFramework=net8.0-windows -p:Configuration=Debug
@@ -50,13 +50,13 @@ dotnet build -c Debug /p:NoWarn=CS1591,CS8618
 
 ```powershell
 # Build and output to file for review
-dotnet build MTM_Inventory_Application.csproj -c Debug > build-output.txt
+dotnet build MTM_WIP_Application_Winforms.csproj -c Debug > build-output.txt
 
 # Check for warnings only
-dotnet build MTM_Inventory_Application.csproj -c Debug 2>&1 | Select-String "warning"
+dotnet build MTM_WIP_Application_Winforms.csproj -c Debug 2>&1 | Select-String "warning"
 
 # Check for errors only
-dotnet build MTM_Inventory_Application.csproj -c Debug 2>&1 | Select-String "error"
+dotnet build MTM_WIP_Application_Winforms.csproj -c Debug 2>&1 | Select-String "error"
 ```
 
 ---
@@ -137,7 +137,7 @@ reportgenerator -reports:"**/coverage.cobertura.xml" -targetdir:"coveragereport"
 mysql -h localhost -P 3306 -u root -proot mtm_wip_application_winforms_test
 
 # Connect to production database (be careful!)
-mysql -h 172.16.1.104 -P 3306 -u root -proot mtm_wip_application
+mysql -h 172.16.1.104 -P 3306 -u root -proot MTM_WIP_Application_Winforms
 
 # Connect and run specific query
 mysql -h localhost -P 3306 -u root -proot mtm_wip_application_winforms_test -e "SELECT COUNT(*) FROM usr_users WHERE UserID LIKE 'TEST-%';"
@@ -351,7 +351,7 @@ mysql -h localhost -P 3306 -u root -proot -e "SELECT VERSION();"
 
 ```powershell
 # Detailed build diagnostics
-dotnet build MTM_Inventory_Application.csproj -c Debug -v detailed > build-detailed.log 2>&1
+dotnet build MTM_WIP_Application_Winforms.csproj -c Debug -v detailed > build-detailed.log 2>&1
 
 # Check for specific error codes
 Get-Content build-detailed.log | Select-String "CS[0-9]{4}"

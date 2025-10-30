@@ -6,10 +6,10 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
-using MTM_Inventory_Application.Logging;
-using MTM_Inventory_Application.Models;
+using MTM_WIP_Application_Winforms.Logging;
+using MTM_WIP_Application_Winforms.Models;
 
-namespace MTM_Inventory_Application.Services;
+namespace MTM_WIP_Application_Winforms.Services;
 
 /// <summary>
 /// Comprehensive debugging and tracing service for MTM Inventory Application

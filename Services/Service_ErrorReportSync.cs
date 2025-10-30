@@ -6,13 +6,13 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
-using MTM_Inventory_Application.Helpers;
-using MTM_Inventory_Application.Logging;
-using MTM_Inventory_Application.Models;
+using MTM_WIP_Application_Winforms.Helpers;
+using MTM_WIP_Application_Winforms.Logging;
+using MTM_WIP_Application_Winforms.Models;
 using MTM_WIP_Application_WinForms.Models;
 using MySql.Data.MySqlClient;
 
-namespace MTM_Inventory_Application.Services;
+namespace MTM_WIP_Application_Winforms.Services;
 
 /// <summary>
 /// Service for synchronizing queued error reports with the database.

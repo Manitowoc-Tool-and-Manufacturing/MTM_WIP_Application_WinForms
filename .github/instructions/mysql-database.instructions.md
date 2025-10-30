@@ -48,11 +48,11 @@ This file defines MySQL 5.7 database patterns, connection management, and manufa
 ### MAMP MySQL 5.7 Credentials
 - Server: `localhost`
 - Port: `3306` (default)
-- Database: `mtm_wip_application` (production)
+- Database: `MTM_WIP_Application_Winforms` (production)
 - Database: `mtm_wip_application_winforms_test` (development)
 - Username: `root`
 - Password: `root`
-- Connection String: `Server=localhost;Database=mtm_wip_application;SslMode=none;AllowPublicKeyRetrieval=true;`
+- Connection String: `Server=localhost;Database=MTM_WIP_Application_Winforms;SslMode=none;AllowPublicKeyRetrieval=true;`
 
 ### Connection String Pattern
 ```

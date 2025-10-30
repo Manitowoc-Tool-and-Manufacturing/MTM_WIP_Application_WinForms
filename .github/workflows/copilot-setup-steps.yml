@@ -103,9 +103,9 @@ jobs:
         run: |
           Write-Host "Validating WinForms project configuration..."
 
-          $csprojPath = Join-Path ${{ github.workspace }} "MTM_Inventory_Application.csproj"
+          $csprojPath = Join-Path ${{ github.workspace }} "MTM_WIP_Application_Winforms.csproj"
           if (-not (Test-Path $csprojPath)) {
-            Write-Error "Project file not found: MTM_Inventory_Application.csproj"
+            Write-Error "Project file not found: MTM_WIP_Application_Winforms.csproj"
             exit 1
           }
 

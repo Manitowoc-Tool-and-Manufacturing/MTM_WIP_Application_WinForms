@@ -1,9 +1,9 @@
 using System;
 using System.Drawing;
 using System.Windows.Forms;
-using MTM_Inventory_Application.Models;
+using MTM_WIP_Application_Winforms.Models;
 
-namespace MTM_Inventory_Application.Helpers
+namespace MTM_WIP_Application_Winforms.Helpers
 {
     /// <summary>
     /// Enhanced progress reporting system with visual error feedback for stored procedures

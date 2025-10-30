@@ -317,10 +317,10 @@ Search entire codebase for stored procedure execution patterns to build master i
 Query INFORMATION_SCHEMA to capture complete database structure snapshot.
 - **Method**: Execute SQL queries:
   ```sql
-  SELECT * FROM INFORMATION_SCHEMA.ROUTINES WHERE ROUTINE_SCHEMA = 'mtm_wip_application';
-  SELECT * FROM INFORMATION_SCHEMA.PARAMETERS WHERE SPECIFIC_SCHEMA = 'mtm_wip_application';
-  SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = 'mtm_wip_application';
-  SELECT * FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA = 'mtm_wip_application';
+  SELECT * FROM INFORMATION_SCHEMA.ROUTINES WHERE ROUTINE_SCHEMA = 'MTM_WIP_Application_Winforms';
+  SELECT * FROM INFORMATION_SCHEMA.PARAMETERS WHERE SPECIFIC_SCHEMA = 'MTM_WIP_Application_Winforms';
+  SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = 'MTM_WIP_Application_Winforms';
+  SELECT * FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA = 'MTM_WIP_Application_Winforms';
   ```
 - **Output**: `database-schema-snapshot.json` with 4 sections (routines, parameters, tables, columns)
 - **Deliverable**: JSON file with complete schema metadata
@@ -710,7 +710,7 @@ Build PowerShell script that wipes old procedures and installs new ones with saf
       }
       'Production' = @{
           Server = '172.16.1.104'
-          Database = 'mtm_wip_application'
+          Database = 'MTM_WIP_Application_Winforms'
           Port = 3306
       }
   }
@@ -830,7 +830,7 @@ Deploy to mtm_wip_application_winforms_test using post-reconciliation procedure 
 - **Dependencies**: T119 (need deployment script), T119b/c/d/e (need reconciled procedures), T108-T111 (need integration tests)
 
 **T121: Execute Production Database Deployment (with DBA Review)**  
-Deploy to mtm_wip_application after DBA approval, backup verification, and drift reconciliation review.
+Deploy to MTM_WIP_Application_Winforms after DBA approval, backup verification, and drift reconciliation review.
 - **Prerequisites**:
   - DBA reviews deployment plan, refactored procedures, AND drift reconciliation report (T119b/c/d/e)
   - Full database backup created and validated (restore test)
@@ -923,7 +923,7 @@ Create custom Roslyn analyzer to detect and fix database access violations in re
      - **v1.0.0** (initial rollout): All rules as Warning severity (educational phase)
      - **v2.0.0** (enforcement): MTM001/MTM002/MTM003 as Error severity, MTM004 remains Warning
   5. **NuGet package**: Build and publish to internal feed or local source
-  6. **IDE integration**: Add `<PackageReference Include="MTM.CodeAnalysis.DatabaseAccess" Version="1.0.0" />` to MTM_Inventory_Application.csproj
+  6. **IDE integration**: Add `<PackageReference Include="MTM.CodeAnalysis.DatabaseAccess" Version="1.0.0" />` to MTM_WIP_Application_Winforms.csproj
 - **Deliverables**: 
   - MTM.CodeAnalysis.DatabaseAccess.csproj with 4 diagnostic analyzers
   - 2 code fix providers (MTM001/MTM002)
@@ -1290,10 +1290,10 @@ Write-Host "Dropping newly deployed procedures..."
 
 # 3. Restore from backup
 Write-Host "Restoring procedures from backup: $BackupFile"
-mysql -h 172.16.1.104 -u root -p mtm_wip_application < $BackupFile
+mysql -h 172.16.1.104 -u root -p MTM_WIP_Application_Winforms < $BackupFile
 
 # 4. Validate restoration
-$restoredCount = Execute-Query -Query "SELECT COUNT(*) FROM INFORMATION_SCHEMA.ROUTINES WHERE ROUTINE_SCHEMA='mtm_wip_application'"
+$restoredCount = Execute-Query -Query "SELECT COUNT(*) FROM INFORMATION_SCHEMA.ROUTINES WHERE ROUTINE_SCHEMA='MTM_WIP_Application_Winforms'"
 Write-Host "Rollback complete. $restoredCount procedures restored." -ForegroundColor Green
 ```
 

@@ -22,7 +22,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\MTM_Inventory_Application.csproj" />
+    <ProjectReference Include="..\MTM_WIP_Application_Winforms.csproj" />
   </ItemGroup>
 
 </Project>

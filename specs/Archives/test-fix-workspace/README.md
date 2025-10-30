@@ -146,7 +146,7 @@ Progress: [████████████████░░░░] 83.1%
 **Most common**:
 ```powershell
 # Build Debug configuration
-dotnet build MTM_Inventory_Application.csproj -c Debug
+dotnet build MTM_WIP_Application_Winforms.csproj -c Debug
 
 # Run Category 1 tests
 dotnet test --filter "FullyQualifiedName~Dao_QuickButtons_Tests"

@@ -386,7 +386,7 @@ CREATE TABLE `usr_users` (
   `VisualUserName` varchar(50) NOT NULL DEFAULT 'User Name',
   `VisualPassword` varchar(50) NOT NULL DEFAULT 'Password',
   `WipServerAddress` varchar(15) NOT NULL DEFAULT '172.16.1.104',
-  `WIPDatabase` varchar(300) NOT NULL DEFAULT 'mtm_wip_application',
+  `WIPDatabase` varchar(300) NOT NULL DEFAULT 'MTM_WIP_Application_Winforms',
   `WipServerPort` varchar(10) NOT NULL DEFAULT '3306',
   PRIMARY KEY (`ID`),
   UNIQUE KEY `uq_user` (`User`)

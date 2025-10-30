@@ -13,7 +13,7 @@
     not require database schema changes.
     
 .PARAMETER DatabaseName
-    Name of the database to check (default: mtm_wip_application)
+    Name of the database to check (default: MTM_WIP_Application_Winforms)
     
 .PARAMETER OutputFormat
     Output format: Console, Json, or Report (default: Report)
@@ -26,7 +26,7 @@
 #>
 
 param(
-    [string]$DatabaseName = "mtm_wip_application",
+    [string]$DatabaseName = "MTM_WIP_Application_Winforms",
     [ValidateSet("Console", "Json", "Report")]
     [string]$OutputFormat = "Report"
 )

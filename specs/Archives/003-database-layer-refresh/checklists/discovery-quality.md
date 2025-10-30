@@ -21,7 +21,7 @@ This checklist validates the **quality of discovery phase requirements** as defi
 
 ### 1.1 Scope Definition
 
-- [ ] **Discovery target clearly defined**: Production database (`mtm_wip_application`) specified as source of truth (Q1 clarification)
+- [ ] **Discovery target clearly defined**: Production database (`MTM_WIP_Application_Winforms`) specified as source of truth (Q1 clarification)
 - [ ] **Call site inventory scope documented**: All .cs files in Data/, Helpers/, Forms/, Controls/, Services/ included in T100 search
 - [ ] **Schema extraction completeness**: Four INFORMATION_SCHEMA queries defined (ROUTINES, PARAMETERS, TABLES, COLUMNS) in T101
 - [ ] **Procedure file organization**: Directory structure specified (`Database/UpdatedStoredProcedures/<domain>/<name>.sql`) in T102

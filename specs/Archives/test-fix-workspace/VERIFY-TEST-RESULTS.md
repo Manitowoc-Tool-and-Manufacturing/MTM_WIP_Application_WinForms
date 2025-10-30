@@ -4,7 +4,7 @@
 
 ```powershell
 # Simple command to see pass/fail summary
-dotnet test MTM_Inventory_Application.csproj `
+dotnet test MTM_WIP_Application_Winforms.csproj `
   --filter "FullyQualifiedName~Integration.Dao_QuickButtons_Tests" `
   --logger "console;verbosity=minimal"
 ```
@@ -16,7 +16,7 @@ Passed!  - Failed:     0, Passed:    10, Skipped:     0, Total:    10, Duration:
 
 **If you see different results**, run this for details:
 ```powershell
-dotnet test MTM_Inventory_Application.csproj `
+dotnet test MTM_WIP_Application_Winforms.csproj `
   --filter "FullyQualifiedName~Integration.Dao_QuickButtons_Tests" `
   --logger "console;verbosity=detailed" > detailed-results.txt
 
@@ -123,7 +123,7 @@ Once you have results, update this table in `categories/01-quick-buttons.md`:
 
 1. **Verify idempotency** (run 2-3 more times):
    ```powershell
-   dotnet test MTM_Inventory_Application.csproj `
+   dotnet test MTM_WIP_Application_Winforms.csproj `
      --filter "FullyQualifiedName~Integration.Dao_QuickButtons_Tests"
    ```
    All runs should show: `Passed! - Failed: 0, Passed: 10`
@@ -153,7 +153,7 @@ Once you have results, update this table in `categories/01-quick-buttons.md`:
 
 ```powershell
 # Step 1: Capture failures
-dotnet test MTM_Inventory_Application.csproj `
+dotnet test MTM_WIP_Application_Winforms.csproj `
   --filter "FullyQualifiedName~Integration.Dao_QuickButtons_Tests" `
   --logger "console;verbosity=detailed" > failures.txt
 

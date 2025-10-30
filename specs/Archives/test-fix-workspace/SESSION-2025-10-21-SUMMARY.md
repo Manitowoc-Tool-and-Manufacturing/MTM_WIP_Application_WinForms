@@ -204,7 +204,7 @@ public async Task SomeTest_Scenario_ExpectedResult()
 
 ### Build Status: ✅ **SUCCESS**
 
-**Command**: `dotnet build MTM_Inventory_Application.csproj -c Debug`
+**Command**: `dotnet build MTM_WIP_Application_Winforms.csproj -c Debug`
 
 **Results**:
 - Compilation: SUCCESS
@@ -353,7 +353,7 @@ dotnet build -c Debug 2>&1 | Select-String "Dao_QuickButtons_Tests.cs|BaseIntegr
 
 1. **Run All Quick Button Tests**
    ```powershell
-   dotnet test MTM_Inventory_Application.csproj --filter "FullyQualifiedName~Integration.Dao_QuickButtons_Tests"
+   dotnet test MTM_WIP_Application_Winforms.csproj --filter "FullyQualifiedName~Integration.Dao_QuickButtons_Tests"
    ```
 
 2. **Capture Test Results**

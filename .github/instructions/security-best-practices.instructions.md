@@ -135,7 +135,7 @@ var unsafeSql = $"SELECT * FROM Inventory WHERE LocationCode = '{locationCode}'"
 ```json
 {
   "ConnectionStrings": {
-    "DefaultConnection": "Server=localhost;Database=mtm_wip_application;User=root;Password=root;SslMode=none;AllowPublicKeyRetrieval=true"
+    "DefaultConnection": "Server=localhost;Database=MTM_WIP_Application_Winforms;User=root;Password=root;SslMode=none;AllowPublicKeyRetrieval=true"
   }
 }
 ```

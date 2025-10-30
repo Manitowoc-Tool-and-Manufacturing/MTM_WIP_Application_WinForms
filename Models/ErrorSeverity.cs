@@ -1,4 +1,4 @@
-namespace MTM_Inventory_Application.Models;
+namespace MTM_WIP_Application_Winforms.Models;
 
 /// <summary>
 /// Defines the severity levels for error handling in the MTM Inventory Application

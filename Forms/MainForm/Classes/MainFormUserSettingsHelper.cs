@@ -1,10 +1,10 @@
 ﻿
 
 using System.Diagnostics;
-using MTM_Inventory_Application.Data;
-using MTM_Inventory_Application.Models;
+using MTM_WIP_Application_Winforms.Data;
+using MTM_WIP_Application_Winforms.Models;
 
-namespace MTM_Inventory_Application.Forms.MainForm.Classes;
+namespace MTM_WIP_Application_Winforms.Forms.MainForm.Classes;
 
 public static class MainFormUserSettingsHelper
 {

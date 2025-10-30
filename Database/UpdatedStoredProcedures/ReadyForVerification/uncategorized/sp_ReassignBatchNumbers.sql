@@ -19,12 +19,12 @@ BEGIN
     DECLARE v_ProcessedCount INT DEFAULT 0;
     DECLARE in_cursor CURSOR FOR
         SELECT ID, PartID, ReceiveDate, Quantity, FromLocation, ToLocation
-        FROM mtm_wip_application.inv_transaction
+        FROM MTM_WIP_Application_Winforms.inv_transaction
         WHERE TransactionType = 'IN' AND BatchNumber IS NULL
         ORDER BY PartID, ReceiveDate;
     DECLARE other_cursor CURSOR FOR
         SELECT ID, PartID
-        FROM mtm_wip_application.inv_transaction
+        FROM MTM_WIP_Application_Winforms.inv_transaction
         WHERE TransactionType IN ('TRANSFER', 'OUT') AND BatchNumber IS NULL
         ORDER BY PartID;
     DECLARE CONTINUE HANDLER FOR NOT FOUND SET done = 1;
@@ -34,7 +34,7 @@ BEGIN
             p_ErrorMsg = MESSAGE_TEXT;
         SET p_Status = -1;
     END;
-    SELECT last_batch_number INTO newBatch FROM mtm_wip_application.inv_inventory_batch_seq;
+    SELECT last_batch_number INTO newBatch FROM MTM_WIP_Application_Winforms.inv_inventory_batch_seq;
     OPEN in_cursor;
     in_loop: LOOP
         FETCH in_cursor INTO curINID, curPartID, curINDate, curQty, curFromLocation, curToLocation;
@@ -43,7 +43,7 @@ BEGIN
         END IF;
         SET newBatch = newBatch + 1;
         SET batch_str = LPAD(newBatch, 10, '0');
-        UPDATE mtm_wip_application.inv_transaction
+        UPDATE MTM_WIP_Application_Winforms.inv_transaction
         SET BatchNumber = batch_str
         WHERE ID = curINID;
         SET v_ProcessedCount = v_ProcessedCount + 1;
@@ -58,13 +58,13 @@ BEGIN
         END IF;
         SET newBatch = newBatch + 1;
         SET batch_str = LPAD(newBatch, 10, '0');
-        UPDATE mtm_wip_application.inv_transaction
+        UPDATE MTM_WIP_Application_Winforms.inv_transaction
         SET BatchNumber = batch_str
         WHERE ID = curOtherID;
         SET v_ProcessedCount = v_ProcessedCount + 1;
     END LOOP;
     CLOSE other_cursor;
-    UPDATE mtm_wip_application.inv_inventory_batch_seq
+    UPDATE MTM_WIP_Application_Winforms.inv_inventory_batch_seq
     SET last_batch_number = newBatch;
     IF v_ProcessedCount > 0 THEN
         SET p_Status = 1;

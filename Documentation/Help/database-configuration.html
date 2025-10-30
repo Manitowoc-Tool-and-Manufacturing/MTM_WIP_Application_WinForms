@@ -33,7 +33,7 @@
                     <div class="env-item production">
                         <h3>🚀 Production Environment</h3>
                         <ul>
-                            <li><strong>Database:</strong> <code>mtm_wip_application</code></li>
+                            <li><strong>Database:</strong> <code>MTM_WIP_Application_Winforms</code></li>
                             <li><strong>Server:</strong> <code>172.16.1.104</code></li>
                             <li><strong>Port:</strong> <code>3306</code></li>
                             <li><strong>Auto-Detection:</strong> Release mode builds</li>
@@ -67,7 +67,7 @@
                 <h3>Step 2: Database Creation</h3>
                 <div class="code-block">
                     <h4>🔵 Production Database</h4>
-                    <pre><code>CREATE DATABASE mtm_wip_application
+                    <pre><code>CREATE DATABASE MTM_WIP_Application_Winforms
 CHARACTER SET utf8mb4 
 COLLATE utf8mb4_unicode_ci;</code></pre>
                 </div>
@@ -87,7 +87,7 @@ COLLATE utf8mb4_unicode_ci;</code></pre>
 CREATE USER 'mtm_user'@'%' IDENTIFIED BY 'secure_password_here';
 
 -- Grant necessary privileges
-GRANT SELECT, INSERT, UPDATE, DELETE, EXECUTE ON mtm_wip_application.* TO 'mtm_user'@'%';
+GRANT SELECT, INSERT, UPDATE, DELETE, EXECUTE ON MTM_WIP_Application_Winforms.* TO 'mtm_user'@'%';
 GRANT SELECT, INSERT, UPDATE, DELETE, EXECUTE ON mtm_wip_application_winforms_test.* TO 'mtm_user'@'%';
 
 -- Flush privileges
@@ -225,7 +225,7 @@ END IF;</code></pre>
                         <h4>🚀 Release Mode Logic</h4>
                         <ul>
                             <li>Always use 172.16.1.104</li>
-                            <li>Database: mtm_wip_application</li>
+                            <li>Database: MTM_WIP_Application_Winforms</li>
                         </ul>
                     </div>
                 </div>

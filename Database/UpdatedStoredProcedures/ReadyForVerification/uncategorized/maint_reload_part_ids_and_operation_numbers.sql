@@ -11,8 +11,8 @@ BEGIN
             p_ErrorMsg = MESSAGE_TEXT;
         SET p_Status = -1;
     END;
-    TRUNCATE TABLE mtm_wip_application.md_part_ids;
-    INSERT INTO mtm_wip_application.md_part_ids (
+    TRUNCATE TABLE MTM_WIP_Application_Winforms.md_part_ids;
+    INSERT INTO MTM_WIP_Application_Winforms.md_part_ids (
         `PartID`,
         `Operations`,
         `Customer`,
@@ -48,7 +48,7 @@ BEGIN
             ID
     ) descs
     ON seqs.ID = descs.ID;
-    INSERT IGNORE INTO mtm_wip_application.md_operation_numbers (`Operation`)
+    INSERT IGNORE INTO MTM_WIP_Application_Winforms.md_operation_numbers (`Operation`)
     SELECT DISTINCT op_num
     FROM (
         SELECT
@@ -58,7 +58,7 @@ BEGIN
                 )
             ) AS op_num
         FROM
-            mtm_wip_application.md_part_ids mpi
+            MTM_WIP_Application_Winforms.md_part_ids mpi
         JOIN (
             SELECT 0 AS n UNION ALL SELECT 1 UNION ALL SELECT 2 UNION ALL SELECT 3 UNION ALL
             SELECT 4 UNION ALL SELECT 5 UNION ALL SELECT 6 UNION ALL SELECT 7 UNION ALL

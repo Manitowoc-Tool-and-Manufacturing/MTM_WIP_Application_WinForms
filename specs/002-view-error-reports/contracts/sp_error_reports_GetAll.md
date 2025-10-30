@@ -3,7 +3,7 @@
 **Purpose**: Retrieve error reports with optional filtering by date range, user, status, machine, and search text.
 
 **Created**: 2025-10-25  
-**Database**: mtm_wip_application (Release) / mtm_wip_application_winforms_test (Debug)  
+**Database**: MTM_WIP_Application_Winforms (Release) / mtm_wip_application_winforms_test (Debug)  
 **Table**: error_reports
 
 ---

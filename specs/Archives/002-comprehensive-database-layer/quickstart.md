@@ -35,9 +35,9 @@ This guide helps developers quickly understand and use the refactored database a
 CREATE DATABASE mtm_wip_application_winform_test;
 ```
 
-**2. Import schema** from `Database/CurrentDatabase/mtm_wip_application.sql`:
+**2. Import schema** from `Database/CurrentDatabase/MTM_WIP_Application_Winforms.sql`:
 ```powershell
-mysql -u root -proot mtm_wip_application_winform_test < Database/CurrentDatabase/mtm_wip_application.sql
+mysql -u root -proot mtm_wip_application_winform_test < Database/CurrentDatabase/MTM_WIP_Application_Winforms.sql
 ```
 
 **3. Verify connection** in `Helper_Database_Variables.cs`:
@@ -46,7 +46,7 @@ mysql -u root -proot mtm_wip_application_winform_test < Database/CurrentDatabase
 public static string DatabaseName =>
     Debugger.IsAttached
         ? "mtm_wip_application_winforms_test" // Development
-        : "mtm_wip_application";     // Production
+        : "MTM_WIP_Application_Winforms";     // Production
 
 // Test database for integration tests (manual selection)
 public const string TestDatabaseName = "mtm_wip_application_winform_test";

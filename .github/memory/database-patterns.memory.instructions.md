@@ -213,7 +213,7 @@ var parameters = new Dictionary<string, object>
 ```json
 {
   "ConnectionStrings": {
-    "DefaultConnection": "Server=localhost;Port=3306;Database=mtm_wip_application;User=root;Password=root;SslMode=none;AllowPublicKeyRetrieval=true;MinPoolSize=5;MaxPoolSize=100;ConnectionTimeout=30;"
+    "DefaultConnection": "Server=localhost;Port=3306;Database=MTM_WIP_Application_Winforms;User=root;Password=root;SslMode=none;AllowPublicKeyRetrieval=true;MinPoolSize=5;MaxPoolSize=100;ConnectionTimeout=30;"
   }
 }
 ```

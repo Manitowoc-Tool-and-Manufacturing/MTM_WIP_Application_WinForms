@@ -19,7 +19,7 @@
     Verifies test database procedures
     
 .EXAMPLE
-    .\Scripts\Verify-DatabaseProcedures.ps1 -Database mtm_wip_application
+    .\Scripts\Verify-DatabaseProcedures.ps1 -Database MTM_WIP_Application_Winforms
     Verifies production database procedures
 #>
 

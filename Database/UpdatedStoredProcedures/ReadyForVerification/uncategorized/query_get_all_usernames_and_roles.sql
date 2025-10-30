@@ -13,9 +13,9 @@ BEGIN
         SET p_Status = -1;
     END;
     SELECT u.User AS Username, s.RoleName
-    FROM `mtm_wip_application`.usr_users u
-    JOIN `mtm_wip_application`.sys_user_roles r ON r.UserID = u.ID
-    JOIN `mtm_wip_application`.sys_roles s ON s.ID = r.RoleID
+    FROM `MTM_WIP_Application_Winforms`.usr_users u
+    JOIN `MTM_WIP_Application_Winforms`.sys_user_roles r ON r.UserID = u.ID
+    JOIN `MTM_WIP_Application_Winforms`.sys_roles s ON s.ID = r.RoleID
     ORDER BY u.User;
     SELECT FOUND_ROWS() INTO v_Count;
     IF v_Count > 0 THEN

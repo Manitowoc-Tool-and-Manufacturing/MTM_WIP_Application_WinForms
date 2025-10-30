@@ -36,6 +36,6 @@ recreate ALL DAO files using proper communication with Database
 
 Validate that all Datacalls work via testing
 
-Database = mtm_wip_application
+Database = MTM_WIP_Application_Winforms
 user = root
 password = root

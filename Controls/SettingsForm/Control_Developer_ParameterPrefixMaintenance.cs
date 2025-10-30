@@ -4,13 +4,13 @@ using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using MTM_Inventory_Application.Core;
-using MTM_Inventory_Application.Data;
-using MTM_Inventory_Application.Logging;
-using MTM_Inventory_Application.Models;
-using MTM_Inventory_Application.Services;
+using MTM_WIP_Application_Winforms.Core;
+using MTM_WIP_Application_Winforms.Data;
+using MTM_WIP_Application_Winforms.Logging;
+using MTM_WIP_Application_Winforms.Models;
+using MTM_WIP_Application_Winforms.Services;
 
-namespace MTM_Inventory_Application.Controls.SettingsForm
+namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
 {
     /// <summary>
     /// Developer control for managing parameter prefix overrides.

@@ -2,17 +2,17 @@
 using System.Data;
 using System.Diagnostics;
 using System.Text.Json;
-using MTM_Inventory_Application.Controls.Addons;
-using MTM_Inventory_Application.Controls.MainForm;
-using MTM_Inventory_Application.Controls.SettingsForm;
-using MTM_Inventory_Application.Controls.Shared;
-using MTM_Inventory_Application.Data;
-using MTM_Inventory_Application.Helpers;
-using MTM_Inventory_Application.Logging;
-using MTM_Inventory_Application.Models;
+using MTM_WIP_Application_Winforms.Controls.Addons;
+using MTM_WIP_Application_Winforms.Controls.MainForm;
+using MTM_WIP_Application_Winforms.Controls.SettingsForm;
+using MTM_WIP_Application_Winforms.Controls.Shared;
+using MTM_WIP_Application_Winforms.Data;
+using MTM_WIP_Application_Winforms.Helpers;
+using MTM_WIP_Application_Winforms.Logging;
+using MTM_WIP_Application_Winforms.Models;
 using System.Reflection;
 
-namespace MTM_Inventory_Application.Core
+namespace MTM_WIP_Application_Winforms.Core
 {
     /// <summary>
     /// Core theming system that provides comprehensive DPI scaling and UI responsiveness.

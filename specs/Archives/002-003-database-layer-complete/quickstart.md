@@ -38,7 +38,7 @@ Help developers adopt the standardized DAO, helper, and stored procedure pattern
 
 2. **Import baseline schema**
    ```powershell
-   mysql -u root -proot mtm_wip_application_winform_test < Database/CurrentDatabase/mtm_wip_application.sql
+   mysql -u root -proot mtm_wip_application_winform_test < Database/CurrentDatabase/MTM_WIP_Application_Winforms.sql
    ```
 
 3. **Configure helper to target test database** (excerpt)
@@ -47,7 +47,7 @@ Help developers adopt the standardized DAO, helper, and stored procedure pattern
 #if DEBUG
        "mtm_wip_application_winform_test";
 #else
-       "mtm_wip_application";
+       "MTM_WIP_Application_Winforms";
 #endif
 
    public const string TestDatabaseName = "mtm_wip_application_winform_test";

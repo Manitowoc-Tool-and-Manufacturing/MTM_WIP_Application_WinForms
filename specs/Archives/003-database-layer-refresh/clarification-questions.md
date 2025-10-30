@@ -14,12 +14,12 @@
 **Context**: Codebase references stored procedures, but production vs test database may have different procedures.
 
 **Options**:
-1. Production database only (`mtm_wip_application` on 172.16.1.104)
+1. Production database only (`MTM_WIP_Application_Winforms` on 172.16.1.104)
 2. Test database only (`mtm_wip_application_winforms_test` on localhost)
 3. Both databases (audit both, reconcile differences)
 4. Code analysis only (discover procedures from C# call sites)
 
-**User Response**: Production database (`mtm_wip_application`) as source of truth. Test database should mirror production after deployment. Code analysis (T100) validates call sites match actual procedures.
+**User Response**: Production database (`MTM_WIP_Application_Winforms`) as source of truth. Test database should mirror production after deployment. Code analysis (T100) validates call sites match actual procedures.
 
 **Decision Impact**: T101 queries production INFORMATION_SCHEMA, T102 extracts from production, T120 deploys to test first for validation before T121 production deployment.
 

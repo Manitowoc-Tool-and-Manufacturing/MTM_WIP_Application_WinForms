@@ -232,7 +232,7 @@ Aligns with industry standards for effective triage.
 **Acceptance Scenarios**:
 
 1. **Uniform Parameter Prefix Standards**
-   - **Given**: All 60+ stored procedures in `mtm_wip_application` database
+   - **Given**: All 60+ stored procedures in `MTM_WIP_Application_Winforms` database
    - **When**: Querying INFORMATION_SCHEMA.PARAMETERS for parameter definitions
    - **Then**: All parameters use standard prefixes: `p_` for CRUD parameters (p_PartID, p_LocationCode), `IN` for multi-step operations (in_FromLocation, in_ToLocation), `OUT` for return values (p_Status, p_ErrorMsg), no mixed or inconsistent prefixes
 

@@ -66,7 +66,7 @@ Integrate developer tools into the Settings form hierarchical navigation system,
 
 ### Simplicity Gates
 
-✅ **Single Project Rule**: Feature operates within existing MTM_Inventory_Application.csproj project. No new projects introduced.
+✅ **Single Project Rule**: Feature operates within existing MTM_WIP_Application_Winforms.csproj project. No new projects introduced.
 
 ✅ **Flat Structure Rule**: Developer tools live in existing `Controls/SettingsForm/` directory alongside other setting controls. No new nested hierarchies.
 
@@ -120,7 +120,7 @@ specs/002-003-database-layer-complete/002-003-001-developer-tools-suite/
 ### Source Code (repository root)
 
 ```
-MTM_Inventory_Application/
+MTM_WIP_Application_Winforms/
 ├── Controls/
 │   └── SettingsForm/
 │       ├── Control_Developer_DebugDashboard.cs           # [NEW] Converted from DebugDashboardForm
@@ -336,7 +336,7 @@ Tasks will be integrated into parent `specs/002-003-database-layer-complete/task
 
 ```sql
 -- Run against: mtm_wip_application_winforms_test (Development)
---          and: mtm_wip_application (Production)
+--          and: MTM_WIP_Application_Winforms (Production)
 
 -- 1. Create parameter prefix overrides table
 CREATE TABLE sys_parameter_prefix_overrides (

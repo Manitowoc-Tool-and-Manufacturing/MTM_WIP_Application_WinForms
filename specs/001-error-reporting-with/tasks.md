@@ -49,11 +49,11 @@ description: "Task list for Error Reporting with User Notes & Offline Queue feat
 **Purpose**: Database schema and stored procedure creation that both online and offline flows depend on
 
 - [X] **T001** – Create error_reports table in MySQL database
-  - **Completed**: 2025-10-26 - Created error_reports table SQL script in Database/UpdatedDatabase/ReadyForVerification/ with proper indexes and documentation. DEPLOYED to both test (mtm_wip_application_winforms_test) and production (mtm_wip_application) databases. Verified 13 columns, 4 indexes (PRIMARY, idx_user, idx_date, idx_status), and successful test insert/delete.
+  - **Completed**: 2025-10-26 - Created error_reports table SQL script in Database/UpdatedDatabase/ReadyForVerification/ with proper indexes and documentation. DEPLOYED to both test (mtm_wip_application_winforms_test) and production (MTM_WIP_Application_Winforms) databases. Verified 13 columns, 4 indexes (PRIMARY, idx_user, idx_date, idx_status), and successful test insert/delete.
   - Create table with 14 columns per data-model.md schema
   - Add indexes on UserName, ReportDate (DESC), Status per data-model.md
   - Use UpdatedDatabase/ReadyForVerification folder for SQL script
-  - Verify table creation in both Debug (mtm_wip_application_winforms_test) and Release (mtm_wip_application) databases
+  - Verify table creation in both Debug (mtm_wip_application_winforms_test) and Release (MTM_WIP_Application_Winforms) databases
   - **Reference**: .github/instructions/mysql-database.instructions.md - Follow stored procedure standards, table naming conventions
 
 - [X] **T002** – Create sp_error_reports_Insert stored procedure
@@ -526,7 +526,7 @@ description: "Task list for Error Reporting with User Notes & Offline Queue feat
   - **Reference**: .github/instructions/code-review-standards.instructions.md - Error handling checklist
 
 - [X] **T040** – Build validation and final integration test
-  - **Completed**: 2025-10-26 - Build validation complete using validate_build MCP tool. Project MTM_Inventory_Application.csproj builds successfully in Debug configuration with 0 compilation errors. 58 warnings present are pre-existing (nullable reference warnings, obsolete method usage) and unrelated to error reporting feature. All error reporting files (Models/Model_ErrorReport.cs, Models/Model_QueuedErrorReport.cs, Data/Dao_ErrorReports.cs, Services/Service_ErrorReportQueue.cs, Services/Service_ErrorReportSync.cs, Forms/ErrorDialog/Form_ReportIssue.cs) compile cleanly with no warnings or errors.
+  - **Completed**: 2025-10-26 - Build validation complete using validate_build MCP tool. Project MTM_WIP_Application_Winforms.csproj builds successfully in Debug configuration with 0 compilation errors. 58 warnings present are pre-existing (nullable reference warnings, obsolete method usage) and unrelated to error reporting feature. All error reporting files (Models/Model_ErrorReport.cs, Models/Model_QueuedErrorReport.cs, Data/Dao_ErrorReports.cs, Services/Service_ErrorReportQueue.cs, Services/Service_ErrorReportSync.cs, Forms/ErrorDialog/Form_ReportIssue.cs) compile cleanly with no warnings or errors.
   - Run dotnet build -c Debug - verify no errors
   - Run dotnet build -c Release - verify no errors
   - Review build warnings, address critical warnings

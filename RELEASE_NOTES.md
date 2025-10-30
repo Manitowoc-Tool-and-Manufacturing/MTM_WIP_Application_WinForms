@@ -118,7 +118,7 @@ Core_Themes.ApplyRuntimeLayoutAdjustments(this);
 **Option 1: Full Build Deployment** (Recommended)
 ```powershell
 # Stop application if running
-Stop-Process -Name "MTM_Inventory_Application" -Force -ErrorAction SilentlyContinue
+Stop-Process -Name "MTM_WIP_Application_Winforms" -Force -ErrorAction SilentlyContinue
 
 # Backup current version
 Copy-Item "C:\Program Files\MTM\WIP_Application\*" "C:\Backups\MTM_5.3.0_$(Get-Date -Format 'yyyyMMdd_HHmmss')" -Recurse
@@ -127,24 +127,24 @@ Copy-Item "C:\Program Files\MTM\WIP_Application\*" "C:\Backups\MTM_5.3.0_$(Get-D
 Copy-Item "\\deployment\share\MTM_WIP_5.3.1\*" "C:\Program Files\MTM\WIP_Application\" -Recurse -Force
 
 # Restart application
-Start-Process "C:\Program Files\MTM\WIP_Application\MTM_Inventory_Application.exe"
+Start-Process "C:\Program Files\MTM\WIP_Application\MTM_WIP_Application_Winforms.exe"
 ```
 
 **Option 2: File-Only Patch** (Quick fix for urgent issues)
 ```powershell
 # Stop application
-Stop-Process -Name "MTM_Inventory_Application" -Force -ErrorAction SilentlyContinue
+Stop-Process -Name "MTM_WIP_Application_Winforms" -Force -ErrorAction SilentlyContinue
 
 # Backup affected file
-Copy-Item "C:\Program Files\MTM\WIP_Application\MTM_Inventory_Application.dll" `
-          "C:\Program Files\MTM\WIP_Application\MTM_Inventory_Application.dll.bak"
+Copy-Item "C:\Program Files\MTM\WIP_Application\MTM_WIP_Application_Winforms.dll" `
+          "C:\Program Files\MTM\WIP_Application\MTM_WIP_Application_Winforms.dll.bak"
 
 # Deploy patched DLL
-Copy-Item "\\deployment\share\MTM_WIP_5.3.1\MTM_Inventory_Application.dll" `
+Copy-Item "\\deployment\share\MTM_WIP_5.3.1\MTM_WIP_Application_Winforms.dll" `
           "C:\Program Files\MTM\WIP_Application\" -Force
 
 # Restart application
-Start-Process "C:\Program Files\MTM\WIP_Application\MTM_Inventory_Application.exe"
+Start-Process "C:\Program Files\MTM\WIP_Application\MTM_WIP_Application_Winforms.exe"
 ```
 
 #### Database Changes
@@ -153,13 +153,13 @@ Start-Process "C:\Program Files\MTM\WIP_Application\MTM_Inventory_Application.ex
 #### Rollback Procedure
 ```powershell
 # Stop application
-Stop-Process -Name "MTM_Inventory_Application" -Force -ErrorAction SilentlyContinue
+Stop-Process -Name "MTM_WIP_Application_Winforms" -Force -ErrorAction SilentlyContinue
 
 # Restore from backup (choose appropriate backup directory)
 Copy-Item "C:\Backups\MTM_5.3.0_<timestamp>\*" "C:\Program Files\MTM\WIP_Application\" -Recurse -Force
 
 # Restart application
-Start-Process "C:\Program Files\MTM\WIP_Application\MTM_Inventory_Application.exe"
+Start-Process "C:\Program Files\MTM\WIP_Application\MTM_WIP_Application_Winforms.exe"
 ```
 
 **Rollback Risk**: 🟢 Very Low - simple file replacement, no database changes to undo.
@@ -169,7 +169,7 @@ Start-Process "C:\Program Files\MTM\WIP_Application\MTM_Inventory_Application.ex
 ### ✅ Testing Checklist
 
 #### Pre-Deployment Validation
-- [x] Build succeeds without new errors/warnings (`dotnet build MTM_Inventory_Application.csproj -c Release`)
+- [x] Build succeeds without new errors/warnings (`dotnet build MTM_WIP_Application_Winforms.csproj -c Release`)
 - [x] Application starts without crashes
 - [x] Trigger error dialog (e.g., disconnect database, attempt transaction)
 - [x] Verify error dialog fits on screen at 100% scaling
@@ -421,7 +421,7 @@ CREATE TABLE error_reports (
 
 ```powershell
 # 1. Stop application if running
-Stop-Process -Name "MTM_Inventory_Application" -Force -ErrorAction SilentlyContinue
+Stop-Process -Name "MTM_WIP_Application_Winforms" -Force -ErrorAction SilentlyContinue
 
 # 2. Backup current version
 $backupPath = "C:\MTM_Backups\v5.2.0_$(Get-Date -Format 'yyyyMMdd_HHmmss')"
@@ -431,8 +431,8 @@ Copy-Item "C:\Program Files\MTM_Application\*" -Destination $backupPath -Recurse
 Copy-Item "\\deployment\MTM_v5.3.0\*" -Destination "C:\Program Files\MTM_Application\" -Force -Recurse
 
 # 4. Run database scripts (in MySQL):
-# mysql -u root -p mtm_wip_application < Database/UpdatedDatabase/ReadyForVerification/create_error_reports_table.sql
-# mysql -u root -p mtm_wip_application < Database/UpdatedStoredProcedures/ReadyForVerification/sp_error_reports_Insert.sql
+# mysql -u root -p MTM_WIP_Application_Winforms < Database/UpdatedDatabase/ReadyForVerification/create_error_reports_table.sql
+# mysql -u root -p MTM_WIP_Application_Winforms < Database/UpdatedStoredProcedures/ReadyForVerification/sp_error_reports_Insert.sql
 
 # 5. Verify database changes
 # Query: SELECT COUNT(*) FROM error_reports; (should return 0)
@@ -441,7 +441,7 @@ Copy-Item "\\deployment\MTM_v5.3.0\*" -Destination "C:\Program Files\MTM_Applica
 # Cleanup: DELETE FROM error_reports WHERE UserName = 'TEST';
 
 # 6. Start application
-Start-Process "C:\Program Files\MTM_Application\MTM_Inventory_Application.exe"
+Start-Process "C:\Program Files\MTM_Application\MTM_WIP_Application_Winforms.exe"
 ```
 
 #### Rollback Procedure
@@ -450,7 +450,7 @@ If issues arise, rollback is straightforward:
 
 ```powershell
 # 1. Stop application
-Stop-Process -Name "MTM_Inventory_Application" -Force
+Stop-Process -Name "MTM_WIP_Application_Winforms" -Force
 
 # 2. Restore previous version
 $latestBackup = Get-ChildItem "C:\MTM_Backups\v5.2.0*" | Sort-Object -Property CreationTime -Descending | Select-Object -First 1
@@ -462,7 +462,7 @@ Copy-Item "$($latestBackup.FullName)\*" -Destination "C:\Program Files\MTM_Appli
 # Note: If table has production data, consider leaving it for future re-deployment
 
 # 4. Start application
-Start-Process "C:\Program Files\MTM_Application\MTM_Inventory_Application.exe"
+Start-Process "C:\Program Files\MTM_Application\MTM_WIP_Application_Winforms.exe"
 ```
 
 **Rollback Risk**: 🟢 Low - New feature is completely isolated. Removing it does not affect existing workflows. Database table can be left in place if it contains production reports.
@@ -728,19 +728,19 @@ This release focuses on **database layer standardization and error handling mode
 
 ```powershell
 # 1. Stop the application if running
-Stop-Process -Name "MTM_Inventory_Application" -ErrorAction SilentlyContinue
+Stop-Process -Name "MTM_WIP_Application_Winforms" -ErrorAction SilentlyContinue
 
 # 2. Backup current installation
-Copy-Item "C:\Program Files\MTM\MTM_WIP_Application\" -Destination "C:\Backups\MTM_WIP_Application_5.1.0_Backup\" -Recurse
+Copy-Item "C:\Program Files\MTM\MTM_WIP_Application_Winforms\" -Destination "C:\Backups\MTM_WIP_Application_5.1.0_Backup\" -Recurse
 
 # 3. Deploy new binaries
-Copy-Item "\\DeploymentShare\MTM_WIP_Application\5.2.0\*" -Destination "C:\Program Files\MTM\MTM_WIP_Application\" -Recurse -Force
+Copy-Item "\\DeploymentShare\MTM_WIP_Application_Winforms\5.2.0\*" -Destination "C:\Program Files\MTM\MTM_WIP_Application_Winforms\" -Recurse -Force
 
 # 4. Verify version
-& "C:\Program Files\MTM\MTM_WIP_Application\MTM_Inventory_Application.exe" --version
+& "C:\Program Files\MTM\MTM_WIP_Application_Winforms\MTM_WIP_Application_Winforms.exe" --version
 
 # 5. Test database connectivity
-& "C:\Program Files\MTM\MTM_WIP_Application\MTM_Inventory_Application.exe" --test-db
+& "C:\Program Files\MTM\MTM_WIP_Application_Winforms\MTM_WIP_Application_Winforms.exe" --test-db
 ```
 
 #### Database Changes
@@ -754,14 +754,14 @@ If issues arise, rollback is straightforward:
 
 ```powershell
 # 1. Stop application
-Stop-Process -Name "MTM_Inventory_Application" -ErrorAction SilentlyContinue
+Stop-Process -Name "MTM_WIP_Application_Winforms" -ErrorAction SilentlyContinue
 
 # 2. Restore previous version
-Remove-Item "C:\Program Files\MTM\MTM_WIP_Application\*" -Recurse -Force
-Copy-Item "C:\Backups\MTM_WIP_Application_5.1.0_Backup\*" -Destination "C:\Program Files\MTM\MTM_WIP_Application\" -Recurse
+Remove-Item "C:\Program Files\MTM\MTM_WIP_Application_Winforms\*" -Recurse -Force
+Copy-Item "C:\Backups\MTM_WIP_Application_5.1.0_Backup\*" -Destination "C:\Program Files\MTM\MTM_WIP_Application_Winforms\" -Recurse
 
 # 3. Verify rollback
-& "C:\Program Files\MTM\MTM_WIP_Application\MTM_Inventory_Application.exe" --version
+& "C:\Program Files\MTM\MTM_WIP_Application_Winforms\MTM_WIP_Application_Winforms.exe" --version
 ```
 
 **Rollback Risk**: 🟢 Low - No database changes means clean rollback with no data migration needed

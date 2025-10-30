@@ -1,7 +1,7 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using MTM_Inventory_Application.Data;
-using MTM_Inventory_Application.Helpers;
-using MTM_Inventory_Application.Models;
+using MTM_WIP_Application_Winforms.Data;
+using MTM_WIP_Application_Winforms.Helpers;
+using MTM_WIP_Application_Winforms.Models;
 using MySql.Data.MySqlClient;
 using System;
 using System.Collections.Generic;
@@ -11,7 +11,7 @@ using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
 
-namespace MTM_Inventory_Application.Tests.Integration;
+namespace MTM_WIP_Application_Winforms.Tests.Integration;
 
 /// <summary>
 /// Base class for integration tests that provides test database connection management and cleanup.

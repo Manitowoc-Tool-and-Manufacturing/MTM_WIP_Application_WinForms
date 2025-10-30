@@ -1,4 +1,4 @@
-namespace MTM_Inventory_Application.Models;
+namespace MTM_WIP_Application_Winforms.Models;
 
 public class Model_UserUiColors
 {

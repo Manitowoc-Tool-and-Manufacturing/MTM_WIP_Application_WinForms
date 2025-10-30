@@ -22,7 +22,7 @@
 
 ### Production Database
 
-**Name**: `mtm_wip_application`  
+**Name**: `MTM_WIP_Application_Winforms`  
 **Version**: MySQL 5.7.24+ (MAMP compatible)  
 **Purpose**: Primary production database for manufacturing operations
 
@@ -30,10 +30,10 @@
 ```
 Server: localhost
 Port: 3306
-Database: mtm_wip_application
+Database: MTM_WIP_Application_Winforms
 Username: root
 Password: root
-Connection String: Server=localhost;Port=3306;Database=mtm_wip_application;User=root;Password=root;SslMode=none;AllowPublicKeyRetrieval=true;MinPoolSize=5;MaxPoolSize=100;ConnectionTimeout=30;
+Connection String: Server=localhost;Port=3306;Database=MTM_WIP_Application_Winforms;User=root;Password=root;SslMode=none;AllowPublicKeyRetrieval=true;MinPoolSize=5;MaxPoolSize=100;ConnectionTimeout=30;
 ```
 
 **Connection Pooling**:
@@ -62,7 +62,7 @@ CREATE DATABASE mtm_wip_application_winform_test;
 
 -- 2. Import schema from production backup
 USE mtm_wip_application_winform_test;
-SOURCE Database/CurrentDatabase/mtm_wip_application.sql;
+SOURCE Database/CurrentDatabase/MTM_WIP_Application_Winforms.sql;
 
 -- 3. Insert minimal seed data for master tables
 -- (locations, operations, item types, test users)
@@ -364,10 +364,10 @@ SHOW DATABASES LIKE 'mtm_wip_application_winform%';
 cd Database/CurrentDatabase
 
 # Import schema (Windows PowerShell)
-Get-Content mtm_wip_application.sql | mysql -u root -proot mtm_wip_application_winform_test
+Get-Content MTM_WIP_Application_Winforms.sql | mysql -u root -proot mtm_wip_application_winform_test
 
 # Alternative: Import from MySQL client
-mysql -u root -proot mtm_wip_application_winform_test < mtm_wip_application.sql
+mysql -u root -proot mtm_wip_application_winform_test < MTM_WIP_Application_Winforms.sql
 ```
 
 **5. Import Stored Procedures**
@@ -473,7 +473,7 @@ public static class Helper_Database_Variables
     public static string DatabaseName =>
         Debugger.IsAttached
             ? "mtm_wip_application_winforms_test"  // Development
-            : "mtm_wip_application";      // Production
+            : "MTM_WIP_Application_Winforms";      // Production
     
     // Get connection string with specific database
     public static string GetConnectionString(string? databaseName = null)
@@ -516,7 +516,7 @@ Tests/
 │   ├── ParameterNaming_Tests.cs        # Parameter naming tests
 │   ├── PerformanceMonitoring_Tests.cs  # Performance tests
 │   └── ConcurrentOperations_Tests.cs   # Concurrency tests
-└── MTM_Inventory_Application.Tests.csproj
+└── MTM_WIP_Application_Winforms.Tests.csproj
 ```
 
 ### Base Integration Test Class
@@ -529,7 +529,7 @@ using MySql.Data.MySqlClient;
 using System;
 using System.Threading.Tasks;
 
-namespace MTM_Inventory_Application.Tests.Integration
+namespace MTM_WIP_Application_Winforms.Tests.Integration
 {
     /// <summary>
     /// Base class for integration tests providing transaction isolation.
@@ -775,7 +775,7 @@ Before writing any DAO implementation code:
 - [ ] **Seed data inserted** (locations, operations, item types, users, roles)
 - [ ] **INFORMATION_SCHEMA access verified** (parameter cache query works)
 - [ ] **Connection string configured** in `Helper_Database_Variables.cs`
-- [ ] **Test project created** (`Tests/MTM_Inventory_Application.Tests.csproj`)
+- [ ] **Test project created** (`Tests/MTM_WIP_Application_Winforms.Tests.csproj`)
 - [ ] **Base integration test class created** (`BaseIntegrationTest.cs`)
 - [ ] **NuGet packages installed** (MSTest, MySql.Data)
 
@@ -819,7 +819,7 @@ After completing all user stories:
 
 **Production**:
 ```
-Server=localhost;Port=3306;Database=mtm_wip_application;User=root;Password=root;SslMode=none;AllowPublicKeyRetrieval=true;MinPoolSize=5;MaxPoolSize=100;ConnectionTimeout=30;
+Server=localhost;Port=3306;Database=MTM_WIP_Application_Winforms;User=root;Password=root;SslMode=none;AllowPublicKeyRetrieval=true;MinPoolSize=5;MaxPoolSize=100;ConnectionTimeout=30;
 ```
 
 **Test**:
@@ -848,7 +848,7 @@ CREATE DATABASE mtm_wip_application_winform_test;
 
 **Import schema**:
 ```powershell
-mysql -u root -proot mtm_wip_application_winform_test < Database/CurrentDatabase/mtm_wip_application.sql
+mysql -u root -proot mtm_wip_application_winform_test < Database/CurrentDatabase/MTM_WIP_Application_Winforms.sql
 ```
 
 **Run tests**:

@@ -6,12 +6,12 @@ using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using MTM_Inventory_Application.Core;
-using MTM_Inventory_Application.Logging;
-using MTM_Inventory_Application.Models;
-using MTM_Inventory_Application.Services;
+using MTM_WIP_Application_Winforms.Core;
+using MTM_WIP_Application_Winforms.Logging;
+using MTM_WIP_Application_Winforms.Models;
+using MTM_WIP_Application_Winforms.Services;
 
-namespace MTM_Inventory_Application.Forms.Development.DependencyChartConverter
+namespace MTM_WIP_Application_Winforms.Forms.Development.DependencyChartConverter
 {
     #region DependencyChartViewer
 

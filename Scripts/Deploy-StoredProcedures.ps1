@@ -45,7 +45,7 @@
     .\Deploy-StoredProcedures.ps1 -Database mtm_wip_application_winforms_test -DryRun
 
 .EXAMPLE
-    .\Deploy-StoredProcedures.ps1 -Database mtm_wip_application -Force
+    .\Deploy-StoredProcedures.ps1 -Database MTM_WIP_Application_Winforms -Force
 
 .NOTES
     Author: MTM Development Team

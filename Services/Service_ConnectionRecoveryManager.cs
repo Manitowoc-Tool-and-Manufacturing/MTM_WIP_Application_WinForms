@@ -1,12 +1,12 @@
 using System.Media;
-using MTM_Inventory_Application.Controls.Addons;
-using MTM_Inventory_Application.Core;
-using MTM_Inventory_Application.Forms.MainForm;
-using MTM_Inventory_Application.Helpers;
+using MTM_WIP_Application_Winforms.Controls.Addons;
+using MTM_WIP_Application_Winforms.Core;
+using MTM_WIP_Application_Winforms.Forms.MainForm;
+using MTM_WIP_Application_Winforms.Helpers;
 using MySql.Data.MySqlClient;
 using Timer = System.Windows.Forms.Timer;
 
-namespace MTM_Inventory_Application.Services
+namespace MTM_WIP_Application_Winforms.Services
 {
     /// <summary>
     /// Service for managing database connection recovery and monitoring

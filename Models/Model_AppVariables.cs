@@ -1,10 +1,10 @@
 ﻿using System;
 using System.IO;
 using System.Reflection;
-using MTM_Inventory_Application.Data;
-using MTM_Inventory_Application.Helpers;
+using MTM_WIP_Application_Winforms.Data;
+using MTM_WIP_Application_Winforms.Helpers;
 
-namespace MTM_Inventory_Application.Models
+namespace MTM_WIP_Application_Winforms.Models
 {
     #region Model_AppVariables
 

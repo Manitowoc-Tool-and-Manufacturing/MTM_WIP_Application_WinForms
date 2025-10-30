@@ -135,7 +135,7 @@ After completing an entire category:
 ```powershell
 # Run full test suite
 cd C:\Users\johnk\source\repos\MTM_WIP_Application_WinForms\Tests
-dotnet test MTM_Inventory_Application.Tests.csproj --logger "console;verbosity=normal" --nologo
+dotnet test MTM_WIP_Application_Winforms.Tests.csproj --logger "console;verbosity=normal" --nologo
 
 # Document new pass/fail counts in test-failure-fixes.md
 ```
@@ -351,7 +351,7 @@ dotnet test --filter "FullyQualifiedName~Dao_System_Tests"
 dotnet test --filter "FullyQualifiedName~TransactionManagement_Tests"
 
 # All tests
-dotnet test MTM_Inventory_Application.Tests.csproj --logger "console;verbosity=normal" --nologo
+dotnet test MTM_WIP_Application_Winforms.Tests.csproj --logger "console;verbosity=normal" --nologo
 ```
 
 ### Deploy Stored Procedures
@@ -397,7 +397,7 @@ SELECT @status, @msg;
 ```powershell
 # Run full suite one final time
 cd C:\Users\johnk\source\repos\MTM_WIP_Application_WinForms\Tests
-dotnet test MTM_Inventory_Application.Tests.csproj --logger "console;verbosity=normal" --nologo
+dotnet test MTM_WIP_Application_Winforms.Tests.csproj --logger "console;verbosity=normal" --nologo
 
 # Should show: Total: 136, Passed: 129+, Failed: <7
 ```

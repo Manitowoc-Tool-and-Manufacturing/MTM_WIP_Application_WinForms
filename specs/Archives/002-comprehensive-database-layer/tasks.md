@@ -67,7 +67,7 @@
 
 **Scope**: ALL stored procedures across entire codebase (estimated 60-100+ procedures based on Database/CurrentStoredProcedures/ and Database/UpdatedStoredProcedures/)
 
-**Database**: `mtm_wip_application` (production) as source of truth
+**Database**: `MTM_WIP_Application_Winforms` (production) as source of truth
 
 **Success Criteria**:
 - Zero compilation errors in C#
@@ -111,7 +111,7 @@
 **Purpose**: Extract complete stored procedure definitions from production database
 
 **Execution**:
-1. Connect to `mtm_wip_application` database
+1. Connect to `MTM_WIP_Application_Winforms` database
 2. Query INFORMATION_SCHEMA.ROUTINES for all stored procedures
 3. Use `SHOW CREATE PROCEDURE` to extract full definitions
 4. Generate individual SQL files in `Database/EXTRACTED_PROCEDURES/`
@@ -120,7 +120,7 @@
 ```sql
 SELECT ROUTINE_NAME 
 FROM INFORMATION_SCHEMA.ROUTINES 
-WHERE ROUTINE_SCHEMA = 'mtm_wip_application' 
+WHERE ROUTINE_SCHEMA = 'MTM_WIP_Application_Winforms' 
   AND ROUTINE_TYPE = 'PROCEDURE'
 ORDER BY ROUTINE_NAME;
 ```
@@ -261,7 +261,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace MTM_Inventory_Application.Tests.Integration.GeneratedTests
+namespace MTM_WIP_Application_Winforms.Tests.Integration.GeneratedTests
 {
     [TestClass]
     public class {ProcedureName}_Tests : BaseIntegrationTest
@@ -633,7 +633,7 @@ namespace MTM_Inventory_Application.Tests.Integration.GeneratedTests
 - [ ] Backup verified restorable (MANUAL STEP)
 - [ ] All SQL files generated (T113-T118 complete)
 - [ ] No broken references remain (T113 complete)
-- [ ] Connection string points to correct database (`mtm_wip_application`)
+- [ ] Connection string points to correct database (`MTM_WIP_Application_Winforms`)
 - [ ] Team notified of deployment window
 - [ ] Rollback plan reviewed and understood
 
@@ -654,7 +654,7 @@ namespace MTM_Inventory_Application.Tests.Integration.GeneratedTests
 -- ===================================================================
 -- AUTOMATED STORED PROCEDURE DEPLOYMENT
 -- Generated: {timestamp}
--- Database: mtm_wip_application
+-- Database: MTM_WIP_Application_Winforms
 -- Total Procedures: {count}
 -- ===================================================================
 
@@ -671,12 +671,12 @@ SOURCE Database/CurrentStoredProcedures/sys_user_GetIdByName.sql;
 -- Step 3: Verify installation
 SELECT COUNT(*) AS InstalledProcedures 
 FROM INFORMATION_SCHEMA.ROUTINES 
-WHERE ROUTINE_SCHEMA = 'mtm_wip_application' 
+WHERE ROUTINE_SCHEMA = 'MTM_WIP_Application_Winforms' 
   AND ROUTINE_TYPE = 'PROCEDURE';
 ```
 
 2. **Execute Deployment**:
-   - Run deployment script against `mtm_wip_application`
+   - Run deployment script against `MTM_WIP_Application_Winforms`
    - Log execution output to `Database/DEPLOYMENT_LOG_{timestamp}.txt`
    - Capture any errors/warnings
    - Verify procedure count matches expected

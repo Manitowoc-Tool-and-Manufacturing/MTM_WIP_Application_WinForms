@@ -303,7 +303,7 @@ oldString: """
 var connectionString = GetTestConnectionString();
 
 // Points to: mtm_wip_application_winforms_test (Debug)
-//         or mtm_wip_application (Release - production)
+//         or MTM_WIP_Application_Winforms (Release - production)
 ```
 
 ### Test Data Cleanup
@@ -480,7 +480,7 @@ dotnet test --filter "FullyQualifiedName~Dao_Inventory_Tests.GetAllInventory"
 
 ```bash
 # Always build before running tests
-dotnet build MTM_Inventory_Application.csproj -c Debug
+dotnet build MTM_WIP_Application_Winforms.csproj -c Debug
 
 # Check for specific file errors
 get_errors(filePaths=["Tests/Integration/Dao_Something_Tests.cs"])

@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using System.Threading.Tasks;
-using MTM_Inventory_Application.Logging;
-using MTM_Inventory_Application.Models;
+using MTM_WIP_Application_Winforms.Logging;
+using MTM_WIP_Application_Winforms.Models;
 using MTM_WIP_Application_WinForms.Models;
 
-namespace MTM_Inventory_Application.Services;
+namespace MTM_WIP_Application_Winforms.Services;
 
 /// <summary>
 /// Service for queueing error reports as local SQL files when database is unavailable.

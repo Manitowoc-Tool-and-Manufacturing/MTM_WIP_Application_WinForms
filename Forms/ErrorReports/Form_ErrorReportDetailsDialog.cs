@@ -1,11 +1,11 @@
 using System;
 using System.Windows.Forms;
-using MTM_Inventory_Application.Controls.ErrorReports;
-using MTM_Inventory_Application.Core;
-using MTM_Inventory_Application.Models;
-using static MTM_Inventory_Application.Controls.ErrorReports.Control_ErrorReportDetails;
+using MTM_WIP_Application_Winforms.Controls.ErrorReports;
+using MTM_WIP_Application_Winforms.Core;
+using MTM_WIP_Application_Winforms.Models;
+using static MTM_WIP_Application_Winforms.Controls.ErrorReports.Control_ErrorReportDetails;
 
-namespace MTM_Inventory_Application.Forms.ErrorReports
+namespace MTM_WIP_Application_Winforms.Forms.ErrorReports
 {
     /// <summary>
     /// Modal dialog for displaying complete error report details with status update capabilities.

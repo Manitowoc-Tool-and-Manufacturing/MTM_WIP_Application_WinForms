@@ -79,7 +79,7 @@ foreach ($testFile in $testFiles) {
 }
 
 Write-Host "`nAttempting build..." -ForegroundColor Cyan
-$buildResult = dotnet build MTM_Inventory_Application.csproj -c Debug --nologo 2>&1 | Out-String
+$buildResult = dotnet build MTM_WIP_Application_Winforms.csproj -c Debug --nologo 2>&1 | Out-String
 $buildSuccess = $buildResult -match "Build succeeded"
 
 if ($buildSuccess) {

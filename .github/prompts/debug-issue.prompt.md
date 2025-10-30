@@ -266,7 +266,7 @@ private async Task SaveAsync()
 ```json
 {
   "ConnectionStrings": {
-    "DefaultConnection": "Server=localhost;Database=mtm_wip_application;User=root;Password=root;SslMode=none;AllowPublicKeyRetrieval=true;"
+    "DefaultConnection": "Server=localhost;Database=MTM_WIP_Application_Winforms;User=root;Password=root;SslMode=none;AllowPublicKeyRetrieval=true;"
   }
 }
 ```
@@ -325,7 +325,7 @@ catch (Exception ex)
 
 1. **Verify stored procedure exists**:
 ```sql
-SHOW PROCEDURE STATUS WHERE Db = 'mtm_wip_application';
+SHOW PROCEDURE STATUS WHERE Db = 'MTM_WIP_Application_Winforms';
 ```
 
 2. **Check parameter names and types**:

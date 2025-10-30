@@ -343,13 +343,13 @@ Fixed table name mismatch - all skipped tests now execute
 ```powershell
 # Clean and rebuild
 cd C:\Users\johnk\source\repos\MTM_WIP_Application_WinForms
-dotnet clean MTM_Inventory_Application.csproj
+dotnet clean MTM_WIP_Application_Winforms.csproj
 cd Tests
-dotnet clean MTM_Inventory_Application.Tests.csproj
+dotnet clean MTM_WIP_Application_Winforms.Tests.csproj
 cd ..
-dotnet build MTM_Inventory_Application.csproj -c Debug --no-incremental
+dotnet build MTM_WIP_Application_Winforms.csproj -c Debug --no-incremental
 cd Tests
-dotnet build MTM_Inventory_Application.Tests.csproj -c Debug --no-incremental
+dotnet build MTM_WIP_Application_Winforms.Tests.csproj -c Debug --no-incremental
 
 # Run all tests
 dotnet test --no-build --logger "console;verbosity=minimal"

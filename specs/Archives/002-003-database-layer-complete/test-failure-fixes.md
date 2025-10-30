@@ -43,7 +43,7 @@
 - 🔴 **BLOCKER IDENTIFIED**: Remaining 43 failures due to architectural mismatch - see Critical Findings below
 
 **2025-10-18 Evening Update (Session 1)**:
-- ✅ **ALL 97 STORED PROCEDURES DEPLOYED** to both `mtm_wip_application` and `mtm_wip_application_winforms_test`
+- ✅ **ALL 97 STORED PROCEDURES DEPLOYED** to both `MTM_WIP_Application_Winforms` and `mtm_wip_application_winforms_test`
 - ✅ **Fixed Master Data Exists procedures** - removed nested transactions causing MySQL error 0
 - ✅ **Fixed SELECT return pattern** - procedures now return scalar value instead of aliased column
 - ✅ **Resolved database mismatch** - DEBUG mode uses production DB, tests needed procedures in both
@@ -58,7 +58,7 @@
 **IMPORTANT FINDINGS** (2025-10-18 Evening):
 
 1. ✅ **Stored Procedures Successfully Deployed**:
-   - All 97 SQL files deployed to both `mtm_wip_application` and `mtm_wip_application_winforms_test`
+   - All 97 SQL files deployed to both `MTM_WIP_Application_Winforms` and `mtm_wip_application_winforms_test`
    - Created `Deploy-Simple.ps1` to work around PowerShell `<` redirection limitation
 
 2. ✅ **Master Data Exists Procedures Fixed**:
@@ -68,7 +68,7 @@
    - **Result**: 6 Exists tests now passing (ItemType, Location, Operation - both exist and non-exist cases)
 
 3. ✅ **Database Mismatch Resolved**:
-   - **Issue**: DEBUG mode uses `mtm_wip_application` (production) but tests expected procedures in `mtm_wip_application_winforms_test`
+   - **Issue**: DEBUG mode uses `MTM_WIP_Application_Winforms` (production) but tests expected procedures in `mtm_wip_application_winforms_test`
    - **Solution**: Deployed all procedures to BOTH databases
    - **Why This Happened**: `Model_Users.Database` uses production DB even in DEBUG mode (see comment on line 23)
 
@@ -444,7 +444,7 @@ This refactoring will fix ~30 of the 43 remaining failures. After completion, re
 - **Solution**: 
   1. Removed START TRANSACTION/COMMIT/ROLLBACK (read-only procedure)
   2. Changed `SELECT v_Exists AS 'Exists'` to `SELECT v_Exists`
-  3. Deployed to both `mtm_wip_application` and `mtm_wip_application_winforms_test`
+  3. Deployed to both `MTM_WIP_Application_Winforms` and `mtm_wip_application_winforms_test`
 - **Related Fixes**: T-MD-002, T-MD-003 (same pattern)
 
 #### ✅ T-MD-002: Location Existence Checks (2 tests) - **FIXED**

@@ -3,12 +3,12 @@ using System.Collections.Generic;
 using System.Data;
 using System.Diagnostics;
 using System.Threading.Tasks;
-using MTM_Inventory_Application.Logging;
-using MTM_Inventory_Application.Models;
-using MTM_Inventory_Application.Services;
+using MTM_WIP_Application_Winforms.Logging;
+using MTM_WIP_Application_Winforms.Models;
+using MTM_WIP_Application_Winforms.Services;
 using MySql.Data.MySqlClient;
 
-namespace MTM_Inventory_Application.Helpers;
+namespace MTM_WIP_Application_Winforms.Helpers;
 
 /// <summary>
 /// Enhanced database helper for stored procedures with comprehensive status reporting.

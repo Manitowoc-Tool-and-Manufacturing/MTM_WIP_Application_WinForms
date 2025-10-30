@@ -4,11 +4,11 @@ using System.IO;
 using System.Runtime.CompilerServices;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
-using MTM_Inventory_Application.Core;
-using MTM_Inventory_Application.Models;
-using MTM_Inventory_Application.Services;
+using MTM_WIP_Application_Winforms.Core;
+using MTM_WIP_Application_Winforms.Models;
+using MTM_WIP_Application_Winforms.Services;
 
-namespace MTM_Inventory_Application.Forms.Development.DependencyChartConverter
+namespace MTM_WIP_Application_Winforms.Forms.Development.DependencyChartConverter
 {
     #region DependencyChartConverter
 

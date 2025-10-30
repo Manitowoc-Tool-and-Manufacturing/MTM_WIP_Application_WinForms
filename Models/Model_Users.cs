@@ -1,4 +1,4 @@
-﻿namespace MTM_Inventory_Application.Models
+﻿namespace MTM_WIP_Application_Winforms.Models
 {
     internal class Model_Users
     {
@@ -20,9 +20,9 @@
         {
             get => _database ?? (
 #if DEBUG
-                "mtm_wip_application"  // Changed to use main database in debug mode
+                "MTM_WIP_Application_Winforms"  // Changed to use main database in debug mode
 #else
-        "mtm_wip_application"
+        "MTM_WIP_Application_Winforms"
 #endif
             );
             set => _database = value;

@@ -21,7 +21,7 @@
     .\Validate-Parameter-Prefixes.ps1
     
 .EXAMPLE
-    .\Validate-Parameter-Prefixes.ps1 -ConnectionString "Server=localhost;Database=mtm_wip_application;User=root;Password=root" -Json
+    .\Validate-Parameter-Prefixes.ps1 -ConnectionString "Server=localhost;Database=MTM_WIP_Application_Winforms;User=root;Password=root" -Json
 
 .EXAMPLE
     .\Validate-Parameter-Prefixes.ps1 -Verbose

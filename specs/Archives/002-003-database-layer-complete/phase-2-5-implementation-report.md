@@ -292,7 +292,7 @@ All tests inherit from `BaseIntegrationTest`:
 - Result: ✅ All 83 procedures deployed successfully
 
 **Production Database**:
-- Database: mtm_wip_application
+- Database: MTM_WIP_Application_Winforms
 - Server: 172.16.1.104
 - Result: ✅ All 83 procedures deployed successfully
 

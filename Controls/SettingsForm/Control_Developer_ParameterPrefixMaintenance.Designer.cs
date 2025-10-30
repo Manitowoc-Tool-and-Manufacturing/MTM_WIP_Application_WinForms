@@ -1,4 +1,4 @@
-namespace MTM_Inventory_Application.Controls.SettingsForm
+namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
 {
     partial class Control_Developer_ParameterPrefixMaintenance
     {

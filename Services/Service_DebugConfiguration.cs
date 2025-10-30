@@ -1,8 +1,8 @@
 using System;
 using System.Collections.Generic;
-using MTM_Inventory_Application.Models;
+using MTM_WIP_Application_Winforms.Models;
 
-namespace MTM_Inventory_Application.Services;
+namespace MTM_WIP_Application_Winforms.Services;
 
 /// <summary>
 /// Debug configuration management for comprehensive application tracing

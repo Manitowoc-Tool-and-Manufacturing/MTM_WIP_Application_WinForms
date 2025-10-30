@@ -12,7 +12,7 @@
 param(
     [string]$Server = "localhost",
     [int]$Port = 3306,
-    [string]$Database = "mtm_wip_application",
+    [string]$Database = "MTM_WIP_Application_Winforms",
     [string]$User = "root",
     [SecureString]$Password
 )

@@ -164,8 +164,8 @@ dotnet restore
 
 4. Build and run:
 ```powershell
-dotnet build MTM_Inventory_Application.csproj
-dotnet run --project MTM_Inventory_Application.csproj
+dotnet build MTM_WIP_Application_Winforms.csproj
+dotnet run --project MTM_WIP_Application_Winforms.csproj
 ```
 ````
 

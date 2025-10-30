@@ -1,4 +1,4 @@
-﻿namespace MTM_Inventory_Application.Forms.Development.DependencyChartConverter
+﻿namespace MTM_WIP_Application_Winforms.Forms.Development.DependencyChartConverter
 {
     partial class DependencyChartConverterForm
     {

@@ -9,7 +9,7 @@
 .PARAMETER Port
     MySQL server port (default: 3306)
 .PARAMETER Database
-    Target database name (default: mtm_wip_application)
+    Target database name (default: MTM_WIP_Application_Winforms)
 .PARAMETER User
     MySQL username (default: root)
 .PARAMETER Password
@@ -22,7 +22,7 @@
 param(
     [string]$Server = "localhost",
     [int]$Port = 3306,
-    [string]$Database = "mtm_wip_application",
+    [string]$Database = "MTM_WIP_Application_Winforms",
     [string]$User = "root",
     [SecureString]$Password = (ConvertTo-SecureString "root" -AsPlainText -Force)
 )
