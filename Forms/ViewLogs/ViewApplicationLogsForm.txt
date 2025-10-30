@@ -16,11 +16,23 @@ namespace MTM_Inventory_Application.Forms.ViewLogs
         private void InitializeComponent()
         {
             tableLayoutMain = new TableLayoutPanel();
-            panel1 = new Panel();
-            lblStatus = new Label();
+            panelUserSelection = new Panel();
+            chkGroupErrors = new CheckBox();
+            chkAutoRefresh = new CheckBox();
+            lblUserCount = new Label();
+            btnRefresh = new Button();
+            cmbUsers = new ComboBox();
+            lblSelectUser = new Label();
+            panelFileList = new Panel();
+            lstLogFiles = new ListView();
+            colFileName = new ColumnHeader();
+            colModified = new ColumnHeader();
+            colSize = new ColumnHeader();
+            lblFileCount = new Label();
+            lblLogFiles = new Label();
             panelEntryDisplay = new Panel();
             txtRawView = new TextBox();
-            tableLayoutEntryDisplay = new TableLayoutPanel();
+            tableLayoutPanel1 = new TableLayoutPanel();
             txtTimestamp = new TextBox();
             lblEntryDetails = new Label();
             lblEntryMessage = new Label();
@@ -31,22 +43,6 @@ namespace MTM_Inventory_Application.Forms.ViewLogs
             txtEntryMessage = new TextBox();
             txtEntrySource = new TextBox();
             lblEntryTimestamp = new Label();
-            panelUserSelection = new Panel();
-            tableLayoutPanel4 = new TableLayoutPanel();
-            lblSelectUser = new Label();
-            cmbUsers = new ComboBox();
-            btnRefresh = new Button();
-            lblUserCount = new Label();
-            chkAutoRefresh = new CheckBox();
-            chkGroupErrors = new CheckBox();
-            panelFileList = new Panel();
-            tableLayoutPanel3 = new TableLayoutPanel();
-            lstLogFiles = new ListView();
-            colFileName = new ColumnHeader();
-            colModified = new ColumnHeader();
-            colSize = new ColumnHeader();
-            lblLogFiles = new Label();
-            lblFileCount = new Label();
             panelNavigation = new Panel();
             tableLayoutPanel2 = new TableLayoutPanel();
             lblEntryPosition = new Label();
@@ -57,6 +53,7 @@ namespace MTM_Inventory_Application.Forms.ViewLogs
             btnToggleView = new Button();
             btnOpenPromptFolder = new Button();
             btnGenerateErrorReport = new Button();
+            lblStatus = new Label();
             panelFilters = new Panel();
             tableLayoutFilters = new TableLayoutPanel();
             lblStartDate = new Label();
@@ -79,20 +76,23 @@ namespace MTM_Inventory_Application.Forms.ViewLogs
             btnErrorsOnly = new Button();
             btnPerformance = new Button();
             btnToday = new Button();
+            tableLayoutPanel3 = new TableLayoutPanel();
+            tableLayoutPanel4 = new TableLayoutPanel();
+            panel1 = new Panel();
             tableLayoutMain.SuspendLayout();
-            panel1.SuspendLayout();
-            panelEntryDisplay.SuspendLayout();
-            tableLayoutEntryDisplay.SuspendLayout();
             panelUserSelection.SuspendLayout();
-            tableLayoutPanel4.SuspendLayout();
             panelFileList.SuspendLayout();
-            tableLayoutPanel3.SuspendLayout();
+            panelEntryDisplay.SuspendLayout();
+            tableLayoutPanel1.SuspendLayout();
             panelNavigation.SuspendLayout();
             tableLayoutPanel2.SuspendLayout();
             panelFilters.SuspendLayout();
             tableLayoutFilters.SuspendLayout();
             panelSeverityChecks.SuspendLayout();
             panelQuickFilters.SuspendLayout();
+            tableLayoutPanel3.SuspendLayout();
+            tableLayoutPanel4.SuspendLayout();
+            panel1.SuspendLayout();
             SuspendLayout();
             // 
             // tableLayoutMain
@@ -117,29 +117,149 @@ namespace MTM_Inventory_Application.Forms.ViewLogs
             tableLayoutMain.Size = new Size(724, 801);
             tableLayoutMain.TabIndex = 0;
             // 
-            // panel1
+            // panelUserSelection
             // 
-            panel1.Controls.Add(lblStatus);
-            panel1.Location = new Point(3, 769);
-            panel1.Name = "panel1";
-            panel1.Size = new Size(715, 29);
-            panel1.TabIndex = 4;
+            panelUserSelection.Controls.Add(tableLayoutPanel4);
+            panelUserSelection.Dock = DockStyle.Fill;
+            panelUserSelection.Location = new Point(3, 3);
+            panelUserSelection.Margin = new Padding(3, 3, 3, 5);
+            panelUserSelection.Name = "panelUserSelection";
+            panelUserSelection.Padding = new Padding(10);
+            panelUserSelection.Size = new Size(718, 50);
+            panelUserSelection.TabIndex = 0;
             // 
-            // lblStatus
+            // chkGroupErrors
             // 
-            lblStatus.Dock = DockStyle.Fill;
-            lblStatus.Location = new Point(0, 0);
-            lblStatus.Name = "lblStatus";
-            lblStatus.Padding = new Padding(10, 5, 5, 5);
-            lblStatus.Size = new Size(715, 29);
-            lblStatus.TabIndex = 3;
-            lblStatus.Text = "Ready";
-            lblStatus.TextAlign = ContentAlignment.MiddleLeft;
+            chkGroupErrors.AutoSize = true;
+            chkGroupErrors.Dock = DockStyle.Fill;
+            chkGroupErrors.Location = new Point(503, 3);
+            chkGroupErrors.Name = "chkGroupErrors";
+            chkGroupErrors.Size = new Size(92, 24);
+            chkGroupErrors.TabIndex = 5;
+            chkGroupErrors.Text = "Group Errors";
+            chkGroupErrors.UseVisualStyleBackColor = true;
+            chkGroupErrors.Visible = false;
+            // 
+            // chkAutoRefresh
+            // 
+            chkAutoRefresh.AutoSize = true;
+            chkAutoRefresh.Dock = DockStyle.Fill;
+            chkAutoRefresh.Location = new Point(601, 3);
+            chkAutoRefresh.Name = "chkAutoRefresh";
+            chkAutoRefresh.Size = new Size(94, 24);
+            chkAutoRefresh.TabIndex = 4;
+            chkAutoRefresh.Text = "Auto Refresh";
+            chkAutoRefresh.UseVisualStyleBackColor = true;
+            // 
+            // lblUserCount
+            // 
+            lblUserCount.AutoSize = true;
+            lblUserCount.Dock = DockStyle.Fill;
+            lblUserCount.Location = new Point(393, 0);
+            lblUserCount.Name = "lblUserCount";
+            lblUserCount.Size = new Size(43, 30);
+            lblUserCount.TabIndex = 3;
+            lblUserCount.Text = "0 users";
+            lblUserCount.TextAlign = ContentAlignment.MiddleLeft;
+            // 
+            // btnRefresh
+            // 
+            btnRefresh.Dock = DockStyle.Fill;
+            btnRefresh.Location = new Point(297, 3);
+            btnRefresh.Name = "btnRefresh";
+            btnRefresh.Size = new Size(90, 24);
+            btnRefresh.TabIndex = 2;
+            btnRefresh.Text = "Refresh";
+            btnRefresh.UseVisualStyleBackColor = true;
+            // 
+            // cmbUsers
+            // 
+            cmbUsers.Dock = DockStyle.Fill;
+            cmbUsers.DropDownStyle = ComboBoxStyle.DropDownList;
+            cmbUsers.FormattingEnabled = true;
+            cmbUsers.Location = new Point(76, 3);
+            cmbUsers.MinimumSize = new Size(200, 0);
+            cmbUsers.Name = "cmbUsers";
+            cmbUsers.Size = new Size(215, 23);
+            cmbUsers.TabIndex = 1;
+            // 
+            // lblSelectUser
+            // 
+            lblSelectUser.AutoSize = true;
+            lblSelectUser.Dock = DockStyle.Fill;
+            lblSelectUser.Location = new Point(3, 0);
+            lblSelectUser.Name = "lblSelectUser";
+            lblSelectUser.Size = new Size(67, 30);
+            lblSelectUser.TabIndex = 0;
+            lblSelectUser.Text = "Select User:";
+            lblSelectUser.TextAlign = ContentAlignment.MiddleRight;
+            // 
+            // panelFileList
+            // 
+            panelFileList.Controls.Add(tableLayoutPanel3);
+            panelFileList.Dock = DockStyle.Fill;
+            panelFileList.Location = new Point(3, 61);
+            panelFileList.Margin = new Padding(3, 3, 3, 5);
+            panelFileList.Name = "panelFileList";
+            panelFileList.Padding = new Padding(10);
+            panelFileList.Size = new Size(718, 243);
+            panelFileList.TabIndex = 1;
+            // 
+            // lstLogFiles
+            // 
+            lstLogFiles.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
+            lstLogFiles.Columns.AddRange(new ColumnHeader[] { colFileName, colModified, colSize });
+            tableLayoutPanel3.SetColumnSpan(lstLogFiles, 3);
+            lstLogFiles.FullRowSelect = true;
+            lstLogFiles.GridLines = true;
+            lstLogFiles.Location = new Point(3, 26);
+            lstLogFiles.Margin = new Padding(3, 5, 3, 3);
+            lstLogFiles.Name = "lstLogFiles";
+            lstLogFiles.Size = new Size(692, 194);
+            lstLogFiles.TabIndex = 2;
+            lstLogFiles.UseCompatibleStateImageBehavior = false;
+            lstLogFiles.View = View.Details;
+            // 
+            // colFileName
+            // 
+            colFileName.Text = "File Name";
+            colFileName.Width = 400;
+            // 
+            // colModified
+            // 
+            colModified.Text = "Modified";
+            colModified.Width = 180;
+            // 
+            // colSize
+            // 
+            colSize.Text = "Size";
+            colSize.Width = 100;
+            // 
+            // lblFileCount
+            // 
+            lblFileCount.AutoSize = true;
+            lblFileCount.Location = new Point(66, 3);
+            lblFileCount.Margin = new Padding(3);
+            lblFileCount.Name = "lblFileCount";
+            lblFileCount.Size = new Size(37, 15);
+            lblFileCount.TabIndex = 1;
+            lblFileCount.Text = "0 files";
+            // 
+            // lblLogFiles
+            // 
+            lblLogFiles.AutoSize = true;
+            lblLogFiles.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
+            lblLogFiles.Location = new Point(3, 3);
+            lblLogFiles.Margin = new Padding(3);
+            lblLogFiles.Name = "lblLogFiles";
+            lblLogFiles.Size = new Size(57, 15);
+            lblLogFiles.TabIndex = 0;
+            lblLogFiles.Text = "Log Files:";
             // 
             // panelEntryDisplay
             // 
-            panelEntryDisplay.Controls.Add(tableLayoutEntryDisplay);
             panelEntryDisplay.Controls.Add(txtRawView);
+            panelEntryDisplay.Controls.Add(tableLayoutPanel1);
             panelEntryDisplay.Dock = DockStyle.Fill;
             panelEntryDisplay.Location = new Point(3, 434);
             panelEntryDisplay.Name = "panelEntryDisplay";
@@ -161,32 +281,32 @@ namespace MTM_Inventory_Application.Forms.ViewLogs
             txtRawView.TabIndex = 3;
             txtRawView.Visible = false;
             // 
-            // tableLayoutEntryDisplay
+            // tableLayoutPanel1
             // 
-            tableLayoutEntryDisplay.ColumnCount = 2;
-            tableLayoutEntryDisplay.ColumnStyles.Add(new ColumnStyle());
-            tableLayoutEntryDisplay.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
-            tableLayoutEntryDisplay.Controls.Add(txtTimestamp, 1, 0);
-            tableLayoutEntryDisplay.Controls.Add(lblEntryDetails, 0, 4);
-            tableLayoutEntryDisplay.Controls.Add(lblEntryMessage, 0, 3);
-            tableLayoutEntryDisplay.Controls.Add(lblEntrySource, 0, 2);
-            tableLayoutEntryDisplay.Controls.Add(lblEntryLevel, 0, 1);
-            tableLayoutEntryDisplay.Controls.Add(txtEntryDetails, 1, 4);
-            tableLayoutEntryDisplay.Controls.Add(txtLevel, 1, 1);
-            tableLayoutEntryDisplay.Controls.Add(txtEntryMessage, 1, 3);
-            tableLayoutEntryDisplay.Controls.Add(txtEntrySource, 1, 2);
-            tableLayoutEntryDisplay.Controls.Add(lblEntryTimestamp, 0, 0);
-            tableLayoutEntryDisplay.Dock = DockStyle.Fill;
-            tableLayoutEntryDisplay.Location = new Point(10, 10);
-            tableLayoutEntryDisplay.Name = "tableLayoutEntryDisplay";
-            tableLayoutEntryDisplay.RowCount = 5;
-            tableLayoutEntryDisplay.RowStyles.Add(new RowStyle());
-            tableLayoutEntryDisplay.RowStyles.Add(new RowStyle());
-            tableLayoutEntryDisplay.RowStyles.Add(new RowStyle());
-            tableLayoutEntryDisplay.RowStyles.Add(new RowStyle(SizeType.Percent, 40F));
-            tableLayoutEntryDisplay.RowStyles.Add(new RowStyle(SizeType.Percent, 60F));
-            tableLayoutEntryDisplay.Size = new Size(698, 309);
-            tableLayoutEntryDisplay.TabIndex = 10;
+            tableLayoutPanel1.ColumnCount = 2;
+            tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle());
+            tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
+            tableLayoutPanel1.Controls.Add(txtTimestamp, 1, 0);
+            tableLayoutPanel1.Controls.Add(lblEntryDetails, 0, 4);
+            tableLayoutPanel1.Controls.Add(lblEntryMessage, 0, 3);
+            tableLayoutPanel1.Controls.Add(lblEntrySource, 0, 2);
+            tableLayoutPanel1.Controls.Add(lblEntryLevel, 0, 1);
+            tableLayoutPanel1.Controls.Add(txtEntryDetails, 1, 4);
+            tableLayoutPanel1.Controls.Add(txtLevel, 1, 1);
+            tableLayoutPanel1.Controls.Add(txtEntryMessage, 1, 3);
+            tableLayoutPanel1.Controls.Add(txtEntrySource, 1, 2);
+            tableLayoutPanel1.Controls.Add(lblEntryTimestamp, 0, 0);
+            tableLayoutPanel1.Dock = DockStyle.Fill;
+            tableLayoutPanel1.Location = new Point(10, 10);
+            tableLayoutPanel1.Name = "tableLayoutPanel1";
+            tableLayoutPanel1.RowCount = 5;
+            tableLayoutPanel1.RowStyles.Add(new RowStyle());
+            tableLayoutPanel1.RowStyles.Add(new RowStyle());
+            tableLayoutPanel1.RowStyles.Add(new RowStyle());
+            tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Percent, 40F));
+            tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Percent, 60F));
+            tableLayoutPanel1.Size = new Size(698, 309);
+            tableLayoutPanel1.TabIndex = 10;
             // 
             // txtTimestamp
             // 
@@ -306,187 +426,6 @@ namespace MTM_Inventory_Application.Forms.ViewLogs
             lblEntryTimestamp.TabIndex = 0;
             lblEntryTimestamp.Text = "Timestamp:";
             lblEntryTimestamp.TextAlign = ContentAlignment.MiddleRight;
-            // 
-            // panelUserSelection
-            // 
-            panelUserSelection.Controls.Add(tableLayoutPanel4);
-            panelUserSelection.Dock = DockStyle.Fill;
-            panelUserSelection.Location = new Point(3, 3);
-            panelUserSelection.Margin = new Padding(3, 3, 3, 5);
-            panelUserSelection.Name = "panelUserSelection";
-            panelUserSelection.Padding = new Padding(10);
-            panelUserSelection.Size = new Size(718, 50);
-            panelUserSelection.TabIndex = 0;
-            // 
-            // tableLayoutPanel4
-            // 
-            tableLayoutPanel4.ColumnCount = 7;
-            tableLayoutPanel4.ColumnStyles.Add(new ColumnStyle());
-            tableLayoutPanel4.ColumnStyles.Add(new ColumnStyle());
-            tableLayoutPanel4.ColumnStyles.Add(new ColumnStyle());
-            tableLayoutPanel4.ColumnStyles.Add(new ColumnStyle());
-            tableLayoutPanel4.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
-            tableLayoutPanel4.ColumnStyles.Add(new ColumnStyle());
-            tableLayoutPanel4.ColumnStyles.Add(new ColumnStyle());
-            tableLayoutPanel4.Controls.Add(lblSelectUser, 0, 0);
-            tableLayoutPanel4.Controls.Add(cmbUsers, 1, 0);
-            tableLayoutPanel4.Controls.Add(btnRefresh, 2, 0);
-            tableLayoutPanel4.Controls.Add(lblUserCount, 3, 0);
-            tableLayoutPanel4.Controls.Add(chkAutoRefresh, 6, 0);
-            tableLayoutPanel4.Controls.Add(chkGroupErrors, 5, 0);
-            tableLayoutPanel4.Dock = DockStyle.Fill;
-            tableLayoutPanel4.Location = new Point(10, 10);
-            tableLayoutPanel4.Name = "tableLayoutPanel4";
-            tableLayoutPanel4.RowCount = 1;
-            tableLayoutPanel4.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
-            tableLayoutPanel4.Size = new Size(698, 30);
-            tableLayoutPanel4.TabIndex = 6;
-            // 
-            // lblSelectUser
-            // 
-            lblSelectUser.AutoSize = true;
-            lblSelectUser.Dock = DockStyle.Fill;
-            lblSelectUser.Location = new Point(3, 0);
-            lblSelectUser.Name = "lblSelectUser";
-            lblSelectUser.Size = new Size(67, 30);
-            lblSelectUser.TabIndex = 0;
-            lblSelectUser.Text = "Select User:";
-            lblSelectUser.TextAlign = ContentAlignment.MiddleRight;
-            // 
-            // cmbUsers
-            // 
-            cmbUsers.Dock = DockStyle.Fill;
-            cmbUsers.DropDownStyle = ComboBoxStyle.DropDownList;
-            cmbUsers.FormattingEnabled = true;
-            cmbUsers.Location = new Point(76, 3);
-            cmbUsers.MinimumSize = new Size(200, 0);
-            cmbUsers.Name = "cmbUsers";
-            cmbUsers.Size = new Size(215, 23);
-            cmbUsers.TabIndex = 1;
-            // 
-            // btnRefresh
-            // 
-            btnRefresh.Dock = DockStyle.Fill;
-            btnRefresh.Location = new Point(297, 3);
-            btnRefresh.Name = "btnRefresh";
-            btnRefresh.Size = new Size(90, 24);
-            btnRefresh.TabIndex = 2;
-            btnRefresh.Text = "Refresh";
-            btnRefresh.UseVisualStyleBackColor = true;
-            // 
-            // lblUserCount
-            // 
-            lblUserCount.AutoSize = true;
-            lblUserCount.Dock = DockStyle.Fill;
-            lblUserCount.Location = new Point(393, 0);
-            lblUserCount.Name = "lblUserCount";
-            lblUserCount.Size = new Size(43, 30);
-            lblUserCount.TabIndex = 3;
-            lblUserCount.Text = "0 users";
-            lblUserCount.TextAlign = ContentAlignment.MiddleLeft;
-            // 
-            // chkAutoRefresh
-            // 
-            chkAutoRefresh.AutoSize = true;
-            chkAutoRefresh.Dock = DockStyle.Fill;
-            chkAutoRefresh.Location = new Point(601, 3);
-            chkAutoRefresh.Name = "chkAutoRefresh";
-            chkAutoRefresh.Size = new Size(94, 24);
-            chkAutoRefresh.TabIndex = 4;
-            chkAutoRefresh.Text = "Auto Refresh";
-            chkAutoRefresh.UseVisualStyleBackColor = true;
-            // 
-            // chkGroupErrors
-            // 
-            chkGroupErrors.AutoSize = true;
-            chkGroupErrors.Dock = DockStyle.Fill;
-            chkGroupErrors.Location = new Point(503, 3);
-            chkGroupErrors.Name = "chkGroupErrors";
-            chkGroupErrors.Size = new Size(92, 24);
-            chkGroupErrors.TabIndex = 5;
-            chkGroupErrors.Text = "Group Errors";
-            chkGroupErrors.UseVisualStyleBackColor = true;
-            chkGroupErrors.Visible = false;
-            // 
-            // panelFileList
-            // 
-            panelFileList.Controls.Add(tableLayoutPanel3);
-            panelFileList.Dock = DockStyle.Fill;
-            panelFileList.Location = new Point(3, 61);
-            panelFileList.Margin = new Padding(3, 3, 3, 5);
-            panelFileList.Name = "panelFileList";
-            panelFileList.Padding = new Padding(10);
-            panelFileList.Size = new Size(718, 243);
-            panelFileList.TabIndex = 1;
-            // 
-            // tableLayoutPanel3
-            // 
-            tableLayoutPanel3.ColumnCount = 3;
-            tableLayoutPanel3.ColumnStyles.Add(new ColumnStyle());
-            tableLayoutPanel3.ColumnStyles.Add(new ColumnStyle());
-            tableLayoutPanel3.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
-            tableLayoutPanel3.Controls.Add(lblLogFiles, 0, 0);
-            tableLayoutPanel3.Controls.Add(lblFileCount, 1, 0);
-            tableLayoutPanel3.Controls.Add(lstLogFiles, 0, 1);
-            tableLayoutPanel3.Dock = DockStyle.Fill;
-            tableLayoutPanel3.Location = new Point(10, 10);
-            tableLayoutPanel3.Name = "tableLayoutPanel3";
-            tableLayoutPanel3.RowCount = 2;
-            tableLayoutPanel3.RowStyles.Add(new RowStyle());
-            tableLayoutPanel3.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
-            tableLayoutPanel3.Size = new Size(698, 223);
-            tableLayoutPanel3.TabIndex = 6;
-            // 
-            // lstLogFiles
-            // 
-            lstLogFiles.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
-            lstLogFiles.Columns.AddRange(new ColumnHeader[] { colFileName, colModified, colSize });
-            tableLayoutPanel3.SetColumnSpan(lstLogFiles, 3);
-            lstLogFiles.FullRowSelect = true;
-            lstLogFiles.GridLines = true;
-            lstLogFiles.Location = new Point(3, 26);
-            lstLogFiles.Margin = new Padding(3, 5, 3, 3);
-            lstLogFiles.Name = "lstLogFiles";
-            lstLogFiles.Size = new Size(692, 194);
-            lstLogFiles.TabIndex = 2;
-            lstLogFiles.UseCompatibleStateImageBehavior = false;
-            lstLogFiles.View = View.Details;
-            // 
-            // colFileName
-            // 
-            colFileName.Text = "File Name";
-            colFileName.Width = 400;
-            // 
-            // colModified
-            // 
-            colModified.Text = "Modified";
-            colModified.Width = 180;
-            // 
-            // colSize
-            // 
-            colSize.Text = "Size";
-            colSize.Width = 100;
-            // 
-            // lblLogFiles
-            // 
-            lblLogFiles.AutoSize = true;
-            lblLogFiles.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
-            lblLogFiles.Location = new Point(3, 3);
-            lblLogFiles.Margin = new Padding(3);
-            lblLogFiles.Name = "lblLogFiles";
-            lblLogFiles.Size = new Size(57, 15);
-            lblLogFiles.TabIndex = 0;
-            lblLogFiles.Text = "Log Files:";
-            // 
-            // lblFileCount
-            // 
-            lblFileCount.AutoSize = true;
-            lblFileCount.Location = new Point(66, 3);
-            lblFileCount.Margin = new Padding(3);
-            lblFileCount.Name = "lblFileCount";
-            lblFileCount.Size = new Size(37, 15);
-            lblFileCount.TabIndex = 1;
-            lblFileCount.Text = "0 files";
             // 
             // panelNavigation
             // 
@@ -610,6 +549,17 @@ namespace MTM_Inventory_Application.Forms.ViewLogs
             btnGenerateErrorReport.TabIndex = 6;
             btnGenerateErrorReport.Text = "Generate Error Report";
             btnGenerateErrorReport.UseVisualStyleBackColor = true;
+            // 
+            // lblStatus
+            // 
+            lblStatus.Dock = DockStyle.Fill;
+            lblStatus.Location = new Point(0, 0);
+            lblStatus.Name = "lblStatus";
+            lblStatus.Padding = new Padding(10, 5, 5, 5);
+            lblStatus.Size = new Size(715, 29);
+            lblStatus.TabIndex = 3;
+            lblStatus.Text = "Ready";
+            lblStatus.TextAlign = ContentAlignment.MiddleLeft;
             // 
             // panelFilters
             // 
@@ -865,6 +815,56 @@ namespace MTM_Inventory_Application.Forms.ViewLogs
             btnToday.Text = "Today";
             btnToday.UseVisualStyleBackColor = true;
             // 
+            // tableLayoutPanel3
+            // 
+            tableLayoutPanel3.ColumnCount = 3;
+            tableLayoutPanel3.ColumnStyles.Add(new ColumnStyle());
+            tableLayoutPanel3.ColumnStyles.Add(new ColumnStyle());
+            tableLayoutPanel3.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
+            tableLayoutPanel3.Controls.Add(lblLogFiles, 0, 0);
+            tableLayoutPanel3.Controls.Add(lblFileCount, 1, 0);
+            tableLayoutPanel3.Controls.Add(lstLogFiles, 0, 1);
+            tableLayoutPanel3.Dock = DockStyle.Fill;
+            tableLayoutPanel3.Location = new Point(10, 10);
+            tableLayoutPanel3.Name = "tableLayoutPanel3";
+            tableLayoutPanel3.RowCount = 2;
+            tableLayoutPanel3.RowStyles.Add(new RowStyle());
+            tableLayoutPanel3.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
+            tableLayoutPanel3.Size = new Size(698, 223);
+            tableLayoutPanel3.TabIndex = 6;
+            // 
+            // tableLayoutPanel4
+            // 
+            tableLayoutPanel4.ColumnCount = 7;
+            tableLayoutPanel4.ColumnStyles.Add(new ColumnStyle());
+            tableLayoutPanel4.ColumnStyles.Add(new ColumnStyle());
+            tableLayoutPanel4.ColumnStyles.Add(new ColumnStyle());
+            tableLayoutPanel4.ColumnStyles.Add(new ColumnStyle());
+            tableLayoutPanel4.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
+            tableLayoutPanel4.ColumnStyles.Add(new ColumnStyle());
+            tableLayoutPanel4.ColumnStyles.Add(new ColumnStyle());
+            tableLayoutPanel4.Controls.Add(lblSelectUser, 0, 0);
+            tableLayoutPanel4.Controls.Add(cmbUsers, 1, 0);
+            tableLayoutPanel4.Controls.Add(btnRefresh, 2, 0);
+            tableLayoutPanel4.Controls.Add(lblUserCount, 3, 0);
+            tableLayoutPanel4.Controls.Add(chkAutoRefresh, 6, 0);
+            tableLayoutPanel4.Controls.Add(chkGroupErrors, 5, 0);
+            tableLayoutPanel4.Dock = DockStyle.Fill;
+            tableLayoutPanel4.Location = new Point(10, 10);
+            tableLayoutPanel4.Name = "tableLayoutPanel4";
+            tableLayoutPanel4.RowCount = 1;
+            tableLayoutPanel4.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
+            tableLayoutPanel4.Size = new Size(698, 30);
+            tableLayoutPanel4.TabIndex = 6;
+            // 
+            // panel1
+            // 
+            panel1.Controls.Add(lblStatus);
+            panel1.Location = new Point(3, 769);
+            panel1.Name = "panel1";
+            panel1.Size = new Size(715, 29);
+            panel1.TabIndex = 4;
+            // 
             // ViewApplicationLogsForm
             // 
             AutoScaleDimensions = new SizeF(96F, 96F);
@@ -879,17 +879,12 @@ namespace MTM_Inventory_Application.Forms.ViewLogs
             StartPosition = FormStartPosition.CenterScreen;
             Text = "View Application Logs";
             tableLayoutMain.ResumeLayout(false);
-            panel1.ResumeLayout(false);
+            panelUserSelection.ResumeLayout(false);
+            panelFileList.ResumeLayout(false);
             panelEntryDisplay.ResumeLayout(false);
             panelEntryDisplay.PerformLayout();
-            tableLayoutEntryDisplay.ResumeLayout(false);
-            tableLayoutEntryDisplay.PerformLayout();
-            panelUserSelection.ResumeLayout(false);
-            tableLayoutPanel4.ResumeLayout(false);
-            tableLayoutPanel4.PerformLayout();
-            panelFileList.ResumeLayout(false);
-            tableLayoutPanel3.ResumeLayout(false);
-            tableLayoutPanel3.PerformLayout();
+            tableLayoutPanel1.ResumeLayout(false);
+            tableLayoutPanel1.PerformLayout();
             panelNavigation.ResumeLayout(false);
             tableLayoutPanel2.ResumeLayout(false);
             tableLayoutPanel2.PerformLayout();
@@ -899,6 +894,11 @@ namespace MTM_Inventory_Application.Forms.ViewLogs
             panelSeverityChecks.ResumeLayout(false);
             panelSeverityChecks.PerformLayout();
             panelQuickFilters.ResumeLayout(false);
+            tableLayoutPanel3.ResumeLayout(false);
+            tableLayoutPanel3.PerformLayout();
+            tableLayoutPanel4.ResumeLayout(false);
+            tableLayoutPanel4.PerformLayout();
+            panel1.ResumeLayout(false);
             ResumeLayout(false);
 
         }
@@ -964,7 +964,7 @@ namespace MTM_Inventory_Application.Forms.ViewLogs
         private System.Windows.Forms.Button btnPerformance;
         private System.Windows.Forms.Button btnToday;
         private System.Windows.Forms.CheckBox chkGroupErrors;
-        private TableLayoutPanel tableLayoutEntryDisplay;
+        private TableLayoutPanel tableLayoutPanel1;
         private TableLayoutPanel tableLayoutPanel3;
         private TableLayoutPanel tableLayoutPanel2;
         private TableLayoutPanel tableLayoutPanel4;

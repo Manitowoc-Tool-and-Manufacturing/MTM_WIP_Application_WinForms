@@ -42,7 +42,7 @@ namespace MTM_Inventory_Application.Forms.ViewLogs
         {
             InitializeComponent();
             _logBasePath = logBasePath ?? throw new ArgumentNullException(nameof(logBasePath));
-            
+
             Core_Themes.ApplyDpiScaling(this);
             Core_Themes.ApplyRuntimeLayoutAdjustments(this);
         }
@@ -83,7 +83,7 @@ namespace MTM_Inventory_Application.Forms.ViewLogs
                 // Clear cache to force regeneration
                 _cachedReport = null;
                 _cacheTimestamp = DateTime.MinValue;
-                
+
                 await GenerateReportAsync();
             }
             catch (Exception ex)
@@ -379,7 +379,7 @@ namespace MTM_Inventory_Application.Forms.ViewLogs
                 // Load and parse entries using existing services
                 var rawEntries = Service_LogFileReader.LoadEntriesAsync(filePath, 0, 10000).Result;
                 var fileDate = File.GetLastWriteTime(filePath).Date;
-                
+
                 // Detect log format from file name
                 string fileName = Path.GetFileName(filePath).ToLower();
                 LogFormat logFormat = LogFormat.Normal;
@@ -393,7 +393,7 @@ namespace MTM_Inventory_Application.Forms.ViewLogs
                     token.ThrowIfCancellationRequested();
 
                     var entry = Service_LogParser.ParseEntry(rawEntry, logFormat);
-                    
+
                     if (entry.Level != "ERROR" && entry.Level != "CRITICAL")
                         continue;
 
@@ -438,8 +438,8 @@ namespace MTM_Inventory_Application.Forms.ViewLogs
         private string ExtractErrorType(Model_LogEntry entry)
         {
             string text = (entry.Message ?? "") + " " + (entry.Details ?? "");
-            
-            var exceptionTypes = new[] { 
+
+            var exceptionTypes = new[] {
                 "NullReferenceException", "ArgumentNullException", "ArgumentException",
                 "InvalidOperationException", "TimeoutException", "SqlException",
                 "FileNotFoundException", "DirectoryNotFoundException", "IOException",
@@ -503,7 +503,7 @@ namespace MTM_Inventory_Application.Forms.ViewLogs
         private HashSet<string> GetPromptFiles()
         {
             var promptFiles = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
-            
+
             try
             {
                 string promptDir = Helper_LogPath.GetPromptFixesDirectory();
@@ -552,7 +552,7 @@ namespace MTM_Inventory_Application.Forms.ViewLogs
         private void DisplayReport(ErrorAnalysisReport report)
         {
             var sb = new StringBuilder();
-            
+
             sb.AppendLine("=" + new string('=', 78));
             sb.AppendLine("                    ERROR ANALYSIS REPORT");
             sb.AppendLine("=" + new string('=', 78));
@@ -566,12 +566,12 @@ namespace MTM_Inventory_Application.Forms.ViewLogs
             sb.AppendLine(new string('-', 79));
             sb.AppendLine($"{"#",-3} {"Error Type",-30} {"Method",-25} {"Count",10} {"%",6}");
             sb.AppendLine(new string('-', 79));
-            
+
             int rank = 1;
             foreach (var error in report.MostFrequentErrors)
             {
-                double percent = report.TotalErrorsAnalyzed > 0 
-                    ? (error.Count * 100.0 / report.TotalErrorsAnalyzed) 
+                double percent = report.TotalErrorsAnalyzed > 0
+                    ? (error.Count * 100.0 / report.TotalErrorsAnalyzed)
                     : 0;
                 sb.AppendLine($"{rank,-3} {TruncateString(error.ErrorType, 30),-30} {TruncateString(error.MethodName, 25),-25} {error.Count,10:N0} {percent,5:F1}%");
                 rank++;
@@ -591,12 +591,12 @@ namespace MTM_Inventory_Application.Forms.ViewLogs
             sb.AppendLine(new string('-', 79));
             sb.AppendLine($"{"Error Type",-30} {"Method",-25} {"Count",10} {"First",12} {"Last",12}");
             sb.AppendLine(new string('-', 79));
-            
+
             foreach (var error in report.PriorityRecommendations.Take(15))
             {
                 sb.AppendLine($"{TruncateString(error.ErrorType, 30),-30} {TruncateString(error.MethodName, 25),-25} {error.Count,10:N0} {error.FirstSeen:MM/dd HH:mm} {error.LastSeen:MM/dd HH:mm}");
             }
-            
+
             if (report.PriorityRecommendations.Count > 15)
             {
                 sb.AppendLine($"... and {report.PriorityRecommendations.Count - 15} more");
@@ -606,12 +606,12 @@ namespace MTM_Inventory_Application.Forms.ViewLogs
             // Error Trends (last 30 days)
             sb.AppendLine("ERROR TRENDS (Last 30 Days)");
             sb.AppendLine(new string('-', 79));
-            
+
             if (report.ErrorTrends.Any())
             {
                 int maxCount = report.ErrorTrends.Values.Max();
                 const int barWidth = 50;
-                
+
                 foreach (var trend in report.ErrorTrends.OrderBy(kvp => kvp.Key))
                 {
                     int barLength = maxCount > 0 ? (trend.Value * barWidth / maxCount) : 0;
@@ -654,10 +654,10 @@ namespace MTM_Inventory_Application.Forms.ViewLogs
             html.AppendLine(".bar { height: 20px; background: #3498db; margin: 2px 0; display: inline-block; }");
             html.AppendLine("</style>");
             html.AppendLine("</head><body>");
-            
+
             html.AppendLine("<h1>Error Analysis Report</h1>");
             html.AppendLine($"<p>Generated: {report.GeneratedAt:yyyy-MM-dd HH:mm:ss}</p>");
-            
+
             html.AppendLine("<div class='stat'>");
             html.AppendLine($"<p><strong>Total Errors Analyzed:</strong> {report.TotalErrorsAnalyzed:N0}</p>");
             html.AppendLine($"<p><strong>Unique Error Types:</strong> {report.TotalUniqueErrors}</p>");
@@ -686,7 +686,7 @@ namespace MTM_Inventory_Application.Forms.ViewLogs
             html.AppendLine("</table>");
 
             html.AppendLine("</body></html>");
-            
+
             File.WriteAllText(filePath, html.ToString());
         }
 
@@ -771,6 +771,7 @@ namespace MTM_Inventory_Application.Forms.ViewLogs
         }
 
         #endregion
+
     }
 
     #region Report Model Classes

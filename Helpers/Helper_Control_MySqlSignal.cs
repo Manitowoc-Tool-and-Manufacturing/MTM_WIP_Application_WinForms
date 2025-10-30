@@ -25,31 +25,33 @@ public class Helper_Control_MySqlSignal
             return (0, -1);
         }
 
-        var pingMs = -1;
+        // First, try to actually connect to MySQL (this is the real test)
+        var sw = System.Diagnostics.Stopwatch.StartNew();
         try
         {
-            using var ping = new Ping();
-            var reply = await ping.SendPingAsync(host, 1000);
-            if (reply.Status == IPStatus.Success)
-                pingMs = (int)reply.RoundtripTime;
+            using var connection = new MySqlConnection(DatabaseConfig.ConnectionString);
+            await connection.OpenAsync();
+            sw.Stop();
+            var pingMs = (int)sw.ElapsedMilliseconds;
+            
+            // Calculate strength based on connection time
+            var strength = pingMs switch
+            {
+                < 50 => 5,
+                < 100 => 4,
+                < 200 => 3,
+                < 400 => 2,
+                < 800 => 1,
+                _ => 0
+            };
+            
+            return (strength, pingMs);
         }
         catch
         {
-            pingMs = -1;
+            // MySQL connection failed, return 0 strength
+            return (0, -1);
         }
-
-        var strength = pingMs switch
-        {
-            < 0 => 0,
-            < 50 => 5,
-            < 100 => 4,
-            < 200 => 3,
-            < 400 => 2,
-            < 800 => 1,
-            _ => 0
-        };
-
-        return (strength, pingMs);
     }
 
     #endregion

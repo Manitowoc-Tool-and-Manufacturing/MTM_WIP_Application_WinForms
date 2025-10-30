@@ -15,7 +15,7 @@ namespace MTM_WIP_Application_Winforms.Forms.MainForm
 
         #endregion
 
-        private MenuStrip MainForm_MenuStrip;
+        public MenuStrip MainForm_MenuStrip;
         private ToolStripMenuItem MainForm_MenuStrip_File;
         private ToolStripMenuItem MainForm_MenuStrip_File_Settings;
         private ToolStripMenuItem MainForm_MenuStrip_Exit;
@@ -27,7 +27,7 @@ namespace MTM_WIP_Application_Winforms.Forms.MainForm
         public ToolStripStatusLabel MainForm_StatusStrip_SavedStatus;
         public ToolStripStatusLabel MainForm_StatusStrip_Disconnected;
         private ToolStripProgressBar MainForm_ProgressBar;
-        private ToolStripStatusLabel MainForm_StatusText;
+        public ToolStripStatusLabel MainForm_StatusText;
 
         private System.Drawing.Printing.PrintDocument MainForm_Inventory_PrintDocument;
         private PrintPreviewDialog MainForm_Inventory_PrintDialog;

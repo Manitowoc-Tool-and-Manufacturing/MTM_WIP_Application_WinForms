@@ -20,7 +20,6 @@ internal static class Service_ErrorHandler
     private static readonly Dictionary<string, DateTime> _lastErrorTimestamp = new();
     private static readonly object _errorLock = new();
     private static readonly TimeSpan ErrorCooldownPeriod = TimeSpan.FromSeconds(5);
-
     #endregion
 
     #region Public Methods - Enhanced Error Handling
@@ -67,8 +66,12 @@ internal static class Service_ErrorHandler
             // Handle critical errors that should terminate the application
             if (severity == Enum_ErrorSeverity.Fatal || IsFatalError(ex))
             {
-                HandleFatalError(ex, callerName, controlName);
-                return false;
+                if (_isErrorDialogOpen)
+                {
+                    LoggingUtility.Log($"[ErrorDialog] Suppressing error dialog - another dialog is already open: {ex.Message}");
+                    return false;
+                }
+                _isErrorDialogOpen = true;
             }
 
             return errorDialog.ShouldRetry && result == DialogResult.Retry;
@@ -78,6 +81,13 @@ internal static class Service_ErrorHandler
             // Fallback error handling if our enhanced handler fails
             LoggingUtility.LogApplicationError(innerEx);
             FallbackErrorDisplay(ex, callerName);
+            
+            // Make sure flag is reset even if exception occurs
+            lock (_errorLock)
+            {
+                _isErrorDialogOpen = false;
+            }
+            
             return false;
         }
     }

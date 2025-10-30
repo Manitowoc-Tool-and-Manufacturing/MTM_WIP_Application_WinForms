@@ -61,11 +61,11 @@ public partial class ViewApplicationLogsForm : Form
     public ViewApplicationLogsForm()
     {
         InitializeComponent();
-        
+
         // Performance optimization
         SetStyle(ControlStyles.OptimizedDoubleBuffer | ControlStyles.AllPaintingInWmPaint | ControlStyles.UserPaint, true);
         UpdateStyles();
-        
+
         Core_Themes.ApplyDpiScaling(this);
         Core_Themes.ApplyRuntimeLayoutAdjustments(this);
         Core_Themes.ApplyFocusHighlighting(this);
@@ -172,7 +172,7 @@ public partial class ViewApplicationLogsForm : Form
         // Insert panel below existing filters (panelFilters)
         panelPromptFilters.Parent = panelEntryDisplay;
         panelPromptFilters.BringToFront();
-        
+
         LoggingUtility.Log("[ViewApplicationLogsForm] Prompt status filter controls initialized");
     }
 
@@ -182,7 +182,7 @@ public partial class ViewApplicationLogsForm : Form
     /// </summary>
     private void OnPromptStatusFilterChanged()
     {
-        if (_chkFilterShowAllStatus == null || _chkFilterNoPrompts == null || 
+        if (_chkFilterShowAllStatus == null || _chkFilterNoPrompts == null ||
             _chkFilterNewStatus == null || _chkFilterInProgressStatus == null)
         {
             return;
@@ -260,7 +260,7 @@ public partial class ViewApplicationLogsForm : Form
         {
             // Apply theme colors to form and controls
             Core_Themes.ApplyTheme(this);
-            
+
             await LoadUserListAsync();
 
             // If username was pre-selected via constructor, select it now
@@ -295,7 +295,7 @@ public partial class ViewApplicationLogsForm : Form
         {
             // Save current selection before clearing
             string? previouslySelectedUser = cmbUsers.SelectedItem as string;
-            
+
             cmbUsers.Items.Clear();
 
             // Get all base log directories (primary and fallback)
@@ -361,7 +361,7 @@ public partial class ViewApplicationLogsForm : Form
             if (cmbUsers.Items.Count > 0)
             {
                 lblUserCount.Text = $"{cmbUsers.Items.Count} users";
-                
+
                 // Restore previous user selection if it still exists
                 if (!string.IsNullOrWhiteSpace(previouslySelectedUser))
                 {
@@ -372,7 +372,7 @@ public partial class ViewApplicationLogsForm : Form
                         cmbUsers.SelectedIndexChanged -= cmbUsers_SelectedIndexChanged;
                         cmbUsers.SelectedIndex = index;
                         cmbUsers.SelectedIndexChanged += cmbUsers_SelectedIndexChanged;
-                        
+
                         LoggingUtility.Log($"[ViewApplicationLogsForm] Restored user selection: {previouslySelectedUser}");
                     }
                 }
@@ -683,7 +683,7 @@ public partial class ViewApplicationLogsForm : Form
 
             // Populate structured fields based on log type
             PopulateStructuredDisplay(entry);
-            
+
             // T071: Apply color to txtLevel AFTER text is populated
             ApplyEntryDisplayPanelBorder(entry);
         }
@@ -730,7 +730,7 @@ public partial class ViewApplicationLogsForm : Form
                 txtLevel.Text = $"{entry.Level ?? "N/A"} {GetEmojiDisplay(entry.Emoji)}";
                 txtEntrySource.Text = entry.Source ?? "N/A";
                 txtEntryMessage.Text = entry.Message ?? "N/A";
-                
+
                 // Format details with JSON formatting if applicable
                 if (!string.IsNullOrWhiteSpace(entry.Details))
                 {
@@ -785,14 +785,14 @@ public partial class ViewApplicationLogsForm : Form
         if (!string.IsNullOrWhiteSpace(_selectedUsername))
         {
             // Save current state
-            string? selectedFileName = lstLogFiles.SelectedItems.Count > 0 
-                ? (lstLogFiles.SelectedItems[0].Tag as Model_LogFile)?.FileName 
+            string? selectedFileName = lstLogFiles.SelectedItems.Count > 0
+                ? (lstLogFiles.SelectedItems[0].Tag as Model_LogFile)?.FileName
                 : null;
             int currentEntryIndex = _currentEntryIndex;
-            
+
             // Reload files
             await LoadLogFilesAsync(_selectedUsername);
-            
+
             // Restore file selection if it still exists
             if (!string.IsNullOrWhiteSpace(selectedFileName))
             {
@@ -968,8 +968,8 @@ public partial class ViewApplicationLogsForm : Form
         {
             LoggingUtility.LogApplicationError(ex);
             Service_ErrorHandler.HandleException(ex, ErrorSeverity.Medium,
-                contextData: new Dictionary<string, object> 
-                { 
+                contextData: new Dictionary<string, object>
+                {
                     ["Operation"] = "ExportEntries",
                     ["EntryCount"] = _currentEntries?.Count ?? 0
                 },
@@ -997,7 +997,7 @@ public partial class ViewApplicationLogsForm : Form
                 lblStatus.Text = "Please select a user";
                 return;
             }
-            
+
             string? logDirectory = Helper_LogPath.GetUserLogDirectory(_selectedUsername);
 
             if (string.IsNullOrWhiteSpace(logDirectory) || !Directory.Exists(logDirectory))
@@ -1046,7 +1046,7 @@ public partial class ViewApplicationLogsForm : Form
             e.Handled = true;
             e.SuppressKeyPress = true;
         }
-        
+
         // Ctrl+P - Manage Prompt Status (T076)
         if (e.Control && e.KeyCode == Keys.P)
         {
@@ -1054,7 +1054,7 @@ public partial class ViewApplicationLogsForm : Form
             e.Handled = true;
             e.SuppressKeyPress = true;
         }
-        
+
         // Ctrl+R - Generate Error Report (T076)
         if (e.Control && e.KeyCode == Keys.R)
         {
@@ -1062,7 +1062,7 @@ public partial class ViewApplicationLogsForm : Form
             e.Handled = true;
             e.SuppressKeyPress = true;
         }
-        
+
         // Ctrl+Shift+F - Open Prompt Fixes Folder (T076)
         if (e.Control && e.Shift && e.KeyCode == Keys.F)
         {
@@ -1106,7 +1106,7 @@ public partial class ViewApplicationLogsForm : Form
         {
             // Extract method name from stack trace
             string? methodName = Service_PromptGenerator.ExtractMethodName(entry.StackTrace);
-            
+
             if (string.IsNullOrWhiteSpace(methodName))
             {
                 lblStatus.Text = "Could not extract method name from error";
@@ -1118,7 +1118,7 @@ public partial class ViewApplicationLogsForm : Form
 
             // T063: Check if prompt already exists
             string? promptFilePath = Helper_LogPath.GetPromptFilePath(methodName);
-            
+
             if (promptFilePath != null && File.Exists(promptFilePath))
             {
                 // Show custom dialog with options
@@ -1134,7 +1134,7 @@ public partial class ViewApplicationLogsForm : Form
                     try
                     {
                         LoggingUtility.Log($"[ViewApplicationLogsForm] Attempting to open prompt file: {promptFilePath}");
-                        
+
                         // Verify file exists before opening
                         if (!File.Exists(promptFilePath))
                         {
@@ -1144,10 +1144,10 @@ public partial class ViewApplicationLogsForm : Form
                                 "File Not Found");
                             return;
                         }
-                        
+
                         // Try multiple approaches to open the file (Windows may not have .md association)
                         bool opened = false;
-                        
+
                         // Approach 1: Try using explorer.exe with /select (most reliable)
                         try
                         {
@@ -1165,7 +1165,7 @@ public partial class ViewApplicationLogsForm : Form
                         catch (Exception explorerEx)
                         {
                             LoggingUtility.Log($"[ViewApplicationLogsForm] Explorer approach failed: {explorerEx.Message}");
-                            
+
                             // Approach 2: Try direct file association
                             try
                             {
@@ -1175,10 +1175,10 @@ public partial class ViewApplicationLogsForm : Form
                                     UseShellExecute = true,
                                     Verb = "open"
                                 };
-                                
+
                                 var process = System.Diagnostics.Process.Start(startInfo);
                                 opened = (process != null);
-                                
+
                                 if (opened)
                                 {
                                     lblStatus.Text = $"Opened existing prompt: {methodName}";
@@ -1190,7 +1190,7 @@ public partial class ViewApplicationLogsForm : Form
                                 LoggingUtility.Log($"[ViewApplicationLogsForm] Direct file open failed: {directEx.Message}");
                             }
                         }
-                        
+
                         if (!opened)
                         {
                             // Last resort: show the file path and offer to open directory
@@ -1200,7 +1200,7 @@ public partial class ViewApplicationLogsForm : Form
                                 "Manual Action Required",
                                 MessageBoxButtons.YesNo,
                                 MessageBoxIcon.Information);
-                            
+
                             if (fallbackResult == DialogResult.Yes)
                             {
                                 string? directory = Path.GetDirectoryName(promptFilePath);
@@ -1221,24 +1221,24 @@ public partial class ViewApplicationLogsForm : Form
                         LoggingUtility.Log($"[ViewApplicationLogsForm] Error opening prompt file: {promptFilePath}");
                         LoggingUtility.LogApplicationError(ex);
                         lblStatus.Text = "Error opening file";
-                        
+
                         Service_ErrorHandler.HandleException(ex, ErrorSeverity.Low,
                             retryAction: null,
-                            contextData: new Dictionary<string, object> 
-                            { 
+                            contextData: new Dictionary<string, object>
+                            {
                                 ["FilePath"] = promptFilePath,
                                 ["MethodName"] = methodName
                             },
                             controlName: nameof(ViewApplicationLogsForm));
                     }
                 }
-                
+
                 return;
             }
 
             // Generate the prompt
             string? promptContent = Service_PromptGenerator.GeneratePrompt(entry);
-            
+
             if (string.IsNullOrWhiteSpace(promptContent))
             {
                 lblStatus.Text = "Failed to generate prompt";
@@ -1250,14 +1250,14 @@ public partial class ViewApplicationLogsForm : Form
 
             // Write prompt to file
             bool success = Service_PromptGenerator.WritePromptToFile(methodName, promptContent);
-            
+
             if (success)
             {
                 lblStatus.Text = $"Prompt created for method: {methodName}";
                 Service_ErrorHandler.ShowInformation(
                     $"Copilot prompt file has been created successfully:\n\nMethod: {methodName}\nLocation: {promptFilePath ?? "Prompt Fixes directory"}",
                     "Prompt Created");
-                
+
                 LoggingUtility.Log($"[ViewApplicationLogsForm] Created prompt file for method: {methodName}");
             }
             else
@@ -1273,7 +1273,7 @@ public partial class ViewApplicationLogsForm : Form
             LoggingUtility.Log($"[ViewApplicationLogsForm] Error creating prompt");
             LoggingUtility.LogApplicationError(ex);
             lblStatus.Text = "Error creating prompt";
-            Service_ErrorHandler.HandleException(ex, ErrorSeverity.Medium, 
+            Service_ErrorHandler.HandleException(ex, ErrorSeverity.Medium,
                 contextData: new Dictionary<string, object>
                 {
                     ["Operation"] = "CreatePrompt",
@@ -1295,7 +1295,7 @@ public partial class ViewApplicationLogsForm : Form
         {
             using var dialog = new PromptStatusManagerDialog();
             dialog.ShowDialog(this);
-            
+
             LoggingUtility.Log("[ViewApplicationLogsForm] Manage Prompt Status dialog closed");
         }
         catch (Exception ex)
@@ -1333,7 +1333,7 @@ public partial class ViewApplicationLogsForm : Form
 
             using var dialog = new ErrorAnalysisReportDialog(logBasePath);
             dialog.ShowDialog(this);
-            
+
             lblStatus.Text = "Error analysis report dialog closed";
             LoggingUtility.Log("[ViewApplicationLogsForm] Error Analysis Report dialog opened");
         }
@@ -1356,7 +1356,7 @@ public partial class ViewApplicationLogsForm : Form
         try
         {
             string? promptDirectory = Helper_LogPath.GetPromptFixesDirectory();
-            
+
             if (string.IsNullOrWhiteSpace(promptDirectory))
             {
                 lblStatus.Text = "Prompt Fixes directory not configured";
@@ -1387,7 +1387,7 @@ public partial class ViewApplicationLogsForm : Form
                 UseShellExecute = true,
                 Verb = "open"
             });
-            
+
             lblStatus.Text = $"Opened Prompt Fixes folder";
             LoggingUtility.Log($"[ViewApplicationLogsForm] Opened Prompt Fixes directory: {promptDirectory}");
         }
@@ -1485,7 +1485,7 @@ public partial class ViewApplicationLogsForm : Form
             int created = 0;
             int skipped = 0;
             int failed = 0;
-            
+
             // T067: Collect detailed results
             var detailedResults = new List<BatchPromptResult>();
 
@@ -1503,7 +1503,7 @@ public partial class ViewApplicationLogsForm : Form
                     {
                         skipped++;
                         LoggingUtility.Log($"[ViewApplicationLogsForm] Skipped existing prompt: {methodName}");
-                        
+
                         // T067: Track skipped result
                         detailedResults.Add(new BatchPromptResult
                         {
@@ -1520,7 +1520,7 @@ public partial class ViewApplicationLogsForm : Form
                     {
                         failed++;
                         LoggingUtility.Log($"[ViewApplicationLogsForm] Failed to generate prompt content: {methodName}");
-                        
+
                         // T067: Track failed result
                         detailedResults.Add(new BatchPromptResult
                         {
@@ -1537,7 +1537,7 @@ public partial class ViewApplicationLogsForm : Form
                     {
                         created++;
                         LoggingUtility.Log($"[ViewApplicationLogsForm] Created prompt: {methodName}");
-                        
+
                         // T067: Track created result
                         detailedResults.Add(new BatchPromptResult
                         {
@@ -1550,7 +1550,7 @@ public partial class ViewApplicationLogsForm : Form
                     {
                         failed++;
                         LoggingUtility.Log($"[ViewApplicationLogsForm] Failed to write prompt file: {methodName}");
-                        
+
                         // T067: Track failed result
                         detailedResults.Add(new BatchPromptResult
                         {
@@ -1565,7 +1565,7 @@ public partial class ViewApplicationLogsForm : Form
                     failed++;
                     LoggingUtility.Log($"[ViewApplicationLogsForm] Exception generating prompt for {methodName}: {ex.Message}");
                     LoggingUtility.LogApplicationError(ex);
-                    
+
                     // T067: Track exception result
                     detailedResults.Add(new BatchPromptResult
                     {
@@ -1702,7 +1702,7 @@ public partial class ViewApplicationLogsForm : Form
 
         // T071: Add emoji severity indicator to entry position label
         string emoji = GetSeverityEmoji(_currentEntries[_currentEntryIndex]);
-        
+
         // T068: Update label format based on grouping mode
         if (_groupingEnabled && !_showingAllOccurrences)
         {
@@ -1765,7 +1765,7 @@ public partial class ViewApplicationLogsForm : Form
         for (int i = 0; i < _currentEntries.Count; i++)
         {
             var entry = _currentEntries[i];
-            
+
             // Only group ERROR and CRITICAL entries
             if (entry.Level != "ERROR" && entry.Level != "CRITICAL")
             {
@@ -1817,9 +1817,9 @@ public partial class ViewApplicationLogsForm : Form
     private string ExtractErrorType(Model_LogEntry entry)
     {
         string text = entry.Message + " " + entry.Details;
-        
+
         // Common exception patterns
-        var exceptionTypes = new[] { 
+        var exceptionTypes = new[] {
             "NullReferenceException", "ArgumentNullException", "ArgumentException",
             "InvalidOperationException", "TimeoutException", "SqlException",
             "FileNotFoundException", "DirectoryNotFoundException", "IOException",
@@ -1899,25 +1899,25 @@ public partial class ViewApplicationLogsForm : Form
         // Find the matching file in the ListView
         foreach (ListViewItem item in lstLogFiles.Items)
         {
-            if (item.Tag is Model_LogFile logFile && 
+            if (item.Tag is Model_LogFile logFile &&
                 logFile.FileName.Equals(fileName, StringComparison.OrdinalIgnoreCase))
             {
                 // Temporarily disable event to prevent reload
                 lstLogFiles.SelectedIndexChanged -= lstLogFiles_SelectedIndexChanged;
-                
+
                 item.Selected = true;
                 item.EnsureVisible();
-                
+
                 // Re-enable event
                 lstLogFiles.SelectedIndexChanged += lstLogFiles_SelectedIndexChanged;
-                
+
                 // Restore entry position if valid
                 if (entryIndex >= 0 && entryIndex < _currentEntries.Count)
                 {
                     _currentEntryIndex = entryIndex;
                     ShowCurrentEntry();
                 }
-                
+
                 LoggingUtility.Log($"[ViewApplicationLogsForm] Restored selection: {fileName} at entry {entryIndex}");
                 break;
             }
@@ -2365,7 +2365,7 @@ public partial class ViewApplicationLogsForm : Form
             context.AppendLine("**Message**:");
             context.AppendLine(entry.Message ?? "No message available");
             context.AppendLine();
-            
+
             if (!string.IsNullOrWhiteSpace(entry.StackTrace))
             {
                 context.AppendLine("**Stack Trace**:");
@@ -2389,15 +2389,15 @@ public partial class ViewApplicationLogsForm : Form
             context.AppendLine("3. Are there any related issues or edge cases to address?");
 
             string contextText = context.ToString();
-            
+
             Clipboard.SetText(contextText);
             lblStatus.Text = "Error context copied to clipboard (ready for Copilot)";
-            
+
             // T070: Show toast-style notification
             Service_ErrorHandler.ShowInformation(
                 "Error context has been copied to your clipboard.\n\nYou can now paste it into Copilot Chat for analysis.",
                 "Error Context Copied");
-            
+
             LoggingUtility.Log($"[ViewApplicationLogsForm] Error context copied for entry {_currentEntryIndex + 1}, method: {methodName}");
         }
         catch (Exception ex)
@@ -2601,7 +2601,7 @@ public partial class ViewApplicationLogsForm : Form
 
         // Get the actual text in txtLevel to determine color
         string levelText = txtLevel.Text?.ToUpperInvariant() ?? "";
-        
+
         // Determine background color based on level text content
         Color backgroundColor = SystemColors.Window; // Default white
 
@@ -2700,7 +2700,7 @@ public partial class ViewApplicationLogsForm : Form
 
             // Note: Service_LogFileReader is static, no disposal needed
             // Note: Helper_LogPath is static, no disposal needed
-            
+
             LoggingUtility.Log($"[ViewApplicationLogsForm] Form disposed, resources cleaned up");
         }
 
@@ -2708,4 +2708,5 @@ public partial class ViewApplicationLogsForm : Form
     }
 
     #endregion
+
 }
