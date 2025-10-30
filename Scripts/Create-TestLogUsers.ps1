@@ -129,7 +129,7 @@ function New-CsvLogFile {
                     "UnauthorizedAccessException: Access to the path is denied | Inner[1]: IOException: The process cannot access the file because it is being used by another process."
                 )
                 $ex = $exceptions[$i % $exceptions.Count]
-                $stackTrace = "   at MTM_Inventory_Application.$file.$method() in $file.cs:line $line`n   at System.Windows.Forms.Control.InvokeMarshaledCallbacks()`n   at MTM_Inventory_Application.Program.Main() in Program.cs:line $(Get-Random -Minimum 20 -Maximum 50)"
+                $stackTrace = "   at MTM_WIP_Application_Winforms.$file.$method() in $file.cs:line $line`n   at System.Windows.Forms.Control.InvokeMarshaledCallbacks()`n   at MTM_WIP_Application_Winforms.Program.Main() in Program.cs:line $(Get-Random -Minimum 20 -Maximum 50)"
                 
                 $entries += "$(ConvertTo-CsvValue $time),$(ConvertTo-CsvValue 'ERROR'),$(ConvertTo-CsvValue $source),$(ConvertTo-CsvValue $ex),$(ConvertTo-CsvValue $stackTrace)"
             }
@@ -153,14 +153,14 @@ function New-CsvLogFile {
                     "MySqlException: Unable to connect to any of the specified MySQL hosts | Inner[1]: SocketException: No connection could be made because the target machine actively refused it",
                     "TimeoutException: Connection timeout expired. The timeout period elapsed while attempting to consume the pre-login handshake acknowledgement",
                     "MySqlException: Deadlock found when trying to get lock; try restarting transaction",
-                    "MySqlException: Table 'mtm_wip_application.inventory_temp' doesn't exist",
+                    "MySqlException: Table 'mtm_wip_application_winforms.inventory_temp' doesn't exist",
                     "MySqlException: Duplicate entry 'INV-$(Get-Random -Minimum 1000 -Maximum 9999)' for key 'PRIMARY'"
                 )
                 $err = $dbErrors[$i % $dbErrors.Count]
                 
                 $details = ""
                 if ($severity -ne "WARNING") {
-                    $details = "   at MySql.Data.MySqlClient.MySqlCommand.ExecuteReader() in MySqlCommand.cs:line 425`n   at MTM_Inventory_Application.Helpers.Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync() in Helper_Database_StoredProcedure.cs:line $(Get-Random -Minimum 200 -Maximum 400)`n   at MTM_Inventory_Application.Data.$file.$method() in $file.cs:line $line"
+                    $details = "   at MySql.Data.MySqlClient.MySqlCommand.ExecuteReader() in MySqlCommand.cs:line 425`n   at MTM_WIP_Application_Winforms.Helpers.Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync() in Helper_Database_StoredProcedure.cs:line $(Get-Random -Minimum 200 -Maximum 400)`n   at MTM_WIP_Application_Winforms.Data.$file.$method() in $file.cs:line $line"
                 }
                 
                 $entries += "$(ConvertTo-CsvValue $time),$(ConvertTo-CsvValue $severity),$(ConvertTo-CsvValue $source),$(ConvertTo-CsvValue $err),$(ConvertTo-CsvValue $details)"

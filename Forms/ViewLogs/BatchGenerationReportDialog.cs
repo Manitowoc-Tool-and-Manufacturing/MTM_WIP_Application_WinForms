@@ -1,9 +1,9 @@
-using MTM_Inventory_Application.Core;
-using MTM_Inventory_Application.Helpers;
-using MTM_Inventory_Application.Logging;
+using MTM_WIP_Application_Winforms.Core;
+using MTM_WIP_Application_Winforms.Helpers;
+using MTM_WIP_Application_Winforms.Logging;
 using System.Diagnostics;
 
-namespace MTM_Inventory_Application.Forms.ViewLogs;
+namespace MTM_WIP_Application_Winforms.Forms.ViewLogs;
 
 /// <summary>
 /// T067: Dialog showing detailed batch prompt generation results.

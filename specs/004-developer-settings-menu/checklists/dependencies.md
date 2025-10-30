@@ -17,13 +17,15 @@ This feature depends on the following completed features:
 **Form**: `ViewErrorReportsForm`
 
 **Required Deliverables**:
-- ☐ ViewErrorReportsForm.cs exists in Forms/ directory
-- ☐ Form compiles without errors
-- ☐ Form can be instantiated and opened programmatically
-- ☐ Core viewing functionality works (can display error reports)
-- ☐ Spec 002 marked as complete in project tracking
+
+-   ☐ ViewErrorReportsForm.cs exists in Forms/ directory
+-   ☐ Form compiles without errors
+-   ☐ Form can be instantiated and opened programmatically
+-   ☐ Core viewing functionality works (can display error reports)
+-   ☐ Spec 002 marked as complete in project tracking
 
 **Verification Command**:
+
 ```powershell
 # Check if form exists
 Test-Path "Forms\ErrorDialog\ViewErrorReportsForm.cs"
@@ -41,13 +43,15 @@ dotnet build MTM_WIP_Application_Winforms.csproj -c Debug
 **Form**: `ViewApplicationLogsForm`
 
 **Required Deliverables**:
-- ☐ ViewApplicationLogsForm.cs exists in Forms/ directory
-- ☐ Form compiles without errors
-- ☐ Form can be instantiated and opened programmatically
-- ☐ Core viewing functionality works (can display log files)
-- ☐ Spec 003 marked as complete in project tracking
+
+-   ☐ ViewApplicationLogsForm.cs exists in Forms/ directory
+-   ☐ Form compiles without errors
+-   ☐ Form can be instantiated and opened programmatically
+-   ☐ Core viewing functionality works (can display log files)
+-   ☐ Spec 003 marked as complete in project tracking
 
 **Verification Command**:
+
 ```powershell
 # Check if form exists
 Test-Path "Forms\Development\ViewApplicationLogsForm.cs"
@@ -63,6 +67,7 @@ dotnet build MTM_WIP_Application_Winforms.csproj -c Debug
 **DO NOT START** Feature 004 implementation until BOTH checkboxes above are marked complete.
 
 **Recommended Sequence**:
+
 1. ✅ Complete Feature 001 (Error Reporting System - foundation)
 2. ✅ Complete Feature 002 (View Error Reports - depends on 001)
 3. ✅ Complete Feature 003 (View Application Logs - independent)
@@ -76,10 +81,10 @@ dotnet build MTM_WIP_Application_Winforms.csproj -c Debug
 Once Features 002 and 003 are complete, Feature 004 will integrate them by:
 
 1. **Adding TreeView Node**: "Developer Settings" node in Settings Form
-2. **Menu Items**: 
-   - "View Error Reports" → Opens `ViewErrorReportsForm`
-   - "View Application Logs" → Opens `ViewApplicationLogsForm`
-   - "Sync Pending Reports" → Executes sync operation
+2. **Menu Items**:
+    - "View Error Reports" → Opens `ViewErrorReportsForm`
+    - "View Application Logs" → Opens `ViewApplicationLogsForm`
+    - "Sync Pending Reports" → Executes sync operation
 3. **Window Management**: Prevents duplicate window instances
 4. **Badge Display**: Shows pending report count
 
@@ -98,7 +103,7 @@ git checkout 002-view-error-reports
 dotnet build -c Debug
 # Expected: Build succeeds with ViewErrorReportsForm
 
-# Verify Feature 003 exists and compiles  
+# Verify Feature 003 exists and compiles
 git checkout 003-view-application-logs
 dotnet build -c Debug
 # Expected: Build succeeds with ViewApplicationLogsForm
@@ -112,16 +117,16 @@ git checkout 004-developer-settings-menu
 
 ## Sign-Off
 
-**002 - View Error Reports**: ☐ Complete (Date: ______ , Reviewer: ______)  
-**003 - View Application Logs**: ☐ Complete (Date: ______ , Reviewer: ______)  
+**002 - View Error Reports**: ☐ Complete (Date: **\_\_** , Reviewer: **\_\_**)  
+**003 - View Application Logs**: ☐ Complete (Date: **\_\_** , Reviewer: **\_\_**)
 
-**004 Ready to Start**: ☐ Yes (Date: ______)
+**004 Ready to Start**: ☐ Yes (Date: **\_\_**)
 
 ---
 
 ## Notes
 
-- If either Feature 002 or 003 is incomplete, Feature 004 can create **stub forms** temporarily
-- Stub forms should throw NotImplementedException with message: "Feature not yet implemented"
-- Replace stubs with actual forms once dependencies are complete
-- Update this checklist status as features are completed
+-   If either Feature 002 or 003 is incomplete, Feature 004 can create **stub forms** temporarily
+-   Stub forms should throw NotImplementedException with message: "Feature not yet implemented"
+-   Replace stubs with actual forms once dependencies are complete
+-   Update this checklist status as features are completed

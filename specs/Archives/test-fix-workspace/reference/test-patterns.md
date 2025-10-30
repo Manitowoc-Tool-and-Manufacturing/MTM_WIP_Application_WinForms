@@ -48,7 +48,7 @@ namespace MTM_WIP_Application_Winforms.Tests.Integration
         {
             // Create test users if tests need them
             await CreateTestUsersAsync();
-            
+
             // Create entity-specific test data if needed
             // await CreateTest[Entity]DataAsync();
         }
@@ -82,11 +82,11 @@ namespace MTM_WIP_Application_Winforms.Tests.Integration
             var result = await Dao_[Entity].GetAll[Entity]Async();
 
             // Assert
-            Assert.IsTrue(result.IsSuccess, 
+            Assert.IsTrue(result.IsSuccess,
                 $"Expected success, got failure: {result.ErrorMessage}");
-            Assert.IsNotNull(result.Data, 
+            Assert.IsNotNull(result.Data,
                 "Expected non-null DataTable");
-            Assert.IsTrue(result.Data.Rows.Count > 0, 
+            Assert.IsTrue(result.Data.Rows.Count > 0,
                 "Expected at least one row");
         }
 
@@ -106,25 +106,25 @@ namespace MTM_WIP_Application_Winforms.Tests.Integration
             // Arrange
             var testId = "TEST-" + Guid.NewGuid().ToString().Substring(0, 8);
             var testName = "Test Entity " + testId;
-            
+
             try
             {
                 // Act
                 var createResult = await Dao_[Entity].Create[Entity]Async(
-                    testId, 
+                    testId,
                     testName,
                     // ... other parameters
                 );
-                
+
                 // Assert - Creation
-                Assert.IsTrue(createResult.IsSuccess, 
+                Assert.IsTrue(createResult.IsSuccess,
                     $"Create failed: {createResult.ErrorMessage}");
-                
+
                 // Assert - Retrieval (verify entity was created)
                 var getResult = await Dao_[Entity].Get[Entity]ByIdAsync(testId);
-                Assert.IsTrue(getResult.IsSuccess && getResult.Data != null, 
+                Assert.IsTrue(getResult.IsSuccess && getResult.Data != null,
                     "Should be able to retrieve created entity");
-                
+
                 if (getResult.Data is DataRow row)
                 {
                     Assert.AreEqual(testId, row["EntityID"].ToString(),
@@ -151,18 +151,18 @@ namespace MTM_WIP_Application_Winforms.Tests.Integration
         {
             // Arrange - use existing entity from GetAll
             var allEntities = await Dao_[Entity].GetAll[Entity]Async();
-            Assert.IsTrue(allEntities.IsSuccess && 
-                         allEntities.Data != null && 
+            Assert.IsTrue(allEntities.IsSuccess &&
+                         allEntities.Data != null &&
                          allEntities.Data.Rows.Count > 0,
                 "Need at least one entity for test");
-            
+
             var existingId = allEntities.Data.Rows[0]["EntityID"].ToString();
-            
+
             // Act
             var result = await Dao_[Entity].[Entity]ExistsAsync(existingId);
-            
+
             // Assert
-            Assert.IsTrue(result.IsSuccess && result.Data, 
+            Assert.IsTrue(result.IsSuccess && result.Data,
                 $"Expected entity '{existingId}' to exist");
         }
 
@@ -174,12 +174,12 @@ namespace MTM_WIP_Application_Winforms.Tests.Integration
         {
             // Arrange
             var nonExistentId = "NONEXISTENT-" + Guid.NewGuid().ToString();
-            
+
             // Act
             var result = await Dao_[Entity].[Entity]ExistsAsync(nonExistentId);
-            
+
             // Assert
-            Assert.IsTrue(result.IsSuccess && !result.Data, 
+            Assert.IsTrue(result.IsSuccess && !result.Data,
                 $"Expected entity '{nonExistentId}' to not exist");
         }
 
@@ -228,12 +228,13 @@ var result = await Dao_Something.GetDataAsync();  // Might not exist!
 ```
 
 **Tool Usage**:
+
 ```typescript
 grep_search({
-  isRegexp: true,
-  includePattern: "Data/Dao_[Entity].cs",
-  query: "(public|internal) (static )?.*Task.*\\("
-})
+    isRegexp: true,
+    includePattern: "Data/Dao_[Entity].cs",
+    query: "(public|internal) (static )?.*Task.*\\(",
+});
 ```
 
 ### Step 2: Read Method Signatures
@@ -243,12 +244,13 @@ grep_search({
 ```
 
 **Tool Usage**:
+
 ```typescript
 read_file({
-  filePath: "Data/Dao_[Entity].cs",
-  offset: 45,
-  limit: 30
-})
+    filePath: "Data/Dao_[Entity].cs",
+    offset: 45,
+    limit: 30,
+});
 ```
 
 ### Step 3: Document Findings
@@ -338,11 +340,11 @@ public class Dao_Example_Tests : BaseIntegrationTest
     {
         // Create test users once per test
         await CreateTestUsersAsync();
-        
+
         // Create entity-specific test data
         await CreateTestQuickButtonsAsync();
     }
-    
+
     [TestCleanup]
     public async Task TestTeardown()
     {
@@ -350,17 +352,17 @@ public class Dao_Example_Tests : BaseIntegrationTest
         await CleanupTestQuickButtonsAsync();
         await CleanupTestUsersAsync();
     }
-    
+
     private async Task CreateTestUsersAsync()
     {
         var sql = @"
             INSERT INTO usr_users (UserID, UserName, PasswordHash, IsActive, CreatedDate)
-            VALUES 
+            VALUES
                 ('TEST-USER', 'Test User', SHA2('password', 256), 1, NOW()),
                 ('TEST-ADMIN', 'Test Admin', SHA2('password', 256), 1, NOW())
             ON DUPLICATE KEY UPDATE UserID = UserID;
         ";
-        
+
         // Execute SQL using Helper_Database_StoredProcedure or MySqlCommand
         // Implementation depends on project helpers
     }
@@ -375,12 +377,12 @@ public async Task CreateItem_ValidData_CreatesItem()
 {
     // Arrange - unique test ID per test
     var testId = "TEST-" + Guid.NewGuid().ToString().Substring(0, 8);
-    
+
     try
     {
         // Act
         var result = await Dao_Item.CreateItemAsync(testId, ...);
-        
+
         // Assert
         Assert.IsTrue(result.IsSuccess);
     }
@@ -399,13 +401,13 @@ public async Task CreateItem_ValidData_CreatesItem()
 public async Task GetAllItems_Execution_ReturnsItems()
 {
     // Arrange - no setup needed, use existing data
-    
+
     // Act
     var result = await Dao_Item.GetAllItemsAsync();
-    
+
     // Assert - just verify operation succeeds
     Assert.IsTrue(result.IsSuccess && result.Data != null);
-    
+
     // Use first item for further tests if needed
     if (result.Data.Rows.Count > 0)
     {
@@ -427,10 +429,10 @@ public async Task GetQuickButtonsByUser_ExistingUser_ReturnsButtons()
 {
     // Arrange
     const string testUserId = "TEST-USER";  // Known test user from setup
-    
+
     // Act
     var result = await Dao_QuickButtons.GetQuickButtonsByUserAsync(testUserId);
-    
+
     // Assert
     Assert.IsTrue(result.IsSuccess && result.Data != null,
         $"Expected success for user '{testUserId}'");
@@ -448,7 +450,7 @@ public async Task AddQuickButton_ValidData_InsertsButton()
     // Arrange
     var testUserId = "TEST-USER";
     var uniqueButtonText = "Test Button " + Guid.NewGuid().ToString().Substring(0, 8);
-    
+
     try
     {
         // Act
@@ -460,7 +462,7 @@ public async Task AddQuickButton_ValidData_InsertsButton()
             "PART-001",  // PartNumber
             1  // Position
         );
-        
+
         // Assert
         Assert.IsTrue(result.IsSuccess,
             $"Expected successful insertion: {result.ErrorMessage}");
@@ -481,7 +483,7 @@ public async Task AddQuickButton_InvalidUser_ReturnsError()
 {
     // Arrange
     var nonExistentUser = "NONEXISTENT-USER";
-    
+
     // Act
     var result = await Dao_QuickButtons.AddQuickButtonAsync(
         nonExistentUser,
@@ -491,13 +493,13 @@ public async Task AddQuickButton_InvalidUser_ReturnsError()
         "PART-001",
         1
     );
-    
+
     // Assert - expect failure due to foreign key constraint
     Assert.IsFalse(result.IsSuccess,
         "Expected failure for non-existent user");
     Assert.IsNotNull(result.ErrorMessage,
         "Expected error message explaining failure");
-    Assert.IsTrue(result.ErrorMessage.Contains("user") || 
+    Assert.IsTrue(result.ErrorMessage.Contains("user") ||
                   result.ErrorMessage.Contains("foreign key"),
         "Error message should mention user or foreign key issue");
 }
@@ -512,10 +514,10 @@ public async Task GetQuickButtonCount_MultipleButtons_ReturnsCorrectCount()
     // Arrange
     const string testUserId = "TEST-USER";
     const int expectedCount = 3;  // Known from test data setup
-    
+
     // Act
     var result = await Dao_QuickButtons.GetQuickButtonCountAsync(testUserId);
-    
+
     // Assert
     Assert.IsTrue(result.IsSuccess && result.Data == expectedCount,
         $"Expected count of {expectedCount} for user '{testUserId}', got {result.Data}");
@@ -578,6 +580,7 @@ var testPartNumber = "TEST-PART-001";
 **Problem**: Model_Dao_Result.Data is null even though IsSuccess is true.
 
 **Solution**:
+
 ```csharp
 // ❌ Incorrect assertion
 Assert.IsTrue(result.IsSuccess && result.Data.Rows.Count > 0);
@@ -592,6 +595,7 @@ Assert.IsTrue(result.IsSuccess && result.Data != null && result.Data.Rows.Count 
 **Problem**: Cannot insert test data due to missing parent record.
 
 **Solution**:
+
 ```csharp
 // Ensure parent records exist first
 await CreateTestUsersAsync();  // Create users before quick buttons
@@ -605,6 +609,7 @@ await CreateTestQuickButtonsAsync();  // Quick buttons reference users
 **Problem**: Tests interfere with each other due to shared data.
 
 **Solution**:
+
 ```csharp
 // Use unique IDs per test
 var uniqueId = "TEST-" + Guid.NewGuid().ToString().Substring(0, 8);

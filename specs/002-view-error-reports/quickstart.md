@@ -10,15 +10,15 @@
 
 Before starting implementation, ensure you have:
 
-- ✅ Read [spec.md](./spec.md) - Complete feature specification
-- ✅ Reviewed [plan.md](./plan.md) - Technical context and constitution compliance
-- ✅ Studied [research.md](./research.md) - Technology decisions and patterns
-- ✅ Understood [data-model.md](./data-model.md) - Entity definitions and relationships
-- ✅ Reviewed [contracts/](./contracts/) - All 5 stored procedure contracts
-- ✅ Access to Debug database: `mtm_wip_application_winforms_test`
-- ✅ Existing error_reports table with sample data (from error-reporting-system feature)
-- ✅ Visual Studio 2022 with .NET 8.0 SDK installed
-- ✅ WinForms designer familiarity
+-   ✅ Read [spec.md](./spec.md) - Complete feature specification
+-   ✅ Reviewed [plan.md](./plan.md) - Technical context and constitution compliance
+-   ✅ Studied [research.md](./research.md) - Technology decisions and patterns
+-   ✅ Understood [data-model.md](./data-model.md) - Entity definitions and relationships
+-   ✅ Reviewed [contracts/](./contracts/) - All 5 stored procedure contracts
+-   ✅ Access to Debug database: `mtm_wip_application_winforms_test`
+-   ✅ Existing error_reports table with sample data (from error-reporting-system feature)
+-   ✅ Visual Studio 2022 with .NET 8.0 SDK installed
+-   ✅ WinForms designer familiarity
 
 ---
 
@@ -31,42 +31,44 @@ Follow this sequence to build the feature incrementally:
 **Goal**: Create stored procedures and test in MySQL Workbench
 
 1. **Create Stored Procedures** (in Database/UpdatedStoredProcedures/ReadyForVerification/)
-   - [ ] `sp_error_reports_GetAll.sql` - Filter and retrieve reports
-   - [ ] `sp_error_reports_GetByID.sql` - Get single report details
-   - [ ] `sp_error_reports_UpdateStatus.sql` - Change status with notes
-   - [ ] `sp_error_reports_GetUserList.sql` - Populate user filter dropdown
-   - [ ] `sp_error_reports_GetMachineList.sql` - Populate machine filter dropdown
+
+    - [ ] `sp_error_reports_GetAll.sql` - Filter and retrieve reports
+    - [ ] `sp_error_reports_GetByID.sql` - Get single report details
+    - [ ] `sp_error_reports_UpdateStatus.sql` - Change status with notes
+    - [ ] `sp_error_reports_GetUserList.sql` - Populate user filter dropdown
+    - [ ] `sp_error_reports_GetMachineList.sql` - Populate machine filter dropdown
 
 2. **Test Each Stored Procedure** (MySQL Workbench)
-   ```sql
-   -- Test GetAll with filters
-   CALL sp_error_reports_GetAll(
-       '2025-10-18 00:00:00', 
-       '2025-10-25 23:59:59', 
-       NULL, NULL, 'New', NULL, 
-       @status, @errMsg
-   );
-   SELECT @status, @errMsg;
-   
-   -- Test GetByID
-   CALL sp_error_reports_GetByID(123, @status, @errMsg);
-   SELECT @status, @errMsg;
-   
-   -- Test UpdateStatus
-   CALL sp_error_reports_UpdateStatus(
-       123, 'Reviewed', 'Investigating issue', 'Dev.Smith', NOW(), 
-       @status, @errMsg
-   );
-   SELECT @status, @errMsg;
-   
-   -- Test GetUserList
-   CALL sp_error_reports_GetUserList(@status, @errMsg);
-   SELECT @status, @errMsg;
-   
-   -- Test GetMachineList
-   CALL sp_error_reports_GetMachineList(@status, @errMsg);
-   SELECT @status, @errMsg;
-   ```
+
+    ```sql
+    -- Test GetAll with filters
+    CALL sp_error_reports_GetAll(
+        '2025-10-18 00:00:00',
+        '2025-10-25 23:59:59',
+        NULL, NULL, 'New', NULL,
+        @status, @errMsg
+    );
+    SELECT @status, @errMsg;
+
+    -- Test GetByID
+    CALL sp_error_reports_GetByID(123, @status, @errMsg);
+    SELECT @status, @errMsg;
+
+    -- Test UpdateStatus
+    CALL sp_error_reports_UpdateStatus(
+        123, 'Reviewed', 'Investigating issue', 'Dev.Smith', NOW(),
+        @status, @errMsg
+    );
+    SELECT @status, @errMsg;
+
+    -- Test GetUserList
+    CALL sp_error_reports_GetUserList(@status, @errMsg);
+    SELECT @status, @errMsg;
+
+    -- Test GetMachineList
+    CALL sp_error_reports_GetMachineList(@status, @errMsg);
+    SELECT @status, @errMsg;
+    ```
 
 3. **Reference**: See [contracts/](./contracts/) for exact parameter definitions and expected outputs
 
@@ -107,7 +109,15 @@ Follow this sequence to build the feature incrementally:
        Console.WriteLine($"Retrieved {result.Data.Rows.Count} reports");
    ```
 
-4. **Reference**: See [contracts/sp_error_reports_*.md](./contracts/) for C# usage examples
+    ```csharp
+    // Quick manual test in Program.cs or test console
+    var filter = new Model_ErrorReportFilter { Status = "New" };
+    var result = await Dao_ErrorReports.GetAllErrorReportsAsync(filter);
+    if (result.IsSuccess)
+        Console.WriteLine($"Retrieved {result.Data.Rows.Count} reports");
+    ```
+
+4. **Reference**: See [contracts/sp*error_reports*\*.md](./contracts/) for C# usage examples
 
 ---
 
@@ -116,19 +126,20 @@ Follow this sequence to build the feature incrementally:
 **Goal**: Create export functionality
 
 1. **Create Helpers/Helper_ErrorReportExport.cs**
-   - [ ] `ExportToCsvAsync(DataTable data, string filePath)` → `Task<bool>`
-   - [ ] `ExportToExcelAsync(DataTable data, string filePath)` → `Task<bool>`
-   - [ ] Use ClosedXML for Excel, StringBuilder for CSV
-   - [ ] Handle UTF-8 encoding for special characters
+
+    - [ ] `ExportToCsvAsync(DataTable data, string filePath)` → `Task<bool>`
+    - [ ] `ExportToExcelAsync(DataTable data, string filePath)` → `Task<bool>`
+    - [ ] Use ClosedXML for Excel, StringBuilder for CSV
+    - [ ] Handle UTF-8 encoding for special characters
 
 2. **Test Export Methods**
-   ```csharp
-   var testData = await Dao_ErrorReports.GetAllErrorReportsAsync(null);
-   bool success = await Helper_ErrorReportExport.ExportToCsvAsync(
-       testData.Data, 
-       @"C:\Temp\test_export.csv"
-   );
-   ```
+    ```csharp
+    var testData = await Dao_ErrorReports.GetAllErrorReportsAsync(null);
+    bool success = await Helper_ErrorReportExport.ExportToCsvAsync(
+        testData.Data,
+        @"C:\Temp\test_export.csv"
+    );
+    ```
 
 ---
 
@@ -145,17 +156,18 @@ Follow this sequence to build the feature incrementally:
    - [ ] Event: `ReportSelected(int reportId)`
 
 2. **Create Controls/ErrorReports/Control_ErrorReportDetails.cs**
-   - [ ] Labels/TextBoxes for all report fields
-   - [ ] Highlight UserNotes section (distinct border/background)
-   - [ ] Expandable sections for CallStack and TechnicalDetails
-   - [ ] Buttons: Mark as Reviewed, Mark as Resolved, Copy All, Export
-   - [ ] Method: `LoadReportAsync(int reportId)`
-   - [ ] Event: `StatusChanged()`
+
+    - [ ] Labels/TextBoxes for all report fields
+    - [ ] Highlight UserNotes section (distinct border/background)
+    - [ ] Expandable sections for CallStack and TechnicalDetails
+    - [ ] Buttons: Mark as Reviewed, Mark as Resolved, Copy All, Export
+    - [ ] Method: `LoadReportAsync(int reportId)`
+    - [ ] Event: `StatusChanged()`
 
 3. **Test Controls in Isolation**
-   - Create temporary form to host each control
-   - Verify data binding and events
-   - Test color-coding and layout at different DPI settings
+    - Create temporary form to host each control
+    - Verify data binding and events
+    - Test color-coding and layout at different DPI settings
 
 ---
 
@@ -164,32 +176,34 @@ Follow this sequence to build the feature incrementally:
 **Goal**: Assemble components into complete window
 
 1. **Create Forms/ErrorReports/Form_ViewErrorReports.cs**
-   - [ ] SplitContainer with Orientation.Horizontal (60% grid / 40% detail)
-   - [ ] Top panel: Filter controls (Date, User, Machine, Status, Search) + Apply/Clear buttons
-   - [ ] Middle panel: Control_ErrorReportsGrid
-   - [ ] Bottom panel: Control_ErrorReportDetails
-   - [ ] Status label: "Showing X of Y reports"
-   - [ ] Export buttons: Export to CSV, Export Selected
-   - [ ] Constructor: Apply Core_Themes.ApplyDpiScaling(this)
+
+    - [ ] SplitContainer with Orientation.Horizontal (60% grid / 40% detail)
+    - [ ] Top panel: Filter controls (Date, User, Machine, Status, Search) + Apply/Clear buttons
+    - [ ] Middle panel: Control_ErrorReportsGrid
+    - [ ] Bottom panel: Control_ErrorReportDetails
+    - [ ] Status label: "Showing X of Y reports"
+    - [ ] Export buttons: Export to CSV, Export Selected
+    - [ ] Constructor: Apply Core_Themes.ApplyDpiScaling(this)
 
 2. **Wire Up Events**
-   - [ ] Grid ReportSelected → Load detail view
-   - [ ] Detail StatusChanged → Refresh grid and detail
-   - [ ] Apply Filters → Call LoadReportsAsync with filter
-   - [ ] Clear Filters → Reset controls and load all reports
-   - [ ] Export buttons → Call Helper_ErrorReportExport
+
+    - [ ] Grid ReportSelected → Load detail view
+    - [ ] Detail StatusChanged → Refresh grid and detail
+    - [ ] Apply Filters → Call LoadReportsAsync with filter
+    - [ ] Clear Filters → Reset controls and load all reports
+    - [ ] Export buttons → Call Helper_ErrorReportExport
 
 3. **Region Organization** (per constitution)
-   ```
-   #region Fields
-   #region Properties
-   #region Constructors
-   #region Database Operations (LoadReportsAsync)
-   #region Button Clicks
-   #region ComboBox & UI Events
-   #region Helpers
-   #region Cleanup
-   ```
+    ```
+    #region Fields
+    #region Properties
+    #region Constructors
+    #region Database Operations (LoadReportsAsync)
+    #region Button Clicks
+    #region ComboBox & UI Events
+    #region Helpers
+    #region Cleanup
+    ```
 
 ---
 
@@ -198,30 +212,32 @@ Follow this sequence to build the feature incrementally:
 **Goal**: End-to-end manual validation
 
 1. **Launch from MainForm** (add menu item or button)
-   ```csharp
-   // In MainForm.cs
-   private void btnViewErrorReports_Click(object sender, EventArgs e)
-   {
-       var form = new Form_ViewErrorReports();
-       form.Show();
-   }
-   ```
+
+    ```csharp
+    // In MainForm.cs
+    private void btnViewErrorReports_Click(object sender, EventArgs e)
+    {
+        var form = new Form_ViewErrorReports();
+        form.Show();
+    }
+    ```
 
 2. **Execute Manual Test Scenarios** (from spec.md)
-   - [ ] User Story 1: Browse All Error Reports
-   - [ ] User Story 2: Filter and Search Reports
-   - [ ] User Story 3: View Details and Update Status
-   - [ ] User Story 4: Bulk Export Reports
-   - [ ] Edge Cases: Large result sets, long text fields, concurrent updates
+
+    - [ ] User Story 1: Browse All Error Reports
+    - [ ] User Story 2: Filter and Search Reports
+    - [ ] User Story 3: View Details and Update Status
+    - [ ] User Story 4: Bulk Export Reports
+    - [ ] Edge Cases: Large result sets, long text fields, concurrent updates
 
 3. **Verify Success Criteria** (from spec.md)
-   - [ ] SC-001: 100 reports load in < 1s
-   - [ ] SC-002: Filtering 1000→50 in < 500ms
-   - [ ] SC-003: Status update in < 300ms
-   - [ ] SC-004: Export 500 reports in < 2s
-   - [ ] SC-005: Search returns in < 400ms
-   - [ ] SC-006: Color-coding 100% correct
-   - [ ] SC-007: Detail view displays 10KB callstack without lag
+    - [ ] SC-001: 100 reports load in < 1s
+    - [ ] SC-002: Filtering 1000→50 in < 500ms
+    - [ ] SC-003: Status update in < 300ms
+    - [ ] SC-004: Export 500 reports in < 2s
+    - [ ] SC-005: Search returns in < 400ms
+    - [ ] SC-006: Color-coding 100% correct
+    - [ ] SC-007: Detail view displays 10KB callstack without lag
 
 ---
 
@@ -235,9 +251,9 @@ private async Task LoadReportsAsync(Model_ErrorReport_Core_Filter filter)
     try
     {
         _progressHelper?.ShowProgress("Loading error reports...");
-        
+
         var result = await Dao_ErrorReports.GetAllErrorReportsAsync(filter);
-        
+
         if (!result.IsSuccess)
         {
             Service_ErrorHandler.HandleException(
@@ -246,16 +262,16 @@ private async Task LoadReportsAsync(Model_ErrorReport_Core_Filter filter)
                 message: result.StatusMessage);
             return;
         }
-        
+
         DataTable reports = result.Data ?? new DataTable();
         dgvReports.DataSource = reports;
-        
+
         // Configure columns
         ConfigureGridColumns();
-        
+
         // Update status label
         lblStatus.Text = $"Showing {reports.Rows.Count} reports";
-        
+
         _progressHelper?.ShowSuccess($"Loaded {reports.Rows.Count} reports");
     }
     catch (Exception ex)
@@ -290,21 +306,21 @@ private void dgvReports_CellFormatting(object sender, DataGridViewCellFormatting
 private async void btnMarkReviewed_Click(object sender, EventArgs e)
 {
     string notes = txtDeveloperNotes.Text.Trim();
-    
+
     var confirmation = Service_ErrorHandler.ShowConfirmation(
-        "Mark this report as Reviewed?", 
+        "Mark this report as Reviewed?",
         "Confirm Status Change");
-    
+
     if (confirmation != DialogResult.OK)
         return;
-    
+
     var result = await Dao_ErrorReports.UpdateErrorReportStatusAsync(
         _currentReportId,
         "Reviewed",
         notes,
         Model_Application_Variables.CurrentUser.UserName
     );
-    
+
     if (result.IsSuccess)
     {
         await RefreshCurrentReport();
@@ -422,34 +438,34 @@ Before marking feature complete:
 
 ### Documentation
 
-- [spec.md](./spec.md) - Complete feature specification
-- [plan.md](./plan.md) - Implementation plan
-- [research.md](./research.md) - Technology decisions
-- [data-model.md](./data-model.md) - Entity definitions
-- [contracts/](./contracts/) - Stored procedure contracts
+-   [spec.md](./spec.md) - Complete feature specification
+-   [plan.md](./plan.md) - Implementation plan
+-   [research.md](./research.md) - Technology decisions
+-   [data-model.md](./data-model.md) - Entity definitions
+-   [contracts/](./contracts/) - Stored procedure contracts
 
 ### Instruction Files
 
-- `.github/instructions/csharp-dotnet8.instructions.md` - C# patterns, async, regions
-- `.github/instructions/mysql-database.instructions.md` - Stored procedures, Helper usage
-- `.github/instructions/testing-standards.instructions.md` - Manual validation approach
+-   `.github/instructions/csharp-dotnet8.instructions.md` - C# patterns, async, regions
+-   `.github/instructions/mysql-database.instructions.md` - Stored procedures, Helper usage
+-   `.github/instructions/testing-standards.instructions.md` - Manual validation approach
 
 ### Existing Code Patterns
 
-- `Data/Dao_ErrorReports.cs` - Current DAO structure (extend this)
-- `Controls/MainForm/Control_AdvancedRemove.cs` - DataGridView binding example
-- `Controls/Shared/ColumnOrderDialog.cs` - DataGridView manipulation
-- `Helpers/Helper_Database_StoredProcedure.cs` - ExecuteDataTableWithStatusAsync
+-   `Data/Dao_ErrorReports.cs` - Current DAO structure (extend this)
+-   `Controls/MainForm/Control_AdvancedRemove.cs` - DataGridView binding example
+-   `Controls/Shared/ColumnOrderDialog.cs` - DataGridView manipulation
+-   `Helpers/Helper_Database_StoredProcedure.cs` - ExecuteDataTableWithStatusAsync
 
 ---
 
 ## 8. Estimated Timeline
 
-- **Day 1**: Database layer (stored procedures) - 4 hours
-- **Day 2**: Data access layer (DAO methods) + Helper - 4 hours
-- **Day 3**: UI controls (Grid + Detail) - 6 hours
-- **Day 4**: Main form assembly - 4 hours
-- **Day 5**: Integration, testing, polish - 6 hours
+-   **Day 1**: Database layer (stored procedures) - 4 hours
+-   **Day 2**: Data access layer (DAO methods) + Helper - 4 hours
+-   **Day 3**: UI controls (Grid + Detail) - 6 hours
+-   **Day 4**: Main form assembly - 4 hours
+-   **Day 5**: Integration, testing, polish - 6 hours
 
 **Total**: ~24 hours (3 full days or 5 half-days)
 

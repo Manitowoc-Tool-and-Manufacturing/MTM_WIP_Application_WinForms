@@ -13,22 +13,25 @@ This quickstart guide provides developers with setup instructions, development w
 ## Prerequisites
 
 ### Required Software
-- Visual Studio 2022 (17.8+) or VS Code with C# DevKit
-- .NET 8.0 SDK
-- MySQL 5.7+ (MAMP or standalone)
-- Git for version control
+
+-   Visual Studio 2022 (17.8+) or VS Code with C# DevKit
+-   .NET 8.0 SDK
+-   MySQL 5.7+ (MAMP or standalone)
+-   Git for version control
 
 ### Required Knowledge
-- C# 12 language features
-- Windows Forms (WinForms) development
-- Async/await patterns
-- Regular expressions
-- File I/O operations
+
+-   C# 12 language features
+-   Windows Forms (WinForms) development
+-   Async/await patterns
+-   Regular expressions
+-   File I/O operations
 
 ### Project Context
-- Branch: `003-view-application-logs`
-- Target framework: .NET 8.0 Windows Forms
-- Database: MySQL 5.7+ (not required for this feature - file-based only)
+
+-   Branch: `003-view-application-logs`
+-   Target framework: .NET 8.0 Windows Forms
+-   Database: MySQL 5.7+ (not required for this feature - file-based only)
 
 ---
 
@@ -47,7 +50,7 @@ git checkout 003-view-application-logs
 dotnet restore
 
 # Build in Debug mode (uses test database - not needed for logs feature)
-dotnet build MTM_Inventory_Application.csproj -c Debug
+dotnet build MTM_WIP_Application_Winforms.csproj -c Debug
 
 # Verify build succeeds
 # Expected: 0 errors, 0 warnings
@@ -65,13 +68,13 @@ public static class LogViewerConfiguration
     /// Base path for network log storage. Configurable per environment.
     /// </summary>
     public static string BaseLogPath { get; set; } = @"\\networkpath\logs";
-    
+
     /// <summary>
     /// Maximum file size (in bytes) before requiring windowing.
     /// Default: 10MB per FR-044.
     /// </summary>
     public static long MaxFileSize { get; set; } = 10 * 1024 * 1024;
-    
+
     /// <summary>
     /// Number of entries to load per window.
     /// Default: 1000 per research decision.
@@ -81,6 +84,7 @@ public static class LogViewerConfiguration
 ```
 
 **For Local Development**: Update `BaseLogPath` to local test directory:
+
 ```csharp
 // Development override
 #if DEBUG
@@ -123,21 +127,24 @@ C:\TestLogs\
 ```
 
 **Sample Normal Log Entry**:
+
 ```
 [2025-10-26 14:30:15.234] HIGH ✅ PROCEDURE md_part_ids_Get_All - Query executed successfully
 Details: {"elapsed_ms": 45, "rows_returned": 127, "status": 0}
 ```
 
 **Sample Application Error Entry**:
+
 ```
 ERROR TYPE: NullReferenceException
 Exception Message: Object reference not set to an instance of an object.
 Stack Trace:
-   at MTM_Inventory_Application.Forms.MainForm.LoadInventory() in MainForm.cs:line 234
-   at MTM_Inventory_Application.Forms.MainForm.OnLoad(EventArgs e) in MainForm.cs:line 145
+   at MTM_WIP_Application_Winforms.Forms.MainForm.LoadInventory() in MainForm.cs:line 234
+   at MTM_WIP_Application_Winforms.Forms.MainForm.OnLoad(EventArgs e) in MainForm.cs:line 145
 ```
 
 **Sample Database Error Entry**:
+
 ```
 SEVERITY: ERROR
 [2025-10-26 14:32:10.567] MySqlException: Timeout expired. The timeout period elapsed prior to completion of the operation.
@@ -164,6 +171,7 @@ New-Item -Path "Models\LogFormat.cs" -ItemType File
 ```
 
 **Implementation Order**:
+
 1. `LogFormat.cs` - Enumeration (no dependencies)
 2. `Model_LogEntry.cs` - Core entity with factory methods
 3. `Model_LogFile.cs` - File metadata entity
@@ -173,7 +181,7 @@ New-Item -Path "Models\LogFormat.cs" -ItemType File
 **Validation**: Build project, verify no errors.
 
 ```powershell
-dotnet build MTM_Inventory_Application.csproj -c Debug
+dotnet build MTM_WIP_Application_Winforms.csproj -c Debug
 ```
 
 ### Phase 2: Security & Path Handling (Estimated: 2 hours)
@@ -186,12 +194,14 @@ New-Item -Path "Helpers\Helper_LogPath.cs" -ItemType File
 ```
 
 **Key Methods**:
-- `GetUserLogDirectory(username)` - Validates and returns user directory path
-- `GetLogFilePath(username, filename)` - Constructs full file path with validation
-- `ValidateUsername(username)` - Regex validation
-- `PreventPathTraversal(path)` - Security check against base directory
+
+-   `GetUserLogDirectory(username)` - Validates and returns user directory path
+-   `GetLogFilePath(username, filename)` - Constructs full file path with validation
+-   `ValidateUsername(username)` - Regex validation
+-   `PreventPathTraversal(path)` - Security check against base directory
 
 **Testing**:
+
 ```csharp
 // Manual test in Program.cs or test form
 var testCases = new[]
@@ -227,13 +237,15 @@ New-Item -Path "Services\Service_LogParser.cs" -ItemType File
 ```
 
 **Key Methods**:
-- `DetectFormat(firstLine)` - Returns LogFormat based on content analysis
-- `ParseEntry(rawText, format)` - Returns Model_LogEntry for given format
-- `ParseNormalLog(rawText)` - Regex parsing for Service_DebugTracer format
-- `ParseApplicationError(rawText)` - Parsing for error log format
-- `ParseDatabaseError(rawText)` - Parsing for database error format
+
+-   `DetectFormat(firstLine)` - Returns LogFormat based on content analysis
+-   `ParseEntry(rawText, format)` - Returns Model_LogEntry for given format
+-   `ParseNormalLog(rawText)` - Regex parsing for Service_DebugTracer format
+-   `ParseApplicationError(rawText)` - Parsing for error log format
+-   `ParseDatabaseError(rawText)` - Parsing for database error format
 
 **Testing**:
+
 ```csharp
 // Test parser with sample entries
 var normalLog = "[2025-10-26 14:30:15.234] HIGH ✅ PROCEDURE md_part_ids_Get_All - Query executed successfully\nDetails: {\"elapsed_ms\": 45}";
@@ -252,6 +264,7 @@ Console.WriteLine($"Parse Success: {parsedNormal.ParseSuccess}");
 ```
 
 **Performance Validation**:
+
 ```csharp
 var stopwatch = Stopwatch.StartNew();
 for (int i = 0; i < 1000; i++)
@@ -274,12 +287,14 @@ New-Item -Path "Services\Service_LogFileReader.cs" -ItemType File
 ```
 
 **Key Methods**:
-- `EnumerateLogFilesAsync(userDirectory)` - Returns List<Model_LogFile>
-- `LoadEntriesAsync(filePath, startIndex, count)` - Window-based loading
-- `GetTotalEntryCountAsync(filePath)` - Counts entries without full load
-- `DetectLogFormat(filePath)` - Returns LogFormat from filename
+
+-   `EnumerateLogFilesAsync(userDirectory)` - Returns List<Model_LogFile>
+-   `LoadEntriesAsync(filePath, startIndex, count)` - Window-based loading
+-   `GetTotalEntryCountAsync(filePath)` - Counts entries without full load
+-   `DetectLogFormat(filePath)` - Returns LogFormat from filename
 
 **Testing**:
+
 ```csharp
 // Test file enumeration
 var files = await Service_LogFileReader.EnumerateLogFilesAsync(@"C:\TestLogs\bjones");
@@ -301,6 +316,7 @@ Console.WriteLine($"Loaded {entries.Count} entries");
 ```
 
 **Performance Validation** (SC-003):
+
 ```csharp
 var stopwatch = Stopwatch.StartNew();
 var entries = await Service_LogFileReader.LoadEntriesAsync(filePath, 0, 1000);
@@ -323,6 +339,7 @@ New-Item -Path "Forms\ViewLogs\ViewApplicationLogsForm.cs" -ItemType File
 ```
 
 **Form Structure** (follow constitution region organization):
+
 ```csharp
 public partial class ViewApplicationLogsForm : Form
 {
@@ -335,19 +352,19 @@ public partial class ViewApplicationLogsForm : Form
     private Model_LogFilter _activeFilter;
     private bool _isParsedView = true;
     #endregion
-    
+
     #region Properties
     public string SelectedUsername { get; private set; }
     public LogFormat SelectedLogType { get; private set; }
     #endregion
-    
+
     #region Progress Control Methods
     private void SetProgressControls(ProgressBar progress, Label status)
     {
         _progressHelper = Helper_StoredProcedureProgress.Create(progress, status, this);
     }
     #endregion
-    
+
     #region Constructors
     public ViewApplicationLogsForm()
     {
@@ -356,13 +373,13 @@ public partial class ViewApplicationLogsForm : Form
         Core_Themes.ApplyRuntimeLayoutAdjustments(this);
         InitializeAsync().ConfigureAwait(false);
     }
-    
+
     public ViewApplicationLogsForm(string username) : this()
     {
         SelectedUsername = username;
     }
     #endregion
-    
+
     #region Initialization
     private async Task InitializeAsync()
     {
@@ -372,25 +389,25 @@ public partial class ViewApplicationLogsForm : Form
         WireUpEvents();
     }
     #endregion
-    
+
     #region File Operations
     private async Task LoadUserListAsync() { /* ... */ }
     private async Task LoadLogFilesAsync(string username) { /* ... */ }
     private async Task LoadLogFileAsync(string filePath) { /* ... */ }
     #endregion
-    
+
     #region Entry Navigation
     private void ShowCurrentEntry() { /* ... */ }
     private void NavigateNext() { /* ... */ }
     private void NavigatePrevious() { /* ... */ }
     #endregion
-    
+
     #region Filtering
     private void ApplyFilter() { /* ... */ }
     private void ClearFilters() { /* ... */ }
     private void UpdateSeverityOptions() { /* ... */ }
     #endregion
-    
+
     #region Button Clicks
     private async void btnRefresh_Click(object sender, EventArgs e) { /* ... */ }
     private void btnPrevious_Click(object sender, EventArgs e) { /* ... */ }
@@ -400,20 +417,20 @@ public partial class ViewApplicationLogsForm : Form
     private void btnCopyEntry_Click(object sender, EventArgs e) { /* ... */ }
     private void btnOpenDirectory_Click(object sender, EventArgs e) { /* ... */ }
     #endregion
-    
+
     #region ComboBox & UI Events
     private async void cmbUsers_SelectedIndexChanged(object sender, EventArgs e) { /* ... */ }
     private void lstLogFiles_SelectedIndexChanged(object sender, EventArgs e) { /* ... */ }
     private void dtpStartDate_ValueChanged(object sender, EventArgs e) { /* ... */ }
     private void txtSearch_TextChanged(object sender, EventArgs e) { /* ... */ }
     #endregion
-    
+
     #region Helpers
     private void WireUpEvents() { /* ... */ }
     private void UpdateEntryCountDisplay() { /* ... */ }
     private string FormatEntryForDisplay(Model_LogEntry entry) { /* ... */ }
     #endregion
-    
+
     #region Cleanup
     protected override void Dispose(bool disposing)
     {
@@ -429,12 +446,14 @@ public partial class ViewApplicationLogsForm : Form
 ```
 
 **Layout Implementation**:
-- Use TableLayoutPanel for main layout (FR-055)
-- Set AutoScaleMode.Dpi (FR-052)
-- MinimumSize: 1200x800 (FR-056)
-- Proper Padding (10px) and Margin (5px) (FR-057)
+
+-   Use TableLayoutPanel for main layout (FR-055)
+-   Set AutoScaleMode.Dpi (FR-052)
+-   MinimumSize: 1200x800 (FR-056)
+-   Proper Padding (10px) and Margin (5px) (FR-057)
 
 **Testing UI**:
+
 1. Run application in Debug mode
 2. Navigate to Settings → View Application Logs
 3. Verify user dropdown populates
@@ -450,6 +469,7 @@ public partial class ViewApplicationLogsForm : Form
 **Task**: Wire up error dialog integration and Service_ErrorHandler
 
 **Error Dialog Changes**:
+
 ```csharp
 // In ErrorDialog form, add "View Logs" button handler
 private void btnViewLogs_Click(object sender, EventArgs e)
@@ -461,6 +481,7 @@ private void btnViewLogs_Click(object sender, EventArgs e)
 ```
 
 **Error Handling Pattern**:
+
 ```csharp
 try
 {
@@ -489,7 +510,9 @@ catch (UnauthorizedAccessException ex)
 ### Manual Validation Scenarios
 
 #### Test Scenario 1: User Selection and File Loading
+
 **Steps**:
+
 1. Open View Application Logs form
 2. Verify user dropdown shows all users with log files
 3. Select "bjones" from dropdown
@@ -500,7 +523,9 @@ catch (UnauthorizedAccessException ex)
 **Expected**: File list populates correctly with type badges and metadata
 
 #### Test Scenario 2: Log Entry Parsing and Display
+
 **Steps**:
+
 1. Select Normal log file
 2. Verify first entry displays with fields: Timestamp, Level, Emoji, Source, Message, Details
 3. Click Next button
@@ -512,7 +537,9 @@ catch (UnauthorizedAccessException ex)
 **Expected**: Parsed entries display correctly with type-appropriate fields
 
 #### Test Scenario 3: Filtering
+
 **Steps**:
+
 1. Load log file with 1000+ entries
 2. Apply date range filter (yesterday to today)
 3. Verify entry count updates: "Entry 1 of X (Showing X of 1000)"
@@ -526,7 +553,9 @@ catch (UnauthorizedAccessException ex)
 **Expected**: Filtering works correctly and meets performance targets
 
 #### Test Scenario 4: Error Handling
+
 **Steps**:
+
 1. Disconnect network (if using network path)
 2. Attempt to load user logs
 3. Verify user-friendly error message appears (no internal paths revealed)
@@ -537,7 +566,9 @@ catch (UnauthorizedAccessException ex)
 **Expected**: Graceful error handling with retry support
 
 #### Test Scenario 5: Performance Validation
+
 **Steps**:
+
 1. Create test file with 1000 entries
 2. Measure load time (use stopwatch in code)
 3. Verify <2 seconds (SC-003)
@@ -561,10 +592,10 @@ public class Service_LogParser_Tests
     {
         // Arrange
         var rawText = "[2025-10-26 14:30:15.234] HIGH ✅ PROCEDURE md_part_ids_Get_All - Query executed successfully";
-        
+
         // Act
         var entry = Service_LogParser.ParseEntry(rawText, LogFormat.Normal);
-        
+
         // Assert
         Assert.IsTrue(entry.ParseSuccess);
         Assert.AreEqual("HIGH", entry.Level);
@@ -580,28 +611,34 @@ public class Service_LogParser_Tests
 ### Common Issues
 
 **Issue**: User dropdown is empty
-- **Cause**: Network path not accessible or no log files exist
-- **Fix**: Verify BaseLogPath configuration, check directory exists, ensure user subdirectories present
+
+-   **Cause**: Network path not accessible or no log files exist
+-   **Fix**: Verify BaseLogPath configuration, check directory exists, ensure user subdirectories present
 
 **Issue**: Parsing fails for entries
-- **Cause**: Log format doesn't match regex pattern
-- **Fix**: Enable debug logging in Service_LogParser, compare actual vs expected format, adjust regex
+
+-   **Cause**: Log format doesn't match regex pattern
+-   **Fix**: Enable debug logging in Service_LogParser, compare actual vs expected format, adjust regex
 
 **Issue**: UI freezes during file loading
-- **Cause**: Synchronous file I/O or missing async/await
-- **Fix**: Verify all file operations use async methods, check for blocking .Result/.Wait() calls
+
+-   **Cause**: Synchronous file I/O or missing async/await
+-   **Fix**: Verify all file operations use async methods, check for blocking .Result/.Wait() calls
 
 **Issue**: High memory usage
-- **Cause**: Loading entire file instead of windowing
-- **Fix**: Verify Service_LogFileReader uses window loading, check WindowSize configuration
+
+-   **Cause**: Loading entire file instead of windowing
+-   **Fix**: Verify Service_LogFileReader uses window loading, check WindowSize configuration
 
 **Issue**: Path traversal security error
-- **Cause**: Invalid username or filename with ".." sequences
-- **Fix**: Verify Helper_LogPath validation logic, check input sanitization
+
+-   **Cause**: Invalid username or filename with ".." sequences
+-   **Fix**: Verify Helper_LogPath validation logic, check input sanitization
 
 ### Debugging Tools
 
 **Enable Verbose Logging**:
+
 ```csharp
 // In Program.cs or form constructor
 Service_DebugTracer.SetDebugLevel(DebugLevel.HIGH);
@@ -609,6 +646,7 @@ LoggingUtility.Log("[LogViewer] Debugging enabled");
 ```
 
 **Performance Profiling**:
+
 ```csharp
 // Wrap operations with Stopwatch
 var sw = Stopwatch.StartNew();
@@ -637,13 +675,13 @@ After completing implementation:
 
 ## References
 
-- **Feature Specification**: `specs/003-view-application-logs/spec.md`
-- **Implementation Plan**: `specs/003-view-application-logs/plan.md`
-- **Research Decisions**: `specs/003-view-application-logs/research.md`
-- **Data Model**: `specs/003-view-application-logs/data-model.md`
-- **Instruction Files**:
-  - `.github/instructions/csharp-dotnet8.instructions.md`
-  - `.github/instructions/ui-scaling-consistency.instructions.md`
-  - `.github/instructions/winforms-responsive-layout.instructions.md`
-  - `.github/instructions/security-best-practices.instructions.md`
-  - `.github/instructions/performance-optimization.instructions.md`
+-   **Feature Specification**: `specs/003-view-application-logs/spec.md`
+-   **Implementation Plan**: `specs/003-view-application-logs/plan.md`
+-   **Research Decisions**: `specs/003-view-application-logs/research.md`
+-   **Data Model**: `specs/003-view-application-logs/data-model.md`
+-   **Instruction Files**:
+    -   `.github/instructions/csharp-dotnet8.instructions.md`
+    -   `.github/instructions/ui-scaling-consistency.instructions.md`
+    -   `.github/instructions/winforms-responsive-layout.instructions.md`
+    -   `.github/instructions/security-best-practices.instructions.md`
+    -   `.github/instructions/performance-optimization.instructions.md`

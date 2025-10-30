@@ -1,4 +1,4 @@
-namespace MTM_Inventory_Application.Forms.ViewLogs
+namespace MTM_WIP_Application_Winforms.Forms.ViewLogs
 {
     partial class PromptStatusManagerDialog
     {

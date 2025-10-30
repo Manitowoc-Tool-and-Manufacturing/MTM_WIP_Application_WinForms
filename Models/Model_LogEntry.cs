@@ -1,4 +1,4 @@
-namespace MTM_Inventory_Application.Models;
+namespace MTM_WIP_Application_Winforms.Models;
 
 /// <summary>
 /// Represents a single parsed log entry from any log format type.

@@ -1,10 +1,10 @@
-using MTM_Inventory_Application.Core;
-using MTM_Inventory_Application.Logging;
-using MTM_Inventory_Application.Models;
-using MTM_Inventory_Application.Services;
+using MTM_WIP_Application_Winforms.Core;
+using MTM_WIP_Application_Winforms.Logging;
+using MTM_WIP_Application_Winforms.Models;
+using MTM_WIP_Application_Winforms.Services;
 using System.ComponentModel;
 
-namespace MTM_Inventory_Application.Forms.ViewLogs;
+namespace MTM_WIP_Application_Winforms.Forms.ViewLogs;
 
 /// <summary>
 /// Modal dialog for managing prompt fix statuses.

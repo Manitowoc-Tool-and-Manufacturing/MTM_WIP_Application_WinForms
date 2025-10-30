@@ -1,7 +1,7 @@
-using MTM_Inventory_Application.Models;
+using MTM_WIP_Application_Winforms.Models;
 using System.Text.RegularExpressions;
 
-namespace MTM_Inventory_Application.Forms.ViewLogs;
+namespace MTM_WIP_Application_Winforms.Forms.ViewLogs;
 
 /// <summary>
 /// Manages navigation and filtering of log entries with indexed access to filtered results.

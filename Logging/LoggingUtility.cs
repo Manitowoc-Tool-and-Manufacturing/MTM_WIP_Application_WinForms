@@ -74,7 +74,6 @@ internal static class LoggingUtility
                 "MTM_WIP_Application_Winforms");
             var localAppDataPath =
                 Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "MTM_WIP_Application_Winforms");
-
             // Run directory cleanup operations asynchronously
             await Task.Run(() =>
             {

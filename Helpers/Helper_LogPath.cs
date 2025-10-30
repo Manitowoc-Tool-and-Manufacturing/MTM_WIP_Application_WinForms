@@ -1,6 +1,6 @@
-using MTM_Inventory_Application.Logging;
+using MTM_WIP_Application_Winforms.Logging;
 
-namespace MTM_Inventory_Application.Helpers;
+namespace MTM_WIP_Application_Winforms.Helpers;
 
 /// <summary>
 /// Provides security validation for log file paths to prevent directory traversal attacks
@@ -23,7 +23,7 @@ public static class Helper_LogPath
     /// </summary>
     private static readonly string FallbackLogDirectory = Path.Combine(
         Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData),
-        "MTM_Inventory_Application",
+        "MTM_WIP_Application_Winforms",
         "Logs");
 
     /// <summary>

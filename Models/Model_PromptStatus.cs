@@ -1,6 +1,6 @@
 using System.Text.Json.Serialization;
 
-namespace MTM_Inventory_Application.Models;
+namespace MTM_WIP_Application_Winforms.Models;
 
 /// <summary>
 /// Represents the status of a Copilot prompt fix for a specific error method.

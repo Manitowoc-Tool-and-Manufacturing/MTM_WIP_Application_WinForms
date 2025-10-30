@@ -1,7 +1,7 @@
-using MTM_Inventory_Application.Logging;
-using MTM_Inventory_Application.Models;
+using MTM_WIP_Application_Winforms.Logging;
+using MTM_WIP_Application_Winforms.Models;
 
-namespace MTM_Inventory_Application.Services;
+namespace MTM_WIP_Application_Winforms.Services;
 
 /// <summary>
 /// Provides simplified CSV-based log entry parsing services.

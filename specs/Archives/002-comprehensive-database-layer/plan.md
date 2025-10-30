@@ -31,17 +31,18 @@ This refactor restructures the entire database access layer across 60+ stored pr
 
 ## Constitution Check
 
-*GATE: Must pass before Phase 0 research. Re-check after Phase 1 design.*
+_GATE: Must pass before Phase 0 research. Re-check after Phase 1 design._
 
 ### I. Stored Procedure Only Database Access ✅ COMPLIANT
 
 **Requirement**: All database operations MUST use stored procedures exclusively via `Helper_Database_StoredProcedure`.
 
 **Compliance**: This refactor enforces stored procedure only access by:
-- Eliminating all direct MySqlConnection/MySqlCommand usage in DAOs
-- Routing 100% of database calls through Helper_Database_StoredProcedure
-- Implementing automatic parameter prefix detection via INFORMATION_SCHEMA queries
-- Validating all 60+ stored procedures include OUT p_Status and OUT p_ErrorMsg parameters
+
+-   Eliminating all direct MySqlConnection/MySqlCommand usage in DAOs
+-   Routing 100% of database calls through Helper_Database_StoredProcedure
+-   Implementing automatic parameter prefix detection via INFORMATION_SCHEMA queries
+-   Validating all 60+ stored procedures include OUT p_Status and OUT p_ErrorMsg parameters
 
 **No violations**: Refactor strengthens existing principle.
 
@@ -195,19 +196,20 @@ MTM_WIP_Application_Winforms/
 **Structure Decision**: Single .NET project structure maintained (WinForms desktop application). New directories added: `Tests/Integration/` for integration tests, `Models/Model_Dao_Result.cs` for wrapper pattern. Primary refactor targets: `Data/` (12 DAO files), `Helpers/Helper_Database_StoredProcedure.cs`, and 100+ call sites across `Forms/`, `Controls/`, and `Services/` for async migration.
 
 **Key File Counts**:
-- DAO files: 12 (complete refactor)
-- Helper files: 3 (major changes to 1, minor to 2)
-- Forms: ~40 files (async migration)
-- Controls: ~30 files (async migration)
-- Services: ~10 files (async migration)
-- Stored procedures: 60+ (validation only, no code changes)
-- Total affected files: ~150 files
+
+-   DAO files: 12 (complete refactor)
+-   Helper files: 3 (major changes to 1, minor to 2)
+-   Forms: ~40 files (async migration)
+-   Controls: ~30 files (async migration)
+-   Services: ~10 files (async migration)
+-   Stored procedures: 60+ (validation only, no code changes)
+-   Total affected files: ~150 files
 
 **Risk Mitigation**: Atomic commits by category (DAOs first, then helpers, then Forms, then Controls, then Services). Each category tested independently before proceeding to next.
 
 ## Complexity Tracking
 
-*No constitution violations requiring justification.*
+_No constitution violations requiring justification._
 
 **Trade-off Documented**: Q6 clarification chose immediate async migration (Option C) over phased migration with legacy wrapper (Option B recommended). This increases upfront refactor scope by 2-4 weeks but eliminates ongoing wrapper maintenance and technical debt.
 
@@ -237,11 +239,12 @@ MTM_WIP_Application_Winforms/
    - `stored-procedure-contract.json`: Execution method signatures, standard parameters, connection pooling, error handling levels, performance monitoring
 
 3. **quickstart.md** (✅ Created)
-   - Getting Started section with prerequisites and test database setup
-   - Creating a New DAO Method templates (query, modification, multi-step transactions)
-   - Testing Your DAO with integration test template
-   - Common Patterns (async event handlers, UserControl initialization, service background operations, progress reporting)
-   - Troubleshooting guide (6 common issues with solutions)
+
+    - Getting Started section with prerequisites and test database setup
+    - Creating a New DAO Method templates (query, modification, multi-step transactions)
+    - Testing Your DAO with integration test template
+    - Common Patterns (async event handlers, UserControl initialization, service background operations, progress reporting)
+    - Troubleshooting guide (6 common issues with solutions)
 
 4. **.github/copilot-instructions.md** (✅ Updated)
    - Added Model_Dao_Result<T> pattern documentation
@@ -269,10 +272,11 @@ MTM_WIP_Application_Winforms/
 **Gate Status**: ✅ ALL GATES PASSED (no changes from pre-design evaluation)
 
 **New Considerations**:
-- ParameterPrefixCache startup initialization (~100-200ms) acceptable overhead for 100% accuracy
-- Multi-step transaction pattern with explicit rollback ensures atomic operations
-- Progress reporting integration optional but available for long operations
-- Integration test isolation via per-test-class transactions prevents data contamination
+
+-   ParameterPrefixCache startup initialization (~100-200ms) acceptable overhead for 100% accuracy
+-   Multi-step transaction pattern with explicit rollback ensures atomic operations
+-   Progress reporting integration optional but available for long operations
+-   Integration test isolation via per-test-class transactions prevents data contamination
 
 **Complexity Assessment**:
 - No new edge cases discovered during design phase

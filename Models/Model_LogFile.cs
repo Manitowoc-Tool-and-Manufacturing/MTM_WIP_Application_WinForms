@@ -1,4 +1,4 @@
-namespace MTM_Inventory_Application.Models;
+namespace MTM_WIP_Application_Winforms.Models;
 
 /// <summary>
 /// Represents metadata about a single log file in the user's log directory.
