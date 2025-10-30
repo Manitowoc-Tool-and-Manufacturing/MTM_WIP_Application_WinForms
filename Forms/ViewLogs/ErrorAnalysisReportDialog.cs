@@ -274,7 +274,7 @@ namespace MTM_Inventory_Application.Forms.ViewLogs
             {
                 lblStatus.Text = "Analysis cancelled by user";
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 lblStatus.Text = "Analysis failed";
                 throw;

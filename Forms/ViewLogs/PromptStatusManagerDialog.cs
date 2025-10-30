@@ -175,7 +175,7 @@ public partial class PromptStatusManagerDialog : Form
     /// <summary>
     /// Handles form load event. Applies theme and loads initial data.
     /// </summary>
-    private async void PromptStatusManagerDialog_Load(object sender, EventArgs e)
+    private async void PromptStatusManagerDialog_Load(object? sender, EventArgs e)
     {
         try
         {
@@ -199,7 +199,7 @@ public partial class PromptStatusManagerDialog : Form
     /// <summary>
     /// Handles form closing event. Prompts to save if there are unsaved changes.
     /// </summary>
-    private void PromptStatusManagerDialog_FormClosing(object sender, FormClosingEventArgs e)
+    private void PromptStatusManagerDialog_FormClosing(object? sender, FormClosingEventArgs e)
     {
         if (_hasUnsavedChanges)
         {
@@ -223,7 +223,7 @@ public partial class PromptStatusManagerDialog : Form
     /// <summary>
     /// Handles cell value changes. Marks status as modified and tracks changes.
     /// </summary>
-    private void DgvPromptStatuses_CellValueChanged(object sender, DataGridViewCellEventArgs e)
+    private void DgvPromptStatuses_CellValueChanged(object? sender, DataGridViewCellEventArgs e)
     {
         if (e.RowIndex < 0 || e.RowIndex >= dgvPromptStatuses.Rows.Count)
             return;
@@ -251,7 +251,7 @@ public partial class PromptStatusManagerDialog : Form
     /// <summary>
     /// Handles ComboBox cell dirty state changes to commit values immediately.
     /// </summary>
-    private void DgvPromptStatuses_CurrentCellDirtyStateChanged(object sender, EventArgs e)
+    private void DgvPromptStatuses_CurrentCellDirtyStateChanged(object? sender, EventArgs e)
     {
         if (dgvPromptStatuses.CurrentCell is DataGridViewComboBoxCell)
         {
@@ -263,7 +263,7 @@ public partial class PromptStatusManagerDialog : Form
     /// Handles cell formatting to apply color coding based on status.
     /// Implements T065 acceptance criteria - color coding visible.
     /// </summary>
-    private void DgvPromptStatuses_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
+    private void DgvPromptStatuses_CellFormatting(object? sender, DataGridViewCellFormattingEventArgs e)
     {
         if (e.RowIndex < 0 || e.RowIndex >= dgvPromptStatuses.Rows.Count)
             return;
@@ -278,20 +278,32 @@ public partial class PromptStatusManagerDialog : Form
             switch (status.Status)
             {
                 case PromptStatusEnum.New:
-                    e.CellStyle.BackColor = Color.LightBlue;
-                    e.CellStyle.ForeColor = Color.Black;
+                    if (e.CellStyle != null)
+                    {
+                        e.CellStyle.BackColor = Color.LightBlue;
+                        e.CellStyle.ForeColor = Color.Black;
+                    }
                     break;
                 case PromptStatusEnum.InProgress:
-                    e.CellStyle.BackColor = Color.LightYellow;
-                    e.CellStyle.ForeColor = Color.Black;
+                    if (e.CellStyle != null)
+                    {
+                        e.CellStyle.BackColor = Color.LightYellow;
+                        e.CellStyle.ForeColor = Color.Black;
+                    }
                     break;
                 case PromptStatusEnum.Fixed:
-                    e.CellStyle.BackColor = Color.LightGreen;
-                    e.CellStyle.ForeColor = Color.Black;
+                    if (e.CellStyle != null)
+                    {
+                        e.CellStyle.BackColor = Color.LightGreen;
+                        e.CellStyle.ForeColor = Color.Black;
+                    }
                     break;
                 case PromptStatusEnum.WontFix:
-                    e.CellStyle.BackColor = Color.LightGray;
-                    e.CellStyle.ForeColor = Color.DarkGray;
+                    if (e.CellStyle != null)
+                    {
+                        e.CellStyle.BackColor = Color.LightGray;
+                        e.CellStyle.ForeColor = Color.DarkGray;
+                    }
                     break;
             }
         }
@@ -300,7 +312,7 @@ public partial class PromptStatusManagerDialog : Form
     /// <summary>
     /// Handles Refresh button click. Reloads data from disk.
     /// </summary>
-    private async void BtnRefresh_Click(object sender, EventArgs e)
+    private async void BtnRefresh_Click(object? sender, EventArgs e)
     {
         if (_hasUnsavedChanges)
         {
@@ -320,7 +332,7 @@ public partial class PromptStatusManagerDialog : Form
     /// <summary>
     /// Handles Save button click. Persists all changes to disk.
     /// </summary>
-    private void BtnSave_Click(object sender, EventArgs e)
+    private void BtnSave_Click(object? sender, EventArgs e)
     {
         SaveChanges();
     }
@@ -328,7 +340,7 @@ public partial class PromptStatusManagerDialog : Form
     /// <summary>
     /// Handles Close button click. Closes the dialog.
     /// </summary>
-    private void BtnClose_Click(object sender, EventArgs e)
+    private void BtnClose_Click(object? sender, EventArgs e)
     {
         Close();
     }

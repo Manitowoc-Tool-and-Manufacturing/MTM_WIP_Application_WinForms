@@ -36,7 +36,6 @@ public partial class ViewApplicationLogsForm : Form
     private List<string> _groupKeys = new();
     private int _currentGroupIndex = 0;
     private bool _showingAllOccurrences = false;
-    private string? _currentExpandedGroupKey;
 
     #endregion
 
@@ -255,7 +254,7 @@ public partial class ViewApplicationLogsForm : Form
     /// <summary>
     /// Handles form load event. Populates user list asynchronously.
     /// </summary>
-    private async void ViewApplicationLogsForm_Load(object sender, EventArgs e)
+    private async void ViewApplicationLogsForm_Load(object? sender, EventArgs e)
     {
         try
         {
@@ -781,7 +780,7 @@ public partial class ViewApplicationLogsForm : Form
     /// <summary>
     /// Handles Refresh button click. Reloads current user's log files while preserving selection state.
     /// </summary>
-    private async void btnRefresh_Click(object sender, EventArgs e)
+    private async void btnRefresh_Click(object? sender, EventArgs e)
     {
         if (!string.IsNullOrWhiteSpace(_selectedUsername))
         {
@@ -993,9 +992,15 @@ public partial class ViewApplicationLogsForm : Form
 
         try
         {
-            string logDirectory = Helper_LogPath.GetUserLogDirectory(_selectedUsername);
+            if (string.IsNullOrWhiteSpace(_selectedUsername))
+            {
+                lblStatus.Text = "Please select a user";
+                return;
+            }
+            
+            string? logDirectory = Helper_LogPath.GetUserLogDirectory(_selectedUsername);
 
-            if (!Directory.Exists(logDirectory))
+            if (string.IsNullOrWhiteSpace(logDirectory) || !Directory.Exists(logDirectory))
             {
                 lblStatus.Text = $"Log directory not found: {logDirectory}";
                 LoggingUtility.Log($"[ViewApplicationLogsForm] Log directory not found for user {_selectedUsername}: {logDirectory}");
@@ -1319,8 +1324,8 @@ public partial class ViewApplicationLogsForm : Form
                 return;
             }
 
-            string logBasePath = Helper_LogPath.GetUserLogDirectory(_selectedUsername);
-            if (!Directory.Exists(logBasePath))
+            string? logBasePath = Helper_LogPath.GetUserLogDirectory(_selectedUsername);
+            if (string.IsNullOrWhiteSpace(logBasePath) || !Directory.Exists(logBasePath))
             {
                 Service_ErrorHandler.ShowWarning("No log directory found for selected user.", "Generate Error Report");
                 return;
@@ -1601,7 +1606,7 @@ public partial class ViewApplicationLogsForm : Form
     /// <summary>
     /// Handles user selection change event. Loads log files for selected user.
     /// </summary>
-    private async void cmbUsers_SelectedIndexChanged(object sender, EventArgs e)
+    private async void cmbUsers_SelectedIndexChanged(object? sender, EventArgs e)
     {
         if (cmbUsers.SelectedItem == null)
         {
@@ -1639,7 +1644,7 @@ public partial class ViewApplicationLogsForm : Form
     /// <summary>
     /// Handles log file selection change event. Loads entries from selected file.
     /// </summary>
-    private async void lstLogFiles_SelectedIndexChanged(object sender, EventArgs e)
+    private async void lstLogFiles_SelectedIndexChanged(object? sender, EventArgs e)
     {
         if (lstLogFiles.SelectedItems.Count == 0)
         {
@@ -1721,7 +1726,6 @@ public partial class ViewApplicationLogsForm : Form
         {
             _groupingEnabled = chkGroupErrors.Checked;
             _showingAllOccurrences = false;
-            _currentExpandedGroupKey = null;
 
             if (_groupingEnabled)
             {
