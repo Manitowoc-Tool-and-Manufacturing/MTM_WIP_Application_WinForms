@@ -24,13 +24,9 @@ namespace MTM_WIP_Application_Winforms.Forms.Transactions
             MainPanel = new Panel();
             MainTableLayout = new TableLayoutPanel();
             SearchPanel = new Panel();
-            searchControl = new MTM_WIP_Application_Winforms.Controls.Transactions.TransactionSearchControl();
             GridPanel = new Panel();
-            gridControl = new MTM_WIP_Application_Winforms.Controls.Transactions.TransactionGridControl();
             MainPanel.SuspendLayout();
             MainTableLayout.SuspendLayout();
-            SearchPanel.SuspendLayout();
-            GridPanel.SuspendLayout();
             SuspendLayout();
             // 
             // MainPanel
@@ -39,7 +35,7 @@ namespace MTM_WIP_Application_Winforms.Forms.Transactions
             MainPanel.Dock = DockStyle.Fill;
             MainPanel.Location = new Point(0, 0);
             MainPanel.Name = "MainPanel";
-            MainPanel.Size = new Size(1912, 768);
+            MainPanel.Size = new Size(784, 561);
             MainPanel.TabIndex = 0;
             // 
             // MainTableLayout
@@ -54,66 +50,38 @@ namespace MTM_WIP_Application_Winforms.Forms.Transactions
             MainTableLayout.RowCount = 2;
             MainTableLayout.RowStyles.Add(new RowStyle());
             MainTableLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
-            MainTableLayout.Size = new Size(1912, 768);
+            MainTableLayout.Size = new Size(784, 561);
             MainTableLayout.TabIndex = 0;
             // 
             // SearchPanel
             // 
             SearchPanel.AutoSize = true;
-            SearchPanel.Controls.Add(searchControl);
             SearchPanel.Dock = DockStyle.Fill;
             SearchPanel.Location = new Point(3, 3);
             SearchPanel.Name = "SearchPanel";
-            SearchPanel.Size = new Size(1906, 883);
+            SearchPanel.Size = new Size(778, 1);
             SearchPanel.TabIndex = 0;
-            // 
-            // searchControl
-            // 
-            searchControl.AutoSize = true;
-            searchControl.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            searchControl.Dock = DockStyle.Fill;
-            searchControl.Location = new Point(0, 0);
-            searchControl.Margin = new Padding(41, 19, 41, 19);
-            searchControl.MinimumSize = new Size(8229, 768);
-            searchControl.Name = "searchControl";
-            searchControl.Size = new Size(8229, 883);
-            searchControl.TabIndex = 0;
             // 
             // GridPanel
             // 
-            GridPanel.Controls.Add(gridControl);
             GridPanel.Dock = DockStyle.Fill;
-            GridPanel.Location = new Point(3, 892);
+            GridPanel.Location = new Point(3, 9);
             GridPanel.Name = "GridPanel";
-            GridPanel.Size = new Size(1906, 1);
+            GridPanel.Size = new Size(778, 549);
             GridPanel.TabIndex = 1;
-            // 
-            // gridControl
-            // 
-            gridControl.Dock = DockStyle.Fill;
-            gridControl.Location = new Point(0, 0);
-            gridControl.Margin = new Padding(41, 19, 41, 19);
-            gridControl.MinimumSize = new Size(5486, 1600);
-            gridControl.Name = "gridControl";
-            gridControl.Size = new Size(5486, 1600);
-            gridControl.TabIndex = 0;
             // 
             // Transactions
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(1912, 768);
+            ClientSize = new Size(784, 561);
             Controls.Add(MainPanel);
-            MinimumSize = new Size(800, 600);
             Name = "Transactions";
             StartPosition = FormStartPosition.CenterScreen;
             Text = "Transaction Viewer";
             MainPanel.ResumeLayout(false);
             MainTableLayout.ResumeLayout(false);
             MainTableLayout.PerformLayout();
-            SearchPanel.ResumeLayout(false);
-            SearchPanel.PerformLayout();
-            GridPanel.ResumeLayout(false);
             ResumeLayout(false);
         }
 
