@@ -7,6 +7,8 @@ applyTo: '**/*.cs,**/*.Designer.cs'
 
 **Cross-Reference**: This file works with `.github/instructions/winforms-responsive-layout.instructions.md` which covers layout architecture patterns. This file focuses specifically on DPI scaling and size consistency.
 
+**Cross-Reference**: For complete theme system integration and DPI scaling internals, see `Documentation/Theme-System-Reference.md` Section 6 (DPI Scaling System).
+
 ## Overview
 
 This file defines standards and patterns for ensuring all WinForms controls maintain consistent visual appearance, aspect ratios, and usability across different screen sizes, resolutions, and DPI settings in Windows.
@@ -33,8 +35,11 @@ This file defines standards and patterns for ensuring all WinForms controls main
 ### 2. DPI Awareness
 - **AutoScaleMode**: Use `Dpi` mode for all forms and user controls
 - **Dynamic scaling**: Let WinForms handle DPI scaling automatically
-- **Theme integration**: Use `Core_Themes.ApplyDpiScaling(this)` in all constructors
-- **Runtime adjustments**: Apply `Core_Themes.ApplyRuntimeLayoutAdjustments(this)` for fine-tuning
+- **Theme integration**: Use `Core_Themes.ApplyDpiScaling(this)` in all constructors (MANDATORY per Constitution Principle IX)
+- **Runtime adjustments**: Apply `Core_Themes.ApplyRuntimeLayoutAdjustments(this)` for fine-tuning (MANDATORY)
+- **Database-backed themes**: Theme system stores 9 themes with 203 color properties in MySQL `app_themes` table
+
+**See Also**: `.github/instructions/ui-compliance/theming-compliance.instructions.md` for complete theme integration requirements including constructor patterns, color tokens, and UI architecture standards.
 
 ### 3. Layout Strategy
 - **Anchoring**: Use `Anchor` property for responsive behavior

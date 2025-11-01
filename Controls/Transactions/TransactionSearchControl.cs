@@ -52,14 +52,14 @@ internal partial class TransactionSearchControl : UserControl
     /// </summary>
     private void WireUpEvents()
     {
-        btnSearch.Click += BtnSearch_Click;
-        btnReset.Click += BtnReset_Click;
+        TransactionSearchControl_Button_Search.Click += BtnSearch_Click;
+        TransactionSearchControl_Button_Reset.Click += BtnReset_Click;
 
         // Quick filter radio buttons
-        rdoToday.CheckedChanged += QuickFilterChanged;
-        rdoWeek.CheckedChanged += QuickFilterChanged;
-        rdoMonth.CheckedChanged += QuickFilterChanged;
-        rdoCustom.CheckedChanged += QuickFilterChanged;
+        TransactionSearchControl_RadioButton_Today.CheckedChanged += QuickFilterChanged;
+        TransactionSearchControl_RadioButton_Week.CheckedChanged += QuickFilterChanged;
+        TransactionSearchControl_RadioButton_Month.CheckedChanged += QuickFilterChanged;
+        TransactionSearchControl_RadioButton_Custom.CheckedChanged += QuickFilterChanged;
     }
 
     /// <summary>
@@ -67,7 +67,7 @@ internal partial class TransactionSearchControl : UserControl
     /// </summary>
     private void InitializeDateRangeDefaults()
     {
-        rdoMonth.Checked = true;
+        TransactionSearchControl_RadioButton_Month.Checked = true;
         ApplyQuickFilter();
     }
 
@@ -81,12 +81,12 @@ internal partial class TransactionSearchControl : UserControl
     /// <param name="parts">List of part numbers.</param>
     public void LoadParts(List<string> parts)
     {
-        cboPartNumber.Items.Clear();
-        cboPartNumber.Items.Add(""); // Add empty option for "All Parts"
-        cboPartNumber.Items.AddRange(parts.ToArray());
-        if (cboPartNumber.Items.Count > 0)
+        TransactionSearchControl_ComboBox_PartNumber.Items.Clear();
+        TransactionSearchControl_ComboBox_PartNumber.Items.Add(""); // Add empty option for "All Parts"
+        TransactionSearchControl_ComboBox_PartNumber.Items.AddRange(parts.ToArray());
+        if (TransactionSearchControl_ComboBox_PartNumber.Items.Count > 0)
         {
-            cboPartNumber.SelectedIndex = 0;
+            TransactionSearchControl_ComboBox_PartNumber.SelectedIndex = 0;
         }
     }
 
@@ -96,12 +96,12 @@ internal partial class TransactionSearchControl : UserControl
     /// <param name="users">List of usernames.</param>
     public void LoadUsers(List<string> users)
     {
-        cboUser.Items.Clear();
-        cboUser.Items.Add(""); // Add empty option for "All Users"
-        cboUser.Items.AddRange(users.ToArray());
-        if (cboUser.Items.Count > 0)
+        TransactionSearchControl_ComboBox_User.Items.Clear();
+        TransactionSearchControl_ComboBox_User.Items.Add(""); // Add empty option for "All Users"
+        TransactionSearchControl_ComboBox_User.Items.AddRange(users.ToArray());
+        if (TransactionSearchControl_ComboBox_User.Items.Count > 0)
         {
-            cboUser.SelectedIndex = 0;
+            TransactionSearchControl_ComboBox_User.SelectedIndex = 0;
         }
     }
 
@@ -112,21 +112,21 @@ internal partial class TransactionSearchControl : UserControl
     public void LoadLocations(List<string> locations)
     {
         // From Location
-        cboFromLocation.Items.Clear();
-        cboFromLocation.Items.Add(""); // Add empty option for "All Locations"
-        cboFromLocation.Items.AddRange(locations.ToArray());
-        if (cboFromLocation.Items.Count > 0)
+        TransactionSearchControl_ComboBox_FromLocation.Items.Clear();
+        TransactionSearchControl_ComboBox_FromLocation.Items.Add(""); // Add empty option for "All Locations"
+        TransactionSearchControl_ComboBox_FromLocation.Items.AddRange(locations.ToArray());
+        if (TransactionSearchControl_ComboBox_FromLocation.Items.Count > 0)
         {
-            cboFromLocation.SelectedIndex = 0;
+            TransactionSearchControl_ComboBox_FromLocation.SelectedIndex = 0;
         }
 
         // To Location
-        cboToLocation.Items.Clear();
-        cboToLocation.Items.Add(""); // Add empty option for "All Locations"
-        cboToLocation.Items.AddRange(locations.ToArray());
-        if (cboToLocation.Items.Count > 0)
+        TransactionSearchControl_ComboBox_ToLocation.Items.Clear();
+        TransactionSearchControl_ComboBox_ToLocation.Items.Add(""); // Add empty option for "All Locations"
+        TransactionSearchControl_ComboBox_ToLocation.Items.AddRange(locations.ToArray());
+        if (TransactionSearchControl_ComboBox_ToLocation.Items.Count > 0)
         {
-            cboToLocation.SelectedIndex = 0;
+            TransactionSearchControl_ComboBox_ToLocation.SelectedIndex = 0;
         }
     }
 
@@ -135,20 +135,20 @@ internal partial class TransactionSearchControl : UserControl
     /// </summary>
     public void ClearCriteria()
     {
-        cboPartNumber.SelectedIndex = 0;
-        cboUser.SelectedIndex = 0;
-        cboFromLocation.SelectedIndex = 0;
-        cboToLocation.SelectedIndex = 0;
-        txtOperation.Clear();
-        txtNotes.Clear();
+        TransactionSearchControl_ComboBox_PartNumber.SelectedIndex = 0;
+        TransactionSearchControl_ComboBox_User.SelectedIndex = 0;
+        TransactionSearchControl_ComboBox_FromLocation.SelectedIndex = 0;
+        TransactionSearchControl_ComboBox_ToLocation.SelectedIndex = 0;
+        TransactionSearchControl_TextBox_Operation.Clear();
+        TransactionSearchControl_TextBox_Notes.Clear();
 
         // Reset transaction type checkboxes to all checked
-        chkIN.Checked = true;
-        chkOUT.Checked = true;
-        chkTRANSFER.Checked = true;
+        TransactionSearchControl_CheckBox_IN.Checked = true;
+        TransactionSearchControl_CheckBox_OUT.Checked = true;
+        TransactionSearchControl_CheckBox_TRANSFER.Checked = true;
 
         // Reset date range to month
-        rdoMonth.Checked = true;
+        TransactionSearchControl_RadioButton_Month.Checked = true;
         ApplyQuickFilter();
     }
 
@@ -216,30 +216,30 @@ internal partial class TransactionSearchControl : UserControl
     {
         var now = DateTime.Now;
 
-        if (rdoToday.Checked)
+        if (TransactionSearchControl_RadioButton_Today.Checked)
         {
             // Today: 00:00 to 23:59
-            dtpDateFrom.Value = now.Date;
-            dtpDateTo.Value = now.Date.AddDays(1).AddSeconds(-1);
+            TransactionSearchControl_DateTimePicker_DateFrom.Value = now.Date;
+            TransactionSearchControl_DateTimePicker_DateTo.Value = now.Date.AddDays(1).AddSeconds(-1);
         }
-        else if (rdoWeek.Checked)
+        else if (TransactionSearchControl_RadioButton_Week.Checked)
         {
             // This Week: Monday to Sunday
             int daysFromMonday = ((int)now.DayOfWeek - (int)DayOfWeek.Monday + 7) % 7;
             DateTime monday = now.Date.AddDays(-daysFromMonday);
             DateTime sunday = monday.AddDays(6);
 
-            dtpDateFrom.Value = monday;
-            dtpDateTo.Value = sunday.AddDays(1).AddSeconds(-1);
+            TransactionSearchControl_DateTimePicker_DateFrom.Value = monday;
+            TransactionSearchControl_DateTimePicker_DateTo.Value = sunday.AddDays(1).AddSeconds(-1);
         }
-        else if (rdoMonth.Checked)
+        else if (TransactionSearchControl_RadioButton_Month.Checked)
         {
             // This Month: 1st to last day
             DateTime firstDay = new DateTime(now.Year, now.Month, 1);
             DateTime lastDay = firstDay.AddMonths(1).AddDays(-1);
 
-            dtpDateFrom.Value = firstDay;
-            dtpDateTo.Value = lastDay.AddDays(1).AddSeconds(-1);
+            TransactionSearchControl_DateTimePicker_DateFrom.Value = firstDay;
+            TransactionSearchControl_DateTimePicker_DateTo.Value = lastDay.AddDays(1).AddSeconds(-1);
         }
         // Custom: user sets dates manually, no automatic adjustment
     }
@@ -256,21 +256,21 @@ internal partial class TransactionSearchControl : UserControl
     {
         var criteria = new TransactionSearchCriteria
         {
-            PartID = string.IsNullOrWhiteSpace(cboPartNumber.Text) ? null : cboPartNumber.Text.Trim(),
-            User = string.IsNullOrWhiteSpace(cboUser.Text) ? null : cboUser.Text.Trim(),
-            FromLocation = string.IsNullOrWhiteSpace(cboFromLocation.Text) ? null : cboFromLocation.Text.Trim(),
-            ToLocation = string.IsNullOrWhiteSpace(cboToLocation.Text) ? null : cboToLocation.Text.Trim(),
-            Operation = string.IsNullOrWhiteSpace(txtOperation.Text) ? null : txtOperation.Text.Trim(),
-            Notes = string.IsNullOrWhiteSpace(txtNotes.Text) ? null : txtNotes.Text.Trim(),
-            DateFrom = dtpDateFrom.Value.Date,
-            DateTo = dtpDateTo.Value.Date.AddDays(1).AddSeconds(-1) // End of selected day
+            PartID = string.IsNullOrWhiteSpace(TransactionSearchControl_ComboBox_PartNumber.Text) ? null : TransactionSearchControl_ComboBox_PartNumber.Text.Trim(),
+            User = string.IsNullOrWhiteSpace(TransactionSearchControl_ComboBox_User.Text) ? null : TransactionSearchControl_ComboBox_User.Text.Trim(),
+            FromLocation = string.IsNullOrWhiteSpace(TransactionSearchControl_ComboBox_FromLocation.Text) ? null : TransactionSearchControl_ComboBox_FromLocation.Text.Trim(),
+            ToLocation = string.IsNullOrWhiteSpace(TransactionSearchControl_ComboBox_ToLocation.Text) ? null : TransactionSearchControl_ComboBox_ToLocation.Text.Trim(),
+            Operation = string.IsNullOrWhiteSpace(TransactionSearchControl_TextBox_Operation.Text) ? null : TransactionSearchControl_TextBox_Operation.Text.Trim(),
+            Notes = string.IsNullOrWhiteSpace(TransactionSearchControl_TextBox_Notes.Text) ? null : TransactionSearchControl_TextBox_Notes.Text.Trim(),
+            DateFrom = TransactionSearchControl_DateTimePicker_DateFrom.Value.Date,
+            DateTo = TransactionSearchControl_DateTimePicker_DateTo.Value.Date.AddDays(1).AddSeconds(-1) // End of selected day
         };
 
         // Build transaction type string from checked boxes
         var types = new List<string>();
-        if (chkIN.Checked) types.Add("IN");
-        if (chkOUT.Checked) types.Add("OUT");
-        if (chkTRANSFER.Checked) types.Add("TRANSFER");
+        if (TransactionSearchControl_CheckBox_IN.Checked) types.Add("IN");
+        if (TransactionSearchControl_CheckBox_OUT.Checked) types.Add("OUT");
+        if (TransactionSearchControl_CheckBox_TRANSFER.Checked) types.Add("TRANSFER");
 
         criteria.TransactionType = types.Count > 0 ? string.Join(",", types) : null;
 
@@ -279,3 +279,4 @@ internal partial class TransactionSearchControl : UserControl
 
     #endregion
 }
+

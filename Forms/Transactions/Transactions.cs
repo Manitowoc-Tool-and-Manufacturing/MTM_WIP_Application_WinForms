@@ -42,10 +42,11 @@ internal partial class Transactions : Form
 
     private void WireUpEvents()
     {
-        searchControl.SearchRequested += SearchControl_SearchRequested;
-        searchControl.ResetRequested += SearchControl_ResetRequested;
-        gridControl.PageChanged += GridControl_PageChanged;
-        gridControl.RowSelected += GridControl_RowSelected;
+        Transactions_UserControl_Search.SearchRequested += SearchControl_SearchRequested;
+        Transactions_UserControl_Search.ResetRequested += SearchControl_ResetRequested;
+        Transactions_UserControl_Grid.PageChanged += GridControl_PageChanged;
+        Transactions_UserControl_Grid.RowSelected += GridControl_RowSelected;
+        Transactions_UserControl_Grid.ToggleSearchRequested += GridControl_ToggleSearchRequested;
         this.Load += Transactions_Load;
     }
 
@@ -62,12 +63,12 @@ internal partial class Transactions : Form
             {
                 if (partsTask.Result.IsSuccess)
                 {
-                    searchControl.LoadParts(partsTask.Result.Data ?? new List<string>());
+                    Transactions_UserControl_Search.LoadParts(partsTask.Result.Data ?? new List<string>());
                 }
 
                 if (usersTask.Result.IsSuccess)
                 {
-                    searchControl.LoadUsers(usersTask.Result.Data ?? new List<string>());
+                    Transactions_UserControl_Search.LoadUsers(usersTask.Result.Data ?? new List<string>());
                 }
             });
         }
@@ -99,7 +100,7 @@ internal partial class Transactions : Form
             {
                 if (result.IsSuccess && result.Data != null)
                 {
-                    gridControl.DisplayResults(result.Data);
+                    Transactions_UserControl_Grid.DisplayResults(result.Data);
                 }
                 else
                 {
@@ -111,13 +112,13 @@ internal partial class Transactions : Form
         {
             Service_ErrorHandler.HandleException(ex, ErrorSeverity.Medium, retryAction: null,
                 contextData: new Dictionary<string, object> { ["Criteria"] = criteria.ToString() },
-                controlName: nameof(searchControl));
+                controlName: nameof(Transactions_UserControl_Search));
         }
     }
 
     private void SearchControl_ResetRequested(object? sender, EventArgs e)
     {
-        gridControl.ClearResults();
+        Transactions_UserControl_Grid.ClearResults();
     }
 
     private async void GridControl_PageChanged(object? sender, int newPage)
@@ -133,7 +134,7 @@ internal partial class Transactions : Form
             {
                 if (result.IsSuccess && result.Data != null)
                 {
-                    gridControl.DisplayResults(result.Data);
+                    Transactions_UserControl_Grid.DisplayResults(result.Data);
                 }
                 else
                 {
@@ -145,7 +146,7 @@ internal partial class Transactions : Form
         {
             Service_ErrorHandler.HandleException(ex, ErrorSeverity.Medium, retryAction: null,
                 contextData: new Dictionary<string, object> { ["Page"] = newPage },
-                controlName: nameof(gridControl));
+                controlName: nameof(Transactions_UserControl_Grid));
         }
     }
 
@@ -155,6 +156,11 @@ internal partial class Transactions : Form
         {
             this.Text = $"Transaction Viewer - Selected: {transaction.TransactionType} #{transaction.ID}";
         }
+    }
+
+    private void GridControl_ToggleSearchRequested(object? sender, EventArgs e)
+    {
+        Transactions_Panel_Search.Visible = !Transactions_Panel_Search.Visible;
     }
 
     #endregion

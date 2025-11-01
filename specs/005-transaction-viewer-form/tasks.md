@@ -67,11 +67,13 @@ Complete architectural redesign of the Transactions form (`Forms/Transactions/Tr
   **Acceptance**: Directory exists, can be committed to git
 
 - [ ] **T005** - Create Forms/Transactions/TransactionDetailDialog shell
+  **Status**: READY (instruction files now available as of 2025-11-01)
   **File**: `Forms/Transactions/TransactionDetailDialog.cs` and `.Designer.cs`
-  **Description**: Create new Form for modal transaction detail display. Basic shell with OK/Close buttons only - implementation in P2 phase.
-  **Reference**: `.github/instructions/csharp-dotnet8.instructions.md` - Apply Core_Themes.ApplyDpiScaling in constructor
+  **Description**: Create new Form for modal transaction detail display. Basic shell with OK/Close buttons only - implementation in P2 phase. This task was defined before `.github/instructions/ui-compliance/theming-compliance.instructions.md` existed; the instruction file is now available.
+  **Reference**: `.github/instructions/csharp-dotnet8.instructions.md` - Apply theme constructor pattern (ApplyDpiScaling AND ApplyRuntimeLayoutAdjustments)
+  **Reference**: `.github/instructions/ui-compliance/theming-compliance.instructions.md` - MANDATORY theme system integration
   **Reference**: `.github/instructions/ui-scaling-consistency.instructions.md` - Set AutoScaleMode = AutoScaleMode.Dpi
-  **Acceptance**: Form compiles, designer opens without errors, themes applied
+  **Acceptance**: Form compiles, designer opens without errors, constructor includes BOTH Core_Themes.ApplyDpiScaling(this) AND Core_Themes.ApplyRuntimeLayoutAdjustments(this) per Constitution Principle IX
 
 - [X] **T006** - Refactor Dao_Transactions: Add SearchAsync method signature
   - **Completed**: 2025-10-29 - Added SearchAsync wrapper method accepting TransactionSearchCriteria parameter, maps to existing SearchTransactionsAsync. Added MapDataRowToModel alias for MapTransactionFromDataRow. Full XML documentation included. ConfigureAwait(false) applied.
@@ -110,12 +112,23 @@ Complete architectural redesign of the Transactions form (`Forms/Transactions/Tr
 *Goal: Grid displays user's transactions with all columns, loads within 2s for last 30 days, newest first.*
 
 - [X] **T010** - Implement TransactionGridControl UI layout
-  - **Completed**: 2025-10-30 - Created UserControl with DataGridView and StatusStrip. TableLayoutPanel with responsive layout (grid fills 100%, status strip 40px fixed). StatusStrip includes Previous/Next/Go buttons, page indicator, record count, and page jump textbox. Applied Core_Themes.ApplyDpiScaling in constructor. AutoScaleMode.Dpi set for proper DPI handling.
+  - **Completed**: 2025-10-30 - Created UserControl with DataGridView and StatusStrip. TableLayoutPanel with responsive layout (grid fills 100%, status strip 40px fixed). StatusStrip includes Previous/Next/Go buttons, page indicator, record count, and page jump textbox. Applied Core_Themes.ApplyDpiScaling AND ApplyRuntimeLayoutAdjustments in constructor per Constitution Principle IX. AutoScaleMode.Dpi set for proper DPI handling.
   **File**: `Controls/Transactions/TransactionGridControl.cs` and `.Designer.cs`
   **Description**: Create UserControl with DataGridView (fills parent), StatusStrip with pagination controls (Previous/Next buttons, page label, record count label). Apply Core_Themes in constructor.
-  **Reference**: `.github/instructions/csharp-dotnet8.instructions.md` - Follow region organization, apply DPI scaling in constructor
+  **Reference**: `.github/instructions/csharp-dotnet8.instructions.md` - Follow region organization, apply theme constructor pattern
+  **Reference**: `.github/instructions/ui-compliance/theming-compliance.instructions.md` - MANDATORY: Both ApplyDpiScaling AND ApplyRuntimeLayoutAdjustments
   **Reference**: `.github/instructions/ui-scaling-consistency.instructions.md` - Use TableLayoutPanel for responsive layout if needed
-  **Acceptance**: Control renders in designer, themes applied, controls laid out correctly at 100%-200% DPI
+  **Acceptance**: Control renders in designer, constructor includes BOTH Core_Themes.ApplyDpiScaling(this) AND Core_Themes.ApplyRuntimeLayoutAdjustments(this), controls laid out correctly at 100%-200% DPI
+  
+  - [ ] **T010v** - Validate theme integration in TransactionGridControl
+    **Description**: Verify that TransactionGridControl.cs constructor includes both Core_Themes.ApplyDpiScaling(this) AND Core_Themes.ApplyRuntimeLayoutAdjustments(this) in correct order after InitializeComponent(). Verify AutoScaleMode.Dpi set in Designer.cs.
+    **Validation Steps**: 
+    1. Open `Controls/Transactions/TransactionGridControl.cs`
+    2. Confirm constructor calls `Core_Themes.ApplyDpiScaling(this);` immediately after `InitializeComponent()`
+    3. Confirm constructor calls `Core_Themes.ApplyRuntimeLayoutAdjustments(this);` immediately after `ApplyDpiScaling`
+    4. Open `Controls/Transactions/TransactionGridControl.Designer.cs`
+    5. Confirm `this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;` is set
+    **Acceptance**: Both theme methods present in correct order, AutoScaleMode.Dpi set
 
 - [X] **T011** - Configure TransactionGridControl DataGridView columns
   - **Completed**: 2025-10-30 - Configured 8 columns programmatically in InitializeColumns: ID (80px, right-align), Type (100px), Part Number (150px Fill), Quantity (80px, right-align), From (120px), To (120px), User (100px), Date/Time (140px, MM/dd/yy HH:mm format). All columns sortable. Alternating row colors applied (F8FAFC). AutoGenerateColumns disabled. Column widths match mockup specifications.
@@ -168,6 +181,13 @@ Complete architectural redesign of the Transactions form (`Forms/Transactions/Tr
   **Reference**: `.github/instructions/testing-standards.instructions.md` - Manual validation as primary approach
   **Acceptance**: Test passes, verifies method signature matches implementation, null-safe assertions
 
+- [ ] **T017b** - Theme-specific DPI integration test for TransactionGridControl
+  **File**: `Tests/Integration/Theme_TransactionGridControl_Tests.cs` (new file)
+  **Description**: Create integration test that programmatically sets DPI scaling to 100%, 125%, 150%, and 200%, then verifies TransactionGridControl renders correctly at each level. Assert: control bounds reasonable, all child controls visible, no layout breakage (negative coordinates, excessive sizes).
+  **Reference**: `.github/instructions/integration-testing.instructions.md` - Integration test patterns
+  **Reference**: `.github/instructions/ui-compliance/theming-compliance.instructions.md` - DPI scaling requirements
+  **Acceptance**: Test passes at all 4 DPI levels (100%, 125%, 150%, 200%), form renders correctly with no layout breakage, controls maintain proper sizing
+
 - [X] **T018** - Refactor Transactions.cs: Create shell with ViewModel field
   - **Completed**: 2025-10-30 - Completely refactored Transactions.cs from 2136-line monolithic implementation to 266-line clean architecture. Old implementation backed up to .old-monolithic-backup. New implementation uses TransactionSearchControl and TransactionGridControl UserControls with TransactionViewModel orchestration. Form acts as thin coordinator wiring events between controls. Includes comprehensive error handling with Service_ErrorHandler and retry actions. Build succeeds with 0 errors.
   **File**: `Forms/Transactions/Transactions.cs`
@@ -215,8 +235,20 @@ Complete architectural redesign of the Transactions form (`Forms/Transactions/Tr
   **File**: `Controls/Transactions/TransactionSearchControl.cs` and `.Designer.cs`
   **Description**: Create UserControl with TableLayoutPanel: Part Number ComboBox (AutoComplete mode), User ComboBox, Location ComboBox, Operation TextBox, Date range DateTimePickers with quick filter radio buttons (Today/Week/Month/All), Transaction type CheckBoxes (IN/OUT/TRANSFER), Notes TextBox, Search/Reset/Export/Print buttons. Apply Core_Themes.
   **Reference**: `.github/instructions/csharp-dotnet8.instructions.md` - DPI scaling in constructor
+  **Reference**: `.github/instructions/ui-compliance/theming-compliance.instructions.md` - MANDATORY: Both ApplyDpiScaling AND ApplyRuntimeLayoutAdjustments
   **Reference**: `.github/instructions/ui-scaling-consistency.instructions.md` - TableLayoutPanel percentage sizing
-  **Acceptance**: Control renders in designer, all controls laid out, themes applied, tab order logical
+  **Acceptance**: Control renders in designer, all controls laid out, themes applied, tab order logical, constructor includes BOTH Core_Themes.ApplyDpiScaling(this) AND Core_Themes.ApplyRuntimeLayoutAdjustments(this)
+  
+  - [ ] **T024v** - Validate theme integration in TransactionSearchControl
+    **Description**: Verify that TransactionSearchControl.cs constructor includes both Core_Themes.ApplyDpiScaling(this) AND Core_Themes.ApplyRuntimeLayoutAdjustments(this) in correct order after InitializeComponent(). Task completion notes only mention ApplyDpiScaling - need to verify ApplyRuntimeLayoutAdjustments was also added.
+    **Validation Steps**: 
+    1. Open `Controls/Transactions/TransactionSearchControl.cs`
+    2. Confirm constructor calls `Core_Themes.ApplyDpiScaling(this);` immediately after `InitializeComponent()`
+    3. Confirm constructor calls `Core_Themes.ApplyRuntimeLayoutAdjustments(this);` immediately after `ApplyDpiScaling`
+    4. If ApplyRuntimeLayoutAdjustments is missing, add it after ApplyDpiScaling call
+    5. Open `Controls/Transactions/TransactionSearchControl.Designer.cs`
+    6. Confirm `this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;` is set
+    **Acceptance**: Both theme methods present in correct order, AutoScaleMode.Dpi set. If missing, implementation must be updated.
 
 - [X] **T025** - Implement TransactionSearchControl BuildCriteria method
   - **Completed**: 2025-10-30 - Created TransactionSearchControl with complete UI layout per Claude mockup. Includes Part Number autocomplete, User/Location/Operation dropdowns, Transaction Type checkboxes (IN/OUT/TRANSFER all checked by default), Date Range with quick filters (Today/Week/Month/Custom), Notes field, Search/Reset buttons. Implemented BuildCriteria method to extract criteria from UI controls. Implemented Search button handler with validation (IsValid, IsDateRangeValid, at least one transaction type). Quick filters automatically set date pickers (Today=00:00-23:59, Week=Monday-Sunday, Month=1st-last day). LoadParts/LoadUsers/LoadLocations methods populate dropdowns. ClearCriteria resets to defaults. SearchRequested/ResetRequested events raised. Applied Core_Themes.ApplyDpiScaling. Build succeeds with 53 pre-existing warnings.
@@ -224,6 +256,10 @@ Complete architectural redesign of the Transactions form (`Forms/Transactions/Tr
   **Description**: Create private BuildCriteria() method that reads UI controls, populates TransactionSearchCriteria object, trims strings, handles null/empty values. Return criteria object.
   **Reference**: `.github/instructions/csharp-dotnet8.instructions.md` - Null safety, string handling
   **Acceptance**: Method correctly extracts all filter values, handles empty controls, returns valid criteria
+  
+  - [ ] **T025v** - Validate theme integration consistency for T025
+    **Description**: T025 shares same file as T024. This validation subtask confirms theme methods remain present after BuildCriteria implementation. If T024v passes, T025v automatically passes.
+    **Acceptance**: Same as T024v - both theme methods present in TransactionSearchControl constructor.
 
 - [X] **T026** - Implement TransactionSearchControl Search button handler
   - **Completed**: 2025-10-30 - Created TransactionSearchControl with complete UI layout per Claude mockup. Includes Part Number autocomplete, User/Location/Operation dropdowns, Transaction Type checkboxes (IN/OUT/TRANSFER all checked by default), Date Range with quick filters (Today/Week/Month/Custom), Notes field, Search/Reset buttons. Implemented BuildCriteria method to extract criteria from UI controls. Implemented Search button handler with validation (IsValid, IsDateRangeValid, at least one transaction type). Quick filters automatically set date pickers (Today=00:00-23:59, Week=Monday-Sunday, Month=1st-last day). LoadParts/LoadUsers/LoadLocations methods populate dropdowns. ClearCriteria resets to defaults. SearchRequested/ResetRequested events raised. Applied Core_Themes.ApplyDpiScaling. Build succeeds with 53 pre-existing warnings.
@@ -231,6 +267,10 @@ Complete architectural redesign of the Transactions form (`Forms/Transactions/Tr
   **Description**: Handle btnSearch_Click: call BuildCriteria, validate with IsValid and IsDateRangeValid, show Service_ErrorHandler.HandleValidationError if invalid, raise SearchRequested event if valid.
   **Reference**: `.github/instructions/security-best-practices.instructions.md` - Input validation at UI boundary
   **Acceptance**: Button validates inputs, shows user-friendly errors, raises event on success
+  
+  - [ ] **T026v** - Validate theme integration consistency for T026
+    **Description**: T026 shares same file as T024/T025. This validation subtask confirms theme methods remain present after Search button handler implementation. If T024v passes, T026v automatically passes.
+    **Acceptance**: Same as T024v - both theme methods present in TransactionSearchControl constructor.
 
 - [X] **T027** - Implement TransactionViewModel LoadPartsAsync method
   - **Completed**: 2025-10-29 - LoadPartsAsync implemented with caching strategy. Calls Dao_Part.GetAllPartsAsync with ConfigureAwait(false), extracts PartID from DataTable rows, caches in _cachedParts field for subsequent calls, returns DaoResult<List<string>> with proper error handling. Cache-first pattern improves performance.
@@ -328,6 +368,17 @@ Complete architectural redesign of the Transactions form (`Forms/Transactions/Tr
 - [ ] **T042** [Story: P1] [CHECKPOINT] - P1 Complete: All Core Viewing Features Implemented
   **Description**: Verify all P1 user stories (US-001 through US-005) pass manual validation. Verify solution builds with 0 errors, 0 warnings. Run MCP validation tools (validate_dao_patterns, validate_error_handling, check_xml_docs). Verify all files under line count limits.
   **Acceptance**: P1 MVP complete, ready for user acceptance testing, all constitution principles satisfied
+
+- [ ] **T042a** - Theme validation checkpoint for P0/P1 implementation
+  **Description**: Run `validate_ui_scaling` MCP tool against all P0/P1 UserControls and Forms created during Phase 1-2 implementation. Verify theme compliance across all UI components.
+  **Reference**: `.github/instructions/ui-compliance/theming-compliance.instructions.md` - Theme validation requirements
+  **MCP Command**: `validate_ui_scaling(source_dir: "c:\\...\\Controls\\Transactions", recursive: true)`
+  **Files to Validate**:
+    - `Controls/Transactions/TransactionSearchControl.cs` and `.Designer.cs`
+    - `Controls/Transactions/TransactionGridControl.cs` and `.Designer.cs`
+    - `Forms/Transactions/Transactions.cs` and `.Designer.cs`
+    - `Forms/Transactions/TransactionDetailDialog.cs` and `.Designer.cs` (if completed)
+  **Acceptance**: All P0/P1 files pass theme validation with 0 critical issues, 0 errors. No hardcoded colors without `// ACCEPTABLE:` justification comments. All Forms/UserControls include both Core_Themes.ApplyDpiScaling and ApplyRuntimeLayoutAdjustments in constructors.
 
 ---
 

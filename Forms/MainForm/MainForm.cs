@@ -1058,16 +1058,25 @@ namespace MTM_WIP_Application_Winforms.Forms.MainForm
         {
             try
             {
-                string connectionString = Model_AppVariables.ConnectionString;
                 string currentUser = Model_AppVariables.User;
 
-                Transactions.Transactions transactionsForm = new(connectionString, currentUser);
+                Transactions.Transactions transactionsForm = new(connectionString: string.Empty, currentUser);
                 transactionsForm.ShowDialog(this);
             }
             catch (Exception ex)
             {
                 LoggingUtility.LogApplicationError(ex);
-                await Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex, callerName: nameof(MainForm_MenuStrip_View_PersonalHistory_Click));
+                Service_ErrorHandler.HandleException(
+                    ex,
+                    ErrorSeverity.Medium,
+                    retryAction: null,
+                    contextData: new Dictionary<string, object>
+                    {
+                        ["User"] = Model_AppVariables.User,
+                        ["MenuAction"] = "ViewTransactionHistory"
+                    },
+                    controlName: nameof(MainForm)
+                );
             }
         }
 

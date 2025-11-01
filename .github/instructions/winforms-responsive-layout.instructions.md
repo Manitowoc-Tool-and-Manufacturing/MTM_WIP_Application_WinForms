@@ -319,6 +319,8 @@ PerformLayout();  // Force immediate layout calculation
 
 ## DPI Scaling Integration
 
+**Cross-Reference**: For complete DPI scaling system documentation, see `Documentation/Theme-System-Reference.md` Section 6 (DPI Scaling System).
+
 **Always call in UserControl constructor:**
 
 ```csharp
@@ -326,9 +328,9 @@ public Control_Example()
 {
     InitializeComponent();
     
-    // MTM-specific DPI scaling
-    Core_Themes.ApplyDpiScaling(this);
-    Core_Themes.ApplyRuntimeLayoutAdjustments(this);
+    // MTM-specific DPI scaling - MANDATORY per Constitution Principle IX
+    Core_Themes.ApplyDpiScaling(this);              // Scales controls for current DPI
+    Core_Themes.ApplyRuntimeLayoutAdjustments(this); // Corrects designer layout issues
     
     // Performance
     SetStyle(ControlStyles.OptimizedDoubleBuffer, true);
@@ -337,6 +339,16 @@ public Control_Example()
     InitializeLayout();
 }
 ```
+
+**Call Order Requirements**:
+1. `InitializeComponent()` - Designer-generated initialization
+2. `Core_Themes.ApplyDpiScaling(this)` - DPI awareness (100%-200% scaling)
+3. `Core_Themes.ApplyRuntimeLayoutAdjustments(this)` - Layout corrections
+4. Custom initialization methods
+
+**Rationale**: Manufacturing environments span diverse display configurations (1080p to 4K, 100%-200% DPI scaling). Theme system integration ensures pixel-perfect rendering across all configurations.
+
+**See Also**: `.github/instructions/ui-compliance/theming-compliance.instructions.md` for complete theme integration requirements including color tokens and UI architecture standards.
 
 ## Common Anti-Patterns and Fixes
 

@@ -3,6 +3,7 @@
 **Feature ID**: F005  
 **Status**: Draft  
 **Created**: 2025-10-25  
+**Last Updated**: 2025-11-01  
 **Priority**: High  
 **Complexity**: High  
 **Architecture**: Clean, spec-compliant rewrite from scratch  
@@ -93,7 +94,7 @@ Complete architectural redesign of the Transactions form (`Forms/Transactions/Tr
 - **Acceptance**: Export button respects current filters
 - **Acceptance**: Excel file includes all visible columns
 - **Acceptance**: Filename: `Transactions_[Date]_[User].xlsx`
-- **Acceptance**: Export completes within 5 seconds for 1000 records
+- **Acceptance**: Export completes within 5 seconds for 1000 records (P95 latency)
 
 **US-009**: As a manufacturing user, I want to print transaction reports so I can maintain physical records.
 - **Acceptance**: Print preview with formatted layout
@@ -802,7 +803,7 @@ CALL inv_transactions_GetAnalytics(
 
 - Each file < 500 lines
 - Cyclomatic complexity < 10 per method
-- XML documentation coverage > 95%
+- XML documentation coverage > 95% (verified by MCP tool `check_xml_docs`)
 - No code duplication (DRY principle)
 - SOLID principles followed throughout
 
@@ -967,6 +968,25 @@ public class Dao_Transactions_IntegrationTests : BaseIntegrationTest
 2. Click Search
 3. **Expected**: Results appear in < 2 seconds
 4. Verify progress indicator shows during load
+
+#### Scenario 9: Theme Switching and DPI Scaling
+1. Open Transaction Viewer at 100% DPI scaling
+2. **Expected**: All controls render correctly with theme colors applied
+3. Change Windows Display Settings to 125% DPI scaling
+4. Relaunch application
+5. **Expected**: Form scales properly, no layout breakage, all text readable
+6. Open Settings → Theme Selection
+7. Change theme from "Default" to "Midnight"
+8. **Expected**: Transaction Viewer colors update immediately to match theme
+9. Verify no hardcoded colors override theme (buttons, panels, labels match selected theme)
+10. Test at 150% and 200% DPI scaling
+11. **Expected**: Form remains usable at all DPI levels, controls maintain proper sizing
+
+**Theme Compliance Validation**:
+- Constructor includes `Core_Themes.ApplyDpiScaling(this)` and `ApplyRuntimeLayoutAdjustments(this)`
+- All custom colors use `Model_UserUiColors` tokens with `SystemColors` fallbacks
+- No hardcoded colors without `// ACCEPTABLE:` justification comments
+- Control names follow `{ComponentName}_{ControlType}_{Purpose}` convention
 
 ---
 
@@ -1266,6 +1286,21 @@ This specification mandates compliance with the following instruction files:
    - Quality gates
    - Review checklist
    - Compliance verification
+
+9. **`.github/instructions/ui-compliance/theming-compliance.instructions.md`**
+   - Theme system integration requirements (MANDATORY)
+   - Core_Themes.ApplyDpiScaling() and ApplyRuntimeLayoutAdjustments() constructor patterns
+   - Color token usage with Model_UserUiColors
+   - Hardcoded color whitelist and justification rules
+   - WinForms UI architecture standards (control naming, AutoSize patterns)
+
+10. **`Documentation/Theme-System-Reference.md`**
+    - Theme system architecture and color token catalog (203 properties)
+    - DPI scaling system (Section 6) - 100%-200% scaling support
+    - Runtime layout adjustments (Section 7)
+    - Font sizing standards (Section 5)
+    - Database storage (`app_themes` table, 9 themes available)
+    - Complete API reference for Core_Themes integration
 
 ---
 

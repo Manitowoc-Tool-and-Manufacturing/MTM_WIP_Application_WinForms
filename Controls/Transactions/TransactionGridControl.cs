@@ -31,6 +31,11 @@ internal partial class TransactionGridControl : UserControl
     /// </summary>
     public event EventHandler<Model_Transactions>? RowSelected;
 
+    /// <summary>
+    /// Raised when the user clicks the Show/Hide Search button.
+    /// </summary>
+    public event EventHandler? ToggleSearchRequested;
+
     #endregion
 
     #region Properties
@@ -42,9 +47,9 @@ internal partial class TransactionGridControl : UserControl
     {
         get
         {
-            if (dgvTransactions.SelectedRows.Count > 0)
+            if (TransactionGridControl_DataGridView_Transactions.SelectedRows.Count > 0)
             {
-                return dgvTransactions.SelectedRows[0].DataBoundItem as Model_Transactions;
+                return TransactionGridControl_DataGridView_Transactions.SelectedRows[0].DataBoundItem as Model_Transactions;
             }
             return null;
         }
@@ -76,11 +81,11 @@ internal partial class TransactionGridControl : UserControl
     /// </summary>
     private void InitializeColumns()
     {
-        dgvTransactions.AutoGenerateColumns = false;
-        dgvTransactions.Columns.Clear();
+        TransactionGridControl_DataGridView_Transactions.AutoGenerateColumns = false;
+        TransactionGridControl_DataGridView_Transactions.Columns.Clear();
 
         // ID Column - 80px
-        dgvTransactions.Columns.Add(new DataGridViewTextBoxColumn
+        TransactionGridControl_DataGridView_Transactions.Columns.Add(new DataGridViewTextBoxColumn
         {
             Name = "colID",
             HeaderText = "ID",
@@ -91,7 +96,7 @@ internal partial class TransactionGridControl : UserControl
         });
 
         // Type Column - 100px
-        dgvTransactions.Columns.Add(new DataGridViewTextBoxColumn
+        TransactionGridControl_DataGridView_Transactions.Columns.Add(new DataGridViewTextBoxColumn
         {
             Name = "colType",
             HeaderText = "Type",
@@ -101,7 +106,7 @@ internal partial class TransactionGridControl : UserControl
         });
 
         // Part Number Column - 150px, Fill
-        dgvTransactions.Columns.Add(new DataGridViewTextBoxColumn
+        TransactionGridControl_DataGridView_Transactions.Columns.Add(new DataGridViewTextBoxColumn
         {
             Name = "colPartNumber",
             HeaderText = "Part Number",
@@ -112,7 +117,7 @@ internal partial class TransactionGridControl : UserControl
         });
 
         // Quantity Column - 80px
-        dgvTransactions.Columns.Add(new DataGridViewTextBoxColumn
+        TransactionGridControl_DataGridView_Transactions.Columns.Add(new DataGridViewTextBoxColumn
         {
             Name = "colQuantity",
             HeaderText = "Qty",
@@ -123,7 +128,7 @@ internal partial class TransactionGridControl : UserControl
         });
 
         // From Location Column - 120px
-        dgvTransactions.Columns.Add(new DataGridViewTextBoxColumn
+        TransactionGridControl_DataGridView_Transactions.Columns.Add(new DataGridViewTextBoxColumn
         {
             Name = "colFromLocation",
             HeaderText = "From",
@@ -133,7 +138,7 @@ internal partial class TransactionGridControl : UserControl
         });
 
         // To Location Column - 120px
-        dgvTransactions.Columns.Add(new DataGridViewTextBoxColumn
+        TransactionGridControl_DataGridView_Transactions.Columns.Add(new DataGridViewTextBoxColumn
         {
             Name = "colToLocation",
             HeaderText = "To",
@@ -143,7 +148,7 @@ internal partial class TransactionGridControl : UserControl
         });
 
         // User Column - 100px
-        dgvTransactions.Columns.Add(new DataGridViewTextBoxColumn
+        TransactionGridControl_DataGridView_Transactions.Columns.Add(new DataGridViewTextBoxColumn
         {
             Name = "colUser",
             HeaderText = "User",
@@ -153,7 +158,7 @@ internal partial class TransactionGridControl : UserControl
         });
 
         // Date/Time Column - 140px
-        dgvTransactions.Columns.Add(new DataGridViewTextBoxColumn
+        TransactionGridControl_DataGridView_Transactions.Columns.Add(new DataGridViewTextBoxColumn
         {
             Name = "colDateTime",
             HeaderText = "Date/Time",
@@ -164,13 +169,13 @@ internal partial class TransactionGridControl : UserControl
         });
 
         // Enable sorting on all columns
-        foreach (DataGridViewColumn column in dgvTransactions.Columns)
+        foreach (DataGridViewColumn column in TransactionGridControl_DataGridView_Transactions.Columns)
         {
             column.SortMode = DataGridViewColumnSortMode.Automatic;
         }
 
         // Set alternating row colors for better readability
-        dgvTransactions.AlternatingRowsDefaultCellStyle.BackColor = System.Drawing.Color.FromArgb(248, 250, 252);
+        TransactionGridControl_DataGridView_Transactions.AlternatingRowsDefaultCellStyle.BackColor = System.Drawing.Color.FromArgb(248, 250, 252);
     }
 
     /// <summary>
@@ -178,11 +183,12 @@ internal partial class TransactionGridControl : UserControl
     /// </summary>
     private void WireUpEvents()
     {
-        btnPrevious.Click += BtnPrevious_Click;
-        btnNext.Click += BtnNext_Click;
-        btnGoToPage.Click += BtnGoToPage_Click;
-        txtGoToPage.KeyPress += TxtGoToPage_KeyPress;
-        dgvTransactions.SelectionChanged += DgvTransactions_SelectionChanged;
+        TransactionGridControl_Button_Previous.Click += BtnPrevious_Click;
+        TransactionGridControl_Button_Next.Click += BtnNext_Click;
+        TransactionGridControl_Button_GoToPage.Click += BtnGoToPage_Click;
+        TransactionGridControl_TextBox_GoToPage.KeyPress += TxtGoToPage_KeyPress;
+        TransactionGridControl_DataGridView_Transactions.SelectionChanged += DgvTransactions_SelectionChanged;
+        TransactionGridControl_Button_ShowHideSearch.Click += BtnShowHideSearch_Click;
     }
 
     #endregion
@@ -204,19 +210,19 @@ internal partial class TransactionGridControl : UserControl
         _currentPage = results.CurrentPage;
 
         // Suspend layout to prevent flickering
-        dgvTransactions.SuspendLayout();
+        TransactionGridControl_DataGridView_Transactions.SuspendLayout();
 
         try
         {
             // Bind data
-            dgvTransactions.DataSource = new BindingSource { DataSource = results.Transactions };
+            TransactionGridControl_DataGridView_Transactions.DataSource = new BindingSource { DataSource = results.Transactions };
 
             // Update pagination controls
             UpdatePaginationControls();
         }
         finally
         {
-            dgvTransactions.ResumeLayout();
+            TransactionGridControl_DataGridView_Transactions.ResumeLayout();
         }
     }
 
@@ -227,7 +233,7 @@ internal partial class TransactionGridControl : UserControl
     {
         _currentResults = null;
         _currentPage = 1;
-        dgvTransactions.DataSource = null;
+        TransactionGridControl_DataGridView_Transactions.DataSource = null;
         UpdatePaginationControls();
     }
 
@@ -254,6 +260,11 @@ internal partial class TransactionGridControl : UserControl
     private void BtnGoToPage_Click(object? sender, EventArgs e)
     {
         GoToPageFromTextBox();
+    }
+
+    private void BtnShowHideSearch_Click(object? sender, EventArgs e)
+    {
+        ToggleSearchRequested?.Invoke(this, EventArgs.Empty);
     }
 
     private void TxtGoToPage_KeyPress(object? sender, KeyPressEventArgs e)
@@ -297,26 +308,26 @@ internal partial class TransactionGridControl : UserControl
     {
         if (_currentResults == null)
         {
-            btnPrevious.Enabled = false;
-            btnNext.Enabled = false;
-            lblPageIndicator.Text = "Page 0 of 0";
-            lblRecordCount.Text = "0 records";
-            txtGoToPage.Enabled = false;
-            btnGoToPage.Enabled = false;
+            TransactionGridControl_Button_Previous.Enabled = false;
+            TransactionGridControl_Button_Next.Enabled = false;
+            TransactionGridControl_Label_PageIndicator.Text = "Page 0 of 0";
+            TransactionGridControl_Label_RecordCount.Text = "0 records";
+            TransactionGridControl_TextBox_GoToPage.Enabled = false;
+            TransactionGridControl_Button_GoToPage.Enabled = false;
             return;
         }
 
         // Enable/disable navigation buttons
-        btnPrevious.Enabled = _currentResults.HasPreviousPage;
-        btnNext.Enabled = _currentResults.HasNextPage;
+        TransactionGridControl_Button_Previous.Enabled = _currentResults.HasPreviousPage;
+        TransactionGridControl_Button_Next.Enabled = _currentResults.HasNextPage;
 
         // Update labels
-        lblPageIndicator.Text = $"Page {_currentResults.CurrentPage} of {_currentResults.TotalPages}";
-        lblRecordCount.Text = $"{_currentResults.TotalRecordCount} records found";
+        TransactionGridControl_Label_PageIndicator.Text = $"Page {_currentResults.CurrentPage} of {_currentResults.TotalPages}";
+        TransactionGridControl_Label_RecordCount.Text = $"{_currentResults.TotalRecordCount} records found";
 
         // Enable page jump controls
-        txtGoToPage.Enabled = _currentResults.TotalPages > 1;
-        btnGoToPage.Enabled = _currentResults.TotalPages > 1;
+        TransactionGridControl_TextBox_GoToPage.Enabled = _currentResults.TotalPages > 1;
+        TransactionGridControl_Button_GoToPage.Enabled = _currentResults.TotalPages > 1;
     }
 
     /// <summary>
@@ -324,17 +335,17 @@ internal partial class TransactionGridControl : UserControl
     /// </summary>
     private void GoToPageFromTextBox()
     {
-        if (_currentResults == null || string.IsNullOrWhiteSpace(txtGoToPage.Text))
+        if (_currentResults == null || string.IsNullOrWhiteSpace(TransactionGridControl_TextBox_GoToPage.Text))
         {
             return;
         }
 
-        if (int.TryParse(txtGoToPage.Text, out int pageNumber))
+        if (int.TryParse(TransactionGridControl_TextBox_GoToPage.Text, out int pageNumber))
         {
             if (pageNumber >= 1 && pageNumber <= _currentResults.TotalPages)
             {
                 PageChanged?.Invoke(this, pageNumber);
-                txtGoToPage.Text = string.Empty; // Clear after successful navigation
+                TransactionGridControl_TextBox_GoToPage.Text = string.Empty; // Clear after successful navigation
             }
             else
             {
@@ -349,3 +360,4 @@ internal partial class TransactionGridControl : UserControl
 
     #endregion
 }
+

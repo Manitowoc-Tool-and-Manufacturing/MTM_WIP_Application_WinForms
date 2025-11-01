@@ -39,6 +39,9 @@ GitHub Copilot will load these guidance files while generating code:
 - #file:instructions/security-best-practices.instructions.md
 - #file:instructions/performance-optimization.instructions.md
 - #file:instructions/code-review-standards.instructions.md
+- #file:instructions/ui-compliance/theming-compliance.instructions.md (NEW: Constitution Principle IX - Theme system integration, DPI scaling, color tokens)
+- #file:instructions/winforms-responsive-layout.instructions.md (WinForms layout architecture and TableLayoutPanel patterns)
+- #file:instructions/ui-scaling-consistency.instructions.md (DPI scaling and responsive design standards)
 
 > Note: Avalonia/MVVM instructions are being retired. Prefer WinForms event-driven patterns and the existing DAO/service abstractions when authoring new code.
 
@@ -71,12 +74,19 @@ Prompts that still apply to this WinForms solution:
 
 JSON configs for these tools live under `.mcp/samples/` (mirror to `C:\.mcp\samples` when syncing).
 
+**Database & Testing Tools:**
 - `generate_test_seed_sql` – build seed scripts for integration fixtures from declarative JSON.
 - `verify_test_seed` – check seeded records against expected rows before/after DAO runs.
 - `install_stored_procedures` – detect drift and apply `Database/UpdatedStoredProcedures/ReadyForVerification` scripts.
 - `validate_schema` – compare the live MySQL schema with `Database/database-schema-snapshot.json` before executing suites.
 - `run_integration_harness` – orchestrate end-to-end DAO workflows (seed → install → tests → cleanup) via JSON-defined steps.
 - `audit_database_cleanup` – report and optionally purge residual `TEST-*` style rows so each suite starts clean.
+
+**UI & Theme Validation Tools:**
+- `validate_ui_scaling` – scan Forms/UserControls for DPI scaling compliance (Core_Themes.ApplyDpiScaling + ApplyRuntimeLayoutAdjustments)
+- `generate_ui_fix_plan` – create JSON fix plan from UI validation results for automated remediation
+- `apply_ui_fixes` – apply UI fix plans with backup/rollback support and corruption detection
+- `check_xml_docs` – verify XML documentation coverage meets 95%+ requirement
 
 (Other Avalonia-specific prompts should be removed or rewritten before reuse.)
 

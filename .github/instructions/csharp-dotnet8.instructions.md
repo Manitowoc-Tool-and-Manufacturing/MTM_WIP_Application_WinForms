@@ -47,6 +47,8 @@ These guidelines describe how to structure and implement C# code within the MTM 
 
 **Cross-Reference**: For responsive layout architecture, see `.github/instructions/winforms-responsive-layout.instructions.md`
 
+**Cross-Reference**: For complete theme system integration, see `.github/instructions/ui-compliance/theming-compliance.instructions.md` and `Documentation/Theme-System-Reference.md`
+
 - Keep event handlers thin. Collect user input, call into helpers/DAOs/services, then update controls.
 - Avoid blocking the UI thread. Use background workers, `Task.Run`, or asynchronous DAO calls and marshal back to the UI thread with `BeginInvoke`/`Invoke`/`SynchronizationContext.Post` when updating controls.
 - Respect designer-generated code. Do not hand-edit `.Designer.cs` files; move logic into partial class files or helpers.
@@ -55,6 +57,55 @@ These guidelines describe how to structure and implement C# code within the MTM 
 - **Layout**: Use TableLayoutPanel with mixed Absolute/Percent sizing for responsive designs (see winforms-responsive-layout.instructions.md)
 - **Spacing**: Add Padding (10px) to containers, Margin (5px) to controls for professional appearance
 - **Constraints**: Set MinimumSize on DataGridView and main content areas to prevent unusable collapse
+
+### Required Constructor Pattern (MANDATORY)
+
+Every Form and UserControl constructor MUST integrate the theme system immediately after `InitializeComponent()`:
+
+```csharp
+public MyForm()
+{
+    InitializeComponent();
+    Core_Themes.ApplyDpiScaling(this);              // MANDATORY - DPI awareness
+    Core_Themes.ApplyRuntimeLayoutAdjustments(this); // MANDATORY - Dynamic layout fixes
+    WireUpEvents();                                  // Optional - Event handler registration
+    ApplyPrivileges();                               // Optional - Permission-based UI adjustments
+}
+```
+
+**Call Order Requirements**:
+1. `InitializeComponent()` - Designer-generated initialization
+2. `Core_Themes.ApplyDpiScaling(this)` - Scale controls for current DPI (100%-200%)
+3. `Core_Themes.ApplyRuntimeLayoutAdjustments(this)` - Apply layout corrections
+4. Custom initialization methods (WireUpEvents, ApplyPrivileges, ApplyThemeColors, etc.)
+
+**Rationale**: Manufacturing environments use diverse display configurations. DPI scaling must occur before event handlers to prevent double-triggering layout events. Runtime adjustments correct designer-generated layout issues.
+
+**Enforcement**: Code review MUST verify both theme methods present. MCP tool `validate_ui_scaling` detects missing calls. Constitution Principle IX mandates compliance.
+
+**See**: `.github/instructions/ui-compliance/theming-compliance.instructions.md` for complete pattern documentation.
+
+### Theme Color Integration
+
+Use `Model_UserUiColors` theme tokens with `SystemColors` fallbacks for all custom colors:
+
+```csharp
+// ✅ CORRECT: Theme token with system fallback
+var colors = Model_AppVariables.UserUiColors;
+button1.BackColor = colors.ButtonBackColor ?? SystemColors.Control;
+panel1.BackColor = colors.PanelBackColor ?? SystemColors.ControlLight;
+
+// ❌ WRONG: Hardcoded color without justification
+button1.BackColor = Color.Blue;  // Code review will reject
+
+// ✅ ACCEPTABLE: Brand color with justification comment
+// ACCEPTABLE: Company logo brand color (not user-themeable)
+panelLogo.BackColor = Color.FromArgb(0, 122, 204);
+```
+
+**Rationale**: Database-backed theme system (`app_themes` table, 9 themes, 203 color properties) enables user personalization without code changes. Theme tokens ensure visual consistency across the application.
+
+**See**: `Documentation/Theme-System-Reference.md` Section 4 (Color Token Catalog) for available theme properties.
 
 ## Data Access & Async
 

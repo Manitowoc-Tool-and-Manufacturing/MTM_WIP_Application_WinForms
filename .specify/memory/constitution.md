@@ -1,5 +1,39 @@
 <!--
 Sync Impact Report:
+Version Change: 1.1.0 → 1.2.0
+Rationale: Added WinForms UI Architecture Standards and Documentation/Instruction File Standards sections
+Modified Principles: None
+Added Sections: 
+  - WinForms UI Architecture Standards (under Additional Constraints)
+  - Documentation and Instruction File Standards (under Additional Constraints)
+Removed Sections: None
+Templates Requiring Updates:
+  ✅ constitution.md - Comprehensive UI architecture and documentation standards added
+  ✅ WinForms-UI-Compliance-Checklist.md - Tracks compliance with architecture standards
+  ✅ UI-Architecture-Analysis.md - Documents discovered patterns and best practices
+  ✅ UI-Compliance-Clarification-Questions.md - Clarifies application of standards
+  ⚠ .github/instructions/ files - Need updates (csharp-dotnet8, winforms-responsive-layout, ui-scaling-consistency)
+  ⚠ .github/instructions/ui-compliance/ - New directory with theming-compliance.instructions.md required
+  ⚠ .github/prompts/ - New refactor-theme-compliance.prompt.md required
+  ⚠ specs/*/spec.md - Must reference Documentation/Theme-System-Reference.md
+  ⚠ specs/*/tasks.md - Must include theme validation checkpoints
+Follow-up TODOs: 
+  - Create .github/instructions/ui-compliance/theming-compliance.instructions.md with YAML front matter
+  - Create .github/prompts/refactor-theme-compliance.prompt.md
+  - Update existing instruction files with theme cross-references
+  - Add theme testing scenarios to all feature specifications
+-->
+
+Previous Sync Impact Reports:
+[v1.1.0] Version Change: 1.0.0 → 1.1.0
+Rationale: Added Principle IX (Theme System Integration) and WinForms UI Architecture standards
+Added Sections: Principle IX: Theme System Integration via Core_Themes
+
+[v1.0.0] Version Change: Initial (template) → 1.0.0
+Rationale: First ratified constitution for MTM_WIP_Application_WinForms project
+-->
+
+Previous Sync Impact Report (1.0.0):
 Version Change: Initial (template) → 1.0.0
 Rationale: First ratified constitution for MTM_WIP_Application_WinForms project
 Modified Principles: All principles established from templates and project documentation
@@ -161,6 +195,69 @@ Public APIs MUST include XML documentation explaining intent, parameters, return
 
 **Enforcement**: Code review MUST verify XML docs on public APIs. Missing documentation SHOULD trigger warnings in build output.
 
+### IX. Theme System Integration via Core_Themes (MANDATORY)
+
+All Forms and UserControls MUST integrate the MTM theme system for DPI scaling, runtime layout adjustments, and consistent visual theming.
+
+**Requirements**:
+
+-   **Constructor Pattern**: Every Form/UserControl constructor MUST call:
+    ```csharp
+    Core_Themes.ApplyDpiScaling(this);
+    Core_Themes.ApplyRuntimeLayoutAdjustments(this);
+    ```
+-   **Call Order**: Theme methods MUST be called immediately after `InitializeComponent()`
+-   **Color Tokens**: Custom colors MUST use `Model_UserUiColors` theme tokens with `SystemColors` fallbacks
+-   **Hardcoded Colors**: ANY hardcoded `Color.FromArgb()` or `Color.Blue` MUST include `// ACCEPTABLE: [reason]` comment
+-   **AutoScaleMode**: All Forms/UserControls MUST set `AutoScaleMode = AutoScaleMode.Dpi`
+-   **Database Themes**: Theme colors are stored in MySQL `app_themes` table (9 themes, 203 properties each)
+
+**Approved Color Patterns**:
+
+```csharp
+// ✅ CORRECT: Theme token with fallback
+var colors = Model_AppVariables.UserUiColors;
+button.BackColor = colors.ButtonBackColor ?? SystemColors.Control;
+
+// ✅ CORRECT: Semantic theme color
+label.ForeColor = colors.ErrorColor ?? Color.Red;
+
+// ✅ CORRECT: Documented brand color
+// ACCEPTABLE: Company logo brand color (not user-themeable)
+panelLogo.BackColor = Color.FromArgb(0, 122, 204);
+
+// ❌ WRONG: Undocumented hardcoded color
+button.BackColor = Color.Blue;  // Missing justification comment
+```
+
+**WinForms UI Architecture Requirements**:
+
+-   **Control Naming**: `{ComponentName}_{ControlType}_{Purpose}` (e.g., `Transactions_Panel_Main`)
+-   **No Abbreviations**: Use `ComboBox` not `cbo`, `TextBox` not `txt`, `Label` not `lbl`
+-   **AutoSize Pattern**: All containers MUST use `AutoSize = true` with `AutoSizeMode.GrowAndShrink`
+-   **Docking Cascade**: Apply `Dock = DockStyle.Fill` from root Panel to leaf controls
+-   **Leaf Control Sizing**: All input controls (TextBox, ComboBox, DateTimePicker) MUST have `MinimumSize` and `MaximumSize` (typically 175x23)
+-   **NO Hardcoded Sizes**: Container controls MUST NOT have hardcoded `Size` properties (rely on AutoSize)
+-   **NO Widths > 1000px**: Excessive widths indicate missing AutoSize configuration
+
+**Rationale**: Manufacturing environment requires pixel-perfect rendering across diverse display configurations (100%-200% DPI scaling). Database-backed themes enable user personalization without code changes. Consistent UI architecture prevents the "12,000 pixel control" issue where AI generates oversized controls by referencing non-compliant examples. Theme token usage ensures visual consistency and enables dynamic theme switching.
+
+**Enforcement**:
+
+-   Code review MUST verify `ApplyDpiScaling` and `ApplyRuntimeLayoutAdjustments` in constructors
+-   MCP tool `validate_ui_scaling` MUST pass before merging
+-   Designer files MUST follow naming convention and AutoSize patterns
+-   Hardcoded colors without `// ACCEPTABLE:` comment trigger review rejection
+-   Static analysis SHOULD detect missing theme integration
+-   Refactoring workflow MUST include theme compliance in pre-refactor analysis
+
+**Reference Documentation**:
+
+-   `Documentation/Theme-System-Reference.md` - Complete theme system API and patterns
+-   `specs/005-transaction-viewer-form/RefactorPortion/UI-Architecture-Analysis.md` - WinForms layout best practices
+-   `specs/005-transaction-viewer-form/RefactorPortion/WinForms-UI-Compliance-Checklist.md` - Compliance tracking
+-   `.github/instructions/ui-compliance/theming-compliance.instructions.md` - MCP-parseable rules
+
 ## Additional Constraints
 
 ### Technology Stack Requirements
@@ -210,6 +307,95 @@ Public APIs MUST include XML documentation explaining intent, parameters, return
 -   Connection pool metrics tracked in Service_DebugTracer
 
 **Rationale**: Shop floor environment requires responsive, reliable application. Database timeouts prevent hung connections. Performance monitoring enables proactive optimization.
+
+### WinForms UI Architecture Standards
+
+**Control Naming Convention (MANDATORY)**:
+
+-   **Format**: `{ComponentName}_{ControlType}_{Purpose}`
+-   **No Abbreviations**: Use `ComboBox` not `cbo`, `TextBox` not `txt`, `Label` not `lbl`, `Button` not `btn`
+-   **Examples**: `TransactionSearchControl_ComboBox_PartNumber`, `InventoryTab_Panel_Main`, `MainForm_TableLayout_Content`
+-   **Context Preservation**: Child control names MUST include parent component context
+
+**Rationale**: Consistent naming prevents ambiguity when AI references controls for code generation. Full type names prevent confusion (`ComboBox` vs `ComboBoxEx`, `TextBox` vs `TextBoxBase`). Context preservation enables search/replace refactoring and clarifies component ownership.
+
+**Layout Architecture (MANDATORY)**:
+
+-   **Root Container**: Every Form/UserControl MUST start with Panel or TableLayoutPanel docked fill
+-   **AutoSize Cascade**: All containers MUST use `AutoSize = true` with `AutoSizeMode = AutoSizeMode.GrowAndShrink`
+-   **Docking Pattern**: Apply `Dock = DockStyle.Fill` from root to leaves in container hierarchy
+-   **Per-Field Containers**: Each input field MUST have dedicated TableLayoutPanel with label (Row 0) and control (Row 1)
+-   **Star Sizing**: Expansion rows/columns MUST use `SizeType.Percent, 100F` for responsive behavior
+-   **Leaf Control Constraints**: Input controls (TextBox, ComboBox, DateTimePicker) MUST have `MinimumSize` and `MaximumSize` (typically 175x23)
+-   **NO Hardcoded Sizes on Containers**: Container `Size` property MUST be removed (rely on AutoSize)
+-   **Maximum Width Limit**: NO control width SHOULD exceed 1000 pixels (indicates missing AutoSize)
+
+**Rationale**: Deep nesting with AutoSize cascade prevents the "12,000 pixel control" issue where AI generates oversized controls. Consistent hierarchy enables predictable layout behavior across DPI levels. Per-field containers ensure uniform label/control spacing. Leaf constraints prevent unwanted expansion while maintaining flexibility.
+
+**Enforcement**:
+
+-   Code review MUST verify naming convention compliance
+-   Designer files exceeding 1000px width trigger immediate investigation
+-   MCP tool `validate_ui_scaling` MUST detect architecture violations
+-   Refactoring workflow MUST include UI architecture compliance analysis
+-   Pre-refactor reports MUST document non-compliant patterns
+
+**Reference Documentation**:
+
+-   `specs/005-transaction-viewer-form/RefactorPortion/UI-Architecture-Analysis.md` - Complete pattern documentation
+-   `specs/005-transaction-viewer-form/RefactorPortion/WinForms-UI-Compliance-Checklist.md` - Compliance tracking
+
+### Documentation and Instruction File Standards
+
+**Instruction File Organization (MANDATORY)**:
+
+-   **Location**: All instruction files MUST reside in `.github/instructions/` or `.github/prompts/`
+-   **Naming**: Use kebab-case with `.instructions.md` or `.prompt.md` suffix
+-   **Subdirectories**: Group related files: `ui-compliance/`, `database/`, `testing/`, etc.
+-   **YAML Front Matter**: MCP-parseable instruction files MUST include YAML metadata:
+    ```yaml
+    ---
+    description: 'Brief description of file purpose'
+    applyTo: '**/*.cs' # Glob pattern for applicable files
+    mcpTools: [validate_ui_scaling, apply_ui_fixes] # Optional: MCP tools that use this file
+    ---
+    ```
+
+**Rationale**: Structured organization enables AI agents to locate applicable guidance efficiently. YAML front matter enables MCP tools to parse and validate compliance programmatically. Glob patterns clarify which files each instruction set governs.
+
+**Instruction File Content Requirements**:
+
+-   **Scope Declaration**: Opening section MUST define what the file governs
+-   **Required vs Optional**: Use MUST/SHOULD/MAY consistently per RFC 2119 semantics
+-   **Code Examples**: Include before/after code blocks for complex patterns
+-   **Rationale Sections**: Explain WHY rules exist, not just WHAT they are
+-   **Exception Handling**: Document approved exceptions with decision criteria
+-   **Cross-References**: Link to related instruction files and documentation
+
+**Prompt File Standards**:
+
+-   **Agent Communication Rules**: Define when to stop for user input vs continue autonomously
+-   **Tool Requirements**: List required MCP tools explicitly
+-   **Execution Flow**: Numbered steps showing prompt workflow
+-   **Validation Criteria**: Define success/failure conditions
+-   **Output Format**: Specify expected deliverables
+
+**Reference Documentation Standards**:
+
+-   **Comprehensive Docs**: Major systems MUST have dedicated reference docs (e.g., `Documentation/Theme-System-Reference.md`)
+-   **Table of Contents**: Reference docs exceeding 200 lines MUST include TOC
+-   **Section Markers**: Use HTML comments for future-proof section discovery: `<!-- {SectionName} Start -->` ... `<!-- {SectionName} End -->`
+-   **Update Timestamps**: Reference docs MUST include "Last Updated: YYYY-MM-DD" and version number
+-   **Cross-Platform Examples**: When applicable, show Windows/macOS/Linux variations
+
+**Enforcement**:
+
+-   Pull requests adding instruction files MUST include YAML front matter validation
+-   Instruction files without rationale sections trigger review comments
+-   Prompt files MUST be tested with actual agent execution before merging
+-   Reference docs MUST be validated for broken internal links
+
+**Rationale**: Instruction files are the foundation of AI-assisted development quality. Structured metadata enables tooling. Clear rationale helps future maintainers understand constraints. Tested prompts prevent agent confusion.
 
 ## Development Workflow
 
@@ -321,4 +507,4 @@ This constitution is versioned and maintained as a living document. Amendments r
 
 **Feedback Channels**: Development team retrospectives, code review observations, production incident post-mortems.
 
-**Version**: 1.0.0 | **Ratified**: 2025-10-13 | **Last Amended**: 2025-10-13
+**Version**: 1.2.0 | **Ratified**: 2025-10-13 | **Last Amended**: 2025-11-01

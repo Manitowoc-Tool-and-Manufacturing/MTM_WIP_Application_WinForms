@@ -56,6 +56,7 @@ _GATE: Must pass before Phase 0 research. Re-check after Phase 1 design._
 | **VI. Async-First UI Responsiveness**                         | ✅ PASS | quickstart.md demonstrates async/await throughout (SearchTransactionsAsync, ExportToExcelAsync). Event handlers are async void. Progress reporting integrated.                           |
 | **VII. Centralized Error Handling with Service_ErrorHandler** | ✅ PASS | quickstart.md shows Service_ErrorHandler.HandleException pattern with retry actions. Common Pitfalls section explicitly warns against MessageBox.Show().                                 |
 | **VIII. Documentation and XML Comments**                      | ✅ PASS | data-model.md includes full XML comments for all entities. quickstart.md code examples demonstrate <summary> tags. MCP validation tools include check_xml_docs.                          |
+| **IX. Theme System Integration via Core_Themes**              | ✅ PASS | All Forms/UserControls include Core_Themes.ApplyDpiScaling() and ApplyRuntimeLayoutAdjustments() in constructors. Spec references `.github/instructions/ui-compliance/theming-compliance.instructions.md` and `Documentation/Theme-System-Reference.md`. Theme tokens via Model_UserUiColors with SystemColors fallbacks. AutoScaleMode.Dpi set in all UI components. |
 
 **Overall**: ✅ **PASS** - All constitution principles satisfied after Phase 1 design.
 
@@ -86,18 +87,18 @@ specs/005-transaction-viewer-form/
 ```
 Controls/
 ├── Transactions/                    # NEW: Transaction viewer UserControls
-│   ├── TransactionSearchControl.cs        # Search filters UI (300 lines target)
+│   ├── TransactionSearchControl.cs        # Search filters UI (300 lines target) [P1]
 │   ├── TransactionSearchControl.Designer.cs
-│   ├── TransactionGridControl.cs          # DataGridView + pagination (300 lines target)
+│   ├── TransactionGridControl.cs          # DataGridView + pagination (300 lines target) [P1]
 │   ├── TransactionGridControl.Designer.cs
-│   └── TransactionDetailPanel.cs          # Side panel details (200 lines target)
+│   └── TransactionDetailPanel.cs          # Side panel details (200 lines target) [P2 - DEFERRED]
 │       └── TransactionDetailPanel.Designer.cs
 │
 Forms/
 ├── Transactions/
-│   ├── Transactions.cs                    # REFACTORED: Main form orchestration (500 lines target, down from 2136)
+│   ├── Transactions.cs                    # REFACTORED: Main form orchestration (500 lines target, down from 2136) [P1]
 │   ├── Transactions.Designer.cs
-│   └── TransactionDetailDialog.cs         # NEW: Detail dialog (modal)
+│   └── TransactionDetailDialog.cs         # NEW: Detail dialog (modal) [P2]
 │       └── TransactionDetailDialog.Designer.cs
 │
 Models/
