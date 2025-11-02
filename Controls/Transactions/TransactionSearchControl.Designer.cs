@@ -70,8 +70,8 @@ namespace MTM_WIP_Application_Winforms.Controls.Transactions
             TransactionSearchControl_TextBox_Operation = new TextBox();
             TransactionSearchControl_Panel_Buttons = new Panel();
             TransactionSearchControl_TableLayout_Buttons = new TableLayoutPanel();
-            TransactionSearchControl_Button_Search = new Button();
             TransactionSearchControl_Button_Reset = new Button();
+            TransactionSearchControl_Button_Search = new Button();
             TransactionSearchControl_TableLayout_Main.SuspendLayout();
             TransactionSearchControl_TableLayout_Filters.SuspendLayout();
             TransactionSearchControl_TableLayout_Controls.SuspendLayout();
@@ -107,33 +107,32 @@ namespace MTM_WIP_Application_Winforms.Controls.Transactions
             TransactionSearchControl_TableLayout_Main.RowCount = 2;
             TransactionSearchControl_TableLayout_Main.RowStyles.Add(new RowStyle());
             TransactionSearchControl_TableLayout_Main.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
-            TransactionSearchControl_TableLayout_Main.Size = new Size(1024, 225);
+            TransactionSearchControl_TableLayout_Main.Size = new Size(1082, 167);
             TransactionSearchControl_TableLayout_Main.TabIndex = 0;
             // 
             // TransactionSearchControl_TableLayout_Filters
             // 
             TransactionSearchControl_TableLayout_Filters.AutoSize = true;
             TransactionSearchControl_TableLayout_Filters.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            TransactionSearchControl_TableLayout_Filters.ColumnCount = 4;
+            TransactionSearchControl_TableLayout_Filters.ColumnCount = 5;
             TransactionSearchControl_TableLayout_Filters.ColumnStyles.Add(new ColumnStyle());
             TransactionSearchControl_TableLayout_Filters.ColumnStyles.Add(new ColumnStyle());
             TransactionSearchControl_TableLayout_Filters.ColumnStyles.Add(new ColumnStyle());
+            TransactionSearchControl_TableLayout_Filters.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
             TransactionSearchControl_TableLayout_Filters.ColumnStyles.Add(new ColumnStyle());
             TransactionSearchControl_TableLayout_Filters.Controls.Add(TransactionSearchControl_TableLayout_Controls, 3, 0);
             TransactionSearchControl_TableLayout_Filters.Controls.Add(TransactionSearchControl_GroupBox_Search, 0, 0);
-            TransactionSearchControl_TableLayout_Filters.Controls.Add(TransactionSearchControl_Panel_Buttons, 0, 2);
+            TransactionSearchControl_TableLayout_Filters.Controls.Add(TransactionSearchControl_Panel_Buttons, 4, 0);
             TransactionSearchControl_TableLayout_Filters.Dock = DockStyle.Fill;
             TransactionSearchControl_TableLayout_Filters.Location = new Point(0, 0);
             TransactionSearchControl_TableLayout_Filters.Margin = new Padding(0);
             TransactionSearchControl_TableLayout_Filters.Name = "TransactionSearchControl_TableLayout_Filters";
             TransactionSearchControl_TableLayout_Filters.Padding = new Padding(2);
-            TransactionSearchControl_TableLayout_Filters.RowCount = 4;
+            TransactionSearchControl_TableLayout_Filters.RowCount = 3;
             TransactionSearchControl_TableLayout_Filters.RowStyles.Add(new RowStyle());
             TransactionSearchControl_TableLayout_Filters.RowStyles.Add(new RowStyle());
             TransactionSearchControl_TableLayout_Filters.RowStyles.Add(new RowStyle());
-            TransactionSearchControl_TableLayout_Filters.RowStyles.Add(new RowStyle());
-            TransactionSearchControl_TableLayout_Filters.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
-            TransactionSearchControl_TableLayout_Filters.Size = new Size(1024, 225);
+            TransactionSearchControl_TableLayout_Filters.Size = new Size(1082, 167);
             TransactionSearchControl_TableLayout_Filters.TabIndex = 1;
             // 
             // TransactionSearchControl_TableLayout_Controls
@@ -251,9 +250,9 @@ namespace MTM_WIP_Application_Winforms.Controls.Transactions
             TransactionSearchControl_TableLayout_DateTimePicker.AutoSizeMode = AutoSizeMode.GrowAndShrink;
             TransactionSearchControl_TableLayout_DateTimePicker.ColumnCount = 4;
             TransactionSearchControl_TableLayout_DateTimePicker.ColumnStyles.Add(new ColumnStyle());
+            TransactionSearchControl_TableLayout_DateTimePicker.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
             TransactionSearchControl_TableLayout_DateTimePicker.ColumnStyles.Add(new ColumnStyle());
-            TransactionSearchControl_TableLayout_DateTimePicker.ColumnStyles.Add(new ColumnStyle());
-            TransactionSearchControl_TableLayout_DateTimePicker.ColumnStyles.Add(new ColumnStyle());
+            TransactionSearchControl_TableLayout_DateTimePicker.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
             TransactionSearchControl_TableLayout_DateTimePicker.Controls.Add(TransactionSearchControl_DateTimePicker_DateFrom, 1, 0);
             TransactionSearchControl_TableLayout_DateTimePicker.Controls.Add(TransactionSearchControl_DateTimePicker_DateTo, 3, 0);
             TransactionSearchControl_TableLayout_DateTimePicker.Controls.Add(TransactionSearchControl_Label_DateFrom, 0, 0);
@@ -271,7 +270,6 @@ namespace MTM_WIP_Application_Winforms.Controls.Transactions
             TransactionSearchControl_DateTimePicker_DateFrom.Dock = DockStyle.Fill;
             TransactionSearchControl_DateTimePicker_DateFrom.Format = DateTimePickerFormat.Short;
             TransactionSearchControl_DateTimePicker_DateFrom.Location = new Point(47, 3);
-            TransactionSearchControl_DateTimePicker_DateFrom.MaximumSize = new Size(175, 23);
             TransactionSearchControl_DateTimePicker_DateFrom.MinimumSize = new Size(175, 23);
             TransactionSearchControl_DateTimePicker_DateFrom.Name = "TransactionSearchControl_DateTimePicker_DateFrom";
             TransactionSearchControl_DateTimePicker_DateFrom.Size = new Size(175, 23);
@@ -282,7 +280,6 @@ namespace MTM_WIP_Application_Winforms.Controls.Transactions
             TransactionSearchControl_DateTimePicker_DateTo.Dock = DockStyle.Fill;
             TransactionSearchControl_DateTimePicker_DateTo.Format = DateTimePickerFormat.Short;
             TransactionSearchControl_DateTimePicker_DateTo.Location = new Point(257, 3);
-            TransactionSearchControl_DateTimePicker_DateTo.MaximumSize = new Size(175, 23);
             TransactionSearchControl_DateTimePicker_DateTo.MinimumSize = new Size(175, 23);
             TransactionSearchControl_DateTimePicker_DateTo.Name = "TransactionSearchControl_DateTimePicker_DateTo";
             TransactionSearchControl_DateTimePicker_DateTo.Size = new Size(175, 23);
@@ -687,65 +684,66 @@ namespace MTM_WIP_Application_Winforms.Controls.Transactions
             // 
             TransactionSearchControl_Panel_Buttons.AutoSize = true;
             TransactionSearchControl_Panel_Buttons.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            TransactionSearchControl_TableLayout_Filters.SetColumnSpan(TransactionSearchControl_Panel_Buttons, 4);
             TransactionSearchControl_Panel_Buttons.Controls.Add(TransactionSearchControl_TableLayout_Buttons);
             TransactionSearchControl_Panel_Buttons.Dock = DockStyle.Fill;
-            TransactionSearchControl_Panel_Buttons.Location = new Point(5, 168);
+            TransactionSearchControl_Panel_Buttons.Location = new Point(1025, 5);
             TransactionSearchControl_Panel_Buttons.Name = "TransactionSearchControl_Panel_Buttons";
-            TransactionSearchControl_Panel_Buttons.Size = new Size(1014, 52);
+            TransactionSearchControl_Panel_Buttons.Size = new Size(52, 157);
             TransactionSearchControl_Panel_Buttons.TabIndex = 20;
             // 
             // TransactionSearchControl_TableLayout_Buttons
             // 
             TransactionSearchControl_TableLayout_Buttons.AutoSize = true;
             TransactionSearchControl_TableLayout_Buttons.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            TransactionSearchControl_TableLayout_Buttons.ColumnCount = 3;
+            TransactionSearchControl_TableLayout_Buttons.ColumnCount = 1;
             TransactionSearchControl_TableLayout_Buttons.ColumnStyles.Add(new ColumnStyle());
-            TransactionSearchControl_TableLayout_Buttons.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
-            TransactionSearchControl_TableLayout_Buttons.ColumnStyles.Add(new ColumnStyle());
-            TransactionSearchControl_TableLayout_Buttons.Controls.Add(TransactionSearchControl_Button_Search, 0, 0);
-            TransactionSearchControl_TableLayout_Buttons.Controls.Add(TransactionSearchControl_Button_Reset, 2, 0);
+            TransactionSearchControl_TableLayout_Buttons.Controls.Add(TransactionSearchControl_Button_Reset, 0, 3);
+            TransactionSearchControl_TableLayout_Buttons.Controls.Add(TransactionSearchControl_Button_Search, 0, 1);
             TransactionSearchControl_TableLayout_Buttons.Dock = DockStyle.Fill;
             TransactionSearchControl_TableLayout_Buttons.Location = new Point(0, 0);
             TransactionSearchControl_TableLayout_Buttons.Name = "TransactionSearchControl_TableLayout_Buttons";
             TransactionSearchControl_TableLayout_Buttons.Padding = new Padding(3);
-            TransactionSearchControl_TableLayout_Buttons.RowCount = 1;
+            TransactionSearchControl_TableLayout_Buttons.RowCount = 5;
+            TransactionSearchControl_TableLayout_Buttons.RowStyles.Add(new RowStyle(SizeType.Percent, 25F));
             TransactionSearchControl_TableLayout_Buttons.RowStyles.Add(new RowStyle());
-            TransactionSearchControl_TableLayout_Buttons.Size = new Size(1014, 52);
+            TransactionSearchControl_TableLayout_Buttons.RowStyles.Add(new RowStyle(SizeType.Percent, 50F));
+            TransactionSearchControl_TableLayout_Buttons.RowStyles.Add(new RowStyle());
+            TransactionSearchControl_TableLayout_Buttons.RowStyles.Add(new RowStyle(SizeType.Percent, 25F));
+            TransactionSearchControl_TableLayout_Buttons.Size = new Size(52, 157);
             TransactionSearchControl_TableLayout_Buttons.TabIndex = 0;
-            // 
-            // TransactionSearchControl_Button_Search
-            // 
-            TransactionSearchControl_Button_Search.AutoSize = true;
-            TransactionSearchControl_Button_Search.BackColor = Color.FromArgb(59, 130, 246);
-            TransactionSearchControl_Button_Search.Dock = DockStyle.Bottom;
-            TransactionSearchControl_Button_Search.FlatStyle = FlatStyle.Flat;
-            TransactionSearchControl_Button_Search.Font = new Font("Segoe UI", 10F, FontStyle.Bold);
-            TransactionSearchControl_Button_Search.ForeColor = Color.White;
-            TransactionSearchControl_Button_Search.Location = new Point(6, 6);
-            TransactionSearchControl_Button_Search.MaximumSize = new Size(175, 40);
-            TransactionSearchControl_Button_Search.MinimumSize = new Size(175, 40);
-            TransactionSearchControl_Button_Search.Name = "TransactionSearchControl_Button_Search";
-            TransactionSearchControl_Button_Search.Size = new Size(175, 40);
-            TransactionSearchControl_Button_Search.TabIndex = 10;
-            TransactionSearchControl_Button_Search.Text = "🔎 Search (F5)";
-            TransactionSearchControl_Button_Search.UseVisualStyleBackColor = false;
             // 
             // TransactionSearchControl_Button_Reset
             // 
             TransactionSearchControl_Button_Reset.AutoSize = true;
+            TransactionSearchControl_Button_Reset.AutoSizeMode = AutoSizeMode.GrowAndShrink;
             TransactionSearchControl_Button_Reset.BackColor = Color.FromArgb(226, 232, 240);
-            TransactionSearchControl_Button_Reset.Dock = DockStyle.Bottom;
             TransactionSearchControl_Button_Reset.FlatStyle = FlatStyle.Flat;
             TransactionSearchControl_Button_Reset.Font = new Font("Segoe UI", 10F, FontStyle.Bold);
-            TransactionSearchControl_Button_Reset.Location = new Point(833, 6);
-            TransactionSearchControl_Button_Reset.MaximumSize = new Size(175, 40);
-            TransactionSearchControl_Button_Reset.MinimumSize = new Size(175, 40);
+            TransactionSearchControl_Button_Reset.Location = new Point(6, 95);
+            TransactionSearchControl_Button_Reset.MaximumSize = new Size(40, 40);
+            TransactionSearchControl_Button_Reset.MinimumSize = new Size(40, 40);
             TransactionSearchControl_Button_Reset.Name = "TransactionSearchControl_Button_Reset";
-            TransactionSearchControl_Button_Reset.Size = new Size(175, 40);
+            TransactionSearchControl_Button_Reset.Size = new Size(40, 40);
             TransactionSearchControl_Button_Reset.TabIndex = 15;
-            TransactionSearchControl_Button_Reset.Text = "🔄 Reset (Ctrl+R)";
+            TransactionSearchControl_Button_Reset.Text = "🔄";
             TransactionSearchControl_Button_Reset.UseVisualStyleBackColor = false;
+            // 
+            // TransactionSearchControl_Button_Search
+            // 
+            TransactionSearchControl_Button_Search.AutoSize = true;
+            TransactionSearchControl_Button_Search.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            TransactionSearchControl_Button_Search.BackColor = Color.FromArgb(59, 130, 246);
+            TransactionSearchControl_Button_Search.FlatStyle = FlatStyle.Flat;
+            TransactionSearchControl_Button_Search.Font = new Font("Segoe UI", 10F, FontStyle.Bold);
+            TransactionSearchControl_Button_Search.ForeColor = Color.White;
+            TransactionSearchControl_Button_Search.Location = new Point(6, 20);
+            TransactionSearchControl_Button_Search.MaximumSize = new Size(40, 40);
+            TransactionSearchControl_Button_Search.MinimumSize = new Size(40, 40);
+            TransactionSearchControl_Button_Search.Name = "TransactionSearchControl_Button_Search";
+            TransactionSearchControl_Button_Search.Size = new Size(40, 40);
+            TransactionSearchControl_Button_Search.TabIndex = 10;
+            TransactionSearchControl_Button_Search.Text = "🔎";
+            TransactionSearchControl_Button_Search.UseVisualStyleBackColor = false;
             // 
             // TransactionSearchControl
             // 
@@ -756,7 +754,7 @@ namespace MTM_WIP_Application_Winforms.Controls.Transactions
             Controls.Add(TransactionSearchControl_TableLayout_Main);
             Margin = new Padding(0);
             Name = "TransactionSearchControl";
-            Size = new Size(1024, 225);
+            Size = new Size(1082, 167);
             TransactionSearchControl_TableLayout_Main.ResumeLayout(false);
             TransactionSearchControl_TableLayout_Main.PerformLayout();
             TransactionSearchControl_TableLayout_Filters.ResumeLayout(false);

@@ -398,6 +398,125 @@ internal class TransactionAnalytics
 
 ---
 
+### 6. TransactionLifecycleNode (NEW)
+
+**Location**: `Models/TransactionLifecycleNode.cs`  
+**Purpose**: Represents a node in the transaction lifecycle tree with split tracking  
+**Used By**: TransactionLifecycleForm (P1 feature)
+
+```csharp
+/// <summary>
+/// Represents a node in the transaction lifecycle tree, tracking batch splits and movement.
+/// </summary>
+internal class TransactionLifecycleNode
+{
+    /// <summary>
+    /// Gets or sets the transaction associated with this node.
+    /// </summary>
+    public Model_Transactions Transaction { get; set; } = null!;
+
+    /// <summary>
+    /// Gets or sets the parent node (null for root IN transaction).
+    /// </summary>
+    public TransactionLifecycleNode? Parent { get; set; }
+
+    /// <summary>
+    /// Gets or sets the child nodes representing splits or continuations.
+    /// </summary>
+    public List<TransactionLifecycleNode> Children { get; set; } = new();
+
+    /// <summary>
+    /// Gets whether this node represents a split operation.
+    /// </summary>
+    public bool IsSplit { get; set; }
+
+    /// <summary>
+    /// Gets or sets the quantity remaining at source location after this transaction.
+    /// Used for split detection.
+    /// </summary>
+    public int RemainingQuantity { get; set; }
+
+    /// <summary>
+    /// Gets the display text for the tree node (Type - Location).
+    /// </summary>
+    public string DisplayText => 
+        Transaction.ToLocation != null 
+            ? $"{Transaction.TransactionType} - {Transaction.FromLocation} → {Transaction.ToLocation}"
+            : $"{Transaction.TransactionType} - {Transaction.FromLocation ?? "—"}";
+
+    /// <summary>
+    /// Gets the icon identifier for visual representation.
+    /// </summary>
+    public string Icon => Transaction.TransactionType switch
+    {
+        TransactionType.IN => "📥",       // Green in UI
+        TransactionType.OUT => "📤",      // Red in UI
+        TransactionType.TRANSFER => "🔄", // Blue in UI
+        _ => "📦"                          // Orange for split indicator
+    };
+}
+```
+
+**Tree Building Algorithm**:
+```csharp
+// Pseudo-code for building lifecycle tree from chronological transaction list
+var root = CreateRootNode(transactions[0]); // First IN transaction
+var locationInventory = new Dictionary<string, int>(); // Track qty at each location
+
+foreach (var transaction in transactions.Skip(1))
+{
+    var sourceQty = locationInventory[transaction.FromLocation];
+    
+    if (transaction.TransactionType == TransactionType.TRANSFER)
+    {
+        if (transaction.Quantity < sourceQty)
+        {
+            // Split detected: partial transfer
+            var moveNode = CreateNode(transaction);
+            moveNode.IsSplit = true;
+            
+            // Create child branches for moved and remaining quantities
+            var movedBranch = CreateNode(transaction) { RemainingQuantity = transaction.Quantity };
+            var remainingBranch = CreateNode(transaction) { RemainingQuantity = sourceQty - transaction.Quantity };
+            
+            moveNode.Children.Add(movedBranch);
+            moveNode.Children.Add(remainingBranch);
+            
+            // Update inventory tracking
+            locationInventory[transaction.FromLocation] -= transaction.Quantity;
+            locationInventory[transaction.ToLocation] = transaction.Quantity;
+        }
+        else
+        {
+            // Full transfer: no split
+            var node = CreateNode(transaction);
+            locationInventory[transaction.FromLocation] = 0;
+            locationInventory[transaction.ToLocation] = transaction.Quantity;
+        }
+    }
+}
+```
+
+**Split Detection Rules**:
+- **Split occurs when**: `TRANSFER.Quantity < SourceLocationInventory`
+- **Example**: 500 units at X-00, transfer 250 → creates 2 branches (250 @ X-04, 250 @ X-00)
+- **No split when**: Full quantity moved (TRANSFER.Quantity == SourceLocationInventory)
+- **OUT transactions**: Always terminal nodes (remove from inventory)
+
+**Real-World Example** (Batch 0000021324):
+```
+📦 Batch 0000021324 (500 units)
+├─ 📥 IN - X-00 (ID: 40361, 500 units) [Root]
+├─ 🔄 TRANSFER - X-00 → X-04 (ID: 40362, 250 units) [Split]
+│  ├─ 📦 250 units moved to X-04
+│  │  └─ 🔄 TRANSFER - X-04 → X-03 (ID: 40363, 100 units) [Split]
+│  │     ├─ 📦 100 units moved to X-03
+│  │     └─ 📦 150 units remain at X-04
+│  └─ 📦 250 units remain at X-00
+```
+
+---
+
 ## Data Flow Diagrams
 
 ### Flow 1: User Initiates Search
@@ -541,6 +660,103 @@ internal class TransactionAnalytics
 └───────────────────────────┘
 ```
 
+### Flow 4: User Views Transaction Lifecycle
+
+```
+┌─────────────┐
+│   User      │
+│ (Selects    │
+│  Trans Row) │
+└──────┬──────┘
+       │ clicks row in DataGridView
+       ▼
+┌───────────────────────────┐
+│ TransactionGridControl    │
+│ - Get selected transaction│
+│ - Raise RowSelected event │
+└──────────┬────────────────┘
+           │ raises RowSelected(transaction)
+           ▼
+┌───────────────────────────┐
+│  Transactions (Form)      │
+│ - Update detail panel     │
+└──────────┬────────────────┘
+           │ sets TransactionDetailPanel.Transaction
+           ▼
+┌───────────────────────────┐
+│ TransactionDetailPanel    │
+│ - Load transaction fields │
+│ - Enable "Lifecycle" btn  │
+└──────────┬────────────────┘
+           │ user clicks "Transaction Life Cycle" button
+           ▼
+┌───────────────────────────┐
+│ TransactionDetailPanel    │
+│ - Validate BatchNumber    │
+│ - Create lifecycle form   │
+└──────────┬────────────────┘
+           │ ShowDialog(TransactionLifecycleForm)
+           ▼
+┌──────────────────────────────────┐
+│ TransactionLifecycleForm         │
+│ - Call GetBatchLifecycleAsync()  │
+└──────────┬───────────────────────┘
+           │ calls Dao_Transactions.GetBatchLifecycleAsync(batchNumber)
+           ▼
+┌───────────────────────────┐
+│ Dao_Transactions          │
+│ - Execute SP:             │
+│   inv_transactions_       │
+│   GetBatchLifecycle       │
+└──────────┬────────────────┘
+           │ returns DaoResult<List<Model_Transactions>>
+           ▼
+┌──────────────────────────────────┐
+│ TransactionLifecycleForm         │
+│ - Build tree structure:          │
+│   • Detect splits by qty compare │
+│   • Create parent/child nodes    │
+│   • Assign icons (IN/OUT/XFER)   │
+│ - Bind to TreeView               │
+│ - User selects node → update     │
+│   detail panel on right          │
+└──────────────────────────────────┘
+```
+
+**Split Detection Logic** (Client-Side):
+```csharp
+var inventory = new Dictionary<string, int>(); // Track qty per location
+var root = BuildNode(transactions[0]); // Root = first IN
+
+foreach (var txn in transactions.Skip(1))
+{
+    var sourceQty = inventory.GetValueOrDefault(txn.FromLocation, 0);
+    
+    if (txn.TransactionType == TransactionType.TRANSFER && txn.Quantity < sourceQty)
+    {
+        // SPLIT: Create 2 child branches
+        var moveNode = new TransactionLifecycleNode { Transaction = txn, IsSplit = true };
+        moveNode.Children.Add(new TransactionLifecycleNode { 
+            RemainingQuantity = txn.Quantity, 
+            DisplayText = $"{txn.Quantity} units → {txn.ToLocation}" 
+        });
+        moveNode.Children.Add(new TransactionLifecycleNode { 
+            RemainingQuantity = sourceQty - txn.Quantity,
+            DisplayText = $"{sourceQty - txn.Quantity} units remain @ {txn.FromLocation}"
+        });
+        
+        inventory[txn.FromLocation] -= txn.Quantity;
+        inventory[txn.ToLocation] = txn.Quantity;
+    }
+    else
+    {
+        // NO SPLIT: Linear continuation
+        inventory[txn.FromLocation] = 0;
+        if (txn.ToLocation != null) inventory[txn.ToLocation] = txn.Quantity;
+    }
+}
+```
+
 ---
 
 ## Database Schema Reference
@@ -566,6 +782,7 @@ internal class TransactionAnalytics
 - INDEX `idx_partid` (`PartID`)
 - INDEX `idx_user` (`User`)
 - INDEX `idx_receivedate` (`ReceiveDate`)
+- INDEX `idx_batchnumber` (`BatchNumber`) ← NEW for lifecycle queries
 
 **Current Record Count**: 24,122 transactions (as of 2025-10-24)
 
@@ -612,6 +829,66 @@ internal class TransactionAnalytics
 - OUT `p_ErrorMsg` VARCHAR(500)
 
 **Returns**: Single row with analytics columns (TotalTransactions, TotalIN, TotalOUT, TotalTRANSFER)
+
+#### inv_transactions_GetBatchLifecycle (NEW - P1)
+
+**Purpose**: Retrieve all transactions for a specific batch number in chronological order for lifecycle tree visualization
+
+**Parameters**:
+- IN `p_BatchNumber` VARCHAR(300) - The batch number to query
+- OUT `p_Status` INT - Status code (0=Success, 1=Success no data, -1=Error)
+- OUT `p_ErrorMsg` VARCHAR(500) - Error message or empty string
+
+**Returns**: DataTable with columns matching inv_transaction table:
+- `ID` INT
+- `TransactionType` VARCHAR (IN/OUT/TRANSFER)
+- `PartID` VARCHAR
+- `BatchNumber` VARCHAR
+- `Quantity` INT
+- `FromLocation` VARCHAR
+- `ToLocation` VARCHAR (nullable)
+- `Operation` VARCHAR
+- `User` VARCHAR
+- `ItemType` VARCHAR
+- `Notes` TEXT (nullable)
+- `ReceiveDate` DATETIME
+
+**Query Logic**:
+```sql
+SELECT 
+    ID,
+    TransactionType,
+    PartID,
+    BatchNumber,
+    Quantity,
+    FromLocation,
+    ToLocation,
+    Operation,
+    User,
+    ItemType,
+    Notes,
+    ReceiveDate
+FROM inv_transaction
+WHERE BatchNumber = p_BatchNumber
+ORDER BY ReceiveDate ASC, ID ASC;  -- Chronological order critical for tree building
+```
+
+**Usage**:
+- Called by `Dao_Transactions.GetBatchLifecycleAsync(string batchNumber)`
+- Results processed client-side to build TransactionLifecycleNode tree
+- Split detection happens in C# code (compare quantities vs location inventory)
+
+**Performance**:
+- Index on `BatchNumber` column ensures fast lookup
+- Expected result size: 1-100 transactions per batch (most batches have 2-10 transactions)
+- Query execution time: < 50ms for typical batches
+
+**Example Result Set** (Batch 0000021324):
+| ID    | TransactionType | PartID       | Quantity | FromLocation | ToLocation | ReceiveDate         |
+|-------|-----------------|--------------|----------|--------------|------------|---------------------|
+| 40361 | IN              | 21-28841-006 | 500      | X-00         | NULL       | 2025-11-01 20:47:31 |
+| 40362 | TRANSFER        | 21-28841-006 | 250      | X-00         | X-04       | 2025-11-01 20:47:48 |
+| 40363 | TRANSFER        | 21-28841-006 | 100      | X-04         | X-03       | 2025-11-01 20:48:37 |
 
 ---
 
@@ -695,21 +972,40 @@ internal class TransactionAnalytics
 ## Future Enhancements
 
 ### Priority 3 Features (Post-MVP)
-- **Analytics dashboard**: Display TransactionAnalytics in tabbed interface
-- **Batch history view**: Filter by BatchNumber and show full lifecycle
+- **Analytics dashboard**: Display TransactionAnalytics in tabbed interface  
 - **Advanced filters**: Combine multiple criteria with OR logic
 - **Export all pages**: Option to export entire result set (not just current page)
 - **Quick filters**: Saved filter presets (e.g., "My IN transactions this week")
 
+### Priority 1 Features (PROMOTED FROM P3)
+- ✅ **Transaction Lifecycle Viewer**: TreeView modal dialog showing batch history with split visualization (P1 implementation)
+  - Uses `TransactionLifecycleNode` model for tree structure
+  - Client-side split detection by comparing transfer quantities vs location inventory
+  - New stored procedure: `inv_transactions_GetBatchLifecycle`
+  - Modal dialog with TreeView (left) + detail panel (right)
+
 ### Data Model Extensions
-- **TransactionBatch** (new entity): Group related transactions by BatchNumber
-- **TransactionAudit** (new entity): Track who viewed transaction details (compliance requirement)
-- **TransactionNote** (new entity): Separate notes table for long-form annotations
+- **TransactionBatch** (potential future): Group related transactions by BatchNumber (metadata table)
+- **TransactionAudit** (compliance): Track who viewed transaction details
+- **TransactionNote** (future): Separate notes table for long-form annotations
 
 ---
 
 ## Conclusion
 
-The data model reuses existing `Model_Transactions` and introduces minimal new models (TransactionSearchCriteria, TransactionSearchResult, TransactionAnalytics) to support the SOLID architecture. All entities align with constitution principles, existing stored procedures remain unchanged, and validation rules ensure data integrity at every layer.
+The data model reuses existing `Model_Transactions` and introduces new models to support the modular UserControl architecture:
 
-**Next Step**: Generate quickstart.md (developer setup and implementation guide).
+**P1 Models** (Implemented):
+- `TransactionSearchCriteria` - Search filter inputs
+- `TransactionSearchResult` - Paginated search results wrapper
+- `TransactionLifecycleNode` - Tree structure for batch lifecycle visualization (NEW)
+
+**P3 Models** (Future):
+- `TransactionAnalytics` - Summary statistics for analytics dashboard
+
+**New Stored Procedure** (P1):
+- `inv_transactions_GetBatchLifecycle` - Retrieve all transactions for a batch in chronological order
+
+All entities align with Constitution principles (Principle IX theme integration, SOLID architecture), leverage existing database schema, and ensure data integrity through comprehensive validation rules. The lifecycle viewer implements client-side tree building to avoid straining the MySQL 5.7 server with complex recursive queries.
+
+**Next Step**: Update plan.md with revised component list and file structure.

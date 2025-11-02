@@ -330,9 +330,13 @@ namespace MTM_WIP_Application_Winforms.Forms.Settings
 
         private void ApplyPrivileges()
         {
+            bool isDeveloper = Model_AppVariables.UserTypeDeveloper;
             bool isAdmin = Model_AppVariables.UserTypeAdmin;
             bool isNormal = Model_AppVariables.UserTypeNormal;
             bool isReadOnly = Model_AppVariables.UserTypeReadOnly;
+
+            // Developers have all Admin privileges plus developer tools
+            bool hasAdminAccess = isDeveloper || isAdmin;
 
             // Rebuild tree to ensure all nodes are present before hiding
             InitializeCategoryTreeView();
@@ -372,9 +376,9 @@ namespace MTM_WIP_Application_Winforms.Forms.Settings
                 }
             }
 
-            if (isAdmin)
+            if (hasAdminAccess)
             {
-                // All nodes shown by default
+                // All nodes shown for Admin and Developer
                 return;
             }
 

@@ -152,17 +152,21 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
 
         private void ApplyPrivileges()
         {
+            bool isDeveloper = Model_AppVariables.UserTypeDeveloper;
             bool isAdmin = Model_AppVariables.UserTypeAdmin;
             bool isNormal = Model_AppVariables.UserTypeNormal;
             bool isReadOnly = Model_AppVariables.UserTypeReadOnly;
 
+            // Developers have all Admin privileges
+            bool hasAdminAccess = isDeveloper || isAdmin;
+
             // Buttons
-            Control_RemoveTab_Button_AdvancedItemRemoval.Visible = isAdmin || isNormal;
+            Control_RemoveTab_Button_AdvancedItemRemoval.Visible = hasAdminAccess || isNormal;
             Control_RemoveTab_Button_Reset.Visible = true;
-            Control_RemoveTab_Button_Delete.Visible = isAdmin || isNormal;
+            Control_RemoveTab_Button_Delete.Visible = hasAdminAccess || isNormal;
             Control_RemoveTab_Button_Search.Visible = true;
             Control_RemoveTab_Button_Toggle_RightPanel.Visible = true;
-            Control_RemoveTab_Button_Undo.Visible = isAdmin || isNormal;
+            Control_RemoveTab_Button_Undo.Visible = hasAdminAccess || isNormal;
 
 
             // For Read-Only, hide buttons and disable ComboBoxes

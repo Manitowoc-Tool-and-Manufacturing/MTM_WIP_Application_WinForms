@@ -87,27 +87,30 @@ specs/005-transaction-viewer-form/
 ```
 Controls/
 ├── Transactions/                    # NEW: Transaction viewer UserControls
-│   ├── TransactionSearchControl.cs        # Search filters UI (300 lines target) [P1]
+│   ├── TransactionSearchControl.cs        # Search filters UI (300 lines target) [P1] ✅
 │   ├── TransactionSearchControl.Designer.cs
-│   ├── TransactionGridControl.cs          # DataGridView + pagination (300 lines target) [P1]
+│   ├── TransactionGridControl.cs          # DataGridView + pagination (300 lines target) [P1] ✅
 │   ├── TransactionGridControl.Designer.cs
-│   └── TransactionDetailPanel.cs          # Side panel details (200 lines target) [P2 - DEFERRED]
+│   └── TransactionDetailPanel.cs          # Detail panel (embedded in grid) (200 lines target) [P1] ✅
 │       └── TransactionDetailPanel.Designer.cs
 │
 Forms/
 ├── Transactions/
-│   ├── Transactions.cs                    # REFACTORED: Main form orchestration (500 lines target, down from 2136) [P1]
+│   ├── Transactions.cs                    # REFACTORED: Main form orchestration (500 lines target, down from 2136) [P1] ✅
 │   ├── Transactions.Designer.cs
-│   └── TransactionDetailDialog.cs         # NEW: Detail dialog (modal) [P2]
-│       └── TransactionDetailDialog.Designer.cs
+│   └── TransactionLifecycleForm.cs       # NEW: TreeView lifecycle modal dialog (400 lines target) [P1]
+│       └── TransactionLifecycleForm.Designer.cs
+│       └── TransactionDetailPanel.Designer.cs
 │
 Models/
-├── TransactionSearchCriteria.cs     # NEW: Search filter encapsulation
-├── TransactionViewModel.cs          # NEW: Business logic and state management (400 lines target)
+├── TransactionSearchCriteria.cs     # NEW: Search filter encapsulation [P1] ✅
+├── TransactionSearchResult.cs       # NEW: Paginated results wrapper [P1] ✅
+├── TransactionLifecycleNode.cs      # NEW: Tree node for lifecycle visualization [P1]
+├── TransactionViewModel.cs          # NEW: Business logic and state management (400 lines target) [P1] ✅
 └── Model_Transactions.cs            # EXISTING: Transaction data model (no changes)
 
 Data/
-├── Dao_Transactions.cs              # REFACTORED: Add SearchAsync, GetAnalyticsAsync methods
+├── Dao_Transactions.cs              # REFACTORED: Add SearchAsync, GetBatchLifecycleAsync methods [P1]
 └── [other DAOs]                     # No changes
 
 Database/
@@ -115,14 +118,17 @@ Database/
 │   └── ReadyForVerification/
 │       ├── inv_transactions_Search.sql         # EXISTING: Main search procedure
 │       ├── inv_transactions_SmartSearch.sql    # EXISTING: Dynamic WHERE clause search
-│       └── inv_transactions_GetAnalytics.sql   # EXISTING: Summary statistics
+│       ├── inv_transactions_GetAnalytics.sql   # EXISTING: Summary statistics [P3]
+│       └── inv_transactions_GetBatchLifecycle.sql  # NEW: Batch lifecycle chronological query [P1]
 │
 Tests/
 └── Integration/
-    └── Dao_Transactions_Tests.cs    # NEW: Integration tests for DAO methods
+    └── Dao_Transactions_Tests.cs    # NEW: Integration tests for DAO methods [P2]
 ```
 
-**Structure Decision**: Single project WinForms application following existing MTM architecture. New `Controls/Transactions/` directory separates transaction-specific UserControls from shared controls. ViewModel pattern introduced for testability while maintaining WinForms event-driven model. Existing stored procedures reused without modification (database schema unchanged).
+**Structure Decision**: Single project WinForms application following existing MTM architecture. New `Controls/Transactions/` directory separates transaction-specific UserControls from shared controls. ViewModel pattern introduced for testability while maintaining WinForms event-driven model. Existing stored procedures reused without modification (except new GetBatchLifecycle for P1 lifecycle viewer). Transaction Lifecycle feature promoted to P1 (previously P3 "Batch History View").
+
+**File Count**: 6 new files (3 UserControls with .Designer.cs, 1 Form with .Designer.cs, 1 ViewModel, 3 Models) + 1 new stored procedure + 1 refactored DAO
 
 ## Complexity Tracking
 

@@ -142,7 +142,7 @@ namespace MTM_WIP_Application_Winforms.Forms.MainForm
             Service_DebugTracer.TraceMethodEntry(new Dictionary<string, object>
             {
                 ["p_User"] = Model_AppVariables.User,
-                ["UserType"] = Model_AppVariables.UserTypeAdmin ? "Admin" : Model_AppVariables.UserTypeNormal ? "Normal" : "ReadOnly"
+                ["UserType"] = Model_AppVariables.UserTypeDeveloper ? "Developer" : Model_AppVariables.UserTypeAdmin ? "Admin" : Model_AppVariables.UserTypeNormal ? "Normal" : "ReadOnly"
             }, nameof(InitializeFormTitle), nameof(MainForm));
 
             try
@@ -177,13 +177,16 @@ namespace MTM_WIP_Application_Winforms.Forms.MainForm
         {
             Service_DebugTracer.TraceMethodEntry(new Dictionary<string, object>
             {
+                ["UserTypeDeveloper"] = Model_AppVariables.UserTypeDeveloper,
                 ["UserTypeAdmin"] = Model_AppVariables.UserTypeAdmin,
                 ["UserTypeNormal"] = Model_AppVariables.UserTypeNormal,
                 ["UserTypeReadOnly"] = Model_AppVariables.UserTypeReadOnly
             }, nameof(GetUserPrivilegeDisplayText), nameof(MainForm));
 
             string privilege;
-            if (Model_AppVariables.UserTypeAdmin)
+            if (Model_AppVariables.UserTypeDeveloper)
+                privilege = "Developer";
+            else if (Model_AppVariables.UserTypeAdmin)
                 privilege = "Administrator";
             else if (Model_AppVariables.UserTypeNormal)
                 privilege = "Normal User";
@@ -194,6 +197,7 @@ namespace MTM_WIP_Application_Winforms.Forms.MainForm
 
             Service_DebugTracer.TraceBusinessLogic("USER_PRIVILEGE_DETERMINATION",
                 inputData: new {
+                    Developer = Model_AppVariables.UserTypeDeveloper,
                     Admin = Model_AppVariables.UserTypeAdmin,
                     Normal = Model_AppVariables.UserTypeNormal,
                     ReadOnly = Model_AppVariables.UserTypeReadOnly

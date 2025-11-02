@@ -150,23 +150,27 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
 
         private void ApplyPrivileges()
         {
+            bool isDeveloper = Model_AppVariables.UserTypeDeveloper;
             bool isAdmin = Model_AppVariables.UserTypeAdmin;
             bool isNormal = Model_AppVariables.UserTypeNormal;
             bool isReadOnly = Model_AppVariables.UserTypeReadOnly;
 
-            // Admin and Normal: all controls visible/enabled
+            // Developers have all Admin privileges
+            bool hasAdminAccess = isDeveloper || isAdmin;
+
+            // Admin/Developer and Normal: all controls visible/enabled
             // Read-Only: only specific controls visible/enabled
-            Control_InventoryTab_GroupBox_Main.Visible = isAdmin || isNormal || isReadOnly;
-            Control_InventoryTab_Button_Reset.Visible = isAdmin || isNormal;
-            Control_InventoryTab_Button_Save.Visible = isAdmin || isNormal;
+            Control_InventoryTab_GroupBox_Main.Visible = hasAdminAccess || isNormal || isReadOnly;
+            Control_InventoryTab_Button_Reset.Visible = hasAdminAccess || isNormal;
+            Control_InventoryTab_Button_Save.Visible = hasAdminAccess || isNormal;
             Control_InventoryTab_Label_Version.Visible = true;
-            Control_InventoryTab_Button_AdvancedEntry.Visible = isAdmin || isNormal;
+            Control_InventoryTab_Button_AdvancedEntry.Visible = hasAdminAccess || isNormal;
             Control_InventoryTab_Label_Part.Visible = true;
             Control_InventoryTab_Label_Op.Visible = true;
             Control_InventoryTab_Label_Loc.Visible = true;
             Control_InventoryTab_Label_Qty.Visible = true;
-            Control_InventoryTab_TextBox_Quantity.Visible = isAdmin || isNormal || isReadOnly;
-            Control_InventoryTab_RichTextBox_Notes.Visible = isAdmin || isNormal || isReadOnly;
+            Control_InventoryTab_TextBox_Quantity.Visible = hasAdminAccess || isNormal || isReadOnly;
+            Control_InventoryTab_RichTextBox_Notes.Visible = hasAdminAccess || isNormal || isReadOnly;
             Control_InventoryTab_TableLayout_Main.Visible = true;
             Control_InventoryTab_TableLayout_TopGroup.Visible = true;
             Control_InventoryTab_Button_Toggle_RightPanel.Visible = isAdmin || isNormal;

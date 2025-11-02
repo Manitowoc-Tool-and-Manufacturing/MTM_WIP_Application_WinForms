@@ -33,6 +33,17 @@ BEGIN
     ELSE
         SET v_FinalWhereClause = 'WHERE 1=1';
     END IF;
+    -- First get the total count (before pagination)
+    SET @countSql = CONCAT(
+        'SELECT COUNT(*) INTO @totalCount FROM inv_transaction ',
+        v_FinalWhereClause
+    );
+    PREPARE countStmt FROM @countSql;
+    EXECUTE countStmt;
+    DEALLOCATE PREPARE countStmt;
+    SET v_Count = @totalCount;
+    
+    -- Now get the paginated results
     SET @sql = CONCAT(
         'SELECT ID, TransactionType, BatchNumber, PartID, FromLocation, ToLocation, ',
         'Operation, Quantity, Notes, User, ItemType, ReceiveDate ',
@@ -44,10 +55,10 @@ BEGIN
     PREPARE stmt FROM @sql;
     EXECUTE stmt;
     DEALLOCATE PREPARE stmt;
-    SELECT FOUND_ROWS() INTO v_Count;
+    
     IF v_Count > 0 THEN
         SET p_Status = 1;
-        SET p_ErrorMsg = NULL;
+        SET p_ErrorMsg = CONCAT('Found ', v_Count, ' transaction(s) matching criteria');
     ELSE
         SET p_Status = 0;
         SET p_ErrorMsg = 'No transactions found matching search criteria';

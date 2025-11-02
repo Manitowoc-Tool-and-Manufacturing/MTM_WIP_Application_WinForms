@@ -1,4 +1,5 @@
 using MTM_WIP_Application_Winforms.Core;
+using MTM_WIP_Application_Winforms.Logging;
 using MTM_WIP_Application_Winforms.Models;
 using MTM_WIP_Application_Winforms.Services;
 
@@ -36,11 +37,16 @@ internal partial class TransactionSearchControl : UserControl
     public TransactionSearchControl()
     {
         InitializeComponent();
+
+        LoggingUtility.Log("[TransactionSearchControl] Initializing...");
+
         Core_Themes.ApplyDpiScaling(this);
         Core_Themes.ApplyRuntimeLayoutAdjustments(this);
 
         WireUpEvents();
         InitializeDateRangeDefaults();
+
+        LoggingUtility.Log("[TransactionSearchControl] Initialization complete.");
     }
 
     #endregion
@@ -81,12 +87,37 @@ internal partial class TransactionSearchControl : UserControl
     /// <param name="parts">List of part numbers.</param>
     public void LoadParts(List<string> parts)
     {
-        TransactionSearchControl_ComboBox_PartNumber.Items.Clear();
-        TransactionSearchControl_ComboBox_PartNumber.Items.Add(""); // Add empty option for "All Parts"
-        TransactionSearchControl_ComboBox_PartNumber.Items.AddRange(parts.ToArray());
-        if (TransactionSearchControl_ComboBox_PartNumber.Items.Count > 0)
+        try
         {
-            TransactionSearchControl_ComboBox_PartNumber.SelectedIndex = 0;
+            LoggingUtility.Log($"[TransactionSearchControl] LoadParts called with {parts?.Count ?? 0} parts");
+
+            TransactionSearchControl_ComboBox_PartNumber.Items.Clear();
+            TransactionSearchControl_ComboBox_PartNumber.Items.Add(""); // Add empty option for "All Parts"
+            
+            if (parts != null && parts.Count > 0)
+            {
+                TransactionSearchControl_ComboBox_PartNumber.Items.AddRange(parts.ToArray());
+            }
+            
+            if (TransactionSearchControl_ComboBox_PartNumber.Items.Count > 0)
+            {
+                TransactionSearchControl_ComboBox_PartNumber.SelectedIndex = 0;
+            }
+            
+            LoggingUtility.Log($"[TransactionSearchControl] Parts loaded: {TransactionSearchControl_ComboBox_PartNumber.Items.Count} items");
+        }
+        catch (Exception ex)
+        {
+            LoggingUtility.Log($"[TransactionSearchControl] Exception in LoadParts: {ex.Message}");
+            LoggingUtility.LogApplicationError(ex);
+            
+            Service_ErrorHandler.HandleException(ex, ErrorSeverity.Medium,
+                contextData: new Dictionary<string, object>
+                {
+                    ["PartsCount"] = parts?.Count ?? 0,
+                    ["Method"] = "LoadParts"
+                },
+                controlName: nameof(TransactionSearchControl));
         }
     }
 
@@ -96,12 +127,37 @@ internal partial class TransactionSearchControl : UserControl
     /// <param name="users">List of usernames.</param>
     public void LoadUsers(List<string> users)
     {
-        TransactionSearchControl_ComboBox_User.Items.Clear();
-        TransactionSearchControl_ComboBox_User.Items.Add(""); // Add empty option for "All Users"
-        TransactionSearchControl_ComboBox_User.Items.AddRange(users.ToArray());
-        if (TransactionSearchControl_ComboBox_User.Items.Count > 0)
+        try
         {
-            TransactionSearchControl_ComboBox_User.SelectedIndex = 0;
+            LoggingUtility.Log($"[TransactionSearchControl] LoadUsers called with {users?.Count ?? 0} users");
+
+            TransactionSearchControl_ComboBox_User.Items.Clear();
+            TransactionSearchControl_ComboBox_User.Items.Add(""); // Add empty option for "All Users"
+            
+            if (users != null && users.Count > 0)
+            {
+                TransactionSearchControl_ComboBox_User.Items.AddRange(users.ToArray());
+            }
+            
+            if (TransactionSearchControl_ComboBox_User.Items.Count > 0)
+            {
+                TransactionSearchControl_ComboBox_User.SelectedIndex = 0;
+            }
+            
+            LoggingUtility.Log($"[TransactionSearchControl] Users loaded: {TransactionSearchControl_ComboBox_User.Items.Count} items");
+        }
+        catch (Exception ex)
+        {
+            LoggingUtility.Log($"[TransactionSearchControl] Exception in LoadUsers: {ex.Message}");
+            LoggingUtility.LogApplicationError(ex);
+            
+            Service_ErrorHandler.HandleException(ex, ErrorSeverity.Medium,
+                contextData: new Dictionary<string, object>
+                {
+                    ["UsersCount"] = users?.Count ?? 0,
+                    ["Method"] = "LoadUsers"
+                },
+                controlName: nameof(TransactionSearchControl));
         }
     }
 
@@ -111,22 +167,81 @@ internal partial class TransactionSearchControl : UserControl
     /// <param name="locations">List of location codes.</param>
     public void LoadLocations(List<string> locations)
     {
-        // From Location
-        TransactionSearchControl_ComboBox_FromLocation.Items.Clear();
-        TransactionSearchControl_ComboBox_FromLocation.Items.Add(""); // Add empty option for "All Locations"
-        TransactionSearchControl_ComboBox_FromLocation.Items.AddRange(locations.ToArray());
-        if (TransactionSearchControl_ComboBox_FromLocation.Items.Count > 0)
+        try
         {
-            TransactionSearchControl_ComboBox_FromLocation.SelectedIndex = 0;
-        }
+            LoggingUtility.Log($"[TransactionSearchControl] LoadLocations called with {locations?.Count ?? 0} locations");
 
-        // To Location
-        TransactionSearchControl_ComboBox_ToLocation.Items.Clear();
-        TransactionSearchControl_ComboBox_ToLocation.Items.Add(""); // Add empty option for "All Locations"
-        TransactionSearchControl_ComboBox_ToLocation.Items.AddRange(locations.ToArray());
-        if (TransactionSearchControl_ComboBox_ToLocation.Items.Count > 0)
+            if (locations == null || locations.Count == 0)
+            {
+                LoggingUtility.Log("[TransactionSearchControl] WARNING: Locations list is null or empty");
+                return;
+            }
+
+            // From Location
+            LoggingUtility.Log("[TransactionSearchControl] Loading FromLocation combobox...");
+            TransactionSearchControl_ComboBox_FromLocation.Items.Clear();
+            TransactionSearchControl_ComboBox_FromLocation.Items.Add(""); // Add empty option for "All Locations"
+            
+            foreach (var location in locations)
+            {
+                if (!string.IsNullOrWhiteSpace(location))
+                {
+                    TransactionSearchControl_ComboBox_FromLocation.Items.Add(location);
+                }
+            }
+            
+            if (TransactionSearchControl_ComboBox_FromLocation.Items.Count > 0)
+            {
+                TransactionSearchControl_ComboBox_FromLocation.SelectedIndex = 0;
+            }
+            LoggingUtility.Log($"[TransactionSearchControl] FromLocation loaded: {TransactionSearchControl_ComboBox_FromLocation.Items.Count} items");
+
+            // To Location
+            LoggingUtility.Log("[TransactionSearchControl] Loading ToLocation combobox...");
+            TransactionSearchControl_ComboBox_ToLocation.Items.Clear();
+            TransactionSearchControl_ComboBox_ToLocation.Items.Add(""); // Add empty option for "All Locations"
+            
+            foreach (var location in locations)
+            {
+                if (!string.IsNullOrWhiteSpace(location))
+                {
+                    TransactionSearchControl_ComboBox_ToLocation.Items.Add(location);
+                }
+            }
+            
+            if (TransactionSearchControl_ComboBox_ToLocation.Items.Count > 0)
+            {
+                TransactionSearchControl_ComboBox_ToLocation.SelectedIndex = 0;
+            }
+            LoggingUtility.Log($"[TransactionSearchControl] ToLocation loaded: {TransactionSearchControl_ComboBox_ToLocation.Items.Count} items");
+        }
+        catch (ArgumentException argEx)
         {
-            TransactionSearchControl_ComboBox_ToLocation.SelectedIndex = 0;
+            LoggingUtility.Log($"[TransactionSearchControl] ArgumentException in LoadLocations: {argEx.Message}");
+            LoggingUtility.Log($"[TransactionSearchControl] ArgumentException ParamName: {argEx.ParamName}");
+            LoggingUtility.Log($"[TransactionSearchControl] ArgumentException StackTrace: {argEx.StackTrace}");
+            LoggingUtility.LogApplicationError(argEx);
+            
+            Service_ErrorHandler.HandleException(argEx, ErrorSeverity.Medium,
+                contextData: new Dictionary<string, object>
+                {
+                    ["LocationsCount"] = locations?.Count ?? 0,
+                    ["Method"] = "LoadLocations"
+                },
+                controlName: nameof(TransactionSearchControl));
+        }
+        catch (Exception ex)
+        {
+            LoggingUtility.Log($"[TransactionSearchControl] Exception in LoadLocations: {ex.Message}");
+            LoggingUtility.LogApplicationError(ex);
+            
+            Service_ErrorHandler.HandleException(ex, ErrorSeverity.Medium,
+                contextData: new Dictionary<string, object>
+                {
+                    ["LocationsCount"] = locations?.Count ?? 0,
+                    ["Method"] = "LoadLocations"
+                },
+                controlName: nameof(TransactionSearchControl));
         }
     }
 
@@ -158,46 +273,73 @@ internal partial class TransactionSearchControl : UserControl
 
     private void BtnSearch_Click(object? sender, EventArgs e)
     {
-        var criteria = BuildCriteria();
-
-        // Validate criteria
-        if (!criteria.IsValid())
+        try
         {
-            Service_ErrorHandler.HandleValidationError(
-                "Search criteria is incomplete. Please check your inputs.",
-                "Search Validation"
-            );
-            return;
-        }
+            LoggingUtility.Log("[TransactionSearchControl] Search button clicked.");
 
-        // Validate date range
-        if (!criteria.IsDateRangeValid())
+            var criteria = BuildCriteria();
+
+            // Validate criteria
+            if (!criteria.IsValid())
+            {
+                LoggingUtility.Log("[TransactionSearchControl] Search validation failed: Incomplete criteria.");
+                Service_ErrorHandler.HandleValidationError(
+                    "Search criteria is incomplete. Please check your inputs.",
+                    "Search Validation"
+                );
+                return;
+            }
+
+            // Validate date range
+            if (!criteria.IsDateRangeValid())
+            {
+                LoggingUtility.Log("[TransactionSearchControl] Search validation failed: Invalid date range.");
+                Service_ErrorHandler.HandleValidationError(
+                    "Invalid date range. 'Date From' must be before or equal to 'Date To'.",
+                    "Date Range Validation"
+                );
+                return;
+            }
+
+            // Validate at least one transaction type is selected
+            if (string.IsNullOrWhiteSpace(criteria.TransactionType))
+            {
+                LoggingUtility.Log("[TransactionSearchControl] Search validation failed: No transaction type selected.");
+                Service_ErrorHandler.HandleValidationError(
+                    "Please select at least one transaction type (IN, OUT, or TRANSFER).",
+                    "Transaction Type Validation"
+                );
+                return;
+            }
+
+            LoggingUtility.Log($"[TransactionSearchControl] Search criteria validated. DateRange: {criteria.DateFrom:MM/dd/yy} - {criteria.DateTo:MM/dd/yy}, Types: {criteria.TransactionType}");
+
+            // Raise event with valid criteria
+            SearchRequested?.Invoke(this, criteria);
+        }
+        catch (Exception ex)
         {
-            Service_ErrorHandler.HandleValidationError(
-                "Invalid date range. 'Date From' must be before or equal to 'Date To'.",
-                "Date Range Validation"
-            );
-            return;
+            LoggingUtility.LogApplicationError(ex);
+            Service_ErrorHandler.HandleException(ex, ErrorSeverity.Medium,
+                controlName: nameof(TransactionSearchControl));
         }
-
-        // Validate at least one transaction type is selected
-        if (string.IsNullOrWhiteSpace(criteria.TransactionType))
-        {
-            Service_ErrorHandler.HandleValidationError(
-                "Please select at least one transaction type (IN, OUT, or TRANSFER).",
-                "Transaction Type Validation"
-            );
-            return;
-        }
-
-        // Raise event with valid criteria
-        SearchRequested?.Invoke(this, criteria);
     }
 
     private void BtnReset_Click(object? sender, EventArgs e)
     {
-        ClearCriteria();
-        ResetRequested?.Invoke(this, EventArgs.Empty);
+        try
+        {
+            LoggingUtility.Log("[TransactionSearchControl] Reset button clicked.");
+            ClearCriteria();
+            ResetRequested?.Invoke(this, EventArgs.Empty);
+            LoggingUtility.Log("[TransactionSearchControl] Search criteria reset successfully.");
+        }
+        catch (Exception ex)
+        {
+            LoggingUtility.LogApplicationError(ex);
+            Service_ErrorHandler.HandleException(ex, ErrorSeverity.Low,
+                controlName: nameof(TransactionSearchControl));
+        }
     }
 
     #endregion
@@ -206,42 +348,64 @@ internal partial class TransactionSearchControl : UserControl
 
     private void QuickFilterChanged(object? sender, EventArgs e)
     {
-        if (sender is RadioButton rdo && rdo.Checked)
+        try
         {
-            ApplyQuickFilter();
+            if (sender is RadioButton rdo && rdo.Checked)
+            {
+                LoggingUtility.Log($"[TransactionSearchControl] Quick filter changed: {rdo.Text}");
+                ApplyQuickFilter();
+            }
+        }
+        catch (Exception ex)
+        {
+            LoggingUtility.LogApplicationError(ex);
+            Service_ErrorHandler.HandleException(ex, ErrorSeverity.Low,
+                controlName: nameof(TransactionSearchControl));
         }
     }
 
     private void ApplyQuickFilter()
     {
-        var now = DateTime.Now;
-
-        if (TransactionSearchControl_RadioButton_Today.Checked)
+        try
         {
-            // Today: 00:00 to 23:59
-            TransactionSearchControl_DateTimePicker_DateFrom.Value = now.Date;
-            TransactionSearchControl_DateTimePicker_DateTo.Value = now.Date.AddDays(1).AddSeconds(-1);
-        }
-        else if (TransactionSearchControl_RadioButton_Week.Checked)
-        {
-            // This Week: Monday to Sunday
-            int daysFromMonday = ((int)now.DayOfWeek - (int)DayOfWeek.Monday + 7) % 7;
-            DateTime monday = now.Date.AddDays(-daysFromMonday);
-            DateTime sunday = monday.AddDays(6);
+            var now = DateTime.Now;
 
-            TransactionSearchControl_DateTimePicker_DateFrom.Value = monday;
-            TransactionSearchControl_DateTimePicker_DateTo.Value = sunday.AddDays(1).AddSeconds(-1);
-        }
-        else if (TransactionSearchControl_RadioButton_Month.Checked)
-        {
-            // This Month: 1st to last day
-            DateTime firstDay = new DateTime(now.Year, now.Month, 1);
-            DateTime lastDay = firstDay.AddMonths(1).AddDays(-1);
+            if (TransactionSearchControl_RadioButton_Today.Checked)
+            {
+                // Today: 00:00 to 23:59
+                TransactionSearchControl_DateTimePicker_DateFrom.Value = now.Date;
+                TransactionSearchControl_DateTimePicker_DateTo.Value = now.Date.AddDays(1).AddSeconds(-1);
+                LoggingUtility.Log("[TransactionSearchControl] Quick filter applied: Today");
+            }
+            else if (TransactionSearchControl_RadioButton_Week.Checked)
+            {
+                // This Week: Monday to Sunday
+                int daysFromMonday = ((int)now.DayOfWeek - (int)DayOfWeek.Monday + 7) % 7;
+                DateTime monday = now.Date.AddDays(-daysFromMonday);
+                DateTime sunday = monday.AddDays(6);
 
-            TransactionSearchControl_DateTimePicker_DateFrom.Value = firstDay;
-            TransactionSearchControl_DateTimePicker_DateTo.Value = lastDay.AddDays(1).AddSeconds(-1);
+                TransactionSearchControl_DateTimePicker_DateFrom.Value = monday;
+                TransactionSearchControl_DateTimePicker_DateTo.Value = sunday.AddDays(1).AddSeconds(-1);
+                LoggingUtility.Log("[TransactionSearchControl] Quick filter applied: Week");
+            }
+            else if (TransactionSearchControl_RadioButton_Month.Checked)
+            {
+                // This Month: 1st to last day
+                DateTime firstDay = new DateTime(now.Year, now.Month, 1);
+                DateTime lastDay = firstDay.AddMonths(1).AddDays(-1);
+
+                TransactionSearchControl_DateTimePicker_DateFrom.Value = firstDay;
+                TransactionSearchControl_DateTimePicker_DateTo.Value = lastDay.AddDays(1).AddSeconds(-1);
+                LoggingUtility.Log("[TransactionSearchControl] Quick filter applied: Month");
+            }
+            // Custom: user sets dates manually, no automatic adjustment
         }
-        // Custom: user sets dates manually, no automatic adjustment
+        catch (Exception ex)
+        {
+            LoggingUtility.LogApplicationError(ex);
+            Service_ErrorHandler.HandleException(ex, ErrorSeverity.Low,
+                controlName: nameof(TransactionSearchControl));
+        }
     }
 
     #endregion

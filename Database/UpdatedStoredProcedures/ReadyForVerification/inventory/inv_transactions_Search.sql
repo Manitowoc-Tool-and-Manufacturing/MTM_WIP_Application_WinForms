@@ -56,24 +56,18 @@ BEGIN
         END IF;
     END IF;
     
-    -- Build and execute search query with filters
-    SELECT 
-        ID,
-        TransactionType,
-        BatchNumber,
-        PartID,
-        FromLocation,
-        ToLocation,
-        Operation,
-        Quantity,
-        Notes,
-        User,
-        ItemType,
-        ReceiveDate
+    -- First, get the total count of matching records (before pagination)
+    SELECT COUNT(*)
+    INTO v_Count
     FROM inv_transaction
     WHERE 1=1
-        -- User filter (admin sees all, regular user sees only their transactions)
-        AND (p_IsAdmin = TRUE OR User = p_UserName)
+        -- User filter: If specific user provided, filter by that user
+        -- Otherwise: admin sees all, regular user sees only their transactions
+        AND (
+            (TRIM(COALESCE(p_UserName, '')) != '' AND User = p_UserName)  -- Explicit user filter
+            OR (TRIM(COALESCE(p_UserName, '')) = '' AND p_IsAdmin = TRUE)  -- Admin with no specific user = all
+            OR (TRIM(COALESCE(p_UserName, '')) = '' AND p_IsAdmin = FALSE)  -- This case won't happen (non-admin must provide username)
+        )
         -- PartID filter (empty string means no filter)
         AND (TRIM(COALESCE(p_PartID, '')) = '' OR PartID LIKE CONCAT('%', p_PartID, '%'))
         -- BatchNumber filter
@@ -94,6 +88,40 @@ BEGIN
         AND (TRIM(COALESCE(p_ItemType, '')) = '' OR ItemType = p_ItemType)
         -- Date range filter
         AND (p_FromDate IS NULL OR ReceiveDate >= p_FromDate)
+        AND (p_ToDate IS NULL OR ReceiveDate <= p_ToDate);
+    
+    -- Now execute the paginated query
+    SELECT 
+        ID,
+        TransactionType,
+        BatchNumber,
+        PartID,
+        FromLocation,
+        ToLocation,
+        Operation,
+        Quantity,
+        Notes,
+        User,
+        ItemType,
+        ReceiveDate
+    FROM inv_transaction
+    WHERE 1=1
+        -- Same filters as COUNT query
+        AND (
+            (TRIM(COALESCE(p_UserName, '')) != '' AND User = p_UserName)
+            OR (TRIM(COALESCE(p_UserName, '')) = '' AND p_IsAdmin = TRUE)
+            OR (TRIM(COALESCE(p_UserName, '')) = '' AND p_IsAdmin = FALSE)
+        )
+        AND (TRIM(COALESCE(p_PartID, '')) = '' OR PartID LIKE CONCAT('%', p_PartID, '%'))
+        AND (TRIM(COALESCE(p_BatchNumber, '')) = '' OR BatchNumber LIKE CONCAT('%', p_BatchNumber, '%'))
+        AND (TRIM(COALESCE(p_FromLocation, '')) = '' OR FromLocation = p_FromLocation)
+        AND (TRIM(COALESCE(p_ToLocation, '')) = '' OR ToLocation = p_ToLocation)
+        AND (TRIM(COALESCE(p_Operation, '')) = '' OR Operation = p_Operation)
+        AND (TRIM(COALESCE(p_TransactionType, '')) = '' OR TransactionType = p_TransactionType)
+        AND (p_Quantity IS NULL OR Quantity = p_Quantity)
+        AND (TRIM(COALESCE(p_Notes, '')) = '' OR Notes LIKE CONCAT('%', p_Notes, '%'))
+        AND (TRIM(COALESCE(p_ItemType, '')) = '' OR ItemType = p_ItemType)
+        AND (p_FromDate IS NULL OR ReceiveDate >= p_FromDate)
         AND (p_ToDate IS NULL OR ReceiveDate <= p_ToDate)
     ORDER BY 
         CASE WHEN p_SortColumn = 'ReceiveDate' AND p_SortDescending THEN ReceiveDate END DESC,
@@ -107,7 +135,6 @@ BEGIN
         ReceiveDate DESC
     LIMIT v_Offset, p_PageSize;
     
-    SELECT FOUND_ROWS() INTO v_Count;
     IF v_Count > 0 THEN
         SET p_Status = 1;
         SET p_ErrorMsg = CONCAT('Found ', v_Count, ' transaction(s) matching criteria');

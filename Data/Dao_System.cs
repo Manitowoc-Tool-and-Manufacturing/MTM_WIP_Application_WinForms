@@ -51,8 +51,11 @@ internal static class Dao_System
             {
                 if (Model_AppVariables.User == userName)
                 {
+                    // Update flags based on role priority
+                    Model_AppVariables.UserTypeDeveloper = accessType == "Developer";
                     Model_AppVariables.UserTypeAdmin = accessType == "Admin";
                     Model_AppVariables.UserTypeReadOnly = accessType == "ReadOnly";
+                    Model_AppVariables.UserTypeNormal = accessType == "User" || accessType == "Normal";
                 }
                 return DaoResult.Success($"User access type set to {accessType} for {userName}");
             }
@@ -87,8 +90,10 @@ internal static class Dao_System
         var user = Model_AppVariables.User;
         try
         {
+            Model_AppVariables.UserTypeDeveloper = false;
             Model_AppVariables.UserTypeAdmin = false;
             Model_AppVariables.UserTypeReadOnly = false;
+            Model_AppVariables.UserTypeNormal = false;
 
             var result = new List<Model_Users>();
 
@@ -105,11 +110,12 @@ internal static class Dao_System
 
             if (!dataResult.IsSuccess)
             {
-                // If stored procedure fails, create a default admin user
-                LoggingUtility.Log($"sys_GetUserAccessType failed: {dataResult.ErrorMessage}. Creating default admin user.");
+                // If stored procedure fails, create a default developer user
+                LoggingUtility.Log($"sys_GetUserAccessType failed: {dataResult.ErrorMessage}. Creating default developer user.");
 
-                // Set current user as admin by default when stored procedures have issues
-                Model_AppVariables.UserTypeAdmin = true;
+                // Set current user as developer by default when stored procedures have issues
+                Model_AppVariables.UserTypeDeveloper = true;
+                Model_AppVariables.UserTypeAdmin = false;
                 Model_AppVariables.UserTypeReadOnly = false;
 
                 var defaultUser = new Model_Users
@@ -136,10 +142,16 @@ internal static class Dao_System
                     var roleName = row[2]?.ToString() ?? "";
                     if (u.User == user)
                     {
-                        if (roleName == "Admin")
+                        // Priority order: Developer > Admin > ReadOnly > User/Normal
+                        if (roleName == "Developer")
+                            Model_AppVariables.UserTypeDeveloper = true;
+                        else if (roleName == "Admin")
                             Model_AppVariables.UserTypeAdmin = true;
-                        if (roleName == "ReadOnly")
+                        else if (roleName == "ReadOnly")
                             Model_AppVariables.UserTypeReadOnly = true;
+                        else
+                            // User or any other role is treated as Normal User
+                            Model_AppVariables.UserTypeNormal = true;
                     }
 
                     result.Add(u);
@@ -147,9 +159,10 @@ internal static class Dao_System
             }
             else
             {
-                // No users found, create default admin
-                LoggingUtility.Log($"No users found in sys_GetUserAccessType. Creating default admin user: {user}");
-                Model_AppVariables.UserTypeAdmin = true;
+                // No users found, create default developer
+                LoggingUtility.Log($"No users found in sys_GetUserAccessType. Creating default developer user: {user}");
+                Model_AppVariables.UserTypeDeveloper = true;
+                Model_AppVariables.UserTypeAdmin = false;
                 Model_AppVariables.UserTypeReadOnly = false;
 
                 var defaultUser = new Model_Users
@@ -167,9 +180,10 @@ internal static class Dao_System
         {
             LoggingUtility.LogApplicationError(ex);
 
-            // FALLBACK: If everything fails, grant default admin access to prevent application lockup
-            LoggingUtility.Log($"System_UserAccessType fallback: Granting default admin access to user: {user}");
-            Model_AppVariables.UserTypeAdmin = true;
+            // FALLBACK: If everything fails, grant default developer access to prevent application lockup
+            LoggingUtility.Log($"System_UserAccessType fallback: Granting default developer access to user: {user}");
+            Model_AppVariables.UserTypeDeveloper = true;
+            Model_AppVariables.UserTypeAdmin = false;
             Model_AppVariables.UserTypeReadOnly = false;
 
             var fallbackUser = new Model_Users
@@ -180,7 +194,7 @@ internal static class Dao_System
 
             await HandleSystemDaoExceptionAsync(ex, "System_UserAccessType");
             return DaoResult<List<Model_Users>>.Success(new List<Model_Users> { fallbackUser },
-                $"Fallback admin access granted for user: {user}");
+                $"Fallback developer access granted for user: {user}");
         }
     }
 

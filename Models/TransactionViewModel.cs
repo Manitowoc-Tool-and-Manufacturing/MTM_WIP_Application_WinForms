@@ -71,21 +71,29 @@ internal sealed class TransactionViewModel
     {
         try
         {
+            LoggingUtility.Log($"[TransactionViewModel] SearchTransactionsAsync starting. User: {userName}, IsAdmin: {isAdmin}, Page: {page}");
+            LoggingUtility.Log($"[TransactionViewModel] Criteria: {criteria}");
+
             // Validate criteria
             if (criteria == null)
             {
+                LoggingUtility.Log("[TransactionViewModel] ERROR: Criteria is null");
                 return DaoResult<TransactionSearchResult>.Failure("Search criteria cannot be null");
             }
 
             if (!criteria.IsValid())
             {
+                LoggingUtility.Log("[TransactionViewModel] ERROR: Criteria is invalid (no filters specified)");
                 return DaoResult<TransactionSearchResult>.Failure("At least one search filter must be specified");
             }
 
             if (!criteria.IsDateRangeValid())
             {
+                LoggingUtility.Log($"[TransactionViewModel] ERROR: Invalid date range. From: {criteria.DateFrom}, To: {criteria.DateTo}");
                 return DaoResult<TransactionSearchResult>.Failure("Date range is invalid: From date must be before To date");
             }
+
+            LoggingUtility.Log("[TransactionViewModel] Calling DAO SearchAsync...");
 
             // Execute search via DAO
             var daoResult = await _dao.SearchAsync(
@@ -96,8 +104,11 @@ internal sealed class TransactionViewModel
                 PageSize
             ).ConfigureAwait(false);
 
+            LoggingUtility.Log($"[TransactionViewModel] DAO returned. Success: {daoResult.IsSuccess}, DataCount: {daoResult.Data?.Count ?? 0}");
+
             if (!daoResult.IsSuccess)
             {
+                LoggingUtility.Log($"[TransactionViewModel] DAO search failed: {daoResult.ErrorMessage}");
                 return DaoResult<TransactionSearchResult>.Failure(daoResult.ErrorMessage, daoResult.Exception);
             }
 
@@ -105,10 +116,19 @@ internal sealed class TransactionViewModel
             var searchResult = new TransactionSearchResult
             {
                 Transactions = daoResult.Data ?? new List<Model_Transactions>(),
-                TotalRecordCount = daoResult.Data?.Count ?? 0, // TODO: Get actual total from stored procedure
+                TotalRecordCount = daoResult.RowsAffected > 0 ? daoResult.RowsAffected : (daoResult.Data?.Count ?? 0),  // Use RowsAffected for total count from DB
                 CurrentPage = page,
                 PageSize = PageSize
             };
+
+            LoggingUtility.Log($"[TransactionViewModel] SearchResult created:");
+            LoggingUtility.Log($"  - TotalRecordCount: {searchResult.TotalRecordCount}");
+            LoggingUtility.Log($"  - CurrentPage: {searchResult.CurrentPage}");
+            LoggingUtility.Log($"  - PageSize: {searchResult.PageSize}");
+            LoggingUtility.Log($"  - TotalPages: {searchResult.TotalPages}");
+            LoggingUtility.Log($"  - HasPreviousPage: {searchResult.HasPreviousPage}");
+            LoggingUtility.Log($"  - HasNextPage: {searchResult.HasNextPage}");
+            LoggingUtility.Log($"  - Transactions.Count: {searchResult.Transactions.Count}");
 
             // Update current state
             _currentCriteria = criteria;
@@ -260,8 +280,94 @@ internal sealed class TransactionViewModel
         }
     }
 
+    /// <summary>
+    /// Loads all location codes for dropdown population.
+    /// Results are cached to improve performance on subsequent calls.
+    /// </summary>
+    /// <returns>DaoResult containing list of location codes</returns>
+    public async Task<DaoResult<List<string>>> LoadLocationsAsync()
+    {
+        try
+        {
+            LoggingUtility.Log("[TransactionViewModel] LoadLocationsAsync starting...");
+
+            // Return cached data if available
+            if (_cachedLocations != null)
+            {
+                LoggingUtility.Log($"[TransactionViewModel] Returning {_cachedLocations.Count} cached locations");
+                return DaoResult<List<string>>.Success(
+                    _cachedLocations,
+                    $"Retrieved {_cachedLocations.Count} locations from cache"
+                );
+            }
+
+            // Load locations from database
+            LoggingUtility.Log("[TransactionViewModel] Calling Dao_Location.GetAllLocations...");
+            var result = await Dao_Location.GetAllLocations().ConfigureAwait(false);
+
+            LoggingUtility.Log($"[TransactionViewModel] DAO returned. Success: {result.IsSuccess}, HasData: {result.Data != null}");
+
+            if (!result.IsSuccess || result.Data == null)
+            {
+                LoggingUtility.Log($"[TransactionViewModel] Failed to load locations: {result.ErrorMessage}");
+                return DaoResult<List<string>>.Failure(
+                    result.ErrorMessage ?? "Failed to load locations",
+                    result.Exception
+                );
+            }
+
+            LoggingUtility.Log($"[TransactionViewModel] DataTable has {result.Data.Rows.Count} rows, {result.Data.Columns.Count} columns");
+            
+            // Log column names to debug the issue
+            var columnNames = new List<string>();
+            foreach (System.Data.DataColumn col in result.Data.Columns)
+            {
+                columnNames.Add(col.ColumnName);
+            }
+            LoggingUtility.Log($"[TransactionViewModel] DataTable columns: {string.Join(", ", columnNames)}");
+
+            // Extract location codes from DataTable
+            var locations = new List<string>();
+            try
+            {
+                foreach (System.Data.DataRow row in result.Data.Rows)
+                {
+                    var locationCode = row["Location"]?.ToString();
+                    if (!string.IsNullOrWhiteSpace(locationCode))
+                    {
+                        locations.Add(locationCode);
+                    }
+                }
+                
+                LoggingUtility.Log($"[TransactionViewModel] Extracted {locations.Count} non-empty locations from DataTable");
+            }
+            catch (ArgumentException argEx)
+            {
+                LoggingUtility.Log($"[TransactionViewModel] ArgumentException extracting locations: {argEx.Message}");
+                LoggingUtility.Log($"[TransactionViewModel] ArgumentException ParamName: {argEx.ParamName}");
+                throw;
+            }
+
+            // Cache results
+            _cachedLocations = locations;
+
+            LoggingUtility.Log($"[TransactionViewModel] LoadLocationsAsync complete: {locations.Count} locations cached");
+
+            return DaoResult<List<string>>.Success(
+                locations,
+                $"Loaded {locations.Count} locations from database"
+            );
+        }
+        catch (Exception ex)
+        {
+            LoggingUtility.Log($"[TransactionViewModel] LoadLocationsAsync failed with exception: {ex.GetType().Name}");
+            LoggingUtility.Log($"[TransactionViewModel] Exception message: {ex.Message}");
+            LoggingUtility.LogApplicationError(ex);
+            return DaoResult<List<string>>.Failure("Failed to load locations", ex);
+        }
+    }
+
     // Additional method implementations will be added in story-specific tasks:
-    // - LoadLocationsAsync (US-002, T028)
     // - LoadRelatedTransactionsAsync (US-010, T060)
     // - ExportToExcelAsync (US-008, T051)
     // - PrintPreviewAsync (US-009, T055)

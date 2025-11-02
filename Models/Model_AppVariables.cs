@@ -16,6 +16,7 @@ namespace MTM_WIP_Application_Winforms.Models
     public static string User { get; set; } = (Environment.UserName ?? "UNKNOWN").ToUpperInvariant();
         public static string? UserPin { get; set; }
         public static string? UserShift { get; set; }
+        public static bool UserTypeDeveloper { get; set; } = false;
         public static bool UserTypeAdmin { get; set; } = false;
         public static bool UserTypeReadOnly { get; set; } = false;
         public static bool UserTypeNormal { get; set; } = true;

@@ -1114,23 +1114,27 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
 
         private void ApplyPrivileges()
         {
+            bool isDeveloper = Model_AppVariables.UserTypeDeveloper;
             bool isAdmin = Model_AppVariables.UserTypeAdmin;
             bool isNormal = Model_AppVariables.UserTypeNormal;
             bool isReadOnly = Model_AppVariables.UserTypeReadOnly;
 
+            // Developers have all Admin privileges
+            bool hasAdminAccess = isDeveloper || isAdmin;
+
             // ComboBoxes
-            Control_TransferTab_ComboBox_Part.Enabled = isAdmin || isNormal || isReadOnly;
-            Control_TransferTab_ComboBox_Operation.Enabled = isAdmin || isNormal || isReadOnly;
-            Control_TransferTab_ComboBox_ToLocation.Enabled = isAdmin || isNormal || isReadOnly;
+            Control_TransferTab_ComboBox_Part.Enabled = hasAdminAccess || isNormal || isReadOnly;
+            Control_TransferTab_ComboBox_Operation.Enabled = hasAdminAccess || isNormal || isReadOnly;
+            Control_TransferTab_ComboBox_ToLocation.Enabled = hasAdminAccess || isNormal || isReadOnly;
             // NumericUpDown
             Control_TransferTab_NumericUpDown_Quantity.ReadOnly = isReadOnly;
-            Control_TransferTab_NumericUpDown_Quantity.Enabled = isAdmin || isNormal || isReadOnly;
+            Control_TransferTab_NumericUpDown_Quantity.Enabled = hasAdminAccess || isNormal || isReadOnly;
             // DataGridView
             Control_TransferTab_DataGridView_Main.ReadOnly = isReadOnly;
-            Control_TransferTab_DataGridView_Main.Enabled = isAdmin || isNormal || isReadOnly;
+            Control_TransferTab_DataGridView_Main.Enabled = hasAdminAccess || isNormal || isReadOnly;
             // Buttons
-            Control_TransferTab_Button_Transfer.Visible = isAdmin || isNormal;
-            Control_TransferTab_Button_Transfer.Enabled = isAdmin || isNormal;
+            Control_TransferTab_Button_Transfer.Visible = hasAdminAccess || isNormal;
+            Control_TransferTab_Button_Transfer.Enabled = hasAdminAccess || isNormal;
             Control_TransferTab_Button_Reset.Visible = true;
             Control_TransferTab_Button_Reset.Enabled = true;
             Control_TransferTab_Button_Search.Visible = true;

@@ -1,5 +1,7 @@
 using MTM_WIP_Application_Winforms.Core;
+using MTM_WIP_Application_Winforms.Logging;
 using MTM_WIP_Application_Winforms.Models;
+using MTM_WIP_Application_Winforms.Services;
 
 namespace MTM_WIP_Application_Winforms.Controls.Transactions;
 
@@ -65,11 +67,16 @@ internal partial class TransactionGridControl : UserControl
     public TransactionGridControl()
     {
         InitializeComponent();
+
+        LoggingUtility.Log("[TransactionGridControl] Initializing...");
+
         Core_Themes.ApplyDpiScaling(this);
         Core_Themes.ApplyRuntimeLayoutAdjustments(this);
 
         InitializeColumns();
         WireUpEvents();
+
+        LoggingUtility.Log("[TransactionGridControl] Initialization complete.");
     }
 
     #endregion
@@ -206,23 +213,39 @@ internal partial class TransactionGridControl : UserControl
             throw new ArgumentNullException(nameof(results));
         }
 
-        _currentResults = results;
-        _currentPage = results.CurrentPage;
-
-        // Suspend layout to prevent flickering
-        TransactionGridControl_DataGridView_Transactions.SuspendLayout();
-
         try
         {
-            // Bind data
-            TransactionGridControl_DataGridView_Transactions.DataSource = new BindingSource { DataSource = results.Transactions };
+            LoggingUtility.Log($"[TransactionGridControl] Displaying {results.Transactions.Count} transactions (Page {results.CurrentPage} of {results.TotalPages}).");
 
-            // Update pagination controls
-            UpdatePaginationControls();
+            _currentResults = results;
+            _currentPage = results.CurrentPage;
+
+            // Suspend layout to prevent flickering
+            TransactionGridControl_DataGridView_Transactions.SuspendLayout();
+
+            try
+            {
+                // Bind data
+                TransactionGridControl_DataGridView_Transactions.DataSource = new BindingSource { DataSource = results.Transactions };
+
+                // Apply row colors based on transaction type
+                ApplyRowColors();
+
+                // Update pagination controls
+                UpdatePaginationControls();
+
+                LoggingUtility.Log($"[TransactionGridControl] Results displayed successfully.");
+            }
+            finally
+            {
+                TransactionGridControl_DataGridView_Transactions.ResumeLayout();
+            }
         }
-        finally
+        catch (Exception ex)
         {
-            TransactionGridControl_DataGridView_Transactions.ResumeLayout();
+            LoggingUtility.LogApplicationError(ex);
+            Service_ErrorHandler.HandleException(ex, ErrorSeverity.Medium,
+                controlName: nameof(TransactionGridControl));
         }
     }
 
@@ -234,6 +257,7 @@ internal partial class TransactionGridControl : UserControl
         _currentResults = null;
         _currentPage = 1;
         TransactionGridControl_DataGridView_Transactions.DataSource = null;
+        TransactionGridControl_TransactionDetailPanel.ClearDetails();
         UpdatePaginationControls();
     }
 
@@ -243,28 +267,68 @@ internal partial class TransactionGridControl : UserControl
 
     private void BtnPrevious_Click(object? sender, EventArgs e)
     {
-        if (_currentResults != null && _currentResults.HasPreviousPage)
+        try
         {
-            PageChanged?.Invoke(this, _currentPage - 1);
+            if (_currentResults != null && _currentResults.HasPreviousPage)
+            {
+                LoggingUtility.Log($"[TransactionGridControl] Previous button clicked. Navigating to page {_currentPage - 1}.");
+                PageChanged?.Invoke(this, _currentPage - 1);
+            }
+        }
+        catch (Exception ex)
+        {
+            LoggingUtility.LogApplicationError(ex);
+            Service_ErrorHandler.HandleException(ex, ErrorSeverity.Low,
+                controlName: nameof(TransactionGridControl));
         }
     }
 
     private void BtnNext_Click(object? sender, EventArgs e)
     {
-        if (_currentResults != null && _currentResults.HasNextPage)
+        try
         {
-            PageChanged?.Invoke(this, _currentPage + 1);
+            if (_currentResults != null && _currentResults.HasNextPage)
+            {
+                LoggingUtility.Log($"[TransactionGridControl] Next button clicked. Navigating to page {_currentPage + 1}.");
+                PageChanged?.Invoke(this, _currentPage + 1);
+            }
+        }
+        catch (Exception ex)
+        {
+            LoggingUtility.LogApplicationError(ex);
+            Service_ErrorHandler.HandleException(ex, ErrorSeverity.Low,
+                controlName: nameof(TransactionGridControl));
         }
     }
 
     private void BtnGoToPage_Click(object? sender, EventArgs e)
     {
-        GoToPageFromTextBox();
+        try
+        {
+            LoggingUtility.Log("[TransactionGridControl] Go To Page button clicked.");
+            GoToPageFromTextBox();
+        }
+        catch (Exception ex)
+        {
+            LoggingUtility.LogApplicationError(ex);
+            Service_ErrorHandler.HandleException(ex, ErrorSeverity.Low,
+                controlName: nameof(TransactionGridControl));
+        }
     }
 
     private void BtnShowHideSearch_Click(object? sender, EventArgs e)
     {
-        ToggleSearchRequested?.Invoke(this, EventArgs.Empty);
+        try
+        {
+            LoggingUtility.Log("[TransactionGridControl] Show/Hide Search button clicked.");
+            ToggleSearchRequested?.Invoke(this, EventArgs.Empty);
+        }
+        catch (Exception ex)
+        {
+            LoggingUtility.LogApplicationError(ex);
+            Service_ErrorHandler.HandleException(ex, ErrorSeverity.Low,
+                controlName: nameof(TransactionGridControl));
+        }
     }
 
     private void TxtGoToPage_KeyPress(object? sender, KeyPressEventArgs e)
@@ -290,10 +354,25 @@ internal partial class TransactionGridControl : UserControl
 
     private void DgvTransactions_SelectionChanged(object? sender, EventArgs e)
     {
-        var selectedTransaction = SelectedTransaction;
-        if (selectedTransaction != null)
+        try
         {
-            RowSelected?.Invoke(this, selectedTransaction);
+            var selectedTransaction = SelectedTransaction;
+            if (selectedTransaction != null)
+            {
+                LoggingUtility.Log($"[TransactionGridControl] Row selected: Transaction ID {selectedTransaction.ID}");
+                
+                // Update the detail panel with the selected transaction
+                TransactionGridControl_TransactionDetailPanel.Transaction = selectedTransaction;
+                
+                // Raise event for parent form
+                RowSelected?.Invoke(this, selectedTransaction);
+            }
+        }
+        catch (Exception ex)
+        {
+            LoggingUtility.LogApplicationError(ex);
+            Service_ErrorHandler.HandleException(ex, ErrorSeverity.Low,
+                controlName: nameof(TransactionGridControl));
         }
     }
 
@@ -306,8 +385,11 @@ internal partial class TransactionGridControl : UserControl
     /// </summary>
     private void UpdatePaginationControls()
     {
+        LoggingUtility.Log($"[TransactionGridControl.UpdatePaginationControls] Called");
+        
         if (_currentResults == null)
         {
+            LoggingUtility.Log($"[TransactionGridControl.UpdatePaginationControls] _currentResults is NULL");
             TransactionGridControl_Button_Previous.Enabled = false;
             TransactionGridControl_Button_Next.Enabled = false;
             TransactionGridControl_Label_PageIndicator.Text = "Page 0 of 0";
@@ -317,9 +399,20 @@ internal partial class TransactionGridControl : UserControl
             return;
         }
 
+        LoggingUtility.Log($"[TransactionGridControl.UpdatePaginationControls] _currentResults:");
+        LoggingUtility.Log($"  - TotalRecordCount: {_currentResults.TotalRecordCount}");
+        LoggingUtility.Log($"  - CurrentPage: {_currentResults.CurrentPage}");
+        LoggingUtility.Log($"  - TotalPages: {_currentResults.TotalPages}");
+        LoggingUtility.Log($"  - HasPreviousPage: {_currentResults.HasPreviousPage}");
+        LoggingUtility.Log($"  - HasNextPage: {_currentResults.HasNextPage}");
+
         // Enable/disable navigation buttons
         TransactionGridControl_Button_Previous.Enabled = _currentResults.HasPreviousPage;
         TransactionGridControl_Button_Next.Enabled = _currentResults.HasNextPage;
+
+        LoggingUtility.Log($"[TransactionGridControl.UpdatePaginationControls] Button states:");
+        LoggingUtility.Log($"  - Previous.Enabled: {TransactionGridControl_Button_Previous.Enabled}");
+        LoggingUtility.Log($"  - Next.Enabled: {TransactionGridControl_Button_Next.Enabled}");
 
         // Update labels
         TransactionGridControl_Label_PageIndicator.Text = $"Page {_currentResults.CurrentPage} of {_currentResults.TotalPages}";
@@ -355,6 +448,58 @@ internal partial class TransactionGridControl : UserControl
                     MessageBoxButtons.OK,
                     MessageBoxIcon.Warning);
             }
+        }
+    }
+
+    /// <summary>
+    /// Applies color coding to DataGridView rows based on transaction type.
+    /// IN = Green, TRANSFER = Yellow, OUT = Red
+    /// </summary>
+    private void ApplyRowColors()
+    {
+        try
+        {
+            foreach (DataGridViewRow row in TransactionGridControl_DataGridView_Transactions.Rows)
+            {
+                if (row.DataBoundItem is Model_Transactions transaction)
+                {
+                    Color backgroundColor;
+                    Color foregroundColor = Color.Black;
+
+                    switch (transaction.TransactionType)
+                    {
+                        case TransactionType.IN:
+                            backgroundColor = Color.LightGreen;
+                            break;
+                        case TransactionType.TRANSFER:
+                            backgroundColor = Color.LightYellow;
+                            break;
+                        case TransactionType.OUT:
+                            backgroundColor = Color.LightCoral;
+                            break;
+                        default:
+                            backgroundColor = Color.White;
+                            break;
+                    }
+
+                    row.DefaultCellStyle.BackColor = backgroundColor;
+                    row.DefaultCellStyle.ForeColor = foregroundColor;
+                    row.DefaultCellStyle.SelectionBackColor = Color.FromArgb(
+                        Math.Max(0, backgroundColor.R - 40),
+                        Math.Max(0, backgroundColor.G - 40),
+                        Math.Max(0, backgroundColor.B - 40)
+                    );
+                    row.DefaultCellStyle.SelectionForeColor = Color.Black;
+                }
+            }
+
+            LoggingUtility.Log($"[TransactionGridControl] Row colors applied to {TransactionGridControl_DataGridView_Transactions.Rows.Count} rows.");
+        }
+        catch (Exception ex)
+        {
+            LoggingUtility.LogApplicationError(ex);
+            Service_ErrorHandler.HandleException(ex, ErrorSeverity.Low,
+                controlName: nameof(TransactionGridControl));
         }
     }
 

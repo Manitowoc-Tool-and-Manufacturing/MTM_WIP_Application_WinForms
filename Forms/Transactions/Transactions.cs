@@ -1,5 +1,6 @@
 using MTM_WIP_Application_Winforms.Controls.Transactions;
 using MTM_WIP_Application_Winforms.Core;
+using MTM_WIP_Application_Winforms.Logging;
 using MTM_WIP_Application_Winforms.Models;
 using MTM_WIP_Application_Winforms.Services;
 
@@ -25,14 +26,21 @@ internal partial class Transactions : Form
     {
         InitializeComponent();
 
+        LoggingUtility.Log("[Transactions] Form initializing...");
+
         Core_Themes.ApplyDpiScaling(this);
         Core_Themes.ApplyRuntimeLayoutAdjustments(this);
 
         _currentUser = currentUser ?? throw new ArgumentNullException(nameof(currentUser));
-        _isAdmin = Model_AppVariables.UserTypeAdmin;
+        _isAdmin = Model_AppVariables.UserTypeDeveloper || Model_AppVariables.UserTypeAdmin;
         _viewModel = new TransactionViewModel();
 
+        LoggingUtility.Log($"[Transactions] User: {_currentUser}, IsAdmin: {_isAdmin}");
+
         WireUpEvents();
+        ApplyThemeColors();
+        
+        LoggingUtility.Log("[Transactions] Starting async initialization...");
         _ = InitializeAsync();
     }
 
@@ -54,10 +62,17 @@ internal partial class Transactions : Form
     {
         try
         {
+            LoggingUtility.Log("[Transactions] Loading dropdown data (parts, users, locations)...");
+
             var partsTask = _viewModel.LoadPartsAsync();
             var usersTask = _viewModel.LoadUsersAsync(_currentUser, _isAdmin);
+            var locationsTask = _viewModel.LoadLocationsAsync();
 
-            await Task.WhenAll(partsTask, usersTask).ConfigureAwait(false);
+            await Task.WhenAll(partsTask, usersTask, locationsTask).ConfigureAwait(false);
+
+            LoggingUtility.Log($"[Transactions] Data loaded - Parts: {(partsTask.Result.IsSuccess ? partsTask.Result.Data?.Count ?? 0 : 0)}, " +
+                             $"Users: {(usersTask.Result.IsSuccess ? usersTask.Result.Data?.Count ?? 0 : 0)}, " +
+                             $"Locations: {(locationsTask.Result.IsSuccess ? locationsTask.Result.Data?.Count ?? 0 : 0)}");
 
             this.Invoke(() =>
             {
@@ -70,12 +85,60 @@ internal partial class Transactions : Form
                 {
                     Transactions_UserControl_Search.LoadUsers(usersTask.Result.Data ?? new List<string>());
                 }
+
+                if (locationsTask.Result.IsSuccess)
+                {
+                    Transactions_UserControl_Search.LoadLocations(locationsTask.Result.Data ?? new List<string>());
+                }
+
+                LoggingUtility.Log("[Transactions] Dropdown data loaded into search control.");
             });
         }
         catch (Exception ex)
         {
+            LoggingUtility.LogApplicationError(ex);
             Service_ErrorHandler.HandleException(ex, ErrorSeverity.Medium, retryAction: null,
                 contextData: new Dictionary<string, object> { ["User"] = _currentUser },
+                controlName: nameof(Transactions));
+        }
+    }
+
+    #endregion
+
+    #region Theme Application
+
+    private void ApplyThemeColors()
+    {
+        try
+        {
+            LoggingUtility.Log("[Transactions] Applying theme colors...");
+            
+            var colors = Model_AppVariables.UserUiColors;
+            if (colors == null)
+            {
+                LoggingUtility.Log("[Transactions] WARNING: UserUiColors is null, using SystemColors fallback");
+                this.BackColor = SystemColors.Control;
+                this.ForeColor = SystemColors.ControlText;
+                return;
+            }
+
+            // Apply theme to form
+            this.BackColor = colors.FormBackColor ?? SystemColors.Control;
+            this.ForeColor = colors.FormForeColor ?? SystemColors.ControlText;
+
+            // Apply theme to panels
+            Transactions_Panel_Search.BackColor = colors.PanelBackColor ?? SystemColors.ControlLight;
+            Transactions_Panel_Search.ForeColor = colors.PanelForeColor ?? SystemColors.ControlText;
+
+            Transactions_Panel_Grid.BackColor = colors.PanelBackColor ?? SystemColors.ControlLight;
+            Transactions_Panel_Grid.ForeColor = colors.PanelForeColor ?? SystemColors.ControlText;
+
+            LoggingUtility.Log($"[Transactions] Theme applied: {Model_AppVariables.ThemeName}");
+        }
+        catch (Exception ex)
+        {
+            LoggingUtility.LogApplicationError(ex);
+            Service_ErrorHandler.HandleException(ex, ErrorSeverity.Low,
                 controlName: nameof(Transactions));
         }
     }
@@ -87,29 +150,40 @@ internal partial class Transactions : Form
     private void Transactions_Load(object? sender, EventArgs e)
     {
         this.Text = $"Transaction Viewer - {_currentUser}" + (_isAdmin ? " (Admin)" : "");
+        LoggingUtility.Log($"[Transactions] Form loaded. Title: {this.Text}");
     }
 
     private async void SearchControl_SearchRequested(object? sender, TransactionSearchCriteria criteria)
     {
         try
         {
+            LoggingUtility.Log($"[Transactions] Search requested with criteria: {criteria}");
+
+            // Clear previous results before new search
+            Transactions_UserControl_Grid.ClearResults();
+
             var result = await _viewModel.SearchTransactionsAsync(criteria, _currentUser, _isAdmin, page: 1)
                 .ConfigureAwait(false);
+
+            LoggingUtility.Log($"[Transactions] Search completed. Success: {result.IsSuccess}, HasData: {result.Data != null}");
 
             this.Invoke(() =>
             {
                 if (result.IsSuccess && result.Data != null)
                 {
+                    LoggingUtility.Log($"[Transactions] Displaying {result.Data.Transactions.Count} transactions (Page {result.Data.CurrentPage} of {result.Data.TotalPages})");
                     Transactions_UserControl_Grid.DisplayResults(result.Data);
                 }
                 else
                 {
+                    LoggingUtility.Log($"[Transactions] Search failed or returned no data. Error: {result.ErrorMessage}");
                     Service_ErrorHandler.HandleValidationError(result.ErrorMessage ?? "Search failed", "Search");
                 }
             });
         }
         catch (Exception ex)
         {
+            LoggingUtility.LogApplicationError(ex);
             Service_ErrorHandler.HandleException(ex, ErrorSeverity.Medium, retryAction: null,
                 contextData: new Dictionary<string, object> { ["Criteria"] = criteria.ToString() },
                 controlName: nameof(Transactions_UserControl_Search));
@@ -118,6 +192,7 @@ internal partial class Transactions : Form
 
     private void SearchControl_ResetRequested(object? sender, EventArgs e)
     {
+        LoggingUtility.Log("[Transactions] Reset requested, clearing grid results.");
         Transactions_UserControl_Grid.ClearResults();
     }
 
@@ -125,7 +200,13 @@ internal partial class Transactions : Form
     {
         try
         {
-            if (_viewModel.CurrentCriteria == null) return;
+            if (_viewModel.CurrentCriteria == null)
+            {
+                LoggingUtility.Log("[Transactions] Page change requested but no current criteria available.");
+                return;
+            }
+
+            LoggingUtility.Log($"[Transactions] Page change requested to page {newPage}.");
 
             var result = await _viewModel.SearchTransactionsAsync(_viewModel.CurrentCriteria, _currentUser, _isAdmin, page: newPage)
                 .ConfigureAwait(false);
@@ -134,16 +215,19 @@ internal partial class Transactions : Form
             {
                 if (result.IsSuccess && result.Data != null)
                 {
+                    LoggingUtility.Log($"[Transactions] Page {newPage} loaded with {result.Data.Transactions.Count} transactions.");
                     Transactions_UserControl_Grid.DisplayResults(result.Data);
                 }
                 else
                 {
+                    LoggingUtility.Log($"[Transactions] Failed to load page {newPage}. Error: {result.ErrorMessage}");
                     Service_ErrorHandler.HandleValidationError(result.ErrorMessage ?? "Failed to load page", "Pagination");
                 }
             });
         }
         catch (Exception ex)
         {
+            LoggingUtility.LogApplicationError(ex);
             Service_ErrorHandler.HandleException(ex, ErrorSeverity.Medium, retryAction: null,
                 contextData: new Dictionary<string, object> { ["Page"] = newPage },
                 controlName: nameof(Transactions_UserControl_Grid));
@@ -154,6 +238,7 @@ internal partial class Transactions : Form
     {
         if (transaction != null)
         {
+            LoggingUtility.Log($"[Transactions] Row selected: Transaction #{transaction.ID} ({transaction.TransactionType})");
             this.Text = $"Transaction Viewer - Selected: {transaction.TransactionType} #{transaction.ID}";
         }
     }
@@ -161,6 +246,7 @@ internal partial class Transactions : Form
     private void GridControl_ToggleSearchRequested(object? sender, EventArgs e)
     {
         Transactions_Panel_Search.Visible = !Transactions_Panel_Search.Visible;
+        LoggingUtility.Log($"[Transactions] Search panel toggled. Now visible: {Transactions_Panel_Search.Visible}");
     }
 
     #endregion
