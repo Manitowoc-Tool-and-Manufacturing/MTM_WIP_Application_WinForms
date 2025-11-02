@@ -66,6 +66,12 @@ internal partial class TransactionSearchControl : UserControl
         TransactionSearchControl_RadioButton_Week.CheckedChanged += QuickFilterChanged;
         TransactionSearchControl_RadioButton_Month.CheckedChanged += QuickFilterChanged;
         TransactionSearchControl_RadioButton_Custom.CheckedChanged += QuickFilterChanged;
+        TransactionSearchControl_RadioButton_Everything.CheckedChanged += QuickFilterChanged;
+
+        // Transaction type checkboxes - validate at least one is selected
+        TransactionSearchControl_CheckBox_IN.CheckedChanged += TransactionTypeCheckBox_CheckedChanged;
+        TransactionSearchControl_CheckBox_OUT.CheckedChanged += TransactionTypeCheckBox_CheckedChanged;
+        TransactionSearchControl_CheckBox_TRANSFER.CheckedChanged += TransactionTypeCheckBox_CheckedChanged;
     }
 
     /// <summary>
@@ -123,6 +129,7 @@ internal partial class TransactionSearchControl : UserControl
 
     /// <summary>
     /// Populates the User dropdown with available users.
+    /// Defaults to current user. If user is not Admin/Developer, combobox is disabled (restricted to own transactions).
     /// </summary>
     /// <param name="users">List of usernames.</param>
     public void LoadUsers(List<string> users)
@@ -132,19 +139,59 @@ internal partial class TransactionSearchControl : UserControl
             LoggingUtility.Log($"[TransactionSearchControl] LoadUsers called with {users?.Count ?? 0} users");
 
             TransactionSearchControl_ComboBox_User.Items.Clear();
-            TransactionSearchControl_ComboBox_User.Items.Add(""); // Add empty option for "All Users"
+            
+            // Check if current user is Admin or Developer
+            bool isAdminOrDeveloper = Model_AppVariables.UserTypeAdmin || Model_AppVariables.UserTypeDeveloper;
+            
+            if (isAdminOrDeveloper)
+            {
+                // Admin/Developer: Can search all users, add empty option for "All Users"
+                TransactionSearchControl_ComboBox_User.Items.Add("");
+                LoggingUtility.Log("[TransactionSearchControl] User is Admin/Developer - enabling all users option");
+            }
             
             if (users != null && users.Count > 0)
             {
                 TransactionSearchControl_ComboBox_User.Items.AddRange(users.ToArray());
             }
             
-            if (TransactionSearchControl_ComboBox_User.Items.Count > 0)
+            // Set default selection to current user
+            string currentUser = Model_AppVariables.User;
+            int currentUserIndex = -1;
+            
+            // Find current user in the list
+            for (int i = 0; i < TransactionSearchControl_ComboBox_User.Items.Count; i++)
             {
-                TransactionSearchControl_ComboBox_User.SelectedIndex = 0;
+                string? itemText = TransactionSearchControl_ComboBox_User.Items[i]?.ToString();
+                if (!string.IsNullOrEmpty(itemText) && itemText.Equals(currentUser, StringComparison.OrdinalIgnoreCase))
+                {
+                    currentUserIndex = i;
+                    break;
+                }
             }
             
-            LoggingUtility.Log($"[TransactionSearchControl] Users loaded: {TransactionSearchControl_ComboBox_User.Items.Count} items");
+            if (currentUserIndex >= 0)
+            {
+                // Current user found in list - select it
+                TransactionSearchControl_ComboBox_User.SelectedIndex = currentUserIndex;
+                LoggingUtility.Log($"[TransactionSearchControl] Current user '{currentUser}' found and selected at index {currentUserIndex}");
+            }
+            else if (TransactionSearchControl_ComboBox_User.Items.Count > 0)
+            {
+                // Current user not found - default to first item (empty for Admin, first user for Regular)
+                TransactionSearchControl_ComboBox_User.SelectedIndex = 0;
+                LoggingUtility.Log($"[TransactionSearchControl] Current user '{currentUser}' not found, defaulting to index 0");
+            }
+            
+            // Disable combobox for non-Admin/non-Developer users (they can only see own transactions)
+            TransactionSearchControl_ComboBox_User.Enabled = isAdminOrDeveloper;
+            
+            if (!isAdminOrDeveloper)
+            {
+                LoggingUtility.Log($"[TransactionSearchControl] User combobox disabled - user '{currentUser}' is not Admin/Developer");
+            }
+            
+            LoggingUtility.Log($"[TransactionSearchControl] Users loaded: {TransactionSearchControl_ComboBox_User.Items.Count} items, Enabled: {TransactionSearchControl_ComboBox_User.Enabled}");
         }
         catch (Exception ex)
         {
@@ -155,7 +202,10 @@ internal partial class TransactionSearchControl : UserControl
                 contextData: new Dictionary<string, object>
                 {
                     ["UsersCount"] = users?.Count ?? 0,
-                    ["Method"] = "LoadUsers"
+                    ["Method"] = "LoadUsers",
+                    ["CurrentUser"] = Model_AppVariables.User,
+                    ["IsAdmin"] = Model_AppVariables.UserTypeAdmin,
+                    ["IsDeveloper"] = Model_AppVariables.UserTypeDeveloper
                 },
                 controlName: nameof(TransactionSearchControl));
         }
@@ -247,11 +297,28 @@ internal partial class TransactionSearchControl : UserControl
 
     /// <summary>
     /// Clears all search criteria and resets to defaults.
+    /// User combobox resets to current user.
     /// </summary>
     public void ClearCriteria()
     {
         TransactionSearchControl_ComboBox_PartNumber.SelectedIndex = 0;
-        TransactionSearchControl_ComboBox_User.SelectedIndex = 0;
+        
+        // Reset user to current user (same logic as LoadUsers)
+        string currentUser = Model_AppVariables.User;
+        int currentUserIndex = -1;
+        
+        for (int i = 0; i < TransactionSearchControl_ComboBox_User.Items.Count; i++)
+        {
+            string? itemText = TransactionSearchControl_ComboBox_User.Items[i]?.ToString();
+            if (!string.IsNullOrEmpty(itemText) && itemText.Equals(currentUser, StringComparison.OrdinalIgnoreCase))
+            {
+                currentUserIndex = i;
+                break;
+            }
+        }
+        
+        TransactionSearchControl_ComboBox_User.SelectedIndex = currentUserIndex >= 0 ? currentUserIndex : 0;
+        
         TransactionSearchControl_ComboBox_FromLocation.SelectedIndex = 0;
         TransactionSearchControl_ComboBox_ToLocation.SelectedIndex = 0;
         TransactionSearchControl_TextBox_Operation.Clear();
@@ -290,15 +357,19 @@ internal partial class TransactionSearchControl : UserControl
                 return;
             }
 
-            // Validate date range
-            if (!criteria.IsDateRangeValid())
+            // Skip date range validation when "Everything" is selected
+            if (!TransactionSearchControl_RadioButton_Everything.Checked)
             {
-                LoggingUtility.Log("[TransactionSearchControl] Search validation failed: Invalid date range.");
-                Service_ErrorHandler.HandleValidationError(
-                    "Invalid date range. 'Date From' must be before or equal to 'Date To'.",
-                    "Date Range Validation"
-                );
-                return;
+                // Validate date range for non-Everything searches
+                if (!criteria.IsDateRangeValid())
+                {
+                    LoggingUtility.Log("[TransactionSearchControl] Search validation failed: Invalid date range.");
+                    Service_ErrorHandler.HandleValidationError(
+                        "Invalid date range. 'Date From' must be before or equal to 'Date To'.",
+                        "Date Range Validation"
+                    );
+                    return;
+                }
             }
 
             // Validate at least one transaction type is selected
@@ -312,7 +383,14 @@ internal partial class TransactionSearchControl : UserControl
                 return;
             }
 
-            LoggingUtility.Log($"[TransactionSearchControl] Search criteria validated. DateRange: {criteria.DateFrom:MM/dd/yy} - {criteria.DateTo:MM/dd/yy}, Types: {criteria.TransactionType}");
+            if (TransactionSearchControl_RadioButton_Everything.Checked)
+            {
+                LoggingUtility.Log($"[TransactionSearchControl] Search criteria validated (Everything mode). Types: {criteria.TransactionType}");
+            }
+            else
+            {
+                LoggingUtility.Log($"[TransactionSearchControl] Search criteria validated. DateRange: {criteria.DateFrom:MM/dd/yy} - {criteria.DateTo:MM/dd/yy}, Types: {criteria.TransactionType}");
+            }
 
             // Raise event with valid criteria
             SearchRequested?.Invoke(this, criteria);
@@ -375,6 +453,8 @@ internal partial class TransactionSearchControl : UserControl
                 // Today: 00:00 to 23:59
                 TransactionSearchControl_DateTimePicker_DateFrom.Value = now.Date;
                 TransactionSearchControl_DateTimePicker_DateTo.Value = now.Date.AddDays(1).AddSeconds(-1);
+                TransactionSearchControl_DateTimePicker_DateFrom.Enabled = false;
+                TransactionSearchControl_DateTimePicker_DateTo.Enabled = false;
                 LoggingUtility.Log("[TransactionSearchControl] Quick filter applied: Today");
             }
             else if (TransactionSearchControl_RadioButton_Week.Checked)
@@ -386,6 +466,8 @@ internal partial class TransactionSearchControl : UserControl
 
                 TransactionSearchControl_DateTimePicker_DateFrom.Value = monday;
                 TransactionSearchControl_DateTimePicker_DateTo.Value = sunday.AddDays(1).AddSeconds(-1);
+                TransactionSearchControl_DateTimePicker_DateFrom.Enabled = false;
+                TransactionSearchControl_DateTimePicker_DateTo.Enabled = false;
                 LoggingUtility.Log("[TransactionSearchControl] Quick filter applied: Week");
             }
             else if (TransactionSearchControl_RadioButton_Month.Checked)
@@ -396,9 +478,26 @@ internal partial class TransactionSearchControl : UserControl
 
                 TransactionSearchControl_DateTimePicker_DateFrom.Value = firstDay;
                 TransactionSearchControl_DateTimePicker_DateTo.Value = lastDay.AddDays(1).AddSeconds(-1);
+                TransactionSearchControl_DateTimePicker_DateFrom.Enabled = false;
+                TransactionSearchControl_DateTimePicker_DateTo.Enabled = false;
                 LoggingUtility.Log("[TransactionSearchControl] Quick filter applied: Month");
             }
-            // Custom: user sets dates manually, no automatic adjustment
+            else if (TransactionSearchControl_RadioButton_Everything.Checked)
+            {
+                // Everything: No date filtering - set to wide range (past 10 years to future 1 year)
+                TransactionSearchControl_DateTimePicker_DateFrom.Value = now.AddYears(-10);
+                TransactionSearchControl_DateTimePicker_DateTo.Value = now.AddYears(1);
+                TransactionSearchControl_DateTimePicker_DateFrom.Enabled = false;
+                TransactionSearchControl_DateTimePicker_DateTo.Enabled = false;
+                LoggingUtility.Log("[TransactionSearchControl] Quick filter applied: Everything (all dates)");
+            }
+            else if (TransactionSearchControl_RadioButton_Custom.Checked)
+            {
+                // Custom: user sets dates manually, enable date pickers
+                TransactionSearchControl_DateTimePicker_DateFrom.Enabled = true;
+                TransactionSearchControl_DateTimePicker_DateTo.Enabled = true;
+                LoggingUtility.Log("[TransactionSearchControl] Quick filter applied: Custom (user-defined dates)");
+            }
         }
         catch (Exception ex)
         {
@@ -411,6 +510,32 @@ internal partial class TransactionSearchControl : UserControl
     #endregion
 
     #region Helpers
+
+    /// <summary>
+    /// Handles CheckedChanged event for transaction type checkboxes.
+    /// Enables/disables Search button based on whether at least one type is selected.
+    /// </summary>
+    private void TransactionTypeCheckBox_CheckedChanged(object? sender, EventArgs e)
+    {
+        try
+        {
+            // Enable Search button only if at least one transaction type is selected
+            bool anyTypeSelected = TransactionSearchControl_CheckBox_IN.Checked ||
+                                   TransactionSearchControl_CheckBox_OUT.Checked ||
+                                   TransactionSearchControl_CheckBox_TRANSFER.Checked;
+
+            TransactionSearchControl_Button_Search.Enabled = anyTypeSelected;
+
+            if (!anyTypeSelected)
+            {
+                LoggingUtility.Log("[TransactionSearchControl] Search button disabled - no transaction types selected");
+            }
+        }
+        catch (Exception ex)
+        {
+            LoggingUtility.LogApplicationError(ex);
+        }
+    }
 
     /// <summary>
     /// Builds a TransactionSearchCriteria object from current UI values.

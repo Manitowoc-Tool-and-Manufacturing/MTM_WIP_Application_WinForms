@@ -1,4 +1,5 @@
 using MTM_WIP_Application_Winforms.Core;
+using MTM_WIP_Application_Winforms.Helpers;
 using MTM_WIP_Application_Winforms.Logging;
 using MTM_WIP_Application_Winforms.Models;
 using MTM_WIP_Application_Winforms.Services;
@@ -196,6 +197,11 @@ internal partial class TransactionGridControl : UserControl
         TransactionGridControl_TextBox_GoToPage.KeyPress += TxtGoToPage_KeyPress;
         TransactionGridControl_DataGridView_Transactions.SelectionChanged += DgvTransactions_SelectionChanged;
         TransactionGridControl_Button_ShowHideSearch.Click += BtnShowHideSearch_Click;
+
+#if DEBUG
+        // Debug-only: Toggle privileges button
+        TransactionGridControl_Button_TogglePrivileges.Click += BtnTogglePrivileges_Click;
+#endif
     }
 
     #endregion
@@ -331,6 +337,131 @@ internal partial class TransactionGridControl : UserControl
         }
     }
 
+#if DEBUG
+    /// <summary>
+    /// Handles the Toggle Privileges button click (Debug mode only).
+    /// Cycles through: ReadOnly → User → Admin → Developer → ReadOnly.
+    /// </summary>
+    private async void BtnTogglePrivileges_Click(object? sender, EventArgs e)
+    {
+        try
+        {
+            LoggingUtility.Log("[TransactionGridControl] Toggle Privileges button clicked (Debug mode).");
+
+            // Get current user ID from database
+            var userResult = await Data.Dao_User.GetUserByUsernameAsync(Model_AppVariables.User);
+            if (!userResult.IsSuccess || userResult.Data == null)
+            {
+                Service_ErrorHandler.HandleValidationError(
+                    $"Failed to get current user information: {userResult.ErrorMessage}",
+                    nameof(TransactionGridControl));
+                return;
+            }
+
+            int userId = Convert.ToInt32(userResult.Data["ID"]);
+
+            // Determine current role
+            string currentRole = "User";
+            if (Model_AppVariables.UserTypeDeveloper)
+                currentRole = "Developer";
+            else if (Model_AppVariables.UserTypeAdmin)
+                currentRole = "Admin";
+            else if (Model_AppVariables.UserTypeReadOnly)
+                currentRole = "ReadOnly";
+
+            // Determine next role in cycle: ReadOnly → User → Admin → Developer → ReadOnly
+            string nextRole = currentRole switch
+            {
+                "Developer" => "ReadOnly",
+                "ReadOnly" => "User",
+                "User" => "Admin",
+                "Admin" => "Developer",
+                _ => "User"
+            };
+
+            LoggingUtility.Log($"[TransactionGridControl] Cycling role from {currentRole} to {nextRole}");
+
+            // Get the next role ID
+            var getRoleIdParams = new Dictionary<string, object>
+            {
+                ["RoleName"] = nextRole
+            };
+
+            var roleIdResult = await Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync(
+                Model_AppVariables.ConnectionString,
+                "sys_GetRoleIdByName",
+                getRoleIdParams
+            );
+
+            if (!roleIdResult.IsSuccess || roleIdResult.Data == null || roleIdResult.Data.Rows.Count == 0)
+            {
+                Service_ErrorHandler.HandleValidationError(
+                    $"Failed to get role ID for {nextRole}: {roleIdResult.StatusMessage}",
+                    nameof(TransactionGridControl));
+                return;
+            }
+
+            int nextRoleId = Convert.ToInt32(roleIdResult.Data.Rows[0]["RoleId"]);
+
+            if (nextRoleId == 0)
+            {
+                Service_ErrorHandler.HandleValidationError(
+                    $"Role '{nextRole}' not found in database. Please ensure sys_roles table is populated.",
+                    nameof(TransactionGridControl));
+                return;
+            }
+
+            // Update the user's role
+            var updateRoleParams = new Dictionary<string, object>
+            {
+                ["UserID"] = userId,
+                ["NewRoleID"] = nextRoleId,
+                ["AssignedBy"] = Model_AppVariables.User + " (Debug Toggle)"
+            };
+
+            var updateResult = await Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync(
+                Model_AppVariables.ConnectionString,
+                "sys_user_roles_Update",
+                updateRoleParams
+            );
+
+            if (!updateResult.IsSuccess)
+            {
+                Service_ErrorHandler.HandleValidationError(
+                    $"Failed to update role: {updateResult.StatusMessage}",
+                    nameof(TransactionGridControl));
+                return;
+            }
+
+            // Update Model_AppVariables to reflect new role
+            Model_AppVariables.UserTypeDeveloper = nextRole == "Developer";
+            Model_AppVariables.UserTypeAdmin = nextRole == "Admin";
+            Model_AppVariables.UserTypeReadOnly = nextRole == "ReadOnly";
+            Model_AppVariables.UserTypeNormal = nextRole == "User";
+
+            LoggingUtility.Log($"[TransactionGridControl] Successfully changed role to {nextRole}");
+
+            // Show confirmation message
+            MessageBox.Show(
+                $"Debug Mode: User privilege changed from {currentRole} to {nextRole}.\n\n" +
+                $"The application UI will reflect this change immediately.",
+                "Privilege Changed (Debug)",
+                MessageBoxButtons.OK,
+                MessageBoxIcon.Information);
+        }
+        catch (Exception ex)
+        {
+            LoggingUtility.LogApplicationError(ex);
+            Service_ErrorHandler.HandleException(ex, ErrorSeverity.Medium,
+                contextData: new Dictionary<string, object>
+                {
+                    ["CurrentUser"] = Model_AppVariables.User
+                },
+                controlName: nameof(TransactionGridControl));
+        }
+    }
+#endif
+
     private void TxtGoToPage_KeyPress(object? sender, KeyPressEventArgs e)
     {
         // Allow only digits, backspace, and Enter
@@ -442,11 +573,9 @@ internal partial class TransactionGridControl : UserControl
             }
             else
             {
-                System.Windows.Forms.MessageBox.Show(
+                Service_ErrorHandler.HandleValidationError(
                     $"Page number must be between 1 and {_currentResults.TotalPages}.",
-                    "Invalid Page",
-                    MessageBoxButtons.OK,
-                    MessageBoxIcon.Warning);
+                    nameof(TransactionGridControl_TextBox_GoToPage));
             }
         }
     }

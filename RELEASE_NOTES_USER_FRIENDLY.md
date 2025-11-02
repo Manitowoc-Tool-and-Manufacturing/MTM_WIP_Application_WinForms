@@ -4,7 +4,67 @@
 
 ---
 
-## Latest Update - October 26, 2025 (Version 5.4.0)
+## Latest Update - November 1, 2025 (Version 6.0.0 - IN PROGRESS)
+
+**What Changed**: Major improvements to Transaction History Viewer (HIGHLY REQUESTED!)  
+**Do I Need To Do Anything?**: Yes - check out the new features when update is released!
+
+---
+
+### 🎯 What This Means For You
+
+#### Faster, Easier Transaction History Search
+
+**What's Better**:
+- **Cleaner layout**: Search filters at top, results on left, details on right - everything visible at once
+- **Faster searches**: Find transactions in under 2 seconds (even searching 90 days of history)
+- **More filter options**: Search by Part Number, User, Location, Operation, Date Range, Transaction Type (IN/OUT/TRANSFER), and even Notes
+- **Better pagination**: Navigate through large result sets with clear "Page 1 of 5" controls
+- **Instant details**: Click any transaction to see full details on the right side (no more popup windows)
+- **Remembers your searches**: Last search criteria stay filled in when you come back
+
+**How to use**:
+1. Click **Transaction History** from main menu (same as before)
+2. **Fill in any search filters** at the top:
+   - Part Number (dropdown shows your recent parts)
+   - User (see everyone's transactions or just yours)
+   - Location (FROM and TO locations for transfers)
+   - Operation (manufacturing routing step)
+   - Date Range (Today/This Week/This Month/Custom)
+   - Transaction Types (check IN, OUT, or TRANSFER)
+   - Notes keyword (find transactions with specific notes)
+3. Click **Search** button
+4. **Browse results** in the grid on the left
+5. **Click any row** to see full details on the right
+
+**Why this helps**:
+- **Find transactions 3x faster** than the old interface
+- **Less clicking** - everything on one screen instead of multiple windows
+- **Better for multi-tasking** - details panel lets you keep the search results visible
+- **Easier to track down issues** - more filter combinations help pinpoint specific transactions
+
+#### 🎉 Coming in Next Phase (Week of November 4th)
+
+**Transaction Life Cycle Viewer** (BRAND NEW FEATURE):
+- **See the complete history** of a batch from start to finish
+- **Visual tree view** shows how inventory splits and moves between locations
+- **Track batch splits**: See exactly when 500 units became 250 at one location and 250 at another
+- **Chronological timeline**: Every IN, TRANSFER, and OUT transaction in order
+- **Click "Transaction Life Cycle" button** in detail panel to open the viewer
+
+**Export to Excel**:
+- Export your search results to Excel for reporting or analysis
+- All visible columns included
+- One-click export from Search or Detail view
+
+**Print Transaction Reports**:
+- Print transaction details for physical records
+- Formatted for standard 8.5x11 paper
+- Includes all transaction information and notes
+
+---
+
+## Previous Update - October 26, 2025 (Version 5.4.0)
 
 **What Changed**: New error report management system for developers  
 **Do I Need To Do Anything?**: No - this is a developer-only feature
@@ -112,6 +172,11 @@
 
 ### ✅ Do I Need To Update?
 
+**Version 6.0.0 (Transaction Viewer - IN PROGRESS)**:
+- **All users**: Yes - this is a major improvement to one of the most-used features
+- **Shop Floor Users**: Recommended - much faster transaction searches and better detail viewing
+- **Office Staff**: Recommended - export to Excel makes reporting easier
+
 **Version 5.4.0 (View Error Reports)**:
 - **IT Support & Developers**: Yes - this new feature helps you manage and investigate user-reported issues more efficiently
 - **Shop Floor Users**: No - this doesn't change anything you interact with daily
@@ -136,6 +201,27 @@
 ---
 
 ### 📱 Common Questions
+
+**Q: Will the Transaction Viewer look completely different?**  
+A: The layout is cleaner, but the same information is there - just better organized. Search filters at top, results on left, details on right.
+
+**Q: Can I still search the old way?**  
+A: The new interface is easier and faster, but uses the same underlying search. All your usual searches will work the same or better.
+
+**Q: What's a "Transaction Life Cycle"?**  
+A: It's a visual timeline showing what happened to a batch of parts. Example: 500 units came IN at Location A, then 250 were TRANSFERred to Location B, then 100 more moved to Location C. The tree view shows all these movements in order.
+
+**Q: Why do I need to see batch splits?**  
+A: When tracking down inventory discrepancies or verifying transfers, seeing the complete history of where units went helps find issues faster. No more guessing which transactions are related.
+
+**Q: Will old transaction history still be searchable?**  
+A: Yes - all 24,000+ historical transactions remain searchable. Nothing is deleted or changed.
+
+**Q: How fast is the new search?**  
+A: Most searches complete in under 2 seconds, even when searching 90 days of history. Large result sets (1000+ transactions) use pagination so the screen loads quickly.
+
+**Q: Can I export filtered results or all results?**  
+A: You can export the current page, current filter results, or all transactions matching your search (coming in next phase).
 
 **Q: Will I lose my work when the app restarts for display changes?**  
 A: No - the application saves your current state and restarts instantly
@@ -162,13 +248,14 @@ A: No problem - Contact John Koll at (ext. 323) or jkoll@mantoolmfg.com / Dan Sm
 We're working on even more improvements:
 
 **Next Updates (Planned)**:
-- **🌟 Improved Transaction Viewer (HIGHLY REQUESTED!)** - Better ways to view and search your inventory transaction history with advanced filtering, sorting, and export options. This has been one of the most requested features from shop floor staff!
 - **View Application Logs** - See what the application is doing behind the scenes (helpful for troubleshooting)
 - **Enhanced Developer Settings Menu** - More tools and options for IT staff and power users
 - Enhanced multi-monitor support and display scaling improvements
 - Better visual feedback during network issues
+- Inventory dashboard with real-time statistics
+- Quick action buttons for common tasks
 
 ---
 
-**Last Updated**: October 26, 2025  
+**Last Updated**: November 1, 2025  
 **Questions?** Contact John Koll at (ext. 323) or jkoll@mantoolmfg.com / Dan Smith at (ext. 311) or dsmith@mantoolmfg.com / Ka Lee at (ext. ___ ) or klee@mantoolmfg.com

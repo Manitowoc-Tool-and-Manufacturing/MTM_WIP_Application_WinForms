@@ -29,22 +29,27 @@ namespace MTM_WIP_Application_Winforms.Controls.Transactions
         private void InitializeComponent()
         {
             TransactionGridControl_TableLayout_Main = new TableLayoutPanel();
-            TransactionGridControl_StatusStrip_Pagination = new StatusStrip();
+            TransactionGridControl_StatusStrip_Main = new StatusStrip();
             TransactionGridControl_ToolStripButtons = new ToolStripSplitButton();
             TransactionGridControl_Button_ShowHideSearch = new ToolStripMenuItem();
+            TransactionGridControl_Button_TogglePrivileges = new ToolStripMenuItem();
             TransactionGridControl_Button_Previous = new ToolStripButton();
             TransactionGridControl_Button_Next = new ToolStripButton();
             TransactionGridControl_Label_PageIndicator = new ToolStripStatusLabel();
             TransactionGridControl_ToolStripSeparator1 = new ToolStripSeparator();
             TransactionGridControl_Label_RecordCount = new ToolStripStatusLabel();
+            TransactionGridControl_Label_PageNumber = new ToolStripStatusLabel();
             TransactionGridControl_TextBox_GoToPage = new ToolStripTextBox();
             TransactionGridControl_Button_GoToPage = new ToolStripButton();
+            TransactionGridControl_ToolStripSeparator2 = new ToolStripSeparator();
             TransactionGridControl_DataGridView_Transactions = new DataGridView();
             TransactionGridControl_TransactionDetailPanel = new TransactionDetailPanel();
-            TransactionGridControl_ToolStripSeparator2 = new ToolStripSeparator();
-            TransactionGridControl_Label_PageNumber = new ToolStripStatusLabel();
+            TransactionGridControl_Button_Export = new ToolStripButton();
+            TransactionGridControl_ToolStripSeparator4 = new ToolStripSeparator();
+            TransactionGridControl_Button_Print = new ToolStripButton();
+            TransactionGridControl_ToolStripSeparator3 = new ToolStripSeparator();
             TransactionGridControl_TableLayout_Main.SuspendLayout();
-            TransactionGridControl_StatusStrip_Pagination.SuspendLayout();
+            TransactionGridControl_StatusStrip_Main.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)TransactionGridControl_DataGridView_Transactions).BeginInit();
             SuspendLayout();
             // 
@@ -55,7 +60,7 @@ namespace MTM_WIP_Application_Winforms.Controls.Transactions
             TransactionGridControl_TableLayout_Main.ColumnCount = 2;
             TransactionGridControl_TableLayout_Main.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
             TransactionGridControl_TableLayout_Main.ColumnStyles.Add(new ColumnStyle());
-            TransactionGridControl_TableLayout_Main.Controls.Add(TransactionGridControl_StatusStrip_Pagination, 0, 1);
+            TransactionGridControl_TableLayout_Main.Controls.Add(TransactionGridControl_StatusStrip_Main, 0, 1);
             TransactionGridControl_TableLayout_Main.Controls.Add(TransactionGridControl_DataGridView_Transactions, 0, 0);
             TransactionGridControl_TableLayout_Main.Controls.Add(TransactionGridControl_TransactionDetailPanel, 1, 0);
             TransactionGridControl_TableLayout_Main.Dock = DockStyle.Fill;
@@ -68,34 +73,43 @@ namespace MTM_WIP_Application_Winforms.Controls.Transactions
             TransactionGridControl_TableLayout_Main.Size = new Size(915, 544);
             TransactionGridControl_TableLayout_Main.TabIndex = 0;
             // 
-            // TransactionGridControl_StatusStrip_Pagination
+            // TransactionGridControl_StatusStrip_Main
             // 
-            TransactionGridControl_TableLayout_Main.SetColumnSpan(TransactionGridControl_StatusStrip_Pagination, 2);
-            TransactionGridControl_StatusStrip_Pagination.Dock = DockStyle.Fill;
-            TransactionGridControl_StatusStrip_Pagination.GripMargin = new Padding(0);
-            TransactionGridControl_StatusStrip_Pagination.Items.AddRange(new ToolStripItem[] { TransactionGridControl_ToolStripButtons, TransactionGridControl_Button_Previous, TransactionGridControl_Button_Next, TransactionGridControl_Label_PageIndicator, TransactionGridControl_ToolStripSeparator1, TransactionGridControl_Label_RecordCount, TransactionGridControl_Label_PageNumber, TransactionGridControl_TextBox_GoToPage, TransactionGridControl_Button_GoToPage, TransactionGridControl_ToolStripSeparator2 });
-            TransactionGridControl_StatusStrip_Pagination.Location = new Point(0, 515);
-            TransactionGridControl_StatusStrip_Pagination.Name = "TransactionGridControl_StatusStrip_Pagination";
-            TransactionGridControl_StatusStrip_Pagination.Padding = new Padding(0);
-            TransactionGridControl_StatusStrip_Pagination.Size = new Size(915, 29);
-            TransactionGridControl_StatusStrip_Pagination.TabIndex = 1;
-            TransactionGridControl_StatusStrip_Pagination.Text = "statusStrip1";
+            TransactionGridControl_TableLayout_Main.SetColumnSpan(TransactionGridControl_StatusStrip_Main, 2);
+            TransactionGridControl_StatusStrip_Main.Dock = DockStyle.Fill;
+            TransactionGridControl_StatusStrip_Main.GripMargin = new Padding(0);
+            TransactionGridControl_StatusStrip_Main.Items.AddRange(new ToolStripItem[] { TransactionGridControl_ToolStripButtons, TransactionGridControl_Button_Previous, TransactionGridControl_Button_Next, TransactionGridControl_Label_PageIndicator, TransactionGridControl_ToolStripSeparator1, TransactionGridControl_Label_RecordCount, TransactionGridControl_Label_PageNumber, TransactionGridControl_TextBox_GoToPage, TransactionGridControl_Button_GoToPage, TransactionGridControl_ToolStripSeparator2, TransactionGridControl_Button_Print, TransactionGridControl_ToolStripSeparator3, TransactionGridControl_Button_Export, TransactionGridControl_ToolStripSeparator4 });
+            TransactionGridControl_StatusStrip_Main.Location = new Point(0, 515);
+            TransactionGridControl_StatusStrip_Main.Name = "TransactionGridControl_StatusStrip_Main";
+            TransactionGridControl_StatusStrip_Main.Padding = new Padding(0);
+            TransactionGridControl_StatusStrip_Main.ShowItemToolTips = true;
+            TransactionGridControl_StatusStrip_Main.Size = new Size(915, 29);
+            TransactionGridControl_StatusStrip_Main.TabIndex = 1;
+            TransactionGridControl_StatusStrip_Main.Text = "statusStrip1";
             // 
             // TransactionGridControl_ToolStripButtons
             // 
             TransactionGridControl_ToolStripButtons.DisplayStyle = ToolStripItemDisplayStyle.Image;
-            TransactionGridControl_ToolStripButtons.DropDownItems.AddRange(new ToolStripItem[] { TransactionGridControl_Button_ShowHideSearch });
+            TransactionGridControl_ToolStripButtons.DropDownItems.AddRange(new ToolStripItem[] { TransactionGridControl_Button_ShowHideSearch, TransactionGridControl_Button_TogglePrivileges });
             TransactionGridControl_ToolStripButtons.Image = Properties.Resources.MTM;
             TransactionGridControl_ToolStripButtons.ImageTransparentColor = Color.Magenta;
             TransactionGridControl_ToolStripButtons.Name = "TransactionGridControl_ToolStripButtons";
             TransactionGridControl_ToolStripButtons.Size = new Size(32, 27);
-            TransactionGridControl_ToolStripButtons.Text = "toolStripSplitButton1";
+            TransactionGridControl_ToolStripButtons.Text = "Transaction Settings / Options";
             // 
             // TransactionGridControl_Button_ShowHideSearch
             // 
             TransactionGridControl_Button_ShowHideSearch.Name = "TransactionGridControl_Button_ShowHideSearch";
             TransactionGridControl_Button_ShowHideSearch.Size = new Size(209, 22);
+            TransactionGridControl_Button_ShowHideSearch.ToolTipText = "Toggle search panel visibility";
             TransactionGridControl_Button_ShowHideSearch.Text = "Show / Hide Search Panel";
+            // 
+            // TransactionGridControl_Button_TogglePrivileges
+            // 
+            TransactionGridControl_Button_TogglePrivileges.Name = "TransactionGridControl_Button_TogglePrivileges";
+            TransactionGridControl_Button_TogglePrivileges.Size = new Size(209, 22);
+            TransactionGridControl_Button_TogglePrivileges.ToolTipText = "Toggle user privileges (Debug Only)";
+            TransactionGridControl_Button_TogglePrivileges.Text = "Toggle Privileges (Debug)";
             // 
             // TransactionGridControl_Button_Previous
             // 
@@ -134,10 +148,19 @@ namespace MTM_WIP_Application_Winforms.Controls.Transactions
             // 
             TransactionGridControl_Label_RecordCount.Margin = new Padding(3);
             TransactionGridControl_Label_RecordCount.Name = "TransactionGridControl_Label_RecordCount";
-            TransactionGridControl_Label_RecordCount.Size = new Size(264, 23);
+            TransactionGridControl_Label_RecordCount.Size = new Size(191, 23);
             TransactionGridControl_Label_RecordCount.Spring = true;
             TransactionGridControl_Label_RecordCount.Text = "0 records";
             TransactionGridControl_Label_RecordCount.TextAlign = ContentAlignment.MiddleLeft;
+            // 
+            // TransactionGridControl_Label_PageNumber
+            // 
+            TransactionGridControl_Label_PageNumber.Margin = new Padding(3);
+            TransactionGridControl_Label_PageNumber.Name = "TransactionGridControl_Label_PageNumber";
+            TransactionGridControl_Label_PageNumber.Size = new Size(191, 23);
+            TransactionGridControl_Label_PageNumber.Spring = true;
+            TransactionGridControl_Label_PageNumber.Text = "Page Number: ";
+            TransactionGridControl_Label_PageNumber.TextAlign = ContentAlignment.MiddleRight;
             // 
             // TransactionGridControl_TextBox_GoToPage
             // 
@@ -153,8 +176,14 @@ namespace MTM_WIP_Application_Winforms.Controls.Transactions
             TransactionGridControl_Button_GoToPage.Margin = new Padding(3);
             TransactionGridControl_Button_GoToPage.Name = "TransactionGridControl_Button_GoToPage";
             TransactionGridControl_Button_GoToPage.Size = new Size(26, 23);
-            TransactionGridControl_Button_GoToPage.Text = "Go";
-            TransactionGridControl_Button_GoToPage.ToolTipText = "Jump to entered page number";
+            TransactionGridControl_Button_GoToPage.Text = "➡️";
+            TransactionGridControl_Button_GoToPage.ToolTipText = "Go to entered page number";
+            // 
+            // TransactionGridControl_ToolStripSeparator2
+            // 
+            TransactionGridControl_ToolStripSeparator2.Margin = new Padding(3);
+            TransactionGridControl_ToolStripSeparator2.Name = "TransactionGridControl_ToolStripSeparator2";
+            TransactionGridControl_ToolStripSeparator2.Size = new Size(6, 23);
             // 
             // TransactionGridControl_DataGridView_Transactions
             // 
@@ -172,7 +201,7 @@ namespace MTM_WIP_Application_Winforms.Controls.Transactions
             TransactionGridControl_DataGridView_Transactions.ReadOnly = true;
             TransactionGridControl_DataGridView_Transactions.RowHeadersVisible = false;
             TransactionGridControl_DataGridView_Transactions.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
-            TransactionGridControl_DataGridView_Transactions.Size = new Size(551, 509);
+            TransactionGridControl_DataGridView_Transactions.Size = new Size(603, 509);
             TransactionGridControl_DataGridView_Transactions.TabIndex = 0;
             // 
             // TransactionGridControl_TransactionDetailPanel
@@ -180,26 +209,41 @@ namespace MTM_WIP_Application_Winforms.Controls.Transactions
             TransactionGridControl_TransactionDetailPanel.AutoSize = true;
             TransactionGridControl_TransactionDetailPanel.AutoSizeMode = AutoSizeMode.GrowAndShrink;
             TransactionGridControl_TransactionDetailPanel.Dock = DockStyle.Fill;
-            TransactionGridControl_TransactionDetailPanel.Location = new Point(560, 3);
+            TransactionGridControl_TransactionDetailPanel.Location = new Point(612, 3);
             TransactionGridControl_TransactionDetailPanel.MinimumSize = new Size(300, 400);
             TransactionGridControl_TransactionDetailPanel.Name = "TransactionGridControl_TransactionDetailPanel";
-            TransactionGridControl_TransactionDetailPanel.Size = new Size(352, 509);
+            TransactionGridControl_TransactionDetailPanel.Size = new Size(300, 509);
             TransactionGridControl_TransactionDetailPanel.TabIndex = 2;
             // 
-            // TransactionGridControl_ToolStripSeparator2
+            // TransactionGridControl_Button_Export
             // 
-            TransactionGridControl_ToolStripSeparator2.Margin = new Padding(3);
-            TransactionGridControl_ToolStripSeparator2.Name = "TransactionGridControl_ToolStripSeparator2";
-            TransactionGridControl_ToolStripSeparator2.Size = new Size(6, 23);
+            TransactionGridControl_Button_Export.DisplayStyle = ToolStripItemDisplayStyle.Text;
+            TransactionGridControl_Button_Export.Margin = new Padding(3);
+            TransactionGridControl_Button_Export.Name = "TransactionGridControl_Button_Export";
+            TransactionGridControl_Button_Export.Size = new Size(44, 23);
+            TransactionGridControl_Button_Export.Text = "📊";
+            TransactionGridControl_Button_Export.ToolTipText = "Export transactions to Excel";
             // 
-            // TransactionGridControl_Label_PageNumber
+            // TransactionGridControl_ToolStripSeparator4
             // 
-            TransactionGridControl_Label_PageNumber.Margin = new Padding(3);
-            TransactionGridControl_Label_PageNumber.Name = "TransactionGridControl_Label_PageNumber";
-            TransactionGridControl_Label_PageNumber.Size = new Size(264, 23);
-            TransactionGridControl_Label_PageNumber.Spring = true;
-            TransactionGridControl_Label_PageNumber.Text = "Page Number: ";
-            TransactionGridControl_Label_PageNumber.TextAlign = ContentAlignment.MiddleRight;
+            TransactionGridControl_ToolStripSeparator4.Margin = new Padding(3);
+            TransactionGridControl_ToolStripSeparator4.Name = "TransactionGridControl_ToolStripSeparator4";
+            TransactionGridControl_ToolStripSeparator4.Size = new Size(6, 23);
+            // 
+            // TransactionGridControl_Button_Print
+            // 
+            TransactionGridControl_Button_Print.DisplayStyle = ToolStripItemDisplayStyle.Text;
+            TransactionGridControl_Button_Print.Margin = new Padding(3);
+            TransactionGridControl_Button_Print.Name = "TransactionGridControl_Button_Print";
+            TransactionGridControl_Button_Print.Size = new Size(36, 23);
+            TransactionGridControl_Button_Print.Text = "🖨️";
+            TransactionGridControl_Button_Print.ToolTipText = "Print transaction report";
+            // 
+            // TransactionGridControl_ToolStripSeparator3
+            // 
+            TransactionGridControl_ToolStripSeparator3.Margin = new Padding(3);
+            TransactionGridControl_ToolStripSeparator3.Name = "TransactionGridControl_ToolStripSeparator3";
+            TransactionGridControl_ToolStripSeparator3.Size = new Size(6, 23);
             // 
             // TransactionGridControl
             // 
@@ -212,8 +256,8 @@ namespace MTM_WIP_Application_Winforms.Controls.Transactions
             Size = new Size(919, 548);
             TransactionGridControl_TableLayout_Main.ResumeLayout(false);
             TransactionGridControl_TableLayout_Main.PerformLayout();
-            TransactionGridControl_StatusStrip_Pagination.ResumeLayout(false);
-            TransactionGridControl_StatusStrip_Pagination.PerformLayout();
+            TransactionGridControl_StatusStrip_Main.ResumeLayout(false);
+            TransactionGridControl_StatusStrip_Main.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)TransactionGridControl_DataGridView_Transactions).EndInit();
             ResumeLayout(false);
             PerformLayout();
@@ -224,7 +268,7 @@ namespace MTM_WIP_Application_Winforms.Controls.Transactions
 
         private System.Windows.Forms.TableLayoutPanel TransactionGridControl_TableLayout_Main;
         private System.Windows.Forms.DataGridView TransactionGridControl_DataGridView_Transactions;
-        private System.Windows.Forms.StatusStrip TransactionGridControl_StatusStrip_Pagination;
+        private System.Windows.Forms.StatusStrip TransactionGridControl_StatusStrip_Main;
         private System.Windows.Forms.ToolStripButton TransactionGridControl_Button_Previous;
         private System.Windows.Forms.ToolStripButton TransactionGridControl_Button_Next;
         private System.Windows.Forms.ToolStripStatusLabel TransactionGridControl_Label_PageIndicator;
@@ -234,9 +278,14 @@ namespace MTM_WIP_Application_Winforms.Controls.Transactions
         private System.Windows.Forms.ToolStripButton TransactionGridControl_Button_GoToPage;
         private ToolStripSplitButton TransactionGridControl_ToolStripButtons;
         private ToolStripMenuItem TransactionGridControl_Button_ShowHideSearch;
+        private ToolStripMenuItem TransactionGridControl_Button_TogglePrivileges;
         private TransactionDetailPanel TransactionGridControl_TransactionDetailPanel;
         private ToolStripStatusLabel TransactionGridControl_Label_PageNumber;
         private ToolStripSeparator TransactionGridControl_ToolStripSeparator2;
+        private ToolStripButton TransactionGridControl_Button_Print;
+        private ToolStripSeparator TransactionGridControl_ToolStripSeparator3;
+        private ToolStripButton TransactionGridControl_Button_Export;
+        private ToolStripSeparator TransactionGridControl_ToolStripSeparator4;
     }
 }
 

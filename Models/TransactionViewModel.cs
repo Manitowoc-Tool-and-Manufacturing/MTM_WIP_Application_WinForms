@@ -369,9 +369,125 @@ internal sealed class TransactionViewModel
 
     // Additional method implementations will be added in story-specific tasks:
     // - LoadRelatedTransactionsAsync (US-010, T060)
-    // - ExportToExcelAsync (US-008, T051)
     // - PrintPreviewAsync (US-009, T055)
-    // - GetAnalyticsAsync (US-011, T065)
+
+    /// <summary>
+    /// Exports the current search results to an Excel file.
+    /// </summary>
+    /// <param name="filePath">The full path where the Excel file should be saved.</param>
+    /// <param name="transactions">The list of transactions to export. If null, uses CurrentResults.</param>
+    /// <returns>A DaoResult indicating success or failure with the file path.</returns>
+    public async Task<DaoResult<string>> ExportToExcelAsync(string filePath, List<Model_Transactions>? transactions = null)
+    {
+        if (string.IsNullOrWhiteSpace(filePath))
+        {
+            return DaoResult<string>.Failure("File path is required for export");
+        }
+
+        try
+        {
+            var dataToExport = transactions ?? CurrentResults?.Transactions ?? new List<Model_Transactions>();
+            
+            if (dataToExport.Count == 0)
+            {
+                return DaoResult<string>.Failure("No transactions to export");
+            }
+
+            // Use Task.Run to avoid blocking UI thread during Excel generation
+            await Task.Run(() =>
+            {
+                using var workbook = new ClosedXML.Excel.XLWorkbook();
+                var worksheet = workbook.Worksheets.Add("Transactions");
+
+                // Add headers
+                worksheet.Cell(1, 1).Value = "ID";
+                worksheet.Cell(1, 2).Value = "Type";
+                worksheet.Cell(1, 3).Value = "Batch Number";
+                worksheet.Cell(1, 4).Value = "Part Number";
+                worksheet.Cell(1, 5).Value = "From Location";
+                worksheet.Cell(1, 6).Value = "To Location";
+                worksheet.Cell(1, 7).Value = "Operation";
+                worksheet.Cell(1, 8).Value = "Quantity";
+                worksheet.Cell(1, 9).Value = "User";
+                worksheet.Cell(1, 10).Value = "Item Type";
+                worksheet.Cell(1, 11).Value = "Date/Time";
+                worksheet.Cell(1, 12).Value = "Notes";
+
+                // Style headers
+                var headerRange = worksheet.Range(1, 1, 1, 12);
+                headerRange.Style.Font.Bold = true;
+                headerRange.Style.Fill.BackgroundColor = ClosedXML.Excel.XLColor.LightGray;
+                headerRange.Style.Alignment.Horizontal = ClosedXML.Excel.XLAlignmentHorizontalValues.Center;
+
+                // Add data rows
+                int row = 2;
+                foreach (var transaction in dataToExport)
+                {
+                    worksheet.Cell(row, 1).Value = transaction.ID;
+                    worksheet.Cell(row, 2).Value = transaction.TransactionType.ToString();
+                    worksheet.Cell(row, 3).Value = transaction.BatchNumber ?? "";
+                    worksheet.Cell(row, 4).Value = transaction.PartID ?? "";
+                    worksheet.Cell(row, 5).Value = transaction.FromLocation ?? "";
+                    worksheet.Cell(row, 6).Value = transaction.ToLocation ?? "";
+                    worksheet.Cell(row, 7).Value = transaction.Operation ?? "";
+                    worksheet.Cell(row, 8).Value = transaction.Quantity;
+                    worksheet.Cell(row, 9).Value = transaction.User ?? "";
+                    worksheet.Cell(row, 10).Value = transaction.ItemType ?? "";
+                    worksheet.Cell(row, 11).Value = transaction.DateTime.ToString("yyyy-MM-dd HH:mm:ss");
+                    worksheet.Cell(row, 12).Value = transaction.Notes ?? "";
+                    row++;
+                }
+
+                // Auto-fit columns for readability
+                worksheet.Columns().AdjustToContents();
+
+                // Save workbook
+                workbook.SaveAs(filePath);
+            }).ConfigureAwait(false);
+
+            LoggingUtility.Log($"[TransactionViewModel] Successfully exported {dataToExport.Count} transactions to {filePath}");
+            return DaoResult<string>.Success(filePath, $"Exported {dataToExport.Count} transactions");
+        }
+        catch (Exception ex)
+        {
+            LoggingUtility.LogApplicationError(ex);
+            return DaoResult<string>.Failure($"Failed to export transactions: {ex.Message}", ex);
+        }
+    }
+
+    /// <summary>
+    /// Retrieves analytics data for transactions within the specified date range.
+    /// </summary>
+    /// <param name="fromDate">Start date for analytics period.</param>
+    /// <param name="toDate">End date for analytics period.</param>
+    /// <returns>A DaoResult containing TransactionAnalytics or error details.</returns>
+    public async Task<DaoResult<TransactionAnalytics>> GetAnalyticsAsync(DateTime fromDate, DateTime toDate)
+    {
+        if (fromDate > toDate)
+        {
+            return DaoResult<TransactionAnalytics>.Failure("Start date cannot be after end date");
+        }
+
+        try
+        {
+            var userName = Model_AppVariables.User;
+            var isAdmin = Model_AppVariables.UserTypeAdmin;
+
+            var result = await _dao.GetAnalyticsAsync(userName, isAdmin, fromDate, toDate);
+            
+            if (!result.IsSuccess || result.Data == null)
+            {
+                return DaoResult<TransactionAnalytics>.Failure(result.ErrorMessage ?? "Failed to retrieve analytics", result.Exception);
+            }
+
+            return DaoResult<TransactionAnalytics>.Success(result.Data, "Analytics retrieved successfully");
+        }
+        catch (Exception ex)
+        {
+            LoggingUtility.LogApplicationError(ex);
+            return DaoResult<TransactionAnalytics>.Failure($"Failed to retrieve analytics: {ex.Message}", ex);
+        }
+    }
 
     #endregion
 

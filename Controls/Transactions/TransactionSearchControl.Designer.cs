@@ -72,6 +72,7 @@ namespace MTM_WIP_Application_Winforms.Controls.Transactions
             TransactionSearchControl_TableLayout_Buttons = new TableLayoutPanel();
             TransactionSearchControl_Button_Reset = new Button();
             TransactionSearchControl_Button_Search = new Button();
+            TransactionSearchControl_RadioButton_Everything = new RadioButton();
             TransactionSearchControl_TableLayout_Main.SuspendLayout();
             TransactionSearchControl_TableLayout_Filters.SuspendLayout();
             TransactionSearchControl_TableLayout_Controls.SuspendLayout();
@@ -326,20 +327,23 @@ namespace MTM_WIP_Application_Winforms.Controls.Transactions
             // 
             TransactionSearchControl_TableLayout_QuickFilters.AutoSize = true;
             TransactionSearchControl_TableLayout_QuickFilters.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            TransactionSearchControl_TableLayout_QuickFilters.ColumnCount = 9;
-            TransactionSearchControl_TableLayout_QuickFilters.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 20F));
+            TransactionSearchControl_TableLayout_QuickFilters.ColumnCount = 11;
+            TransactionSearchControl_TableLayout_QuickFilters.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 16.6666718F));
             TransactionSearchControl_TableLayout_QuickFilters.ColumnStyles.Add(new ColumnStyle());
-            TransactionSearchControl_TableLayout_QuickFilters.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 20F));
+            TransactionSearchControl_TableLayout_QuickFilters.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 16.6666679F));
             TransactionSearchControl_TableLayout_QuickFilters.ColumnStyles.Add(new ColumnStyle());
-            TransactionSearchControl_TableLayout_QuickFilters.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 20F));
+            TransactionSearchControl_TableLayout_QuickFilters.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 16.6666679F));
             TransactionSearchControl_TableLayout_QuickFilters.ColumnStyles.Add(new ColumnStyle());
-            TransactionSearchControl_TableLayout_QuickFilters.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 20F));
+            TransactionSearchControl_TableLayout_QuickFilters.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 16.6666679F));
             TransactionSearchControl_TableLayout_QuickFilters.ColumnStyles.Add(new ColumnStyle());
-            TransactionSearchControl_TableLayout_QuickFilters.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 20F));
+            TransactionSearchControl_TableLayout_QuickFilters.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 16.6666679F));
+            TransactionSearchControl_TableLayout_QuickFilters.ColumnStyles.Add(new ColumnStyle());
+            TransactionSearchControl_TableLayout_QuickFilters.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 16.6666679F));
             TransactionSearchControl_TableLayout_QuickFilters.Controls.Add(TransactionSearchControl_RadioButton_Custom, 7, 0);
             TransactionSearchControl_TableLayout_QuickFilters.Controls.Add(TransactionSearchControl_RadioButton_Month, 5, 0);
             TransactionSearchControl_TableLayout_QuickFilters.Controls.Add(TransactionSearchControl_RadioButton_Week, 3, 0);
             TransactionSearchControl_TableLayout_QuickFilters.Controls.Add(TransactionSearchControl_RadioButton_Today, 1, 0);
+            TransactionSearchControl_TableLayout_QuickFilters.Controls.Add(TransactionSearchControl_RadioButton_Everything, 9, 0);
             TransactionSearchControl_TableLayout_QuickFilters.Dock = DockStyle.Fill;
             TransactionSearchControl_TableLayout_QuickFilters.Location = new Point(3, 19);
             TransactionSearchControl_TableLayout_QuickFilters.Name = "TransactionSearchControl_TableLayout_QuickFilters";
@@ -352,7 +356,7 @@ namespace MTM_WIP_Application_Winforms.Controls.Transactions
             // 
             TransactionSearchControl_RadioButton_Custom.AutoSize = true;
             TransactionSearchControl_RadioButton_Custom.Dock = DockStyle.Fill;
-            TransactionSearchControl_RadioButton_Custom.Location = new Point(329, 3);
+            TransactionSearchControl_RadioButton_Custom.Location = new Point(249, 3);
             TransactionSearchControl_RadioButton_Custom.Name = "TransactionSearchControl_RadioButton_Custom";
             TransactionSearchControl_RadioButton_Custom.Size = new Size(67, 19);
             TransactionSearchControl_RadioButton_Custom.TabIndex = 3;
@@ -364,7 +368,7 @@ namespace MTM_WIP_Application_Winforms.Controls.Transactions
             TransactionSearchControl_RadioButton_Month.AutoSize = true;
             TransactionSearchControl_RadioButton_Month.Checked = true;
             TransactionSearchControl_RadioButton_Month.Dock = DockStyle.Fill;
-            TransactionSearchControl_RadioButton_Month.Location = new Point(228, 3);
+            TransactionSearchControl_RadioButton_Month.Location = new Point(168, 3);
             TransactionSearchControl_RadioButton_Month.Name = "TransactionSearchControl_RadioButton_Month";
             TransactionSearchControl_RadioButton_Month.Size = new Size(61, 19);
             TransactionSearchControl_RadioButton_Month.TabIndex = 2;
@@ -376,7 +380,7 @@ namespace MTM_WIP_Application_Winforms.Controls.Transactions
             // 
             TransactionSearchControl_RadioButton_Week.AutoSize = true;
             TransactionSearchControl_RadioButton_Week.Dock = DockStyle.Fill;
-            TransactionSearchControl_RadioButton_Week.Location = new Point(134, 3);
+            TransactionSearchControl_RadioButton_Week.Location = new Point(94, 3);
             TransactionSearchControl_RadioButton_Week.Name = "TransactionSearchControl_RadioButton_Week";
             TransactionSearchControl_RadioButton_Week.Size = new Size(54, 19);
             TransactionSearchControl_RadioButton_Week.TabIndex = 1;
@@ -387,7 +391,7 @@ namespace MTM_WIP_Application_Winforms.Controls.Transactions
             // 
             TransactionSearchControl_RadioButton_Today.AutoSize = true;
             TransactionSearchControl_RadioButton_Today.Dock = DockStyle.Fill;
-            TransactionSearchControl_RadioButton_Today.Location = new Point(37, 3);
+            TransactionSearchControl_RadioButton_Today.Location = new Point(17, 3);
             TransactionSearchControl_RadioButton_Today.Name = "TransactionSearchControl_RadioButton_Today";
             TransactionSearchControl_RadioButton_Today.Size = new Size(57, 19);
             TransactionSearchControl_RadioButton_Today.TabIndex = 0;
@@ -745,6 +749,17 @@ namespace MTM_WIP_Application_Winforms.Controls.Transactions
             TransactionSearchControl_Button_Search.Text = "🔎";
             TransactionSearchControl_Button_Search.UseVisualStyleBackColor = false;
             // 
+            // TransactionSearchControl_RadioButton_Everything
+            // 
+            TransactionSearchControl_RadioButton_Everything.AutoSize = true;
+            TransactionSearchControl_RadioButton_Everything.Dock = DockStyle.Fill;
+            TransactionSearchControl_RadioButton_Everything.Location = new Point(336, 3);
+            TransactionSearchControl_RadioButton_Everything.Name = "TransactionSearchControl_RadioButton_Everything";
+            TransactionSearchControl_RadioButton_Everything.Size = new Size(81, 19);
+            TransactionSearchControl_RadioButton_Everything.TabIndex = 4;
+            TransactionSearchControl_RadioButton_Everything.Text = "Everything";
+            TransactionSearchControl_RadioButton_Everything.UseVisualStyleBackColor = true;
+            // 
             // TransactionSearchControl
             // 
             AutoScaleDimensions = new SizeF(96F, 96F);
@@ -847,6 +862,7 @@ namespace MTM_WIP_Application_Winforms.Controls.Transactions
         private GroupBox TransactionSearchControl_GroupBox_DateRange;
         private GroupBox TransactionSearchControl_GroupBox_RadioButtons;
         private TableLayoutPanel TransactionSearchControl_TableLayout_DateTimePicker;
+        private RadioButton TransactionSearchControl_RadioButton_Everything;
     }
 }
 
