@@ -331,6 +331,82 @@ internal class Dao_Transactions
         }
     }
 
+    /// <summary>
+    /// Retrieves the complete transaction lifecycle for a specific batch number.
+    /// Returns all transactions chronologically ordered for lifecycle visualization.
+    /// </summary>
+    /// <param name="batchNumber">The batch number to retrieve lifecycle for.</param>
+    /// <param name="connection">Optional MySqlConnection for transaction context.</param>
+    /// <param name="transaction">Optional MySqlTransaction for transaction context.</param>
+    /// <returns>DaoResult containing list of transactions in chronological order.</returns>
+    /// <exception cref="ArgumentException">Thrown when batchNumber is null or empty.</exception>
+    public async Task<DaoResult<List<Model_Transactions>>> GetBatchLifecycleAsync(
+        string batchNumber,
+        MySqlConnection? connection = null,
+        MySqlTransaction? transaction = null
+    )
+    {
+        try
+        {
+            // Validate input
+            if (string.IsNullOrWhiteSpace(batchNumber))
+            {
+                return DaoResult<List<Model_Transactions>>.Failure(
+                    "Batch number is required for lifecycle retrieval"
+                );
+            }
+
+            LoggingUtility.Log($"[Dao_Transactions.GetBatchLifecycleAsync] Retrieving lifecycle for batch: {batchNumber}");
+
+            var parameters = new Dictionary<string, object>
+            {
+                ["BatchNumber"] = batchNumber
+            };
+
+            // Call stored procedure
+            var result = await Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync(
+                Model_AppVariables.ConnectionString,
+                "inv_transactions_GetBatchLifecycle",
+                parameters,
+                progressHelper: null,
+                connection: connection,
+                transaction: transaction
+            );
+
+            if (!result.IsSuccess)
+            {
+                return DaoResult<List<Model_Transactions>>.Failure(
+                    result.ErrorMessage ?? "Failed to retrieve batch lifecycle"
+                );
+            }
+
+            var transactions = new List<Model_Transactions>();
+            if (result.Data != null)
+            {
+                foreach (DataRow row in result.Data.Rows)
+                {
+                    transactions.Add(MapTransactionFromDataRow(row));
+                }
+            }
+
+            LoggingUtility.Log($"[Dao_Transactions.GetBatchLifecycleAsync] Retrieved {transactions.Count} transactions for batch {batchNumber}");
+
+            return DaoResult<List<Model_Transactions>>.Success(
+                transactions,
+                result.StatusMessage ?? $"Retrieved {transactions.Count} transactions"
+            );
+        }
+        catch (Exception ex)
+        {
+            LoggingUtility.Log($"[Dao_Transactions] GetBatchLifecycleAsync exception: {ex.Message}");
+            LoggingUtility.LogDatabaseError(ex);
+            await Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex, callerName: "GetBatchLifecycleAsync");
+            return DaoResult<List<Model_Transactions>>.Failure(
+                "Failed to retrieve batch lifecycle", ex
+            );
+        }
+    }
+
     #endregion
 
     #region Smart Search Methods

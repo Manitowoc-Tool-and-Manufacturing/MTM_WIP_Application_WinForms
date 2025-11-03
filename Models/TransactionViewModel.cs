@@ -367,9 +367,125 @@ internal sealed class TransactionViewModel
         }
     }
 
+    /// <summary>
+    /// Generates a print dialog for the current transaction search results.
+    /// Opens the system print dialog with formatted transaction data.
+    /// </summary>
+    /// <param name="transactions">The list of transactions to print. If null, uses CurrentResults.</param>
+    /// <returns>A DaoResult indicating success or failure of the print operation.</returns>
+    public async Task<DaoResult<bool>> PrintPreviewAsync(List<Model_Transactions>? transactions = null)
+    {
+        try
+        {
+            var dataToPreview = transactions ?? CurrentResults?.Transactions ?? new List<Model_Transactions>();
+
+            if (dataToPreview.Count == 0)
+            {
+                return DaoResult<bool>.Failure("No transactions to print");
+            }
+
+            LoggingUtility.Log($"[TransactionViewModel] PrintPreviewAsync starting for {dataToPreview.Count} transactions");
+
+            // Convert transaction list to DataTable for Core_DgvPrinter compatibility
+            var dataTable = new DataTable();
+            
+            // Add columns
+            dataTable.Columns.Add("ID", typeof(int));
+            dataTable.Columns.Add("Type", typeof(string));
+            dataTable.Columns.Add("Batch Number", typeof(string));
+            dataTable.Columns.Add("Part Number", typeof(string));
+            dataTable.Columns.Add("From Location", typeof(string));
+            dataTable.Columns.Add("To Location", typeof(string));
+            dataTable.Columns.Add("Operation", typeof(string));
+            dataTable.Columns.Add("Quantity", typeof(int));
+            dataTable.Columns.Add("User", typeof(string));
+            dataTable.Columns.Add("Item Type", typeof(string));
+            dataTable.Columns.Add("Date/Time", typeof(string));
+            dataTable.Columns.Add("Notes", typeof(string));
+
+            // Populate rows
+            foreach (var transaction in dataToPreview)
+            {
+                dataTable.Rows.Add(
+                    transaction.ID,
+                    transaction.TransactionType.ToString(),
+                    transaction.BatchNumber ?? "",
+                    transaction.PartID ?? "",
+                    transaction.FromLocation ?? "",
+                    transaction.ToLocation ?? "",
+                    transaction.Operation ?? "",
+                    transaction.Quantity,
+                    transaction.User ?? "",
+                    transaction.ItemType ?? "",
+                    transaction.DateTime.ToString("yyyy-MM-dd HH:mm:ss"),
+                    transaction.Notes ?? ""
+                );
+            }
+
+            // Print operation must be run on UI thread
+            // Use ConfigureAwait(false) since we're not accessing UI after await
+            return await Task.Run(() =>
+            {
+                try
+                {
+                    // Create temporary DataGridView for printing
+                    using var tempDgv = new System.Windows.Forms.DataGridView
+                    {
+                        DataSource = dataTable,
+                        AutoGenerateColumns = true,
+                        AllowUserToAddRows = false,
+                        AllowUserToDeleteRows = false,
+                        ReadOnly = true
+                    };
+
+                    // Create printer instance
+                    var printer = new Core.Core_DgvPrinter();
+
+                    // Set column layout with appropriate widths
+                    printer.SetColumnLayout("ID", width: 50);
+                    printer.SetColumnLayout("Type", width: 80);
+                    printer.SetColumnLayout("Batch Number", width: 100);
+                    printer.SetColumnLayout("Part Number", width: 100);
+                    printer.SetColumnLayout("From Location", width: 100);
+                    printer.SetColumnLayout("To Location", width: 100);
+                    printer.SetColumnLayout("Operation", width: 80);
+                    printer.SetColumnLayout("Quantity", width: 70, alignment: System.Drawing.StringAlignment.Far);
+                    printer.SetColumnLayout("User", width: 80);
+                    printer.SetColumnLayout("Item Type", width: 80);
+                    printer.SetColumnLayout("Date/Time", width: 140);
+                    printer.SetColumnLayout("Notes", width: 150);
+
+                    // Set visible columns (all columns)
+                    var columnNames = new List<string>
+                    {
+                        "ID", "Type", "Batch Number", "Part Number", "From Location",
+                        "To Location", "Operation", "Quantity", "User", "Item Type",
+                        "Date/Time", "Notes"
+                    };
+                    printer.SetPrintVisibleColumns(columnNames);
+
+                    // Open print dialog
+                    printer.Print(tempDgv);
+
+                    LoggingUtility.Log("[TransactionViewModel] Print dialog completed");
+                    return DaoResult<bool>.Success(true, "Print dialog opened successfully");
+                }
+                catch (Exception ex)
+                {
+                    LoggingUtility.LogApplicationError(ex);
+                    return DaoResult<bool>.Failure($"Print operation failed: {ex.Message}", ex);
+                }
+            }).ConfigureAwait(false);
+        }
+        catch (Exception ex)
+        {
+            LoggingUtility.LogApplicationError(ex);
+            return DaoResult<bool>.Failure($"Failed to open print dialog: {ex.Message}", ex);
+        }
+    }
+
     // Additional method implementations will be added in story-specific tasks:
     // - LoadRelatedTransactionsAsync (US-010, T060)
-    // - PrintPreviewAsync (US-009, T055)
 
     /// <summary>
     /// Exports the current search results to an Excel file.

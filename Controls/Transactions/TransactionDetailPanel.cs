@@ -83,8 +83,50 @@ namespace MTM_WIP_Application_Winforms.Controls.Transactions
 
         private void TransactionDetailPanel_Button_ViewBatchHistory_Click(object? sender, EventArgs e)
         {
-            // TODO: Implement batch history viewer functionality
-            // This will be implemented in a future phase
+            try
+            {
+                // Validate that we have a transaction with required data
+                if (_transaction == null)
+                {
+                    LoggingUtility.Log("[TransactionDetailPanel] Cannot open lifecycle - no transaction loaded.");
+                    Service_ErrorHandler.HandleValidationError("No transaction selected.", "Transaction Lifecycle");
+                    return;
+                }
+
+                if (string.IsNullOrWhiteSpace(_transaction.PartID))
+                {
+                    LoggingUtility.Log("[TransactionDetailPanel] Cannot open lifecycle - missing PartID.");
+                    Service_ErrorHandler.HandleValidationError("Transaction is missing Part ID.", "Transaction Lifecycle");
+                    return;
+                }
+
+                if (string.IsNullOrWhiteSpace(_transaction.BatchNumber))
+                {
+                    LoggingUtility.Log("[TransactionDetailPanel] Cannot open lifecycle - missing BatchNumber.");
+                    Service_ErrorHandler.HandleValidationError("Transaction is missing Batch Number.", "Transaction Lifecycle");
+                    return;
+                }
+
+                LoggingUtility.Log($"[TransactionDetailPanel] Opening lifecycle form for Part: {_transaction.PartID}, Batch: {_transaction.BatchNumber}");
+
+                // Create and show the lifecycle form as a modal dialog
+                using var lifecycleForm = new Forms.Transactions.TransactionLifecycleForm(_transaction.PartID, _transaction.BatchNumber);
+                lifecycleForm.ShowDialog(this.FindForm());
+
+                LoggingUtility.Log("[TransactionDetailPanel] Lifecycle form closed.");
+            }
+            catch (Exception ex)
+            {
+                LoggingUtility.LogApplicationError(ex);
+                Service_ErrorHandler.HandleException(ex, ErrorSeverity.Medium,
+                    contextData: new Dictionary<string, object>
+                    {
+                        ["TransactionID"] = _transaction?.ID ?? 0,
+                        ["PartID"] = _transaction?.PartID ?? "N/A",
+                        ["BatchNumber"] = _transaction?.BatchNumber ?? "N/A"
+                    },
+                    controlName: nameof(TransactionDetailPanel));
+            }
         }
 
         #endregion

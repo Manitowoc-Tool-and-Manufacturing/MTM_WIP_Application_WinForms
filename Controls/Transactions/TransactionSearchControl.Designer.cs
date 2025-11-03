@@ -72,6 +72,8 @@ namespace MTM_WIP_Application_Winforms.Controls.Transactions
             TransactionSearchControl_TableLayout_Buttons = new TableLayoutPanel();
             TransactionSearchControl_Button_Reset = new Button();
             TransactionSearchControl_Button_Search = new Button();
+            TransactionSearchControl_Button_Export = new Button();
+            TransactionSearchControl_Button_Print = new Button();
             TransactionSearchControl_RadioButton_Everything = new RadioButton();
             TransactionSearchControl_TableLayout_Main.SuspendLayout();
             TransactionSearchControl_TableLayout_Filters.SuspendLayout();
@@ -701,18 +703,24 @@ namespace MTM_WIP_Application_Winforms.Controls.Transactions
             TransactionSearchControl_TableLayout_Buttons.AutoSizeMode = AutoSizeMode.GrowAndShrink;
             TransactionSearchControl_TableLayout_Buttons.ColumnCount = 1;
             TransactionSearchControl_TableLayout_Buttons.ColumnStyles.Add(new ColumnStyle());
-            TransactionSearchControl_TableLayout_Buttons.Controls.Add(TransactionSearchControl_Button_Reset, 0, 3);
+            TransactionSearchControl_TableLayout_Buttons.Controls.Add(TransactionSearchControl_Button_Reset, 0, 7);
             TransactionSearchControl_TableLayout_Buttons.Controls.Add(TransactionSearchControl_Button_Search, 0, 1);
+            TransactionSearchControl_TableLayout_Buttons.Controls.Add(TransactionSearchControl_Button_Export, 0, 3);
+            TransactionSearchControl_TableLayout_Buttons.Controls.Add(TransactionSearchControl_Button_Print, 0, 5);
             TransactionSearchControl_TableLayout_Buttons.Dock = DockStyle.Fill;
             TransactionSearchControl_TableLayout_Buttons.Location = new Point(0, 0);
             TransactionSearchControl_TableLayout_Buttons.Name = "TransactionSearchControl_TableLayout_Buttons";
             TransactionSearchControl_TableLayout_Buttons.Padding = new Padding(3);
-            TransactionSearchControl_TableLayout_Buttons.RowCount = 5;
-            TransactionSearchControl_TableLayout_Buttons.RowStyles.Add(new RowStyle(SizeType.Percent, 25F));
+            TransactionSearchControl_TableLayout_Buttons.RowCount = 9;
+            TransactionSearchControl_TableLayout_Buttons.RowStyles.Add(new RowStyle(SizeType.Percent, 20F));
             TransactionSearchControl_TableLayout_Buttons.RowStyles.Add(new RowStyle());
-            TransactionSearchControl_TableLayout_Buttons.RowStyles.Add(new RowStyle(SizeType.Percent, 50F));
+            TransactionSearchControl_TableLayout_Buttons.RowStyles.Add(new RowStyle(SizeType.Percent, 20F));
             TransactionSearchControl_TableLayout_Buttons.RowStyles.Add(new RowStyle());
-            TransactionSearchControl_TableLayout_Buttons.RowStyles.Add(new RowStyle(SizeType.Percent, 25F));
+            TransactionSearchControl_TableLayout_Buttons.RowStyles.Add(new RowStyle(SizeType.Percent, 20F));
+            TransactionSearchControl_TableLayout_Buttons.RowStyles.Add(new RowStyle());
+            TransactionSearchControl_TableLayout_Buttons.RowStyles.Add(new RowStyle(SizeType.Percent, 20F));
+            TransactionSearchControl_TableLayout_Buttons.RowStyles.Add(new RowStyle());
+            TransactionSearchControl_TableLayout_Buttons.RowStyles.Add(new RowStyle(SizeType.Percent, 20F));
             TransactionSearchControl_TableLayout_Buttons.Size = new Size(52, 157);
             TransactionSearchControl_TableLayout_Buttons.TabIndex = 0;
             // 
@@ -748,6 +756,40 @@ namespace MTM_WIP_Application_Winforms.Controls.Transactions
             TransactionSearchControl_Button_Search.TabIndex = 10;
             TransactionSearchControl_Button_Search.Text = "🔎";
             TransactionSearchControl_Button_Search.UseVisualStyleBackColor = false;
+            // 
+            // TransactionSearchControl_Button_Export
+            // 
+            TransactionSearchControl_Button_Export.AutoSize = true;
+            TransactionSearchControl_Button_Export.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            TransactionSearchControl_Button_Export.BackColor = Color.FromArgb(34, 197, 94);
+            TransactionSearchControl_Button_Export.FlatStyle = FlatStyle.Flat;
+            TransactionSearchControl_Button_Export.Font = new Font("Segoe UI", 10F, FontStyle.Bold);
+            TransactionSearchControl_Button_Export.ForeColor = Color.White;
+            TransactionSearchControl_Button_Export.Location = new Point(6, 82);
+            TransactionSearchControl_Button_Export.MaximumSize = new Size(40, 40);
+            TransactionSearchControl_Button_Export.MinimumSize = new Size(40, 40);
+            TransactionSearchControl_Button_Export.Name = "TransactionSearchControl_Button_Export";
+            TransactionSearchControl_Button_Export.Size = new Size(40, 40);
+            TransactionSearchControl_Button_Export.TabIndex = 11;
+            TransactionSearchControl_Button_Export.Text = "📊";
+            TransactionSearchControl_Button_Export.UseVisualStyleBackColor = false;
+            // 
+            // TransactionSearchControl_Button_Print
+            // 
+            TransactionSearchControl_Button_Print.AutoSize = true;
+            TransactionSearchControl_Button_Print.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            TransactionSearchControl_Button_Print.BackColor = Color.FromArgb(168, 85, 247);
+            TransactionSearchControl_Button_Print.FlatStyle = FlatStyle.Flat;
+            TransactionSearchControl_Button_Print.Font = new Font("Segoe UI", 10F, FontStyle.Bold);
+            TransactionSearchControl_Button_Print.ForeColor = Color.White;
+            TransactionSearchControl_Button_Print.Location = new Point(6, 128);
+            TransactionSearchControl_Button_Print.MaximumSize = new Size(40, 40);
+            TransactionSearchControl_Button_Print.MinimumSize = new Size(40, 40);
+            TransactionSearchControl_Button_Print.Name = "TransactionSearchControl_Button_Print";
+            TransactionSearchControl_Button_Print.Size = new Size(40, 40);
+            TransactionSearchControl_Button_Print.TabIndex = 12;
+            TransactionSearchControl_Button_Print.Text = "🖨️";
+            TransactionSearchControl_Button_Print.UseVisualStyleBackColor = false;
             // 
             // TransactionSearchControl_RadioButton_Everything
             // 
@@ -828,6 +870,8 @@ namespace MTM_WIP_Application_Winforms.Controls.Transactions
         private System.Windows.Forms.Label TransactionSearchControl_Label_Operation;
         private System.Windows.Forms.TextBox TransactionSearchControl_TextBox_Operation;
         private System.Windows.Forms.Button TransactionSearchControl_Button_Search;
+        private System.Windows.Forms.Button TransactionSearchControl_Button_Export;
+        private System.Windows.Forms.Button TransactionSearchControl_Button_Print;
         private System.Windows.Forms.GroupBox TransactionSearchControl_GroupBox_TransactionTypes;
         private System.Windows.Forms.CheckBox TransactionSearchControl_CheckBox_IN;
         private System.Windows.Forms.CheckBox TransactionSearchControl_CheckBox_OUT;

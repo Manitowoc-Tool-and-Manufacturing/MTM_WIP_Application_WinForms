@@ -52,6 +52,8 @@ internal partial class Transactions : Form
     {
         Transactions_UserControl_Search.SearchRequested += SearchControl_SearchRequested;
         Transactions_UserControl_Search.ResetRequested += SearchControl_ResetRequested;
+        Transactions_UserControl_Search.ExportRequested += SearchControl_ExportRequested;
+        Transactions_UserControl_Search.PrintRequested += SearchControl_PrintRequested;
         Transactions_UserControl_Grid.PageChanged += GridControl_PageChanged;
         Transactions_UserControl_Grid.RowSelected += GridControl_RowSelected;
         Transactions_UserControl_Grid.ToggleSearchRequested += GridControl_ToggleSearchRequested;
@@ -194,6 +196,126 @@ internal partial class Transactions : Form
     {
         LoggingUtility.Log("[Transactions] Reset requested, clearing grid results.");
         Transactions_UserControl_Grid.ClearResults();
+    }
+
+    private async void SearchControl_ExportRequested(object? sender, EventArgs e)
+    {
+        try
+        {
+            LoggingUtility.Log("[Transactions] Export requested.");
+
+            // Check if there are results to export
+            if (_viewModel.CurrentResults == null || _viewModel.CurrentResults.Transactions == null || _viewModel.CurrentResults.Transactions.Count == 0)
+            {
+                LoggingUtility.Log("[Transactions] Export aborted - no results to export.");
+                Service_ErrorHandler.HandleValidationError("No transactions to export. Please perform a search first.", "Export");
+                return;
+            }
+
+            // Generate default filename: Transactions_yyyyMMdd_Username.xlsx
+            string defaultFileName = $"Transactions_{DateTime.Now:yyyyMMdd}_{_currentUser}.xlsx";
+            
+            // Show SaveFileDialog
+            using var saveDialog = new SaveFileDialog
+            {
+                Filter = "Excel Files (*.xlsx)|*.xlsx",
+                FileName = defaultFileName,
+                Title = "Export Transactions to Excel",
+                DefaultExt = "xlsx",
+                AddExtension = true,
+                OverwritePrompt = true
+            };
+
+            if (saveDialog.ShowDialog(this) == DialogResult.OK)
+            {
+                string filePath = saveDialog.FileName;
+                
+                // Validate file path (security best practice)
+                if (string.IsNullOrWhiteSpace(filePath))
+                {
+                    LoggingUtility.Log("[Transactions] Export aborted - invalid file path.");
+                    Service_ErrorHandler.HandleValidationError("Invalid file path selected.", "Export");
+                    return;
+                }
+
+                // Validate directory exists
+                string? directory = Path.GetDirectoryName(filePath);
+                if (string.IsNullOrWhiteSpace(directory) || !Directory.Exists(directory))
+                {
+                    LoggingUtility.Log($"[Transactions] Export aborted - directory does not exist: {directory}");
+                    Service_ErrorHandler.HandleValidationError("Selected directory does not exist.", "Export");
+                    return;
+                }
+
+                LoggingUtility.Log($"[Transactions] Exporting {_viewModel.CurrentResults.Transactions.Count} transactions to: {filePath}");
+
+                // Call ViewModel export method
+                var exportResult = await _viewModel.ExportToExcelAsync(filePath, null).ConfigureAwait(false);
+
+                this.Invoke(() =>
+                {
+                    if (exportResult.IsSuccess)
+                    {
+                        LoggingUtility.Log($"[Transactions] Export successful: {filePath}");
+                        Service_ErrorHandler.ShowConfirmation($"Transactions exported successfully!\n\nFile: {Path.GetFileName(filePath)}\nLocation: {directory}", "Export Complete");
+                    }
+                    else
+                    {
+                        LoggingUtility.Log($"[Transactions] Export failed: {exportResult.ErrorMessage}");
+                        Service_ErrorHandler.HandleValidationError(exportResult.ErrorMessage ?? "Export failed", "Export");
+                    }
+                });
+            }
+            else
+            {
+                LoggingUtility.Log("[Transactions] Export cancelled by user.");
+            }
+        }
+        catch (Exception ex)
+        {
+            LoggingUtility.LogApplicationError(ex);
+            Service_ErrorHandler.HandleException(ex, ErrorSeverity.Medium, retryAction: null,
+                contextData: new Dictionary<string, object> 
+                { 
+                    ["User"] = _currentUser,
+                    ["TransactionCount"] = _viewModel.CurrentResults?.Transactions?.Count ?? 0
+                },
+                controlName: nameof(Transactions));
+        }
+    }
+
+    private async void SearchControl_PrintRequested(object? sender, EventArgs e)
+    {
+        try
+        {
+            LoggingUtility.Log("[Transactions] Print requested.");
+
+            // Check if there are results to print
+            if (_viewModel.CurrentResults == null || _viewModel.CurrentResults.Transactions == null || _viewModel.CurrentResults.Transactions.Count == 0)
+            {
+                LoggingUtility.Log("[Transactions] Print aborted - no results to print.");
+                Service_ErrorHandler.HandleValidationError("No transactions to print. Please perform a search first.", "Print");
+                return;
+            }
+
+            LoggingUtility.Log($"[Transactions] Printing {_viewModel.CurrentResults.Transactions.Count} transactions.");
+
+            // Call ViewModel print method
+            await _viewModel.PrintPreviewAsync(_viewModel.CurrentResults.Transactions).ConfigureAwait(false);
+
+            LoggingUtility.Log("[Transactions] Print dialog shown.");
+        }
+        catch (Exception ex)
+        {
+            LoggingUtility.LogApplicationError(ex);
+            Service_ErrorHandler.HandleException(ex, ErrorSeverity.Low, retryAction: null,
+                contextData: new Dictionary<string, object> 
+                { 
+                    ["User"] = _currentUser,
+                    ["TransactionCount"] = _viewModel.CurrentResults?.Transactions?.Count ?? 0
+                },
+                controlName: nameof(Transactions));
+        }
     }
 
     private async void GridControl_PageChanged(object? sender, int newPage)
