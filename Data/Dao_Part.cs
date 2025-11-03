@@ -30,7 +30,9 @@ internal static class Dao_Part
             var result = await Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync(
                 Model_AppVariables.ConnectionString,
                 "md_part_ids_Get_All",
-                null
+                null,
+                connection: connection,
+                transaction: transaction
             );
 
             if (result.IsSuccess && result.Data != null)
@@ -129,7 +131,9 @@ internal static class Dao_Part
     /// Retrieves all distinct part types from the system.
     /// </summary>
     /// <returns>A DaoResult containing a DataTable with part types.</returns>
-    internal static async Task<DaoResult<DataTable>> GetPartTypesAsync()
+    internal static async Task<DaoResult<DataTable>> GetPartTypesAsync(
+        MySqlConnection? connection = null,
+        MySqlTransaction? transaction = null)
     {
         Service_DebugTracer.TraceMethodEntry(controlName: "Dao_Part");
 
@@ -138,7 +142,9 @@ internal static class Dao_Part
             var result = await Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync(
                 Model_AppVariables.ConnectionString,
                 "md_item_types_GetDistinct",
-                null
+                null,
+                connection: connection,
+                transaction: transaction
             );
 
             if (result.IsSuccess && result.Data != null)
@@ -219,7 +225,9 @@ internal static class Dao_Part
     /// <param name="type">The part type/category.</param>
     /// <returns>A DaoResult indicating success or failure.</returns>
     internal static async Task<DaoResult> CreatePartAsync(string itemNumber, string customer, string description,
-        string issuedBy, string type)
+        string issuedBy, string type,
+        MySqlConnection? connection = null,
+        MySqlTransaction? transaction = null)
     {
         Service_DebugTracer.TraceMethodEntry(new Dictionary<string, object>
         {
@@ -242,7 +250,9 @@ internal static class Dao_Part
             var result = await Helper_Database_StoredProcedure.ExecuteNonQueryWithStatusAsync(
                 Model_AppVariables.ConnectionString,
                 "md_part_ids_Add_Part",
-                parameters
+                parameters,
+                connection: connection,
+                transaction: transaction
             );
 
             if (result.IsSuccess)
@@ -281,7 +291,9 @@ internal static class Dao_Part
     /// <param name="type">The part type/category.</param>
     /// <returns>A DaoResult indicating success or failure.</returns>
     internal static async Task<DaoResult> UpdatePartAsync(int id, string itemNumber, string customer,
-        string description, string issuedBy, string type)
+        string description, string issuedBy, string type,
+        MySqlConnection? connection = null,
+        MySqlTransaction? transaction = null)
     {
         Service_DebugTracer.TraceMethodEntry(new Dictionary<string, object>
         {
@@ -306,7 +318,9 @@ internal static class Dao_Part
             var result = await Helper_Database_StoredProcedure.ExecuteNonQueryWithStatusAsync(
                 Model_AppVariables.ConnectionString,
                 "md_part_ids_Update_Part",
-                parameters
+                parameters,
+                connection: connection,
+                transaction: transaction
             );
 
             if (result.IsSuccess)
@@ -399,7 +413,9 @@ internal static class Dao_Part
             var result = await Helper_Database_StoredProcedure.ExecuteNonQueryWithStatusAsync(
                 Model_AppVariables.ConnectionString,
                 "md_part_ids_Delete_ByItemNumber",
-                parameters
+                parameters,
+                connection: connection,
+                transaction: transaction
             );
 
             if (result.IsSuccess)

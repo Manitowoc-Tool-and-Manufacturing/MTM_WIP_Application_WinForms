@@ -67,7 +67,7 @@ internal class Dao_Transactions
                 ["BatchNumber"] = batchNumber ?? "",
                 ["FromLocation"] = fromLocation ?? "",
                 ["ToLocation"] = toLocation ?? "",
-                ["p_Operation"] = operation ?? "",
+                ["Operation"] = operation ?? "",
                 ["TransactionType"] = transactionType?.ToString() ?? "",
                 ["Quantity"] = quantity ?? (object)DBNull.Value,
                 ["Notes"] = notes ?? "",
@@ -647,7 +647,9 @@ internal class Dao_Transactions
         string userName,
         bool isAdmin,
         DateTime? dateFrom,
-        DateTime? dateTo)
+        DateTime? dateTo,
+        MySqlConnection? connection = null,
+        MySqlTransaction? transaction = null)
     {
         try
         {
@@ -663,7 +665,9 @@ internal class Dao_Transactions
                 Model_AppVariables.ConnectionString,
                 "inv_transactions_GetAnalytics",
                 parameters,
-                progressHelper: null
+                progressHelper: null,
+                connection: connection,
+                transaction: transaction
             ).ConfigureAwait(false);
 
             if (!result.IsSuccess)

@@ -22,7 +22,9 @@ namespace MTM_WIP_Application_Winforms.Data
         /// Used for loading the startup cache in Helper_Database_StoredProcedure.
         /// </summary>
         /// <returns>DaoResult containing list of active overrides, or empty list if none exist.</returns>
-        public static async Task<DaoResult<List<Model_ParameterPrefixOverride>>> GetAllActiveAsync()
+        public static async Task<DaoResult<List<Model_ParameterPrefixOverride>>> GetAllActiveAsync(
+            MySqlConnection? connection = null,
+            MySqlTransaction? transaction = null)
         {
             try
             {
@@ -32,7 +34,9 @@ namespace MTM_WIP_Application_Winforms.Data
                     connectionString,
                     "sys_parameter_prefix_overrides_Get_All",
                     new Dictionary<string, object>(),
-                    progressHelper: null);
+                    progressHelper: null,
+                    connection: connection,
+                    transaction: transaction);
 
                 if (!result.IsSuccess)
                 {
@@ -69,7 +73,9 @@ namespace MTM_WIP_Application_Winforms.Data
         /// </summary>
         /// <param name="overrideId">The unique identifier of the override.</param>
         /// <returns>DaoResult containing the override, or failure if not found.</returns>
-        public static async Task<DaoResult<Model_ParameterPrefixOverride>> GetByIdAsync(int overrideId)
+        public static async Task<DaoResult<Model_ParameterPrefixOverride>> GetByIdAsync(int overrideId,
+            MySqlConnection? connection = null,
+            MySqlTransaction? transaction = null)
         {
             try
             {
@@ -84,7 +90,9 @@ namespace MTM_WIP_Application_Winforms.Data
                     connectionString,
                     "sys_parameter_prefix_overrides_Get_ById",
                     new Dictionary<string, object> { ["OverrideId"] = overrideId },
-                    progressHelper: null);
+                    progressHelper: null,
+                    connection: connection,
+                    transaction: transaction);
 
                 if (!result.IsSuccess)
                 {
@@ -119,7 +127,9 @@ namespace MTM_WIP_Application_Winforms.Data
         /// </summary>
         /// <param name="model">The override to add (OverrideId will be populated on success).</param>
         /// <returns>DaoResult containing the new OverrideId on success.</returns>
-        public static async Task<DaoResult<int>> AddAsync(Model_ParameterPrefixOverride model)
+        public static async Task<DaoResult<int>> AddAsync(Model_ParameterPrefixOverride model,
+            MySqlConnection? connection = null,
+            MySqlTransaction? transaction = null)
         {
             try
             {
@@ -159,7 +169,9 @@ namespace MTM_WIP_Application_Winforms.Data
                         ["Reason"] = model.Reason ?? (object)DBNull.Value,
                         ["CreatedBy"] = model.CreatedBy
                     },
-                    progressHelper: null);
+                    progressHelper: null,
+                    connection: connection,
+                    transaction: transaction);
 
                 if (!result.IsSuccess)
                 {
@@ -178,7 +190,7 @@ namespace MTM_WIP_Application_Winforms.Data
                 }
 
                 // Query back to get the new ID (since OUT parameters aren't exposed by helper yet)
-                var getAllResult = await GetAllActiveAsync();
+                var getAllResult = await GetAllActiveAsync(connection, transaction);
                 if (getAllResult.IsSuccess && getAllResult.Data != null)
                 {
                     var newOverride = getAllResult.Data.Find(o =>
@@ -253,7 +265,9 @@ namespace MTM_WIP_Application_Winforms.Data
                         ["Reason"] = model.Reason ?? (object)DBNull.Value,
                         ["ModifiedBy"] = model.ModifiedBy
                     },
-                    progressHelper: null);
+                    progressHelper: null,
+                    connection: connection,
+                    transaction: transaction);
 
                 if (!result.IsSuccess)
                 {
@@ -316,7 +330,9 @@ namespace MTM_WIP_Application_Winforms.Data
                         ["OverrideId"] = overrideId,
                         ["ModifiedBy"] = modifiedBy
                     },
-                    progressHelper: null);
+                    progressHelper: null,
+                    connection: connection,
+                    transaction: transaction);
 
                 if (!result.IsSuccess)
                 {

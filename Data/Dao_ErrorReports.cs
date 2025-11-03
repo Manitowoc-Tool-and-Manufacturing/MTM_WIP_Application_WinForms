@@ -7,6 +7,7 @@ using MTM_WIP_Application_Winforms.Helpers;
 using MTM_WIP_Application_Winforms.Logging;
 using MTM_WIP_Application_Winforms.Models;
 using MTM_WIP_Application_WinForms.Models;
+using MySql.Data.MySqlClient;
 
 namespace MTM_WIP_Application_Winforms.Data;
 
@@ -42,7 +43,9 @@ internal static class Dao_ErrorReports
     /// The stored procedure uses transactions to ensure atomicity.
     /// On success, the ReportID is extracted from output parameters.
     /// </remarks>
-    public static async Task<DaoResult<int>> InsertReportAsync(Model_ErrorReport report)
+    public static async Task<DaoResult<int>> InsertReportAsync(Model_ErrorReport report,
+        MySqlConnection? connection = null,
+        MySqlTransaction? transaction = null)
     {
         ArgumentNullException.ThrowIfNull(report);
 
@@ -69,7 +72,9 @@ internal static class Dao_ErrorReports
                 connectionString,
                 "sp_error_reports_Insert",
                 parameters,
-                progressHelper: null);
+                progressHelper: null,
+                connection: connection,
+                transaction: transaction);
 
             if (result.IsSuccess)
             {
@@ -146,7 +151,9 @@ internal static class Dao_ErrorReports
     /// <exception cref="InvalidOperationException">Thrown when filter validation fails (e.g., DateFrom > DateTo).</exception>
     public static async Task<DaoResult<DataTable>> GetAllErrorReportsAsync(
         Model_ErrorReportFilter? filter,
-        Helper_StoredProcedureProgress? progressHelper = null)
+        Helper_StoredProcedureProgress? progressHelper = null,
+        MySqlConnection? connection = null,
+        MySqlTransaction? transaction = null)
     {
         filter ??= new Model_ErrorReportFilter();
 
@@ -169,7 +176,9 @@ internal static class Dao_ErrorReports
                 connectionString,
                 "sp_error_reports_GetAll",
                 parameters,
-                progressHelper);
+                progressHelper,
+                connection: connection,
+                transaction: transaction);
 
             if (!storedProcedureResult.IsSuccess)
             {
@@ -213,7 +222,9 @@ internal static class Dao_ErrorReports
     /// <exception cref="InvalidOperationException">Thrown when reportId is less than or equal to zero.</exception>
     public static async Task<DaoResult<Model_ErrorReport>> GetErrorReportByIdAsync(
         int reportId,
-        Helper_StoredProcedureProgress? progressHelper = null)
+        Helper_StoredProcedureProgress? progressHelper = null,
+        MySqlConnection? connection = null,
+        MySqlTransaction? transaction = null)
     {
         if (reportId <= 0)
         {
@@ -233,7 +244,9 @@ internal static class Dao_ErrorReports
                 connectionString,
                 "sp_error_reports_GetByID",
                 parameters,
-                progressHelper);
+                progressHelper,
+                connection: connection,
+                transaction: transaction);
 
             if (!storedProcedureResult.IsSuccess)
             {
@@ -298,7 +311,9 @@ internal static class Dao_ErrorReports
         string newStatus,
         string? developerNotes,
         string reviewedBy,
-        Helper_StoredProcedureProgress? progressHelper = null)
+        Helper_StoredProcedureProgress? progressHelper = null,
+        MySqlConnection? connection = null,
+        MySqlTransaction? transaction = null)
     {
         if (reportId <= 0)
         {
@@ -334,7 +349,9 @@ internal static class Dao_ErrorReports
                 connectionString,
                 "sp_error_reports_UpdateStatus",
                 parameters,
-                progressHelper);
+                progressHelper,
+                connection: connection,
+                transaction: transaction);
 
             if (!storedProcedureResult.IsSuccess)
             {
@@ -372,7 +389,9 @@ internal static class Dao_ErrorReports
     /// This method is typically called once when initializing filter controls.
     /// The calling code should prepend UI options like "[ All Users ]".
     /// </remarks>
-    public static async Task<DaoResult<List<string>>> GetUserListAsync()
+    public static async Task<DaoResult<List<string>>> GetUserListAsync(
+        MySqlConnection? connection = null,
+        MySqlTransaction? transaction = null)
     {
         try
         {
@@ -380,7 +399,9 @@ internal static class Dao_ErrorReports
 
             var storedProcedureResult = await Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync(
                 connectionString,
-                "sp_error_reports_GetUserList");
+                "sp_error_reports_GetUserList",
+                connection: connection,
+                transaction: transaction);
 
             if (!storedProcedureResult.IsSuccess)
             {
@@ -421,7 +442,9 @@ internal static class Dao_ErrorReports
     /// This method is typically called once when initializing filter controls.
     /// The calling code should prepend UI options like "[ All Machines ]".
     /// </remarks>
-    public static async Task<DaoResult<List<string>>> GetMachineListAsync()
+    public static async Task<DaoResult<List<string>>> GetMachineListAsync(
+        MySqlConnection? connection = null,
+        MySqlTransaction? transaction = null)
     {
         try
         {
@@ -429,7 +452,9 @@ internal static class Dao_ErrorReports
 
             var storedProcedureResult = await Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync(
                 connectionString,
-                "sp_error_reports_GetMachineList");
+                "sp_error_reports_GetMachineList",
+                connection: connection,
+                transaction: transaction);
 
             if (!storedProcedureResult.IsSuccess)
             {

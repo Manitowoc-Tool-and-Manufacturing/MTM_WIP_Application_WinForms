@@ -74,7 +74,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
                 _currentOperation = await Dao_Operation.GetOperationByNumber(selectedOperation ?? string.Empty);
                 if (_currentOperation != null)
                 {
-                    operationTextBox.Text = _currentOperation["p_Operation"]?.ToString() ?? string.Empty;
+                    operationTextBox.Text = _currentOperation["Operation"]?.ToString() ?? string.Empty;
                     issuedByValueLabel.Text = _currentOperation["IssuedBy"]?.ToString() ?? "Current User";
                     EnableControls(true);
                 }
@@ -106,7 +106,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
                 }
 
                 string newOperationNumber = operationTextBox.Text.Trim();
-                string originalOperationNumber = _currentOperation["p_Operation"]?.ToString() ?? string.Empty;
+                string originalOperationNumber = _currentOperation["Operation"]?.ToString() ?? string.Empty;
                 
                 if (newOperationNumber != originalOperationNumber)
                 {

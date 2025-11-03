@@ -149,7 +149,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
 
         #region Methods
 
-        public async Task LoadLast10Transactions(string currentUser)
+        public async Task LoadLast10Transactions(string? currentUser)
         {
             try
             {
@@ -163,10 +163,11 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
 
                 // FIXED: Use Helper_Database_StoredProcedure instead of direct MySqlConnection
                 // because the stored procedure has p_Status and p_ErrorMsg parameters
+                if (string.IsNullOrEmpty(currentUser)) { currentUser = string.Empty; }
                 var dataResult = await Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync(
-                    Model_AppVariables.ConnectionString,
+                    Model_AppVariables.BootstrapConnectionString,
                     "sys_last_10_transactions_Get_ByUser",
-                    new Dictionary<string, object> { ["p_User"] = currentUser },
+                    new Dictionary<string, object> { ["User"] = currentUser },
                     null // No progress helper for this method
                 );
 

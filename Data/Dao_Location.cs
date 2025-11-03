@@ -24,7 +24,9 @@ internal static class Dao_Location
                 Model_AppVariables.ConnectionString,
                 "md_locations_Delete_ByLocation",
                 parameters,
-                null // No progress helper for this method
+                null, // No progress helper for this method
+                connection: connection,
+                transaction: transaction
             );
 
             if (result.IsSuccess)
@@ -65,7 +67,9 @@ internal static class Dao_Location
                 Model_AppVariables.ConnectionString,
                 "md_locations_Add_Location",
                 parameters,
-                null // No progress helper for this method
+                null, // No progress helper for this method
+                connection: connection,
+                transaction: transaction
             );
 
             if (result.IsSuccess)
@@ -107,7 +111,9 @@ internal static class Dao_Location
                 Model_AppVariables.ConnectionString,
                 "md_locations_Update_Location",
                 parameters,
-                null // No progress helper for this method
+                null, // No progress helper for this method
+                connection: connection,
+                transaction: transaction
             );
 
             if (result.IsSuccess)
@@ -135,7 +141,9 @@ internal static class Dao_Location
                 Model_AppVariables.ConnectionString,
                 "md_locations_Get_All",
                 null, // No parameters needed
-                null // No progress helper for this method
+                null, // No progress helper for this method
+                connection: connection,
+                transaction: transaction
             );
 
             if (result.IsSuccess && result.Data != null)
@@ -196,7 +204,9 @@ internal static class Dao_Location
                 Model_AppVariables.ConnectionString,
                 "md_locations_Exists_ByLocation",
                 parameters,
-                null // No progress helper for this method
+                null, // No progress helper for this method
+                connection: connection,
+                transaction: transaction
             );
 
             if (result.IsSuccess && result.Data != null)

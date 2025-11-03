@@ -63,6 +63,36 @@ namespace MTM_WIP_Application_Winforms.Models
         public static string? WipServerPort { get; set; } = "3306";
         public static string? Version { get; set; } = Assembly.GetEntryAssembly()?.GetName().Version?.ToString();
 
+        /// <summary>
+        /// Bootstrap connection string cached at application startup.
+        /// Used for fetching user settings to avoid circular dependency.
+        /// This uses the initial default values and never changes.
+        /// </summary>
+        private static string? _bootstrapConnectionString;
+
+        /// <summary>
+        /// Gets the bootstrap connection string, initializing it on first access.
+        /// This connection string uses default values and is immune to changes in Model_Users properties.
+        /// </summary>
+        public static string BootstrapConnectionString
+        {
+            get
+            {
+                if (_bootstrapConnectionString == null)
+                {
+                    // Capture initial values - these should never change during settings fetch
+                    string server = Model_Users.WipServerAddress ?? "localhost";
+                    string database = Model_Users.Database ?? "MTM_WIP_Application_Winforms";
+                    _bootstrapConnectionString = Helper_Database_Variables.GetConnectionString(server, database, "root", "root");
+                }
+                return _bootstrapConnectionString;
+            }
+        }
+
+        /// <summary>
+        /// Dynamic connection string that uses current Model_Users values.
+        /// This will reflect any changes made to server/database/port settings.
+        /// </summary>
         public static string ConnectionString =>
             Helper_Database_Variables.GetConnectionString(null, null, null, null);
 

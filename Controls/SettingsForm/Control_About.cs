@@ -7,6 +7,7 @@ using System.Windows.Forms;
 using MTM_WIP_Application_Winforms.Core;
 using MTM_WIP_Application_Winforms.Logging;
 using MTM_WIP_Application_Winforms.Models;
+using MTM_WIP_Application_Winforms.Services;
 
 namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
 {
@@ -51,7 +52,15 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             }
             catch (Exception ex)
             {
-                LoggingUtility.LogApplicationError(ex);
+                Service_ErrorHandler.HandleException(ex, ErrorSeverity.Medium,
+                    contextData: new Dictionary<string, object>
+                    {
+                        ["Operation"] = "About Control Initialization",
+                        ["Version"] = Model_AppVariables.ApplicationVersion,
+                        ["User"] = Model_AppVariables.User
+                    },
+                    callerName: nameof(Control_About_LoadControl),
+                    controlName: nameof(Control_About));
                 StatusMessageChanged?.Invoke(this, $"Error loading about information: {ex.Message}");
             }
         }
@@ -91,7 +100,15 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             }
             catch (Exception ex)
             {
-                LoggingUtility.LogApplicationError(ex);
+                Service_ErrorHandler.HandleException(ex, ErrorSeverity.Medium,
+                    contextData: new Dictionary<string, object>
+                    {
+                        ["Operation"] = "Changelog Loading",
+                        ["WebView2Initialized"] = Control_About_Label_WebView_ChangeLogView?.CoreWebView2 != null,
+                        ["User"] = Model_AppVariables.User
+                    },
+                    callerName: nameof(LoadChangelogAsync),
+                    controlName: nameof(Control_About));
                 ShowErrorContent(ex.Message);
                 StatusMessageChanged?.Invoke(this, $"Warning: Could not load changelog - {ex.Message}");
             }
@@ -142,7 +159,17 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             }
             catch (Exception ex)
             {
-                LoggingUtility.LogApplicationError(ex);
+                Service_ErrorHandler.HandleException(ex, ErrorSeverity.Low,
+                    contextData: new Dictionary<string, object>
+                    {
+                        ["Operation"] = "PDF Path Resolution",
+                        ["AppDirectory"] = AppDomain.CurrentDomain.BaseDirectory,
+                        ["TempPath"] = Path.GetTempPath(),
+                        ["User"] = Model_AppVariables.User,
+                        ["IsCritical"] = false // Falls back to HTML content
+                    },
+                    callerName: nameof(GetChangelogPdfPathAsync),
+                    controlName: nameof(Control_About));
                 return null;
             }
         }

@@ -157,7 +157,7 @@ internal static class Service_ErrorHandler
 
             var contextData = new Dictionary<string, object>
             {
-                ["p_Operation"] = operation,
+                ["Operation"] = operation,
                 ["UserName"] = Environment.UserName,
                 ["IsAdmin"] = IsRunningAsAdministrator()
             };

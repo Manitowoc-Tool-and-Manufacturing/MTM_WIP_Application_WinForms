@@ -32,7 +32,7 @@ public static class Dao_Inventory
             var result = await Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync(
                 Model_AppVariables.ConnectionString,
                 "inv_inventory_Get_ByUser",
-                new Dictionary<string, object> { ["p_User"] = "" },
+                new Dictionary<string, object> { ["User"] = "" },
                 progressHelper: null,
                 connection: connection,
                 transaction: transaction
@@ -262,7 +262,7 @@ public static class Dao_Inventory
                 new Dictionary<string, object>
                 {
                     ["PartID"] = partId.Trim(),
-                    ["p_Operation"] = operation.Trim()  // Fixed: Changed from o_Operation to p_Operation
+                    ["Operation"] = operation.Trim()  // Fixed: Changed from o_Operation to p_Operation
                 },
                 progressHelper: null, // No progress helper for this method
                 connection: connection,
@@ -397,10 +397,10 @@ public static class Dao_Inventory
                 {
                     ["PartID"] = partId,           // helper detects required prefix
                     ["Location"] = location,
-                    ["p_Operation"] = operation,
+                    ["Operation"] = operation,
                     ["Quantity"] = quantity,
                     ["ItemType"] = itemType ?? "None",
-                    ["p_User"] = user,
+                    ["User"] = user,
                     ["BatchNumber"] = batchNumber,
                     ["Notes"] = notes
                 },
@@ -523,12 +523,12 @@ public static class Dao_Inventory
             // MIGRATED: Use Helper_Database_StoredProcedure for proper status handling
             Dictionary<string, object> parameters = new()
             {
-                ["PartID"] = partId,               // helper detects required prefix
+                ["PartID"] = partId,               // Automatic prefix detection
                 ["Location"] = location,
-                ["p_Operation"] = operation,
+                ["Operation"] = operation,
                 ["Quantity"] = quantity,
                 ["ItemType"] = itemType,
-                ["p_User"] = user,
+                ["User"] = user,
                 ["BatchNumber"] = batchNumber,
                 ["Notes"] = notes
             };
@@ -597,13 +597,13 @@ public static class Dao_Inventory
     {
         try
         {
-            // Use explicit p_ prefix for transfer procedures (parameter cache may not be populated yet)
+            // Use automatic parameter prefix detection
             Dictionary<string, object> parameters = new()
             {
-                ["p_BatchNumber"] = batchNumber,
+                ["BatchNumber"] = batchNumber,
                 ["PartID"] = partId,
-                ["p_Operation"] = operation,
-                ["p_NewLocation"] = newLocation
+                ["Operation"] = operation,
+                ["NewLocation"] = newLocation
             };
 
             var result = await Helper_Database_StoredProcedure.ExecuteNonQueryWithStatusAsync(
@@ -663,16 +663,16 @@ public static class Dao_Inventory
     {
         try
         {
-            // Use explicit p_ prefix for transfer procedures (parameter cache may not be populated yet)
+            // Use automatic parameter prefix detection
             Dictionary<string, object> parameters = new()
             {
-                ["p_BatchNumber"] = batchNumber,
+                ["BatchNumber"] = batchNumber,
                 ["PartID"] = partId,
-                ["p_Operation"] = operation,
-                ["p_TransferQuantity"] = transferQuantity,
-                ["p_OriginalQuantity"] = originalQuantity,
-                ["p_NewLocation"] = newLocation,
-                ["p_User"] = user
+                ["Operation"] = operation,
+                ["TransferQuantity"] = transferQuantity,
+                ["OriginalQuantity"] = originalQuantity,
+                ["NewLocation"] = newLocation,
+                ["User"] = user
             };
 
             var result = await Helper_Database_StoredProcedure.ExecuteNonQueryWithStatusAsync(

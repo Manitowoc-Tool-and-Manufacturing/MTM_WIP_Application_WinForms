@@ -138,7 +138,8 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
                     RemoveUserControl_Label_FullName.Text = userRow["Full Name"]?.ToString() ?? "";
                     RemoveUserControl_Label_Shift.Text = userRow["Shift"]?.ToString() ?? "";
 
-                    if (userRow.Table.Columns.Contains("p_ID") && int.TryParse(userRow["p_ID"]?.ToString(), out int userId))
+                    // Use correct column name 'ID' from usr_users table (not 'p_ID')
+                    if (userRow.Table.Columns.Contains("ID") && int.TryParse(userRow["ID"]?.ToString(), out int userId))
                     {
                         UpdateProgress(80, "Loading user role information...");
                         var roleResult = await Dao_User.GetUserRoleIdAsync(userId);
@@ -206,82 +207,41 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             try
             {
                 ShowProgress("Initializing user removal...");
-                UpdateProgress(5, $"Preparing to remove user '{userName}'...");
+                UpdateProgress(20, $"Preparing to remove user '{userName}'...");
                 await Task.Delay(100);
 
-                UpdateProgress(10, "Retrieving user information...");
-                var userResult = await Dao_User.GetUserByUsernameAsync(userName);
-                if (!userResult.IsSuccess || userResult.Data == null)
+                // The stored procedure usr_users_Delete_User handles ALL deletions:
+                // - sys_user_roles (FK constraint)
+                // - usr_ui_settings (FK constraint)
+                // - usr_users (main table)
+                
+                UpdateProgress(50, "Deleting user account and related data...");
+                var deleteUserResult = await Dao_User.DeleteUserAsync(userName);
+                if (!deleteUserResult.IsSuccess)
                 {
                     HideProgress();
-                    MessageBox.Show($@"Error retrieving user: {userResult.ErrorMessage}", @"Error", 
+                    MessageBox.Show($@"Error deleting user: {deleteUserResult.ErrorMessage}", @"Error", 
                         MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    if (userResult.Exception != null)
-                        LoggingUtility.LogApplicationError(userResult.Exception);
+                    if (deleteUserResult.Exception != null)
+                        LoggingUtility.LogApplicationError(deleteUserResult.Exception);
                     return;
                 }
 
-                DataRow userRow = userResult.Data;
-                if (userRow.Table.Columns.Contains("p_ID"))
-                {
-                    UpdateProgress(20, "Validating user data...");
-                    await Task.Delay(100);
+                UpdateProgress(85, "Finalizing...");
+                await Task.Delay(100);
 
-                    UpdateProgress(30, "Deleting user settings...");
-                    var deleteSettingsResult = await Dao_User.DeleteUserSettingsAsync(userName);
-                    if (!deleteSettingsResult.IsSuccess)
-                    {
-                        HideProgress();
-                        MessageBox.Show($@"Error deleting user settings: {deleteSettingsResult.ErrorMessage}", 
-                            @"Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                        if (deleteSettingsResult.Exception != null)
-                            LoggingUtility.LogApplicationError(deleteSettingsResult.Exception);
-                        return;
-                    }
+                UpdateProgress(95, "Refreshing user list...");
+                UserRemoved?.Invoke(this, EventArgs.Empty);
 
-                    int userId = Convert.ToInt32(userRow["p_ID"]);
+                UpdateProgress(100, "User removed successfully!");
+                await Task.Delay(500);
+                HideProgress();
 
-                    UpdateProgress(45, "Retrieving user role information...");
-                    var roleResult = await Dao_User.GetUserRoleIdAsync(userId);
-                    if (roleResult.IsSuccess)
-                    {
-                        UpdateProgress(60, "Removing user role assignments...");
-                        var removeRoleResult = await Dao_User.RemoveUserRoleAsync(userId, roleResult.Data);
-                        if (!removeRoleResult.IsSuccess)
-                        {
-                            // Log warning but continue - role removal failure shouldn't block user deletion
-                            LoggingUtility.Log($"Warning: Failed to remove user role: {removeRoleResult.ErrorMessage}");
-                        }
-                    }
+                MessageBox.Show(@"User removed successfully!", @"Success", MessageBoxButtons.OK,
+                    MessageBoxIcon.Information);
 
-                    UpdateProgress(75, "Deleting user account...");
-                    var deleteUserResult = await Dao_User.DeleteUserAsync(userName);
-                    if (!deleteUserResult.IsSuccess)
-                    {
-                        HideProgress();
-                        MessageBox.Show($@"Error deleting user: {deleteUserResult.ErrorMessage}", @"Error", 
-                            MessageBoxButtons.OK, MessageBoxIcon.Error);
-                        if (deleteUserResult.Exception != null)
-                            LoggingUtility.LogApplicationError(deleteUserResult.Exception);
-                        return;
-                    }
-
-                    UpdateProgress(85, "Cleaning up user data...");
-                    await Task.Delay(100);
-
-                    UpdateProgress(95, "Refreshing user list...");
-                    UserRemoved?.Invoke(this, EventArgs.Empty);
-
-                    UpdateProgress(100, "User removed successfully!");
-                    await Task.Delay(500);
-                    HideProgress();
-
-                    MessageBox.Show(@"User removed successfully!", @"Success", MessageBoxButtons.OK,
-                        MessageBoxIcon.Information);
-
-                    // Reinitialize the ComboBox with detailed progress
-                    LoadUsersAsync();
-                }
+                // Reinitialize the ComboBox with detailed progress
+                LoadUsersAsync();
             }
             catch (Exception ex)
             {

@@ -24,15 +24,6 @@ BEGIN
     ELSEIF p_ItemNumber IS NULL OR TRIM(p_ItemNumber) = '' THEN
         SET p_Status = -2;
         SET p_ErrorMsg = 'ItemNumber is required';
-    ELSEIF p_Customer IS NULL OR TRIM(p_Customer) = '' THEN
-        SET p_Status = -2;
-        SET p_ErrorMsg = 'Customer is required';
-    ELSEIF p_Description IS NULL OR TRIM(p_Description) = '' THEN
-        SET p_Status = -2;
-        SET p_ErrorMsg = 'Description is required';
-    ELSEIF p_IssuedBy IS NULL OR TRIM(p_IssuedBy) = '' THEN
-        SET p_Status = -2;
-        SET p_ErrorMsg = 'IssuedBy is required';
     ELSEIF p_ItemType IS NULL OR TRIM(p_ItemType) = '' THEN
         SET p_Status = -2;
         SET p_ErrorMsg = 'ItemType is required';

@@ -136,8 +136,8 @@ public static class Helper_Database_StoredProcedure
                     finalParameters,
                     new Dictionary<string, object>
                     {
-                        ["p_Status"] = status,
-                        ["p_ErrorMsg"] = errorMessage
+                        ["Status"] = status,
+                        ["ErrorMsg"] = errorMessage
                     },
                     $"DataTable[{dataTable.Rows.Count} rows]",
                     status,

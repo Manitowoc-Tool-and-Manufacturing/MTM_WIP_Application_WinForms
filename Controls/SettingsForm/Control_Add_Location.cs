@@ -1,6 +1,7 @@
 using MTM_WIP_Application_Winforms.Core;
 using MTM_WIP_Application_Winforms.Data;
 using MTM_WIP_Application_Winforms.Models;
+using MTM_WIP_Application_Winforms.Services;
 
 namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
 {
@@ -54,8 +55,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             {
                 if (string.IsNullOrWhiteSpace(Control_Add_Location_TextBox_Location.Text))
                 {
-                    MessageBox.Show(@"Location is required.", @"Validation Error", MessageBoxButtons.OK,
-                        MessageBoxIcon.Warning);
+                    Service_ErrorHandler.HandleValidationError("Location is required.", "Location");
                     Control_Add_Location_TextBox_Location.Focus();
                     return;
                 }
@@ -63,8 +63,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
                 if (Control_Add_Location_ComboBox_Building.SelectedIndex <= 0 ||
                     Control_Add_Location_ComboBox_Building.Text == "Select Building")
                 {
-                    MessageBox.Show(@"Building is required.", @"Validation Error", MessageBoxButtons.OK,
-                        MessageBoxIcon.Warning);
+                    Service_ErrorHandler.HandleValidationError("Building is required.", "Building");
                     Control_Add_Location_ComboBox_Building.Focus();
                     return;
                 }
@@ -75,16 +74,26 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
                 var existsResult = await Dao_Location.LocationExists(location);
                 if (!existsResult.IsSuccess)
                 {
-                    MessageBox.Show($@"Error checking location: {existsResult.ErrorMessage}", @"Error", MessageBoxButtons.OK,
-                        MessageBoxIcon.Error);
+                    if (existsResult.Exception != null)
+                    {
+                        Service_ErrorHandler.HandleDatabaseError(existsResult.Exception,
+                            contextData: new Dictionary<string, object> { ["Location"] = location },
+                            callerName: nameof(Control_Add_Location_Button_Save_Click),
+                            controlName: nameof(Control_Add_Location));
+                    }
+                    else
+                    {
+                        Service_ErrorHandler.HandleException(new Exception(existsResult.ErrorMessage ?? "Database operation failed"),
+                            contextData: new Dictionary<string, object> { ["Location"] = location },
+                            callerName: nameof(Control_Add_Location_Button_Save_Click),
+                            controlName: nameof(Control_Add_Location));
+                    }
                     return;
                 }
                 
                 if (existsResult.Data)
                 {
-                    MessageBox.Show($@"Location '{location}' already exists.", @"Duplicate Location",
-                        MessageBoxButtons.OK,
-                        MessageBoxIcon.Warning);
+                    Service_ErrorHandler.ShowWarning($@"Location '{location}' already exists.", "Duplicate Location");
                     Control_Add_Location_TextBox_Location.Focus();
                     return;
                 }
@@ -92,20 +101,33 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
                 var insertResult = await Dao_Location.InsertLocation(location, building);
                 if (!insertResult.IsSuccess)
                 {
-                    MessageBox.Show($@"Error adding location: {insertResult.ErrorMessage}", @"Error", MessageBoxButtons.OK,
-                        MessageBoxIcon.Error);
+                    if (insertResult.Exception != null)
+                    {
+                        Service_ErrorHandler.HandleDatabaseError(insertResult.Exception,
+                            contextData: new Dictionary<string, object> { ["Location"] = location, ["Building"] = building },
+                            callerName: nameof(Control_Add_Location_Button_Save_Click),
+                            controlName: nameof(Control_Add_Location));
+                    }
+                    else
+                    {
+                        Service_ErrorHandler.HandleException(new Exception(insertResult.ErrorMessage ?? "Database operation failed"),
+                            contextData: new Dictionary<string, object> { ["Location"] = location, ["Building"] = building },
+                            callerName: nameof(Control_Add_Location_Button_Save_Click),
+                            controlName: nameof(Control_Add_Location));
+                    }
                     return;
                 }
                 
                 ClearForm();
                 LocationAdded?.Invoke(this, EventArgs.Empty);
-                MessageBox.Show(@"Location added successfully!", @"Success", MessageBoxButtons.OK,
-                    MessageBoxIcon.Information);
+                Service_ErrorHandler.ShowInformation(@"Location added successfully!", @"Success",
+                    controlName: nameof(Control_Add_Location));
             }
             catch (Exception ex)
             {
-                MessageBox.Show($@"Error adding location: {ex.Message}", @"Error", MessageBoxButtons.OK,
-                    MessageBoxIcon.Error);
+                Service_ErrorHandler.HandleException(ex,
+                    callerName: nameof(Control_Add_Location_Button_Save_Click),
+                    controlName: nameof(Control_Add_Location));
             }
         }
 

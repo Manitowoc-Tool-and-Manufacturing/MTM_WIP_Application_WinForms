@@ -18,13 +18,15 @@ internal static class Dao_Operation
     {
         try
         {
-            var parameters = new Dictionary<string, object> { ["p_Operation"] = operationNumber }; // p_ prefix added automatically
+            var parameters = new Dictionary<string, object> { ["Operation"] = operationNumber }; // p_ prefix added automatically
 
             var result = await Helper_Database_StoredProcedure.ExecuteNonQueryWithStatusAsync(
                 Model_AppVariables.ConnectionString,
                 "md_operation_numbers_Delete_ByOperation",
                 parameters,
-                null // No progress helper for this method
+                null, // No progress helper for this method
+                connection: connection,
+                transaction: transaction
             );
 
             if (result.IsSuccess)
@@ -56,7 +58,7 @@ internal static class Dao_Operation
         {
             var parameters = new Dictionary<string, object>
             {
-                ["p_Operation"] = operationNumber,   // p_ prefix added automatically
+                ["Operation"] = operationNumber,   // p_ prefix added automatically
                 ["IssuedBy"] = user
             };
 
@@ -64,7 +66,9 @@ internal static class Dao_Operation
                 Model_AppVariables.ConnectionString,
                 "md_operation_numbers_Add_Operation",
                 parameters,
-                null // No progress helper for this method
+                null, // No progress helper for this method
+                connection: connection,
+                transaction: transaction
             );
 
             if (result.IsSuccess)
@@ -96,7 +100,7 @@ internal static class Dao_Operation
         {
             var parameters = new Dictionary<string, object>
             {
-                ["p_Operation"] = oldOperation,        // p_ prefix added automatically
+                ["Operation"] = oldOperation,        // p_ prefix added automatically
                 ["NewOperation"] = newOperationNumber,
                 ["IssuedBy"] = user
             };
@@ -105,7 +109,9 @@ internal static class Dao_Operation
                 Model_AppVariables.ConnectionString,
                 "md_operation_numbers_Update_Operation",
                 parameters,
-                null // No progress helper for this method
+                null, // No progress helper for this method
+                connection: connection,
+                transaction: transaction
             );
 
             if (result.IsSuccess)
@@ -137,7 +143,9 @@ internal static class Dao_Operation
                 Model_AppVariables.ConnectionString,
                 "md_operation_numbers_Get_All",
                 null, // No parameters needed
-                null // No progress helper for this method
+                null, // No progress helper for this method
+                connection: connection,
+                transaction: transaction
             );
 
             if (result.IsSuccess && result.Data != null)
@@ -188,7 +196,7 @@ internal static class Dao_Operation
     {
         try
         {
-            var parameters = new Dictionary<string, object> { ["p_Operation"] = operationNumber }; // p_ prefix added automatically
+            var parameters = new Dictionary<string, object> { ["Operation"] = operationNumber }; // p_ prefix added automatically
 
             var result = await Helper_Database_StoredProcedure.ExecuteScalarWithStatusAsync(
                 Model_AppVariables.ConnectionString,

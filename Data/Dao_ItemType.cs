@@ -24,7 +24,9 @@ internal static class Dao_ItemType
                 Model_AppVariables.ConnectionString,
                 "md_item_types_Delete_ByType",
                 parameters,
-                null // No progress helper for this method
+                null, // No progress helper for this method
+                connection: connection,
+                transaction: transaction
             );
 
             if (result.IsSuccess)
@@ -60,7 +62,9 @@ internal static class Dao_ItemType
                 Model_AppVariables.ConnectionString,
                 "md_item_types_Add_ItemType",
                 parameters,
-                null // No progress helper for this method
+                null, // No progress helper for this method
+                connection: connection,
+                transaction: transaction
             );
 
             if (result.IsSuccess)
@@ -92,7 +96,7 @@ internal static class Dao_ItemType
         {
             Dictionary<string, object> parameters = new()
             {
-                ["p_ID"] = id,                    // p_ prefix added automatically
+                ["ID"] = id,                    // p_ prefix added automatically
                 ["ItemType"] = newItemType,
                 ["IssuedBy"] = user
             };
@@ -101,7 +105,9 @@ internal static class Dao_ItemType
                 Model_AppVariables.ConnectionString,
                 "md_item_types_Update_ItemType",
                 parameters,
-                null // No progress helper for this method
+                null, // No progress helper for this method
+                connection: connection,
+                transaction: transaction
             );
 
             if (result.IsSuccess)

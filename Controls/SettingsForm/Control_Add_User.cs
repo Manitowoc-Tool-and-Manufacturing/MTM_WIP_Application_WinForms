@@ -64,6 +64,14 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
                     ["DefaultSelection"] = true
                 });
             Control_Add_User_RadioButton_NormalUser.Checked = true;
+            
+            // Wire up Developer radio button (roleId = 4)
+            Service_DebugTracer.TraceUIAction("DEVELOPER_ROLE_WIRED", nameof(Control_Add_User),
+                new Dictionary<string, object>
+                {
+                    ["RoleId"] = 4,
+                    ["RoleType"] = "Developer"
+                });
 
             Service_DebugTracer.TraceUIAction("KEYPRESS_EVENTS_SETUP", nameof(Control_Add_User),
                 new Dictionary<string, object>
@@ -173,6 +181,8 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
 
         private async void Control_Add_User_Button_Save_Click(object sender, EventArgs e)
         {
+            string userName = string.Empty; // Declare outside try block for catch access
+            
             try
             {
                 Control_Add_User_Button_Save.Enabled = false;
@@ -219,7 +229,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
                     return;
                 }
 
-                string userName = Control_Add_User_TextBox_UserName.Text.ToUpper();
+                userName = Control_Add_User_TextBox_UserName.Text.ToUpper();
 
                 UpdateProgress(20, "Checking for existing user...");
                 await Task.Delay(100);
@@ -229,9 +239,14 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
 
                 if (!userExistsResult.IsSuccess)
                 {
-                    ShowError($"Error checking user existence: {userExistsResult.ErrorMessage}");
                     if (userExistsResult.Exception != null)
-                        LoggingUtility.LogApplicationError(userExistsResult.Exception);
+                    {
+                        Service_ErrorHandler.HandleDatabaseError(userExistsResult.Exception,
+                            contextData: new Dictionary<string, object> { ["UserName"] = userName },
+                            callerName: nameof(Control_Add_User_Button_Save_Click),
+                            controlName: nameof(Control_Add_User));
+                    }
+                    ShowError($"Error checking user existence: {userExistsResult.ErrorMessage}");
                     return;
                 }
 
@@ -251,6 +266,12 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
                 
                 // Use DAO method with DaoResult pattern
                 string lastShownVersion = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version?.ToString() ?? string.Empty;
+                
+                // Use default connection values for new user (they can change them later in settings)
+                string wipServerAddress = string.IsNullOrWhiteSpace(Model_Users.WipServerAddress) ? "172.16.1.104" : Model_Users.WipServerAddress;
+                string database = string.IsNullOrWhiteSpace(Model_Users.Database) ? "MTM_WIP_Application_Winforms" : Model_Users.Database;
+                string wipServerPort = string.IsNullOrWhiteSpace(Model_Users.WipServerPort) ? "3306" : Model_Users.WipServerPort;
+                
                 var createUserResult = await Dao_User.CreateUserAsync(
                     userName,
                     fullName,
@@ -263,16 +284,21 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
                     9, // Theme_FontSize
                     Control_Add_User_TextBox_VisualUserName.Text,
                     Control_Add_User_TextBox_VisualPassword.Text,
-                    Model_Users.WipServerAddress,
-                    Model_Users.Database,
-                    Model_Users.WipServerPort
+                    wipServerAddress,
+                    database,
+                    wipServerPort
                 );
 
                 if (!createUserResult.IsSuccess)
                 {
-                    ShowError($"Error creating user: {createUserResult.ErrorMessage}");
                     if (createUserResult.Exception != null)
-                        LoggingUtility.LogApplicationError(createUserResult.Exception);
+                    {
+                        Service_ErrorHandler.HandleDatabaseError(createUserResult.Exception,
+                            contextData: new Dictionary<string, object> { ["UserName"] = userName },
+                            callerName: nameof(Control_Add_User_Button_Save_Click),
+                            controlName: nameof(Control_Add_User));
+                    }
+                    ShowError($"Error creating user: {createUserResult.ErrorMessage}");
                     return;
                 }
 
@@ -290,7 +316,8 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
                 UpdateProgress(70, "Processing user role assignment...");
                 await Task.Delay(100);
 
-                int userId = Convert.ToInt32(getUserResult.Data["p_ID"]);
+                // Use correct column name 'ID' from usr_users table (not 'p_ID')
+                int userId = Convert.ToInt32(getUserResult.Data["ID"]);
                 int roleId = 3; // Default to Normal User
                 if (Control_Add_User_RadioButton_Administrator.Checked)
                 {
@@ -300,6 +327,10 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
                 {
                     roleId = 2;
                 }
+                else if (Control_Add_User_RadioButton_Developer.Checked)
+                {
+                    roleId = 4;
+                }
 
                 UpdateProgress(80, "Assigning user role...");
                 
@@ -308,9 +339,14 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
 
                 if (!addRoleResult.IsSuccess)
                 {
-                    ShowError($"User created but role assignment failed: {addRoleResult.ErrorMessage}");
                     if (addRoleResult.Exception != null)
-                        LoggingUtility.LogApplicationError(addRoleResult.Exception);
+                    {
+                        Service_ErrorHandler.HandleDatabaseError(addRoleResult.Exception,
+                            contextData: new Dictionary<string, object> { ["UserId"] = userId, ["RoleId"] = roleId },
+                            callerName: nameof(Control_Add_User_Button_Save_Click),
+                            controlName: nameof(Control_Add_User));
+                    }
+                    ShowError($"User created but role assignment failed: {addRoleResult.ErrorMessage}");
                     // Note: User was created successfully, but role assignment failed
                 }
 
@@ -328,16 +364,16 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
                 UserAdded?.Invoke(this, EventArgs.Empty);
                 UpdateStatus($"User '{fullName}' added successfully!");
 
-                MessageBox.Show($@"User '{fullName}' created successfully!", @"Success", MessageBoxButtons.OK,
-                    MessageBoxIcon.Information);
+                Service_ErrorHandler.ShowInformation($"User '{fullName}' created successfully!", "Success");
             }
             catch (Exception ex)
             {
+                Service_ErrorHandler.HandleException(ex,
+                    contextData: new Dictionary<string, object> { ["UserName"] = userName },
+                    callerName: nameof(Control_Add_User_Button_Save_Click),
+                    controlName: nameof(Control_Add_User));
                 ShowError($"Unexpected error creating user: {ex.Message}");
-                LoggingUtility.LogApplicationError(ex);
                 UpdateStatus($"Error adding user: {ex.Message}");
-                MessageBox.Show($@"Error creating user: {ex.Message}", @"Error", MessageBoxButtons.OK,
-                    MessageBoxIcon.Error);
             }
             finally
             {

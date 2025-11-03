@@ -529,7 +529,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
                 return;
             }
 
-            int id = Convert.ToInt32(_currentPart["p_ID"]);
+            int id = Convert.ToInt32(_currentPart["ID"]);
             string itemNumber = itemNumberTextBox.Text.Trim();
             string customer = customerTextBox.Text.Trim();
             string description = descriptionTextBox.Text.Trim();

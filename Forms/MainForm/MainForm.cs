@@ -141,7 +141,7 @@ namespace MTM_WIP_Application_Winforms.Forms.MainForm
         {
             Service_DebugTracer.TraceMethodEntry(new Dictionary<string, object>
             {
-                ["p_User"] = Model_AppVariables.User,
+                ["User"] = Model_AppVariables.User,
                 ["UserType"] = Model_AppVariables.UserTypeDeveloper ? "Developer" : Model_AppVariables.UserTypeAdmin ? "Admin" : Model_AppVariables.UserTypeNormal ? "Normal" : "ReadOnly"
             }, nameof(InitializeFormTitle), nameof(MainForm));
 
@@ -150,7 +150,7 @@ namespace MTM_WIP_Application_Winforms.Forms.MainForm
                 string privilege = GetUserPrivilegeDisplayText();
                 var formTitleData = new Dictionary<string, object>
                 {
-                    ["p_User"] = Model_AppVariables.User,
+                    ["User"] = Model_AppVariables.User,
                     ["Privilege"] = privilege,
                     ["Title"] = $"Manitowoc Tool and Manufacturing WIP Inventory System | {Model_AppVariables.User} | {privilege}"
                 };
@@ -317,7 +317,7 @@ namespace MTM_WIP_Application_Winforms.Forms.MainForm
                     Service_DebugTracer.TraceUIAction("DEVELOPMENT_MENU_CONFIGURED", nameof(MainForm),
                         new Dictionary<string, object>
                         {
-                            ["p_User"] = Model_AppVariables.User ?? "Unknown",
+                            ["User"] = Model_AppVariables.User ?? "Unknown",
                             ["MenuVisible"] = isDeveloper,
                             ["AccessLevel"] = isDeveloper ? "Developer" : "Standard User"
                         });
@@ -345,7 +345,7 @@ namespace MTM_WIP_Application_Winforms.Forms.MainForm
                     contextData: new Dictionary<string, object>
                     {
                         ["Method"] = nameof(ConfigureDevelopmentMenuVisibility),
-                        ["p_User"] = Model_AppVariables.User ?? "Unknown"
+                        ["User"] = Model_AppVariables.User ?? "Unknown"
                     });
             }
 

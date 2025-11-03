@@ -385,7 +385,7 @@ internal static class Dao_ErrorLog
         {
             Dictionary<string, object> parameters = new()
             {
-                ["p_User"] = Model_AppVariables.User ?? "Unknown", // FIXED: Remove p_ prefix
+                ["User"] = Model_AppVariables.User ?? "Unknown", // Automatic prefix detection
                 ["Severity"] = severity,
                 ["ErrorType"] = errorType,
                 ["ErrorMessage"] = errorMessage,

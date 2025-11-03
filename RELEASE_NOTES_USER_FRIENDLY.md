@@ -4,7 +4,87 @@
 
 ---
 
-## Latest Update - November 1, 2025 (Version 6.0.0 - IN PROGRESS)
+## Latest Update - November 2, 2025 (Version 6.0.1)
+
+**What Changed**: User Management, Part Number Management, and Settings Form improvements  
+**Do I Need To Do Anything?**: No - these fixes make existing features work better
+
+---
+
+### 🎯 What This Means For You
+
+#### Settings Form Now Works for All Users - Was broken during implementation of Stored Procedure fix, finally getting to it now.
+
+**What's fixed**:
+- **Settings form no longer crashes when opening**: Opening Settings → Database, Theme, or other settings now works reliably for all users in all environments
+- **Fixed database connection switching issue**: The application no longer tries to switch to unreachable servers when loading saved settings (was causing "Unable to connect to MySQL host" errors)
+- **Environment-aware server selection**: In development/test mode, the app stays connected to localhost even if saved settings mention a production server
+- **Fresh database support**: The application handles empty settings tables gracefully (important for test environments and new installations)
+- **Better error recovery**: If settings can't be loaded, the form displays default values instead of crashing
+
+**Why this broke before**:
+- When opening Settings form, it loaded saved database connection preferences
+- If those preferences contained a production server address (172.16.1.104), the app tried to switch to it
+- In test/development environments running on localhost, this caused connection failures and error spam
+- Multiple stored procedures failed trying to reach the unreachable production server
+
+**What's better now**:
+- Test/development environments stay connected to localhost regardless of saved settings
+- Production environments still work normally with saved server preferences
+- Server address changes are validated before being applied
+- First-time users see sensible defaults (localhost in dev, production server in release builds)
+- Settings form loads instantly even with no saved preferences
+- Makes testing and new installations smoother
+
+**How this helps**: 
+- Developers and testers can open Settings form without triggering connection errors
+- New employees, test environments, and fresh database setups work without manual database setup
+- Production users are unaffected - their saved settings work as expected
+- The Settings form "just works" in all environments from day one
+
+---
+
+#### Easier User Management (For Administrators)
+
+**What's fixed**:
+- **Faster user deletion**: Removing users from the system now completes in 2-3 seconds (was freezing at 10%)
+- **Cleaner process**: No more "Customer is required" errors when adding users
+- **Simplified workflow**: System handles all cleanup automatically (user roles, settings, database records)
+
+**Why this helps**: Administrators can add and remove users without unexpected errors or delays. The system now properly cleans up all user-related data when a user is removed.
+
+#### Simplified Part Number Management
+
+**What's fixed**:
+- **Only 2 required fields**: When adding new parts, you only need to enter **Part Number** and **Item Type** (was requiring Customer and Description unnecessarily)
+- **Item Type defaults to "WIP"**: The most common choice is pre-selected for you
+- **Optional fields work properly**: Customer, Description, and other fields can be left blank if not needed
+
+**What's better**:
+- **Faster part entry**: Enter new parts in seconds without filling unnecessary fields
+- **Less frustration**: No more "Customer is required" or "Description is required" error messages
+- **Matches your workflow**: Most parts don't need customer or detailed descriptions right away
+
+**How to use**:
+1. Click **Settings** → **Part Numbers** → **Add Part Number**
+2. Enter the **Part Number** (e.g., "12345-A")
+3. Select **Item Type** from dropdown (defaults to "WIP" - most common choice)
+4. Click **Save** - That's it!
+5. *Optional*: Fill in Customer, Description if you want to add more details
+
+**Example workflow**:
+- Adding a new WIP part: Just type part number and click Save (Item Type already set to WIP)
+- Adding a finished goods part: Type part number, change Item Type to "FG", click Save
+- Adding a purchased part with details: Type part number, select Item Type, fill in Customer and Description, click Save
+
+**Why this helps**:
+- **3x faster data entry** - most parts are WIP and don't need extra details
+- **Fewer mistakes** - less typing means fewer typos
+- **Matches how you work** - add basic info fast, update details later if needed
+
+---
+
+## Previous Update - November 1, 2025 (Version 6.0.0 - IN PROGRESS)
 
 **What Changed**: Major improvements to Transaction History Viewer (HIGHLY REQUESTED!)  
 **Do I Need To Do Anything?**: Yes - check out the new features when update is released!
@@ -257,5 +337,5 @@ We're working on even more improvements:
 
 ---
 
-**Last Updated**: November 1, 2025  
+**Last Updated**: November 2, 2025  
 **Questions?** Contact John Koll at (ext. 323) or jkoll@mantoolmfg.com / Dan Smith at (ext. 311) or dsmith@mantoolmfg.com / Ka Lee at (ext. ___ ) or klee@mantoolmfg.com

@@ -102,7 +102,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
                 var existsResult = await Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync(
                     Model_AppVariables.ConnectionString,
                     "md_operation_numbers_Exists_ByOperation",
-                    new Dictionary<string, object> { ["p_Operation"] = operationNumber },
+                    new Dictionary<string, object> { ["Operation"] = operationNumber },
                     _progressHelper
                 );
 
@@ -131,7 +131,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
                     "md_operation_numbers_Add_Operation",
                     new Dictionary<string, object>
                     {
-                        ["p_Operation"] = operationNumber,
+                        ["Operation"] = operationNumber,
                         ["IssuedBy"] = Model_AppVariables.User ?? "Current User"
                     },
                     _progressHelper

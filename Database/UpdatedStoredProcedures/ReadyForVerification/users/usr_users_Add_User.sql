@@ -45,7 +45,7 @@ BEGIN
             INSERT INTO usr_users (
                 `User`, `Full Name`, `Shift`, `VitsUser`, `Pin`, `LastShownVersion`, `HideChangeLog`,
                 `Theme_Name`, `Theme_FontSize`, `VisualUserName`, `VisualPassword`,
-                `WipServerAddress`, `WipDatabase`, `WipServerPort`
+                `WipServerAddress`, `WIPDatabase`, `WipServerPort`
             ) VALUES (
                 p_User, p_FullName, p_Shift, p_VitsUser, p_Pin, p_LastShownVersion, p_HideChangeLog,
                 p_ThemeName, p_ThemeFontSize, p_VisualUserName, p_VisualPassword,
@@ -53,22 +53,9 @@ BEGIN
             );
             SET v_RowCount = ROW_COUNT();
             IF v_RowCount > 0 THEN
-                -- NOTE: Dynamic SQL required for MySQL user management
-                -- Username is validated above to contain only safe characters
-                -- Additional escaping applied via REPLACE for defense in depth
-                SET @createUserQuery := CONCAT(
-                    'CREATE USER IF NOT EXISTS ''', REPLACE(p_User, '''', ''''''), '''@''%'''
-                );
-                PREPARE stmt FROM @createUserQuery;
-                EXECUTE stmt;
-                DEALLOCATE PREPARE stmt;
-                SET @grantAllQuery := CONCAT(
-                    'GRANT ALL PRIVILEGES ON *.* TO ''', REPLACE(p_User, '''', ''''''), '''@''%'';'
-                );
-                PREPARE stmt FROM @grantAllQuery;
-                EXECUTE stmt;
-                DEALLOCATE PREPARE stmt;
-                FLUSH PRIVILEGES;
+                -- NOTE: MySQL user creation moved to application layer
+                -- PREPARE/EXECUTE causes mysql.servers table access issues in MySQL 5.7
+                -- Application should call CREATE USER and GRANT after this procedure succeeds
                 SET p_Status = 1;
                 SET p_ErrorMsg = CONCAT('User "', p_User, '" added successfully');
             ELSE

@@ -148,7 +148,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
                     }
                 }
 
-                int itemTypeId = Convert.ToInt32(_currentItemType["p_ID"]);
+                int itemTypeId = Convert.ToInt32(_currentItemType["ID"]);
                 var updateResult = await Dao_ItemType.UpdateItemType(itemTypeId, newItemType, Model_AppVariables.User ?? "Current User");
                 if (!updateResult.IsSuccess)
                 {
