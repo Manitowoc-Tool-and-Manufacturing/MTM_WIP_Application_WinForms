@@ -14,8 +14,9 @@ namespace MTM_WIP_Application_Winforms.Controls.Transactions
         #region Fields
 
         private Model_Transactions? _transaction;
-    private bool _detailsCollapsed;
-    private float _notesRowOriginalHeight;
+        private bool _detailsCollapsed;
+        private float _notesRowOriginalHeight;
+        private bool _isEmbeddedMode;
 
         #endregion
 
@@ -34,6 +35,20 @@ namespace MTM_WIP_Application_Winforms.Controls.Transactions
                 {
                     LoadTransactionDetails();
                 }
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets whether this panel is embedded in another form (e.g., TransactionLifecycleForm).
+        /// When true, hides recursive navigation controls like "View Batch History" button.
+        /// </summary>
+        internal bool IsEmbeddedMode
+        {
+            get => _isEmbeddedMode;
+            set
+            {
+                _isEmbeddedMode = value;
+                ConfigureEmbeddedMode();
             }
         }
 
@@ -78,7 +93,8 @@ namespace MTM_WIP_Application_Winforms.Controls.Transactions
 
         private void WireUpEvents()
         {
-            TransactionDetailPanel_Button_ViewBatchHistory.Click += TransactionDetailPanel_Button_ViewBatchHistory_Click;
+            // Event handlers are wired in Designer.cs
+            // No manual wiring needed to prevent double-subscription
         }
 
         private void TransactionDetailPanel_Button_ViewBatchHistory_Click(object? sender, EventArgs e)
@@ -233,6 +249,50 @@ namespace MTM_WIP_Application_Winforms.Controls.Transactions
                 LoggingUtility.LogApplicationError(ex);
                 Service_ErrorHandler.HandleException(ex, ErrorSeverity.Low,
                     controlName: nameof(TransactionDetailPanel));
+            }
+        }
+
+        /// <summary>
+        /// Configures the panel for embedded mode (inside TransactionLifecycleForm).
+        /// Hides the "View Batch History" button and Related Transactions section to prevent recursion.
+        /// </summary>
+        private void ConfigureEmbeddedMode()
+        {
+            try
+            {
+                if (_isEmbeddedMode)
+                {
+                    // Hide the entire Related Transactions section when embedded
+                    TransactionDetailPanel_TableLayout_RelatedHeader.Visible = false;
+                    TransactionDetailPanel_Label_RelatedStatus.Visible = false;
+                    
+                    // Collapse the row containing related transactions
+                    if (TransactionDetailPanel_TableLayout_Main.RowStyles.Count > 3)
+                    {
+                        TransactionDetailPanel_TableLayout_Main.RowStyles[3].SizeType = SizeType.Absolute;
+                        TransactionDetailPanel_TableLayout_Main.RowStyles[3].Height = 0;
+                    }
+                    
+                    LoggingUtility.Log("[TransactionDetailPanel] Configured for embedded mode - related transactions section hidden.");
+                }
+                else
+                {
+                    // Show everything in standalone mode
+                    TransactionDetailPanel_TableLayout_RelatedHeader.Visible = true;
+                    TransactionDetailPanel_Label_RelatedStatus.Visible = true;
+                    
+                    // Restore the row height
+                    if (TransactionDetailPanel_TableLayout_Main.RowStyles.Count > 3)
+                    {
+                        TransactionDetailPanel_TableLayout_Main.RowStyles[3].SizeType = SizeType.AutoSize;
+                    }
+                    
+                    LoggingUtility.Log("[TransactionDetailPanel] Configured for standalone mode.");
+                }
+            }
+            catch (Exception ex)
+            {
+                LoggingUtility.LogApplicationError(ex);
             }
         }
       

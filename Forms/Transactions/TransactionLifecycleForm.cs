@@ -50,6 +50,9 @@ internal partial class TransactionLifecycleForm : Form
         // Set form title with part and batch info
         this.Text = $"{_partId} - {_batchNumber} - Transaction Lifecycle";
 
+        // Configure embedded detail panel to prevent recursive navigation
+        TransactionLifecycleForm_DetailPanel.IsEmbeddedMode = true;
+
         WireUpEvents();
         ApplyThemeColors();
         
