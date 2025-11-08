@@ -77,21 +77,21 @@ namespace MTM_WIP_Application_Winforms.Controls.Transactions
                 TransactionAnalyticsControl_Label_InValue.Text = _analytics.TotalIN.ToString("N0");
                 TransactionAnalyticsControl_Label_InPercentage.Text = 
                     _analytics.TotalTransactions > 0 
-                        ? $"({_analytics.PercentageIN:F1}%)"
+                        ? string.Format("({0:0.0}%)", _analytics.PercentageIN)
                         : "(0.0%)";
 
                 // OUT transactions card
                 TransactionAnalyticsControl_Label_OutValue.Text = _analytics.TotalOUT.ToString("N0");
                 TransactionAnalyticsControl_Label_OutPercentage.Text = 
                     _analytics.TotalTransactions > 0 
-                        ? $"({_analytics.PercentageOUT:F1}%)"
+                        ? string.Format("({0:0.0}%)", _analytics.PercentageOUT)
                         : "(0.0%)";
 
                 // TRANSFER transactions card
                 TransactionAnalyticsControl_Label_TransferValue.Text = _analytics.TotalTRANSFER.ToString("N0");
                 TransactionAnalyticsControl_Label_TransferPercentage.Text = 
                     _analytics.TotalTransactions > 0 
-                        ? $"({_analytics.PercentageTRANSFER:F1}%)"
+                        ? string.Format("({0:0.0}%)", _analytics.PercentageTRANSFER)
                         : "(0.0%)";
 
                 LoggingUtility.Log("[TransactionAnalyticsControl] Analytics displayed successfully.");

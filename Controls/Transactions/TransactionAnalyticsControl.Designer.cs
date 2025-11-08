@@ -221,7 +221,7 @@ namespace MTM_WIP_Application_Winforms.Controls.Transactions
             // 
             TransactionAnalyticsControl_Panel_Transfer.AutoSize = true;
             TransactionAnalyticsControl_Panel_Transfer.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            TransactionAnalyticsControl_Panel_Transfer.BackColor = Color.FromArgb(219, 234, 254);
+            TransactionAnalyticsControl_Panel_Transfer.BackColor = Color.FromArgb(254, 249, 195);
             TransactionAnalyticsControl_Panel_Transfer.BorderStyle = BorderStyle.FixedSingle;
             TransactionAnalyticsControl_Panel_Transfer.Controls.Add(TransactionAnalyticsControl_Label_TransferCaption);
             TransactionAnalyticsControl_Panel_Transfer.Controls.Add(TransactionAnalyticsControl_Label_TransferValue);
@@ -240,7 +240,7 @@ namespace MTM_WIP_Application_Winforms.Controls.Transactions
             TransactionAnalyticsControl_Label_TransferCaption.AutoSize = true;
             TransactionAnalyticsControl_Label_TransferCaption.Dock = DockStyle.Top;
             TransactionAnalyticsControl_Label_TransferCaption.Font = new Font("Segoe UI", 10F, FontStyle.Bold);
-            TransactionAnalyticsControl_Label_TransferCaption.ForeColor = Color.FromArgb(37, 99, 235);
+            TransactionAnalyticsControl_Label_TransferCaption.ForeColor = Color.FromArgb(161, 98, 7);
             TransactionAnalyticsControl_Label_TransferCaption.Location = new Point(10, 10);
             TransactionAnalyticsControl_Label_TransferCaption.Name = "TransactionAnalyticsControl_Label_TransferCaption";
             TransactionAnalyticsControl_Label_TransferCaption.Size = new Size(127, 19);
@@ -252,7 +252,7 @@ namespace MTM_WIP_Application_Winforms.Controls.Transactions
             TransactionAnalyticsControl_Label_TransferValue.AutoSize = true;
             TransactionAnalyticsControl_Label_TransferValue.Dock = DockStyle.Bottom;
             TransactionAnalyticsControl_Label_TransferValue.Font = new Font("Segoe UI", 18F, FontStyle.Bold);
-            TransactionAnalyticsControl_Label_TransferValue.ForeColor = Color.FromArgb(37, 99, 235);
+            TransactionAnalyticsControl_Label_TransferValue.ForeColor = Color.FromArgb(161, 98, 7);
             TransactionAnalyticsControl_Label_TransferValue.Location = new Point(10, 42);
             TransactionAnalyticsControl_Label_TransferValue.Name = "TransactionAnalyticsControl_Label_TransferValue";
             TransactionAnalyticsControl_Label_TransferValue.Size = new Size(28, 32);
@@ -263,7 +263,7 @@ namespace MTM_WIP_Application_Winforms.Controls.Transactions
             // 
             TransactionAnalyticsControl_Label_TransferPercentage.AutoSize = true;
             TransactionAnalyticsControl_Label_TransferPercentage.Font = new Font("Segoe UI", 9F);
-            TransactionAnalyticsControl_Label_TransferPercentage.ForeColor = Color.FromArgb(37, 99, 235);
+            TransactionAnalyticsControl_Label_TransferPercentage.ForeColor = Color.FromArgb(161, 98, 7);
             TransactionAnalyticsControl_Label_TransferPercentage.Location = new Point(45, 48);
             TransactionAnalyticsControl_Label_TransferPercentage.Name = "TransactionAnalyticsControl_Label_TransferPercentage";
             TransactionAnalyticsControl_Label_TransferPercentage.Size = new Size(0, 15);

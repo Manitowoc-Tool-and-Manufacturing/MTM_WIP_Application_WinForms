@@ -73,6 +73,11 @@ internal partial class TransactionGridControl : UserControl
         }
     }
 
+    /// <summary>
+    /// Gets the analytics control for external data binding.
+    /// </summary>
+    internal TransactionAnalyticsControl AnalyticsControl => TransactionGridControl_TransactionAnalyticsControl;
+
     #endregion
 
     #region Constructors
@@ -453,7 +458,25 @@ internal partial class TransactionGridControl : UserControl
         {
             LoggingUtility.Log("[TransactionGridControl] Analytics button clicked.");
             
-            // Raise analytics event for parent form to handle
+            // Toggle analytics visibility - hide/show in place of DataGridView
+            TransactionGridControl_TransactionAnalyticsControl.Visible = !TransactionGridControl_TransactionAnalyticsControl.Visible;
+            TransactionGridControl_DataGridView_Transactions.Visible = !TransactionGridControl_TransactionAnalyticsControl.Visible;
+            
+            // Update button text to indicate current state
+            if (TransactionGridControl_TransactionAnalyticsControl.Visible)
+            {
+                TransactionGridControl_Button_Analytics.Text = "📋";
+                TransactionGridControl_Button_Analytics.ToolTipText = "Show transaction grid";
+                LoggingUtility.Log("[TransactionGridControl] Analytics panel shown, DataGridView hidden.");
+            }
+            else
+            {
+                TransactionGridControl_Button_Analytics.Text = "📈";
+                TransactionGridControl_Button_Analytics.ToolTipText = "Show analytics summary";
+                LoggingUtility.Log("[TransactionGridControl] Analytics panel hidden, DataGridView shown.");
+            }
+            
+            // Raise analytics event for parent form to handle (e.g., refresh analytics data)
             AnalyticsRequested?.Invoke(this, EventArgs.Empty);
         }
         catch (Exception ex)

@@ -17,6 +17,7 @@ internal partial class Transactions : Form
     private readonly TransactionViewModel _viewModel;
     private readonly string _currentUser;
     private readonly bool _isAdmin;
+    private TransactionSearchResult? _currentSearchResults;
 
     #endregion
 
@@ -59,6 +60,7 @@ internal partial class Transactions : Form
         Transactions_UserControl_Grid.ToggleSearchRequested += GridControl_ToggleSearchRequested;
         Transactions_UserControl_Grid.ExportRequested += SearchControl_ExportRequested;
         Transactions_UserControl_Grid.PrintRequested += SearchControl_PrintRequested;
+        Transactions_UserControl_Grid.AnalyticsRequested += GridControl_AnalyticsRequested;
         this.Load += Transactions_Load;
     }
 
@@ -176,6 +178,7 @@ internal partial class Transactions : Form
                 if (result.IsSuccess && result.Data != null)
                 {
                     LoggingUtility.Log($"[Transactions] Displaying {result.Data.Transactions.Count} transactions (Page {result.Data.CurrentPage} of {result.Data.TotalPages})");
+                    _currentSearchResults = result.Data; // Store for analytics
                     Transactions_UserControl_Grid.DisplayResults(result.Data);
                 }
                 else
@@ -340,6 +343,7 @@ internal partial class Transactions : Form
                 if (result.IsSuccess && result.Data != null)
                 {
                     LoggingUtility.Log($"[Transactions] Page {newPage} loaded with {result.Data.Transactions.Count} transactions.");
+                    _currentSearchResults = result.Data; // Store for analytics
                     Transactions_UserControl_Grid.DisplayResults(result.Data);
                 }
                 else
@@ -371,6 +375,59 @@ internal partial class Transactions : Form
     {
         Transactions_Panel_Search.Visible = !Transactions_Panel_Search.Visible;
         LoggingUtility.Log($"[Transactions] Search panel toggled. Now visible: {Transactions_Panel_Search.Visible}");
+    }
+
+    private async void GridControl_AnalyticsRequested(object? sender, EventArgs e)
+    {
+        try
+        {
+            // Check if analytics panel is now visible
+            if (!Transactions_UserControl_Grid.AnalyticsControl.Visible)
+            {
+                LoggingUtility.Log("[Transactions] Analytics panel hidden, no data load needed.");
+                return;
+            }
+
+            LoggingUtility.Log("[Transactions] Analytics panel shown, loading analytics data from database...");
+
+            // Use a wide date range to capture all transactions
+            // TODO: Store search criteria to use actual date range from search filters
+            DateTime fromDate = DateTime.Now.AddYears(-10); // Default: 10 years ago
+            DateTime toDate = DateTime.Now.AddDays(1); // Default: tomorrow
+
+            // Load analytics data from database
+            var analyticsResult = await _viewModel.GetAnalyticsAsync(fromDate, toDate).ConfigureAwait(false);
+
+            if (!analyticsResult.IsSuccess || analyticsResult.Data == null)
+            {
+                LoggingUtility.Log($"[Transactions] Analytics load failed: {analyticsResult.ErrorMessage}");
+                this.Invoke(() =>
+                {
+                    Service_ErrorHandler.HandleValidationError(
+                        analyticsResult.ErrorMessage ?? "Failed to load analytics",
+                        nameof(Transactions));
+                    Transactions_UserControl_Grid.AnalyticsControl.ClearAnalytics();
+                });
+                return;
+            }
+
+            LoggingUtility.Log($"[Transactions] Analytics loaded: Total={analyticsResult.Data.TotalTransactions}, " +
+                             $"IN={analyticsResult.Data.TotalIN}, OUT={analyticsResult.Data.TotalOUT}, " +
+                             $"TRANSFER={analyticsResult.Data.TotalTRANSFER}");
+
+            // Update the analytics control on the UI thread
+            this.Invoke(() =>
+            {
+                Transactions_UserControl_Grid.AnalyticsControl.Analytics = analyticsResult.Data;
+            });
+        }
+        catch (Exception ex)
+        {
+            LoggingUtility.LogApplicationError(ex);
+            Service_ErrorHandler.HandleException(ex, ErrorSeverity.Medium,
+                contextData: new Dictionary<string, object> { ["User"] = _currentUser },
+                controlName: nameof(Transactions));
+        }
     }
 
     #endregion
