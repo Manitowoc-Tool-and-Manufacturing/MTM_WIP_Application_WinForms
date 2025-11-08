@@ -1,0 +1,64 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "PrintSettings Persistence Contract",
+  "description": "User preferences for print operations, stored per-grid in local AppData",
+  "type": "object",
+  "required": [
+    "gridName",
+    "visibleColumns",
+    "columnOrder",
+    "lastModified"
+  ],
+  "properties": {
+    "gridName": {
+      "type": "string",
+      "description": "Unique identifier for grid (e.g., 'Control_RemoveTab', 'Control_Transactions')",
+      "pattern": "^[A-Za-z_][A-Za-z0-9_]*$",
+      "minLength": 1
+    },
+    "printerName": {
+      "type": ["string", "null"],
+      "description": "Last selected printer name (null if default printer used)"
+    },
+    "visibleColumns": {
+      "type": "array",
+      "description": "Last column visibility selection",
+      "items": {
+        "type": "string"
+      },
+      "minItems": 1,
+      "uniqueItems": true
+    },
+    "columnOrder": {
+      "type": "array",
+      "description": "Last column ordering (must match visibleColumns)",
+      "items": {
+        "type": "string"
+      },
+      "minItems": 1,
+      "uniqueItems": true
+    },
+    "lastModified": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Timestamp of last save (ISO 8601 UTC format)"
+    }
+  },
+  "examples": [
+    {
+      "gridName": "Control_RemoveTab",
+      "printerName": "HP LaserJet Pro M404",
+      "visibleColumns": ["PartNumber", "Description", "Quantity", "Location"],
+      "columnOrder": ["PartNumber", "Quantity", "Location", "Description"],
+      "lastModified": "2025-11-08T14:30:00Z"
+    },
+    {
+      "gridName": "Control_Transactions",
+      "printerName": null,
+      "visibleColumns": ["TransactionID", "PartNumber", "Operation", "Date", "User"],
+      "columnOrder": ["TransactionID", "PartNumber", "Operation", "Date", "User"],
+      "lastModified": "2025-11-08T15:45:00Z"
+    }
+  ],
+  "additionalProperties": false
+}

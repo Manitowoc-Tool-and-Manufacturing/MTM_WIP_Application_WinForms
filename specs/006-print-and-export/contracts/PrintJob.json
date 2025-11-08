@@ -1,0 +1,166 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "PrintJob Configuration Contract",
+  "description": "Defines the structure for print and export operations in the MTM WIP Application",
+  "type": "object",
+  "required": [
+    "sourceData",
+    "title",
+    "visibleColumns",
+    "columnOrder",
+    "orientation",
+    "colorMode",
+    "pageRange",
+    "totalPages"
+  ],
+  "properties": {
+    "sourceData": {
+      "type": "object",
+      "description": "DataTable represented as JSON with columns and rows",
+      "required": ["columns", "rows"],
+      "properties": {
+        "columns": {
+          "type": "array",
+          "description": "Column definitions with name and type",
+          "items": {
+            "type": "object",
+            "required": ["name", "type"],
+            "properties": {
+              "name": {
+                "type": "string",
+                "description": "Column name"
+              },
+              "type": {
+                "type": "string",
+                "description": "Data type (e.g., 'System.String', 'System.Int32', 'System.DateTime')"
+              }
+            }
+          },
+          "minItems": 1
+        },
+        "rows": {
+          "type": "array",
+          "description": "Data rows as arrays of values",
+          "items": {
+            "type": "array",
+            "description": "Row values matching column order"
+          },
+          "minItems": 1
+        }
+      }
+    },
+    "title": {
+      "type": "string",
+      "description": "Document title appearing in print header",
+      "maxLength": 100,
+      "minLength": 1
+    },
+    "visibleColumns": {
+      "type": "array",
+      "description": "Column names to include in output",
+      "items": {
+        "type": "string"
+      },
+      "minItems": 1,
+      "uniqueItems": true
+    },
+    "columnOrder": {
+      "type": "array",
+      "description": "Display order of columns (left to right)",
+      "items": {
+        "type": "string"
+      },
+      "minItems": 1,
+      "uniqueItems": true
+    },
+    "printerName": {
+      "type": ["string", "null"],
+      "description": "Target printer name (null = default printer)"
+    },
+    "orientation": {
+      "type": "string",
+      "enum": ["Portrait", "Landscape"],
+      "description": "Page orientation"
+    },
+    "colorMode": {
+      "type": "string",
+      "enum": ["Color", "Grayscale"],
+      "description": "Print color mode"
+    },
+    "pageRange": {
+      "type": "string",
+      "enum": ["AllPages", "CurrentPage", "CustomRange"],
+      "description": "Page range selection"
+    },
+    "fromPage": {
+      "type": ["integer", "null"],
+      "description": "Starting page number (required when pageRange is CustomRange)",
+      "minimum": 1
+    },
+    "toPage": {
+      "type": ["integer", "null"],
+      "description": "Ending page number (required when pageRange is CustomRange)",
+      "minimum": 1
+    },
+    "totalPages": {
+      "type": "integer",
+      "description": "Actual page count calculated after preview generation",
+      "minimum": 1
+    }
+  },
+  "dependencies": {
+    "pageRange": {
+      "oneOf": [
+        {
+          "properties": {
+            "pageRange": {
+              "enum": ["AllPages", "CurrentPage"]
+            }
+          }
+        },
+        {
+          "properties": {
+            "pageRange": {
+              "const": "CustomRange"
+            },
+            "fromPage": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "toPage": {
+              "type": "integer",
+              "minimum": 1
+            }
+          },
+          "required": ["fromPage", "toPage"]
+        }
+      ]
+    }
+  },
+  "examples": [
+    {
+      "sourceData": {
+        "columns": [
+          { "name": "PartNumber", "type": "System.String" },
+          { "name": "Quantity", "type": "System.Int32" },
+          { "name": "Location", "type": "System.String" },
+          { "name": "Date", "type": "System.DateTime" }
+        ],
+        "rows": [
+          ["ABC-123", 50, "FLOOR", "2025-11-08T10:00:00Z"],
+          ["XYZ-789", 25, "RECEIVING", "2025-11-08T11:30:00Z"]
+        ]
+      },
+      "title": "Transaction Report - 2025-11-08",
+      "visibleColumns": ["PartNumber", "Quantity", "Location", "Date"],
+      "columnOrder": ["PartNumber", "Quantity", "Location", "Date"],
+      "printerName": "Microsoft Print to PDF",
+      "orientation": "Landscape",
+      "colorMode": "Grayscale",
+      "pageRange": "CustomRange",
+      "fromPage": 3,
+      "toPage": 7,
+      "totalPages": 12
+    }
+  ]
+}

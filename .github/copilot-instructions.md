@@ -13,6 +13,8 @@ Last updated: 2025-10-13
 - [e.g., Python 3.11, Swift 5.9, Rust 1.75 or NEEDS CLARIFICATION] + [e.g., FastAPI, UIKit, LLVM or NEEDS CLARIFICATION] (005-transaction-viewer-form)
 - [if applicable, e.g., PostgreSQL, CoreData, files or N/A] (005-transaction-viewer-form)
 - C# 12 / .NET 8.0 Windows Forms + MySql.Data 9.4.0, System.Text.Json, Microsoft.Web.WebView2, ClosedXML (Excel export) (005-transaction-viewer-form)
+- C# 12 / .NET 8.0 Windows Forms + MySql.Data 9.4.0, System.Text.Json, Microsoft.Web.WebView2, ClosedXML (Excel export), System.Drawing.Printing (006-print-and-export)
+- MySQL 5.7+ (stored procedures only for settings persistence), Local JSON files in AppData for per-grid preferences (006-print-and-export)
 
 ## Agent Communication Rules
 

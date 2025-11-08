@@ -289,7 +289,7 @@ internal partial class Transactions : Form
         }
     }
 
-    private async void SearchControl_PrintRequested(object? sender, EventArgs e)
+    private void SearchControl_PrintRequested(object? sender, EventArgs e)
     {
         try
         {
@@ -305,10 +305,11 @@ internal partial class Transactions : Form
 
             LoggingUtility.Log($"[Transactions] Printing {_viewModel.CurrentResults.Transactions.Count} transactions.");
 
-            // Call ViewModel print method
-            await _viewModel.PrintPreviewAsync(_viewModel.CurrentResults.Transactions).ConfigureAwait(false);
+            // Open print dialog with the grid's DataGridView
+            using var printForm = new Shared.PrintForm(Transactions_UserControl_Grid.DataGridView);
+            printForm.ShowDialog(this);
 
-            LoggingUtility.Log("[Transactions] Print dialog shown.");
+            LoggingUtility.Log("[Transactions] Print dialog closed.");
         }
         catch (Exception ex)
         {

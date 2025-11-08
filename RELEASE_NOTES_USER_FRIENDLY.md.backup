@@ -84,7 +84,7 @@
 
 ---
 
-## Previous Update - November 2, 2025 (Version 5.9.0)
+## Previous Update - November 2, 2025 (Version 6.0.1)
 
 **What Changed**: User Management, Part Number Management, and Settings Form improvements  
 **Do I Need To Do Anything?**: No - these fixes make existing features work better
@@ -317,7 +317,7 @@
 - **Office Staff**: Strongly recommended - analytics summaries and better filtering make reporting easier
 - **Administrators**: Recommended - can now view all users' transactions with better filtering
 
-**Version 5.9.0 (Settings & User Management Fixes)**:
+**Version 6.0.1 (Settings & User Management Fixes)**:
 - **All users**: Update when convenient - fixes Settings form crashes in development environments
 - **Administrators**: Yes - faster user deletion and simplified part number management
 - **Shop Floor Users**: No urgent need unless you access Settings frequently

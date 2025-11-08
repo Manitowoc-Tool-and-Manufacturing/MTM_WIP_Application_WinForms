@@ -719,16 +719,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
         {
             try
             {
-                if (Control_AdvancedRemove_DataGridView_Results.Rows.Count == 0)
-                {
-                    MessageBox.Show(@"No data to print.", @"Print", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                    return;
-                }
-
-                Core_DgvPrinter printer = new();
-                // Use Part textbox for tag
-                Control_AdvancedRemove_DataGridView_Results.Tag = Control_AdvancedRemove_TextBox_Part.Text;
-                printer.Print(Control_AdvancedRemove_DataGridView_Results);
+                MessageBox.Show(@"Not Implemented Yet");
             }
             catch (Exception ex)
             {
