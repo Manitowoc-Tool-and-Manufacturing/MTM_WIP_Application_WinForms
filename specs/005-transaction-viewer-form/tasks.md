@@ -506,7 +506,7 @@ Complete architectural redesign of the Transactions form (`Forms/Transactions/Tr
   **Description**: Add btnPrint_Click handler: raise PrintRequested event. Wire event in Transactions.cs to call _viewModel.PrintPreviewAsync, show PrintPreviewDialog.
   **Acceptance**: Print button triggers workflow, print preview dialog shown
 
-- [ ] **T057** [CHECKPOINT] - US-009 Manual Validation
+- [X] **T057** [CHECKPOINT] - US-009 Manual Validation
   **Description**: Manual test: Perform search, click Print button, verify print preview shows, verify header displays filter criteria and date range, verify footer shows page numbers and totals, verify layout professional.
   **Acceptance**: All US-009 acceptance criteria pass manual validation
 

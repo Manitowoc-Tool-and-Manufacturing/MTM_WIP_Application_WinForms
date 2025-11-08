@@ -57,6 +57,8 @@ internal partial class Transactions : Form
         Transactions_UserControl_Grid.PageChanged += GridControl_PageChanged;
         Transactions_UserControl_Grid.RowSelected += GridControl_RowSelected;
         Transactions_UserControl_Grid.ToggleSearchRequested += GridControl_ToggleSearchRequested;
+        Transactions_UserControl_Grid.ExportRequested += SearchControl_ExportRequested;
+        Transactions_UserControl_Grid.PrintRequested += SearchControl_PrintRequested;
         this.Load += Transactions_Load;
     }
 

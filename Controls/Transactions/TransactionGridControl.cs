@@ -39,6 +39,16 @@ internal partial class TransactionGridControl : UserControl
     /// </summary>
     public event EventHandler? ToggleSearchRequested;
 
+    /// <summary>
+    /// Raised when the user clicks the Export button.
+    /// </summary>
+    public event EventHandler? ExportRequested;
+
+    /// <summary>
+    /// Raised when the user clicks the Print button.
+    /// </summary>
+    public event EventHandler? PrintRequested;
+
     #endregion
 
     #region Properties
@@ -76,6 +86,9 @@ internal partial class TransactionGridControl : UserControl
 
         InitializeColumns();
         WireUpEvents();
+
+        // Initially disable Export and Print buttons until grid has data
+        SetExportPrintButtonsEnabled(false);
 
         LoggingUtility.Log("[TransactionGridControl] Initialization complete.");
     }
@@ -197,6 +210,9 @@ internal partial class TransactionGridControl : UserControl
         TransactionGridControl_TextBox_GoToPage.KeyPress += TxtGoToPage_KeyPress;
         TransactionGridControl_DataGridView_Transactions.SelectionChanged += DgvTransactions_SelectionChanged;
         TransactionGridControl_Button_ShowHideSearch.Click += BtnShowHideSearch_Click;
+        TransactionGridControl_Button_Export.Click += BtnExport_Click;
+        TransactionGridControl_Button_Print.Click += BtnPrint_Click;
+        TransactionGridControl_Button_ToggleDetails.Click += BtnToggleDetails_Click;
 
 #if DEBUG
         // Debug-only: Toggle privileges button
@@ -240,6 +256,10 @@ internal partial class TransactionGridControl : UserControl
                 // Update pagination controls
                 UpdatePaginationControls();
 
+                // Enable Export and Print buttons when grid has data
+                bool hasData = results.Transactions != null && results.Transactions.Count > 0;
+                SetExportPrintButtonsEnabled(hasData);
+
                 LoggingUtility.Log($"[TransactionGridControl] Results displayed successfully.");
             }
             finally
@@ -265,6 +285,21 @@ internal partial class TransactionGridControl : UserControl
         TransactionGridControl_DataGridView_Transactions.DataSource = null;
         TransactionGridControl_TransactionDetailPanel.ClearDetails();
         UpdatePaginationControls();
+        
+        // Disable Export and Print buttons when grid is cleared
+        SetExportPrintButtonsEnabled(false);
+    }
+
+    /// <summary>
+    /// Enables or disables the Export and Print buttons.
+    /// </summary>
+    /// <param name="enabled">True to enable buttons, false to disable.</param>
+    public void SetExportPrintButtonsEnabled(bool enabled)
+    {
+        TransactionGridControl_Button_Export.Enabled = enabled;
+        TransactionGridControl_Button_Print.Enabled = enabled;
+        
+        LoggingUtility.Log($"[TransactionGridControl] Export/Print buttons {(enabled ? "enabled" : "disabled")}");
     }
 
     #endregion
@@ -328,6 +363,75 @@ internal partial class TransactionGridControl : UserControl
         {
             LoggingUtility.Log("[TransactionGridControl] Show/Hide Search button clicked.");
             ToggleSearchRequested?.Invoke(this, EventArgs.Empty);
+        }
+        catch (Exception ex)
+        {
+            LoggingUtility.LogApplicationError(ex);
+            Service_ErrorHandler.HandleException(ex, ErrorSeverity.Low,
+                controlName: nameof(TransactionGridControl));
+        }
+    }
+
+    private void BtnToggleDetails_Click(object? sender, EventArgs e)
+    {
+        try
+        {
+            LoggingUtility.Log("[TransactionGridControl] Toggle Details button clicked.");
+            
+            // Toggle the detail panel visibility
+            TransactionGridControl_TransactionDetailPanel.Visible = !TransactionGridControl_TransactionDetailPanel.Visible;
+            
+            // Update column span of DataGridView to fill space when details hidden
+            if (TransactionGridControl_TransactionDetailPanel.Visible)
+            {
+                // Details visible - DataGridView uses only column 0, details panel uses column 1
+                TransactionGridControl_TableLayout_Main.SetColumnSpan(TransactionGridControl_DataGridView_Transactions, 1);
+                TransactionGridControl_Button_ToggleDetails.Text = "◀ 📋";
+                TransactionGridControl_Button_ToggleDetails.ToolTipText = "Hide transaction details panel";
+            }
+            else
+            {
+                // Details hidden - DataGridView spans both columns to fill entire width
+                TransactionGridControl_TableLayout_Main.SetColumnSpan(TransactionGridControl_DataGridView_Transactions, 2);
+                TransactionGridControl_Button_ToggleDetails.Text = "📋 ▶";
+                TransactionGridControl_Button_ToggleDetails.ToolTipText = "Show transaction details panel";
+            }
+            
+            LoggingUtility.Log($"[TransactionGridControl] Details panel visibility: {TransactionGridControl_TransactionDetailPanel.Visible}");
+        }
+        catch (Exception ex)
+        {
+            LoggingUtility.LogApplicationError(ex);
+            Service_ErrorHandler.HandleException(ex, ErrorSeverity.Low,
+                controlName: nameof(TransactionGridControl));
+        }
+    }
+
+    private void BtnExport_Click(object? sender, EventArgs e)
+    {
+        try
+        {
+            LoggingUtility.Log("[TransactionGridControl] Export button clicked.");
+            
+            // Raise export event for parent form to handle
+            ExportRequested?.Invoke(this, EventArgs.Empty);
+        }
+        catch (Exception ex)
+        {
+            LoggingUtility.LogApplicationError(ex);
+            Service_ErrorHandler.HandleException(ex, ErrorSeverity.Low,
+                controlName: nameof(TransactionGridControl));
+        }
+    }
+
+    private void BtnPrint_Click(object? sender, EventArgs e)
+    {
+        try
+        {
+            LoggingUtility.Log("[TransactionGridControl] Print button clicked.");
+            
+            // Raise print event for parent form to handle
+            PrintRequested?.Invoke(this, EventArgs.Empty);
         }
         catch (Exception ex)
         {
@@ -441,13 +545,14 @@ internal partial class TransactionGridControl : UserControl
 
             LoggingUtility.Log($"[TransactionGridControl] Successfully changed role to {nextRole}");
 
-            // Show confirmation message
-            MessageBox.Show(
+            // Show confirmation message using Service_ErrorHandler
+            Service_ErrorHandler.ShowInformation(
                 $"Debug Mode: User privilege changed from {currentRole} to {nextRole}.\n\n" +
                 $"The application UI will reflect this change immediately.",
                 "Privilege Changed (Debug)",
                 MessageBoxButtons.OK,
-                MessageBoxIcon.Information);
+                MessageBoxIcon.Information,
+                controlName: nameof(TransactionGridControl));
         }
         catch (Exception ex)
         {

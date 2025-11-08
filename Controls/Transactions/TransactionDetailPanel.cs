@@ -52,6 +52,21 @@ namespace MTM_WIP_Application_Winforms.Controls.Transactions
             }
         }
 
+        /// <summary>
+        /// Gets or sets whether the details section is collapsed.
+        /// </summary>
+        public bool DetailsCollapsed
+        {
+            get => _detailsCollapsed;
+            set
+            {
+                if (_detailsCollapsed != value)
+                {
+                    ToggleDetailsCollapsed();
+                }
+            }
+        }
+
         #endregion
 
         #region Constructors
@@ -72,6 +87,10 @@ namespace MTM_WIP_Application_Winforms.Controls.Transactions
             _notesRowOriginalHeight = TransactionDetailPanel_TableLayout_Main.RowStyles.Count > 3
                 ? TransactionDetailPanel_TableLayout_Main.RowStyles[3].Height
                 : 70F;
+
+            // Add tooltip to make collapse feature discoverable
+            var toolTip = new ToolTip();
+            toolTip.SetToolTip(TransactionDetailPanel_GroupBox_Main, "Click header to collapse/expand details");
 
             WireUpEvents();
 
@@ -95,6 +114,15 @@ namespace MTM_WIP_Application_Winforms.Controls.Transactions
         {
             // Event handlers are wired in Designer.cs
             // No manual wiring needed to prevent double-subscription
+            
+            // Wire up collapse/expand button click
+            TransactionDetailPanel_GroupBox_Main.Click += GroupBox_Header_Click;
+        }
+
+        private void GroupBox_Header_Click(object? sender, EventArgs e)
+        {
+            // Toggle collapse/expand when clicking the GroupBox header
+            ToggleDetailsCollapsed();
         }
 
         private void TransactionDetailPanel_Button_ViewBatchHistory_Click(object? sender, EventArgs e)
@@ -161,8 +189,8 @@ namespace MTM_WIP_Application_Winforms.Controls.Transactions
             {
                 LoggingUtility.Log($"[TransactionDetailPanel] Loading transaction details for ID: {_transaction.ID}");
 
-                // Populate detail fields with transaction data
-                TransactionDetailPanel_GroupBox_Main.Text = $"Transaction Details - ID: {_transaction.ID}";
+                // Update GroupBox title with collapse indicator
+                UpdateGroupBoxTitle();
                 
                 // Populate caption labels (left column)
                 TransactionDetailPanel_Label_IdCaption.Text = "ID:";
@@ -212,8 +240,8 @@ namespace MTM_WIP_Application_Winforms.Controls.Transactions
 
                 _transaction = null;
 
-                // Clear title
-                TransactionDetailPanel_GroupBox_Main.Text = "Transaction Details";
+                // Update GroupBox title
+                UpdateGroupBoxTitle();
 
                 // Clear caption labels (left column)
                 TransactionDetailPanel_Label_IdCaption.Text = string.Empty;
@@ -296,6 +324,79 @@ namespace MTM_WIP_Application_Winforms.Controls.Transactions
             }
         }
       
+        /// <summary>
+        /// Toggles the collapsed/expanded state of the transaction details section.
+        /// </summary>
+        private void ToggleDetailsCollapsed()
+        {
+            try
+            {
+                _detailsCollapsed = !_detailsCollapsed;
+
+                LoggingUtility.Log($"[TransactionDetailPanel] Toggling details. Collapsed: {_detailsCollapsed}");
+
+                if (_detailsCollapsed)
+                {
+                    // Collapse the details section
+                    TransactionDetailPanel_TableLayout_Details.Visible = false;
+                    TransactionDetailPanel_TextBox_Notes.Visible = false;
+                    TransactionDetailPanel_Label_NotesCaption.Visible = false;
+                    TransactionDetailPanel_TableLayout_RelatedHeader.Visible = false;
+                    TransactionDetailPanel_Label_RelatedStatus.Visible = false;
+
+                    // Update GroupBox title to show it's collapsed
+                    UpdateGroupBoxTitle();
+                }
+                else
+                {
+                    // Expand the details section
+                    TransactionDetailPanel_TableLayout_Details.Visible = true;
+                    TransactionDetailPanel_TextBox_Notes.Visible = true;
+                    TransactionDetailPanel_Label_NotesCaption.Visible = true;
+                    
+                    // Only show related section if not in embedded mode
+                    if (!_isEmbeddedMode)
+                    {
+                        TransactionDetailPanel_TableLayout_RelatedHeader.Visible = true;
+                        TransactionDetailPanel_Label_RelatedStatus.Visible = true;
+                    }
+
+                    // Update GroupBox title to show it's expanded
+                    UpdateGroupBoxTitle();
+                }
+            }
+            catch (Exception ex)
+            {
+                LoggingUtility.LogApplicationError(ex);
+                Service_ErrorHandler.HandleException(ex, ErrorSeverity.Low,
+                    controlName: nameof(TransactionDetailPanel));
+            }
+        }
+
+        /// <summary>
+        /// Updates the GroupBox title to show collapse/expand indicator and transaction ID.
+        /// </summary>
+        private void UpdateGroupBoxTitle()
+        {
+            try
+            {
+                var indicator = _detailsCollapsed ? "▶" : "▼";
+                var transactionId = _transaction?.ID.ToString() ?? "";
+                
+                if (string.IsNullOrEmpty(transactionId))
+                {
+                    TransactionDetailPanel_GroupBox_Main.Text = $"{indicator} Transaction Details (Click to {(_detailsCollapsed ? "Expand" : "Collapse")})";
+                }
+                else
+                {
+                    TransactionDetailPanel_GroupBox_Main.Text = $"{indicator} Transaction Details - ID: {transactionId} (Click to {(_detailsCollapsed ? "Expand" : "Collapse")})";
+                }
+            }
+            catch (Exception ex)
+            {
+                LoggingUtility.LogApplicationError(ex);
+            }
+        }
 
         #endregion
     }

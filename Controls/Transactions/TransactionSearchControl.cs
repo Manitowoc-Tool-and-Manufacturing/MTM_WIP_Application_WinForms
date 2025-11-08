@@ -70,8 +70,6 @@ internal partial class TransactionSearchControl : UserControl
     {
         TransactionSearchControl_Button_Search.Click += BtnSearch_Click;
         TransactionSearchControl_Button_Reset.Click += BtnReset_Click;
-        TransactionSearchControl_Button_Export.Click += BtnExport_Click;
-        TransactionSearchControl_Button_Print.Click += TransactionSearchControl_Button_Print_Click;
 
         // Quick filter radio buttons
         TransactionSearchControl_RadioButton_Today.CheckedChanged += QuickFilterChanged;
@@ -343,7 +341,6 @@ internal partial class TransactionSearchControl : UserControl
 
         // Reset date range to month
         TransactionSearchControl_RadioButton_Month.Checked = true;
-        ApplyQuickFilter();
     }
 
     #endregion
@@ -423,44 +420,6 @@ internal partial class TransactionSearchControl : UserControl
             ClearCriteria();
             ResetRequested?.Invoke(this, EventArgs.Empty);
             LoggingUtility.Log("[TransactionSearchControl] Search criteria reset successfully.");
-        }
-        catch (Exception ex)
-        {
-            LoggingUtility.LogApplicationError(ex);
-            Service_ErrorHandler.HandleException(ex, ErrorSeverity.Low,
-                controlName: nameof(TransactionSearchControl));
-        }
-    }
-
-    private void BtnExport_Click(object? sender, EventArgs e)
-    {
-        try
-        {
-            LoggingUtility.Log("[TransactionSearchControl] Export button clicked.");
-            
-            // Raise export event - parent form will handle SaveFileDialog and export logic
-            ExportRequested?.Invoke(this, EventArgs.Empty);
-            
-            LoggingUtility.Log("[TransactionSearchControl] Export request raised.");
-        }
-        catch (Exception ex)
-        {
-            LoggingUtility.LogApplicationError(ex);
-            Service_ErrorHandler.HandleException(ex, ErrorSeverity.Low,
-                controlName: nameof(TransactionSearchControl));
-        }
-    }
-
-    private void TransactionSearchControl_Button_Print_Click(object? sender, EventArgs e)
-    {
-        try
-        {
-            LoggingUtility.Log("[TransactionSearchControl] Print button clicked.");
-            
-            // Raise print event - parent form will handle print dialog logic
-            PrintRequested?.Invoke(this, EventArgs.Empty);
-            
-            LoggingUtility.Log("[TransactionSearchControl] Print request raised.");
         }
         catch (Exception ex)
         {
