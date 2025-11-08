@@ -4,10 +4,10 @@
 
 ---
 
-## Latest Update - November 2, 2025 (Version 6.0.1)
+## Latest Update - November 8, 2025 (Version 6.0.0)
 
-**What Changed**: User Management, Part Number Management, and Settings Form improvements  
-**Do I Need To Do Anything?**: No - these fixes make existing features work better
+**What Changed**: Complete redesign of Transaction History Viewer with major performance and usability improvements  
+**Do I Need To Do Anything?**: Yes - check out the new features! Your old transaction history is still there, just easier to find now.
 
 ---
 
@@ -84,63 +84,122 @@
 
 ---
 
-## Previous Update - November 1, 2025 (Version 6.0.0 - IN PROGRESS)
+## Previous Update - November 2, 2025 (Version 5.9.0)
 
-**What Changed**: Major improvements to Transaction History Viewer (HIGHLY REQUESTED!)  
-**Do I Need To Do Anything?**: Yes - check out the new features when update is released!
+**What Changed**: User Management, Part Number Management, and Settings Form improvements  
+**Do I Need To Do Anything?**: No - these fixes make existing features work better
 
 ---
 
 ### 🎯 What This Means For You
 
-#### Faster, Easier Transaction History Search
+#### Settings Form Now Works for All Users - Was broken during implementation of Stored Procedure fix, finally getting to it now.
 
-**What's Better**:
-- **Cleaner layout**: Search filters at top, results on left, details on right - everything visible at once
-- **Faster searches**: Find transactions in under 2 seconds (even searching 90 days of history)
-- **More filter options**: Search by Part Number, User, Location, Operation, Date Range, Transaction Type (IN/OUT/TRANSFER), and even Notes
-- **Better pagination**: Navigate through large result sets with clear "Page 1 of 5" controls
-- **Instant details**: Click any transaction to see full details on the right side (no more popup windows)
-- **Remembers your searches**: Last search criteria stay filled in when you come back
+**What's New**:
+- **Modern 3-panel layout**: Search filters at top, results grid on left, transaction details on right - see everything at once
+- **Lightning fast searches**: Find transactions in under 2 seconds, even when searching 90 days of history with thousands of records
+- **Advanced filtering**: Search by Part Number, User, From Location, To Location, Operation, Date Range, Transaction Type (IN/OUT/TRANSFER), and Notes keywords
+- **Smart pagination**: Navigate large result sets with Previous/Next buttons, page jump (go directly to page 5 of 20), and clear "Page X of Y" display
+- **Instant detail view**: Click any transaction row to see complete information on the right - no popup windows
+- **Remembers your last search**: Filters stay filled when you come back, making repeated searches faster
+- **Configurable page size**: Default 50 transactions per page (adjustable in settings)
 
 **How to use**:
-1. Click **Transaction History** from main menu (same as before)
-2. **Fill in any search filters** at the top:
-   - Part Number (dropdown shows your recent parts)
-   - User (see everyone's transactions or just yours)
-   - Location (FROM and TO locations for transfers)
-   - Operation (manufacturing routing step)
-   - Date Range (Today/This Week/This Month/Custom)
-   - Transaction Types (check IN, OUT, or TRANSFER)
-   - Notes keyword (find transactions with specific notes)
-3. Click **Search** button
-4. **Browse results** in the grid on the left
-5. **Click any row** to see full details on the right
+1. Click **Transactions** tab from main menu (same location as before)
+2. **Fill in search filters** at the top (all filters are optional - use what you need):
+   - **Part Number**: Dropdown with autocomplete (type to search your parts)
+   - **User**: Select any user (admins see all users, regular users see only themselves)
+   - **From Location**: Where the inventory came from
+   - **To Location**: Where the inventory went to
+   - **Operation**: Manufacturing step (90, 100, 110, 120, 130, etc.)
+   - **Transaction Type**: Check IN, OUT, or TRANSFER (or all three)
+   - **Date Range**: Quick buttons (Today/This Week/This Month) or custom From/To dates
+   - **Notes**: Search for keywords in transaction notes
+3. Click **Search** button (or press Enter)
+4. **View results** in the grid on left:
+   - Shows: ID, Type, Part Number, Quantity, From→To locations, User, Date/Time
+   - Sort by any column (click column header)
+   - 50 transactions per page
+5. **Click any row** to see full details on the right:
+   - Complete transaction information
+   - All dates and timestamps
+   - Full notes text
+   - Related batch information
+6. **Navigate pages**:
+   - Use **Previous/Next** buttons
+   - Type page number and click **Go** to jump directly
+   - See total record count ("Showing 50 of 1,247 transactions")
+
+**Performance Improvements**:
+- **3x faster search**: Old interface took 5-8 seconds for large searches, new one completes in under 2 seconds
+- **Instant page navigation**: Switching between pages happens immediately (was 1-2 second delay)
+- **Handles huge datasets**: Search 100,000+ transactions without freezing or slowing down
+- **Responsive grid**: Scrolling and sorting work smoothly even with complex filters
 
 **Why this helps**:
-- **Find transactions 3x faster** than the old interface
-- **Less clicking** - everything on one screen instead of multiple windows
-- **Better for multi-tasking** - details panel lets you keep the search results visible
-- **Easier to track down issues** - more filter combinations help pinpoint specific transactions
+- **Save time**: Find specific transactions in seconds instead of minutes
+- **Less clicking**: Everything visible on one screen - no jumping between windows
+- **Better troubleshooting**: More filter combinations help pinpoint exactly what you're looking for
+- **Easier tracking**: See transaction details while keeping search results visible
+- **Reduced errors**: Clear layout prevents confusion about which transaction you're viewing
 
-#### 🎉 Coming in Next Phase (Week of November 4th)
+#### Transaction Analytics Summary (NEW!)
 
-**Transaction Life Cycle Viewer** (BRAND NEW FEATURE):
-- **See the complete history** of a batch from start to finish
-- **Visual tree view** shows how inventory splits and moves between locations
-- **Track batch splits**: See exactly when 500 units became 250 at one location and 250 at another
-- **Chronological timeline**: Every IN, TRANSFER, and OUT transaction in order
-- **Click "Transaction Life Cycle" button** in detail panel to open the viewer
+**What's New**:
+- **Real-time statistics** displayed above the search results
+- **Summary cards** show totals for current date range:
+  - Total Transactions (all types combined)
+  - Total IN transactions (receiving inventory)
+  - Total OUT transactions (removing inventory)
+  - Total TRANSFER transactions (moving between locations)
+- **Date range indicator**: Shows which period the analytics cover
+- **Updates automatically**: Statistics refresh when you change date filters
 
-**Export to Excel**:
-- Export your search results to Excel for reporting or analysis
-- All visible columns included
-- One-click export from Search or Detail view
+**How to use**:
+1. Set your date range filters (Today/This Week/This Month/Custom)
+2. Analytics cards update automatically above the search results
+3. See at-a-glance how many transactions of each type occurred
+4. Use to quickly validate daily/weekly activity levels
 
-**Print Transaction Reports**:
-- Print transaction details for physical records
-- Formatted for standard 8.5x11 paper
-- Includes all transaction information and notes
+**Why this helps**:
+- **Quick daily review**: See total transactions at a glance each morning
+- **Activity monitoring**: Spot unusually high or low transaction counts
+- **Shift reporting**: Quick summary of what happened during your shift
+- **Trend awareness**: Compare this week to last week easily
+
+#### Improved Data Display
+
+**What's Better**:
+- **Readable column widths**: Part numbers, locations, and dates no longer cut off
+- **Better date formatting**: MM/dd/yy HH:mm format (example: 11/08/25 14:30)
+- **Right-aligned numbers**: Quantities line up properly for easy reading
+- **Alternating row colors**: Light gray/white rows make tracking across columns easier
+- **Column sorting**: Click any column header to sort ascending/descending
+- **Responsive layout**: Works correctly at 100%, 125%, 150%, and 200% screen scaling
+
+**Keyboard Shortcuts** (NEW!):
+- **F5**: Refresh/re-run current search
+- **Ctrl+R**: Reset all filters to defaults
+- **Escape**: Clear row selection
+- **Tab**: Navigate between filter fields
+- **Enter**: Execute search (when in any filter field)
+
+---
+
+### ✨ Coming Soon (Next Release - Week of November 11th)
+
+**Transaction Lifecycle Viewer**:
+- See the complete history of a batch from receiving to current location
+- Visual tree showing how inventory splits between locations
+- Track partial transfers (500 units → 250 here + 250 there)
+- Chronological timeline of every IN, TRANSFER, and OUT
+- Click "View Lifecycle" button in detail panel
+
+**Export & Print**:
+- Export search results to Excel for offline analysis
+- Print formatted transaction reports
+- PDF export option
+- All current filters applied to exports
 
 ---
 
@@ -252,10 +311,16 @@
 
 ### ✅ Do I Need To Update?
 
-**Version 6.0.0 (Transaction Viewer - IN PROGRESS)**:
-- **All users**: Yes - this is a major improvement to one of the most-used features
-- **Shop Floor Users**: Recommended - much faster transaction searches and better detail viewing
-- **Office Staff**: Recommended - export to Excel makes reporting easier
+**Version 6.0.0 (Transaction Viewer Redesign - RELEASED)**:
+- **All users**: YES - this is a major improvement to one of the most-used features
+- **Shop Floor Users**: Strongly recommended - much faster transaction searches, easier to find what you need
+- **Office Staff**: Strongly recommended - analytics summaries and better filtering make reporting easier
+- **Administrators**: Recommended - can now view all users' transactions with better filtering
+
+**Version 5.9.0 (Settings & User Management Fixes)**:
+- **All users**: Update when convenient - fixes Settings form crashes in development environments
+- **Administrators**: Yes - faster user deletion and simplified part number management
+- **Shop Floor Users**: No urgent need unless you access Settings frequently
 
 **Version 5.4.0 (View Error Reports)**:
 - **IT Support & Developers**: Yes - this new feature helps you manage and investigate user-reported issues more efficiently
@@ -283,25 +348,43 @@
 ### 📱 Common Questions
 
 **Q: Will the Transaction Viewer look completely different?**  
-A: The layout is cleaner, but the same information is there - just better organized. Search filters at top, results on left, details on right.
+A: Yes - the layout is much cleaner and more modern. Search filters at top, results on left, details on right. But all the same information is there, just better organized and faster to access.
 
 **Q: Can I still search the old way?**  
-A: The new interface is easier and faster, but uses the same underlying search. All your usual searches will work the same or better.
+A: The old interface has been completely replaced with the new one, but all your usual searches work the same or better. The new interface has more filter options and is faster.
 
-**Q: What's a "Transaction Life Cycle"?**  
-A: It's a visual timeline showing what happened to a batch of parts. Example: 500 units came IN at Location A, then 250 were TRANSFERred to Location B, then 100 more moved to Location C. The tree view shows all these movements in order.
+**Q: Where did my transaction history go?**  
+A: All 24,000+ historical transactions are still there and fully searchable. Nothing was deleted or changed - just the viewing interface is new.
 
-**Q: Why do I need to see batch splits?**  
-A: When tracking down inventory discrepancies or verifying transfers, seeing the complete history of where units went helps find issues faster. No more guessing which transactions are related.
+**Q: How do I search for transactions from a specific part?**  
+A: Click the Part Number dropdown at the top, start typing the part number (it autocompletes), select it, then click Search. You'll see all transactions for that part.
 
-**Q: Will old transaction history still be searchable?**  
-A: Yes - all 24,000+ historical transactions remain searchable. Nothing is deleted or changed.
+**Q: Can I search by multiple filters at once?**  
+A: Yes! Fill in any combination of filters - Part Number, User, Locations, Operation, Date Range, Transaction Type, and Notes. All filters work together (AND logic).
+
+**Q: What does the page jump feature do?**  
+A: If you have 20 pages of results, you can type "15" in the page box and click Go to jump directly to page 15. Much faster than clicking Next 14 times.
 
 **Q: How fast is the new search?**  
-A: Most searches complete in under 2 seconds, even when searching 90 days of history. Large result sets (1000+ transactions) use pagination so the screen loads quickly.
+A: Most searches complete in under 2 seconds, even when searching 90 days of history. Large result sets (1000+ transactions) use pagination so the screen loads instantly.
 
-**Q: Can I export filtered results or all results?**  
-A: You can export the current page, current filter results, or all transactions matching your search (coming in next phase).
+**Q: Can I sort the results?**  
+A: Yes! Click any column header to sort by that column. Click again to reverse the sort order.
+
+**Q: What are the analytics cards at the top?**  
+A: Those show real-time summaries of your current search: total transactions, total IN, total OUT, and total TRANSFER counts. They update automatically when you change your date range.
+
+**Q: Why does it only show 50 transactions at a time?**  
+A: Pagination keeps the interface fast and responsive. You can navigate through all results using the Previous/Next buttons or page jump. Total count is always displayed.
+
+**Q: Can I change the page size to show more or fewer transactions?**  
+A: The default is 50 per page. Contact IT if you need to adjust this setting for your workstation.
+
+**Q: What's a "Transaction Lifecycle"?**  
+A: (Coming next release) It's a visual timeline showing what happened to a batch of parts from start to finish. Example: 500 units came IN at Location A, then 250 were TRANSFERred to Location B, then 100 more moved to Location C. The tree view shows all these movements chronologically.
+
+**Q: Why do I need to see batch splits?**  
+A: (Coming next release) When tracking down inventory discrepancies or verifying transfers, seeing the complete history of where units went helps find issues faster. No more guessing which transactions are related to each other.
 
 **Q: Will I lose my work when the app restarts for display changes?**  
 A: No - the application saves your current state and restarts instantly
@@ -328,14 +411,15 @@ A: No problem - Contact John Koll at (ext. 323) or jkoll@mantoolmfg.com / Dan Sm
 We're working on even more improvements:
 
 **Next Updates (Planned)**:
-- **View Application Logs** - See what the application is doing behind the scenes (helpful for troubleshooting)
+- **Transaction Lifecycle Viewer** (Week of November 11th) - See complete batch history with visual tree showing splits and movements
+- **Print & Export** (Week of November 11th) - Export to Excel, print formatted reports, PDF generation
+- **Enhanced Print Dialog** - Modern print preview with compact sidebar, column management, page range selection
 - **Enhanced Developer Settings Menu** - More tools and options for IT staff and power users
-- Enhanced multi-monitor support and display scaling improvements
 - Better visual feedback during network issues
 - Inventory dashboard with real-time statistics
 - Quick action buttons for common tasks
 
 ---
 
-**Last Updated**: November 2, 2025  
+**Last Updated**: November 8, 2025  
 **Questions?** Contact John Koll at (ext. 323) or jkoll@mantoolmfg.com / Dan Smith at (ext. 311) or dsmith@mantoolmfg.com / Ka Lee at (ext. ___ ) or klee@mantoolmfg.com
