@@ -1,10 +1,10 @@
 <#
 .SYNOPSIS
-    Checks all DAO files for methods that don't return DaoResult types
+    Checks all DAO files for methods that don't return Model_Dao_Result types
 .DESCRIPTION
-    Scans Data/*.cs files for async methods that return primitive types instead of DaoResult<T> or DaoResult
+    Scans Data/*.cs files for async methods that return primitive types instead of Model_Dao_Result<T> or Model_Dao_Result
 .EXAMPLE
-    .\Check-DaoResult-Compliance.ps1
+    .\Check-Model_Dao_Result-Compliance.ps1
 #>
 
 [CmdletBinding()]
@@ -13,7 +13,7 @@ param()
 $ErrorActionPreference = "Stop"
 $dataFolder = Join-Path $PSScriptRoot "..\Data"
 
-Write-Host "=== DAO DaoResult Compliance Check ===" -ForegroundColor Cyan
+Write-Host "=== DAO Model_Dao_Result Compliance Check ===" -ForegroundColor Cyan
 Write-Host "Scanning: $dataFolder" -ForegroundColor Gray
 Write-Host ""
 
@@ -27,9 +27,9 @@ foreach ($file in $daoFiles) {
     
     $content = Get-Content $file.FullName -Raw
     
-    # Pattern to find async methods that don't return DaoResult
+    # Pattern to find async methods that don't return Model_Dao_Result
     # Matches: internal/public static async Task<string|int|bool|void|DataTable|DataRow|etc>
-    # Excludes: internal/public static async Task<DaoResult
+    # Excludes: internal/public static async Task<Model_Dao_Result
     
     $lines = Get-Content $file.FullName
     $lineNumber = 0
@@ -41,8 +41,8 @@ foreach ($file in $daoFiles) {
         if ($line -match '^\s*//') { continue }
         if ($line -match '^\s*$') { continue }
         
-        # Check for async methods that don't return DaoResult
-        if ($line -match '^\s*(internal|public)\s+static\s+async\s+Task<(?!DaoResult)([^>]+)>\s+(\w+)') {
+        # Check for async methods that don't return Model_Dao_Result
+        if ($line -match '^\s*(internal|public)\s+static\s+async\s+Task<(?!Model_Dao_Result)([^>]+)>\s+(\w+)') {
             $visibility = $matches[1]
             $returnType = $matches[2]
             $methodName = $matches[3]
@@ -76,7 +76,7 @@ foreach ($file in $daoFiles) {
     }
     
     if (-not ($findings | Where-Object { $_.File -eq $file.Name })) {
-        Write-Host "  ✅ All methods return DaoResult" -ForegroundColor Green
+        Write-Host "  ✅ All methods return Model_Dao_Result" -ForegroundColor Green
     }
     
     Write-Host ""
@@ -86,7 +86,7 @@ Write-Host "=== Summary ===" -ForegroundColor Cyan
 Write-Host ""
 
 if ($findings.Count -eq 0) {
-    Write-Host "✅ All DAO files are compliant - all async methods return DaoResult types" -ForegroundColor Green
+    Write-Host "✅ All DAO files are compliant - all async methods return Model_Dao_Result types" -ForegroundColor Green
     exit 0
 } else {
     Write-Host "⚠️  Found $($findings.Count) non-compliant methods across $($findings | Select-Object -ExpandProperty File -Unique | Measure-Object).Count files" -ForegroundColor Yellow
@@ -104,8 +104,8 @@ if ($findings.Count -eq 0) {
     }
     
     Write-Host "💡 These methods need to be refactored to return:" -ForegroundColor Yellow
-    Write-Host "   - DaoResult<T> for methods returning data" -ForegroundColor Gray
-    Write-Host "   - DaoResult for void-like operations" -ForegroundColor Gray
+    Write-Host "   - Model_Dao_Result<T> for methods returning data" -ForegroundColor Gray
+    Write-Host "   - Model_Dao_Result for void-like operations" -ForegroundColor Gray
     Write-Host ""
     
     # Export to CSV for tracking

@@ -217,12 +217,12 @@ Prefer well-structured files over heavy region use. Regions exist to collapse in
 /// </summary>
 /// <param name="inventoryId">Unique identifier of the inventory record.</param>
 /// <param name="quantityDelta">Quantity adjustment to apply.</param>
-/// <returns>A <see cref="DaoResult"/> containing status, error message, and optional payload.</returns>
+/// <returns>A <see cref="Model_Dao_Result"/> containing status, error message, and optional payload.</returns>
 /// <remarks>
 /// The underlying stored procedure enforces manufacturing business rules. Callers should inspect
 /// the returned status and message before updating UI state.
 /// </remarks>
-public static DaoResult Transactions_AdjustInventory(long inventoryId, decimal quantityDelta)
+public static Model_Dao_Result Transactions_AdjustInventory(long inventoryId, decimal quantityDelta)
 {
     // Implementation
 }

@@ -12,7 +12,7 @@ The Settings System manages user preferences, theme selection, application confi
 
 **Key Findings**:
 - 13 distinct settings forms covering diverse domains (user preferences, themes, database, diagnostics)
-- Multiple data persistence approaches (database, JSON, in-memory Model_AppVariables)
+- Multiple data persistence approaches (database, JSON, in-memory Model_Application_Variables)
 - Settings Controls properly separated but designer files need WinForms UI Architecture compliance
 - Theme system fully integrated with database backend (app_themes table)
 - Diagnostics forms mixed with user settings (architectural separation needed)
@@ -63,7 +63,7 @@ The Settings System manages user preferences, theme selection, application confi
 - No dedicated settings table
 
 **In-Memory Configuration**:
-- `Model_AppVariables` - Runtime application variables
+- `Model_Application_Variables` - Runtime application variables
 - `Core_WipAppVariables` - Constant configuration values
 
 ---
@@ -102,7 +102,7 @@ User Input → Form → DAO → Stored Procedure → Database
 - 9 available themes stored in app_themes table
 - 203 color properties per theme (JSON serialized)
 - Theme loading via Core_Themes.LoadTheme()
-- Database-backed with Model_UserUiColors runtime cache
+- Database-backed with Model_Shared_UserUiColors runtime cache
 
 **Forms/Controls**:
 - ThemePickerForm.cs
@@ -111,7 +111,7 @@ User Input → Form → DAO → Stored Procedure → Database
 
 **Data Flow**:
 ```
-app_themes table → Core_Themes.LoadTheme() → Model_AppVariables.UserUiColors → UI Controls
+app_themes table → Core_Themes.LoadTheme() → Model_Application_Variables.UserUiColors → UI Controls
 md_users.ThemeName ← User Selection ← ThemePickerForm
 ```
 
@@ -206,7 +206,7 @@ User Input → Form → Helper_Database_Variables.UpdateConnectionString() → R
 **Current Approaches**:
 - Database (user preferences, themes, quick buttons)
 - JSON files (connection strings in some scenarios)
-- In-memory only (Model_AppVariables runtime state)
+- In-memory only (Model_Application_Variables runtime state)
 - Helper classes (Helper_Database_Variables)
 
 **Recommendation**:
@@ -492,8 +492,8 @@ User Input → Form → Helper_Database_Variables.UpdateConnectionString() → R
 - Service_ErrorHandler (error handling)
 
 **Models**:
-- Model_AppVariables (runtime state)
-- Model_UserUiColors (theme colors)
+- Model_Application_Variables (runtime state)
+- Model_Shared_UserUiColors (theme colors)
 - Core_WipAppVariables (constants)
 
 ---

@@ -84,7 +84,7 @@ internal partial class TransactionLifecycleForm : Form
     {
         try
         {
-            var colors = Model_AppVariables.UserUiColors;
+            var colors = Model_Application_Variables.UserUiColors;
 
             // Apply theme tokens with SystemColors fallbacks
             this.BackColor = colors.PanelBackColor ?? SystemColors.Control;
@@ -143,7 +143,7 @@ internal partial class TransactionLifecycleForm : Form
         catch (Exception ex)
         {
             LoggingUtility.LogApplicationError(ex);
-            Service_ErrorHandler.HandleException(ex, ErrorSeverity.Medium,
+            Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Medium,
                 contextData: new Dictionary<string, object>
                 {
                     ["PartID"] = _partId,
@@ -158,7 +158,7 @@ internal partial class TransactionLifecycleForm : Form
     /// Detects splits by comparing quantities and creates child branches.
     /// </summary>
     /// <param name="transactions">List of transactions in chronological order.</param>
-    private void BuildLifecycleTree(List<Model_Transactions> transactions)
+    private void BuildLifecycleTree(List<Model_Transactions_Core> transactions)
     {
         try
         {
@@ -224,24 +224,30 @@ internal partial class TransactionLifecycleForm : Form
                     }
                 }
 
-                // Add node to tree (as child if split, otherwise as sibling to root)
-                if (isSplit)
+                // Add node to tree based on location flow
+                // Find parent node where ToLocation matches this transaction's FromLocation
+                TreeNode? parentNode = null;
+                
+                if (!string.IsNullOrEmpty(transaction.FromLocation))
                 {
-                    // Find the parent node (last node with FromLocation match)
-                    var parentNode = FindNodeByLocation(rootNode, transaction.FromLocation);
-                    if (parentNode != null)
+                    // Search entire tree for node with ToLocation matching this FromLocation
+                    parentNode = FindNodeByLocation(rootNode, transaction.FromLocation);
+                }
+                
+                if (parentNode != null)
+                {
+                    // Add as child of the node that led to this location
+                    parentNode.Nodes.Add(node);
+                    if (isSplit)
                     {
-                        parentNode.Nodes.Add(node);
-                        parentNode.Expand();
+                        // Mark split nodes for visual distinction
+                        node.ForeColor = Color.Orange;
                     }
-                    else
-                    {
-                        rootNode.Nodes.Add(node);
-                    }
+                    parentNode.Expand();
                 }
                 else
                 {
-                    // Add as top-level node (linear progression)
+                    // No parent found - add as root level (shouldn't happen except for orphaned transactions)
                     TransactionLifecycleForm_TreeView_Lifecycle.Nodes.Add(node);
                 }
             }
@@ -256,7 +262,7 @@ internal partial class TransactionLifecycleForm : Form
         catch (Exception ex)
         {
             LoggingUtility.LogApplicationError(ex);
-            Service_ErrorHandler.HandleException(ex, ErrorSeverity.Medium,
+            Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Medium,
                 controlName: nameof(TransactionLifecycleForm));
         }
         finally
@@ -270,7 +276,7 @@ internal partial class TransactionLifecycleForm : Form
     /// </summary>
     /// <param name="transaction">The transaction to create a node for.</param>
     /// <returns>TreeNode configured with transaction data.</returns>
-    private TreeNode CreateTransactionNode(Model_Transactions transaction)
+    private TreeNode CreateTransactionNode(Model_Transactions_Core transaction)
     {
         // Node format: "{Type} - {Location}" (no dates per spec)
         var nodeText = $"{transaction.TransactionType}";
@@ -306,7 +312,7 @@ internal partial class TransactionLifecycleForm : Form
         if (string.IsNullOrEmpty(location)) return null;
 
         // Check if parent node's transaction has this location
-        if (parentNode.Tag is Model_Transactions transaction)
+        if (parentNode.Tag is Model_Transactions_Core transaction)
         {
             if (transaction.ToLocation == location)
             {
@@ -335,7 +341,7 @@ internal partial class TransactionLifecycleForm : Form
     {
         try
         {
-            if (e.Node?.Tag is Model_Transactions transaction)
+            if (e.Node?.Tag is Model_Transactions_Core transaction)
             {
                 LoggingUtility.Log($"[TransactionLifecycleForm] Node selected: Transaction ID {transaction.ID}");
                 TransactionLifecycleForm_DetailPanel.Transaction = transaction;
@@ -348,7 +354,7 @@ internal partial class TransactionLifecycleForm : Form
         catch (Exception ex)
         {
             LoggingUtility.LogApplicationError(ex);
-            Service_ErrorHandler.HandleException(ex, ErrorSeverity.Low,
+            Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Low,
                 controlName: nameof(TransactionLifecycleForm));
         }
     }
@@ -372,13 +378,19 @@ internal partial class TransactionLifecycleForm : Form
         catch (Exception ex)
         {
             LoggingUtility.LogApplicationError(ex);
-            Service_ErrorHandler.HandleException(ex, ErrorSeverity.Low,
+            Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Low,
                 controlName: nameof(TransactionLifecycleForm));
         }
     }
 
     private void BtnPrint_Click(object? sender, EventArgs e)
     {
+        // TEMPORARY: Print system being refactored (Phase 1 - Task T002)
+        Service_ErrorHandler.ShowInformation(
+            "Print functionality is being rebuilt. Coming soon!",
+            "Feature Temporarily Unavailable");
+        
+        /* OLD IMPLEMENTATION - Kept for reference, will be restored in Phase 7
         try
         {
             LoggingUtility.Log("[TransactionLifecycleForm] Print button clicked.");
@@ -392,9 +404,10 @@ internal partial class TransactionLifecycleForm : Form
         catch (Exception ex)
         {
             LoggingUtility.LogApplicationError(ex);
-            Service_ErrorHandler.HandleException(ex, ErrorSeverity.Low,
+            Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Low,
                 controlName: nameof(TransactionLifecycleForm));
         }
+        */
     }
 
     private void BtnClose_Click(object? sender, EventArgs e)

@@ -88,7 +88,7 @@ ORDER BY ReportDate DESC;
 
 ```csharp
 // Build filter parameters
-var filter = new Model_ErrorReportFilter
+var filter = new Model_ErrorReport_Core_Filter
 {
     DateFrom = DateTime.Parse("2025-10-18"),
     DateTo = DateTime.Parse("2025-10-25").AddDays(1).AddTicks(-1),
@@ -123,7 +123,7 @@ else
 {
     Service_ErrorHandler.HandleException(
         result.Exception,
-        ErrorSeverity.Medium,
+        Enum_ErrorSeverity.Medium,
         message: result.StatusMessage);
 }
 ```

@@ -67,21 +67,21 @@ All database operations MUST use stored procedures exclusively. No inline SQL is
 
 **Enforcement**: Code review MUST reject any direct `MySqlConnection`, `MySqlCommand`, or string concatenation of SQL. Static analysis tools SHOULD flag violations.
 
-### II. DaoResult<T> Wrapper Pattern (MANDATORY)
+### II. Model_Dao_Result<T> Wrapper Pattern (MANDATORY)
 
-All data access methods MUST return structured `DaoResult` or `DaoResult<T>` responses, never throwing exceptions for expected failures.
+All data access methods MUST return structured `Model_Dao_Result` or `Model_Dao_Result<T>` responses, never throwing exceptions for expected failures.
 
 **Requirements**:
 
--   Success case: `DaoResult<T>.Success(data, message)`
--   Failure case: `DaoResult<T>.Failure(message, exception)`
+-   Success case: `Model_Dao_Result<T>.Success(data, message)`
+-   Failure case: `Model_Dao_Result<T>.Failure(message, exception)`
 -   Properties: `IsSuccess`, `Data`, `Message`, `Exception`
--   Database errors MUST be caught and wrapped in DaoResult
+-   Database errors MUST be caught and wrapped in Model_Dao_Result
 -   Callers MUST check `IsSuccess` before accessing `Data`
 
 **Rationale**: Eliminates exception-driven control flow for expected failures (record not found, validation errors). Provides consistent API contract across all DAOs, enabling predictable error handling in UI layer.
 
-**Enforcement**: All methods in `Data/` folder MUST return DaoResult variants. Code review MUST verify exception wrapping and null-safety.
+**Enforcement**: All methods in `Data/` folder MUST return Model_Dao_Result variants. Code review MUST verify exception wrapping and null-safety.
 
 ### III. Region Organization and Method Ordering (MANDATORY)
 
@@ -207,7 +207,7 @@ All Forms and UserControls MUST integrate the MTM theme system for DPI scaling, 
     Core_Themes.ApplyRuntimeLayoutAdjustments(this);
     ```
 -   **Call Order**: Theme methods MUST be called immediately after `InitializeComponent()`
--   **Color Tokens**: Custom colors MUST use `Model_UserUiColors` theme tokens with `SystemColors` fallbacks
+-   **Color Tokens**: Custom colors MUST use `Model_Shared_UserUiColors` theme tokens with `SystemColors` fallbacks
 -   **Hardcoded Colors**: ANY hardcoded `Color.FromArgb()` or `Color.Blue` MUST include `// ACCEPTABLE: [reason]` comment
 -   **AutoScaleMode**: All Forms/UserControls MUST set `AutoScaleMode = AutoScaleMode.Dpi`
 -   **Database Themes**: Theme colors are stored in MySQL `app_themes` table (9 themes, 203 properties each)
@@ -216,7 +216,7 @@ All Forms and UserControls MUST integrate the MTM theme system for DPI scaling, 
 
 ```csharp
 // ✅ CORRECT: Theme token with fallback
-var colors = Model_AppVariables.UserUiColors;
+var colors = Model_Application_Variables.UserUiColors;
 button.BackColor = colors.ButtonBackColor ?? SystemColors.Control;
 
 // ✅ CORRECT: Semantic theme color
@@ -414,7 +414,7 @@ button.BackColor = Color.Blue;  // Missing justification comment
 **Compliance Checklist**:
 
 -   Region organization and method ordering
--   DAO pattern (DaoResult<T>, stored procedures, parameter naming)
+-   DAO pattern (Model_Dao_Result<T>, stored procedures, parameter naming)
 -   Null safety and error handling
 -   Progress reporting integration
 -   Theme and DPI scaling
@@ -457,7 +457,7 @@ button.BackColor = Color.Blue;  // Missing justification comment
 
 -   Format: `<type>: <description>` (e.g., `refactor: reorganize Dao_Inventory into standard regions`)
 -   Types: `feat`, `fix`, `refactor`, `docs`, `test`, `perf`, `chore`
--   Breaking changes: Append `!` (e.g., `feat!: change DaoResult API signature`)
+-   Breaking changes: Append `!` (e.g., `feat!: change Model_Dao_Result API signature`)
 
 **Rationale**: Consistent naming enables branch discovery and automated tooling. Conventional commits support changelog generation and semantic versioning.
 

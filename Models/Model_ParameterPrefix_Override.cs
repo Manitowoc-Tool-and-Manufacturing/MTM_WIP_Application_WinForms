@@ -6,7 +6,7 @@ namespace MTM_WIP_Application_Winforms.Models
     /// Represents a parameter prefix override for stored procedure execution.
     /// Used by Helper_Database_StoredProcedure to resolve parameter prefixes dynamically.
     /// </summary>
-    public class Model_ParameterPrefixOverride
+    public class Model_ParameterPrefix_Override
     {
         #region Properties
 

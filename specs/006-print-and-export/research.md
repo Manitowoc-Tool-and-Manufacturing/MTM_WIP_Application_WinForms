@@ -241,7 +241,7 @@ private void ProgressDialog_Load(object sender, EventArgs e)
 ```
 
 **Implementation Impact**:
-- Model_PrintSettings class with Load/Save methods
+- Model_Print_CoreSettings class with Load/Save methods
 - FR-029: "Remember printer selection, column order, column visibility per grid between sessions"
 - FR-030: "Reset orientation, color mode, page range, zoom each session" (not persisted)
 
@@ -325,7 +325,7 @@ public PrintForm(DataGridView sourceGrid)
 ```csharp
 private void ApplyThemeColors()
 {
-    var colors = Model_AppVariables.UserUiColors;
+    var colors = Model_Application_Variables.UserUiColors;
     
     // Sidebar panels
     pnlSidebar.BackColor = colors.PanelBackColor ?? SystemColors.Control;

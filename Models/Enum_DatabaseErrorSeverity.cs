@@ -4,7 +4,7 @@ namespace MTM_WIP_Application_Winforms.Models;
 /// Defines the severity levels for database errors in the MTM Inventory Application.
 /// Used to classify database operation failures and determine appropriate handling.
 /// </summary>
-public enum DatabaseErrorSeverity
+public enum Enum_DatabaseEnum_ErrorSeverity
 {
     /// <summary>
     /// Warning - Unexpected but handled situation, operation may have degraded functionality.

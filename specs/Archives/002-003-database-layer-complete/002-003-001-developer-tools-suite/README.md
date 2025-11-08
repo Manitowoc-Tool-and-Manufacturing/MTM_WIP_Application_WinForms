@@ -92,7 +92,7 @@ SettingsForm (TreeView)
 4. `sys_parameter_prefix_overrides_Update_ById` - Modify override
 5. `sys_parameter_prefix_overrides_Delete_ById` - Soft delete
 
-**New Model**: `Model_ParameterPrefixOverride` (POCO)
+**New Model**: `Model_ParameterPrefix_Override` (POCO)
 
 **New DAO**: `Dao_ParameterPrefixOverrides` (5 async methods)
 
@@ -158,7 +158,7 @@ Feature is **COMPLETE** when:
 
 ### External Dependencies
 - MySQL 5.7.24+ with INFORMATION_SCHEMA access
-- Model_AppVariables.CurrentUser.IsDeveloper flag implementation
+- Model_Application_Variables.CurrentUser.IsDeveloper flag implementation
 - Settings form TreeView node navigation pattern
 - Core_Themes DPI scaling and layout adjustment utilities
 

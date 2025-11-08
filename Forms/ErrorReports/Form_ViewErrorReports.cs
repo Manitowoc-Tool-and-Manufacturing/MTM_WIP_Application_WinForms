@@ -87,7 +87,7 @@ namespace MTM_WIP_Application_Winforms.Forms.ErrorReports
             }
             catch (Exception ex)
             {
-                Service_ErrorHandler.HandleException(ex, ErrorSeverity.Medium, controlName: Name);
+                Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Medium, controlName: Name);
             }
         }
 

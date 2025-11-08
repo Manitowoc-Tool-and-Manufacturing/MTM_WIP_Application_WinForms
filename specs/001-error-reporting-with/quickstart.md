@@ -114,10 +114,10 @@ DELIMITER ;
 
 ### Step 2: Create Model Classes
 
-**Models/Model_ErrorReport.cs**:
+**Models/Model_ErrorReport_Core.cs**:
 
 ```csharp
-public class Model_ErrorReport
+public class Model_ErrorReport_Core
 {
     public int ReportID { get; set; }
     public DateTime ReportDate { get; set; }
@@ -134,7 +134,7 @@ public class Model_ErrorReport
 }
 ```
 
-**Models/Model_QueuedErrorReport.cs** (see data-model.md)
+**Models/Model_ErrorReport_Core_Queued.cs** (see data-model.md)
 
 ### Step 3: Implement Data Access Layer
 
@@ -151,8 +151,8 @@ private static readonly string ConnectionString =
 /// <summary>
 /// Inserts a new error report into the database.
 /// </summary>
-/// <returns>DaoResult containing the generated ReportID on success</returns>
-public static async Task<DaoResult<int>> InsertReportAsync(Model_ErrorReport report)
+/// <returns>Model_Dao_Result containing the generated ReportID on success</returns>
+public static async Task<Model_Dao_Result<int>> InsertReportAsync(Model_ErrorReport_Core report)
 {
     try
     {
@@ -178,15 +178,15 @@ public static async Task<DaoResult<int>> InsertReportAsync(Model_ErrorReport rep
         if (result.IsSuccess && result.OutputParameters.ContainsKey("ReportID"))
         {
             int reportID = Convert.ToInt32(result.OutputParameters["ReportID"]);
-            return DaoResult<int>.Success(reportID, result.StatusMessage);
+            return Model_Dao_Result<int>.Success(reportID, result.StatusMessage);
         }
 
-        return DaoResult<int>.Failure(result.StatusMessage, result.Exception);
+        return Model_Dao_Result<int>.Failure(result.StatusMessage, result.Exception);
     }
     catch (Exception ex)
     {
         LoggingUtility.LogApplicationError(ex, "Failed to insert error report");
-        return DaoResult<int>.Failure("Error submitting report", ex);
+        return Model_Dao_Result<int>.Failure("Error submitting report", ex);
     }
 }
 
@@ -210,7 +210,7 @@ private static readonly string ArchiveDirectory = Path.Combine(
 
 #region Queue Operations
 
-public static async Task<DaoResult<string>> QueueReportAsync(Model_ErrorReport report)
+public static async Task<Model_Dao_Result<string>> QueueReportAsync(Model_ErrorReport_Core report)
 {
     try
     {
@@ -232,16 +232,16 @@ public static async Task<DaoResult<string>> QueueReportAsync(Model_ErrorReport r
         await File.WriteAllTextAsync(filePath, sql);
 
         LoggingUtility.Log($"Error report queued: {fileName}");
-        return DaoResult<string>.Success(filePath, "Report queued for later submission");
+        return Model_Dao_Result<string>.Success(filePath, "Report queued for later submission");
     }
     catch (Exception ex)
     {
         LoggingUtility.LogApplicationError(ex, "Failed to queue error report");
-        return DaoResult<string>.Failure("Failed to queue report", ex);
+        return Model_Dao_Result<string>.Failure("Failed to queue report", ex);
     }
 }
 
-private static string GenerateSqlForReport(Model_ErrorReport report)
+private static string GenerateSqlForReport(Model_ErrorReport_Core report)
 {
     // Escape single quotes for SQL
     string EscapeSql(string? value) => value?.Replace("'", "''") ?? "NULL";
@@ -286,12 +286,12 @@ private static readonly SemaphoreSlim _syncLock = new SemaphoreSlim(1, 1);
 
 #region Sync Operations
 
-public static async Task<DaoResult<int>> SyncOnStartupAsync()
+public static async Task<Model_Dao_Result<int>> SyncOnStartupAsync()
 {
     // Try to acquire lock with immediate timeout
     if (!await _syncLock.WaitAsync(0))
     {
-        return DaoResult<int>.Failure("Sync already in progress", null);
+        return Model_Dao_Result<int>.Failure("Sync already in progress", null);
     }
 
     try
@@ -300,13 +300,13 @@ public static async Task<DaoResult<int>> SyncOnStartupAsync()
         if (!await IsDatabaseAvailableAsync())
         {
             LoggingUtility.Log("Database unavailable, skipping startup sync");
-            return DaoResult<int>.Success(0, "Database unavailable");
+            return Model_Dao_Result<int>.Success(0, "Database unavailable");
         }
 
         int successCount = await ProcessPendingFilesAsync();
         
         LoggingUtility.Log($"Startup sync completed: {successCount} reports submitted");
-        return DaoResult<int>.Success(successCount, $"{successCount} reports synced");
+        return Model_Dao_Result<int>.Success(successCount, $"{successCount} reports synced");
     }
     finally
     {
@@ -355,9 +355,9 @@ private static async Task<int> ProcessPendingFilesAsync()
 ```csharp
 public partial class Form_ReportIssue : Form
 {
-    private readonly Model_ErrorReport _report;
+    private readonly Model_ErrorReport_Core _report;
 
-    public Form_ReportIssue(Model_ErrorReport report)
+    public Form_ReportIssue(Model_ErrorReport_Core report)
     {
         InitializeComponent();
         _report = report;
@@ -378,7 +378,7 @@ public partial class Form_ReportIssue : Form
         // Check database connectivity
         bool isOnline = await CheckDatabaseConnectivityAsync();
 
-        DaoResult<int> result;
+        Model_Dao_Result<int> result;
 
         if (isOnline)
         {
@@ -396,7 +396,7 @@ public partial class Form_ReportIssue : Form
             {
                 Service_ErrorHandler.HandleException(
                     result.Exception,
-                    ErrorSeverity.Medium,
+                    Enum_ErrorSeverity.Medium,
                     contextData: new Dictionary<string, object> { ["Operation"] = "SubmitReport" });
             }
         }
@@ -416,7 +416,7 @@ public partial class Form_ReportIssue : Form
             {
                 Service_ErrorHandler.HandleException(
                     queueResult.Exception,
-                    ErrorSeverity.Medium);
+                    Enum_ErrorSeverity.Medium);
             }
         }
     }
@@ -480,7 +480,7 @@ _ = Task.Run(async () =>
 
 ## Configuration
 
-Add to `Model_AppVariables` or appsettings.json:
+Add to `Model_Application_Variables` or appsettings.json:
 
 ```json
 {

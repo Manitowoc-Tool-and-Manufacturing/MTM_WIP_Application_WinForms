@@ -3,14 +3,14 @@ namespace MTM_WIP_Application_Winforms.Models;
 /// <summary>
 /// Pagination wrapper for transaction search results.
 /// </summary>
-internal sealed class TransactionSearchResult
+internal sealed class Model_Transactions_SearchResult
 {
     #region Properties
 
     /// <summary>
     /// Gets or sets the list of transactions for the current page.
     /// </summary>
-    public List<Model_Transactions> Transactions { get; set; } = new List<Model_Transactions>();
+    public List<Model_Transactions_Core> Transactions { get; set; } = new List<Model_Transactions_Core>();
 
     /// <summary>
     /// Gets or sets the total number of records matching the search criteria.

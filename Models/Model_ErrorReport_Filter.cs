@@ -2,13 +2,13 @@ using System;
 
 namespace MTM_WIP_Application_Winforms.Models
 {
-    #region Model_ErrorReportFilter
+    #region Model_ErrorReport_Core_Filter
 
     /// <summary>
     /// Represents filter criteria used when querying error reports for the View Error Reports window.
     /// Provides normalization helpers and validation to keep database queries predictable.
     /// </summary>
-    internal sealed class Model_ErrorReportFilter
+    internal sealed class Model_ErrorReport_Core_Filter
     {
         #region Fields
 

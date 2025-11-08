@@ -159,7 +159,7 @@ Complete architectural redesign of the Transactions form (`Forms/Transactions/Tr
    - Batch history navigation
    - **Max size**: 200 lines
 
-5. **TransactionViewModel.cs** (ViewModel) - State and business logic
+5. **Model_Transactions_ViewModel.cs** (ViewModel) - State and business logic
    - Filter criteria management
    - Pagination state
    - Search orchestration
@@ -193,8 +193,8 @@ Complete architectural redesign of the Transactions form (`Forms/Transactions/Tr
 **Implementation Pattern**:
 ```csharp
 // In Dao_Transactions.cs
-public async Task<DaoResult<List<Model_Transactions>>> SearchAsync(
-    TransactionSearchCriteria criteria,
+public async Task<Model_Dao_Result<List<Model_Transactions_Core>>> SearchAsync(
+    Model_Transactions_SearchCriteria criteria,
     int page = 1,
     int pageSize = 50)
 {
@@ -220,14 +220,14 @@ public async Task<DaoResult<List<Model_Transactions>>> SearchAsync(
 
     if (!result.IsSuccess || result.Data == null)
     {
-        return DaoResult<List<Model_Transactions>>.Failure(result.StatusMessage);
+        return Model_Dao_Result<List<Model_Transactions_Core>>.Failure(result.StatusMessage);
     }
 
     var transactions = result.Data.AsEnumerable()
         .Select(MapDataRowToModel)
         .ToList();
 
-    return DaoResult<List<Model_Transactions>>.Success(transactions);
+    return Model_Dao_Result<List<Model_Transactions_Core>>.Success(transactions);
 }
 
 // NO inline SQL - this is FORBIDDEN
@@ -260,7 +260,7 @@ try
 }
 catch (Exception ex)
 {
-    Service_ErrorHandler.HandleException(ex, ErrorSeverity.Medium,
+    Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Medium,
         retryAction: async () => await SearchTransactionsAsync(criteria),
         controlName: nameof(Transactions));
 }
@@ -378,8 +378,8 @@ private void InitializeProgressReporting()
 }
 
 // In ViewModel
-public async Task<DaoResult<List<Model_Transactions>>> SearchTransactionsAsync(
-    TransactionSearchCriteria criteria,
+public async Task<Model_Dao_Result<List<Model_Transactions_Core>>> SearchTransactionsAsync(
+    Model_Transactions_SearchCriteria criteria,
     Helper_StoredProcedureProgress? progress = null)
 {
     progress?.ShowProgress("Preparing search...");
@@ -454,7 +454,7 @@ public TransactionSearchControl()
 /// <param name="criteria">The search criteria including filters and pagination.</param>
 /// <param name="cancellationToken">Cancellation token for async operation.</param>
 /// <returns>
-/// A <see cref="DaoResult{T}"/> containing the list of matching transactions
+/// A <see cref="Model_Dao_Result{T}"/> containing the list of matching transactions
 /// or an error message if the search failed.
 /// </returns>
 /// <exception cref="ArgumentNullException">Thrown when criteria is null.</exception>
@@ -462,8 +462,8 @@ public TransactionSearchControl()
 /// This method calls the inv_transactions_Search stored procedure.
 /// Results are limited by the PageSize property in the criteria.
 /// </remarks>
-public async Task<DaoResult<List<Model_Transactions>>> SearchTransactionsAsync(
-    TransactionSearchCriteria criteria,
+public async Task<Model_Dao_Result<List<Model_Transactions_Core>>> SearchTransactionsAsync(
+    Model_Transactions_SearchCriteria criteria,
     CancellationToken cancellationToken = default)
 {
     // Implementation
@@ -791,14 +791,14 @@ Example: Batch 0000021324
 
 ```csharp
 [TestClass]
-public class TransactionViewModelTests
+public class Model_Transactions_ViewModelTests
 {
     [TestMethod]
     public async Task SearchAsync_WithValidCriteria_ReturnsResults()
     {
         // Arrange
-        var viewModel = new TransactionViewModel();
-        var criteria = new TransactionSearchCriteria
+        var viewModel = new Model_Transactions_ViewModel();
+        var criteria = new Model_Transactions_SearchCriteria
         {
             DateFrom = DateTime.Today.AddDays(-7),
             DateTo = DateTime.Today
@@ -817,8 +817,8 @@ public class TransactionViewModelTests
     public async Task SearchAsync_WithEmptyCriteria_ReturnsValidationError()
     {
         // Arrange
-        var viewModel = new TransactionViewModel();
-        var criteria = new TransactionSearchCriteria(); // Empty
+        var viewModel = new Model_Transactions_ViewModel();
+        var criteria = new Model_Transactions_SearchCriteria(); // Empty
 
         // Act
         var result = await viewModel.SearchTransactionsAsync(criteria);
@@ -841,7 +841,7 @@ public class Dao_Transactions_IntegrationTests : BaseIntegrationTest
     {
         // Arrange
         var dao = new Dao_Transactions();
-        var criteria = new TransactionSearchCriteria
+        var criteria = new Model_Transactions_SearchCriteria
         {
             DateFrom = DateTime.Parse("2025-10-24"),
             DateTo = DateTime.Parse("2025-10-25")
@@ -925,7 +925,7 @@ public class Dao_Transactions_IntegrationTests : BaseIntegrationTest
 
 **Theme Compliance Validation**:
 - Constructor includes `Core_Themes.ApplyDpiScaling(this)` and `ApplyRuntimeLayoutAdjustments(this)`
-- All custom colors use `Model_UserUiColors` tokens with `SystemColors` fallbacks
+- All custom colors use `Model_Shared_UserUiColors` tokens with `SystemColors` fallbacks
 - No hardcoded colors without `// ACCEPTABLE:` justification comments
 - Control names follow `{ComponentName}_{ControlType}_{Purpose}` convention
 
@@ -1066,13 +1066,13 @@ If critical issues discovered:
 
 ## Appendix A: Model Definitions
 
-### TransactionSearchCriteria.cs
+### Model_Transactions_SearchCriteria.cs
 
 ```csharp
 /// <summary>
 /// Encapsulates search criteria for transaction queries.
 /// </summary>
-public class TransactionSearchCriteria
+public class Model_Transactions_SearchCriteria
 {
     /// <summary>
     /// Gets or sets the part number to filter by.
@@ -1150,10 +1150,10 @@ public class TransactionSearchCriteria
 }
 ```
 
-### Model_Transactions.cs (Existing, for reference)
+### Model_Transactions_Core.cs (Existing, for reference)
 
 ```csharp
-internal class Model_Transactions
+internal class Model_Transactions_Core
 {
     public int ID { get; set; }
     public TransactionType TransactionType { get; set; }
@@ -1194,7 +1194,7 @@ This specification mandates compliance with the following instruction files:
    - Helper_Database_StoredProcedure patterns
    - Parameter naming (NO p_ prefix in C#)
    - Connection pooling
-   - DaoResult patterns
+   - Model_Dao_Result patterns
 
 3. **`.github/instructions/testing-standards.instructions.md`**
    - Manual validation approach
@@ -1204,7 +1204,7 @@ This specification mandates compliance with the following instruction files:
 4. **`.github/instructions/integration-testing.instructions.md`**
    - Discovery-first workflow for DAOs
    - Method signature verification
-   - DaoResult null safety
+   - Model_Dao_Result null safety
    - BaseIntegrationTest usage
 
 5. **`.github/instructions/documentation.instructions.md`**
@@ -1231,7 +1231,7 @@ This specification mandates compliance with the following instruction files:
 9. **`.github/instructions/ui-compliance/theming-compliance.instructions.md`**
    - Theme system integration requirements (MANDATORY)
    - Core_Themes.ApplyDpiScaling() and ApplyRuntimeLayoutAdjustments() constructor patterns
-   - Color token usage with Model_UserUiColors
+   - Color token usage with Model_Shared_UserUiColors
    - Hardcoded color whitelist and justification rules
    - WinForms UI architecture standards (control naming, AutoSize patterns)
 

@@ -4,7 +4,46 @@
 
 ---
 
-## Latest Update - November 8, 2025 (Version 6.0.0)
+## Latest Update - November 8, 2025 (Version 6.0.1)
+
+**What Changed**: QuickButtons now work perfectly - fixes for duplicates, display issues, and save order  
+**Do I Need To Do Anything?**: No - QuickButtons just work better now!
+
+---
+
+### 🎯 What This Means For You
+
+#### QuickButtons Are Now 100% Reliable
+
+**What's fixed**:
+- **No more duplicate buttons**: Fixed issue where the same part/operation would appear multiple times in your QuickButtons list
+- **Proper display when clicking buttons**: QuickButtons now fill in Part Number and Operation fields correctly with full descriptions (was showing raw codes like "21-28841-006" instead of formatted "21-28841-006 | Customer Name | Description")
+- **Edit button now works**: Right-click any QuickButton and select "Edit" to change Part ID, Operation, or Quantity (was doing nothing before)
+- **New buttons appear at top**: When you save a transaction as a QuickButton, it now appears at the top of your list immediately (was going to the bottom)
+- **Simplified reorder dialog**: Removed confusing Edit button from the "Change Order" dialog - use right-click Edit instead
+
+**Why these were broken**:
+1. **Duplicates**: Database cleanup was deleting buttons one-by-one, causing position shifts that let some duplicates survive
+2. **Display issues**: QuickButtons were using old search-by-text method instead of proper value selection for multi-column dropdowns
+3. **Edit not working**: The Edit menu item wasn't connected to its click handler
+4. **Wrong save order**: Cleanup was reorganizing buttons after save, moving new ones to bottom instead of keeping them at top
+
+**What's better now**:
+- **Clean list**: All duplicates removed automatically on next app restart
+- **Correct data entry**: Clicking a QuickButton fills all fields properly formatted
+- **Full editing**: Right-click any button → Edit to update Part ID, Operation, or Quantity
+- **Smart ordering**: Newest QuickButtons appear first (at top), older ones shift down
+- **Cleaner interface**: Reorder dialog is simpler without redundant Edit button
+
+**How this helps**: 
+- **No more confusion**: Your QuickButtons list shows unique buttons only, no duplicates
+- **Faster data entry**: Fields populate correctly on first click, no manual fixing needed
+- **Easy maintenance**: Edit buttons directly from right-click menu
+- **Better organization**: Most recent transactions automatically appear at top where you need them
+
+---
+
+## Previous Update - November 8, 2025 (Version 6.0.0)
 
 **What Changed**: Complete redesign of Transaction History Viewer with major performance and usability improvements  
 **Do I Need To Do Anything?**: Yes - check out the new features! Your old transaction history is still there, just easier to find now.
@@ -311,6 +350,13 @@
 
 ### ✅ Do I Need To Update?
 
+**Version 6.0.1 (QuickButtons Fixes - RELEASED)**:
+- **All users who use QuickButtons**: YES - this fixes several annoying bugs that affect daily use
+- **Shop Floor Users**: Strongly recommended - QuickButtons are more reliable and easier to use
+- **If you see duplicate QuickButtons**: YES - this update cleans them up automatically
+- **If QuickButtons aren't filling fields correctly**: YES - this fixes the display issue
+- **Office Staff**: Update when convenient - QuickButtons improvements make data entry faster
+
 **Version 6.0.0 (Transaction Viewer Redesign - RELEASED)**:
 - **All users**: YES - this is a major improvement to one of the most-used features
 - **Shop Floor Users**: Strongly recommended - much faster transaction searches, easier to find what you need
@@ -346,6 +392,24 @@
 ---
 
 ### 📱 Common Questions
+
+**Q: How do I know if I have duplicate QuickButtons?**  
+A: If you see the same Part Number + Operation combination appearing more than once in your QuickButtons panel, you have duplicates. Update to version 6.0.1 and they'll be cleaned up automatically on next restart.
+
+**Q: Why were my QuickButtons showing raw codes instead of descriptions?**  
+A: This was a bug in how the buttons filled the dropdown fields. Version 6.0.1 fixes this - now they use proper value selection instead of text search.
+
+**Q: How do I edit a QuickButton?**  
+A: Right-click any QuickButton and select "Edit" from the menu. You can change the Part ID, Operation, or Quantity. Click OK to save changes.
+
+**Q: Can I reorder my QuickButtons?**  
+A: Yes! Right-click any QuickButton and select "Change Order". Drag and drop rows to rearrange them, or use Shift+Up/Down arrow keys to move selected rows. Click OK to save the new order.
+
+**Q: Why do my newest QuickButtons appear at the top now?**  
+A: This is the new intended behavior - most users want their most recent transactions at the top for quick access. Older transactions shift down automatically.
+
+**Q: What happens to my existing QuickButtons after this update?**  
+A: All your existing buttons remain unchanged. Duplicates are removed automatically on first load after update. Order stays the same unless you manually reorder them.
 
 **Q: Will the Transaction Viewer look completely different?**  
 A: Yes - the layout is much cleaner and more modern. Search filters at top, results on left, details on right. But all the same information is there, just better organized and faster to access.

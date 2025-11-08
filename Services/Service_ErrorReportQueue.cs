@@ -17,8 +17,8 @@ internal static class Service_ErrorReportQueue
 {
     #region Fields
 
-    private static readonly string QueueDirectory = Model_AppVariables.ErrorReporting.QueueDirectory;
-    private static readonly string ArchiveDirectory = Model_AppVariables.ErrorReporting.ArchiveDirectory;
+    private static readonly string QueueDirectory = Model_Application_Variables.ErrorReporting.QueueDirectory;
+    private static readonly string ArchiveDirectory = Model_Application_Variables.ErrorReporting.ArchiveDirectory;
 
     #endregion
 
@@ -29,8 +29,8 @@ internal static class Service_ErrorReportQueue
     /// Creates Pending and Sent directories if they don't exist.
     /// </summary>
     /// <param name="report">The error report to queue.</param>
-    /// <returns>DaoResult containing the file path on success.</returns>
-    public static async Task<DaoResult<string>> QueueReportAsync(Model_ErrorReport report)
+    /// <returns>Model_Dao_Result containing the file path on success.</returns>
+    public static async Task<Model_Dao_Result<string>> QueueReportAsync(Model_ErrorReport_Core report)
     {
         ArgumentNullException.ThrowIfNull(report);
 
@@ -55,14 +55,14 @@ internal static class Service_ErrorReportQueue
 
             LoggingUtility.Log($"[Service_ErrorReportQueue] Queued error report: {filename}");
 
-            return DaoResult<string>.Success(
+            return Model_Dao_Result<string>.Success(
                 filePath,
                 $"Error report queued successfully. Will be submitted when database connection is restored.");
         }
         catch (Exception ex)
         {
             LoggingUtility.LogApplicationError(ex);
-            return DaoResult<string>.Failure(
+            return Model_Dao_Result<string>.Failure(
                 "Failed to queue error report for offline submission.",
                 ex);
         }
@@ -78,7 +78,7 @@ internal static class Service_ErrorReportQueue
     /// </summary>
     /// <param name="report">The error report to convert to SQL.</param>
     /// <returns>SQL file content as string.</returns>
-    private static string GenerateSqlForReport(Model_ErrorReport report)
+    private static string GenerateSqlForReport(Model_ErrorReport_Core report)
     {
         var sql = new StringBuilder();
 

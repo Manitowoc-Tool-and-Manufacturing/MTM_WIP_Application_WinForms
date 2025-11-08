@@ -33,7 +33,7 @@ namespace MTM_WIP_Application_Winforms.Services
             }
             catch (Exception ex)
             {
-                Service_ErrorHandler.HandleException(ex, ErrorSeverity.Fatal,
+                Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Fatal,
                     contextData: new Dictionary<string, object> { ["MethodName"] = "ApplicationContext" },
                     callerName: "ApplicationContext_Constructor",
                     controlName: "StartupSplash_ApplicationContext");
@@ -57,7 +57,7 @@ namespace MTM_WIP_Application_Winforms.Services
             }
             catch (Exception ex)
             {
-                Service_ErrorHandler.HandleException(ex, ErrorSeverity.Medium,
+                Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Medium,
                     contextData: new Dictionary<string, object> { ["MethodName"] = "SplashScreen_FormClosed" },
                     callerName: "SplashScreen_FormClosed",
                     controlName: "StartupSplash_FormClosed");
@@ -90,7 +90,7 @@ namespace MTM_WIP_Application_Winforms.Services
                 }
                 catch (Exception ex)
                 {
-                    Service_ErrorHandler.HandleException(ex, ErrorSeverity.High,
+                    Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.High,
                         contextData: new Dictionary<string, object> { ["StartupStep"] = "Logging Initialization" },
                         callerName: "RunStartupAsync_LoggingInit",
                         controlName: "StartupSplash_LoggingInit");
@@ -112,7 +112,7 @@ namespace MTM_WIP_Application_Winforms.Services
                 catch (Exception ex)
                 {
                     // Log cleanup failure is not critical - continue startup
-                    Service_ErrorHandler.HandleException(ex, ErrorSeverity.Low,
+                    Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Low,
                         contextData: new Dictionary<string, object> { ["StartupStep"] = "Log Cleanup", ["IsCritical"] = false },
                         callerName: "RunStartupAsync_LogCleanup",
                         controlName: "StartupSplash_LogCleanup");
@@ -133,7 +133,7 @@ namespace MTM_WIP_Application_Winforms.Services
                 catch (Exception ex)
                 {
                     // App data cleanup failure is not critical - continue startup
-                    Service_ErrorHandler.HandleException(ex, ErrorSeverity.Low,
+                    Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Low,
                         contextData: new Dictionary<string, object> { ["StartupStep"] = "App Data Cleanup", ["IsCritical"] = false },
                         callerName: "RunStartupAsync_AppDataCleanup",
                         controlName: "StartupSplash_AppDataCleanup");
@@ -160,12 +160,12 @@ namespace MTM_WIP_Application_Winforms.Services
                 }
                 catch (Exception ex)
                 {
-                    Service_ErrorHandler.HandleException(ex, ErrorSeverity.Fatal,
+                    Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Fatal,
                         contextData: new Dictionary<string, object>
                         {
                             ["StartupStep"] = "Database Connectivity",
-                            ["DatabaseName"] = Model_Users.Database,
-                            ["ServerAddress"] = Model_Users.WipServerAddress
+                            ["DatabaseName"] = Model_Shared_Users.Database,
+                            ["ServerAddress"] = Model_Shared_Users.WipServerAddress
                         },
                         callerName: "RunStartupAsync_DatabaseConnectivity",
                         controlName: "StartupSplash_DatabaseConnectivity");
@@ -196,7 +196,7 @@ namespace MTM_WIP_Application_Winforms.Services
                 }
                 catch (Exception ex)
                 {
-                    Service_ErrorHandler.HandleException(ex, ErrorSeverity.Fatal,
+                    Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Fatal,
                         contextData: new Dictionary<string, object> { ["StartupStep"] = "Data Tables Setup" },
                         callerName: "RunStartupAsync_DataTablesSetup_General",
                         controlName: "StartupSplash_DataTablesSetup");
@@ -218,7 +218,7 @@ namespace MTM_WIP_Application_Winforms.Services
                 catch (Exception ex)
                 {
                     // Version checker failure is not critical - continue startup
-                    Service_ErrorHandler.HandleException(ex, ErrorSeverity.Low,
+                    Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Low,
                         contextData: new Dictionary<string, object> { ["StartupStep"] = "Version Checker", ["IsCritical"] = false },
                         callerName: "RunStartupAsync_VersionChecker",
                         controlName: "StartupSplash_VersionChecker");
@@ -231,7 +231,7 @@ namespace MTM_WIP_Application_Winforms.Services
                 _splashScreen?.UpdateProgress(progress, "Initializing theme system...");
                 try
                 {
-                    await Core_Themes.Core_AppThemes.InitializeThemeSystemAsync(Model_AppVariables.User);
+                    await Core_Themes.Core_AppThemes.InitializeThemeSystemAsync(Model_Application_Variables.User);
                     progress = 75;
                     _splashScreen?.UpdateProgress(progress, "Theme system initialized.");
                     LoggingUtility.Log("[Splash] Theme system initialized");
@@ -240,7 +240,7 @@ namespace MTM_WIP_Application_Winforms.Services
                 {
                     // Theme system might use database - show specific error
                     Service_ErrorHandler.HandleDatabaseError(ex,
-                        contextData: new Dictionary<string, object> { ["StartupStep"] = "Theme System", ["User"] = Model_AppVariables.User },
+                        contextData: new Dictionary<string, object> { ["StartupStep"] = "Theme System", ["User"] = Model_Application_Variables.User },
                         callerName: "RunStartupAsync_ThemeSystem_MySql",
                         controlName: "StartupSplash_ThemeSystem");
                     string userMessage = GetUserFriendlyConnectionError(ex);
@@ -250,8 +250,8 @@ namespace MTM_WIP_Application_Winforms.Services
                 catch (Exception ex)
                 {
                     // Theme initialization failure is not critical - continue with defaults
-                    Service_ErrorHandler.HandleException(ex, ErrorSeverity.Low,
-                        contextData: new Dictionary<string, object> { ["StartupStep"] = "Theme System", ["IsCritical"] = false, ["User"] = Model_AppVariables.User },
+                    Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Low,
+                        contextData: new Dictionary<string, object> { ["StartupStep"] = "Theme System", ["IsCritical"] = false, ["User"] = Model_Application_Variables.User },
                         callerName: "RunStartupAsync_ThemeSystem_General",
                         controlName: "StartupSplash_ThemeSystem");
                     LoggingUtility.Log("[Splash] Theme system initialization failed, using defaults");
@@ -260,8 +260,8 @@ namespace MTM_WIP_Application_Winforms.Services
 
                 // 8. Load user context (no database dependency)
                 progress = 80;
-                _splashScreen?.UpdateProgress(progress, $"User Full Name loaded: {Model_AppVariables.User}");
-                LoggingUtility.Log($"[Splash] User context loaded: {Model_AppVariables.User}");
+                _splashScreen?.UpdateProgress(progress, $"User Full Name loaded: {Model_Application_Variables.User}");
+                LoggingUtility.Log($"[Splash] User context loaded: {Model_Application_Variables.User}");
                 await Task.Delay(50);
 
                 // 9. Load theme settings with error handling
@@ -278,7 +278,7 @@ namespace MTM_WIP_Application_Winforms.Services
                 {
                     // Theme settings use database - show specific error
                     Service_ErrorHandler.HandleDatabaseError(ex,
-                        contextData: new Dictionary<string, object> { ["StartupStep"] = "Theme Settings", ["User"] = Model_AppVariables.User },
+                        contextData: new Dictionary<string, object> { ["StartupStep"] = "Theme Settings", ["User"] = Model_Application_Variables.User },
                         callerName: "RunStartupAsync_ThemeSettings_MySql",
                         controlName: "StartupSplash_ThemeSettings");
                     string userMessage = GetUserFriendlyConnectionError(ex);
@@ -288,8 +288,8 @@ namespace MTM_WIP_Application_Winforms.Services
                 catch (Exception ex)
                 {
                     // Theme settings failure is not critical - continue with defaults
-                    Service_ErrorHandler.HandleException(ex, ErrorSeverity.Low,
-                        contextData: new Dictionary<string, object> { ["StartupStep"] = "Theme Settings", ["IsCritical"] = false, ["User"] = Model_AppVariables.User },
+                    Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Low,
+                        contextData: new Dictionary<string, object> { ["StartupStep"] = "Theme Settings", ["IsCritical"] = false, ["User"] = Model_Application_Variables.User },
                         callerName: "RunStartupAsync_ThemeSettings_General",
                         controlName: "StartupSplash_ThemeSettings");
                     LoggingUtility.Log("[Splash] Theme settings loading failed, using defaults");
@@ -324,7 +324,7 @@ namespace MTM_WIP_Application_Winforms.Services
                 }
                 catch (Exception ex)
                 {
-                    Service_ErrorHandler.HandleException(ex, ErrorSeverity.Fatal,
+                    Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Fatal,
                         contextData: new Dictionary<string, object> { ["StartupStep"] = "Main Form Creation" },
                         callerName: "RunStartupAsync_MainFormCreation_General",
                         controlName: "StartupSplash_MainFormCreation");
@@ -342,7 +342,7 @@ namespace MTM_WIP_Application_Winforms.Services
                 }
                 catch (Exception ex)
                 {
-                    Service_ErrorHandler.HandleException(ex, ErrorSeverity.Fatal,
+                    Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Fatal,
                         contextData: new Dictionary<string, object> { ["StartupStep"] = "Form Instance Configuration" },
                         callerName: "RunStartupAsync_FormConfiguration",
                         controlName: "StartupSplash_FormConfiguration");
@@ -361,7 +361,7 @@ namespace MTM_WIP_Application_Winforms.Services
                 catch (Exception ex)
                 {
                     // Theme application failure is not critical
-                    Service_ErrorHandler.HandleException(ex, ErrorSeverity.Low,
+                    Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Low,
                         contextData: new Dictionary<string, object> { ["StartupStep"] = "Theme Application", ["IsCritical"] = false },
                         callerName: "RunStartupAsync_ThemeApplication",
                         controlName: "StartupSplash_ThemeApplication");
@@ -387,7 +387,7 @@ namespace MTM_WIP_Application_Winforms.Services
                 }
                 catch (Exception ex)
                 {
-                    Service_ErrorHandler.HandleException(ex, ErrorSeverity.Fatal,
+                    Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Fatal,
                         contextData: new Dictionary<string, object> { ["StartupStep"] = "Main Form Display" },
                         callerName: "RunStartupAsync_MainFormDisplay",
                         controlName: "StartupSplash_MainFormDisplay");
@@ -417,15 +417,15 @@ namespace MTM_WIP_Application_Winforms.Services
         /// <summary>
         /// Verify database connectivity using helper patterns with async support
         /// </summary>
-        /// <returns>DaoResult indicating connectivity status</returns>
-        private async Task<DaoResult> VerifyDatabaseConnectivityWithHelperAsync()
+        /// <returns>Model_Dao_Result indicating connectivity status</returns>
+        private async Task<Model_Dao_Result> VerifyDatabaseConnectivityWithHelperAsync()
         {
             try
             {
                 LoggingUtility.Log("[Splash] Starting async database connectivity verification");
 
                 // Use consistent timeout settings
-                var connectionStringBuilder = new MySqlConnectionStringBuilder(Model_AppVariables.ConnectionString)
+                var connectionStringBuilder = new MySqlConnectionStringBuilder(Model_Application_Variables.ConnectionString)
                 {
                     ConnectionTimeout = 10,
                     DefaultCommandTimeout = 10
@@ -441,13 +441,13 @@ namespace MTM_WIP_Application_Winforms.Services
                 if (version != null)
                 {
                     LoggingUtility.Log($"[Splash] Database connectivity verified. MySQL version: {version}");
-                    return DaoResult.Success($"Database connectivity verified. MySQL version: {version}");
+                    return Model_Dao_Result.Success($"Database connectivity verified. MySQL version: {version}");
                 }
                 else
                 {
                     const string errorMsg = "Database version query returned null";
                     LoggingUtility.Log($"[Splash] {errorMsg}");
-                    return DaoResult.Failure(errorMsg);
+                    return Model_Dao_Result.Failure(errorMsg);
                 }
             }
             catch (MySqlException ex)
@@ -461,11 +461,11 @@ namespace MTM_WIP_Application_Winforms.Services
                 {
                     Service_ErrorHandler.HandleException(
                         ex,
-                        ErrorSeverity.Fatal,
+                        Enum_ErrorSeverity.Fatal,
                         contextData: new Dictionary<string, object>
                         {
-                            ["DatabaseName"] = Model_Users.Database,
-                            ["ServerAddress"] = Model_Users.WipServerAddress,
+                            ["DatabaseName"] = Model_Shared_Users.Database,
+                            ["ServerAddress"] = Model_Shared_Users.WipServerAddress,
                             ["MethodName"] = "ValidateConnectivityAsync",
                             ["ErrorType"] = "MySqlException_StartupConnectivity"
                         },
@@ -479,7 +479,7 @@ namespace MTM_WIP_Application_Winforms.Services
                     Console.WriteLine($"[CRITICAL] Original database error: {userMessage}");
                 }
 
-                return DaoResult.Failure(userMessage, ex);
+                return Model_Dao_Result.Failure(userMessage, ex);
             }
             catch (Exception ex)
             {
@@ -495,11 +495,11 @@ namespace MTM_WIP_Application_Winforms.Services
                 {
                     Service_ErrorHandler.HandleException(
                         ex,
-                        ErrorSeverity.Fatal,
+                        Enum_ErrorSeverity.Fatal,
                         contextData: new Dictionary<string, object>
                         {
-                            ["DatabaseName"] = Model_Users.Database,
-                            ["ServerAddress"] = Model_Users.WipServerAddress,
+                            ["DatabaseName"] = Model_Shared_Users.Database,
+                            ["ServerAddress"] = Model_Shared_Users.WipServerAddress,
                             ["MethodName"] = "ValidateConnectivityAsync",
                             ["ErrorType"] = "GeneralException_StartupConnectivity"
                         },
@@ -513,7 +513,7 @@ namespace MTM_WIP_Application_Winforms.Services
                     Console.WriteLine($"[CRITICAL] Original error: {userMessage}");
                 }
 
-                return DaoResult.Failure(userMessage, ex);
+                return Model_Dao_Result.Failure(userMessage, ex);
             }
         }
 
@@ -526,8 +526,8 @@ namespace MTM_WIP_Application_Winforms.Services
         {
             if (ex.Message.Contains("Unknown database"))
             {
-                string dbName = Model_Users.Database;
-                string serverAddress = Model_Users.WipServerAddress;
+                string dbName = Model_Shared_Users.Database;
+                string serverAddress = Model_Shared_Users.WipServerAddress;
 
 #if DEBUG
                 return $"The test database '{dbName}' does not exist on server '{serverAddress}'.\n\n" +
@@ -666,7 +666,7 @@ namespace MTM_WIP_Application_Winforms.Services
             {
                 Service_ErrorHandler.HandleException(
                     new Exception(message),
-                    ErrorSeverity.High,
+                    Enum_ErrorSeverity.High,
                     contextData: new Dictionary<string, object>
                     {
                         ["Title"] = title,
@@ -696,26 +696,26 @@ namespace MTM_WIP_Application_Winforms.Services
             {
                 LoggingUtility.Log("[Splash] Loading theme settings");
 
-                int? fontSize = await Dao_User.GetThemeFontSizeAsync(Model_AppVariables.User);
-                Model_AppVariables.ThemeFontSize = fontSize ?? 9;
+                int? fontSize = await Dao_User.GetThemeFontSizeAsync(Model_Application_Variables.User);
+                Model_Application_Variables.ThemeFontSize = fontSize ?? 9;
 
-                Model_AppVariables.UserUiColors = await Core_Themes.GetUserThemeColorsAsync(Model_AppVariables.User);
+                Model_Application_Variables.UserUiColors = await Core_Themes.GetUserThemeColorsAsync(Model_Application_Variables.User);
 
-                LoggingUtility.Log($"[Splash] Theme settings loaded - Font size: {Model_AppVariables.ThemeFontSize}");
+                LoggingUtility.Log($"[Splash] Theme settings loaded - Font size: {Model_Application_Variables.ThemeFontSize}");
             }
             catch (Exception ex)
             {
-                Service_ErrorHandler.HandleException(ex, ErrorSeverity.Low,
+                Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Low,
                     contextData: new Dictionary<string, object>
                     {
                         ["MethodName"] = "LoadThemeSettingsAsync",
-                        ["User"] = Model_AppVariables.User,
+                        ["User"] = Model_Application_Variables.User,
                         ["IsCritical"] = false
                     },
                     callerName: "LoadThemeSettingsAsync",
                     controlName: "StartupSplash_LoadThemeSettings");
                 // Set defaults if theme loading fails
-                Model_AppVariables.ThemeFontSize = 9;
+                Model_Application_Variables.ThemeFontSize = 9;
                 LoggingUtility.Log("[Splash] Using default theme settings due to loading error");
             }
         }
@@ -742,7 +742,7 @@ namespace MTM_WIP_Application_Winforms.Services
             }
             catch (Exception ex)
             {
-                Service_ErrorHandler.HandleException(ex, ErrorSeverity.Fatal,
+                Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Fatal,
                     contextData: new Dictionary<string, object> { ["MethodName"] = "ConfigureFormInstances" },
                     callerName: "ConfigureFormInstances",
                     controlName: "StartupSplash_ConfigureFormInstances");
@@ -772,7 +772,7 @@ namespace MTM_WIP_Application_Winforms.Services
             }
             catch (Exception ex)
             {
-                Service_ErrorHandler.HandleException(ex, ErrorSeverity.Low,
+                Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Low,
                     contextData: new Dictionary<string, object>
                     {
                         ["MethodName"] = "ApplyThemeToMainForm",
@@ -807,7 +807,7 @@ namespace MTM_WIP_Application_Winforms.Services
             }
             catch (Exception ex)
             {
-                Service_ErrorHandler.HandleException(ex, ErrorSeverity.Fatal,
+                Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Fatal,
                     contextData: new Dictionary<string, object> { ["MethodName"] = "ShowMainForm" },
                     callerName: "ShowMainForm",
                     controlName: "StartupSplash_ShowMainForm");

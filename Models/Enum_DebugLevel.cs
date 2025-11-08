@@ -3,7 +3,7 @@ namespace MTM_WIP_Application_Winforms.Models;
 /// <summary>
 /// Debug tracing levels for Service_DebugTracer
 /// </summary>
-public enum DebugLevel
+public enum Enum_DebugLevel
 {
     /// <summary>
     /// Minimal tracing - only critical UI actions and major operations

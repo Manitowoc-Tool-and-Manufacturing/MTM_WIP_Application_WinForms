@@ -26,6 +26,151 @@ This prompt handles multi-phase implementation workflows. To maximize the value 
 
 ---
 
+## Available Specialized Agents
+
+This prompt can delegate complex implementation tasks to specialized agents with deep domain expertise:
+
+### Agent Invocation Pattern
+
+When tasks require specialized expertise beyond MCP tools, invoke agents using:
+```
+#file:agents/[agent-name].agent.md #file:006-print-and-export [specific task or question]
+```
+
+### CSharpExpert Agent (.github/agents/CSharpExpert.agent.md)
+
+**Use when:**
+- Implementing complex C# classes (DAOs, Services, Helpers, Core utilities)
+- Refactoring existing C# code for better patterns
+- Resolving async/await issues or performance bottlenecks
+- Applying SOLID principles and design patterns
+- Questions about .NET 8 features, dependency injection, or testing approaches
+- Reviewing code for C# best practices and conventions
+
+**Expertise:**
+- Modern C# 12/.NET 8 patterns (file-scoped namespaces, record types, pattern matching)
+- Async/await best practices and cancellation patterns
+- Unit testing with xUnit/NUnit/MSTest frameworks
+- LINQ optimization and collection performance
+- Null safety and error handling patterns
+- Code design rules (interface usage, visibility, naming consistency)
+
+**Example invocations:**
+```
+#file:agents/CSharpExpert.agent.md #file:006-print-and-export Help me implement T008 Core_TablePrinter with proper async/await and cancellation support
+#file:agents/CSharpExpert.agent.md #file:006-print-and-export Review my Helper_ExportManager for performance issues and suggest refactoring
+#file:agents/CSharpExpert.agent.md #file:006-print-and-export Generate unit tests for Model_Print_Job validation logic
+```
+
+### WinFormsExpert Agent (.github/agents/WinFormsExpert.agent.md)
+
+**Use when:**
+- Designing WinForms UI layouts (Forms, UserControls, Dialogs)
+- Working with WinForms designer files (.Designer.cs)
+- Implementing responsive layouts with TableLayoutPanel/FlowLayoutPanel
+- Resolving DPI scaling and high-DPI display issues
+- Questions about WinForms data binding or MVVM patterns (.NET 8+)
+- Debugging designer serialization issues or InitializeComponent problems
+
+**Expertise:**
+- WinForms Designer compatibility rules (what's allowed in InitializeComponent)
+- Modern C# vs Designer code context separation
+- Responsive layout patterns (TableLayoutPanel best practices)
+- DPI awareness and AutoScaleMode configuration
+- Control naming conventions and AutoSize cascade patterns
+- Modal dialogs, progress indicators, and UI responsiveness
+- PrintDocument, PrintPreviewControl, and printing system integration
+
+**Critical knowledge:**
+- Forbidden patterns in designer code (no lambdas, ternary operators, collection expressions in InitializeComponent)
+- When to use Anchor vs Dock vs TableLayoutPanel
+- AutoSize and AutoSizeMode patterns for responsive containers
+- Required structure of InitializeComponent (instantiate → suspend → configure → resume)
+
+**Example invocations:**
+```
+#file:agents/WinFormsExpert.agent.md #file:006-print-and-export Design PrintForm with Compact Sidebar layout following Mockup 3 specifications
+#file:agents/WinFormsExpert.agent.md #file:006-print-and-export Fix DPI scaling issues in the preview panel - controls too small at 150% scaling
+#file:agents/WinFormsExpert.agent.md #file:006-print-and-export Help me implement PrintPreviewControl zoom levels including Fit to Width calculation
+```
+
+### ADR Generator Agent (.github/agents/adr-generator.agent.md)
+
+**Use when:**
+- Documenting architectural decisions made during implementation
+- Creating ADRs for technology choices (libraries, patterns, approaches)
+- Recording design trade-offs and alternatives considered
+- Need to justify complex implementation decisions for future reference
+- Creating formal documentation for significant refactoring decisions
+
+**Expertise:**
+- Structured ADR format with front matter, context, decision, consequences
+- Documenting alternatives with clear rejection rationale
+- Creating comprehensive implementation notes and references
+- Generating ADRs optimized for both AI consumption and human readability
+
+**Example invocations:**
+```
+#file:agents/adr-generator.agent.md #file:006-print-and-export Create ADR for decision to use exact page boundaries instead of row-based estimation
+#file:agents/adr-generator.agent.md #file:006-print-and-export Document why we chose JSON file persistence over database storage for print settings
+#file:agents/adr-generator.agent.md #file:006-print-and-export Create ADR for Compact Sidebar UI layout selection (Mockup 3)
+```
+
+### Agent Selection Decision Tree
+
+**Choose CSharpExpert when:**
+- Task involves complex business logic, algorithms, or data processing
+- Need to implement async/await patterns with proper cancellation
+- Refactoring for performance, testability, or SOLID principles
+- Generating test scaffolding or writing unit tests
+- Code review focused on C# patterns and conventions
+
+**Choose WinFormsExpert when:**
+- Task involves Forms, UserControls, or UI dialogs
+- Working with .Designer.cs files or InitializeComponent
+- Layout issues (controls not sizing, overlapping, DPI problems)
+- Data binding to DataGridView, controls, or MVVM patterns
+- Questions about PrintDocument, PrintPreviewControl, or Windows printing APIs
+
+**Choose ADR Generator when:**
+- Major architectural decision needs formal documentation
+- Technology choice requires justification (library selection, pattern adoption)
+- Design trade-offs should be recorded for future maintainers
+- Refactoring decision impacts multiple components
+
+**Use MCP tools when:**
+- Standard validation (DAO patterns, error handling, XML docs)
+- Automated analysis (performance, security, dependencies)
+- Code generation from templates (DAO wrappers, unit tests)
+- Build validation and compilation checks
+
+### Integration Strategy
+
+**Workflow example - Implementing T012 (PrintForm UI Design):**
+
+1. **Start with WinFormsExpert** for UI design:
+   ```
+   #file:agents/WinFormsExpert.agent.md #file:006-print-and-export Design PrintForm.Designer.cs following Compact Sidebar layout with proper TableLayoutPanel structure
+   ```
+
+2. **Switch to CSharpExpert** for event handlers:
+   ```
+   #file:agents/CSharpExpert.agent.md #file:006-print-and-export Implement PrintForm.cs event handlers with async preview generation and proper error handling
+   ```
+
+3. **Validate with MCP tools**:
+   ```
+   validate_ui_scaling(source_dir: "Forms/Shared")
+   check_xml_docs(source_dir: "Forms/Shared")
+   ```
+
+4. **Document decision with ADR Generator** (if significant):
+   ```
+   #file:agents/adr-generator.agent.md #file:006-print-and-export Create ADR for TableLayoutPanel-based responsive layout pattern
+   ```
+
+---
+
 ## Available MCP Tools
 
 This prompt has access to powerful MCP tools from the **mtm-workflow** server. These tools provide automated analysis, validation, and code generation capabilities specifically designed for the MTM project.
@@ -214,6 +359,12 @@ You **MUST** consider the user input before proceeding (if not empty).
      * **MUST check off completed tasks**: Use `[x]` marker and add completion timestamp for fully finished tasks
      * **MUST maintain task integrity**: Don't leave tasks in broken/non-functional state
      * **Continue until natural checkpoint**: Keep working through related tasks until significant complexity requires user input or a phase boundary is reached
+   - **Delegate to specialized agents when beneficial**:
+     * **WinForms UI tasks**: Invoke WinFormsExpert for .Designer.cs files, layout design, DPI scaling, PrintDocument integration
+     * **Complex C# logic**: Invoke CSharpExpert for async/await patterns, SOLID refactoring, performance optimization, test generation
+     * **Architectural decisions**: Invoke ADR Generator when documenting significant design choices or technology selections
+     * **Agent invocation pattern**: `#file:agents/[agent].agent.md #file:[feature-folder] [task description]`
+     * **After agent completion**: Validate output with relevant MCP tools before marking task complete
    - **Use MCP tools strategically**:
      * Before DAO work: Run `validate_dao_patterns` on existing DAOs to understand current patterns
      * Before database changes: Run `analyze_stored_procedures` and `compare_databases` to assess impact
@@ -260,6 +411,10 @@ You **MUST** consider the user input before proceeding (if not empty).
    - Validate that tests pass and coverage meets requirements
    - Confirm the implementation follows the technical plan
    - **Verify instruction file compliance**: Check that code follows patterns from referenced instruction files
+   - **Verify agent-implemented code quality**:
+     * WinFormsExpert-generated UI: Run `validate_ui_scaling` to confirm DPI compliance
+     * CSharpExpert-generated code: Verify async/await patterns, null safety, error handling
+     * ADR Generator docs: Confirm ADRs are saved in `/docs/adr/` with proper numbering
    - **Run final MCP tool validation suite**:
      * `validate_dao_patterns` - Ensure all DAOs follow MTM patterns
      * `validate_error_handling` - Verify Service_ErrorHandler usage
@@ -269,6 +424,7 @@ You **MUST** consider the user input before proceeding (if not empty).
      * `analyze_stored_procedures` - Validate SQL compliance
    - Report final status with summary of completed work
    - **Document lessons learned**: If new patterns or pitfalls discovered, note them for potential instruction file updates
+   - **Document agent contributions**: Note which tasks benefited from agent delegation vs MCP tools vs manual implementation
 
 Note: This command assumes a complete task breakdown exists in tasks.md. If tasks are incomplete or missing, suggest running `/tasks` first to regenerate the task list.
 

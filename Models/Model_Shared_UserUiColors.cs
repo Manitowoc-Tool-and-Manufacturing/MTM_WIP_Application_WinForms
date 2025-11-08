@@ -1,6 +1,6 @@
 namespace MTM_WIP_Application_Winforms.Models;
 
-public class Model_UserUiColors
+public class Model_Shared_UserUiColors
 {
     #region Properties
 

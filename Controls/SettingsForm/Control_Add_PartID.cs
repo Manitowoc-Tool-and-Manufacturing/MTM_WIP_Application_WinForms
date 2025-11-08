@@ -80,7 +80,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             base.OnLoad(e);
             if (issuedByValueLabel != null)
             {
-                issuedByValueLabel.Text = Model_AppVariables.User ?? "Current User";
+                issuedByValueLabel.Text = Model_Application_Variables.User ?? "Current User";
             }
         }
 
@@ -144,10 +144,10 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             }
         }
 
-        private async Task<DaoResult> AddPartAsync()
+        private async Task<Model_Dao_Result> AddPartAsync()
         {
             string itemNumber = itemNumberTextBox.Text.Trim();
-            string issuedBy = Model_AppVariables.User;
+            string issuedBy = Model_Application_Variables.User;
             string type = Control_Add_PartID_ComboBox_ItemType.Text ?? string.Empty;
             
             return await Dao_Part.CreatePartAsync(itemNumber, string.Empty, string.Empty, issuedBy, type);

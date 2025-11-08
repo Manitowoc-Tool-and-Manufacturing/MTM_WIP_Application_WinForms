@@ -20,7 +20,7 @@ internal partial class TransactionSearchControl : UserControl
     /// <summary>
     /// Raised when the user clicks the Search button with valid criteria.
     /// </summary>
-    public event EventHandler<TransactionSearchCriteria>? SearchRequested;
+    public event EventHandler<Model_Transactions_SearchCriteria>? SearchRequested;
 
     /// <summary>
     /// Raised when the user clicks the Reset button.
@@ -127,7 +127,7 @@ internal partial class TransactionSearchControl : UserControl
             LoggingUtility.Log($"[TransactionSearchControl] Exception in LoadParts: {ex.Message}");
             LoggingUtility.LogApplicationError(ex);
             
-            Service_ErrorHandler.HandleException(ex, ErrorSeverity.Medium,
+            Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Medium,
                 contextData: new Dictionary<string, object>
                 {
                     ["PartsCount"] = parts?.Count ?? 0,
@@ -151,7 +151,7 @@ internal partial class TransactionSearchControl : UserControl
             TransactionSearchControl_ComboBox_User.Items.Clear();
             
             // Check if current user is Admin or Developer
-            bool isAdminOrDeveloper = Model_AppVariables.UserTypeAdmin || Model_AppVariables.UserTypeDeveloper;
+            bool isAdminOrDeveloper = Model_Application_Variables.UserTypeAdmin || Model_Application_Variables.UserTypeDeveloper;
             
             if (isAdminOrDeveloper)
             {
@@ -166,7 +166,7 @@ internal partial class TransactionSearchControl : UserControl
             }
             
             // Set default selection to current user
-            string currentUser = Model_AppVariables.User;
+            string currentUser = Model_Application_Variables.User;
             int currentUserIndex = -1;
             
             // Find current user in the list
@@ -208,14 +208,14 @@ internal partial class TransactionSearchControl : UserControl
             LoggingUtility.Log($"[TransactionSearchControl] Exception in LoadUsers: {ex.Message}");
             LoggingUtility.LogApplicationError(ex);
             
-            Service_ErrorHandler.HandleException(ex, ErrorSeverity.Medium,
+            Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Medium,
                 contextData: new Dictionary<string, object>
                 {
                     ["UsersCount"] = users?.Count ?? 0,
                     ["Method"] = "LoadUsers",
-                    ["CurrentUser"] = Model_AppVariables.User,
-                    ["IsAdmin"] = Model_AppVariables.UserTypeAdmin,
-                    ["IsDeveloper"] = Model_AppVariables.UserTypeDeveloper
+                    ["CurrentUser"] = Model_Application_Variables.User,
+                    ["IsAdmin"] = Model_Application_Variables.UserTypeAdmin,
+                    ["IsDeveloper"] = Model_Application_Variables.UserTypeDeveloper
                 },
                 controlName: nameof(TransactionSearchControl));
         }
@@ -282,7 +282,7 @@ internal partial class TransactionSearchControl : UserControl
             LoggingUtility.Log($"[TransactionSearchControl] ArgumentException StackTrace: {argEx.StackTrace}");
             LoggingUtility.LogApplicationError(argEx);
             
-            Service_ErrorHandler.HandleException(argEx, ErrorSeverity.Medium,
+            Service_ErrorHandler.HandleException(argEx, Enum_ErrorSeverity.Medium,
                 contextData: new Dictionary<string, object>
                 {
                     ["LocationsCount"] = locations?.Count ?? 0,
@@ -295,7 +295,7 @@ internal partial class TransactionSearchControl : UserControl
             LoggingUtility.Log($"[TransactionSearchControl] Exception in LoadLocations: {ex.Message}");
             LoggingUtility.LogApplicationError(ex);
             
-            Service_ErrorHandler.HandleException(ex, ErrorSeverity.Medium,
+            Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Medium,
                 contextData: new Dictionary<string, object>
                 {
                     ["LocationsCount"] = locations?.Count ?? 0,
@@ -314,7 +314,7 @@ internal partial class TransactionSearchControl : UserControl
         TransactionSearchControl_ComboBox_PartNumber.SelectedIndex = 0;
         
         // Reset user to current user (same logic as LoadUsers)
-        string currentUser = Model_AppVariables.User;
+        string currentUser = Model_Application_Variables.User;
         int currentUserIndex = -1;
         
         for (int i = 0; i < TransactionSearchControl_ComboBox_User.Items.Count; i++)
@@ -407,7 +407,7 @@ internal partial class TransactionSearchControl : UserControl
         catch (Exception ex)
         {
             LoggingUtility.LogApplicationError(ex);
-            Service_ErrorHandler.HandleException(ex, ErrorSeverity.Medium,
+            Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Medium,
                 controlName: nameof(TransactionSearchControl));
         }
     }
@@ -424,7 +424,7 @@ internal partial class TransactionSearchControl : UserControl
         catch (Exception ex)
         {
             LoggingUtility.LogApplicationError(ex);
-            Service_ErrorHandler.HandleException(ex, ErrorSeverity.Low,
+            Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Low,
                 controlName: nameof(TransactionSearchControl));
         }
     }
@@ -446,7 +446,7 @@ internal partial class TransactionSearchControl : UserControl
         catch (Exception ex)
         {
             LoggingUtility.LogApplicationError(ex);
-            Service_ErrorHandler.HandleException(ex, ErrorSeverity.Low,
+            Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Low,
                 controlName: nameof(TransactionSearchControl));
         }
     }
@@ -511,7 +511,7 @@ internal partial class TransactionSearchControl : UserControl
         catch (Exception ex)
         {
             LoggingUtility.LogApplicationError(ex);
-            Service_ErrorHandler.HandleException(ex, ErrorSeverity.Low,
+            Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Low,
                 controlName: nameof(TransactionSearchControl));
         }
     }
@@ -547,12 +547,12 @@ internal partial class TransactionSearchControl : UserControl
     }
 
     /// <summary>
-    /// Builds a TransactionSearchCriteria object from current UI values.
+    /// Builds a Model_Transactions_SearchCriteria object from current UI values.
     /// </summary>
     /// <returns>Populated search criteria object.</returns>
-    private TransactionSearchCriteria BuildCriteria()
+    private Model_Transactions_SearchCriteria BuildCriteria()
     {
-        var criteria = new TransactionSearchCriteria
+        var criteria = new Model_Transactions_SearchCriteria
         {
             PartID = string.IsNullOrWhiteSpace(TransactionSearchControl_ComboBox_PartNumber.Text) ? null : TransactionSearchControl_ComboBox_PartNumber.Text.Trim(),
             User = string.IsNullOrWhiteSpace(TransactionSearchControl_ComboBox_User.Text) ? null : TransactionSearchControl_ComboBox_User.Text.Trim(),

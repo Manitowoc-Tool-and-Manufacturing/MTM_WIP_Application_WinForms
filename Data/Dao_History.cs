@@ -12,7 +12,7 @@ internal class Dao_History
 {
     #region History Methods
 
-    public static async Task<DaoResult> AddTransactionHistoryAsync(Model_TransactionHistory history,
+    public static async Task<Model_Dao_Result> AddTransactionHistoryAsync(Model_Transactions_History history,
         MySqlConnection? connection = null,
         MySqlTransaction? transaction = null)
     {
@@ -35,7 +35,7 @@ internal class Dao_History
             };
 
             var result = await Helper_Database_StoredProcedure.ExecuteNonQueryWithStatusAsync(
-                Model_AppVariables.ConnectionString,
+                Model_Application_Variables.ConnectionString,
                 "inv_transaction_Add",
                 parameters,
                 progressHelper: null,
@@ -46,16 +46,16 @@ internal class Dao_History
             if (!result.IsSuccess)
             {
                 LoggingUtility.Log($"AddTransactionHistoryAsync failed: {result.ErrorMessage}");
-                return DaoResult.Failure(result.ErrorMessage ?? "Failed to add transaction history", result.Exception);
+                return Model_Dao_Result.Failure(result.ErrorMessage ?? "Failed to add transaction history", result.Exception);
             }
 
-            return DaoResult.Success();
+            return Model_Dao_Result.Success();
         }
         catch (Exception ex)
         {
             LoggingUtility.LogDatabaseError(ex);
             var errorResult = await Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex, callerName: "AddTransactionHistoryAsync");
-            return DaoResult.Failure("Failed to add transaction history", ex);
+            return Model_Dao_Result.Failure("Failed to add transaction history", ex);
         }
     }
 

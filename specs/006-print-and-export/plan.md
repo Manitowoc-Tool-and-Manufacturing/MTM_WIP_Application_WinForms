@@ -29,13 +29,13 @@ Complete refactor of print and export functionality to resolve fundamental archi
 **Status**: ✅ COMPLIANT  
 **Analysis**: Feature uses stored procedures only for settings persistence (printer selection, column preferences). No inline SQL required. If database persistence used, will follow `Helper_Database_StoredProcedure` pattern.
 
-### Principle II: DaoResult<T> Wrapper Pattern
+### Principle II: Model_Dao_Result<T> Wrapper Pattern
 **Status**: ✅ COMPLIANT  
-**Analysis**: New DAO methods for settings persistence will return `DaoResult` or `DaoResult<T>`. All database operations wrapped in structured responses. File-based persistence (JSON in AppData) uses try-catch with structured result objects.
+**Analysis**: New DAO methods for settings persistence will return `Model_Dao_Result` or `Model_Dao_Result<T>`. All database operations wrapped in structured responses. File-based persistence (JSON in AppData) uses try-catch with structured result objects.
 
 ### Principle III: Region Organization and Method Ordering
 **Status**: ✅ COMPLIANT  
-**Analysis**: All new C# files (Core_TablePrinter, Helper_PrintManager, Helper_ExportManager, PrintForm, Model_PrintJob, Model_PrintSettings) will follow standard region organization: Fields, Properties, Progress Control Methods, Constructors, specific functionality regions, Helpers, Cleanup.
+**Analysis**: All new C# files (Core_TablePrinter, Helper_PrintManager, Helper_ExportManager, PrintForm, Model_Print_Core_Job, Model_Print_CoreSettings) will follow standard region organization: Fields, Properties, Progress Control Methods, Constructors, specific functionality regions, Helpers, Cleanup.
 
 ### Principle IV: Manual Validation Testing Approach
 **Status**: ✅ COMPLIANT  
@@ -55,12 +55,12 @@ Complete refactor of print and export functionality to resolve fundamental archi
 
 ### Principle VIII: Documentation and XML Comments
 **Status**: ✅ COMPLIANT  
-**Analysis**: All public APIs will have XML documentation. Core_TablePrinter, Helper_PrintManager, Helper_ExportManager, Model_PrintJob, Model_PrintSettings classes require comprehensive XML docs per FR requirements.
+**Analysis**: All public APIs will have XML documentation. Core_TablePrinter, Helper_PrintManager, Helper_ExportManager, Model_Print_Core_Job, Model_Print_CoreSettings classes require comprehensive XML docs per FR requirements.
 
 ### Principle IX: Theme System Integration via Core_Themes
 **Status**: ✅ COMPLIANT  
 **Analysis**: 
-- **FR-020**: Print dialog MUST integrate with MTM theme system (Model_UserUiColors)
+- **FR-020**: Print dialog MUST integrate with MTM theme system (Model_Shared_UserUiColors)
 - **FR-021**: Print dialog MUST apply Core_Themes.ApplyDpiScaling() and ApplyRuntimeLayoutAdjustments()
 - **Mockup 3 Compact Sidebar**: UI follows WinForms architecture standards with proper control naming, AutoSize cascade, and DPI awareness
 - **Theme Reference**: Specification explicitly mentions `Documentation/Theme-System-Reference.md`
@@ -84,7 +84,7 @@ Complete refactor of print and export functionality to resolve fundamental archi
 All principles remain ✅ COMPLIANT after generating research.md, data-model.md, contracts/, and quickstart.md.
 
 **Design Artifacts Validation**:
-- ✅ **data-model.md**: PrintJob and PrintSettings entities follow DaoResult pattern, validation rules defined
+- ✅ **data-model.md**: PrintJob and PrintSettings entities follow Model_Dao_Result pattern, validation rules defined
 - ✅ **contracts/PrintJob.json**: JSON schema for print job configuration with proper constraints
 - ✅ **contracts/PrintSettings.json**: JSON schema for user preferences with validation
 - ✅ **research.md**: All 7 research questions resolved (Windows print system, Excel export, zoom, cancellation, storage, DataTable conversion, theme integration)
@@ -129,8 +129,8 @@ MTM_WIP_Application_WinForms/
 │   ├── Helper_PrintManager.cs        # NEW: Print orchestration and preview generation
 │   └── Helper_ExportManager.cs       # NEW: PDF/Excel export with exact page ranges
 ├── Models/
-│   ├── Model_PrintJob.cs             # NEW: Print/export configuration object
-│   └── Model_PrintSettings.cs        # NEW: Per-grid persistence (printer, columns)
+│   ├── Model_Print_Core_Job.cs             # NEW: Print/export configuration object
+│   └── Model_Print_CoreSettings.cs        # NEW: Per-grid persistence (printer, columns)
 ├── Forms/
 │   └── Shared/
 │       ├── PrintForm.cs              # NEW: Compact Sidebar print dialog

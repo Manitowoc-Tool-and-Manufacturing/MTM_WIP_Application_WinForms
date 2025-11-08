@@ -34,7 +34,7 @@ This file defines MySQL 5.7 database patterns, connection management, and manufa
 ### Connection Pooling
 - Always use connection pooling for performance
 - Configuration: MinPoolSize=5, MaxPoolSize=100
-- Timeout: 30 seconds (align with `Model_AppVariables.CommandTimeoutSeconds` settings)
+- Timeout: 30 seconds (align with `Model_Application_Variables.CommandTimeoutSeconds` settings)
 - MaxRetryAttempts: 3 with exponential backoff
 
 ### Async/Await for All Operations
@@ -60,7 +60,7 @@ SERVER=<host>;DATABASE=<db>;UID=<user>;PASSWORD=<password>;Allow User Variables=
 ```
 
 ### Configuration Source
-- Use `Helper_Database_Variables.GetConnectionString` to build connection strings based on `Model_Users` and `Model_AppVariables`.
+- Use `Helper_Database_Variables.GetConnectionString` to build connection strings based on `Model_Shared_Users` and `Model_Application_Variables`.
 - Keep credentials outside of source control. When local secrets are required, store them in environment-specific config files that are ignored by Git.
 - Validate connection strings on startup using the helper methods in `Program.cs` to surface user-friendly errors.
 
@@ -220,7 +220,7 @@ private bool IsTransientError(MySqlException ex)
 }
 ```
 
-> Define `_maxRetryAttempts` and `_retryDelaySeconds` at the service level or read them from `Model_AppVariables` so retry behavior stays consistent across DAOs.
+> Define `_maxRetryAttempts` and `_retryDelaySeconds` at the service level or read them from `Model_Application_Variables` so retry behavior stays consistent across DAOs.
 
 ### Connection Validation
 ```

@@ -67,7 +67,7 @@ public async Task ReloadAsync()
     }
     catch (Exception ex)
     {
-        Service_ErrorHandler.HandleException(ex, ErrorSeverity.Medium,
+        Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Medium,
             retryAction: () => { ReloadAsync().Wait(); return true; },
             controlName: nameof(Control_Developer_SchemaInspector));
     }
@@ -242,29 +242,29 @@ public async Task ReloadAsync()
     }
     catch (Exception ex)
     {
-        Service_ErrorHandler.HandleException(ex, ErrorSeverity.Medium,
+        Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Medium,
             retryAction: () => { ReloadAsync().Wait(); return true; },
             controlName: nameof(Control_Developer_ParameterPrefixMaintenance));
     }
 }
 ```
 
-#### AddOverrideAsync(Model_ParameterPrefixOverride override)
+#### AddOverrideAsync(Model_ParameterPrefix_Override override)
 
 ```csharp
 /// <summary>
 /// Add new parameter prefix override.
 /// </summary>
 /// <param name="override">Override details</param>
-/// <returns>DaoResult with new OverrideId</returns>
-public async Task<DaoResult<int>> AddOverrideAsync(Model_ParameterPrefixOverride override)
+/// <returns>Model_Dao_Result with new OverrideId</returns>
+public async Task<Model_Dao_Result<int>> AddOverrideAsync(Model_ParameterPrefix_Override override)
 {
     // Validation
     if (string.IsNullOrWhiteSpace(override.ProcedureName))
-        return DaoResult<int>.Failure("Procedure name is required");
+        return Model_Dao_Result<int>.Failure("Procedure name is required");
 
     if (string.IsNullOrWhiteSpace(override.ParameterName))
-        return DaoResult<int>.Failure("Parameter name is required");
+        return Model_Dao_Result<int>.Failure("Parameter name is required");
 
     // Check if procedure exists (warning, not error)
     var procedureExists = await CheckProcedureExistsAsync(override.ProcedureName);
@@ -277,7 +277,7 @@ public async Task<DaoResult<int>> AddOverrideAsync(Model_ParameterPrefixOverride
             MessageBoxIcon.Warning);
 
         if (result != DialogResult.Yes)
-            return DaoResult<int>.Failure("Operation cancelled by user");
+            return Model_Dao_Result<int>.Failure("Operation cancelled by user");
     }
 
     // Call DAO
@@ -285,15 +285,15 @@ public async Task<DaoResult<int>> AddOverrideAsync(Model_ParameterPrefixOverride
 }
 ```
 
-#### UpdateOverrideAsync(Model_ParameterPrefixOverride override)
+#### UpdateOverrideAsync(Model_ParameterPrefix_Override override)
 
 ```csharp
 /// <summary>
 /// Update existing parameter prefix override.
 /// </summary>
 /// <param name="override">Updated override details</param>
-/// <returns>DaoResult indicating success/failure</returns>
-public async Task<DaoResult> UpdateOverrideAsync(Model_ParameterPrefixOverride override)
+/// <returns>Model_Dao_Result indicating success/failure</returns>
+public async Task<Model_Dao_Result> UpdateOverrideAsync(Model_ParameterPrefix_Override override)
 {
     // Validation (same as Add)
     // Call DAO
@@ -308,15 +308,15 @@ public async Task<DaoResult> UpdateOverrideAsync(Model_ParameterPrefixOverride o
 /// Soft-delete parameter prefix override.
 /// </summary>
 /// <param name="overrideId">Override ID to delete</param>
-/// <returns>DaoResult indicating success/failure</returns>
-public async Task<DaoResult> DeleteOverrideAsync(int overrideId)
+/// <returns>Model_Dao_Result indicating success/failure</returns>
+public async Task<Model_Dao_Result> DeleteOverrideAsync(int overrideId)
 {
     var result = Service_ErrorHandler.ShowConfirmation(
         "Are you sure you want to delete this override?",
         "Confirm Delete");
 
     if (result != DialogResult.Yes)
-        return DaoResult.Failure("Operation cancelled by user");
+        return Model_Dao_Result.Failure("Operation cancelled by user");
 
     return await Dao_ParameterPrefixOverrides.DeleteAsync(overrideId);
 }
@@ -334,7 +334,7 @@ public event EventHandler<OverrideChangedEventArgs>? OverrideDeleted;
 
 ```csharp
 public int OverrideCount => dgvOverrides.Rows.Count;
-public Model_ParameterPrefixOverride? SelectedOverride { get; }
+public Model_ParameterPrefix_Override? SelectedOverride { get; }
 ```
 
 ---
@@ -373,7 +373,7 @@ public async Task ReloadAsync()
     }
     catch (Exception ex)
     {
-        Service_ErrorHandler.HandleException(ex, ErrorSeverity.Medium,
+        Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Medium,
             retryAction: () => { ReloadAsync().Wait(); return true; },
             controlName: nameof(Control_Developer_SchemaInspector));
     }
@@ -538,7 +538,7 @@ public async Task ReloadAsync()
     }
     catch (Exception ex)
     {
-        Service_ErrorHandler.HandleException(ex, ErrorSeverity.Medium,
+        Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Medium,
             retryAction: () => { ReloadAsync().Wait(); return true; },
             controlName: nameof(Control_Developer_ProcedureCallHierarchy));
     }
@@ -687,7 +687,7 @@ public async Task ReloadAsync()
     }
     catch (Exception ex)
     {
-        Service_ErrorHandler.HandleException(ex, ErrorSeverity.Medium,
+        Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Medium,
             retryAction: () => { ReloadAsync().Wait(); return true; },
             controlName: nameof(Control_Developer_CodeGenerator));
     }
@@ -768,12 +768,12 @@ public async Task<string> GenerateDaoMethodAsync(string procedureName)
 
         if (result.IsSuccess)
         {{
-            return DaoResult<DataTable>.Success(result.Data);
+            return Model_Dao_Result<DataTable>.Success(result.Data);
         }}
         else
         {{
             LoggingUtility.LogApplicationError(result.Exception, result.StatusMessage);
-            return DaoResult<DataTable>.Failure(result.StatusMessage);
+            return Model_Dao_Result<DataTable>.Failure(result.StatusMessage);
         }}
     }}
     catch (Exception ex)
@@ -870,7 +870,7 @@ private void LoadTreeViewNodes()
     // Existing nodes...
 
     // Add Developer node if user has Developer role
-    if (Model_AppVariables.CurrentUser.IsDeveloper)
+    if (Model_Application_Variables.CurrentUser.IsDeveloper)
     {
         var developerNode = new TreeNode("Developer");
         developerNode.Nodes.Add("Debug Dashboard");

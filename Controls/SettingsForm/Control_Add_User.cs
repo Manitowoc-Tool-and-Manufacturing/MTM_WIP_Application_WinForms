@@ -234,7 +234,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
                 UpdateProgress(20, "Checking for existing user...");
                 await Task.Delay(100);
 
-                // Use enhanced DAO method with DaoResult pattern
+                // Use enhanced DAO method with Model_Dao_Result pattern
                 var userExistsResult = await Dao_User.UserExistsAsync(userName);
 
                 if (!userExistsResult.IsSuccess)
@@ -264,13 +264,13 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
 
                 UpdateProgress(40, "Creating user account...");
                 
-                // Use DAO method with DaoResult pattern
+                // Use DAO method with Model_Dao_Result pattern
                 string lastShownVersion = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version?.ToString() ?? string.Empty;
                 
                 // Use default connection values for new user (they can change them later in settings)
-                string wipServerAddress = string.IsNullOrWhiteSpace(Model_Users.WipServerAddress) ? "172.16.1.104" : Model_Users.WipServerAddress;
-                string database = string.IsNullOrWhiteSpace(Model_Users.Database) ? "MTM_WIP_Application_Winforms" : Model_Users.Database;
-                string wipServerPort = string.IsNullOrWhiteSpace(Model_Users.WipServerPort) ? "3306" : Model_Users.WipServerPort;
+                string wipServerAddress = string.IsNullOrWhiteSpace(Model_Shared_Users.WipServerAddress) ? "172.16.1.104" : Model_Shared_Users.WipServerAddress;
+                string database = string.IsNullOrWhiteSpace(Model_Shared_Users.Database) ? "MTM_WIP_Application_Winforms" : Model_Shared_Users.Database;
+                string wipServerPort = string.IsNullOrWhiteSpace(Model_Shared_Users.WipServerPort) ? "3306" : Model_Shared_Users.WipServerPort;
                 
                 var createUserResult = await Dao_User.CreateUserAsync(
                     userName,

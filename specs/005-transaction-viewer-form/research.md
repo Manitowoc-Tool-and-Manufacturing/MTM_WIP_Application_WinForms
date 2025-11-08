@@ -18,7 +18,7 @@ Decompose the existing Transactions.cs into 5 distinct components:
 2. **TransactionSearchControl.cs** (UserControl) - Filter UI (~300 lines)
 3. **TransactionGridControl.cs** (UserControl) - DataGridView + pagination (~300 lines)
 4. **TransactionDetailPanel.cs** (UserControl) - Side panel display (~200 lines)
-5. **TransactionViewModel.cs** (ViewModel) - Business logic and state (~400 lines)
+5. **Model_Transactions_ViewModel.cs** (ViewModel) - Business logic and state (~400 lines)
 
 ### Rationale
 - **Single Responsibility**: Each component has one clear purpose (search, display, details, orchestration, logic)
@@ -36,7 +36,7 @@ Decompose the existing Transactions.cs into 5 distinct components:
 - **Event-driven communication**: UserControls raise events (SearchRequested, RowSelected), Form handles and delegates to ViewModel
 - **ViewModel access**: Form creates ViewModel in constructor, passes to controls when needed (e.g., for async operations)
 - **Progress reporting**: Form owns Helper_StoredProcedureProgress, passes to ViewModel methods
-- **Error handling**: ViewModel catches exceptions, returns DaoResult, Form displays via Service_ErrorHandler
+- **Error handling**: ViewModel catches exceptions, returns Model_Dao_Result, Form displays via Service_ErrorHandler
 
 ---
 
@@ -62,7 +62,7 @@ Use existing stored procedures **without modification**:
 ### Parameter Mapping Strategy
 C# code removes `p_` prefix, helper adds automatically:
 ```csharp
-// In TransactionSearchCriteria → Dictionary<string, object>
+// In Model_Transactions_SearchCriteria → Dictionary<string, object>
 ["PartID"] = criteria.PartID ?? (object)DBNull.Value;      // MySQL: p_PartID
 ["User"] = criteria.User ?? (object)DBNull.Value;          // MySQL: p_User
 ["FromLocation"] = criteria.FromLocation ?? (object)DBNull.Value; // MySQL: p_FromLocation
@@ -81,7 +81,7 @@ C# code removes `p_` prefix, helper adds automatically:
 ### Decision
 Implement **Passive ViewModel** pattern (not MVVM):
 - ViewModel contains business logic and async operations
-- ViewModel returns DaoResult<T> to Form
+- ViewModel returns Model_Dao_Result<T> to Form
 - Form updates controls imperatively (not via data binding)
 - UserControls remain dumb views with event notifications
 
@@ -108,9 +108,9 @@ Form calls ViewModel method (SearchTransactionsAsync)
   ↓
 ViewModel calls DAO (Dao_Transactions.SearchAsync)
   ↓
-ViewModel processes DaoResult
+ViewModel processes Model_Dao_Result
   ↓
-ViewModel returns DaoResult to Form
+ViewModel returns Model_Dao_Result to Form
   ↓
 Form updates UI (Grid, Status, Progress)
   ↓
@@ -120,7 +120,7 @@ Form raises event to UserControl (ResultsUpdated)
 ### ViewModel Responsibilities
 - **Validation**: Check search criteria validity before DAO calls
 - **Orchestration**: Coordinate multiple DAO calls (e.g., load dropdowns in parallel)
-- **Transformation**: Map DataTable rows to Model_Transactions objects
+- **Transformation**: Map DataTable rows to Model_Transactions_Core objects
 - **Caching**: Store dropdown data (parts, users, locations) for performance
 - **Progress**: Accept Helper_StoredProcedureProgress and call ShowProgress/UpdateProgress/ShowSuccess
 
@@ -132,7 +132,7 @@ Form raises event to UserControl (ResultsUpdated)
 Implement **server-side pagination** with client-side page navigation:
 - Stored procedure accepts `p_Page` and `p_PageSize` parameters
 - Client requests pages on-demand (page 1, page 2, etc.)
-- Grid displays 50 records per page (configurable via Model_AppVariables)
+- Grid displays 50 records per page (configurable via Model_Application_Variables)
 - Navigation controls: Previous/Next buttons + page number indicator
 
 ### Rationale
@@ -147,7 +147,7 @@ Implement **server-side pagination** with client-side page navigation:
 - **Option C: Cursor-based pagination** - Rejected: Requires stored procedure changes, more complex
 
 ### Implementation Details
-- **Page size**: 50 records (default), configurable in `Model_AppVariables.TransactionPageSize`
+- **Page size**: 50 records (default), configurable in `Model_Application_Variables.TransactionPageSize`
 - **Page tracking**: ViewModel stores current page number and total record count
 - **Navigation buttons**: Enabled/disabled based on current page (disable Previous on page 1, disable Next on last page)
 - **Page indicator**: "Page 1 of 5" label shows current position
@@ -209,8 +209,8 @@ new DataGridViewTextBoxColumn {
 
 ### Decision
 Implement **layered error handling**:
-1. **DAO Layer**: Catch MySqlException, wrap in DaoResult.Failure()
-2. **ViewModel Layer**: Validate inputs, propagate DaoResult failures
+1. **DAO Layer**: Catch MySqlException, wrap in Model_Dao_Result.Failure()
+2. **ViewModel Layer**: Validate inputs, propagate Model_Dao_Result failures
 3. **Form Layer**: Call Service_ErrorHandler.HandleException() with retry actions
 4. **UserControl Layer**: Display validation errors inline (ErrorProvider)
 
@@ -227,8 +227,8 @@ Implement **layered error handling**:
 
 ### Error Severity Classification
 - **Low**: Validation errors (empty search, invalid date range) → `Service_ErrorHandler.HandleValidationError()`
-- **Medium**: Transient database errors (timeout, connection lost) → `Service_ErrorHandler.HandleException(..., ErrorSeverity.Medium, retryAction)`
-- **High**: Unexpected exceptions (null reference, index out of range) → `Service_ErrorHandler.HandleException(..., ErrorSeverity.High)`
+- **Medium**: Transient database errors (timeout, connection lost) → `Service_ErrorHandler.HandleException(..., Enum_ErrorSeverity.Medium, retryAction)`
+- **High**: Unexpected exceptions (null reference, index out of range) → `Service_ErrorHandler.HandleException(..., Enum_ErrorSeverity.High)`
 - **Fatal**: Never used (no unrecoverable errors in transaction viewer)
 
 ### Retry Action Pattern
@@ -245,11 +245,11 @@ try
 }
 catch (Exception ex)
 {
-    Service_ErrorHandler.HandleException(ex, ErrorSeverity.Medium,
+    Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Medium,
         retryAction: async () => await SearchTransactionsAsync(), // Pass current method as retry action
         contextData: new Dictionary<string, object> {
             ["SearchCriteria"] = criteria.ToString(),
-            ["UserName"] = Model_AppVariables.CurrentUser?.UserName ?? "Unknown"
+            ["UserName"] = Model_Application_Variables.CurrentUser?.UserName ?? "Unknown"
         },
         controlName: nameof(Transactions)
     );
@@ -308,7 +308,7 @@ Use **ClosedXML** library (already included in project):
 
 ### Implementation Pattern
 ```csharp
-public async Task ExportToExcelAsync(List<Model_Transactions> transactions, string filePath)
+public async Task ExportToExcelAsync(List<Model_Transactions_Core> transactions, string filePath)
 {
     using var workbook = new XLWorkbook();
     var worksheet = workbook.Worksheets.Add("Transactions");
@@ -402,7 +402,7 @@ Implement **parallel running period** with feature toggle:
 ### Rollback Plan
 If critical issues discovered:
 1. Disable "Use New Transaction Viewer" toggle in Settings
-2. Set default to old form via Model_AppVariables
+2. Set default to old form via Model_Application_Variables
 3. Document issue in GitHub Issues with reproduction steps
 4. Fix identified problems in feature branch
 5. Re-enable toggle when stable

@@ -26,7 +26,7 @@
 
 **Q1.1**: Which theme files should be prioritized for analysis?
 - [ ] `Core/Core_Themes.cs` (primary implementation)
-- [ ] `Models/Model_UserUiColors.cs` (user preferences)
+- [ ] `Models/Model_Shared_UserUiColors.cs` (user preferences)
 - [ ] Existing instruction files in `.github/instructions/`
 - [ ] Documentation in `Documentation/` folder
 - [x] All of the above
@@ -40,14 +40,14 @@
   - [x] No files exist.  Create a new .instruction.md file as well as a .prompt.md file for validating and if needed implementing Full Theme / Architecture Compliance in the referenced file (example: /refactor-architecture MainForm.cs, or /refactor-document copilot.instructions.md)
 
 **Q1.3**: What theme aspects should be validated during compliance checking?
-- [ ] Color application (`Model_UserUiColors` usage) - See `Documentation/Theme-System-Reference.md` Section 4 (Color Token Catalog)
+- [ ] Color application (`Model_Shared_UserUiColors` usage) - See `Documentation/Theme-System-Reference.md` Section 4 (Color Token Catalog)
 - [ ] DPI scaling (`Core_Themes.ApplyDpiScaling`) - See `Documentation/Theme-System-Reference.md` Section 6 (DPI Scaling System)
 - [ ] Runtime layout adjustments - See `Documentation/Theme-System-Reference.md` Section 7 (Runtime Layout Adjustments)
 - [ ] Font sizing - See `Documentation/Theme-System-Reference.md` Section 5 (Font Sizing Standards)
 - [x] All of the above
 
 **Reference Documentation**:
-- **Section 4** - Color Token Catalog: 203 theme properties from `app_themes` MySQL table, accessed via `Model_UserUiColors`
+- **Section 4** - Color Token Catalog: 203 theme properties from `app_themes` MySQL table, accessed via `Model_Shared_UserUiColors`
 - **Section 5** - Font Sizing: Adaptive font scaling for 100%-200% DPI range
 - **Section 6** - DPI Scaling: `Core_Themes.ApplyDpiScaling(this)` implementation and requirements
 - **Section 7** - Runtime Adjustments: `Core_Themes.ApplyRuntimeLayoutAdjustments(this)` fixes designer-generated layout issues
@@ -57,7 +57,7 @@
 ### 2. Theme Discrepancy Detection
 
 **Q2.1**: What constitutes a "theme discrepancy"?
-- [x] Controls not using `Model_UserUiColors` for custom colors
+- [x] Controls not using `Model_Shared_UserUiColors` for custom colors
 - [x] Missing `Core_Themes.ApplyDpiScaling(this)` in constructors
 - [x] Hardcoded colors (e.g., `Color.Blue` instead of theme tokens) - These will need to be investigated on a file by file basis, as in some files this will be accepted
 - [x] Missing `Core_Themes.ApplyRuntimeLayoutAdjustments(this)`
@@ -312,7 +312,7 @@ A, B and C so you the AI will have as much data to go off of
 
 **Q12.1**: Should `Documentation/Theme-System-Reference.md` include?
 - [x] Complete Core_Themes API reference
-- [x] Model_UserUiColors usage guide
+- [x] Model_Shared_UserUiColors usage guide
 - [x] Color token catalog (if it exists)
 - [x] DPI scaling best practices
 - [x] Runtime layout adjustment patterns
@@ -392,14 +392,14 @@ A, B and C so you the AI will have as much data to go off of
 
 The MTM theme system automatically applies colors via:
 1. **Core_Themes.ApplyTheme()** - Recursively applies theme to all controls
-2. **Model_UserUiColors** - 203 color token properties (nullable Color?) from MySQL `app_themes` table
+2. **Model_Shared_UserUiColors** - 203 color token properties (nullable Color?) from MySQL `app_themes` table
 3. **9 available themes** - Default, Midnight, Forest, Ocean, Sunset, Corporate, HighContrast, Minimalist, Vintage
 4. **Control-specific appliers** - 40+ control types with custom theme logic
 5. **Database storage** - Each theme has 203 properties stored in `app_themes` table
 
 **Access Pattern**:
 ```csharp
-var colors = Model_AppVariables.UserUiColors;
+var colors = Model_Application_Variables.UserUiColors;
 button.BackColor = colors.ButtonBackColor ?? SystemColors.Control;
 label.ForeColor = colors.LabelForeColor ?? SystemColors.ControlText;
 ```
@@ -418,13 +418,13 @@ Is the color hardcoded in code (.cs file, not Designer.cs)?
 │   │
 │   ├─ Is it a SEMANTIC theme color with documented purpose?
 │   │   ├─ ErrorColor (red) for validation errors?
-│   │   │   └─ YES → ✅ ACCEPTABLE (use Model_UserUiColors.ErrorColor)
+│   │   │   └─ YES → ✅ ACCEPTABLE (use Model_Shared_UserUiColors.ErrorColor)
 │   │   ├─ WarningColor (orange) for warnings?
-│   │   │   └─ YES → ✅ ACCEPTABLE (use Model_UserUiColors.WarningColor)
+│   │   │   └─ YES → ✅ ACCEPTABLE (use Model_Shared_UserUiColors.WarningColor)
 │   │   ├─ SuccessColor (green) for success states?
-│   │   │   └─ YES → ✅ ACCEPTABLE (use Model_UserUiColors.SuccessColor)
+│   │   │   └─ YES → ✅ ACCEPTABLE (use Model_Shared_UserUiColors.SuccessColor)
 │   │   ├─ AccentColor (blue) for highlights/focus?
-│   │   │   └─ YES → ✅ ACCEPTABLE (use Model_UserUiColors.AccentColor)
+│   │   │   └─ YES → ✅ ACCEPTABLE (use Model_Shared_UserUiColors.AccentColor)
 │   │   └─ Otherwise → Continue evaluation
 │   │
 │   ├─ Is it documented with "// ACCEPTABLE: [reason]" comment?
@@ -451,8 +451,8 @@ Is the color hardcoded in code (.cs file, not Designer.cs)?
 │   │         - Some custom controls have special theme logic
 │   │
 │   └─ Otherwise
-│       └─ ❌ NON-COMPLIANT (should use Model_UserUiColors theme tokens)
-│             Fix: Replace with theme token from Model_UserUiColors
+│       └─ ❌ NON-COMPLIANT (should use Model_Shared_UserUiColors theme tokens)
+│             Fix: Replace with theme token from Model_Shared_UserUiColors
 │             Example: btn.BackColor = colors.ButtonBackColor ?? SystemColors.Control;
 │
 └─ NO → ✅ COMPLIANT (no hardcoded colors found)
@@ -469,8 +469,8 @@ textBox1.ForeColor = colors.TextBoxForeColor ?? SystemColors.WindowText;
 
 **✅ CORRECT: Semantic Theme Color**
 ```csharp
-labelError.ForeColor = Model_AppVariables.UserUiColors.ErrorColor ?? Color.Red;
-labelSuccess.ForeColor = Model_AppVariables.UserUiColors.SuccessColor ?? Color.Green;
+labelError.ForeColor = Model_Application_Variables.UserUiColors.ErrorColor ?? Color.Red;
+labelSuccess.ForeColor = Model_Application_Variables.UserUiColors.SuccessColor ?? Color.Green;
 ```
 
 **✅ CORRECT: Documented Brand Color Exception**
@@ -487,7 +487,7 @@ control.BackColor = colors.ControlBackColor ?? SystemColors.Control;
 
 **❌ WRONG: Direct Color Assignment**
 ```csharp
-// Missing theme token - should use Model_UserUiColors
+// Missing theme token - should use Model_Shared_UserUiColors
 button1.BackColor = Color.Blue;  // BAD!
 textBox1.ForeColor = Color.White;  // BAD!
 ```
@@ -503,7 +503,7 @@ panel1.BackColor = Color.FromArgb(30, 30, 30);  // BAD!
 Colors meeting ANY of these criteria should be whitelisted:
 
 1. **SystemColors.*** values (always acceptable)
-2. **Model_UserUiColors semantic tokens** (ErrorColor, WarningColor, SuccessColor, AccentColor, InfoColor)
+2. **Model_Shared_UserUiColors semantic tokens** (ErrorColor, WarningColor, SuccessColor, AccentColor, InfoColor)
 3. **Documented brand colors** with "// ACCEPTABLE:" comment
 4. **Data visualization colors** with "// DATA COLOR:" comment explaining necessity
 5. **Development tool colors** in Forms/Development/** or Tests/**
@@ -511,7 +511,7 @@ Colors meeting ANY of these criteria should be whitelisted:
 ### References
 
 - **Theme System Reference**: `Documentation/Theme-System-Reference.md`
-- **Color Token Catalog**: 200+ properties in `Models/Model_UserUiColors.cs`
+- **Color Token Catalog**: 200+ properties in `Models/Model_Shared_UserUiColors.cs`
 - **Theme Appliers**: `Core/Core_Themes.cs` (lines 1000-2500)
 - **P0 Pattern Examples**: `Controls/MainForm/Control_*Tab.cs` constructors
 

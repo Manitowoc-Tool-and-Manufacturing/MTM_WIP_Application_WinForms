@@ -77,7 +77,7 @@
 
     - **Issue**: DEBUG mode uses `MTM_WIP_Application_Winforms` (production) but tests expected procedures in `mtm_wip_application_winforms_test`
     - **Solution**: Deployed all procedures to BOTH databases
-    - **Why This Happened**: `Model_Users.Database` uses production DB even in DEBUG mode (see comment on line 23)
+    - **Why This Happened**: `Model_Shared_Users.Database` uses production DB even in DEBUG mode (see comment on line 23)
 
 4. 🔴 **Remaining Issues to Address**:
     - Parameter mismatches in transfer/transaction procedures
@@ -250,8 +250,8 @@ This refactoring will fix ~30 of the 43 remaining failures. After completion, re
 #### ❌ T-SP-005: inv_transactions_GetAnalytics - Missing p_UserName
 
 -   **Tests**:
-    -   `GetTransactionAnalyticsAsync_ValidUser_ReturnsAnalytics` (Dao_Transactions_Tests.cs:182)
-    -   `GetTransactionAnalyticsAsync_DateRange_ReturnsFilteredAnalytics` (Dao_Transactions_Tests.cs:207)
+    -   `GetModel_Transactions_Core_AnalyticsAsync_ValidUser_ReturnsAnalytics` (Dao_Transactions_Tests.cs:182)
+    -   `GetModel_Transactions_Core_AnalyticsAsync_DateRange_ReturnsFilteredAnalytics` (Dao_Transactions_Tests.cs:207)
 -   **Error**: `Parameter 'p_UserName' not found in the collection`
 -   **Action Required**:
     -   [ ] Check stored procedure parameter list
@@ -771,7 +771,7 @@ This refactoring will fix ~30 of the 43 remaining failures. After completion, re
 -   **Test**: See T-SP-004
 -   **Status**: 🔴 Not Started (covered under Stored Procedure section)
 
-#### ❌ T-TX-003: GetTransactionAnalyticsAsync - Missing Parameter (2 tests)
+#### ❌ T-TX-003: GetModel_Transactions_Core_AnalyticsAsync - Missing Parameter (2 tests)
 
 -   **Tests**: See T-SP-005
 -   **Status**: 🔴 Not Started (covered under Stored Procedure section)

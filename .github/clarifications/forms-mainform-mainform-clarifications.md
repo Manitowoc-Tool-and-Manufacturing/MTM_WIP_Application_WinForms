@@ -27,7 +27,7 @@ catch (Exception ex)
 ```
 
 **Context Analysis**:
-- `HandleException_GeneralError_CloseApp` is an `async Task<DaoResult>` method
+- `HandleException_GeneralError_CloseApp` is an `async Task<Model_Dao_Result>` method
 - It logs errors to database, shows error dialog to user, and can terminate the application for critical errors
 - The method is called in catch blocks where further execution may not be meaningful
 - The method includes its own try-catch for recursion protection

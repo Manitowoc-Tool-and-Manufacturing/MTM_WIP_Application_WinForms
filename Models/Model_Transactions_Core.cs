@@ -2,7 +2,7 @@
 
 namespace MTM_WIP_Application_Winforms.Models
 {
-    internal class Model_Transactions
+    internal class Model_Transactions_Core
     {
         public int ID { get; set; }
         public TransactionType TransactionType { get; set; }

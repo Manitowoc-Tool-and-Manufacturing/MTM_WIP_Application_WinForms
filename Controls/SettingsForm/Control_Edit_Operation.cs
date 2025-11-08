@@ -50,7 +50,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             LoadOperations();
             if (issuedByValueLabel != null)
             {
-                issuedByValueLabel.Text = Model_AppVariables.User ?? "Current User";
+                issuedByValueLabel.Text = Model_Application_Variables.User ?? "Current User";
             }
         }
 
@@ -128,7 +128,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
                 }
 
                 var updateResult = await Dao_Operation.UpdateOperation(originalOperationNumber, newOperationNumber,
-                    Model_AppVariables.User ?? "Current User");
+                    Model_Application_Variables.User ?? "Current User");
                 if (!updateResult.IsSuccess)
                 {
                     MessageBox.Show($@"Error updating operation: {updateResult.ErrorMessage}", @"Error",
@@ -164,7 +164,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
         {
             operationTextBox.Clear();
             operationsComboBox.SelectedIndex = 0;
-            issuedByValueLabel.Text = Model_AppVariables.User ?? "Current User";
+            issuedByValueLabel.Text = Model_Application_Variables.User ?? "Current User";
             _currentOperation = null;
         }
 

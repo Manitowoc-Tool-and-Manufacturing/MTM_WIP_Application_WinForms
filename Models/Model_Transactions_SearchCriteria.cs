@@ -3,7 +3,7 @@ namespace MTM_WIP_Application_Winforms.Models;
 /// <summary>
 /// Encapsulates search criteria for transaction queries with validation methods.
 /// </summary>
-internal sealed class TransactionSearchCriteria
+internal sealed class Model_Transactions_SearchCriteria
 {
     #region Properties
 

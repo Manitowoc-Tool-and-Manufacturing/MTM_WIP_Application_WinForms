@@ -45,7 +45,7 @@ namespace MTM_WIP_Application_Winforms.Forms.Development.DependencyChartConverte
             }
             catch (Exception ex)
             {
-                Service_ErrorHandler.HandleException(ex, ErrorSeverity.High, 
+                Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.High, 
                     controlName: nameof(DependencyChartViewerForm));
             }
         }
@@ -67,7 +67,7 @@ namespace MTM_WIP_Application_Winforms.Forms.Development.DependencyChartConverte
             }
             catch (Exception ex)
             {
-                Service_ErrorHandler.HandleException(ex, ErrorSeverity.Medium, 
+                Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Medium, 
                     controlName: nameof(DependencyChartViewerForm));
             }
         }
@@ -249,7 +249,7 @@ namespace MTM_WIP_Application_Winforms.Forms.Development.DependencyChartConverte
             }
             catch (Exception ex)
             {
-                Service_ErrorHandler.HandleException(ex, ErrorSeverity.Medium, 
+                Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Medium, 
                     retryAction: () => { btnSelectHtmlDir_Click(sender, e); return true; },
                     controlName: nameof(DependencyChartViewerForm));
             }
@@ -272,7 +272,7 @@ namespace MTM_WIP_Application_Winforms.Forms.Development.DependencyChartConverte
             }
             catch (Exception ex)
             {
-                Service_ErrorHandler.HandleException(ex, ErrorSeverity.Medium, 
+                Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Medium, 
                     retryAction: () => { btnOpenExternal_Click(sender, e); return true; },
                     controlName: nameof(DependencyChartViewerForm));
             }
@@ -297,7 +297,7 @@ namespace MTM_WIP_Application_Winforms.Forms.Development.DependencyChartConverte
             }
             catch (Exception ex)
             {
-                Service_ErrorHandler.HandleException(ex, ErrorSeverity.Medium, 
+                Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Medium, 
                     retryAction: () => { listHtmlFiles_SelectedIndexChanged(sender, e); return true; },
                     controlName: nameof(DependencyChartViewerForm));
             }
@@ -333,7 +333,7 @@ namespace MTM_WIP_Application_Winforms.Forms.Development.DependencyChartConverte
             }
             catch (Exception ex)
             {
-                Service_ErrorHandler.HandleException(ex, ErrorSeverity.Medium, 
+                Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Medium, 
                     retryAction: () => { LoadHtmlFiles(); return true; },
                     contextData: new Dictionary<string, object> { ["Directory"] = _htmlDir ?? "null" },
                     controlName: nameof(DependencyChartViewerForm));
@@ -396,7 +396,7 @@ namespace MTM_WIP_Application_Winforms.Forms.Development.DependencyChartConverte
             }
             catch (Exception ex)
             {
-                Service_ErrorHandler.HandleException(ex, ErrorSeverity.Medium, 
+                Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Medium, 
                     contextData: new Dictionary<string, object> { ["FilePath"] = htmlFile },
                     controlName: nameof(DependencyChartViewerForm));
             }
@@ -665,7 +665,7 @@ namespace MTM_WIP_Application_Winforms.Forms.Development.DependencyChartConverte
             }
             catch (Exception ex)
             {
-                Service_ErrorHandler.HandleException(ex, ErrorSeverity.Low, 
+                Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Low, 
                     controlName: nameof(DependencyChartViewerForm));
             }
         }
@@ -695,7 +695,7 @@ namespace MTM_WIP_Application_Winforms.Forms.Development.DependencyChartConverte
             }
             catch (Exception ex)
             {
-                Service_ErrorHandler.HandleException(ex, ErrorSeverity.Low, 
+                Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Low, 
                     controlName: nameof(DependencyChartViewerForm));
                 return base.ProcessCmdKey(ref msg, keyData);
             }
@@ -717,7 +717,7 @@ namespace MTM_WIP_Application_Winforms.Forms.Development.DependencyChartConverte
             }
             catch (Exception ex)
             {
-                Service_ErrorHandler.HandleException(ex, ErrorSeverity.Low, 
+                Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Low, 
                     controlName: nameof(DependencyChartViewerForm));
             }
         }

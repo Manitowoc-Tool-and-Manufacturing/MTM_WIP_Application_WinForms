@@ -330,7 +330,7 @@ This document provides a phased, risk-mitigated approach to implementing the Set
 - **Phase 5**: Hotkeys disabled, old workflows work
 
 ### Emergency Rollback
-1. Disable feature flags in `Model_AppVariables`
+1. Disable feature flags in `Model_Application_Variables`
 2. Run database rollback script (restores schema)
 3. Redeploy previous application version
 4. Restore settings from backup if needed

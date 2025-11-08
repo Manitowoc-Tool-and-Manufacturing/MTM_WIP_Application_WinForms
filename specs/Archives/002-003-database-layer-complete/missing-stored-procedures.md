@@ -7,9 +7,9 @@ The entries below come from a repository-wide scan of non-test C# files. Each st
 | Procedure | Call Sites | Should Be |
 |-----------|-------------|-----------|
 | `inv_inventory_Get_All` | Controls/MainForm/Control_RemoveTab.cs | Needs to be created, validate with Caller what needs to be returned |
-| `inv_inventory_get_all` | Models/Model_ParameterPrefixCache.cs | inv_inventory_Get_All (needs to be created) |
+| `inv_inventory_get_all` | Models/Model_ParameterPrefix_Cache.cs | inv_inventory_Get_All (needs to be created) |
 | `inv_inventory_GetNextBatchNumber` | Data/Dao_Inventory.cs | Needs to be created |
-| `inv_transaction_log` | Models/Model_ParameterPrefixCache.cs | is in a comment, not applicable |
+| `inv_transaction_log` | Models/Model_ParameterPrefix_Cache.cs | is in a comment, not applicable |
 | `inv_transactions_Search` | Data/Dao_Transactions.cs | Needs to be created, validate with Caller what needs to be returned |
 | `md_item_types_Exists_ByType` | Data/Dao_ItemType.cs | Needs to be created, validate with Caller what needs to be returned |
 | `md_item_types_GetDistinct` | Data/Dao_Part.cs | Needs to be created, validate with Caller what needs to be returned |

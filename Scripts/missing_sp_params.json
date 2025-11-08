@@ -3,35 +3,35 @@
     "procedure": "inv_inventory_Get_All",
     "file": "Controls\\MainForm\\Control_RemoveTab.cs",
     "line": 1034,
-    "connection": "Model_AppVariables.ConnectionString",
+    "connection": "Model_Application_Variables.ConnectionString",
     "parameters": []
   },
   {
     "procedure": "md_operation_numbers_Exists_ByOperation",
     "file": "Controls\\SettingsForm\\Control_Add_Operation.cs",
     "line": 99,
-    "connection": "Model_AppVariables.ConnectionString",
+    "connection": "Model_Application_Variables.ConnectionString",
     "parameters": []
   },
   {
     "procedure": "md_part_ids_GetItemType_ByPartID",
     "file": "Data\\Dao_Inventory.cs",
     "line": 302,
-    "connection": "Model_AppVariables.ConnectionString",
+    "connection": "Model_Application_Variables.ConnectionString",
     "parameters": []
   },
   {
     "procedure": "inv_inventory_GetNextBatchNumber",
     "file": "Data\\Dao_Inventory.cs",
     "line": 317,
-    "connection": "Model_AppVariables.ConnectionString",
+    "connection": "Model_Application_Variables.ConnectionString",
     "parameters": []
   },
   {
     "procedure": "md_item_types_Exists_ByType",
     "file": "Data\\Dao_ItemType.cs",
     "line": 182,
-    "connection": "Model_AppVariables.ConnectionString",
+    "connection": "Model_Application_Variables.ConnectionString",
     "parameters": [
       [
         "ItemType",
@@ -43,7 +43,7 @@
     "procedure": "md_locations_Exists_ByLocation",
     "file": "Data\\Dao_Location.cs",
     "line": 188,
-    "connection": "Model_AppVariables.ConnectionString",
+    "connection": "Model_Application_Variables.ConnectionString",
     "parameters": [
       [
         "Location",
@@ -55,7 +55,7 @@
     "procedure": "md_operation_numbers_Exists_ByOperation",
     "file": "Data\\Dao_Operation.cs",
     "line": 186,
-    "connection": "Model_AppVariables.ConnectionString",
+    "connection": "Model_Application_Variables.ConnectionString",
     "parameters": [
       [
         "p_Operation",
@@ -67,14 +67,14 @@
     "procedure": "md_item_types_GetDistinct",
     "file": "Data\\Dao_Part.cs",
     "line": 134,
-    "connection": "Model_AppVariables.ConnectionString",
+    "connection": "Model_Application_Variables.ConnectionString",
     "parameters": []
   },
   {
     "procedure": "sys_last_10_transactions_Add_AtPosition",
     "file": "Data\\Dao_QuickButtons.cs",
     "line": 101,
-    "connection": "Model_AppVariables.ConnectionString",
+    "connection": "Model_Application_Variables.ConnectionString",
     "parameters": [
       [
         "User",
@@ -102,7 +102,7 @@
     "procedure": "sys_last_10_transactions_Move",
     "file": "Data\\Dao_QuickButtons.cs",
     "line": 139,
-    "connection": "Model_AppVariables.ConnectionString",
+    "connection": "Model_Application_Variables.ConnectionString",
     "parameters": [
       [
         "User",
@@ -122,7 +122,7 @@
     "procedure": "sys_last_10_transactions_DeleteAll_ByUser",
     "file": "Data\\Dao_QuickButtons.cs",
     "line": 171,
-    "connection": "Model_AppVariables.ConnectionString",
+    "connection": "Model_Application_Variables.ConnectionString",
     "parameters": [
       [
         "User",
@@ -134,7 +134,7 @@
     "procedure": "sys_last_10_transactions_Delete_ByUserAndPosition_1",
     "file": "Data\\Dao_QuickButtons.cs",
     "line": 245,
-    "connection": "Model_AppVariables.ConnectionString",
+    "connection": "Model_Application_Variables.ConnectionString",
     "parameters": [
       [
         "User",
@@ -150,7 +150,7 @@
     "procedure": "sys_GetRoleIdByName",
     "file": "Data\\Dao_System.cs",
     "line": 205,
-    "connection": "Model_AppVariables.ConnectionString",
+    "connection": "Model_Application_Variables.ConnectionString",
     "parameters": [
       [
         "RoleName",
@@ -162,7 +162,7 @@
     "procedure": "inv_transactions_Search",
     "file": "Data\\Dao_Transactions.cs",
     "line": 80,
-    "connection": "Model_AppVariables.ConnectionString",
+    "connection": "Model_Application_Variables.ConnectionString",
     "parameters": [
       [
         "UserName",
@@ -238,7 +238,7 @@
     "procedure": "inv_transactions_Search",
     "file": "Data\\Dao_Transactions.cs",
     "line": 81,
-    "connection": "Model_AppVariables.ConnectionString",
+    "connection": "Model_Application_Variables.ConnectionString",
     "parameters": [
       [
         "UserName",
@@ -314,28 +314,28 @@
     "procedure": "usr_ui_settings_GetJsonSetting",
     "file": "Data\\Dao_User.cs",
     "line": 662,
-    "connection": "Model_AppVariables.ConnectionString",
+    "connection": "Model_Application_Variables.ConnectionString",
     "parameters": []
   },
   {
     "procedure": "usr_users_SetUserSetting_ByUserAndField",
     "file": "Data\\Dao_User.cs",
     "line": 699,
-    "connection": "Model_AppVariables.ConnectionString",
+    "connection": "Model_Application_Variables.ConnectionString",
     "parameters": []
   },
   {
     "procedure": "usr_ui_settings_Delete_ByUserId",
     "file": "Data\\Dao_User.cs",
     "line": 741,
-    "connection": "Model_AppVariables.ConnectionString",
+    "connection": "Model_Application_Variables.ConnectionString",
     "parameters": []
   },
   {
     "procedure": "usr_user_roles_GetRoleId_ByUserId",
     "file": "Data\\Dao_User.cs",
     "line": 1192,
-    "connection": "Model_AppVariables.ConnectionString",
+    "connection": "Model_Application_Variables.ConnectionString",
     "parameters": []
   }
 ]

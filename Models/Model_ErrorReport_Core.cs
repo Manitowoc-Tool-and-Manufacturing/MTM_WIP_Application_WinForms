@@ -6,7 +6,7 @@ namespace MTM_WIP_Application_WinForms.Models;
 /// Represents an error report submitted by a user with optional contextual notes.
 /// Maps to error_reports database table.
 /// </summary>
-public class Model_ErrorReport
+public class Model_ErrorReport_Core
 {
     #region Properties
 

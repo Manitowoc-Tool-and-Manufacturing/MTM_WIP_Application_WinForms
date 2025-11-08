@@ -3,7 +3,7 @@ namespace MTM_WIP_Application_Winforms.Models;
 /// <summary>
 /// Analytics summary for transaction data with calculated percentages.
 /// </summary>
-internal sealed class TransactionAnalytics
+internal sealed class Model_Transactions_Core_Analytics
 {
     #region Properties - Transaction Counts
 

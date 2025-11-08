@@ -30,7 +30,7 @@ internal static class Dao_ErrorReports
     /// </summary>
     /// <param name="report">The error report to insert. UserName is required.</param>
     /// <returns>
-    /// DaoResult containing the generated ReportID on success, or error information on failure.
+    /// Model_Dao_Result containing the generated ReportID on success, or error information on failure.
     /// </returns>
     /// <exception cref="ArgumentNullException">Thrown when report is null.</exception>
     /// <remarks>
@@ -43,7 +43,7 @@ internal static class Dao_ErrorReports
     /// The stored procedure uses transactions to ensure atomicity.
     /// On success, the ReportID is extracted from output parameters.
     /// </remarks>
-    public static async Task<DaoResult<int>> InsertReportAsync(Model_ErrorReport report,
+    public static async Task<Model_Dao_Result<int>> InsertReportAsync(Model_ErrorReport_Core report,
         MySqlConnection? connection = null,
         MySqlTransaction? transaction = null)
     {
@@ -95,7 +95,7 @@ internal static class Dao_ErrorReports
                     LoggingUtility.LogApplicationInfo(
                         $"[Dao_ErrorReports] Successfully inserted error report. ReportID: {reportID}, User: {report.UserName}");
 
-                    return DaoResult<int>.Success(
+                    return Model_Dao_Result<int>.Success(
                         reportID,
                         $"Error report submitted successfully. Report ID: {reportID}");
                 }
@@ -105,7 +105,7 @@ internal static class Dao_ErrorReports
                     LoggingUtility.Log(
                         "[Dao_ErrorReports] Warning: Error report inserted but ReportID not returned from stored procedure");
 
-                    return DaoResult<int>.Success(
+                    return Model_Dao_Result<int>.Success(
                         0,
                         "Error report submitted successfully.");
                 }
@@ -122,7 +122,7 @@ internal static class Dao_ErrorReports
                     LoggingUtility.Log($"[Dao_ErrorReports] Failed to insert error report: {result.StatusMessage}");
                 }
 
-                return DaoResult<int>.Failure(
+                return Model_Dao_Result<int>.Failure(
                     result.StatusMessage ?? "Failed to submit error report.");
             }
         }
@@ -130,7 +130,7 @@ internal static class Dao_ErrorReports
         {
             LoggingUtility.LogApplicationError(ex);
 
-            return DaoResult<int>.Failure(
+            return Model_Dao_Result<int>.Failure(
                 "An unexpected error occurred while submitting the error report.");
         }
     }
@@ -141,7 +141,7 @@ internal static class Dao_ErrorReports
     /// </summary>
     /// <param name="filter">Filter criteria; pass null to retrieve all error reports. All filter properties are optional.</param>
     /// <param name="progressHelper">Optional progress helper for long-running operations.</param>
-    /// <returns>A DaoResult containing a DataTable of error reports when successful. Never null, but may be empty.</returns>
+    /// <returns>A Model_Dao_Result containing a DataTable of error reports when successful. Never null, but may be empty.</returns>
     /// <remarks>
     /// The stored procedure sp_error_reports_GetAll performs server-side filtering for optimal performance.
     /// Search text filters across ErrorSummary, UserNotes, and TechnicalDetails fields using LIKE queries.
@@ -149,20 +149,20 @@ internal static class Dao_ErrorReports
     /// Results are ordered by ReportDate DESC (newest first).
     /// </remarks>
     /// <exception cref="InvalidOperationException">Thrown when filter validation fails (e.g., DateFrom > DateTo).</exception>
-    public static async Task<DaoResult<DataTable>> GetAllErrorReportsAsync(
-        Model_ErrorReportFilter? filter,
+    public static async Task<Model_Dao_Result<DataTable>> GetAllErrorReportsAsync(
+        Model_ErrorReport_Core_Filter? filter,
         Helper_StoredProcedureProgress? progressHelper = null,
         MySqlConnection? connection = null,
         MySqlTransaction? transaction = null)
     {
-        filter ??= new Model_ErrorReportFilter();
+        filter ??= new Model_ErrorReport_Core_Filter();
 
         if (!filter.TryValidate(out var validationMessage))
         {
             LoggingUtility.Log(
                 "[Dao_ErrorReports] Invalid filter supplied for GetAllErrorReportsAsync: " + validationMessage);
 
-            return DaoResult<DataTable>.Failure(
+            return Model_Dao_Result<DataTable>.Failure(
                 validationMessage ?? "Invalid filter values supplied for error report retrieval.");
         }
 
@@ -189,7 +189,7 @@ internal static class Dao_ErrorReports
                 LoggingUtility.Log(
                     "[Dao_ErrorReports] Stored procedure sp_error_reports_GetAll failed: " + errorMessage);
 
-                return DaoResult<DataTable>.Failure(errorMessage, storedProcedureResult.Exception);
+                return Model_Dao_Result<DataTable>.Failure(errorMessage, storedProcedureResult.Exception);
             }
 
             var rowCount = storedProcedureResult.Data?.Rows.Count ?? 0;
@@ -201,7 +201,7 @@ internal static class Dao_ErrorReports
         catch (Exception ex)
         {
             LoggingUtility.LogApplicationError(ex);
-            return DaoResult<DataTable>.Failure(
+            return Model_Dao_Result<DataTable>.Failure(
                 "An unexpected error occurred while retrieving error reports.",
                 ex);
         }
@@ -213,14 +213,14 @@ internal static class Dao_ErrorReports
     /// </summary>
     /// <param name="reportId">The report identifier to retrieve. Must be greater than zero.</param>
     /// <param name="progressHelper">Optional progress helper for UI updates.</param>
-    /// <returns>DaoResult containing the populated Model_ErrorReport on success, or error information if not found.</returns>
+    /// <returns>Model_Dao_Result containing the populated Model_ErrorReport_Core on success, or error information if not found.</returns>
     /// <remarks>
     /// This method retrieves all 14 fields from the error_reports table including large TEXT fields.
     /// The stored procedure includes validation for ReportID existence and returns appropriate status codes.
     /// NULL fields are safely converted to empty strings or null as appropriate per the model.
     /// </remarks>
     /// <exception cref="InvalidOperationException">Thrown when reportId is less than or equal to zero.</exception>
-    public static async Task<DaoResult<Model_ErrorReport>> GetErrorReportByIdAsync(
+    public static async Task<Model_Dao_Result<Model_ErrorReport_Core>> GetErrorReportByIdAsync(
         int reportId,
         Helper_StoredProcedureProgress? progressHelper = null,
         MySqlConnection? connection = null,
@@ -228,7 +228,7 @@ internal static class Dao_ErrorReports
     {
         if (reportId <= 0)
         {
-            return DaoResult<Model_ErrorReport>.Failure("Report ID must be greater than zero.");
+            return Model_Dao_Result<Model_ErrorReport_Core>.Failure("Report ID must be greater than zero.");
         }
 
         try
@@ -257,12 +257,12 @@ internal static class Dao_ErrorReports
                 LoggingUtility.Log(
                     $"[Dao_ErrorReports] Stored procedure sp_error_reports_GetByID failed for ReportID {reportId}: {errorMessage}");
 
-                return DaoResult<Model_ErrorReport>.Failure(errorMessage, storedProcedureResult.Exception);
+                return Model_Dao_Result<Model_ErrorReport_Core>.Failure(errorMessage, storedProcedureResult.Exception);
             }
 
             if (storedProcedureResult.Data == null || storedProcedureResult.Data.Rows.Count == 0)
             {
-                return DaoResult<Model_ErrorReport>.Failure(
+                return Model_Dao_Result<Model_ErrorReport_Core>.Failure(
                     $"Error report {reportId} was not found in the database.");
             }
 
@@ -271,7 +271,7 @@ internal static class Dao_ErrorReports
             LoggingUtility.LogApplicationInfo(
                 $"[Dao_ErrorReports] Retrieved detail for error report {reportId}.");
 
-            return DaoResult<Model_ErrorReport>.Success(
+            return Model_Dao_Result<Model_ErrorReport_Core>.Success(
                 report,
                 storedProcedureResult.StatusMessage ?? "Error report retrieved successfully",
                 1);
@@ -279,7 +279,7 @@ internal static class Dao_ErrorReports
         catch (Exception ex)
         {
             LoggingUtility.LogApplicationError(ex);
-            return DaoResult<Model_ErrorReport>.Failure(
+            return Model_Dao_Result<Model_ErrorReport_Core>.Failure(
                 "An unexpected error occurred while retrieving the error report.",
                 ex);
         }
@@ -295,7 +295,7 @@ internal static class Dao_ErrorReports
     /// <param name="developerNotes">Optional developer notes to store with the status change. Saved to DeveloperNotes field.</param>
     /// <param name="reviewedBy">Username of the developer performing the update. Required, cannot be empty.</param>
     /// <param name="progressHelper">Optional progress helper for UI feedback.</param>
-    /// <returns>DaoResult indicating success or failure of the update operation.</returns>
+    /// <returns>Model_Dao_Result indicating success or failure of the update operation.</returns>
     /// <remarks>
     /// The stored procedure validates:
     /// - ReportID exists
@@ -306,7 +306,7 @@ internal static class Dao_ErrorReports
     /// ReviewedDate is automatically set to NOW() by the stored procedure.
     /// </remarks>
     /// <exception cref="InvalidOperationException">Thrown when validation fails for reportId, newStatus, or reviewedBy.</exception>
-    public static async Task<DaoResult<bool>> UpdateErrorReportStatusAsync(
+    public static async Task<Model_Dao_Result<bool>> UpdateErrorReportStatusAsync(
         int reportId,
         string newStatus,
         string? developerNotes,
@@ -317,17 +317,17 @@ internal static class Dao_ErrorReports
     {
         if (reportId <= 0)
         {
-            return DaoResult<bool>.Failure("Report ID must be greater than zero.");
+            return Model_Dao_Result<bool>.Failure("Report ID must be greater than zero.");
         }
 
         if (string.IsNullOrWhiteSpace(newStatus))
         {
-            return DaoResult<bool>.Failure("Status is required when updating an error report.");
+            return Model_Dao_Result<bool>.Failure("Status is required when updating an error report.");
         }
 
         if (string.IsNullOrWhiteSpace(reviewedBy))
         {
-            return DaoResult<bool>.Failure("ReviewedBy is required when updating an error report.");
+            return Model_Dao_Result<bool>.Failure("ReviewedBy is required when updating an error report.");
         }
 
         try
@@ -362,18 +362,18 @@ internal static class Dao_ErrorReports
                 LoggingUtility.Log(
                     $"[Dao_ErrorReports] Stored procedure sp_error_reports_UpdateStatus failed for ReportID {reportId}: {errorMessage}");
 
-                return DaoResult<bool>.Failure(errorMessage, storedProcedureResult.Exception);
+                return Model_Dao_Result<bool>.Failure(errorMessage, storedProcedureResult.Exception);
             }
 
             LoggingUtility.LogApplicationInfo(
                 $"[Dao_ErrorReports] Updated report {reportId} to status '{newStatus.Trim()}' by {reviewedBy.Trim()}.");
 
-            return DaoResult<bool>.Success(true, storedProcedureResult.StatusMessage ?? "Status updated successfully");
+            return Model_Dao_Result<bool>.Success(true, storedProcedureResult.StatusMessage ?? "Status updated successfully");
         }
         catch (Exception ex)
         {
             LoggingUtility.LogApplicationError(ex);
-            return DaoResult<bool>.Failure(
+            return Model_Dao_Result<bool>.Failure(
                 "An unexpected error occurred while updating the error report status.",
                 ex);
         }
@@ -383,13 +383,13 @@ internal static class Dao_ErrorReports
     /// Retrieves the distinct list of usernames from error reports using sp_error_reports_GetUserList.
     /// Returns alphabetically sorted list for populating filter dropdowns.
     /// </summary>
-    /// <returns>DaoResult containing the user list. Empty list if no reports exist.</returns>
+    /// <returns>Model_Dao_Result containing the user list. Empty list if no reports exist.</returns>
     /// <remarks>
     /// Uses DISTINCT to eliminate duplicates and ORDER BY UserName for alphabetical sorting.
     /// This method is typically called once when initializing filter controls.
     /// The calling code should prepend UI options like "[ All Users ]".
     /// </remarks>
-    public static async Task<DaoResult<List<string>>> GetUserListAsync(
+    public static async Task<Model_Dao_Result<List<string>>> GetUserListAsync(
         MySqlConnection? connection = null,
         MySqlTransaction? transaction = null)
     {
@@ -412,12 +412,12 @@ internal static class Dao_ErrorReports
                 LoggingUtility.Log(
                     "[Dao_ErrorReports] Stored procedure sp_error_reports_GetUserList failed: " + errorMessage);
 
-                return DaoResult<List<string>>.Failure(errorMessage, storedProcedureResult.Exception);
+                return Model_Dao_Result<List<string>>.Failure(errorMessage, storedProcedureResult.Exception);
             }
 
             var users = ExtractStringColumn(storedProcedureResult.Data, "UserName");
 
-            return DaoResult<List<string>>.Success(
+            return Model_Dao_Result<List<string>>.Success(
                 users,
                 storedProcedureResult.StatusMessage ?? "Retrieved user list successfully",
                 users.Count);
@@ -425,7 +425,7 @@ internal static class Dao_ErrorReports
         catch (Exception ex)
         {
             LoggingUtility.LogApplicationError(ex);
-            return DaoResult<List<string>>.Failure(
+            return Model_Dao_Result<List<string>>.Failure(
                 "An unexpected error occurred while retrieving the user list.",
                 ex);
         }
@@ -435,14 +435,14 @@ internal static class Dao_ErrorReports
     /// Retrieves the distinct list of machine names from error reports using sp_error_reports_GetMachineList.
     /// Returns alphabetically sorted list excluding NULL/empty values for populating filter dropdowns.
     /// </summary>
-    /// <returns>DaoResult containing the machine list. Empty list if no reports exist with machine names.</returns>
+    /// <returns>Model_Dao_Result containing the machine list. Empty list if no reports exist with machine names.</returns>
     /// <remarks>
     /// Uses DISTINCT with WHERE MachineName IS NOT NULL AND MachineName != '' to filter blanks.
     /// Results are sorted alphabetically by MachineName.
     /// This method is typically called once when initializing filter controls.
     /// The calling code should prepend UI options like "[ All Machines ]".
     /// </remarks>
-    public static async Task<DaoResult<List<string>>> GetMachineListAsync(
+    public static async Task<Model_Dao_Result<List<string>>> GetMachineListAsync(
         MySqlConnection? connection = null,
         MySqlTransaction? transaction = null)
     {
@@ -465,12 +465,12 @@ internal static class Dao_ErrorReports
                 LoggingUtility.Log(
                     "[Dao_ErrorReports] Stored procedure sp_error_reports_GetMachineList failed: " + errorMessage);
 
-                return DaoResult<List<string>>.Failure(errorMessage, storedProcedureResult.Exception);
+                return Model_Dao_Result<List<string>>.Failure(errorMessage, storedProcedureResult.Exception);
             }
 
             var machines = ExtractStringColumn(storedProcedureResult.Data, "MachineName");
 
-            return DaoResult<List<string>>.Success(
+            return Model_Dao_Result<List<string>>.Success(
                 machines,
                 storedProcedureResult.StatusMessage ?? "Retrieved machine list successfully",
                 machines.Count);
@@ -478,7 +478,7 @@ internal static class Dao_ErrorReports
         catch (Exception ex)
         {
             LoggingUtility.LogApplicationError(ex);
-            return DaoResult<List<string>>.Failure(
+            return Model_Dao_Result<List<string>>.Failure(
                 "An unexpected error occurred while retrieving the machine list.",
                 ex);
         }
@@ -488,7 +488,7 @@ internal static class Dao_ErrorReports
 
     #region Helpers
 
-    private static Dictionary<string, object> BuildFilterParameters(Model_ErrorReportFilter filter)
+    private static Dictionary<string, object> BuildFilterParameters(Model_ErrorReport_Core_Filter filter)
     {
         return new Dictionary<string, object>
         {
@@ -501,11 +501,11 @@ internal static class Dao_ErrorReports
         };
     }
 
-    private static Model_ErrorReport MapToErrorReport(DataRow row)
+    private static Model_ErrorReport_Core MapToErrorReport(DataRow row)
     {
         ArgumentNullException.ThrowIfNull(row);
 
-        return new Model_ErrorReport
+        return new Model_ErrorReport_Core
         {
             ReportID = row.Field<int>("ReportID"),
             ReportDate = row.Field<DateTime>("ReportDate"),

@@ -2,7 +2,7 @@
 
 namespace MTM_WIP_Application_Winforms.Models;
 
-internal class Model_HistoryTransfer
+internal class Model_History_Transfer
 {
     #region Properties
 

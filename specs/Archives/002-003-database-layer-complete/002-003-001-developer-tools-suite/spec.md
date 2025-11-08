@@ -208,7 +208,7 @@ A developer needs to quickly scaffold a new DAO method for a newly created store
 - **FR-007.2**: Code Generator MUST load stored procedure list from INFORMATION_SCHEMA.ROUTINES
 - **FR-007.3**: Code Generator MUST query INFORMATION_SCHEMA.PARAMETERS for selected procedure
 - **FR-007.4**: Code Generator MUST generate C# DAO method code following MTM patterns:
-  - Async Task<DaoResult> or Task<DaoResult<T>> return type
+  - Async Task<Model_Dao_Result> or Task<Model_Dao_Result<T>> return type
   - Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync call
   - Dictionary<string, object> parameter construction (without p_ prefix)
   - XML documentation comments
@@ -282,7 +282,7 @@ private static Dictionary<string, Dictionary<string, string>>? _parameterPrefixO
 public static async Task LoadParameterPrefixOverridesAsync()
 {
     var result = await ExecuteDataTableWithStatusAsync(
-        Model_AppVariables.ConnectionString,
+        Model_Application_Variables.ConnectionString,
         "sys_parameter_prefix_overrides_Get_All",
         null);
     

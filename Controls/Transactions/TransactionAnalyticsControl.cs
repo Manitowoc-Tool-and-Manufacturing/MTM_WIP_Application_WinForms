@@ -8,11 +8,11 @@ namespace MTM_WIP_Application_Winforms.Controls.Transactions
     /// UserControl for displaying transaction analytics with summary cards.
     /// Shows total transactions, IN/OUT/TRANSFER counts and percentages.
     /// </summary>
-    public partial class TransactionAnalyticsControl : UserControl
+    public partial class Model_Transactions_Core_AnalyticsControl : UserControl
     {
         #region Fields
 
-        private TransactionAnalytics? _analytics;
+        private Model_Transactions_Core_Analytics? _analytics;
 
         #endregion
 
@@ -21,7 +21,7 @@ namespace MTM_WIP_Application_Winforms.Controls.Transactions
         /// <summary>
         /// Gets or sets the analytics data to display.
         /// </summary>
-        internal TransactionAnalytics? Analytics
+        internal Model_Transactions_Core_Analytics? Analytics
         {
             get => _analytics;
             set
@@ -36,19 +36,19 @@ namespace MTM_WIP_Application_Winforms.Controls.Transactions
         #region Constructors
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="TransactionAnalyticsControl"/> class.
+        /// Initializes a new instance of the <see cref="Model_Transactions_Core_AnalyticsControl"/> class.
         /// </summary>
-        public TransactionAnalyticsControl()
+        public Model_Transactions_Core_AnalyticsControl()
         {
             InitializeComponent();
 
-            LoggingUtility.Log("[TransactionAnalyticsControl] Initializing...");
+            LoggingUtility.Log("[Model_Transactions_Core_AnalyticsControl] Initializing...");
 
             // MANDATORY: Constitution Principle IX - Theme System Integration
             Core_Themes.ApplyDpiScaling(this);
             Core_Themes.ApplyRuntimeLayoutAdjustments(this);
 
-            LoggingUtility.Log("[TransactionAnalyticsControl] Initialization complete.");
+            LoggingUtility.Log("[Model_Transactions_Core_AnalyticsControl] Initialization complete.");
         }
 
         #endregion
@@ -68,28 +68,28 @@ namespace MTM_WIP_Application_Winforms.Controls.Transactions
 
             try
             {
-                LoggingUtility.Log($"[TransactionAnalyticsControl] Displaying analytics: Total={_analytics.TotalTransactions}");
+                LoggingUtility.Log($"[Model_Transactions_Core_AnalyticsControl] Displaying analytics: Total={_analytics.TotalTransactions}");
 
                 // Total count card
-                TransactionAnalyticsControl_Label_TotalValue.Text = _analytics.TotalTransactions.ToString("N0");
+                Model_Transactions_Core_AnalyticsControl_Label_TotalValue.Text = _analytics.TotalTransactions.ToString("N0");
 
                 // IN transactions card
-                TransactionAnalyticsControl_Label_InValue.Text = _analytics.TotalIN.ToString("N0");
-                TransactionAnalyticsControl_Label_InPercentage.Text =
+                Model_Transactions_Core_AnalyticsControl_Label_InValue.Text = _analytics.TotalIN.ToString("N0");
+                Model_Transactions_Core_AnalyticsControl_Label_InPercentage.Text =
                     _analytics.TotalTransactions > 0
                         ? string.Format("({0:0.0}%)", _analytics.PercentageIN)
                         : "(0.0%)";
 
                 // OUT transactions card
-                TransactionAnalyticsControl_Label_OutValue.Text = _analytics.TotalOUT.ToString("N0");
-                TransactionAnalyticsControl_Label_OutPercentage.Text =
+                Model_Transactions_Core_AnalyticsControl_Label_OutValue.Text = _analytics.TotalOUT.ToString("N0");
+                Model_Transactions_Core_AnalyticsControl_Label_OutPercentage.Text =
                     _analytics.TotalTransactions > 0
                         ? string.Format("({0:0.0}%)", _analytics.PercentageOUT)
                         : "(0.0%)";
 
                 // TRANSFER transactions card
-                TransactionAnalyticsControl_Label_TransferValue.Text = _analytics.TotalTRANSFER.ToString("N0");
-                TransactionAnalyticsControl_Label_TransferPercentage.Text =
+                Model_Transactions_Core_AnalyticsControl_Label_TransferValue.Text = _analytics.TotalTRANSFER.ToString("N0");
+                Model_Transactions_Core_AnalyticsControl_Label_TransferPercentage.Text =
                     _analytics.TotalTransactions > 0
                         ? string.Format("({0:0.0}%)", _analytics.PercentageTRANSFER)
                         : "(0.0%)";
@@ -97,93 +97,93 @@ namespace MTM_WIP_Application_Winforms.Controls.Transactions
                 // Database Lifespan card
                 if (_analytics.DatabaseDaySpan > 0)
                 {
-                    TransactionAnalyticsControl_Label_DatabaseLifespanValue.Text =
+                    Model_Transactions_Core_AnalyticsControl_Label_DatabaseLifespanValue.Text =
                         $"{_analytics.DatabaseDaySpan:N0} {(_analytics.DatabaseDaySpan == 1 ? "day" : "days")}";
-                    TransactionAnalyticsControl_Label_AvgDaily.Text =
+                    Model_Transactions_Core_AnalyticsControl_Label_AvgDaily.Text =
                         $"Avg. Daily: {_analytics.AverageDailyTransactions:F1}";
                 }
                 else
                 {
-                    TransactionAnalyticsControl_Label_DatabaseLifespanValue.Text = "—";
-                    TransactionAnalyticsControl_Label_AvgDaily.Text = "Avg. Daily: —";
+                    Model_Transactions_Core_AnalyticsControl_Label_DatabaseLifespanValue.Text = "—";
+                    Model_Transactions_Core_AnalyticsControl_Label_AvgDaily.Text = "Avg. Daily: —";
                 }
 
                 // Most Active User card
                 if (!string.IsNullOrWhiteSpace(_analytics.MostActiveUser.UserName))
                 {
-                    TransactionAnalyticsControl_Label_TopUserName.Text = _analytics.MostActiveUser.UserName;
-                    TransactionAnalyticsControl_Label_TopUserCount.Text =
+                    Model_Transactions_Core_AnalyticsControl_Label_TopUserName.Text = _analytics.MostActiveUser.UserName;
+                    Model_Transactions_Core_AnalyticsControl_Label_TopUserCount.Text =
                         $"{_analytics.MostActiveUser.TransactionCount:N0} {(_analytics.MostActiveUser.TransactionCount == 1 ? "transaction" : "transactions")}";
                 }
                 else
                 {
-                    TransactionAnalyticsControl_Label_TopUserName.Text = "—";
-                    TransactionAnalyticsControl_Label_TopUserCount.Text = "0 transactions";
+                    Model_Transactions_Core_AnalyticsControl_Label_TopUserName.Text = "—";
+                    Model_Transactions_Core_AnalyticsControl_Label_TopUserCount.Text = "0 transactions";
                 }
 
                 // Most Transacted Part card
                 if (!string.IsNullOrWhiteSpace(_analytics.MostTransactedPart.PartID))
                 {
-                    TransactionAnalyticsControl_Label_TopPartID.Text = _analytics.MostTransactedPart.PartID;
-                    TransactionAnalyticsControl_Label_TopPartCount.Text =
+                    Model_Transactions_Core_AnalyticsControl_Label_TopPartID.Text = _analytics.MostTransactedPart.PartID;
+                    Model_Transactions_Core_AnalyticsControl_Label_TopPartCount.Text =
                         $"{_analytics.MostTransactedPart.TransactionCount:N0} {(_analytics.MostTransactedPart.TransactionCount == 1 ? "transaction" : "transactions")}";
                 }
                 else
                 {
-                    TransactionAnalyticsControl_Label_TopPartID.Text = "—";
-                    TransactionAnalyticsControl_Label_TopPartCount.Text = "0 transactions";
+                    Model_Transactions_Core_AnalyticsControl_Label_TopPartID.Text = "—";
+                    Model_Transactions_Core_AnalyticsControl_Label_TopPartCount.Text = "0 transactions";
                 }
 
                 // Busiest Location card
                 if (!string.IsNullOrWhiteSpace(_analytics.BusiestLocation.LocationName))
                 {
-                    TransactionAnalyticsControl_Label_BusiestLocationName.Text = _analytics.BusiestLocation.LocationName;
-                    TransactionAnalyticsControl_Label_BusiestLocationCount.Text =
+                    Model_Transactions_Core_AnalyticsControl_Label_BusiestLocationName.Text = _analytics.BusiestLocation.LocationName;
+                    Model_Transactions_Core_AnalyticsControl_Label_BusiestLocationCount.Text =
                         $"{_analytics.BusiestLocation.TransactionCount:N0} {(_analytics.BusiestLocation.TransactionCount == 1 ? "transaction" : "transactions")}";
                 }
                 else
                 {
-                    TransactionAnalyticsControl_Label_BusiestLocationName.Text = "—";
-                    TransactionAnalyticsControl_Label_BusiestLocationCount.Text = "0 transactions";
+                    Model_Transactions_Core_AnalyticsControl_Label_BusiestLocationName.Text = "—";
+                    Model_Transactions_Core_AnalyticsControl_Label_BusiestLocationCount.Text = "0 transactions";
                 }
 
                 // Most Transferred Part card (Row 3 - Card 1)
                 if (!string.IsNullOrWhiteSpace(_analytics.MostTransferredPart.PartID))
                 {
-                    TransactionAnalyticsControl_Label_MostTransferredPartID.Text = _analytics.MostTransferredPart.PartID;
-                    TransactionAnalyticsControl_Label_MostTransferredPartCount.Text =
+                    Model_Transactions_Core_AnalyticsControl_Label_MostTransferredPartID.Text = _analytics.MostTransferredPart.PartID;
+                    Model_Transactions_Core_AnalyticsControl_Label_MostTransferredPartCount.Text =
                         $"{_analytics.MostTransferredPart.TransferCount:N0} {(_analytics.MostTransferredPart.TransferCount == 1 ? "transfer" : "transfers")}";
                 }
                 else
                 {
-                    TransactionAnalyticsControl_Label_MostTransferredPartID.Text = "—";
-                    TransactionAnalyticsControl_Label_MostTransferredPartCount.Text = "0 transfers";
+                    Model_Transactions_Core_AnalyticsControl_Label_MostTransferredPartID.Text = "—";
+                    Model_Transactions_Core_AnalyticsControl_Label_MostTransferredPartCount.Text = "0 transfers";
                 }
 
                 // Transaction Rate card (Row 3 - Card 2)
                 if (_analytics.TransactionRate > 0)
                 {
-                    TransactionAnalyticsControl_Label_TransactionRateValue.Text = $"{_analytics.TransactionRate:F1} /day";
-                    TransactionAnalyticsControl_Label_TransactionRateTrend.Text =
+                    Model_Transactions_Core_AnalyticsControl_Label_TransactionRateValue.Text = $"{_analytics.TransactionRate:F1} /day";
+                    Model_Transactions_Core_AnalyticsControl_Label_TransactionRateTrend.Text =
                         _analytics.TransactionRateTrend ?? "➡️ Stable";
                 }
                 else
                 {
-                    TransactionAnalyticsControl_Label_TransactionRateValue.Text = "—";
-                    TransactionAnalyticsControl_Label_TransactionRateTrend.Text = "";
+                    Model_Transactions_Core_AnalyticsControl_Label_TransactionRateValue.Text = "—";
+                    Model_Transactions_Core_AnalyticsControl_Label_TransactionRateTrend.Text = "";
                 }
 
                 // Busiest Day card (Row 3 - Card 3)
                 if (!string.IsNullOrWhiteSpace(_analytics.BusiestDay.DayName))
                 {
-                    TransactionAnalyticsControl_Label_BusiestDayValue.Text = _analytics.BusiestDay.DayName;
-                    TransactionAnalyticsControl_Label_BusiestDayCount.Text =
+                    Model_Transactions_Core_AnalyticsControl_Label_BusiestDayValue.Text = _analytics.BusiestDay.DayName;
+                    Model_Transactions_Core_AnalyticsControl_Label_BusiestDayCount.Text =
                         $"{_analytics.BusiestDay.TransactionCount:N0} {(_analytics.BusiestDay.TransactionCount == 1 ? "transaction" : "transactions")}";
                 }
                 else
                 {
-                    TransactionAnalyticsControl_Label_BusiestDayValue.Text = "—";
-                    TransactionAnalyticsControl_Label_BusiestDayCount.Text = "0 transactions";
+                    Model_Transactions_Core_AnalyticsControl_Label_BusiestDayValue.Text = "—";
+                    Model_Transactions_Core_AnalyticsControl_Label_BusiestDayCount.Text = "0 transactions";
                 }
 
                 // Peak Hour card (Row 3 - Card 4)
@@ -193,23 +193,23 @@ namespace MTM_WIP_Application_Winforms.Controls.Transactions
                     int hour = _analytics.PeakHour.Hour;
                     string amPm = hour >= 12 ? "PM" : "AM";
                     int displayHour = hour == 0 ? 12 : (hour > 12 ? hour - 12 : hour);
-                    TransactionAnalyticsControl_Label_PeakHourValue.Text = $"{displayHour}:00 {amPm}";
-                    TransactionAnalyticsControl_Label_PeakHourCount.Text =
+                    Model_Transactions_Core_AnalyticsControl_Label_PeakHourValue.Text = $"{displayHour}:00 {amPm}";
+                    Model_Transactions_Core_AnalyticsControl_Label_PeakHourCount.Text =
                         $"{_analytics.PeakHour.TransactionCount:N0} {(_analytics.PeakHour.TransactionCount == 1 ? "transaction" : "transactions")}";
                 }
                 else
                 {
-                    TransactionAnalyticsControl_Label_PeakHourValue.Text = "—";
-                    TransactionAnalyticsControl_Label_PeakHourCount.Text = "0 transactions";
+                    Model_Transactions_Core_AnalyticsControl_Label_PeakHourValue.Text = "—";
+                    Model_Transactions_Core_AnalyticsControl_Label_PeakHourCount.Text = "0 transactions";
                 }
 
-                LoggingUtility.Log("[TransactionAnalyticsControl] Analytics displayed successfully.");
+                LoggingUtility.Log("[Model_Transactions_Core_AnalyticsControl] Analytics displayed successfully.");
             }
             catch (Exception ex)
             {
                 LoggingUtility.LogApplicationError(ex);
-                Services.Service_ErrorHandler.HandleException(ex, Models.ErrorSeverity.Low,
-                    controlName: nameof(TransactionAnalyticsControl));
+                Services.Service_ErrorHandler.HandleException(ex, Models.Enum_ErrorSeverity.Low,
+                    controlName: nameof(Model_Transactions_Core_AnalyticsControl));
             }
         }
 
@@ -220,46 +220,46 @@ namespace MTM_WIP_Application_Winforms.Controls.Transactions
         {
             try
             {
-                LoggingUtility.Log("[TransactionAnalyticsControl] Clearing analytics.");
+                LoggingUtility.Log("[Model_Transactions_Core_AnalyticsControl] Clearing analytics.");
 
                 _analytics = null;
 
                 // Row 1: Transaction Type Breakdown
-                TransactionAnalyticsControl_Label_TotalValue.Text = "—";
-                TransactionAnalyticsControl_Label_InValue.Text = "—";
-                TransactionAnalyticsControl_Label_InPercentage.Text = "";
-                TransactionAnalyticsControl_Label_OutValue.Text = "—";
-                TransactionAnalyticsControl_Label_OutPercentage.Text = "";
-                TransactionAnalyticsControl_Label_TransferValue.Text = "—";
-                TransactionAnalyticsControl_Label_TransferPercentage.Text = "";
+                Model_Transactions_Core_AnalyticsControl_Label_TotalValue.Text = "—";
+                Model_Transactions_Core_AnalyticsControl_Label_InValue.Text = "—";
+                Model_Transactions_Core_AnalyticsControl_Label_InPercentage.Text = "";
+                Model_Transactions_Core_AnalyticsControl_Label_OutValue.Text = "—";
+                Model_Transactions_Core_AnalyticsControl_Label_OutPercentage.Text = "";
+                Model_Transactions_Core_AnalyticsControl_Label_TransferValue.Text = "—";
+                Model_Transactions_Core_AnalyticsControl_Label_TransferPercentage.Text = "";
 
                 // Row 2: Database Insights
-                TransactionAnalyticsControl_Label_DatabaseLifespanValue.Text = "—";
-                TransactionAnalyticsControl_Label_AvgDaily.Text = "Avg. Daily: —";
-                TransactionAnalyticsControl_Label_TopUserName.Text = "—";
-                TransactionAnalyticsControl_Label_TopUserCount.Text = "0 transactions";
-                TransactionAnalyticsControl_Label_TopPartID.Text = "—";
-                TransactionAnalyticsControl_Label_TopPartCount.Text = "0 transactions";
-                TransactionAnalyticsControl_Label_BusiestLocationName.Text = "—";
-                TransactionAnalyticsControl_Label_BusiestLocationCount.Text = "0 transactions";
+                Model_Transactions_Core_AnalyticsControl_Label_DatabaseLifespanValue.Text = "—";
+                Model_Transactions_Core_AnalyticsControl_Label_AvgDaily.Text = "Avg. Daily: —";
+                Model_Transactions_Core_AnalyticsControl_Label_TopUserName.Text = "—";
+                Model_Transactions_Core_AnalyticsControl_Label_TopUserCount.Text = "0 transactions";
+                Model_Transactions_Core_AnalyticsControl_Label_TopPartID.Text = "—";
+                Model_Transactions_Core_AnalyticsControl_Label_TopPartCount.Text = "0 transactions";
+                Model_Transactions_Core_AnalyticsControl_Label_BusiestLocationName.Text = "—";
+                Model_Transactions_Core_AnalyticsControl_Label_BusiestLocationCount.Text = "0 transactions";
 
                 // Row 3: Advanced Metrics
-                TransactionAnalyticsControl_Label_MostTransferredPartID.Text = "—";
-                TransactionAnalyticsControl_Label_MostTransferredPartCount.Text = "0 transfers";
-                TransactionAnalyticsControl_Label_TransactionRateValue.Text = "—";
-                TransactionAnalyticsControl_Label_TransactionRateTrend.Text = "";
-                TransactionAnalyticsControl_Label_BusiestDayValue.Text = "—";
-                TransactionAnalyticsControl_Label_BusiestDayCount.Text = "0 transactions";
-                TransactionAnalyticsControl_Label_PeakHourValue.Text = "—";
-                TransactionAnalyticsControl_Label_PeakHourCount.Text = "0 transactions";
+                Model_Transactions_Core_AnalyticsControl_Label_MostTransferredPartID.Text = "—";
+                Model_Transactions_Core_AnalyticsControl_Label_MostTransferredPartCount.Text = "0 transfers";
+                Model_Transactions_Core_AnalyticsControl_Label_TransactionRateValue.Text = "—";
+                Model_Transactions_Core_AnalyticsControl_Label_TransactionRateTrend.Text = "";
+                Model_Transactions_Core_AnalyticsControl_Label_BusiestDayValue.Text = "—";
+                Model_Transactions_Core_AnalyticsControl_Label_BusiestDayCount.Text = "0 transactions";
+                Model_Transactions_Core_AnalyticsControl_Label_PeakHourValue.Text = "—";
+                Model_Transactions_Core_AnalyticsControl_Label_PeakHourCount.Text = "0 transactions";
 
-                LoggingUtility.Log("[TransactionAnalyticsControl] Analytics cleared.");
+                LoggingUtility.Log("[Model_Transactions_Core_AnalyticsControl] Analytics cleared.");
             }
             catch (Exception ex)
             {
                 LoggingUtility.LogApplicationError(ex);
-                Services.Service_ErrorHandler.HandleException(ex, Models.ErrorSeverity.Low,
-                    controlName: nameof(TransactionAnalyticsControl));
+                Services.Service_ErrorHandler.HandleException(ex, Models.Enum_ErrorSeverity.Low,
+                    controlName: nameof(Model_Transactions_Core_AnalyticsControl));
             }
         }
 

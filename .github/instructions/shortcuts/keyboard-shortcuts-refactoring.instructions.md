@@ -191,7 +191,7 @@ Add to `Data/Dao_User.cs`:
 /// <summary>
 /// Gets user's customized shortcuts.
 /// </summary>
-public static async Task<DaoResult<DataTable>> GetUserShortcutsAsync(string userId)
+public static async Task<Model_Dao_Result<DataTable>> GetUserShortcutsAsync(string userId)
 {
     string connectionString = Helper_Database_Variables.GetConnectionString();
     
@@ -207,7 +207,7 @@ public static async Task<DaoResult<DataTable>> GetUserShortcutsAsync(string user
         useAsync: true
     );
 
-    return new DaoResult<DataTable>
+    return new Model_Dao_Result<DataTable>
     {
         IsSuccess = result.IsSuccess,
         Data = result.Payload,
@@ -218,7 +218,7 @@ public static async Task<DaoResult<DataTable>> GetUserShortcutsAsync(string user
 /// <summary>
 /// Saves user's customized shortcut.
 /// </summary>
-public static async Task<DaoResult> SaveUserShortcutAsync(string userId, string actionId, string shortcutKeys)
+public static async Task<Model_Dao_Result> SaveUserShortcutAsync(string userId, string actionId, string shortcutKeys)
 {
     string connectionString = Helper_Database_Variables.GetConnectionString();
     
@@ -236,7 +236,7 @@ public static async Task<DaoResult> SaveUserShortcutAsync(string userId, string 
         useAsync: true
     );
 
-    return new DaoResult
+    return new Model_Dao_Result
     {
         IsSuccess = result.IsSuccess,
         ErrorMessage = result.StatusMessage
@@ -246,7 +246,7 @@ public static async Task<DaoResult> SaveUserShortcutAsync(string userId, string 
 /// <summary>
 /// Deletes user's customized shortcut (resets to default).
 /// </summary>
-public static async Task<DaoResult> DeleteUserShortcutAsync(string userId, string actionId)
+public static async Task<Model_Dao_Result> DeleteUserShortcutAsync(string userId, string actionId)
 {
     string connectionString = Helper_Database_Variables.GetConnectionString();
     
@@ -263,7 +263,7 @@ public static async Task<DaoResult> DeleteUserShortcutAsync(string userId, strin
         useAsync: true
     );
 
-    return new DaoResult
+    return new Model_Dao_Result
     {
         IsSuccess = result.IsSuccess,
         ErrorMessage = result.StatusMessage
@@ -284,7 +284,7 @@ Create `Services/Service_ShortcutManager.cs` with full implementation from `keyb
 ```csharp
 // In Program.cs, after user login
 var shortcutManager = Service_ShortcutManager.Instance;
-await shortcutManager.LoadUserShortcutsAsync(Model_AppVariables.User);
+await shortcutManager.LoadUserShortcutsAsync(Model_Application_Variables.User);
 ```
 
 ### **Step 2.3: Keep Helper_UI_Shortcuts**

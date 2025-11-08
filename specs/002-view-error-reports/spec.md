@@ -123,7 +123,7 @@ Developers can export multiple error reports to CSV or Excel for analysis in ext
   - Source: Populated from error_reports table via Dao_ErrorReports.GetAllErrorReports()
 
 - **ErrorReportDetailView**: Represents complete report displayed in detail panel/dialog
-  - Attributes: All fields from Model_ErrorReport including full Summary, UserNotes, TechnicalDetails, CallStack
+  - Attributes: All fields from Model_ErrorReport_Core including full Summary, UserNotes, TechnicalDetails, CallStack
   - Actions: CopyToClipboard, ExportToFile, UpdateStatus
 
 ---

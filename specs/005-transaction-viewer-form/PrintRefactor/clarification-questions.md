@@ -225,7 +225,7 @@ Please review each question below and select/provide your answer. After completi
 - **C)** Always reset to defaults
 - **D)** Remember only printer selection, reset everything else
 
-**Technical Impact**: Determines if we need Model_PrintSettings persistence to file/database.
+**Technical Impact**: Determines if we need Model_Print_CoreSettings persistence to file/database.
 
 **Your Answer**: Remember Printer, Column Order and Selection (per-grid), reset everything else
 
@@ -293,7 +293,7 @@ Please review each question below and select/provide your answer. After completi
 
 **Category**: User Interface
 
-**Question**: Should the print dialog match the MTM app's theme system (Model_UserUiColors)?
+**Question**: Should the print dialog match the MTM app's theme system (Model_Shared_UserUiColors)?
 
 **In MTM App**:
 - **A)** Yes - integrate with existing theme system (Phase 5)

@@ -219,7 +219,7 @@ var inventoryResult = await Dao_Inventory.AddInventoryItemAsync(
     op,
     qty,
     "",
-    Model_AppVariables.User,
+    Model_Application_Variables.User,
     "",       // Empty batch number (procedure generates)
     notes,
     true);

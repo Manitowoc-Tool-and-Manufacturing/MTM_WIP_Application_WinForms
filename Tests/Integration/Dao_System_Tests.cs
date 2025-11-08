@@ -28,7 +28,7 @@ namespace MTM_WIP_Application_Winforms.Tests.Integration
 
             // Assert
             AssertSuccessWithData(result);
-            Assert.IsInstanceOfType(result.Data, typeof(System.Collections.Generic.List<Model_Users>));
+            Assert.IsInstanceOfType(result.Data, typeof(System.Collections.Generic.List<Model_Shared_Users>));
             Assert.IsTrue(result.Data!.Count > 0, "Expected at least one user in the system");
         }
 
@@ -270,19 +270,19 @@ namespace MTM_WIP_Application_Winforms.Tests.Integration
 
         #endregion
 
-        #region DaoResult Pattern Validation Tests
+        #region Model_Dao_Result Pattern Validation Tests
 
         /// <summary>
-        /// Tests that System_UserAccessTypeAsync returns proper DaoResult structure.
+        /// Tests that System_UserAccessTypeAsync returns proper Model_Dao_Result structure.
         /// </summary>
         [TestMethod]
-        public async Task System_UserAccessTypeAsync_ReturnsDaoResultWithProperties()
+        public async Task System_UserAccessTypeAsync_ReturnsModel_Dao_ResultWithProperties()
         {
             // Act
             var result = await Dao_System.System_UserAccessTypeAsync();
 
             // Assert
-            Assert.IsNotNull(result, "DaoResult should not be null");
+            Assert.IsNotNull(result, "Model_Dao_Result should not be null");
             Assert.IsTrue(result.IsSuccess || !result.IsSuccess, "IsSuccess property should exist");
             Assert.IsNotNull(result.StatusMessage, "StatusMessage should not be null");
             // Data can be null on failure, but for this test it should succeed

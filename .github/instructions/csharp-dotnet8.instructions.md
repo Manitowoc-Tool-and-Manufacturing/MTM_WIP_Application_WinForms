@@ -53,7 +53,7 @@ These guidelines describe how to structure and implement C# code within the MTM 
 - Avoid blocking the UI thread. Use background workers, `Task.Run`, or asynchronous DAO calls and marshal back to the UI thread with `BeginInvoke`/`Invoke`/`SynchronizationContext.Post` when updating controls.
 - Respect designer-generated code. Do not hand-edit `.Designer.cs` files; move logic into partial class files or helpers.
 - Centralize shared UI logic in `Controls/Shared` or helper classes rather than duplicating across forms.
-- Use `Model_AppVariables`, `Service_DebugTracer`, and logging helpers for shared application state and diagnostics instead of global statics scattered throughout the codebase.
+- Use `Model_Application_Variables`, `Service_DebugTracer`, and logging helpers for shared application state and diagnostics instead of global statics scattered throughout the codebase.
 - **Layout**: Use TableLayoutPanel with mixed Absolute/Percent sizing for responsive designs (see winforms-responsive-layout.instructions.md)
 - **Spacing**: Add Padding (10px) to containers, Margin (5px) to controls for professional appearance
 - **Constraints**: Set MinimumSize on DataGridView and main content areas to prevent unusable collapse
@@ -87,11 +87,11 @@ public MyForm()
 
 ### Theme Color Integration
 
-Use `Model_UserUiColors` theme tokens with `SystemColors` fallbacks for all custom colors:
+Use `Model_Shared_UserUiColors` theme tokens with `SystemColors` fallbacks for all custom colors:
 
 ```csharp
 // ✅ CORRECT: Theme token with system fallback
-var colors = Model_AppVariables.UserUiColors;
+var colors = Model_Application_Variables.UserUiColors;
 button1.BackColor = colors.ButtonBackColor ?? SystemColors.Control;
 panel1.BackColor = colors.PanelBackColor ?? SystemColors.ControlLight;
 
@@ -110,7 +110,7 @@ panelLogo.BackColor = Color.FromArgb(0, 122, 204);
 ## Data Access & Async
 
 - All database operations should route through DAO classes which call stored procedures via `Helper_Database_StoredProcedure` or `Helper_Database_Variables`.
-- Prefer async DAO methods (`Task<Model>` or `Task<DaoResult>`) so callers can keep the UI responsive. Only block when a WinForms API requires synchronous completion.
+- Prefer async DAO methods (`Task<Model>` or `Task<Model_Dao_Result>`) so callers can keep the UI responsive. Only block when a WinForms API requires synchronous completion.
 - Never call `.Result` or `.Wait()` on tasks inside UI code; schedule continuation work with `await` or explicit callbacks.
 - Capture stored procedure outputs in POCO models located in `Models/`. Keep transformation logic close to the DAO when it is purely data shaping.
 
@@ -144,7 +144,7 @@ This pattern avoids creating duplicate procedures when existing ones already ret
 ## Error Handling & Logging
 
 - Wrap external boundary calls (database, file system, interop) in try/catch blocks that log using `LoggingUtility` or `Service_DebugTracer`.
-- Convert raw exceptions into `DaoResult` or other structured responses so the UI layer can show actionable messages.
+- Convert raw exceptions into `Model_Dao_Result` or other structured responses so the UI layer can show actionable messages.
 - Use targeted catch blocks (`MySqlException`, `TimeoutException`, etc.) to provide accurate user prompts. Let unexpected exceptions bubble to the global handlers configured in `Program.cs`.
 - Do not swallow exceptions silently. If an exception is expected and handled, document why in a brief comment.
 

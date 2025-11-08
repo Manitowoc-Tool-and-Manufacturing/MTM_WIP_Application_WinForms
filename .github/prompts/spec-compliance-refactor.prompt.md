@@ -147,7 +147,7 @@ grep_search(
 ### Priority 2: HIGH (Spec Compliance / Architecture)
 - Rules that enforce architectural patterns
 - Rules that ensure spec requirement compliance
-- Examples: DaoResult pattern, async/await, Service_ErrorHandler
+- Examples: Model_Dao_Result pattern, async/await, Service_ErrorHandler
 
 ### Priority 3: MEDIUM (Code Quality / Maintainability)
 - Rules that improve code structure

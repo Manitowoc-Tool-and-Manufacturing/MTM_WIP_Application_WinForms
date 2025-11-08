@@ -87,7 +87,7 @@ CREATE PROCEDURE usr_ui_settings_Get_All(
 ### Usage in Code (Dao_System.cs)
 ```csharp
 var userSettingsResult = await Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync(
-    Model_AppVariables.ConnectionString,
+    Model_Application_Variables.ConnectionString,
     "usr_ui_settings_Get_All",
     null  // No parameters needed
 );

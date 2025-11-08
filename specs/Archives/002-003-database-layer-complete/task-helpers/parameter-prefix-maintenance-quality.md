@@ -221,7 +221,7 @@ This checklist validates the **quality of Parameter Prefix Maintenance Form requ
 - [ ] **T113c complete**: sys_parameter_prefix_override table exists, Developer role infrastructure in place
 - [ ] **Helper_Database_Variables exists**: RefreshParameterPrefixCache() method available (or stubbed for T113d)
 - [ ] **Settings Form TreeView**: Development node created in T113c, ready for UserControl integration
-- [ ] **Model_Users.CurrentUser**: Provides IsDeveloper property for access control check
+- [ ] **Model_Shared_Users.CurrentUser**: Provides IsDeveloper property for access control check
 
 **Score**: ___ / 4 (requires ≥3 pass)
 

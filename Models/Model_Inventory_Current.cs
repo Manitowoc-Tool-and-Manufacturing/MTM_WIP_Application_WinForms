@@ -2,7 +2,7 @@
 
 namespace MTM_WIP_Application_Winforms.Models;
 
-internal class Model_CurrentInventory
+internal class Model_Inventory_Current
 {
     #region Properties
 

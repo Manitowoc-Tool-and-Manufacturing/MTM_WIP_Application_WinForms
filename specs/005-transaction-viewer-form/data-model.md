@@ -6,15 +6,15 @@
 
 ## Overview
 
-This document defines the data models, entities, and data flow for the Transaction Viewer Form redesign. The feature reuses existing `Model_Transactions` from the database schema and introduces new models for search criteria, ViewModel state, and pagination.
+This document defines the data models, entities, and data flow for the Transaction Viewer Form redesign. The feature reuses existing `Model_Transactions_Core` from the database schema and introduces new models for search criteria, ViewModel state, and pagination.
 
 ---
 
 ## Entity Definitions
 
-### 1. Model_Transactions (EXISTING - No Changes)
+### 1. Model_Transactions_Core (EXISTING - No Changes)
 
-**Location**: `Models/Model_Transactions.cs`  
+**Location**: `Models/Model_Transactions_Core.cs`  
 **Purpose**: Represents a single transaction record from the `inv_transaction` table  
 **Source**: Database table via stored procedures
 
@@ -22,7 +22,7 @@ This document defines the data models, entities, and data flow for the Transacti
 /// <summary>
 /// Represents a transaction record in the inventory system.
 /// </summary>
-internal class Model_Transactions
+internal class Model_Transactions_Core
 {
     /// <summary>
     /// Gets or sets the unique transaction ID.
@@ -103,7 +103,7 @@ internal class Model_Transactions
 
 ### 2. TransactionType (EXISTING - Enum)
 
-**Location**: `Models/Model_Transactions.cs` (same file)  
+**Location**: `Models/Model_Transactions_Core.cs` (same file)  
 **Purpose**: Defines the three transaction types in the system
 
 ```csharp
@@ -136,17 +136,17 @@ internal enum TransactionType
 
 ---
 
-### 3. TransactionSearchCriteria (NEW)
+### 3. Model_Transactions_SearchCriteria (NEW)
 
-**Location**: `Models/TransactionSearchCriteria.cs`  
+**Location**: `Models/Model_Transactions_SearchCriteria.cs`  
 **Purpose**: Encapsulates user-specified search filters for transaction queries  
-**Used By**: TransactionSearchControl, TransactionViewModel, Dao_Transactions
+**Used By**: TransactionSearchControl, Model_Transactions_ViewModel, Dao_Transactions
 
 ```csharp
 /// <summary>
 /// Encapsulates search criteria for transaction queries.
 /// </summary>
-internal class TransactionSearchCriteria
+internal class Model_Transactions_SearchCriteria
 {
     /// <summary>
     /// Gets or sets the part number to filter by.
@@ -271,22 +271,22 @@ internal class TransactionSearchCriteria
 
 ---
 
-### 4. TransactionSearchResult (NEW)
+### 4. Model_Transactions_SearchResult (NEW)
 
-**Location**: `Models/TransactionSearchResult.cs`  
+**Location**: `Models/Model_Transactions_SearchResult.cs`  
 **Purpose**: Wraps search results with pagination metadata  
-**Used By**: TransactionViewModel, TransactionGridControl
+**Used By**: Model_Transactions_ViewModel, TransactionGridControl
 
 ```csharp
 /// <summary>
 /// Represents the result of a transaction search operation with pagination metadata.
 /// </summary>
-internal class TransactionSearchResult
+internal class Model_Transactions_SearchResult
 {
     /// <summary>
     /// Gets or sets the list of transactions matching the search criteria.
     /// </summary>
-    public List<Model_Transactions> Transactions { get; set; } = new();
+    public List<Model_Transactions_Core> Transactions { get; set; } = new();
 
     /// <summary>
     /// Gets or sets the total number of records matching the criteria (across all pages).
@@ -337,17 +337,17 @@ internal class TransactionSearchResult
 
 ---
 
-### 5. TransactionAnalytics (NEW)
+### 5. Model_Transactions_Core_Analytics (NEW)
 
-**Location**: `Models/TransactionAnalytics.cs`  
+**Location**: `Models/Model_Transactions_Core_Analytics.cs`  
 **Purpose**: Represents summary statistics for analytics display  
-**Used By**: TransactionViewModel (Priority 3 feature)
+**Used By**: Model_Transactions_ViewModel (Priority 3 feature)
 
 ```csharp
 /// <summary>
 /// Represents summary analytics for transactions within a date range.
 /// </summary>
-internal class TransactionAnalytics
+internal class Model_Transactions_Core_Analytics
 {
     /// <summary>
     /// Gets or sets the total number of transactions.
@@ -413,7 +413,7 @@ internal class TransactionLifecycleNode
     /// <summary>
     /// Gets or sets the transaction associated with this node.
     /// </summary>
-    public Model_Transactions Transaction { get; set; } = null!;
+    public Model_Transactions_Core Transaction { get; set; } = null!;
 
     /// <summary>
     /// Gets or sets the parent node (null for root IN transaction).
@@ -545,7 +545,7 @@ foreach (var transaction in transactions.Skip(1))
            │ calls SearchTransactionsAsync(criteria)
            ▼
 ┌───────────────────────────┐
-│ TransactionViewModel      │
+│ Model_Transactions_ViewModel      │
 │ - Validate criteria       │
 │ - Show progress           │
 │ - Call DAO                │
@@ -556,7 +556,7 @@ foreach (var transaction in transactions.Skip(1))
 │   Dao_Transactions        │
 │ - Map criteria → params   │
 │ - Call stored procedure   │
-│ - Wrap in DaoResult<T>    │
+│ - Wrap in Model_Dao_Result<T>    │
 └──────────┬────────────────┘
            │ calls inv_transactions_Search
            ▼
@@ -567,22 +567,22 @@ foreach (var transaction in transactions.Skip(1))
 │ - Paginate results        │
 │ - Return DataTable        │
 └──────────┬────────────────┘
-           │ returns DaoResult<DataTable>
+           │ returns Model_Dao_Result<DataTable>
            ▼
 ┌───────────────────────────┐
 │   Dao_Transactions        │
 │ - Map rows → Model        │
-│ - Return DaoResult<List>  │
+│ - Return Model_Dao_Result<List>  │
 └──────────┬────────────────┘
-           │ returns DaoResult<List<Model_Transactions>>
+           │ returns Model_Dao_Result<List<Model_Transactions_Core>>
            ▼
 ┌───────────────────────────┐
-│ TransactionViewModel      │
+│ Model_Transactions_ViewModel      │
 │ - Wrap in SearchResult    │
 │ - Calculate pagination    │
 │ - Show success            │
 └──────────┬────────────────┘
-           │ returns DaoResult<TransactionSearchResult>
+           │ returns Model_Dao_Result<Model_Transactions_SearchResult>
            ▼
 ┌───────────────────────────┐
 │  Transactions (Form)      │
@@ -644,14 +644,14 @@ foreach (var transaction in transactions.Skip(1))
            │ calls ExportToExcelAsync(results, filePath)
            ▼
 ┌───────────────────────────┐
-│ TransactionViewModel      │
+│ Model_Transactions_ViewModel      │
 │ - Show progress           │
 │ - Create ClosedXML book   │
 │ - Format headers          │
 │ - Write data rows         │
 │ - Save file               │
 └──────────┬────────────────┘
-           │ returns DaoResult<string> (filePath)
+           │ returns Model_Dao_Result<string> (filePath)
            ▼
 ┌───────────────────────────┐
 │  Transactions (Form)      │
@@ -709,7 +709,7 @@ foreach (var transaction in transactions.Skip(1))
 │   inv_transactions_       │
 │   GetBatchLifecycle       │
 └──────────┬────────────────┘
-           │ returns DaoResult<List<Model_Transactions>>
+           │ returns Model_Dao_Result<List<Model_Transactions_Core>>
            ▼
 ┌──────────────────────────────────┐
 │ TransactionLifecycleForm         │
@@ -896,11 +896,11 @@ ORDER BY ReceiveDate ASC, ID ASC;  -- Chronological order critical for tree buil
 
 ### ViewModel State
 
-**Stored in TransactionViewModel**:
-- `CurrentSearchCriteria` (TransactionSearchCriteria) - Last executed search
-- `CurrentResults` (TransactionSearchResult) - Last returned results
+**Stored in Model_Transactions_ViewModel**:
+- `CurrentSearchCriteria` (Model_Transactions_SearchCriteria) - Last executed search
+- `CurrentResults` (Model_Transactions_SearchResult) - Last returned results
 - `CurrentPage` (int) - Current pagination page
-- `PageSize` (int) - Records per page (from Model_AppVariables)
+- `PageSize` (int) - Records per page (from Model_Application_Variables)
 - `CachedParts` (List<string>) - Part numbers for dropdown autocomplete
 - `CachedUsers` (List<string>) - Usernames for dropdown
 - `CachedLocations` (List<string>) - Location codes for dropdown
@@ -915,7 +915,7 @@ ORDER BY ReceiveDate ASC, ID ASC;  -- Chronological order critical for tree buil
 ### Form State
 
 **Stored in Transactions.cs**:
-- `_viewModel` (TransactionViewModel) - Business logic instance
+- `_viewModel` (Model_Transactions_ViewModel) - Business logic instance
 - `_progressHelper` (Helper_StoredProcedureProgress) - Progress reporting
 - `_isLoading` (bool) - Prevents duplicate searches during load
 
@@ -929,19 +929,19 @@ ORDER BY ReceiveDate ASC, ID ASC;  -- Chronological order critical for tree buil
 
 ## Validation Rules Summary
 
-### TransactionSearchCriteria
+### Model_Transactions_SearchCriteria
 - ✅ At least one criterion must be specified
 - ✅ DateFrom <= DateTo if both specified
 - ✅ String fields max lengths: PartID (300), User (100), Location (100), Operation (100)
 
-### Model_Transactions (enforced by database)
+### Model_Transactions_Core (enforced by database)
 - ✅ ID unique, auto-increment
 - ✅ TransactionType must be IN/OUT/TRANSFER
 - ✅ PartID required, max 300 characters
 - ✅ Quantity > 0
 - ✅ User required, max 100 characters
 
-### TransactionSearchResult
+### Model_Transactions_SearchResult
 - ✅ CurrentPage >= 1 and <= TotalPages
 - ✅ PageSize > 0
 - ✅ TotalRecordCount >= 0
@@ -963,7 +963,7 @@ ORDER BY ReceiveDate ASC, ID ASC;  -- Chronological order critical for tree buil
 - **Index usage**: Database indexes on PartID, User, ReceiveDate ensure fast queries
 
 ### Memory Management
-- **DataTable disposal**: DataTable from stored procedure mapped to List<Model_Transactions>, then disposed
+- **DataTable disposal**: DataTable from stored procedure mapped to List<Model_Transactions_Core>, then disposed
 - **Large result sets**: Pagination prevents loading 24,000+ records into memory
 - **Export operations**: Process rows in batches if export exceeds memory limits (future enhancement)
 
@@ -972,7 +972,7 @@ ORDER BY ReceiveDate ASC, ID ASC;  -- Chronological order critical for tree buil
 ## Future Enhancements
 
 ### Priority 3 Features (Post-MVP)
-- **Analytics dashboard**: Display TransactionAnalytics in tabbed interface  
+- **Analytics dashboard**: Display Model_Transactions_Core_Analytics in tabbed interface  
 - **Advanced filters**: Combine multiple criteria with OR logic
 - **Export all pages**: Option to export entire result set (not just current page)
 - **Quick filters**: Saved filter presets (e.g., "My IN transactions this week")
@@ -993,15 +993,15 @@ ORDER BY ReceiveDate ASC, ID ASC;  -- Chronological order critical for tree buil
 
 ## Conclusion
 
-The data model reuses existing `Model_Transactions` and introduces new models to support the modular UserControl architecture:
+The data model reuses existing `Model_Transactions_Core` and introduces new models to support the modular UserControl architecture:
 
 **P1 Models** (Implemented):
-- `TransactionSearchCriteria` - Search filter inputs
-- `TransactionSearchResult` - Paginated search results wrapper
+- `Model_Transactions_SearchCriteria` - Search filter inputs
+- `Model_Transactions_SearchResult` - Paginated search results wrapper
 - `TransactionLifecycleNode` - Tree structure for batch lifecycle visualization (NEW)
 
 **P3 Models** (Future):
-- `TransactionAnalytics` - Summary statistics for analytics dashboard
+- `Model_Transactions_Core_Analytics` - Summary statistics for analytics dashboard
 
 **New Stored Procedure** (P1):
 - `inv_transactions_GetBatchLifecycle` - Retrieve all transactions for a batch in chronological order

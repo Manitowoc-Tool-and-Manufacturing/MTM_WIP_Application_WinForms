@@ -70,7 +70,7 @@ if (result.IsSuccess && result.Data != null)
 {
     foreach (DataRow row in result.Data.Rows)
     {
-        var override = new Model_ParameterPrefixOverride
+        var override = new Model_ParameterPrefix_Override
         {
             OverrideId = Convert.ToInt32(row["OverrideId"]),
             ProcedureName = row["ProcedureName"].ToString() ?? "",
@@ -145,7 +145,7 @@ var result = await Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsy
 if (result.IsSuccess && result.Data != null && result.Data.Rows.Count > 0)
 {
     var row = result.Data.Rows[0];
-    // Map to Model_ParameterPrefixOverride
+    // Map to Model_ParameterPrefix_Override
 }
 ```
 
@@ -220,7 +220,7 @@ var parameters = new Dictionary<string, object>
     ["ParameterName"] = parameterName,
     ["OverridePrefix"] = overridePrefix, // Can be empty string
     ["Reason"] = reason ?? (object)DBNull.Value,
-    ["CreatedBy"] = Model_AppVariables.CurrentUser.UserName
+    ["CreatedBy"] = Model_Application_Variables.CurrentUser.UserName
 };
 
 var result = await Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync(
@@ -310,7 +310,7 @@ var parameters = new Dictionary<string, object>
     ["OverridePrefix"] = overridePrefix,
     ["Reason"] = reason ?? (object)DBNull.Value,
     ["IsActive"] = isActive ? 1 : 0,
-    ["ModifiedBy"] = Model_AppVariables.CurrentUser.UserName
+    ["ModifiedBy"] = Model_Application_Variables.CurrentUser.UserName
 };
 
 var result = await Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync(
@@ -375,7 +375,7 @@ SELECT @status, @errorMsg;
 var parameters = new Dictionary<string, object>
 {
     ["OverrideId"] = overrideId,
-    ["ModifiedBy"] = Model_AppVariables.CurrentUser.UserName
+    ["ModifiedBy"] = Model_Application_Variables.CurrentUser.UserName
 };
 
 var result = await Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync(

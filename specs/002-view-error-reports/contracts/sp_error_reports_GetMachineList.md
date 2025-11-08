@@ -69,7 +69,7 @@ END IF;
 ## C# Usage Example
 
 ```csharp
-public static async Task<DaoResult<List<string>>> GetMachineListAsync()
+public static async Task<Model_Dao_Result<List<string>>> GetMachineListAsync()
 {
     try
     {
@@ -84,12 +84,12 @@ public static async Task<DaoResult<List<string>>> GetMachineListAsync()
         if (!result.IsSuccess)
         {
             LoggingUtility.Log($"[Dao_ErrorReports] Failed to retrieve machine list: {result.StatusMessage}");
-            return DaoResult<List<string>>.Failure(result.StatusMessage);
+            return Model_Dao_Result<List<string>>.Failure(result.StatusMessage);
         }
 
         if (result.Data == null || result.Data.Rows.Count == 0)
         {
-            return DaoResult<List<string>>.Success(
+            return Model_Dao_Result<List<string>>.Success(
                 new List<string>(),
                 "No machines found");
         }
@@ -100,14 +100,14 @@ public static async Task<DaoResult<List<string>>> GetMachineListAsync()
             .Where(machine => !string.IsNullOrEmpty(machine))
             .ToList();
 
-        return DaoResult<List<string>>.Success(
+        return Model_Dao_Result<List<string>>.Success(
             machines,
             $"Retrieved {machines.Count} machines");
     }
     catch (Exception ex)
     {
         LoggingUtility.LogApplicationError(ex);
-        return DaoResult<List<string>>.Failure(
+        return Model_Dao_Result<List<string>>.Failure(
             "An unexpected error occurred while retrieving machine list.");
     }
 }
@@ -140,7 +140,7 @@ private async void PopulateMachineFilterComboBox()
     {
         Service_ErrorHandler.HandleException(
             result.Exception,
-            ErrorSeverity.Low,
+            Enum_ErrorSeverity.Low,
             message: "Failed to load machine list for filter");
 
         // Fallback: Add "All Machines" only
@@ -164,7 +164,7 @@ private void ApplyFilters()
         : selectedMachine;
 
     // Build filter object
-    var filter = new Model_ErrorReportFilter
+    var filter = new Model_ErrorReport_Core_Filter
     {
         MachineName = machineFilter,
         // ... other filters

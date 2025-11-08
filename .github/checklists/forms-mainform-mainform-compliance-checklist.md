@@ -23,8 +23,8 @@
 
 | Spec Section | Status | Evidence |
 |--------------|--------|----------|
-| **FR-002** Connection String Management | ✅ **COMPLIANT** | No hardcoded connection strings; uses Model_AppVariables.ConnectionString |
-| **FR-003** DaoResult Pattern | ✅ **COMPLIANT** | Uses Dao_ErrorLog and Dao_User (no direct MySqlConnection) |
+| **FR-002** Connection String Management | ✅ **COMPLIANT** | No hardcoded connection strings; uses Model_Application_Variables.ConnectionString |
+| **FR-003** Model_Dao_Result Pattern | ✅ **COMPLIANT** | Uses Dao_ErrorLog and Dao_User (no direct MySqlConnection) |
 | **FR-004** Async/Await | ✅ **NOW COMPLIANT** | All 9 fire-and-forget calls fixed (awaited or documented) |
 | **FR-006** Service_DebugTracer | ✅ **COMPLIANT** | Extensively integrated throughout (20+ trace calls) |
 | **FR-008** Service_ErrorHandler | ✅ **COMPLIANT** | 0 MessageBox.Show violations; uses Service_ErrorHandler |
@@ -123,7 +123,7 @@
 
 **Dao_ErrorLog.cs**:
 - Already compliant with database layer standards
-- Properly async, uses DaoResult pattern
+- Properly async, uses Model_Dao_Result pattern
 - Contains HandleException_GeneralError_CloseApp method being analyzed in CL-001
 - **No remediation needed**
 

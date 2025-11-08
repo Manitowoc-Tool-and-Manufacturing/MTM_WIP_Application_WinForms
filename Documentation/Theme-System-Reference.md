@@ -53,7 +53,7 @@ The MTM WIP Application theme system provides comprehensive DPI scaling, UI resp
                     ├──────────────────┬───────────────────┐
                     ▼                  ▼                   ▼
         ┌───────────────────┐ ┌──────────────┐  ┌─────────────────┐
-        │ Model_UserUiColors │ │ Core_AppThemes│  │ FocusUtils      │
+        │ Model_Shared_UserUiColors │ │ Core_AppThemes│  │ FocusUtils      │
         │  (Color Tokens)    │ │  (Theme Mgmt) │  │ (Focus Handling)│
         └───────────────────┘ └──────────────┘  └─────────────────┘
                     │                  │
@@ -89,9 +89,9 @@ The MTM WIP Application theme system provides comprehensive DPI scaling, UI resp
 - Focus highlighting
 - DataGridView enhancements
 
-### 2. Model_UserUiColors.cs
+### 2. Model_Shared_UserUiColors.cs
 
-**Location**: `Models/Model_UserUiColors.cs`  
+**Location**: `Models/Model_Shared_UserUiColors.cs`  
 **Purpose**: Color token catalog with nullable Color properties
 
 **Contains**:
@@ -142,7 +142,7 @@ CREATE TABLE app_themes (
 9. **Urban Bloom** - Modern mixed theme
 
 **JSON Structure** (203 properties per theme):
-- All 200+ color tokens from `Model_UserUiColors`
+- All 200+ color tokens from `Model_Shared_UserUiColors`
 - Stored as JSON object with flat structure
 - Example keys: `FormBackColor`, `ButtonBackColor`, `DataGridBackColor`, etc.
 - Each property stores ARGB color value
@@ -387,7 +387,7 @@ protected override void OnDpiChanged(DpiChangedEventArgs e)
 **{GetUserThemeColorsAsync} Start**
 
 ```csharp
-public static async Task<Model_UserUiColors> GetUserThemeColorsAsync(string userId)
+public static async Task<Model_Shared_UserUiColors> GetUserThemeColorsAsync(string userId)
 ```
 
 **Purpose**: Retrieves user-specific theme colors from database.
@@ -395,7 +395,7 @@ public static async Task<Model_UserUiColors> GetUserThemeColorsAsync(string user
 **Parameters**:
 - `userId` - The user ID
 
-**Returns**: `Model_UserUiColors` with user's theme preferences
+**Returns**: `Model_Shared_UserUiColors` with user's theme preferences
 
 **Process**:
 1. Fetches theme name from database
@@ -409,8 +409,8 @@ public static async Task<Model_UserUiColors> GetUserThemeColorsAsync(string user
 
 **Example**:
 ```csharp
-var colors = await Core_Themes.GetUserThemeColorsAsync(Model_AppVariables.User);
-Model_AppVariables.UserUiColors = colors;
+var colors = await Core_Themes.GetUserThemeColorsAsync(Model_Application_Variables.User);
+Model_Application_Variables.UserUiColors = colors;
 ```
 
 **{GetUserThemeColorsAsync} End**
@@ -791,7 +791,7 @@ private static readonly ConcurrentDictionary<Type, ControlThemeApplier> ThemeApp
 ### Example: Button Theme Applier
 
 ```csharp
-public static void ApplyButtonTheme(Control control, Model_UserUiColors colors)
+public static void ApplyButtonTheme(Control control, Model_Shared_UserUiColors colors)
 {
     if (control is Button btn)
     {
@@ -1004,7 +1004,7 @@ private async void btnApplyTheme_Click(object sender, EventArgs e)
     string selectedTheme = comboBoxThemes.SelectedItem.ToString();
     
     // Save theme preference
-    await Dao_User.SetThemeNameAsync(Model_AppVariables.User, selectedTheme);
+    await Dao_User.SetThemeNameAsync(Model_Application_Variables.User, selectedTheme);
     
     // Reload theme
     await Core_AppThemes.LoadThemesFromDatabaseAsync();
@@ -1167,7 +1167,7 @@ VALUES (
 var customTheme = new Core_AppThemes.AppTheme
 {
     Name = "Custom Theme",
-    Colors = new Model_UserUiColors
+    Colors = new Model_Shared_UserUiColors
     {
         FormBackColor = Color.FromArgb(30, 30, 30),
         FormForeColor = Color.FromArgb(255, 255, 255),
@@ -1220,7 +1220,7 @@ Users can select themes via Settings dialog:
 ## Related Files
 
 - `Core/Core_Themes.cs` - Main implementation (3087 lines)
-- `Models/Model_UserUiColors.cs` - Color token catalog
+- `Models/Model_Shared_UserUiColors.cs` - Color token catalog
 - `.github/instructions/ui-scaling-consistency.instructions.md` - UI scaling standards
 - `.github/instructions/winforms-responsive-layout.instructions.md` - Responsive layout patterns
 - `.github/instructions/csharp-dotnet8.instructions.md` - C# coding standards

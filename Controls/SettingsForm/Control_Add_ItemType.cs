@@ -29,7 +29,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             base.OnLoad(e);
             if (Control_Add_ItemType_Label_IssuedByValue != null)
             {
-                Control_Add_ItemType_Label_IssuedByValue.Text = Model_AppVariables.User ?? "Current User";
+                Control_Add_ItemType_Label_IssuedByValue.Text = Model_Application_Variables.User ?? "Current User";
             }
         }
 
@@ -67,7 +67,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
                     return;
                 }
 
-                var insertResult = await Dao_ItemType.InsertItemType(itemType, Model_AppVariables.User ?? "Current User");
+                var insertResult = await Dao_ItemType.InsertItemType(itemType, Model_Application_Variables.User ?? "Current User");
                 if (!insertResult.IsSuccess)
                 {
                     MessageBox.Show($@"Error adding PartID: {insertResult.ErrorMessage}", @"Error",

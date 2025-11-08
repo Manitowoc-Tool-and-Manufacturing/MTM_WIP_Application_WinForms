@@ -11,7 +11,7 @@ namespace MTM_WIP_Application_Winforms.Models;
 /// This cache eliminates MySQL parameter errors by automatically detecting the correct prefix for each stored procedure.
 /// The cache is populated once during application startup (Program.cs) with ~100-200ms overhead for 60+ stored procedures.
 /// </remarks>
-public static class Model_ParameterPrefixCache
+public static class Model_ParameterPrefix_Cache
 {
     #region Fields
 
@@ -142,7 +142,7 @@ public static class Model_ParameterPrefixCache
     /// Overrides take precedence over INFORMATION_SCHEMA cache for parameter prefix resolution.
     /// This enables gradual stored procedure standardization without breaking existing DAO code.
     /// </remarks>
-    public static void LoadOverrides(List<Model_ParameterPrefixOverride> overrides)
+    public static void LoadOverrides(List<Model_ParameterPrefix_Override> overrides)
     {
         lock (_lockObject)
         {
@@ -167,7 +167,7 @@ public static class Model_ParameterPrefixCache
     /// Reloads parameter prefix overrides from database (for runtime refresh after UI changes).
     /// </summary>
     /// <param name="overrides">Fresh list of override records</param>
-    public static void ReloadOverrides(List<Model_ParameterPrefixOverride> overrides)
+    public static void ReloadOverrides(List<Model_ParameterPrefix_Override> overrides)
     {
         lock (_lockObject)
         {

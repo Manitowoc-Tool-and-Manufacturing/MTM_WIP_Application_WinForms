@@ -1,5 +1,5 @@
-# Fix-TestFiles-DaoResult.ps1
-# Updates integration test files to handle DaoResult<DataTable> return types from Dao_ErrorLog methods
+# Fix-TestFiles-Model_Dao_Result.ps1
+# Updates integration test files to handle Model_Dao_Result<DataTable> return types from Dao_ErrorLog methods
 
 $testFiles = @(
     "ErrorLogging_Tests.cs",

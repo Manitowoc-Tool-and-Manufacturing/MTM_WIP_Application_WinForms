@@ -164,7 +164,7 @@ This specification documents the comprehensive refactoring and enhancement of th
 
 - `Forms/Settings/` - Current settings form implementation
 - `Controls/SettingsForm/` - Settings-related controls
-- `Models/Model_AppVariables.cs` - Application configuration
+- `Models/Model_Application_Variables.cs` - Application configuration
 - `Helpers/Helper_Database_Variables.cs` - Connection management
 
 ### Similar Implementations

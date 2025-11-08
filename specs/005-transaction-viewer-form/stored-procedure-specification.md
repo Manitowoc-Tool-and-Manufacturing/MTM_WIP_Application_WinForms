@@ -164,8 +164,8 @@ SELECT @status AS Status, @errorMsg AS ErrorMessage;
 /// Retrieves all transactions for a specific batch in chronological order.
 /// </summary>
 /// <param name="batchNumber">The batch number to query.</param>
-/// <returns>DaoResult containing list of transactions, or error details.</returns>
-internal static async Task<DaoResult<List<Model_Transactions>>> GetBatchLifecycleAsync(string batchNumber)
+/// <returns>Model_Dao_Result containing list of transactions, or error details.</returns>
+internal static async Task<Model_Dao_Result<List<Model_Transactions_Core>>> GetBatchLifecycleAsync(string batchNumber)
 {
     try
     {
@@ -185,22 +185,22 @@ internal static async Task<DaoResult<List<Model_Transactions>>> GetBatchLifecycl
 
         if (!result.IsSuccess)
         {
-            return DaoResult<List<Model_Transactions>>.Failure(result.StatusMessage);
+            return Model_Dao_Result<List<Model_Transactions_Core>>.Failure(result.StatusMessage);
         }
 
-        // Map DataTable to List<Model_Transactions>
-        var transactions = new List<Model_Transactions>();
+        // Map DataTable to List<Model_Transactions_Core>
+        var transactions = new List<Model_Transactions_Core>();
         foreach (DataRow row in result.Data.Rows)
         {
             transactions.Add(MapRowToTransaction(row));
         }
 
-        return DaoResult<List<Model_Transactions>>.Success(transactions);
+        return Model_Dao_Result<List<Model_Transactions_Core>>.Success(transactions);
     }
     catch (Exception ex)
     {
         LoggingUtility.LogApplicationError(ex);
-        return DaoResult<List<Model_Transactions>>.Failure($"Failed to retrieve batch lifecycle: {ex.Message}");
+        return Model_Dao_Result<List<Model_Transactions_Core>>.Failure($"Failed to retrieve batch lifecycle: {ex.Message}");
     }
 }
 ```

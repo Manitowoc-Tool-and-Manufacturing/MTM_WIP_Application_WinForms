@@ -204,11 +204,11 @@ Settings Form (Panel Style):
 private void InitializeDeveloperSettingsNode()
 {
     // Check configuration
-    if (!Model_AppVariables.DeveloperSettings.ShowInSettingsMenu)
+    if (!Model_Application_Variables.DeveloperSettings.ShowInSettingsMenu)
         return;
     
-    if (Model_AppVariables.DeveloperSettings.RequireAdminRole && 
-        !Model_Users.CurrentUser.IsAdmin)
+    if (Model_Application_Variables.DeveloperSettings.RequireAdminRole && 
+        !Model_Shared_Users.CurrentUser.IsAdmin)
         return;
     
     // Create parent node
@@ -331,7 +331,7 @@ private async void SyncPendingReports()
     }
     catch (Exception ex)
     {
-        Service_ErrorHandler.HandleException(ex, ErrorSeverity.Medium, 
+        Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Medium, 
             controlName: nameof(SettingsForm));
     }
 }
@@ -353,7 +353,7 @@ private void RefreshSyncNodeCount()
 
 ## Configuration
 
-Add to `Model_AppVariables` or appsettings.json:
+Add to `Model_Application_Variables` or appsettings.json:
 
 ```json
 {

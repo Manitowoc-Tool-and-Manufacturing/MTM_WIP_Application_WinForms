@@ -32,7 +32,7 @@ public partial class Form_ReportIssue : Form
 {
     #region Fields
 
-    private readonly Model_ErrorReport _report;
+    private readonly Model_ErrorReport_Core _report;
 
     #endregion
 
@@ -43,7 +43,7 @@ public partial class Form_ReportIssue : Form
     /// </summary>
     /// <param name="report">Pre-populated error report with exception details.</param>
     /// <exception cref="ArgumentNullException">Thrown when report is null.</exception>
-    public Form_ReportIssue(Model_ErrorReport report)
+    public Form_ReportIssue(Model_ErrorReport_Core report)
     {
         ArgumentNullException.ThrowIfNull(report);
         
@@ -108,7 +108,7 @@ public partial class Form_ReportIssue : Form
                     // Database operation failed
                     Service_ErrorHandler.HandleException(
                         result.Exception ?? new Exception(result.ErrorMessage),
-                        ErrorSeverity.Medium,
+                        Enum_ErrorSeverity.Medium,
                         controlName: nameof(Form_ReportIssue));
                     
                     // Re-enable submit button for retry
@@ -134,7 +134,7 @@ public partial class Form_ReportIssue : Form
                 {
                     Service_ErrorHandler.HandleException(
                         queueResult.Exception ?? new Exception(queueResult.ErrorMessage),
-                        ErrorSeverity.Medium,
+                        Enum_ErrorSeverity.Medium,
                         controlName: nameof(Form_ReportIssue));
                     
                     // Re-enable submit button for retry
@@ -149,7 +149,7 @@ public partial class Form_ReportIssue : Form
             
             Service_ErrorHandler.HandleException(
                 ex,
-                ErrorSeverity.Medium,
+                Enum_ErrorSeverity.Medium,
                 contextData: new System.Collections.Generic.Dictionary<string, object>
                 {
                     ["User"] = _report.UserName,

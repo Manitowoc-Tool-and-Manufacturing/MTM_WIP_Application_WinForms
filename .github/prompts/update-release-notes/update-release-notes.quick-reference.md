@@ -47,7 +47,7 @@ Create version 5.3.0 release notes based on recent PatchNotes.md entries
 | "Service_ErrorHandler adoption" | "Modern error dialogs with retry" |
 | "FR-004 specification" | "Database reliability standard" |
 | "OnFormClosing critical path" | "Application shutdown process" |
-| "DaoResult pattern" | "Structured error handling" |
+| "Model_Dao_Result pattern" | "Structured error handling" |
 
 ---
 

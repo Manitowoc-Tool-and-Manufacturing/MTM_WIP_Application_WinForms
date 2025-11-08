@@ -117,7 +117,7 @@ var nonExistentUser = "NonExistentUser_" + Guid.NewGuid().ToString();
 **Data Management Strategy**:
 - ✅ Uses hardcoded part IDs (`TEST-PART-001` through `TEST-PART-003`)
 - ✅ Uses hardcoded user name (`TestUser`)
-- ✅ Creates Model_TransactionHistory objects inline
+- ✅ Creates Model_Transactions_History objects inline
 - ✅ Delete operations rolled back by transaction
 
 **Isolation Assessment**: ✅ **SAFE**
@@ -167,7 +167,7 @@ var nonExistentUser = "NonExistentUser_" + Guid.NewGuid().ToString();
 ### Dao_ErrorLog_Tests.cs (Existing Legacy Tests)
 
 **Data Management Strategy**:
-- ✅ Uses Model_AppVariables.User with fallback to "TestUser"
+- ✅ Uses Model_Application_Variables.User with fallback to "TestUser"
 - ✅ Uses GUID-based user names for non-existent tests
 - ⚠️ Some tests may rely on existing error log data
 

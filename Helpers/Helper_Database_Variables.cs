@@ -23,8 +23,8 @@ namespace MTM_WIP_Application_Winforms.Helpers
         {
             try
             {
-                server ??= Model_Users.WipServerAddress;
-                database ??= Model_Users.Database;
+                server ??= Model_Shared_Users.WipServerAddress;
+                database ??= Model_Shared_Users.Database;
                 uid ??= "root";  // Use root user for MAMP MySQL
                 password ??= "root";  // Use root password for MAMP MySQL
                 return $"SERVER={server};DATABASE={database};UID={uid};PASSWORD={password};Allow User Variables=True;SslMode=none;AllowPublicKeyRetrieval=true;";

@@ -140,7 +140,7 @@ The project uses instruction files to provide authoritative guidance on coding p
     - **Discovery-first workflow**: grep_search → verify signatures → write tests
     - Method signature verification patterns
     - Static vs instance method detection
-    - DaoResult null safety patterns
+    - Model_Dao_Result null safety patterns
     - Common pitfalls and how to avoid them
 
 5. **documentation.instructions.md** - Documentation standards
@@ -362,7 +362,7 @@ else
 
 ```csharp
 // For exceptions
-Service_ErrorHandler.HandleException(ex, ErrorSeverity.Medium,
+Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Medium,
     retryAction: () => RetryOperation(),
     contextData: new Dictionary<string, object> { ["UserId"] = userId },
     controlName: nameof(CurrentControl));

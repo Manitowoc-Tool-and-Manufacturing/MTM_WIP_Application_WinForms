@@ -123,7 +123,7 @@ public class Dao_Transactions_Tests : BaseIntegrationTest
     }
 
     /// <summary>
-    /// Tests that SearchAsync (new method with TransactionSearchCriteria) filters by date range correctly.
+    /// Tests that SearchAsync (new method with Model_Transactions_SearchCriteria) filters by date range correctly.
     /// Validates: method signature matches implementation, null-safe assertions, date range filtering.
     /// </summary>
     [TestMethod]
@@ -134,7 +134,7 @@ public class Dao_Transactions_Tests : BaseIntegrationTest
         var isAdmin = true;
         
         // Create criteria with last 30 days date range
-        var criteria = new TransactionSearchCriteria
+        var criteria = new Model_Transactions_SearchCriteria
         {
             DateFrom = DateTime.Today.AddDays(-30),
             DateTo = DateTime.Today
@@ -176,7 +176,7 @@ public class Dao_Transactions_Tests : BaseIntegrationTest
         var adminUserName = "TestAdmin";
         var isAdmin = true;
         
-        var criteria = new TransactionSearchCriteria
+        var criteria = new Model_Transactions_SearchCriteria
         {
             DateFrom = DateTime.Today.AddDays(-30),
             DateTo = DateTime.Today
@@ -212,7 +212,7 @@ public class Dao_Transactions_Tests : BaseIntegrationTest
         var regularUserName = "TestRegularUser";
         var isAdmin = false;
         
-        var criteria = new TransactionSearchCriteria
+        var criteria = new Model_Transactions_SearchCriteria
         {
             DateFrom = DateTime.Today.AddDays(-30),
             DateTo = DateTime.Today
@@ -279,10 +279,10 @@ public class Dao_Transactions_Tests : BaseIntegrationTest
     #region Analytics Methods Tests
 
     /// <summary>
-    /// Tests that GetTransactionAnalyticsAsync returns analytics data.
+    /// Tests that GetModel_Transactions_Core_AnalyticsAsync returns analytics data.
     /// </summary>
     [TestMethod]
-    public async Task GetTransactionAnalyticsAsync_ValidUser_ReturnsAnalytics()
+    public async Task GetModel_Transactions_Core_AnalyticsAsync_ValidUser_ReturnsAnalytics()
     {
         // Arrange
         var userName = "TestUser";
@@ -290,7 +290,7 @@ public class Dao_Transactions_Tests : BaseIntegrationTest
 
         // Act
         var dao = new Dao_Transactions();
-        var result = await dao.GetTransactionAnalyticsAsync(
+        var result = await dao.GetModel_Transactions_Core_AnalyticsAsync(
             userName: userName,
             isAdmin: isAdmin,
             timeRange: (null, null)
@@ -302,10 +302,10 @@ public class Dao_Transactions_Tests : BaseIntegrationTest
     }
 
     /// <summary>
-    /// Tests that GetTransactionAnalyticsAsync handles date range correctly.
+    /// Tests that GetModel_Transactions_Core_AnalyticsAsync handles date range correctly.
     /// </summary>
     [TestMethod]
-    public async Task GetTransactionAnalyticsAsync_DateRange_ReturnsFilteredAnalytics()
+    public async Task GetModel_Transactions_Core_AnalyticsAsync_DateRange_ReturnsFilteredAnalytics()
     {
         // Arrange
         var userName = "TestUser";
@@ -315,7 +315,7 @@ public class Dao_Transactions_Tests : BaseIntegrationTest
 
         // Act
         var dao = new Dao_Transactions();
-        var result = await dao.GetTransactionAnalyticsAsync(
+        var result = await dao.GetModel_Transactions_Core_AnalyticsAsync(
             userName: userName,
             isAdmin: isAdmin,
             timeRange: (fromDate, toDate)

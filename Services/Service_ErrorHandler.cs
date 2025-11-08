@@ -36,7 +36,7 @@ internal static class Service_ErrorHandler
     /// <param name="controlName">Name of the control or form where error occurred</param>
     /// <returns>True if user chose to retry and retry succeeded, false otherwise</returns>
     public static bool HandleException(Exception ex,
-        ErrorSeverity severity = ErrorSeverity.Medium,
+        Enum_ErrorSeverity severity = Enum_ErrorSeverity.Medium,
         Func<bool>? retryAction = null,
         Dictionary<string, object>? contextData = null,
         [CallerMemberName] string callerName = "",
@@ -65,7 +65,7 @@ internal static class Service_ErrorHandler
             var result = errorDialog.ShowDialog();
 
             // Handle critical errors that should terminate the application
-            if (severity == ErrorSeverity.Fatal || IsFatalError(ex))
+            if (severity == Enum_ErrorSeverity.Fatal || IsFatalError(ex))
             {
                 HandleFatalError(ex, callerName, controlName);
                 return false;
@@ -91,7 +91,7 @@ internal static class Service_ErrorHandler
         [CallerMemberName] string callerName = "",
         string controlName = "",
         string methodName = "",
-        DatabaseErrorSeverity dbSeverity = DatabaseErrorSeverity.Error)
+        Enum_DatabaseEnum_ErrorSeverity dbSeverity = Enum_DatabaseEnum_ErrorSeverity.Error)
     {
         // Add database-specific context
         var dbContextData = contextData ?? new Dictionary<string, object>();
@@ -107,10 +107,10 @@ internal static class Service_ErrorHandler
         // Map database severity to general error severity for UI display
         var uiSeverity = dbSeverity switch
         {
-            DatabaseErrorSeverity.Warning => ErrorSeverity.Low,
-            DatabaseErrorSeverity.Error => ErrorSeverity.Medium,
-            DatabaseErrorSeverity.Critical => ErrorSeverity.High,
-            _ => ErrorSeverity.Medium
+            Enum_DatabaseEnum_ErrorSeverity.Warning => Enum_ErrorSeverity.Low,
+            Enum_DatabaseEnum_ErrorSeverity.Error => Enum_ErrorSeverity.Medium,
+            Enum_DatabaseEnum_ErrorSeverity.Critical => Enum_ErrorSeverity.High,
+            _ => Enum_ErrorSeverity.Medium
         };
 
         return HandleException(ex, uiSeverity, retryAction, dbContextData, effectiveCallerName, controlName);
@@ -135,7 +135,7 @@ internal static class Service_ErrorHandler
                 ["UserMessage"] = message
             };
 
-            HandleException(validationEx, ErrorSeverity.Low, null, contextData, callerName, controlName);
+            HandleException(validationEx, Enum_ErrorSeverity.Low, null, contextData, callerName, controlName);
         }
         catch (Exception ex)
         {
@@ -162,7 +162,7 @@ internal static class Service_ErrorHandler
                 ["IsAdmin"] = IsRunningAsAdministrator()
             };
 
-            HandleException(unauthorizedEx, ErrorSeverity.Medium, null, contextData, callerName, controlName);
+            HandleException(unauthorizedEx, Enum_ErrorSeverity.Medium, null, contextData, callerName, controlName);
         }
         catch (Exception ex)
         {
@@ -187,7 +187,7 @@ internal static class Service_ErrorHandler
                 ["ErrorType"] = "File Operation"
             };
 
-            return HandleException(ex, ErrorSeverity.Medium, retryAction, contextData, callerName, controlName);
+            return HandleException(ex, Enum_ErrorSeverity.Medium, retryAction, contextData, callerName, controlName);
         }
         catch (Exception innerEx)
         {
@@ -212,7 +212,7 @@ internal static class Service_ErrorHandler
                 ["NetworkAvailable"] = System.Net.NetworkInformation.NetworkInterface.GetIsNetworkAvailable()
             };
 
-            return HandleException(ex, ErrorSeverity.High, retryAction, contextData, callerName, controlName);
+            return HandleException(ex, Enum_ErrorSeverity.High, retryAction, contextData, callerName, controlName);
         }
         catch (Exception innerEx)
         {
@@ -311,7 +311,7 @@ internal static class Service_ErrorHandler
     [Obsolete("Use HandleException instead", false)]
     public static void HandleGeneralException(Exception ex)
     {
-        HandleException(ex, ErrorSeverity.Medium);
+        HandleException(ex, Enum_ErrorSeverity.Medium);
     }
 
     [Obsolete("Use HandleUnauthorizedAccess instead", false)]

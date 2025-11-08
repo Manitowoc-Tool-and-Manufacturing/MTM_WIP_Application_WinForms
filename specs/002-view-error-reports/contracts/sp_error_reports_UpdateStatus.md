@@ -76,7 +76,7 @@ SET p_ErrorMsg = 'Error report status updated successfully';
 ## C# Usage Example
 
 ```csharp
-public static async Task<DaoResult<bool>> UpdateErrorReportStatusAsync(
+public static async Task<Model_Dao_Result<bool>> UpdateErrorReportStatusAsync(
     int reportId,
     string newStatus,
     string developerNotes,
@@ -104,18 +104,18 @@ public static async Task<DaoResult<bool>> UpdateErrorReportStatusAsync(
         if (!result.IsSuccess)
         {
             LoggingUtility.Log($"[Dao_ErrorReports] Failed to update report {reportId}: {result.StatusMessage}");
-            return DaoResult<bool>.Failure(result.StatusMessage);
+            return Model_Dao_Result<bool>.Failure(result.StatusMessage);
         }
 
         LoggingUtility.LogApplicationInfo(
             $"[Dao_ErrorReports] Updated report {reportId} to status '{newStatus}' by {reviewedBy}");
 
-        return DaoResult<bool>.Success(true, "Status updated successfully");
+        return Model_Dao_Result<bool>.Success(true, "Status updated successfully");
     }
     catch (Exception ex)
     {
         LoggingUtility.LogApplicationError(ex);
-        return DaoResult<bool>.Failure(
+        return Model_Dao_Result<bool>.Failure(
             "An unexpected error occurred while updating error report status.");
     }
 }
@@ -139,7 +139,7 @@ public static async Task<DaoResult<bool>> UpdateErrorReportStatusAsync(
 
 2. **Collect Developer Notes**: Multi-line TextBox for optional notes
 
-3. **Get Current User**: Use Model_AppVariables.CurrentUser.UserName for ReviewedBy
+3. **Get Current User**: Use Model_Application_Variables.CurrentUser.UserName for ReviewedBy
 
 4. **Call DAO Method**: UpdateErrorReportStatusAsync()
 

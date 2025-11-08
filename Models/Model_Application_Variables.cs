@@ -6,9 +6,9 @@ using MTM_WIP_Application_Winforms.Helpers;
 
 namespace MTM_WIP_Application_Winforms.Models
 {
-    #region Model_AppVariables
+    #region Model_Application_Variables
 
-    internal static class Model_AppVariables
+    internal static class Model_Application_Variables
     {
         #region User Info
 
@@ -27,7 +27,7 @@ namespace MTM_WIP_Application_Winforms.Models
         public static string? UserFullName { get; set; }
         public static string? VisualUserName { get; set; }
         public static string? VisualPassword { get; set; }
-        public static Model_UserUiColors UserUiColors { get; set; } = new();
+        public static Model_Shared_UserUiColors UserUiColors { get; set; } = new();
 
         #endregion
 
@@ -52,11 +52,11 @@ namespace MTM_WIP_Application_Winforms.Models
         {
             get
             {
-                return Model_Users.WipServerAddress;
+                return Model_Shared_Users.WipServerAddress;
             }
             set
             {
-                // For compatibility, but the logic is now in Model_Users
+                // For compatibility, but the logic is now in Model_Shared_Users
             }
         }
 
@@ -72,7 +72,7 @@ namespace MTM_WIP_Application_Winforms.Models
 
         /// <summary>
         /// Gets the bootstrap connection string, initializing it on first access.
-        /// This connection string uses default values and is immune to changes in Model_Users properties.
+        /// This connection string uses default values and is immune to changes in Model_Shared_Users properties.
         /// </summary>
         public static string BootstrapConnectionString
         {
@@ -81,8 +81,8 @@ namespace MTM_WIP_Application_Winforms.Models
                 if (_bootstrapConnectionString == null)
                 {
                     // Capture initial values - these should never change during settings fetch
-                    string server = Model_Users.WipServerAddress ?? "localhost";
-                    string database = Model_Users.Database ?? "MTM_WIP_Application_Winforms";
+                    string server = Model_Shared_Users.WipServerAddress ?? "localhost";
+                    string database = Model_Shared_Users.Database ?? "MTM_WIP_Application_Winforms";
                     _bootstrapConnectionString = Helper_Database_Variables.GetConnectionString(server, database, "root", "root");
                 }
                 return _bootstrapConnectionString;
@@ -90,7 +90,7 @@ namespace MTM_WIP_Application_Winforms.Models
         }
 
         /// <summary>
-        /// Dynamic connection string that uses current Model_Users values.
+        /// Dynamic connection string that uses current Model_Shared_Users values.
         /// This will reflect any changes made to server/database/port settings.
         /// </summary>
         public static string ConnectionString =>

@@ -141,7 +141,7 @@ A user generates a preview of a 1500-row dataset. They want to see progress and 
 - **FR-017**: System MUST disable Print/Export buttons when page range is invalid (From > To)
 - **FR-018**: Column management MUST support visibility checkboxes and drag-and-drop reordering with Up/Down arrow buttons
 - **FR-019**: System MUST show "Generating Preview..." modal dialog with cancel button, elapsed time counter, and progress bar during preview generation
-- **FR-020**: Print dialog MUST integrate with MTM theme system (Model_UserUiColors)
+- **FR-020**: Print dialog MUST integrate with MTM theme system (Model_Shared_UserUiColors)
 - **FR-021**: Print dialog MUST apply Core_Themes.ApplyDpiScaling() and ApplyRuntimeLayoutAdjustments()
 
 #### Phase 4: Export System
@@ -206,7 +206,7 @@ A user generates a preview of a 1500-row dataset. They want to see progress and 
 
 1. **Printer Availability**: Users have access to at least "Microsoft Print to PDF" printer (installed by default on Windows 10+)
 2. **DataGridView Data Source**: All grids use DataTable as underlying data source or can easily convert to DataTable
-3. **Theme System**: MTM theme system (Model_UserUiColors, Core_Themes) is fully functional and accessible
+3. **Theme System**: MTM theme system (Model_Shared_UserUiColors, Core_Themes) is fully functional and accessible
 4. **File System Access**: Application has write permissions to user's Documents folder or temp directory for export operations
 5. **Windows Forms**: Application remains WinForms-based (not migrating to WPF/Avalonia during this refactor)
 6. **Print System**: Windows GDI+ printing APIs are sufficient for requirements (no need for advanced PDF libraries like iTextSharp)
@@ -220,7 +220,7 @@ A user generates a preview of a 1500-row dataset. They want to see progress and 
 ## Dependencies
 
 ### Internal Dependencies
-- MTM Theme System (Model_UserUiColors, Core_Themes)
+- MTM Theme System (Model_Shared_UserUiColors, Core_Themes)
 - Service_ErrorHandler for error display
 - LoggingUtility for operation logging
 - Existing DataGridView implementations in MainForm tabs
@@ -268,8 +268,8 @@ The following items are explicitly excluded from this refactor:
 - Helpers/Helper_PrintManager.cs
 - Helpers/Helper_ExportManager.cs
 - Core/Core_TablePrinter.cs
-- Models/Model_PrintJob.cs
-- Models/Model_PrintSettings.cs
+- Models/Model_Print_Core_Job.cs
+- Models/Model_Print_CoreSettings.cs
 
 **Code to Replace**:
 - All print button click handlers → Show MessageBox: "Print functionality is being rebuilt. Coming soon!"
@@ -302,7 +302,7 @@ The following items are explicitly excluded from this refactor:
 - Generate preview
 - Execute print jobs
 
-**Model_PrintJob.cs**:
+**Model_Print_Core_Job.cs**:
 - Configuration object with DataTable, columns, settings
 - Windows PrintRange/FromPage/ToPage properties
 
@@ -336,7 +336,7 @@ The following items are explicitly excluded from this refactor:
 **Behaviors**:
 - Progress dialog during preview generation
 - Disable Print/Export when range invalid
-- Theme integration via Model_UserUiColors
+- Theme integration via Model_Shared_UserUiColors
 - DPI scaling via Core_Themes
 
 **Completion Criteria**:
@@ -404,7 +404,7 @@ Since this is WinForms with no automated UI testing, use comprehensive manual te
 - Helper_PrintManager_Tests.cs
 - Helper_ExportManager_Tests.cs
 - Core_TablePrinter_Tests.cs
-- Model_PrintJob_Tests.cs
+- Model_Print_Core_Job_Tests.cs
 
 **Integration Tests** (workflow-based):
 - Small dataset (10 rows) - Fast validation

@@ -13,7 +13,7 @@ namespace MTM_WIP_Application_Winforms.Controls.Transactions
     {
         #region Fields
 
-        private Model_Transactions? _transaction;
+        private Model_Transactions_Core? _transaction;
         private bool _detailsCollapsed;
         private float _notesRowOriginalHeight;
         private bool _isEmbeddedMode;
@@ -25,7 +25,7 @@ namespace MTM_WIP_Application_Winforms.Controls.Transactions
         /// <summary>
         /// Gets or sets the transaction to display in the dialog.
         /// </summary>
-        internal Model_Transactions? Transaction
+        internal Model_Transactions_Core? Transaction
         {
             get => _transaction;
             set
@@ -101,7 +101,7 @@ namespace MTM_WIP_Application_Winforms.Controls.Transactions
         /// Initializes a new instance of the <see cref="TransactionDetailPanel"/> class with a transaction.
         /// </summary>
         /// <param name="transaction">The transaction to display.</param>
-        internal TransactionDetailPanel(Model_Transactions transaction) : this()
+        internal TransactionDetailPanel(Model_Transactions_Core transaction) : this()
         {
             Transaction = transaction;
         }
@@ -162,7 +162,7 @@ namespace MTM_WIP_Application_Winforms.Controls.Transactions
             catch (Exception ex)
             {
                 LoggingUtility.LogApplicationError(ex);
-                Service_ErrorHandler.HandleException(ex, ErrorSeverity.Medium,
+                Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Medium,
                     contextData: new Dictionary<string, object>
                     {
                         ["TransactionID"] = _transaction?.ID ?? 0,
@@ -224,7 +224,7 @@ namespace MTM_WIP_Application_Winforms.Controls.Transactions
             catch (Exception ex)
             {
                 LoggingUtility.LogApplicationError(ex);
-                Service_ErrorHandler.HandleException(ex, ErrorSeverity.Medium,
+                Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Medium,
                     controlName: nameof(TransactionDetailPanel));
             }
         }
@@ -275,7 +275,7 @@ namespace MTM_WIP_Application_Winforms.Controls.Transactions
             catch (Exception ex)
             {
                 LoggingUtility.LogApplicationError(ex);
-                Service_ErrorHandler.HandleException(ex, ErrorSeverity.Low,
+                Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Low,
                     controlName: nameof(TransactionDetailPanel));
             }
         }
@@ -368,7 +368,7 @@ namespace MTM_WIP_Application_Winforms.Controls.Transactions
             catch (Exception ex)
             {
                 LoggingUtility.LogApplicationError(ex);
-                Service_ErrorHandler.HandleException(ex, ErrorSeverity.Low,
+                Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Low,
                     controlName: nameof(TransactionDetailPanel));
             }
         }

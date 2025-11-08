@@ -566,7 +566,7 @@ public class Service_ShortcutManager
             IsTextInputFocused = IsTextInputControl(form.ActiveControl),
             CurrentTab = GetFormCategory(form),
             IsDialogOpen = form.Modal,
-            IsReadOnly = Model_AppVariables.UserTypeReadOnly
+            IsReadOnly = Model_Application_Variables.UserTypeReadOnly
         };
     }
 
@@ -606,7 +606,7 @@ public class Service_ShortcutManager
         catch (Exception ex)
         {
             LoggingUtility.LogApplicationError(ex);
-            Service_ErrorHandler.HandleException(ex, ErrorSeverity.Medium,
+            Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Medium,
                 contextData: new Dictionary<string, object>
                 {
                     ["ActionId"] = actionId,
@@ -647,7 +647,7 @@ public class Service_ShortcutManager
         catch (Exception ex)
         {
             LoggingUtility.LogApplicationError(ex);
-            Service_ErrorHandler.HandleException(ex, ErrorSeverity.Medium,
+            Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Medium,
                 contextData: new Dictionary<string, object> { ["UserId"] = userId },
                 controlName: nameof(Service_ShortcutManager));
         }
@@ -656,17 +656,17 @@ public class Service_ShortcutManager
     /// <summary>
     /// Saves user-customized shortcut to database.
     /// </summary>
-    public async Task<DaoResult> SaveUserShortcutAsync(string userId, string actionId, Keys keys)
+    public async Task<Model_Dao_Result> SaveUserShortcutAsync(string userId, string actionId, Keys keys)
     {
         if (!_actions.ContainsKey(actionId))
         {
-            return DaoResult.Failure($"Action '{actionId}' not found");
+            return Model_Dao_Result.Failure($"Action '{actionId}' not found");
         }
 
         var action = _actions[actionId];
         if (!action.AllowCustomization)
         {
-            return DaoResult.Failure($"Action '{actionId}' cannot be customized (system shortcut)");
+            return Model_Dao_Result.Failure($"Action '{actionId}' cannot be customized (system shortcut)");
         }
 
         // Check for conflicts
@@ -693,11 +693,11 @@ public class Service_ShortcutManager
     /// <summary>
     /// Checks if shortcut keys conflict with existing shortcuts in same category.
     /// </summary>
-    private async Task<DaoResult> CheckConflictAsync(string userId, string actionId, Keys keys)
+    private async Task<Model_Dao_Result> CheckConflictAsync(string userId, string actionId, Keys keys)
     {
         if (!_actions.TryGetValue(actionId, out var action))
         {
-            return DaoResult.Failure("Action not found");
+            return Model_Dao_Result.Failure("Action not found");
         }
 
         string category = action.Category;
@@ -712,11 +712,11 @@ public class Service_ShortcutManager
             Keys otherKeys = GetKeysForAction(otherAction.Id);
             if (otherKeys == keys)
             {
-                return DaoResult.Failure($"Shortcut conflicts with: {otherAction.DisplayName}");
+                return Model_Dao_Result.Failure($"Shortcut conflicts with: {otherAction.DisplayName}");
             }
         }
 
-        return DaoResult.Success();
+        return Model_Dao_Result.Success();
     }
 
     /// <summary>
@@ -740,11 +740,11 @@ public class Service_ShortcutManager
     /// <summary>
     /// Resets action to default shortcut.
     /// </summary>
-    public async Task<DaoResult> ResetToDefaultAsync(string userId, string actionId)
+    public async Task<Model_Dao_Result> ResetToDefaultAsync(string userId, string actionId)
     {
         if (!_actions.ContainsKey(actionId))
         {
-            return DaoResult.Failure("Action not found");
+            return Model_Dao_Result.Failure("Action not found");
         }
 
         _userCustomizations.Remove(actionId);
@@ -1157,7 +1157,7 @@ if (saveAction != null)
 ```csharp
 // In Program.cs or MainForm constructor
 var mgr = Service_ShortcutManager.Instance;
-await mgr.LoadUserShortcutsAsync(Model_AppVariables.User);
+await mgr.LoadUserShortcutsAsync(Model_Application_Variables.User);
 ```
 
 ---
@@ -1203,7 +1203,7 @@ public partial class Control_Shortcuts : UserControl
 
             Control_Shortcuts_DataGridView_Shortcuts.Rows.Clear();
 
-            string user = Model_AppVariables.User;
+            string user = Model_Application_Variables.User;
             await _manager.LoadUserShortcutsAsync(user);
 
             var actions = _manager.GetAllActions()
@@ -1238,7 +1238,7 @@ public partial class Control_Shortcuts : UserControl
         catch (Exception ex)
         {
             LoggingUtility.LogApplicationError(ex);
-            Service_ErrorHandler.HandleException(ex, ErrorSeverity.Medium,
+            Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Medium,
                 controlName: nameof(Control_Shortcuts));
         }
     }
@@ -1247,7 +1247,7 @@ public partial class Control_Shortcuts : UserControl
     {
         try
         {
-            string user = Model_AppVariables.User;
+            string user = Model_Application_Variables.User;
 
             for (int i = 0; i < Control_Shortcuts_DataGridView_Shortcuts.Rows.Count; i++)
             {
@@ -1268,7 +1268,7 @@ public partial class Control_Shortcuts : UserControl
         catch (Exception ex)
         {
             LoggingUtility.LogApplicationError(ex);
-            Service_ErrorHandler.HandleException(ex, ErrorSeverity.Medium,
+            Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Medium,
                 controlName: nameof(Control_Shortcuts));
         }
     }
@@ -1281,7 +1281,7 @@ public partial class Control_Shortcuts : UserControl
         var action = _manager.GetAction(actionId);
         if (action == null) return;
 
-        string user = Model_AppVariables.User;
+        string user = Model_Application_Variables.User;
         var result = await _manager.ResetToDefaultAsync(user, actionId);
 
         if (result.IsSuccess)

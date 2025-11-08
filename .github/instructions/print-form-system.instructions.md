@@ -96,7 +96,7 @@ private void Print_Click(object? sender, EventArgs e)
     catch (Exception ex)
     {
         LoggingUtility.LogApplicationError(ex);
-        Service_ErrorHandler.HandleException(ex, ErrorSeverity.Medium);
+        Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Medium);
     }
 }
 ```
@@ -121,7 +121,7 @@ private void Print_Click(object? sender, EventArgs e)
     catch (Exception ex)
     {
         LoggingUtility.LogApplicationError(ex);
-        Service_ErrorHandler.HandleException(ex, ErrorSeverity.Medium);
+        Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Medium);
     }
 }
 ```
@@ -154,7 +154,7 @@ private void Print_Click(object? sender, EventArgs e)
     catch (Exception ex)
     {
         LoggingUtility.LogApplicationError(ex);
-        Service_ErrorHandler.HandleException(ex, ErrorSeverity.Medium,
+        Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Medium,
             controlName: nameof(MyControl));
     }
     finally
@@ -623,7 +623,7 @@ myDataGridView.SelectionMode = DataGridViewSelectionMode.RowHeaderSelect;
 Forms/Shared/PrintForm.cs (1,100+ lines)
 Forms/Shared/PrintForm.Designer.cs
 Models/Model_PrintPreset.cs
-Models/Model_PrintSettings.cs
+Models/Model_Print_Settings.cs
 Helpers/Helper_PrintExport.cs (270+ lines)
 ```
 

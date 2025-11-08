@@ -77,7 +77,7 @@
 
 ### Q2.1: Theme Color Token Coverage
 
-**Question**: What should be done about the 203 color properties in `Model_UserUiColors`?
+**Question**: What should be done about the 203 color properties in `Model_Shared_UserUiColors`?
 
 **Answer**: ✅ **Audit and Consolidate**
 - Run code search to identify which color properties are actually used

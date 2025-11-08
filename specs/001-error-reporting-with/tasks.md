@@ -80,9 +80,9 @@ description: "Task list for Error Reporting with User Notes & Offline Queue feat
 
 **⚠️ CRITICAL**: No user story work can begin until this phase is complete
 
--   [x] **T003** [P] – Create Model_ErrorReport class
+-   [x] **T003** [P] – Create Model_ErrorReport_Core class
 
-    -   File path: Models/Model_ErrorReport.cs
+    -   File path: Models/Model_ErrorReport_Core.cs
     -   Implement 14 properties per data-model.md specification
     -   Add ErrorReportStatus enum (New, Reviewed, Resolved)
     -   Include XML documentation on all public properties
@@ -90,17 +90,17 @@ description: "Task list for Error Reporting with User Notes & Offline Queue feat
     -   **Reference**: .github/instructions/csharp-dotnet8.instructions.md - Naming conventions, nullable patterns, XML documentation
     -   **Reference**: .github/instructions/documentation.instructions.md - XML comment standards
 
--   [x] **T004** [P] – Create Model_QueuedErrorReport class
+-   [x] **T004** [P] – Create Model_ErrorReport_Core_Queued class
 
-    -   File path: Models/Model_QueuedErrorReport.cs
+    -   File path: Models/Model_ErrorReport_Core_Queued.cs
     -   Implement properties: FilePath, FileName, CreationDate, FileSize, AttemptCount, IsValid
     -   Add static FromFileInfo(FileInfo) factory method
     -   Add private ValidateSqlFile(string) validation method per data-model.md
     -   Include XML documentation
     -   **Reference**: .github/instructions/csharp-dotnet8.instructions.md - Static methods, factory patterns, file I/O
 
--   [x] **T005** – Add ErrorReporting configuration to Model_AppVariables
-    -   **Completed**: 2025-10-26 - Added ErrorReportingConfig nested class to Model_AppVariables with QueueDirectory, ArchiveDirectory, and all configuration properties with sensible defaults
+-   [x] **T005** – Add ErrorReporting configuration to Model_Application_Variables
+    -   **Completed**: 2025-10-26 - Added ErrorReportingConfig nested class to Model_Application_Variables with QueueDirectory, ArchiveDirectory, and all configuration properties with sensible defaults
     -   Add nested ErrorReportingConfig class with properties:
         -   QueueDirectory (string, default: %APPDATA%\MTM_Application\ErrorReports\Pending)
         -   ArchiveDirectory (string, default: %APPDATA%\MTM_Application\ErrorReports\Sent)
@@ -108,7 +108,7 @@ description: "Task list for Error Reporting with User Notes & Offline Queue feat
         -   MaxSentArchiveAgeDays (int, default: 30)
         -   EnableAutoSyncOnStartup (bool, default: true)
         -   SyncProgressThreshold (int, default: 5)
-    -   Add static ErrorReporting property to Model_AppVariables
+    -   Add static ErrorReporting property to Model_Application_Variables
     -   **Reference**: .github/instructions/csharp-dotnet8.instructions.md - Configuration patterns, nested classes
 
 **Checkpoint**: Foundation ready - user story implementation can now begin in parallel
@@ -128,14 +128,14 @@ description: "Task list for Error Reporting with User Notes & Offline Queue feat
     -   **Completed**: 2025-10-26 - Created Dao_ErrorReports class with InsertReportAsync method using Helper_Database_StoredProcedure pattern, proper error handling, and comprehensive XML documentation. ReportID extraction handled via result DataTable.
     -   File path: Data/Dao_ErrorReports.cs
     -   Create new static class with region organization (Fields, Database Operations, Helpers)
-    -   Implement async Task<DaoResult<int>> InsertReportAsync(Model_ErrorReport report)
+    -   Implement async Task<Model_Dao_Result<int>> InsertReportAsync(Model_ErrorReport_Core report)
     -   Use Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync pattern
     -   Map Model*ErrorReport properties to stored procedure parameters (remove p* prefix)
     -   Handle DBNull.Value for nullable fields
     -   Extract ReportID from OutputParameters on success
-    -   Return DaoResult<int>.Success(reportID, message) or DaoResult<int>.Failure
+    -   Return Model_Dao_Result<int>.Success(reportID, message) or Model_Dao_Result<int>.Failure
     -   Add comprehensive XML documentation
-    -   **Reference**: .github/instructions/mysql-database.instructions.md - Helper_Database_StoredProcedure usage, DaoResult pattern, async patterns
+    -   **Reference**: .github/instructions/mysql-database.instructions.md - Helper_Database_StoredProcedure usage, Model_Dao_Result pattern, async patterns
     -   **Reference**: .github/instructions/csharp-dotnet8.instructions.md - Async/await, region organization, null handling
 
 -   [x] **T007** [P] – Create Form_ReportIssue dialog form
@@ -145,7 +145,7 @@ description: "Task list for Error Reporting with User Notes & Offline Queue feat
         -   Read-only TextBox for error summary (txtErrorSummary, multiline, scrollbars)
         -   Multiline TextBox for user notes (txtUserNotes, placeholder: "What were you doing when this error occurred?")
         -   Submit button (btnSubmit), Cancel button (btnCancel)
-    -   Constructor accepts Model_ErrorReport parameter
+    -   Constructor accepts Model_ErrorReport_Core parameter
     -   Apply Core_Themes.ApplyDpiScaling in constructor
     -   Follow standard WinForms designer patterns
     -   **Reference**: .github/instructions/csharp-dotnet8.instructions.md - WinForms patterns, constructor initialization, Core_Themes usage
@@ -174,12 +174,12 @@ description: "Task list for Error Reporting with User Notes & Offline Queue feat
     -   **Reference**: .github/instructions/mysql-database.instructions.md - Connection management, connectivity testing
 
 -   [x] **T010** – Integrate Form_ReportIssue with Service_ErrorHandler
-    -   **Completed**: 2025-10-26 - Updated EnhancedErrorDialog.ButtonReportIssue_Click to create Model_ErrorReport from current exception, open Form_ReportIssue dialog, handle DialogResult.OK with ShowInformation confirmation, and catch exceptions with ShowWarning fallback
+    -   **Completed**: 2025-10-26 - Updated EnhancedErrorDialog.ButtonReportIssue_Click to create Model_ErrorReport_Core from current exception, open Form_ReportIssue dialog, handle DialogResult.OK with ShowInformation confirmation, and catch exceptions with ShowWarning fallback
     -   Locate Service_ErrorHandler "Report Issue" button click handler
-    -   Create Model_ErrorReport instance from current exception context
+    -   Create Model_ErrorReport_Core instance from current exception context
     -   Populate ErrorSummary, ErrorType, TechnicalDetails, CallStack from exception
     -   Set UserName from Environment.UserName
-    -   Set AppVersion from Assembly version or Model_AppVariables
+    -   Set AppVersion from Assembly version or Model_Application_Variables
     -   Open Form_ReportIssue dialog with ShowDialog()
     -   Handle DialogResult to determine if report was submitted
     -   **Reference**: .github/instructions/csharp-dotnet8.instructions.md - Exception handling, assembly version retrieval, dialog patterns
@@ -201,15 +201,15 @@ description: "Task list for Error Reporting with User Notes & Offline Queue feat
     -   **Completed**: 2025-10-26 - Created Service_ErrorReportQueue class with QueueDirectory/ArchiveDirectory fields, complete region organization matching MTM patterns
     -   File path: Services/Service_ErrorReportQueue.cs
     -   Create static class with region organization
-    -   Add Fields region with static readonly QueueDirectory and ArchiveDirectory paths from Model_AppVariables
+    -   Add Fields region with static readonly QueueDirectory and ArchiveDirectory paths from Model_Application_Variables
     -   Add Queue Operations region placeholder
     -   Add Helpers region placeholder
     -   **Reference**: .github/instructions/csharp-dotnet8.instructions.md - Static service patterns, region organization
 
 -   [x] **T012** – Implement Service_ErrorReportQueue.QueueReportAsync method
 
-    -   **Completed**: 2025-10-26 - Implemented QueueReportAsync with directory creation, filename generation (timestamp_user_guid.sql), GenerateSqlForReport call, async file write, logging, and DaoResult pattern
-    -   Signature: public static async Task<DaoResult<string>> QueueReportAsync(Model_ErrorReport report)
+    -   **Completed**: 2025-10-26 - Implemented QueueReportAsync with directory creation, filename generation (timestamp_user_guid.sql), GenerateSqlForReport call, async file write, logging, and Model_Dao_Result pattern
+    -   Signature: public static async Task<Model_Dao_Result<string>> QueueReportAsync(Model_ErrorReport_Core report)
     -   Create Pending and Sent directories if not exist using Directory.CreateDirectory
     -   Generate filename: ErrorReport*{timestamp}*{sanitizedUser}\_{guid}.sql
     -   Timestamp format: yyyyMMdd_HHmmss
@@ -218,14 +218,14 @@ description: "Task list for Error Reporting with User Notes & Offline Queue feat
     -   Call GenerateSqlForReport(report) helper
     -   Write SQL content to file with File.WriteAllTextAsync
     -   Log queue operation with LoggingUtility
-    -   Return DaoResult<string>.Success(filePath, message) or Failure
+    -   Return Model_Dao_Result<string>.Success(filePath, message) or Failure
     -   **Reference**: .github/instructions/csharp-dotnet8.instructions.md - Async file I/O, string sanitization, Path.Combine usage
     -   **Reference**: .github/instructions/security-best-practices.instructions.md - File naming security, path traversal prevention
 
 -   [x] **T013** – Implement Service_ErrorReportQueue.GenerateSqlForReport helper
 
     -   **Completed**: 2025-10-26 - Implemented GenerateSqlForReport with SQL header, START TRANSACTION, CALL sp_error_reports_Insert with all parameters, EscapeSqlString helper for single quote escaping, SELECT validation, and COMMIT. Includes SanitizeUsername helper for safe filenames.
-    -   Signature: private static string GenerateSqlForReport(Model_ErrorReport report)
+    -   Signature: private static string GenerateSqlForReport(Model_ErrorReport_Core report)
     -   Create SQL file header with metadata comments (Generated date, User, Error Type)
     -   Generate START TRANSACTION; statement
     -   Generate CALL sp_error_reports_Insert(...) with all 8 parameters
@@ -262,16 +262,16 @@ description: "Task list for Error Reporting with User Notes & Offline Queue feat
 
 -   [x] **T016** – Implement Service_ErrorReportSync.SyncOnStartupAsync method
 
-    -   **Completed**: 2025-10-26 - Implemented SyncOnStartupAsync with immediate WaitAsync(0) lock acquisition, IsDatabaseAvailableAsync check, ProcessPendingFilesAsync call, logging, try/finally with Release, and DaoResult pattern with success count
-    -   Signature: public static async Task<DaoResult<int>> SyncOnStartupAsync()
+    -   **Completed**: 2025-10-26 - Implemented SyncOnStartupAsync with immediate WaitAsync(0) lock acquisition, IsDatabaseAvailableAsync check, ProcessPendingFilesAsync call, logging, try/finally with Release, and Model_Dao_Result pattern with success count
+    -   Signature: public static async Task<Model_Dao_Result<int>> SyncOnStartupAsync()
     -   Try to acquire \_syncLock with await \_syncLock.WaitAsync(0) (immediate timeout)
-    -   If lock not acquired: Return DaoResult<int>.Failure("Sync already in progress")
+    -   If lock not acquired: Return Model_Dao_Result<int>.Failure("Sync already in progress")
     -   In try block:
         -   Check database connectivity with IsDatabaseAvailableAsync()
         -   If offline: Log and return Success(0, "Database unavailable")
         -   If online: Call ProcessPendingFilesAsync()
         -   Log completion with success count
-        -   Return DaoResult<int>.Success(successCount, message)
+        -   Return Model_Dao_Result<int>.Success(successCount, message)
     -   In finally block: \_syncLock.Release()
     -   **Reference**: .github/instructions/csharp-dotnet8.instructions.md - Async patterns, SemaphoreSlim, try-finally
     -   **Reference**: .github/instructions/performance-optimization.instructions.md - Non-blocking startup patterns per research.md Q3
@@ -280,7 +280,7 @@ description: "Task list for Error Reporting with User Notes & Offline Queue feat
 
     -   **Completed**: 2025-10-26 - Implemented ProcessPendingFilesAsync with directory existence check, GetFiles ordered by CreationTime ascending, sequential foreach iteration, ExecuteSqlFileAsync calls, success/failure counting, and summary logging
     -   Signature: private static async Task<int> ProcessPendingFilesAsync()
-    -   Get pending path from Model_AppVariables.ErrorReporting.QueueDirectory
+    -   Get pending path from Model_Application_Variables.ErrorReporting.QueueDirectory
     -   Return 0 if directory doesn't exist
     -   Enumerate \*.sql files ordered by File.GetCreationTime() ascending
     -   Iterate each file sequentially (NOT in parallel to prevent DB lock conflicts)
@@ -349,7 +349,7 @@ description: "Task list for Error Reporting with User Notes & Offline Queue feat
 
     -   **Completed**: 2025-10-26 - Implemented CleanupOldReportsAsync with MaxSentArchiveAgeDays cutoff for Sent folder deletion, MaxPendingAgeDays check for stale warnings (no deletion), per-file try/catch, and logging. Includes MoveToArchive helper.
     -   Signature: public static async Task CleanupOldReportsAsync()
-    -   Get cutoff date from Model_AppVariables.ErrorReporting.MaxSentArchiveAgeDays
+    -   Get cutoff date from Model_Application_Variables.ErrorReporting.MaxSentArchiveAgeDays
     -   Enumerate files in Sent folder older than cutoff
     -   Delete old files with File.Delete in try/catch per file
     -   Log deletions and failures
@@ -383,14 +383,14 @@ description: "Task list for Error Reporting with User Notes & Offline Queue feat
 
 -   [x] **T025** – Implement Service_ErrorReportSync.SyncManuallyAsync method
 
-    -   **Completed**: 2025-10-26 - Implemented SyncManuallyAsync with immediate lock acquisition, database check, GetPendingReportCount, showProgress threshold check, ProcessPendingFilesAsync call, and user-friendly DaoResult messages. Includes GetPendingReportCount helper method.
-    -   Signature: public static async Task<DaoResult<int>> SyncManuallyAsync()
+    -   **Completed**: 2025-10-26 - Implemented SyncManuallyAsync with immediate lock acquisition, database check, GetPendingReportCount, showProgress threshold check, ProcessPendingFilesAsync call, and user-friendly Model_Dao_Result messages. Includes GetPendingReportCount helper method.
+    -   Signature: public static async Task<Model_Dao_Result<int>> SyncManuallyAsync()
     -   Similar structure to SyncOnStartupAsync but with different messaging
     -   Acquire \_syncLock with WaitAsync(0)
     -   Check database connectivity
     -   Call ProcessPendingFilesAsync
-    -   Show progress indicator if count > Model_AppVariables.ErrorReporting.SyncProgressThreshold
-    -   Return DaoResult with count and user-friendly message
+    -   Show progress indicator if count > Model_Application_Variables.ErrorReporting.SyncProgressThreshold
+    -   Return Model_Dao_Result with count and user-friendly message
     -   **Reference**: .github/instructions/csharp-dotnet8.instructions.md - Async patterns, concurrency
     -   **Reference**: .github/instructions/performance-optimization.instructions.md - Progress reporting patterns
 
@@ -436,7 +436,7 @@ description: "Task list for Error Reporting with User Notes & Offline Queue feat
 
 -   [x] **T029** [P] – Add comprehensive XML documentation to all public APIs
 
-    -   **Completed**: 2025-10-26 - All error reporting components verified to have comprehensive XML documentation: Dao_ErrorReports.InsertReportAsync, Service_ErrorReportQueue.QueueReportAsync and all helpers (GenerateSqlForReport, EscapeSqlString, SanitizeUsername), Service_ErrorReportSync (SyncOnStartupAsync, SyncManuallyAsync, GetPendingReportCount, CleanupOldReportsAsync, and all private helpers including ReportExistsAsync, IsDatabaseAvailableAsync, HandleCorruptFile, ParseFileInfo), Model_ErrorReport (all 14 properties plus ErrorReportStatus enum), Model_QueuedErrorReport (class, properties, FromFileInfo factory, ValidateSqlFile), Form_ReportIssue (class and constructor). Documentation includes summary, param, returns, exceptions, and remarks tags per documentation.instructions.md standards. Concurrency patterns (SemaphoreSlim) documented in Service_ErrorReportSync.
+    -   **Completed**: 2025-10-26 - All error reporting components verified to have comprehensive XML documentation: Dao_ErrorReports.InsertReportAsync, Service_ErrorReportQueue.QueueReportAsync and all helpers (GenerateSqlForReport, EscapeSqlString, SanitizeUsername), Service_ErrorReportSync (SyncOnStartupAsync, SyncManuallyAsync, GetPendingReportCount, CleanupOldReportsAsync, and all private helpers including ReportExistsAsync, IsDatabaseAvailableAsync, HandleCorruptFile, ParseFileInfo), Model_ErrorReport_Core (all 14 properties plus ErrorReportStatus enum), Model_ErrorReport_Core_Queued (class, properties, FromFileInfo factory, ValidateSqlFile), Form_ReportIssue (class and constructor). Documentation includes summary, param, returns, exceptions, and remarks tags per documentation.instructions.md standards. Concurrency patterns (SemaphoreSlim) documented in Service_ErrorReportSync.
     -   Review Dao_ErrorReports, Service_ErrorReportQueue, Service_ErrorReportSync
     -   Ensure all public methods have <summary>, <param>, <returns>, <exception> tags
     -   Add <remarks> for complex algorithms (SQL generation, idempotent checks)
@@ -554,18 +554,18 @@ description: "Task list for Error Reporting with User Notes & Offline Queue feat
 
 -   [x] **T039** [P] – Code review: Error handling patterns
 
-    -   **Completed**: 2025-10-26 - Error handling patterns validated using validate_error_handling MCP tool. Service_ErrorReportQueue and Service_ErrorReportSync both passed validation with 0 MessageBox.Show usage, proper LoggingUtility usage for all errors (LogApplicationError for exceptions, Log for info), comprehensive try-catch blocks in all methods, and proper async exception handling. All methods follow csharp-dotnet8.instructions.md patterns: ArgumentNullException.ThrowIfNull for parameter validation, DaoResult<T> return types for all operations, user-friendly error messages that don't expose technical details, all exceptions logged before returning failures. Service_ErrorReportQueue wraps file operations in try-catch, Service_ErrorReportSync has try-catch-finally with SemaphoreSlim cleanup, ExecuteSqlFileAsync handles MySqlException, IOException, and general Exception separately with appropriate handling.
+    -   **Completed**: 2025-10-26 - Error handling patterns validated using validate_error_handling MCP tool. Service_ErrorReportQueue and Service_ErrorReportSync both passed validation with 0 MessageBox.Show usage, proper LoggingUtility usage for all errors (LogApplicationError for exceptions, Log for info), comprehensive try-catch blocks in all methods, and proper async exception handling. All methods follow csharp-dotnet8.instructions.md patterns: ArgumentNullException.ThrowIfNull for parameter validation, Model_Dao_Result<T> return types for all operations, user-friendly error messages that don't expose technical details, all exceptions logged before returning failures. Service_ErrorReportQueue wraps file operations in try-catch, Service_ErrorReportSync has try-catch-finally with SemaphoreSlim cleanup, ExecuteSqlFileAsync handles MySqlException, IOException, and general Exception separately with appropriate handling.
     -   Verify all async methods have try/catch blocks
     -   Check that Service_ErrorHandler is used instead of MessageBox.Show
     -   Verify all exceptions logged with LoggingUtility.LogApplicationError
-    -   Check that DaoResult pattern used consistently
+    -   Check that Model_Dao_Result pattern used consistently
     -   Verify user-friendly messages don't expose technical details
     -   **Reference**: .github/instructions/csharp-dotnet8.instructions.md - Error handling standards
     -   **Reference**: .github/instructions/code-review-standards.instructions.md - Error handling checklist
 
 -   [x] **T040** – Build validation and final integration test
 
-    -   **Completed**: 2025-10-26 - Build validation complete using validate_build MCP tool. Project MTM_WIP_Application_Winforms.csproj builds successfully in Debug configuration with 0 compilation errors. 58 warnings present are pre-existing (nullable reference warnings, obsolete method usage) and unrelated to error reporting feature. All error reporting files (Models/Model_ErrorReport.cs, Models/Model_QueuedErrorReport.cs, Data/Dao_ErrorReports.cs, Services/Service_ErrorReportQueue.cs, Services/Service_ErrorReportSync.cs, Forms/ErrorDialog/Form_ReportIssue.cs) compile cleanly with no warnings or errors.
+    -   **Completed**: 2025-10-26 - Build validation complete using validate_build MCP tool. Project MTM_WIP_Application_Winforms.csproj builds successfully in Debug configuration with 0 compilation errors. 58 warnings present are pre-existing (nullable reference warnings, obsolete method usage) and unrelated to error reporting feature. All error reporting files (Models/Model_ErrorReport_Core.cs, Models/Model_ErrorReport_Core_Queued.cs, Data/Dao_ErrorReports.cs, Services/Service_ErrorReportQueue.cs, Services/Service_ErrorReportSync.cs, Forms/ErrorDialog/Form_ReportIssue.cs) compile cleanly with no warnings or errors.
     -   Run dotnet build -c Debug - verify no errors
     -   Run dotnet build -c Release - verify no errors
     -   Review build warnings, address critical warnings
@@ -580,11 +580,11 @@ description: "Task list for Error Reporting with User Notes & Offline Queue feat
     -   **Reference**: .github/instructions/code-review-standards.instructions.md - Build validation, integration testing
 
 -   [x] **T041** – Update quickstart.md with any implementation deviations
-    -   **Completed**: 2025-10-26 - Reviewed quickstart.md against all implemented components. No significant deviations found. The quickstart accurately documents: database schema (error_reports table with 13 columns + indexes), sp_error_reports_Insert contract (all parameters, outputs, usage examples), Model_ErrorReport and Model_QueuedErrorReport structures, Dao_ErrorReports.InsertReportAsync pattern, Service_ErrorReportQueue.QueueReportAsync with correct EscapeSqlString implementation (returns "NULL" for nulls, escapes single quotes with ''), Service_ErrorReportSync patterns (SemaphoreSlim locking, IsDatabaseAvailableAsync check, ProcessPendingFilesAsync), Form_ReportIssue dialog structure, and integration with Service_ErrorHandler. All code samples match actual implementation. File paths, method signatures, and directory structures (QueueDirectory, ArchiveDirectory) all accurate.
+    -   **Completed**: 2025-10-26 - Reviewed quickstart.md against all implemented components. No significant deviations found. The quickstart accurately documents: database schema (error_reports table with 13 columns + indexes), sp_error_reports_Insert contract (all parameters, outputs, usage examples), Model_ErrorReport_Core and Model_ErrorReport_Core_Queued structures, Dao_ErrorReports.InsertReportAsync pattern, Service_ErrorReportQueue.QueueReportAsync with correct EscapeSqlString implementation (returns "NULL" for nulls, escapes single quotes with ''), Service_ErrorReportSync patterns (SemaphoreSlim locking, IsDatabaseAvailableAsync check, ProcessPendingFilesAsync), Form_ReportIssue dialog structure, and integration with Service_ErrorHandler. All code samples match actual implementation. File paths, method signatures, and directory structures (QueueDirectory, ArchiveDirectory) all accurate.
     -   Review quickstart.md against actual implementation
     -   Update code examples if signatures changed
     -   Add troubleshooting section if new issues discovered
-    -   Update configuration section with actual Model_AppVariables structure
+    -   Update configuration section with actual Model_Application_Variables structure
     -   **Reference**: .github/instructions/documentation.instructions.md - README and documentation standards
 
 ---
@@ -605,7 +605,7 @@ description: "Task list for Error Reporting with User Notes & Offline Queue feat
 -   **User Story 1 (P1)**: Requires Setup + Foundational
 
     -   T006 (DAO) requires T001, T002 (database ready)
-    -   T007, T008 (Form) require T003 (Model_ErrorReport)
+    -   T007, T008 (Form) require T003 (Model_ErrorReport_Core)
     -   T010 (integration) requires T007, T008 (form complete)
 
 -   **User Story 2 (P1)**: Requires Foundational + US1 form
@@ -712,7 +712,7 @@ Tasks in this file reference instruction files from `.github/instructions/` for 
 ### Core Development
 
 -   **csharp-dotnet8.instructions.md** - Language features, naming conventions, WinForms patterns, async/await, region organization, Service_ErrorHandler usage
--   **mysql-database.instructions.md** - Stored procedure standards, Helper*Database_StoredProcedure usage, DaoResult pattern, connection management, p* parameter prefix
+-   **mysql-database.instructions.md** - Stored procedure standards, Helper*Database_StoredProcedure usage, Model_Dao_Result pattern, connection management, p* parameter prefix
 -   **documentation.instructions.md** - XML documentation standards, README structure, code comments
 
 ### Quality & Security

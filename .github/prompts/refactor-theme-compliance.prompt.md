@@ -74,7 +74,7 @@ Follow this execution flow:
 4. **Generate Fix Plan**
    - For each violation, determine remediation action:
      * **Missing Constructor Calls**: Insert `Core_Themes.ApplyDpiScaling(this)` and `Core_Themes.ApplyRuntimeLayoutAdjustments(this)` after `InitializeComponent()`
-     * **Hardcoded Colors**: Replace with `Model_UserUiColors` token + `SystemColors` fallback OR document as `// ACCEPTABLE:`
+     * **Hardcoded Colors**: Replace with `Model_Shared_UserUiColors` token + `SystemColors` fallback OR document as `// ACCEPTABLE:`
      * **Control Naming**: Rename to `{ComponentName}_{ControlType}_{Purpose}` format (Designer.cs only - requires regeneration)
      * **Layout Issues**: Fix AutoSize, MinimumSize/MaximumSize, Dock properties
    - Prioritize: CRITICAL → ERROR → WARNING
@@ -109,7 +109,7 @@ Follow this execution flow:
      * Determine appropriate theme token (Button → ButtonBackColor, TextBox → TextBoxBackColor, etc.)
      * Replace with token + fallback pattern:
        ```csharp
-       var colors = Model_AppVariables.UserUiColors;
+       var colors = Model_Application_Variables.UserUiColors;
        control.BackColor = colors.ButtonBackColor ?? SystemColors.Control;
        ```
      * If user indicated "brand color", add `// ACCEPTABLE: [reason]` comment instead
@@ -254,7 +254,7 @@ public Control_InventoryTab()
 
 private void ApplyThemeColors()
 {
-    var colors = Model_AppVariables.UserUiColors;
+    var colors = Model_Application_Variables.UserUiColors;
     Control_InventoryTab_Panel_Main.BackColor = colors.PanelBackColor ?? SystemColors.Control;
 }
 ```
@@ -284,7 +284,7 @@ private void InitializeComponent()
 // In code-behind .cs file:
 private void ApplyThemeColors()
 {
-    var colors = Model_AppVariables.UserUiColors;
+    var colors = Model_Application_Variables.UserUiColors;
     MyControl_Button_Action.BackColor = colors.ButtonBackColor ?? SystemColors.Control;
     MyControl_TextBox_Input.ForeColor = colors.TextBoxForeColor ?? SystemColors.WindowText;
     MyControl_Panel_Main.BackColor = colors.PanelBackColor ?? SystemColors.ControlDark;
@@ -373,11 +373,11 @@ using MTM.Models;
 
 ### Pitfall 2: Null reference on colors
 
-**Symptom**: NullReferenceException when accessing `Model_AppVariables.UserUiColors`
+**Symptom**: NullReferenceException when accessing `Model_Application_Variables.UserUiColors`
 
 **Solution**: Always use null-coalescing with SystemColors fallback:
 ```csharp
-var colors = Model_AppVariables.UserUiColors;
+var colors = Model_Application_Variables.UserUiColors;
 control.BackColor = colors?.ButtonBackColor ?? SystemColors.Control;
 ```
 

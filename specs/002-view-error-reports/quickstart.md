@@ -76,11 +76,11 @@ Follow this sequence to build the feature incrementally:
 
 **Goal**: Extend Dao_ErrorReports with new methods
 
-1. **Create Model_ErrorReportFilter.cs** (in Models/)
+1. **Create Model_ErrorReport_Core_Filter.cs** (in Models/)
    ```csharp
    namespace MTM_WIP_Application_Winforms.Models;
    
-   public class Model_ErrorReportFilter
+   public class Model_ErrorReport_Core_Filter
    {
        public DateTime? DateFrom { get; set; }
        public DateTime? DateTo { get; set; }
@@ -92,16 +92,16 @@ Follow this sequence to build the feature incrementally:
    ```
 
 2. **Extend Data/Dao_ErrorReports.cs** (add to #region Database Operations)
-   - [ ] `GetAllErrorReportsAsync(Model_ErrorReportFilter filter)` → `DaoResult<DataTable>`
-   - [ ] `GetErrorReportByIdAsync(int reportId)` → `DaoResult<Model_ErrorReport>`
-   - [ ] `UpdateErrorReportStatusAsync(int reportId, string newStatus, string notes, string reviewedBy)` → `DaoResult<bool>`
-   - [ ] `GetUserListAsync()` → `DaoResult<List<string>>`
-   - [ ] `GetMachineListAsync()` → `DaoResult<List<string>>`
+   - [ ] `GetAllErrorReportsAsync(Model_ErrorReport_Core_Filter filter)` → `Model_Dao_Result<DataTable>`
+   - [ ] `GetErrorReportByIdAsync(int reportId)` → `Model_Dao_Result<Model_ErrorReport_Core>`
+   - [ ] `UpdateErrorReportStatusAsync(int reportId, string newStatus, string notes, string reviewedBy)` → `Model_Dao_Result<bool>`
+   - [ ] `GetUserListAsync()` → `Model_Dao_Result<List<string>>`
+   - [ ] `GetMachineListAsync()` → `Model_Dao_Result<List<string>>`
 
 3. **Test Each DAO Method** (Debug console or test project)
    ```csharp
    // Quick manual test in Program.cs or test console
-   var filter = new Model_ErrorReportFilter { Status = "New" };
+   var filter = new Model_ErrorReport_Core_Filter { Status = "New" };
    var result = await Dao_ErrorReports.GetAllErrorReportsAsync(filter);
    if (result.IsSuccess)
        Console.WriteLine($"Retrieved {result.Data.Rows.Count} reports");
@@ -141,7 +141,7 @@ Follow this sequence to build the feature incrementally:
    - [ ] Color-coding via CellFormatting event (New=Red, Reviewed=Yellow, Resolved=Green)
    - [ ] Double-click handler to raise event for detail view
    - [ ] Column sorting enabled
-   - [ ] Method: `LoadReportsAsync(Model_ErrorReportFilter filter)`
+   - [ ] Method: `LoadReportsAsync(Model_ErrorReport_Core_Filter filter)`
    - [ ] Event: `ReportSelected(int reportId)`
 
 2. **Create Controls/ErrorReports/Control_ErrorReportDetails.cs**
@@ -230,7 +230,7 @@ Follow this sequence to build the feature incrementally:
 ### DataGridView Binding
 
 ```csharp
-private async Task LoadReportsAsync(Model_ErrorReportFilter filter)
+private async Task LoadReportsAsync(Model_ErrorReport_Core_Filter filter)
 {
     try
     {
@@ -242,7 +242,7 @@ private async Task LoadReportsAsync(Model_ErrorReportFilter filter)
         {
             Service_ErrorHandler.HandleException(
                 result.Exception, 
-                ErrorSeverity.Medium,
+                Enum_ErrorSeverity.Medium,
                 message: result.StatusMessage);
             return;
         }
@@ -260,7 +260,7 @@ private async Task LoadReportsAsync(Model_ErrorReportFilter filter)
     }
     catch (Exception ex)
     {
-        Service_ErrorHandler.HandleException(ex, ErrorSeverity.Medium);
+        Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Medium);
     }
 }
 ```
@@ -302,7 +302,7 @@ private async void btnMarkReviewed_Click(object sender, EventArgs e)
         _currentReportId,
         "Reviewed",
         notes,
-        Model_AppVariables.CurrentUser.UserName
+        Model_Application_Variables.CurrentUser.UserName
     );
     
     if (result.IsSuccess)
@@ -314,7 +314,7 @@ private async void btnMarkReviewed_Click(object sender, EventArgs e)
     {
         Service_ErrorHandler.HandleException(
             result.Exception, 
-            ErrorSeverity.Medium,
+            Enum_ErrorSeverity.Medium,
             message: result.StatusMessage);
     }
 }
@@ -345,7 +345,7 @@ dgvReports.DataSource = result.Data; // Might be null!
 
 ```csharp
 // Service_ErrorHandler
-Service_ErrorHandler.HandleException(ex, ErrorSeverity.Medium);
+Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Medium);
 
 // Async all the way
 var result = await Dao_ErrorReports.GetAllErrorReportsAsync(filter);
@@ -368,7 +368,7 @@ if (!result.IsSuccess || result.Data == null)
 Before marking feature complete:
 
 - [ ] All 5 stored procedures created and tested in MySQL Workbench
-- [ ] All 5 DAO methods implemented with DaoResult pattern
+- [ ] All 5 DAO methods implemented with Model_Dao_Result pattern
 - [ ] Export helper class created and tested (CSV + Excel)
 - [ ] Grid UserControl displays data with color-coding
 - [ ] Detail UserControl loads complete report

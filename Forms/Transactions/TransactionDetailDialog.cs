@@ -11,7 +11,7 @@ namespace MTM_WIP_Application_Winforms.Forms.Transactions
     {
         #region Fields
 
-        private Model_Transactions? _transaction;
+        private Model_Transactions_Core? _transaction;
 
         #endregion
 
@@ -20,7 +20,7 @@ namespace MTM_WIP_Application_Winforms.Forms.Transactions
         /// <summary>
         /// Gets or sets the transaction to display in the dialog.
         /// </summary>
-        internal Model_Transactions? Transaction
+        internal Model_Transactions_Core? Transaction
         {
             get => _transaction;
             set
@@ -55,7 +55,7 @@ namespace MTM_WIP_Application_Winforms.Forms.Transactions
         /// Initializes a new instance of the <see cref="TransactionDetailPanel"/> class with a transaction.
         /// </summary>
         /// <param name="transaction">The transaction to display.</param>
-        internal TransactionDetailPanel(Model_Transactions transaction) : this()
+        internal TransactionDetailPanel(Model_Transactions_Core transaction) : this()
         {
             Transaction = transaction;
         }

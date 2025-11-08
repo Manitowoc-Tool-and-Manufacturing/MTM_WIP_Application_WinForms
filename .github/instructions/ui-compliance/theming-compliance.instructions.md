@@ -61,11 +61,11 @@ public MyForm()
 
 ### Theme Token Pattern
 
-All custom colors MUST use `Model_UserUiColors` theme tokens with `SystemColors` fallbacks:
+All custom colors MUST use `Model_Shared_UserUiColors` theme tokens with `SystemColors` fallbacks:
 
 ```csharp
 // ✅ CORRECT: Theme token with system fallback
-var colors = Model_AppVariables.UserUiColors;
+var colors = Model_Application_Variables.UserUiColors;
 button1.BackColor = colors.ButtonBackColor ?? SystemColors.Control;
 textBox1.ForeColor = colors.TextBoxForeColor ?? SystemColors.WindowText;
 panel1.BackColor = colors.PanelBackColor ?? SystemColors.ControlLight;
@@ -304,13 +304,13 @@ Themes load automatically at application startup via `Core_Themes.LoadTheme()`:
 // Application startup (Program.cs)
 Core_Themes.LoadTheme(currentUser.ThemeName);
 
-// Theme applied to Model_AppVariables.UserUiColors
-var colors = Model_AppVariables.UserUiColors;
+// Theme applied to Model_Application_Variables.UserUiColors
+var colors = Model_Application_Variables.UserUiColors;
 ```
 
 ### Theme Tokens Available
 
-203 properties accessible via `Model_UserUiColors` (all nullable `Color?`):
+203 properties accessible via `Model_Shared_UserUiColors` (all nullable `Color?`):
 
 **Common Controls**:
 - `ButtonBackColor`, `ButtonForeColor`, `ButtonBorderColor`
@@ -360,7 +360,7 @@ var colors = Model_AppVariables.UserUiColors;
 - [ ] Constructor includes `Core_Themes.ApplyDpiScaling(this)`
 - [ ] Constructor includes `Core_Themes.ApplyRuntimeLayoutAdjustments(this)`
 - [ ] Call order: InitializeComponent → ApplyDpiScaling → ApplyRuntimeLayoutAdjustments
-- [ ] Custom colors use `Model_UserUiColors` tokens with `SystemColors` fallbacks
+- [ ] Custom colors use `Model_Shared_UserUiColors` tokens with `SystemColors` fallbacks
 - [ ] Hardcoded colors have `// ACCEPTABLE:` or `// DATA COLOR:` justification
 - [ ] Control names follow `{ComponentName}_{ControlType}_{Purpose}` convention
 - [ ] No abbreviations in control names (ComboBox not cbo, TextBox not txt)
@@ -414,7 +414,7 @@ namespace MTM.Forms
         
         private void ApplyThemeColors()
         {
-            var colors = Model_AppVariables.UserUiColors;
+            var colors = Model_Application_Variables.UserUiColors;
             
             // Use theme tokens with SystemColors fallbacks
             MyForm_Panel_Main.BackColor = colors.PanelBackColor ?? SystemColors.Control;

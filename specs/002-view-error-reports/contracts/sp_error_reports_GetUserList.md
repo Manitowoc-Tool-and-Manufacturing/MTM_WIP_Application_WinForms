@@ -61,7 +61,7 @@ END IF;
 ## C# Usage Example
 
 ```csharp
-public static async Task<DaoResult<List<string>>> GetUserListAsync()
+public static async Task<Model_Dao_Result<List<string>>> GetUserListAsync()
 {
     try
     {
@@ -76,12 +76,12 @@ public static async Task<DaoResult<List<string>>> GetUserListAsync()
         if (!result.IsSuccess)
         {
             LoggingUtility.Log($"[Dao_ErrorReports] Failed to retrieve user list: {result.StatusMessage}");
-            return DaoResult<List<string>>.Failure(result.StatusMessage);
+            return Model_Dao_Result<List<string>>.Failure(result.StatusMessage);
         }
 
         if (result.Data == null || result.Data.Rows.Count == 0)
         {
-            return DaoResult<List<string>>.Success(
+            return Model_Dao_Result<List<string>>.Success(
                 new List<string>(),
                 "No users found");
         }
@@ -92,14 +92,14 @@ public static async Task<DaoResult<List<string>>> GetUserListAsync()
             .Where(user => !string.IsNullOrEmpty(user))
             .ToList();
 
-        return DaoResult<List<string>>.Success(
+        return Model_Dao_Result<List<string>>.Success(
             users,
             $"Retrieved {users.Count} users");
     }
     catch (Exception ex)
     {
         LoggingUtility.LogApplicationError(ex);
-        return DaoResult<List<string>>.Failure(
+        return Model_Dao_Result<List<string>>.Failure(
             "An unexpected error occurred while retrieving user list.");
     }
 }
@@ -132,7 +132,7 @@ private async void PopulateUserFilterComboBox()
     {
         Service_ErrorHandler.HandleException(
             result.Exception,
-            ErrorSeverity.Low,
+            Enum_ErrorSeverity.Low,
             message: "Failed to load user list for filter");
 
         // Fallback: Add "All Users" only
@@ -156,7 +156,7 @@ private void ApplyFilters()
         : selectedUser;
 
     // Build filter object
-    var filter = new Model_ErrorReportFilter
+    var filter = new Model_ErrorReport_Core_Filter
     {
         UserName = userFilter,
         // ... other filters

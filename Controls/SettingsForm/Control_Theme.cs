@@ -33,7 +33,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
                 string[] themeNames = Core_Themes.Core_AppThemes.GetThemeNames().ToArray();
                 Control_Themes_ComboBox_Theme.Items.AddRange(themeNames);
 
-                string user = Model_AppVariables.User;
+                string user = Model_Application_Variables.User;
                 var themeResult = await Dao_User.GetThemeNameAsync(user);
 
                 if (themeResult.IsSuccess)
@@ -71,8 +71,8 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             }
             catch (Exception ex)
             {
-                Service_ErrorHandler.HandleException(ex, ErrorSeverity.Medium,
-                    contextData: new Dictionary<string, object> { ["User"] = Model_AppVariables.User },
+                Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Medium,
+                    contextData: new Dictionary<string, object> { ["User"] = Model_Application_Variables.User },
                     callerName: nameof(LoadThemeSettingsAsync),
                     controlName: nameof(Control_Theme));
 
@@ -98,7 +98,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
                     return;
                 }
 
-                string user = Model_AppVariables.User;
+                string user = Model_Application_Variables.User;
 
                 // FIXED: Use the proper theme setter that works with existing database structure
                 var saveResult = await Dao_User.SetThemeNameAsync(user, selectedTheme);
@@ -106,7 +106,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
                 if (saveResult.IsSuccess)
                 {
                     // Update the current theme in the app variables and apply to all open forms
-                    Model_AppVariables.ThemeName = selectedTheme;
+                    Model_Application_Variables.ThemeName = selectedTheme;
                     foreach (Form openForm in Application.OpenForms)
                     {
                         Core_Themes.ApplyTheme(openForm);
@@ -133,10 +133,10 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             }
             catch (Exception ex)
             {
-                Service_ErrorHandler.HandleException(ex, ErrorSeverity.Medium,
+                Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Medium,
                     contextData: new Dictionary<string, object>
                     {
-                        ["User"] = Model_AppVariables.User,
+                        ["User"] = Model_Application_Variables.User,
                         ["SelectedTheme"] = Control_Themes_ComboBox_Theme.SelectedItem?.ToString() ?? "null"
                     },
                     callerName: nameof(SaveButton_Click),
@@ -161,21 +161,21 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
                     return;
                 }
 
-                string? originalTheme = Model_AppVariables.ThemeName;
-                Model_AppVariables.ThemeName = selectedTheme;
+                string? originalTheme = Model_Application_Variables.ThemeName;
+                Model_Application_Variables.ThemeName = selectedTheme;
                 foreach (Form openForm in Application.OpenForms)
                 {
                     Core_Themes.ApplyTheme(openForm);
                 }
-                Model_AppVariables.ThemeName = originalTheme;
+                Model_Application_Variables.ThemeName = originalTheme;
                 StatusMessageChanged?.Invoke(this, $"Theme preview applied: {selectedTheme}");
             }
             catch (Exception ex)
             {
-                Service_ErrorHandler.HandleException(ex, ErrorSeverity.Medium,
+                Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Medium,
                     contextData: new Dictionary<string, object>
                     {
-                        ["User"] = Model_AppVariables.User,
+                        ["User"] = Model_Application_Variables.User,
                         ["SelectedTheme"] = Control_Themes_ComboBox_Theme.SelectedItem?.ToString() ?? "null"
                     },
                     callerName: nameof(PreviewButton_Click),

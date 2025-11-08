@@ -76,8 +76,8 @@ var connectionString = Helper_Database_Variables.GetConnectionString(
 /// </summary>
 /// <param name="[param1]">[Description of param1].</param>
 /// <param name="[param2]">[Description of param2].</param>
-/// <returns>DaoResult&lt;DataTable&gt; containing query results or error.</returns>
-public static async Task<DaoResult<DataTable>> Get[EntityName]Async(
+/// <returns>Model_Dao_Result&lt;DataTable&gt; containing query results or error.</returns>
+public static async Task<Model_Dao_Result<DataTable>> Get[EntityName]Async(
     string param1,
     int param2)
 {
@@ -87,12 +87,12 @@ public static async Task<DaoResult<DataTable>> Get[EntityName]Async(
         {
             ["Param1"] = param1,  // NO p_ prefix in C# code
             ["Param2"] = param2,
-            ["User"] = Model_AppVariables.User,
+            ["User"] = Model_Application_Variables.User,
             ["DateTime"] = DateTime.Now
         };
 
         var result = await Helper_Database_StoredProcedure.ExecuteDataTableWithStatus(
-            Model_AppVariables.ConnectionString,
+            Model_Application_Variables.ConnectionString,
             "[stored_procedure_name]",  // e.g., "inv_inventory_get_all"
             parameters,
             progressHelper: null,
@@ -100,19 +100,19 @@ public static async Task<DaoResult<DataTable>> Get[EntityName]Async(
 
         if (result.IsSuccess)
         {
-            return DaoResult<DataTable>.Success(
+            return Model_Dao_Result<DataTable>.Success(
                 result.Data,
                 $"Retrieved {result.Data.Rows.Count} [entity name](s)");
         }
         else
         {
-            return DaoResult<DataTable>.Failure(result.Message);
+            return Model_Dao_Result<DataTable>.Failure(result.Message);
         }
     }
     catch (Exception ex)
     {
         LoggingUtility.LogDatabaseError(ex);
-        return DaoResult<DataTable>.Failure(
+        return Model_Dao_Result<DataTable>.Failure(
             $"Failed to retrieve [entity name]: {ex.Message}",
             ex);
     }
@@ -126,8 +126,8 @@ public static async Task<DaoResult<DataTable>> Get[EntityName]Async(
 /// [Adds/Updates/Deletes] [description].
 /// </summary>
 /// <param name="[param1]">[Description].</param>
-/// <returns>DaoResult indicating success or failure.</returns>
-public static async Task<DaoResult> [Add/Update/Delete][EntityName]Async(
+/// <returns>Model_Dao_Result indicating success or failure.</returns>
+public static async Task<Model_Dao_Result> [Add/Update/Delete][EntityName]Async(
     string param1,
     int param2)
 {
@@ -137,12 +137,12 @@ public static async Task<DaoResult> [Add/Update/Delete][EntityName]Async(
         {
             ["Param1"] = param1,
             ["Param2"] = param2,
-            ["User"] = Model_AppVariables.User,
+            ["User"] = Model_Application_Variables.User,
             ["DateTime"] = DateTime.Now
         };
 
         var result = await Helper_Database_StoredProcedure.ExecuteNonQueryWithStatus(
-            Model_AppVariables.ConnectionString,
+            Model_Application_Variables.ConnectionString,
             "[stored_procedure_name]",
             parameters,
             progressHelper: null,
@@ -150,17 +150,17 @@ public static async Task<DaoResult> [Add/Update/Delete][EntityName]Async(
 
         if (result.IsSuccess)
         {
-            return DaoResult.Success($"[Entity name] [added/updated/deleted] successfully");
+            return Model_Dao_Result.Success($"[Entity name] [added/updated/deleted] successfully");
         }
         else
         {
-            return DaoResult.Failure(result.Message);
+            return Model_Dao_Result.Failure(result.Message);
         }
     }
     catch (Exception ex)
     {
         LoggingUtility.LogDatabaseError(ex);
-        return DaoResult.Failure(
+        return Model_Dao_Result.Failure(
             $"Failed to [add/update/delete] [entity name]: {ex.Message}",
             ex);
     }
@@ -173,11 +173,11 @@ public static async Task<DaoResult> [Add/Update/Delete][EntityName]Async(
 /// <summary>
 /// Performs multi-step operation with transaction.
 /// </summary>
-public static async Task<DaoResult> PerformMultiStepOperationAsync(
+public static async Task<Model_Dao_Result> PerformMultiStepOperationAsync(
     string param1,
     int param2)
 {
-    using var connection = new MySqlConnection(Model_AppVariables.ConnectionString);
+    using var connection = new MySqlConnection(Model_Application_Variables.ConnectionString);
     await connection.OpenAsync();
 
     using var transaction = await connection.BeginTransactionAsync();
@@ -188,11 +188,11 @@ public static async Task<DaoResult> PerformMultiStepOperationAsync(
         var step1Parameters = new Dictionary<string, object>
         {
             ["Param1"] = param1,
-            ["User"] = Model_AppVariables.User
+            ["User"] = Model_Application_Variables.User
         };
 
         var result1 = await Helper_Database_StoredProcedure.ExecuteNonQueryWithStatus(
-            Model_AppVariables.ConnectionString,
+            Model_Application_Variables.ConnectionString,
             "stored_procedure_step1",
             step1Parameters,
             progressHelper: null,
@@ -201,18 +201,18 @@ public static async Task<DaoResult> PerformMultiStepOperationAsync(
         if (!result1.IsSuccess)
         {
             await transaction.RollbackAsync();
-            return DaoResult.Failure($"Step 1 failed: {result1.Message}");
+            return Model_Dao_Result.Failure($"Step 1 failed: {result1.Message}");
         }
 
         // Step 2: Second operation
         var step2Parameters = new Dictionary<string, object>
         {
             ["Param2"] = param2,
-            ["User"] = Model_AppVariables.User
+            ["User"] = Model_Application_Variables.User
         };
 
         var result2 = await Helper_Database_StoredProcedure.ExecuteNonQueryWithStatus(
-            Model_AppVariables.ConnectionString,
+            Model_Application_Variables.ConnectionString,
             "stored_procedure_step2",
             step2Parameters,
             progressHelper: null,
@@ -221,18 +221,18 @@ public static async Task<DaoResult> PerformMultiStepOperationAsync(
         if (!result2.IsSuccess)
         {
             await transaction.RollbackAsync();
-            return DaoResult.Failure($"Step 2 failed: {result2.Message}");
+            return Model_Dao_Result.Failure($"Step 2 failed: {result2.Message}");
         }
 
         // All steps succeeded - commit
         await transaction.CommitAsync();
-        return DaoResult.Success("Multi-step operation completed successfully");
+        return Model_Dao_Result.Success("Multi-step operation completed successfully");
     }
     catch (Exception ex)
     {
         await transaction.RollbackAsync();
         LoggingUtility.LogDatabaseError(ex);
-        return DaoResult.Failure($"Transaction failed: {ex.Message}", ex);
+        return Model_Dao_Result.Failure($"Transaction failed: {ex.Message}", ex);
     }
 }
 ```
@@ -587,7 +587,7 @@ var step1Result = await ExecuteStep1Async();
 if (!step1Result.IsSuccess)
 {
     await transaction.RollbackAsync();
-    return DaoResult.Failure($"Step 1 failed: {step1Result.Message}");
+    return Model_Dao_Result.Failure($"Step 1 failed: {step1Result.Message}");
 }
 
 // Continue to step 2 only if step 1 succeeded
@@ -595,7 +595,7 @@ var step2Result = await ExecuteStep2Async();
 if (!step2Result.IsSuccess)
 {
     await transaction.RollbackAsync();
-    return DaoResult.Failure($"Step 2 failed: {step2Result.Message}");
+    return Model_Dao_Result.Failure($"Step 2 failed: {step2Result.Message}");
 }
 ```
 
@@ -639,7 +639,7 @@ using (var connection = new MySqlConnection(connectionString))
 4. Consider paginating large result sets
 5. If legitimately slow (e.g., complex report), increase threshold for that specific operation category
 
-### Issue 6: "DaoResult.Data is null" Error
+### Issue 6: "Model_Dao_Result.Data is null" Error
 
 **Symptom**: NullReferenceException when accessing `result.Data`.
 

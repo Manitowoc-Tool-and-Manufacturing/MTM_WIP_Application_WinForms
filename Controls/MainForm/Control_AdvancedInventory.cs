@@ -129,17 +129,17 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                 AdvancedInventory_MultiLoc_Button_Reset.TabStop = false;
 
                 AdvancedInventory_Single_ComboBox_Part.ForeColor =
-                    Model_AppVariables.UserUiColors.ComboBoxErrorForeColor ?? Color.Red;
+                    Model_Application_Variables.UserUiColors.ComboBoxErrorForeColor ?? Color.Red;
                 AdvancedInventory_Single_ComboBox_Op.ForeColor =
-                    Model_AppVariables.UserUiColors.ComboBoxErrorForeColor ?? Color.Red;
+                    Model_Application_Variables.UserUiColors.ComboBoxErrorForeColor ?? Color.Red;
                 AdvancedInventory_Single_ComboBox_Loc.ForeColor =
-                    Model_AppVariables.UserUiColors.ComboBoxErrorForeColor ?? Color.Red;
+                    Model_Application_Variables.UserUiColors.ComboBoxErrorForeColor ?? Color.Red;
                 AdvancedInventory_MultiLoc_ComboBox_Part.ForeColor =
-                    Model_AppVariables.UserUiColors.ComboBoxErrorForeColor ?? Color.Red;
+                    Model_Application_Variables.UserUiColors.ComboBoxErrorForeColor ?? Color.Red;
                 AdvancedInventory_MultiLoc_ComboBox_Op.ForeColor =
-                    Model_AppVariables.UserUiColors.ComboBoxErrorForeColor ?? Color.Red;
+                    Model_Application_Variables.UserUiColors.ComboBoxErrorForeColor ?? Color.Red;
                 AdvancedInventory_MultiLoc_ComboBox_Loc.ForeColor =
-                    Model_AppVariables.UserUiColors.ComboBoxErrorForeColor ?? Color.Red;
+                    Model_Application_Variables.UserUiColors.ComboBoxErrorForeColor ?? Color.Red;
 
                 WireUpEvents();
 
@@ -217,17 +217,17 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             {
                 await LoadAllComboBoxesAsync();
                 AdvancedInventory_Single_ComboBox_Part.ForeColor =
-                    Model_AppVariables.UserUiColors.ComboBoxErrorForeColor ?? Color.Red;
+                    Model_Application_Variables.UserUiColors.ComboBoxErrorForeColor ?? Color.Red;
                 AdvancedInventory_Single_ComboBox_Op.ForeColor =
-                    Model_AppVariables.UserUiColors.ComboBoxErrorForeColor ?? Color.Red;
+                    Model_Application_Variables.UserUiColors.ComboBoxErrorForeColor ?? Color.Red;
                 AdvancedInventory_Single_ComboBox_Loc.ForeColor =
-                    Model_AppVariables.UserUiColors.ComboBoxErrorForeColor ?? Color.Red;
+                    Model_Application_Variables.UserUiColors.ComboBoxErrorForeColor ?? Color.Red;
                 AdvancedInventory_MultiLoc_ComboBox_Part.ForeColor =
-                    Model_AppVariables.UserUiColors.ComboBoxErrorForeColor ?? Color.Red;
+                    Model_Application_Variables.UserUiColors.ComboBoxErrorForeColor ?? Color.Red;
                 AdvancedInventory_MultiLoc_ComboBox_Op.ForeColor =
-                    Model_AppVariables.UserUiColors.ComboBoxErrorForeColor ?? Color.Red;
+                    Model_Application_Variables.UserUiColors.ComboBoxErrorForeColor ?? Color.Red;
                 AdvancedInventory_MultiLoc_ComboBox_Loc.ForeColor =
-                    Model_AppVariables.UserUiColors.ComboBoxErrorForeColor ?? Color.Red;
+                    Model_Application_Variables.UserUiColors.ComboBoxErrorForeColor ?? Color.Red;
                 AdvancedInventory_Single_ComboBox_Part.Focus();
                 Core_Themes.ApplyFocusHighlighting(this);
             }
@@ -369,8 +369,8 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                 AdvancedInventory_Single_TextBox_Qty.KeyDown += (sender, e) =>
                 {
                     MainFormControlHelper.AdjustQuantityByKey_Quantity(sender, e, "[ Enter Valid Quantity ]",
-                        Model_AppVariables.UserUiColors.TextBoxForeColor ?? Color.Black,
-                        Model_AppVariables.UserUiColors.TextBoxErrorForeColor ?? Color.Red);
+                        Model_Application_Variables.UserUiColors.TextBoxForeColor ?? Color.Black,
+                        Model_Application_Variables.UserUiColors.TextBoxErrorForeColor ?? Color.Red);
                 };
 
                 AdvancedInventory_Single_TextBox_Count.Text = "[ How Many Transactions ]";
@@ -392,8 +392,8 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                 AdvancedInventory_Single_TextBox_Count.KeyDown += (sender, e) =>
                 {
                     MainFormControlHelper.AdjustQuantityByKey_Transfers(sender, e, "[ How Many Transactions ]",
-                        Model_AppVariables.UserUiColors.TextBoxForeColor ?? Color.Black,
-                        Model_AppVariables.UserUiColors.TextBoxErrorForeColor ?? Color.Red);
+                        Model_Application_Variables.UserUiColors.TextBoxForeColor ?? Color.Black,
+                        Model_Application_Variables.UserUiColors.TextBoxErrorForeColor ?? Color.Red);
                 };
 
                 AdvancedInventory_MultiLoc_TextBox_Qty.Text = "[ Enter Valid Quantity ]";
@@ -428,11 +428,11 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                 bool isValid = int.TryParse(text, out int qty) && qty > 0;
                 if (isValid)
                 {
-                    textBox.ForeColor = Model_AppVariables.UserUiColors.TextBoxForeColor ?? Color.Black;
+                    textBox.ForeColor = Model_Application_Variables.UserUiColors.TextBoxForeColor ?? Color.Black;
                 }
                 else
                 {
-                    textBox.ForeColor = Model_AppVariables.UserUiColors.TextBoxErrorForeColor ?? Color.Red;
+                    textBox.ForeColor = Model_Application_Variables.UserUiColors.TextBoxErrorForeColor ?? Color.Red;
                     if (text != placeholder)
                     {
                         textBox.Text = placeholder;
@@ -493,11 +493,11 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             bool isValid = int.TryParse(text, out int value) && value > 0;
             if (isValid)
             {
-                textBox.ForeColor = Model_AppVariables.UserUiColors.TextBoxForeColor ?? Color.Black;
+                textBox.ForeColor = Model_Application_Variables.UserUiColors.TextBoxForeColor ?? Color.Black;
             }
             else
             {
-                textBox.ForeColor = Model_AppVariables.UserUiColors.TextBoxErrorForeColor ?? Color.Red;
+                textBox.ForeColor = Model_Application_Variables.UserUiColors.TextBoxErrorForeColor ?? Color.Red;
                 if (text != placeholder)
                 {
                     textBox.Text = placeholder;
@@ -709,39 +709,39 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
 
                 Debug.WriteLine("[DEBUG] Resetting UI fields");
                 MainFormControlHelper.ResetComboBox(AdvancedInventory_MultiLoc_ComboBox_Part,
-                    Model_AppVariables.UserUiColors.ComboBoxErrorForeColor ?? Color.Red, 0);
+                    Model_Application_Variables.UserUiColors.ComboBoxErrorForeColor ?? Color.Red, 0);
                 MainFormControlHelper.ResetComboBox(AdvancedInventory_MultiLoc_ComboBox_Op,
-                    Model_AppVariables.UserUiColors.ComboBoxErrorForeColor ?? Color.Red, 0);
+                    Model_Application_Variables.UserUiColors.ComboBoxErrorForeColor ?? Color.Red, 0);
                 MainFormControlHelper.ResetComboBox(AdvancedInventory_MultiLoc_ComboBox_Loc,
-                    Model_AppVariables.UserUiColors.ComboBoxErrorForeColor ?? Color.Red, 0);
+                    Model_Application_Variables.UserUiColors.ComboBoxErrorForeColor ?? Color.Red, 0);
                 MainFormControlHelper.ResetTextBox(AdvancedInventory_MultiLoc_TextBox_Qty,
-                    Model_AppVariables.UserUiColors.TextBoxErrorForeColor ?? Color.Red,
+                    Model_Application_Variables.UserUiColors.TextBoxErrorForeColor ?? Color.Red,
                     "[ Enter Valid Quantity ]");
                 MainFormControlHelper.ResetComboBox(AdvancedInventory_Single_ComboBox_Part,
-                    Model_AppVariables.UserUiColors.ComboBoxErrorForeColor ?? Color.Red, 0);
+                    Model_Application_Variables.UserUiColors.ComboBoxErrorForeColor ?? Color.Red, 0);
                 MainFormControlHelper.ResetComboBox(AdvancedInventory_Single_ComboBox_Op,
-                    Model_AppVariables.UserUiColors.ComboBoxErrorForeColor ?? Color.Red, 0);
+                    Model_Application_Variables.UserUiColors.ComboBoxErrorForeColor ?? Color.Red, 0);
                 MainFormControlHelper.ResetComboBox(AdvancedInventory_Single_ComboBox_Loc,
-                    Model_AppVariables.UserUiColors.ComboBoxErrorForeColor ?? Color.Red, 0);
+                    Model_Application_Variables.UserUiColors.ComboBoxErrorForeColor ?? Color.Red, 0);
                 MainFormControlHelper.ResetTextBox(AdvancedInventory_Single_TextBox_Qty,
-                    Model_AppVariables.UserUiColors.TextBoxErrorForeColor ?? Color.Red,
+                    Model_Application_Variables.UserUiColors.TextBoxErrorForeColor ?? Color.Red,
                     "[ Enter Valid Quantity ]");
                 MainFormControlHelper.ResetTextBox(AdvancedInventory_Single_TextBox_Count,
-                    Model_AppVariables.UserUiColors.TextBoxErrorForeColor ?? Color.Red,
+                    Model_Application_Variables.UserUiColors.TextBoxErrorForeColor ?? Color.Red,
                     "[ Enter How Many Times ]");
                 AdvancedInventory_Single_RichTextBox_Notes.Text = string.Empty;
                 AdvancedInventory_Single_ListView.Items.Clear();
 
                 AdvancedInventory_Single_ComboBox_Part.ForeColor =
-                    Model_AppVariables.UserUiColors.ErrorColor ?? Color.Red;
+                    Model_Application_Variables.UserUiColors.ErrorColor ?? Color.Red;
                 AdvancedInventory_Single_ComboBox_Op.ForeColor =
-                    Model_AppVariables.UserUiColors.ErrorColor ?? Color.Red;
+                    Model_Application_Variables.UserUiColors.ErrorColor ?? Color.Red;
                 AdvancedInventory_Single_ComboBox_Loc.ForeColor =
-                    Model_AppVariables.UserUiColors.ErrorColor ?? Color.Red;
+                    Model_Application_Variables.UserUiColors.ErrorColor ?? Color.Red;
                 AdvancedInventory_Single_TextBox_Qty.ForeColor =
-                    Model_AppVariables.UserUiColors.ErrorColor ?? Color.Red;
+                    Model_Application_Variables.UserUiColors.ErrorColor ?? Color.Red;
                 AdvancedInventory_Single_TextBox_Count.ForeColor =
-                    Model_AppVariables.UserUiColors.ErrorColor ?? Color.Red;
+                    Model_Application_Variables.UserUiColors.ErrorColor ?? Color.Red;
 
                 UpdateSingleSaveButtonState();
 
@@ -785,39 +785,39 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
 
                 Debug.WriteLine("[DEBUG] Resetting UI fields");
                 MainFormControlHelper.ResetComboBox(AdvancedInventory_MultiLoc_ComboBox_Part,
-                    Model_AppVariables.UserUiColors.ErrorColor ?? Color.Red, 0);
+                    Model_Application_Variables.UserUiColors.ErrorColor ?? Color.Red, 0);
                 MainFormControlHelper.ResetComboBox(AdvancedInventory_MultiLoc_ComboBox_Op,
-                    Model_AppVariables.UserUiColors.ErrorColor ?? Color.Red, 0);
+                    Model_Application_Variables.UserUiColors.ErrorColor ?? Color.Red, 0);
                 MainFormControlHelper.ResetComboBox(AdvancedInventory_MultiLoc_ComboBox_Loc,
-                    Model_AppVariables.UserUiColors.ErrorColor ?? Color.Red, 0);
+                    Model_Application_Variables.UserUiColors.ErrorColor ?? Color.Red, 0);
                 MainFormControlHelper.ResetTextBox(AdvancedInventory_MultiLoc_TextBox_Qty,
-                    Model_AppVariables.UserUiColors.ErrorColor ?? Color.Red,
+                    Model_Application_Variables.UserUiColors.ErrorColor ?? Color.Red,
                     "[ Enter Valid Quantity ]");
                 MainFormControlHelper.ResetComboBox(AdvancedInventory_Single_ComboBox_Part,
-                    Model_AppVariables.UserUiColors.ErrorColor ?? Color.Red, 0);
+                    Model_Application_Variables.UserUiColors.ErrorColor ?? Color.Red, 0);
                 MainFormControlHelper.ResetComboBox(AdvancedInventory_Single_ComboBox_Op,
-                    Model_AppVariables.UserUiColors.ErrorColor ?? Color.Red, 0);
+                    Model_Application_Variables.UserUiColors.ErrorColor ?? Color.Red, 0);
                 MainFormControlHelper.ResetComboBox(AdvancedInventory_Single_ComboBox_Loc,
-                    Model_AppVariables.UserUiColors.ErrorColor ?? Color.Red, 0);
+                    Model_Application_Variables.UserUiColors.ErrorColor ?? Color.Red, 0);
                 MainFormControlHelper.ResetTextBox(AdvancedInventory_Single_TextBox_Qty,
-                    Model_AppVariables.UserUiColors.ErrorColor ?? Color.Red,
+                    Model_Application_Variables.UserUiColors.ErrorColor ?? Color.Red,
                     "[ Enter Valid Quantity ]");
                 MainFormControlHelper.ResetTextBox(AdvancedInventory_Single_TextBox_Count,
-                    Model_AppVariables.UserUiColors.ErrorColor ?? Color.Red,
+                    Model_Application_Variables.UserUiColors.ErrorColor ?? Color.Red,
                     "[ Enter How Many Times ]");
                 AdvancedInventory_Single_RichTextBox_Notes.Text = string.Empty;
                 AdvancedInventory_Single_ListView.Items.Clear();
 
                 AdvancedInventory_Single_ComboBox_Part.ForeColor =
-                    Model_AppVariables.UserUiColors.ErrorColor ?? Color.Red;
+                    Model_Application_Variables.UserUiColors.ErrorColor ?? Color.Red;
                 AdvancedInventory_Single_ComboBox_Op.ForeColor =
-                    Model_AppVariables.UserUiColors.ErrorColor ?? Color.Red;
+                    Model_Application_Variables.UserUiColors.ErrorColor ?? Color.Red;
                 AdvancedInventory_Single_ComboBox_Loc.ForeColor =
-                    Model_AppVariables.UserUiColors.ErrorColor ?? Color.Red;
+                    Model_Application_Variables.UserUiColors.ErrorColor ?? Color.Red;
                 AdvancedInventory_Single_TextBox_Qty.ForeColor =
-                    Model_AppVariables.UserUiColors.ErrorColor ?? Color.Red;
+                    Model_Application_Variables.UserUiColors.ErrorColor ?? Color.Red;
                 AdvancedInventory_Single_TextBox_Count.ForeColor =
-                    Model_AppVariables.UserUiColors.ErrorColor ?? Color.Red;
+                    Model_Application_Variables.UserUiColors.ErrorColor ?? Color.Red;
 
                 UpdateSingleSaveButtonState();
             }
@@ -902,7 +902,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                         string.IsNullOrWhiteSpace(loc) || !int.TryParse(qtyText, out int qty) || qty <= 0)
                     {
                         anyFailure = true;
-                        item.ForeColor = Model_AppVariables.UserUiColors.TextBoxErrorForeColor ?? Color.Red;
+                        item.ForeColor = Model_Application_Variables.UserUiColors.TextBoxErrorForeColor ?? Color.Red;
                         Service_ErrorHandler.HandleValidationError(
                             "Inventory list contains invalid data. Please review entries highlighted in red.",
                             "Inventory List",
@@ -910,21 +910,21 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                         continue;
                     }
 
-                    Model_AppVariables.PartId = partId;
-                    Model_AppVariables.Operation = op;
-                    Model_AppVariables.Location = loc;
-                    Model_AppVariables.Notes = notes;
-                    Model_AppVariables.InventoryQuantity = qty;
-                    Model_AppVariables.User ??= Environment.UserName;
-                    Model_AppVariables.PartType ??= string.Empty;
+                    Model_Application_Variables.PartId = partId;
+                    Model_Application_Variables.Operation = op;
+                    Model_Application_Variables.Location = loc;
+                    Model_Application_Variables.Notes = notes;
+                    Model_Application_Variables.InventoryQuantity = qty;
+                    Model_Application_Variables.User ??= Environment.UserName;
+                    Model_Application_Variables.PartType ??= string.Empty;
 
-                    DaoResult<int> addResult = await Dao_Inventory.AddInventoryItemAsync(
+                    Model_Dao_Result<int> addResult = await Dao_Inventory.AddInventoryItemAsync(
                         partId,
                         loc,
                         op,
                         qty,
-                        Model_AppVariables.PartType ?? string.Empty,
-                        Model_AppVariables.User,
+                        Model_Application_Variables.PartType ?? string.Empty,
+                        Model_Application_Variables.User,
                         null,
                         notes,
                         true);
@@ -937,7 +937,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                             $"Failed to save inventory for part {partId} at {loc} ({op}).",
                             CreateInventoryContext(partId, op, loc, qty, notes),
                             nameof(AdvancedInventory_Single_Button_Save_Click));
-                        item.ForeColor = Model_AppVariables.UserUiColors.TextBoxErrorForeColor ?? Color.Red;
+                        item.ForeColor = Model_Application_Variables.UserUiColors.TextBoxErrorForeColor ?? Color.Red;
                         continue;
                     }
 
@@ -1085,16 +1085,16 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                 }
 
                 MainFormControlHelper.ResetComboBox(AdvancedInventory_Single_ComboBox_Part,
-                    Model_AppVariables.UserUiColors.ComboBoxErrorForeColor ?? Color.Red, 0);
+                    Model_Application_Variables.UserUiColors.ComboBoxErrorForeColor ?? Color.Red, 0);
                 MainFormControlHelper.ResetComboBox(AdvancedInventory_Single_ComboBox_Op,
-                    Model_AppVariables.UserUiColors.ComboBoxErrorForeColor ?? Color.Red, 0);
+                    Model_Application_Variables.UserUiColors.ComboBoxErrorForeColor ?? Color.Red, 0);
                 MainFormControlHelper.ResetComboBox(AdvancedInventory_Single_ComboBox_Loc,
-                    Model_AppVariables.UserUiColors.ComboBoxErrorForeColor ?? Color.Red, 0);
+                    Model_Application_Variables.UserUiColors.ComboBoxErrorForeColor ?? Color.Red, 0);
                 MainFormControlHelper.ResetTextBox(AdvancedInventory_Single_TextBox_Qty,
-                    Model_AppVariables.UserUiColors.TextBoxErrorForeColor ?? Color.Red,
+                    Model_Application_Variables.UserUiColors.TextBoxErrorForeColor ?? Color.Red,
                     "[ Enter Valid Quantity ]");
                 MainFormControlHelper.ResetTextBox(AdvancedInventory_Single_TextBox_Count,
-                    Model_AppVariables.UserUiColors.TextBoxErrorForeColor ?? Color.Red,
+                    Model_Application_Variables.UserUiColors.TextBoxErrorForeColor ?? Color.Red,
                     "[ Enter How Many Times ]");
                 AdvancedInventory_Single_RichTextBox_Notes.Text = string.Empty;
 
@@ -1140,7 +1140,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                             part.SelectedIndex = 0;
                             part.Focus();
                             part.SelectAll();
-                            part.BackColor = Model_AppVariables.UserUiColors.ControlFocusedBackColor ?? Color.LightBlue;
+                            part.BackColor = Model_Application_Variables.UserUiColors.ControlFocusedBackColor ?? Color.LightBlue;
                         }
 
                         if (op is not null)
@@ -1205,25 +1205,25 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
 
                 Debug.WriteLine("[DEBUG] Resetting UI fields");
                 MainFormControlHelper.ResetComboBox(AdvancedInventory_MultiLoc_ComboBox_Part,
-                    Model_AppVariables.UserUiColors.ComboBoxErrorForeColor ?? Color.Red, 0);
+                    Model_Application_Variables.UserUiColors.ComboBoxErrorForeColor ?? Color.Red, 0);
                 MainFormControlHelper.ResetComboBox(AdvancedInventory_MultiLoc_ComboBox_Op,
-                    Model_AppVariables.UserUiColors.ComboBoxErrorForeColor ?? Color.Red, 0);
+                    Model_Application_Variables.UserUiColors.ComboBoxErrorForeColor ?? Color.Red, 0);
                 MainFormControlHelper.ResetComboBox(AdvancedInventory_MultiLoc_ComboBox_Loc,
-                    Model_AppVariables.UserUiColors.ComboBoxErrorForeColor ?? Color.Red, 0);
+                    Model_Application_Variables.UserUiColors.ComboBoxErrorForeColor ?? Color.Red, 0);
                 MainFormControlHelper.ResetTextBox(AdvancedInventory_MultiLoc_TextBox_Qty,
-                    Model_AppVariables.UserUiColors.TextBoxErrorForeColor ?? Color.Red,
+                    Model_Application_Variables.UserUiColors.TextBoxErrorForeColor ?? Color.Red,
                     "[ Enter Valid Quantity ]");
                 MainFormControlHelper.ResetComboBox(AdvancedInventory_Single_ComboBox_Part,
-                    Model_AppVariables.UserUiColors.ComboBoxErrorForeColor ?? Color.Red, 0);
+                    Model_Application_Variables.UserUiColors.ComboBoxErrorForeColor ?? Color.Red, 0);
                 MainFormControlHelper.ResetComboBox(AdvancedInventory_Single_ComboBox_Op,
-                    Model_AppVariables.UserUiColors.ComboBoxErrorForeColor ?? Color.Red, 0);
+                    Model_Application_Variables.UserUiColors.ComboBoxErrorForeColor ?? Color.Red, 0);
                 MainFormControlHelper.ResetComboBox(AdvancedInventory_Single_ComboBox_Loc,
-                    Model_AppVariables.UserUiColors.ComboBoxErrorForeColor ?? Color.Red, 0);
+                    Model_Application_Variables.UserUiColors.ComboBoxErrorForeColor ?? Color.Red, 0);
                 MainFormControlHelper.ResetTextBox(AdvancedInventory_Single_TextBox_Qty,
-                    Model_AppVariables.UserUiColors.TextBoxErrorForeColor ?? Color.Red,
+                    Model_Application_Variables.UserUiColors.TextBoxErrorForeColor ?? Color.Red,
                     "[ Enter Valid Quantity ]");
                 MainFormControlHelper.ResetTextBox(AdvancedInventory_Single_TextBox_Count,
-                    Model_AppVariables.UserUiColors.TextBoxErrorForeColor ?? Color.Red,
+                    Model_Application_Variables.UserUiColors.TextBoxErrorForeColor ?? Color.Red,
                     "[ Enter How Many Times ]");
                 AdvancedInventory_MultiLoc_RichTextBox_Notes.Text = string.Empty;
                 AdvancedInventory_MultiLoc_ListView_Preview.Items.Clear();
@@ -1231,13 +1231,13 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                 AdvancedInventory_MultiLoc_ComboBox_Op.Enabled = true;
 
                 AdvancedInventory_MultiLoc_ComboBox_Part.ForeColor =
-                    Model_AppVariables.UserUiColors.ErrorColor ?? Color.Red;
+                    Model_Application_Variables.UserUiColors.ErrorColor ?? Color.Red;
                 AdvancedInventory_MultiLoc_ComboBox_Op.ForeColor =
-                    Model_AppVariables.UserUiColors.ErrorColor ?? Color.Red;
+                    Model_Application_Variables.UserUiColors.ErrorColor ?? Color.Red;
                 AdvancedInventory_MultiLoc_ComboBox_Loc.ForeColor =
-                    Model_AppVariables.UserUiColors.ErrorColor ?? Color.Red;
+                    Model_Application_Variables.UserUiColors.ErrorColor ?? Color.Red;
                 AdvancedInventory_MultiLoc_TextBox_Qty.ForeColor =
-                    Model_AppVariables.UserUiColors.ErrorColor ?? Color.Red;
+                    Model_Application_Variables.UserUiColors.ErrorColor ?? Color.Red;
 
                 UpdateMultiSaveButtonState();
 
@@ -1281,25 +1281,25 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
 
                 Debug.WriteLine("[DEBUG] Resetting UI fields");
                 MainFormControlHelper.ResetComboBox(AdvancedInventory_MultiLoc_ComboBox_Part,
-                    Model_AppVariables.UserUiColors.ErrorColor ?? Color.Red, 0);
+                    Model_Application_Variables.UserUiColors.ErrorColor ?? Color.Red, 0);
                 MainFormControlHelper.ResetComboBox(AdvancedInventory_MultiLoc_ComboBox_Op,
-                    Model_AppVariables.UserUiColors.ErrorColor ?? Color.Red, 0);
+                    Model_Application_Variables.UserUiColors.ErrorColor ?? Color.Red, 0);
                 MainFormControlHelper.ResetComboBox(AdvancedInventory_MultiLoc_ComboBox_Loc,
-                    Model_AppVariables.UserUiColors.ErrorColor ?? Color.Red, 0);
+                    Model_Application_Variables.UserUiColors.ErrorColor ?? Color.Red, 0);
                 MainFormControlHelper.ResetTextBox(AdvancedInventory_MultiLoc_TextBox_Qty,
-                    Model_AppVariables.UserUiColors.ErrorColor ?? Color.Red,
+                    Model_Application_Variables.UserUiColors.ErrorColor ?? Color.Red,
                     "[ Enter Valid Quantity ]");
                 MainFormControlHelper.ResetComboBox(AdvancedInventory_Single_ComboBox_Part,
-                    Model_AppVariables.UserUiColors.ErrorColor ?? Color.Red, 0);
+                    Model_Application_Variables.UserUiColors.ErrorColor ?? Color.Red, 0);
                 MainFormControlHelper.ResetComboBox(AdvancedInventory_Single_ComboBox_Op,
-                    Model_AppVariables.UserUiColors.ErrorColor ?? Color.Red, 0);
+                    Model_Application_Variables.UserUiColors.ErrorColor ?? Color.Red, 0);
                 MainFormControlHelper.ResetComboBox(AdvancedInventory_Single_ComboBox_Loc,
-                    Model_AppVariables.UserUiColors.ErrorColor ?? Color.Red, 0);
+                    Model_Application_Variables.UserUiColors.ErrorColor ?? Color.Red, 0);
                 MainFormControlHelper.ResetTextBox(AdvancedInventory_Single_TextBox_Qty,
-                    Model_AppVariables.UserUiColors.ErrorColor ?? Color.Red,
+                    Model_Application_Variables.UserUiColors.ErrorColor ?? Color.Red,
                     "[ Enter Valid Quantity ]");
                 MainFormControlHelper.ResetTextBox(AdvancedInventory_Single_TextBox_Count,
-                    Model_AppVariables.UserUiColors.ErrorColor ?? Color.Red,
+                    Model_Application_Variables.UserUiColors.ErrorColor ?? Color.Red,
                     "[ Enter How Many Times ]");
                 AdvancedInventory_MultiLoc_RichTextBox_Notes.Text = string.Empty;
                 AdvancedInventory_MultiLoc_ListView_Preview.Items.Clear();
@@ -1307,13 +1307,13 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                 AdvancedInventory_MultiLoc_ComboBox_Op.Enabled = true;
 
                 AdvancedInventory_MultiLoc_ComboBox_Part.ForeColor =
-                    Model_AppVariables.UserUiColors.ErrorColor ?? Color.Red;
+                    Model_Application_Variables.UserUiColors.ErrorColor ?? Color.Red;
                 AdvancedInventory_MultiLoc_ComboBox_Op.ForeColor =
-                    Model_AppVariables.UserUiColors.ErrorColor ?? Color.Red;
+                    Model_Application_Variables.UserUiColors.ErrorColor ?? Color.Red;
                 AdvancedInventory_MultiLoc_ComboBox_Loc.ForeColor =
-                    Model_AppVariables.UserUiColors.ErrorColor ?? Color.Red;
+                    Model_Application_Variables.UserUiColors.ErrorColor ?? Color.Red;
                 AdvancedInventory_MultiLoc_TextBox_Qty.ForeColor =
-                    Model_AppVariables.UserUiColors.ErrorColor ?? Color.Red;
+                    Model_Application_Variables.UserUiColors.ErrorColor ?? Color.Red;
 
                 UpdateMultiSaveButtonState();
             }
@@ -1429,7 +1429,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                 }
 
                 MainFormControlHelper.ResetComboBox(AdvancedInventory_MultiLoc_ComboBox_Loc,
-                    Model_AppVariables.UserUiColors.ComboBoxErrorForeColor ?? Color.Red, 0);
+                    Model_Application_Variables.UserUiColors.ComboBoxErrorForeColor ?? Color.Red, 0);
                 AdvancedInventory_MultiLoc_ComboBox_Loc.Focus();
 
                 UpdateMultiSaveButtonState();
@@ -1493,13 +1493,13 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                         continue;
                     }
 
-                    Model_AppVariables.PartId = partId;
-                    Model_AppVariables.Operation = op;
-                    Model_AppVariables.Location = loc;
-                    Model_AppVariables.Notes = notes;
-                    Model_AppVariables.InventoryQuantity = qty;
-                    Model_AppVariables.User ??= Environment.UserName;
-                    Model_AppVariables.PartType ??= "";
+                    Model_Application_Variables.PartId = partId;
+                    Model_Application_Variables.Operation = op;
+                    Model_Application_Variables.Location = loc;
+                    Model_Application_Variables.Notes = notes;
+                    Model_Application_Variables.InventoryQuantity = qty;
+                    Model_Application_Variables.User ??= Environment.UserName;
+                    Model_Application_Variables.PartType ??= "";
 
                     // Pass null/empty for batchNumber for unique batch per transaction
                     await Dao_Inventory.AddInventoryItemAsync(
@@ -1507,8 +1507,8 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                         loc,
                         op,
                         qty,
-                        Model_AppVariables.PartType ?? "",
-                        Model_AppVariables.User,
+                        Model_Application_Variables.PartType ?? "",
+                        Model_Application_Variables.User,
                         null, // <-- ensure unique batch number
                         notes,
                         true);
@@ -1549,8 +1549,8 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
 
         private static async Task<string> GetWipAppExcelUserFolderAsync()
         {
-            string? server = new MySqlConnectionStringBuilder(Model_AppVariables.ConnectionString).Server;
-            string userName = Model_AppVariables.User ?? Environment.UserName;
+            string? server = new MySqlConnectionStringBuilder(Model_Application_Variables.ConnectionString).Server;
+            string userName = Model_Application_Variables.User ?? Environment.UserName;
             
             // Sanitize username to prevent path traversal
             userName = Path.GetInvalidFileNameChars()
@@ -1580,7 +1580,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
         private static async Task<string> GetUserExcelFilePathAsync()
         {
             string userFolder = await GetWipAppExcelUserFolderAsync();
-            string userName = Model_AppVariables.User ?? Environment.UserName;
+            string userName = Model_Application_Variables.User ?? Environment.UserName;
             
             // Sanitize username for filename
             userName = Path.GetInvalidFileNameChars()
@@ -1629,7 +1629,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                     {
                         Service_ErrorHandler.HandleException(
                             new SecurityException($"Template path validation failed: {templatePath}"),
-                            ErrorSeverity.High,
+                            Enum_ErrorSeverity.High,
                             controlName: nameof(AdvancedInventory_Import_Button_OpenExcel));
                         return;
                     }
@@ -1642,7 +1642,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                     {
                         Service_ErrorHandler.HandleException(
                             new FileNotFoundException($"Excel template not found: {templatePath}"),
-                            ErrorSeverity.Medium,
+                            Enum_ErrorSeverity.Medium,
                             controlName: nameof(AdvancedInventory_Import_Button_OpenExcel));
                         return;
                     }
@@ -1653,7 +1653,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             catch (Exception ex)
             {
                 LoggingUtility.LogApplicationError(ex);
-                Service_ErrorHandler.HandleException(ex, ErrorSeverity.Medium,
+                Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Medium,
                     contextData: new Dictionary<string, object> { ["ExcelPath"] = await GetUserExcelFilePathAsync() },
                     controlName: nameof(AdvancedInventory_Import_Button_OpenExcel));
             }
@@ -1726,7 +1726,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             catch (Exception ex)
             {
                 LoggingUtility.LogApplicationError(ex);
-                Service_ErrorHandler.HandleException(ex, ErrorSeverity.Medium,
+                Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Medium,
                     contextData: new Dictionary<string, object> { ["ExcelPath"] = await GetUserExcelFilePathAsync() },
                     controlName: nameof(AdvancedInventory_Import_Button_ImportExcel));
             }
@@ -1783,7 +1783,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                 bool rowValid = true;
                 foreach (DataGridViewCell cell in row.Cells)
                 {
-                    cell.Style.ForeColor = Model_AppVariables.UserUiColors.TextBoxForeColor ?? Color.Black;
+                    cell.Style.ForeColor = Model_Application_Variables.UserUiColors.TextBoxForeColor ?? Color.Black;
                 }
 
                 string part = row.Cells["Part"].Value?.ToString() ?? "";
@@ -1796,28 +1796,28 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                 if (!validParts.Contains(part))
                 {
                     row.Cells["Part"].Style.ForeColor =
-                        Model_AppVariables.UserUiColors.TextBoxErrorForeColor ?? Color.Red;
+                        Model_Application_Variables.UserUiColors.TextBoxErrorForeColor ?? Color.Red;
                     rowValid = false;
                 }
 
                 if (!validOps.Contains(op))
                 {
                     row.Cells["Operation"].Style.ForeColor =
-                        Model_AppVariables.UserUiColors.TextBoxErrorForeColor ?? Color.Red;
+                        Model_Application_Variables.UserUiColors.TextBoxErrorForeColor ?? Color.Red;
                     rowValid = false;
                 }
 
                 if (!validLocs.Contains(loc))
                 {
                     row.Cells["Location"].Style.ForeColor =
-                        Model_AppVariables.UserUiColors.TextBoxErrorForeColor ?? Color.Red;
+                        Model_Application_Variables.UserUiColors.TextBoxErrorForeColor ?? Color.Red;
                     rowValid = false;
                 }
 
                 if (!int.TryParse(qtyText, out int qty) || qty <= 0)
                 {
                     row.Cells["Quantity"].Style.ForeColor =
-                        Model_AppVariables.UserUiColors.TextBoxErrorForeColor ?? Color.Red;
+                        Model_Application_Variables.UserUiColors.TextBoxErrorForeColor ?? Color.Red;
                     rowValid = false;
                 }
 
@@ -1827,14 +1827,14 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                     {
                         // Pass null/empty for batchNumber for unique batch per transaction
                         await Dao_Inventory.AddInventoryItemAsync(
-                            part, loc, op, qty, "", Model_AppVariables.User ?? Environment.UserName, null, notes, true);
+                            part, loc, op, qty, "", Model_Application_Variables.User ?? Environment.UserName, null, notes, true);
                     }
                     catch (Exception ex)
                     {
                         LoggingUtility.LogApplicationError(ex);
                         foreach (DataGridViewCell cell in row.Cells)
                         {
-                            cell.Style.ForeColor = Model_AppVariables.UserUiColors.TextBoxErrorForeColor ?? Color.Red;
+                            cell.Style.ForeColor = Model_Application_Variables.UserUiColors.TextBoxErrorForeColor ?? Color.Red;
                         }
 
                         rowValid = false;
@@ -1912,7 +1912,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                     foreach (DataGridViewCell cell in row.Cells)
                     {
                         if (cell.Style.ForeColor ==
-                            (Model_AppVariables.UserUiColors.TextBoxErrorForeColor ?? Color.Red))
+                            (Model_Application_Variables.UserUiColors.TextBoxErrorForeColor ?? Color.Red))
                         {
                             if (cell.OwningColumn != null)
                             {
@@ -1985,7 +1985,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                     {
                         if (cell.OwningColumn != null && cols.Contains(cell.OwningColumn.Name))
                         {
-                            cell.Style.ForeColor = Model_AppVariables.UserUiColors.TextBoxErrorForeColor ?? Color.Red;
+                            cell.Style.ForeColor = Model_Application_Variables.UserUiColors.TextBoxErrorForeColor ?? Color.Red;
                         }
                     }
                 }
@@ -1996,7 +1996,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                     string qtyText = qtyCell.Value?.ToString() ?? "";
                     if (!int.TryParse(qtyText, out int qty) || qty <= 0)
                     {
-                        qtyCell.Style.ForeColor = Model_AppVariables.UserUiColors.TextBoxErrorForeColor ?? Color.Red;
+                        qtyCell.Style.ForeColor = Model_Application_Variables.UserUiColors.TextBoxErrorForeColor ?? Color.Red;
                     }
                 }
             }
@@ -2006,7 +2006,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
 
         #region Helpers
 
-        private static void HandleDaoFailure<T>(DaoResult<T> result, string fallbackMessage,
+        private static void HandleDaoFailure<T>(Model_Dao_Result<T> result, string fallbackMessage,
             Dictionary<string, object> contextData, string callerName)
         {
             string message = string.IsNullOrWhiteSpace(result.ErrorMessage)
@@ -2015,7 +2015,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
 
             Service_ErrorHandler.HandleException(
                 new InvalidOperationException(message),
-                ErrorSeverity.Medium,
+                Enum_ErrorSeverity.Medium,
                 contextData: contextData,
                 callerName: callerName,
                 controlName: nameof(Control_AdvancedInventory));

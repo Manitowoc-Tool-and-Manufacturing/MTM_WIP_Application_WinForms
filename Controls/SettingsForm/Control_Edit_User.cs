@@ -219,7 +219,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
                     return;
                 }
 
-                // Update user with DaoResult pattern
+                // Update user with Model_Dao_Result pattern
                 var updateResult = await Dao_User.UpdateUserAsync(
                     userName,
                     Control_Edit_User_TextBox_FirstName.Text + " " + Control_Edit_User_TextBox_LastName.Text,

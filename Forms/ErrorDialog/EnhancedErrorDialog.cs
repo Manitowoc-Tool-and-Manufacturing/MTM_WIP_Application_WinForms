@@ -22,7 +22,7 @@ namespace MTM_WIP_Application_Winforms.Forms.ErrorDialog
         private Exception _exception;
         private string _callerName;
         private string _controlName;
-        private ErrorSeverity _severity;
+        private Enum_ErrorSeverity _severity;
         private Func<bool>? _retryAction;
         private readonly Dictionary<string, object> _contextData;
 
@@ -38,7 +38,7 @@ namespace MTM_WIP_Application_Winforms.Forms.ErrorDialog
         #region Constructors
 
         public EnhancedErrorDialog(Exception exception, string callerName, string controlName, 
-            ErrorSeverity severity = ErrorSeverity.Medium, Func<bool>? retryAction = null,
+            Enum_ErrorSeverity severity = Enum_ErrorSeverity.Medium, Func<bool>? retryAction = null,
             Dictionary<string, object>? contextData = null)
         {
             Service_DebugTracer.TraceMethodEntry(new Dictionary<string, object>
@@ -110,10 +110,10 @@ namespace MTM_WIP_Application_Winforms.Forms.ErrorDialog
             // Dynamic sizing based on error severity - smaller for less severe errors
             this.ClientSize = _severity switch
             {
-                ErrorSeverity.Low => new Size(480, 300),      // Compact for warnings
-                ErrorSeverity.Medium => new Size(560, 400),   // Standard size
-                ErrorSeverity.High => new Size(620, 450),     // Larger for critical
-                ErrorSeverity.Fatal => new Size(680, 500),    // Maximum for fatal
+                Enum_ErrorSeverity.Low => new Size(480, 300),      // Compact for warnings
+                Enum_ErrorSeverity.Medium => new Size(560, 400),   // Standard size
+                Enum_ErrorSeverity.High => new Size(620, 450),     // Larger for critical
+                Enum_ErrorSeverity.Fatal => new Size(680, 500),    // Maximum for fatal
                 _ => new Size(560, 400)
             };
             
@@ -144,10 +144,10 @@ namespace MTM_WIP_Application_Winforms.Forms.ErrorDialog
         {
             string severityText = _severity switch
             {
-                ErrorSeverity.Low => "Warning",
-                ErrorSeverity.Medium => "Error", 
-                ErrorSeverity.High => "Critical Database Issue",
-                ErrorSeverity.Fatal => "Fatal Application Error",
+                Enum_ErrorSeverity.Low => "Warning",
+                Enum_ErrorSeverity.Medium => "Error", 
+                Enum_ErrorSeverity.High => "Critical Database Issue",
+                Enum_ErrorSeverity.Fatal => "Fatal Application Error",
                 _ => "Error"
             };
 
@@ -160,10 +160,10 @@ namespace MTM_WIP_Application_Winforms.Forms.ErrorDialog
                 // Softer, more professional colors
                 var severityColor = _severity switch
                 {
-                    ErrorSeverity.Low => Color.FromArgb(255, 193, 7),      // Amber
-                    ErrorSeverity.Medium => Color.FromArgb(244, 67, 54),   // Red
-                    ErrorSeverity.High => Color.FromArgb(183, 28, 28),     // Dark Red
-                    ErrorSeverity.Fatal => Color.FromArgb(33, 33, 33),     // Near Black
+                    Enum_ErrorSeverity.Low => Color.FromArgb(255, 193, 7),      // Amber
+                    Enum_ErrorSeverity.Medium => Color.FromArgb(244, 67, 54),   // Red
+                    Enum_ErrorSeverity.High => Color.FromArgb(183, 28, 28),     // Dark Red
+                    Enum_ErrorSeverity.Fatal => Color.FromArgb(33, 33, 33),     // Near Black
                     _ => Color.FromArgb(244, 67, 54)
                 };
                 
@@ -182,10 +182,10 @@ namespace MTM_WIP_Application_Winforms.Forms.ErrorDialog
                     // Draw appropriate symbol
                     string symbol = _severity switch
                     {
-                        ErrorSeverity.Low => "!",
-                        ErrorSeverity.Medium => "X",
-                        ErrorSeverity.High => "X",
-                        ErrorSeverity.Fatal => "X",
+                        Enum_ErrorSeverity.Low => "!",
+                        Enum_ErrorSeverity.Medium => "X",
+                        Enum_ErrorSeverity.High => "X",
+                        Enum_ErrorSeverity.Fatal => "X",
                         _ => "!"
                     };
                     
@@ -229,10 +229,10 @@ namespace MTM_WIP_Application_Winforms.Forms.ErrorDialog
             summary.AppendLine("**Impact:**");
             string impact = _severity switch
             {
-                ErrorSeverity.Low => "Minor functionality may be affected, but the application should continue working normally.",
-                ErrorSeverity.Medium => "Your recent changes may not have been saved. The operation that failed will need to be retried.",
-                ErrorSeverity.High => "Data integrity may be affected. Recent inventory changes may not have been saved properly.",
-                ErrorSeverity.Fatal => "The application cannot continue and will need to be restarted.",
+                Enum_ErrorSeverity.Low => "Minor functionality may be affected, but the application should continue working normally.",
+                Enum_ErrorSeverity.Medium => "Your recent changes may not have been saved. The operation that failed will need to be retried.",
+                Enum_ErrorSeverity.High => "Data integrity may be affected. Recent inventory changes may not have been saved properly.",
+                Enum_ErrorSeverity.Fatal => "The application cannot continue and will need to be restarted.",
                 _ => "Some functionality may be temporarily unavailable."
             };
             summary.AppendLine(impact);
@@ -241,10 +241,10 @@ namespace MTM_WIP_Application_Winforms.Forms.ErrorDialog
             summary.AppendLine("**What You Should Do:**");
             var recommendations = _severity switch
             {
-                ErrorSeverity.Low => new[] { "• Continue using the application normally", "• Report this if it happens frequently" },
-                ErrorSeverity.Medium => new[] { "• Try the operation again", "• Check your network connection", "• Contact IT support if this persists" },
-                ErrorSeverity.High => new[] { "• Check your network connection", "• Contact IT support immediately", "• Try the operation again in a few minutes" },
-                ErrorSeverity.Fatal => new[] { "• Restart the application", "• Contact IT support", "• Report this error with the details below" },
+                Enum_ErrorSeverity.Low => new[] { "• Continue using the application normally", "• Report this if it happens frequently" },
+                Enum_ErrorSeverity.Medium => new[] { "• Try the operation again", "• Check your network connection", "• Contact IT support if this persists" },
+                Enum_ErrorSeverity.High => new[] { "• Check your network connection", "• Contact IT support immediately", "• Try the operation again in a few minutes" },
+                Enum_ErrorSeverity.Fatal => new[] { "• Restart the application", "• Contact IT support", "• Report this error with the details below" },
                 _ => new[] { "• Try the operation again", "• Contact support if the problem persists" }
             };
             
@@ -403,8 +403,8 @@ namespace MTM_WIP_Application_Winforms.Forms.ErrorDialog
 
         private void ConfigureActionButtons()
         {
-            buttonRetry.Visible = _retryAction != null && _severity != ErrorSeverity.Fatal;
-            buttonReportIssue.Visible = _severity >= ErrorSeverity.Medium;
+            buttonRetry.Visible = _retryAction != null && _severity != Enum_ErrorSeverity.Fatal;
+            buttonReportIssue.Visible = _severity >= Enum_ErrorSeverity.Medium;
             // Enable view logs if logging system is initialized
             buttonViewLogs.Enabled = true; // Always enabled for now - logging system is always initialized
         }
@@ -413,19 +413,19 @@ namespace MTM_WIP_Application_Winforms.Forms.ErrorDialog
         {
             string statusIcon = _severity switch
             {
-                ErrorSeverity.Low => "●",      // Simple dot
-                ErrorSeverity.Medium => "●",
-                ErrorSeverity.High => "●",
-                ErrorSeverity.Fatal => "●",
+                Enum_ErrorSeverity.Low => "●",      // Simple dot
+                Enum_ErrorSeverity.Medium => "●",
+                Enum_ErrorSeverity.High => "●",
+                Enum_ErrorSeverity.Fatal => "●",
                 _ => "●"
             };
             
             var statusColor = _severity switch
             {
-                ErrorSeverity.Low => Color.FromArgb(255, 193, 7),      // Amber
-                ErrorSeverity.Medium => Color.FromArgb(244, 67, 54),   // Red
-                ErrorSeverity.High => Color.FromArgb(183, 28, 28),     // Dark Red
-                ErrorSeverity.Fatal => Color.FromArgb(33, 33, 33),     // Near Black
+                Enum_ErrorSeverity.Low => Color.FromArgb(255, 193, 7),      // Amber
+                Enum_ErrorSeverity.Medium => Color.FromArgb(244, 67, 54),   // Red
+                Enum_ErrorSeverity.High => Color.FromArgb(183, 28, 28),     // Dark Red
+                Enum_ErrorSeverity.Fatal => Color.FromArgb(33, 33, 33),     // Near Black
                 _ => Color.FromArgb(244, 67, 54)
             };
             
@@ -433,14 +433,14 @@ namespace MTM_WIP_Application_Winforms.Forms.ErrorDialog
             toolStripStatusLabel.Text = $"{statusIcon} {GetSeverityDisplay(_severity)} | {DateTime.Now:HH:mm:ss}";
         }
 
-        private string GetSeverityDisplay(ErrorSeverity severity)
+        private string GetSeverityDisplay(Enum_ErrorSeverity severity)
         {
             return severity switch
             {
-                ErrorSeverity.Low => "Low (Information/Warning)",
-                ErrorSeverity.Medium => "Medium (Recoverable Error)",
-                ErrorSeverity.High => "High (Critical Error)",
-                ErrorSeverity.Fatal => "Fatal (Application Termination)",
+                Enum_ErrorSeverity.Low => "Low (Information/Warning)",
+                Enum_ErrorSeverity.Medium => "Medium (Recoverable Error)",
+                Enum_ErrorSeverity.High => "High (Critical Error)",
+                Enum_ErrorSeverity.Fatal => "Fatal (Application Termination)",
                 _ => "Unknown"
             };
         }
@@ -514,11 +514,11 @@ namespace MTM_WIP_Application_Winforms.Forms.ErrorDialog
             try
             {
                 // Create error report from current exception
-                var report = new MTM_WIP_Application_WinForms.Models.Model_ErrorReport
+                var report = new MTM_WIP_Application_WinForms.Models.Model_ErrorReport_Core
                 {
-                    UserName = Model_AppVariables.User,
+                    UserName = Model_Application_Variables.User,
                     MachineName = Environment.MachineName,
-                    AppVersion = Model_AppVariables.UserVersion,
+                    AppVersion = Model_Application_Variables.UserVersion,
                     ErrorType = _exception.GetType().Name,
                     ErrorSummary = _exception.Message,
                     TechnicalDetails = _exception.ToString(),

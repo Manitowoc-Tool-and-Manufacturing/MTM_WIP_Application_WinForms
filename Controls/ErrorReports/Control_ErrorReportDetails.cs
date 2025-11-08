@@ -17,7 +17,7 @@ namespace MTM_WIP_Application_Winforms.Controls.ErrorReports
     {
         #region Fields
 
-        private Model_ErrorReport? _currentReport;
+        private Model_ErrorReport_Core? _currentReport;
         private bool _isLoading;
         private readonly Dictionary<ErrorReportStatus, string> _statusDisplay = new()
         {
@@ -35,7 +35,7 @@ namespace MTM_WIP_Application_Winforms.Controls.ErrorReports
         /// <summary>
         /// Gets the currently loaded error report, or null if no report is loaded.
         /// </summary>
-        public Model_ErrorReport? CurrentReport => _currentReport;
+        public Model_ErrorReport_Core? CurrentReport => _currentReport;
 
         /// <summary>
         /// Gets a value indicating whether the control is currently loading report data.
@@ -108,7 +108,7 @@ namespace MTM_WIP_Application_Winforms.Controls.ErrorReports
 
         #region Helpers
 
-        private void PopulateFromModel(Model_ErrorReport report)
+        private void PopulateFromModel(Model_ErrorReport_Core report)
         {
             _currentReport = report;
             txtReportId.Text = report.ReportID.ToString();
@@ -167,11 +167,11 @@ namespace MTM_WIP_Application_Winforms.Controls.ErrorReports
 
             if (exception != null)
             {
-                Service_ErrorHandler.HandleException(exception, ErrorSeverity.Medium, controlName: Name);
+                Service_ErrorHandler.HandleException(exception, Enum_ErrorSeverity.Medium, controlName: Name);
             }
             else
             {
-                Service_ErrorHandler.HandleException(new InvalidOperationException(message), ErrorSeverity.Medium, controlName: Name);
+                Service_ErrorHandler.HandleException(new InvalidOperationException(message), Enum_ErrorSeverity.Medium, controlName: Name);
             }
         }
 
@@ -285,11 +285,11 @@ namespace MTM_WIP_Application_Winforms.Controls.ErrorReports
             catch (Exception ex)
             {
                 LoggingUtility.LogApplicationError(ex);
-                Service_ErrorHandler.HandleException(ex, ErrorSeverity.Medium, controlName: Name);
+                Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Medium, controlName: Name);
             }
         }
 
-        private static string BuildPlainTextExport(Model_ErrorReport report)
+        private static string BuildPlainTextExport(Model_ErrorReport_Core report)
         {
             StringBuilder builder = new();
             builder.AppendLine($"Report #{report.ReportID}");
@@ -366,7 +366,7 @@ namespace MTM_WIP_Application_Winforms.Controls.ErrorReports
                 ? null
                 : notesDialog.DeveloperNotes.Trim();
 
-            string reviewedBy = Model_AppVariables.User ?? Environment.UserName ?? "UNKNOWN";
+            string reviewedBy = Model_Application_Variables.User ?? Environment.UserName ?? "UNKNOWN";
 
             try
             {
@@ -386,7 +386,7 @@ namespace MTM_WIP_Application_Winforms.Controls.ErrorReports
 
                     Service_ErrorHandler.HandleException(
                         new InvalidOperationException(errorMessage),
-                        ErrorSeverity.Medium,
+                        Enum_ErrorSeverity.Medium,
                         controlName: Name);
                     return;
                 }
@@ -415,7 +415,7 @@ namespace MTM_WIP_Application_Winforms.Controls.ErrorReports
             }
             catch (Exception ex)
             {
-                Service_ErrorHandler.HandleException(ex, ErrorSeverity.High, controlName: Name);
+                Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.High, controlName: Name);
             }
             finally
             {

@@ -34,8 +34,8 @@ internal class Dao_Transactions
     /// <param name="sortDescending">Sort direction</param>
     /// <param name="page">Page number for pagination</param>
     /// <param name="pageSize">Number of items per page</param>
-    /// <returns>DaoResult containing list of transactions</returns>
-    public async Task<DaoResult<List<Model_Transactions>>> SearchTransactionsAsync(
+    /// <returns>Model_Dao_Result containing list of transactions</returns>
+    public async Task<Model_Dao_Result<List<Model_Transactions_Core>>> SearchTransactionsAsync(
         string userName,
         bool isAdmin,
         string partID = "",
@@ -83,7 +83,7 @@ internal class Dao_Transactions
 
             // Use Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync for proper status handling
             var result = await Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync(
-                Model_AppVariables.ConnectionString,
+                Model_Application_Variables.ConnectionString,
                 "inv_transactions_Search",
                 parameters,
                 progressHelper: null,
@@ -93,12 +93,12 @@ internal class Dao_Transactions
 
             if (!result.IsSuccess)
             {
-                return DaoResult<List<Model_Transactions>>.Failure(
+                return Model_Dao_Result<List<Model_Transactions_Core>>.Failure(
                     result.ErrorMessage ?? "Failed to search transactions"
                 );
             }
 
-            var transactions = new List<Model_Transactions>();
+            var transactions = new List<Model_Transactions_Core>();
             if (result.Data != null)
             {
                 foreach (DataRow row in result.Data.Rows)
@@ -137,7 +137,7 @@ internal class Dao_Transactions
 
             LoggingUtility.Log($"[Dao_Transactions.SearchTransactionsAsync] Final totalCount: {totalCount}, page: {page}, pageSize: {pageSize}");
 
-            return DaoResult<List<Model_Transactions>>.Success(
+            return Model_Dao_Result<List<Model_Transactions_Core>>.Success(
                 transactions,
                 $"Retrieved {transactions.Count} transactions (page {page} of {Math.Ceiling((double)totalCount / pageSize)})",
                 totalCount  // Pass total count in RowsAffected
@@ -147,7 +147,7 @@ internal class Dao_Transactions
         {
             LoggingUtility.LogDatabaseError(ex);
             await Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex, callerName: "SearchTransactionsAsync");
-            return DaoResult<List<Model_Transactions>>.Failure(
+            return Model_Dao_Result<List<Model_Transactions_Core>>.Failure(
                 "Failed to search transactions", ex
             );
         }
@@ -173,8 +173,8 @@ internal class Dao_Transactions
     /// <param name="sortDescending">Sort direction</param>
     /// <param name="page">Page number for pagination</param>
     /// <param name="pageSize">Number of items per page</param>
-    /// <returns>DaoResult containing list of transactions</returns>
-    public DaoResult<List<Model_Transactions>> SearchTransactions(
+    /// <returns>Model_Dao_Result containing list of transactions</returns>
+    public Model_Dao_Result<List<Model_Transactions_Core>> SearchTransactions(
         string userName,
         bool isAdmin,
         string partID = "",
@@ -206,7 +206,7 @@ internal class Dao_Transactions
         {
             LoggingUtility.LogDatabaseError(ex);
             _ = Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex, callerName: "SearchTransactions");
-            return DaoResult<List<Model_Transactions>>.Failure(
+            return Model_Dao_Result<List<Model_Transactions_Core>>.Failure(
                 "Failed to search transactions (sync)", ex
             );
         }
@@ -221,9 +221,9 @@ internal class Dao_Transactions
     /// <param name="isAdmin">Whether user has admin privileges</param>
     /// <param name="page">Page number for pagination (1-based)</param>
     /// <param name="pageSize">Number of records per page</param>
-    /// <returns>DaoResult containing list of transactions matching criteria</returns>
-    public async Task<DaoResult<List<Model_Transactions>>> SearchAsync(
-        TransactionSearchCriteria criteria,
+    /// <returns>Model_Dao_Result containing list of transactions matching criteria</returns>
+    public async Task<Model_Dao_Result<List<Model_Transactions_Core>>> SearchAsync(
+        Model_Transactions_SearchCriteria criteria,
         string userName,
         bool isAdmin,
         int page = 1,
@@ -243,7 +243,7 @@ internal class Dao_Transactions
             if (criteria == null)
             {
                 LoggingUtility.Log("[Dao_Transactions] ERROR: Criteria is null");
-                return DaoResult<List<Model_Transactions>>.Failure("Search criteria cannot be null");
+                return Model_Dao_Result<List<Model_Transactions_Core>>.Failure("Search criteria cannot be null");
             }
 
             LoggingUtility.Log($"[Dao_Transactions] Criteria.TransactionType raw value: '{criteria.TransactionType}'");
@@ -325,7 +325,7 @@ internal class Dao_Transactions
             LoggingUtility.Log($"[Dao_Transactions] SearchAsync exception: {ex.Message}");
             LoggingUtility.LogDatabaseError(ex);
             await Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex, callerName: "SearchAsync");
-            return DaoResult<List<Model_Transactions>>.Failure(
+            return Model_Dao_Result<List<Model_Transactions_Core>>.Failure(
                 "Failed to search transactions with criteria", ex
             );
         }
@@ -338,9 +338,9 @@ internal class Dao_Transactions
     /// <param name="batchNumber">The batch number to retrieve lifecycle for.</param>
     /// <param name="connection">Optional MySqlConnection for transaction context.</param>
     /// <param name="transaction">Optional MySqlTransaction for transaction context.</param>
-    /// <returns>DaoResult containing list of transactions in chronological order.</returns>
+    /// <returns>Model_Dao_Result containing list of transactions in chronological order.</returns>
     /// <exception cref="ArgumentException">Thrown when batchNumber is null or empty.</exception>
-    public async Task<DaoResult<List<Model_Transactions>>> GetBatchLifecycleAsync(
+    public async Task<Model_Dao_Result<List<Model_Transactions_Core>>> GetBatchLifecycleAsync(
         string batchNumber,
         MySqlConnection? connection = null,
         MySqlTransaction? transaction = null
@@ -351,7 +351,7 @@ internal class Dao_Transactions
             // Validate input
             if (string.IsNullOrWhiteSpace(batchNumber))
             {
-                return DaoResult<List<Model_Transactions>>.Failure(
+                return Model_Dao_Result<List<Model_Transactions_Core>>.Failure(
                     "Batch number is required for lifecycle retrieval"
                 );
             }
@@ -365,7 +365,7 @@ internal class Dao_Transactions
 
             // Call stored procedure
             var result = await Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync(
-                Model_AppVariables.ConnectionString,
+                Model_Application_Variables.ConnectionString,
                 "inv_transactions_GetBatchLifecycle",
                 parameters,
                 progressHelper: null,
@@ -375,12 +375,12 @@ internal class Dao_Transactions
 
             if (!result.IsSuccess)
             {
-                return DaoResult<List<Model_Transactions>>.Failure(
+                return Model_Dao_Result<List<Model_Transactions_Core>>.Failure(
                     result.ErrorMessage ?? "Failed to retrieve batch lifecycle"
                 );
             }
 
-            var transactions = new List<Model_Transactions>();
+            var transactions = new List<Model_Transactions_Core>();
             if (result.Data != null)
             {
                 foreach (DataRow row in result.Data.Rows)
@@ -391,7 +391,7 @@ internal class Dao_Transactions
 
             LoggingUtility.Log($"[Dao_Transactions.GetBatchLifecycleAsync] Retrieved {transactions.Count} transactions for batch {batchNumber}");
 
-            return DaoResult<List<Model_Transactions>>.Success(
+            return Model_Dao_Result<List<Model_Transactions_Core>>.Success(
                 transactions,
                 result.StatusMessage ?? $"Retrieved {transactions.Count} transactions"
             );
@@ -401,7 +401,7 @@ internal class Dao_Transactions
             LoggingUtility.Log($"[Dao_Transactions] GetBatchLifecycleAsync exception: {ex.Message}");
             LoggingUtility.LogDatabaseError(ex);
             await Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex, callerName: "GetBatchLifecycleAsync");
-            return DaoResult<List<Model_Transactions>>.Failure(
+            return Model_Dao_Result<List<Model_Transactions_Core>>.Failure(
                 "Failed to retrieve batch lifecycle", ex
             );
         }
@@ -422,8 +422,8 @@ internal class Dao_Transactions
     /// <param name="isAdmin">Whether user has admin privileges</param>
     /// <param name="page">Page number for pagination</param>
     /// <param name="pageSize">Items per page</param>
-    /// <returns>DaoResult containing smart search results</returns>
-    public async Task<DaoResult<List<Model_Transactions>>> SmartSearchAsync(
+    /// <returns>Model_Dao_Result containing smart search results</returns>
+    public async Task<Model_Dao_Result<List<Model_Transactions_Core>>> SmartSearchAsync(
         Dictionary<string, string> searchTerms,
         List<TransactionType> transactionTypes,
         (DateTime? from, DateTime? to) timeRange,
@@ -560,7 +560,7 @@ internal class Dao_Transactions
 
             // Use Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync for proper status handling
             var result = await Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync(
-                Model_AppVariables.ConnectionString,
+                Model_Application_Variables.ConnectionString,
                 "inv_transactions_SmartSearch",
                 parameters,
                 progressHelper: null,
@@ -572,12 +572,12 @@ internal class Dao_Transactions
 
             if (!result.IsSuccess)
             {
-                return DaoResult<List<Model_Transactions>>.Failure(
+                return Model_Dao_Result<List<Model_Transactions_Core>>.Failure(
                     result.ErrorMessage ?? "Smart search failed"
                 );
             }
 
-            var transactions = new List<Model_Transactions>();
+            var transactions = new List<Model_Transactions_Core>();
             if (result.Data != null)
             {
                 foreach (DataRow row in result.Data.Rows)
@@ -615,7 +615,7 @@ internal class Dao_Transactions
             LoggingUtility.Log($"[Dao_Transactions.SmartSearchAsync] Final totalCount: {totalCount}, page: {page}, pageSize: {pageSize}");
             System.Diagnostics.Debug.WriteLine($"[DAO DEBUG] === DAO SmartSearchAsync Complete ===");
 
-            return DaoResult<List<Model_Transactions>>.Success(
+            return Model_Dao_Result<List<Model_Transactions_Core>>.Success(
                 transactions,
                 $"Retrieved {transactions.Count} of {totalCount} transactions",
                 totalCount  // Pass total count in RowsAffected
@@ -628,7 +628,7 @@ internal class Dao_Transactions
 
             LoggingUtility.LogDatabaseError(ex);
             await Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex, callerName: "SmartSearchAsync");
-            return DaoResult<List<Model_Transactions>>.Failure(
+            return Model_Dao_Result<List<Model_Transactions_Core>>.Failure(
                 "Smart search failed", ex
             );
         }
@@ -640,8 +640,8 @@ internal class Dao_Transactions
     /// <param name="userName">Current user name</param>
     /// <param name="isAdmin">Whether user has admin privileges</param>
     /// <param name="timeRange">Time range for analytics</param>
-    /// <returns>DaoResult containing analytics data</returns>
-    public async Task<DaoResult<Dictionary<string, object>>> GetTransactionAnalyticsAsync(
+    /// <returns>Model_Dao_Result containing analytics data</returns>
+    public async Task<Model_Dao_Result<Dictionary<string, object>>> GetModel_Transactions_Core_AnalyticsAsync(
         string userName,
         bool isAdmin,
         (DateTime? from, DateTime? to) timeRange,
@@ -661,7 +661,7 @@ internal class Dao_Transactions
 
             // Use Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync for proper status handling
             var result = await Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync(
-                Model_AppVariables.ConnectionString,
+                Model_Application_Variables.ConnectionString,
                 "inv_transactions_GetAnalytics",
                 parameters,
                 progressHelper: null,
@@ -671,7 +671,7 @@ internal class Dao_Transactions
 
             if (!result.IsSuccess)
             {
-                return DaoResult<Dictionary<string, object>>.Failure(
+                return Model_Dao_Result<Dictionary<string, object>>.Failure(
                     result.ErrorMessage ?? "Failed to retrieve transaction analytics"
                 );
             }
@@ -692,7 +692,7 @@ internal class Dao_Transactions
                 analytics["TopUser"] = row["TopUser"]?.ToString() ?? "";
             }
 
-            return DaoResult<Dictionary<string, object>>.Success(
+            return Model_Dao_Result<Dictionary<string, object>>.Success(
                 analytics,
                 "Transaction analytics retrieved successfully"
             );
@@ -700,8 +700,8 @@ internal class Dao_Transactions
         catch (Exception ex)
         {
             LoggingUtility.LogDatabaseError(ex);
-            await Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex, callerName: "GetTransactionAnalyticsAsync");
-            return DaoResult<Dictionary<string, object>>.Failure(
+            await Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex, callerName: "GetModel_Transactions_Core_AnalyticsAsync");
+            return Model_Dao_Result<Dictionary<string, object>>.Failure(
                 "Failed to retrieve transaction analytics", ex
             );
         }
@@ -718,8 +718,8 @@ internal class Dao_Transactions
     /// <param name="isAdmin">Whether the user has admin privileges.</param>
     /// <param name="dateFrom">Start date for analytics period.</param>
     /// <param name="dateTo">End date for analytics period.</param>
-    /// <returns>DaoResult containing TransactionAnalytics with counts and percentages.</returns>
-    public async Task<DaoResult<TransactionAnalytics>> GetAnalyticsAsync(
+    /// <returns>Model_Dao_Result containing Model_Transactions_Core_Analytics with counts and percentages.</returns>
+    public async Task<Model_Dao_Result<Model_Transactions_Core_Analytics>> GetAnalyticsAsync(
         string userName,
         bool isAdmin,
         DateTime? dateFrom,
@@ -738,7 +738,7 @@ internal class Dao_Transactions
             };
 
             var result = await Helper_Database_StoredProcedure.ExecuteDataSetWithStatusAsync(
-                Model_AppVariables.ConnectionString,
+                Model_Application_Variables.ConnectionString,
                 "inv_transactions_GetAnalytics",
                 parameters,
                 progressHelper: null,
@@ -749,7 +749,7 @@ internal class Dao_Transactions
             if (!result.IsSuccess)
             {
                 LoggingUtility.Log($"[Dao_Transactions.GetAnalyticsAsync] Error from SP: {result.StatusMessage}");
-                return DaoResult<TransactionAnalytics>.Failure(
+                return Model_Dao_Result<Model_Transactions_Core_Analytics>.Failure(
                     result.StatusMessage ?? "Failed to retrieve transaction analytics"
                 );
             }
@@ -757,7 +757,7 @@ internal class Dao_Transactions
             if (result.Data == null)
             {
                 LoggingUtility.Log("[Dao_Transactions.GetAnalyticsAsync] No data returned from stored procedure");
-                return DaoResult<TransactionAnalytics>.Failure(
+                return Model_Dao_Result<Model_Transactions_Core_Analytics>.Failure(
                     "No data returned from stored procedure"
                 );
             }
@@ -765,13 +765,13 @@ internal class Dao_Transactions
             if (result.Data.Tables.Count < 10)
             {
                 LoggingUtility.Log($"[Dao_Transactions.GetAnalyticsAsync] Expected 10 result sets but got {result.Data.Tables.Count}");
-                return DaoResult<TransactionAnalytics>.Failure(
+                return Model_Dao_Result<Model_Transactions_Core_Analytics>.Failure(
                     $"Invalid analytics data: Expected 10 result sets but received {result.Data.Tables.Count}"
                 );
             }
 
             // Extract data from all 10 result sets
-            var analytics = new TransactionAnalytics
+            var analytics = new Model_Transactions_Core_Analytics
             {
                 DateRange = (dateFrom, dateTo)
             };
@@ -896,7 +896,7 @@ internal class Dao_Transactions
                 analytics.TransactionRateTrend = row10["TransactionRateTrend"]?.ToString();
             }
 
-            return DaoResult<TransactionAnalytics>.Success(
+            return Model_Dao_Result<Model_Transactions_Core_Analytics>.Success(
                 analytics,
                 analytics.TotalTransactions > 0 
                     ? "Transaction analytics retrieved successfully" 
@@ -906,7 +906,7 @@ internal class Dao_Transactions
         catch (Exception ex)
         {
             LoggingUtility.LogDatabaseError(ex);
-            return DaoResult<TransactionAnalytics>.Failure(
+            return Model_Dao_Result<Model_Transactions_Core_Analytics>.Failure(
                 "Exception occurred while retrieving transaction analytics",
                 ex
             );
@@ -917,14 +917,66 @@ internal class Dao_Transactions
     /// Retrieves transaction analytics with additional detail fields (legacy method).
     #endregion
 
+    #region Delete Methods
+
+    /// <summary>
+    /// Deletes a transaction record by ID (Admin/Developer only).
+    /// </summary>
+    /// <param name="transactionId">Transaction ID to delete</param>
+    /// <returns>Model_Dao_Result indicating success or failure</returns>
+    /// <remarks>
+    /// SECURITY: This operation should only be called for users with Admin or Developer privileges.
+    /// This permanently removes transaction history data from the database.
+    /// </remarks>
+    public async Task<Model_Dao_Result> DeleteTransactionByIdAsync(int transactionId)
+    {
+        try
+        {
+            LoggingUtility.Log($"[Dao_Transactions] Deleting transaction ID: {transactionId}");
+
+            var parameters = new Dictionary<string, object>
+            {
+                ["ID"] = transactionId
+            };
+
+            var result = await Helper_Database_StoredProcedure.ExecuteNonQueryWithStatusAsync(
+                Model_Application_Variables.ConnectionString,
+                "inv_transaction_Delete_ByID",
+                parameters,
+                progressHelper: null
+            );
+
+            if (result.IsSuccess)
+            {
+                LoggingUtility.Log($"[Dao_Transactions] Transaction ID {transactionId} deleted successfully");
+                return Model_Dao_Result.Success($"Transaction ID {transactionId} deleted successfully");
+            }
+            else
+            {
+                LoggingUtility.Log($"[Dao_Transactions] Failed to delete transaction ID {transactionId}: {result.ErrorMessage}");
+                return Model_Dao_Result.Failure($"Failed to delete transaction: {result.ErrorMessage}");
+            }
+        }
+        catch (Exception ex)
+        {
+            LoggingUtility.LogDatabaseError(ex);
+            return Model_Dao_Result.Failure(
+                $"Exception occurred while deleting transaction ID {transactionId}",
+                ex
+            );
+        }
+    }
+
+    #endregion
+
     #region Private Methods
 
     /// <summary>
-    /// Maps DataRow to Model_Transactions object
+    /// Maps DataRow to Model_Transactions_Core object
     /// </summary>
     /// <param name="row">DataRow from stored procedure result</param>
-    /// <returns>Mapped Model_Transactions object</returns>
-    private Model_Transactions MapTransactionFromDataRow(DataRow row) =>
+    /// <returns>Mapped Model_Transactions_Core object</returns>
+    private Model_Transactions_Core MapTransactionFromDataRow(DataRow row) =>
         new()
         {
             ID = Convert.ToInt32(row["ID"]),
@@ -947,12 +999,12 @@ internal class Dao_Transactions
         };
 
     /// <summary>
-    /// Maps a DataRow to Model_Transactions object.
+    /// Maps a DataRow to Model_Transactions_Core object.
     /// Alias for MapTransactionFromDataRow for consistency with task naming conventions.
     /// </summary>
     /// <param name="row">DataRow from stored procedure result</param>
-    /// <returns>Mapped Model_Transactions object</returns>
-    private Model_Transactions MapDataRowToModel(DataRow row) => MapTransactionFromDataRow(row);
+    /// <returns>Mapped Model_Transactions_Core object</returns>
+    private Model_Transactions_Core MapDataRowToModel(DataRow row) => MapTransactionFromDataRow(row);
 
     #endregion
 }

@@ -11,7 +11,7 @@ Quick start
 
 -   App type: Windows Forms (.NET 8)
 -   Database: MySQL 5.7.24+ (stored procedures only)
--   Error handling: DaoResult<T> everywhere
+-   Error handling: Model_Dao_Result<T> everywhere
 -   Theming: Centralized theme engine with DPI scaling
 -   Progress: Standard StatusStrip progress pattern
 -   Refactors: Must follow the Recursive Dependency Compliance Analysis workflow
@@ -86,7 +86,7 @@ public partial class Control_ExampleTab : UserControl
 
     #region Database Operations
 
-    public async Task<DaoResult<DataTable>> LoadDataAsync()
+    public async Task<Model_Dao_Result<DataTable>> LoadDataAsync()
     {
         // Implementation using Helper_Database_StoredProcedure
     }
@@ -150,8 +150,8 @@ MTM_WIP_Application_Winforms/
 │  └─ Helper_UI_ComboBoxes.cs    # ComboBox management
 ├─ Logging/                      # Centralized logging system
 ├─ Models/                       # Data models and DTOs
-│  ├─ Model_Users.cs             # Environment-aware database/server properties
-│  └─ Model_AppVariables.cs      # Application variables with environment logic
+│  ├─ Model_Shared_Users.cs             # Environment-aware database/server properties
+│  └─ Model_Application_Variables.cs      # Application variables with environment logic
 ├─ Services/                     # Background services and utilities
 │  ├─ Service_Timer_VersionChecker.cs  # Version checking service
 │  └─ Service_ErrorHandler.cs          # Error handling service
@@ -289,10 +289,10 @@ Generate the MASTER REFRACTOR PROMPT (Online Mode) for file <relative/path/FileN
 
 Database and DAO
 
--   Migrate a DAO method to DaoResult<T> with helper-based stored procedure call:
+-   Migrate a DAO method to Model_Dao_Result<T> with helper-based stored procedure call:
 
 ```
-Migrate method <Dao_Class.MethodName> to DaoResult<T> using Helper_Database_StoredProcedure, no inline SQL, C# parameters without p_ prefix, and robust null-safety and logging. Organize with proper regions.
+Migrate method <Dao_Class.MethodName> to Model_Dao_Result<T> using Helper_Database_StoredProcedure, no inline SQL, C# parameters without p_ prefix, and robust null-safety and logging. Organize with proper regions.
 ```
 
 -   Verify stored procedure contract and parameters:
@@ -312,7 +312,7 @@ Add Helper_StoredProcedureProgress usage to <Control_Class.Method>, with ShowPro
 -   Create a new UserControl that follows all standards:
 
 ```
-Create a new UserControl following Control_[TabName] template with theme application in constructor, ApplyPrivileges, keyboard shortcuts, progress controls, DaoResult-based data loading, and proper region organization.
+Create a new UserControl following Control_[TabName] template with theme application in constructor, ApplyPrivileges, keyboard shortcuts, progress controls, Model_Dao_Result-based data loading, and proper region organization.
 ```
 
 -   Null-safe DataGridView setup:
@@ -332,7 +332,7 @@ Add standard ComboBox validation and event wiring to <Control_Class>, including 
 -   Progress testing scenarios:
 
 ```
-Create a test helper that exercises success, error, and warning flows of Helper_StoredProcedureProgress, including DaoResult failure simulation.
+Create a test helper that exercises success, error, and warning flows of Helper_StoredProcedureProgress, including Model_Dao_Result failure simulation.
 ```
 
 Docs and GitHub
@@ -355,13 +355,13 @@ When refactoring ANY file in this repository, ensure:
 
 ✅ **Region Organization**: Methods grouped in proper #regions following the standard order  
 ✅ **Method Ordering**: Public → Protected → Private → Static within each region  
-✅ **DAO Compliance**: DaoResult<T> usage with Helper_Database_StoredProcedure  
+✅ **DAO Compliance**: Model_Dao_Result<T> usage with Helper_Database_StoredProcedure  
 ✅ **Progress Reporting**: Helper_StoredProcedureProgress for UI database operations  
 ✅ **Error Handling**: Comprehensive try/catch with LoggingUtility  
 ✅ **Null Safety**: Never dereference potentially null objects  
 ✅ **Theme Compliance**: Core_Themes usage only in approved locations  
 ✅ **Database Standards**: Stored procedures with OUT p_Status, p_ErrorMsg  
-✅ **Environment Compliance**: Use Model_Users properties for database/server selection  
+✅ **Environment Compliance**: Use Model_Shared_Users properties for database/server selection  
 ✅ **File Structure Compliance**: Only modify Updated\* folders, never Current\* folders  
 ✅ **Logging Standards**: Context-rich logging with start/end markers  
 ✅ **Thread Safety**: Proper Invoke usage for cross-thread operations
@@ -465,7 +465,7 @@ _progressHelper = Helper_StoredProcedureProgress.Create(progressBar, statusLabel
 
 ```csharp
 // Replace MessageBox.Show with Service_ErrorHandler:
-Service_ErrorHandler.HandleException(ex, ErrorSeverity.Medium,
+Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Medium,
     retryAction: () => RetryOperation(),
     contextData: new Dictionary<string, object> { ["UserId"] = userId });
 
@@ -541,7 +541,7 @@ All forms in the `Forms/Development/` folder MUST comply with the following stan
 
 -   **MUST** use `Service_ErrorHandler` instead of `MessageBox.Show`
 -   **MUST** implement comprehensive try/catch blocks with context logging
--   **MUST** use `DaoResult<T>` for all database operations
+-   **MUST** use `Model_Dao_Result<T>` for all database operations
 -   **MUST** include retry mechanisms for recoverable errors
 
 #### **Theme and UI Standards**
@@ -561,8 +561,8 @@ _progressHelper = Helper_StoredProcedureProgress.Create(progressBar, statusLabel
 
 #### **Database Operation Standards**
 
--   **MUST** use environment-aware database selection (`Model_Users.Database`)
--   **MUST** use server address from `Model_Users.WipServerAddress`
+-   **MUST** use environment-aware database selection (`Model_Shared_Users.Database`)
+-   **MUST** use server address from `Model_Shared_Users.WipServerAddress`
 -   **MUST** follow stored procedure parameter conventions (no p\_ prefix in C#)
 -   **MUST** handle OUT p_Status and p_ErrorMsg parameters
 
@@ -678,7 +678,7 @@ SET p_ErrorMsg = 'Database connection error: Unable to execute query';
 -   Use async/await for database operations
 -   Implement proper disposal patterns in #region Cleanup
 -   Cache frequently accessed data in static properties
--   Use DaoResult<T> for efficient error handling without exceptions
+-   Use Model_Dao_Result<T> for efficient error handling without exceptions
 
 ## Service_ErrorHandler Implementation Standards
 
@@ -688,7 +688,7 @@ ALL methods MUST use the centralized `Service_ErrorHandler` system:
 
 ```csharp
 // Replace ALL MessageBox.Show() calls with:
-Service_ErrorHandler.HandleException(ex, ErrorSeverity.Medium,
+Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Medium,
     retryAction: () => RetryOperation(),
     contextData: new Dictionary<string, object> { ["UserId"] = userId },
     controlName: nameof(CurrentControl));
@@ -746,7 +746,7 @@ Service_ErrorHandler.HandleValidationError("Invalid input", "FieldName");
 
 -   ✅ **Database Selection**: Automatic Debug/Release mode database name selection
 -   ✅ **Server Selection**: Intelligent server address detection based on environment
--   ✅ **Connection Logic**: Updated `Helper_Database_Variables` and `Model_Users` classes
+-   ✅ **Connection Logic**: Updated `Helper_Database_Variables` and `Model_Shared_Users` classes
 -   ✅ **Deployment Scripts**: Updated for test database by default with production options
 -   ✅ **Documentation**: Comprehensive documentation of file structure and environment logic
 -   ✅ **Compliance Templates**: Updated refactor templates and Copilot instructions

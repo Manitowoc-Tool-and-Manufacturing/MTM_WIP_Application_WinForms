@@ -137,9 +137,9 @@ The updated prompt now references a consolidated FR/SC reference file instead of
    - Still searches for `(Cells|drv|row)\["p_(Operation|User|PartID)"\]`
    - Priority 1 fix (prevents runtime errors)
 
-2. **FR-003: DaoResult Pattern Enforcement**
+2. **FR-003: Model_Dao_Result Pattern Enforcement**
    - All database work must call DAO async methods
-   - Returns DaoResult or DaoResult<T>
+   - Returns Model_Dao_Result or Model_Dao_Result<T>
 
 3. **FR-008: Service_ErrorHandler Adoption**
    - Replace MessageBox.Show with Service_ErrorHandler

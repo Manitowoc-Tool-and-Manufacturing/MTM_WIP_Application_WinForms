@@ -81,7 +81,7 @@ Every feature must define testable success criteria:
 - Controls remain aligned at common resolutions (1080p/1440p/4K)
 - Keyboard navigation and focus order follow manufacturing workflows
 - ErrorProvider or inline messages render without overlapping other controls
-- Theme/colors match values returned from `Model_UserUiColors`
+- Theme/colors match values returned from `Model_Shared_UserUiColors`
 - No flicker or redraw issues when resizing
 
 ### Database Operation Success

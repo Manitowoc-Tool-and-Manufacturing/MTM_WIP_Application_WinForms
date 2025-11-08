@@ -15,7 +15,7 @@
         "sys_user_roles",
         "user"
       ],
-      "ReturnType": "Task<DaoResult>",
+      "ReturnType": "Task<Model_Dao_Result>",
       "UIElementUpdated": {
         "OnSuccess": "None detected",
         "OnFailure": "None detected"
@@ -34,7 +34,7 @@
         "sys_user_roles",
         "user"
       ],
-      "ReturnType": "Task<DaoResult>"
+      "ReturnType": "Task<Model_Dao_Result>"
     }
   ],
   "sys_last_10_transactions_Get_ByUser_1": [
@@ -62,7 +62,7 @@
       },
       "StoredProcedure": "md_operation_numbers_Delete_ByOperation",
       "Tables": "md_operation_numbers",
-      "ReturnType": "Task<DaoResult>"
+      "ReturnType": "Task<Model_Dao_Result>"
     }
   ],
   "usr_users_Exists": [
@@ -78,7 +78,7 @@
       },
       "StoredProcedure": "usr_users_Exists",
       "Tables": "usr_users",
-      "ReturnType": "Task<DaoResult<bool>>",
+      "ReturnType": "Task<Model_Dao_Result<bool>>",
       "UIElementUpdated": {
         "OnSuccess": "ShowError",
         "OnFailure": "None detected"
@@ -98,7 +98,7 @@
         "settings",
         "was"
       ],
-      "ReturnType": "Task<DaoResult>"
+      "ReturnType": "Task<Model_Dao_Result>"
     }
   ],
   "md_operation_numbers_Update_Operation": [
@@ -116,7 +116,7 @@
         "md_operation_numbers",
         "was"
       ],
-      "ReturnType": "Task<DaoResult>",
+      "ReturnType": "Task<Model_Dao_Result>",
       "UIElementUpdated": {
         "OnSuccess": "Show",
         "OnFailure": "None detected"
@@ -146,7 +146,7 @@
       },
       "StoredProcedure": "inv_inventory_Transfer_Part",
       "Tables": "inv_inventory",
-      "ReturnType": "Task<DaoResult>",
+      "ReturnType": "Task<Model_Dao_Result>",
       "UIElementUpdated": {
         "OnSuccess": "None detected",
         "OnFailure": "None detected"
@@ -172,7 +172,7 @@
       },
       "StoredProcedure": "sys_last_10_transactions_RemoveAndShift_ByUser",
       "Tables": "sys_last_10_transactions",
-      "ReturnType": "Task<DaoResult>",
+      "ReturnType": "Task<Model_Dao_Result>",
       "UIElementUpdated": {
         "OnSuccess": "Show",
         "OnFailure": "None detected"
@@ -223,7 +223,7 @@
       },
       "StoredProcedure": "md_part_ids_Add_Part",
       "Tables": "md_part_ids",
-      "ReturnType": "Task<DaoResult>",
+      "ReturnType": "Task<Model_Dao_Result>",
       "UIElementUpdated": {
         "OnSuccess": "None detected",
         "OnFailure": "None detected"
@@ -253,7 +253,7 @@
       },
       "StoredProcedure": "inv_inventory_Get_ByUser",
       "Tables": "inv_inventory",
-      "ReturnType": "Task<DaoResult<DataTable>>",
+      "ReturnType": "Task<Model_Dao_Result<DataTable>>",
       "UIElementUpdated": {
         "OnSuccess": "None detected",
         "OnFailure": "None detected"
@@ -277,7 +277,7 @@
         "sys_roles",
         "sys_user_roles"
       ],
-      "ReturnType": "Task<DaoResult>",
+      "ReturnType": "Task<Model_Dao_Result>",
       "UIElementUpdated": {
         "OnSuccess": "ShowError",
         "OnFailure": "None detected"
@@ -313,7 +313,7 @@
         "md_item_types",
         "was"
       ],
-      "ReturnType": "Task<DaoResult>",
+      "ReturnType": "Task<Model_Dao_Result>",
       "UIElementUpdated": {
         "OnSuccess": "Show",
         "OnFailure": "None detected"
@@ -334,7 +334,7 @@
         "sys_last_10_transactions",
         "transaction"
       ],
-      "ReturnType": "Task<DaoResult>",
+      "ReturnType": "Task<Model_Dao_Result>",
       "UIElementUpdated": {
         "OnSuccess": "Show",
         "OnFailure": "None detected"
@@ -373,7 +373,7 @@
         "transaction",
         "inv_transaction"
       ],
-      "ReturnType": "Task<DaoResult<int>>",
+      "ReturnType": "Task<Model_Dao_Result<int>>",
       "UIElementUpdated": {
         "OnSuccess": "None detected",
         "OnFailure": "None detected"
@@ -389,7 +389,7 @@
       },
       "StoredProcedure": "md_item_types_Get_All",
       "Tables": "md_item_types",
-      "ReturnType": "Task<DaoResult<DataTable>>"
+      "ReturnType": "Task<Model_Dao_Result<DataTable>>"
     },
     {
       "Status": "Called from DAO (no UI event handler traced)",
@@ -445,7 +445,7 @@
       },
       "StoredProcedure": "md_operation_numbers_Get_All",
       "Tables": "md_operation_numbers",
-      "ReturnType": "Task<DaoResult<DataTable>>"
+      "ReturnType": "Task<Model_Dao_Result<DataTable>>"
     },
     {
       "Status": "Called from DAO (no UI event handler traced)",
@@ -469,7 +469,7 @@
       },
       "StoredProcedure": "inv_inventory_Get_ByPartIDandOperation",
       "Tables": "inv_inventory",
-      "ReturnType": "Task<DaoResult<DataTable>>",
+      "ReturnType": "Task<Model_Dao_Result<DataTable>>",
       "UIElementUpdated": {
         "OnSuccess": "None detected",
         "OnFailure": "None detected"
@@ -485,7 +485,7 @@
       },
       "StoredProcedure": "inv_inventory_Get_ByPartIDandOperation",
       "Tables": "inv_inventory",
-      "ReturnType": "Task<DaoResult<DataTable>>",
+      "ReturnType": "Task<Model_Dao_Result<DataTable>>",
       "UIElementUpdated": {
         "OnSuccess": "None detected",
         "OnFailure": "None detected"
@@ -508,7 +508,7 @@
         "information_schema",
         "usr_users"
       ],
-      "ReturnType": "Task<DaoResult<List<Model_Users>>>",
+      "ReturnType": "Task<Model_Dao_Result<List<Model_Shared_Users>>>",
       "UIElementUpdated": {
         "OnSuccess": "None detected",
         "OnFailure": "None detected"
@@ -526,7 +526,7 @@
       },
       "StoredProcedure": "inv_transactions_GetAnalytics",
       "Tables": "inv_transaction",
-      "ReturnType": "Task<DaoResult<List<Model_Transactions>>>",
+      "ReturnType": "Task<Model_Dao_Result<List<Model_Transactions_Core>>>",
       "UIElementUpdated": {
         "OnSuccess": "None detected",
         "OnFailure": "None detected"
@@ -546,7 +546,7 @@
       },
       "StoredProcedure": "sys_user_GetIdByName",
       "Tables": "usr_users",
-      "ReturnType": "Task<DaoResult<int>>",
+      "ReturnType": "Task<Model_Dao_Result<int>>",
       "UIElementUpdated": {
         "OnSuccess": "None detected",
         "OnFailure": "None detected"
@@ -564,7 +564,7 @@
       },
       "StoredProcedure": "md_locations_Add_Location",
       "Tables": "md_locations",
-      "ReturnType": "Task<DaoResult>",
+      "ReturnType": "Task<Model_Dao_Result>",
       "UIElementUpdated": {
         "OnSuccess": "Show",
         "OnFailure": "None detected"
@@ -592,7 +592,7 @@
       },
       "StoredProcedure": "md_item_types_Add_ItemType",
       "Tables": "md_item_types",
-      "ReturnType": "Task<DaoResult>",
+      "ReturnType": "Task<Model_Dao_Result>",
       "UIElementUpdated": {
         "OnSuccess": "Show",
         "OnFailure": "None detected"
@@ -627,7 +627,7 @@
         "access",
         "was"
       ],
-      "ReturnType": "Task<DaoResult>",
+      "ReturnType": "Task<Model_Dao_Result>",
       "UIElementUpdated": {
         "OnSuccess": "None detected",
         "OnFailure": "None detected"
@@ -657,7 +657,7 @@
         "usr_users",
         "was"
       ],
-      "ReturnType": "Task<DaoResult>",
+      "ReturnType": "Task<Model_Dao_Result>",
       "UIElementUpdated": {
         "OnSuccess": "None detected",
         "OnFailure": "None detected"
@@ -696,7 +696,7 @@
         "inv_inventory",
         "inv_transaction"
       ],
-      "ReturnType": "Task<DaoResult<int>>",
+      "ReturnType": "Task<Model_Dao_Result<int>>",
       "UIElementUpdated": {
         "OnSuccess": "None detected",
         "OnFailure": "None detected"
@@ -724,7 +724,7 @@
       },
       "StoredProcedure": "md_locations_Delete_ByLocation",
       "Tables": "md_locations",
-      "ReturnType": "Task<DaoResult>"
+      "ReturnType": "Task<Model_Dao_Result>"
     }
   ],
   "usr_ui_settings_SetShortcutsJson": [
@@ -742,7 +742,7 @@
         "usr_ui_settings",
         "was"
       ],
-      "ReturnType": "Task<DaoResult>",
+      "ReturnType": "Task<Model_Dao_Result>",
       "UIElementUpdated": {
         "OnSuccess": "None detected",
         "OnFailure": "None detected"
@@ -766,7 +766,7 @@
         "md_locations",
         "was"
       ],
-      "ReturnType": "Task<DaoResult>",
+      "ReturnType": "Task<Model_Dao_Result>",
       "UIElementUpdated": {
         "OnSuccess": "Show",
         "OnFailure": "None detected"
@@ -786,7 +786,7 @@
       },
       "StoredProcedure": "usr_users_Add_User",
       "Tables": "usr_users",
-      "ReturnType": "Task<DaoResult>",
+      "ReturnType": "Task<Model_Dao_Result>",
       "UIElementUpdated": {
         "OnSuccess": "ShowError",
         "OnFailure": "None detected"
@@ -815,7 +815,7 @@
       },
       "StoredProcedure": "usr_users_Get_ByUser",
       "Tables": "usr_users",
-      "ReturnType": "Task<DaoResult>",
+      "ReturnType": "Task<Model_Dao_Result>",
       "UIElementUpdated": {
         "OnSuccess": "None detected",
         "OnFailure": "None detected"
@@ -831,7 +831,7 @@
       },
       "StoredProcedure": "usr_users_Get_ByUser",
       "Tables": "usr_users",
-      "ReturnType": "Task<DaoResult<DataRow>>",
+      "ReturnType": "Task<Model_Dao_Result<DataRow>>",
       "UIElementUpdated": {
         "OnSuccess": "None detected",
         "OnFailure": "None detected"
@@ -862,7 +862,7 @@
       },
       "StoredProcedure": "usr_ui_settings_GetShortcutsJson",
       "Tables": "usr_ui_settings",
-      "ReturnType": "Task<DaoResult<string>>",
+      "ReturnType": "Task<Model_Dao_Result<string>>",
       "UIElementUpdated": {
         "OnSuccess": "None detected",
         "OnFailure": "None detected"
@@ -880,7 +880,7 @@
       },
       "StoredProcedure": "inv_transactions_SmartSearch",
       "Tables": "inv_transaction",
-      "ReturnType": "Task<DaoResult<List<Model_Transactions>>>",
+      "ReturnType": "Task<Model_Dao_Result<List<Model_Transactions_Core>>>",
       "UIElementUpdated": {
         "OnSuccess": "None detected",
         "OnFailure": "None detected"
@@ -918,7 +918,7 @@
       },
       "StoredProcedure": "inv_inventory_Get_ByPartID",
       "Tables": "inv_inventory",
-      "ReturnType": "Task<DaoResult<DataTable>>",
+      "ReturnType": "Task<Model_Dao_Result<DataTable>>",
       "UIElementUpdated": {
         "OnSuccess": "None detected",
         "OnFailure": "None detected"
@@ -936,7 +936,7 @@
       },
       "StoredProcedure": "inv_transaction_Add",
       "Tables": "inv_transaction",
-      "ReturnType": "Task<DaoResult>",
+      "ReturnType": "Task<Model_Dao_Result>",
       "UIElementUpdated": {
         "OnSuccess": "None detected",
         "OnFailure": "None detected"
@@ -964,7 +964,7 @@
       },
       "StoredProcedure": "md_part_ids_Get_All",
       "Tables": "md_part_ids",
-      "ReturnType": "Task<DaoResult<DataTable>>"
+      "ReturnType": "Task<Model_Dao_Result<DataTable>>"
     },
     {
       "Status": "Called from DAO (no UI event handler traced)",
@@ -990,7 +990,7 @@
       },
       "StoredProcedure": "sys_theme_GetAll",
       "Tables": "app_themes",
-      "ReturnType": "Task<DaoResult>",
+      "ReturnType": "Task<Model_Dao_Result>",
       "UIElementUpdated": {
         "OnSuccess": "None detected",
         "OnFailure": "None detected"
@@ -1014,7 +1014,7 @@
         "md_part_ids",
         "was"
       ],
-      "ReturnType": "Task<DaoResult>",
+      "ReturnType": "Task<Model_Dao_Result>",
       "UIElementUpdated": {
         "OnSuccess": "None detected",
         "OnFailure": "ClearForm"
@@ -1030,7 +1030,7 @@
       },
       "StoredProcedure": "usr_users_Get_All",
       "Tables": "usr_users",
-      "ReturnType": "Task<DaoResult<DataTable>>"
+      "ReturnType": "Task<Model_Dao_Result<DataTable>>"
     },
     {
       "Status": "Called from UI",
@@ -1063,7 +1063,7 @@
         "table",
         "usr_users"
       ],
-      "ReturnType": "Task<DaoResult>",
+      "ReturnType": "Task<Model_Dao_Result>",
       "UIElementUpdated": {
         "OnSuccess": [
           "HideProgress",
@@ -1103,7 +1103,7 @@
         "usr_ui_settings",
         "existing"
       ],
-      "ReturnType": "Task<DaoResult>"
+      "ReturnType": "Task<Model_Dao_Result>"
     }
   ],
   "log_changelog_Get_Current": [
@@ -1140,7 +1140,7 @@
         "original",
         "inv_inventory"
       ],
-      "ReturnType": "Task<DaoResult>",
+      "ReturnType": "Task<Model_Dao_Result>",
       "UIElementUpdated": {
         "OnSuccess": "None detected",
         "OnFailure": "None detected"
@@ -1158,7 +1158,7 @@
       },
       "StoredProcedure": "md_part_ids_Delete_ByItemNumber",
       "Tables": "md_part_ids",
-      "ReturnType": "Task<DaoResult>",
+      "ReturnType": "Task<Model_Dao_Result>",
       "UIElementUpdated": {
         "OnSuccess": "Show",
         "OnFailure": "None detected"
@@ -1179,7 +1179,7 @@
         "sys_user_roles",
         "user"
       ],
-      "ReturnType": "Task<DaoResult>",
+      "ReturnType": "Task<Model_Dao_Result>",
       "UIElementUpdated": {
         "OnSuccess": "None detected",
         "OnFailure": "None detected"
@@ -1199,7 +1199,7 @@
         "inv_inventory_batch_seq",
         "sequence"
       ],
-      "ReturnType": "Task<DaoResult>"
+      "ReturnType": "Task<Model_Dao_Result>"
     }
   ],
   "sys_last_10_transactions_AddQuickButton_1": [
@@ -1213,7 +1213,7 @@
       },
       "StoredProcedure": "sys_last_10_transactions_AddQuickButton_1",
       "Tables": "sys_last_10_transactions",
-      "ReturnType": "Task<DaoResult>",
+      "ReturnType": "Task<Model_Dao_Result>",
       "UIElementUpdated": {
         "OnSuccess": "None detected",
         "OnFailure": "None detected"
@@ -1229,7 +1229,7 @@
       },
       "StoredProcedure": "sys_last_10_transactions_AddQuickButton_1",
       "Tables": "sys_last_10_transactions",
-      "ReturnType": "Task<DaoResult>",
+      "ReturnType": "Task<Model_Dao_Result>",
       "UIElementUpdated": {
         "OnSuccess": "Show",
         "OnFailure": "None detected"
@@ -1261,7 +1261,7 @@
       },
       "StoredProcedure": "md_operation_numbers_Add_Operation",
       "Tables": "md_operation_numbers",
-      "ReturnType": "Task<DaoResult>"
+      "ReturnType": "Task<Model_Dao_Result>"
     }
   ],
   "md_item_types_Delete_ByType": [
@@ -1275,7 +1275,7 @@
       },
       "StoredProcedure": "md_item_types_Delete_ByType",
       "Tables": "md_item_types",
-      "ReturnType": "Task<DaoResult>",
+      "ReturnType": "Task<Model_Dao_Result>",
       "UIElementUpdated": {
         "OnSuccess": "Show",
         "OnFailure": "None detected"
@@ -1291,7 +1291,7 @@
       },
       "StoredProcedure": "md_locations_Get_All",
       "Tables": "md_locations",
-      "ReturnType": "Task<DaoResult<DataTable>>"
+      "ReturnType": "Task<Model_Dao_Result<DataTable>>"
     },
     {
       "Status": "Called from DAO (no UI event handler traced)",
@@ -1317,7 +1317,7 @@
       },
       "StoredProcedure": "md_part_ids_Get_ByItemNumber",
       "Tables": "md_part_ids",
-      "ReturnType": "Task<DaoResult<DataRow>>",
+      "ReturnType": "Task<Model_Dao_Result<DataRow>>",
       "UIElementUpdated": {
         "OnSuccess": "None detected",
         "OnFailure": "ClearForm"

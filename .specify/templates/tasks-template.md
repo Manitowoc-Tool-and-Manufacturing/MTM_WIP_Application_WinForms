@@ -79,10 +79,10 @@ description: "Task list template for feature implementation"
 ```markdown
 - [ ] **T007** [Story: Foundation] - Extend Dao_ErrorReports with GetAllErrorReportsAsync
   **File**: `Data/Dao_ErrorReports.cs`
-  **Description**: Add async method accepting Model_ErrorReportFilter parameter. Build Dictionary with DBNull.Value for null filters. Call sp_error_reports_GetAll via Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync. Return DaoResult<DataTable>. Add to #region Database Operations.
+  **Description**: Add async method accepting Model_ErrorReport_Core_Filter parameter. Build Dictionary with DBNull.Value for null filters. Call sp_error_reports_GetAll via Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync. Return Model_Dao_Result<DataTable>. Add to #region Database Operations.
   **Reference**: `.github/instructions/mysql-database.instructions.md` - Helper_Database_StoredProcedure usage pattern
   **Reference**: `.github/instructions/csharp-dotnet8.instructions.md` - Async/await patterns and region organization
-  **Acceptance**: Method compiles, uses async correctly, returns DaoResult<DataTable>, handles null filters with DBNull.Value
+  **Acceptance**: Method compiles, uses async correctly, returns Model_Dao_Result<DataTable>, handles null filters with DBNull.Value
   **Note**: This method is called by the grid control's LoadReportsAsync method
 ```
 

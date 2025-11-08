@@ -1,6 +1,6 @@
 namespace MTM_WIP_Application_Winforms.Models
 {
-    internal class Model_Users
+    internal class Model_Shared_Users
     {
         #region Properties
 

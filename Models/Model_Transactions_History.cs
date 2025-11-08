@@ -1,6 +1,6 @@
 namespace MTM_WIP_Application_Winforms.Models;
 
-internal class Model_TransactionHistory
+internal class Model_Transactions_History
 {
     #region Properties
 

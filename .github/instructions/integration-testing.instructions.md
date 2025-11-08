@@ -31,14 +31,14 @@ This file defines integration testing patterns specific to the MTM WIP Applicati
 - **Never assume method signatures** - always verify actual implementations
 - **Check static vs instance** - DAOs may use different patterns
 - **Verify parameter names** - don't rely on conventions
-- **Confirm return types** - DaoResult vs DaoResult<T> matters
+- **Confirm return types** - Model_Dao_Result vs Model_Dao_Result<T> matters
 
 ### Discovery-First Workflow
 Before writing any test:
 1. Use `grep_search` to find actual method signatures
 2. Verify static vs instance method patterns
 3. Check parameter names and types
-4. Identify return type (DaoResult vs DaoResult<T>)
+4. Identify return type (Model_Dao_Result vs Model_Dao_Result<T>)
 5. Only then write the test
 
 ## Method Signature Discovery Pattern
@@ -71,7 +71,7 @@ Check for:
 - Static vs instance method (presence of `static` keyword)
 - Async suffix convention (some DAOs use `Async`, some don't)
 - Parameter names (exact casing matters)
-- Return type details (`DaoResult`, `DaoResult<DataTable>`, `DaoResult<bool>`, etc.)
+- Return type details (`Model_Dao_Result`, `Model_Dao_Result<DataTable>`, `Model_Dao_Result<bool>`, etc.)
 
 ## Common DAO Patterns
 
@@ -79,7 +79,7 @@ Check for:
 
 ```csharp
 // DAO Definition
-internal static async Task<DaoResult<DataTable>> GetAllItems()
+internal static async Task<Model_Dao_Result<DataTable>> GetAllItems()
 
 // Test Usage
 var result = await Dao_Item.GetAllItems();
@@ -89,7 +89,7 @@ var result = await Dao_Item.GetAllItems();
 
 ```csharp
 // DAO Definition
-public async Task<DaoResult<List<Model>>> SearchAsync(...)
+public async Task<Model_Dao_Result<List<Model>>> SearchAsync(...)
 
 // Test Usage
 var dao = new Dao_Item();
@@ -108,7 +108,7 @@ var result = await Dao_ItemType.GetAllItemTypes(); // No Async suffix!
 
 **Rule**: Always verify - never assume based on other DAOs.
 
-## DaoResult Null Safety Pattern
+## Model_Dao_Result Null Safety Pattern
 
 ### Always Check Data for Null
 
@@ -126,16 +126,16 @@ Assert.IsTrue(result.IsSuccess && result.Data != null && result.Data.Rows.Count 
 ### Handle Different Return Types
 
 ```csharp
-// DaoResult<DataTable> - check for null and rows
+// Model_Dao_Result<DataTable> - check for null and rows
 Assert.IsTrue(result.Data != null && result.Data.Rows.Count > 0);
 
-// DaoResult<bool> - Data is boolean
+// Model_Dao_Result<bool> - Data is boolean
 Assert.IsTrue(result.IsSuccess && result.Data);
 
-// DaoResult<DataRow> - check for null
+// Model_Dao_Result<DataRow> - check for null
 Assert.IsNotNull(result.Data);
 
-// DaoResult (no type parameter) - only check IsSuccess
+// Model_Dao_Result (no type parameter) - only check IsSuccess
 Assert.IsTrue(result.IsSuccess, result.ErrorMessage);
 ```
 
@@ -413,8 +413,8 @@ public void GetData_Execution_ReturnsData()
    // Dao_Target patterns discovered:
    // - All methods are static
    // - No Async suffix on method names
-   // - Returns DaoResult<DataTable> for Get operations
-   // - Returns DaoResult<bool> for Exists operations
+   // - Returns Model_Dao_Result<DataTable> for Get operations
+   // - Returns Model_Dao_Result<bool> for Exists operations
    ```
 
 4. **Write tests** based on actual signatures

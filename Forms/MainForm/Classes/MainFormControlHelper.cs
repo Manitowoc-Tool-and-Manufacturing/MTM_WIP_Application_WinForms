@@ -82,7 +82,7 @@ public static class MainFormControlHelper
             return;
 
         validColor ??= Color.Black;
-        invalidColor ??= Model_AppVariables.UserUiColors.ComboBoxErrorForeColor ?? Color.Red;
+        invalidColor ??= Model_Application_Variables.UserUiColors.ComboBoxErrorForeColor ?? Color.Red;
         ;
 
         var isPlaceholder = textBox.Text.Trim() == placeholder;
@@ -170,7 +170,7 @@ public static class MainFormControlHelper
             return;
 
         validColor ??= Color.Black;
-        invalidColor ??= Model_AppVariables.UserUiColors.ComboBoxErrorForeColor ?? Color.Red;
+        invalidColor ??= Model_Application_Variables.UserUiColors.ComboBoxErrorForeColor ?? Color.Red;
         ;
 
         var isPlaceholder = textBox.Text.Trim() == placeholder;

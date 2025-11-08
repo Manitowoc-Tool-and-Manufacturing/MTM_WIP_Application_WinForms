@@ -301,33 +301,33 @@ Success message via Service_ErrorHandler
 ```csharp
 public class PrintJobValidator
 {
-    public static DaoResult Validate(PrintJob job)
+    public static Model_Dao_Result Validate(PrintJob job)
     {
         if (job.SourceData == null || job.SourceData.Rows.Count == 0)
-            return DaoResult.Failure("No data to print");
+            return Model_Dao_Result.Failure("No data to print");
             
         if (string.IsNullOrWhiteSpace(job.Title))
-            return DaoResult.Failure("Document title is required");
+            return Model_Dao_Result.Failure("Document title is required");
             
         if (job.VisibleColumns == null || job.VisibleColumns.Count == 0)
-            return DaoResult.Failure("At least one column must be visible");
+            return Model_Dao_Result.Failure("At least one column must be visible");
             
         if (!job.VisibleColumns.All(col => job.SourceData.Columns.Contains(col)))
-            return DaoResult.Failure("VisibleColumns contains invalid column names");
+            return Model_Dao_Result.Failure("VisibleColumns contains invalid column names");
             
         if (!job.ColumnOrder.SequenceEqual(job.VisibleColumns))
-            return DaoResult.Failure("ColumnOrder must match VisibleColumns");
+            return Model_Dao_Result.Failure("ColumnOrder must match VisibleColumns");
             
         if (job.PageRange == PrintPageRange.CustomRange)
         {
             if (job.FromPage < 1 || job.ToPage < job.FromPage)
-                return DaoResult.Failure("Invalid page range: FromPage must be >= 1 and <= ToPage");
+                return Model_Dao_Result.Failure("Invalid page range: FromPage must be >= 1 and <= ToPage");
                 
             if (job.TotalPages > 0 && job.ToPage > job.TotalPages)
-                return DaoResult.Failure($"ToPage ({job.ToPage}) exceeds TotalPages ({job.TotalPages})");
+                return Model_Dao_Result.Failure($"ToPage ({job.ToPage}) exceeds TotalPages ({job.TotalPages})");
         }
         
-        return DaoResult.Success();
+        return Model_Dao_Result.Success();
     }
 }
 ```
@@ -337,21 +337,21 @@ public class PrintJobValidator
 ```csharp
 public class PrintSettingsValidator
 {
-    public static DaoResult Validate(PrintSettings settings, DataGridView grid)
+    public static Model_Dao_Result Validate(PrintSettings settings, DataGridView grid)
     {
         if (string.IsNullOrWhiteSpace(settings.GridName))
-            return DaoResult.Failure("GridName is required");
+            return Model_Dao_Result.Failure("GridName is required");
             
         var availableColumns = grid.Columns.Cast<DataGridViewColumn>()
             .Select(c => c.Name).ToList();
             
         if (!settings.VisibleColumns.All(col => availableColumns.Contains(col)))
-            return DaoResult.Failure("VisibleColumns contains columns not in grid");
+            return Model_Dao_Result.Failure("VisibleColumns contains columns not in grid");
             
         if (!settings.ColumnOrder.SequenceEqual(settings.VisibleColumns))
-            return DaoResult.Failure("ColumnOrder must match VisibleColumns");
+            return Model_Dao_Result.Failure("ColumnOrder must match VisibleColumns");
             
-        return DaoResult.Success();
+        return Model_Dao_Result.Success();
     }
 }
 ```
@@ -361,11 +361,11 @@ public class PrintSettingsValidator
 ## Migration Notes
 
 ### Phase 1: Removal
-- Old Model_PrintJob.cs deleted (replaced with new design)
-- Old Model_PrintSettings.cs deleted (replaced with new design)
+- Old Model_Print_Core_Job.cs deleted (replaced with new design)
+- Old Model_Print_CoreSettings.cs deleted (replaced with new design)
 
 ### Phase 2: Core Infrastructure
-- New Model_PrintJob.cs created with properties above
+- New Model_Print_Core_Job.cs created with properties above
 - PageBoundary struct created as internal type in Core_TablePrinter.cs
 
 ### Phase 3: Print Dialog

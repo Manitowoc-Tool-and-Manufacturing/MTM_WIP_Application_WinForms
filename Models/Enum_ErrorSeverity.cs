@@ -3,7 +3,7 @@ namespace MTM_WIP_Application_Winforms.Models;
 /// <summary>
 /// Defines the severity levels for error handling in the MTM Inventory Application
 /// </summary>
-public enum ErrorSeverity
+public enum Enum_ErrorSeverity
 {
     /// <summary>
     /// Low severity - Information/Warning level, application continues normally

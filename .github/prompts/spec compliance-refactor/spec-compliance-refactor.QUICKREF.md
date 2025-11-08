@@ -39,7 +39,7 @@ Input: C:\...\Forms\MainForm\MainForm.cs
 | Priority | Category | Examples | Impact |
 |----------|----------|----------|---------|
 | **P1** | CRITICAL | Column naming, transactions | Runtime errors, data corruption |
-| **P2** | HIGH | DaoResult, Service_ErrorHandler | Spec compliance, architecture |
+| **P2** | HIGH | Model_Dao_Result, Service_ErrorHandler | Spec compliance, architecture |
 | **P3** | MEDIUM | Service_DebugTracer, XML docs | Code quality, maintainability |
 | **P4** | LOW | Naming conventions, comments | Style, readability |
 

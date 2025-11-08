@@ -4,12 +4,12 @@
 **Remaining**: T046g-u (14 subtasks)
 
 ## Completed Tasks (T046a-f)
-- ✅ T046a: Control_Add_ItemType - DaoResult checks added
-- ✅ T046b: Control_Edit_ItemType - DaoResult checks added  
-- ✅ T046c: Control_Remove_ItemType - DaoResult checks added
-- ✅ T046d: Control_Remove_Location - DaoResult checks added
-- ✅ T046e: Control_Remove_Operation - DaoResult checks added
-- ✅ T046f: Control_Remove_PartID - DaoResult checks added (using new Async methods)
+- ✅ T046a: Control_Add_ItemType - Model_Dao_Result checks added
+- ✅ T046b: Control_Edit_ItemType - Model_Dao_Result checks added  
+- ✅ T046c: Control_Remove_ItemType - Model_Dao_Result checks added
+- ✅ T046d: Control_Remove_Location - Model_Dao_Result checks added
+- ✅ T046e: Control_Remove_Operation - Model_Dao_Result checks added
+- ✅ T046f: Control_Remove_PartID - Model_Dao_Result checks added (using new Async methods)
 
 ## Remaining SettingsForm Controls
 
@@ -87,7 +87,7 @@ if (!saveResult.IsSuccess)
 ### T046i: Control_Edit_User.cs (Verify - partially done in T038)
 **File**: `Controls/SettingsForm/Control_Edit_User.cs`
 
-**Status**: Per T038, this was already updated. Need to VERIFY all calls properly check DaoResult.
+**Status**: Per T038, this was already updated. Need to VERIFY all calls properly check Model_Dao_Result.
 
 Methods to verify:
 - Line 147: `GetUserByUsernameAsync` - Check result.Data
@@ -103,7 +103,7 @@ Methods to verify:
 ### T046j: Control_Remove_User.cs (Verify - partially done in T038)
 **File**: `Controls/SettingsForm/Control_Remove_User.cs`
 
-**Status**: Per T038, this was already updated. Need to VERIFY all calls properly check DaoResult.
+**Status**: Per T038, this was already updated. Need to VERIFY all calls properly check Model_Dao_Result.
 
 Methods to verify:
 - Line 129: `GetUserByUsernameAsync` - Check result.Data
@@ -249,7 +249,7 @@ if (!updateResult.IsSuccess)
 - Line 1441: Check result.IsSuccess
 - Line 1725: Check result.IsSuccess
 
-**Action**: Read file and verify proper DaoResult checking.
+**Action**: Read file and verify proper Model_Dao_Result checking.
 
 ---
 
@@ -260,7 +260,7 @@ if (!updateResult.IsSuccess)
 - Line 450: `RemoveInventoryItemsFromDataGridViewAsync` - Check result.IsSuccess
 - Line 684: `AddInventoryItemAsync` - Check result.IsSuccess
 
-**Action**: Read file and verify proper DaoResult checking.
+**Action**: Read file and verify proper Model_Dao_Result checking.
 
 ---
 
@@ -326,17 +326,17 @@ if (!result.IsSuccess)
 **Line 547** - GetUserFullNameAsync:
 ```csharp
 // CURRENT (INCORRECT):
-Model_AppVariables.UserFullName = await Dao_User.GetUserFullNameAsync(Model_AppVariables.User);
+Model_Application_Variables.UserFullName = await Dao_User.GetUserFullNameAsync(Model_Application_Variables.User);
 
 // SHOULD BE:
-var userNameResult = await Dao_User.GetUserFullNameAsync(Model_AppVariables.User);
+var userNameResult = await Dao_User.GetUserFullNameAsync(Model_Application_Variables.User);
 if (userNameResult.IsSuccess && !string.IsNullOrEmpty(userNameResult.Data))
 {
-    Model_AppVariables.UserFullName = userNameResult.Data;
+    Model_Application_Variables.UserFullName = userNameResult.Data;
 }
 else
 {
-    Model_AppVariables.UserFullName = Model_AppVariables.User; // Fallback
+    Model_Application_Variables.UserFullName = Model_Application_Variables.User; // Fallback
     if (!userNameResult.IsSuccess)
     {
         LoggingUtility.Log($"Failed to load user full name: {userNameResult.ErrorMessage}");
@@ -349,11 +349,11 @@ else
 ### T046t: MainFormUserSettingsHelper.cs
 **File**: `Forms/MainForm/Classes/MainFormUserSettingsHelper.cs`
 
-**ALL Dao_User calls need DaoResult checks:**
+**ALL Dao_User calls need Model_Dao_Result checks:**
 
 ```csharp
 // Line 18 - GetLastShownVersionAsync
-var versionResult = await Dao_User.GetLastShownVersionAsync(Model_AppVariables.User);
+var versionResult = await Dao_User.GetLastShownVersionAsync(Model_Application_Variables.User);
 if (versionResult.IsSuccess)
 {
     var lastShownVersion = versionResult.Data;
@@ -361,38 +361,38 @@ if (versionResult.IsSuccess)
 }
 
 // Line 21 - SetHideChangeLogAsync
-var hideChangeLogResult = await Dao_User.SetHideChangeLogAsync(Model_AppVariables.User, "false");
+var hideChangeLogResult = await Dao_User.SetHideChangeLogAsync(Model_Application_Variables.User, "false");
 if (!hideChangeLogResult.IsSuccess)
 {
     LoggingUtility.Log($"Failed to set hide changelog: {hideChangeLogResult.ErrorMessage}");
 }
 
 // Line 23 - SetLastShownVersionAsync
-var setVersionResult = await Dao_User.SetLastShownVersionAsync(Model_AppVariables.User, Model_AppVariables.Version);
+var setVersionResult = await Dao_User.SetLastShownVersionAsync(Model_Application_Variables.User, Model_Application_Variables.Version);
 if (!setVersionResult.IsSuccess)
 {
     LoggingUtility.Log($"Failed to set last shown version: {setVersionResult.ErrorMessage}");
 }
 
 // Line 26-30 - Multiple Get* methods
-var serverAddressResult = await Dao_User.GetWipServerAddressAsync(Model_AppVariables.User);
-Model_AppVariables.WipServerAddress = serverAddressResult.IsSuccess ? serverAddressResult.Data : string.Empty;
+var serverAddressResult = await Dao_User.GetWipServerAddressAsync(Model_Application_Variables.User);
+Model_Application_Variables.WipServerAddress = serverAddressResult.IsSuccess ? serverAddressResult.Data : string.Empty;
 
-var serverPortResult = await Dao_User.GetWipServerPortAsync(Model_AppVariables.User);
-Model_AppVariables.WipServerPort = serverPortResult.IsSuccess ? serverPortResult.Data : string.Empty;
+var serverPortResult = await Dao_User.GetWipServerPortAsync(Model_Application_Variables.User);
+Model_Application_Variables.WipServerPort = serverPortResult.IsSuccess ? serverPortResult.Data : string.Empty;
 
-var visualUserNameResult = await Dao_User.GetVisualUserNameAsync(Model_AppVariables.User);
-Model_AppVariables.VisualUserName = visualUserNameResult.IsSuccess ? visualUserNameResult.Data : string.Empty;
+var visualUserNameResult = await Dao_User.GetVisualUserNameAsync(Model_Application_Variables.User);
+Model_Application_Variables.VisualUserName = visualUserNameResult.IsSuccess ? visualUserNameResult.Data : string.Empty;
 
-var visualPasswordResult = await Dao_User.GetVisualPasswordAsync(Model_AppVariables.User);
-Model_AppVariables.VisualPassword = visualPasswordResult.IsSuccess ? visualPasswordResult.Data : string.Empty;
+var visualPasswordResult = await Dao_User.GetVisualPasswordAsync(Model_Application_Variables.User);
+Model_Application_Variables.VisualPassword = visualPasswordResult.IsSuccess ? visualPasswordResult.Data : string.Empty;
 
-var themeNameResult = await Dao_User.GetThemeNameAsync(Model_AppVariables.User);
-Model_AppVariables.WipDataGridTheme = themeNameResult.IsSuccess ? themeNameResult.Data : Model_AppVariables.ThemeName;
+var themeNameResult = await Dao_User.GetThemeNameAsync(Model_Application_Variables.User);
+Model_Application_Variables.WipDataGridTheme = themeNameResult.IsSuccess ? themeNameResult.Data : Model_Application_Variables.ThemeName;
 
 // Line 36 - GetThemeFontSizeAsync
-var fontSizeResult = await Dao_User.GetThemeFontSizeAsync(Model_AppVariables.User);
-Model_AppVariables.ThemeFontSize = fontSizeResult.IsSuccess ? fontSizeResult.Data ?? 9 : 9;
+var fontSizeResult = await Dao_User.GetThemeFontSizeAsync(Model_Application_Variables.User);
+Model_Application_Variables.ThemeFontSize = fontSizeResult.IsSuccess ? fontSizeResult.Data ?? 9 : 9;
 ```
 
 ---
@@ -405,18 +405,18 @@ Model_AppVariables.ThemeFontSize = fontSizeResult.IsSuccess ? fontSizeResult.Dat
 **Line 639** - GetThemeFontSizeAsync:
 ```csharp
 // CURRENT (INCORRECT):
-int? fontSize = await Dao_User.GetThemeFontSizeAsync(Model_AppVariables.User);
-Model_AppVariables.ThemeFontSize = fontSize ?? 9;
+int? fontSize = await Dao_User.GetThemeFontSizeAsync(Model_Application_Variables.User);
+Model_Application_Variables.ThemeFontSize = fontSize ?? 9;
 
 // SHOULD BE:
-var fontSizeResult = await Dao_User.GetThemeFontSizeAsync(Model_AppVariables.User);
+var fontSizeResult = await Dao_User.GetThemeFontSizeAsync(Model_Application_Variables.User);
 if (fontSizeResult.IsSuccess)
 {
-    Model_AppVariables.ThemeFontSize = fontSizeResult.Data ?? 9;
+    Model_Application_Variables.ThemeFontSize = fontSizeResult.Data ?? 9;
 }
 else
 {
-    Model_AppVariables.ThemeFontSize = 9; // Default fallback
+    Model_Application_Variables.ThemeFontSize = 9; // Default fallback
     LoggingUtility.Log($"Failed to load theme font size: {fontSizeResult.ErrorMessage}");
 }
 ```
@@ -428,23 +428,23 @@ else
 ### T047: Control_Add_Operation.cs - Refactor to use Dao_Operation methods
 **Current status**: Control_Add_Operation.cs currently uses direct Helper_Database_StoredProcedure calls (bypasses DAO layer).
 
-**Covered by T046**: NO - T046 tasks focus on DaoResult checking, not refactoring from Helper to DAO calls.
+**Covered by T046**: NO - T046 tasks focus on Model_Dao_Result checking, not refactoring from Helper to DAO calls.
 
 **Verdict**: **T047 is SEPARATE work** - needs to refactor Control_Add_Operation to use Dao_Operation.OperationExists() and Dao_Operation.InsertOperation() instead of direct stored procedure calls.
 
 ---
 
 ### T048: Control_QuickButtons.cs - async/await patterns
-**Current status**: T046o updates Control_QuickButtons.cs to add DaoResult checks.
+**Current status**: T046o updates Control_QuickButtons.cs to add Model_Dao_Result checks.
 **T048 scope**: "LoadQuickButtonsAsync, btnQuickButton_Click event handlers"
 
 **Overlap**: T046o covers button click handlers (UpdateQuickButtonAsync, RemoveQuickButtonAndShiftAsync, DeleteAllQuickButtonsForUserAsync, AddQuickButtonAtPositionAsync).
 
 **Verdict**: **T048 PARTIALLY COVERED by T046o**. After T046o completes:
-- ✅ Button click handlers covered (DaoResult checks added)
+- ✅ Button click handlers covered (Model_Dao_Result checks added)
 - ❓ LoadQuickButtonsAsync needs verification - check if it properly uses async/await patterns
 
-**Amendment needed for T048**: "Verify LoadQuickButtonsAsync uses proper async/await patterns. Button click DaoResult checks completed in T046o."
+**Amendment needed for T048**: "Verify LoadQuickButtonsAsync uses proper async/await patterns. Button click Model_Dao_Result checks completed in T046o."
 
 ---
 
@@ -467,5 +467,5 @@ else
 
 **Recommended Amendment to tasks.md**:
 ```markdown
-- [ ] T048 [US4] Verify `Controls/MainForm/Control_QuickButtons.cs` LoadQuickButtonsAsync uses proper async/await patterns (button click DaoResult checks completed in T046o)
+- [ ] T048 [US4] Verify `Controls/MainForm/Control_QuickButtons.cs` LoadQuickButtonsAsync uses proper async/await patterns (button click Model_Dao_Result checks completed in T046o)
 ```

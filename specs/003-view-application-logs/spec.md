@@ -441,7 +441,7 @@ Search & Filter Tab:
 
 ## Configuration
 
-Add to `Model_AppVariables` or appsettings.json:
+Add to `Model_Application_Variables` or appsettings.json:
 
 ```json
 {

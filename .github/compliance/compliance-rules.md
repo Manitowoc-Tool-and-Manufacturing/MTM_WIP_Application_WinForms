@@ -6,7 +6,7 @@ The following rules were extracted from completed specification tasks in `specs/
 
 ---
 
-## Rule CR-DAO-001: DAO Methods Return `DaoResult` and Use Stored Procedure Helpers
+## Rule CR-DAO-001: DAO Methods Return `Model_Dao_Result` and Use Stored Procedure Helpers
 
 - **Source Spec**: `specs/Archives/002-comprehensive-database-layer/spec.md`
 - **Source Tasks**: `specs/Archives/002-comprehensive-database-layer/tasks.md` (T024a–T045h, lines 1247-1452), `specs/Archives/002-003-database-layer-complete/tasks.md` (T113–T118)
@@ -15,7 +15,7 @@ The following rules were extracted from completed specification tasks in `specs/
 - **Evidence Count**: 80+ method implementations
 
 ### Description
-All DAO methods must be asynchronous, call the `Helper_Database_StoredProcedure.Execute*WithStatusAsync` helpers, and return `DaoResult` or `DaoResult<T>` envelopes. Direct `MySqlCommand` usage or returning raw `DataTable`/primitive types is prohibited.
+All DAO methods must be asynchronous, call the `Helper_Database_StoredProcedure.Execute*WithStatusAsync` helpers, and return `Model_Dao_Result` or `Model_Dao_Result<T>` envelopes. Direct `MySqlCommand` usage or returning raw `DataTable`/primitive types is prohibited.
 
 ### Pattern to Enforce
 **Before (Anti-pattern)**
@@ -27,13 +27,13 @@ return table;
 **After (Compliant pattern)**
 ```csharp
 var result = await Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync(
-    Model_AppVariables.ConnectionString,
+    Model_Application_Variables.ConnectionString,
     "inv_inventory_Get_ByUser",
     new Dictionary<string, object> { ["p_User"] = userName });
 
 return result.IsSuccess && result.Data != null
-    ? DaoResult<DataTable>.Success(result.Data)
-    : DaoResult<DataTable>.Failure(result.ErrorMessage ?? "Inventory query failed");
+    ? Model_Dao_Result<DataTable>.Success(result.Data)
+    : Model_Dao_Result<DataTable>.Failure(result.ErrorMessage ?? "Inventory query failed");
 ```
 
 ### Violation Detection
@@ -43,8 +43,8 @@ return result.IsSuccess && result.Data != null
 
 ### Remediation Steps
 1. Wrap stored procedure invocation with the appropriate helper method.
-2. Map helper responses to `DaoResult`/`DaoResult<T>` using Success/Failure factories.
-3. Ensure all consumers inspect `DaoResult` instead of raw tables.
+2. Map helper responses to `Model_Dao_Result`/`Model_Dao_Result<T>` using Success/Failure factories.
+3. Ensure all consumers inspect `Model_Dao_Result` instead of raw tables.
 
 ### Instruction References
 - `.github/instructions/mysql-database.instructions.md`
@@ -64,10 +64,10 @@ Every DAO method must call `Service_DebugTracer.TraceMethodEntry`, `TraceBusines
 ### Pattern to Enforce
 **Before**
 ```csharp
-public static async Task<DaoResult<DataTable>> GetInventoryAsync()
+public static async Task<Model_Dao_Result<DataTable>> GetInventoryAsync()
 {
     var result = await Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync(...);
-    return DaoResult<DataTable>.Success(result.Data!);
+    return Model_Dao_Result<DataTable>.Success(result.Data!);
 }
 ```
 
@@ -82,7 +82,7 @@ return resultEnvelope;
 ```
 
 ### Violation Detection
-- **Search Pattern**: `public .* Task<DaoResult` without `TraceMethodEntry`
+- **Search Pattern**: `public .* Task<Model_Dao_Result` without `TraceMethodEntry`
 - **File Types**: `Data/*.cs`
 
 ### Remediation Steps
@@ -92,14 +92,14 @@ return resultEnvelope;
 
 ---
 
-## Rule CR-UI-001: UI Event Handlers Must Evaluate `DaoResult`
+## Rule CR-UI-001: UI Event Handlers Must Evaluate `Model_Dao_Result`
 
 - **Source Tasks**: `specs/Archives/002-comprehensive-database-layer/tasks.md` (T046a–T046r, lines 1461-1643)
 - **Implementation Status**: ✅ Validated across updated controls except legacy AdvancedInventory
 - **Evidence Files**: `Controls/SettingsForm/Control_Add_User.cs`, `Controls/Shared/Control_RemoveTab.cs`
 
 ### Description
-UI layers must never assume success when invoking DAO methods. Event handlers should inspect `DaoResult.IsSuccess` (and `Data` when applicable), surface error messages via `Service_ErrorHandler`, and avoid directly reading `DataTable`/`DataRow` without null checks.
+UI layers must never assume success when invoking DAO methods. Event handlers should inspect `Model_Dao_Result.IsSuccess` (and `Data` when applicable), surface error messages via `Service_ErrorHandler`, and avoid directly reading `DataTable`/`DataRow` without null checks.
 
 ### Pattern to Enforce
 **Before (Anti-pattern)**
@@ -183,7 +183,7 @@ await UpdateInventoryGridAsync(result.Data);
 - **Evidence Files**: `Logging/LoggingUtility.cs`, `Services/Service_ErrorHandler.cs`, multiple controls
 
 ### Description
-Errors surfaced from DAO or UI workflows must be routed through `Service_ErrorHandler`, which coordinates cooldown behavior, severity mapping, and logging via `LoggingUtility.LogDatabaseError(DatabaseErrorSeverity)`. Direct `MessageBox.Show` usage is disallowed.
+Errors surfaced from DAO or UI workflows must be routed through `Service_ErrorHandler`, which coordinates cooldown behavior, severity mapping, and logging via `LoggingUtility.LogDatabaseError(Enum_DatabaseEnum_ErrorSeverity)`. Direct `MessageBox.Show` usage is disallowed.
 
 ### Pattern to Enforce
 **Before (Anti-pattern)**
@@ -195,7 +195,7 @@ MessageBox.Show("Inventory failed");
 ```csharp
 Service_ErrorHandler.HandleDatabaseError(
     "Inventory retrieval failed",
-    DatabaseErrorSeverity.Error,
+    Enum_DatabaseEnum_ErrorSeverity.Error,
     controlName: nameof(Control_AdvancedInventory));
 ```
 

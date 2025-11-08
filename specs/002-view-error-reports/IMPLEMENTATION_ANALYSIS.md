@@ -85,9 +85,9 @@ All 10 foundation tasks have been implemented according to specifications.
 
 ---
 
-### T006: Model_ErrorReportFilter Class
+### T006: Model_ErrorReport_Core_Filter Class
 
-**Location**: `Models/Model_ErrorReportFilter.cs`
+**Location**: `Models/Model_ErrorReport_Core_Filter.cs`
 
 #### ✅ Full Compliance
 - **Spec Requirements**: Nullable DateTime DateFrom/DateTo, string UserName, MachineName, Status, SearchText. Validation logic for date range.
@@ -110,10 +110,10 @@ All 10 foundation tasks have been implemented according to specifications.
 #### ✅ T007: GetAllErrorReportsAsync
 - **Spec Compliance**: ✅ Full compliance
 - **Implementation**:
-  - ✅ Accepts `Model_ErrorReportFilter?` parameter (nullable, null = all reports)
+  - ✅ Accepts `Model_ErrorReport_Core_Filter?` parameter (nullable, null = all reports)
   - ✅ Validates filter before execution using `filter.TryValidate()`
   - ✅ Uses `Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync`
-  - ✅ Returns `DaoResult<DataTable>`
+  - ✅ Returns `Model_Dao_Result<DataTable>`
   - ✅ Parameters built via `BuildFilterParameters()` helper with DBNull.Value for nulls
   - ✅ Error logging via `LoggingUtility`
   - ✅ Async/await pattern throughout
@@ -121,11 +121,11 @@ All 10 foundation tasks have been implemented according to specifications.
 
 **Code Snippet** (Lines 127-188):
 ```csharp
-public static async Task<DaoResult<DataTable>> GetAllErrorReportsAsync(
-    Model_ErrorReportFilter? filter,
+public static async Task<Model_Dao_Result<DataTable>> GetAllErrorReportsAsync(
+    Model_ErrorReport_Core_Filter? filter,
     Helper_StoredProcedureProgress? progressHelper = null)
 {
-    filter ??= new Model_ErrorReportFilter();
+    filter ??= new Model_ErrorReport_Core_Filter();
     if (!filter.TryValidate(out var validationMessage)) { ... }
     // ... calls sp_error_reports_GetAll via helper
 }
@@ -136,19 +136,19 @@ public static async Task<DaoResult<DataTable>> GetAllErrorReportsAsync(
 - **Implementation**:
   - ✅ Accepts `int reportId` parameter with validation (> 0)
   - ✅ Calls `sp_error_reports_GetByID` via helper
-  - ✅ Returns `DaoResult<Model_ErrorReport>`
-  - ✅ Maps DataRow to Model_ErrorReport via `MapToErrorReport()` helper
+  - ✅ Returns `Model_Dao_Result<Model_ErrorReport_Core>`
+  - ✅ Maps DataRow to Model_ErrorReport_Core via `MapToErrorReport()` helper
   - ✅ Null-safe field access using `DataRow.Field<T?>()` pattern
   - ✅ Handles "(No data provided)" placeholders for null fields
   - ✅ Error logging and exception handling
 
 **Code Snippet** (Lines 196-260):
 ```csharp
-public static async Task<DaoResult<Model_ErrorReport>> GetErrorReportByIdAsync(
+public static async Task<Model_Dao_Result<Model_ErrorReport_Core>> GetErrorReportByIdAsync(
     int reportId,
     Helper_StoredProcedureProgress? progressHelper = null)
 {
-    if (reportId <= 0) { return DaoResult<Model_ErrorReport>.Failure(...); }
+    if (reportId <= 0) { return Model_Dao_Result<Model_ErrorReport_Core>.Failure(...); }
     // ... executes sp_error_reports_GetByID
     var report = MapToErrorReport(storedProcedureResult.Data.Rows[0]);
 }
@@ -160,13 +160,13 @@ public static async Task<DaoResult<Model_ErrorReport>> GetErrorReportByIdAsync(
   - ✅ Parameters: `reportId`, `newStatus`, `developerNotes?`, `reviewedBy`
   - ✅ Validation: reportId > 0, newStatus not null/empty, reviewedBy not null/empty
   - ✅ Calls `sp_error_reports_UpdateStatus` with `DateTime.Now` for ReviewedDate
-  - ✅ Returns `DaoResult<bool>`
+  - ✅ Returns `Model_Dao_Result<bool>`
   - ✅ Handles optional `developerNotes` with DBNull.Value when null
   - ✅ Error logging and exception handling
 
 **Code Snippet** (Lines 268-333):
 ```csharp
-public static async Task<DaoResult<bool>> UpdateErrorReportStatusAsync(
+public static async Task<Model_Dao_Result<bool>> UpdateErrorReportStatusAsync(
     int reportId,
     string newStatus,
     string? developerNotes,
@@ -191,25 +191,25 @@ public static async Task<DaoResult<bool>> UpdateErrorReportStatusAsync(
 - **Spec Compliance**: ✅ Full compliance
 - **Implementation**:
   - ✅ Both methods call respective stored procedures
-  - ✅ Both return `DaoResult<List<string>>`
+  - ✅ Both return `Model_Dao_Result<List<string>>`
   - ✅ DataTable to List<string> conversion via `ExtractStringColumn()` helper
   - ✅ Empty result handling
   - ✅ Error logging
 
 **Code Snippet** (Lines 341-423):
 ```csharp
-public static async Task<DaoResult<List<string>>> GetUserListAsync()
+public static async Task<Model_Dao_Result<List<string>>> GetUserListAsync()
 {
     // calls sp_error_reports_GetUserList
     var users = ExtractStringColumn(storedProcedureResult.Data, "UserName");
-    return DaoResult<List<string>>.Success(users, ...);
+    return Model_Dao_Result<List<string>>.Success(users, ...);
 }
 
-public static async Task<DaoResult<List<string>>> GetMachineListAsync()
+public static async Task<Model_Dao_Result<List<string>>> GetMachineListAsync()
 {
     // calls sp_error_reports_GetMachineList
     var machines = ExtractStringColumn(storedProcedureResult.Data, "MachineName");
-    return DaoResult<List<string>>.Success(machines, ...);
+    return Model_Dao_Result<List<string>>.Success(machines, ...);
 }
 ```
 
@@ -240,7 +240,7 @@ public static async Task<DaoResult<List<string>>> GetMachineListAsync()
 #### ✅ T013: LoadReportsAsync Method
 - **Spec Compliance**: ✅ Full compliance
 - **Implementation** (Lines 81-132):
-  - ✅ Async method accepting `Model_ErrorReportFilter?` (nullable)
+  - ✅ Async method accepting `Model_ErrorReport_Core_Filter?` (nullable)
   - ✅ Calls `Dao_ErrorReports.GetAllErrorReportsAsync()`
   - ✅ Checks `IsSuccess` before binding
   - ✅ Binds DataTable to `_bindingSource.DataSource`, then refreshes
@@ -249,7 +249,7 @@ public static async Task<DaoResult<List<string>>> GetMachineListAsync()
 
 **Code Snippet**:
 ```csharp
-internal async Task LoadReportsAsync(Model_ErrorReportFilter? filter = null, ...)
+internal async Task LoadReportsAsync(Model_ErrorReport_Core_Filter? filter = null, ...)
 {
     var result = await Dao_ErrorReports.GetAllErrorReportsAsync(filter, progressHelper);
     if (result.IsSuccess) {
@@ -355,7 +355,7 @@ if (columnName == "colErrorSummary" && e.Value is string summary ...)
   - ✅ T023: `PopulateStatusFilterAsync()` - Code present (lines 324-338)
   - ✅ T024: `btnApplyFilters_Click` handler - Code present (lines 143-145, 340-396)
   - ✅ T025: `btnClearFilters_Click` handler - Code present (lines 148-150, 398-416)
-  - ✅ T026: Search text validation - Code present in Model_ErrorReportFilter
+  - ✅ T026: Search text validation - Code present in Model_ErrorReport_Core_Filter
 
 **CRITICAL BLOCKER**: User Story 2 is completely non-functional. The entire filter system was implemented but the UI panel containing the controls is not rendering.
 
@@ -434,7 +434,7 @@ if (columnName == "colErrorSummary" && e.Value is string summary ...)
     - reportId
     - newStatus ("Reviewed" or "Resolved")
     - developerNotes (from dialog)
-    - reviewedBy (`Model_AppVariables.CurrentUser.UserName`)
+    - reviewedBy (`Model_Application_Variables.CurrentUser.UserName`)
   - ✅ Raise `StatusChanged` event on success (lines 293-304)
 
 #### ✅ T036: StatusChanged Event
@@ -470,7 +470,7 @@ Clipboard.SetText(sb.ToString());
   - ✅ Shows `SaveFileDialog` with filters: `"Text Files (*.txt)|*.txt|JSON Files (*.json)|*.json"`
   - ✅ Exports to selected format:
     - `.txt` → formatted text (same as Copy All Details)
-    - `.json` → JSON serialization of Model_ErrorReport
+    - `.json` → JSON serialization of Model_ErrorReport_Core
   - ✅ Uses `File.WriteAllText()` / `File.WriteAllTextAsync()`
   - ✅ Success confirmation
 
@@ -550,7 +550,7 @@ dialog.StatusChanged += async (s, e) =>
   - ✅ Event handler: `MainForm_MenuStrip_Development_ViewErrorReports_Click`
   - ✅ Form launching: Creates `Form_ViewErrorReports` instance, shows non-modal
   - ✅ Singleton pattern: Reuses existing form if already open (brings to front)
-  - ✅ Error handling: `Service_ErrorHandler.HandleException` with ErrorSeverity.Medium
+  - ✅ Error handling: `Service_ErrorHandler.HandleException` with Enum_ErrorSeverity.Medium
   - ✅ Form cleanup: `FormClosed` event sets field to null
 
 **Code Snippet**:
@@ -580,7 +580,7 @@ private void MainForm_MenuStrip_Development_ViewErrorReports_Click(object sender
 **✅ Excellent**: InsertReportAsync (lines 28-48)
 - Has comprehensive `<summary>` with workflow description
 - All `<param>` tags present
-- `<returns>` describes DaoResult structure
+- `<returns>` describes Model_Dao_Result structure
 - `<exception>` tag for ArgumentNullException
 - `<remarks>` section explains stored procedure behavior
 
@@ -613,7 +613,7 @@ Add comprehensive XML documentation to match InsertReportAsync quality level:
 /// </summary>
 /// <param name="filter">Filter criteria; pass null to retrieve all error reports.</param>
 /// <param name="progressHelper">Optional progress helper for long-running operations.</param>
-/// <returns>A DaoResult containing a DataTable of error reports when successful.</returns>
+/// <returns>A Model_Dao_Result containing a DataTable of error reports when successful.</returns>
 /// <exception cref="ArgumentException">Thrown when filter validation fails.</exception>
 /// <remarks>
 /// This method calls sp_error_reports_GetAll which:
@@ -621,10 +621,10 @@ Add comprehensive XML documentation to match InsertReportAsync quality level:
 /// - Returns results ordered by ReportDate DESC (most recent first)
 /// - Uses parametrized queries to prevent SQL injection
 /// 
-/// The method validates filters before execution using Model_ErrorReportFilter.TryValidate().
+/// The method validates filters before execution using Model_ErrorReport_Core_Filter.TryValidate().
 /// Empty filter values are converted to DBNull for SQL compatibility.
 /// </remarks>
-public static async Task<DaoResult<DataTable>> GetAllErrorReportsAsync(...)
+public static async Task<Model_Dao_Result<DataTable>> GetAllErrorReportsAsync(...)
 ```
 
 ---
@@ -774,7 +774,7 @@ flowLayoutFilters.MinimumSize = new Size(0, 60);
 /// <summary>...</summary>
 /// <param name="reportId">The report identifier (must be > 0).</param>
 /// <param name="progressHelper">Optional progress tracking.</param>
-/// <returns>DaoResult containing Model_ErrorReport on success, error info on failure.</returns>
+/// <returns>Model_Dao_Result containing Model_ErrorReport_Core on success, error info on failure.</returns>
 /// <exception cref="ArgumentOutOfRangeException">Thrown when reportId <= 0.</exception>
 /// <exception cref="InvalidOperationException">Thrown when database connection fails.</exception>
 /// <remarks>

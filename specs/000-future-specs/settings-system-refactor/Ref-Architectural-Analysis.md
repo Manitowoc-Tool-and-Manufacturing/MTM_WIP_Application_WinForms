@@ -13,7 +13,7 @@ This document provides a deep architectural analysis of the current Settings Sys
 
 **Key Findings**:
 - Current system has 19 UserControls with inconsistent patterns across 5 CRUD entities and 5 settings categories
-- State management fragmented across 3 layers (Model_AppVariables, Model_Users, database) causing synchronization issues
+- State management fragmented across 3 layers (Model_Application_Variables, Model_Shared_Users, database) causing synchronization issues
 - No unified validation framework leading to duplicate validation logic in 15+ files
 - Integration points scattered across 23 Theme System files, 15 Error Handling files, 4 Progress Reporting files
 - Database schema spans 10 tables with no cohesive audit strategy
@@ -76,8 +76,8 @@ This document provides a deep architectural analysis of the current Settings Sys
 - `Dao_Part.cs`, `Dao_Location.cs`, `Dao_Operation.cs`, `Dao_ItemType.cs`: CRUD operations for master data
 
 **Models**:
-- `Model_AppVariables.cs` (179 lines): Static properties for application state
-- `Model_Users.cs`: User entity with mixed static/instance properties
+- `Model_Application_Variables.cs` (179 lines): Static properties for application state
+- `Model_Shared_Users.cs`: User entity with mixed static/instance properties
 - Individual entity models for PartID, Location, Operation, ItemType
 
 **Database Schema**:
@@ -115,12 +115,12 @@ UI Controls (manual data binding)
 **Fragmentation Problem**:
 
 Settings exist in 3 locations simultaneously:
-1. **Memory** (`Model_AppVariables`, `Model_Users`): Static properties, no change notification
+1. **Memory** (`Model_Application_Variables`, `Model_Shared_Users`): Static properties, no change notification
 2. **Database** (`usr_ui_settings`, `usr_users`): Persistent storage
 3. **UserControl State**: Local variables in each control
 
 **Synchronization Issues**:
-- Changing ThemeName in `Model_AppVariables` doesn't update database until explicit save
+- Changing ThemeName in `Model_Application_Variables` doesn't update database until explicit save
 - Database changes don't propagate to memory until app restart
 - No event-driven synchronization between layers
 
@@ -271,7 +271,7 @@ Manual type conversion (string to int, etc.)
 
 **Sources**:
 - `appsettings.json`: ValidOperations, DefaultLocations, SessionTimeoutMinutes
-- `Model_AppVariables`: Hardcoded constants (font sizes, thresholds)
+- `Model_Application_Variables`: Hardcoded constants (font sizes, thresholds)
 - Database: User preferences, theme definitions
 - Code: Hardcoded strings (e.g., shift names "First", "Second", "Third", "Weekend")
 

@@ -74,7 +74,7 @@ Help developers adopt the standardized DAO, helper, and stored procedure pattern
 /// <summary>
 /// Retrieves inventory rows for the supplied location.
 /// </summary>
-public static async Task<DaoResult<DataTable>> GetInventoryByLocationAsync(
+public static async Task<Model_Dao_Result<DataTable>> GetInventoryByLocationAsync(
     string locationCode,
     bool includeInactive)
 {
@@ -84,24 +84,24 @@ public static async Task<DaoResult<DataTable>> GetInventoryByLocationAsync(
         {
             ["LocationCode"] = locationCode,
             ["IncludeInactive"] = includeInactive,
-            ["User"] = Model_AppVariables.User
+            ["User"] = Model_Application_Variables.User
         };
 
         var result = await Helper_Database_StoredProcedure.ExecuteDataTableWithStatus(
-            Model_AppVariables.ConnectionString,
+            Model_Application_Variables.ConnectionString,
             "inv_inventory_Get_ByLocation",
             parameters,
             progressHelper: null,
             useAsync: true);
 
         return result.IsSuccess
-            ? DaoResult<DataTable>.Success(result.Data, $"Retrieved {result.Data.Rows.Count} rows")
-            : DaoResult<DataTable>.Failure(result.Message);
+            ? Model_Dao_Result<DataTable>.Success(result.Data, $"Retrieved {result.Data.Rows.Count} rows")
+            : Model_Dao_Result<DataTable>.Failure(result.Message);
     }
     catch (Exception ex)
     {
         LoggingUtility.LogDatabaseError(ex);
-        return DaoResult<DataTable>.Failure($"Database error: {ex.Message}", ex);
+        return Model_Dao_Result<DataTable>.Failure($"Database error: {ex.Message}", ex);
     }
 }
 ```
@@ -112,7 +112,7 @@ public static async Task<DaoResult<DataTable>> GetInventoryByLocationAsync(
 /// <summary>
 /// Adds inventory for the provided part number.
 /// </summary>
-public static async Task<DaoResult> AddInventoryAsync(
+public static async Task<Model_Dao_Result> AddInventoryAsync(
     string partNumber,
     string locationCode,
     int quantity)
@@ -124,24 +124,24 @@ public static async Task<DaoResult> AddInventoryAsync(
             ["PartNumber"] = partNumber,
             ["LocationCode"] = locationCode,
             ["Quantity"] = quantity,
-            ["User"] = Model_AppVariables.User
+            ["User"] = Model_Application_Variables.User
         };
 
         var result = await Helper_Database_StoredProcedure.ExecuteNonQueryWithStatus(
-            Model_AppVariables.ConnectionString,
+            Model_Application_Variables.ConnectionString,
             "inv_inventory_Add_Item",
             parameters,
             progressHelper: null,
             useAsync: true);
 
         return result.IsSuccess
-            ? DaoResult.Success("Inventory added successfully")
-            : DaoResult.Failure(result.Message);
+            ? Model_Dao_Result.Success("Inventory added successfully")
+            : Model_Dao_Result.Failure(result.Message);
     }
     catch (Exception ex)
     {
         LoggingUtility.LogDatabaseError(ex);
-        return DaoResult.Failure($"Failed to add inventory: {ex.Message}", ex);
+        return Model_Dao_Result.Failure($"Failed to add inventory: {ex.Message}", ex);
     }
 }
 ```
@@ -149,13 +149,13 @@ public static async Task<DaoResult> AddInventoryAsync(
 ### Multi-Step Transactions
 
 ```csharp
-public static async Task<DaoResult> TransferInventoryAsync(
+public static async Task<Model_Dao_Result> TransferInventoryAsync(
     string partNumber,
     string fromLocation,
     string toLocation,
     int quantity)
 {
-    await using var connection = new MySqlConnection(Model_AppVariables.ConnectionString);
+    await using var connection = new MySqlConnection(Model_Application_Variables.ConnectionString);
     await connection.OpenAsync();
 
     await using var transaction = await connection.BeginTransactionAsync();
@@ -165,38 +165,38 @@ public static async Task<DaoResult> TransferInventoryAsync(
         if (!validation.IsSuccess)
         {
             await transaction.RollbackAsync();
-            return DaoResult.Failure(validation.Message);
+            return Model_Dao_Result.Failure(validation.Message);
         }
 
         var deduct = await DeductInventoryAsync(connection, transaction, partNumber, fromLocation, quantity);
         if (!deduct.IsSuccess)
         {
             await transaction.RollbackAsync();
-            return DaoResult.Failure(deduct.Message);
+            return Model_Dao_Result.Failure(deduct.Message);
         }
 
         var add = await AddInventoryAsync(connection, transaction, partNumber, toLocation, quantity);
         if (!add.IsSuccess)
         {
             await transaction.RollbackAsync();
-            return DaoResult.Failure(add.Message);
+            return Model_Dao_Result.Failure(add.Message);
         }
 
         var log = await LogTransferAsync(connection, transaction, partNumber, fromLocation, toLocation, quantity);
         if (!log.IsSuccess)
         {
             await transaction.RollbackAsync();
-            return DaoResult.Failure(log.Message);
+            return Model_Dao_Result.Failure(log.Message);
         }
 
         await transaction.CommitAsync();
-        return DaoResult.Success($"Transferred {quantity} of {partNumber}.");
+        return Model_Dao_Result.Success($"Transferred {quantity} of {partNumber}.");
     }
     catch (Exception ex)
     {
         await transaction.RollbackAsync();
         LoggingUtility.LogDatabaseError(ex);
-        return DaoResult.Failure($"Transfer failed: {ex.Message}", ex);
+        return Model_Dao_Result.Failure($"Transfer failed: {ex.Message}", ex);
     }
 }
 ```
@@ -277,7 +277,7 @@ private async void btnSave_Click(object sender, EventArgs e)
     }
     catch (Exception ex)
     {
-        Service_ErrorHandler.HandleException(ex, ErrorSeverity.Error, controlName: nameof(btnSave));
+        Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Error, controlName: nameof(btnSave));
     }
     finally
     {
@@ -309,7 +309,7 @@ public partial class InventoryControl : UserControl
         {
             Service_ErrorHandler.HandleException(
                 new InvalidOperationException(result.Message),
-                ErrorSeverity.Warning,
+                Enum_ErrorSeverity.Warning,
                 controlName: nameof(InventoryControl));
         }
     }
@@ -326,7 +326,7 @@ private async void Timer_Tick(object? sender, EventArgs e)
     {
         Service_ErrorHandler.HandleException(
             new InvalidOperationException(result.Message),
-            ErrorSeverity.Warning,
+            Enum_ErrorSeverity.Warning,
             controlName: nameof(Timer_Tick));
     }
 }
@@ -355,13 +355,13 @@ public async Task ExportInventoryAsync()
 | Transaction rolled back      | Step failure not short-circuiting                  | Validate each step and return immediately on failure                               |
 | Connection pool exhausted    | Undisposed MySqlConnection                         | Use `await using` or `using` statements for all connections/commands               |
 | Slow query warning           | Execution time exceeded threshold                  | Analyze stored procedure (EXPLAIN), review indexes, adjust strategy                |
-| `DaoResult.Data` null access | Caller skipped `IsSuccess` check                   | Guard access with `if (result.IsSuccess)`                                          |
+| `Model_Dao_Result.Data` null access | Caller skipped `IsSuccess` check                   | Guard access with `if (result.IsSuccess)`                                          |
 
 ---
 
 ## Next Steps
 
 -   Consult [data-model.md](./data-model.md) for entity details.
--   Review `/contracts/` for DaoResult and stored procedure contracts.
+-   Review `/contracts/` for Model_Dao_Result and stored procedure contracts.
 -   Track documentation obligations via the Documentation Update Matrix once generated.
 -   Reference the plan and tasks files for phase sequencing and automation gates.

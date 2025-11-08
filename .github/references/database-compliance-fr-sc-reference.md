@@ -18,8 +18,8 @@ Provide four standardized helper methods (non-query, DataTable, scalar, custom o
 **FR-002** - Parameter Prefix Detection  
 Cache stored procedure parameter metadata from INFORMATION_SCHEMA at startup and apply correct prefixes automatically. Developers provide unprefixed PascalCase parameter names in Dictionary<string, object>.
 
-**FR-003** - DaoResult Pattern  
-ALL DAO methods must return DaoResult or DaoResult<T> envelopes containing: IsSuccess (bool), Message (string), Data (when applicable), Exception (if error occurred).
+**FR-003** - Model_Dao_Result Pattern  
+ALL DAO methods must return Model_Dao_Result or Model_Dao_Result<T> envelopes containing: IsSuccess (bool), Message (string), Data (when applicable), Exception (if error occurred).
 
 **FR-004** - Stored Procedure Output Standards  
 Every stored procedure MUST declare OUT p_Status INT and OUT p_ErrorMsg VARCHAR(500) with documented status codes:

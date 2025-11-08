@@ -7,7 +7,7 @@ namespace MTM_WIP_Application_WinForms.Models;
 /// Represents an offline queued error report stored as a local SQL file.
 /// Used for tracking pending reports that need to be synchronized with the database.
 /// </summary>
-public class Model_QueuedErrorReport
+public class Model_ErrorReport_Core_Queued
 {
     #region Properties
 
@@ -52,17 +52,17 @@ public class Model_QueuedErrorReport
     #region Factory Methods
 
     /// <summary>
-    /// Creates a Model_QueuedErrorReport instance from a FileInfo object.
+    /// Creates a Model_ErrorReport_Core_Queued instance from a FileInfo object.
     /// Performs basic validation on the file.
     /// </summary>
     /// <param name="fileInfo">FileInfo for the SQL file.</param>
-    /// <returns>Model_QueuedErrorReport instance with populated properties.</returns>
+    /// <returns>Model_ErrorReport_Core_Queued instance with populated properties.</returns>
     /// <exception cref="ArgumentNullException">Thrown when fileInfo is null.</exception>
-    public static Model_QueuedErrorReport FromFileInfo(FileInfo fileInfo)
+    public static Model_ErrorReport_Core_Queued FromFileInfo(FileInfo fileInfo)
     {
         ArgumentNullException.ThrowIfNull(fileInfo);
 
-        var queuedReport = new Model_QueuedErrorReport
+        var queuedReport = new Model_ErrorReport_Core_Queued
         {
             FilePath = fileInfo.FullName,
             FileName = fileInfo.Name,

@@ -8,18 +8,18 @@ namespace MTM_WIP_Application_Winforms.Models
     /// Generic result wrapper for DAO operations that return data.
     /// Provides success/failure status, error information, and strongly-typed data payload.
     /// </summary>
-    /// <typeparam name="T">The type of data returned by the operation (e.g., List&lt;Model_Users&gt;, DataTable, string)</typeparam>
+    /// <typeparam name="T">The type of data returned by the operation (e.g., List&lt;Model_Shared_Users&gt;, DataTable, string)</typeparam>
     /// <remarks>
     /// <para>
     /// <strong>Purpose:</strong>
-    /// DaoResult&lt;T&gt; encapsulates the result of a DAO operation that retrieves or returns data,
+    /// Model_Dao_Result&lt;T&gt; encapsulates the result of a DAO operation that retrieves or returns data,
     /// eliminating the need for try-catch blocks in calling code and providing consistent error handling.
     /// </para>
     /// <para>
     /// <strong>When to Use:</strong>
-    /// Use DaoResult&lt;T&gt; when your DAO method returns data (SELECT operations, calculations, lookups).
+    /// Use Model_Dao_Result&lt;T&gt; when your DAO method returns data (SELECT operations, calculations, lookups).
     /// For operations that only indicate success/failure without returning data (INSERT, UPDATE, DELETE),
-    /// use the non-generic <see cref="DaoResult"/> class instead.
+    /// use the non-generic <see cref="Model_Dao_Result"/> class instead.
     /// </para>
     /// <para>
     /// <strong>Factory Methods:</strong>
@@ -35,21 +35,21 @@ namespace MTM_WIP_Application_Winforms.Models
     /// <strong>Usage Pattern:</strong>
     /// <code>
     /// // DAO Layer (Data/Dao_Inventory.cs)
-    /// internal static async Task&lt;DaoResult&lt;List&lt;Model_CurrentInventory&gt;&gt;&gt; GetAllInventoryAsync()
+    /// internal static async Task&lt;Model_Dao_Result&lt;List&lt;Model_Inventory_Current&gt;&gt;&gt; GetAllInventoryAsync()
     /// {
     ///     try
     ///     {
     ///         var result = await Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync(...);
     ///
     ///         if (!result.IsSuccess)
-    ///             return DaoResult&lt;List&lt;Model_CurrentInventory&gt;&gt;.Failure(result.StatusMessage);
+    ///             return Model_Dao_Result&lt;List&lt;Model_Inventory_Current&gt;&gt;.Failure(result.StatusMessage);
     ///
     ///         var inventory = MapDataTableToInventory(result.Payload);
-    ///         return DaoResult&lt;List&lt;Model_CurrentInventory&gt;&gt;.Success(inventory, "Retrieved inventory successfully");
+    ///         return Model_Dao_Result&lt;List&lt;Model_Inventory_Current&gt;&gt;.Success(inventory, "Retrieved inventory successfully");
     ///     }
     ///     catch (MySqlException ex)
     ///     {
-    ///         return DaoResult&lt;List&lt;Model_CurrentInventory&gt;&gt;.Failure(ex);
+    ///         return Model_Dao_Result&lt;List&lt;Model_Inventory_Current&gt;&gt;.Failure(ex);
     ///     }
     /// }
     ///
@@ -75,12 +75,12 @@ namespace MTM_WIP_Application_Winforms.Models
     /// </para>
     /// <para>
     /// <strong>Design Rationale:</strong>
-    /// The generic DaoResult&lt;T&gt; and non-generic <see cref="DaoResult"/> exist as separate classes
-    /// (rather than DaoResult&lt;T&gt; with DaoResult : DaoResult&lt;object&gt;) to provide cleaner API:
+    /// The generic Model_Dao_Result&lt;T&gt; and non-generic <see cref="Model_Dao_Result"/> exist as separate classes
+    /// (rather than Model_Dao_Result&lt;T&gt; with Model_Dao_Result : Model_Dao_Result&lt;object&gt;) to provide cleaner API:
     /// operations that don't return data shouldn't force callers to specify a type parameter or handle null Data.
     /// </para>
     /// </remarks>
-    public class DaoResult<T>
+    public class Model_Dao_Result<T>
     {
         #region Properties
 
@@ -124,16 +124,16 @@ namespace MTM_WIP_Application_Winforms.Models
         /// <param name="data">The data returned by the successful operation.</param>
         /// <param name="statusMessage">Optional status message describing the operation (e.g., "Retrieved 42 inventory items").</param>
         /// <param name="rowsAffected">Optional count of database rows affected by the operation.</param>
-        /// <returns>A DaoResult&lt;T&gt; with IsSuccess=true and the provided data.</returns>
+        /// <returns>A Model_Dao_Result&lt;T&gt; with IsSuccess=true and the provided data.</returns>
         /// <example>
         /// <code>
-        /// var users = new List&lt;Model_Users&gt; { user1, user2 };
-        /// return DaoResult&lt;List&lt;Model_Users&gt;&gt;.Success(users, "Retrieved 2 users");
+        /// var users = new List&lt;Model_Shared_Users&gt; { user1, user2 };
+        /// return Model_Dao_Result&lt;List&lt;Model_Shared_Users&gt;&gt;.Success(users, "Retrieved 2 users");
         /// </code>
         /// </example>
-        public static DaoResult<T> Success(T data, string statusMessage = "", int rowsAffected = 0)
+        public static Model_Dao_Result<T> Success(T data, string statusMessage = "", int rowsAffected = 0)
         {
-            return new DaoResult<T>
+            return new Model_Dao_Result<T>
             {
                 IsSuccess = true,
                 Data = data,
@@ -144,24 +144,24 @@ namespace MTM_WIP_Application_Winforms.Models
 
         /// <summary>
         /// Creates a successful result without data payload.
-        /// Use when operation succeeded but doesn't return data (uncommon for DaoResult&lt;T&gt;).
+        /// Use when operation succeeded but doesn't return data (uncommon for Model_Dao_Result&lt;T&gt;).
         /// </summary>
         /// <param name="statusMessage">Optional status message describing the operation.</param>
         /// <param name="rowsAffected">Optional count of database rows affected by the operation.</param>
-        /// <returns>A DaoResult&lt;T&gt; with IsSuccess=true and Data=default(T).</returns>
+        /// <returns>A Model_Dao_Result&lt;T&gt; with IsSuccess=true and Data=default(T).</returns>
         /// <remarks>
-        /// This overload is rarely used with DaoResult&lt;T&gt;. Consider using non-generic <see cref="DaoResult"/>
+        /// This overload is rarely used with Model_Dao_Result&lt;T&gt;. Consider using non-generic <see cref="Model_Dao_Result"/>
         /// for operations that don't return data.
         /// </remarks>
         /// <example>
         /// <code>
-        /// // Prefer non-generic DaoResult for this pattern:
-        /// return DaoResult.Success("Operation completed", rowsAffected: 1);
+        /// // Prefer non-generic Model_Dao_Result for this pattern:
+        /// return Model_Dao_Result.Success("Operation completed", rowsAffected: 1);
         /// </code>
         /// </example>
-        public static DaoResult<T> Success(string statusMessage = "", int rowsAffected = 0)
+        public static Model_Dao_Result<T> Success(string statusMessage = "", int rowsAffected = 0)
         {
-            return new DaoResult<T>
+            return new Model_Dao_Result<T>
             {
                 IsSuccess = true,
                 StatusMessage = statusMessage,
@@ -174,22 +174,22 @@ namespace MTM_WIP_Application_Winforms.Models
         /// </summary>
         /// <param name="errorMessage">User-friendly error message describing what went wrong.</param>
         /// <param name="exception">Optional exception that caused the failure (for logging/diagnostics).</param>
-        /// <returns>A DaoResult&lt;T&gt; with IsSuccess=false and the provided error information.</returns>
+        /// <returns>A Model_Dao_Result&lt;T&gt; with IsSuccess=false and the provided error information.</returns>
         /// <example>
         /// <code>
         /// if (string.IsNullOrEmpty(partNumber))
-        ///     return DaoResult&lt;Model_Part&gt;.Failure("Part number is required");
+        ///     return Model_Dao_Result&lt;Model_Part&gt;.Failure("Part number is required");
         ///
         /// // With exception for logging
         /// catch (MySqlException ex)
         /// {
-        ///     return DaoResult&lt;List&lt;Model_Part&gt;&gt;.Failure("Failed to retrieve parts", ex);
+        ///     return Model_Dao_Result&lt;List&lt;Model_Part&gt;&gt;.Failure("Failed to retrieve parts", ex);
         /// }
         /// </code>
         /// </example>
-        public static DaoResult<T> Failure(string errorMessage, Exception? exception = null)
+        public static Model_Dao_Result<T> Failure(string errorMessage, Exception? exception = null)
         {
-            return new DaoResult<T>
+            return new Model_Dao_Result<T>
             {
                 IsSuccess = false,
                 ErrorMessage = errorMessage,
@@ -201,7 +201,7 @@ namespace MTM_WIP_Application_Winforms.Models
         /// Creates a failed result from an exception, using the exception message as the error message.
         /// </summary>
         /// <param name="exception">The exception that caused the failure.</param>
-        /// <returns>A DaoResult&lt;T&gt; with IsSuccess=false and exception details.</returns>
+        /// <returns>A Model_Dao_Result&lt;T&gt; with IsSuccess=false and exception details.</returns>
         /// <remarks>
         /// Prefer <see cref="Failure(string, Exception)"/> when you want to provide a user-friendly error message
         /// separate from the technical exception message. Use this overload when the exception message itself
@@ -212,13 +212,13 @@ namespace MTM_WIP_Application_Winforms.Models
         /// catch (ArgumentException ex)
         /// {
         ///     // Exception message is user-friendly
-        ///     return DaoResult&lt;Model_User&gt;.Failure(ex);
+        ///     return Model_Dao_Result&lt;Model_User&gt;.Failure(ex);
         /// }
         /// </code>
         /// </example>
-        public static DaoResult<T> Failure(Exception exception)
+        public static Model_Dao_Result<T> Failure(Exception exception)
         {
-            return new DaoResult<T>
+            return new Model_Dao_Result<T>
             {
                 IsSuccess = false,
                 ErrorMessage = exception.Message,
@@ -231,14 +231,14 @@ namespace MTM_WIP_Application_Winforms.Models
         #region Methods
 
         /// <summary>
-        /// Implicitly converts successful DaoResult&lt;T&gt; to the underlying data type.
+        /// Implicitly converts successful Model_Dao_Result&lt;T&gt; to the underlying data type.
         /// Returns default(T) if the result failed.
         /// </summary>
-        /// <param name="result">The DaoResult&lt;T&gt; to convert.</param>
+        /// <param name="result">The Model_Dao_Result&lt;T&gt; to convert.</param>
         /// <returns>The Data property if IsSuccess=true, otherwise default(T).</returns>
         /// <remarks>
         /// <para>
-        /// This implicit conversion allows direct assignment from DaoResult&lt;T&gt; to T,
+        /// This implicit conversion allows direct assignment from Model_Dao_Result&lt;T&gt; to T,
         /// but you lose access to success/failure status. Use this pattern only when you've
         /// already checked IsSuccess separately.
         /// </para>
@@ -250,7 +250,7 @@ namespace MTM_WIP_Application_Winforms.Models
         /// <example>
         /// <code>
         /// // Implicit conversion (use cautiously)
-        /// DaoResult&lt;string&gt; result = GetUserName();
+        /// Model_Dao_Result&lt;string&gt; result = GetUserName();
         /// string? userName = result; // Implicit conversion, could be null if failed
         ///
         /// // Preferred pattern (explicit checking)
@@ -260,7 +260,7 @@ namespace MTM_WIP_Application_Winforms.Models
         /// }
         /// </code>
         /// </example>
-        public static implicit operator T?(DaoResult<T> result)
+        public static implicit operator T?(Model_Dao_Result<T> result)
         {
             return result.IsSuccess ? result.Data : default;
         }
@@ -274,10 +274,10 @@ namespace MTM_WIP_Application_Winforms.Models
         /// </returns>
         /// <example>
         /// <code>
-        /// var result = DaoResult&lt;int&gt;.Success(42, "Retrieved count", rowsAffected: 1);
+        /// var result = Model_Dao_Result&lt;int&gt;.Success(42, "Retrieved count", rowsAffected: 1);
         /// Console.WriteLine(result); // Output: "Success: Retrieved count (Rows: 1)"
         ///
-        /// var failResult = DaoResult&lt;int&gt;.Failure("Database timeout");
+        /// var failResult = Model_Dao_Result&lt;int&gt;.Failure("Database timeout");
         /// Console.WriteLine(failResult); // Output: "Failed: Database timeout"
         /// </code>
         /// </example>
@@ -300,13 +300,13 @@ namespace MTM_WIP_Application_Winforms.Models
     /// <remarks>
     /// <para>
     /// <strong>Purpose:</strong>
-    /// DaoResult encapsulates the result of a DAO operation that performs an action without returning data,
+    /// Model_Dao_Result encapsulates the result of a DAO operation that performs an action without returning data,
     /// such as INSERT, UPDATE, DELETE, or validation operations. It eliminates the need for try-catch blocks
     /// in calling code and provides consistent error handling.
     /// </para>
     /// <para>
     /// <strong>When to Use:</strong>
-    /// Use DaoResult (non-generic) when your DAO method indicates success/failure without returning data:
+    /// Use Model_Dao_Result (non-generic) when your DAO method indicates success/failure without returning data:
     /// <list type="bullet">
     /// <item>INSERT operations that don't return the inserted row</item>
     /// <item>UPDATE operations that return only row count</item>
@@ -314,7 +314,7 @@ namespace MTM_WIP_Application_Winforms.Models
     /// <item>Validation or connectivity checks</item>
     /// </list>
     /// For operations that return data (SELECT operations, calculations, lookups),
-    /// use the generic <see cref="DaoResult{T}"/> class instead.
+    /// use the generic <see cref="Model_Dao_Result{T}"/> class instead.
     /// </para>
     /// <para>
     /// <strong>Factory Methods:</strong>
@@ -329,7 +329,7 @@ namespace MTM_WIP_Application_Winforms.Models
     /// <strong>Usage Pattern:</strong>
     /// <code>
     /// // DAO Layer (Data/Dao_Inventory.cs)
-    /// internal static async Task&lt;DaoResult&gt; DeleteInventoryAsync(int inventoryId)
+    /// internal static async Task&lt;Model_Dao_Result&gt; DeleteInventoryAsync(int inventoryId)
     /// {
     ///     try
     ///     {
@@ -339,19 +339,19 @@ namespace MTM_WIP_Application_Winforms.Models
     ///         };
     ///
     ///         var result = await Helper_Database_StoredProcedure.ExecuteNonQueryWithStatusAsync(
-    ///             Model_AppVariables.ConnectionString,
+    ///             Model_Application_Variables.ConnectionString,
     ///             "inventory_Delete_ById",
     ///             parameters
     ///         );
     ///
     ///         if (!result.IsSuccess)
-    ///             return DaoResult.Failure(result.StatusMessage);
+    ///             return Model_Dao_Result.Failure(result.StatusMessage);
     ///
-    ///         return DaoResult.Success("Inventory deleted successfully", rowsAffected: 1);
+    ///         return Model_Dao_Result.Success("Inventory deleted successfully", rowsAffected: 1);
     ///     }
     ///     catch (MySqlException ex)
     ///     {
-    ///         return DaoResult.Failure($"Failed to delete inventory: {ex.Message}", ex);
+    ///         return Model_Dao_Result.Failure($"Failed to delete inventory: {ex.Message}", ex);
     ///     }
     /// }
     ///
@@ -375,7 +375,7 @@ namespace MTM_WIP_Application_Winforms.Models
     /// </para>
     /// <para>
     /// <strong>Implicit Boolean Conversion:</strong>
-    /// DaoResult can be implicitly converted to bool (returns IsSuccess value), enabling concise checking:
+    /// Model_Dao_Result can be implicitly converted to bool (returns IsSuccess value), enabling concise checking:
     /// <code>
     /// var result = await Dao_User.UpdatePasswordAsync(userId, newPassword);
     /// if (result) // Implicitly checks result.IsSuccess
@@ -386,7 +386,7 @@ namespace MTM_WIP_Application_Winforms.Models
     /// However, this loses access to error details. Prefer explicit IsSuccess checking when you need error messages.
     /// </para>
     /// </remarks>
-    public class DaoResult
+    public class Model_Dao_Result
     {
         #region Properties
 
@@ -424,19 +424,19 @@ namespace MTM_WIP_Application_Winforms.Models
         /// </summary>
         /// <param name="statusMessage">Optional status message describing the operation (e.g., "Deleted 3 inventory items").</param>
         /// <param name="rowsAffected">Optional count of database rows affected by the operation.</param>
-        /// <returns>A DaoResult with IsSuccess=true and the provided status information.</returns>
+        /// <returns>A Model_Dao_Result with IsSuccess=true and the provided status information.</returns>
         /// <example>
         /// <code>
         /// // Simple success
-        /// return DaoResult.Success("Operation completed");
+        /// return Model_Dao_Result.Success("Operation completed");
         ///
         /// // Success with row count
-        /// return DaoResult.Success("Updated inventory", rowsAffected: 5);
+        /// return Model_Dao_Result.Success("Updated inventory", rowsAffected: 5);
         /// </code>
         /// </example>
-        public static DaoResult Success(string statusMessage = "", int rowsAffected = 0)
+        public static Model_Dao_Result Success(string statusMessage = "", int rowsAffected = 0)
         {
-            return new DaoResult
+            return new Model_Dao_Result
             {
                 IsSuccess = true,
                 StatusMessage = statusMessage,
@@ -449,23 +449,23 @@ namespace MTM_WIP_Application_Winforms.Models
         /// </summary>
         /// <param name="errorMessage">User-friendly error message describing what went wrong.</param>
         /// <param name="exception">Optional exception that caused the failure (for logging/diagnostics).</param>
-        /// <returns>A DaoResult with IsSuccess=false and the provided error information.</returns>
+        /// <returns>A Model_Dao_Result with IsSuccess=false and the provided error information.</returns>
         /// <example>
         /// <code>
         /// // Validation failure
         /// if (string.IsNullOrEmpty(userName))
-        ///     return DaoResult.Failure("Username is required");
+        ///     return Model_Dao_Result.Failure("Username is required");
         ///
         /// // Database error with exception
         /// catch (MySqlException ex)
         /// {
-        ///     return DaoResult.Failure("Failed to connect to database", ex);
+        ///     return Model_Dao_Result.Failure("Failed to connect to database", ex);
         /// }
         /// </code>
         /// </example>
-        public static DaoResult Failure(string errorMessage, Exception? exception = null)
+        public static Model_Dao_Result Failure(string errorMessage, Exception? exception = null)
         {
-            return new DaoResult
+            return new Model_Dao_Result
             {
                 IsSuccess = false,
                 ErrorMessage = errorMessage,
@@ -477,7 +477,7 @@ namespace MTM_WIP_Application_Winforms.Models
         /// Creates a failed result from an exception, using the exception message as the error message.
         /// </summary>
         /// <param name="exception">The exception that caused the failure.</param>
-        /// <returns>A DaoResult with IsSuccess=false and exception details.</returns>
+        /// <returns>A Model_Dao_Result with IsSuccess=false and exception details.</returns>
         /// <remarks>
         /// Prefer <see cref="Failure(string, Exception)"/> when you want to provide a user-friendly error message
         /// separate from the technical exception message. Use this overload when the exception message itself
@@ -488,19 +488,19 @@ namespace MTM_WIP_Application_Winforms.Models
         /// catch (ArgumentException ex)
         /// {
         ///     // Exception message is user-friendly
-        ///     return DaoResult.Failure(ex);
+        ///     return Model_Dao_Result.Failure(ex);
         /// }
         ///
         /// catch (MySqlException ex)
         /// {
         ///     // Prefer wrapping with context
-        ///     return DaoResult.Failure($"Database operation failed: {ex.Message}", ex);
+        ///     return Model_Dao_Result.Failure($"Database operation failed: {ex.Message}", ex);
         /// }
         /// </code>
         /// </example>
-        public static DaoResult Failure(Exception exception)
+        public static Model_Dao_Result Failure(Exception exception)
         {
-            return new DaoResult
+            return new Model_Dao_Result
             {
                 IsSuccess = false,
                 ErrorMessage = exception.Message,
@@ -513,14 +513,14 @@ namespace MTM_WIP_Application_Winforms.Models
         #region Methods
 
         /// <summary>
-        /// Implicitly converts DaoResult to boolean, returning the IsSuccess value.
+        /// Implicitly converts Model_Dao_Result to boolean, returning the IsSuccess value.
         /// Enables concise success checking in conditional statements.
         /// </summary>
-        /// <param name="result">The DaoResult to convert.</param>
+        /// <param name="result">The Model_Dao_Result to convert.</param>
         /// <returns>True if the operation succeeded (IsSuccess=true), otherwise false.</returns>
         /// <remarks>
         /// <para>
-        /// This implicit conversion allows using DaoResult directly in boolean contexts,
+        /// This implicit conversion allows using Model_Dao_Result directly in boolean contexts,
         /// but you lose access to error details. Use this pattern when you only need to check
         /// success/failure, and access error messages separately when needed.
         /// </para>
@@ -549,7 +549,7 @@ namespace MTM_WIP_Application_Winforms.Models
         /// }
         /// </code>
         /// </example>
-        public static implicit operator bool(DaoResult result)
+        public static implicit operator bool(Model_Dao_Result result)
         {
             return result.IsSuccess;
         }
@@ -563,10 +563,10 @@ namespace MTM_WIP_Application_Winforms.Models
         /// </returns>
         /// <example>
         /// <code>
-        /// var result = DaoResult.Success("Updated inventory", rowsAffected: 3);
+        /// var result = Model_Dao_Result.Success("Updated inventory", rowsAffected: 3);
         /// Console.WriteLine(result); // Output: "Success: Updated inventory (Rows: 3)"
         ///
-        /// var failResult = DaoResult.Failure("Connection timeout");
+        /// var failResult = Model_Dao_Result.Failure("Connection timeout");
         /// Console.WriteLine(failResult); // Output: "Failed: Connection timeout"
         ///
         /// // Useful for logging
