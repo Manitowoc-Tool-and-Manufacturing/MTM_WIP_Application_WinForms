@@ -737,7 +737,7 @@ internal class Dao_Transactions
                 ["ToDate"] = dateTo ?? (object)DBNull.Value
             };
 
-            var result = await Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync(
+            var result = await Helper_Database_StoredProcedure.ExecuteDataSetWithStatusAsync(
                 Model_AppVariables.ConnectionString,
                 "inv_transactions_GetAnalytics",
                 parameters,
@@ -748,40 +748,159 @@ internal class Dao_Transactions
 
             if (!result.IsSuccess)
             {
+                LoggingUtility.Log($"[Dao_Transactions.GetAnalyticsAsync] Error from SP: {result.StatusMessage}");
                 return DaoResult<TransactionAnalytics>.Failure(
                     result.StatusMessage ?? "Failed to retrieve transaction analytics"
                 );
             }
 
-            if (result.Data == null || result.Data.Rows.Count == 0)
+            if (result.Data == null)
             {
-                // Return empty analytics
-                return DaoResult<TransactionAnalytics>.Success(
-                    new TransactionAnalytics
-                    {
-                        TotalTransactions = 0,
-                        TotalIN = 0,
-                        TotalOUT = 0,
-                        TotalTRANSFER = 0,
-                        DateRange = (dateFrom, dateTo)
-                    },
-                    "No transaction data found for the specified period"
+                LoggingUtility.Log("[Dao_Transactions.GetAnalyticsAsync] No data returned from stored procedure");
+                return DaoResult<TransactionAnalytics>.Failure(
+                    "No data returned from stored procedure"
                 );
             }
 
-            var row = result.Data.Rows[0];
+            if (result.Data.Tables.Count < 10)
+            {
+                LoggingUtility.Log($"[Dao_Transactions.GetAnalyticsAsync] Expected 10 result sets but got {result.Data.Tables.Count}");
+                return DaoResult<TransactionAnalytics>.Failure(
+                    $"Invalid analytics data: Expected 10 result sets but received {result.Data.Tables.Count}"
+                );
+            }
+
+            // Extract data from all 10 result sets
             var analytics = new TransactionAnalytics
             {
-                TotalTransactions = Convert.ToInt32(row["TotalTransactions"]),
-                TotalIN = Convert.ToInt32(row["InTransactions"]),
-                TotalOUT = Convert.ToInt32(row["OutTransactions"]),
-                TotalTRANSFER = Convert.ToInt32(row["TransferTransactions"]),
                 DateRange = (dateFrom, dateTo)
             };
 
+            // Result Set 1: Transaction counts by type
+            if (result.Data.Tables[0].Rows.Count > 0)
+            {
+                var row1 = result.Data.Tables[0].Rows[0];
+                analytics.TotalTransactions = row1["TotalTransactions"] == DBNull.Value ? 0 : Convert.ToInt32(row1["TotalTransactions"]);
+                analytics.TotalIN = row1["TotalIN"] == DBNull.Value ? 0 : Convert.ToInt32(row1["TotalIN"]);
+                analytics.TotalOUT = row1["TotalOUT"] == DBNull.Value ? 0 : Convert.ToInt32(row1["TotalOUT"]);
+                analytics.TotalTRANSFER = row1["TotalTRANSFER"] == DBNull.Value ? 0 : Convert.ToInt32(row1["TotalTRANSFER"]);
+            }
+
+            // Result Set 2: Quantity totals by type
+            if (result.Data.Tables[1].Rows.Count > 0)
+            {
+                var row2 = result.Data.Tables[1].Rows[0];
+                analytics.TotalQuantityMoved = row2["TotalQuantityMoved"] == DBNull.Value ? 0 : Convert.ToInt32(row2["TotalQuantityMoved"]);
+                analytics.QuantityIN = row2["QuantityIN"] == DBNull.Value ? 0 : Convert.ToInt32(row2["QuantityIN"]);
+                analytics.QuantityOUT = row2["QuantityOUT"] == DBNull.Value ? 0 : Convert.ToInt32(row2["QuantityOUT"]);
+                analytics.QuantityTRANSFER = row2["QuantityTRANSFER"] == DBNull.Value ? 0 : Convert.ToInt32(row2["QuantityTRANSFER"]);
+            }
+
+            // Result Set 3: Date range
+            if (result.Data.Tables[2].Rows.Count > 0)
+            {
+                var row3 = result.Data.Tables[2].Rows[0];
+                analytics.FirstTransactionDate = row3["FirstTransactionDate"] == DBNull.Value ? null : Convert.ToDateTime(row3["FirstTransactionDate"]);
+                analytics.LastTransactionDate = row3["LastTransactionDate"] == DBNull.Value ? null : Convert.ToDateTime(row3["LastTransactionDate"]);
+            }
+
+            // Result Set 4: Most active user
+            if (result.Data.Tables[3].Rows.Count > 0)
+            {
+                var row4 = result.Data.Tables[3].Rows[0];
+                analytics.MostActiveUser = (
+                    row4["UserName"]?.ToString(),
+                    row4["TransactionCount"] == DBNull.Value ? 0 : Convert.ToInt32(row4["TransactionCount"])
+                );
+            }
+            else
+            {
+                analytics.MostActiveUser = (null, 0);
+            }
+
+            // Result Set 5: Most transacted part
+            if (result.Data.Tables[4].Rows.Count > 0)
+            {
+                var row5 = result.Data.Tables[4].Rows[0];
+                analytics.MostTransactedPart = (
+                    row5["PartID"]?.ToString(),
+                    row5["TransactionCount"] == DBNull.Value ? 0 : Convert.ToInt32(row5["TransactionCount"])
+                );
+            }
+            else
+            {
+                analytics.MostTransactedPart = (null, 0);
+            }
+
+            // Result Set 6: Busiest location
+            if (result.Data.Tables[5].Rows.Count > 0)
+            {
+                var row6 = result.Data.Tables[5].Rows[0];
+                analytics.BusiestLocation = (
+                    row6["LocationName"]?.ToString(),
+                    row6["TransactionCount"] == DBNull.Value ? 0 : Convert.ToInt32(row6["TransactionCount"])
+                );
+            }
+            else
+            {
+                analytics.BusiestLocation = (null, 0);
+            }
+
+            // Result Set 7: Most transferred part
+            if (result.Data.Tables[6].Rows.Count > 0)
+            {
+                var row7 = result.Data.Tables[6].Rows[0];
+                analytics.MostTransferredPart = (
+                    row7["PartID"]?.ToString(),
+                    row7["TransferCount"] == DBNull.Value ? 0 : Convert.ToInt32(row7["TransferCount"])
+                );
+            }
+            else
+            {
+                analytics.MostTransferredPart = (null, 0);
+            }
+
+            // Result Set 8: Busiest day of week
+            if (result.Data.Tables[7].Rows.Count > 0)
+            {
+                var row8 = result.Data.Tables[7].Rows[0];
+                analytics.BusiestDay = (
+                    row8["DayName"]?.ToString(),
+                    row8["TransactionCount"] == DBNull.Value ? 0 : Convert.ToInt32(row8["TransactionCount"])
+                );
+            }
+            else
+            {
+                analytics.BusiestDay = (null, 0);
+            }
+
+            // Result Set 9: Peak hour
+            if (result.Data.Tables[8].Rows.Count > 0)
+            {
+                var row9 = result.Data.Tables[8].Rows[0];
+                analytics.PeakHour = (
+                    row9["Hour"] == DBNull.Value ? 0 : Convert.ToInt32(row9["Hour"]),
+                    row9["TransactionCount"] == DBNull.Value ? 0 : Convert.ToInt32(row9["TransactionCount"])
+                );
+            }
+            else
+            {
+                analytics.PeakHour = (0, 0);
+            }
+
+            // Result Set 10: Transaction rate
+            if (result.Data.Tables[9].Rows.Count > 0)
+            {
+                var row10 = result.Data.Tables[9].Rows[0];
+                analytics.TransactionRate = row10["TransactionRate"] == DBNull.Value ? 0.0 : Convert.ToDouble(row10["TransactionRate"]);
+                analytics.TransactionRateTrend = row10["TransactionRateTrend"]?.ToString();
+            }
+
             return DaoResult<TransactionAnalytics>.Success(
                 analytics,
-                "Transaction analytics retrieved successfully"
+                analytics.TotalTransactions > 0 
+                    ? "Transaction analytics retrieved successfully" 
+                    : "No transaction data found for the specified period"
             );
         }
         catch (Exception ex)

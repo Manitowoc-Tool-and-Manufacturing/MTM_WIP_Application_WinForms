@@ -34,6 +34,177 @@ public static class Helper_Database_StoredProcedure
     #region Public Methods - Core Execution
 
     /// <summary>
+    /// Execute stored procedure that returns multiple result sets as a DataSet with status output parameters
+    /// </summary>
+    /// <param name="connectionString">Database connection string</param>
+    /// <param name="procedureName">Stored procedure name</param>
+    /// <param name="parameters">Input parameters (WITHOUT prefix - prefixes added automatically)</param>
+    /// <param name="progressHelper">Progress helper for visual feedback (optional)</param>
+    /// <param name="connection">Optional external connection (for test transaction support)</param>
+    /// <param name="transaction">Optional external transaction (for test transaction support)</param>
+    /// <returns>DaoResult containing DataSet with multiple tables and status information</returns>
+    /// <remarks>
+    /// <para>
+    /// Use this method when a stored procedure returns multiple result sets.
+    /// Each result set will be a separate DataTable in the returned DataSet.
+    /// </para>
+    /// <para>
+    /// <strong>Transaction Support</strong>: When <paramref name="connection"/> and <paramref name="transaction"/>
+    /// are provided, the method uses the external connection/transaction instead of creating a new one.
+    /// </para>
+    /// </remarks>
+    public static async Task<DaoResult<DataSet>> ExecuteDataSetWithStatusAsync(
+        string connectionString,
+        string procedureName,
+        Dictionary<string, object>? parameters = null,
+        Helper_StoredProcedureProgress? progressHelper = null,
+        MySqlConnection? connection = null,
+        MySqlTransaction? transaction = null)
+    {
+        var stopwatch = Stopwatch.StartNew();
+        var performanceKey = Service_DebugTracer.StartPerformanceTrace($"SP_{procedureName}");
+
+        Service_DebugTracer.TraceMethodEntry(new Dictionary<string, object>
+        {
+            ["procedureName"] = procedureName,
+            ["parameterCount"] = parameters?.Count ?? 0
+        }, nameof(ExecuteDataSetWithStatusAsync), "Helper_Database_StoredProcedure");
+
+        Service_DebugTracer.TraceDatabaseStart("PROCEDURE", procedureName, parameters, connectionString);
+
+        try
+        {
+            return await ExecuteWithRetryAsync(async () =>
+            {
+                progressHelper?.UpdateProgress(10, $"Connecting to database for {procedureName}...");
+
+                // Use provided connection or create new one
+                bool externalConnection = connection != null;
+                MySqlConnection activeConnection = connection ?? new MySqlConnection(connectionString);
+
+                try
+                {
+                    if (!externalConnection)
+                    {
+                        await activeConnection.OpenAsync();
+                    }
+
+                    progressHelper?.UpdateProgress(30, $"Executing stored procedure {procedureName}...");
+
+                    using var command = new MySqlCommand(procedureName, activeConnection)
+                    {
+                        CommandType = CommandType.StoredProcedure,
+                        CommandTimeout = Model_AppVariables.CommandTimeoutSeconds
+                    };
+
+                    // Associate with external transaction if provided
+                    if (transaction != null)
+                    {
+                        command.Transaction = transaction;
+                    }
+
+                    // Add input parameters with automatic prefix detection
+                    var finalParameters = AddParametersWithPrefixDetection(command, procedureName, parameters);
+
+                    // Add standard output parameters
+                    var (statusParam, errorMsgParam) = AddStandardOutputParameters(command, procedureName);
+
+                    progressHelper?.UpdateProgress(50, $"Retrieving data sets from {procedureName}...");
+
+                    // Execute and fill DataSet with all result sets
+                    var dataSet = new DataSet();
+                    using (var adapter = new MySqlDataAdapter(command))
+                    {
+                        await Task.Run(() => adapter.Fill(dataSet));
+                    }
+
+                    progressHelper?.UpdateProgress(80, $"Processing {dataSet.Tables.Count} result sets from {procedureName}...");
+
+                    int status = Convert.ToInt32(statusParam.Value ?? 0);
+                    string errorMessage = errorMsgParam.Value?.ToString() ?? string.Empty;
+
+                    progressHelper?.UpdateProgress(100, $"Completed {procedureName}");
+
+                    stopwatch.Stop();
+
+                    // Log performance if threshold exceeded
+                    LogPerformanceIfNeeded(procedureName, stopwatch.ElapsedMilliseconds, "Query");
+
+                    Service_DebugTracer.TraceStoredProcedure(
+                        procedureName,
+                        finalParameters,
+                        new Dictionary<string, object>
+                        {
+                            ["Status"] = status,
+                            ["ErrorMsg"] = errorMessage
+                        },
+                        $"DataSet[{dataSet.Tables.Count} tables]",
+                        status,
+                        errorMessage,
+                        stopwatch.ElapsedMilliseconds);
+
+                    Service_DebugTracer.TraceDatabaseComplete("PROCEDURE", procedureName,
+                        $"DataSet with {dataSet.Tables.Count} tables", dataSet.Tables.Count, stopwatch.ElapsedMilliseconds);
+
+                    // Status codes: 1=success with data, 0=success without data, negative=error
+                    if (status >= 0)
+                    {
+                        // Both status 0 and 1 are success (with or without data)
+                        int totalRows = 0;
+                        foreach (DataTable table in dataSet.Tables)
+                        {
+                            totalRows += table.Rows.Count;
+                        }
+
+                        progressHelper?.ProcessStoredProcedureResult(status, errorMessage,
+                            $"Successfully retrieved {dataSet.Tables.Count} result sets with {totalRows} total records");
+
+                        return DaoResult<DataSet>.Success(dataSet,
+                            errorMessage != string.Empty ? errorMessage : "Data sets retrieved successfully");
+                    }
+                    else
+                    {
+                        // Negative status = error
+                        progressHelper?.ProcessStoredProcedureResult(status, errorMessage,
+                            $"Stored procedure {procedureName} returned error status");
+
+                        return DaoResult<DataSet>.Failure(
+                            errorMessage != string.Empty ? errorMessage : $"Stored procedure {procedureName} returned error status: {status}");
+                    }
+                }
+                finally
+                {
+                    if (!externalConnection)
+                    {
+                        await activeConnection.DisposeAsync();
+                    }
+                }
+            });
+        }
+        catch (Exception ex)
+        {
+            stopwatch.Stop();
+            string userFriendlyMessage = GetUserFriendlyConnectionError(ex, procedureName);
+            LoggingUtility.LogDatabaseError(ex);
+            progressHelper?.ProcessStoredProcedureResult(-1, ex.Message);
+
+            Service_DebugTracer.TraceDatabaseComplete("PROCEDURE", procedureName,
+                $"EXCEPTION: {ex.Message}", 0, stopwatch.ElapsedMilliseconds);
+
+            var result = DaoResult<DataSet>.Failure(userFriendlyMessage, ex);
+
+            Service_DebugTracer.TraceMethodExit(result, nameof(ExecuteDataSetWithStatusAsync), "Helper_Database_StoredProcedure");
+            Service_DebugTracer.StopPerformanceTrace(performanceKey, new Dictionary<string, object>
+            {
+                ["Status"] = "EXCEPTION",
+                ["ErrorMessage"] = ex.Message
+            });
+
+            return result;
+        }
+    }
+
+    /// <summary>
     /// Execute stored procedure that returns a DataTable with status output parameters
     /// </summary>
     /// <param name="connectionString">Database connection string</param>
