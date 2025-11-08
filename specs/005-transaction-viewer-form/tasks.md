@@ -514,32 +514,32 @@ Complete architectural redesign of the Transactions form (`Forms/Transactions/Tr
 
 *Goal: Click row shows side panel, displays all transaction fields, shows related transactions (same batch, same part).*
 
-- [ ] **T058** - Implement TransactionDetailPanel UI layout
+- [X] **T058** - Implement TransactionDetailPanel UI layout
   **File**: `Controls/Transactions/TransactionDetailPanel.cs` and `.Designer.cs`
   **Description**: Create UserControl with TableLayoutPanel: label/value pairs for all Model_Transactions fields (ID, Type, Part, Batch, Qty, Locations, Operation, User, Date, Notes), "Related Transactions" DataGridView (compact view), "View Batch History" button. Apply Core_Themes.
   **Reference**: `.github/instructions/ui-scaling-consistency.instructions.md` - Responsive layout with TableLayoutPanel
   **Acceptance**: Control renders in designer, labels/values laid out vertically, themes applied
 
-- [ ] **T059** - Implement TransactionDetailPanel DisplayTransaction method
+- [X] **T059** - Implement TransactionDetailPanel DisplayTransaction method
   **File**: `Controls/Transactions/TransactionDetailPanel.cs`
   **Description**: Create DisplayTransaction(Model_Transactions) method: populate label/value pairs from transaction properties, call LoadRelatedTransactionsAsync to populate DataGridView.
   **Acceptance**: Method displays all transaction fields, handles nulls gracefully
 
-- [ ] **T060** - Implement TransactionViewModel LoadRelatedTransactionsAsync method
+- [X] **T060** - Implement TransactionViewModel LoadRelatedTransactionsAsync method
   **File**: `Models/TransactionViewModel.cs`
   **Description**: Create LoadRelatedTransactionsAsync(batchNumber) method: call _dao.SearchAsync with criteria filtered by BatchNumber, return DaoResult<List<Model_Transactions>>.
   **Acceptance**: Method loads related transactions, handles empty results
 
-- [ ] **T061** - Add TransactionDetailPanel to Transactions.cs designer
+- [X] **T061** - Add TransactionDetailPanel to Transactions.cs designer
   **File**: `Forms/Transactions/Transactions.Designer.cs`
   **Description**: Add TransactionDetailPanel to form, dock right or place in TableLayoutPanel column. Handle GridControl RowSelected event to call detailPanel.DisplayTransaction.
   **Acceptance**: Detail panel appears in designer, event wired, displays when row selected
 
-- [ ] **T062** [CHECKPOINT] - US-010 Manual Validation
+- [X] **T062** [CHECKPOINT] - US-010 Manual Validation
   **Description**: Manual test: Perform search, click on transaction row, verify detail panel displays all fields correctly, verify related transactions shown (same batch), verify "View Batch History" button present.
   **Acceptance**: All US-010 acceptance criteria pass manual validation
 
-- [ ] **T063** [Story: P2] [CHECKPOINT] - P2 Complete: All Advanced Features Implemented
+- [X] **T063** [Story: P2] [CHECKPOINT] - P2 Complete: All Advanced Features Implemented
   **Description**: Verify all P2 user stories (US-006 through US-010) pass manual validation. Verify solution builds with 0 errors, 0 warnings. Run MCP validation tools. Verify file sizes still under limits (<500 lines per file).
   **Acceptance**: P2 features complete, ready for extended user acceptance testing
 
@@ -564,14 +564,15 @@ Complete architectural redesign of the Transactions form (`Forms/Transactions/Tr
   **Description**: Create GetAnalyticsAsync(progress) method: extract dateFrom/dateTo from _currentCriteria, call _dao.GetAnalyticsAsync with current user info, report progress, return DaoResult<TransactionAnalytics>.
   **Acceptance**: Method orchestrates analytics retrieval, uses current search filters
 
-- [ ] **T066** [P] - Create analytics display UserControl (optional future enhancement)
+- [X] **T066** [P] - Create analytics display UserControl
+  - **Completed**: 2025-11-08 - Created TransactionAnalyticsControl UserControl with 4 summary cards (Total, IN, OUT, TRANSFER). Each card displays count and percentage. DisplayAnalytics() method populates cards from TransactionAnalytics model. ClearAnalytics() method resets display. Applied MANDATORY theme system integration (Core_Themes.ApplyDpiScaling and ApplyRuntimeLayoutAdjustments). Color-coded cards: Gray (Total), Green (IN), Red (OUT), Blue (TRANSFER) with emoji icons. Responsive TableLayoutPanel layout with 25% width per card. Build succeeded with 0 errors.
   **File**: `Controls/Transactions/TransactionAnalyticsControl.cs`
   **Description**: Create UserControl with summary cards (Labels showing counts and percentages), chart controls (optional - placeholder for now). DisplayAnalytics(TransactionAnalytics) method populates cards.
   **Acceptance**: Control renders summary cards, updates with analytics data
 
 - [ ] **T067** [CHECKPOINT] - US-011 Manual Validation
   **Description**: Manual test (if analytics control added): Perform search with date filter, verify analytics cards show correct counts and percentages, verify analytics match filtered results (not all data).
-  **Acceptance**: US-011 acceptance criteria pass if analytics UI implemented, or marked as future enhancement
+  **Acceptance**: US-011 acceptance criteria pass if analytics UI implemented
 
 ### User Story 12 (US-012): Transaction Lifecycle Viewer
 

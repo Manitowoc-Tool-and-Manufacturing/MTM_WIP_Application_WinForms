@@ -44,8 +44,11 @@ namespace MTM_WIP_Application_Winforms.Controls.Transactions
             TransactionGridControl_ToolStripSeparator2 = new ToolStripSeparator();
             TransactionGridControl_DataGridView_Transactions = new DataGridView();
             TransactionGridControl_TransactionDetailPanel = new TransactionDetailPanel();
+            TransactionGridControl_TransactionAnalyticsControl = new TransactionAnalyticsControl();
             TransactionGridControl_Button_Export = new ToolStripButton();
             TransactionGridControl_ToolStripSeparator4 = new ToolStripSeparator();
+            TransactionGridControl_Button_Analytics = new ToolStripButton();
+            TransactionGridControl_ToolStripSeparator6 = new ToolStripSeparator();
             TransactionGridControl_Button_ToggleDetails = new ToolStripButton();
             TransactionGridControl_ToolStripSeparator5 = new ToolStripSeparator();
             TransactionGridControl_Button_Print = new ToolStripButton();
@@ -80,7 +83,7 @@ namespace MTM_WIP_Application_Winforms.Controls.Transactions
             TransactionGridControl_TableLayout_Main.SetColumnSpan(TransactionGridControl_StatusStrip_Main, 2);
             TransactionGridControl_StatusStrip_Main.Dock = DockStyle.Fill;
             TransactionGridControl_StatusStrip_Main.GripMargin = new Padding(0);
-            TransactionGridControl_StatusStrip_Main.Items.AddRange(new ToolStripItem[] { TransactionGridControl_ToolStripButtons, TransactionGridControl_Button_Previous, TransactionGridControl_Button_Next, TransactionGridControl_Label_PageIndicator, TransactionGridControl_ToolStripSeparator1, TransactionGridControl_Label_RecordCount, TransactionGridControl_Label_PageNumber, TransactionGridControl_TextBox_GoToPage, TransactionGridControl_Button_GoToPage, TransactionGridControl_ToolStripSeparator2, TransactionGridControl_Button_Print, TransactionGridControl_ToolStripSeparator3, TransactionGridControl_Button_Export, TransactionGridControl_ToolStripSeparator4, TransactionGridControl_Button_ToggleDetails, TransactionGridControl_ToolStripSeparator5 });
+            TransactionGridControl_StatusStrip_Main.Items.AddRange(new ToolStripItem[] { TransactionGridControl_ToolStripButtons, TransactionGridControl_Button_Previous, TransactionGridControl_Button_Next, TransactionGridControl_Label_PageIndicator, TransactionGridControl_ToolStripSeparator1, TransactionGridControl_Label_RecordCount, TransactionGridControl_Label_PageNumber, TransactionGridControl_TextBox_GoToPage, TransactionGridControl_Button_GoToPage, TransactionGridControl_ToolStripSeparator2, TransactionGridControl_Button_Print, TransactionGridControl_ToolStripSeparator3, TransactionGridControl_Button_Export, TransactionGridControl_ToolStripSeparator4, TransactionGridControl_Button_Analytics, TransactionGridControl_ToolStripSeparator6, TransactionGridControl_Button_ToggleDetails, TransactionGridControl_ToolStripSeparator5 });
             TransactionGridControl_StatusStrip_Main.Location = new Point(0, 515);
             TransactionGridControl_StatusStrip_Main.Name = "TransactionGridControl_StatusStrip_Main";
             TransactionGridControl_StatusStrip_Main.Padding = new Padding(0);
@@ -232,6 +235,21 @@ namespace MTM_WIP_Application_Winforms.Controls.Transactions
             TransactionGridControl_ToolStripSeparator4.Name = "TransactionGridControl_ToolStripSeparator4";
             TransactionGridControl_ToolStripSeparator4.Size = new Size(6, 23);
             // 
+            // TransactionGridControl_Button_Analytics
+            // 
+            TransactionGridControl_Button_Analytics.DisplayStyle = ToolStripItemDisplayStyle.Text;
+            TransactionGridControl_Button_Analytics.Margin = new Padding(3);
+            TransactionGridControl_Button_Analytics.Name = "TransactionGridControl_Button_Analytics";
+            TransactionGridControl_Button_Analytics.Size = new Size(36, 23);
+            TransactionGridControl_Button_Analytics.Text = "�";
+            TransactionGridControl_Button_Analytics.ToolTipText = "Show/Hide analytics summary";
+            // 
+            // TransactionGridControl_ToolStripSeparator6
+            // 
+            TransactionGridControl_ToolStripSeparator6.Margin = new Padding(3);
+            TransactionGridControl_ToolStripSeparator6.Name = "TransactionGridControl_ToolStripSeparator6";
+            TransactionGridControl_ToolStripSeparator6.Size = new Size(6, 23);
+            // 
             // TransactionGridControl_Button_ToggleDetails
             // 
             TransactionGridControl_Button_ToggleDetails.DisplayStyle = ToolStripItemDisplayStyle.Text;
@@ -303,6 +321,8 @@ namespace MTM_WIP_Application_Winforms.Controls.Transactions
         private ToolStripSeparator TransactionGridControl_ToolStripSeparator3;
         private ToolStripButton TransactionGridControl_Button_Export;
         private ToolStripSeparator TransactionGridControl_ToolStripSeparator4;
+        private ToolStripButton TransactionGridControl_Button_Analytics;
+        private ToolStripSeparator TransactionGridControl_ToolStripSeparator6;
         private ToolStripButton TransactionGridControl_Button_ToggleDetails;
         private ToolStripSeparator TransactionGridControl_ToolStripSeparator5;
     }

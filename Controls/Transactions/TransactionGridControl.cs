@@ -49,6 +49,11 @@ internal partial class TransactionGridControl : UserControl
     /// </summary>
     public event EventHandler? PrintRequested;
 
+    /// <summary>
+    /// Raised when the user clicks the Analytics button.
+    /// </summary>
+    public event EventHandler? AnalyticsRequested;
+
     #endregion
 
     #region Properties
@@ -212,6 +217,7 @@ internal partial class TransactionGridControl : UserControl
         TransactionGridControl_Button_ShowHideSearch.Click += BtnShowHideSearch_Click;
         TransactionGridControl_Button_Export.Click += BtnExport_Click;
         TransactionGridControl_Button_Print.Click += BtnPrint_Click;
+        TransactionGridControl_Button_Analytics.Click += BtnAnalytics_Click;
         TransactionGridControl_Button_ToggleDetails.Click += BtnToggleDetails_Click;
 
 #if DEBUG
@@ -432,6 +438,23 @@ internal partial class TransactionGridControl : UserControl
             
             // Raise print event for parent form to handle
             PrintRequested?.Invoke(this, EventArgs.Empty);
+        }
+        catch (Exception ex)
+        {
+            LoggingUtility.LogApplicationError(ex);
+            Service_ErrorHandler.HandleException(ex, ErrorSeverity.Low,
+                controlName: nameof(TransactionGridControl));
+        }
+    }
+
+    private void BtnAnalytics_Click(object? sender, EventArgs e)
+    {
+        try
+        {
+            LoggingUtility.Log("[TransactionGridControl] Analytics button clicked.");
+            
+            // Raise analytics event for parent form to handle
+            AnalyticsRequested?.Invoke(this, EventArgs.Empty);
         }
         catch (Exception ex)
         {
