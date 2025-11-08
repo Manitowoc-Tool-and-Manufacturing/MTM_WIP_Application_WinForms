@@ -638,10 +638,6 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
 
         private void Control_TransferTab_Button_Print_Click(object? sender, EventArgs? e)
         {
-            // Show progress bar at the start
-            _progressHelper?.ShowProgress();
-            _progressHelper?.UpdateProgress(10, "Preparing print...");
-
             try
             {
                 if (Control_TransferTab_DataGridView_Main.Rows.Count == 0)
@@ -654,23 +650,8 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                     return;
                 }
 
-                // Get visible column names for print
-                List<string> visibleColumns = new();
-                foreach (DataGridViewColumn col in Control_TransferTab_DataGridView_Main.Columns)
-                {
-                    if (col.Visible)
-                    {
-                        visibleColumns.Add(col.Name);
-                    }
-                }
-
-                Core_DgvPrinter printer = new();
-                Control_TransferTab_DataGridView_Main.Tag = Control_TransferTab_ComboBox_Part.Text;
-                // Set visible columns for print
-                printer.SetPrintVisibleColumns(visibleColumns);
-                _progressHelper?.UpdateProgress(60, "Printing...");
-                printer.Print(Control_TransferTab_DataGridView_Main);
-                _progressHelper?.UpdateProgress(100, "Print complete");
+                using var printForm = new Forms.Shared.PrintForm(Control_TransferTab_DataGridView_Main);
+                printForm.ShowDialog(this.FindForm());
             }
             catch (Exception ex)
             {
@@ -679,10 +660,6 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                     ex,
                     ErrorSeverity.Medium,
                     controlName: nameof(Control_TransferTab_Button_Print));
-            }
-            finally
-            {
-                _progressHelper?.HideProgress();
             }
         }
 

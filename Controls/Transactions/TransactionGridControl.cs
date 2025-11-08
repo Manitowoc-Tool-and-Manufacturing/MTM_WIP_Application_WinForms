@@ -74,6 +74,11 @@ internal partial class TransactionGridControl : UserControl
     }
 
     /// <summary>
+    /// Gets the underlying DataGridView for advanced operations like printing.
+    /// </summary>
+    public DataGridView DataGridView => TransactionGridControl_DataGridView_Transactions;
+
+    /// <summary>
     /// Gets the analytics control for external data binding.
     /// </summary>
     internal TransactionAnalyticsControl AnalyticsControl => TransactionGridControl_TransactionAnalyticsControl;

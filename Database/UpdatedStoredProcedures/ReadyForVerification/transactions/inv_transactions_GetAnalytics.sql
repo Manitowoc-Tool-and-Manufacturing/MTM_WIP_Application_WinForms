@@ -111,8 +111,9 @@ BEGIN
     LIMIT 1;
     
     -- Result Set 6: Busiest location (FromLocation or ToLocation)
+    -- Excludes generic location names without specific identifiers
     SELECT 
-        COALESCE(Location, '') as LocationName,
+        Location as LocationName,
         COUNT(*) as TransactionCount
     FROM (
         SELECT FromLocation as Location
@@ -122,6 +123,7 @@ BEGIN
           AND (p_ToDate IS NULL OR ReceiveDate <= p_ToDate)
           AND FromLocation IS NOT NULL
           AND FromLocation != ''
+          AND FromLocation NOT IN ('FLOOR', 'RECEIVING', 'SHIPPING')  -- Exclude generic locations
         
         UNION ALL
         
@@ -132,6 +134,7 @@ BEGIN
           AND (p_ToDate IS NULL OR ReceiveDate <= p_ToDate)
           AND ToLocation IS NOT NULL
           AND ToLocation != ''
+          AND ToLocation NOT IN ('FLOOR', 'RECEIVING', 'SHIPPING')  -- Exclude generic locations
     ) AS AllLocations
     GROUP BY Location
     ORDER BY COUNT(*) DESC
@@ -216,7 +219,7 @@ BEGIN
                             p_FromDate 
                             AND DATE_ADD(p_FromDate, INTERVAL DATEDIFF(p_ToDate, p_FromDate) / 2 DAY)
                     )
-                    THEN '📈 Increasing'
+                    THEN 'Increasing'
                     WHEN (
                         SELECT COUNT(*) 
                         FROM inv_transaction 
@@ -232,10 +235,10 @@ BEGIN
                             p_FromDate 
                             AND DATE_ADD(p_FromDate, INTERVAL DATEDIFF(p_ToDate, p_FromDate) / 2 DAY)
                     )
-                    THEN '📉 Decreasing'
-                    ELSE '➡️ Stable'
+                    THEN 'Decreasing'
+                    ELSE 'Stable'
                 END
-            ELSE '➡️ Stable'
+            ELSE 'Stable'
         END as TransactionRateTrend;
     
     -- Set status based on whether we found any data

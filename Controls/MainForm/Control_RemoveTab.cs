@@ -827,14 +827,15 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
 
         private void Control_RemoveTab_Button_Print_Click(object? sender, EventArgs? e)
         {
-            _progressHelper?.ShowProgress();
-            _progressHelper?.UpdateProgress(10, "Preparing print...");
-
             try
             {
                 if (Control_RemoveTab_DataGridView_Main?.Rows.Count == 0)
                 {
-                    Service_ErrorHandler.ShowWarning(@"No data to print.", @"Print", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    Service_ErrorHandler.ShowWarning(
+                        "No data to print.", 
+                        "Print", 
+                        MessageBoxButtons.OK, 
+                        MessageBoxIcon.Information);
                     return;
                 }
 
@@ -843,33 +844,14 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                     return;
                 }
 
-                // Get visible column names for print
-                List<string> visibleColumns = new();
-                foreach (DataGridViewColumn col in Control_RemoveTab_DataGridView_Main.Columns)
-                {
-                    if (col.Visible)
-                    {
-                        visibleColumns.Add(col.Name);
-                    }
-                }
-
-                Core_DgvPrinter printer = new();
-                Control_RemoveTab_DataGridView_Main.Tag = Control_RemoveTab_ComboBox_Part?.Text ?? "";
-                // Set visible columns for print
-                printer.SetPrintVisibleColumns(visibleColumns);
-                _progressHelper?.UpdateProgress(60, "Printing...");
-                printer.Print(Control_RemoveTab_DataGridView_Main);
-                _progressHelper?.UpdateProgress(100, "Print complete");
+                using var printForm = new Forms.Shared.PrintForm(Control_RemoveTab_DataGridView_Main);
+                printForm.ShowDialog(this.FindForm());
             }
             catch (Exception ex)
             {
                 LoggingUtility.LogApplicationError(ex);
                 Service_ErrorHandler.HandleException(ex, ErrorSeverity.Medium,
                     controlName: nameof(Control_RemoveTab));
-            }
-            finally
-            {
-                _progressHelper?.HideProgress();
             }
         }
 
@@ -1081,15 +1063,15 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
         {
             try
             {
-                _progressHelper?.ShowProgress();
-                _progressHelper?.UpdateProgress(10, "Loading all inventory...");
+                _progressHelper?.ShowProgress("Loading all inventory...");
 
                 // FIXED: Use inv_inventory_Get_All stored procedure instead of hardcoded SQL
+                // NOTE: Don't pass progress helper to avoid displaying stored procedure warning messages
                 var getAllResult = await Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync(
                     Model_AppVariables.ConnectionString,
                     "inv_inventory_Get_All",
                     null,
-                    _progressHelper);
+                    progressHelper: null);
 
                 if (!getAllResult.IsSuccess)
                 {
@@ -1127,17 +1109,23 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                 Core_Themes.ApplyThemeToDataGridView(Control_RemoveTab_DataGridView_Main);
                 Core_Themes.SizeDataGrid(Control_RemoveTab_DataGridView_Main);
                 Control_RemoveTab_Image_NothingFound.Visible = dt.Rows.Count == 0;
-                _progressHelper?.UpdateProgress(100, "Show all complete");
+                
+                // Show success message to replace any warning/error from stored procedure
+                if (dt.Rows.Count == 0)
+                {
+                    _progressHelper?.ShowSuccess("No inventory items found");
+                }
+                else
+                {
+                    _progressHelper?.ShowSuccess($"Loaded {dt.Rows.Count} inventory items");
+                }
             }
             catch (Exception ex)
             {
                 LoggingUtility.LogApplicationError(ex);
                 Service_ErrorHandler.HandleDatabaseError(ex, 
                     controlName: nameof(Control_RemoveTab));
-            }
-            finally
-            {
-                _progressHelper?.HideProgress();
+                _progressHelper?.ShowError("Failed to load inventory");
             }
         }
 
