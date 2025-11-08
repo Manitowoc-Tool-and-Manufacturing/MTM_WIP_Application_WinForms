@@ -97,6 +97,12 @@ var job = new PrintJob
 - Saved by: PrintForm when user clicks Print or Export (success only)
 - One-to-one with: DataGridView instances (each grid has its own settings file)
 
+**LastModified Update Triggers**:
+- **On Save()**: Updates `LastModified = DateTime.UtcNow` when saving to JSON file
+- **On Load()**: Preserves existing `LastModified` value from file (read-only after load)
+- **Trigger Points**: User clicks Print/Export button AND operation completes successfully (no errors)
+- **Not Updated**: When print/export fails, when dialog cancelled, when preview-only generated
+
 **Example JSON**:
 ```json
 {

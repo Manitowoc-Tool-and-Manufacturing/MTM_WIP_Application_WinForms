@@ -78,7 +78,7 @@ A production planner wants to print a simplified report with only Part Number, Q
 
 1. **Given** grid has 8 columns displayed, **When** user unchecks 3 columns in print dialog, **Then** preview shows only 5 selected columns
 2. **Given** columns are in order A, B, C, D, **When** user moves column C to first position using arrow buttons, **Then** preview updates to show C, A, B, D order
-3. **Given** user saves column preferences, **When** user reopens print dialog for same grid tomorrow, **Then** previously selected columns and order are restored
+3. **Given** user saves column preferences, **When** user restarts application and reopens print dialog for same grid, **Then** previously selected columns and order are restored
 
 ---
 
@@ -135,7 +135,7 @@ A user generates a preview of a 1500-row dataset. They want to see progress and 
 - **FR-011**: Print dialog MUST use Compact Sidebar layout (80% preview, 20% settings sidebar)
 - **FR-012**: Settings sidebar MUST have collapsible sections with icons: 🖨️ Printer, 📄 Setup, 📑 Range, ⚙️ Columns
 - **FR-013**: Preview area MUST show PrintPreviewControl with navigation buttons (First ◀◀, Prev ◀, Next ▶, Last ▶▶)
-- **FR-014**: Preview MUST display page counter in format "Page X / Y"
+- **FR-014**: Preview MUST display accurate page counter in format "Page X / Y" matching PrintDocument.PageNumber property exactly (no tolerance for estimation)
 - **FR-015**: Zoom control MUST support: 25%, 50%, 75%, 100%, 125%, 150%, 200%, Fit to Width, Fit to Page
 - **FR-016**: Page range selection MUST support: All Pages, Current Page, Custom (From/To)
 - **FR-017**: System MUST disable Print/Export buttons when page range is invalid (From > To)

@@ -69,8 +69,9 @@
 
 - [ ] **T004** [Story: Foundation] [CHECKPOINT] - Validate Phase 1 completion
   **Description**: Build solution in both Debug and Release configurations. Run application and click all print buttons to verify temporary messages appear. Review removed-entry-points.md for completeness.
+  **Build validation**: Run `dotnet build MTM_WIP_Application_Winforms.csproj -c Debug` and `dotnet build MTM_WIP_Application_Winforms.csproj -c Release` and verify zero errors (SC-009).
   **Reference**: `.github/instructions/testing-standards.instructions.md` - Manual validation approach
-  **Acceptance**: Solution builds clean, all print buttons functional with temporary messages, documentation complete
+  **Acceptance**: Solution builds clean in both configurations with zero errors, all print buttons functional with temporary messages, documentation complete
 
 ---
 
@@ -116,8 +117,9 @@
 
 - [ ] **T010** [Story: Foundation] [CHECKPOINT] - Validate Phase 2 foundation
   **Description**: Unit test Helper_PrintManager.GetDataTableFromGrid with all three scenarios (DataTable source, BindingSource, unbound grid). Manually test Core_TablePrinter by creating PrintDocument and verifying page count matches expected value for known dataset. Verify PageBoundary tracking is accurate.
+  **Build validation**: Run `dotnet build MTM_WIP_Application_Winforms.csproj -c Debug` and verify zero errors (SC-009).
   **Reference**: `.github/instructions/testing-standards.instructions.md` - Manual validation workflows
-  **Acceptance**: All foundation components functional, page count 100% accurate (SC-002)
+  **Acceptance**: All foundation components functional, page count 100% accurate (SC-002), clean build with zero errors
 
 ---
 
@@ -137,58 +139,65 @@
 
 - [ ] **T012** [Story: US1] - Design Compact Sidebar layout in WinForms Designer
   **File**: `Forms/Shared/PrintForm.Designer.cs`
-  **Description**: Implement Mockup 3 Compact Sidebar layout: Root Panel (PrintForm_Panel_Main, Dock.Fill, AutoSize=true) → TableLayoutPanel (PrintForm_TableLayout_Master, 2 columns: 20% sidebar, 80% preview, AutoSize=true, AutoSizeMode=GrowAndShrink) → Sidebar Panel (PrintForm_Panel_Sidebar) + Preview Panel (PrintForm_Panel_PreviewViewport, BackColor=#95a5a6 gray). Use control naming convention: {ComponentName}_{ControlType}_{Purpose} with NO abbreviations.
+  **Description**: Implement **Compact Sidebar layout (Mockup 3)**: Root Panel (PrintForm_Panel_Main, Dock.Fill, AutoSize=true) → TableLayoutPanel (PrintForm_TableLayout_Master, 2 columns: 20% sidebar, 80% preview, AutoSize=true, AutoSizeMode=GrowAndShrink) → Sidebar Panel (PrintForm_Panel_Sidebar) + Preview Panel (PrintForm_Panel_PreviewViewport, BackColor=#95a5a6 gray). Use control naming convention: {ComponentName}_{ControlType}_{Purpose} with NO abbreviations.
   **Reference**: `.github/instructions/winforms-responsive-layout.instructions.md` - TableLayoutPanel patterns, UI architecture
-  **Acceptance**: Layout matches Compact Sidebar mockup, all controls follow naming convention, no widths exceed 1000px
+  **Acceptance**: Layout matches Compact Sidebar mockup (Mockup 3), all controls follow naming convention, no widths exceed 1000px
 
 - [ ] **T013** [Story: US1] [P] - Implement Printer Settings collapsible section
   **File**: `Forms/Shared/PrintForm.Designer.cs`
-  **Description**: Create collapsible panel in sidebar with 🖨️ icon and "Printer Settings" header. Add PrintForm_ComboBox_Printer (populated with installed printers, MinimumSize/MaximumSize = 175x23) and orientation radio buttons (PrintForm_RadioButton_Portrait, PrintForm_RadioButton_Landscape). Default to user's last printer selection from PrintSettings or system default.
+  **Description**: Create collapsible panel in sidebar **per Compact Sidebar layout (Mockup 3)** with 🖨️ icon and "Printer Settings" header. Add PrintForm_ComboBox_Printer (populated with installed printers, MinimumSize/MaximumSize = 175x23) and orientation radio buttons (PrintForm_RadioButton_Portrait, PrintForm_RadioButton_Landscape). Default to user's last printer selection from PrintSettings or system default.
   **Reference**: `.github/instructions/csharp-dotnet8.instructions.md` - ComboBox population, control sizing patterns
-  **Acceptance**: Printer dropdown shows installed printers, orientation radios work, settings restore from PrintSettings
+  **Acceptance**: Printer dropdown shows installed printers per Mockup 3, orientation radios work, settings restore from PrintSettings
 
 - [ ] **T014** [Story: US1] [P] - Implement Page Settings collapsible section
   **File**: `Forms/Shared/PrintForm.Designer.cs`
-  **Description**: Create collapsible panel with 📄 icon and "Page Settings" header. Add page range radio buttons (PrintForm_RadioButton_AllPages, PrintForm_RadioButton_CurrentPage, PrintForm_RadioButton_CustomRange) and custom range inputs (PrintForm_TextBox_FromPage, PrintForm_TextBox_ToPage). Disable From/To inputs until CustomRange selected. Validate From <= To and both <= TotalPages.
+  **Description**: Create collapsible panel **per Compact Sidebar layout (Mockup 3)** with 📄 icon and "Page Settings" header. Add page range radio buttons (PrintForm_RadioButton_AllPages, PrintForm_RadioButton_CurrentPage, PrintForm_RadioButton_CustomRange) and custom range inputs (PrintForm_TextBox_FromPage, PrintForm_TextBox_ToPage). Disable From/To inputs until CustomRange selected. Validate From <= To and both <= TotalPages.
   **Reference**: `.github/instructions/csharp-dotnet8.instructions.md` - Control naming and validation
   **Reference**: `.github/instructions/security-best-practices.instructions.md` - Input validation
-  **Acceptance**: Page range selection works, validation prevents invalid ranges (FR-017)
+  **Acceptance**: Page range selection works per Mockup 3, validation prevents invalid ranges (FR-017)
 
 - [ ] **T015** [Story: US1] [P] - Implement Column Settings collapsible section
   **File**: `Forms/Shared/PrintForm.Designer.cs`
-  **Description**: Create collapsible panel with 📑 icon and "Column Settings" header. Add PrintForm_CheckedListBox_Columns (shows all available columns with checkboxes) and Up/Down arrow buttons (PrintForm_Button_ColumnUp, PrintForm_Button_ColumnDown) for reordering. Initialize from PrintSettings.VisibleColumns and ColumnOrder.
+  **Description**: Create collapsible panel **per Compact Sidebar layout (Mockup 3)** with 📑 icon and "Column Settings" header. Add PrintForm_CheckedListBox_Columns (shows all available columns with checkboxes) and Up/Down arrow buttons (PrintForm_Button_ColumnUp, PrintForm_Button_ColumnDown) for reordering. Initialize from PrintSettings.VisibleColumns and ColumnOrder.
   **Reference**: `.github/instructions/csharp-dotnet8.instructions.md` - CheckedListBox patterns, UI architecture
-  **Acceptance**: Column visibility toggles work, Up/Down reordering functional (US3 support)
+  **Acceptance**: Column visibility toggles work per Mockup 3, Up/Down reordering functional (US3 support)
 
 - [ ] **T016** [Story: US1] [P] - Implement Options collapsible section
   **File**: `Forms/Shared/PrintForm.Designer.cs`
-  **Description**: Create collapsible panel with ⚙️ icon and "Options" header. Add color mode radio buttons (PrintForm_RadioButton_Color, PrintForm_RadioButton_Grayscale) and zoom level dropdown (PrintForm_ComboBox_Zoom with items: 25%, 50%, 75%, 100%, 125%, 150%, 200%, Fit to Width, Fit to Page). Default to "Fit to Page".
+  **Description**: Create collapsible panel **per Compact Sidebar layout (Mockup 3)** with ⚙️ icon and "Options" header. Add color mode radio buttons (PrintForm_RadioButton_Color, PrintForm_RadioButton_Grayscale) and zoom level dropdown (PrintForm_ComboBox_Zoom with items: 25%, 50%, 75%, 100%, 125%, 150%, 200%, Fit to Width, Fit to Page). Default to "Fit to Page".
   **Reference**: `.github/instructions/csharp-dotnet8.instructions.md` - Control patterns and defaults
-  **Acceptance**: Color mode and zoom selections work, defaults correct
+  **Acceptance**: Color mode and zoom selections work per Mockup 3, defaults correct
 
 - [ ] **T017** [Story: US1] - Add PrintPreviewControl to preview panel
   **File**: `Forms/Shared/PrintForm.Designer.cs`
-  **Description**: Add PrintForm_PrintPreviewControl (Dock.Fill) to preview viewport panel. Wire to PrintDocument created by Core_TablePrinter. Implement zoom level handler that sets AutoZoom=true for "Fit to Page" or calculates custom zoom for "Fit to Width" (pageWidth / controlWidth). Standard zoom levels set Zoom property directly.
+  **Description**: Add PrintForm_PrintPreviewControl (Dock.Fill) to preview viewport panel **per Compact Sidebar layout (Mockup 3)**. Wire to PrintDocument created by Core_TablePrinter. Implement zoom level handler that sets AutoZoom=true for "Fit to Page" or calculates custom zoom for "Fit to Width" (pageWidth / controlWidth). Standard zoom levels set Zoom property directly.
   **Reference**: `.github/instructions/csharp-dotnet8.instructions.md` - Control event wiring
-  **Acceptance**: Preview shows document, zoom levels work including Fit to Width (research.md R3)
+  **Acceptance**: Preview shows document per Mockup 3, zoom levels work including Fit to Width (research.md R3)
 
 - [ ] **T018** [Story: US1] [P] - Add preview navigation controls
   **File**: `Forms/Shared/PrintForm.Designer.cs`
-  **Description**: Add navigation buttons below preview: PrintForm_Button_FirstPage (◀◀), PrintForm_Button_PrevPage (◀), PrintForm_Label_PageCounter ("Page X / Y"), PrintForm_Button_NextPage (▶), PrintForm_Button_LastPage (▶▶). Wire to PrintPreviewControl.StartPage property. Update label when page changes.
+  **Description**: Add navigation buttons below preview **per Compact Sidebar layout (Mockup 3)**: PrintForm_Button_FirstPage (◀◀), PrintForm_Button_PrevPage (◀), PrintForm_Label_PageCounter ("Page X / Y" - MUST match PrintDocument.PageNumber exactly with no estimation tolerance per FR-014), PrintForm_Button_NextPage (▶), PrintForm_Button_LastPage (▶▶). Wire to PrintPreviewControl.StartPage property. Update label when page changes.
   **Reference**: `.github/instructions/csharp-dotnet8.instructions.md` - Control naming and event wiring
-  **Acceptance**: Navigation buttons work, page counter accurate (FR-014)
+  **Acceptance**: Navigation buttons work per Mockup 3, page counter accurate with exact page numbers (FR-014)
 
 - [ ] **T019** [Story: US1] - Add action buttons to sidebar bottom
   **File**: `Forms/Shared/PrintForm.Designer.cs`
-  **Description**: Add button panel at bottom of sidebar: PrintForm_Button_Print (primary action, BackColor from theme AccentColor), PrintForm_Button_Export (dropdown, BackColor from theme ButtonBackColor), PrintForm_Button_Cancel (BackColor from theme ButtonBackColor). Print and Export disabled until preview generated.
+  **Description**: Add button panel at bottom of sidebar **per Compact Sidebar layout (Mockup 3)**: PrintForm_Button_Print (primary action, BackColor from theme AccentColor), PrintForm_Button_Export (dropdown, BackColor from theme ButtonBackColor), PrintForm_Button_Cancel (BackColor from theme ButtonBackColor). Print and Export disabled until preview generated.
   **Reference**: `.github/instructions/csharp-dotnet8.instructions.md` - Theme color token usage, button patterns
-  **Acceptance**: Buttons present with correct theme colors, initially disabled
+  **Acceptance**: Buttons present per Mockup 3 with correct theme colors, initially disabled
 
 - [ ] **T020** [Story: US1] - Implement ApplyThemeColors method
   **File**: `Forms/Shared/PrintForm.cs`
   **Description**: Create private ApplyThemeColors() method that applies Model_UserUiColors theme tokens to all controls: sidebar panels (PanelBackColor ?? SystemColors.Control), buttons (ButtonBackColor/ButtonForeColor with SystemColors fallbacks), preview viewport (#95a5a6 hardcoded gray per mockup with ACCEPTABLE comment). Call from constructor after theme integration methods.
   **Reference**: `.github/instructions/csharp-dotnet8.instructions.md` - Theme token pattern with fallbacks, method organization
-  **Acceptance**: All controls themed correctly, hardcoded colors documented with ACCEPTABLE comments
+  **Acceptance**: All controls themed correctly, hardcoded colors documented with ACCEPTABLE comments, print output uses black text regardless of theme selection
+
+- [ ] **T020.5** [Story: US1] - Validate theme integration compliance
+  **File**: `Forms/Shared/PrintForm.cs`, `Forms/Shared/PrintForm.Designer.cs`
+  **Description**: Run `validate_ui_scaling` MCP tool against PrintForm files to verify 9 theme integration requirements are met: (FR-013) DPI scaling support, (FR-016) error handling patterns, (FR-020) theme system integration, (FR-021) ApplyDpiScaling + ApplyRuntimeLayoutAdjustments in constructor. Verify control naming convention (no abbreviations), AutoSize cascade pattern, leaf control MinimumSize/MaximumSize constraints, theme color tokens with SystemColors fallbacks, no hardcoded colors without ACCEPTABLE comments. Address all critical/error findings before proceeding.
+  **Reference**: `.github/instructions/ui-compliance/theming-compliance.instructions.md` - Complete theme compliance requirements
+  **Reference**: `Documentation/Theme-System-Reference.md` - Theme system API and patterns
+  **Acceptance**: MCP tool passes with zero critical/error violations, all 9 theme requirements verified, FR-013/FR-016/FR-020/FR-021 compliance confirmed
 
 - [ ] **T021** [Story: US1] - Implement preview generation logic
   **File**: `Forms/Shared/PrintForm.cs`
@@ -251,8 +260,9 @@
 
 - [ ] **T031** [Story: US1] [CHECKPOINT] - Validate US1 completion
   **Description**: Run complete end-to-end test: Navigate to Remove tab → click Print → verify preview accurate → change orientation → verify update → select page range → print to PDF → verify output. Confirm all FR-001 through FR-021 requirements met.
+  **Build validation**: Run `dotnet build MTM_WIP_Application_Winforms.csproj -c Debug` and verify zero errors (SC-009).
   **Reference**: `.github/instructions/testing-standards.instructions.md` - Success criteria validation
-  **Acceptance**: US1 fully functional, all acceptance scenarios pass, SC-001 through SC-007 verified
+  **Acceptance**: US1 fully functional, all acceptance scenarios pass, SC-001 through SC-007 verified, clean build with zero errors
 
 - [ ] **T032** [Story: US1] - Run validate_ui_scaling MCP tool
   **Description**: Execute validate_ui_scaling MCP tool against Forms/Shared/PrintForm.cs and PrintForm.Designer.cs to verify theme compliance. Address any critical/error findings. Warnings acceptable if documented with ACCEPTABLE comments.
@@ -335,8 +345,9 @@
 
 - [ ] **T044** [Story: US2] [CHECKPOINT] - Validate US2 completion
   **Description**: Run complete export workflow: Generate preview → select pages 3-7 → export to PDF → verify 5 pages → export same range to Excel → verify row count matches PDF content → compare both exports to preview. Confirm FR-022 through FR-026 met.
+  **Build validation**: Run `dotnet build MTM_WIP_Application_Winforms.csproj -c Debug` and verify zero errors (SC-009).
   **Reference**: `.github/instructions/testing-standards.instructions.md` - Checkpoint validation
-  **Acceptance**: US2 fully functional, SC-003 and SC-004 verified, no approximation warnings
+  **Acceptance**: US2 fully functional, SC-003 and SC-004 verified, no approximation warnings, clean build with zero errors
 
 - [ ] **T045** [Story: US2] - Security audit of export paths
   **Description**: Review all file path handling in Helper_ExportManager for vulnerabilities: directory traversal prevention, invalid character handling, path length limits, permission checks. Use Path.GetFullPath and validate against allowed directories.
@@ -388,8 +399,9 @@
 
 - [ ] **T052** [Story: US3] [CHECKPOINT] - Validate US3 completion
   **Description**: Run complete column customization workflow: Uncheck multiple columns → reorder with both mouse and keyboard → verify preview → print → verify output → restart app → verify settings restored. Confirm FR-018 and FR-029 met.
+  **Build validation**: Run `dotnet build MTM_WIP_Application_Winforms.csproj -c Debug` and verify zero errors (SC-009).
   **Reference**: `.github/instructions/testing-standards.instructions.md` - Complete workflow validation
-  **Acceptance**: US3 fully functional, column customization works end-to-end
+  **Acceptance**: US3 fully functional, column customization works end-to-end, clean build with zero errors
 
 - [ ] **T053** [Story: US3] - Accessibility audit of column controls
   **Description**: Test column management with keyboard only (no mouse). Verify tab order logical, all controls accessible via keyboard, screen reader compatibility (if possible). CheckedListBox should support space bar to toggle, arrow keys to navigate.
@@ -443,8 +455,9 @@
 
 - [ ] **T060** [Story: US4] [CHECKPOINT] - Validate US4 completion
   **Description**: Run complete progress monitoring workflow: Load 1500-row dataset → click Print → observe progress dialog → verify elapsed time → cancel at 50% → verify clean cancellation → retry and let complete → verify preview appears. Confirm FR-019 met.
+  **Build validation**: Run `dotnet build MTM_WIP_Application_Winforms.csproj -c Debug` and verify zero errors (SC-009).
   **Reference**: `.github/instructions/testing-standards.instructions.md` - Workflow validation
-  **Acceptance**: US4 fully functional, progress monitoring and cancellation work reliably
+  **Acceptance**: US4 fully functional, progress monitoring and cancellation work reliably, clean build with zero errors
 
 ---
 
@@ -480,9 +493,9 @@
 
 - [ ] **T065** - Verify removed-entry-points.md is complete
   **File**: `specs/006-print-and-export/removed-entry-points.md`
-  **Description**: Cross-reference removed-entry-points.md from T001 with newly wired entry points from T061-T063. Verify all documented entry points have been reconnected or documented as permanently removed.
+  **Description**: Cross-reference removed-entry-points.md from T001 with newly wired entry points from T061-T063. Verify all documented entry points have been reconnected or documented as permanently removed with rationale. **Dependencies**: This task MUST execute after T001-T004 (Phase 1 completion) which creates removed-entry-points.md.
   **Reference**: `.github/instructions/documentation.instructions.md` - Documentation completeness
-  **Acceptance**: All entry points accounted for, doc matches implementation
+  **Acceptance**: All entry points accounted for, doc matches implementation, all entries either reconnected OR documented as permanently removed with rationale
 
 - [ ] **T066** - Run comprehensive regression test suite
   **Description**: Test all existing features in MTM app to ensure print refactor introduced no regressions: inventory adjustments, transfers, history queries, settings, user management, error reporting. Focus on areas that share code with print system (DataGridView usage, theme system, error handling).
@@ -516,8 +529,9 @@
 
 - [ ] **T072** [CHECKPOINT] - Final validation and deployment readiness
   **Description**: Run complete end-to-end workflow from each entry point (Remove tab button, Transactions tab button, Ctrl+P, right-click menu). Verify all user stories (US1-US4) pass their acceptance scenarios. Confirm solution builds in Release configuration. Generate deployment package if applicable.
+  **Build validation**: Run `dotnet build MTM_WIP_Application_Winforms.csproj -c Debug` and `dotnet build MTM_WIP_Application_Winforms.csproj -c Release` and verify zero errors (SC-009).
   **Reference**: `.github/instructions/testing-standards.instructions.md` - Final validation checklist
-  **Acceptance**: All features functional, all tests pass, deployment ready
+  **Acceptance**: All features functional, all tests pass, clean builds in both configurations with zero errors, deployment ready
 
 ---
 
