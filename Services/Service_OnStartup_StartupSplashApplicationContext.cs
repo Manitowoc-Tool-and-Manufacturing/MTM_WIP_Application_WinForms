@@ -696,12 +696,16 @@ namespace MTM_WIP_Application_Winforms.Services
             {
                 LoggingUtility.Log("[Splash] Loading theme settings");
 
+                // Load theme enabled/disabled setting
+                var themeEnabledResult = await Dao_User.GetThemeEnabledAsync(Model_Application_Variables.User);
+                Model_Application_Variables.ThemeEnabled = themeEnabledResult.Data; // Defaults to true
+
                 int? fontSize = await Dao_User.GetThemeFontSizeAsync(Model_Application_Variables.User);
                 Model_Application_Variables.ThemeFontSize = fontSize ?? 9;
 
                 Model_Application_Variables.UserUiColors = await Core_Themes.GetUserThemeColorsAsync(Model_Application_Variables.User);
 
-                LoggingUtility.Log($"[Splash] Theme settings loaded - Font size: {Model_Application_Variables.ThemeFontSize}");
+                LoggingUtility.Log($"[Splash] Theme settings loaded - Theme Enabled: {Model_Application_Variables.ThemeEnabled}, Font size: {Model_Application_Variables.ThemeFontSize}");
             }
             catch (Exception ex)
             {
@@ -715,6 +719,7 @@ namespace MTM_WIP_Application_Winforms.Services
                     callerName: "LoadThemeSettingsAsync",
                     controlName: "StartupSplash_LoadThemeSettings");
                 // Set defaults if theme loading fails
+                Model_Application_Variables.ThemeEnabled = true;
                 Model_Application_Variables.ThemeFontSize = 9;
                 LoggingUtility.Log("[Splash] Using default theme settings due to loading error");
             }

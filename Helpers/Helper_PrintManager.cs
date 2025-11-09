@@ -1,4 +1,10 @@
+using System;
+using System.Collections.Generic;
+using System.Data;
 using System.Drawing.Printing;
+using System.Linq;
+using System.Threading.Tasks;
+using System.Windows.Forms;
 using MTM_WIP_Application_Winforms.Core;
 using MTM_WIP_Application_Winforms.Logging;
 using MTM_WIP_Application_Winforms.Models;
@@ -52,11 +58,7 @@ public class Helper_PrintManager : IDisposable
             _tablePrinter = new Core_TablePrinter();
             
             // Set data (pass ALL data - PrintDocument.PrinterSettings will control pages)
-            _tablePrinter.SetData(
-                _printJob.Data,
-                _printJob.ColumnOrder,
-                _printJob.VisibleColumns,
-                _printJob.Title);
+            _tablePrinter.SetData(_printJob);
 
             // Apply print job settings to PrintDocument
             _printJob.ApplyToPrintDocument(_tablePrinter.PrintDocument);
@@ -110,6 +112,7 @@ public class Helper_PrintManager : IDisposable
                 // User confirmed - start printing
                 LoggingUtility.Log($"[Helper_PrintManager] User confirmed print: {printDialog.PrinterSettings.PrinterName}");
                 printDocument.Print();
+                SyncPageBoundariesFromPrinter();
                 LoggingUtility.Log("[Helper_PrintManager] Print operation initiated successfully");
                 return true;
             }
@@ -151,6 +154,155 @@ public class Helper_PrintManager : IDisposable
         GC.SuppressFinalize(this);
 
         LoggingUtility.Log("[Helper_PrintManager] Print manager disposed");
+    }
+
+    /// <summary>
+    /// Copies page boundary information from the active table printer into the print job.
+    /// </summary>
+    public void SyncPageBoundariesFromPrinter()
+    {
+        if (_tablePrinter == null)
+        {
+            _printJob.SetPageBoundaries(Array.Empty<Model_Print_PageBoundary>());
+            return;
+        }
+
+        IReadOnlyList<Model_Print_PageBoundary> boundaries = _tablePrinter.GetPageBoundariesSnapshot();
+        _printJob.SetPageBoundaries(boundaries);
+        _printJob.TotalPages = Math.Max(boundaries.Count, 0);
+    }
+
+    #endregion
+
+    #region Static Helpers (Create Print Job / Dialog)
+
+    /// <summary>
+    /// Attempts to extract a DataTable from a DataGridView handling three common scenarios:
+    /// - DataSource is a DataTable
+    /// - DataSource is a BindingSource wrapping a DataTable
+    /// - Unbound grid (reads displayed cell values)
+    /// </summary>
+    public static DataTable GetDataTableFromGrid(DataGridView dgv)
+    {
+        if (dgv is null) throw new ArgumentNullException(nameof(dgv));
+
+        // If bound to DataTable directly
+        if (dgv.DataSource is DataTable dt)
+        {
+            return dt.Copy();
+        }
+
+        // If bound via BindingSource
+        if (dgv.DataSource is BindingSource bs)
+        {
+            if (bs.DataSource is DataTable bdt)
+            {
+                return bdt.Copy();
+            }
+        }
+
+        // Unbound grid - create DataTable from visible columns and rows
+        var table = new DataTable(dgv.Name ?? "GridData");
+        foreach (DataGridViewColumn col in dgv.Columns)
+        {
+            var colName = !string.IsNullOrWhiteSpace(col.DataPropertyName) ? col.DataPropertyName : col.Name;
+            if (!table.Columns.Contains(colName))
+            {
+                table.Columns.Add(colName);
+            }
+        }
+
+        foreach (DataGridViewRow row in dgv.Rows)
+        {
+            if (row.IsNewRow) continue;
+            var newRow = table.NewRow();
+            foreach (DataGridViewColumn col in dgv.Columns)
+            {
+                var colName = !string.IsNullOrWhiteSpace(col.DataPropertyName) ? col.DataPropertyName : col.Name;
+                try
+                {
+                    newRow[colName] = row.Cells[col.Index].Value ?? DBNull.Value;
+                }
+                catch
+                {
+                    newRow[colName] = DBNull.Value;
+                }
+            }
+
+            table.Rows.Add(newRow);
+        }
+
+        return table;
+    }
+
+    /// <summary>
+    /// Creates a <see cref="Model_Print_Job"/> from the DataGridView contents and column metadata.
+    /// </summary>
+    public static Model_Print_Job CreatePrintJob(DataGridView dgv, string title = "Print Job")
+    {
+        if (dgv is null) throw new ArgumentNullException(nameof(dgv));
+
+        var data = GetDataTableFromGrid(dgv);
+        var columnOrder = dgv.Columns.Cast<DataGridViewColumn>()
+            .Select(c => !string.IsNullOrWhiteSpace(c.DataPropertyName) ? c.DataPropertyName : c.Name)
+            .ToList();
+
+        var visibleColumns = dgv.Columns.Cast<DataGridViewColumn>()
+            .Where(c => c.Visible)
+            .Select(c => !string.IsNullOrWhiteSpace(c.DataPropertyName) ? c.DataPropertyName : c.Name)
+            .ToList();
+
+        return new Model_Print_Job(data, columnOrder, visibleColumns, title);
+    }
+
+    /// <summary>
+    /// Shows the PrintForm dialog for the provided DataGridView. Loads persisted settings by gridName.
+    /// </summary>
+    public static Task<DialogResult> ShowPrintDialogAsync(Control parent, DataGridView dgv, string gridName)
+    {
+        if (parent is null) throw new ArgumentNullException(nameof(parent));
+        if (dgv is null) throw new ArgumentNullException(nameof(dgv));
+        if (string.IsNullOrWhiteSpace(gridName)) throw new ArgumentNullException(nameof(gridName));
+
+        var printJob = CreatePrintJob(dgv, title: gridName);
+        var settings = Model_Print_Settings.Load(gridName);
+
+        // Apply persisted selections to print job where applicable
+        if (settings.ColumnOrder?.Count > 0)
+        {
+            var merged = settings.ColumnOrder.Where(printJob.ColumnOrder.Contains).ToList();
+            foreach (var col in printJob.ColumnOrder)
+            {
+                if (!merged.Contains(col)) merged.Add(col);
+            }
+
+            if (merged.Count == printJob.ColumnOrder.Count)
+            {
+                printJob.ColumnOrder = new List<string>(merged);
+            }
+        }
+
+        if (settings.VisibleColumns?.Count > 0)
+        {
+            var visible = settings.VisibleColumns.Where(c => printJob.ColumnOrder.Contains(c)).ToList();
+            if (visible.Count > 0) printJob.VisibleColumns = new List<string>(visible);
+        }
+
+        if (!string.IsNullOrWhiteSpace(settings.PrinterName))
+        {
+            printJob.PrinterName = settings.PrinterName;
+        }
+
+        var tcs = new TaskCompletionSource<DialogResult>();
+
+        parent.BeginInvoke(new Action(() =>
+        {
+            using var form = new Forms.Shared.PrintForm(printJob, settings);
+            var result = form.ShowDialog(parent);
+            tcs.SetResult(result);
+        }));
+
+        return tcs.Task;
     }
 
     #endregion

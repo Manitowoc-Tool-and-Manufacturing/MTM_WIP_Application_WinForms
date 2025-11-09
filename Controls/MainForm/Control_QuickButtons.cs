@@ -11,6 +11,7 @@ using MTM_WIP_Application_Winforms.Logging;
 using MTM_WIP_Application_Winforms.Services;
 using MySql.Data.MySqlClient;
 using MTM_WIP_Application_Winforms.Controls.Shared;
+using MTM_WIP_Application_Winforms.Forms.Shared;
 
 namespace MTM_WIP_Application_Winforms.Controls.MainForm
 {
@@ -400,25 +401,15 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             button.Controls.Clear();
             button.Text = string.Empty;
             
-            // Get theme colors
-            var colors = Model_Application_Variables.UserUiColors;
-            Color buttonBackColor = colors.ButtonBackColor ?? SystemColors.Control;
-            Color buttonForeColor = colors.ButtonForeColor ?? SystemColors.ControlText;
-            Color buttonHoverBackColor = colors.ButtonHoverBackColor ?? SystemColors.ControlLight;
-            Color buttonPressedBackColor = colors.ButtonPressedBackColor ?? SystemColors.ControlDark;
-            Color buttonBorderColor = colors.ButtonBorderColor ?? SystemColors.ControlDark;
-            
-            // Button configuration: Auto-fill row, minimal padding, theme colors
+            // Button configuration: Auto-fill row, minimal padding
             button.Padding = new Padding(4);
             button.AutoSize = false; // Button fills row, doesn't auto-size
-            button.UseVisualStyleBackColor = false;
-            button.BackColor = buttonBackColor;
-            button.ForeColor = buttonForeColor;
-            button.FlatStyle = FlatStyle.Flat;
-            button.FlatAppearance.BorderSize = 2;
-            button.FlatAppearance.BorderColor = buttonBorderColor;
-            button.FlatAppearance.MouseOverBackColor = buttonHoverBackColor;
-            button.FlatAppearance.MouseDownBackColor = buttonPressedBackColor;
+            button.UseVisualStyleBackColor = false; // Need to set BackColor for hover effects
+            button.BackColor = SystemColors.Control;
+            button.ForeColor = SystemColors.ControlText;
+            button.FlatStyle = FlatStyle.Flat; // Flat style for custom hover effects
+            button.FlatAppearance.BorderSize = 1;
+            button.FlatAppearance.BorderColor = SystemColors.ControlDark;
 
             // Calculate adaptive font size based on button height
             // Base calculation: button height / 6 for Part ID, / 8 for Op/Qty
@@ -458,7 +449,6 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                 AutoSize = false,  // Don't auto-size - fit within cell
                 AutoEllipsis = true, // Show ... if text too long
                 BackColor = Color.Transparent,
-                ForeColor = buttonForeColor,
                 Margin = new Padding(2, 0, 2, 0),
                 Padding = Padding.Empty
             };
@@ -475,7 +465,6 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                 AutoSize = false,  // Don't auto-size - fit within cell
                 AutoEllipsis = true, // Show ... if text too long
                 BackColor = Color.Transparent,
-                ForeColor = buttonForeColor,
                 Margin = new Padding(2, 0, 1, 0),
                 Padding = Padding.Empty
             };
@@ -491,7 +480,6 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                 AutoSize = false,  // Don't auto-size - fit within cell
                 AutoEllipsis = true, // Show ... if text too long
                 BackColor = Color.Transparent,
-                ForeColor = buttonForeColor,
                 Margin = new Padding(1, 0, 2, 0),
                 Padding = Padding.Empty
             };
@@ -499,23 +487,20 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
 
             button.Controls.Add(tableLayout);
 
-            // CRITICAL: FlatAppearance doesn't work with nested controls because mouse events
-            // go to the child controls (labels), not the button. We need to manually propagate
-            // mouse events from all child controls to simulate FlatAppearance behavior.
-            
-            // Wire up button's own mouse events
+            // Wire up mouse events for hover/click effects
+            // Note: With nested controls (labels), we need to wire events to both button and children
             button.MouseEnter += QuickButton_MouseEnter;
             button.MouseLeave += QuickButton_MouseLeave;
             button.MouseDown += QuickButton_MouseDown;
             button.MouseUp += QuickButton_MouseUp;
             
-            // Wire up child control mouse events to propagate to button
+            // Wire child control events to propagate to button
             WireMouseEventsToChildren(button, tableLayout);
             WireMouseEventsToChildren(button, lblPartId);
             WireMouseEventsToChildren(button, lblOperation);
             WireMouseEventsToChildren(button, lblQuantity);
 
-            // Pass clicks through to button
+            // Pass clicks through from labels to button
             lblPartId.Click += (s, e) => button.PerformClick();
             lblOperation.Click += (s, e) => button.PerformClick();
             lblQuantity.Click += (s, e) => button.PerformClick();
@@ -533,57 +518,53 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
         }
 
         /// <summary>
-        /// Handles mouse enter for theme-based hover color
+        /// Handles mouse enter for hover effect using system colors
         /// </summary>
         private void QuickButton_MouseEnter(object? sender, EventArgs e)
         {
             if (sender is Button btn)
             {
-                var colors = Model_Application_Variables.UserUiColors;
-                btn.BackColor = colors.ButtonHoverBackColor ?? SystemColors.ControlLight;
+                btn.BackColor = SystemColors.ControlLight;
             }
         }
 
         /// <summary>
-        /// Handles mouse leave to restore normal theme color
+        /// Handles mouse leave to restore normal color
         /// </summary>
         private void QuickButton_MouseLeave(object? sender, EventArgs e)
         {
             if (sender is Button btn)
             {
-                var colors = Model_Application_Variables.UserUiColors;
-                btn.BackColor = colors.ButtonBackColor ?? SystemColors.Control;
+                btn.BackColor = SystemColors.Control;
             }
         }
 
         /// <summary>
-        /// Handles mouse down for theme-based pressed color
+        /// Handles mouse down for pressed effect using system colors
         /// </summary>
         private void QuickButton_MouseDown(object? sender, MouseEventArgs e)
         {
             if (sender is Button btn)
             {
-                var colors = Model_Application_Variables.UserUiColors;
-                btn.BackColor = colors.ButtonPressedBackColor ?? SystemColors.ControlDark;
+                btn.BackColor = SystemColors.ControlDark;
             }
         }
 
         /// <summary>
-        /// Handles mouse up to restore hover theme color
+        /// Handles mouse up to restore hover or normal color
         /// </summary>
         private void QuickButton_MouseUp(object? sender, MouseEventArgs e)
         {
             if (sender is Button btn)
             {
-                var colors = Model_Application_Variables.UserUiColors;
-                // Check if mouse is still over button
+                // Check if mouse is still over button - if yes, use hover color, else normal color
                 if (btn.ClientRectangle.Contains(btn.PointToClient(Cursor.Position)))
                 {
-                    btn.BackColor = colors.ButtonHoverBackColor ?? SystemColors.ControlLight;
+                    btn.BackColor = SystemColors.ControlLight;
                 }
                 else
                 {
-                    btn.BackColor = colors.ButtonBackColor ?? SystemColors.Control;
+                    btn.BackColor = SystemColors.Control;
                 }
             }
         }
@@ -597,11 +578,26 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                 return;
             }
 
-            // Use SelectedValue to properly select items in multi-column ComboBoxes
-            // This avoids the "old way" display issue where it shows raw values
-            if (cb.DataSource != null && !string.IsNullOrEmpty(cb.ValueMember))
+            // Search for the item by display text (not SelectedValue which expects integer ID)
+            // This handles multi-column ComboBoxes where DisplayMember is the text we want to match
+            if (cb.DataSource != null && !string.IsNullOrEmpty(cb.DisplayMember))
             {
-                cb.SelectedValue = value;
+                // Search through items by display text
+                for (int i = 0; i < cb.Items.Count; i++)
+                {
+                    string? displayText = cb.GetItemText(cb.Items[i]);
+                    if (string.IsNullOrEmpty(displayText)) continue;
+                    
+                    // Match if display text starts with the value (handles "PartID | Customer | Description" format)
+                    if (displayText.StartsWith(value, StringComparison.OrdinalIgnoreCase))
+                    {
+                        cb.SelectedIndex = i;
+                        return;
+                    }
+                }
+                
+                // If no match found, set text directly (allows typing)
+                cb.Text = value;
             }
             else
             {
@@ -612,8 +608,6 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                     cb.Text = value;
                 }
             }
-
-            cb.ForeColor = Model_Application_Variables.UserUiColors.ComboBoxForeColor ?? Color.Black;
         }
 
         private static void SetTextBoxText(object control, string fieldName, string value)
@@ -622,18 +616,23 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             if (field?.GetValue(control) is TextBox tb)
             {
                 tb.Text = value;
-                tb.ForeColor = Model_Application_Variables.UserUiColors.TextBoxForeColor ?? Color.Black;
             }
         }
 
         private void QuickButton_Click(object? sender, EventArgs? e) // Changed from static to instance method
         {
-            if (sender is not Button btn || btn.Tag is null)
+            if (sender is not Button btn)
             {
                 return;
             }
 
-            dynamic tag = btn.Tag;
+            object? tagObj = btn.Tag;
+            if (tagObj == null)
+            {
+                return;
+            }
+
+            dynamic tag = tagObj;
             string partId = tag.partId;
             string operation = tag.operation;
             int quantity = tag.quantity;
@@ -752,17 +751,22 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
 
         private async void MenuItemEdit_Click(object? sender, EventArgs? e)
         {
-            if (Control_QuickButtons_ContextMenu.SourceControl is Button btn && btn.Tag != null && quickButtons != null)
+                if (Control_QuickButtons_ContextMenu.SourceControl is Button btn && btn.Tag != null && quickButtons != null)
             {
                 int idx = quickButtons.IndexOf(btn);
                 int position = idx + 1; // Convert 0-based index to 1-based position
-                dynamic tag = btn.Tag;
-                string oldPartId = tag.partId;
-                string oldOperation = tag.operation;
-                int oldQuantity = tag.quantity;
+                object tagObj = btn.Tag;
+                    if (tagObj == null)
+                    {
+                        return;
+                    }
+                    dynamic tag = tagObj;
+                    string oldPartId = tag.partId;
+                    string oldOperation = tag.operation;
+                    int oldQuantity = tag.quantity;
                 string user = Model_Application_Variables.User;
 
-                using QuickButtonEditDialog dlg = new(oldPartId, oldOperation, oldQuantity);
+                using Form_QuickButtonEdit dlg = new(oldPartId, oldOperation, oldQuantity);
                 if (dlg.ShowDialog(this) == DialogResult.OK)
                 {
                     // Check if the edited values create a duplicate (same PartID + Operation already exists)
@@ -773,7 +777,9 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                         
                         if (otherBtn.Tag != null)
                         {
-                            dynamic otherTag = otherBtn.Tag;
+                            object otherTagObj = otherBtn.Tag;
+                            if (otherTagObj == null) continue;
+                            dynamic otherTag = otherTagObj;
                             string otherPartId = otherTag.partId?.ToString() ?? "";
                             string otherOperation = otherTag.operation?.ToString() ?? "";
                             
@@ -925,7 +931,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                 return;
             }
 
-            using QuickButtonOrderDialog dlg = new(quickButtons);
+            using Form_QuickButtonOrder dlg = new(quickButtons);
             if (dlg.ShowDialog(this) == DialogResult.OK)
             {
                 List<Button> newOrder = dlg.GetButtonOrder();
@@ -951,7 +957,9 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                 for (int i = 0; i < newOrder.Count; i++)
                 {
                     Button btn = newOrder[i];
-                    dynamic tag = btn.Tag;
+                    if (btn.Tag == null) continue; // Skip if no tag
+                    
+                    dynamic tag = btn.Tag!; // Null-forgiving operator since we checked above
                     string partId = tag?.partId ?? string.Empty;
                     string operation = tag?.operation ?? string.Empty;
                     int quantity = tag?.quantity ?? 0;
@@ -988,276 +996,6 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             }
         }
 
-        private class QuickButtonEditDialog : Form
-        {
-            public string PartId { get; private set; } = string.Empty;
-            public string Operation { get; private set; } = string.Empty;
-            public int Quantity { get; private set; }
-            private TextBox txtPartId;
-            private TextBox txtOperation;
-            private NumericUpDown numQuantity;
-            private Button btnOk;
-            private Button btnCancel;
-
-            public QuickButtonEditDialog(string partId, string operation, int quantity)
-            {
-                Text = "Edit Quick Button";
-                Width = 300;
-                Height = 200;
-                FormBorderStyle = FormBorderStyle.FixedDialog;
-                StartPosition = FormStartPosition.CenterParent;
-                MaximizeBox = false;
-                MinimizeBox = false;
-                ShowInTaskbar = false;
-                Label lblPartId = new() { Text = "Part ID", Left = 10, Top = 15, Width = 80 };
-                txtPartId = new TextBox { Left = 100, Top = 10, Width = 160, Text = partId };
-                Label lblOperation = new() { Text = "Operation", Left = 10, Top = 45, Width = 80 };
-                txtOperation = new TextBox { Left = 100, Top = 40, Width = 160, Text = operation };
-                Label lblQuantity = new() { Text = "Quantity", Left = 10, Top = 75, Width = 80 };
-                numQuantity = new NumericUpDown
-                {
-                    Left = 100,
-                    Top = 70,
-                    Width = 80,
-                    Minimum = 1,
-                    Maximum = 100000,
-                    Value = quantity
-                };
-                btnOk = new Button
-                {
-                    Text = "OK",
-                    Left = 60,
-                    Width = 80,
-                    Top = 110,
-                    DialogResult = DialogResult.OK
-                };
-                btnCancel = new Button
-                {
-                    Text = "Cancel",
-                    Left = 150,
-                    Width = 80,
-                    Top = 110,
-                    DialogResult = DialogResult.Cancel
-                };
-                btnOk.Click += (s, e) =>
-                {
-                    PartId = txtPartId.Text.Trim();
-                    Operation = txtOperation.Text.Trim();
-                    Quantity = (int)numQuantity.Value;
-                    DialogResult = DialogResult.OK;
-                    Close();
-                };
-                btnCancel.Click += (s, e) =>
-                {
-                    DialogResult = DialogResult.Cancel;
-                    Close();
-                };
-                Controls.Add(lblPartId);
-                Controls.Add(txtPartId);
-                Controls.Add(lblOperation);
-                Controls.Add(txtOperation);
-                Controls.Add(lblQuantity);
-                Controls.Add(numQuantity);
-                Controls.Add(btnOk);
-                Controls.Add(btnCancel);
-            }
-        }
-
-        private class QuickButtonOrderDialog : Form
-        {
-            private readonly ListView listView;
-            private readonly Button btnOK;
-            private readonly Button btnCancel;
-            private readonly Label lblInstructions;
-            private readonly List<Button> buttonOrder;
-            private int dragIndex = -1;
-
-            public QuickButtonOrderDialog(List<Button> buttons)
-            {
-                Text = "Change Quick Button Order";
-                Size = new Size(500, 500);
-                FormBorderStyle = FormBorderStyle.FixedDialog;
-                StartPosition = FormStartPosition.CenterParent;
-                MinimizeBox = false;
-                MaximizeBox = false;
-                ShowInTaskbar = false;
-                buttonOrder = new List<Button>(buttons.Where(b => b.Visible));
-                listView = new ListView
-                {
-                    Dock = DockStyle.Top,
-                    Height = 250,
-                    View = View.Details,
-                    FullRowSelect = true,
-                    AllowDrop = true,
-                    HeaderStyle = ColumnHeaderStyle.Nonclickable
-                };
-                listView.Columns.Add("Position", 70, HorizontalAlignment.Center);
-                listView.Columns.Add("Part ID", 120, HorizontalAlignment.Left);
-                listView.Columns.Add("Operation", 120, HorizontalAlignment.Left);
-                listView.Columns.Add("Quantity", 80, HorizontalAlignment.Right);
-                for (int i = 0; i < buttonOrder.Count; i++)
-                {
-                    Button btn = buttonOrder[i];
-                    dynamic tag = btn.Tag;
-                    string partId = tag?.partId ?? "";
-                    string op = tag?.operation ?? "";
-                    string qty = tag?.quantity?.ToString() ?? "";
-                    ListViewItem lvi = new(new[] { (i + 1).ToString(), partId, op, qty });
-                    listView.Items.Add(lvi);
-                }
-
-                listView.MouseDown += ListView_MouseDown;
-                listView.ItemDrag += ListView_ItemDrag;
-                listView.DragEnter += ListView_DragEnter;
-                listView.DragDrop += ListView_DragDrop;
-                listView.KeyDown += ListView_KeyDown;
-
-                lblInstructions = new Label
-                {
-                    Text =
-                        "How to use this form:\n\n- Drag and drop rows to change the order.\n- Use Shift+Up/Down to move a selected row.\n- Click OK to save your changes.",
-                    Dock = DockStyle.Top,
-                    Height = 90,
-                    TextAlign = ContentAlignment.MiddleLeft,
-                    Padding = new Padding(8),
-                    Font = new Font(Font.FontFamily, 10, FontStyle.Regular),
-                    AutoSize = false
-                };
-
-                btnOK = new Button { Text = "OK", DialogResult = DialogResult.OK, Dock = DockStyle.Bottom };
-                btnCancel = new Button { Text = "Cancel", DialogResult = DialogResult.Cancel, Dock = DockStyle.Bottom };
-
-                Controls.Add(btnOK);
-                Controls.Add(btnCancel);
-                Controls.Add(lblInstructions);
-                Controls.Add(listView);
-
-                AcceptButton = btnOK;
-                CancelButton = btnCancel;
-
-                // DPI scaling and layout adjustments
-                Core_Themes.ApplyDpiScaling(this);
-                Core_Themes.ApplyRuntimeLayoutAdjustments(this);
-            }
-
-            private void ListView_MouseDown(object? sender, MouseEventArgs e) =>
-                dragIndex = listView.GetItemAt(e.X, e.Y)?.Index ?? -1;
-
-            private void ListView_ItemDrag(object? sender, ItemDragEventArgs e)
-            {
-                if (listView.SelectedItems.Count > 0)
-                {
-                    listView.DoDragDrop(listView.SelectedItems[0], DragDropEffects.Move);
-                }
-            }
-
-            private void ListView_DragEnter(object? sender, DragEventArgs e)
-            {
-                if (e.Data?.GetDataPresent(typeof(ListViewItem)) == true)
-                {
-                    e.Effect = DragDropEffects.Move;
-                }
-            }
-
-            private void ListView_DragDrop(object? sender, DragEventArgs e)
-            {
-                if (e.Data?.GetDataPresent(typeof(ListViewItem)) == true)
-                {
-                    Point cp = listView.PointToClient(new Point(e.X, e.Y));
-                    ListViewItem dragItem = (ListViewItem)e.Data.GetData(typeof(ListViewItem));
-                    int dropIndex = listView.GetItemAt(cp.X, cp.Y)?.Index ?? listView.Items.Count - 1;
-                    if (dragItem.Index == dropIndex || dragItem.Index < 0)
-                    {
-                        return;
-                    }
-
-                    Button btn = buttonOrder[dragItem.Index];
-                    buttonOrder.RemoveAt(dragItem.Index);
-                    listView.Items.RemoveAt(dragItem.Index);
-                    buttonOrder.Insert(dropIndex, btn);
-                    listView.Items.Insert(dropIndex, (ListViewItem)dragItem.Clone());
-                    listView.Items[dropIndex].Selected = true;
-                    // Update positions
-                    for (int i = 0; i < listView.Items.Count; i++)
-                    {
-                        listView.Items[i].SubItems[0].Text = (i + 1).ToString();
-                    }
-                }
-            }
-
-            private void ListView_KeyDown(object? sender, KeyEventArgs e)
-            {
-                if (e.Shift && listView.SelectedIndices.Count > 0)
-                {
-                    int idx = listView.SelectedIndices[0];
-                    if (e.KeyCode == Keys.Up && idx > 0)
-                    {
-                        Button btn = buttonOrder[idx];
-                        buttonOrder.RemoveAt(idx);
-                        buttonOrder.Insert(idx - 1, btn);
-                        ListViewItem lvi = (ListViewItem)listView.Items[idx].Clone();
-                        listView.Items.RemoveAt(idx);
-                        listView.Items.Insert(idx - 1, lvi);
-                        listView.Items[idx - 1].Selected = true;
-                        // Update positions
-                        for (int i = 0; i < listView.Items.Count; i++)
-                        {
-                            listView.Items[i].SubItems[0].Text = (i + 1).ToString();
-                        }
-
-                        e.Handled = true;
-                    }
-                    else if (e.KeyCode == Keys.Down && idx < listView.Items.Count - 1)
-                    {
-                        Button btn = buttonOrder[idx];
-                        buttonOrder.RemoveAt(idx);
-                        buttonOrder.Insert(idx + 1, btn);
-                        ListViewItem lvi = (ListViewItem)listView.Items[idx].Clone();
-                        listView.Items.RemoveAt(idx);
-                        listView.Items.Insert(idx + 1, lvi);
-                        listView.Items[idx + 1].Selected = true;
-                        // Update positions
-                        for (int i = 0; i < listView.Items.Count; i++)
-                        {
-                            listView.Items[i].SubItems[0].Text = (i + 1).ToString();
-                        }
-
-                        e.Handled = true;
-                    }
-                }
-            }
-
-            public List<Button> GetButtonOrder()
-            {
-                // Return the button order as currently shown in the ListView
-                List<Button> result = new();
-                for (int i = 0; i < listView.Items.Count; i++)
-                {
-                    // Find the button that corresponds to this ListView item
-                    ListViewItem listViewItem = listView.Items[i];
-                    string partId = listViewItem.SubItems[1].Text;
-                    string operation = listViewItem.SubItems[2].Text;
-                    string quantity = listViewItem.SubItems[3].Text;
-
-                    // Find the button with matching data
-                    Button? matchingButton = buttonOrder.FirstOrDefault(btn =>
-                    {
-                        dynamic tag = btn.Tag;
-                        return tag?.partId == partId &&
-                               tag?.operation == operation &&
-                               tag?.quantity?.ToString() == quantity;
-                    });
-
-                    if (matchingButton != null)
-                    {
-                        result.Add(matchingButton);
-                    }
-                }
-
-                return result;
-            }
-        }
-
-        #endregion
+        #endregion Methods
     }
 }

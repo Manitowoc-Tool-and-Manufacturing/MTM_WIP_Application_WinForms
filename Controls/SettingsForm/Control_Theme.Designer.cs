@@ -33,6 +33,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
         {
             Control_Themes_GroupBox_Main = new GroupBox();
             Control_Themes_TableLayout_Main = new TableLayoutPanel();
+            Control_Themes_CheckBox_EnableTheming = new CheckBox();
             Control_Themes_Button_Preview = new Button();
             Control_Themes_ComboBox_Theme = new ComboBox();
             Control_Themes_Button_Save = new Button();
@@ -58,22 +59,38 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             Control_Themes_TableLayout_Main.ColumnCount = 2;
             Control_Themes_TableLayout_Main.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
             Control_Themes_TableLayout_Main.ColumnStyles.Add(new ColumnStyle());
-            Control_Themes_TableLayout_Main.Controls.Add(Control_Themes_Button_Preview, 1, 0);
-            Control_Themes_TableLayout_Main.Controls.Add(Control_Themes_ComboBox_Theme, 0, 0);
-            Control_Themes_TableLayout_Main.Controls.Add(Control_Themes_Button_Save, 1, 2);
+            Control_Themes_TableLayout_Main.Controls.Add(Control_Themes_CheckBox_EnableTheming, 0, 0);
+            Control_Themes_TableLayout_Main.Controls.Add(Control_Themes_Button_Preview, 1, 1);
+            Control_Themes_TableLayout_Main.Controls.Add(Control_Themes_ComboBox_Theme, 0, 1);
+            Control_Themes_TableLayout_Main.Controls.Add(Control_Themes_Button_Save, 1, 3);
             Control_Themes_TableLayout_Main.Dock = DockStyle.Fill;
             Control_Themes_TableLayout_Main.Location = new Point(3, 19);
             Control_Themes_TableLayout_Main.Name = "Control_Themes_TableLayout_Main";
-            Control_Themes_TableLayout_Main.RowCount = 3;
+            Control_Themes_TableLayout_Main.RowCount = 4;
+            Control_Themes_TableLayout_Main.RowStyles.Add(new RowStyle());
             Control_Themes_TableLayout_Main.RowStyles.Add(new RowStyle());
             Control_Themes_TableLayout_Main.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
             Control_Themes_TableLayout_Main.RowStyles.Add(new RowStyle());
-            Control_Themes_TableLayout_Main.Size = new Size(271, 58);
+            Control_Themes_TableLayout_Main.Size = new Size(271, 90);
             Control_Themes_TableLayout_Main.TabIndex = 3;
+            // 
+            // Control_Themes_CheckBox_EnableTheming
+            // 
+            Control_Themes_CheckBox_EnableTheming.AutoSize = true;
+            Control_Themes_TableLayout_Main.SetColumnSpan(Control_Themes_CheckBox_EnableTheming, 2);
+            Control_Themes_CheckBox_EnableTheming.Checked = true;
+            Control_Themes_CheckBox_EnableTheming.CheckState = CheckState.Checked;
+            Control_Themes_CheckBox_EnableTheming.Dock = DockStyle.Fill;
+            Control_Themes_CheckBox_EnableTheming.Location = new Point(3, 3);
+            Control_Themes_CheckBox_EnableTheming.Name = "Control_Themes_CheckBox_EnableTheming";
+            Control_Themes_CheckBox_EnableTheming.Size = new Size(265, 19);
+            Control_Themes_CheckBox_EnableTheming.TabIndex = 0;
+            Control_Themes_CheckBox_EnableTheming.Text = "Enable Theme System (colors only, DPI scaling always on)";
+            Control_Themes_CheckBox_EnableTheming.UseVisualStyleBackColor = true;
             // 
             // Control_Themes_Button_Preview
             // 
-            Control_Themes_Button_Preview.Location = new Point(193, 3);
+            Control_Themes_Button_Preview.Location = new Point(193, 28);
             Control_Themes_Button_Preview.Name = "Control_Themes_Button_Preview";
             Control_Themes_Button_Preview.Size = new Size(75, 23);
             Control_Themes_Button_Preview.TabIndex = 2;
@@ -84,14 +101,14 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             // 
             Control_Themes_ComboBox_Theme.DropDownStyle = ComboBoxStyle.DropDownList;
             Control_Themes_ComboBox_Theme.FormattingEnabled = true;
-            Control_Themes_ComboBox_Theme.Location = new Point(3, 3);
+            Control_Themes_ComboBox_Theme.Location = new Point(3, 28);
             Control_Themes_ComboBox_Theme.Name = "Control_Themes_ComboBox_Theme";
             Control_Themes_ComboBox_Theme.Size = new Size(184, 23);
             Control_Themes_ComboBox_Theme.TabIndex = 1;
             // 
             // Control_Themes_Button_Save
             // 
-            Control_Themes_Button_Save.Location = new Point(193, 32);
+            Control_Themes_Button_Save.Location = new Point(193, 64);
             Control_Themes_Button_Save.Name = "Control_Themes_Button_Save";
             Control_Themes_Button_Save.Size = new Size(75, 23);
             Control_Themes_Button_Save.TabIndex = 3;
@@ -118,6 +135,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
 
         private GroupBox Control_Themes_GroupBox_Main;
         private TableLayoutPanel Control_Themes_TableLayout_Main;
+        private CheckBox Control_Themes_CheckBox_EnableTheming;
         private Button Control_Themes_Button_Preview;
         private ComboBox Control_Themes_ComboBox_Theme;
         private Button Control_Themes_Button_Save;

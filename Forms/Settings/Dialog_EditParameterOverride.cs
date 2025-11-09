@@ -46,6 +46,7 @@ public partial class Dialog_EditParameterOverride : Form
         _originalOverride = existingOverride;
 
         InitializeComponent();
+        SetStyle(ControlStyles.OptimizedDoubleBuffer, true);
         Core_Themes.ApplyDpiScaling(this);
         Core_Themes.ApplyRuntimeLayoutAdjustments(this);
         

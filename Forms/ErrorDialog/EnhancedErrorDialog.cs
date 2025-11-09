@@ -63,6 +63,7 @@ namespace MTM_WIP_Application_Winforms.Forms.ErrorDialog
                 });
 
             InitializeComponent();
+            SetStyle(ControlStyles.OptimizedDoubleBuffer, true);
             Core_Themes.ApplyDpiScaling(this);
             Core_Themes.ApplyRuntimeLayoutAdjustments(this);
 

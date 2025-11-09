@@ -51,25 +51,34 @@ namespace MTM_WIP_Application_Winforms.Core
 
         public static void ApplyTheme(Form form)
         {
-            Core_AppThemes.AppTheme theme = Core_AppThemes.GetCurrentTheme();
-            string themeName = Core_AppThemes.GetEffectiveThemeName();
             form.SuspendLayout();
 
-            // Apply DPI scaling and layout adjustments first
+            // ALWAYS apply DPI scaling and layout adjustments - these are required regardless of theme setting
             // This ensures pixel-perfect scaling at all DPI settings (100%, 125%, 150%, 200%)
             ApplyDpiScaling(form);
             ApplyRuntimeLayoutAdjustments(form);
 
-            // Then apply theme colors
-            SetFormTheme(form, theme, themeName);
-            ApplyThemeToControls(form.Controls);
-            if (form is Forms.MainForm.MainForm mainForm)
+            // Only apply theme colors if theming is enabled
+            if (Model_Application_Variables.ThemeEnabled)
             {
-                Helper_UI_Shortcuts.UpdateMainFormTabShortcuts(mainForm);
+                Core_AppThemes.AppTheme theme = Core_AppThemes.GetCurrentTheme();
+                string themeName = Core_AppThemes.GetEffectiveThemeName();
+                
+                SetFormTheme(form, theme, themeName);
+                ApplyThemeToControls(form.Controls);
+                if (form is Forms.MainForm.MainForm mainForm)
+                {
+                    Helper_UI_Shortcuts.UpdateMainFormTabShortcuts(mainForm);
+                }
+
+                LoggingUtility.Log($"Global theme '{themeName}' with DPI scaling applied to form '{form.Name}'.");
+            }
+            else
+            {
+                LoggingUtility.Log($"DPI scaling applied to form '{form.Name}' (theming disabled).");
             }
 
             form.ResumeLayout();
-            LoggingUtility.Log($"Global theme '{themeName}' with DPI scaling applied to form '{form.Name}'.");
         }
 
         public static async Task<Model_Shared_UserUiColors> GetUserThemeColorsAsync(string userId)
@@ -87,7 +96,7 @@ namespace MTM_WIP_Application_Winforms.Core
 
         public static void ApplyThemeToDataGridView(DataGridView dataGridView)
         {
-            if (dataGridView == null)
+            if (dataGridView == null || !Model_Application_Variables.ThemeEnabled)
             {
                 return;
             }

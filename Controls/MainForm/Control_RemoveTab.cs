@@ -73,7 +73,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                 });
 
             InitializeComponent();
-
+SetStyle(ControlStyles.OptimizedDoubleBuffer, true);
             Service_DebugTracer.TraceUIAction("THEME_APPLICATION", nameof(Control_RemoveTab),
                 new Dictionary<string, object>
                 {
@@ -809,39 +809,55 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
 
         private void Control_RemoveTab_Button_Print_Click(object? sender, EventArgs? e)
         {
-            // TEMPORARY: Print system being refactored (Phase 1 - Task T002)
-            Service_ErrorHandler.ShowInformation(
-                "Print functionality is being rebuilt. Coming soon!",
-                "Feature Temporarily Unavailable");
-            
-            /* OLD IMPLEMENTATION - Kept for reference, will be restored in Phase 7
             try
             {
-                if (Control_RemoveTab_DataGridView_Main?.Rows.Count == 0)
+                LoggingUtility.Log("[RemoveTab] Print requested.");
+
+                if (Control_RemoveTab_DataGridView_Main is null || Control_RemoveTab_DataGridView_Main.Rows.Count == 0)
                 {
-                    Service_ErrorHandler.ShowWarning(
-                        "No data to print.", 
-                        "Print", 
-                        MessageBoxButtons.OK, 
-                        MessageBoxIcon.Information);
+                    LoggingUtility.Log("[RemoveTab] Print aborted - grid is empty.");
+                    Service_ErrorHandler.HandleValidationError(
+                        "No records available to print. Run a search or perform an inventory removal first.",
+                        "Print");
                     return;
                 }
 
-                if (Control_RemoveTab_DataGridView_Main == null)
-                {
-                    return;
-                }
+                Control parent = FindForm() is Control form ? form : this;
+                string gridName = string.IsNullOrWhiteSpace(Control_RemoveTab_DataGridView_Main.Name)
+                    ? "Remove Inventory"
+                    : Control_RemoveTab_DataGridView_Main.Name;
 
-                using var printForm = new Forms.Shared.PrintForm(Control_RemoveTab_DataGridView_Main);
-                printForm.ShowDialog(this.FindForm());
+                var dialogTask = Helper_PrintManager.ShowPrintDialogAsync(parent, Control_RemoveTab_DataGridView_Main, gridName);
+
+                dialogTask.ContinueWith(t =>
+                {
+                    if (t.IsCompletedSuccessfully)
+                    {
+                        LoggingUtility.Log($"[RemoveTab] Print dialog closed with result: {t.Result}.");
+                    }
+                    else if (t.IsFaulted)
+                    {
+                        Exception? baseException = t.Exception?.GetBaseException();
+                        if (baseException != null)
+                        {
+                            LoggingUtility.LogApplicationError(baseException);
+                            BeginInvoke(new Action(() =>
+                                Service_ErrorHandler.HandleException(
+                                    baseException,
+                                    Enum_ErrorSeverity.Medium,
+                                    controlName: nameof(Control_RemoveTab_Button_Print_Click))));
+                        }
+                    }
+                });
             }
             catch (Exception ex)
             {
                 LoggingUtility.LogApplicationError(ex);
-                Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Medium,
-                    controlName: nameof(Control_RemoveTab));
+                Service_ErrorHandler.HandleException(
+                    ex,
+                    Enum_ErrorSeverity.Medium,
+                    controlName: nameof(Control_RemoveTab_Button_Print_Click));
             }
-            */
         }
 
         #endregion

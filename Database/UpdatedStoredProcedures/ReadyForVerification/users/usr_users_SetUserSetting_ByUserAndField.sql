@@ -19,7 +19,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `usr_users_SetUserSetting_ByUserAndF
 )
 BEGIN
     DECLARE v_RowsAffected INT DEFAULT 0;
-    DECLARE v_AllowedFields VARCHAR(1000) DEFAULT 'DefaultOperation,DefaultLocation,DefaultItemType,Email,FullName';
+    DECLARE v_AllowedFields VARCHAR(1000) DEFAULT 'DefaultOperation,DefaultLocation,DefaultItemType,Email,FullName,Theme_Name';
     -- Transaction management removed: Works within caller's transaction context (tests use transactions)`r`n    
     DECLARE EXIT HANDLER FOR SQLEXCEPTION
     BEGIN

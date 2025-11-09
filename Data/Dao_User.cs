@@ -152,6 +152,65 @@ internal static class Dao_User
     }
 
     /// <summary>
+    /// Gets whether the theme system is enabled for the specified user.
+    /// </summary>
+    /// <param name="user">The username.</param>
+    /// <returns>A Model_Dao_Result containing true if enabled, false if disabled. Defaults to true.</returns>
+    internal static async Task<Model_Dao_Result<bool>> GetThemeEnabledAsync(string user,
+        MySqlConnection? connection = null,
+        MySqlTransaction? transaction = null)
+    {
+        Service_DebugTracer.TraceMethodEntry(new Dictionary<string, object> { ["user"] = user }, controlName: "Dao_User");
+
+        try
+        {
+            var result = await GetSettingsJsonInternalAsync("Theme_Enabled", user, connection, transaction);
+            
+            // Parse the value - default to true if not set or invalid
+            bool enabled = string.IsNullOrEmpty(result) || result.Equals("true", StringComparison.OrdinalIgnoreCase);
+
+            Service_DebugTracer.TraceMethodExit(enabled, controlName: "Dao_User");
+            return Model_Dao_Result<bool>.Success(enabled, $"Retrieved Theme_Enabled for user {user}");
+        }
+        catch (Exception ex)
+        {
+            LoggingUtility.LogDatabaseError(ex);
+            Service_DebugTracer.TraceMethodExit(true, controlName: "Dao_User");
+            return Model_Dao_Result<bool>.Success(true, $"Defaulting Theme_Enabled to true for user {user}");
+        }
+    }
+
+    /// <summary>
+    /// Sets whether the theme system is enabled for the specified user.
+    /// </summary>
+    /// <param name="user">The username.</param>
+    /// <param name="enabled">True to enable theming, false to disable (DPI scaling remains active).</param>
+    /// <returns>A Model_Dao_Result indicating success or failure.</returns>
+    internal static async Task<Model_Dao_Result> SetThemeEnabledAsync(string user, bool enabled,
+        MySqlConnection? connection = null,
+        MySqlTransaction? transaction = null)
+    {
+        Service_DebugTracer.TraceMethodEntry(new Dictionary<string, object> { ["user"] = user, ["enabled"] = enabled }, controlName: "Dao_User");
+
+        try
+        {
+            // Theme_Enabled is stored in SettingsJson, not as a column
+            await SetSettingsJsonFieldAsync(user, "Theme_Enabled", enabled.ToString().ToLowerInvariant(), connection, transaction);
+
+            Service_DebugTracer.TraceMethodExit(controlName: "Dao_User");
+            return Model_Dao_Result.Success($"Set Theme_Enabled to {enabled} for user {user}");
+        }
+        catch (Exception ex)
+        {
+            LoggingUtility.LogDatabaseError(ex);
+            LoggingUtility.Log($"SetThemeEnabledAsync failed with exception: {ex.Message}");
+
+            Service_DebugTracer.TraceMethodExit(null, controlName: "Dao_User");
+            return Model_Dao_Result.Failure($"Error setting Theme_Enabled for user {user}", ex);
+        }
+    }
+
+    /// <summary>
     /// Gets the theme font size for the specified user.
     /// </summary>
     /// <param name="user">The username.</param>
@@ -1238,7 +1297,9 @@ internal static class Dao_User
 
         try
         {
-            await SetUserSettingInternalAsync("Theme_Name", user, themeName, connection, transaction);
+            // Theme_Name is stored in SettingsJson, not as a column
+            // We need to update the JSON field, not a table column
+            await SetSettingsJsonFieldAsync(user, "Theme_Name", themeName, connection, transaction);
 
             Service_DebugTracer.TraceMethodExit(controlName: "Dao_User");
             return Model_Dao_Result.Success($"Set theme name to {themeName} for user {user}");
@@ -1251,6 +1312,36 @@ internal static class Dao_User
             Service_DebugTracer.TraceMethodExit(null, controlName: "Dao_User");
             return Model_Dao_Result.Failure($"Error setting theme name for user {user}", ex);
         }
+    }
+    
+    /// <summary>
+    /// Sets a single field in the user's SettingsJson.
+    /// </summary>
+    /// <param name="user">The username.</param>
+    /// <param name="field">The JSON field name.</param>
+    /// <param name="value">The value to set.</param>
+    private static async Task SetSettingsJsonFieldAsync(string user, string field, string value,
+        MySqlConnection? connection = null,
+        MySqlTransaction? transaction = null)
+    {
+        // Use the existing usr_ui_settings_SetThemeJson procedure which merges JSON
+        string connectionString = Model_Application_Variables.BootstrapConnectionString;
+        
+        // Create a simple JSON object with just this field
+        string themeJson = $"{{\"{field}\": \"{value}\"}}";
+        
+        // This procedure will merge the JSON with existing settings
+        await Helper_Database_StoredProcedure.ExecuteNonQueryWithStatusAsync(
+            connectionString,
+            "usr_ui_settings_SetThemeJson",
+            new Dictionary<string, object>
+            {
+                ["UserId"] = user,
+                ["ThemeJson"] = themeJson
+            },
+            connection: connection,
+            transaction: transaction
+        );
     }
 
     #endregion

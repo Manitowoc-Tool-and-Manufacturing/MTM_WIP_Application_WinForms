@@ -1,6 +1,9 @@
+using System;
+using System.Collections.Generic;
 using System.Data;
 using System.Drawing;
 using System.Drawing.Printing;
+using System.Linq;
 using MTM_WIP_Application_Winforms.Logging;
 using MTM_WIP_Application_Winforms.Models;
 
@@ -19,6 +22,8 @@ public class Core_TablePrinter : IDisposable
     private int _currentRow;
     private int _pageNumber;
     private string _title = string.Empty;
+    private Model_Print_Job? _printJob;
+    private readonly List<Model_Print_PageBoundary> _pageBoundaries = new();
 
     private readonly Font _titleFont;
     private readonly Font _headerFont;
@@ -60,14 +65,18 @@ public class Core_TablePrinter : IDisposable
         _pageFont = new Font("Segoe UI", 9, FontStyle.Regular);
 
         // Get theme colors from Model_Application_Variables
-        var colors = Model_Application_Variables.UserUiColors;
+    var colors = Model_Application_Variables.UserUiColors;
 
-        _titleBrush = new SolidBrush(colors?.DataGridHeaderForeColor ?? SystemColors.ControlText);
-        _headerBrush = new SolidBrush(colors?.DataGridHeaderForeColor ?? SystemColors.ControlText);
-        _cellBrush = new SolidBrush(colors?.DataGridForeColor ?? SystemColors.WindowText);
-        _watermarkBrush = new SolidBrush(Color.FromArgb(30, SystemColors.ControlText));
-        _gridPen = new Pen(colors?.DataGridGridColor ?? SystemColors.ControlDark);
-        _headerBackColor = colors?.DataGridHeaderBackColor ?? SystemColors.Control;
+    Color headerForeColor = EnsurePrintableColor(colors?.DataGridHeaderForeColor ?? SystemColors.ControlText);
+    Color cellForeColor = EnsurePrintableColor(colors?.DataGridForeColor ?? SystemColors.WindowText);
+    Color gridColor = EnsurePrintableColor(colors?.DataGridGridColor ?? SystemColors.ControlDark);
+
+    _titleBrush = new SolidBrush(headerForeColor);
+    _headerBrush = new SolidBrush(headerForeColor);
+    _cellBrush = new SolidBrush(cellForeColor);
+    _watermarkBrush = new SolidBrush(Color.FromArgb(30, SystemColors.ControlText));
+    _gridPen = new Pen(gridColor);
+    _headerBackColor = colors?.DataGridHeaderBackColor ?? SystemColors.Control;
 
         // Initialize PrintDocument
         _printDocument = new PrintDocument();
@@ -79,24 +88,25 @@ public class Core_TablePrinter : IDisposable
     #region Configuration
 
     /// <summary>
-    /// Sets data and configuration for printing
+    /// Configures the printer with a full print job description.
     /// </summary>
-    /// <param name="data">Data to print</param>
-    /// <param name="columnOrder">Column display order</param>
-    /// <param name="visibleColumns">Visible columns list</param>
-    /// <param name="title">Print title</param>
-    public void SetData(DataTable data, List<string> columnOrder, List<string> visibleColumns, string title)
+    /// <param name="printJob">The print job to render.</param>
+    public void SetData(Model_Print_Job printJob)
     {
-        ArgumentNullException.ThrowIfNull(data);
-        ArgumentNullException.ThrowIfNull(columnOrder);
-        ArgumentNullException.ThrowIfNull(visibleColumns);
+        ArgumentNullException.ThrowIfNull(printJob);
+        ArgumentNullException.ThrowIfNull(printJob.Data);
+        ArgumentNullException.ThrowIfNull(printJob.ColumnOrder);
+        ArgumentNullException.ThrowIfNull(printJob.VisibleColumns);
 
-        _data = data;
-        _columnOrder = columnOrder;
-        _visibleColumns = visibleColumns;
-        _title = title ?? "Data Print";
+        _printJob = printJob;
+        _data = printJob.Data;
+        _columnOrder = new List<string>(printJob.ColumnOrder);
+        _visibleColumns = new List<string>(printJob.VisibleColumns);
+        _title = printJob.Title ?? "Data Print";
         _currentRow = 0;
         _pageNumber = 0;
+        _pageBoundaries.Clear();
+        _printJob.SetPageBoundaries(Array.Empty<Model_Print_PageBoundary>());
 
         LoggingUtility.Log($"[Core_TablePrinter] Data set: {_data.Rows.Count} rows, {_visibleColumns.Count} visible columns, Title: {_title}");
     }
@@ -159,6 +169,7 @@ public class Core_TablePrinter : IDisposable
 
             // Draw data rows
             int rowHeight = 25;
+            int pageStartRow = _currentRow;
             while (_currentRow < _data.Rows.Count && (yPosition + rowHeight) < bottomMargin)
             {
                 var row = _data.Rows[_currentRow];
@@ -183,12 +194,21 @@ public class Core_TablePrinter : IDisposable
             e.Graphics.DrawString(pageText, _pageFont, _cellBrush,
                 rightMargin - pageSize.Width, bottomMargin + 10);
 
+            int pageEndRow = _currentRow;
+            _pageBoundaries.Add(new Model_Print_PageBoundary
+            {
+                PageNumber = _pageNumber,
+                StartRow = pageStartRow,
+                EndRow = pageEndRow
+            });
+
             // Check if more pages needed
             e.HasMorePages = _currentRow < _data.Rows.Count;
             
             if (!e.HasMorePages)
             {
                 LoggingUtility.Log($"[Core_TablePrinter] Printing complete: {_pageNumber} page(s), {_currentRow} rows printed");
+                _printJob?.SetPageBoundaries(_pageBoundaries);
             }
         }
         catch (Exception ex)
@@ -229,6 +249,24 @@ public class Core_TablePrinter : IDisposable
 
     #endregion
 
+    #region Helpers
+
+    private static Color EnsurePrintableColor(Color color)
+    {
+        // Force fully opaque color so printers render consistently.
+        Color opaqueColor = Color.FromArgb(255, color);
+
+        // If the color is very light (high brightness), switch to black for contrast on white paper.
+        if (opaqueColor.GetBrightness() >= 0.8f)
+        {
+            return Color.Black;
+        }
+
+        return opaqueColor;
+    }
+
+    #endregion
+
     #region Cleanup
 
     /// <summary>
@@ -247,6 +285,17 @@ public class Core_TablePrinter : IDisposable
         _cellBrush?.Dispose();
         _watermarkBrush?.Dispose();
         _gridPen?.Dispose();
+        _pageBoundaries.Clear();
+    }
+
+    /// <summary>
+    /// Returns a snapshot of the page boundary data captured during the last render.
+    /// </summary>
+    public IReadOnlyList<Model_Print_PageBoundary> GetPageBoundariesSnapshot()
+    {
+        return _pageBoundaries
+            .Select(boundary => boundary.Clone())
+            .ToList();
     }
 
     #endregion

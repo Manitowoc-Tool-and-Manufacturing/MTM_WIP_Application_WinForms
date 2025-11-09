@@ -36,6 +36,7 @@ namespace MTM_WIP_Application_Winforms.Forms.Development.DependencyChartConverte
             try
             {
                 InitializeComponent();
+                SetStyle(ControlStyles.OptimizedDoubleBuffer, true);
                 Core_Themes.ApplyDpiScaling(this);
                 Core_Themes.ApplyRuntimeLayoutAdjustments(this);
                 InitializeForm();

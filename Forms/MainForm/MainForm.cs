@@ -63,6 +63,7 @@ namespace MTM_WIP_Application_Winforms.Forms.MainForm
                     });
 
                 InitializeComponent();
+                SetStyle(ControlStyles.OptimizedDoubleBuffer, true);
                 AutoScaleMode = AutoScaleMode.Dpi;
 
                 Service_DebugTracer.TraceUIAction("THEME_APPLICATION", nameof(MainForm),

@@ -72,7 +72,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
 
                 LoggingUtility.Log("Control_AdvancedInventory constructor entered.");
                 InitializeComponent();
-
+                SetStyle(ControlStyles.OptimizedDoubleBuffer, true);
                 Service_DebugTracer.TraceUIAction("THEME_APPLICATION", nameof(Control_AdvancedInventory),
                     new Dictionary<string, object>
                     {

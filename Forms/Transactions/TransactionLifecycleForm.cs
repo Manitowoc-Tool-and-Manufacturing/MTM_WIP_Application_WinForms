@@ -40,6 +40,7 @@ internal partial class TransactionLifecycleForm : Form
         LoggingUtility.Log("[TransactionLifecycleForm] Initializing...");
 
         // MANDATORY theme system integration per Constitution Principle IX
+        SetStyle(ControlStyles.OptimizedDoubleBuffer, true);
         Core_Themes.ApplyDpiScaling(this);
         Core_Themes.ApplyRuntimeLayoutAdjustments(this);
 
@@ -54,7 +55,6 @@ internal partial class TransactionLifecycleForm : Form
         TransactionLifecycleForm_DetailPanel.IsEmbeddedMode = true;
 
         WireUpEvents();
-        ApplyThemeColors();
         
         // Load lifecycle data asynchronously after form is shown
         this.Load += async (s, e) => await LoadLifecycleAsync();
@@ -75,27 +75,6 @@ internal partial class TransactionLifecycleForm : Form
         TransactionLifecycleForm_Button_Print.Click += BtnPrint_Click;
         TransactionLifecycleForm_Button_Close.Click += BtnClose_Click;
         TransactionLifecycleForm_TreeView_Lifecycle.AfterSelect += TreeView_AfterSelect;
-    }
-
-    /// <summary>
-    /// Applies theme colors to form controls.
-    /// </summary>
-    private void ApplyThemeColors()
-    {
-        try
-        {
-            var colors = Model_Application_Variables.UserUiColors;
-
-            // Apply theme tokens with SystemColors fallbacks
-            this.BackColor = colors.PanelBackColor ?? SystemColors.Control;
-            TransactionLifecycleForm_Panel_TreeView.BackColor = colors.PanelBackColor ?? SystemColors.ControlLight;
-            TransactionLifecycleForm_Panel_DetailView.BackColor = colors.PanelBackColor ?? SystemColors.ControlLight;
-        }
-        catch (Exception ex)
-        {
-            LoggingUtility.LogApplicationError(ex);
-            // Continue with default colors if theme application fails
-        }
     }
 
     #endregion

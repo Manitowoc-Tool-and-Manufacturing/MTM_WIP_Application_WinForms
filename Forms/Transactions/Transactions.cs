@@ -5,6 +5,7 @@ using MTM_WIP_Application_Winforms.Data;
 using MTM_WIP_Application_Winforms.Logging;
 using MTM_WIP_Application_Winforms.Models;
 using MTM_WIP_Application_Winforms.Services;
+using MTM_WIP_Application_Winforms.Helpers;
 
 namespace MTM_WIP_Application_Winforms.Forms.Transactions;
 
@@ -30,7 +31,7 @@ internal partial class Transactions : Form
         InitializeComponent();
 
         LoggingUtility.Log("[Transactions] Form initializing...");
-
+        SetStyle(ControlStyles.OptimizedDoubleBuffer, true);
         Core_Themes.ApplyDpiScaling(this);
         Core_Themes.ApplyRuntimeLayoutAdjustments(this);
 
@@ -41,7 +42,6 @@ internal partial class Transactions : Form
         LoggingUtility.Log($"[Transactions] User: {_currentUser}, IsAdmin: {_isAdmin}");
 
         WireUpEvents();
-        ApplyThemeColors();
         
         LoggingUtility.Log("[Transactions] Starting async initialization...");
         _ = InitializeAsync();
@@ -108,46 +108,6 @@ internal partial class Transactions : Form
             LoggingUtility.LogApplicationError(ex);
             Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Medium, retryAction: null,
                 contextData: new Dictionary<string, object> { ["User"] = _currentUser },
-                controlName: nameof(Transactions));
-        }
-    }
-
-    #endregion
-
-    #region Theme Application
-
-    private void ApplyThemeColors()
-    {
-        try
-        {
-            LoggingUtility.Log("[Transactions] Applying theme colors...");
-            
-            var colors = Model_Application_Variables.UserUiColors;
-            if (colors == null)
-            {
-                LoggingUtility.Log("[Transactions] WARNING: UserUiColors is null, using SystemColors fallback");
-                this.BackColor = SystemColors.Control;
-                this.ForeColor = SystemColors.ControlText;
-                return;
-            }
-
-            // Apply theme to form
-            this.BackColor = colors.FormBackColor ?? SystemColors.Control;
-            this.ForeColor = colors.FormForeColor ?? SystemColors.ControlText;
-
-            // Apply theme to panels
-            Transactions_Panel_Search.BackColor = colors.PanelBackColor ?? SystemColors.ControlLight;
-            Transactions_Panel_Search.ForeColor = colors.PanelForeColor ?? SystemColors.ControlText;
-
-            Transactions_Panel_Grid.BackColor = colors.PanelBackColor ?? SystemColors.ControlLight;
-            Transactions_Panel_Grid.ForeColor = colors.PanelForeColor ?? SystemColors.ControlText;
-
-            LoggingUtility.Log($"[Transactions] Theme applied: {Model_Application_Variables.ThemeName}");
-        }
-        catch (Exception ex)
-        {
-            LoggingUtility.LogApplicationError(ex);
-            Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Low,
                 controlName: nameof(Transactions));
         }
     }
@@ -294,12 +254,6 @@ internal partial class Transactions : Form
 
     private void SearchControl_PrintRequested(object? sender, EventArgs e)
     {
-        // TEMPORARY: Print system being refactored (Phase 1 - Task T002)
-        Service_ErrorHandler.ShowInformation(
-            "Print functionality is being rebuilt. Coming soon!",
-            "Feature Temporarily Unavailable");
-        
-        /* OLD IMPLEMENTATION - Kept for reference, will be restored in Phase 7
         try
         {
             LoggingUtility.Log("[Transactions] Print requested.");
@@ -312,13 +266,19 @@ internal partial class Transactions : Form
                 return;
             }
 
-            LoggingUtility.Log($"[Transactions] Printing {_viewModel.CurrentResults.Transactions.Count} transactions.");
-
-            // Open print dialog with the grid's DataGridView
-            using var printForm = new Shared.PrintForm(Transactions_UserControl_Grid.DataGridView);
-            printForm.ShowDialog(this);
-
-            LoggingUtility.Log("[Transactions] Print dialog closed.");
+            // Show print dialog for the grid and await result
+            var dialogResultTask = Helper_PrintManager.ShowPrintDialogAsync(this, Transactions_UserControl_Grid.DataGridView, "Transactions");
+            dialogResultTask.ContinueWith(t =>
+            {
+                if (t.IsCompletedSuccessfully)
+                {
+                    LoggingUtility.Log($"[Transactions] Print dialog closed with result: {t.Result}");
+                }
+                else if (t.IsFaulted)
+                {
+                    LoggingUtility.LogApplicationError(t.Exception?.GetBaseException());
+                }
+            });
         }
         catch (Exception ex)
         {
@@ -331,7 +291,6 @@ internal partial class Transactions : Form
                 },
                 controlName: nameof(Transactions));
         }
-        */
     }
 
     private async void GridControl_PageChanged(object? sender, int newPage)

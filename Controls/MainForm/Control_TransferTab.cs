@@ -69,7 +69,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                 });
 
             InitializeComponent();
-
+SetStyle(ControlStyles.OptimizedDoubleBuffer, true);
             // Apply comprehensive DPI scaling and runtime layout adjustments
             // THEME POLICY: Only update theme on startup, in settings menu, or on DPI change.
             // Do NOT call theme update methods from arbitrary event handlers or business logic.

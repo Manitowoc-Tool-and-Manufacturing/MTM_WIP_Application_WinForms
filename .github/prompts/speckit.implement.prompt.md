@@ -34,7 +34,7 @@ This prompt can delegate complex implementation tasks to specialized agents with
 
 When tasks require specialized expertise beyond MCP tools, invoke agents using:
 ```
-#file:agents/[agent-name].agent.md #file:006-print-and-export [specific task or question]
+# file:../agents/[agent-name].agent.md # file:../../specs/006-print-and-export/tasks.md [specific task or question]
 ```
 
 ### CSharpExpert Agent (.github/agents/CSharpExpert.agent.md)
@@ -57,9 +57,9 @@ When tasks require specialized expertise beyond MCP tools, invoke agents using:
 
 **Example invocations:**
 ```
-#file:agents/CSharpExpert.agent.md #file:006-print-and-export Help me implement T008 Core_TablePrinter with proper async/await and cancellation support
-#file:agents/CSharpExpert.agent.md #file:006-print-and-export Review my Helper_ExportManager for performance issues and suggest refactoring
-#file:agents/CSharpExpert.agent.md #file:006-print-and-export Generate unit tests for Model_Print_Job validation logic
+# file:../agents/CSharpExpert.agent.md # file:../../specs/006-print-and-export/tasks.md Help me implement T008 Core_TablePrinter with proper async/await and cancellation support
+# file:../agents/CSharpExpert.agent.md # file:../../specs/006-print-and-export/tasks.md Review my Helper_ExportManager for performance issues and suggest refactoring
+# file:../agents/CSharpExpert.agent.md # file:../../specs/006-print-and-export/tasks.md Generate unit tests for Model_Print_Job validation logic
 ```
 
 ### WinFormsExpert Agent (.github/agents/WinFormsExpert.agent.md)
@@ -89,9 +89,9 @@ When tasks require specialized expertise beyond MCP tools, invoke agents using:
 
 **Example invocations:**
 ```
-#file:agents/WinFormsExpert.agent.md #file:006-print-and-export Design PrintForm with Compact Sidebar layout following Mockup 3 specifications
-#file:agents/WinFormsExpert.agent.md #file:006-print-and-export Fix DPI scaling issues in the preview panel - controls too small at 150% scaling
-#file:agents/WinFormsExpert.agent.md #file:006-print-and-export Help me implement PrintPreviewControl zoom levels including Fit to Width calculation
+# file:../agents/WinFormsExpert.agent.md # file:../../specs/006-print-and-export/spec.md Design PrintForm with Compact Sidebar layout following Mockup 3 specifications
+# file:../agents/WinFormsExpert.agent.md # file:../../specs/006-print-and-export/spec.md Fix DPI scaling issues in the preview panel - controls too small at 150% scaling
+# file:../agents/WinFormsExpert.agent.md # file:../../specs/006-print-and-export/spec.md Help me implement PrintPreviewControl zoom levels including Fit to Width calculation
 ```
 
 ### ADR Generator Agent (.github/agents/adr-generator.agent.md)
@@ -111,9 +111,9 @@ When tasks require specialized expertise beyond MCP tools, invoke agents using:
 
 **Example invocations:**
 ```
-#file:agents/adr-generator.agent.md #file:006-print-and-export Create ADR for decision to use exact page boundaries instead of row-based estimation
-#file:agents/adr-generator.agent.md #file:006-print-and-export Document why we chose JSON file persistence over database storage for print settings
-#file:agents/adr-generator.agent.md #file:006-print-and-export Create ADR for Compact Sidebar UI layout selection (Mockup 3)
+# file:../agents/adr-generator.agent.md # file:../../specs/006-print-and-export/spec.md Create ADR for decision to use exact page boundaries instead of row-based estimation
+# file:../agents/adr-generator.agent.md # file:../../specs/006-print-and-export/spec.md Document why we chose JSON file persistence over database storage for print settings
+# file:../agents/adr-generator.agent.md # file:../../specs/006-print-and-export/spec.md Create ADR for Compact Sidebar UI layout selection (Mockup 3)
 ```
 
 ### Agent Selection Decision Tree

@@ -40,6 +40,7 @@ public partial class Dialog_AddParameterOverride : Form
     public Dialog_AddParameterOverride()
     {
         InitializeComponent();
+        SetStyle(ControlStyles.OptimizedDoubleBuffer, true);
         Core_Themes.ApplyDpiScaling(this);
         Core_Themes.ApplyRuntimeLayoutAdjustments(this);
         

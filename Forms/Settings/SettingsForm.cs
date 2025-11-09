@@ -36,7 +36,7 @@ namespace MTM_WIP_Application_Winforms.Forms.Settings
                 });
 
             InitializeComponent();
-
+            SetStyle(ControlStyles.OptimizedDoubleBuffer, true);
             AutoScaleMode = AutoScaleMode.Dpi;
             Service_DebugTracer.TraceUIAction("THEME_APPLICATION", nameof(SettingsForm),
                 new Dictionary<string, object>

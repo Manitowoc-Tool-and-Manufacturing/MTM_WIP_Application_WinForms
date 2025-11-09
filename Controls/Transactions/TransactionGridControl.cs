@@ -442,16 +442,10 @@ internal partial class TransactionGridControl : UserControl
 
     private void BtnPrint_Click(object? sender, EventArgs e)
     {
-        // TEMPORARY: Print system being refactored (Phase 1 - Task T002)
-        Service_ErrorHandler.ShowInformation(
-            "Print functionality is being rebuilt. Coming soon!",
-            "Feature Temporarily Unavailable");
-        
-        /* OLD IMPLEMENTATION - Kept for reference, will be restored in Phase 7
         try
         {
             LoggingUtility.Log("[TransactionGridControl] Print button clicked.");
-            
+
             // Raise print event for parent form to handle
             PrintRequested?.Invoke(this, EventArgs.Empty);
         }
@@ -461,7 +455,6 @@ internal partial class TransactionGridControl : UserControl
             Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Low,
                 controlName: nameof(TransactionGridControl));
         }
-        */
     }
 
     private void BtnAnalytics_Click(object? sender, EventArgs e)

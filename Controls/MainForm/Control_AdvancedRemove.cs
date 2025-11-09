@@ -56,7 +56,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                 });
 
             InitializeComponent();
-
+            SetStyle(ControlStyles.OptimizedDoubleBuffer, true);
             Service_DebugTracer.TraceUIAction("THEME_APPLICATION", nameof(Control_AdvancedRemove),
                 new Dictionary<string, object>
                 {
