@@ -261,7 +261,9 @@ public class Model_Print_Job
             _pageBoundaries.Add(boundary.Clone());
         }
 
-        TotalPages = _pageBoundaries.Count;
+        TotalPages = _pageBoundaries.Count > 0
+            ? _pageBoundaries.Max(boundary => boundary.PageNumber)
+            : _pageBoundaries.Count;
     }
 
     private (int fromPage, int toPage) GetEffectivePageRange()

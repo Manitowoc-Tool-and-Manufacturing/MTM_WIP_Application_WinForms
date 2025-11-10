@@ -286,9 +286,13 @@ public static class Helper_ExportManager
 
     private static (int fromPage, int toPage) ResolvePageRange(Model_Print_Job printJob)
     {
+        int maxBoundaryPage = printJob.PageBoundaries.Count > 0
+            ? printJob.PageBoundaries.Max(boundary => boundary.PageNumber)
+            : 0;
+
         int maxPage = Math.Max(
-            printJob.PageBoundaries.Count,
-            Math.Max(printJob.TotalPages, 1));
+            Math.Max(maxBoundaryPage, printJob.TotalPages),
+            1);
 
         return printJob.PageRangeType switch
         {

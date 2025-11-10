@@ -38,6 +38,10 @@ public class Core_TablePrinter : IDisposable
     private readonly Color _headerBackColor;
 
     private readonly PrintDocument _printDocument;
+    private int _startRowIndex;
+    private int _endRowIndexExclusive;
+    private int _firstPageNumber;
+    private bool _completionLogged;
 
     #endregion
 
@@ -80,6 +84,7 @@ public class Core_TablePrinter : IDisposable
 
         // Initialize PrintDocument
         _printDocument = new PrintDocument();
+        _printDocument.BeginPrint += PrintDocument_BeginPrint;
         _printDocument.PrintPage += PrintDocument_PrintPage;
     }
 
@@ -99,21 +104,173 @@ public class Core_TablePrinter : IDisposable
         ArgumentNullException.ThrowIfNull(printJob.VisibleColumns);
 
         _printJob = printJob;
-        _data = printJob.Data;
+
+        _data = printJob.Data ?? throw new ArgumentNullException(nameof(printJob.Data));
         _columnOrder = new List<string>(printJob.ColumnOrder);
         _visibleColumns = new List<string>(printJob.VisibleColumns);
         _title = printJob.Title ?? "Data Print";
-        _currentRow = 0;
-        _pageNumber = 0;
-        _pageBoundaries.Clear();
-        _printJob.SetPageBoundaries(Array.Empty<Model_Print_PageBoundary>());
 
-        LoggingUtility.Log($"[Core_TablePrinter] Data set: {_data.Rows.Count} rows, {_visibleColumns.Count} visible columns, Title: {_title}");
+        var boundarySnapshot = CapturePageBoundariesSnapshot(printJob);
+    (_startRowIndex, _endRowIndexExclusive, _firstPageNumber, _) = CalculateRowWindow(printJob, boundarySnapshot);
+
+        _currentRow = _startRowIndex;
+        _pageNumber = _firstPageNumber - 1;
+    _pageBoundaries.Clear();
+    _completionLogged = false;
+
+        LoggingUtility.Log(string.Format(
+            "[Core_TablePrinter] Data prepared: RangeType={0}, FirstPage={1}, StartRow={2}, EndRowExclusive={3}, VisibleColumns={4}, TotalRows={5}, ExistingTotalPages={6}",
+            printJob.PageRangeType,
+            _firstPageNumber,
+            _startRowIndex,
+            _endRowIndexExclusive,
+            _visibleColumns.Count,
+            _data.Rows.Count,
+            printJob.TotalPages));
+    }
+
+    private static IReadOnlyList<Model_Print_PageBoundary> CapturePageBoundariesSnapshot(Model_Print_Job printJob)
+    {
+        if (printJob.PageBoundaries is null || printJob.PageBoundaries.Count == 0)
+        {
+            return Array.Empty<Model_Print_PageBoundary>();
+        }
+
+        return printJob.PageBoundaries
+            .Where(boundary => boundary is not null)
+            .Select(boundary => boundary!.Clone())
+            .OrderBy(boundary => boundary.PageNumber)
+            .ToList();
+    }
+
+    private (int startRow, int endRowExclusive, int firstPage, int lastPage) CalculateRowWindow(
+        Model_Print_Job printJob,
+        IReadOnlyList<Model_Print_PageBoundary> boundaries)
+    {
+        int totalRows = _data?.Rows.Count ?? 0;
+        if (totalRows <= 0)
+        {
+            return (0, 0, 1, 1);
+        }
+
+        int defaultTotalPages = Math.Max(printJob.TotalPages, 1);
+        int defaultRowsPerPage = Math.Max(1, totalRows / defaultTotalPages);
+        if (defaultRowsPerPage <= 0)
+        {
+            defaultRowsPerPage = Math.Max(1, totalRows);
+        }
+
+        int highestRecordedPage = boundaries.Count > 0
+            ? Math.Max(1, boundaries.Max(boundary => boundary.PageNumber))
+            : defaultTotalPages;
+
+        int firstPage;
+        int lastPage;
+
+        if (printJob.PageRangeType == Enum_PrintRangeType.AllPages)
+        {
+            firstPage = 1;
+            lastPage = Math.Max(firstPage, highestRecordedPage);
+        }
+        else
+        {
+            int firstRecordedPage = boundaries.Count > 0 ? boundaries[0].PageNumber : 1;
+            int lastRecordedPage = boundaries.Count > 0 ? boundaries[boundaries.Count - 1].PageNumber : highestRecordedPage;
+            firstPage = Math.Max(firstRecordedPage, 1);
+            lastPage = Math.Max(lastRecordedPage, firstPage);
+        }
+
+        (int start, int end) ResolveRange(int requestedPage)
+        {
+            if (boundaries.Count > 0)
+            {
+                foreach (Model_Print_PageBoundary boundary in boundaries)
+                {
+                    if (boundary.PageNumber == requestedPage)
+                    {
+                        int start = Math.Clamp(boundary.StartRow, 0, totalRows);
+                        int end = Math.Clamp(boundary.EndRow, start, totalRows);
+                        return (start, end);
+                    }
+                }
+
+                if (requestedPage < boundaries[0].PageNumber)
+                {
+                    return ComputeHeuristicRange(requestedPage);
+                }
+
+                Model_Print_PageBoundary lastBoundary = boundaries[boundaries.Count - 1];
+                if (requestedPage > lastBoundary.PageNumber)
+                {
+                    int alignedStart = Math.Clamp(lastBoundary.EndRow, 0, totalRows);
+                    return (alignedStart, totalRows);
+                }
+            }
+
+            return ComputeHeuristicRange(requestedPage);
+        }
+
+        (int start, int end) ComputeHeuristicRange(int requestedPage)
+        {
+            int rowsPerPage = defaultRowsPerPage;
+            int tentativeStart = Math.Clamp((requestedPage - 1) * rowsPerPage, 0, totalRows);
+            int tentativeEnd = Math.Clamp(tentativeStart + rowsPerPage, tentativeStart, totalRows);
+            return (tentativeStart, tentativeEnd);
+        }
+
+        switch (printJob.PageRangeType)
+        {
+            case Enum_PrintRangeType.CurrentPage:
+            {
+                int currentPage = ClampPageNumber(printJob.CurrentPage, firstPage, lastPage);
+                (int start, int end) = ResolveRange(currentPage);
+                return (start, end, currentPage, currentPage);
+            }
+
+            case Enum_PrintRangeType.PageRange:
+            {
+                int fromPage = ClampPageNumber(printJob.FromPage, firstPage, lastPage);
+                int toPage = ClampPageNumber(printJob.ToPage, fromPage, lastPage);
+                (int start, _) = ResolveRange(fromPage);
+                (_, int end) = ResolveRange(toPage);
+                start = Math.Clamp(start, 0, totalRows);
+                end = Math.Clamp(end, start, totalRows);
+                return (start, end, fromPage, toPage);
+            }
+
+            default:
+                return (0, totalRows, firstPage, lastPage);
+        }
+    }
+
+    private static int ClampPageNumber(int value, int min, int max)
+    {
+        if (value < min)
+        {
+            return min;
+        }
+
+        if (value > max)
+        {
+            return max;
+        }
+
+        return value;
     }
 
     #endregion
 
     #region Print Event Handlers
+
+    private void PrintDocument_BeginPrint(object? sender, PrintEventArgs e)
+    {
+        // Reset state for new print job
+        _currentRow = _startRowIndex;
+        _pageNumber = _firstPageNumber - 1;
+        _completionLogged = false;
+        
+        LoggingUtility.Log($"[Core_TablePrinter] BeginPrint: Reset to StartRow={_currentRow}, PageNumber will start at {_pageNumber + 1}");
+    }
 
     private void PrintDocument_PrintPage(object? sender, PrintPageEventArgs e)
     {
@@ -170,7 +327,7 @@ public class Core_TablePrinter : IDisposable
             // Draw data rows
             int rowHeight = 25;
             int pageStartRow = _currentRow;
-            while (_currentRow < _data.Rows.Count && (yPosition + rowHeight) < bottomMargin)
+            while (_currentRow < _endRowIndexExclusive && (yPosition + rowHeight) <= bottomMargin)
             {
                 var row = _data.Rows[_currentRow];
                 xPosition = leftMargin;
@@ -202,13 +359,24 @@ public class Core_TablePrinter : IDisposable
                 EndRow = pageEndRow
             });
 
+            if (_pageNumber == _firstPageNumber)
+            {
+                LoggingUtility.Log(string.Format(
+                    "[Core_TablePrinter] PrintPage first page rendered: Page={0}, StartRow={1}, EndRow={2}, HasMore={3}",
+                    _pageNumber,
+                    pageStartRow,
+                    pageEndRow,
+                    _currentRow < _endRowIndexExclusive));
+            }
+
             // Check if more pages needed
-            e.HasMorePages = _currentRow < _data.Rows.Count;
+            e.HasMorePages = _currentRow < _endRowIndexExclusive;
             
-            if (!e.HasMorePages)
+            if (!e.HasMorePages && !_completionLogged)
             {
                 LoggingUtility.Log($"[Core_TablePrinter] Printing complete: {_pageNumber} page(s), {_currentRow} rows printed");
                 _printJob?.SetPageBoundaries(_pageBoundaries);
+                _completionLogged = true;
             }
         }
         catch (Exception ex)
