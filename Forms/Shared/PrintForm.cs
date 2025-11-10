@@ -290,21 +290,18 @@ public partial class PrintForm : Form
 
         // Clear document first to reset internal state
         PrintForm_PrintPreviewControl.Document = null;
-        PrintForm_PrintPreviewControl.StartPage = 0; // Always reset to 0 first
         
-        // Now assign the actual document
+        // Now assign the actual document  
         PrintForm_PrintPreviewControl.Document = previewDocument;
         
-        LoggingUtility.Log($"[PrintForm] After setting Document, StartPage should be: {targetIndex}, actual: Control.StartPage={PrintForm_PrintPreviewControl.StartPage}");
-        
-        // Apply target index after document is assigned
+        // CRITICAL: Set StartPage BEFORE InvalidatePreview
+        // The control's internal rendering uses StartPage to determine scroll position
         PrintForm_PrintPreviewControl.StartPage = targetIndex;
         
-        // Force immediate UI update by accessing the control
-        _ = PrintForm_PrintPreviewControl.Handle; // Force handle creation
-        PrintForm_PrintPreviewControl.Refresh(); // Force immediate paint
+        LoggingUtility.Log($"[PrintForm] After setting Document and StartPage={targetIndex}: Control.StartPage={PrintForm_PrintPreviewControl.StartPage}");
         
-        LoggingUtility.Log($"[PrintForm] After setting StartPage={targetIndex}: Control.StartPage={PrintForm_PrintPreviewControl.StartPage}");
+        // Force the control to re-render with the correct StartPage
+        PrintForm_PrintPreviewControl.InvalidatePreview();
         
         PrintForm_PrintPreviewControl.InvalidatePreview();
 
