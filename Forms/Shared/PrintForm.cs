@@ -1,14 +1,6 @@
-using System;
-using System.Collections.Generic;
 using System.Data;
-using System.Drawing;
 using System.Drawing.Printing;
 using System.Globalization;
-using System.IO;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
-using System.Windows.Forms;
 using MTM_WIP_Application_Winforms.Core;
 using MTM_WIP_Application_Winforms.Helpers;
 using MTM_WIP_Application_Winforms.Logging;
@@ -33,7 +25,6 @@ public partial class PrintForm : Form
 
     private const string PrinterUnavailableDisplayText = "(No printers installed)";
     private const string ZoomFitToPage = "Fit to Page";
-    private const string ZoomFitToWidth = "Fit to Width";
 
     private readonly Model_Print_Job _printJob;
     private readonly Model_Print_Settings _printSettings;
@@ -124,7 +115,6 @@ public partial class PrintForm : Form
         LoggingUtility.Log($"[PrintForm] Constructor: After InitializeComponent, Control.StartPage={PrintForm_PrintPreviewControl.StartPage}");
 
         Shown += PrintForm_Shown;
-        PrintForm_PrintPreviewControl.SizeChanged += PrintForm_PrintPreviewControl_SizeChanged;
         PrintForm_PrintPreviewControl.StartPageChanged += PrintForm_PrintPreviewControl_StartPageChanged;
 
         LoadSettings();
@@ -415,11 +405,6 @@ public partial class PrintForm : Form
             UpdateCustomRangeTextBoxValue(PrintForm_TextBox_FromPage, _printJob.FromPage);
             UpdateCustomRangeTextBoxValue(PrintForm_TextBox_ToPage, _printJob.ToPage);
         }
-
-        if (_selectedZoomOption.Equals(ZoomFitToWidth, StringComparison.OrdinalIgnoreCase))
-        {
-            ApplyFitToWidthZoom();
-        }
     }
 
     #endregion
@@ -705,14 +690,6 @@ public partial class PrintForm : Form
         }
     }
 
-    private void PrintForm_PrintPreviewControl_SizeChanged(object? sender, EventArgs e)
-    {
-        if (_selectedZoomOption.Equals(ZoomFitToWidth, StringComparison.OrdinalIgnoreCase))
-        {
-            ApplyFitToWidthZoom();
-        }
-    }
-
     private void PrintForm_PrintPreviewControl_StartPageChanged(object? sender, EventArgs e)
     {
         LoggingUtility.Log($"[PrintForm] StartPageChanged EVENT: StartPage={PrintForm_PrintPreviewControl.StartPage}");
@@ -725,11 +702,6 @@ public partial class PrintForm : Form
             _printJob.ToPage = _printJob.CurrentPage;
             UpdateCustomRangeTextBoxValue(PrintForm_TextBox_FromPage, _printJob.FromPage);
             UpdateCustomRangeTextBoxValue(PrintForm_TextBox_ToPage, _printJob.ToPage);
-        }
-
-        if (_selectedZoomOption.Equals(ZoomFitToWidth, StringComparison.OrdinalIgnoreCase))
-        {
-            ApplyFitToWidthZoom();
         }
     }
 
@@ -1462,43 +1434,10 @@ public partial class PrintForm : Form
 
         PrintForm_PrintPreviewControl.AutoZoom = false;
 
-        if (_selectedZoomOption.Equals(ZoomFitToWidth, StringComparison.OrdinalIgnoreCase))
-        {
-            ApplyFitToWidthZoom();
-            return;
-        }
-
         if (_zoomLevelLookup.TryGetValue(_selectedZoomOption, out double zoomValue))
         {
             PrintForm_PrintPreviewControl.Zoom = Math.Clamp(zoomValue, 0.1, 5.0);
         }
-    }
-
-    private void ApplyFitToWidthZoom()
-    {
-        if (PrintForm_PrintPreviewControl.Document is null)
-        {
-            return;
-        }
-
-        if (_previewPageInfos.Length == 0)
-        {
-            PrintForm_PrintPreviewControl.AutoZoom = true;
-            return;
-        }
-
-        int pageIndex = Math.Clamp(PrintForm_PrintPreviewControl.StartPage, 0, _previewPageInfos.Length - 1);
-        Image? pageImage = _previewPageInfos[pageIndex].Image;
-        if (pageImage is null || pageImage.Width == 0)
-        {
-            return;
-        }
-
-        int horizontalPadding = PrintForm_PrintPreviewControl.Padding.Horizontal;
-        int scrollbarAllowance = SystemInformation.VerticalScrollBarWidth;
-        double availableWidth = Math.Max(1, PrintForm_PrintPreviewControl.ClientSize.Width - horizontalPadding - scrollbarAllowance - 8);
-        double zoom = availableWidth / pageImage.Width;
-        PrintForm_PrintPreviewControl.Zoom = Math.Clamp(zoom, 0.1, 5.0);
     }
 
     private void UpdateActionButtonsState()

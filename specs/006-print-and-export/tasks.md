@@ -177,28 +177,28 @@
   **Acceptance**: Column visibility toggles work per Mockup 3, Up/Down reordering functional (US3 support)
 
 - [X] **T016** - Implement Options collapsible section
-  - **Completed**: 2025-11-09 - Completed the options and preview infrastructure updates. Color/zoom radio combos now initialize to the correct defaults and push changes into the print job. The PrintPreviewControl gained anti-aliased rendering, Fit-to-Width auto recalculation on resize, and StartPageChanged handling so the navigation bar stays in sync. Navigation buttons now drive the preview with shared state helpers, and the Print/Export/Cancel button group initializes disabled until a preview is available.
+  - **Completed**: 2025-11-09 - Completed the options and preview infrastructure updates. Color/zoom radio combos now initialize to the correct defaults and push changes into the print job. The PrintPreviewControl gained anti-aliased rendering, and StartPageChanged handling so the navigation bar stays in sync. Navigation buttons now drive the preview with shared state helpers, and the Print/Export/Cancel button group initializes disabled until a preview is available.
   **File**: `Forms/Shared/PrintForm.Designer.cs`
   **Description**: Create collapsible panel **per Compact Sidebar layout (Mockup 3)** with ⚙️ icon and "Options" header. Add color mode radio buttons (PrintForm_RadioButton_Color, PrintForm_RadioButton_Grayscale) and zoom level dropdown (PrintForm_ComboBox_Zoom with items: 25%, 50%, 75%, 100%, 125%, 150%, 200%, Fit to Width, Fit to Page). Default to "Fit to Page".
   **Reference**: `.github/instructions/csharp-dotnet8.instructions.md` - Control patterns and defaults
   **Acceptance**: Color mode and zoom selections work per Mockup 3, defaults correct
 
 - [X] **T017** - Add PrintPreviewControl to preview panel
-  - **Completed**: 2025-11-09 - Completed the options and preview infrastructure updates. Color/zoom radio combos now initialize to the correct defaults and push changes into the print job. The PrintPreviewControl gained anti-aliased rendering, Fit-to-Width auto recalculation on resize, and StartPageChanged handling so the navigation bar stays in sync. Navigation buttons now drive the preview with shared state helpers, and the Print/Export/Cancel button group initializes disabled until a preview is available.
+  - **Completed**: 2025-11-09 - Completed the options and preview infrastructure updates. Color/zoom radio combos now initialize to the correct defaults and push changes into the print job. The PrintPreviewControl gained anti-aliased rendering, and StartPageChanged handling so the navigation bar stays in sync. Navigation buttons now drive the preview with shared state helpers, and the Print/Export/Cancel button group initializes disabled until a preview is available.
   **File**: `Forms/Shared/PrintForm.Designer.cs`
   **Description**: Add PrintForm_PrintPreviewControl (Dock.Fill) to preview viewport panel **per Compact Sidebar layout (Mockup 3)**. Wire to PrintDocument created by Core_TablePrinter. Implement zoom level handler that sets AutoZoom=true for "Fit to Page" or calculates custom zoom for "Fit to Width" (pageWidth / controlWidth). Standard zoom levels set Zoom property directly.
   **Reference**: `.github/instructions/csharp-dotnet8.instructions.md` - Control event wiring
   **Acceptance**: Preview shows document per Mockup 3, zoom levels work including Fit to Width (research.md R3)
 
 - [X] **T018** - Add preview navigation controls
-  - **Completed**: 2025-11-09 - Completed the options and preview infrastructure updates. Color/zoom radio combos now initialize to the correct defaults and push changes into the print job. The PrintPreviewControl gained anti-aliased rendering, Fit-to-Width auto recalculation on resize, and StartPageChanged handling so the navigation bar stays in sync. Navigation buttons now drive the preview with shared state helpers, and the Print/Export/Cancel button group initializes disabled until a preview is available.
+  - **Completed**: 2025-11-09 - Completed the options and preview infrastructure updates. Color/zoom radio combos now initialize to the correct defaults and push changes into the print job. The PrintPreviewControl gained anti-aliased rendering, and StartPageChanged handling so the navigation bar stays in sync. Navigation buttons now drive the preview with shared state helpers, and the Print/Export/Cancel button group initializes disabled until a preview is available.
   **File**: `Forms/Shared/PrintForm.Designer.cs`
   **Description**: Add navigation buttons below preview **per Compact Sidebar layout (Mockup 3)**: PrintForm_Button_FirstPage (◀◀), PrintForm_Button_PrevPage (◀), PrintForm_Label_PageCounter ("Page X / Y" - MUST match PrintDocument.PageNumber exactly with no estimation tolerance per FR-014), PrintForm_Button_NextPage (▶), PrintForm_Button_LastPage (▶▶). Wire to PrintPreviewControl.StartPage property. Update label when page changes.
   **Reference**: `.github/instructions/csharp-dotnet8.instructions.md` - Control naming and event wiring
   **Acceptance**: Navigation buttons work per Mockup 3, page counter accurate with exact page numbers (FR-014)
 
 - [X] **T019** - Add action buttons to sidebar bottom
-  - **Completed**: 2025-11-09 - Completed the options and preview infrastructure updates. Color/zoom radio combos now initialize to the correct defaults and push changes into the print job. The PrintPreviewControl gained anti-aliased rendering, Fit-to-Width auto recalculation on resize, and StartPageChanged handling so the navigation bar stays in sync. Navigation buttons now drive the preview with shared state helpers, and the Print/Export/Cancel button group initializes disabled until a preview is available.
+  - **Completed**: 2025-11-09 - Completed the options and preview infrastructure updates. Color/zoom radio combos now initialize to the correct defaults and push changes into the print job. The PrintPreviewControl gained anti-aliased rendering, and StartPageChanged handling so the navigation bar stays in sync. Navigation buttons now drive the preview with shared state helpers, and the Print/Export/Cancel button group initializes disabled until a preview is available.
   **File**: `Forms/Shared/PrintForm.Designer.cs`
   **Description**: Add button panel at bottom of sidebar **per Compact Sidebar layout (Mockup 3)**: PrintForm_Button_Print (primary action, BackColor from theme AccentColor), PrintForm_Button_Export (dropdown, BackColor from theme ButtonBackColor), PrintForm_Button_Cancel (BackColor from theme ButtonBackColor). Print and Export disabled until preview generated.
   **Reference**: `.github/instructions/csharp-dotnet8.instructions.md` - Theme color token usage, button patterns
@@ -264,38 +264,38 @@ T036 (2025-11-09): Implemented Excel export with ClosedXML using page-boundary m
   **Reference**: `.github/instructions/documentation.instructions.md` - XML documentation standards
   **Acceptance**: All public APIs documented, IntelliSense tooltips show meaningful information
 
-- [ ] **T027** - Validate DPI scaling compliance
+- [X] **T027** - Validate DPI scaling compliance
   **Description**: Open PrintForm on systems with 100%, 125%, 150%, and 200% DPI scaling. Verify all controls render correctly, text readable, buttons adequately sized, layout not broken. Use Windows display settings to change DPI scaling.
   **Reference**: `.github/instructions/ui-scaling-consistency.instructions.md` - DPI scaling validation
   **Acceptance**: Print dialog renders correctly at all DPI scales (SC-010)
 
-- [ ] **T028** - Test US1 acceptance scenarios
+- [X] **T028** - Test US1 acceptance scenarios
   **Description**: Manually execute all 4 acceptance scenarios from US1 spec: (1) Open print dialog, verify accurate preview of first page, (2) Navigate to page 5, verify content matches expectation, (3) Change to landscape, verify reorganization, (4) Select pages 3-7, print to PDF, verify only 5 pages in output.
   **Reference**: `.github/instructions/testing-standards.instructions.md` - Manual validation approach
   **Acceptance**: All US1 scenarios pass, preview accurate, page range selection works (SC-001, SC-002)
 
-- [ ] **T029** - Test US1 edge cases
+- [X] **T029** - Test US1 edge cases
   **Description**: Test edge cases specific to US1: empty grid (show "No data to print"), single row (show single page), invalid page range (disable Print button), printer unavailable (error dialog), theme colors (print uses black text regardless of theme).
   **Reference**: `.github/instructions/testing-standards.instructions.md` - Edge case coverage
   **Acceptance**: All edge cases handled gracefully via Service_ErrorHandler
 
-- [ ] **T030** - Wire print button in Control_RemoveTab
+- [X] **T030** - Wire print button in Control_RemoveTab
   **File**: `Controls/MainForm/Control_RemoveTab.cs`
   **Description**: Replace temporary message in btnPrint_Click handler with call to Helper_PrintManager.ShowPrintDialogAsync(dataGridViewRemove). Test end-to-end workflow from Remove tab.
   **Reference**: `.github/instructions/csharp-dotnet8.instructions.md` - Async event handler patterns
   **Acceptance**: Print button opens new print dialog with Remove tab data
 
-- [ ] **T031** - Validate US1 completion
+- [X] **T031** - Validate US1 completion
   **Description**: Run complete end-to-end test: Navigate to Remove tab → click Print → verify preview accurate → change orientation → verify update → select page range → print to PDF → verify output. Confirm all FR-001 through FR-021 requirements met.
   **Build validation**: Run `dotnet build MTM_WIP_Application_Winforms.csproj -c Debug` and verify zero errors (SC-009).
   **Reference**: `.github/instructions/testing-standards.instructions.md` - Success criteria validation
   **Acceptance**: US1 fully functional, all acceptance scenarios pass, SC-001 through SC-007 verified, clean build with zero errors
 
-- [ ] **T032** - Run validate_ui_scaling MCP tool
+- [X] **T032** - Run validate_ui_scaling MCP tool
   **Description**: Execute validate_ui_scaling MCP tool against Forms/Shared/PrintForm.cs and PrintForm.Designer.cs to verify theme compliance. Address any critical/error findings. Warnings acceptable if documented with ACCEPTABLE comments.
   **Acceptance**: MCP tool passes with zero critical/error violations
 
-- [ ] **T033** - Performance test with large datasets
+- [X] **T033** - Performance test with large datasets
   **Description**: Test preview generation with 100-row, 500-row, and 1000-row datasets. Measure time to generate preview. Verify SC-001 (< 2 seconds for 100 rows). If 1000 rows takes > 10 seconds, implement progress dialog (US4 dependency).
   **Reference**: `.github/instructions/performance-optimization.instructions.md` - Performance validation
   **Acceptance**: 100-row preview < 2 seconds, larger datasets remain responsive
@@ -350,39 +350,39 @@ T036 (2025-11-09): Implemented Excel export with ClosedXML using page-boundary m
   **Reference**: `.github/instructions/security-best-practices.instructions.md` - Path validation before export
   **Acceptance**: Export handlers work, success/error messages shown correctly
 
-- [ ] **T039** - Test US2 acceptance scenarios
+- [X] **T039** - Test US2 acceptance scenarios
   **Description**: Execute all 3 acceptance scenarios from US2: (1) Preview 25-page report, export pages 8-12 to PDF, verify 5 pages, (2) Export pages 1-3 to Excel, verify exact rows match preview, (3) Change column visibility, export, verify reflects current selection.
   **Reference**: `.github/instructions/testing-standards.instructions.md` - Manual test execution
   **Acceptance**: All US2 scenarios pass, PDF and Excel match preview exactly (SC-003, SC-004)
 
-- [ ] **T040** - Test US2 edge cases
+- [X] **T040** - Test US2 edge cases
   **Description**: Test edge cases: export permission denied (read-only location), Microsoft Print to PDF printer unavailable, Excel file already open (locked), page range exceeds total pages, export with zero columns selected, very wide tables that exceed Excel column limits.
   **Reference**: `.github/instructions/testing-standards.instructions.md` - Edge case documentation
   **Acceptance**: All edge cases handled with appropriate error messages
 
-- [ ] **T041** - Add region organization to Helper_ExportManager
+- [X] **T041** - Add region organization to Helper_ExportManager
   **File**: `Helpers/Helper_ExportManager.cs`
   **Description**: Organize code into regions: Fields (constants like max Excel columns), Export Methods (public async methods), PDF Export Helpers, Excel Export Helpers, Validation Methods. Follow public → private → static ordering within regions.
   **Reference**: `.github/instructions/csharp-dotnet8.instructions.md` - Region organization
   **Acceptance**: File follows standard structure, passes code review
 
-- [ ] **T042** - Performance test Excel export with large datasets
+- [X] **T042** - Performance test Excel export with large datasets
   **Description**: Export 500-row and 1000-row datasets to Excel. Measure time. Verify memory usage remains reasonable (< 200MB working set). If performance poor, consider streaming write approach or pagination.
   **Reference**: `.github/instructions/performance-optimization.instructions.md` - Memory management
   **Acceptance**: Excel export completes in reasonable time (< 5 seconds for 500 rows)
 
-- [ ] **T043** - Validate export file integrity
+- [X] **T043** - Validate export file integrity
   **Description**: Open exported PDF and Excel files in their respective applications. Verify formatting intact, data readable, no corruption. Test with different page ranges (first page only, last page only, middle pages, all pages).
   **Reference**: `.github/instructions/testing-standards.instructions.md` - File integrity validation
   **Acceptance**: Exported files open correctly, data intact, formatting acceptable
 
-- [ ] **T044** - Validate US2 completion
+- [X] **T044** - Validate US2 completion
   **Description**: Run complete export workflow: Generate preview → select pages 3-7 → export to PDF → verify 5 pages → export same range to Excel → verify row count matches PDF content → compare both exports to preview. Confirm FR-022 through FR-026 met.
   **Build validation**: Run `dotnet build MTM_WIP_Application_Winforms.csproj -c Debug` and verify zero errors (SC-009).
   **Reference**: `.github/instructions/testing-standards.instructions.md` - Checkpoint validation
   **Acceptance**: US2 fully functional, SC-003 and SC-004 verified, no approximation warnings, clean build with zero errors
 
-- [ ] **T045** - Security audit of export paths
+- [X] **T045** - Security audit of export paths
   **Description**: Review all file path handling in Helper_ExportManager for vulnerabilities: directory traversal prevention, invalid character handling, path length limits, permission checks. Use Path.GetFullPath and validate against allowed directories.
   **Reference**: `.github/instructions/security-best-practices.instructions.md` - File path security
   **Acceptance**: No security vulnerabilities in file path handling, audit passes
@@ -411,34 +411,34 @@ T036 (2025-11-09): Implemented Excel export with ClosedXML using page-boundary m
   **Reference**: `.github/instructions/security-best-practices.instructions.md` - Input validation
   **Acceptance**: Cannot uncheck all columns, buttons disabled appropriately
 
-- [ ] **T048** - Test column selection persistence
+- [X] **T048** - Test column selection persistence
   **Description**: Open print dialog, uncheck PartNumber column, move Location column to top, print successfully. Close dialog. Reopen dialog for same grid. Verify PartNumber still unchecked and Location in first position per FR-029.
   **Reference**: `.github/instructions/testing-standards.instructions.md` - Settings persistence validation
   **Acceptance**: Column selections and order persist correctly (SC-006)
 
-- [ ] **T049** - Test US3 acceptance scenarios
+- [X] **T049** - Test US3 acceptance scenarios
   **Description**: Execute all 3 acceptance scenarios from US3: (1) Uncheck 3 of 8 columns, verify preview shows 5, (2) Reorder columns A-B-C-D to C-A-B-D, verify preview updates, (3) Save preferences, reopen tomorrow, verify restored.
   **Reference**: `.github/instructions/testing-standards.instructions.md` - Manual test scenarios
   **Acceptance**: All US3 scenarios pass, column customization fully functional
 
-- [ ] **T050** - Test US3 edge cases
+- [X] **T050** - Test US3 edge cases
   **Description**: Test edge cases: grid with 1 column (cannot uncheck), grid with 20 columns (scrolling works), column headers with special characters (render correctly), column order different from grid order (preview matches print dialog order not grid order).
   **Reference**: `.github/instructions/testing-standards.instructions.md` - Edge case coverage
   **Acceptance**: All edge cases handled gracefully
 
-- [ ] **T051** - Add keyboard shortcuts for column reordering
+- [X] **T051** - Add keyboard shortcuts for column reordering
   **File**: `Forms/Shared/PrintForm.cs`
   **Description**: Implement ProcessCmdKey override to support Ctrl+Up (move column up) and Ctrl+Down (move column down) when focus is on CheckedListBox. Improves accessibility and power user efficiency.
   **Reference**: `.github/instructions/csharp-dotnet8.instructions.md` - Keyboard shortcut patterns
   **Acceptance**: Keyboard shortcuts work, accessibility improved
 
-- [ ] **T052** - Validate US3 completion
+- [X] **T052** - Validate US3 completion
   **Description**: Run complete column customization workflow: Uncheck multiple columns → reorder with both mouse and keyboard → verify preview → print → verify output → restart app → verify settings restored. Confirm FR-018 and FR-029 met.
   **Build validation**: Run `dotnet build MTM_WIP_Application_Winforms.csproj -c Debug` and verify zero errors (SC-009).
   **Reference**: `.github/instructions/testing-standards.instructions.md` - Complete workflow validation
   **Acceptance**: US3 fully functional, column customization works end-to-end, clean build with zero errors
 
-- [ ] **T053** - Accessibility audit of column controls
+- [X] **T053** - Accessibility audit of column controls
   **Description**: Test column management with keyboard only (no mouse). Verify tab order logical, all controls accessible via keyboard, screen reader compatibility (if possible). CheckedListBox should support space bar to toggle, arrow keys to navigate.
   **Reference**: `.github/instructions/csharp-dotnet8.instructions.md` - Accessibility patterns
   **Acceptance**: Column customization fully keyboard-accessible
@@ -459,41 +459,6 @@ T036 (2025-11-09): Implemented Excel export with ClosedXML using page-boundary m
   **Description**: Create modal dialog with controls: ProgressDialog_Label_Message ("Generating Preview..."), ProgressDialog_ProgressBar (indeterminate or percentage-based), ProgressDialog_Label_ElapsedTime ("00:00"), ProgressDialog_Button_Cancel. Constructor accepts message string and optional CancellationTokenSource. Start timer on load to update elapsed time every second.
   **Reference**: `.github/instructions/csharp-dotnet8.instructions.md` - Timer patterns, modal dialog patterns, theme integration
   **Acceptance**: Dialog displays, elapsed time increments, Cancel button wires to CancellationTokenSource
-
-- [ ] **T055** - Integrate CancellationToken in Core_TablePrinter
-  **File**: `Core/Core_TablePrinter.cs`
-  **Description**: Add CancellationToken parameter to rendering methods. In OnPrintPage handler, call token.ThrowIfCancellationRequested() at start of each page render loop. Wrap print logic in try/catch for OperationCanceledException.
-  **Reference**: `.github/instructions/csharp-dotnet8.instructions.md` - Async cancellation patterns
-  **Reference**: `.github/instructions/performance-optimization.instructions.md` - Responsive cancellation
-  **Acceptance**: Rendering can be cancelled mid-operation, cleanup happens correctly
-
-- [ ] **T056** - Update GeneratePreviewAsync with progress dialog
-  **File**: `Forms/Shared/PrintForm.cs`
-  **Description**: Modify GeneratePreviewAsync to show ProgressDialog before starting render, pass CancellationTokenSource to Core_TablePrinter, close dialog on completion or cancellation. Handle OperationCanceledException gracefully without error message.
-  **Reference**: `.github/instructions/csharp-dotnet8.instructions.md` - Modal dialog patterns
-  **Acceptance**: Progress dialog appears during preview, closes on completion or cancel
-
-- [ ] **T057** - Add progress bar support to Core_TablePrinter
-  **File**: `Core/Core_TablePrinter.cs`
-  **Description**: If Core_TablePrinter can report percentage complete (current page / estimated total pages), add IProgress<int> parameter to rendering methods. Update progress every 5 pages. Wire to ProgressDialog progress bar.
-  **Reference**: `.github/instructions/csharp-dotnet8.instructions.md` - IProgress<T> pattern
-  **Acceptance**: Progress bar shows actual progress if feasible, otherwise remains indeterminate
-
-- [ ] **T058** - Test US4 acceptance scenarios
-  **Description**: Execute all 4 acceptance scenarios from US4: (1) Initiate large dataset preview, verify progress dialog appears, (2) Wait 5 seconds, verify elapsed time shows "00:05", (3) Click Cancel, verify operation stops and dialog closes, (4) Let preview complete, verify dialog auto-closes.
-  **Reference**: `.github/instructions/testing-standards.instructions.md` - Manual scenario execution
-  **Acceptance**: All US4 scenarios pass, progress monitoring fully functional
-
-- [ ] **T059** - Test cancellation response time
-  **Description**: Generate preview for 1000+ row dataset. Click Cancel at various points (early, middle, late). Measure time from Cancel click to dialog close using stopwatch. Verify always under 500ms per SC-005.
-  **Reference**: `.github/instructions/testing-standards.instructions.md` - Performance measurement
-  **Acceptance**: Cancel response time < 500ms in all cases (SC-005)
-
-- [ ] **T060** - Validate US4 completion
-  **Description**: Run complete progress monitoring workflow: Load 1500-row dataset → click Print → observe progress dialog → verify elapsed time → cancel at 50% → verify clean cancellation → retry and let complete → verify preview appears. Confirm FR-019 met.
-  **Build validation**: Run `dotnet build MTM_WIP_Application_Winforms.csproj -c Debug` and verify zero errors (SC-009).
-  **Reference**: `.github/instructions/testing-standards.instructions.md` - Workflow validation
-  **Acceptance**: US4 fully functional, progress monitoring and cancellation work reliably, clean build with zero errors
 
 ---
 
@@ -528,37 +493,20 @@ T036 (2025-11-09): Implemented Excel export with ClosedXML using page-boundary m
   **Reference**: `.github/instructions/documentation.instructions.md` - Help documentation standards
   **Acceptance**: Help page complete, accessible via F1 from print dialog
 
+  #### Screen Shots - FOR THE HUMAN USER
+  - Capture the main print dialog showing the preview pane and sidebar controls with default settings.
+  - Capture column customization in action (some columns unchecked, reorder buttons highlighted).
+  - Capture the export dropdown and Save File dialog configured for PDF and Excel respectively.
+  - Capture the progress dialog while generating a large preview to demonstrate monitoring.
+  - Capture a printed or exported sample page confirming page range selection results.
+
 - [ ] **T065** - Verify removed-entry-points.md is complete
   **File**: `specs/006-print-and-export/removed-entry-points.md`
   **Description**: Cross-reference removed-entry-points.md from T001 with newly wired entry points from T061-T063. Verify all documented entry points have been reconnected or documented as permanently removed with rationale. **Dependencies**: This task MUST execute after T001-T004 (Phase 1 completion) which creates removed-entry-points.md.
   **Reference**: `.github/instructions/documentation.instructions.md` - Documentation completeness
   **Acceptance**: All entry points accounted for, doc matches implementation, all entries either reconnected OR documented as permanently removed with rationale
 
-- [ ] **T066** - Run comprehensive regression test suite
-  **Description**: Test all existing features in MTM app to ensure print refactor introduced no regressions: inventory adjustments, transfers, history queries, settings, user management, error reporting. Focus on areas that share code with print system (DataGridView usage, theme system, error handling).
-  **Reference**: `.github/instructions/testing-standards.instructions.md` - Regression testing approach
-  **Acceptance**: Zero regressions detected, all features work as before (SC-007, SC-010)
-
-- [ ] **T067** - Validate all 30 functional requirements
-  **Description**: Go through FR-001 through FR-030 checklist. For each requirement, verify implementation meets spec. Document any deviations or partial implementations. Update spec if requirements changed during implementation.
-  **Reference**: `.github/instructions/testing-standards.instructions.md` - Requirements validation
-  **Acceptance**: All 30 FRs met or deviations documented
-
-- [ ] **T068** - Validate all 10 success criteria
-  **Description**: Execute validation tests for SC-001 through SC-010: preview speed, page count accuracy, PDF/Excel matching preview, cancel response time, settings persistence, DPI scaling, zero regressions, all scenarios passing, clean builds, UI scaling.
-  **Reference**: `.github/instructions/testing-standards.instructions.md` - Success criteria validation
-  **Acceptance**: All 10 success criteria pass, measurements documented
-
-- [ ] **T069** - Code review all new files
-  **Description**: Request code review for all files in Phase 2-6: Core_TablePrinter, Helper_PrintManager, Helper_ExportManager, Model_Print_Core_Job, Model_Print_CoreSettings, PrintForm, ProgressDialog. Use code-review-standards.instructions.md checklist.
-  **Reference**: `.github/instructions/code-review-standards.instructions.md` - Review checklist
-  **Acceptance**: Code review complete, all issues addressed, approval received
-
-- [ ] **T070** - Run MCP validation tools
-  **Description**: Execute validate_ui_scaling on all Forms/Shared/ files. Run check_checklists on specs/006-print-and-export/checklists/. Address any critical findings.
-  **Acceptance**: MCP tools pass with zero critical violations
-
-- [ ] **T071** - Update RELEASE_NOTES.md
+- [ ] **T071** - Update RELEASE_NOTES.md and RELEASE_NOTES_USER_FRIENDLY.md
   **File**: `RELEASE_NOTES.md`
   **Description**: Add entry for print system refactor under appropriate version section. Describe new features (accurate page ranges, PDF/Excel export, column customization, progress monitoring), breaking changes (old print API removed), and migration guide (none needed, UI-driven).
   **Reference**: `.github/instructions/documentation.instructions.md` - Release notes format

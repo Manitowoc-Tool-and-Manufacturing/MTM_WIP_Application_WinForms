@@ -66,7 +66,6 @@ namespace MTM_WIP_Application_Winforms.Forms.Shared
             PrintForm_Label_Columns = new Label();
             PrintForm_CheckedListBox_Columns = new CheckedListBox();
             PrintForm_TableLayout_PrinterSettingsSection = new TableLayoutPanel();
-            PrintForm_Panel_PrinterSettingsHeader = new Panel();
             PrintForm_TableLayoutPanel_PrinterSettingsHeader = new TableLayoutPanel();
             PrintForm_Label_PrinterSettingsHeader = new Label();
             PrintForm_Button_PrinterSettingsToggle = new Button();
@@ -110,7 +109,6 @@ namespace MTM_WIP_Application_Winforms.Forms.Shared
             PrintForm_TableLayout_ColumnSettingsContent.SuspendLayout();
             PrintForm_TableLayoutPanel_ColumnButtons.SuspendLayout();
             PrintForm_TableLayout_PrinterSettingsSection.SuspendLayout();
-            PrintForm_Panel_PrinterSettingsHeader.SuspendLayout();
             PrintForm_TableLayoutPanel_PrinterSettingsHeader.SuspendLayout();
             PrintForm_Panel_PrinterSettingsContent.SuspendLayout();
             PrintForm_TableLayout_PrinterSettingsContent.SuspendLayout();
@@ -129,7 +127,7 @@ namespace MTM_WIP_Application_Winforms.Forms.Shared
             PrintForm_Panel_Main.Location = new Point(0, 0);
             PrintForm_Panel_Main.Margin = new Padding(0);
             PrintForm_Panel_Main.Name = "PrintForm_Panel_Main";
-            PrintForm_Panel_Main.Size = new Size(984, 861);
+            PrintForm_Panel_Main.Size = new Size(984, 871);
             PrintForm_Panel_Main.TabIndex = 0;
             // 
             // PrintForm_TableLayout_Master
@@ -147,7 +145,7 @@ namespace MTM_WIP_Application_Winforms.Forms.Shared
             PrintForm_TableLayout_Master.Name = "PrintForm_TableLayout_Master";
             PrintForm_TableLayout_Master.RowCount = 1;
             PrintForm_TableLayout_Master.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
-            PrintForm_TableLayout_Master.Size = new Size(984, 861);
+            PrintForm_TableLayout_Master.Size = new Size(984, 871);
             PrintForm_TableLayout_Master.TabIndex = 0;
             // 
             // PrintForm_Panel_Sidebar
@@ -161,7 +159,7 @@ namespace MTM_WIP_Application_Winforms.Forms.Shared
             PrintForm_Panel_Sidebar.Margin = new Padding(0);
             PrintForm_Panel_Sidebar.Name = "PrintForm_Panel_Sidebar";
             PrintForm_Panel_Sidebar.Padding = new Padding(10);
-            PrintForm_Panel_Sidebar.Size = new Size(357, 861);
+            PrintForm_Panel_Sidebar.Size = new Size(357, 871);
             PrintForm_Panel_Sidebar.TabIndex = 0;
             // 
             // PrintForm_TableLayout_Sidebar
@@ -187,7 +185,7 @@ namespace MTM_WIP_Application_Winforms.Forms.Shared
             PrintForm_TableLayout_Sidebar.RowStyles.Add(new RowStyle());
             PrintForm_TableLayout_Sidebar.RowStyles.Add(new RowStyle());
             PrintForm_TableLayout_Sidebar.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
-            PrintForm_TableLayout_Sidebar.Size = new Size(337, 841);
+            PrintForm_TableLayout_Sidebar.Size = new Size(337, 851);
             PrintForm_TableLayout_Sidebar.TabIndex = 0;
             // 
             // PrintForm_TableLayout_PageSettingsSection
@@ -201,6 +199,7 @@ namespace MTM_WIP_Application_Winforms.Forms.Shared
             PrintForm_TableLayout_PageSettingsSection.Controls.Add(PrintForm_Panel_PageSettingsContent, 0, 1);
             PrintForm_TableLayout_PageSettingsSection.Dock = DockStyle.Fill;
             PrintForm_TableLayout_PageSettingsSection.Location = new Point(3, 157);
+            PrintForm_TableLayout_PageSettingsSection.MinimumSize = new Size(331, 0);
             PrintForm_TableLayout_PageSettingsSection.Name = "PrintForm_TableLayout_PageSettingsSection";
             PrintForm_TableLayout_PageSettingsSection.RowCount = 2;
             PrintForm_TableLayout_PageSettingsSection.RowStyles.Add(new RowStyle());
@@ -232,10 +231,8 @@ namespace MTM_WIP_Application_Winforms.Forms.Shared
             PrintForm_Label_PageSettingsHeader.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
             PrintForm_Label_PageSettingsHeader.Location = new Point(3, 3);
             PrintForm_Label_PageSettingsHeader.Margin = new Padding(3);
-            PrintForm_Label_PageSettingsHeader.MaximumSize = new Size(285, 25);
-            PrintForm_Label_PageSettingsHeader.MinimumSize = new Size(285, 25);
             PrintForm_Label_PageSettingsHeader.Name = "PrintForm_Label_PageSettingsHeader";
-            PrintForm_Label_PageSettingsHeader.Size = new Size(285, 25);
+            PrintForm_Label_PageSettingsHeader.Size = new Size(286, 25);
             PrintForm_Label_PageSettingsHeader.TabIndex = 0;
             PrintForm_Label_PageSettingsHeader.Text = "📄 Page Settings";
             PrintForm_Label_PageSettingsHeader.TextAlign = ContentAlignment.MiddleLeft;
@@ -506,6 +503,7 @@ namespace MTM_WIP_Application_Winforms.Forms.Shared
             PrintForm_TableLayout_OptionsSection.Controls.Add(PrintForm_Panel_OptionsContent, 0, 1);
             PrintForm_TableLayout_OptionsSection.Dock = DockStyle.Fill;
             PrintForm_TableLayout_OptionsSection.Location = new Point(3, 576);
+            PrintForm_TableLayout_OptionsSection.MinimumSize = new Size(331, 0);
             PrintForm_TableLayout_OptionsSection.Name = "PrintForm_TableLayout_OptionsSection";
             PrintForm_TableLayout_OptionsSection.RowCount = 2;
             PrintForm_TableLayout_OptionsSection.RowStyles.Add(new RowStyle());
@@ -554,10 +552,8 @@ namespace MTM_WIP_Application_Winforms.Forms.Shared
             PrintForm_Label_OptionsHeader.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
             PrintForm_Label_OptionsHeader.Location = new Point(3, 3);
             PrintForm_Label_OptionsHeader.Margin = new Padding(3);
-            PrintForm_Label_OptionsHeader.MaximumSize = new Size(285, 25);
-            PrintForm_Label_OptionsHeader.MinimumSize = new Size(285, 25);
             PrintForm_Label_OptionsHeader.Name = "PrintForm_Label_OptionsHeader";
-            PrintForm_Label_OptionsHeader.Size = new Size(285, 25);
+            PrintForm_Label_OptionsHeader.Size = new Size(286, 25);
             PrintForm_Label_OptionsHeader.TabIndex = 0;
             PrintForm_Label_OptionsHeader.Text = "⚙️ Options";
             PrintForm_Label_OptionsHeader.TextAlign = ContentAlignment.MiddleLeft;
@@ -666,7 +662,7 @@ namespace MTM_WIP_Application_Winforms.Forms.Shared
             PrintForm_ComboBox_Zoom.Dock = DockStyle.Fill;
             PrintForm_ComboBox_Zoom.DropDownStyle = ComboBoxStyle.DropDownList;
             PrintForm_ComboBox_Zoom.FormattingEnabled = true;
-            PrintForm_ComboBox_Zoom.Items.AddRange(new object[] { "25%", "50%", "75%", "100%", "125%", "150%", "200%", "Fit to Width", "Fit to Page" });
+            PrintForm_ComboBox_Zoom.Items.AddRange(new object[] { "25%", "50%", "75%", "100%", "125%", "150%", "200%", "Fit to Page" });
             PrintForm_ComboBox_Zoom.Location = new Point(3, 76);
             PrintForm_ComboBox_Zoom.Name = "PrintForm_ComboBox_Zoom";
             PrintForm_ComboBox_Zoom.Size = new Size(317, 23);
@@ -684,6 +680,7 @@ namespace MTM_WIP_Application_Winforms.Forms.Shared
             PrintForm_TableLayout_ColumnSettingsSection.Controls.Add(PrintForm_Panel_ColumnSettingsContent, 0, 1);
             PrintForm_TableLayout_ColumnSettingsSection.Dock = DockStyle.Fill;
             PrintForm_TableLayout_ColumnSettingsSection.Location = new Point(3, 340);
+            PrintForm_TableLayout_ColumnSettingsSection.MinimumSize = new Size(331, 0);
             PrintForm_TableLayout_ColumnSettingsSection.Name = "PrintForm_TableLayout_ColumnSettingsSection";
             PrintForm_TableLayout_ColumnSettingsSection.RowCount = 2;
             PrintForm_TableLayout_ColumnSettingsSection.RowStyles.Add(new RowStyle());
@@ -710,13 +707,15 @@ namespace MTM_WIP_Application_Winforms.Forms.Shared
             // 
             // PrintForm_Button_ColumnSettingsToggle
             // 
+            PrintForm_Button_ColumnSettingsToggle.AutoSize = true;
+            PrintForm_Button_ColumnSettingsToggle.AutoSizeMode = AutoSizeMode.GrowAndShrink;
             PrintForm_Button_ColumnSettingsToggle.Dock = DockStyle.Fill;
             PrintForm_Button_ColumnSettingsToggle.FlatAppearance.BorderSize = 0;
             PrintForm_Button_ColumnSettingsToggle.FlatStyle = FlatStyle.Flat;
-            PrintForm_Button_ColumnSettingsToggle.Location = new Point(296, 3);
+            PrintForm_Button_ColumnSettingsToggle.Location = new Point(298, 3);
             PrintForm_Button_ColumnSettingsToggle.MaximumSize = new Size(25, 25);
             PrintForm_Button_ColumnSettingsToggle.Name = "PrintForm_Button_ColumnSettingsToggle";
-            PrintForm_Button_ColumnSettingsToggle.Size = new Size(24, 25);
+            PrintForm_Button_ColumnSettingsToggle.Size = new Size(22, 25);
             PrintForm_Button_ColumnSettingsToggle.TabIndex = 1;
             PrintForm_Button_ColumnSettingsToggle.Text = "-";
             PrintForm_Button_ColumnSettingsToggle.UseVisualStyleBackColor = true;
@@ -729,10 +728,8 @@ namespace MTM_WIP_Application_Winforms.Forms.Shared
             PrintForm_Label_ColumnSettingsHeader.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
             PrintForm_Label_ColumnSettingsHeader.Location = new Point(3, 3);
             PrintForm_Label_ColumnSettingsHeader.Margin = new Padding(3);
-            PrintForm_Label_ColumnSettingsHeader.MaximumSize = new Size(285, 25);
-            PrintForm_Label_ColumnSettingsHeader.MinimumSize = new Size(285, 25);
             PrintForm_Label_ColumnSettingsHeader.Name = "PrintForm_Label_ColumnSettingsHeader";
-            PrintForm_Label_ColumnSettingsHeader.Size = new Size(285, 25);
+            PrintForm_Label_ColumnSettingsHeader.Size = new Size(289, 25);
             PrintForm_Label_ColumnSettingsHeader.TabIndex = 0;
             PrintForm_Label_ColumnSettingsHeader.Text = "📑 Column Settings";
             PrintForm_Label_ColumnSettingsHeader.TextAlign = ContentAlignment.MiddleLeft;
@@ -842,10 +839,11 @@ namespace MTM_WIP_Application_Winforms.Forms.Shared
             PrintForm_TableLayout_PrinterSettingsSection.CellBorderStyle = TableLayoutPanelCellBorderStyle.Single;
             PrintForm_TableLayout_PrinterSettingsSection.ColumnCount = 1;
             PrintForm_TableLayout_PrinterSettingsSection.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
-            PrintForm_TableLayout_PrinterSettingsSection.Controls.Add(PrintForm_Panel_PrinterSettingsHeader, 0, 0);
+            PrintForm_TableLayout_PrinterSettingsSection.Controls.Add(PrintForm_TableLayoutPanel_PrinterSettingsHeader, 0, 0);
             PrintForm_TableLayout_PrinterSettingsSection.Controls.Add(PrintForm_Panel_PrinterSettingsContent, 0, 1);
             PrintForm_TableLayout_PrinterSettingsSection.Dock = DockStyle.Fill;
             PrintForm_TableLayout_PrinterSettingsSection.Location = new Point(3, 3);
+            PrintForm_TableLayout_PrinterSettingsSection.MinimumSize = new Size(331, 0);
             PrintForm_TableLayout_PrinterSettingsSection.Name = "PrintForm_TableLayout_PrinterSettingsSection";
             PrintForm_TableLayout_PrinterSettingsSection.RowCount = 2;
             PrintForm_TableLayout_PrinterSettingsSection.RowStyles.Add(new RowStyle());
@@ -853,52 +851,41 @@ namespace MTM_WIP_Application_Winforms.Forms.Shared
             PrintForm_TableLayout_PrinterSettingsSection.Size = new Size(331, 148);
             PrintForm_TableLayout_PrinterSettingsSection.TabIndex = 0;
             // 
-            // PrintForm_Panel_PrinterSettingsHeader
-            // 
-            PrintForm_Panel_PrinterSettingsHeader.AutoSize = true;
-            PrintForm_Panel_PrinterSettingsHeader.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            PrintForm_Panel_PrinterSettingsHeader.Controls.Add(PrintForm_TableLayoutPanel_PrinterSettingsHeader);
-            PrintForm_Panel_PrinterSettingsHeader.Dock = DockStyle.Fill;
-            PrintForm_Panel_PrinterSettingsHeader.Location = new Point(1, 1);
-            PrintForm_Panel_PrinterSettingsHeader.Margin = new Padding(0);
-            PrintForm_Panel_PrinterSettingsHeader.Name = "PrintForm_Panel_PrinterSettingsHeader";
-            PrintForm_Panel_PrinterSettingsHeader.Padding = new Padding(3);
-            PrintForm_Panel_PrinterSettingsHeader.Size = new Size(329, 37);
-            PrintForm_Panel_PrinterSettingsHeader.TabIndex = 0;
-            // 
             // PrintForm_TableLayoutPanel_PrinterSettingsHeader
             // 
             PrintForm_TableLayoutPanel_PrinterSettingsHeader.AutoSize = true;
+            PrintForm_TableLayoutPanel_PrinterSettingsHeader.AutoSizeMode = AutoSizeMode.GrowAndShrink;
             PrintForm_TableLayoutPanel_PrinterSettingsHeader.ColumnCount = 2;
             PrintForm_TableLayoutPanel_PrinterSettingsHeader.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
             PrintForm_TableLayoutPanel_PrinterSettingsHeader.ColumnStyles.Add(new ColumnStyle());
             PrintForm_TableLayoutPanel_PrinterSettingsHeader.Controls.Add(PrintForm_Label_PrinterSettingsHeader, 0, 0);
             PrintForm_TableLayoutPanel_PrinterSettingsHeader.Controls.Add(PrintForm_Button_PrinterSettingsToggle, 1, 0);
             PrintForm_TableLayoutPanel_PrinterSettingsHeader.Dock = DockStyle.Fill;
-            PrintForm_TableLayoutPanel_PrinterSettingsHeader.Location = new Point(3, 3);
+            PrintForm_TableLayoutPanel_PrinterSettingsHeader.Location = new Point(4, 4);
             PrintForm_TableLayoutPanel_PrinterSettingsHeader.MinimumSize = new Size(311, 26);
             PrintForm_TableLayoutPanel_PrinterSettingsHeader.Name = "PrintForm_TableLayoutPanel_PrinterSettingsHeader";
             PrintForm_TableLayoutPanel_PrinterSettingsHeader.RowCount = 1;
             PrintForm_TableLayoutPanel_PrinterSettingsHeader.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
             PrintForm_TableLayoutPanel_PrinterSettingsHeader.Size = new Size(323, 31);
-            PrintForm_TableLayoutPanel_PrinterSettingsHeader.TabIndex = 0;
+            PrintForm_TableLayoutPanel_PrinterSettingsHeader.TabIndex = 2;
             // 
             // PrintForm_Label_PrinterSettingsHeader
             // 
+            PrintForm_Label_PrinterSettingsHeader.AutoSize = true;
             PrintForm_Label_PrinterSettingsHeader.Dock = DockStyle.Fill;
             PrintForm_Label_PrinterSettingsHeader.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
             PrintForm_Label_PrinterSettingsHeader.Location = new Point(3, 3);
             PrintForm_Label_PrinterSettingsHeader.Margin = new Padding(3);
-            PrintForm_Label_PrinterSettingsHeader.MaximumSize = new Size(285, 25);
-            PrintForm_Label_PrinterSettingsHeader.MinimumSize = new Size(285, 25);
             PrintForm_Label_PrinterSettingsHeader.Name = "PrintForm_Label_PrinterSettingsHeader";
-            PrintForm_Label_PrinterSettingsHeader.Size = new Size(285, 25);
+            PrintForm_Label_PrinterSettingsHeader.Size = new Size(286, 25);
             PrintForm_Label_PrinterSettingsHeader.TabIndex = 0;
             PrintForm_Label_PrinterSettingsHeader.Text = "🖨️ Printer Settings";
             PrintForm_Label_PrinterSettingsHeader.TextAlign = ContentAlignment.MiddleLeft;
             // 
             // PrintForm_Button_PrinterSettingsToggle
             // 
+            PrintForm_Button_PrinterSettingsToggle.AutoSize = true;
+            PrintForm_Button_PrinterSettingsToggle.AutoSizeMode = AutoSizeMode.GrowAndShrink;
             PrintForm_Button_PrinterSettingsToggle.Dock = DockStyle.Fill;
             PrintForm_Button_PrinterSettingsToggle.FlatAppearance.BorderSize = 0;
             PrintForm_Button_PrinterSettingsToggle.FlatStyle = FlatStyle.Flat;
@@ -1042,7 +1029,7 @@ namespace MTM_WIP_Application_Winforms.Forms.Shared
             PrintForm_Panel_PreviewViewport.MinimumSize = new Size(400, 300);
             PrintForm_Panel_PreviewViewport.Name = "PrintForm_Panel_PreviewViewport";
             PrintForm_Panel_PreviewViewport.Padding = new Padding(10);
-            PrintForm_Panel_PreviewViewport.Size = new Size(627, 861);
+            PrintForm_Panel_PreviewViewport.Size = new Size(627, 871);
             PrintForm_Panel_PreviewViewport.TabIndex = 1;
             // 
             // PrintForm_TableLayout_PreviewArea
@@ -1059,7 +1046,7 @@ namespace MTM_WIP_Application_Winforms.Forms.Shared
             PrintForm_TableLayout_PreviewArea.RowCount = 2;
             PrintForm_TableLayout_PreviewArea.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
             PrintForm_TableLayout_PreviewArea.RowStyles.Add(new RowStyle());
-            PrintForm_TableLayout_PreviewArea.Size = new Size(607, 841);
+            PrintForm_TableLayout_PreviewArea.Size = new Size(607, 851);
             PrintForm_TableLayout_PreviewArea.TabIndex = 0;
             // 
             // PrintForm_PrintPreviewControl
@@ -1067,7 +1054,7 @@ namespace MTM_WIP_Application_Winforms.Forms.Shared
             PrintForm_PrintPreviewControl.Dock = DockStyle.Fill;
             PrintForm_PrintPreviewControl.Location = new Point(3, 3);
             PrintForm_PrintPreviewControl.Name = "PrintForm_PrintPreviewControl";
-            PrintForm_PrintPreviewControl.Size = new Size(601, 783);
+            PrintForm_PrintPreviewControl.Size = new Size(601, 793);
             PrintForm_PrintPreviewControl.TabIndex = 2;
             PrintForm_PrintPreviewControl.UseAntiAlias = true;
             // 
@@ -1087,7 +1074,7 @@ namespace MTM_WIP_Application_Winforms.Forms.Shared
             PrintForm_TableLayout_PreviewNavigation.Controls.Add(PrintForm_Button_NextPage, 3, 0);
             PrintForm_TableLayout_PreviewNavigation.Controls.Add(PrintForm_Button_LastPage, 4, 0);
             PrintForm_TableLayout_PreviewNavigation.Dock = DockStyle.Fill;
-            PrintForm_TableLayout_PreviewNavigation.Location = new Point(3, 792);
+            PrintForm_TableLayout_PreviewNavigation.Location = new Point(3, 802);
             PrintForm_TableLayout_PreviewNavigation.Name = "PrintForm_TableLayout_PreviewNavigation";
             PrintForm_TableLayout_PreviewNavigation.RowCount = 1;
             PrintForm_TableLayout_PreviewNavigation.RowStyles.Add(new RowStyle());
@@ -1174,9 +1161,9 @@ namespace MTM_WIP_Application_Winforms.Forms.Shared
             // 
             AutoScaleDimensions = new SizeF(96F, 96F);
             AutoScaleMode = AutoScaleMode.Dpi;
-            ClientSize = new Size(984, 861);
+            ClientSize = new Size(984, 871);
             Controls.Add(PrintForm_Panel_Main);
-            MinimumSize = new Size(1000, 900);
+            MinimumSize = new Size(1000, 910);
             Name = "PrintForm";
             StartPosition = FormStartPosition.CenterParent;
             Text = "Print Preview";
@@ -1223,9 +1210,8 @@ namespace MTM_WIP_Application_Winforms.Forms.Shared
             PrintForm_TableLayoutPanel_ColumnButtons.PerformLayout();
             PrintForm_TableLayout_PrinterSettingsSection.ResumeLayout(false);
             PrintForm_TableLayout_PrinterSettingsSection.PerformLayout();
-            PrintForm_Panel_PrinterSettingsHeader.ResumeLayout(false);
-            PrintForm_Panel_PrinterSettingsHeader.PerformLayout();
             PrintForm_TableLayoutPanel_PrinterSettingsHeader.ResumeLayout(false);
+            PrintForm_TableLayoutPanel_PrinterSettingsHeader.PerformLayout();
             PrintForm_Panel_PrinterSettingsContent.ResumeLayout(false);
             PrintForm_Panel_PrinterSettingsContent.PerformLayout();
             PrintForm_TableLayout_PrinterSettingsContent.ResumeLayout(false);
@@ -1250,9 +1236,6 @@ namespace MTM_WIP_Application_Winforms.Forms.Shared
         private System.Windows.Forms.Panel PrintForm_Panel_PreviewViewport;
         private System.Windows.Forms.TableLayoutPanel PrintForm_TableLayout_Sidebar;
         private System.Windows.Forms.TableLayoutPanel PrintForm_TableLayout_PrinterSettingsSection;
-        private System.Windows.Forms.Panel PrintForm_Panel_PrinterSettingsHeader;
-        private System.Windows.Forms.Label PrintForm_Label_PrinterSettingsHeader;
-        private System.Windows.Forms.Button PrintForm_Button_PrinterSettingsToggle;
         private System.Windows.Forms.Panel PrintForm_Panel_PrinterSettingsContent;
         private System.Windows.Forms.TableLayoutPanel PrintForm_TableLayout_PrinterSettingsContent;
         private System.Windows.Forms.Label PrintForm_Label_PrinterName;
@@ -1308,7 +1291,6 @@ namespace MTM_WIP_Application_Winforms.Forms.Shared
         private System.Windows.Forms.Label PrintForm_Label_PageCounter;
         private System.Windows.Forms.Button PrintForm_Button_NextPage;
         private System.Windows.Forms.Button PrintForm_Button_LastPage;
-        private TableLayoutPanel PrintForm_TableLayoutPanel_PrinterSettingsHeader;
         private TableLayoutPanel tableLayoutPanel1;
         private TableLayoutPanel PrintForm_TableLayoutPanel_PageSettingsHeader;
         private TableLayoutPanel PrintForm_TableLayoutPanel_ColumnButtons;
@@ -1316,5 +1298,8 @@ namespace MTM_WIP_Application_Winforms.Forms.Shared
         private TableLayoutPanel PrintForm_TableLayoutPanel_OptionsHeader;
         private TableLayoutPanel PrintForm_TableLayoutPanel_ColorMode;
         private PrintPreviewControl PrintForm_PrintPreviewControl;
+        private TableLayoutPanel PrintForm_TableLayoutPanel_PrinterSettingsHeader;
+        private Label PrintForm_Label_PrinterSettingsHeader;
+        private Button PrintForm_Button_PrinterSettingsToggle;
     }
 }
