@@ -280,7 +280,7 @@ public partial class ViewApplicationLogsForm : Form
         {
             LoggingUtility.Log($"[ViewApplicationLogsForm] Error during form load");
             LoggingUtility.LogApplicationError(ex);
-            Service_ErrorHandler.HandleException(ex, ErrorSeverity.Medium, controlName: nameof(ViewApplicationLogsForm));
+            Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Medium, controlName: nameof(ViewApplicationLogsForm));
         }
     }
 
@@ -386,7 +386,7 @@ public partial class ViewApplicationLogsForm : Form
         {
             LoggingUtility.Log($"[ViewApplicationLogsForm] Access denied loading user list");
             LoggingUtility.LogApplicationError(ex);
-            Service_ErrorHandler.HandleException(ex, ErrorSeverity.Medium,
+            Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Medium,
                 contextData: new Dictionary<string, object> { ["Operation"] = "LoadUserList" },
                 controlName: nameof(ViewApplicationLogsForm));
         }
@@ -394,7 +394,7 @@ public partial class ViewApplicationLogsForm : Form
         {
             LoggingUtility.Log($"[ViewApplicationLogsForm] Error loading user list");
             LoggingUtility.LogApplicationError(ex);
-            Service_ErrorHandler.HandleException(ex, ErrorSeverity.Medium, controlName: nameof(ViewApplicationLogsForm));
+            Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Medium, controlName: nameof(ViewApplicationLogsForm));
         }
     }
 
@@ -518,7 +518,7 @@ public partial class ViewApplicationLogsForm : Form
             LoggingUtility.Log($"[ViewApplicationLogsForm] Access denied loading file: {filePath}");
             LoggingUtility.LogApplicationError(ex);
             lblStatus.Text = "Access denied";
-            Service_ErrorHandler.HandleException(ex, ErrorSeverity.Medium,
+            Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Medium,
                 contextData: new Dictionary<string, object> { ["FilePath"] = filePath },
                 controlName: nameof(ViewApplicationLogsForm));
         }
@@ -527,7 +527,7 @@ public partial class ViewApplicationLogsForm : Form
             LoggingUtility.Log($"[ViewApplicationLogsForm] Error loading file: {filePath}");
             LoggingUtility.LogApplicationError(ex);
             lblStatus.Text = "Error loading file";
-            Service_ErrorHandler.HandleException(ex, ErrorSeverity.Medium, controlName: nameof(ViewApplicationLogsForm));
+            Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Medium, controlName: nameof(ViewApplicationLogsForm));
         }
     }
 
@@ -612,7 +612,7 @@ public partial class ViewApplicationLogsForm : Form
             LoggingUtility.Log($"[ViewApplicationLogsForm] Access denied loading log files for: {username}");
             LoggingUtility.LogApplicationError(ex);
             lblStatus.Text = "Access denied";
-            Service_ErrorHandler.HandleException(ex, ErrorSeverity.Medium,
+            Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Medium,
                 contextData: new Dictionary<string, object> { ["Username"] = username },
                 controlName: nameof(ViewApplicationLogsForm));
         }
@@ -621,7 +621,7 @@ public partial class ViewApplicationLogsForm : Form
             LoggingUtility.Log($"[ViewApplicationLogsForm] Error loading log files for: {username}");
             LoggingUtility.LogApplicationError(ex);
             lblStatus.Text = "Error loading files";
-            Service_ErrorHandler.HandleException(ex, ErrorSeverity.Medium, controlName: nameof(ViewApplicationLogsForm));
+            Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Medium, controlName: nameof(ViewApplicationLogsForm));
         }
     }
 
@@ -967,7 +967,7 @@ public partial class ViewApplicationLogsForm : Form
         catch (Exception ex)
         {
             LoggingUtility.LogApplicationError(ex);
-            Service_ErrorHandler.HandleException(ex, ErrorSeverity.Medium,
+            Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Medium,
                 contextData: new Dictionary<string, object>
                 {
                     ["Operation"] = "ExportEntries",
@@ -1016,7 +1016,7 @@ public partial class ViewApplicationLogsForm : Form
         catch (Exception ex)
         {
             LoggingUtility.LogApplicationError(ex);
-            Service_ErrorHandler.HandleException(ex, ErrorSeverity.Low,
+            Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Low,
                 contextData: new Dictionary<string, object>
                 {
                     ["Operation"] = "OpenLogDirectory",
@@ -1222,7 +1222,7 @@ public partial class ViewApplicationLogsForm : Form
                         LoggingUtility.LogApplicationError(ex);
                         lblStatus.Text = "Error opening file";
 
-                        Service_ErrorHandler.HandleException(ex, ErrorSeverity.Low,
+                        Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Low,
                             retryAction: null,
                             contextData: new Dictionary<string, object>
                             {
@@ -1273,7 +1273,7 @@ public partial class ViewApplicationLogsForm : Form
             LoggingUtility.Log($"[ViewApplicationLogsForm] Error creating prompt");
             LoggingUtility.LogApplicationError(ex);
             lblStatus.Text = "Error creating prompt";
-            Service_ErrorHandler.HandleException(ex, ErrorSeverity.Medium,
+            Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Medium,
                 contextData: new Dictionary<string, object>
                 {
                     ["Operation"] = "CreatePrompt",
@@ -1301,7 +1301,7 @@ public partial class ViewApplicationLogsForm : Form
         catch (Exception ex)
         {
             LoggingUtility.LogApplicationError(ex);
-            Service_ErrorHandler.HandleException(ex, ErrorSeverity.Medium,
+            Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Medium,
                 contextData: new Dictionary<string, object> { ["Operation"] = "OpenPromptStatusManager" },
                 controlName: nameof(ViewApplicationLogsForm));
         }
@@ -1340,7 +1340,7 @@ public partial class ViewApplicationLogsForm : Form
         catch (Exception ex)
         {
             LoggingUtility.LogApplicationError(ex);
-            Service_ErrorHandler.HandleException(ex, ErrorSeverity.Low,
+            Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Low,
                 contextData: new Dictionary<string, object> { ["Operation"] = "OpenErrorReport" },
                 controlName: nameof(ViewApplicationLogsForm));
         }
@@ -1394,7 +1394,7 @@ public partial class ViewApplicationLogsForm : Form
         catch (Exception ex)
         {
             LoggingUtility.LogApplicationError(ex);
-            Service_ErrorHandler.HandleException(ex, ErrorSeverity.Medium,
+            Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Medium,
                 contextData: new Dictionary<string, object> { ["Operation"] = "OpenPromptFolder" },
                 controlName: nameof(ViewApplicationLogsForm));
         }
@@ -1593,7 +1593,7 @@ public partial class ViewApplicationLogsForm : Form
         {
             lblStatus.Text = "Batch generation error";
             LoggingUtility.LogApplicationError(ex);
-            Service_ErrorHandler.HandleException(ex, ErrorSeverity.Medium,
+            Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Medium,
                 contextData: new Dictionary<string, object> { ["Operation"] = "BatchPromptGeneration" },
                 controlName: nameof(ViewApplicationLogsForm));
         }
@@ -1675,7 +1675,7 @@ public partial class ViewApplicationLogsForm : Form
         {
             LoggingUtility.Log($"[ViewApplicationLogsForm] Unexpected error in file selection handler");
             LoggingUtility.LogApplicationError(ex);
-            Service_ErrorHandler.HandleException(ex, ErrorSeverity.Medium, controlName: nameof(ViewApplicationLogsForm));
+            Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Medium, controlName: nameof(ViewApplicationLogsForm));
         }
     }
 
@@ -1747,7 +1747,7 @@ public partial class ViewApplicationLogsForm : Form
         catch (Exception ex)
         {
             LoggingUtility.LogApplicationError(ex);
-            Service_ErrorHandler.HandleException(ex, ErrorSeverity.Low,
+            Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Low,
                 contextData: new Dictionary<string, object> { ["Operation"] = "ToggleGrouping" },
                 controlName: nameof(ViewApplicationLogsForm));
         }
@@ -2286,7 +2286,7 @@ public partial class ViewApplicationLogsForm : Form
         {
             LoggingUtility.Log($"[ViewApplicationLogsForm] Error copying to clipboard");
             LoggingUtility.LogApplicationError(ex);
-            Service_ErrorHandler.HandleException(ex, ErrorSeverity.Low,
+            Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Low,
                 contextData: new Dictionary<string, object> { ["Operation"] = "CopyEntry" },
                 controlName: nameof(ViewApplicationLogsForm));
         }
@@ -2405,7 +2405,7 @@ public partial class ViewApplicationLogsForm : Form
             LoggingUtility.Log($"[ViewApplicationLogsForm] Error copying error context");
             LoggingUtility.LogApplicationError(ex);
             lblStatus.Text = "Error copying context";
-            Service_ErrorHandler.HandleException(ex, ErrorSeverity.Low,
+            Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Low,
                 contextData: new Dictionary<string, object> { ["Operation"] = "CopyErrorContext" },
                 controlName: nameof(ViewApplicationLogsForm));
         }

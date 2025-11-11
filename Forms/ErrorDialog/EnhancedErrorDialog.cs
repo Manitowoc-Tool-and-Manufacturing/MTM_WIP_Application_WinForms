@@ -6,6 +6,7 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Windows.Forms;
+using DocumentFormat.OpenXml.EMMA;
 using MTM_WIP_Application_Winforms.Core;
 using MTM_WIP_Application_Winforms.Logging;
 using MTM_WIP_Application_Winforms.Models;
@@ -555,7 +556,7 @@ namespace MTM_WIP_Application_Winforms.Forms.ErrorDialog
             try
             {
                 // T046: Open log viewer with current user pre-selected
-                string currentUsername = Model_AppVariables.EnteredUser;
+                string currentUsername = Model_Application_Variables.EnteredUser;
                 
                 if (string.IsNullOrWhiteSpace(currentUsername) || currentUsername == "Default User")
                 {

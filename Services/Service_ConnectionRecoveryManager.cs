@@ -287,7 +287,7 @@ namespace MTM_WIP_Application_Winforms.Services
                     callerName: nameof(Service_ConnectionRecoveryManager),
                     controlName: "Connection Recovery",
                     methodName: "Database Connection Recovery - Fatal Error",
-                    dbSeverity: Models.DatabaseErrorSeverity.Critical
+                    dbSeverity: Models.Enum_DatabaseEnum_ErrorSeverity.Critical
                 );
                 
                 // Force application exit after showing the error

@@ -21,6 +21,7 @@ internal static class LoggingUtility
     private static string _logDirectory = string.Empty;
     private static string _normalLogFile = string.Empty;
     private static readonly Lock LogLock = new();
+    private static readonly HashSet<string> _filesWithHeaders = new();
 
     /// <summary>
     /// Thread-local flag to prevent recursive logging in LogDatabaseError when database operations fail.
@@ -114,9 +115,27 @@ internal static class LoggingUtility
                     {
                         try
                         {
+                            // Check if we need to write CSV header
+                            bool needsHeader = false;
+                            lock (LogLock)
+                            {
+                                if (!_filesWithHeaders.Contains(filePath) && !File.Exists(filePath))
+                                {
+                                    needsHeader = true;
+                                    _filesWithHeaders.Add(filePath);
+                                }
+                            }
+
                             // Use FileStream with FileShare.Write to allow multiple processes to write
                             await using var fs = new FileStream(filePath, FileMode.Append, FileAccess.Write, FileShare.Write);
                             await using var writer = new StreamWriter(fs);
+                            
+                            // Write CSV header if this is a new file
+                            if (needsHeader)
+                            {
+                                await writer.WriteLineAsync("Timestamp,Level,Source,Message,Details");
+                            }
+                            
                             await writer.WriteLineAsync(logEntry);
                             break; // Success
                         }
@@ -166,18 +185,22 @@ internal static class LoggingUtility
             catch (OperationCanceledException)
             {
                 Debug.WriteLine("[DEBUG] Log path creation timed out, using fallback");
-                // Fallback to local temp directory
-                var tempDir = Path.Combine(Path.GetTempPath(), "MTM_WIP_Application_Winforms", "Logs", userName);
-                Directory.CreateDirectory(tempDir);
+                // Fallback to CommonApplicationData directory (matches Helper_LogPath fallback location)
+                var fallbackDir = Path.Combine(
+                    Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData),
+                    "MTM_WIP_Application_Winforms",
+                    "Logs",
+                    userName);
+                Directory.CreateDirectory(fallbackDir);
                 var timestamp = DateTime.Now.ToString("MM-dd-yyyy @ h-mm tt");
-                logFilePath = Path.Combine(tempDir, $"{userName} {timestamp}.log");
+                logFilePath = Path.Combine(fallbackDir, $"{userName} {timestamp}.csv");
             }
 
             _logDirectory = Path.GetDirectoryName(logFilePath) ?? "";
             var baseFileName = Path.GetFileNameWithoutExtension(logFilePath);
-            _normalLogFile = Path.Combine(_logDirectory, $"{baseFileName}_normal.log");
-            _dbErrorLogFile = Path.Combine(_logDirectory, $"{baseFileName}_db_error.log");
-            _appErrorLogFile = Path.Combine(_logDirectory, $"{baseFileName}_app_error.log");
+            _normalLogFile = Path.Combine(_logDirectory, $"{baseFileName}_normal.csv");
+            _dbErrorLogFile = Path.Combine(_logDirectory, $"{baseFileName}_db_error.csv");
+            _appErrorLogFile = Path.Combine(_logDirectory, $"{baseFileName}_app_error.csv");
 
             Debug.WriteLine($"[DEBUG] Log directory: {_logDirectory}");
             Debug.WriteLine($"[DEBUG] Normal log file: {_normalLogFile}");
@@ -190,18 +213,21 @@ internal static class LoggingUtility
         catch (Exception ex)
         {
             Debug.WriteLine($"[DEBUG] Error during logging initialization: {ex.Message}");
-            // Create fallback logging to temp directory
+            // Create fallback logging to CommonApplicationData directory (matches Helper_LogPath fallback location)
             try
             {
-                var tempDir = Path.Combine(Path.GetTempPath(), "MTM_WIP_Application_Winforms", "Logs");
-                Directory.CreateDirectory(tempDir);
+                var fallbackDir = Path.Combine(
+                    Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData),
+                    "MTM_WIP_Application_Winforms",
+                    "Logs");
+                Directory.CreateDirectory(fallbackDir);
                 var timestamp = DateTime.Now.ToString("MM-dd-yyyy @ h-mm tt");
-                var fallbackFile = Path.Combine(tempDir, $"fallback_{timestamp}.log");
-                _logDirectory = tempDir;
+                var fallbackFile = Path.Combine(fallbackDir, $"fallback_{timestamp}.csv");
+                _logDirectory = fallbackDir;
                 _normalLogFile = fallbackFile;
                 _dbErrorLogFile = fallbackFile;
                 _appErrorLogFile = fallbackFile;
-                Debug.WriteLine($"[DEBUG] Using fallback logging to: {tempDir}");
+                Debug.WriteLine($"[DEBUG] Using fallback logging to: {fallbackDir}");
             }
             catch (Exception fallbackEx)
             {
@@ -217,34 +243,70 @@ internal static class LoggingUtility
 
     #endregion
 
+    #region CSV Formatting Helper
+
+    /// <summary>
+    /// Escapes a CSV field value by wrapping in quotes and escaping internal quotes.
+    /// </summary>
+    private static string EscapeCsvField(string? field)
+    {
+        if (string.IsNullOrEmpty(field))
+        {
+            return string.Empty;
+        }
+
+        // If field contains comma, newline, or quote, wrap in quotes and escape internal quotes
+        if (field.Contains(',') || field.Contains('\n') || field.Contains('"'))
+        {
+            return $"\"{field.Replace("\"", "\"\"")}\"";
+        }
+
+        return field;
+    }
+
+    /// <summary>
+    /// Formats a CSV log entry with proper field escaping.
+    /// CSV Format: Timestamp,Level,Source,Message,Details
+    /// </summary>
+    private static string FormatCsvEntry(DateTime timestamp, string level, string source, string message, string? details = null)
+    {
+        var timestampStr = timestamp.ToString("yyyy-MM-dd HH:mm:ss");
+        var csvLine = $"{timestampStr},{EscapeCsvField(level)},{EscapeCsvField(source)},{EscapeCsvField(message)},{EscapeCsvField(details)}";
+        return csvLine;
+    }
+
+    #endregion
+
     #region LoggingMethods
 
     public static void Log(string message)
     {
-        var logEntry = $"{DateTime.Now:yyyy-MM-dd HH:mm:ss} - {message}";
+        var timestamp = DateTime.Now;
+        var csvEntry = FormatCsvEntry(timestamp, "INFO", "Application", message, null);
         
         // Output to Debug console (visible in Output window when debugging)
-        Debug.WriteLine(logEntry);
+        Debug.WriteLine($"{timestamp:yyyy-MM-dd HH:mm:ss} - {message}");
         
         lock (LogLock)
         {
-            FlushLogEntryToDisk(_normalLogFile, logEntry);
+            FlushLogEntryToDisk(_normalLogFile, csvEntry);
         }
     }
 
     public static void LogApplicationError(Exception ex)
     {
-        var errorEntry = $"{DateTime.Now:yyyy-MM-dd HH:mm:ss} - Application Error - {ex.Message}";
-        var stackEntry = $"{DateTime.Now:yyyy-MM-dd HH:mm:ss} - Stack Trace - {ex.StackTrace}";
+        var timestamp = DateTime.Now;
+        var source = ex.Source ?? "Application";
+        var details = $"Type: {ex.GetType().Name}\nStack Trace: {ex.StackTrace}";
+        var csvEntry = FormatCsvEntry(timestamp, "ERROR", source, ex.Message, details);
         
         // Output to Debug console (visible in Output window when debugging)
-        Debug.WriteLine(errorEntry);
-        Debug.WriteLine(stackEntry);
+        Debug.WriteLine($"{timestamp:yyyy-MM-dd HH:mm:ss} - Application Error - {ex.Message}");
+        Debug.WriteLine($"{timestamp:yyyy-MM-dd HH:mm:ss} - Stack Trace - {ex.StackTrace}");
         
         lock (LogLock)
         {
-            FlushLogEntryToDisk(_appErrorLogFile, errorEntry);
-            FlushLogEntryToDisk(_appErrorLogFile, stackEntry);
+            FlushLogEntryToDisk(_appErrorLogFile, csvEntry);
         }
     }
 
@@ -259,10 +321,11 @@ internal static class LoggingUtility
             // Try direct file logging as last resort
             try
             {
-                var fallbackEntry = $"{DateTime.Now:yyyy-MM-dd HH:mm:ss} - Database Error (Fallback) [{severity}] - {ex.Message}";
+                var timestamp = DateTime.Now;
+                var fallbackCsv = FormatCsvEntry(timestamp, "ERROR", "Database (Fallback)", ex.Message, null);
                 if (!string.IsNullOrEmpty(_dbErrorLogFile))
                 {
-                    File.AppendAllText(_dbErrorLogFile, fallbackEntry + Environment.NewLine);
+                    File.AppendAllText(_dbErrorLogFile, fallbackCsv + Environment.NewLine);
                 }
             }
             catch
@@ -276,6 +339,7 @@ internal static class LoggingUtility
         {
             _isLoggingDatabaseError = true;
 
+            var timestamp = DateTime.Now;
             var severityLabel = severity switch
             {
                 Enum_DatabaseEnum_ErrorSeverity.Warning => "WARNING",
@@ -284,17 +348,17 @@ internal static class LoggingUtility
                 _ => "ERROR"
             };
 
-            var errorEntry = $"{DateTime.Now:yyyy-MM-dd HH:mm:ss} - Database Error [{severityLabel}] - {ex.Message}";
-            var stackEntry = $"{DateTime.Now:yyyy-MM-dd HH:mm:ss} - Stack Trace - {ex.StackTrace}";
+            var source = ex.Source ?? "Database";
+            var details = $"Type: {ex.GetType().Name}\nStack Trace: {ex.StackTrace}";
+            var csvEntry = FormatCsvEntry(timestamp, severityLabel, source, ex.Message, details);
             
             // Output to Debug console (visible in Output window when debugging)
-            Debug.WriteLine(errorEntry);
-            Debug.WriteLine(stackEntry);
+            Debug.WriteLine($"{timestamp:yyyy-MM-dd HH:mm:ss} - Database Error [{severityLabel}] - {ex.Message}");
+            Debug.WriteLine($"{timestamp:yyyy-MM-dd HH:mm:ss} - Stack Trace - {ex.StackTrace}");
             
             lock (LogLock)
             {
-                FlushLogEntryToDisk(_dbErrorLogFile, errorEntry);
-                FlushLogEntryToDisk(_dbErrorLogFile, stackEntry);
+                FlushLogEntryToDisk(_dbErrorLogFile, csvEntry);
             }
         }
         finally
@@ -305,14 +369,15 @@ internal static class LoggingUtility
 
     public static void LogApplicationInfo(string message)
     {
-        var infoEntry = $"{DateTime.Now:yyyy-MM-dd HH:mm:ss} - Application Info - {message}";
+        var timestamp = DateTime.Now;
+        var csvEntry = FormatCsvEntry(timestamp, "INFO", "Application", message, null);
         
         // Output to Debug console (visible in Output window when debugging)
-        Debug.WriteLine(infoEntry);
+        Debug.WriteLine($"{timestamp:yyyy-MM-dd HH:mm:ss} - Application Info - {message}");
         
         lock (LogLock)
         {
-            FlushLogEntryToDisk(_normalLogFile, infoEntry);
+            FlushLogEntryToDisk(_normalLogFile, csvEntry);
         }
     }
 

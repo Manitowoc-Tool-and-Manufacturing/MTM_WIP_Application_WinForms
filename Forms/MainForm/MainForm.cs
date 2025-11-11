@@ -27,7 +27,6 @@ namespace MTM_WIP_Application_Winforms.Forms.MainForm
         private Timer? _connectionStrengthTimer;
         public Helper_Control_MySqlSignal ConnectionStrengthChecker = null!;
         private Helper_StoredProcedureProgress? _progressHelper;
-        private Forms.Development.DebugDashboardForm? _debugDashboard;
     private Form_ViewErrorReports? _viewErrorReportsForm;
     private Forms.ViewLogs.ViewApplicationLogsForm? _viewApplicationLogsForm;
 
@@ -1000,14 +999,6 @@ namespace MTM_WIP_Application_Winforms.Forms.MainForm
                 _connectionStrengthTimer?.Stop();
                 _connectionStrengthTimer?.Dispose();
 
-                // Close Debug Dashboard if it's open
-                if (_debugDashboard != null && !_debugDashboard.IsDisposed)
-                {
-                    _debugDashboard.Close();
-                    _debugDashboard.Dispose();
-                    _debugDashboard = null;
-                }
-
                 // Close View Error Reports form if it's open
                 if (_viewErrorReportsForm != null && !_viewErrorReportsForm.IsDisposed)
                 {
@@ -1179,20 +1170,6 @@ namespace MTM_WIP_Application_Winforms.Forms.MainForm
 
         #endregion
 
-        private async void MainForm_MenuStrip_Development_DebugDashboard_Click(object sender, EventArgs e)
-        {
-            try
-            {
-                using var debugDashboard = new Forms.Development.DebugDashboardForm();
-                debugDashboard.ShowDialog(this);
-            }
-            catch (Exception ex)
-            {
-                LoggingUtility.LogApplicationError(ex);
-                await Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex, callerName: nameof(MainForm_MenuStrip_Development_DebugDashboard_Click));
-            }
-        }
-
         private void MainForm_MenuStrip_Development_ViewApplicationLogs_Click(object? sender, EventArgs e)
         {
             try
@@ -1307,20 +1284,6 @@ namespace MTM_WIP_Application_Winforms.Forms.MainForm
                 {
                     menuItem.Enabled = true;
                 }
-            }
-        }
-
-        private async void MainForm_MenuStrip_Development_Conversion_Click(object sender, EventArgs e)
-        {
-            try
-            {
-                using var converterForm = new Forms.Development.DependencyChartConverter.DependencyChartConverterForm();
-                converterForm.ShowDialog(this);
-            }
-            catch (Exception ex)
-            {
-                LoggingUtility.LogApplicationError(ex);
-                await Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex, callerName: nameof(MainForm_MenuStrip_Development_Conversion_Click));
             }
         }
 
@@ -1463,19 +1426,6 @@ namespace MTM_WIP_Application_Winforms.Forms.MainForm
         #endregion
         */
 
-        private async void viewerToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            try
-            {
-                using var viewerForm = new Forms.Development.DependencyChartConverter.DependencyChartViewerForm();
-                viewerForm.ShowDialog(this);
-            }
-            catch (Exception ex)
-            {
-                LoggingUtility.LogApplicationError(ex);
-                await Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex, callerName: nameof(viewerToolStripMenuItem_Click));
-            }
-        }
     }
 
     #endregion

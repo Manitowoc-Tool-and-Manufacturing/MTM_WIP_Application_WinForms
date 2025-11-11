@@ -63,7 +63,7 @@ namespace MTM_WIP_Application_Winforms.Forms.ViewLogs
             catch (Exception ex)
             {
                 LoggingUtility.LogApplicationError(ex);
-                Service_ErrorHandler.HandleException(ex, ErrorSeverity.Medium,
+                Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Medium,
                     contextData: new Dictionary<string, object> { ["Operation"] = "LoadDialog" },
                     controlName: nameof(ErrorAnalysisReportDialog));
             }
@@ -89,7 +89,7 @@ namespace MTM_WIP_Application_Winforms.Forms.ViewLogs
             catch (Exception ex)
             {
                 LoggingUtility.LogApplicationError(ex);
-                Service_ErrorHandler.HandleException(ex, ErrorSeverity.Low,
+                Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Low,
                     contextData: new Dictionary<string, object> { ["Operation"] = "Refresh" },
                     controlName: nameof(ErrorAnalysisReportDialog));
             }
@@ -150,7 +150,7 @@ namespace MTM_WIP_Application_Winforms.Forms.ViewLogs
             catch (Exception ex)
             {
                 LoggingUtility.LogApplicationError(ex);
-                Service_ErrorHandler.HandleException(ex, ErrorSeverity.Low,
+                Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Low,
                     contextData: new Dictionary<string, object> { ["Operation"] = "ExportHtml" },
                     controlName: nameof(ErrorAnalysisReportDialog));
             }
@@ -185,7 +185,7 @@ namespace MTM_WIP_Application_Winforms.Forms.ViewLogs
             catch (Exception ex)
             {
                 LoggingUtility.LogApplicationError(ex);
-                Service_ErrorHandler.HandleException(ex, ErrorSeverity.Low,
+                Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Low,
                     contextData: new Dictionary<string, object> { ["Operation"] = "ExportCsv" },
                     controlName: nameof(ErrorAnalysisReportDialog));
             }
@@ -211,7 +211,7 @@ namespace MTM_WIP_Application_Winforms.Forms.ViewLogs
             catch (Exception ex)
             {
                 LoggingUtility.LogApplicationError(ex);
-                Service_ErrorHandler.HandleException(ex, ErrorSeverity.Low,
+                Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Low,
                     contextData: new Dictionary<string, object> { ["Operation"] = "CopyClipboard" },
                     controlName: nameof(ErrorAnalysisReportDialog));
             }

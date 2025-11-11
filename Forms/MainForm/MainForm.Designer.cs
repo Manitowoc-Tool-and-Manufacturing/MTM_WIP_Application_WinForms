@@ -80,11 +80,7 @@ namespace MTM_WIP_Application_Winforms.Forms.MainForm
             developmentToolStripMenuItem = new ToolStripMenuItem();
             viewErrorReportsToolStripMenuItem = new ToolStripMenuItem();
             viewApplicationLogsToolStripMenuItem = new ToolStripMenuItem();
-            debugDashboardToolStripMenuItem = new ToolStripMenuItem();
             syncPendingReportsToolStripMenuItem = new ToolStripMenuItem();
-            dependencyChartsToolStripMenuItem = new ToolStripMenuItem();
-            conversionToolStripMenuItem = new ToolStripMenuItem();
-            debugDashboardToolStripMenuItem = new ToolStripMenuItem();
             // COMMENTED OUT - Help Menu (to be reimplemented later)
             //helpToolStripMenuItem = new ToolStripMenuItem();
             //gettingStartedToolStripMenuItem = new ToolStripMenuItem();
@@ -115,7 +111,6 @@ namespace MTM_WIP_Application_Winforms.Forms.MainForm
             MainForm_UserControl_TransferTab = new Control_TransferTab();
             MainForm_UserControl_QuickButtons = new Control_QuickButtons();
             tableLayoutPanel1 = new TableLayoutPanel();
-            viewerToolStripMenuItem = new ToolStripMenuItem();
             MainForm_MenuStrip.SuspendLayout();
             MainForm_StatusStrip.SuspendLayout();
             MainForm_TableLayout.SuspendLayout();
@@ -186,7 +181,7 @@ namespace MTM_WIP_Application_Winforms.Forms.MainForm
             // 
             // developmentToolStripMenuItem
             // 
-            developmentToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { viewErrorReportsToolStripMenuItem, viewApplicationLogsToolStripMenuItem, debugDashboardToolStripMenuItem, syncPendingReportsToolStripMenuItem, dependencyChartsToolStripMenuItem });
+            developmentToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { viewErrorReportsToolStripMenuItem, viewApplicationLogsToolStripMenuItem, syncPendingReportsToolStripMenuItem });
             developmentToolStripMenuItem.Name = "developmentToolStripMenuItem";
             developmentToolStripMenuItem.Size = new Size(90, 24);
             developmentToolStripMenuItem.Text = "Development";
@@ -206,42 +201,12 @@ namespace MTM_WIP_Application_Winforms.Forms.MainForm
             viewApplicationLogsToolStripMenuItem.Text = "📄 View Application Logs";
             viewApplicationLogsToolStripMenuItem.Click += MainForm_MenuStrip_Development_ViewApplicationLogs_Click;
             // 
-            // debugDashboardToolStripMenuItem
-            // 
-            debugDashboardToolStripMenuItem.Name = "debugDashboardToolStripMenuItem";
-            debugDashboardToolStripMenuItem.ShortcutKeys = Keys.Control | Keys.Shift | Keys.D;
-            debugDashboardToolStripMenuItem.Size = new Size(250, 22);
-            debugDashboardToolStripMenuItem.Text = "🔍 Debug Dashboard";
-            debugDashboardToolStripMenuItem.Click += MainForm_MenuStrip_Development_DebugDashboard_Click;
-            // 
             // syncPendingReportsToolStripMenuItem
             // 
             syncPendingReportsToolStripMenuItem.Name = "syncPendingReportsToolStripMenuItem";
             syncPendingReportsToolStripMenuItem.Size = new Size(250, 22);
             syncPendingReportsToolStripMenuItem.Text = "🔄 Sync Pending Error Reports";
             syncPendingReportsToolStripMenuItem.Click += MainForm_MenuStrip_Development_SyncReports_Click;
-            // 
-            // dependencyChartsToolStripMenuItem
-            // 
-            dependencyChartsToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { conversionToolStripMenuItem, viewerToolStripMenuItem });
-            dependencyChartsToolStripMenuItem.Name = "dependencyChartsToolStripMenuItem";
-            dependencyChartsToolStripMenuItem.Size = new Size(250, 22);
-            dependencyChartsToolStripMenuItem.Text = "Dependency Charts";
-            // 
-            // conversionToolStripMenuItem
-            // 
-            conversionToolStripMenuItem.Name = "conversionToolStripMenuItem";
-            conversionToolStripMenuItem.Size = new Size(180, 22);
-            conversionToolStripMenuItem.Text = "Conversion";
-            conversionToolStripMenuItem.Click += MainForm_MenuStrip_Development_Conversion_Click;
-            // 
-            // debugDashboardToolStripMenuItem
-            // 
-            debugDashboardToolStripMenuItem.Name = "debugDashboardToolStripMenuItem";
-            debugDashboardToolStripMenuItem.ShortcutKeys = Keys.Control | Keys.Shift | Keys.D;
-            debugDashboardToolStripMenuItem.Size = new Size(180, 22);
-            debugDashboardToolStripMenuItem.Text = "🔍 Debug Dashboard";
-            debugDashboardToolStripMenuItem.Click += MainForm_MenuStrip_Development_DebugDashboard_Click;
             // 
             // COMMENTED OUT - Help Menu (to be reimplemented later)
             // 
@@ -525,13 +490,6 @@ namespace MTM_WIP_Application_Winforms.Forms.MainForm
             tableLayoutPanel1.Size = new Size(878, 31);
             tableLayoutPanel1.TabIndex = 94;
             // 
-            // viewerToolStripMenuItem
-            // 
-            viewerToolStripMenuItem.Name = "viewerToolStripMenuItem";
-            viewerToolStripMenuItem.Size = new Size(180, 22);
-            viewerToolStripMenuItem.Text = "Viewer";
-            viewerToolStripMenuItem.Click += viewerToolStripMenuItem_Click;
-            // 
             // MainForm
             // 
             AutoScaleDimensions = new SizeF(96F, 96F);
@@ -575,19 +533,9 @@ namespace MTM_WIP_Application_Winforms.Forms.MainForm
     private ToolStripMenuItem developmentToolStripMenuItem;
     private ToolStripMenuItem viewErrorReportsToolStripMenuItem;
     private ToolStripMenuItem viewApplicationLogsToolStripMenuItem;
-    private ToolStripMenuItem debugDashboardToolStripMenuItem;
         private ToolStripMenuItem syncPendingReportsToolStripMenuItem;
-        private ToolStripMenuItem dependencyChartsToolStripMenuItem;
-        private ToolStripMenuItem conversionToolStripMenuItem;
         
         // COMMENTED OUT - Help Menu Items (to be reimplemented later)
-        //private ToolStripMenuItem helpToolStripMenuItem;
-        //private ToolStripMenuItem gettingStartedToolStripMenuItem;
-        //private ToolStripMenuItem userGuideToolStripMenuItem;
-        //private ToolStripMenuItem keyboardShortcutsToolStripMenuItem;
-        //private ToolStripSeparator helpSeparator1;
-        //private ToolStripMenuItem aboutMTMInventoryToolStripMenuItem;
-        private ToolStripMenuItem viewerToolStripMenuItem;
     }
 
 

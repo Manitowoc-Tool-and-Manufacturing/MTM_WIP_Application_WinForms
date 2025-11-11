@@ -601,7 +601,7 @@ internal static class Service_DebugTracer
                 {
                     var jsonData = JsonSerializer.Serialize(data, new JsonSerializerOptions
                     {
-                        WriteIndented = true,
+                        WriteIndented = false, // Use compact JSON for CSV compatibility
                         DefaultIgnoreCondition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull,
                         Encoder = System.Text.Encodings.Web.JavaScriptEncoder.UnsafeRelaxedJsonEscaping // Prevent Unicode escaping
                     });

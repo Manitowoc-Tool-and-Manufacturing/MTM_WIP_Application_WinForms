@@ -68,7 +68,7 @@ namespace MTM_WIP_Application_Winforms.Helpers
                 }
 
                 string timestamp = DateTime.Now.ToString("MM-dd-yyyy @ h-mm tt");
-                string logFileName = $"{userName} {timestamp}.log";
+                string logFileName = $"{userName} {timestamp}.csv";
                 return Path.Combine(userDirectory, logFileName);
             }
             catch (Exception ex)
