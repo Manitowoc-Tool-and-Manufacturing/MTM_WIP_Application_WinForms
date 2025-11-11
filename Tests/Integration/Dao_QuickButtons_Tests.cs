@@ -13,7 +13,7 @@ namespace MTM_WIP_Application_Winforms.Tests.Integration;
 /// Dao_QuickButtons patterns discovered:
 /// - All methods are static
 /// - All methods have Async suffix
-/// - All methods return DaoResult (no generic type parameter)
+/// - All methods return Model_Dao_Result (no generic type parameter)
 /// - Position parameters are 1-based (1-10) for UI display
 /// - Uses sys_last_10_transactions_* stored procedures
 /// </remarks>

@@ -1,4 +1,4 @@
-﻿// Licensed to the .NET Foundation under one or more agreements.
+// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
 using System.Diagnostics;
@@ -21,7 +21,7 @@ internal static class LoggingUtility
     private static string _logDirectory = string.Empty;
     private static string _normalLogFile = string.Empty;
     private static readonly Lock LogLock = new();
-    
+
     /// <summary>
     /// Thread-local flag to prevent recursive logging in LogDatabaseError when database operations fail.
     /// </summary>
@@ -38,7 +38,7 @@ internal static class LoggingUtility
         {
             // Run the file operations on a background thread with proper timeout
             using var cts = new CancellationTokenSource(TimeSpan.FromSeconds(10));
-            
+
             await Task.Run(() =>
             {
                 try
@@ -46,7 +46,7 @@ internal static class LoggingUtility
                     var logFiles = Directory.GetFiles(logDirectory, "*.log")
                         .OrderByDescending(File.GetCreationTime)
                         .ToList();
-                        
+
                     if (logFiles.Count > maxLogs)
                     {
                         var filesToDelete = logFiles.Skip(maxLogs).ToList();
@@ -74,7 +74,7 @@ internal static class LoggingUtility
                 "MTM_WIP_Application_Winforms");
             var localAppDataPath =
                 Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "MTM_WIP_Application_Winforms");
-            
+
             // Run directory cleanup operations asynchronously
             await Task.Run(() =>
             {
@@ -150,14 +150,14 @@ internal static class LoggingUtility
         {
             Debug.WriteLine("[DEBUG] Starting logging initialization...");
 
-            var server = new MySqlConnectionStringBuilder(Model_AppVariables.ConnectionString).Server;
-            var userName = Model_AppVariables.User;
+            var server = new MySqlConnectionStringBuilder(Model_Application_Variables.ConnectionString).Server;
+            var userName = Model_Application_Variables.User;
 
             Debug.WriteLine($"[DEBUG] Server: {server}, User: {userName}");
 
             // Add timeout for log path operations with proper async pattern
             using var cts = new CancellationTokenSource(TimeSpan.FromSeconds(10));
-            
+
             string logFilePath;
             try
             {
@@ -222,6 +222,10 @@ internal static class LoggingUtility
     public static void Log(string message)
     {
         var logEntry = $"{DateTime.Now:yyyy-MM-dd HH:mm:ss} - {message}";
+        
+        // Output to Debug console (visible in Output window when debugging)
+        Debug.WriteLine(logEntry);
+        
         lock (LogLock)
         {
             FlushLogEntryToDisk(_normalLogFile, logEntry);
@@ -232,6 +236,11 @@ internal static class LoggingUtility
     {
         var errorEntry = $"{DateTime.Now:yyyy-MM-dd HH:mm:ss} - Application Error - {ex.Message}";
         var stackEntry = $"{DateTime.Now:yyyy-MM-dd HH:mm:ss} - Stack Trace - {ex.StackTrace}";
+        
+        // Output to Debug console (visible in Output window when debugging)
+        Debug.WriteLine(errorEntry);
+        Debug.WriteLine(stackEntry);
+        
         lock (LogLock)
         {
             FlushLogEntryToDisk(_appErrorLogFile, errorEntry);
@@ -239,14 +248,14 @@ internal static class LoggingUtility
         }
     }
 
-    public static void LogDatabaseError(Exception ex, DatabaseErrorSeverity severity = DatabaseErrorSeverity.Error)
+    public static void LogDatabaseError(Exception ex, Enum_DatabaseEnum_ErrorSeverity severity = Enum_DatabaseEnum_ErrorSeverity.Error)
     {
         // Prevent recursive logging if database operation called from logging itself fails
         if (_isLoggingDatabaseError)
         {
             // Fallback to Debug output to avoid infinite recursion
             Debug.WriteLine($"[DEBUG] Database error during logging (recursion prevented): {ex.Message}");
-            
+
             // Try direct file logging as last resort
             try
             {
@@ -266,17 +275,22 @@ internal static class LoggingUtility
         try
         {
             _isLoggingDatabaseError = true;
-            
+
             var severityLabel = severity switch
             {
-                DatabaseErrorSeverity.Warning => "WARNING",
-                DatabaseErrorSeverity.Error => "ERROR",
-                DatabaseErrorSeverity.Critical => "CRITICAL",
+                Enum_DatabaseEnum_ErrorSeverity.Warning => "WARNING",
+                Enum_DatabaseEnum_ErrorSeverity.Error => "ERROR",
+                Enum_DatabaseEnum_ErrorSeverity.Critical => "CRITICAL",
                 _ => "ERROR"
             };
-            
+
             var errorEntry = $"{DateTime.Now:yyyy-MM-dd HH:mm:ss} - Database Error [{severityLabel}] - {ex.Message}";
             var stackEntry = $"{DateTime.Now:yyyy-MM-dd HH:mm:ss} - Stack Trace - {ex.StackTrace}";
+            
+            // Output to Debug console (visible in Output window when debugging)
+            Debug.WriteLine(errorEntry);
+            Debug.WriteLine(stackEntry);
+            
             lock (LogLock)
             {
                 FlushLogEntryToDisk(_dbErrorLogFile, errorEntry);
@@ -292,6 +306,10 @@ internal static class LoggingUtility
     public static void LogApplicationInfo(string message)
     {
         var infoEntry = $"{DateTime.Now:yyyy-MM-dd HH:mm:ss} - Application Info - {message}";
+        
+        // Output to Debug console (visible in Output window when debugging)
+        Debug.WriteLine(infoEntry);
+        
         lock (LogLock)
         {
             FlushLogEntryToDisk(_normalLogFile, infoEntry);

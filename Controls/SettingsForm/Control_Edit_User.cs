@@ -142,7 +142,14 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
 
         private async void Control_Edit_User_ComboBox_Users_SelectedIndexChanged(object? sender, EventArgs e)
         {
-            if (Control_Edit_User_ComboBox_Users.Text is { } userName)
+            // Extract username from DataRowView properly - don't use .Text with data-bound ComboBoxes
+            string? userName = null;
+            if (Control_Edit_User_ComboBox_Users.SelectedItem is DataRowView drv)
+            {
+                userName = drv["User"]?.ToString();
+            }
+            
+            if (!string.IsNullOrWhiteSpace(userName))
             {
                 var userResult = await Dao_User.GetUserByUsernameAsync(userName);
                 if (!userResult.IsSuccess || userResult.Data == null)
@@ -165,7 +172,8 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
                 Control_Edit_User_TextBox_VisualUserName.Text = userRow["VisualUserName"]?.ToString() ?? "";
                 Control_Edit_User_TextBox_VisualPassword.Text = userRow["VisualPassword"]?.ToString() ?? "";
                 
-                int userId = Convert.ToInt32(userRow["p_ID"]);
+                // Use correct column name 'ID' from usr_users table (not 'p_ID')
+                int userId = Convert.ToInt32(userRow["ID"]);
                 var roleResult = await Dao_User.GetUserRoleIdAsync(userId);
                 if (roleResult.IsSuccess)
                 {
@@ -173,6 +181,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
                     Control_Edit_User_RadioButton_NormalUser.Checked = roleId == 3;
                     Control_Edit_User_RadioButton_Administrator.Checked = roleId == 1;
                     Control_Edit_User_RadioButton_ReadOnly.Checked = roleId == 2;
+                    Control_Edit_User_RadioButton_Developer.Checked = roleId == 4;
                 }
             }
         }
@@ -217,7 +226,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
                     return;
                 }
 
-                // Update user with DaoResult pattern
+                // Update user with Model_Dao_Result pattern
                 var updateResult = await Dao_User.UpdateUserAsync(
                     userName,
                     Control_Edit_User_TextBox_FirstName.Text + " " + Control_Edit_User_TextBox_LastName.Text,
@@ -237,9 +246,9 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
 
                 // Get user ID and update role
                 var userResult = await Dao_User.GetUserByUsernameAsync(userName);
-                if (userResult.IsSuccess && userResult.Data != null && userResult.Data.Table.Columns.Contains("p_ID"))
+                if (userResult.IsSuccess && userResult.Data != null && userResult.Data.Table.Columns.Contains("ID"))
                 {
-                    int userId = Convert.ToInt32(userResult.Data["p_ID"]);
+                    int userId = Convert.ToInt32(userResult.Data["ID"]);
                     int newRoleId = 3;
                     if (Control_Edit_User_RadioButton_Administrator.Checked)
                     {
@@ -248,6 +257,10 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
                     else if (Control_Edit_User_RadioButton_ReadOnly.Checked)
                     {
                         newRoleId = 2;
+                    }
+                    else if (Control_Edit_User_RadioButton_Developer.Checked)
+                    {
+                        newRoleId = 4;
                     }
 
                     var roleResult = await Dao_User.SetUserRoleAsync(userId, newRoleId, Environment.UserName);

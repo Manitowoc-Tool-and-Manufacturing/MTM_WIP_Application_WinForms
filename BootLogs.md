@@ -3,831 +3,1432 @@ You may only use the Microsoft Visual Studio .NET/C/C++ Debugger (vsdbg) with
 Visual Studio Code, Visual Studio or Visual Studio for Mac software to help you
 develop and test your applications.
 ------------------------------------------------------------------------------
-MTM_WIP_Application_Winforms.exe (13592): Loaded 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.21\System.Private.CoreLib.dll'. Cannot find or open the PDB file.
-MTM_WIP_Application_Winforms.exe (13592): Loaded 'c:\Users\johnk\source\repos\MTM_WIP_Application_WinForms\bin\Debug\net8.0-windows\MTM_WIP_Application_Winforms.dll'. Symbols loaded.
-MTM_WIP_Application_Winforms.exe (13592): Loaded 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.21\System.Runtime.dll'. Cannot find or open the PDB file.
-MTM_WIP_Application_Winforms.exe (13592): Loaded 'c:\Users\johnk\source\repos\MTM_WIP_Application_WinForms\bin\Debug\net8.0-windows\MySql.Data.dll'. Cannot find or open the PDB file.
-MTM_WIP_Application_Winforms.exe (13592): Loaded 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.21\System.Data.Common.dll'. Cannot find or open the PDB file.
-MTM_WIP_Application_Winforms.exe (13592): Loaded 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.21\System.Collections.dll'. Cannot find or open the PDB file.
-MTM_WIP_Application_Winforms.exe (13592): Loaded 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.21\System.Threading.Thread.dll'. Cannot find or open the PDB file.
-MTM_WIP_Application_Winforms.exe (13592): Loaded 'C:\Program Files\dotnet\shared\Microsoft.WindowsDesktop.App\8.0.21\System.Windows.Forms.dll'. Cannot find or open the PDB file.
-MTM_WIP_Application_Winforms.exe (13592): Loaded 'C:\Program Files\dotnet\shared\Microsoft.WindowsDesktop.App\8.0.21\System.Windows.Forms.Primitives.dll'. Cannot find or open the PDB file.
-MTM_WIP_Application_Winforms.exe (13592): Loaded 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.21\System.Console.dll'. Cannot find or open the PDB file.
-MTM_WIP_Application_Winforms.exe (13592): Loaded 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.21\System.Diagnostics.TraceSource.dll'. Cannot find or open the PDB file.
-MTM_WIP_Application_Winforms.exe (13592): Loaded 'c:\Users\johnk\source\repos\MTM_WIP_Application_WinForms\bin\Debug\net8.0-windows\System.Text.Json.dll'. Symbols loaded.
-MTM_WIP_Application_Winforms.exe (13592): Loaded 'c:\Users\johnk\source\repos\MTM_WIP_Application_WinForms\bin\Debug\net8.0-windows\System.Text.Encodings.Web.dll'. Cannot find or open the PDB file.
-MTM_WIP_Application_Winforms.exe (13592): Loaded 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.21\System.Linq.dll'. Cannot find or open the PDB file.
-[12:13:09.609] [LOW   ] 🚀 DEBUG TRACER INITIALIZED
-MTM_WIP_Application_Winforms.exe (13592): Loaded 'c:\Users\johnk\source\repos\MTM_WIP_Application_WinForms\bin\Debug\net8.0-windows\DocumentFormat.OpenXml.dll'. Cannot find or open the PDB file.
-MTM_WIP_Application_Winforms.exe (13592): Loaded 'c:\Users\johnk\source\repos\MTM_WIP_Application_WinForms\bin\Debug\net8.0-windows\DocumentFormat.OpenXml.Framework.dll'. Cannot find or open the PDB file.
-MTM_WIP_Application_Winforms.exe (13592): Loaded 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.21\System.Threading.dll'. Cannot find or open the PDB file.
-MTM_WIP_Application_Winforms.exe (13592): Loaded 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.21\System.ComponentModel.TypeConverter.dll'. Cannot find or open the PDB file.
-MTM_WIP_Application_Winforms.exe (13592): Loaded 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.21\System.ComponentModel.Primitives.dll'. Cannot find or open the PDB file.
-MTM_WIP_Application_Winforms.exe (13592): Loaded 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.21\System.ComponentModel.dll'. Cannot find or open the PDB file.
-MTM_WIP_Application_Winforms.exe (13592): Loaded 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.21\System.Xml.ReaderWriter.dll'. Cannot find or open the PDB file.
-MTM_WIP_Application_Winforms.exe (13592): Loaded 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.21\System.Private.Xml.dll'. Cannot find or open the PDB file.
-MTM_WIP_Application_Winforms.exe (13592): Loaded 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.21\System.Drawing.Primitives.dll'. Cannot find or open the PDB file.
-[12:13:09.661] [LOW   ] 🖱️ UI ACTION: DEBUG_CONFIGURATION_INITIALIZED on Service_DebugConfiguration
-[12:13:09.663] [LOW   ] 🖱️ UI ACTION: DEBUG_MODE_SET on Service_DebugConfiguration
-[12:13:09.664] [LOW   ] 🖱️ UI ACTION: APPLICATION_STARTUP on Program
-MTM_WIP_Application_Winforms.exe (13592): Loaded 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.21\System.Collections.Specialized.dll'. Cannot find or open the PDB file.
-MTM_WIP_Application_Winforms.exe (13592): Loaded 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.21\System.Runtime.InteropServices.dll'. Cannot find or open the PDB file.
-MTM_WIP_Application_Winforms.exe (13592): Loaded 'C:\Program Files\dotnet\shared\Microsoft.WindowsDesktop.App\8.0.21\System.Drawing.Common.dll'. Cannot find or open the PDB file.
-MTM_WIP_Application_Winforms.exe (13592): Loaded 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.21\System.Security.Principal.Windows.dll'. Cannot find or open the PDB file.
-MTM_WIP_Application_Winforms.exe (13592): Loaded 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.21\System.Security.Claims.dll'. Cannot find or open the PDB file.
-MTM_WIP_Application_Winforms.exe (13592): Loaded 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.21\Microsoft.Win32.Primitives.dll'. Cannot find or open the PDB file.
-MTM_WIP_Application_Winforms.exe (13592): Loaded 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.21\System.Transactions.Local.dll'. Cannot find or open the PDB file.
-MTM_WIP_Application_Winforms.exe (13592): Loaded 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.21\System.Net.Sockets.dll'. Cannot find or open the PDB file.
-MTM_WIP_Application_Winforms.exe (13592): Loaded 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.21\System.Net.Primitives.dll'. Cannot find or open the PDB file.
-MTM_WIP_Application_Winforms.exe (13592): Loaded 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.21\System.Diagnostics.Tracing.dll'. Cannot find or open the PDB file.
-MTM_WIP_Application_Winforms.exe (13592): Loaded 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.21\System.Memory.dll'. Cannot find or open the PDB file.
-[12:13:09.720] [HIGH  ] ⏱️ PERFORMANCE START: SP_sys_theme_GetAll
-MTM_WIP_Application_Winforms.exe (13592): Loaded 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.21\System.Runtime.Intrinsics.dll'. Cannot find or open the PDB file.
-MTM_WIP_Application_Winforms.exe (13592): Loaded 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.21\System.Numerics.Vectors.dll'. Cannot find or open the PDB file.
-MTM_WIP_Application_Winforms.exe (13592): Loaded 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.21\System.Text.Encoding.Extensions.dll'. Cannot find or open the PDB file.
-MTM_WIP_Application_Winforms.exe (13592): Loaded 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.21\System.Collections.Concurrent.dll'. Cannot find or open the PDB file.
-MTM_WIP_Application_Winforms.exe (13592): Loaded 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.21\System.Private.Uri.dll'. Cannot find or open the PDB file.
-MTM_WIP_Application_Winforms.exe (13592): Loaded 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.21\System.Reflection.Emit.ILGeneration.dll'. Cannot find or open the PDB file.
-MTM_WIP_Application_Winforms.exe (13592): Loaded 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.21\System.Reflection.Emit.Lightweight.dll'. Cannot find or open the PDB file.
-MTM_WIP_Application_Winforms.exe (13592): Loaded 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.21\System.Reflection.Primitives.dll'. Cannot find or open the PDB file.
-MTM_WIP_Application_Winforms.exe (13592): Loaded 'c:\Users\johnk\source\repos\MTM_WIP_Application_WinForms\bin\Debug\net8.0-windows\System.IO.Pipelines.dll'. Cannot find or open the PDB file.
-MTM_WIP_Application_Winforms.exe (13592): Loaded 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.21\System.Collections.NonGeneric.dll'. Cannot find or open the PDB file.
-[12:13:09.786] [MEDIUM] ➡️ ENTERING Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync
-[12:13:09.787] [MEDIUM] 🗄️ DB PROCEDURE START: sys_theme_GetAll
-MTM_WIP_Application_Winforms.exe (13592): Loaded 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.21\System.Text.RegularExpressions.dll'. Cannot find or open the PDB file.
-MTM_WIP_Application_Winforms.exe (13592): Loaded 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.21\System.Diagnostics.DiagnosticSource.dll'. Cannot find or open the PDB file.
-MTM_WIP_Application_Winforms.exe (13592): Loaded 'C:\Program Files\dotnet\shared\Microsoft.WindowsDesktop.App\8.0.21\System.Security.Permissions.dll'. Cannot find or open the PDB file.
-MTM_WIP_Application_Winforms.exe (13592): Loaded 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.21\System.Runtime.Loader.dll'. Cannot find or open the PDB file.
-MTM_WIP_Application_Winforms.exe (13592): Loaded 'C:\Program Files\dotnet\shared\Microsoft.WindowsDesktop.App\8.0.21\System.Configuration.ConfigurationManager.dll'. Cannot find or open the PDB file.
-MTM_WIP_Application_Winforms.exe (13592): Loaded 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.21\System.Net.WebClient.dll'. Cannot find or open the PDB file.
-MTM_WIP_Application_Winforms.exe (13592): Loaded 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.21\System.Security.Cryptography.dll'. Cannot find or open the PDB file.
-MTM_WIP_Application_Winforms.exe (13592): Loaded 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.21\System.Net.NameResolution.dll'. Cannot find or open the PDB file.
-MTM_WIP_Application_Winforms.exe (13592): Loaded 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.21\System.Threading.ThreadPool.dll'. Cannot find or open the PDB file.
-MTM_WIP_Application_Winforms.exe (13592): Loaded 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.21\System.Threading.Overlapped.dll'. Cannot find or open the PDB file.
-Exception thrown: 'System.NullReferenceException' in MySql.Data.dll
-MTM_WIP_Application_Winforms.exe (13592): Loaded 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.21\System.Diagnostics.Process.dll'. Cannot find or open the PDB file.
-MTM_WIP_Application_Winforms.exe (13592): Loaded 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.21\System.Text.Encoding.CodePages.dll'. Cannot find or open the PDB file.
-MTM_WIP_Application_Winforms.exe (13592): Loaded 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.21\System.Runtime.Numerics.dll'. Cannot find or open the PDB file.
-[12:13:09.977] [HIGH  ] ✅ PROCEDURE sys_theme_GetAll (256ms) - Status: 1
-[12:13:09.989] [MEDIUM] ✅ DB PROCEDURE COMPLETE: sys_theme_GetAll (256ms) - 9 rows
-[12:13:09.991] [MEDIUM] ⬅️ EXITING Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync (204ms)
-[12:13:09.992] [HIGH  ] ⏱️ PERFORMANCE COMPLETE: SP_sys_theme_GetAll (271ms)
-[Startup] Parameter cache: 107 procedures cached in 18ms
-[12:13:10.018] [HIGH  ] ⏱️ PERFORMANCE START: SP_sys_GetUserAccessType
-[12:13:10.019] [MEDIUM] ➡️ ENTERING Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync
-[12:13:10.020] [MEDIUM] 🗄️ DB PROCEDURE START: sys_GetUserAccessType
+[20:21:43.099] [LOW   ] 🚀 DEBUG TRACER INITIALIZED
+2025-11-09 20:21:43 - [20:21:43.099] [LOW   ] 🚀 DEBUG TRACER INITIALIZED
+[20:21:43.134] [LOW   ] 🖱️ UI ACTION: DEBUG_CONFIGURATION_INITIALIZED on Service_DebugConfiguration
+2025-11-09 20:21:43 - [20:21:43.134] [LOW   ] 🖱️ UI ACTION: DEBUG_CONFIGURATION_INITIALIZED on Service_DebugConfiguration
+[20:21:43.136] [LOW   ] 🖱️ UI ACTION: DEBUG_MODE_SET on Service_DebugConfiguration
+2025-11-09 20:21:43 - [20:21:43.136] [LOW   ] 🖱️ UI ACTION: DEBUG_MODE_SET on Service_DebugConfiguration
+[20:21:43.138] [LOW   ] 🖱️ UI ACTION: APPLICATION_STARTUP on Program
+2025-11-09 20:21:43 - [20:21:43.138] [LOW   ] 🖱️ UI ACTION: APPLICATION_STARTUP on Program
+2025-11-09 20:21:43 - [Startup] Application initialization started
+2025-11-09 20:21:43 - [Startup] User identified: JOHNK
+2025-11-09 20:21:43 - [Dao_System] Checking database connectivity
+[20:21:43.173] [HIGH  ] ⏱️ PERFORMANCE START: SP_sys_theme_GetAll
+2025-11-09 20:21:43 - [20:21:43.173] [HIGH  ] ⏱️ PERFORMANCE START: SP_sys_theme_GetAll
+2025-11-09 20:21:43 - [20:21:43.173] [DATA  ] {
+  "Action": "PERFORMANCE_START",
+  "Operation": "SP_sys_theme_GetAll",
+  "Caller": "ExecuteDataTableWithStatusAsync",
+  "Key": "ExecuteDataTableWithStatusAsync:SP_sys_theme_GetAll:638983165031727587"
+}
+[20:21:43.247] [MEDIUM] ➡️ ENTERING Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync
+2025-11-09 20:21:43 - [20:21:43.247] [MEDIUM] ➡️ ENTERING Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync
+[20:21:43.249] [MEDIUM] 🗄️ DB PROCEDURE START: sys_theme_GetAll
+2025-11-09 20:21:43 - [20:21:43.249] [MEDIUM] 🗄️ DB PROCEDURE START: sys_theme_GetAll
+[20:21:43.438] [HIGH  ] ✅ PROCEDURE sys_theme_GetAll (265ms) - Status: 1
+2025-11-09 20:21:43 - [20:21:43.438] [HIGH  ] ✅ PROCEDURE sys_theme_GetAll (265ms) - Status: 1
+2025-11-09 20:21:43 - [20:21:43.438] [DATA  ] {
+  "Action": "STORED_PROCEDURE_EXECUTION",
+  "Procedure": "sys_theme_GetAll",
+  "Caller": "ExecuteDataTableWithStatusAsync",
+  "Status": 1,
+  "ElapsedMs": 265,
+  "Thread": 15,
+  "OutputParameters": {
+    "Status": "1",
+    "ErrorMsg": "Retrieved 9 theme(s)"
+  },
+  "ResultData": "DataTable[9 rows]",
+  "ErrorMessage": "Retrieved 9 theme(s)"
+}
+[20:21:43.453] [MEDIUM] ✅ DB PROCEDURE COMPLETE: sys_theme_GetAll (265ms) - 9 rows
+2025-11-09 20:21:43 - [20:21:43.453] [MEDIUM] ✅ DB PROCEDURE COMPLETE: sys_theme_GetAll (265ms) - 9 rows
+[20:21:43.455] [MEDIUM] ⬅️ EXITING Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync (207ms)
+2025-11-09 20:21:43 - [20:21:43.455] [MEDIUM] ⬅️ EXITING Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync (207ms)
+[20:21:43.457] [HIGH  ] ⏱️ PERFORMANCE COMPLETE: SP_sys_theme_GetAll (284ms)
+2025-11-09 20:21:43 - [20:21:43.457] [HIGH  ] ⏱️ PERFORMANCE COMPLETE: SP_sys_theme_GetAll (284ms)
+2025-11-09 20:21:43 - [20:21:43.457] [DATA  ] {
+  "Action": "PERFORMANCE_COMPLETE",
+  "Operation": "SP_sys_theme_GetAll",
+  "ElapsedMs": 284,
+  "Key": "ExecuteDataTableWithStatusAsync:SP_sys_theme_GetAll:638983165031727587",
+  "Status": "SUCCESS",
+  "RowCount": 9
+}
+2025-11-09 20:21:43 - [Dao_System] Database connectivity check passed
+2025-11-09 20:21:43 - [Startup] Database connectivity validated successfully
+2025-11-09 20:21:43 - [Startup] Initializing INFORMATION_SCHEMA parameter cache...
+2025-11-09 20:21:43 - [Startup] Querying INFORMATION_SCHEMA.PARAMETERS for stored procedure metadata
+2025-11-09 20:21:43 - [Startup] Parameter cache populated: 116 procedures, 519 total parameters
+2025-11-09 20:21:43 - [Startup] Parameter prefix cache initialized successfully in 14ms. Cached 116 stored procedures.
+[Startup] Parameter cache: 116 procedures cached in 14ms
+[20:21:43.484] [HIGH  ] ⏱️ PERFORMANCE START: SP_sys_GetUserAccessType
+2025-11-09 20:21:43 - [20:21:43.484] [HIGH  ] ⏱️ PERFORMANCE START: SP_sys_GetUserAccessType
+2025-11-09 20:21:43 - [20:21:43.484] [DATA  ] {
+  "Action": "PERFORMANCE_START",
+  "Operation": "SP_sys_GetUserAccessType",
+  "Caller": "ExecuteDataTableWithStatusAsync",
+  "Key": "ExecuteDataTableWithStatusAsync:SP_sys_GetUserAccessType:638983165034841936"
+}
+[20:21:43.486] [MEDIUM] ➡️ ENTERING Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync
+2025-11-09 20:21:43 - [20:21:43.486] [MEDIUM] ➡️ ENTERING Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync
+[20:21:43.488] [MEDIUM] 🗄️ DB PROCEDURE START: sys_GetUserAccessType
+2025-11-09 20:21:43 - [20:21:43.488] [MEDIUM] 🗄️ DB PROCEDURE START: sys_GetUserAccessType
 [Trace] [Main] Application starting...
 [Trace] [Main] Application starting...
-MTM_WIP_Application_Winforms.exe (13592): Loaded 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.21\System.ComponentModel.EventBasedAsync.dll'. Cannot find or open the PDB file.
-MTM_WIP_Application_Winforms.exe (13592): Loaded 'C:\Program Files\dotnet\shared\Microsoft.WindowsDesktop.App\8.0.21\Accessibility.dll'. Module was built without symbols.
-[12:13:10.044] [MEDIUM] ➡️ ENTERING SplashScreenForm.SplashScreenForm
+2025-11-09 20:21:43 - [Splash] Initializing splash screen
+2025-11-09 20:21:43 - [Service_ErrorReportSync] Startup sync completed: 0 reports submitted
+[20:21:43.509] [HIGH  ] ✅ PROCEDURE sys_GetUserAccessType (25ms) - Status: 1
+2025-11-09 20:21:43 - [20:21:43.509] [HIGH  ] ✅ PROCEDURE sys_GetUserAccessType (25ms) - Status: 1
+2025-11-09 20:21:43 - [20:21:43.509] [DATA  ] {
+  "Action": "STORED_PROCEDURE_EXECUTION",
+  "Procedure": "sys_GetUserAccessType",
+  "Caller": "ExecuteDataTableWithStatusAsync",
+  "Status": 1,
+  "ElapsedMs": 25,
+  "Thread": 8,
+  "OutputParameters": {
+    "Status": "1",
+    "ErrorMsg": "Retrieved 88 user access type(s)"
+  },
+  "ResultData": "DataTable[88 rows]",
+  "ErrorMessage": "Retrieved 88 user access type(s)"
+}
+[20:21:43.512] [MEDIUM] ✅ DB PROCEDURE COMPLETE: sys_GetUserAccessType (25ms) - 88 rows
+2025-11-09 20:21:43 - [20:21:43.512] [MEDIUM] ✅ DB PROCEDURE COMPLETE: sys_GetUserAccessType (25ms) - 88 rows
+[20:21:43.514] [MEDIUM] ⬅️ EXITING Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync (26ms)
+2025-11-09 20:21:43 - [20:21:43.514] [MEDIUM] ⬅️ EXITING Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync (26ms)
+[20:21:43.515] [HIGH  ] ⏱️ PERFORMANCE COMPLETE: SP_sys_GetUserAccessType (31ms)
+2025-11-09 20:21:43 - [20:21:43.515] [HIGH  ] ⏱️ PERFORMANCE COMPLETE: SP_sys_GetUserAccessType (31ms)
+2025-11-09 20:21:43 - [20:21:43.515] [DATA  ] {
+  "Action": "PERFORMANCE_COMPLETE",
+  "Operation": "SP_sys_GetUserAccessType",
+  "ElapsedMs": 31,
+  "Key": "ExecuteDataTableWithStatusAsync:SP_sys_GetUserAccessType:638983165034841936",
+  "Status": "SUCCESS",
+  "RowCount": 88
+}
+2025-11-09 20:21:43 - System_UserAccessType executed successfully for user: JOHNK
+[20:21:43.522] [MEDIUM] ➡️ ENTERING SplashScreenForm.SplashScreenForm
+2025-11-09 20:21:43 - [20:21:43.522] [MEDIUM] ➡️ ENTERING SplashScreenForm.SplashScreenForm
 [DEBUG] [SplashScreenForm.ctor] Constructing SplashScreenForm...
-[12:13:10.046] [LOW   ] 🖱️ UI ACTION: SPLASH_FORM_INITIALIZATION on SplashScreenForm
-MTM_WIP_Application_Winforms.exe (13592): Loaded 'C:\Program Files\dotnet\shared\Microsoft.WindowsDesktop.App\8.0.21\Microsoft.Win32.SystemEvents.dll'. Cannot find or open the PDB file.
-[12:13:10.058] [HIGH  ] ✅ PROCEDURE sys_GetUserAccessType (39ms) - Status: 1
-[12:13:10.058] [MEDIUM] ✅ DB PROCEDURE COMPLETE: sys_GetUserAccessType (39ms) - 89 rows
-[12:13:10.059] [MEDIUM] ⬅️ EXITING Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync (39ms)
-[12:13:10.060] [HIGH  ] ⏱️ PERFORMANCE COMPLETE: SP_sys_GetUserAccessType (41ms)
-MTM_WIP_Application_Winforms.exe (13592): Loaded 'C:\Program Files\dotnet\shared\Microsoft.WindowsDesktop.App\8.0.21\System.Resources.Extensions.dll'. Cannot find or open the PDB file.
-MTM_WIP_Application_Winforms.exe (13592): Loaded 'C:\Program Files\dotnet\shared\Microsoft.WindowsDesktop.App\8.0.21\System.Drawing.dll'. Cannot find or open the PDB file.
-[12:13:10.071] [LOW   ] 🖱️ UI ACTION: THEME_APPLICATION on SplashScreenForm
-MTM_WIP_Application_Winforms.exe (13592): Loaded 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.21\System.ObjectModel.dll'. Cannot find or open the PDB file.
+[20:21:43.525] [LOW   ] 🖱️ UI ACTION: SPLASH_FORM_INITIALIZATION on SplashScreenForm
+2025-11-09 20:21:43 - [20:21:43.525] [LOW   ] 🖱️ UI ACTION: SPLASH_FORM_INITIALIZATION on SplashScreenForm
+2025-11-09 20:21:43 - DPI scaling applied to user control 'Control_ProgressBarUserControl' and all its controls.
+2025-11-09 20:21:43 - Runtime layout adjustments applied to user control 'Control_ProgressBarUserControl'.
+[20:21:43.549] [LOW   ] 🖱️ UI ACTION: THEME_APPLICATION on SplashScreenForm
+2025-11-09 20:21:43 - [20:21:43.549] [LOW   ] 🖱️ UI ACTION: THEME_APPLICATION on SplashScreenForm
+2025-11-09 20:21:43 - DPI scaling applied to form 'SplashScreenForm' and all its controls.
+2025-11-09 20:21:43 - Runtime layout adjustments applied to form 'SplashScreenForm'.
 Exception thrown: 'System.Text.Json.JsonException' in System.Text.Json.dll
 Exception thrown: 'System.Text.Json.JsonException' in System.Text.Json.dll
-Exception thrown: 'System.Text.Json.JsonException' in System.Text.Json.dll
-Exception thrown: 'System.Text.Json.JsonException' in System.Text.Json.dll
-[12:13:10.117] [MEDIUM] 📊 BUSINESS LOGIC: UI_COLORS_APPLICATION
-[12:13:10.118] [LOW   ] 🖱️ UI ACTION: THEME_APPLIED on SplashScreenForm
+[20:21:43.583] [MEDIUM] 📊 BUSINESS LOGIC: UI_COLORS_APPLICATION
+2025-11-09 20:21:43 - [20:21:43.583] [MEDIUM] 📊 BUSINESS LOGIC: UI_COLORS_APPLICATION
+[20:21:43.585] [LOW   ] 🖱️ UI ACTION: THEME_APPLIED on SplashScreenForm
+2025-11-09 20:21:43 - [20:21:43.585] [LOW   ] 🖱️ UI ACTION: THEME_APPLIED on SplashScreenForm
 [DEBUG] [SplashScreenForm.ApplyTheme] Applying theme...
-[THEME]  (Label) - BackColor: FormBackColor = Color [A=255, R=30, G=30, B=30] | Theme: Default
-[THEME]  (Label) - ForeColor: FormForeColor = Color [A=255, R=255, G=255, B=255] | Theme: Default
-[THEME]  (Label) - BackColor: FormBackColor = Color [A=255, R=30, G=30, B=30] | Theme: Default
-[THEME]  (Label) - ForeColor: FormForeColor = Color [A=255, R=255, G=255, B=255] | Theme: Default
-[THEME] Control_ProgressBarUserControl (Control_ProgressBarUserControl) - BackColor: FormBackColor = Color [A=255, R=30, G=30, B=30] | Theme: Default
-[THEME] Control_ProgressBarUserControl (Control_ProgressBarUserControl) - ForeColor: FormForeColor = Color [A=255, R=255, G=255, B=255] | Theme: Default
-[THEME]  (PictureBox) - BackColor: FormBackColor = Color [A=255, R=30, G=30, B=30] | Theme: Default
-[THEME]  (PictureBox) - ForeColor: FormForeColor = Color [A=255, R=255, G=255, B=255] | Theme: Default
-[THEME]  (ProgressBar) - BackColor: FormBackColor = Color [A=255, R=30, G=30, B=30] | Theme: Default
-[THEME]  (ProgressBar) - ForeColor: FormForeColor = Color [A=255, R=255, G=255, B=255] | Theme: Default
-[THEME]  (Label) - BackColor: FormBackColor = Color [A=255, R=30, G=30, B=30] | Theme: Default
-[THEME]  (Label) - ForeColor: FormForeColor = Color [A=255, R=255, G=255, B=255] | Theme: Default
+2025-11-09 20:21:43 - DPI scaling applied to form 'SplashScreenForm' and all its controls.
+2025-11-09 20:21:43 - Runtime layout adjustments applied to form 'SplashScreenForm'.
+2025-11-09 20:21:43 - Global theme 'Default' with DPI scaling applied to form 'SplashScreenForm'.
 [DEBUG] [SplashScreenForm.ApplyTheme] Theme applied.
-[12:13:10.138] [LOW   ] 🖱️ UI ACTION: SPLASH_FORM_INITIALIZATION on SplashScreenForm
-[12:13:10.139] [MEDIUM] ⬅️ EXITING SplashScreenForm.SplashScreenForm (94ms)
+[20:21:43.598] [LOW   ] 🖱️ UI ACTION: SPLASH_FORM_INITIALIZATION on SplashScreenForm
+2025-11-09 20:21:43 - [20:21:43.598] [LOW   ] 🖱️ UI ACTION: SPLASH_FORM_INITIALIZATION on SplashScreenForm
+[20:21:43.600] [MEDIUM] ⬅️ EXITING SplashScreenForm.SplashScreenForm (77ms)
+2025-11-09 20:21:43 - [20:21:43.600] [MEDIUM] ⬅️ EXITING SplashScreenForm.SplashScreenForm (77ms)
 [DEBUG] [SplashScreenForm.ctor] SplashScreenForm constructed.
+2025-11-09 20:21:43 - [Splash] Starting startup sequence
 [DEBUG] [SplashScreenForm.UpdateProgress] Progress: 0, Status: Starting startup sequence...
 [DEBUG] [SplashScreenForm.UpdateProgress] Progress: 5, Status: Initializing logging...
 [DEBUG] Starting logging initialization...
 [DEBUG] Server: localhost, User: JOHNK
 [DEBUG] Log directory: C:\Users\johnk\OneDrive\Documents\Work Folder\WIP App Logs\JOHNK
-[DEBUG] Normal log file: C:\Users\johnk\OneDrive\Documents\Work Folder\WIP App Logs\JOHNK\JOHNK 10-26-2025 @ 12-13 PM_normal.log
+[DEBUG] Normal log file: C:\Users\johnk\OneDrive\Documents\Work Folder\WIP App Logs\JOHNK\JOHNK 11-09-2025 @ 8-21 PM_normal.log
+2025-11-09 20:21:43 - Initializing logging...
 [DEBUG] Logging initialization completed
 [DEBUG] [SplashScreenForm.UpdateProgress] Progress: 10, Status: Logging initialized.
+2025-11-09 20:21:43 - [Splash] Logging system initialized
 [DEBUG] [SplashScreenForm.UpdateProgress] Progress: 15, Status: Cleaning up old logs...
 [DEBUG] [SplashScreenForm.UpdateProgress] Progress: 20, Status: Old logs cleaned up.
+2025-11-09 20:21:43 - [Splash] Log cleanup completed
 [DEBUG] [SplashScreenForm.UpdateProgress] Progress: 25, Status: Wiping app data folders...
 [DEBUG] [SplashScreenForm.UpdateProgress] Progress: 30, Status: App data folders wiped.
+2025-11-09 20:21:43 - [Splash] App data cleanup completed
 [DEBUG] [SplashScreenForm.UpdateProgress] Progress: 35, Status: Verifying database connectivity...
+2025-11-09 20:21:43 - [Splash] Starting async database connectivity verification
+2025-11-09 20:21:43 - [Splash] Database connectivity verified. MySQL version: 5.7.24
 [DEBUG] [SplashScreenForm.UpdateProgress] Progress: 40, Status: Database connectivity verified.
+2025-11-09 20:21:43 - [Splash] Database connectivity verified during startup
 [DEBUG] [SplashScreenForm.UpdateProgress] Progress: 45, Status: Setting up Data Tables...
-[12:13:10.562] [HIGH  ] ⏱️ PERFORMANCE START: SP_md_part_ids_Get_All
-[12:13:10.563] [MEDIUM] ➡️ ENTERING Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync
-[12:13:10.564] [MEDIUM] 🗄️ DB PROCEDURE START: md_part_ids_Get_All
-[12:13:10.616] [HIGH  ] ✅ PROCEDURE md_part_ids_Get_All (54ms) - Status: 1
-[12:13:10.617] [MEDIUM] ✅ DB PROCEDURE COMPLETE: md_part_ids_Get_All (54ms) - 3746 rows
-[12:13:10.618] [MEDIUM] ⬅️ EXITING Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync (54ms)
-[12:13:10.619] [HIGH  ] ⏱️ PERFORMANCE COMPLETE: SP_md_part_ids_Get_All (56ms)
-[12:13:10.647] [HIGH  ] ⏱️ PERFORMANCE START: SP_md_operation_numbers_Get_All
-[12:13:10.649] [MEDIUM] ➡️ ENTERING Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync
-[12:13:10.650] [MEDIUM] 🗄️ DB PROCEDURE START: md_operation_numbers_Get_All
-[12:13:10.677] [HIGH  ] ✅ PROCEDURE md_operation_numbers_Get_All (29ms) - Status: 1
-[12:13:10.680] [MEDIUM] ✅ DB PROCEDURE COMPLETE: md_operation_numbers_Get_All (29ms) - 72 rows
-[12:13:10.681] [MEDIUM] ⬅️ EXITING Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync (31ms)
-[12:13:10.682] [HIGH  ] ⏱️ PERFORMANCE COMPLETE: SP_md_operation_numbers_Get_All (34ms)
-[12:13:10.685] [HIGH  ] ⏱️ PERFORMANCE START: SP_md_locations_Get_All
-[12:13:10.686] [MEDIUM] ➡️ ENTERING Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync
-[12:13:10.687] [MEDIUM] 🗄️ DB PROCEDURE START: md_locations_Get_All
-[12:13:10.768] [HIGH  ] ✅ PROCEDURE md_locations_Get_All (82ms) - Status: 1
-[12:13:10.771] [MEDIUM] ✅ DB PROCEDURE COMPLETE: md_locations_Get_All (82ms) - 10371 rows
-[12:13:10.772] [MEDIUM] ⬅️ EXITING Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync (85ms)
-[12:13:10.773] [HIGH  ] ⏱️ PERFORMANCE COMPLETE: SP_md_locations_Get_All (88ms)
-[12:13:10.786] [HIGH  ] ⏱️ PERFORMANCE START: SP_usr_users_Get_All
-[12:13:10.787] [MEDIUM] ➡️ ENTERING Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync
-[12:13:10.788] [MEDIUM] 🗄️ DB PROCEDURE START: usr_users_Get_All
-[12:13:10.819] [HIGH  ] ✅ PROCEDURE usr_users_Get_All (33ms) - Status: 1
-[12:13:10.820] [MEDIUM] ✅ DB PROCEDURE COMPLETE: usr_users_Get_All (33ms) - 88 rows
-[12:13:10.822] [MEDIUM] ⬅️ EXITING Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync (34ms)
-[12:13:10.823] [HIGH  ] ⏱️ PERFORMANCE COMPLETE: SP_usr_users_Get_All (37ms)
-[12:13:10.827] [HIGH  ] ⏱️ PERFORMANCE START: SP_md_item_types_Get_All
-[12:13:10.828] [MEDIUM] ➡️ ENTERING Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync
-[12:13:10.829] [MEDIUM] 🗄️ DB PROCEDURE START: md_item_types_Get_All
-[12:13:10.859] [HIGH  ] ✅ PROCEDURE md_item_types_Get_All (32ms) - Status: 1
-[12:13:10.860] [MEDIUM] ✅ DB PROCEDURE COMPLETE: md_item_types_Get_All (32ms) - 4 rows
-[12:13:10.861] [MEDIUM] ⬅️ EXITING Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync (33ms)
-[12:13:10.863] [HIGH  ] ⏱️ PERFORMANCE COMPLETE: SP_md_item_types_Get_All (35ms)
+[20:21:44.032] [HIGH  ] ⏱️ PERFORMANCE START: SP_md_part_ids_Get_All
+2025-11-09 20:21:44 - [20:21:44.032] [HIGH  ] ⏱️ PERFORMANCE START: SP_md_part_ids_Get_All
+2025-11-09 20:21:44 - [20:21:44.032] [DATA  ] {
+  "Action": "PERFORMANCE_START",
+  "Operation": "SP_md_part_ids_Get_All",
+  "Caller": "ExecuteDataTableWithStatusAsync",
+  "Key": "ExecuteDataTableWithStatusAsync:SP_md_part_ids_Get_All:638983165040320719"
+}
+[20:21:44.035] [MEDIUM] ➡️ ENTERING Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync
+2025-11-09 20:21:44 - [20:21:44.035] [MEDIUM] ➡️ ENTERING Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync
+[20:21:44.037] [MEDIUM] 🗄️ DB PROCEDURE START: md_part_ids_Get_All
+2025-11-09 20:21:44 - [20:21:44.037] [MEDIUM] 🗄️ DB PROCEDURE START: md_part_ids_Get_All
+[20:21:44.081] [HIGH  ] ✅ PROCEDURE md_part_ids_Get_All (49ms) - Status: 1
+2025-11-09 20:21:44 - [20:21:44.081] [HIGH  ] ✅ PROCEDURE md_part_ids_Get_All (49ms) - Status: 1
+2025-11-09 20:21:44 - [20:21:44.081] [DATA  ] {
+  "Action": "STORED_PROCEDURE_EXECUTION",
+  "Procedure": "md_part_ids_Get_All",
+  "Caller": "ExecuteDataTableWithStatusAsync",
+  "Status": 1,
+  "ElapsedMs": 49,
+  "Thread": 1,
+  "OutputParameters": {
+    "Status": "1",
+    "ErrorMsg": "Retrieved 3745 part(s)"
+  },
+  "ResultData": "DataTable[3745 rows]",
+  "ErrorMessage": "Retrieved 3745 part(s)"
+}
+[20:21:44.084] [MEDIUM] ✅ DB PROCEDURE COMPLETE: md_part_ids_Get_All (49ms) - 3745 rows
+2025-11-09 20:21:44 - [20:21:44.084] [MEDIUM] ✅ DB PROCEDURE COMPLETE: md_part_ids_Get_All (49ms) - 3745 rows
+[20:21:44.086] [MEDIUM] ⬅️ EXITING Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync (51ms)
+2025-11-09 20:21:44 - [20:21:44.086] [MEDIUM] ⬅️ EXITING Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync (51ms)
+[20:21:44.088] [HIGH  ] ⏱️ PERFORMANCE COMPLETE: SP_md_part_ids_Get_All (56ms)
+2025-11-09 20:21:44 - [20:21:44.088] [HIGH  ] ⏱️ PERFORMANCE COMPLETE: SP_md_part_ids_Get_All (56ms)
+2025-11-09 20:21:44 - [20:21:44.088] [DATA  ] {
+  "Action": "PERFORMANCE_COMPLETE",
+  "Operation": "SP_md_part_ids_Get_All",
+  "ElapsedMs": 56,
+  "Key": "ExecuteDataTableWithStatusAsync:SP_md_part_ids_Get_All:638983165040320719",
+  "Status": "SUCCESS",
+  "RowCount": 3745
+}
+2025-11-09 20:21:44 - [DataTable] ComboBoxPart: Schema mismatch detected
+2025-11-09 20:21:44 - [DataTable] ComboBoxPart: Source schema: ID(Int32), PartID(String), Customer(String), Description(String), IssuedBy(String), ItemType(String), Operations(String)
+2025-11-09 20:21:44 - [DataTable] ComboBoxPart: Target schema:
+2025-11-09 20:21:44 - [DataTable] ComboBoxPart: Replacing target table with source copy instead of merging
+[20:21:44.119] [HIGH  ] ⏱️ PERFORMANCE START: SP_md_operation_numbers_Get_All
+2025-11-09 20:21:44 - [20:21:44.119] [HIGH  ] ⏱️ PERFORMANCE START: SP_md_operation_numbers_Get_All
+2025-11-09 20:21:44 - [20:21:44.119] [DATA  ] {
+  "Action": "PERFORMANCE_START",
+  "Operation": "SP_md_operation_numbers_Get_All",
+  "Caller": "ExecuteDataTableWithStatusAsync",
+  "Key": "ExecuteDataTableWithStatusAsync:SP_md_operation_numbers_Get_All:638983165041196315"
+}
+[20:21:44.122] [MEDIUM] ➡️ ENTERING Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync
+2025-11-09 20:21:44 - [20:21:44.122] [MEDIUM] ➡️ ENTERING Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync
+[20:21:44.124] [MEDIUM] 🗄️ DB PROCEDURE START: md_operation_numbers_Get_All
+2025-11-09 20:21:44 - [20:21:44.124] [MEDIUM] 🗄️ DB PROCEDURE START: md_operation_numbers_Get_All
+[20:21:44.143] [HIGH  ] ✅ PROCEDURE md_operation_numbers_Get_All (24ms) - Status: 1
+2025-11-09 20:21:44 - [20:21:44.143] [HIGH  ] ✅ PROCEDURE md_operation_numbers_Get_All (24ms) - Status: 1
+2025-11-09 20:21:44 - [20:21:44.143] [DATA  ] {
+  "Action": "STORED_PROCEDURE_EXECUTION",
+  "Procedure": "md_operation_numbers_Get_All",
+  "Caller": "ExecuteDataTableWithStatusAsync",
+  "Status": 1,
+  "ElapsedMs": 24,
+  "Thread": 1,
+  "OutputParameters": {
+    "Status": "1",
+    "ErrorMsg": "Retrieved 72 operation(s)"
+  },
+  "ResultData": "DataTable[72 rows]",
+  "ErrorMessage": "Retrieved 72 operation(s)"
+}
+[20:21:44.148] [MEDIUM] ✅ DB PROCEDURE COMPLETE: md_operation_numbers_Get_All (24ms) - 72 rows
+2025-11-09 20:21:44 - [20:21:44.148] [MEDIUM] ✅ DB PROCEDURE COMPLETE: md_operation_numbers_Get_All (24ms) - 72 rows
+[20:21:44.150] [MEDIUM] ⬅️ EXITING Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync (27ms)
+2025-11-09 20:21:44 - [20:21:44.150] [MEDIUM] ⬅️ EXITING Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync (27ms)
+[20:21:44.152] [HIGH  ] ⏱️ PERFORMANCE COMPLETE: SP_md_operation_numbers_Get_All (32ms)
+2025-11-09 20:21:44 - [20:21:44.152] [HIGH  ] ⏱️ PERFORMANCE COMPLETE: SP_md_operation_numbers_Get_All (32ms)
+2025-11-09 20:21:44 - [20:21:44.152] [DATA  ] {
+  "Action": "PERFORMANCE_COMPLETE",
+  "Operation": "SP_md_operation_numbers_Get_All",
+  "ElapsedMs": 32,
+  "Key": "ExecuteDataTableWithStatusAsync:SP_md_operation_numbers_Get_All:638983165041196315",
+  "Status": "SUCCESS",
+  "RowCount": 72
+}
+2025-11-09 20:21:44 - [DataTable] ComboBoxOperation: Schema mismatch detected
+2025-11-09 20:21:44 - [DataTable] ComboBoxOperation: Source schema: ID(Int32), Operation(String), IssuedBy(String)
+2025-11-09 20:21:44 - [DataTable] ComboBoxOperation: Target schema:
+2025-11-09 20:21:44 - [DataTable] ComboBoxOperation: Replacing target table with source copy instead of merging
+[20:21:44.161] [HIGH  ] ⏱️ PERFORMANCE START: SP_md_locations_Get_All
+2025-11-09 20:21:44 - [20:21:44.161] [HIGH  ] ⏱️ PERFORMANCE START: SP_md_locations_Get_All
+2025-11-09 20:21:44 - [20:21:44.161] [DATA  ] {
+  "Action": "PERFORMANCE_START",
+  "Operation": "SP_md_locations_Get_All",
+  "Caller": "ExecuteDataTableWithStatusAsync",
+  "Key": "ExecuteDataTableWithStatusAsync:SP_md_locations_Get_All:638983165041610225"
+}
+[20:21:44.163] [MEDIUM] ➡️ ENTERING Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync
+2025-11-09 20:21:44 - [20:21:44.163] [MEDIUM] ➡️ ENTERING Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync
+[20:21:44.165] [MEDIUM] 🗄️ DB PROCEDURE START: md_locations_Get_All
+2025-11-09 20:21:44 - [20:21:44.165] [MEDIUM] 🗄️ DB PROCEDURE START: md_locations_Get_All
+[20:21:44.232] [HIGH  ] ✅ PROCEDURE md_locations_Get_All (71ms) - Status: 1
+2025-11-09 20:21:44 - [20:21:44.232] [HIGH  ] ✅ PROCEDURE md_locations_Get_All (71ms) - Status: 1
+2025-11-09 20:21:44 - [20:21:44.232] [DATA  ] {
+  "Action": "STORED_PROCEDURE_EXECUTION",
+  "Procedure": "md_locations_Get_All",
+  "Caller": "ExecuteDataTableWithStatusAsync",
+  "Status": 1,
+  "ElapsedMs": 71,
+  "Thread": 1,
+  "OutputParameters": {
+    "Status": "1",
+    "ErrorMsg": "Retrieved 10371 location(s)"
+  },
+  "ResultData": "DataTable[10371 rows]",
+  "ErrorMessage": "Retrieved 10371 location(s)"
+}
+[20:21:44.237] [MEDIUM] ✅ DB PROCEDURE COMPLETE: md_locations_Get_All (71ms) - 10371 rows
+2025-11-09 20:21:44 - [20:21:44.237] [MEDIUM] ✅ DB PROCEDURE COMPLETE: md_locations_Get_All (71ms) - 10371 rows
+[20:21:44.239] [MEDIUM] ⬅️ EXITING Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync (75ms)
+2025-11-09 20:21:44 - [20:21:44.239] [MEDIUM] ⬅️ EXITING Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync (75ms)
+[20:21:44.241] [HIGH  ] ⏱️ PERFORMANCE COMPLETE: SP_md_locations_Get_All (80ms)
+2025-11-09 20:21:44 - [20:21:44.241] [HIGH  ] ⏱️ PERFORMANCE COMPLETE: SP_md_locations_Get_All (80ms)
+2025-11-09 20:21:44 - [20:21:44.241] [DATA  ] {
+  "Action": "PERFORMANCE_COMPLETE",
+  "Operation": "SP_md_locations_Get_All",
+  "ElapsedMs": 80,
+  "Key": "ExecuteDataTableWithStatusAsync:SP_md_locations_Get_All:638983165041610225",
+  "Status": "SUCCESS",
+  "RowCount": 10371
+}
+2025-11-09 20:21:44 - [DataTable] ComboBoxLocation: Schema mismatch detected
+2025-11-09 20:21:44 - [DataTable] ComboBoxLocation: Source schema: ID(Int32), Location(String), Building(String), IssuedBy(String)
+2025-11-09 20:21:44 - [DataTable] ComboBoxLocation: Target schema:
+2025-11-09 20:21:44 - [DataTable] ComboBoxLocation: Replacing target table with source copy instead of merging
+[20:21:44.263] [HIGH  ] ⏱️ PERFORMANCE START: SP_usr_users_Get_All
+2025-11-09 20:21:44 - [20:21:44.263] [HIGH  ] ⏱️ PERFORMANCE START: SP_usr_users_Get_All
+2025-11-09 20:21:44 - [20:21:44.263] [DATA  ] {
+  "Action": "PERFORMANCE_START",
+  "Operation": "SP_usr_users_Get_All",
+  "Caller": "ExecuteDataTableWithStatusAsync",
+  "Key": "ExecuteDataTableWithStatusAsync:SP_usr_users_Get_All:638983165042634008"
+}
+[20:21:44.266] [MEDIUM] ➡️ ENTERING Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync
+2025-11-09 20:21:44 - [20:21:44.266] [MEDIUM] ➡️ ENTERING Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync
+[20:21:44.270] [MEDIUM] 🗄️ DB PROCEDURE START: usr_users_Get_All
+2025-11-09 20:21:44 - [20:21:44.270] [MEDIUM] 🗄️ DB PROCEDURE START: usr_users_Get_All
+[20:21:44.289] [HIGH  ] ✅ PROCEDURE usr_users_Get_All (26ms) - Status: 1
+2025-11-09 20:21:44 - [20:21:44.289] [HIGH  ] ✅ PROCEDURE usr_users_Get_All (26ms) - Status: 1
+2025-11-09 20:21:44 - [20:21:44.289] [DATA  ] {
+  "Action": "STORED_PROCEDURE_EXECUTION",
+  "Procedure": "usr_users_Get_All",
+  "Caller": "ExecuteDataTableWithStatusAsync",
+  "Status": 1,
+  "ElapsedMs": 26,
+  "Thread": 1,
+  "OutputParameters": {
+    "Status": "1",
+    "ErrorMsg": "Retrieved 88 user(s)"
+  },
+  "ResultData": "DataTable[88 rows]",
+  "ErrorMessage": "Retrieved 88 user(s)"
+}
+[20:21:44.292] [MEDIUM] ✅ DB PROCEDURE COMPLETE: usr_users_Get_All (26ms) - 88 rows
+2025-11-09 20:21:44 - [20:21:44.292] [MEDIUM] ✅ DB PROCEDURE COMPLETE: usr_users_Get_All (26ms) - 88 rows
+[20:21:44.295] [MEDIUM] ⬅️ EXITING Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync (28ms)
+2025-11-09 20:21:44 - [20:21:44.295] [MEDIUM] ⬅️ EXITING Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync (28ms)
+[20:21:44.297] [HIGH  ] ⏱️ PERFORMANCE COMPLETE: SP_usr_users_Get_All (34ms)
+2025-11-09 20:21:44 - [20:21:44.297] [HIGH  ] ⏱️ PERFORMANCE COMPLETE: SP_usr_users_Get_All (34ms)
+2025-11-09 20:21:44 - [20:21:44.297] [DATA  ] {
+  "Action": "PERFORMANCE_COMPLETE",
+  "Operation": "SP_usr_users_Get_All",
+  "ElapsedMs": 34,
+  "Key": "ExecuteDataTableWithStatusAsync:SP_usr_users_Get_All:638983165042634008",
+  "Status": "SUCCESS",
+  "RowCount": 88
+}
+2025-11-09 20:21:44 - [DataTable] ComboBoxUser: Schema mismatch detected
+2025-11-09 20:21:44 - [DataTable] ComboBoxUser: Source schema: ID(Int32), User(String), Full Name(String), Shift(String), VitsUser(Boolean), Pin(String), LastShownVersion(String), HideChangeLog(String), Theme_Name(String), Theme_FontSize(Int32), VisualUserName(String), VisualPassword(String), WipServerAddress(String), WIPDatabase(String), WipServerPort(String)
+2025-11-09 20:21:44 - [DataTable] ComboBoxUser: Target schema:
+2025-11-09 20:21:44 - [DataTable] ComboBoxUser: Replacing target table with source copy instead of merging
+[20:21:44.307] [HIGH  ] ⏱️ PERFORMANCE START: SP_md_item_types_Get_All
+2025-11-09 20:21:44 - [20:21:44.307] [HIGH  ] ⏱️ PERFORMANCE START: SP_md_item_types_Get_All
+2025-11-09 20:21:44 - [20:21:44.307] [DATA  ] {
+  "Action": "PERFORMANCE_START",
+  "Operation": "SP_md_item_types_Get_All",
+  "Caller": "ExecuteDataTableWithStatusAsync",
+  "Key": "ExecuteDataTableWithStatusAsync:SP_md_item_types_Get_All:638983165043077928"
+}
+[20:21:44.311] [MEDIUM] ➡️ ENTERING Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync
+2025-11-09 20:21:44 - [20:21:44.311] [MEDIUM] ➡️ ENTERING Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync
+[20:21:44.312] [MEDIUM] 🗄️ DB PROCEDURE START: md_item_types_Get_All
+2025-11-09 20:21:44 - [20:21:44.312] [MEDIUM] 🗄️ DB PROCEDURE START: md_item_types_Get_All
+[20:21:44.332] [HIGH  ] ✅ PROCEDURE md_item_types_Get_All (24ms) - Status: 1
+2025-11-09 20:21:44 - [20:21:44.332] [HIGH  ] ✅ PROCEDURE md_item_types_Get_All (24ms) - Status: 1
+2025-11-09 20:21:44 - [20:21:44.332] [DATA  ] {
+  "Action": "STORED_PROCEDURE_EXECUTION",
+  "Procedure": "md_item_types_Get_All",
+  "Caller": "ExecuteDataTableWithStatusAsync",
+  "Status": 1,
+  "ElapsedMs": 24,
+  "Thread": 1,
+  "OutputParameters": {
+    "Status": "1",
+    "ErrorMsg": "Retrieved 4 item type(s)"
+  },
+  "ResultData": "DataTable[4 rows]",
+  "ErrorMessage": "Retrieved 4 item type(s)"
+}
+[20:21:44.334] [MEDIUM] ✅ DB PROCEDURE COMPLETE: md_item_types_Get_All (24ms) - 4 rows
+2025-11-09 20:21:44 - [20:21:44.334] [MEDIUM] ✅ DB PROCEDURE COMPLETE: md_item_types_Get_All (24ms) - 4 rows
+[20:21:44.336] [MEDIUM] ⬅️ EXITING Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync (25ms)
+2025-11-09 20:21:44 - [20:21:44.336] [MEDIUM] ⬅️ EXITING Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync (25ms)
+[20:21:44.339] [HIGH  ] ⏱️ PERFORMANCE COMPLETE: SP_md_item_types_Get_All (31ms)
+2025-11-09 20:21:44 - [20:21:44.339] [HIGH  ] ⏱️ PERFORMANCE COMPLETE: SP_md_item_types_Get_All (31ms)
+2025-11-09 20:21:44 - [20:21:44.339] [DATA  ] {
+  "Action": "PERFORMANCE_COMPLETE",
+  "Operation": "SP_md_item_types_Get_All",
+  "ElapsedMs": 31,
+  "Key": "ExecuteDataTableWithStatusAsync:SP_md_item_types_Get_All:638983165043077928",
+  "Status": "SUCCESS",
+  "RowCount": 4
+}
+2025-11-09 20:21:44 - [DataTable] ComboBoxItemType: Schema mismatch detected
+2025-11-09 20:21:44 - [DataTable] ComboBoxItemType: Source schema: ID(Int32), ItemType(String), IssuedBy(String)
+2025-11-09 20:21:44 - [DataTable] ComboBoxItemType: Target schema:
+2025-11-09 20:21:44 - [DataTable] ComboBoxItemType: Replacing target table with source copy instead of merging
 [DEBUG] [SplashScreenForm.UpdateProgress] Progress: 50, Status: Data Tables set up.
+2025-11-09 20:21:44 - [Splash] Data tables setup completed
 [DEBUG] [SplashScreenForm.UpdateProgress] Progress: 60, Status: Initializing version checker...
 VersionTimer initialized and started.
+2025-11-09 20:21:44 - VersionTimer initialized and started successfully.
 Running VersionChecker...
-[12:13:10.922] [HIGH  ] ⏱️ PERFORMANCE START: SP_log_changelog_Get_Current
-[12:13:10.923] [MEDIUM] ➡️ ENTERING Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync
-[12:13:10.924] [MEDIUM] 🗄️ DB PROCEDURE START: log_changelog_Get_Current
+2025-11-09 20:21:44 - Running VersionChecker - checking database version information.
+[20:21:44.410] [HIGH  ] ⏱️ PERFORMANCE START: SP_log_changelog_Get_Current
+2025-11-09 20:21:44 - [20:21:44.410] [HIGH  ] ⏱️ PERFORMANCE START: SP_log_changelog_Get_Current
+2025-11-09 20:21:44 - [20:21:44.410] [DATA  ] {
+  "Action": "PERFORMANCE_START",
+  "Operation": "SP_log_changelog_Get_Current",
+  "Caller": "ExecuteDataTableWithStatusAsync",
+  "Key": "ExecuteDataTableWithStatusAsync:SP_log_changelog_Get_Current:638983165044107882"
+}
+[20:21:44.414] [MEDIUM] ➡️ ENTERING Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync
+2025-11-09 20:21:44 - [20:21:44.414] [MEDIUM] ➡️ ENTERING Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync
+[20:21:44.416] [MEDIUM] 🗄️ DB PROCEDURE START: log_changelog_Get_Current
+2025-11-09 20:21:44 - [20:21:44.416] [MEDIUM] 🗄️ DB PROCEDURE START: log_changelog_Get_Current
 [DEBUG] [SplashScreenForm.UpdateProgress] Progress: 65, Status: Version checker initialized.
-[12:13:10.948] [HIGH  ] ✅ PROCEDURE log_changelog_Get_Current (26ms) - Status: 1
-[12:13:10.949] [MEDIUM] ✅ DB PROCEDURE COMPLETE: log_changelog_Get_Current (26ms) - 1 rows
-[12:13:10.950] [MEDIUM] ⬅️ EXITING Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync (26ms)
-[12:13:10.951] [HIGH  ] ⏱️ PERFORMANCE COMPLETE: SP_log_changelog_Get_Current (29ms)
-Database version retrieved: 5.2.0.0
-Version labels updated - App: 5.2.0.0, DB: 5.2.0.0
+2025-11-09 20:21:44 - [Splash] Version checker initialized
+[20:21:44.434] [HIGH  ] ✅ PROCEDURE log_changelog_Get_Current (23ms) - Status: 1
+2025-11-09 20:21:44 - [20:21:44.434] [HIGH  ] ✅ PROCEDURE log_changelog_Get_Current (23ms) - Status: 1
+2025-11-09 20:21:44 - [20:21:44.434] [DATA  ] {
+  "Action": "STORED_PROCEDURE_EXECUTION",
+  "Procedure": "log_changelog_Get_Current",
+  "Caller": "ExecuteDataTableWithStatusAsync",
+  "Status": 1,
+  "ElapsedMs": 23,
+  "Thread": 1,
+  "OutputParameters": {
+    "Status": "1",
+    "ErrorMsg": "Retrieved current changelog version"
+  },
+  "ResultData": "DataTable[1 rows]",
+  "ErrorMessage": "Retrieved current changelog version"
+}
+[20:21:44.437] [MEDIUM] ✅ DB PROCEDURE COMPLETE: log_changelog_Get_Current (23ms) - 1 rows
+2025-11-09 20:21:44 - [20:21:44.437] [MEDIUM] ✅ DB PROCEDURE COMPLETE: log_changelog_Get_Current (23ms) - 1 rows
+[20:21:44.439] [MEDIUM] ⬅️ EXITING Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync (25ms)
+2025-11-09 20:21:44 - [20:21:44.439] [MEDIUM] ⬅️ EXITING Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync (25ms)
+[20:21:44.441] [HIGH  ] ⏱️ PERFORMANCE COMPLETE: SP_log_changelog_Get_Current (30ms)
+2025-11-09 20:21:44 - [20:21:44.441] [HIGH  ] ⏱️ PERFORMANCE COMPLETE: SP_log_changelog_Get_Current (30ms)
+2025-11-09 20:21:44 - [20:21:44.441] [DATA  ] {
+  "Action": "PERFORMANCE_COMPLETE",
+  "Operation": "SP_log_changelog_Get_Current",
+  "ElapsedMs": 30,
+  "Key": "ExecuteDataTableWithStatusAsync:SP_log_changelog_Get_Current:638983165044107882",
+  "Status": "SUCCESS",
+  "RowCount": 1
+}
+Database version retrieved: 6.0.0.0
+2025-11-09 20:21:44 - Version check successful - Database version: 6.0.0.0
+Version labels updated - App: 6.0.1.0, DB: 6.0.0.0
 [DEBUG] [SplashScreenForm.UpdateProgress] Progress: 70, Status: Initializing theme system...
-[12:13:10.985] [HIGH  ] ⏱️ PERFORMANCE START: SP_sys_theme_GetAll
-[12:13:10.986] [MEDIUM] ➡️ ENTERING Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync
-[12:13:10.987] [MEDIUM] 🗄️ DB PROCEDURE START: sys_theme_GetAll
-[12:13:10.994] [HIGH  ] ✅ PROCEDURE sys_theme_GetAll (8ms) - Status: 1
-[12:13:10.995] [MEDIUM] ✅ DB PROCEDURE COMPLETE: sys_theme_GetAll (8ms) - 9 rows
-[12:13:10.996] [MEDIUM] ⬅️ EXITING Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync (9ms)
-[12:13:10.997] [HIGH  ] ⏱️ PERFORMANCE COMPLETE: SP_sys_theme_GetAll (11ms)
-[12:13:11.029] [MEDIUM] ➡️ ENTERING Dao_User.GetThemeNameAsync
-[12:13:11.031] [MEDIUM] ➡️ ENTERING Dao_User.GetSettingsJsonInternalAsync
-[12:13:11.032] [HIGH  ] ⏱️ PERFORMANCE START: SP_usr_ui_settings_Get
-[12:13:11.033] [MEDIUM] ➡️ ENTERING Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync
-[12:13:11.034] [MEDIUM] 🗄️ DB PROCEDURE START: usr_ui_settings_Get
-[12:13:11.064] [HIGH  ] ✅ PROCEDURE usr_ui_settings_Get (32ms) - Status: 1
-[12:13:11.066] [MEDIUM] ✅ DB PROCEDURE COMPLETE: usr_ui_settings_Get (32ms) - 1 rows
-[12:13:11.068] [MEDIUM] ⬅️ EXITING Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync (34ms)
-[12:13:11.069] [HIGH  ] ⏱️ PERFORMANCE COMPLETE: SP_usr_ui_settings_Get (37ms)
-[12:13:11.077] [MEDIUM] ⬅️ EXITING Dao_User.GetSettingsJsonInternalAsync (46ms)
-[12:13:11.078] [MEDIUM] ⬅️ EXITING Dao_User.GetThemeNameAsync (49ms)
+2025-11-09 20:21:44 - Attempting to load themes from database using Dao_System.GetAllThemesAsync...
+[20:21:44.485] [HIGH  ] ⏱️ PERFORMANCE START: SP_sys_theme_GetAll
+2025-11-09 20:21:44 - [20:21:44.485] [HIGH  ] ⏱️ PERFORMANCE START: SP_sys_theme_GetAll
+2025-11-09 20:21:44 - [20:21:44.485] [DATA  ] {
+  "Action": "PERFORMANCE_START",
+  "Operation": "SP_sys_theme_GetAll",
+  "Caller": "ExecuteDataTableWithStatusAsync",
+  "Key": "ExecuteDataTableWithStatusAsync:SP_sys_theme_GetAll:638983165044854464"
+}
+[20:21:44.488] [MEDIUM] ➡️ ENTERING Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync
+2025-11-09 20:21:44 - [20:21:44.488] [MEDIUM] ➡️ ENTERING Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync
+[20:21:44.490] [MEDIUM] 🗄️ DB PROCEDURE START: sys_theme_GetAll
+2025-11-09 20:21:44 - [20:21:44.490] [MEDIUM] 🗄️ DB PROCEDURE START: sys_theme_GetAll
+[20:21:44.497] [HIGH  ] ✅ PROCEDURE sys_theme_GetAll (11ms) - Status: 1
+2025-11-09 20:21:44 - [20:21:44.497] [HIGH  ] ✅ PROCEDURE sys_theme_GetAll (11ms) - Status: 1
+2025-11-09 20:21:44 - [20:21:44.497] [DATA  ] {
+  "Action": "STORED_PROCEDURE_EXECUTION",
+  "Procedure": "sys_theme_GetAll",
+  "Caller": "ExecuteDataTableWithStatusAsync",
+  "Status": 1,
+  "ElapsedMs": 11,
+  "Thread": 1,
+  "OutputParameters": {
+    "Status": "1",
+    "ErrorMsg": "Retrieved 9 theme(s)"
+  },
+  "ResultData": "DataTable[9 rows]",
+  "ErrorMessage": "Retrieved 9 theme(s)"
+}
+[20:21:44.499] [MEDIUM] ✅ DB PROCEDURE COMPLETE: sys_theme_GetAll (11ms) - 9 rows
+2025-11-09 20:21:44 - [20:21:44.499] [MEDIUM] ✅ DB PROCEDURE COMPLETE: sys_theme_GetAll (11ms) - 9 rows
+[20:21:44.502] [MEDIUM] ⬅️ EXITING Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync (13ms)
+2025-11-09 20:21:44 - [20:21:44.502] [MEDIUM] ⬅️ EXITING Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync (13ms)
+[20:21:44.503] [HIGH  ] ⏱️ PERFORMANCE COMPLETE: SP_sys_theme_GetAll (18ms)
+2025-11-09 20:21:44 - [20:21:44.503] [HIGH  ] ⏱️ PERFORMANCE COMPLETE: SP_sys_theme_GetAll (18ms)
+2025-11-09 20:21:44 - [20:21:44.503] [DATA  ] {
+  "Action": "PERFORMANCE_COMPLETE",
+  "Operation": "SP_sys_theme_GetAll",
+  "ElapsedMs": 18,
+  "Key": "ExecuteDataTableWithStatusAsync:SP_sys_theme_GetAll:638983165044854464",
+  "Status": "SUCCESS",
+  "RowCount": 9
+}
+2025-11-09 20:21:44 - [Dao_System] Retrieved 9 themes using stored procedure
+2025-11-09 20:21:44 - Successfully loaded 9 themes from database
+2025-11-09 20:21:44 - ✓ Successfully loaded theme 'Arctic' from database
+2025-11-09 20:21:44 - ✓ Successfully loaded theme 'Default' from database
+2025-11-09 20:21:44 - ✓ Successfully loaded theme 'Fire Storm' from database
+2025-11-09 20:21:44 - ✓ Successfully loaded theme 'Forest' from database
+2025-11-09 20:21:44 - ✓ Successfully loaded theme 'Lavender' from database
+2025-11-09 20:21:44 - ✓ Successfully loaded theme 'Midnight' from database
+2025-11-09 20:21:44 - ✓ Successfully loaded theme 'Ocean' from database
+2025-11-09 20:21:44 - ✓ Successfully loaded theme 'Sunset' from database
+2025-11-09 20:21:44 - ✓ Successfully loaded theme 'Urban Bloom' from database
+2025-11-09 20:21:44 - Final theme collection contains: Arctic, Default, Fire Storm, Forest, Lavender, Midnight, Ocean, Sunset, Urban Bloom
+2025-11-09 20:21:44 - Theme system initialized with 9 themes available: Arctic, Default, Fire Storm, Forest, Lavender, Midnight, Ocean, Sunset, Urban Bloom
+[20:21:44.548] [MEDIUM] ➡️ ENTERING Dao_User.GetThemeNameAsync
+2025-11-09 20:21:44 - [20:21:44.548] [MEDIUM] ➡️ ENTERING Dao_User.GetThemeNameAsync
+[20:21:44.550] [MEDIUM] ➡️ ENTERING Dao_User.GetSettingsJsonInternalAsync
+2025-11-09 20:21:44 - [20:21:44.550] [MEDIUM] ➡️ ENTERING Dao_User.GetSettingsJsonInternalAsync
+[20:21:44.552] [HIGH  ] ⏱️ PERFORMANCE START: SP_usr_ui_settings_Get
+2025-11-09 20:21:44 - [20:21:44.552] [HIGH  ] ⏱️ PERFORMANCE START: SP_usr_ui_settings_Get
+2025-11-09 20:21:44 - [20:21:44.552] [DATA  ] {
+  "Action": "PERFORMANCE_START",
+  "Operation": "SP_usr_ui_settings_Get",
+  "Caller": "ExecuteDataTableWithStatusAsync",
+  "Key": "ExecuteDataTableWithStatusAsync:SP_usr_ui_settings_Get:638983165045528124"
+}
+[20:21:44.555] [MEDIUM] ➡️ ENTERING Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync
+2025-11-09 20:21:44 - [20:21:44.555] [MEDIUM] ➡️ ENTERING Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync
+[20:21:44.557] [MEDIUM] 🗄️ DB PROCEDURE START: usr_ui_settings_Get
+2025-11-09 20:21:44 - [20:21:44.557] [MEDIUM] 🗄️ DB PROCEDURE START: usr_ui_settings_Get
+[20:21:44.576] [HIGH  ] ✅ PROCEDURE usr_ui_settings_Get (23ms) - Status: 1
+2025-11-09 20:21:44 - [20:21:44.576] [HIGH  ] ✅ PROCEDURE usr_ui_settings_Get (23ms) - Status: 1
+2025-11-09 20:21:44 - [20:21:44.576] [DATA  ] {
+  "Action": "STORED_PROCEDURE_EXECUTION",
+  "Procedure": "usr_ui_settings_Get",
+  "Caller": "ExecuteDataTableWithStatusAsync",
+  "Status": 1,
+  "ElapsedMs": 23,
+  "Thread": 1,
+  "InputParameters": {
+    "p_UserId": "JOHNK"
+  },
+  "OutputParameters": {
+    "Status": "1",
+    "ErrorMsg": "Retrieved settings for user \"JOHNK\""
+  },
+  "ResultData": "DataTable[1 rows]",
+  "ErrorMessage": "Retrieved settings for user \"JOHNK\""
+}
+[20:21:44.579] [MEDIUM] ✅ DB PROCEDURE COMPLETE: usr_ui_settings_Get (23ms) - 1 rows
+2025-11-09 20:21:44 - [20:21:44.579] [MEDIUM] ✅ DB PROCEDURE COMPLETE: usr_ui_settings_Get (23ms) - 1 rows
+[20:21:44.582] [MEDIUM] ⬅️ EXITING Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync (26ms)
+2025-11-09 20:21:44 - [20:21:44.582] [MEDIUM] ⬅️ EXITING Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync (26ms)
+[20:21:44.583] [HIGH  ] ⏱️ PERFORMANCE COMPLETE: SP_usr_ui_settings_Get (31ms)
+2025-11-09 20:21:44 - [20:21:44.583] [HIGH  ] ⏱️ PERFORMANCE COMPLETE: SP_usr_ui_settings_Get (31ms)
+2025-11-09 20:21:44 - [20:21:44.583] [DATA  ] {
+  "Action": "PERFORMANCE_COMPLETE",
+  "Operation": "SP_usr_ui_settings_Get",
+  "ElapsedMs": 31,
+  "Key": "ExecuteDataTableWithStatusAsync:SP_usr_ui_settings_Get:638983165045528124",
+  "Status": "SUCCESS",
+  "RowCount": 1
+}
+[20:21:44.593] [MEDIUM] ⬅️ EXITING Dao_User.GetSettingsJsonInternalAsync (42ms)
+2025-11-09 20:21:44 - [20:21:44.593] [MEDIUM] ⬅️ EXITING Dao_User.GetSettingsJsonInternalAsync (42ms)
+[20:21:44.596] [MEDIUM] ⬅️ EXITING Dao_User.GetThemeNameAsync (47ms)
+2025-11-09 20:21:44 - [20:21:44.596] [MEDIUM] ⬅️ EXITING Dao_User.GetThemeNameAsync (47ms)
+2025-11-09 20:21:44 - Loaded theme preference for user JOHNK: Forest
+2025-11-09 20:21:44 - Set Model_Application_Variables.ThemeName to: Forest
+2025-11-09 20:21:44 - Theme system initialized for user JOHNK. Final theme: Forest, Available themes: Arctic, Default, Fire Storm, Forest, Lavender, Midnight, Ocean, Sunset, Urban Bloom, Font size: 9
 [DEBUG] [SplashScreenForm.UpdateProgress] Progress: 75, Status: Theme system initialized.
+2025-11-09 20:21:44 - [Splash] Theme system initialized
 [DEBUG] [SplashScreenForm.UpdateProgress] Progress: 80, Status: User Full Name loaded: JOHNK
+2025-11-09 20:21:44 - [Splash] User context loaded: JOHNK
 [DEBUG] [SplashScreenForm.UpdateProgress] Progress: 85, Status: Loading theme settings...
-[12:13:11.205] [MEDIUM] ➡️ ENTERING Dao_User.GetThemeFontSizeAsync
-[12:13:11.206] [MEDIUM] ➡️ ENTERING Dao_User.GetSettingsJsonInternalAsync
-[12:13:11.207] [HIGH  ] ⏱️ PERFORMANCE START: SP_usr_ui_settings_Get
-[12:13:11.209] [MEDIUM] ➡️ ENTERING Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync
-[12:13:11.210] [MEDIUM] 🗄️ DB PROCEDURE START: usr_ui_settings_Get
-[12:13:11.213] [HIGH  ] ✅ PROCEDURE usr_ui_settings_Get (5ms) - Status: 1
-[12:13:11.214] [MEDIUM] ✅ DB PROCEDURE COMPLETE: usr_ui_settings_Get (5ms) - 1 rows
-[12:13:11.215] [MEDIUM] ⬅️ EXITING Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync (6ms)
-[12:13:11.217] [HIGH  ] ⏱️ PERFORMANCE COMPLETE: SP_usr_ui_settings_Get (9ms)
-[12:13:11.219] [MEDIUM] ⬅️ EXITING Dao_User.GetSettingsJsonInternalAsync (12ms)
-[12:13:11.220] [MEDIUM] ⬅️ EXITING Dao_User.GetThemeFontSizeAsync (14ms)
-[12:13:11.222] [MEDIUM] ➡️ ENTERING Dao_User.GetThemeNameAsync
-[12:13:11.223] [MEDIUM] ➡️ ENTERING Dao_User.GetSettingsJsonInternalAsync
-[12:13:11.224] [HIGH  ] ⏱️ PERFORMANCE START: SP_usr_ui_settings_Get
-[12:13:11.225] [MEDIUM] ➡️ ENTERING Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync
-[12:13:11.227] [MEDIUM] 🗄️ DB PROCEDURE START: usr_ui_settings_Get
-[12:13:11.230] [HIGH  ] ✅ PROCEDURE usr_ui_settings_Get (5ms) - Status: 1
-[12:13:11.231] [MEDIUM] ✅ DB PROCEDURE COMPLETE: usr_ui_settings_Get (5ms) - 1 rows
-[12:13:11.232] [MEDIUM] ⬅️ EXITING Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync (6ms)
-[12:13:11.233] [HIGH  ] ⏱️ PERFORMANCE COMPLETE: SP_usr_ui_settings_Get (8ms)
-[12:13:11.235] [MEDIUM] ⬅️ EXITING Dao_User.GetSettingsJsonInternalAsync (11ms)
-[12:13:11.236] [MEDIUM] ⬅️ EXITING Dao_User.GetThemeNameAsync (14ms)
+2025-11-09 20:21:44 - [Splash] Loading theme settings
+[20:21:44.738] [MEDIUM] ➡️ ENTERING Dao_User.GetThemeEnabledAsync
+2025-11-09 20:21:44 - [20:21:44.738] [MEDIUM] ➡️ ENTERING Dao_User.GetThemeEnabledAsync
+[20:21:44.740] [MEDIUM] ➡️ ENTERING Dao_User.GetSettingsJsonInternalAsync
+2025-11-09 20:21:44 - [20:21:44.740] [MEDIUM] ➡️ ENTERING Dao_User.GetSettingsJsonInternalAsync
+[20:21:44.742] [HIGH  ] ⏱️ PERFORMANCE START: SP_usr_ui_settings_Get
+2025-11-09 20:21:44 - [20:21:44.742] [HIGH  ] ⏱️ PERFORMANCE START: SP_usr_ui_settings_Get
+2025-11-09 20:21:44 - [20:21:44.742] [DATA  ] {
+  "Action": "PERFORMANCE_START",
+  "Operation": "SP_usr_ui_settings_Get",
+  "Caller": "ExecuteDataTableWithStatusAsync",
+  "Key": "ExecuteDataTableWithStatusAsync:SP_usr_ui_settings_Get:638983165047421655"
+}
+[20:21:44.745] [MEDIUM] ➡️ ENTERING Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync
+2025-11-09 20:21:44 - [20:21:44.745] [MEDIUM] ➡️ ENTERING Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync
+[20:21:44.747] [MEDIUM] 🗄️ DB PROCEDURE START: usr_ui_settings_Get
+2025-11-09 20:21:44 - [20:21:44.747] [MEDIUM] 🗄️ DB PROCEDURE START: usr_ui_settings_Get
+[20:21:44.752] [HIGH  ] ✅ PROCEDURE usr_ui_settings_Get (10ms) - Status: 1
+2025-11-09 20:21:44 - [20:21:44.752] [HIGH  ] ✅ PROCEDURE usr_ui_settings_Get (10ms) - Status: 1
+2025-11-09 20:21:44 - [20:21:44.752] [DATA  ] {
+  "Action": "STORED_PROCEDURE_EXECUTION",
+  "Procedure": "usr_ui_settings_Get",
+  "Caller": "ExecuteDataTableWithStatusAsync",
+  "Status": 1,
+  "ElapsedMs": 10,
+  "Thread": 1,
+  "InputParameters": {
+    "p_UserId": "JOHNK"
+  },
+  "OutputParameters": {
+    "Status": "1",
+    "ErrorMsg": "Retrieved settings for user \"JOHNK\""
+  },
+  "ResultData": "DataTable[1 rows]",
+  "ErrorMessage": "Retrieved settings for user \"JOHNK\""
+}
+[20:21:44.755] [MEDIUM] ✅ DB PROCEDURE COMPLETE: usr_ui_settings_Get (10ms) - 1 rows
+2025-11-09 20:21:44 - [20:21:44.755] [MEDIUM] ✅ DB PROCEDURE COMPLETE: usr_ui_settings_Get (10ms) - 1 rows
+[20:21:44.757] [MEDIUM] ⬅️ EXITING Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync (11ms)
+2025-11-09 20:21:44 - [20:21:44.757] [MEDIUM] ⬅️ EXITING Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync (11ms)
+[20:21:44.759] [HIGH  ] ⏱️ PERFORMANCE COMPLETE: SP_usr_ui_settings_Get (17ms)
+2025-11-09 20:21:44 - [20:21:44.759] [HIGH  ] ⏱️ PERFORMANCE COMPLETE: SP_usr_ui_settings_Get (17ms)
+2025-11-09 20:21:44 - [20:21:44.759] [DATA  ] {
+  "Action": "PERFORMANCE_COMPLETE",
+  "Operation": "SP_usr_ui_settings_Get",
+  "ElapsedMs": 17,
+  "Key": "ExecuteDataTableWithStatusAsync:SP_usr_ui_settings_Get:638983165047421655",
+  "Status": "SUCCESS",
+  "RowCount": 1
+}
+[20:21:44.762] [MEDIUM] ⬅️ EXITING Dao_User.GetSettingsJsonInternalAsync (22ms)
+2025-11-09 20:21:44 - [20:21:44.762] [MEDIUM] ⬅️ EXITING Dao_User.GetSettingsJsonInternalAsync (22ms)
+[20:21:44.765] [MEDIUM] ⬅️ EXITING Dao_User.GetThemeEnabledAsync (26ms)
+2025-11-09 20:21:44 - [20:21:44.765] [MEDIUM] ⬅️ EXITING Dao_User.GetThemeEnabledAsync (26ms)
+[20:21:44.767] [MEDIUM] ➡️ ENTERING Dao_User.GetThemeFontSizeAsync
+2025-11-09 20:21:44 - [20:21:44.767] [MEDIUM] ➡️ ENTERING Dao_User.GetThemeFontSizeAsync
+[20:21:44.769] [MEDIUM] ➡️ ENTERING Dao_User.GetSettingsJsonInternalAsync
+2025-11-09 20:21:44 - [20:21:44.769] [MEDIUM] ➡️ ENTERING Dao_User.GetSettingsJsonInternalAsync
+[20:21:44.771] [HIGH  ] ⏱️ PERFORMANCE START: SP_usr_ui_settings_Get
+2025-11-09 20:21:44 - [20:21:44.771] [HIGH  ] ⏱️ PERFORMANCE START: SP_usr_ui_settings_Get
+2025-11-09 20:21:44 - [20:21:44.771] [DATA  ] {
+  "Action": "PERFORMANCE_START",
+  "Operation": "SP_usr_ui_settings_Get",
+  "Caller": "ExecuteDataTableWithStatusAsync",
+  "Key": "ExecuteDataTableWithStatusAsync:SP_usr_ui_settings_Get:638983165047716379"
+}
+[20:21:44.774] [MEDIUM] ➡️ ENTERING Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync
+2025-11-09 20:21:44 - [20:21:44.774] [MEDIUM] ➡️ ENTERING Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync
+[20:21:44.776] [MEDIUM] 🗄️ DB PROCEDURE START: usr_ui_settings_Get
+2025-11-09 20:21:44 - [20:21:44.776] [MEDIUM] 🗄️ DB PROCEDURE START: usr_ui_settings_Get
+[20:21:44.781] [HIGH  ] ✅ PROCEDURE usr_ui_settings_Get (9ms) - Status: 1
+2025-11-09 20:21:44 - [20:21:44.781] [HIGH  ] ✅ PROCEDURE usr_ui_settings_Get (9ms) - Status: 1
+2025-11-09 20:21:44 - [20:21:44.781] [DATA  ] {
+  "Action": "STORED_PROCEDURE_EXECUTION",
+  "Procedure": "usr_ui_settings_Get",
+  "Caller": "ExecuteDataTableWithStatusAsync",
+  "Status": 1,
+  "ElapsedMs": 9,
+  "Thread": 1,
+  "InputParameters": {
+    "p_UserId": "JOHNK"
+  },
+  "OutputParameters": {
+    "Status": "1",
+    "ErrorMsg": "Retrieved settings for user \"JOHNK\""
+  },
+  "ResultData": "DataTable[1 rows]",
+  "ErrorMessage": "Retrieved settings for user \"JOHNK\""
+}
+[20:21:44.783] [MEDIUM] ✅ DB PROCEDURE COMPLETE: usr_ui_settings_Get (9ms) - 1 rows
+2025-11-09 20:21:44 - [20:21:44.783] [MEDIUM] ✅ DB PROCEDURE COMPLETE: usr_ui_settings_Get (9ms) - 1 rows
+[20:21:44.786] [MEDIUM] ⬅️ EXITING Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync (11ms)
+2025-11-09 20:21:44 - [20:21:44.786] [MEDIUM] ⬅️ EXITING Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync (11ms)
+[20:21:44.788] [HIGH  ] ⏱️ PERFORMANCE COMPLETE: SP_usr_ui_settings_Get (16ms)
+2025-11-09 20:21:44 - [20:21:44.788] [HIGH  ] ⏱️ PERFORMANCE COMPLETE: SP_usr_ui_settings_Get (16ms)
+2025-11-09 20:21:44 - [20:21:44.788] [DATA  ] {
+  "Action": "PERFORMANCE_COMPLETE",
+  "Operation": "SP_usr_ui_settings_Get",
+  "ElapsedMs": 16,
+  "Key": "ExecuteDataTableWithStatusAsync:SP_usr_ui_settings_Get:638983165047716379",
+  "Status": "SUCCESS",
+  "RowCount": 1
+}
+[20:21:44.792] [MEDIUM] ⬅️ EXITING Dao_User.GetSettingsJsonInternalAsync (22ms)
+2025-11-09 20:21:44 - [20:21:44.792] [MEDIUM] ⬅️ EXITING Dao_User.GetSettingsJsonInternalAsync (22ms)
+[20:21:44.794] [MEDIUM] ⬅️ EXITING Dao_User.GetThemeFontSizeAsync (26ms)
+2025-11-09 20:21:44 - [20:21:44.794] [MEDIUM] ⬅️ EXITING Dao_User.GetThemeFontSizeAsync (26ms)
+[20:21:44.797] [MEDIUM] ➡️ ENTERING Dao_User.GetThemeNameAsync
+2025-11-09 20:21:44 - [20:21:44.797] [MEDIUM] ➡️ ENTERING Dao_User.GetThemeNameAsync
+[20:21:44.799] [MEDIUM] ➡️ ENTERING Dao_User.GetSettingsJsonInternalAsync
+2025-11-09 20:21:44 - [20:21:44.799] [MEDIUM] ➡️ ENTERING Dao_User.GetSettingsJsonInternalAsync
+[20:21:44.800] [HIGH  ] ⏱️ PERFORMANCE START: SP_usr_ui_settings_Get
+2025-11-09 20:21:44 - [20:21:44.800] [HIGH  ] ⏱️ PERFORMANCE START: SP_usr_ui_settings_Get
+2025-11-09 20:21:44 - [20:21:44.800] [DATA  ] {
+  "Action": "PERFORMANCE_START",
+  "Operation": "SP_usr_ui_settings_Get",
+  "Caller": "ExecuteDataTableWithStatusAsync",
+  "Key": "ExecuteDataTableWithStatusAsync:SP_usr_ui_settings_Get:638983165048007765"
+}
+[20:21:44.803] [MEDIUM] ➡️ ENTERING Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync
+2025-11-09 20:21:44 - [20:21:44.803] [MEDIUM] ➡️ ENTERING Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync
+[20:21:44.806] [MEDIUM] 🗄️ DB PROCEDURE START: usr_ui_settings_Get
+2025-11-09 20:21:44 - [20:21:44.806] [MEDIUM] 🗄️ DB PROCEDURE START: usr_ui_settings_Get
+[20:21:44.810] [HIGH  ] ✅ PROCEDURE usr_ui_settings_Get (9ms) - Status: 1
+2025-11-09 20:21:44 - [20:21:44.810] [HIGH  ] ✅ PROCEDURE usr_ui_settings_Get (9ms) - Status: 1
+2025-11-09 20:21:44 - [20:21:44.810] [DATA  ] {
+  "Action": "STORED_PROCEDURE_EXECUTION",
+  "Procedure": "usr_ui_settings_Get",
+  "Caller": "ExecuteDataTableWithStatusAsync",
+  "Status": 1,
+  "ElapsedMs": 9,
+  "Thread": 1,
+  "InputParameters": {
+    "p_UserId": "JOHNK"
+  },
+  "OutputParameters": {
+    "Status": "1",
+    "ErrorMsg": "Retrieved settings for user \"JOHNK\""
+  },
+  "ResultData": "DataTable[1 rows]",
+  "ErrorMessage": "Retrieved settings for user \"JOHNK\""
+}
+[20:21:44.813] [MEDIUM] ✅ DB PROCEDURE COMPLETE: usr_ui_settings_Get (9ms) - 1 rows
+2025-11-09 20:21:44 - [20:21:44.813] [MEDIUM] ✅ DB PROCEDURE COMPLETE: usr_ui_settings_Get (9ms) - 1 rows
+[20:21:44.815] [MEDIUM] ⬅️ EXITING Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync (11ms)
+2025-11-09 20:21:44 - [20:21:44.815] [MEDIUM] ⬅️ EXITING Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync (11ms)
+[20:21:44.817] [HIGH  ] ⏱️ PERFORMANCE COMPLETE: SP_usr_ui_settings_Get (16ms)
+2025-11-09 20:21:44 - [20:21:44.817] [HIGH  ] ⏱️ PERFORMANCE COMPLETE: SP_usr_ui_settings_Get (16ms)
+2025-11-09 20:21:44 - [20:21:44.817] [DATA  ] {
+  "Action": "PERFORMANCE_COMPLETE",
+  "Operation": "SP_usr_ui_settings_Get",
+  "ElapsedMs": 16,
+  "Key": "ExecuteDataTableWithStatusAsync:SP_usr_ui_settings_Get:638983165048007765",
+  "Status": "SUCCESS",
+  "RowCount": 1
+}
+[20:21:44.820] [MEDIUM] ⬅️ EXITING Dao_User.GetSettingsJsonInternalAsync (21ms)
+2025-11-09 20:21:44 - [20:21:44.820] [MEDIUM] ⬅️ EXITING Dao_User.GetSettingsJsonInternalAsync (21ms)
+[20:21:44.822] [MEDIUM] ⬅️ EXITING Dao_User.GetThemeNameAsync (25ms)
+2025-11-09 20:21:44 - [20:21:44.822] [MEDIUM] ⬅️ EXITING Dao_User.GetThemeNameAsync (25ms)
+2025-11-09 20:21:44 - [Splash] Theme settings loaded - Theme Enabled: True, Font size: 9
 [DEBUG] [SplashScreenForm.UpdateProgress] Progress: 90, Status: Theme settings loaded.
+2025-11-09 20:21:44 - [Splash] Theme settings loaded
 [DEBUG] [SplashScreenForm.UpdateProgress] Progress: 93, Status: Startup sequence completed.
+2025-11-09 20:21:44 - [Splash] Core startup sequence completed
 [DEBUG] [SplashScreenForm.UpdateProgress] Progress: 95, Status: Creating main form...
-[12:13:11.608] [MEDIUM] ➡️ ENTERING MainForm.MainForm
+[20:21:45.203] [MEDIUM] ➡️ ENTERING MainForm.MainForm
+2025-11-09 20:21:45 - [20:21:45.203] [MEDIUM] ➡️ ENTERING MainForm.MainForm
 [DEBUG] [MainForm.ctor] Constructing MainForm...
-[12:13:11.610] [LOW   ] 🖱️ UI ACTION: FORM_INITIALIZATION on MainForm
-[12:13:11.635] [MEDIUM] ➡️ ENTERING Control_InventoryTab.Control_InventoryTab
-[12:13:11.636] [LOW   ] 🖱️ UI ACTION: INVENTORY_TAB_INITIALIZATION on Control_InventoryTab
-MTM_WIP_Application_Winforms.exe (13592): Loaded 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.21\System.Diagnostics.FileVersionInfo.dll'. Cannot find or open the PDB file.
-[12:13:11.647] [LOW   ] 🖱️ UI ACTION: THEME_APPLICATION on Control_InventoryTab
-[12:13:11.659] [LOW   ] 🖱️ UI ACTION: TOOLTIPS_SETUP on Control_InventoryTab
-[12:13:11.661] [LOW   ] 🖱️ UI ACTION: VERSION_TIMER_SETUP on Control_InventoryTab
-[12:13:11.662] [LOW   ] 🖱️ UI ACTION: DATA_LOADING_START on Control_InventoryTab
-[12:13:11.664] [MEDIUM] ➡️ ENTERING Control_InventoryTab_OnStartup_LoadDataComboBoxesAsync.Control_InventoryTab
-[12:13:11.674] [LOW   ] 🖱️ UI ACTION: EVENTS_WIREUP on Control_InventoryTab
-[12:13:11.675] [LOW   ] 🖱️ UI ACTION: VERSION_LABEL_SET on Control_InventoryTab
-[12:13:11.677] [LOW   ] 🖱️ UI ACTION: UI_STYLING_APPLIED on Control_InventoryTab
-[12:13:11.680] [LOW   ] 🖱️ UI ACTION: PRIVILEGES_APPLIED on Control_InventoryTab
-[12:13:11.681] [LOW   ] 🖱️ UI ACTION: INVENTORY_TAB_INITIALIZATION on Control_InventoryTab
-[12:13:11.682] [MEDIUM] ⬅️ EXITING Control_InventoryTab.Control_InventoryTab (47ms)
-[12:13:11.684] [MEDIUM] ➡️ ENTERING Control_AdvancedInventory.Control_AdvancedInventory
-[12:13:11.685] [LOW   ] 🖱️ UI ACTION: ADVANCED_INVENTORY_INITIALIZATION on Control_AdvancedInventory
-[12:13:11.695] [LOW   ] 🖱️ UI ACTION: THEME_APPLICATION on Control_AdvancedInventory
-[12:13:11.719] [LOW   ] 🖱️ UI ACTION: TOOLTIPS_SETUP on Control_AdvancedInventory
-[12:13:11.721] [MEDIUM] ➡️ ENTERING Control_RemoveTab.Control_RemoveTab
-[12:13:11.722] [LOW   ] 🖱️ UI ACTION: REMOVE_TAB_INITIALIZATION on Control_RemoveTab
-[12:13:11.731] [LOW   ] 🖱️ UI ACTION: THEME_APPLICATION on Control_RemoveTab
-[12:13:11.744] [LOW   ] 🖱️ UI ACTION: CONTROL_INITIALIZATION on Control_RemoveTab
-[12:13:11.745] [LOW   ] 🖱️ UI ACTION: COMBOBOX_PROPERTIES_APPLIED on Control_RemoveTab
-[12:13:11.746] [LOW   ] 🖱️ UI ACTION: DATA_LOADING_START on Control_RemoveTab
-[12:13:11.754] [LOW   ] 🖱️ UI ACTION: EVENT_HANDLERS_SETUP on Control_RemoveTab
-[12:13:11.755] [LOW   ] 🖱️ UI ACTION: TOOLTIPS_SETUP on Control_RemoveTab
-[12:13:11.756] [LOW   ] 🖱️ UI ACTION: PRIVILEGES_APPLIED on Control_RemoveTab
-[12:13:11.757] [LOW   ] 🖱️ UI ACTION: REMOVE_TAB_INITIALIZATION on Control_RemoveTab
-[12:13:11.758] [MEDIUM] ⬅️ EXITING Control_RemoveTab.Control_RemoveTab (36ms)
-[12:13:11.760] [MEDIUM] ➡️ ENTERING Control_AdvancedRemove.Control_AdvancedRemove
-[12:13:11.761] [LOW   ] 🖱️ UI ACTION: ADVANCED_REMOVE_INITIALIZATION on Control_AdvancedRemove
-[12:13:11.770] [LOW   ] 🖱️ UI ACTION: THEME_APPLICATION on Control_AdvancedRemove
-[12:13:11.788] [LOW   ] 🖱️ UI ACTION: CONTROL_INITIALIZATION on Control_AdvancedRemove
-[12:13:11.790] [LOW   ] 🖱️ UI ACTION: BUTTON_EVENTS_SETUP on Control_AdvancedRemove
-[12:13:11.794] [MEDIUM] ➡️ ENTERING Control_TransferTab.Control_TransferTab
-[12:13:11.795] [LOW   ] 🖱️ UI ACTION: TRANSFER_TAB_INITIALIZATION on Control_TransferTab
-[12:13:11.811] [LOW   ] 🖱️ UI ACTION: TRANSFER_TAB_INITIALIZATION on Control_TransferTab
-[12:13:11.813] [MEDIUM] ➡️ ENTERING Control_QuickButtons.Control_QuickButtons
-[12:13:11.814] [LOW   ] 🖱️ UI ACTION: QUICK_BUTTONS_INITIALIZATION on Control_QuickButtons
-[12:13:11.817] [LOW   ] 🖱️ UI ACTION: TABLE_LAYOUT_SETUP on Control_QuickButtons
-MTM_WIP_Application_Winforms.exe (13592): Loaded 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.21\System.Diagnostics.StackTrace.dll'. Cannot find or open the PDB file.
-[12:13:11.828] [LOW   ] 🖱️ UI ACTION: QUICK_BUTTONS_POST_CONSTRUCTOR on Control_QuickButtons
-[12:13:11.850] [LOW   ] 🖱️ UI ACTION: THEME_APPLICATION on MainForm
+[20:21:45.206] [LOW   ] 🖱️ UI ACTION: FORM_INITIALIZATION on MainForm
+2025-11-09 20:21:45 - [20:21:45.206] [LOW   ] 🖱️ UI ACTION: FORM_INITIALIZATION on MainForm
+2025-11-09 20:21:45 - DPI scaling applied to user control 'Control_ConnectionStrengthControl' and all its controls.
+2025-11-09 20:21:45 - Runtime layout adjustments applied to user control 'Control_ConnectionStrengthControl'.
+[20:21:45.233] [MEDIUM] ➡️ ENTERING Control_InventoryTab.Control_InventoryTab
+2025-11-09 20:21:45 - [20:21:45.233] [MEDIUM] ➡️ ENTERING Control_InventoryTab.Control_InventoryTab
+[20:21:45.235] [LOW   ] 🖱️ UI ACTION: INVENTORY_TAB_INITIALIZATION on Control_InventoryTab
+2025-11-09 20:21:45 - [20:21:45.235] [LOW   ] 🖱️ UI ACTION: INVENTORY_TAB_INITIALIZATION on Control_InventoryTab
+[20:21:45.245] [LOW   ] 🖱️ UI ACTION: THEME_APPLICATION on Control_InventoryTab
+2025-11-09 20:21:45 - [20:21:45.245] [LOW   ] 🖱️ UI ACTION: THEME_APPLICATION on Control_InventoryTab
+2025-11-09 20:21:45 - DPI scaling applied to user control 'Control_InventoryTab' and all its controls.
+2025-11-09 20:21:45 - Applied GroupBox layout adjustments to 'Control_InventoryTab_GroupBox_Main'
+2025-11-09 20:21:45 - Applied TableLayoutPanel layout adjustments to 'Control_InventoryTab_TableLayout_Main'
+2025-11-09 20:21:45 - Applied TableLayoutPanel layout adjustments to 'Control_InventoryTab_TableLayout_MiddleGroup'
+2025-11-09 20:21:45 - Applied TableLayoutPanel layout adjustments to 'Control_InventoryTab_TableLayout_TopGroup'
+2025-11-09 20:21:45 - Applied TableLayoutPanel layout adjustments to 'Control_InventoryTab_TableLayout_BottomGroup'
+2025-11-09 20:21:45 - Runtime layout adjustments applied to user control 'Control_InventoryTab'.
+[20:21:45.259] [LOW   ] 🖱️ UI ACTION: TOOLTIPS_SETUP on Control_InventoryTab
+2025-11-09 20:21:45 - [20:21:45.259] [LOW   ] 🖱️ UI ACTION: TOOLTIPS_SETUP on Control_InventoryTab
+[20:21:45.261] [LOW   ] 🖱️ UI ACTION: VERSION_TIMER_SETUP on Control_InventoryTab
+2025-11-09 20:21:45 - [20:21:45.261] [LOW   ] 🖱️ UI ACTION: VERSION_TIMER_SETUP on Control_InventoryTab
+[20:21:45.263] [LOW   ] 🖱️ UI ACTION: DATA_LOADING_START on Control_InventoryTab
+2025-11-09 20:21:45 - [20:21:45.263] [LOW   ] 🖱️ UI ACTION: DATA_LOADING_START on Control_InventoryTab
+[20:21:45.266] [MEDIUM] ➡️ ENTERING Control_InventoryTab_OnStartup_LoadDataComboBoxesAsync.Control_InventoryTab
+2025-11-09 20:21:45 - [20:21:45.266] [MEDIUM] ➡️ ENTERING Control_InventoryTab_OnStartup_LoadDataComboBoxesAsync.Control_InventoryTab
+[20:21:45.278] [LOW   ] 🖱️ UI ACTION: EVENTS_WIREUP on Control_InventoryTab
+2025-11-09 20:21:45 - [20:21:45.278] [LOW   ] 🖱️ UI ACTION: EVENTS_WIREUP on Control_InventoryTab
+2025-11-09 20:21:45 - Inventory tab events wired up.
+[20:21:45.281] [LOW   ] 🖱️ UI ACTION: VERSION_LABEL_SET on Control_InventoryTab
+2025-11-09 20:21:45 - [20:21:45.281] [LOW   ] 🖱️ UI ACTION: VERSION_LABEL_SET on Control_InventoryTab
+[20:21:45.284] [LOW   ] 🖱️ UI ACTION: UI_STYLING_APPLIED on Control_InventoryTab
+2025-11-09 20:21:45 - [20:21:45.284] [LOW   ] 🖱️ UI ACTION: UI_STYLING_APPLIED on Control_InventoryTab
+2025-11-09 20:21:45 - Inventory Quantity TextBox changed.
+[20:21:45.288] [LOW   ] 🖱️ UI ACTION: PRIVILEGES_APPLIED on Control_InventoryTab
+2025-11-09 20:21:45 - [20:21:45.288] [LOW   ] 🖱️ UI ACTION: PRIVILEGES_APPLIED on Control_InventoryTab
+[20:21:45.290] [LOW   ] 🖱️ UI ACTION: INVENTORY_TAB_INITIALIZATION on Control_InventoryTab
+2025-11-09 20:21:45 - [20:21:45.290] [LOW   ] 🖱️ UI ACTION: INVENTORY_TAB_INITIALIZATION on Control_InventoryTab
+[20:21:45.292] [MEDIUM] ⬅️ EXITING Control_InventoryTab.Control_InventoryTab (58ms)
+2025-11-09 20:21:45 - [20:21:45.292] [MEDIUM] ⬅️ EXITING Control_InventoryTab.Control_InventoryTab (58ms)
+[20:21:45.295] [MEDIUM] ➡️ ENTERING Control_AdvancedInventory.Control_AdvancedInventory
+2025-11-09 20:21:45 - [20:21:45.295] [MEDIUM] ➡️ ENTERING Control_AdvancedInventory.Control_AdvancedInventory
+[20:21:45.296] [LOW   ] 🖱️ UI ACTION: ADVANCED_INVENTORY_INITIALIZATION on Control_AdvancedInventory
+2025-11-09 20:21:45 - [20:21:45.296] [LOW   ] 🖱️ UI ACTION: ADVANCED_INVENTORY_INITIALIZATION on Control_AdvancedInventory
+2025-11-09 20:21:45 - Control_AdvancedInventory constructor entered.
+[20:21:45.308] [LOW   ] 🖱️ UI ACTION: THEME_APPLICATION on Control_AdvancedInventory
+2025-11-09 20:21:45 - [20:21:45.308] [LOW   ] 🖱️ UI ACTION: THEME_APPLICATION on Control_AdvancedInventory
+2025-11-09 20:21:45 - DPI scaling applied to user control 'Control_AdvancedInventory' and all its controls.
+2025-11-09 20:21:45 - Applied GroupBox layout adjustments to 'AdvancedInventory_GroupBox_Main'
+2025-11-09 20:21:45 - Applied Panel layout adjustments to 'AdvancedInventory_TabControl_Single'
+2025-11-09 20:21:45 - Applied TableLayoutPanel layout adjustments to 'AdvancedInventory_TableLayout_Single'
+2025-11-09 20:21:45 - Applied GroupBox layout adjustments to 'AdvancedInventory_Single_GroupBox_Right'
+2025-11-09 20:21:45 - Applied TableLayoutPanel layout adjustments to 'AdvancedInventory_Single_TableLayout_Right'
+2025-11-09 20:21:45 - Applied TableLayoutPanel layout adjustments to 'AdvancedInventory_Single_TableLayout_LowerRight'
+2025-11-09 20:21:45 - Applied GroupBox layout adjustments to 'AdvancedInventory_Single_GroupBox_Left'
+2025-11-09 20:21:45 - Applied TableLayoutPanel layout adjustments to 'AdvancedInventory_Single_TableLayout_Left'
+2025-11-09 20:21:45 - Applied Panel layout adjustments to 'panel4'
+2025-11-09 20:21:45 - Applied Panel layout adjustments to 'AdvancedInventory_TabControl_MultiLoc'
+2025-11-09 20:21:45 - Applied TableLayoutPanel layout adjustments to 'AdvancedInventory_TableLayoutPanel_Multi'
+2025-11-09 20:21:45 - Applied GroupBox layout adjustments to 'AdvancedInventory_MultiLoc_GroupBox_Preview'
+2025-11-09 20:21:45 - Applied TableLayoutPanel layout adjustments to 'AdvancedInventory_Multi_TableLayout_Right'
+2025-11-09 20:21:45 - Applied TableLayoutPanel layout adjustments to 'AdvancedInventory_Multi_TableLayout_BottomRight'
+2025-11-09 20:21:45 - Applied Panel layout adjustments to 'panel1'
+2025-11-09 20:21:45 - Applied GroupBox layout adjustments to 'AdvancedInventory_MultiLoc_GroupBox_Item'
+2025-11-09 20:21:45 - Applied TableLayoutPanel layout adjustments to 'Control_Shortcuts_TableLayout_Main'
+2025-11-09 20:21:45 - Applied Panel layout adjustments to 'panel2'
+2025-11-09 20:21:45 - Applied TableLayoutPanel layout adjustments to 'AdvancedInventory_Multi_TableLayout_Left'
+2025-11-09 20:21:45 - Applied Panel layout adjustments to 'panel3'
+2025-11-09 20:21:45 - Applied Panel layout adjustments to 'AdvancedInventory_TabControl_Import'
+2025-11-09 20:21:45 - Applied TableLayoutPanel layout adjustments to 'AdvancedInventory_Import_TableLayout'
+2025-11-09 20:21:45 - Applied Panel layout adjustments to 'AdvancedInventory_Import_Panel_Middle'
+2025-11-09 20:21:45 - Applied TableLayoutPanel layout adjustments to 'AdvancedInventory_Import_TableLayout_Bottom'
+2025-11-09 20:21:45 - Applied TableLayoutPanel layout adjustments to 'AdvancedInventory_Import_TableLayout_Top'
+2025-11-09 20:21:45 - Runtime layout adjustments applied to user control 'Control_AdvancedInventory'.
+[20:21:45.362] [LOW   ] 🖱️ UI ACTION: TOOLTIPS_SETUP on Control_AdvancedInventory
+2025-11-09 20:21:45 - [20:21:45.362] [LOW   ] 🖱️ UI ACTION: TOOLTIPS_SETUP on Control_AdvancedInventory
+2025-11-09 20:21:45 - Control_AdvancedInventory constructor exited.
+[20:21:45.367] [MEDIUM] ➡️ ENTERING Control_RemoveTab.Control_RemoveTab
+2025-11-09 20:21:45 - [20:21:45.367] [MEDIUM] ➡️ ENTERING Control_RemoveTab.Control_RemoveTab
+[20:21:45.368] [LOW   ] 🖱️ UI ACTION: REMOVE_TAB_INITIALIZATION on Control_RemoveTab
+2025-11-09 20:21:45 - [20:21:45.368] [LOW   ] 🖱️ UI ACTION: REMOVE_TAB_INITIALIZATION on Control_RemoveTab
+[20:21:45.378] [LOW   ] 🖱️ UI ACTION: THEME_APPLICATION on Control_RemoveTab
+2025-11-09 20:21:45 - [20:21:45.378] [LOW   ] 🖱️ UI ACTION: THEME_APPLICATION on Control_RemoveTab
+2025-11-09 20:21:45 - DPI scaling applied to user control 'Control_RemoveTab' and all its controls.
+2025-11-09 20:21:45 - Applied GroupBox layout adjustments to 'Control_RemoveTab_GroupBox_MainControl'
+2025-11-09 20:21:45 - Applied TableLayoutPanel layout adjustments to 'Control_RemoveTab_Panel_Main'
+2025-11-09 20:21:45 - Applied Panel layout adjustments to 'Control_RemoveTab_Panel_DataGridView'
+2025-11-09 20:21:45 - Applied Panel layout adjustments to 'Control_RemoveTab_Panel_Header'
+2025-11-09 20:21:45 - Applied TableLayoutPanel layout adjustments to 'Control_RemoveTab_TableLayout_Top'
+2025-11-09 20:21:45 - Applied TableLayoutPanel layout adjustments to 'Control_RemoveTab_TableLayout_Bottom'
+2025-11-09 20:21:45 - Runtime layout adjustments applied to user control 'Control_RemoveTab'.
+[20:21:45.400] [LOW   ] 🖱️ UI ACTION: CONTROL_INITIALIZATION on Control_RemoveTab
+2025-11-09 20:21:45 - [20:21:45.400] [LOW   ] 🖱️ UI ACTION: CONTROL_INITIALIZATION on Control_RemoveTab
+[20:21:45.402] [LOW   ] 🖱️ UI ACTION: COMBOBOX_PROPERTIES_APPLIED on Control_RemoveTab
+2025-11-09 20:21:45 - [20:21:45.402] [LOW   ] 🖱️ UI ACTION: COMBOBOX_PROPERTIES_APPLIED on Control_RemoveTab
+[20:21:45.404] [LOW   ] 🖱️ UI ACTION: DATA_LOADING_START on Control_RemoveTab
+2025-11-09 20:21:45 - [20:21:45.404] [LOW   ] 🖱️ UI ACTION: DATA_LOADING_START on Control_RemoveTab
+[20:21:45.413] [LOW   ] 🖱️ UI ACTION: EVENT_HANDLERS_SETUP on Control_RemoveTab
+2025-11-09 20:21:45 - [20:21:45.413] [LOW   ] 🖱️ UI ACTION: EVENT_HANDLERS_SETUP on Control_RemoveTab
+[20:21:45.415] [LOW   ] 🖱️ UI ACTION: TOOLTIPS_SETUP on Control_RemoveTab
+2025-11-09 20:21:45 - [20:21:45.415] [LOW   ] 🖱️ UI ACTION: TOOLTIPS_SETUP on Control_RemoveTab
+[20:21:45.417] [LOW   ] 🖱️ UI ACTION: PRIVILEGES_APPLIED on Control_RemoveTab
+2025-11-09 20:21:45 - [20:21:45.417] [LOW   ] 🖱️ UI ACTION: PRIVILEGES_APPLIED on Control_RemoveTab
+[20:21:45.419] [LOW   ] 🖱️ UI ACTION: REMOVE_TAB_INITIALIZATION on Control_RemoveTab
+2025-11-09 20:21:45 - [20:21:45.419] [LOW   ] 🖱️ UI ACTION: REMOVE_TAB_INITIALIZATION on Control_RemoveTab
+[20:21:45.421] [MEDIUM] ⬅️ EXITING Control_RemoveTab.Control_RemoveTab (54ms)
+2025-11-09 20:21:45 - [20:21:45.421] [MEDIUM] ⬅️ EXITING Control_RemoveTab.Control_RemoveTab (54ms)
+[20:21:45.424] [MEDIUM] ➡️ ENTERING Control_AdvancedRemove.Control_AdvancedRemove
+2025-11-09 20:21:45 - [20:21:45.424] [MEDIUM] ➡️ ENTERING Control_AdvancedRemove.Control_AdvancedRemove
+[20:21:45.425] [LOW   ] 🖱️ UI ACTION: ADVANCED_REMOVE_INITIALIZATION on Control_AdvancedRemove
+2025-11-09 20:21:45 - [20:21:45.425] [LOW   ] 🖱️ UI ACTION: ADVANCED_REMOVE_INITIALIZATION on Control_AdvancedRemove
+[20:21:45.435] [LOW   ] 🖱️ UI ACTION: THEME_APPLICATION on Control_AdvancedRemove
+2025-11-09 20:21:45 - [20:21:45.435] [LOW   ] 🖱️ UI ACTION: THEME_APPLICATION on Control_AdvancedRemove
+2025-11-09 20:21:45 - DPI scaling applied to user control 'Control_AdvancedRemove' and all its controls.
+2025-11-09 20:21:45 - Applied GroupBox layout adjustments to 'Control_AdvancedRemove_GroupBox_Main'
+2025-11-09 20:21:45 - Applied TableLayoutPanel layout adjustments to 'Control_AdvancedRemove_TableLayout_Main'
+2025-11-09 20:21:45 - Applied TableLayoutPanel layout adjustments to 'Control_AdvancedRemove_TableLayout_Row4'
+2025-11-09 20:21:45 - Applied TableLayoutPanel layout adjustments to 'Control_AdvancedRemove_TableLayout_BottomRight'
+2025-11-09 20:21:45 - Applied TableLayoutPanel layout adjustments to 'Control_AdvancedRemove_TableLayout_BottomLeft'
+2025-11-09 20:21:45 - Applied Panel layout adjustments to 'Control_AdvancedRemove_Panel_Top'
+2025-11-09 20:21:45 - Applied Panel layout adjustments to ''
+2025-11-09 20:21:45 - Applied TableLayoutPanel layout adjustments to 'Control_AdvancedRemove_TableLayout_TopLeft'
+2025-11-09 20:21:45 - Applied TableLayoutPanel layout adjustments to 'Control_AdvancedRemove_TableLayout_DateRange'
+2025-11-09 20:21:45 - Applied TableLayoutPanel layout adjustments to 'Control_AdvancedRemove_TableLayout_Quantity'
+2025-11-09 20:21:45 - Applied Panel layout adjustments to ''
+2025-11-09 20:21:45 - Applied Panel layout adjustments to 'Control_AdvancedRemove_Panel_Row4_Center'
+2025-11-09 20:21:45 - Runtime layout adjustments applied to user control 'Control_AdvancedRemove'.
+[20:21:45.467] [LOW   ] 🖱️ UI ACTION: CONTROL_INITIALIZATION on Control_AdvancedRemove
+2025-11-09 20:21:45 - [20:21:45.467] [LOW   ] 🖱️ UI ACTION: CONTROL_INITIALIZATION on Control_AdvancedRemove
+[20:21:45.470] [LOW   ] 🖱️ UI ACTION: BUTTON_EVENTS_SETUP on Control_AdvancedRemove
+2025-11-09 20:21:45 - [20:21:45.470] [LOW   ] 🖱️ UI ACTION: BUTTON_EVENTS_SETUP on Control_AdvancedRemove
+[20:21:45.475] [MEDIUM] ➡️ ENTERING Control_TransferTab.Control_TransferTab
+2025-11-09 20:21:45 - [20:21:45.475] [MEDIUM] ➡️ ENTERING Control_TransferTab.Control_TransferTab
+[20:21:45.476] [LOW   ] 🖱️ UI ACTION: TRANSFER_TAB_INITIALIZATION on Control_TransferTab
+2025-11-09 20:21:45 - [20:21:45.476] [LOW   ] 🖱️ UI ACTION: TRANSFER_TAB_INITIALIZATION on Control_TransferTab
+2025-11-09 20:21:45 - DPI scaling applied to user control 'Control_TransferTab' and all its controls.
+2025-11-09 20:21:45 - Applied GroupBox layout adjustments to 'Control_TransferTab_GroupBox_MainControl'
+2025-11-09 20:21:45 - Applied TableLayoutPanel layout adjustments to 'Control_TransferTab_Panel_Main'
+2025-11-09 20:21:45 - Applied TableLayoutPanel layout adjustments to 'Control_Database_TableLayout_Top'
+2025-11-09 20:21:45 - Applied Panel layout adjustments to ''
+2025-11-09 20:21:45 - Applied TableLayoutPanel layout adjustments to 'Control_Shortcuts_TableLayout_Main'
+2025-11-09 20:21:45 - Applied TableLayoutPanel layout adjustments to 'Control_Shortcuts_TableLayout_Bottom'
+2025-11-09 20:21:45 - Applied Panel layout adjustments to ''
+2025-11-09 20:21:45 - Applied Panel layout adjustments to 'panel1'
+2025-11-09 20:21:45 - Applied Panel layout adjustments to 'Control_TransferTab_Panel_DataGridView'
+2025-11-09 20:21:45 - Runtime layout adjustments applied to user control 'Control_TransferTab'.
+2025-11-09 20:21:45 - Transfer tab events wired up.
+[20:21:45.505] [LOW   ] 🖱️ UI ACTION: TRANSFER_TAB_INITIALIZATION on Control_TransferTab
+2025-11-09 20:21:45 - [20:21:45.505] [LOW   ] 🖱️ UI ACTION: TRANSFER_TAB_INITIALIZATION on Control_TransferTab
+[20:21:45.507] [MEDIUM] ➡️ ENTERING Control_QuickButtons.Control_QuickButtons
+2025-11-09 20:21:45 - [20:21:45.507] [MEDIUM] ➡️ ENTERING Control_QuickButtons.Control_QuickButtons
+[20:21:45.509] [LOW   ] 🖱️ UI ACTION: QUICK_BUTTONS_INITIALIZATION on Control_QuickButtons
+2025-11-09 20:21:45 - [20:21:45.509] [LOW   ] 🖱️ UI ACTION: QUICK_BUTTONS_INITIALIZATION on Control_QuickButtons
+[20:21:45.532] [LOW   ] 🖱️ UI ACTION: TABLE_LAYOUT_SETUP on Control_QuickButtons
+2025-11-09 20:21:45 - [20:21:45.532] [LOW   ] 🖱️ UI ACTION: TABLE_LAYOUT_SETUP on Control_QuickButtons
+[20:21:45.564] [LOW   ] 🖱️ UI ACTION: QUICK_BUTTONS_POST_CONSTRUCTOR on Control_QuickButtons
+2025-11-09 20:21:45 - [20:21:45.564] [LOW   ] 🖱️ UI ACTION: QUICK_BUTTONS_POST_CONSTRUCTOR on Control_QuickButtons
+2025-11-09 20:21:45 - DPI scaling applied to user control 'Control_QuickButtons' and all its controls.
+2025-11-09 20:21:45 - Applied TableLayoutPanel layout adjustments to 'Control_QuickButtons_TableLayoutPanel_Main'
+2025-11-09 20:21:45 - Runtime layout adjustments applied to user control 'Control_QuickButtons'.
+2025-11-09 20:21:45 - Inventory Part ComboBox selection changed.
+2025-11-09 20:21:45 - [PERF] Update_ButtonStates called from: <Control_TransferTab_OnStartup_WireUpEvents>g__ValidateAndUpdate|24_1
+[20:21:45.595] [LOW   ] 🖱️ UI ACTION: THEME_APPLICATION on MainForm
+2025-11-09 20:21:45 - [20:21:45.595] [LOW   ] 🖱️ UI ACTION: THEME_APPLICATION on MainForm
+2025-11-09 20:21:45 - DPI scaling applied to form 'MainForm' and all its controls.
+2025-11-09 20:21:45 - Applied TableLayoutPanel layout adjustments to 'MainForm_TableLayout'
+2025-11-09 20:21:45 - Applied Panel layout adjustments to ''
+2025-11-09 20:21:45 - Applied Panel layout adjustments to 'MainForm_TabPage_Inventory'
+2025-11-09 20:21:45 - Applied GroupBox layout adjustments to 'Control_InventoryTab_GroupBox_Main'
+2025-11-09 20:21:45 - Applied TableLayoutPanel layout adjustments to 'Control_InventoryTab_TableLayout_Main'
+2025-11-09 20:21:45 - Applied TableLayoutPanel layout adjustments to 'Control_InventoryTab_TableLayout_MiddleGroup'
+2025-11-09 20:21:45 - Applied TableLayoutPanel layout adjustments to 'Control_InventoryTab_TableLayout_TopGroup'
+2025-11-09 20:21:45 - Applied TableLayoutPanel layout adjustments to 'Control_InventoryTab_TableLayout_BottomGroup'
+2025-11-09 20:21:45 - Applied GroupBox layout adjustments to 'AdvancedInventory_GroupBox_Main'
+2025-11-09 20:21:45 - Applied Panel layout adjustments to 'AdvancedInventory_TabControl_Single'
+2025-11-09 20:21:45 - Applied TableLayoutPanel layout adjustments to 'AdvancedInventory_TableLayout_Single'
+2025-11-09 20:21:45 - Applied GroupBox layout adjustments to 'AdvancedInventory_Single_GroupBox_Right'
+2025-11-09 20:21:45 - Applied TableLayoutPanel layout adjustments to 'AdvancedInventory_Single_TableLayout_Right'
+2025-11-09 20:21:45 - Applied TableLayoutPanel layout adjustments to 'AdvancedInventory_Single_TableLayout_LowerRight'
+2025-11-09 20:21:45 - Applied GroupBox layout adjustments to 'AdvancedInventory_Single_GroupBox_Left'
+2025-11-09 20:21:45 - Applied TableLayoutPanel layout adjustments to 'AdvancedInventory_Single_TableLayout_Left'
+2025-11-09 20:21:45 - Applied Panel layout adjustments to 'panel4'
+2025-11-09 20:21:45 - Applied Panel layout adjustments to 'AdvancedInventory_TabControl_MultiLoc'
+2025-11-09 20:21:45 - Applied TableLayoutPanel layout adjustments to 'AdvancedInventory_TableLayoutPanel_Multi'
+2025-11-09 20:21:45 - Applied GroupBox layout adjustments to 'AdvancedInventory_MultiLoc_GroupBox_Preview'
+2025-11-09 20:21:45 - Applied TableLayoutPanel layout adjustments to 'AdvancedInventory_Multi_TableLayout_Right'
+2025-11-09 20:21:45 - Applied TableLayoutPanel layout adjustments to 'AdvancedInventory_Multi_TableLayout_BottomRight'
+2025-11-09 20:21:45 - Applied Panel layout adjustments to 'panel1'
+2025-11-09 20:21:45 - Applied GroupBox layout adjustments to 'AdvancedInventory_MultiLoc_GroupBox_Item'
+2025-11-09 20:21:45 - Applied TableLayoutPanel layout adjustments to 'Control_Shortcuts_TableLayout_Main'
+2025-11-09 20:21:45 - Applied Panel layout adjustments to 'panel2'
+2025-11-09 20:21:45 - Applied TableLayoutPanel layout adjustments to 'AdvancedInventory_Multi_TableLayout_Left'
+2025-11-09 20:21:45 - Applied Panel layout adjustments to 'panel3'
+2025-11-09 20:21:45 - Applied Panel layout adjustments to 'AdvancedInventory_TabControl_Import'
+2025-11-09 20:21:45 - Applied TableLayoutPanel layout adjustments to 'AdvancedInventory_Import_TableLayout'
+2025-11-09 20:21:45 - Applied Panel layout adjustments to 'AdvancedInventory_Import_Panel_Middle'
+2025-11-09 20:21:45 - Applied TableLayoutPanel layout adjustments to 'AdvancedInventory_Import_TableLayout_Bottom'
+2025-11-09 20:21:45 - Applied TableLayoutPanel layout adjustments to 'AdvancedInventory_Import_TableLayout_Top'
+2025-11-09 20:21:45 - Applied Panel layout adjustments to 'MainForm_TabPage_Remove'
+2025-11-09 20:21:45 - Applied GroupBox layout adjustments to 'Control_RemoveTab_GroupBox_MainControl'
+2025-11-09 20:21:45 - Applied TableLayoutPanel layout adjustments to 'Control_RemoveTab_Panel_Main'
+2025-11-09 20:21:45 - Applied Panel layout adjustments to 'Control_RemoveTab_Panel_DataGridView'
+2025-11-09 20:21:45 - Applied Panel layout adjustments to 'Control_RemoveTab_Panel_Header'
+2025-11-09 20:21:45 - Applied TableLayoutPanel layout adjustments to 'Control_RemoveTab_TableLayout_Top'
+2025-11-09 20:21:45 - Applied TableLayoutPanel layout adjustments to 'Control_RemoveTab_TableLayout_Bottom'
+2025-11-09 20:21:45 - Applied GroupBox layout adjustments to 'Control_AdvancedRemove_GroupBox_Main'
+2025-11-09 20:21:45 - Applied TableLayoutPanel layout adjustments to 'Control_AdvancedRemove_TableLayout_Main'
+2025-11-09 20:21:45 - Applied TableLayoutPanel layout adjustments to 'Control_AdvancedRemove_TableLayout_Row4'
+2025-11-09 20:21:45 - Applied TableLayoutPanel layout adjustments to 'Control_AdvancedRemove_TableLayout_BottomRight'
+2025-11-09 20:21:45 - Applied TableLayoutPanel layout adjustments to 'Control_AdvancedRemove_TableLayout_BottomLeft'
+2025-11-09 20:21:45 - Applied Panel layout adjustments to 'Control_AdvancedRemove_Panel_Top'
+2025-11-09 20:21:45 - Applied Panel layout adjustments to ''
+2025-11-09 20:21:45 - Applied TableLayoutPanel layout adjustments to 'Control_AdvancedRemove_TableLayout_TopLeft'
+2025-11-09 20:21:45 - Applied TableLayoutPanel layout adjustments to 'Control_AdvancedRemove_TableLayout_DateRange'
+2025-11-09 20:21:45 - Applied TableLayoutPanel layout adjustments to 'Control_AdvancedRemove_TableLayout_Quantity'
+2025-11-09 20:21:45 - Applied Panel layout adjustments to ''
+2025-11-09 20:21:45 - Applied Panel layout adjustments to 'Control_AdvancedRemove_Panel_Row4_Center'
+2025-11-09 20:21:45 - Applied Panel layout adjustments to 'MainForm_TabPage_Transfer'
+2025-11-09 20:21:45 - Applied GroupBox layout adjustments to 'Control_TransferTab_GroupBox_MainControl'
+2025-11-09 20:21:45 - Applied TableLayoutPanel layout adjustments to 'Control_TransferTab_Panel_Main'
+2025-11-09 20:21:45 - Applied TableLayoutPanel layout adjustments to 'Control_Database_TableLayout_Top'
+2025-11-09 20:21:45 - Applied Panel layout adjustments to ''
+2025-11-09 20:21:45 - Applied TableLayoutPanel layout adjustments to 'Control_Shortcuts_TableLayout_Main'
+2025-11-09 20:21:45 - Applied TableLayoutPanel layout adjustments to 'Control_Shortcuts_TableLayout_Bottom'
+2025-11-09 20:21:45 - Applied Panel layout adjustments to ''
+2025-11-09 20:21:45 - Applied Panel layout adjustments to 'panel1'
+2025-11-09 20:21:45 - Applied Panel layout adjustments to 'Control_TransferTab_Panel_DataGridView'
+2025-11-09 20:21:45 - Applied Panel layout adjustments to ''
+2025-11-09 20:21:45 - Applied TableLayoutPanel layout adjustments to 'Control_QuickButtons_TableLayoutPanel_Main'
+2025-11-09 20:21:45 - Applied TableLayoutPanel layout adjustments to 'tableLayoutPanel1'
+2025-11-09 20:21:45 - Runtime layout adjustments applied to form 'MainForm'.
 [DEBUG] [MainForm.ctor] InitializeComponent complete.
-[12:13:11.884] [MEDIUM] ➡️ ENTERING MainForm.InitializeFormTitle
-[12:13:11.886] [MEDIUM] ➡️ ENTERING MainForm.GetUserPrivilegeDisplayText
-[12:13:11.889] [MEDIUM] 📊 BUSINESS LOGIC: USER_PRIVILEGE_DETERMINATION
-[12:13:11.890] [MEDIUM] ⬅️ EXITING MainForm.GetUserPrivilegeDisplayText (3ms)
-[12:13:11.892] [MEDIUM] 📊 BUSINESS LOGIC: FORM_TITLE_GENERATION
-[12:13:11.893] [LOW   ] 🖱️ UI ACTION: FORM_TITLE_SET on MainForm
-[12:13:11.894] [MEDIUM] ⬅️ EXITING MainForm.InitializeFormTitle (9ms)
+[20:21:45.685] [MEDIUM] ➡️ ENTERING MainForm.InitializeFormTitle
+2025-11-09 20:21:45 - [20:21:45.685] [MEDIUM] ➡️ ENTERING MainForm.InitializeFormTitle
+[20:21:45.687] [MEDIUM] ➡️ ENTERING MainForm.GetUserPrivilegeDisplayText
+2025-11-09 20:21:45 - [20:21:45.687] [MEDIUM] ➡️ ENTERING MainForm.GetUserPrivilegeDisplayText
+2025-11-09 20:21:45 - Inventory Op ComboBox selection changed.
+2025-11-09 20:21:45 - [PERF] Update_ButtonStates called from: <Control_TransferTab_OnStartup_WireUpEvents>g__ValidateAndUpdate|24_1
+[20:21:45.694] [MEDIUM] 📊 BUSINESS LOGIC: USER_PRIVILEGE_DETERMINATION
+2025-11-09 20:21:45 - [20:21:45.694] [MEDIUM] 📊 BUSINESS LOGIC: USER_PRIVILEGE_DETERMINATION
+[20:21:45.720] [MEDIUM] ⬅️ EXITING MainForm.GetUserPrivilegeDisplayText (32ms)
+2025-11-09 20:21:45 - [20:21:45.720] [MEDIUM] ⬅️ EXITING MainForm.GetUserPrivilegeDisplayText (32ms)
+[20:21:45.752] [MEDIUM] 📊 BUSINESS LOGIC: FORM_TITLE_GENERATION
+2025-11-09 20:21:45 - [20:21:45.752] [MEDIUM] 📊 BUSINESS LOGIC: FORM_TITLE_GENERATION
+[20:21:45.754] [LOW   ] 🖱️ UI ACTION: FORM_TITLE_SET on MainForm
+2025-11-09 20:21:45 - [20:21:45.754] [LOW   ] 🖱️ UI ACTION: FORM_TITLE_SET on MainForm
+[20:21:45.756] [MEDIUM] ⬅️ EXITING MainForm.InitializeFormTitle (71ms)
+2025-11-09 20:21:45 - [20:21:45.756] [MEDIUM] ⬅️ EXITING MainForm.InitializeFormTitle (71ms)
 [DEBUG] [MainForm] UserControl progress helpers initialized.
 [DEBUG] [MainForm.ctor] Progress control initialized.
-[12:13:11.898] [LOW   ] 🖱️ UI ACTION: CONNECTION_CHECKER_INIT on MainForm
+[20:21:45.761] [LOW   ] 🖱️ UI ACTION: CONNECTION_CHECKER_INIT on MainForm
+2025-11-09 20:21:45 - [20:21:45.761] [LOW   ] 🖱️ UI ACTION: CONNECTION_CHECKER_INIT on MainForm
 [DEBUG] [MainForm.ctor] ConnectionStrengthChecker initialized.
-[12:13:11.901] [LOW   ] 🖱️ UI ACTION: CONNECTION_RECOVERY_INIT on MainForm
+[20:21:45.764] [LOW   ] 🖱️ UI ACTION: CONNECTION_RECOVERY_INIT on MainForm
+2025-11-09 20:21:45 - [20:21:45.764] [LOW   ] 🖱️ UI ACTION: CONNECTION_RECOVERY_INIT on MainForm
 [DEBUG] [MainForm.ctor] ConnectionRecoveryManager initialized.
-[12:13:11.903] [MEDIUM] ➡️ ENTERING MainForm.InitializeStartupComponents
-[12:13:11.904] [LOW   ] 🖱️ UI ACTION: CONNECTION_STRENGTH_SETUP on MainForm
+[20:21:45.797] [MEDIUM] ➡️ ENTERING MainForm.InitializeStartupComponents
+2025-11-09 20:21:45 - [20:21:45.797] [MEDIUM] ➡️ ENTERING MainForm.InitializeStartupComponents
+[20:21:45.799] [LOW   ] 🖱️ UI ACTION: CONNECTION_STRENGTH_SETUP on MainForm
+2025-11-09 20:21:45 - [20:21:45.799] [LOW   ] 🖱️ UI ACTION: CONNECTION_STRENGTH_SETUP on MainForm
 [DEBUG] [MainForm.ctor] ConnectionStrengthControl setup complete.
-[12:13:11.908] [LOW   ] 🖱️ UI ACTION: EVENTS_WIREUP on MainForm
+[20:21:45.803] [LOW   ] 🖱️ UI ACTION: EVENTS_WIREUP on MainForm
+2025-11-09 20:21:45 - [20:21:45.803] [LOW   ] 🖱️ UI ACTION: EVENTS_WIREUP on MainForm
 [DEBUG] [MainForm.ctor] Events wired up.
-[12:13:11.910] [LOW   ] 🖱️ UI ACTION: DPI_EVENTS_WIREUP on MainForm
+[20:21:45.807] [LOW   ] 🖱️ UI ACTION: DPI_EVENTS_WIREUP on MainForm
+2025-11-09 20:21:45 - [20:21:45.807] [LOW   ] 🖱️ UI ACTION: DPI_EVENTS_WIREUP on MainForm
+2025-11-09 20:21:45 - DPI change event handlers wired up successfully
 [DEBUG] [MainForm.ctor] DPI change events wired up.
-[12:13:11.912] [LOW   ] 🖱️ UI ACTION: STARTUP_COMPONENTS on MainForm
-[12:13:11.914] [MEDIUM] ⬅️ EXITING MainForm.InitializeStartupComponents (10ms)
+[20:21:45.812] [LOW   ] 🖱️ UI ACTION: STARTUP_COMPONENTS on MainForm
+2025-11-09 20:21:45 - [20:21:45.812] [LOW   ] 🖱️ UI ACTION: STARTUP_COMPONENTS on MainForm
+[20:21:45.814] [MEDIUM] ⬅️ EXITING MainForm.InitializeStartupComponents (16ms)
+2025-11-09 20:21:45 - [20:21:45.814] [MEDIUM] ⬅️ EXITING MainForm.InitializeStartupComponents (16ms)
 [DEBUG] [MainForm.ctor] Startup components initialized.
-[12:13:11.916] [LOW   ] 🖱️ UI ACTION: FORM_INITIALIZATION on MainForm
+[20:21:45.817] [LOW   ] 🖱️ UI ACTION: FORM_INITIALIZATION on MainForm
+2025-11-09 20:21:45 - [20:21:45.817] [LOW   ] 🖱️ UI ACTION: FORM_INITIALIZATION on MainForm
 [DEBUG] [MainForm.ctor] MainForm constructed.
-[12:13:11.918] [MEDIUM] ⬅️ EXITING MainForm.MainForm (310ms)
+[20:21:45.820] [MEDIUM] ⬅️ EXITING MainForm.MainForm (617ms)
+2025-11-09 20:21:45 - [20:21:45.820] [MEDIUM] ⬅️ EXITING MainForm.MainForm (617ms)
+2025-11-09 20:21:45 - [Splash] MainForm created
 [DEBUG] [SplashScreenForm.UpdateProgress] Progress: 97, Status: Configuring form instances...
-[12:13:11.924] [MEDIUM] ➡️ ENTERING Dao_User.GetUserFullNameAsync
-[12:13:11.926] [HIGH  ] ⏱️ PERFORMANCE START: SP_usr_users_Get_ByUser
-[12:13:11.927] [MEDIUM] ➡️ ENTERING Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync
-[12:13:11.929] [MEDIUM] 🗄️ DB PROCEDURE START: usr_users_Get_ByUser
-[12:13:11.934] [MEDIUM] ➡️ ENTERING Control_InventoryTab_ComboBox_Operation_SelectedIndexChanged.Control_InventoryTab
-[12:13:11.936] [MEDIUM] ⬅️ EXITING Control_InventoryTab_ComboBox_Operation_SelectedIndexChanged.Control_InventoryTab (1ms)
-[12:13:11.949] [MEDIUM]   ➡️ ENTERING Dao_User.GetUserFullNameAsync
-[12:13:11.951] [HIGH  ] ⏱️ PERFORMANCE START: SP_usr_users_Get_ByUser
-[12:13:11.952] [MEDIUM]   ➡️ ENTERING Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync
-[12:13:11.953] [MEDIUM] 🗄️ DB PROCEDURE START: usr_users_Get_ByUser
-[12:13:12.004] [HIGH  ] ✅ PROCEDURE usr_users_Get_ByUser (53ms) - Status: 1
-[12:13:12.007] [MEDIUM] ✅ DB PROCEDURE COMPLETE: usr_users_Get_ByUser (53ms) - 1 rows
-[12:13:12.009] [MEDIUM]   ⬅️ EXITING Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync (80ms)
-[12:13:12.010] [HIGH  ] ⏱️ PERFORMANCE COMPLETE: SP_usr_users_Get_ByUser (58ms)
-[12:13:12.012] [MEDIUM] ➡️ ENTERING Control_InventoryTab_ComboBox_Location_SelectedIndexChanged.Control_InventoryTab
-[12:13:12.013] [MEDIUM]   ⬅️ EXITING Dao_User.GetUserFullNameAsync (88ms)
-[12:13:12.015] [MEDIUM] ⬅️ EXITING Control_InventoryTab_ComboBox_Location_SelectedIndexChanged.Control_InventoryTab (2ms)
-[12:13:12.018] [HIGH  ] ✅ PROCEDURE usr_users_Get_ByUser (92ms) - Status: 1
-[12:13:12.019] [MEDIUM] ✅ DB PROCEDURE COMPLETE: usr_users_Get_ByUser (92ms) - 1 rows
-[12:13:12.021] [MEDIUM] ⬅️ EXITING Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync (68ms)
-[12:13:12.022] [HIGH  ] ⏱️ PERFORMANCE COMPLETE: SP_usr_users_Get_ByUser (96ms)
-[12:13:12.024] [MEDIUM] ⬅️ EXITING Dao_User.GetUserFullNameAsync (74ms)
+2025-11-09 20:21:45 - Remove tab ComboBoxes loaded.
+2025-11-09 20:21:45 - Removal tab events wired up.
+2025-11-09 20:21:45 - Initial setup of ComboBoxes in the Remove Tab.
+2025-11-09 20:21:45 - [PERF] Update_ButtonStates called from: <Control_TransferTab_OnStartup_WireUpEvents>g__ValidateAndUpdate|24_1
+[20:21:45.831] [MEDIUM] ➡️ ENTERING Dao_User.GetUserFullNameAsync
+2025-11-09 20:21:45 - [20:21:45.831] [MEDIUM] ➡️ ENTERING Dao_User.GetUserFullNameAsync
+[20:21:45.860] [HIGH  ] ⏱️ PERFORMANCE START: SP_usr_users_Get_ByUser
+2025-11-09 20:21:45 - [20:21:45.860] [HIGH  ] ⏱️ PERFORMANCE START: SP_usr_users_Get_ByUser
+2025-11-09 20:21:45 - [20:21:45.860] [DATA  ] {
+  "Action": "PERFORMANCE_START",
+  "Operation": "SP_usr_users_Get_ByUser",
+  "Caller": "ExecuteDataTableWithStatusAsync",
+  "Key": "ExecuteDataTableWithStatusAsync:SP_usr_users_Get_ByUser:638983165058606228"
+}
+[20:21:45.864] [MEDIUM] ➡️ ENTERING Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync
+2025-11-09 20:21:45 - [20:21:45.864] [MEDIUM] ➡️ ENTERING Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync
+[20:21:45.866] [MEDIUM] 🗄️ DB PROCEDURE START: usr_users_Get_ByUser
+2025-11-09 20:21:45 - [20:21:45.866] [MEDIUM] 🗄️ DB PROCEDURE START: usr_users_Get_ByUser
+2025-11-09 20:21:45 - Transfer tab ComboBoxes loaded.
+[20:21:45.870] [MEDIUM]   ➡️ ENTERING Dao_User.GetUserFullNameAsync
+2025-11-09 20:21:45 - [20:21:45.870] [MEDIUM]   ➡️ ENTERING Dao_User.GetUserFullNameAsync
+[20:21:45.873] [HIGH  ] ⏱️ PERFORMANCE START: SP_usr_users_Get_ByUser
+2025-11-09 20:21:45 - [20:21:45.873] [HIGH  ] ⏱️ PERFORMANCE START: SP_usr_users_Get_ByUser
+2025-11-09 20:21:45 - [20:21:45.873] [DATA  ] {
+  "Action": "PERFORMANCE_START",
+  "Operation": "SP_usr_users_Get_ByUser",
+  "Caller": "ExecuteDataTableWithStatusAsync",
+  "Key": "ExecuteDataTableWithStatusAsync:SP_usr_users_Get_ByUser:638983165058730858"
+}
+[20:21:45.876] [MEDIUM]   ➡️ ENTERING Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync
+2025-11-09 20:21:45 - [20:21:45.876] [MEDIUM]   ➡️ ENTERING Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync
+[20:21:45.879] [MEDIUM] 🗄️ DB PROCEDURE START: usr_users_Get_ByUser
+2025-11-09 20:21:45 - [20:21:45.879] [MEDIUM] 🗄️ DB PROCEDURE START: usr_users_Get_ByUser
+[20:21:45.884] [MEDIUM] ➡️ ENTERING Control_InventoryTab_ComboBox_Operation_SelectedIndexChanged.Control_InventoryTab
+2025-11-09 20:21:45 - [20:21:45.884] [MEDIUM] ➡️ ENTERING Control_InventoryTab_ComboBox_Operation_SelectedIndexChanged.Control_InventoryTab
+2025-11-09 20:21:45 - Inventory Op ComboBox selection changed.
+[20:21:45.889] [MEDIUM] ⬅️ EXITING Control_InventoryTab_ComboBox_Operation_SelectedIndexChanged.Control_InventoryTab (3ms)
+2025-11-09 20:21:45 - [20:21:45.889] [MEDIUM] ⬅️ EXITING Control_InventoryTab_ComboBox_Operation_SelectedIndexChanged.Control_InventoryTab (3ms)
+[20:21:45.892] [HIGH  ] ✅ PROCEDURE usr_users_Get_ByUser (31ms) - Status: 1
+2025-11-09 20:21:45 - [20:21:45.892] [HIGH  ] ✅ PROCEDURE usr_users_Get_ByUser (31ms) - Status: 1
+2025-11-09 20:21:45 - [20:21:45.892] [DATA  ] {
+  "Action": "STORED_PROCEDURE_EXECUTION",
+  "Procedure": "usr_users_Get_ByUser",
+  "Caller": "ExecuteDataTableWithStatusAsync",
+  "Status": 1,
+  "ElapsedMs": 31,
+  "Thread": 1,
+  "InputParameters": {
+    "p_User": "JOHNK"
+  },
+  "OutputParameters": {
+    "Status": "1",
+    "ErrorMsg": "Retrieved user \"JOHNK\""
+  },
+  "ResultData": "DataTable[1 rows]",
+  "ErrorMessage": "Retrieved user \"JOHNK\""
+}
+[20:21:45.897] [MEDIUM] ✅ DB PROCEDURE COMPLETE: usr_users_Get_ByUser (31ms) - 1 rows
+2025-11-09 20:21:45 - [20:21:45.897] [MEDIUM] ✅ DB PROCEDURE COMPLETE: usr_users_Get_ByUser (31ms) - 1 rows
+[20:21:45.900] [MEDIUM]   ⬅️ EXITING Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync (35ms)
+2025-11-09 20:21:45 - [20:21:45.900] [MEDIUM]   ⬅️ EXITING Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync (35ms)
+[20:21:45.902] [HIGH  ] ⏱️ PERFORMANCE COMPLETE: SP_usr_users_Get_ByUser (41ms)
+2025-11-09 20:21:45 - [20:21:45.902] [HIGH  ] ⏱️ PERFORMANCE COMPLETE: SP_usr_users_Get_ByUser (41ms)
+2025-11-09 20:21:45 - [20:21:45.902] [DATA  ] {
+  "Action": "PERFORMANCE_COMPLETE",
+  "Operation": "SP_usr_users_Get_ByUser",
+  "ElapsedMs": 41,
+  "Key": "ExecuteDataTableWithStatusAsync:SP_usr_users_Get_ByUser:638983165058606228",
+  "Status": "SUCCESS",
+  "RowCount": 1
+}
+[20:21:45.906] [MEDIUM]   ⬅️ EXITING Dao_User.GetUserFullNameAsync (74ms)
+2025-11-09 20:21:45 - [20:21:45.906] [MEDIUM]   ⬅️ EXITING Dao_User.GetUserFullNameAsync (74ms)
+2025-11-09 20:21:45 - User full name loaded: John Koll
+[20:21:45.913] [HIGH  ] ✅ PROCEDURE usr_users_Get_ByUser (40ms) - Status: 1
+2025-11-09 20:21:45 - [20:21:45.913] [HIGH  ] ✅ PROCEDURE usr_users_Get_ByUser (40ms) - Status: 1
+2025-11-09 20:21:45 - [20:21:45.913] [DATA  ] {
+  "Action": "STORED_PROCEDURE_EXECUTION",
+  "Procedure": "usr_users_Get_ByUser",
+  "Caller": "ExecuteDataTableWithStatusAsync",
+  "Status": 1,
+  "ElapsedMs": 40,
+  "Thread": 21,
+  "InputParameters": {
+    "p_User": "JOHNK"
+  },
+  "OutputParameters": {
+    "Status": "1",
+    "ErrorMsg": "Retrieved user \"JOHNK\""
+  },
+  "ResultData": "DataTable[1 rows]",
+  "ErrorMessage": "Retrieved user \"JOHNK\""
+}
+[20:21:45.916] [MEDIUM] ✅ DB PROCEDURE COMPLETE: usr_users_Get_ByUser (40ms) - 1 rows
+2025-11-09 20:21:45 - [20:21:45.916] [MEDIUM] ✅ DB PROCEDURE COMPLETE: usr_users_Get_ByUser (40ms) - 1 rows
+[20:21:45.939] [MEDIUM] ⬅️ EXITING Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync (62ms)
+2025-11-09 20:21:45 - [20:21:45.939] [MEDIUM] ⬅️ EXITING Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync (62ms)
+[20:21:45.941] [HIGH  ] ⏱️ PERFORMANCE COMPLETE: SP_usr_users_Get_ByUser (68ms)
+2025-11-09 20:21:45 - [20:21:45.941] [HIGH  ] ⏱️ PERFORMANCE COMPLETE: SP_usr_users_Get_ByUser (68ms)
+2025-11-09 20:21:45 - [20:21:45.941] [DATA  ] {
+  "Action": "PERFORMANCE_COMPLETE",
+  "Operation": "SP_usr_users_Get_ByUser",
+  "ElapsedMs": 68,
+  "Key": "ExecuteDataTableWithStatusAsync:SP_usr_users_Get_ByUser:638983165058730858",
+  "Status": "SUCCESS",
+  "RowCount": 1
+}
+[20:21:45.945] [MEDIUM] ⬅️ EXITING Dao_User.GetUserFullNameAsync (74ms)
+2025-11-09 20:21:45 - [20:21:45.945] [MEDIUM] ⬅️ EXITING Dao_User.GetUserFullNameAsync (74ms)
+2025-11-09 20:21:45 - User full name loaded: John Koll
+[20:21:45.968] [MEDIUM] ➡️ ENTERING Control_InventoryTab_ComboBox_Location_SelectedIndexChanged.Control_InventoryTab
+2025-11-09 20:21:45 - [20:21:45.968] [MEDIUM] ➡️ ENTERING Control_InventoryTab_ComboBox_Location_SelectedIndexChanged.Control_InventoryTab
+2025-11-09 20:21:45 - Inventory Location ComboBox selection changed.
+[20:21:45.971] [MEDIUM] ⬅️ EXITING Control_InventoryTab_ComboBox_Location_SelectedIndexChanged.Control_InventoryTab (3ms)
+2025-11-09 20:21:45 - [20:21:45.971] [MEDIUM] ⬅️ EXITING Control_InventoryTab_ComboBox_Location_SelectedIndexChanged.Control_InventoryTab (3ms)
+2025-11-09 20:21:45 - [Splash] All form instances configured successfully
+2025-11-09 20:21:45 - [Splash] Form instances configured
 [DEBUG] [SplashScreenForm.UpdateProgress] Progress: 99, Status: Applying theme...
-[THEME] MainForm_TableLayout (TableLayoutPanel) - BackColor: FormBackColor = Color [A=255, R=240, G=248, B=240] | Theme: Forest
-[THEME] MainForm_TableLayout (TableLayoutPanel) - ForeColor: FormForeColor = Color [A=255, R=26, G=26, B=26] | Theme: Forest
-[THEME] MainForm_MenuStrip (MenuStrip) - BackColor: FormBackColor = Color [A=255, R=240, G=248, B=240] | Theme: Forest
-[THEME] MainForm_MenuStrip (MenuStrip) - ForeColor: FormForeColor = Color [A=255, R=26, G=26, B=26] | Theme: Forest
-[THEME] MainForm_SplitContainer_Middle (SplitContainer) - BackColor: FormBackColor = Color [A=255, R=240, G=248, B=240] | Theme: Forest
-[THEME] MainForm_SplitContainer_Middle (SplitContainer) - ForeColor: FormForeColor = Color [A=255, R=26, G=26, B=26] | Theme: Forest
-[THEME]  (SplitterPanel) - BackColor: FormBackColor = Color [A=255, R=240, G=248, B=240] | Theme: Forest
-[THEME]  (SplitterPanel) - ForeColor: FormForeColor = Color [A=255, R=26, G=26, B=26] | Theme: Forest
-[THEME] MainForm_TabControl (TabControl) - BackColor: FormBackColor = Color [A=255, R=240, G=248, B=240] | Theme: Forest
-[THEME] MainForm_TabControl (TabControl) - ForeColor: FormForeColor = Color [A=255, R=26, G=26, B=26] | Theme: Forest
-[THEME] MainForm_TabPage_Inventory (TabPage) - BackColor: FormBackColor = Color [A=255, R=240, G=248, B=240] | Theme: Forest
-[THEME] MainForm_TabPage_Inventory (TabPage) - ForeColor: FormForeColor = Color [A=255, R=26, G=26, B=26] | Theme: Forest
-[THEME] MainForm_UserControl_InventoryTab (Control_InventoryTab) - BackColor: FormBackColor = Color [A=255, R=240, G=248, B=240] | Theme: Forest
-[THEME] MainForm_UserControl_InventoryTab (Control_InventoryTab) - ForeColor: FormForeColor = Color [A=255, R=26, G=26, B=26] | Theme: Forest
-[THEME] Control_InventoryTab_GroupBox_Main (GroupBox) - BackColor: FormBackColor = Color [A=255, R=240, G=248, B=240] | Theme: Forest
-[THEME] Control_InventoryTab_GroupBox_Main (GroupBox) - ForeColor: FormForeColor = Color [A=255, R=26, G=26, B=26] | Theme: Forest
-[THEME] Control_InventoryTab_TableLayout_Main (TableLayoutPanel) - BackColor: FormBackColor = Color [A=255, R=240, G=248, B=240] | Theme: Forest
-[THEME] Control_InventoryTab_TableLayout_Main (TableLayoutPanel) - ForeColor: FormForeColor = Color [A=255, R=26, G=26, B=26] | Theme: Forest
-[THEME] Control_InventoryTab_TableLayout_MiddleGroup (TableLayoutPanel) - BackColor: FormBackColor = Color [A=255, R=240, G=248, B=240] | Theme: Forest
-[THEME] Control_InventoryTab_TableLayout_MiddleGroup (TableLayoutPanel) - ForeColor: FormForeColor = Color [A=255, R=26, G=26, B=26] | Theme: Forest
-[THEME] Control_InventoryTab_Label_Notes (Label) - BackColor: FormBackColor = Color [A=255, R=240, G=248, B=240] | Theme: Forest
-[THEME] Control_InventoryTab_Label_Notes (Label) - ForeColor: FormForeColor = Color [A=255, R=26, G=26, B=26] | Theme: Forest
-[THEME] Control_InventoryTab_RichTextBox_Notes (RichTextBox) - BackColor: FormBackColor = Color [A=255, R=240, G=248, B=240] | Theme: Forest
-[THEME] Control_InventoryTab_RichTextBox_Notes (RichTextBox) - ForeColor: FormForeColor = Color [A=255, R=26, G=26, B=26] | Theme: Forest
-[THEME] Control_InventoryTab_TableLayout_TopGroup (TableLayoutPanel) - BackColor: FormBackColor = Color [A=255, R=240, G=248, B=240] | Theme: Forest
-[THEME] Control_InventoryTab_TableLayout_TopGroup (TableLayoutPanel) - ForeColor: FormForeColor = Color [A=255, R=26, G=26, B=26] | Theme: Forest
-[THEME] Control_InventoryTab_ComboBox_Location (ComboBox) - BackColor: FormBackColor = Color [A=255, R=240, G=248, B=240] | Theme: Forest
-[THEME] Control_InventoryTab_ComboBox_Location (ComboBox) - ForeColor: FormForeColor = Color [A=255, R=26, G=26, B=26] | Theme: Forest
-[THEME] Control_InventoryTab_TextBox_Quantity (TextBox) - BackColor: FormBackColor = Color [A=255, R=240, G=248, B=240] | Theme: Forest
-[THEME] Control_InventoryTab_TextBox_Quantity (TextBox) - ForeColor: FormForeColor = Color [A=255, R=26, G=26, B=26] | Theme: Forest
-[THEME] Control_InventoryTab_ComboBox_Operation (ComboBox) - BackColor: FormBackColor = Color [A=255, R=240, G=248, B=240] | Theme: Forest
-[THEME] Control_InventoryTab_ComboBox_Operation (ComboBox) - ForeColor: FormForeColor = Color [A=255, R=26, G=26, B=26] | Theme: Forest
-[THEME] Control_InventoryTab_ComboBox_Part (ComboBox) - BackColor: FormBackColor = Color [A=255, R=240, G=248, B=240] | Theme: Forest
-[THEME] Control_InventoryTab_ComboBox_Part (ComboBox) - ForeColor: FormForeColor = Color [A=255, R=26, G=26, B=26] | Theme: Forest
-[THEME] Control_InventoryTab_Label_Loc (Label) - BackColor: FormBackColor = Color [A=255, R=240, G=248, B=240] | Theme: Forest
-[THEME] Control_InventoryTab_Label_Loc (Label) - ForeColor: FormForeColor = Color [A=255, R=26, G=26, B=26] | Theme: Forest
-[THEME] Control_InventoryTab_Label_Qty (Label) - BackColor: FormBackColor = Color [A=255, R=240, G=248, B=240] | Theme: Forest
-[THEME] Control_InventoryTab_Label_Qty (Label) - ForeColor: FormForeColor = Color [A=255, R=26, G=26, B=26] | Theme: Forest
-[THEME] Control_InventoryTab_Label_Op (Label) - BackColor: FormBackColor = Color [A=255, R=240, G=248, B=240] | Theme: Forest
-[THEME] Control_InventoryTab_Label_Op (Label) - ForeColor: FormForeColor = Color [A=255, R=26, G=26, B=26] | Theme: Forest
-[THEME] Control_InventoryTab_Label_Part (Label) - BackColor: FormBackColor = Color [A=255, R=240, G=248, B=240] | Theme: Forest
-[THEME] Control_InventoryTab_Label_Part (Label) - ForeColor: FormForeColor = Color [A=255, R=26, G=26, B=26] | Theme: Forest
-[THEME] Control_InventoryTab_TableLayout_BottomGroup (TableLayoutPanel) - BackColor: FormBackColor = Color [A=255, R=240, G=248, B=240] | Theme: Forest
-[THEME] Control_InventoryTab_TableLayout_BottomGroup (TableLayoutPanel) - ForeColor: FormForeColor = Color [A=255, R=26, G=26, B=26] | Theme: Forest
-[THEME] Control_InventoryTab_Button_Toggle_RightPanel (Button) - BackColor: FormBackColor = Color [A=255, R=240, G=248, B=240] | Theme: Forest
-[THEME] Control_InventoryTab_Button_Toggle_RightPanel (Button) - ForeColor: FormForeColor = Color [A=255, R=26, G=26, B=26] | Theme: Forest
-[THEME] Control_InventoryTab_Label_Version (Label) - BackColor: FormBackColor = Color [A=255, R=240, G=248, B=240] | Theme: Forest
-[THEME] Control_InventoryTab_Label_Version (Label) - ForeColor: FormForeColor = Color [A=255, R=26, G=26, B=26] | Theme: Forest
-[THEME] Control_InventoryTab_Button_Save (Button) - BackColor: FormBackColor = Color [A=255, R=240, G=248, B=240] | Theme: Forest
-[THEME] Control_InventoryTab_Button_Save (Button) - ForeColor: FormForeColor = Color [A=255, R=26, G=26, B=26] | Theme: Forest
-[THEME] Control_InventoryTab_Button_AdvancedEntry (Button) - BackColor: FormBackColor = Color [A=255, R=240, G=248, B=240] | Theme: Forest
-[THEME] Control_InventoryTab_Button_AdvancedEntry (Button) - ForeColor: FormForeColor = Color [A=255, R=26, G=26, B=26] | Theme: Forest
-[THEME] Control_InventoryTab_Button_Reset (Button) - BackColor: FormBackColor = Color [A=255, R=240, G=248, B=240] | Theme: Forest
-[THEME] Control_InventoryTab_Button_Reset (Button) - ForeColor: FormForeColor = Color [A=255, R=26, G=26, B=26] | Theme: Forest
-[THEME] MainForm_UserControl_AdvancedInventory (Control_AdvancedInventory) - BackColor: FormBackColor = Color [A=255, R=240, G=248, B=240] | Theme: Forest
-[THEME] MainForm_UserControl_AdvancedInventory (Control_AdvancedInventory) - ForeColor: FormForeColor = Color [A=255, R=26, G=26, B=26] | Theme: Forest
-[THEME] AdvancedInventory_GroupBox_Main (GroupBox) - BackColor: FormBackColor = Color [A=255, R=240, G=248, B=240] | Theme: Forest
-[THEME] AdvancedInventory_GroupBox_Main (GroupBox) - ForeColor: FormForeColor = Color [A=255, R=26, G=26, B=26] | Theme: Forest
-[THEME] AdvancedInventory_TabControl (TabControl) - BackColor: FormBackColor = Color [A=255, R=240, G=248, B=240] | Theme: Forest
-[THEME] AdvancedInventory_TabControl (TabControl) - ForeColor: FormForeColor = Color [A=255, R=26, G=26, B=26] | Theme: Forest
-[THEME] AdvancedInventory_TabControl_Single (TabPage) - BackColor: FormBackColor = Color [A=255, R=240, G=248, B=240] | Theme: Forest
-[THEME] AdvancedInventory_TabControl_Single (TabPage) - ForeColor: FormForeColor = Color [A=255, R=26, G=26, B=26] | Theme: Forest
-[THEME] AdvancedInventory_TableLayout_Single (TableLayoutPanel) - BackColor: FormBackColor = Color [A=255, R=240, G=248, B=240] | Theme: Forest
-[THEME] AdvancedInventory_TableLayout_Single (TableLayoutPanel) - ForeColor: FormForeColor = Color [A=255, R=26, G=26, B=26] | Theme: Forest
-[THEME] AdvancedInventory_Single_GroupBox_Right (GroupBox) - BackColor: FormBackColor = Color [A=255, R=240, G=248, B=240] | Theme: Forest
-[THEME] AdvancedInventory_Single_GroupBox_Right (GroupBox) - ForeColor: FormForeColor = Color [A=255, R=26, G=26, B=26] | Theme: Forest
-[THEME] AdvancedInventory_Single_TableLayout_Right (TableLayoutPanel) - BackColor: FormBackColor = Color [A=255, R=240, G=248, B=240] | Theme: Forest
-[THEME] AdvancedInventory_Single_TableLayout_Right (TableLayoutPanel) - ForeColor: FormForeColor = Color [A=255, R=26, G=26, B=26] | Theme: Forest
-[THEME] AdvancedInventory_Single_ListView (ListView) - BackColor: FormBackColor = Color [A=255, R=240, G=248, B=240] | Theme: Forest
-[THEME] AdvancedInventory_Single_ListView (ListView) - ForeColor: FormForeColor = Color [A=255, R=26, G=26, B=26] | Theme: Forest
-[THEME] AdvancedInventory_Single_TableLayout_LowerRight (TableLayoutPanel) - BackColor: FormBackColor = Color [A=255, R=240, G=248, B=240] | Theme: Forest
-[THEME] AdvancedInventory_Single_TableLayout_LowerRight (TableLayoutPanel) - ForeColor: FormForeColor = Color [A=255, R=26, G=26, B=26] | Theme: Forest
-[THEME] AdvancedInventory_Single_Button_Save (Button) - BackColor: FormBackColor = Color [A=255, R=240, G=248, B=240] | Theme: Forest
-[THEME] AdvancedInventory_Single_Button_Save (Button) - ForeColor: FormForeColor = Color [A=255, R=26, G=26, B=26] | Theme: Forest
-[THEME] AdvancedInventory_Single_Button_Reset (Button) - BackColor: FormBackColor = Color [A=255, R=240, G=248, B=240] | Theme: Forest
-[THEME] AdvancedInventory_Single_Button_Reset (Button) - ForeColor: FormForeColor = Color [A=255, R=26, G=26, B=26] | Theme: Forest
-[THEME] AdvancedInventory_Single_Button_Normal (Button) - BackColor: FormBackColor = Color [A=255, R=240, G=248, B=240] | Theme: Forest
-[THEME] AdvancedInventory_Single_Button_Normal (Button) - ForeColor: FormForeColor = Color [A=255, R=26, G=26, B=26] | Theme: Forest
-[THEME] AdvancedInventory_Single_GroupBox_Left (GroupBox) - BackColor: FormBackColor = Color [A=255, R=240, G=248, B=240] | Theme: Forest
-[THEME] AdvancedInventory_Single_GroupBox_Left (GroupBox) - ForeColor: FormForeColor = Color [A=255, R=26, G=26, B=26] | Theme: Forest
-[THEME] AdvancedInventory_Single_TableLayout_Left (TableLayoutPanel) - BackColor: FormBackColor = Color [A=255, R=240, G=248, B=240] | Theme: Forest
-[THEME] AdvancedInventory_Single_TableLayout_Left (TableLayoutPanel) - ForeColor: FormForeColor = Color [A=255, R=26, G=26, B=26] | Theme: Forest
-[THEME] AdvancedInventory_Single_Label_Part (Label) - BackColor: FormBackColor = Color [A=255, R=240, G=248, B=240] | Theme: Forest
-[THEME] AdvancedInventory_Single_Label_Part (Label) - ForeColor: FormForeColor = Color [A=255, R=26, G=26, B=26] | Theme: Forest
-[THEME] AdvancedInventory_Single_Button_Send (Button) - BackColor: FormBackColor = Color [A=255, R=240, G=248, B=240] | Theme: Forest
-[THEME] AdvancedInventory_Single_Button_Send (Button) - ForeColor: FormForeColor = Color [A=255, R=26, G=26, B=26] | Theme: Forest
-[THEME] AdvancedInventory_Single_ComboBox_Part (ComboBox) - BackColor: FormBackColor = Color [A=255, R=240, G=248, B=240] | Theme: Forest
-[THEME] AdvancedInventory_Single_ComboBox_Part (ComboBox) - ForeColor: FormForeColor = Color [A=255, R=26, G=26, B=26] | Theme: Forest
-[THEME] AdvancedInventory_Single_Label_Op (Label) - BackColor: FormBackColor = Color [A=255, R=240, G=248, B=240] | Theme: Forest
-[THEME] AdvancedInventory_Single_Label_Op (Label) - ForeColor: FormForeColor = Color [A=255, R=26, G=26, B=26] | Theme: Forest
-[THEME] AdvancedInventory_Single_Label_Qty (Label) - BackColor: FormBackColor = Color [A=255, R=240, G=248, B=240] | Theme: Forest
-[THEME] AdvancedInventory_Single_Label_Qty (Label) - ForeColor: FormForeColor = Color [A=255, R=26, G=26, B=26] | Theme: Forest
-[THEME] AdvancedInventory_Single_Label_Loc (Label) - BackColor: FormBackColor = Color [A=255, R=240, G=248, B=240] | Theme: Forest
-[THEME] AdvancedInventory_Single_Label_Loc (Label) - ForeColor: FormForeColor = Color [A=255, R=26, G=26, B=26] | Theme: Forest
-[THEME] AdvancedInventory_Single_ComboBox_Op (ComboBox) - BackColor: FormBackColor = Color [A=255, R=240, G=248, B=240] | Theme: Forest
-[THEME] AdvancedInventory_Single_ComboBox_Op (ComboBox) - ForeColor: FormForeColor = Color [A=255, R=26, G=26, B=26] | Theme: Forest
-[THEME] AdvancedInventory_Single_Label_Count (Label) - BackColor: FormBackColor = Color [A=255, R=240, G=248, B=240] | Theme: Forest
-[THEME] AdvancedInventory_Single_Label_Count (Label) - ForeColor: FormForeColor = Color [A=255, R=26, G=26, B=26] | Theme: Forest
-[THEME] AdvancedInventory_Single_TextBox_Qty (TextBox) - BackColor: FormBackColor = Color [A=255, R=240, G=248, B=240] | Theme: Forest
-[THEME] AdvancedInventory_Single_TextBox_Qty (TextBox) - ForeColor: FormForeColor = Color [A=255, R=26, G=26, B=26] | Theme: Forest
-[THEME] AdvancedInventory_Single_ComboBox_Loc (ComboBox) - BackColor: FormBackColor = Color [A=255, R=240, G=248, B=240] | Theme: Forest
-[THEME] AdvancedInventory_Single_ComboBox_Loc (ComboBox) - ForeColor: FormForeColor = Color [A=255, R=26, G=26, B=26] | Theme: Forest
-[THEME] AdvancedInventory_Single_Label_Notes (Label) - BackColor: FormBackColor = Color [A=255, R=240, G=248, B=240] | Theme: Forest
-[THEME] AdvancedInventory_Single_Label_Notes (Label) - ForeColor: FormForeColor = Color [A=255, R=26, G=26, B=26] | Theme: Forest
-[THEME] AdvancedInventory_Single_TextBox_Count (TextBox) - BackColor: FormBackColor = Color [A=255, R=240, G=248, B=240] | Theme: Forest
-[THEME] AdvancedInventory_Single_TextBox_Count (TextBox) - ForeColor: FormForeColor = Color [A=255, R=26, G=26, B=26] | Theme: Forest
-[THEME] panel4 (Panel) - BackColor: FormBackColor = Color [A=255, R=240, G=248, B=240] | Theme: Forest
-[THEME] panel4 (Panel) - ForeColor: FormForeColor = Color [A=255, R=26, G=26, B=26] | Theme: Forest
-[THEME] AdvancedInventory_Single_RichTextBox_Notes (RichTextBox) - BackColor: FormBackColor = Color [A=255, R=240, G=248, B=240] | Theme: Forest
-[THEME] AdvancedInventory_Single_RichTextBox_Notes (RichTextBox) - ForeColor: FormForeColor = Color [A=255, R=26, G=26, B=26] | Theme: Forest
-[THEME] AdvancedInventory_TabControl_MultiLoc (TabPage) - BackColor: FormBackColor = Color [A=255, R=240, G=248, B=240] | Theme: Forest
-[THEME] AdvancedInventory_TabControl_MultiLoc (TabPage) - ForeColor: FormForeColor = Color [A=255, R=26, G=26, B=26] | Theme: Forest
-[THEME] AdvancedInventory_TableLayoutPanel_Multi (TableLayoutPanel) - BackColor: FormBackColor = Color [A=255, R=240, G=248, B=240] | Theme: Forest
-[THEME] AdvancedInventory_TableLayoutPanel_Multi (TableLayoutPanel) - ForeColor: FormForeColor = Color [A=255, R=26, G=26, B=26] | Theme: Forest
-[THEME] AdvancedInventory_MultiLoc_GroupBox_Preview (GroupBox) - BackColor: FormBackColor = Color [A=255, R=240, G=248, B=240] | Theme: Forest
-[THEME] AdvancedInventory_MultiLoc_GroupBox_Preview (GroupBox) - ForeColor: FormForeColor = Color [A=255, R=26, G=26, B=26] | Theme: Forest
-[THEME] AdvancedInventory_Multi_TableLayout_Right (TableLayoutPanel) - BackColor: FormBackColor = Color [A=255, R=240, G=248, B=240] | Theme: Forest
-[THEME] AdvancedInventory_Multi_TableLayout_Right (TableLayoutPanel) - ForeColor: FormForeColor = Color [A=255, R=26, G=26, B=26] | Theme: Forest
-[THEME] AdvancedInventory_Multi_TableLayout_BottomRight (TableLayoutPanel) - BackColor: FormBackColor = Color [A=255, R=240, G=248, B=240] | Theme: Forest
-[THEME] AdvancedInventory_Multi_TableLayout_BottomRight (TableLayoutPanel) - ForeColor: FormForeColor = Color [A=255, R=26, G=26, B=26] | Theme: Forest
-[THEME] AdvancedInventory_MultiLoc_Button_SaveAll (Button) - BackColor: FormBackColor = Color [A=255, R=240, G=248, B=240] | Theme: Forest
-[THEME] AdvancedInventory_MultiLoc_Button_SaveAll (Button) - ForeColor: FormForeColor = Color [A=255, R=26, G=26, B=26] | Theme: Forest
-[THEME] AdvancedInventory_MultiLoc_Button_Reset (Button) - BackColor: FormBackColor = Color [A=255, R=240, G=248, B=240] | Theme: Forest
-[THEME] AdvancedInventory_MultiLoc_Button_Reset (Button) - ForeColor: FormForeColor = Color [A=255, R=26, G=26, B=26] | Theme: Forest
-[THEME] AdvancedInventory_Multi_Button_Normal (Button) - BackColor: FormBackColor = Color [A=255, R=240, G=248, B=240] | Theme: Forest
-[THEME] AdvancedInventory_Multi_Button_Normal (Button) - ForeColor: FormForeColor = Color [A=255, R=26, G=26, B=26] | Theme: Forest
-[THEME] panel1 (Panel) - BackColor: FormBackColor = Color [A=255, R=240, G=248, B=240] | Theme: Forest
-[THEME] panel1 (Panel) - ForeColor: FormForeColor = Color [A=255, R=26, G=26, B=26] | Theme: Forest
-[THEME] AdvancedInventory_MultiLoc_ListView_Preview (ListView) - BackColor: FormBackColor = Color [A=255, R=240, G=248, B=240] | Theme: Forest
-[THEME] AdvancedInventory_MultiLoc_ListView_Preview (ListView) - ForeColor: FormForeColor = Color [A=255, R=26, G=26, B=26] | Theme: Forest
-[THEME] AdvancedInventory_MultiLoc_GroupBox_Item (GroupBox) - BackColor: FormBackColor = Color [A=255, R=240, G=248, B=240] | Theme: Forest
-[THEME] AdvancedInventory_MultiLoc_GroupBox_Item (GroupBox) - ForeColor: FormForeColor = Color [A=255, R=26, G=26, B=26] | Theme: Forest
-[THEME] Control_Shortcuts_TableLayout_Main (TableLayoutPanel) - BackColor: FormBackColor = Color [A=255, R=240, G=248, B=240] | Theme: Forest
-[THEME] Control_Shortcuts_TableLayout_Main (TableLayoutPanel) - ForeColor: FormForeColor = Color [A=255, R=26, G=26, B=26] | Theme: Forest
-[THEME] panel2 (Panel) - BackColor: FormBackColor = Color [A=255, R=240, G=248, B=240] | Theme: Forest
-[THEME] panel2 (Panel) - ForeColor: FormForeColor = Color [A=255, R=26, G=26, B=26] | Theme: Forest
-[THEME] AdvancedInventory_MultiLoc_Button_AddLoc (Button) - BackColor: FormBackColor = Color [A=255, R=240, G=248, B=240] | Theme: Forest
-[THEME] AdvancedInventory_MultiLoc_Button_AddLoc (Button) - ForeColor: FormForeColor = Color [A=255, R=26, G=26, B=26] | Theme: Forest
-[THEME] AdvancedInventory_Multi_TableLayout_Left (TableLayoutPanel) - BackColor: FormBackColor = Color [A=255, R=240, G=248, B=240] | Theme: Forest
-[THEME] AdvancedInventory_Multi_TableLayout_Left (TableLayoutPanel) - ForeColor: FormForeColor = Color [A=255, R=26, G=26, B=26] | Theme: Forest
-[THEME] AdvancedInventory_MultiLoc_Label_Part (Label) - BackColor: FormBackColor = Color [A=255, R=240, G=248, B=240] | Theme: Forest
-[THEME] AdvancedInventory_MultiLoc_Label_Part (Label) - ForeColor: FormForeColor = Color [A=255, R=26, G=26, B=26] | Theme: Forest
-[THEME] AdvancedInventory_MultiLoc_ComboBox_Part (ComboBox) - BackColor: FormBackColor = Color [A=255, R=240, G=248, B=240] | Theme: Forest
-[THEME] AdvancedInventory_MultiLoc_ComboBox_Part (ComboBox) - ForeColor: FormForeColor = Color [A=255, R=26, G=26, B=26] | Theme: Forest
-[THEME] AdvancedInventory_MultiLoc_Label_Op (Label) - BackColor: FormBackColor = Color [A=255, R=240, G=248, B=240] | Theme: Forest
-[THEME] AdvancedInventory_MultiLoc_Label_Op (Label) - ForeColor: FormForeColor = Color [A=255, R=26, G=26, B=26] | Theme: Forest
-[THEME] AdvancedInventory_MultiLoc_ComboBox_Op (ComboBox) - BackColor: FormBackColor = Color [A=255, R=240, G=248, B=240] | Theme: Forest
-[THEME] AdvancedInventory_MultiLoc_ComboBox_Op (ComboBox) - ForeColor: FormForeColor = Color [A=255, R=26, G=26, B=26] | Theme: Forest
-[THEME] AdvancedInventory_MultiLoc_Label_Qty (Label) - BackColor: FormBackColor = Color [A=255, R=240, G=248, B=240] | Theme: Forest
-[THEME] AdvancedInventory_MultiLoc_Label_Qty (Label) - ForeColor: FormForeColor = Color [A=255, R=26, G=26, B=26] | Theme: Forest
-[THEME] AdvancedInventory_MultiLoc_Label_Notes (Label) - BackColor: FormBackColor = Color [A=255, R=240, G=248, B=240] | Theme: Forest
-[THEME] AdvancedInventory_MultiLoc_Label_Notes (Label) - ForeColor: FormForeColor = Color [A=255, R=26, G=26, B=26] | Theme: Forest
-[THEME] AdvancedInventory_MultiLoc_TextBox_Qty (TextBox) - BackColor: FormBackColor = Color [A=255, R=240, G=248, B=240] | Theme: Forest
-[THEME] AdvancedInventory_MultiLoc_TextBox_Qty (TextBox) - ForeColor: FormForeColor = Color [A=255, R=26, G=26, B=26] | Theme: Forest
-[THEME] AdvancedInventory_MultiLoc_Label_Loc (Label) - BackColor: FormBackColor = Color [A=255, R=240, G=248, B=240] | Theme: Forest
-[THEME] AdvancedInventory_MultiLoc_Label_Loc (Label) - ForeColor: FormForeColor = Color [A=255, R=26, G=26, B=26] | Theme: Forest
-[THEME] AdvancedInventory_MultiLoc_ComboBox_Loc (ComboBox) - BackColor: FormBackColor = Color [A=255, R=240, G=248, B=240] | Theme: Forest
-[THEME] AdvancedInventory_MultiLoc_ComboBox_Loc (ComboBox) - ForeColor: FormForeColor = Color [A=255, R=26, G=26, B=26] | Theme: Forest
-[THEME] panel3 (Panel) - BackColor: FormBackColor = Color [A=255, R=240, G=248, B=240] | Theme: Forest
-[THEME] panel3 (Panel) - ForeColor: FormForeColor = Color [A=255, R=26, G=26, B=26] | Theme: Forest
-[THEME] AdvancedInventory_MultiLoc_RichTextBox_Notes (RichTextBox) - BackColor: FormBackColor = Color [A=255, R=240, G=248, B=240] | Theme: Forest
-[THEME] AdvancedInventory_MultiLoc_RichTextBox_Notes (RichTextBox) - ForeColor: FormForeColor = Color [A=255, R=26, G=26, B=26] | Theme: Forest
-[THEME] AdvancedInventory_TabControl_Import (TabPage) - BackColor: FormBackColor = Color [A=255, R=240, G=248, B=240] | Theme: Forest
-[THEME] AdvancedInventory_TabControl_Import (TabPage) - ForeColor: FormForeColor = Color [A=255, R=26, G=26, B=26] | Theme: Forest
-[THEME] AdvancedInventory_Import_TableLayout (TableLayoutPanel) - BackColor: FormBackColor = Color [A=255, R=240, G=248, B=240] | Theme: Forest
-[THEME] AdvancedInventory_Import_TableLayout (TableLayoutPanel) - ForeColor: FormForeColor = Color [A=255, R=26, G=26, B=26] | Theme: Forest
-[THEME] AdvancedInventory_Import_Panel_Middle (Panel) - BackColor: FormBackColor = Color [A=255, R=240, G=248, B=240] | Theme: Forest
-[THEME] AdvancedInventory_Import_Panel_Middle (Panel) - ForeColor: FormForeColor = Color [A=255, R=26, G=26, B=26] | Theme: Forest
-[THEME] AdvancedInventory_Import_DataGridView (DataGridView) - BackColor: DataGridBackColor = Color [A=255, R=255, G=255, B=255] | Theme: Forest
-[THEME] AdvancedInventory_Import_DataGridView (DataGridView) - ForeColor: DataGridForeColor = Color [A=255, R=26, G=26, B=26] | Theme: Forest
-[THEME]  (HScrollBar) - BackColor: FormBackColor = Color [A=255, R=240, G=248, B=240] | Theme: Forest
-[THEME]  (HScrollBar) - ForeColor: FormForeColor = Color [A=255, R=26, G=26, B=26] | Theme: Forest
-[THEME]  (VScrollBar) - BackColor: FormBackColor = Color [A=255, R=240, G=248, B=240] | Theme: Forest
-[THEME]  (VScrollBar) - ForeColor: FormForeColor = Color [A=255, R=26, G=26, B=26] | Theme: Forest
-[THEME] AdvancedInventory_Import_TableLayout_Bottom (TableLayoutPanel) - BackColor: FormBackColor = Color [A=255, R=240, G=248, B=240] | Theme: Forest
-[THEME] AdvancedInventory_Import_TableLayout_Bottom (TableLayoutPanel) - ForeColor: FormForeColor = Color [A=255, R=26, G=26, B=26] | Theme: Forest
-[THEME] AdvancedInventory_Import_Button_Normal (Button) - BackColor: FormBackColor = Color [A=255, R=240, G=248, B=240] | Theme: Forest
-[THEME] AdvancedInventory_Import_Button_Normal (Button) - ForeColor: FormForeColor = Color [A=255, R=26, G=26, B=26] | Theme: Forest
-[THEME] AdvancedInventory_Import_Button_Save (Button) - BackColor: FormBackColor = Color [A=255, R=240, G=248, B=240] | Theme: Forest
-[THEME] AdvancedInventory_Import_Button_Save (Button) - ForeColor: FormForeColor = Color [A=255, R=26, G=26, B=26] | Theme: Forest
-[THEME] AdvancedInventory_Import_TableLayout_Top (TableLayoutPanel) - BackColor: FormBackColor = Color [A=255, R=240, G=248, B=240] | Theme: Forest
-[THEME] AdvancedInventory_Import_TableLayout_Top (TableLayoutPanel) - ForeColor: FormForeColor = Color [A=255, R=26, G=26, B=26] | Theme: Forest
-[THEME] AdvancedInventory_Import_Button_OpenExcel (Button) - BackColor: FormBackColor = Color [A=255, R=240, G=248, B=240] | Theme: Forest
-[THEME] AdvancedInventory_Import_Button_OpenExcel (Button) - ForeColor: FormForeColor = Color [A=255, R=26, G=26, B=26] | Theme: Forest
-[THEME] AdvancedInventory_Import_Button_ImportExcel (Button) - BackColor: FormBackColor = Color [A=255, R=240, G=248, B=240] | Theme: Forest
-[THEME] AdvancedInventory_Import_Button_ImportExcel (Button) - ForeColor: FormForeColor = Color [A=255, R=26, G=26, B=26] | Theme: Forest
-[THEME] MainForm_TabPage_Remove (TabPage) - BackColor: FormBackColor = Color [A=255, R=240, G=248, B=240] | Theme: Forest
-[THEME] MainForm_TabPage_Remove (TabPage) - ForeColor: FormForeColor = Color [A=255, R=26, G=26, B=26] | Theme: Forest
-[THEME] MainForm_UserControl_RemoveTab (Control_RemoveTab) - BackColor: FormBackColor = Color [A=255, R=240, G=248, B=240] | Theme: Forest
-[THEME] MainForm_UserControl_RemoveTab (Control_RemoveTab) - ForeColor: FormForeColor = Color [A=255, R=26, G=26, B=26] | Theme: Forest
-[THEME] Control_RemoveTab_GroupBox_MainControl (GroupBox) - BackColor: FormBackColor = Color [A=255, R=240, G=248, B=240] | Theme: Forest
-[THEME] Control_RemoveTab_GroupBox_MainControl (GroupBox) - ForeColor: FormForeColor = Color [A=255, R=26, G=26, B=26] | Theme: Forest
-[THEME] Control_RemoveTab_Panel_Main (TableLayoutPanel) - BackColor: FormBackColor = Color [A=255, R=240, G=248, B=240] | Theme: Forest
-[THEME] Control_RemoveTab_Panel_Main (TableLayoutPanel) - ForeColor: FormForeColor = Color [A=255, R=26, G=26, B=26] | Theme: Forest
-[THEME] Control_RemoveTab_Panel_DataGridView (Panel) - BackColor: FormBackColor = Color [A=255, R=240, G=248, B=240] | Theme: Forest
-[THEME] Control_RemoveTab_Panel_DataGridView (Panel) - ForeColor: FormForeColor = Color [A=255, R=26, G=26, B=26] | Theme: Forest
-[THEME] Control_RemoveTab_Image_NothingFound (PictureBox) - BackColor: FormBackColor = Color [A=255, R=240, G=248, B=240] | Theme: Forest
-[THEME] Control_RemoveTab_Image_NothingFound (PictureBox) - ForeColor: FormForeColor = Color [A=255, R=26, G=26, B=26] | Theme: Forest
-[THEME] Control_RemoveTab_DataGridView_Main (DataGridView) - BackColor: DataGridBackColor = Color [A=255, R=255, G=255, B=255] | Theme: Forest
-[THEME] Control_RemoveTab_DataGridView_Main (DataGridView) - ForeColor: DataGridForeColor = Color [A=255, R=26, G=26, B=26] | Theme: Forest
-[THEME]  (HScrollBar) - BackColor: FormBackColor = Color [A=255, R=240, G=248, B=240] | Theme: Forest
-[THEME]  (HScrollBar) - ForeColor: FormForeColor = Color [A=255, R=26, G=26, B=26] | Theme: Forest
-[THEME]  (VScrollBar) - BackColor: FormBackColor = Color [A=255, R=240, G=248, B=240] | Theme: Forest
-[THEME]  (VScrollBar) - ForeColor: FormForeColor = Color [A=255, R=26, G=26, B=26] | Theme: Forest
-[THEME] Control_RemoveTab_Panel_Header (Panel) - BackColor: FormBackColor = Color [A=255, R=240, G=248, B=240] | Theme: Forest
-[THEME] Control_RemoveTab_Panel_Header (Panel) - ForeColor: FormForeColor = Color [A=255, R=26, G=26, B=26] | Theme: Forest
-[THEME] Control_RemoveTab_TableLayout_Top (TableLayoutPanel) - BackColor: FormBackColor = Color [A=255, R=240, G=248, B=240] | Theme: Forest
-[THEME] Control_RemoveTab_TableLayout_Top (TableLayoutPanel) - ForeColor: FormForeColor = Color [A=255, R=26, G=26, B=26] | Theme: Forest
-[THEME] Control_RemoveTab_Label_Part (Label) - BackColor: FormBackColor = Color [A=255, R=240, G=248, B=240] | Theme: Forest
-[THEME] Control_RemoveTab_Label_Part (Label) - ForeColor: FormForeColor = Color [A=255, R=26, G=26, B=26] | Theme: Forest
-[THEME] Control_RemoveTab_ComboBox_Part (ComboBox) - BackColor: FormBackColor = Color [A=255, R=240, G=248, B=240] | Theme: Forest
-[THEME] Control_RemoveTab_ComboBox_Part (ComboBox) - ForeColor: FormForeColor = Color [A=255, R=26, G=26, B=26] | Theme: Forest
-[THEME] Control_RemoveTab_Label_Operation (Label) - BackColor: FormBackColor = Color [A=255, R=240, G=248, B=240] | Theme: Forest
-[THEME] Control_RemoveTab_Label_Operation (Label) - ForeColor: FormForeColor = Color [A=255, R=26, G=26, B=26] | Theme: Forest
-[THEME] Control_RemoveTab_ComboBox_Operation (ComboBox) - BackColor: FormBackColor = Color [A=255, R=240, G=248, B=240] | Theme: Forest
-[THEME] Control_RemoveTab_ComboBox_Operation (ComboBox) - ForeColor: FormForeColor = Color [A=255, R=26, G=26, B=26] | Theme: Forest
-[THEME] Control_RemoveTab_TableLayout_Bottom (TableLayoutPanel) - BackColor: FormBackColor = Color [A=255, R=240, G=248, B=240] | Theme: Forest
-[THEME] Control_RemoveTab_TableLayout_Bottom (TableLayoutPanel) - ForeColor: FormForeColor = Color [A=255, R=26, G=26, B=26] | Theme: Forest
-[THEME] Control_RemoveTab_Button_ShowAll (Button) - BackColor: FormBackColor = Color [A=255, R=240, G=248, B=240] | Theme: Forest
-[THEME] Control_RemoveTab_Button_ShowAll (Button) - ForeColor: FormForeColor = Color [A=255, R=26, G=26, B=26] | Theme: Forest
-[THEME] Control_RemoveTab_Button_AdvancedItemRemoval (Button) - BackColor: FormBackColor = Color [A=255, R=240, G=248, B=240] | Theme: Forest
-[THEME] Control_RemoveTab_Button_AdvancedItemRemoval (Button) - ForeColor: FormForeColor = Color [A=255, R=26, G=26, B=26] | Theme: Forest
-[THEME] Control_RemoveTab_Button_Delete (Button) - BackColor: FormBackColor = Color [A=255, R=240, G=248, B=240] | Theme: Forest
-[THEME] Control_RemoveTab_Button_Delete (Button) - ForeColor: FormForeColor = Color [A=255, R=26, G=26, B=26] | Theme: Forest
-[THEME] Control_RemoveTab_Button_Search (Button) - BackColor: FormBackColor = Color [A=255, R=240, G=248, B=240] | Theme: Forest
-[THEME] Control_RemoveTab_Button_Search (Button) - ForeColor: FormForeColor = Color [A=255, R=26, G=26, B=26] | Theme: Forest
-[THEME] Control_RemoveTab_Button_Toggle_RightPanel (Button) - BackColor: FormBackColor = Color [A=255, R=240, G=248, B=240] | Theme: Forest
-[THEME] Control_RemoveTab_Button_Toggle_RightPanel (Button) - ForeColor: FormForeColor = Color [A=255, R=26, G=26, B=26] | Theme: Forest
-[THEME] Control_RemoveTab_Button_Reset (Button) - BackColor: FormBackColor = Color [A=255, R=240, G=248, B=240] | Theme: Forest
-[THEME] Control_RemoveTab_Button_Reset (Button) - ForeColor: FormForeColor = Color [A=255, R=26, G=26, B=26] | Theme: Forest
-[THEME] Control_RemoveTab_Button_Print (Button) - BackColor: FormBackColor = Color [A=255, R=240, G=248, B=240] | Theme: Forest
-[THEME] Control_RemoveTab_Button_Print (Button) - ForeColor: FormForeColor = Color [A=255, R=26, G=26, B=26] | Theme: Forest
-[THEME] Control_RemoveTab_Button_Undo (Button) - BackColor: FormBackColor = Color [A=255, R=240, G=248, B=240] | Theme: Forest
-[THEME] Control_RemoveTab_Button_Undo (Button) - ForeColor: FormForeColor = Color [A=255, R=26, G=26, B=26] | Theme: Forest
-[THEME] MainForm_UserControl_AdvancedRemove (Control_AdvancedRemove) - BackColor: FormBackColor = Color [A=255, R=240, G=248, B=240] | Theme: Forest
-[THEME] MainForm_UserControl_AdvancedRemove (Control_AdvancedRemove) - ForeColor: FormForeColor = Color [A=255, R=26, G=26, B=26] | Theme: Forest
-[THEME] Control_AdvancedRemove_GroupBox_Main (GroupBox) - BackColor: FormBackColor = Color [A=255, R=240, G=248, B=240] | Theme: Forest
-[THEME] Control_AdvancedRemove_GroupBox_Main (GroupBox) - ForeColor: FormForeColor = Color [A=255, R=26, G=26, B=26] | Theme: Forest
-[THEME] Control_AdvancedRemove_TableLayout_Main (TableLayoutPanel) - BackColor: FormBackColor = Color [A=255, R=240, G=248, B=240] | Theme: Forest
-[THEME] Control_AdvancedRemove_TableLayout_Main (TableLayoutPanel) - ForeColor: FormForeColor = Color [A=255, R=26, G=26, B=26] | Theme: Forest
-[THEME] Control_AdvancedRemove_TableLayout_Row4 (TableLayoutPanel) - BackColor: FormBackColor = Color [A=255, R=240, G=248, B=240] | Theme: Forest
-[THEME] Control_AdvancedRemove_TableLayout_Row4 (TableLayoutPanel) - ForeColor: FormForeColor = Color [A=255, R=26, G=26, B=26] | Theme: Forest
-[THEME] Control_AdvancedRemove_TableLayout_BottomRight (TableLayoutPanel) - BackColor: FormBackColor = Color [A=255, R=240, G=248, B=240] | Theme: Forest
-[THEME] Control_AdvancedRemove_TableLayout_BottomRight (TableLayoutPanel) - ForeColor: FormForeColor = Color [A=255, R=26, G=26, B=26] | Theme: Forest
-[THEME] Control_AdvancedRemove_Button_Reset (Button) - BackColor: FormBackColor = Color [A=255, R=240, G=248, B=240] | Theme: Forest
-[THEME] Control_AdvancedRemove_Button_Reset (Button) - ForeColor: FormForeColor = Color [A=255, R=26, G=26, B=26] | Theme: Forest
-[THEME] Control_AdvancedRemove_Button_Print (Button) - BackColor: FormBackColor = Color [A=255, R=240, G=248, B=240] | Theme: Forest
-[THEME] Control_AdvancedRemove_Button_Print (Button) - ForeColor: FormForeColor = Color [A=255, R=26, G=26, B=26] | Theme: Forest
-[THEME] Control_AdvancedRemove_Button_Normal (Button) - BackColor: FormBackColor = Color [A=255, R=240, G=248, B=240] | Theme: Forest
-[THEME] Control_AdvancedRemove_Button_Normal (Button) - ForeColor: FormForeColor = Color [A=255, R=26, G=26, B=26] | Theme: Forest
-[THEME] Control_AdvancedRemove_TableLayout_BottomLeft (TableLayoutPanel) - BackColor: FormBackColor = Color [A=255, R=240, G=248, B=240] | Theme: Forest
-[THEME] Control_AdvancedRemove_TableLayout_BottomLeft (TableLayoutPanel) - ForeColor: FormForeColor = Color [A=255, R=26, G=26, B=26] | Theme: Forest
-[THEME] Control_AdvancedRemove_Button_Search (Button) - BackColor: FormBackColor = Color [A=255, R=240, G=248, B=240] | Theme: Forest
-[THEME] Control_AdvancedRemove_Button_Search (Button) - ForeColor: FormForeColor = Color [A=255, R=26, G=26, B=26] | Theme: Forest
-[THEME] Control_AdvancedRemove_Button_Undo (Button) - BackColor: FormBackColor = Color [A=255, R=240, G=248, B=240] | Theme: Forest
-[THEME] Control_AdvancedRemove_Button_Undo (Button) - ForeColor: FormForeColor = Color [A=255, R=26, G=26, B=26] | Theme: Forest
-[THEME] Control_AdvancedRemove_Button_SidePanel (Button) - BackColor: FormBackColor = Color [A=255, R=240, G=248, B=240] | Theme: Forest
-[THEME] Control_AdvancedRemove_Button_SidePanel (Button) - ForeColor: FormForeColor = Color [A=255, R=26, G=26, B=26] | Theme: Forest
-[THEME] Control_AdvancedRemove_Button_Delete (Button) - BackColor: FormBackColor = Color [A=255, R=240, G=248, B=240] | Theme: Forest
-[THEME] Control_AdvancedRemove_Button_Delete (Button) - ForeColor: FormForeColor = Color [A=255, R=26, G=26, B=26] | Theme: Forest
-[THEME] Control_AdvancedRemove_Panel_Top (Panel) - BackColor: FormBackColor = Color [A=255, R=240, G=248, B=240] | Theme: Forest
-[THEME] Control_AdvancedRemove_Panel_Top (Panel) - ForeColor: FormForeColor = Color [A=255, R=26, G=26, B=26] | Theme: Forest
-[THEME] Control_AdvancedRemove_SplitContainer_Main (SplitContainer) - BackColor: FormBackColor = Color [A=255, R=240, G=248, B=240] | Theme: Forest
-[THEME] Control_AdvancedRemove_SplitContainer_Main (SplitContainer) - ForeColor: FormForeColor = Color [A=255, R=26, G=26, B=26] | Theme: Forest
-[THEME]  (SplitterPanel) - BackColor: FormBackColor = Color [A=255, R=240, G=248, B=240] | Theme: Forest
-[THEME]  (SplitterPanel) - ForeColor: FormForeColor = Color [A=255, R=26, G=26, B=26] | Theme: Forest
-[THEME] Control_AdvancedRemove_TableLayout_TopLeft (TableLayoutPanel) - BackColor: FormBackColor = Color [A=255, R=240, G=248, B=240] | Theme: Forest
-[THEME] Control_AdvancedRemove_TableLayout_TopLeft (TableLayoutPanel) - ForeColor: FormForeColor = Color [A=255, R=26, G=26, B=26] | Theme: Forest
-[THEME] Control_AdvancedRemove_TableLayout_DateRange (TableLayoutPanel) - BackColor: FormBackColor = Color [A=255, R=240, G=248, B=240] | Theme: Forest
-[THEME] Control_AdvancedRemove_TableLayout_DateRange (TableLayoutPanel) - ForeColor: FormForeColor = Color [A=255, R=26, G=26, B=26] | Theme: Forest
-[THEME] Control_AdvancedRemove_DateTimePicker_To (DateTimePicker) - BackColor: FormBackColor = Color [A=255, R=240, G=248, B=240] | Theme: Forest
-[THEME] Control_AdvancedRemove_DateTimePicker_To (DateTimePicker) - ForeColor: FormForeColor = Color [A=255, R=26, G=26, B=26] | Theme: Forest
-[THEME] Control_AdvancedRemove_DateTimePicker_From (DateTimePicker) - BackColor: FormBackColor = Color [A=255, R=240, G=248, B=240] | Theme: Forest
-[THEME] Control_AdvancedRemove_DateTimePicker_From (DateTimePicker) - ForeColor: FormForeColor = Color [A=255, R=26, G=26, B=26] | Theme: Forest
-[THEME] Control_AdvancedRemove_Label_DateDash (Label) - BackColor: FormBackColor = Color [A=255, R=240, G=248, B=240] | Theme: Forest
-[THEME] Control_AdvancedRemove_Label_DateDash (Label) - ForeColor: FormForeColor = Color [A=255, R=26, G=26, B=26] | Theme: Forest
-[THEME] Control_AdvancedRemove_TextBox_Location (TextBox) - BackColor: FormBackColor = Color [A=255, R=240, G=248, B=240] | Theme: Forest
-[THEME] Control_AdvancedRemove_TextBox_Location (TextBox) - ForeColor: FormForeColor = Color [A=255, R=26, G=26, B=26] | Theme: Forest
-[THEME] Control_AdvancedRemove_TextBox_Part (TextBox) - BackColor: FormBackColor = Color [A=255, R=240, G=248, B=240] | Theme: Forest
-[THEME] Control_AdvancedRemove_TextBox_Part (TextBox) - ForeColor: FormForeColor = Color [A=255, R=26, G=26, B=26] | Theme: Forest
-[THEME] Control_AdvancedRemove_Label_Loc (Label) - BackColor: FormBackColor = Color [A=255, R=240, G=248, B=240] | Theme: Forest
-[THEME] Control_AdvancedRemove_Label_Loc (Label) - ForeColor: FormForeColor = Color [A=255, R=26, G=26, B=26] | Theme: Forest
-[THEME] Control_AdvancedRemove_Label_Op (Label) - BackColor: FormBackColor = Color [A=255, R=240, G=248, B=240] | Theme: Forest
-[THEME] Control_AdvancedRemove_Label_Op (Label) - ForeColor: FormForeColor = Color [A=255, R=26, G=26, B=26] | Theme: Forest
-[THEME] Control_AdvancedRemove_Label_User (Label) - BackColor: FormBackColor = Color [A=255, R=240, G=248, B=240] | Theme: Forest
-[THEME] Control_AdvancedRemove_Label_User (Label) - ForeColor: FormForeColor = Color [A=255, R=26, G=26, B=26] | Theme: Forest
-[THEME] Control_AdvancedRemove_Label_Notes (Label) - BackColor: FormBackColor = Color [A=255, R=240, G=248, B=240] | Theme: Forest
-[THEME] Control_AdvancedRemove_Label_Notes (Label) - ForeColor: FormForeColor = Color [A=255, R=26, G=26, B=26] | Theme: Forest
-[THEME] Control_AdvancedRemove_CheckBox_Date (CheckBox) - BackColor: FormBackColor = Color [A=255, R=240, G=248, B=240] | Theme: Forest
-[THEME] Control_AdvancedRemove_CheckBox_Date (CheckBox) - ForeColor: FormForeColor = Color [A=255, R=26, G=26, B=26] | Theme: Forest
-[THEME] Control_AdvancedRemove_Label_Qty (Label) - BackColor: FormBackColor = Color [A=255, R=240, G=248, B=240] | Theme: Forest
-[THEME] Control_AdvancedRemove_Label_Qty (Label) - ForeColor: FormForeColor = Color [A=255, R=26, G=26, B=26] | Theme: Forest
-[THEME] Control_AdvancedRemove_ComboBox_User (ComboBox) - BackColor: FormBackColor = Color [A=255, R=240, G=248, B=240] | Theme: Forest
-[THEME] Control_AdvancedRemove_ComboBox_User (ComboBox) - ForeColor: FormForeColor = Color [A=255, R=26, G=26, B=26] | Theme: Forest
-[THEME] Control_AdvancedRemove_TextBox_Operation (TextBox) - BackColor: FormBackColor = Color [A=255, R=240, G=248, B=240] | Theme: Forest
-[THEME] Control_AdvancedRemove_TextBox_Operation (TextBox) - ForeColor: FormForeColor = Color [A=255, R=26, G=26, B=26] | Theme: Forest
-[THEME] Control_AdvancedRemove_Label_Part (Label) - BackColor: FormBackColor = Color [A=255, R=240, G=248, B=240] | Theme: Forest
-[THEME] Control_AdvancedRemove_Label_Part (Label) - ForeColor: FormForeColor = Color [A=255, R=26, G=26, B=26] | Theme: Forest
-[THEME] Control_AdvancedRemove_TextBox_Notes (TextBox) - BackColor: FormBackColor = Color [A=255, R=240, G=248, B=240] | Theme: Forest
-[THEME] Control_AdvancedRemove_TextBox_Notes (TextBox) - ForeColor: FormForeColor = Color [A=255, R=26, G=26, B=26] | Theme: Forest
-[THEME] Control_AdvancedRemove_TableLayout_Quantity (TableLayoutPanel) - BackColor: FormBackColor = Color [A=255, R=240, G=248, B=240] | Theme: Forest
-[THEME] Control_AdvancedRemove_TableLayout_Quantity (TableLayoutPanel) - ForeColor: FormForeColor = Color [A=255, R=26, G=26, B=26] | Theme: Forest
-[THEME] Control_AdvancedRemove_TextBox_QtyMin (TextBox) - BackColor: FormBackColor = Color [A=255, R=240, G=248, B=240] | Theme: Forest
-[THEME] Control_AdvancedRemove_TextBox_QtyMin (TextBox) - ForeColor: FormForeColor = Color [A=255, R=26, G=26, B=26] | Theme: Forest
-[THEME] Control_AdvancedRemove_TextBox_QtyMax (TextBox) - BackColor: FormBackColor = Color [A=255, R=240, G=248, B=240] | Theme: Forest
-[THEME] Control_AdvancedRemove_TextBox_QtyMax (TextBox) - ForeColor: FormForeColor = Color [A=255, R=26, G=26, B=26] | Theme: Forest
-[THEME] Control_AdvancedRemove_Label_QtyDash (Label) - BackColor: FormBackColor = Color [A=255, R=240, G=248, B=240] | Theme: Forest
-[THEME] Control_AdvancedRemove_Label_QtyDash (Label) - ForeColor: FormForeColor = Color [A=255, R=26, G=26, B=26] | Theme: Forest
-[THEME]  (SplitterPanel) - BackColor: FormBackColor = Color [A=255, R=240, G=248, B=240] | Theme: Forest
-[THEME]  (SplitterPanel) - ForeColor: FormForeColor = Color [A=255, R=26, G=26, B=26] | Theme: Forest
-[THEME] Control_AdvancedRemove_Panel_Row4_Center (Panel) - BackColor: FormBackColor = Color [A=255, R=240, G=248, B=240] | Theme: Forest
-[THEME] Control_AdvancedRemove_Panel_Row4_Center (Panel) - ForeColor: FormForeColor = Color [A=255, R=26, G=26, B=26] | Theme: Forest
-[THEME] Control_AdvancedRemove_Image_NothingFound (PictureBox) - BackColor: FormBackColor = Color [A=255, R=240, G=248, B=240] | Theme: Forest
-[THEME] Control_AdvancedRemove_Image_NothingFound (PictureBox) - ForeColor: FormForeColor = Color [A=255, R=26, G=26, B=26] | Theme: Forest
-[THEME] Control_AdvancedRemove_DataGridView_Results (DataGridView) - BackColor: DataGridBackColor = Color [A=255, R=255, G=255, B=255] | Theme: Forest
-[THEME] Control_AdvancedRemove_DataGridView_Results (DataGridView) - ForeColor: DataGridForeColor = Color [A=255, R=26, G=26, B=26] | Theme: Forest
-[THEME]  (HScrollBar) - BackColor: FormBackColor = Color [A=255, R=240, G=248, B=240] | Theme: Forest
-[THEME]  (HScrollBar) - ForeColor: FormForeColor = Color [A=255, R=26, G=26, B=26] | Theme: Forest
-[THEME]  (VScrollBar) - BackColor: FormBackColor = Color [A=255, R=240, G=248, B=240] | Theme: Forest
-[THEME]  (VScrollBar) - ForeColor: FormForeColor = Color [A=255, R=26, G=26, B=26] | Theme: Forest
-[THEME] MainForm_TabPage_Transfer (TabPage) - BackColor: FormBackColor = Color [A=255, R=240, G=248, B=240] | Theme: Forest
-[THEME] MainForm_TabPage_Transfer (TabPage) - ForeColor: FormForeColor = Color [A=255, R=26, G=26, B=26] | Theme: Forest
-[THEME] MainForm_UserControl_TransferTab (Control_TransferTab) - BackColor: FormBackColor = Color [A=255, R=240, G=248, B=240] | Theme: Forest
-[THEME] MainForm_UserControl_TransferTab (Control_TransferTab) - ForeColor: FormForeColor = Color [A=255, R=26, G=26, B=26] | Theme: Forest
-[THEME] Control_TransferTab_GroupBox_MainControl (GroupBox) - BackColor: FormBackColor = Color [A=255, R=240, G=248, B=240] | Theme: Forest
-[THEME] Control_TransferTab_GroupBox_MainControl (GroupBox) - ForeColor: FormForeColor = Color [A=255, R=26, G=26, B=26] | Theme: Forest
-[THEME] Control_TransferTab_Panel_Main (TableLayoutPanel) - BackColor: FormBackColor = Color [A=255, R=240, G=248, B=240] | Theme: Forest
-[THEME] Control_TransferTab_Panel_Main (TableLayoutPanel) - ForeColor: FormForeColor = Color [A=255, R=26, G=26, B=26] | Theme: Forest
-[THEME] Control_Database_TableLayout_Top (TableLayoutPanel) - BackColor: FormBackColor = Color [A=255, R=240, G=248, B=240] | Theme: Forest
-[THEME] Control_Database_TableLayout_Top (TableLayoutPanel) - ForeColor: FormForeColor = Color [A=255, R=26, G=26, B=26] | Theme: Forest
-[THEME] Control_TransferTab_Button_Toggle_Split (Button) - BackColor: FormBackColor = Color [A=255, R=240, G=248, B=240] | Theme: Forest
-[THEME] Control_TransferTab_Button_Toggle_Split (Button) - ForeColor: FormForeColor = Color [A=255, R=26, G=26, B=26] | Theme: Forest
-[THEME] Control_TransferTab_Button_Toggle_RightPanel (Button) - BackColor: FormBackColor = Color [A=255, R=240, G=248, B=240] | Theme: Forest
-[THEME] Control_TransferTab_Button_Toggle_RightPanel (Button) - ForeColor: FormForeColor = Color [A=255, R=26, G=26, B=26] | Theme: Forest
-[THEME] Control_TransferTab_SplitContainer_Main (SplitContainer) - BackColor: FormBackColor = Color [A=255, R=240, G=248, B=240] | Theme: Forest
-[THEME] Control_TransferTab_SplitContainer_Main (SplitContainer) - ForeColor: FormForeColor = Color [A=255, R=26, G=26, B=26] | Theme: Forest
-[THEME]  (SplitterPanel) - BackColor: FormBackColor = Color [A=255, R=240, G=248, B=240] | Theme: Forest
-[THEME]  (SplitterPanel) - ForeColor: FormForeColor = Color [A=255, R=26, G=26, B=26] | Theme: Forest
-[THEME] Control_Shortcuts_TableLayout_Main (TableLayoutPanel) - BackColor: FormBackColor = Color [A=255, R=240, G=248, B=240] | Theme: Forest
-[THEME] Control_Shortcuts_TableLayout_Main (TableLayoutPanel) - ForeColor: FormForeColor = Color [A=255, R=26, G=26, B=26] | Theme: Forest
-[THEME] Control_TransferTab_ComboBox_Operation (ComboBox) - BackColor: FormBackColor = Color [A=255, R=240, G=248, B=240] | Theme: Forest
-[THEME] Control_TransferTab_ComboBox_Operation (ComboBox) - ForeColor: FormForeColor = Color [A=255, R=26, G=26, B=26] | Theme: Forest
-[THEME] Control_TransferTab_ComboBox_Part (ComboBox) - BackColor: FormBackColor = Color [A=255, R=240, G=248, B=240] | Theme: Forest
-[THEME] Control_TransferTab_ComboBox_Part (ComboBox) - ForeColor: FormForeColor = Color [A=255, R=26, G=26, B=26] | Theme: Forest
-[THEME] Control_TransferTab_NumericUpDown_Quantity (NumericUpDown) - BackColor: FormBackColor = Color [A=255, R=240, G=248, B=240] | Theme: Forest
-[THEME] Control_TransferTab_NumericUpDown_Quantity (NumericUpDown) - ForeColor: FormForeColor = Color [A=255, R=26, G=26, B=26] | Theme: Forest
-[THEME]  (UpDownButtons) - BackColor: FormBackColor = Color [A=255, R=240, G=248, B=240] | Theme: Forest
-[THEME]  (UpDownButtons) - ForeColor: FormForeColor = Color [A=255, R=26, G=26, B=26] | Theme: Forest
-[THEME]  (UpDownEdit) - BackColor: FormBackColor = Color [A=255, R=240, G=248, B=240] | Theme: Forest
-[THEME]  (UpDownEdit) - ForeColor: FormForeColor = Color [A=255, R=26, G=26, B=26] | Theme: Forest
-[THEME] Control_TransferTab_ComboBox_ToLocation (ComboBox) - BackColor: FormBackColor = Color [A=255, R=240, G=248, B=240] | Theme: Forest
-[THEME] Control_TransferTab_ComboBox_ToLocation (ComboBox) - ForeColor: FormForeColor = Color [A=255, R=26, G=26, B=26] | Theme: Forest
-[THEME] Control_TransferTab_Label_Part (Label) - BackColor: FormBackColor = Color [A=255, R=240, G=248, B=240] | Theme: Forest
-[THEME] Control_TransferTab_Label_Part (Label) - ForeColor: FormForeColor = Color [A=255, R=26, G=26, B=26] | Theme: Forest
-[THEME] Control_TransferTab_Label_Operation (Label) - BackColor: FormBackColor = Color [A=255, R=240, G=248, B=240] | Theme: Forest
-[THEME] Control_TransferTab_Label_Operation (Label) - ForeColor: FormForeColor = Color [A=255, R=26, G=26, B=26] | Theme: Forest
-[THEME] Control_TransferTab_Label_ToLocation (Label) - BackColor: FormBackColor = Color [A=255, R=240, G=248, B=240] | Theme: Forest
-[THEME] Control_TransferTab_Label_ToLocation (Label) - ForeColor: FormForeColor = Color [A=255, R=26, G=26, B=26] | Theme: Forest
-[THEME] Control_TransferTab_Label_Quantity (Label) - BackColor: FormBackColor = Color [A=255, R=240, G=248, B=240] | Theme: Forest
-[THEME] Control_TransferTab_Label_Quantity (Label) - ForeColor: FormForeColor = Color [A=255, R=26, G=26, B=26] | Theme: Forest
-[THEME] Control_Shortcuts_TableLayout_Bottom (TableLayoutPanel) - BackColor: FormBackColor = Color [A=255, R=240, G=248, B=240] | Theme: Forest
-[THEME] Control_Shortcuts_TableLayout_Bottom (TableLayoutPanel) - ForeColor: FormForeColor = Color [A=255, R=26, G=26, B=26] | Theme: Forest
-[THEME] Control_TransferTab_Button_Transfer (Button) - BackColor: FormBackColor = Color [A=255, R=240, G=248, B=240] | Theme: Forest
-[THEME] Control_TransferTab_Button_Transfer (Button) - ForeColor: FormForeColor = Color [A=255, R=26, G=26, B=26] | Theme: Forest
-[THEME] Control_TransferTab_Button_Search (Button) - BackColor: FormBackColor = Color [A=255, R=240, G=248, B=240] | Theme: Forest
-[THEME] Control_TransferTab_Button_Search (Button) - ForeColor: FormForeColor = Color [A=255, R=26, G=26, B=26] | Theme: Forest
-[THEME] Control_TransferTab_Button_Print (Button) - BackColor: FormBackColor = Color [A=255, R=240, G=248, B=240] | Theme: Forest
-[THEME] Control_TransferTab_Button_Print (Button) - ForeColor: FormForeColor = Color [A=255, R=26, G=26, B=26] | Theme: Forest
-[THEME] Control_TransferTab_Button_Reset (Button) - BackColor: FormBackColor = Color [A=255, R=240, G=248, B=240] | Theme: Forest
-[THEME] Control_TransferTab_Button_Reset (Button) - ForeColor: FormForeColor = Color [A=255, R=26, G=26, B=26] | Theme: Forest
-[THEME]  (SplitterPanel) - BackColor: FormBackColor = Color [A=255, R=240, G=248, B=240] | Theme: Forest
-[THEME]  (SplitterPanel) - ForeColor: FormForeColor = Color [A=255, R=26, G=26, B=26] | Theme: Forest
-[THEME] panel1 (Panel) - BackColor: FormBackColor = Color [A=255, R=240, G=248, B=240] | Theme: Forest
-[THEME] panel1 (Panel) - ForeColor: FormForeColor = Color [A=255, R=26, G=26, B=26] | Theme: Forest
-[THEME] Control_TransferTab_Panel_DataGridView (Panel) - BackColor: FormBackColor = Color [A=255, R=240, G=248, B=240] | Theme: Forest
-[THEME] Control_TransferTab_Panel_DataGridView (Panel) - ForeColor: FormForeColor = Color [A=255, R=26, G=26, B=26] | Theme: Forest
-[THEME] Control_TransferTab_Image_NothingFound (PictureBox) - BackColor: FormBackColor = Color [A=255, R=240, G=248, B=240] | Theme: Forest
-[THEME] Control_TransferTab_Image_NothingFound (PictureBox) - ForeColor: FormForeColor = Color [A=255, R=26, G=26, B=26] | Theme: Forest
-[THEME] Control_TransferTab_DataGridView_Main (DataGridView) - BackColor: DataGridBackColor = Color [A=255, R=255, G=255, B=255] | Theme: Forest
-[THEME] Control_TransferTab_DataGridView_Main (DataGridView) - ForeColor: DataGridForeColor = Color [A=255, R=26, G=26, B=26] | Theme: Forest
-[THEME]  (HScrollBar) - BackColor: FormBackColor = Color [A=255, R=240, G=248, B=240] | Theme: Forest
-[THEME]  (HScrollBar) - ForeColor: FormForeColor = Color [A=255, R=26, G=26, B=26] | Theme: Forest
-[THEME]  (VScrollBar) - BackColor: FormBackColor = Color [A=255, R=240, G=248, B=240] | Theme: Forest
-[THEME]  (VScrollBar) - ForeColor: FormForeColor = Color [A=255, R=26, G=26, B=26] | Theme: Forest
-[THEME]  (SplitterPanel) - BackColor: FormBackColor = Color [A=255, R=240, G=248, B=240] | Theme: Forest
-[THEME]  (SplitterPanel) - ForeColor: FormForeColor = Color [A=255, R=26, G=26, B=26] | Theme: Forest
-[THEME] MainForm_UserControl_QuickButtons (Control_QuickButtons) - BackColor: FormBackColor = Color [A=255, R=240, G=248, B=240] | Theme: Forest
-[THEME] MainForm_UserControl_QuickButtons (Control_QuickButtons) - ForeColor: FormForeColor = Color [A=255, R=26, G=26, B=26] | Theme: Forest
-[THEME] Control_QuickButtons_TableLayoutPanel_Main (TableLayoutPanel) - BackColor: FormBackColor = Color [A=255, R=240, G=248, B=240] | Theme: Forest
-[THEME] Control_QuickButtons_TableLayoutPanel_Main (TableLayoutPanel) - ForeColor: FormForeColor = Color [A=255, R=26, G=26, B=26] | Theme: Forest
-[THEME] Control_QuickButtons_Button_Button10 (Button) - BackColor: FormBackColor = Color [A=255, R=240, G=248, B=240] | Theme: Forest
-[THEME] Control_QuickButtons_Button_Button10 (Button) - ForeColor: FormForeColor = Color [A=255, R=26, G=26, B=26] | Theme: Forest
-[THEME] Control_QuickButtons_Button_Button9 (Button) - BackColor: FormBackColor = Color [A=255, R=240, G=248, B=240] | Theme: Forest
-[THEME] Control_QuickButtons_Button_Button9 (Button) - ForeColor: FormForeColor = Color [A=255, R=26, G=26, B=26] | Theme: Forest
-[THEME] Control_QuickButtons_Button_Button8 (Button) - BackColor: FormBackColor = Color [A=255, R=240, G=248, B=240] | Theme: Forest
-[THEME] Control_QuickButtons_Button_Button8 (Button) - ForeColor: FormForeColor = Color [A=255, R=26, G=26, B=26] | Theme: Forest
-[THEME] Control_QuickButtons_Button_Button7 (Button) - BackColor: FormBackColor = Color [A=255, R=240, G=248, B=240] | Theme: Forest
-[THEME] Control_QuickButtons_Button_Button7 (Button) - ForeColor: FormForeColor = Color [A=255, R=26, G=26, B=26] | Theme: Forest
-[THEME] Control_QuickButtons_Button_Button6 (Button) - BackColor: FormBackColor = Color [A=255, R=240, G=248, B=240] | Theme: Forest
-[THEME] Control_QuickButtons_Button_Button6 (Button) - ForeColor: FormForeColor = Color [A=255, R=26, G=26, B=26] | Theme: Forest
-[THEME] Control_QuickButtons_Button_Button5 (Button) - BackColor: FormBackColor = Color [A=255, R=240, G=248, B=240] | Theme: Forest
-[THEME] Control_QuickButtons_Button_Button5 (Button) - ForeColor: FormForeColor = Color [A=255, R=26, G=26, B=26] | Theme: Forest
-[THEME] Control_QuickButtons_Button_Button4 (Button) - BackColor: FormBackColor = Color [A=255, R=240, G=248, B=240] | Theme: Forest
-[THEME] Control_QuickButtons_Button_Button4 (Button) - ForeColor: FormForeColor = Color [A=255, R=26, G=26, B=26] | Theme: Forest
-[THEME] Control_QuickButtons_Button_Button3 (Button) - BackColor: FormBackColor = Color [A=255, R=240, G=248, B=240] | Theme: Forest
-[THEME] Control_QuickButtons_Button_Button3 (Button) - ForeColor: FormForeColor = Color [A=255, R=26, G=26, B=26] | Theme: Forest
-[THEME] Control_QuickButtons_Button_Button2 (Button) - BackColor: FormBackColor = Color [A=255, R=240, G=248, B=240] | Theme: Forest
-[THEME] Control_QuickButtons_Button_Button2 (Button) - ForeColor: FormForeColor = Color [A=255, R=26, G=26, B=26] | Theme: Forest
-[THEME] Control_QuickButtons_Button_Button1 (Button) - BackColor: FormBackColor = Color [A=255, R=240, G=248, B=240] | Theme: Forest
-[THEME] Control_QuickButtons_Button_Button1 (Button) - ForeColor: FormForeColor = Color [A=255, R=26, G=26, B=26] | Theme: Forest
-[THEME] tableLayoutPanel1 (TableLayoutPanel) - BackColor: FormBackColor = Color [A=255, R=240, G=248, B=240] | Theme: Forest
-[THEME] tableLayoutPanel1 (TableLayoutPanel) - ForeColor: FormForeColor = Color [A=255, R=26, G=26, B=26] | Theme: Forest
-[THEME] MainForm_StatusStrip (StatusStrip) - BackColor: FormBackColor = Color [A=255, R=240, G=248, B=240] | Theme: Forest
-[THEME] MainForm_StatusStrip (StatusStrip) - ForeColor: FormForeColor = Color [A=255, R=26, G=26, B=26] | Theme: Forest
-[THEME] MainForm_UserControl_SignalStrength (Control_ConnectionStrengthControl) - BackColor: FormBackColor = Color [A=255, R=240, G=248, B=240] | Theme: Forest
-[THEME] MainForm_UserControl_SignalStrength (Control_ConnectionStrengthControl) - ForeColor: FormForeColor = Color [A=255, R=26, G=26, B=26] | Theme: Forest
-[THEME]  (MdiClient) - BackColor: FormBackColor = Color [A=255, R=240, G=248, B=240] | Theme: Forest
-[THEME]  (MdiClient) - ForeColor: FormForeColor = Color [A=255, R=26, G=26, B=26] | Theme: Forest
+2025-11-09 20:21:45 - DPI scaling applied to form 'MainForm' and all its controls.
+2025-11-09 20:21:45 - Applied TableLayoutPanel layout adjustments to 'MainForm_TableLayout'
+2025-11-09 20:21:45 - Applied Panel layout adjustments to ''
+2025-11-09 20:21:45 - Applied Panel layout adjustments to 'MainForm_TabPage_Inventory'
+2025-11-09 20:21:45 - Applied GroupBox layout adjustments to 'Control_InventoryTab_GroupBox_Main'
+2025-11-09 20:21:45 - Applied TableLayoutPanel layout adjustments to 'Control_InventoryTab_TableLayout_Main'
+2025-11-09 20:21:45 - Applied TableLayoutPanel layout adjustments to 'Control_InventoryTab_TableLayout_MiddleGroup'
+2025-11-09 20:21:45 - Applied TableLayoutPanel layout adjustments to 'Control_InventoryTab_TableLayout_TopGroup'
+2025-11-09 20:21:45 - Applied TableLayoutPanel layout adjustments to 'Control_InventoryTab_TableLayout_BottomGroup'
+2025-11-09 20:21:45 - Applied GroupBox layout adjustments to 'AdvancedInventory_GroupBox_Main'
+2025-11-09 20:21:45 - Applied Panel layout adjustments to 'AdvancedInventory_TabControl_Single'
+2025-11-09 20:21:45 - Applied TableLayoutPanel layout adjustments to 'AdvancedInventory_TableLayout_Single'
+2025-11-09 20:21:45 - Applied GroupBox layout adjustments to 'AdvancedInventory_Single_GroupBox_Right'
+2025-11-09 20:21:45 - Applied TableLayoutPanel layout adjustments to 'AdvancedInventory_Single_TableLayout_Right'
+2025-11-09 20:21:45 - Applied TableLayoutPanel layout adjustments to 'AdvancedInventory_Single_TableLayout_LowerRight'
+2025-11-09 20:21:45 - Applied GroupBox layout adjustments to 'AdvancedInventory_Single_GroupBox_Left'
+2025-11-09 20:21:45 - Applied TableLayoutPanel layout adjustments to 'AdvancedInventory_Single_TableLayout_Left'
+2025-11-09 20:21:46 - Applied Panel layout adjustments to 'panel4'
+2025-11-09 20:21:46 - Applied Panel layout adjustments to 'AdvancedInventory_TabControl_MultiLoc'
+2025-11-09 20:21:46 - Applied TableLayoutPanel layout adjustments to 'AdvancedInventory_TableLayoutPanel_Multi'
+2025-11-09 20:21:46 - Applied GroupBox layout adjustments to 'AdvancedInventory_MultiLoc_GroupBox_Preview'
+2025-11-09 20:21:46 - Applied TableLayoutPanel layout adjustments to 'AdvancedInventory_Multi_TableLayout_Right'
+2025-11-09 20:21:46 - Applied TableLayoutPanel layout adjustments to 'AdvancedInventory_Multi_TableLayout_BottomRight'
+2025-11-09 20:21:46 - Applied Panel layout adjustments to 'panel1'
+2025-11-09 20:21:46 - Applied GroupBox layout adjustments to 'AdvancedInventory_MultiLoc_GroupBox_Item'
+2025-11-09 20:21:46 - Applied TableLayoutPanel layout adjustments to 'Control_Shortcuts_TableLayout_Main'
+2025-11-09 20:21:46 - Applied Panel layout adjustments to 'panel2'
+2025-11-09 20:21:46 - Applied TableLayoutPanel layout adjustments to 'AdvancedInventory_Multi_TableLayout_Left'
+2025-11-09 20:21:46 - Applied Panel layout adjustments to 'panel3'
+2025-11-09 20:21:46 - Applied Panel layout adjustments to 'AdvancedInventory_TabControl_Import'
+2025-11-09 20:21:46 - Applied TableLayoutPanel layout adjustments to 'AdvancedInventory_Import_TableLayout'
+2025-11-09 20:21:46 - Applied Panel layout adjustments to 'AdvancedInventory_Import_Panel_Middle'
+2025-11-09 20:21:46 - Applied TableLayoutPanel layout adjustments to 'AdvancedInventory_Import_TableLayout_Bottom'
+2025-11-09 20:21:46 - Applied TableLayoutPanel layout adjustments to 'AdvancedInventory_Import_TableLayout_Top'
+2025-11-09 20:21:46 - Applied Panel layout adjustments to 'MainForm_TabPage_Remove'
+2025-11-09 20:21:46 - Applied GroupBox layout adjustments to 'Control_RemoveTab_GroupBox_MainControl'
+2025-11-09 20:21:46 - Applied TableLayoutPanel layout adjustments to 'Control_RemoveTab_Panel_Main'
+2025-11-09 20:21:46 - Applied Panel layout adjustments to 'Control_RemoveTab_Panel_DataGridView'
+2025-11-09 20:21:46 - Applied Panel layout adjustments to 'Control_RemoveTab_Panel_Header'
+2025-11-09 20:21:46 - Applied TableLayoutPanel layout adjustments to 'Control_RemoveTab_TableLayout_Top'
+2025-11-09 20:21:46 - Applied TableLayoutPanel layout adjustments to 'Control_RemoveTab_TableLayout_Bottom'
+2025-11-09 20:21:46 - Applied GroupBox layout adjustments to 'Control_AdvancedRemove_GroupBox_Main'
+2025-11-09 20:21:46 - Applied TableLayoutPanel layout adjustments to 'Control_AdvancedRemove_TableLayout_Main'
+2025-11-09 20:21:46 - Applied TableLayoutPanel layout adjustments to 'Control_AdvancedRemove_TableLayout_Row4'
+2025-11-09 20:21:46 - Applied TableLayoutPanel layout adjustments to 'Control_AdvancedRemove_TableLayout_BottomRight'
+2025-11-09 20:21:46 - Applied TableLayoutPanel layout adjustments to 'Control_AdvancedRemove_TableLayout_BottomLeft'
+2025-11-09 20:21:46 - Applied Panel layout adjustments to 'Control_AdvancedRemove_Panel_Top'
+2025-11-09 20:21:46 - Applied Panel layout adjustments to ''
+2025-11-09 20:21:46 - Applied TableLayoutPanel layout adjustments to 'Control_AdvancedRemove_TableLayout_TopLeft'
+2025-11-09 20:21:46 - Applied TableLayoutPanel layout adjustments to 'Control_AdvancedRemove_TableLayout_DateRange'
+2025-11-09 20:21:46 - Applied TableLayoutPanel layout adjustments to 'Control_AdvancedRemove_TableLayout_Quantity'
+2025-11-09 20:21:46 - Applied Panel layout adjustments to ''
+2025-11-09 20:21:46 - Applied Panel layout adjustments to 'Control_AdvancedRemove_Panel_Row4_Center'
+2025-11-09 20:21:46 - Applied Panel layout adjustments to 'MainForm_TabPage_Transfer'
+2025-11-09 20:21:46 - Applied GroupBox layout adjustments to 'Control_TransferTab_GroupBox_MainControl'
+2025-11-09 20:21:46 - Applied TableLayoutPanel layout adjustments to 'Control_TransferTab_Panel_Main'
+2025-11-09 20:21:46 - Applied TableLayoutPanel layout adjustments to 'Control_Database_TableLayout_Top'
+2025-11-09 20:21:46 - Applied Panel layout adjustments to ''
+2025-11-09 20:21:46 - Applied TableLayoutPanel layout adjustments to 'Control_Shortcuts_TableLayout_Main'
+2025-11-09 20:21:46 - Applied TableLayoutPanel layout adjustments to 'Control_Shortcuts_TableLayout_Bottom'
+2025-11-09 20:21:46 - Applied Panel layout adjustments to ''
+2025-11-09 20:21:46 - Applied Panel layout adjustments to 'panel1'
+2025-11-09 20:21:46 - Applied Panel layout adjustments to 'Control_TransferTab_Panel_DataGridView'
+2025-11-09 20:21:46 - Applied Panel layout adjustments to ''
+2025-11-09 20:21:46 - Applied TableLayoutPanel layout adjustments to 'Control_QuickButtons_TableLayoutPanel_Main'
+2025-11-09 20:21:46 - Applied TableLayoutPanel layout adjustments to 'tableLayoutPanel1'
+2025-11-09 20:21:46 - Runtime layout adjustments applied to form 'MainForm'.
+2025-11-09 20:21:46 - Global theme 'Forest' with DPI scaling applied to form 'MainForm'.
+2025-11-09 20:21:46 - [Splash] Theme applied to MainForm
+2025-11-09 20:21:46 - [Splash] Theme applied to MainForm
 [DEBUG] [SplashScreenForm.UpdateProgress] Progress: 100, Status: Ready to start!
-[12:13:12.549] [MEDIUM] ⬅️ EXITING Control_InventoryTab_OnStartup_LoadDataComboBoxesAsync.Control_InventoryTab (885ms)
-[12:13:13.586] [LOW   ] 🖱️ UI ACTION: QUICK_BUTTONS_LOAD_EVENT on Control_QuickButtons
+2025-11-09 20:21:46 - Inventory tab ComboBoxes loaded.
+[20:21:46.110] [MEDIUM] ⬅️ EXITING Control_InventoryTab_OnStartup_LoadDataComboBoxesAsync.Control_InventoryTab (844ms)
+2025-11-09 20:21:46 - [20:21:46.110] [MEDIUM] ⬅️ EXITING Control_InventoryTab_OnStartup_LoadDataComboBoxesAsync.Control_InventoryTab (844ms)
+[20:21:47.165] [LOW   ] 🖱️ UI ACTION: QUICK_BUTTONS_LOAD_EVENT on Control_QuickButtons
+2025-11-09 20:21:47 - [20:21:47.165] [LOW   ] 🖱️ UI ACTION: QUICK_BUTTONS_LOAD_EVENT on Control_QuickButtons
+2025-11-09 20:21:47 - [Splash] MainForm displayed successfully
+2025-11-09 20:21:47 - [Splash] MainForm displayed - startup complete
+2025-11-09 20:21:47 - [Splash] Splash screen closed
 [DEBUG] [MainForm.ctor] MainForm Shown event triggered.
-[12:13:13.617] [MEDIUM] ➡️ ENTERING Dao_User.GetUserFullNameAsync
-[12:13:13.619] [HIGH  ] ⏱️ PERFORMANCE START: SP_usr_users_Get_ByUser
-[12:13:13.620] [MEDIUM] ➡️ ENTERING Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync
-[12:13:13.621] [MEDIUM] 🗄️ DB PROCEDURE START: usr_users_Get_ByUser
-[12:13:13.626] [HIGH  ] ✅ PROCEDURE usr_users_Get_ByUser (7ms) - Status: 1
-[12:13:13.627] [MEDIUM] ✅ DB PROCEDURE COMPLETE: usr_users_Get_ByUser (7ms) - 1 rows
-[12:13:13.629] [MEDIUM] ⬅️ EXITING Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync (8ms)
-[12:13:13.630] [HIGH  ] ⏱️ PERFORMANCE COMPLETE: SP_usr_users_Get_ByUser (11ms)
-[12:13:13.631] [MEDIUM] ⬅️ EXITING Dao_User.GetUserFullNameAsync (13ms)
+[20:21:47.203] [MEDIUM] ➡️ ENTERING Dao_User.GetUserFullNameAsync
+2025-11-09 20:21:47 - [20:21:47.203] [MEDIUM] ➡️ ENTERING Dao_User.GetUserFullNameAsync
+[20:21:47.205] [HIGH  ] ⏱️ PERFORMANCE START: SP_usr_users_Get_ByUser
+2025-11-09 20:21:47 - [20:21:47.205] [HIGH  ] ⏱️ PERFORMANCE START: SP_usr_users_Get_ByUser
+2025-11-09 20:21:47 - [20:21:47.205] [DATA  ] {
+  "Action": "PERFORMANCE_START",
+  "Operation": "SP_usr_users_Get_ByUser",
+  "Caller": "ExecuteDataTableWithStatusAsync",
+  "Key": "ExecuteDataTableWithStatusAsync:SP_usr_users_Get_ByUser:638983165072055394"
+}
+[20:21:47.209] [MEDIUM] ➡️ ENTERING Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync
+2025-11-09 20:21:47 - [20:21:47.209] [MEDIUM] ➡️ ENTERING Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync
+[20:21:47.211] [MEDIUM] 🗄️ DB PROCEDURE START: usr_users_Get_ByUser
+2025-11-09 20:21:47 - [20:21:47.211] [MEDIUM] 🗄️ DB PROCEDURE START: usr_users_Get_ByUser
+[20:21:47.217] [HIGH  ] ✅ PROCEDURE usr_users_Get_ByUser (12ms) - Status: 1
+2025-11-09 20:21:47 - [20:21:47.217] [HIGH  ] ✅ PROCEDURE usr_users_Get_ByUser (12ms) - Status: 1
+2025-11-09 20:21:47 - [20:21:47.217] [DATA  ] {
+  "Action": "STORED_PROCEDURE_EXECUTION",
+  "Procedure": "usr_users_Get_ByUser",
+  "Caller": "ExecuteDataTableWithStatusAsync",
+  "Status": 1,
+  "ElapsedMs": 12,
+  "Thread": 1,
+  "InputParameters": {
+    "p_User": "JOHNK"
+  },
+  "OutputParameters": {
+    "Status": "1",
+    "ErrorMsg": "Retrieved user \"JOHNK\""
+  },
+  "ResultData": "DataTable[1 rows]",
+  "ErrorMessage": "Retrieved user \"JOHNK\""
+}
+[20:21:47.222] [MEDIUM] ✅ DB PROCEDURE COMPLETE: usr_users_Get_ByUser (12ms) - 1 rows
+2025-11-09 20:21:47 - [20:21:47.222] [MEDIUM] ✅ DB PROCEDURE COMPLETE: usr_users_Get_ByUser (12ms) - 1 rows
+[20:21:47.224] [MEDIUM] ⬅️ EXITING Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync (15ms)
+2025-11-09 20:21:47 - [20:21:47.224] [MEDIUM] ⬅️ EXITING Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync (15ms)
+[20:21:47.226] [HIGH  ] ⏱️ PERFORMANCE COMPLETE: SP_usr_users_Get_ByUser (21ms)
+2025-11-09 20:21:47 - [20:21:47.226] [HIGH  ] ⏱️ PERFORMANCE COMPLETE: SP_usr_users_Get_ByUser (21ms)
+2025-11-09 20:21:47 - [20:21:47.226] [DATA  ] {
+  "Action": "PERFORMANCE_COMPLETE",
+  "Operation": "SP_usr_users_Get_ByUser",
+  "ElapsedMs": 21,
+  "Key": "ExecuteDataTableWithStatusAsync:SP_usr_users_Get_ByUser:638983165072055394",
+  "Status": "SUCCESS",
+  "RowCount": 1
+}
+[20:21:47.230] [MEDIUM] ⬅️ EXITING Dao_User.GetUserFullNameAsync (27ms)
+2025-11-09 20:21:47 - [20:21:47.230] [MEDIUM] ⬅️ EXITING Dao_User.GetUserFullNameAsync (27ms)
 [DEBUG] [MainForm.ctor] User full name loaded.
-[12:13:13.635] [MEDIUM] ➡️ ENTERING MainForm.ConfigureDevelopmentMenuVisibility
-[12:13:13.638] [MEDIUM] 📊 BUSINESS LOGIC: DEVELOPMENT_MENU_VISIBILITY
-[12:13:13.639] [LOW   ] 🖱️ UI ACTION: DEVELOPMENT_MENU_CONFIGURED on MainForm
-[12:13:13.641] [MEDIUM] ⬅️ EXITING MainForm.ConfigureDevelopmentMenuVisibility (5ms)
-[12:13:13.699] [LOW   ] 🖱️ UI ACTION: QUICK_BUTTONS_LOAD_START on Control_QuickButtons
-[12:13:13.701] [MEDIUM] ➡️ ENTERING LoadLast10Transactions.Control_QuickButtons
-[12:13:13.703] [HIGH  ] ⏱️ PERFORMANCE START: SP_sys_last_10_transactions_Get_ByUser
-[12:13:13.704] [MEDIUM] ➡️ ENTERING Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync
-[12:13:13.706] [MEDIUM] 🗄️ DB PROCEDURE START: sys_last_10_transactions_Get_ByUser
-[12:13:13.737] [HIGH  ] ✅ PROCEDURE sys_last_10_transactions_Get_ByUser (34ms) - Status: 1
-[12:13:13.739] [MEDIUM] ✅ DB PROCEDURE COMPLETE: sys_last_10_transactions_Get_ByUser (34ms) - 6 rows
-[12:13:13.740] [MEDIUM] ⬅️ EXITING Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync (35ms)
-[12:13:13.741] [HIGH  ] ⏱️ PERFORMANCE COMPLETE: SP_sys_last_10_transactions_Get_ByUser (38ms)
-[12:13:13.745] [MEDIUM] 📊 BUSINESS LOGIC: QUICK_BUTTONS_DATA_RESULT
-[12:13:13.772] [MEDIUM] ⬅️ EXITING LoadLast10Transactions.Control_QuickButtons (69ms)
-[12:13:13.773] [LOW   ] 🖱️ UI ACTION: QUICK_BUTTONS_LOAD_COMPLETE on Control_QuickButtons
+[20:21:47.234] [MEDIUM] ➡️ ENTERING MainForm.ConfigureDevelopmentMenuVisibility
+2025-11-09 20:21:47 - [20:21:47.234] [MEDIUM] ➡️ ENTERING MainForm.ConfigureDevelopmentMenuVisibility
+[20:21:47.238] [MEDIUM] 📊 BUSINESS LOGIC: DEVELOPMENT_MENU_VISIBILITY
+2025-11-09 20:21:47 - [20:21:47.238] [MEDIUM] 📊 BUSINESS LOGIC: DEVELOPMENT_MENU_VISIBILITY
+[20:21:47.240] [LOW   ] 🖱️ UI ACTION: DEVELOPMENT_MENU_CONFIGURED on MainForm
+2025-11-09 20:21:47 - [20:21:47.240] [LOW   ] 🖱️ UI ACTION: DEVELOPMENT_MENU_CONFIGURED on MainForm
+2025-11-09 20:21:47 - Application Info - Development Menu configured for user 'JOHNK': Visible
+[20:21:47.244] [MEDIUM] ⬅️ EXITING MainForm.ConfigureDevelopmentMenuVisibility (9ms)
+2025-11-09 20:21:47 - [20:21:47.244] [MEDIUM] ⬅️ EXITING MainForm.ConfigureDevelopmentMenuVisibility (9ms)
+[20:21:47.277] [LOW   ] 🖱️ UI ACTION: QUICK_BUTTONS_LOAD_START on Control_QuickButtons
+2025-11-09 20:21:47 - [20:21:47.277] [LOW   ] 🖱️ UI ACTION: QUICK_BUTTONS_LOAD_START on Control_QuickButtons
+2025-11-09 20:21:47 -
+2025-11-09 20:21:47 - [QuickButtons] ════════════════════════════════════════════════════════════
+2025-11-09 20:21:47 - [QuickButtons] LoadLast10Transactions STARTED
+2025-11-09 20:21:47 - [QuickButtons]   User: JOHNK
+2025-11-09 20:21:47 - [QuickButtons] ════════════════════════════════════════════════════════════
+[20:21:47.286] [MEDIUM] ➡️ ENTERING LoadLast10Transactions.Control_QuickButtons
+2025-11-09 20:21:47 - [20:21:47.286] [MEDIUM] ➡️ ENTERING LoadLast10Transactions.Control_QuickButtons
+2025-11-09 20:21:47 - [QuickButtons] STEP 1: Running cleanup before loading
+2025-11-09 20:21:47 - [Dao_QuickButtons] STEP 1: Pulling current button data for user JOHNK
+[20:21:47.292] [HIGH  ] ⏱️ PERFORMANCE START: SP_sys_last_10_transactions_Get_ByUser
+2025-11-09 20:21:47 - [20:21:47.292] [HIGH  ] ⏱️ PERFORMANCE START: SP_sys_last_10_transactions_Get_ByUser
+2025-11-09 20:21:47 - [20:21:47.292] [DATA  ] {
+  "Action": "PERFORMANCE_START",
+  "Operation": "SP_sys_last_10_transactions_Get_ByUser",
+  "Caller": "ExecuteDataTableWithStatusAsync",
+  "Key": "ExecuteDataTableWithStatusAsync:SP_sys_last_10_transactions_Get_ByUser:638983165072922545"
+}
+[20:21:47.295] [MEDIUM] ➡️ ENTERING Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync
+2025-11-09 20:21:47 - [20:21:47.295] [MEDIUM] ➡️ ENTERING Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync
+[20:21:47.297] [MEDIUM] 🗄️ DB PROCEDURE START: sys_last_10_transactions_Get_ByUser
+2025-11-09 20:21:47 - [20:21:47.297] [MEDIUM] 🗄️ DB PROCEDURE START: sys_last_10_transactions_Get_ByUser
+[20:21:47.315] [HIGH  ] ✅ PROCEDURE sys_last_10_transactions_Get_ByUser (23ms) - Status: 1
+2025-11-09 20:21:47 - [20:21:47.315] [HIGH  ] ✅ PROCEDURE sys_last_10_transactions_Get_ByUser (23ms) - Status: 1
+2025-11-09 20:21:47 - [20:21:47.315] [DATA  ] {
+  "Action": "STORED_PROCEDURE_EXECUTION",
+  "Procedure": "sys_last_10_transactions_Get_ByUser",
+  "Caller": "ExecuteDataTableWithStatusAsync",
+  "Status": 1,
+  "ElapsedMs": 23,
+  "Thread": 1,
+  "InputParameters": {
+    "p_User": "JOHNK"
+  },
+  "OutputParameters": {
+    "Status": "1",
+    "ErrorMsg": "Retrieved 6 transaction(s) for user: JOHNK"
+  },
+  "ResultData": "DataTable[6 rows]",
+  "ErrorMessage": "Retrieved 6 transaction(s) for user: JOHNK"
+}
+[20:21:47.318] [MEDIUM] ✅ DB PROCEDURE COMPLETE: sys_last_10_transactions_Get_ByUser (23ms) - 6 rows
+2025-11-09 20:21:47 - [20:21:47.318] [MEDIUM] ✅ DB PROCEDURE COMPLETE: sys_last_10_transactions_Get_ByUser (23ms) - 6 rows
+[20:21:47.321] [MEDIUM] ⬅️ EXITING Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync (24ms)
+2025-11-09 20:21:47 - [20:21:47.321] [MEDIUM] ⬅️ EXITING Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync (24ms)
+[20:21:47.323] [HIGH  ] ⏱️ PERFORMANCE COMPLETE: SP_sys_last_10_transactions_Get_ByUser (30ms)
+2025-11-09 20:21:47 - [20:21:47.323] [HIGH  ] ⏱️ PERFORMANCE COMPLETE: SP_sys_last_10_transactions_Get_ByUser (30ms)
+2025-11-09 20:21:47 - [20:21:47.323] [DATA  ] {
+  "Action": "PERFORMANCE_COMPLETE",
+  "Operation": "SP_sys_last_10_transactions_Get_ByUser",
+  "ElapsedMs": 30,
+  "Key": "ExecuteDataTableWithStatusAsync:SP_sys_last_10_transactions_Get_ByUser:638983165072922545",
+  "Status": "SUCCESS",
+  "RowCount": 6
+}
+2025-11-09 20:21:47 - [Dao_QuickButtons] STEP 2: Removing duplicates and restructuring array
+2025-11-09 20:21:47 - [Dao_QuickButtons] Added to array: 01-31976-000 + 10 (Qty: 1)
+2025-11-09 20:21:47 - [Dao_QuickButtons] Added to array: 04-27693-000 + 90 (Qty: 10)
+2025-11-09 20:21:47 - [Dao_QuickButtons] Added to array: 01-34578-000 + 880 (Qty: 20)
+2025-11-09 20:21:47 - [Dao_QuickButtons] Added to array: 03-29236-030 + 959 (Qty: 30)
+2025-11-09 20:21:47 - [Dao_QuickButtons] Added to array: 06-96408-001 + N/A (Qty: 40)
+2025-11-09 20:21:47 - [Dao_QuickButtons] Added to array: 01-33016-000 + 109 (Qty: 10)
+2025-11-09 20:21:47 - [Dao_QuickButtons] Array restructured: 6 unique buttons, 0 duplicates removed
+2025-11-09 20:21:47 - [Dao_QuickButtons] STEP 3: Deleting ALL buttons from database
+2025-11-09 20:21:47 - [Dao_QuickButtons] All buttons deleted from database
+2025-11-09 20:21:47 - [Dao_QuickButtons] STEP 4: Creating new buttons from array data
+2025-11-09 20:21:47 - [Dao_QuickButtons] Created button at position 1: 01-31976-000 + 10 (Qty: 1)
+2025-11-09 20:21:47 - [Dao_QuickButtons] Created button at position 2: 04-27693-000 + 90 (Qty: 10)
+2025-11-09 20:21:47 - [Dao_QuickButtons] Created button at position 3: 01-34578-000 + 880 (Qty: 20)
+2025-11-09 20:21:47 - [Dao_QuickButtons] Created button at position 4: 03-29236-030 + 959 (Qty: 30)
+2025-11-09 20:21:47 - [Dao_QuickButtons] Created button at position 5: 06-96408-001 + N/A (Qty: 40)
+2025-11-09 20:21:47 - [Dao_QuickButtons] Created button at position 6: 01-33016-000 + 109 (Qty: 10)
+2025-11-09 20:21:47 - [Dao_QuickButtons] Created 6 buttons in database
+2025-11-09 20:21:47 - [Dao_QuickButtons] Cleanup complete: 0 duplicates removed, 6 buttons remain
+2025-11-09 20:21:47 - [Dao_QuickButtons] STEP 5: Array disposed
+2025-11-09 20:21:47 - [QuickButtons] STEP 1: ✓ Cleanup completed: Cleanup complete: 0 duplicates removed, 6 buttons remain
+2025-11-09 20:21:47 - [QuickButtons] STEP 2: Loading data from database
+[20:21:47.407] [HIGH  ] ⏱️ PERFORMANCE START: SP_sys_last_10_transactions_Get_ByUser
+2025-11-09 20:21:47 - [20:21:47.407] [HIGH  ] ⏱️ PERFORMANCE START: SP_sys_last_10_transactions_Get_ByUser
+2025-11-09 20:21:47 - [20:21:47.407] [DATA  ] {
+  "Action": "PERFORMANCE_START",
+  "Operation": "SP_sys_last_10_transactions_Get_ByUser",
+  "Caller": "ExecuteDataTableWithStatusAsync",
+  "Key": "ExecuteDataTableWithStatusAsync:SP_sys_last_10_transactions_Get_ByUser:638983165074075181"
+}
+[20:21:47.411] [MEDIUM] ➡️ ENTERING Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync
+2025-11-09 20:21:47 - [20:21:47.411] [MEDIUM] ➡️ ENTERING Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync
+[20:21:47.413] [MEDIUM] 🗄️ DB PROCEDURE START: sys_last_10_transactions_Get_ByUser
+2025-11-09 20:21:47 - [20:21:47.413] [MEDIUM] 🗄️ DB PROCEDURE START: sys_last_10_transactions_Get_ByUser
+[20:21:47.418] [HIGH  ] ✅ PROCEDURE sys_last_10_transactions_Get_ByUser (10ms) - Status: 1
+2025-11-09 20:21:47 - [20:21:47.418] [HIGH  ] ✅ PROCEDURE sys_last_10_transactions_Get_ByUser (10ms) - Status: 1
+2025-11-09 20:21:47 - [20:21:47.418] [DATA  ] {
+  "Action": "STORED_PROCEDURE_EXECUTION",
+  "Procedure": "sys_last_10_transactions_Get_ByUser",
+  "Caller": "ExecuteDataTableWithStatusAsync",
+  "Status": 1,
+  "ElapsedMs": 10,
+  "Thread": 1,
+  "InputParameters": {
+    "p_User": "JOHNK"
+  },
+  "OutputParameters": {
+    "Status": "1",
+    "ErrorMsg": "Retrieved 6 transaction(s) for user: JOHNK"
+  },
+  "ResultData": "DataTable[6 rows]",
+  "ErrorMessage": "Retrieved 6 transaction(s) for user: JOHNK"
+}
+[20:21:47.421] [MEDIUM] ✅ DB PROCEDURE COMPLETE: sys_last_10_transactions_Get_ByUser (10ms) - 6 rows
+2025-11-09 20:21:47 - [20:21:47.421] [MEDIUM] ✅ DB PROCEDURE COMPLETE: sys_last_10_transactions_Get_ByUser (10ms) - 6 rows
+[20:21:47.423] [MEDIUM] ⬅️ EXITING Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync (12ms)
+2025-11-09 20:21:47 - [20:21:47.423] [MEDIUM] ⬅️ EXITING Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync (12ms)
+[20:21:47.425] [HIGH  ] ⏱️ PERFORMANCE COMPLETE: SP_sys_last_10_transactions_Get_ByUser (18ms)
+2025-11-09 20:21:47 - [20:21:47.425] [HIGH  ] ⏱️ PERFORMANCE COMPLETE: SP_sys_last_10_transactions_Get_ByUser (18ms)
+2025-11-09 20:21:47 - [20:21:47.425] [DATA  ] {
+  "Action": "PERFORMANCE_COMPLETE",
+  "Operation": "SP_sys_last_10_transactions_Get_ByUser",
+  "ElapsedMs": 18,
+  "Key": "ExecuteDataTableWithStatusAsync:SP_sys_last_10_transactions_Get_ByUser:638983165074075181",
+  "Status": "SUCCESS",
+  "RowCount": 6
+}
+[20:21:47.431] [MEDIUM] 📊 BUSINESS LOGIC: QUICK_BUTTONS_DATA_RESULT
+2025-11-09 20:21:47 - [20:21:47.431] [MEDIUM] 📊 BUSINESS LOGIC: QUICK_BUTTONS_DATA_RESULT
+2025-11-09 20:21:47 - [QuickButtons] STEP 2: ✓ Retrieved 6 button(s) from database
+2025-11-09 20:21:47 - [QuickButtons] STEP 3: Populating UI buttons
+2025-11-09 20:21:47 - [QuickButtons] STEP 3:   Button 1: 01-31976-000 + Op:10 (Qty: 1)
+2025-11-09 20:21:47 - [QuickButtons] STEP 3:   Button 2: 04-27693-000 + Op:90 (Qty: 10)
+2025-11-09 20:21:47 - [QuickButtons] STEP 3:   Button 3: 01-34578-000 + Op:880 (Qty: 20)
+2025-11-09 20:21:47 - [QuickButtons] STEP 3:   Button 4: 03-29236-030 + Op:959 (Qty: 30)
+2025-11-09 20:21:47 - [QuickButtons] STEP 3:   Button 5: 06-96408-001 + Op:N/A (Qty: 40)
+2025-11-09 20:21:47 - [QuickButtons] STEP 3:   Button 6: 01-33016-000 + Op:109 (Qty: 10)
+2025-11-09 20:21:47 - [QuickButtons] STEP 3: Filled 6 button(s) with data
+2025-11-09 20:21:47 - [QuickButtons] STEP 3: Clearing remaining 4 button(s)
+2025-11-09 20:21:47 - [QuickButtons] STEP 4: Refreshing button layout
+2025-11-09 20:21:47 - [QuickButtons] STEP 4: Layout refreshed - 6 visible button(s)
+2025-11-09 20:21:47 - [QuickButtons] ╔══════════════════════════════════════════════════════════╗
+2025-11-09 20:21:47 - [QuickButtons] ║ LoadLast10Transactions COMPLETED SUCCESSFULLY
+2025-11-09 20:21:47 - [QuickButtons] ║ User: JOHNK
+2025-11-09 20:21:47 - [QuickButtons] ║ Visible Buttons: 6
+2025-11-09 20:21:47 - [QuickButtons] ╚══════════════════════════════════════════════════════════╝
+2025-11-09 20:21:47 - [QuickButtons] ════════════════════════════════════════════════════════════
+2025-11-09 20:21:47 -
+[20:21:47.485] [MEDIUM] ⬅️ EXITING LoadLast10Transactions.Control_QuickButtons (198ms)
+2025-11-09 20:21:47 - [20:21:47.485] [MEDIUM] ⬅️ EXITING LoadLast10Transactions.Control_QuickButtons (198ms)
+[20:21:47.487] [LOW   ] 🖱️ UI ACTION: QUICK_BUTTONS_LOAD_COMPLETE on Control_QuickButtons
+2025-11-09 20:21:47 - [20:21:47.487] [LOW   ] 🖱️ UI ACTION: QUICK_BUTTONS_LOAD_COMPLETE on Control_QuickButtons
 [DEBUG] [MainForm.ctor] MainForm is now idle and ready.
-MTM_WIP_Application_Winforms.exe (13592): Loaded 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.21\System.Net.Ping.dll'. Cannot find or open the PDB file.
-[12:13:17.123] [HIGH  ] ⏱️ PERFORMANCE START: SP_sp_error_reports_GetUserList
-[12:13:17.124] [MEDIUM] ➡️ ENTERING Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync
-[12:13:17.125] [MEDIUM] 🗄️ DB PROCEDURE START: sp_error_reports_GetUserList
-[12:13:17.200] [HIGH  ] ✅ PROCEDURE sp_error_reports_GetUserList (76ms) - Status: 0
-[12:13:17.201] [MEDIUM] ✅ DB PROCEDURE COMPLETE: sp_error_reports_GetUserList (76ms) - 1 rows
-[12:13:17.202] [MEDIUM] ⬅️ EXITING Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync (77ms)
-[12:13:17.203] [HIGH  ] ⏱️ PERFORMANCE COMPLETE: SP_sp_error_reports_GetUserList (80ms)
-[12:13:17.209] [HIGH  ] ⏱️ PERFORMANCE START: SP_sp_error_reports_GetMachineList
-[12:13:17.210] [MEDIUM] ➡️ ENTERING Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync
-[12:13:17.211] [MEDIUM] 🗄️ DB PROCEDURE START: sp_error_reports_GetMachineList
-[12:13:17.243] [HIGH  ] ✅ PROCEDURE sp_error_reports_GetMachineList (34ms) - Status: 0
-[12:13:17.245] [MEDIUM] ✅ DB PROCEDURE COMPLETE: sp_error_reports_GetMachineList (34ms) - 1 rows
-[12:13:17.246] [MEDIUM] ⬅️ EXITING Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync (35ms)
-[12:13:17.248] [HIGH  ] ⏱️ PERFORMANCE COMPLETE: SP_sp_error_reports_GetMachineList (39ms)
-[12:13:17.251] [HIGH  ] ⏱️ PERFORMANCE START: SP_sp_error_reports_GetAll
-[12:13:17.252] [MEDIUM] ➡️ ENTERING Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync
-[12:13:17.254] [MEDIUM] 🗄️ DB PROCEDURE START: sp_error_reports_GetAll
-Exception thrown: 'MySql.Data.MySqlClient.MySqlException' in MySql.Data.dll
-Exception thrown: 'MySql.Data.MySqlClient.MySqlException' in System.Private.CoreLib.dll
-Exception thrown: 'MySql.Data.MySqlClient.MySqlException' in System.Private.CoreLib.dll
-MTM_WIP_Application_Winforms.exe (13592): Loaded 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.21\System.Reflection.Metadata.dll'. Cannot find or open the PDB file.
-MTM_WIP_Application_Winforms.exe (13592): Loaded 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.21\System.Collections.Immutable.dll'. Cannot find or open the PDB file.
-MTM_WIP_Application_Winforms.exe (13592): Loaded 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.21\System.IO.MemoryMappedFiles.dll'. Cannot find or open the PDB file.
-[12:13:17.321] [MEDIUM] ✅ DB PROCEDURE COMPLETE: sp_error_reports_GetAll (53ms) - 0 rows
-[12:13:17.322] [MEDIUM] ⬅️ EXITING Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync (70ms)
-[12:13:17.324] [HIGH  ] ⏱️ PERFORMANCE COMPLETE: SP_sp_error_reports_GetAll (72ms)
-MTM_WIP_Application_Winforms.exe (13592): Loaded 'C:\Program Files\dotnet\shared\Microsoft.WindowsDesktop.App\8.0.21\System.Windows.Extensions.dll'. Cannot find or open the PDB file.
-[12:13:18.418] [MEDIUM] ➡️ ENTERING EnhancedErrorDialog.EnhancedErrorDialog
-[12:13:18.419] [LOW   ] 🖱️ UI ACTION: ERROR_DIALOG_INITIALIZATION on EnhancedErrorDialog
-[12:13:18.429] [MEDIUM] 📊 BUSINESS LOGIC: ERROR_CONTEXT_SETUP
-[12:13:18.431] [LOW   ] 🖱️ UI ACTION: ERROR_DIALOG_SETUP on EnhancedErrorDialog
-[12:13:18.435] [LOW   ] 🖱️ UI ACTION: ERROR_DIALOG_INITIALIZATION on EnhancedErrorDialog
-[12:13:18.437] [MEDIUM] ⬅️ EXITING EnhancedErrorDialog.EnhancedErrorDialog (18ms)
-Running VersionChecker...
-[12:13:40.925] [HIGH  ] ⏱️ PERFORMANCE START: SP_log_changelog_Get_Current
-[12:13:40.927] [MEDIUM] ➡️ ENTERING Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync
-[12:13:40.929] [MEDIUM] 🗄️ DB PROCEDURE START: log_changelog_Get_Current
-[12:13:40.939] [HIGH  ] ✅ PROCEDURE log_changelog_Get_Current (14ms) - Status: 1
-[12:13:40.941] [MEDIUM] ✅ DB PROCEDURE COMPLETE: log_changelog_Get_Current (14ms) - 1 rows
-[12:13:40.943] [MEDIUM] ⬅️ EXITING Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync (15ms)
-[12:13:40.945] [HIGH  ] ⏱️ PERFORMANCE COMPLETE: SP_log_changelog_Get_Current (20ms)
-Database version retrieved: 5.2.0.0
-Version labels updated - App: 5.2.0.0, DB: 5.2.0.0
 Resetting user controls...
-Attempting to invoke Control_RemoveTab_SoftReset on Control_RemoveTab
 Attempting to invoke Control_InventoryTab_SoftReset on Control_InventoryTab
 Attempting to invoke Control_AdvancedRemove_SoftReset on Control_AdvancedRemove
 Invoking Control_InventoryTab_SoftReset on Control_InventoryTab
 Invoking Control_AdvancedRemove_SoftReset on Control_AdvancedRemove
-Invoking Control_RemoveTab_SoftReset on Control_RemoveTab
-Attempting to invoke Control_AdvancedInventory_SoftReset on Control_AdvancedInventory
 Attempting to invoke Control_TransferTab_SoftReset on Control_TransferTab
-Method Control_AdvancedInventory_SoftReset not found on Control_AdvancedInventory
+Attempting to invoke Control_AdvancedInventory_SoftReset on Control_AdvancedInventory
 Invoking Control_TransferTab_SoftReset on Control_TransferTab
-[12:14:04.450] [MEDIUM] ➡️ ENTERING Control_InventoryTab_SoftReset.Control_InventoryTab
+Method Control_AdvancedInventory_SoftReset not found on Control_AdvancedInventory
+Attempting to invoke Control_RemoveTab_SoftReset on Control_RemoveTab
+Invoking Control_RemoveTab_SoftReset on Control_RemoveTab
+[20:21:48.922] [MEDIUM] ➡️ ENTERING Control_InventoryTab_SoftReset.Control_InventoryTab
+2025-11-09 20:21:48 - [20:21:48.922] [MEDIUM] ➡️ ENTERING Control_InventoryTab_SoftReset.Control_InventoryTab
 [DEBUG] Updating status strip for Soft Reset
 [DEBUG] AdvancedRemove SoftReset button re-enabled
 [DEBUG] Restoring status strip after soft reset
@@ -836,98 +1437,122 @@ Invoking Control_TransferTab_SoftReset on Control_TransferTab
 [DEBUG] TransferTab SoftReset button re-enabled
 [DEBUG] Updating status strip for Soft Reset
 [DEBUG] Resetting UI fields
-[12:14:04.474] [MEDIUM] ⬅️ EXITING Control_InventoryTab_SoftReset.Control_InventoryTab (24ms)
+[20:21:48.948] [MEDIUM] ⬅️ EXITING Control_InventoryTab_SoftReset.Control_InventoryTab (26ms)
+2025-11-09 20:21:48 - [20:21:48.948] [MEDIUM] ⬅️ EXITING Control_InventoryTab_SoftReset.Control_InventoryTab (26ms)
 [DEBUG] InventoryTab SoftReset button re-enabled
 [DEBUG] Restoring status strip after reset
-[12:14:05.066] [HIGH  ] ⏱️ PERFORMANCE START: SP_sp_error_reports_GetUserList
-[12:14:05.069] [MEDIUM] ➡️ ENTERING Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync
-[12:14:05.070] [MEDIUM] 🗄️ DB PROCEDURE START: sp_error_reports_GetUserList
-[12:14:05.099] [HIGH  ] ✅ PROCEDURE sp_error_reports_GetUserList (33ms) - Status: 0
-[12:14:05.100] [MEDIUM] ✅ DB PROCEDURE COMPLETE: sp_error_reports_GetUserList (33ms) - 1 rows
-[12:14:05.102] [MEDIUM] ⬅️ EXITING Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync (32ms)
-[12:14:05.103] [HIGH  ] ⏱️ PERFORMANCE COMPLETE: SP_sp_error_reports_GetUserList (36ms)
-[12:14:05.105] [HIGH  ] ⏱️ PERFORMANCE START: SP_sp_error_reports_GetMachineList
-[12:14:05.106] [MEDIUM] ➡️ ENTERING Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync
-[12:14:05.107] [MEDIUM] 🗄️ DB PROCEDURE START: sp_error_reports_GetMachineList
-[12:14:05.111] [HIGH  ] ✅ PROCEDURE sp_error_reports_GetMachineList (6ms) - Status: 0
-[12:14:05.112] [MEDIUM] ✅ DB PROCEDURE COMPLETE: sp_error_reports_GetMachineList (6ms) - 1 rows
-[12:14:05.113] [MEDIUM] ⬅️ EXITING Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync (7ms)
-[12:14:05.115] [HIGH  ] ⏱️ PERFORMANCE COMPLETE: SP_sp_error_reports_GetMachineList (9ms)
-[12:14:05.117] [HIGH  ] ⏱️ PERFORMANCE START: SP_sp_error_reports_GetAll
-[12:14:05.118] [MEDIUM] ➡️ ENTERING Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync
-[12:14:05.119] [MEDIUM] 🗄️ DB PROCEDURE START: sp_error_reports_GetAll
-Exception thrown: 'MySql.Data.MySqlClient.MySqlException' in MySql.Data.dll
-Exception thrown: 'MySql.Data.MySqlClient.MySqlException' in System.Private.CoreLib.dll
-Exception thrown: 'MySql.Data.MySqlClient.MySqlException' in System.Private.CoreLib.dll
-[12:14:05.161] [MEDIUM] ✅ DB PROCEDURE COMPLETE: sp_error_reports_GetAll (43ms) - 0 rows
-[12:14:05.162] [MEDIUM] ⬅️ EXITING Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync (44ms)
-[12:14:05.163] [HIGH  ] ⏱️ PERFORMANCE COMPLETE: SP_sp_error_reports_GetAll (46ms)
-[12:14:06.647] [MEDIUM] ➡️ ENTERING EnhancedErrorDialog.EnhancedErrorDialog
-[12:14:06.648] [LOW   ] 🖱️ UI ACTION: ERROR_DIALOG_INITIALIZATION on EnhancedErrorDialog
-[12:14:06.650] [MEDIUM] 📊 BUSINESS LOGIC: ERROR_CONTEXT_SETUP
-[12:14:06.651] [LOW   ] 🖱️ UI ACTION: ERROR_DIALOG_SETUP on EnhancedErrorDialog
-[12:14:06.653] [LOW   ] 🖱️ UI ACTION: ERROR_DIALOG_INITIALIZATION on EnhancedErrorDialog
-[12:14:06.654] [MEDIUM] ⬅️ EXITING EnhancedErrorDialog.EnhancedErrorDialog (7ms)
-Running VersionChecker...
-[12:14:10.932] [HIGH  ] ⏱️ PERFORMANCE START: SP_log_changelog_Get_Current
-[12:14:10.934] [MEDIUM] ➡️ ENTERING Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync
-[12:14:10.936] [MEDIUM] 🗄️ DB PROCEDURE START: log_changelog_Get_Current
-[12:14:10.941] [HIGH  ] ✅ PROCEDURE log_changelog_Get_Current (8ms) - Status: 1
-[12:14:10.943] [MEDIUM] ✅ DB PROCEDURE COMPLETE: log_changelog_Get_Current (8ms) - 1 rows
-[12:14:10.945] [MEDIUM] ⬅️ EXITING Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync (10ms)
-[12:14:10.946] [HIGH  ] ⏱️ PERFORMANCE COMPLETE: SP_log_changelog_Get_Current (14ms)
-Database version retrieved: 5.2.0.0
-Version labels updated - App: 5.2.0.0, DB: 5.2.0.0
-Running VersionChecker...
-[12:14:40.931] [HIGH  ] ⏱️ PERFORMANCE START: SP_log_changelog_Get_Current
-[12:14:40.933] [MEDIUM] ➡️ ENTERING Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync
-[12:14:40.936] [MEDIUM] 🗄️ DB PROCEDURE START: log_changelog_Get_Current
-[12:14:40.941] [HIGH  ] ✅ PROCEDURE log_changelog_Get_Current (9ms) - Status: 1
-[12:14:40.942] [MEDIUM] ✅ DB PROCEDURE COMPLETE: log_changelog_Get_Current (9ms) - 1 rows
-[12:14:40.944] [MEDIUM] ⬅️ EXITING Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync (10ms)
-[12:14:40.945] [HIGH  ] ⏱️ PERFORMANCE COMPLETE: SP_log_changelog_Get_Current (13ms)
-Database version retrieved: 5.2.0.0
-Version labels updated - App: 5.2.0.0, DB: 5.2.0.0
-[12:15:05.908] [HIGH  ] ⏱️ PERFORMANCE START: SP_sp_error_reports_GetUserList
-[12:15:05.910] [MEDIUM] ➡️ ENTERING Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync
-[12:15:05.911] [MEDIUM] 🗄️ DB PROCEDURE START: sp_error_reports_GetUserList
-[12:15:05.966] [HIGH  ] ✅ PROCEDURE sp_error_reports_GetUserList (57ms) - Status: 0
-[12:15:05.969] [MEDIUM] ✅ DB PROCEDURE COMPLETE: sp_error_reports_GetUserList (57ms) - 1 rows
-[12:15:05.970] [MEDIUM] ⬅️ EXITING Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync (59ms)
-[12:15:05.971] [HIGH  ] ⏱️ PERFORMANCE COMPLETE: SP_sp_error_reports_GetUserList (62ms)
-[12:15:05.973] [HIGH  ] ⏱️ PERFORMANCE START: SP_sp_error_reports_GetMachineList
-[12:15:05.974] [MEDIUM] ➡️ ENTERING Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync
-[12:15:05.975] [MEDIUM] 🗄️ DB PROCEDURE START: sp_error_reports_GetMachineList
-[12:15:05.980] [HIGH  ] ✅ PROCEDURE sp_error_reports_GetMachineList (7ms) - Status: 0
-[12:15:05.981] [MEDIUM] ✅ DB PROCEDURE COMPLETE: sp_error_reports_GetMachineList (7ms) - 1 rows
-[12:15:05.982] [MEDIUM] ⬅️ EXITING Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync (8ms)
-[12:15:05.983] [HIGH  ] ⏱️ PERFORMANCE COMPLETE: SP_sp_error_reports_GetMachineList (10ms)
-[12:15:05.986] [HIGH  ] ⏱️ PERFORMANCE START: SP_sp_error_reports_GetAll
-[12:15:05.987] [MEDIUM] ➡️ ENTERING Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync
-[12:15:05.988] [MEDIUM] 🗄️ DB PROCEDURE START: sp_error_reports_GetAll
-Exception thrown: 'MySql.Data.MySqlClient.MySqlException' in MySql.Data.dll
-Exception thrown: 'MySql.Data.MySqlClient.MySqlException' in System.Private.CoreLib.dll
-Exception thrown: 'MySql.Data.MySqlClient.MySqlException' in System.Private.CoreLib.dll
-[12:15:06.029] [MEDIUM] ✅ DB PROCEDURE COMPLETE: sp_error_reports_GetAll (42ms) - 0 rows
-[12:15:06.029] [MEDIUM] ⬅️ EXITING Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync (42ms)
-[12:15:06.031] [HIGH  ] ⏱️ PERFORMANCE COMPLETE: SP_sp_error_reports_GetAll (44ms)
-[12:15:07.536] [MEDIUM] ➡️ ENTERING EnhancedErrorDialog.EnhancedErrorDialog
-[12:15:07.537] [LOW   ] 🖱️ UI ACTION: ERROR_DIALOG_INITIALIZATION on EnhancedErrorDialog
-[12:15:07.540] [MEDIUM] 📊 BUSINESS LOGIC: ERROR_CONTEXT_SETUP
-[12:15:07.542] [LOW   ] 🖱️ UI ACTION: ERROR_DIALOG_SETUP on EnhancedErrorDialog
-[12:15:07.544] [LOW   ] 🖱️ UI ACTION: ERROR_DIALOG_INITIALIZATION on EnhancedErrorDialog
-[12:15:07.545] [MEDIUM] ⬅️ EXITING EnhancedErrorDialog.EnhancedErrorDialog (9ms)
-Running VersionChecker...
-[12:15:10.928] [HIGH  ] ⏱️ PERFORMANCE START: SP_log_changelog_Get_Current
-[12:15:10.930] [MEDIUM] ➡️ ENTERING Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync
-[12:15:10.932] [MEDIUM] 🗄️ DB PROCEDURE START: log_changelog_Get_Current
-[12:15:10.939] [HIGH  ] ✅ PROCEDURE log_changelog_Get_Current (10ms) - Status: 1
-[12:15:10.940] [MEDIUM] ✅ DB PROCEDURE COMPLETE: log_changelog_Get_Current (10ms) - 1 rows
-[12:15:10.941] [MEDIUM] ⬅️ EXITING Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync (11ms)
-[12:15:10.942] [HIGH  ] ⏱️ PERFORMANCE COMPLETE: SP_log_changelog_Get_Current (14ms)
-Database version retrieved: 5.2.0.0
-Version labels updated - App: 5.2.0.0, DB: 5.2.0.0
-MTM_WIP_Application_Winforms.exe (13592): Loaded 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.21\System.Runtime.Serialization.Formatters.dll'. Cannot find or open the PDB file.
+[20:21:49.404] [HIGH  ] ⏱️ PERFORMANCE START: SP_inv_inventory_Get_All
+2025-11-09 20:21:49 - [20:21:49.404] [HIGH  ] ⏱️ PERFORMANCE START: SP_inv_inventory_Get_All
+2025-11-09 20:21:49 - [20:21:49.404] [DATA  ] {
+  "Action": "PERFORMANCE_START",
+  "Operation": "SP_inv_inventory_Get_All",
+  "Caller": "ExecuteDataTableWithStatusAsync",
+  "Key": "ExecuteDataTableWithStatusAsync:SP_inv_inventory_Get_All:638983165094043396"
+}
+[20:21:49.407] [MEDIUM] ➡️ ENTERING Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync
+2025-11-09 20:21:49 - [20:21:49.407] [MEDIUM] ➡️ ENTERING Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync
+[20:21:49.409] [MEDIUM] 🗄️ DB PROCEDURE START: inv_inventory_Get_All
+2025-11-09 20:21:49 - [20:21:49.409] [MEDIUM] 🗄️ DB PROCEDURE START: inv_inventory_Get_All
+[20:21:49.431] [HIGH  ] ✅ PROCEDURE inv_inventory_Get_All (26ms) - Status: 1
+2025-11-09 20:21:49 - [20:21:49.431] [HIGH  ] ✅ PROCEDURE inv_inventory_Get_All (26ms) - Status: 1
+2025-11-09 20:21:49 - [20:21:49.431] [DATA  ] {
+  "Action": "STORED_PROCEDURE_EXECUTION",
+  "Procedure": "inv_inventory_Get_All",
+  "Caller": "ExecuteDataTableWithStatusAsync",
+  "Status": 1,
+  "ElapsedMs": 26,
+  "Thread": 1,
+  "OutputParameters": {
+    "Status": "1",
+    "ErrorMsg": "Retrieved 832 inventory record(s)"
+  },
+  "ResultData": "DataTable[832 rows]",
+  "ErrorMessage": "Retrieved 832 inventory record(s)"
+}
+[20:21:49.434] [MEDIUM] ✅ DB PROCEDURE COMPLETE: inv_inventory_Get_All (26ms) - 832 rows
+2025-11-09 20:21:49 - [20:21:49.434] [MEDIUM] ✅ DB PROCEDURE COMPLETE: inv_inventory_Get_All (26ms) - 832 rows
+[20:21:49.436] [MEDIUM] ⬅️ EXITING Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync (28ms)
+2025-11-09 20:21:49 - [20:21:49.436] [MEDIUM] ⬅️ EXITING Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync (28ms)
+[20:21:49.439] [HIGH  ] ⏱️ PERFORMANCE COMPLETE: SP_inv_inventory_Get_All (34ms)
+2025-11-09 20:21:49 - [20:21:49.439] [HIGH  ] ⏱️ PERFORMANCE COMPLETE: SP_inv_inventory_Get_All (34ms)
+2025-11-09 20:21:49 - [20:21:49.439] [DATA  ] {
+  "Action": "PERFORMANCE_COMPLETE",
+  "Operation": "SP_inv_inventory_Get_All",
+  "ElapsedMs": 34,
+  "Key": "ExecuteDataTableWithStatusAsync:SP_inv_inventory_Get_All:638983165094043396",
+  "Status": "SUCCESS",
+  "RowCount": 832
+}
+2025-11-09 20:21:49 - [SHOW ALL DEBUG] Retrieved 832 inventory records. Success: True
+2025-11-09 20:21:52 - [RemoveTab] Print requested.
+2025-11-09 20:21:52 - [PrintForm] Constructor: Incoming printJob.CurrentPage=1, TotalPages=1
+2025-11-09 20:21:52 - DPI scaling applied to form 'PrintForm' and all its controls.
+2025-11-09 20:21:52 - Applied Panel layout adjustments to 'PrintForm_Panel_Main'
+2025-11-09 20:21:52 - Applied TableLayoutPanel layout adjustments to 'PrintForm_TableLayout_Master'
+2025-11-09 20:21:52 - Applied Panel layout adjustments to 'PrintForm_Panel_Sidebar'
+2025-11-09 20:21:52 - Applied TableLayoutPanel layout adjustments to 'PrintForm_TableLayout_Sidebar'
+2025-11-09 20:21:52 - Applied TableLayoutPanel layout adjustments to 'PrintForm_TableLayout_PageSettingsSection'
+2025-11-09 20:21:52 - Applied TableLayoutPanel layout adjustments to 'PrintForm_TableLayoutPanel_PageSettingsHeader'
+2025-11-09 20:21:52 - Applied Panel layout adjustments to 'PrintForm_Panel_PageSettingsContent'
+2025-11-09 20:21:52 - Applied TableLayoutPanel layout adjustments to 'PrintForm_TableLayout_PageSettingsContent'
+2025-11-09 20:21:52 - Applied TableLayoutPanel layout adjustments to 'PrintForm_TableLayout_CustomPageRange'
+2025-11-09 20:21:52 - Applied TableLayoutPanel layout adjustments to 'PrintForm_TableLayout_ActionButtons'
+2025-11-09 20:21:52 - Applied TableLayoutPanel layout adjustments to 'PrintForm_TableLayout_OptionsSection'
+2025-11-09 20:21:52 - Applied TableLayoutPanel layout adjustments to 'PrintForm_TableLayoutPanel_OptionsHeader'
+2025-11-09 20:21:52 - Applied Panel layout adjustments to 'PrintForm_Panel_OptionsContent'
+2025-11-09 20:21:52 - Applied TableLayoutPanel layout adjustments to 'PrintForm_TableLayout_OptionsContent'
+2025-11-09 20:21:52 - Applied TableLayoutPanel layout adjustments to 'PrintForm_TableLayoutPanel_ColorMode'
+2025-11-09 20:21:52 - Applied TableLayoutPanel layout adjustments to 'PrintForm_TableLayout_ColumnSettingsSection'
+2025-11-09 20:21:52 - Applied TableLayoutPanel layout adjustments to 'PrintForm_TableLayoutPanel_ColumnSettingsHeader'
+2025-11-09 20:21:52 - Applied Panel layout adjustments to 'PrintForm_Panel_ColumnSettingsContent'
+2025-11-09 20:21:52 - Applied TableLayoutPanel layout adjustments to 'PrintForm_TableLayout_ColumnSettingsContent'
+2025-11-09 20:21:52 - Applied TableLayoutPanel layout adjustments to 'PrintForm_TableLayoutPanel_ColumnButtons'
+2025-11-09 20:21:52 - Applied TableLayoutPanel layout adjustments to 'PrintForm_TableLayout_PrinterSettingsSection'
+2025-11-09 20:21:52 - Applied Panel layout adjustments to 'PrintForm_Panel_PrinterSettingsHeader'
+2025-11-09 20:21:52 - Applied TableLayoutPanel layout adjustments to 'PrintForm_TableLayoutPanel_PrinterSettingsHeader'
+2025-11-09 20:21:52 - Applied Panel layout adjustments to 'PrintForm_Panel_PrinterSettingsContent'
+2025-11-09 20:21:52 - Applied TableLayoutPanel layout adjustments to 'PrintForm_TableLayout_PrinterSettingsContent'
+2025-11-09 20:21:52 - Applied TableLayoutPanel layout adjustments to 'tableLayoutPanel1'
+2025-11-09 20:21:52 - Applied Panel layout adjustments to 'PrintForm_Panel_SidebarSpacer'
+2025-11-09 20:21:52 - Applied Panel layout adjustments to 'PrintForm_Panel_PreviewViewport'
+2025-11-09 20:21:52 - Applied TableLayoutPanel layout adjustments to 'PrintForm_TableLayout_PreviewArea'
+2025-11-09 20:21:52 - Applied TableLayoutPanel layout adjustments to 'PrintForm_TableLayout_PreviewNavigation'
+2025-11-09 20:21:52 - Runtime layout adjustments applied to form 'PrintForm'.
+2025-11-09 20:21:52 - [PrintForm] Constructor: After InitializeComponent, Control.StartPage=0
+2025-11-09 20:21:52 - [PrintForm] InitializePreviewSection: Before reset StartPage=0
+2025-11-09 20:21:52 - [PrintForm] InitializePreviewSection: After reset StartPage=0
+2025-11-09 20:21:52 - [PrintForm] Constructor complete: CurrentPage=1, Control.StartPage=0
+2025-11-09 20:21:52 - [PrintForm] GeneratePreviewAsync ENTRY: CurrentPage=1, TotalPages=1, PageRangeType=AllPages
+2025-11-09 20:21:52 - [PrintForm] After reset: CurrentPage=1
+2025-11-09 20:21:52 - [PrintForm] Captured original values: Range=AllPages, From=1, To=1, Current=1
+2025-11-09 20:21:52 - [Helper_PrintManager] Print manager initialized
+2025-11-09 20:21:52 - [Helper_PrintManager] Preparing print document...
+2025-11-09 20:21:52 - [Core_TablePrinter] Data prepared: RangeType=AllPages, FirstPage=1, StartRow=0, EndRowExclusive=832, VisibleColumns=5, TotalRows=832, ExistingTotalPages=1
+2025-11-09 20:21:52 - [Helper_PrintManager] Print document prepared: 832 rows, Printer: Microsoft Print to PDF
+2025-11-09 20:21:52 - [Core_TablePrinter] PrintPage first page rendered: Page=1, StartRow=0, EndRow=32, HasMore=True
+2025-11-09 20:21:54 - [Core_TablePrinter] Printing complete: 26 page(s), 832 rows printed
+2025-11-09 20:21:54 - [PrintForm] Preview setup: TotalPages=26, TargetIndex=0, OriginalCurrentPage=1
+2025-11-09 20:21:54 - [PrintForm] Before setting Document: Control.StartPage=0
+2025-11-09 20:21:54 - [PrintForm] After setting Document, before StartPage: Control.StartPage=0
+2025-11-09 20:21:54 - [PrintForm] After setting StartPage=0: Control.StartPage=0
+2025-11-09 20:21:54 - [PrintForm] Final CurrentPage set to: 1, StartPage=0
+2025-11-09 20:21:54 - [PrintForm] UpdatePreviewNavigationState: StartPage=0, CurrentIndex=0, DisplayPage=1, TotalPages=26
+2025-11-09 20:21:54 - [PrintForm] UpdatePreviewNavigationState: Set CurrentPage to 1
+2025-11-09 20:21:56 - [Helper_PrintManager] Print manager disposed
+2025-11-09 20:21:56 - [RemoveTab] Print dialog closed with result: Cancel.
+2025-11-09 20:21:58 - [Cleanup] Starting application cleanup
+2025-11-09 20:21:58 - [Cleanup] Control_About temp files cleaned up successfully
+2025-11-09 20:21:58 - [Cleanup] Memory cleanup completed
+2025-11-09 20:21:58 - [Cleanup] Application cleanup completed successfully
 [Trace] [Main] Application exiting Main().
 [Trace] [Main] Application exiting Main().
-The program '[13592] MTM_WIP_Application_Winforms.exe' has exited with code 0 (0x0).
+2025-11-09 20:21:58 - [Startup] Application shutdown completed
+2025-11-09 20:21:58 - [Cleanup] Starting application cleanup
+2025-11-09 20:21:58 - [Cleanup] Control_About temp files cleaned up successfully
+2025-11-09 20:21:58 - [Cleanup] Memory cleanup completed
+2025-11-09 20:21:58 - [Cleanup] Application cleanup completed successfully
+2025-11-09 20:21:58 - [Cleanup] Starting application cleanup
+2025-11-09 20:21:58 - [Cleanup] Control_About temp files cleaned up successfully
+2025-11-09 20:21:58 - [Cleanup] Memory cleanup completed
+2025-11-09 20:21:58 - [Cleanup] Application cleanup completed successfully
+The program '[19676] MTM_WIP_Application_Winforms.exe' has exited with code 0 (0x0).

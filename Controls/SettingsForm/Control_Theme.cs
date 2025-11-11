@@ -6,6 +6,7 @@ using MTM_WIP_Application_Winforms.Core;
 using MTM_WIP_Application_Winforms.Data;
 using MTM_WIP_Application_Winforms.Models;
 using MTM_WIP_Application_Winforms.Logging;
+using MTM_WIP_Application_Winforms.Services;
 
 namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
 {
@@ -19,8 +20,9 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             InitializeComponent();
             Core_Themes.ApplyDpiScaling(this);
             Core_Themes.ApplyRuntimeLayoutAdjustments(this);
-            Control_Shortcuts_Button_Save.Click += SaveButton_Click;
-            Control_Shortcuts_Button_Switch.Click += PreviewButton_Click;
+            Control_Themes_Button_Save.Click += SaveButton_Click;
+            Control_Themes_Button_Preview.Click += PreviewButton_Click;
+            Control_Themes_CheckBox_EnableTheming.CheckedChanged += EnableThemingCheckBox_CheckedChanged;
             LoadThemeSettingsAsync();
         }
 
@@ -28,72 +30,191 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
         {
             try
             {
-                Control_Shortcuts_ComboBox_Theme.Items.Clear();
+                Control_Themes_ComboBox_Theme.Items.Clear();
                 string[] themeNames = Core_Themes.Core_AppThemes.GetThemeNames().ToArray();
-                Control_Shortcuts_ComboBox_Theme.Items.AddRange(themeNames);
+                Control_Themes_ComboBox_Theme.Items.AddRange(themeNames);
 
-                string user = Model_AppVariables.User;
-                string? themeName = await Dao_User.GetThemeNameAsync(user);
-
-                if (!string.IsNullOrEmpty(themeName) && Control_Shortcuts_ComboBox_Theme.Items.Contains(themeName))
+                string user = Model_Application_Variables.User;
+                
+                // DEFENSIVE: Validate user is not corrupted (should never be a type name)
+                if (string.IsNullOrWhiteSpace(user) || user.Contains("System.") || user.Contains("DataRow"))
                 {
-                    Control_Shortcuts_ComboBox_Theme.SelectedItem = themeName;
+                    LoggingUtility.Log($"[Control_Theme] WARNING: Model_Application_Variables.User is invalid: '{user}'. Using Environment.UserName as fallback.");
+                    user = Environment.UserName?.ToUpperInvariant() ?? "UNKNOWN";
                 }
-                else if (Control_Shortcuts_ComboBox_Theme.Items.Count > 0)
-                {
-                    Control_Shortcuts_ComboBox_Theme.SelectedIndex = 0;
-                }
+                
+                // Load theme enabled/disabled setting
+                var themeEnabledResult = await Dao_User.GetThemeEnabledAsync(user);
+                bool themeEnabled = themeEnabledResult.Data; // Defaults to true
+                Control_Themes_CheckBox_EnableTheming.Checked = themeEnabled;
+                
+                // Enable/disable theme controls based on checkbox
+                Control_Themes_ComboBox_Theme.Enabled = themeEnabled;
+                Control_Themes_Button_Preview.Enabled = themeEnabled;
+                
+                var themeResult = await Dao_User.GetThemeNameAsync(user);
 
-                StatusMessageChanged?.Invoke(this, "Theme settings loaded successfully.");
+                if (themeResult.IsSuccess)
+                {
+                    string? themeName = themeResult.Data;
+                    if (!string.IsNullOrEmpty(themeName) && Control_Themes_ComboBox_Theme.Items.Contains(themeName))
+                    {
+                        Control_Themes_ComboBox_Theme.SelectedItem = themeName;
+                    }
+                    else if (Control_Themes_ComboBox_Theme.Items.Count > 0)
+                    {
+                        Control_Themes_ComboBox_Theme.SelectedIndex = 0;
+                    }
+
+                    StatusMessageChanged?.Invoke(this, "Theme settings loaded successfully.");
+                }
+                else
+                {
+                    // Handle database error gracefully
+                    Service_ErrorHandler.HandleDatabaseError(
+                        new Exception($"Failed to load theme settings: {themeResult.ErrorMessage}"),
+                        contextData: new Dictionary<string, object> { ["User"] = user },
+                        callerName: nameof(LoadThemeSettingsAsync),
+                        controlName: nameof(Control_Theme)
+                    );
+
+                    // Fallback to first theme if available
+                    if (Control_Themes_ComboBox_Theme.Items.Count > 0)
+                    {
+                        Control_Themes_ComboBox_Theme.SelectedIndex = 0;
+                    }
+
+                    StatusMessageChanged?.Invoke(this, $"Error loading theme settings: {themeResult.ErrorMessage}");
+                }
             }
             catch (Exception ex)
             {
-                LoggingUtility.LogApplicationError(ex);
-                StatusMessageChanged?.Invoke(this, $"Error loading theme settings: {ex.Message}");
+                Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Medium,
+                    contextData: new Dictionary<string, object> { ["User"] = Model_Application_Variables.User },
+                    callerName: nameof(LoadThemeSettingsAsync),
+                    controlName: nameof(Control_Theme));
 
                 // Fallback to first theme if available
-                if (Control_Shortcuts_ComboBox_Theme.Items.Count > 0)
+                if (Control_Themes_ComboBox_Theme.Items.Count > 0)
                 {
-                    Control_Shortcuts_ComboBox_Theme.SelectedIndex = 0;
+                    Control_Themes_ComboBox_Theme.SelectedIndex = 0;
                 }
             }
+        }
+
+        private void EnableThemingCheckBox_CheckedChanged(object? sender, EventArgs e)
+        {
+            bool isEnabled = Control_Themes_CheckBox_EnableTheming.Checked;
+            Control_Themes_ComboBox_Theme.Enabled = isEnabled;
+            Control_Themes_Button_Preview.Enabled = isEnabled;
         }
 
         private async void SaveButton_Click(object? sender, EventArgs e)
         {
             try
             {
-                Control_Shortcuts_Button_Save.Enabled = false;
-                string? selectedTheme = Control_Shortcuts_ComboBox_Theme.SelectedItem?.ToString();
-                if (string.IsNullOrWhiteSpace(selectedTheme))
+                Control_Themes_Button_Save.Enabled = false;
+                
+                string user = Model_Application_Variables.User;
+                
+                // DEFENSIVE: Validate user is not corrupted before saving
+                if (string.IsNullOrWhiteSpace(user) || user.Contains("System.") || user.Contains("DataRow"))
                 {
-                    StatusMessageChanged?.Invoke(this, "Please select a theme.");
+                    LoggingUtility.Log($"[Control_Theme] ERROR: Cannot save theme - Model_Application_Variables.User is invalid: '{user}'");
+                    Service_ErrorHandler.HandleValidationError(
+                        $"Cannot save theme: User identity is corrupted ('{user}'). Please restart the application.",
+                        "User Identity",
+                        callerName: nameof(SaveButton_Click),
+                        controlName: nameof(Control_Theme));
                     return;
                 }
 
-                string user = Model_AppVariables.User;
+                // Save theme enabled/disabled setting
+                bool themeEnabled = Control_Themes_CheckBox_EnableTheming.Checked;
+                var saveEnabledResult = await Dao_User.SetThemeEnabledAsync(user, themeEnabled);
+                
+                if (!saveEnabledResult.IsSuccess)
+                {
+                    Service_ErrorHandler.HandleDatabaseError(
+                        new Exception($"Failed to save theme enabled setting: {saveEnabledResult.ErrorMessage}"),
+                        contextData: new Dictionary<string, object>
+                        {
+                            ["User"] = user,
+                            ["ThemeEnabled"] = themeEnabled
+                        },
+                        callerName: nameof(SaveButton_Click),
+                        controlName: nameof(Control_Theme)
+                    );
+                    StatusMessageChanged?.Invoke(this, $"Error saving theme settings: {saveEnabledResult.ErrorMessage}");
+                    return;
+                }
+                
+                // Save theme name (only if theming is enabled)
+                string? selectedTheme = Control_Themes_ComboBox_Theme.SelectedItem?.ToString();
+                if (themeEnabled)
+                {
+                    if (string.IsNullOrWhiteSpace(selectedTheme))
+                    {
+                        Service_ErrorHandler.HandleValidationError("Please select a theme.", "Theme",
+                            callerName: nameof(SaveButton_Click),
+                            controlName: nameof(Control_Theme));
+                        return;
+                    }
 
-                // FIXED: Use the proper theme setter that works with existing database structure
-                await Dao_User.SetThemeNameAsync(user, selectedTheme);
+                    // FIXED: Use the proper theme setter that works with existing database structure
+                    var saveResult = await Dao_User.SetThemeNameAsync(user, selectedTheme);
 
-                // Update the current theme in the app variables and apply to all open forms
-                Model_AppVariables.ThemeName = selectedTheme;
+                    if (!saveResult.IsSuccess)
+                    {
+                        Service_ErrorHandler.HandleDatabaseError(
+                            new Exception($"Failed to save theme: {saveResult.ErrorMessage}"),
+                            contextData: new Dictionary<string, object>
+                            {
+                                ["User"] = user,
+                                ["SelectedTheme"] = selectedTheme
+                            },
+                            callerName: nameof(SaveButton_Click),
+                            controlName: nameof(Control_Theme)
+                        );
+
+                        StatusMessageChanged?.Invoke(this, $"Error saving theme: {saveResult.ErrorMessage}");
+                        return;
+                    }
+                }
+
+                // Update the application variables and apply changes
+                Model_Application_Variables.ThemeEnabled = themeEnabled;
+                if (themeEnabled && !string.IsNullOrEmpty(selectedTheme))
+                {
+                    Model_Application_Variables.ThemeName = selectedTheme;
+                }
+                
+                // Apply theme to all open forms
                 foreach (Form openForm in Application.OpenForms)
                 {
                     Core_Themes.ApplyTheme(openForm);
                 }
 
                 ThemeChanged?.Invoke(this, EventArgs.Empty);
-                StatusMessageChanged?.Invoke(this, "Theme saved and applied successfully!");
+                StatusMessageChanged?.Invoke(this, themeEnabled 
+                    ? "Theme saved and applied successfully!" 
+                    : "Theme system disabled successfully!");
             }
             catch (Exception ex)
             {
-                LoggingUtility.LogApplicationError(ex);
-                StatusMessageChanged?.Invoke(this, $"Error saving theme: {ex.Message}");
+                Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Medium,
+                    contextData: new Dictionary<string, object>
+                    {
+                        ["User"] = Model_Application_Variables.User,
+                        ["SelectedTheme"] = Control_Themes_ComboBox_Theme.SelectedItem?.ToString() ?? "null",
+                        ["ThemeEnabled"] = Control_Themes_CheckBox_EnableTheming.Checked
+                    },
+                    callerName: nameof(SaveButton_Click),
+                    controlName: nameof(Control_Theme));
             }
             finally
             {
-                Control_Shortcuts_Button_Save.Enabled = true;
+                Control_Themes_Button_Save.Enabled = true;
             }
         }
 
@@ -101,26 +222,34 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
         {
             try
             {
-                string? selectedTheme = Control_Shortcuts_ComboBox_Theme.SelectedItem?.ToString();
+                string? selectedTheme = Control_Themes_ComboBox_Theme.SelectedItem?.ToString();
                 if (string.IsNullOrWhiteSpace(selectedTheme))
                 {
-                    StatusMessageChanged?.Invoke(this, "Please select a theme to preview.");
+                    Service_ErrorHandler.HandleValidationError("Please select a theme to preview.", "Theme",
+                        callerName: nameof(PreviewButton_Click),
+                        controlName: nameof(Control_Theme));
                     return;
                 }
 
-                string? originalTheme = Model_AppVariables.ThemeName;
-                Model_AppVariables.ThemeName = selectedTheme;
+                string? originalTheme = Model_Application_Variables.ThemeName;
+                Model_Application_Variables.ThemeName = selectedTheme;
                 foreach (Form openForm in Application.OpenForms)
                 {
                     Core_Themes.ApplyTheme(openForm);
                 }
-                Model_AppVariables.ThemeName = originalTheme;
+                Model_Application_Variables.ThemeName = originalTheme;
                 StatusMessageChanged?.Invoke(this, $"Theme preview applied: {selectedTheme}");
             }
             catch (Exception ex)
             {
-                LoggingUtility.LogApplicationError(ex);
-                StatusMessageChanged?.Invoke(this, $"Error previewing theme: {ex.Message}");
+                Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Medium,
+                    contextData: new Dictionary<string, object>
+                    {
+                        ["User"] = Model_Application_Variables.User,
+                        ["SelectedTheme"] = Control_Themes_ComboBox_Theme.SelectedItem?.ToString() ?? "null"
+                    },
+                    callerName: nameof(PreviewButton_Click),
+                    controlName: nameof(Control_Theme));
             }
         }
 

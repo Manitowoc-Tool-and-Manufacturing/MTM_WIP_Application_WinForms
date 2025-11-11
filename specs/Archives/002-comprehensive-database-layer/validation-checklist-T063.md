@@ -89,7 +89,7 @@ This checklist separates **pre-deployment validation** (can be verified during i
    - Transaction log: _______ ms (variance: _____%)
    - Transfer operation: _______ ms (variance: _____%)
 3. [ ] Verify all variances < 5%
-4. [ ] If variance > 5%, investigate cause (INFORMATION_SCHEMA query overhead, DaoResult wrapping, async/await overhead)
+4. [ ] If variance > 5%, investigate cause (INFORMATION_SCHEMA query overhead, Model_Dao_Result wrapping, async/await overhead)
 
 **Expected Result**: All operations within ±5% of baseline performance
 
@@ -164,7 +164,7 @@ This checklist separates **pre-deployment validation** (can be verified during i
    - Execute test and verify pass (3 min)
    - **Total time**: _______ minutes
 3. [ ] Verify quickstart.md guide is accurate (no missing steps)
-4. [ ] Verify DaoResult pattern easy to follow
+4. [ ] Verify Model_Dao_Result pattern easy to follow
 5. [ ] Verify parameter prefix detection works automatically
 
 **Expected Result**: New operation implemented in <15 minutes following quickstart guide
@@ -185,7 +185,7 @@ This checklist separates **pre-deployment validation** (can be verified during i
    - Query initial inventory: `SELECT * FROM inventory WHERE PartID = 'TEST_PART';`
    - Record initial quantities: FromLocation qty = _______, ToLocation qty = _______
    - Execute transfer with forced failure (e.g., invalid ToLocation)
-   - Verify transfer returned DaoResult.Failure
+   - Verify transfer returned Model_Dao_Result.Failure
    - Query inventory again: `SELECT * FROM inventory WHERE PartID = 'TEST_PART';`
    - Verify quantities unchanged: FromLocation qty = _______, ToLocation qty = _______
 3. [ ] Check `inv_transaction` table: Verify no orphaned transaction records for failed transfer

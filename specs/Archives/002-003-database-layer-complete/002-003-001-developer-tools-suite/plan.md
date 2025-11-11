@@ -16,53 +16,59 @@ Integrate developer tools into the Settings form hierarchical navigation system,
 ## Technical Context
 
 **Language/Version**: C# 12, .NET 8.0 Windows Forms  
-**Primary Dependencies**: 
-- MySql.Data 9.4.0 (database connectivity)
-- System.Text.Json (JSON parsing for call hierarchy artifacts)
-- Existing MTM infrastructure (Core_Themes, Helper_Database_StoredProcedure, Service_ErrorHandler)
+**Primary Dependencies**:
+
+-   MySql.Data 9.4.0 (database connectivity)
+-   System.Text.Json (JSON parsing for call hierarchy artifacts)
+-   Existing MTM infrastructure (Core_Themes, Helper_Database_StoredProcedure, Service_ErrorHandler)
 
 **Storage**: MySQL 5.7.24+ (MAMP compatible)
-- New table: `sys_parameter_prefix_overrides` (parameter override storage)
-- New stored procedures: 5 CRUD operations for override management
-- Read-only access to `INFORMATION_SCHEMA` (Tables, Columns, Routines, Parameters)
+
+-   New table: `sys_parameter_prefix_overrides` (parameter override storage)
+-   New stored procedures: 5 CRUD operations for override management
+-   Read-only access to `INFORMATION_SCHEMA` (Tables, Columns, Routines, Parameters)
 
 **Testing**: Manual validation approach (no automated unit tests per MTM standards)
-- Exercise Settings form integration with Developer role enabled
-- Validate CRUD operations on parameter prefix overrides
-- Test Schema Inspector with live database connection
-- Verify Code Generator output compiles in DAO classes
+
+-   Exercise Settings form integration with Developer role enabled
+-   Validate CRUD operations on parameter prefix overrides
+-   Test Schema Inspector with live database connection
+-   Verify Code Generator output compiles in DAO classes
 
 **Target Platform**: Windows 10/11 Desktop (.NET 8.0 Windows Forms)  
 **Project Type**: WinForms desktop application (existing project structure)
 
 **Performance Goals**:
-- Settings form TreeView expansion with Developer category: <100ms response time
-- Parameter prefix override cache loading at startup: <500ms
-- Schema Inspector table list query: <5 seconds for 50+ table database
-- Code Generator method generation: <1 second for procedures with <20 parameters
-- Debug Dashboard output rendering: <500ms for 100-line batches
+
+-   Settings form TreeView expansion with Developer category: <100ms response time
+-   Parameter prefix override cache loading at startup: <500ms
+-   Schema Inspector table list query: <5 seconds for 50+ table database
+-   Code Generator method generation: <1 second for procedures with <20 parameters
+-   Debug Dashboard output rendering: <500ms for 100-line batches
 
 **Constraints**:
-- Must integrate with existing Settings form UserControl pattern
-- Cannot break existing Settings categories (User, Theme, Database, About)
-- Must respect Developer role checking (Admin + Developer flag)
-- Parameter prefix overrides must be database-specific (no cross-environment sharing)
-- All database operations must use Helper_Database_StoredProcedure patterns
-- Must follow WinForms designer compatibility (no AXAML/XAML patterns)
+
+-   Must integrate with existing Settings form UserControl pattern
+-   Cannot break existing Settings categories (User, Theme, Database, About)
+-   Must respect Developer role checking (Admin + Developer flag)
+-   Parameter prefix overrides must be database-specific (no cross-environment sharing)
+-   All database operations must use Helper_Database_StoredProcedure patterns
+-   Must follow WinForms designer compatibility (no AXAML/XAML patterns)
 
 **Scale/Scope**:
-- 5 developer tool UserControls (DebugDashboard, ParameterPrefixMaintenance, SchemaInspector, ProcedureCallHierarchy, CodeGenerator)
-- 1 database table + 5 stored procedures for parameter overrides
-- 2 forms to remove (DependencyChartViewerForm, DependencyChartConverterForm)
-- 1 existing UserControl to refactor (Control_Database → integrate into Developer category)
-- TreeView structure: 1 parent node (Developer) + 6 child nodes
-- Estimated 74+ stored procedures to potentially override during Phase 2.5
+
+-   5 developer tool UserControls (DebugDashboard, ParameterPrefixMaintenance, SchemaInspector, ProcedureCallHierarchy, CodeGenerator)
+-   1 database table + 5 stored procedures for parameter overrides
+-   2 forms to remove (DependencyChartViewerForm, DependencyChartConverterForm)
+-   1 existing UserControl to refactor (Control_Database → integrate into Developer category)
+-   TreeView structure: 1 parent node (Developer) + 6 child nodes
+-   Estimated 74+ stored procedures to potentially override during Phase 2.5
 
 ---
 
 ## Constitution Check
 
-*GATE: Must pass before Phase 0 research. Re-check after Phase 1 design.*
+_GATE: Must pass before Phase 0 research. Re-check after Phase 1 design._
 
 ### Simplicity Gates
 
@@ -70,10 +76,11 @@ Integrate developer tools into the Settings form hierarchical navigation system,
 
 ✅ **Flat Structure Rule**: Developer tools live in existing `Controls/SettingsForm/` directory alongside other setting controls. No new nested hierarchies.
 
-⚠️ **Avoid Premature Patterns**: 
-- **Concern**: Introducing parameter prefix override system adds abstraction layer over INFORMATION_SCHEMA queries
-- **Justification**: Required for Phase 2.5 gradual migration strategy. Without overrides, must refactor all 74 procedures at once (high risk). Override table enables incremental standardization with tracking.
-- **Simpler Alternative Rejected**: "Just fix all procedures now" - rejected because multi-week all-or-nothing refactoring blocks other Phase 2.5 work and creates deployment coordination issues across environments.
+⚠️ **Avoid Premature Patterns**:
+
+-   **Concern**: Introducing parameter prefix override system adds abstraction layer over INFORMATION_SCHEMA queries
+-   **Justification**: Required for Phase 2.5 gradual migration strategy. Without overrides, must refactor all 74 procedures at once (high risk). Override table enables incremental standardization with tracking.
+-   **Simpler Alternative Rejected**: "Just fix all procedures now" - rejected because multi-week all-or-nothing refactoring blocks other Phase 2.5 work and creates deployment coordination issues across environments.
 
 ✅ **Avoid Gold Plating**: Feature implements only tools needed for Phase 2.5 support (parameter overrides, schema inspection, debug monitoring). Advanced features like automated refactoring, migration script generation, and performance profiling are explicitly out of scope.
 
@@ -83,17 +90,18 @@ Integrate developer tools into the Settings form hierarchical navigation system,
 
 ✅ **Testing Strategy**: Manual validation through Settings form access. Exercise CRUD operations on parameter overrides. Test code generation output by compiling in DAO class. Validate Debug Dashboard tracing with Service_DebugTracer.
 
-✅ **Documentation Requirements**: 
-- XML comments on all public UserControl methods
-- Quickstart.md with developer onboarding workflow
-- Data model documentation for sys_parameter_prefix_overrides table
-- Inline comments explaining override application logic in Helper_Database_StoredProcedure
+✅ **Documentation Requirements**:
+
+-   XML comments on all public UserControl methods
+-   Quickstart.md with developer onboarding workflow
+-   Data model documentation for sys_parameter_prefix_overrides table
+-   Inline comments explaining override application logic in Helper_Database_StoredProcedure
 
 ### Consistency Gates
 
 ✅ **Existing Patterns**: Follows WinForms UserControl integration pattern established by Control_Add_User, Control_Theme, Control_Database. Uses Settings form progress bar and status label helpers. Applies Core_Themes.ApplyDpiScaling in constructors.
 
-✅ **Code Style**: Adheres to C# region organization (Fields, Properties, Constructors, Button Clicks, Helpers, Cleanup). Uses async/await for database operations. Follows naming conventions (Control_Developer_{ToolName}).
+✅ **Code Style**: Adheres to C# region organization (Fields, Properties, Constructors, Button Clicks, Helpers, Cleanup). Uses async/await for database operations. Follows naming conventions (Control*Developer*{ToolName}).
 
 ✅ **Technology Stack**: Uses existing MySQL 5.7, MySql.Data connector, Helper_Database_StoredProcedure abstractions. No new database engines or data access libraries introduced.
 
@@ -152,7 +160,7 @@ MTM_WIP_Application_Winforms/
 │   └── Dao_System.cs                                     # [MODIFY] Add Developer role check method
 │
 ├── Models/
-│   └── Model_ParameterPrefixOverride.cs                  # [NEW] POCO for override records
+│   └── Model_ParameterPrefix_Override.cs                  # [NEW] POCO for override records
 │
 └── Database/
     └── UpdatedStoredProcedures/
@@ -170,11 +178,11 @@ MTM_WIP_Application_Winforms/
 
 ## Complexity Tracking
 
-*Justification for Constitution Check warning (Avoid Premature Patterns)*
+_Justification for Constitution Check warning (Avoid Premature Patterns)_
 
-| Violation | Why Needed | Simpler Alternative Rejected Because |
-|-----------|------------|-------------------------------------|
-| Parameter Prefix Override System | Enables gradual migration of 74+ procedures from inconsistent prefixes (p_, in_, none) to standard p_ prefix without blocking Phase 2.5 progress. Provides fallback when INFORMATION_SCHEMA unavailable. Supports Production hotfixes that aren't yet in Dev database. | **Alternative 1 - "Fix all procedures now"**: Rejected because multi-week effort blocks other Phase 2.5 tasks, requires coordinated deployment across environments, and creates high-risk big-bang release. **Alternative 2 - "Live with inconsistency"**: Rejected because violates Phase 2.5 standardization goals and perpetuates Helper_Database_StoredProcedure convention guessing that led to Phase 2.5 discovery work. **Alternative 3 - "Configuration file approach"**: Rejected per stakeholder decision (Q1) - database-specific storage provides environment isolation and prevents Production contamination from Development experiments. |
+| Violation                        | Why Needed                                                                                                                                                                                                                                                              | Simpler Alternative Rejected Because                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    |
+| -------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Parameter Prefix Override System | Enables gradual migration of 74+ procedures from inconsistent prefixes (p*, in*, none) to standard p\_ prefix without blocking Phase 2.5 progress. Provides fallback when INFORMATION_SCHEMA unavailable. Supports Production hotfixes that aren't yet in Dev database. | **Alternative 1 - "Fix all procedures now"**: Rejected because multi-week effort blocks other Phase 2.5 tasks, requires coordinated deployment across environments, and creates high-risk big-bang release. **Alternative 2 - "Live with inconsistency"**: Rejected because violates Phase 2.5 standardization goals and perpetuates Helper_Database_StoredProcedure convention guessing that led to Phase 2.5 discovery work. **Alternative 3 - "Configuration file approach"**: Rejected per stakeholder decision (Q1) - database-specific storage provides environment isolation and prevents Production contamination from Development experiments. |
 
 ---
 
@@ -202,9 +210,9 @@ All technical decisions have been resolved through the clarification questionnai
 
 ### Additional Clarifications from Stakeholder
 
-- **JOHNK User Setup**: Run MySQL script to grant JOHNK Admin + Developer roles before implementation to enable manual testing
-- **Control_Database Integration**: Refactor existing Control_Database to move under Developer category (currently under Database category)
-- **Regenerate Button**: Add "Regenerate" button to Procedure Call Hierarchy control alongside friendly error message when artifacts missing
+-   **JOHNK User Setup**: Run MySQL script to grant JOHNK Admin + Developer roles before implementation to enable manual testing
+-   **Control_Database Integration**: Refactor existing Control_Database to move under Developer category (currently under Database category)
+-   **Regenerate Button**: Add "Regenerate" button to Procedure Call Hierarchy control alongside friendly error message when artifacts missing
 
 No further research required. Proceeding to Phase 1 (Design & Contracts).
 
@@ -228,12 +236,13 @@ No further research required. Proceeding to Phase 1 (Design & Contracts).
 ### Quickstart (see quickstart.md)
 
 Developer onboarding guide covering:
-- How to enable Developer role for testing user
-- How to access Developer tools through Settings form
-- How to add/edit/delete parameter prefix overrides
-- How to use Code Generator to scaffold DAO methods
-- How to interpret Schema Inspector output
-- How to navigate Procedure Call Hierarchy dependencies
+
+-   How to enable Developer role for testing user
+-   How to access Developer tools through Settings form
+-   How to add/edit/delete parameter prefix overrides
+-   How to use Code Generator to scaffold DAO methods
+-   How to interpret Schema Inspector output
+-   How to navigate Procedure Call Hierarchy dependencies
 
 ---
 
@@ -242,33 +251,36 @@ Developer onboarding guide covering:
 Tasks will be integrated into parent `specs/002-003-database-layer-complete/tasks.md` under refined T113c and T113d:
 
 ### T113c - Implement Developer Role & Infrastructure
-- Create sys_parameter_prefix_overrides table
-- Create 5 CRUD stored procedures
-- Create Model_ParameterPrefixOverride POCO
-- Create Dao_ParameterPrefixOverrides DAO class
-- Modify Dao_System to add Developer role check method
-- Modify Helper_Database_StoredProcedure to load override cache at startup
-- Create SQL script to grant JOHNK Admin + Developer roles
-- Update SettingsForm TreeView with Developer category
-- Write integration tests for override CRUD operations
+
+-   Create sys_parameter_prefix_overrides table
+-   Create 5 CRUD stored procedures
+-   Create Model_ParameterPrefix_Override POCO
+-   Create Dao_ParameterPrefixOverrides DAO class
+-   Modify Dao_System to add Developer role check method
+-   Modify Helper_Database_StoredProcedure to load override cache at startup
+-   Create SQL script to grant JOHNK Admin + Developer roles
+-   Update SettingsForm TreeView with Developer category
+-   Write integration tests for override CRUD operations
 
 ### T113d - Build Developer Tools User Controls
-- Convert DebugDashboardForm to Control_Developer_DebugDashboard
-- Create Control_Developer_ParameterPrefixMaintenance (CRUD UI)
-- Create Control_Developer_SchemaInspector (INFORMATION_SCHEMA viewer)
-- Create Control_Developer_ProcedureCallHierarchy (dependency graph + regenerate button)
-- Create Control_Developer_CodeGenerator (DAO method scaffolding)
-- Refactor Control_Database to integrate into Developer category
-- Delete Forms/Development/DependencyChartViewer directory
-- Delete Forms/Development/DependencyChartConverter directory
-- Update any MainForm references to removed forms
-- Manual validation testing of all 5+1 developer tools
+
+-   Convert DebugDashboardForm to Control_Developer_DebugDashboard
+-   Create Control_Developer_ParameterPrefixMaintenance (CRUD UI)
+-   Create Control_Developer_SchemaInspector (INFORMATION_SCHEMA viewer)
+-   Create Control_Developer_ProcedureCallHierarchy (dependency graph + regenerate button)
+-   Create Control_Developer_CodeGenerator (DAO method scaffolding)
+-   Refactor Control_Database to integrate into Developer category
+-   Delete Forms/Development/DependencyChartViewer directory
+-   Delete Forms/Development/DependencyChartConverter directory
+-   Update any MainForm references to removed forms
+-   Manual validation testing of all 5+1 developer tools
 
 ---
 
 ## Implementation Order
 
 ### Sprint 1: Foundation (T113c)
+
 1. Database schema and stored procedures
 2. Model and DAO classes for parameter overrides
 3. Helper_Database_StoredProcedure override cache integration
@@ -277,12 +289,14 @@ Tasks will be integrated into parent `specs/002-003-database-layer-complete/task
 6. SettingsForm TreeView Developer category addition
 
 ### Sprint 2: Core Tools (T113d Part 1)
+
 1. Convert DebugDashboardForm to UserControl
 2. Create ParameterPrefixMaintenance control (highest priority for Phase 2.5)
 3. Integrate Control_Database into Developer category
 4. Manual validation of parameter override workflow
 
 ### Sprint 3: Analysis Tools (T113d Part 2)
+
 1. Create SchemaInspector control
 2. Create ProcedureCallHierarchy control with regenerate button
 3. Create CodeGenerator control
@@ -293,40 +307,40 @@ Tasks will be integrated into parent `specs/002-003-database-layer-complete/task
 
 ## Success Metrics
 
-- ✅ Developer with appropriate role can access all 6 developer tools through Settings → Developer
-- ✅ Parameter prefix override CRUD workflow completes in under 2 minutes
-- ✅ Debug Dashboard captures database traces with <500ms latency
-- ✅ Schema Inspector loads all tables/procedures within 5 seconds
-- ✅ Code Generator produces compilable C# code for 95% of procedures
-- ✅ Procedure Call Hierarchy search returns results within 2 seconds
-- ✅ Parameter prefix overrides persist across application restarts
-- ✅ Obsolete dependency chart forms completely removed
-- ✅ All developer tools include proper Service_ErrorHandler integration
-- ✅ Settings form progress bar and status label work with all developer tools
+-   ✅ Developer with appropriate role can access all 6 developer tools through Settings → Developer
+-   ✅ Parameter prefix override CRUD workflow completes in under 2 minutes
+-   ✅ Debug Dashboard captures database traces with <500ms latency
+-   ✅ Schema Inspector loads all tables/procedures within 5 seconds
+-   ✅ Code Generator produces compilable C# code for 95% of procedures
+-   ✅ Procedure Call Hierarchy search returns results within 2 seconds
+-   ✅ Parameter prefix overrides persist across application restarts
+-   ✅ Obsolete dependency chart forms completely removed
+-   ✅ All developer tools include proper Service_ErrorHandler integration
+-   ✅ Settings form progress bar and status label work with all developer tools
 
 ---
 
 ## Risk Mitigation
 
-| Risk | Mitigation Strategy |
-|------|---------------------|
+| Risk                                                           | Mitigation Strategy                                                                   |
+| -------------------------------------------------------------- | ------------------------------------------------------------------------------------- |
 | Settings form UserControl integration breaks existing controls | Create controls in isolation first, test individually before SettingsForm integration |
-| Parameter prefix overrides conflict with INFORMATION_SCHEMA | Override takes precedence, log conflicts to Logging/DebugTracer for review |
-| Debug Dashboard causes performance degradation | Implement 1000-line auto-truncation, pause/resume capture, async output rendering |
-| Generated code doesn't compile | Include XML comment disclaimer, provide manual review checklist in quickstart.md |
-| call-hierarchy-complete.json missing | Graceful degradation with regenerate button, instructions in error message |
-| TreeView expansion breaks existing Settings navigation | Test all existing categories after Developer node addition, verify no layout shifts |
+| Parameter prefix overrides conflict with INFORMATION_SCHEMA    | Override takes precedence, log conflicts to Logging/DebugTracer for review            |
+| Debug Dashboard causes performance degradation                 | Implement 1000-line auto-truncation, pause/resume capture, async output rendering     |
+| Generated code doesn't compile                                 | Include XML comment disclaimer, provide manual review checklist in quickstart.md      |
+| call-hierarchy-complete.json missing                           | Graceful degradation with regenerate button, instructions in error message            |
+| TreeView expansion breaks existing Settings navigation         | Test all existing categories after Developer node addition, verify no layout shifts   |
 
 ---
 
 ## Dependencies
 
-- Parent feature `002-003-database-layer-complete` Phase 2.5 must be in progress
-- Settings form must be stable and accessible
-- Service_DebugTracer must be functional for Debug Dashboard
-- INFORMATION_SCHEMA queries must work for Schema Inspector
-- Database analysis artifacts must exist (`call-hierarchy-complete.json`, `STORED_PROCEDURE_CALLSITES.csv`)
-- Helper_Database_StoredProcedure must support override injection point
+-   Parent feature `002-003-database-layer-complete` Phase 2.5 must be in progress
+-   Settings form must be stable and accessible
+-   Service_DebugTracer must be functional for Debug Dashboard
+-   INFORMATION_SCHEMA queries must work for Schema Inspector
+-   Database analysis artifacts must exist (`call-hierarchy-complete.json`, `STORED_PROCEDURE_CALLSITES.csv`)
+-   Helper_Database_StoredProcedure must support override injection point
 
 ---
 
@@ -379,50 +393,55 @@ WHERE UserName = 'JOHNK' AND IsAdmin = 1;
 ### Manual Test Scenarios
 
 1. **Developer Role Access**
-   - Log in as JOHNK (Admin + Developer)
-   - Open Settings form
-   - Verify Developer category appears after About
-   - Verify 6 child nodes visible (DebugDashboard, ParameterPrefixMaintenance, SchemaInspector, ProcedureCallHierarchy, CodeGenerator, Database)
+
+    - Log in as JOHNK (Admin + Developer)
+    - Open Settings form
+    - Verify Developer category appears after About
+    - Verify 6 child nodes visible (DebugDashboard, ParameterPrefixMaintenance, SchemaInspector, ProcedureCallHierarchy, CodeGenerator, Database)
 
 2. **Parameter Prefix Override Workflow**
-   - Navigate to Settings → Developer → Parameter Prefix Maintenance
-   - Click "Add Override"
-   - Enter test procedure name, parameter, prefix, reason
-   - Save override
-   - Restart application
-   - Verify override appears in loaded cache
-   - Call stored procedure and confirm override applied
+
+    - Navigate to Settings → Developer → Parameter Prefix Maintenance
+    - Click "Add Override"
+    - Enter test procedure name, parameter, prefix, reason
+    - Save override
+    - Restart application
+    - Verify override appears in loaded cache
+    - Call stored procedure and confirm override applied
 
 3. **Debug Dashboard Integration**
-   - Navigate to Settings → Developer → Debug Dashboard
-   - Enable Database Operations tracing
-   - Execute inventory adjustment in main application
-   - Verify stored procedure execution appears in dashboard output
-   - Click "Pause Capture" and confirm output freezes
-   - Click "Save Log" and verify file saves with timestamp
+
+    - Navigate to Settings → Developer → Debug Dashboard
+    - Enable Database Operations tracing
+    - Execute inventory adjustment in main application
+    - Verify stored procedure execution appears in dashboard output
+    - Click "Pause Capture" and confirm output freezes
+    - Click "Save Log" and verify file saves with timestamp
 
 4. **Schema Inspector Functionality**
-   - Navigate to Settings → Developer → Schema Inspector
-   - Verify table list loads within 5 seconds
-   - Select a table and verify columns display
-   - Switch to Stored Procedures tab
-   - Select a procedure and verify parameters display
-   - Click Refresh (F5) and confirm data reloads
+
+    - Navigate to Settings → Developer → Schema Inspector
+    - Verify table list loads within 5 seconds
+    - Select a table and verify columns display
+    - Switch to Stored Procedures tab
+    - Select a procedure and verify parameters display
+    - Click Refresh (F5) and confirm data reloads
 
 5. **Code Generator Output**
-   - Navigate to Settings → Developer → Code Generator
-   - Select stored procedure from dropdown
-   - Click "Generate DAO Method"
-   - Copy generated code to clipboard
-   - Paste into temporary DAO class
-   - Build project and verify code compiles
+
+    - Navigate to Settings → Developer → Code Generator
+    - Select stored procedure from dropdown
+    - Click "Generate DAO Method"
+    - Copy generated code to clipboard
+    - Paste into temporary DAO class
+    - Build project and verify code compiles
 
 6. **Procedure Call Hierarchy**
-   - Navigate to Settings → Developer → Procedure Call Hierarchy
-   - Search for "inv_inventory_Add_Item"
-   - Verify C# call sites display with file paths
-   - Verify called procedures display in dependency tree
-   - Test "Show Dependency Tree" visualization
+    - Navigate to Settings → Developer → Procedure Call Hierarchy
+    - Search for "inv_inventory_Add_Item"
+    - Verify C# call sites display with file paths
+    - Verify called procedures display in dependency tree
+    - Test "Show Dependency Tree" visualization
 
 ---
 

@@ -1,0 +1,706 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Print and Export System - MTM Inventory Application Help</title>
+    <link rel="stylesheet" href="css/help-styles.css">
+</head>
+<body>
+    <div class="help-container">
+        <div class="help-header">
+            <h1>🖨️ Print and Export System</h1>
+            <p>Complete guide to printing and exporting data from MTM WIP Application</p>
+        </div>
+        
+        <div class="help-nav">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="index.html">Help Home</a></li>
+                    <li class="breadcrumb-item active">Print and Export</li>
+                </ol>
+            </nav>
+            <input type="text" class="search-box" placeholder="Search printing help..." id="searchBox">
+        </div>
+        
+        <div class="help-content">
+            <div class="alert alert-info">
+                <strong>Quick Start:</strong> Press <kbd>Ctrl</kbd>+<kbd>P</kbd> to open the print dialog for any grid view. Right-click any data grid and select "Print..." for quick access.
+            </div>
+            
+            <div class="help-section">
+                <h2>Print System Overview</h2>
+                
+                <div class="help-card">
+                    <h4>🎯 What's New</h4>
+                    <p>The MTM print system has been completely redesigned with these key features:</p>
+                    <ul class="help-list">
+                        <li><strong>Accurate Page Ranges</strong> - Print exactly the pages you need</li>
+                        <li><strong>Live Preview</strong> - See exactly what will print before printing</li>
+                        <li><strong>Column Customization</strong> - Choose which columns to print and reorder them</li>
+                        <li><strong>PDF Export</strong> - Save reports as PDF files</li>
+                        <li><strong>Excel Export</strong> - Export data to Excel with exact page ranges</li>
+                        <li><strong>Settings Persistence</strong> - Your printer and column preferences are remembered</li>
+                    </ul>
+                </div>
+                
+                <div class="help-card">
+                    <h4>📋 Where Can I Print?</h4>
+                    <p>The print system is available anywhere you see data grids:</p>
+                    <ul class="help-list">
+                        <li><strong>Inventory Tab</strong> - Print current inventory views</li>
+                        <li><strong>Remove Tab</strong> - Print removal history</li>
+                        <li><strong>Transactions Tab</strong> - Print transaction history</li>
+                        <li><strong>Transfer Tab</strong> - Print transfer records</li>
+                    </ul>
+                    
+                    <h5>Three Ways to Access Print:</h5>
+                    <table class="help-table">
+                        <thead>
+                            <tr>
+                                <th>Method</th>
+                                <th>How To</th>
+                                <th>Best For</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Print Button</strong></td>
+                                <td>Click the Print button on any tab</td>
+                                <td>Mouse users, obvious access</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Keyboard Shortcut</strong></td>
+                                <td>Press <kbd>Ctrl</kbd>+<kbd>P</kbd></td>
+                                <td>Power users, quick access</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Right-Click Menu</strong></td>
+                                <td>Right-click grid → Print...</td>
+                                <td>Context-specific printing</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            
+            <div class="help-section">
+                <h2>Print Dialog Layout</h2>
+                
+                <div class="help-card">
+                    <h4>🖥️ Understanding the Interface</h4>
+                    <p>The print dialog uses a Compact Sidebar layout for maximum preview space:</p>
+                    
+                    <div style="text-align: center; margin: 1rem 0;">
+                        <img src="images/Print1.png" alt="Main print dialog showing preview pane and settings sidebar with collapsible sections" style="max-width: 100%; border: 1px solid #dee2e6; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+                        <p style="font-size: 0.875rem; color: #6c757d; margin-top: 0.5rem; font-style: italic;">Print Preview dialog showing the Control_RemoveTab_DataGridView_Main data with settings sidebar on the left (~25% width) and live preview on the right (~75% width). Sidebar contains collapsible sections: Printer Settings (Microsoft Print to PDF selected, Portrait orientation), Page Settings (All pages, Custom range 1 to 26), Column Settings (ID unchecked, other columns checked), and Options (Color mode, Fit to Page zoom). Preview displays "Page 1 / 26" at bottom with navigation arrows.</p>
+                    </div>
+                    
+                    <h5>Layout Components:</h5>
+                    <ul class="help-list">
+                        <li><strong>Settings Sidebar (Left ~25%)</strong> - Collapsible sections for Printer Settings, Page Settings, Column Settings, and Options</li>
+                        <li><strong>Preview Pane (Right ~75%)</strong> - Live preview of your document with gray background and white page display</li>
+                        <li><strong>Navigation Bar</strong> - Page navigation buttons (◀◀ ◀ ▶ ▶▶) and page counter (Page X / Y) at bottom of preview</li>
+                        <li><strong>Action Buttons</strong> - Print button, Export button, and Cancel button at bottom of sidebar (colors vary by theme)</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="help-section">
+                <h2>Step-by-Step: Printing Data</h2>
+                
+                <div class="help-card">
+                    <h4>1. 🖨️ Printer Settings</h4>
+                    <p>Click the <strong>🖨️ Printer Settings</strong> section header to expand printer options:</p>
+                    
+                    <ul class="help-list">
+                        <li><strong>Select Printer</strong> - Choose from installed printers (your last selection is remembered)</li>
+                        <li><strong>Orientation</strong> - Choose Portrait (tall) or Landscape (wide)</li>
+                    </ul>
+                    
+                    <div class="alert alert-info">
+                        <strong>Default Printer:</strong> The dialog remembers your last printer selection for each grid. First time usage defaults to your system default printer.
+                    </div>
+                </div>
+                
+                <div class="help-card">
+                    <h4>2. 📄 Page Settings</h4>
+                    <p>Click the <strong>📄 Page Settings</strong> section to configure what pages to print:</p>
+                    
+                    <table class="help-table">
+                        <thead>
+                            <tr>
+                                <th>Option</th>
+                                <th>Description</th>
+                                <th>Use When</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>All Pages</strong></td>
+                                <td>Prints the entire document</td>
+                                <td>You need complete report</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Current Page</strong></td>
+                                <td>Prints only the page you're viewing</td>
+                                <td>Single page verification needed</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Page Range</strong></td>
+                                <td>Prints from page X to page Y</td>
+                                <td>Partial report needed (e.g., pages 5-10)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    
+                    <h5>Page Range Validation:</h5>
+                    <ul class="help-list">
+                        <li><strong>From page must be ≤ To page</strong> - Invalid ranges disable Print/Export buttons</li>
+                        <li><strong>Both values must be ≤ Total Pages</strong> - System validates against actual page count</li>
+                        <li><strong>Visual feedback</strong> - Invalid entries show red text</li>
+                    </ul>
+                    
+                    <div class="alert alert-success">
+                        <strong>Accuracy Guarantee:</strong> Page ranges use actual print system pagination, not row-based estimates. What you see in preview is exactly what will print.
+                    </div>
+                </div>
+                
+                <div class="help-card">
+                    <h4>3. 📑 Column Settings</h4>
+                    <p>Click the <strong>📑 Column Settings</strong> section to customize which columns appear:</p>
+                    
+                    <div style="text-align: center; margin: 1rem 0;">
+                        <img src="images/Print2.png" alt="Column settings panel showing checkboxes for column visibility and Up/Down arrow buttons for reordering" style="max-width: 100%; border: 1px solid #dee2e6; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+                        <p style="font-size: 0.875rem; color: #6c757d; margin-top: 0.5rem; font-style: italic;">Column Settings section expanded showing available columns with checkboxes. In this example, "ID" is unchecked (will not print), while PartID, Location, Operation, Quantity, ItemType, and ReceivedDate are checked (will print). The selected column (PartID highlighted) can be reordered using the up/down arrow buttons (▲ ▼) at the bottom. Options section is collapsed below. Print, Export, and Cancel buttons are visible at the bottom (button colors vary by user theme).</p>
+                    </div>
+                    
+                    <h5>Column Visibility:</h5>
+                    <ul class="help-list">
+                        <li><strong>Check/Uncheck columns</strong> - Control which columns print</li>
+                        <li><strong>At least one required</strong> - Cannot uncheck all columns</li>
+                        <li><strong>Preview updates immediately</strong> - Changes reflect in preview instantly</li>
+                        <li><strong>Settings saved</strong> - Column selections remembered for next print</li>
+                    </ul>
+                    
+                    <h5>Column Reordering:</h5>
+                    <table class="help-table">
+                        <thead>
+                            <tr>
+                                <th>Action</th>
+                                <th>Method</th>
+                                <th>Result</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Move Up</strong></td>
+                                <td>Select column, click ▲ button or press <kbd>Ctrl</kbd>+<kbd>↑</kbd></td>
+                                <td>Selected column moves up in list (left in print output)</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Move Down</strong></td>
+                                <td>Select column, click ▼ button or press <kbd>Ctrl</kbd>+<kbd>↓</kbd></td>
+                                <td>Selected column moves down in list (right in print output)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    
+                    <div class="alert alert-warning">
+                        <strong>Note:</strong> Column order in print dialog controls print output, not the grid display. Grid and print column orders are independent.
+                    </div>
+                </div>
+                
+                <div class="help-card">
+                    <h4>4. ⚙️ Options</h4>
+                    <p>Click the <strong>⚙️ Options</strong> section for additional settings:</p>
+                    
+                    <ul class="help-list">
+                        <li><strong>Zoom Level</strong> - Control preview magnification (25% to 200%, or Fit to Page)</li>
+                        <li><strong>Color Mode</strong> - Choose between Color or Grayscale printing</li>
+                    </ul>
+                    
+                    <table class="help-table">
+                        <thead>
+                            <tr>
+                                <th>Zoom Option</th>
+                                <th>Best For</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Fit to Page</td>
+                                <td>See entire page (default, recommended)</td>
+                            </tr>
+                            <tr>
+                                <td>25% - 200%</td>
+                                <td>Specific magnification needs</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    
+                    <div class="alert alert-info">
+                        <strong>Not Saved:</strong> Orientation, zoom, page range, and color mode are reset each session. Only printer selection and column preferences persist.
+                    </div>
+                </div>
+                
+                <div class="help-card">
+                    <h4>5. 👁️ Preview Navigation</h4>
+                    <p>Navigate through your document using the controls below the preview:</p>
+                    
+                    <table class="help-table">
+                        <thead>
+                            <tr>
+                                <th>Button</th>
+                                <th>Action</th>
+                                <th>Keyboard</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>◀◀ First</td>
+                                <td>Jump to page 1</td>
+                                <td><kbd>Home</kbd></td>
+                            </tr>
+                            <tr>
+                                <td>◀ Previous</td>
+                                <td>Go back one page</td>
+                                <td><kbd>Page Up</kbd></td>
+                            </tr>
+                            <tr>
+                                <td>Page X / Y</td>
+                                <td>Shows current page and total</td>
+                                <td>-</td>
+                            </tr>
+                            <tr>
+                                <td>Next ▶</td>
+                                <td>Advance one page</td>
+                                <td><kbd>Page Down</kbd></td>
+                            </tr>
+                            <tr>
+                                <td>Last ▶▶</td>
+                                <td>Jump to final page</td>
+                                <td><kbd>End</kbd></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    
+                    <div class="alert alert-success">
+                        <strong>Page Counter Accuracy:</strong> The "Page X / Y" counter matches PrintDocument.PageNumber exactly—no estimation or approximation.
+                    </div>
+                </div>
+                
+                <div class="help-card">
+                    <h4>6. 🖨️ Print Execution</h4>
+                    <p>When you're ready to print:</p>
+                    
+                    <ol class="help-list">
+                        <li><strong>Review preview</strong> - Verify content, page range, and column selection</li>
+                        <li><strong>Click Print button</strong> - Print button at bottom of sidebar</li>
+                        <li><strong>Windows Print Dialog appears</strong> - Standard Windows print dialog opens for final printer configuration</li>
+                        <li><strong>Configure final settings</strong> - Adjust copies, paper size, or other printer-specific options if needed</li>
+                        <li><strong>Click Print</strong> - In the Windows dialog to send job to printer</li>
+                        <li><strong>Settings Saved</strong> - Your printer and column preferences are saved automatically</li>
+                        <li><strong>Collect output</strong> - Retrieve your printed document from the printer</li>
+                    </ol>
+                    
+                    <div style="text-align: center; margin: 1rem 0;">
+                        <img src="images/Print6.png" alt="Print button at bottom of sidebar" style="max-width: 100%; border: 1px solid #dee2e6; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+                        <p style="font-size: 0.875rem; color: #6c757d; margin-top: 0.5rem; font-style: italic;">The Print button located at the bottom of the settings sidebar. Click this button to proceed to the Windows Print dialog where you can configure final print settings and send the job to your printer. Note: Button colors vary based on your selected theme.</p>
+                    </div>
+                    
+                    <div style="text-align: center; margin: 1rem 0;">
+                        <img src="images/Print5.png" alt="Windows Print Dialog after clicking Print button" style="max-width: 100%; border: 1px solid #dee2e6; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+                        <p style="font-size: 0.875rem; color: #6c757d; margin-top: 0.5rem; font-style: italic;">Standard Windows Print dialog that appears after clicking the Print button. Your MTM settings (printer, orientation, page range) are automatically transferred to this dialog. You only need to configure additional settings not available in MTM, such as number of copies, paper size, or duplex printing.</p>
+                    </div>
+                    
+                    <h5>Settings Automatically Transferred to Windows Dialog:</h5>
+                    <ul class="help-list">
+                        <li><strong>Printer Selection</strong> - Your chosen printer from MTM is pre-selected</li>
+                        <li><strong>Page Orientation</strong> - Portrait or Landscape setting is already applied</li>
+                        <li><strong>Page Range</strong> - All Pages, Current Page, or Custom Range (From/To) is pre-configured</li>
+                    </ul>
+                    
+                    <h5>Additional Settings Available in Windows Dialog:</h5>
+                    <ul class="help-list">
+                        <li><strong>Number of Copies</strong> - Print multiple copies of your document</li>
+                        <li><strong>Paper Size</strong> - Change paper size (Letter, Legal, A4, etc.)</li>
+                        <li><strong>Paper Source</strong> - Select which printer tray to use</li>
+                        <li><strong>Print Quality</strong> - Adjust resolution or draft/normal/high quality settings</li>
+                        <li><strong>Duplex Printing</strong> - Enable double-sided printing if your printer supports it</li>
+                        <li><strong>Collation</strong> - Control page ordering for multiple copies</li>
+                        <li><strong>Printer Properties</strong> - Access advanced printer-specific settings</li>
+                    </ul>
+                    
+                    <h5>What Happens During Print:</h5>
+                    <ul class="help-list">
+                        <li><strong>Validation</strong> - Page range and column selection verified before Windows dialog opens</li>
+                        <li><strong>Windows Dialog Opens</strong> - Standard system print dialog for final printer configuration</li>
+                        <li><strong>Print Job Sent</strong> - After clicking Print in Windows dialog, data sent to printer with exact page settings</li>
+                        <li><strong>Settings Saved</strong> - MTM saves your printer selection and column preferences for next time</li>
+                        <li><strong>Dialog Closes</strong> - Print preview dialog closes after successful job submission</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="help-section">
+                <h2>Exporting to PDF and Excel</h2>
+                
+                <div class="help-card">
+                    <h4>📊 Export Options</h4>
+                    <p>Click the <strong>Export</strong> dropdown button to choose export format:</p>
+                    
+                    <div style="text-align: center; margin: 1rem 0;">
+                        <img src="images/Print3.png" alt="Export dropdown menu with PDF and Excel export options" style="max-width: 100%; border: 1px solid #dee2e6; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+                        <p style="font-size: 0.875rem; color: #6c757d; margin-top: 0.5rem; font-style: italic;">Export button dropdown menu displaying two options: "Export to PDF" and "Export to Excel". Clicking the Export button reveals this context menu with both export format choices. Cancel button is visible to the right.</p>
+                    </div>
+                    
+                    <table class="help-table">
+                        <thead>
+                            <tr>
+                                <th>Format</th>
+                                <th>Best For</th>
+                                <th>Features</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>PDF</strong></td>
+                                <td>Sharing reports, archiving, printing later</td>
+                                <td>Exact page ranges, portable format, print-ready</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Excel</strong></td>
+                                <td>Data analysis, spreadsheet work, calculations</td>
+                                <td>Exact page ranges, editable data, formula support</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                
+                <div class="help-card">
+                    <h4>📄 Export to PDF</h4>
+                    <p>Export your report as a PDF file:</p>
+                    
+                    <ol class="help-list">
+                        <li>Configure print settings (page range, columns, orientation)</li>
+                        <li>Click <strong>Export</strong> dropdown → <strong>Export to PDF</strong></li>
+                        <li>Choose save location in file dialog</li>
+                        <li>Enter filename (e.g., "Transaction_Report_2025-11-11.pdf")</li>
+                        <li>Click Save</li>
+                        <li>Wait for success message</li>
+                    </ol>
+                    
+                    <h5>PDF Export Features:</h5>
+                    <ul class="help-list">
+                        <li><strong>Uses "Microsoft Print to PDF"</strong> - Built into Windows 10+</li>
+                        <li><strong>Exact page ranges</strong> - Pages 5-10 in preview = pages 5-10 in PDF</li>
+                        <li><strong>Same settings as print</strong> - Orientation, columns match preview exactly</li>
+                        <li><strong>Print-ready</strong> - PDF can be printed later with identical results</li>
+                    </ul>
+                    
+                    <div class="alert alert-success">
+                        <strong>Export Guarantee:</strong> PDF export contains exactly the same content as preview. No approximation or estimation.
+                    </div>
+                </div>
+                
+                <div class="help-card">
+                    <h4>📊 Export to Excel</h4>
+                    <p>Export data to Excel spreadsheet format:</p>
+                    
+                    <ol class="help-list">
+                        <li>Configure columns and page range</li>
+                        <li>Click <strong>Export</strong> dropdown → <strong>Export to Excel</strong></li>
+                        <li>Choose save location in file dialog</li>
+                        <li>Enter filename (e.g., "Inventory_Data_2025-11-11.xlsx")</li>
+                        <li>Click Save</li>
+                        <li>Wait for success message</li>
+                    </ol>
+                    
+                    <h5>Excel Export Features:</h5>
+                    <ul class="help-list">
+                        <li><strong>Exact page boundaries</strong> - Uses print rendering to determine exact rows per page</li>
+                        <li><strong>Only selected columns</strong> - Exports only checked columns in configured order</li>
+                        <li><strong>Formatted headers</strong> - Bold column headers, borders for readability</li>
+                        <li><strong>Editable data</strong> - Full Excel functionality (formulas, sorting, filtering)</li>
+                    </ul>
+                    
+                    <div class="alert alert-info">
+                        <strong>Page Range Match:</strong> If you export pages 1-3, Excel contains exactly the rows visible on preview pages 1-3. Row counts match exactly.
+                    </div>
+                </div>
+            </div>
+            
+            <div class="help-section">
+                <h2>Progress Monitoring</h2>
+                
+                <div class="help-card">
+                    <h4>⏱️ Long-Running Operations</h4>
+                    <p>For large datasets, a progress dialog appears during preview generation:</p>
+                    
+                    <div style="text-align: center; margin: 1rem 0;">
+                        <img src="images/Print4.png" alt="Progress dialog showing operation status with current page and cancel button" style="max-width: 100%; border: 1px solid #dee2e6; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+                        <p style="font-size: 0.875rem; color: #6c757d; margin-top: 0.5rem; font-style: italic;">Progress dialog appears during preview generation with the title "Generating Previews" showing current progress ("Page 10 of document" in this example) and a Cancel button to stop the operation. This modal dialog prevents interaction with the main print window until preview generation completes or is cancelled.</p>
+                    </div>
+                    
+                    <h5>Progress Dialog Features:</h5>
+                    <ul class="help-list">
+                        <li><strong>Dialog Title</strong> - "Generating Previews" (or "Exporting to PDF/Excel" for export operations)</li>
+                        <li><strong>Progress Message</strong> - Shows current page being processed (e.g., "Page 10 of document")</li>
+                        <li><strong>Modal Overlay</strong> - Prevents interaction with print dialog until operation completes</li>
+                        <li><strong>Cancel Button</strong> - Stop operation if taking too long (responds within 500ms)</li>
+                    </ul>
+                    
+                    <h5>Cancellation:</h5>
+                    <ul class="help-list">
+                        <li><strong>Click Cancel</strong> - Operation stops within 500ms</li>
+                        <li><strong>Dialog closes</strong> - Returns to print dialog without changes</li>
+                        <li><strong>Resources released</strong> - Memory and system resources freed</li>
+                    </ul>
+                    
+                    <div class="alert alert-warning">
+                        <strong>Performance Note:</strong> Previews with 100 rows or less generate in under 2 seconds. Larger datasets may take longer (expect ~5-10 seconds for 1000 rows).
+                    </div>
+                </div>
+            </div>
+            
+            <div class="help-section">
+                <h2>Keyboard Shortcuts</h2>
+                
+                <div class="help-card">
+                    <h4>⌨️ Complete Shortcut Reference</h4>
+                    
+                    <table class="help-table">
+                        <thead>
+                            <tr>
+                                <th>Shortcut</th>
+                                <th>Action</th>
+                                <th>Context</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><kbd>Ctrl</kbd>+<kbd>P</kbd></td>
+                                <td>Open print dialog</td>
+                                <td>Any grid view</td>
+                            </tr>
+                            <tr>
+                                <td><kbd>Ctrl</kbd>+<kbd>↑</kbd></td>
+                                <td>Move column up</td>
+                                <td>Column settings (when column selected)</td>
+                            </tr>
+                            <tr>
+                                <td><kbd>Ctrl</kbd>+<kbd>↓</kbd></td>
+                                <td>Move column down</td>
+                                <td>Column settings (when column selected)</td>
+                            </tr>
+                            <tr>
+                                <td><kbd>Home</kbd></td>
+                                <td>First page</td>
+                                <td>Preview navigation</td>
+                            </tr>
+                            <tr>
+                                <td><kbd>End</kbd></td>
+                                <td>Last page</td>
+                                <td>Preview navigation</td>
+                            </tr>
+                            <tr>
+                                <td><kbd>Page Up</kbd></td>
+                                <td>Previous page</td>
+                                <td>Preview navigation</td>
+                            </tr>
+                            <tr>
+                                <td><kbd>Page Down</kbd></td>
+                                <td>Next page</td>
+                                <td>Preview navigation</td>
+                            </tr>
+                            <tr>
+                                <td><kbd>Esc</kbd></td>
+                                <td>Cancel/Close dialog</td>
+                                <td>Print dialog</td>
+                            </tr>
+                            <tr>
+                                <td><kbd>Enter</kbd></td>
+                                <td>Print (when Print button focused)</td>
+                                <td>Print dialog</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            
+            <div class="help-section">
+                <h2>Troubleshooting</h2>
+                
+                <div class="help-card">
+                    <h4>❌ Common Issues and Solutions</h4>
+                    
+                    <table class="help-table">
+                        <thead>
+                            <tr>
+                                <th>Problem</th>
+                                <th>Cause</th>
+                                <th>Solution</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>"No data to print"</td>
+                                <td>Empty data grid</td>
+                                <td>Add data to grid or filter differently</td>
+                            </tr>
+                            <tr>
+                                <td>Print/Export buttons disabled</td>
+                                <td>Invalid page range or no columns selected</td>
+                                <td>Check From ≤ To and at least one column checked</td>
+                            </tr>
+                            <tr>
+                                <td>"Microsoft Print to PDF" not found</td>
+                                <td>PDF printer not installed</td>
+                                <td>Add "Microsoft Print to PDF" in Windows Settings → Printers</td>
+                            </tr>
+                            <tr>
+                                <td>Export fails with permission denied</td>
+                                <td>Read-only save location or file locked</td>
+                                <td>Choose different folder or close file if open</td>
+                            </tr>
+                            <tr>
+                                <td>Page count seems wrong</td>
+                                <td>Orientation or columns changed</td>
+                                <td>Page count recalculates automatically—wait for preview refresh</td>
+                            </tr>
+                            <tr>
+                                <td>Preview is very slow</td>
+                                <td>Large dataset (1000+ rows)</td>
+                                <td>Use Cancel button or filter data before printing</td>
+                            </tr>
+                            <tr>
+                                <td>Settings not saving</td>
+                                <td>File permission issue in AppData</td>
+                                <td>Check %APPDATA%\MTM\PrintSettings\ folder permissions</td>
+                            </tr>
+                            <tr>
+                                <td>Excel file shows errors when opened</td>
+                                <td>File already open or Excel version issue</td>
+                                <td>Close Excel files, use Excel 2016 or newer</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            
+            <div class="help-section">
+                <h2>Best Practices</h2>
+                
+                <div class="help-card">
+                    <h4>💡 Efficiency Tips</h4>
+                    <ul class="help-list">
+                        <li><strong>Filter before printing</strong> - Use grid filters to show only needed data</li>
+                        <li><strong>Use keyboard shortcuts</strong> - <kbd>Ctrl</kbd>+<kbd>P</kbd> for quick access</li>
+                        <li><strong>Landscape for wide data</strong> - More columns fit per page</li>
+                        <li><strong>PDF for archiving</strong> - Use PDF for records and email distribution</li>
+                        <li><strong>Excel for analysis</strong> - Export to Excel when you need to manipulate data</li>
+                        <li><strong>Page ranges save paper</strong> - Print only needed pages (e.g., pages 5-10)</li>
+                    </ul>
+                </div>
+                
+                <div class="help-card">
+                    <h4>🎯 Quality Tips</h4>
+                    <ul class="help-list">
+                        <li><strong>Always preview first</strong> - Verify before printing</li>
+                        <li><strong>Check page count</strong> - Ensure all data included</li>
+                        <li><strong>Customize columns</strong> - Show only relevant columns for cleaner output</li>
+                        <li><strong>Use meaningful filenames</strong> - Include date and report type in exports</li>
+                        <li><strong>Verify page ranges</strong> - Double-check From/To values before export</li>
+                    </ul>
+                </div>
+                
+                <div class="help-card">
+                    <h4>📁 File Organization</h4>
+                    <ul class="help-list">
+                        <li><strong>Consistent naming</strong> - Use format like "Report_Type_YYYY-MM-DD.pdf"</li>
+                        <li><strong>Organized folders</strong> - Create folders by month or report type</li>
+                        <li><strong>Backup important exports</strong> - Keep copies of critical reports</li>
+                        <li><strong>Regular cleanup</strong> - Archive or delete old exports periodically</li>
+                    </ul>
+                    
+                    <div style="background: #e7f3ff; border-left: 4px solid #0d6efd; padding: 1rem; margin-top: 1rem; border-radius: 4px;">
+                        <strong>📂 Default Export Location:</strong>
+                        <p style="margin: 0.5rem 0 0 0;">
+                            Exported files are saved to: <code style="background: #f8f9fa; padding: 0.2rem 0.5rem; border-radius: 3px;">C:\Users\[YourUsername]\Documents\MTM_Exports</code>
+                        </p>
+                        <p style="margin: 0.5rem 0 0 0; font-size: 0.875rem;">
+                            <em>Tip: Copy this path and paste it into Windows Explorer's address bar (replace [YourUsername] with your actual Windows username).</em>
+                        </p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="help-section">
+                <h2>Technical Details</h2>
+                
+                <div class="help-card">
+                    <h4>⚙️ System Requirements</h4>
+                    <ul class="help-list">
+                        <li><strong>Operating System</strong> - Windows 10 or newer</li>
+                        <li><strong>PDF Export</strong> - "Microsoft Print to PDF" printer (included in Windows 10+)</li>
+                        <li><strong>Excel Export</strong> - Excel 2016 or newer to open .xlsx files</li>
+                        <li><strong>DPI Scaling</strong> - Tested at 100%, 125%, 150%, 200% scaling</li>
+                        <li><strong>Minimum Resolution</strong> - 1024x768 (1920x1080 recommended)</li>
+                    </ul>
+                </div>
+                
+                <div class="help-card">
+                    <h4>💾 Settings Storage</h4>
+                    <p>Print preferences are stored in:</p>
+                    <code style="display: block; background: #f8f9fa; padding: 1rem; border-radius: 4px; margin: 1rem 0;">
+                        %APPDATA%\MTM\PrintSettings\{GridName}.json
+                    </code>
+                    
+                    <h5>What's Saved:</h5>
+                    <ul class="help-list">
+                        <li><strong>Per Grid</strong> - Each grid (Transactions, Remove, etc.) has separate settings</li>
+                        <li><strong>Printer Selection</strong> - Last used printer name</li>
+                        <li><strong>Column Visibility</strong> - Which columns were checked</li>
+                        <li><strong>Column Order</strong> - How columns were arranged</li>
+                    </ul>
+                    
+                    <h5>What's NOT Saved (Resets Each Session):</h5>
+                    <ul class="help-list">
+                        <li>Page orientation (Portrait/Landscape)</li>
+                        <li>Page range selection (All Pages/Current/Custom)</li>
+                        <li>Zoom level</li>
+                        <li>Color mode (Color/Grayscale)</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="help-section">
+                <h2>Related Help Topics</h2>
+                
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1rem; margin-top: 1rem;">
+                    <a href="inventory-operations.html" class="help-btn help-btn-outline-primary" style="padding: 1rem; text-align: center; text-decoration: none;">
+                        📋 Inventory Operations
+                    </a>
+                    <a href="transaction-history.html" class="help-btn help-btn-outline-primary" style="padding: 1rem; text-align: center; text-decoration: none;">
+                        📊 Transaction History
+                    </a>
+                    <a href="keyboard-shortcuts.html" class="help-btn help-btn-outline-primary" style="padding: 1rem; text-align: center; text-decoration: none;">
+                        ⌨️ Keyboard Shortcuts
+                    </a>
+                    <a href="troubleshooting.html" class="help-btn help-btn-outline-primary" style="padding: 1rem; text-align: center; text-decoration: none;">
+                        🔧 Troubleshooting
+                    </a>
+                </div>
+            </div>
+        </div>
+        
+        <div class="help-footer">
+            <p>MTM Inventory Application v5.0.1.2 | Print and Export System Guide</p>
+            <p>Questions or issues? <a href="troubleshooting.html" style="color: #fff;">Visit Troubleshooting</a> | <a href="index.html" style="color: #fff;">Back to Help Home</a></p>
+        </div>
+    </div>
+    
+    <script src="js/help-navigation.js"></script>
+</body>
+</html>

@@ -10,7 +10,7 @@
 
 - [Test Class Template](#test-class-template)
 - [Discovery-First Workflow](#discovery-first-workflow)
-- [Null-Safe DaoResult Pattern](#null-safe-daoresult-pattern)
+- [Null-Safe Model_Dao_Result Pattern](#null-safe-daoresult-pattern)
 - [Test Data Setup](#test-data-setup-patterns)
 - [Common Test Patterns](#common-test-patterns)
 
@@ -258,8 +258,8 @@ read_file({
 // Dao_[Entity] patterns discovered:
 // - All methods are static (no instance needed)
 // - No Async suffix on method names (GetAllItems not GetAllItemsAsync)
-// - Returns DaoResult<DataTable> for Get operations
-// - Returns DaoResult<bool> for Exists operations
+// - Returns Model_Dao_Result<DataTable> for Get operations
+// - Returns Model_Dao_Result<bool> for Exists operations
 // - Parameter names: itemId, locationCode, includeInactive
 ```
 
@@ -275,30 +275,30 @@ var result = await Dao_ItemType.GetAllItemTypesAsync();  // Doesn't exist!
 
 ---
 
-## Null-Safe DaoResult Pattern
+## Null-Safe Model_Dao_Result Pattern
 
-**Purpose**: Safely check DaoResult.Data without null reference exceptions.
+**Purpose**: Safely check Model_Dao_Result.Data without null reference exceptions.
 
-### Common DaoResult Return Types
+### Common Model_Dao_Result Return Types
 
 ```csharp
-// DaoResult<DataTable> - most Get operations
-DaoResult<DataTable> result = await Dao_Something.GetDataAsync();
+// Model_Dao_Result<DataTable> - most Get operations
+Model_Dao_Result<DataTable> result = await Dao_Something.GetDataAsync();
 
-// DaoResult<bool> - Exists operations
-DaoResult<bool> result = await Dao_Something.ItemExistsAsync();
+// Model_Dao_Result<bool> - Exists operations
+Model_Dao_Result<bool> result = await Dao_Something.ItemExistsAsync();
 
-// DaoResult<DataRow> - GetById operations
-DaoResult<DataRow> result = await Dao_Something.GetByIdAsync();
+// Model_Dao_Result<DataRow> - GetById operations
+Model_Dao_Result<DataRow> result = await Dao_Something.GetByIdAsync();
 
-// DaoResult (no type parameter) - Add/Update/Delete operations
-DaoResult result = await Dao_Something.DeleteItemAsync();
+// Model_Dao_Result (no type parameter) - Add/Update/Delete operations
+Model_Dao_Result result = await Dao_Something.DeleteItemAsync();
 ```
 
 ### Null-Safe Assertion Patterns
 
 ```csharp
-// ✅ CORRECT: DaoResult<DataTable> with null check
+// ✅ CORRECT: Model_Dao_Result<DataTable> with null check
 var result = await Dao_Something.GetDataAsync();
 Assert.IsTrue(result.IsSuccess && result.Data != null && result.Data.Rows.Count > 0,
     "Expected successful result with non-null DataTable and rows");
@@ -307,17 +307,17 @@ Assert.IsTrue(result.IsSuccess && result.Data != null && result.Data.Rows.Count 
 var result = await Dao_Something.GetDataAsync();
 Assert.IsTrue(result.IsSuccess && result.Data.Rows.Count > 0);  // NullReferenceException if Data is null!
 
-// ✅ CORRECT: DaoResult<bool>
+// ✅ CORRECT: Model_Dao_Result<bool>
 var result = await Dao_Something.ItemExistsAsync(id);
 Assert.IsTrue(result.IsSuccess && result.Data,
     "Expected successful result with Data = true");
 
-// ✅ CORRECT: DaoResult<DataRow>
+// ✅ CORRECT: Model_Dao_Result<DataRow>
 var result = await Dao_Something.GetByIdAsync(id);
 Assert.IsTrue(result.IsSuccess && result.Data != null,
     "Expected successful result with non-null DataRow");
 
-// ✅ CORRECT: DaoResult (no type parameter)
+// ✅ CORRECT: Model_Dao_Result (no type parameter)
 var result = await Dao_Something.DeleteItemAsync(id);
 Assert.IsTrue(result.IsSuccess,
     $"Expected successful deletion, got: {result.ErrorMessage}");
@@ -575,7 +575,7 @@ var testPartNumber = "TEST-PART-001";
 
 ### Issue: Test Fails with "Data is null"
 
-**Problem**: DaoResult.Data is null even though IsSuccess is true.
+**Problem**: Model_Dao_Result.Data is null even though IsSuccess is true.
 
 **Solution**:
 ```csharp

@@ -10,21 +10,21 @@
 
 ## Input Parameters
 
-| Parameter | Type | Required | Default | Description | Example |
-|-----------|------|----------|---------|-------------|---------|
-| p_ReportID | INT | Yes | N/A | Primary key of report to update | 123 |
-| p_NewStatus | VARCHAR(20) | Yes | N/A | New status value | 'Reviewed' or 'Resolved' |
-| p_DeveloperNotes | TEXT | No | NULL | Developer comments/findings | 'Investigating database timeout' |
-| p_ReviewedBy | VARCHAR(100) | Yes | N/A | Username of developer making change | 'Dev.Smith' |
-| p_ReviewedDate | DATETIME | Yes | N/A | Current timestamp of status change | NOW() |
+| Parameter        | Type         | Required | Default | Description                         | Example                          |
+| ---------------- | ------------ | -------- | ------- | ----------------------------------- | -------------------------------- |
+| p_ReportID       | INT          | Yes      | N/A     | Primary key of report to update     | 123                              |
+| p_NewStatus      | VARCHAR(20)  | Yes      | N/A     | New status value                    | 'Reviewed' or 'Resolved'         |
+| p_DeveloperNotes | TEXT         | No       | NULL    | Developer comments/findings         | 'Investigating database timeout' |
+| p_ReviewedBy     | VARCHAR(100) | Yes      | N/A     | Username of developer making change | 'Dev.Smith'                      |
+| p_ReviewedDate   | DATETIME     | Yes      | N/A     | Current timestamp of status change  | NOW()                            |
 
 ---
 
 ## Output Parameters
 
-| Parameter | Type | Description | Values |
-|-----------|------|-------------|--------|
-| p_Status | INT | Operation result code | 0 = Success<br>-1 = Database error<br>-2 = ReportID not found<br>-3 = Invalid status value |
+| Parameter  | Type         | Description                   | Values                                                                                                                    |
+| ---------- | ------------ | ----------------------------- | ------------------------------------------------------------------------------------------------------------------------- |
+| p_Status   | INT          | Operation result code         | 0 = Success<br>-1 = Database error<br>-2 = ReportID not found<br>-3 = Invalid status value                                |
 | p_ErrorMsg | VARCHAR(500) | Human-readable status message | 'Error report status updated successfully'<br>'ReportID not found'<br>'Invalid status value'<br>'Database error occurred' |
 
 ---
@@ -50,7 +50,7 @@ END IF;
 START TRANSACTION;
 
 UPDATE error_reports
-SET 
+SET
     Status = p_NewStatus,
     ReviewedBy = p_ReviewedBy,
     ReviewedDate = p_ReviewedDate,
@@ -64,27 +64,28 @@ SET p_ErrorMsg = 'Error report status updated successfully';
 ```
 
 **Business Logic Notes**:
-- Status can transition from any state to any state (flexible workflow per spec edge case)
-- If p_DeveloperNotes is NULL, existing DeveloperNotes are preserved
-- If p_DeveloperNotes is provided, it replaces existing notes (not append)
-- ReviewedBy and ReviewedDate always updated (even if changing from Resolved back to New)
-- Transaction ensures atomicity
+
+-   Status can transition from any state to any state (flexible workflow per spec edge case)
+-   If p_DeveloperNotes is NULL, existing DeveloperNotes are preserved
+-   If p_DeveloperNotes is provided, it replaces existing notes (not append)
+-   ReviewedBy and ReviewedDate always updated (even if changing from Resolved back to New)
+-   Transaction ensures atomicity
 
 ---
 
 ## C# Usage Example
 
 ```csharp
-public static async Task<DaoResult<bool>> UpdateErrorReportStatusAsync(
-    int reportId, 
-    string newStatus, 
-    string developerNotes, 
+public static async Task<Model_Dao_Result<bool>> UpdateErrorReportStatusAsync(
+    int reportId,
+    string newStatus,
+    string developerNotes,
     string reviewedBy)
 {
     try
     {
         string connectionString = Helper_Database_Variables.GetConnectionString();
-        
+
         var parameters = new Dictionary<string, object>
         {
             ["ReportID"] = reportId,
@@ -93,28 +94,28 @@ public static async Task<DaoResult<bool>> UpdateErrorReportStatusAsync(
             ["ReviewedBy"] = reviewedBy,
             ["ReviewedDate"] = DateTime.Now
         };
-        
+
         var result = await Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync(
             connectionString,
             "sp_error_reports_UpdateStatus",
             parameters,
             progressHelper: null);
-        
+
         if (!result.IsSuccess)
         {
             LoggingUtility.Log($"[Dao_ErrorReports] Failed to update report {reportId}: {result.StatusMessage}");
-            return DaoResult<bool>.Failure(result.StatusMessage);
+            return Model_Dao_Result<bool>.Failure(result.StatusMessage);
         }
-        
+
         LoggingUtility.LogApplicationInfo(
             $"[Dao_ErrorReports] Updated report {reportId} to status '{newStatus}' by {reviewedBy}");
-        
-        return DaoResult<bool>.Success(true, "Status updated successfully");
+
+        return Model_Dao_Result<bool>.Success(true, "Status updated successfully");
     }
     catch (Exception ex)
     {
         LoggingUtility.LogApplicationError(ex);
-        return DaoResult<bool>.Failure(
+        return Model_Dao_Result<bool>.Failure(
             "An unexpected error occurred while updating error report status.");
     }
 }
@@ -127,17 +128,18 @@ public static async Task<DaoResult<bool>> UpdateErrorReportStatusAsync(
 ### Before Calling Stored Procedure
 
 1. **Confirmation Dialog**: Show Service_ErrorHandler.ShowConfirmation()
-   ```csharp
-   string message = $"Change status to '{newStatus}'?\n\n" +
-                    "Optional: Add developer notes below.";
-   var confirmation = Service_ErrorHandler.ShowConfirmation(message, "Confirm Status Change");
-   if (confirmation != DialogResult.OK)
-       return; // User cancelled
-   ```
+
+    ```csharp
+    string message = $"Change status to '{newStatus}'?\n\n" +
+                     "Optional: Add developer notes below.";
+    var confirmation = Service_ErrorHandler.ShowConfirmation(message, "Confirm Status Change");
+    if (confirmation != DialogResult.OK)
+        return; // User cancelled
+    ```
 
 2. **Collect Developer Notes**: Multi-line TextBox for optional notes
 
-3. **Get Current User**: Use Model_AppVariables.CurrentUser.UserName for ReviewedBy
+3. **Get Current User**: Use Model_Application_Variables.CurrentUser.UserName for ReviewedBy
 
 4. **Call DAO Method**: UpdateErrorReportStatusAsync()
 
@@ -148,31 +150,37 @@ public static async Task<DaoResult<bool>> UpdateErrorReportStatusAsync(
 ## Test Cases
 
 ### Test Case 1: Mark as Reviewed with Notes
+
 **Input**: ReportID=123, NewStatus='Reviewed', DeveloperNotes='Investigating issue', ReviewedBy='Dev.Smith'  
 **Expected Output**: Report updated, Status='Reviewed', notes saved  
 **Expected Status**: 0 (Success)
 
 ### Test Case 2: Mark as Resolved without Notes
+
 **Input**: ReportID=123, NewStatus='Resolved', DeveloperNotes=NULL, ReviewedBy='Dev.Smith'  
 **Expected Output**: Report updated, Status='Resolved', existing notes preserved  
 **Expected Status**: 0 (Success)
 
 ### Test Case 3: Reopen from Resolved to Reviewed
+
 **Input**: ReportID=456 (currently Resolved), NewStatus='Reviewed', ReviewedBy='Dev.Jones'  
 **Expected Output**: Status changed to 'Reviewed', ReviewedBy/ReviewedDate updated  
 **Expected Status**: 0 (Success)
 
 ### Test Case 4: Invalid Status Value
+
 **Input**: NewStatus='Pending' (invalid)  
 **Expected Output**: Update rejected  
 **Expected Status**: -3 (Invalid status value)
 
 ### Test Case 5: ReportID Not Found
+
 **Input**: ReportID=99999 (does not exist)  
 **Expected Output**: Update rejected  
 **Expected Status**: -2 (ReportID not found)
 
 ### Test Case 6: Update DeveloperNotes on Existing Reviewed Report
+
 **Input**: ReportID=789 (already Reviewed), NewStatus='Reviewed', DeveloperNotes='Updated findings'  
 **Expected Output**: DeveloperNotes replaced with new text, ReviewedDate updated to now  
 **Expected Status**: 0 (Success)
@@ -192,37 +200,41 @@ public static async Task<DaoResult<bool>> UpdateErrorReportStatusAsync(
 
 ## Error Handling
 
-- **ReportID not found**: Returns p_Status=-2, no changes made
-- **Invalid status**: Returns p_Status=-3, no changes made
-- **Database connection failure**: Returns p_Status=-1, transaction rolled back
-- **SQL syntax error**: Returns p_Status=-1, transaction rolled back
-- **Success**: Returns p_Status=0, changes committed
+-   **ReportID not found**: Returns p_Status=-2, no changes made
+-   **Invalid status**: Returns p_Status=-3, no changes made
+-   **Database connection failure**: Returns p_Status=-1, transaction rolled back
+-   **SQL syntax error**: Returns p_Status=-1, transaction rolled back
+-   **Success**: Returns p_Status=0, changes committed
 
 ---
 
 ## Performance Benchmarks
 
 **Target Performance** (from spec.md):
-- Status update: < 300ms
+
+-   Status update: < 300ms
 
 **Optimization Notes**:
-- Primary key index ensures fast UPDATE
-- Single row update with transaction overhead
-- No JOINs or complex logic
-- Should easily meet 300ms target
+
+-   Primary key index ensures fast UPDATE
+-   Single row update with transaction overhead
+-   No JOINs or complex logic
+-   Should easily meet 300ms target
 
 ---
 
 ## Audit Trail Considerations
 
 **Logged Information**:
-- Current status before change (for audit trail)
-- New status after change
-- DeveloperNotes content (or NULL)
-- ReviewedBy username
-- ReviewedDate timestamp
+
+-   Current status before change (for audit trail)
+-   New status after change
+-   DeveloperNotes content (or NULL)
+-   ReviewedBy username
+-   ReviewedDate timestamp
 
 **Recommendation**: Add trigger or logging to capture status change history:
+
 ```sql
 -- Future enhancement: error_reports_audit table
 CREATE TABLE error_reports_audit (
@@ -245,6 +257,7 @@ CREATE TABLE error_reports_audit (
 **Current Behavior**: Last write wins (no optimistic locking)
 
 **Logged Warning** (in C# layer):
+
 ```csharp
 // Before update, optionally check if ReviewedBy changed since load
 if (loadedReviewedBy != null && loadedReviewedBy != currentReviewedBy)
@@ -261,6 +274,6 @@ if (loadedReviewedBy != null && loadedReviewedBy != currentReviewedBy)
 
 ## Change History
 
-| Date | Version | Changes | Author |
-|------|---------|---------|--------|
-| 2025-10-25 | 1.0.0 | Initial contract definition | AI Planning Agent |
+| Date       | Version | Changes                     | Author            |
+| ---------- | ------- | --------------------------- | ----------------- |
+| 2025-10-25 | 1.0.0   | Initial contract definition | AI Planning Agent |

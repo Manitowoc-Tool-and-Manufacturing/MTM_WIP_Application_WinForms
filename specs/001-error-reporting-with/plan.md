@@ -17,49 +17,53 @@ Implement a comprehensive error reporting system that allows users to submit err
 **Testing**: Manual validation (per testing-standards.instructions.md), MSTest for integration tests  
 **Target Platform**: Windows desktop (WinForms), manufacturing shop floor environment  
 **Project Type**: Single desktop application with existing WinForms architecture  
-**Performance Goals**: 
-  - Error report submission: <2 seconds online, <500ms offline queue
-  - Startup sync: <500ms overhead for 10 pending reports
-  - Manual sync: <5 seconds for 10 reports
-  - UI responsiveness: Sub-100ms for button clicks
+**Performance Goals**:
 
-**Constraints**: 
-  - Must use existing Service_ErrorHandler integration (no MessageBox.Show)
-  - Stored procedures only (no inline SQL)
-  - All DAO methods return DaoResult<T> wrapper pattern
-  - Background sync must not block application startup
-  - Offline queue files must be valid SQL INSERT statements for manual recovery
-  - Must support concurrent prevention (lock/semaphore pattern)
+-   Error report submission: <2 seconds online, <500ms offline queue
+-   Startup sync: <500ms overhead for 10 pending reports
+-   Manual sync: <5 seconds for 10 reports
+-   UI responsiveness: Sub-100ms for button clicks
 
-**Scale/Scope**: 
-  - Expected: 5-20 error reports per day per user
-  - Max queue depth: 100 pending reports (30-day retention)
-  - Database table: error_reports with 14 columns
-  - UI components: 1 new dialog form, 1 Developer Settings menu item
-  - Code additions: ~800-1200 lines across Forms/, Services/, Data/, Helpers/
+**Constraints**:
+
+-   Must use existing Service_ErrorHandler integration (no MessageBox.Show)
+-   Stored procedures only (no inline SQL)
+-   All DAO methods return Model_Dao_Result<T> wrapper pattern
+-   Background sync must not block application startup
+-   Offline queue files must be valid SQL INSERT statements for manual recovery
+-   Must support concurrent prevention (lock/semaphore pattern)
+
+**Scale/Scope**:
+
+-   Expected: 5-20 error reports per day per user
+-   Max queue depth: 100 pending reports (30-day retention)
+-   Database table: error_reports with 14 columns
+-   UI components: 1 new dialog form, 1 Developer Settings menu item
+-   Code additions: ~800-1200 lines across Forms/, Services/, Data/, Helpers/
 
 ## Constitution Check
 
-*GATE: Must pass before Phase 0 research. Re-check after Phase 1 design.*
+_GATE: Must pass before Phase 0 research. Re-check after Phase 1 design._
 
-| Principle | Status | Justification |
-|-----------|--------|---------------|
-| I. Stored Procedure Only Database Access | ✅ PASS | All error report submissions will use stored procedure `sp_error_reports_Insert` via `Helper_Database_StoredProcedure`. Offline queue generates SQL INSERT statements that call the same stored procedure. No inline SQL in application code. |
-| II. DaoResult<T> Wrapper Pattern | ✅ PASS | New `Dao_ErrorReports` class will return `DaoResult<int>` for insert operations (returning ReportID) and `DaoResult<DataTable>` for query operations. All database errors wrapped in DaoResult with proper exception handling. |
-| III. Region Organization and Method Ordering | ✅ PASS | New forms and services will follow standard region organization: Fields, Properties, Constructors, Specific Functionality (Report Submission, Queue Management), Button Clicks, Helpers, Cleanup. Methods ordered public→protected→private→static within each region. |
-| IV. Manual Validation Testing Approach | ✅ PASS | Feature specification includes comprehensive manual test scenarios for all three user stories (P1: Report with Context, P1: Offline Reporting, P2: Manual Sync). Success criteria defined with measurable outcomes (SC-001 through SC-009). |
-| V. Environment-Aware Database Selection | ✅ PASS | Uses existing `Helper_Database_Variables.GetConnectionString()` for database connectivity. Debug builds target `mtm_wip_application_winforms_test`, Release builds target `MTM_WIP_Application_Winforms`. No hardcoded connection strings. |
-| VI. Async-First UI Responsiveness | ✅ PASS | All database operations async (`SubmitReportAsync`, `SyncPendingReportsAsync`). Background sync uses `Task.Run` to avoid blocking startup. Progress reporting via `Helper_StoredProcedureProgress` for sync operations >5 reports. No blocking `.Result` or `.Wait()` calls. |
-| VII. Centralized Error Handling with Service_ErrorHandler | ✅ PASS | Report Issue dialog integrates with existing `Service_ErrorHandler` flow. New error reporting exceptions handled via Service_ErrorHandler with appropriate severity levels. No direct MessageBox.Show usage. |
-| VIII. Documentation and XML Comments | ✅ PASS | All public APIs in new Dao_ErrorReports, Service_ErrorReportSync, and Form_ReportIssue will include XML documentation with `<summary>`, `<param>`, `<returns>`, and `<exception>` tags. Complex algorithms documented inline. |
+| Principle                                                 | Status  | Justification                                                                                                                                                                                                                                                                |
+| --------------------------------------------------------- | ------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| I. Stored Procedure Only Database Access                  | ✅ PASS | All error report submissions will use stored procedure `sp_error_reports_Insert` via `Helper_Database_StoredProcedure`. Offline queue generates SQL INSERT statements that call the same stored procedure. No inline SQL in application code.                                |
+| II. Model_Dao_Result<T> Wrapper Pattern                          | ✅ PASS | New `Dao_ErrorReports` class will return `Model_Dao_Result<int>` for insert operations (returning ReportID) and `Model_Dao_Result<DataTable>` for query operations. All database errors wrapped in Model_Dao_Result with proper exception handling.                                               |
+| III. Region Organization and Method Ordering              | ✅ PASS | New forms and services will follow standard region organization: Fields, Properties, Constructors, Specific Functionality (Report Submission, Queue Management), Button Clicks, Helpers, Cleanup. Methods ordered public→protected→private→static within each region.        |
+| IV. Manual Validation Testing Approach                    | ✅ PASS | Feature specification includes comprehensive manual test scenarios for all three user stories (P1: Report with Context, P1: Offline Reporting, P2: Manual Sync). Success criteria defined with measurable outcomes (SC-001 through SC-009).                                  |
+| V. Environment-Aware Database Selection                   | ✅ PASS | Uses existing `Helper_Database_Variables.GetConnectionString()` for database connectivity. Debug builds target `mtm_wip_application_winforms_test`, Release builds target `MTM_WIP_Application_Winforms`. No hardcoded connection strings.                                   |
+| VI. Async-First UI Responsiveness                         | ✅ PASS | All database operations async (`SubmitReportAsync`, `SyncPendingReportsAsync`). Background sync uses `Task.Run` to avoid blocking startup. Progress reporting via `Helper_StoredProcedureProgress` for sync operations >5 reports. No blocking `.Result` or `.Wait()` calls. |
+| VII. Centralized Error Handling with Service_ErrorHandler | ✅ PASS | Report Issue dialog integrates with existing `Service_ErrorHandler` flow. New error reporting exceptions handled via Service_ErrorHandler with appropriate severity levels. No direct MessageBox.Show usage.                                                                 |
+| VIII. Documentation and XML Comments                      | ✅ PASS | All public APIs in new Dao_ErrorReports, Service_ErrorReportSync, and Form_ReportIssue will include XML documentation with `<summary>`, `<param>`, `<returns>`, and `<exception>` tags. Complex algorithms documented inline.                                                |
 
 **Overall Gate Status**: ✅ PASS - No violations. All principles satisfied by proposed design.
 
 **Notes**:
-- Offline queue uses SQL file format specifically to maintain stored procedure pattern even when database unavailable
-- Sequential file processing prevents database lock conflicts per Constitution Principle I
-- Manual sync respects async patterns and uses semaphore to prevent concurrent execution
-- All error handling routes through Service_ErrorHandler maintaining centralized error presentation
+
+-   Offline queue uses SQL file format specifically to maintain stored procedure pattern even when database unavailable
+-   Sequential file processing prevents database lock conflicts per Constitution Principle I
+-   Manual sync respects async patterns and uses semaphore to prevent concurrent execution
+-   All error handling routes through Service_ErrorHandler maintaining centralized error presentation
 
 ## Project Structure
 
@@ -94,8 +98,8 @@ MTM_WIP_Application_WinForms/
 │   └── Service_ErrorReportSync.cs           # NEW: Startup/manual sync coordinator
 │
 ├── Models/
-│   ├── Model_ErrorReport.cs                 # NEW: Error report entity
-│   └── Model_QueuedErrorReport.cs           # NEW: Offline queue item
+│   ├── Model_ErrorReport_Core.cs                 # NEW: Error report entity
+│   └── Model_ErrorReport_Core_Queued.cs           # NEW: Offline queue item
 │
 ├── Helpers/
 │   └── Helper_Database_StoredProcedure.cs   # EXISTING: Used for SP calls
@@ -113,21 +117,23 @@ MTM_WIP_Application_WinForms/
 ```
 
 **Structure Decision**: Using existing single WinForms application structure. New components follow established patterns:
-- Forms in `Forms/ErrorDialog/` for new dialogs
-- Data access in `Data/` following DAO pattern
-- Services in `Services/` for business logic
-- Models in `Models/` for data entities
-- Stored procedures in `Database/UpdatedStoredProcedures/ReadyForVerification/`
+
+-   Forms in `Forms/ErrorDialog/` for new dialogs
+-   Data access in `Data/` following DAO pattern
+-   Services in `Services/` for business logic
+-   Models in `Models/` for data entities
+-   Stored procedures in `Database/UpdatedStoredProcedures/ReadyForVerification/`
 
 **Integration Points**:
-- `Service_ErrorHandler` calls `Form_ReportIssue` when user clicks "Report Issue"
-- `Program.cs` startup sequence invokes `Service_ErrorReportSync.SyncOnStartupAsync()`
-- `Control_DeveloperSettings` menu item triggers `Service_ErrorReportSync.SyncManuallyAsync()`
-- Offline queue location: `%APPDATA%\MTM_Application\ErrorReports\Pending\` and `...\Sent\`
+
+-   `Service_ErrorHandler` calls `Form_ReportIssue` when user clicks "Report Issue"
+-   `Program.cs` startup sequence invokes `Service_ErrorReportSync.SyncOnStartupAsync()`
+-   `Control_DeveloperSettings` menu item triggers `Service_ErrorReportSync.SyncManuallyAsync()`
+-   Offline queue location: `%APPDATA%\MTM_Application\ErrorReports\Pending\` and `...\Sent\`
 
 ## Complexity Tracking
 
-*Fill ONLY if Constitution Check has violations that must be justified*
+_Fill ONLY if Constitution Check has violations that must be justified_
 
 **No violations to track** - All constitution principles satisfied by proposed design.
 
@@ -138,27 +144,31 @@ MTM_WIP_Application_WinForms/
 **Note**: These instruction files provide coding patterns and standards for implementation. Review relevant files when moving from planning to task execution.
 
 ### Core Development:
-- `.github/instructions/csharp-dotnet8.instructions.md` - Language features, WinForms patterns, async/await, file organization
-- `.github/instructions/mysql-database.instructions.md` - Stored procedures, connection management, Helper_Database_StoredProcedure usage
-- `.github/instructions/documentation.instructions.md` - XML comments, README structure, code documentation
+
+-   `.github/instructions/csharp-dotnet8.instructions.md` - Language features, WinForms patterns, async/await, file organization
+-   `.github/instructions/mysql-database.instructions.md` - Stored procedures, connection management, Helper_Database_StoredProcedure usage
+-   `.github/instructions/documentation.instructions.md` - XML comments, README structure, code documentation
 
 ### Quality & Security:
-- `.github/instructions/testing-standards.instructions.md` - Manual validation approach, success criteria, test scenarios
-- `.github/instructions/integration-testing.instructions.md` - Discovery-first workflow, method signature verification, DAO testing patterns
-- `.github/instructions/security-best-practices.instructions.md` - Input validation, credential management, SQL injection prevention
-- `.github/instructions/performance-optimization.instructions.md` - Async patterns, connection pooling, memory management, caching strategies
-- `.github/instructions/code-review-standards.instructions.md` - Quality gates, review process, common issues
+
+-   `.github/instructions/testing-standards.instructions.md` - Manual validation approach, success criteria, test scenarios
+-   `.github/instructions/integration-testing.instructions.md` - Discovery-first workflow, method signature verification, DAO testing patterns
+-   `.github/instructions/security-best-practices.instructions.md` - Input validation, credential management, SQL injection prevention
+-   `.github/instructions/performance-optimization.instructions.md` - Async patterns, connection pooling, memory management, caching strategies
+-   `.github/instructions/code-review-standards.instructions.md` - Quality gates, review process, common issues
 
 ### When to Use:
-- **During task generation** (`/speckit.tasks`): Reference to add instruction file pointers to specific tasks
-- **During implementation** (`/speckit.implement`): Load instruction files to apply correct patterns
-- **During code review**: Validate compliance with documented standards
+
+-   **During task generation** (`/speckit.tasks`): Reference to add instruction file pointers to specific tasks
+-   **During implementation** (`/speckit.implement`): Load instruction files to apply correct patterns
+-   **During code review**: Validate compliance with documented standards
 
 **Instruction File Reference Format in Tasks**:
+
 ```markdown
-- [ ] T100 - Implement DAO method for inventory queries
-  - **Reference**: .github/instructions/mysql-database.instructions.md - Use Helper_Database_StoredProcedure pattern
-  - **Reference**: .github/instructions/csharp-dotnet8.instructions.md - Follow async/await patterns
+-   [ ] T100 - Implement DAO method for inventory queries
+    -   **Reference**: .github/instructions/mysql-database.instructions.md - Use Helper_Database_StoredProcedure pattern
+    -   **Reference**: .github/instructions/csharp-dotnet8.instructions.md - Follow async/await patterns
 ```
 
 ---
@@ -170,6 +180,7 @@ MTM_WIP_Application_WinForms/
 **Output**: [research.md](./research.md) (18.6 KB)
 
 **Resolved Questions**:
+
 1. Offline queue file format → SQL files calling stored procedures
 2. Concurrent sync prevention → SemaphoreSlim with immediate timeout
 3. Startup sync performance → Fire-and-forget background task
@@ -181,31 +192,35 @@ MTM_WIP_Application_WinForms/
 ### ✅ Phase 1: Design - COMPLETE
 
 **Outputs**:
-- [data-model.md](./data-model.md) (19.9 KB) - Entity definitions with validation rules
-- [contracts/sp_error_reports_Insert.sql](./contracts/sp_error_reports_Insert.sql) - Stored procedure contract
-- [quickstart.md](./quickstart.md) (18.9 KB) - Developer implementation guide
-- Updated [.github/copilot-instructions.md](../../.github/copilot-instructions.md) - Agent context registered
+
+-   [data-model.md](./data-model.md) (19.9 KB) - Entity definitions with validation rules
+-   [contracts/sp_error_reports_Insert.sql](./contracts/sp_error_reports_Insert.sql) - Stored procedure contract
+-   [quickstart.md](./quickstart.md) (18.9 KB) - Developer implementation guide
+-   Updated [.github/copilot-instructions.md](../../.github/copilot-instructions.md) - Agent context registered
 
 **Entities Defined**:
-- ErrorReport (14 attributes, MySQL table with indexes)
-- Model_ErrorReport (C# class)
-- Model_QueuedErrorReport (C# class for file system queue)
+
+-   ErrorReport (14 attributes, MySQL table with indexes)
+-   Model_ErrorReport_Core (C# class)
+-   Model_ErrorReport_Core_Queued (C# class for file system queue)
 
 **Contracts Created**:
-- sp_error_reports_Insert stored procedure with 8 input parameters, 3 output parameters
-- Complete usage examples for C#, direct SQL, and offline queue scenarios
+
+-   sp_error_reports_Insert stored procedure with 8 input parameters, 3 output parameters
+-   Complete usage examples for C#, direct SQL, and offline queue scenarios
 
 ### ✅ Constitution Check (Post-Design) - PASS
 
 All 8 constitution principles satisfied:
-- ✅ Stored Procedure Only Database Access
-- ✅ DaoResult<T> Wrapper Pattern
-- ✅ Region Organization and Method Ordering
-- ✅ Manual Validation Testing Approach
-- ✅ Environment-Aware Database Selection
-- ✅ Async-First UI Responsiveness
-- ✅ Centralized Error Handling with Service_ErrorHandler
-- ✅ Documentation and XML Comments
+
+-   ✅ Stored Procedure Only Database Access
+-   ✅ Model_Dao_Result<T> Wrapper Pattern
+-   ✅ Region Organization and Method Ordering
+-   ✅ Manual Validation Testing Approach
+-   ✅ Environment-Aware Database Selection
+-   ✅ Async-First UI Responsiveness
+-   ✅ Centralized Error Handling with Service_ErrorHandler
+-   ✅ Documentation and XML Comments
 
 **No violations** - Design maintains constitutional compliance.
 
@@ -216,11 +231,12 @@ All 8 constitution principles satisfied:
 **Expected Output**: [tasks.md](./tasks.md) with implementation tasks organized by phase
 
 **Task Categories** (estimated):
-- Phase 0: Database Setup (1-2 tasks)
-- Phase 1: Model & DAO Layer (3-4 tasks)
-- Phase 2: Services & Queue Management (4-5 tasks)
-- Phase 3: UI Forms & Integration (3-4 tasks)
-- Phase 4: Testing & Documentation (2-3 tasks)
+
+-   Phase 0: Database Setup (1-2 tasks)
+-   Phase 1: Model & DAO Layer (3-4 tasks)
+-   Phase 2: Services & Queue Management (4-5 tasks)
+-   Phase 3: UI Forms & Integration (3-4 tasks)
+-   Phase 4: Testing & Documentation (2-3 tasks)
 
 **Estimated Tasks**: 13-18 tasks total
 
@@ -234,17 +250,19 @@ All 8 constitution principles satisfied:
 **Status**: ✅ Ready for task generation
 
 **Generated Artifacts**:
-- ✅ spec.md (requirements, success criteria, user stories)
-- ✅ plan.md (this file - technical architecture)
-- ✅ research.md (design decisions and rationale)
-- ✅ data-model.md (entities, relationships, validation)
-- ✅ quickstart.md (developer implementation guide)
-- ✅ contracts/sp_error_reports_Insert.sql (stored procedure contract)
-- ✅ checklists/requirements.md (quality gates - PASSED)
+
+-   ✅ spec.md (requirements, success criteria, user stories)
+-   ✅ plan.md (this file - technical architecture)
+-   ✅ research.md (design decisions and rationale)
+-   ✅ data-model.md (entities, relationships, validation)
+-   ✅ quickstart.md (developer implementation guide)
+-   ✅ contracts/sp_error_reports_Insert.sql (stored procedure contract)
+-   ✅ checklists/requirements.md (quality gates - PASSED)
 
 **Ready For**:
-- Task breakdown with `/speckit.tasks`
-- Implementation with task execution workflow
-- Integration testing per manual validation checklist
+
+-   Task breakdown with `/speckit.tasks`
+-   Implementation with task execution workflow
+-   Integration testing per manual validation checklist
 
 ---

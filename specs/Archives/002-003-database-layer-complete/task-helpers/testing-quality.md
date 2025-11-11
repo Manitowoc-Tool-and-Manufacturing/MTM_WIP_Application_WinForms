@@ -57,10 +57,10 @@ This checklist validates the **quality of testing phase requirements** as define
 
 ### 2.1 Test Pattern Clarity
 
-- [ ] **"Success with data" pattern**: Valid inputs → DaoResult.Success, Data populated (not empty/null)
-- [ ] **"Success no data" pattern**: Valid inputs, no matching records → DaoResult.Success, Data empty (0 rows)
-- [ ] **"Validation error" pattern**: Invalid inputs (null required param) → DaoResult.Failure, error message clear and specific
-- [ ] **"Database error" pattern**: Force constraint violation → DaoResult.Failure, exception logged to log_error table
+- [ ] **"Success with data" pattern**: Valid inputs → Model_Dao_Result.Success, Data populated (not empty/null)
+- [ ] **"Success no data" pattern**: Valid inputs, no matching records → Model_Dao_Result.Success, Data empty (0 rows)
+- [ ] **"Validation error" pattern**: Invalid inputs (null required param) → Model_Dao_Result.Failure, error message clear and specific
+- [ ] **"Database error" pattern**: Force constraint violation → Model_Dao_Result.Failure, exception logged to log_error table
 - [ ] **Test naming convention**: Test method names follow pattern `<ProcedureName>_<ScenarioName>_<ExpectedOutcome>` (e.g., `inv_inventory_Add_ValidInput_ReturnsSuccess`)
 - [ ] **Assertion clarity**: Each test specifies exact assertions (Assert.IsTrue(result.IsSuccess), Assert.IsNotNull(result.Data), Assert.AreEqual expected message)
 
@@ -151,8 +151,8 @@ This checklist validates the **quality of testing phase requirements** as define
 
 ### 4.3 Test Pattern Consistency
 
-- [ ] **Success scenarios**: Both "success with data" and "success no data" return DaoResult.IsSuccess=true (consistent success definition)
-- [ ] **Failure scenarios**: Both "validation error" and "database error" return DaoResult.IsSuccess=false (consistent failure definition)
+- [ ] **Success scenarios**: Both "success with data" and "success no data" return Model_Dao_Result.IsSuccess=true (consistent success definition)
+- [ ] **Failure scenarios**: Both "validation error" and "database error" return Model_Dao_Result.IsSuccess=false (consistent failure definition)
 - [ ] **Assertion pattern**: All tests check IsSuccess first, then Data or Message depending on scenario (consistent assertion order)
 - [ ] **Test data pattern**: All tests create prerequisite data within transaction (no external setup required)
 - [ ] **Naming pattern**: All test methods follow <ProcedureName>_<Scenario>_<Outcome> convention (consistent naming)

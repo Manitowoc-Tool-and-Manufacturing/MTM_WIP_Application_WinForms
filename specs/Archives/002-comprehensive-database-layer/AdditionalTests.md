@@ -13,9 +13,9 @@
 **File**: `Tests/Integration/Dao_Inventory_Tests.cs`
 
 **Missing Test Scenarios**:
-- [ ] T021b-1 Test SearchInventoryAsync with empty results - verify DaoResult.IsSuccess = true with empty DataTable
+- [ ] T021b-1 Test SearchInventoryAsync with empty results - verify Model_Dao_Result.IsSuccess = true with empty DataTable
 - [ ] T021b-2 Test SearchInventoryAsync with wildcard patterns - verify partial matches work correctly
-- [ ] T021b-3 Test UpdateInventoryAsync with invalid InventoryID - verify DaoResult.IsSuccess = false with appropriate error message
+- [ ] T021b-3 Test UpdateInventoryAsync with invalid InventoryID - verify Model_Dao_Result.IsSuccess = false with appropriate error message
 - [ ] T021b-4 Test GetAllInventoryAsync pagination support - verify large result sets handled correctly
 - [ ] T021b-5 Test concurrent AddInventoryAsync operations - verify no deadlocks or duplicate keys
 

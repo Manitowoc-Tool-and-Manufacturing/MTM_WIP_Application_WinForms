@@ -117,7 +117,7 @@
 ### 4.1 Internal Consistency (5 items)
 - [ ] **Test suite consistency**: T122 uses same 280 tests developed in T108-T111 (no new tests, just re-run)
 - [ ] **Baseline consistency**: T128 uses same 10 operations measured in T100 baseline (apples-to-apples comparison)
-- [ ] **Error logging pattern**: T125 validates same DaoResult pattern used throughout all 70 procedures
+- [ ] **Error logging pattern**: T125 validates same Model_Dao_Result pattern used throughout all 70 procedures
 - [ ] **Transaction pattern**: T127 validates same BEGIN/COMMIT/ROLLBACK pattern used in all multi-step procedures
 - [ ] **Manual testing scope**: T126 covers all 25 forms referenced in plan.md current state analysis
 

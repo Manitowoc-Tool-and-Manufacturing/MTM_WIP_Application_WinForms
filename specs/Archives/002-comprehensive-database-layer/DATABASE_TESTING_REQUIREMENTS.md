@@ -27,6 +27,7 @@
 **Purpose**: Primary production database for manufacturing operations
 
 **Connection Configuration**:
+
 ```
 Server: localhost
 Port: 3306
@@ -37,9 +38,10 @@ Connection String: Server=localhost;Port=3306;Database=MTM_WIP_Application_Winfo
 ```
 
 **Connection Pooling**:
-- **MinPoolSize**: 5 (warm connections always available)
-- **MaxPoolSize**: 100 (prevent connection exhaustion)
-- **ConnectionTimeout**: 30 seconds (align with command timeout)
+
+-   **MinPoolSize**: 5 (warm connections always available)
+-   **MaxPoolSize**: 100 (prevent connection exhaustion)
+-   **ConnectionTimeout**: 30 seconds (align with command timeout)
 
 ### Test Database
 
@@ -48,11 +50,12 @@ Connection String: Server=localhost;Port=3306;Database=MTM_WIP_Application_Winfo
 **Purpose**: Isolated integration testing environment
 
 **Requirements**:
-- ✅ Schema-only copy of production database (no production data)
-- ✅ Same stored procedures as production
-- ✅ Seed data for master tables only (parts, locations, operations, users)
-- ✅ NO transactional data pre-populated (tests insert within transaction scope)
-- ✅ Each developer maintains local test database
+
+-   ✅ Schema-only copy of production database (no production data)
+-   ✅ Same stored procedures as production
+-   ✅ Seed data for master tables only (parts, locations, operations, users)
+-   ✅ NO transactional data pre-populated (tests insert within transaction scope)
+-   ✅ Each developer maintains local test database
 
 **Creation Steps**:
 
@@ -88,6 +91,7 @@ INSERT INTO user (Username, PasswordHash, RoleID, IsActive) VALUES
 ```
 
 **Connection String**:
+
 ```csharp
 var connectionString = Helper_Database_Variables.GetConnectionString(
     databaseName: Helper_Database_Variables.TestDatabaseName);
@@ -108,18 +112,21 @@ OUT p_ErrorMsg VARCHAR(500)
 ```
 
 **Status Codes**:
-- **0**: Success - operation completed successfully
-- **1**: Success with no data - query returned zero rows (still considered success)
-- **-1**: Error - operation failed (check `p_ErrorMsg` for details)
+
+-   **0**: Success - operation completed successfully
+-   **1**: Success with no data - query returned zero rows (still considered success)
+-   **-1**: Error - operation failed (check `p_ErrorMsg` for details)
 
 **Error Message**:
-- User-friendly description of error (no technical jargon or stack traces)
-- Empty/NULL when operation succeeds
-- Maximum 500 characters
+
+-   User-friendly description of error (no technical jargon or stack traces)
+-   Empty/NULL when operation succeeds
+-   Maximum 500 characters
 
 ### Parameter Naming Conventions
 
 **MySQL Side** (stored procedure definition):
+
 ```sql
 CREATE PROCEDURE inv_inventory_get_by_part(
     IN p_PartID VARCHAR(50),           -- Use p_ prefix for standard parameters
@@ -131,6 +138,7 @@ CREATE PROCEDURE inv_inventory_get_by_part(
 ```
 
 **C# Side** (DAO method parameters):
+
 ```csharp
 var parameters = new Dictionary<string, object>
 {
@@ -141,13 +149,15 @@ var parameters = new Dictionary<string, object>
 ```
 
 **Prefix Types**:
-- **p_**: Standard CRUD operations (most common)
-- **in_**: Transfer and transaction operations (special case)
-- **o_**: Custom output parameters (rare)
+
+-   **p\_**: Standard CRUD operations (most common)
+-   **in\_**: Transfer and transaction operations (special case)
+-   **o\_**: Custom output parameters (rare)
 
 **PascalCase Required**: All parameter names must use PascalCase matching C# model properties
-- ✅ Good: `PartID`, `LocationCode`, `OperationCode`
-- ❌ Bad: `partid`, `location_code`, `operationCode`
+
+-   ✅ Good: `PartID`, `LocationCode`, `OperationCode`
+-   ❌ Bad: `partid`, `location_code`, `operationCode`
 
 ### Required Stored Procedures (60+ procedures)
 
@@ -253,6 +263,7 @@ var parameters = new Dictionary<string, object>
 ### Stored Procedure Template
 
 **For procedures returning data (SELECT)**:
+
 ```sql
 CREATE PROCEDURE [procedure_name](
     IN p_Parameter1 VARCHAR(50),
@@ -267,9 +278,9 @@ BEGIN
         SET p_ErrorMsg = 'Database error occurred';
         ROLLBACK;
     END;
-    
+
     START TRANSACTION;
-    
+
     -- Validation
     IF p_Parameter1 IS NULL OR p_Parameter1 = '' THEN
         SET p_Status = -1;
@@ -280,7 +291,7 @@ BEGIN
         SELECT * FROM [table_name]
         WHERE [column] = p_Parameter1
           AND [column2] = p_Parameter2;
-        
+
         SET p_Status = 0;
         SET p_ErrorMsg = NULL;
         COMMIT;
@@ -289,6 +300,7 @@ END;
 ```
 
 **For procedures modifying data (INSERT/UPDATE/DELETE)**:
+
 ```sql
 CREATE PROCEDURE [procedure_name](
     IN p_Parameter1 VARCHAR(50),
@@ -303,9 +315,9 @@ BEGIN
         SET p_ErrorMsg = 'Database error occurred';
         ROLLBACK;
     END;
-    
+
     START TRANSACTION;
-    
+
     -- Validation
     IF p_Parameter1 IS NULL THEN
         SET p_Status = -1;
@@ -315,7 +327,7 @@ BEGIN
         -- Perform modification
         INSERT INTO [table_name] ([columns])
         VALUES (p_Parameter1, p_Parameter2);
-        
+
         SET p_Status = 0;
         SET p_ErrorMsg = NULL;
         COMMIT;
@@ -349,8 +361,8 @@ Download and install MAMP from https://www.mamp.info/
 mysql -u root -proot
 
 -- Create test database
-CREATE DATABASE mtm_wip_application_winform_test 
-    CHARACTER SET utf8mb4 
+CREATE DATABASE mtm_wip_application_winform_test
+    CHARACTER SET utf8mb4
     COLLATE utf8mb4_general_ci;
 
 -- Verify creation
@@ -389,7 +401,7 @@ USE mtm_wip_application_winform_test;
 
 -- Locations (required for inventory operations)
 INSERT INTO location (LocationCode, LocationName, Description, IsActive, CreatedBy, CreatedDate)
-VALUES 
+VALUES
     ('FLOOR', 'Shop Floor', 'Manufacturing floor area', 1, 'SYSTEM', NOW()),
     ('RECEIVING', 'Receiving Area', 'Incoming shipments', 1, 'SYSTEM', NOW()),
     ('SHIPPING', 'Shipping Area', 'Outbound shipments', 1, 'SYSTEM', NOW()),
@@ -444,7 +456,7 @@ SELECT 'Roles', COUNT(*) FROM role;
 
 ```sql
 -- Test parameter cache query
-SELECT 
+SELECT
     ROUTINE_NAME,
     PARAMETER_NAME,
     PARAMETER_MODE,
@@ -468,13 +480,13 @@ public static class Helper_Database_Variables
 {
     // Test database constant
     public const string TestDatabaseName = "mtm_wip_application_winform_test";
-    
+
     // Environment-aware database selection
     public static string DatabaseName =>
         Debugger.IsAttached
             ? "mtm_wip_application_winforms_test"  // Development
             : "MTM_WIP_Application_Winforms";      // Production
-    
+
     // Get connection string with specific database
     public static string GetConnectionString(string? databaseName = null)
     {
@@ -600,7 +612,7 @@ namespace MTM_WIP_Application_Winforms.Tests.Integration
         protected async Task<int> ExecuteNonQueryAsync(string sql, Dictionary<string, object>? parameters = null)
         {
             using var command = new MySqlCommand(sql, Connection, Transaction);
-            
+
             if (parameters != null)
             {
                 foreach (var param in parameters)
@@ -618,7 +630,7 @@ namespace MTM_WIP_Application_Winforms.Tests.Integration
         protected async Task<DataTable> ExecuteQueryAsync(string sql, Dictionary<string, object>? parameters = null)
         {
             using var command = new MySqlCommand(sql, Connection, Transaction);
-            
+
             if (parameters != null)
             {
                 foreach (var param in parameters)
@@ -630,7 +642,7 @@ namespace MTM_WIP_Application_Winforms.Tests.Integration
             var dataTable = new DataTable();
             using var adapter = new MySqlDataAdapter(command);
             adapter.Fill(dataTable);
-            
+
             return dataTable;
         }
     }
@@ -650,7 +662,7 @@ public class Dao_Inventory_Tests : BaseIntegrationTest
         // Insert test inventory data within transaction
         await ExecuteNonQueryAsync(@"
             INSERT INTO inventory (PartID, LocationCode, Quantity, Operation, ItemType, CreatedBy, CreatedDate)
-            VALUES 
+            VALUES
                 (@PartID1, @Location1, @Qty1, @Op1, @Type1, @User, @Date),
                 (@PartID2, @Location2, @Qty2, @Op2, @Type2, @User, @Date)",
             new Dictionary<string, object>
@@ -700,7 +712,7 @@ public class Dao_Inventory_Tests : BaseIntegrationTest
         var verify = await ExecuteQueryAsync(
             "SELECT * FROM inventory WHERE PartID = @PartID",
             new Dictionary<string, object> { ["@PartID"] = partId });
-        
+
         Assert.AreEqual(1, verify.Rows.Count, "Part should exist after add");
     }
 
@@ -723,12 +735,12 @@ public class Dao_Inventory_Tests : BaseIntegrationTest
         // Verify source deducted
         var sourceQty = await ExecuteQueryAsync(
             "SELECT Quantity FROM inventory WHERE PartID = @PartID AND LocationCode = @Location",
-            new Dictionary<string, object> 
-            { 
+            new Dictionary<string, object>
+            {
                 ["@PartID"] = partId,
                 ["@Location"] = fromLocation
             });
-        Assert.AreEqual(90, Convert.ToInt32(sourceQty.Rows[0]["Quantity"]), 
+        Assert.AreEqual(90, Convert.ToInt32(sourceQty.Rows[0]["Quantity"]),
             "Source should be reduced by transfer quantity");
 
         // Verify destination increased
@@ -747,16 +759,19 @@ public class Dao_Inventory_Tests : BaseIntegrationTest
 ### Test Execution
 
 **Run all tests**:
+
 ```powershell
 dotnet test
 ```
 
 **Run specific test class**:
+
 ```powershell
 dotnet test --filter "FullyQualifiedName~Dao_Inventory_Tests"
 ```
 
 **Run with detailed output**:
+
 ```powershell
 dotnet test --logger "console;verbosity=detailed"
 ```
@@ -769,47 +784,47 @@ dotnet test --logger "console;verbosity=detailed"
 
 Before writing any DAO implementation code:
 
-- [ ] **Test database created** (`mtm_wip_application_winform_test`)
-- [ ] **Schema imported** from production backup
-- [ ] **Stored procedures imported** (all 60+ procedures)
-- [ ] **Seed data inserted** (locations, operations, item types, users, roles)
-- [ ] **INFORMATION_SCHEMA access verified** (parameter cache query works)
-- [ ] **Connection string configured** in `Helper_Database_Variables.cs`
-- [ ] **Test project created** (`Tests/MTM_WIP_Application_Winforms.Tests.csproj`)
-- [ ] **Base integration test class created** (`BaseIntegrationTest.cs`)
-- [ ] **NuGet packages installed** (MSTest, MySql.Data)
+-   [ ] **Test database created** (`mtm_wip_application_winform_test`)
+-   [ ] **Schema imported** from production backup
+-   [ ] **Stored procedures imported** (all 60+ procedures)
+-   [ ] **Seed data inserted** (locations, operations, item types, users, roles)
+-   [ ] **INFORMATION_SCHEMA access verified** (parameter cache query works)
+-   [ ] **Connection string configured** in `Helper_Database_Variables.cs`
+-   [ ] **Test project created** (`Tests/MTM_WIP_Application_Winforms.Tests.csproj`)
+-   [ ] **Base integration test class created** (`BaseIntegrationTest.cs`)
+-   [ ] **NuGet packages installed** (MSTest, MySql.Data)
 
 ### Per User Story Testing Checklist
 
 For each user story (US1-US5):
 
-- [ ] **Write tests FIRST** (TDD approach - tests should FAIL before implementation)
-- [ ] **Create test class** inheriting from `BaseIntegrationTest`
-- [ ] **Insert test data** in `OnSetupAsync()` method
-- [ ] **Test success path** with valid data
-- [ ] **Test failure path** with invalid data
-- [ ] **Test edge cases** (nulls, empty strings, boundary values)
-- [ ] **Test error handling** (connection failures, timeouts, constraint violations)
-- [ ] **Verify DaoResult pattern** (IsSuccess, Message, Data/Exception)
-- [ ] **Verify transaction rollback** (no test data persists after test completion)
-- [ ] **Run tests** and verify all FAIL before implementation
-- [ ] **Implement DAO methods** following established pattern
-- [ ] **Run tests again** and verify all PASS after implementation
-- [ ] **Manual validation** per success criteria from spec.md
+-   [ ] **Write tests FIRST** (TDD approach - tests should FAIL before implementation)
+-   [ ] **Create test class** inheriting from `BaseIntegrationTest`
+-   [ ] **Insert test data** in `OnSetupAsync()` method
+-   [ ] **Test success path** with valid data
+-   [ ] **Test failure path** with invalid data
+-   [ ] **Test edge cases** (nulls, empty strings, boundary values)
+-   [ ] **Test error handling** (connection failures, timeouts, constraint violations)
+-   [ ] **Verify Model_Dao_Result pattern** (IsSuccess, Message, Data/Exception)
+-   [ ] **Verify transaction rollback** (no test data persists after test completion)
+-   [ ] **Run tests** and verify all FAIL before implementation
+-   [ ] **Implement DAO methods** following established pattern
+-   [ ] **Run tests again** and verify all PASS after implementation
+-   [ ] **Manual validation** per success criteria from spec.md
 
 ### Post-Implementation Validation Checklist
 
 After completing all user stories:
 
-- [ ] **All integration tests passing** (0 failures)
-- [ ] **Connection pool healthy** under concurrent load (100+ operations)
-- [ ] **Transaction rollback working** (no orphaned test data)
-- [ ] **Parameter prefix detection working** for all 60+ procedures
-- [ ] **Performance thresholds met** (Query < 500ms, Modification < 1000ms, etc.)
-- [ ] **Error logging functional** without recursive failures
-- [ ] **Stored procedure validation script passing** (0 inconsistencies)
-- [ ] **Manual validation checklist complete** (SC-001 through SC-010 from spec.md)
-- [ ] **Documentation updated** (README.md, quickstart.md, migration guide)
+-   [ ] **All integration tests passing** (0 failures)
+-   [ ] **Connection pool healthy** under concurrent load (100+ operations)
+-   [ ] **Transaction rollback working** (no orphaned test data)
+-   [ ] **Parameter prefix detection working** for all 60+ procedures
+-   [ ] **Performance thresholds met** (Query < 500ms, Modification < 1000ms, etc.)
+-   [ ] **Error logging functional** without recursive failures
+-   [ ] **Stored procedure validation script passing** (0 inconsistencies)
+-   [ ] **Manual validation checklist complete** (SC-001 through SC-010 from spec.md)
+-   [ ] **Documentation updated** (README.md, quickstart.md, migration guide)
 
 ---
 
@@ -818,45 +833,51 @@ After completing all user stories:
 ### Connection Strings
 
 **Production**:
+
 ```
 Server=localhost;Port=3306;Database=MTM_WIP_Application_Winforms;User=root;Password=root;SslMode=none;AllowPublicKeyRetrieval=true;MinPoolSize=5;MaxPoolSize=100;ConnectionTimeout=30;
 ```
 
 **Test**:
+
 ```
 Server=localhost;Port=3306;Database=mtm_wip_application_winform_test;User=root;Password=root;SslMode=none;AllowPublicKeyRetrieval=true;MinPoolSize=5;MaxPoolSize=100;ConnectionTimeout=30;
 ```
 
 ### Key Files
 
-| File | Purpose |
-|------|---------|
-| `Helper_Database_Variables.cs` | Connection string management |
-| `Helper_Database_StoredProcedure.cs` | Central stored procedure execution |
-| `Models/Model_DaoResult.cs` | DaoResult base class |
-| `Models/Model_DaoResult_Generic.cs` | DaoResult<T> generic class |
-| `Models/Model_ParameterPrefixCache.cs` | Parameter prefix cache |
-| `Tests/Integration/BaseIntegrationTest.cs` | Base test class with transaction isolation |
-| `Program.cs` | Application startup (includes parameter cache initialization) |
+| File                                       | Purpose                                                       |
+| ------------------------------------------ | ------------------------------------------------------------- |
+| `Helper_Database_Variables.cs`             | Connection string management                                  |
+| `Helper_Database_StoredProcedure.cs`       | Central stored procedure execution                            |
+| `Models/Model_Dao_Result.cs`                | Model_Dao_Result base class                                          |
+| `Models/Model_Dao_Result_Generic.cs`        | Model_Dao_Result<T> generic class                                    |
+| `Models/Model_ParameterPrefix_Cache.cs`     | Parameter prefix cache                                        |
+| `Tests/Integration/BaseIntegrationTest.cs` | Base test class with transaction isolation                    |
+| `Program.cs`                               | Application startup (includes parameter cache initialization) |
 
 ### Command Quick Reference
 
 **Create test database**:
+
 ```sql
 CREATE DATABASE mtm_wip_application_winform_test;
 ```
 
 **Import schema**:
+
 ```powershell
 mysql -u root -proot mtm_wip_application_winform_test < Database/CurrentDatabase/MTM_WIP_Application_Winforms.sql
 ```
 
 **Run tests**:
+
 ```powershell
 dotnet test
 ```
 
 **Verify test database**:
+
 ```sql
 USE mtm_wip_application_winform_test;
 SHOW TABLES;
@@ -866,40 +887,40 @@ SELECT COUNT(*) FROM operation;
 
 ### Status Codes
 
-| Code | Meaning | DaoResult.IsSuccess |
-|------|---------|---------------------|
-| 0 | Success | true |
-| 1 | Success (no data) | true |
-| -1 | Error | false |
+| Code | Meaning           | Model_Dao_Result.IsSuccess |
+| ---- | ----------------- | ------------------- |
+| 0    | Success           | true                |
+| 1    | Success (no data) | true                |
+| -1   | Error             | false               |
 
 ### Performance Thresholds
 
-| Category | Threshold | Stored Procedure Patterns |
-|----------|-----------|---------------------------|
-| Query | 500ms | `*_get_*`, `*_search_*`, `*_retrieve_*` |
-| Modification | 1000ms | `*_add_*`, `*_update_*`, `*_delete_*` |
-| Batch | 5000ms | `*_batch_*`, `*_bulk_*`, `*_import_*` |
-| Report | 2000ms | `*_report_*`, `*_summary_*`, `*_dashboard_*` |
+| Category     | Threshold | Stored Procedure Patterns                    |
+| ------------ | --------- | -------------------------------------------- |
+| Query        | 500ms     | `*_get_*`, `*_search_*`, `*_retrieve_*`      |
+| Modification | 1000ms    | `*_add_*`, `*_update_*`, `*_delete_*`        |
+| Batch        | 5000ms    | `*_batch_*`, `*_bulk_*`, `*_import_*`        |
+| Report       | 2000ms    | `*_report_*`, `*_summary_*`, `*_dashboard_*` |
 
 ### Connection Pool Configuration
 
-| Setting | Value | Purpose |
-|---------|-------|---------|
-| MinPoolSize | 5 | Warm connections always available |
-| MaxPoolSize | 100 | Prevent connection exhaustion |
-| ConnectionTimeout | 30 seconds | Align with command timeout |
+| Setting           | Value      | Purpose                           |
+| ----------------- | ---------- | --------------------------------- |
+| MinPoolSize       | 5          | Warm connections always available |
+| MaxPoolSize       | 100        | Prevent connection exhaustion     |
+| ConnectionTimeout | 30 seconds | Align with command timeout        |
 
 ---
 
 ## Related Documentation
 
-- **Specification**: [spec.md](./spec.md) - Full feature requirements and user stories
-- **Data Model**: [data-model.md](./data-model.md) - Entity structure and relationships
-- **Research**: [research.md](./research.md) - Technical decisions and patterns
-- **Tasks**: [tasks.md](./tasks.md) - Implementation task breakdown
-- **Quickstart**: [quickstart.md](./quickstart.md) - Developer getting started guide
-- **Contracts**: [contracts/](./contracts/) - API schemas and JSON contracts
-- **Instructions**: [.github/instructions/mysql-database.instructions.md](../../.github/instructions/mysql-database.instructions.md) - MySQL best practices
+-   **Specification**: [spec.md](./spec.md) - Full feature requirements and user stories
+-   **Data Model**: [data-model.md](./data-model.md) - Entity structure and relationships
+-   **Research**: [research.md](./research.md) - Technical decisions and patterns
+-   **Tasks**: [tasks.md](./tasks.md) - Implementation task breakdown
+-   **Quickstart**: [quickstart.md](./quickstart.md) - Developer getting started guide
+-   **Contracts**: [contracts/](./contracts/) - API schemas and JSON contracts
+-   **Instructions**: [.github/instructions/mysql-database.instructions.md](../../.github/instructions/mysql-database.instructions.md) - MySQL best practices
 
 ---
 

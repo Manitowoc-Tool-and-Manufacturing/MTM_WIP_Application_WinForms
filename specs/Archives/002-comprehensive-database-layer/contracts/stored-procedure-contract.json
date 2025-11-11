@@ -5,8 +5,8 @@
   "executionMethods": {
     "ExecuteNonQueryWithStatus": {
       "description": "Execute INSERT/UPDATE/DELETE stored procedures",
-      "signature": "public static async Task<DaoResult> ExecuteNonQueryWithStatus(string connectionString, string storedProcedureName, Dictionary<string, object> parameters, Helper_StoredProcedureProgress? progressHelper = null, bool useAsync = true)",
-      "returnType": "DaoResult",
+      "signature": "public static async Task<Model_Dao_Result> ExecuteNonQueryWithStatus(string connectionString, string storedProcedureName, Dictionary<string, object> parameters, Helper_StoredProcedureProgress? progressHelper = null, bool useAsync = true)",
+      "returnType": "Model_Dao_Result",
       "useCases": [
         "Inventory additions (INSERT)",
         "User updates (UPDATE)",
@@ -28,8 +28,8 @@
     },
     "ExecuteDataTableWithStatus": {
       "description": "Execute SELECT queries returning multiple rows",
-      "signature": "public static async Task<DaoResult<DataTable>> ExecuteDataTableWithStatus(string connectionString, string storedProcedureName, Dictionary<string, object> parameters, Helper_StoredProcedureProgress? progressHelper = null, bool useAsync = true)",
-      "returnType": "DaoResult<DataTable>",
+      "signature": "public static async Task<Model_Dao_Result<DataTable>> ExecuteDataTableWithStatus(string connectionString, string storedProcedureName, Dictionary<string, object> parameters, Helper_StoredProcedureProgress? progressHelper = null, bool useAsync = true)",
+      "returnType": "Model_Dao_Result<DataTable>",
       "useCases": [
         "Inventory searches (SELECT)",
         "User lists (SELECT)",
@@ -52,8 +52,8 @@
     },
     "ExecuteScalarWithStatus": {
       "description": "Execute queries returning single scalar value",
-      "signature": "public static async Task<DaoResult<T>> ExecuteScalarWithStatus<T>(string connectionString, string storedProcedureName, Dictionary<string, object> parameters, Helper_StoredProcedureProgress? progressHelper = null, bool useAsync = true)",
-      "returnType": "DaoResult<T> where T is int, string, bool, DateTime, etc.",
+      "signature": "public static async Task<Model_Dao_Result<T>> ExecuteScalarWithStatus<T>(string connectionString, string storedProcedureName, Dictionary<string, object> parameters, Helper_StoredProcedureProgress? progressHelper = null, bool useAsync = true)",
+      "returnType": "Model_Dao_Result<T> where T is int, string, bool, DateTime, etc.",
       "useCases": [
         "Row counts (SELECT COUNT)",
         "Existence checks (SELECT EXISTS)",
@@ -76,8 +76,8 @@
     },
     "ExecuteWithCustomOutput": {
       "description": "Execute procedures with non-standard output parameters",
-      "signature": "public static async Task<DaoResult<Dictionary<string, object>>> ExecuteWithCustomOutput(string connectionString, string storedProcedureName, Dictionary<string, object> parameters, string[] outputParameterNames, Helper_StoredProcedureProgress? progressHelper = null, bool useAsync = true)",
-      "returnType": "DaoResult<Dictionary<string, object>>",
+      "signature": "public static async Task<Model_Dao_Result<Dictionary<string, object>>> ExecuteWithCustomOutput(string connectionString, string storedProcedureName, Dictionary<string, object> parameters, string[] outputParameterNames, Helper_StoredProcedureProgress? progressHelper = null, bool useAsync = true)",
+      "returnType": "Model_Dao_Result<Dictionary<string, object>>",
       "useCases": [
         "Procedures returning multiple OUT parameters",
         "Special operations with custom output structure"
@@ -185,11 +185,11 @@
       },
       {
         "level": "Helper_Database_StoredProcedure",
-        "responsibility": "Execute procedure, read OUT parameters, retry transient errors, wrap in DaoResult"
+        "responsibility": "Execute procedure, read OUT parameters, retry transient errors, wrap in Model_Dao_Result"
       },
       {
         "level": "DAO Method",
-        "responsibility": "Catch exceptions, log errors, return DaoResult with user-friendly message"
+        "responsibility": "Catch exceptions, log errors, return Model_Dao_Result with user-friendly message"
       },
       {
         "level": "Calling Code",
@@ -244,8 +244,8 @@
     },
     "validation": {
       "parameterDetection": "Test that parameter prefixes are correctly detected for all 60+ stored procedures",
-      "errorHandling": "Test DaoResult.Failure returned for SQL errors, connection timeouts, invalid parameters",
-      "successPath": "Test DaoResult.Success returned with expected data for valid operations",
+      "errorHandling": "Test Model_Dao_Result.Failure returned for SQL errors, connection timeouts, invalid parameters",
+      "successPath": "Test Model_Dao_Result.Success returned with expected data for valid operations",
       "performanceMonitoring": "Test that slow queries are logged with threshold warnings"
     }
   }

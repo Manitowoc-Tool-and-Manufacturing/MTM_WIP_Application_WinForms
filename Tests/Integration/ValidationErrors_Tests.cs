@@ -34,7 +34,7 @@ public class ValidationErrors_Tests : BaseIntegrationTest
     /// Tests that passing null for required string parameter returns validation error.
     /// </summary>
     /// <remarks>
-    /// Expected: DaoResult.IsSuccess = false, ErrorMessage describes missing parameter,
+    /// Expected: Model_Dao_Result.IsSuccess = false, ErrorMessage describes missing parameter,
     /// NOT MySqlException thrown to caller.
     /// </remarks>
     [TestMethod]
@@ -48,7 +48,7 @@ public class ValidationErrors_Tests : BaseIntegrationTest
 
         // Assert
         // Note: Current implementation may return empty DataTable instead of validation error
-        // This test documents expected behavior - should be enhanced to return DaoResult<DataTable>
+        // This test documents expected behavior - should be enhanced to return Model_Dao_Result<DataTable>
         Assert.IsNotNull(errors, "Should return empty DataTable, not throw exception");
         
         // Future enhancement: Validate user-friendly error message
@@ -72,7 +72,7 @@ public class ValidationErrors_Tests : BaseIntegrationTest
 
         // Assert
         // Current implementation may return empty results
-        // Future enhancement: Return DaoResult with validation message "End date must be after start date"
+        // Future enhancement: Return Model_Dao_Result with validation message "End date must be after start date"
         Assert.IsNotNull(errors, "Should handle invalid date range gracefully");
 
         Console.WriteLine($"[Test Note] Invalid date range handled (Start: {start}, End: {end})");
@@ -238,7 +238,7 @@ public class ValidationErrors_Tests : BaseIntegrationTest
 
         // Assert
         // Note: This test uses default connection string, not the invalid one
-        // To test invalid connection, we'd need to temporarily override Model_AppVariables.ConnectionString
+        // To test invalid connection, we'd need to temporarily override Model_Application_Variables.ConnectionString
         if (!result.IsSuccess)
         {
             // Error message should be user-friendly, not raw MySQL exception
@@ -267,7 +267,7 @@ public class ValidationErrors_Tests : BaseIntegrationTest
     public async Task DatabaseOperation_WithTimeout_ReturnsUserFriendlyError()
     {
         // Arrange
-        // Note: Cannot override connection timeout without modifying Model_AppVariables
+        // Note: Cannot override connection timeout without modifying Model_Application_Variables
         // This test verifies that connection checks handle errors gracefully
 
         try

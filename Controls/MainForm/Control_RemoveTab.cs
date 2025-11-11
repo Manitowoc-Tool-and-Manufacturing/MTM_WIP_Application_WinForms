@@ -21,7 +21,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
     {
         #region Fields
 
-        private readonly List<Model_HistoryRemove> _lastRemovedItems = [];
+        private readonly List<Model_History_Remove> _lastRemovedItems = [];
         private Helper_StoredProcedureProgress? _progressHelper;
 
         #endregion
@@ -73,7 +73,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                 });
 
             InitializeComponent();
-
+SetStyle(ControlStyles.OptimizedDoubleBuffer, true);
             Service_DebugTracer.TraceUIAction("THEME_APPLICATION", nameof(Control_RemoveTab),
                 new Dictionary<string, object>
                 {
@@ -99,9 +99,9 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             Helper_UI_ComboBoxes.ApplyStandardComboBoxProperties(Control_RemoveTab_ComboBox_Part);
             Helper_UI_ComboBoxes.ApplyStandardComboBoxProperties(Control_RemoveTab_ComboBox_Operation);
             Control_RemoveTab_ComboBox_Part.ForeColor =
-                Model_AppVariables.UserUiColors.ComboBoxErrorForeColor ?? Color.Red;
+                Model_Application_Variables.UserUiColors.ComboBoxErrorForeColor ?? Color.Red;
             Control_RemoveTab_ComboBox_Operation.ForeColor =
-                Model_AppVariables.UserUiColors.ComboBoxErrorForeColor ?? Color.Red;
+                Model_Application_Variables.UserUiColors.ComboBoxErrorForeColor ?? Color.Red;
             Control_RemoveTab_Image_NothingFound.Visible = false;
 
             Service_DebugTracer.TraceUIAction("DATA_LOADING_START", nameof(Control_RemoveTab),
@@ -152,17 +152,21 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
 
         private void ApplyPrivileges()
         {
-            bool isAdmin = Model_AppVariables.UserTypeAdmin;
-            bool isNormal = Model_AppVariables.UserTypeNormal;
-            bool isReadOnly = Model_AppVariables.UserTypeReadOnly;
+            bool isDeveloper = Model_Application_Variables.UserTypeDeveloper;
+            bool isAdmin = Model_Application_Variables.UserTypeAdmin;
+            bool isNormal = Model_Application_Variables.UserTypeNormal;
+            bool isReadOnly = Model_Application_Variables.UserTypeReadOnly;
+
+            // Developers have all Admin privileges
+            bool hasAdminAccess = isDeveloper || isAdmin;
 
             // Buttons
-            Control_RemoveTab_Button_AdvancedItemRemoval.Visible = isAdmin || isNormal;
+            Control_RemoveTab_Button_AdvancedItemRemoval.Visible = hasAdminAccess || isNormal;
             Control_RemoveTab_Button_Reset.Visible = true;
-            Control_RemoveTab_Button_Delete.Visible = isAdmin || isNormal;
+            Control_RemoveTab_Button_Delete.Visible = hasAdminAccess || isNormal;
             Control_RemoveTab_Button_Search.Visible = true;
             Control_RemoveTab_Button_Toggle_RightPanel.Visible = true;
-            Control_RemoveTab_Button_Undo.Visible = isAdmin || isNormal;
+            Control_RemoveTab_Button_Undo.Visible = hasAdminAccess || isNormal;
 
 
             // For Read-Only, hide buttons and disable ComboBoxes
@@ -196,9 +200,9 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
 
                 try
                 {
-                    Model_AppVariables.UserFullName =
-                        await Dao_User.GetUserFullNameAsync(Model_AppVariables.User);
-                    LoggingUtility.Log($"User full name loaded: {Model_AppVariables.UserFullName}");
+                    Model_Application_Variables.UserFullName =
+                        await Dao_User.GetUserFullNameAsync(Model_Application_Variables.User);
+                    LoggingUtility.Log($"User full name loaded: {Model_Application_Variables.UserFullName}");
                 }
                 catch (Exception ex)
                 {
@@ -334,7 +338,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                     if (row.DataBoundItem is DataRowView drv)
                     {
                         attempted++;
-                        Model_HistoryRemove item = new()
+                        Model_History_Remove item = new()
                         {
                             PartId = drv["PartID"]?.ToString() ?? "",
                             Location = drv["Location"]?.ToString() ?? "",
@@ -360,26 +364,8 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                             sb.AppendLine(
                                 $"PartID: {item.PartId}, Location: {item.Location}, Operation: {item.Operation}, Quantity: {item.Quantity}");
 
-                            // Add to inv_transaction (OUT)
-                            Model_TransactionHistory transaction = new()
-                            {
-                                TransactionType = "OUT",
-                                PartId = item.PartId,
-                                FromLocation = item.Location,
-                                ToLocation = null,
-                                Operation = item.Operation,
-                                Quantity = item.Quantity,
-                                Notes = item.Notes,
-                                User = item.User,
-                                ItemType = item.ItemType,
-                                BatchNumber = item.BatchNumber,
-                                DateTime = item.ReceiveDate
-                            };
-                            var historyResult = await Dao_History.AddTransactionHistoryAsync(transaction);
-                            if (!historyResult.IsSuccess)
-                            {
-                                LoggingUtility.Log($"Failed to log transaction history: {historyResult.ErrorMessage}");
-                            }
+                            // NOTE: Transaction history (OUT) is automatically created by stored procedure inv_inventory_Remove_Item
+                            // DO NOT manually add transaction here - it would create duplicates
                         }
                     }
                 }
@@ -444,7 +430,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
 
             try
             {
-                foreach (Model_HistoryRemove item in _lastRemovedItems)
+                foreach (Model_History_Remove item in _lastRemovedItems)
                 {
                     await Dao_Inventory.AddInventoryItemAsync(
                         item.PartId,
@@ -474,7 +460,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             catch (Exception ex)
             {
                 LoggingUtility.LogApplicationError(ex);
-                Service_ErrorHandler.HandleException(ex, ErrorSeverity.Medium, 
+                Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Medium, 
                     controlName: nameof(Control_RemoveTab));
             }
             finally
@@ -540,9 +526,9 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                 Control_RemoveTab_Image_NothingFound.Visible = false;
 
                 MainFormControlHelper.ResetComboBox(Control_RemoveTab_ComboBox_Part,
-                    Model_AppVariables.UserUiColors.ComboBoxErrorForeColor ?? Color.Red, 0);
+                    Model_Application_Variables.UserUiColors.ComboBoxErrorForeColor ?? Color.Red, 0);
                 MainFormControlHelper.ResetComboBox(Control_RemoveTab_ComboBox_Operation,
-                    Model_AppVariables.UserUiColors.ComboBoxErrorForeColor ?? Color.Red, 0);
+                    Model_Application_Variables.UserUiColors.ComboBoxErrorForeColor ?? Color.Red, 0);
 
                 Control_RemoveTab_ComboBox_Part.Focus();
 
@@ -583,9 +569,9 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                 }
 
                 MainFormControlHelper.ResetComboBox(Control_RemoveTab_ComboBox_Part,
-                    Model_AppVariables.UserUiColors.ComboBoxErrorForeColor ?? Color.Red, 0);
+                    Model_Application_Variables.UserUiColors.ComboBoxErrorForeColor ?? Color.Red, 0);
                 MainFormControlHelper.ResetComboBox(Control_RemoveTab_ComboBox_Operation,
-                    Model_AppVariables.UserUiColors.ComboBoxErrorForeColor ?? Color.Red, 0);
+                    Model_Application_Variables.UserUiColors.ComboBoxErrorForeColor ?? Color.Red, 0);
 
                 Control_RemoveTab_DataGridView_Main.DataSource = null;
                 Control_RemoveTab_Image_NothingFound.Visible = false;
@@ -640,27 +626,27 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                         part)
                     {
                         part.SelectedIndex = 0;
-                        part.ForeColor = Model_AppVariables.UserUiColors.ComboBoxErrorForeColor ?? Color.Red;
+                        part.ForeColor = Model_Application_Variables.UserUiColors.ComboBoxErrorForeColor ?? Color.Red;
                         part.Focus();
                     }
 
                     if (adv.Controls.Find("Control_AdvancedRemove_ComboBox_Op", true).FirstOrDefault() is ComboBox op)
                     {
                         op.SelectedIndex = 0;
-                        op.ForeColor = Model_AppVariables.UserUiColors.ComboBoxErrorForeColor ?? Color.Red;
+                        op.ForeColor = Model_Application_Variables.UserUiColors.ComboBoxErrorForeColor ?? Color.Red;
                     }
 
                     if (adv.Controls.Find("Control_AdvancedRemove_ComboBox_Loc", true).FirstOrDefault() is ComboBox loc)
                     {
                         loc.SelectedIndex = 0;
-                        loc.ForeColor = Model_AppVariables.UserUiColors.ComboBoxErrorForeColor ?? Color.Red;
+                        loc.ForeColor = Model_Application_Variables.UserUiColors.ComboBoxErrorForeColor ?? Color.Red;
                     }
 
                     if (adv.Controls.Find("Control_AdvancedRemove_ComboBox_User", true).FirstOrDefault() is ComboBox
                         user)
                     {
                         user.SelectedIndex = 0;
-                        user.ForeColor = Model_AppVariables.UserUiColors.ComboBoxErrorForeColor ?? Color.Red;
+                        user.ForeColor = Model_Application_Variables.UserUiColors.ComboBoxErrorForeColor ?? Color.Red;
                     }
                 }
             }
@@ -734,11 +720,11 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                     {
                         LoggingUtility.LogDatabaseError(
                             partOpResult.Exception ?? new Exception(partOpResult.ErrorMessage),
-                            DatabaseErrorSeverity.Error);
+                            Enum_DatabaseEnum_ErrorSeverity.Error);
                         
                         Service_ErrorHandler.HandleException(
                             partOpResult.Exception ?? new Exception(partOpResult.ErrorMessage ?? "Failed to retrieve inventory by part and operation"),
-                            ErrorSeverity.High,
+                            Enum_ErrorSeverity.High,
                             retryAction: () => { Control_RemoveTab_Button_Search_Click(null, null); return true; },
                             contextData: new Dictionary<string, object>
                             {
@@ -762,11 +748,11 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                     {
                         LoggingUtility.LogDatabaseError(
                             partResult.Exception ?? new Exception(partResult.ErrorMessage),
-                            DatabaseErrorSeverity.Error);
+                            Enum_DatabaseEnum_ErrorSeverity.Error);
                         
                         Service_ErrorHandler.HandleException(
                             partResult.Exception ?? new Exception(partResult.ErrorMessage ?? "Failed to retrieve inventory by part"),
-                            ErrorSeverity.High,
+                            Enum_ErrorSeverity.High,
                             retryAction: () => { Control_RemoveTab_Button_Search_Click(null, null); return true; },
                             contextData: new Dictionary<string, object>
                             {
@@ -823,50 +809,61 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
 
         private void Control_RemoveTab_Button_Print_Click(object? sender, EventArgs? e)
         {
-            _progressHelper?.ShowProgress();
-            _progressHelper?.UpdateProgress(10, "Preparing print...");
-
             try
             {
-                if (Control_RemoveTab_DataGridView_Main?.Rows.Count == 0)
+                LoggingUtility.Log("[RemoveTab] Print requested.");
+
+                if (Control_RemoveTab_DataGridView_Main is null || Control_RemoveTab_DataGridView_Main.Rows.Count == 0)
                 {
-                    Service_ErrorHandler.ShowWarning(@"No data to print.", @"Print", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    LoggingUtility.Log("[RemoveTab] Print aborted - grid is empty.");
+                    Service_ErrorHandler.HandleValidationError(
+                        "No records available to print. Run a search or perform an inventory removal first.",
+                        "Print");
                     return;
                 }
 
-                if (Control_RemoveTab_DataGridView_Main == null)
-                {
-                    return;
-                }
+                Control parent = FindForm() is Control form ? form : this;
+                string gridName = string.IsNullOrWhiteSpace(Control_RemoveTab_DataGridView_Main.Name)
+                    ? "Remove Inventory"
+                    : Control_RemoveTab_DataGridView_Main.Name;
 
-                // Get visible column names for print
-                List<string> visibleColumns = new();
-                foreach (DataGridViewColumn col in Control_RemoveTab_DataGridView_Main.Columns)
+                var dialogTask = Helper_PrintManager.ShowPrintDialogAsync(parent, Control_RemoveTab_DataGridView_Main, gridName);
+
+                dialogTask.ContinueWith(t =>
                 {
-                    if (col.Visible)
+                    if (t.IsCompletedSuccessfully)
                     {
-                        visibleColumns.Add(col.Name);
+                        LoggingUtility.Log($"[RemoveTab] Print dialog closed with result: {t.Result}.");
                     }
-                }
-
-                Core_DgvPrinter printer = new();
-                Control_RemoveTab_DataGridView_Main.Tag = Control_RemoveTab_ComboBox_Part?.Text ?? "";
-                // Set visible columns for print
-                printer.SetPrintVisibleColumns(visibleColumns);
-                _progressHelper?.UpdateProgress(60, "Printing...");
-                printer.Print(Control_RemoveTab_DataGridView_Main);
-                _progressHelper?.UpdateProgress(100, "Print complete");
+                    else if (t.IsFaulted)
+                    {
+                        Exception? baseException = t.Exception?.GetBaseException();
+                        if (baseException != null)
+                        {
+                            LoggingUtility.LogApplicationError(baseException);
+                            BeginInvoke(new Action(() =>
+                                Service_ErrorHandler.HandleException(
+                                    baseException,
+                                    Enum_ErrorSeverity.Medium,
+                                    controlName: nameof(Control_RemoveTab_Button_Print_Click))));
+                        }
+                    }
+                });
             }
             catch (Exception ex)
             {
                 LoggingUtility.LogApplicationError(ex);
-                Service_ErrorHandler.HandleException(ex, ErrorSeverity.Medium,
-                    controlName: nameof(Control_RemoveTab));
+                Service_ErrorHandler.HandleException(
+                    ex,
+                    Enum_ErrorSeverity.Medium,
+                    controlName: nameof(Control_RemoveTab_Button_Print_Click));
             }
-            finally
-            {
-                _progressHelper?.HideProgress();
-            }
+        }
+
+        private async void Control_RemoveTab_ContextMenuItem_Print_Click(object? sender, EventArgs e)
+        {
+            // Reuse existing print button logic
+            Control_RemoveTab_Button_Print_Click(sender, e);
         }
 
         #endregion
@@ -882,20 +879,20 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                 if (Control_RemoveTab_ComboBox_Operation.SelectedIndex > 0)
                 {
                     Control_RemoveTab_ComboBox_Operation.ForeColor =
-                        Model_AppVariables.UserUiColors.ComboBoxForeColor ?? Color.Black;
-                    Model_AppVariables.Operation = Control_RemoveTab_ComboBox_Operation.Text;
+                        Model_Application_Variables.UserUiColors.ComboBoxForeColor ?? Color.Black;
+                    Model_Application_Variables.Operation = Control_RemoveTab_ComboBox_Operation.Text;
                 }
                 else
                 {
                     Control_RemoveTab_ComboBox_Operation.ForeColor =
-                        Model_AppVariables.UserUiColors.ComboBoxErrorForeColor ?? Color.Red;
+                        Model_Application_Variables.UserUiColors.ComboBoxErrorForeColor ?? Color.Red;
                     if (Control_RemoveTab_ComboBox_Operation.SelectedIndex != 0 &&
                         Control_RemoveTab_ComboBox_Operation.Items.Count > 0)
                     {
                         Control_RemoveTab_ComboBox_Operation.SelectedIndex = 0;
                     }
 
-                    Model_AppVariables.Operation = null;
+                    Model_Application_Variables.Operation = null;
                 }
             }
             catch (Exception ex)
@@ -915,20 +912,20 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                 if (Control_RemoveTab_ComboBox_Part.SelectedIndex > 0)
                 {
                     Control_RemoveTab_ComboBox_Part.ForeColor =
-                        Model_AppVariables.UserUiColors.ComboBoxForeColor ?? Color.Black;
-                    Model_AppVariables.PartId = Control_RemoveTab_ComboBox_Part.Text;
+                        Model_Application_Variables.UserUiColors.ComboBoxForeColor ?? Color.Black;
+                    Model_Application_Variables.PartId = Control_RemoveTab_ComboBox_Part.Text;
                 }
                 else
                 {
                     Control_RemoveTab_ComboBox_Part.ForeColor =
-                        Model_AppVariables.UserUiColors.ComboBoxErrorForeColor ?? Color.Red;
+                        Model_Application_Variables.UserUiColors.ComboBoxErrorForeColor ?? Color.Red;
                     if (Control_RemoveTab_ComboBox_Part.SelectedIndex != 0 &&
                         Control_RemoveTab_ComboBox_Part.Items.Count > 0)
                     {
                         Control_RemoveTab_ComboBox_Part.SelectedIndex = 0;
                     }
 
-                    Model_AppVariables.PartId = null;
+                    Model_Application_Variables.PartId = null;
                 }
             }
             catch (Exception ex)
@@ -1008,24 +1005,24 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                 Control_RemoveTab_ComboBox_Part.Enter += (s, e) =>
                 {
                     Control_RemoveTab_ComboBox_Part.BackColor =
-                        Model_AppVariables.UserUiColors.ControlFocusedBackColor ?? Color.LightBlue;
+                        Model_Application_Variables.UserUiColors.ControlFocusedBackColor ?? Color.LightBlue;
                 };
                 Control_RemoveTab_ComboBox_Part.Leave += (s, e) =>
                 {
                     Control_RemoveTab_ComboBox_Part.BackColor =
-                        Model_AppVariables.UserUiColors.ControlBackColor ?? SystemColors.Window;
+                        Model_Application_Variables.UserUiColors.ControlBackColor ?? SystemColors.Window;
                     Helper_UI_ComboBoxes.ValidateComboBoxItem(Control_RemoveTab_ComboBox_Part, "[ Enter Part Number ]");
                 };
 
                 Control_RemoveTab_ComboBox_Operation.Enter += (s, e) =>
                 {
                     Control_RemoveTab_ComboBox_Operation.BackColor =
-                        Model_AppVariables.UserUiColors.ControlFocusedBackColor ?? Color.LightBlue;
+                        Model_Application_Variables.UserUiColors.ControlFocusedBackColor ?? Color.LightBlue;
                 };
                 Control_RemoveTab_ComboBox_Operation.Leave += (s, e) =>
                 {
                     Control_RemoveTab_ComboBox_Operation.BackColor =
-                        Model_AppVariables.UserUiColors.ControlBackColor ?? SystemColors.Window;
+                        Model_Application_Variables.UserUiColors.ControlBackColor ?? SystemColors.Window;
                     Helper_UI_ComboBoxes.ValidateComboBoxItem(Control_RemoveTab_ComboBox_Operation,
                         "[ Enter Operation ]");
                 };
@@ -1057,7 +1054,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
 
                 Control_RemoveTab_Button_Toggle_RightPanel.Text = "⬅️";
                 Control_RemoveTab_Button_Toggle_RightPanel.ForeColor =
-                    Model_AppVariables.UserUiColors.ErrorColor ?? Color.Red;
+                    Model_Application_Variables.UserUiColors.ErrorColor ?? Color.Red;
             }
             else
             {
@@ -1066,7 +1063,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                     MainFormInstance.MainForm_SplitContainer_Middle.Panel2Collapsed = false;
                     Control_RemoveTab_Button_Toggle_RightPanel.Text = "➡️";
                     Control_RemoveTab_Button_Toggle_RightPanel.ForeColor =
-                        Model_AppVariables.UserUiColors.SuccessColor ?? Color.Green;
+                        Model_Application_Variables.UserUiColors.SuccessColor ?? Color.Green;
                 }
             }
 
@@ -1077,15 +1074,15 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
         {
             try
             {
-                _progressHelper?.ShowProgress();
-                _progressHelper?.UpdateProgress(10, "Loading all inventory...");
+                _progressHelper?.ShowProgress("Loading all inventory...");
 
                 // FIXED: Use inv_inventory_Get_All stored procedure instead of hardcoded SQL
+                // NOTE: Don't pass progress helper to avoid displaying stored procedure warning messages
                 var getAllResult = await Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync(
-                    Model_AppVariables.ConnectionString,
+                    Model_Application_Variables.ConnectionString,
                     "inv_inventory_Get_All",
                     null,
-                    _progressHelper);
+                    progressHelper: null);
 
                 if (!getAllResult.IsSuccess)
                 {
@@ -1123,17 +1120,23 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                 Core_Themes.ApplyThemeToDataGridView(Control_RemoveTab_DataGridView_Main);
                 Core_Themes.SizeDataGrid(Control_RemoveTab_DataGridView_Main);
                 Control_RemoveTab_Image_NothingFound.Visible = dt.Rows.Count == 0;
-                _progressHelper?.UpdateProgress(100, "Show all complete");
+                
+                // Show success message to replace any warning/error from stored procedure
+                if (dt.Rows.Count == 0)
+                {
+                    _progressHelper?.ShowSuccess("No inventory items found");
+                }
+                else
+                {
+                    _progressHelper?.ShowSuccess($"Loaded {dt.Rows.Count} inventory items");
+                }
             }
             catch (Exception ex)
             {
                 LoggingUtility.LogApplicationError(ex);
                 Service_ErrorHandler.HandleDatabaseError(ex, 
                     controlName: nameof(Control_RemoveTab));
-            }
-            finally
-            {
-                _progressHelper?.HideProgress();
+                _progressHelper?.ShowError("Failed to load inventory");
             }
         }
 

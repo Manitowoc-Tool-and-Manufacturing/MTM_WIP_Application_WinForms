@@ -17,6 +17,7 @@ This document defines the public API contracts for all developer tool UserContro
 All developer tool controls follow this pattern established by existing Settings controls (Control_Add_User, Control_Theme, etc.):
 
 ### Required Constructor Pattern
+
 ```csharp
 public Control_Developer_{ToolName}()
 {
@@ -30,21 +31,25 @@ public Control_Developer_{ToolName}()
 ### Required Public Methods
 
 #### ReloadAsync()
+
 **Purpose**: Reload control data when user navigates to this control in Settings TreeView.
 
 **Signature**:
+
 ```csharp
 public async Task ReloadAsync()
 ```
 
 **Contract**:
-- Called by Settings form when TreeView node is selected
-- Must be idempotent (safe to call multiple times)
-- Should refresh data from database/files/cache
-- Must handle connection failures gracefully (Service_ErrorHandler)
-- Should update progress bar and status label via Settings form properties
+
+-   Called by Settings form when TreeView node is selected
+-   Must be idempotent (safe to call multiple times)
+-   Should refresh data from database/files/cache
+-   Must handle connection failures gracefully (Service_ErrorHandler)
+-   Should update progress bar and status label via Settings form properties
 
 **Example Implementation**:
+
 ```csharp
 public async Task ReloadAsync()
 {
@@ -52,17 +57,17 @@ public async Task ReloadAsync()
     {
         // Show progress
         _settingsForm?.ShowProgress("Loading schema...");
-        
+
         // Load data
         await LoadDataAsync();
-        
+
         // Hide progress
         _settingsForm?.HideProgress();
         _settingsForm?.UpdateStatus("Schema loaded successfully");
     }
     catch (Exception ex)
     {
-        Service_ErrorHandler.HandleException(ex, ErrorSeverity.Medium,
+        Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Medium,
             retryAction: () => { ReloadAsync().Wait(); return true; },
             controlName: nameof(Control_Developer_SchemaInspector));
     }
@@ -72,46 +77,52 @@ public async Task ReloadAsync()
 ### Optional Public Methods
 
 #### ClearAsync()
+
 **Purpose**: Clear control state when user navigates away.
 
 **Signature**:
+
 ```csharp
 public async Task ClearAsync()
 ```
 
 **Contract**:
-- Called by Settings form when user navigates to different category
-- Should dispose of large objects (DataTable, images, etc.)
-- Should pause background operations (timers, threads)
-- Not required if control has no expensive state
+
+-   Called by Settings form when user navigates to different category
+-   Should dispose of large objects (DataTable, images, etc.)
+-   Should pause background operations (timers, threads)
+-   Not required if control has no expensive state
 
 ---
 
 ## 1. Control_Developer_DebugDashboard
 
 ### Purpose
+
 Real-time debugging dashboard for monitoring application activity (converted from DebugDashboardForm).
 
 ### Public API
 
 #### Constructor
+
 ```csharp
 public Control_Developer_DebugDashboard()
 {
     InitializeComponent();
     Core_Themes.ApplyDpiScaling(this);
     Core_Themes.ApplyRuntimeLayoutAdjustments(this);
-    
+
     _debugLog = new List<string>();
     _refreshTimer = new Timer { Interval = 1000 };
     _refreshTimer.Tick += RefreshTimer_Tick;
     _isCapturingDebug = true;
-    
+
     LoadCurrentConfiguration();
 }
 ```
 
 #### ReloadAsync()
+
 ```csharp
 /// <summary>
 /// Reload debug configuration from Service_DebugTracer.
@@ -125,6 +136,7 @@ public async Task ReloadAsync()
 ```
 
 #### ClearAsync()
+
 ```csharp
 /// <summary>
 /// Clear debug output and stop capture.
@@ -140,6 +152,7 @@ public async Task ClearAsync()
 ```
 
 #### StartCapture()
+
 ```csharp
 /// <summary>
 /// Start capturing debug output from Service_DebugTracer.
@@ -152,6 +165,7 @@ public void StartCapture()
 ```
 
 #### PauseCapture()
+
 ```csharp
 /// <summary>
 /// Pause capturing debug output (output frozen, app continues).
@@ -164,6 +178,7 @@ public void PauseCapture()
 ```
 
 #### SaveLog(string filePath)
+
 ```csharp
 /// <summary>
 /// Save current debug output to file.
@@ -176,9 +191,11 @@ public void SaveLog(string filePath)
 ```
 
 ### Events
+
 None (uses internal event handlers for UI controls).
 
 ### Properties
+
 ```csharp
 public bool IsCapturing => _isCapturingDebug;
 public int LogEntryCount => _debugLog?.Count ?? 0;
@@ -189,11 +206,13 @@ public int LogEntryCount => _debugLog?.Count ?? 0;
 ## 2. Control_Developer_ParameterPrefixMaintenance
 
 ### Purpose
+
 CRUD interface for managing parameter prefix overrides.
 
 ### Public API
 
 #### Constructor
+
 ```csharp
 public Control_Developer_ParameterPrefixMaintenance()
 {
@@ -204,6 +223,7 @@ public Control_Developer_ParameterPrefixMaintenance()
 ```
 
 #### ReloadAsync()
+
 ```csharp
 /// <summary>
 /// Reload all active parameter prefix overrides from database.
@@ -213,7 +233,7 @@ public async Task ReloadAsync()
     try
     {
         var result = await Dao_ParameterPrefixOverrides.GetAllActiveAsync();
-        
+
         if (result.IsSuccess && result.Data != null)
         {
             dgvOverrides.DataSource = result.Data;
@@ -222,29 +242,30 @@ public async Task ReloadAsync()
     }
     catch (Exception ex)
     {
-        Service_ErrorHandler.HandleException(ex, ErrorSeverity.Medium,
+        Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Medium,
             retryAction: () => { ReloadAsync().Wait(); return true; },
             controlName: nameof(Control_Developer_ParameterPrefixMaintenance));
     }
 }
 ```
 
-#### AddOverrideAsync(Model_ParameterPrefixOverride override)
+#### AddOverrideAsync(Model_ParameterPrefix_Override override)
+
 ```csharp
 /// <summary>
 /// Add new parameter prefix override.
 /// </summary>
 /// <param name="override">Override details</param>
-/// <returns>DaoResult with new OverrideId</returns>
-public async Task<DaoResult<int>> AddOverrideAsync(Model_ParameterPrefixOverride override)
+/// <returns>Model_Dao_Result with new OverrideId</returns>
+public async Task<Model_Dao_Result<int>> AddOverrideAsync(Model_ParameterPrefix_Override override)
 {
     // Validation
     if (string.IsNullOrWhiteSpace(override.ProcedureName))
-        return DaoResult<int>.Failure("Procedure name is required");
-    
+        return Model_Dao_Result<int>.Failure("Procedure name is required");
+
     if (string.IsNullOrWhiteSpace(override.ParameterName))
-        return DaoResult<int>.Failure("Parameter name is required");
-    
+        return Model_Dao_Result<int>.Failure("Parameter name is required");
+
     // Check if procedure exists (warning, not error)
     var procedureExists = await CheckProcedureExistsAsync(override.ProcedureName);
     if (!procedureExists)
@@ -254,24 +275,25 @@ public async Task<DaoResult<int>> AddOverrideAsync(Model_ParameterPrefixOverride
             "Procedure Not Found",
             MessageBoxButtons.YesNo,
             MessageBoxIcon.Warning);
-        
+
         if (result != DialogResult.Yes)
-            return DaoResult<int>.Failure("Operation cancelled by user");
+            return Model_Dao_Result<int>.Failure("Operation cancelled by user");
     }
-    
+
     // Call DAO
     return await Dao_ParameterPrefixOverrides.AddAsync(override);
 }
 ```
 
-#### UpdateOverrideAsync(Model_ParameterPrefixOverride override)
+#### UpdateOverrideAsync(Model_ParameterPrefix_Override override)
+
 ```csharp
 /// <summary>
 /// Update existing parameter prefix override.
 /// </summary>
 /// <param name="override">Updated override details</param>
-/// <returns>DaoResult indicating success/failure</returns>
-public async Task<DaoResult> UpdateOverrideAsync(Model_ParameterPrefixOverride override)
+/// <returns>Model_Dao_Result indicating success/failure</returns>
+public async Task<Model_Dao_Result> UpdateOverrideAsync(Model_ParameterPrefix_Override override)
 {
     // Validation (same as Add)
     // Call DAO
@@ -280,26 +302,28 @@ public async Task<DaoResult> UpdateOverrideAsync(Model_ParameterPrefixOverride o
 ```
 
 #### DeleteOverrideAsync(int overrideId)
+
 ```csharp
 /// <summary>
 /// Soft-delete parameter prefix override.
 /// </summary>
 /// <param name="overrideId">Override ID to delete</param>
-/// <returns>DaoResult indicating success/failure</returns>
-public async Task<DaoResult> DeleteOverrideAsync(int overrideId)
+/// <returns>Model_Dao_Result indicating success/failure</returns>
+public async Task<Model_Dao_Result> DeleteOverrideAsync(int overrideId)
 {
     var result = Service_ErrorHandler.ShowConfirmation(
         "Are you sure you want to delete this override?",
         "Confirm Delete");
-    
+
     if (result != DialogResult.Yes)
-        return DaoResult.Failure("Operation cancelled by user");
-    
+        return Model_Dao_Result.Failure("Operation cancelled by user");
+
     return await Dao_ParameterPrefixOverrides.DeleteAsync(overrideId);
 }
 ```
 
 ### Events
+
 ```csharp
 public event EventHandler<OverrideChangedEventArgs>? OverrideAdded;
 public event EventHandler<OverrideChangedEventArgs>? OverrideUpdated;
@@ -307,9 +331,10 @@ public event EventHandler<OverrideChangedEventArgs>? OverrideDeleted;
 ```
 
 ### Properties
+
 ```csharp
 public int OverrideCount => dgvOverrides.Rows.Count;
-public Model_ParameterPrefixOverride? SelectedOverride { get; }
+public Model_ParameterPrefix_Override? SelectedOverride { get; }
 ```
 
 ---
@@ -317,11 +342,13 @@ public Model_ParameterPrefixOverride? SelectedOverride { get; }
 ## 3. Control_Developer_SchemaInspector
 
 ### Purpose
+
 Read-only viewer for database schema metadata from INFORMATION_SCHEMA.
 
 ### Public API
 
 #### Constructor
+
 ```csharp
 public Control_Developer_SchemaInspector()
 {
@@ -332,6 +359,7 @@ public Control_Developer_SchemaInspector()
 ```
 
 #### ReloadAsync()
+
 ```csharp
 /// <summary>
 /// Reload schema metadata from INFORMATION_SCHEMA.
@@ -345,7 +373,7 @@ public async Task ReloadAsync()
     }
     catch (Exception ex)
     {
-        Service_ErrorHandler.HandleException(ex, ErrorSeverity.Medium,
+        Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Medium,
             retryAction: () => { ReloadAsync().Wait(); return true; },
             controlName: nameof(Control_Developer_SchemaInspector));
     }
@@ -353,6 +381,7 @@ public async Task ReloadAsync()
 ```
 
 #### LoadTablesAsync()
+
 ```csharp
 /// <summary>
 /// Load all tables from INFORMATION_SCHEMA.TABLES.
@@ -360,25 +389,25 @@ public async Task ReloadAsync()
 private async Task LoadTablesAsync()
 {
     var query = @"
-        SELECT 
-            TABLE_NAME, 
-            TABLE_TYPE, 
-            TABLE_ROWS, 
-            ENGINE, 
-            CREATE_TIME, 
-            UPDATE_TIME, 
+        SELECT
+            TABLE_NAME,
+            TABLE_TYPE,
+            TABLE_ROWS,
+            ENGINE,
+            CREATE_TIME,
+            UPDATE_TIME,
             TABLE_COMMENT
         FROM INFORMATION_SCHEMA.TABLES
         WHERE TABLE_SCHEMA = @DatabaseName
         ORDER BY TABLE_NAME";
-    
+
     var parameters = new Dictionary<string, object>
     {
         ["DatabaseName"] = "MTM_WIP_Application_Winforms"
     };
-    
+
     var result = await Helper_Database_Query.ExecuteQueryAsync(query, parameters);
-    
+
     if (result.IsSuccess && result.Data != null)
     {
         dgvTables.DataSource = result.Data;
@@ -387,6 +416,7 @@ private async Task LoadTablesAsync()
 ```
 
 #### LoadTableColumnsAsync(string tableName)
+
 ```csharp
 /// <summary>
 /// Load columns for selected table from INFORMATION_SCHEMA.COLUMNS.
@@ -395,7 +425,7 @@ private async Task LoadTablesAsync()
 public async Task LoadTableColumnsAsync(string tableName)
 {
     var query = @"
-        SELECT 
+        SELECT
             COLUMN_NAME,
             ORDINAL_POSITION,
             COLUMN_DEFAULT,
@@ -411,15 +441,15 @@ public async Task LoadTableColumnsAsync(string tableName)
         WHERE TABLE_SCHEMA = @DatabaseName
         AND TABLE_NAME = @TableName
         ORDER BY ORDINAL_POSITION";
-    
+
     var parameters = new Dictionary<string, object>
     {
         ["DatabaseName"] = "MTM_WIP_Application_Winforms",
         ["TableName"] = tableName
     };
-    
+
     var result = await Helper_Database_Query.ExecuteQueryAsync(query, parameters);
-    
+
     if (result.IsSuccess && result.Data != null)
     {
         dgvColumns.DataSource = result.Data;
@@ -428,6 +458,7 @@ public async Task LoadTableColumnsAsync(string tableName)
 ```
 
 #### LoadStoredProceduresAsync()
+
 ```csharp
 /// <summary>
 /// Load all stored procedures from INFORMATION_SCHEMA.ROUTINES.
@@ -439,6 +470,7 @@ private async Task LoadStoredProceduresAsync()
 ```
 
 #### LoadProcedureParametersAsync(string procedureName)
+
 ```csharp
 /// <summary>
 /// Load parameters for selected procedure from INFORMATION_SCHEMA.PARAMETERS.
@@ -451,12 +483,14 @@ public async Task LoadProcedureParametersAsync(string procedureName)
 ```
 
 ### Events
+
 ```csharp
 public event EventHandler<TableSelectedEventArgs>? TableSelected;
 public event EventHandler<ProcedureSelectedEventArgs>? ProcedureSelected;
 ```
 
 ### Properties
+
 ```csharp
 public int TableCount => dgvTables.Rows.Count;
 public int ProcedureCount => dgvProcedures.Rows.Count;
@@ -469,11 +503,13 @@ public string? SelectedProcedureName { get; }
 ## 4. Control_Developer_ProcedureCallHierarchy
 
 ### Purpose
+
 Visualize stored procedure dependencies and C# call sites from analysis artifacts.
 
 ### Public API
 
 #### Constructor
+
 ```csharp
 public Control_Developer_ProcedureCallHierarchy()
 {
@@ -484,6 +520,7 @@ public Control_Developer_ProcedureCallHierarchy()
 ```
 
 #### ReloadAsync()
+
 ```csharp
 /// <summary>
 /// Load procedure call hierarchy from JSON and CSV artifacts.
@@ -501,7 +538,7 @@ public async Task ReloadAsync()
     }
     catch (Exception ex)
     {
-        Service_ErrorHandler.HandleException(ex, ErrorSeverity.Medium,
+        Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Medium,
             retryAction: () => { ReloadAsync().Wait(); return true; },
             controlName: nameof(Control_Developer_ProcedureCallHierarchy));
     }
@@ -509,24 +546,26 @@ public async Task ReloadAsync()
 ```
 
 #### LoadCallHierarchyAsync()
+
 ```csharp
 /// <summary>
 /// Load procedure dependencies from call-hierarchy-complete.json.
 /// </summary>
 private async Task LoadCallHierarchyAsync()
 {
-    var jsonPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, 
+    var jsonPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory,
         "Database", "call-hierarchy-complete.json");
-    
+
     if (!File.Exists(jsonPath))
         throw new FileNotFoundException("Call hierarchy JSON not found", jsonPath);
-    
+
     var jsonContent = await File.ReadAllTextAsync(jsonPath);
     _callHierarchy = JsonSerializer.Deserialize<Dictionary<string, ProcedureNode>>(jsonContent);
 }
 ```
 
 #### LoadCallSitesAsync()
+
 ```csharp
 /// <summary>
 /// Load C# call sites from STORED_PROCEDURE_CALLSITES.csv.
@@ -535,15 +574,16 @@ private async Task LoadCallSitesAsync()
 {
     var csvPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory,
         "Database", "STORED_PROCEDURE_CALLSITES.csv");
-    
+
     if (!File.Exists(csvPath))
         throw new FileNotFoundException("Call sites CSV not found", csvPath);
-    
+
     // Parse CSV into List<Model_ProcedureCallSite>
 }
 ```
 
 #### SearchProcedure(string procedureName)
+
 ```csharp
 /// <summary>
 /// Search for procedure in call hierarchy.
@@ -558,6 +598,7 @@ public void SearchProcedure(string procedureName)
 ```
 
 #### ShowDependencyTree(string procedureName)
+
 ```csharp
 /// <summary>
 /// Display dependency tree for selected procedure.
@@ -573,6 +614,7 @@ public void ShowDependencyTree(string procedureName)
 ```
 
 #### RegenerateArtifacts()
+
 ```csharp
 /// <summary>
 /// Launch PowerShell script to regenerate call hierarchy artifacts.
@@ -581,7 +623,7 @@ public void RegenerateArtifacts()
 {
     var scriptPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory,
         "Database", "2-Trace-Complete-CallHierarchy-v2.ps1");
-    
+
     var startInfo = new ProcessStartInfo
     {
         FileName = "pwsh.exe",
@@ -589,18 +631,20 @@ public void RegenerateArtifacts()
         UseShellExecute = false,
         CreateNoWindow = false
     };
-    
+
     Process.Start(startInfo);
 }
 ```
 
 ### Events
+
 ```csharp
 public event EventHandler<ProcedureSearchEventArgs>? ProcedureSearched;
 public event EventHandler<DependencyTreeEventArgs>? DependencyTreeShown;
 ```
 
 ### Properties
+
 ```csharp
 public int TotalProcedures => _callHierarchy?.Count ?? 0;
 public int RootProcedures => _callHierarchy?.Values.Count(p => p.IsRoot) ?? 0;
@@ -613,11 +657,13 @@ public bool HasCircularDependencies => _callHierarchy?.Values.Any(p => p.HasCirc
 ## 5. Control_Developer_CodeGenerator
 
 ### Purpose
+
 Generate C# DAO method code from stored procedure definitions.
 
 ### Public API
 
 #### Constructor
+
 ```csharp
 public Control_Developer_CodeGenerator()
 {
@@ -628,6 +674,7 @@ public Control_Developer_CodeGenerator()
 ```
 
 #### ReloadAsync()
+
 ```csharp
 /// <summary>
 /// Load stored procedure list from INFORMATION_SCHEMA.
@@ -640,7 +687,7 @@ public async Task ReloadAsync()
     }
     catch (Exception ex)
     {
-        Service_ErrorHandler.HandleException(ex, ErrorSeverity.Medium,
+        Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Medium,
             retryAction: () => { ReloadAsync().Wait(); return true; },
             controlName: nameof(Control_Developer_CodeGenerator));
     }
@@ -648,6 +695,7 @@ public async Task ReloadAsync()
 ```
 
 #### LoadProcedureListAsync()
+
 ```csharp
 /// <summary>
 /// Load all stored procedures for dropdown selection.
@@ -660,14 +708,14 @@ private async Task LoadProcedureListAsync()
         WHERE ROUTINE_SCHEMA = @DatabaseName
         AND ROUTINE_TYPE = 'PROCEDURE'
         ORDER BY ROUTINE_NAME";
-    
+
     var parameters = new Dictionary<string, object>
     {
         ["DatabaseName"] = "MTM_WIP_Application_Winforms"
     };
-    
+
     var result = await Helper_Database_Query.ExecuteQueryAsync(query, parameters);
-    
+
     if (result.IsSuccess && result.Data != null)
     {
         cmbProcedures.DataSource = result.Data;
@@ -678,6 +726,7 @@ private async Task LoadProcedureListAsync()
 ```
 
 #### GenerateDaoMethodAsync(string procedureName)
+
 ```csharp
 /// <summary>
 /// Generate C# DAO method code for selected stored procedure.
@@ -688,25 +737,25 @@ public async Task<string> GenerateDaoMethodAsync(string procedureName)
 {
     // 1. Query INFORMATION_SCHEMA.PARAMETERS
     var parameters = await GetProcedureParametersAsync(procedureName);
-    
+
     // 2. Generate method name (e.g., "inv_inventory_Add_Item" → "AddItemAsync")
     var methodName = GenerateMethodName(procedureName);
-    
+
     // 3. Generate method signature
     var signature = GenerateMethodSignature(methodName, parameters);
-    
+
     // 4. Generate XML documentation
     var xmlDocs = GenerateXmlDocumentation(procedureName, parameters);
-    
+
     // 5. Generate parameter dictionary
     var paramDict = GenerateParameterDictionary(parameters);
-    
+
     // 6. Generate Helper_Database_StoredProcedure call
     var helperCall = GenerateHelperCall(procedureName, paramDict);
-    
+
     // 7. Generate error handling
     var errorHandling = GenerateErrorHandling();
-    
+
     // 8. Combine all parts
     return $@"{xmlDocs}
 {signature}
@@ -714,17 +763,17 @@ public async Task<string> GenerateDaoMethodAsync(string procedureName)
     try
     {{
         {paramDict}
-        
+
         {helperCall}
-        
+
         if (result.IsSuccess)
         {{
-            return DaoResult<DataTable>.Success(result.Data);
+            return Model_Dao_Result<DataTable>.Success(result.Data);
         }}
         else
         {{
             LoggingUtility.LogApplicationError(result.Exception, result.StatusMessage);
-            return DaoResult<DataTable>.Failure(result.StatusMessage);
+            return Model_Dao_Result<DataTable>.Failure(result.StatusMessage);
         }}
     }}
     catch (Exception ex)
@@ -736,6 +785,7 @@ public async Task<string> GenerateDaoMethodAsync(string procedureName)
 ```
 
 #### CopyToClipboard(string code)
+
 ```csharp
 /// <summary>
 /// Copy generated code to clipboard.
@@ -751,11 +801,13 @@ public void CopyToClipboard(string code)
 ```
 
 ### Events
+
 ```csharp
 public event EventHandler<CodeGeneratedEventArgs>? CodeGenerated;
 ```
 
 ### Properties
+
 ```csharp
 public int ProcedureCount => cmbProcedures.Items.Count;
 public string? SelectedProcedureName => cmbProcedures.SelectedValue?.ToString();
@@ -767,6 +819,7 @@ public string GeneratedCode => txtGeneratedCode.Text;
 ## 6. Control_Database (Refactored)
 
 ### Purpose
+
 Existing database connection strength monitor, moved into Developer category.
 
 ### Public API
@@ -774,6 +827,7 @@ Existing database connection strength monitor, moved into Developer category.
 **No changes to public API**. Control simply moves from "Database" category to "Developer" category in Settings TreeView structure.
 
 #### Existing ReloadAsync()
+
 ```csharp
 public async Task ReloadAsync()
 {
@@ -814,9 +868,9 @@ Settings
 private void LoadTreeViewNodes()
 {
     // Existing nodes...
-    
+
     // Add Developer node if user has Developer role
-    if (Model_AppVariables.CurrentUser.IsDeveloper)
+    if (Model_Application_Variables.CurrentUser.IsDeveloper)
     {
         var developerNode = new TreeNode("Developer");
         developerNode.Nodes.Add("Debug Dashboard");
@@ -825,7 +879,7 @@ private void LoadTreeViewNodes()
         developerNode.Nodes.Add("Procedure Call Hierarchy");
         developerNode.Nodes.Add("Code Generator");
         developerNode.Nodes.Add("Database"); // Moved from Database category
-        
+
         treeViewSettings.Nodes.Add(developerNode);
     }
 }
@@ -837,10 +891,10 @@ private async void TreeViewSettings_AfterSelect(object sender, TreeViewEventArgs
     {
         if (_currentControl is IAsyncControl asyncControl)
             await asyncControl.ClearAsync();
-        
+
         pnlContent.Controls.Remove(_currentControl);
     }
-    
+
     // Load selected control
     UserControl? newControl = e.Node.Text switch
     {
@@ -851,13 +905,13 @@ private async void TreeViewSettings_AfterSelect(object sender, TreeViewEventArgs
         "Code Generator" => new Control_Developer_CodeGenerator(),
         _ => null
     };
-    
+
     if (newControl != null)
     {
         _currentControl = newControl;
         newControl.Dock = DockStyle.Fill;
         pnlContent.Controls.Add(newControl);
-        
+
         if (newControl is IAsyncControl asyncControl)
             await asyncControl.ReloadAsync();
     }
@@ -869,26 +923,29 @@ private async void TreeViewSettings_AfterSelect(object sender, TreeViewEventArgs
 ## Testing Checklist
 
 ### Integration Tests
-- [ ] Settings form shows Developer category for users with IsDeveloper = true
-- [ ] Settings form hides Developer category for users without IsDeveloper
-- [ ] All 6 developer tools load without exceptions
-- [ ] TreeView navigation between tools clears previous control state
-- [ ] Progress bar and status label update during operations
-- [ ] Core_Themes.ApplyDpiScaling works on all controls
+
+-   [ ] Settings form shows Developer category for users with IsDeveloper = true
+-   [ ] Settings form hides Developer category for users without IsDeveloper
+-   [ ] All 6 developer tools load without exceptions
+-   [ ] TreeView navigation between tools clears previous control state
+-   [ ] Progress bar and status label update during operations
+-   [ ] Core_Themes.ApplyDpiScaling works on all controls
 
 ### Individual Control Tests
-- [ ] DebugDashboard: Capture/pause/resume/save log workflow
-- [ ] ParameterPrefixMaintenance: Add/edit/delete override workflow
-- [ ] SchemaInspector: Load tables, select table, view columns
-- [ ] ProcedureCallHierarchy: Search procedure, view dependencies, regenerate artifacts
-- [ ] CodeGenerator: Select procedure, generate code, copy to clipboard
-- [ ] Database: Connection strength test (existing functionality)
+
+-   [ ] DebugDashboard: Capture/pause/resume/save log workflow
+-   [ ] ParameterPrefixMaintenance: Add/edit/delete override workflow
+-   [ ] SchemaInspector: Load tables, select table, view columns
+-   [ ] ProcedureCallHierarchy: Search procedure, view dependencies, regenerate artifacts
+-   [ ] CodeGenerator: Select procedure, generate code, copy to clipboard
+-   [ ] Database: Connection strength test (existing functionality)
 
 ### Error Handling Tests
-- [ ] Connection failure in SchemaInspector shows retry dialog
-- [ ] Missing artifacts in ProcedureCallHierarchy shows regenerate message
-- [ ] Duplicate override in ParameterPrefixMaintenance shows validation error
-- [ ] Invalid procedure selection in CodeGenerator shows friendly error
+
+-   [ ] Connection failure in SchemaInspector shows retry dialog
+-   [ ] Missing artifacts in ProcedureCallHierarchy shows regenerate message
+-   [ ] Duplicate override in ParameterPrefixMaintenance shows validation error
+-   [ ] Invalid procedure selection in CodeGenerator shows friendly error
 
 ---
 

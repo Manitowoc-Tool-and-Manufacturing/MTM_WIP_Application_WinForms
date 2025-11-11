@@ -1,0 +1,371 @@
+{
+  "DatabaseTables": {
+    "sys_parameter_prefix_overrides": {
+      "Name": "sys_parameter_prefix_overrides",
+      "UsedBy": [
+        "sys_parameter_prefix_overrides_Add",
+        "sys_parameter_prefix_overrides_Add",
+        "sys_parameter_prefix_overrides_Delete_ById",
+        "sys_parameter_prefix_overrides_Delete_ById",
+        "sys_parameter_prefix_overrides_Get_All",
+        "sys_parameter_prefix_overrides_Get_All",
+        "sys_parameter_prefix_overrides_Get_All",
+        "sys_parameter_prefix_overrides_Get_ById",
+        "sys_parameter_prefix_overrides_Get_ById",
+        "sys_parameter_prefix_overrides_Get_ById",
+        "sys_parameter_prefix_overrides_Update_ById",
+        "sys_parameter_prefix_overrides_Update_ById",
+        "sys_parameter_prefix_overrides_Update_ById"
+      ]
+    },
+    "sys_roles": {
+      "Name": "sys_roles",
+      "UsedBy": [
+        "sys_GetRoleIdByName",
+        "sys_GetUserAccessType",
+        "sys_role_GetIdByName",
+        "sys_roles_Get_ById",
+        "sys_user_roles_Add",
+        "sys_user_roles_Update"
+      ]
+    },
+    "usr_users": {
+      "Name": "usr_users",
+      "UsedBy": [
+        "sys_GetUserAccessType",
+        "sys_user_access_SetType",
+        "sys_user_access_SetType",
+        "sys_user_GetByName",
+        "sys_user_GetIdByName",
+        "sys_user_roles_Add",
+        "sys_user_roles_Update",
+        "usr_users_Add_User",
+        "usr_users_Delete_User",
+        "usr_users_Exists",
+        "usr_users_Get_All",
+        "usr_users_Get_ByUser",
+        "usr_users_SetUserSetting_ByUserAndField",
+        "usr_users_Update_User"
+      ]
+    },
+    "usr_ui_settings": {
+      "Name": "usr_ui_settings",
+      "UsedBy": [
+        "usr_ui_settings_Delete_ByUserId",
+        "usr_ui_settings_Get",
+        "usr_ui_settings_GetJsonSetting",
+        "usr_ui_settings_GetShortcutsJson",
+        "usr_ui_settings_SetJsonSetting",
+        "usr_ui_settings_SetJsonSetting",
+        "usr_ui_settings_SetJsonSetting",
+        "usr_ui_settings_SetJsonSetting",
+        "usr_ui_settings_SetShortcutsJson",
+        "usr_ui_settings_SetThemeJson",
+        "usr_ui_settings_SetThemeJson",
+        "usr_ui_settings_SetThemeJson"
+      ]
+    },
+    "sys_last_": {
+      "Name": "sys_last_",
+      "UsedBy": [
+        "sys_last_10_transactions_Add_AtPosition",
+        "sys_last_10_transactions_Add_AtPosition",
+        "sys_last_10_transactions_Add_AtPosition",
+        "sys_last_10_transactions_AddQuickButton",
+        "sys_last_10_transactions_AddQuickButton",
+        "sys_last_10_transactions_Delete_ByUserAndPosition",
+        "sys_last_10_transactions_Delete_ByUserAndPosition",
+        "sys_last_10_transactions_DeleteAll_ByUser",
+        "sys_last_10_transactions_Get_ByUser",
+        "sys_last_10_transactions_Move",
+        "sys_last_10_transactions_Move",
+        "sys_last_10_transactions_Move",
+        "sys_last_10_transactions_Move",
+        "sys_last_10_transactions_Move",
+        "sys_last_10_transactions_MoveToLast_ByUser",
+        "sys_last_10_transactions_MoveToLast_ByUser",
+        "sys_last_10_transactions_MoveToLast_ByUser",
+        "sys_last_10_transactions_RemoveAndShift_ByUser",
+        "sys_last_10_transactions_RemoveAndShift_ByUser",
+        "sys_last_10_transactions_RemoveAndShift_ByUser",
+        "sys_last_10_transactions_Reorder_ByUser",
+        "sys_last_10_transactions_Reorder_ByUser",
+        "sys_last_10_transactions_SwapPositions_ByUser",
+        "sys_last_10_transactions_SwapPositions_ByUser",
+        "sys_last_10_transactions_SwapPositions_ByUser",
+        "sys_last_10_transactions_SwapPositions_ByUser",
+        "sys_last_10_transactions_Update_ByUserAndDate",
+        "sys_last_10_transactions_Update_ByUserAndDate",
+        "sys_last_10_transactions_Update_ByUserAndPosition",
+        "sys_last_10_transactions_Update_ByUserAndPosition"
+      ]
+    },
+    "sys_user_roles": {
+      "Name": "sys_user_roles",
+      "UsedBy": [
+        "sys_GetUserAccessType",
+        "sys_user_roles_Add",
+        "sys_user_roles_Add",
+        "sys_user_roles_Delete",
+        "sys_user_roles_Delete",
+        "sys_user_roles_Update",
+        "sys_user_roles_Update",
+        "sys_user_roles_Update"
+      ]
+    },
+    "md_operation_numbers": {
+      "Name": "md_operation_numbers",
+      "UsedBy": [
+        "md_operation_numbers_Add_Operation",
+        "md_operation_numbers_Delete_ByOperation",
+        "md_operation_numbers_Exists_ByOperation",
+        "md_operation_numbers_Get_All",
+        "md_operation_numbers_Update_Operation"
+      ]
+    },
+    "md_item_types": {
+      "Name": "md_item_types",
+      "UsedBy": [
+        "md_item_types_Add_ItemType",
+        "md_item_types_Delete_ByID",
+        "md_item_types_Delete_ByType",
+        "md_item_types_Exists_ByType",
+        "md_item_types_Get_All",
+        "md_item_types_GetDistinct",
+        "md_item_types_Update_ItemType"
+      ]
+    },
+    "md_part_ids": {
+      "Name": "md_part_ids",
+      "UsedBy": [
+        "md_part_ids_Add_Part",
+        "md_part_ids_Delete_ByItemNumber",
+        "md_part_ids_Get_All",
+        "md_part_ids_Get_ByItemNumber",
+        "md_part_ids_Update_Part"
+      ]
+    },
+    "md_locations": {
+      "Name": "md_locations",
+      "UsedBy": [
+        "md_locations_Add_Location",
+        "md_locations_Delete_ByLocation",
+        "md_locations_Exists_ByLocation",
+        "md_locations_Get_All",
+        "md_locations_Update_Location"
+      ]
+    }
+  },
+  "Timestamp": "2025-11-02 12:46:45",
+  "Controls": {
+    "Settings": {
+      "About": "Control_About.cs",
+      "Developer_ParameterPrefixMaintenance": "Control_Developer_ParameterPrefixMaintenance.cs",
+      "Theme": "Control_Theme.cs",
+      "Shortcuts": "Control_Shortcuts.cs",
+      "Database": "Control_Database.cs"
+    },
+    "CRUD": {
+      "Location": {
+        "Remove": "Control_Remove_Location.cs",
+        "Add": "Control_Add_Location.cs",
+        "Entity": "Location",
+        "Edit": "Control_Edit_Location.cs"
+      },
+      "PartID": {
+        "Remove": "Control_Remove_PartID.cs",
+        "Add": "Control_Add_PartID.cs",
+        "Entity": "PartID",
+        "Edit": "Control_Edit_PartID.cs"
+      },
+      "ItemType": {
+        "Remove": "Control_Remove_ItemType.cs",
+        "Add": "Control_Add_ItemType.cs",
+        "Entity": "ItemType",
+        "Edit": "Control_Edit_ItemType.cs"
+      },
+      "Operation": {
+        "Remove": "Control_Remove_Operation.cs",
+        "Add": "Control_Add_Operation.cs",
+        "Entity": "Operation",
+        "Edit": "Control_Edit_Operation.cs"
+      },
+      "User": {
+        "Remove": "Control_Remove_User.cs",
+        "Add": "Control_Add_User.cs",
+        "Entity": "User",
+        "Edit": "Control_Edit_User.cs"
+      }
+    }
+  },
+  "Categories": {
+    "SystemConfiguration": [
+      "Database",
+      "Developer_ParameterPrefixMaintenance"
+    ],
+    "AppearanceAndUI": [
+      "Theme",
+      "Shortcuts"
+    ],
+    "Information": [
+      "About"
+    ],
+    "UserManagement": [
+      "User"
+    ],
+    "MasterData": [
+      "PartID",
+      "Location",
+      "Operation",
+      "ItemType"
+    ]
+  },
+  "DAOMethods": {
+    "SetHideChangeLogAsync": {
+      "Name": "SetHideChangeLogAsync",
+      "IsSetter": true,
+      "IsGetter": false
+    },
+    "DeleteUserAsync": {
+      "Name": "DeleteUserAsync",
+      "IsSetter": false,
+      "IsGetter": false
+    },
+    "SetShortcutsJsonAsync": {
+      "Name": "SetShortcutsJsonAsync",
+      "IsSetter": true,
+      "IsGetter": false
+    },
+    "SetThemeFontSizeAsync": {
+      "Name": "SetThemeFontSizeAsync",
+      "IsSetter": true,
+      "IsGetter": false
+    },
+    "SetUserRoleAsync": {
+      "Name": "SetUserRoleAsync",
+      "IsSetter": true,
+      "IsGetter": false
+    },
+    "SetWipServerPortAsync": {
+      "Name": "SetWipServerPortAsync",
+      "IsSetter": true,
+      "IsGetter": false
+    },
+    "SetVisualPasswordAsync": {
+      "Name": "SetVisualPasswordAsync",
+      "IsSetter": true,
+      "IsGetter": false
+    },
+    "SetUsersRoleAsync": {
+      "Name": "SetUsersRoleAsync",
+      "IsSetter": true,
+      "IsGetter": false
+    },
+    "SetLastShownVersionAsync": {
+      "Name": "SetLastShownVersionAsync",
+      "IsSetter": true,
+      "IsGetter": false
+    },
+    "CreateUserAsync": {
+      "Name": "CreateUserAsync",
+      "IsSetter": false,
+      "IsGetter": false
+    },
+    "SetDatabaseAsync": {
+      "Name": "SetDatabaseAsync",
+      "IsSetter": true,
+      "IsGetter": false
+    },
+    "SetWipServerAddressAsync": {
+      "Name": "SetWipServerAddressAsync",
+      "IsSetter": true,
+      "IsGetter": false
+    },
+    "AddUserRoleAsync": {
+      "Name": "AddUserRoleAsync",
+      "IsSetter": false,
+      "IsGetter": false
+    },
+    "RemoveUserRoleAsync": {
+      "Name": "RemoveUserRoleAsync",
+      "IsSetter": false,
+      "IsGetter": false
+    },
+    "DeleteUserSettingsAsync": {
+      "Name": "DeleteUserSettingsAsync",
+      "IsSetter": false,
+      "IsGetter": false
+    },
+    "SetVisualUserNameAsync": {
+      "Name": "SetVisualUserNameAsync",
+      "IsSetter": true,
+      "IsGetter": false
+    },
+    "SetThemeNameAsync": {
+      "Name": "SetThemeNameAsync",
+      "IsSetter": true,
+      "IsGetter": false
+    },
+    "UpdateUserAsync": {
+      "Name": "UpdateUserAsync",
+      "IsSetter": false,
+      "IsGetter": false
+    }
+  },
+  "Integrations": {
+    "ErrorHandling": [
+      "Control_About.cs",
+      "Control_Add_Operation.cs",
+      "Control_Add_User.cs",
+      "Control_Database.cs",
+      "Control_Developer_ParameterPrefixMaintenance.cs",
+      "Control_Edit_ItemType.cs",
+      "Control_Edit_PartID.cs",
+      "Control_Edit_User.cs",
+      "Control_Remove_ItemType.cs",
+      "Control_Remove_PartID.cs",
+      "Control_Remove_User.cs",
+      "Control_Shortcuts.cs",
+      "Control_Theme.cs",
+      "Dialog_AddParameterOverride.cs",
+      "Dialog_EditParameterOverride.cs"
+    ],
+    "ThemeSystem": [
+      "Control_About.cs",
+      "Control_Add_ItemType.cs",
+      "Control_Add_Location.cs",
+      "Control_Add_Operation.cs",
+      "Control_Add_PartID.cs",
+      "Control_Add_User.cs",
+      "Control_Database.cs",
+      "Control_Developer_ParameterPrefixMaintenance.cs",
+      "Control_Edit_ItemType.cs",
+      "Control_Edit_Location.cs",
+      "Control_Edit_Operation.cs",
+      "Control_Edit_PartID.cs",
+      "Control_Edit_User.cs",
+      "Control_Remove_ItemType.cs",
+      "Control_Remove_Location.cs",
+      "Control_Remove_Operation.cs",
+      "Control_Remove_PartID.cs",
+      "Control_Remove_User.cs",
+      "Control_Shortcuts.cs",
+      "Control_Theme.cs",
+      "Dialog_AddParameterOverride.cs",
+      "Dialog_EditParameterOverride.cs",
+      "SettingsForm.cs"
+    ],
+    "ProgressReporting": [
+      "Control_Add_Operation.cs",
+      "Control_Add_User.cs",
+      "Control_Remove_User.cs",
+      "SettingsForm.cs"
+    ],
+    "ShortcutSystem": [
+      "Control_Edit_PartID.cs",
+      "Control_Shortcuts.cs",
+      "Control_Theme.cs",
+      "SettingsForm.cs"
+    ]
+  }
+}

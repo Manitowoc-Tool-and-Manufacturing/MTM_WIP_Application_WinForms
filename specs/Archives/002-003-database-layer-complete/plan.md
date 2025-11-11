@@ -14,7 +14,7 @@
 
 | Phase | Scope | Est. Effort |
 |-------|-------|-------------|
-| Foundation Review | Confirm Phase 1-2 artifacts (DaoResult, helpers, quickstart) | 1 day |
+| Foundation Review | Confirm Phase 1-2 artifacts (Model_Dao_Result, helpers, quickstart) | 1 day |
 | Phase 2.5 Parts A–F | Discovery through documentation (T100–T132) | 19–30 days |
 | Phase 3–8 | DAO refactor & async migration | 20–30 days |
 | Validation & Sign-off | Benchmarks, manual testing, post-deploy monitoring | 5 days |
@@ -23,7 +23,7 @@ Parallel work by three developers can reduce Phase 2.5 and Phase 3–8 durations
 
 ## Dependencies & Prerequisites
 
-- Phase 1-2 artifacts (`Models/Model_DaoResult*.cs`, helper refactor, quickstart) must be confirmed before new work begins.
+- Phase 1-2 artifacts (`Models/Model_Dao_Result*.cs`, helper refactor, quickstart) must be confirmed before new work begins.
 - Phase 2.5 completion is a hard gate for all downstream DAO changes.
 - DBA availability is required for schema drift reconciliation and production deployment windows.
 - Developers must have access to the test database `mtm_wip_application_winform_test` and supporting scripts.
@@ -32,7 +32,7 @@ Parallel work by three developers can reduce Phase 2.5 and Phase 3–8 durations
 ## Phase Breakdown
 
 ### Foundation Review (Day 0–1)
-- Verify DaoResult classes, helper methods, and parameter cache are in place.
+- Verify Model_Dao_Result classes, helper methods, and parameter cache are in place.
 - Ensure quickstart.md and contracts accurately reflect current patterns.
 - Confirm no regressions were introduced after Phase 1-2 completion.
 
@@ -72,7 +72,7 @@ Parallel work by three developers can reduce Phase 2.5 and Phase 3–8 durations
 - Produce final implementation guide with metrics, drift summary, CSV insights, and analyzer integration details.
 
 ### Phase 3 – Inventory DAO Refactor (after Phase 2.5)
-- Update Dao_Inventory methods to new helper + DaoResult patterns.
+- Update Dao_Inventory methods to new helper + Model_Dao_Result patterns.
 - Migrate forms/controls using inventory DAOs to async event handlers.
 - Confirm tests pass against standardized procedures.
 

@@ -16,26 +16,27 @@ This document defines the data entities, database schema, and data flow patterns
 
 ### 1. ParameterPrefixOverride (Database Table)
 
-**Purpose**: Store non-standard parameter prefix mappings for stored procedures that don't follow the p_ convention, enabling gradual migration and supporting legacy/vendor procedures.
+**Purpose**: Store non-standard parameter prefix mappings for stored procedures that don't follow the p\_ convention, enabling gradual migration and supporting legacy/vendor procedures.
 
 **Table Name**: `sys_parameter_prefix_overrides`
 
 **Schema**:
 
-| Column Name | Data Type | Constraints | Description |
-|------------|-----------|-------------|-------------|
-| OverrideId | INT | PRIMARY KEY, AUTO_INCREMENT | Unique identifier for override record |
-| ProcedureName | VARCHAR(128) | NOT NULL | Name of stored procedure (e.g., "inv_inventory_Add_Item") |
-| ParameterName | VARCHAR(128) | NOT NULL | Parameter name WITHOUT prefix (e.g., "UserID") |
-| OverridePrefix | VARCHAR(10) | NOT NULL | Prefix to use (e.g., "p_", "in_", "" for no prefix) |
-| Reason | VARCHAR(500) | NULL | Why this override exists (e.g., "Legacy 2020 procedure", "Vendor-supplied") |
-| CreatedBy | VARCHAR(50) | NOT NULL | Username who created the override |
-| CreatedDate | DATETIME | NOT NULL, DEFAULT CURRENT_TIMESTAMP | When override was created |
-| ModifiedBy | VARCHAR(50) | NULL | Username who last modified the override |
-| ModifiedDate | DATETIME | NULL | When override was last modified |
-| IsActive | TINYINT(1) | NOT NULL, DEFAULT 1 | Whether override is currently active (1) or disabled (0) |
+| Column Name    | Data Type    | Constraints                         | Description                                                                 |
+| -------------- | ------------ | ----------------------------------- | --------------------------------------------------------------------------- |
+| OverrideId     | INT          | PRIMARY KEY, AUTO_INCREMENT         | Unique identifier for override record                                       |
+| ProcedureName  | VARCHAR(128) | NOT NULL                            | Name of stored procedure (e.g., "inv_inventory_Add_Item")                   |
+| ParameterName  | VARCHAR(128) | NOT NULL                            | Parameter name WITHOUT prefix (e.g., "UserID")                              |
+| OverridePrefix | VARCHAR(10)  | NOT NULL                            | Prefix to use (e.g., "p*", "in*", "" for no prefix)                         |
+| Reason         | VARCHAR(500) | NULL                                | Why this override exists (e.g., "Legacy 2020 procedure", "Vendor-supplied") |
+| CreatedBy      | VARCHAR(50)  | NOT NULL                            | Username who created the override                                           |
+| CreatedDate    | DATETIME     | NOT NULL, DEFAULT CURRENT_TIMESTAMP | When override was created                                                   |
+| ModifiedBy     | VARCHAR(50)  | NULL                                | Username who last modified the override                                     |
+| ModifiedDate   | DATETIME     | NULL                                | When override was last modified                                             |
+| IsActive       | TINYINT(1)   | NOT NULL, DEFAULT 1                 | Whether override is currently active (1) or disabled (0)                    |
 
 **Indexes**:
+
 ```sql
 UNIQUE KEY UQ_ProcParam (ProcedureName, ParameterName)  -- Prevent duplicate overrides
 INDEX IDX_ProcName (ProcedureName)                      -- Fast lookup by procedure
@@ -43,35 +44,37 @@ INDEX IDX_IsActive (IsActive)                           -- Filter active overrid
 ```
 
 **Relationships**:
-- References `usr_users` table via CreatedBy and ModifiedBy (foreign key not enforced for simplicity)
-- No direct foreign keys to INFORMATION_SCHEMA (stored procedures are metadata)
+
+-   References `usr_users` table via CreatedBy and ModifiedBy (foreign key not enforced for simplicity)
+-   No direct foreign keys to INFORMATION_SCHEMA (stored procedures are metadata)
 
 **Validation Rules**:
-- ProcedureName must not be empty
-- ParameterName must not be empty
-- OverridePrefix can be empty string (for no-prefix procedures)
-- Unique constraint enforces one override per procedure-parameter pair
-- IsActive allows soft-delete pattern (set to 0 instead of DELETE)
+
+-   ProcedureName must not be empty
+-   ParameterName must not be empty
+-   OverridePrefix can be empty string (for no-prefix procedures)
+-   Unique constraint enforces one override per procedure-parameter pair
+-   IsActive allows soft-delete pattern (set to 0 instead of DELETE)
 
 **Example Records**:
 
 ```sql
 -- Legacy procedure with in_ prefix
-INSERT INTO sys_parameter_prefix_overrides 
+INSERT INTO sys_parameter_prefix_overrides
 (ProcedureName, ParameterName, OverridePrefix, Reason, CreatedBy, IsActive)
-VALUES 
+VALUES
 ('sys_old_procedure', 'UserID', 'in_', 'Legacy 2020 procedure uses in_ convention', 'JOHNK', 1);
 
 -- Vendor procedure with custom prefix
-INSERT INTO sys_parameter_prefix_overrides 
+INSERT INTO sys_parameter_prefix_overrides
 (ProcedureName, ParameterName, OverridePrefix, Reason, CreatedBy, IsActive)
-VALUES 
+VALUES
 ('vendor_import_data', 'ImportID', 'vnd_', 'Vendor-supplied procedure, cannot modify', 'JOHNK', 1);
 
 -- Procedure with no prefix (rare but exists)
-INSERT INTO sys_parameter_prefix_overrides 
+INSERT INTO sys_parameter_prefix_overrides
 (ProcedureName, ParameterName, OverridePrefix, Reason, CreatedBy, IsActive)
-VALUES 
+VALUES
 ('md_legacy_check', 'ItemType', '', 'Old procedure has no parameter prefixes', 'JOHNK', 1);
 ```
 
@@ -79,11 +82,11 @@ VALUES
 
 ## Application Data Models (C# POCOs)
 
-### 2. Model_ParameterPrefixOverride
+### 2. Model_ParameterPrefix_Override
 
 **Purpose**: C# representation of database override record for in-memory operations.
 
-**File**: `Models/Model_ParameterPrefixOverride.cs`
+**File**: `Models/Model_ParameterPrefix_Override.cs`
 
 **Properties**:
 
@@ -94,58 +97,58 @@ namespace MTM_WIP_Application_Winforms.Models
     /// Represents a parameter prefix override for a stored procedure parameter.
     /// Enables non-standard parameter naming without modifying the stored procedure itself.
     /// </summary>
-    public class Model_ParameterPrefixOverride
+    public class Model_ParameterPrefix_Override
     {
         /// <summary>
         /// Unique identifier for the override record
         /// </summary>
         public int OverrideId { get; set; }
-        
+
         /// <summary>
         /// Name of the stored procedure (e.g., "inv_inventory_Add_Item")
         /// </summary>
         public string ProcedureName { get; set; } = string.Empty;
-        
+
         /// <summary>
         /// Parameter name WITHOUT prefix (e.g., "UserID")
         /// </summary>
         public string ParameterName { get; set; } = string.Empty;
-        
+
         /// <summary>
         /// Prefix to apply (e.g., "p_", "in_", "" for no prefix)
         /// </summary>
         public string OverridePrefix { get; set; } = string.Empty;
-        
+
         /// <summary>
         /// Reason for override existence
         /// </summary>
         public string? Reason { get; set; }
-        
+
         /// <summary>
         /// Username who created this override
         /// </summary>
         public string CreatedBy { get; set; } = string.Empty;
-        
+
         /// <summary>
         /// When override was created
         /// </summary>
         public DateTime CreatedDate { get; set; }
-        
+
         /// <summary>
         /// Username who last modified this override
         /// </summary>
         public string? ModifiedBy { get; set; }
-        
+
         /// <summary>
         /// When override was last modified
         /// </summary>
         public DateTime? ModifiedDate { get; set; }
-        
+
         /// <summary>
         /// Whether override is currently active
         /// </summary>
         public bool IsActive { get; set; } = true;
-        
+
         /// <summary>
         /// Computed property: Full parameter name with prefix applied
         /// </summary>
@@ -155,11 +158,12 @@ namespace MTM_WIP_Application_Winforms.Models
 ```
 
 **Validation Rules** (enforced in DAO layer):
-- ProcedureName and ParameterName required (not null or empty)
-- OverridePrefix can be empty (valid for no-prefix procedures)
-- CreatedBy required
-- CreatedDate automatically set on insert
-- ModifiedBy/ModifiedDate set on update
+
+-   ProcedureName and ParameterName required (not null or empty)
+-   OverridePrefix can be empty (valid for no-prefix procedures)
+-   CreatedBy required
+-   CreatedDate automatically set on insert
+-   ModifiedBy/ModifiedDate set on update
 
 ---
 
@@ -258,7 +262,7 @@ public class Model_ProcedureParameter
 
 **Data Source**: `SELECT * FROM INFORMATION_SCHEMA.PARAMETERS WHERE SPECIFIC_SCHEMA = 'MTM_WIP_Application_Winforms' AND SPECIFIC_NAME = @ProcedureName ORDER BY ORDINAL_POSITION`
 
-**Computed Field**: `DetectedPrefix` extracts prefix from ParameterName (e.g., "p_UserID" → "p_")
+**Computed Field**: `DetectedPrefix` extracts prefix from ParameterName (e.g., "p*UserID" → "p*")
 
 ---
 
@@ -319,15 +323,16 @@ public class Model_GeneratedDaoMethod
     public string MethodName { get; set; } = string.Empty;
     public string GeneratedCode { get; set; } = string.Empty;
     public List<Model_ProcedureParameter> Parameters { get; set; } = new();
-    public string ReturnType { get; set; } = "Task<DaoResult<DataTable>>";
+    public string ReturnType { get; set; } = "Task<Model_Dao_Result<DataTable>>";
     public bool HasComplexityWarning => Parameters.Count > 10;
     public DateTime GeneratedDate { get; set; } = DateTime.Now;
 }
 ```
 
 **Computed Fields**:
-- `MethodName`: Derived from ProcedureName (e.g., "inv_inventory_Add_Item" → "AddItemAsync")
-- `HasComplexityWarning`: True if parameter count exceeds 10 (triggers warning comment in generated code)
+
+-   `MethodName`: Derived from ProcedureName (e.g., "inv_inventory_Add_Item" → "AddItemAsync")
+-   `HasComplexityWarning`: True if parameter count exceeds 10 (triggers warning comment in generated code)
 
 ---
 
@@ -344,7 +349,7 @@ Dao_ParameterPrefixOverrides.GetAllActiveAsync()
     ↓
 sys_parameter_prefix_overrides_Get_All stored procedure
     ↓
-Returns: List<Model_ParameterPrefixOverride>
+Returns: List<Model_ParameterPrefix_Override>
     ↓
 Store in static Dictionary<string, Dictionary<string, string>>
     Key1: ProcedureName
@@ -436,7 +441,7 @@ Query INFORMATION_SCHEMA.PARAMETERS for selected procedure
 Build Model_GeneratedDaoMethod:
     - Parse parameters into C# Dictionary construction
     - Generate XML documentation comments
-    - Generate method signature (async Task<DaoResult<DataTable>>)
+    - Generate method signature (async Task<Model_Dao_Result<DataTable>>)
     - Generate Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync call
     - Generate try-catch with Dao_ErrorLog.HandleException_GeneralError_CloseApp
     ↓
@@ -454,7 +459,7 @@ Code copied for pasting into DAO class
 ### Parameter Prefix Override Lifecycle
 
 ```
-[Not Exists] 
+[Not Exists]
     ↓ (User clicks "Add Override")
 [Created] (IsActive = 1, CreatedBy set, CreatedDate set)
     ↓ (User clicks "Edit Override")
@@ -486,76 +491,87 @@ Code copied for pasting into DAO class
 ## Data Validation Rules Summary
 
 ### Database-Level Validation (Enforced by MySQL)
-- UNIQUE constraint on (ProcedureName, ParameterName)
-- NOT NULL constraints on required fields
-- DEFAULT values for timestamps and IsActive flag
+
+-   UNIQUE constraint on (ProcedureName, ParameterName)
+-   NOT NULL constraints on required fields
+-   DEFAULT values for timestamps and IsActive flag
 
 ### Application-Level Validation (Enforced in DAO layer)
-- ProcedureName must not be empty or whitespace
-- ParameterName must not be empty or whitespace
-- OverridePrefix can be empty (valid for no-prefix procedures)
-- CreatedBy must be populated (current user)
-- Warn (but allow) if procedure doesn't exist in INFORMATION_SCHEMA
+
+-   ProcedureName must not be empty or whitespace
+-   ParameterName must not be empty or whitespace
+-   OverridePrefix can be empty (valid for no-prefix procedures)
+-   CreatedBy must be populated (current user)
+-   Warn (but allow) if procedure doesn't exist in INFORMATION_SCHEMA
 
 ### UI-Level Validation (Enforced in UserControl)
-- Required field indicators in Parameter Prefix Maintenance form
-- Confirmation dialog before delete operations
-- Warning dialog when saving override for non-existent procedure
-- Character limits enforced in TextBox controls (MaxLength properties)
+
+-   Required field indicators in Parameter Prefix Maintenance form
+-   Confirmation dialog before delete operations
+-   Warning dialog when saving override for non-existent procedure
+-   Character limits enforced in TextBox controls (MaxLength properties)
 
 ---
 
 ## Performance Considerations
 
 ### Caching Strategy
-- **Parameter prefix overrides**: Cached in memory at startup, refreshed only on explicit reload or application restart
-- **INFORMATION_SCHEMA queries**: No caching (manual refresh in Schema Inspector)
-- **Procedure call hierarchy**: Loaded from JSON file once at control initialization
-- **Debug dashboard output**: In-memory list with auto-truncation at 1000 lines
+
+-   **Parameter prefix overrides**: Cached in memory at startup, refreshed only on explicit reload or application restart
+-   **INFORMATION_SCHEMA queries**: No caching (manual refresh in Schema Inspector)
+-   **Procedure call hierarchy**: Loaded from JSON file once at control initialization
+-   **Debug dashboard output**: In-memory list with auto-truncation at 1000 lines
 
 ### Query Optimization
-- **INFORMATION_SCHEMA queries**: Use WHERE clauses to filter by TABLE_SCHEMA and TABLE_NAME
-- **Parameter prefix overrides**: Indexed on ProcedureName for O(1) lookup
-- **Procedure call hierarchy**: JSON parsing done once, not on every search
+
+-   **INFORMATION_SCHEMA queries**: Use WHERE clauses to filter by TABLE_SCHEMA and TABLE_NAME
+-   **Parameter prefix overrides**: Indexed on ProcedureName for O(1) lookup
+-   **Procedure call hierarchy**: JSON parsing done once, not on every search
 
 ### Memory Management
-- Debug dashboard list limited to 1000 entries (oldest 100 removed when limit hit)
-- Large INFORMATION_SCHEMA result sets displayed in DataGridView (virtual scrolling)
-- Procedure call hierarchy JSON file (~500KB) loaded into memory structure
-- Generated DAO code stored in TextBox control (bounded by procedure complexity)
+
+-   Debug dashboard list limited to 1000 entries (oldest 100 removed when limit hit)
+-   Large INFORMATION_SCHEMA result sets displayed in DataGridView (virtual scrolling)
+-   Procedure call hierarchy JSON file (~500KB) loaded into memory structure
+-   Generated DAO code stored in TextBox control (bounded by procedure complexity)
 
 ---
 
 ## Security Considerations
 
 ### Access Control
-- Developer tools access restricted by role check (Admin + Developer flag)
-- Parameter prefix overrides tracked by CreatedBy/ModifiedBy audit fields
-- No ability to modify database schema through Schema Inspector (read-only)
-- Generated code requires manual review before deployment
+
+-   Developer tools access restricted by role check (Admin + Developer flag)
+-   Parameter prefix overrides tracked by CreatedBy/ModifiedBy audit fields
+-   No ability to modify database schema through Schema Inspector (read-only)
+-   Generated code requires manual review before deployment
 
 ### Data Sensitivity
-- No passwords or secrets stored in parameter prefix overrides
-- INFORMATION_SCHEMA queries reveal database structure (acceptable for developers)
-- Debug dashboard output may contain business data (ephemeral only, not persisted)
-- Procedure call hierarchy reveals code organization (acceptable for developers)
+
+-   No passwords or secrets stored in parameter prefix overrides
+-   INFORMATION_SCHEMA queries reveal database structure (acceptable for developers)
+-   Debug dashboard output may contain business data (ephemeral only, not persisted)
+-   Procedure call hierarchy reveals code organization (acceptable for developers)
 
 ---
 
 ## Migration Strategy
 
 ### Initial Deployment
+
 1. Create `sys_parameter_prefix_overrides` table in Development database
 2. Deploy 5 CRUD stored procedures
 3. Grant JOHNK Developer role
 4. Application loads empty override cache (no overrides yet)
 
 ### Gradual Population
+
 1. As Phase 2.5 refactoring proceeds, developers add overrides for non-standard procedures
 2. Override table acts as "technical debt tracker" - goal is empty table when standardization complete
 3. Each override documents reason (legacy, vendor, temporary)
 
 ### Production Deployment
+
 1. Deploy table and stored procedures to Production
 2. Manually migrate overrides from Development if needed (or let Production discover its own needs)
 3. Production overrides remain independent from Development overrides
@@ -564,45 +580,49 @@ Code copied for pasting into DAO class
 
 ## Future Enhancements (Out of Scope)
 
-- Import/export override sets between environments
-- Automated detection of needed overrides by analyzing INFORMATION_SCHEMA vs code
-- Override usage statistics (how often each override is used)
-- Automated cleanup of unused overrides (procedures that no longer exist)
-- Version history tracking (separate audit table for override changes)
-- Bulk override operations (add multiple overrides for one procedure at once)
+-   Import/export override sets between environments
+-   Automated detection of needed overrides by analyzing INFORMATION_SCHEMA vs code
+-   Override usage statistics (how often each override is used)
+-   Automated cleanup of unused overrides (procedures that no longer exist)
+-   Version history tracking (separate audit table for override changes)
+-   Bulk override operations (add multiple overrides for one procedure at once)
 
 ---
 
 ## Appendix: Sample Queries
 
 ### Get All Active Overrides
+
 ```sql
-SELECT * FROM sys_parameter_prefix_overrides 
-WHERE IsActive = 1 
+SELECT * FROM sys_parameter_prefix_overrides
+WHERE IsActive = 1
 ORDER BY ProcedureName, ParameterName;
 ```
 
 ### Get Overrides for Specific Procedure
+
 ```sql
-SELECT * FROM sys_parameter_prefix_overrides 
-WHERE ProcedureName = 'inv_inventory_Add_Item' 
+SELECT * FROM sys_parameter_prefix_overrides
+WHERE ProcedureName = 'inv_inventory_Add_Item'
 AND IsActive = 1;
 ```
 
 ### Find Unused Overrides (Procedures That No Longer Exist)
+
 ```sql
 SELECT DISTINCT spo.ProcedureName
 FROM sys_parameter_prefix_overrides spo
-LEFT JOIN INFORMATION_SCHEMA.ROUTINES r 
-    ON spo.ProcedureName = r.ROUTINE_NAME 
+LEFT JOIN INFORMATION_SCHEMA.ROUTINES r
+    ON spo.ProcedureName = r.ROUTINE_NAME
     AND r.ROUTINE_SCHEMA = 'MTM_WIP_Application_Winforms'
-WHERE spo.IsActive = 1 
+WHERE spo.IsActive = 1
 AND r.ROUTINE_NAME IS NULL;
 ```
 
 ### Override History Audit
+
 ```sql
-SELECT 
+SELECT
     ProcedureName,
     ParameterName,
     OverridePrefix,

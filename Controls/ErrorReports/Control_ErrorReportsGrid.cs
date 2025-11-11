@@ -22,7 +22,7 @@ namespace MTM_WIP_Application_Winforms.Controls.ErrorReports
     private readonly BindingSource _bindingSource = new();
     private bool _isLoading;
     private bool _hasLoaded;
-    private Model_ErrorReportFilter? _lastFilter;
+    private Model_ErrorReport_Core_Filter? _lastFilter;
     private const string AllUsersOption = "[ All Users ]";
     private const string AllMachinesOption = "[ All Machines ]";
     private const string AllStatusesOption = "[ All Statuses ]";
@@ -33,7 +33,7 @@ namespace MTM_WIP_Application_Winforms.Controls.ErrorReports
 
         public bool IsLoading => _isLoading;
 
-        internal Model_ErrorReportFilter? LastFilter => _lastFilter;
+        internal Model_ErrorReport_Core_Filter? LastFilter => _lastFilter;
 
         public int? SelectedReportId
         {
@@ -79,7 +79,7 @@ namespace MTM_WIP_Application_Winforms.Controls.ErrorReports
 
         #region Database Operations
 
-    internal async Task LoadReportsAsync(Model_ErrorReportFilter? filter = null, Helper_StoredProcedureProgress? progressHelper = null)
+    internal async Task LoadReportsAsync(Model_ErrorReport_Core_Filter? filter = null, Helper_StoredProcedureProgress? progressHelper = null)
         {
             if (_isLoading)
             {
@@ -129,11 +129,11 @@ namespace MTM_WIP_Application_Winforms.Controls.ErrorReports
             lblResultCount.Text = BuildResultCountText(0);
             if (exception != null)
             {
-                Service_ErrorHandler.HandleException(exception, ErrorSeverity.Medium, controlName: Name);
+                Service_ErrorHandler.HandleException(exception, Enum_ErrorSeverity.Medium, controlName: Name);
             }
             else
             {
-                Service_ErrorHandler.HandleException(new InvalidOperationException(message), ErrorSeverity.Medium, controlName: Name);
+                Service_ErrorHandler.HandleException(new InvalidOperationException(message), Enum_ErrorSeverity.Medium, controlName: Name);
             }
         }
 
@@ -280,7 +280,7 @@ namespace MTM_WIP_Application_Winforms.Controls.ErrorReports
                 {
                     Service_ErrorHandler.HandleException(
                         new InvalidOperationException(result.ErrorMessage ?? "Failed to load user list."),
-                        ErrorSeverity.Low,
+                        Enum_ErrorSeverity.Low,
                         controlName: Name);
                 }
 
@@ -322,7 +322,7 @@ namespace MTM_WIP_Application_Winforms.Controls.ErrorReports
                 {
                     Service_ErrorHandler.HandleException(
                         new InvalidOperationException(result.ErrorMessage ?? "Failed to load machine list."),
-                        ErrorSeverity.Low,
+                        Enum_ErrorSeverity.Low,
                         controlName: Name);
                 }
 
@@ -415,9 +415,9 @@ namespace MTM_WIP_Application_Winforms.Controls.ErrorReports
             await LoadReportsAsync(null);
         }
 
-        private Model_ErrorReportFilter BuildFilterFromControls()
+        private Model_ErrorReport_Core_Filter BuildFilterFromControls()
         {
-            var filter = new Model_ErrorReportFilter();
+            var filter = new Model_ErrorReport_Core_Filter();
 
             if (dtpDateFrom.Checked)
             {

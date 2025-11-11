@@ -10,22 +10,22 @@
 
 ## Input Parameters
 
-| Parameter | Type | Required | Default | Description | Example |
-|-----------|------|----------|---------|-------------|---------|
-| p_DateFrom | DATETIME | No | NULL | Start of date range filter (inclusive) | '2025-10-18 00:00:00' |
-| p_DateTo | DATETIME | No | NULL | End of date range filter (inclusive) | '2025-10-25 23:59:59' |
-| p_UserName | VARCHAR(100) | No | NULL | Filter by specific username (exact match) | 'John.Smith' |
-| p_MachineName | VARCHAR(200) | No | NULL | Filter by specific machine name (exact match) | 'DESK-01' |
-| p_Status | VARCHAR(20) | No | NULL | Filter by status: 'New', 'Reviewed', 'Resolved' | 'New' |
-| p_SearchText | VARCHAR(255) | No | NULL | Search term for LIKE query across text fields | 'database' |
+| Parameter     | Type         | Required | Default | Description                                     | Example               |
+| ------------- | ------------ | -------- | ------- | ----------------------------------------------- | --------------------- |
+| p_DateFrom    | DATETIME     | No       | NULL    | Start of date range filter (inclusive)          | '2025-10-18 00:00:00' |
+| p_DateTo      | DATETIME     | No       | NULL    | End of date range filter (inclusive)            | '2025-10-25 23:59:59' |
+| p_UserName    | VARCHAR(100) | No       | NULL    | Filter by specific username (exact match)       | 'John.Smith'          |
+| p_MachineName | VARCHAR(200) | No       | NULL    | Filter by specific machine name (exact match)   | 'DESK-01'             |
+| p_Status      | VARCHAR(20)  | No       | NULL    | Filter by status: 'New', 'Reviewed', 'Resolved' | 'New'                 |
+| p_SearchText  | VARCHAR(255) | No       | NULL    | Search term for LIKE query across text fields   | 'database'            |
 
 ---
 
 ## Output Parameters
 
-| Parameter | Type | Description | Values |
-|-----------|------|-------------|--------|
-| p_Status | INT | Operation result code | 0 = Success<br>1 = Success (no data)<br>-1 = Database error |
+| Parameter  | Type         | Description                   | Values                                                                               |
+| ---------- | ------------ | ----------------------------- | ------------------------------------------------------------------------------------ |
+| p_Status   | INT          | Operation result code         | 0 = Success<br>1 = Success (no data)<br>-1 = Database error                          |
 | p_ErrorMsg | VARCHAR(500) | Human-readable status message | 'Retrieved N error reports'<br>'No error reports found'<br>'Database error occurred' |
 
 ---
@@ -34,24 +34,24 @@
 
 Returns a DataTable with the following columns:
 
-| Column | Type | Nullable | Description | Notes |
-|--------|------|----------|-------------|-------|
-| ReportID | INT | No | Primary key | Auto-increment ID |
-| ReportDate | DATETIME | No | When error occurred | Format: 'yyyy-MM-dd HH:mm:ss' |
-| UserName | VARCHAR(100) | No | Windows username | Submitter of report |
-| MachineName | VARCHAR(200) | Yes | Computer name | May be NULL |
-| ErrorType | VARCHAR(255) | Yes | Exception type name | May be NULL |
-| ErrorSummary | TEXT | Yes | User-friendly error message | Truncate in UI to 100 chars |
-| Status | VARCHAR(20) | No | Current status | 'New', 'Reviewed', 'Resolved' |
-| ReviewedBy | VARCHAR(100) | Yes | Developer who reviewed | NULL if Status='New' |
-| ReviewedDate | DATETIME | Yes | When status changed | NULL if Status='New' |
+| Column       | Type         | Nullable | Description                 | Notes                         |
+| ------------ | ------------ | -------- | --------------------------- | ----------------------------- |
+| ReportID     | INT          | No       | Primary key                 | Auto-increment ID             |
+| ReportDate   | DATETIME     | No       | When error occurred         | Format: 'yyyy-MM-dd HH:mm:ss' |
+| UserName     | VARCHAR(100) | No       | Windows username            | Submitter of report           |
+| MachineName  | VARCHAR(200) | Yes      | Computer name               | May be NULL                   |
+| ErrorType    | VARCHAR(255) | Yes      | Exception type name         | May be NULL                   |
+| ErrorSummary | TEXT         | Yes      | User-friendly error message | Truncate in UI to 100 chars   |
+| Status       | VARCHAR(20)  | No       | Current status              | 'New', 'Reviewed', 'Resolved' |
+| ReviewedBy   | VARCHAR(100) | Yes      | Developer who reviewed      | NULL if Status='New'          |
+| ReviewedDate | DATETIME     | Yes      | When status changed         | NULL if Status='New'          |
 
 ---
 
 ## SQL Logic
 
 ```sql
-SELECT 
+SELECT
     ReportID,
     ReportDate,
     UserName,
@@ -68,7 +68,7 @@ WHERE
     (p_UserName IS NULL OR UserName = p_UserName) AND
     (p_MachineName IS NULL OR MachineName = p_MachineName) AND
     (p_Status IS NULL OR Status = p_Status) AND
-    (p_SearchText IS NULL OR 
+    (p_SearchText IS NULL OR
         ErrorSummary LIKE CONCAT('%', p_SearchText, '%') OR
         UserNotes LIKE CONCAT('%', p_SearchText, '%') OR
         TechnicalDetails LIKE CONCAT('%', p_SearchText, '%')
@@ -77,9 +77,10 @@ ORDER BY ReportDate DESC;
 ```
 
 **Performance Notes**:
-- Indexes on Status, ReportDate, UserName, MachineName support fast filtering
-- LIKE queries on TEXT fields may be slow with large datasets
-- Consider FULLTEXT index if search performance degrades
+
+-   Indexes on Status, ReportDate, UserName, MachineName support fast filtering
+-   LIKE queries on TEXT fields may be slow with large datasets
+-   Consider FULLTEXT index if search performance degrades
 
 ---
 
@@ -87,7 +88,7 @@ ORDER BY ReportDate DESC;
 
 ```csharp
 // Build filter parameters
-var filter = new Model_ErrorReportFilter
+var filter = new Model_ErrorReport_Core_Filter
 {
     DateFrom = DateTime.Parse("2025-10-18"),
     DateTo = DateTime.Parse("2025-10-25").AddDays(1).AddTicks(-1),
@@ -122,7 +123,7 @@ else
 {
     Service_ErrorHandler.HandleException(
         result.Exception,
-        ErrorSeverity.Medium,
+        Enum_ErrorSeverity.Medium,
         message: result.StatusMessage);
 }
 ```
@@ -132,36 +133,43 @@ else
 ## Test Cases
 
 ### Test Case 1: No Filters (All Reports)
+
 **Input**: All parameters NULL  
 **Expected Output**: All error reports, ordered by ReportDate DESC  
 **Expected Status**: 0 (Success)
 
 ### Test Case 2: Date Range Filter
+
 **Input**: DateFrom='2025-10-18', DateTo='2025-10-25'  
 **Expected Output**: Reports between dates (inclusive)  
 **Expected Status**: 0 (Success)
 
 ### Test Case 3: Status Filter
+
 **Input**: Status='New'  
 **Expected Output**: Only reports with Status='New'  
 **Expected Status**: 0 (Success)
 
 ### Test Case 4: Search Text
+
 **Input**: SearchText='database'  
 **Expected Output**: Reports where ErrorSummary, UserNotes, or TechnicalDetails contain 'database'  
 **Expected Status**: 0 (Success)
 
 ### Test Case 5: Combined Filters
+
 **Input**: DateFrom='2025-10-18', Status='New', SearchText='database'  
 **Expected Output**: Reports matching all criteria  
 **Expected Status**: 0 (Success)
 
 ### Test Case 6: No Matches
+
 **Input**: DateFrom='2025-01-01', DateTo='2025-01-01'  
 **Expected Output**: Empty DataTable  
 **Expected Status**: 1 (Success, no data)
 
 ### Test Case 7: Invalid Date Range
+
 **Input**: DateFrom='2025-10-25', DateTo='2025-10-18' (From > To)  
 **Expected Output**: Empty DataTable (no matches)  
 **Expected Status**: 1 (Success, no data)  
@@ -181,28 +189,30 @@ else
 
 ## Error Handling
 
-- **Database connection failure**: Returns p_Status=-1, p_ErrorMsg='Database error occurred'
-- **SQL syntax error**: Returns p_Status=-1, p_ErrorMsg with error details
-- **No results found**: Returns p_Status=1, p_ErrorMsg='No error reports found', empty DataTable
-- **Success with data**: Returns p_Status=0, p_ErrorMsg='Retrieved N error reports'
+-   **Database connection failure**: Returns p_Status=-1, p_ErrorMsg='Database error occurred'
+-   **SQL syntax error**: Returns p_Status=-1, p_ErrorMsg with error details
+-   **No results found**: Returns p_Status=1, p_ErrorMsg='No error reports found', empty DataTable
+-   **Success with data**: Returns p_Status=0, p_ErrorMsg='Retrieved N error reports'
 
 ---
 
 ## Performance Benchmarks
 
 **Target Performance** (from spec.md):
-- 1000 reports → 50 matching: < 500ms
-- 100 reports with filters: < 400ms
+
+-   1000 reports → 50 matching: < 500ms
+-   100 reports with filters: < 400ms
 
 **Optimization Strategies**:
-- Use indexed columns for WHERE filters (Status, ReportDate, UserName, MachineName)
-- LIMIT clause if implementing paging (TOP 1000)
-- Avoid LIKE on TEXT fields when possible (use exact match filters first)
+
+-   Use indexed columns for WHERE filters (Status, ReportDate, UserName, MachineName)
+-   LIMIT clause if implementing paging (TOP 1000)
+-   Avoid LIKE on TEXT fields when possible (use exact match filters first)
 
 ---
 
 ## Change History
 
-| Date | Version | Changes | Author |
-|------|---------|---------|--------|
-| 2025-10-25 | 1.0.0 | Initial contract definition | AI Planning Agent |
+| Date       | Version | Changes                     | Author            |
+| ---------- | ------- | --------------------------- | ----------------- |
+| 2025-10-25 | 1.0.0   | Initial contract definition | AI Planning Agent |

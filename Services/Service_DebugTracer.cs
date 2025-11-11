@@ -23,9 +23,9 @@ internal static class Service_DebugTracer
     private static readonly Dictionary<string, int> _callDepth = new();
     private static readonly object _traceLock = new();
     private static bool _isInitialized = false;
-    
+
     // Configuration
-    private static DebugLevel _currentLevel = DebugLevel.Medium;
+    private static Enum_DebugLevel _currentLevel = Enum_DebugLevel.Medium;
     private static bool _traceDatabase = true;
     private static bool _traceBusinessLogic = true;
     private static bool _traceUIActions = true;
@@ -38,7 +38,7 @@ internal static class Service_DebugTracer
     /// <summary>
     /// Gets or sets the current debug tracing level
     /// </summary>
-    public static DebugLevel CurrentLevel
+    public static Enum_DebugLevel CurrentLevel
     {
         get => _currentLevel;
         set => _currentLevel = value;
@@ -87,14 +87,14 @@ internal static class Service_DebugTracer
     /// <summary>
     /// Initialize the debug tracing system
     /// </summary>
-    public static void Initialize(DebugLevel level = DebugLevel.Medium)
+    public static void Initialize(Enum_DebugLevel level = Enum_DebugLevel.Medium)
     {
         if (_isInitialized) return;
 
         _currentLevel = level;
         _isInitialized = true;
 
-        LogTrace("🚀 DEBUG TRACER INITIALIZED", DebugLevel.Low, new Dictionary<string, object>
+        LogTrace("🚀 DEBUG TRACER INITIALIZED", Enum_DebugLevel.Low, new Dictionary<string, object>
         {
             ["Level"] = level.ToString(),
             ["TraceDatabase"] = _traceDatabase,
@@ -119,7 +119,7 @@ internal static class Service_DebugTracer
     public static void TraceMethodEntry(Dictionary<string, object>? parameters = null,
         [CallerMemberName] string callerName = "",
         string controlName = "",
-        DebugLevel level = DebugLevel.Medium)
+        Enum_DebugLevel level = Enum_DebugLevel.Medium)
     {
         if (!ShouldTrace(level)) return;
 
@@ -165,7 +165,7 @@ internal static class Service_DebugTracer
     public static void TraceMethodExit(object? returnValue = null,
         [CallerMemberName] string callerName = "",
         string controlName = "",
-        DebugLevel level = DebugLevel.Medium)
+        Enum_DebugLevel level = Enum_DebugLevel.Medium)
     {
         if (!ShouldTrace(level)) return;
 
@@ -229,17 +229,17 @@ internal static class Service_DebugTracer
     /// <param name="parameters">SQL parameters</param>
     /// <param name="connectionString">Connection string (sanitized for logging)</param>
     /// <param name="callerName">Method name (auto-filled)</param>
-    public static void TraceDatabaseStart(string operation, string target, 
+    public static void TraceDatabaseStart(string operation, string target,
         Dictionary<string, object>? parameters = null,
         string connectionString = "",
         [CallerMemberName] string callerName = "")
     {
-        if (!ShouldTrace(DebugLevel.Medium) || !_traceDatabase) return;
+        if (!ShouldTrace(Enum_DebugLevel.Medium) || !_traceDatabase) return;
 
         var logData = new Dictionary<string, object>
         {
             ["Action"] = "DATABASE_START",
-            ["p_Operation"] = operation,
+            ["Operation"] = operation,
             ["Target"] = target,
             ["Caller"] = callerName,
             ["Server"] = ExtractServerFromConnectionString(connectionString),
@@ -252,7 +252,7 @@ internal static class Service_DebugTracer
             logData["Parameters"] = SerializeParameters(parameters);
         }
 
-        LogTrace($"🗄️ DB {operation} START: {target}", DebugLevel.Medium, logData);
+        LogTrace($"🗄️ DB {operation} START: {target}", Enum_DebugLevel.Medium, logData);
     }
 
     /// <summary>
@@ -270,12 +270,12 @@ internal static class Service_DebugTracer
         long elapsedMs = 0,
         [CallerMemberName] string callerName = "")
     {
-        if (!ShouldTrace(DebugLevel.Medium) || !_traceDatabase) return;
+        if (!ShouldTrace(Enum_DebugLevel.Medium) || !_traceDatabase) return;
 
         var logData = new Dictionary<string, object>
         {
             ["Action"] = "DATABASE_COMPLETE",
-            ["p_Operation"] = operation,
+            ["Operation"] = operation,
             ["Target"] = target,
             ["Caller"] = callerName,
             ["RowsAffected"] = rowsAffected,
@@ -289,7 +289,7 @@ internal static class Service_DebugTracer
         }
 
         var performance = elapsedMs > 0 ? $" ({elapsedMs}ms)" : "";
-        LogTrace($"✅ DB {operation} COMPLETE: {target}{performance} - {rowsAffected} rows", DebugLevel.Medium, logData);
+        LogTrace($"✅ DB {operation} COMPLETE: {target}{performance} - {rowsAffected} rows", Enum_DebugLevel.Medium, logData);
     }
 
     /// <summary>
@@ -312,7 +312,7 @@ internal static class Service_DebugTracer
         long elapsedMs = 0,
         [CallerMemberName] string callerName = "")
     {
-        if (!ShouldTrace(DebugLevel.High) || !_traceDatabase) return;
+        if (!ShouldTrace(Enum_DebugLevel.High) || !_traceDatabase) return;
 
         var logData = new Dictionary<string, object>
         {
@@ -347,7 +347,7 @@ internal static class Service_DebugTracer
         // Status codes: 1=success with data, 0=success without data, negative=error
         var statusIcon = status >= 0 ? "✅" : "❌";
         var performance = elapsedMs > 0 ? $" ({elapsedMs}ms)" : "";
-        LogTrace($"{statusIcon} PROCEDURE {procedureName}{performance} - Status: {status}", DebugLevel.High, logData);
+        LogTrace($"{statusIcon} PROCEDURE {procedureName}{performance} - Status: {status}", Enum_DebugLevel.High, logData);
     }
 
     #endregion
@@ -370,7 +370,7 @@ internal static class Service_DebugTracer
         Dictionary<string, object>? validationResults = null,
         [CallerMemberName] string callerName = "")
     {
-        if (!ShouldTrace(DebugLevel.Medium) || !_traceBusinessLogic) return;
+        if (!ShouldTrace(Enum_DebugLevel.Medium) || !_traceBusinessLogic) return;
 
         var logData = new Dictionary<string, object>
         {
@@ -400,7 +400,7 @@ internal static class Service_DebugTracer
             logData["ValidationResults"] = SerializeParameters(validationResults);
         }
 
-        LogTrace($"📊 BUSINESS LOGIC: {logicName}", DebugLevel.Medium, logData);
+        LogTrace($"📊 BUSINESS LOGIC: {logicName}", Enum_DebugLevel.Medium, logData);
     }
 
     /// <summary>
@@ -419,7 +419,7 @@ internal static class Service_DebugTracer
         List<string>? errorMessages = null,
         [CallerMemberName] string callerName = "")
     {
-        if (!ShouldTrace(DebugLevel.High) || !_traceBusinessLogic) return;
+        if (!ShouldTrace(Enum_DebugLevel.High) || !_traceBusinessLogic) return;
 
         var logData = new Dictionary<string, object>
         {
@@ -446,7 +446,7 @@ internal static class Service_DebugTracer
         }
 
         var icon = isValid ? "✅" : "❌";
-        LogTrace($"{icon} VALIDATION {validationType}: {(isValid ? "PASSED" : "FAILED")}", DebugLevel.High, logData);
+        LogTrace($"{icon} VALIDATION {validationType}: {(isValid ? "PASSED" : "FAILED")}", Enum_DebugLevel.High, logData);
     }
 
     #endregion
@@ -466,7 +466,7 @@ internal static class Service_DebugTracer
         object? userInput = null,
         [CallerMemberName] string callerName = "")
     {
-        if (!ShouldTrace(DebugLevel.Low) || !_traceUIActions) return;
+        if (!ShouldTrace(Enum_DebugLevel.Low) || !_traceUIActions) return;
 
         var logData = new Dictionary<string, object>
         {
@@ -487,7 +487,7 @@ internal static class Service_DebugTracer
             logData["UserInput"] = SerializeValue(userInput);
         }
 
-        LogTrace($"🖱️ UI ACTION: {actionType} on {controlName}", DebugLevel.Low, logData);
+        LogTrace($"🖱️ UI ACTION: {actionType} on {controlName}", Enum_DebugLevel.Low, logData);
     }
 
     #endregion
@@ -510,12 +510,12 @@ internal static class Service_DebugTracer
             _methodTimers[key] = Stopwatch.StartNew();
         }
 
-        if (ShouldTrace(DebugLevel.High))
+        if (ShouldTrace(Enum_DebugLevel.High))
         {
-            LogTrace($"⏱️ PERFORMANCE START: {operationName}", DebugLevel.High, new Dictionary<string, object>
+            LogTrace($"⏱️ PERFORMANCE START: {operationName}", Enum_DebugLevel.High, new Dictionary<string, object>
             {
                 ["Action"] = "PERFORMANCE_START",
-                ["p_Operation"] = operationName,
+                ["Operation"] = operationName,
                 ["Caller"] = callerName,
                 ["Key"] = key
             });
@@ -544,15 +544,15 @@ internal static class Service_DebugTracer
             }
         }
 
-        if (ShouldTrace(DebugLevel.High))
+        if (ShouldTrace(Enum_DebugLevel.High))
         {
             var parts = performanceKey.Split(':');
             var operation = parts.Length > 1 ? parts[1] : "Unknown";
-            
+
             var logData = new Dictionary<string, object>
             {
                 ["Action"] = "PERFORMANCE_COMPLETE",
-                ["p_Operation"] = operation,
+                ["Operation"] = operation,
                 ["ElapsedMs"] = elapsedMs,
                 ["Key"] = performanceKey
             };
@@ -565,7 +565,7 @@ internal static class Service_DebugTracer
                 }
             }
 
-            LogTrace($"⏱️ PERFORMANCE COMPLETE: {operation} ({elapsedMs}ms)", DebugLevel.High, logData);
+            LogTrace($"⏱️ PERFORMANCE COMPLETE: {operation} ({elapsedMs}ms)", Enum_DebugLevel.High, logData);
         }
 
         return elapsedMs;
@@ -575,12 +575,12 @@ internal static class Service_DebugTracer
 
     #region Helper Methods
 
-    private static bool ShouldTrace(DebugLevel level)
+    private static bool ShouldTrace(Enum_DebugLevel level)
     {
         return _isInitialized && level <= _currentLevel;
     }
 
-    private static void LogTrace(string message, DebugLevel level, Dictionary<string, object>? data = null)
+    private static void LogTrace(string message, Enum_DebugLevel level, Dictionary<string, object>? data = null)
     {
         try
         {
@@ -595,12 +595,12 @@ internal static class Service_DebugTracer
             LoggingUtility.Log(formattedMessage);
 
             // If we have structured data, log it as JSON for detailed analysis
-            if (data?.Any() == true && level >= DebugLevel.High)
+            if (data?.Any() == true && level >= Enum_DebugLevel.High)
             {
                 try
                 {
-                    var jsonData = JsonSerializer.Serialize(data, new JsonSerializerOptions 
-                    { 
+                    var jsonData = JsonSerializer.Serialize(data, new JsonSerializerOptions
+                    {
                         WriteIndented = true,
                         DefaultIgnoreCondition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull,
                         Encoder = System.Text.Encodings.Web.JavaScriptEncoder.UnsafeRelaxedJsonEscaping // Prevent Unicode escaping
@@ -638,41 +638,41 @@ internal static class Service_DebugTracer
         if (value is Exception ex) return $"Exception: {ex.Message}";
         if (value is Type type) return $"Type: {type.FullName}";
         if (value is Color color) return $"Color[A={color.A}, R={color.R}, G={color.G}, B={color.B}]";
-        
+
         // Handle common .NET types that might cause serialization issues
         if (value.GetType().IsValueType || value is string)
         {
             return value.ToString() ?? "NULL";
         }
-        
+
         // Handle complex objects that might contain unsupported types
         try
         {
             var valueType = value.GetType();
-            
+
             // Check if this is a result type (StoredProcedureResult, etc.)
             if (valueType.IsGenericType)
             {
                 var genericTypeDef = valueType.GetGenericTypeDefinition();
                 var typeName = genericTypeDef.Name;
-                
+
                 if (typeName.Contains("Result") || typeName.Contains("StoredProcedure"))
                 {
                     // Create a safe representation of the result object
                     return CreateSafeResultRepresentation(value);
                 }
             }
-            
+
             // For other objects, try safe JSON serialization with protection
-            var options = new JsonSerializerOptions 
-            { 
+            var options = new JsonSerializerOptions
+            {
                 WriteIndented = false,
                 DefaultIgnoreCondition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull,
                 ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.IgnoreCycles,
                 MaxDepth = 2, // Limit depth to prevent issues
                 Encoder = System.Text.Encodings.Web.JavaScriptEncoder.UnsafeRelaxedJsonEscaping // Prevent Unicode escaping
             };
-            
+
             return JsonSerializer.Serialize(value, options);
         }
         catch (NotSupportedException)
@@ -701,7 +701,7 @@ internal static class Service_DebugTracer
                 {
                     var propValue = prop.GetValue(result);
                     string safeName = prop.Name;
-                    
+
                     if (propValue == null)
                     {
                         safeDict[safeName] = "NULL";

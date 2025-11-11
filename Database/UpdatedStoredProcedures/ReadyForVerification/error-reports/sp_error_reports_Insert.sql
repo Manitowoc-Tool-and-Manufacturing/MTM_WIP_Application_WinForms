@@ -1,4 +1,9 @@
 -- =============================================
+-- Drop procedure if it exists
+-- =============================================
+DROP PROCEDURE IF EXISTS `sp_error_reports_Insert`;//
+
+-- =============================================
 -- Stored Procedure: sp_error_reports_Insert
 -- Description: Inserts a new error report with user notes
 -- Created: 2025-10-25

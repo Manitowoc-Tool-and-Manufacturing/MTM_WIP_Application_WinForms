@@ -160,8 +160,8 @@ function generateDaoMethod(
 /// Executes ${procedureName} stored procedure.
 /// </summary>
 ${inParams.map((p) => `/// <param name="${p.name}">The ${p.name} parameter.</param>`).join("\n")}
-/// <returns>A DaoResult containing status, error message, and optional payload.</returns>
-public static async Task<DaoResult> ${methodName}(${paramList})
+/// <returns>A Model_Dao_Result containing status, error message, and optional payload.</returns>
+public static async Task<Model_Dao_Result> ${methodName}(${paramList})
 {
     var parameters = new Dictionary<string, object>
     {
@@ -177,7 +177,7 @@ ${paramDict}
     if (result.IsSuccess)
     {
         // TODO: Map DataTable to appropriate model
-        return new DaoResult
+        return new Model_Dao_Result
         {
             Success = true,
             Data = result.Payload,
@@ -187,7 +187,7 @@ ${paramDict}
     else
     {
         LoggingUtility.LogApplicationError(result.Exception, result.StatusMessage);
-        return new DaoResult
+        return new Model_Dao_Result
         {
             Success = false,
             Message = result.StatusMessage,

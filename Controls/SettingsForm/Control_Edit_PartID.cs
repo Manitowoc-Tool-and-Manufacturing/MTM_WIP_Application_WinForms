@@ -83,7 +83,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
                         ["InnerException"] = ex.InnerException?.Message ?? "None"
                     });
 
-                Service_ErrorHandler.HandleException(ex, ErrorSeverity.High, 
+                Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.High, 
                     controlName: nameof(Control_Edit_PartID));
             }
             
@@ -110,7 +110,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             }
             catch (Exception ex)
             {
-                Service_ErrorHandler.HandleException(ex, ErrorSeverity.Medium, 
+                Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Medium, 
                     controlName: nameof(Control_Edit_PartID));
             }
         }
@@ -123,7 +123,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             }
             catch (Exception ex)
             {
-                Service_ErrorHandler.HandleException(ex, ErrorSeverity.Medium, 
+                Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Medium, 
                     controlName: nameof(Control_Edit_PartID), callerName: nameof(LoadParts));
             }
         }
@@ -135,14 +135,14 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
                 base.OnLoad(e);
                 if (issuedByValueLabel != null)
                 {
-                    issuedByValueLabel.Text = Model_AppVariables.User ?? "Current User";
+                    issuedByValueLabel.Text = Model_Application_Variables.User ?? "Current User";
                 }
 
                 LoadParts();
             }
             catch (Exception ex)
             {
-                Service_ErrorHandler.HandleException(ex, ErrorSeverity.High, 
+                Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.High, 
                     controlName: nameof(Control_Edit_PartID), callerName: nameof(OnLoad));
             }
         }
@@ -529,11 +529,11 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
                 return;
             }
 
-            int id = Convert.ToInt32(_currentPart["p_ID"]);
+            int id = Convert.ToInt32(_currentPart["ID"]);
             string itemNumber = itemNumberTextBox.Text.Trim();
             string customer = customerTextBox.Text.Trim();
             string description = descriptionTextBox.Text.Trim();
-            string issuedBy = Model_AppVariables.User;
+            string issuedBy = Model_Application_Variables.User;
             string type = Control_Edit_PartID_ComboBox_ItemType.Text;
             
             var result = await Dao_Part.UpdatePartAsync(id, itemNumber, customer, description, issuedBy, type);
@@ -572,7 +572,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             }
             catch (Exception ex)
             {
-                Service_ErrorHandler.HandleException(ex, ErrorSeverity.Low, 
+                Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Low, 
                     controlName: nameof(Control_Edit_PartID));
             }
         }

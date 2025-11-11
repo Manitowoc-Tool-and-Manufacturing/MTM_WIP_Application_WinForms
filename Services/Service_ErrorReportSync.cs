@@ -23,8 +23,8 @@ internal static class Service_ErrorReportSync
     #region Fields
 
     private static readonly SemaphoreSlim _syncLock = new SemaphoreSlim(1, 1);
-    private static readonly string QueueDirectory = Model_AppVariables.ErrorReporting.QueueDirectory;
-    private static readonly string ArchiveDirectory = Model_AppVariables.ErrorReporting.ArchiveDirectory;
+    private static readonly string QueueDirectory = Model_Application_Variables.ErrorReporting.QueueDirectory;
+    private static readonly string ArchiveDirectory = Model_Application_Variables.ErrorReporting.ArchiveDirectory;
 
     #endregion
 
@@ -34,16 +34,16 @@ internal static class Service_ErrorReportSync
     /// Synchronizes pending error reports on application startup.
     /// Non-blocking operation that processes queued reports if database is available.
     /// </summary>
-    /// <returns>DaoResult containing count of successfully synced reports.</returns>
-    public static async Task<DaoResult<int>> SyncOnStartupAsync()
+    /// <returns>Model_Dao_Result containing count of successfully synced reports.</returns>
+    public static async Task<Model_Dao_Result<int>> SyncOnStartupAsync()
     {
         // Try to acquire lock immediately without waiting
         bool lockAcquired = await _syncLock.WaitAsync(0);
-        
+
         if (!lockAcquired)
         {
             LoggingUtility.Log("[Service_ErrorReportSync] Sync already in progress, skipping startup sync");
-            return DaoResult<int>.Failure("Sync operation already in progress");
+            return Model_Dao_Result<int>.Failure("Sync operation already in progress");
         }
 
         try
@@ -52,7 +52,7 @@ internal static class Service_ErrorReportSync
             if (!await IsDatabaseAvailableAsync())
             {
                 LoggingUtility.Log("[Service_ErrorReportSync] Database unavailable, skipping startup sync");
-                return DaoResult<int>.Success(0, "Database unavailable - sync deferred");
+                return Model_Dao_Result<int>.Success(0, "Database unavailable - sync deferred");
             }
 
             // Process pending files
@@ -60,16 +60,16 @@ internal static class Service_ErrorReportSync
 
             LoggingUtility.Log($"[Service_ErrorReportSync] Startup sync completed: {successCount} reports submitted");
 
-            return DaoResult<int>.Success(
+            return Model_Dao_Result<int>.Success(
                 successCount,
-                successCount > 0 
+                successCount > 0
                     ? $"Successfully submitted {successCount} pending error report(s)"
                     : "No pending error reports to sync");
         }
         catch (Exception ex)
         {
             LoggingUtility.LogApplicationError(ex);
-            return DaoResult<int>.Failure("Error during startup sync", ex);
+            return Model_Dao_Result<int>.Failure("Error during startup sync", ex);
         }
         finally
         {
@@ -81,15 +81,15 @@ internal static class Service_ErrorReportSync
     /// Manually triggers synchronization of pending error reports.
     /// Used from Developer Settings menu.
     /// </summary>
-    /// <returns>DaoResult containing count of successfully synced reports.</returns>
-    public static async Task<DaoResult<int>> SyncManuallyAsync()
+    /// <returns>Model_Dao_Result containing count of successfully synced reports.</returns>
+    public static async Task<Model_Dao_Result<int>> SyncManuallyAsync()
     {
         // Try to acquire lock immediately
         bool lockAcquired = await _syncLock.WaitAsync(0);
-        
+
         if (!lockAcquired)
         {
-            return DaoResult<int>.Failure("Another sync operation is already in progress. Please wait and try again.");
+            return Model_Dao_Result<int>.Failure("Another sync operation is already in progress. Please wait and try again.");
         }
 
         try
@@ -97,20 +97,20 @@ internal static class Service_ErrorReportSync
             // Check database connectivity
             if (!await IsDatabaseAvailableAsync())
             {
-                return DaoResult<int>.Failure("Database is not currently available. Please check your connection and try again.");
+                return Model_Dao_Result<int>.Failure("Database is not currently available. Please check your connection and try again.");
             }
 
             // Get pending count for progress indication
             int pendingCount = GetPendingReportCount();
-            
+
             if (pendingCount == 0)
             {
-                return DaoResult<int>.Success(0, "No pending error reports to sync");
+                return Model_Dao_Result<int>.Success(0, "No pending error reports to sync");
             }
 
             // Show progress indicator if count exceeds threshold
-            bool showProgress = pendingCount > Model_AppVariables.ErrorReporting.SyncProgressThreshold;
-            
+            bool showProgress = pendingCount > Model_Application_Variables.ErrorReporting.SyncProgressThreshold;
+
             if (showProgress)
             {
                 LoggingUtility.Log($"[Service_ErrorReportSync] Starting manual sync of {pendingCount} reports (progress will be shown)");
@@ -121,14 +121,14 @@ internal static class Service_ErrorReportSync
 
             LoggingUtility.Log($"[Service_ErrorReportSync] Manual sync completed: {successCount} of {pendingCount} reports submitted");
 
-            return DaoResult<int>.Success(
+            return Model_Dao_Result<int>.Success(
                 successCount,
                 $"Successfully submitted {successCount} of {pendingCount} pending error report(s)");
         }
         catch (Exception ex)
         {
             LoggingUtility.LogApplicationError(ex);
-            return DaoResult<int>.Failure("Error during manual sync operation", ex);
+            return Model_Dao_Result<int>.Failure("Error during manual sync operation", ex);
         }
         finally
         {
@@ -190,7 +190,7 @@ internal static class Service_ErrorReportSync
         foreach (string filePath in sqlFiles)
         {
             bool success = await ExecuteSqlFileAsync(filePath);
-            
+
             if (success)
             {
                 successCount++;
@@ -226,7 +226,7 @@ internal static class Service_ErrorReportSync
             if (await ReportExistsAsync(userName, timestamp))
             {
                 LoggingUtility.Log($"[Service_ErrorReportSync] Report already exists, skipping: {Path.GetFileName(filePath)}");
-                
+
                 // Move to archive to prevent reprocessing
                 MoveToArchive(filePath);
                 return true;
@@ -234,50 +234,50 @@ internal static class Service_ErrorReportSync
 
             // Execute SQL file
             string connectionString = Helper_Database_Variables.GetConnectionString(null, null, null, null);
-            
+
             using (var connection = new MySqlConnection(connectionString))
             {
                 await connection.OpenAsync();
-                
+
                 using (var command = connection.CreateCommand())
                 {
                     command.CommandText = sqlContent;
-                    command.CommandTimeout = Model_AppVariables.CommandTimeoutSeconds;
-                    
+                    command.CommandTimeout = Model_Application_Variables.CommandTimeoutSeconds;
+
                     await command.ExecuteNonQueryAsync();
                 }
             }
 
             // Success - move to archive
             MoveToArchive(filePath);
-            
+
             LoggingUtility.Log($"[Service_ErrorReportSync] Successfully processed: {Path.GetFileName(filePath)}");
-            
+
             return true;
         }
         catch (MySqlException ex)
         {
             LoggingUtility.LogApplicationError(ex);
-            
+
             // SQL execution failed - mark as corrupt
             HandleCorruptFile(filePath, ex);
-            
+
             return false;
         }
         catch (IOException ex)
         {
             // File move failure - log but leave in pending for retry
             LoggingUtility.Log($"[Service_ErrorReportSync] File operation failed for {Path.GetFileName(filePath)}: {ex.Message}");
-            
+
             return false;
         }
         catch (Exception ex)
         {
             LoggingUtility.LogApplicationError(ex);
-            
+
             // Unexpected error - mark as corrupt
             HandleCorruptFile(filePath, ex);
-            
+
             return false;
         }
     }
@@ -298,25 +298,25 @@ internal static class Service_ErrorReportSync
         try
         {
             string connectionString = Helper_Database_Variables.GetConnectionString(null, null, null, null);
-            
+
             using (var connection = new MySqlConnection(connectionString))
             {
                 await connection.OpenAsync();
-                
+
                 using (var command = connection.CreateCommand())
                 {
                     // Query with 1-second tolerance for timestamp matching
                     command.CommandText = @"
-                        SELECT COUNT(*) 
-                        FROM error_reports 
-                        WHERE UserName = @userName 
+                        SELECT COUNT(*)
+                        FROM error_reports
+                        WHERE UserName = @userName
                         AND ABS(TIMESTAMPDIFF(SECOND, ReportDate, @reportDate)) <= 1";
-                    
+
                     command.Parameters.AddWithValue("@userName", userName);
                     command.Parameters.AddWithValue("@reportDate", reportDate);
-                    
+
                     long count = (long)await command.ExecuteScalarAsync();
-                    
+
                     return count > 0;
                 }
             }
@@ -324,7 +324,7 @@ internal static class Service_ErrorReportSync
         catch (Exception ex)
         {
             LoggingUtility.Log($"[Service_ErrorReportSync] Error checking for duplicate report: {ex.Message}");
-            
+
             // On error, assume report doesn't exist to allow retry
             return false;
         }
@@ -339,17 +339,17 @@ internal static class Service_ErrorReportSync
         try
         {
             string connectionString = Helper_Database_Variables.GetConnectionString(null, null, null, null);
-            
+
             using (var connection = new MySqlConnection(connectionString))
             {
                 await connection.OpenAsync();
-                
+
                 using (var command = connection.CreateCommand())
                 {
                     command.CommandText = "SELECT 1";
                     await command.ExecuteScalarAsync();
                 }
-                
+
                 return true;
             }
         }
@@ -369,16 +369,16 @@ internal static class Service_ErrorReportSync
         try
         {
             string corruptPath = Path.ChangeExtension(filePath, ".corrupt");
-            
+
             // If corrupt file already exists, append timestamp
             if (File.Exists(corruptPath))
             {
                 string timestamp = DateTime.Now.ToString("yyyyMMddHHmmss");
                 corruptPath = Path.ChangeExtension(filePath, $".corrupt.{timestamp}");
             }
-            
+
             File.Move(filePath, corruptPath);
-            
+
             LoggingUtility.Log($"[Service_ErrorReportSync] Marked file as corrupt: {Path.GetFileName(corruptPath)}");
             LoggingUtility.LogApplicationError(ex);
         }
@@ -399,21 +399,21 @@ internal static class Service_ErrorReportSync
         try
         {
             string filename = Path.GetFileNameWithoutExtension(filePath);
-            
+
             // Pattern: ErrorReport_YYYYMMDD_HHMMSS_UserName_GUID
             var match = Regex.Match(filename, @"ErrorReport_(\d{8})_(\d{6})_(.+?)_[a-f0-9]+$");
-            
+
             if (match.Success)
             {
                 string dateStr = match.Groups[1].Value;
                 string timeStr = match.Groups[2].Value;
                 string userName = match.Groups[3].Value;
-                
+
                 DateTime timestamp = DateTime.ParseExact(
                     $"{dateStr}{timeStr}",
                     "yyyyMMddHHmmss",
                     System.Globalization.CultureInfo.InvariantCulture);
-                
+
                 return (userName, timestamp);
             }
         }
@@ -421,7 +421,7 @@ internal static class Service_ErrorReportSync
         {
             LoggingUtility.Log($"[Service_ErrorReportSync] Error parsing filename {Path.GetFileName(filePath)}: {ex.Message}");
         }
-        
+
         // Return defaults on parse failure
         return ("Unknown", DateTime.UtcNow);
     }
@@ -435,10 +435,10 @@ internal static class Service_ErrorReportSync
         try
         {
             Directory.CreateDirectory(ArchiveDirectory);
-            
+
             string filename = Path.GetFileName(filePath);
             string archivePath = Path.Combine(ArchiveDirectory, filename);
-            
+
             // If file already exists in archive, append timestamp
             if (File.Exists(archivePath))
             {
@@ -447,7 +447,7 @@ internal static class Service_ErrorReportSync
                 string ext = Path.GetExtension(filename);
                 archivePath = Path.Combine(ArchiveDirectory, $"{filenameWithoutExt}_{timestamp}{ext}");
             }
-            
+
             File.Move(filePath, archivePath);
         }
         catch (IOException ex)
@@ -472,7 +472,7 @@ internal static class Service_ErrorReportSync
             // Clean up old archived (Sent) files
             if (Directory.Exists(ArchiveDirectory))
             {
-                DateTime archiveCutoff = DateTime.Now.AddDays(-Model_AppVariables.ErrorReporting.MaxSentArchiveAgeDays);
+                DateTime archiveCutoff = DateTime.Now.AddDays(-Model_Application_Variables.ErrorReporting.MaxSentArchiveAgeDays);
                 var oldArchiveFiles = Directory.GetFiles(ArchiveDirectory, "*.sql")
                     .Where(f => File.GetCreationTime(f) < archiveCutoff)
                     .ToList();
@@ -500,14 +500,14 @@ internal static class Service_ErrorReportSync
             // Check for stale pending files (log warnings, don't delete)
             if (Directory.Exists(QueueDirectory))
             {
-                DateTime pendingCutoff = DateTime.Now.AddDays(-Model_AppVariables.ErrorReporting.MaxPendingAgeDays);
+                DateTime pendingCutoff = DateTime.Now.AddDays(-Model_Application_Variables.ErrorReporting.MaxPendingAgeDays);
                 var stalePendingFiles = Directory.GetFiles(QueueDirectory, "*.sql")
                     .Where(f => File.GetCreationTime(f) < pendingCutoff)
                     .ToList();
 
                 if (stalePendingFiles.Any())
                 {
-                    LoggingUtility.Log($"[Service_ErrorReportSync] WARNING: {stalePendingFiles.Count} pending error reports are older than {Model_AppVariables.ErrorReporting.MaxPendingAgeDays} days. Manual review recommended.");
+                    LoggingUtility.Log($"[Service_ErrorReportSync] WARNING: {stalePendingFiles.Count} pending error reports are older than {Model_Application_Variables.ErrorReporting.MaxPendingAgeDays} days. Manual review recommended.");
                 }
             }
 

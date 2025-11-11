@@ -12,30 +12,30 @@ internal class Dao_History
 {
     #region History Methods
 
-    public static async Task<DaoResult> AddTransactionHistoryAsync(Model_TransactionHistory history,
+    public static async Task<Model_Dao_Result> AddTransactionHistoryAsync(Model_Transactions_History history,
         MySqlConnection? connection = null,
         MySqlTransaction? transaction = null)
     {
         try
         {
-            // MIGRATED: Use Helper_Database_StoredProcedure with explicit p_ prefix
+            // MIGRATED: Use Helper_Database_StoredProcedure with automatic parameter prefix detection
             Dictionary<string, object> parameters = new()
             {
-                ["p_TransactionType"] = history.TransactionType,      // Explicit p_ prefix for transaction procedures
-                ["p_PartID"] = history.PartId,
-                ["p_FromLocation"] = history.FromLocation ?? (object)DBNull.Value,
-                ["p_ToLocation"] = history.ToLocation ?? (object)DBNull.Value,
-                ["p_Operation"] = history.Operation ?? (object)DBNull.Value,
-                ["p_Quantity"] = history.Quantity,
-                ["p_Notes"] = history.Notes ?? (object)DBNull.Value,
-                ["p_User"] = history.User,
-                ["p_ItemType"] = history.ItemType ?? (object)DBNull.Value,
-                ["p_BatchNumber"] = history.BatchNumber ?? (object)DBNull.Value,
-                ["p_ReceiveDate"] = history.DateTime
+                ["TransactionType"] = history.TransactionType,      // Automatic prefix detection
+                ["PartID"] = history.PartId,
+                ["FromLocation"] = history.FromLocation ?? (object)DBNull.Value,
+                ["ToLocation"] = history.ToLocation ?? (object)DBNull.Value,
+                ["Operation"] = history.Operation ?? (object)DBNull.Value,
+                ["Quantity"] = history.Quantity,
+                ["Notes"] = history.Notes ?? (object)DBNull.Value,
+                ["User"] = history.User,
+                ["ItemType"] = history.ItemType ?? (object)DBNull.Value,
+                ["BatchNumber"] = history.BatchNumber ?? (object)DBNull.Value,
+                ["ReceiveDate"] = history.DateTime
             };
 
             var result = await Helper_Database_StoredProcedure.ExecuteNonQueryWithStatusAsync(
-                Model_AppVariables.ConnectionString,
+                Model_Application_Variables.ConnectionString,
                 "inv_transaction_Add",
                 parameters,
                 progressHelper: null,
@@ -46,16 +46,16 @@ internal class Dao_History
             if (!result.IsSuccess)
             {
                 LoggingUtility.Log($"AddTransactionHistoryAsync failed: {result.ErrorMessage}");
-                return DaoResult.Failure(result.ErrorMessage ?? "Failed to add transaction history", result.Exception);
+                return Model_Dao_Result.Failure(result.ErrorMessage ?? "Failed to add transaction history", result.Exception);
             }
 
-            return DaoResult.Success();
+            return Model_Dao_Result.Success();
         }
         catch (Exception ex)
         {
             LoggingUtility.LogDatabaseError(ex);
             var errorResult = await Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex, callerName: "AddTransactionHistoryAsync");
-            return DaoResult.Failure("Failed to add transaction history", ex);
+            return Model_Dao_Result.Failure("Failed to add transaction history", ex);
         }
     }
 

@@ -7,6 +7,7 @@ using System.Windows.Forms;
 using MTM_WIP_Application_Winforms.Core;
 using MTM_WIP_Application_Winforms.Logging;
 using MTM_WIP_Application_Winforms.Models;
+using MTM_WIP_Application_Winforms.Services;
 
 namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
 {
@@ -40,18 +41,26 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
         {
             try
             {
-                // Use Model_AppVariables instead of direct assembly calls
-                Control_About_Label_Version_Data.Text = Model_AppVariables.ApplicationVersion;
-                Control_About_Label_Copyright_Data.Text = Model_AppVariables.ApplicationCopyright;
-                Control_About_Label_Author_Data.Text = Model_AppVariables.ApplicationAuthor;
-                Control_About_Label_LastUpdate_Data.Text = Model_AppVariables.LastUpdated ?? "Unknown";
+                // Use Model_Application_Variables instead of direct assembly calls
+                Control_About_Label_Version_Data.Text = Model_Application_Variables.ApplicationVersion;
+                Control_About_Label_Copyright_Data.Text = Model_Application_Variables.ApplicationCopyright;
+                Control_About_Label_Author_Data.Text = Model_Application_Variables.ApplicationAuthor;
+                Control_About_Label_LastUpdate_Data.Text = Model_Application_Variables.LastUpdated ?? "Unknown";
 
                 // Initialize WebView2 and load PDF
                 await LoadChangelogAsync();
             }
             catch (Exception ex)
             {
-                LoggingUtility.LogApplicationError(ex);
+                Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Medium,
+                    contextData: new Dictionary<string, object>
+                    {
+                        ["Operation"] = "About Control Initialization",
+                        ["Version"] = Model_Application_Variables.ApplicationVersion,
+                        ["User"] = Model_Application_Variables.User
+                    },
+                    callerName: nameof(Control_About_LoadControl),
+                    controlName: nameof(Control_About));
                 StatusMessageChanged?.Invoke(this, $"Error loading about information: {ex.Message}");
             }
         }
@@ -91,7 +100,15 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             }
             catch (Exception ex)
             {
-                LoggingUtility.LogApplicationError(ex);
+                Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Medium,
+                    contextData: new Dictionary<string, object>
+                    {
+                        ["Operation"] = "Changelog Loading",
+                        ["WebView2Initialized"] = Control_About_Label_WebView_ChangeLogView?.CoreWebView2 != null,
+                        ["User"] = Model_Application_Variables.User
+                    },
+                    callerName: nameof(LoadChangelogAsync),
+                    controlName: nameof(Control_About));
                 ShowErrorContent(ex.Message);
                 StatusMessageChanged?.Invoke(this, $"Warning: Could not load changelog - {ex.Message}");
             }
@@ -142,7 +159,17 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             }
             catch (Exception ex)
             {
-                LoggingUtility.LogApplicationError(ex);
+                Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Low,
+                    contextData: new Dictionary<string, object>
+                    {
+                        ["Operation"] = "PDF Path Resolution",
+                        ["AppDirectory"] = AppDomain.CurrentDomain.BaseDirectory,
+                        ["TempPath"] = Path.GetTempPath(),
+                        ["User"] = Model_Application_Variables.User,
+                        ["IsCritical"] = false // Falls back to HTML content
+                    },
+                    callerName: nameof(GetChangelogPdfPathAsync),
+                    controlName: nameof(Control_About));
                 return null;
             }
         }
@@ -191,8 +218,8 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
     <div class='container'>
         <h1>MTM WIP Application Changelog</h1>
         <div class='version'>
-            <h3>Version {Model_AppVariables.ApplicationVersion}</h3>
-            <p class='date'>Last Updated: {Model_AppVariables.LastUpdated}</p>
+            <h3>Version {Model_Application_Variables.ApplicationVersion}</h3>
+            <p class='date'>Last Updated: {Model_Application_Variables.LastUpdated}</p>
             <ul>
                 <li class='feature'>Enhanced user interface and user experience</li>
                 <li class='feature'>Improved database connectivity and performance</li>
@@ -226,8 +253,8 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
         </div>
         <hr>
         <p><em>This is a summary of recent changes. For detailed changelog information, please refer to the application documentation or contact the system administrator.</em></p>
-        <p><small>Developed by: {Model_AppVariables.ApplicationAuthor}<br>
-        Company: {Model_AppVariables.ApplicationCopyright}</small></p>
+        <p><small>Developed by: {Model_Application_Variables.ApplicationAuthor}<br>
+        Company: {Model_Application_Variables.ApplicationCopyright}</small></p>
     </div>
 </body>
 </html>";
@@ -277,10 +304,10 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
         <hr>
         <p><strong>Application Information:</strong></p>
         <ul>
-            <li>Version: {Model_AppVariables.ApplicationVersion}</li>
-            <li>Last Updated: {Model_AppVariables.LastUpdated}</li>
-            <li>Author: {Model_AppVariables.ApplicationAuthor}</li>
-            <li>Copyright: {Model_AppVariables.ApplicationCopyright}</li>
+            <li>Version: {Model_Application_Variables.ApplicationVersion}</li>
+            <li>Last Updated: {Model_Application_Variables.LastUpdated}</li>
+            <li>Author: {Model_Application_Variables.ApplicationAuthor}</li>
+            <li>Copyright: {Model_Application_Variables.ApplicationCopyright}</li>
         </ul>
     </div>
 </body>

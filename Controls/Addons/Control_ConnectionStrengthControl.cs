@@ -121,7 +121,7 @@ namespace MTM_WIP_Application_Winforms.Controls.Addons
             {
                 Color color = i < _strength
                     ? GetBarColor(i, barCount)
-                    : Model_AppVariables.UserUiColors.ControlBackColor ?? Color.LightGray;
+                    : Model_Application_Variables.UserUiColors.ControlBackColor ?? Color.LightGray;
                 int height = barMinHeight + (barMaxHeight - barMinHeight) * i / (barCount - 1);
                 int x = startX + i * (barWidth + spacing);
                 int y = baseY - height;
@@ -130,15 +130,15 @@ namespace MTM_WIP_Application_Winforms.Controls.Addons
                     g.FillRectangle(brush, x, y, barWidth, height);
                 }
 
-                using Pen pen = new(Model_AppVariables.UserUiColors.ControlForeColor ?? Color.DarkGray);
+                using Pen pen = new(Model_Application_Variables.UserUiColors.ControlForeColor ?? Color.DarkGray);
                 g.DrawRectangle(pen, x, y, barWidth, height);
             }
         }
 
         private static Color GetBarColor(int barIndex, int barCount)
         {
-            Color lowColor = Model_AppVariables.UserUiColors.ErrorColor ?? Color.Red;
-            Color highColor = Model_AppVariables.UserUiColors.SuccessColor ?? Color.LimeGreen;
+            Color lowColor = Model_Application_Variables.UserUiColors.ErrorColor ?? Color.Red;
+            Color highColor = Model_Application_Variables.UserUiColors.SuccessColor ?? Color.LimeGreen;
 
             float t = barCount == 1 ? 1f : (float)barIndex / (barCount - 1);
             int r = (int)(lowColor.R * (1 - t) + highColor.R * t);
@@ -174,7 +174,7 @@ namespace MTM_WIP_Application_Winforms.Controls.Addons
             }
             else
             {
-                BackColor = Model_AppVariables.UserUiColors.ControlBackColor ?? SystemColors.Control;
+                BackColor = Model_Application_Variables.UserUiColors.ControlBackColor ?? SystemColors.Control;
             }
 
             Invalidate();

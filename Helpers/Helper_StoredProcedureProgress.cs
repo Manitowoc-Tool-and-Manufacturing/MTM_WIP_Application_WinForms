@@ -26,14 +26,14 @@ namespace MTM_WIP_Application_Winforms.Helpers
         #region Constructors
 
         public Helper_StoredProcedureProgress(
-            ToolStripProgressBar progressBar, 
-            ToolStripStatusLabel statusLabel, 
+            ToolStripProgressBar progressBar,
+            ToolStripStatusLabel statusLabel,
             Form parentForm)
         {
             _progressBar = progressBar ?? throw new ArgumentNullException(nameof(progressBar));
             _statusLabel = statusLabel ?? throw new ArgumentNullException(nameof(statusLabel));
             _parentForm = parentForm ?? throw new ArgumentNullException(nameof(parentForm));
-            
+
             // Store the original progress bar color (ToolStripProgressBar doesn't support ForeColor change)
             // We'll use different approaches for visual feedback
             _originalProgressBarColor = SystemColors.Highlight;
@@ -95,16 +95,16 @@ namespace MTM_WIP_Application_Winforms.Helpers
                 // Note: ToolStripProgressBar doesn't support ForeColor changes
                 // We rely on status label color for error indication
                 _statusLabel.ForeColor = _errorColor;
-                
+
                 if (progress.HasValue)
                 {
                     int clampedProgress = Math.Max(0, Math.Min(100, progress.Value));
                     _progressBar.Value = clampedProgress;
                 }
-                
+
                 _statusLabel.Text = $"ERROR: {errorMessage}";
                 Application.DoEvents();
-                
+
                 // Keep error visible for a moment
                 System.Threading.Tasks.Task.Delay(100).Wait();
             });
@@ -235,8 +235,8 @@ namespace MTM_WIP_Application_Winforms.Helpers
         /// <param name="parentForm">Parent form for thread-safe operations</param>
         /// <returns>New progress helper instance</returns>
         public static Helper_StoredProcedureProgress Create(
-            ToolStripProgressBar progressBar, 
-            ToolStripStatusLabel statusLabel, 
+            ToolStripProgressBar progressBar,
+            ToolStripStatusLabel statusLabel,
             Form parentForm)
         {
             return new Helper_StoredProcedureProgress(progressBar, statusLabel, parentForm);

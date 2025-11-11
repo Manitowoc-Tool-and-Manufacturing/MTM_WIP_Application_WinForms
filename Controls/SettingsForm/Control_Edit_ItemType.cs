@@ -52,7 +52,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
                 base.OnLoad(e);
                 if (issuedByValueLabel != null)
                 {
-                    issuedByValueLabel.Text = Model_AppVariables.User ?? "Current User";
+                    issuedByValueLabel.Text = Model_Application_Variables.User ?? "Current User";
                 }
 
                 LoadItemTypes();
@@ -148,8 +148,8 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
                     }
                 }
 
-                int itemTypeId = Convert.ToInt32(_currentItemType["p_ID"]);
-                var updateResult = await Dao_ItemType.UpdateItemType(itemTypeId, newItemType, Model_AppVariables.User ?? "Current User");
+                int itemTypeId = Convert.ToInt32(_currentItemType["ID"]);
+                var updateResult = await Dao_ItemType.UpdateItemType(itemTypeId, newItemType, Model_Application_Variables.User ?? "Current User");
                 if (!updateResult.IsSuccess)
                 {
                     MessageBox.Show($@"Error updating ItemType: {updateResult.ErrorMessage}", @"Error",

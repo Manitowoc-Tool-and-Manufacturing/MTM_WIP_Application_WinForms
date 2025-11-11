@@ -13,8 +13,8 @@ internal static class Service_DebugConfiguration
     #region Fields
 
     private static readonly Dictionary<string, bool> _componentTracing = new();
-    private static readonly Dictionary<string, DebugLevel> _componentLevels = new();
-    
+    private static readonly Dictionary<string, Enum_DebugLevel> _componentLevels = new();
+
     #endregion
 
     #region Initialization
@@ -35,15 +35,15 @@ internal static class Service_DebugConfiguration
         _componentTracing["NetworkOperations"] = false;
 
         // Default component debug levels
-        _componentLevels["MainForm"] = DebugLevel.Medium;
-        _componentLevels["InventoryTab"] = DebugLevel.High;
-        _componentLevels["TransactionTab"] = DebugLevel.High;
-        _componentLevels["SettingsForm"] = DebugLevel.Medium;
-        _componentLevels["Database"] = DebugLevel.High;
-        _componentLevels["ErrorHandling"] = DebugLevel.High;
-        _componentLevels["BusinessLogic"] = DebugLevel.Medium;
+        _componentLevels["MainForm"] = Enum_DebugLevel.Medium;
+        _componentLevels["InventoryTab"] = Enum_DebugLevel.High;
+        _componentLevels["TransactionTab"] = Enum_DebugLevel.High;
+        _componentLevels["SettingsForm"] = Enum_DebugLevel.Medium;
+        _componentLevels["Database"] = Enum_DebugLevel.High;
+        _componentLevels["ErrorHandling"] = Enum_DebugLevel.High;
+        _componentLevels["BusinessLogic"] = Enum_DebugLevel.Medium;
 
-        Service_DebugTracer.TraceUIAction("DEBUG_CONFIGURATION_INITIALIZED", "Service_DebugConfiguration", 
+        Service_DebugTracer.TraceUIAction("DEBUG_CONFIGURATION_INITIALIZED", "Service_DebugConfiguration",
             new Dictionary<string, object>
             {
                 ["ComponentCount"] = _componentTracing.Count,
@@ -72,9 +72,9 @@ internal static class Service_DebugConfiguration
     /// </summary>
     /// <param name="componentName">Name of the component</param>
     /// <returns>Debug level for the component</returns>
-    public static DebugLevel GetComponentLevel(string componentName)
+    public static Enum_DebugLevel GetComponentLevel(string componentName)
     {
-        return _componentLevels.GetValueOrDefault(componentName, DebugLevel.Medium);
+        return _componentLevels.GetValueOrDefault(componentName, Enum_DebugLevel.Medium);
     }
 
     /// <summary>
@@ -85,7 +85,7 @@ internal static class Service_DebugConfiguration
     public static void SetComponentTracing(string componentName, bool enabled)
     {
         _componentTracing[componentName] = enabled;
-        
+
         Service_DebugTracer.TraceUIAction("COMPONENT_TRACING_CHANGED", "Service_DebugConfiguration",
             new Dictionary<string, object>
             {
@@ -99,10 +99,10 @@ internal static class Service_DebugConfiguration
     /// </summary>
     /// <param name="componentName">Name of the component</param>
     /// <param name="level">Debug level to set</param>
-    public static void SetComponentLevel(string componentName, DebugLevel level)
+    public static void SetComponentLevel(string componentName, Enum_DebugLevel level)
     {
         _componentLevels[componentName] = level;
-        
+
         Service_DebugTracer.TraceUIAction("COMPONENT_LEVEL_CHANGED", "Service_DebugConfiguration",
             new Dictionary<string, object>
             {
@@ -120,7 +120,7 @@ internal static class Service_DebugConfiguration
     /// </summary>
     public static void SetDevelopmentMode()
     {
-        Service_DebugTracer.CurrentLevel = DebugLevel.Verbose;
+        Service_DebugTracer.CurrentLevel = Enum_DebugLevel.Verbose;
         Service_DebugTracer.TraceDatabase = true;
         Service_DebugTracer.EnableBusinessLogicTracing = true;
         Service_DebugTracer.TraceUIActions = true;
@@ -135,7 +135,7 @@ internal static class Service_DebugConfiguration
         // Set all components to high level
         foreach (var key in _componentLevels.Keys.ToList())
         {
-            _componentLevels[key] = DebugLevel.High;
+            _componentLevels[key] = Enum_DebugLevel.High;
         }
 
         Service_DebugTracer.TraceUIAction("DEBUG_MODE_SET", "Service_DebugConfiguration",
@@ -152,7 +152,7 @@ internal static class Service_DebugConfiguration
     /// </summary>
     public static void SetProductionMode()
     {
-        Service_DebugTracer.CurrentLevel = DebugLevel.Low;
+        Service_DebugTracer.CurrentLevel = Enum_DebugLevel.Low;
         Service_DebugTracer.TraceDatabase = false;
         Service_DebugTracer.EnableBusinessLogicTracing = false;
         Service_DebugTracer.TraceUIActions = false;
@@ -167,7 +167,7 @@ internal static class Service_DebugConfiguration
         // Set all components to low level
         foreach (var key in _componentLevels.Keys.ToList())
         {
-            _componentLevels[key] = DebugLevel.Low;
+            _componentLevels[key] = Enum_DebugLevel.Low;
         }
 
         Service_DebugTracer.TraceUIAction("DEBUG_MODE_SET", "Service_DebugConfiguration",
@@ -184,7 +184,7 @@ internal static class Service_DebugConfiguration
     /// </summary>
     public static void SetDatabaseTroubleshootingMode()
     {
-        Service_DebugTracer.CurrentLevel = DebugLevel.Verbose;
+        Service_DebugTracer.CurrentLevel = Enum_DebugLevel.Verbose;
         Service_DebugTracer.TraceDatabase = true;
         Service_DebugTracer.EnableBusinessLogicTracing = true;
         Service_DebugTracer.TraceUIActions = false;
@@ -203,9 +203,9 @@ internal static class Service_DebugConfiguration
         _componentTracing["NetworkOperations"] = false;
 
         // Set database components to verbose
-        _componentLevels["Database"] = DebugLevel.Verbose;
-        _componentLevels["BusinessLogic"] = DebugLevel.Verbose;
-        _componentLevels["ErrorHandling"] = DebugLevel.High;
+        _componentLevels["Database"] = Enum_DebugLevel.Verbose;
+        _componentLevels["BusinessLogic"] = Enum_DebugLevel.Verbose;
+        _componentLevels["ErrorHandling"] = Enum_DebugLevel.High;
 
         Service_DebugTracer.TraceUIAction("DEBUG_MODE_SET", "Service_DebugConfiguration",
             new Dictionary<string, object>

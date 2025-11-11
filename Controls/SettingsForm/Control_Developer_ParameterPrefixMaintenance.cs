@@ -20,8 +20,8 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
     {
         #region Fields
 
-        private List<Model_ParameterPrefixOverride> _overrides = new();
-        private Model_ParameterPrefixOverride? _selectedOverride;
+        private List<Model_ParameterPrefix_Override> _overrides = new();
+        private Model_ParameterPrefix_Override? _selectedOverride;
 
         #endregion
 
@@ -77,7 +77,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
                     return;
                 }
 
-                _overrides = result.Data ?? new List<Model_ParameterPrefixOverride>();
+                _overrides = result.Data ?? new List<Model_ParameterPrefix_Override>();
                 
                 PopulateDataGridView();
                 
@@ -189,7 +189,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             }
         }
 
-        private void DisplayOverrideDetails(Model_ParameterPrefixOverride? @override)
+        private void DisplayOverrideDetails(Model_ParameterPrefix_Override? @override)
         {
             if (@override == null)
             {
@@ -225,7 +225,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
 
         private void DgvOverrides_SelectionChanged(object? sender, EventArgs e)
         {
-            if (dgvOverrides.CurrentRow?.DataBoundItem is Model_ParameterPrefixOverride selected)
+            if (dgvOverrides.CurrentRow?.DataBoundItem is Model_ParameterPrefix_Override selected)
             {
                 _selectedOverride = selected;
                 DisplayOverrideDetails(selected);
@@ -303,7 +303,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
 
                 var result = await Dao_ParameterPrefixOverrides.DeleteAsync(
                     _selectedOverride.OverrideId, 
-                    Model_AppVariables.User);
+                    Model_Application_Variables.User);
 
                 if (result.IsSuccess)
                 {

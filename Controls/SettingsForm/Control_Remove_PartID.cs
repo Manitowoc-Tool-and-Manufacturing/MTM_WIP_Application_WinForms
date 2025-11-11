@@ -50,7 +50,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
                 base.OnLoad(e);
                 if (issuedByValueLabel != null)
                 {
-                    issuedByValueLabel.Text = Model_AppVariables.User ?? "Current User";
+                    issuedByValueLabel.Text = Model_Application_Variables.User ?? "Current User";
                 }
 
                 LoadParts();

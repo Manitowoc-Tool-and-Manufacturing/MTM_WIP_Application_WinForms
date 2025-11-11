@@ -1,0 +1,292 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1400" height="900" viewBox="0 0 1400 900">
+  <!-- Styles -->
+  <defs>
+    <style>
+      .bg-primary { fill: #ffffff; }
+      .bg-secondary { fill: #f8fafc; }
+      .bg-accent { fill: #f1f5f9; }
+      .border-light { stroke: #cbd5e1; stroke-width: 1; }
+      .border-medium { stroke: #94a3b8; stroke-width: 1.5; }
+      .border-dark { stroke: #64748b; stroke-width: 2; }
+      
+      .text-title { font-family: 'Segoe UI', system-ui, sans-serif; font-size: 28px; font-weight: 700; fill: #0f172a; }
+      .text-heading { font-family: 'Segoe UI', system-ui, sans-serif; font-size: 20px; font-weight: 600; fill: #1e293b; }
+      .text-subheading { font-family: 'Segoe UI', system-ui, sans-serif; font-size: 16px; font-weight: 500; fill: #334155; }
+      .text-body { font-family: 'Segoe UI', system-ui, sans-serif; font-size: 14px; fill: #475569; }
+      .text-caption { font-family: 'Segoe UI', system-ui, sans-serif; font-size: 12px; fill: #64748b; }
+      .text-white { fill: #ffffff; }
+      
+      .btn-primary { fill: #3b82f6; stroke: #2563eb; stroke-width: 1; }
+      .btn-secondary { fill: #e2e8f0; stroke: #cbd5e1; stroke-width: 1; }
+      .btn-text { font-family: 'Segoe UI', system-ui, sans-serif; font-size: 14px; font-weight: 600; }
+      
+      .input-field { fill: #ffffff; stroke: #cbd5e1; stroke-width: 1.5; }
+      .input-text { font-family: 'Segoe UI', system-ui, sans-serif; font-size: 13px; fill: #64748b; }
+      
+      .grid-header { fill: #f1f5f9; stroke: #cbd5e1; stroke-width: 1; }
+      .grid-cell { fill: #ffffff; stroke: #e2e8f0; stroke-width: 0.5; }
+      .grid-cell-alt { fill: #f8fafc; stroke: #e2e8f0; stroke-width: 0.5; }
+      .grid-text { font-family: 'Consolas', 'Courier New', monospace; font-size: 12px; fill: #334155; }
+      .grid-text-header { font-family: 'Segoe UI', system-ui, sans-serif; font-size: 12px; font-weight: 600; fill: #475569; }
+      
+      .shadow { filter: drop-shadow(0 1px 3px rgba(0,0,0,0.1)); }
+      .shadow-lg { filter: drop-shadow(0 4px 6px rgba(0,0,0,0.07)); }
+    </style>
+    
+    <!-- Arrow icon for buttons -->
+    <symbol id="arrow-right" viewBox="0 0 20 20">
+      <path d="M7 4l6 6-6 6" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round"/>
+    </symbol>
+    
+    <!-- Search icon -->
+    <symbol id="search" viewBox="0 0 20 20">
+      <circle cx="8" cy="8" r="5" stroke="currentColor" stroke-width="2" fill="none"/>
+      <path d="M12 12l5 5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+    </symbol>
+  </defs>
+  
+  <!-- Background -->
+  <rect width="1400" height="900" fill="#f8fafc"/>
+  
+  <!-- Main Container -->
+  <rect x="30" y="30" width="1340" height="840" rx="12" class="bg-primary shadow-lg border-medium"/>
+  
+  <!-- Header Section -->
+  <rect x="50" y="50" width="1300" height="80" class="bg-accent" rx="8"/>
+  <text x="80" y="90" class="text-title">Transaction Viewer</text>
+  <text x="80" y="115" class="text-caption">SOLID Architecture | Component-Based Design | 24,122 Transactions Available</text>
+  
+  <!-- Search Panel -->
+  <rect x="50" y="150" width="1300" height="180" class="bg-secondary shadow border-light" rx="8"/>
+  <text x="80" y="180" class="text-heading">Search Criteria</text>
+  <line x1="80" y1="188" x2="280" y2="188" stroke="#3b82f6" stroke-width="3" stroke-linecap="round"/>
+  
+  <!-- Row 1: Main Filters -->
+  <g transform="translate(80, 205)">
+    <!-- Part Number -->
+    <rect width="240" height="40" class="input-field" rx="6"/>
+    <text x="12" y="26" class="input-text">🔍 Part Number (autocomplete)</text>
+  </g>
+  
+  <g transform="translate(340, 205)">
+    <!-- User -->
+    <rect width="200" height="40" class="input-field" rx="6"/>
+    <text x="12" y="26" class="input-text">👤 User (All Users)</text>
+  </g>
+  
+  <g transform="translate(560, 205)">
+    <!-- From Location -->
+    <rect width="180" height="40" class="input-field" rx="6"/>
+    <text x="12" y="26" class="input-text">📍 From Location</text>
+  </g>
+  
+  <g transform="translate(760, 205)">
+    <!-- To Location -->
+    <rect width="180" height="40" class="input-field" rx="6"/>
+    <text x="12" y="26" class="input-text">📍 To Location</text>
+  </g>
+  
+  <g transform="translate(960, 205)">
+    <!-- Operation -->
+    <rect width="140" height="40" class="input-field" rx="6"/>
+    <text x="12" y="26" class="input-text">⚙️ Operation</text>
+  </g>
+  
+  <g transform="translate(1120, 205)">
+    <!-- Search Button -->
+    <rect width="160" height="40" class="btn-primary shadow" rx="6"/>
+    <text x="35" y="26" class="btn-text text-white">🔎 Search (F5)</text>
+  </g>
+  
+  <!-- Row 2: Transaction Types & Date Range -->
+  <g transform="translate(80, 260)">
+    <rect width="260" height="40" class="input-field" rx="6"/>
+    <text x="12" y="15" class="text-caption">Transaction Types:</text>
+    <text x="12" y="32" class="input-text">☑ IN   ☑ OUT   ☑ TRANSFER</text>
+  </g>
+  
+  <g transform="translate(360, 260)">
+    <rect width="340" height="40" class="input-field" rx="6"/>
+    <text x="12" y="15" class="text-caption">Date Range:</text>
+    <text x="12" y="32" class="input-text">○ Today  ○ Week  ○ Month  ● Custom: [10/01] → [10/30]</text>
+  </g>
+  
+  <g transform="translate(720, 260)">
+    <!-- Notes Search -->
+    <rect width="380" height="40" class="input-field" rx="6"/>
+    <text x="12" y="26" class="input-text">📝 Notes keyword (partial match supported)</text>
+  </g>
+  
+  <g transform="translate(1120, 260)">
+    <!-- Reset Button -->
+    <rect width="160" height="40" class="btn-secondary shadow" rx="6"/>
+    <text x="32" y="26" class="btn-text" fill="#475569">🔄 Reset (Ctrl+R)</text>
+  </g>
+  
+  <!-- Main Content Area: Grid + Detail Panel -->
+  <g transform="translate(50, 350)">
+    <!-- Grid Section -->
+    <rect width="880" height="450" class="bg-primary shadow border-medium" rx="8"/>
+    <text x="30" y="35" class="text-heading">Results Grid</text>
+    <text x="30" y="55" class="text-caption">245 transactions found | Page 1 of 5 | 50 per page</text>
+    
+    <!-- Column Headers -->
+    <g transform="translate(30, 70)">
+      <rect width="820" height="36" class="grid-header" rx="4"/>
+      <text x="12" y="24" class="grid-text-header">ID</text>
+      <text x="70" y="24" class="grid-text-header">Type</text>
+      <text x="150" y="24" class="grid-text-header">Part Number</text>
+      <text x="320" y="24" class="grid-text-header">Qty</text>
+      <text x="380" y="24" class="grid-text-header">From</text>
+      <text x="490" y="24" class="grid-text-header">To</text>
+      <text x="600" y="24" class="grid-text-header">User</text>
+      <text x="680" y="24" class="grid-text-header">Date/Time</text>
+    </g>
+    
+    <!-- Grid Rows -->
+    <g transform="translate(30, 110)">
+      <!-- Row 1 (Selected) -->
+      <rect width="820" height="32" fill="#dbeafe" stroke="#3b82f6" stroke-width="2" rx="4"/>
+      <text x="12" y="22" class="grid-text">40345</text>
+      <text x="70" y="22" class="grid-text">IN</text>
+      <text x="150" y="22" class="grid-text">21-28841-006</text>
+      <text x="320" y="22" class="grid-text">500</text>
+      <text x="380" y="22" class="grid-text">CS-04</text>
+      <text x="490" y="22" class="grid-text">—</text>
+      <text x="600" y="22" class="grid-text">JOHNK</text>
+      <text x="680" y="22" class="grid-text">10/24 19:07</text>
+    </g>
+    
+    <!-- Row 2 -->
+    <g transform="translate(30, 146)">
+      <rect width="820" height="32" class="grid-cell-alt" rx="4"/>
+      <text x="12" y="22" class="grid-text">40344</text>
+      <text x="70" y="22" class="grid-text">IN</text>
+      <text x="150" y="22" class="grid-text">21-28841-006</text>
+      <text x="320" y="22" class="grid-text">500</text>
+      <text x="380" y="22" class="grid-text">CS-04</text>
+      <text x="490" y="22" class="grid-text">—</text>
+      <text x="600" y="22" class="grid-text">JOHNK</text>
+      <text x="680" y="22" class="grid-text">10/24 18:45</text>
+    </g>
+    
+    <!-- Row 3 -->
+    <g transform="translate(30, 182)">
+      <rect width="820" height="32" class="grid-cell" rx="4"/>
+      <text x="12" y="22" class="grid-text">40343</text>
+      <text x="70" y="22" class="grid-text">TRAN</text>
+      <text x="150" y="22" class="grid-text">01-31976-000</text>
+      <text x="320" y="22" class="grid-text">200</text>
+      <text x="380" y="22" class="grid-text">FLOOR</text>
+      <text x="490" y="22" class="grid-text">SHIP</text>
+      <text x="600" y="22" class="grid-text">AMY</text>
+      <text x="680" y="22" class="grid-text">10/24 16:22</text>
+    </g>
+    
+    <!-- Row 4 -->
+    <g transform="translate(30, 218)">
+      <rect width="820" height="32" class="grid-cell-alt" rx="4"/>
+      <text x="12" y="22" class="grid-text">40342</text>
+      <text x="70" y="22" class="grid-text">OUT</text>
+      <text x="150" y="22" class="grid-text">45-67890-123</text>
+      <text x="320" y="22" class="grid-text">75</text>
+      <text x="380" y="22" class="grid-text">FG-A01</text>
+      <text x="490" y="22" class="grid-text">—</text>
+      <text x="600" y="22" class="grid-text">CHRIS</text>
+      <text x="680" y="22" class="grid-text">10/24 14:15</text>
+    </g>
+    
+    <!-- Row 5 -->
+    <g transform="translate(30, 254)">
+      <rect width="820" height="32" class="grid-cell" rx="4"/>
+      <text x="12" y="22" class="grid-text">40341</text>
+      <text x="70" y="22" class="grid-text">IN</text>
+      <text x="150" y="22" class="grid-text">12-34567-890</text>
+      <text x="320" y="22" class="grid-text">1000</text>
+      <text x="380" y="22" class="grid-text">REC</text>
+      <text x="490" y="22" class="grid-text">—</text>
+      <text x="600" y="22" class="grid-text">JOHNK</text>
+      <text x="680" y="22" class="grid-text">10/24 11:03</text>
+    </g>
+    
+    <!-- More rows indicator -->
+    <g transform="translate(30, 290)">
+      <rect width="820" height="32" class="grid-cell-alt" rx="4"/>
+      <text x="360" y="22" class="text-caption" text-anchor="middle">... 45 more rows on this page ...</text>
+    </g>
+    
+    <!-- Pagination Controls -->
+    <g transform="translate(30, 370)">
+      <rect width="160" height="40" class="btn-primary shadow" rx="6"/>
+      <text x="35" y="26" class="btn-text text-white">← Previous</text>
+    </g>
+    <g transform="translate(210, 370)">
+      <rect width="160" height="40" class="btn-primary shadow" rx="6"/>
+      <text x="48" y="26" class="btn-text text-white">Next →</text>
+    </g>
+    <text x="390" y="396" class="text-body">Page 1 of 5</text>
+    <g transform="translate(480, 370)">
+      <rect width="100" height="40" class="input-field" rx="6"/>
+      <text x="20" y="26" class="input-text">Go to page...</text>
+    </g>
+    
+    <!-- Export/Print Actions -->
+    <g transform="translate(620, 370)">
+      <rect width="110" height="40" class="btn-secondary shadow" rx="6"/>
+      <text x="18" y="26" class="btn-text" fill="#475569">📊 Export</text>
+    </g>
+    <g transform="translate(740, 370)">
+      <rect width="110" height="40" class="btn-secondary shadow" rx="6"/>
+      <text x="24" y="26" class="btn-text" fill="#475569">🖨️ Print</text>
+    </g>
+  </g>
+  
+  <!-- Detail Panel (Right Side) -->
+  <g transform="translate(980, 350)">
+    <rect width="370" height="450" class="bg-primary shadow border-medium" rx="8"/>
+    <text x="30" y="35" class="text-heading">Transaction Detail</text>
+    <line x1="30" y1="42" x2="180" y2="42" stroke="#3b82f6" stroke-width="2" stroke-linecap="round"/>
+    <text x="30" y="58" class="text-caption">Click row or press Enter to view full details</text>
+    
+    <!-- Selected Transaction Info -->
+    <g transform="translate(30, 75)">
+      <rect width="310" height="120" class="bg-accent border-light" rx="6"/>
+      <text x="20" y="25" class="text-subheading">Transaction #40345</text>
+      <text x="20" y="50" class="text-body">Type: IN (Receiving)</text>
+      <text x="20" y="70" class="text-body">Part: 21-28841-006</text>
+      <text x="20" y="90" class="text-body">Quantity: 500 units</text>
+      <text x="20" y="110" class="text-caption">Operation 90 • User: JOHNK</text>
+    </g>
+    
+    <!-- Location Details -->
+    <g transform="translate(30, 210)">
+      <rect width="310" height="80" class="bg-accent border-light" rx="6"/>
+      <text x="20" y="25" class="text-subheading">Location</text>
+      <text x="20" y="50" class="text-body">From: CS-04</text>
+      <text x="20" y="70" class="text-body">To: (not applicable)</text>
+    </g>
+    
+    <!-- Notes -->
+    <g transform="translate(30, 305)">
+      <rect width="310" height="65" class="bg-accent border-light" rx="6"/>
+      <text x="20" y="25" class="text-subheading">Notes</text>
+      <text x="20" y="48" class="text-caption" style="font-style: italic;">No notes recorded for this transaction</text>
+    </g>
+    
+    <!-- Action Button -->
+    <g transform="translate(30, 385)">
+      <rect width="310" height="45" class="btn-primary shadow" rx="8"/>
+      <text x="60" y="30" class="btn-text text-white" font-size="15px">📋 Open Full Detail Dialog</text>
+    </g>
+  </g>
+  
+  <!-- Status Bar -->
+  <rect x="50" y="820" width="1300" height="40" class="bg-accent border-light" rx="8"/>
+  <text x="80" y="846" class="text-caption">Ready • Last search: 0.847s • Database: mtm_wip_application_winforms_test • Architecture: Component-based SOLID design</text>
+  <text x="1270" y="846" class="text-caption" text-anchor="end">v5.0</text>
+  
+  <!-- Design Attribution -->
+  <text x="700" y="890" class="text-caption" text-anchor="middle" style="font-size: 10px; fill: #94a3b8;">
+    Claude Sonnet 4.5 Design • MTM Transaction Viewer • P1 Scope Implementation
+  </text>
+</svg>

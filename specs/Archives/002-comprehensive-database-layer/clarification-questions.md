@@ -317,14 +317,14 @@ A single 1000ms threshold will either:
 
 **Recommended Answer**: **Option B - Configurable per operation type**
 
-**Reasoning**: Manufacturing systems need accurate performance monitoring without alarm fatigue. Option B provides practical flexibility: set 200ms for simple queries, 1000ms for reports, 5000ms for batch operations. This allows performance regression detection (batch operation suddenly takes 10 seconds = problem) without false positives. Configuration can live in `Model_AppVariables` or appsettings. More intelligent than single threshold, more maintainable than adaptive learning.
+**Reasoning**: Manufacturing systems need accurate performance monitoring without alarm fatigue. Option B provides practical flexibility: set 200ms for simple queries, 1000ms for reports, 5000ms for batch operations. This allows performance regression detection (batch operation suddenly takes 10 seconds = problem) without false positives. Configuration can live in `Model_Application_Variables` or appsettings. More intelligent than single threshold, more maintainable than adaptive learning.
 
 **Options**:
 
 | Option | Description | Implications |
 |--------|-------------|--------------|
 | **A** | **Single 1000ms threshold for all operations** | Simplest to implement: one constant, one log check. Easy to understand and document. Will generate false warnings for legitimate slow operations (reports, batch processing). May miss performance regressions in fast operations (query goes from 50ms to 300ms = still under 1000ms but 6x slower). Good for MVP, may need refinement later. |
-| **B** | **Configurable per operation type (queries vs modifications vs batch vs reports)** | Practical middle ground. Define categories: "Query" (500ms), "Modification" (1000ms), "Batch" (5000ms), "Report" (2000ms). DAO methods tagged with category. Accurate performance monitoring without alarm fatigue. Requires category classification effort. Can be stored in config file or Model_AppVariables. Industry-standard approach. |
+| **B** | **Configurable per operation type (queries vs modifications vs batch vs reports)** | Practical middle ground. Define categories: "Query" (500ms), "Modification" (1000ms), "Batch" (5000ms), "Report" (2000ms). DAO methods tagged with category. Accurate performance monitoring without alarm fatigue. Requires category classification effort. Can be stored in config file or Model_Application_Variables. Industry-standard approach. |
 | **C** | **Adaptive thresholds based on baseline metrics** | Most intelligent: system learns normal performance, alerts on deviations. Requires baseline collection period (7-30 days). Statistical analysis overhead (mean, std dev, percentiles). Complex to implement and explain to users. Best for mature systems with stable workloads. Overkill for current refactor scope - consider for future enhancement. |
 | **Custom** | Provide your own threshold strategy | |
 

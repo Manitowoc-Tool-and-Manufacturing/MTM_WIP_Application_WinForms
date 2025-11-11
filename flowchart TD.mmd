@@ -1,0 +1,254 @@
+flowchart TD
+    %% Entry Point
+    UserClick([User Clicks Print Button]) --> RemovePrint[Control_RemoveTab_Button_Print_Click]
+    
+    %% Validation
+    RemovePrint --> ValidateGrid{Grid has data?}
+    ValidateGrid -->|No| ShowError[Service_ErrorHandler.HandleValidationError]
+    ValidateGrid -->|Yes| CallHelper[Helper_PrintManager.ShowPrintDialogAsync]
+    
+    %% Helper_PrintManager Static Method
+    CallHelper --> CreateJob[Helper_PrintManager.CreatePrintJob]
+    CreateJob --> LoadSettings[Model_Print_Settings.Load]
+    LoadSettings --> MergeSettings[Merge settings with print job]
+    MergeSettings --> BeginInvoke[parent.BeginInvoke]
+    
+    %% PrintForm Constructor
+    BeginInvoke --> PrintFormCtor[new PrintForm<br/>printJob, settings]
+    
+    %% Constructor Initialization Chain
+    PrintFormCtor --> InitComp[InitializeComponent]
+    InitComp --> ApplyDpi[Core_Themes.ApplyDpiScaling]
+    ApplyDpi --> ApplyLayout[Core_Themes.ApplyRuntimeLayoutAdjustments]
+    ApplyLayout --> ApplyColors[ApplyThemeColors]
+    ApplyColors --> LoadSettingsInCtor[LoadSettings<br/>from Model_Print_Settings]
+    LoadSettingsInCtor --> InitSections[InitializeSections]
+    
+    %% Initialize Sections
+    InitSections --> InitPrinter[InitializePrinterSettingsSection]
+    InitSections --> InitPage[InitializePageSettingsSection]
+    InitSections --> InitCol[InitializeColumnSettingsSection]
+    InitSections --> InitOpt[InitializeOptionsSection]
+    InitSections --> InitPrev[InitializePreviewSection]
+    InitSections --> InitBtns[InitializeActionButtons]
+    
+    %% InitializePreviewSection Details
+    InitPrev --> SetStartPage0[PrintForm_PrintPreviewControl.StartPage = 0]
+    SetStartPage0 --> UpdateNavState1[UpdatePreviewNavigationState]
+    
+    %% UpdatePreviewNavigationState
+    UpdateNavState1 --> CheckHandle1{IsHandleCreated?}
+    CheckHandle1 -->|No| Return1[Return early]
+    CheckHandle1 -->|Yes| CheckInvoke1{InvokeRequired?}
+    CheckInvoke1 -->|Yes| BeginInvokeNav[BeginInvoke UpdatePreviewNavigationState]
+    CheckInvoke1 -->|No| CalcIndex1[Calculate currentIndex from StartPage]
+    CalcIndex1 --> SetCurrentPage1[_printJob.CurrentPage = currentIndex + 1]
+    SetCurrentPage1 --> UpdateLabel1[Update lblPageInfo text]
+    UpdateLabel1 --> EnableButtons1[Enable/Disable navigation buttons]
+    
+    %% Continue Constructor
+    InitBtns --> WireEvents[Wire up event handlers]
+    WireEvents --> ScheduleFirst[SchedulePreviewRefresh]
+    ScheduleFirst --> CtorComplete[Constructor Complete]
+    
+    %% Show Dialog
+    CtorComplete --> ShowDialog[form.ShowDialog<br/>parent]
+    ShowDialog --> FormShown[PrintForm_Shown Event]
+    
+    %% PrintForm_Shown Event
+    FormShown --> CallGenerate[GeneratePreviewAsync]
+    
+    %% GeneratePreviewAsync Main Flow
+    CallGenerate --> CheckGenerating{_isGeneratingPreview?}
+    CheckGenerating -->|Yes| SetPending[_isPreviewRefreshPending = true]
+    CheckGenerating -->|No| CheckData{Has valid data?}
+    
+    CheckData -->|No| ResetState[ResetPreviewState]
+    CheckData -->|Yes| SetGenerating[_isGeneratingPreview = true]
+    
+    SetGenerating --> ResetCurrentPage[_printJob.CurrentPage = 1]
+    ResetCurrentPage --> CreateMgr[new Helper_PrintManager<br/>_printJob]
+    
+    %% Helper_PrintManager Instance
+    CreateMgr --> PrepDoc[PreparePrintDocument]
+    PrepDoc --> DisposePrinter[Dispose existing _tablePrinter]
+    DisposePrinter --> CreatePrinter[new Core_TablePrinter]
+    CreatePrinter --> SetData[_tablePrinter.SetData<br/>_printJob]
+    
+    %% Core_TablePrinter.SetData
+    SetData --> StoreJob[Store _printJob reference]
+    StoreJob --> CopyData[Copy DataTable _data]
+    CopyData --> FilterCols[Filter visible columns]
+    FilterCols --> CalcRange[Calculate row range<br/>based on PageRangeType]
+    CalcRange --> ResetPageNum[_pageNumber = _firstPageNumber - 1]
+    ResetPageNum --> ClearBounds[_pageBoundaries.Clear]
+    ClearBounds --> ResetRow[_currentRow = _startRowIndex]
+    
+    %% Back to PreparePrintDocument
+    ClearBounds --> ApplySettings[_printJob.ApplyToPrintDocument<br/>_tablePrinter.PrintDocument]
+    ApplySettings --> ReturnDoc[Return PrintDocument]
+    
+    %% Back to GeneratePreviewAsync
+    ReturnDoc --> AssignDoc[Assign _previewDocument]
+    AssignDoc --> TryRender[Try rendering document]
+    
+    %% Document Rendering - BeginPrint Event
+    TryRender --> BeginPrint[PrintDocument_BeginPrint Event]
+    BeginPrint --> ResetBegin[Reset _currentRow<br/>Reset _pageNumber<br/>_completionLogged = false]
+    
+    %% Document Rendering - PrintPage Events
+    ResetBegin --> RenderPages[Render all pages]
+    RenderPages --> PrintPage1[PrintDocument_PrintPage<br/>Page 1]
+    PrintPage1 --> IncrementPage1[_pageNumber++]
+    IncrementPage1 --> DrawTitle1[Draw title]
+    DrawTitle1 --> DrawWatermark1[Draw watermark]
+    DrawWatermark1 --> DrawHeaders1[Draw column headers]
+    DrawHeaders1 --> DrawRows1[Draw data rows]
+    DrawRows1 --> DrawPageNum1[Draw page number]
+    DrawPageNum1 --> StoreBounds1[Store page boundaries]
+    StoreBounds1 --> CheckMore1{More rows?}
+    
+    CheckMore1 -->|Yes| PrintPage2[PrintDocument_PrintPage<br/>Page 2]
+    PrintPage2 --> IncrementPage2[_pageNumber++]
+    IncrementPage2 --> DrawCycle2[Draw title, watermark,<br/>headers, rows, page number]
+    DrawCycle2 --> CheckMore2{More rows?}
+    
+    CheckMore2 -->|Yes| PrintPageN[PrintDocument_PrintPage<br/>Pages 3-26]
+    PrintPageN --> RenderCycle[Repeat render cycle]
+    RenderCycle --> CheckMoreN{More rows?}
+    
+    CheckMore1 -->|No| LogComplete[Log printing complete]
+    CheckMore2 -->|No| LogComplete
+    CheckMoreN -->|No| LogComplete
+    
+    LogComplete --> SetBounds[_printJob.SetPageBoundaries]
+    SetBounds --> RenderComplete[Document fully rendered<br/>26 pages total]
+    
+    %% Back to GeneratePreviewAsync - Set Control Properties
+    RenderComplete --> GetPages[Get _previewDocument.PrintController.Preview]
+    GetPages --> StorePages[_previewPageInfos = pages]
+    StorePages --> SetTotalPages[_previewTotalPages = pages.Length]
+    
+    SetTotalPages --> CalcTarget[Calculate targetIndex<br/>from PageRangeType]
+    CalcTarget --> ClearCtrlDoc[PrintForm_PrintPreviewControl.Document = null]
+    ClearCtrlDoc --> AssignCtrlDoc[PrintForm_PrintPreviewControl.Document = _previewDocument]
+    AssignCtrlDoc --> SetCtrlTarget[PrintForm_PrintPreviewControl.StartPage = targetIndex]
+    SetCtrlTarget --> InvalidatePreview[InvalidatePreview - Force Re-render]
+    
+    InvalidatePreview --> UpdateNavState2[UpdatePreviewNavigationState]
+    UpdateNavState2 --> CalcIndex2[Calculate currentIndex]
+    CalcIndex2 --> SetCurrentPage2[_printJob.CurrentPage = currentIndex + 1]
+    SetCurrentPage2 --> UpdateLabel2[Update Page X / Y label]
+    UpdateLabel2 --> EnableButtons2[Enable/Disable nav buttons]
+    
+    EnableButtons2 --> UpdateRange[UpdatePageRangeControls]
+    UpdateRange --> UpdateActions[UpdateActionButtonsState]
+    UpdateActions --> CheckPending{_isPreviewRefreshPending?}
+    
+    CheckPending -->|Yes| CallAgain[Call GeneratePreviewAsync again]
+    CheckPending -->|No| PreviewComplete[Preview Generation Complete]
+    
+    %% User Interactions
+    PreviewComplete --> UserNav{User Action}
+    
+    UserNav -->|First Page| FirstBtn[PrintForm_Button_FirstPage_Click]
+    FirstBtn --> ChangePage0[ChangePreviewPage 0]
+    
+    UserNav -->|Previous| PrevBtn[PrintForm_Button_PreviousPage_Click]
+    PrevBtn --> ChangePagePrev[ChangePreviewPage currentIndex - 1]
+    
+    UserNav -->|Next| NextBtn[PrintForm_Button_NextPage_Click]
+    NextBtn --> ChangePageNext[ChangePreviewPage currentIndex + 1]
+    
+    UserNav -->|Last| LastBtn[PrintForm_Button_LastPage_Click]
+    LastBtn --> ChangePageLast[ChangePreviewPage _previewTotalPages - 1]
+    
+    %% ChangePreviewPage
+    ChangePage0 --> SetNavUpdating[_isNavigationUpdating = true]
+    ChangePagePrev --> SetNavUpdating
+    ChangePageNext --> SetNavUpdating
+    ChangePageLast --> SetNavUpdating
+    
+    SetNavUpdating --> SetCtrlStartNew[PrintForm_PrintPreviewControl.StartPage = requestedIndex]
+    SetCtrlStartNew --> SetJobCurrent[_printJob.CurrentPage = requestedIndex + 1]
+    SetJobCurrent --> UpdateNavState3[UpdatePreviewNavigationState]
+    UpdateNavState3 --> ClearNavUpdating[_isNavigationUpdating = false]
+    
+    %% Settings Changes
+    UserNav -->|Change Printer| PrinterChange[PrintForm_ComboBox_Printer_SelectedIndexChanged]
+    PrinterChange --> StorePrinter[_printJob.PrinterName = selected]
+    StorePrinter --> RefreshPrinter[SchedulePreviewRefresh]
+    
+    UserNav -->|Change Orientation| OrientChange[RadioButton_Landscape/Portrait_CheckedChanged]
+    OrientChange --> StoreOrient[_printJob.Landscape = value]
+    StoreOrient --> RefreshOrient[SchedulePreviewRefresh]
+    
+    UserNav -->|Change Page Range| RangeChange[RadioButton_AllPages/CurrentPage/CustomRange_CheckedChanged]
+    RangeChange --> StoreRange[_printJob.PageRangeType = value]
+    StoreRange --> RefreshRange[SchedulePreviewRefresh]
+    
+    UserNav -->|Toggle Column| ColToggle[CheckedListBox_SelectedIndexChanged]
+    ColToggle --> UpdateVisible[Update _printJob.VisibleColumns]
+    UpdateVisible --> RefreshCols[SchedulePreviewRefresh]
+    
+    %% Print Action
+    UserNav -->|Print| PrintBtn[PrintForm_Button_Print_Click]
+    PrintBtn --> CheckDoc{_previewDocument exists?}
+    CheckDoc -->|No| ShowPrintError[Service_ErrorHandler.ShowWarning]
+    CheckDoc -->|Yes| SaveSettings1[_printSettings.Save]
+    SaveSettings1 --> CreatePrintMgr[new Helper_PrintManager<br/>_printJob]
+    CreatePrintMgr --> CallPrint[_printManager.Print]
+    CallPrint --> ShowPrintDlg[Show PrintDialog]
+    ShowPrintDlg --> UserPrintChoice{User choice}
+    UserPrintChoice -->|OK| ExecutePrint[printDocument.Print]
+    UserPrintChoice -->|Cancel| PrintCancelled[Return false]
+    ExecutePrint --> SetResult[DialogResult.OK]
+    PrintCancelled --> KeepOpen[Keep dialog open]
+    
+    %% Export Action
+    UserNav -->|Export| ExportBtn[PrintForm_Button_Export_Click]
+    ExportBtn --> ShowExportMenu[Show ContextMenuStrip]
+    ShowExportMenu --> ExportChoice{User choice}
+    
+    ExportChoice -->|PDF| ExportPdf[PrintForm_ToolStripMenuItem_ExportPdf_Click]
+    ExportPdf --> SavePdf[Model_Print_Settings.Save]
+    SavePdf --> CallPdfExport[Helper_ExportManager.ExportToPdfAsync]
+    CallPdfExport --> ShowSaveDialog1[SaveFileDialog]
+    ShowSaveDialog1 --> PdfChoice{User choice}
+    PdfChoice -->|OK| WritePdf[Write PDF file]
+    PdfChoice -->|Cancel| PdfCancelled[Return]
+    WritePdf --> PdfSuccess[Show success message]
+    
+    ExportChoice -->|Excel| ExportExcel[PrintForm_ToolStripMenuItem_ExportExcel_Click]
+    ExportExcel --> SaveExcel[Model_Print_Settings.Save]
+    SaveExcel --> CallExcelExport[Helper_ExportManager.ExportToExcelAsync]
+    CallExcelExport --> ShowSaveDialog2[SaveFileDialog]
+    ShowSaveDialog2 --> ExcelChoice{User choice}
+    ExcelChoice -->|OK| WriteExcel[Write Excel file using ClosedXML]
+    ExcelChoice -->|Cancel| ExcelCancelled[Return]
+    WriteExcel --> ExcelSuccess[Show success message]
+    
+    %% Cancel/Close
+    UserNav -->|Cancel| CancelBtn[PrintForm_Button_Cancel_Click]
+    CancelBtn --> SetCancel[DialogResult.Cancel]
+    SetCancel --> CloseForm[Close form]
+    
+    %% Cleanup
+    CloseForm --> DisposePreview[Dispose PrintPreviewControl.Document]
+    DisposePreview --> DisposePrintMgr[Dispose Helper_PrintManager]
+    DisposePrintMgr --> DisposePrinter2[Dispose Core_TablePrinter]
+    DisposePrinter2 --> EndTask[tcs.SetResult DialogResult]
+    EndTask --> ReturnRemove[Return to Control_RemoveTab]
+    ReturnRemove --> LogResult[LoggingUtility.Log result]
+    
+    %% Styling
+    style UserClick fill:#e1f5ff,stroke:#0366d6,stroke-width:3px
+    style RemovePrint fill:#fff4e1,stroke:#f9a825,stroke-width:2px
+    style CallHelper fill:#fff4e1,stroke:#f9a825,stroke-width:2px
+    style PrintFormCtor fill:#e1ffe1,stroke:#28a745,stroke-width:3px
+    style CallGenerate fill:#ffe1e1,stroke:#d73a49,stroke-width:2px
+    style BeginPrint fill:#ffe1e1,stroke:#d73a49,stroke-width:3px
+    style RenderPages fill:#f0e1ff,stroke:#6f42c1,stroke-width:2px
+    style PreviewComplete fill:#e1ffe1,stroke:#28a745,stroke-width:3px
+    style SetResult fill:#e1ffe1,stroke:#28a745,stroke-width:3px
+    style ReturnRemove fill:#e1f5ff,stroke:#0366d6,stroke-width:3px

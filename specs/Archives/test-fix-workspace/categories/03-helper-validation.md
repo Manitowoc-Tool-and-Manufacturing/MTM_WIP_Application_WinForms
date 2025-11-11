@@ -215,7 +215,7 @@ dotnet build MTM_WIP_Application_Winforms.csproj -c Debug
 
 ### Configuration (May Affect Validation)
 - `Core/Core_WipAppVariables.cs` - May contain valid location codes
-- `Models/Model_AppVariables.cs` - May contain validation rules
+- `Models/Model_Application_Variables.cs` - May contain validation rules
 
 ### No Stored Procedures
 - These are pure C# unit/integration tests, no database involved

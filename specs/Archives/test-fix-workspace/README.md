@@ -93,7 +93,7 @@ Progress: [████████████████░░░░] 83.1%
 
 1. **Follow clarification protocol**: See TOC.md "AI-Human Clarification Protocol"
 2. **Use discovery-first workflow**: Verify method signatures before coding
-3. **Apply null-safe patterns**: Follow DaoResult checking patterns
+3. **Apply null-safe patterns**: Follow Model_Dao_Result checking patterns
 4. **Document learnings**: Capture insights in session logs
 5. **Respect test isolation**: Ensure tests don't interfere with each other
 
@@ -176,7 +176,7 @@ ON DUPLICATE KEY UPDATE UserID = UserID;
 
 - Start with [Test Patterns](reference/test-patterns.md) for C# examples
 - Read [Discovery-First Workflow](reference/test-patterns.md#discovery-first-workflow) to avoid mistakes
-- Follow [Null-Safe DaoResult Pattern](reference/test-patterns.md#null-safe-daoresult-pattern)
+- Follow [Null-Safe Model_Dao_Result Pattern](reference/test-patterns.md#null-safe-daoresult-pattern)
 
 ### Understanding Root Causes?
 
@@ -223,7 +223,7 @@ ON DUPLICATE KEY UPDATE UserID = UserID;
 - Follows `.github/instructions/integration-testing.instructions.md`
 - Uses `BaseIntegrationTest` class patterns
 - Respects discovery-first workflow
-- Applies null-safe DaoResult checking
+- Applies null-safe Model_Dao_Result checking
 
 ### With MCP Tools
 

@@ -5,6 +5,7 @@ using MTM_WIP_Application_Winforms.Core;
 using MTM_WIP_Application_Winforms.Data;
 using MTM_WIP_Application_Winforms.Models;
 using MTM_WIP_Application_Winforms.Logging;
+using MTM_WIP_Application_Winforms.Services;
 
 namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
 {
@@ -36,19 +37,49 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
         {
             try
             {
-                string user = Model_AppVariables.User;
+                string user = Model_Application_Variables.User;
 
-                Control_Database_TextBox_Server.Text =
-                    await Dao_User.GetWipServerAddressAsync(user) ?? "localhost";
-                Control_Database_TextBox_Port.Text = await Dao_User.GetWipServerPortAsync(user) ?? "3306";
-                Control_Database_TextBox_Database.Text = await Dao_User.GetDatabaseAsync(user) ?? "MTM_WIP_Application_Winforms";
+                var serverResult = await Dao_User.GetWipServerAddressAsync(user);
+                var portResult = await Dao_User.GetWipServerPortAsync(user);
+                var databaseResult = await Dao_User.GetDatabaseAsync(user);
 
-                StatusMessageChanged?.Invoke(this, "Database settings loaded successfully.");
+                if (serverResult.IsSuccess && portResult.IsSuccess && databaseResult.IsSuccess)
+                {
+                    Control_Database_TextBox_Server.Text = serverResult.Data ?? "localhost";
+                    Control_Database_TextBox_Port.Text = portResult.Data ?? "3306";
+                    Control_Database_TextBox_Database.Text = databaseResult.Data ?? "MTM_WIP_Application_Winforms";
+
+                    StatusMessageChanged?.Invoke(this, "Database settings loaded successfully.");
+                }
+                else
+                {
+                    // Handle database errors gracefully
+                    var errors = new List<string>();
+                    if (!serverResult.IsSuccess) errors.Add($"Server: {serverResult.ErrorMessage}");
+                    if (!portResult.IsSuccess) errors.Add($"Port: {portResult.ErrorMessage}");
+                    if (!databaseResult.IsSuccess) errors.Add($"Database: {databaseResult.ErrorMessage}");
+
+                    Service_ErrorHandler.HandleDatabaseError(
+                        new Exception($"Failed to load database settings: {string.Join("; ", errors)}"),
+                        contextData: new Dictionary<string, object> { ["User"] = user },
+                        callerName: nameof(LoadDatabaseSettingsAsync),
+                        controlName: nameof(Control_Database)
+                    );
+
+                    // Set default values as fallback
+                    Control_Database_TextBox_Server.Text = "localhost";
+                    Control_Database_TextBox_Port.Text = "3306";
+                    Control_Database_TextBox_Database.Text = "MTM_WIP_Application_Winforms";
+
+                    StatusMessageChanged?.Invoke(this, $"Error loading database settings: {string.Join("; ", errors)}");
+                }
             }
             catch (Exception ex)
             {
-                LoggingUtility.LogApplicationError(ex);
-                StatusMessageChanged?.Invoke(this, $"Error loading database settings: {ex.Message}");
+                Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Medium,
+                    contextData: new Dictionary<string, object> { ["User"] = Model_Application_Variables.User },
+                    callerName: nameof(LoadDatabaseSettingsAsync),
+                    controlName: nameof(Control_Database));
 
                 // Set default values as fallback
                 Control_Database_TextBox_Server.Text = "localhost";
@@ -64,42 +95,84 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
                 // Validation
                 if (string.IsNullOrWhiteSpace(Control_Database_TextBox_Server.Text))
                 {
-                    StatusMessageChanged?.Invoke(this, "Server address is required.");
+                    Service_ErrorHandler.HandleValidationError("Server address is required.", "Server",
+                        callerName: nameof(SaveDatabaseSettingsAsync),
+                        controlName: nameof(Control_Database));
                     return;
                 }
 
                 if (string.IsNullOrWhiteSpace(Control_Database_TextBox_Port.Text))
                 {
-                    StatusMessageChanged?.Invoke(this, "Port is required.");
+                    Service_ErrorHandler.HandleValidationError("Port is required.", "Port",
+                        callerName: nameof(SaveDatabaseSettingsAsync),
+                        controlName: nameof(Control_Database));
                     return;
                 }
 
                 if (!int.TryParse(Control_Database_TextBox_Port.Text, out int port) || port <= 0 || port > 65535)
                 {
-                    StatusMessageChanged?.Invoke(this, "Port must be a valid number between 1 and 65535.");
+                    Service_ErrorHandler.HandleValidationError("Port must be a valid number between 1 and 65535.", "Port",
+                        callerName: nameof(SaveDatabaseSettingsAsync),
+                        controlName: nameof(Control_Database));
                     return;
                 }
 
                 if (string.IsNullOrWhiteSpace(Control_Database_TextBox_Database.Text))
                 {
-                    StatusMessageChanged?.Invoke(this, "Database name is required.");
+                    Service_ErrorHandler.HandleValidationError("Database name is required.", "Database",
+                        callerName: nameof(SaveDatabaseSettingsAsync),
+                        controlName: nameof(Control_Database));
                     return;
                 }
 
-                string user = Model_AppVariables.User;
+                string user = Model_Application_Variables.User;
 
-                await Dao_User.SetWipServerAddressAsync(user, Control_Database_TextBox_Server.Text.Trim());
-                await Dao_User.SetDatabaseAsync(user, Control_Database_TextBox_Database.Text.Trim());
-                await Dao_User.SetWipServerPortAsync(user, Control_Database_TextBox_Port.Text.Trim());
+                var serverResult = await Dao_User.SetWipServerAddressAsync(user, Control_Database_TextBox_Server.Text.Trim());
+                var databaseResult = await Dao_User.SetDatabaseAsync(user, Control_Database_TextBox_Database.Text.Trim());
+                var portResult = await Dao_User.SetWipServerPortAsync(user, Control_Database_TextBox_Port.Text.Trim());
 
-                DatabaseSettingsUpdated?.Invoke(this, EventArgs.Empty);
-                StatusMessageChanged?.Invoke(this,
-                    "Database settings saved successfully. Restart application for changes to take effect.");
+                if (serverResult.IsSuccess && databaseResult.IsSuccess && portResult.IsSuccess)
+                {
+                    DatabaseSettingsUpdated?.Invoke(this, EventArgs.Empty);
+                    StatusMessageChanged?.Invoke(this,
+                        "Database settings saved successfully. Restart application for changes to take effect.");
+                }
+                else
+                {
+                    // Handle database errors gracefully
+                    var errors = new List<string>();
+                    if (!serverResult.IsSuccess) errors.Add($"Server: {serverResult.ErrorMessage}");
+                    if (!databaseResult.IsSuccess) errors.Add($"Database: {databaseResult.ErrorMessage}");
+                    if (!portResult.IsSuccess) errors.Add($"Port: {portResult.ErrorMessage}");
+
+                    Service_ErrorHandler.HandleDatabaseError(
+                        new Exception($"Failed to save database settings: {string.Join("; ", errors)}"),
+                        contextData: new Dictionary<string, object>
+                        {
+                            ["User"] = user,
+                            ["Server"] = Control_Database_TextBox_Server.Text.Trim(),
+                            ["Port"] = Control_Database_TextBox_Port.Text.Trim(),
+                            ["Database"] = Control_Database_TextBox_Database.Text.Trim()
+                        },
+                        callerName: nameof(SaveDatabaseSettingsAsync),
+                        controlName: nameof(Control_Database)
+                    );
+
+                    StatusMessageChanged?.Invoke(this, $"Error saving database settings: {string.Join("; ", errors)}");
+                }
             }
             catch (Exception ex)
             {
-                LoggingUtility.LogApplicationError(ex);
-                StatusMessageChanged?.Invoke(this, $"Error saving database settings: {ex.Message}");
+                Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Medium,
+                    contextData: new Dictionary<string, object>
+                    {
+                        ["User"] = Model_Application_Variables.User,
+                        ["Server"] = Control_Database_TextBox_Server.Text.Trim(),
+                        ["Port"] = Control_Database_TextBox_Port.Text.Trim(),
+                        ["Database"] = Control_Database_TextBox_Database.Text.Trim()
+                    },
+                    callerName: nameof(SaveDatabaseSettingsAsync),
+                    controlName: nameof(Control_Database));
             }
         }
 
@@ -109,6 +182,13 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             {
                 Control_Database_Button_Save.Enabled = false;
                 await SaveDatabaseSettingsAsync();
+            }
+            catch (Exception ex)
+            {
+                Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Medium,
+                    contextData: new Dictionary<string, object> { ["User"] = Model_Application_Variables.User },
+                    callerName: nameof(SaveButton_Click),
+                    controlName: nameof(Control_Database));
             }
             finally
             {
@@ -131,8 +211,10 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             }
             catch (Exception ex)
             {
-                LoggingUtility.LogApplicationError(ex);
-                StatusMessageChanged?.Invoke(this, $"Error resetting database settings: {ex.Message}");
+                Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Medium,
+                    contextData: new Dictionary<string, object> { ["User"] = Model_Application_Variables.User },
+                    callerName: nameof(ResetButton_Click),
+                    controlName: nameof(Control_Database));
             }
             finally
             {

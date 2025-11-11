@@ -69,7 +69,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                 });
 
             InitializeComponent();
-
+SetStyle(ControlStyles.OptimizedDoubleBuffer, true);
             // Apply comprehensive DPI scaling and runtime layout adjustments
             // THEME POLICY: Only update theme on startup, in settings menu, or on DPI change.
             // Do NOT call theme update methods from arbitrary event handlers or business logic.
@@ -108,7 +108,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
         private void InitializeImmediateUI()
         {
             // Set immediate UI state that doesn't require database access
-            Color errorColor = Model_AppVariables.UserUiColors.ComboBoxErrorForeColor ?? Color.Red;
+            Color errorColor = Model_Application_Variables.UserUiColors.ComboBoxErrorForeColor ?? Color.Red;
             Control_TransferTab_ComboBox_Part.ForeColor = errorColor;
             Control_TransferTab_ComboBox_Operation.ForeColor = errorColor;
             Control_TransferTab_ComboBox_ToLocation.ForeColor = errorColor;
@@ -148,8 +148,8 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                 // Load user information asynchronously
                 try
                 {
-                    Model_AppVariables.UserFullName = await Dao_User.GetUserFullNameAsync(Model_AppVariables.User);
-                    LoggingUtility.Log($"User full name loaded: {Model_AppVariables.UserFullName}");
+                    Model_Application_Variables.UserFullName = await Dao_User.GetUserFullNameAsync(Model_Application_Variables.User);
+                    LoggingUtility.Log($"User full name loaded: {Model_Application_Variables.UserFullName}");
                 }
                 catch (Exception ex)
                 {
@@ -386,11 +386,11 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
 
                 Debug.WriteLine("[DEBUG] Resetting UI fields");
                 MainFormControlHelper.ResetComboBox(Control_TransferTab_ComboBox_Part,
-                    Model_AppVariables.UserUiColors.ComboBoxErrorForeColor ?? Color.Red, 0);
+                    Model_Application_Variables.UserUiColors.ComboBoxErrorForeColor ?? Color.Red, 0);
                 MainFormControlHelper.ResetComboBox(Control_TransferTab_ComboBox_Operation,
-                    Model_AppVariables.UserUiColors.ComboBoxErrorForeColor ?? Color.Red, 0);
+                    Model_Application_Variables.UserUiColors.ComboBoxErrorForeColor ?? Color.Red, 0);
                 MainFormControlHelper.ResetComboBox(Control_TransferTab_ComboBox_ToLocation,
-                    Model_AppVariables.UserUiColors.ComboBoxErrorForeColor ?? Color.Red, 0);
+                    Model_Application_Variables.UserUiColors.ComboBoxErrorForeColor ?? Color.Red, 0);
 
                 Control_TransferTab_DataGridView_Main.DataSource = null;
                 Control_TransferTab_DataGridView_Main.Refresh();
@@ -446,17 +446,17 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
 
                 Debug.WriteLine("[DEBUG] Resetting UI fields");
                 MainFormControlHelper.ResetComboBox(Control_TransferTab_ComboBox_Part,
-                    Model_AppVariables.UserUiColors.ErrorColor ?? Color.Red, 0);
+                    Model_Application_Variables.UserUiColors.ErrorColor ?? Color.Red, 0);
                 MainFormControlHelper.ResetComboBox(Control_TransferTab_ComboBox_Operation,
-                    Model_AppVariables.UserUiColors.ErrorColor ?? Color.Red, 0);
+                    Model_Application_Variables.UserUiColors.ErrorColor ?? Color.Red, 0);
                 MainFormControlHelper.ResetComboBox(Control_TransferTab_ComboBox_ToLocation,
-                    Model_AppVariables.UserUiColors.ErrorColor ?? Color.Red, 0);
+                    Model_Application_Variables.UserUiColors.ErrorColor ?? Color.Red, 0);
 
-                Control_TransferTab_ComboBox_Part.ForeColor = Model_AppVariables.UserUiColors.ErrorColor ?? Color.Red;
+                Control_TransferTab_ComboBox_Part.ForeColor = Model_Application_Variables.UserUiColors.ErrorColor ?? Color.Red;
                 Control_TransferTab_ComboBox_Operation.ForeColor =
-                    Model_AppVariables.UserUiColors.ErrorColor ?? Color.Red;
+                    Model_Application_Variables.UserUiColors.ErrorColor ?? Color.Red;
                 Control_TransferTab_ComboBox_ToLocation.ForeColor =
-                    Model_AppVariables.UserUiColors.ErrorColor ?? Color.Red;
+                    Model_Application_Variables.UserUiColors.ErrorColor ?? Color.Red;
 
                 Control_TransferTab_DataGridView_Main.DataSource = null;
                 Control_TransferTab_DataGridView_Main.Refresh();
@@ -638,52 +638,59 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
 
         private void Control_TransferTab_Button_Print_Click(object? sender, EventArgs? e)
         {
-            // Show progress bar at the start
-            _progressHelper?.ShowProgress();
-            _progressHelper?.UpdateProgress(10, "Preparing print...");
-
             try
             {
-                if (Control_TransferTab_DataGridView_Main.Rows.Count == 0)
+                LoggingUtility.Log("[TransferTab] Print requested.");
+
+                if (Control_TransferTab_DataGridView_Main is null || Control_TransferTab_DataGridView_Main.Rows.Count == 0)
                 {
-                    Service_ErrorHandler.ShowWarning(
-                        "No data to print.",
-                        "Print",
-                        MessageBoxButtons.OK,
-                        MessageBoxIcon.Information);
+                    LoggingUtility.Log("[TransferTab] Print aborted - grid is empty.");
+                    Service_ErrorHandler.HandleValidationError(
+                        "No records available to print. Run a search or perform an inventory transfer first.",
+                        "Print");
                     return;
                 }
 
-                // Get visible column names for print
-                List<string> visibleColumns = new();
-                foreach (DataGridViewColumn col in Control_TransferTab_DataGridView_Main.Columns)
-                {
-                    if (col.Visible)
-                    {
-                        visibleColumns.Add(col.Name);
-                    }
-                }
+                Control parent = FindForm() is Control form ? form : this;
+                string gridName = "Transfer Inventory";
 
-                Core_DgvPrinter printer = new();
-                Control_TransferTab_DataGridView_Main.Tag = Control_TransferTab_ComboBox_Part.Text;
-                // Set visible columns for print
-                printer.SetPrintVisibleColumns(visibleColumns);
-                _progressHelper?.UpdateProgress(60, "Printing...");
-                printer.Print(Control_TransferTab_DataGridView_Main);
-                _progressHelper?.UpdateProgress(100, "Print complete");
+                var dialogTask = Helper_PrintManager.ShowPrintDialogAsync(parent, Control_TransferTab_DataGridView_Main, gridName);
+
+                dialogTask.ContinueWith(t =>
+                {
+                    if (t.IsCompletedSuccessfully)
+                    {
+                        LoggingUtility.Log($"[TransferTab] Print dialog closed with result: {t.Result}.");
+                    }
+                    else if (t.IsFaulted)
+                    {
+                        Exception? baseException = t.Exception?.GetBaseException();
+                        if (baseException != null)
+                        {
+                            LoggingUtility.LogApplicationError(baseException);
+                            BeginInvoke(new Action(() =>
+                                Service_ErrorHandler.HandleException(
+                                    baseException,
+                                    Enum_ErrorSeverity.Medium,
+                                    controlName: nameof(Control_TransferTab_Button_Print_Click))));
+                        }
+                    }
+                });
             }
             catch (Exception ex)
             {
                 LoggingUtility.LogApplicationError(ex);
                 Service_ErrorHandler.HandleException(
                     ex,
-                    ErrorSeverity.Medium,
-                    controlName: nameof(Control_TransferTab_Button_Print));
+                    Enum_ErrorSeverity.Medium,
+                    controlName: nameof(Control_TransferTab_Button_Print_Click));
             }
-            finally
-            {
-                _progressHelper?.HideProgress();
-            }
+        }
+
+        private async void Control_TransferTab_ContextMenuItem_Print_Click(object? sender, EventArgs e)
+        {
+            // Reuse existing print button logic
+            Control_TransferTab_Button_Print_Click(sender, e);
         }
 
         #endregion
@@ -714,7 +721,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
 
             int transferQuantity = Math.Min((int)Control_TransferTab_NumericUpDown_Quantity.Value, originalQuantity);
             string newLocation = Control_TransferTab_ComboBox_ToLocation.Text;
-            string user = Model_AppVariables.User ?? Environment.UserName;
+            string user = Model_Application_Variables.User ?? Environment.UserName;
             if (transferQuantity < originalQuantity)
             {
                 await Dao_Inventory.TransferInventoryQuantityAsync(
@@ -727,7 +734,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                     batchNumber, partId, operation, newLocation);
             }
 
-            var historyResult = await Dao_History.AddTransactionHistoryAsync(new Model_TransactionHistory
+            var historyResult = await Dao_History.AddTransactionHistoryAsync(new Model_Transactions_History
             {
                 TransactionType = "TRANSFER",
                 PartId = partId,
@@ -757,7 +764,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
         private async Task TransferMultipleRowsAsync(DataGridViewSelectedRowCollection selectedRows)
         {
             string newLocation = Control_TransferTab_ComboBox_ToLocation.Text;
-            string user = Model_AppVariables.User ?? Environment.UserName;
+            string user = Model_Application_Variables.User ?? Environment.UserName;
             HashSet<string> partIds = new();
             HashSet<string> operations = new();
             HashSet<string> fromLocations = new();
@@ -789,7 +796,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                 await Dao_Inventory.TransferPartSimpleAsync(
                     batchNumber, partId, operation, newLocation);
                     
-                var historyResult = await Dao_History.AddTransactionHistoryAsync(new Model_TransactionHistory
+                var historyResult = await Dao_History.AddTransactionHistoryAsync(new Model_Transactions_History
                 {
                     TransactionType = "TRANSFER",
                     PartId = partId,
@@ -852,7 +859,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                 if (Control_TransferTab_ComboBox_Operation.SelectedIndex > 0)
                 {
                     SetComboBoxForeColor(Control_TransferTab_ComboBox_Operation, true);
-                    Model_AppVariables.Operation = Control_TransferTab_ComboBox_Operation.Text;
+                    Model_Application_Variables.Operation = Control_TransferTab_ComboBox_Operation.Text;
                 }
                 else
                 {
@@ -863,7 +870,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                         Control_TransferTab_ComboBox_Operation.SelectedIndex = 0;
                     }
 
-                    Model_AppVariables.Operation = null;
+                    Model_Application_Variables.Operation = null;
                 }
             }
             catch (Exception ex)
@@ -882,7 +889,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                 if (Control_TransferTab_ComboBox_Part.SelectedIndex > 0)
                 {
                     SetComboBoxForeColor(Control_TransferTab_ComboBox_Part, true);
-                    Model_AppVariables.PartId = Control_TransferTab_ComboBox_Part.Text;
+                    Model_Application_Variables.PartId = Control_TransferTab_ComboBox_Part.Text;
                 }
                 else
                 {
@@ -893,7 +900,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                         Control_TransferTab_ComboBox_Part.SelectedIndex = 0;
                     }
 
-                    Model_AppVariables.PartId = null;
+                    Model_Application_Variables.PartId = null;
                 }
             }
             catch (Exception ex)
@@ -982,14 +989,14 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                 Control_TransferTab_ComboBox_Part.Leave += (s, e) =>
                 {
                     Control_TransferTab_ComboBox_Part.BackColor =
-                        Model_AppVariables.UserUiColors.ControlBackColor ?? SystemColors.Window;
+                        Model_Application_Variables.UserUiColors.ControlBackColor ?? SystemColors.Window;
                     Helper_UI_ComboBoxes.ValidateComboBoxItem(Control_TransferTab_ComboBox_Part,
                         "[ Enter Part Number ]");
                 };
                 Control_TransferTab_ComboBox_Part.Enter += (s, e) =>
                 {
                     Control_TransferTab_ComboBox_Part.BackColor =
-                        Model_AppVariables.UserUiColors.ControlFocusedBackColor ?? Color.LightBlue;
+                        Model_Application_Variables.UserUiColors.ControlFocusedBackColor ?? Color.LightBlue;
                 };
 
                 // OPERATION ComboBox
@@ -1001,14 +1008,14 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                 Control_TransferTab_ComboBox_Operation.Leave += (s, e) =>
                 {
                     Control_TransferTab_ComboBox_Operation.BackColor =
-                        Model_AppVariables.UserUiColors.ControlBackColor ?? SystemColors.Window;
+                        Model_Application_Variables.UserUiColors.ControlBackColor ?? SystemColors.Window;
                     Helper_UI_ComboBoxes.ValidateComboBoxItem(Control_TransferTab_ComboBox_Operation,
                         "[ Enter Operation ]");
                 };
                 Control_TransferTab_ComboBox_Operation.Enter += (s, e) =>
                 {
                     Control_TransferTab_ComboBox_Operation.BackColor =
-                        Model_AppVariables.UserUiColors.ControlFocusedBackColor ?? Color.LightBlue;
+                        Model_Application_Variables.UserUiColors.ControlFocusedBackColor ?? Color.LightBlue;
                 };
 
                 // TO LOCATION ComboBox
@@ -1019,14 +1026,14 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                 Control_TransferTab_ComboBox_ToLocation.Leave += (s, e) =>
                 {
                     Control_TransferTab_ComboBox_ToLocation.BackColor =
-                        Model_AppVariables.UserUiColors.ControlBackColor ?? SystemColors.Window;
+                        Model_Application_Variables.UserUiColors.ControlBackColor ?? SystemColors.Window;
                     Helper_UI_ComboBoxes.ValidateComboBoxItem(Control_TransferTab_ComboBox_ToLocation,
                         "[ Enter Location ]");
                 };
                 Control_TransferTab_ComboBox_ToLocation.Enter += (s, e) =>
                 {
                     Control_TransferTab_ComboBox_ToLocation.BackColor =
-                        Model_AppVariables.UserUiColors.ControlFocusedBackColor ?? Color.LightBlue;
+                        Model_Application_Variables.UserUiColors.ControlFocusedBackColor ?? Color.LightBlue;
                 };
 
                 // NumericUpDown
@@ -1101,8 +1108,8 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                 MainFormInstance.MainForm_SplitContainer_Middle.Panel2Collapsed = !panelCollapsed;
                 Control_TransferTab_Button_Toggle_RightPanel.Text = panelCollapsed ? "➡️" : "⬅️";
                 Control_TransferTab_Button_Toggle_RightPanel.ForeColor = panelCollapsed
-                    ? Model_AppVariables.UserUiColors.SuccessColor ?? Color.Green
-                    : Model_AppVariables.UserUiColors.ErrorColor ?? Color.Red;
+                    ? Model_Application_Variables.UserUiColors.SuccessColor ?? Color.Green
+                    : Model_Application_Variables.UserUiColors.ErrorColor ?? Color.Red;
             }
 
             Helper_UI_ComboBoxes.DeselectAllComboBoxText(this);
@@ -1114,23 +1121,27 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
 
         private void ApplyPrivileges()
         {
-            bool isAdmin = Model_AppVariables.UserTypeAdmin;
-            bool isNormal = Model_AppVariables.UserTypeNormal;
-            bool isReadOnly = Model_AppVariables.UserTypeReadOnly;
+            bool isDeveloper = Model_Application_Variables.UserTypeDeveloper;
+            bool isAdmin = Model_Application_Variables.UserTypeAdmin;
+            bool isNormal = Model_Application_Variables.UserTypeNormal;
+            bool isReadOnly = Model_Application_Variables.UserTypeReadOnly;
+
+            // Developers have all Admin privileges
+            bool hasAdminAccess = isDeveloper || isAdmin;
 
             // ComboBoxes
-            Control_TransferTab_ComboBox_Part.Enabled = isAdmin || isNormal || isReadOnly;
-            Control_TransferTab_ComboBox_Operation.Enabled = isAdmin || isNormal || isReadOnly;
-            Control_TransferTab_ComboBox_ToLocation.Enabled = isAdmin || isNormal || isReadOnly;
+            Control_TransferTab_ComboBox_Part.Enabled = hasAdminAccess || isNormal || isReadOnly;
+            Control_TransferTab_ComboBox_Operation.Enabled = hasAdminAccess || isNormal || isReadOnly;
+            Control_TransferTab_ComboBox_ToLocation.Enabled = hasAdminAccess || isNormal || isReadOnly;
             // NumericUpDown
             Control_TransferTab_NumericUpDown_Quantity.ReadOnly = isReadOnly;
-            Control_TransferTab_NumericUpDown_Quantity.Enabled = isAdmin || isNormal || isReadOnly;
+            Control_TransferTab_NumericUpDown_Quantity.Enabled = hasAdminAccess || isNormal || isReadOnly;
             // DataGridView
             Control_TransferTab_DataGridView_Main.ReadOnly = isReadOnly;
-            Control_TransferTab_DataGridView_Main.Enabled = isAdmin || isNormal || isReadOnly;
+            Control_TransferTab_DataGridView_Main.Enabled = hasAdminAccess || isNormal || isReadOnly;
             // Buttons
-            Control_TransferTab_Button_Transfer.Visible = isAdmin || isNormal;
-            Control_TransferTab_Button_Transfer.Enabled = isAdmin || isNormal;
+            Control_TransferTab_Button_Transfer.Visible = hasAdminAccess || isNormal;
+            Control_TransferTab_Button_Transfer.Enabled = hasAdminAccess || isNormal;
             Control_TransferTab_Button_Reset.Visible = true;
             Control_TransferTab_Button_Reset.Enabled = true;
             Control_TransferTab_Button_Search.Visible = true;
@@ -1156,8 +1167,8 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private void SetComboBoxForeColor(ComboBox combo, bool valid) =>
             combo.ForeColor = valid
-                ? Model_AppVariables.UserUiColors.ComboBoxForeColor ?? Color.Black
-                : Model_AppVariables.UserUiColors.ComboBoxErrorForeColor ?? Color.Red;
+                ? Model_Application_Variables.UserUiColors.ComboBoxForeColor ?? Color.Black
+                : Model_Application_Variables.UserUiColors.ComboBoxErrorForeColor ?? Color.Red;
 
         /// <summary>
         /// Efficiently configure DataGridView columns visibility and display order

@@ -171,7 +171,7 @@ namespace MTM_WIP_Application_Winforms.Controls.Shared
             Point center = new(rect.Width / 2, rect.Height / 2);
             int radius = Math.Min(rect.Width, rect.Height) / 2 - 4;
 
-            using Pen pen = new(Model_AppVariables.UserUiColors?.ProgressBarForeColor ?? Color.Blue, 3);
+            using Pen pen = new(Model_Application_Variables.UserUiColors?.ProgressBarForeColor ?? Color.Blue, 3);
 
             int startAngle = Environment.TickCount / 10 % 360;
             g.DrawArc(pen, center.X - radius, center.Y - radius, radius * 2, radius * 2, startAngle, 270);
@@ -265,7 +265,7 @@ namespace MTM_WIP_Application_Winforms.Controls.Shared
             try
             {
                 Core_Themes.Core_AppThemes.AppTheme theme = Core_Themes.Core_AppThemes.GetCurrentTheme();
-                Model_UserUiColors colors = theme.Colors;
+                Model_Shared_UserUiColors colors = theme.Colors;
                 if (colors.UserControlBackColor.HasValue)
                 {
                     BackColor = colors.UserControlBackColor.Value;

@@ -63,6 +63,7 @@ namespace MTM_WIP_Application_Winforms.Forms.MainForm
                     });
 
                 InitializeComponent();
+                SetStyle(ControlStyles.OptimizedDoubleBuffer, true);
                 AutoScaleMode = AutoScaleMode.Dpi;
 
                 Service_DebugTracer.TraceUIAction("THEME_APPLICATION", nameof(MainForm),
@@ -129,7 +130,7 @@ namespace MTM_WIP_Application_Winforms.Forms.MainForm
             }
 
             Debug.WriteLine("[DEBUG] [MainForm.ctor] MainForm constructed.");
-            
+
             Service_DebugTracer.TraceMethodExit(null, nameof(MainForm), nameof(MainForm));
         }
 
@@ -141,8 +142,8 @@ namespace MTM_WIP_Application_Winforms.Forms.MainForm
         {
             Service_DebugTracer.TraceMethodEntry(new Dictionary<string, object>
             {
-                ["p_User"] = Model_AppVariables.User,
-                ["UserType"] = Model_AppVariables.UserTypeAdmin ? "Admin" : Model_AppVariables.UserTypeNormal ? "Normal" : "ReadOnly"
+                ["User"] = Model_Application_Variables.User,
+                ["UserType"] = Model_Application_Variables.UserTypeDeveloper ? "Developer" : Model_Application_Variables.UserTypeAdmin ? "Admin" : Model_Application_Variables.UserTypeNormal ? "Normal" : "ReadOnly"
             }, nameof(InitializeFormTitle), nameof(MainForm));
 
             try
@@ -150,17 +151,17 @@ namespace MTM_WIP_Application_Winforms.Forms.MainForm
                 string privilege = GetUserPrivilegeDisplayText();
                 var formTitleData = new Dictionary<string, object>
                 {
-                    ["p_User"] = Model_AppVariables.User,
+                    ["User"] = Model_Application_Variables.User,
                     ["Privilege"] = privilege,
-                    ["Title"] = $"Manitowoc Tool and Manufacturing WIP Inventory System | {Model_AppVariables.User} | {privilege}"
+                    ["Title"] = $"Manitowoc Tool and Manufacturing WIP Inventory System | {Model_Application_Variables.User} | {privilege}"
                 };
-                
-                Service_DebugTracer.TraceBusinessLogic("FORM_TITLE_GENERATION", 
-                    inputData: new { User = Model_AppVariables.User, UserType = privilege },
+
+                Service_DebugTracer.TraceBusinessLogic("FORM_TITLE_GENERATION",
+                    inputData: new { User = Model_Application_Variables.User, UserType = privilege },
                     outputData: formTitleData["Title"]);
 
                 Text = formTitleData["Title"].ToString();
-                
+
                 Service_DebugTracer.TraceUIAction("FORM_TITLE_SET", nameof(MainForm), formTitleData);
             }
             catch (Exception ex)
@@ -177,26 +178,30 @@ namespace MTM_WIP_Application_Winforms.Forms.MainForm
         {
             Service_DebugTracer.TraceMethodEntry(new Dictionary<string, object>
             {
-                ["UserTypeAdmin"] = Model_AppVariables.UserTypeAdmin,
-                ["UserTypeNormal"] = Model_AppVariables.UserTypeNormal,
-                ["UserTypeReadOnly"] = Model_AppVariables.UserTypeReadOnly
+                ["UserTypeDeveloper"] = Model_Application_Variables.UserTypeDeveloper,
+                ["UserTypeAdmin"] = Model_Application_Variables.UserTypeAdmin,
+                ["UserTypeNormal"] = Model_Application_Variables.UserTypeNormal,
+                ["UserTypeReadOnly"] = Model_Application_Variables.UserTypeReadOnly
             }, nameof(GetUserPrivilegeDisplayText), nameof(MainForm));
 
             string privilege;
-            if (Model_AppVariables.UserTypeAdmin)
+            if (Model_Application_Variables.UserTypeDeveloper)
+                privilege = "Developer";
+            else if (Model_Application_Variables.UserTypeAdmin)
                 privilege = "Administrator";
-            else if (Model_AppVariables.UserTypeNormal)
+            else if (Model_Application_Variables.UserTypeNormal)
                 privilege = "Normal User";
-            else if (Model_AppVariables.UserTypeReadOnly)
+            else if (Model_Application_Variables.UserTypeReadOnly)
                 privilege = "Read Only";
             else
                 privilege = "Unknown";
 
             Service_DebugTracer.TraceBusinessLogic("USER_PRIVILEGE_DETERMINATION",
-                inputData: new { 
-                    Admin = Model_AppVariables.UserTypeAdmin,
-                    Normal = Model_AppVariables.UserTypeNormal,
-                    ReadOnly = Model_AppVariables.UserTypeReadOnly
+                inputData: new {
+                    Developer = Model_Application_Variables.UserTypeDeveloper,
+                    Admin = Model_Application_Variables.UserTypeAdmin,
+                    Normal = Model_Application_Variables.UserTypeNormal,
+                    ReadOnly = Model_Application_Variables.UserTypeReadOnly
                 },
                 outputData: privilege);
 
@@ -227,8 +232,8 @@ namespace MTM_WIP_Application_Winforms.Forms.MainForm
                 Debug.WriteLine("[DEBUG] [MainForm.ctor] DPI change events wired up.");
 
                 Service_DebugTracer.TraceUIAction("STARTUP_COMPONENTS", nameof(MainForm),
-                    new Dictionary<string, object> 
-                    { 
+                    new Dictionary<string, object>
+                    {
                         ["Phase"] = "COMPLETE",
                         ["ComponentsInitialized"] = new[] { "ConnectionStrength", "Events", "DpiChangeEvents" }
                     });
@@ -286,22 +291,22 @@ namespace MTM_WIP_Application_Winforms.Forms.MainForm
         {
             Service_DebugTracer.TraceMethodEntry(new Dictionary<string, object>
             {
-                ["CurrentUser"] = Model_AppVariables.User ?? "Unknown",
+                ["CurrentUser"] = Model_Application_Variables.User ?? "Unknown",
                 ["DevelopmentMenuExists"] = developmentToolStripMenuItem != null
             }, nameof(ConfigureDevelopmentMenuVisibility), nameof(MainForm));
 
             try
             {
-                string currentUser = Model_AppVariables.User?.ToUpperInvariant() ?? "";
+                string currentUser = Model_Application_Variables.User?.ToUpperInvariant() ?? "";
                 bool isDeveloper = currentUser == "JKOLL" || currentUser == "JOHNK";
 
                 if (developmentToolStripMenuItem != null)
                 {
                     developmentToolStripMenuItem.Visible = isDeveloper;
 
-                    Service_DebugTracer.TraceBusinessLogic("DEVELOPMENT_MENU_VISIBILITY", 
-                        inputData: new { 
-                            User = Model_AppVariables.User,
+                    Service_DebugTracer.TraceBusinessLogic("DEVELOPMENT_MENU_VISIBILITY",
+                        inputData: new {
+                            User = Model_Application_Variables.User,
                             UserUpperCase = currentUser,
                             IsDeveloper = isDeveloper
                         },
@@ -313,12 +318,12 @@ namespace MTM_WIP_Application_Winforms.Forms.MainForm
                     Service_DebugTracer.TraceUIAction("DEVELOPMENT_MENU_CONFIGURED", nameof(MainForm),
                         new Dictionary<string, object>
                         {
-                            ["p_User"] = Model_AppVariables.User ?? "Unknown",
+                            ["User"] = Model_Application_Variables.User ?? "Unknown",
                             ["MenuVisible"] = isDeveloper,
                             ["AccessLevel"] = isDeveloper ? "Developer" : "Standard User"
                         });
 
-                    LoggingUtility.LogApplicationInfo($"Development Menu configured for user '{Model_AppVariables.User}': {(isDeveloper ? "Visible" : "Hidden")}");
+                    LoggingUtility.LogApplicationInfo($"Development Menu configured for user '{Model_Application_Variables.User}': {(isDeveloper ? "Visible" : "Hidden")}");
                 }
                 else
                 {
@@ -334,14 +339,14 @@ namespace MTM_WIP_Application_Winforms.Forms.MainForm
             {
                 Service_DebugTracer.TraceUIAction("DEVELOPMENT_MENU_CONFIG_ERROR", nameof(MainForm),
                     new Dictionary<string, object> { ["Exception"] = ex.Message });
-        
+
                 LoggingUtility.LogApplicationError(ex);
-                Service_ErrorHandler.HandleException(ex, ErrorSeverity.Low,
+                Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Low,
                     controlName: nameof(MainForm),
-                    contextData: new Dictionary<string, object> 
-                    { 
+                    contextData: new Dictionary<string, object>
+                    {
                         ["Method"] = nameof(ConfigureDevelopmentMenuVisibility),
-                        ["p_User"] = Model_AppVariables.User ?? "Unknown"
+                        ["User"] = Model_Application_Variables.User ?? "Unknown"
                     });
             }
 
@@ -357,7 +362,7 @@ namespace MTM_WIP_Application_Winforms.Forms.MainForm
                     MainForm_UserControl_InventoryTab.Control_InventoryTab_ComboBox_Part.Focus();
                     MainForm_UserControl_InventoryTab.Control_InventoryTab_ComboBox_Part.SelectAll();
                     MainForm_UserControl_InventoryTab.Control_InventoryTab_ComboBox_Part.BackColor =
-                        Model_AppVariables.UserUiColors.ControlFocusedBackColor ?? Color.LightBlue;
+                        Model_Application_Variables.UserUiColors.ControlFocusedBackColor ?? Color.LightBlue;
                 }
             }
             catch (Exception ex)
@@ -502,7 +507,7 @@ namespace MTM_WIP_Application_Winforms.Forms.MainForm
                     {
                         // Prompt user to restart instead of auto-refresh
                         LoggingUtility.Log("Display settings changed - prompting user for restart");
-                        
+
                         // Note: We don't auto-refresh here because the DpiChanged event
                         // on the form will handle it and prompt the user
                     }
@@ -550,13 +555,13 @@ namespace MTM_WIP_Application_Winforms.Forms.MainForm
                 {
                     // User chose to restart - save state and restart application
                     LoggingUtility.Log("User chose to restart application after DPI change");
-                    
+
                     // Get the application executable path
                     string appPath = Application.ExecutablePath;
-                    
+
                     // Start new instance
                     Process.Start(appPath);
-                    
+
                     // Close current instance gracefully
                     Application.Exit();
                 }
@@ -585,12 +590,12 @@ namespace MTM_WIP_Application_Winforms.Forms.MainForm
         {
             try
             {
-                Model_AppVariables.UserFullName =
-                    await Dao_User.GetUserFullNameAsync(Model_AppVariables.User);
+                Model_Application_Variables.UserFullName =
+                    await Dao_User.GetUserFullNameAsync(Model_Application_Variables.User);
 
-                if (string.IsNullOrEmpty(Model_AppVariables.UserFullName))
+                if (string.IsNullOrEmpty(Model_Application_Variables.UserFullName))
                 {
-                    Model_AppVariables.UserFullName = Model_AppVariables.User;
+                    Model_Application_Variables.UserFullName = Model_Application_Variables.User;
                 }
             }
             catch (Exception ex)
@@ -654,7 +659,7 @@ namespace MTM_WIP_Application_Winforms.Forms.MainForm
             }
             catch (Exception ex)
             {
-                Service_ErrorHandler.HandleException(ex, ErrorSeverity.Medium,
+                Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Medium,
                     controlName: nameof(MainForm));
             }
         }
@@ -675,7 +680,7 @@ namespace MTM_WIP_Application_Winforms.Forms.MainForm
             }
             catch (Exception ex)
             {
-                Service_ErrorHandler.HandleException(ex, ErrorSeverity.Medium,
+                Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Medium,
                     controlName: nameof(MainForm));
             }
             finally
@@ -881,6 +886,13 @@ namespace MTM_WIP_Application_Winforms.Forms.MainForm
         {
             try
             {
+                // Ctrl+P - Print active grid
+                if (keyData == (Keys.Control | Keys.P))
+                {
+                    HandlePrintShortcut();
+                    return true;
+                }
+
                 if (keyData == Core_WipAppVariables.Shortcut_MainForm_Tab1)
                 {
                     MainForm_TabControl.SelectedIndex = 0;
@@ -908,6 +920,74 @@ namespace MTM_WIP_Application_Winforms.Forms.MainForm
             }
         }
 
+        /// <summary>
+        /// Handles Ctrl+P keyboard shortcut to print the active DataGridView
+        /// </summary>
+        private async void HandlePrintShortcut()
+        {
+            try
+            {
+                // Determine which tab is active and get its printable grid
+                DataGridView? activeGrid = null;
+                string gridName = string.Empty;
+
+                int selectedIndex = MainForm_TabControl.SelectedIndex;
+                
+                if (selectedIndex >= 0 && selectedIndex < MainForm_TabControl.TabPages.Count)
+                {
+                    var selectedTab = MainForm_TabControl.TabPages[selectedIndex];
+                    gridName = selectedTab.Text; // Use tab name (Inventory, Remove, Transfer)
+                    
+                    // Find first DataGridView in the selected tab
+                    activeGrid = FindFirstDataGridView(selectedTab);
+                }
+
+                if (activeGrid is null || activeGrid.Rows.Count == 0)
+                {
+                    Service_ErrorHandler.ShowWarning("No printable data available in the current tab.", "Print");
+                    return;
+                }
+
+                // Call print manager with active grid
+                await Helper_PrintManager.ShowPrintDialogAsync(this, activeGrid, gridName);
+            }
+            catch (Exception ex)
+            {
+                LoggingUtility.LogApplicationError(ex);
+                Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Medium,
+                    controlName: nameof(MainForm),
+                    contextData: new Dictionary<string, object>
+                    {
+                        ["Action"] = "Ctrl+P Print Shortcut"
+                    });
+            }
+        }
+
+        /// <summary>
+        /// Recursively finds the first DataGridView in a control hierarchy
+        /// </summary>
+        private DataGridView? FindFirstDataGridView(Control parent)
+        {
+            foreach (Control child in parent.Controls)
+            {
+                if (child is DataGridView dgv)
+                {
+                    return dgv;
+                }
+                
+                if (child.Controls.Count > 0)
+                {
+                    var found = FindFirstDataGridView(child);
+                    if (found != null)
+                    {
+                        return found;
+                    }
+                }
+            }
+            
+            return null;
+        }
+
         #endregion
 
         #region Form Closing
@@ -918,7 +998,7 @@ namespace MTM_WIP_Application_Winforms.Forms.MainForm
             {
                 _connectionStrengthTimer?.Stop();
                 _connectionStrengthTimer?.Dispose();
-                
+
                 // Close Debug Dashboard if it's open
                 if (_debugDashboard != null && !_debugDashboard.IsDisposed)
                 {
@@ -969,8 +1049,8 @@ namespace MTM_WIP_Application_Winforms.Forms.MainForm
                 }
 
                 Service_DebugTracer.TraceUIAction("SETTINGS_FORM_ACCEPTED", nameof(MainForm),
-                    new Dictionary<string, object> 
-                    { 
+                    new Dictionary<string, object>
+                    {
                         ["UserAction"] = "ACCEPTED",
                         ["RequiredOperations"] = new[] { "HardReset", "ThemeApply" }
                     });
@@ -1047,7 +1127,7 @@ namespace MTM_WIP_Application_Winforms.Forms.MainForm
             {
                 Service_DebugTracer.TraceUIAction("EXIT_MENU_ERROR", nameof(MainForm),
                     new Dictionary<string, object> { ["Exception"] = ex.Message });
-                Service_ErrorHandler.HandleException(ex, ErrorSeverity.Medium,
+                Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Medium,
                     controlName: nameof(MainForm));
             }
 
@@ -1058,16 +1138,25 @@ namespace MTM_WIP_Application_Winforms.Forms.MainForm
         {
             try
             {
-                string connectionString = Model_AppVariables.ConnectionString;
-                string currentUser = Model_AppVariables.User;
+                string currentUser = Model_Application_Variables.User;
 
-                Transactions.Transactions transactionsForm = new(connectionString, currentUser);
+                Transactions.Transactions transactionsForm = new(connectionString: string.Empty, currentUser);
                 transactionsForm.ShowDialog(this);
             }
             catch (Exception ex)
             {
                 LoggingUtility.LogApplicationError(ex);
-                await Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex, callerName: nameof(MainForm_MenuStrip_View_PersonalHistory_Click));
+                Service_ErrorHandler.HandleException(
+                    ex,
+                    Enum_ErrorSeverity.Medium,
+                    retryAction: null,
+                    contextData: new Dictionary<string, object>
+                    {
+                        ["User"] = Model_Application_Variables.User,
+                        ["MenuAction"] = "ViewTransactionHistory"
+                    },
+                    controlName: nameof(MainForm)
+                );
             }
         }
 
@@ -1123,14 +1212,14 @@ namespace MTM_WIP_Application_Winforms.Forms.MainForm
             {
                 Cursor = Cursors.Default;
                 LoggingUtility.LogApplicationError(ex);
-                
+
                 Service_ErrorHandler.HandleException(
                     ex,
-                    ErrorSeverity.Medium,
+                    Enum_ErrorSeverity.Medium,
                     contextData: new Dictionary<string, object>
                     {
                         ["Operation"] = "ManualSync",
-                        ["User"] = Model_AppVariables.User
+                        ["User"] = Model_Application_Variables.User
                     },
                     controlName: nameof(MainForm_MenuStrip_Development_SyncReports_Click));
             }
@@ -1181,10 +1270,12 @@ namespace MTM_WIP_Application_Winforms.Forms.MainForm
             catch (Exception ex)
             {
                 LoggingUtility.LogApplicationError(ex);
-                Service_ErrorHandler.HandleException(ex, ErrorSeverity.Medium, controlName: nameof(MainForm_MenuStrip_Development_ViewErrorReports_Click));
+                Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Medium, controlName: nameof(MainForm_MenuStrip_Development_ViewErrorReports_Click));
             }
         }
 
+        // COMMENTED OUT - Help Menu Event Handlers (to be reimplemented later)
+        /*
         #region Help Menu Event Handlers
 
         private void MainForm_MenuStrip_Help_GettingStarted_Click(object sender, EventArgs e)
@@ -1195,7 +1286,7 @@ namespace MTM_WIP_Application_Winforms.Forms.MainForm
             }
             catch (Exception ex)
             {
-                Service_ErrorHandler.HandleException(ex, ErrorSeverity.Medium,
+                Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Medium,
                     controlName: nameof(MainForm),
                     contextData: new Dictionary<string, object> { ["HelpFile"] = "getting-started.html" });
             }
@@ -1209,7 +1300,7 @@ namespace MTM_WIP_Application_Winforms.Forms.MainForm
             }
             catch (Exception ex)
             {
-                Service_ErrorHandler.HandleException(ex, ErrorSeverity.Medium,
+                Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Medium,
                     controlName: nameof(MainForm),
                     contextData: new Dictionary<string, object> { ["HelpFile"] = "index.html" });
             }
@@ -1223,7 +1314,7 @@ namespace MTM_WIP_Application_Winforms.Forms.MainForm
             }
             catch (Exception ex)
             {
-                Service_ErrorHandler.HandleException(ex, ErrorSeverity.Medium,
+                Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Medium,
                     controlName: nameof(MainForm),
                     contextData: new Dictionary<string, object> { ["HelpFile"] = "keyboard-shortcuts.html" });
             }
@@ -1238,13 +1329,13 @@ namespace MTM_WIP_Application_Winforms.Forms.MainForm
                                   $"© 2025 Manitowoc Tool and Manufacturing\n\n" +
                                   $"Built with .NET 8 and Windows Forms\n" +
                                   $"Database: MySQL with stored procedures\n" +
-                                  $"Environment: {(Model_Users.Database == "MTM_WIP_Application_Winforms" ? "Release" : "Debug")}";
+                                  $"Environment: {(Model_Shared_Users.Database == "MTM_WIP_Application_Winforms" ? "Release" : "Debug")}";
 
                 Service_ErrorHandler.ShowInformation("About MTM Inventory", aboutMessage);
             }
             catch (Exception ex)
             {
-                Service_ErrorHandler.HandleException(ex, ErrorSeverity.Low, controlName: nameof(MainForm));
+                Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Low, controlName: nameof(MainForm));
             }
         }
 
@@ -1293,6 +1384,7 @@ namespace MTM_WIP_Application_Winforms.Forms.MainForm
         }
 
         #endregion
+        */
 
         private async void viewerToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -1300,7 +1392,7 @@ namespace MTM_WIP_Application_Winforms.Forms.MainForm
             {
                 using var viewerForm = new Forms.Development.DependencyChartConverter.DependencyChartViewerForm();
                 viewerForm.ShowDialog(this);
-            }   
+            }
             catch (Exception ex)
             {
                 LoggingUtility.LogApplicationError(ex);

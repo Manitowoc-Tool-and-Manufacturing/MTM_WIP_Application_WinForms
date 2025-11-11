@@ -1,7 +1,6 @@
--- BYPASS_MCP_CHECK: SQL_INJECTION
--- Reason: MySQL user management requires dynamic SQL to DROP USER.
--- Security: Username validated with REGEXP to allow only alphanumeric, underscore, and hyphen.
--- Defense in depth: Additional escaping via REPLACE for single quotes.
+-- Stored procedure to delete a user from usr_users table
+-- Note: Does NOT drop MySQL user account - that must be handled separately if needed
+-- Note: Deletes related records from sys_user_roles and usr_ui_settings due to FK constraints
 DELIMITER //
 DROP PROCEDURE IF EXISTS `usr_users_Delete_User`//
 CREATE DEFINER=`root`@`localhost` PROCEDURE `usr_users_Delete_User`(
@@ -11,30 +10,35 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `usr_users_Delete_User`(
 )
 BEGIN
     DECLARE v_RowCount INT DEFAULT 0;
-    -- Transaction management removed: Works within caller's transaction context (tests use transactions)`r`n    DECLARE EXIT HANDLER FOR SQLEXCEPTION
+    DECLARE v_UserId INT DEFAULT 0;
+    -- Transaction management removed: Works within caller's transaction context (tests use transactions)
+    
+    DECLARE EXIT HANDLER FOR SQLEXCEPTION
     BEGIN
         GET DIAGNOSTICS CONDITION 1
             p_ErrorMsg = MESSAGE_TEXT;
         SET p_Status = -1;
     END;
+    
     IF p_User IS NULL OR TRIM(p_User) = '' THEN
         SET p_Status = -2;
         SET p_ErrorMsg = 'User is required';
     ELSE
-        -- Validate username contains only safe characters (alphanumeric, underscore, hyphen)
-        IF p_User REGEXP '[^A-Za-z0-9_-]' THEN
-            SET p_Status = -2;
-            SET p_ErrorMsg = 'Username contains invalid characters. Only alphanumeric, underscore, and hyphen allowed.';
+        -- Get user ID for FK deletions
+        SELECT ID INTO v_UserId FROM usr_users WHERE `User` = p_User LIMIT 1;
+        
+        IF v_UserId IS NULL OR v_UserId = 0 THEN
+            SET p_Status = -4;
+            SET p_ErrorMsg = CONCAT('User "', p_User, '" not found');
         ELSE
-            -- NOTE: Dynamic SQL required for MySQL user management
-            -- Username is validated above to contain only safe characters
-            -- Additional escaping applied via REPLACE for defense in depth
-            SET @d := CONCAT('DROP USER IF EXISTS ''', REPLACE(p_User, '''', ''''''), '''@''%'';');
-            PREPARE stmt FROM @d;
-            EXECUTE stmt;
-            DEALLOCATE PREPARE stmt;
+            -- Delete related records first (FK constraints)
+            DELETE FROM sys_user_roles WHERE UserID = v_UserId;
+            DELETE FROM usr_ui_settings WHERE UserId = p_User;
+            
+            -- Now delete the user
             DELETE FROM usr_users WHERE `User` = p_User;
             SET v_RowCount = ROW_COUNT();
+            
             IF v_RowCount > 0 THEN
                 SET p_Status = 1;
                 SET p_ErrorMsg = CONCAT('User "', p_User, '" deleted successfully');

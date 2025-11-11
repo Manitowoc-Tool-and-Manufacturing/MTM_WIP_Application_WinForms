@@ -8,10 +8,10 @@
 
 ## Quick Navigation
 
-- [Build Commands](#build-commands)
-- [Test Commands](#test-commands)
-- [Database Commands](#database-commands)
-- [Workspace Commands](#workspace-commands)
+-   [Build Commands](#build-commands)
+-   [Test Commands](#test-commands)
+-   [Database Commands](#database-commands)
+-   [Workspace Commands](#workspace-commands)
 
 ---
 

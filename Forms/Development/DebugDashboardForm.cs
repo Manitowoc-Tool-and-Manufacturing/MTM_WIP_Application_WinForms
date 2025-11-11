@@ -27,7 +27,7 @@ namespace MTM_WIP_Application_Winforms.Forms.Development
         #region Properties
 
         private TextBox txtDebugOutput = null!;
-        private ComboBox cmbDebugLevel = null!;
+        private ComboBox cmbEnum_DebugLevel = null!;
         private CheckBox chkTraceDatabase = null!;
         private CheckBox chkTraceBusinessLogic = null!;
         private CheckBox chkTraceUIActions = null!;
@@ -132,14 +132,14 @@ namespace MTM_WIP_Application_Winforms.Forms.Development
 
             // Debug level
             layout.Controls.Add(new Label { Text = "Debug Level:", Font = new Font("Segoe UI", 9, FontStyle.Bold) }, 0, 0);
-            cmbDebugLevel = new ComboBox
+            cmbEnum_DebugLevel = new ComboBox
             {
                 Dock = DockStyle.Fill,
                 DropDownStyle = ComboBoxStyle.DropDownList
             };
-            cmbDebugLevel.Items.AddRange(new[] { "Low", "Medium", "High", "Verbose" });
-            cmbDebugLevel.SelectedIndexChanged += CmbDebugLevel_SelectedIndexChanged;
-            layout.Controls.Add(cmbDebugLevel, 0, 1);
+            cmbEnum_DebugLevel.Items.AddRange(new[] { "Low", "Medium", "High", "Verbose" });
+            cmbEnum_DebugLevel.SelectedIndexChanged += CmbEnum_DebugLevel_SelectedIndexChanged;
+            layout.Controls.Add(cmbEnum_DebugLevel, 0, 1);
 
             // Tracing options
             layout.Controls.Add(new Label { Text = "Tracing Options:", Font = new Font("Segoe UI", 9, FontStyle.Bold) }, 0, 2);
@@ -301,9 +301,9 @@ namespace MTM_WIP_Application_Winforms.Forms.Development
 
         #region Event Handlers
 
-        private void CmbDebugLevel_SelectedIndexChanged(object? sender, EventArgs e)
+        private void CmbEnum_DebugLevel_SelectedIndexChanged(object? sender, EventArgs e)
         {
-            if (cmbDebugLevel.SelectedItem is string levelStr && Enum.TryParse<DebugLevel>(levelStr, out var level))
+            if (cmbEnum_DebugLevel.SelectedItem is string levelStr && Enum.TryParse<Enum_DebugLevel>(levelStr, out var level))
             {
                 Service_DebugTracer.CurrentLevel = level;
                 Service_DebugTracer.TraceUIAction("DEBUG_LEVEL_CHANGED", nameof(DebugDashboardForm), 
@@ -418,7 +418,7 @@ namespace MTM_WIP_Application_Winforms.Forms.Development
         private void LoadCurrentConfiguration()
         {
             // Load current debug configuration
-            cmbDebugLevel.SelectedItem = Service_DebugTracer.CurrentLevel.ToString();
+            cmbEnum_DebugLevel.SelectedItem = Service_DebugTracer.CurrentLevel.ToString();
             chkTraceDatabase.Checked = Service_DebugTracer.TraceDatabase;
             chkTraceBusinessLogic.Checked = Service_DebugTracer.EnableBusinessLogicTracing;
             chkTraceUIActions.Checked = Service_DebugTracer.TraceUIActions;

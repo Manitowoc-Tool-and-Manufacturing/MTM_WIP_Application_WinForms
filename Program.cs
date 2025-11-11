@@ -23,11 +23,11 @@ namespace MTM_WIP_Application_Winforms
             {
                 // Initialize debugging system first (before any other operations)
                 #if DEBUG
-                Service_DebugTracer.Initialize(DebugLevel.High);
+                Service_DebugTracer.Initialize(Enum_DebugLevel.High);
                 Service_DebugConfiguration.InitializeDefaults();
                 Service_DebugConfiguration.SetDevelopmentMode();
                 #else
-                Service_DebugTracer.Initialize(DebugLevel.Medium);
+                Service_DebugTracer.Initialize(Enum_DebugLevel.Medium);
                 Service_DebugConfiguration.InitializeDefaults();
                 #endif
 
@@ -49,7 +49,7 @@ namespace MTM_WIP_Application_Winforms
                         ["ExceptionType"] = args.Exception.GetType().Name,
                         ["ExceptionMessage"] = args.Exception.Message
                     }, "ThreadExceptionHandler", "Program");
-                    
+
                     try
                     {
                         LoggingUtility.LogApplicationError(args.Exception);
@@ -73,7 +73,7 @@ namespace MTM_WIP_Application_Winforms
                             ["ExceptionMessage"] = ex.Message,
                             ["IsTerminating"] = args.IsTerminating
                         }, "UnhandledExceptionHandler", "Program");
-                        
+
                         try
                         {
                             LoggingUtility.LogApplicationError(ex);
@@ -129,11 +129,11 @@ namespace MTM_WIP_Application_Winforms
                 // User identification with error handling
                 try
                 {
-                    Model_AppVariables.User = Dao_System.System_GetUserName();
-                    //Model_AppVariables.User = "TestUser"; // TEMPORARY OVERRIDE FOR TESTING - REMOVE IN PRODUCTION
+                    Model_Application_Variables.User = Dao_System.System_GetUserName();
+                    //Model_Application_Variables.User = "TestUser"; // TEMPORARY OVERRIDE FOR TESTING - REMOVE IN PRODUCTION
 
 
-                    LoggingUtility.Log($"[Startup] User identified: {Model_AppVariables.User}");
+                    LoggingUtility.Log($"[Startup] User identified: {Model_Application_Variables.User}");
                 }
                 catch (Exception ex)
                 {
@@ -143,17 +143,17 @@ namespace MTM_WIP_Application_Winforms
                     // Use fallback user identification
                     try
                     {
-                        Model_AppVariables.User = Environment.UserName ?? "Unknown";
-                        LoggingUtility.Log($"[Startup] Using fallback user identification: {Model_AppVariables.User}");
+                        Model_Application_Variables.User = Environment.UserName ?? "Unknown";
+                        LoggingUtility.Log($"[Startup] Using fallback user identification: {Model_Application_Variables.User}");
 
                         ShowNonCriticalError("User Identification Warning",
                             $"Could not identify user through normal methods:\n\n{ex.Message}\n\n" +
-                            $"Using system username '{Model_AppVariables.User}' as fallback.\n" +
+                            $"Using system username '{Model_Application_Variables.User}' as fallback.\n" +
                             "Some user-specific features may not work correctly.");
                     }
                     catch (Exception fallbackEx)
                     {
-                        Model_AppVariables.User = "Unknown";
+                        Model_Application_Variables.User = "Unknown";
                         LoggingUtility.LogApplicationError(fallbackEx);
                         ShowNonCriticalError("User Identification Error",
                             "Failed to identify current user. Using 'Unknown' as username.\n" +
@@ -173,25 +173,25 @@ namespace MTM_WIP_Application_Winforms
                     Console.WriteLine($"[DEBUG] connectivityResult.ErrorMessage: '{connectivityResult.ErrorMessage}'");
 
                     // Use ErrorMessage if StatusMessage is generic
-                    string errorMessage = !string.IsNullOrEmpty(connectivityResult.StatusMessage) && 
+                    string errorMessage = !string.IsNullOrEmpty(connectivityResult.StatusMessage) &&
                                         connectivityResult.StatusMessage != "Database connectivity validation failed"
-                                        ? connectivityResult.StatusMessage 
+                                        ? connectivityResult.StatusMessage
                                         : connectivityResult.ErrorMessage;
 
                     // Use Service_ErrorHandler for consistent error UX with retry capability
                     Service_ErrorHandler.HandleException(
                         connectivityResult.Exception ?? new Exception(errorMessage),
-                        ErrorSeverity.Fatal,
+                        Enum_ErrorSeverity.Fatal,
                         retryAction: () => { Main(); return true; },
                         contextData: new Dictionary<string, object>
                         {
-                            ["DatabaseName"] = Model_Users.Database,
-                            ["ServerAddress"] = Model_Users.WipServerAddress,
+                            ["DatabaseName"] = Model_Shared_Users.Database,
+                            ["ServerAddress"] = Model_Shared_Users.WipServerAddress,
                             ["MethodName"] = nameof(Main),
                             ["ErrorType"] = "DatabaseConnectivityValidation"
                         },
                         controlName: "Program_Main_DatabaseConnectivity");
-                    
+
                     // User chose to exit after error dialog (Service_ErrorHandler returns when dialog closes)
                     LoggingUtility.Log("[Startup] Exiting after database connectivity error");
                     return;
@@ -210,14 +210,14 @@ namespace MTM_WIP_Application_Winforms
 
                     if (cacheResult.IsSuccess)
                     {
-                        LoggingUtility.Log($"[Startup] Parameter prefix cache initialized successfully in {stopwatch.ElapsedMilliseconds}ms. Cached {Model_ParameterPrefixCache.ProcedureCount} stored procedures.");
-                        Console.WriteLine($"[Startup] Parameter cache: {Model_ParameterPrefixCache.ProcedureCount} procedures cached in {stopwatch.ElapsedMilliseconds}ms");
+                        LoggingUtility.Log($"[Startup] Parameter prefix cache initialized successfully in {stopwatch.ElapsedMilliseconds}ms. Cached {Model_ParameterPrefix_Cache.ProcedureCount} stored procedures.");
+                        Console.WriteLine($"[Startup] Parameter cache: {Model_ParameterPrefix_Cache.ProcedureCount} procedures cached in {stopwatch.ElapsedMilliseconds}ms");
                     }
                     else
                     {
                         LoggingUtility.Log($"[Startup] Warning: Parameter prefix cache initialization failed: {cacheResult.ErrorMessage}. Using fallback convention-based detection.");
                         Console.WriteLine($"[Startup Warning] Parameter cache init failed: {cacheResult.ErrorMessage}");
-                        
+
                         ShowNonCriticalError("Parameter Cache Warning",
                             "The stored procedure parameter cache could not be initialized.\n\n" +
                             $"Reason: {cacheResult.ErrorMessage}\n\n" +
@@ -231,7 +231,7 @@ namespace MTM_WIP_Application_Winforms
                     LoggingUtility.LogApplicationError(ex);
                     LoggingUtility.Log($"[Startup] Warning: Parameter prefix cache initialization threw exception: {ex.Message}. Using fallback convention-based detection.");
                     Console.WriteLine($"[Startup Warning] Parameter cache exception: {ex.Message}");
-                    
+
                     ShowNonCriticalError("Parameter Cache Error",
                         $"An error occurred while initializing the parameter cache:\n\n{ex.Message}\n\n" +
                         "The application will continue using convention-based parameter detection.\n" +
@@ -266,72 +266,72 @@ namespace MTM_WIP_Application_Winforms
                     // Use Service_ErrorHandler for consistent error UX with retry capability
                     Service_ErrorHandler.HandleException(
                         ex,
-                        ErrorSeverity.Fatal,
+                        Enum_ErrorSeverity.Fatal,
                         retryAction: () => { Main(); return true; },
                         contextData: new Dictionary<string, object>
                         {
-                            ["User"] = Model_AppVariables.User,
-                            ["DatabaseName"] = Model_Users.Database,
-                            ["ServerAddress"] = Model_Users.WipServerAddress,
+                            ["User"] = Model_Application_Variables.User,
+                            ["DatabaseName"] = Model_Shared_Users.Database,
+                            ["ServerAddress"] = Model_Shared_Users.WipServerAddress,
                             ["MethodName"] = "System_UserAccessTypeAsync",
                             ["ErrorType"] = "UserAccessLoading_MySqlException"
                         },
                         controlName: "Program_Main_UserAccessLoading");
-                    
+
                     LoggingUtility.Log("[Startup] Exiting after user access loading failure");
                     return;
                 }
                 catch (TimeoutException ex)
                 {
                     LoggingUtility.LogApplicationError(ex);
-                    
+
                     Service_ErrorHandler.HandleException(
                         ex,
-                        ErrorSeverity.High,
+                        Enum_ErrorSeverity.High,
                         retryAction: () => { Main(); return true; },
                         contextData: new Dictionary<string, object>
                         {
-                            ["User"] = Model_AppVariables.User,
+                            ["User"] = Model_Application_Variables.User,
                             ["MethodName"] = "System_UserAccessTypeAsync",
                             ["ErrorType"] = "UserAccessLoading_Timeout"
                         },
                         controlName: "Program_Main_UserAccessTimeout");
-                    
+
                     return;
                 }
                 catch (UnauthorizedAccessException ex)
                 {
                     LoggingUtility.LogApplicationError(ex);
-                    
+
                     Service_ErrorHandler.HandleException(
                         ex,
-                        ErrorSeverity.Fatal,
+                        Enum_ErrorSeverity.Fatal,
                         contextData: new Dictionary<string, object>
                         {
-                            ["User"] = Model_AppVariables.User,
+                            ["User"] = Model_Application_Variables.User,
                             ["MethodName"] = "System_UserAccessTypeAsync",
                             ["ErrorType"] = "UserAccessLoading_UnauthorizedAccess"
                         },
                         controlName: "Program_Main_UnauthorizedAccess");
-                    
+
                     return;
                 }
                 catch (Exception ex)
                 {
                     LoggingUtility.LogApplicationError(ex);
-                    
+
                     Service_ErrorHandler.HandleException(
                         ex,
-                        ErrorSeverity.Fatal,
+                        Enum_ErrorSeverity.Fatal,
                         contextData: new Dictionary<string, object>
                         {
-                            ["User"] = Model_AppVariables.User,
+                            ["User"] = Model_Application_Variables.User,
                             ["MethodName"] = "System_UserAccessTypeAsync",
                             ["ErrorType"] = "UserAccessLoading_GeneralException",
                             ["ExceptionType"] = ex.GetType().Name
                         },
                         controlName: "Program_Main_UserAccessError");
-                    
+
                     return;
                 }
 
@@ -391,7 +391,7 @@ namespace MTM_WIP_Application_Winforms
                             "• Memory leak in application or system\n" +
                             "• Too many applications running\n\n" +
                             "Please restart your computer and close unnecessary applications."),
-                        ErrorSeverity.Fatal,
+                        Enum_ErrorSeverity.Fatal,
                         controlName: "Program_Main");
                 }
                 catch
@@ -465,13 +465,13 @@ namespace MTM_WIP_Application_Winforms
 
                     Service_ErrorHandler.HandleException(
                         mysqlEx,
-                        ErrorSeverity.Fatal,
+                        Enum_ErrorSeverity.Fatal,
                         retryAction: () => { Main(); return true; },
                         contextData: new Dictionary<string, object>
                         {
-                            ["User"] = Model_AppVariables.User ?? "Unknown",
-                            ["DatabaseName"] = Model_Users.Database,
-                            ["ServerAddress"] = Model_Users.WipServerAddress,
+                            ["User"] = Model_Application_Variables.User ?? "Unknown",
+                            ["DatabaseName"] = Model_Shared_Users.Database,
+                            ["ServerAddress"] = Model_Shared_Users.WipServerAddress,
                             ["MethodName"] = "HandleGlobalException",
                             ["ErrorType"] = "GlobalMySqlException"
                         },
@@ -580,14 +580,14 @@ namespace MTM_WIP_Application_Winforms
         /// <summary>
         /// Initialize the INFORMATION_SCHEMA parameter cache for automatic prefix detection
         /// </summary>
-        /// <returns>DaoResult indicating success or failure with timing information</returns>
+        /// <returns>Model_Dao_Result indicating success or failure with timing information</returns>
         /// <remarks>
         /// Queries INFORMATION_SCHEMA.PARAMETERS to build a cache of all stored procedure parameters with their prefixes.
         /// This cache enables automatic prefix detection (p_, o_) when executing stored procedures,
         /// eliminating MySQL parameter errors caused by incorrect prefix usage.
         /// Expected execution time: ~100-200ms for 60+ stored procedures.
         /// </remarks>
-        private static DaoResult InitializeParameterPrefixCache()
+        private static Model_Dao_Result InitializeParameterPrefixCache()
         {
             try
             {
@@ -595,19 +595,19 @@ namespace MTM_WIP_Application_Winforms
 
                 // MySQL 5.7 uses SPECIFIC_NAME instead of ROUTINE_NAME
                 const string query = @"
-                    SELECT 
-                        SPECIFIC_NAME AS ROUTINE_NAME, 
-                        PARAMETER_NAME, 
-                        PARAMETER_MODE 
-                    FROM INFORMATION_SCHEMA.PARAMETERS 
-                    WHERE SPECIFIC_SCHEMA = DATABASE() 
-                    AND ROUTINE_TYPE = 'PROCEDURE' 
+                    SELECT
+                        SPECIFIC_NAME AS ROUTINE_NAME,
+                        PARAMETER_NAME,
+                        PARAMETER_MODE
+                    FROM INFORMATION_SCHEMA.PARAMETERS
+                    WHERE SPECIFIC_SCHEMA = DATABASE()
+                    AND ROUTINE_TYPE = 'PROCEDURE'
                     ORDER BY SPECIFIC_NAME, ORDINAL_POSITION";
 
                 // Build cache dictionary structure
                 var cacheData = new Dictionary<string, Dictionary<string, string>>(StringComparer.OrdinalIgnoreCase);
 
-                using var connection = new MySqlConnection(Model_AppVariables.ConnectionString);
+                using var connection = new MySqlConnection(Model_Application_Variables.ConnectionString);
                 connection.Open();
 
                 using var command = new MySqlCommand(query, connection);
@@ -634,23 +634,23 @@ namespace MTM_WIP_Application_Winforms
                 }
 
                 // Initialize the cache with collected data
-                Model_ParameterPrefixCache.Initialize(cacheData);
+                Model_ParameterPrefix_Cache.Initialize(cacheData);
 
                 LoggingUtility.Log($"[Startup] Parameter cache populated: {cacheData.Count} procedures, {parameterCount} total parameters");
 
-                return DaoResult.Success($"Parameter cache initialized: {cacheData.Count} procedures, {parameterCount} parameters");
+                return Model_Dao_Result.Success($"Parameter cache initialized: {cacheData.Count} procedures, {parameterCount} parameters");
             }
             catch (MySqlException ex)
             {
                 string errorMsg = $"MySQL error querying INFORMATION_SCHEMA.PARAMETERS: {ex.Message}";
                 LoggingUtility.LogDatabaseError(ex);
-                return DaoResult.Failure(errorMsg, ex);
+                return Model_Dao_Result.Failure(errorMsg, ex);
             }
             catch (Exception ex)
             {
                 string errorMsg = $"Unexpected error initializing parameter cache: {ex.Message}";
                 LoggingUtility.LogApplicationError(ex);
-                return DaoResult.Failure(errorMsg, ex);
+                return Model_Dao_Result.Failure(errorMsg, ex);
             }
         }
 
@@ -661,8 +661,8 @@ namespace MTM_WIP_Application_Winforms
         /// <summary>
         /// Validate database connectivity using Helper_Database_StoredProcedure patterns
         /// </summary>
-        /// <returns>DaoResult indicating success or failure with user-friendly message</returns>
-        private static DaoResult ValidateDatabaseConnectivityWithHelper()
+        /// <returns>Model_Dao_Result indicating success or failure with user-friendly message</returns>
+        private static Model_Dao_Result ValidateDatabaseConnectivityWithHelper()
         {
             try
             {
@@ -685,7 +685,7 @@ namespace MTM_WIP_Application_Winforms
 
                 Console.WriteLine("[Startup] Database connectivity validated successfully.");
                 LoggingUtility.Log("[Startup] Database connectivity validation completed successfully");
-                return DaoResult.Success("Database connectivity validated successfully");
+                return Model_Dao_Result.Success("Database connectivity validated successfully");
             }
             catch (MySqlException ex)
             {
@@ -693,7 +693,7 @@ namespace MTM_WIP_Application_Winforms
                 Console.WriteLine($"[Startup] MySQL Error: {errorMsg}");
                 LoggingUtility.LogDatabaseError(ex);
 
-                return DaoResult.Failure(errorMsg, ex);
+                return Model_Dao_Result.Failure(errorMsg, ex);
             }
             catch (Exception ex)
             {
@@ -701,15 +701,15 @@ namespace MTM_WIP_Application_Winforms
                 Console.WriteLine($"[Startup] {errorMsg}");
                 LoggingUtility.LogApplicationError(ex);
 
-                return DaoResult.Failure(errorMsg, ex);
+                return Model_Dao_Result.Failure(errorMsg, ex);
             }
         }
 
         /// <summary>
         /// Validate database health using stored procedure approach consistent with application patterns
         /// </summary>
-        /// <returns>DaoResult indicating database health status</returns>
-        private static DaoResult ValidateDatabaseHealthWithStoredProcedure()
+        /// <returns>Model_Dao_Result indicating database health status</returns>
+        private static Model_Dao_Result ValidateDatabaseHealthWithStoredProcedure()
         {
             try
             {
@@ -727,7 +727,7 @@ namespace MTM_WIP_Application_Winforms
             {
                 string userMessage = GetDatabaseConnectionErrorMessage(ex);
                 LoggingUtility.LogDatabaseError(ex);
-                return DaoResult.Failure(userMessage, ex);
+                return Model_Dao_Result.Failure(userMessage, ex);
             }
             catch (TimeoutException ex)
             {
@@ -738,35 +738,35 @@ namespace MTM_WIP_Application_Winforms
                                    "• Server is overloaded\n\n" +
                                    "Please try again or contact your system administrator.";
                 LoggingUtility.LogApplicationError(ex);
-                return DaoResult.Failure(userMessage, ex);
+                return Model_Dao_Result.Failure(userMessage, ex);
             }
             catch (Exception ex)
             {
                 string errorMsg = $"Database health validation failed: {ex.Message}";
                 LoggingUtility.LogApplicationError(ex);
-                return DaoResult.Failure(errorMsg, ex);
+                return Model_Dao_Result.Failure(errorMsg, ex);
             }
         }
 
         /// <summary>
         /// Attempt to use stored procedure for health check if available
         /// </summary>
-        /// <returns>DaoResult indicating stored procedure health check result</returns>
-        private static DaoResult AttemptStoredProcedureHealthCheck()
+        /// <returns>Model_Dao_Result indicating stored procedure health check result</returns>
+        private static Model_Dao_Result AttemptStoredProcedureHealthCheck()
         {
             try
             {
                 LoggingUtility.Log("[Startup] Attempting stored procedure health check");
 
                 // Use a basic connectivity test first
-                using var connection = new MySqlConnection(Model_AppVariables.ConnectionString);
+                using var connection = new MySqlConnection(Model_Application_Variables.ConnectionString);
                 connection.Open();
 
                 // Test if critical stored procedures exist
                 const string checkProcedureQuery = @"
-                    SELECT COUNT(*) 
-                    FROM INFORMATION_SCHEMA.ROUTINES 
-                    WHERE ROUTINE_SCHEMA = DATABASE() 
+                    SELECT COUNT(*)
+                    FROM INFORMATION_SCHEMA.ROUTINES
+                    WHERE ROUTINE_SCHEMA = DATABASE()
                     AND ROUTINE_NAME IN ('sys_GetUserAccessType', 'sys_SetUserAccessType')";
 
                 using var command = new MySqlCommand(checkProcedureQuery, connection);
@@ -775,40 +775,40 @@ namespace MTM_WIP_Application_Winforms
                 if (procedureCount >= 1)
                 {
                     LoggingUtility.Log($"[Startup] Found {procedureCount} critical stored procedures");
-                    return DaoResult.Success("Critical stored procedures are available");
+                    return Model_Dao_Result.Success("Critical stored procedures are available");
                 }
                 else
                 {
                     LoggingUtility.Log("[Startup] Warning: Critical stored procedures may not be deployed");
                     // Don't fail startup - let the application handle this gracefully
-                    return DaoResult.Success("Database accessible but stored procedures may need deployment");
+                    return Model_Dao_Result.Success("Database accessible but stored procedures may need deployment");
                 }
             }
             catch (MySqlException ex)
             {
                 LoggingUtility.LogDatabaseError(ex);
-                return DaoResult.Failure($"MySQL error during health check: {ex.Message}", ex);
+                return Model_Dao_Result.Failure($"MySQL error during health check: {ex.Message}", ex);
             }
             catch (Exception ex)
             {
                 LoggingUtility.Log($"[Startup] Stored procedure health check failed: {ex.Message}");
                 // This is not critical - fallback to basic connectivity
-                return DaoResult.Failure("Stored procedure check failed, will attempt basic connectivity", ex);
+                return Model_Dao_Result.Failure("Stored procedure check failed, will attempt basic connectivity", ex);
             }
         }
 
         /// <summary>
         /// Basic connectivity validation using helper-consistent patterns
         /// </summary>
-        /// <returns>DaoResult indicating basic connectivity status</returns>
-        private static DaoResult ValidateBasicConnectivityWithHelper()
+        /// <returns>Model_Dao_Result indicating basic connectivity status</returns>
+        private static Model_Dao_Result ValidateBasicConnectivityWithHelper()
         {
             try
             {
                 LoggingUtility.Log("[Startup] Performing basic connectivity validation");
 
                 // Build connection with appropriate timeouts for startup validation
-                var connectionStringBuilder = new MySqlConnectionStringBuilder(Model_AppVariables.ConnectionString)
+                var connectionStringBuilder = new MySqlConnectionStringBuilder(Model_Application_Variables.ConnectionString)
                 {
                     ConnectionTimeout = 10, // 10 second timeout for startup validation
                     DefaultCommandTimeout = 10
@@ -824,45 +824,45 @@ namespace MTM_WIP_Application_Winforms
                 if (version != null)
                 {
                     LoggingUtility.Log($"[Startup] Database connectivity confirmed. MySQL version: {version}");
-                    return DaoResult.Success($"Database connectivity verified. MySQL version: {version}");
+                    return Model_Dao_Result.Success($"Database connectivity verified. MySQL version: {version}");
                 }
                 else
                 {
                     string errorMsg = "Database connection established but version query returned null";
                     LoggingUtility.Log($"[Startup] {errorMsg}");
-                    return DaoResult.Failure(errorMsg);
+                    return Model_Dao_Result.Failure(errorMsg);
                 }
             }
             catch (MySqlException ex)
             {
                 string errorMsg = GetDatabaseConnectionErrorMessage(ex);
                 LoggingUtility.LogDatabaseError(ex);
-                return DaoResult.Failure(errorMsg, ex);
+                return Model_Dao_Result.Failure(errorMsg, ex);
             }
             catch (Exception ex)
             {
                 string errorMsg = $"Basic connectivity validation failed: {ex.Message}";
                 LoggingUtility.LogApplicationError(ex);
-                return DaoResult.Failure(errorMsg, ex);
+                return Model_Dao_Result.Failure(errorMsg, ex);
             }
         }
 
         /// <summary>
         /// Validate connection string format before attempting connection
         /// </summary>
-        /// <returns>DaoResult indicating validation success or failure</returns>
-        private static DaoResult ValidateConnectionStringFormat()
+        /// <returns>Model_Dao_Result indicating validation success or failure</returns>
+        private static Model_Dao_Result ValidateConnectionStringFormat()
         {
             try
             {
-                var connectionString = Model_AppVariables.ConnectionString;
+                var connectionString = Model_Application_Variables.ConnectionString;
 
                 if (string.IsNullOrEmpty(connectionString))
                 {
                     const string errorMsg = "Database connection string is not configured.\n\n" +
                                           "Please contact your system administrator to configure the database connection.";
                     LoggingUtility.Log($"[Startup] {errorMsg}");
-                    return DaoResult.Failure(errorMsg);
+                    return Model_Dao_Result.Failure(errorMsg);
                 }
 
                 // Basic connection string validation
@@ -871,17 +871,17 @@ namespace MTM_WIP_Application_Winforms
                     const string errorMsg = "Database connection string is invalid.\n\n" +
                                           "Please contact your system administrator to verify the database configuration.";
                     LoggingUtility.Log($"[Startup] {errorMsg}");
-                    return DaoResult.Failure(errorMsg);
+                    return Model_Dao_Result.Failure(errorMsg);
                 }
 
                 LoggingUtility.Log("[Startup] Connection string format validation passed");
-                return DaoResult.Success("Connection string format is valid");
+                return Model_Dao_Result.Success("Connection string format is valid");
             }
             catch (Exception ex)
             {
                 string errorMsg = $"Error validating database configuration:\n\n{ex.Message}";
                 LoggingUtility.LogApplicationError(ex);
-                return DaoResult.Failure(errorMsg, ex);
+                return Model_Dao_Result.Failure(errorMsg, ex);
             }
         }
 
@@ -898,8 +898,8 @@ namespace MTM_WIP_Application_Winforms
         {
             if (ex.Message.Contains("Unknown database"))
             {
-                string dbName = Model_Users.Database;
-                string serverAddress = Model_Users.WipServerAddress;
+                string dbName = Model_Shared_Users.Database;
+                string serverAddress = Model_Shared_Users.WipServerAddress;
 
 #if DEBUG
                 return $"The test database '{dbName}' does not exist on server '{serverAddress}'.\n\n" +

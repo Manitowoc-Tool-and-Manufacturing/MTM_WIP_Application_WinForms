@@ -1,0 +1,1128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Print System UI Mockups - MTM WIP Application</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f5f5f5;
+        }
+        
+        /* Navigation Bar */
+        nav {
+            background: #2c3e50;
+            color: white;
+            padding: 15px 30px;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+        
+        nav h1 {
+            margin-bottom: 15px;
+            font-size: 24px;
+        }
+        
+        .nav-buttons {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        
+        .nav-btn {
+            background: #3498db;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+            border-radius: 4px;
+            font-size: 14px;
+            transition: background 0.3s;
+        }
+        
+        .nav-btn:hover {
+            background: #2980b9;
+        }
+        
+        .nav-btn.active {
+            background: #27ae60;
+        }
+        
+        /* Mockup Container */
+        .mockup-container {
+            display: none;
+            padding: 30px;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        
+        .mockup-container.active {
+            display: block;
+        }
+        
+        .mockup-header {
+            background: white;
+            padding: 20px;
+            border-radius: 8px 8px 0 0;
+            border-bottom: 2px solid #3498db;
+        }
+        
+        .mockup-header h2 {
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+        
+        .mockup-header p {
+            color: #7f8c8d;
+        }
+        
+        /* Print Dialog Mockup */
+        .print-dialog {
+            background: white;
+            border-radius: 0 0 8px 8px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        
+        .dialog-content {
+            display: flex;
+            height: 700px;
+        }
+        
+        /* Preview Area (70%) */
+        .preview-area {
+            flex: 0 0 70%;
+            border-right: 1px solid #ddd;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .preview-toolbar {
+            background: #ecf0f1;
+            padding: 10px;
+            border-bottom: 1px solid #bdc3c7;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .preview-nav {
+            display: flex;
+            gap: 5px;
+        }
+        
+        .preview-btn {
+            background: white;
+            border: 1px solid #bdc3c7;
+            padding: 8px 15px;
+            cursor: pointer;
+            border-radius: 4px;
+            font-size: 13px;
+        }
+        
+        .preview-btn:hover {
+            background: #dfe6e9;
+        }
+        
+        .page-indicator {
+            font-size: 14px;
+            color: #2c3e50;
+        }
+        
+        .zoom-control {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .zoom-control select {
+            padding: 6px 10px;
+            border: 1px solid #bdc3c7;
+            border-radius: 4px;
+        }
+        
+        .preview-viewport {
+            flex: 1;
+            background: #95a5a6;
+            padding: 20px;
+            overflow: auto;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+        }
+        
+        .preview-page {
+            background: white;
+            width: 816px;
+            min-height: 1056px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+            padding: 40px;
+        }
+        
+        .preview-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 10px;
+        }
+        
+        .preview-table th {
+            background: #34495e;
+            color: white;
+            padding: 8px;
+            text-align: left;
+            border: 1px solid #2c3e50;
+        }
+        
+        .preview-table td {
+            padding: 6px 8px;
+            border: 1px solid #ddd;
+        }
+        
+        .preview-table tr:nth-child(even) {
+            background: #f9f9f9;
+        }
+        
+        /* Settings Panel (30%) */
+        .settings-panel {
+            flex: 0 0 30%;
+            background: #fafafa;
+            padding: 20px;
+            overflow-y: auto;
+        }
+        
+        .settings-section {
+            margin-bottom: 25px;
+        }
+        
+        .settings-section h3 {
+            font-size: 14px;
+            color: #2c3e50;
+            margin-bottom: 12px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #3498db;
+        }
+        
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        .form-group label {
+            display: block;
+            font-size: 13px;
+            color: #34495e;
+            margin-bottom: 5px;
+        }
+        
+        .form-group select,
+        .form-group input {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #bdc3c7;
+            border-radius: 4px;
+            font-size: 13px;
+        }
+        
+        .radio-group {
+            margin: 10px 0;
+        }
+        
+        .radio-group label {
+            display: flex;
+            align-items: center;
+            padding: 5px 0;
+            cursor: pointer;
+        }
+        
+        .radio-group input[type="radio"] {
+            margin-right: 8px;
+            width: auto;
+        }
+        
+        .page-range-inputs {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            margin-left: 24px;
+        }
+        
+        .page-range-inputs input {
+            width: 60px;
+            padding: 6px;
+        }
+        
+        .checkbox-list {
+            max-height: 150px;
+            overflow-y: auto;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            padding: 10px;
+            background: white;
+        }
+        
+        .checkbox-item {
+            display: flex;
+            align-items: center;
+            padding: 5px 0;
+            cursor: pointer;
+        }
+        
+        .checkbox-item input {
+            margin-right: 8px;
+            width: auto;
+        }
+        
+        .reorder-buttons {
+            display: flex;
+            gap: 5px;
+            margin-left: auto;
+        }
+        
+        .reorder-btn {
+            background: #ecf0f1;
+            border: 1px solid #bdc3c7;
+            padding: 4px 8px;
+            cursor: pointer;
+            border-radius: 3px;
+            font-size: 11px;
+        }
+        
+        /* Action Bar */
+        .action-bar {
+            background: #ecf0f1;
+            padding: 15px 20px;
+            border-top: 1px solid #bdc3c7;
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+        }
+        
+        .action-btn {
+            padding: 10px 25px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+        }
+        
+        .btn-primary {
+            background: #3498db;
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background: #2980b9;
+        }
+        
+        .btn-success {
+            background: #27ae60;
+            color: white;
+        }
+        
+        .btn-success:hover {
+            background: #229954;
+        }
+        
+        .btn-secondary {
+            background: #95a5a6;
+            color: white;
+        }
+        
+        .btn-secondary:hover {
+            background: #7f8c8d;
+        }
+        
+        /* Export Dropdown */
+        .export-dropdown {
+            position: relative;
+            display: inline-block;
+        }
+        
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            bottom: 100%;
+            right: 0;
+            background: white;
+            min-width: 150px;
+            box-shadow: 0 -4px 8px rgba(0,0,0,0.2);
+            border-radius: 4px 4px 0 0;
+            margin-bottom: 5px;
+        }
+        
+        .dropdown-content a {
+            color: #2c3e50;
+            padding: 12px 16px;
+            text-decoration: none;
+            display: block;
+            border-bottom: 1px solid #ecf0f1;
+        }
+        
+        .dropdown-content a:hover {
+            background: #ecf0f1;
+        }
+        
+        .export-dropdown:hover .dropdown-content {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav>
+        <h1>Print System UI Mockups</h1>
+        <div class="nav-buttons">
+            <button class="nav-btn active" onclick="showMockup(1)">Mockup 1: Classic Layout</button>
+            <button class="nav-btn" onclick="showMockup(2)">Mockup 2: Modern Tabs</button>
+            <button class="nav-btn" onclick="showMockup(3)">Mockup 3: Compact Sidebar</button>
+            <button class="nav-btn" onclick="showMockup(4)">Mockup 4: Floating Settings</button>
+            <button class="nav-btn" onclick="showMockup(5)">Mockup 5: Split Preview</button>
+        </div>
+    </nav>
+
+    <!-- Mockup 1: Classic Layout (70/30 split) -->
+    <div id="mockup1" class="mockup-container active">
+        <div class="mockup-header">
+            <h2>Mockup 1: Classic Layout (70/30 Split)</h2>
+            <p><strong>Design Philosophy:</strong> Traditional print dialog with preview on left, settings on right. Familiar to users, efficient use of space.</p>
+            <p><strong>Key Features:</strong> Large preview area, vertical settings panel, bottom action bar</p>
+        </div>
+        <div class="print-dialog">
+            <div class="dialog-content">
+                <!-- Preview Area (70%) -->
+                <div class="preview-area">
+                    <div class="preview-toolbar">
+                        <div class="preview-nav">
+                            <button class="preview-btn">◀◀ First</button>
+                            <button class="preview-btn">◀ Prev</button>
+                            <button class="preview-btn">Next ▶</button>
+                            <button class="preview-btn">Last ▶▶</button>
+                        </div>
+                        <div class="page-indicator">
+                            Page 1 of 12
+                        </div>
+                        <div class="zoom-control">
+                            <label for="zoom1">Zoom:</label>
+                            <select id="zoom1">
+                                <option>25%</option>
+                                <option>50%</option>
+                                <option>75%</option>
+                                <option selected>100%</option>
+                                <option>125%</option>
+                                <option>150%</option>
+                                <option>200%</option>
+                                <option>Fit to Width</option>
+                                <option>Fit to Page</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="preview-viewport">
+                        <div class="preview-page">
+                            <h3 style="text-align: center; margin-bottom: 20px; font-size: 16px;">Transaction Report</h3>
+                            <table class="preview-table">
+                                <thead>
+                                    <tr>
+                                        <th>Part ID</th>
+                                        <th>Description</th>
+                                        <th>Quantity</th>
+                                        <th>Location</th>
+                                        <th>Date</th>
+                                        <th>User</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr><td>P-1001</td><td>Steel Plate 12x24</td><td>150</td><td>FLOOR</td><td>2025-11-08</td><td>johnk</td></tr>
+                                    <tr><td>P-1002</td><td>Aluminum Rod 2"</td><td>75</td><td>RECEIVING</td><td>2025-11-08</td><td>marys</td></tr>
+                                    <tr><td>P-1003</td><td>Copper Wire #12</td><td>500</td><td>SHIPPING</td><td>2025-11-07</td><td>bobr</td></tr>
+                                    <tr><td>P-1004</td><td>Brass Fitting 3/4"</td><td>200</td><td>FLOOR</td><td>2025-11-07</td><td>johnk</td></tr>
+                                    <tr><td>P-1005</td><td>Stainless Bolt M10</td><td>1000</td><td>FLOOR</td><td>2025-11-06</td><td>sarac</td></tr>
+                                    <tr><td>P-1006</td><td>Plastic Sheet 4x8</td><td>25</td><td>RECEIVING</td><td>2025-11-06</td><td>marys</td></tr>
+                                    <tr><td>P-1007</td><td>Rubber Gasket 6"</td><td>300</td><td>SHIPPING</td><td>2025-11-05</td><td>bobr</td></tr>
+                                    <tr><td>P-1008</td><td>Carbon Tube 1"</td><td>100</td><td>FLOOR</td><td>2025-11-05</td><td>johnk</td></tr>
+                                    <tr><td>P-1009</td><td>Titanium Plate</td><td>10</td><td>RECEIVING</td><td>2025-11-04</td><td>marys</td></tr>
+                                    <tr><td>P-1010</td><td>Iron Bar 2x4</td><td>250</td><td>FLOOR</td><td>2025-11-04</td><td>sarac</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Settings Panel (30%) -->
+                <div class="settings-panel">
+                    <div class="settings-section">
+                        <h3>Printer</h3>
+                        <div class="form-group">
+                            <label for="printer1">Select Printer:</label>
+                            <select id="printer1">
+                                <option>HP LaserJet Pro (Default)</option>
+                                <option>Canon ImageRunner</option>
+                                <option>Microsoft Print to PDF</option>
+                                <option>Network Printer - Floor</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="settings-section">
+                        <h3>Page Setup</h3>
+                        <div class="form-group">
+                            <label>Orientation:</label>
+                            <div class="radio-group">
+                                <label><input type="radio" name="orient1" checked> Portrait</label>
+                                <label><input type="radio" name="orient1"> Landscape</label>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Color Mode:</label>
+                            <div class="radio-group">
+                                <label><input type="radio" name="color1" checked> Color</label>
+                                <label><input type="radio" name="color1"> Grayscale</label>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="settings-section">
+                        <h3>Page Range</h3>
+                        <div class="radio-group">
+                            <label><input type="radio" name="range1" checked> All Pages</label>
+                            <label><input type="radio" name="range1"> Current Page</label>
+                            <label>
+                                <input type="radio" name="range1"> Pages
+                            </label>
+                            <div class="page-range-inputs">
+                                <input type="number" value="1" min="1" max="12" disabled> to
+                                <input type="number" value="12" min="1" max="12" disabled>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="settings-section">
+                        <h3>Columns</h3>
+                        <div class="checkbox-list">
+                            <div class="checkbox-item">
+                                <input type="checkbox" checked> Part ID
+                                <div class="reorder-buttons">
+                                    <button class="reorder-btn">▲</button>
+                                    <button class="reorder-btn">▼</button>
+                                </div>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" checked> Description
+                                <div class="reorder-buttons">
+                                    <button class="reorder-btn">▲</button>
+                                    <button class="reorder-btn">▼</button>
+                                </div>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" checked> Quantity
+                                <div class="reorder-buttons">
+                                    <button class="reorder-btn">▲</button>
+                                    <button class="reorder-btn">▼</button>
+                                </div>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" checked> Location
+                                <div class="reorder-buttons">
+                                    <button class="reorder-btn">▲</button>
+                                    <button class="reorder-btn">▼</button>
+                                </div>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" checked> Date
+                                <div class="reorder-buttons">
+                                    <button class="reorder-btn">▲</button>
+                                    <button class="reorder-btn">▼</button>
+                                </div>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" checked> User
+                                <div class="reorder-buttons">
+                                    <button class="reorder-btn">▲</button>
+                                    <button class="reorder-btn">▼</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Action Bar -->
+            <div class="action-bar">
+                <div class="export-dropdown">
+                    <button class="action-btn btn-primary">Export ▼</button>
+                    <div class="dropdown-content">
+                        <a href="#">Export to PDF</a>
+                        <a href="#">Export to Excel</a>
+                    </div>
+                </div>
+                <button class="action-btn btn-success">Print</button>
+                <button class="action-btn btn-secondary">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Mockup 2: Modern Tabs Layout -->
+    <div id="mockup2" class="mockup-container">
+        <div class="mockup-header">
+            <h2>Mockup 2: Modern Tabs Layout</h2>
+            <p><strong>Design Philosophy:</strong> Settings organized in tabs for cleaner interface. Preview dominates screen.</p>
+            <p><strong>Key Features:</strong> Tabbed settings, larger preview, modern UI patterns</p>
+        </div>
+        <div class="print-dialog">
+            <div class="dialog-content">
+                <!-- Preview Area (75%) -->
+                <div class="preview-area" style="flex: 0 0 75%;">
+                    <div class="preview-toolbar">
+                        <div class="preview-nav">
+                            <button class="preview-btn">◀◀ First</button>
+                            <button class="preview-btn">◀ Prev</button>
+                            <button class="preview-btn">Next ▶</button>
+                            <button class="preview-btn">Last ▶▶</button>
+                        </div>
+                        <div class="page-indicator">
+                            Page 1 of 12
+                        </div>
+                        <div class="zoom-control">
+                            <label for="zoom2">Zoom:</label>
+                            <select id="zoom2">
+                                <option>25%</option>
+                                <option>50%</option>
+                                <option>75%</option>
+                                <option selected>100%</option>
+                                <option>125%</option>
+                                <option>150%</option>
+                                <option>200%</option>
+                                <option>Fit to Width</option>
+                                <option>Fit to Page</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="preview-viewport">
+                        <div class="preview-page">
+                            <h3 style="text-align: center; margin-bottom: 20px; font-size: 16px;">Transaction Report</h3>
+                            <table class="preview-table">
+                                <thead>
+                                    <tr>
+                                        <th>Part ID</th>
+                                        <th>Description</th>
+                                        <th>Quantity</th>
+                                        <th>Location</th>
+                                        <th>Date</th>
+                                        <th>User</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr><td>P-1001</td><td>Steel Plate 12x24</td><td>150</td><td>FLOOR</td><td>2025-11-08</td><td>johnk</td></tr>
+                                    <tr><td>P-1002</td><td>Aluminum Rod 2"</td><td>75</td><td>RECEIVING</td><td>2025-11-08</td><td>marys</td></tr>
+                                    <tr><td>P-1003</td><td>Copper Wire #12</td><td>500</td><td>SHIPPING</td><td>2025-11-07</td><td>bobr</td></tr>
+                                    <tr><td>P-1004</td><td>Brass Fitting 3/4"</td><td>200</td><td>FLOOR</td><td>2025-11-07</td><td>johnk</td></tr>
+                                    <tr><td>P-1005</td><td>Stainless Bolt M10</td><td>1000</td><td>FLOOR</td><td>2025-11-06</td><td>sarac</td></tr>
+                                    <tr><td>P-1006</td><td>Plastic Sheet 4x8</td><td>25</td><td>RECEIVING</td><td>2025-11-06</td><td>marys</td></tr>
+                                    <tr><td>P-1007</td><td>Rubber Gasket 6"</td><td>300</td><td>SHIPPING</td><td>2025-11-05</td><td>bobr</td></tr>
+                                    <tr><td>P-1008</td><td>Carbon Tube 1"</td><td>100</td><td>FLOOR</td><td>2025-11-05</td><td>johnk</td></tr>
+                                    <tr><td>P-1009</td><td>Titanium Plate</td><td>10</td><td>RECEIVING</td><td>2025-11-04</td><td>marys</td></tr>
+                                    <tr><td>P-1010</td><td>Iron Bar 2x4</td><td>250</td><td>FLOOR</td><td>2025-11-04</td><td>sarac</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Settings Panel (25%) with Tabs -->
+                <div class="settings-panel" style="flex: 0 0 25%; padding: 0;">
+                    <div style="display: flex; border-bottom: 1px solid #bdc3c7;">
+                        <button style="flex: 1; padding: 12px; background: #3498db; color: white; border: none; cursor: pointer; font-weight: bold;">Printer</button>
+                        <button style="flex: 1; padding: 12px; background: #ecf0f1; border: none; cursor: pointer;">Page</button>
+                        <button style="flex: 1; padding: 12px; background: #ecf0f1; border: none; cursor: pointer;">Columns</button>
+                    </div>
+                    <div style="padding: 20px;">
+                        <div class="form-group">
+                            <label for="printer2">Select Printer:</label>
+                            <select id="printer2">
+                                <option>HP LaserJet Pro (Default)</option>
+                                <option>Canon ImageRunner</option>
+                                <option>Microsoft Print to PDF</option>
+                                <option>Network Printer - Floor</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group" style="margin-top: 20px;">
+                            <label>Orientation:</label>
+                            <div class="radio-group">
+                                <label><input type="radio" name="orient2" checked> Portrait</label>
+                                <label><input type="radio" name="orient2"> Landscape</label>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>Color Mode:</label>
+                            <div class="radio-group">
+                                <label><input type="radio" name="color2" checked> Color</label>
+                                <label><input type="radio" name="color2"> Grayscale</label>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group" style="margin-top: 20px;">
+                            <label>Page Range:</label>
+                            <div class="radio-group">
+                                <label><input type="radio" name="range2" checked> All Pages</label>
+                                <label><input type="radio" name="range2"> Current Page</label>
+                                <label>
+                                    <input type="radio" name="range2"> Custom
+                                </label>
+                                <div class="page-range-inputs">
+                                    <input type="number" value="1" min="1" max="12" disabled> to
+                                    <input type="number" value="12" min="1" max="12" disabled>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Action Bar -->
+            <div class="action-bar">
+                <div class="export-dropdown">
+                    <button class="action-btn btn-primary">Export ▼</button>
+                    <div class="dropdown-content">
+                        <a href="#">Export to PDF</a>
+                        <a href="#">Export to Excel</a>
+                    </div>
+                </div>
+                <button class="action-btn btn-success">Print</button>
+                <button class="action-btn btn-secondary">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Mockup 3: Compact Sidebar -->
+    <div id="mockup3" class="mockup-container">
+        <div class="mockup-header">
+            <h2>Mockup 3: Compact Sidebar</h2>
+            <p><strong>Design Philosophy:</strong> Narrow sidebar with icons, expandable sections. Maximizes preview space.</p>
+            <p><strong>Key Features:</strong> Collapsible settings groups, icon-based navigation, minimal chrome</p>
+        </div>
+        <div class="print-dialog">
+            <div class="dialog-content">
+                <!-- Preview Area (80%) -->
+                <div class="preview-area" style="flex: 0 0 80%;">
+                    <div class="preview-toolbar">
+                        <div class="preview-nav">
+                            <button class="preview-btn">◀◀</button>
+                            <button class="preview-btn">◀</button>
+                            <button class="preview-btn">▶</button>
+                            <button class="preview-btn">▶▶</button>
+                        </div>
+                        <div class="page-indicator">
+                            <strong>Page 1 / 12</strong>
+                        </div>
+                        <div class="zoom-control">
+                            <select id="zoom3" style="width: 120px;">
+                                <option>25%</option>
+                                <option>50%</option>
+                                <option>75%</option>
+                                <option selected>100%</option>
+                                <option>125%</option>
+                                <option>150%</option>
+                                <option>200%</option>
+                                <option>Fit Width</option>
+                                <option>Fit Page</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="preview-viewport">
+                        <div class="preview-page">
+                            <h3 style="text-align: center; margin-bottom: 20px; font-size: 16px;">Transaction Report</h3>
+                            <table class="preview-table">
+                                <thead>
+                                    <tr>
+                                        <th>Part ID</th>
+                                        <th>Description</th>
+                                        <th>Quantity</th>
+                                        <th>Location</th>
+                                        <th>Date</th>
+                                        <th>User</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr><td>P-1001</td><td>Steel Plate 12x24</td><td>150</td><td>FLOOR</td><td>2025-11-08</td><td>johnk</td></tr>
+                                    <tr><td>P-1002</td><td>Aluminum Rod 2"</td><td>75</td><td>RECEIVING</td><td>2025-11-08</td><td>marys</td></tr>
+                                    <tr><td>P-1003</td><td>Copper Wire #12</td><td>500</td><td>SHIPPING</td><td>2025-11-07</td><td>bobr</td></tr>
+                                    <tr><td>P-1004</td><td>Brass Fitting 3/4"</td><td>200</td><td>FLOOR</td><td>2025-11-07</td><td>johnk</td></tr>
+                                    <tr><td>P-1005</td><td>Stainless Bolt M10</td><td>1000</td><td>FLOOR</td><td>2025-11-06</td><td>sarac</td></tr>
+                                    <tr><td>P-1006</td><td>Plastic Sheet 4x8</td><td>25</td><td>RECEIVING</td><td>2025-11-06</td><td>marys</td></tr>
+                                    <tr><td>P-1007</td><td>Rubber Gasket 6"</td><td>300</td><td>SHIPPING</td><td>2025-11-05</td><td>bobr</td></tr>
+                                    <tr><td>P-1008</td><td>Carbon Tube 1"</td><td>100</td><td>FLOOR</td><td>2025-11-05</td><td>johnk</td></tr>
+                                    <tr><td>P-1009</td><td>Titanium Plate</td><td>10</td><td>RECEIVING</td><td>2025-11-04</td><td>marys</td></tr>
+                                    <tr><td>P-1010</td><td>Iron Bar 2x4</td><td>250</td><td>FLOOR</td><td>2025-11-04</td><td>sarac</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Compact Sidebar (20%) -->
+                <div class="settings-panel" style="flex: 0 0 20%; padding: 15px;">
+                    <details open style="margin-bottom: 15px; border: 1px solid #ddd; border-radius: 4px; padding: 10px;">
+                        <summary style="cursor: pointer; font-weight: bold; font-size: 13px; margin-bottom: 10px;">🖨️ Printer</summary>
+                        <select style="width: 100%; padding: 6px; font-size: 12px; margin-top: 5px;">
+                            <option>HP LaserJet</option>
+                            <option>Canon IR</option>
+                            <option>PDF</option>
+                        </select>
+                    </details>
+                    
+                    <details open style="margin-bottom: 15px; border: 1px solid #ddd; border-radius: 4px; padding: 10px;">
+                        <summary style="cursor: pointer; font-weight: bold; font-size: 13px; margin-bottom: 10px;">📄 Setup</summary>
+                        <div style="font-size: 12px;">
+                            <label style="display: block; margin: 8px 0;"><input type="radio" name="orient3" checked> Portrait</label>
+                            <label style="display: block; margin: 8px 0;"><input type="radio" name="orient3"> Landscape</label>
+                        </div>
+                    </details>
+                    
+                    <details open style="margin-bottom: 15px; border: 1px solid #ddd; border-radius: 4px; padding: 10px;">
+                        <summary style="cursor: pointer; font-weight: bold; font-size: 13px; margin-bottom: 10px;">📑 Range</summary>
+                        <div style="font-size: 12px;">
+                            <label style="display: block; margin: 8px 0;"><input type="radio" name="range3" checked> All</label>
+                            <label style="display: block; margin: 8px 0;"><input type="radio" name="range3"> Current</label>
+                            <label style="display: block; margin: 8px 0;"><input type="radio" name="range3"> Custom</label>
+                            <div style="display: flex; gap: 5px; margin-top: 8px; margin-left: 20px;">
+                                <input type="number" value="1" style="width: 40px; padding: 4px;" disabled>
+                                <span>to</span>
+                                <input type="number" value="12" style="width: 40px; padding: 4px;" disabled>
+                            </div>
+                        </div>
+                    </details>
+                    
+                    <details style="margin-bottom: 15px; border: 1px solid #ddd; border-radius: 4px; padding: 10px;">
+                        <summary style="cursor: pointer; font-weight: bold; font-size: 13px; margin-bottom: 10px;">⚙️ Columns</summary>
+                        <div style="font-size: 11px; max-height: 120px; overflow-y: auto;">
+                            <label style="display: block; margin: 5px 0;"><input type="checkbox" checked> Part ID</label>
+                            <label style="display: block; margin: 5px 0;"><input type="checkbox" checked> Description</label>
+                            <label style="display: block; margin: 5px 0;"><input type="checkbox" checked> Quantity</label>
+                            <label style="display: block; margin: 5px 0;"><input type="checkbox" checked> Location</label>
+                            <label style="display: block; margin: 5px 0;"><input type="checkbox" checked> Date</label>
+                            <label style="display: block; margin: 5px 0;"><input type="checkbox" checked> User</label>
+                        </div>
+                    </details>
+                </div>
+            </div>
+            
+            <!-- Action Bar -->
+            <div class="action-bar">
+                <div class="export-dropdown">
+                    <button class="action-btn btn-primary">Export ▼</button>
+                    <div class="dropdown-content">
+                        <a href="#">Export to PDF</a>
+                        <a href="#">Export to Excel</a>
+                    </div>
+                </div>
+                <button class="action-btn btn-success">Print</button>
+                <button class="action-btn btn-secondary">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Mockup 4: Floating Settings Panel -->
+    <div id="mockup4" class="mockup-container">
+        <div class="mockup-header">
+            <h2>Mockup 4: Floating Settings Panel</h2>
+            <p><strong>Design Philosophy:</strong> Full-width preview with settings in floating overlay. Modern, non-modal approach.</p>
+            <p><strong>Key Features:</strong> Draggable settings panel, full preview visibility, modern overlay design</p>
+        </div>
+        <div class="print-dialog">
+            <div class="dialog-content" style="position: relative;">
+                <!-- Full Width Preview Area -->
+                <div class="preview-area" style="flex: 1;">
+                    <div class="preview-toolbar">
+                        <div class="preview-nav">
+                            <button class="preview-btn">◀◀ First</button>
+                            <button class="preview-btn">◀ Prev</button>
+                            <button class="preview-btn">Next ▶</button>
+                            <button class="preview-btn">Last ▶▶</button>
+                        </div>
+                        <div class="page-indicator">
+                            Page 1 of 12
+                        </div>
+                        <div class="zoom-control">
+                            <label for="zoom4">Zoom:</label>
+                            <select id="zoom4">
+                                <option>25%</option>
+                                <option>50%</option>
+                                <option>75%</option>
+                                <option selected>100%</option>
+                                <option>125%</option>
+                                <option>150%</option>
+                                <option>200%</option>
+                                <option>Fit to Width</option>
+                                <option>Fit to Page</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="preview-viewport">
+                        <div class="preview-page">
+                            <h3 style="text-align: center; margin-bottom: 20px; font-size: 16px;">Transaction Report</h3>
+                            <table class="preview-table">
+                                <thead>
+                                    <tr>
+                                        <th>Part ID</th>
+                                        <th>Description</th>
+                                        <th>Quantity</th>
+                                        <th>Location</th>
+                                        <th>Date</th>
+                                        <th>User</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr><td>P-1001</td><td>Steel Plate 12x24</td><td>150</td><td>FLOOR</td><td>2025-11-08</td><td>johnk</td></tr>
+                                    <tr><td>P-1002</td><td>Aluminum Rod 2"</td><td>75</td><td>RECEIVING</td><td>2025-11-08</td><td>marys</td></tr>
+                                    <tr><td>P-1003</td><td>Copper Wire #12</td><td>500</td><td>SHIPPING</td><td>2025-11-07</td><td>bobr</td></tr>
+                                    <tr><td>P-1004</td><td>Brass Fitting 3/4"</td><td>200</td><td>FLOOR</td><td>2025-11-07</td><td>johnk</td></tr>
+                                    <tr><td>P-1005</td><td>Stainless Bolt M10</td><td>1000</td><td>FLOOR</td><td>2025-11-06</td><td>sarac</td></tr>
+                                    <tr><td>P-1006</td><td>Plastic Sheet 4x8</td><td>25</td><td>RECEIVING</td><td>2025-11-06</td><td>marys</td></tr>
+                                    <tr><td>P-1007</td><td>Rubber Gasket 6"</td><td>300</td><td>SHIPPING</td><td>2025-11-05</td><td>bobr</td></tr>
+                                    <tr><td>P-1008</td><td>Carbon Tube 1"</td><td>100</td><td>FLOOR</td><td>2025-11-05</td><td>johnk</td></tr>
+                                    <tr><td>P-1009</td><td>Titanium Plate</td><td>10</td><td>RECEIVING</td><td>2025-11-04</td><td>marys</td></tr>
+                                    <tr><td>P-1010</td><td>Iron Bar 2x4</td><td>250</td><td>FLOOR</td><td>2025-11-04</td><td>sarac</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Floating Settings Panel -->
+                <div style="position: absolute; top: 20px; right: 20px; width: 320px; background: white; border-radius: 8px; box-shadow: 0 8px 16px rgba(0,0,0,0.3); overflow: hidden;">
+                    <div style="background: #3498db; color: white; padding: 12px 15px; cursor: move; display: flex; justify-content: space-between; align-items: center;">
+                        <span style="font-weight: bold;">⚙️ Print Settings</span>
+                        <button style="background: transparent; border: none; color: white; font-size: 20px; cursor: pointer;">×</button>
+                    </div>
+                    <div style="padding: 15px; max-height: 500px; overflow-y: auto;">
+                        <div class="settings-section">
+                            <h3>Printer</h3>
+                            <div class="form-group">
+                                <select style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px;">
+                                    <option>HP LaserJet Pro</option>
+                                    <option>Canon ImageRunner</option>
+                                    <option>Microsoft Print to PDF</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div class="settings-section">
+                            <h3>Page Setup</h3>
+                            <div class="form-group">
+                                <label>Orientation:</label>
+                                <div class="radio-group">
+                                    <label><input type="radio" name="orient4" checked> Portrait</label>
+                                    <label><input type="radio" name="orient4"> Landscape</label>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="settings-section">
+                            <h3>Page Range</h3>
+                            <div class="radio-group">
+                                <label><input type="radio" name="range4" checked> All Pages</label>
+                                <label><input type="radio" name="range4"> Current Page</label>
+                                <label><input type="radio" name="range4"> Custom</label>
+                                <div class="page-range-inputs">
+                                    <input type="number" value="1" style="width: 50px;" disabled> to
+                                    <input type="number" value="12" style="width: 50px;" disabled>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="settings-section">
+                            <h3>Columns</h3>
+                            <div style="max-height: 120px; overflow-y: auto; border: 1px solid #ddd; border-radius: 4px; padding: 8px;">
+                                <label style="display: block; margin: 4px 0; font-size: 12px;"><input type="checkbox" checked> Part ID</label>
+                                <label style="display: block; margin: 4px 0; font-size: 12px;"><input type="checkbox" checked> Description</label>
+                                <label style="display: block; margin: 4px 0; font-size: 12px;"><input type="checkbox" checked> Quantity</label>
+                                <label style="display: block; margin: 4px 0; font-size: 12px;"><input type="checkbox" checked> Location</label>
+                                <label style="display: block; margin: 4px 0; font-size: 12px;"><input type="checkbox" checked> Date</label>
+                                <label style="display: block; margin: 4px 0; font-size: 12px;"><input type="checkbox" checked> User</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Action Bar -->
+            <div class="action-bar">
+                <div class="export-dropdown">
+                    <button class="action-btn btn-primary">Export ▼</button>
+                    <div class="dropdown-content">
+                        <a href="#">Export to PDF</a>
+                        <a href="#">Export to Excel</a>
+                    </div>
+                </div>
+                <button class="action-btn btn-success">Print</button>
+                <button class="action-btn btn-secondary">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Mockup 5: Split Preview (Before/After) -->
+    <div id="mockup5" class="mockup-container">
+        <div class="mockup-header">
+            <h2>Mockup 5: Split Preview (Before/After Comparison)</h2>
+            <p><strong>Design Philosophy:</strong> Side-by-side comparison view with settings between panels. Unique approach for validation.</p>
+            <p><strong>Key Features:</strong> Dual preview panels, center settings column, comparison workflow</p>
+        </div>
+        <div class="print-dialog">
+            <div class="dialog-content">
+                <!-- Left Preview (40%) -->
+                <div class="preview-area" style="flex: 0 0 40%; border-right: 2px solid #3498db;">
+                    <div class="preview-toolbar" style="background: #3498db; color: white;">
+                        <div class="page-indicator" style="color: white; font-weight: bold;">
+                            Preview (All Columns)
+                        </div>
+                    </div>
+                    <div class="preview-viewport" style="padding: 10px;">
+                        <div class="preview-page" style="transform: scale(0.6); transform-origin: top left; width: 1360px; height: 1760px;">
+                            <h3 style="text-align: center; margin-bottom: 20px; font-size: 16px;">Transaction Report - Full</h3>
+                            <table class="preview-table">
+                                <thead>
+                                    <tr>
+                                        <th>Part ID</th>
+                                        <th>Description</th>
+                                        <th>Quantity</th>
+                                        <th>Location</th>
+                                        <th>Date</th>
+                                        <th>User</th>
+                                        <th>Status</th>
+                                        <th>Notes</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr><td>P-1001</td><td>Steel Plate 12x24</td><td>150</td><td>FLOOR</td><td>2025-11-08</td><td>johnk</td><td>Active</td><td>QC Pass</td></tr>
+                                    <tr><td>P-1002</td><td>Aluminum Rod 2"</td><td>75</td><td>RECEIVING</td><td>2025-11-08</td><td>marys</td><td>Active</td><td>-</td></tr>
+                                    <tr><td>P-1003</td><td>Copper Wire #12</td><td>500</td><td>SHIPPING</td><td>2025-11-07</td><td>bobr</td><td>Active</td><td>-</td></tr>
+                                    <tr><td>P-1004</td><td>Brass Fitting 3/4"</td><td>200</td><td>FLOOR</td><td>2025-11-07</td><td>johnk</td><td>Active</td><td>-</td></tr>
+                                    <tr><td>P-1005</td><td>Stainless Bolt M10</td><td>1000</td><td>FLOOR</td><td>2025-11-06</td><td>sarac</td><td>Active</td><td>Bulk</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Center Settings (20%) -->
+                <div class="settings-panel" style="flex: 0 0 20%; background: #f8f9fa;">
+                    <div style="text-align: center; padding: 15px; background: #3498db; color: white; font-weight: bold;">
+                        Settings
+                    </div>
+                    <div style="padding: 15px;">
+                        <div class="form-group">
+                            <label style="font-size: 12px; font-weight: bold;">Printer:</label>
+                            <select style="width: 100%; padding: 6px; font-size: 11px;">
+                                <option>HP LaserJet</option>
+                                <option>PDF</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group" style="margin-top: 15px;">
+                            <label style="font-size: 12px; font-weight: bold;">Orientation:</label>
+                            <div style="font-size: 11px;">
+                                <label style="display: block; margin: 5px 0;"><input type="radio" name="orient5" checked> Portrait</label>
+                                <label style="display: block; margin: 5px 0;"><input type="radio" name="orient5"> Landscape</label>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group" style="margin-top: 15px;">
+                            <label style="font-size: 12px; font-weight: bold;">Pages:</label>
+                            <div style="font-size: 11px;">
+                                <label style="display: block; margin: 5px 0;"><input type="radio" name="range5" checked> All</label>
+                                <label style="display: block; margin: 5px 0;"><input type="radio" name="range5"> 1-5</label>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group" style="margin-top: 15px;">
+                            <label style="font-size: 12px; font-weight: bold;">Columns:</label>
+                            <div style="font-size: 10px; max-height: 150px; overflow-y: auto; border: 1px solid #ddd; padding: 5px; background: white;">
+                                <label style="display: block; margin: 3px 0;"><input type="checkbox" checked> Part ID</label>
+                                <label style="display: block; margin: 3px 0;"><input type="checkbox" checked> Description</label>
+                                <label style="display: block; margin: 3px 0;"><input type="checkbox" checked> Quantity</label>
+                                <label style="display: block; margin: 3px 0;"><input type="checkbox" checked> Location</label>
+                                <label style="display: block; margin: 3px 0;"><input type="checkbox" checked> Date</label>
+                                <label style="display: block; margin: 3px 0;"><input type="checkbox" checked> User</label>
+                                <label style="display: block; margin: 3px 0;"><input type="checkbox"> Status</label>
+                                <label style="display: block; margin: 3px 0;"><input type="checkbox"> Notes</label>
+                            </div>
+                        </div>
+                        
+                        <button style="width: 100%; margin-top: 15px; padding: 10px; background: #27ae60; color: white; border: none; border-radius: 4px; cursor: pointer; font-weight: bold;">
+                            Apply →
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Right Preview (40%) -->
+                <div class="preview-area" style="flex: 0 0 40%; border-left: 2px solid #27ae60;">
+                    <div class="preview-toolbar" style="background: #27ae60; color: white;">
+                        <div class="page-indicator" style="color: white; font-weight: bold;">
+                            Updated Preview (Selected Columns)
+                        </div>
+                    </div>
+                    <div class="preview-viewport" style="padding: 10px;">
+                        <div class="preview-page" style="transform: scale(0.7); transform-origin: top left; width: 1165px; height: 1510px;">
+                            <h3 style="text-align: center; margin-bottom: 20px; font-size: 16px;">Transaction Report - Filtered</h3>
+                            <table class="preview-table">
+                                <thead>
+                                    <tr>
+                                        <th>Part ID</th>
+                                        <th>Description</th>
+                                        <th>Quantity</th>
+                                        <th>Location</th>
+                                        <th>Date</th>
+                                        <th>User</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr><td>P-1001</td><td>Steel Plate 12x24</td><td>150</td><td>FLOOR</td><td>2025-11-08</td><td>johnk</td></tr>
+                                    <tr><td>P-1002</td><td>Aluminum Rod 2"</td><td>75</td><td>RECEIVING</td><td>2025-11-08</td><td>marys</td></tr>
+                                    <tr><td>P-1003</td><td>Copper Wire #12</td><td>500</td><td>SHIPPING</td><td>2025-11-07</td><td>bobr</td></tr>
+                                    <tr><td>P-1004</td><td>Brass Fitting 3/4"</td><td>200</td><td>FLOOR</td><td>2025-11-07</td><td>johnk</td></tr>
+                                    <tr><td>P-1005</td><td>Stainless Bolt M10</td><td>1000</td><td>FLOOR</td><td>2025-11-06</td><td>sarac</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Action Bar -->
+            <div class="action-bar">
+                <div class="export-dropdown">
+                    <button class="action-btn btn-primary">Export ▼</button>
+                    <div class="dropdown-content">
+                        <a href="#">Export to PDF</a>
+                        <a href="#">Export to Excel</a>
+                    </div>
+                </div>
+                <button class="action-btn btn-success">Print</button>
+                <button class="action-btn btn-secondary">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function showMockup(num) {
+            // Hide all mockups
+            document.querySelectorAll('.mockup-container').forEach(m => m.classList.remove('active'));
+            document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+            
+            // Show selected mockup
+            document.getElementById('mockup' + num).classList.add('active');
+            document.querySelectorAll('.nav-btn')[num - 1].classList.add('active');
+        }
+    </script>
+</body>
+</html>

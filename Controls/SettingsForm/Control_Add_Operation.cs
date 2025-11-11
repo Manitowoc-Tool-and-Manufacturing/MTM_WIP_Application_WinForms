@@ -69,7 +69,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             base.OnLoad(e);
             if (Control_Add_Operation_Label_IssuedByValue != null)
             {
-                Control_Add_Operation_Label_IssuedByValue.Text = Model_AppVariables.User ?? "Current User";
+                Control_Add_Operation_Label_IssuedByValue.Text = Model_Application_Variables.User ?? "Current User";
             }
         }
 
@@ -100,9 +100,9 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
 
                 // Check if operation already exists using enhanced stored procedure
                 var existsResult = await Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync(
-                    Model_AppVariables.ConnectionString,
+                    Model_Application_Variables.ConnectionString,
                     "md_operation_numbers_Exists_ByOperation",
-                    new Dictionary<string, object> { ["p_Operation"] = operationNumber },
+                    new Dictionary<string, object> { ["Operation"] = operationNumber },
                     _progressHelper
                 );
 
@@ -127,12 +127,12 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
 
                 // Create the operation using enhanced stored procedure
                 var createResult = await Helper_Database_StoredProcedure.ExecuteNonQueryWithStatusAsync(
-                    Model_AppVariables.ConnectionString,
+                    Model_Application_Variables.ConnectionString,
                     "md_operation_numbers_Add_Operation",
                     new Dictionary<string, object>
                     {
-                        ["p_Operation"] = operationNumber,
-                        ["IssuedBy"] = Model_AppVariables.User ?? "Current User"
+                        ["Operation"] = operationNumber,
+                        ["IssuedBy"] = Model_Application_Variables.User ?? "Current User"
                     },
                     _progressHelper
                 );

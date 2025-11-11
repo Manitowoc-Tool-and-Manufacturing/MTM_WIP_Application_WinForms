@@ -32,7 +32,7 @@ CREATE TABLE `sys_parameter_prefix_overrides` (
 -- =============================================
 
 -- Example override entries (uncomment to use):
--- INSERT INTO `sys_parameter_prefix_overrides` 
+-- INSERT INTO `sys_parameter_prefix_overrides`
 --   (`ProcedureName`, `ParameterName`, `OverridePrefix`, `Reason`, `CreatedBy`, `IsActive`)
 -- VALUES
 --   ('inv_inventory_Add', 'PartNumber', 'in_', 'Legacy procedure uses in_ prefix', 'SYSTEM', 1),

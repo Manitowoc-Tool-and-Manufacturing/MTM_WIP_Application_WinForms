@@ -3,6 +3,7 @@
 **Feature ID**: F005  
 **Status**: Draft  
 **Created**: 2025-10-25  
+**Last Updated**: 2025-11-01  
 **Priority**: High  
 **Complexity**: High  
 **Architecture**: Clean, spec-compliant rewrite from scratch  
@@ -93,7 +94,7 @@ Complete architectural redesign of the Transactions form (`Forms/Transactions/Tr
 - **Acceptance**: Export button respects current filters
 - **Acceptance**: Excel file includes all visible columns
 - **Acceptance**: Filename: `Transactions_[Date]_[User].xlsx`
-- **Acceptance**: Export completes within 5 seconds for 1000 records
+- **Acceptance**: Export completes within 5 seconds for 1000 records (P95 latency)
 
 **US-009**: As a manufacturing user, I want to print transaction reports so I can maintain physical records.
 - **Acceptance**: Print preview with formatted layout
@@ -112,10 +113,14 @@ Complete architectural redesign of the Transactions form (`Forms/Transactions/Tr
 - **Acceptance**: Charts: Transactions by Type, Transactions Over Time
 - **Acceptance**: Analytics respect current date filter
 
-**US-012**: As a manufacturing user, I want to view transaction history for a specific batch number so I can trace item lifecycle.
-- **Acceptance**: "View Batch History" button on selected transaction
-- **Acceptance**: Opens new view filtered to batch number
-- **Acceptance**: Shows full timeline from IN to current state
+**US-012**: As a manufacturing user, I want to view the complete lifecycle of a batch with split visualization so I can trace how inventory moved through operations and locations.
+- **Priority**: P1 (promoted from P3 - core feature)
+- **Acceptance**: "Transaction Lifecycle" button on transaction detail panel
+- **Acceptance**: Opens modal dialog showing TreeView with batch timeline
+- **Acceptance**: TreeView displays splits as branches when TRANSFERs have partial quantities
+- **Acceptance**: Shows full timeline from initial IN to current state(s)
+- **Acceptance**: Detail panel on right updates when TreeView node selected
+- **Acceptance**: Icon legend at bottom (📥 IN=Green, 🔄 TRANSFER=Blue, 📤 OUT=Red, 📦 Split=Orange)
 
 ---
 
@@ -154,7 +159,7 @@ Complete architectural redesign of the Transactions form (`Forms/Transactions/Tr
    - Batch history navigation
    - **Max size**: 200 lines
 
-5. **TransactionViewModel.cs** (ViewModel) - State and business logic
+5. **Model_Transactions_ViewModel.cs** (ViewModel) - State and business logic
    - Filter criteria management
    - Pagination state
    - Search orchestration
@@ -188,8 +193,8 @@ Complete architectural redesign of the Transactions form (`Forms/Transactions/Tr
 **Implementation Pattern**:
 ```csharp
 // In Dao_Transactions.cs
-public async Task<DaoResult<List<Model_Transactions>>> SearchAsync(
-    TransactionSearchCriteria criteria,
+public async Task<Model_Dao_Result<List<Model_Transactions_Core>>> SearchAsync(
+    Model_Transactions_SearchCriteria criteria,
     int page = 1,
     int pageSize = 50)
 {
@@ -215,14 +220,14 @@ public async Task<DaoResult<List<Model_Transactions>>> SearchAsync(
 
     if (!result.IsSuccess || result.Data == null)
     {
-        return DaoResult<List<Model_Transactions>>.Failure(result.StatusMessage);
+        return Model_Dao_Result<List<Model_Transactions_Core>>.Failure(result.StatusMessage);
     }
 
     var transactions = result.Data.AsEnumerable()
         .Select(MapDataRowToModel)
         .ToList();
 
-    return DaoResult<List<Model_Transactions>>.Success(transactions);
+    return Model_Dao_Result<List<Model_Transactions_Core>>.Success(transactions);
 }
 
 // NO inline SQL - this is FORBIDDEN
@@ -255,7 +260,7 @@ try
 }
 catch (Exception ex)
 {
-    Service_ErrorHandler.HandleException(ex, ErrorSeverity.Medium,
+    Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Medium,
         retryAction: async () => await SearchTransactionsAsync(criteria),
         controlName: nameof(Transactions));
 }
@@ -373,8 +378,8 @@ private void InitializeProgressReporting()
 }
 
 // In ViewModel
-public async Task<DaoResult<List<Model_Transactions>>> SearchTransactionsAsync(
-    TransactionSearchCriteria criteria,
+public async Task<Model_Dao_Result<List<Model_Transactions_Core>>> SearchTransactionsAsync(
+    Model_Transactions_SearchCriteria criteria,
     Helper_StoredProcedureProgress? progress = null)
 {
     progress?.ShowProgress("Preparing search...");
@@ -449,7 +454,7 @@ public TransactionSearchControl()
 /// <param name="criteria">The search criteria including filters and pagination.</param>
 /// <param name="cancellationToken">Cancellation token for async operation.</param>
 /// <returns>
-/// A <see cref="DaoResult{T}"/> containing the list of matching transactions
+/// A <see cref="Model_Dao_Result{T}"/> containing the list of matching transactions
 /// or an error message if the search failed.
 /// </returns>
 /// <exception cref="ArgumentNullException">Thrown when criteria is null.</exception>
@@ -457,8 +462,8 @@ public TransactionSearchControl()
 /// This method calls the inv_transactions_Search stored procedure.
 /// Results are limited by the PageSize property in the criteria.
 /// </remarks>
-public async Task<DaoResult<List<Model_Transactions>>> SearchTransactionsAsync(
-    TransactionSearchCriteria criteria,
+public async Task<Model_Dao_Result<List<Model_Transactions_Core>>> SearchTransactionsAsync(
+    Model_Transactions_SearchCriteria criteria,
     CancellationToken cancellationToken = default)
 {
     // Implementation
@@ -574,190 +579,125 @@ CALL inv_transactions_GetAnalytics(
 
 ## UI Mockups and Layout Options
 
-### Option A: Traditional Search + Grid (Recommended)
+### Current Implementation: 3-Panel Layout (Search + Grid + Detail)
+
+**Layout**: Search control at top, transaction grid on left (60%), detail panel on right (40%)
 
 ```
-┌─────────────────────────────────────────────────────────────────────────┐
-│ Transaction Viewer                                              [_][□][X]│
-├─────────────────────────────────────────────────────────────────────────┤
-│ ┌─ Search Filters ─────────────────────────────────────────────────────┐│
-│ │ Part Number: [_________▼] User: [All Users  ▼] Location: [All▼]     ││
-│ │                                                                        ││
-│ │ Type: [✓] IN  [✓] OUT  [✓] TRANSFER                                  ││
-│ │                                                                        ││
-│ │ Date Range: (•) Today  ( ) This Week  ( ) This Month  ( ) Custom     ││
-│ │            [2025-10-01 ▼] to [2025-10-25 ▼]                          ││
-│ │                                                                        ││
-│ │ Notes: [________________]    [Search] [Reset] [Export] [Print]       ││
-│ └────────────────────────────────────────────────────────────────────────┘│
-│                                                                           │
-│ ┌─ Results: 245 transactions (Page 1 of 5) ───────────────────────────┐│
-│ │┌────┬────┬──────────────┬──────┬────────┬────────┬────────┬─────────┐││
-│ ││ ID │Type│ Part Number  │ Qty  │ From   │ To     │ User   │ Date    │││
-│ │├────┼────┼──────────────┼──────┼────────┼────────┼────────┼─────────┤││
-│ ││4034│IN  │21-28841-006  │  500 │CS-04   │        │JOHNK   │10/24 19││
-│ ││4034│IN  │21-28841-006  │  500 │CS-04   │        │JOHNK   │10/24 19││
-│ ││4034│IN  │21-28841-006  │  500 │CS-04   │        │JOHNK   │10/24 19││
-│ ││4034│IN  │21-28841-006  │  500 │DC-A0-01│        │JOHNK   │10/24 19││
-│ ││4034│IN  │21-28841-006  │  500 │DC-A0-01│        │JOHNK   │10/24 19││
-│ ││4034│IN  │01-31976-000  │   50 │CS-01   │        │JOHNK   │10/24 19││
-│ ││... │... │...           │  ... │...     │...     │...     │...      │││
-│ │└────┴────┴──────────────┴──────┴────────┴────────┴────────┴─────────┘││
-│ │                                                                        ││
-│ │                 [← Previous] Page 1 of 5 [Next →]                     ││
-│ └────────────────────────────────────────────────────────────────────────┘│
-│ Ready | 245 records loaded in 0.8s                      [▓▓▓▓▓▓▓▓▓▓] 100%│
-└─────────────────────────────────────────────────────────────────────────┘
+┌─────────────────────────────────────────────────────────────────────────────────┐
+│ MTM WIP Application - Transaction History System                       [_][□][X]│
+├─────────────────────────────────────────────────────────────────────────────────┤
+│ Step 1: Enter Search Criteria                                                   │
+├──────────────────────────────────┬──────────────────────────────────────────────┤
+│ 🌲 Part Number [_________▼]     │ 👤 User [All Users    ▼]  ⚙ Operation [▼]  │
+│                                   │                                              │
+│ 📍 From Location [All Locations▼]│ 📍 To Location [All Locations▼]              │
+│                                   │ 📝 Notes Keyword [_______________]          │
+│                                   │    Partial match supported                   │
+├───────────────────────────────────┴──────────────────────────────────────────────┤
+│ Select a Date Range (Custom Filter must be selected below)                      │
+│ From: [11/ 1/2020 📅▼]  To: [11/30/2025 📅▼]                          [🔍]     │
+│ Simple Date Filter:  ( ) Today  ( ) Week  ( ) Month  (•) Custom                │
+│ Filter by Transaction Types:  [✓] IN  [✓] OUT  [✓] TRANSFER                    │
+├────────────────────────────────────────────────┬─────────────────────────────────┤
+│ ┌─ Transaction Results ───────────────────────┐│ Transaction Details - ID: 29171 │
+│ │┌────┬──────┬─────────────┬────┬───────┬────┐││  ID: 29171                      │
+│ ││ ID │ Type │ Part Number │ Qty│ From  │ To │││  Type: IN                       │
+│ │├────┼──────┼─────────────┼────┼───────┼────┤││  Item Type: WIP                 │
+│ ││29171│IN   │10000000825  │ 200│FLOOR-R│—  │││|  Part Number: 10000000825       │
+│ ││29144│IN   │10000000825  │ 180│FLOOR-R│—  │││|  Batch: 0000011234              │
+│ ││29143│IN   │10000000825  │ 200│FLOOR-R│—  │││|  Quantity: 200                  │
+│ ││29142│IN   │10000000825  │ 200│FLOOR-R│—  │││|  From: FLOOR - R C/D            │
+│ ││29141│IN   │10000000825  │ 200│FLOOR-R│—  │││|  To: —                          │
+│ ││29126│IN   │GM102555     │ 254│R-N2-05│—  │││|  Operation: 19                  │
+│ ││29949│IN   │A110147      │ 500│R-G0-13│—  │││|  User: DHAMMONS                 │
+│ ││29948│IN   │A110146      │ 500│R-G0-13│—  │││|  Date/Time: 10/06/2025 11:44:43 │
+│ ││29940│IN   │A110147      │ 500│R-G0-14│—  │││| Notes                           │
+│ ││29939│IN   │A110146      │ 500│R-G0-15│—  │││|┌──────────────────────────────┐ │
+│ ││29934│IN   │A110147      │ 500│R-G0-15│—  │││|│                              │ │
+│ ││29933│IN   │A110146      │ 500│R-G4-15│—  │││|│                              │ │
+│ ││ ... │ ...  │...          │ ..│...    │ ..│││|│                              │ │
+│ │└────┴──────┴─────────────┴────┴───────┴────┘│││                              │ │
+│ │                                             ||└──────────────────────────────┘ │
+│ │ [← Previous] Page 1 of 2 [Next →]           |│                                 │
+│ └─────────────────────────────────────────────┘│ Select a transaction to view... │
+│                                                | ┌─ Related Transactions ─────┐  │
+│                                                | │  [Transaction Life Cycle]  │  │
+│                                                | └────────────────────────────┘  │
+├────────────────────────────────────────────────┴─────────────────────────────────┤
+│ 🔄 ← Previous  Next →  Page 1 of 2  58 records found       Page Number: [___] Go│
+└──────────────────────────────────────────────────────────────────────────────────┘
 ```
 
-**Pros**:
-- ✅ Familiar layout for existing users
-- ✅ All controls visible without scrolling
-- ✅ Fast keyboard navigation
-- ✅ Clear separation of filters and results
+**Key Features**:
+- ✅ Search control collapses/expands at top (TransactionSearchControl)
+- ✅ Grid shows paginated results with horizontal scroll (TransactionGridControl)
+- ✅ Detail panel on right updates on row selection (TransactionDetailPanel)
+- ✅ "Transaction Life Cycle" button opens modal TreeView dialog
+- ✅ All theme-aware with Core_Themes integration
 
-**Cons**:
-- ⚠️ Limited space for many filter fields
-- ⚠️ No side panel for details (must use dialog or separate view)
+**Implemented Components**:
+- `TransactionSearchControl.cs` - Top search filters
+- `TransactionGridControl.cs` - Left grid with pagination
+- `TransactionDetailPanel.cs` - Right detail panel (embedded)
+- `Transactions.cs` - Parent form coordinating all controls
 
 ---
 
-### Option B: Collapsible Search Panel + Detail Side Panel
+### Transaction Life Cycle Modal Dialog
+
+Opened when user clicks "Transaction Life Cycle" button in TransactionDetailPanel:
 
 ```
-┌─────────────────────────────────────────────────────────────────────────┐
-│ Transaction Viewer                                              [_][□][X]│
-├─────────────────────────────────────────────────────────────────────────┤
-│ ┌─ Search Filters (Click to expand/collapse) ─────────────────────▼───┐│
-│ │ Part: [______▼] User: [All▼] Type: [✓IN ✓OUT ✓TRANSFER]           ││
-│ │ Date: (•) Today  ( ) Week  ( ) Month   [Search] [Reset]            ││
-│ └────────────────────────────────────────────────────────────────────────┘│
-│                                                                           │
-│ ┌─ Results ─────────────────────┬─ Transaction Detail ─────────────────┐│
-│ │┌────┬────┬──────────────┬────┐│ Part Number: 21-28841-006          ││
-│ ││ ID │Type│ Part         │Date││ Transaction Type: IN               ││
-│ │├────┼────┼──────────────┼────┤│ Batch Number: 0000021310            ││
-│ ││4034│IN  │21-28841-006 →│10/2││ Quantity: 500                       ││
-│ ││4034│IN  │21-28841-006  │10/2││ From Location: CS-04                ││
-│ ││4034│IN  │21-28841-006  │10/2││ Operation: 90                       ││
-│ ││4034│IN  │21-28841-006  │10/2││ User: JOHNK                         ││
-│ ││4034│IN  │21-28841-006  │10/2││ Date: 2025-10-24 19:07:46          ││
-│ ││4034│IN  │01-31976-000  │10/2││ Notes: (empty)                      ││
-│ ││4034│IN  │01-31976-000  │10/2││                                     ││
-│ ││... │... │...           │... ││ Related Transactions (same batch):  ││
-│ │└────┴────┴──────────────┴────┘│ • ID 40344 - IN - 500 units         ││
-│ │                                │ • ID 40343 - IN - 500 units         ││
-│ │      [← Prev] 1/5 [Next →]    │                                     ││
-│ │                                │ [View Batch History]                ││
-│ └────────────────────────────────┴─────────────────────────────────────┘│
-│ Ready | Selected: ID 40345                             [▓▓▓▓▓▓▓▓▓▓] 100%│
+┌─ 21-28841-006 - 0000021324 - Transaction Life Cycle ───────────────[X]┐
+│                                                                         │
+│ ┌─ Lifecycle Tree ──────────────┬─ Transaction Details ──────────────┐│
+│ │                                │                                    ││
+│ │ 📦 Batch 0000021324 (500 units)│ Transaction ID: 40361              ││
+│ │ ├─ 📥 IN - X-00                │ Type: IN                           ││
+│ │ │   ID: 40361 | 500 units      │ Part Number: 21-28841-006          ││
+│ │ │                               │ Batch: 0000021324                  ││
+│ │ ├─ 🔄 TRANSFER - X-00 → X-04   │ Quantity: 500 units                ││
+│ │ │   ID: 40362 | 250 units      │ From: X-00                         ││
+│ │ │   ├─ 📦 Split: 250 @ X-04    │ To: —                              ││
+│ │ │   │   └─ 🔄 TRANSFER - X-04 →│ Operation: 90                      ││
+│ │ │   │       ID: 40363 | 100 →X-│ User: JOHNK                        ││
+│ │ │   │       ├─ 📦 Split: 100 @ │ Date/Time: 11/01/2025 20:47:31     ││
+│ │ │   │       └─ 📦 Split: 150 @ │                                    ││
+│ │ │   └─ 📦 Split: 250 @ X-00    │ Notes:                             ││
+│ │ │                               │ ┌────────────────────────────────┐││
+│ │ │                               │ │                                │││
+│ │ │                               │ │                                │││
+│ │ │                               │ │                                │││
+│ │ │                               │ └────────────────────────────────┘││
+│ │ │                               │                                    ││
+│ │ │                               │ [View in Main Grid]                ││
+│ │ │                               │                                    ││
+│ └────────────────────────────────┴────────────────────────────────────┘│
+│                                                                         │
+│ Icon Legend: 📥 IN (Green) | 🔄 TRANSFER (Blue) | 📤 OUT (Red) | 📦 Split (Orange) │
+│                                                                         │
+│                                    [Export] [Print] [Close]            │
 └─────────────────────────────────────────────────────────────────────────┘
 ```
 
-**Pros**:
-- ✅ More screen space for results when search collapsed
-- ✅ Side panel shows full details without navigation
-- ✅ Quick access to related transactions
-- ✅ Modern, information-dense layout
+**Tree Structure Logic**:
+- **Root node**: First IN transaction for the batch
+- **Linear branches**: Transactions that move entire quantity
+- **Split branches**: TRANSFER where quantity < source inventory creates child nodes
+- **Node selection**: Updates detail panel on right with full transaction info
+- **No dates in tree**: Chronological order implied, dates shown in detail panel
 
-**Cons**:
-- ⚠️ Collapsible panel adds UI complexity
-- ⚠️ Side panel reduces grid width
-- ⚠️ May be unfamiliar to existing users
-
----
-
-### Option C: Tabbed Interface (Advanced Features)
-
+**Split Detection**:
 ```
-┌─────────────────────────────────────────────────────────────────────────┐
-│ Transaction Viewer                                              [_][□][X]│
-├─────────────────────────────────────────────────────────────────────────┤
-│ [Search & Results] [Analytics] [Export] [History]                        │
-├─────────────────────────────────────────────────────────────────────────┤
-│ ┌─ Quick Filters ──────────────────────────────────────────────────────┐│
-│ │ (•) My Transactions  ( ) All Transactions  ( ) By Part  ( ) Advanced ││
-│ │ Date: (•) Today  ( ) Week  ( ) Month  ( ) Custom [______▼] to [___▼]││
-│ └────────────────────────────────────────────────────────────────────────┘│
-│                                                                           │
-│ ┌─ Transactions ───────────────────────────────────────────────────────┐│
-│ │┌────┬────┬──────────────┬──────┬────────┬────────┬────────┬─────────┐││
-│ ││ ID │Type│ Part Number  │ Qty  │ From   │ To     │ User   │ Date    │││
-│ │├────┼────┼──────────────┼──────┼────────┼────────┼────────┼─────────┤││
-│ ││4034│IN  │21-28841-006  │  500 │CS-04   │        │JOHNK   │10/24 19││
-│ ││... │... │...           │  ... │...     │...     │...     │...      │││
-│ │└────┴────┴──────────────┴──────┴────────┴────────┴────────┴─────────┘││
-│ │                  [← Previous] Page 1 of 5 [Next →]                    ││
-│ └────────────────────────────────────────────────────────────────────────┘│
-│ Ready                                                   [▓▓▓▓▓▓▓▓▓▓] 100%│
-└─────────────────────────────────────────────────────────────────────────┘
-
-[Analytics Tab View]:
-│ ┌─ Summary (Last 30 Days) ─────────────────────────────────────────────┐│
-│ │ ╔════════════════╗  ╔════════════════╗  ╔════════════════╗           ││
-│ │ ║ Total Trans    ║  ║ IN             ║  ║ OUT            ║           ││
-│ │ ║ 1,245          ║  ║ 645 (52%)      ║  ║ 456 (37%)      ║           ││
-│ │ ╚════════════════╝  ╚════════════════╝  ╚════════════════╝           ││
-│ │ ╔════════════════╗  ╔═══════════════════════════════════╗            ││
-│ │ ║ TRANSFER       ║  ║ Transactions Over Time            ║            ││
-│ │ ║ 144 (11%)      ║  ║ [Chart showing daily trend]       ║            ││
-│ │ ╚════════════════╝  ╚═══════════════════════════════════╝            ││
-│ └────────────────────────────────────────────────────────────────────────┘│
-```
-
-**Pros**:
-- ✅ Separates different workflows (search vs analytics vs export)
-- ✅ Each tab can have optimized layout for its purpose
-- ✅ Reduces clutter on main search view
-- ✅ Analytics tab provides insights without separate reports
-
-**Cons**:
-- ⚠️ Users must navigate between tabs
-- ⚠️ More complex implementation
-- ⚠️ Analytics tab requires additional stored procedure development
-
----
-
-### **Recommended: Option A with Detail Dialog**
-
-**Rationale**:
-- Maintains familiar workflow for existing users
-- Simplest implementation (lowest risk)
-- Clear separation of concerns
-- Detail dialog (not side panel) keeps grid width maximized
-- Can add Option B side panel later as enhancement
-
-**Detail Dialog** (opened on double-click or "View Details" button):
-```
-┌─ Transaction Details ──────────────────────────────────────────[X]┐
-│                                                                    │
-│ Transaction ID: 40345                                              │
-│ ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━  │
-│                                                                    │
-│ Transaction Type:  IN                                              │
-│ Part Number:       21-28841-006                                    │
-│ Batch Number:      0000021310                                      │
-│ Quantity:          500 units                                       │
-│                                                                    │
-│ Location:          CS-04                                           │
-│ Operation:         90                                              │
-│ User:              JOHNK                                           │
-│ Date:              2025-10-24 19:07:46                            │
-│                                                                    │
-│ Notes:             (none)                                          │
-│                                                                    │
-│ ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━  │
-│                                                                    │
-│ Related Transactions (Batch 0000021310):                           │
-│ ┌────┬────┬──────────────┬──────┬────────┬────────────────────┐  │
-│ │ ID │Type│ Part         │ Qty  │Location│ Date               │  │
-│ ├────┼────┼──────────────┼──────┼────────┼────────────────────┤  │
-│ │4034│IN  │21-28841-006  │  500 │CS-04   │2025-10-24 19:07:46 │  │
-│ │4034│IN  │21-28841-006  │  500 │CS-04   │2025-10-24 19:07:46 │  │
-│ └────┴────┴──────────────┴──────┴────────┴────────────────────┘  │
-│                                                                    │
-│           [View Batch History] [Close]                             │
-└────────────────────────────────────────────────────────────────────┘
+Example: Batch 0000021324
+- Transaction 40361: IN 500 units @ X-00
+- Transaction 40362: TRANSFER 250 units X-00 → X-04
+  → Split detected: 250 moved, 250 remaining at X-00
+  → Create 2 child branches under 40362
+- Transaction 40363: TRANSFER 100 units X-04 → X-03
+  → Split detected: 100 moved, 150 remaining at X-04
+  → Create 2 child branches under 40363
 ```
 
 ---
@@ -771,10 +711,12 @@ CALL inv_transactions_GetAnalytics(
 - Pagination navigation instantaneous (< 100ms)
 - Export to Excel completes in < 5 seconds for 1000 records
 - Form load time < 3 seconds including initial data load
+- Lifecycle tree builds in < 1 second for batches with up to 100 transactions
 
 ### NFR-002: Scalability
 
 - Support displaying up to 100,000 transactions (with pagination)
+- Lifecycle viewer handles batches with up to 100 transactions efficiently
 - Handle up to 100 concurrent user searches
 - Dropdown autocomplete responsive with 10,000+ parts
 
@@ -802,7 +744,7 @@ CALL inv_transactions_GetAnalytics(
 
 - Each file < 500 lines
 - Cyclomatic complexity < 10 per method
-- XML documentation coverage > 95%
+- XML documentation coverage > 95% (verified by MCP tool `check_xml_docs`)
 - No code duplication (DRY principle)
 - SOLID principles followed throughout
 
@@ -849,14 +791,14 @@ CALL inv_transactions_GetAnalytics(
 
 ```csharp
 [TestClass]
-public class TransactionViewModelTests
+public class Model_Transactions_ViewModelTests
 {
     [TestMethod]
     public async Task SearchAsync_WithValidCriteria_ReturnsResults()
     {
         // Arrange
-        var viewModel = new TransactionViewModel();
-        var criteria = new TransactionSearchCriteria
+        var viewModel = new Model_Transactions_ViewModel();
+        var criteria = new Model_Transactions_SearchCriteria
         {
             DateFrom = DateTime.Today.AddDays(-7),
             DateTo = DateTime.Today
@@ -875,8 +817,8 @@ public class TransactionViewModelTests
     public async Task SearchAsync_WithEmptyCriteria_ReturnsValidationError()
     {
         // Arrange
-        var viewModel = new TransactionViewModel();
-        var criteria = new TransactionSearchCriteria(); // Empty
+        var viewModel = new Model_Transactions_ViewModel();
+        var criteria = new Model_Transactions_SearchCriteria(); // Empty
 
         // Act
         var result = await viewModel.SearchTransactionsAsync(criteria);
@@ -899,7 +841,7 @@ public class Dao_Transactions_IntegrationTests : BaseIntegrationTest
     {
         // Arrange
         var dao = new Dao_Transactions();
-        var criteria = new TransactionSearchCriteria
+        var criteria = new Model_Transactions_SearchCriteria
         {
             DateFrom = DateTime.Parse("2025-10-24"),
             DateTo = DateTime.Parse("2025-10-25")
@@ -967,6 +909,25 @@ public class Dao_Transactions_IntegrationTests : BaseIntegrationTest
 2. Click Search
 3. **Expected**: Results appear in < 2 seconds
 4. Verify progress indicator shows during load
+
+#### Scenario 9: Theme Switching and DPI Scaling
+1. Open Transaction Viewer at 100% DPI scaling
+2. **Expected**: All controls render correctly with theme colors applied
+3. Change Windows Display Settings to 125% DPI scaling
+4. Relaunch application
+5. **Expected**: Form scales properly, no layout breakage, all text readable
+6. Open Settings → Theme Selection
+7. Change theme from "Default" to "Midnight"
+8. **Expected**: Transaction Viewer colors update immediately to match theme
+9. Verify no hardcoded colors override theme (buttons, panels, labels match selected theme)
+10. Test at 150% and 200% DPI scaling
+11. **Expected**: Form remains usable at all DPI levels, controls maintain proper sizing
+
+**Theme Compliance Validation**:
+- Constructor includes `Core_Themes.ApplyDpiScaling(this)` and `ApplyRuntimeLayoutAdjustments(this)`
+- All custom colors use `Model_Shared_UserUiColors` tokens with `SystemColors` fallbacks
+- No hardcoded colors without `// ACCEPTABLE:` justification comments
+- Control names follow `{ComponentName}_{ControlType}_{Purpose}` convention
 
 ---
 
@@ -1105,13 +1066,13 @@ If critical issues discovered:
 
 ## Appendix A: Model Definitions
 
-### TransactionSearchCriteria.cs
+### Model_Transactions_SearchCriteria.cs
 
 ```csharp
 /// <summary>
 /// Encapsulates search criteria for transaction queries.
 /// </summary>
-public class TransactionSearchCriteria
+public class Model_Transactions_SearchCriteria
 {
     /// <summary>
     /// Gets or sets the part number to filter by.
@@ -1189,10 +1150,10 @@ public class TransactionSearchCriteria
 }
 ```
 
-### Model_Transactions.cs (Existing, for reference)
+### Model_Transactions_Core.cs (Existing, for reference)
 
 ```csharp
-internal class Model_Transactions
+internal class Model_Transactions_Core
 {
     public int ID { get; set; }
     public TransactionType TransactionType { get; set; }
@@ -1233,7 +1194,7 @@ This specification mandates compliance with the following instruction files:
    - Helper_Database_StoredProcedure patterns
    - Parameter naming (NO p_ prefix in C#)
    - Connection pooling
-   - DaoResult patterns
+   - Model_Dao_Result patterns
 
 3. **`.github/instructions/testing-standards.instructions.md`**
    - Manual validation approach
@@ -1243,7 +1204,7 @@ This specification mandates compliance with the following instruction files:
 4. **`.github/instructions/integration-testing.instructions.md`**
    - Discovery-first workflow for DAOs
    - Method signature verification
-   - DaoResult null safety
+   - Model_Dao_Result null safety
    - BaseIntegrationTest usage
 
 5. **`.github/instructions/documentation.instructions.md`**
@@ -1266,6 +1227,21 @@ This specification mandates compliance with the following instruction files:
    - Quality gates
    - Review checklist
    - Compliance verification
+
+9. **`.github/instructions/ui-compliance/theming-compliance.instructions.md`**
+   - Theme system integration requirements (MANDATORY)
+   - Core_Themes.ApplyDpiScaling() and ApplyRuntimeLayoutAdjustments() constructor patterns
+   - Color token usage with Model_Shared_UserUiColors
+   - Hardcoded color whitelist and justification rules
+   - WinForms UI architecture standards (control naming, AutoSize patterns)
+
+10. **`Documentation/Theme-System-Reference.md`**
+    - Theme system architecture and color token catalog (203 properties)
+    - DPI scaling system (Section 6) - 100%-200% scaling support
+    - Runtime layout adjustments (Section 7)
+    - Font sizing standards (Section 5)
+    - Database storage (`app_themes` table, 9 themes available)
+    - Complete API reference for Core_Themes integration
 
 ---
 

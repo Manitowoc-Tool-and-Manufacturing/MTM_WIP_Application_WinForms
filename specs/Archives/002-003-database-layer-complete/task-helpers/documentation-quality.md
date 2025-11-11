@@ -32,14 +32,14 @@
 
 ### 1.2 Quickstart Guide (T130 - 4 items)
 - [ ] **Section 1 (Creating procedure)**: 5-minute guide with code example showing standard structure (IN parameters, OUT p_Status, OUT p_ErrorMsg, BEGIN/COMMIT/ROLLBACK)
-- [ ] **Section 2 (Adding DAO method)**: 5-minute guide showing DaoResult<T> wrapper pattern, Helper_Database_StoredProcedure call, parameter dictionary setup
+- [ ] **Section 2 (Adding DAO method)**: 5-minute guide showing Model_Dao_Result<T> wrapper pattern, Helper_Database_StoredProcedure call, parameter dictionary setup
 - [ ] **Section 3 (Writing integration test)**: 5-minute guide showing BaseIntegrationTest inheritance, 4-test pattern implementation, per-test transaction setup
-- [ ] **Section 4 (Calling from Form)**: 3-minute guide showing async/await Form event handler, DaoResult handling, UI error display
+- [ ] **Section 4 (Calling from Form)**: 3-minute guide showing async/await Form event handler, Model_Dao_Result handling, UI error display
 
 ### 1.3 XML Documentation Updates (T131 - 3 items)
 - [ ] **150+ DAO methods documented**: All public methods in 12 DAO classes have XML summary, param, returns, exception, remarks tags
 - [ ] **Helper_Database_StoredProcedure methods**: ExecuteDataTableWithStatus, ExecuteNonQueryWithStatus, ExecuteScalarWithStatus documented with examples
-- [ ] **DaoResult<T> class**: Generic wrapper class documented with usage examples
+- [ ] **Model_Dao_Result<T> class**: Generic wrapper class documented with usage examples
 
 ### 1.4 Phase 2.5 Completion Report (T132 - 2 items)
 - [ ] **Executive summary**: 1-page overview (what was accomplished, business value, timeline, success/failure metrics)
@@ -111,7 +111,7 @@
 ### 4.3 Terminology Consistency (3 items)
 - [ ] **"Stored procedure" vs "routine"**: Consistent terminology throughout T129-T132 (prefer "stored procedure")
 - [ ] **"Parameter prefix" definition**: Consistent usage (p_ prefix for IN/OUT parameters) across T129-T130
-- [ ] **"DaoResult pattern" definition**: Consistent explanation across T130-T131 (wrapper for success/failure + payload)
+- [ ] **"Model_Dao_Result pattern" definition**: Consistent explanation across T130-T131 (wrapper for success/failure + payload)
 
 ---
 

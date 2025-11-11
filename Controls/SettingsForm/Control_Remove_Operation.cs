@@ -79,7 +79,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
                 _currentOperation = getResult.Data;
                 if (_currentOperation != null)
                 {
-                    operationValueLabel.Text = _currentOperation["p_Operation"]?.ToString() ?? string.Empty;
+                    operationValueLabel.Text = _currentOperation["Operation"]?.ToString() ?? string.Empty;
                     issuedByValueLabel.Text = _currentOperation["IssuedBy"]?.ToString() ?? "Unknown";
                     EnableControls(true);
                 }
@@ -100,7 +100,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
                 return;
             }
 
-            string operationNumber = _currentOperation["p_Operation"]?.ToString() ?? string.Empty;
+            string operationNumber = _currentOperation["Operation"]?.ToString() ?? string.Empty;
             DialogResult result =
                 MessageBox.Show(
                     $@"Are you sure you want to remove the operation number '{operationNumber}'?{Environment.NewLine}{Environment.NewLine}This action cannot be undone.",
