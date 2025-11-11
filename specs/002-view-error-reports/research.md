@@ -146,7 +146,7 @@ if (!result.IsSuccess)
 {
     Service_ErrorHandler.HandleException(
         result.Exception, 
-        ErrorSeverity.Medium,
+        Enum_ErrorSeverity.Medium,
         message: result.ErrorMessage);
     return;
 }
@@ -231,7 +231,7 @@ public Form_ViewErrorReports()
 ✅ Service_ErrorHandler - Exists with HandleException and ShowConfirmation  
 ✅ Core_Themes - Exists with ApplyDpiScaling  
 ✅ Dao_ErrorReports - Exists, ready to extend  
-✅ Model_ErrorReport - Exists with all required fields
+✅ Model_ErrorReport_Core - Exists with all required fields
 
 ## Risk Assessment
 

@@ -13,7 +13,7 @@
 
 - **Q2: Application Termination Policy for Database Errors** → **A: Terminate on startup, show retry prompt to user during operation** - Startup failure prevents app initialization without database. During operation, user sees "Connection lost. Retry?" dialog and decides whether to retry or close app, preserving in-progress work where possible.
 
-- **Q3: Slow Query Threshold Configuration** → **A: Configurable per operation type (queries vs modifications vs batch vs reports)** - Define categories with thresholds: "Query" (500ms), "Modification" (1000ms), "Batch" (5000ms), "Report" (2000ms). Configuration stored in Model_AppVariables or appsettings file.
+- **Q3: Slow Query Threshold Configuration** → **A: Configurable per operation type (queries vs modifications vs batch vs reports)** - Define categories with thresholds: "Query" (500ms), "Modification" (1000ms), "Batch" (5000ms), "Report" (2000ms). Configuration stored in Model_Application_Variables or appsettings file.
 
 - **Q4: Transaction Scope and Multi-Step Operation Policy** → **A: All multi-step operations MUST use explicit transactions** - Maximum data integrity approach covering all scenarios. Every multi-call DAO method includes transaction management with proper rollback on any step failure.
 
@@ -33,13 +33,13 @@ As a developer adding new inventory features, I need a standardized DAO pattern 
 
 **Why this priority**: This is the foundation that enables all other database work. Without a uniform pattern, every new feature risks introducing MySQL parameter errors that currently plague the system.
 
-**Independent Test**: Create a new stored procedure with standard parameters, generate a corresponding DAO method following the standard pattern, execute it with valid and invalid data, and verify consistent DaoResult responses with proper error logging.
+**Independent Test**: Create a new stored procedure with standard parameters, generate a corresponding DAO method following the standard pattern, execute it with valid and invalid data, and verify consistent Model_Dao_Result responses with proper error logging.
 
 **Acceptance Scenarios**:
 
-1. **Given** a new stored procedure `test_operation_Add` exists with standard parameters, **When** developer creates DAO method using standard pattern and calls it with valid data, **Then** method returns DaoResult.Success with confirmation message
-2. **Given** the same DAO method, **When** developer calls it with invalid/missing parameters, **Then** method returns DaoResult.Failure with user-friendly error message and logs error to database
-3. **Given** the DAO method encounters a database connection failure, **When** execution is attempted, **Then** method returns DaoResult.Failure without crashing application and logs detailed error information
+1. **Given** a new stored procedure `test_operation_Add` exists with standard parameters, **When** developer creates DAO method using standard pattern and calls it with valid data, **Then** method returns Model_Dao_Result.Success with confirmation message
+2. **Given** the same DAO method, **When** developer calls it with invalid/missing parameters, **Then** method returns Model_Dao_Result.Failure with user-friendly error message and logs error to database
+3. **Given** the DAO method encounters a database connection failure, **When** execution is attempted, **Then** method returns Model_Dao_Result.Failure without crashing application and logs detailed error information
 
 ---
 
@@ -127,7 +127,7 @@ As a performance analyst, I need visibility into database operation timing and c
 
 - **FR-002**: System MUST automatically detect and apply parameter prefixes (p_, in_, o_) by querying INFORMATION_SCHEMA.PARAMETERS at application startup, caching results in memory, and using fallback convention (p_ default, in_ for Transfer*/transaction* procedures) if schema query fails, allowing developers to provide unprefixed parameter names in Dictionary<string, object>
 
-- **FR-003**: All DAO methods MUST return structured DaoResult or DaoResult\<T> objects containing IsSuccess boolean, Data (if applicable), Message string, and Exception (if applicable)
+- **FR-003**: All DAO methods MUST return structured Model_Dao_Result or Model_Dao_Result\<T> objects containing IsSuccess boolean, Data (if applicable), Message string, and Exception (if applicable)
 
 - **FR-004**: All stored procedures MUST declare OUT p_Status INT and OUT p_ErrorMsg VARCHAR(500) output parameters with standardized return codes: 0=success, 1=not found/no-op, -1=error
 
@@ -151,7 +151,7 @@ As a performance analyst, I need visibility into database operation timing and c
 
 - **FR-014**: System MUST validate database connectivity on application startup before loading MainForm
 
-- **FR-015**: All DAO classes MUST follow identical structure: methods are async, return DaoResult variants, match stored procedure parameters exactly, and route all database access through Helper_Database_StoredProcedure
+- **FR-015**: All DAO classes MUST follow identical structure: methods are async, return Model_Dao_Result variants, match stored procedure parameters exactly, and route all database access through Helper_Database_StoredProcedure
 
 - **FR-016**: System MUST eliminate all direct MySqlConnection and MySqlCommand usage in Data/ folder, routing exclusively through Helper_Database_StoredProcedure
 
@@ -165,9 +165,9 @@ As a performance analyst, I need visibility into database operation timing and c
 
 ### Key Entities
 
-- **DaoResult**: Wrapper class encapsulating operation outcome with IsSuccess boolean, Message string describing outcome, Exception object if error occurred, used for non-data-returning operations
+- **Model_Dao_Result**: Wrapper class encapsulating operation outcome with IsSuccess boolean, Message string describing outcome, Exception object if error occurred, used for non-data-returning operations
 
-- **DaoResult\<T>**: Generic wrapper class extending DaoResult with Data property of type T containing query results, used for data-returning operations like SELECT queries
+- **Model_Dao_Result\<T>**: Generic wrapper class extending Model_Dao_Result with Data property of type T containing query results, used for data-returning operations like SELECT queries
 
 - **Helper_Database_StoredProcedure**: Central helper class providing four execution methods, automatic parameter prefix detection, status code processing, connection pooling configuration, and retry logic for transient errors
 
@@ -189,7 +189,7 @@ As a performance analyst, I need visibility into database operation timing and c
 
 - **SC-002**: 100% of database operations in Data/ folder route through Helper_Database_StoredProcedure with no direct MySQL API usage (verified by static code analysis)
 
-- **SC-003**: All 60+ stored procedures successfully tested with both valid and invalid inputs, returning consistent DaoResult responses
+- **SC-003**: All 60+ stored procedures successfully tested with both valid and invalid inputs, returning consistent Model_Dao_Result responses
 
 - **SC-004**: Database operations complete within 5% performance variance compared to pre-refactor baseline (measured by benchmark suite)
 

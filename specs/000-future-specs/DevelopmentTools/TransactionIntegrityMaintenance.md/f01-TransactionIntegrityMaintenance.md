@@ -89,19 +89,19 @@ Create a comprehensive system for validating and fixing inventory transaction da
 **Methods**:
 ```csharp
 // Validation
-Task<DaoResult<DataIntegrityReport>> ValidateInventoryIntegrityAsync(int monthsBack = 3);
+Task<Model_Dao_Result<DataIntegrityReport>> ValidateInventoryIntegrityAsync(int monthsBack = 3);
 
 // Fix operations (all with dry-run support)
-Task<DaoResult<FixResult>> FixOrphanedOutsAsync(string? batchNumber = null, bool dryRun = true);
-Task<DaoResult<FixResult>> FixOrphanedTransfersAsync(string? batchNumber = null, bool dryRun = true);
-Task<DaoResult<FixResult>> FixTimestampViolationsAsync(
+Task<Model_Dao_Result<FixResult>> FixOrphanedOutsAsync(string? batchNumber = null, bool dryRun = true);
+Task<Model_Dao_Result<FixResult>> FixOrphanedTransfersAsync(string? batchNumber = null, bool dryRun = true);
+Task<Model_Dao_Result<FixResult>> FixTimestampViolationsAsync(
     TimestampFixMethod method, string? batchNumber = null, bool dryRun = true);
-Task<DaoResult<FixResult>> FixMissingExplainedInsAsync(
+Task<Model_Dao_Result<FixResult>> FixMissingExplainedInsAsync(
     MissingInFixMethod method, string? batchNumber = null, bool dryRun = true);
-Task<DaoResult<FixResult>> FixTransferLocationViolationsAsync(string? batchNumber = null, bool dryRun = true);
+Task<Model_Dao_Result<FixResult>> FixTransferLocationViolationsAsync(string? batchNumber = null, bool dryRun = true);
 
 // Bulk fix (applies all fixes with single transaction)
-Task<DaoResult<BulkFixResult>> FixAllIssuesAsync(FixAllOptions options, bool dryRun = true);
+Task<Model_Dao_Result<BulkFixResult>> FixAllIssuesAsync(FixAllOptions options, bool dryRun = true);
 ```
 
 ### **2.2 Models**

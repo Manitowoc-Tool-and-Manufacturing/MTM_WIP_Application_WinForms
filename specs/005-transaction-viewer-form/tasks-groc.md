@@ -60,7 +60,7 @@ Audit and fix error handling compliance across all open files using Service_Erro
 - [ ] **Verify async operations** - All database calls are properly awaited
 
 #### **Database-UI Integration Memory Compliance**
-- [ ] **Check DaoResult handling** - Proper IsSuccess checking and null-safe Data access
+- [ ] **Check Model_Dao_Result handling** - Proper IsSuccess checking and null-safe Data access
 - [ ] **Verify async/await patterns** - UI thread safety during database operations
 - [ ] **Confirm error propagation** - Database errors properly surfaced to UI
 - [ ] **Ensure graceful degradation** - Application continues when database operations fail

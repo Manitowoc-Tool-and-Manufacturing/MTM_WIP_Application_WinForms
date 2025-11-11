@@ -11,11 +11,11 @@ This refactor restructures the entire database access layer across 60+ stored pr
 
 1. **Uniform Helper Pattern**: All database operations route through `Helper_Database_StoredProcedure` with automatic parameter prefix detection via INFORMATION_SCHEMA queries
 2. **Async-Only Architecture**: Pure async DAO methods with immediate migration of all calling code (Forms, Services, Controls) to async/await patterns—no legacy synchronous wrappers
-3. **Consistent Error Handling**: DaoResult<T> wrapper pattern with structured status/error responses, integrated with Service_ErrorHandler and comprehensive logging
+3. **Consistent Error Handling**: Model_Dao_Result<T> wrapper pattern with structured status/error responses, integrated with Service_ErrorHandler and comprehensive logging
 4. **Transaction Management**: Explicit transaction handling for all multi-step operations with automatic rollback on failures
 5. **Performance Monitoring**: Configurable slow query thresholds per operation category (Query: 500ms, Modification: 1000ms, Batch: 5000ms, Report: 2000ms)
 
-**Technical Approach**: Query INFORMATION_SCHEMA.PARAMETERS at application startup to cache all stored procedure parameter names and prefixes. Refactor all 12 DAO classes to pure async methods returning DaoResult<T>. Migrate 100+ call sites across Forms/Services/Controls to async/await patterns. Implement per-test-class transaction isolation for integration testing using `mtm_wip_application_winform_test` database.
+**Technical Approach**: Query INFORMATION_SCHEMA.PARAMETERS at application startup to cache all stored procedure parameter names and prefixes. Refactor all 12 DAO classes to pure async methods returning Model_Dao_Result<T>. Migrate 100+ call sites across Forms/Services/Controls to async/await patterns. Implement per-test-class transaction isolation for integration testing using `mtm_wip_application_winform_test` database.
 
 ## Technical Context
 
@@ -45,11 +45,11 @@ This refactor restructures the entire database access layer across 60+ stored pr
 
 **No violations**: Refactor strengthens existing principle.
 
-### II. DaoResult<T> Wrapper Pattern ✅ COMPLIANT
+### II. Model_Dao_Result<T> Wrapper Pattern ✅ COMPLIANT
 
-**Requirement**: All data access methods MUST return structured DaoResult<T> responses.
+**Requirement**: All data access methods MUST return structured Model_Dao_Result<T> responses.
 
-**Compliance**: All 12 DAO classes refactored to return DaoResult or DaoResult<T>, eliminating exception-driven control flow for expected failures.
+**Compliance**: All 12 DAO classes refactored to return Model_Dao_Result or Model_Dao_Result<T>, eliminating exception-driven control flow for expected failures.
 
 **No violations**: Core pattern of this refactor.
 
@@ -91,7 +91,7 @@ This refactor restructures the entire database access layer across 60+ stored pr
 
 **Requirement**: All error presentation routes through Service_ErrorHandler.
 
-**Compliance**: DaoResult pattern integrates with Service_ErrorHandler for UI-level error display. All database exceptions wrapped and logged with three-tier severity (Critical/Error/Warning per clarification Q5). Error cooldown mechanism prevents spam.
+**Compliance**: Model_Dao_Result pattern integrates with Service_ErrorHandler for UI-level error display. All database exceptions wrapped and logged with three-tier severity (Critical/Error/Warning per clarification Q5). Error cooldown mechanism prevents spam.
 
 **No violations**: Error handling strengthened by refactor.
 
@@ -127,11 +127,11 @@ specs/002-comprehensive-database-layer/
 ├── plan.md                # This file (implementation plan)
 ├── clarification-questions.md  # 8 resolved clarification questions (2 rounds)
 ├── research.md            # Phase 0 output - INFORMATION_SCHEMA query patterns, async migration strategies
-├── data-model.md          # Phase 1 output - DaoResult<T>, Helper classes, DAO structure
+├── data-model.md          # Phase 1 output - Model_Dao_Result<T>, Helper classes, DAO structure
 ├── quickstart.md          # Phase 1 output - Developer guide for new DAO patterns
 ├── contracts/             # Phase 1 output - Stored procedure parameter contracts
 │   ├── parameter-schema.json     # INFORMATION_SCHEMA query results format
-│   └── dao-result-schema.json    # DaoResult<T> API contract
+│   └── dao-result-schema.json    # Model_Dao_Result<T> API contract
 └── checklists/
     └── requirements.md    # Specification quality checklist (8/8 clarifications resolved)
 ```
@@ -159,10 +159,10 @@ MTM_WIP_Application_Winforms/
 │   └── Helper_StoredProcedureProgress.cs   # Progress reporting integration
 │
 ├── Models/                         # Data models (MINOR UPDATES)
-│   ├── Model_DaoResult.cs          # DaoResult and DaoResult<T> definitions (NEW)
-│   ├── Model_AppVariables.cs       # Application variables including slow query thresholds
-│   ├── Model_Users.cs              # User model
-│   ├── Model_CurrentInventory.cs   # Inventory models
+│   ├── Model_Dao_Result.cs          # Model_Dao_Result and Model_Dao_Result<T> definitions (NEW)
+│   ├── Model_Application_Variables.cs       # Application variables including slow query thresholds
+│   ├── Model_Shared_Users.cs              # User model
+│   ├── Model_Inventory_Current.cs   # Inventory models
 │   └── [other models]              # Existing models preserved
 │
 ├── Forms/                          # WinForms UI (ASYNC MIGRATION TARGET - 40+ files)
@@ -179,7 +179,7 @@ MTM_WIP_Application_Winforms/
 │   └── Addons/                     # Specialized controls
 │
 ├── Services/                       # Background services (ASYNC MIGRATION TARGET)
-│   ├── Service_ErrorHandler.cs     # Integrates with DaoResult pattern
+│   ├── Service_ErrorHandler.cs     # Integrates with Model_Dao_Result pattern
 │   ├── Service_DebugTracer.cs      # Performance monitoring integration
 │   └── [other services]            # Migrate to async DAO calls
 │
@@ -192,7 +192,7 @@ MTM_WIP_Application_Winforms/
         └── TestDatabase/           # Schema scripts for mtm_wip_application_winform_test
 ```
 
-**Structure Decision**: Single .NET project structure maintained (WinForms desktop application). New directories added: `Tests/Integration/` for integration tests, `Models/Model_DaoResult.cs` for wrapper pattern. Primary refactor targets: `Data/` (12 DAO files), `Helpers/Helper_Database_StoredProcedure.cs`, and 100+ call sites across `Forms/`, `Controls/`, and `Services/` for async migration.
+**Structure Decision**: Single .NET project structure maintained (WinForms desktop application). New directories added: `Tests/Integration/` for integration tests, `Models/Model_Dao_Result.cs` for wrapper pattern. Primary refactor targets: `Data/` (12 DAO files), `Helpers/Helper_Database_StoredProcedure.cs`, and 100+ call sites across `Forms/`, `Controls/`, and `Services/` for async migration.
 
 **Key File Counts**:
 - DAO files: 12 (complete refactor)
@@ -224,7 +224,7 @@ MTM_WIP_Application_Winforms/
 
 1. **data-model.md** (✅ Created)
    - 8 core entities documented with fields, validation rules, relationships
-   - DaoResult and DaoResult<T> wrapper classes
+   - Model_Dao_Result and Model_Dao_Result<T> wrapper classes
    - Helper_Database_StoredProcedure execution methods (4 methods)
    - ParameterPrefixCache internal structure
    - 12 DAO class structure templates
@@ -232,7 +232,7 @@ MTM_WIP_Application_Winforms/
    - Entity relationships and state transition diagrams
 
 2. **contracts/** (✅ Created - 3 files)
-   - `dao-result-schema.json`: DaoResult and DaoResult<T> API contract with factory methods, usage patterns, caller contract
+   - `dao-result-schema.json`: Model_Dao_Result and Model_Dao_Result<T> API contract with factory methods, usage patterns, caller contract
    - `parameter-schema.json`: INFORMATION_SCHEMA query contract, cache structure, prefix detection algorithm, test cases
    - `stored-procedure-contract.json`: Execution method signatures, standard parameters, connection pooling, error handling levels, performance monitoring
 
@@ -244,7 +244,7 @@ MTM_WIP_Application_Winforms/
    - Troubleshooting guide (6 common issues with solutions)
 
 4. **.github/copilot-instructions.md** (✅ Updated)
-   - Added DaoResult<T> pattern documentation
+   - Added Model_Dao_Result<T> pattern documentation
    - Added INFORMATION_SCHEMA parameter caching approach
    - Added per-test-class transaction pattern
    - Added configurable slow query thresholds
@@ -258,7 +258,7 @@ MTM_WIP_Application_Winforms/
 | Principle | Status | Notes |
 |-----------|--------|-------|
 | I. Stored Procedure Only | ✅ COMPLIANT | All 4 execution methods route through stored procedures. No inline SQL permitted. |
-| II. DaoResult<T> Wrapper | ✅ COMPLIANT | Comprehensive schema defined in contracts. Success/Failure factory pattern documented. |
+| II. Model_Dao_Result<T> Wrapper | ✅ COMPLIANT | Comprehensive schema defined in contracts. Success/Failure factory pattern documented. |
 | III. Region Organization | ✅ COMPLIANT | No code files created yet; will apply during implementation. |
 | IV. Manual Validation | ✅ COMPLIANT | Integration test templates provided in quickstart.md with per-test-class transactions. |
 | V. Environment-Aware DB | ✅ COMPLIANT | Test database setup documented (mtm_wip_application_winform_test). Connection string patterns preserved. |
@@ -276,7 +276,7 @@ MTM_WIP_Application_Winforms/
 
 **Complexity Assessment**:
 - No new edge cases discovered during design phase
-- DaoResult<T> pattern simpler than anticipated (2 classes, 4 factory methods)
+- Model_Dao_Result<T> pattern simpler than anticipated (2 classes, 4 factory methods)
 - INFORMATION_SCHEMA query straightforward (single SELECT at startup)
 - Test database isolation cleaner than originally expected
 

@@ -174,7 +174,7 @@ This checklist validates the **quality of Developer role infrastructure requirem
 - [ ] **sys_user table exists**: Validated in T101 schema extraction (existing table, no structural changes needed)
 - [ ] **User Management Form exists**: Forms/Settings/UserManagementForm.cs confirmed in codebase
 - [ ] **Settings Form TreeView**: Existing TreeView control identified as modification target (no new control creation)
-- [ ] **Current user context**: Model_Users.CurrentUser provides user role flags (IsAdmin, IsDeveloper) for access checks
+- [ ] **Current user context**: Model_Shared_Users.CurrentUser provides user role flags (IsAdmin, IsDeveloper) for access checks
 
 **Score**: ___ / 4 (requires ≥3 pass)
 
@@ -191,7 +191,7 @@ This checklist validates the **quality of Developer role infrastructure requirem
 - [ ] **Helper_Database_Variables integration**: GetConnectionString() used for override table queries
 - [ ] **Service_DebugTracer integration**: Role changes logged for security audit trail
 - [ ] **LoggingUtility integration**: Schema migration errors logged to application log
-- [ ] **Model_Users integration**: CurrentUser object updated to include IsDeveloper property
+- [ ] **Model_Shared_Users integration**: CurrentUser object updated to include IsDeveloper property
 
 **Score**: ___ / 4 (requires ≥3 pass)
 

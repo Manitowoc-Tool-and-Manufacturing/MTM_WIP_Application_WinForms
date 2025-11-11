@@ -66,7 +66,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                 });
 
             InitializeComponent();
-
+SetStyle(ControlStyles.OptimizedDoubleBuffer, true);
             Service_DebugTracer.TraceUIAction("THEME_APPLICATION", nameof(Control_InventoryTab),
                 new Dictionary<string, object>
                 {
@@ -108,10 +108,10 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             Service_DebugTracer.TraceUIAction("VERSION_LABEL_SET", nameof(Control_InventoryTab),
                 new Dictionary<string, object>
                 {
-                    ["UserVersion"] = Model_AppVariables.UserVersion,
+                    ["UserVersion"] = Model_Application_Variables.UserVersion,
                     ["DatabaseVersion"] = Service_Timer_VersionChecker.LastCheckedDatabaseVersion ?? "unknown"
                 });
-            SetVersionLabel(Model_AppVariables.UserVersion,
+            SetVersionLabel(Model_Application_Variables.UserVersion,
                 Service_Timer_VersionChecker.LastCheckedDatabaseVersion ?? "unknown");
 
             Service_DebugTracer.TraceUIAction("UI_STYLING_APPLIED", nameof(Control_InventoryTab),
@@ -125,11 +125,11 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             Core_Themes.ApplyFocusHighlighting(this);
             Control_InventoryTab_ComboBox_Part.ForeColor = Control_InventoryTab_ComboBox_Operation.ForeColor =
                 Control_InventoryTab_ComboBox_Location.ForeColor =
-                    Model_AppVariables.UserUiColors.ComboBoxForeColor ?? Color.Red;
+                    Model_Application_Variables.UserUiColors.ComboBoxForeColor ?? Color.Red;
             Control_InventoryTab_ComboBox_Part.Focus();
             Control_InventoryTab_TextBox_Quantity.Text = "[ Enter Valid Quantity ]";
             Control_InventoryTab_TextBox_Quantity.ForeColor =
-                Model_AppVariables.UserUiColors.TextBoxErrorForeColor ?? Color.Red;
+                Model_Application_Variables.UserUiColors.TextBoxErrorForeColor ?? Color.Red;
 
             Service_DebugTracer.TraceUIAction("PRIVILEGES_APPLIED", nameof(Control_InventoryTab));
             ApplyPrivileges();
@@ -150,10 +150,10 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
 
         private void ApplyPrivileges()
         {
-            bool isDeveloper = Model_AppVariables.UserTypeDeveloper;
-            bool isAdmin = Model_AppVariables.UserTypeAdmin;
-            bool isNormal = Model_AppVariables.UserTypeNormal;
-            bool isReadOnly = Model_AppVariables.UserTypeReadOnly;
+            bool isDeveloper = Model_Application_Variables.UserTypeDeveloper;
+            bool isAdmin = Model_Application_Variables.UserTypeAdmin;
+            bool isNormal = Model_Application_Variables.UserTypeNormal;
+            bool isReadOnly = Model_Application_Variables.UserTypeReadOnly;
 
             // Developers have all Admin privileges
             bool hasAdminAccess = isDeveloper || isAdmin;
@@ -253,7 +253,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                 
                 Service_ErrorHandler.HandleException(
                     ex,
-                    ErrorSeverity.High,
+                    Enum_ErrorSeverity.High,
                     retryAction: () => { _ = Control_InventoryTab_OnStartup_LoadDataComboBoxesAsync(); return true; },
                     contextData: new Dictionary<string, object>
                     {
@@ -355,7 +355,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                 
                 Service_ErrorHandler.HandleException(
                     ex,
-                    ErrorSeverity.Medium,
+                    Enum_ErrorSeverity.Medium,
                     contextData: new Dictionary<string, object>
                     {
                         ["MethodName"] = nameof(ProcessCmdKey),
@@ -410,7 +410,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                         ?.GetValue(adv) is ComboBox combo && combo.Items.Count > 0)
                 {
                     combo.SelectedIndex = 0;
-                    combo.ForeColor = Model_AppVariables.UserUiColors.ErrorColor ?? Color.Red;
+                    combo.ForeColor = Model_Application_Variables.UserUiColors.ErrorColor ?? Color.Red;
                     combo.Focus();
                     combo.SelectAll();
                 }
@@ -420,7 +420,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                         ?.GetValue(adv) is ComboBox op && op.Items.Count > 0)
                 {
                     op.SelectedIndex = 0;
-                    op.ForeColor = Model_AppVariables.UserUiColors.ErrorColor ?? Color.Red;
+                    op.ForeColor = Model_Application_Variables.UserUiColors.ErrorColor ?? Color.Red;
                 }
 
                 if (adv.GetType().GetField("AdvancedInventory_Single_ComboBox_Loc",
@@ -428,7 +428,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                         ?.GetValue(adv) is ComboBox loc && loc.Items.Count > 0)
                 {
                     loc.SelectedIndex = 0;
-                    loc.ForeColor = Model_AppVariables.UserUiColors.ErrorColor ?? Color.Red;
+                    loc.ForeColor = Model_Application_Variables.UserUiColors.ErrorColor ?? Color.Red;
                 }
 
                 if (adv.GetType().GetField("AdvancedInventory_MultiLoc_ComboBox_Part",
@@ -436,7 +436,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                         ?.GetValue(adv) is ComboBox multiPart && multiPart.Items.Count > 0)
                 {
                     multiPart.SelectedIndex = 0;
-                    multiPart.ForeColor = Model_AppVariables.UserUiColors.ErrorColor ?? Color.Red;
+                    multiPart.ForeColor = Model_Application_Variables.UserUiColors.ErrorColor ?? Color.Red;
                 }
 
                 if (adv.GetType().GetField("AdvancedInventory_MultiLoc_ComboBox_Op",
@@ -444,7 +444,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                         ?.GetValue(adv) is ComboBox multiOp && multiOp.Items.Count > 0)
                 {
                     multiOp.SelectedIndex = 0;
-                    multiOp.ForeColor = Model_AppVariables.UserUiColors.ErrorColor ?? Color.Red;
+                    multiOp.ForeColor = Model_Application_Variables.UserUiColors.ErrorColor ?? Color.Red;
                 }
 
                 if (adv.GetType().GetField("AdvancedInventory_MultiLoc_ComboBox_Loc",
@@ -452,7 +452,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                         ?.GetValue(adv) is ComboBox multiLoc && multiLoc.Items.Count > 0)
                 {
                     multiLoc.SelectedIndex = 0;
-                    multiLoc.ForeColor = Model_AppVariables.UserUiColors.ErrorColor ?? Color.Red;
+                    multiLoc.ForeColor = Model_Application_Variables.UserUiColors.ErrorColor ?? Color.Red;
                 }
 
                 if (adv.GetType().GetField("AdvancedInventory_TabControl",
@@ -471,7 +471,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                 
                 Service_ErrorHandler.HandleException(
                     ex,
-                    ErrorSeverity.Medium,
+                    Enum_ErrorSeverity.Medium,
                     contextData: new Dictionary<string, object>
                     {
                         ["MethodName"] = nameof(Control_InventoryTab_Button_AdvancedEntry_Click)
@@ -512,7 +512,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                 
                 Service_ErrorHandler.HandleException(
                     ex,
-                    ErrorSeverity.Medium,
+                    Enum_ErrorSeverity.Medium,
                     retryAction: () => { Control_InventoryTab_Button_Reset_Click(); return true; },
                     contextData: new Dictionary<string, object>
                     {
@@ -579,15 +579,15 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
 
                 Debug.WriteLine("[DEBUG] Resetting UI fields");
                 MainFormControlHelper.ResetComboBox(Control_InventoryTab_ComboBox_Part,
-                    Model_AppVariables.UserUiColors.ComboBoxErrorForeColor ?? Color.Red, 0);
+                    Model_Application_Variables.UserUiColors.ComboBoxErrorForeColor ?? Color.Red, 0);
                 MainFormControlHelper.ResetComboBox(Control_InventoryTab_ComboBox_Operation,
-                    Model_AppVariables.UserUiColors.ComboBoxErrorForeColor ?? Color.Red, 0);
+                    Model_Application_Variables.UserUiColors.ComboBoxErrorForeColor ?? Color.Red, 0);
                 MainFormControlHelper.ResetComboBox(Control_InventoryTab_ComboBox_Location,
-                    Model_AppVariables.UserUiColors.ComboBoxErrorForeColor ?? Color.Red, 0);
+                    Model_Application_Variables.UserUiColors.ComboBoxErrorForeColor ?? Color.Red, 0);
                 MainFormControlHelper.ResetTextBox(Control_InventoryTab_TextBox_Quantity,
-                    Model_AppVariables.UserUiColors.TextBoxErrorForeColor ?? Color.Red, "[ Enter Valid Quantity ]");
+                    Model_Application_Variables.UserUiColors.TextBoxErrorForeColor ?? Color.Red, "[ Enter Valid Quantity ]");
                 MainFormControlHelper.ResetRichTextBox(Control_InventoryTab_RichTextBox_Notes,
-                    Model_AppVariables.UserUiColors.RichTextBoxErrorForeColor ?? Color.Red, "");
+                    Model_Application_Variables.UserUiColors.RichTextBoxErrorForeColor ?? Color.Red, "");
 
                 Control_InventoryTab_ComboBox_Part.Focus();
 
@@ -605,7 +605,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                 
                 Service_ErrorHandler.HandleException(
                     ex,
-                    ErrorSeverity.High,
+                    Enum_ErrorSeverity.High,
                     retryAction: () => { Control_InventoryTab_HardReset(); return true; },
                     contextData: new Dictionary<string, object>
                     {
@@ -653,15 +653,15 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
 
                 Debug.WriteLine("[DEBUG] Resetting UI fields");
                 MainFormControlHelper.ResetComboBox(Control_InventoryTab_ComboBox_Part,
-                    Model_AppVariables.UserUiColors.ErrorColor ?? Color.Red, 0);
+                    Model_Application_Variables.UserUiColors.ErrorColor ?? Color.Red, 0);
                 MainFormControlHelper.ResetComboBox(Control_InventoryTab_ComboBox_Operation,
-                    Model_AppVariables.UserUiColors.ErrorColor ?? Color.Red, 0);
+                    Model_Application_Variables.UserUiColors.ErrorColor ?? Color.Red, 0);
                 MainFormControlHelper.ResetComboBox(Control_InventoryTab_ComboBox_Location,
-                    Model_AppVariables.UserUiColors.ErrorColor ?? Color.Red, 0);
+                    Model_Application_Variables.UserUiColors.ErrorColor ?? Color.Red, 0);
                 MainFormControlHelper.ResetTextBox(Control_InventoryTab_TextBox_Quantity,
-                    Model_AppVariables.UserUiColors.ErrorColor ?? Color.Red, "[ Enter Valid Quantity ]");
+                    Model_Application_Variables.UserUiColors.ErrorColor ?? Color.Red, "[ Enter Valid Quantity ]");
                 MainFormControlHelper.ResetRichTextBox(Control_InventoryTab_RichTextBox_Notes,
-                    Model_AppVariables.UserUiColors.ErrorColor ?? Color.Red, "");
+                    Model_Application_Variables.UserUiColors.ErrorColor ?? Color.Red, "");
                 Control_InventoryTab_Button_Save.Enabled = false;
                 _progressHelper?.UpdateProgress(100, "Reset complete");
                 Service_DebugTracer.TraceMethodExit("Success", nameof(Control_InventoryTab), nameof(Control_InventoryTab_SoftReset));
@@ -674,7 +674,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                 
                 Service_ErrorHandler.HandleException(
                     ex,
-                    ErrorSeverity.Medium,
+                    Enum_ErrorSeverity.Medium,
                     retryAction: () => { Control_InventoryTab_SoftReset(); return true; },
                     contextData: new Dictionary<string, object>
                     {
@@ -761,12 +761,12 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                     return;
                 }
 
-                Model_AppVariables.PartId = partId;
-                Model_AppVariables.Operation = op;
-                Model_AppVariables.Location = loc;
-                Model_AppVariables.Notes = notes;
-                Model_AppVariables.InventoryQuantity = qty;
-                Model_AppVariables.User ??= Environment.UserName;
+                Model_Application_Variables.PartId = partId;
+                Model_Application_Variables.Operation = op;
+                Model_Application_Variables.Location = loc;
+                Model_Application_Variables.Notes = notes;
+                Model_Application_Variables.InventoryQuantity = qty;
+                Model_Application_Variables.User ??= Environment.UserName;
 
                 _progressHelper?.UpdateProgress(40, "Adding inventory item...");
                 
@@ -776,7 +776,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                     ["Location"] = loc,
                     ["Operation"] = op,
                     ["Quantity"] = qty,
-                    ["User"] = Model_AppVariables.User
+                    ["User"] = Model_Application_Variables.User
                 }, nameof(Control_InventoryTab), "AddInventoryItemAsync");
                 
                 // Verify the transaction succeeded before proceeding
@@ -786,7 +786,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                     op,
                     qty,
                     "",
-                    Model_AppVariables.User,
+                    Model_Application_Variables.User,
                     "",
                     notes,
                     true);
@@ -800,7 +800,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                     
                     Service_ErrorHandler.HandleException(
                         inventoryResult.Exception ?? new Exception(inventoryResult.ErrorMessage),
-                        ErrorSeverity.Medium,
+                        Enum_ErrorSeverity.Medium,
                         retryAction: () => { Control_InventoryTab_Button_Save.PerformClick(); return true; },
                         contextData: new Dictionary<string, object>
                         {
@@ -808,7 +808,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                             ["Operation"] = op,
                             ["Location"] = loc,
                             ["Quantity"] = qty,
-                            ["User"] = Model_AppVariables.User
+                            ["User"] = Model_Application_Variables.User
                         },
                         controlName: nameof(Control_InventoryTab_Button_Save));
                     
@@ -826,7 +826,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                 LoggingUtility.Log($"Inventory transaction verified successful: {inventoryResult.StatusMessage}");
                 
                 _progressHelper?.UpdateProgress(70, "Updating recent transactions...");
-                await AddToLast10TransactionsIfUniqueAsync(Model_AppVariables.User, partId, op, qty);
+                await AddToLast10TransactionsIfUniqueAsync(Model_Application_Variables.User, partId, op, qty);
 
                 // Only update status after verifying transaction success
                 if (MainFormInstance != null)
@@ -839,7 +839,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                 Control_InventoryTab_Button_Reset_Click();
                 if (MainFormInstance != null && MainFormInstance.MainForm_UserControl_QuickButtons != null)
                 {
-                    await MainFormInstance.MainForm_UserControl_QuickButtons.LoadLast10Transactions(Model_AppVariables.User);
+                    await MainFormInstance.MainForm_UserControl_QuickButtons.LoadLast10Transactions(Model_Application_Variables.User);
                 }
 
                 _progressHelper?.UpdateProgress(100, "Save complete");
@@ -859,7 +859,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                 
                 Service_ErrorHandler.HandleException(
                     ex,
-                    ErrorSeverity.High,
+                    Enum_ErrorSeverity.High,
                     retryAction: () => { Control_InventoryTab_Button_Save.PerformClick(); return true; },
                     contextData: new Dictionary<string, object>
                     {
@@ -895,11 +895,16 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                 {
                     LoggingUtility.LogDatabaseError(
                         result.Exception ?? new Exception(result.ErrorMessage),
-                        DatabaseErrorSeverity.Warning); // Non-critical operation, log as warning
+                        Enum_DatabaseEnum_ErrorSeverity.Warning); // Non-critical operation, log as warning
                     Service_DebugTracer.TraceMethodExit(new { Success = false, Error = result.ErrorMessage }, nameof(Control_InventoryTab), nameof(AddToLast10TransactionsIfUniqueAsync));
                 }
                 else
                 {
+                    // CRITICAL: Refresh QuickButtons UI to match database state
+                    if (MainFormInstance?.MainForm_UserControl_QuickButtons != null)
+                    {
+                        await MainFormInstance.MainForm_UserControl_QuickButtons.LoadLast10Transactions(user);
+                    }
                     Service_DebugTracer.TraceMethodExit(new { Success = true }, nameof(Control_InventoryTab), nameof(AddToLast10TransactionsIfUniqueAsync));
                 }
             }
@@ -918,7 +923,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
 
                 Control_InventoryTab_Button_Toggle_RightPanel.Text = "⬅️";
                 Control_InventoryTab_Button_Toggle_RightPanel.ForeColor =
-                    Model_AppVariables.UserUiColors.ErrorColor ?? Color.Red;
+                    Model_Application_Variables.UserUiColors.ErrorColor ?? Color.Red;
             }
             else
             {
@@ -927,7 +932,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                     MainFormInstance.MainForm_SplitContainer_Middle.Panel2Collapsed = false;
                     Control_InventoryTab_Button_Toggle_RightPanel.Text = "➡️";
                     Control_InventoryTab_Button_Toggle_RightPanel.ForeColor =
-                        Model_AppVariables.UserUiColors.SuccessColor ?? Color.Green;
+                        Model_Application_Variables.UserUiColors.SuccessColor ?? Color.Green;
                 }
             }
 
@@ -953,21 +958,21 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                 if (Control_InventoryTab_ComboBox_Location.SelectedIndex > 0)
                 {
                     Control_InventoryTab_ComboBox_Location.ForeColor =
-                        Model_AppVariables.UserUiColors.ComboBoxForeColor ?? Color.Black;
-                    Model_AppVariables.Location = Control_InventoryTab_ComboBox_Location.Text;
-                    Service_DebugTracer.TraceMethodExit(new { Valid = true, Location = Model_AppVariables.Location }, nameof(Control_InventoryTab), nameof(Control_InventoryTab_ComboBox_Location_SelectedIndexChanged));
+                        Model_Application_Variables.UserUiColors.ComboBoxForeColor ?? Color.Black;
+                    Model_Application_Variables.Location = Control_InventoryTab_ComboBox_Location.Text;
+                    Service_DebugTracer.TraceMethodExit(new { Valid = true, Location = Model_Application_Variables.Location }, nameof(Control_InventoryTab), nameof(Control_InventoryTab_ComboBox_Location_SelectedIndexChanged));
                 }
                 else
                 {
                     Control_InventoryTab_ComboBox_Location.ForeColor =
-                        Model_AppVariables.UserUiColors.ComboBoxErrorForeColor ?? Color.Red;
+                        Model_Application_Variables.UserUiColors.ComboBoxErrorForeColor ?? Color.Red;
                     if (Control_InventoryTab_ComboBox_Location.SelectedIndex != 0 &&
                         Control_InventoryTab_ComboBox_Location.Items.Count > 0)
                     {
                         Control_InventoryTab_ComboBox_Location.SelectedIndex = 0;
                     }
 
-                    Model_AppVariables.Location = null;
+                    Model_Application_Variables.Location = null;
                     Service_DebugTracer.TraceMethodExit(new { Valid = false }, nameof(Control_InventoryTab), nameof(Control_InventoryTab_ComboBox_Location_SelectedIndexChanged));
                 }
             }
@@ -978,7 +983,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                 
                 Service_ErrorHandler.HandleException(
                     ex,
-                    ErrorSeverity.Low,
+                    Enum_ErrorSeverity.Low,
                     contextData: new Dictionary<string, object>
                     {
                         ["MethodName"] = nameof(Control_InventoryTab_ComboBox_Location_SelectedIndexChanged),
@@ -1003,21 +1008,21 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                 if (Control_InventoryTab_ComboBox_Operation.SelectedIndex > 0)
                 {
                     Control_InventoryTab_ComboBox_Operation.ForeColor =
-                        Model_AppVariables.UserUiColors.ComboBoxForeColor ?? Color.Black;
-                    Model_AppVariables.Operation = Control_InventoryTab_ComboBox_Operation.Text;
-                    Service_DebugTracer.TraceMethodExit(new { Valid = true, Operation = Model_AppVariables.Operation }, nameof(Control_InventoryTab), nameof(Control_InventoryTab_ComboBox_Operation_SelectedIndexChanged));
+                        Model_Application_Variables.UserUiColors.ComboBoxForeColor ?? Color.Black;
+                    Model_Application_Variables.Operation = Control_InventoryTab_ComboBox_Operation.Text;
+                    Service_DebugTracer.TraceMethodExit(new { Valid = true, Operation = Model_Application_Variables.Operation }, nameof(Control_InventoryTab), nameof(Control_InventoryTab_ComboBox_Operation_SelectedIndexChanged));
                 }
                 else
                 {
                     Control_InventoryTab_ComboBox_Operation.ForeColor =
-                        Model_AppVariables.UserUiColors.ComboBoxErrorForeColor ?? Color.Red;
+                        Model_Application_Variables.UserUiColors.ComboBoxErrorForeColor ?? Color.Red;
                     if (Control_InventoryTab_ComboBox_Operation.SelectedIndex != 0 &&
                         Control_InventoryTab_ComboBox_Operation.Items.Count > 0)
                     {
                         Control_InventoryTab_ComboBox_Operation.SelectedIndex = 0;
                     }
 
-                    Model_AppVariables.Operation = null;
+                    Model_Application_Variables.Operation = null;
                     Service_DebugTracer.TraceMethodExit(new { Valid = false }, nameof(Control_InventoryTab), nameof(Control_InventoryTab_ComboBox_Operation_SelectedIndexChanged));
                 }
             }
@@ -1028,7 +1033,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                 
                 Service_ErrorHandler.HandleException(
                     ex,
-                    ErrorSeverity.Low,
+                    Enum_ErrorSeverity.Low,
                     contextData: new Dictionary<string, object>
                     {
                         ["MethodName"] = nameof(Control_InventoryTab_ComboBox_Operation_SelectedIndexChanged),
@@ -1053,21 +1058,21 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                 if (Control_InventoryTab_ComboBox_Part.SelectedIndex > 0)
                 {
                     Control_InventoryTab_ComboBox_Part.ForeColor =
-                        Model_AppVariables.UserUiColors.ComboBoxForeColor ?? Color.Black;
-                    Model_AppVariables.PartId = Control_InventoryTab_ComboBox_Part.Text;
-                    Service_DebugTracer.TraceMethodExit(new { Valid = true, PartId = Model_AppVariables.PartId }, nameof(Control_InventoryTab), nameof(Control_InventoryTab_ComboBox_Part_SelectedIndexChanged));
+                        Model_Application_Variables.UserUiColors.ComboBoxForeColor ?? Color.Black;
+                    Model_Application_Variables.PartId = Control_InventoryTab_ComboBox_Part.Text;
+                    Service_DebugTracer.TraceMethodExit(new { Valid = true, PartId = Model_Application_Variables.PartId }, nameof(Control_InventoryTab), nameof(Control_InventoryTab_ComboBox_Part_SelectedIndexChanged));
                 }
                 else
                 {
                     Control_InventoryTab_ComboBox_Part.ForeColor =
-                        Model_AppVariables.UserUiColors.ComboBoxErrorForeColor ?? Color.Red;
+                        Model_Application_Variables.UserUiColors.ComboBoxErrorForeColor ?? Color.Red;
                     if (Control_InventoryTab_ComboBox_Part.SelectedIndex != 0 &&
                         Control_InventoryTab_ComboBox_Part.Items.Count > 0)
                     {
                         Control_InventoryTab_ComboBox_Part.SelectedIndex = 0;
                     }
 
-                    Model_AppVariables.PartId = null;
+                    Model_Application_Variables.PartId = null;
                     Service_DebugTracer.TraceMethodExit(new { Valid = false }, nameof(Control_InventoryTab), nameof(Control_InventoryTab_ComboBox_Part_SelectedIndexChanged));
                 }
             }
@@ -1078,7 +1083,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                 
                 Service_ErrorHandler.HandleException(
                     ex,
-                    ErrorSeverity.Low,
+                    Enum_ErrorSeverity.Low,
                     contextData: new Dictionary<string, object>
                     {
                         ["MethodName"] = nameof(Control_InventoryTab_ComboBox_Part_SelectedIndexChanged),
@@ -1101,12 +1106,12 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                 if (isValid)
                 {
                     Control_InventoryTab_TextBox_Quantity.ForeColor =
-                        Model_AppVariables.UserUiColors.TextBoxForeColor ?? Color.Black;
+                        Model_Application_Variables.UserUiColors.TextBoxForeColor ?? Color.Black;
                 }
                 else
                 {
                     Control_InventoryTab_TextBox_Quantity.ForeColor =
-                        Model_AppVariables.UserUiColors.TextBoxErrorForeColor ?? Color.Red;
+                        Model_Application_Variables.UserUiColors.TextBoxErrorForeColor ?? Color.Red;
                     if (text != placeholder)
                     {
                         Control_InventoryTab_TextBox_Quantity.Text = placeholder;
@@ -1120,7 +1125,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                 LoggingUtility.LogApplicationError(ex);
                 Service_ErrorHandler.HandleException(
                     ex,
-                    ErrorSeverity.Low,
+                    Enum_ErrorSeverity.Low,
                     contextData: new Dictionary<string, object>
                     {
                         ["MethodName"] = nameof(Control_InventoryTab_TextBox_Quantity_TextChanged),
@@ -1148,7 +1153,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                 LoggingUtility.LogApplicationError(ex);
                 Service_ErrorHandler.HandleException(
                     ex,
-                    ErrorSeverity.Low,
+                    Enum_ErrorSeverity.Low,
                     contextData: new Dictionary<string, object>
                     {
                         ["MethodName"] = nameof(Control_InventoryTab_Update_SaveButtonState)
@@ -1222,8 +1227,8 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
 
                 Control_InventoryTab_TextBox_Quantity.KeyDown += (sender, e) =>
                     MainFormControlHelper.AdjustQuantityByKey_Quantity(sender, e, "[ Enter Valid Quantity ]",
-                        Model_AppVariables.UserUiColors.TextBoxForeColor ?? Color.Black,
-                        Model_AppVariables.UserUiColors.TextBoxErrorForeColor ?? Color.Red);
+                        Model_Application_Variables.UserUiColors.TextBoxForeColor ?? Color.Black,
+                        Model_Application_Variables.UserUiColors.TextBoxErrorForeColor ?? Color.Red);
 
                 LoggingUtility.Log("Inventory tab events wired up.");
             }
@@ -1232,7 +1237,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                 LoggingUtility.LogApplicationError(ex);
                 Service_ErrorHandler.HandleException(
                     ex,
-                    ErrorSeverity.High,
+                    Enum_ErrorSeverity.High,
                     contextData: new Dictionary<string, object>
                     {
                         ["MethodName"] = nameof(Control_InventoryTab_OnStartup_WireUpEvents)
@@ -1264,8 +1269,8 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             Control_InventoryTab_Label_Version.Text =
                 $@"Client Version: {currentVersion} | Server Version: {serverVersion}";
             Control_InventoryTab_Label_Version.ForeColor = isOutOfDate
-                ? Model_AppVariables.UserUiColors.ErrorColor ?? Color.Red
-                : Model_AppVariables.UserUiColors.LabelForeColor ?? SystemColors.ControlText;
+                ? Model_Application_Variables.UserUiColors.ErrorColor ?? Color.Red
+                : Model_Application_Variables.UserUiColors.LabelForeColor ?? SystemColors.ControlText;
         }
 
         #endregion

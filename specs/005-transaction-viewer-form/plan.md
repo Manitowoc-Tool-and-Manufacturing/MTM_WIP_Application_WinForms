@@ -30,7 +30,7 @@ _GATE: Must pass before Phase 0 research. Re-check after Phase 1 design._
 | Principle                                                     | Status  | Justification                                                                                                                                                                   |
 | ------------------------------------------------------------- | ------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | **I. Stored Procedure Only Database Access**                  | ✅ PASS | Spec mandates `inv_transactions_Search`, `inv_transactions_SmartSearch`, `inv_transactions_GetAnalytics` via Helper_Database_StoredProcedure. No inline SQL.                    |
-| **II. DaoResult<T> Wrapper Pattern**                          | ✅ PASS | DAO methods return `DaoResult<List<Model_Transactions>>` and `DaoResult<DataTable>`. UI checks `IsSuccess` before accessing `Data`.                                             |
+| **II. Model_Dao_Result<T> Wrapper Pattern**                          | ✅ PASS | DAO methods return `Model_Dao_Result<List<Model_Transactions_Core>>` and `Model_Dao_Result<DataTable>`. UI checks `IsSuccess` before accessing `Data`.                                             |
 | **III. Region Organization and Method Ordering**              | ✅ PASS | All new files (Transactions.cs, UserControls, ViewModel) will follow standard 10-region organization. Target <500 lines per file enforces structure.                            |
 | **IV. Manual Validation Testing Approach**                    | ✅ PASS | Spec includes 8 manual test scenarios (Basic Search, Part Number Search, Multi-Filter, Export, Error Handling, Pagination, Detail View, Performance). Success criteria defined. |
 | **V. Environment-Aware Database Selection**                   | ✅ PASS | Feature uses `Helper_Database_Variables.GetConnectionString()` which respects Debug/Release configuration and machine IP detection.                                             |
@@ -40,7 +40,7 @@ _GATE: Must pass before Phase 0 research. Re-check after Phase 1 design._
 
 **Overall**: ✅ **PASS** - All constitution principles satisfied. No violations requiring justification in Complexity Tracking table.
 
-**Re-check Required After Phase 1**: Verify data-model.md entities align with existing Model_Transactions, contracts/ directory contains no new API endpoints (not applicable for WinForms), and research.md technical decisions don't introduce forbidden practices.
+**Re-check Required After Phase 1**: Verify data-model.md entities align with existing Model_Transactions_Core, contracts/ directory contains no new API endpoints (not applicable for WinForms), and research.md technical decisions don't introduce forbidden practices.
 
 ---
 
@@ -49,20 +49,20 @@ _GATE: Must pass before Phase 0 research. Re-check after Phase 1 design._
 | Principle                                                     | Status  | Justification                                                                                                                                                                            |
 | ------------------------------------------------------------- | ------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | **I. Stored Procedure Only Database Access**                  | ✅ PASS | research.md confirms existing stored procedures used without modification. quickstart.md demonstrates Helper_Database_StoredProcedure pattern. No inline SQL detected.                   |
-| **II. DaoResult<T> Wrapper Pattern**                          | ✅ PASS | data-model.md defines TransactionSearchResult wrapper. quickstart.md shows DaoResult<List<Model_Transactions>> return types. ViewModel layer propagates DaoResult to Form layer.         |
+| **II. Model_Dao_Result<T> Wrapper Pattern**                          | ✅ PASS | data-model.md defines Model_Transactions_SearchResult wrapper. quickstart.md shows Model_Dao_Result<List<Model_Transactions_Core>> return types. ViewModel layer propagates Model_Dao_Result to Form layer.         |
 | **III. Region Organization and Method Ordering**              | ✅ PASS | quickstart.md code examples follow standard region organization (#region Fields, #region Constructors, etc.). File size targets enforced (Form <500, UserControls <300, ViewModel <400). |
 | **IV. Manual Validation Testing Approach**                    | ✅ PASS | quickstart.md includes 8-item manual validation checklist. Integration tests defined for DAO layer. ViewModel unit tests planned.                                                        |
 | **V. Environment-Aware Database Selection**                   | ✅ PASS | quickstart.md confirms Debug builds use `mtm_wip_application_winforms_test`, Release uses `MTM_WIP_Application_Winforms`. No hardcoded connection strings.                               |
 | **VI. Async-First UI Responsiveness**                         | ✅ PASS | quickstart.md demonstrates async/await throughout (SearchTransactionsAsync, ExportToExcelAsync). Event handlers are async void. Progress reporting integrated.                           |
 | **VII. Centralized Error Handling with Service_ErrorHandler** | ✅ PASS | quickstart.md shows Service_ErrorHandler.HandleException pattern with retry actions. Common Pitfalls section explicitly warns against MessageBox.Show().                                 |
 | **VIII. Documentation and XML Comments**                      | ✅ PASS | data-model.md includes full XML comments for all entities. quickstart.md code examples demonstrate <summary> tags. MCP validation tools include check_xml_docs.                          |
-| **IX. Theme System Integration via Core_Themes**              | ✅ PASS | All Forms/UserControls include Core_Themes.ApplyDpiScaling() and ApplyRuntimeLayoutAdjustments() in constructors. Spec references `.github/instructions/ui-compliance/theming-compliance.instructions.md` and `Documentation/Theme-System-Reference.md`. Theme tokens via Model_UserUiColors with SystemColors fallbacks. AutoScaleMode.Dpi set in all UI components. |
+| **IX. Theme System Integration via Core_Themes**              | ✅ PASS | All Forms/UserControls include Core_Themes.ApplyDpiScaling() and ApplyRuntimeLayoutAdjustments() in constructors. Spec references `.github/instructions/ui-compliance/theming-compliance.instructions.md` and `Documentation/Theme-System-Reference.md`. Theme tokens via Model_Shared_UserUiColors with SystemColors fallbacks. AutoScaleMode.Dpi set in all UI components. |
 
 **Overall**: ✅ **PASS** - All constitution principles satisfied after Phase 1 design.
 
 **Key Findings**:
 
--   ✅ data-model.md entities (TransactionSearchCriteria, TransactionSearchResult, TransactionAnalytics) align with existing Model_Transactions
+-   ✅ data-model.md entities (Model_Transactions_SearchCriteria, Model_Transactions_SearchResult, Model_Transactions_Core_Analytics) align with existing Model_Transactions_Core
 -   ✅ contracts/ directory not applicable (WinForms, not REST API)
 -   ✅ research.md decisions (Passive ViewModel, ClosedXML export, BaseIntegrationTest pattern) fully compliant with constitution
 -   ✅ No new forbidden practices introduced (no ORM, no inline SQL, no MessageBox, no blocking async)
@@ -103,11 +103,11 @@ Forms/
 │       └── TransactionDetailPanel.Designer.cs
 │
 Models/
-├── TransactionSearchCriteria.cs     # NEW: Search filter encapsulation [P1] ✅
-├── TransactionSearchResult.cs       # NEW: Paginated results wrapper [P1] ✅
+├── Model_Transactions_SearchCriteria.cs     # NEW: Search filter encapsulation [P1] ✅
+├── Model_Transactions_SearchResult.cs       # NEW: Paginated results wrapper [P1] ✅
 ├── TransactionLifecycleNode.cs      # NEW: Tree node for lifecycle visualization [P1]
-├── TransactionViewModel.cs          # NEW: Business logic and state management (400 lines target) [P1] ✅
-└── Model_Transactions.cs            # EXISTING: Transaction data model (no changes)
+├── Model_Transactions_ViewModel.cs          # NEW: Business logic and state management (400 lines target) [P1] ✅
+└── Model_Transactions_Core.cs            # EXISTING: Transaction data model (no changes)
 
 Data/
 ├── Dao_Transactions.cs              # REFACTORED: Add SearchAsync, GetBatchLifecycleAsync methods [P1]

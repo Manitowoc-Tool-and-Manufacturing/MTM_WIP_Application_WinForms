@@ -101,14 +101,14 @@ Follow phases sequentially. Do NOT skip Phase 1 removal before implementing Phas
 #### 2A. Create Model Classes
 
 ```csharp
-// Models/Model_PrintJob.cs
+// Models/Model_Print_Core_Job.cs
 namespace MTM.Models
 {
     /// <summary>
     /// Represents a complete print or export operation.
     /// See data-model.md for full documentation.
     /// </summary>
-    public class Model_PrintJob
+    public class Model_Print_Core_Job
     {
         public DataTable SourceData { get; set; }
         public string Title { get; set; }
@@ -126,14 +126,14 @@ namespace MTM.Models
 ```
 
 ```csharp
-// Models/Model_PrintSettings.cs
+// Models/Model_Print_CoreSettings.cs
 namespace MTM.Models
 {
     /// <summary>
     /// User preferences for print operations, persisted per-grid.
     /// See data-model.md for persistence rules.
     /// </summary>
-    public class Model_PrintSettings
+    public class Model_Print_CoreSettings
     {
         public string GridName { get; set; }
         public string PrinterName { get; set; }
@@ -142,7 +142,7 @@ namespace MTM.Models
         public DateTime LastModified { get; set; }
         
         // Methods
-        public static Model_PrintSettings Load(string gridName) { /* See data-model.md */ }
+        public static Model_Print_CoreSettings Load(string gridName) { /* See data-model.md */ }
         public void Save() { /* Saves to %APPDATA%\MTM\PrintSettings\{GridName}.json */ }
     }
 }
@@ -171,7 +171,7 @@ private int _currentRowIndex;
 /// Renders DataTable to PrintDocument with exact page boundaries.
 /// See research.md R1 for Windows print system integration.
 /// </summary>
-public PrintDocument CreatePrintDocument(Model_PrintJob job)
+public PrintDocument CreatePrintDocument(Model_Print_Core_Job job)
 {
     var doc = new PrintDocument();
     doc.PrintPage += OnPrintPage;
@@ -212,7 +212,7 @@ private void OnPrintPage(object sender, PrintPageEventArgs e)
 public static async Task ShowPrintDialogAsync(DataGridView grid)
 {
     var printJob = CreatePrintJob(grid);
-    var settings = Model_PrintSettings.Load(grid.Name);
+    var settings = Model_Print_CoreSettings.Load(grid.Name);
     
     using var dialog = new PrintForm(printJob, settings);
     dialog.ShowDialog();
@@ -220,10 +220,10 @@ public static async Task ShowPrintDialogAsync(DataGridView grid)
 #endregion
 
 #region Helper Methods
-private static Model_PrintJob CreatePrintJob(DataGridView grid)
+private static Model_Print_Core_Job CreatePrintJob(DataGridView grid)
 {
     var dt = GetDataTableFromGrid(grid); // See research.md R6
-    return new Model_PrintJob
+    return new Model_Print_Core_Job
     {
         SourceData = dt,
         Title = $"{grid.Name} - {DateTime.Now:yyyy-MM-dd}",
@@ -270,7 +270,7 @@ private static Model_PrintJob CreatePrintJob(DataGridView grid)
 ```csharp
 // Forms/Shared/PrintForm.cs
 
-public PrintForm(Model_PrintJob job, Model_PrintSettings settings)
+public PrintForm(Model_Print_Core_Job job, Model_Print_CoreSettings settings)
 {
     InitializeComponent();
     
@@ -288,7 +288,7 @@ public PrintForm(Model_PrintJob job, Model_PrintSettings settings)
 
 private void ApplyThemeColors()
 {
-    var colors = Model_AppVariables.UserUiColors;
+    var colors = Model_Application_Variables.UserUiColors;
     
     // Sidebar panels
     PrintForm_Panel_Sidebar.BackColor = colors.PanelBackColor ?? SystemColors.Control;
@@ -316,7 +316,7 @@ private void ApplyThemeColors()
 - [ ] Leaf controls (ComboBox, TextBox) have MinimumSize/MaximumSize set
 - [ ] No container widths exceed 1000px
 - [ ] Core_Themes.ApplyDpiScaling called in constructor
-- [ ] Theme colors applied from Model_UserUiColors
+- [ ] Theme colors applied from Model_Shared_UserUiColors
 
 **Success Criteria**: SC-007 "UI functions correctly at 100%-200% DPI" must pass.
 
@@ -336,8 +336,8 @@ private void ApplyThemeColors()
 /// Exports print job to PDF using Microsoft Print to PDF.
 /// See research.md R1 for PrintRange.SomePages usage.
 /// </summary>
-public static async Task<DaoResult> ExportToPdfAsync(
-    Model_PrintJob job,
+public static async Task<Model_Dao_Result> ExportToPdfAsync(
+    Model_Print_Core_Job job,
     List<PageBoundary> boundaries,
     string filePath,
     CancellationToken ct)
@@ -351,8 +351,8 @@ public static async Task<DaoResult> ExportToPdfAsync(
 /// Exports print job to Excel using ClosedXML with exact page boundaries.
 /// See research.md R2 and data-model.md PageBoundary section.
 /// </summary>
-public static async Task<DaoResult> ExportToExcelAsync(
-    Model_PrintJob job,
+public static async Task<Model_Dao_Result> ExportToExcelAsync(
+    Model_Print_Core_Job job,
     List<PageBoundary> boundaries,
     string filePath,
     CancellationToken ct)
@@ -442,7 +442,7 @@ All C# files MUST follow standard region order:
 ```csharp
 #region Fields
 private DataGridView _sourceGrid;
-private Model_PrintJob _printJob;
+private Model_Print_Core_Job _printJob;
 private CancellationTokenSource _cts;
 #endregion
 
@@ -458,7 +458,7 @@ public void SetProgressControls(ProgressBar bar, Label label)
 #endregion
 
 #region Constructors
-public PrintForm(Model_PrintJob job, Model_PrintSettings settings)
+public PrintForm(Model_Print_Core_Job job, Model_Print_CoreSettings settings)
 {
     InitializeComponent();
     Core_Themes.ApplyDpiScaling(this);
@@ -511,7 +511,7 @@ try
     {
         Service_ErrorHandler.HandleException(
             result.Exception,
-            ErrorSeverity.Medium,
+            Enum_ErrorSeverity.Medium,
             contextData: new Dictionary<string, object>
             {
                 ["FilePath"] = filePath,
@@ -522,7 +522,7 @@ try
 }
 catch (Exception ex)
 {
-    Service_ErrorHandler.HandleException(ex, ErrorSeverity.High);
+    Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.High);
 }
 ```
 

@@ -41,7 +41,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             base.OnLoad(e);
             if (Control_Add_Location_Label_IssuedByValue != null)
             {
-                Control_Add_Location_Label_IssuedByValue.Text = Model_AppVariables.User ?? "Current User";
+                Control_Add_Location_Label_IssuedByValue.Text = Model_Application_Variables.User ?? "Current User";
             }
         }
 

@@ -50,10 +50,10 @@ List of files to delete:
 - Helpers/Helper_PrintManager.cs (Old print manager)
 - Helpers/Helper_ExportManager.cs (Old export manager)
 - Core/Core_TablePrinter.cs (Old table printer)
-- Models/Model_PrintJob.cs (Old print job model)
-- Models/Model_PrintSettings.cs (Old settings model)
+- Models/Model_Print_Core_Job.cs (Old print job model)
+- Models/Model_Print_CoreSettings.cs (Old settings model)
 - Models/PrintFilter.cs (Old filter model if exists)
-- Models/PrintRangeType.cs (Old enum if separate file)
+- Models/Enum_PrintRangeType.cs (Old enum if separate file)
 
 #### Code Removal from Existing Files
 
@@ -77,8 +77,8 @@ List of files to delete:
 - [ ] Delete `Helpers/Helper_PrintManager.cs`
 - [ ] Delete `Helpers/Helper_ExportManager.cs`
 - [ ] Delete `Core/Core_TablePrinter.cs`
-- [ ] Delete `Models/Model_PrintJob.cs`
-- [ ] Delete `Models/Model_PrintSettings.cs`
+- [ ] Delete `Models/Model_Print_Core_Job.cs`
+- [ ] Delete `Models/Model_Print_CoreSettings.cs`
 - [ ] Search entire solution for `PrintForm` references
 - [ ] Replace all print button handlers with TODO messages
 - [ ] Verify solution builds after removal
@@ -112,7 +112,7 @@ Create `removed-entry-points.md` documenting each UI element that called the old
   - Execute print job
   - Return page count for UI display
 
-#### Model_PrintJob.cs
+#### Model_Print_Core_Job.cs
 - **Purpose**: Complete print/export configuration
 - **Properties**:
   - `DataTable Data` - Source data (all rows, unfiltered)
@@ -205,7 +205,7 @@ Create `removed-entry-points.md` documenting each UI element that called the old
 - Shows "Generating Preview..." on refresh
 
 **Theme Integration**:
-- Use MTM theme system (Model_UserUiColors)
+- Use MTM theme system (Model_Shared_UserUiColors)
 - Apply Core_Themes.ApplyDpiScaling() and ApplyRuntimeLayoutAdjustments()
 - Match existing app styling
 
@@ -245,8 +245,8 @@ Create `removed-entry-points.md` documenting each UI element that called the old
 ### Export Manager Design
 
 Helper_ExportManager class with static methods:
-- ExportToPdf: Takes Model_PrintJob and file path, returns success boolean
-- ExportToExcel: Takes Model_PrintJob and file path, returns success boolean
+- ExportToPdf: Takes Model_Print_Core_Job and file path, returns success boolean
+- ExportToExcel: Takes Model_Print_Core_Job and file path, returns success boolean
 
 ---
 
@@ -345,8 +345,8 @@ Helper_ExportManager class with static methods:
 - `Helper_PrintManager_Tests.cs` - Test print manager core functionality
 - `Helper_ExportManager_Tests.cs` - Test PDF and Excel export operations
 - `Core_TablePrinter_Tests.cs` - Test table rendering and pagination logic
-- `Model_PrintJob_Tests.cs` - Test print job configuration and validation
-- `Model_PrintSettings_Tests.cs` - Test settings persistence (per-grid)
+- `Model_Print_Core_Job_Tests.cs` - Test print job configuration and validation
+- `Model_Print_CoreSettings_Tests.cs` - Test settings persistence (per-grid)
 
 **Test Coverage**:
 - Print document creation with various data sizes
@@ -441,7 +441,7 @@ Helper_ExportManager class with static methods:
 6. **Column Reordering**: Drag-and-drop + Up/Down arrow buttons
 7. **Progress Dialog**: Show cancel button + elapsed time counter
 8. **Settings Persistence**: Remember printer/columns per-grid, reset orientation/color/zoom
-9. **Theme Integration**: Full MTM theme system integration (Model_UserUiColors)
+9. **Theme Integration**: Full MTM theme system integration (Model_Shared_UserUiColors)
 10. **Documentation**: Text descriptions only (no screenshots needed)
 11. **Error Handling**: Use Service_ErrorHandler (MTM app only, not NuGet)
 12. **Timeline**: Flexible - quality over speed, AI-driven implementation
@@ -470,8 +470,8 @@ Helper_ExportManager class with static methods:
 - Helpers/Helper_PrintManager.cs ❌
 - Helpers/Helper_ExportManager.cs ❌
 - Core/Core_TablePrinter.cs ❌
-- Models/Model_PrintJob.cs ❌
-- Models/Model_PrintSettings.cs ❌
+- Models/Model_Print_Core_Job.cs ❌
+- Models/Model_Print_CoreSettings.cs ❌
 - Controls/MainForm/Control_RemoveTab.cs ✏️ (TODO marker)
 - [Others as discovered] ✏️
 
@@ -479,8 +479,8 @@ Helper_ExportManager class with static methods:
 - Core/Core_TablePrinter.cs ➕ (Complete rewrite with exact pagination)
 - Helpers/Helper_PrintManager.cs ➕ (Complete rewrite)
 - Helpers/Helper_ExportManager.cs ➕ (PDF + Excel only)
-- Models/Model_PrintJob.cs ➕ (Complete rewrite)
-- Models/Model_PrintSettings.cs ➕ (Per-grid persistence)
+- Models/Model_Print_Core_Job.cs ➕ (Complete rewrite)
+- Models/Model_Print_CoreSettings.cs ➕ (Per-grid persistence)
 - Forms/Shared/PrintForm.cs ➕ (Complete rewrite with theme integration)
 - Forms/Shared/PrintForm.Designer.cs ➕
 

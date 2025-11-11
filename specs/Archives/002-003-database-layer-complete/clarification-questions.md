@@ -14,7 +14,7 @@ This document consolidates all resolved clarification questions from the origina
 |---|----------|----------|-------|
 | Q1 | Async execution strategy? | Async-only DAO methods; no synchronous wrappers. | Forces complete migration across codebase. |
 | Q2 | Startup failure policy? | Terminate application with message; runtime shows retry dialog. | Ensures deterministic startup behavior. |
-| Q3 | Slow query thresholds? | Category-based thresholds (Query 500 ms, Modification 1000 ms, Report 2000 ms, Batch 5000 ms). | Configurable via Model_AppVariables. |
+| Q3 | Slow query thresholds? | Category-based thresholds (Query 500 ms, Modification 1000 ms, Report 2000 ms, Batch 5000 ms). | Configurable via Model_Application_Variables. |
 | Q4 | Multi-step transaction handling? | Explicit transactions with rollback on failure for all multi-step operations. | Applies to transfers, batch updates, composite workflows. |
 | Q5 | Error logging severity levels? | Critical / Error / Warning taxonomy with documented criteria. | Aligns LoggingUtility and Service_ErrorHandler behaviors. |
 | Q6 | DaoLegacy wrapper? | Reject wrapper; migrate all callers to async/await immediately. | Eliminates technical debt. |

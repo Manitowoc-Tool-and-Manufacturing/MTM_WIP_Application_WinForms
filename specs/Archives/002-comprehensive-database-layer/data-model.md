@@ -10,7 +10,7 @@ Document the data structures, relationships, and validation rules for the refact
 
 ## Core Entities
 
-### DaoResult (Base Wrapper)
+### Model_Dao_Result (Base Wrapper)
 
 **Purpose**: Encapsulates operation outcomes for non-data-returning operations (INSERT, UPDATE, DELETE).
 
@@ -28,8 +28,8 @@ Document the data structures, relationships, and validation rules for the refact
 
 **Factory Methods**:
 ```csharp
-public static DaoResult Success(string message = "Operation completed successfully")
-public static DaoResult Failure(string message, Exception? exception = null)
+public static Model_Dao_Result Success(string message = "Operation completed successfully")
+public static Model_Dao_Result Failure(string message, Exception? exception = null)
 ```
 
 **Usage**:
@@ -39,35 +39,35 @@ public static DaoResult Failure(string message, Exception? exception = null)
 
 ---
 
-### DaoResult<T> (Generic Data Wrapper)
+### Model_Dao_Result<T> (Generic Data Wrapper)
 
-**Purpose**: Extends DaoResult to include query result data for SELECT operations.
+**Purpose**: Extends Model_Dao_Result to include query result data for SELECT operations.
 
 **Fields**:
 | Field | Type | Required | Description |
 |-------|------|----------|-------------|
-| IsSuccess | bool | Yes | Inherited from DaoResult |
-| Message | string | Yes | Inherited from DaoResult |
-| Exception | Exception? | No | Inherited from DaoResult |
+| IsSuccess | bool | Yes | Inherited from Model_Dao_Result |
+| Message | string | Yes | Inherited from Model_Dao_Result |
+| Exception | Exception? | No | Inherited from Model_Dao_Result |
 | Data | T? | No | Query result data, null if operation failed |
 
 **Validation Rules**:
-- All DaoResult validation rules apply
+- All Model_Dao_Result validation rules apply
 - If `IsSuccess == true`, `Data` SHOULD NOT be null (except for queries returning zero rows)
 - If `IsSuccess == false`, `Data` MUST be null
 - Callers MUST check `IsSuccess` before accessing `Data`
 
 **Factory Methods**:
 ```csharp
-public static DaoResult<T> Success(T data, string message = "Operation completed successfully")
-public static DaoResult<T> Failure(string message, Exception? exception = null)
+public static Model_Dao_Result<T> Success(T data, string message = "Operation completed successfully")
+public static Model_Dao_Result<T> Failure(string message, Exception? exception = null)
 ```
 
 **Common Type Parameters**:
-- `DaoResult<DataTable>`: Most common for SELECT queries returning multiple rows
-- `DaoResult<DataRow>`: Single row results
-- `DaoResult<int>`: Scalar results (counts, IDs)
-- `DaoResult<bool>`: Boolean results (exists checks)
+- `Model_Dao_Result<DataTable>`: Most common for SELECT queries returning multiple rows
+- `Model_Dao_Result<DataRow>`: Single row results
+- `Model_Dao_Result<int>`: Scalar results (counts, IDs)
+- `Model_Dao_Result<bool>`: Boolean results (exists checks)
 
 ---
 
@@ -79,7 +79,7 @@ public static DaoResult<T> Failure(string message, Exception? exception = null)
 
 #### ExecuteNonQueryWithStatus
 ```csharp
-public static async Task<DaoResult> ExecuteNonQueryWithStatus(
+public static async Task<Model_Dao_Result> ExecuteNonQueryWithStatus(
     string connectionString,
     string storedProcedureName,
     Dictionary<string, object> parameters,
@@ -88,12 +88,12 @@ public static async Task<DaoResult> ExecuteNonQueryWithStatus(
 ```
 
 **Purpose**: Execute INSERT/UPDATE/DELETE stored procedures  
-**Returns**: DaoResult with success/failure status  
+**Returns**: Model_Dao_Result with success/failure status  
 **Usage**: Inventory additions, user updates, transaction logging
 
 #### ExecuteDataTableWithStatus
 ```csharp
-public static async Task<DaoResult<DataTable>> ExecuteDataTableWithStatus(
+public static async Task<Model_Dao_Result<DataTable>> ExecuteDataTableWithStatus(
     string connectionString,
     string storedProcedureName,
     Dictionary<string, object> parameters,
@@ -102,12 +102,12 @@ public static async Task<DaoResult<DataTable>> ExecuteDataTableWithStatus(
 ```
 
 **Purpose**: Execute SELECT queries returning multiple rows  
-**Returns**: DaoResult<DataTable> with query results  
+**Returns**: Model_Dao_Result<DataTable> with query results  
 **Usage**: Inventory searches, user lists, transaction history
 
 #### ExecuteScalarWithStatus
 ```csharp
-public static async Task<DaoResult<T>> ExecuteScalarWithStatus<T>(
+public static async Task<Model_Dao_Result<T>> ExecuteScalarWithStatus<T>(
     string connectionString,
     string storedProcedureName,
     Dictionary<string, object> parameters,
@@ -116,12 +116,12 @@ public static async Task<DaoResult<T>> ExecuteScalarWithStatus<T>(
 ```
 
 **Purpose**: Execute queries returning single scalar value  
-**Returns**: DaoResult<T> with scalar result (int, string, bool, etc.)  
+**Returns**: Model_Dao_Result<T> with scalar result (int, string, bool, etc.)  
 **Usage**: Row counts, existence checks, ID lookups
 
 #### ExecuteWithCustomOutput
 ```csharp
-public static async Task<DaoResult<Dictionary<string, object>>> ExecuteWithCustomOutput(
+public static async Task<Model_Dao_Result<Dictionary<string, object>>> ExecuteWithCustomOutput(
     string connectionString,
     string storedProcedureName,
     Dictionary<string, object> parameters,
@@ -131,7 +131,7 @@ public static async Task<DaoResult<Dictionary<string, object>>> ExecuteWithCusto
 ```
 
 **Purpose**: Execute procedures with non-standard output parameters  
-**Returns**: DaoResult<Dictionary<string, object>> with output parameter values  
+**Returns**: Model_Dao_Result<Dictionary<string, object>> with output parameter values  
 **Usage**: Special operations returning multiple OUT parameters
 
 **Shared Behavior**:
@@ -198,33 +198,33 @@ public static class Dao_[Domain]
     /// [Operation description]
     /// </summary>
     /// <param name="[param1]">[Description]</param>
-    /// <returns>DaoResult or DaoResult&lt;T&gt; with operation outcome</returns>
-    public static async Task<DaoResult<T>> [OperationName]Async([parameters])
+    /// <returns>Model_Dao_Result or Model_Dao_Result&lt;T&gt; with operation outcome</returns>
+    public static async Task<Model_Dao_Result<T>> [OperationName]Async([parameters])
     {
         try
         {
             var result = await Helper_Database_StoredProcedure.[ExecutionMethod](
-                Model_AppVariables.ConnectionString,
+                Model_Application_Variables.ConnectionString,
                 "[stored_procedure_name]",
                 new Dictionary<string, object>
                 {
                     ["Parameter1"] = value1, // No p_ prefix
                     ["Parameter2"] = value2,
-                    ["User"] = Model_AppVariables.User,
+                    ["User"] = Model_Application_Variables.User,
                     ["DateTime"] = DateTime.Now
                 },
                 progressHelper: null, // Or passed from caller
                 useAsync: true);
             
             if (result.IsSuccess)
-                return DaoResult<T>.Success(result.Data, $"[Success message]");
+                return Model_Dao_Result<T>.Success(result.Data, $"[Success message]");
             else
-                return DaoResult<T>.Failure(result.Message);
+                return Model_Dao_Result<T>.Failure(result.Message);
         }
         catch (Exception ex)
         {
             LoggingUtility.LogDatabaseError(ex);
-            return DaoResult<T>.Failure($"[Operation] failed: {ex.Message}", ex);
+            return Model_Dao_Result<T>.Failure($"[Operation] failed: {ex.Message}", ex);
         }
     }
 }
@@ -249,7 +249,7 @@ public static class Dao_[Domain]
 
 ### StoredProcedureResult (Helper Internal)
 
-**Purpose**: Internal intermediate result from stored procedure execution before wrapping in DaoResult.
+**Purpose**: Internal intermediate result from stored procedure execution before wrapping in Model_Dao_Result.
 
 **Fields**:
 | Field | Type | Description |
@@ -265,7 +265,7 @@ public static class Dao_[Domain]
 2. Read OUT p_Status and OUT p_ErrorMsg parameters
 3. Map StatusCode to IsSuccess (0 or 1 → true, otherwise false)
 4. Create StoredProcedureResult with Payload and status
-5. Wrap in DaoResult or DaoResult<T> for return to caller
+5. Wrap in Model_Dao_Result or Model_Dao_Result<T> for return to caller
 
 ---
 
@@ -355,7 +355,7 @@ MySqlCommand.Parameters[p_Status, p_ErrorMsg]
     ↓
 StoredProcedureResult (internal)
     ↓
-DaoResult or DaoResult<T> (wrapped)
+Model_Dao_Result or Model_Dao_Result<T> (wrapped)
     ↓ return
 Calling Code (check IsSuccess, use Data, show Message)
 ```
@@ -378,7 +378,7 @@ Step 3: Execute stored procedure (pass transaction)
 Yes: MySqlTransaction.CommitAsync()
 No: MySqlTransaction.RollbackAsync()
     ↓
-Return DaoResult with final outcome
+Return Model_Dao_Result with final outcome
 ```
 
 ### Error Handling Flow
@@ -394,7 +394,7 @@ Dao_ErrorLog.LogErrorAsync() [recursive prevention check]
     ↓
 log_error table INSERT
     ↓
-Return DaoResult.Failure(message, ex)
+Return Model_Dao_Result.Failure(message, ex)
     ↓
 Calling code checks IsSuccess
     ↓
@@ -434,16 +434,16 @@ Error branch:
     ↓
 [Parameter Validation]
     ↓ Valid?
-No: [Return DaoResult.Failure (validation error)]
+No: [Return Model_Dao_Result.Failure (validation error)]
 Yes: ↓
 [Call Helper_Database_StoredProcedure]
     ↓
 [Stored Procedure Execution]
     ↓ Success (p_Status = 0 or 1)?
-Yes: [Return DaoResult.Success with data]
-No: [Return DaoResult.Failure with p_ErrorMsg]
+Yes: [Return Model_Dao_Result.Success with data]
+No: [Return Model_Dao_Result.Failure with p_ErrorMsg]
     ↓ Exception?
-Yes: [Log error, Return DaoResult.Failure with exception]
+Yes: [Log error, Return Model_Dao_Result.Failure with exception]
     ↓
 [Exit]
 ```
@@ -457,7 +457,7 @@ Yes: [Log error, Return DaoResult.Failure with exception]
 - **C#**: Remove p_ prefix (e.g., UserID, PartNumber)
 - **Casing**: PascalCase for all parameter names
 
-### DaoResult Construction
+### Model_Dao_Result Construction
 - **Success**: Always provide meaningful message, Data may be null for zero-row queries
 - **Failure**: Always provide user-friendly message, Exception optional but recommended
 
@@ -481,10 +481,10 @@ Yes: [Log error, Return DaoResult.Failure with exception]
 ## Next Steps
 
 This data model serves as the contract for Phase 2 task decomposition. Implementation tasks will:
-1. Create Model_DaoResult.cs with DaoResult and DaoResult<T> classes
+1. Create Model_Dao_Result.cs with Model_Dao_Result and Model_Dao_Result<T> classes
 2. Refactor Helper_Database_StoredProcedure with parameter prefix detection
 3. Implement ParameterPrefixCache initialization in Program.cs
-4. Refactor all 12 DAO classes to async methods returning DaoResult variants
+4. Refactor all 12 DAO classes to async methods returning Model_Dao_Result variants
 5. Migrate 100+ call sites to async/await patterns
 6. Create integration test infrastructure with per-test-class transactions
 7. Update documentation and developer quickstart guide

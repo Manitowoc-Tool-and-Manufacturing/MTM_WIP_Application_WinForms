@@ -16,7 +16,7 @@ namespace MTM_WIP_Application_Winforms.Forms.Splash
             Service_DebugTracer.TraceMethodEntry(new Dictionary<string, object>
             {
                 ["FormType"] = nameof(SplashScreenForm),
-                ["Version"] = Model_AppVariables.Version ?? "4.6.0.0",
+                ["Version"] = Model_Application_Variables.Version ?? "4.6.0.0",
                 ["InitializationTime"] = DateTime.Now,
                 ["Thread"] = Thread.CurrentThread.ManagedThreadId
             }, nameof(SplashScreenForm), nameof(SplashScreenForm));
@@ -46,19 +46,19 @@ namespace MTM_WIP_Application_Winforms.Forms.Splash
 
             Service_DebugTracer.TraceBusinessLogic("UI_COLORS_APPLICATION",
                 inputData: new {
-                    UserBackColor = Model_AppVariables.UserUiColors?.FormBackColor,
-                    UserForeColor = Model_AppVariables.UserUiColors?.LabelForeColor,
-                    Version = Model_AppVariables.Version
+                    UserBackColor = Model_Application_Variables.UserUiColors?.FormBackColor,
+                    UserForeColor = Model_Application_Variables.UserUiColors?.LabelForeColor,
+                    Version = Model_Application_Variables.Version
                 },
                 outputData: new {
-                    AppliedBackColor = Model_AppVariables.UserUiColors?.FormBackColor ?? BackColor,
-                    AppliedForeColor = Model_AppVariables.UserUiColors?.LabelForeColor,
-                    VersionText = $"Version {Model_AppVariables.Version ?? "4.6.0.0"}"
+                    AppliedBackColor = Model_Application_Variables.UserUiColors?.FormBackColor ?? BackColor,
+                    AppliedForeColor = Model_Application_Variables.UserUiColors?.LabelForeColor,
+                    VersionText = $"Version {Model_Application_Variables.Version ?? "4.6.0.0"}"
                 });
-            BackColor = Model_AppVariables.UserUiColors?.FormBackColor ?? BackColor;
-            _titleLabel!.ForeColor = Model_AppVariables.UserUiColors?.LabelForeColor ?? _titleLabel.ForeColor;
-            _versionLabel!.ForeColor = Model_AppVariables.UserUiColors?.LabelForeColor ?? _versionLabel.ForeColor;
-            _versionLabel.Text = $"Version {Model_AppVariables.Version ?? "4.6.0.0"}";
+            BackColor = Model_Application_Variables.UserUiColors?.FormBackColor ?? BackColor;
+            _titleLabel!.ForeColor = Model_Application_Variables.UserUiColors?.LabelForeColor ?? _titleLabel.ForeColor;
+            _versionLabel!.ForeColor = Model_Application_Variables.UserUiColors?.LabelForeColor ?? _versionLabel.ForeColor;
+            _versionLabel.Text = $"Version {Model_Application_Variables.Version ?? "4.6.0.0"}";
 
             Service_DebugTracer.TraceUIAction("THEME_APPLIED", nameof(SplashScreenForm));
             ApplyTheme();

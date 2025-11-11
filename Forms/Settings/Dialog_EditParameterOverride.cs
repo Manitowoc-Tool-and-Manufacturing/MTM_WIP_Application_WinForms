@@ -20,10 +20,10 @@ public partial class Dialog_EditParameterOverride : Form
 {
     #region Fields
 
-    private readonly Model_ParameterPrefixOverride _originalOverride;
+    private readonly Model_ParameterPrefix_Override _originalOverride;
     private List<string> _procedureNames = new();
     private List<string> _parameterNames = new();
-    private Model_ParameterPrefixOverride? _result;
+    private Model_ParameterPrefix_Override? _result;
 
     #endregion
 
@@ -32,13 +32,13 @@ public partial class Dialog_EditParameterOverride : Form
     /// <summary>
     /// Gets the updated override if dialog was confirmed.
     /// </summary>
-    public Model_ParameterPrefixOverride? Result => _result;
+    public Model_ParameterPrefix_Override? Result => _result;
 
     #endregion
 
     #region Constructors
 
-    public Dialog_EditParameterOverride(Model_ParameterPrefixOverride existingOverride)
+    public Dialog_EditParameterOverride(Model_ParameterPrefix_Override existingOverride)
     {
         if (existingOverride == null)
             throw new ArgumentNullException(nameof(existingOverride));
@@ -46,6 +46,7 @@ public partial class Dialog_EditParameterOverride : Form
         _originalOverride = existingOverride;
 
         InitializeComponent();
+        SetStyle(ControlStyles.OptimizedDoubleBuffer, true);
         Core_Themes.ApplyDpiScaling(this);
         Core_Themes.ApplyRuntimeLayoutAdjustments(this);
         
@@ -307,7 +308,7 @@ public partial class Dialog_EditParameterOverride : Form
             }
 
             // Create updated override model
-            _result = new Model_ParameterPrefixOverride
+            _result = new Model_ParameterPrefix_Override
             {
                 OverrideId = _originalOverride.OverrideId,
                 ProcedureName = txtProcedureName.Text.Trim(),
@@ -318,7 +319,7 @@ public partial class Dialog_EditParameterOverride : Form
                 Reason = txtReason.Text.Trim(),
                 CreatedBy = _originalOverride.CreatedBy,
                 CreatedDate = _originalOverride.CreatedDate,
-                ModifiedBy = Model_AppVariables.User,
+                ModifiedBy = Model_Application_Variables.User,
                 ModifiedDate = DateTime.Now,
                 IsActive = true
             };

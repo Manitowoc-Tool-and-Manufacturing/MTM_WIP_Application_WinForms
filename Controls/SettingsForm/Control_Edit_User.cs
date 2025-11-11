@@ -142,7 +142,14 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
 
         private async void Control_Edit_User_ComboBox_Users_SelectedIndexChanged(object? sender, EventArgs e)
         {
-            if (Control_Edit_User_ComboBox_Users.Text is { } userName)
+            // Extract username from DataRowView properly - don't use .Text with data-bound ComboBoxes
+            string? userName = null;
+            if (Control_Edit_User_ComboBox_Users.SelectedItem is DataRowView drv)
+            {
+                userName = drv["User"]?.ToString();
+            }
+            
+            if (!string.IsNullOrWhiteSpace(userName))
             {
                 var userResult = await Dao_User.GetUserByUsernameAsync(userName);
                 if (!userResult.IsSuccess || userResult.Data == null)
@@ -219,7 +226,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
                     return;
                 }
 
-                // Update user with DaoResult pattern
+                // Update user with Model_Dao_Result pattern
                 var updateResult = await Dao_User.UpdateUserAsync(
                     userName,
                     Control_Edit_User_TextBox_FirstName.Text + " " + Control_Edit_User_TextBox_LastName.Text,

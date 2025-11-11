@@ -62,7 +62,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             LoadLocations();
             if (issuedByValueLabel != null)
             {
-                issuedByValueLabel.Text = Model_AppVariables.User ?? "Current User";
+                issuedByValueLabel.Text = Model_Application_Variables.User ?? "Current User";
             }
         }
 
@@ -197,7 +197,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             locationTextBox.Clear();
             buildingComboBox.SelectedIndex = 0;
             locationsComboBox.SelectedIndex = 0;
-            issuedByValueLabel.Text = Model_AppVariables.User ?? "Current User";
+            issuedByValueLabel.Text = Model_Application_Variables.User ?? "Current User";
             _currentLocation = null;
         }
 

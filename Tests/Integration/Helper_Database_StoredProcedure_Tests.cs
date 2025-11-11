@@ -11,7 +11,7 @@ namespace MTM_WIP_Application_Winforms.Tests.Integration;
 
 /// <summary>
 /// Integration tests for Helper_Database_StoredProcedure with focus on parameter prefix detection,
-/// DaoResult pattern integration, and stored procedure execution.
+/// Model_Dao_Result pattern integration, and stored procedure execution.
 /// </summary>
 [TestClass]
 public class Helper_Database_StoredProcedure_Tests : BaseIntegrationTest
@@ -100,7 +100,7 @@ public class Helper_Database_StoredProcedure_Tests : BaseIntegrationTest
         // Assert - Should succeed (updates access type successfully)
         Console.WriteLine($"Result - IsSuccess: {result.IsSuccess}, Message: '{result.StatusMessage}', Error: '{result.ErrorMessage}'");
         Assert.IsTrue(result.IsSuccess, $"Expected success but got Message='{result.StatusMessage}', Error='{result.ErrorMessage}'");
-        // ExecuteNonQueryWithStatusAsync returns DaoResult (no Data property), not DaoResult<T>
+        // ExecuteNonQueryWithStatusAsync returns Model_Dao_Result (no Data property), not Model_Dao_Result<T>
     }
 
     /// <summary>
@@ -122,13 +122,13 @@ public class Helper_Database_StoredProcedure_Tests : BaseIntegrationTest
 
     #endregion
 
-    #region DaoResult Pattern Tests
+    #region Model_Dao_Result Pattern Tests
 
     /// <summary>
-    /// Tests that successful ExecuteDataTableWithStatusAsync returns DaoResult with IsSuccess=true
+    /// Tests that successful ExecuteDataTableWithStatusAsync returns Model_Dao_Result with IsSuccess=true
     /// </summary>
     [TestMethod]
-    public async Task ExecuteDataTableWithStatusAsync_Success_ReturnsDaoResultSuccess()
+    public async Task ExecuteDataTableWithStatusAsync_Success_ReturnsModel_Dao_ResultSuccess()
     {
         // Arrange - Get a valid test user from the system
         var usersResult = await Dao_System.System_UserAccessTypeAsync();
@@ -154,10 +154,10 @@ public class Helper_Database_StoredProcedure_Tests : BaseIntegrationTest
     }
 
     /// <summary>
-    /// Tests that database errors are captured in DaoResult with IsSuccess=false
+    /// Tests that database errors are captured in Model_Dao_Result with IsSuccess=false
     /// </summary>
     [TestMethod]
-    public async Task ExecuteDataTableWithStatusAsync_WithInvalidConnection_ReturnsDaoResultFailure()
+    public async Task ExecuteDataTableWithStatusAsync_WithInvalidConnection_ReturnsModel_Dao_ResultFailure()
     {
         // Arrange - Invalid connection string
         var invalidConnectionString = "Server=invalid_host;Database=nonexistent;User=nobody;Password=wrong;";
@@ -274,7 +274,7 @@ public class Helper_Database_StoredProcedure_Tests : BaseIntegrationTest
         };
 
         // Act - Execute 10 concurrent operations
-        var tasks = new List<Task<DaoResult<DataTable>>>();
+        var tasks = new List<Task<Model_Dao_Result<DataTable>>>();
         for (int i = 0; i < 10; i++)
         {
             tasks.Add(Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync(

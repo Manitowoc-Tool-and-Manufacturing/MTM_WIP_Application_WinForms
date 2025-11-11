@@ -82,11 +82,11 @@ VALUES
 
 ## Application Data Models (C# POCOs)
 
-### 2. Model_ParameterPrefixOverride
+### 2. Model_ParameterPrefix_Override
 
 **Purpose**: C# representation of database override record for in-memory operations.
 
-**File**: `Models/Model_ParameterPrefixOverride.cs`
+**File**: `Models/Model_ParameterPrefix_Override.cs`
 
 **Properties**:
 
@@ -97,7 +97,7 @@ namespace MTM_WIP_Application_Winforms.Models
     /// Represents a parameter prefix override for a stored procedure parameter.
     /// Enables non-standard parameter naming without modifying the stored procedure itself.
     /// </summary>
-    public class Model_ParameterPrefixOverride
+    public class Model_ParameterPrefix_Override
     {
         /// <summary>
         /// Unique identifier for the override record
@@ -323,7 +323,7 @@ public class Model_GeneratedDaoMethod
     public string MethodName { get; set; } = string.Empty;
     public string GeneratedCode { get; set; } = string.Empty;
     public List<Model_ProcedureParameter> Parameters { get; set; } = new();
-    public string ReturnType { get; set; } = "Task<DaoResult<DataTable>>";
+    public string ReturnType { get; set; } = "Task<Model_Dao_Result<DataTable>>";
     public bool HasComplexityWarning => Parameters.Count > 10;
     public DateTime GeneratedDate { get; set; } = DateTime.Now;
 }
@@ -349,7 +349,7 @@ Dao_ParameterPrefixOverrides.GetAllActiveAsync()
     ↓
 sys_parameter_prefix_overrides_Get_All stored procedure
     ↓
-Returns: List<Model_ParameterPrefixOverride>
+Returns: List<Model_ParameterPrefix_Override>
     ↓
 Store in static Dictionary<string, Dictionary<string, string>>
     Key1: ProcedureName
@@ -441,7 +441,7 @@ Query INFORMATION_SCHEMA.PARAMETERS for selected procedure
 Build Model_GeneratedDaoMethod:
     - Parse parameters into C# Dictionary construction
     - Generate XML documentation comments
-    - Generate method signature (async Task<DaoResult<DataTable>>)
+    - Generate method signature (async Task<Model_Dao_Result<DataTable>>)
     - Generate Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync call
     - Generate try-catch with Dao_ErrorLog.HandleException_GeneralError_CloseApp
     ↓

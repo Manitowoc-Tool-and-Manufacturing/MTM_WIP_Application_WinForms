@@ -44,7 +44,7 @@ namespace MTM_WIP_Application_Winforms.Controls.Transactions
             TransactionGridControl_ToolStripSeparator2 = new ToolStripSeparator();
             TransactionGridControl_DataGridView_Transactions = new DataGridView();
             TransactionGridControl_TransactionDetailPanel = new TransactionDetailPanel();
-            TransactionGridControl_TransactionAnalyticsControl = new TransactionAnalyticsControl();
+            TransactionGridControl_Model_Transactions_Core_AnalyticsControl = new Model_Transactions_Core_AnalyticsControl();
             TransactionGridControl_Button_Export = new ToolStripButton();
             TransactionGridControl_ToolStripSeparator4 = new ToolStripSeparator();
             TransactionGridControl_Button_Analytics = new ToolStripButton();
@@ -67,7 +67,7 @@ namespace MTM_WIP_Application_Winforms.Controls.Transactions
             TransactionGridControl_TableLayout_Main.ColumnStyles.Add(new ColumnStyle());
             TransactionGridControl_TableLayout_Main.Controls.Add(TransactionGridControl_StatusStrip_Main, 0, 1);
             TransactionGridControl_TableLayout_Main.Controls.Add(TransactionGridControl_DataGridView_Transactions, 0, 0);
-            TransactionGridControl_TableLayout_Main.Controls.Add(TransactionGridControl_TransactionAnalyticsControl, 0, 0);
+            TransactionGridControl_TableLayout_Main.Controls.Add(TransactionGridControl_Model_Transactions_Core_AnalyticsControl, 0, 0);
             TransactionGridControl_TableLayout_Main.Controls.Add(TransactionGridControl_TransactionDetailPanel, 1, 0);
             TransactionGridControl_TableLayout_Main.Dock = DockStyle.Fill;
             TransactionGridControl_TableLayout_Main.Location = new Point(2, 2);
@@ -210,17 +210,17 @@ namespace MTM_WIP_Application_Winforms.Controls.Transactions
             TransactionGridControl_DataGridView_Transactions.Size = new Size(603, 509);
             TransactionGridControl_DataGridView_Transactions.TabIndex = 0;
             // 
-            // TransactionGridControl_TransactionAnalyticsControl
+            // TransactionGridControl_Model_Transactions_Core_AnalyticsControl
             // 
-            TransactionGridControl_TransactionAnalyticsControl.AutoSize = true;
-            TransactionGridControl_TransactionAnalyticsControl.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            TransactionGridControl_TransactionAnalyticsControl.Dock = DockStyle.Top;
-            TransactionGridControl_TransactionAnalyticsControl.Location = new Point(3, 3);
-            TransactionGridControl_TransactionAnalyticsControl.MinimumSize = new Size(600, 100);
-            TransactionGridControl_TransactionAnalyticsControl.Name = "TransactionGridControl_TransactionAnalyticsControl";
-            TransactionGridControl_TransactionAnalyticsControl.Size = new Size(606, 100);
-            TransactionGridControl_TransactionAnalyticsControl.TabIndex = 3;
-            TransactionGridControl_TransactionAnalyticsControl.Visible = false;
+            TransactionGridControl_Model_Transactions_Core_AnalyticsControl.AutoSize = true;
+            TransactionGridControl_Model_Transactions_Core_AnalyticsControl.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            TransactionGridControl_Model_Transactions_Core_AnalyticsControl.Dock = DockStyle.Top;
+            TransactionGridControl_Model_Transactions_Core_AnalyticsControl.Location = new Point(3, 3);
+            TransactionGridControl_Model_Transactions_Core_AnalyticsControl.MinimumSize = new Size(600, 100);
+            TransactionGridControl_Model_Transactions_Core_AnalyticsControl.Name = "TransactionGridControl_Model_Transactions_Core_AnalyticsControl";
+            TransactionGridControl_Model_Transactions_Core_AnalyticsControl.Size = new Size(606, 100);
+            TransactionGridControl_Model_Transactions_Core_AnalyticsControl.TabIndex = 3;
+            TransactionGridControl_Model_Transactions_Core_AnalyticsControl.Visible = false;
             // 
             // TransactionGridControl_TransactionDetailPanel
             // 
@@ -328,7 +328,7 @@ namespace MTM_WIP_Application_Winforms.Controls.Transactions
         private ToolStripMenuItem TransactionGridControl_Button_ShowHideSearch;
         private ToolStripMenuItem TransactionGridControl_Button_TogglePrivileges;
         private TransactionDetailPanel TransactionGridControl_TransactionDetailPanel;
-        private TransactionAnalyticsControl TransactionGridControl_TransactionAnalyticsControl;
+        private Model_Transactions_Core_AnalyticsControl TransactionGridControl_Model_Transactions_Core_AnalyticsControl;
         private ToolStripStatusLabel TransactionGridControl_Label_PageNumber;
         private ToolStripSeparator TransactionGridControl_ToolStripSeparator2;
         private ToolStripButton TransactionGridControl_Button_Print;

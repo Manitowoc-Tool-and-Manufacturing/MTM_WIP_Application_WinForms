@@ -1,9 +1,9 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "title": "DaoResult API Contract",
-  "description": "Schema for DaoResult and DaoResult<T> return types used by all DAO methods",
+  "title": "Model_Dao_Result API Contract",
+  "description": "Schema for Model_Dao_Result and Model_Dao_Result<T> return types used by all DAO methods",
   "definitions": {
-    "DaoResult": {
+    "Model_Dao_Result": {
       "type": "object",
       "description": "Base result wrapper for non-data-returning operations (INSERT, UPDATE, DELETE)",
       "required": ["IsSuccess", "Message"],
@@ -42,7 +42,7 @@
         "Message MUST be user-friendly (no technical jargon or stack traces)"
       ]
     },
-    "DaoResult_Generic": {
+    "Model_Dao_Result_Generic": {
       "type": "object",
       "description": "Generic result wrapper for data-returning operations (SELECT)",
       "required": ["IsSuccess", "Message", "Data"],
@@ -79,31 +79,31 @@
     }
   },
   "factories": {
-    "DaoResult": {
+    "Model_Dao_Result": {
       "Success": {
-        "signature": "public static DaoResult Success(string message = \"Operation completed successfully\")",
-        "returns": "DaoResult with IsSuccess=true, Message=message, Exception=null"
+        "signature": "public static Model_Dao_Result Success(string message = \"Operation completed successfully\")",
+        "returns": "Model_Dao_Result with IsSuccess=true, Message=message, Exception=null"
       },
       "Failure": {
-        "signature": "public static DaoResult Failure(string message, Exception? exception = null)",
-        "returns": "DaoResult with IsSuccess=false, Message=message, Exception=exception"
+        "signature": "public static Model_Dao_Result Failure(string message, Exception? exception = null)",
+        "returns": "Model_Dao_Result with IsSuccess=false, Message=message, Exception=exception"
       }
     },
-    "DaoResult_T": {
+    "Model_Dao_Result_T": {
       "Success": {
-        "signature": "public static DaoResult<T> Success(T data, string message = \"Operation completed successfully\")",
-        "returns": "DaoResult<T> with IsSuccess=true, Data=data, Message=message, Exception=null"
+        "signature": "public static Model_Dao_Result<T> Success(T data, string message = \"Operation completed successfully\")",
+        "returns": "Model_Dao_Result<T> with IsSuccess=true, Data=data, Message=message, Exception=null"
       },
       "Failure": {
-        "signature": "public static DaoResult<T> Failure(string message, Exception? exception = null)",
-        "returns": "DaoResult<T> with IsSuccess=false, Data=default(T), Message=message, Exception=exception"
+        "signature": "public static Model_Dao_Result<T> Failure(string message, Exception? exception = null)",
+        "returns": "Model_Dao_Result<T> with IsSuccess=false, Data=default(T), Message=message, Exception=exception"
       }
     }
   },
   "usagePatterns": [
     {
       "scenario": "Non-query operation (INSERT/UPDATE/DELETE)",
-      "returnType": "DaoResult",
+      "returnType": "Model_Dao_Result",
       "example": {
         "success": {
           "IsSuccess": true,
@@ -122,7 +122,7 @@
     },
     {
       "scenario": "Query operation returning DataTable",
-      "returnType": "DaoResult<DataTable>",
+      "returnType": "Model_Dao_Result<DataTable>",
       "example": {
         "success": {
           "IsSuccess": true,
@@ -147,7 +147,7 @@
     },
     {
       "scenario": "Scalar query returning count",
-      "returnType": "DaoResult<int>",
+      "returnType": "Model_Dao_Result<int>",
       "example": {
         "success": {
           "IsSuccess": true,
@@ -159,7 +159,7 @@
     },
     {
       "scenario": "Exists check",
-      "returnType": "DaoResult<bool>",
+      "returnType": "Model_Dao_Result<bool>",
       "example": {
         "success": {
           "IsSuccess": true,

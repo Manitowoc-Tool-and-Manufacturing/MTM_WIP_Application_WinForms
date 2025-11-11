@@ -1,6 +1,9 @@
+using System;
+using System.Collections.Generic;
 using System.Data;
 using System.Drawing;
 using System.Drawing.Printing;
+using System.Linq;
 using MTM_WIP_Application_Winforms.Logging;
 using MTM_WIP_Application_Winforms.Models;
 
@@ -9,15 +12,19 @@ namespace MTM_WIP_Application_Winforms.Core;
 /// <summary>
 /// Professional DataTable printer with watermark, theme colors, and headers
 /// </summary>
-public class Core_TablePrinter
+public class Core_TablePrinter : IDisposable
 {
-    private DataTable _data;
-    private List<string> _columnOrder;
-    private List<string> _visibleColumns;
+    #region Fields
+
+    private DataTable? _data;
+    private List<string> _columnOrder = new();
+    private List<string> _visibleColumns = new();
     private int _currentRow;
     private int _pageNumber;
-    private string _title;
-    
+    private string _title = string.Empty;
+    private Model_Print_Job? _printJob;
+    private readonly List<Model_Print_PageBoundary> _pageBoundaries = new();
+
     private readonly Font _titleFont;
     private readonly Font _headerFont;
     private readonly Font _cellFont;
@@ -29,144 +36,348 @@ public class Core_TablePrinter
     private readonly Brush _watermarkBrush;
     private readonly Pen _gridPen;
     private readonly Color _headerBackColor;
-    
-    public PrintDocument? PrintDocument { get; private set; }
-    
+
+    private readonly PrintDocument _printDocument;
+    private int _startRowIndex;
+    private int _endRowIndexExclusive;
+    private int _firstPageNumber;
+    private bool _completionLogged;
+
+    #endregion
+
+    #region Properties
+
+    /// <summary>
+    /// Configured PrintDocument ready for printing
+    /// </summary>
+    public PrintDocument PrintDocument => _printDocument;
+
+    #endregion
+
+    #region Constructors
+
+    /// <summary>
+    /// Creates new table printer with theme integration
+    /// </summary>
     public Core_TablePrinter()
     {
-        _data = new DataTable();
-        _columnOrder = new List<string>();
-        _visibleColumns = new List<string>();
-        _currentRow = 0;
-        _pageNumber = 1;
-        _title = "MTM WIP Application";
-        
-        // Use theme colors if available
-        var themeColors = Model_AppVariables.UserUiColors;
-        
-        _titleFont = new Font("Arial", 14, FontStyle.Bold);
-        _headerFont = new Font("Arial", 10, FontStyle.Bold);
-        _cellFont = new Font("Arial", 9, FontStyle.Regular);
-        _watermarkFont = new Font("Arial", 60, FontStyle.Bold);
-        _pageFont = new Font("Arial", 8, FontStyle.Regular);
-        
-        _titleBrush = new SolidBrush(themeColors.DataGridHeaderForeColor ?? Color.Black);
-        _headerBrush = new SolidBrush(themeColors.DataGridHeaderForeColor ?? Color.Black);
-        _cellBrush = new SolidBrush(themeColors.DataGridForeColor ?? Color.Black);
-        _watermarkBrush = new SolidBrush(Color.FromArgb(40, Color.Gray)); // Semi-transparent
-        
-        _headerBackColor = themeColors.DataGridHeaderBackColor ?? Color.LightGray;
-        _gridPen = new Pen(themeColors.DataGridGridColor ?? Color.Gray, 1);
+        // Initialize fonts
+        _titleFont = new Font("Segoe UI", 16, FontStyle.Bold);
+        _headerFont = new Font("Segoe UI", 11, FontStyle.Bold);
+        _cellFont = new Font("Segoe UI", 10, FontStyle.Regular);
+        _watermarkFont = new Font("Segoe UI", 48, FontStyle.Bold);
+        _pageFont = new Font("Segoe UI", 9, FontStyle.Regular);
+
+        // Get theme colors from Model_Application_Variables
+    var colors = Model_Application_Variables.UserUiColors;
+
+    Color headerForeColor = EnsurePrintableColor(colors?.DataGridHeaderForeColor ?? SystemColors.ControlText);
+    Color cellForeColor = EnsurePrintableColor(colors?.DataGridForeColor ?? SystemColors.WindowText);
+    Color gridColor = EnsurePrintableColor(colors?.DataGridGridColor ?? SystemColors.ControlDark);
+
+    _titleBrush = new SolidBrush(headerForeColor);
+    _headerBrush = new SolidBrush(headerForeColor);
+    _cellBrush = new SolidBrush(cellForeColor);
+    _watermarkBrush = new SolidBrush(Color.FromArgb(30, SystemColors.ControlText));
+    _gridPen = new Pen(gridColor);
+    _headerBackColor = colors?.DataGridHeaderBackColor ?? SystemColors.Control;
+
+        // Initialize PrintDocument
+        _printDocument = new PrintDocument();
+        _printDocument.BeginPrint += PrintDocument_BeginPrint;
+        _printDocument.PrintPage += PrintDocument_PrintPage;
     }
-    
-    public void SetData(DataTable data, List<string> columnOrder, List<string> visibleColumns, string title = "MTM WIP Application")
+
+    #endregion
+
+    #region Configuration
+
+    /// <summary>
+    /// Configures the printer with a full print job description.
+    /// </summary>
+    /// <param name="printJob">The print job to render.</param>
+    public void SetData(Model_Print_Job printJob)
     {
-        ArgumentNullException.ThrowIfNull(data);
-        ArgumentNullException.ThrowIfNull(columnOrder);
-        ArgumentNullException.ThrowIfNull(visibleColumns);
-        
-        _data = data;
-        _columnOrder = columnOrder;
-        _visibleColumns = visibleColumns;
-        _currentRow = 0;
-        _pageNumber = 1;
-        _title = title;
-        
-        PrintDocument?.Dispose();
-        PrintDocument = new PrintDocument();
-        PrintDocument.PrintPage += OnPrintPage;
-        
-        LoggingUtility.Log($"[TablePrinter] Data set: {_data.Rows.Count} rows, {_visibleColumns.Count} visible columns");
+        ArgumentNullException.ThrowIfNull(printJob);
+        ArgumentNullException.ThrowIfNull(printJob.Data);
+        ArgumentNullException.ThrowIfNull(printJob.ColumnOrder);
+        ArgumentNullException.ThrowIfNull(printJob.VisibleColumns);
+
+        _printJob = printJob;
+
+        _data = printJob.Data ?? throw new ArgumentNullException(nameof(printJob.Data));
+        _columnOrder = new List<string>(printJob.ColumnOrder);
+        _visibleColumns = new List<string>(printJob.VisibleColumns);
+        _title = printJob.Title ?? "Data Print";
+
+        var boundarySnapshot = CapturePageBoundariesSnapshot(printJob);
+    (_startRowIndex, _endRowIndexExclusive, _firstPageNumber, _) = CalculateRowWindow(printJob, boundarySnapshot);
+
+        _currentRow = _startRowIndex;
+        _pageNumber = _firstPageNumber - 1;
+    _pageBoundaries.Clear();
+    _completionLogged = false;
+
+        LoggingUtility.Log(string.Format(
+            "[Core_TablePrinter] Data prepared: RangeType={0}, FirstPage={1}, StartRow={2}, EndRowExclusive={3}, VisibleColumns={4}, TotalRows={5}, ExistingTotalPages={6}",
+            printJob.PageRangeType,
+            _firstPageNumber,
+            _startRowIndex,
+            _endRowIndexExclusive,
+            _visibleColumns.Count,
+            _data.Rows.Count,
+            printJob.TotalPages));
     }
-    
-    private void OnPrintPage(object? sender, PrintPageEventArgs e)
+
+    private static IReadOnlyList<Model_Print_PageBoundary> CapturePageBoundariesSnapshot(Model_Print_Job printJob)
     {
+        if (printJob.PageBoundaries is null || printJob.PageBoundaries.Count == 0)
+        {
+            return Array.Empty<Model_Print_PageBoundary>();
+        }
+
+        return printJob.PageBoundaries
+            .Where(boundary => boundary is not null)
+            .Select(boundary => boundary!.Clone())
+            .OrderBy(boundary => boundary.PageNumber)
+            .ToList();
+    }
+
+    private (int startRow, int endRowExclusive, int firstPage, int lastPage) CalculateRowWindow(
+        Model_Print_Job printJob,
+        IReadOnlyList<Model_Print_PageBoundary> boundaries)
+    {
+        int totalRows = _data?.Rows.Count ?? 0;
+        if (totalRows <= 0)
+        {
+            return (0, 0, 1, 1);
+        }
+
+        int defaultTotalPages = Math.Max(printJob.TotalPages, 1);
+        int defaultRowsPerPage = Math.Max(1, totalRows / defaultTotalPages);
+        if (defaultRowsPerPage <= 0)
+        {
+            defaultRowsPerPage = Math.Max(1, totalRows);
+        }
+
+        int highestRecordedPage = boundaries.Count > 0
+            ? Math.Max(1, boundaries.Max(boundary => boundary.PageNumber))
+            : defaultTotalPages;
+
+        int firstPage;
+        int lastPage;
+
+        if (printJob.PageRangeType == Enum_PrintRangeType.AllPages)
+        {
+            firstPage = 1;
+            lastPage = Math.Max(firstPage, highestRecordedPage);
+        }
+        else
+        {
+            int firstRecordedPage = boundaries.Count > 0 ? boundaries[0].PageNumber : 1;
+            int lastRecordedPage = boundaries.Count > 0 ? boundaries[boundaries.Count - 1].PageNumber : highestRecordedPage;
+            firstPage = Math.Max(firstRecordedPage, 1);
+            lastPage = Math.Max(lastRecordedPage, firstPage);
+        }
+
+        (int start, int end) ResolveRange(int requestedPage)
+        {
+            if (boundaries.Count > 0)
+            {
+                foreach (Model_Print_PageBoundary boundary in boundaries)
+                {
+                    if (boundary.PageNumber == requestedPage)
+                    {
+                        int start = Math.Clamp(boundary.StartRow, 0, totalRows);
+                        int end = Math.Clamp(boundary.EndRow, start, totalRows);
+                        return (start, end);
+                    }
+                }
+
+                if (requestedPage < boundaries[0].PageNumber)
+                {
+                    return ComputeHeuristicRange(requestedPage);
+                }
+
+                Model_Print_PageBoundary lastBoundary = boundaries[boundaries.Count - 1];
+                if (requestedPage > lastBoundary.PageNumber)
+                {
+                    int alignedStart = Math.Clamp(lastBoundary.EndRow, 0, totalRows);
+                    return (alignedStart, totalRows);
+                }
+            }
+
+            return ComputeHeuristicRange(requestedPage);
+        }
+
+        (int start, int end) ComputeHeuristicRange(int requestedPage)
+        {
+            int rowsPerPage = defaultRowsPerPage;
+            int tentativeStart = Math.Clamp((requestedPage - 1) * rowsPerPage, 0, totalRows);
+            int tentativeEnd = Math.Clamp(tentativeStart + rowsPerPage, tentativeStart, totalRows);
+            return (tentativeStart, tentativeEnd);
+        }
+
+        switch (printJob.PageRangeType)
+        {
+            case Enum_PrintRangeType.CurrentPage:
+            {
+                int currentPage = ClampPageNumber(printJob.CurrentPage, firstPage, lastPage);
+                (int start, int end) = ResolveRange(currentPage);
+                return (start, end, currentPage, currentPage);
+            }
+
+            case Enum_PrintRangeType.PageRange:
+            {
+                int fromPage = ClampPageNumber(printJob.FromPage, firstPage, lastPage);
+                int toPage = ClampPageNumber(printJob.ToPage, fromPage, lastPage);
+                (int start, _) = ResolveRange(fromPage);
+                (_, int end) = ResolveRange(toPage);
+                start = Math.Clamp(start, 0, totalRows);
+                end = Math.Clamp(end, start, totalRows);
+                return (start, end, fromPage, toPage);
+            }
+
+            default:
+                return (0, totalRows, firstPage, lastPage);
+        }
+    }
+
+    private static int ClampPageNumber(int value, int min, int max)
+    {
+        if (value < min)
+        {
+            return min;
+        }
+
+        if (value > max)
+        {
+            return max;
+        }
+
+        return value;
+    }
+
+    #endregion
+
+    #region Print Event Handlers
+
+    private void PrintDocument_BeginPrint(object? sender, PrintEventArgs e)
+    {
+        // Reset state for new print job
+        _currentRow = _startRowIndex;
+        _pageNumber = _firstPageNumber - 1;
+        _completionLogged = false;
+        
+        LoggingUtility.Log($"[Core_TablePrinter] BeginPrint: Reset to StartRow={_currentRow}, PageNumber will start at {_pageNumber + 1}");
+    }
+
+    private void PrintDocument_PrintPage(object? sender, PrintPageEventArgs e)
+    {
+        if (_data == null || e.Graphics == null)
+        {
+            e.HasMorePages = false;
+            return;
+        }
+
         try
         {
-            if (e.Graphics == null) return;
+            _pageNumber++;
             
-            var visibleCols = _columnOrder.Where(c => _visibleColumns.Contains(c)).ToList();
-            
-            if (visibleCols.Count == 0)
+            // Calculate margins
+            int leftMargin = e.MarginBounds.Left;
+            int topMargin = e.MarginBounds.Top;
+            int rightMargin = e.MarginBounds.Right;
+            int bottomMargin = e.MarginBounds.Bottom;
+            int printableWidth = rightMargin - leftMargin;
+            int printableHeight = bottomMargin - topMargin;
+
+            int yPosition = topMargin;
+
+            // Draw title
+            var titleSize = e.Graphics.MeasureString(_title, _titleFont);
+            e.Graphics.DrawString(_title, _titleFont, _titleBrush, 
+                leftMargin + (printableWidth - titleSize.Width) / 2, yPosition);
+            yPosition += (int)titleSize.Height + 20;
+
+            // Draw watermark
+            DrawWatermark(e.Graphics, e.MarginBounds);
+
+            // Calculate column widths
+            int columnCount = _visibleColumns.Count;
+            int columnWidth = printableWidth / Math.Max(columnCount, 1);
+
+            // Draw header row with background
+            var headerRect = new Rectangle(leftMargin, yPosition, printableWidth, 30);
+            using (var headerBrush = new SolidBrush(_headerBackColor))
             {
-                LoggingUtility.Log("[TablePrinter] No visible columns to print");
-                e.HasMorePages = false;
-                return;
+                e.Graphics.FillRectangle(headerBrush, headerRect);
             }
-            
-            float x = e.MarginBounds.Left;
-            float y = e.MarginBounds.Top;
-            
-            // Draw watermark (faint "MTM" in center of page)
-            DrawWatermark(e.Graphics, e.PageBounds);
-            
-            // Draw header (title, date, page number)
-            y = DrawHeader(e.Graphics, e.MarginBounds, ref _pageNumber) + 20;
-            
-            float pageWidth = e.MarginBounds.Width;
-            float columnWidth = pageWidth / visibleCols.Count;
-            float rowHeight = 25;
-            
-            // Draw column header row
-            for (int i = 0; i < visibleCols.Count; i++)
+
+            int xPosition = leftMargin;
+            foreach (var columnName in _visibleColumns)
             {
-                var rect = new RectangleF(x + (i * columnWidth), y, columnWidth, rowHeight);
-                e.Graphics.FillRectangle(new SolidBrush(_headerBackColor), rect);
-                e.Graphics.DrawRectangle(_gridPen, rect.X, rect.Y, rect.Width, rect.Height);
-                e.Graphics.DrawString(visibleCols[i], _headerFont, _headerBrush, rect, new StringFormat
-                {
-                    Alignment = StringAlignment.Center,
-                    LineAlignment = StringAlignment.Center,
-                    Trimming = StringTrimming.EllipsisCharacter
-                });
+                e.Graphics.DrawRectangle(_gridPen, xPosition, yPosition, columnWidth, 30);
+                e.Graphics.DrawString(columnName, _headerFont, _headerBrush, 
+                    new RectangleF(xPosition + 5, yPosition + 7, columnWidth - 10, 20));
+                xPosition += columnWidth;
             }
-            
-            y += rowHeight;
-            
+            yPosition += 30;
+
             // Draw data rows
-            while (_currentRow < _data.Rows.Count)
+            int rowHeight = 25;
+            int pageStartRow = _currentRow;
+            while (_currentRow < _endRowIndexExclusive && (yPosition + rowHeight) <= bottomMargin)
             {
-                if (y + rowHeight > e.MarginBounds.Bottom - 30) // Reserve space for footer
+                var row = _data.Rows[_currentRow];
+                xPosition = leftMargin;
+
+                foreach (var columnName in _visibleColumns)
                 {
-                    e.HasMorePages = true;
-                    _pageNumber++;
-                    LoggingUtility.Log($"[TablePrinter] Page {_pageNumber - 1} complete, row {_currentRow}/{_data.Rows.Count}");
-                    return;
+                    var cellValue = row[columnName]?.ToString() ?? string.Empty;
+                    e.Graphics.DrawRectangle(_gridPen, xPosition, yPosition, columnWidth, rowHeight);
+                    e.Graphics.DrawString(cellValue, _cellFont, _cellBrush,
+                        new RectangleF(xPosition + 5, yPosition + 5, columnWidth - 10, rowHeight - 10));
+                    xPosition += columnWidth;
                 }
-                
-                var dataRow = _data.Rows[_currentRow];
-                
-                for (int i = 0; i < visibleCols.Count; i++)
-                {
-                    string columnName = visibleCols[i];
-                    string value = string.Empty;
-                    
-                    if (_data.Columns.Contains(columnName))
-                    {
-                        value = dataRow[columnName]?.ToString() ?? string.Empty;
-                    }
-                    
-                    var rect = new RectangleF(x + (i * columnWidth), y, columnWidth, rowHeight);
-                    e.Graphics.DrawRectangle(_gridPen, rect.X, rect.Y, rect.Width, rect.Height);
-                    e.Graphics.DrawString(value, _cellFont, _cellBrush, rect, new StringFormat
-                    {
-                        LineAlignment = StringAlignment.Center,
-                        Trimming = StringTrimming.EllipsisCharacter
-                    });
-                }
-                
-                y += rowHeight;
+
+                yPosition += rowHeight;
                 _currentRow++;
             }
+
+            // Draw page number
+            string pageText = $"Page {_pageNumber}";
+            var pageSize = e.Graphics.MeasureString(pageText, _pageFont);
+            e.Graphics.DrawString(pageText, _pageFont, _cellBrush,
+                rightMargin - pageSize.Width, bottomMargin + 10);
+
+            int pageEndRow = _currentRow;
+            _pageBoundaries.Add(new Model_Print_PageBoundary
+            {
+                PageNumber = _pageNumber,
+                StartRow = pageStartRow,
+                EndRow = pageEndRow
+            });
+
+            if (_pageNumber == _firstPageNumber)
+            {
+                LoggingUtility.Log(string.Format(
+                    "[Core_TablePrinter] PrintPage first page rendered: Page={0}, StartRow={1}, EndRow={2}, HasMore={3}",
+                    _pageNumber,
+                    pageStartRow,
+                    pageEndRow,
+                    _currentRow < _endRowIndexExclusive));
+            }
+
+            // Check if more pages needed
+            e.HasMorePages = _currentRow < _endRowIndexExclusive;
             
-            // Draw footer
-            DrawFooter(e.Graphics, e.MarginBounds, _pageNumber);
-            
-            e.HasMorePages = false;
-            LoggingUtility.Log($"[TablePrinter] Final page {_pageNumber} complete, total rows: {_currentRow}");
-            
-            _currentRow = 0;
-            _pageNumber = 1;
+            if (!e.HasMorePages && !_completionLogged)
+            {
+                LoggingUtility.Log($"[Core_TablePrinter] Printing complete: {_pageNumber} page(s), {_currentRow} rows printed");
+                _printJob?.SetPageBoundaries(_pageBoundaries);
+                _completionLogged = true;
+            }
         }
         catch (Exception ex)
         {
@@ -174,57 +385,105 @@ public class Core_TablePrinter
             e.HasMorePages = false;
         }
     }
-    
-    private void DrawWatermark(Graphics g, Rectangle pageBounds)
+
+    #endregion
+
+    #region Watermark
+
+    /// <summary>
+    /// Draws diagonal watermark on page
+    /// </summary>
+    private void DrawWatermark(Graphics graphics, Rectangle bounds)
     {
-        // Draw faint "MTM" watermark in center of page
-        string watermarkText = "MTM";
-        SizeF textSize = g.MeasureString(watermarkText, _watermarkFont);
-        
-        float x = (pageBounds.Width - textSize.Width) / 2;
-        float y = (pageBounds.Height - textSize.Height) / 2;
-        
-        g.DrawString(watermarkText, _watermarkFont, _watermarkBrush, x, y);
+        // Load MTM logo watermark
+        Bitmap? watermarkImage = Properties.Resources.MTM;
+        if (watermarkImage is null)
+        {
+            return;
+        }
+
+        // Save graphics state
+        var state = graphics.Save();
+
+        // Move to center and rotate -45 degrees (same angle as text was)
+        graphics.TranslateTransform(
+            bounds.Left + bounds.Width / 2,
+            bounds.Top + bounds.Height / 2);
+        graphics.RotateTransform(-45);
+
+        // Scale image to reasonable size (30% of page width)
+        float targetWidth = bounds.Width * 0.3f;
+        float scale = targetWidth / watermarkImage.Width;
+        int scaledWidth = (int)(watermarkImage.Width * scale);
+        int scaledHeight = (int)(watermarkImage.Height * scale);
+
+        // Draw watermark image centered and semi-transparent
+        using var imageAttr = new System.Drawing.Imaging.ImageAttributes();
+        var colorMatrix = new System.Drawing.Imaging.ColorMatrix
+        {
+            Matrix33 = 0.15f // 15% opacity for subtle watermark
+        };
+        imageAttr.SetColorMatrix(colorMatrix);
+
+        graphics.DrawImage(watermarkImage,
+            new Rectangle(-scaledWidth / 2, -scaledHeight / 2, scaledWidth, scaledHeight),
+            0, 0, watermarkImage.Width, watermarkImage.Height,
+            GraphicsUnit.Pixel, imageAttr);
+
+        // Restore graphics state
+        graphics.Restore(state);
     }
-    
-    private float DrawHeader(Graphics g, Rectangle marginBounds, ref int pageNumber)
+
+    #endregion
+
+    #region Helpers
+
+    private static Color EnsurePrintableColor(Color color)
     {
-        float y = marginBounds.Top;
-        
-        // Draw title
-        g.DrawString(_title, _titleFont, _titleBrush, marginBounds.Left, y);
-        y += _titleFont.Height + 5;
-        
-        // Draw date and page number
-        string dateStr = $"Printed: {DateTime.Now:yyyy-MM-dd HH:mm:ss}";
-        string pageStr = $"Page {pageNumber}";
-        string userName = Model_AppVariables.User ?? Environment.UserName;
-        string userStr = $"User: {userName}";
-        
-        g.DrawString(dateStr, _pageFont, _cellBrush, marginBounds.Left, y);
-        
-        SizeF userSize = g.MeasureString(userStr, _pageFont);
-        g.DrawString(userStr, _pageFont, _cellBrush, marginBounds.Right - userSize.Width, y);
-        y += _pageFont.Height + 5;
-        
-        // Draw separator line
-        g.DrawLine(_gridPen, marginBounds.Left, y, marginBounds.Right, y);
-        
-        return y + 5;
+        // Force fully opaque color so printers render consistently.
+        Color opaqueColor = Color.FromArgb(255, color);
+
+        // If the color is very light (high brightness), switch to black for contrast on white paper.
+        if (opaqueColor.GetBrightness() >= 0.8f)
+        {
+            return Color.Black;
+        }
+
+        return opaqueColor;
     }
-    
-    private void DrawFooter(Graphics g, Rectangle marginBounds, int pageNumber)
+
+    #endregion
+
+    #region Cleanup
+
+    /// <summary>
+    /// Disposes resources
+    /// </summary>
+    public void Dispose()
     {
-        float y = marginBounds.Bottom + 5;
-        
-        // Draw separator line
-        g.DrawLine(_gridPen, marginBounds.Left, y, marginBounds.Right, y);
-        y += 5;
-        
-        // Draw page number centered
-        string pageStr = $"Page {pageNumber}";
-        SizeF pageSize = g.MeasureString(pageStr, _pageFont);
-        float x = marginBounds.Left + (marginBounds.Width - pageSize.Width) / 2;
-        g.DrawString(pageStr, _pageFont, _cellBrush, x, y);
+        _printDocument?.Dispose();
+        _titleFont?.Dispose();
+        _headerFont?.Dispose();
+        _cellFont?.Dispose();
+        _watermarkFont?.Dispose();
+        _pageFont?.Dispose();
+        _titleBrush?.Dispose();
+        _headerBrush?.Dispose();
+        _cellBrush?.Dispose();
+        _watermarkBrush?.Dispose();
+        _gridPen?.Dispose();
+        _pageBoundaries.Clear();
     }
+
+    /// <summary>
+    /// Returns a snapshot of the page boundary data captured during the last render.
+    /// </summary>
+    public IReadOnlyList<Model_Print_PageBoundary> GetPageBoundariesSnapshot()
+    {
+        return _pageBoundaries
+            .Select(boundary => boundary.Clone())
+            .ToList();
+    }
+
+    #endregion
 }

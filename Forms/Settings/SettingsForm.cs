@@ -36,7 +36,7 @@ namespace MTM_WIP_Application_Winforms.Forms.Settings
                 });
 
             InitializeComponent();
-
+            SetStyle(ControlStyles.OptimizedDoubleBuffer, true);
             AutoScaleMode = AutoScaleMode.Dpi;
             Service_DebugTracer.TraceUIAction("THEME_APPLICATION", nameof(SettingsForm),
                 new Dictionary<string, object>
@@ -330,10 +330,10 @@ namespace MTM_WIP_Application_Winforms.Forms.Settings
 
         private void ApplyPrivileges()
         {
-            bool isDeveloper = Model_AppVariables.UserTypeDeveloper;
-            bool isAdmin = Model_AppVariables.UserTypeAdmin;
-            bool isNormal = Model_AppVariables.UserTypeNormal;
-            bool isReadOnly = Model_AppVariables.UserTypeReadOnly;
+            bool isDeveloper = Model_Application_Variables.UserTypeDeveloper;
+            bool isAdmin = Model_Application_Variables.UserTypeAdmin;
+            bool isNormal = Model_Application_Variables.UserTypeNormal;
+            bool isReadOnly = Model_Application_Variables.UserTypeReadOnly;
 
             // Developers have all Admin privileges plus developer tools
             bool hasAdminAccess = isDeveloper || isAdmin;

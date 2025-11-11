@@ -22,7 +22,7 @@ public partial class Dialog_AddParameterOverride : Form
 
     private List<string> _procedureNames = new();
     private List<string> _parameterNames = new();
-    private Model_ParameterPrefixOverride? _result;
+    private Model_ParameterPrefix_Override? _result;
 
     #endregion
 
@@ -31,7 +31,7 @@ public partial class Dialog_AddParameterOverride : Form
     /// <summary>
     /// Gets the created override if dialog was confirmed.
     /// </summary>
-    public Model_ParameterPrefixOverride? Result => _result;
+    public Model_ParameterPrefix_Override? Result => _result;
 
     #endregion
 
@@ -40,6 +40,7 @@ public partial class Dialog_AddParameterOverride : Form
     public Dialog_AddParameterOverride()
     {
         InitializeComponent();
+        SetStyle(ControlStyles.OptimizedDoubleBuffer, true);
         Core_Themes.ApplyDpiScaling(this);
         Core_Themes.ApplyRuntimeLayoutAdjustments(this);
         
@@ -291,7 +292,7 @@ public partial class Dialog_AddParameterOverride : Form
             }
 
             // Create override model
-            _result = new Model_ParameterPrefixOverride
+            _result = new Model_ParameterPrefix_Override
             {
                 ProcedureName = txtProcedureName.Text.Trim(),
                 ParameterName = txtParameterName.Text.Trim(),
@@ -299,7 +300,7 @@ public partial class Dialog_AddParameterOverride : Form
                     ? string.Empty 
                     : txtOverridePrefix.Text.Trim(),
                 Reason = txtReason.Text.Trim(),
-                CreatedBy = Model_AppVariables.User,
+                CreatedBy = Model_Application_Variables.User,
                 CreatedDate = DateTime.Now,
                 IsActive = true
             };

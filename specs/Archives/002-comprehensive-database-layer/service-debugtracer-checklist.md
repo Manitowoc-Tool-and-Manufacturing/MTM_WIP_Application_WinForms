@@ -23,7 +23,7 @@
 /// <summary>
 /// [Operation description]
 /// </summary>
-public static async Task<DaoResult<DataTable>> OperationNameAsync(
+public static async Task<Model_Dao_Result<DataTable>> OperationNameAsync(
     string param1,
     int param2)
 {
@@ -38,11 +38,11 @@ public static async Task<DaoResult<DataTable>> OperationNameAsync(
         {
             ["Param1"] = param1,
             ["Param2"] = param2,
-            ["User"] = Model_AppVariables.User
+            ["User"] = Model_Application_Variables.User
         };
 
         var result = await Helper_Database_StoredProcedure.ExecuteDataTableWithStatus(
-            Model_AppVariables.ConnectionString,
+            Model_Application_Variables.ConnectionString,
             "stored_procedure_name",
             parameters,
             progressHelper: null,
@@ -55,11 +55,11 @@ public static async Task<DaoResult<DataTable>> OperationNameAsync(
 
         if (result.IsSuccess)
         {
-            return DaoResult<DataTable>.Success(result.Data, "Success message");
+            return Model_Dao_Result<DataTable>.Success(result.Data, "Success message");
         }
         else
         {
-            return DaoResult<DataTable>.Failure(result.Message);
+            return Model_Dao_Result<DataTable>.Failure(result.Message);
         }
     }
     catch (Exception ex)
@@ -70,7 +70,7 @@ public static async Task<DaoResult<DataTable>> OperationNameAsync(
             new { Exception = ex.Message });
         
         LoggingUtility.LogDatabaseError(ex);
-        return DaoResult<DataTable>.Failure($"Operation failed: {ex.Message}", ex);
+        return Model_Dao_Result<DataTable>.Failure($"Operation failed: {ex.Message}", ex);
     }
 }
 ```

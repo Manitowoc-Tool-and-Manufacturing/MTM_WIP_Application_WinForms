@@ -4,7 +4,108 @@
 
 ---
 
-## Latest Update - November 8, 2025 (Version 6.0.0)
+## Latest Update - November 8, 2025 (Version 6.0.2)
+
+**What Changed**: Theme selection now saves correctly + QuickButtons improvements  
+**Do I Need To Do Anything?**: No - but you can now change your theme and it will stick!
+
+---
+
+### 🎯 What This Means For You
+
+#### Theme Selection Now Saves Properly
+
+**What's fixed**:
+- **Your theme choice is remembered**: When you change your theme in Settings, it now saves correctly and persists across application restarts
+- **No more reverting to default**: Fixed issue where theme selection would reset to "Lavender" on next login even after saving a different theme
+- **Proper JSON storage**: Theme preferences are now correctly stored in the database settings
+
+**Why this was broken**:
+1. **Wrong database procedure**: Code was trying to update a non-existent table column instead of updating the JSON settings
+2. **Missing stored procedure**: The correct procedure for merging theme JSON wasn't being used
+3. **Data corruption prevention**: Fixed ComboBox data extraction that could corrupt user settings
+
+**What's better now**:
+- **Pick your theme and keep it**: Choose any of the 9 available themes (Arctic, Default, Fire Storm, Glacier, Ice, Lavender, Midnight, Neon, Sunset, Wood) and your choice is saved
+- **Instant application**: Theme applies immediately when you click Save
+- **Works after restart**: Your selected theme loads automatically when you open the app
+- **Error recovery**: If theme settings can't be loaded, the app uses a safe default instead of crashing
+
+**How to change your theme**:
+1. Click **Settings** (gear icon in top menu)
+2. Select **Theme** tab
+3. Pick a theme from the dropdown
+4. Click **Save**
+5. Your theme applies immediately and is remembered next time you log in
+
+**Available themes**:
+- **Arctic** - Cool blue tones
+- **Default** - Standard gray/blue professional look
+- **Fire Storm** - Warm orange/red tones
+- **Glacier** - Light blue/white clean look
+- **Ice** - Cool white/light blue
+- **Lavender** - Purple/lavender accent colors
+- **Midnight** - Dark blue professional theme
+- **Neon** - Bright accent colors
+- **Sunset** - Warm orange/pink tones
+- **Wood** - Warm brown/tan earth tones
+
+**Why this helps**: Personalize your workspace with colors that are easier on your eyes during long shifts. Some users prefer high-contrast themes for better visibility, others prefer softer tones to reduce eye strain.
+
+---
+
+## Previous Update - November 8, 2025 (Version 6.0.1)
+
+**What Changed**: QuickButtons now work perfectly - fixes for duplicates, display issues, and save order  
+**Do I Need To Do Anything?**: No - QuickButtons just work better now!
+
+---
+
+### 🎯 What This Means For You
+
+#### QuickButtons Are Now 100% Reliable
+
+**What's fixed**:
+- **No more duplicate buttons**: Fixed issue where the same part/operation would appear multiple times in your QuickButtons list
+- **Proper display when clicking buttons**: QuickButtons now fill in Part Number and Operation fields correctly with full descriptions (was showing raw codes like "21-28841-006" instead of formatted "21-28841-006 | Customer Name | Description")
+- **Edit dialog with smart dropdowns**: Right-click Edit now shows ComboBoxes with autocomplete for Part ID and Operation - same experience as the main Inventory tab
+- **New buttons appear at top**: When you save a transaction as a QuickButton, it now appears at the top of your list immediately (was going to the bottom)
+- **Simplified reorder dialog**: Removed confusing Edit button from the "Change Order" dialog - use right-click Edit instead
+- **Better validation**: Edit dialog only accepts valid Part IDs and Operations from your database - prevents typos and invalid data
+
+**Why these were broken**:
+1. **Duplicates**: Database cleanup was deleting buttons one-by-one, causing position shifts that let some duplicates survive
+2. **Display issues**: QuickButtons were using old search-by-text method instead of proper value selection for multi-column dropdowns
+3. **Edit not working**: The Edit menu item wasn't connected to its click handler
+4. **Wrong save order**: Cleanup was reorganizing buttons after save, moving new ones to bottom instead of keeping them at top
+5. **No validation**: Old edit dialog used free-text fields allowing invalid Part IDs and Operations
+
+**What's better now**:
+- **Clean list**: All duplicates removed automatically on next app restart
+- **Correct data entry**: Clicking a QuickButton fills all fields properly formatted
+- **Professional edit dialog**: ComboBoxes with autocomplete, data validation, and loading status feedback
+- **Smart ordering**: Newest QuickButtons appear first (at top), older ones shift down
+- **Cleaner interface**: Reorder dialog is simpler without redundant Edit button
+- **Error prevention**: Can't enter invalid Part IDs or Operations - system validates your choices
+
+**How to edit QuickButtons**:
+1. Right-click any QuickButton
+2. Select "Edit" from menu
+3. **Part ID**: Type to search or select from dropdown (autocomplete enabled)
+4. **Operation**: Select from dropdown (only valid operations shown)
+5. **Quantity**: Adjust using up/down arrows or type directly
+6. Click OK to save (Cancel to discard changes)
+
+**How this helps**: 
+- **No more confusion**: Your QuickButtons list shows unique buttons only, no duplicates
+- **Faster data entry**: Fields populate correctly on first click, no manual fixing needed
+- **Easy maintenance**: Edit buttons with same controls as main Inventory tab
+- **Better organization**: Most recent transactions automatically appear at top where you need them
+- **Data accuracy**: Validation prevents invalid Part IDs and Operations from being saved
+
+---
+
+## Previous Update - November 8, 2025 (Version 6.0.0)
 
 **What Changed**: Complete redesign of Transaction History Viewer with major performance and usability improvements  
 **Do I Need To Do Anything?**: Yes - check out the new features! Your old transaction history is still there, just easier to find now.
@@ -311,6 +412,19 @@
 
 ### ✅ Do I Need To Update?
 
+**Version 6.0.2 (Theme Selection Fix - RELEASED)**:
+- **All users**: Update when convenient - if you want to change your theme and have it stick, you need this update
+- **If your theme keeps resetting**: YES - this fixes that issue
+- **If you're happy with Lavender theme**: No urgent need - update at your convenience
+- **First-time users**: Recommended - ensures theme selection works from day one
+
+**Version 6.0.1 (QuickButtons Fixes - RELEASED)**:
+- **All users who use QuickButtons**: YES - this fixes several annoying bugs that affect daily use
+- **Shop Floor Users**: Strongly recommended - QuickButtons are more reliable and easier to use
+- **If you see duplicate QuickButtons**: YES - this update cleans them up automatically
+- **If QuickButtons aren't filling fields correctly**: YES - this fixes the display issue
+- **Office Staff**: Update when convenient - QuickButtons improvements make data entry faster
+
 **Version 6.0.0 (Transaction Viewer Redesign - RELEASED)**:
 - **All users**: YES - this is a major improvement to one of the most-used features
 - **Shop Floor Users**: Strongly recommended - much faster transaction searches, easier to find what you need
@@ -346,6 +460,42 @@
 ---
 
 ### 📱 Common Questions
+
+**Q: Why wasn't my theme saving before?**  
+A: The code was calling a stored procedure that doesn't exist (`usr_ui_settings_Upsert`). Now it uses the correct procedure (`usr_ui_settings_SetThemeJson`) that properly merges your theme choice into your settings.
+
+**Q: Will changing my theme affect other users?**  
+A: No - themes are per-user. Your theme choice only affects your login, not anyone else's.
+
+**Q: What happens to my other settings when I change themes?**  
+A: Nothing - theme changes only update your `Theme_Name` setting. All your other preferences (grid column settings, shortcuts, etc.) remain unchanged.
+
+**Q: Can I go back to the default theme?**  
+A: Yes - just select "Default" from the theme dropdown and click Save.
+
+**Q: Why does the app still show Lavender after I picked a different theme?**  
+A: If you're on version 6.0.1 or earlier, the save function is broken. Update to 6.0.2 and your theme selection will save correctly.
+
+**Q: Do themes change the layout or just the colors?**  
+A: Themes only change colors and visual styling. The layout, buttons, and functionality remain exactly the same regardless of theme choice.
+
+**Q: How do I know if I have duplicate QuickButtons?**  
+A: If you see the same Part Number + Operation combination appearing more than once in your QuickButtons panel, you have duplicates. Update to version 6.0.1 and they'll be cleaned up automatically on next restart.
+
+**Q: Why were my QuickButtons showing raw codes instead of descriptions?**  
+A: This was a bug in how the buttons filled the dropdown fields. Version 6.0.1 fixes this - now they use proper value selection instead of text search.
+
+**Q: How do I edit a QuickButton?**  
+A: Right-click any QuickButton and select "Edit" from the menu. You can change the Part ID, Operation, or Quantity. Click OK to save changes.
+
+**Q: Can I reorder my QuickButtons?**  
+A: Yes! Right-click any QuickButton and select "Change Order". Drag and drop rows to rearrange them, or use Shift+Up/Down arrow keys to move selected rows. Click OK to save the new order.
+
+**Q: Why do my newest QuickButtons appear at the top now?**  
+A: This is the new intended behavior - most users want their most recent transactions at the top for quick access. Older transactions shift down automatically.
+
+**Q: What happens to my existing QuickButtons after this update?**  
+A: All your existing buttons remain unchanged. Duplicates are removed automatically on first load after update. Order stays the same unless you manually reorder them.
 
 **Q: Will the Transaction Viewer look completely different?**  
 A: Yes - the layout is much cleaner and more modern. Search filters at top, results on left, details on right. But all the same information is there, just better organized and faster to access.

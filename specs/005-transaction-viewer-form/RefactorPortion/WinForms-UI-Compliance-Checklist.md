@@ -72,7 +72,7 @@ Based on `UI-Architecture-Analysis.md`, designer files MUST follow these standar
 - [ ] **Constructor Pattern**: Constructor includes BOTH `Core_Themes.ApplyDpiScaling(this)` AND `Core_Themes.ApplyRuntimeLayoutAdjustments(this)`
 - [ ] **Call Order**: Theme methods called immediately after `InitializeComponent()`
 - [ ] **AutoScaleMode**: Form/UserControl has `AutoScaleMode = AutoScaleMode.Dpi` set in Designer.cs
-- [ ] **Color Tokens**: Custom colors use `Model_UserUiColors` theme tokens with `SystemColors` fallbacks
+- [ ] **Color Tokens**: Custom colors use `Model_Shared_UserUiColors` theme tokens with `SystemColors` fallbacks
 - [ ] **Hardcoded Colors**: ANY hardcoded `Color.FromArgb()` or `Color.Blue` includes `// ACCEPTABLE: [reason]` justification comment
 
 **Validation**:

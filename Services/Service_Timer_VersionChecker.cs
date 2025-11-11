@@ -87,7 +87,7 @@ namespace MTM_WIP_Application_Winforms.Services
                     LoggingUtility.Log($"Version check successful - Database version: {LastCheckedDatabaseVersion}");
 
                     // Update UI with version information (thread-safe)
-                    UpdateVersionLabel(Model_AppVariables.UserVersion, LastCheckedDatabaseVersion);
+                    UpdateVersionLabel(Model_Application_Variables.UserVersion, LastCheckedDatabaseVersion);
                     return;
                 }
 
@@ -96,7 +96,7 @@ namespace MTM_WIP_Application_Winforms.Services
                 {
                     LoggingUtility.Log("VersionChecker: log_changelog_Get_Current returned no data - no changelog entries exist yet.");
                     LastCheckedDatabaseVersion = "No Version Data";
-                    UpdateVersionLabel(Model_AppVariables.UserVersion, "No Version Data");
+                    UpdateVersionLabel(Model_Application_Variables.UserVersion, "No Version Data");
                     return;
                 }
 
@@ -105,41 +105,41 @@ namespace MTM_WIP_Application_Winforms.Services
                 {
                     LoggingUtility.Log($"VersionChecker: Warning from stored procedure - {dataResult.ErrorMessage}");
                     LastCheckedDatabaseVersion = "Database Version Warning";
-                    UpdateVersionLabel(Model_AppVariables.UserVersion, "Database Version Warning");
+                    UpdateVersionLabel(Model_Application_Variables.UserVersion, "Database Version Warning");
                     return;
                 }
 
                 // Handle error status (Status = -1)
                 LoggingUtility.Log($"VersionChecker: Stored procedure returned error - {dataResult.ErrorMessage}");
                 LastCheckedDatabaseVersion = "Database Version Error";
-                UpdateVersionLabel(Model_AppVariables.UserVersion, "Database Version Error");
+                UpdateVersionLabel(Model_Application_Variables.UserVersion, "Database Version Error");
             }
             catch (MySql.Data.MySqlClient.MySqlException ex) when (ex.Number == 1305) // Procedure doesn't exist
             {
                 LoggingUtility.Log("VersionChecker: log_changelog_Get_Current stored procedure not found. This is normal during development - procedure may not be deployed yet.");
                 // TEMPORARY: More descriptive message to help with debugging
                 LastCheckedDatabaseVersion = "Deploy Procedures Required";
-                UpdateVersionLabel(Model_AppVariables.UserVersion, "Deploy Procedures Required");
+                UpdateVersionLabel(Model_Application_Variables.UserVersion, "Deploy Procedures Required");
             }
             catch (MySql.Data.MySqlClient.MySqlException ex) when (ex.Number == 1054) // Column doesn't exist
             {
                 LoggingUtility.Log($"VersionChecker: Column not found in log_changelog table - {ex.Message}. This may indicate the table structure needs updating.");
                 LastCheckedDatabaseVersion = "Database Schema Issue";
-                UpdateVersionLabel(Model_AppVariables.UserVersion, "Database Schema Issue");
+                UpdateVersionLabel(Model_Application_Variables.UserVersion, "Database Schema Issue");
             }
             catch (MySql.Data.MySqlClient.MySqlException ex)
             {
                 LoggingUtility.LogDatabaseError(ex);
                 LoggingUtility.Log($"VersionChecker: Database error occurred - {ex.Message}");
                 LastCheckedDatabaseVersion = "Database Connection Error";
-                UpdateVersionLabel(Model_AppVariables.UserVersion, "Database Connection Error");
+                UpdateVersionLabel(Model_Application_Variables.UserVersion, "Database Connection Error");
             }
             catch (Exception ex)
             {
                 LoggingUtility.LogApplicationError(ex);
                 LoggingUtility.Log($"VersionChecker: General error occurred - {ex.Message}");
                 LastCheckedDatabaseVersion = "Version Check Error";
-                UpdateVersionLabel(Model_AppVariables.UserVersion, "Version Check Error");
+                UpdateVersionLabel(Model_Application_Variables.UserVersion, "Version Check Error");
             }
         }
 

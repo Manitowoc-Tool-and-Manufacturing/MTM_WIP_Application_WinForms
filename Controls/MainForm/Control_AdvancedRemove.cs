@@ -16,7 +16,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
     {
         #region Fields
 
-        private readonly List<Model_HistoryRemove> _lastRemovedItems = [];
+        private readonly List<Model_History_Remove> _lastRemovedItems = [];
         public static Forms.MainForm.MainForm? MainFormInstance { get; set; }
         private Helper_StoredProcedureProgress? _progressHelper;
 
@@ -56,7 +56,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                 });
 
             InitializeComponent();
-
+            SetStyle(ControlStyles.OptimizedDoubleBuffer, true);
             Service_DebugTracer.TraceUIAction("THEME_APPLICATION", nameof(Control_AdvancedRemove),
                 new Dictionary<string, object>
                 {
@@ -189,7 +189,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                         part)
                     {
                         part.SelectedIndex = 0;
-                        part.ForeColor = Model_AppVariables.UserUiColors.ComboBoxErrorForeColor ?? Color.Red;
+                        part.ForeColor = Model_Application_Variables.UserUiColors.ComboBoxErrorForeColor ?? Color.Red;
                         part.Focus();
                     }
 
@@ -198,7 +198,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                         op)
                     {
                         op.SelectedIndex = 0;
-                        op.ForeColor = Model_AppVariables.UserUiColors.ComboBoxErrorForeColor ?? Color.Red;
+                        op.ForeColor = Model_Application_Variables.UserUiColors.ComboBoxErrorForeColor ?? Color.Red;
                     }
                 }
             }
@@ -240,12 +240,12 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                 if (Control_AdvancedRemove_ComboBox_User.SelectedIndex > 0)
                 {
                     Control_AdvancedRemove_ComboBox_User.ForeColor =
-                        Model_AppVariables.UserUiColors.ComboBoxForeColor ?? Color.Black;
+                        Model_Application_Variables.UserUiColors.ComboBoxForeColor ?? Color.Black;
                 }
                 else
                 {
                     Control_AdvancedRemove_ComboBox_User.ForeColor =
-                        Model_AppVariables.UserUiColors.ComboBoxErrorForeColor ?? Color.Red;
+                        Model_Application_Variables.UserUiColors.ComboBoxErrorForeColor ?? Color.Red;
                 }
             };
             Control_AdvancedRemove_ComboBox_User.Leave += (s, e) =>
@@ -255,10 +255,10 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
 
             Control_AdvancedRemove_ComboBox_User.Enter +=
                 (s, e) => Control_AdvancedRemove_ComboBox_User.BackColor =
-                    Model_AppVariables.UserUiColors.ControlFocusedBackColor ?? Color.LightBlue;
+                    Model_Application_Variables.UserUiColors.ControlFocusedBackColor ?? Color.LightBlue;
             Control_AdvancedRemove_ComboBox_User.Leave +=
                 (s, e) => Control_AdvancedRemove_ComboBox_User.BackColor =
-                    Model_AppVariables.UserUiColors.ControlBackColor ?? SystemColors.Window;
+                    Model_Application_Variables.UserUiColors.ControlBackColor ?? SystemColors.Window;
 
             Control_AdvancedRemove_DataGridView_Results.SelectionChanged +=
                 (s, e) => Control_AdvancedRemove_Update_ButtonStates();
@@ -337,7 +337,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                     $"DateFrom={dateFrom}, DateTo={dateTo}");
 
                 var searchResult = await Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync(
-                    Model_AppVariables.ConnectionString,
+                    Model_Application_Variables.ConnectionString,
                     "inv_inventory_Search_Advanced",
                     searchParameters,
                     _progressHelper);
@@ -411,7 +411,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                     string user = row.Cells["User"]?.Value?.ToString() ?? "";
                     string batchNumber = row.Cells["BatchNumber"]?.Value?.ToString() ?? "";
 
-                    _lastRemovedItems.Add(new Model_HistoryRemove
+                    _lastRemovedItems.Add(new Model_History_Remove
                     {
                         PartId = partId,
                         Location = location,
@@ -424,7 +424,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                 }
 
                 StringBuilder sb = new();
-                foreach (Model_HistoryRemove item in _lastRemovedItems)
+                foreach (Model_History_Remove item in _lastRemovedItems)
                 {
                     sb.AppendLine(
                         $"PartID: {item.PartId}, Location: {item.Location}, Operation: {item.Operation}, Quantity: {item.Quantity}");
@@ -527,7 +527,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                 await Helper_UI_ComboBoxes.FillUserComboBoxesAsync(Control_AdvancedRemove_ComboBox_User);
 
                 MainFormControlHelper.ResetComboBox(Control_AdvancedRemove_ComboBox_User,
-                    Model_AppVariables.UserUiColors.ComboBoxErrorForeColor ?? Color.Red, 0);
+                    Model_Application_Variables.UserUiColors.ComboBoxErrorForeColor ?? Color.Red, 0);
 
                 Control_AdvancedRemove_TextBox_QtyMin.Text = string.Empty;
                 Control_AdvancedRemove_TextBox_QtyMax.Text = string.Empty;
@@ -598,24 +598,24 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                 }
 
                 MainFormControlHelper.ResetComboBox(Control_AdvancedRemove_ComboBox_User,
-                    Model_AppVariables.UserUiColors.ErrorColor ?? Color.Red, 0);
+                    Model_Application_Variables.UserUiColors.ErrorColor ?? Color.Red, 0);
                 Control_AdvancedRemove_TextBox_QtyMin.Text = string.Empty;
                 Control_AdvancedRemove_TextBox_QtyMin.ForeColor =
-                    Model_AppVariables.UserUiColors.ErrorColor ?? Color.Red;
+                    Model_Application_Variables.UserUiColors.ErrorColor ?? Color.Red;
                 Control_AdvancedRemove_TextBox_QtyMax.Text = string.Empty;
                 Control_AdvancedRemove_TextBox_QtyMax.ForeColor =
-                    Model_AppVariables.UserUiColors.ErrorColor ?? Color.Red;
+                    Model_Application_Variables.UserUiColors.ErrorColor ?? Color.Red;
                 Control_AdvancedRemove_TextBox_Notes.Text = string.Empty;
                 Control_AdvancedRemove_TextBox_Notes.ForeColor =
-                    Model_AppVariables.UserUiColors.ErrorColor ?? Color.Red;
+                    Model_Application_Variables.UserUiColors.ErrorColor ?? Color.Red;
                 Control_AdvancedRemove_TextBox_Part.Text = string.Empty;
-                Control_AdvancedRemove_TextBox_Part.ForeColor = Model_AppVariables.UserUiColors.ErrorColor ?? Color.Red;
+                Control_AdvancedRemove_TextBox_Part.ForeColor = Model_Application_Variables.UserUiColors.ErrorColor ?? Color.Red;
                 Control_AdvancedRemove_TextBox_Operation.Text = string.Empty;
                 Control_AdvancedRemove_TextBox_Operation.ForeColor =
-                    Model_AppVariables.UserUiColors.ErrorColor ?? Color.Red;
+                    Model_Application_Variables.UserUiColors.ErrorColor ?? Color.Red;
                 Control_AdvancedRemove_TextBox_Location.Text = string.Empty;
                 Control_AdvancedRemove_TextBox_Location.ForeColor =
-                    Model_AppVariables.UserUiColors.ErrorColor ?? Color.Red;
+                    Model_Application_Variables.UserUiColors.ErrorColor ?? Color.Red;
 
                 Control_AdvancedRemove_CheckBox_Date.Checked = false;
                 Control_AdvancedRemove_DateTimePicker_From.Value = DateTime.Today;
@@ -679,7 +679,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
 
             try
             {
-                foreach (Model_HistoryRemove item in _lastRemovedItems)
+                foreach (Model_History_Remove item in _lastRemovedItems)
                 {
                     await Dao_Inventory.AddInventoryItemAsync(
                         item.PartId,
@@ -717,6 +717,12 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
 
         private void Control_AdvancedRemove_Button_Print_Click(object? sender, EventArgs? e)
         {
+            // TEMPORARY: Print system being refactored (Phase 1 - Task T002)
+            Service_ErrorHandler.ShowInformation(
+                "Print functionality is being rebuilt. Coming soon!",
+                "Feature Temporarily Unavailable");
+            
+            /* OLD IMPLEMENTATION - Kept for reference, will be restored in Phase 7
             try
             {
                 MessageBox.Show(@"Not Implemented Yet");
@@ -727,6 +733,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                 MessageBox.Show($@"Print failed: {ex.Message}", @"Print Error", MessageBoxButtons.OK,
                     MessageBoxIcon.Error);
             }
+            */
         }
 
         private void Control_AdvancedRemove_Update_ButtonStates()

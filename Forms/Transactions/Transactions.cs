@@ -1,8 +1,11 @@
+using System.Text;
 using MTM_WIP_Application_Winforms.Controls.Transactions;
 using MTM_WIP_Application_Winforms.Core;
+using MTM_WIP_Application_Winforms.Data;
 using MTM_WIP_Application_Winforms.Logging;
 using MTM_WIP_Application_Winforms.Models;
 using MTM_WIP_Application_Winforms.Services;
+using MTM_WIP_Application_Winforms.Helpers;
 
 namespace MTM_WIP_Application_Winforms.Forms.Transactions;
 
@@ -14,10 +17,10 @@ internal partial class Transactions : Form
 {
     #region Fields
 
-    private readonly TransactionViewModel _viewModel;
+    private readonly Model_Transactions_ViewModel _viewModel;
     private readonly string _currentUser;
     private readonly bool _isAdmin;
-    private TransactionSearchResult? _currentSearchResults;
+    private Model_Transactions_SearchResult? _currentSearchResults;
 
     #endregion
 
@@ -28,18 +31,17 @@ internal partial class Transactions : Form
         InitializeComponent();
 
         LoggingUtility.Log("[Transactions] Form initializing...");
-
+        SetStyle(ControlStyles.OptimizedDoubleBuffer, true);
         Core_Themes.ApplyDpiScaling(this);
         Core_Themes.ApplyRuntimeLayoutAdjustments(this);
 
         _currentUser = currentUser ?? throw new ArgumentNullException(nameof(currentUser));
-        _isAdmin = Model_AppVariables.UserTypeDeveloper || Model_AppVariables.UserTypeAdmin;
-        _viewModel = new TransactionViewModel();
+        _isAdmin = Model_Application_Variables.UserTypeDeveloper || Model_Application_Variables.UserTypeAdmin;
+        _viewModel = new Model_Transactions_ViewModel();
 
         LoggingUtility.Log($"[Transactions] User: {_currentUser}, IsAdmin: {_isAdmin}");
 
         WireUpEvents();
-        ApplyThemeColors();
         
         LoggingUtility.Log("[Transactions] Starting async initialization...");
         _ = InitializeAsync();
@@ -61,6 +63,7 @@ internal partial class Transactions : Form
         Transactions_UserControl_Grid.ExportRequested += SearchControl_ExportRequested;
         Transactions_UserControl_Grid.PrintRequested += SearchControl_PrintRequested;
         Transactions_UserControl_Grid.AnalyticsRequested += GridControl_AnalyticsRequested;
+        Transactions_UserControl_Grid.DataGridView.KeyDown += DataGridView_KeyDown;
         this.Load += Transactions_Load;
     }
 
@@ -103,48 +106,8 @@ internal partial class Transactions : Form
         catch (Exception ex)
         {
             LoggingUtility.LogApplicationError(ex);
-            Service_ErrorHandler.HandleException(ex, ErrorSeverity.Medium, retryAction: null,
+            Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Medium, retryAction: null,
                 contextData: new Dictionary<string, object> { ["User"] = _currentUser },
-                controlName: nameof(Transactions));
-        }
-    }
-
-    #endregion
-
-    #region Theme Application
-
-    private void ApplyThemeColors()
-    {
-        try
-        {
-            LoggingUtility.Log("[Transactions] Applying theme colors...");
-            
-            var colors = Model_AppVariables.UserUiColors;
-            if (colors == null)
-            {
-                LoggingUtility.Log("[Transactions] WARNING: UserUiColors is null, using SystemColors fallback");
-                this.BackColor = SystemColors.Control;
-                this.ForeColor = SystemColors.ControlText;
-                return;
-            }
-
-            // Apply theme to form
-            this.BackColor = colors.FormBackColor ?? SystemColors.Control;
-            this.ForeColor = colors.FormForeColor ?? SystemColors.ControlText;
-
-            // Apply theme to panels
-            Transactions_Panel_Search.BackColor = colors.PanelBackColor ?? SystemColors.ControlLight;
-            Transactions_Panel_Search.ForeColor = colors.PanelForeColor ?? SystemColors.ControlText;
-
-            Transactions_Panel_Grid.BackColor = colors.PanelBackColor ?? SystemColors.ControlLight;
-            Transactions_Panel_Grid.ForeColor = colors.PanelForeColor ?? SystemColors.ControlText;
-
-            LoggingUtility.Log($"[Transactions] Theme applied: {Model_AppVariables.ThemeName}");
-        }
-        catch (Exception ex)
-        {
-            LoggingUtility.LogApplicationError(ex);
-            Service_ErrorHandler.HandleException(ex, ErrorSeverity.Low,
                 controlName: nameof(Transactions));
         }
     }
@@ -159,7 +122,7 @@ internal partial class Transactions : Form
         LoggingUtility.Log($"[Transactions] Form loaded. Title: {this.Text}");
     }
 
-    private async void SearchControl_SearchRequested(object? sender, TransactionSearchCriteria criteria)
+    private async void SearchControl_SearchRequested(object? sender, Model_Transactions_SearchCriteria criteria)
     {
         try
         {
@@ -191,7 +154,7 @@ internal partial class Transactions : Form
         catch (Exception ex)
         {
             LoggingUtility.LogApplicationError(ex);
-            Service_ErrorHandler.HandleException(ex, ErrorSeverity.Medium, retryAction: null,
+            Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Medium, retryAction: null,
                 contextData: new Dictionary<string, object> { ["Criteria"] = criteria.ToString() },
                 controlName: nameof(Transactions_UserControl_Search));
         }
@@ -279,7 +242,7 @@ internal partial class Transactions : Form
         catch (Exception ex)
         {
             LoggingUtility.LogApplicationError(ex);
-            Service_ErrorHandler.HandleException(ex, ErrorSeverity.Medium, retryAction: null,
+            Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Medium, retryAction: null,
                 contextData: new Dictionary<string, object> 
                 { 
                     ["User"] = _currentUser,
@@ -303,18 +266,24 @@ internal partial class Transactions : Form
                 return;
             }
 
-            LoggingUtility.Log($"[Transactions] Printing {_viewModel.CurrentResults.Transactions.Count} transactions.");
-
-            // Open print dialog with the grid's DataGridView
-            using var printForm = new Shared.PrintForm(Transactions_UserControl_Grid.DataGridView);
-            printForm.ShowDialog(this);
-
-            LoggingUtility.Log("[Transactions] Print dialog closed.");
+            // Show print dialog for the grid and await result
+            var dialogResultTask = Helper_PrintManager.ShowPrintDialogAsync(this, Transactions_UserControl_Grid.DataGridView, "Transactions");
+            dialogResultTask.ContinueWith(t =>
+            {
+                if (t.IsCompletedSuccessfully)
+                {
+                    LoggingUtility.Log($"[Transactions] Print dialog closed with result: {t.Result}");
+                }
+                else if (t.IsFaulted)
+                {
+                    LoggingUtility.LogApplicationError(t.Exception?.GetBaseException());
+                }
+            });
         }
         catch (Exception ex)
         {
             LoggingUtility.LogApplicationError(ex);
-            Service_ErrorHandler.HandleException(ex, ErrorSeverity.Low, retryAction: null,
+            Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Low, retryAction: null,
                 contextData: new Dictionary<string, object> 
                 { 
                     ["User"] = _currentUser,
@@ -357,13 +326,13 @@ internal partial class Transactions : Form
         catch (Exception ex)
         {
             LoggingUtility.LogApplicationError(ex);
-            Service_ErrorHandler.HandleException(ex, ErrorSeverity.Medium, retryAction: null,
+            Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Medium, retryAction: null,
                 contextData: new Dictionary<string, object> { ["Page"] = newPage },
                 controlName: nameof(Transactions_UserControl_Grid));
         }
     }
 
-    private void GridControl_RowSelected(object? sender, Model_Transactions transaction)
+    private void GridControl_RowSelected(object? sender, Model_Transactions_Core transaction)
     {
         if (transaction != null)
         {
@@ -425,8 +394,172 @@ internal partial class Transactions : Form
         catch (Exception ex)
         {
             LoggingUtility.LogApplicationError(ex);
-            Service_ErrorHandler.HandleException(ex, ErrorSeverity.Medium,
+            Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Medium,
                 contextData: new Dictionary<string, object> { ["User"] = _currentUser },
+                controlName: nameof(Transactions));
+        }
+    }
+
+    private async void DataGridView_KeyDown(object? sender, KeyEventArgs e)
+    {
+        // Only allow delete for Admin/Developer users
+        if (!_isAdmin)
+        {
+            return;
+        }
+
+        // Check if Delete key was pressed
+        if (e.KeyCode != Keys.Delete)
+        {
+            return;
+        }
+
+        try
+        {
+            var dgv = Transactions_UserControl_Grid.DataGridView;
+            
+            if (dgv.SelectedRows.Count == 0)
+            {
+                LoggingUtility.Log("[Transactions] Delete key pressed but no rows selected");
+                return;
+            }
+
+            // Get selected transaction(s)
+            List<(int ID, string Display)> selectedTransactions = new();
+            
+            foreach (DataGridViewRow row in dgv.SelectedRows)
+            {
+                if (row.DataBoundItem is Model_Transactions_Core transaction)
+                {
+                    string display = $"ID: {transaction.ID} - {transaction.TransactionType} - Part: {transaction.PartID} - Qty: {transaction.Quantity}";
+                    selectedTransactions.Add((transaction.ID, display));
+                }
+            }
+
+            if (selectedTransactions.Count == 0)
+            {
+                LoggingUtility.Log("[Transactions] No valid transactions selected for deletion");
+                return;
+            }
+
+            // Build confirmation message
+            StringBuilder confirmMessage = new();
+            confirmMessage.AppendLine("WARNING: You are about to permanently delete the following transaction(s):");
+            confirmMessage.AppendLine();
+            
+            foreach (var (ID, Display) in selectedTransactions)
+            {
+                confirmMessage.AppendLine($"  • {Display}");
+            }
+            
+            confirmMessage.AppendLine();
+            confirmMessage.AppendLine("This action CANNOT be undone!");
+            confirmMessage.AppendLine();
+            confirmMessage.AppendLine("Are you sure you want to delete these transaction record(s)?");
+
+            // Show confirmation dialog
+            var confirmResult = Service_ErrorHandler.ShowConfirmation(
+                confirmMessage.ToString(),
+                "Confirm Delete Transaction(s)",
+                MessageBoxButtons.YesNo,
+                MessageBoxIcon.Warning
+            );
+
+            if (confirmResult != DialogResult.Yes)
+            {
+                LoggingUtility.Log($"[Transactions] User cancelled deletion of {selectedTransactions.Count} transaction(s)");
+                return;
+            }
+
+            // Delete transactions
+            LoggingUtility.Log($"[Transactions] User confirmed deletion of {selectedTransactions.Count} transaction(s)");
+            
+            int successCount = 0;
+            int failureCount = 0;
+            List<string> errors = new();
+
+            var daoTransactions = new Dao_Transactions();
+
+            foreach (var (ID, Display) in selectedTransactions)
+            {
+                var deleteResult = await daoTransactions.DeleteTransactionByIdAsync(ID);
+                
+                if (deleteResult.IsSuccess)
+                {
+                    successCount++;
+                    LoggingUtility.Log($"[Transactions] Successfully deleted transaction ID {ID}");
+                }
+                else
+                {
+                    failureCount++;
+                    string errorMsg = $"ID {ID}: {deleteResult.ErrorMessage}";
+                    errors.Add(errorMsg);
+                    LoggingUtility.Log($"[Transactions] Failed to delete transaction ID {ID}: {deleteResult.ErrorMessage}");
+                }
+            }
+
+            // Build result message
+            StringBuilder resultMessage = new();
+            
+            if (successCount > 0)
+            {
+                resultMessage.AppendLine($"Successfully deleted {successCount} transaction(s).");
+            }
+            
+            if (failureCount > 0)
+            {
+                resultMessage.AppendLine();
+                resultMessage.AppendLine($"Failed to delete {failureCount} transaction(s):");
+                foreach (var error in errors)
+                {
+                    resultMessage.AppendLine($"  • {error}");
+                }
+            }
+
+            // Show result
+            if (failureCount > 0)
+            {
+                Service_ErrorHandler.ShowWarning(resultMessage.ToString(), "Delete Results");
+            }
+            else
+            {
+                Service_ErrorHandler.ShowInformation(resultMessage.ToString(), "Delete Successful");
+            }
+
+            // Refresh the grid if any deletions were successful
+            if (successCount > 0 && _viewModel.CurrentCriteria != null)
+            {
+                LoggingUtility.Log("[Transactions] Refreshing grid after deletion");
+                
+                var refreshResult = await _viewModel.SearchTransactionsAsync(
+                    _viewModel.CurrentCriteria,
+                    _currentUser,
+                    _isAdmin,
+                    _viewModel.CurrentResults?.CurrentPage ?? 1
+                ).ConfigureAwait(false);
+
+                this.Invoke(() =>
+                {
+                    if (refreshResult.IsSuccess && refreshResult.Data != null)
+                    {
+                        Transactions_UserControl_Grid.DisplayResults(refreshResult.Data);
+                    }
+                });
+            }
+
+            // Suppress the key press to prevent beep
+            e.Handled = true;
+            e.SuppressKeyPress = true;
+        }
+        catch (Exception ex)
+        {
+            LoggingUtility.LogApplicationError(ex);
+            Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Medium, retryAction: null,
+                contextData: new Dictionary<string, object>
+                {
+                    ["User"] = _currentUser,
+                    ["IsAdmin"] = _isAdmin
+                },
                 controlName: nameof(Transactions));
         }
     }

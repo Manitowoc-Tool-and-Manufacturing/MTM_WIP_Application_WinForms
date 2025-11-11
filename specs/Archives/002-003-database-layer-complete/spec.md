@@ -48,7 +48,7 @@ The effort creates a single source of truth for the combined scope under one spe
 ### In Scope
 
 - Standardization of all stored procedures, including status/error outputs and parameter prefixes.
-- Refactoring of all DAO classes to async-only DaoResult patterns.
+- Refactoring of all DAO classes to async-only Model_Dao_Result patterns.
 - Migration of all call sites (forms, controls, services) to async/await.
 - Comprehensive integration test suite covering every stored procedure.
 - Performance benchmarking, error logging enhancements, and retry policies.
@@ -67,8 +67,8 @@ The effort creates a single source of truth for the combined scope under one spe
 ### User Story 1 – Developer Adds New Database Operation (Priority P1)
 
 **Scenario**: Developer creates `Dao_Inventory.AddCycleCountAsync`, calls stored procedure `inv_inventory_AddCycleCount`, and relies on helper patterns.
-- Valid data returns `DaoResult.Success` with confirmation message.
-- Invalid parameters produce `DaoResult.Failure` with actionable message and log entry.
+- Valid data returns `Model_Dao_Result.Success` with confirmation message.
+- Invalid parameters produce `Model_Dao_Result.Failure` with actionable message and log entry.
 - Forced connection loss surfaces retry prompt without crashing and logs severity "Error".
 
 ### User Story 2 – Application Executes Reliable Database Operations (Priority P1)
@@ -104,7 +104,7 @@ The effort creates a single source of truth for the combined scope under one spe
 
 1. **FR-001** – Provide four standardized helper methods (non-query, DataTable, scalar, custom output) for executing stored procedures.
 2. **FR-002** – Cache stored procedure parameter metadata from INFORMATION_SCHEMA at startup and apply correct prefixes without requiring prefixes in C# dictionaries.
-3. **FR-003** – DAO methods must return `DaoResult`/`DaoResult<T>` envelopes with message, data (when applicable), and optional exception.
+3. **FR-003** – DAO methods must return `Model_Dao_Result`/`Model_Dao_Result<T>` envelopes with message, data (when applicable), and optional exception.
 4. **FR-004** – Every stored procedure must expose `OUT p_Status INT` and `OUT p_ErrorMsg VARCHAR(500)` with documented status semantics.
 5. **FR-005** – Log database errors with complete context (user, severity, type, message, stack, module, method, additional info, host, OS, app version, timestamp).
 6. **FR-006** – Handle logging failures by falling back to file logging without recursion.
@@ -155,7 +155,7 @@ The effort creates a single source of truth for the combined scope under one spe
 
 ## Key Entities
 
-- **DaoResult / DaoResult<T>** – Standard result envelopes capturing success flag, message, optional data, and exception.
+- **Model_Dao_Result / Model_Dao_Result<T>** – Standard result envelopes capturing success flag, message, optional data, and exception.
 - **Helper_Database_StoredProcedure** – Central execution utility providing standardized stored procedure interactions.
 - **ParameterPrefixCache** – Startup-loaded dictionary mapping stored procedure parameters to detected prefixes and modes.
 - **DAO Classes** – `Dao_Inventory`, `Dao_User`, `Dao_Transactions`, `Dao_Part`, `Dao_Location`, `Dao_Operation`, `Dao_ItemType`, `Dao_QuickButtons`, `Dao_History`, `Dao_ErrorLog`, `Dao_System`.

@@ -454,8 +454,8 @@ The Transaction Viewer represents a **more sophisticated iteration** of the patt
    - Ensures proper DPI scaling (100%-200%) and runtime layout corrections
    - See `.github/instructions/ui-compliance/theming-compliance.instructions.md`
 
-10. **Use Model_UserUiColors theme tokens for all custom colors**
-    - Access theme tokens via `Model_AppVariables.UserUiColors`
+10. **Use Model_Shared_UserUiColors theme tokens for all custom colors**
+    - Access theme tokens via `Model_Application_Variables.UserUiColors`
     - Always provide SystemColors fallback: `colors.ButtonBackColor ?? SystemColors.Control`
     - Database-backed themes: 9 themes, 203 color properties (`app_themes` table)
     - See `Documentation/Theme-System-Reference.md` Section 4 for token catalog
@@ -482,9 +482,9 @@ The Transaction Viewer represents a **more sophisticated iteration** of the patt
    - Write "ComboBox" not "cbo"
    - Clarity over brevity
 
-7. **Don't use hardcoded colors without checking Model_UserUiColors first**
+7. **Don't use hardcoded colors without checking Model_Shared_UserUiColors first**
    - FORBIDDEN: `button.BackColor = Color.Blue;` without justification
-   - Check theme tokens first: `var colors = Model_AppVariables.UserUiColors;`
+   - Check theme tokens first: `var colors = Model_Application_Variables.UserUiColors;`
    - If hardcoded color required (brand, logo), add comment: `// ACCEPTABLE: Company logo brand color (not user-themeable)`
    - Code review will reject hardcoded colors without `// ACCEPTABLE:` justification
 

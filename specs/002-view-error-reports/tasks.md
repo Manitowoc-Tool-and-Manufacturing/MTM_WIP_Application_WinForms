@@ -31,9 +31,9 @@
 
 **Completion Criteria**:
 - All 5 stored procedures created and tested in MySQL Workbench
-- Model_ErrorReportFilter class created
+- Model_ErrorReport_Core_Filter class created
 - Existing Dao_ErrorReports class extended with 5 new methods
-- All DAO methods return DaoResult<T> and use async patterns
+- All DAO methods return Model_Dao_Result<T> and use async patterns
 - Manual testing confirms stored procedures return expected data
 
 ---
@@ -84,8 +84,8 @@
 
 ### Model Layer Tasks
 
-- [x] **T006** [Story: Foundation] [P] - Create `Model_ErrorReportFilter` class  
-  **File**: `Models/Model_ErrorReportFilter.cs`  
+- [x] **T006** [Story: Foundation] [P] - Create `Model_ErrorReport_Core_Filter` class  
+  **File**: `Models/Model_ErrorReport_Core_Filter.cs`  
   **Description**: Implement filter criteria model with nullable DateTime DateFrom/DateTo, string UserName, MachineName, Status, and SearchText properties. Include validation logic for date range.  
   **Reference**: `.github/instructions/csharp-dotnet8.instructions.md` - Nullable reference types, property patterns  
   **Reference**: `specs/002-view-error-reports/data-model.md` - Entity definition section 3  
@@ -98,16 +98,16 @@
 
 - [x] **T007** [Story: Foundation] - Extend `Dao_ErrorReports` with `GetAllErrorReportsAsync` method  
   **File**: `Data/Dao_ErrorReports.cs`  
-  **Description**: Add method accepting Model_ErrorReportFilter, building parameters Dictionary with DBNull.Value for nulls, calling sp_error_reports_GetAll via Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync. Return DaoResult<DataTable>.  
+  **Description**: Add method accepting Model_ErrorReport_Core_Filter, building parameters Dictionary with DBNull.Value for nulls, calling sp_error_reports_GetAll via Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync. Return Model_Dao_Result<DataTable>.  
   **Reference**: `.github/instructions/mysql-database.instructions.md` - Helper_Database_StoredProcedure usage pattern  
   **Reference**: `.github/instructions/csharp-dotnet8.instructions.md` - Async/await patterns, region organization (add to #region Database Operations)  
   **Reference**: `specs/002-view-error-reports/contracts/sp_error_reports_GetAll.md` - C# usage example  
-  **Acceptance**: Method compiles, uses async, returns DaoResult<DataTable>, handles null filters correctly
+  **Acceptance**: Method compiles, uses async, returns Model_Dao_Result<DataTable>, handles null filters correctly
   **Completed**: 2025-10-26 – Implemented filter validation, parameter normalization, and SP execution with logging
 
 - [x] **T008** [Story: Foundation] - Extend `Dao_ErrorReports` with `GetErrorReportByIdAsync` method  
   **File**: `Data/Dao_ErrorReports.cs`  
-  **Description**: Add method accepting int reportId, calling sp_error_reports_GetByID, mapping DataRow to Model_ErrorReport with null-safe field access. Return DaoResult<Model_ErrorReport>.  
+  **Description**: Add method accepting int reportId, calling sp_error_reports_GetByID, mapping DataRow to Model_ErrorReport_Core with null-safe field access. Return Model_Dao_Result<Model_ErrorReport_Core>.  
   **Reference**: `.github/instructions/mysql-database.instructions.md` - DataRow to model mapping, DBNull.Value handling  
   **Reference**: `specs/002-view-error-reports/contracts/sp_error_reports_GetByID.md` - Mapping example  
   **Acceptance**: Method handles DBNull.Value for nullable fields, maps all 14 columns correctly
@@ -115,7 +115,7 @@
 
 - [x] **T009** [Story: Foundation] - Extend `Dao_ErrorReports` with `UpdateErrorReportStatusAsync` method  
   **File**: `Data/Dao_ErrorReports.cs`  
-  **Description**: Add method accepting reportId, newStatus, developerNotes, reviewedBy. Call sp_error_reports_UpdateStatus with DateTime.Now for ReviewedDate. Return DaoResult<bool>.  
+  **Description**: Add method accepting reportId, newStatus, developerNotes, reviewedBy. Call sp_error_reports_UpdateStatus with DateTime.Now for ReviewedDate. Return Model_Dao_Result<bool>.  
   **Reference**: `.github/instructions/mysql-database.instructions.md` - UPDATE operation patterns  
   **Reference**: `specs/002-view-error-reports/contracts/sp_error_reports_UpdateStatus.md` - Parameter construction  
   **Acceptance**: Method validates inputs, handles optional developerNotes (DBNull.Value when null)
@@ -123,11 +123,11 @@
 
 - [x] **T010** [Story: Foundation] [P] - Extend `Dao_ErrorReports` with `GetUserListAsync` and `GetMachineListAsync` methods  
   **File**: `Data/Dao_ErrorReports.cs`  
-  **Description**: Add two methods calling respective stored procedures, converting DataTable to List<string>. Return DaoResult<List<string>>.  
+  **Description**: Add two methods calling respective stored procedures, converting DataTable to List<string>. Return Model_Dao_Result<List<string>>.  
   **Reference**: `.github/instructions/mysql-database.instructions.md` - DataTable to List conversion  
   **Reference**: `specs/002-view-error-reports/contracts/sp_error_reports_GetUserList.md` and `sp_error_reports_GetMachineList.md`  
   **Acceptance**: Both methods compile, handle empty results, return sorted string lists
-  **Completed**: 2025-10-26 – Added list retrieval helpers with DataTable extraction and DaoResult wrappers
+  **Completed**: 2025-10-26 – Added list retrieval helpers with DataTable extraction and Model_Dao_Result wrappers
 
 ---
 
@@ -165,8 +165,8 @@
 
 - [x] **T013** [Story: US1] - Implement `LoadReportsAsync` method in grid control  
   **File**: `Controls/ErrorReports/Control_ErrorReportsGrid.cs`  
-  **Description**: Add async method accepting Model_ErrorReportFilter (nullable). Call Dao_ErrorReports.GetAllErrorReportsAsync(), check IsSuccess, bind DataTable to dgvErrorReports.DataSource. Add try/catch with Service_ErrorHandler.HandleException.  
-  **Reference**: `.github/instructions/mysql-database.instructions.md` - DaoResult pattern and error handling  
+  **Description**: Add async method accepting Model_ErrorReport_Core_Filter (nullable). Call Dao_ErrorReports.GetAllErrorReportsAsync(), check IsSuccess, bind DataTable to dgvErrorReports.DataSource. Add try/catch with Service_ErrorHandler.HandleException.  
+  **Reference**: `.github/instructions/mysql-database.instructions.md` - Model_Dao_Result pattern and error handling  
   **Reference**: `.github/instructions/performance-optimization.instructions.md` - DataGridView binding performance  
   **Reference**: `specs/002-view-error-reports/research.md` - Key patterns section  
   **Acceptance**: Method loads data asynchronously, handles null filter (all reports), shows error dialog on failure
@@ -265,9 +265,9 @@
 
 - [x] **T024** [Story: US2] - Implement Apply Filters button click handler  
   **File**: `Controls/ErrorReports/Control_ErrorReportsGrid.cs`  
-  **Description**: Wire btnApplyFilters.Click event. Collect values from all filter controls, build Model_ErrorReportFilter instance, handle "All" selections as null, validate date range (From <= To), call LoadReportsAsync(filter).  
+  **Description**: Wire btnApplyFilters.Click event. Collect values from all filter controls, build Model_ErrorReport_Core_Filter instance, handle "All" selections as null, validate date range (From <= To), call LoadReportsAsync(filter).  
   **Reference**: `.github/instructions/csharp-dotnet8.instructions.md` - Event handler patterns  
-  **Reference**: `specs/002-view-error-reports/data-model.md` - Model_ErrorReportFilter validation rules  
+  **Reference**: `specs/002-view-error-reports/data-model.md` - Model_ErrorReport_Core_Filter validation rules  
   **Acceptance**: Button applies filters, shows validation error if From > To, passes nulls for "All" selections
   **Completed**: 2025-10-26 – Apply handler builds filter model, honors "All" selections, and surfaces validation via Service_ErrorHandler
 
@@ -280,7 +280,7 @@
 
 - [x] **T026** [Story: US2] - Implement search text filtering  
   **File**: `Controls/ErrorReports/Control_ErrorReportsGrid.cs`  
-  **Description**: In Apply Filters handler, extract search text from TextBox, add to Model_ErrorReportFilter.SearchText. Validate minimum 3 characters if not empty. Pass to stored procedure which handles LIKE queries.  
+  **Description**: In Apply Filters handler, extract search text from TextBox, add to Model_ErrorReport_Core_Filter.SearchText. Validate minimum 3 characters if not empty. Pass to stored procedure which handles LIKE queries.  
   **Reference**: `.github/instructions/security-best-practices.instructions.md` - Input validation patterns  
   **Reference**: `specs/002-view-error-reports/contracts/sp_error_reports_GetAll.md` - SearchText parameter behavior  
   **Acceptance**: Search text filters across Summary/UserNotes/TechnicalDetails, case-insensitive, shows validation error if < 3 chars
@@ -339,8 +339,8 @@
 
 - [x] **T032** [Story: US3] - Implement `LoadReportAsync` method in detail control  
   **File**: `Controls/ErrorReports/Control_ErrorReportDetails.cs`  
-  **Description**: Add async method accepting int reportId. Call Dao_ErrorReports.GetErrorReportByIdAsync(), check IsSuccess, populate all TextBoxes with Model_ErrorReport properties. Handle null values with "(No data provided)" placeholders.  
-  **Reference**: `.github/instructions/mysql-database.instructions.md` - DaoResult pattern  
+  **Description**: Add async method accepting int reportId. Call Dao_ErrorReports.GetErrorReportByIdAsync(), check IsSuccess, populate all TextBoxes with Model_ErrorReport_Core properties. Handle null values with "(No data provided)" placeholders.  
+  **Reference**: `.github/instructions/mysql-database.instructions.md` - Model_Dao_Result pattern  
   **Reference**: `specs/002-view-error-reports/contracts/sp_error_reports_GetByID.md` - C# usage example  
   **Acceptance**: Method loads report asynchronously, populates all fields, handles nulls gracefully *(Completed 2025-10-26)*
 
@@ -352,7 +352,7 @@
 
 - [x] **T034** [Story: US3] - Implement "Mark as Reviewed" button click handler  
   **File**: `Controls/ErrorReports/Control_ErrorReportDetails.cs`  
-  **Description**: Wire btnMarkReviewed.Click event. Show Service_ErrorHandler.ShowConfirmation dialog with multi-line TextBox for developer notes. If OK, call Dao_ErrorReports.UpdateErrorReportStatusAsync with "Reviewed", notes, Model_AppVariables.CurrentUser.UserName. Raise StatusChanged event.  
+  **Description**: Wire btnMarkReviewed.Click event. Show Service_ErrorHandler.ShowConfirmation dialog with multi-line TextBox for developer notes. If OK, call Dao_ErrorReports.UpdateErrorReportStatusAsync with "Reviewed", notes, Model_Application_Variables.CurrentUser.UserName. Raise StatusChanged event.  
   **Reference**: `.github/instructions/csharp-dotnet8.instructions.md` - Service_ErrorHandler usage  
   **Reference**: `specs/002-view-error-reports/contracts/sp_error_reports_UpdateStatus.md` - UI workflow section  
   **Acceptance**: Button shows confirmation, saves notes, updates database, raises event *(Completed 2025-10-26 via status workflow in Control_ErrorReportDetails.cs)*
@@ -551,7 +551,7 @@ Integration (T049-T052) → Final polish
 - T005 (sp_error_reports_GetMachineList)
 
 **Model Layer** (independent of database):
-- T006 (Model_ErrorReportFilter) [P]
+- T006 (Model_ErrorReport_Core_Filter) [P]
 
 **After database layer complete, DAO methods can be parallelized**:
 - T007 (GetAllErrorReportsAsync)

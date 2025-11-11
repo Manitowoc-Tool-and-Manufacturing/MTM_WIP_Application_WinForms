@@ -51,48 +51,57 @@ namespace MTM_WIP_Application_Winforms.Core
 
         public static void ApplyTheme(Form form)
         {
-            Core_AppThemes.AppTheme theme = Core_AppThemes.GetCurrentTheme();
-            string themeName = Core_AppThemes.GetEffectiveThemeName();
             form.SuspendLayout();
 
-            // Apply DPI scaling and layout adjustments first
+            // ALWAYS apply DPI scaling and layout adjustments - these are required regardless of theme setting
             // This ensures pixel-perfect scaling at all DPI settings (100%, 125%, 150%, 200%)
             ApplyDpiScaling(form);
             ApplyRuntimeLayoutAdjustments(form);
 
-            // Then apply theme colors
-            SetFormTheme(form, theme, themeName);
-            ApplyThemeToControls(form.Controls);
-            if (form is Forms.MainForm.MainForm mainForm)
+            // Only apply theme colors if theming is enabled
+            if (Model_Application_Variables.ThemeEnabled)
             {
-                Helper_UI_Shortcuts.UpdateMainFormTabShortcuts(mainForm);
+                Core_AppThemes.AppTheme theme = Core_AppThemes.GetCurrentTheme();
+                string themeName = Core_AppThemes.GetEffectiveThemeName();
+                
+                SetFormTheme(form, theme, themeName);
+                ApplyThemeToControls(form.Controls);
+                if (form is Forms.MainForm.MainForm mainForm)
+                {
+                    Helper_UI_Shortcuts.UpdateMainFormTabShortcuts(mainForm);
+                }
+
+                LoggingUtility.Log($"Global theme '{themeName}' with DPI scaling applied to form '{form.Name}'.");
+            }
+            else
+            {
+                LoggingUtility.Log($"DPI scaling applied to form '{form.Name}' (theming disabled).");
             }
 
             form.ResumeLayout();
-            LoggingUtility.Log($"Global theme '{themeName}' with DPI scaling applied to form '{form.Name}'.");
         }
 
-        public static async Task<Model_UserUiColors> GetUserThemeColorsAsync(string userId)
+        public static async Task<Model_Shared_UserUiColors> GetUserThemeColorsAsync(string userId)
         {
             var themeNameResult = await Dao_User.GetThemeNameAsync(userId);
-            Model_AppVariables.ThemeName = themeNameResult.IsSuccess && themeNameResult.Data != null ? themeNameResult.Data : "Default";
-            if (!Core_AppThemes.GetThemeNames().Contains(Model_AppVariables.ThemeName))
+            Model_Application_Variables.ThemeName = themeNameResult.IsSuccess && themeNameResult.Data != null ? themeNameResult.Data : "Default";
+            if (!Core_AppThemes.GetThemeNames().Contains(Model_Application_Variables.ThemeName))
             {
                 await Core_AppThemes.LoadThemesFromDatabaseAsync();
             }
 
-            Core_AppThemes.AppTheme appTheme = Core_AppThemes.GetTheme(Model_AppVariables.ThemeName);
+            Core_AppThemes.AppTheme appTheme = Core_AppThemes.GetTheme(Model_Application_Variables.ThemeName);
             return appTheme.Colors;
         }
 
         public static void ApplyThemeToDataGridView(DataGridView dataGridView)
         {
-            if (dataGridView == null)
+            if (dataGridView == null || !Model_Application_Variables.ThemeEnabled)
             {
                 return;
             }
 
-            Model_UserUiColors colors = Core_AppThemes.GetCurrentTheme().Colors;
+            Model_Shared_UserUiColors colors = Core_AppThemes.GetCurrentTheme().Colors;
 
             if (colors.DataGridBackColor.HasValue)
             {
@@ -352,8 +361,8 @@ namespace MTM_WIP_Application_Winforms.Core
                         .Select(c => new { Name = c.Name, Visible = c.Visible, DisplayIndex = c.DisplayIndex })
                         .ToList();
                     string json = JsonSerializer.Serialize(new { Columns = columns });
-                    // Get userId (from Model_AppVariables.User)
-                    string userId = Model_AppVariables.User;
+                    // Get userId (from Model_Application_Variables.User)
+                    string userId = Model_Application_Variables.User;
                     string gridName = dgv.Name;
                     await Dao_User.SetGridViewSettingsJsonAsync(userId, gridName, json);
 
@@ -862,7 +871,7 @@ namespace MTM_WIP_Application_Winforms.Core
 
         #region Private Helpers
 
-        private delegate void ControlThemeApplier(Control control, Model_UserUiColors colors);
+        private delegate void ControlThemeApplier(Control control, Model_Shared_UserUiColors colors);
 
         private static readonly ConcurrentDictionary<Type, ControlThemeApplier> ThemeAppliers = new()
         {
@@ -931,7 +940,7 @@ namespace MTM_WIP_Application_Winforms.Core
         {
             form.BackColor = theme.Colors.FormBackColor ?? Color.White;
             form.ForeColor = theme.Colors.FormForeColor ?? Color.Black;
-            form.Font = theme.FormFont ?? new Font(form.Font.Name, Model_AppVariables.ThemeFontSize, form.Font.Style);
+            form.Font = theme.FormFont ?? new Font(form.Font.Name, Model_Application_Variables.ThemeFontSize, form.Font.Style);
 
             if (!string.IsNullOrWhiteSpace(themeName))
             {
@@ -951,10 +960,12 @@ namespace MTM_WIP_Application_Winforms.Core
 
         private static void LogControlColor(Control ctrl, string colorType, string colorSource, Color colorValue)
         {
-            string themeName = Core_AppThemes.GetEffectiveThemeName();
-
-            Debug.WriteLine(
-                $"[THEME] {ctrl.Name} ({ctrl.GetType().Name}) - {colorType}: {colorSource} = {colorValue} | Theme: {themeName}");
+            // Theme color logging disabled to reduce Debug console noise
+            // Uncomment below to debug theme application issues
+            
+            //string themeName = Core_AppThemes.GetEffectiveThemeName();
+            //Debug.WriteLine(
+            //    $"[THEME] {ctrl.Name} ({ctrl.GetType().Name}) - {colorType}: {colorSource} = {colorValue} | Theme: {themeName}");
         }
 
         private static Color DimColor(Color color, double percent)
@@ -1051,7 +1062,7 @@ namespace MTM_WIP_Application_Winforms.Core
             }
 
             Font font = theme.FormFont ??
-                        new Font(control.Font.Name, Model_AppVariables.ThemeFontSize, control.Font.Style);
+                        new Font(control.Font.Name, Model_Application_Variables.ThemeFontSize, control.Font.Style);
             if (control.Font == null || control.Font.Size != font.Size || control.Font.Name != font.Name)
             {
                 control.Font = font;
@@ -1066,7 +1077,7 @@ namespace MTM_WIP_Application_Winforms.Core
             }
 
             Core_AppThemes.AppTheme theme = Core_AppThemes.GetCurrentTheme();
-            Model_UserUiColors colors = theme.Colors;
+            Model_Shared_UserUiColors colors = theme.Colors;
             try
             {
                 Type controlType = control.GetType();
@@ -1104,7 +1115,7 @@ namespace MTM_WIP_Application_Winforms.Core
 
         private static class ThemeAppliersInternal
         {
-            public static void ApplyQuickButtonsTheme(Control control, Model_UserUiColors colors)
+            public static void ApplyQuickButtonsTheme(Control control, Model_Shared_UserUiColors colors)
             {
                 if (control is Control_QuickButtons quickButtons)
                 {
@@ -1189,7 +1200,7 @@ namespace MTM_WIP_Application_Winforms.Core
                 }
             }
 
-            public static void ApplyAdvancedInventoryTheme(Control control, Model_UserUiColors colors)
+            public static void ApplyAdvancedInventoryTheme(Control control, Model_Shared_UserUiColors colors)
             {
                 if (control is Control_AdvancedInventory advInv)
                 {
@@ -1198,7 +1209,7 @@ namespace MTM_WIP_Application_Winforms.Core
                 }
             }
 
-            public static void ApplyAdvancedRemoveTheme(Control control, Model_UserUiColors colors)
+            public static void ApplyAdvancedRemoveTheme(Control control, Model_Shared_UserUiColors colors)
             {
                 if (control is Control_AdvancedRemove advRem)
                 {
@@ -1207,7 +1218,7 @@ namespace MTM_WIP_Application_Winforms.Core
                 }
             }
 
-            public static void ApplyConnectionStrengthTheme(Control control, Model_UserUiColors colors)
+            public static void ApplyConnectionStrengthTheme(Control control, Model_Shared_UserUiColors colors)
             {
                 if (control is Control_ConnectionStrengthControl conn)
                 {
@@ -1217,7 +1228,7 @@ namespace MTM_WIP_Application_Winforms.Core
                 }
             }
 
-            public static void ApplyInventoryTabTheme(Control control, Model_UserUiColors colors)
+            public static void ApplyInventoryTabTheme(Control control, Model_Shared_UserUiColors colors)
             {
                 if (control is Control_InventoryTab tab)
                 {
@@ -1226,7 +1237,7 @@ namespace MTM_WIP_Application_Winforms.Core
                 }
             }
 
-            public static void ApplyRemoveTabTheme(Control control, Model_UserUiColors colors)
+            public static void ApplyRemoveTabTheme(Control control, Model_Shared_UserUiColors colors)
             {
                 if (control is Control_RemoveTab tab)
                 {
@@ -1235,7 +1246,7 @@ namespace MTM_WIP_Application_Winforms.Core
                 }
             }
 
-            public static void ApplyTransferTabTheme(Control control, Model_UserUiColors colors)
+            public static void ApplyTransferTabTheme(Control control, Model_Shared_UserUiColors colors)
             {
                 if (control is Control_TransferTab tab)
                 {
@@ -1244,7 +1255,7 @@ namespace MTM_WIP_Application_Winforms.Core
                 }
             }
 
-            public static void ApplyCustomControlTheme(Control control, Model_UserUiColors colors)
+            public static void ApplyCustomControlTheme(Control control, Model_Shared_UserUiColors colors)
             {
                 if (colors.CustomControlBackColor.HasValue)
                 {
@@ -1257,10 +1268,10 @@ namespace MTM_WIP_Application_Winforms.Core
                 }
             }
 
-            private static void ApplyOwnerDrawThemes(Control control, Model_UserUiColors colors) =>
+            private static void ApplyOwnerDrawThemes(Control control, Model_Shared_UserUiColors colors) =>
                 OwnerDrawThemeHelper.ApplyOwnerDrawTheme(control, colors);
 
-            public static void ApplyButtonTheme(Control control, Model_UserUiColors colors)
+            public static void ApplyButtonTheme(Control control, Model_Shared_UserUiColors colors)
             {
                 if (control is Button btn)
                 {
@@ -1345,7 +1356,7 @@ namespace MTM_WIP_Application_Winforms.Core
                 }
             }
 
-            public static void ApplyTabControlTheme(Control control, Model_UserUiColors colors)
+            public static void ApplyTabControlTheme(Control control, Model_Shared_UserUiColors colors)
             {
                 if (control is TabControl tab)
                 {
@@ -1358,7 +1369,7 @@ namespace MTM_WIP_Application_Winforms.Core
                 }
             }
 
-            public static void ApplyTabPageTheme(Control control, Model_UserUiColors colors)
+            public static void ApplyTabPageTheme(Control control, Model_Shared_UserUiColors colors)
             {
                 if (control is TabPage tabPage)
                 {
@@ -1379,7 +1390,7 @@ namespace MTM_WIP_Application_Winforms.Core
                 }
             }
 
-            public static void ApplyTextBoxTheme(Control control, Model_UserUiColors colors)
+            public static void ApplyTextBoxTheme(Control control, Model_Shared_UserUiColors colors)
             {
                 if (control is TextBox txt)
                 {
@@ -1406,7 +1417,7 @@ namespace MTM_WIP_Application_Winforms.Core
                 }
             }
 
-            public static void ApplyMaskedTextBoxTheme(Control control, Model_UserUiColors colors)
+            public static void ApplyMaskedTextBoxTheme(Control control, Model_Shared_UserUiColors colors)
             {
                 if (control is MaskedTextBox mtxt)
                 {
@@ -1424,7 +1435,7 @@ namespace MTM_WIP_Application_Winforms.Core
                 }
             }
 
-            public static void ApplyRichTextBoxTheme(Control control, Model_UserUiColors colors)
+            public static void ApplyRichTextBoxTheme(Control control, Model_Shared_UserUiColors colors)
             {
                 if (control is RichTextBox rtxt)
                 {
@@ -1442,7 +1453,7 @@ namespace MTM_WIP_Application_Winforms.Core
                 }
             }
 
-            public static void ApplyComboBoxTheme(Control control, Model_UserUiColors colors)
+            public static void ApplyComboBoxTheme(Control control, Model_Shared_UserUiColors colors)
             {
                 if (control is ComboBox cb)
                 {
@@ -1494,16 +1505,16 @@ namespace MTM_WIP_Application_Winforms.Core
                     if (cb.Text.Contains("["))
 
                     {
-                        cb.ForeColor = Model_AppVariables.UserUiColors.ComboBoxErrorForeColor ?? Color.Red;
+                        cb.ForeColor = Model_Application_Variables.UserUiColors.ComboBoxErrorForeColor ?? Color.Red;
                     }
                     else
                     {
-                        cb.ForeColor = Model_AppVariables.UserUiColors.ComboBoxForeColor ?? Color.Black;
+                        cb.ForeColor = Model_Application_Variables.UserUiColors.ComboBoxForeColor ?? Color.Black;
                     }
                 }
             }
 
-            public static void ApplyListBoxTheme(Control control, Model_UserUiColors colors)
+            public static void ApplyListBoxTheme(Control control, Model_Shared_UserUiColors colors)
             {
                 if (control is ListBox lb)
                 {
@@ -1521,7 +1532,7 @@ namespace MTM_WIP_Application_Winforms.Core
                 }
             }
 
-            public static void ApplyCheckedListBoxTheme(Control control, Model_UserUiColors colors)
+            public static void ApplyCheckedListBoxTheme(Control control, Model_Shared_UserUiColors colors)
             {
                 if (control is CheckedListBox clb)
                 {
@@ -1539,7 +1550,7 @@ namespace MTM_WIP_Application_Winforms.Core
                 }
             }
 
-            public static void ApplyLabelTheme(Control control, Model_UserUiColors colors)
+            public static void ApplyLabelTheme(Control control, Model_Shared_UserUiColors colors)
             {
                 if (control is Label lbl)
                 {
@@ -1558,7 +1569,7 @@ namespace MTM_WIP_Application_Winforms.Core
                 }
             }
 
-            public static void ApplyRadioButtonTheme(Control control, Model_UserUiColors colors)
+            public static void ApplyRadioButtonTheme(Control control, Model_Shared_UserUiColors colors)
             {
                 if (control is RadioButton rb)
                 {
@@ -1574,7 +1585,7 @@ namespace MTM_WIP_Application_Winforms.Core
                 }
             }
 
-            public static void ApplyCheckBoxTheme(Control control, Model_UserUiColors colors)
+            public static void ApplyCheckBoxTheme(Control control, Model_Shared_UserUiColors colors)
             {
                 if (control is CheckBox cbx)
                 {
@@ -1590,7 +1601,7 @@ namespace MTM_WIP_Application_Winforms.Core
                 }
             }
 
-            public static void ApplyTreeViewTheme(Control control, Model_UserUiColors colors)
+            public static void ApplyTreeViewTheme(Control control, Model_Shared_UserUiColors colors)
             {
                 if (control is TreeView tv)
                 {
@@ -1613,7 +1624,7 @@ namespace MTM_WIP_Application_Winforms.Core
                 }
             }
 
-            public static void ApplyListViewTheme(Control control, Model_UserUiColors colors)
+            public static void ApplyListViewTheme(Control control, Model_Shared_UserUiColors colors)
             {
                 if (control is ListView lv)
                 {
@@ -1631,7 +1642,7 @@ namespace MTM_WIP_Application_Winforms.Core
                 }
             }
 
-            public static void ApplyMenuStripTheme(Control control, Model_UserUiColors colors)
+            public static void ApplyMenuStripTheme(Control control, Model_Shared_UserUiColors colors)
             {
                 if (control is MenuStrip ms)
                 {
@@ -1649,7 +1660,7 @@ namespace MTM_WIP_Application_Winforms.Core
                 }
             }
 
-            public static void ApplyStatusStripTheme(Control control, Model_UserUiColors colors)
+            public static void ApplyStatusStripTheme(Control control, Model_Shared_UserUiColors colors)
             {
                 if (control is StatusStrip ss)
                 {
@@ -1664,7 +1675,7 @@ namespace MTM_WIP_Application_Winforms.Core
                 }
             }
 
-            public static void ApplyToolStripTheme(Control control, Model_UserUiColors colors)
+            public static void ApplyToolStripTheme(Control control, Model_Shared_UserUiColors colors)
             {
                 if (control is ToolStrip ts)
                 {
@@ -1682,7 +1693,7 @@ namespace MTM_WIP_Application_Winforms.Core
                 }
             }
 
-            public static void ApplyGroupBoxTheme(Control control, Model_UserUiColors colors)
+            public static void ApplyGroupBoxTheme(Control control, Model_Shared_UserUiColors colors)
             {
                 if (control is GroupBox gb)
                 {
@@ -1703,7 +1714,7 @@ namespace MTM_WIP_Application_Winforms.Core
                 }
             }
 
-            public static void ApplyPanelTheme(Control control, Model_UserUiColors colors)
+            public static void ApplyPanelTheme(Control control, Model_Shared_UserUiColors colors)
             {
                 if (control is Panel pnl)
                 {
@@ -1716,7 +1727,7 @@ namespace MTM_WIP_Application_Winforms.Core
                 }
             }
 
-            public static void ApplySplitContainerTheme(Control control, Model_UserUiColors colors)
+            public static void ApplySplitContainerTheme(Control control, Model_Shared_UserUiColors colors)
             {
                 if (control is SplitContainer sc)
                 {
@@ -1734,7 +1745,7 @@ namespace MTM_WIP_Application_Winforms.Core
                 }
             }
 
-            public static void ApplyFlowLayoutPanelTheme(Control control, Model_UserUiColors colors)
+            public static void ApplyFlowLayoutPanelTheme(Control control, Model_Shared_UserUiColors colors)
             {
                 if (control is FlowLayoutPanel flp)
                 {
@@ -1747,7 +1758,7 @@ namespace MTM_WIP_Application_Winforms.Core
                 }
             }
 
-            public static void ApplyTableLayoutPanelTheme(Control control, Model_UserUiColors colors)
+            public static void ApplyTableLayoutPanelTheme(Control control, Model_Shared_UserUiColors colors)
             {
                 if (control is TableLayoutPanel tlp)
                 {
@@ -1760,7 +1771,7 @@ namespace MTM_WIP_Application_Winforms.Core
                 }
             }
 
-            public static void ApplyDateTimePickerTheme(Control control, Model_UserUiColors colors)
+            public static void ApplyDateTimePickerTheme(Control control, Model_Shared_UserUiColors colors)
             {
                 if (control is DateTimePicker dtp)
                 {
@@ -1778,7 +1789,7 @@ namespace MTM_WIP_Application_Winforms.Core
                 }
             }
 
-            public static void ApplyMonthCalendarTheme(Control control, Model_UserUiColors colors)
+            public static void ApplyMonthCalendarTheme(Control control, Model_Shared_UserUiColors colors)
             {
                 if (control is MonthCalendar mc)
                 {
@@ -1811,7 +1822,7 @@ namespace MTM_WIP_Application_Winforms.Core
                 }
             }
 
-            public static void ApplyNumericUpDownTheme(Control control, Model_UserUiColors colors)
+            public static void ApplyNumericUpDownTheme(Control control, Model_Shared_UserUiColors colors)
             {
                 if (control is NumericUpDown nud)
                 {
@@ -1829,7 +1840,7 @@ namespace MTM_WIP_Application_Winforms.Core
                 }
             }
 
-            public static void ApplyTrackBarTheme(Control control, Model_UserUiColors colors)
+            public static void ApplyTrackBarTheme(Control control, Model_Shared_UserUiColors colors)
             {
                 if (control is TrackBar tb)
                 {
@@ -1847,7 +1858,7 @@ namespace MTM_WIP_Application_Winforms.Core
                 }
             }
 
-            public static void ApplyProgressBarTheme(Control control, Model_UserUiColors colors)
+            public static void ApplyProgressBarTheme(Control control, Model_Shared_UserUiColors colors)
             {
                 if (control is ProgressBar pb)
                 {
@@ -1865,7 +1876,7 @@ namespace MTM_WIP_Application_Winforms.Core
                 }
             }
 
-            public static void ApplyProgressBarUserControlTheme(Control control, Model_UserUiColors colors)
+            public static void ApplyProgressBarUserControlTheme(Control control, Model_Shared_UserUiColors colors)
             {
                 if (control is Control_ProgressBarUserControl pbuc)
                 {
@@ -1883,7 +1894,7 @@ namespace MTM_WIP_Application_Winforms.Core
                 }
             }
 
-            public static void ApplyHScrollBarTheme(Control control, Model_UserUiColors colors)
+            public static void ApplyHScrollBarTheme(Control control, Model_Shared_UserUiColors colors)
             {
                 if (control is HScrollBar hsb)
                 {
@@ -1901,7 +1912,7 @@ namespace MTM_WIP_Application_Winforms.Core
                 }
             }
 
-            public static void ApplyVScrollBarTheme(Control control, Model_UserUiColors colors)
+            public static void ApplyVScrollBarTheme(Control control, Model_Shared_UserUiColors colors)
             {
                 if (control is VScrollBar vsb)
                 {
@@ -1919,7 +1930,7 @@ namespace MTM_WIP_Application_Winforms.Core
                 }
             }
 
-            public static void ApplyPictureBoxTheme(Control control, Model_UserUiColors colors)
+            public static void ApplyPictureBoxTheme(Control control, Model_Shared_UserUiColors colors)
             {
                 if (control is PictureBox pic)
                 {
@@ -1932,7 +1943,7 @@ namespace MTM_WIP_Application_Winforms.Core
                 }
             }
 
-            public static void ApplyPropertyGridTheme(Control control, Model_UserUiColors colors)
+            public static void ApplyPropertyGridTheme(Control control, Model_Shared_UserUiColors colors)
             {
                 if (control is PropertyGrid pg)
                 {
@@ -1950,7 +1961,7 @@ namespace MTM_WIP_Application_Winforms.Core
                 }
             }
 
-            public static void ApplyDomainUpDownTheme(Control control, Model_UserUiColors colors)
+            public static void ApplyDomainUpDownTheme(Control control, Model_Shared_UserUiColors colors)
             {
                 if (control is DomainUpDown dud)
                 {
@@ -1968,7 +1979,7 @@ namespace MTM_WIP_Application_Winforms.Core
                 }
             }
 
-            public static void ApplyWebBrowserTheme(Control control, Model_UserUiColors colors)
+            public static void ApplyWebBrowserTheme(Control control, Model_Shared_UserUiColors colors)
             {
                 if (control is WebBrowser wb)
                 {
@@ -1981,7 +1992,7 @@ namespace MTM_WIP_Application_Winforms.Core
                 }
             }
 
-            public static void ApplyUserControlTheme(Control control, Model_UserUiColors colors)
+            public static void ApplyUserControlTheme(Control control, Model_Shared_UserUiColors colors)
             {
                 if (control is UserControl uc)
                 {
@@ -1996,7 +2007,7 @@ namespace MTM_WIP_Application_Winforms.Core
                 }
             }
 
-            public static void ApplyLinkLabelTheme(Control control, Model_UserUiColors colors)
+            public static void ApplyLinkLabelTheme(Control control, Model_Shared_UserUiColors colors)
             {
                 if (control is LinkLabel ll)
                 {
@@ -2032,7 +2043,7 @@ namespace MTM_WIP_Application_Winforms.Core
                 }
             }
 
-            public static void ApplyContextMenuTheme(Control control, Model_UserUiColors colors)
+            public static void ApplyContextMenuTheme(Control control, Model_Shared_UserUiColors colors)
             {
                 if (control is ContextMenuStrip cms)
                 {
@@ -2057,7 +2068,7 @@ namespace MTM_WIP_Application_Winforms.Core
                     return;
                 }
 
-                Model_UserUiColors colors = Core_AppThemes.GetCurrentTheme().Colors;
+                Model_Shared_UserUiColors colors = Core_AppThemes.GetCurrentTheme().Colors;
 
                 if (colors.DataGridBackColor.HasValue)
                 {
@@ -2367,7 +2378,7 @@ namespace MTM_WIP_Application_Winforms.Core
 
         private static class OwnerDrawThemeHelper
         {
-            public static void ApplyOwnerDrawTheme(Control control, Model_UserUiColors colors)
+            public static void ApplyOwnerDrawTheme(Control control, Model_Shared_UserUiColors colors)
             {
                 if (control is Button btn)
                 {
@@ -2448,7 +2459,7 @@ namespace MTM_WIP_Application_Winforms.Core
 
         private static class FocusUtils
         {
-            public static void ApplyFocusEventHandling(Control control, Model_UserUiColors colors)
+            public static void ApplyFocusEventHandling(Control control, Model_Shared_UserUiColors colors)
             {
                 if (!CanControlReceiveFocus(control))
                 {
@@ -2459,7 +2470,7 @@ namespace MTM_WIP_Application_Winforms.Core
             }
 
             public static void ApplyFocusEventHandlingToControls(Control.ControlCollection controls,
-                Model_UserUiColors colors)
+                Model_Shared_UserUiColors colors)
             {
                 foreach (Control ctrl in controls)
                 {
@@ -2475,7 +2486,7 @@ namespace MTM_WIP_Application_Winforms.Core
             {
                 if (sender is Control ctrl && ctrl.Focused)
                 {
-                    Model_UserUiColors colors = Core_AppThemes.GetCurrentTheme().Colors;
+                    Model_Shared_UserUiColors colors = Core_AppThemes.GetCurrentTheme().Colors;
                     Color focusBackColor = colors.ControlFocusedBackColor ?? Color.LightBlue;
                     ctrl.BackColor = focusBackColor;
 
@@ -2493,7 +2504,7 @@ namespace MTM_WIP_Application_Winforms.Core
             {
                 if (sender is Control ctrl)
                 {
-                    Model_UserUiColors colors = Core_AppThemes.GetCurrentTheme().Colors;
+                    Model_Shared_UserUiColors colors = Core_AppThemes.GetCurrentTheme().Colors;
                     Color normalBackColor = GetControlThemeBackColor(ctrl, colors);
                     ctrl.BackColor = normalBackColor;
                 }
@@ -2515,7 +2526,7 @@ namespace MTM_WIP_Application_Winforms.Core
                 }
             }
 
-            private static void Apply(Control control, Model_UserUiColors colors)
+            private static void Apply(Control control, Model_Shared_UserUiColors colors)
             {
                 control.Enter -= Control_Enter_Handler;
                 control.Leave -= Control_Leave_Handler;
@@ -2575,7 +2586,7 @@ namespace MTM_WIP_Application_Winforms.Core
                 };
             }
 
-            private static Color GetControlThemeBackColor(Control control, Model_UserUiColors colors) =>
+            private static Color GetControlThemeBackColor(Control control, Model_Shared_UserUiColors colors) =>
                 control switch
                 {
                     TextBox => colors.TextBoxBackColor ?? colors.ControlBackColor ?? Color.White,
@@ -2587,7 +2598,7 @@ namespace MTM_WIP_Application_Winforms.Core
                     _ => colors.ControlBackColor ?? Color.White
                 };
 
-            private static Color GetControlThemeForeColor(Control control, Model_UserUiColors colors) =>
+            private static Color GetControlThemeForeColor(Control control, Model_Shared_UserUiColors colors) =>
                 control switch
                 {
                     TextBox => colors.TextBoxForeColor ?? colors.ControlForeColor ?? Color.Black,
@@ -2610,7 +2621,7 @@ namespace MTM_WIP_Application_Winforms.Core
 
             public class AppTheme
             {
-                public Model_UserUiColors Colors { get; set; } = new();
+                public Model_Shared_UserUiColors Colors { get; set; } = new();
                 public Font? FormFont { get; set; }
             }
 
@@ -2639,17 +2650,17 @@ namespace MTM_WIP_Application_Winforms.Core
                         LoggingUtility.Log($"Loaded theme preference for user {userId}: {themeName}");
                     }
 
-                    // Set the theme name in Model_AppVariables
-                    Model_AppVariables.ThemeName = themeName;
+                    // Set the theme name in Model_Application_Variables
+                    Model_Application_Variables.ThemeName = themeName;
 
-                    LoggingUtility.Log($"Set Model_AppVariables.ThemeName to: {themeName}");
+                    LoggingUtility.Log($"Set Model_Application_Variables.ThemeName to: {themeName}");
                     return themeName;
                 }
                 catch (Exception ex)
                 {
                     LoggingUtility.LogApplicationError(ex);
                     // On error, default to "Default" theme
-                    Model_AppVariables.ThemeName = "Default";
+                    Model_Application_Variables.ThemeName = "Default";
                     LoggingUtility.Log("Error loading user theme preference, defaulting to Default theme");
                     return "Default";
                 }
@@ -2689,9 +2700,9 @@ namespace MTM_WIP_Application_Winforms.Core
                                         };
                                         options.Converters.Add(new JsonColorConverter());
 
-                                        // Directly deserialize the complete Model_UserUiColors from database
+                                        // Directly deserialize the complete Model_Shared_UserUiColors from database
                                         // The database should contain the full JSON with all color properties
-                                        Model_UserUiColors? colors = JsonSerializer.Deserialize<Model_UserUiColors>(settingsJson, options);
+                                        Model_Shared_UserUiColors? colors = JsonSerializer.Deserialize<Model_Shared_UserUiColors>(settingsJson, options);
 
                                         if (colors != null)
                                         {
@@ -2773,7 +2784,7 @@ namespace MTM_WIP_Application_Winforms.Core
             {
                 try
                 {
-                    string themeName = Model_AppVariables.ThemeName ?? "Default";
+                    string themeName = Model_Application_Variables.ThemeName ?? "Default";
                     if (Themes.TryGetValue(themeName, out AppTheme? theme))
                     {
                         return theme;
@@ -2812,7 +2823,7 @@ namespace MTM_WIP_Application_Winforms.Core
             {
                 try
                 {
-                    string themeName = Model_AppVariables.ThemeName ?? "Default";
+                    string themeName = Model_Application_Variables.ThemeName ?? "Default";
                     if (!Themes.ContainsKey(themeName))
                     {
                         themeName = "Default";
@@ -2867,7 +2878,7 @@ namespace MTM_WIP_Application_Winforms.Core
                         }
 
                         LoggingUtility.Log($"Using fallback theme '{fallbackTheme}' for user {userId}");
-                        Model_AppVariables.ThemeName = fallbackTheme;
+                        Model_Application_Variables.ThemeName = fallbackTheme;
                     }
 
                     // Apply font settings to all themes
@@ -2875,17 +2886,17 @@ namespace MTM_WIP_Application_Winforms.Core
                     {
                         if (theme.FormFont == null)
                         {
-                            theme.FormFont = new Font("Segoe UI Emoji", Model_AppVariables.ThemeFontSize);
+                            theme.FormFont = new Font("Segoe UI Emoji", Model_Application_Variables.ThemeFontSize);
                         }
-                        else if (Math.Abs(theme.FormFont.Size - Model_AppVariables.ThemeFontSize) > 0.01f)
+                        else if (Math.Abs(theme.FormFont.Size - Model_Application_Variables.ThemeFontSize) > 0.01f)
                         {
-                            theme.FormFont = new Font(theme.FormFont.FontFamily, Model_AppVariables.ThemeFontSize,
+                            theme.FormFont = new Font(theme.FormFont.FontFamily, Model_Application_Variables.ThemeFontSize,
                                 theme.FormFont.Style);
                         }
                     }
 
-                    string finalTheme = Model_AppVariables.ThemeName ?? "Default";
-                    LoggingUtility.Log($"Theme system initialized for user {userId}. Final theme: {finalTheme}, Available themes: {string.Join(", ", Themes.Keys)}, Font size: {Model_AppVariables.ThemeFontSize}");
+                    string finalTheme = Model_Application_Variables.ThemeName ?? "Default";
+                    LoggingUtility.Log($"Theme system initialized for user {userId}. Final theme: {finalTheme}, Available themes: {string.Join(", ", Themes.Keys)}, Font size: {Model_Application_Variables.ThemeFontSize}");
                 }
                 catch (Exception ex)
                 {
@@ -2895,8 +2906,8 @@ namespace MTM_WIP_Application_Winforms.Core
                     {
                         Themes = CreateDefaultThemes();
                     }
-                    Model_AppVariables.ThemeName = Themes.Keys.FirstOrDefault() ?? "Default";
-                    LoggingUtility.Log($"Error initializing theme system, using fallback theme: {Model_AppVariables.ThemeName}");
+                    Model_Application_Variables.ThemeName = Themes.Keys.FirstOrDefault() ?? "Default";
+                    LoggingUtility.Log($"Error initializing theme system, using fallback theme: {Model_Application_Variables.ThemeName}");
                     throw;
                 }
             }
@@ -2911,7 +2922,7 @@ namespace MTM_WIP_Application_Winforms.Core
                 var themes = new Dictionary<string, AppTheme>();
 
                 // Default Light Theme
-                var defaultColors = new Model_UserUiColors
+                var defaultColors = new Model_Shared_UserUiColors
                 {
                     FormBackColor = Color.White,
                     FormForeColor = Color.Black,
@@ -2939,7 +2950,7 @@ namespace MTM_WIP_Application_Winforms.Core
                 themes["Default"] = new AppTheme { Colors = defaultColors, FormFont = null };
 
                 // Dark Theme
-                var darkColors = new Model_UserUiColors
+                var darkColors = new Model_Shared_UserUiColors
                 {
                     FormBackColor = Color.FromArgb(45, 45, 48),
                     FormForeColor = Color.White,
@@ -2967,7 +2978,7 @@ namespace MTM_WIP_Application_Winforms.Core
                 themes["Dark"] = new AppTheme { Colors = darkColors, FormFont = null };
 
                 // Blue Theme
-                var blueColors = new Model_UserUiColors
+                var blueColors = new Model_Shared_UserUiColors
                 {
                     FormBackColor = Color.FromArgb(240, 248, 255),
                     FormForeColor = Color.FromArgb(25, 25, 25),
@@ -3011,7 +3022,7 @@ namespace MTM_WIP_Application_Winforms.Core
             // Load and apply saved grid settings (column visibility/order)
             try
             {
-                string userId = Model_AppVariables.User;
+                string userId = Model_Application_Variables.User;
                 string json = await Dao_User.GetGridViewSettingsJsonAsync(userId);
                 if (!string.IsNullOrWhiteSpace(json))
                 {

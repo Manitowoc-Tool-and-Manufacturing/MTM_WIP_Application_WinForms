@@ -90,7 +90,7 @@ END IF;
 ## C# Usage Example
 
 ```csharp
-public static async Task<DaoResult<Model_ErrorReport>> GetErrorReportByIdAsync(int reportId)
+public static async Task<Model_Dao_Result<Model_ErrorReport_Core>> GetErrorReportByIdAsync(int reportId)
 {
     try
     {
@@ -110,17 +110,17 @@ public static async Task<DaoResult<Model_ErrorReport>> GetErrorReportByIdAsync(i
         if (!result.IsSuccess)
         {
             LoggingUtility.Log($"[Dao_ErrorReports] Failed to retrieve report {reportId}: {result.StatusMessage}");
-            return DaoResult<Model_ErrorReport>.Failure(result.StatusMessage);
+            return Model_Dao_Result<Model_ErrorReport_Core>.Failure(result.StatusMessage);
         }
 
         if (result.Data == null || result.Data.Rows.Count == 0)
         {
-            return DaoResult<Model_ErrorReport>.Failure($"Error report {reportId} not found.");
+            return Model_Dao_Result<Model_ErrorReport_Core>.Failure($"Error report {reportId} not found.");
         }
 
-        // Map DataRow to Model_ErrorReport
+        // Map DataRow to Model_ErrorReport_Core
         DataRow row = result.Data.Rows[0];
-        var report = new Model_ErrorReport
+        var report = new Model_ErrorReport_Core
         {
             ReportID = Convert.ToInt32(row["ReportID"]),
             ReportDate = Convert.ToDateTime(row["ReportDate"]),
@@ -140,14 +140,14 @@ public static async Task<DaoResult<Model_ErrorReport>> GetErrorReportByIdAsync(i
             DeveloperNotes = row["DeveloperNotes"]?.ToString()
         };
 
-        return DaoResult<Model_ErrorReport>.Success(
+        return Model_Dao_Result<Model_ErrorReport_Core>.Success(
             report,
             $"Retrieved error report {reportId}");
     }
     catch (Exception ex)
     {
         LoggingUtility.LogApplicationError(ex);
-        return DaoResult<Model_ErrorReport>.Failure(
+        return Model_Dao_Result<Model_ErrorReport_Core>.Failure(
             "An unexpected error occurred while retrieving error report.");
     }
 }

@@ -5,11 +5,11 @@ using System.Data;
 namespace MTM_WIP_Application_Winforms.Tests.Integration;
 
 /// <summary>
-/// Integration tests for TransactionViewModel operations.
+/// Integration tests for Model_Transactions_ViewModel operations.
 /// Tests Excel export functionality and view model orchestration.
 /// </summary>
 [TestClass]
-public class TransactionViewModel_Tests : BaseIntegrationTest
+public class Model_Transactions_ViewModel_Tests : BaseIntegrationTest
 {
     #region Export Methods Tests
 
@@ -21,12 +21,12 @@ public class TransactionViewModel_Tests : BaseIntegrationTest
     public async Task ExportToExcelAsync_ValidData_CreatesExcelFile()
     {
         // Arrange
-        var viewModel = new TransactionViewModel();
+        var viewModel = new Model_Transactions_ViewModel();
         
         // Create sample transactions
-        var transactions = new List<Model_Transactions>
+        var transactions = new List<Model_Transactions_Core>
         {
-            new Model_Transactions
+            new Model_Transactions_Core
             {
                 ID = 1,
                 TransactionType = TransactionType.IN,
@@ -41,7 +41,7 @@ public class TransactionViewModel_Tests : BaseIntegrationTest
                 ItemType = "WIP",
                 DateTime = DateTime.Now.AddDays(-1)
             },
-            new Model_Transactions
+            new Model_Transactions_Core
             {
                 ID = 2,
                 TransactionType = TransactionType.TRANSFER,
@@ -140,8 +140,8 @@ public class TransactionViewModel_Tests : BaseIntegrationTest
     public async Task ExportToExcelAsync_EmptyTransactions_CreatesFileWithHeadersOnly()
     {
         // Arrange
-        var viewModel = new TransactionViewModel();
-        var transactions = new List<Model_Transactions>(); // Empty list
+        var viewModel = new Model_Transactions_ViewModel();
+        var transactions = new List<Model_Transactions_Core>(); // Empty list
         var tempFilePath = Path.Combine(Path.GetTempPath(), $"TransactionExport_Empty_{Guid.NewGuid()}.xlsx");
 
         try

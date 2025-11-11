@@ -28,7 +28,7 @@ Implement a comprehensive error reporting system that allows users to submit err
 
 -   Must use existing Service_ErrorHandler integration (no MessageBox.Show)
 -   Stored procedures only (no inline SQL)
--   All DAO methods return DaoResult<T> wrapper pattern
+-   All DAO methods return Model_Dao_Result<T> wrapper pattern
 -   Background sync must not block application startup
 -   Offline queue files must be valid SQL INSERT statements for manual recovery
 -   Must support concurrent prevention (lock/semaphore pattern)
@@ -48,7 +48,7 @@ _GATE: Must pass before Phase 0 research. Re-check after Phase 1 design._
 | Principle                                                 | Status  | Justification                                                                                                                                                                                                                                                                |
 | --------------------------------------------------------- | ------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | I. Stored Procedure Only Database Access                  | ✅ PASS | All error report submissions will use stored procedure `sp_error_reports_Insert` via `Helper_Database_StoredProcedure`. Offline queue generates SQL INSERT statements that call the same stored procedure. No inline SQL in application code.                                |
-| II. DaoResult<T> Wrapper Pattern                          | ✅ PASS | New `Dao_ErrorReports` class will return `DaoResult<int>` for insert operations (returning ReportID) and `DaoResult<DataTable>` for query operations. All database errors wrapped in DaoResult with proper exception handling.                                               |
+| II. Model_Dao_Result<T> Wrapper Pattern                          | ✅ PASS | New `Dao_ErrorReports` class will return `Model_Dao_Result<int>` for insert operations (returning ReportID) and `Model_Dao_Result<DataTable>` for query operations. All database errors wrapped in Model_Dao_Result with proper exception handling.                                               |
 | III. Region Organization and Method Ordering              | ✅ PASS | New forms and services will follow standard region organization: Fields, Properties, Constructors, Specific Functionality (Report Submission, Queue Management), Button Clicks, Helpers, Cleanup. Methods ordered public→protected→private→static within each region.        |
 | IV. Manual Validation Testing Approach                    | ✅ PASS | Feature specification includes comprehensive manual test scenarios for all three user stories (P1: Report with Context, P1: Offline Reporting, P2: Manual Sync). Success criteria defined with measurable outcomes (SC-001 through SC-009).                                  |
 | V. Environment-Aware Database Selection                   | ✅ PASS | Uses existing `Helper_Database_Variables.GetConnectionString()` for database connectivity. Debug builds target `mtm_wip_application_winforms_test`, Release builds target `MTM_WIP_Application_Winforms`. No hardcoded connection strings.                                   |
@@ -98,8 +98,8 @@ MTM_WIP_Application_WinForms/
 │   └── Service_ErrorReportSync.cs           # NEW: Startup/manual sync coordinator
 │
 ├── Models/
-│   ├── Model_ErrorReport.cs                 # NEW: Error report entity
-│   └── Model_QueuedErrorReport.cs           # NEW: Offline queue item
+│   ├── Model_ErrorReport_Core.cs                 # NEW: Error report entity
+│   └── Model_ErrorReport_Core_Queued.cs           # NEW: Offline queue item
 │
 ├── Helpers/
 │   └── Helper_Database_StoredProcedure.cs   # EXISTING: Used for SP calls
@@ -201,8 +201,8 @@ _Fill ONLY if Constitution Check has violations that must be justified_
 **Entities Defined**:
 
 -   ErrorReport (14 attributes, MySQL table with indexes)
--   Model_ErrorReport (C# class)
--   Model_QueuedErrorReport (C# class for file system queue)
+-   Model_ErrorReport_Core (C# class)
+-   Model_ErrorReport_Core_Queued (C# class for file system queue)
 
 **Contracts Created**:
 
@@ -214,7 +214,7 @@ _Fill ONLY if Constitution Check has violations that must be justified_
 All 8 constitution principles satisfied:
 
 -   ✅ Stored Procedure Only Database Access
--   ✅ DaoResult<T> Wrapper Pattern
+-   ✅ Model_Dao_Result<T> Wrapper Pattern
 -   ✅ Region Organization and Method Ordering
 -   ✅ Manual Validation Testing Approach
 -   ✅ Environment-Aware Database Selection

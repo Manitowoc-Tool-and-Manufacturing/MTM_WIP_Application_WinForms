@@ -330,15 +330,15 @@ This release introduces a **comprehensive error reporting system with offline qu
 
 **Models** (Data Structures):
 
--   `Model_ErrorReport` - 14 properties mapping to database table
--   `Model_QueuedErrorReport` - Tracks pending offline reports
+-   `Model_ErrorReport_Core` - 14 properties mapping to database table
+-   `Model_ErrorReport_Core_Queued` - Tracks pending offline reports
 -   `ErrorReportStatus` enum - New, Reviewed, Resolved
 
 **Data Access Layer**:
 
 -   `Dao_ErrorReports` - Database operations using Helper_Database_StoredProcedure pattern
 -   InsertReportAsync method with proper error handling
--   DaoResult<int> return type for consistent error reporting
+-   Model_Dao_Result<int> return type for consistent error reporting
 
 **Services**:
 
@@ -364,7 +364,7 @@ This release introduces a **comprehensive error reporting system with offline qu
 
 #### Configuration
 
-**Model_AppVariables.ErrorReporting**:
+**Model_Application_Variables.ErrorReporting**:
 
 -   QueueDirectory: `%APPDATA%\MTM_Application\ErrorReports\Pending`
 -   ArchiveDirectory: `%APPDATA%\MTM_Application\ErrorReports\Sent`
@@ -390,7 +390,7 @@ This release introduces a **comprehensive error reporting system with offline qu
 **Service_ErrorHandler**:
 
 -   "Report Issue" button in error dialog
--   Model_ErrorReport population from exception context
+-   Model_ErrorReport_Core population from exception context
 -   Form_ReportIssue dialog integration
 
 ---
@@ -626,7 +626,7 @@ Start-Process "C:\Program Files\MTM_Application\MTM_WIP_Application_Winforms.exe
 
 **Code Components**:
 
--   Models: `Model_ErrorReport`, `Model_QueuedErrorReport`
+-   Models: `Model_ErrorReport_Core`, `Model_ErrorReport_Core_Queued`
 -   Data Access: `Dao_ErrorReports`
 -   Services: `Service_ErrorReportQueue`, `Service_ErrorReportSync`
 -   UI: `Form_ReportIssue`

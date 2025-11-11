@@ -86,7 +86,7 @@ All user stories require completion of:
   - **Reference**: `contracts/stored-procedures.md` (Procedure #5) + `.github/instructions/mysql-database.instructions.md`
 - [x] **T012** – Test All 5 Stored Procedures Together
   - **Reference**: `.github/instructions/integration-testing.instructions.md`
-- [x] **T013** – Create Model_ParameterPrefixOverride POCO
+- [x] **T013** – Create Model_ParameterPrefix_Override POCO
   - **Reference**: `.github/instructions/csharp-dotnet8.instructions.md`
 - [x] **T014** – Create Dao_ParameterPrefixOverrides DAO Class
   - **Reference**: `.github/instructions/csharp-dotnet8.instructions.md` + `.github/instructions/integration-testing.instructions.md`

@@ -210,7 +210,7 @@ SELECT COUNT(*) FROM sys_quick_buttons WHERE UserID = 'TEST-USER';
 
 ```csharp
 // File: path/to/file.cs, Lines: 45-60
-public async Task<DaoResult<DataTable>> GetData()
+public async Task<Model_Dao_Result<DataTable>> GetData()
 {
     var result = await Helper.ExecuteAsync(...);
     return result;  // ⚠️ No null check on result.Data!
@@ -347,7 +347,7 @@ public async Task<DaoResult<DataTable>> GetData()
 if (result.Data == null)
 {
     LoggingUtility.LogWarning("Data is null in GetData()");
-    return DaoResult<DataTable>.Failure("No data returned");
+    return Model_Dao_Result<DataTable>.Failure("No data returned");
 }
 ```
 

@@ -53,7 +53,7 @@ namespace MTM_WIP_Application_Winforms.Helpers
                 // FIXED: Use Helper_Database_StoredProcedure instead of Helper_Database_Core
                 // because our stored procedures HAVE p_Status and p_ErrorMsg parameters
                 var dataResult = await Helper_Database_StoredProcedure.ExecuteDataTableWithStatus(
-                    Model_AppVariables.ConnectionString,
+                    Model_Application_Variables.ConnectionString,
                     "md_part_ids_Get_All",
                     null, // No parameters needed
                     null, // No progress helper for this method
@@ -86,7 +86,7 @@ namespace MTM_WIP_Application_Winforms.Helpers
             {
                 // FIXED: Use Helper_Database_StoredProcedure instead of Helper_Database_Core
                 var dataResult = await Helper_Database_StoredProcedure.ExecuteDataTableWithStatus(
-                    Model_AppVariables.ConnectionString,
+                    Model_Application_Variables.ConnectionString,
                     "md_operation_numbers_Get_All",
                     null, // No parameters needed
                     null, // No progress helper for this method
@@ -119,7 +119,7 @@ namespace MTM_WIP_Application_Winforms.Helpers
             {
                 // FIXED: Use Helper_Database_StoredProcedure instead of Helper_Database_Core
                 var dataResult = await Helper_Database_StoredProcedure.ExecuteDataTableWithStatus(
-                    Model_AppVariables.ConnectionString,
+                    Model_Application_Variables.ConnectionString,
                     "md_locations_Get_All",
                     null, // No parameters needed
                     null, // No progress helper for this method
@@ -152,7 +152,7 @@ namespace MTM_WIP_Application_Winforms.Helpers
             {
                 // FIXED: Use Helper_Database_StoredProcedure instead of Helper_Database_Core
                 var dataResult = await Helper_Database_StoredProcedure.ExecuteDataTableWithStatus(
-                    Model_AppVariables.ConnectionString,
+                    Model_Application_Variables.ConnectionString,
                     "usr_users_Get_All",
                     null, // No parameters needed
                     null, // No progress helper for this method
@@ -202,7 +202,7 @@ namespace MTM_WIP_Application_Winforms.Helpers
             {
                 // FIXED: Use Helper_Database_StoredProcedure instead of Helper_Database_Core
                 var dataResult = await Helper_Database_StoredProcedure.ExecuteDataTableWithStatus(
-                    Model_AppVariables.ConnectionString,
+                    Model_Application_Variables.ConnectionString,
                     "md_item_types_Get_All",
                     null, // No parameters needed
                     null, // No progress helper for this method
@@ -245,7 +245,7 @@ namespace MTM_WIP_Application_Winforms.Helpers
                     "[ Enter Part Number ]",
                     PartDataLock
                 ).ConfigureAwait(false);
-                comboBox.ForeColor = Model_AppVariables.UserUiColors.ComboBoxErrorForeColor ?? Color.Red;
+                comboBox.ForeColor = Model_Application_Variables.UserUiColors.ComboBoxErrorForeColor ?? Color.Red;
                 await Task.Delay(100);
             }
             catch (Exception ex)
@@ -266,7 +266,7 @@ namespace MTM_WIP_Application_Winforms.Helpers
                     "[ Enter Operation ]",
                     OperationDataLock
                 ).ConfigureAwait(false);
-                comboBox.ForeColor = Model_AppVariables.UserUiColors.ComboBoxErrorForeColor ?? Color.Red;
+                comboBox.ForeColor = Model_Application_Variables.UserUiColors.ComboBoxErrorForeColor ?? Color.Red;
             }
             catch (Exception ex)
             {
@@ -286,7 +286,7 @@ namespace MTM_WIP_Application_Winforms.Helpers
                     "[ Enter Location ]",
                     LocationDataLock
                 ).ConfigureAwait(false);
-                comboBox.ForeColor = Model_AppVariables.UserUiColors.ComboBoxErrorForeColor ?? Color.Red;
+                comboBox.ForeColor = Model_Application_Variables.UserUiColors.ComboBoxErrorForeColor ?? Color.Red;
             }
             catch (Exception ex)
             {
@@ -300,7 +300,7 @@ namespace MTM_WIP_Application_Winforms.Helpers
             {
                 await FillComboBoxAsync(ComboBoxUser_DataTable, comboBox, "User", "ID", "[ Enter User ]", UserDataLock)
                     .ConfigureAwait(false);
-                comboBox.ForeColor = Model_AppVariables.UserUiColors.ComboBoxErrorForeColor ?? Color.Red;
+                comboBox.ForeColor = Model_Application_Variables.UserUiColors.ComboBoxErrorForeColor ?? Color.Red;
             }
             catch (Exception ex)
             {
@@ -320,7 +320,7 @@ namespace MTM_WIP_Application_Winforms.Helpers
                     "[ Enter Item Type ]",
                     ItemTypeDataLock
                 ).ConfigureAwait(false);
-                comboBox.ForeColor = Model_AppVariables.UserUiColors.ComboBoxErrorForeColor ?? Color.Red;
+                comboBox.ForeColor = Model_Application_Variables.UserUiColors.ComboBoxErrorForeColor ?? Color.Red;
             }
             catch (Exception ex)
             {
@@ -489,7 +489,7 @@ namespace MTM_WIP_Application_Winforms.Helpers
 
             if (string.IsNullOrWhiteSpace(text))
             {
-                comboBox.ForeColor = Model_AppVariables.UserUiColors.ComboBoxErrorForeColor ?? Color.Red;
+                comboBox.ForeColor = Model_Application_Variables.UserUiColors.ComboBoxErrorForeColor ?? Color.Red;
                 comboBox.Text = placeholder;
                 if (comboBox.Items.Count > 0)
                 {
@@ -501,7 +501,7 @@ namespace MTM_WIP_Application_Winforms.Helpers
 
             if (text.Equals(placeholder, StringComparison.OrdinalIgnoreCase))
             {
-                comboBox.ForeColor = Model_AppVariables.UserUiColors.ComboBoxErrorForeColor ?? Color.Red;
+                comboBox.ForeColor = Model_Application_Variables.UserUiColors.ComboBoxErrorForeColor ?? Color.Red;
                 if (comboBox.Items.Count > 0)
                 {
                     comboBox.SelectedIndex = 0;
@@ -523,12 +523,12 @@ namespace MTM_WIP_Application_Winforms.Helpers
 
             if (found)
             {
-                comboBox.ForeColor = Model_AppVariables.UserUiColors.ComboBoxForeColor ?? Color.Black;
+                comboBox.ForeColor = Model_Application_Variables.UserUiColors.ComboBoxForeColor ?? Color.Black;
                 return true;
             }
             else
             {
-                comboBox.ForeColor = Model_AppVariables.UserUiColors.ComboBoxErrorForeColor ?? Color.Red;
+                comboBox.ForeColor = Model_Application_Variables.UserUiColors.ComboBoxErrorForeColor ?? Color.Red;
                 comboBox.Text = placeholder;
                 if (comboBox.Items.Count > 0)
                 {

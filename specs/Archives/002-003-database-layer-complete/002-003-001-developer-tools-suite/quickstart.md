@@ -436,8 +436,8 @@ Quickly scaffold C# DAO method code from stored procedure definitions, reducing 
 /// </summary>
 /// <param name="inventoryId">Inventory record ID</param>
 /// <param name="adjustmentReason">Reason for adjustment</param>
-/// <returns>DaoResult with operation status</returns>
-public static async Task<DaoResult<DataTable>> EmergencyAdjustAsync(
+/// <returns>Model_Dao_Result with operation status</returns>
+public static async Task<Model_Dao_Result<DataTable>> EmergencyAdjustAsync(
     long inventoryId,
     string adjustmentReason)
 {
@@ -450,19 +450,19 @@ public static async Task<DaoResult<DataTable>> EmergencyAdjustAsync(
         };
 
         var result = await Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync(
-            Model_AppVariables.ConnectionString,
+            Model_Application_Variables.ConnectionString,
             "inv_inventory_EmergencyAdjust",
             parameters,
             useAsync: true);
 
         if (result.IsSuccess)
         {
-            return DaoResult<DataTable>.Success(result.Data);
+            return Model_Dao_Result<DataTable>.Success(result.Data);
         }
         else
         {
             LoggingUtility.LogApplicationError(result.Exception, result.StatusMessage);
-            return DaoResult<DataTable>.Failure(result.StatusMessage);
+            return Model_Dao_Result<DataTable>.Failure(result.StatusMessage);
         }
     }
     catch (Exception ex)
@@ -471,7 +471,7 @@ public static async Task<DaoResult<DataTable>> EmergencyAdjustAsync(
             ex,
             nameof(EmergencyAdjustAsync),
             nameof(Dao_Inventory));
-        return DaoResult<DataTable>.Failure(ex.Message);
+        return Model_Dao_Result<DataTable>.Failure(ex.Message);
     }
 }
 
@@ -509,7 +509,7 @@ public class SearchCriteria
     // ... 15 more properties
 }
 
-public static async Task<DaoResult<DataTable>> SearchTransactionsAsync(
+public static async Task<Model_Dao_Result<DataTable>> SearchTransactionsAsync(
     SearchCriteria criteria) // Single parameter instead of 17
 {
     // Convert criteria to dictionary
@@ -744,7 +744,7 @@ Test-Path "Database/STORED_PROCEDURE_CALLSITES.csv"
 ```csharp
 // 1. Check return type - may need adjustment
 // If procedure returns multiple result sets:
-public static async Task<DaoResult<DataSet>> MethodAsync(...) // Use DataSet not DataTable
+public static async Task<Model_Dao_Result<DataSet>> MethodAsync(...) // Use DataSet not DataTable
 
 // 2. Check parameter types - generator uses best guess
 // Adjust types as needed:

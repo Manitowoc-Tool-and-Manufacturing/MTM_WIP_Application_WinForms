@@ -13,7 +13,7 @@ This specification defines a comprehensive refactor and standardization of the e
 
 **Solution Approach**: Implement a three-phase standardization:
 
-1. **Phase 1-2**: Foundation - DaoResult pattern, Helper refactoring, parameter prefix detection
+1. **Phase 1-2**: Foundation - Model_Dao_Result pattern, Helper refactoring, parameter prefix detection
 2. **Phase 2.5**: Stored Procedure Discovery & Standardization - Comprehensive audit and refactoring of ALL 60+ stored procedures
 3. **Phase 3-8**: DAO Implementation - Systematic refactoring of 12 DAO classes and 100+ call sites
 
@@ -45,7 +45,7 @@ This specification defines a comprehensive refactor and standardization of the e
 -   Batch operations: 5000ms
 -   Report operations: 2000ms
 
-Configuration stored in `Model_AppVariables` or appsettings file.
+Configuration stored in `Model_Application_Variables` or appsettings file.
 
 ---
 
@@ -112,10 +112,10 @@ Aligns with industry standards for effective triage.
 **Independent Test Criteria**:
 
 -   Create test stored procedure `test_operation_Add` with standard OUT parameters
--   Generate corresponding DAO method using standard DaoResult pattern
--   Execute with valid data → returns DaoResult.Success with confirmation
--   Execute with invalid data → returns DaoResult.Failure with user-friendly message
--   Force database error → returns DaoResult.Failure without crash, logs to database
+-   Generate corresponding DAO method using standard Model_Dao_Result pattern
+-   Execute with valid data → returns Model_Dao_Result.Success with confirmation
+-   Execute with invalid data → returns Model_Dao_Result.Failure with user-friendly message
+-   Force database error → returns Model_Dao_Result.Failure without crash, logs to database
 
 **Acceptance Scenarios**:
 
@@ -123,18 +123,18 @@ Aligns with industry standards for effective triage.
 
     - **Given**: New stored procedure `test_operation_Add` exists with parameters (p_PartID, p_Quantity, OUT p_Status, OUT p_ErrorMsg)
     - **When**: Developer creates DAO method following standard pattern and calls with valid data (PartID="ABC123", Quantity=10)
-    - **Then**: Method returns `DaoResult.Success` with `IsSuccess=true` and confirmation message "Operation completed successfully"
+    - **Then**: Method returns `Model_Dao_Result.Success` with `IsSuccess=true` and confirmation message "Operation completed successfully"
 
 2. **Invalid Parameter Handling**
 
     - **Given**: Same DAO method exists
     - **When**: Developer calls with invalid/missing parameters (PartID=null, Quantity=-5)
-    - **Then**: Method returns `DaoResult.Failure` with `IsSuccess=false`, user-friendly message "PartID is required" or "Quantity must be positive", and error logged to log_error table with full context
+    - **Then**: Method returns `Model_Dao_Result.Failure` with `IsSuccess=false`, user-friendly message "PartID is required" or "Quantity must be positive", and error logged to log_error table with full context
 
 3. **Database Connection Failure Recovery**
     - **Given**: DAO method executing normally
     - **When**: Database connection fails mid-operation (network disconnect, server restart)
-    - **Then**: Method catches exception, returns `DaoResult.Failure` with actionable message "Database connection lost. Please retry.", logs detailed error with stack trace, and application remains stable (no crash)
+    - **Then**: Method catches exception, returns `Model_Dao_Result.Failure` with actionable message "Database connection lost. Please retry.", logs detailed error with stack trace, and application remains stable (no crash)
 
 **Dependencies**: Blocks all other user stories - must complete first
 
@@ -162,7 +162,7 @@ Aligns with industry standards for effective triage.
 
     - **Given**: 100 inventory items to add with valid data
     - **When**: All operations execute via `Dao_Inventory.AddInventoryAsync` sequentially
-    - **Then**: All 100 succeed with `DaoResult.IsSuccess=true`, stored procedures return `p_Status=1` (success with data), and all items appear in database
+    - **Then**: All 100 succeed with `Model_Dao_Result.IsSuccess=true`, stored procedures return `p_Status=1` (success with data), and all items appear in database
 
 2. **Mid-Operation Failure Recovery**
 
@@ -174,7 +174,7 @@ Aligns with industry standards for effective triage.
 
     - **Given**: DAO method expecting (PartID:string, Quantity:decimal)
     - **When**: Called with malformed parameters (PartID="", Quantity="invalid")
-    - **Then**: Method validates before database call, returns `DaoResult.Failure` with validation message "PartID cannot be empty" or "Quantity must be numeric", NOT MySQL exception
+    - **Then**: Method validates before database call, returns `Model_Dao_Result.Failure` with validation message "PartID cannot be empty" or "Quantity must be numeric", NOT MySQL exception
 
 4. **Connection Pool Health Under Load**
     - **Given**: Connection pool configured (MinPoolSize=5, MaxPoolSize=100, ConnectionTimeout=30s)
@@ -322,7 +322,7 @@ Aligns with industry standards for effective triage.
 **Unexpected Status Code Handling**
 
 -   **Scenario**: Stored procedure returns status code not in standard range (e.g., p_Status=99)
--   **Behavior**: System logs warning "Unexpected status code 99 from procedure inv_inventory_Add", treats as error condition (equivalent to p_Status=-1), returns `DaoResult.Failure` with message "Unexpected database response. Contact support."
+-   **Behavior**: System logs warning "Unexpected status code 99 from procedure inv_inventory_Add", treats as error condition (equivalent to p_Status=-1), returns `Model_Dao_Result.Failure` with message "Unexpected database response. Contact support."
 -   **Rationale**: Prevents undefined behavior from non-standard status codes
 
 **Database Timeout During Long Operation**
@@ -374,10 +374,10 @@ Aligns with industry standards for effective triage.
 **FR-001: Standardized Helper Execution Methods**  
 System MUST provide `Helper_Database_StoredProcedure` class with four execution methods that route all database access:
 
--   `ExecuteNonQueryWithStatusAsync` - INSERT/UPDATE/DELETE operations returning DaoResult
--   `ExecuteDataTableWithStatusAsync` - SELECT operations returning DaoResult<DataTable>
--   `ExecuteScalarWithStatusAsync<T>` - SELECT single value returning DaoResult<T>
--   `ExecuteWithCustomOutputAsync` - Non-standard outputs returning DaoResult<Dictionary<string, object>>
+-   `ExecuteNonQueryWithStatusAsync` - INSERT/UPDATE/DELETE operations returning Model_Dao_Result
+-   `ExecuteDataTableWithStatusAsync` - SELECT operations returning Model_Dao_Result<DataTable>
+-   `ExecuteScalarWithStatusAsync<T>` - SELECT single value returning Model_Dao_Result<T>
+-   `ExecuteWithCustomOutputAsync` - Non-standard outputs returning Model_Dao_Result<Dictionary<string, object>>
 
 All methods include automatic parameter prefix detection, retry logic, and performance monitoring.
 
@@ -396,12 +396,12 @@ Startup cache initialization completes within 100-200ms with logging of cache hi
 
 ---
 
-**FR-003: DaoResult Wrapper Pattern**  
+**FR-003: Model_Dao_Result Wrapper Pattern**  
 All DAO methods MUST return structured result objects:
 
--   **DaoResult** for non-data operations: Properties include `IsSuccess` (bool), `Message` (string), `Exception` (Exception or null)
--   **DaoResult<T>** for data operations: Extends DaoResult with `Data` (T - DataTable, DataRow, primitive, or custom type)
--   **Factory methods**: `DaoResult.Success(message)`, `DaoResult.Failure(message, exception)`, `DaoResult<T>.Success(data, message)`, `DaoResult<T>.Failure(message, exception)`
+-   **Model_Dao_Result** for non-data operations: Properties include `IsSuccess` (bool), `Message` (string), `Exception` (Exception or null)
+-   **Model_Dao_Result<T>** for data operations: Extends Model_Dao_Result with `Data` (T - DataTable, DataRow, primitive, or custom type)
+-   **Factory methods**: `Model_Dao_Result.Success(message)`, `Model_Dao_Result.Failure(message, exception)`, `Model_Dao_Result<T>.Success(data, message)`, `Model_Dao_Result<T>.Failure(message, exception)`
 
 Pattern eliminates exception-driven control flow for expected database failures.
 
@@ -501,7 +501,7 @@ Retry logic integrated into all four Helper execution methods.
 All new DAO methods MUST be purely asynchronous:
 
 -   Method names end with `Async` suffix
--   Return `Task<DaoResult>` or `Task<DaoResult<T>>`
+-   Return `Task<Model_Dao_Result>` or `Task<Model_Dao_Result<T>>`
 -   No `useAsync` parameter (removed from all methods)
 -   All calling code (Forms event handlers, Services, Controls) must use `async/await` patterns
 -   No synchronous wrapper class provided - forces immediate async migration
@@ -568,7 +568,7 @@ Ensures application never loads with non-functional database layer.
 **FR-015: Uniform DAO Structure**  
 All DAO classes MUST follow identical structure:
 
--   All methods are `async` returning `Task<DaoResult>` or `Task<DaoResult<T>>`
+-   All methods are `async` returning `Task<Model_Dao_Result>` or `Task<Model_Dao_Result<T>>`
 -   All methods route through `Helper_Database_StoredProcedure` (no direct MySqlConnection/MySqlCommand)
 -   Parameters match stored procedure signature exactly (PascalCase names, types aligned)
 -   XML documentation on all public methods (summary, param, returns, exception tags)
@@ -637,7 +637,7 @@ System MUST measure and log execution time for all database operations:
 -   Categorize operations by type: Query (SELECT with filters), Modification (INSERT/UPDATE/DELETE), Batch (multiple row operations), Report (aggregation/analytics)
 -   Define threshold per category: Query=500ms, Modification=1000ms, Batch=5000ms, Report=2000ms
 -   Log operations exceeding threshold as WARNING with details: operation name, parameters (sanitized), execution time, category, threshold
--   Store thresholds in `Model_AppVariables` or appsettings for easy adjustment
+-   Store thresholds in `Model_Application_Variables` or appsettings for easy adjustment
 -   Provide performance dashboard via Service_DebugTracer showing top 10 slowest operations
 
 Enables proactive performance optimization and bottleneck identification.
@@ -772,7 +772,7 @@ Prevents application from running with incomplete/fallback parameter data which 
 
 ### Key Entities
 
-**DaoResult**  
+**Model_Dao_Result**  
 Non-generic wrapper class for operations that don't return data.
 
 -   **IsSuccess** (bool): True if operation succeeded, false if failed
@@ -783,11 +783,11 @@ Non-generic wrapper class for operations that don't return data.
 
 ---
 
-**DaoResult<T>**  
-Generic wrapper class for operations returning data, extends DaoResult.
+**Model_Dao_Result<T>**  
+Generic wrapper class for operations returning data, extends Model_Dao_Result.
 
 -   **Data** (T): Query results (DataTable, DataRow, string, int, custom model)
--   **Inherits**: IsSuccess, Message, Exception from DaoResult
+-   **Inherits**: IsSuccess, Message, Exception from Model_Dao_Result
 -   **Factory Methods**: `Success(data, message)`, `Failure(message, exception)`
 -   **Usage**: SELECT operations, scalar queries, custom output procedures
 
@@ -796,10 +796,10 @@ Generic wrapper class for operations returning data, extends DaoResult.
 **Helper_Database_StoredProcedure**  
 Central helper class providing standardized stored procedure execution.
 
--   **ExecuteNonQueryWithStatusAsync**: Returns DaoResult for INSERT/UPDATE/DELETE
--   **ExecuteDataTableWithStatusAsync**: Returns DaoResult<DataTable> for SELECT
--   **ExecuteScalarWithStatusAsync<T>**: Returns DaoResult<T> for scalar SELECT
--   **ExecuteWithCustomOutputAsync**: Returns DaoResult<Dictionary<string, object>> for custom outputs
+-   **ExecuteNonQueryWithStatusAsync**: Returns Model_Dao_Result for INSERT/UPDATE/DELETE
+-   **ExecuteDataTableWithStatusAsync**: Returns Model_Dao_Result<DataTable> for SELECT
+-   **ExecuteScalarWithStatusAsync<T>**: Returns Model_Dao_Result<T> for scalar SELECT
+-   **ExecuteWithCustomOutputAsync**: Returns Model_Dao_Result<Dictionary<string, object>> for custom outputs
 -   **Parameter Prefix Detection**: Queries INFORMATION_SCHEMA at startup, applies prefixes automatically
 -   **Retry Logic**: Handles transient errors (1205, 1213, 2006, 2013) with exponential backoff
 -   **Performance Monitoring**: Logs execution time, flags slow queries per category threshold
@@ -831,7 +831,7 @@ Data Access Object classes providing domain-specific database operations:
 -   **Dao_History**: Historical data queries (inventory/remove/transfer history)
 -   **Dao_ErrorLog**: Error logging operations
 -   **Dao_System**: System metadata, roles, themes, access control
--   **Common Structure**: All use async methods, DaoResult pattern, route through Helper
+-   **Common Structure**: All use async methods, Model_Dao_Result pattern, route through Helper
 
 ---
 
@@ -905,7 +905,7 @@ All database operations in Data/ folder route through Helper_Database_StoredProc
 ---
 
 **SC-003: Comprehensive Stored Procedure Testing**  
-All 60+ stored procedures successfully tested with valid and invalid inputs, returning consistent DaoResult responses.
+All 60+ stored procedures successfully tested with valid and invalid inputs, returning consistent Model_Dao_Result responses.
 
 -   **Test Coverage**: Each procedure has ≥4 test methods (success with data, success no data, validation error, database error)
 -   **Pass Rate**: 100% of tests passing
@@ -919,7 +919,7 @@ Database operations complete within 5% performance variance compared to pre-refa
 
 -   **Baseline**: Establish before refactor begins (10 key operations: inventory add, search, transfer, user auth, etc.)
 -   **Measurement**: Execute same operations post-refactor, compare execution times
--   **Acceptable Variance**: ±5% (acknowledges measurement noise and minor overhead from DaoResult wrapping)
+-   **Acceptable Variance**: ±5% (acknowledges measurement noise and minor overhead from Model_Dao_Result wrapping)
 -   **Tool**: Benchmark suite using Stopwatch for precise timing
 
 ---

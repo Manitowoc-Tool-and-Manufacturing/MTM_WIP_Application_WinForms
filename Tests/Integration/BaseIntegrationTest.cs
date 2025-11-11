@@ -685,7 +685,7 @@ public abstract class BaseIntegrationTest
     protected static string GetTestConnectionString()
     {
         return Helper_Database_Variables.GetConnectionString(
-            server: null,  // Use default from Model_Users
+            server: null,  // Use default from Model_Shared_Users
             database: Helper_Database_Variables.TestDatabaseName,
             uid: null,     // Use default "root"
             password: null // Use default "root"
@@ -1011,7 +1011,7 @@ public abstract class BaseIntegrationTest
     /// <summary>
     /// Executes a stored procedure against the test database with automatic diagnostic capture.
     /// </summary>
-    protected async Task<DaoResult<DataTable>> ExecuteTestProcedureAsync(
+    protected async Task<Model_Dao_Result<DataTable>> ExecuteTestProcedureAsync(
         string procedureName,
         Dictionary<string, object> parameters,
         params string[] tablesToSnapshot)
@@ -1094,14 +1094,14 @@ public abstract class BaseIntegrationTest
     /// Asserts procedure results and emits verbose diagnostics if expectations are not met.
     /// </summary>
     protected void AssertProcedureResult(
-        DaoResult result,
+        Model_Dao_Result result,
         bool expectedSuccess,
         string? expectedMessageSubstring = null,
         params string[] tablesToSnapshot)
     {
         if (result is null)
         {
-            Assert.Fail("DaoResult was null; cannot validate outcome.");
+            Assert.Fail("Model_Dao_Result was null; cannot validate outcome.");
             return;
         }
 
@@ -1118,14 +1118,14 @@ public abstract class BaseIntegrationTest
     /// Asserts generic procedure results with verbose diagnostics.
     /// </summary>
     protected void AssertProcedureResult<T>(
-        DaoResult<T> result,
+        Model_Dao_Result<T> result,
         bool expectedSuccess,
         string? expectedMessageSubstring = null,
         params string[] tablesToSnapshot)
     {
         if (result is null)
         {
-            Assert.Fail("DaoResult<T> was null; cannot validate outcome.");
+            Assert.Fail("Model_Dao_Result<T> was null; cannot validate outcome.");
             return;
         }
 
@@ -1139,16 +1139,16 @@ public abstract class BaseIntegrationTest
     }
 
     /// <summary>
-    /// Asserts that a DaoResult operation succeeded.
+    /// Asserts that a Model_Dao_Result operation succeeded.
     /// </summary>
-    /// <param name="result">The DaoResult to validate.</param>
+    /// <param name="result">The Model_Dao_Result to validate.</param>
     /// <param name="message">Optional custom assertion message.</param>
     /// <exception cref="AssertFailedException">Thrown if result.IsSuccess is false.</exception>
     /// <remarks>
     /// Provides detailed failure information including the result's error message
     /// and exception details (if present).
     /// </remarks>
-    protected static void AssertSuccess(DaoResult result, string? message = null)
+    protected static void AssertSuccess(Model_Dao_Result result, string? message = null)
     {
         var failureDetails = result.IsSuccess
             ? string.Empty
@@ -1162,14 +1162,14 @@ public abstract class BaseIntegrationTest
 
         Assert.IsTrue(
             result.IsSuccess,
-            message ?? $"Expected DaoResult.IsSuccess to be true, but was false.{failureDetails}");
+            message ?? $"Expected Model_Dao_Result.IsSuccess to be true, but was false.{failureDetails}");
     }
 
     /// <summary>
-    /// Asserts that a DaoResult&lt;T&gt; operation succeeded and returned data.
+    /// Asserts that a Model_Dao_Result&lt;T&gt; operation succeeded and returned data.
     /// </summary>
-    /// <typeparam name="T">The data type returned by the DaoResult.</typeparam>
-    /// <param name="result">The DaoResult&lt;T&gt; to validate.</param>
+    /// <typeparam name="T">The data type returned by the Model_Dao_Result.</typeparam>
+    /// <param name="result">The Model_Dao_Result&lt;T&gt; to validate.</param>
     /// <param name="message">Optional custom assertion message.</param>
     /// <exception cref="AssertFailedException">
     /// Thrown if result.IsSuccess is false or result.Data is null.
@@ -1178,7 +1178,7 @@ public abstract class BaseIntegrationTest
     /// Validates both success status and data presence. For operations that may
     /// legitimately return null data on success, use <see cref="AssertSuccess"/> instead.
     /// </remarks>
-    protected static void AssertSuccessWithData<T>(DaoResult<T> result, string? message = null)
+    protected static void AssertSuccessWithData<T>(Model_Dao_Result<T> result, string? message = null)
     {
         var failureDetails = result.IsSuccess
             ? string.Empty
@@ -1187,37 +1187,37 @@ public abstract class BaseIntegrationTest
 
         Assert.IsTrue(
             result.IsSuccess,
-            message ?? $"Expected DaoResult.IsSuccess to be true, but was false.{failureDetails}");
+            message ?? $"Expected Model_Dao_Result.IsSuccess to be true, but was false.{failureDetails}");
 
         Assert.IsNotNull(
             result.Data,
-            message ?? $"Expected DaoResult<{typeof(T).Name}>.Data to be non-null after successful operation.");
+            message ?? $"Expected Model_Dao_Result<{typeof(T).Name}>.Data to be non-null after successful operation.");
     }
 
     /// <summary>
-    /// Asserts that a DaoResult operation failed.
+    /// Asserts that a Model_Dao_Result operation failed.
     /// </summary>
-    /// <param name="result">The DaoResult to validate.</param>
+    /// <param name="result">The Model_Dao_Result to validate.</param>
     /// <param name="message">Optional custom assertion message.</param>
     /// <exception cref="AssertFailedException">Thrown if result.IsSuccess is true.</exception>
     /// <remarks>
     /// Use this to test error handling paths and validation logic.
     /// </remarks>
-    protected static void AssertFailure(DaoResult result, string? message = null)
+    protected static void AssertFailure(Model_Dao_Result result, string? message = null)
     {
         Assert.IsFalse(
             result.IsSuccess,
-            message ?? "Expected DaoResult.IsSuccess to be false, but was true.");
+            message ?? "Expected Model_Dao_Result.IsSuccess to be false, but was true.");
 
         Assert.IsFalse(
             string.IsNullOrWhiteSpace(result.ErrorMessage),
-            "Expected DaoResult.ErrorMessage to contain error details, but was null or empty.");
+            "Expected Model_Dao_Result.ErrorMessage to contain error details, but was null or empty.");
     }
 
     /// <summary>
-    /// Asserts that a DaoResult operation failed with a specific error message substring.
+    /// Asserts that a Model_Dao_Result operation failed with a specific error message substring.
     /// </summary>
-    /// <param name="result">The DaoResult to validate.</param>
+    /// <param name="result">The Model_Dao_Result to validate.</param>
     /// <param name="expectedMessageSubstring">
     /// A substring that should appear in the error message (case-insensitive).
     /// </param>
@@ -1226,7 +1226,7 @@ public abstract class BaseIntegrationTest
     /// Thrown if result succeeded or error message doesn't contain expected substring.
     /// </exception>
     protected static void AssertFailureWithMessage(
-        DaoResult result,
+        Model_Dao_Result result,
         string expectedMessageSubstring,
         string? message = null)
     {

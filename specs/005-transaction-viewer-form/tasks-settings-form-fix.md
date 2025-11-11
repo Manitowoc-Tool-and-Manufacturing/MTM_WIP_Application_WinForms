@@ -27,7 +27,7 @@ Must read through "C:\Users\johnk\OneDrive\Documents\Work Folder\WIP App Logs\JO
 - [ ] **Task 3: Fix `Control_Remove_User.cs`**
 - **Issue**: Uses DAO methods for user deletion - verify stored procedure calls
 - **Validate**: Check delete/soft-delete stored procedures
-- **Fix**: Ensure proper error handling with `DaoResult` pattern
+- **Fix**: Ensure proper error handling with `Model_Dao_Result` pattern
 - **Error Handling Check**: Verify all DAO calls use `Service_ErrorHandler.HandleDatabaseError()` for database exceptions and `Service_ErrorHandler.HandleException()` for general errors, replacing any `MessageBox.Show()`. Ensure `LoggingUtility.LogDatabaseError()` or `LoggingUtility.LogApplicationError()` is used appropriately. Check compliance with #file:database-patterns.memory.instructions.md for connection pooling, retry logic, and stored procedure patterns, and #file:database-ui-integration.memory.instructions.md for safe column access and DataTable mapping.
 
 ---
@@ -205,7 +205,7 @@ For each file, follow this workflow:
 3. **Verify stored procedure exists** - Check ReadyForVerification
 4. **Validate parameters** - Ensure parameter names match stored procedure expectations (with `p_` prefix in MySQL, without in C# Dictionary)
 5. **Test execution** - Run the control and verify no SQL errors occur
-6. **Check error handling** - Ensure `DaoResult` pattern is used with proper `IsSuccess` checks
+6. **Check error handling** - Ensure `Model_Dao_Result` pattern is used with proper `IsSuccess` checks
 7. **Update if needed** - Fix parameter mismatches, missing stored procedures, or error handling issues
 8. **Error Handling Verification** - Confirm `Service_ErrorHandler` is used for all exceptions, `LoggingUtility` for logging, and compliance with database patterns and UI integration memory files
 

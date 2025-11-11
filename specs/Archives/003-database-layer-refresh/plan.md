@@ -14,7 +14,7 @@
 ✅ **Aligned**: All stored procedure standardization preserves manufacturing business logic exactly. Operation numbers (90/100/110) remain as work order sequence steps. Transaction types (IN/OUT/TRANSFER) remain as inventory movement intent. No changes to business semantics.
 
 **2. Performance Requirements (Sub-100ms UI, 30s Database Timeout)**  
-✅ **Aligned**: Phase 2.5 standardization does not alter query logic or add overhead. Parameter prefix detection cached at startup (~100ms one-time cost). DaoResult wrapper adds <1ms per operation. Connection pooling maintains performance baseline. Performance testing (SC-004) validates ±5% variance.
+✅ **Aligned**: Phase 2.5 standardization does not alter query logic or add overhead. Parameter prefix detection cached at startup (~100ms one-time cost). Model_Dao_Result wrapper adds <1ms per operation. Connection pooling maintains performance baseline. Performance testing (SC-004) validates ±5% variance.
 
 **3. WinForms Architecture Patterns**  
 ✅ **Aligned**: DAO refactor maintains separation between Forms (UI event handlers), Helpers (utilities), and DAOs (data access). Async-only pattern requires Forms to adopt `async void` event handlers, which is standard WinForms practice. No designer file modifications.
@@ -94,8 +94,8 @@
 ┌─────────────────────────────────────────────────────────┐
 │ Data Access Layer (Data/)                               │
 │  - 12 DAO classes (Dao_Inventory, Dao_User, etc.)       │
-│  - DaoResult wrapper pattern                            │
-│  - Async-only methods (Task<DaoResult>)                 │
+│  - Model_Dao_Result wrapper pattern                            │
+│  - Async-only methods (Task<Model_Dao_Result>)                 │
 └─────────────────────────────┬───────────────────────────┘
                               │ Routes through Helper
                               ↓
@@ -191,14 +191,14 @@
 -   T130 completes any remaining backlog, T131 validates 100% completion
 -   **Risk reduced**: Concurrent tracking prevents drift, validation enforces completeness
 
-**6. Performance Regression from DaoResult Wrapping**  
+**6. Performance Regression from Model_Dao_Result Wrapping**  
 **Risk**: Additional object allocation and method calls slow down operations  
 **Impact**: User-perceivable lag, timeout errors under load  
 **Mitigation**:
 
 -   SC-004 requires ±5% performance variance (tight tolerance)
 -   Benchmark suite measures 10 key operations before/after refactor
--   DaoResult is lightweight struct (~40 bytes per instance)
+-   Model_Dao_Result is lightweight struct (~40 bytes per instance)
 -   Connection pooling maintains baseline performance
 
 **7. Integration Test Flakiness from Shared Test Database**  
@@ -472,13 +472,13 @@ Build reusable base class for integration tests with automatic transaction rollb
             TestConnection?.Dispose();
         }
 
-        protected async Task<DaoResult<DataTable>> ExecuteTestProcedureAsync(string procedureName, Dictionary<string, object> parameters)
+        protected async Task<Model_Dao_Result<DataTable>> ExecuteTestProcedureAsync(string procedureName, Dictionary<string, object> parameters)
         {
             // Helper method executing procedure within test transaction
         }
 
         // NEW: Verbose failure diagnostic helper
-        protected void AssertProcedureResult(DaoResult result, bool expectedSuccess, string expectedMessagePattern = null)
+        protected void AssertProcedureResult(Model_Dao_Result result, bool expectedSuccess, string expectedMessagePattern = null)
         {
             if (result.IsSuccess != expectedSuccess)
             {
@@ -510,10 +510,10 @@ Build reusable base class for integration tests with automatic transaction rollb
 Create test classes for all inv*inventory*\* procedures following 4-test pattern with verbose failures.
 
 -   **Test Pattern** (per procedure):
-    1. **Success with data**: Valid inputs → returns DaoResult.Success, Data populated
-    2. **Success no data**: Valid inputs, no matching records → returns DaoResult.Success, Data empty
-    3. **Validation error**: Invalid inputs (null required param) → returns DaoResult.Failure, error message clear
-    4. **Database error**: Force constraint violation → returns DaoResult.Failure, exception logged
+    1. **Success with data**: Valid inputs → returns Model_Dao_Result.Success, Data populated
+    2. **Success no data**: Valid inputs, no matching records → returns Model_Dao_Result.Success, Data empty
+    3. **Validation error**: Invalid inputs (null required param) → returns Model_Dao_Result.Failure, error message clear
+    4. **Database error**: Force constraint violation → returns Model_Dao_Result.Failure, exception logged
 -   **All tests use AssertProcedureResult()** for verbose failure diagnostics (7 fields: exception, parameters, expected vs actual, execution time, database state, test method, timestamp)
 -   **Scope**: 15 inventory procedures × 4 tests = 60 test methods
 -   **Deliverable**: InventoryProcedures_IntegrationTests.cs (~800 LOC)
@@ -1129,7 +1129,7 @@ Compile complete reference document covering all refactoring work, decisions, an
 /// <param name="operationNumber">Operation number from md_operation_numbers (optional).</param>
 /// <param name="userId">Current user ID for audit trail (required).</param>
 /// <returns>
-/// DaoResult indicating success or failure:
+/// Model_Dao_Result indicating success or failure:
 /// - IsSuccess=true: Inventory added successfully, Message contains confirmation
 /// - IsSuccess=false: Addition failed, Message contains user-friendly error, Exception contains technical details
 /// </returns>
@@ -1139,7 +1139,7 @@ Compile complete reference document covering all refactoring work, decisions, an
 /// Operation logged to inv_transaction table automatically by stored procedure.
 /// Validates location and operation existence before insertion.
 /// </remarks>
-public async Task<DaoResult> AddInventoryAsync(string partId, string locationCode, decimal quantity, int? operationNumber, int userId)
+public async Task<Model_Dao_Result> AddInventoryAsync(string partId, string locationCode, decimal quantity, int? operationNumber, int userId)
 {
     // Implementation
 }
@@ -1202,7 +1202,7 @@ Compile complete reference document covering all refactoring work, decisions, an
 
 Phase 2.5 depends on Phase 1-2 completion:
 
--   **Phase 1**: DaoResult<T> pattern defined and implemented (T001-T006)
+-   **Phase 1**: Model_Dao_Result<T> pattern defined and implemented (T001-T006)
 -   **Phase 2**: Helper_Database_StoredProcedure refactored with 4 execution methods (T007-T016)
 -   **Phase 2**: INFORMATION_SCHEMA parameter cache implemented (T011)
 
@@ -1226,7 +1226,7 @@ Phase 2.5 blocks all downstream DAO refactoring work:
 
 **Options**:
 
-1. **Async-only** (chosen): All DAO methods return Task<DaoResult>, no sync wrappers
+1. **Async-only** (chosen): All DAO methods return Task<Model_Dao_Result>, no sync wrappers
 2. **Async/Sync dual**: Provide both async and sync versions of every method
 
 **Decision**: Async-only with immediate migration requirement (FR-010)

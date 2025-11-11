@@ -11,7 +11,7 @@ namespace MTM_WIP_Application_Winforms.Tests.Integration
     /// <summary>
     /// Integration tests for Dao_ErrorLog database operations.
     /// Tests error logging (INSERT), retrieval (SELECT), and deletion operations.
-    /// Validates recursive error prevention and proper DaoResult handling.
+    /// Validates recursive error prevention and proper Model_Dao_Result handling.
     /// </summary>
     [TestClass]
     public class Dao_ErrorLog_Tests : BaseIntegrationTest
@@ -65,7 +65,7 @@ namespace MTM_WIP_Application_Winforms.Tests.Integration
         #region GetAllErrors Tests
 
         /// <summary>
-        /// Tests GetAllErrorsAsync returns DaoResult with DataTable of all errors.
+        /// Tests GetAllErrorsAsync returns Model_Dao_Result with DataTable of all errors.
         /// </summary>
         [TestMethod]
         public async Task GetAllErrorsAsync_ReturnsDataTable()
@@ -110,7 +110,7 @@ namespace MTM_WIP_Application_Winforms.Tests.Integration
         public async Task GetErrorsByUserAsync_WithValidUser_ReturnsDataTable()
         {
             // Arrange
-            var testUser = Model_AppVariables.User ?? "TestUser";
+            var testUser = Model_Application_Variables.User ?? "TestUser";
 
             // Act
             var result = await Dao_ErrorLog.GetErrorsByUserAsync(testUser);

@@ -100,9 +100,9 @@ private static string GetParameterPrefix(string procedureName, string parameterN
 
 ---
 
-### R3: DaoResult<T> Wrapper Pattern
+### R3: Model_Dao_Result<T> Wrapper Pattern
 
-**Decision**: Standardize on `DaoResult`/`DaoResult<T>` wrappers with static `Success`/`Failure` constructors.
+**Decision**: Standardize on `Model_Dao_Result`/`Model_Dao_Result<T>` wrappers with static `Success`/`Failure` constructors.
 
 **Rationale**:
 - Prevents exception-driven control flow for expected outcomes.
@@ -167,6 +167,6 @@ private static string GetParameterPrefix(string procedureName, string parameterN
 
 ## Research Summary
 
-All open questions from the combined initiatives are resolved. Established patterns cover parameter detection, async adoption, DaoResult usage, transaction safety, integration testing, performance monitoring, and the new automation workflow for CSV/checklist validation.
+All open questions from the combined initiatives are resolved. Established patterns cover parameter detection, async adoption, Model_Dao_Result usage, transaction safety, integration testing, performance monitoring, and the new automation workflow for CSV/checklist validation.
 
 **Next Phase**: Continue with design artifacts (`data-model.md`, `/contracts/`, `quickstart.md`) using these decisions as the architectural baseline.

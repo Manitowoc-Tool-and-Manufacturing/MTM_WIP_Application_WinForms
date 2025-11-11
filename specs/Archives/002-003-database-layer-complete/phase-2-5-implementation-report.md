@@ -230,7 +230,7 @@ All tests inherit from `BaseIntegrationTest`:
 -   SearchTransactions_WithFiltering_ReturnsFilteredResults
 -   SearchTransactions_WithDateRange_ReturnsMatchingTransactions
 -   SmartSearch_BasicQuery_ReturnsResults
--   GetTransactionAnalytics_Execution_ReturnsAnalytics
+-   GetModel_Transactions_Core_Analytics_Execution_ReturnsAnalytics
 -   SearchTransactions_ComplexFilters_ReturnsAccurateResults
 -   SearchTransactions_EdgeCases_HandlesGracefully
 

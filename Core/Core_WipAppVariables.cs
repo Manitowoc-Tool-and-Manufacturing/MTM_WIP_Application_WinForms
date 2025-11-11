@@ -12,7 +12,7 @@ internal static class Core_WipAppVariables
 {
     #region User Info
 
-    public static readonly string User = Model_AppVariables.User;
+    public static readonly string User = Model_Application_Variables.User;
 
     #endregion
 

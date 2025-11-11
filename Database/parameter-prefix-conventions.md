@@ -30,7 +30,7 @@ All stored procedures in the current MySQL 5.7 schema use a **parameter name pre
 2. **Return Envelope**  
    - Every procedure must provide `OUT p_Status INT` and `OUT p_ErrorMsg VARCHAR(500)`.  
    - Status Codes: `1` (success with data), `0` (success without data), `-1..-5` (error classes).  
-   - MTM DAO helpers rely on these OUT parameters to populate `DaoResult` envelopes.
+   - MTM DAO helpers rely on these OUT parameters to populate `Model_Dao_Result` envelopes.
 
 3. **Parameter Naming**  
    - PascalCase after the prefix (e.g., `p_UserId`, `p_FromLocation`).  
@@ -54,7 +54,7 @@ While no current procedures use alternative prefixes, the helper layer retains c
    - If not found, try `in_` + name.  
    - If not found, try `o_` / `out_`.  
    - If still missing, fall back to default prefix `p_` (maintains compatibility for newly added procedures before cache refresh).
-3. Cache miss handling logs the procedure/parameter combination and returns a descriptive DaoResult error so the calling feature can fail gracefully.
+3. Cache miss handling logs the procedure/parameter combination and returns a descriptive Model_Dao_Result error so the calling feature can fail gracefully.
 
 **When to Use Fallbacks:**
 - Supporting historical database snapshots during drift reconciliation (Part D tasks).  

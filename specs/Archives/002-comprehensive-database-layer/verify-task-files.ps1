@@ -23,9 +23,9 @@ $repoRoot = Split-Path -Parent (Split-Path -Parent $PSScriptRoot)
 
 # Files to be CREATED (should NOT exist yet)
 $filesToCreate = @(
-    @{ Path = "Models/Model_DaoResult.cs"; Task = "T001"; Phase = "Phase 1: Setup" }
-    @{ Path = "Models/Model_DaoResult_Generic.cs"; Task = "T002"; Phase = "Phase 1: Setup" }
-    @{ Path = "Models/Model_ParameterPrefixCache.cs"; Task = "T003"; Phase = "Phase 1: Setup" }
+    @{ Path = "Models/Model_Dao_Result.cs"; Task = "T001"; Phase = "Phase 1: Setup" }
+    @{ Path = "Models/Model_Dao_Result_Generic.cs"; Task = "T002"; Phase = "Phase 1: Setup" }
+    @{ Path = "Models/Model_ParameterPrefix_Cache.cs"; Task = "T003"; Phase = "Phase 1: Setup" }
     @{ Path = "Tests/Integration/BaseIntegrationTest.cs"; Task = "T013"; Phase = "Phase 2: Foundational" }
     @{ Path = "Tests/Integration/Dao_System_Tests.cs"; Task = "T014"; Phase = "Phase 3: US1" }
     @{ Path = "Tests/Integration/Dao_ErrorLog_Tests.cs"; Task = "T015"; Phase = "Phase 3: US1" }
@@ -51,24 +51,24 @@ $filesToRefactor = @(
     @{ Path = "Helpers/Helper_Database_StoredProcedure.cs"; Task = "T005-T010"; Phase = "Phase 2: Foundational"; Purpose = "Refactor all 4 execution methods" }
     @{ Path = "Helpers/Helper_Database_Variables.cs"; Task = "T011"; Phase = "Phase 2: Foundational"; Purpose = "Add TestDatabaseName constant" }
     @{ Path = "Logging/LoggingUtility.cs"; Task = "T012, T037"; Phase = "Phase 2 & 5"; Purpose = "Recursive prevention + severity classification" }
-    @{ Path = "Data/Dao_System.cs"; Task = "T017"; Phase = "Phase 3: US1"; Purpose = "Async methods returning DaoResult" }
-    @{ Path = "Data/Dao_ErrorLog.cs"; Task = "T018"; Phase = "Phase 3: US1"; Purpose = "Async methods returning DaoResult" }
+    @{ Path = "Data/Dao_System.cs"; Task = "T017"; Phase = "Phase 3: US1"; Purpose = "Async methods returning Model_Dao_Result" }
+    @{ Path = "Data/Dao_ErrorLog.cs"; Task = "T018"; Phase = "Phase 3: US1"; Purpose = "Async methods returning Model_Dao_Result" }
     @{ Path = "Data/Dao_Inventory.cs"; Task = "T024"; Phase = "Phase 4: US2"; Purpose = "Async methods with transaction management" }
-    @{ Path = "Data/Dao_Transactions.cs"; Task = "T025"; Phase = "Phase 4: US2"; Purpose = "Async methods returning DaoResult" }
-    @{ Path = "Data/Dao_History.cs"; Task = "T026"; Phase = "Phase 4: US2"; Purpose = "Async methods returning DaoResult" }
+    @{ Path = "Data/Dao_Transactions.cs"; Task = "T025"; Phase = "Phase 4: US2"; Purpose = "Async methods returning Model_Dao_Result" }
+    @{ Path = "Data/Dao_History.cs"; Task = "T026"; Phase = "Phase 4: US2"; Purpose = "Async methods returning Model_Dao_Result" }
     @{ Path = "Forms/MainForm/MainForm.cs"; Task = "T027"; Phase = "Phase 4: US2"; Purpose = "Async event handlers" }
     @{ Path = "Forms/Transactions/TransactionForm.cs"; Task = "T028"; Phase = "Phase 4: US2"; Purpose = "Async event handlers" }
-    @{ Path = "Data/Dao_User.cs"; Task = "T033"; Phase = "Phase 5: US3"; Purpose = "Async methods returning DaoResult" }
-    @{ Path = "Data/Dao_Part.cs"; Task = "T034"; Phase = "Phase 5: US3"; Purpose = "Async methods returning DaoResult" }
+    @{ Path = "Data/Dao_User.cs"; Task = "T033"; Phase = "Phase 5: US3"; Purpose = "Async methods returning Model_Dao_Result" }
+    @{ Path = "Data/Dao_Part.cs"; Task = "T034"; Phase = "Phase 5: US3"; Purpose = "Async methods returning Model_Dao_Result" }
     @{ Path = "Forms/Settings/UserManagementForm.cs"; Task = "T038"; Phase = "Phase 5: US3"; Purpose = "Async event handlers" }
-    @{ Path = "Data/Dao_Location.cs"; Task = "T042"; Phase = "Phase 6: US4"; Purpose = "Async methods returning DaoResult" }
-    @{ Path = "Data/Dao_Operation.cs"; Task = "T043"; Phase = "Phase 6: US4"; Purpose = "Async methods returning DaoResult" }
-    @{ Path = "Data/Dao_ItemType.cs"; Task = "T044"; Phase = "Phase 6: US4"; Purpose = "Async methods returning DaoResult" }
-    @{ Path = "Data/Dao_QuickButtons.cs"; Task = "T045"; Phase = "Phase 6: US4"; Purpose = "Async methods returning DaoResult" }
+    @{ Path = "Data/Dao_Location.cs"; Task = "T042"; Phase = "Phase 6: US4"; Purpose = "Async methods returning Model_Dao_Result" }
+    @{ Path = "Data/Dao_Operation.cs"; Task = "T043"; Phase = "Phase 6: US4"; Purpose = "Async methods returning Model_Dao_Result" }
+    @{ Path = "Data/Dao_ItemType.cs"; Task = "T044"; Phase = "Phase 6: US4"; Purpose = "Async methods returning Model_Dao_Result" }
+    @{ Path = "Data/Dao_QuickButtons.cs"; Task = "T045"; Phase = "Phase 6: US4"; Purpose = "Async methods returning Model_Dao_Result" }
     @{ Path = "Forms/Settings/LocationManagementForm.cs"; Task = "T046"; Phase = "Phase 6: US4"; Purpose = "Async event handlers" }
     @{ Path = "Forms/Settings/OperationManagementForm.cs"; Task = "T047"; Phase = "Phase 6: US4"; Purpose = "Async event handlers" }
     @{ Path = "Controls/MainForm/QuickButtonsControl.cs"; Task = "T048"; Phase = "Phase 6: US4"; Purpose = "Async event handlers" }
-    @{ Path = "Documentation/Copilot Files/04-patterns-and-templates.md"; Task = "T060"; Phase = "Phase 8: Polish"; Purpose = "Update with DaoResult patterns" }
+    @{ Path = "Documentation/Copilot Files/04-patterns-and-templates.md"; Task = "T060"; Phase = "Phase 8: Polish"; Purpose = "Update with Model_Dao_Result patterns" }
     @{ Path = "README.md"; Task = "T061"; Phase = "Phase 8: Polish"; Purpose = "Update Database Access Patterns section" }
 )
 

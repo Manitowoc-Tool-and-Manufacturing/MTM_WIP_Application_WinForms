@@ -131,7 +131,7 @@ Refactor DAOs and Helper classes to support optional external transaction/connec
 3. [ ] **Dao_Transactions** (7 failing tests)
    - SearchTransactionsAsync
    - SmartSearchAsync
-   - GetTransactionAnalyticsAsync
+   - GetModel_Transactions_Core_AnalyticsAsync
 
 4. [ ] **Dao_ErrorLog** (1 failing test)
    - DeleteErrorByIdAsync
@@ -148,10 +148,10 @@ Refactor DAOs and Helper classes to support optional external transaction/connec
 **Pattern to Apply**:
 ```csharp
 // BEFORE
-public static async Task<DaoResult> SomeMethodAsync(string param1, string param2)
+public static async Task<Model_Dao_Result> SomeMethodAsync(string param1, string param2)
 {
     var result = await Helper_Database_StoredProcedure.ExecuteNonQueryWithStatusAsync(
-        Model_AppVariables.ConnectionString,
+        Model_Application_Variables.ConnectionString,
         "sp_SomeProcedure",
         parameters,
         null);
@@ -159,14 +159,14 @@ public static async Task<DaoResult> SomeMethodAsync(string param1, string param2
 }
 
 // AFTER
-public static async Task<DaoResult> SomeMethodAsync(
+public static async Task<Model_Dao_Result> SomeMethodAsync(
     string param1, 
     string param2,
     MySqlConnection? connection = null,
     MySqlTransaction? transaction = null)
 {
     var result = await Helper_Database_StoredProcedure.ExecuteNonQueryWithStatusAsync(
-        Model_AppVariables.ConnectionString,
+        Model_Application_Variables.ConnectionString,
         "sp_SomeProcedure",
         parameters,
         progressHelper: null,
@@ -317,7 +317,7 @@ var result = await Dao_Inventory.TransferPartSimpleAsync(
 
 - [ ] **SearchTransactionsAsync** (4 tests affected)
 - [ ] **SmartSearchAsync** (1 test)
-- [ ] **GetTransactionAnalyticsAsync** (2 tests affected)
+- [ ] **GetModel_Transactions_Core_AnalyticsAsync** (2 tests affected)
 
 #### Dao_ErrorLog Methods (Priority 4)
 
@@ -403,7 +403,7 @@ var result = await Dao_Inventory.TransferPartSimpleAsync(
 
 - [ ] Update all SearchTransactionsAsync calls
 - [ ] Update SmartSearchAsync calls
-- [ ] Update GetTransactionAnalyticsAsync calls
+- [ ] Update GetModel_Transactions_Core_AnalyticsAsync calls
 
 #### Dao_ErrorLog_Tests.cs (1 test)
 

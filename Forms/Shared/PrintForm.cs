@@ -1,287 +1,493 @@
 using System.Data;
-using System.Drawing.Imaging;
 using System.Drawing.Printing;
+using System.Globalization;
+using MTM_WIP_Application_Winforms.Core;
 using MTM_WIP_Application_Winforms.Helpers;
 using MTM_WIP_Application_Winforms.Logging;
 using MTM_WIP_Application_Winforms.Models;
+using MTM_WIP_Application_Winforms.Services;
 
 namespace MTM_WIP_Application_Winforms.Forms.Shared;
 
 /// <summary>
-/// Comprehensive print dialog with preview, column selection, filtering, and export capabilities.
-/// Uses clean Model_PrintJob and Helper_PrintManager/Helper_ExportManager architecture.
+/// Compact sidebar dialog that orchestrates print preview, printing, and export flows for any grid-backed dataset.
 /// </summary>
+/// <remarks>
+/// The constructor follows the mandatory theme integration sequence: <c>InitializeComponent()</c>,
+/// <see cref="Core_Themes.ApplyDpiScaling(System.Windows.Forms.Control)"/>, then
+/// <see cref="Core_Themes.ApplyRuntimeLayoutAdjustments(System.Windows.Forms.Control)"/>. Callers must
+/// provide a fully populated <see cref="Model_Print_Job"/> and its previously persisted
+/// <see cref="Model_Print_Settings"/> so the dialog can restore printer and column preferences.
+/// </remarks>
 public partial class PrintForm : Form
 {
     #region Fields
 
-    private readonly DataGridView _sourceDataGridView;
-    private DataTable _sourceData;
-    private DataTable _filteredData;
-    private Model_PrintJob _printJob;
+    private const string PrinterUnavailableDisplayText = "(No printers installed)";
+    private const string ZoomFitToPage = "Fit to Page";
+
+    private readonly Model_Print_Job _printJob;
+    private readonly Model_Print_Settings _printSettings;
+    private readonly Dictionary<string, double> _zoomLevelLookup = new(StringComparer.OrdinalIgnoreCase)
+    {
+        ["25%"] = 0.25,
+        ["50%"] = 0.5,
+        ["75%"] = 0.75,
+        ["100%"] = 1.0,
+        ["125%"] = 1.25,
+        ["150%"] = 1.5,
+        ["200%"] = 2.0
+    };
+
     private Helper_PrintManager? _printManager;
-    private Model_PrintSettings? _userSettings;
-    private readonly List<PrintFilter> _activeFilters = new();
-    private readonly List<int> _selectedRowIndices = new();
-    
-    // Track page range values for change detection
-    private int _previousFromPage = 1;
-    private int _previousToPage = 1;
+    private PrintDocument? _previewDocument;
+    private PreviewPageInfo[] _previewPageInfos = Array.Empty<PreviewPageInfo>();
+
+    private bool _isPrinterSettingsExpanded = true;
+    private bool _isUpdatingPrinterSection;
+    private bool _isPageSettingsExpanded = true;
+    private bool _isUpdatingPageSettings;
+    private bool _isColumnSettingsExpanded = true;
+    private bool _isUpdatingColumnSettings;
+    private bool _isOptionsExpanded = true;
+    private bool _isUpdatingOptionsSection;
+    private bool _isUpdatingZoomSelection;
+    private bool _isNavigationUpdating;
+    private bool _isGeneratingPreview;
+    private bool _isPreviewRefreshPending;
+    private bool _isCustomRangeValid = true;
+
+    private int _previewTotalPages;
+    private string _selectedZoomOption = ZoomFitToPage;
+    private string? _windowTitleSnapshot;
+    private string? _exportButtonTextSnapshot;
+
+    #endregion
+
+    #region Properties
+
+    /// <summary>
+    /// Gets the mutable print settings instance backing the dialog.
+    /// </summary>
+    /// <summary>
+    /// Gets the user-specific print settings backing this dialog instance.
+    /// </summary>
+    /// <remarks>
+    /// Settings are loaded on construction and saved after a successful print or export operation.
+    /// Only printer information and column visibility/order are persisted per FR-030.
+    /// </remarks>
+    public Model_Print_Settings PrintSettings => _printSettings;
 
     #endregion
 
     #region Constructors
 
-    public PrintForm(DataGridView sourceDataGridView)
+    /// <summary>
+    /// Initializes a new instance of the <see cref="PrintForm"/> class.
+    /// </summary>
+    /// <param name="printJob">Print job describing the current preview configuration.</param>
+    /// <param name="printSettings">Persisted user preferences for the originating grid.</param>
+    /// <summary>
+    /// Initializes a new instance of the <see cref="PrintForm"/> class with the supplied job configuration and persisted settings.
+    /// </summary>
+    /// <param name="printJob">Fully prepared print job containing source data, visible columns, and page configuration.</param>
+    /// <param name="printSettings">Persisted user settings for the originating grid, used to restore printer and column preferences.</param>
+    /// <exception cref="ArgumentNullException">Thrown when <paramref name="printJob"/> or <paramref name="printSettings"/> is <see langword="null"/>.</exception>
+    /// <remarks>
+    /// The constructor applies model settings, initializes collapsible sidebar sections, and immediately schedules a preview refresh.
+    /// Manual callers should invoke <see cref="ShowDialog()"/> to display the modal workflow.
+    /// </remarks>
+    public PrintForm(Model_Print_Job printJob, Model_Print_Settings printSettings)
     {
-        ArgumentNullException.ThrowIfNull(sourceDataGridView);
-        
-        _sourceDataGridView = sourceDataGridView;
-        
+        ArgumentNullException.ThrowIfNull(printJob);
+        ArgumentNullException.ThrowIfNull(printSettings);
+
+        _printJob = printJob;
+        _printSettings = printSettings;
+
+        LoggingUtility.Log($"[PrintForm] Constructor: Incoming printJob.CurrentPage={printJob.CurrentPage}, TotalPages={printJob.TotalPages}");
+
         InitializeComponent();
-        Core.Core_Themes.ApplyDpiScaling(this);
-        Core.Core_Themes.ApplyRuntimeLayoutAdjustments(this);
+        Core_Themes.ApplyDpiScaling(this);
+        Core_Themes.ApplyRuntimeLayoutAdjustments(this);
+        ApplyThemeColors();
+
+        LoggingUtility.Log($"[PrintForm] Constructor: After InitializeComponent, Control.StartPage={PrintForm_PrintPreviewControl.StartPage}");
+
+        Shown += PrintForm_Shown;
+        PrintForm_PrintPreviewControl.StartPageChanged += PrintForm_PrintPreviewControl_StartPageChanged;
+
+        LoadSettings();
+        InitializeSections();
         
-        // Initialize data
-        _sourceData = GetDataTableFromDataGridView(_sourceDataGridView);
-        _filteredData = _sourceData.Copy();
-        
-        // Capture selected row indices
-        foreach (DataGridViewRow row in _sourceDataGridView.SelectedRows)
-        {
-            if (!row.IsNewRow)
-                _selectedRowIndices.Add(row.Index);
-        }
-        
-        // Initialize print job with defaults
-        _printJob = new Model_PrintJob
-        {
-            Data = _filteredData,
-            ColumnOrder = GetColumnOrder(),
-            VisibleColumns = GetVisibleColumns(),
-            IsLandscape = false,
-            IsColor = true,
-            PageRangeType = PrintRangeType.AllPages
-        };
-        
-        InitializeForm();
+        LoggingUtility.Log($"[PrintForm] Constructor complete: CurrentPage={_printJob.CurrentPage}, Control.StartPage={PrintForm_PrintPreviewControl.StartPage}");
     }
 
     #endregion
 
     #region Initialization
 
-    private void InitializeForm()
+    private void InitializeSections()
     {
-        LoadUserSettings();
-        PopulatePrinters();
-        PopulateColumns();
-        PopulateFilterColumns();
-        PopulatePresets();
-        PrintForm_ComboBox_Zoom.Items.AddRange(new object[] { "25%", "50%", "75%", "100%", "125%", "150%", "200%" });
-        PrintForm_ComboBox_Zoom.Text = "100%";
-        
-        // Initialize page range values - set Maximum first, then Value
-        PrintForm_NumericUpDown_FromPage.Minimum = 1;
-        PrintForm_NumericUpDown_FromPage.Maximum = 9999;
-        PrintForm_NumericUpDown_FromPage.Value = 1;
-        
-        PrintForm_NumericUpDown_ToPage.Minimum = 1;
-        PrintForm_NumericUpDown_ToPage.Maximum = 9999;
-        PrintForm_NumericUpDown_ToPage.Value = 9999; // Will be updated after preview generation
-        
-        _previousFromPage = 1;
-        _previousToPage = 9999;
-        
-        // Wire up page range value changed events
-        PrintForm_NumericUpDown_FromPage.ValueChanged += PageRangeValue_Changed;
-        PrintForm_NumericUpDown_ToPage.ValueChanged += PageRangeValue_Changed;
-        PrintForm_NumericUpDown_FromPage.Leave += PageRangeControl_Leave;
-        PrintForm_NumericUpDown_ToPage.Leave += PageRangeControl_Leave;
-        
-        // Set initial page range controls state
-        PageRange_CheckedChanged(null, EventArgs.Empty);
-        
-        RefreshPreview();
-        UpdateStatusBar($"Ready - Rows: {_filteredData.Rows.Count}");
-    }
-
-    private void PopulatePrinters()
-    {
-        PrintForm_ComboBox_Printer.Items.Clear();
-        foreach (string printer in PrinterSettings.InstalledPrinters)
-        {
-            PrintForm_ComboBox_Printer.Items.Add(printer);
-        }
-        
-        if (PrintForm_ComboBox_Printer.Items.Count > 0)
-        {
-            var defaultPrinter = new PrintDocument().PrinterSettings.PrinterName;
-            int index = PrintForm_ComboBox_Printer.Items.IndexOf(defaultPrinter);
-            PrintForm_ComboBox_Printer.SelectedIndex = index >= 0 ? index : 0;
-        }
-    }
-
-    private void PopulateColumns()
-    {
-        PrintForm_CheckedListBox_Columns.Items.Clear();
-        
-        // Add ALL columns (including hidden ones) so user can select them for printing
-        foreach (DataGridViewColumn col in _sourceDataGridView.Columns)
-        {
-            // Check the column if it's currently visible in the DataGridView
-            bool isChecked = col.Visible;
-            PrintForm_CheckedListBox_Columns.Items.Add(col.HeaderText, isChecked);
-        }
-    }
-
-    private void PopulateFilterColumns()
-    {
-        PrintForm_ComboBox_FilterColumn.Items.Clear();
-        PrintForm_ComboBox_FilterColumn.Items.Add("-- Select Column --");
-        foreach (DataColumn col in _sourceData.Columns)
-        {
-            PrintForm_ComboBox_FilterColumn.Items.Add(col.ColumnName);
-        }
-        PrintForm_ComboBox_FilterColumn.SelectedIndex = 0;
-        
-        PrintForm_ComboBox_FilterType.Items.Clear();
-        PrintForm_ComboBox_FilterType.Items.AddRange(new object[]
-        {
-            "Contains",
-            "Equals",
-            "Starts With",
-            "Ends With",
-            "Date Range",
-            "Show Selected Rows Only"
-        });
-        PrintForm_ComboBox_FilterType.SelectedIndex = 0;
-    }
-
-    private void PopulatePresets()
-    {
-        PrintForm_ComboBox_Presets.Items.Clear();
-        PrintForm_ComboBox_Presets.Items.Add("-- Select Preset --");
-        
-        string presetsDir = GetPresetsDirectory();
-        if (Directory.Exists(presetsDir))
-        {
-            foreach (string file in Directory.GetFiles(presetsDir, "*.json"))
-            {
-                PrintForm_ComboBox_Presets.Items.Add(Path.GetFileNameWithoutExtension(file));
-            }
-        }
-        PrintForm_ComboBox_Presets.SelectedIndex = 0;
+        InitializePrinterSettingsSection();
+        InitializePageSettingsSection();
+        InitializeColumnSettingsSection();
+        InitializeOptionsSection();
+        InitializePreviewSection();
+        InitializeActionButtons();
     }
 
     #endregion
 
-    #region Preview
+    #region Key Processing
 
-    private void RefreshPreview()
+    private async void PrintForm_Shown(object? sender, EventArgs e)
     {
+        Shown -= PrintForm_Shown;
+        await GeneratePreviewAsync();
+    }
+
+    private void SchedulePreviewRefresh()
+    {
+        if (!IsHandleCreated)
+        {
+            return;
+        }
+
+        if (_isGeneratingPreview)
+        {
+            _isPreviewRefreshPending = true;
+            return;
+        }
+
+        _isPreviewRefreshPending = false;
+        _ = GeneratePreviewAsync();
+    }
+
+    private async Task GeneratePreviewAsync()
+    {
+        LoggingUtility.Log($"[PrintForm] GeneratePreviewAsync ENTRY: CurrentPage={_printJob.CurrentPage}, TotalPages={_printJob.TotalPages}, PageRangeType={_printJob.PageRangeType}");
+
+        if (_isGeneratingPreview)
+        {
+            _isPreviewRefreshPending = true;
+            return;
+        }
+
+        if (_printJob.VisibleColumns.Count == 0 || _printJob.Data is not { Rows.Count: > 0 })
+        {
+            ResetPreviewState();
+            ValidateCustomRangeInputs();
+            return;
+        }
+
+        _isGeneratingPreview = true;
+        Cursor? previousCursor = Cursor.Current;
+        Cursor.Current = Cursors.WaitCursor;
+
+        // Reset to page 1 for initial preview generation
+        _printJob.CurrentPage = 1;
+        LoggingUtility.Log($"[PrintForm] After reset: CurrentPage={_printJob.CurrentPage}");
+
+        Enum_PrintRangeType originalRange = _printJob.PageRangeType;
+        int originalFromPage = _printJob.FromPage;
+        int originalToPage = _printJob.ToPage;
+        int originalCurrentPage = 1;
+        
+        LoggingUtility.Log($"[PrintForm] Captured original values: Range={originalRange}, From={originalFromPage}, To={originalToPage}, Current={originalCurrentPage}");
+
+        PreviewPageInfo[] pageInfos = Array.Empty<PreviewPageInfo>();
+        PrintDocument? previewDocument = null;
+        bool generationSucceeded = false;
+
         try
         {
-            // Show progress form
-            using (var progressForm = new Form())
+            _printJob.PageRangeType = Enum_PrintRangeType.AllPages;
+            _printJob.FromPage = 1;
+            _printJob.ToPage = Math.Max(1, _printJob.TotalPages);
+            _printJob.CurrentPage = Math.Clamp(originalCurrentPage, 1, Math.Max(1, _printJob.TotalPages));
+
+            _printManager ??= new Helper_PrintManager(_printJob);
+            previewDocument = _printManager.PreparePrintDocument();
+            if (previewDocument is null)
             {
-                progressForm.Text = "Generating Preview";
-                progressForm.Size = new Size(300, 100);
-                progressForm.StartPosition = FormStartPosition.CenterParent;
-                progressForm.FormBorderStyle = FormBorderStyle.FixedDialog;
-                progressForm.ControlBox = false;
-                progressForm.MaximizeBox = false;
-                progressForm.MinimizeBox = false;
-                
-                var label = new Label
-                {
-                    Text = "Please wait while generating preview...",
-                    AutoSize = true,
-                    Location = new Point(20, 30)
-                };
-                progressForm.Controls.Add(label);
-                
-                // Show the form non-modal and process the refresh
-                progressForm.Show(this);
-                Application.DoEvents();
-                
-                UpdateStatusBar("Refreshing preview...");
-                
-                // Dispose old print manager
-                _printManager?.Dispose();
-                
-                // Update print job with current settings
-                UpdatePrintJobFromUI();
-                
-                // Create new print manager
-                _printManager = new Helper_PrintManager(_printJob);
-                var printDoc = _printManager.PreparePrintDocument();
-                
-                if (printDoc != null)
-                {
-                    PrintForm_PrintPreviewControl_Main.Document = printDoc;
-                    UpdatePageNavigationButtons();
-                    UpdateStatusBar($"Ready - {_filteredData.Rows.Count} rows");
-                }
-                else
-                {
-                    UpdateStatusBar("Error preparing preview");
-                }
-                
-                Application.DoEvents();
+                return;
             }
+
+            var previewController = new PreviewPrintController
+            {
+                UseAntiAlias = true
+            };
+            previewDocument.PrintController = previewController;
+
+            await Task.Run(() => previewDocument.Print());
+            pageInfos = previewController.GetPreviewPageInfo() ?? Array.Empty<PreviewPageInfo>();
+            _printManager.SyncPageBoundariesFromPrinter();
+            generationSucceeded = true;
         }
         catch (Exception ex)
         {
             LoggingUtility.LogApplicationError(ex);
-            UpdateStatusBar($"Preview error: {ex.Message}");
+            Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Medium, controlName: nameof(PrintForm));
+        }
+        finally
+        {
+            _printJob.PageRangeType = originalRange;
+            _printJob.FromPage = originalFromPage;
+            _printJob.ToPage = originalToPage;
+            _printJob.CurrentPage = originalCurrentPage;
+
+            Cursor.Current = previousCursor ?? Cursors.Default;
+            _isGeneratingPreview = false;
+        }
+
+        if (!generationSucceeded || previewDocument is null)
+        {
+            ResetPreviewState();
+            ValidateCustomRangeInputs();
+
+            if (_isPreviewRefreshPending)
+            {
+                _isPreviewRefreshPending = false;
+                _ = GeneratePreviewAsync();
+            }
+
+            return;
+        }
+
+        _previewDocument = previewDocument;
+        _previewTotalPages = _printJob.TotalPages > 0 ? _printJob.TotalPages : pageInfos.Length;
+        _previewPageInfos = pageInfos;
+        _printJob.TotalPages = _previewTotalPages;
+
+        if (_previewTotalPages > 0)
+        {
+            _printJob.FromPage = Math.Clamp(_printJob.FromPage, 1, _previewTotalPages);
+            _printJob.ToPage = Math.Clamp(_printJob.ToPage, _printJob.FromPage, _previewTotalPages);
+        }
+        else
+        {
+            _printJob.FromPage = 1;
+            _printJob.ToPage = 1;
+        }
+
+        int targetIndex = _previewTotalPages > 0
+            ? Math.Clamp(originalCurrentPage - 1, 0, _previewTotalPages - 1)
+            : 0;
+
+        LoggingUtility.Log($"[PrintForm] Preview setup: TotalPages={_previewTotalPages}, TargetIndex={targetIndex}, OriginalCurrentPage={originalCurrentPage}");
+        LoggingUtility.Log($"[PrintForm] Before setting Document: Control.StartPage={PrintForm_PrintPreviewControl.StartPage}");
+
+        // Clear document first to reset internal state
+        PrintForm_PrintPreviewControl.Document = null;
+        
+        // Now assign the actual document  
+        PrintForm_PrintPreviewControl.Document = previewDocument;
+        
+        // CRITICAL: Set StartPage BEFORE InvalidatePreview
+        // The control's internal rendering uses StartPage to determine scroll position
+        PrintForm_PrintPreviewControl.StartPage = targetIndex;
+        
+        LoggingUtility.Log($"[PrintForm] After setting Document and StartPage={targetIndex}: Control.StartPage={PrintForm_PrintPreviewControl.StartPage}");
+        
+        // Force the control to re-render with the correct StartPage
+        PrintForm_PrintPreviewControl.InvalidatePreview();
+        
+        PrintForm_PrintPreviewControl.InvalidatePreview();
+
+        _printJob.CurrentPage = _previewTotalPages > 0 ? targetIndex + 1 : 1;
+        
+        LoggingUtility.Log($"[PrintForm] Final CurrentPage set to: {_printJob.CurrentPage}, StartPage={PrintForm_PrintPreviewControl.StartPage}");
+
+        ApplyZoomSelection();
+        UpdatePreviewNavigationState();
+        UpdatePageRangeControls();
+        UpdateActionButtonsState();
+
+        if (_isPreviewRefreshPending)
+        {
+            _isPreviewRefreshPending = false;
+            _ = GeneratePreviewAsync();
         }
     }
 
-    private void UpdatePrintJobFromUI()
+    private void ResetPreviewState()
     {
-        _printJob.Data = _filteredData;
-        _printJob.ColumnOrder = GetColumnOrder();
-        _printJob.VisibleColumns = GetVisibleColumns();
-        _printJob.PrinterName = PrintForm_ComboBox_Printer.SelectedItem?.ToString() ?? string.Empty;
-        _printJob.IsLandscape = PrintForm_RadioButton_Landscape.Checked;
-        _printJob.IsColor = PrintForm_RadioButton_Color.Checked;
-        _printJob.CurrentPreviewPage = PrintForm_PrintPreviewControl_Main.StartPage + 1;
+        _previewTotalPages = 0;
+        _printJob.TotalPages = 0;
+        _printJob.SetPageBoundaries(Array.Empty<Model_Print_PageBoundary>());
+        _previewDocument = null;
+        _previewPageInfos = Array.Empty<PreviewPageInfo>();
+        PrintForm_PrintPreviewControl.Document = null;
+        UpdatePreviewNavigationState();
+        UpdateActionButtonsState();
+    }
+
+    private void InitializePreviewSection()
+    {
+        _previewTotalPages = Math.Max(0, _printJob.TotalPages);
+        PrintForm_PrintPreviewControl.AutoZoom = true;
+        PrintForm_PrintPreviewControl.Zoom = 1.0;
         
-        if (PrintForm_RadioButton_AllPages.Checked)
+        LoggingUtility.Log($"[PrintForm] InitializePreviewSection: Before reset StartPage={PrintForm_PrintPreviewControl.StartPage}");
+        PrintForm_PrintPreviewControl.StartPage = 0;
+        LoggingUtility.Log($"[PrintForm] InitializePreviewSection: After reset StartPage={PrintForm_PrintPreviewControl.StartPage}");
+        
+        UpdatePreviewNavigationState();
+    }
+
+    private void UpdatePreviewNavigationState()
+    {
+        if (!IsHandleCreated)
         {
-            _printJob.PageRangeType = PrintRangeType.AllPages;
+            return;
         }
-        else if (PrintForm_RadioButton_CurrentPage.Checked)
+
+        if (InvokeRequired)
         {
-            _printJob.PageRangeType = PrintRangeType.CurrentPage;
+            BeginInvoke(new Action(UpdatePreviewNavigationState));
+            return;
         }
-        else if (PrintForm_RadioButton_PageRange.Checked)
+
+        _isNavigationUpdating = true;
+
+        try
         {
-            _printJob.PageRangeType = PrintRangeType.PageRange;
-            _printJob.FromPage = (int)PrintForm_NumericUpDown_FromPage.Value;
-            _printJob.ToPage = (int)PrintForm_NumericUpDown_ToPage.Value;
+            int currentIndex = Math.Clamp(PrintForm_PrintPreviewControl.StartPage, 0, Math.Max(0, _previewTotalPages - 1));
+            int displayPage = _previewTotalPages > 0 ? currentIndex + 1 : 0;
+            
+            LoggingUtility.Log($"[PrintForm] UpdatePreviewNavigationState: StartPage={PrintForm_PrintPreviewControl.StartPage}, CurrentIndex={currentIndex}, DisplayPage={displayPage}, TotalPages={_previewTotalPages}");
+            
+            PrintForm_Label_PageCounter.Text = $"Page {displayPage} / {_previewTotalPages}";
+
+            bool hasPages = _previewTotalPages > 0;
+            bool hasPrevious = hasPages && currentIndex > 0;
+            bool hasNext = hasPages && currentIndex < _previewTotalPages - 1;
+
+            PrintForm_Button_FirstPage.Enabled = hasPrevious;
+            PrintForm_Button_PreviousPage.Enabled = hasPrevious;
+            PrintForm_Button_NextPage.Enabled = hasNext;
+            PrintForm_Button_LastPage.Enabled = hasNext;
+
+            _printJob.CurrentPage = hasPages ? currentIndex + 1 : 1;
+            
+            LoggingUtility.Log($"[PrintForm] UpdatePreviewNavigationState: Set CurrentPage to {_printJob.CurrentPage}");
+
+            if (_printJob.PageRangeType == Enum_PrintRangeType.AllPages)
+            {
+                UpdateCustomRangeTextBoxValue(PrintForm_TextBox_FromPage, 1);
+                UpdateCustomRangeTextBoxValue(PrintForm_TextBox_ToPage, Math.Max(1, _previewTotalPages));
+            }
+        }
+        finally
+        {
+            _isNavigationUpdating = false;
+        }
+
+        UpdateActionButtonsState();
+    }
+
+    private void ChangePreviewPage(int requestedIndex)
+    {
+        if (_isNavigationUpdating || _previewTotalPages <= 0)
+        {
+            return;
+        }
+
+        int clampedIndex = Math.Clamp(requestedIndex, 0, Math.Max(0, _previewTotalPages - 1));
+        PrintForm_PrintPreviewControl.StartPage = clampedIndex;
+        UpdatePreviewNavigationState();
+
+        if (_printJob.PageRangeType == Enum_PrintRangeType.CurrentPage)
+        {
+            _printJob.FromPage = _printJob.CurrentPage;
+            _printJob.ToPage = _printJob.CurrentPage;
+            UpdateCustomRangeTextBoxValue(PrintForm_TextBox_FromPage, _printJob.FromPage);
+            UpdateCustomRangeTextBoxValue(PrintForm_TextBox_ToPage, _printJob.ToPage);
         }
     }
 
     #endregion
 
-    #region Printing
+    #region Button Clicks
 
-    private void PrintForm_Button_Print_Click(object? sender, EventArgs e)
+    private void PrintForm_Button_PrinterSettingsToggle_Click(object sender, EventArgs e)
     {
+        _isPrinterSettingsExpanded = !_isPrinterSettingsExpanded;
+        UpdatePrinterSettingsCollapseState();
+    }
+
+    private void PrintForm_Button_PageSettingsToggle_Click(object sender, EventArgs e)
+    {
+        _isPageSettingsExpanded = !_isPageSettingsExpanded;
+        UpdatePageSettingsCollapseState();
+    }
+
+    private void PrintForm_Button_ColumnSettingsToggle_Click(object sender, EventArgs e)
+    {
+        _isColumnSettingsExpanded = !_isColumnSettingsExpanded;
+        UpdateColumnSettingsCollapseState();
+    }
+
+    private void PrintForm_Button_OptionsToggle_Click(object sender, EventArgs e)
+    {
+        _isOptionsExpanded = !_isOptionsExpanded;
+        UpdateOptionsCollapseState();
+    }
+
+    private void PrintForm_Button_ColumnUp_Click(object sender, EventArgs e)
+    {
+        MoveColumnItem(-1);
+    }
+
+    private void PrintForm_Button_ColumnDown_Click(object sender, EventArgs e)
+    {
+        MoveColumnItem(1);
+    }
+
+    private void PrintForm_Button_FirstPage_Click(object sender, EventArgs e)
+    {
+        ChangePreviewPage(0);
+    }
+
+    private void PrintForm_Button_PreviousPage_Click(object sender, EventArgs e)
+    {
+        ChangePreviewPage(PrintForm_PrintPreviewControl.StartPage - 1);
+    }
+
+    private void PrintForm_Button_NextPage_Click(object sender, EventArgs e)
+    {
+        ChangePreviewPage(PrintForm_PrintPreviewControl.StartPage + 1);
+    }
+
+    private void PrintForm_Button_LastPage_Click(object sender, EventArgs e)
+    {
+        if (_previewTotalPages <= 0)
+        {
+            return;
+        }
+
+        ChangePreviewPage(_previewTotalPages - 1);
+    }
+
+    private void PrintForm_Button_Print_Click(object sender, EventArgs e)
+    {
+        if (_previewDocument is null)
+        {
+            Service_ErrorHandler.HandleValidationError("Generate a preview before printing.", nameof(PrintForm));
+            return;
+        }
+
         try
         {
-            if (_printManager == null)
+            UpdateActionButtonsState();
+
+            _printManager ??= new Helper_PrintManager(_printJob);
+            bool printSucceeded = _printManager.Print();
+
+            if (printSucceeded)
             {
-                MessageBox.Show("Print preview not ready. Please wait.", "Print", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                return;
-            }
-            
-            UpdatePrintJobFromUI();
-            
-            if (_printManager.Print())
-            {
+                SaveSettings();
                 DialogResult = DialogResult.OK;
                 Close();
             }
@@ -289,617 +495,975 @@ public partial class PrintForm : Form
         catch (Exception ex)
         {
             LoggingUtility.LogApplicationError(ex);
-            MessageBox.Show($"Print failed: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Medium, controlName: nameof(PrintForm));
+        }
+        finally
+        {
+            UpdateActionButtonsState();
         }
     }
 
-    #endregion
-
-    #region Export
-
-    private void PrintForm_Button_ExportSettings_Click(object? sender, EventArgs e)
+    private void PrintForm_Button_Export_Click(object sender, EventArgs e)
     {
-        if (!PrintForm_CheckBox_ExportPdf.Checked && 
-            !PrintForm_CheckBox_ExportExcel.Checked && 
-            !PrintForm_CheckBox_ExportImage.Checked)
+        if (!PrintForm_Button_Export.Enabled)
         {
-            MessageBox.Show("Please select at least one export format.", "Export", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             return;
         }
-        
-        UpdatePrintJobFromUI();
-        int completed = 0;
-        
-        // PDF Export
-        if (PrintForm_CheckBox_ExportPdf.Checked)
-        {
-            string? path = Helper_ExportManager.ShowPdfSaveDialog("DataExport");
-            if (!string.IsNullOrEmpty(path))
-            {
-                if (Helper_ExportManager.ExportToPdf(_printJob, path))
-                {
-                    completed++;
-                    MessageBox.Show($"PDF export successful!{Environment.NewLine}{Environment.NewLine}{path}", 
-                        "Export Complete", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                }
-            }
-        }
-        
-        // Excel Export
-        if (PrintForm_CheckBox_ExportExcel.Checked)
-        {
-            string? path = Helper_ExportManager.ShowExcelSaveDialog("DataExport");
-            if (!string.IsNullOrEmpty(path))
-            {
-                if (Helper_ExportManager.ExportToExcel(_printJob, path))
-                {
-                    completed++;
-                    MessageBox.Show($"Excel export successful!{Environment.NewLine}{Environment.NewLine}{path}", 
-                        "Export Complete", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                }
-            }
-        }
-        
-        // Image Export
-        if (PrintForm_CheckBox_ExportImage.Checked)
-        {
-            string? path = Helper_ExportManager.ShowImageSaveDialog("DataExport");
-            if (!string.IsNullOrEmpty(path))
-            {
-                ImageFormat format = path.EndsWith(".jpg") ? ImageFormat.Jpeg : ImageFormat.Png;
-                if (Helper_ExportManager.ExportToImage(_printJob, path, format))
-                {
-                    completed++;
-                    MessageBox.Show($"Image export successful!{Environment.NewLine}{Environment.NewLine}{path}", 
-                        "Export Complete", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                }
-            }
-        }
-        
-        if (completed > 0)
-        {
-            UpdateStatusBar($"Exported {completed} file(s)");
-        }
+
+        Point menuLocation = new(0, PrintForm_Button_Export.Height);
+        PrintForm_ContextMenu_Export.Show(PrintForm_Button_Export, menuLocation);
     }
 
-    #endregion
-
-    #region Column Management
-
-    private List<string> GetColumnOrder()
-    {
-        var order = new List<string>();
-        for (int i = 0; i < PrintForm_CheckedListBox_Columns.Items.Count; i++)
-        {
-            order.Add(PrintForm_CheckedListBox_Columns.Items[i].ToString()!);
-        }
-        return order;
-    }
-
-    private List<string> GetVisibleColumns()
-    {
-        var visible = new List<string>();
-        for (int i = 0; i < PrintForm_CheckedListBox_Columns.Items.Count; i++)
-        {
-            if (PrintForm_CheckedListBox_Columns.GetItemChecked(i))
-            {
-                visible.Add(PrintForm_CheckedListBox_Columns.Items[i].ToString()!);
-            }
-        }
-        return visible;
-    }
-
-    private void PrintForm_Button_SelectAll_Click(object? sender, EventArgs e)
-    {
-        for (int i = 0; i < PrintForm_CheckedListBox_Columns.Items.Count; i++)
-        {
-            PrintForm_CheckedListBox_Columns.SetItemChecked(i, true);
-        }
-        RefreshPreview();
-    }
-
-    private void PrintForm_Button_DeselectAll_Click(object? sender, EventArgs e)
-    {
-        for (int i = 0; i < PrintForm_CheckedListBox_Columns.Items.Count; i++)
-        {
-            PrintForm_CheckedListBox_Columns.SetItemChecked(i, false);
-        }
-        RefreshPreview();
-    }
-
-    private void PrintForm_Button_MoveUp_Click(object? sender, EventArgs e)
-    {
-        int index = PrintForm_CheckedListBox_Columns.SelectedIndex;
-        if (index > 0)
-        {
-            object item = PrintForm_CheckedListBox_Columns.Items[index];
-            bool isChecked = PrintForm_CheckedListBox_Columns.GetItemChecked(index);
-            PrintForm_CheckedListBox_Columns.Items.RemoveAt(index);
-            PrintForm_CheckedListBox_Columns.Items.Insert(index - 1, item);
-            PrintForm_CheckedListBox_Columns.SetItemChecked(index - 1, isChecked);
-            PrintForm_CheckedListBox_Columns.SelectedIndex = index - 1;
-            RefreshPreview();
-        }
-    }
-
-    private void PrintForm_Button_MoveDown_Click(object? sender, EventArgs e)
-    {
-        int index = PrintForm_CheckedListBox_Columns.SelectedIndex;
-        if (index >= 0 && index < PrintForm_CheckedListBox_Columns.Items.Count - 1)
-        {
-            object item = PrintForm_CheckedListBox_Columns.Items[index];
-            bool isChecked = PrintForm_CheckedListBox_Columns.GetItemChecked(index);
-            PrintForm_CheckedListBox_Columns.Items.RemoveAt(index);
-            PrintForm_CheckedListBox_Columns.Items.Insert(index + 1, item);
-            PrintForm_CheckedListBox_Columns.SetItemChecked(index + 1, isChecked);
-            PrintForm_CheckedListBox_Columns.SelectedIndex = index + 1;
-            RefreshPreview();
-        }
-    }
-
-    private void PrintForm_CheckedListBox_Columns_ItemCheck(object? sender, ItemCheckEventArgs e)
-    {
-        // Only refresh preview if the form handle has been created (i.e., after initialization)
-        if (IsHandleCreated)
-        {
-            BeginInvoke(() => RefreshPreview());
-        }
-    }
-
-    #endregion
-
-    #region Filters
-
-    private void PrintForm_Button_AddFilter_Click(object? sender, EventArgs e)
-    {
-        string filterType = PrintForm_ComboBox_FilterType.SelectedItem?.ToString() ?? string.Empty;
-        
-        if (filterType == "Show Selected Rows Only")
-        {
-            ApplySelectedRowsFilter();
-            return;
-        }
-        
-        string column = PrintForm_ComboBox_FilterColumn.SelectedItem?.ToString() ?? string.Empty;
-        if (column == "-- Select Column --")
-        {
-            MessageBox.Show("Please select a column to filter.", "Filter", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-            return;
-        }
-        
-        var filter = new PrintFilter
-        {
-            ColumnName = column,
-            FilterType = filterType
-        };
-        
-        if (filterType == "Date Range")
-        {
-            filter.DateFrom = PrintForm_DateTimePicker_DateFrom.Value.Date;
-            filter.DateTo = PrintForm_DateTimePicker_DateTo.Value.Date;
-        }
-        else
-        {
-            filter.Value = PrintForm_TextBox_FilterValue.Text;
-        }
-        
-        _activeFilters.Add(filter);
-        RefreshActiveFiltersList();
-        ApplyFilters();
-    }
-
-    private void PrintForm_Button_RemoveFilter_Click(object? sender, EventArgs e)
-    {
-        if (PrintForm_ListBox_ActiveFilters.SelectedIndex >= 0)
-        {
-            _activeFilters.RemoveAt(PrintForm_ListBox_ActiveFilters.SelectedIndex);
-            RefreshActiveFiltersList();
-            ApplyFilters();
-        }
-    }
-
-    private void PrintForm_Button_ClearFilters_Click(object? sender, EventArgs e)
-    {
-        _activeFilters.Clear();
-        RefreshActiveFiltersList();
-        ApplyFilters();
-    }
-
-    private void RefreshActiveFiltersList()
-    {
-        PrintForm_ListBox_ActiveFilters.Items.Clear();
-        foreach (var filter in _activeFilters)
-        {
-            PrintForm_ListBox_ActiveFilters.Items.Add(filter.ToString());
-        }
-    }
-
-    private void ApplyFilters()
-    {
-        _filteredData = _sourceData.Copy();
-        
-        foreach (var filter in _activeFilters)
-        {
-            ApplySingleFilter(filter);
-        }
-        
-        RefreshPreview();
-        UpdateStatusBar($"Filtered to {_filteredData.Rows.Count} rows");
-    }
-
-    private void ApplySingleFilter(PrintFilter filter)
-    {
-        var rowsToRemove = new List<DataRow>();
-        
-        foreach (DataRow row in _filteredData.Rows)
-        {
-            if (!filter.MatchesRow(row))
-            {
-                rowsToRemove.Add(row);
-            }
-        }
-        
-        foreach (var row in rowsToRemove)
-        {
-            _filteredData.Rows.Remove(row);
-        }
-    }
-
-    private void ApplySelectedRowsFilter()
-    {
-        if (_selectedRowIndices.Count == 0)
-        {
-            MessageBox.Show("No rows were selected in the source grid.", "Filter", MessageBoxButtons.OK, MessageBoxIcon.Information);
-            return;
-        }
-        
-        _filteredData = _sourceData.Clone();
-        foreach (int index in _selectedRowIndices)
-        {
-            if (index < _sourceData.Rows.Count)
-            {
-                _filteredData.ImportRow(_sourceData.Rows[index]);
-            }
-        }
-        
-        RefreshPreview();
-        UpdateStatusBar($"Showing {_filteredData.Rows.Count} selected rows");
-    }
-
-    private void PrintForm_ComboBox_FilterType_SelectedIndexChanged(object? sender, EventArgs e)
-    {
-        string filterType = PrintForm_ComboBox_FilterType.SelectedItem?.ToString() ?? string.Empty;
-        bool isDateRange = filterType == "Date Range";
-        bool isSelectedRows = filterType == "Show Selected Rows Only";
-        
-        PrintForm_ComboBox_FilterColumn.Enabled = !isSelectedRows;
-        PrintForm_TextBox_FilterValue.Visible = !isDateRange && !isSelectedRows;
-        PrintForm_DateTimePicker_DateFrom.Visible = isDateRange;
-        PrintForm_DateTimePicker_DateTo.Visible = isDateRange;
-    }
-
-    #endregion
-
-    #region Settings Changed
-
-    private void PrintForm_RadioButton_Landscape_CheckedChanged(object? sender, EventArgs e)
-    {
-        if (PrintForm_RadioButton_Landscape.Checked)
-        {
-            RefreshPreview();
-        }
-    }
-
-    private void PrintForm_RadioButton_Color_CheckedChanged(object? sender, EventArgs e)
-    {
-        if (PrintForm_RadioButton_Color.Checked)
-        {
-            RefreshPreview();
-        }
-    }
-
-    private void PrintForm_ComboBox_Printer_SelectedIndexChanged(object? sender, EventArgs e)
-    {
-        RefreshPreview();
-    }
-
-    private void PageRange_CheckedChanged(object? sender, EventArgs e)
-    {
-        bool enablePageNumbers = PrintForm_RadioButton_PageRange.Checked;
-        PrintForm_NumericUpDown_FromPage.Enabled = enablePageNumbers;
-        PrintForm_NumericUpDown_ToPage.Enabled = enablePageNumbers;
-        PrintForm_Label_PageFrom.Enabled = enablePageNumbers;
-        PrintForm_Label_PageTo.Enabled = enablePageNumbers;
-    }
-
-    private void PageRangeValue_Changed(object? sender, EventArgs e)
-    {
-        // Track that values have changed, but don't refresh yet
-        // Refresh will happen on Leave event when neither control has focus
-    }
-
-    private void PageRangeControl_Leave(object? sender, EventArgs e)
-    {
-        // Only refresh if neither control has focus and values have actually changed
-        if (!PrintForm_NumericUpDown_FromPage.Focused && 
-            !PrintForm_NumericUpDown_ToPage.Focused)
-        {
-            int currentFrom = (int)PrintForm_NumericUpDown_FromPage.Value;
-            int currentTo = (int)PrintForm_NumericUpDown_ToPage.Value;
-            
-            if (currentFrom != _previousFromPage || currentTo != _previousToPage)
-            {
-                _previousFromPage = currentFrom;
-                _previousToPage = currentTo;
-                RefreshPreview();
-            }
-        }
-    }
-
-    #endregion
-
-    #region Preview Navigation
-
-    private void PrintForm_Button_FirstPage_Click(object? sender, EventArgs e)
-    {
-        PrintForm_PrintPreviewControl_Main.StartPage = 0;
-        UpdatePageNavigationButtons();
-    }
-
-    private void PrintForm_Button_PreviousPage_Click(object? sender, EventArgs e)
-    {
-        if (PrintForm_PrintPreviewControl_Main.StartPage > 0)
-        {
-            PrintForm_PrintPreviewControl_Main.StartPage--;
-            UpdatePageNavigationButtons();
-        }
-    }
-
-    private void PrintForm_Button_NextPage_Click(object? sender, EventArgs e)
-    {
-        PrintForm_PrintPreviewControl_Main.StartPage++;
-        UpdatePageNavigationButtons();
-    }
-
-    private void PrintForm_Button_LastPage_Click(object? sender, EventArgs e)
-    {
-        // Navigate to the last page by setting StartPage to a high value
-        // PrintPreviewControl will automatically cap it at the last available page
-        if (_printManager?.PreparePrintDocument() is PrintDocument doc)
-        {
-            // Set to a high page number - the control will cap it at the actual last page
-            PrintForm_PrintPreviewControl_Main.StartPage = 9999;
-            UpdatePageNavigationButtons();
-        }
-    }
-
-    private void UpdatePageNavigationButtons()
-    {
-        int currentPage = PrintForm_PrintPreviewControl_Main.StartPage + 1;
-        PrintForm_Label_PageInfo.Text = $"Page {currentPage}";
-        PrintForm_Button_FirstPage.Enabled = currentPage > 1;
-        PrintForm_Button_PreviousPage.Enabled = currentPage > 1;
-    }
-
-    private void PrintForm_Button_ZoomIn_Click(object? sender, EventArgs e)
-    {
-        PrintForm_PrintPreviewControl_Main.Zoom = Math.Min(2.0, PrintForm_PrintPreviewControl_Main.Zoom + 0.25);
-        PrintForm_ComboBox_Zoom.Text = $"{(int)(PrintForm_PrintPreviewControl_Main.Zoom * 100)}%";
-    }
-
-    private void PrintForm_Button_ZoomOut_Click(object? sender, EventArgs e)
-    {
-        PrintForm_PrintPreviewControl_Main.Zoom = Math.Max(0.25, PrintForm_PrintPreviewControl_Main.Zoom - 0.25);
-        PrintForm_ComboBox_Zoom.Text = $"{(int)(PrintForm_PrintPreviewControl_Main.Zoom * 100)}%";
-    }
-
-    private void PrintForm_ComboBox_Zoom_SelectedIndexChanged(object? sender, EventArgs e)
-    {
-        if (PrintForm_ComboBox_Zoom.SelectedItem != null)
-        {
-            string zoom = PrintForm_ComboBox_Zoom.SelectedItem.ToString()!.Replace("%", string.Empty);
-            if (int.TryParse(zoom, out int zoomPercent))
-            {
-                PrintForm_PrintPreviewControl_Main.Zoom = zoomPercent / 100.0;
-            }
-        }
-    }
-
-    #endregion
-
-    #region Presets
-
-    private void PrintForm_Button_SavePreset_Click(object? sender, EventArgs e)
-    {
-        string presetName = Microsoft.VisualBasic.Interaction.InputBox("Enter preset name:", "Save Preset", string.Empty);
-        if (string.IsNullOrWhiteSpace(presetName)) return;
-        
-        var preset = CreatePresetFromUI();
-        SavePreset(presetName, preset);
-        PopulatePresets();
-        MessageBox.Show("Preset saved successfully.", "Save Preset", MessageBoxButtons.OK, MessageBoxIcon.Information);
-    }
-
-    private void PrintForm_Button_DeletePreset_Click(object? sender, EventArgs e)
-    {
-        if (PrintForm_ComboBox_Presets.SelectedIndex > 0)
-        {
-            string presetName = PrintForm_ComboBox_Presets.SelectedItem!.ToString()!;
-            if (MessageBox.Show($"Delete preset \"{presetName}\"?", "Delete Preset", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
-            {
-                DeletePreset(presetName);
-                PopulatePresets();
-            }
-        }
-    }
-
-    private void PrintForm_ComboBox_Presets_SelectedIndexChanged(object? sender, EventArgs e)
-    {
-        if (PrintForm_ComboBox_Presets.SelectedIndex > 0)
-        {
-            string presetName = PrintForm_ComboBox_Presets.SelectedItem!.ToString()!;
-            LoadPreset(presetName);
-        }
-    }
-
-    #endregion
-
-    #region Utilities
-
-    private DataTable GetDataTableFromDataGridView(DataGridView dgv)
-    {
-        var dt = new DataTable();
-        
-        // Add ALL columns (including hidden ones) to the DataTable
-        foreach (DataGridViewColumn col in dgv.Columns)
-        {
-            dt.Columns.Add(col.HeaderText, typeof(string));
-        }
-        
-        // Extract all cell values (including from hidden columns)
-        foreach (DataGridViewRow row in dgv.Rows)
-        {
-            if (!row.IsNewRow)
-            {
-                var values = new List<object>();
-                foreach (DataGridViewColumn col in dgv.Columns)
-                {
-                    values.Add(row.Cells[col.Index].Value?.ToString() ?? string.Empty);
-                }
-                dt.Rows.Add(values.ToArray());
-            }
-        }
-        
-        return dt;
-    }
-
-    private void UpdateStatusBar(string message)
-    {
-        PrintForm_ToolStripStatusLabel_Status.Text = message;
-    }
-
-    private string GetPresetsDirectory()
-    {
-        string appData = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
-        string dir = Path.Combine(appData, "MTM", "PrintPresets");
-        Directory.CreateDirectory(dir);
-        return dir;
-    }
-
-    private PrintPreset CreatePresetFromUI()
-    {
-        return new PrintPreset
-        {
-            ColumnOrder = GetColumnOrder(),
-            VisibleColumns = GetVisibleColumns(),
-            IsLandscape = PrintForm_RadioButton_Landscape.Checked,
-            IsColor = PrintForm_RadioButton_Color.Checked
-        };
-    }
-
-    private void SavePreset(string name, PrintPreset preset)
-    {
-        string path = Path.Combine(GetPresetsDirectory(), $"{name}.json");
-        string json = System.Text.Json.JsonSerializer.Serialize(preset);
-        File.WriteAllText(path, json);
-    }
-
-    private void LoadPreset(string name)
-    {
-        string path = Path.Combine(GetPresetsDirectory(), $"{name}.json");
-        if (File.Exists(path))
-        {
-            string json = File.ReadAllText(path);
-            var preset = System.Text.Json.JsonSerializer.Deserialize<PrintPreset>(json);
-            if (preset != null)
-            {
-                ApplyPresetToUI(preset);
-                RefreshPreview();
-            }
-        }
-    }
-
-    private void ApplyPresetToUI(PrintPreset preset)
-    {
-        PrintForm_RadioButton_Landscape.Checked = preset.IsLandscape;
-        PrintForm_RadioButton_Portrait.Checked = !preset.IsLandscape;
-        PrintForm_RadioButton_Color.Checked = preset.IsColor;
-        PrintForm_RadioButton_BlackWhite.Checked = !preset.IsColor;
-    }
-
-    private void DeletePreset(string name)
-    {
-        string path = Path.Combine(GetPresetsDirectory(), $"{name}.json");
-        if (File.Exists(path))
-        {
-            File.Delete(path);
-        }
-    }
-
-    private void LoadUserSettings()
-    {
-        // Load from %AppData%\MTM\PrintSettings.json if needed
-    }
-
-    private void PrintForm_Button_Cancel_Click(object? sender, EventArgs e)
+    private void PrintForm_Button_Cancel_Click(object sender, EventArgs e)
     {
         DialogResult = DialogResult.Cancel;
         Close();
     }
 
-    protected override void Dispose(bool disposing)
+    private async void PrintForm_ToolStripMenuItem_ExportPdf_Click(object sender, EventArgs e)
     {
-        if (disposing)
-        {
-            _printManager?.Dispose();
-        }
-        base.Dispose(disposing);
+        PrintForm_ContextMenu_Export.Close();
+        await ExecuteExportAsync(
+            Helper_ExportManager.ExportToPdfAsync,
+            "PDF files (*.pdf)|*.pdf|All files (*.*)|*.*",
+            ".pdf",
+            "Export to PDF");
+    }
+
+    private async void PrintForm_ToolStripMenuItem_ExportExcel_Click(object sender, EventArgs e)
+    {
+        PrintForm_ContextMenu_Export.Close();
+        await ExecuteExportAsync(
+            Helper_ExportManager.ExportToExcelAsync,
+            "Excel Workbook (*.xlsx)|*.xlsx|All files (*.*)|*.*",
+            ".xlsx",
+            "Export to Excel");
     }
 
     #endregion
-}
 
-#region Supporting Classes
+    #region ComboBox & UI Events
 
-public class PrintFilter
-{
-    public string ColumnName { get; set; } = string.Empty;
-    public string FilterType { get; set; } = string.Empty;
-    public string Value { get; set; } = string.Empty;
-    public DateTime DateFrom { get; set; }
-    public DateTime DateTo { get; set; }
-
-    public bool MatchesRow(DataRow row)
+    private void PrintForm_ComboBox_Printer_SelectedIndexChanged(object sender, EventArgs e)
     {
-        if (!row.Table.Columns.Contains(ColumnName)) return false;
-        
-        string cellValue = row[ColumnName]?.ToString() ?? string.Empty;
-        
-        return FilterType switch
+        if (_isUpdatingPrinterSection)
         {
-            "Contains" => cellValue.Contains(Value, StringComparison.OrdinalIgnoreCase),
-            "Equals" => cellValue.Equals(Value, StringComparison.OrdinalIgnoreCase),
-            "Starts With" => cellValue.StartsWith(Value, StringComparison.OrdinalIgnoreCase),
-            "Ends With" => cellValue.EndsWith(Value, StringComparison.OrdinalIgnoreCase),
-            "Date Range" => DateTime.TryParse(cellValue, out DateTime date) && date >= DateFrom && date <= DateTo,
-            _ => true
+            return;
+        }
+
+        if (PrintForm_ComboBox_Printer.SelectedItem is string printerName && !string.Equals(printerName, PrinterUnavailableDisplayText, StringComparison.Ordinal))
+        {
+            _printJob.PrinterName = printerName;
+            _printSettings.PrinterName = printerName;
+            SchedulePreviewRefresh();
+        }
+    }
+
+    private void PrintForm_RadioButton_Portrait_CheckedChanged(object sender, EventArgs e)
+    {
+        if (_isUpdatingPrinterSection || !PrintForm_RadioButton_Portrait.Checked)
+        {
+            return;
+        }
+
+        _printJob.Landscape = false;
+        SchedulePreviewRefresh();
+    }
+
+    private void PrintForm_RadioButton_Landscape_CheckedChanged(object sender, EventArgs e)
+    {
+        if (_isUpdatingPrinterSection || !PrintForm_RadioButton_Landscape.Checked)
+        {
+            return;
+        }
+
+        _printJob.Landscape = true;
+        SchedulePreviewRefresh();
+    }
+
+    private void PrintForm_RadioButton_AllPages_CheckedChanged(object sender, EventArgs e)
+    {
+        if (_isUpdatingPageSettings || !PrintForm_RadioButton_AllPages.Checked)
+        {
+            return;
+        }
+
+        _printJob.PageRangeType = Enum_PrintRangeType.AllPages;
+        UpdatePageRangeControls();
+    }
+
+    private void PrintForm_RadioButton_CurrentPage_CheckedChanged(object sender, EventArgs e)
+    {
+        if (_isUpdatingPageSettings || !PrintForm_RadioButton_CurrentPage.Checked)
+        {
+            return;
+        }
+
+        _printJob.PageRangeType = Enum_PrintRangeType.CurrentPage;
+        UpdatePageRangeControls();
+    }
+
+    private void PrintForm_RadioButton_CustomRange_CheckedChanged(object sender, EventArgs e)
+    {
+        if (_isUpdatingPageSettings || !PrintForm_RadioButton_CustomRange.Checked)
+        {
+            return;
+        }
+
+        _printJob.PageRangeType = Enum_PrintRangeType.PageRange;
+        UpdatePageRangeControls();
+    }
+
+    private void PrintForm_TextBox_FromPage_TextChanged(object sender, EventArgs e)
+    {
+        if (_isUpdatingPageSettings)
+        {
+            return;
+        }
+
+        ValidateCustomRangeInputs();
+    }
+
+    private void PrintForm_TextBox_ToPage_TextChanged(object sender, EventArgs e)
+    {
+        if (_isUpdatingPageSettings)
+        {
+            return;
+        }
+
+        ValidateCustomRangeInputs();
+    }
+
+    private void PrintForm_CheckedListBox_Columns_SelectedIndexChanged(object sender, EventArgs e)
+    {
+        if (_isUpdatingColumnSettings)
+        {
+            return;
+        }
+
+        UpdateColumnActionStates();
+    }
+
+    private void PrintForm_CheckedListBox_Columns_ItemCheck(object? sender, ItemCheckEventArgs e)
+    {
+        if (_isUpdatingColumnSettings)
+        {
+            return;
+        }
+
+        BeginInvoke(new Action(() => ApplyColumnSelectionFromListBoxWithPendingState(e.Index, e.NewValue == CheckState.Checked)));
+    }
+
+    private void PrintForm_RadioButton_Color_CheckedChanged(object sender, EventArgs e)
+    {
+        if (_isUpdatingOptionsSection || !PrintForm_RadioButton_Color.Checked)
+        {
+            return;
+        }
+
+        _printJob.ColorMode = Enum_PrintColorMode.Color;
+        SchedulePreviewRefresh();
+    }
+
+    private void PrintForm_RadioButton_Grayscale_CheckedChanged(object sender, EventArgs e)
+    {
+        if (_isUpdatingOptionsSection || !PrintForm_RadioButton_Grayscale.Checked)
+        {
+            return;
+        }
+
+        _printJob.ColorMode = Enum_PrintColorMode.Grayscale;
+        SchedulePreviewRefresh();
+    }
+
+    private void PrintForm_ComboBox_Zoom_SelectedIndexChanged(object sender, EventArgs e)
+    {
+        if (_isUpdatingZoomSelection)
+        {
+            return;
+        }
+
+        if (PrintForm_ComboBox_Zoom.SelectedItem is string selected)
+        {
+            _selectedZoomOption = selected;
+            ApplyZoomSelection();
+        }
+    }
+
+    private void PrintForm_PrintPreviewControl_StartPageChanged(object? sender, EventArgs e)
+    {
+        LoggingUtility.Log($"[PrintForm] StartPageChanged EVENT: StartPage={PrintForm_PrintPreviewControl.StartPage}");
+        
+        UpdatePreviewNavigationState();
+
+        if (_printJob.PageRangeType == Enum_PrintRangeType.CurrentPage)
+        {
+            _printJob.FromPage = _printJob.CurrentPage;
+            _printJob.ToPage = _printJob.CurrentPage;
+            UpdateCustomRangeTextBoxValue(PrintForm_TextBox_FromPage, _printJob.FromPage);
+            UpdateCustomRangeTextBoxValue(PrintForm_TextBox_ToPage, _printJob.ToPage);
+        }
+    }
+
+    #endregion
+
+    #region Helpers
+
+    private void ApplyThemeColors()
+    {
+        Model_Shared_UserUiColors colors = Model_Application_Variables.UserUiColors;
+
+        Color formBack = colors.FormBackColor ?? SystemColors.Control;
+        Color formFore = colors.FormForeColor ?? SystemColors.ControlText;
+        BackColor = formBack;
+        ForeColor = formFore;
+
+        Color panelBack = colors.PanelBackColor ?? SystemColors.Control;
+        PrintForm_Panel_Main.BackColor = panelBack;
+        PrintForm_TableLayout_Master.BackColor = panelBack;
+        PrintForm_Panel_Sidebar.BackColor = panelBack;
+        PrintForm_TableLayout_Sidebar.BackColor = panelBack;
+        PrintForm_Panel_PrinterSettingsContent.BackColor = panelBack;
+        PrintForm_Panel_PageSettingsContent.BackColor = panelBack;
+        PrintForm_Panel_ColumnSettingsContent.BackColor = panelBack;
+        PrintForm_Panel_OptionsContent.BackColor = panelBack;
+
+        PrintForm_Panel_PreviewViewport.BackColor = Color.FromArgb(0x95, 0xA5, 0xA6); // ACCEPTABLE: Mockup-specified preview backdrop color
+
+        Color labelFore = colors.LabelForeColor ?? SystemColors.ControlText;
+        foreach (Label label in new[]
+        {
+                PrintForm_Label_PrinterSettingsHeader,
+                PrintForm_Label_PrinterName,
+                PrintForm_Label_PrinterOrientation,
+                PrintForm_Label_PageSettingsHeader,
+                PrintForm_Label_PageRange,
+                PrintForm_Label_FromPage,
+                PrintForm_Label_ToPage,
+                PrintForm_Label_ColumnSettingsHeader,
+                PrintForm_Label_Columns,
+                PrintForm_Label_OptionsHeader,
+                PrintForm_Label_ColorMode,
+                PrintForm_Label_Zoom,
+                PrintForm_Label_PageCounter
+            })
+        {
+            label.ForeColor = labelFore;
+        }
+
+        Color radioBack = colors.RadioButtonBackColor ?? panelBack;
+        Color radioFore = colors.RadioButtonForeColor ?? labelFore;
+        PrintForm_RadioButton_Portrait.BackColor = radioBack;
+        PrintForm_RadioButton_Portrait.ForeColor = radioFore;
+        PrintForm_RadioButton_Landscape.BackColor = radioBack;
+        PrintForm_RadioButton_Landscape.ForeColor = radioFore;
+        PrintForm_RadioButton_AllPages.BackColor = radioBack;
+        PrintForm_RadioButton_AllPages.ForeColor = radioFore;
+        PrintForm_RadioButton_CurrentPage.BackColor = radioBack;
+        PrintForm_RadioButton_CurrentPage.ForeColor = radioFore;
+        PrintForm_RadioButton_CustomRange.BackColor = radioBack;
+        PrintForm_RadioButton_CustomRange.ForeColor = radioFore;
+        PrintForm_RadioButton_Color.BackColor = radioBack;
+        PrintForm_RadioButton_Color.ForeColor = radioFore;
+        PrintForm_RadioButton_Grayscale.BackColor = radioBack;
+        PrintForm_RadioButton_Grayscale.ForeColor = radioFore;
+
+        Color textBoxBack = colors.TextBoxBackColor ?? SystemColors.Window;
+        Color textBoxFore = colors.TextBoxForeColor ?? SystemColors.WindowText;
+        foreach (TextBox textBox in new[] { PrintForm_TextBox_FromPage, PrintForm_TextBox_ToPage })
+        {
+            textBox.BackColor = textBoxBack;
+            textBox.ForeColor = textBoxFore;
+        }
+
+        Color comboBack = colors.ComboBoxBackColor ?? SystemColors.Window;
+        Color comboFore = colors.ComboBoxForeColor ?? SystemColors.WindowText;
+        PrintForm_ComboBox_Printer.BackColor = comboBack;
+        PrintForm_ComboBox_Printer.ForeColor = comboFore;
+        PrintForm_ComboBox_Zoom.BackColor = comboBack;
+        PrintForm_ComboBox_Zoom.ForeColor = comboFore;
+
+        Color listBack = colors.CheckedListBoxBackColor ?? SystemColors.Window;
+        Color listFore = colors.CheckedListBoxForeColor ?? SystemColors.WindowText;
+        PrintForm_CheckedListBox_Columns.BackColor = listBack;
+        PrintForm_CheckedListBox_Columns.ForeColor = listFore;
+
+        Color buttonBack = colors.ButtonBackColor ?? SystemColors.Control;
+        Color buttonFore = colors.ButtonForeColor ?? SystemColors.ControlText;
+        foreach (Button button in new[]
+        {
+                PrintForm_Button_PrinterSettingsToggle,
+                PrintForm_Button_PageSettingsToggle,
+                PrintForm_Button_ColumnSettingsToggle,
+                PrintForm_Button_OptionsToggle,
+                PrintForm_Button_ColumnUp,
+                PrintForm_Button_ColumnDown,
+                PrintForm_Button_FirstPage,
+                PrintForm_Button_PreviousPage,
+                PrintForm_Button_NextPage,
+                PrintForm_Button_LastPage,
+                PrintForm_Button_Export,
+                PrintForm_Button_Cancel
+            })
+        {
+            button.BackColor = buttonBack;
+            button.ForeColor = buttonFore;
+            button.UseVisualStyleBackColor = false;
+        }
+
+        Color accent = colors.AccentColor ?? SystemColors.Highlight;
+        PrintForm_Button_Print.BackColor = accent;
+        PrintForm_Button_Print.ForeColor = colors.ButtonForeColor ?? SystemColors.HighlightText;
+        PrintForm_Button_Print.UseVisualStyleBackColor = false;
+    }
+
+    private void LoadSettings()
+    {
+        var availableColumns = new List<string>(_printJob.ColumnOrder);
+
+        if (_printSettings.ColumnOrder.Count > 0)
+        {
+            var mergedOrder = _printSettings.ColumnOrder.Where(availableColumns.Contains).ToList();
+            foreach (string column in availableColumns)
+            {
+                if (!mergedOrder.Contains(column))
+                {
+                    mergedOrder.Add(column);
+                }
+            }
+
+            if (mergedOrder.Count == availableColumns.Count)
+            {
+                _printJob.ColumnOrder = new List<string>(mergedOrder);
+            }
+        }
+
+        if (_printSettings.VisibleColumns.Count > 0)
+        {
+            List<string> visible = _printSettings.VisibleColumns
+                .Where(column => _printJob.ColumnOrder.Contains(column))
+                .ToList();
+
+            if (visible.Count > 0)
+            {
+                _printJob.VisibleColumns = new List<string>(visible);
+            }
+        }
+
+        if (_printJob.VisibleColumns.Count == 0)
+        {
+            _printJob.VisibleColumns = new List<string>(_printJob.ColumnOrder);
+        }
+
+        if (!string.IsNullOrWhiteSpace(_printSettings.PrinterName))
+        {
+            _printJob.PrinterName = _printSettings.PrinterName;
+        }
+    }
+
+    private void SaveSettings()
+    {
+        _printSettings.PrinterName = _printJob.PrinterName;
+        _printSettings.VisibleColumns = new List<string>(_printJob.VisibleColumns);
+        _printSettings.ColumnOrder = new List<string>(_printJob.ColumnOrder);
+        _printSettings.LastModified = DateTime.UtcNow;
+
+        try
+        {
+            _printSettings.Save();
+        }
+        catch (Exception ex)
+        {
+            LoggingUtility.LogApplicationError(ex);
+            // Failure to persist settings should not block printing; surface non-blocking diagnostic
+            Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Low, controlName: nameof(PrintForm));
+        }
+    }
+
+    private void InitializePrinterSettingsSection()
+    {
+        _isUpdatingPrinterSection = true;
+        try
+        {
+            PrintForm_ComboBox_Printer.Items.Clear();
+            var installedPrinters = PrinterSettings.InstalledPrinters.Cast<string>().ToList();
+
+            if (installedPrinters.Count == 0)
+            {
+                PrintForm_ComboBox_Printer.Items.Add(PrinterUnavailableDisplayText);
+                PrintForm_ComboBox_Printer.SelectedIndex = 0;
+                PrintForm_ComboBox_Printer.Enabled = false;
+                _printJob.PrinterName = null;
+            }
+            else
+            {
+                foreach (string printer in installedPrinters)
+                {
+                    PrintForm_ComboBox_Printer.Items.Add(printer);
+                }
+
+                string desired = _printJob.PrinterName ?? _printSettings.PrinterName ?? new PrinterSettings().PrinterName;
+                string resolved = installedPrinters.FirstOrDefault(p => string.Equals(p, desired, StringComparison.OrdinalIgnoreCase))
+                        ?? installedPrinters.First();
+
+                _printJob.PrinterName = resolved;
+                _printSettings.PrinterName = resolved;
+                PrintForm_ComboBox_Printer.Enabled = true;
+                PrintForm_ComboBox_Printer.SelectedItem = installedPrinters.First(p => string.Equals(p, resolved, StringComparison.OrdinalIgnoreCase));
+            }
+
+            PrintForm_RadioButton_Portrait.Checked = !_printJob.Landscape;
+            PrintForm_RadioButton_Landscape.Checked = _printJob.Landscape;
+        }
+        finally
+        {
+            _isUpdatingPrinterSection = false;
+        }
+
+        UpdatePrinterSettingsCollapseState();
+    }
+
+    private void InitializePageSettingsSection()
+    {
+        _isUpdatingPageSettings = true;
+        try
+        {
+            PrintForm_TextBox_FromPage.Text = Math.Max(1, _printJob.FromPage).ToString(CultureInfo.InvariantCulture);
+            PrintForm_TextBox_ToPage.Text = Math.Max(_printJob.FromPage, _printJob.ToPage).ToString(CultureInfo.InvariantCulture);
+        }
+        finally
+        {
+            _isUpdatingPageSettings = false;
+        }
+
+        UpdatePageRangeControls();
+        UpdatePageSettingsCollapseState();
+    }
+
+    private void InitializeColumnSettingsSection()
+    {
+        _isUpdatingColumnSettings = true;
+        try
+        {
+            PrintForm_CheckedListBox_Columns.Items.Clear();
+            foreach (string column in _printJob.ColumnOrder)
+            {
+                bool isChecked = _printJob.VisibleColumns.Contains(column);
+                PrintForm_CheckedListBox_Columns.Items.Add(column, isChecked);
+            }
+
+            if (PrintForm_CheckedListBox_Columns.Items.Count > 0)
+            {
+                PrintForm_CheckedListBox_Columns.SelectedIndex = 0;
+            }
+        }
+        finally
+        {
+            _isUpdatingColumnSettings = false;
+        }
+
+        UpdateColumnActionStates();
+        UpdateColumnSettingsCollapseState();
+    }
+
+    private void InitializeOptionsSection()
+    {
+        _isUpdatingOptionsSection = true;
+        try
+        {
+            PrintForm_RadioButton_Color.Checked = _printJob.ColorMode == Enum_PrintColorMode.Color;
+            PrintForm_RadioButton_Grayscale.Checked = _printJob.ColorMode == Enum_PrintColorMode.Grayscale;
+
+            _isUpdatingZoomSelection = true;
+            try
+            {
+                _selectedZoomOption = ZoomFitToPage;
+                string? comboItem = PrintForm_ComboBox_Zoom.Items.Cast<object>()
+                    .OfType<string>()
+                    .FirstOrDefault(item => item.Equals(ZoomFitToPage, StringComparison.OrdinalIgnoreCase));
+
+                if (comboItem is null)
+                {
+                    PrintForm_ComboBox_Zoom.Items.Add(ZoomFitToPage);
+                    comboItem = ZoomFitToPage;
+                }
+
+                PrintForm_ComboBox_Zoom.SelectedItem = comboItem;
+            }
+            finally
+            {
+                _isUpdatingZoomSelection = false;
+            }
+        }
+        finally
+        {
+            _isUpdatingOptionsSection = false;
+        }
+
+        UpdateOptionsCollapseState();
+    }
+
+    private void InitializeActionButtons()
+    {
+        PrintForm_Button_Print.Enabled = false;
+        PrintForm_Button_Export.Enabled = false;
+        PrintForm_Button_Cancel.Enabled = true;
+        UpdateActionButtonsState();
+    }
+
+    private void UpdatePrinterSettingsCollapseState()
+    {
+        PrintForm_Panel_PrinterSettingsContent.Visible = _isPrinterSettingsExpanded;
+        PrintForm_Button_PrinterSettingsToggle.Text = _isPrinterSettingsExpanded ? "-" : "+";
+    }
+
+    private void UpdatePageSettingsCollapseState()
+    {
+        PrintForm_Panel_PageSettingsContent.Visible = _isPageSettingsExpanded;
+        PrintForm_Button_PageSettingsToggle.Text = _isPageSettingsExpanded ? "-" : "+";
+    }
+
+    private void UpdateColumnSettingsCollapseState()
+    {
+        PrintForm_Panel_ColumnSettingsContent.Visible = _isColumnSettingsExpanded;
+        PrintForm_Button_ColumnSettingsToggle.Text = _isColumnSettingsExpanded ? "-" : "+";
+    }
+
+    private void UpdateOptionsCollapseState()
+    {
+        PrintForm_Panel_OptionsContent.Visible = _isOptionsExpanded;
+        PrintForm_Button_OptionsToggle.Text = _isOptionsExpanded ? "-" : "+";
+    }
+
+    private void UpdatePageRangeControls()
+    {
+        _isUpdatingPageSettings = true;
+        try
+        {
+            PrintForm_RadioButton_AllPages.Checked = _printJob.PageRangeType == Enum_PrintRangeType.AllPages;
+            PrintForm_RadioButton_CurrentPage.Checked = _printJob.PageRangeType == Enum_PrintRangeType.CurrentPage;
+            PrintForm_RadioButton_CustomRange.Checked = _printJob.PageRangeType == Enum_PrintRangeType.PageRange;
+
+            bool enableCustom = _printJob.PageRangeType == Enum_PrintRangeType.PageRange;
+            PrintForm_TextBox_FromPage.Enabled = enableCustom;
+            PrintForm_TextBox_ToPage.Enabled = enableCustom;
+
+            if (_printJob.PageRangeType == Enum_PrintRangeType.AllPages)
+            {
+                _printJob.FromPage = 1;
+                _printJob.ToPage = Math.Max(1, _previewTotalPages);
+            }
+            else if (_printJob.PageRangeType == Enum_PrintRangeType.CurrentPage)
+            {
+                int currentPage = Math.Clamp(_printJob.CurrentPage, 1, Math.Max(1, _previewTotalPages));
+                _printJob.FromPage = currentPage;
+                _printJob.ToPage = currentPage;
+            }
+
+            PrintForm_TextBox_FromPage.Text = _printJob.FromPage.ToString(CultureInfo.InvariantCulture);
+            PrintForm_TextBox_ToPage.Text = _printJob.ToPage.ToString(CultureInfo.InvariantCulture);
+        }
+        finally
+        {
+            _isUpdatingPageSettings = false;
+        }
+
+        ValidateCustomRangeInputs();
+    }
+
+    private void ValidateCustomRangeInputs()
+    {
+        if (_printJob.PageRangeType != Enum_PrintRangeType.PageRange)
+        {
+            _isCustomRangeValid = true;
+            UpdateCustomRangeFieldVisualState(true);
+            UpdateActionButtonsState();
+            return;
+        }
+
+        bool fromValid = TryParsePositiveInt(PrintForm_TextBox_FromPage.Text, out int fromValue);
+        bool toValid = TryParsePositiveInt(PrintForm_TextBox_ToPage.Text, out int toValue);
+
+        int maxPage = Math.Max(1, _previewTotalPages > 0 ? _previewTotalPages : _printJob.TotalPages);
+        if (fromValid)
+        {
+            fromValue = Math.Clamp(fromValue, 1, maxPage);
+        }
+
+        if (toValid)
+        {
+            toValue = Math.Clamp(toValue, 1, maxPage);
+        }
+
+        bool isValid = fromValid && toValid && fromValue <= toValue;
+        _isCustomRangeValid = isValid;
+
+        if (isValid)
+        {
+            _printJob.FromPage = fromValue;
+            _printJob.ToPage = toValue;
+            UpdateCustomRangeTextBoxValue(PrintForm_TextBox_FromPage, fromValue);
+            UpdateCustomRangeTextBoxValue(PrintForm_TextBox_ToPage, toValue);
+        }
+
+        UpdateCustomRangeFieldVisualState(isValid);
+        UpdateActionButtonsState();
+    }
+
+    private void UpdateCustomRangeTextBoxValue(TextBox textBox, int value)
+    {
+        string valueText = value.ToString(CultureInfo.InvariantCulture);
+        if (!string.Equals(textBox.Text, valueText, StringComparison.Ordinal))
+        {
+            bool previousUpdatingState = _isUpdatingPageSettings;
+            _isUpdatingPageSettings = true;
+            textBox.Text = valueText;
+            _isUpdatingPageSettings = previousUpdatingState;
+        }
+    }
+
+    private void UpdateCustomRangeFieldVisualState(bool isValid)
+    {
+        Color validColor = Model_Application_Variables.UserUiColors.TextBoxForeColor ?? SystemColors.WindowText;
+        Color invalidColor = Model_Application_Variables.UserUiColors.TextBoxErrorForeColor ?? Color.Red;
+        Color target = isValid ? validColor : invalidColor;
+        PrintForm_TextBox_FromPage.ForeColor = target;
+        PrintForm_TextBox_ToPage.ForeColor = target;
+    }
+
+    private static bool TryParsePositiveInt(string? value, out int result)
+    {
+        bool parsed = int.TryParse(value, NumberStyles.Integer, CultureInfo.InvariantCulture, out result);
+        return parsed && result > 0;
+    }
+
+    private void UpdateColumnActionStates()
+    {
+        int selectedIndex = PrintForm_CheckedListBox_Columns.SelectedIndex;
+        bool hasSelection = selectedIndex >= 0;
+
+        PrintForm_Button_ColumnUp.Enabled = hasSelection && selectedIndex > 0;
+        PrintForm_Button_ColumnDown.Enabled = hasSelection && selectedIndex >= 0 && selectedIndex < PrintForm_CheckedListBox_Columns.Items.Count - 1;
+        UpdateActionButtonsState();
+    }
+
+    private void SetBusyState(bool isBusy, string? statusText = null)
+    {
+        if (InvokeRequired)
+        {
+            BeginInvoke(new Action(() => SetBusyState(isBusy, statusText)));
+            return;
+        }
+
+        if (isBusy)
+        {
+            _windowTitleSnapshot ??= Text;
+            _exportButtonTextSnapshot ??= PrintForm_Button_Export.Text;
+
+            string suffix = string.IsNullOrWhiteSpace(statusText) ? "Working..." : statusText!;
+            Text = string.IsNullOrWhiteSpace(_windowTitleSnapshot)
+                ? suffix
+                : $"{_windowTitleSnapshot} – {suffix}";
+
+            UseWaitCursor = true;
+            Cursor = Cursors.WaitCursor;
+
+            PrintForm_Button_Print.Enabled = false;
+            PrintForm_Button_Export.Enabled = false;
+            PrintForm_Button_Cancel.Enabled = false;
+            PrintForm_ContextMenu_Export.Enabled = false;
+
+            PrintForm_Button_Export.Text = "Exporting...";
+            PrintForm_Button_Export.Refresh();
+        }
+        else
+        {
+            if (!string.IsNullOrWhiteSpace(_windowTitleSnapshot))
+            {
+                Text = _windowTitleSnapshot!;
+            }
+
+            UseWaitCursor = false;
+            Cursor = Cursors.Default;
+
+            PrintForm_Button_Cancel.Enabled = true;
+            PrintForm_ContextMenu_Export.Enabled = true;
+
+            if (!string.IsNullOrWhiteSpace(_exportButtonTextSnapshot))
+            {
+                PrintForm_Button_Export.Text = _exportButtonTextSnapshot!;
+            }
+
+            UpdateActionButtonsState();
+        }
+    }
+
+    private async Task ExecuteExportAsync(
+        Func<Model_Print_Job, string, CancellationToken, Task<Model_Dao_Result>> exportFunc,
+        string fileFilter,
+        string defaultExtension,
+        string dialogTitle)
+    {
+        ArgumentNullException.ThrowIfNull(exportFunc);
+
+        if (_previewDocument is null)
+        {
+            Service_ErrorHandler.HandleValidationError("Generate a preview before exporting.", nameof(PrintForm));
+            return;
+        }
+
+        ValidateCustomRangeInputs();
+
+        if (_printJob.PageRangeType == Enum_PrintRangeType.PageRange && !_isCustomRangeValid)
+        {
+            Service_ErrorHandler.HandleValidationError("Fix the page range before exporting.", nameof(PrintForm));
+            return;
+        }
+
+        if (_printJob.VisibleColumns.Count == 0)
+        {
+            Service_ErrorHandler.HandleValidationError("Select at least one column before exporting.", nameof(PrintForm));
+            return;
+        }
+
+        using SaveFileDialog saveFileDialog = CreateExportSaveFileDialog(fileFilter, defaultExtension, dialogTitle);
+        if (saveFileDialog.ShowDialog(this) != DialogResult.OK)
+        {
+            return;
+        }
+
+        try
+        {
+            SetBusyState(true, "Preparing export...");
+
+            using var cancellationSource = new CancellationTokenSource();
+            Model_Dao_Result exportResult = await exportFunc(_printJob, saveFileDialog.FileName, cancellationSource.Token);
+
+            if (exportResult.IsSuccess)
+            {
+                SaveSettings();
+                string message = string.IsNullOrWhiteSpace(exportResult.StatusMessage)
+                    ? $"Export completed successfully.{Environment.NewLine}{Environment.NewLine}Location: {saveFileDialog.FileName}"
+                    : exportResult.StatusMessage;
+                Service_ErrorHandler.ShowInformation(message, "Export Completed", controlName: nameof(PrintForm));
+            }
+            else
+            {
+                HandleExportFailure(exportResult, saveFileDialog.FileName);
+            }
+        }
+        catch (OperationCanceledException)
+        {
+            Service_ErrorHandler.ShowInformation("Export was cancelled.", "Export Cancelled", controlName: nameof(PrintForm));
+        }
+        catch (Exception ex)
+        {
+            LoggingUtility.LogApplicationError(ex);
+            Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Medium, controlName: nameof(PrintForm));
+        }
+        finally
+        {
+            SetBusyState(false);
+        }
+    }
+
+    private void HandleExportFailure(Model_Dao_Result exportResult, string destinationPath)
+    {
+        string message = string.IsNullOrWhiteSpace(exportResult.ErrorMessage)
+            ? $"The export operation failed for {destinationPath}."
+            : exportResult.ErrorMessage;
+
+        if (exportResult.Exception is not null)
+        {
+            var context = new Dictionary<string, object>
+            {
+                ["DestinationPath"] = destinationPath
+            };
+            Service_ErrorHandler.HandleException(exportResult.Exception, Enum_ErrorSeverity.Medium, contextData: context, controlName: nameof(PrintForm));
+            return;
+        }
+
+        Service_ErrorHandler.HandleValidationError(message, nameof(PrintForm));
+    }
+
+    private SaveFileDialog CreateExportSaveFileDialog(string fileFilter, string defaultExtension, string dialogTitle)
+    {
+        string normalizedExtension = NormalizeExtension(defaultExtension);
+        return new SaveFileDialog
+        {
+            Title = dialogTitle,
+            Filter = fileFilter,
+            DefaultExt = normalizedExtension.TrimStart('.'),
+            AddExtension = true,
+            FileName = BuildDefaultExportFileName(_printJob.Title, normalizedExtension),
+            InitialDirectory = GetDefaultExportDirectory(),
+            RestoreDirectory = true,
+            OverwritePrompt = true
         };
     }
 
-    public override string ToString()
+    private static string BuildDefaultExportFileName(string? title, string extension)
     {
-        return FilterType == "Date Range"
-            ? $"{ColumnName}: {FilterType} ({DateFrom:d} to {DateTo:d})"
-            : $"{ColumnName}: {FilterType} \"{Value}\"";
+        string safeTitle = string.IsNullOrWhiteSpace(title) ? "MTM-Export" : title;
+        char[] invalidChars = Path.GetInvalidFileNameChars();
+        safeTitle = new string(safeTitle.Select(ch => invalidChars.Contains(ch) ? '_' : ch).ToArray());
+        string timestamp = DateTime.Now.ToString("yyyyMMdd-HHmmss", CultureInfo.InvariantCulture);
+        return $"{safeTitle}_{timestamp}{extension}";
     }
-}
 
-public class PrintPreset
-{
-    public List<string> ColumnOrder { get; set; } = new();
-    public List<string> VisibleColumns { get; set; } = new();
-    public bool IsLandscape { get; set; }
-    public bool IsColor { get; set; }
-}
+    private static string GetDefaultExportDirectory()
+    {
+        try
+        {
+            string documents = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+            if (!string.IsNullOrWhiteSpace(documents) && Directory.Exists(documents))
+            {
+                return documents;
+            }
+        }
+        catch
+        {
+            // Fallback handled below if we cannot resolve documents directory.
+        }
 
-#endregion
+        return Environment.CurrentDirectory;
+    }
+
+    private static string NormalizeExtension(string extension)
+    {
+        if (string.IsNullOrWhiteSpace(extension))
+        {
+            return ".dat";
+        }
+
+        return extension.StartsWith(".", StringComparison.Ordinal) ? extension : "." + extension;
+    }
+
+    private void ApplyColumnSelectionFromListBoxWithPendingState(int index, bool shouldCheck)
+    {
+        if (index < 0 || index >= PrintForm_CheckedListBox_Columns.Items.Count)
+        {
+            return;
+        }
+
+        if (!shouldCheck && PrintForm_CheckedListBox_Columns.GetItemChecked(index) && PrintForm_CheckedListBox_Columns.CheckedItems.Count <= 1)
+        {
+            _isUpdatingColumnSettings = true;
+            try
+            {
+                PrintForm_CheckedListBox_Columns.SetItemChecked(index, true);
+            }
+            finally
+            {
+                _isUpdatingColumnSettings = false;
+            }
+
+            Service_ErrorHandler.HandleValidationError("At least one column must remain visible.", nameof(PrintForm));
+            UpdateActionButtonsState();
+            return;
+        }
+
+        ApplyColumnSelectionFromListBox();
+    }
+
+    private void ApplyColumnSelectionFromListBox()
+    {
+        List<string> orderedColumns = PrintForm_CheckedListBox_Columns.Items.Cast<object>()
+            .OfType<string>()
+            .ToList();
+        List<string> visibleColumns = PrintForm_CheckedListBox_Columns.CheckedItems.Cast<object>()
+            .OfType<string>()
+            .ToList();
+
+        _printJob.ColumnOrder = new List<string>(orderedColumns);
+        _printJob.VisibleColumns = new List<string>(visibleColumns);
+
+        _printSettings.ColumnOrder = new List<string>(orderedColumns);
+        _printSettings.VisibleColumns = new List<string>(visibleColumns);
+        _printSettings.LastModified = DateTime.UtcNow;
+
+        UpdateColumnActionStates();
+        SchedulePreviewRefresh();
+    }
+
+    private void MoveColumnItem(int direction)
+    {
+        if (direction == 0 || PrintForm_CheckedListBox_Columns.SelectedIndex < 0)
+        {
+            return;
+        }
+
+        int currentIndex = PrintForm_CheckedListBox_Columns.SelectedIndex;
+        int newIndex = currentIndex + direction;
+        if (newIndex < 0 || newIndex >= PrintForm_CheckedListBox_Columns.Items.Count)
+        {
+            return;
+        }
+
+        _isUpdatingColumnSettings = true;
+        try
+        {
+            object item = PrintForm_CheckedListBox_Columns.Items[currentIndex]!;
+            bool isChecked = PrintForm_CheckedListBox_Columns.GetItemChecked(currentIndex);
+
+            PrintForm_CheckedListBox_Columns.Items.RemoveAt(currentIndex);
+            PrintForm_CheckedListBox_Columns.Items.Insert(newIndex, item);
+            PrintForm_CheckedListBox_Columns.SetItemChecked(newIndex, isChecked);
+            PrintForm_CheckedListBox_Columns.SelectedIndex = newIndex;
+        }
+        finally
+        {
+            _isUpdatingColumnSettings = false;
+        }
+
+        ApplyColumnSelectionFromListBox();
+    }
+
+    private void ApplyZoomSelection()
+    {
+        if (PrintForm_PrintPreviewControl.Document is null)
+        {
+            return;
+        }
+
+        if (_selectedZoomOption.Equals(ZoomFitToPage, StringComparison.OrdinalIgnoreCase))
+        {
+            PrintForm_PrintPreviewControl.AutoZoom = true;
+            return;
+        }
+
+        PrintForm_PrintPreviewControl.AutoZoom = false;
+
+        if (_zoomLevelLookup.TryGetValue(_selectedZoomOption, out double zoomValue))
+        {
+            PrintForm_PrintPreviewControl.Zoom = Math.Clamp(zoomValue, 0.1, 5.0);
+        }
+    }
+
+    private void UpdateActionButtonsState()
+    {
+        bool hasPreview = _previewDocument is not null && _previewTotalPages > 0 && _printJob.VisibleColumns.Count > 0;
+        bool rangeValid = _printJob.PageRangeType != Enum_PrintRangeType.PageRange || _isCustomRangeValid;
+        bool canExecute = hasPreview && rangeValid && !_isGeneratingPreview;
+
+        PrintForm_Button_Print.Enabled = canExecute;
+        PrintForm_Button_Export.Enabled = canExecute;
+    }
+
+    #endregion
+
+    #region Cleanup
+
+    protected override void OnFormClosed(FormClosedEventArgs e)
+    {
+        base.OnFormClosed(e);
+        _previewDocument?.Dispose();
+        _previewDocument = null;
+        _previewPageInfos = Array.Empty<PreviewPageInfo>();
+        _printManager?.Dispose();
+        _printManager = null;
+    }
+
+    #endregion
+
+}

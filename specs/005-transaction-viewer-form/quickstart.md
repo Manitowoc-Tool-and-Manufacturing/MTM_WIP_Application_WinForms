@@ -90,7 +90,7 @@ git checkout 005-transaction-viewer-form
 
 ### Step 2: Create New Models
 
-**File**: `Models/TransactionSearchCriteria.cs`
+**File**: `Models/Model_Transactions_SearchCriteria.cs`
 
 ```csharp
 namespace MTM_WIP_Application_Winforms.Models;
@@ -98,7 +98,7 @@ namespace MTM_WIP_Application_Winforms.Models;
 /// <summary>
 /// Encapsulates search criteria for transaction queries.
 /// </summary>
-internal class TransactionSearchCriteria
+internal class Model_Transactions_SearchCriteria
 {
     public string? PartID { get; set; }
     public string? User { get; set; }
@@ -116,7 +116,7 @@ internal class TransactionSearchCriteria
 }
 ```
 
-**File**: `Models/TransactionSearchResult.cs`
+**File**: `Models/Model_Transactions_SearchResult.cs`
 
 ```csharp
 namespace MTM_WIP_Application_Winforms.Models;
@@ -124,9 +124,9 @@ namespace MTM_WIP_Application_Winforms.Models;
 /// <summary>
 /// Represents search results with pagination metadata.
 /// </summary>
-internal class TransactionSearchResult
+internal class Model_Transactions_SearchResult
 {
-    public List<Model_Transactions> Transactions { get; set; } = new();
+    public List<Model_Transactions_Core> Transactions { get; set; } = new();
     public int TotalRecordCount { get; set; }
     public int CurrentPage { get; set; }
     public int PageSize { get; set; }
@@ -139,7 +139,7 @@ internal class TransactionSearchResult
 
 ### Step 3: Create ViewModel
 
-**File**: `Models/TransactionViewModel.cs`
+**File**: `Models/Model_Transactions_ViewModel.cs`
 
 ```csharp
 namespace MTM_WIP_Application_Winforms.Models;
@@ -147,16 +147,16 @@ namespace MTM_WIP_Application_Winforms.Models;
 /// <summary>
 /// Business logic and state management for transaction viewer.
 /// </summary>
-internal class TransactionViewModel
+internal class Model_Transactions_ViewModel
 {
     #region Fields
     private readonly Dao_Transactions _dao;
-    private TransactionSearchCriteria? _currentCriteria;
-    private TransactionSearchResult? _currentResults;
+    private Model_Transactions_SearchCriteria? _currentCriteria;
+    private Model_Transactions_SearchResult? _currentResults;
     #endregion
 
     #region Constructors
-    public TransactionViewModel()
+    public Model_Transactions_ViewModel()
     {
         _dao = new Dao_Transactions();
     }
@@ -166,8 +166,8 @@ internal class TransactionViewModel
     /// <summary>
     /// Searches for transactions matching the specified criteria.
     /// </summary>
-    public async Task<DaoResult<TransactionSearchResult>> SearchTransactionsAsync(
-        TransactionSearchCriteria criteria,
+    public async Task<Model_Dao_Result<Model_Transactions_SearchResult>> SearchTransactionsAsync(
+        Model_Transactions_SearchCriteria criteria,
         int page = 1,
         int pageSize = 50,
         Helper_StoredProcedureProgress? progress = null)
@@ -179,7 +179,7 @@ internal class TransactionViewModel
     /// <summary>
     /// Exports current results to Excel.
     /// </summary>
-    public async Task<DaoResult<string>> ExportToExcelAsync(
+    public async Task<Model_Dao_Result<string>> ExportToExcelAsync(
         string filePath,
         Helper_StoredProcedureProgress? progress = null)
     {
@@ -189,7 +189,7 @@ internal class TransactionViewModel
     #endregion
 
     #region Private Methods
-    private Dictionary<string, object> MapCriteriaToParameters(TransactionSearchCriteria criteria)
+    private Dictionary<string, object> MapCriteriaToParameters(Model_Transactions_SearchCriteria criteria)
     {
         // Map criteria properties to stored procedure parameters
         // See mysql-database.instructions.md for parameter naming rules
@@ -216,7 +216,7 @@ public partial class TransactionSearchControl : UserControl
     /// <summary>
     /// Raised when user clicks Search button with valid criteria.
     /// </summary>
-    public event EventHandler<TransactionSearchCriteria>? SearchRequested;
+    public event EventHandler<Model_Transactions_SearchCriteria>? SearchRequested;
     #endregion
 
     #region Constructors
@@ -244,7 +244,7 @@ public partial class TransactionSearchControl : UserControl
     #endregion
 
     #region Helpers
-    private TransactionSearchCriteria BuildCriteria()
+    private Model_Transactions_SearchCriteria BuildCriteria()
     {
         // Read from UI controls (combo boxes, date pickers, checkboxes)
         // Return populated criteria object
@@ -273,7 +273,7 @@ namespace MTM_WIP_Application_Winforms.Forms.Transactions;
 public partial class Transactions : Form
 {
     #region Fields
-    private TransactionViewModel _viewModel = null!;
+    private Model_Transactions_ViewModel _viewModel = null!;
     private Helper_StoredProcedureProgress? _progressHelper;
     #endregion
 
@@ -293,7 +293,7 @@ public partial class Transactions : Form
     #region Initialization
     private void InitializeViewModel()
     {
-        _viewModel = new TransactionViewModel();
+        _viewModel = new Model_Transactions_ViewModel();
     }
 
     private void InitializeProgressReporting()
@@ -313,7 +313,7 @@ public partial class Transactions : Form
     #endregion
 
     #region Event Handlers
-    private async void SearchControl_SearchRequested(object? sender, TransactionSearchCriteria e)
+    private async void SearchControl_SearchRequested(object? sender, Model_Transactions_SearchCriteria e)
     {
         await ExecuteSearchAsync(e);
     }
@@ -323,14 +323,14 @@ public partial class Transactions : Form
         await ExecuteSearchAsync(_viewModel.CurrentCriteria, newPage);
     }
 
-    private void GridControl_RowSelected(object? sender, Model_Transactions transaction)
+    private void GridControl_RowSelected(object? sender, Model_Transactions_Core transaction)
     {
         detailPanel.DisplayTransaction(transaction);
     }
     #endregion
 
     #region Search Execution
-    private async Task ExecuteSearchAsync(TransactionSearchCriteria criteria, int page = 1)
+    private async Task ExecuteSearchAsync(Model_Transactions_SearchCriteria criteria, int page = 1)
     {
         try
         {
@@ -347,7 +347,7 @@ public partial class Transactions : Form
         }
         catch (Exception ex)
         {
-            Service_ErrorHandler.HandleException(ex, ErrorSeverity.Medium,
+            Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Medium,
                 retryAction: async () => await ExecuteSearchAsync(criteria, page),
                 controlName: nameof(Transactions));
         }
@@ -371,9 +371,9 @@ Add new method:
 /// <param name="criteria">The search criteria.</param>
 /// <param name="page">The page number (1-indexed).</param>
 /// <param name="pageSize">The number of records per page.</param>
-/// <returns>A DaoResult containing the list of transactions or an error.</returns>
-public async Task<DaoResult<List<Model_Transactions>>> SearchAsync(
-    TransactionSearchCriteria criteria,
+/// <returns>A Model_Dao_Result containing the list of transactions or an error.</returns>
+public async Task<Model_Dao_Result<List<Model_Transactions_Core>>> SearchAsync(
+    Model_Transactions_SearchCriteria criteria,
     int page = 1,
     int pageSize = 50)
 {
@@ -401,19 +401,19 @@ public async Task<DaoResult<List<Model_Transactions>>> SearchAsync(
 
     if (!result.IsSuccess || result.Data == null)
     {
-        return DaoResult<List<Model_Transactions>>.Failure(result.StatusMessage);
+        return Model_Dao_Result<List<Model_Transactions_Core>>.Failure(result.StatusMessage);
     }
 
     var transactions = result.Data.AsEnumerable()
         .Select(MapDataRowToModel)
         .ToList();
 
-    return DaoResult<List<Model_Transactions>>.Success(transactions);
+    return Model_Dao_Result<List<Model_Transactions_Core>>.Success(transactions);
 }
 
-private Model_Transactions MapDataRowToModel(DataRow row)
+private Model_Transactions_Core MapDataRowToModel(DataRow row)
 {
-    // Map DataRow columns to Model_Transactions properties
+    // Map DataRow columns to Model_Transactions_Core properties
     // Handle DBNull.Value appropriately
 }
 ```
@@ -424,18 +424,18 @@ private Model_Transactions MapDataRowToModel(DataRow row)
 
 ### Unit Tests (ViewModel)
 
-**File**: `Tests/Unit/TransactionViewModelTests.cs`
+**File**: `Tests/Unit/Model_Transactions_ViewModelTests.cs`
 
 ```csharp
 [TestClass]
-public class TransactionViewModelTests
+public class Model_Transactions_ViewModelTests
 {
     [TestMethod]
     public async Task SearchAsync_WithValidCriteria_ReturnsSuccess()
     {
         // Arrange
-        var viewModel = new TransactionViewModel();
-        var criteria = new TransactionSearchCriteria
+        var viewModel = new Model_Transactions_ViewModel();
+        var criteria = new Model_Transactions_SearchCriteria
         {
             DateFrom = DateTime.Today.AddDays(-7),
             DateTo = DateTime.Today
@@ -453,8 +453,8 @@ public class TransactionViewModelTests
     public async Task SearchAsync_WithEmptyCriteria_ReturnsValidationError()
     {
         // Arrange
-        var viewModel = new TransactionViewModel();
-        var criteria = new TransactionSearchCriteria();
+        var viewModel = new Model_Transactions_ViewModel();
+        var criteria = new Model_Transactions_SearchCriteria();
 
         // Act
         var result = await viewModel.SearchTransactionsAsync(criteria);
@@ -479,7 +479,7 @@ public class Dao_Transactions_IntegrationTests : BaseIntegrationTest
     {
         // Arrange
         var dao = new Dao_Transactions();
-        var criteria = new TransactionSearchCriteria
+        var criteria = new Model_Transactions_SearchCriteria
         {
             DateFrom = DateTime.Parse("2025-10-24"),
             DateTo = DateTime.Parse("2025-10-25")
@@ -540,7 +540,7 @@ MessageBox.Show("Error: " + ex.Message);
 ✅ **CORRECT**:
 
 ```csharp
-Service_ErrorHandler.HandleException(ex, ErrorSeverity.Medium,
+Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Medium,
     retryAction: () => RetryOperation(), controlName: nameof(Transactions));
 ```
 
@@ -658,11 +658,11 @@ mcp_mtm-workflow_validate_build(
 Use conventional commit format:
 
 ```
-feat: add TransactionSearchCriteria model with validation
-feat: implement TransactionViewModel with async search
+feat: add Model_Transactions_SearchCriteria model with validation
+feat: implement Model_Transactions_ViewModel with async search
 refactor: decompose Transactions.cs into UserControls
 test: add integration tests for Dao_Transactions.SearchAsync
-docs: update XML comments for TransactionViewModel
+docs: update XML comments for Model_Transactions_ViewModel
 ```
 
 ### Pull Request Checklist

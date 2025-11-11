@@ -17,7 +17,7 @@ internal partial class TransactionGridControl : UserControl
 {
     #region Fields
 
-    private TransactionSearchResult? _currentResults;
+    private Model_Transactions_SearchResult? _currentResults;
     private int _currentPage = 1;
 
     #endregion
@@ -32,7 +32,7 @@ internal partial class TransactionGridControl : UserControl
     /// <summary>
     /// Raised when the user selects a transaction row.
     /// </summary>
-    public event EventHandler<Model_Transactions>? RowSelected;
+    public event EventHandler<Model_Transactions_Core>? RowSelected;
 
     /// <summary>
     /// Raised when the user clicks the Show/Hide Search button.
@@ -61,13 +61,13 @@ internal partial class TransactionGridControl : UserControl
     /// <summary>
     /// Gets the currently selected transaction, or null if no selection.
     /// </summary>
-    public Model_Transactions? SelectedTransaction
+    public Model_Transactions_Core? SelectedTransaction
     {
         get
         {
             if (TransactionGridControl_DataGridView_Transactions.SelectedRows.Count > 0)
             {
-                return TransactionGridControl_DataGridView_Transactions.SelectedRows[0].DataBoundItem as Model_Transactions;
+                return TransactionGridControl_DataGridView_Transactions.SelectedRows[0].DataBoundItem as Model_Transactions_Core;
             }
             return null;
         }
@@ -81,7 +81,7 @@ internal partial class TransactionGridControl : UserControl
     /// <summary>
     /// Gets the analytics control for external data binding.
     /// </summary>
-    internal TransactionAnalyticsControl AnalyticsControl => TransactionGridControl_TransactionAnalyticsControl;
+    internal Model_Transactions_Core_AnalyticsControl AnalyticsControl => TransactionGridControl_Model_Transactions_Core_AnalyticsControl;
 
     #endregion
 
@@ -244,7 +244,7 @@ internal partial class TransactionGridControl : UserControl
     /// Displays transaction search results and updates pagination controls.
     /// </summary>
     /// <param name="results">The search results with pagination metadata.</param>
-    public void DisplayResults(TransactionSearchResult results)
+    public void DisplayResults(Model_Transactions_SearchResult results)
     {
         if (results == null)
         {
@@ -286,7 +286,7 @@ internal partial class TransactionGridControl : UserControl
         catch (Exception ex)
         {
             LoggingUtility.LogApplicationError(ex);
-            Service_ErrorHandler.HandleException(ex, ErrorSeverity.Medium,
+            Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Medium,
                 controlName: nameof(TransactionGridControl));
         }
     }
@@ -335,7 +335,7 @@ internal partial class TransactionGridControl : UserControl
         catch (Exception ex)
         {
             LoggingUtility.LogApplicationError(ex);
-            Service_ErrorHandler.HandleException(ex, ErrorSeverity.Low,
+            Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Low,
                 controlName: nameof(TransactionGridControl));
         }
     }
@@ -353,7 +353,7 @@ internal partial class TransactionGridControl : UserControl
         catch (Exception ex)
         {
             LoggingUtility.LogApplicationError(ex);
-            Service_ErrorHandler.HandleException(ex, ErrorSeverity.Low,
+            Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Low,
                 controlName: nameof(TransactionGridControl));
         }
     }
@@ -368,7 +368,7 @@ internal partial class TransactionGridControl : UserControl
         catch (Exception ex)
         {
             LoggingUtility.LogApplicationError(ex);
-            Service_ErrorHandler.HandleException(ex, ErrorSeverity.Low,
+            Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Low,
                 controlName: nameof(TransactionGridControl));
         }
     }
@@ -383,7 +383,7 @@ internal partial class TransactionGridControl : UserControl
         catch (Exception ex)
         {
             LoggingUtility.LogApplicationError(ex);
-            Service_ErrorHandler.HandleException(ex, ErrorSeverity.Low,
+            Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Low,
                 controlName: nameof(TransactionGridControl));
         }
     }
@@ -418,7 +418,7 @@ internal partial class TransactionGridControl : UserControl
         catch (Exception ex)
         {
             LoggingUtility.LogApplicationError(ex);
-            Service_ErrorHandler.HandleException(ex, ErrorSeverity.Low,
+            Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Low,
                 controlName: nameof(TransactionGridControl));
         }
     }
@@ -435,7 +435,7 @@ internal partial class TransactionGridControl : UserControl
         catch (Exception ex)
         {
             LoggingUtility.LogApplicationError(ex);
-            Service_ErrorHandler.HandleException(ex, ErrorSeverity.Low,
+            Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Low,
                 controlName: nameof(TransactionGridControl));
         }
     }
@@ -445,14 +445,14 @@ internal partial class TransactionGridControl : UserControl
         try
         {
             LoggingUtility.Log("[TransactionGridControl] Print button clicked.");
-            
+
             // Raise print event for parent form to handle
             PrintRequested?.Invoke(this, EventArgs.Empty);
         }
         catch (Exception ex)
         {
             LoggingUtility.LogApplicationError(ex);
-            Service_ErrorHandler.HandleException(ex, ErrorSeverity.Low,
+            Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Low,
                 controlName: nameof(TransactionGridControl));
         }
     }
@@ -464,11 +464,11 @@ internal partial class TransactionGridControl : UserControl
             LoggingUtility.Log("[TransactionGridControl] Analytics button clicked.");
             
             // Toggle analytics visibility - hide/show in place of DataGridView
-            TransactionGridControl_TransactionAnalyticsControl.Visible = !TransactionGridControl_TransactionAnalyticsControl.Visible;
-            TransactionGridControl_DataGridView_Transactions.Visible = !TransactionGridControl_TransactionAnalyticsControl.Visible;
+            TransactionGridControl_Model_Transactions_Core_AnalyticsControl.Visible = !TransactionGridControl_Model_Transactions_Core_AnalyticsControl.Visible;
+            TransactionGridControl_DataGridView_Transactions.Visible = !TransactionGridControl_Model_Transactions_Core_AnalyticsControl.Visible;
             
             // Update button text to indicate current state
-            if (TransactionGridControl_TransactionAnalyticsControl.Visible)
+            if (TransactionGridControl_Model_Transactions_Core_AnalyticsControl.Visible)
             {
                 TransactionGridControl_Button_Analytics.Text = "📋";
                 TransactionGridControl_Button_Analytics.ToolTipText = "Show transaction grid";
@@ -487,7 +487,7 @@ internal partial class TransactionGridControl : UserControl
         catch (Exception ex)
         {
             LoggingUtility.LogApplicationError(ex);
-            Service_ErrorHandler.HandleException(ex, ErrorSeverity.Low,
+            Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Low,
                 controlName: nameof(TransactionGridControl));
         }
     }
@@ -504,7 +504,7 @@ internal partial class TransactionGridControl : UserControl
             LoggingUtility.Log("[TransactionGridControl] Toggle Privileges button clicked (Debug mode).");
 
             // Get current user ID from database
-            var userResult = await Data.Dao_User.GetUserByUsernameAsync(Model_AppVariables.User);
+            var userResult = await Data.Dao_User.GetUserByUsernameAsync(Model_Application_Variables.User);
             if (!userResult.IsSuccess || userResult.Data == null)
             {
                 Service_ErrorHandler.HandleValidationError(
@@ -517,11 +517,11 @@ internal partial class TransactionGridControl : UserControl
 
             // Determine current role
             string currentRole = "User";
-            if (Model_AppVariables.UserTypeDeveloper)
+            if (Model_Application_Variables.UserTypeDeveloper)
                 currentRole = "Developer";
-            else if (Model_AppVariables.UserTypeAdmin)
+            else if (Model_Application_Variables.UserTypeAdmin)
                 currentRole = "Admin";
-            else if (Model_AppVariables.UserTypeReadOnly)
+            else if (Model_Application_Variables.UserTypeReadOnly)
                 currentRole = "ReadOnly";
 
             // Determine next role in cycle: ReadOnly → User → Admin → Developer → ReadOnly
@@ -543,7 +543,7 @@ internal partial class TransactionGridControl : UserControl
             };
 
             var roleIdResult = await Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync(
-                Model_AppVariables.ConnectionString,
+                Model_Application_Variables.ConnectionString,
                 "sys_GetRoleIdByName",
                 getRoleIdParams
             );
@@ -571,11 +571,11 @@ internal partial class TransactionGridControl : UserControl
             {
                 ["UserID"] = userId,
                 ["NewRoleID"] = nextRoleId,
-                ["AssignedBy"] = Model_AppVariables.User + " (Debug Toggle)"
+                ["AssignedBy"] = Model_Application_Variables.User + " (Debug Toggle)"
             };
 
             var updateResult = await Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync(
-                Model_AppVariables.ConnectionString,
+                Model_Application_Variables.ConnectionString,
                 "sys_user_roles_Update",
                 updateRoleParams
             );
@@ -588,11 +588,11 @@ internal partial class TransactionGridControl : UserControl
                 return;
             }
 
-            // Update Model_AppVariables to reflect new role
-            Model_AppVariables.UserTypeDeveloper = nextRole == "Developer";
-            Model_AppVariables.UserTypeAdmin = nextRole == "Admin";
-            Model_AppVariables.UserTypeReadOnly = nextRole == "ReadOnly";
-            Model_AppVariables.UserTypeNormal = nextRole == "User";
+            // Update Model_Application_Variables to reflect new role
+            Model_Application_Variables.UserTypeDeveloper = nextRole == "Developer";
+            Model_Application_Variables.UserTypeAdmin = nextRole == "Admin";
+            Model_Application_Variables.UserTypeReadOnly = nextRole == "ReadOnly";
+            Model_Application_Variables.UserTypeNormal = nextRole == "User";
 
             LoggingUtility.Log($"[TransactionGridControl] Successfully changed role to {nextRole}");
 
@@ -608,10 +608,10 @@ internal partial class TransactionGridControl : UserControl
         catch (Exception ex)
         {
             LoggingUtility.LogApplicationError(ex);
-            Service_ErrorHandler.HandleException(ex, ErrorSeverity.Medium,
+            Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Medium,
                 contextData: new Dictionary<string, object>
                 {
-                    ["CurrentUser"] = Model_AppVariables.User
+                    ["CurrentUser"] = Model_Application_Variables.User
                 },
                 controlName: nameof(TransactionGridControl));
         }
@@ -658,7 +658,7 @@ internal partial class TransactionGridControl : UserControl
         catch (Exception ex)
         {
             LoggingUtility.LogApplicationError(ex);
-            Service_ErrorHandler.HandleException(ex, ErrorSeverity.Low,
+            Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Low,
                 controlName: nameof(TransactionGridControl));
         }
     }
@@ -746,7 +746,7 @@ internal partial class TransactionGridControl : UserControl
         {
             foreach (DataGridViewRow row in TransactionGridControl_DataGridView_Transactions.Rows)
             {
-                if (row.DataBoundItem is Model_Transactions transaction)
+                if (row.DataBoundItem is Model_Transactions_Core transaction)
                 {
                     Color backgroundColor;
                     Color foregroundColor = Color.Black;
@@ -783,7 +783,7 @@ internal partial class TransactionGridControl : UserControl
         catch (Exception ex)
         {
             LoggingUtility.LogApplicationError(ex);
-            Service_ErrorHandler.HandleException(ex, ErrorSeverity.Low,
+            Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Low,
                 controlName: nameof(TransactionGridControl));
         }
     }

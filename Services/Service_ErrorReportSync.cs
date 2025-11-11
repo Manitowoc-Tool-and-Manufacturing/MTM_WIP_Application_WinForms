@@ -23,8 +23,8 @@ internal static class Service_ErrorReportSync
     #region Fields
 
     private static readonly SemaphoreSlim _syncLock = new SemaphoreSlim(1, 1);
-    private static readonly string QueueDirectory = Model_AppVariables.ErrorReporting.QueueDirectory;
-    private static readonly string ArchiveDirectory = Model_AppVariables.ErrorReporting.ArchiveDirectory;
+    private static readonly string QueueDirectory = Model_Application_Variables.ErrorReporting.QueueDirectory;
+    private static readonly string ArchiveDirectory = Model_Application_Variables.ErrorReporting.ArchiveDirectory;
 
     #endregion
 
@@ -34,8 +34,8 @@ internal static class Service_ErrorReportSync
     /// Synchronizes pending error reports on application startup.
     /// Non-blocking operation that processes queued reports if database is available.
     /// </summary>
-    /// <returns>DaoResult containing count of successfully synced reports.</returns>
-    public static async Task<DaoResult<int>> SyncOnStartupAsync()
+    /// <returns>Model_Dao_Result containing count of successfully synced reports.</returns>
+    public static async Task<Model_Dao_Result<int>> SyncOnStartupAsync()
     {
         // Try to acquire lock immediately without waiting
         bool lockAcquired = await _syncLock.WaitAsync(0);
@@ -43,7 +43,7 @@ internal static class Service_ErrorReportSync
         if (!lockAcquired)
         {
             LoggingUtility.Log("[Service_ErrorReportSync] Sync already in progress, skipping startup sync");
-            return DaoResult<int>.Failure("Sync operation already in progress");
+            return Model_Dao_Result<int>.Failure("Sync operation already in progress");
         }
 
         try
@@ -52,7 +52,7 @@ internal static class Service_ErrorReportSync
             if (!await IsDatabaseAvailableAsync())
             {
                 LoggingUtility.Log("[Service_ErrorReportSync] Database unavailable, skipping startup sync");
-                return DaoResult<int>.Success(0, "Database unavailable - sync deferred");
+                return Model_Dao_Result<int>.Success(0, "Database unavailable - sync deferred");
             }
 
             // Process pending files
@@ -60,7 +60,7 @@ internal static class Service_ErrorReportSync
 
             LoggingUtility.Log($"[Service_ErrorReportSync] Startup sync completed: {successCount} reports submitted");
 
-            return DaoResult<int>.Success(
+            return Model_Dao_Result<int>.Success(
                 successCount,
                 successCount > 0
                     ? $"Successfully submitted {successCount} pending error report(s)"
@@ -69,7 +69,7 @@ internal static class Service_ErrorReportSync
         catch (Exception ex)
         {
             LoggingUtility.LogApplicationError(ex);
-            return DaoResult<int>.Failure("Error during startup sync", ex);
+            return Model_Dao_Result<int>.Failure("Error during startup sync", ex);
         }
         finally
         {
@@ -81,15 +81,15 @@ internal static class Service_ErrorReportSync
     /// Manually triggers synchronization of pending error reports.
     /// Used from Developer Settings menu.
     /// </summary>
-    /// <returns>DaoResult containing count of successfully synced reports.</returns>
-    public static async Task<DaoResult<int>> SyncManuallyAsync()
+    /// <returns>Model_Dao_Result containing count of successfully synced reports.</returns>
+    public static async Task<Model_Dao_Result<int>> SyncManuallyAsync()
     {
         // Try to acquire lock immediately
         bool lockAcquired = await _syncLock.WaitAsync(0);
 
         if (!lockAcquired)
         {
-            return DaoResult<int>.Failure("Another sync operation is already in progress. Please wait and try again.");
+            return Model_Dao_Result<int>.Failure("Another sync operation is already in progress. Please wait and try again.");
         }
 
         try
@@ -97,7 +97,7 @@ internal static class Service_ErrorReportSync
             // Check database connectivity
             if (!await IsDatabaseAvailableAsync())
             {
-                return DaoResult<int>.Failure("Database is not currently available. Please check your connection and try again.");
+                return Model_Dao_Result<int>.Failure("Database is not currently available. Please check your connection and try again.");
             }
 
             // Get pending count for progress indication
@@ -105,11 +105,11 @@ internal static class Service_ErrorReportSync
 
             if (pendingCount == 0)
             {
-                return DaoResult<int>.Success(0, "No pending error reports to sync");
+                return Model_Dao_Result<int>.Success(0, "No pending error reports to sync");
             }
 
             // Show progress indicator if count exceeds threshold
-            bool showProgress = pendingCount > Model_AppVariables.ErrorReporting.SyncProgressThreshold;
+            bool showProgress = pendingCount > Model_Application_Variables.ErrorReporting.SyncProgressThreshold;
 
             if (showProgress)
             {
@@ -121,14 +121,14 @@ internal static class Service_ErrorReportSync
 
             LoggingUtility.Log($"[Service_ErrorReportSync] Manual sync completed: {successCount} of {pendingCount} reports submitted");
 
-            return DaoResult<int>.Success(
+            return Model_Dao_Result<int>.Success(
                 successCount,
                 $"Successfully submitted {successCount} of {pendingCount} pending error report(s)");
         }
         catch (Exception ex)
         {
             LoggingUtility.LogApplicationError(ex);
-            return DaoResult<int>.Failure("Error during manual sync operation", ex);
+            return Model_Dao_Result<int>.Failure("Error during manual sync operation", ex);
         }
         finally
         {
@@ -242,7 +242,7 @@ internal static class Service_ErrorReportSync
                 using (var command = connection.CreateCommand())
                 {
                     command.CommandText = sqlContent;
-                    command.CommandTimeout = Model_AppVariables.CommandTimeoutSeconds;
+                    command.CommandTimeout = Model_Application_Variables.CommandTimeoutSeconds;
 
                     await command.ExecuteNonQueryAsync();
                 }
@@ -472,7 +472,7 @@ internal static class Service_ErrorReportSync
             // Clean up old archived (Sent) files
             if (Directory.Exists(ArchiveDirectory))
             {
-                DateTime archiveCutoff = DateTime.Now.AddDays(-Model_AppVariables.ErrorReporting.MaxSentArchiveAgeDays);
+                DateTime archiveCutoff = DateTime.Now.AddDays(-Model_Application_Variables.ErrorReporting.MaxSentArchiveAgeDays);
                 var oldArchiveFiles = Directory.GetFiles(ArchiveDirectory, "*.sql")
                     .Where(f => File.GetCreationTime(f) < archiveCutoff)
                     .ToList();
@@ -500,14 +500,14 @@ internal static class Service_ErrorReportSync
             // Check for stale pending files (log warnings, don't delete)
             if (Directory.Exists(QueueDirectory))
             {
-                DateTime pendingCutoff = DateTime.Now.AddDays(-Model_AppVariables.ErrorReporting.MaxPendingAgeDays);
+                DateTime pendingCutoff = DateTime.Now.AddDays(-Model_Application_Variables.ErrorReporting.MaxPendingAgeDays);
                 var stalePendingFiles = Directory.GetFiles(QueueDirectory, "*.sql")
                     .Where(f => File.GetCreationTime(f) < pendingCutoff)
                     .ToList();
 
                 if (stalePendingFiles.Any())
                 {
-                    LoggingUtility.Log($"[Service_ErrorReportSync] WARNING: {stalePendingFiles.Count} pending error reports are older than {Model_AppVariables.ErrorReporting.MaxPendingAgeDays} days. Manual review recommended.");
+                    LoggingUtility.Log($"[Service_ErrorReportSync] WARNING: {stalePendingFiles.Count} pending error reports are older than {Model_Application_Variables.ErrorReporting.MaxPendingAgeDays} days. Manual review recommended.");
                 }
             }
 

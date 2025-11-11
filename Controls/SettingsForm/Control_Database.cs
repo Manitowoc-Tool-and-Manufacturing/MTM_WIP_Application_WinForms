@@ -37,7 +37,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
         {
             try
             {
-                string user = Model_AppVariables.User;
+                string user = Model_Application_Variables.User;
 
                 var serverResult = await Dao_User.GetWipServerAddressAsync(user);
                 var portResult = await Dao_User.GetWipServerPortAsync(user);
@@ -76,8 +76,8 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             }
             catch (Exception ex)
             {
-                Service_ErrorHandler.HandleException(ex, ErrorSeverity.Medium,
-                    contextData: new Dictionary<string, object> { ["User"] = Model_AppVariables.User },
+                Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Medium,
+                    contextData: new Dictionary<string, object> { ["User"] = Model_Application_Variables.User },
                     callerName: nameof(LoadDatabaseSettingsAsync),
                     controlName: nameof(Control_Database));
 
@@ -125,7 +125,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
                     return;
                 }
 
-                string user = Model_AppVariables.User;
+                string user = Model_Application_Variables.User;
 
                 var serverResult = await Dao_User.SetWipServerAddressAsync(user, Control_Database_TextBox_Server.Text.Trim());
                 var databaseResult = await Dao_User.SetDatabaseAsync(user, Control_Database_TextBox_Database.Text.Trim());
@@ -163,10 +163,10 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             }
             catch (Exception ex)
             {
-                Service_ErrorHandler.HandleException(ex, ErrorSeverity.Medium,
+                Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Medium,
                     contextData: new Dictionary<string, object>
                     {
-                        ["User"] = Model_AppVariables.User,
+                        ["User"] = Model_Application_Variables.User,
                         ["Server"] = Control_Database_TextBox_Server.Text.Trim(),
                         ["Port"] = Control_Database_TextBox_Port.Text.Trim(),
                         ["Database"] = Control_Database_TextBox_Database.Text.Trim()
@@ -185,8 +185,8 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             }
             catch (Exception ex)
             {
-                Service_ErrorHandler.HandleException(ex, ErrorSeverity.Medium,
-                    contextData: new Dictionary<string, object> { ["User"] = Model_AppVariables.User },
+                Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Medium,
+                    contextData: new Dictionary<string, object> { ["User"] = Model_Application_Variables.User },
                     callerName: nameof(SaveButton_Click),
                     controlName: nameof(Control_Database));
             }
@@ -211,8 +211,8 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             }
             catch (Exception ex)
             {
-                Service_ErrorHandler.HandleException(ex, ErrorSeverity.Medium,
-                    contextData: new Dictionary<string, object> { ["User"] = Model_AppVariables.User },
+                Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Medium,
+                    contextData: new Dictionary<string, object> { ["User"] = Model_Application_Variables.User },
                     callerName: nameof(ResetButton_Click),
                     controlName: nameof(Control_Database));
             }

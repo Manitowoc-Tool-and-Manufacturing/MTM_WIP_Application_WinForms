@@ -14,13 +14,13 @@ namespace MTM_WIP_Application_Winforms.Tests.Integration;
 /// Dao_ErrorLog patterns discovered:
 /// - All methods are static
 /// - All methods have Async suffix
-/// - Returns DaoResult&lt;DataTable&gt; for query operations
-/// - Returns DaoResult for delete operations
+/// - Returns Model_Dao_Result&lt;DataTable&gt; for query operations
+/// - Returns Model_Dao_Result for delete operations
 /// - Special return type List&lt;(string, string)&gt; for GetUniqueErrorsAsync
 /// 
 /// Dao_History patterns discovered:
 /// - One static method: AddTransactionHistoryAsync
-/// - Returns DaoResult
+/// - Returns Model_Dao_Result
 /// - Uses explicit in_ prefix for parameters (transaction procedures)
 /// </remarks>
 [TestClass]
@@ -185,7 +185,7 @@ public class Dao_Logging_Tests : BaseIntegrationTest
         await EnsureLoggingTablesAsync();
 
         // Arrange
-        var history = new Model_TransactionHistory
+        var history = new Model_Transactions_History
         {
             TransactionType = "IN",
             PartId = "TEST-PART-001",
@@ -218,7 +218,7 @@ public class Dao_Logging_Tests : BaseIntegrationTest
         await EnsureLoggingTablesAsync();
 
         // Arrange
-        var history = new Model_TransactionHistory
+        var history = new Model_Transactions_History
         {
             TransactionType = "TRANSFER",
             PartId = "TEST-PART-002",
@@ -251,7 +251,7 @@ public class Dao_Logging_Tests : BaseIntegrationTest
         await EnsureLoggingTablesAsync();
 
         // Arrange - ItemType is required by database constraint
-        var history = new Model_TransactionHistory
+        var history = new Model_Transactions_History
         {
             TransactionType = "IN",
             PartId = "TEST-PART-003",

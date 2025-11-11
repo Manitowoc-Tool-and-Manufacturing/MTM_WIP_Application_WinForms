@@ -314,14 +314,14 @@
 
 **Options**:
 
-1. **Hardcoded constants**: Define in `Model_AppVariables.cs` as const fields (fastest but requires recompile to change)
+1. **Hardcoded constants**: Define in `Model_Application_Variables.cs` as const fields (fastest but requires recompile to change)
 2. **appsettings.json**: Store in configuration file (adjustable without recompile but requires app restart)
 3. **Database configuration table**: `sys_configuration` table with key-value pairs (runtime adjustable, no restart)
 4. **Environment variables**: OS-level configuration (deployment-specific but requires container/process restart)
 
-**User Response**: appsettings.json (Option 2) with Model_AppVariables wrapper. Configuration section: `"PerformanceThresholds": { "Query": 500, "Modification": 1000, "Batch": 5000, "Report": 2000 }`. Model_AppVariables loads on startup, caches in memory. Allows threshold tuning without recompile. Restart required to apply changes (acceptable for performance tuning).
+**User Response**: appsettings.json (Option 2) with Model_Application_Variables wrapper. Configuration section: `"PerformanceThresholds": { "Query": 500, "Modification": 1000, "Batch": 5000, "Report": 2000 }`. Model_Application_Variables loads on startup, caches in memory. Allows threshold tuning without recompile. Restart required to apply changes (acceptable for performance tuning).
 
-**Decision Impact**: T002 (Phase 1) adds PerformanceThresholds section to appsettings.json. Model_AppVariables exposes properties: QueryThresholdMs, ModificationThresholdMs, BatchThresholdMs, ReportThresholdMs. Helper_Database_StoredProcedure reads thresholds for performance comparison. T128 benchmark uses same thresholds for consistency.
+**Decision Impact**: T002 (Phase 1) adds PerformanceThresholds section to appsettings.json. Model_Application_Variables exposes properties: QueryThresholdMs, ModificationThresholdMs, BatchThresholdMs, ReportThresholdMs. Helper_Database_StoredProcedure reads thresholds for performance comparison. T128 benchmark uses same thresholds for consistency.
 
 ---
 

@@ -1,288 +1,320 @@
+using System;
+using System.Collections.Generic;
 using System.Data;
-using System.Drawing.Imaging;
 using System.Drawing.Printing;
-using System.Windows.Forms;
+using System.IO;
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
+using System.Globalization;
 using ClosedXML.Excel;
-using MTM_WIP_Application_Winforms.Core;
 using MTM_WIP_Application_Winforms.Logging;
 using MTM_WIP_Application_Winforms.Models;
-using MTM_WIP_Application_Winforms.Services;
 
 namespace MTM_WIP_Application_Winforms.Helpers;
 
 /// <summary>
-/// Handles exporting DataGridView data to various formats (PDF, Excel, Image)
+/// Lightweight scaffold for export functionality. Concrete implementations (PDF/Excel) will be
+/// implemented in follow-up tasks. This class provides a safe helper to write a ready-made PDF
+/// stream to disk and placeholder async methods for higher-level export flows.
 /// </summary>
 public static class Helper_ExportManager
 {
-    #region PDF Export
-    
     /// <summary>
-    /// Exports data to PDF using Microsoft Print to PDF printer
+    /// Persist a PDF stream to disk asynchronously. Creates parent directory when missing.
     /// </summary>
-    public static bool ExportToPdf(Model_PrintJob printJob, string filePath)
+    public static async Task ExportPdfStreamToFileAsync(Stream sourcePdfStream, string destinationPath, CancellationToken cancellationToken = default)
     {
+        if (sourcePdfStream is null) throw new ArgumentNullException(nameof(sourcePdfStream));
+        if (string.IsNullOrWhiteSpace(destinationPath)) throw new ArgumentException("destinationPath required", nameof(destinationPath));
+
         try
         {
-            // Find PDF printer
-            string? pdfPrinter = FindPdfPrinter();
-            if (string.IsNullOrEmpty(pdfPrinter))
-            {
-                MessageBox.Show(
-                    "Microsoft Print to PDF printer not found. Please install it from Windows Features.",
-                    "PDF Export",
-                    MessageBoxButtons.OK,
-                    MessageBoxIcon.Warning);
-                return false;
-            }
-            
-            // Set PDF printer and file output
-            printJob.PrinterName = pdfPrinter;
-            
-            // Create print manager (it will handle page range filtering)
-            using (var printManager = new Helper_PrintManager(printJob))
-            {
-                var printDoc = printManager.PreparePrintDocument();
-                if (printDoc == null)
-                {
-                    LoggingUtility.Log("[ExportManager] PDF export failed - could not prepare print document");
-                    return false;
-                }
-                
-                // Configure for file output
-                printDoc.PrinterSettings.PrintToFile = true;
-                printDoc.PrinterSettings.PrintFileName = filePath;
-                
-                // Print to file
-                printDoc.Print();
-                
-                LoggingUtility.Log($"[ExportManager] PDF export completed: {filePath}");
-                return true;
-            }
+            Directory.CreateDirectory(Path.GetDirectoryName(destinationPath) ?? Path.GetTempPath());
+            await using var fileStream = File.Create(destinationPath);
+            sourcePdfStream.Seek(0, SeekOrigin.Begin);
+            await sourcePdfStream.CopyToAsync(fileStream, 81920, cancellationToken).ConfigureAwait(false);
         }
         catch (Exception ex)
         {
             LoggingUtility.LogApplicationError(ex);
-            Service_ErrorHandler.HandleException(ex, ErrorSeverity.Medium,
-                contextData: new Dictionary<string, object> { ["FilePath"] = filePath });
-            return false;
+            throw;
         }
     }
-    
-    private static string? FindPdfPrinter()
-    {
-        foreach (string printer in PrinterSettings.InstalledPrinters)
-        {
-            if (printer.Contains("PDF", StringComparison.OrdinalIgnoreCase) ||
-                printer.Contains("Microsoft Print To PDF", StringComparison.OrdinalIgnoreCase))
-            {
-                return printer;
-            }
-        }
-        return null;
-    }
-    
-    #endregion
-    
-    #region Excel Export
-    
+
     /// <summary>
-    /// Exports data to Excel file using ClosedXML
-    /// Note: Page range is approximate (~31 rows/page) since Excel doesn't use the print system
+    /// Renders the supplied <see cref="Model_Print_Job"/> to a PDF file using the Microsoft Print to PDF driver.
     /// </summary>
-    public static bool ExportToExcel(Model_PrintJob printJob, string filePath)
+    /// <param name="printJob">Configured print job describing the desired output.</param>
+    /// <param name="destinationPath">Absolute or relative destination for the PDF file.</param>
+    /// <param name="cancellationToken">Cancellation token to abort the export before printing begins.</param>
+    /// <returns>A <see cref="Model_Dao_Result"/> representing success or failure.</returns>
+    public static async Task<Model_Dao_Result> ExportToPdfAsync(Model_Print_Job printJob, string destinationPath, CancellationToken cancellationToken = default)
     {
+        ArgumentNullException.ThrowIfNull(printJob);
+
+        if (string.IsNullOrWhiteSpace(destinationPath))
+        {
+            return Model_Dao_Result.Failure("Destination path is required for PDF export.");
+        }
+
         try
         {
-            // Show warning if using page range (not exact like printing)
-            if (printJob.PageRangeType != PrintRangeType.AllPages)
+            cancellationToken.ThrowIfCancellationRequested();
+
+            string resolvedPath = Path.GetFullPath(destinationPath);
+            string? directory = Path.GetDirectoryName(resolvedPath);
+            if (string.IsNullOrWhiteSpace(directory))
             {
-                var result = MessageBox.Show(
-                    "Excel export uses an approximate page range (~31 rows per page).\n\n" +
-                    "For exact page ranges, use PDF export instead.\n\n" +
-                    "Continue with Excel export?",
-                    "Page Range Approximation",
-                    MessageBoxButtons.YesNo,
-                    MessageBoxIcon.Information);
-                    
-                if (result != DialogResult.Yes)
-                    return false;
+                return Model_Dao_Result.Failure("Unable to determine the target directory for the PDF export.");
             }
-            
-            using (var workbook = new XLWorkbook())
+
+            Directory.CreateDirectory(directory);
+
+            if (!resolvedPath.EndsWith(".pdf", StringComparison.OrdinalIgnoreCase))
             {
-                var worksheet = workbook.Worksheets.Add("Data");
-                
-                // Get visible columns in order
-                var visibleCols = printJob.ColumnOrder.Where(c => printJob.VisibleColumns.Contains(c)).ToList();
-                
-                // Get filtered data based on page range
-                var exportData = printJob.GetFilteredData();
-                
-                // Add headers
-                for (int i = 0; i < visibleCols.Count; i++)
+                resolvedPath = Path.ChangeExtension(resolvedPath, ".pdf") ?? resolvedPath + ".pdf";
+            }
+
+            if (File.Exists(resolvedPath))
+            {
+                File.Delete(resolvedPath);
+            }
+
+            string pdfPrinterName = "Microsoft Print to PDF";
+            bool printerAvailable = PrinterSettings.InstalledPrinters.Cast<string>()
+                .Any(name => string.Equals(name, pdfPrinterName, StringComparison.OrdinalIgnoreCase));
+
+            if (!printerAvailable)
+            {
+                return Model_Dao_Result.Failure("Microsoft Print to PDF is not available on this system.");
+            }
+
+            string? originalPrinter = printJob.PrinterName;
+            printJob.PrinterName = pdfPrinterName;
+
+            try
+            {
+                cancellationToken.ThrowIfCancellationRequested();
+
+                using var printManager = new Helper_PrintManager(printJob);
+                PrintDocument? document = printManager.PreparePrintDocument();
+                if (document is null)
                 {
-                    worksheet.Cell(1, i + 1).Value = visibleCols[i];
-                    worksheet.Cell(1, i + 1).Style.Font.Bold = true;
+                    return Model_Dao_Result.Failure("Unable to prepare print document for PDF export.");
                 }
-                
-                // Add data rows
-                for (int row = 0; row < exportData.Rows.Count; row++)
+
+                document.PrinterSettings.PrintToFile = true;
+                document.PrinterSettings.PrintFileName = resolvedPath;
+                document.PrintController = new StandardPrintController();
+
+                cancellationToken.ThrowIfCancellationRequested();
+
+                await Task.Run(() =>
                 {
-                    var dataRow = exportData.Rows[row];
-                    for (int col = 0; col < visibleCols.Count; col++)
+                    cancellationToken.ThrowIfCancellationRequested();
+                    document.Print();
+                }, cancellationToken).ConfigureAwait(false);
+
+                printManager.SyncPageBoundariesFromPrinter();
+
+                if (!File.Exists(resolvedPath))
+                {
+                    return Model_Dao_Result.Failure("PDF export completed but the expected file was not created.");
+                }
+
+                return Model_Dao_Result.Success($"PDF exported to {resolvedPath}");
+            }
+            finally
+            {
+                printJob.PrinterName = originalPrinter;
+            }
+        }
+        catch (OperationCanceledException)
+        {
+            LoggingUtility.Log("[Helper_ExportManager] PDF export cancelled by caller.");
+            return Model_Dao_Result.Failure("PDF export was cancelled.");
+        }
+        catch (Exception ex)
+        {
+            LoggingUtility.LogApplicationError(ex);
+            return Model_Dao_Result.Failure("Failed to export PDF.", ex);
+        }
+    }
+
+    /// <summary>
+    /// Exports the selected page range of the supplied print job to an Excel workbook.
+    /// </summary>
+    /// <param name="printJob">Configured print job describing the desired output.</param>
+    /// <param name="destinationPath">Absolute or relative destination for the Excel file.</param>
+    /// <param name="cancellationToken">Cancellation token to abort the export prior to writing the file.</param>
+    /// <returns>A <see cref="Model_Dao_Result"/> representing success or failure.</returns>
+    public static async Task<Model_Dao_Result> ExportToExcelAsync(Model_Print_Job printJob, string destinationPath, CancellationToken cancellationToken = default)
+    {
+        ArgumentNullException.ThrowIfNull(printJob);
+
+        if (printJob.Data?.Rows.Count is null or 0)
+        {
+            return Model_Dao_Result.Failure("There is no data available for export.");
+        }
+
+        if (string.IsNullOrWhiteSpace(destinationPath))
+        {
+            return Model_Dao_Result.Failure("Destination path is required for Excel export.");
+        }
+
+        try
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+
+            string resolvedPath = Path.GetFullPath(destinationPath);
+            string? directory = Path.GetDirectoryName(resolvedPath);
+            if (string.IsNullOrWhiteSpace(directory))
+            {
+                return Model_Dao_Result.Failure("Unable to determine the target directory for the Excel export.");
+            }
+
+            Directory.CreateDirectory(directory);
+
+            if (!resolvedPath.EndsWith(".xlsx", StringComparison.OrdinalIgnoreCase))
+            {
+                resolvedPath = Path.ChangeExtension(resolvedPath, ".xlsx") ?? resolvedPath + ".xlsx";
+            }
+
+            if (File.Exists(resolvedPath))
+            {
+                File.Delete(resolvedPath);
+            }
+
+            List<string> columnsToExport = printJob.ColumnOrder
+                .Where(column => printJob.VisibleColumns.Contains(column))
+                .ToList();
+
+            if (columnsToExport.Count == 0)
+            {
+                return Model_Dao_Result.Failure("No columns are selected for export.");
+            }
+
+            (int fromPage, int toPage) = ResolvePageRange(printJob);
+            if (fromPage > toPage)
+            {
+                return Model_Dao_Result.Failure("The specified page range is invalid for Excel export.");
+            }
+
+            IReadOnlyList<DataRow> rowsToExport = printJob
+                .EnumerateRowsForPageRange(fromPage, toPage)
+                .ToList();
+
+            if (rowsToExport.Count == 0)
+            {
+                return Model_Dao_Result.Failure("No rows fall within the selected page range.");
+            }
+
+            await Task.Run(() =>
+            {
+                cancellationToken.ThrowIfCancellationRequested();
+
+                using var workbook = new XLWorkbook();
+                var worksheet = workbook.Worksheets.Add("Export");
+
+                // Header row
+                for (int columnIndex = 0; columnIndex < columnsToExport.Count; columnIndex++)
+                {
+                    worksheet.Cell(1, columnIndex + 1).Value = columnsToExport[columnIndex];
+                }
+
+                var headerRange = worksheet.Range(1, 1, 1, columnsToExport.Count);
+                headerRange.Style.Font.Bold = true;
+                headerRange.Style.Fill.BackgroundColor = XLColor.FromArgb(230, 230, 230);
+
+                // Data rows
+                int currentRow = 2;
+                foreach (DataRow dataRow in rowsToExport)
+                {
+                    cancellationToken.ThrowIfCancellationRequested();
+
+                    for (int columnIndex = 0; columnIndex < columnsToExport.Count; columnIndex++)
                     {
-                        string columnName = visibleCols[col];
-                        if (exportData.Columns.Contains(columnName))
+                        object? value = dataRow[columnsToExport[columnIndex]];
+                        var cell = worksheet.Cell(currentRow, columnIndex + 1);
+                        if (value is null || value is DBNull)
                         {
-                            var value = dataRow[columnName];
-                            worksheet.Cell(row + 2, col + 1).Value = value?.ToString() ?? string.Empty;
+                            cell.SetValue(string.Empty);
+                        }
+                        else if (value is DateTime dateTime)
+                        {
+                            cell.SetValue(dateTime);
+                        }
+                        else if (value is bool boolean)
+                        {
+                            cell.SetValue(boolean);
+                        }
+                        else if (value is IFormattable formattable)
+                        {
+                            cell.SetValue(formattable.ToString(null, CultureInfo.CurrentCulture));
+                        }
+                        else
+                        {
+                            cell.SetValue(value.ToString() ?? string.Empty);
                         }
                     }
+
+                    currentRow++;
                 }
-                
-                // Auto-fit columns
-                worksheet.Columns().AdjustToContents();
-                
-                workbook.SaveAs(filePath);
-                LoggingUtility.Log($"[ExportManager] Excel export completed: {filePath}");
-                return true;
-            }
+
+                var dataRange = worksheet.Range(1, 1, rowsToExport.Count + 1, columnsToExport.Count);
+                dataRange.Style.Border.OutsideBorder = XLBorderStyleValues.Thin;
+                dataRange.Style.Border.InsideBorder = XLBorderStyleValues.Thin;
+                worksheet.Columns(1, columnsToExport.Count).AdjustToContents();
+
+                workbook.SaveAs(resolvedPath);
+            }, cancellationToken).ConfigureAwait(false);
+
+            return Model_Dao_Result.Success($"Excel exported to {resolvedPath}");
+        }
+        catch (OperationCanceledException)
+        {
+            LoggingUtility.Log("[Helper_ExportManager] Excel export cancelled by caller.");
+            return Model_Dao_Result.Failure("Excel export was cancelled.");
         }
         catch (Exception ex)
         {
             LoggingUtility.LogApplicationError(ex);
-            Service_ErrorHandler.HandleException(ex, ErrorSeverity.Medium,
-                contextData: new Dictionary<string, object> { ["FilePath"] = filePath });
-            return false;
+            return Model_Dao_Result.Failure("Failed to export Excel file.", ex);
         }
     }
-    
-    #endregion
-    
-    #region Image Export
-    
-    /// <summary>
-    /// Exports data to image (PNG/JPG) by rendering to bitmap
-    /// Note: Page range is approximate (~31 rows/page) since image export doesn't use the print system
-    /// </summary>
-    public static bool ExportToImage(Model_PrintJob printJob, string filePath, ImageFormat format)
+
+    private static (int fromPage, int toPage) ResolvePageRange(Model_Print_Job printJob)
     {
-        try
+        int maxBoundaryPage = printJob.PageBoundaries.Count > 0
+            ? printJob.PageBoundaries.Max(boundary => boundary.PageNumber)
+            : 0;
+
+        int maxPage = Math.Max(
+            Math.Max(maxBoundaryPage, printJob.TotalPages),
+            1);
+
+        return printJob.PageRangeType switch
         {
-            // Show warning if using page range (not exact like printing)
-            if (printJob.PageRangeType != PrintRangeType.AllPages)
-            {
-                var result = MessageBox.Show(
-                    "Image export uses an approximate page range (~31 rows per page).\n\n" +
-                    "For exact page ranges, use PDF export instead.\n\n" +
-                    "Continue with image export?",
-                    "Page Range Approximation",
-                    MessageBoxButtons.YesNo,
-                    MessageBoxIcon.Information);
-                    
-                if (result != DialogResult.Yes)
-                    return false;
-            }
-            
-            var visibleCols = printJob.ColumnOrder.Where(c => printJob.VisibleColumns.Contains(c)).ToList();
-            
-            // Get filtered data based on page range
-            var exportData = printJob.GetFilteredData();
-            
-            // Calculate image size
-            int cellWidth = 120;
-            int cellHeight = 25;
-            int imageWidth = visibleCols.Count * cellWidth;
-            int imageHeight = (exportData.Rows.Count + 1) * cellHeight; // +1 for header
-            
-            using (var bitmap = new System.Drawing.Bitmap(imageWidth, imageHeight))
-            using (var graphics = System.Drawing.Graphics.FromImage(bitmap))
-            {
-                graphics.Clear(System.Drawing.Color.White);
-                graphics.TextRenderingHint = System.Drawing.Text.TextRenderingHint.AntiAlias;
-                
-                var font = new System.Drawing.Font("Segoe UI", 9);
-                var brush = System.Drawing.Brushes.Black;
-                var headerBrush = new System.Drawing.SolidBrush(System.Drawing.Color.FromArgb(240, 240, 240));
-                
-                // Draw header
-                for (int col = 0; col < visibleCols.Count; col++)
-                {
-                    var rect = new System.Drawing.Rectangle(col * cellWidth, 0, cellWidth, cellHeight);
-                    graphics.FillRectangle(headerBrush, rect);
-                    graphics.DrawRectangle(System.Drawing.Pens.Gray, rect);
-                    graphics.DrawString(visibleCols[col], font, brush, rect.X + 5, rect.Y + 5);
-                }
-                
-                // Draw data rows
-                for (int row = 0; row < exportData.Rows.Count; row++)
-                {
-                    var dataRow = exportData.Rows[row];
-                    for (int col = 0; col < visibleCols.Count; col++)
-                    {
-                        string columnName = visibleCols[col];
-                        var value = dataRow[columnName]?.ToString() ?? string.Empty;
-                        var rect = new System.Drawing.Rectangle(
-                            col * cellWidth,
-                            (row + 1) * cellHeight,
-                            cellWidth,
-                            cellHeight);
-                        graphics.DrawRectangle(System.Drawing.Pens.LightGray, rect);
-                        graphics.DrawString(value, font, brush, rect.X + 5, rect.Y + 5);
-                    }
-                }
-                
-                bitmap.Save(filePath, format);
-                LoggingUtility.Log($"[ExportManager] Image export completed: {filePath}");
-                return true;
-            }
-        }
-        catch (Exception ex)
-        {
-            LoggingUtility.LogApplicationError(ex);
-            Service_ErrorHandler.HandleException(ex, ErrorSeverity.Medium,
-                contextData: new Dictionary<string, object> { ["FilePath"] = filePath });
-            return false;
-        }
+            Enum_PrintRangeType.CurrentPage => (Clamp(printJob.CurrentPage, 1, maxPage), Clamp(printJob.CurrentPage, 1, maxPage)),
+            Enum_PrintRangeType.PageRange =>
+                (Clamp(printJob.FromPage, 1, maxPage), Clamp(printJob.ToPage, Clamp(printJob.FromPage, 1, maxPage), maxPage)),
+            _ => (1, maxPage)
+        };
     }
-    
-    #endregion
-    
-    #region File Dialogs
-    
-    public static string? ShowPdfSaveDialog(string defaultFileName)
+
+    private static int Clamp(int value, int min, int max)
     {
-        using (var dialog = new SaveFileDialog())
+        if (value < min)
         {
-            dialog.Filter = "PDF Files (*.pdf)|*.pdf";
-            dialog.DefaultExt = "pdf";
-            dialog.FileName = $"{defaultFileName}_{DateTime.Now:yyyyMMdd_HHmmss}.pdf";
-            return dialog.ShowDialog() == DialogResult.OK ? dialog.FileName : null;
+            return min;
         }
-    }
-    
-    public static string? ShowExcelSaveDialog(string defaultFileName)
-    {
-        using (var dialog = new SaveFileDialog())
+
+        if (value > max)
         {
-            dialog.Filter = "Excel Files (*.xlsx)|*.xlsx";
-            dialog.DefaultExt = "xlsx";
-            dialog.FileName = $"{defaultFileName}_{DateTime.Now:yyyyMMdd_HHmmss}.xlsx";
-            return dialog.ShowDialog() == DialogResult.OK ? dialog.FileName : null;
+            return max;
         }
+
+        return value;
     }
-    
-    public static string? ShowImageSaveDialog(string defaultFileName)
-    {
-        using (var dialog = new SaveFileDialog())
-        {
-            dialog.Filter = "PNG Files (*.png)|*.png|JPEG Files (*.jpg)|*.jpg";
-            dialog.DefaultExt = "png";
-            dialog.FileName = $"{defaultFileName}_{DateTime.Now:yyyyMMdd_HHmmss}.png";
-            return dialog.ShowDialog() == DialogResult.OK ? dialog.FileName : null;
-        }
-    }
-    
-    #endregion
 }

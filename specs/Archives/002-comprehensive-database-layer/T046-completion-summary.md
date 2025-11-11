@@ -11,8 +11,8 @@
 **Status**: COMPLETE
 
 **Changes made**:
-- Added DaoResult check for `ItemTypeExists` - checks `result.Data` (bool)
-- Added DaoResult check for `InsertItemType` - checks `result.IsSuccess`
+- Added Model_Dao_Result check for `ItemTypeExists` - checks `result.Data` (bool)
+- Added Model_Dao_Result check for `InsertItemType` - checks `result.IsSuccess`
 - Displays `result.ErrorMessage` on failure
 
 **Files modified**:
@@ -24,9 +24,9 @@
 **Status**: COMPLETE
 
 **Changes made**:
-- Added DaoResult check for `GetItemTypeByName` - checks `result.Data` (DataRow)
-- Added DaoResult check for `ItemTypeExists` - checks `result.Data` (bool)
-- Added DaoResult check for `UpdateItemType` - checks `result.IsSuccess`
+- Added Model_Dao_Result check for `GetItemTypeByName` - checks `result.Data` (DataRow)
+- Added Model_Dao_Result check for `ItemTypeExists` - checks `result.Data` (bool)
+- Added Model_Dao_Result check for `UpdateItemType` - checks `result.IsSuccess`
 - Displays `result.ErrorMessage` on failure
 
 **Files modified**:
@@ -40,8 +40,8 @@
 **Status**: COMPLETE
 
 **Changes made**:
-- Added DaoResult check for `GetItemTypeByName` - checks `result.Data` (DataRow)
-- Added DaoResult check for `DeleteItemType` - checks `result.IsSuccess`
+- Added Model_Dao_Result check for `GetItemTypeByName` - checks `result.Data` (DataRow)
+- Added Model_Dao_Result check for `DeleteItemType` - checks `result.IsSuccess`
 - Displays `result.ErrorMessage` on failure
 
 **Files modified**:
@@ -53,8 +53,8 @@
 **Status**: COMPLETE
 
 **Changes made**:
-- Added DaoResult check for `GetLocationByName` - checks `result.Data` (DataRow)
-- Added DaoResult check for `DeleteLocation` - checks `result.IsSuccess`
+- Added Model_Dao_Result check for `GetLocationByName` - checks `result.Data` (DataRow)
+- Added Model_Dao_Result check for `DeleteLocation` - checks `result.IsSuccess`
 - Displays `result.ErrorMessage` on failure
 
 **Files modified**:
@@ -66,8 +66,8 @@
 **Status**: COMPLETE
 
 **Changes made**:
-- Added DaoResult check for `GetOperationByNumber` - checks `result.Data` (DataRow)
-- Added DaoResult check for `DeleteOperation` - checks `result.IsSuccess`
+- Added Model_Dao_Result check for `GetOperationByNumber` - checks `result.Data` (DataRow)
+- Added Model_Dao_Result check for `DeleteOperation` - checks `result.IsSuccess`
 - Displays `result.ErrorMessage` on failure
 
 **Files modified**:
@@ -95,21 +95,21 @@
 ### Priority 1: SettingsForm Controls (T046g-h, T046q-r)
 
 #### T046g: Control_Shortcuts.cs
-- Line 39: GetShortcutsJsonAsync - needs DaoResult check
-- Line 399: SetShortcutsJsonAsync - needs DaoResult check
+- Line 39: GetShortcutsJsonAsync - needs Model_Dao_Result check
+- Line 399: SetShortcutsJsonAsync - needs Model_Dao_Result check
 
 #### T046h: Control_Theme.cs
-- Line 34: GetThemeNameAsync - needs DaoResult check
-- Line 75: SetThemeNameAsync - needs DaoResult check
+- Line 34: GetThemeNameAsync - needs Model_Dao_Result check
+- Line 75: SetThemeNameAsync - needs Model_Dao_Result check
 
 #### T046q: Control_Add_PartID.cs
-- Line 108: Replace obsolete `PartExists` with `PartExistsAsync` + DaoResult check
-- Line 135: Replace obsolete `AddPartWithStoredProcedure` with `CreatePartAsync` + DaoResult check
+- Line 108: Replace obsolete `PartExists` with `PartExistsAsync` + Model_Dao_Result check
+- Line 135: Replace obsolete `AddPartWithStoredProcedure` with `CreatePartAsync` + Model_Dao_Result check
 
 #### T046r: Control_Edit_PartID.cs
-- Line 184: Replace obsolete `GetPartByNumber` with `GetPartByNumberAsync` + DaoResult check
-- Line 332: Replace obsolete `PartExists` with `PartExistsAsync` + DaoResult check
-- Line 512: Replace obsolete `UpdatePartWithStoredProcedure` with `UpdatePartAsync` + DaoResult check
+- Line 184: Replace obsolete `GetPartByNumber` with `GetPartByNumberAsync` + Model_Dao_Result check
+- Line 332: Replace obsolete `PartExists` with `PartExistsAsync` + Model_Dao_Result check
+- Line 512: Replace obsolete `UpdatePartWithStoredProcedure` with `UpdatePartAsync` + Model_Dao_Result check
 
 ---
 
@@ -118,7 +118,7 @@
 #### T046i: Control_Edit_User.cs (VERIFY ONLY)
 **Status**: Partially complete per T038
 
-**Action needed**: Verify all DaoResult checks are present for:
+**Action needed**: Verify all Model_Dao_Result checks are present for:
 - GetUserByUsernameAsync (lines 147, 239)
 - GetUserRoleIdAsync (line 169)
 - UpdateUserAsync (line 221)
@@ -127,7 +127,7 @@
 #### T046j: Control_Remove_User.cs (VERIFY ONLY)
 **Status**: Partially complete per T038
 
-**Action needed**: Verify all DaoResult checks are present for:
+**Action needed**: Verify all Model_Dao_Result checks are present for:
 - GetUserByUsernameAsync (lines 129, 210)
 - GetUserRoleIdAsync (lines 141, 242)
 - DeleteUserSettingsAsync (line 228)
@@ -140,9 +140,9 @@
 
 #### T046k: Control_TransferTab.cs
 **Needs updates**:
-- Line 145: GetUserFullNameAsync - needs DaoResult check
-- Line 497: GetInventoryByPartIdAndOperationAsync - needs DaoResult check
-- Line 515: GetInventoryByPartIdAsync - needs DaoResult check
+- Line 145: GetUserFullNameAsync - needs Model_Dao_Result check
+- Line 497: GetInventoryByPartIdAndOperationAsync - needs Model_Dao_Result check
+- Line 515: GetInventoryByPartIdAsync - needs Model_Dao_Result check
 
 **Verify error handling** (may be fire-and-forget):
 - Line 730: TransferInventoryQuantityAsync
@@ -153,9 +153,9 @@
 
 #### T046l: Control_RemoveTab.cs
 **Needs updates**:
-- Line 194: GetUserFullNameAsync - needs DaoResult check
-- Line 708: GetInventoryByPartIdAndOperationAsync - needs DaoResult check
-- Line 721: GetInventoryByPartIdAsync - needs DaoResult check
+- Line 194: GetUserFullNameAsync - needs Model_Dao_Result check
+- Line 708: GetInventoryByPartIdAndOperationAsync - needs Model_Dao_Result check
+- Line 721: GetInventoryByPartIdAsync - needs Model_Dao_Result check
 
 **Already correct** ✅:
 - Line 304: RemoveInventoryItemsFromDataGridViewAsync
@@ -169,22 +169,22 @@
 - Line 1725
 
 #### T046n: Control_AdvancedRemove.cs (VERIFY ONLY)
-**Action needed**: Verify DaoResult checks:
+**Action needed**: Verify Model_Dao_Result checks:
 - Line 450: RemoveInventoryItemsFromDataGridViewAsync
 - Line 684: AddInventoryItemAsync
 
 #### T046o: Control_QuickButtons.cs
 **Needs updates**:
-- Line 505: UpdateQuickButtonAsync - needs DaoResult check
-- Line 529: RemoveQuickButtonAndShiftAsync - needs DaoResult check
-- Line 567: DeleteAllQuickButtonsForUserAsync - needs DaoResult check
-- Line 577: AddQuickButtonAtPositionAsync - needs DaoResult check
+- Line 505: UpdateQuickButtonAsync - needs Model_Dao_Result check
+- Line 529: RemoveQuickButtonAndShiftAsync - needs Model_Dao_Result check
+- Line 567: DeleteAllQuickButtonsForUserAsync - needs Model_Dao_Result check
+- Line 577: AddQuickButtonAtPositionAsync - needs Model_Dao_Result check
 
-**Pattern**: Replace try/catch MySqlException with DaoResult checking
+**Pattern**: Replace try/catch MySqlException with Model_Dao_Result checking
 
 #### T046p: Control_InventoryTab.cs
 **Needs updates**:
-- Line 675: AddOrShiftQuickButtonAsync - needs DaoResult check (non-critical)
+- Line 675: AddOrShiftQuickButtonAsync - needs Model_Dao_Result check (non-critical)
 
 **Already correct** ✅:
 - Line 604: AddInventoryItemAsync
@@ -194,10 +194,10 @@
 ### Priority 4: Forms & Services (T046s-u)
 
 #### T046s: MainForm.cs
-- Line 547: GetUserFullNameAsync - needs DaoResult check with fallback logic
+- Line 547: GetUserFullNameAsync - needs Model_Dao_Result check with fallback logic
 
 #### T046t: MainFormUserSettingsHelper.cs
-**ALL Dao_User calls need DaoResult checks**:
+**ALL Dao_User calls need Model_Dao_Result checks**:
 - Line 18: GetLastShownVersionAsync
 - Line 21: SetHideChangeLogAsync
 - Line 23: SetLastShownVersionAsync
@@ -211,7 +211,7 @@
 **Pattern**: Use ternary operators for Get* methods with fallback defaults
 
 #### T046u: Service_OnStartup_StartupSplashApplicationContext.cs
-- Line 639: GetThemeFontSizeAsync - needs DaoResult check with default fallback
+- Line 639: GetThemeFontSizeAsync - needs Model_Dao_Result check with default fallback
 
 ---
 
@@ -232,11 +232,11 @@
 **Original scope**: "LoadQuickButtonsAsync, btnQuickButton_Click event handlers"
 
 **After T046o completion**:
-- ✅ Button click handlers covered (DaoResult checks added)
+- ✅ Button click handlers covered (Model_Dao_Result checks added)
 - ❓ LoadQuickButtonsAsync needs verification only
 
 **Amended T048 task**:
-"Verify `Controls/MainForm/Control_QuickButtons.cs` LoadQuickButtonsAsync uses proper async/await patterns (button click DaoResult checks completed in T046o)"
+"Verify `Controls/MainForm/Control_QuickButtons.cs` LoadQuickButtonsAsync uses proper async/await patterns (button click Model_Dao_Result checks completed in T046o)"
 
 ---
 
@@ -277,7 +277,7 @@
    - Control_Edit_PartID.cs
 
 2. **Verification tasks** (T046i-j, T046m-n):
-   - Read files and confirm DaoResult checks present from T038
+   - Read files and confirm Model_Dao_Result checks present from T038
    - Document any missing checks
 
 3. **MainForm Controls** (T046k-p):
@@ -309,7 +309,7 @@
 
 ## Implementation Patterns Established
 
-### Standard DaoResult Pattern (Read operations)
+### Standard Model_Dao_Result Pattern (Read operations)
 ```csharp
 var result = await Dao_*.Get*Async(parameter);
 if (!result.IsSuccess)
@@ -325,7 +325,7 @@ if (data != null)
 }
 ```
 
-### Standard DaoResult Pattern (Write operations)
+### Standard Model_Dao_Result Pattern (Write operations)
 ```csharp
 var result = await Dao_*.Update/Insert/Delete*Async(parameters);
 if (!result.IsSuccess)
@@ -344,7 +344,7 @@ MessageBox.Show("Operation successful!", "Success",
 // OLD (Obsolete):
 var data = await Dao_Part.GetPartByNumber(partNumber);
 
-// NEW (DaoResult):
+// NEW (Model_Dao_Result):
 var result = await Dao_Part.GetPartByNumberAsync(partNumber);
 if (!result.IsSuccess)
 {

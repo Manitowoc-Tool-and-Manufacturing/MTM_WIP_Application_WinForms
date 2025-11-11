@@ -22,7 +22,7 @@ This matrix tracks all documentation that needs to be created, updated, or valid
 | spec.md | ✅ | High | Complete feature specification | T000 |
 | plan.md | ✅ | High | Implementation plan complete | T000 |
 | tasks.md | ✅ | High | Task breakdown active | T000-T704 |
-| data-model.md | ✅ | High | DaoResult patterns documented | T000 |
+| data-model.md | ✅ | High | Model_Dao_Result patterns documented | T000 |
 | research.md | ✅ | Medium | Research findings documented | T000 |
 | quickstart.md | ✅ | High | Quickstart guide complete | T000 |
 | schema-drift-audit.md | ✅ | High | Drift audit complete | T119b |
@@ -54,18 +54,18 @@ This matrix tracks all documentation that needs to be created, updated, or valid
 
 | DAO Class | XML Docs | Status | Methods | Task |
 |-----------|----------|--------|---------|------|
-| Dao_Inventory | ✅ | Complete | All async DaoResult<T> | T201 |
-| Dao_Transactions | ✅ | Complete | All async DaoResult<T> | T301 |
-| Dao_User | ✅ | Complete | All async DaoResult<T> | T301 |
+| Dao_Inventory | ✅ | Complete | All async Model_Dao_Result<T> | T201 |
+| Dao_Transactions | ✅ | Complete | All async Model_Dao_Result<T> | T301 |
+| Dao_User | ✅ | Complete | All async Model_Dao_Result<T> | T301 |
 | Dao_ErrorLog | ⚠️ | Needs Review | MessageBox.Show usage | T301 |
-| Dao_History | ✅ | Complete | All async DaoResult<T> | T301 |
-| Dao_Part | ✅ | Complete | All async DaoResult<T> | T401 |
-| Dao_Location | ✅ | Complete | All async DaoResult<T> | T401 |
-| Dao_Operation | ✅ | Complete | All async DaoResult<T> | T401 |
-| Dao_ItemType | ✅ | Complete | All async DaoResult<T> | T401 |
-| Dao_QuickButtons | ✅ | Complete | All async DaoResult<T> | T401 |
-| Dao_System | ✅ | Complete | All async DaoResult | T401 |
-| Dao_ParameterPrefixOverrides | ✅ | Complete | All async DaoResult<T> | T113c |
+| Dao_History | ✅ | Complete | All async Model_Dao_Result<T> | T301 |
+| Dao_Part | ✅ | Complete | All async Model_Dao_Result<T> | T401 |
+| Dao_Location | ✅ | Complete | All async Model_Dao_Result<T> | T401 |
+| Dao_Operation | ✅ | Complete | All async Model_Dao_Result<T> | T401 |
+| Dao_ItemType | ✅ | Complete | All async Model_Dao_Result<T> | T401 |
+| Dao_QuickButtons | ✅ | Complete | All async Model_Dao_Result<T> | T401 |
+| Dao_System | ✅ | Complete | All async Model_Dao_Result | T401 |
+| Dao_ParameterPrefixOverrides | ✅ | Complete | All async Model_Dao_Result<T> | T113c |
 
 ## Instruction Files Referenced
 
@@ -87,7 +87,7 @@ This matrix tracks all documentation that needs to be created, updated, or valid
 | Helper_Database_StoredProcedure | ✅ | Critical | ExecuteDataTableWithStatusAsync patterns | T100-T118 |
 | Helper_Database_Variables | ✅ | High | Connection string management | All |
 | Helper_StoredProcedureProgress | ✅ | Medium | Progress reporting patterns | All |
-| DaoResult<T> | ✅ | Critical | Standardized return wrapper | All DAOs |
+| Model_Dao_Result<T> | ✅ | Critical | Standardized return wrapper | All DAOs |
 | BaseIntegrationTest | ✅ | High | Test base class with diagnostics | T107 |
 
 ## Deployment Documentation

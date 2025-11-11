@@ -160,7 +160,7 @@ MTM_WIP_Application_Winforms/
 │   └── Dao_System.cs                                     # [MODIFY] Add Developer role check method
 │
 ├── Models/
-│   └── Model_ParameterPrefixOverride.cs                  # [NEW] POCO for override records
+│   └── Model_ParameterPrefix_Override.cs                  # [NEW] POCO for override records
 │
 └── Database/
     └── UpdatedStoredProcedures/
@@ -254,7 +254,7 @@ Tasks will be integrated into parent `specs/002-003-database-layer-complete/task
 
 -   Create sys_parameter_prefix_overrides table
 -   Create 5 CRUD stored procedures
--   Create Model_ParameterPrefixOverride POCO
+-   Create Model_ParameterPrefix_Override POCO
 -   Create Dao_ParameterPrefixOverrides DAO class
 -   Modify Dao_System to add Developer role check method
 -   Modify Helper_Database_StoredProcedure to load override cache at startup
