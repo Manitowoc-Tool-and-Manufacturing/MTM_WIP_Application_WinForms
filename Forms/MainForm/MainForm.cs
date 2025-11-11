@@ -1274,6 +1274,8 @@ namespace MTM_WIP_Application_Winforms.Forms.MainForm
             }
         }
 
+        // COMMENTED OUT - Help Menu Event Handlers (to be reimplemented later)
+        /*
         #region Help Menu Event Handlers
 
         private void MainForm_MenuStrip_Help_GettingStarted_Click(object sender, EventArgs e)
@@ -1382,6 +1384,7 @@ namespace MTM_WIP_Application_Winforms.Forms.MainForm
         }
 
         #endregion
+        */
 
         private async void viewerToolStripMenuItem_Click(object sender, EventArgs e)
         {

@@ -234,49 +234,51 @@ namespace MTM_WIP_Application_Winforms.Forms.MainForm
             debugDashboardToolStripMenuItem.Text = "🔍 Debug Dashboard";
             debugDashboardToolStripMenuItem.Click += MainForm_MenuStrip_Development_DebugDashboard_Click;
             // 
-            // helpToolStripMenuItem
+            // COMMENTED OUT - Help Menu (to be reimplemented later)
             // 
-            helpToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { gettingStartedToolStripMenuItem, userGuideToolStripMenuItem, keyboardShortcutsToolStripMenuItem, helpSeparator1, aboutMTMInventoryToolStripMenuItem });
-            helpToolStripMenuItem.Name = "helpToolStripMenuItem";
-            helpToolStripMenuItem.Size = new Size(44, 24);
-            helpToolStripMenuItem.Text = "Help";
-            // 
-            // gettingStartedToolStripMenuItem
-            // 
-            gettingStartedToolStripMenuItem.Name = "gettingStartedToolStripMenuItem";
-            gettingStartedToolStripMenuItem.ShortcutKeys = Keys.Control | Keys.F1;
-            gettingStartedToolStripMenuItem.Size = new Size(257, 22);
-            gettingStartedToolStripMenuItem.Text = "Getting Started";
-            gettingStartedToolStripMenuItem.Click += MainForm_MenuStrip_Help_GettingStarted_Click;
-            // 
-            // userGuideToolStripMenuItem
-            // 
-            userGuideToolStripMenuItem.Name = "userGuideToolStripMenuItem";
-            userGuideToolStripMenuItem.ShortcutKeys = Keys.F1;
-            userGuideToolStripMenuItem.Size = new Size(257, 22);
-            userGuideToolStripMenuItem.Text = "User Guide";
-            userGuideToolStripMenuItem.Click += MainForm_MenuStrip_Help_UserGuide_Click;
-            // 
-            // keyboardShortcutsToolStripMenuItem
-            // 
-            keyboardShortcutsToolStripMenuItem.Name = "keyboardShortcutsToolStripMenuItem";
-            keyboardShortcutsToolStripMenuItem.ShortcutKeys = Keys.Control | Keys.Shift | Keys.K;
-            keyboardShortcutsToolStripMenuItem.Size = new Size(257, 22);
-            keyboardShortcutsToolStripMenuItem.Text = "Keyboard Shortcuts";
-            keyboardShortcutsToolStripMenuItem.Click += MainForm_MenuStrip_Help_KeyboardShortcuts_Click;
-            // 
-            // helpSeparator1
-            // 
-            helpSeparator1.Name = "helpSeparator1";
-            helpSeparator1.Size = new Size(254, 6);
-            // 
-            // aboutMTMInventoryToolStripMenuItem
-            // 
-            aboutMTMInventoryToolStripMenuItem.Name = "aboutMTMInventoryToolStripMenuItem";
-            aboutMTMInventoryToolStripMenuItem.ShortcutKeys = Keys.Control | Keys.Alt | Keys.A;
-            aboutMTMInventoryToolStripMenuItem.Size = new Size(257, 22);
-            aboutMTMInventoryToolStripMenuItem.Text = "About MTM Inventory";
-            aboutMTMInventoryToolStripMenuItem.Click += MainForm_MenuStrip_Help_About_Click;
+            //// helpToolStripMenuItem
+            //// 
+            //helpToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { gettingStartedToolStripMenuItem, userGuideToolStripMenuItem, keyboardShortcutsToolStripMenuItem, helpSeparator1, aboutMTMInventoryToolStripMenuItem });
+            //helpToolStripMenuItem.Name = "helpToolStripMenuItem";
+            //helpToolStripMenuItem.Size = new Size(44, 24);
+            //helpToolStripMenuItem.Text = "Help";
+            //// 
+            //// gettingStartedToolStripMenuItem
+            //// 
+            //gettingStartedToolStripMenuItem.Name = "gettingStartedToolStripMenuItem";
+            //gettingStartedToolStripMenuItem.ShortcutKeys = Keys.Control | Keys.F1;
+            //gettingStartedToolStripMenuItem.Size = new Size(257, 22);
+            //gettingStartedToolStripMenuItem.Text = "Getting Started";
+            //gettingStartedToolStripMenuItem.Click += MainForm_MenuStrip_Help_GettingStarted_Click;
+            //// 
+            //// userGuideToolStripMenuItem
+            //// 
+            //userGuideToolStripMenuItem.Name = "userGuideToolStripMenuItem";
+            //userGuideToolStripMenuItem.ShortcutKeys = Keys.F1;
+            //userGuideToolStripMenuItem.Size = new Size(257, 22);
+            //userGuideToolStripMenuItem.Text = "User Guide";
+            //userGuideToolStripMenuItem.Click += MainForm_MenuStrip_Help_UserGuide_Click;
+            //// 
+            //// keyboardShortcutsToolStripMenuItem
+            //// 
+            //keyboardShortcutsToolStripMenuItem.Name = "keyboardShortcutsToolStripMenuItem";
+            //keyboardShortcutsToolStripMenuItem.ShortcutKeys = Keys.Control | Keys.Shift | Keys.K;
+            //keyboardShortcutsToolStripMenuItem.Size = new Size(257, 22);
+            //keyboardShortcutsToolStripMenuItem.Text = "Keyboard Shortcuts";
+            //keyboardShortcutsToolStripMenuItem.Click += MainForm_MenuStrip_Help_KeyboardShortcuts_Click;
+            //// 
+            //// helpSeparator1
+            //// 
+            //helpSeparator1.Name = "helpSeparator1";
+            //helpSeparator1.Size = new Size(254, 6);
+            //// 
+            //// aboutMTMInventoryToolStripMenuItem
+            //// 
+            //aboutMTMInventoryToolStripMenuItem.Name = "aboutMTMInventoryToolStripMenuItem";
+            //aboutMTMInventoryToolStripMenuItem.ShortcutKeys = Keys.Control | Keys.Alt | Keys.A;
+            //aboutMTMInventoryToolStripMenuItem.Size = new Size(257, 22);
+            //aboutMTMInventoryToolStripMenuItem.Text = "About MTM Inventory";
+            //aboutMTMInventoryToolStripMenuItem.Click += MainForm_MenuStrip_Help_About_Click;
             // 
             // MainForm_StatusStrip
             // 
@@ -568,13 +570,13 @@ namespace MTM_WIP_Application_Winforms.Forms.MainForm
         private ToolStripMenuItem dependencyChartsToolStripMenuItem;
         private ToolStripMenuItem conversionToolStripMenuItem;
         
-        // Help Menu Items
-        private ToolStripMenuItem helpToolStripMenuItem;
-        private ToolStripMenuItem gettingStartedToolStripMenuItem;
-        private ToolStripMenuItem userGuideToolStripMenuItem;
-        private ToolStripMenuItem keyboardShortcutsToolStripMenuItem;
-        private ToolStripSeparator helpSeparator1;
-        private ToolStripMenuItem aboutMTMInventoryToolStripMenuItem;
+        // COMMENTED OUT - Help Menu Items (to be reimplemented later)
+        //private ToolStripMenuItem helpToolStripMenuItem;
+        //private ToolStripMenuItem gettingStartedToolStripMenuItem;
+        //private ToolStripMenuItem userGuideToolStripMenuItem;
+        //private ToolStripMenuItem keyboardShortcutsToolStripMenuItem;
+        //private ToolStripSeparator helpSeparator1;
+        //private ToolStripMenuItem aboutMTMInventoryToolStripMenuItem;
         private ToolStripMenuItem viewerToolStripMenuItem;
     }
 
