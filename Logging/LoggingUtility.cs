@@ -43,7 +43,7 @@ internal static class LoggingUtility
             {
                 try
                 {
-                    var logFiles = Directory.GetFiles(logDirectory, "*.csv")
+                    var logFiles = Directory.GetFiles(logDirectory, "*.log")
                         .OrderByDescending(File.GetCreationTime)
                         .ToList();
 
@@ -74,6 +74,7 @@ internal static class LoggingUtility
                 "MTM_WIP_Application_Winforms");
             var localAppDataPath =
                 Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "MTM_WIP_Application_Winforms");
+
             // Run directory cleanup operations asynchronously
             await Task.Run(() =>
             {
@@ -98,28 +99,7 @@ internal static class LoggingUtility
 
     #region LogFileWriting
 
-    /// <summary>
-    /// Escapes a value for CSV format by enclosing in quotes if it contains comma, quote, or newline.
-    /// Doubles any internal quotes.
-    /// </summary>
-    private static string EscapeCsvValue(string? value)
-    {
-        if (string.IsNullOrEmpty(value))
-            return string.Empty;
-
-        // If value contains comma, quote, or newline, enclose in quotes and escape internal quotes
-        if (value.Contains(',') || value.Contains('"') || value.Contains('\n') || value.Contains('\r'))
-        {
-            return $"\"{value.Replace("\"", "\"\"")}\"";
-        }
-
-        return value;
-    }
-
-    /// <summary>
-    /// Writes a CSV log entry to disk asynchronously with retry logic.
-    /// </summary>
-    private static void FlushLogEntryToDisk(string filePath, string timestamp, string level, string source, string message, string? details = null)
+    private static void FlushLogEntryToDisk(string filePath, string logEntry)
     {
         try
         {
@@ -134,22 +114,10 @@ internal static class LoggingUtility
                     {
                         try
                         {
-                            // Check if file exists and needs header
-                            bool needsHeader = !File.Exists(filePath);
-
                             // Use FileStream with FileShare.Write to allow multiple processes to write
                             await using var fs = new FileStream(filePath, FileMode.Append, FileAccess.Write, FileShare.Write);
                             await using var writer = new StreamWriter(fs);
-
-                            // Write header if this is a new file
-                            if (needsHeader)
-                            {
-                                await writer.WriteLineAsync("Timestamp,Level,Source,Message,Details");
-                            }
-
-                            // Write CSV row
-                            var csvLine = $"{EscapeCsvValue(timestamp)},{EscapeCsvValue(level)},{EscapeCsvValue(source)},{EscapeCsvValue(message)},{EscapeCsvValue(details)}";
-                            await writer.WriteLineAsync(csvLine);
+                            await writer.WriteLineAsync(logEntry);
                             break; // Success
                         }
                         catch (IOException) when (attempt < maxRetries)
@@ -207,9 +175,9 @@ internal static class LoggingUtility
 
             _logDirectory = Path.GetDirectoryName(logFilePath) ?? "";
             var baseFileName = Path.GetFileNameWithoutExtension(logFilePath);
-            _normalLogFile = Path.Combine(_logDirectory, $"{baseFileName}_normal.csv");
-            _dbErrorLogFile = Path.Combine(_logDirectory, $"{baseFileName}_db_error.csv");
-            _appErrorLogFile = Path.Combine(_logDirectory, $"{baseFileName}_app_error.csv");
+            _normalLogFile = Path.Combine(_logDirectory, $"{baseFileName}_normal.log");
+            _dbErrorLogFile = Path.Combine(_logDirectory, $"{baseFileName}_db_error.log");
+            _appErrorLogFile = Path.Combine(_logDirectory, $"{baseFileName}_app_error.log");
 
             Debug.WriteLine($"[DEBUG] Log directory: {_logDirectory}");
             Debug.WriteLine($"[DEBUG] Normal log file: {_normalLogFile}");
@@ -251,14 +219,7 @@ internal static class LoggingUtility
 
     #region LoggingMethods
 
-    /// <summary>
-    /// Logs a normal message with consistent CSV format.
-    /// Automatically captures caller information for better debugging context.
-    /// </summary>
-    public static void Log(string message,
-        [System.Runtime.CompilerServices.CallerMemberName] string callerMember = "",
-        [System.Runtime.CompilerServices.CallerFilePath] string callerFilePath = "",
-        [System.Runtime.CompilerServices.CallerLineNumber] int callerLineNumber = 0)
+    public static void Log(string message)
     {
         var logEntry = $"{DateTime.Now:yyyy-MM-dd HH:mm:ss} - {message}";
         
@@ -267,18 +228,11 @@ internal static class LoggingUtility
         
         lock (LogLock)
         {
-            FlushLogEntryToDisk(_normalLogFile, timestamp, level, enhancedSource, message);
+            FlushLogEntryToDisk(_normalLogFile, logEntry);
         }
     }
 
-    /// <summary>
-    /// Logs an application error with consistent CSV format.
-    /// Automatically captures caller information and extracts method from stack trace.
-    /// </summary>
-    public static void LogApplicationError(Exception ex,
-        [System.Runtime.CompilerServices.CallerMemberName] string callerMember = "",
-        [System.Runtime.CompilerServices.CallerFilePath] string callerFilePath = "",
-        [System.Runtime.CompilerServices.CallerLineNumber] int callerLineNumber = 0)
+    public static void LogApplicationError(Exception ex)
     {
         var errorEntry = $"{DateTime.Now:yyyy-MM-dd HH:mm:ss} - Application Error - {ex.Message}";
         var stackEntry = $"{DateTime.Now:yyyy-MM-dd HH:mm:ss} - Stack Trace - {ex.StackTrace}";
@@ -289,7 +243,8 @@ internal static class LoggingUtility
         
         lock (LogLock)
         {
-            FlushLogEntryToDisk(_appErrorLogFile, timestamp, "ERROR", enhancedSource, message, details);
+            FlushLogEntryToDisk(_appErrorLogFile, errorEntry);
+            FlushLogEntryToDisk(_appErrorLogFile, stackEntry);
         }
     }
 
@@ -304,8 +259,7 @@ internal static class LoggingUtility
             // Try direct file logging as last resort
             try
             {
-                var timestamp = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
-                var fallbackEntry = $"[{timestamp}]|{severity.ToString().ToUpper()}|Database|{ex.Message}";
+                var fallbackEntry = $"{DateTime.Now:yyyy-MM-dd HH:mm:ss} - Database Error (Fallback) [{severity}] - {ex.Message}";
                 if (!string.IsNullOrEmpty(_dbErrorLogFile))
                 {
                     File.AppendAllText(_dbErrorLogFile, fallbackEntry + Environment.NewLine);
@@ -339,7 +293,8 @@ internal static class LoggingUtility
             
             lock (LogLock)
             {
-                FlushLogEntryToDisk(_dbErrorLogFile, timestamp, severityLabel, enhancedSource, message, details);
+                FlushLogEntryToDisk(_dbErrorLogFile, errorEntry);
+                FlushLogEntryToDisk(_dbErrorLogFile, stackEntry);
             }
         }
         finally
@@ -348,14 +303,7 @@ internal static class LoggingUtility
         }
     }
 
-    /// <summary>
-    /// Logs application information with consistent CSV format.
-    /// Automatically captures caller information for better debugging context.
-    /// </summary>
-    public static void LogApplicationInfo(string message,
-        [System.Runtime.CompilerServices.CallerMemberName] string callerMember = "",
-        [System.Runtime.CompilerServices.CallerFilePath] string callerFilePath = "",
-        [System.Runtime.CompilerServices.CallerLineNumber] int callerLineNumber = 0)
+    public static void LogApplicationInfo(string message)
     {
         var infoEntry = $"{DateTime.Now:yyyy-MM-dd HH:mm:ss} - Application Info - {message}";
         
@@ -364,70 +312,8 @@ internal static class LoggingUtility
         
         lock (LogLock)
         {
-            FlushLogEntryToDisk(_normalLogFile, timestamp, "INFO", enhancedSource, message);
+            FlushLogEntryToDisk(_normalLogFile, infoEntry);
         }
-    }
-
-    /// <summary>
-    /// Determines log level from message content keywords.
-    /// </summary>
-    private static string DetermineLogLevel(string message)
-    {
-        if (string.IsNullOrEmpty(message))
-            return "INFO";
-
-        var msgUpper = message.ToUpperInvariant();
-        
-        // Performance logging
-        if (msgUpper.Contains("[PERFORMANCE]") || msgUpper.Contains("TOOK") || msgUpper.Contains("MS"))
-            return "PERFORMANCE";
-        
-        // Error indicators
-        if (msgUpper.Contains("ERROR") || msgUpper.Contains("FAILED") || msgUpper.Contains("EXCEPTION"))
-            return "ERROR";
-        
-        // Warning indicators
-        if (msgUpper.Contains("WARNING") || msgUpper.Contains("WARN"))
-            return "WARNING";
-        
-        // Success indicators
-        if (msgUpper.Contains("SUCCESS") || msgUpper.Contains("COMPLETED") || msgUpper.Contains("LOADED"))
-            return "SUCCESS";
-        
-        // Debug/trace indicators
-        if (msgUpper.Contains("[DEBUG]") || msgUpper.Contains("TRACE"))
-            return "DEBUG";
-
-        return "INFO";
-    }
-
-    /// <summary>
-    /// Builds a comprehensive exception message including inner exceptions.
-    /// </summary>
-    private static string BuildExceptionMessage(Exception ex)
-    {
-        var parts = new List<string>
-        {
-            $"{ex.GetType().Name}: {ex.Message}"
-        };
-
-        // Add inner exceptions
-        var innerEx = ex.InnerException;
-        int depth = 1;
-        while (innerEx != null && depth <= 3) // Limit to 3 levels to prevent excessive data
-        {
-            parts.Add($"Inner[{depth}]: {innerEx.GetType().Name}: {innerEx.Message}");
-            innerEx = innerEx.InnerException;
-            depth++;
-        }
-
-        // Add special handling for aggregate exceptions
-        if (ex is AggregateException aggEx && aggEx.InnerExceptions.Count > 0)
-        {
-            parts.Add($"AggregateException with {aggEx.InnerExceptions.Count} inner exceptions");
-        }
-
-        return string.Join(" | ", parts);
     }
 
     #endregion
@@ -436,13 +322,12 @@ internal static class LoggingUtility
 
     private static void OnProcessExit(object? sender, EventArgs e)
     {
-        var timestamp = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
-        var shutdownMsg = "Application exiting";
+        var shutdownMsg = $"{DateTime.Now:yyyy-MM-dd HH:mm:ss} - Application exiting.";
         lock (LogLock)
         {
-            FlushLogEntryToDisk(_normalLogFile, timestamp, "INFO", "Application", shutdownMsg);
-            FlushLogEntryToDisk(_dbErrorLogFile, timestamp, "INFO", "Application", shutdownMsg);
-            FlushLogEntryToDisk(_appErrorLogFile, timestamp, "INFO", "Application", shutdownMsg);
+            FlushLogEntryToDisk(_normalLogFile, shutdownMsg);
+            FlushLogEntryToDisk(_dbErrorLogFile, shutdownMsg);
+            FlushLogEntryToDisk(_appErrorLogFile, shutdownMsg);
         }
     }
 
