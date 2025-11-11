@@ -475,13 +475,15 @@ T036 (2025-11-09): Implemented Excel export with ClosedXML using page-boundary m
   **Reference**: `.github/instructions/csharp-dotnet8.instructions.md` - Event handler patterns
   **Acceptance**: Transactions tab print button opens dialog with transaction data
 
-- [ ] **T062** - Wire print keyboard shortcut (Ctrl+P)
+- [X] **T062** - Wire print keyboard shortcut (Ctrl+P)
+  - **Completed**: 2025-11-09 - Implemented Ctrl+P detection in MainForm.ProcessCmdKey(), added HandlePrintShortcut() method with recursive DataGridView finder, validates grid data before showing dialog, integrates with Helper_PrintManager. Build verified zero errors.
   **File**: `Forms/MainForm/MainForm.cs`
   **Description**: Override ProcessCmdKey to detect Ctrl+P. Determine which tab is active (Remove, Transactions, etc.) and call appropriate Helper_PrintManager.ShowPrintDialogAsync with active grid. Show message if no printable grid visible.
   **Reference**: `.github/instructions/csharp-dotnet8.instructions.md` - Keyboard shortcut patterns
   **Acceptance**: Ctrl+P opens print dialog for active grid
 
-- [ ] **T063** - Add print context menu to DataGridViews
+- [X] **T063** - Add print context menu to DataGridViews
+  - **Completed**: 2025-11-09 - Added ContextMenuStrip with "Print..." menu item to Control_RemoveTab and Control_TransferTab DataGridViews. Context menu handlers delegate to existing print button logic. TransferTab print button implementation updated from placeholder to full Helper_PrintManager integration.
   **File**: Multiple files in `Controls/MainForm/`
   **Description**: Add "Print..." context menu item to right-click menu of all printable DataGridViews. Wire to Helper_PrintManager.ShowPrintDialogAsync.
   **Reference**: `.github/instructions/csharp-dotnet8.instructions.md` - ContextMenuStrip patterns

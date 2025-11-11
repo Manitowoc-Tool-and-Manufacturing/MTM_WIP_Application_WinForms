@@ -32,6 +32,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
 
         private void InitializeComponent()
         {
+            components = new System.ComponentModel.Container();
             Control_TransferTab_GroupBox_MainControl = new GroupBox();
             Control_TransferTab_Panel_Main = new TableLayoutPanel();
             tableLayoutPanel3 = new TableLayoutPanel();
@@ -56,6 +57,8 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             Control_TransferTab_Panel_DataGridView = new Panel();
             Control_TransferTab_Image_NothingFound = new PictureBox();
             Control_TransferTab_DataGridView_Main = new DataGridView();
+            Control_TransferTab_ContextMenu_DataGridView = new ContextMenuStrip(components);
+            Control_TransferTab_ContextMenuItem_Print = new ToolStripMenuItem();
             Control_TransferTab_GroupBox_MainControl.SuspendLayout();
             Control_TransferTab_Panel_Main.SuspendLayout();
             tableLayoutPanel3.SuspendLayout();
@@ -398,6 +401,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             Control_TransferTab_DataGridView_Main.ClipboardCopyMode = DataGridViewClipboardCopyMode.Disable;
             Control_TransferTab_DataGridView_Main.ColumnHeadersBorderStyle = DataGridViewHeaderBorderStyle.Sunken;
             Control_TransferTab_DataGridView_Main.ColumnHeadersHeight = 34;
+            Control_TransferTab_DataGridView_Main.ContextMenuStrip = Control_TransferTab_ContextMenu_DataGridView;
             Control_TransferTab_DataGridView_Main.Dock = DockStyle.Fill;
             Control_TransferTab_DataGridView_Main.EditMode = DataGridViewEditMode.EditProgrammatically;
             Control_TransferTab_DataGridView_Main.Location = new Point(0, 0);
@@ -414,6 +418,19 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             Control_TransferTab_DataGridView_Main.Size = new Size(565, 442);
             Control_TransferTab_DataGridView_Main.StandardTab = true;
             Control_TransferTab_DataGridView_Main.TabIndex = 4;
+            // 
+            // Control_TransferTab_ContextMenu_DataGridView
+            // 
+            Control_TransferTab_ContextMenu_DataGridView.Items.AddRange(new ToolStripItem[] { Control_TransferTab_ContextMenuItem_Print });
+            Control_TransferTab_ContextMenu_DataGridView.Name = "Control_TransferTab_ContextMenu_DataGridView";
+            Control_TransferTab_ContextMenu_DataGridView.Size = new Size(115, 26);
+            // 
+            // Control_TransferTab_ContextMenuItem_Print
+            // 
+            Control_TransferTab_ContextMenuItem_Print.Name = "Control_TransferTab_ContextMenuItem_Print";
+            Control_TransferTab_ContextMenuItem_Print.Size = new Size(114, 22);
+            Control_TransferTab_ContextMenuItem_Print.Text = "&Print...";
+            Control_TransferTab_ContextMenuItem_Print.Click += Control_TransferTab_ContextMenuItem_Print_Click;
             // 
             // Control_TransferTab
             // 
@@ -458,6 +475,8 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
         private Label Control_TransferTab_Label_Quantity;
         private Button Control_TransferTab_Button_Print;
         private DataGridView Control_TransferTab_DataGridView_Main;
+        private ContextMenuStrip Control_TransferTab_ContextMenu_DataGridView;
+        private ToolStripMenuItem Control_TransferTab_ContextMenuItem_Print;
         private Button Control_TransferTab_Button_Reset;
         private ComboBox Control_TransferTab_ComboBox_ToLocation;
         private Button Control_TransferTab_Button_Transfer;

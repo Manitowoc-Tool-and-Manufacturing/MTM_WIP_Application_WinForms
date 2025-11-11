@@ -638,26 +638,44 @@ SetStyle(ControlStyles.OptimizedDoubleBuffer, true);
 
         private void Control_TransferTab_Button_Print_Click(object? sender, EventArgs? e)
         {
-            // TEMPORARY: Print system being refactored (Phase 1 - Task T002)
-            Service_ErrorHandler.ShowInformation(
-                "Print functionality is being rebuilt. Coming soon!",
-                "Feature Temporarily Unavailable");
-            
-            /* OLD IMPLEMENTATION - Kept for reference, will be restored in Phase 7
             try
             {
-                if (Control_TransferTab_DataGridView_Main.Rows.Count == 0)
+                LoggingUtility.Log("[TransferTab] Print requested.");
+
+                if (Control_TransferTab_DataGridView_Main is null || Control_TransferTab_DataGridView_Main.Rows.Count == 0)
                 {
-                    Service_ErrorHandler.ShowWarning(
-                        "No data to print.",
-                        "Print",
-                        MessageBoxButtons.OK,
-                        MessageBoxIcon.Information);
+                    LoggingUtility.Log("[TransferTab] Print aborted - grid is empty.");
+                    Service_ErrorHandler.HandleValidationError(
+                        "No records available to print. Run a search or perform an inventory transfer first.",
+                        "Print");
                     return;
                 }
 
-                using var printForm = new Forms.Shared.PrintForm(Control_TransferTab_DataGridView_Main);
-                printForm.ShowDialog(this.FindForm());
+                Control parent = FindForm() is Control form ? form : this;
+                string gridName = "Transfer Inventory";
+
+                var dialogTask = Helper_PrintManager.ShowPrintDialogAsync(parent, Control_TransferTab_DataGridView_Main, gridName);
+
+                dialogTask.ContinueWith(t =>
+                {
+                    if (t.IsCompletedSuccessfully)
+                    {
+                        LoggingUtility.Log($"[TransferTab] Print dialog closed with result: {t.Result}.");
+                    }
+                    else if (t.IsFaulted)
+                    {
+                        Exception? baseException = t.Exception?.GetBaseException();
+                        if (baseException != null)
+                        {
+                            LoggingUtility.LogApplicationError(baseException);
+                            BeginInvoke(new Action(() =>
+                                Service_ErrorHandler.HandleException(
+                                    baseException,
+                                    Enum_ErrorSeverity.Medium,
+                                    controlName: nameof(Control_TransferTab_Button_Print_Click))));
+                        }
+                    }
+                });
             }
             catch (Exception ex)
             {
@@ -665,9 +683,14 @@ SetStyle(ControlStyles.OptimizedDoubleBuffer, true);
                 Service_ErrorHandler.HandleException(
                     ex,
                     Enum_ErrorSeverity.Medium,
-                    controlName: nameof(Control_TransferTab_Button_Print));
+                    controlName: nameof(Control_TransferTab_Button_Print_Click));
             }
-            */
+        }
+
+        private async void Control_TransferTab_ContextMenuItem_Print_Click(object? sender, EventArgs e)
+        {
+            // Reuse existing print button logic
+            Control_TransferTab_Button_Print_Click(sender, e);
         }
 
         #endregion

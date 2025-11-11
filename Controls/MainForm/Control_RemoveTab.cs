@@ -860,6 +860,12 @@ SetStyle(ControlStyles.OptimizedDoubleBuffer, true);
             }
         }
 
+        private async void Control_RemoveTab_ContextMenuItem_Print_Click(object? sender, EventArgs e)
+        {
+            // Reuse existing print button logic
+            Control_RemoveTab_Button_Print_Click(sender, e);
+        }
+
         #endregion
 
         #region ComboBox & UI Events

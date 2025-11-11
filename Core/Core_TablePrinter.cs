@@ -395,21 +395,40 @@ public class Core_TablePrinter : IDisposable
     /// </summary>
     private void DrawWatermark(Graphics graphics, Rectangle bounds)
     {
-        string watermark = "MTM WIP Application";
-        var size = graphics.MeasureString(watermark, _watermarkFont);
+        // Load MTM logo watermark
+        Bitmap? watermarkImage = Properties.Resources.MTM;
+        if (watermarkImage is null)
+        {
+            return;
+        }
 
         // Save graphics state
         var state = graphics.Save();
 
-        // Move to center and rotate
+        // Move to center and rotate -45 degrees (same angle as text was)
         graphics.TranslateTransform(
             bounds.Left + bounds.Width / 2,
             bounds.Top + bounds.Height / 2);
         graphics.RotateTransform(-45);
 
-        // Draw watermark
-        graphics.DrawString(watermark, _watermarkFont, _watermarkBrush,
-            -size.Width / 2, -size.Height / 2);
+        // Scale image to reasonable size (30% of page width)
+        float targetWidth = bounds.Width * 0.3f;
+        float scale = targetWidth / watermarkImage.Width;
+        int scaledWidth = (int)(watermarkImage.Width * scale);
+        int scaledHeight = (int)(watermarkImage.Height * scale);
+
+        // Draw watermark image centered and semi-transparent
+        using var imageAttr = new System.Drawing.Imaging.ImageAttributes();
+        var colorMatrix = new System.Drawing.Imaging.ColorMatrix
+        {
+            Matrix33 = 0.15f // 15% opacity for subtle watermark
+        };
+        imageAttr.SetColorMatrix(colorMatrix);
+
+        graphics.DrawImage(watermarkImage,
+            new Rectangle(-scaledWidth / 2, -scaledHeight / 2, scaledWidth, scaledHeight),
+            0, 0, watermarkImage.Width, watermarkImage.Height,
+            GraphicsUnit.Pixel, imageAttr);
 
         // Restore graphics state
         graphics.Restore(state);

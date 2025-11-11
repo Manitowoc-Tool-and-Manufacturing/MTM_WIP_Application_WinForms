@@ -886,6 +886,13 @@ namespace MTM_WIP_Application_Winforms.Forms.MainForm
         {
             try
             {
+                // Ctrl+P - Print active grid
+                if (keyData == (Keys.Control | Keys.P))
+                {
+                    HandlePrintShortcut();
+                    return true;
+                }
+
                 if (keyData == Core_WipAppVariables.Shortcut_MainForm_Tab1)
                 {
                     MainForm_TabControl.SelectedIndex = 0;
@@ -911,6 +918,74 @@ namespace MTM_WIP_Application_Winforms.Forms.MainForm
                 LoggingUtility.LogApplicationError(ex);
                 return false;
             }
+        }
+
+        /// <summary>
+        /// Handles Ctrl+P keyboard shortcut to print the active DataGridView
+        /// </summary>
+        private async void HandlePrintShortcut()
+        {
+            try
+            {
+                // Determine which tab is active and get its printable grid
+                DataGridView? activeGrid = null;
+                string gridName = string.Empty;
+
+                int selectedIndex = MainForm_TabControl.SelectedIndex;
+                
+                if (selectedIndex >= 0 && selectedIndex < MainForm_TabControl.TabPages.Count)
+                {
+                    var selectedTab = MainForm_TabControl.TabPages[selectedIndex];
+                    gridName = selectedTab.Text; // Use tab name (Inventory, Remove, Transfer)
+                    
+                    // Find first DataGridView in the selected tab
+                    activeGrid = FindFirstDataGridView(selectedTab);
+                }
+
+                if (activeGrid is null || activeGrid.Rows.Count == 0)
+                {
+                    Service_ErrorHandler.ShowWarning("No printable data available in the current tab.", "Print");
+                    return;
+                }
+
+                // Call print manager with active grid
+                await Helper_PrintManager.ShowPrintDialogAsync(this, activeGrid, gridName);
+            }
+            catch (Exception ex)
+            {
+                LoggingUtility.LogApplicationError(ex);
+                Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Medium,
+                    controlName: nameof(MainForm),
+                    contextData: new Dictionary<string, object>
+                    {
+                        ["Action"] = "Ctrl+P Print Shortcut"
+                    });
+            }
+        }
+
+        /// <summary>
+        /// Recursively finds the first DataGridView in a control hierarchy
+        /// </summary>
+        private DataGridView? FindFirstDataGridView(Control parent)
+        {
+            foreach (Control child in parent.Controls)
+            {
+                if (child is DataGridView dgv)
+                {
+                    return dgv;
+                }
+                
+                if (child.Controls.Count > 0)
+                {
+                    var found = FindFirstDataGridView(child);
+                    if (found != null)
+                    {
+                        return found;
+                    }
+                }
+            }
+            
+            return null;
         }
 
         #endregion
