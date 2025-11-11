@@ -1193,6 +1193,66 @@ namespace MTM_WIP_Application_Winforms.Forms.MainForm
             }
         }
 
+        private void MainForm_MenuStrip_Development_ViewApplicationLogs_Click(object? sender, EventArgs e)
+        {
+            try
+            {
+                Service_DebugTracer.TraceUIAction("VIEW_APPLICATION_LOGS_MENU_CLICK", nameof(MainForm),
+                    new Dictionary<string, object>
+                    {
+                        ["MenuAction"] = "Development > View Application Logs",
+                        ["UserInitiated"] = true,
+                        ["CurrentUser"] = Model_Application_Variables.EnteredUser ?? "Unknown"
+                    });
+
+                // If form already exists and is not disposed, bring it to front
+                if (_viewApplicationLogsForm is { IsDisposed: false })
+                {
+                    if (_viewApplicationLogsForm.WindowState == FormWindowState.Minimized)
+                    {
+                        _viewApplicationLogsForm.WindowState = FormWindowState.Normal;
+                    }
+
+                    _viewApplicationLogsForm.BringToFront();
+                    _viewApplicationLogsForm.Focus();
+                    LoggingUtility.Log($"[MainForm] View Application Logs form brought to front (already open)");
+                    return;
+                }
+
+                // Create new form with current user pre-selected
+                string? currentUser = Model_Application_Variables.EnteredUser;
+                if (!string.IsNullOrWhiteSpace(currentUser))
+                {
+                    _viewApplicationLogsForm = new Forms.ViewLogs.ViewApplicationLogsForm(currentUser);
+                    LoggingUtility.Log($"[MainForm] View Application Logs form created with user pre-selected: {currentUser}");
+                }
+                else
+                {
+                    _viewApplicationLogsForm = new Forms.ViewLogs.ViewApplicationLogsForm();
+                    LoggingUtility.Log($"[MainForm] View Application Logs form created without user pre-selection");
+                }
+
+                // Wire up form closed event to clean up reference
+                _viewApplicationLogsForm.FormClosed += (_, _) => _viewApplicationLogsForm = null;
+
+                // Show as modeless dialog
+                _viewApplicationLogsForm.Show(this);
+
+                LoggingUtility.Log($"[MainForm] View Application Logs form opened successfully");
+            }
+            catch (Exception ex)
+            {
+                LoggingUtility.LogApplicationError(ex);
+                Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Medium, 
+                    contextData: new Dictionary<string, object> 
+                    { 
+                        ["CurrentUser"] = Model_Application_Variables.EnteredUser ?? "Unknown",
+                        ["MenuAction"] = "Development > View Application Logs"
+                    },
+                    controlName: nameof(MainForm_MenuStrip_Development_ViewApplicationLogs_Click));
+            }
+        }
+
         private async void MainForm_MenuStrip_Development_SyncReports_Click(object sender, EventArgs e)
         {
             try
