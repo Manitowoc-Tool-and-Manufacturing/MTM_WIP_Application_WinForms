@@ -84,12 +84,13 @@ namespace MTM_WIP_Application_Winforms.Forms.MainForm
             dependencyChartsToolStripMenuItem = new ToolStripMenuItem();
             conversionToolStripMenuItem = new ToolStripMenuItem();
             debugDashboardToolStripMenuItem = new ToolStripMenuItem();
-            helpToolStripMenuItem = new ToolStripMenuItem();
-            gettingStartedToolStripMenuItem = new ToolStripMenuItem();
-            userGuideToolStripMenuItem = new ToolStripMenuItem();
-            keyboardShortcutsToolStripMenuItem = new ToolStripMenuItem();
-            helpSeparator1 = new ToolStripSeparator();
-            aboutMTMInventoryToolStripMenuItem = new ToolStripMenuItem();
+            // COMMENTED OUT - Help Menu (to be reimplemented later)
+            //helpToolStripMenuItem = new ToolStripMenuItem();
+            //gettingStartedToolStripMenuItem = new ToolStripMenuItem();
+            //userGuideToolStripMenuItem = new ToolStripMenuItem();
+            //keyboardShortcutsToolStripMenuItem = new ToolStripMenuItem();
+            //helpSeparator1 = new ToolStripSeparator();
+            //aboutMTMInventoryToolStripMenuItem = new ToolStripMenuItem();
             MainForm_StatusStrip = new StatusStrip();
             MainForm_ProgressBar = new ToolStripProgressBar();
             MainForm_StatusText = new ToolStripStatusLabel();
@@ -132,7 +133,7 @@ namespace MTM_WIP_Application_Winforms.Forms.MainForm
             // 
             MainForm_MenuStrip.Dock = DockStyle.Fill;
             MainForm_MenuStrip.ImageScalingSize = new Size(24, 24);
-            MainForm_MenuStrip.Items.AddRange(new ToolStripItem[] { MainForm_MenuStrip_File, MainForm_MenuStrip_View, developmentToolStripMenuItem, helpToolStripMenuItem });
+            MainForm_MenuStrip.Items.AddRange(new ToolStripItem[] { MainForm_MenuStrip_File, MainForm_MenuStrip_View, developmentToolStripMenuItem /*, helpToolStripMenuItem*/ });
             MainForm_MenuStrip.Location = new Point(0, 0);
             MainForm_MenuStrip.Name = "MainForm_MenuStrip";
             MainForm_MenuStrip.Padding = new Padding(0);

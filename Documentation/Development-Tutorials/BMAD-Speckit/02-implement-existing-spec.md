@@ -493,7 +493,7 @@ None - implementation on track
 @dev Summarize specs/006-print-and-export/
 
 # Step 2: Find next task
-@dev Next incomplete task in specs/006-print-and-export/tasks.md?
+@dev Next incomplete task in specs/006-print-and-export/tasks.md
 > Task T051: Column selection UI
 
 # Step 3: Implement

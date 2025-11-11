@@ -489,11 +489,12 @@ T036 (2025-11-09): Implemented Excel export with ClosedXML using page-boundary m
   **Reference**: `.github/instructions/csharp-dotnet8.instructions.md` - ContextMenuStrip patterns
   **Acceptance**: Right-click → Print opens dialog for clicked grid
 
-- [ ] **T064** - Update help documentation
+- [x] **T064** - Update help documentation ✅ **COMPLETED** (2025-11-11)
   **File**: `Documentation/Help/printing.html`
   **Description**: Create or update help page explaining new print system: how to open dialog, navigate preview, select page ranges, customize columns, export to PDF/Excel. Include screenshots (text descriptions in spec, actual screenshots in help file).
   **Reference**: `.github/instructions/documentation.instructions.md` - Help documentation standards
   **Acceptance**: Help page complete, accessible via F1 from print dialog
+  **Completion Note**: Created comprehensive printing.html help documentation following existing MTM help system patterns. Includes complete guide with step-by-step instructions for printing, column customization, PDF/Excel export, progress monitoring, keyboard shortcuts, troubleshooting, best practices, and common workflows. Added screenshot placeholders with descriptive text for user to capture: (1) Main print dialog with sidebar and preview, (2) Column customization UI, (3) Export dropdown menu, (4) Progress dialog. Help file integrated into index.html under Core Operations category. All content matches print system features from spec.md.
 
   #### Screen Shots - FOR THE HUMAN USER
   - Capture the main print dialog showing the preview pane and sidebar controls with default settings.
