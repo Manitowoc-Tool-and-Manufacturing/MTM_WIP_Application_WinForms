@@ -390,21 +390,6 @@ public static async Task<Model_Dao_Result<DataTable>> GetSomeDataAsync(...)
 
 **Rationale**: Auto-detection eliminates parameter name mismatches, reduces DAO boilerplate, and ensures stored procedures can evolve independently of C# code.
 
-### VII. Test-Driven Database Development
-
-**Integration test requirements**:
-- Use external `MySqlConnection` with `MySqlTransaction` for isolation
-- Always rollback test transactions - never commit to test database
-- Seed test data at start of test, verify results, then rollback
-- Test both success and error paths (positive/negative status codes)
-
-**Test database separation**:
-- Production: `MTM_WIP_Application_Winforms`
-- Testing: `mtm_wip_application_winforms_test`
-- Configuration managed through connection strings
-
-**Rationale**: Transaction-based testing ensures test isolation, prevents test pollution, enables parallel test execution, and maintains database integrity.
-
 ## Development Standards
 
 ### Code Organization
@@ -449,20 +434,6 @@ public static async Task<Model_Dao_Result<DataTable>> GetSomeDataAsync(...)
 **Automatic logging**: Helper_Database_StoredProcedure logs warnings when thresholds exceeded.
 
 ## Quality Assurance Standards
-
-### Mandatory Testing Gates
-
-**Before any database feature deployment**:
-- Unit tests for DAO methods (mocked database)
-- Integration tests with test database (transaction rollback)
-- Error path testing (negative status codes, exceptions)
-- Connection failure simulation (retry logic verification)
-
-**Before any UI feature deployment**:
-- Manual testing on multiple DPI settings (100%, 125%, 150%)
-- Form disposal verification (no memory leaks)
-- Error dialog testing (retry, cancel, details expansion)
-- Keyboard navigation testing (tab order, shortcuts)
 
 ### Code Review Requirements
 

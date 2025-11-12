@@ -29,9 +29,6 @@ When generating code for this repository:
 - **Microsoft.Extensions.Logging**: 8.0.0
 - **ClosedXML**: 0.105.0 (Excel export)
 - **Microsoft.Web.WebView2**: 1.0.2792.45
-- **Moq**: 4.20.70 (testing)
-- **xUnit**: 2.6.2 (primary test framework)
-- **MSTest**: 3.7.0 (secondary test framework)
 
 ### Critical MySQL Constraint
 **MySQL Server**: 5.7.24 (LEGACY VERSION)
@@ -59,8 +56,6 @@ MTM_WIP_Application_WinForms/
 ├── Models/                 # Data models, enums
 │   └── Model_Dao_Result.cs # REQUIRED return type for ALL DAO methods
 ├── Logging/                # LoggingUtility (centralized CSV logging)
-├── Tests/                  # Integration tests (xUnit)
-│   └── BaseIntegrationTest.cs
 └── Database/               # Stored procedures ONLY
 ```
 
@@ -301,6 +296,37 @@ public class Dao_EntityTests : BaseIntegrationTest
 
 **Test Database**: `mtm_wip_application_winforms_test`  
 **Base Class**: `BaseIntegrationTest` (provides transaction management, auto-rollback)
+
+### MySQL Database Access
+
+**MAMP MySQL Server Configuration:**
+- **Host**: localhost
+- **Port**: 3306
+- **Username**: root
+- **Password**: root
+- **MySQL Binary**: `C:\MAMP\bin\mysql\bin\mysql.exe`
+
+**Database Names:**
+- **Production**: `mtm_wip_application_winforms` (24 tables)
+- **Testing**: `mtm_wip_application_winforms_test` (20 tables)
+
+**Quick Access Commands:**
+```powershell
+# Connect to production database
+& "C:\MAMP\bin\mysql\bin\mysql.exe" -h localhost -P 3306 -u root -proot mtm_wip_application_winforms
+
+# Connect to test database
+& "C:\MAMP\bin\mysql\bin\mysql.exe" -h localhost -P 3306 -u root -proot mtm_wip_application_winforms_test
+
+# Show all databases
+& "C:\MAMP\bin\mysql\bin\mysql.exe" -h localhost -P 3306 -u root -proot -e "SHOW DATABASES;"
+
+# Show tables in production
+& "C:\MAMP\bin\mysql\bin\mysql.exe" -h localhost -P 3306 -u root -proot mtm_wip_application_winforms -e "SHOW TABLES;"
+
+# Execute SQL file
+& "C:\MAMP\bin\mysql\bin\mysql.exe" -h localhost -P 3306 -u root -proot mtm_wip_application_winforms < path/to/script.sql
+```
 
 ## Constitution Compliance
 
