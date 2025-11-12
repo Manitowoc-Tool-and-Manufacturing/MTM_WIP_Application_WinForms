@@ -1,11 +1,12 @@
 using System.ComponentModel;
 using MTM_WIP_Application_Winforms.Core;
+using MTM_WIP_Application_Winforms.Forms.Shared;
 using MTM_WIP_Application_Winforms.Models;
 using Timer = System.Windows.Forms.Timer;
 
 namespace MTM_WIP_Application_Winforms.Controls.Shared
 {
-    public partial class Control_ProgressBarUserControl : UserControl
+    public partial class Control_ProgressBarUserControl : ThemedUserControl
     {
         #region Fields
 
@@ -60,10 +61,8 @@ namespace MTM_WIP_Application_Winforms.Controls.Shared
         public Control_ProgressBarUserControl()
         {
             InitializeComponent();
-            Core_Themes.ApplyDpiScaling(this);
-            Core_Themes.ApplyRuntimeLayoutAdjustments(this);
             InitializeControls();
-            ApplyTheme();
+            // Theme applied automatically by ThemedUserControl base class
         }
 
         #endregion
@@ -258,27 +257,6 @@ namespace MTM_WIP_Application_Winforms.Controls.Shared
             UpdateProgress(100, "Complete");
             await Task.Delay(500);
             HideProgress();
-        }
-
-        private void ApplyTheme()
-        {
-            try
-            {
-                Core_Themes.Core_AppThemes.AppTheme theme = Core_Themes.Core_AppThemes.GetCurrentTheme();
-                Model_Shared_UserUiColors colors = theme.Colors;
-                if (colors.UserControlBackColor.HasValue)
-                {
-                    BackColor = colors.UserControlBackColor.Value;
-                }
-
-                if (colors.UserControlForeColor.HasValue)
-                {
-                    ForeColor = colors.UserControlForeColor.Value;
-                }
-            }
-            catch
-            {
-            }
         }
 
         protected override void OnResize(EventArgs e)

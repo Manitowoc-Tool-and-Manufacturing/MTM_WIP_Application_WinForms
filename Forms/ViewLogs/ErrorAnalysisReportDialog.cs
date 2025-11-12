@@ -10,6 +10,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using MTM_WIP_Application_Winforms.Core;
+using MTM_WIP_Application_Winforms.Forms.Shared;
 using MTM_WIP_Application_Winforms.Helpers;
 using MTM_WIP_Application_Winforms.Logging;
 using MTM_WIP_Application_Winforms.Models;
@@ -20,8 +21,9 @@ namespace MTM_WIP_Application_Winforms.Forms.ViewLogs
     /// <summary>
     /// Dialog for displaying comprehensive error analysis reports.
     /// Implements T073, T074, T075 - Statistical Dashboard with progress, caching, and export.
+    /// Migrated to ThemedForm for automatic DPI scaling and theme support.
     /// </summary>
-    public partial class ErrorAnalysisReportDialog : Form
+    public partial class ErrorAnalysisReportDialog : ThemedForm
     {
         #region Fields
 
@@ -42,9 +44,6 @@ namespace MTM_WIP_Application_Winforms.Forms.ViewLogs
         {
             InitializeComponent();
             _logBasePath = logBasePath ?? throw new ArgumentNullException(nameof(logBasePath));
-
-            Core_Themes.ApplyDpiScaling(this);
-            Core_Themes.ApplyRuntimeLayoutAdjustments(this);
         }
 
         #endregion

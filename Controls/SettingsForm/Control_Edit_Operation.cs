@@ -24,7 +24,6 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
                 public Control_Edit_Operation()
         {
             InitializeComponent();
-            Core.Core_Themes.ApplyDpiScaling(this);
         }
 
         #endregion

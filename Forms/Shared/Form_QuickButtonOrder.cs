@@ -12,6 +12,7 @@ namespace MTM_WIP_Application_Winforms.Forms.Shared;
 /// Dialog form for reordering QuickButtons through drag-and-drop or keyboard navigation.
 /// Displays current button order in a ListView with Part ID, Operation, and Quantity columns.
 /// Supports drag-and-drop reordering and Shift+Up/Down keyboard shortcuts.
+/// Migrated to ThemedForm for automatic DPI scaling and theme support.
 /// </summary>
 /// <remarks>
 /// Layout: ListView fills top portion with instructions below and OK/Cancel buttons at bottom.
@@ -19,7 +20,7 @@ namespace MTM_WIP_Application_Winforms.Forms.Shared;
 /// Form is non-resizable dialog.
 /// Changes are not saved until user clicks OK button.
 /// </remarks>
-public partial class Form_QuickButtonOrder : Form
+public partial class Form_QuickButtonOrder : ThemedForm
 {
     #region Fields
 
@@ -38,10 +39,8 @@ public partial class Form_QuickButtonOrder : Form
     {
         InitializeComponent();
 
-        // Apply theme and scaling
+        // DPI scaling and layout now handled by ThemedForm.OnLoad
         SetStyle(ControlStyles.OptimizedDoubleBuffer, true);
-        Core_Themes.ApplyDpiScaling(this);
-        Core_Themes.ApplyRuntimeLayoutAdjustments(this);
 
         // Store visible buttons only
         buttonOrder = new List<Button>(buttons.Where(b => b.Visible));

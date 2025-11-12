@@ -183,7 +183,6 @@ Follow this sequence to build the feature incrementally:
     - [ ] Bottom panel: Control_ErrorReportDetails
     - [ ] Status label: "Showing X of Y reports"
     - [ ] Export buttons: Export to CSV, Export Selected
-    - [ ] Constructor: Apply Core_Themes.ApplyDpiScaling(this)
 
 2. **Wire Up Events**
 

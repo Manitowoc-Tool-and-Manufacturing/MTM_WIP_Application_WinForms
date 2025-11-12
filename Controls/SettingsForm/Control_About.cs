@@ -27,8 +27,6 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             InitializeComponent();
             
             // Apply comprehensive DPI scaling and runtime layout adjustments
-            Core_Themes.ApplyDpiScaling(this);
-            Core_Themes.ApplyRuntimeLayoutAdjustments(this);
             
             Control_About_LoadControl();
         }

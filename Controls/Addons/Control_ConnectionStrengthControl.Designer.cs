@@ -1,6 +1,8 @@
-﻿namespace MTM_WIP_Application_Winforms.Controls.Addons
+﻿using MTM_WIP_Application_Winforms.Forms.Shared;
+
+namespace MTM_WIP_Application_Winforms.Controls.Addons
 {
-    partial class Control_ConnectionStrengthControl
+    partial class Control_ConnectionStrengthControl : ThemedUserControl
     {
         #region Fields
         

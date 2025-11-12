@@ -39,10 +39,8 @@ namespace MTM_WIP_Application_Winforms.Forms.Splash
                     ["DpiScaling"] = "APPLIED",
                     ["LayoutAdjustments"] = "APPLIED"
                 });
-            // Apply comprehensive DPI scaling and runtime layout adjustments
+                
             AutoScaleMode = AutoScaleMode.Dpi;
-            Core_Themes.ApplyDpiScaling(this);
-            Core_Themes.ApplyRuntimeLayoutAdjustments(this);
 
             Service_DebugTracer.TraceBusinessLogic("UI_COLORS_APPLICATION",
                 inputData: new {
@@ -61,7 +59,10 @@ namespace MTM_WIP_Application_Winforms.Forms.Splash
             _versionLabel.Text = $"Version {Model_Application_Variables.Version ?? "4.6.0.0"}";
 
             Service_DebugTracer.TraceUIAction("THEME_APPLIED", nameof(SplashScreenForm));
-            ApplyTheme();
+            // MIGRATION NOTE: SplashScreenForm should be migrated to ThemedForm base class
+            // For now, we apply theme colors manually without using Core_Themes.ApplyTheme()
+            // which would override the colors we just set above.
+            // TODO: Migrate SplashScreenForm to inherit from ThemedForm
 
             Service_DebugTracer.TraceUIAction("SPLASH_FORM_INITIALIZATION", nameof(SplashScreenForm),
                 new Dictionary<string, object>
@@ -116,21 +117,6 @@ namespace MTM_WIP_Application_Winforms.Forms.Splash
             await _progressControl!.CompleteProgressAsync();
             Close();
             System.Diagnostics.Debug.WriteLine("[DEBUG] [SplashScreenForm.CompleteSplashAsync] Splash closed.");
-        }
-
-        private void ApplyTheme()
-        {
-            try
-            {
-                System.Diagnostics.Debug.WriteLine("[DEBUG] [SplashScreenForm.ApplyTheme] Applying theme...");
-                Core_Themes.ApplyTheme(this);
-                System.Diagnostics.Debug.WriteLine("[DEBUG] [SplashScreenForm.ApplyTheme] Theme applied.");
-            }
-            catch
-            {
-                System.Diagnostics.Debug.WriteLine(
-                    "[DEBUG] [SplashScreenForm.ApplyTheme] Theme application failed (ignored).");
-            }
         }
 
         protected override void SetVisibleCore(bool value) => base.SetVisibleCore(value && !DesignMode);

@@ -1,4 +1,5 @@
 using MTM_WIP_Application_Winforms.Core;
+using MTM_WIP_Application_Winforms.Forms.Shared;
 using MTM_WIP_Application_Winforms.Helpers;
 using MTM_WIP_Application_Winforms.Logging;
 using MTM_WIP_Application_Winforms.Models;
@@ -8,12 +9,13 @@ namespace MTM_WIP_Application_Winforms.Controls.Transactions;
 
 /// <summary>
 /// UserControl for displaying transaction search results in a paginated DataGridView.
+/// Migrated to ThemedUserControl for automatic DPI scaling and theme support.
 /// </summary>
 /// <remarks>
 /// This control handles the grid display, pagination controls, and row selection.
 /// It raises events for page changes and row selection to allow parent forms to react.
 /// </remarks>
-internal partial class TransactionGridControl : UserControl
+internal partial class TransactionGridControl : ThemedUserControl
 {
     #region Fields
 
@@ -95,9 +97,6 @@ internal partial class TransactionGridControl : UserControl
         InitializeComponent();
 
         LoggingUtility.Log("[TransactionGridControl] Initializing...");
-
-        Core_Themes.ApplyDpiScaling(this);
-        Core_Themes.ApplyRuntimeLayoutAdjustments(this);
 
         InitializeColumns();
         WireUpEvents();

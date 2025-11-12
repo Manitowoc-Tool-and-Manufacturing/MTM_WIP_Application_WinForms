@@ -53,9 +53,6 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
                     ["DpiScaling"] = "APPLIED",
                     ["LayoutAdjustments"] = "APPLIED"
                 });
-            // Apply comprehensive DPI scaling and runtime layout adjustments
-            Core_Themes.ApplyDpiScaling(this);
-            Core_Themes.ApplyRuntimeLayoutAdjustments(this);
 
             Service_DebugTracer.TraceUIAction("DEFAULT_USER_TYPE_SET", nameof(Control_Add_User),
                 new Dictionary<string, object>

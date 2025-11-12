@@ -44,8 +44,6 @@ namespace MTM_WIP_Application_Winforms.Forms.Settings
                     ["DpiScaling"] = "APPLIED",
                     ["LayoutAdjustments"] = "APPLIED"
                 });
-            Core_Themes.ApplyDpiScaling(this);
-            Core_Themes.ApplyRuntimeLayoutAdjustments(this);
 
             Service_DebugTracer.TraceUIAction("SETTINGS_PANELS_INITIALIZATION", nameof(SettingsForm),
                 new Dictionary<string, object>

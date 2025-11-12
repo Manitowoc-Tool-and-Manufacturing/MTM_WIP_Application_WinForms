@@ -13,6 +13,7 @@ namespace MTM_WIP_Application_Winforms.Forms.Shared;
 /// Dialog form for editing QuickButton properties (Part ID, Operation, Quantity).
 /// Provides ComboBox controls with autocomplete matching Control_InventoryTab behavior.
 /// Uses color-coded validation (red for invalid, black for valid selections).
+/// Migrated to ThemedForm for automatic DPI scaling and theme support.
 /// </summary>
 /// <remarks>
 /// Layout: Standard 3-field vertical form with labels on left, controls on right.
@@ -20,7 +21,7 @@ namespace MTM_WIP_Application_Winforms.Forms.Shared;
 /// Form is non-resizable dialog.
 /// Loads Part IDs and Operations asynchronously from database on form load.
 /// </remarks>
-public partial class Form_QuickButtonEdit : Form
+public partial class Form_QuickButtonEdit : ThemedForm
 {
     #region Fields
 
@@ -42,10 +43,8 @@ public partial class Form_QuickButtonEdit : Form
     {
         InitializeComponent();
 
-        // Apply theme and scaling
+        // DPI scaling and layout now handled by ThemedForm.OnLoad
         SetStyle(ControlStyles.OptimizedDoubleBuffer, true);
-        Core_Themes.ApplyDpiScaling(this);
-        Core_Themes.ApplyRuntimeLayoutAdjustments(this);
 
         // Initialize quantity
         Quantity = quantity;

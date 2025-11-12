@@ -8,6 +8,7 @@ using System.Text;
 using System.Windows.Forms;
 using DocumentFormat.OpenXml.EMMA;
 using MTM_WIP_Application_Winforms.Core;
+using MTM_WIP_Application_Winforms.Forms.Shared;
 using MTM_WIP_Application_Winforms.Logging;
 using MTM_WIP_Application_Winforms.Models;
 using MTM_WIP_Application_Winforms.Services;
@@ -16,7 +17,11 @@ namespace MTM_WIP_Application_Winforms.Forms.ErrorDialog
 {
     #region EnhancedErrorDialog
 
-    public partial class EnhancedErrorDialog : Form
+    /// <summary>
+    /// Enhanced error dialog with detailed exception information and retry capabilities.
+    /// Migrated to ThemedForm for automatic DPI scaling and theme support.
+    /// </summary>
+    public partial class EnhancedErrorDialog : ThemedForm
     {
         #region Fields
 
@@ -65,8 +70,6 @@ namespace MTM_WIP_Application_Winforms.Forms.ErrorDialog
 
             InitializeComponent();
             SetStyle(ControlStyles.OptimizedDoubleBuffer, true);
-            Core_Themes.ApplyDpiScaling(this);
-            Core_Themes.ApplyRuntimeLayoutAdjustments(this);
 
             Service_DebugTracer.TraceBusinessLogic("ERROR_CONTEXT_SETUP",
                 inputData: new { exception.Message, callerName, controlName, severity },
@@ -91,7 +94,6 @@ namespace MTM_WIP_Application_Winforms.Forms.ErrorDialog
             // SetDialogSize(); // DISABLED: Causes layout issues - Designer size is used for all severities
             InitializeErrorDialog();
             WireUpEvents();
-            ApplyTheme();
 
             Service_DebugTracer.TraceUIAction("ERROR_DIALOG_INITIALIZATION", nameof(EnhancedErrorDialog),
                 new Dictionary<string, object>
@@ -584,28 +586,6 @@ namespace MTM_WIP_Application_Winforms.Forms.ErrorDialog
         {
             ErrorDialogResult = DialogResult.Cancel;
             this.Close();
-        }
-
-        #endregion
-
-        #region Theme Support
-
-        private void ApplyTheme()
-        {
-            try
-            {
-                // DISABLED: DPI scaling causes fullscreen issues in error dialog
-                // Apply theme using the existing Core_Themes system
-                // Core_Themes.ApplyDpiScaling(this);
-                // Core_Themes.ApplyRuntimeLayoutAdjustments(this);
-                
-                // Error dialog uses fixed size - no theme adjustments needed
-            }
-            catch (Exception ex)
-            {
-                LoggingUtility.LogApplicationError(ex);
-                // Don't fail the error dialog if theming fails
-            }
         }
 
         #endregion

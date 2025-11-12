@@ -1,9 +1,11 @@
 ﻿using System.Drawing;
 using System.Windows.Forms;
 
+using MTM_WIP_Application_Winforms.Forms.Shared;
+
 namespace MTM_WIP_Application_Winforms.Controls.MainForm
 {
-    partial class Control_QuickButtons
+    partial class Control_QuickButtons : ThemedUserControl
     {
         #region Fields
         

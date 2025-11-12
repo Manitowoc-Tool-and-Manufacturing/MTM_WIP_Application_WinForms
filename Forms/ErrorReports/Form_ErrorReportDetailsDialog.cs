@@ -2,6 +2,7 @@ using System;
 using System.Windows.Forms;
 using MTM_WIP_Application_Winforms.Controls.ErrorReports;
 using MTM_WIP_Application_Winforms.Core;
+using MTM_WIP_Application_Winforms.Forms.Shared;
 using MTM_WIP_Application_Winforms.Models;
 using static MTM_WIP_Application_Winforms.Controls.ErrorReports.Control_ErrorReportDetails;
 
@@ -9,8 +10,9 @@ namespace MTM_WIP_Application_Winforms.Forms.ErrorReports
 {
     /// <summary>
     /// Modal dialog for displaying complete error report details with status update capabilities.
+    /// Migrated to ThemedForm for automatic DPI scaling and theme support.
     /// </summary>
-    public partial class Form_ErrorReportDetailsDialog : Form
+    public partial class Form_ErrorReportDetailsDialog : ThemedForm
     {
         #region Fields
 
@@ -60,9 +62,8 @@ namespace MTM_WIP_Application_Winforms.Forms.ErrorReports
             _reportId = reportId;
 
             InitializeComponent();
+            // DPI scaling and layout now handled by ThemedForm.OnLoad
             SetStyle(ControlStyles.OptimizedDoubleBuffer, true);
-            Core_Themes.ApplyDpiScaling(this);
-            Core_Themes.ApplyRuntimeLayoutAdjustments(this);
             WireUpEvents();
         }
 

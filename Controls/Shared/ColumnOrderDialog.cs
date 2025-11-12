@@ -38,7 +38,6 @@ namespace MTM_WIP_Application_Winforms.Controls.Shared
             InitializeColumnData(dgv);
             InitializeControls(dgv);
             SetupEventHandlers();
-            ApplyTheming();
         }
 
         #endregion
@@ -153,16 +152,6 @@ namespace MTM_WIP_Application_Winforms.Controls.Shared
             listBox.DragOver += ListBox_DragOver;
             listBox.DragDrop += ListBox_DragDrop;
             listBox.KeyDown += ListBox_KeyDown;
-        }
-
-        /// <summary>
-        /// Apply theming and DPI scaling
-        /// </summary>
-        private void ApplyTheming()
-        {
-            // DPI scaling and layout adjustments
-            Core_Themes.ApplyDpiScaling(this);
-            Core_Themes.ApplyRuntimeLayoutAdjustments(this);
         }
 
         #endregion

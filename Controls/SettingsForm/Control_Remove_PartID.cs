@@ -9,8 +9,6 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
 {
     public partial class Control_Remove_PartID : UserControl
     {
-        #region Fields
-
         #region Events
 
         public event EventHandler? PartRemoved;
@@ -25,19 +23,10 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
 
         #region Constructors
 
-        #endregion
-
-        #region Constructors
-
-                public Control_Remove_PartID()
+        public Control_Remove_PartID()
         {
             InitializeComponent();
-            Core_Themes.ApplyDpiScaling(this);
         }
-
-        #endregion
-
-        #region Methods
 
         #endregion
 
@@ -206,8 +195,6 @@ This action cannot be undone.",
             issuedByValueLabel.Text = "";
             _currentPart = null;
         }
-
-        #endregion
 
         #endregion
     }

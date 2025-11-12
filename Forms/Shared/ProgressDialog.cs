@@ -8,8 +8,9 @@ namespace MTM_WIP_Application_Winforms.Forms.Shared;
 
 /// <summary>
 /// Simple cancelable progress dialog used for long-running export/preview operations.
+/// Migrated to ThemedForm for automatic DPI scaling and theme support.
 /// </summary>
-public class ProgressDialog : Form
+public class ProgressDialog : ThemedForm
 {
     private readonly ProgressBar _progressBar = new();
     private readonly Button _buttonCancel = new();
@@ -29,8 +30,7 @@ public class ProgressDialog : Form
         Height = 120;
 
         InitializeComponent();
-        Core_Themes.ApplyDpiScaling(this);
-        Core_Themes.ApplyRuntimeLayoutAdjustments(this);
+        // DPI scaling and layout now handled by ThemedForm.OnLoad
     }
 
     private void InitializeComponent()

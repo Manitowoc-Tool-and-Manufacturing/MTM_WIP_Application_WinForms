@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using MTM_WIP_Application_Winforms.Core;
 using MTM_WIP_Application_Winforms.Data;
+using MTM_WIP_Application_Winforms.Forms.Shared;
 using MTM_WIP_Application_Winforms.Helpers;
 using MTM_WIP_Application_Winforms.Logging;
 using MTM_WIP_Application_Winforms.Models;
@@ -14,9 +15,10 @@ namespace MTM_WIP_Application_Winforms.Forms.Settings;
 
 /// <summary>
 /// Dialog for editing existing parameter prefix overrides.
-/// Provides autocomplete for procedure and parameter names.
+/// Allows changing prefix and verification type.
+/// Migrated to ThemedForm for automatic DPI scaling and theme support.
 /// </summary>
-public partial class Dialog_EditParameterOverride : Form
+public partial class Dialog_EditParameterOverride : ThemedForm
 {
     #region Fields
 
@@ -47,8 +49,6 @@ public partial class Dialog_EditParameterOverride : Form
 
         InitializeComponent();
         SetStyle(ControlStyles.OptimizedDoubleBuffer, true);
-        Core_Themes.ApplyDpiScaling(this);
-        Core_Themes.ApplyRuntimeLayoutAdjustments(this);
         
         PopulateFields();
     }

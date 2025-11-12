@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using MTM_WIP_Application_Winforms.Core;
 using MTM_WIP_Application_Winforms.Data;
+using MTM_WIP_Application_Winforms.Forms.Shared;
 using MTM_WIP_Application_Winforms.Helpers;
 using MTM_WIP_Application_Winforms.Logging;
 using MTM_WIP_Application_Winforms.Models;
@@ -16,6 +17,7 @@ namespace MTM_WIP_Application_Winforms.Forms.ErrorDialog;
 /// Dialog form for reporting errors with user-provided contextual notes.
 /// Supports both online (direct database submission) and offline (queued file) reporting.
 /// Uses TableLayoutPanel for responsive grid-based layout.
+/// Migrated to ThemedForm for automatic DPI scaling and theme support.
 /// </summary>
 /// <remarks>
 /// Layout structure:
@@ -28,7 +30,7 @@ namespace MTM_WIP_Application_Winforms.Forms.ErrorDialog;
 /// Minimum size: 600x350
 /// Form is resizable to allow users to expand notes area as needed
 /// </remarks>
-public partial class Form_ReportIssue : Form
+public partial class Form_ReportIssue : ThemedForm
 {
     #region Fields
 
@@ -51,10 +53,8 @@ public partial class Form_ReportIssue : Form
         
         InitializeComponent();
         
-        // Apply theme and scaling
+        // DPI scaling and layout now handled by ThemedForm.OnLoad
         SetStyle(ControlStyles.OptimizedDoubleBuffer, true);
-        Core_Themes.ApplyDpiScaling(this);
-        Core_Themes.ApplyRuntimeLayoutAdjustments(this);
         
         // Populate error summary (read-only display of exception details)
         // DEBUG: Log what we're setting

@@ -4,6 +4,7 @@ using System.Text;
 using MTM_WIP_Application_Winforms.Core;
 using MTM_WIP_Application_Winforms.Data;
 using MTM_WIP_Application_Winforms.Forms.MainForm.Classes;
+using MTM_WIP_Application_Winforms.Forms.Shared;
 using MTM_WIP_Application_Winforms.Helpers;
 using MTM_WIP_Application_Winforms.Logging;
 using MTM_WIP_Application_Winforms.Models;
@@ -14,7 +15,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
 {
     #region InventoryTab
 
-    public partial class Control_InventoryTab : UserControl
+    public partial class Control_InventoryTab : ThemedUserControl
     {
         #region Fields
 
@@ -66,18 +67,16 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                 });
 
             InitializeComponent();
-SetStyle(ControlStyles.OptimizedDoubleBuffer, true);
+            SetStyle(ControlStyles.OptimizedDoubleBuffer, true);
+            // DPI scaling, layout adjustments, and focus highlighting applied automatically by ThemedUserControl base class
             Service_DebugTracer.TraceUIAction("THEME_APPLICATION", nameof(Control_InventoryTab),
                 new Dictionary<string, object>
                 {
-                    ["DpiScaling"] = "APPLIED",
-                    ["LayoutAdjustments"] = "APPLIED"
+                    ["DpiScaling"] = "AUTO_APPLIED_BY_BASE",
+                    ["LayoutAdjustments"] = "AUTO_APPLIED_BY_BASE",
+                    ["FocusHighlighting"] = "AUTO_APPLIED_BY_BASE"
                 });
-            // Apply comprehensive DPI scaling and runtime layout adjustments
-            // THEME POLICY: Only update theme on startup, in settings menu, or on DPI change.
-            // Do NOT call theme update methods from arbitrary event handlers or business logic.
-            Core_Themes.ApplyDpiScaling(this); // Allowed: UserControl initialization
-            Core_Themes.ApplyRuntimeLayoutAdjustments(this); // Allowed: UserControl initialization
+                
 
             Service_DebugTracer.TraceUIAction("TOOLTIPS_SETUP", nameof(Control_InventoryTab),
                 new Dictionary<string, object>
@@ -117,12 +116,11 @@ SetStyle(ControlStyles.OptimizedDoubleBuffer, true);
             Service_DebugTracer.TraceUIAction("UI_STYLING_APPLIED", nameof(Control_InventoryTab),
                 new Dictionary<string, object>
                 {
-                    ["FocusHighlighting"] = true,
+                    ["FocusHighlighting"] = "AUTO_APPLIED_BY_BASE",
                     ["ComboBoxColors"] = "Applied",
                     ["InitialFocus"] = "Control_InventoryTab_ComboBox_Part",
                     ["QuantityTextBoxState"] = "Placeholder"
                 });
-            Core_Themes.ApplyFocusHighlighting(this);
             Control_InventoryTab_ComboBox_Part.ForeColor = Control_InventoryTab_ComboBox_Operation.ForeColor =
                 Control_InventoryTab_ComboBox_Location.ForeColor =
                     Model_Application_Variables.UserUiColors.ComboBoxForeColor ?? Color.Red;

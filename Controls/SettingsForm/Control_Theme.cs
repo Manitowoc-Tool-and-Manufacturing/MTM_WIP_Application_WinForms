@@ -3,10 +3,13 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using MTM_WIP_Application_Winforms.Core;
+using MTM_WIP_Application_Winforms.Core.Theming;
+using MTM_WIP_Application_Winforms.Core.Theming.Interfaces;
 using MTM_WIP_Application_Winforms.Data;
 using MTM_WIP_Application_Winforms.Models;
 using MTM_WIP_Application_Winforms.Logging;
 using MTM_WIP_Application_Winforms.Services;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
 {
@@ -18,8 +21,6 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
         public Control_Theme()
         {
             InitializeComponent();
-            Core_Themes.ApplyDpiScaling(this);
-            Core_Themes.ApplyRuntimeLayoutAdjustments(this);
             Control_Themes_Button_Save.Click += SaveButton_Click;
             Control_Themes_Button_Preview.Click += PreviewButton_Click;
             Control_Themes_CheckBox_EnableTheming.CheckedChanged += EnableThemingCheckBox_CheckedChanged;
@@ -31,7 +32,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             try
             {
                 Control_Themes_ComboBox_Theme.Items.Clear();
-                string[] themeNames = Core_Themes.Core_AppThemes.GetThemeNames().ToArray();
+                string[] themeNames = [.. Core_AppThemes.GetThemeNames()];
                 Control_Themes_ComboBox_Theme.Items.AddRange(themeNames);
 
                 string user = Model_Application_Variables.User;
@@ -189,10 +190,16 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
                     Model_Application_Variables.ThemeName = selectedTheme;
                 }
                 
-                // Apply theme to all open forms
-                foreach (Form openForm in Application.OpenForms)
+                // Use new theme system: ThemeManager will notify all ThemedForm subscribers
+                var themeProvider = Program.ServiceProvider?.GetService<IThemeProvider>();
+                if (themeProvider != null && themeEnabled && !string.IsNullOrEmpty(selectedTheme))
                 {
-                    Core_Themes.ApplyTheme(openForm);
+                    await themeProvider.SetThemeAsync(selectedTheme, ThemeChangeReason.UserSelection, user);
+                    LoggingUtility.Log($"[Control_Theme] Theme '{selectedTheme}' applied via ThemeManager to all subscribed forms");
+                }
+                else if (themeProvider == null)
+                {
+                    LoggingUtility.Log("[Control_Theme] ERROR: ThemeProvider not available - forms will not receive theme updates!");
                 }
 
                 ThemeChanged?.Invoke(this, EventArgs.Empty);
@@ -218,7 +225,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             }
         }
 
-        private void PreviewButton_Click(object? sender, EventArgs e)
+        private async void PreviewButton_Click(object? sender, EventArgs e)
         {
             try
             {
@@ -233,10 +240,19 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
 
                 string? originalTheme = Model_Application_Variables.ThemeName;
                 Model_Application_Variables.ThemeName = selectedTheme;
-                foreach (Form openForm in Application.OpenForms)
+                
+                // Use new theme system: ThemeManager will notify all ThemedForm subscribers
+                var themeProvider = Program.ServiceProvider?.GetService<IThemeProvider>();
+                if (themeProvider != null)
                 {
-                    Core_Themes.ApplyTheme(openForm);
+                    await themeProvider.SetThemeAsync(selectedTheme, ThemeChangeReason.Preview, Model_Application_Variables.User);
+                    LoggingUtility.Log($"[Control_Theme] Preview theme '{selectedTheme}' applied via ThemeManager to all subscribed forms");
                 }
+                else
+                {
+                    LoggingUtility.Log("[Control_Theme] ERROR: ThemeProvider not available - preview will not work!");
+                }
+                
                 Model_Application_Variables.ThemeName = originalTheme;
                 StatusMessageChanged?.Invoke(this, $"Theme preview applied: {selectedTheme}");
             }

@@ -82,8 +82,6 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                 // Apply comprehensive DPI scaling and runtime layout adjustments
                 // THEME POLICY: Only update theme on startup, in settings menu, or on DPI change.
                 // Do NOT call theme update methods from arbitrary event handlers or business logic.
-                Core_Themes.ApplyDpiScaling(this); // Allowed: Form initialization
-                Core_Themes.ApplyRuntimeLayoutAdjustments(this); // Allowed: Form initialization
 
                 Service_DebugTracer.TraceUIAction("TOOLTIPS_SETUP", nameof(Control_AdvancedInventory),
                     new Dictionary<string, object>

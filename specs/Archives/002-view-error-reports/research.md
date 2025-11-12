@@ -197,8 +197,6 @@ Follow same pattern when adding methods:
 public Form_ViewErrorReports()
 {
     InitializeComponent();
-    Core_Themes.ApplyDpiScaling(this);
-    Core_Themes.ApplyRuntimeLayoutAdjustments(this);
     WireUpEvents();
     InitializeProgressHelper();
     LoadInitialData();

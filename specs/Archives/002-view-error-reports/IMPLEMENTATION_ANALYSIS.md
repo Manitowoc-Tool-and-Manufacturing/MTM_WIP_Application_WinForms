@@ -226,7 +226,6 @@ public static async Task<Model_Dao_Result<List<string>>> GetMachineListAsync()
 - **Verification**:
   - ✅ UserControl with DataGridView named `dgvErrorReports`
   - ✅ Standard region organization: Fields, Properties, Progress Control Methods, Constructors, Key Processing, ComboBox & UI Events, Helpers, Cleanup
-  - ✅ `Core_Themes.ApplyDpiScaling(this)` in constructor (line 72)
   - ✅ Opens in designer without errors
 
 #### ✅ T012: DataGridView Column Configuration
@@ -378,7 +377,6 @@ if (columnName == "colErrorSummary" && e.Value is string summary ...)
 - **Verification** (Lines 1-54):
   - ✅ UserControl with Panel container
   - ✅ Standard region organization
-  - ✅ `Core_Themes.ApplyDpiScaling(this)` in constructor (line 52)
   - ✅ `Core_Themes.ApplyRuntimeLayoutAdjustments(this)` (line 53)
 
 #### ✅ T029-T031: Detail View Fields (Combined Analysis)
@@ -484,7 +482,6 @@ Clipboard.SetText(sb.ToString());
   - `Forms/ErrorReports/Form_ErrorReportDetailsDialog.cs` - Modal dialog containing `Control_ErrorReportDetails`
 - **Verification**:
   - ✅ Form opens correctly
-  - ✅ Core_Themes.ApplyDpiScaling(this) applied (Form_ViewErrorReports line 37, Form_ErrorReportDetailsDialog line 63)
   - ✅ Grid control embedded and functional
 
 **Status**: ✅ **APPROVED** - User confirmed separate-forms pattern is preferred for data volume

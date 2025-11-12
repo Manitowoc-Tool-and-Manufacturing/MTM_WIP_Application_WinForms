@@ -18,9 +18,6 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
         {
             InitializeComponent();
 
-            // Apply comprehensive DPI scaling and runtime layout adjustments
-            Core_Themes.ApplyDpiScaling(this);
-            Core_Themes.ApplyRuntimeLayoutAdjustments(this);
 
             // Wire up button events
             Control_Database_Button_Save.Click += SaveButton_Click;

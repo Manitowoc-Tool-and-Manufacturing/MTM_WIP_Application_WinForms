@@ -11,15 +11,15 @@ namespace MTM_WIP_Application_Winforms.Forms.Shared;
 
 /// <summary>
 /// Compact sidebar dialog that orchestrates print preview, printing, and export flows for any grid-backed dataset.
+/// Migrated to ThemedForm for automatic DPI scaling and theme support.
 /// </summary>
 /// <remarks>
 /// The constructor follows the mandatory theme integration sequence: <c>InitializeComponent()</c>,
-/// <see cref="Core_Themes.ApplyDpiScaling(System.Windows.Forms.Control)"/>, then
-/// <see cref="Core_Themes.ApplyRuntimeLayoutAdjustments(System.Windows.Forms.Control)"/>. Callers must
-/// provide a fully populated <see cref="Model_Print_Job"/> and its previously persisted
+/// with DPI scaling and layout adjustments now handled automatically by ThemedForm.OnLoad.
+/// Callers must provide a fully populated <see cref="Model_Print_Job"/> and its previously persisted
 /// <see cref="Model_Print_Settings"/> so the dialog can restore printer and column preferences.
 /// </remarks>
-public partial class PrintForm : Form
+public partial class PrintForm : ThemedForm
 {
     #region Fields
 
@@ -108,8 +108,7 @@ public partial class PrintForm : Form
         LoggingUtility.Log($"[PrintForm] Constructor: Incoming printJob.CurrentPage={printJob.CurrentPage}, TotalPages={printJob.TotalPages}");
 
         InitializeComponent();
-        Core_Themes.ApplyDpiScaling(this);
-        Core_Themes.ApplyRuntimeLayoutAdjustments(this);
+        // DPI scaling and layout now handled by ThemedForm.OnLoad
         ApplyThemeColors();
 
         LoggingUtility.Log($"[PrintForm] Constructor: After InitializeComponent, Control.StartPage={PrintForm_PrintPreviewControl.StartPage}");

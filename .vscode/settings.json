@@ -1,28 +1,15 @@
 {
-  "chat.agent.enabled": true,
-  "chat.agent.maxRequests": 15,
-  "github.copilot.chat.agent.runTasks": true,
-  "chat.mcp.discovery.enabled": {
-    "claude-desktop": true,
-    "windsurf": true,
-    "cursor-global": true,
-    "cursor-workspace": true
-  },
-  "github.copilot.chat.agent.autoFix": true,
-  "chat.tools.autoApprove": false,
-  
-  // Markdown preview settings
-  "markdown.marp.enableHtml": true,
-  "markdown.preview.breaks": false,
-  "markdown.preview.linkify": true,
-  
-  // Mermaid Preview extension (vstirbu.vscode-mermaid-preview v2.1.2)
-  // Renders Mermaid diagrams in standard markdown preview automatically
-  "mermaid.vscode.dark_theme": "dark",
-  "mermaid.vscode.light_theme": "default",
-  
-  // File associations
-  "[markdown]": {
-    "editor.wordWrap": "on"
-  }
+    "chat.promptFilesRecommendations": {
+        "speckit.constitution": true,
+        "speckit.specify": true,
+        "speckit.plan": true,
+        "speckit.tasks": true,
+        "speckit.implement": true
+    },
+    "chat.tools.terminal.autoApprove": {
+        ".specify/scripts/bash/": true,
+        ".specify/scripts/powershell/": true
+    },
+    "chat.agent.maxRequests": 2500
 }
+

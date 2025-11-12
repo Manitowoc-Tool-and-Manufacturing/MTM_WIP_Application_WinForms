@@ -44,8 +44,6 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
                 });
 
             InitializeComponent();
-            Core_Themes.ApplyDpiScaling(this);
-            Core_Themes.ApplyRuntimeLayoutAdjustments(this);
 
             Service_DebugTracer.TraceMethodExit(null, nameof(Control_Add_Operation), nameof(Control_Add_Operation));
         }

@@ -22,9 +22,6 @@ All developer tool controls follow this pattern established by existing Settings
 public Control_Developer_{ToolName}()
 {
     InitializeComponent();
-    Core_Themes.ApplyDpiScaling(this);
-    Core_Themes.ApplyRuntimeLayoutAdjustments(this);
-    // Additional initialization
 }
 ```
 

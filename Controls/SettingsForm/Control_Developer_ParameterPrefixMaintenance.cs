@@ -46,8 +46,6 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
         public Control_Developer_ParameterPrefixMaintenance()
         {
             InitializeComponent();
-            Core_Themes.ApplyDpiScaling(this);
-            Core_Themes.ApplyRuntimeLayoutAdjustments(this);
             ConfigureDataGridView();
         }
 

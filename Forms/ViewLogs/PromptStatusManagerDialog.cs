@@ -1,4 +1,5 @@
 using MTM_WIP_Application_Winforms.Core;
+using MTM_WIP_Application_Winforms.Forms.Shared;
 using MTM_WIP_Application_Winforms.Logging;
 using MTM_WIP_Application_Winforms.Models;
 using MTM_WIP_Application_Winforms.Services;
@@ -10,8 +11,9 @@ namespace MTM_WIP_Application_Winforms.Forms.ViewLogs;
 /// Modal dialog for managing prompt fix statuses.
 /// Allows viewing and editing status, assignee, and notes for all prompts.
 /// Implements T065 - Create Developer UI for status management.
+/// Migrated to ThemedForm for automatic DPI scaling and theme support.
 /// </summary>
-public partial class PromptStatusManagerDialog : Form
+public partial class PromptStatusManagerDialog : ThemedForm
 {
     #region Fields
 
@@ -40,8 +42,6 @@ public partial class PromptStatusManagerDialog : Form
         InitializeComponent();
 
         // Theme system integration - CRITICAL PATTERN from theme-system.instructions.md
-        Core_Themes.ApplyDpiScaling(this);              // Step 1: DPI scaling
-        Core_Themes.ApplyRuntimeLayoutAdjustments(this); // Step 2: Layout adjustments
         Core_Themes.ApplyFocusHighlighting(this);        // Step 3: Focus highlighting
 
         InitializeDataGridView();
@@ -179,9 +179,6 @@ public partial class PromptStatusManagerDialog : Form
     {
         try
         {
-            // Apply theme colors - CRITICAL PATTERN from theme-system.instructions.md
-            // Forms apply theme colors in Load event (not constructor)
-            Core_Themes.ApplyTheme(this);
 
             await LoadPromptStatusesAsync();
         }

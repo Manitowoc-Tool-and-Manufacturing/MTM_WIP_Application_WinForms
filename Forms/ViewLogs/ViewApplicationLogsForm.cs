@@ -1,4 +1,5 @@
 using MTM_WIP_Application_Winforms.Core;
+using MTM_WIP_Application_Winforms.Forms.Shared;
 using MTM_WIP_Application_Winforms.Helpers;
 using MTM_WIP_Application_Winforms.Logging;
 using MTM_WIP_Application_Winforms.Models;
@@ -10,8 +11,9 @@ namespace MTM_WIP_Application_Winforms.Forms.ViewLogs;
 /// <summary>
 /// Form for viewing application logs with user selection, file browsing, and parsed entry display.
 /// Supports filtering, navigation, and export of log entries across Normal, ApplicationError, and DatabaseError formats.
+/// Migrated to ThemedForm for automatic DPI scaling and theme support.
 /// </summary>
-public partial class ViewApplicationLogsForm : Form
+public partial class ViewApplicationLogsForm : ThemedForm
 {
     #region Fields
 
@@ -62,13 +64,10 @@ public partial class ViewApplicationLogsForm : Form
     {
         InitializeComponent();
 
-        // Performance optimization
+        // Performance optimization and DPI scaling now handled by ThemedForm.OnLoad
         SetStyle(ControlStyles.OptimizedDoubleBuffer | ControlStyles.AllPaintingInWmPaint | ControlStyles.UserPaint, true);
         UpdateStyles();
 
-        Core_Themes.ApplyDpiScaling(this);
-        Core_Themes.ApplyRuntimeLayoutAdjustments(this);
-        Core_Themes.ApplyFocusHighlighting(this);
         WireUpEvents();
         InitializeAutoRefreshTimer(); // T047
         InitializePromptStatusFilters(); // T072
@@ -258,8 +257,7 @@ public partial class ViewApplicationLogsForm : Form
     {
         try
         {
-            // Apply theme colors to form and controls
-            Core_Themes.ApplyTheme(this);
+            // Theme now applied automatically by ThemedForm base class
 
             await LoadUserListAsync();
 

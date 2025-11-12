@@ -25,7 +25,6 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
                 public Control_Remove_Operation()
         {
             InitializeComponent();
-            Core_Themes.ApplyDpiScaling(this);
         }
 
         #endregion

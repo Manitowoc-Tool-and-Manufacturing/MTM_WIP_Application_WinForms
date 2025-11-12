@@ -1,5 +1,7 @@
 using System.Diagnostics;
+using Microsoft.Extensions.DependencyInjection;
 using MTM_WIP_Application_Winforms.Controls.SettingsForm;
+using MTM_WIP_Application_Winforms.Core.DependencyInjection;
 using MTM_WIP_Application_Winforms.Data;
 using MTM_WIP_Application_Winforms.Forms.ErrorDialog;
 using MTM_WIP_Application_Winforms.Logging;
@@ -14,6 +16,31 @@ namespace MTM_WIP_Application_Winforms
 {
     internal static class Program
     {
+        #region Dependency Injection
+
+        /// <summary>
+        /// Global service provider for dependency injection.
+        /// </summary>
+        public static IServiceProvider? ServiceProvider { get; private set; }
+
+        /// <summary>
+        /// Configures and builds the dependency injection container.
+        /// </summary>
+        private static void ConfigureServices()
+        {
+            var services = new ServiceCollection();
+
+            // Register theme services (includes IThemeProvider, IThemeStore, all 17 appliers)
+            services.AddThemeServices();
+
+            // Build the service provider
+            ServiceProvider = services.BuildServiceProvider();
+
+            LoggingUtility.Log("[Startup] Dependency injection container configured successfully");
+        }
+
+        #endregion
+
         #region Entry Point
 
         [STAThread]
@@ -349,6 +376,23 @@ namespace MTM_WIP_Application_Winforms
                     // Trace setup failure is not critical, but log it
                     LoggingUtility.LogApplicationError(ex);
                     Console.WriteLine($"[Warning] Trace setup failed: {ex.Message}");
+                }
+
+                // Configure dependency injection container
+                try
+                {
+                    LoggingUtility.Log("[Startup] Initializing dependency injection container");
+                    ConfigureServices();
+                    LoggingUtility.Log("[Startup] Dependency injection container initialized successfully");
+                }
+                catch (Exception ex)
+                {
+                    LoggingUtility.LogApplicationError(ex);
+                    ShowFatalError("Dependency Injection Error",
+                        $"Failed to initialize application services:\n\n{ex.Message}\n\n" +
+                        "The application cannot continue without proper service configuration.\n" +
+                        "Please contact your system administrator.");
+                    return;
                 }
 
                 // Start application with splash screen

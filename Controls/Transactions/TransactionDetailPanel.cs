@@ -80,10 +80,6 @@ namespace MTM_WIP_Application_Winforms.Controls.Transactions
 
             LoggingUtility.Log("[TransactionDetailPanel] Initializing...");
 
-            // MANDATORY: Constitution Principle IX - Theme System Integration
-            Core_Themes.ApplyDpiScaling(this);
-            Core_Themes.ApplyRuntimeLayoutAdjustments(this);
-
             _notesRowOriginalHeight = TransactionDetailPanel_TableLayout_Main.RowStyles.Count > 3
                 ? TransactionDetailPanel_TableLayout_Main.RowStyles[3].Height
                 : 70F;

@@ -47,9 +47,6 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
                     ["DpiScaling"] = "APPLIED",
                     ["LayoutAdjustments"] = "APPLIED"
                 });
-            // Apply comprehensive DPI scaling and runtime layout adjustments
-            Core_Themes.ApplyDpiScaling(this);
-            Core_Themes.ApplyRuntimeLayoutAdjustments(this);
 
             Service_DebugTracer.TraceUIAction("KEYPRESS_EVENTS_SETUP", nameof(Control_Edit_User),
                 new Dictionary<string, object>

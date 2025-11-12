@@ -48,8 +48,6 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
                     });
 
                 InitializeComponent();
-            Core_Themes.ApplyDpiScaling(this);
-            Core_Themes.ApplyRuntimeLayoutAdjustments(this);
                 
                 Service_DebugTracer.TraceUIAction("EVENT_HANDLERS_BINDING", nameof(Control_Edit_PartID),
                     new Dictionary<string, object>

@@ -1,12 +1,13 @@
 ﻿using System.ComponentModel;
 using MTM_WIP_Application_Winforms.Core;
+using MTM_WIP_Application_Winforms.Forms.Shared;
 using MTM_WIP_Application_Winforms.Models;
 
 namespace MTM_WIP_Application_Winforms.Controls.Addons
 {
     #region ConnectionStrengthControl
 
-    public partial class Control_ConnectionStrengthControl : UserControl
+    public partial class Control_ConnectionStrengthControl : ThemedUserControl
     {
         #region Fields
 
@@ -73,20 +74,40 @@ namespace MTM_WIP_Application_Winforms.Controls.Addons
         public Control_ConnectionStrengthControl()
         {
             InitializeComponent();
-            Core_Themes.ApplyDpiScaling(this);
-            Core_Themes.ApplyRuntimeLayoutAdjustments(this);
             Size = new Size(80, 14);
             SetStyle(ControlStyles.OptimizedDoubleBuffer | ControlStyles.AllPaintingInWmPaint | ControlStyles.UserPaint,
                 true);
             Paint += ConnectionStrengthControl_Paint;
             UpdateToolTip();
+
             MouseHover += ConnectionStrengthControl_MouseHover;
-            Core.Core_Themes.ApplyFocusHighlighting(this);
+            
+            // Force StatusStrip background color when control loads
+            this.Load += (s, e) =>
+            {
+                var theme = Model_Application_Variables.UserUiColors;
+                BackColor = theme.StatusStripBackColor 
+                    ?? theme.PanelBackColor 
+                    ?? theme.ControlBackColor 
+                    ?? SystemColors.Control;
+                Invalidate();
+            };
         }
 
         #endregion
 
         #region Methods
+
+        protected override void ApplyTheme(Model_Shared_UserUiColors theme)
+        {
+            // Apply StatusStrip background color to match the status bar
+            BackColor = theme.StatusStripBackColor 
+                ?? theme.PanelBackColor 
+                ?? theme.ControlBackColor 
+                ?? SystemColors.Control;
+
+            Invalidate();
+        }
 
         #endregion
 
@@ -168,14 +189,11 @@ namespace MTM_WIP_Application_Winforms.Controls.Addons
 
         private void SyncBackgroundWithParent()
         {
-            if (Parent != null)
-            {
-                BackColor = Parent.BackColor;
-            }
-            else
-            {
-                BackColor = Model_Application_Variables.UserUiColors.ControlBackColor ?? SystemColors.Control;
-            }
+            // Use StatusStrip background color to match the status bar it's always next to
+            BackColor = Model_Application_Variables.UserUiColors.StatusStripBackColor 
+                ?? Model_Application_Variables.UserUiColors.PanelBackColor 
+                ?? Model_Application_Variables.UserUiColors.ControlBackColor 
+                ?? SystemColors.Control;
 
             Invalidate();
         }

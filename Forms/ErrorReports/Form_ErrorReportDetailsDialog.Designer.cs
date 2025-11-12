@@ -1,10 +1,11 @@
 using System.Drawing;
 using System.Windows.Forms;
 using MTM_WIP_Application_Winforms.Controls.ErrorReports;
+using MTM_WIP_Application_Winforms.Forms.Shared;
 
 namespace MTM_WIP_Application_Winforms.Forms.ErrorReports
 {
-    partial class Form_ErrorReportDetailsDialog : Form
+    partial class Form_ErrorReportDetailsDialog : ThemedForm
     {
         /// <summary>
         /// Required designer variable.

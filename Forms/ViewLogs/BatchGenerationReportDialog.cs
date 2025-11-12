@@ -1,4 +1,5 @@
 using MTM_WIP_Application_Winforms.Core;
+using MTM_WIP_Application_Winforms.Forms.Shared;
 using MTM_WIP_Application_Winforms.Helpers;
 using MTM_WIP_Application_Winforms.Logging;
 using System.Diagnostics;
@@ -8,8 +9,9 @@ namespace MTM_WIP_Application_Winforms.Forms.ViewLogs;
 /// <summary>
 /// T067: Dialog showing detailed batch prompt generation results.
 /// Displays summary statistics and per-prompt status breakdown.
+/// Migrated to ThemedForm for automatic DPI scaling and theme support.
 /// </summary>
-public partial class BatchGenerationReportDialog : Form
+public partial class BatchGenerationReportDialog : ThemedForm
 {
     #region Fields
 
@@ -41,10 +43,6 @@ public partial class BatchGenerationReportDialog : Form
         _failedCount = failedCount;
 
         InitializeComponent();
-        
-        // Apply DPI scaling and theme
-        Core_Themes.ApplyDpiScaling(this);
-        Core_Themes.ApplyRuntimeLayoutAdjustments(this);
     }
 
     #endregion
@@ -58,8 +56,6 @@ public partial class BatchGenerationReportDialog : Form
     {
         try
         {
-            // Apply theme after form is loaded
-            Core_Themes.ApplyTheme(this);
             
             PopulateSummary();
             PopulateDetailsGrid();

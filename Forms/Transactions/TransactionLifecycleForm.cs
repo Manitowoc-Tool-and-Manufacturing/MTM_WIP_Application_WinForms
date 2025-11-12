@@ -1,5 +1,6 @@
 using MTM_WIP_Application_Winforms.Core;
 using MTM_WIP_Application_Winforms.Data;
+using MTM_WIP_Application_Winforms.Forms.Shared;
 using MTM_WIP_Application_Winforms.Logging;
 using MTM_WIP_Application_Winforms.Models;
 using MTM_WIP_Application_Winforms.Services;
@@ -9,6 +10,7 @@ namespace MTM_WIP_Application_Winforms.Forms.Transactions;
 /// <summary>
 /// Modal dialog for displaying transaction lifecycle visualization.
 /// Shows full batch timeline with TreeView hierarchy and transaction details.
+/// Migrated to ThemedForm for automatic DPI scaling and theme support.
 /// </summary>
 /// <remarks>
 /// Displays transactions in chronological order with split visualization.
@@ -16,7 +18,7 @@ namespace MTM_WIP_Application_Winforms.Forms.Transactions;
 /// Detail panel updates based on TreeView selection.
 /// Icon legend at bottom: 📥 IN (Green), 🔄 TRANSFER (Blue), 📤 OUT (Red), 📦 Split (Orange)
 /// </remarks>
-internal partial class TransactionLifecycleForm : Form
+internal partial class TransactionLifecycleForm : ThemedForm
 {
     #region Fields
 
@@ -39,10 +41,8 @@ internal partial class TransactionLifecycleForm : Form
 
         LoggingUtility.Log("[TransactionLifecycleForm] Initializing...");
 
-        // MANDATORY theme system integration per Constitution Principle IX
+        // DPI scaling and layout now handled by ThemedForm.OnLoad
         SetStyle(ControlStyles.OptimizedDoubleBuffer, true);
-        Core_Themes.ApplyDpiScaling(this);
-        Core_Themes.ApplyRuntimeLayoutAdjustments(this);
 
         _partId = partId ?? throw new ArgumentNullException(nameof(partId));
         _batchNumber = batchNumber ?? throw new ArgumentNullException(nameof(batchNumber));

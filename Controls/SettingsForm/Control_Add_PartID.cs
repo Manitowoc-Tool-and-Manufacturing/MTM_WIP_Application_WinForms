@@ -37,8 +37,6 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
                 });
 
             InitializeComponent();
-            Core_Themes.ApplyDpiScaling(this);
-            Core_Themes.ApplyRuntimeLayoutAdjustments(this);
 
             Service_DebugTracer.TraceUIAction("PART_TYPES_LOADING", nameof(Control_Add_PartID),
                 new Dictionary<string, object> { ["DataSource"] = "ItemTypes" });

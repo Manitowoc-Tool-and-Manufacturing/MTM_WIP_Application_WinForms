@@ -1,4 +1,5 @@
 using MTM_WIP_Application_Winforms.Core;
+using MTM_WIP_Application_Winforms.Forms.Shared;
 using MTM_WIP_Application_Winforms.Logging;
 using MTM_WIP_Application_Winforms.Models;
 using MTM_WIP_Application_Winforms.Services;
@@ -7,13 +8,14 @@ namespace MTM_WIP_Application_Winforms.Controls.Transactions;
 
 /// <summary>
 /// UserControl for transaction search criteria input.
+/// Migrated to ThemedUserControl for automatic DPI scaling and theme support.
 /// </summary>
 /// <remarks>
 /// Provides UI for filtering transactions by part number, user, locations,
 /// operation, transaction type, date range, and notes. Supports quick date filters
 /// (Today/Week/Month/Custom) and raises SearchRequested event when user initiates search.
 /// </remarks>
-internal partial class TransactionSearchControl : UserControl
+internal partial class TransactionSearchControl : ThemedUserControl
 {
     #region Events
 
@@ -49,9 +51,6 @@ internal partial class TransactionSearchControl : UserControl
         InitializeComponent();
 
         LoggingUtility.Log("[TransactionSearchControl] Initializing...");
-
-        Core_Themes.ApplyDpiScaling(this);
-        Core_Themes.ApplyRuntimeLayoutAdjustments(this);
 
         WireUpEvents();
         InitializeDateRangeDefaults();

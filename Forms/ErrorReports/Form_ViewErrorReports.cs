@@ -3,12 +3,13 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using MTM_WIP_Application_Winforms.Controls.ErrorReports;
 using MTM_WIP_Application_Winforms.Core;
+using MTM_WIP_Application_Winforms.Forms.Shared;
 using MTM_WIP_Application_Winforms.Models;
 using MTM_WIP_Application_Winforms.Services;
 
 namespace MTM_WIP_Application_Winforms.Forms.ErrorReports
 {
-    public partial class Form_ViewErrorReports : Form
+    public partial class Form_ViewErrorReports : ThemedForm
     {
         #region Fields
 
@@ -33,9 +34,8 @@ namespace MTM_WIP_Application_Winforms.Forms.ErrorReports
         public Form_ViewErrorReports()
         {
             InitializeComponent();
+            // DPI scaling and layout now handled by ThemedForm.OnLoad
             SetStyle(ControlStyles.OptimizedDoubleBuffer, true);
-            Core_Themes.ApplyDpiScaling(this);
-            Core_Themes.ApplyRuntimeLayoutAdjustments(this);
             WireUpEvents();
         }
 

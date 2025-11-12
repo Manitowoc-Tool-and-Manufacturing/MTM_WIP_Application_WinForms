@@ -50,8 +50,6 @@ namespace MTM_WIP_Application_Winforms.Controls.ErrorReports
         {
             InitializeComponent();
             SetStyle(ControlStyles.OptimizedDoubleBuffer, true);
-            Core_Themes.ApplyDpiScaling(this);
-            Core_Themes.ApplyRuntimeLayoutAdjustments(this);
             ClearDisplay();
         }
 
@@ -529,8 +527,6 @@ namespace MTM_WIP_Application_Winforms.Controls.ErrorReports
 
                 AcceptButton = btnOk;
                 CancelButton = btnCancel;
-
-                Core_Themes.ApplyDpiScaling(this);
             }
 
             internal string DeveloperNotes => _txtNotes.Text;

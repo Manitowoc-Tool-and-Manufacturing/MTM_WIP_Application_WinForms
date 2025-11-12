@@ -1,5 +1,7 @@
-﻿using MTM_WIP_Application_Winforms.Controls.MainForm;
+﻿using Microsoft.Extensions.DependencyInjection;
+using MTM_WIP_Application_Winforms.Controls.MainForm;
 using MTM_WIP_Application_Winforms.Core;
+using MTM_WIP_Application_Winforms.Core.Theming.Interfaces;
 using MTM_WIP_Application_Winforms.Data;
 using MTM_WIP_Application_Winforms.Forms.MainForm;
 using MTM_WIP_Application_Winforms.Forms.Splash;
@@ -231,7 +233,35 @@ namespace MTM_WIP_Application_Winforms.Services
                 _splashScreen?.UpdateProgress(progress, "Initializing theme system...");
                 try
                 {
-                    await Core_Themes.Core_AppThemes.InitializeThemeSystemAsync(Model_Application_Variables.User);
+                    await Core_AppThemes.InitializeThemeSystemAsync(Model_Application_Variables.User);
+                    
+                    // Initialize ThemeStore cache from Core_AppThemes
+                    var themeStore = Program.ServiceProvider?.GetService<IThemeStore>();
+                    if (themeStore != null)
+                    {
+                        await themeStore.LoadFromDatabaseAsync();
+                        LoggingUtility.Log("[Splash] ThemeStore loaded from database");
+                    }
+                    else
+                    {
+                        LoggingUtility.Log("[Splash] WARNING: ThemeStore not available in ServiceProvider");
+                    }
+                    
+                    // Set ThemeManager's current theme to the user's preference
+                    var themeProvider = Program.ServiceProvider?.GetService<IThemeProvider>();
+                    if (themeProvider != null && !string.IsNullOrEmpty(Model_Application_Variables.ThemeName))
+                    {
+                        await themeProvider.SetThemeAsync(
+                            Model_Application_Variables.ThemeName,
+                            Core.Theming.ThemeChangeReason.Login,
+                            Model_Application_Variables.User);
+                        LoggingUtility.Log($"[Splash] ThemeManager initialized with '{Model_Application_Variables.ThemeName}' theme");
+                    }
+                    else
+                    {
+                        LoggingUtility.Log("[Splash] WARNING: ThemeProvider not available or theme name is empty");
+                    }
+                    
                     progress = 75;
                     _splashScreen?.UpdateProgress(progress, "Theme system initialized.");
                     LoggingUtility.Log("[Splash] Theme system initialized");
@@ -764,16 +794,23 @@ namespace MTM_WIP_Application_Winforms.Services
             {
                 if (_mainForm == null) return;
 
-                if (_mainForm.InvokeRequired)
-                {
-                    _mainForm.Invoke(new Action(() => Core_Themes.ApplyTheme(_mainForm)));
-                }
-                else
-                {
-                    Core_Themes.ApplyTheme(_mainForm);
-                }
+                // MIGRATION NOTE: MainForm now inherits from ThemedForm which automatically
+                // applies themes via the new dependency injection system. Calling Core_Themes.ApplyTheme()
+                // here would OVERRIDE the ThemedForm colors with fallback values, causing the
+                // black and white appearance instead of the actual theme colors.
+                // The theme is already applied by ThemedForm.Shown event handler.
+                
+                // OLD CODE - DO NOT RE-ENABLE:
+                // if (_mainForm.InvokeRequired)
+                // {
+                //     _mainForm.Invoke(new Action(() => Core_Themes.ApplyTheme(_mainForm)));
+                // }
+                // else
+                // {
+                //     Core_Themes.ApplyTheme(_mainForm);
+                // }
 
-                LoggingUtility.Log("[Splash] Theme applied to MainForm");
+                LoggingUtility.Log("[Splash] MainForm uses ThemedForm - automatic theme application");
             }
             catch (Exception ex)
             {

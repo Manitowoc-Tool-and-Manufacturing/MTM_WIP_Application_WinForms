@@ -9,6 +9,7 @@ using MTM_WIP_Application_Winforms.Data;
 using MTM_WIP_Application_Winforms.Forms.ErrorDialog;
 using MTM_WIP_Application_Winforms.Forms.ErrorReports;
 using MTM_WIP_Application_Winforms.Forms.Settings;
+using MTM_WIP_Application_Winforms.Forms.Shared;
 using MTM_WIP_Application_Winforms.Helpers;
 using MTM_WIP_Application_Winforms.Logging;
 using MTM_WIP_Application_Winforms.Models;
@@ -20,7 +21,7 @@ namespace MTM_WIP_Application_Winforms.Forms.MainForm
 {
     #region MainForm
 
-    public partial class MainForm : Form
+    public partial class MainForm : ThemedForm
     {
         #region Fields
 
@@ -76,8 +77,6 @@ namespace MTM_WIP_Application_Winforms.Forms.MainForm
                 // Apply comprehensive DPI scaling and runtime layout adjustments
                 // THEME POLICY: Only update theme on startup, in settings menu, or on DPI change.
                 // Do NOT call theme update methods from arbitrary event handlers or business logic.
-                Core_Themes.ApplyDpiScaling(this); // Allowed: Form initialization
-                Core_Themes.ApplyRuntimeLayoutAdjustments(this); // Allowed: Form initialization
 
                 Debug.WriteLine("[DEBUG] [MainForm.ctor] InitializeComponent complete.");
 
@@ -567,10 +566,8 @@ namespace MTM_WIP_Application_Winforms.Forms.MainForm
                 }
                 else if (result == DialogResult.No)
                 {
-                    // User chose auto-resize - use the Core_Themes DPI change handler
                     LoggingUtility.Log("User chose auto-resize after DPI change");
-                    Core_Themes.HandleDpiChanged(this, e.DeviceDpiOld, e.DeviceDpiNew);
-                    Core_Themes.ApplyTheme(this);
+                    // Theme reapplied automatically by ThemedForm base class
                     LoggingUtility.Log("MainForm DPI change handling completed");
                 }
                 else
@@ -1066,9 +1063,9 @@ namespace MTM_WIP_Application_Winforms.Forms.MainForm
                 Service_DebugTracer.TraceUIAction("INVENTORY_TAB_RESET", nameof(MainForm));
                 MainForm_UserControl_InventoryTab?.Control_InventoryTab_HardReset();
 
-                Service_DebugTracer.TraceUIAction("THEME_REAPPLY", nameof(MainForm),
+                // Theme reapplied automatically by ThemedForm base class when settings change
+                Service_DebugTracer.TraceUIAction("THEME_AUTO_REAPPLY", nameof(MainForm),
                     new Dictionary<string, object> { ["Reason"] = "SettingsChanged" });
-                Core_Themes.ApplyTheme(this);
             }
             catch (Exception ex)
             {

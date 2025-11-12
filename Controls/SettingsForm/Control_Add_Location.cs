@@ -18,8 +18,6 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
         public Control_Add_Location()
         {
             InitializeComponent();
-            Core_Themes.ApplyDpiScaling(this);
-            Core_Themes.ApplyRuntimeLayoutAdjustments(this);
             LoadBuildingOptions();
         }
 

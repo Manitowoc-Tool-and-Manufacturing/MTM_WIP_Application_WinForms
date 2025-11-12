@@ -3,9 +3,11 @@ using System.Windows.Forms;
 using MTM_WIP_Application_Winforms.Controls.Addons;
 using MTM_WIP_Application_Winforms.Controls.MainForm;
 
+using MTM_WIP_Application_Winforms.Forms.Shared;
+
 namespace MTM_WIP_Application_Winforms.Forms.MainForm
 {
-    public partial class MainForm : Form
+    public partial class MainForm : ThemedForm
     {
         #region Fields
 

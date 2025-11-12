@@ -1,6 +1,8 @@
+using MTM_WIP_Application_Winforms.Forms.Shared;
+
 namespace MTM_WIP_Application_Winforms.Controls.Shared
 {
-    partial class Control_ProgressBarUserControl
+    partial class Control_ProgressBarUserControl : ThemedUserControl
     {
         #region Fields
         

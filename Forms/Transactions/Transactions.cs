@@ -2,6 +2,7 @@ using System.Text;
 using MTM_WIP_Application_Winforms.Controls.Transactions;
 using MTM_WIP_Application_Winforms.Core;
 using MTM_WIP_Application_Winforms.Data;
+using MTM_WIP_Application_Winforms.Forms.Shared;
 using MTM_WIP_Application_Winforms.Logging;
 using MTM_WIP_Application_Winforms.Models;
 using MTM_WIP_Application_Winforms.Services;
@@ -12,8 +13,9 @@ namespace MTM_WIP_Application_Winforms.Forms.Transactions;
 /// <summary>
 /// Transaction viewer form using modular UserControl architecture.
 /// Refactored from 2136-line monolithic implementation to clean separation of concerns.
+/// Migrated to ThemedForm for automatic DPI scaling and theme support.
 /// </summary>
-internal partial class Transactions : Form
+internal partial class Transactions : ThemedForm
 {
     #region Fields
 
@@ -31,9 +33,8 @@ internal partial class Transactions : Form
         InitializeComponent();
 
         LoggingUtility.Log("[Transactions] Form initializing...");
+        // DPI scaling and layout now handled by ThemedForm.OnLoad
         SetStyle(ControlStyles.OptimizedDoubleBuffer, true);
-        Core_Themes.ApplyDpiScaling(this);
-        Core_Themes.ApplyRuntimeLayoutAdjustments(this);
 
         _currentUser = currentUser ?? throw new ArgumentNullException(nameof(currentUser));
         _isAdmin = Model_Application_Variables.UserTypeDeveloper || Model_Application_Variables.UserTypeAdmin;

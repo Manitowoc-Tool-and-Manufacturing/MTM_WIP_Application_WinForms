@@ -18,11 +18,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
         public Control_Shortcuts()
         {
             InitializeComponent();
-            
-            // Apply comprehensive DPI scaling and runtime layout adjustments
-            Core_Themes.ApplyDpiScaling(this);
-            Core_Themes.ApplyRuntimeLayoutAdjustments(this);
-            
+                        
             _ = LoadShortcuts();
         }
 
@@ -270,14 +266,6 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
                     });
                     inputForm.AcceptButton = okButton;
                     inputForm.CancelButton = Control_Shortcuts_Button_Cancel;
-
-                    try
-                    {
-                        Core_Themes.ApplyTheme(inputForm);
-                    }
-                    catch
-                    {
-                    }
 
                     if (inputForm.ShowDialog(this) == DialogResult.OK)
                     {

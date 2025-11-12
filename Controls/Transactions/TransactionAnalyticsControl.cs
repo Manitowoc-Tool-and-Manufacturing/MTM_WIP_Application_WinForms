@@ -40,13 +40,10 @@ namespace MTM_WIP_Application_Winforms.Controls.Transactions
         /// </summary>
         public Model_Transactions_Core_AnalyticsControl()
         {
-            InitializeComponent();
 
             LoggingUtility.Log("[Model_Transactions_Core_AnalyticsControl] Initializing...");
-
-            // MANDATORY: Constitution Principle IX - Theme System Integration
-            Core_Themes.ApplyDpiScaling(this);
-            Core_Themes.ApplyRuntimeLayoutAdjustments(this);
+            
+            InitializeComponent();
 
             LoggingUtility.Log("[Model_Transactions_Core_AnalyticsControl] Initialization complete.");
         }
