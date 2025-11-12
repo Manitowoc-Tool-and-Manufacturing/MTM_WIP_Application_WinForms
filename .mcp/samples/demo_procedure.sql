@@ -1,7 +1,0 @@
-DROP PROCEDURE IF EXISTS `demo_TestProc`;
-DELIMITER $$
-CREATE PROCEDURE `demo_TestProc`(IN p_Value INT)
-BEGIN
-  SELECT p_Value AS EchoValue;
-END$$
-DELIMITER ;

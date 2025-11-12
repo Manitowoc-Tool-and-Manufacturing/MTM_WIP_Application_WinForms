@@ -57,9 +57,15 @@ public class ThemedForm : Form
                     // Apply current theme immediately on Shown event (when form is first displayed)
                     this.Shown += (s, e) =>
                     {
-                        if (ThemeProvider?.CurrentTheme != null)
+                        // Only apply theme if theming is enabled
+                        if (Model_Application_Variables.ThemeEnabled && ThemeProvider?.CurrentTheme != null)
                         {
                             ApplyTheme(ThemeProvider.CurrentTheme);
+                        }
+                        else if (!Model_Application_Variables.ThemeEnabled)
+                        {
+                            // Theming disabled - use system default colors
+                            ResetToSystemColors();
                         }
                     };
 
@@ -119,6 +125,12 @@ public class ThemedForm : Form
     /// </summary>
     private void OnThemeChanged(object? sender, ThemeChangedEventArgs e)
     {
+        // Only apply theme if theming is enabled (unless it's a preview)
+        if (!Model_Application_Variables.ThemeEnabled && e.Reason != ThemeChangeReason.Preview)
+        {
+            return; // Theming is disabled, ignore theme changes
+        }
+        
         if (InvokeRequired)
         {
             Invoke(() => ApplyTheme(e.NewTheme));
@@ -126,6 +138,60 @@ public class ThemedForm : Form
         else
         {
             ApplyTheme(e.NewTheme);
+        }
+    }
+
+    /// <summary>
+    /// Resets the form and all controls to system default colors.
+    /// Used when theming is disabled.
+    /// </summary>
+    private void ResetToSystemColors()
+    {
+        // Reset form to system defaults
+        this.BackColor = SystemColors.Control;
+        this.ForeColor = SystemColors.ControlText;
+        
+        // Recursively reset all child controls
+        ResetControlToSystemColors(this);
+    }
+    
+    /// <summary>
+    /// Recursively resets a control and its children to system colors.
+    /// </summary>
+    private void ResetControlToSystemColors(Control control)
+    {
+        foreach (Control child in control.Controls)
+        {
+            if (child.IsDisposed)
+                continue;
+                
+            // Reset to appropriate system color based on control type
+            if (child is TextBox or ComboBox or ListBox)
+            {
+                child.BackColor = SystemColors.Window;
+                child.ForeColor = SystemColors.WindowText;
+            }
+            else if (child is Button)
+            {
+                child.BackColor = SystemColors.Control;
+                child.ForeColor = SystemColors.ControlText;
+            }
+            else if (child is DataGridView)
+            {
+                child.BackColor = SystemColors.Window;
+                child.ForeColor = SystemColors.WindowText;
+            }
+            else
+            {
+                child.BackColor = SystemColors.Control;
+                child.ForeColor = SystemColors.ControlText;
+            }
+            
+            // Recursively reset children
+            if (child.HasChildren)
+            {
+                ResetControlToSystemColors(child);
+            }
         }
     }
 

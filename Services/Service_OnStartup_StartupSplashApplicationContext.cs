@@ -247,15 +247,19 @@ namespace MTM_WIP_Application_Winforms.Services
                         LoggingUtility.Log("[Splash] WARNING: ThemeStore not available in ServiceProvider");
                     }
                     
-                    // Set ThemeManager's current theme to the user's preference
+                    // Set ThemeManager's current theme to the user's preference (only if enabled)
                     var themeProvider = Program.ServiceProvider?.GetService<IThemeProvider>();
-                    if (themeProvider != null && !string.IsNullOrEmpty(Model_Application_Variables.ThemeName))
+                    if (themeProvider != null && Model_Application_Variables.ThemeEnabled && !string.IsNullOrEmpty(Model_Application_Variables.ThemeName))
                     {
                         await themeProvider.SetThemeAsync(
                             Model_Application_Variables.ThemeName,
                             Core.Theming.ThemeChangeReason.Login,
                             Model_Application_Variables.User);
                         LoggingUtility.Log($"[Splash] ThemeManager initialized with '{Model_Application_Variables.ThemeName}' theme");
+                    }
+                    else if (!Model_Application_Variables.ThemeEnabled)
+                    {
+                        LoggingUtility.Log("[Splash] Theme system is disabled by user preference - skipping theme application");
                     }
                     else
                     {

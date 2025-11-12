@@ -1,6 +1,7 @@
 ﻿using System.Reflection;
 using MTM_WIP_Application_Winforms.Controls.SettingsForm;
 using MTM_WIP_Application_Winforms.Core;
+using MTM_WIP_Application_Winforms.Forms.Shared;
 using MTM_WIP_Application_Winforms.Models;
 using MTM_WIP_Application_Winforms.Helpers;
 using MTM_WIP_Application_Winforms.Data;
@@ -8,7 +9,7 @@ using MTM_WIP_Application_Winforms.Services;
 
 namespace MTM_WIP_Application_Winforms.Forms.Settings
 {
-    public partial class SettingsForm : Form
+    public partial class SettingsForm : ThemedForm
     {
         #region Fields
 
@@ -583,7 +584,7 @@ namespace MTM_WIP_Application_Winforms.Forms.Settings
         /// </summary>
         /// <param name="result">Stored procedure result</param>
         /// <param name="successMessage">Custom success message (optional)</param>
-        public void ProcessStoredProcedureResult(StoredProcedureResult result, string successMessage = null)
+        public void ProcessStoredProcedureResult(StoredProcedureResult result, string? successMessage = null)
         {
             try
             {
@@ -608,7 +609,7 @@ namespace MTM_WIP_Application_Winforms.Forms.Settings
         /// <typeparam name="T">Result data type</typeparam>
         /// <param name="result">Stored procedure result</param>
         /// <param name="successMessage">Custom success message (optional)</param>
-        public void ProcessStoredProcedureResult<T>(StoredProcedureResult<T> result, string successMessage = null)
+        public void ProcessStoredProcedureResult<T>(StoredProcedureResult<T> result, string? successMessage = null)
         {
             try
             {

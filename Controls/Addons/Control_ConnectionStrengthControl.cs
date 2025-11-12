@@ -100,13 +100,8 @@ namespace MTM_WIP_Application_Winforms.Controls.Addons
 
         protected override void ApplyTheme(Model_Shared_UserUiColors theme)
         {
-            // Apply StatusStrip background color to match the status bar
-            BackColor = theme.StatusStripBackColor 
-                ?? theme.PanelBackColor 
-                ?? theme.ControlBackColor 
-                ?? SystemColors.Control;
-
-            Invalidate();
+            // Sync with parent's background color after theme is applied
+            SyncBackgroundWithParent();
         }
 
         #endregion
@@ -189,11 +184,18 @@ namespace MTM_WIP_Application_Winforms.Controls.Addons
 
         private void SyncBackgroundWithParent()
         {
-            // Use StatusStrip background color to match the status bar it's always next to
-            BackColor = Model_Application_Variables.UserUiColors.StatusStripBackColor 
-                ?? Model_Application_Variables.UserUiColors.PanelBackColor 
-                ?? Model_Application_Variables.UserUiColors.ControlBackColor 
-                ?? SystemColors.Control;
+            // Simply match the parent container's background color (like it was in master branch)
+            if (Parent != null)
+            {
+                BackColor = Parent.BackColor;
+            }
+            else
+            {
+                // Fallback to StatusStrip color if no parent yet
+                BackColor = Model_Application_Variables.UserUiColors.StatusStripBackColor 
+                    ?? Model_Application_Variables.UserUiColors.ControlBackColor 
+                    ?? SystemColors.Control;
+            }
 
             Invalidate();
         }

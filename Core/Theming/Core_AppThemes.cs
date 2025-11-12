@@ -234,6 +234,19 @@ public static class Core_AppThemes
         {
             // First load all available themes from database
             await LoadThemesFromDatabaseAsync();
+            
+            // Load theme enabled/disabled setting
+            var themeEnabledResult = await Dao_User.GetThemeEnabledAsync(userId);
+            if (themeEnabledResult.IsSuccess)
+            {
+                Model_Application_Variables.ThemeEnabled = themeEnabledResult.Data;
+                LoggingUtility.Log($"Theme system enabled status for user {userId}: {themeEnabledResult.Data}");
+            }
+            else
+            {
+                LoggingUtility.Log($"Failed to load theme enabled setting for user {userId}: {themeEnabledResult.ErrorMessage}. Defaulting to enabled.");
+                Model_Application_Variables.ThemeEnabled = true; // Default to enabled
+            }
 
             // Then try to get the user's theme preference
             string? userThemeName = await LoadAndSetUserThemeNameAsync(userId);

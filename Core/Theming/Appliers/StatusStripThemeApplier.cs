@@ -12,7 +12,17 @@ public class StatusStripThemeApplier : ThemeApplierBase
         if (control is not StatusStrip statusStrip) return;
         try
         {
-            statusStrip.BackColor = GetColorOrDefault(theme.StatusStripBackColor, Color.FromArgb(0, 122, 204));
+            // Match parent's background color for seamless integration
+            if (statusStrip.Parent != null)
+            {
+                statusStrip.BackColor = statusStrip.Parent.BackColor;
+            }
+            else
+            {
+                // Fallback to theme color if no parent
+                statusStrip.BackColor = GetColorOrDefault(theme.StatusStripBackColor, Color.FromArgb(0, 122, 204));
+            }
+            
             statusStrip.ForeColor = GetColorOrDefault(theme.StatusStripForeColor, Color.White);
         }
         catch (Exception ex) { HandleApplyError(ex, control, theme); }

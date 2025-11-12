@@ -88,6 +88,14 @@ public class ThemeManager : IThemeProvider, IDisposable
     {
         try
         {
+            // Check if theming is enabled globally
+            if (!Model_Application_Variables.ThemeEnabled && reason != ThemeChangeReason.Preview)
+            {
+                _logger.LogInformation("Theme change to '{ThemeName}' skipped - theming is disabled", themeName);
+                LoggingUtility.Log($"Theme change to '{themeName}' skipped - theming is disabled globally");
+                return;
+            }
+            
             var oldTheme = CurrentTheme;
             var newTheme = await _themeStore.GetThemeAsync(themeName);
 

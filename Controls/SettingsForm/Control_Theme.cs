@@ -192,10 +192,20 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
                 
                 // Use new theme system: ThemeManager will notify all ThemedForm subscribers
                 var themeProvider = Program.ServiceProvider?.GetService<IThemeProvider>();
-                if (themeProvider != null && themeEnabled && !string.IsNullOrEmpty(selectedTheme))
+                if (themeProvider != null)
                 {
-                    await themeProvider.SetThemeAsync(selectedTheme, ThemeChangeReason.UserSelection, user);
-                    LoggingUtility.Log($"[Control_Theme] Theme '{selectedTheme}' applied via ThemeManager to all subscribed forms");
+                    if (themeEnabled && !string.IsNullOrEmpty(selectedTheme))
+                    {
+                        // Apply theme
+                        await themeProvider.SetThemeAsync(selectedTheme, ThemeChangeReason.UserSelection, user);
+                        LoggingUtility.Log($"[Control_Theme] Theme '{selectedTheme}' applied via ThemeManager to all subscribed forms");
+                    }
+                    else if (!themeEnabled)
+                    {
+                        // Theming disabled - forms will reset to system colors on next theme change event
+                        // Trigger a system default "theme" to reset all forms
+                        LoggingUtility.Log("[Control_Theme] Theming disabled - forms should reset to system colors");
+                    }
                 }
                 else if (themeProvider == null)
                 {
