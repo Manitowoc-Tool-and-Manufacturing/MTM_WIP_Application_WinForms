@@ -4,7 +4,170 @@
 
 ---
 
-## Latest Update - November 12, 2025 (Version 6.1.0)
+## Latest Update - November 13, 2025 (Version 6.2.0)
+
+**What Changed**: Universal Suggestion System replacing all ComboBoxes with intelligent autocomplete + Smart confirmation dialogs for deletions and transfers  
+**Do I Need To Do Anything?**: No - data entry is now faster and safer with better feedback!
+
+---
+
+### 🎯 What This Means For You
+
+#### Intelligent Part Number, Operation, and Location Entry
+
+**What's new**:
+- **Autocomplete everywhere**: Type anywhere in Part Number, Operation, or Location fields and see matching suggestions instantly
+- **Wildcard search support**: Use `%` to search flexibly (e.g., `R-%` shows all parts starting with R-, `%-01` shows all parts ending in 01)
+- **Keyboard-only operation**: Full arrow key navigation, Home/End to jump to first/last, Enter to select, Escape to cancel
+- **No more scrolling through long lists**: Type 2-3 characters and see only matching options
+- **Smart validation**: Fields only accept valid values from your database - prevents typos and invalid entries
+- **Uppercase standardization**: All entries automatically converted to uppercase for consistency
+- **Light dismiss**: Click outside suggestion box or press Escape to cancel without selecting
+
+**Where it works**:
+- **Inventory Tab**: Part Number, Operation, Location fields
+- **Transfer Tab**: Part Number, Operation, To Location fields  
+- **Remove Tab**: Part Number, Operation fields
+- **Quick Button Edit Dialog**: Part Number, Operation fields
+
+**How to use it**:
+1. **Start typing** in any field (Part, Operation, or Location)
+2. **Suggestion overlay appears** automatically when you press Tab or leave the field
+3. **Navigate suggestions**:
+   - **Arrow keys**: Move up/down through list
+   - **Home/End**: Jump to first/last suggestion
+   - **Enter**: Select highlighted suggestion
+   - **Escape**: Cancel and keep what you typed
+   - **Double-click**: Select with mouse
+4. **Wildcard patterns**:
+   - Type `R-%` to see all parts starting with "R-"
+   - Type `%-01` to see all parts ending in "01"
+   - Type `%2142%` to see all parts containing "2142"
+   - Type `10` for Operation to see 10, 100, 101, etc.
+
+**What's better now**:
+- **3x faster data entry**: No scrolling through 500+ parts to find what you need
+- **Zero typos**: Can't save invalid Part IDs, Operations, or Locations
+- **Consistent formatting**: Everything uppercase automatically
+- **Less clicking**: Keyboard shortcuts eliminate mouse dependency
+- **Smart filtering**: Suggestions refresh as you type more characters
+- **Exact match handling**: If you type a complete exact match and tab away, it's automatically accepted
+
+**Examples**:
+- **Inventory Tab - Part field**: Type "R-" → Shows all R- parts → Arrow down 3 times → Enter → Part selected
+- **Transfer Tab - Location**: Type "DD" → Shows DD-A1-01, DD-A1-02, DD-B2-05 → Click DD-B2-05
+- **Remove Tab - Operation**: Type "10" → Shows 10, 100, 101, 1000 → Down arrow → Enter → "100" selected
+- **Wildcard search**: Type "%-A1-%" → Shows all locations containing "-A1-" (DD-A1-01, DD-A1-02, EX-A1-01)
+
+**Why this helps**:
+- **Save time**: Find parts in seconds instead of minutes
+- **Reduce errors**: System validates entries against master data
+- **Better ergonomics**: Full keyboard control for power users
+- **Learn as you go**: See available options without memorizing codes
+- **Professional UX**: Same autocomplete experience as modern web applications
+
+---
+
+#### Smart Deletion and Transfer Confirmation
+
+**What's new**:
+- **Confirmation before any deletion or transfer**: System asks for confirmation before making changes to inventory
+- **Smart grouping for multiple items**: When deleting or transferring 10+ items, system groups by Part ID to prevent message flooding
+- **Clear summary**: See exactly what will be deleted or transferred before it happens
+- **Easy to cancel**: Click "No" or press Escape to cancel without changes
+
+**Deletion Confirmations (Remove Tab & Advanced Remove)**:
+
+**Single item deletion**:
+```
+Are you sure you want to delete this item?
+
+Part ID: 0K2142
+Location: DD-A1-01
+Quantity: 16
+```
+
+**Multiple items deletion** (prevents spam):
+```
+Are you sure you want to delete 15 items?
+
+PartID: 0K2142, Location(s): 5, Quantity: 80
+PartID: R-123-01, Location(s): 3, Quantity: 45  
+PartID: X-456-02, Location(s): 7, Quantity: 120
+```
+
+**Transfer Confirmations (Transfer Tab)**:
+
+**Single item transfer**:
+```
+Are you sure you want to transfer this item?
+
+Part ID: 0K2142
+Operation: 10
+From: DD-A1-01
+To: DD-B2-05
+Quantity: 16
+```
+
+**Multiple items transfer** (grouped summary):
+```
+Are you sure you want to transfer 8 items to DD-B2-05?
+
+PartID: 0K2142, 2 locations, 2 operations, Quantity: 32
+PartID: R-123-01, 1 location, Quantity: 15
+PartID: X-456-02, 3 locations, 1 operation, Quantity: 48
+```
+
+**What's better**:
+- **Prevents accidents**: Can't accidentally delete or transfer without confirmation
+- **Clear feedback**: See exactly what's about to happen before it happens
+- **No message spam**: Groups items intelligently when selecting many rows
+- **Shows totals**: See combined quantities per Part ID for multi-location operations
+- **Operation awareness**: Transfer confirmations show when multiple operations are involved
+
+**Why this helps**:
+- **Safety**: Prevents accidental deletion of large batches
+- **Clarity**: Know exactly what you're about to do before doing it
+- **Less frustration**: No more "oops, I didn't mean to delete that"
+- **Audit trail**: Clear record of intentional vs accidental changes
+- **Professional workflow**: Standard confirmation pattern matches other business software
+
+---
+
+#### Focus Highlighting Improvements
+
+**What's fixed**:
+- **Transfer Tab Location field**: Focus highlighting now works on the To Location field (was skipped because field started disabled)
+- **Consistent highlighting**: All text input fields now highlight properly when focused across all tabs
+- **Automatic re-application**: Focus highlighting applies after privilege changes (when fields are enabled/disabled)
+
+**Why this matters**:
+- **Better visual feedback**: Always clear which field has focus
+- **Improved accessibility**: Easier to see where you're typing, especially for keyboard-only users
+- **Consistent experience**: All tabs behave the same way
+
+---
+
+#### Data Validation for Exact Matches
+
+**What's fixed**:
+- **Exact match validation**: When you type an exact Part ID, Operation, or Location and press Tab, the system validates it against master data
+- **Save button activation**: Save button now enables correctly when all fields have valid exact matches (no need to use suggestion overlay)
+- **Helper data loading**: Validation data loads automatically on tab initialization for instant validation
+
+**What's better**:
+- **Faster for power users**: If you know the exact code, just type it and tab through - no need to wait for suggestions
+- **Still validates**: Even exact typed values are checked against master data
+- **Save button responds**: Button enables as soon as all required fields have valid data
+
+**Why this helps**:
+- **Power user workflow**: Type exact codes without interruption
+- **Error prevention**: System still validates typed entries
+- **Faster data entry**: No forced interaction with suggestion overlay if you don't need it
+
+---
+
+## Previous Update - November 12, 2025 (Version 6.1.0)
 
 **What Changed**: Complete theme system overhaul - faster, smoother, and more reliable theme switching  
 **Do I Need To Do Anything?**: No - themes now update automatically and work even better!

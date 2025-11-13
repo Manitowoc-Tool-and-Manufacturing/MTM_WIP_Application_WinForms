@@ -765,6 +765,22 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                     return;
                 }
 
+                // Build confirmation message showing what will be transferred
+                string toLocation = Control_TransferTab_TextBox_ToLocation.Text;
+                string confirmMessage = BuildTransferConfirmationMessage(selectedRows, toLocation);
+                
+                DialogResult confirmResult = Service_ErrorHandler.ShowConfirmation(
+                    confirmMessage,
+                    "Confirm Transfer",
+                    MessageBoxButtons.YesNo,
+                    MessageBoxIcon.Question);
+
+                if (confirmResult != DialogResult.Yes)
+                {
+                    LoggingUtility.Log("User cancelled transfer.");
+                    return;
+                }
+
                 _progressHelper?.UpdateProgress(40, "Processing transfer...");
 
                 if (selectedRows.Count == 1)
@@ -1212,6 +1228,85 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
 
         #region Helper Methods
 
+        /// <summary>
+        /// Builds a concise confirmation message for inventory transfers.
+        /// Groups items by Part ID for multiple selections to prevent message flooding.
+        /// </summary>
+        /// <param name="selectedRows">Selected rows to transfer</param>
+        /// <param name="toLocation">Destination location</param>
+        /// <returns>Formatted confirmation message</returns>
+        private string BuildTransferConfirmationMessage(DataGridViewSelectedRowCollection selectedRows, string toLocation)
+        {
+            if (selectedRows.Count == 1)
+            {
+                // Single item - show full details
+                var row = selectedRows[0];
+                if (row.DataBoundItem is DataRowView drv)
+                {
+                    string partId = drv["PartID"]?.ToString() ?? "";
+                    string fromLocation = drv["Location"]?.ToString() ?? "";
+                    string operation = drv["Operation"]?.ToString() ?? "";
+                    string quantityStr = drv["Quantity"]?.ToString() ?? "";
+                    int.TryParse(quantityStr, out int quantity);
+                    int transferQty = Math.Min((int)Control_TransferTab_NumericUpDown_Quantity.Value, quantity);
+
+                    return $"Are you sure you want to transfer this item?\n\n" +
+                           $"Part ID: {partId}\n" +
+                           $"Operation: {operation}\n" +
+                           $"From: {fromLocation}\n" +
+                           $"To: {toLocation}\n" +
+                           $"Quantity: {transferQty}";
+                }
+            }
+            else
+            {
+                // Multiple items - group by Part ID for concise summary
+                var items = new List<(string PartID, string FromLocation, string Operation, int Quantity)>();
+                
+                foreach (DataGridViewRow row in selectedRows)
+                {
+                    if (row.DataBoundItem is DataRowView drv)
+                    {
+                        string partId = drv["PartID"]?.ToString() ?? "";
+                        string fromLocation = drv["Location"]?.ToString() ?? "";
+                        string operation = drv["Operation"]?.ToString() ?? "";
+                        string quantityStr = drv["Quantity"]?.ToString() ?? "";
+                        if (int.TryParse(quantityStr, out int quantity))
+                        {
+                            items.Add((partId, fromLocation, operation, quantity));
+                        }
+                    }
+                }
+
+                var groupedByPart = items
+                    .GroupBy(x => x.PartID)
+                    .Select(g => new
+                    {
+                        PartID = g.Key,
+                        LocationCount = g.Select(x => x.FromLocation).Distinct().Count(),
+                        OperationCount = g.Select(x => x.Operation).Distinct().Count(),
+                        TotalQuantity = g.Sum(x => x.Quantity)
+                    })
+                    .OrderBy(x => x.PartID)
+                    .ToList();
+
+                StringBuilder sb = new();
+                sb.AppendLine($"Are you sure you want to transfer {items.Count} items to {toLocation}?\n");
+                
+                foreach (var group in groupedByPart)
+                {
+                    string locationText = group.LocationCount > 1 ? $"{group.LocationCount} locations" : "1 location";
+                    string operationText = group.OperationCount > 1 ? $"{group.OperationCount} operations" : "";
+                    string opSuffix = !string.IsNullOrEmpty(operationText) ? $", {operationText}" : "";
+                    
+                    sb.AppendLine($"PartID: {group.PartID}, {locationText}{opSuffix}, Quantity: {group.TotalQuantity}");
+                }
+
+                return sb.ToString().TrimEnd();
+            }
+
+            return "Are you sure you want to transfer the selected items?";
+        }
 
         #endregion
 

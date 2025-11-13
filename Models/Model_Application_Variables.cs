@@ -22,7 +22,7 @@ namespace MTM_WIP_Application_Winforms.Models
         public static bool UserTypeNormal { get; set; } = true;
 
         public static string UserVersion { get; set; } =
-            Assembly.GetExecutingAssembly().GetName().Version?.ToString() ?? "unknown";
+            Assembly.GetExecutingAssembly().GetName().Version?.ToString() ?? "Error: Version not found";
 
         public static string? UserFullName { get; set; }
         public static string? VisualUserName { get; set; }

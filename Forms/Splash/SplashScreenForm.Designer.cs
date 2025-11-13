@@ -1,5 +1,6 @@
 ﻿#nullable enable
 using DocumentFormat.OpenXml.Vml.Spreadsheet;
+using MTM_WIP_Application_Winforms.Models;
 
 namespace MTM_WIP_Application_Winforms.Forms.Splash
 {
@@ -108,7 +109,7 @@ namespace MTM_WIP_Application_Winforms.Forms.Splash
             this._versionLabel.Margin = new System.Windows.Forms.Padding(3, 3, 3, 3);
             this._versionLabel.ForeColor = System.Drawing.Color.LightGray;
             this._versionLabel.Name = "_versionLabel";
-            this._versionLabel.Text = "Version 6.0.1.0";
+            this._versionLabel.Text = Model_Application_Variables.Version;
             this._versionLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
 
             // 

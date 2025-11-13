@@ -455,7 +455,7 @@ public static async Task<Model_Dao_Result<DataTable>> GetSomeDataAsync(...)
 - **PATCH**: Bug fixes, performance improvements, non-breaking refactors
 - **BUILD**: Automated build number (incremented per build)
 
-**Current version** (from AssemblyInfo.cs): `6.0.1.0`
+**Current version** (from AssemblyInfo.cs): `6.2.0.0`
 
 ### Database Migration Strategy
 
