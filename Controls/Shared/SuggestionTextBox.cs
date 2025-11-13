@@ -388,17 +388,45 @@ namespace MTM_WIP_Application_Winforms.Controls.Shared
 
                 _currentOverlay = new SuggestionOverlayForm(suggestions, this);
                 
+                var parentForm = this.FindForm();
+                if (parentForm == null)
+                {
+                    LoggingUtility.LogApplicationError(new InvalidOperationException($"[SuggestionTextBox] Cannot find parent form for control: {this.Name}"));
+                    _currentOverlay.Dispose();
+                    _currentOverlay = null;
+                    _isOverlayVisible = false;
+                    return;
+                }
+                
                 LoggingUtility.Log($"[SuggestionTextBox] About to show dialog");
-                var result = _currentOverlay.ShowDialog(this.FindForm());
+                var result = _currentOverlay.ShowDialog(parentForm);
                 LoggingUtility.Log($"[SuggestionTextBox] Dialog closed with result: {result}");
 
-                // Capture selected item BEFORE dispose
-                string? selectedValue = _currentOverlay.SelectedItem;
-                LoggingUtility.Log($"[SuggestionTextBox] Captured selectedValue: '{selectedValue}'");
+                // Capture selected item IMMEDIATELY after dialog closes (before any disposal)
+                string? selectedValue = null;
+                try
+                {
+                    selectedValue = _currentOverlay?.SelectedItem;
+                    LoggingUtility.Log($"[SuggestionTextBox] Captured selectedValue: '{selectedValue}'");
+                }
+                catch (Exception ex)
+                {
+                    LoggingUtility.Log($"[SuggestionTextBox] ERROR capturing selectedValue: {ex.Message}");
+                }
 
-                // Dispose overlay
-                _currentOverlay.Dispose();
-                _currentOverlay = null;
+                // Dispose overlay safely
+                try
+                {
+                    _currentOverlay?.Dispose();
+                }
+                catch (Exception ex)
+                {
+                    LoggingUtility.Log($"[SuggestionTextBox] ERROR disposing overlay: {ex.Message}");
+                }
+                finally
+                {
+                    _currentOverlay = null;
+                }
 
                 if (result == DialogResult.OK && selectedValue != null)
                 {

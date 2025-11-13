@@ -69,10 +69,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                 });
 
             InitializeComponent();
-SetStyle(ControlStyles.OptimizedDoubleBuffer, true);
-            // Apply comprehensive DPI scaling and runtime layout adjustments
-            // THEME POLICY: Only update theme on startup, in settings menu, or on DPI change.
-            // Do NOT call theme update methods from arbitrary event handlers or business logic.
+            SetStyle(ControlStyles.OptimizedDoubleBuffer, true);
 
             Control_TransferTab_Initialize();
             ApplyPrivileges();
@@ -422,9 +419,9 @@ SetStyle(ControlStyles.OptimizedDoubleBuffer, true);
                 var suggestions = new List<string>();
                 foreach (System.Data.DataRow row in dataResult.Data.Rows)
                 {
-                    if (row["OperationNumber"] != null && row["OperationNumber"] != DBNull.Value)
+                    if (row["Operation"] != null && row["Operation"] != DBNull.Value)
                     {
-                        suggestions.Add(row["OperationNumber"].ToString() ?? string.Empty);
+                        suggestions.Add(row["Operation"].ToString() ?? string.Empty);
                     }
                 }
 
@@ -549,7 +546,6 @@ SetStyle(ControlStyles.OptimizedDoubleBuffer, true);
                 }
 
                 _progressHelper?.UpdateProgress(30, "Resetting data tables...");
-                Debug.WriteLine("[DEBUG] Hiding ComboBoxes");
 
                 Debug.WriteLine("[DEBUG] Resetting and refreshing all ComboBox DataTables");
                 await Helper_UI_ComboBoxes.ResetAndRefreshAllDataTablesAsync();

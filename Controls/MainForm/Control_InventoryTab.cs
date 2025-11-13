@@ -1102,165 +1102,6 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
 
         #region ComboBox & UI Events
 
-        // NOTE: SelectedIndexChanged event handlers commented out - Part, Operation, and Location now use SuggestionTextBox (TextBox-based)
-        // These controls don't have SelectedIndex property. Validation now handled via Text property and SuggestionSelected events.
-        
-        /*
-        private void Control_InventoryTab_TextBox_Location_SelectedIndexChanged()
-        {
-            Service_DebugTracer.TraceMethodEntry(new Dictionary<string, object>
-            {
-                ["SelectedIndex"] = Control_InventoryTab_TextBox_Location.SelectedIndex,
-                ["SelectedText"] = Control_InventoryTab_TextBox_Location.Text
-            }, nameof(Control_InventoryTab), nameof(Control_InventoryTab_TextBox_Location_SelectedIndexChanged));
-
-            try
-            {
-                LoggingUtility.Log("Inventory Location ComboBox selection changed.");
-
-                if (Control_InventoryTab_TextBox_Location.SelectedIndex > 0)
-                {
-                    Control_InventoryTab_TextBox_Location.ForeColor =
-                        Model_Application_Variables.UserUiColors.ComboBoxForeColor ?? Color.Black;
-                    Model_Application_Variables.Location = Control_InventoryTab_TextBox_Location.Text;
-                    Service_DebugTracer.TraceMethodExit(new { Valid = true, Location = Model_Application_Variables.Location }, nameof(Control_InventoryTab), nameof(Control_InventoryTab_TextBox_Location_SelectedIndexChanged));
-                }
-                else
-                {
-                    Control_InventoryTab_TextBox_Location.ForeColor =
-                        Model_Application_Variables.UserUiColors.ComboBoxErrorForeColor ?? Color.Red;
-                    if (Control_InventoryTab_TextBox_Location.SelectedIndex != 0 &&
-                        Control_InventoryTab_TextBox_Location.Items.Count > 0)
-                    {
-                        Control_InventoryTab_TextBox_Location.SelectedIndex = 0;
-                    }
-
-                    Model_Application_Variables.Location = null;
-                    Service_DebugTracer.TraceMethodExit(new { Valid = false }, nameof(Control_InventoryTab), nameof(Control_InventoryTab_TextBox_Location_SelectedIndexChanged));
-                }
-            }
-            catch (Exception ex)
-            {
-                LoggingUtility.LogApplicationError(ex);
-                Service_DebugTracer.TraceMethodExit(new { Exception = ex.Message }, nameof(Control_InventoryTab), nameof(Control_InventoryTab_TextBox_Location_SelectedIndexChanged));
-                
-                Service_ErrorHandler.HandleException(
-                    ex,
-                    Enum_ErrorSeverity.Low,
-                    contextData: new Dictionary<string, object>
-                    {
-                        ["MethodName"] = nameof(Control_InventoryTab_TextBox_Location_SelectedIndexChanged),
-                        ["SelectedIndex"] = Control_InventoryTab_TextBox_Location.SelectedIndex
-                    },
-                    controlName: nameof(Control_InventoryTab_TextBox_Location));
-            }
-        }
-
-        // NOTE: SelectedIndexChanged event handlers commented out - Part and Operation now use SuggestionTextBox (TextBox-based)
-        // These controls don't have SelectedIndex property. Validation now handled via Text property and SuggestionSelected events.
-        
-        /*
-        private void Control_InventoryTab_TextBox_Operation_SelectedIndexChanged()
-        {
-            Service_DebugTracer.TraceMethodEntry(new Dictionary<string, object>
-            {
-                ["SelectedIndex"] = Control_InventoryTab_TextBox_Operation.SelectedIndex,
-                ["SelectedText"] = Control_InventoryTab_TextBox_Operation.Text
-            }, nameof(Control_InventoryTab), nameof(Control_InventoryTab_TextBox_Operation_SelectedIndexChanged));
-
-            try
-            {
-                LoggingUtility.Log("Inventory Op ComboBox selection changed.");
-
-                if (Control_InventoryTab_TextBox_Operation.SelectedIndex > 0)
-                {
-                    Control_InventoryTab_TextBox_Operation.ForeColor =
-                        Model_Application_Variables.UserUiColors.ComboBoxForeColor ?? Color.Black;
-                    Model_Application_Variables.Operation = Control_InventoryTab_TextBox_Operation.Text;
-                    Service_DebugTracer.TraceMethodExit(new { Valid = true, Operation = Model_Application_Variables.Operation }, nameof(Control_InventoryTab), nameof(Control_InventoryTab_TextBox_Operation_SelectedIndexChanged));
-                }
-                else
-                {
-                    Control_InventoryTab_TextBox_Operation.ForeColor =
-                        Model_Application_Variables.UserUiColors.ComboBoxErrorForeColor ?? Color.Red;
-                    if (Control_InventoryTab_TextBox_Operation.SelectedIndex != 0 &&
-                        Control_InventoryTab_TextBox_Operation.Items.Count > 0)
-                    {
-                        Control_InventoryTab_TextBox_Operation.SelectedIndex = 0;
-                    }
-
-                    Model_Application_Variables.Operation = null;
-                    Service_DebugTracer.TraceMethodExit(new { Valid = false }, nameof(Control_InventoryTab), nameof(Control_InventoryTab_TextBox_Operation_SelectedIndexChanged));
-                }
-            }
-            catch (Exception ex)
-            {
-                LoggingUtility.LogApplicationError(ex);
-                Service_DebugTracer.TraceMethodExit(new { Exception = ex.Message }, nameof(Control_InventoryTab), nameof(Control_InventoryTab_TextBox_Operation_SelectedIndexChanged));
-                
-                Service_ErrorHandler.HandleException(
-                    ex,
-                    Enum_ErrorSeverity.Low,
-                    contextData: new Dictionary<string, object>
-                    {
-                        ["MethodName"] = nameof(Control_InventoryTab_TextBox_Operation_SelectedIndexChanged),
-                        ["SelectedIndex"] = Control_InventoryTab_TextBox_Operation.SelectedIndex
-                    },
-                    controlName: nameof(Control_InventoryTab_TextBox_Operation));
-            }
-        }
-
-        private void Control_InventoryTab_TextBox_Part_SelectedIndexChanged()
-        {
-            Service_DebugTracer.TraceMethodEntry(new Dictionary<string, object>
-            {
-                ["SelectedIndex"] = Control_InventoryTab_TextBox_Part.SelectedIndex,
-                ["SelectedText"] = Control_InventoryTab_TextBox_Part.Text
-            }, nameof(Control_InventoryTab), nameof(Control_InventoryTab_TextBox_Part_SelectedIndexChanged));
-
-            try
-            {
-                LoggingUtility.Log("Inventory Part ComboBox selection changed.");
-
-                if (Control_InventoryTab_TextBox_Part.SelectedIndex > 0)
-                {
-                    Control_InventoryTab_TextBox_Part.ForeColor =
-                        Model_Application_Variables.UserUiColors.ComboBoxForeColor ?? Color.Black;
-                    Model_Application_Variables.PartId = Control_InventoryTab_TextBox_Part.Text;
-                    Service_DebugTracer.TraceMethodExit(new { Valid = true, PartId = Model_Application_Variables.PartId }, nameof(Control_InventoryTab), nameof(Control_InventoryTab_TextBox_Part_SelectedIndexChanged));
-                }
-                else
-                {
-                    Control_InventoryTab_TextBox_Part.ForeColor =
-                        Model_Application_Variables.UserUiColors.ComboBoxErrorForeColor ?? Color.Red;
-                    if (Control_InventoryTab_TextBox_Part.SelectedIndex != 0 &&
-                        Control_InventoryTab_TextBox_Part.Items.Count > 0)
-                    {
-                        Control_InventoryTab_TextBox_Part.SelectedIndex = 0;
-                    }
-
-                    Model_Application_Variables.PartId = null;
-                    Service_DebugTracer.TraceMethodExit(new { Valid = false }, nameof(Control_InventoryTab), nameof(Control_InventoryTab_TextBox_Part_SelectedIndexChanged));
-                }
-            }
-            catch (Exception ex)
-            {
-                LoggingUtility.LogApplicationError(ex);
-                Service_DebugTracer.TraceMethodExit(new { Exception = ex.Message }, nameof(Control_InventoryTab), nameof(Control_InventoryTab_TextBox_Part_SelectedIndexChanged));
-                
-                Service_ErrorHandler.HandleException(
-                    ex,
-                    Enum_ErrorSeverity.Low,
-                    contextData: new Dictionary<string, object>
-                    {
-                        ["MethodName"] = nameof(Control_InventoryTab_TextBox_Part_SelectedIndexChanged),
-                        ["SelectedIndex"] = Control_InventoryTab_TextBox_Part.SelectedIndex
-                    },
-                    controlName: nameof(Control_InventoryTab_TextBox_Part));
-            }
-        }
-        */
-
         private void Control_InventoryTab_TextBox_Quantity_TextChanged()
         {
             try
@@ -1315,11 +1156,11 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                 string locText = Control_InventoryTab_TextBox_Location.Text?.Trim() ?? string.Empty;
                 
                 bool partValid = !string.IsNullOrWhiteSpace(Model_Application_Variables.PartId) 
-                    || Helper_UI_ComboBoxes.IsValidPartId(partText);
+                    || Helper_UI_SuggestionBoxes.IsValidPartId(partText);
                 bool opValid = !string.IsNullOrWhiteSpace(Model_Application_Variables.Operation) 
-                    || Helper_UI_ComboBoxes.IsValidOperation(opText);
+                    || Helper_UI_SuggestionBoxes.IsValidOperation(opText);
                 bool locValid = !string.IsNullOrWhiteSpace(Model_Application_Variables.Location) 
-                    || Helper_UI_ComboBoxes.IsValidLocation(locText);
+                    || Helper_UI_SuggestionBoxes.IsValidLocation(locText);
                 bool qtyValid = int.TryParse(Control_InventoryTab_TextBox_Quantity.Text.Trim(), out int qty) && qty > 0;
                 
                 // Update colors based on validation
