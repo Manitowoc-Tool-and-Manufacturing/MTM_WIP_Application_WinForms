@@ -4,14 +4,52 @@
 
 ---
 
-## Latest Update - November 13, 2025 (Version 6.2.0)
+## Latest Update - November 13, 2025 (Version 6.2.1)
 
-**What Changed**: Universal Suggestion System replacing all ComboBoxes with intelligent autocomplete + Smart confirmation dialogs for deletions and transfers  
-**Do I Need To Do Anything?**: No - data entry is now faster and safer with better feedback!
+**What Changed**: Added Startup Arguments to choose database (Production/Test/custom), set username, and optionally provide DB credentials; new Help page explains how to use it.  
+**Do I Need To Do Anything?**: No. Optional feature — use if you need separate shortcuts for Production vs Test.
 
 ---
 
 ### 🎯 What This Means For You
+
+#### Launch App With Database And User Selection (New)
+
+**What's new**:
+- Start the app with options like `-db=prod` (Production) or `-db=test` (Test)
+- Set your display name in logs with `-user=JDOE`
+- Advanced: override database username/password with `-dbuser=` and `-dbpassword=`
+
+**How to use**:
+1. Create a desktop shortcut to the app
+2. Edit the shortcut Target and add arguments, for example:
+   - Production: `-db=prod -user=JDOE`
+   - Test: `-db=test -user=QA_USER`
+   - Custom DB: `-db=mtm_wip_application_winforms_training`
+
+**Where to learn more**:
+- Help → “Startup Arguments” page (F1 → search “Startup Arguments”)
+
+**Why this helps**:
+- Easy switching between Production and Test without changing settings
+- Clearer logs when multiple people share a station (set `-user=`)
+- Training or demo environments can use separate databases safely
+
+**Security note**:
+- If you include a password in a shortcut, anyone with access to the machine can view it. Prefer test environments or secured setups for `-dbpassword`.
+
+---
+
+#### Documentation Update
+
+- New Help page: “Startup Arguments” with examples, screenshots guidance, and step-by-step shortcut instructions
+
+---
+
+## Previous Update - November 13, 2025 (Version 6.2.0)
+
+**What Changed**: Universal Suggestion System replacing all ComboBoxes with intelligent autocomplete + Smart confirmation dialogs for deletions and transfers  
+**Do I Need To Do Anything?**: No - data entry is now faster and safer with better feedback!
 
 #### Intelligent Part Number, Operation, and Location Entry
 

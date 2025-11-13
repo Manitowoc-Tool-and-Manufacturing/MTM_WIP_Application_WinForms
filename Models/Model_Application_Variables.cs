@@ -65,6 +65,32 @@ namespace MTM_WIP_Application_Winforms.Models
         public static string? Version { get; set; } = Assembly.GetEntryAssembly()?.GetName().Version?.ToString();
 
         /// <summary>
+        /// Optional override for database name. When set, all connection strings will use this value.
+        /// Defaults to Model_Shared_Users.Database when not explicitly overridden.
+        /// </summary>
+        private static string? _databaseNameOverride;
+
+        /// <summary>
+        /// Gets or sets the database name used for connections.
+        /// When not set, falls back to Model_Shared_Users.Database (legacy location).
+        /// </summary>
+        public static string DatabaseName
+        {
+            get => _databaseNameOverride ?? (Model_Shared_Users.Database ?? "MTM_WIP_Application_Winforms");
+            set => _databaseNameOverride = value;
+        }
+
+        /// <summary>
+        /// Database username used in connection strings. Default: root (MAMP default)
+        /// </summary>
+        public static string DatabaseUser { get; set; } = "root";
+
+        /// <summary>
+        /// Database password used in connection strings. Default: root (MAMP default)
+        /// </summary>
+        public static string DatabasePassword { get; set; } = "root";
+
+        /// <summary>
         /// Bootstrap connection string cached at application startup.
         /// Used for fetching user settings to avoid circular dependency.
         /// This uses the initial default values and never changes.
@@ -84,7 +110,8 @@ namespace MTM_WIP_Application_Winforms.Models
                     // Capture initial values - these should never change during settings fetch
                     string server = Model_Shared_Users.WipServerAddress ?? "localhost";
                     string database = Model_Shared_Users.Database ?? "MTM_WIP_Application_Winforms";
-                    _bootstrapConnectionString = Helper_Database_Variables.GetConnectionString(server, database, "root", "root");
+                    // Bootstrap uses initial defaults intentionally
+                    _bootstrapConnectionString = Helper_Database_Variables.GetConnectionString(server, database, DatabaseUser, DatabasePassword);
                 }
                 return _bootstrapConnectionString;
             }

@@ -44,10 +44,13 @@ namespace MTM_WIP_Application_Winforms
         #region Entry Point
 
         [STAThread]
-        private static void Main()
+        private static void Main(string[] args)
         {
             try
             {
+            // Parse command-line arguments
+            ParseCommandLineArguments(args, out string? argUsername, out string? argPassword, out string? argDatabase);
+
                 // Initialize debugging system first (before any other operations)
                 #if DEBUG
                 Service_DebugTracer.Initialize(Enum_DebugLevel.High);
@@ -156,8 +159,17 @@ namespace MTM_WIP_Application_Winforms
                 // User identification with error handling
                 try
                 {
-                    Model_Application_Variables.User = Dao_System.System_GetUserName();
-                    //Model_Application_Variables.User = "TestUser"; // TEMPORARY OVERRIDE FOR TESTING - REMOVE IN PRODUCTION
+                    // Use command-line argument if provided, otherwise get from system
+                    if (!string.IsNullOrWhiteSpace(argUsername))
+                    {
+                        Model_Application_Variables.User = argUsername;
+                        LoggingUtility.Log($"[Startup] Using command-line username: {Model_Application_Variables.User}");
+                    }
+                    else
+                    {
+                        Model_Application_Variables.User = Dao_System.System_GetUserName();
+                        //Model_Application_Variables.User = "TestUser"; // TEMPORARY OVERRIDE FOR TESTING - REMOVE IN PRODUCTION
+                    }
 
 
                     LoggingUtility.Log($"[Startup] User identified: {Model_Application_Variables.User}");
@@ -188,6 +200,20 @@ namespace MTM_WIP_Application_Winforms
                     }
                 }
 
+                // Apply command-line database argument if provided
+                if (!string.IsNullOrWhiteSpace(argDatabase))
+                {
+                    Model_Application_Variables.DatabaseName = argDatabase;
+                    LoggingUtility.Log($"[Startup] Using command-line database: {argDatabase}");
+                }
+
+                // Apply command-line DB user/password overrides when provided
+                if (!string.IsNullOrWhiteSpace(argPassword))
+                {
+                    Model_Application_Variables.DatabasePassword = argPassword;
+                    LoggingUtility.Log("[Startup] Database password override provided via command-line");
+                }
+
                 // ENHANCED: Validate database connectivity using Dao_System.CheckConnectivityAsync per FR-014
                 // NOTE: Using .GetAwaiter().GetResult() in Main as it's synchronous entry point
                 var connectivityResult = Dao_System.CheckConnectivityAsync().GetAwaiter().GetResult();
@@ -195,6 +221,27 @@ namespace MTM_WIP_Application_Winforms
                 {
                     LoggingUtility.Log($"[Startup] Database connectivity validation failed: {connectivityResult.StatusMessage}");
 
+                        /// <summary>
+                        /// Parses command-line arguments for username, password, and database selection.
+                        /// </summary>
+                        /// <param name="args">Command-line arguments</param>
+                        /// <param name="username">Output: Username argument (-user=value or /user=value)</param>
+                        /// <param name="password">Output: Password argument (-password=value or /password=value)</param>
+                        /// <param name="database">Output: Database argument (-db=value or /db=value, accepts 'prod' or 'test')</param>
+                        /// <remarks>
+                        /// Supported argument formats:
+                        /// - Username: -user=username or /user=username
+                        /// - Password: -password=password or /password=password  
+                        /// - Database: -db=prod, -db=test, /db=prod, or /db=test
+                        ///   - 'prod' maps to 'mtm_wip_application_winforms'
+                        ///   - 'test' maps to 'mtm_wip_application_winforms_test'
+                        ///   - Or provide full database name directly
+                        /// 
+                        /// Example usage:
+                        ///   MTM_WIP_Application_Winforms.exe -user=JohnDoe -password=SecurePass123 -db=test
+                        ///   MTM_WIP_Application_Winforms.exe /user=JaneSmith /db=prod
+                        /// </remarks>
+  
                     // DEBUG: Output exactly what's in the status message
                     Console.WriteLine($"[DEBUG] connectivityResult.StatusMessage: '{connectivityResult.StatusMessage}'");
                     Console.WriteLine($"[DEBUG] connectivityResult.ErrorMessage: '{connectivityResult.ErrorMessage}'");
@@ -209,7 +256,7 @@ namespace MTM_WIP_Application_Winforms
                     Service_ErrorHandler.HandleException(
                         connectivityResult.Exception ?? new Exception(errorMessage),
                         Enum_ErrorSeverity.Fatal,
-                        retryAction: () => { Main(); return true; },
+                        retryAction: () => { Main(Array.Empty<string>()); return true; },
                         contextData: new Dictionary<string, object>
                         {
                             ["DatabaseName"] = Model_Shared_Users.Database,
@@ -294,7 +341,7 @@ namespace MTM_WIP_Application_Winforms
                     Service_ErrorHandler.HandleException(
                         ex,
                         Enum_ErrorSeverity.Fatal,
-                        retryAction: () => { Main(); return true; },
+                        retryAction: () => { Main(Array.Empty<string>()); return true; },
                         contextData: new Dictionary<string, object>
                         {
                             ["User"] = Model_Application_Variables.User,
@@ -315,7 +362,7 @@ namespace MTM_WIP_Application_Winforms
                     Service_ErrorHandler.HandleException(
                         ex,
                         Enum_ErrorSeverity.High,
-                        retryAction: () => { Main(); return true; },
+                        retryAction: () => { Main(Array.Empty<string>()); return true; },
                         contextData: new Dictionary<string, object>
                         {
                             ["User"] = Model_Application_Variables.User,
@@ -493,7 +540,87 @@ namespace MTM_WIP_Application_Winforms
 
         #endregion
 
+        #region Command-Line Argument Parsing
+
+        private static void ParseCommandLineArguments(string[] args, out string? username, out string? password, out string? database)
+        {
+            
+            username = null;
+            password = null;
+            database = null;
+
+            foreach (string arg in args)
+            {
+                // Handle both - and / prefixes
+                string normalizedArg = arg.TrimStart('-', '/').ToLowerInvariant();
+
+                if (normalizedArg.StartsWith("user="))
+                {
+                    username = arg.Substring(arg.IndexOf('=') + 1);
+                }
+                else if (normalizedArg.StartsWith("password="))
+                {
+                    // Treat generic -password as database password override
+                    password = arg.Substring(arg.IndexOf('=') + 1);
+                }
+                else if (normalizedArg.StartsWith("dbuser="))
+                {
+                    var val = arg.Substring(arg.IndexOf('=') + 1);
+                    Model_Application_Variables.DatabaseUser = val;
+                }
+                else if (normalizedArg.StartsWith("dbpassword=") || normalizedArg.StartsWith("dbpass="))
+                {
+                    var val = arg.Substring(arg.IndexOf('=') + 1);
+                    Model_Application_Variables.DatabasePassword = val;
+                }
+                else if (normalizedArg.StartsWith("db="))
+                {
+                    string dbArg = arg.Substring(arg.IndexOf('=') + 1).ToLowerInvariant();
+    
+                    // Map 'prod' and 'test' to full database names
+                    database = dbArg switch
+                    {
+                        "prod" => "mtm_wip_application_winforms",
+                        "test" => "mtm_wip_application_winforms_test",
+                        _ => dbArg // Use as-is if not 'prod' or 'test'
+                    };
+                }
+            }
+
+            // Log parsed arguments (without password for security)
+            if (username != null || password != null || database != null)
+            {
+                Console.WriteLine("[Startup] Command-line arguments parsed:");
+                if (username != null) Console.WriteLine($"  - Username: {username}");
+                if (password != null) Console.WriteLine("  - Password: [PROVIDED]");
+                if (database != null) Console.WriteLine($"  - Database: {database}");
+            }
+        }
+
+        #endregion Command-Line Argument Parsing
+
         #region Global Exception Handling
+
+        /// <summary>
+        /// Parses command-line arguments for username, password, and database selection.
+        /// </summary>
+        /// <param name="args">Command-line arguments</param>
+        /// <param name="username">Output: Username argument (-user=value or /user=value)</param>
+        /// <param name="password">Output: Password argument (-password=value or /password=value)</param>
+        /// <param name="database">Output: Database argument (-db=value or /db=value, accepts 'prod' or 'test')</param>
+        /// <remarks>
+        /// Supported argument formats:
+        /// - Username: -user=username or /user=username
+        /// - Password: -password=password or /password=password  
+        /// - Database: -db=prod, -db=test, /db=prod, or /db=test
+        ///   - 'prod' maps to 'mtm_wip_application_winforms'
+        ///   - 'test' maps to 'mtm_wip_application_winforms_test'
+        ///   - Or provide full database name directly
+        /// 
+        /// Example usage:
+        ///   MTM_WIP_Application_Winforms.exe -user=JohnDoe -password=SecurePass123 -db=test
+        ///   MTM_WIP_Application_Winforms.exe /user=JaneSmith /db=prod
+        /// </remarks>
 
         /// <summary>
         /// Handle global exceptions with user-friendly messaging
@@ -510,7 +637,7 @@ namespace MTM_WIP_Application_Winforms
                     Service_ErrorHandler.HandleException(
                         mysqlEx,
                         Enum_ErrorSeverity.Fatal,
-                        retryAction: () => { Main(); return true; },
+                        retryAction: () => { Main(Array.Empty<string>()); return true; },
                         contextData: new Dictionary<string, object>
                         {
                             ["User"] = Model_Application_Variables.User ?? "Unknown",

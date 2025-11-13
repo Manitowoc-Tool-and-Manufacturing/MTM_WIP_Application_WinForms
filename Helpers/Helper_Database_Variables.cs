@@ -24,9 +24,11 @@ namespace MTM_WIP_Application_Winforms.Helpers
             try
             {
                 server ??= Model_Shared_Users.WipServerAddress;
-                database ??= Model_Shared_Users.Database;
-                uid ??= "root";  // Use root user for MAMP MySQL
-                password ??= "root";  // Use root password for MAMP MySQL
+                // Prefer Model_Application_Variables.DatabaseName which allows runtime override
+                database ??= Model_Application_Variables.DatabaseName;
+                // Use application-level overrides for credentials when provided
+                uid ??= Model_Application_Variables.DatabaseUser;
+                password ??= Model_Application_Variables.DatabasePassword;
                 return $"SERVER={server};DATABASE={database};UID={uid};PASSWORD={password};Allow User Variables=True;SslMode=none;AllowPublicKeyRetrieval=true;";
             }
             catch (Exception ex)
