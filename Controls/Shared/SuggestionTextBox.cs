@@ -276,6 +276,32 @@ namespace MTM_WIP_Application_Winforms.Controls.Shared
         }
 
         /// <summary>
+        /// Handles Leave event to capitalize valid input.
+        /// If the user has entered text and no overlay is showing, capitalize it.
+        /// </summary>
+        /// <param name="e">Event arguments.</param>
+        protected override void OnLeave(EventArgs e)
+        {
+            base.OnLeave(e);
+
+            // If there's text and we're not showing the overlay, capitalize it
+            if (!string.IsNullOrWhiteSpace(this.Text) && !_isOverlayVisible)
+            {
+                // Store cursor position
+                int cursorPosition = this.SelectionStart;
+                
+                // Capitalize the text
+                this.Text = this.Text.ToUpperInvariant();
+                
+                // Restore cursor position (adjust if needed)
+                if (cursorPosition <= this.Text.Length)
+                {
+                    this.SelectionStart = cursorPosition;
+                }
+            }
+        }
+
+        /// <summary>
         /// Disposes resources used by SuggestionTextBox.
         /// Ensures overlay form is disposed if still open.
         /// </summary>
@@ -430,10 +456,10 @@ namespace MTM_WIP_Application_Winforms.Controls.Shared
 
                 if (result == DialogResult.OK && selectedValue != null)
                 {
-                    // User accepted selection - update TextBox
+                    // User accepted selection - update TextBox with capitalized value
                     LoggingUtility.Log($"[SuggestionTextBox] BEFORE text assignment: Field={this.Name}, Current Text='{this.Text}', Will set to='{selectedValue}'");
                     
-                    this.Text = selectedValue;
+                    this.Text = selectedValue.ToUpperInvariant();
                     
                     LoggingUtility.Log($"[SuggestionTextBox] AFTER text assignment: Field={this.Name}, Text is now='{this.Text}'");
 

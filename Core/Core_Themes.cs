@@ -53,9 +53,7 @@ namespace MTM_WIP_Application_Winforms.Core
         }
 
         /// <summary>
-        /// Attaches column visibility context menu to DataGridView.
-        /// NOTE: Theme colors are now applied by DataGridThemeApplier in the new theme system.
-        /// This method ONLY handles the column visibility menu feature.
+        /// Applies theme colors to DataGridView, hides row header, and attaches column visibility context menu.
         /// </summary>
         public static void ApplyThemeToDataGridView(DataGridView dataGridView)
         {
@@ -64,8 +62,25 @@ namespace MTM_WIP_Application_Winforms.Core
                 return;
             }
 
-            // MIGRATION NOTE: Color application removed - now handled by DataGridThemeApplier
-            // This method now ONLY adds the column visibility context menu
+            // Get current theme colors
+            var theme = Core_AppThemes.GetCurrentTheme();
+            var colors = theme.Colors;
+
+            // Apply theme colors
+            dataGridView.BackgroundColor = colors.DataGridBackColor ?? SystemColors.AppWorkspace;
+            dataGridView.GridColor = colors.DataGridGridColor ?? SystemColors.ControlDark;
+            dataGridView.DefaultCellStyle.BackColor = colors.DataGridRowBackColor ?? SystemColors.Window;
+            dataGridView.DefaultCellStyle.ForeColor = colors.DataGridForeColor ?? SystemColors.ControlText;
+            dataGridView.DefaultCellStyle.SelectionBackColor = colors.DataGridSelectionBackColor ?? SystemColors.Highlight;
+            dataGridView.DefaultCellStyle.SelectionForeColor = colors.DataGridSelectionForeColor ?? SystemColors.HighlightText;
+            dataGridView.ColumnHeadersDefaultCellStyle.BackColor = colors.DataGridHeaderBackColor ?? SystemColors.Control;
+            dataGridView.ColumnHeadersDefaultCellStyle.ForeColor = colors.DataGridHeaderForeColor ?? SystemColors.ControlText;
+            dataGridView.EnableHeadersVisualStyles = false; // Required for custom header colors
+
+            // Hide row header (selection indicator bar on left)
+            dataGridView.RowHeadersVisible = false;
+
+            // Attach column visibility context menu
             AttachColumnVisibilityMenu(dataGridView);
         }
 
@@ -78,15 +93,11 @@ namespace MTM_WIP_Application_Winforms.Core
             dataGridView.MouseDown -= DataGridView_MouseDown;
             dataGridView.MouseDown += DataGridView_MouseDown;
 
-            // Create or get existing context menu
-            ContextMenuStrip menu = dataGridView.ContextMenuStrip ?? new ContextMenuStrip();
-            if (dataGridView.ContextMenuStrip == null)
+            // Store the original context menu to restore when not on header
+            if (dataGridView.Tag == null)
             {
-                dataGridView.ContextMenuStrip = menu;
+                dataGridView.Tag = dataGridView.ContextMenuStrip;
             }
-
-            // Store original context menu to use when not clicking on header
-            dataGridView.Tag = dataGridView.Tag ?? menu;
 
             static void DataGridView_MouseDown(object? sender, MouseEventArgs e)
             {
@@ -101,7 +112,27 @@ namespace MTM_WIP_Application_Winforms.Core
 
                 if (headerRect.Contains(e.Location))
                 {
+                    // On header - show column visibility menu and suppress default context menu
                     ShowColumnVisibilityMenu(dgv, e.Location);
+                    
+                    // Temporarily clear the context menu to prevent print menu from showing
+                    var originalMenu = dgv.Tag as ContextMenuStrip;
+                    dgv.ContextMenuStrip = null;
+                    
+                    // Restore it after a short delay
+                    Task.Delay(100).ContinueWith(_ => 
+                    {
+                        if (dgv.IsHandleCreated && !dgv.IsDisposed)
+                        {
+                            dgv.BeginInvoke(new Action(() => 
+                            {
+                                if (!dgv.IsDisposed)
+                                {
+                                    dgv.ContextMenuStrip = originalMenu;
+                                }
+                            }));
+                        }
+                    });
                 }
             }
         }
@@ -283,7 +314,12 @@ namespace MTM_WIP_Application_Winforms.Core
 
             try
             {
-                ApplyAutoSizingToDataGrid(dataGridView);
+                // Hide row header to maximize usable space
+                dataGridView.RowHeadersVisible = false;
+
+                // Use Fill mode to utilize full available area
+                dataGridView.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
+                dataGridView.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.DisplayedCells;
             }
             catch (Exception ex)
             {

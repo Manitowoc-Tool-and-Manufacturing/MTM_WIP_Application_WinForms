@@ -94,16 +94,11 @@ SetStyle(ControlStyles.OptimizedDoubleBuffer, true);
                     ["ComboBoxes"] = new[] { "Part", "Operation" },
                     ["StandardProperties"] = "Applied"
                 });
-            Helper_UI_ComboBoxes.ApplyStandardComboBoxProperties(Control_RemoveTab_ComboBox_Part);
-            Helper_UI_ComboBoxes.ApplyStandardComboBoxProperties(Control_RemoveTab_ComboBox_Operation);
-            Control_RemoveTab_ComboBox_Part.ForeColor =
-                Model_Application_Variables.UserUiColors.ComboBoxErrorForeColor ?? Color.Red;
-            Control_RemoveTab_ComboBox_Operation.ForeColor =
-                Model_Application_Variables.UserUiColors.ComboBoxErrorForeColor ?? Color.Red;
+            // NOTE: SuggestionTextBox does not need ApplyStandardComboBoxProperties or manual ForeColor settings
             Control_RemoveTab_Image_NothingFound.Visible = false;
 
             Service_DebugTracer.TraceUIAction("DATA_LOADING_START", nameof(Control_RemoveTab),
-                new Dictionary<string, object> { ["DataType"] = "ComboBoxes" });
+                new Dictionary<string, object> { ["DataType"] = "SuggestionTextBoxes" });
             _ = Control_RemoveTab_OnStartup_LoadComboBoxesAsync();
 
             Service_DebugTracer.TraceUIAction("EVENT_HANDLERS_SETUP", nameof(Control_RemoveTab),
@@ -180,7 +175,11 @@ SetStyle(ControlStyles.OptimizedDoubleBuffer, true);
 
         #region Initialization
 
-        private void Control_RemoveTab_Initialize() => Control_RemoveTab_Button_Reset.TabStop = false;
+        private void Control_RemoveTab_Initialize()
+        {
+            Control_RemoveTab_Button_Reset.TabStop = false;
+            Core_Themes.ApplyFocusHighlighting(this);
+        }
 
         #endregion
 
@@ -218,28 +217,145 @@ SetStyle(ControlStyles.OptimizedDoubleBuffer, true);
         }
 
         /// <summary>
-        /// Asynchronously loads combo box data (Parts and Operations) during Remove tab initialization.
+        /// Asynchronously loads suggestion control data (Parts and Operations) during Remove tab initialization.
         /// </summary>
-        /// <returns>A task that completes when combo boxes are populated</returns>
+        /// <returns>A task that completes when suggestion controls are configured</returns>
         /// <remarks>
         /// This method is called automatically during control construction and should not be called directly.
-        /// Uses Helper_UI_ComboBoxes to populate combo boxes from master data tables.
-        /// Note: Location combo box is populated dynamically after Part/Operation selection from inventory search results.
+        /// Configures SuggestionTextBox controls with data provider delegates.
         /// Handles errors with Dao_ErrorLog.HandleException_GeneralError_CloseApp for critical initialization failures.
         /// </remarks>
         public async Task Control_RemoveTab_OnStartup_LoadDataComboBoxesAsync()
         {
             try
             {
-                await Helper_UI_ComboBoxes.FillPartComboBoxesAsync(Control_RemoveTab_ComboBox_Part);
-                await Helper_UI_ComboBoxes.FillOperationComboBoxesAsync(Control_RemoveTab_ComboBox_Operation);
-                LoggingUtility.Log("Remove tab ComboBoxes loaded.");
+                _progressHelper?.ShowProgress();
+                _progressHelper?.UpdateProgress(10, "Configuring part suggestions...");
+
+                // Configure part number SuggestionTextBox
+                Control_RemoveTab_TextBox_Part.DataProvider = GetPartNumberSuggestionsAsync;
+                Control_RemoveTab_TextBox_Part.MaxResults = 100;
+                Control_RemoveTab_TextBox_Part.EnableWildcards = true;
+                Control_RemoveTab_TextBox_Part.ClearOnNoMatch = true;
+
+                _progressHelper?.UpdateProgress(70, "Configuring operation suggestions...");
+
+                // Configure operation SuggestionTextBox
+                Control_RemoveTab_TextBox_Operation.DataProvider = GetOperationSuggestionsAsync;
+                Control_RemoveTab_TextBox_Operation.MaxResults = 50;
+                Control_RemoveTab_TextBox_Operation.EnableWildcards = true;
+                Control_RemoveTab_TextBox_Operation.ClearOnNoMatch = true;
+
+                _progressHelper?.UpdateProgress(100, "Suggestion controls configured");
+                await Task.Delay(100);
+
+                LoggingUtility.Log("Remove tab suggestion controls configured.");
             }
             catch (Exception ex)
             {
                 LoggingUtility.LogApplicationError(ex);
                 await Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex,
                     new StringBuilder().Append("MainForm_LoadRemoveTabComboBoxesAsync").ToString());
+            }
+        }
+
+        #endregion
+
+        #region Suggestion Data Providers
+
+        /// <summary>
+        /// Data provider for part number SuggestionTextBox.
+        /// Returns list of all part IDs from database.
+        /// </summary>
+        /// <returns>List of part ID strings.</returns>
+        private async Task<List<string>> GetPartNumberSuggestionsAsync()
+        {
+            try
+            {
+                var dataResult = await Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync(
+                    Model_Application_Variables.ConnectionString,
+                    "md_part_ids_Get_All",
+                    null);
+
+                if (!dataResult.IsSuccess || dataResult.Data == null)
+                {
+                    Service_ErrorHandler.ShowWarning(dataResult.ErrorMessage ?? "Failed to load part numbers");
+                    return new List<string>();
+                }
+
+                var suggestions = new List<string>();
+                foreach (System.Data.DataRow row in dataResult.Data.Rows)
+                {
+                    if (row["PartID"] != null && row["PartID"] != DBNull.Value)
+                    {
+                        suggestions.Add(row["PartID"].ToString() ?? string.Empty);
+                    }
+                }
+
+                return suggestions;
+            }
+            catch (Exception ex)
+            {
+                Service_ErrorHandler.HandleException(
+                    ex,
+                    Enum_ErrorSeverity.Medium,
+                    contextData: new Dictionary<string, object>
+                    {
+                        ["Control"] = nameof(Control_RemoveTab),
+                        ["Method"] = nameof(GetPartNumberSuggestionsAsync)
+                    },
+                    callerName: nameof(GetPartNumberSuggestionsAsync),
+                    controlName: this.Name);
+
+                return new List<string>();
+            }
+        }
+
+        /// <summary>
+        /// Data provider for operation SuggestionTextBox.
+        /// Returns list of all operation numbers from database.
+        /// </summary>
+        /// <returns>List of operation strings.</returns>
+        private async Task<List<string>> GetOperationSuggestionsAsync()
+        {
+            try
+            {
+                var dataResult = await Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync(
+                    Model_Application_Variables.ConnectionString,
+                    "md_operation_numbers_Get_All",
+                    null);
+
+                if (!dataResult.IsSuccess || dataResult.Data == null)
+                {
+                    Service_ErrorHandler.ShowWarning(dataResult.ErrorMessage ?? "Failed to load operations");
+                    return new List<string>();
+                }
+
+                var suggestions = new List<string>();
+                foreach (System.Data.DataRow row in dataResult.Data.Rows)
+                {
+                    if (row["Operation"] != null && row["Operation"] != DBNull.Value)
+                    {
+                        suggestions.Add(row["Operation"].ToString() ?? string.Empty);
+                    }
+                }
+
+                return suggestions;
+            }
+            catch (Exception ex)
+            {
+                Service_ErrorHandler.HandleException(
+                    ex,
+                    Enum_ErrorSeverity.Medium,
+                    contextData: new Dictionary<string, object>
+                    {
+                        ["Control"] = nameof(Control_RemoveTab),
+                        ["Method"] = nameof(GetOperationSuggestionsAsync)
+                    },
+                    callerName: nameof(GetOperationSuggestionsAsync),
+                    controlName: this.Name);
+
+                return new List<string>();
             }
         }
 
@@ -315,6 +431,32 @@ SetStyle(ControlStyles.OptimizedDoubleBuffer, true);
                     return;
                 }
 
+                // Build confirmation message showing what will be deleted
+                var itemsToDelete = GetSelectedItemsToDelete(out string itemsSummary);
+                
+                string confirmMessage;
+                if (itemsToDelete.Count == 1)
+                {
+                    var item = itemsToDelete[0];
+                    confirmMessage = $"Are you sure you want to delete this item?\n\nPart ID: {item.PartID}\nLocation: {item.Location}\nQuantity: {item.Quantity}";
+                }
+                else
+                {
+                    confirmMessage = $"Are you sure you want to delete {itemsToDelete.Count} items?\n\n{itemsSummary}";
+                }
+
+                DialogResult confirmResult = Service_ErrorHandler.ShowConfirmation(
+                    confirmMessage,
+                    "Confirm Deletion",
+                    MessageBoxButtons.YesNo,
+                    MessageBoxIcon.Warning);
+
+                if (confirmResult != DialogResult.Yes)
+                {
+                    LoggingUtility.Log("User cancelled deletion.");
+                    return;
+                }
+
                 // --- Only add to history and inv_transaction if actually removed ---
                 _lastRemovedItems.Clear();
                 StringBuilder sb = new();
@@ -387,12 +529,6 @@ SetStyle(ControlStyles.OptimizedDoubleBuffer, true);
                     Service_ErrorHandler.ShowConfirmation(reason, @"Delete", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     return;
                 }
-
-                DialogResult confirmResult = Service_ErrorHandler.ShowConfirmation(
-                    $@"The following items were deleted and added to history:\n\n{summary}",
-                    @"Delete Complete",
-                    MessageBoxButtons.OK,
-                    MessageBoxIcon.Information);
 
                 _progressHelper?.UpdateProgress(80, "Refreshing results...");
                 Control_RemoveTab_Button_Search_Click(null, null);
@@ -516,19 +652,14 @@ SetStyle(ControlStyles.OptimizedDoubleBuffer, true);
                 _progressHelper?.UpdateProgress(30, "Resetting data tables...");
                 await Helper_UI_ComboBoxes.ResetAndRefreshAllDataTablesAsync();
 
-                _progressHelper?.UpdateProgress(60, "Refilling combo boxes...");
-                await Helper_UI_ComboBoxes.FillPartComboBoxesAsync(Control_RemoveTab_ComboBox_Part);
-                await Helper_UI_ComboBoxes.FillOperationComboBoxesAsync(Control_RemoveTab_ComboBox_Operation);
+                _progressHelper?.UpdateProgress(60, "Resetting suggestion fields...");
+                Control_RemoveTab_TextBox_Part.Text = string.Empty;
+                Control_RemoveTab_TextBox_Operation.Text = string.Empty;
 
                 Control_RemoveTab_DataGridView_Main.DataSource = null;
                 Control_RemoveTab_Image_NothingFound.Visible = false;
 
-                MainFormControlHelper.ResetComboBox(Control_RemoveTab_ComboBox_Part,
-                    Model_Application_Variables.UserUiColors.ComboBoxErrorForeColor ?? Color.Red, 0);
-                MainFormControlHelper.ResetComboBox(Control_RemoveTab_ComboBox_Operation,
-                    Model_Application_Variables.UserUiColors.ComboBoxErrorForeColor ?? Color.Red, 0);
-
-                Control_RemoveTab_ComboBox_Part.Focus();
+                Control_RemoveTab_TextBox_Part.Focus();
 
                 Control_RemoveTab_Button_Search.Enabled = true;
                 Control_RemoveTab_Button_Delete.Enabled = false;
@@ -566,10 +697,8 @@ SetStyle(ControlStyles.OptimizedDoubleBuffer, true);
                     MainFormInstance.MainForm_StatusStrip_SavedStatus.Visible = false;
                 }
 
-                MainFormControlHelper.ResetComboBox(Control_RemoveTab_ComboBox_Part,
-                    Model_Application_Variables.UserUiColors.ComboBoxErrorForeColor ?? Color.Red, 0);
-                MainFormControlHelper.ResetComboBox(Control_RemoveTab_ComboBox_Operation,
-                    Model_Application_Variables.UserUiColors.ComboBoxErrorForeColor ?? Color.Red, 0);
+                Control_RemoveTab_TextBox_Part.Text = string.Empty;
+                Control_RemoveTab_TextBox_Operation.Text = string.Empty;
 
                 Control_RemoveTab_DataGridView_Main.DataSource = null;
                 Control_RemoveTab_Image_NothingFound.Visible = false;
@@ -586,7 +715,7 @@ SetStyle(ControlStyles.OptimizedDoubleBuffer, true);
             finally
             {
                 Control_RemoveTab_Button_Reset.Enabled = true;
-                Control_RemoveTab_ComboBox_Part.Focus();
+                Control_RemoveTab_TextBox_Part.Focus();
                 if (MainFormInstance != null)
                 {
                     MainFormInstance.MainForm_StatusStrip_Disconnected.Visible = false;
@@ -693,19 +822,19 @@ SetStyle(ControlStyles.OptimizedDoubleBuffer, true);
 
                 LoggingUtility.Log("RemoveTab Search button clicked.");
 
-                string partId = Control_RemoveTab_ComboBox_Part?.Text ?? "";
-                string op = Control_RemoveTab_ComboBox_Operation?.Text ?? "";
+                string partId = Control_RemoveTab_TextBox_Part.Text?.Trim() ?? "";
+                string op = Control_RemoveTab_TextBox_Operation.Text?.Trim() ?? "";
 
-                if (string.IsNullOrWhiteSpace(partId) || (Control_RemoveTab_ComboBox_Part?.SelectedIndex ?? -1) <= 0)
+                if (string.IsNullOrWhiteSpace(partId))
                 {
                     Service_ErrorHandler.HandleValidationError("Please select a valid Part.", "Part Selection");
-                    Control_RemoveTab_ComboBox_Part?.Focus();
+                    Control_RemoveTab_TextBox_Part.Focus();
                     return;
                 }
 
                 DataTable? results = null;
 
-                if (!string.IsNullOrWhiteSpace(op) && (Control_RemoveTab_ComboBox_Operation?.SelectedIndex ?? -1) > 0)
+                if (!string.IsNullOrWhiteSpace(op))
                 {
                     _progressHelper?.UpdateProgress(40,
                         "Querying by part and operation...");
@@ -868,77 +997,11 @@ SetStyle(ControlStyles.OptimizedDoubleBuffer, true);
 
         #region ComboBox & UI Events
 
-        private void Control_RemoveTab_ComboBox_Operation_SelectedIndexChanged()
-        {
-            try
-            {
-                LoggingUtility.Log("Inventory Op ComboBox selection changed.");
-
-                if (Control_RemoveTab_ComboBox_Operation.SelectedIndex > 0)
-                {
-                    Control_RemoveTab_ComboBox_Operation.ForeColor =
-                        Model_Application_Variables.UserUiColors.ComboBoxForeColor ?? Color.Black;
-                    Model_Application_Variables.Operation = Control_RemoveTab_ComboBox_Operation.Text;
-                }
-                else
-                {
-                    Control_RemoveTab_ComboBox_Operation.ForeColor =
-                        Model_Application_Variables.UserUiColors.ComboBoxErrorForeColor ?? Color.Red;
-                    if (Control_RemoveTab_ComboBox_Operation.SelectedIndex != 0 &&
-                        Control_RemoveTab_ComboBox_Operation.Items.Count > 0)
-                    {
-                        Control_RemoveTab_ComboBox_Operation.SelectedIndex = 0;
-                    }
-
-                    Model_Application_Variables.Operation = null;
-                }
-            }
-            catch (Exception ex)
-            {
-                LoggingUtility.LogApplicationError(ex);
-                _ = Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex,
-                    new StringBuilder().Append("MainForm_Inventory_ComboBox_Op").ToString());
-            }
-        }
-
-        private void Control_RemoveTab_ComboBox_Part_SelectedIndexChanged()
-        {
-            try
-            {
-                LoggingUtility.Log("Inventory Part ComboBox selection changed.");
-
-                if (Control_RemoveTab_ComboBox_Part.SelectedIndex > 0)
-                {
-                    Control_RemoveTab_ComboBox_Part.ForeColor =
-                        Model_Application_Variables.UserUiColors.ComboBoxForeColor ?? Color.Black;
-                    Model_Application_Variables.PartId = Control_RemoveTab_ComboBox_Part.Text;
-                }
-                else
-                {
-                    Control_RemoveTab_ComboBox_Part.ForeColor =
-                        Model_Application_Variables.UserUiColors.ComboBoxErrorForeColor ?? Color.Red;
-                    if (Control_RemoveTab_ComboBox_Part.SelectedIndex != 0 &&
-                        Control_RemoveTab_ComboBox_Part.Items.Count > 0)
-                    {
-                        Control_RemoveTab_ComboBox_Part.SelectedIndex = 0;
-                    }
-
-                    Model_Application_Variables.PartId = null;
-                }
-            }
-            catch (Exception ex)
-            {
-                LoggingUtility.LogApplicationError(ex);
-                _ = Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex,
-                    new StringBuilder().Append("MainForm_Inventory_ComboBox_Part").ToString());
-            }
-        }
-
         private void Control_RemoveTab_Update_ButtonStates()
         {
             try
             {
-                Control_RemoveTab_Button_Search.Enabled = (Control_RemoveTab_ComboBox_Part?.SelectedIndex ?? -1) > 0;
+                Control_RemoveTab_Button_Search.Enabled = !string.IsNullOrWhiteSpace(Control_RemoveTab_TextBox_Part.Text);
                 bool hasData = Control_RemoveTab_DataGridView_Main?.Rows.Count > 0;
                 bool hasSelection = Control_RemoveTab_DataGridView_Main?.SelectedRows.Count > 0;
                 Control_RemoveTab_Button_Delete.Enabled = hasData && hasSelection;
@@ -961,30 +1024,10 @@ SetStyle(ControlStyles.OptimizedDoubleBuffer, true);
             try
             {
                 Control_RemoveTab_Button_Reset.Click += (s, e) => Control_RemoveTab_Button_Reset_Click();
-                Control_RemoveTab_ComboBox_Part.SelectedIndexChanged += (s, e) =>
-                {
-                    Control_RemoveTab_ComboBox_Part_SelectedIndexChanged();
-                    Helper_UI_ComboBoxes.ValidateComboBoxItem(Control_RemoveTab_ComboBox_Part, "Enter or Select Part Number");
-                    Control_RemoveTab_Update_ButtonStates();
-                };
-                Control_RemoveTab_ComboBox_Part.Leave += (s, e) =>
-                {
-                    Helper_UI_ComboBoxes.ValidateComboBoxItem(Control_RemoveTab_ComboBox_Part,
-                        "Enter or Select Part Number");
-                };
-
-                Control_RemoveTab_ComboBox_Operation.SelectedIndexChanged += (s, e) =>
-                {
-                    Control_RemoveTab_ComboBox_Operation_SelectedIndexChanged();
-                    Helper_UI_ComboBoxes.ValidateComboBoxItem(Control_RemoveTab_ComboBox_Operation,
-                        "Enter or Select Operation");
-                    Control_RemoveTab_Update_ButtonStates();
-                };
-                Control_RemoveTab_ComboBox_Operation.Leave += (s, e) =>
-                {
-                    Helper_UI_ComboBoxes.ValidateComboBoxItem(Control_RemoveTab_ComboBox_Operation,
-                        "Enter or Select Operation");
-                };
+                
+                // SuggestionTextBox event handlers - simplified
+                Control_RemoveTab_TextBox_Part.TextChanged += (s, e) => Control_RemoveTab_Update_ButtonStates();
+                Control_RemoveTab_TextBox_Operation.TextChanged += (s, e) => Control_RemoveTab_Update_ButtonStates();
 
                 Control_RemoveTab_Button_AdvancedItemRemoval.Click +=
                     (s, e) => Control_RemoveTab_Button_AdvancedItemRemoval_Click();
@@ -1000,30 +1043,7 @@ SetStyle(ControlStyles.OptimizedDoubleBuffer, true);
                     }
                 }
 
-                Control_RemoveTab_ComboBox_Part.Enter += (s, e) =>
-                {
-                    Control_RemoveTab_ComboBox_Part.BackColor =
-                        Model_Application_Variables.UserUiColors.ControlFocusedBackColor ?? Color.LightBlue;
-                };
-                Control_RemoveTab_ComboBox_Part.Leave += (s, e) =>
-                {
-                    Control_RemoveTab_ComboBox_Part.BackColor =
-                        Model_Application_Variables.UserUiColors.ControlBackColor ?? SystemColors.Window;
-                    Helper_UI_ComboBoxes.ValidateComboBoxItem(Control_RemoveTab_ComboBox_Part, "Enter or Select Part Number");
-                };
-
-                Control_RemoveTab_ComboBox_Operation.Enter += (s, e) =>
-                {
-                    Control_RemoveTab_ComboBox_Operation.BackColor =
-                        Model_Application_Variables.UserUiColors.ControlFocusedBackColor ?? Color.LightBlue;
-                };
-                Control_RemoveTab_ComboBox_Operation.Leave += (s, e) =>
-                {
-                    Control_RemoveTab_ComboBox_Operation.BackColor =
-                        Model_Application_Variables.UserUiColors.ControlBackColor ?? SystemColors.Window;
-                    Helper_UI_ComboBoxes.ValidateComboBoxItem(Control_RemoveTab_ComboBox_Operation,
-                        "Enter or Select Operation");
-                };
+                // NOTE: SuggestionTextBox does not need Enter/Leave/BackColor handlers - handled internally
 
                 Control_RemoveTab_DataGridView_Main.SelectionChanged +=
                     (s, e) => Control_RemoveTab_Update_ButtonStates();
@@ -1160,12 +1180,36 @@ SetStyle(ControlStyles.OptimizedDoubleBuffer, true);
                         continue;
                     }
 
-                    sb.AppendLine($"PartID: {partId}, Location: {location}, Quantity: {quantity}");
                     LoggingUtility.Log(
                         $"Selected for deletion: PartID={partId}, Location={location}, Quantity={quantity}");
 
                     itemsToDelete.Add((partId, location, quantity));
                 }
+            }
+
+            // Create concise summary - group by Part ID for multiple items
+            if (itemsToDelete.Count > 1)
+            {
+                var groupedByPart = itemsToDelete
+                    .GroupBy(x => x.PartID)
+                    .Select(g => new
+                    {
+                        PartID = g.Key,
+                        LocationCount = g.Count(),
+                        TotalQuantity = g.Sum(x => x.Quantity)
+                    })
+                    .OrderBy(x => x.PartID)
+                    .ToList();
+
+                foreach (var group in groupedByPart)
+                {
+                    sb.AppendLine($"PartID: {group.PartID}, Location(s): {group.LocationCount}, Quantity: {group.TotalQuantity}");
+                }
+            }
+            else if (itemsToDelete.Count == 1)
+            {
+                var item = itemsToDelete[0];
+                sb.AppendLine($"PartID: {item.PartID}, Location: {item.Location}, Quantity: {item.Quantity}");
             }
 
             summary = sb.ToString();

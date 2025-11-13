@@ -570,7 +570,36 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
         {
             FieldInfo? field = control.GetType().GetField(fieldName,
                 BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance);
-            if (field?.GetValue(control) is not ComboBox cb)
+            
+            var fieldValue = field?.GetValue(control);
+            
+            // Handle TextBox/SuggestionTextBox controls
+            if (fieldValue is TextBox tb)
+            {
+                tb.Text = value;
+                
+                // Set proper ForeColor for SuggestionTextBox to prevent error coloring
+                tb.ForeColor = Model_Application_Variables.UserUiColors.ComboBoxForeColor ?? Color.Black;
+                
+                // Update Model_Application_Variables based on field name to sync state
+                if (fieldName.Contains("Part"))
+                {
+                    Model_Application_Variables.PartId = value;
+                }
+                else if (fieldName.Contains("Operation"))
+                {
+                    Model_Application_Variables.Operation = value;
+                }
+                else if (fieldName.Contains("Location"))
+                {
+                    Model_Application_Variables.Location = value;
+                }
+                
+                return;
+            }
+            
+            // Handle ComboBox controls (legacy)
+            if (fieldValue is not ComboBox cb)
             {
                 return;
             }
@@ -677,17 +706,17 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             if (mainForm.MainForm_UserControl_InventoryTab?.Visible == true)
             {
                 Control_InventoryTab? inv = mainForm.MainForm_UserControl_InventoryTab;
-                SetComboBoxes(inv, "Control_InventoryTab_ComboBox_Part", "Control_InventoryTab_ComboBox_Operation",
+                SetComboBoxes(inv, "Control_InventoryTab_TextBox_Part", "Control_InventoryTab_TextBox_Operation",
                     partId, operation);
                 SetTextBoxText(inv, "Control_InventoryTab_TextBox_Quantity", quantity.ToString());
-                SetFocusOnControl(inv, "Control_InventoryTab_ComboBox_Location");
+                SetFocusOnControl(inv, "Control_InventoryTab_TextBox_Location");
                 return;
             }
 
             if (mainForm.MainForm_UserControl_RemoveTab?.Visible == true)
             {
                 Control_RemoveTab? rem = mainForm.MainForm_UserControl_RemoveTab;
-                SetComboBoxes(rem, "Control_RemoveTab_ComboBox_Part", "Control_RemoveTab_ComboBox_Operation", partId,
+                SetComboBoxes(rem, "Control_RemoveTab_TextBox_Part", "Control_RemoveTab_TextBox_Operation", partId,
                     operation);
                 rem.Focus();
                 TriggerEnterEvent(rem);
@@ -698,7 +727,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             if (mainForm.MainForm_UserControl_TransferTab?.Visible == true)
             {
                 Control_TransferTab? trn = mainForm.MainForm_UserControl_TransferTab;
-                SetComboBoxes(trn, "Control_TransferTab_ComboBox_Part", "Control_TransferTab_ComboBox_Operation",
+                SetComboBoxes(trn, "Control_TransferTab_TextBox_Part", "Control_TransferTab_TextBox_Operation",
                     partId, operation);
                 trn.Focus();
                 TriggerEnterEvent(trn);

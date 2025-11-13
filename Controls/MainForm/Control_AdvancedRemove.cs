@@ -2,6 +2,7 @@ using System.Data;
 using System.Diagnostics;
 using System.Drawing.Printing;
 using System.Text;
+using MTM_WIP_Application_Winforms.Controls.Shared;
 using MTM_WIP_Application_Winforms.Core;
 using MTM_WIP_Application_Winforms.Data;
 using MTM_WIP_Application_Winforms.Forms.MainForm.Classes;
@@ -183,19 +184,19 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                 Control_RemoveTab? removeTab = Control_RemoveTab.MainFormInstance?.MainForm_UserControl_RemoveTab;
                 if (removeTab != null)
                 {
-                    if (removeTab.Controls.Find("Control_RemoveTab_ComboBox_Part", true).FirstOrDefault() is ComboBox
+                    if (removeTab.Controls.Find("Control_RemoveTab_TextBox_Part", true).FirstOrDefault() is SuggestionTextBox
                         part)
                     {
-                        part.SelectedIndex = 0;
+                        part.Text = string.Empty;
                         part.ForeColor = Model_Application_Variables.UserUiColors.ComboBoxErrorForeColor ?? Color.Red;
                         part.Focus();
                     }
 
-                    if (removeTab.Controls.Find("Control_RemoveTab_ComboBox_Operation", true)
-                            .FirstOrDefault() is ComboBox
+                    if (removeTab.Controls.Find("Control_RemoveTab_TextBox_Operation", true)
+                            .FirstOrDefault() is SuggestionTextBox
                         op)
                     {
-                        op.SelectedIndex = 0;
+                        op.Text = string.Empty;
                         op.ForeColor = Model_Application_Variables.UserUiColors.ComboBoxErrorForeColor ?? Color.Red;
                     }
                 }
@@ -421,19 +422,31 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                     });
                 }
 
-                StringBuilder sb = new();
-                foreach (Model_History_Remove item in _lastRemovedItems)
+                string confirmMessage;
+                if (_lastRemovedItems.Count == 1)
                 {
-                    sb.AppendLine(
-                        $"PartID: {item.PartId}, Location: {item.Location}, Operation: {item.Operation}, Quantity: {item.Quantity}");
+                    var item = _lastRemovedItems[0];
+                    confirmMessage = $"Are you sure you want to delete this item?\n\nPart ID: {item.PartId}\nLocation: {item.Location}\nOperation: {item.Operation}\nQuantity: {item.Quantity}";
+                }
+                else
+                {
+                    // Group by Part ID for cleaner summary
+                    var groupedItems = _lastRemovedItems
+                        .GroupBy(x => x.PartId)
+                        .Select(g => new { PartId = g.Key, Count = g.Count(), TotalQty = g.Sum(x => x.Quantity) })
+                        .ToList();
+                    
+                    StringBuilder sb = new();
+                    foreach (var group in groupedItems)
+                    {
+                        sb.AppendLine($"  • {group.PartId}: {group.Count} location(s), {group.TotalQty} total quantity");
+                    }
+                    
+                    confirmMessage = $"Are you sure you want to delete {_lastRemovedItems.Count} items?\n\n{sb}";
                 }
 
-                string summary = sb.ToString();
-
                 DialogResult confirmResult = MessageBox.Show(
-                    $@"The following items will be deleted:
-
-{summary}Are you sure?",
+                    confirmMessage,
                     @"Confirm Deletion",
                     MessageBoxButtons.YesNo,
                     MessageBoxIcon.Warning);

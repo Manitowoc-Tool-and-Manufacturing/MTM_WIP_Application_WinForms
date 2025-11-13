@@ -1,5 +1,6 @@
 ﻿using System.Drawing;
 using System.Windows.Forms;
+using MTM_WIP_Application_Winforms.Controls.Shared;
 
 namespace MTM_WIP_Application_Winforms.Controls.MainForm
 {
@@ -14,10 +15,10 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
         #endregion
 
         private GroupBox Control_RemoveTab_GroupBox_MainControl;
-        internal ComboBox Control_RemoveTab_ComboBox_Part;
+        internal SuggestionTextBox Control_RemoveTab_TextBox_Part;
         private Label Control_RemoveTab_Label_Part;
         private Label Control_RemoveTab_Label_Operation;
-        private ComboBox Control_RemoveTab_ComboBox_Operation;
+        private SuggestionTextBox Control_RemoveTab_TextBox_Operation;
         private Panel Control_RemoveTab_Panel_DataGridView;
         private PictureBox Control_RemoveTab_Image_NothingFound;
         private DataGridView Control_RemoveTab_DataGridView_Main;
@@ -60,9 +61,9 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             Control_RemoveTab_Panel_Header = new Panel();
             Control_RemoveTab_TableLayout_Top = new TableLayoutPanel();
             Control_RemoveTab_Label_Part = new Label();
-            Control_RemoveTab_ComboBox_Part = new ComboBox();
+            Control_RemoveTab_TextBox_Part = new SuggestionTextBox();
             Control_RemoveTab_Label_Operation = new Label();
-            Control_RemoveTab_ComboBox_Operation = new ComboBox();
+            Control_RemoveTab_TextBox_Operation = new SuggestionTextBox();
             Control_RemoveTab_TableLayout_Bottom = new TableLayoutPanel();
             Control_RemoveTab_Button_ShowAll = new Button();
             Control_RemoveTab_Button_AdvancedItemRemoval = new Button();
@@ -200,9 +201,9 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             Control_RemoveTab_TableLayout_Top.ColumnStyles.Add(new ColumnStyle());
             Control_RemoveTab_TableLayout_Top.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
             Control_RemoveTab_TableLayout_Top.Controls.Add(Control_RemoveTab_Label_Part, 0, 0);
-            Control_RemoveTab_TableLayout_Top.Controls.Add(Control_RemoveTab_ComboBox_Part, 1, 0);
+            Control_RemoveTab_TableLayout_Top.Controls.Add(Control_RemoveTab_TextBox_Part, 1, 0);
             Control_RemoveTab_TableLayout_Top.Controls.Add(Control_RemoveTab_Label_Operation, 2, 0);
-            Control_RemoveTab_TableLayout_Top.Controls.Add(Control_RemoveTab_ComboBox_Operation, 3, 0);
+            Control_RemoveTab_TableLayout_Top.Controls.Add(Control_RemoveTab_TextBox_Operation, 3, 0);
             Control_RemoveTab_TableLayout_Top.Dock = DockStyle.Fill;
             Control_RemoveTab_TableLayout_Top.Location = new Point(0, 0);
             Control_RemoveTab_TableLayout_Top.Name = "Control_RemoveTab_TableLayout_Top";
@@ -222,16 +223,14 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             Control_RemoveTab_Label_Part.Text = "Part Number:";
             Control_RemoveTab_Label_Part.TextAlign = ContentAlignment.MiddleRight;
             // 
-            // Control_RemoveTab_ComboBox_Part
+            // Control_RemoveTab_TextBox_Part
             // 
-            Control_RemoveTab_ComboBox_Part.AutoCompleteMode = AutoCompleteMode.SuggestAppend;
-            Control_RemoveTab_ComboBox_Part.AutoCompleteSource = AutoCompleteSource.ListItems;
-            Control_RemoveTab_ComboBox_Part.Dock = DockStyle.Fill;
-            Control_RemoveTab_ComboBox_Part.FormattingEnabled = true;
-            Control_RemoveTab_ComboBox_Part.Location = new Point(87, 3);
-            Control_RemoveTab_ComboBox_Part.Name = "Control_RemoveTab_ComboBox_Part";
-            Control_RemoveTab_ComboBox_Part.Size = new Size(279, 23);
-            Control_RemoveTab_ComboBox_Part.TabIndex = 1;
+            Control_RemoveTab_TextBox_Part.Dock = DockStyle.Fill;
+            Control_RemoveTab_TextBox_Part.Location = new Point(87, 3);
+            Control_RemoveTab_TextBox_Part.Name = "Control_RemoveTab_TextBox_Part";
+            Control_RemoveTab_TextBox_Part.PlaceholderText = "Enter or Select Part Number";
+            Control_RemoveTab_TextBox_Part.Size = new Size(279, 23);
+            Control_RemoveTab_TextBox_Part.TabIndex = 1;
             // 
             // Control_RemoveTab_Label_Operation
             // 
@@ -244,15 +243,13 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             Control_RemoveTab_Label_Operation.Text = "Operation:";
             Control_RemoveTab_Label_Operation.TextAlign = ContentAlignment.MiddleRight;
             // 
-            // Control_RemoveTab_ComboBox_Operation
+            // Control_RemoveTab_TextBox_Operation
             // 
-            Control_RemoveTab_ComboBox_Operation.AutoCompleteMode = AutoCompleteMode.SuggestAppend;
-            Control_RemoveTab_ComboBox_Operation.AutoCompleteSource = AutoCompleteSource.ListItems;
-            Control_RemoveTab_ComboBox_Operation.FormattingEnabled = true;
-            Control_RemoveTab_ComboBox_Operation.Location = new Point(441, 3);
-            Control_RemoveTab_ComboBox_Operation.Name = "Control_RemoveTab_ComboBox_Operation";
-            Control_RemoveTab_ComboBox_Operation.Size = new Size(180, 23);
-            Control_RemoveTab_ComboBox_Operation.TabIndex = 2;
+            Control_RemoveTab_TextBox_Operation.Location = new Point(441, 3);
+            Control_RemoveTab_TextBox_Operation.Name = "Control_RemoveTab_TextBox_Operation";
+            Control_RemoveTab_TextBox_Operation.PlaceholderText = "Enter or Select Operation";
+            Control_RemoveTab_TextBox_Operation.Size = new Size(180, 23);
+            Control_RemoveTab_TextBox_Operation.TabIndex = 2;
             // 
             // Control_RemoveTab_TableLayout_Bottom
             // 

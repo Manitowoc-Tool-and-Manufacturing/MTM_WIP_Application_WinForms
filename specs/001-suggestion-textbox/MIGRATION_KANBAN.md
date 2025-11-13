@@ -10,8 +10,6 @@ config:
 ---
 kanban
   todo[Todo]
-    t1[Control_TransferTab - 3 ComboBoxes]@{ assigned: 'MainForm', ticket: 'T051-T062', priority: 'Very High' }
-    t2[Control_RemoveTab - 2 ComboBoxes]@{ assigned: 'MainForm', ticket: 'T063-T071', priority: 'Very High' }
     t3[Control_AdvancedInventory - 6 ComboBoxes]@{ assigned: 'MainForm', ticket: 'T072-T086', priority: 'Very High' }
     t4[Form_QuickButtonEdit - 1 ComboBox]@{ assigned: 'Standalone', ticket: 'T097-T104', priority: 'High' }
     t5[Control_Edit_PartID - 1 ComboBox]@{ assigned: 'SettingsForm', ticket: 'T105-T111', priority: 'Low' }
@@ -30,6 +28,8 @@ kanban
   
   done[Done]
     d1[Control_InventoryTab - 3 ComboBoxes]@{ assigned: 'MainForm', ticket: 'T024-T042' }
+    d2[Control_TransferTab - 3 ComboBoxes]@{ assigned: 'MainForm', ticket: 'T051-T062' }
+    d3[Control_RemoveTab - 2 ComboBoxes]@{ assigned: 'MainForm', ticket: 'T063-T071' }
 ```
 
 ---
@@ -42,8 +42,8 @@ kanban
 | Child Control | ComboBoxes Found | DropDownStyle | Migration Status | Reason / Notes |
 |---------------|------------------|---------------|------------------|----------------|
 | **Control_InventoryTab** | Part, Operation, Location | N/A (SuggestionTextBox) | ✅ MIGRATED | Already uses SuggestionTextBox (T024-T042) |
-| **Control_TransferTab** | Part, Operation, ToLocation | DropDown (editable) | 📋 NEEDS MIGRATION | T051-T062 - 3 editable ComboBoxes |
-| **Control_RemoveTab** | Part, Operation | DropDown (editable) | 📋 NEEDS MIGRATION | T063-T071 - 2 editable ComboBoxes |
+| **Control_TransferTab** | Part, Operation, ToLocation | N/A (SuggestionTextBox) | ✅ MIGRATED | Completed T051-T062 - 3 SuggestionTextBox controls |
+| **Control_RemoveTab** | Part, Operation | N/A (SuggestionTextBox) | ✅ MIGRATED | Completed T063-T071 - 2 SuggestionTextBox controls |
 | **Control_AdvancedInventory** | Multiple across 2 tabs | DropDown (editable) | 📋 NEEDS MIGRATION | T072-T086 - 6 editable ComboBoxes (Single + Multi-Loc tabs) |
 | **Control_AdvancedRemove** | None found | N/A | ⚪ NO MIGRATION | Uses TextBoxes for Part/Op/Location, not ComboBoxes |
 | **Control_QuickButtons** | None | N/A | ⚪ NO MIGRATION | Button management only - no ComboBoxes |
@@ -136,8 +136,8 @@ kanban
 
 | Migration Status | Forms/Controls | ComboBoxes | Percentage | Notes |
 |------------------|----------------|------------|------------|-------|
-| ✅ **MIGRATED** | 1 | 3 | 6% | Control_InventoryTab complete (Part, Operation, Location) |
-| 📋 **NEEDS MIGRATION** | 15 | 22 | 94% | 3 MainForm (11 controls), 1 Standalone (1 control), 10 SettingsForm (10 controls), 1 Optional (1 control) |
+| ✅ **MIGRATED** | 3 | 8 | 32% | Control_InventoryTab, Control_TransferTab, Control_RemoveTab complete |
+| 📋 **NEEDS MIGRATION** | 13 | 17 | 68% | 1 MainForm (6 controls), 1 Standalone (1 control), 10 SettingsForm (10 controls), 1 Optional (1 control) |
 | ⚪ **NO MIGRATION NEEDED** | 27 | N/A | N/A | Hardcoded lists only (Shift, Building, Theme), no ComboBoxes, or display only |
 | **TOTAL FORMS ANALYZED** | **43** | **25** | 100% | ALL 43 forms/controls analyzed - INCLUDES DropDownList with database data! |
 
@@ -158,9 +158,7 @@ kanban
 
 ## Priority Lanes
 
-### 🔴 P1 - Critical (MainForm Children) - 3 Forms with 11 ComboBoxes
-- **Control_TransferTab** → 3 ComboBoxes (Part, Operation, ToLocation)
-- **Control_RemoveTab** → 2 ComboBoxes (Part, Operation)
+### 🔴 P1 - Critical (MainForm Children) - 1 Form with 6 ComboBoxes
 - **Control_AdvancedInventory** → 6 ComboBoxes across Single + Multi-Loc tabs
 
 ### 🟡 P2 - Important (Standalone Forms) - 1 Form with 1 ComboBox
@@ -185,13 +183,13 @@ kanban
 
 | Status | Form/Controls | ComboBoxes | Percentage |
 |--------|---------------|------------|------------|
-| ✅ Done | 1 | 3 | 6% |
+| ✅ Done | 3 | 8 | 32% |
 | 🚧 In Progress | 0 | 0 | 0% |
-| 📋 Todo | 15 | 22 | 94% |
+| 📋 Todo | 13 | 17 | 68% |
 | **TOTAL** | **16** | **25** | **100%** |
 
-**Migration Velocity**: ~1 form/week (based on Control_InventoryTab completion)  
-**Estimated Completion**: 15 weeks for all P1-P3 migrations
+**Migration Velocity**: ~1-2 forms/week (based on recent completion rate)  
+**Estimated Completion**: 7-10 weeks for all P1-P3 migrations
 
 **NOTE**: Includes 7 DropDownList controls that load from database - these need migration for consistency!
 
@@ -231,16 +229,16 @@ Migration complete, tested, and deployed. All acceptance criteria met:
 
 ## Next Card to Pull
 
-**→ Control_TransferTab (3 ComboBoxes) - T051-T062**
+**→ Control_AdvancedInventory (6 ComboBoxes) - T072-T086**
 
 **Details**:
 - **Priority**: P1 (Very High)
 - **Parent**: MainForm
-- **Complexity**: Medium
-- **Fields**: Part, Operation, ToLocation
-- **Expected Duration**: 2-3 hours
+- **Complexity**: High (6 controls across 2 tabs)
+- **Fields**: Part, Operation, Location (Single tab) + Part, Operation, Location (Multi-Loc tab)
+- **Expected Duration**: 4-6 hours
 - **Blocks**: None
 - **Similar to**: Control_InventoryTab (reference implementation)
-- **Dependencies**: Dao_Part, Dao_Operation, Dao_Location
+- **Dependencies**: Dao_Part, Dao_Operation, Dao_Location (shared data providers)
 
-**Tasks**: T051-T062 (12 tasks total)
+**Tasks**: T072-T086 (15 tasks total)

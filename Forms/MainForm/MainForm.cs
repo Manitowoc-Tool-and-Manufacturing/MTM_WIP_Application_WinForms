@@ -823,7 +823,7 @@ namespace MTM_WIP_Application_Winforms.Forms.MainForm
                         MainForm_UserControl_InventoryTab?.Control_InventoryTab_TextBox_Part?.Focus();
                         break;
                     case 1:
-                        MainForm_UserControl_RemoveTab?.Control_RemoveTab_ComboBox_Part?.Focus();
+                        MainForm_UserControl_RemoveTab?.Control_RemoveTab_TextBox_Part?.Focus();
                         break;
                     case 2:
                         MainForm_UserControl_TransferTab?.Control_TransferTab_TextBox_Part?.Focus();

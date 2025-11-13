@@ -121,9 +121,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                     ["InitialFocus"] = "Control_InventoryTab_TextBox_Part",
                     ["QuantityTextBoxState"] = "Placeholder"
                 });
-            Control_InventoryTab_TextBox_Part.ForeColor = Control_InventoryTab_TextBox_Operation.ForeColor =
-                Control_InventoryTab_TextBox_Location.ForeColor =
-                    Model_Application_Variables.UserUiColors.ComboBoxForeColor ?? Color.Red;
+            // ForeColor is now managed automatically by SuggestionTextBox and validation logic
             Control_InventoryTab_TextBox_Part.Focus();
             
             // PlaceholderText is now set in Designer instead of programmatically setting Text
@@ -229,6 +227,12 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             try
             {
                 _progressHelper?.ShowProgress();
+                _progressHelper?.UpdateProgress(5, "Loading validation data...");
+                
+                // Load validation data for exact match checking
+                await Helper_UI_SuggestionBoxes.LoadAllDataAsync();
+                
+                Control_InventoryTab_Button_Save.Enabled = false;
                 _progressHelper?.UpdateProgress(10, "Loading part data...");
                 
                 // Configure part number SuggestionTextBox
@@ -1163,44 +1167,29 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                     || Helper_UI_SuggestionBoxes.IsValidLocation(locText);
                 bool qtyValid = int.TryParse(Control_InventoryTab_TextBox_Quantity.Text.Trim(), out int qty) && qty > 0;
                 
-                // Update colors based on validation
+                // Update Model_Application_Variables from exact matches
                 if (partValid && !string.IsNullOrWhiteSpace(partText))
                 {
-                    Control_InventoryTab_TextBox_Part.ForeColor = Model_Application_Variables.UserUiColors.ComboBoxForeColor ?? Color.Black;
                     if (string.IsNullOrWhiteSpace(Model_Application_Variables.PartId))
                     {
                         Model_Application_Variables.PartId = partText; // Set from exact match
                     }
                 }
-                else if (!string.IsNullOrWhiteSpace(partText))
-                {
-                    Control_InventoryTab_TextBox_Part.ForeColor = Model_Application_Variables.UserUiColors.ComboBoxErrorForeColor ?? Color.Red;
-                }
                 
                 if (opValid && !string.IsNullOrWhiteSpace(opText))
                 {
-                    Control_InventoryTab_TextBox_Operation.ForeColor = Model_Application_Variables.UserUiColors.ComboBoxForeColor ?? Color.Black;
                     if (string.IsNullOrWhiteSpace(Model_Application_Variables.Operation))
                     {
                         Model_Application_Variables.Operation = opText; // Set from exact match
                     }
                 }
-                else if (!string.IsNullOrWhiteSpace(opText))
-                {
-                    Control_InventoryTab_TextBox_Operation.ForeColor = Model_Application_Variables.UserUiColors.ComboBoxErrorForeColor ?? Color.Red;
-                }
                 
                 if (locValid && !string.IsNullOrWhiteSpace(locText))
                 {
-                    Control_InventoryTab_TextBox_Location.ForeColor = Model_Application_Variables.UserUiColors.ComboBoxForeColor ?? Color.Black;
                     if (string.IsNullOrWhiteSpace(Model_Application_Variables.Location))
                     {
                         Model_Application_Variables.Location = locText; // Set from exact match
                     }
-                }
-                else if (!string.IsNullOrWhiteSpace(locText))
-                {
-                    Control_InventoryTab_TextBox_Location.ForeColor = Model_Application_Variables.UserUiColors.ComboBoxErrorForeColor ?? Color.Red;
                 }
                 
                 Control_InventoryTab_Button_Save.Enabled = partValid && opValid && locValid && qtyValid;
@@ -1231,7 +1220,6 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                 Control_InventoryTab_TextBox_Part.SuggestionSelected += (s, e) =>
                 {
                     Model_Application_Variables.PartId = e.SelectedValue;
-                    Control_InventoryTab_TextBox_Part.ForeColor = Model_Application_Variables.UserUiColors.ComboBoxForeColor ?? Color.Black;
                     LoggingUtility.Log($"Part suggestion selected: {e.SelectedValue}");
                     Control_InventoryTab_Update_SaveButtonState();
                 };
@@ -1243,7 +1231,6 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                     if (Control_InventoryTab_TextBox_Part.Text != Model_Application_Variables.PartId)
                     {
                         Model_Application_Variables.PartId = null;
-                        Control_InventoryTab_TextBox_Part.ForeColor = Model_Application_Variables.UserUiColors.ComboBoxErrorForeColor ?? Color.Red;
                         Control_InventoryTab_Update_SaveButtonState();
                     }
                 };
@@ -1251,7 +1238,6 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                 Control_InventoryTab_TextBox_Operation.SuggestionSelected += (s, e) =>
                 {
                     Model_Application_Variables.Operation = e.SelectedValue;
-                    Control_InventoryTab_TextBox_Operation.ForeColor = Model_Application_Variables.UserUiColors.ComboBoxForeColor ?? Color.Black;
                     LoggingUtility.Log($"Operation suggestion selected: {e.SelectedValue}");
                     Control_InventoryTab_Update_SaveButtonState();
                 };
@@ -1262,7 +1248,6 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                     if (Control_InventoryTab_TextBox_Operation.Text != Model_Application_Variables.Operation)
                     {
                         Model_Application_Variables.Operation = null;
-                        Control_InventoryTab_TextBox_Operation.ForeColor = Model_Application_Variables.UserUiColors.ComboBoxErrorForeColor ?? Color.Red;
                         Control_InventoryTab_Update_SaveButtonState();
                     }
                 };
@@ -1270,7 +1255,6 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                 Control_InventoryTab_TextBox_Location.SuggestionSelected += (s, e) =>
                 {
                     Model_Application_Variables.Location = e.SelectedValue;
-                    Control_InventoryTab_TextBox_Location.ForeColor = Model_Application_Variables.UserUiColors.ComboBoxForeColor ?? Color.Black;
                     LoggingUtility.Log($"Location suggestion selected: {e.SelectedValue}");
                     Control_InventoryTab_Update_SaveButtonState();
                 };
@@ -1281,7 +1265,6 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                     if (Control_InventoryTab_TextBox_Location.Text != Model_Application_Variables.Location)
                     {
                         Model_Application_Variables.Location = null;
-                        Control_InventoryTab_TextBox_Location.ForeColor = Model_Application_Variables.UserUiColors.ComboBoxErrorForeColor ?? Color.Red;
                         Control_InventoryTab_Update_SaveButtonState();
                     }
                 };

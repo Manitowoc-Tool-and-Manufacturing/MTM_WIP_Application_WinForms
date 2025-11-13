@@ -161,9 +161,9 @@
 - [X] T057 Configure all three SuggestionTextBox controls (DataProvider, MaxResults, EnableWildcards properties)
 - [X] T058 Add event handlers (SuggestionSelected, SuggestionCancelled) for all three fields with logging
 - [X] T059 Remove old ComboBox code (SelectedIndexChanged handlers, DataSource binding)
-- [ ] T060 Test wildcard patterns on all three fields (%, %-suffix, prefix-%, complex patterns)
-- [ ] T061 Verify keyboard navigation and tab order (Part → Operation → ToLocation)
-- [ ] T062 Update MIGRATION_KANBAN.md: Move Control_TransferTab from Todo to Done
+- [X] T060 Test wildcard patterns on all three fields (%, %-suffix, prefix-%, complex patterns)
+- [X] T061 Verify keyboard navigation and tab order (Part → Operation → ToLocation)
+- [X] T062 Update MIGRATION_KANBAN.md: Move Control_TransferTab from Todo to Done
 
 **Checkpoint**: Transfer tab migration complete
 
@@ -176,15 +176,15 @@
 **Priority**: P1 - Consistent UX across tabs  
 **Complexity**: Low (identical to InventoryTab pattern)
 
-- [ ] T063 Migrate Control_RemoveTab_ComboBox_Part to SuggestionTextBox (follow T050 pattern, placeholder: "Enter or Select Part Number", MaxResults=100, EnableWildcards=true)
-- [ ] T064 Migrate Control_RemoveTab_ComboBox_Operation to SuggestionTextBox (follow T050 pattern, placeholder: "Enter or Select Operation", MaxResults=50, EnableWildcards=true)
-- [ ] T065 Implement GetPartNumberSuggestionsAsync calling Dao_Part.GetAllPartIDsAsync()
-- [ ] T066 Implement GetOperationSuggestionsAsync calling Dao_Operation.GetAllOperationsAsync()
-- [ ] T067 Configure both SuggestionTextBox controls (DataProvider, MaxResults, EnableWildcards properties)
-- [ ] T068 Add event handlers (SuggestionSelected, SuggestionCancelled) for both fields with logging
-- [ ] T069 Remove old ComboBox code (SelectedIndexChanged handlers, DataSource binding)
-- [ ] T070 Test consistency with Inventory/Transfer tabs (identical behavior, keyboard nav)
-- [ ] T071 Update MIGRATION_KANBAN.md: Move Control_RemoveTab from Todo to Done
+- [X] T063 Migrate Control_RemoveTab_ComboBox_Part to SuggestionTextBox (follow T050 pattern, placeholder: "Enter or Select Part Number", MaxResults=100, EnableWildcards=true)
+- [X] T064 Migrate Control_RemoveTab_ComboBox_Operation to SuggestionTextBox (follow T050 pattern, placeholder: "Enter or Select Operation", MaxResults=50, EnableWildcards=true)
+- [X] T065 Implement GetPartNumberSuggestionsAsync calling Dao_Part.GetAllPartIDsAsync()
+- [X] T066 Implement GetOperationSuggestionsAsync calling Dao_Operation.GetAllOperationsAsync()
+- [X] T067 Configure both SuggestionTextBox controls (DataProvider, MaxResults, EnableWildcards properties)
+- [X] T068 Add event handlers (SuggestionSelected, SuggestionCancelled) for both fields with logging
+- [X] T069 Remove old ComboBox code (SelectedIndexChanged handlers, DataSource binding)
+- [X] T070 Test consistency with Inventory/Transfer tabs (identical behavior, keyboard nav)
+- [X] T071 Update MIGRATION_KANBAN.md: Move Control_RemoveTab from Todo to Done
 
 **Checkpoint**: Remove tab migration complete
 

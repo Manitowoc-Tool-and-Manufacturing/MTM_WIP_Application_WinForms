@@ -1069,7 +1069,12 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             {
                 // Use lambda to match EventHandler signature for async void method
                 Control_TransferTab_Button_Reset.Click += (s, e) => Control_TransferTab_Button_Reset_Click();
-                                
+                
+                // TextBox events - update button states when text changes
+                Control_TransferTab_TextBox_Part.TextChanged += (s, e) => Control_TransferTab_Update_ButtonStates();
+                Control_TransferTab_TextBox_Operation.TextChanged += (s, e) => Control_TransferTab_Update_ButtonStates();
+                Control_TransferTab_TextBox_ToLocation.TextChanged += (s, e) => Control_TransferTab_Update_ButtonStates();
+                
                 // Transfer button
                 Control_TransferTab_Button_Transfer.Click +=
                     async (s, e) => await Control_TransferTab_Button_Save_ClickAsync(s, e);
@@ -1168,6 +1173,14 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             Control_TransferTab_TextBox_Part.Enabled = hasAdminAccess || isNormal || isReadOnly;
             Control_TransferTab_TextBox_Operation.Enabled = hasAdminAccess || isNormal || isReadOnly;
             Control_TransferTab_TextBox_ToLocation.Enabled = hasAdminAccess || isNormal || isReadOnly;
+            
+            // Apply focus highlighting to ToLocation after enabling (it starts disabled in designer)
+            if (Control_TransferTab_TextBox_ToLocation.Enabled)
+            {
+                Core.FocusUtils.ApplyFocusEventHandling(Control_TransferTab_TextBox_ToLocation, 
+                    Model_Application_Variables.UserUiColors);
+            }
+            
             // NumericUpDown
             Control_TransferTab_NumericUpDown_Quantity.ReadOnly = isReadOnly;
             Control_TransferTab_NumericUpDown_Quantity.Enabled = hasAdminAccess || isNormal || isReadOnly;
