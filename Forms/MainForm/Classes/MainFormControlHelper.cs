@@ -49,13 +49,13 @@ public static class MainFormControlHelper
             textBox.Invoke(new MethodInvoker(() =>
             {
                 textBox.ForeColor = color;
-                textBox.Text = text;
+                textBox.Text = "";  // Always clear text to show PlaceholderText
             }));
         }
         else
         {
             textBox.ForeColor = color;
-            textBox.Text = text;
+            textBox.Text = "";  // Always clear text to show PlaceholderText
         }
     }
 
@@ -74,7 +74,6 @@ public static class MainFormControlHelper
     public static void AdjustQuantityByKey_Transfers(
         object? sender,
         KeyEventArgs e,
-        string placeholder = "[ Enter Valid Quantity ]",
         Color? validColor = null,
         Color? invalidColor = null)
     {
@@ -83,16 +82,16 @@ public static class MainFormControlHelper
 
         validColor ??= Color.Black;
         invalidColor ??= Model_Application_Variables.UserUiColors.ComboBoxErrorForeColor ?? Color.Red;
-        ;
 
-        var isPlaceholder = textBox.Text.Trim() == placeholder;
+        // Check if textbox is empty (placeholder is shown) or contains a valid number
+        var isEmpty = string.IsNullOrWhiteSpace(textBox.Text);
         var isNumber = int.TryParse(textBox.Text.Trim(), out var value);
 
-        void SetValueOrPlaceholder(int newValue)
+        void SetValueOrClear(int newValue)
         {
             if (newValue <= 0)
             {
-                textBox.Text = placeholder;
+                textBox.Text = "";  // Clear text to show placeholder
                 textBox.ForeColor = invalidColor.Value;
             }
             else
@@ -103,7 +102,7 @@ public static class MainFormControlHelper
             }
         }
 
-        if (isPlaceholder || isNumber)
+        if (isEmpty || isNumber)
         {
             var current = isNumber ? value : 0;
             int newValue;
@@ -111,49 +110,49 @@ public static class MainFormControlHelper
             if (e.KeyCode == Keys.Left && !e.Shift)
             {
                 newValue = current - 1;
-                SetValueOrPlaceholder(newValue);
+                SetValueOrClear(newValue);
                 e.Handled = true;
             }
             else if (e.KeyCode == Keys.Right && !e.Shift)
             {
                 newValue = current + 1;
-                SetValueOrPlaceholder(newValue);
+                SetValueOrClear(newValue);
                 e.Handled = true;
             }
             else if (e.KeyCode == Keys.Up && !e.Shift)
             {
                 newValue = current + 5;
-                SetValueOrPlaceholder(newValue);
+                SetValueOrClear(newValue);
                 e.Handled = true;
             }
             else if (e.KeyCode == Keys.Down && !e.Shift)
             {
                 newValue = current - 5;
-                SetValueOrPlaceholder(newValue);
+                SetValueOrClear(newValue);
                 e.Handled = true;
             }
             else if (e.KeyCode == Keys.Left && e.Shift)
             {
                 newValue = current - 10;
-                SetValueOrPlaceholder(newValue);
+                SetValueOrClear(newValue);
                 e.Handled = true;
             }
             else if (e.KeyCode == Keys.Right && e.Shift)
             {
                 newValue = current + 10;
-                SetValueOrPlaceholder(newValue);
+                SetValueOrClear(newValue);
                 e.Handled = true;
             }
             else if (e.KeyCode == Keys.Up && e.Shift)
             {
                 newValue = current + 50;
-                SetValueOrPlaceholder(newValue);
+                SetValueOrClear(newValue);
                 e.Handled = true;
             }
             else if (e.KeyCode == Keys.Down && e.Shift)
             {
                 newValue = current - 50;
-                SetValueOrPlaceholder(newValue);
+                SetValueOrClear(newValue);
                 e.Handled = true;
             }
         }
@@ -162,7 +161,6 @@ public static class MainFormControlHelper
     public static void AdjustQuantityByKey_Quantity(
         object? sender,
         KeyEventArgs e,
-        string placeholder = "[ Enter Valid Quantity ]",
         Color? validColor = null,
         Color? invalidColor = null)
     {
@@ -171,16 +169,16 @@ public static class MainFormControlHelper
 
         validColor ??= Color.Black;
         invalidColor ??= Model_Application_Variables.UserUiColors.ComboBoxErrorForeColor ?? Color.Red;
-        ;
 
-        var isPlaceholder = textBox.Text.Trim() == placeholder;
+        // Check if textbox is empty (placeholder is shown) or contains a valid number
+        var isEmpty = string.IsNullOrWhiteSpace(textBox.Text);
         var isNumber = int.TryParse(textBox.Text.Trim(), out var value);
 
-        void SetValueOrPlaceholder(int newValue)
+        void SetValueOrClear(int newValue)
         {
             if (newValue <= 0)
             {
-                textBox.Text = placeholder;
+                textBox.Text = "";  // Clear text to show placeholder
                 textBox.ForeColor = invalidColor.Value;
             }
             else
@@ -191,7 +189,7 @@ public static class MainFormControlHelper
             }
         }
 
-        if (isPlaceholder || isNumber)
+        if (isEmpty || isNumber)
         {
             var current = isNumber ? value : 0;
             int newValue;
@@ -199,49 +197,49 @@ public static class MainFormControlHelper
             if (e.KeyCode == Keys.Left && !e.Shift)
             {
                 newValue = current - 10;
-                SetValueOrPlaceholder(newValue);
+                SetValueOrClear(newValue);
                 e.Handled = true;
             }
             else if (e.KeyCode == Keys.Right && !e.Shift)
             {
                 newValue = current + 10;
-                SetValueOrPlaceholder(newValue);
+                SetValueOrClear(newValue);
                 e.Handled = true;
             }
             else if (e.KeyCode == Keys.Up && !e.Shift)
             {
                 newValue = current + 1000;
-                SetValueOrPlaceholder(newValue);
+                SetValueOrClear(newValue);
                 e.Handled = true;
             }
             else if (e.KeyCode == Keys.Down && !e.Shift)
             {
                 newValue = current - 1000;
-                SetValueOrPlaceholder(newValue);
+                SetValueOrClear(newValue);
                 e.Handled = true;
             }
             else if (e.KeyCode == Keys.Left && e.Shift)
             {
                 newValue = current - 10000;
-                SetValueOrPlaceholder(newValue);
+                SetValueOrClear(newValue);
                 e.Handled = true;
             }
             else if (e.KeyCode == Keys.Right && e.Shift)
             {
                 newValue = current + 10000;
-                SetValueOrPlaceholder(newValue);
+                SetValueOrClear(newValue);
                 e.Handled = true;
             }
             else if (e.KeyCode == Keys.Up && e.Shift)
             {
                 newValue = current + 100;
-                SetValueOrPlaceholder(newValue);
+                SetValueOrClear(newValue);
                 e.Handled = true;
             }
             else if (e.KeyCode == Keys.Down && e.Shift)
             {
                 newValue = current - 100;
-                SetValueOrPlaceholder(newValue);
+                SetValueOrClear(newValue);
                 e.Handled = true;
             }
         }

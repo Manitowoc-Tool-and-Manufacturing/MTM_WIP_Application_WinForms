@@ -356,11 +356,11 @@ namespace MTM_WIP_Application_Winforms.Forms.MainForm
         {
             try
             {
-                if (MainForm_UserControl_InventoryTab?.Control_InventoryTab_ComboBox_Part != null)
+                if (MainForm_UserControl_InventoryTab?.Control_InventoryTab_TextBox_Part != null)
                 {
-                    MainForm_UserControl_InventoryTab.Control_InventoryTab_ComboBox_Part.Focus();
-                    MainForm_UserControl_InventoryTab.Control_InventoryTab_ComboBox_Part.SelectAll();
-                    MainForm_UserControl_InventoryTab.Control_InventoryTab_ComboBox_Part.BackColor =
+                    MainForm_UserControl_InventoryTab.Control_InventoryTab_TextBox_Part.Focus();
+                    MainForm_UserControl_InventoryTab.Control_InventoryTab_TextBox_Part.SelectAll();
+                    MainForm_UserControl_InventoryTab.Control_InventoryTab_TextBox_Part.BackColor =
                         Model_Application_Variables.UserUiColors.ControlFocusedBackColor ?? Color.LightBlue;
                 }
             }
@@ -820,13 +820,13 @@ namespace MTM_WIP_Application_Winforms.Forms.MainForm
                 switch (MainForm_TabControl.SelectedIndex)
                 {
                     case 0:
-                        MainForm_UserControl_InventoryTab?.Control_InventoryTab_ComboBox_Part?.Focus();
+                        MainForm_UserControl_InventoryTab?.Control_InventoryTab_TextBox_Part?.Focus();
                         break;
                     case 1:
                         MainForm_UserControl_RemoveTab?.Control_RemoveTab_ComboBox_Part?.Focus();
                         break;
                     case 2:
-                        MainForm_UserControl_TransferTab?.Control_TransferTab_ComboBox_Part?.Focus();
+                        MainForm_UserControl_TransferTab?.Control_TransferTab_TextBox_Part?.Focus();
                         break;
                 }
             }

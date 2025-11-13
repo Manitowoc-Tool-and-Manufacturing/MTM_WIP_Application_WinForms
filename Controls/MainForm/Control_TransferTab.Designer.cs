@@ -1,5 +1,6 @@
 ﻿using System.Drawing;
 using System.Windows.Forms;
+using MTM_WIP_Application_Winforms.Controls.Shared;
 
 namespace MTM_WIP_Application_Winforms.Controls.MainForm
 {
@@ -40,10 +41,10 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             Control_TransferTab_Button_Toggle_RightPanel = new Button();
             Control_TransferTab_SplitContainer_Main = new SplitContainer();
             tableLayoutPanel1 = new TableLayoutPanel();
-            Control_TransferTab_ComboBox_Operation = new ComboBox();
-            Control_TransferTab_ComboBox_Part = new ComboBox();
+            Control_TransferTab_TextBox_Operation = new SuggestionTextBox();
+            Control_TransferTab_TextBox_Part = new SuggestionTextBox();
             Control_TransferTab_NumericUpDown_Quantity = new NumericUpDown();
-            Control_TransferTab_ComboBox_ToLocation = new ComboBox();
+            Control_TransferTab_TextBox_ToLocation = new SuggestionTextBox();
             Control_TransferTab_Label_Part = new Label();
             Control_TransferTab_Label_Operation = new Label();
             Control_TransferTab_Label_ToLocation = new Label();
@@ -162,17 +163,16 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             Control_TransferTab_SplitContainer_Main.Size = new Size(955, 442);
             Control_TransferTab_SplitContainer_Main.SplitterDistance = 386;
             Control_TransferTab_SplitContainer_Main.TabIndex = 0;
-            Control_TransferTab_SplitContainer_Main.SplitterMoved += splitContainer1_SplitterMoved;
             // 
             // Control_Shortcuts_TableLayout_Main
             // 
             tableLayoutPanel1.ColumnCount = 2;
             tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle());
             tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
-            tableLayoutPanel1.Controls.Add(Control_TransferTab_ComboBox_Operation, 1, 1);
-            tableLayoutPanel1.Controls.Add(Control_TransferTab_ComboBox_Part, 1, 0);
+            tableLayoutPanel1.Controls.Add(Control_TransferTab_TextBox_Operation, 1, 1);
+            tableLayoutPanel1.Controls.Add(Control_TransferTab_TextBox_Part, 1, 0);
             tableLayoutPanel1.Controls.Add(Control_TransferTab_NumericUpDown_Quantity, 1, 3);
-            tableLayoutPanel1.Controls.Add(Control_TransferTab_ComboBox_ToLocation, 1, 2);
+            tableLayoutPanel1.Controls.Add(Control_TransferTab_TextBox_ToLocation, 1, 2);
             tableLayoutPanel1.Controls.Add(Control_TransferTab_Label_Part, 0, 0);
             tableLayoutPanel1.Controls.Add(Control_TransferTab_Label_Operation, 0, 1);
             tableLayoutPanel1.Controls.Add(Control_TransferTab_Label_ToLocation, 0, 2);
@@ -192,27 +192,23 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             tableLayoutPanel1.Size = new Size(386, 442);
             tableLayoutPanel1.TabIndex = 0;
             // 
-            // Control_TransferTab_ComboBox_Operation
+            // Control_TransferTab_TextBox_Operation
             // 
-            Control_TransferTab_ComboBox_Operation.Anchor = AnchorStyles.Top | AnchorStyles.Right;
-            Control_TransferTab_ComboBox_Operation.AutoCompleteMode = AutoCompleteMode.SuggestAppend;
-            Control_TransferTab_ComboBox_Operation.AutoCompleteSource = AutoCompleteSource.ListItems;
-            Control_TransferTab_ComboBox_Operation.FormattingEnabled = true;
-            Control_TransferTab_ComboBox_Operation.Location = new Point(103, 32);
-            Control_TransferTab_ComboBox_Operation.Name = "Control_TransferTab_ComboBox_Operation";
-            Control_TransferTab_ComboBox_Operation.Size = new Size(280, 23);
-            Control_TransferTab_ComboBox_Operation.TabIndex = 2;
+            Control_TransferTab_TextBox_Operation.Anchor = AnchorStyles.Left | AnchorStyles.Right;
+            Control_TransferTab_TextBox_Operation.Location = new Point(103, 32);
+            Control_TransferTab_TextBox_Operation.Name = "Control_TransferTab_TextBox_Operation";
+            Control_TransferTab_TextBox_Operation.PlaceholderText = "Enter or Select Operation";
+            Control_TransferTab_TextBox_Operation.Size = new Size(280, 23);
+            Control_TransferTab_TextBox_Operation.TabIndex = 2;
             // 
-            // Control_TransferTab_ComboBox_Part
+            // Control_TransferTab_TextBox_Part
             // 
-            Control_TransferTab_ComboBox_Part.Anchor = AnchorStyles.Top | AnchorStyles.Right;
-            Control_TransferTab_ComboBox_Part.AutoCompleteMode = AutoCompleteMode.SuggestAppend;
-            Control_TransferTab_ComboBox_Part.AutoCompleteSource = AutoCompleteSource.ListItems;
-            Control_TransferTab_ComboBox_Part.FormattingEnabled = true;
-            Control_TransferTab_ComboBox_Part.Location = new Point(103, 3);
-            Control_TransferTab_ComboBox_Part.Name = "Control_TransferTab_ComboBox_Part";
-            Control_TransferTab_ComboBox_Part.Size = new Size(280, 23);
-            Control_TransferTab_ComboBox_Part.TabIndex = 1;
+            Control_TransferTab_TextBox_Part.Anchor = AnchorStyles.Left | AnchorStyles.Right;
+            Control_TransferTab_TextBox_Part.Location = new Point(103, 3);
+            Control_TransferTab_TextBox_Part.Name = "Control_TransferTab_TextBox_Part";
+            Control_TransferTab_TextBox_Part.PlaceholderText = "Enter or Select Part Number";
+            Control_TransferTab_TextBox_Part.Size = new Size(280, 23);
+            Control_TransferTab_TextBox_Part.TabIndex = 1;
             // 
             // Control_TransferTab_NumericUpDown_Quantity
             // 
@@ -226,17 +222,15 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             Control_TransferTab_NumericUpDown_Quantity.TabIndex = 4;
             Control_TransferTab_NumericUpDown_Quantity.Value = new decimal(new int[] { 1, 0, 0, 0 });
             // 
-            // Control_TransferTab_ComboBox_ToLocation
+            // Control_TransferTab_TextBox_ToLocation
             // 
-            Control_TransferTab_ComboBox_ToLocation.Anchor = AnchorStyles.Top | AnchorStyles.Right;
-            Control_TransferTab_ComboBox_ToLocation.AutoCompleteMode = AutoCompleteMode.SuggestAppend;
-            Control_TransferTab_ComboBox_ToLocation.AutoCompleteSource = AutoCompleteSource.ListItems;
-            Control_TransferTab_ComboBox_ToLocation.Enabled = false;
-            Control_TransferTab_ComboBox_ToLocation.FormattingEnabled = true;
-            Control_TransferTab_ComboBox_ToLocation.Location = new Point(103, 61);
-            Control_TransferTab_ComboBox_ToLocation.Name = "Control_TransferTab_ComboBox_ToLocation";
-            Control_TransferTab_ComboBox_ToLocation.Size = new Size(280, 23);
-            Control_TransferTab_ComboBox_ToLocation.TabIndex = 3;
+            Control_TransferTab_TextBox_ToLocation.Anchor = AnchorStyles.Left | AnchorStyles.Right;
+            Control_TransferTab_TextBox_ToLocation.Enabled = false;
+            Control_TransferTab_TextBox_ToLocation.Location = new Point(103, 61);
+            Control_TransferTab_TextBox_ToLocation.Name = "Control_TransferTab_TextBox_ToLocation";
+            Control_TransferTab_TextBox_ToLocation.PlaceholderText = "Enter or Select Location";
+            Control_TransferTab_TextBox_ToLocation.Size = new Size(280, 23);
+            Control_TransferTab_TextBox_ToLocation.TabIndex = 3;
             // 
             // Control_TransferTab_Label_Part
             // 
@@ -468,9 +462,9 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
         private TableLayoutPanel tableLayoutPanel1;
         private Panel Control_TransferTab_Panel_DataGridView;
         private Label Control_TransferTab_Label_Part;
-        internal ComboBox Control_TransferTab_ComboBox_Part;
+        internal SuggestionTextBox Control_TransferTab_TextBox_Part;
         private Label Control_TransferTab_Label_Operation;
-        private ComboBox Control_TransferTab_ComboBox_Operation;
+        private SuggestionTextBox Control_TransferTab_TextBox_Operation;
         private Label Control_TransferTab_Label_ToLocation;
         private Label Control_TransferTab_Label_Quantity;
         private Button Control_TransferTab_Button_Print;
@@ -478,7 +472,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
         private ContextMenuStrip Control_TransferTab_ContextMenu_DataGridView;
         private ToolStripMenuItem Control_TransferTab_ContextMenuItem_Print;
         private Button Control_TransferTab_Button_Reset;
-        private ComboBox Control_TransferTab_ComboBox_ToLocation;
+        private SuggestionTextBox Control_TransferTab_TextBox_ToLocation;
         private Button Control_TransferTab_Button_Transfer;
         private Button Control_TransferTab_Button_Search;
         private NumericUpDown Control_TransferTab_NumericUpDown_Quantity;

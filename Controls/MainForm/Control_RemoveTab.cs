@@ -964,26 +964,26 @@ SetStyle(ControlStyles.OptimizedDoubleBuffer, true);
                 Control_RemoveTab_ComboBox_Part.SelectedIndexChanged += (s, e) =>
                 {
                     Control_RemoveTab_ComboBox_Part_SelectedIndexChanged();
-                    Helper_UI_ComboBoxes.ValidateComboBoxItem(Control_RemoveTab_ComboBox_Part, "[ Enter Part Number ]");
+                    Helper_UI_ComboBoxes.ValidateComboBoxItem(Control_RemoveTab_ComboBox_Part, "Enter or Select Part Number");
                     Control_RemoveTab_Update_ButtonStates();
                 };
                 Control_RemoveTab_ComboBox_Part.Leave += (s, e) =>
                 {
                     Helper_UI_ComboBoxes.ValidateComboBoxItem(Control_RemoveTab_ComboBox_Part,
-                        "[ Enter Part Number ]");
+                        "Enter or Select Part Number");
                 };
 
                 Control_RemoveTab_ComboBox_Operation.SelectedIndexChanged += (s, e) =>
                 {
                     Control_RemoveTab_ComboBox_Operation_SelectedIndexChanged();
                     Helper_UI_ComboBoxes.ValidateComboBoxItem(Control_RemoveTab_ComboBox_Operation,
-                        "[ Enter Operation ]");
+                        "Enter or Select Operation");
                     Control_RemoveTab_Update_ButtonStates();
                 };
                 Control_RemoveTab_ComboBox_Operation.Leave += (s, e) =>
                 {
                     Helper_UI_ComboBoxes.ValidateComboBoxItem(Control_RemoveTab_ComboBox_Operation,
-                        "[ Enter Operation ]");
+                        "Enter or Select Operation");
                 };
 
                 Control_RemoveTab_Button_AdvancedItemRemoval.Click +=
@@ -1009,7 +1009,7 @@ SetStyle(ControlStyles.OptimizedDoubleBuffer, true);
                 {
                     Control_RemoveTab_ComboBox_Part.BackColor =
                         Model_Application_Variables.UserUiColors.ControlBackColor ?? SystemColors.Window;
-                    Helper_UI_ComboBoxes.ValidateComboBoxItem(Control_RemoveTab_ComboBox_Part, "[ Enter Part Number ]");
+                    Helper_UI_ComboBoxes.ValidateComboBoxItem(Control_RemoveTab_ComboBox_Part, "Enter or Select Part Number");
                 };
 
                 Control_RemoveTab_ComboBox_Operation.Enter += (s, e) =>
@@ -1022,7 +1022,7 @@ SetStyle(ControlStyles.OptimizedDoubleBuffer, true);
                     Control_RemoveTab_ComboBox_Operation.BackColor =
                         Model_Application_Variables.UserUiColors.ControlBackColor ?? SystemColors.Window;
                     Helper_UI_ComboBoxes.ValidateComboBoxItem(Control_RemoveTab_ComboBox_Operation,
-                        "[ Enter Operation ]");
+                        "Enter or Select Operation");
                 };
 
                 Control_RemoveTab_DataGridView_Main.SelectionChanged +=

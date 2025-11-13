@@ -173,9 +173,9 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                     throw new InvalidOperationException("Tab 'AdvancedInventory_TabControl_Import' not found.");
                 }
 
-                ValidateQtyTextBox(AdvancedInventory_Single_TextBox_Qty, "[ Enter Valid Quantity ]");
-                ValidateQtyTextBox(AdvancedInventory_Single_TextBox_Count, "[ How Many Transactions ]");
-                ValidateQtyTextBox(AdvancedInventory_MultiLoc_TextBox_Qty, "[ Enter Valid Quantity ]");
+                ValidateQtyTextBox(AdvancedInventory_Single_TextBox_Qty);
+                ValidateQtyTextBox(AdvancedInventory_Single_TextBox_Count);
+                ValidateQtyTextBox(AdvancedInventory_MultiLoc_TextBox_Qty);
 
                 Enter += (s, e) =>
                 {
@@ -272,92 +272,91 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                 AdvancedInventory_Single_ComboBox_Part.SelectedIndexChanged += (s, e) =>
                 {
                     Helper_UI_ComboBoxes.ValidateComboBoxItem(AdvancedInventory_Single_ComboBox_Part,
-                        "[ Enter Part Number ]");
+                        "Enter or Select Part Number");
                     UpdateSingleSaveButtonState();
                     LoggingUtility.Log("Single Part ComboBox selection changed.");
                 };
                 AdvancedInventory_Single_ComboBox_Part.Leave += (s, e) =>
                 {
                     Helper_UI_ComboBoxes.ValidateComboBoxItem(AdvancedInventory_Single_ComboBox_Part,
-                        "[ Enter Part Number ]");
+                        "Enter or Select Part Number");
                 };
 
                 AdvancedInventory_Single_ComboBox_Op.SelectedIndexChanged += (s, e) =>
                 {
                     Helper_UI_ComboBoxes.ValidateComboBoxItem(AdvancedInventory_Single_ComboBox_Op,
-                        "[ Enter Operation ]");
+                        "Enter or Select Operation");
                     UpdateSingleSaveButtonState();
                     LoggingUtility.Log("Single Op ComboBox selection changed.");
                 };
                 AdvancedInventory_Single_ComboBox_Op.Leave += (s, e) =>
                 {
                     Helper_UI_ComboBoxes.ValidateComboBoxItem(AdvancedInventory_Single_ComboBox_Op,
-                        "[ Enter Operation ]");
+                        "Enter or Select Operation");
                 };
 
                 AdvancedInventory_Single_ComboBox_Loc.SelectedIndexChanged += (s, e) =>
                 {
                     Helper_UI_ComboBoxes.ValidateComboBoxItem(AdvancedInventory_Single_ComboBox_Loc,
-                        "[ Enter Location ]");
+                        "Enter or Select Location");
                     UpdateSingleSaveButtonState();
                     LoggingUtility.Log("Single Loc ComboBox selection changed.");
                 };
                 AdvancedInventory_Single_ComboBox_Loc.Leave += (s, e) =>
                 {
                     Helper_UI_ComboBoxes.ValidateComboBoxItem(AdvancedInventory_Single_ComboBox_Loc,
-                        "[ Enter Location ]");
+                        "Enter or Select Location");
                 };
 
                 AdvancedInventory_MultiLoc_ComboBox_Part.SelectedIndexChanged += (s, e) =>
                 {
                     Helper_UI_ComboBoxes.ValidateComboBoxItem(AdvancedInventory_MultiLoc_ComboBox_Part,
-                        "[ Enter Part Number ]");
+                        "Enter or Select Part Number");
                     UpdateMultiSaveButtonState();
                     LoggingUtility.Log("Multi Part ComboBox selection changed.");
                 };
                 AdvancedInventory_MultiLoc_ComboBox_Part.Leave += (s, e) =>
                 {
                     Helper_UI_ComboBoxes.ValidateComboBoxItem(AdvancedInventory_MultiLoc_ComboBox_Part,
-                        "[ Enter Part Number ]");
+                        "Enter or Select Part Number");
                 };
 
                 AdvancedInventory_MultiLoc_ComboBox_Op.SelectedIndexChanged += (s, e) =>
                 {
                     Helper_UI_ComboBoxes.ValidateComboBoxItem(AdvancedInventory_MultiLoc_ComboBox_Op,
-                        "[ Enter Operation ]");
+                        "Enter or Select Operation");
                     UpdateMultiSaveButtonState();
                     LoggingUtility.Log("Multi Op ComboBox selection changed.");
                 };
                 AdvancedInventory_MultiLoc_ComboBox_Op.Leave += (s, e) =>
                 {
                     Helper_UI_ComboBoxes.ValidateComboBoxItem(AdvancedInventory_MultiLoc_ComboBox_Op,
-                        "[ Enter Operation ]");
+                        "Enter or Select Operation");
                 };
 
                 AdvancedInventory_MultiLoc_ComboBox_Loc.SelectedIndexChanged += (s, e) =>
                 {
                     Helper_UI_ComboBoxes.ValidateComboBoxItem(AdvancedInventory_MultiLoc_ComboBox_Loc,
-                        "[ Enter Location ]");
+                        "Enter or Select Location");
                     UpdateMultiSaveButtonState();
                     LoggingUtility.Log("Multi Loc ComboBox selection changed.");
                 };
                 AdvancedInventory_MultiLoc_ComboBox_Loc.Leave += (s, e) =>
                 {
                     Helper_UI_ComboBoxes.ValidateComboBoxItem(AdvancedInventory_MultiLoc_ComboBox_Loc,
-                        "[ Enter Location ]");
+                        "Enter or Select Location");
                 };
 
-                AdvancedInventory_Single_TextBox_Qty.Text = "[ Enter Valid Quantity ]";
                 AdvancedInventory_Single_TextBox_Qty.TextChanged += (s, e) =>
                 {
-                    InventoryTextBoxQty_TextChanged(AdvancedInventory_Single_TextBox_Qty, "[ Enter Valid Quantity ]");
-                    ValidateQtyTextBox(AdvancedInventory_Single_TextBox_Qty, "[ Enter Valid Quantity ]");
+                    InventoryTextBoxQty_TextChanged(AdvancedInventory_Single_TextBox_Qty);
+                    ValidateQtyTextBox(AdvancedInventory_Single_TextBox_Qty);
                     UpdateSingleSaveButtonState();
                     LoggingUtility.Log("Single Qty TextBox changed.");
                 };
                 AdvancedInventory_Single_TextBox_Qty.Leave += (s, e) =>
                 {
-                    ValidateQtyTextBox(AdvancedInventory_Single_TextBox_Qty, "[ Enter Valid Quantity ]");
+                    ValidateQtyTextBox(AdvancedInventory_Single_TextBox_Qty);
                 };
 
                 AdvancedInventory_Single_TextBox_Qty.Enter +=
@@ -366,21 +365,21 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                     (s, e) => AdvancedInventory_Single_TextBox_Qty.SelectAll();
                 AdvancedInventory_Single_TextBox_Qty.KeyDown += (sender, e) =>
                 {
-                    MainFormControlHelper.AdjustQuantityByKey_Quantity(sender, e, "[ Enter Valid Quantity ]",
+                    MainFormControlHelper.AdjustQuantityByKey_Quantity(sender, e,
                         Model_Application_Variables.UserUiColors.TextBoxForeColor ?? Color.Black,
                         Model_Application_Variables.UserUiColors.TextBoxErrorForeColor ?? Color.Red);
                 };
 
-                AdvancedInventory_Single_TextBox_Count.Text = "[ How Many Transactions ]";
+                AdvancedInventory_Single_TextBox_Count.Text = "Enter How Many Transactions";
                 AdvancedInventory_Single_TextBox_Count.TextChanged += (s, e) =>
                 {
-                    ValidateQtyTextBox(AdvancedInventory_Single_TextBox_Count, "[ How Many Transactions ]");
+                    ValidateQtyTextBox(AdvancedInventory_Single_TextBox_Count);
                     UpdateSingleSaveButtonState();
                     LoggingUtility.Log("Single Count TextBox changed.");
                 };
                 AdvancedInventory_Single_TextBox_Count.Leave += (s, e) =>
                 {
-                    ValidateQtyTextBox(AdvancedInventory_Single_TextBox_Count, "[ How Many Transactions ]");
+                    ValidateQtyTextBox(AdvancedInventory_Single_TextBox_Count);
                 };
 
                 AdvancedInventory_Single_TextBox_Count.Enter +=
@@ -389,21 +388,21 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                     (s, e) => AdvancedInventory_Single_TextBox_Count.SelectAll();
                 AdvancedInventory_Single_TextBox_Count.KeyDown += (sender, e) =>
                 {
-                    MainFormControlHelper.AdjustQuantityByKey_Transfers(sender, e, "[ How Many Transactions ]",
+                    MainFormControlHelper.AdjustQuantityByKey_Transfers(sender, e,
                         Model_Application_Variables.UserUiColors.TextBoxForeColor ?? Color.Black,
                         Model_Application_Variables.UserUiColors.TextBoxErrorForeColor ?? Color.Red);
                 };
 
-                AdvancedInventory_MultiLoc_TextBox_Qty.Text = "[ Enter Valid Quantity ]";
+                AdvancedInventory_MultiLoc_TextBox_Qty.Text = "";
                 AdvancedInventory_MultiLoc_TextBox_Qty.TextChanged += (s, e) =>
                 {
-                    ValidateQtyTextBox(AdvancedInventory_MultiLoc_TextBox_Qty, "[ Enter Valid Quantity ]");
+                    ValidateQtyTextBox(AdvancedInventory_MultiLoc_TextBox_Qty);
                     UpdateMultiSaveButtonState();
                     LoggingUtility.Log("MultiLoc Qty TextBox changed.");
                 };
                 AdvancedInventory_MultiLoc_TextBox_Qty.Leave += (s, e) =>
                 {
-                    ValidateQtyTextBox(AdvancedInventory_MultiLoc_TextBox_Qty, "[ Enter Valid Quantity ]");
+                    ValidateQtyTextBox(AdvancedInventory_MultiLoc_TextBox_Qty);
                 };
             }
             catch (Exception ex)
@@ -418,7 +417,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
 
         #region Validation and Utility Methods
 
-        private static void InventoryTextBoxQty_TextChanged(TextBox textBox, string placeholder)
+        private static void InventoryTextBoxQty_TextChanged(TextBox textBox)
         {
             try
             {
@@ -431,10 +430,9 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                 else
                 {
                     textBox.ForeColor = Model_Application_Variables.UserUiColors.TextBoxErrorForeColor ?? Color.Red;
-                    if (text != placeholder)
+                    if (string.IsNullOrEmpty(textBox.Text))
                     {
-                        textBox.Text = placeholder;
-                        textBox.SelectionStart = textBox.Text.Length;
+                        textBox.Text = "";
                     }
                 }
             }
@@ -485,7 +483,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
         /// Invalid input: Sets foreground to UserUiColors.TextBoxErrorForeColor (red) and resets to placeholder.
         /// Used for quantity validation in both single and multi-location inventory entry forms.
         /// </remarks>
-        public static void ValidateQtyTextBox(TextBox textBox, string placeholder)
+        public static void ValidateQtyTextBox(TextBox textBox)
         {
             string text = textBox.Text.Trim();
             bool isValid = int.TryParse(text, out int value) && value > 0;
@@ -496,10 +494,9 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             else
             {
                 textBox.ForeColor = Model_Application_Variables.UserUiColors.TextBoxErrorForeColor ?? Color.Red;
-                if (text != placeholder)
+                if (string.IsNullOrEmpty(textBox.Text))
                 {
-                    textBox.Text = placeholder;
-                    textBox.SelectionStart = textBox.Text.Length;
+                    textBox.Text = "";
                 }
             }
         }
@@ -714,7 +711,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                     Model_Application_Variables.UserUiColors.ComboBoxErrorForeColor ?? Color.Red, 0);
                 MainFormControlHelper.ResetTextBox(AdvancedInventory_MultiLoc_TextBox_Qty,
                     Model_Application_Variables.UserUiColors.TextBoxErrorForeColor ?? Color.Red,
-                    "[ Enter Valid Quantity ]");
+                    "Enter Quantity");
                 MainFormControlHelper.ResetComboBox(AdvancedInventory_Single_ComboBox_Part,
                     Model_Application_Variables.UserUiColors.ComboBoxErrorForeColor ?? Color.Red, 0);
                 MainFormControlHelper.ResetComboBox(AdvancedInventory_Single_ComboBox_Op,
@@ -723,10 +720,10 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                     Model_Application_Variables.UserUiColors.ComboBoxErrorForeColor ?? Color.Red, 0);
                 MainFormControlHelper.ResetTextBox(AdvancedInventory_Single_TextBox_Qty,
                     Model_Application_Variables.UserUiColors.TextBoxErrorForeColor ?? Color.Red,
-                    "[ Enter Valid Quantity ]");
+                    "Enter Quantity");
                 MainFormControlHelper.ResetTextBox(AdvancedInventory_Single_TextBox_Count,
                     Model_Application_Variables.UserUiColors.TextBoxErrorForeColor ?? Color.Red,
-                    "[ Enter How Many Times ]");
+                    "Enter Enter How Many Times");
                 AdvancedInventory_Single_RichTextBox_Notes.Text = string.Empty;
                 AdvancedInventory_Single_ListView.Items.Clear();
 
@@ -790,7 +787,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                     Model_Application_Variables.UserUiColors.ErrorColor ?? Color.Red, 0);
                 MainFormControlHelper.ResetTextBox(AdvancedInventory_MultiLoc_TextBox_Qty,
                     Model_Application_Variables.UserUiColors.ErrorColor ?? Color.Red,
-                    "[ Enter Valid Quantity ]");
+                    "Enter Quantity");
                 MainFormControlHelper.ResetComboBox(AdvancedInventory_Single_ComboBox_Part,
                     Model_Application_Variables.UserUiColors.ErrorColor ?? Color.Red, 0);
                 MainFormControlHelper.ResetComboBox(AdvancedInventory_Single_ComboBox_Op,
@@ -799,10 +796,10 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                     Model_Application_Variables.UserUiColors.ErrorColor ?? Color.Red, 0);
                 MainFormControlHelper.ResetTextBox(AdvancedInventory_Single_TextBox_Qty,
                     Model_Application_Variables.UserUiColors.ErrorColor ?? Color.Red,
-                    "[ Enter Valid Quantity ]");
+                    "Enter Quantity");
                 MainFormControlHelper.ResetTextBox(AdvancedInventory_Single_TextBox_Count,
                     Model_Application_Variables.UserUiColors.ErrorColor ?? Color.Red,
-                    "[ Enter How Many Times ]");
+                    "Enter Enter How Many Times");
                 AdvancedInventory_Single_RichTextBox_Notes.Text = string.Empty;
                 AdvancedInventory_Single_ListView.Items.Clear();
 
@@ -1090,10 +1087,10 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                     Model_Application_Variables.UserUiColors.ComboBoxErrorForeColor ?? Color.Red, 0);
                 MainFormControlHelper.ResetTextBox(AdvancedInventory_Single_TextBox_Qty,
                     Model_Application_Variables.UserUiColors.TextBoxErrorForeColor ?? Color.Red,
-                    "[ Enter Valid Quantity ]");
+                    "Enter Quantity");
                 MainFormControlHelper.ResetTextBox(AdvancedInventory_Single_TextBox_Count,
                     Model_Application_Variables.UserUiColors.TextBoxErrorForeColor ?? Color.Red,
-                    "[ Enter How Many Times ]");
+                    "Enter Enter How Many Times");
                 AdvancedInventory_Single_RichTextBox_Notes.Text = string.Empty;
 
                 AdvancedInventory_Single_ComboBox_Part.Focus();
@@ -1126,16 +1123,17 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                     Control_InventoryTab? invTab = MainFormInstance.MainForm_UserControl_InventoryTab;
                     if (invTab is not null)
                     {
-                        ComboBox? part = invTab.Control_InventoryTab_ComboBox_Part;
-                        ComboBox? op = invTab.GetType().GetField("Control_InventoryTab_ComboBox_Operation",
+                        // Part, Operation, and Location now use SuggestionTextBox (TextBox-based)
+                        var part = invTab.Control_InventoryTab_TextBox_Part;
+                        var op = invTab.GetType().GetField("Control_InventoryTab_TextBox_Operation",
                                 System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance)
-                            ?.GetValue(invTab) as ComboBox;
-                        ComboBox? loc = invTab.GetType().GetField("Control_InventoryTab_ComboBox_Location",
+                            ?.GetValue(invTab) as Controls.Shared.SuggestionTextBox;
+                        var loc = invTab.GetType().GetField("Control_InventoryTab_TextBox_Location",
                                 System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance)
-                            ?.GetValue(invTab) as ComboBox;
+                            ?.GetValue(invTab) as Controls.Shared.SuggestionTextBox;
                         if (part is not null)
                         {
-                            part.SelectedIndex = 0;
+                            part.Text = string.Empty;
                             part.Focus();
                             part.SelectAll();
                             part.BackColor = Model_Application_Variables.UserUiColors.ControlFocusedBackColor ?? Color.LightBlue;
@@ -1143,12 +1141,12 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
 
                         if (op is not null)
                         {
-                            op.SelectedIndex = 0;
+                            op.Text = string.Empty;
                         }
 
                         if (loc is not null)
                         {
-                            loc.SelectedIndex = 0;
+                            loc.Text = string.Empty;
                         }
                     }
                 }
@@ -1210,7 +1208,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                     Model_Application_Variables.UserUiColors.ComboBoxErrorForeColor ?? Color.Red, 0);
                 MainFormControlHelper.ResetTextBox(AdvancedInventory_MultiLoc_TextBox_Qty,
                     Model_Application_Variables.UserUiColors.TextBoxErrorForeColor ?? Color.Red,
-                    "[ Enter Valid Quantity ]");
+                    "Enter Quantity");
                 MainFormControlHelper.ResetComboBox(AdvancedInventory_Single_ComboBox_Part,
                     Model_Application_Variables.UserUiColors.ComboBoxErrorForeColor ?? Color.Red, 0);
                 MainFormControlHelper.ResetComboBox(AdvancedInventory_Single_ComboBox_Op,
@@ -1219,10 +1217,10 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                     Model_Application_Variables.UserUiColors.ComboBoxErrorForeColor ?? Color.Red, 0);
                 MainFormControlHelper.ResetTextBox(AdvancedInventory_Single_TextBox_Qty,
                     Model_Application_Variables.UserUiColors.TextBoxErrorForeColor ?? Color.Red,
-                    "[ Enter Valid Quantity ]");
+                    "Enter Quantity");
                 MainFormControlHelper.ResetTextBox(AdvancedInventory_Single_TextBox_Count,
                     Model_Application_Variables.UserUiColors.TextBoxErrorForeColor ?? Color.Red,
-                    "[ Enter How Many Times ]");
+                    "Enter Enter How Many Times");
                 AdvancedInventory_MultiLoc_RichTextBox_Notes.Text = string.Empty;
                 AdvancedInventory_MultiLoc_ListView_Preview.Items.Clear();
                 AdvancedInventory_MultiLoc_ComboBox_Part.Enabled = true;
@@ -1286,7 +1284,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                     Model_Application_Variables.UserUiColors.ErrorColor ?? Color.Red, 0);
                 MainFormControlHelper.ResetTextBox(AdvancedInventory_MultiLoc_TextBox_Qty,
                     Model_Application_Variables.UserUiColors.ErrorColor ?? Color.Red,
-                    "[ Enter Valid Quantity ]");
+                    "Enter Quantity");
                 MainFormControlHelper.ResetComboBox(AdvancedInventory_Single_ComboBox_Part,
                     Model_Application_Variables.UserUiColors.ErrorColor ?? Color.Red, 0);
                 MainFormControlHelper.ResetComboBox(AdvancedInventory_Single_ComboBox_Op,
@@ -1295,10 +1293,10 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                     Model_Application_Variables.UserUiColors.ErrorColor ?? Color.Red, 0);
                 MainFormControlHelper.ResetTextBox(AdvancedInventory_Single_TextBox_Qty,
                     Model_Application_Variables.UserUiColors.ErrorColor ?? Color.Red,
-                    "[ Enter Valid Quantity ]");
+                    "Enter Quantity");
                 MainFormControlHelper.ResetTextBox(AdvancedInventory_Single_TextBox_Count,
                     Model_Application_Variables.UserUiColors.ErrorColor ?? Color.Red,
-                    "[ Enter How Many Times ]");
+                    "Enter Enter How Many Times");
                 AdvancedInventory_MultiLoc_RichTextBox_Notes.Text = string.Empty;
                 AdvancedInventory_MultiLoc_ListView_Preview.Items.Clear();
                 AdvancedInventory_MultiLoc_ComboBox_Part.Enabled = true;

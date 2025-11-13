@@ -105,11 +105,6 @@ SetStyle(ControlStyles.OptimizedDoubleBuffer, true);
 
         private void InitializeImmediateUI()
         {
-            // Set immediate UI state that doesn't require database access
-            Color errorColor = Model_Application_Variables.UserUiColors.ComboBoxErrorForeColor ?? Color.Red;
-            Control_TransferTab_ComboBox_Part.ForeColor = errorColor;
-            Control_TransferTab_ComboBox_Operation.ForeColor = errorColor;
-            Control_TransferTab_ComboBox_ToLocation.ForeColor = errorColor;
             Control_TransferTab_Image_NothingFound.Visible = false;
 
             // Set initial button states
@@ -288,29 +283,215 @@ SetStyle(ControlStyles.OptimizedDoubleBuffer, true);
 
 
         /// <summary>
-        /// Asynchronously loads combo box data (Parts, Operations, and ToLocation) during Transfer tab initialization.
+        /// Asynchronously configures SuggestionTextBox controls (Parts, Operations, and ToLocation) during Transfer tab initialization.
         /// </summary>
-        /// <returns>A task that completes when all combo boxes are populated</returns>
+        /// <returns>A task that completes when all suggestion controls are configured</returns>
         /// <remarks>
         /// This method is called automatically during control construction and should not be called directly.
-        /// Uses Helper_UI_ComboBoxes to populate combo boxes from master data tables.
-        /// Loads three combo boxes: Part (source part), Operation (source operation), and ToLocation (destination).
-        /// Handles errors with Dao_ErrorLog.HandleException_GeneralError_CloseApp for critical initialization failures.
+        /// Configures data providers, max results, wildcard support, and clear-on-no-match behavior.
+        /// Replaces old ComboBox population with SuggestionTextBox configuration for autocomplete functionality.
+        /// Handles errors with Service_ErrorHandler for consistent error management across the application.
         /// </remarks>
         public async Task Control_TransferTab_OnStartup_LoadDataComboBoxesAsync()
         {
             try
             {
-                await Helper_UI_ComboBoxes.FillPartComboBoxesAsync(Control_TransferTab_ComboBox_Part);
-                await Helper_UI_ComboBoxes.FillOperationComboBoxesAsync(Control_TransferTab_ComboBox_Operation);
-                await Helper_UI_ComboBoxes.FillLocationComboBoxesAsync(Control_TransferTab_ComboBox_ToLocation);
-                LoggingUtility.Log("Transfer tab ComboBoxes loaded.");
+                _progressHelper?.ShowProgress();
+                _progressHelper?.UpdateProgress(10, "Configuring part suggestions...");
+                
+                // Configure part number SuggestionTextBox
+                Control_TransferTab_TextBox_Part.DataProvider = GetPartNumberSuggestionsAsync;
+                Control_TransferTab_TextBox_Part.MaxResults = 100;
+                Control_TransferTab_TextBox_Part.EnableWildcards = true;
+                Control_TransferTab_TextBox_Part.ClearOnNoMatch = true;
+                
+                _progressHelper?.UpdateProgress(40, "Configuring operation suggestions...");
+                
+                // Configure operation SuggestionTextBox
+                Control_TransferTab_TextBox_Operation.DataProvider = GetOperationSuggestionsAsync;
+                Control_TransferTab_TextBox_Operation.MaxResults = 50;
+                Control_TransferTab_TextBox_Operation.EnableWildcards = true;
+                Control_TransferTab_TextBox_Operation.ClearOnNoMatch = true;
+                
+                _progressHelper?.UpdateProgress(70, "Configuring location suggestions...");
+                
+                // Configure location SuggestionTextBox
+                Control_TransferTab_TextBox_ToLocation.DataProvider = GetLocationSuggestionsAsync;
+                Control_TransferTab_TextBox_ToLocation.MaxResults = 100;
+                Control_TransferTab_TextBox_ToLocation.EnableWildcards = true;
+                Control_TransferTab_TextBox_ToLocation.ClearOnNoMatch = true;
+
+                _progressHelper?.UpdateProgress(100, "Suggestion controls configured");
+                await Task.Delay(100);
+                
+                LoggingUtility.Log("Transfer tab suggestion controls configured.");
             }
             catch (Exception ex)
             {
                 LoggingUtility.LogApplicationError(ex);
-                await Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex,
-                    new StringBuilder().Append("MainForm_LoadTransferTabComboBoxesAsync").ToString());
+                
+                Service_ErrorHandler.HandleException(
+                    ex,
+                    Enum_ErrorSeverity.High,
+                    contextData: new Dictionary<string, object>
+                    {
+                        ["MethodName"] = nameof(Control_TransferTab_OnStartup_LoadDataComboBoxesAsync),
+                        ["ControlType"] = nameof(Control_TransferTab)
+                    },
+                    callerName: nameof(Control_TransferTab_OnStartup_LoadDataComboBoxesAsync),
+                    controlName: this.Name);
+            }
+            finally
+            {
+                _progressHelper?.HideProgress();
+            }
+        }
+
+        #endregion
+
+        #region Suggestion Data Providers
+
+        /// <summary>
+        /// Data provider for part number SuggestionTextBox.
+        /// Returns list of all part IDs from database.
+        /// </summary>
+        /// <returns>List of part ID strings.</returns>
+        private async Task<List<string>> GetPartNumberSuggestionsAsync()
+        {
+            try
+            {
+                var dataResult = await Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync(
+                    Model_Application_Variables.ConnectionString,
+                    "md_part_ids_Get_All",
+                    null);
+
+                if (!dataResult.IsSuccess || dataResult.Data == null)
+                {
+                    Service_ErrorHandler.ShowWarning(dataResult.ErrorMessage ?? "Failed to load part numbers");
+                    return new List<string>();
+                }
+
+                var suggestions = new List<string>();
+                foreach (System.Data.DataRow row in dataResult.Data.Rows)
+                {
+                    if (row["PartID"] != null && row["PartID"] != DBNull.Value)
+                    {
+                        suggestions.Add(row["PartID"].ToString() ?? string.Empty);
+                    }
+                }
+
+                return suggestions;
+            }
+            catch (Exception ex)
+            {
+                Service_ErrorHandler.HandleException(
+                    ex,
+                    Enum_ErrorSeverity.Medium,
+                    contextData: new Dictionary<string, object>
+                    {
+                        ["Control"] = nameof(Control_TransferTab),
+                        ["Method"] = nameof(GetPartNumberSuggestionsAsync)
+                    },
+                    callerName: nameof(GetPartNumberSuggestionsAsync),
+                    controlName: this.Name);
+
+                return new List<string>();
+            }
+        }
+
+        /// <summary>
+        /// Data provider for operation SuggestionTextBox.
+        /// Returns list of all operation numbers from database.
+        /// </summary>
+        /// <returns>List of operation strings.</returns>
+        private async Task<List<string>> GetOperationSuggestionsAsync()
+        {
+            try
+            {
+                var dataResult = await Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync(
+                    Model_Application_Variables.ConnectionString,
+                    "md_operation_numbers_Get_All",
+                    null);
+
+                if (!dataResult.IsSuccess || dataResult.Data == null)
+                {
+                    Service_ErrorHandler.ShowWarning(dataResult.ErrorMessage ?? "Failed to load operations");
+                    return new List<string>();
+                }
+
+                var suggestions = new List<string>();
+                foreach (System.Data.DataRow row in dataResult.Data.Rows)
+                {
+                    if (row["OperationNumber"] != null && row["OperationNumber"] != DBNull.Value)
+                    {
+                        suggestions.Add(row["OperationNumber"].ToString() ?? string.Empty);
+                    }
+                }
+
+                return suggestions;
+            }
+            catch (Exception ex)
+            {
+                Service_ErrorHandler.HandleException(
+                    ex,
+                    Enum_ErrorSeverity.Medium,
+                    contextData: new Dictionary<string, object>
+                    {
+                        ["Control"] = nameof(Control_TransferTab),
+                        ["Method"] = nameof(GetOperationSuggestionsAsync)
+                    },
+                    callerName: nameof(GetOperationSuggestionsAsync),
+                    controlName: this.Name);
+
+                return new List<string>();
+            }
+        }
+
+        /// <summary>
+        /// Data provider for location SuggestionTextBox.
+        /// Returns list of all location names from database.
+        /// </summary>
+        /// <returns>List of location strings.</returns>
+        private async Task<List<string>> GetLocationSuggestionsAsync()
+        {
+            try
+            {
+                var dataResult = await Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync(
+                    Model_Application_Variables.ConnectionString,
+                    "md_locations_Get_All",
+                    null);
+
+                if (!dataResult.IsSuccess || dataResult.Data == null)
+                {
+                    Service_ErrorHandler.ShowWarning(dataResult.ErrorMessage ?? "Failed to load locations");
+                    return new List<string>();
+                }
+
+                var suggestions = new List<string>();
+                foreach (System.Data.DataRow row in dataResult.Data.Rows)
+                {
+                    if (row["Location"] != null && row["Location"] != DBNull.Value)
+                    {
+                        suggestions.Add(row["Location"].ToString() ?? string.Empty);
+                    }
+                }
+
+                return suggestions;
+            }
+            catch (Exception ex)
+            {
+                Service_ErrorHandler.HandleException(
+                    ex,
+                    Enum_ErrorSeverity.Medium,
+                    contextData: new Dictionary<string, object>
+                    {
+                        ["Control"] = nameof(Control_TransferTab),
+                        ["Method"] = nameof(GetLocationSuggestionsAsync)
+                    },
+                    callerName: nameof(GetLocationSuggestionsAsync),
+                    controlName: this.Name);
+
+                return new List<string>();
             }
         }
 
@@ -374,27 +555,21 @@ SetStyle(ControlStyles.OptimizedDoubleBuffer, true);
                 await Helper_UI_ComboBoxes.ResetAndRefreshAllDataTablesAsync();
                 Debug.WriteLine("[DEBUG] DataTables reset complete");
 
-                _progressHelper?.UpdateProgress(60, "Refilling combo boxes...");
-                Debug.WriteLine("[DEBUG] Refilling Part ComboBox");
-                await Helper_UI_ComboBoxes.FillPartComboBoxesAsync(Control_TransferTab_ComboBox_Part);
-                Debug.WriteLine("[DEBUG] Refilling Operation ComboBox");
-                await Helper_UI_ComboBoxes.FillOperationComboBoxesAsync(Control_TransferTab_ComboBox_Operation);
-                Debug.WriteLine("[DEBUG] Refilling ToLocation ComboBox");
-                await Helper_UI_ComboBoxes.FillLocationComboBoxesAsync(Control_TransferTab_ComboBox_ToLocation);
+                _progressHelper?.UpdateProgress(60, "Resetting suggestion fields...");
+                Debug.WriteLine("[DEBUG] Resetting Part TextBox");
+                Control_TransferTab_TextBox_Part.Text = string.Empty;
+                Debug.WriteLine("[DEBUG] Resetting Operation TextBox");
+                Control_TransferTab_TextBox_Operation.Text = string.Empty;
+                Debug.WriteLine("[DEBUG] Resetting ToLocation TextBox");
+                Control_TransferTab_TextBox_ToLocation.Text = string.Empty;
 
                 Debug.WriteLine("[DEBUG] Resetting UI fields");
-                MainFormControlHelper.ResetComboBox(Control_TransferTab_ComboBox_Part,
-                    Model_Application_Variables.UserUiColors.ComboBoxErrorForeColor ?? Color.Red, 0);
-                MainFormControlHelper.ResetComboBox(Control_TransferTab_ComboBox_Operation,
-                    Model_Application_Variables.UserUiColors.ComboBoxErrorForeColor ?? Color.Red, 0);
-                MainFormControlHelper.ResetComboBox(Control_TransferTab_ComboBox_ToLocation,
-                    Model_Application_Variables.UserUiColors.ComboBoxErrorForeColor ?? Color.Red, 0);
 
                 Control_TransferTab_DataGridView_Main.DataSource = null;
                 Control_TransferTab_DataGridView_Main.Refresh();
                 Control_TransferTab_Image_NothingFound.Visible = false;
 
-                Control_TransferTab_ComboBox_Part.Focus();
+                Control_TransferTab_TextBox_Part.Focus();
 
                 Debug.WriteLine("[DEBUG] TransferTab HardReset - end");
             }
@@ -412,11 +587,8 @@ SetStyle(ControlStyles.OptimizedDoubleBuffer, true);
                 if (MainFormInstance != null)
                 {
                     Debug.WriteLine("[DEBUG] Resetting TransferTab buttons and status strip");
-                    MainFormTabResetHelper.ResetTransferTab(
-                        Control_TransferTab_ComboBox_Part,
-                        Control_TransferTab_ComboBox_Operation,
-                        Control_TransferTab_Button_Search,
-                        Control_TransferTab_Button_Transfer);
+                    Control_TransferTab_Button_Search.Enabled = false;
+                    Control_TransferTab_Button_Transfer.Enabled = false;
                     Control_TransferTab_NumericUpDown_Quantity.Value =
                         Control_TransferTab_NumericUpDown_Quantity.Minimum;
                     Control_TransferTab_NumericUpDown_Quantity.Enabled = false;
@@ -443,18 +615,9 @@ SetStyle(ControlStyles.OptimizedDoubleBuffer, true);
                 }
 
                 Debug.WriteLine("[DEBUG] Resetting UI fields");
-                MainFormControlHelper.ResetComboBox(Control_TransferTab_ComboBox_Part,
-                    Model_Application_Variables.UserUiColors.ErrorColor ?? Color.Red, 0);
-                MainFormControlHelper.ResetComboBox(Control_TransferTab_ComboBox_Operation,
-                    Model_Application_Variables.UserUiColors.ErrorColor ?? Color.Red, 0);
-                MainFormControlHelper.ResetComboBox(Control_TransferTab_ComboBox_ToLocation,
-                    Model_Application_Variables.UserUiColors.ErrorColor ?? Color.Red, 0);
-
-                Control_TransferTab_ComboBox_Part.ForeColor = Model_Application_Variables.UserUiColors.ErrorColor ?? Color.Red;
-                Control_TransferTab_ComboBox_Operation.ForeColor =
-                    Model_Application_Variables.UserUiColors.ErrorColor ?? Color.Red;
-                Control_TransferTab_ComboBox_ToLocation.ForeColor =
-                    Model_Application_Variables.UserUiColors.ErrorColor ?? Color.Red;
+                Control_TransferTab_TextBox_Part.Text = string.Empty;
+                Control_TransferTab_TextBox_Operation.Text = string.Empty;
+                Control_TransferTab_TextBox_ToLocation.Text = string.Empty;
 
                 Control_TransferTab_DataGridView_Main.DataSource = null;
                 Control_TransferTab_DataGridView_Main.Refresh();
@@ -476,7 +639,7 @@ SetStyle(ControlStyles.OptimizedDoubleBuffer, true);
             {
                 Debug.WriteLine("[DEBUG] TransferTab SoftReset button re-enabled");
                 Control_TransferTab_Button_Reset.Enabled = true;
-                Control_TransferTab_ComboBox_Part.Focus();
+                Control_TransferTab_TextBox_Part.Focus();
                 if (MainFormInstance != null)
                 {
                     MainFormInstance.MainForm_StatusStrip_Disconnected.Visible = false;
@@ -496,20 +659,20 @@ SetStyle(ControlStyles.OptimizedDoubleBuffer, true);
 
                 LoggingUtility.Log("TransferTab Search button clicked.");
                 
-                string partId = Control_TransferTab_ComboBox_Part.Text?.Trim() ?? "";
-                string op = Control_TransferTab_ComboBox_Operation.Text?.Trim() ?? "";
+                string partId = Control_TransferTab_TextBox_Part.Text?.Trim() ?? "";
+                string op = Control_TransferTab_TextBox_Operation.Text?.Trim() ?? "";
                 
-                if (string.IsNullOrWhiteSpace(partId) || Control_TransferTab_ComboBox_Part.SelectedIndex <= 0)
+                if (string.IsNullOrWhiteSpace(partId) || string.IsNullOrWhiteSpace(Control_TransferTab_TextBox_Part.Text))
                 {
                     Service_ErrorHandler.HandleValidationError("Please select a valid Part.", "Part Selection");
-                    Control_TransferTab_ComboBox_Part.Focus();
+                    Control_TransferTab_TextBox_Part.Focus();
                     return;
                 }
 
                 DataTable? results = null;
 
-                if (Control_TransferTab_ComboBox_Operation.SelectedIndex > 0 &&
-                    !string.IsNullOrWhiteSpace(op) && op != @"[ Enter Operation ]")
+                if (!string.IsNullOrWhiteSpace(Control_TransferTab_TextBox_Operation.Text) &&
+                    !string.IsNullOrWhiteSpace(op) && op != @"Enter or Select Operation")
                 {
                     _progressHelper?.UpdateProgress(40, "Querying by part and operation...");
                     var partOpResult = await Dao_Inventory.GetInventoryByPartIdAndOperationAsync(partId, op, true);
@@ -596,13 +759,13 @@ SetStyle(ControlStyles.OptimizedDoubleBuffer, true);
                     return;
                 }
 
-                if (Control_TransferTab_ComboBox_ToLocation.SelectedIndex < 0 ||
-                    string.IsNullOrWhiteSpace(Control_TransferTab_ComboBox_ToLocation.Text))
+                if (string.IsNullOrWhiteSpace(Control_TransferTab_TextBox_ToLocation.Text) ||
+                    string.IsNullOrWhiteSpace(Control_TransferTab_TextBox_ToLocation.Text))
                 {
                     Service_ErrorHandler.HandleValidationError(
                         "Please select a valid destination location.",
                         "Location Selection");
-                    Control_TransferTab_ComboBox_ToLocation?.Focus();
+                    Control_TransferTab_TextBox_ToLocation?.Focus();
                     return;
                 }
 
@@ -718,7 +881,7 @@ SetStyle(ControlStyles.OptimizedDoubleBuffer, true);
             }
 
             int transferQuantity = Math.Min((int)Control_TransferTab_NumericUpDown_Quantity.Value, originalQuantity);
-            string newLocation = Control_TransferTab_ComboBox_ToLocation.Text;
+            string newLocation = Control_TransferTab_TextBox_ToLocation.Text;
             string user = Model_Application_Variables.User ?? Environment.UserName;
             if (transferQuantity < originalQuantity)
             {
@@ -761,7 +924,7 @@ SetStyle(ControlStyles.OptimizedDoubleBuffer, true);
 
         private async Task TransferMultipleRowsAsync(DataGridViewSelectedRowCollection selectedRows)
         {
-            string newLocation = Control_TransferTab_ComboBox_ToLocation.Text;
+            string newLocation = Control_TransferTab_TextBox_ToLocation.Text;
             string user = Model_Application_Variables.User ?? Environment.UserName;
             HashSet<string> partIds = new();
             HashSet<string> operations = new();
@@ -847,67 +1010,7 @@ SetStyle(ControlStyles.OptimizedDoubleBuffer, true);
 
         #endregion
 
-        #region ComboBox & UI Events
-
-        private void Control_TransferTab_ComboBox_Operation_SelectedIndexChanged()
-        {
-            try
-            {
-                LoggingUtility.Log("Inventory Op ComboBox selection changed.");
-                if (Control_TransferTab_ComboBox_Operation.SelectedIndex > 0)
-                {
-                    SetComboBoxForeColor(Control_TransferTab_ComboBox_Operation, true);
-                    Model_Application_Variables.Operation = Control_TransferTab_ComboBox_Operation.Text;
-                }
-                else
-                {
-                    SetComboBoxForeColor(Control_TransferTab_ComboBox_Operation, false);
-                    if (Control_TransferTab_ComboBox_Operation.SelectedIndex != 0 &&
-                        Control_TransferTab_ComboBox_Operation.Items.Count > 0)
-                    {
-                        Control_TransferTab_ComboBox_Operation.SelectedIndex = 0;
-                    }
-
-                    Model_Application_Variables.Operation = null;
-                }
-            }
-            catch (Exception ex)
-            {
-                LoggingUtility.LogApplicationError(ex);
-                _ = Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex,
-                    new StringBuilder().Append("MainForm_Inventory_ComboBox_Op").ToString());
-            }
-        }
-
-        private void Control_TransferTab_ComboBox_Part_SelectedIndexChanged()
-        {
-            try
-            {
-                LoggingUtility.Log("Inventory Part ComboBox selection changed.");
-                if (Control_TransferTab_ComboBox_Part.SelectedIndex > 0)
-                {
-                    SetComboBoxForeColor(Control_TransferTab_ComboBox_Part, true);
-                    Model_Application_Variables.PartId = Control_TransferTab_ComboBox_Part.Text;
-                }
-                else
-                {
-                    SetComboBoxForeColor(Control_TransferTab_ComboBox_Part, false);
-                    if (Control_TransferTab_ComboBox_Part.SelectedIndex != 0 &&
-                        Control_TransferTab_ComboBox_Part.Items.Count > 0)
-                    {
-                        Control_TransferTab_ComboBox_Part.SelectedIndex = 0;
-                    }
-
-                    Model_Application_Variables.PartId = null;
-                }
-            }
-            catch (Exception ex)
-            {
-                LoggingUtility.LogApplicationError(ex);
-                _ = Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex,
-                    new StringBuilder().Append("MainForm_Inventory_ComboBox_Part").ToString());
-            }
-        }
+        #region TextBox & UI Events
 
         private void Control_TransferTab_Update_ButtonStates()
         {
@@ -919,16 +1022,16 @@ SetStyle(ControlStyles.OptimizedDoubleBuffer, true);
             try
             {
                 // Cache frequently accessed properties to avoid repeated lookups
-                bool hasPart = Control_TransferTab_ComboBox_Part.SelectedIndex > 0;
+                bool hasPart = !string.IsNullOrWhiteSpace(Control_TransferTab_TextBox_Part.Text);
                 bool hasData = Control_TransferTab_DataGridView_Main.Rows.Count > 0;
                 bool hasSelection = hasData && Control_TransferTab_DataGridView_Main.SelectedRows.Count > 0;
-                bool hasToLocation = Control_TransferTab_ComboBox_ToLocation.SelectedIndex > 0 &&
-                                     !string.IsNullOrWhiteSpace(Control_TransferTab_ComboBox_ToLocation.Text);
+                bool hasToLocation = !string.IsNullOrWhiteSpace(Control_TransferTab_TextBox_ToLocation.Text) &&
+                                     !string.IsNullOrWhiteSpace(Control_TransferTab_TextBox_ToLocation.Text);
                 bool hasQuantity = Control_TransferTab_NumericUpDown_Quantity.Value > 0;
 
                 // Update control states efficiently
                 Control_TransferTab_Button_Search.Enabled = hasPart;
-                // ToLocation ComboBox stays enabled (respects user privileges from ApplyPrivileges)
+                // ToLocation TextBox stays enabled (respects user privileges from ApplyPrivileges)
                 Control_TransferTab_NumericUpDown_Quantity.Enabled = hasData && 
                     Control_TransferTab_DataGridView_Main.SelectedRows.Count <= 1;
 
@@ -941,7 +1044,7 @@ SetStyle(ControlStyles.OptimizedDoubleBuffer, true);
                     if (firstSelectedRow?.DataBoundItem is DataRowView drv)
                     {
                         string rowLocation = drv["Location"]?.ToString() ?? string.Empty;
-                        toLocationIsSameAsRow = string.Equals(rowLocation, Control_TransferTab_ComboBox_ToLocation.Text,
+                        toLocationIsSameAsRow = string.Equals(rowLocation, Control_TransferTab_TextBox_ToLocation.Text,
                             StringComparison.OrdinalIgnoreCase);
                     }
                 }
@@ -970,69 +1073,10 @@ SetStyle(ControlStyles.OptimizedDoubleBuffer, true);
             {
                 // Use lambda to match EventHandler signature for async void method
                 Control_TransferTab_Button_Reset.Click += (s, e) => Control_TransferTab_Button_Reset_Click();
-
-                // Helper for validation and state update
-                void ValidateAndUpdate(ComboBox combo, string placeholder)
-                {
-                    Helper_UI_ComboBoxes.ValidateComboBoxItem(combo, placeholder);
-                    Control_TransferTab_Update_ButtonStates();
-                }
-
-                // PART ComboBox
-                Control_TransferTab_ComboBox_Part.SelectedIndexChanged += (s, e) =>
-                {
-                    Control_TransferTab_ComboBox_Part_SelectedIndexChanged();
-                    ValidateAndUpdate(Control_TransferTab_ComboBox_Part, "[ Enter Part Number ]");
-                };
-                Control_TransferTab_ComboBox_Part.Leave += (s, e) =>
-                {
-                    Control_TransferTab_ComboBox_Part.BackColor =
-                        Model_Application_Variables.UserUiColors.ControlBackColor ?? SystemColors.Window;
-                    Helper_UI_ComboBoxes.ValidateComboBoxItem(Control_TransferTab_ComboBox_Part,
-                        "[ Enter Part Number ]");
-                };
-                Control_TransferTab_ComboBox_Part.Enter += (s, e) =>
-                {
-                    Control_TransferTab_ComboBox_Part.BackColor =
-                        Model_Application_Variables.UserUiColors.ControlFocusedBackColor ?? Color.LightBlue;
-                };
-
-                // OPERATION ComboBox
-                Control_TransferTab_ComboBox_Operation.SelectedIndexChanged += (s, e) =>
-                {
-                    Control_TransferTab_ComboBox_Operation_SelectedIndexChanged();
-                    ValidateAndUpdate(Control_TransferTab_ComboBox_Operation, "[ Enter Operation ]");
-                };
-                Control_TransferTab_ComboBox_Operation.Leave += (s, e) =>
-                {
-                    Control_TransferTab_ComboBox_Operation.BackColor =
-                        Model_Application_Variables.UserUiColors.ControlBackColor ?? SystemColors.Window;
-                    Helper_UI_ComboBoxes.ValidateComboBoxItem(Control_TransferTab_ComboBox_Operation,
-                        "[ Enter Operation ]");
-                };
-                Control_TransferTab_ComboBox_Operation.Enter += (s, e) =>
-                {
-                    Control_TransferTab_ComboBox_Operation.BackColor =
-                        Model_Application_Variables.UserUiColors.ControlFocusedBackColor ?? Color.LightBlue;
-                };
-
-                // TO LOCATION ComboBox
-                Control_TransferTab_ComboBox_ToLocation.SelectedIndexChanged += (s, e) =>
-                {
-                    ValidateAndUpdate(Control_TransferTab_ComboBox_ToLocation, "[ Enter Location ]");
-                };
-                Control_TransferTab_ComboBox_ToLocation.Leave += (s, e) =>
-                {
-                    Control_TransferTab_ComboBox_ToLocation.BackColor =
-                        Model_Application_Variables.UserUiColors.ControlBackColor ?? SystemColors.Window;
-                    Helper_UI_ComboBoxes.ValidateComboBoxItem(Control_TransferTab_ComboBox_ToLocation,
-                        "[ Enter Location ]");
-                };
-                Control_TransferTab_ComboBox_ToLocation.Enter += (s, e) =>
-                {
-                    Control_TransferTab_ComboBox_ToLocation.BackColor =
-                        Model_Application_Variables.UserUiColors.ControlFocusedBackColor ?? Color.LightBlue;
-                };
+                                
+                // Transfer button
+                Control_TransferTab_Button_Transfer.Click +=
+                    async (s, e) => await Control_TransferTab_Button_Save_ClickAsync(s, e);
 
                 // NumericUpDown
                 Control_TransferTab_NumericUpDown_Quantity.ValueChanged +=
@@ -1046,9 +1090,6 @@ SetStyle(ControlStyles.OptimizedDoubleBuffer, true);
                 Control_TransferTab_DataGridView_Main.DataSourceChanged +=
                     (s, e) => Control_TransferTab_Update_ButtonStates();
 
-                // Transfer button
-                Control_TransferTab_Button_Transfer.Click +=
-                    async (s, e) => await Control_TransferTab_Button_Save_ClickAsync(s, e);
 
                 LoggingUtility.Log("Transfer tab events wired up.");
             }
@@ -1128,9 +1169,9 @@ SetStyle(ControlStyles.OptimizedDoubleBuffer, true);
             bool hasAdminAccess = isDeveloper || isAdmin;
 
             // ComboBoxes
-            Control_TransferTab_ComboBox_Part.Enabled = hasAdminAccess || isNormal || isReadOnly;
-            Control_TransferTab_ComboBox_Operation.Enabled = hasAdminAccess || isNormal || isReadOnly;
-            Control_TransferTab_ComboBox_ToLocation.Enabled = hasAdminAccess || isNormal || isReadOnly;
+            Control_TransferTab_TextBox_Part.Enabled = hasAdminAccess || isNormal || isReadOnly;
+            Control_TransferTab_TextBox_Operation.Enabled = hasAdminAccess || isNormal || isReadOnly;
+            Control_TransferTab_TextBox_ToLocation.Enabled = hasAdminAccess || isNormal || isReadOnly;
             // NumericUpDown
             Control_TransferTab_NumericUpDown_Quantity.ReadOnly = isReadOnly;
             Control_TransferTab_NumericUpDown_Quantity.Enabled = hasAdminAccess || isNormal || isReadOnly;
@@ -1162,55 +1203,8 @@ SetStyle(ControlStyles.OptimizedDoubleBuffer, true);
 
         #region Helper Methods
 
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private void SetComboBoxForeColor(ComboBox combo, bool valid) =>
-            combo.ForeColor = valid
-                ? Model_Application_Variables.UserUiColors.ComboBoxForeColor ?? Color.Black
-                : Model_Application_Variables.UserUiColors.ComboBoxErrorForeColor ?? Color.Red;
-
-        /// <summary>
-        /// Efficiently configure DataGridView columns visibility and display order
-        /// </summary>
-        /// <param name="dgv">DataGridView to configure</param>
-        private void ConfigureDataGridViewColumns(DataGridView dgv)
-        {
-            try
-            {
-                // Only show columns in this order: Location, PartID, Operation, Quantity, Notes
-                string[] columnsToShowArr = { "Location", "PartID", "Operation", "Quantity", "Notes" };
-                HashSet<string> columnsToShow = new(columnsToShowArr);
-                
-                // Set column visibility efficiently
-                foreach (DataGridViewColumn column in dgv.Columns)
-                {
-                    if (column != null)
-                    {
-                        column.Visible = columnsToShow.Contains(column.Name);
-                    }
-                }
-
-                // Reorder columns only if needed and they exist
-                for (int i = 0; i < columnsToShowArr.Length; i++)
-                {
-                    string colName = columnsToShowArr[i];
-                    if (dgv.Columns.Contains(colName) && dgv.Columns[colName] != null && 
-                        dgv.Columns[colName].DisplayIndex != i)
-                    {
-                        dgv.Columns[colName].DisplayIndex = i;
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                LoggingUtility.LogApplicationError(ex);
-            }
-        }
 
         #endregion
-
-        private void splitContainer1_SplitterMoved(object sender, SplitterEventArgs e)
-        {
-        }
 
         private void Control_TransferTab_Button_Toggle_Split_Click(object sender, EventArgs e)
         {

@@ -217,23 +217,23 @@ Based on `UI-Architecture-Analysis.md`, designer files MUST follow these standar
 Control_InventoryTab_GroupBox_Main.Size = new Size(1175, 622);
 Control_InventoryTab_TableLayout_Main.Size = new Size(1169, 600);
 Control_InventoryTab_TableLayout_MiddleGroup.Size = new Size(1163, 433);
-Control_InventoryTab_ComboBox_Location.Size = new Size(1073, 23);
+Control_InventoryTab_TextBox_Location.Size = new Size(1073, 23);
 ```
 **Should be**: AutoSize + Dock.Fill pattern, NO hardcoded Size
 
 #### 2. ❌ Missing MinimumSize/MaximumSize on Leaf Controls
 ```csharp
-Control_InventoryTab_ComboBox_Location.Size = new Size(1073, 23);
+Control_InventoryTab_TextBox_Location.Size = new Size(1073, 23);
 ```
 **Should be**:
 ```csharp
-Control_InventoryTab_ComboBox_Location.MinimumSize = new Size(175, 23);
-Control_InventoryTab_ComboBox_Location.MaximumSize = new Size(175, 23);
-Control_InventoryTab_ComboBox_Location.Dock = DockStyle.Fill;
+Control_InventoryTab_TextBox_Location.MinimumSize = new Size(175, 23);
+Control_InventoryTab_TextBox_Location.MaximumSize = new Size(175, 23);
+Control_InventoryTab_TextBox_Location.Dock = DockStyle.Fill;
 ```
 
 #### 3. ⚠️ Naming Convention (Partially Compliant)
-- ✅ Uses new naming pattern: `Control_InventoryTab_ComboBox_Location`
+- ✅ Uses new naming pattern: `Control_InventoryTab_TextBox_Location`
 - But control likely named before full standardization
 
 ### Required Refactoring

@@ -200,7 +200,7 @@ digraph CSharpDependencies {
     "MTM_WIP_Application_Winforms.StoredProcedureResult" [label="StoredProcedureResult", fillcolor=white, tooltip="MTM_WIP_Application_Winforms.Helpers.StoredProcedureResult"];
     "MTM_WIP_Application_Winforms.Helper_ThemeMigration" [label="Helper_ThemeMigration", fillcolor=white, tooltip="MTM_WIP_Application_Winforms.Helpers.Helper_ThemeMigration"];
     "MTM_WIP_Application_Winforms.Helper_UI_ComboBoxes" [label="Helper_UI_ComboBoxes", fillcolor=white, tooltip="MTM_WIP_Application_Winforms.Helpers.Helper_UI_ComboBoxes"];
-    "MTM_WIP_Application_Winforms.ComboBoxHelpers" [label="ComboBoxHelpers", fillcolor=white, tooltip="MTM_WIP_Application_Winforms.Helpers.ComboBoxHelpers"];
+    "MTM_WIP_Application_Winforms.TextBoxHelpers" [label="TextBoxHelpers", fillcolor=white, tooltip="MTM_WIP_Application_Winforms.Helpers.TextBoxHelpers"];
     "MTM_WIP_Application_Winforms.Helper_UI_Shortcuts" [label="Helper_UI_Shortcuts", fillcolor=white, tooltip="MTM_WIP_Application_Winforms.Helpers.Helper_UI_Shortcuts"];
     "MTM_WIP_Application_Winforms.LoggingUtility" [label="LoggingUtility", fillcolor=white, tooltip="MTM_WIP_Application_Winforms.Logging.LoggingUtility"];
     "MTM_WIP_Application_Winforms.Model_Application_Variables" [label="Model_Application_Variables", fillcolor=white, tooltip="MTM_WIP_Application_Winforms.Models.Model_Application_Variables"];
@@ -689,7 +689,7 @@ digraph CSharpDependencies {
   "MTM_WIP_Application_Winforms.Helper_ThemeMigration" -> "MTM_WIP_Application_Winforms.Core_Themes" [penwidth=1.5];
   "MTM_WIP_Application_Winforms.Helper_UI_ComboBoxes" -> "MTM_WIP_Application_Winforms.Helper_Database_StoredProcedure" [penwidth=1.5];
   "MTM_WIP_Application_Winforms.Helper_UI_ComboBoxes" -> "MTM_WIP_Application_Winforms.LoggingUtility" [penwidth=1.5];
-  "MTM_WIP_Application_Winforms.Helper_UI_ComboBoxes" -> "MTM_WIP_Application_Winforms.ComboBoxHelpers" [penwidth=1.5];
+  "MTM_WIP_Application_Winforms.Helper_UI_ComboBoxes" -> "MTM_WIP_Application_Winforms.TextBoxHelpers" [penwidth=1.5];
   "MTM_WIP_Application_Winforms.Helper_UI_Shortcuts" -> "MTM_WIP_Application_Winforms.MainForm" [penwidth=1.5];
   "MTM_WIP_Application_Winforms.LoggingUtility" -> "MTM_WIP_Application_Winforms.Service_OnStartup_AppDataCleaner" [penwidth=1.5, color="#FF0000", penwidth=2.0, fontcolor="#FF0000", label="cycle"];
   "MTM_WIP_Application_Winforms.LoggingUtility" -> "MTM_WIP_Application_Winforms.Helper_Database_Variables" [penwidth=1.5, color="#FF0000", penwidth=2.0, fontcolor="#FF0000", label="cycle"];

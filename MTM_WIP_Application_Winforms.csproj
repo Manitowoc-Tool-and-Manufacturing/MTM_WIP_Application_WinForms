@@ -37,6 +37,12 @@
     </ItemGroup>
 
     <ItemGroup>
+        <Compile Remove="specs\**" />
+        <EmbeddedResource Remove="specs\**" />
+        <None Remove="specs\**" />
+    </ItemGroup>
+
+    <ItemGroup>
         <None Remove="DATABASE_SCHEMA.sql" />
         <None Remove="Resources\CHANGELOG.pdf" />
     </ItemGroup>

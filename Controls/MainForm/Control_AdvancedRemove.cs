@@ -234,7 +234,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             // Only wire up User ComboBox events
             Control_AdvancedRemove_ComboBox_User.SelectedIndexChanged += (s, e) =>
             {
-                Helper_UI_ComboBoxes.ValidateComboBoxItem(Control_AdvancedRemove_ComboBox_User, "[ Enter User ]");
+                Helper_UI_ComboBoxes.ValidateComboBoxItem(Control_AdvancedRemove_ComboBox_User, "Enter or Select User");
                 if (Control_AdvancedRemove_ComboBox_User.SelectedIndex > 0)
                 {
                     Control_AdvancedRemove_ComboBox_User.ForeColor =
@@ -248,7 +248,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             };
             Control_AdvancedRemove_ComboBox_User.Leave += (s, e) =>
             {
-                Helper_UI_ComboBoxes.ValidateComboBoxItem(Control_AdvancedRemove_ComboBox_User, "[ Enter User ]");
+                Helper_UI_ComboBoxes.ValidateComboBoxItem(Control_AdvancedRemove_ComboBox_User, "Enter or Select User");
             };
 
             Control_AdvancedRemove_ComboBox_User.Enter +=

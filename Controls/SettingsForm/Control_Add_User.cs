@@ -140,7 +140,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             base.OnLoad(e);
             Control_Add_User_ComboBox_Shift.Items.Clear();
             Control_Add_User_ComboBox_Shift.Items.AddRange([
-                "[ Enter Shift ]", "First", "Second", "Third", "Weekend"
+                "Enter or Select Shift", "First", "Second", "Third", "Weekend"
             ]);
             Control_Add_User_ComboBox_Shift.SelectedIndex = 0;
         }

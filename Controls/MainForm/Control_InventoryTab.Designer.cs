@@ -1,6 +1,7 @@
 ﻿using System.Drawing;
 using System.Windows.Forms;
 
+using MTM_WIP_Application_Winforms.Controls.Shared;
 using MTM_WIP_Application_Winforms.Forms.Shared;
 
 namespace MTM_WIP_Application_Winforms.Controls.MainForm
@@ -20,11 +21,12 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
         private Button Control_InventoryTab_Button_Save;
         private Label Control_InventoryTab_Label_Version;
         private Button Control_InventoryTab_Button_AdvancedEntry;
-        private ComboBox Control_InventoryTab_ComboBox_Operation;
+        private SuggestionTextBox Control_InventoryTab_TextBox_Operation;
         private TextBox Control_InventoryTab_TextBox_Quantity;
         private TableLayoutPanel Control_InventoryTab_TableLayout_Main;
         private Button Control_InventoryTab_Button_Toggle_RightPanel;
-        public ComboBox Control_InventoryTab_ComboBox_Part;
+        public SuggestionTextBox Control_InventoryTab_TextBox_Part;
+        private SuggestionTextBox Control_InventoryTab_TextBox_Location;
         private ToolTip Control_InventoryTab_Tooltip;
         
 
@@ -52,10 +54,10 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             Control_InventoryTab_Label_Notes = new Label();
             Control_InventoryTab_RichTextBox_Notes = new RichTextBox();
             Control_InventoryTab_TableLayout_TopGroup = new TableLayoutPanel();
-            Control_InventoryTab_ComboBox_Location = new ComboBox();
+            Control_InventoryTab_TextBox_Location = new SuggestionTextBox();
             Control_InventoryTab_TextBox_Quantity = new TextBox();
-            Control_InventoryTab_ComboBox_Operation = new ComboBox();
-            Control_InventoryTab_ComboBox_Part = new ComboBox();
+            Control_InventoryTab_TextBox_Operation = new SuggestionTextBox();
+            Control_InventoryTab_TextBox_Part = new SuggestionTextBox();
             Control_InventoryTab_Label_Loc = new Label();
             Control_InventoryTab_Label_Qty = new Label();
             Control_InventoryTab_Label_Op = new Label();
@@ -148,10 +150,10 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             Control_InventoryTab_TableLayout_TopGroup.ColumnCount = 2;
             Control_InventoryTab_TableLayout_TopGroup.ColumnStyles.Add(new ColumnStyle());
             Control_InventoryTab_TableLayout_TopGroup.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
-            Control_InventoryTab_TableLayout_TopGroup.Controls.Add(Control_InventoryTab_ComboBox_Location, 1, 3);
+            Control_InventoryTab_TableLayout_TopGroup.Controls.Add(Control_InventoryTab_TextBox_Location, 1, 3);
             Control_InventoryTab_TableLayout_TopGroup.Controls.Add(Control_InventoryTab_TextBox_Quantity, 1, 2);
-            Control_InventoryTab_TableLayout_TopGroup.Controls.Add(Control_InventoryTab_ComboBox_Operation, 1, 1);
-            Control_InventoryTab_TableLayout_TopGroup.Controls.Add(Control_InventoryTab_ComboBox_Part, 1, 0);
+            Control_InventoryTab_TableLayout_TopGroup.Controls.Add(Control_InventoryTab_TextBox_Operation, 1, 1);
+            Control_InventoryTab_TableLayout_TopGroup.Controls.Add(Control_InventoryTab_TextBox_Part, 1, 0);
             Control_InventoryTab_TableLayout_TopGroup.Controls.Add(Control_InventoryTab_Label_Loc, 0, 3);
             Control_InventoryTab_TableLayout_TopGroup.Controls.Add(Control_InventoryTab_Label_Qty, 0, 2);
             Control_InventoryTab_TableLayout_TopGroup.Controls.Add(Control_InventoryTab_Label_Op, 0, 1);
@@ -167,47 +169,45 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             Control_InventoryTab_TableLayout_TopGroup.Size = new Size(1163, 116);
             Control_InventoryTab_TableLayout_TopGroup.TabIndex = 7;
             // 
-            // Control_InventoryTab_ComboBox_Location
+            // Control_InventoryTab_TextBox_Location
             // 
-            Control_InventoryTab_ComboBox_Location.AutoCompleteMode = AutoCompleteMode.Suggest;
-            Control_InventoryTab_ComboBox_Location.AutoCompleteSource = AutoCompleteSource.ListItems;
-            Control_InventoryTab_ComboBox_Location.Dock = DockStyle.Fill;
-            Control_InventoryTab_ComboBox_Location.Location = new Point(87, 90);
-            Control_InventoryTab_ComboBox_Location.MaxDropDownItems = 6;
-            Control_InventoryTab_ComboBox_Location.Name = "Control_InventoryTab_ComboBox_Location";
-            Control_InventoryTab_ComboBox_Location.Size = new Size(1073, 23);
-            Control_InventoryTab_ComboBox_Location.TabIndex = 12;
+            Control_InventoryTab_TextBox_Location.Anchor = AnchorStyles.Left | AnchorStyles.Right;
+            Control_InventoryTab_TextBox_Location.Location = new Point(87, 90);
+            Control_InventoryTab_TextBox_Location.Name = "Control_InventoryTab_TextBox_Location";
+            Control_InventoryTab_TextBox_Location.PlaceholderText = "Enter or Select Location";
+            Control_InventoryTab_TextBox_Location.Size = new Size(1073, 23);
+            Control_InventoryTab_TextBox_Location.TabIndex = 12;
+            Control_InventoryTab_TextBox_Location.TextAlign = HorizontalAlignment.Left;
             // 
             // Control_InventoryTab_TextBox_Quantity
             // 
-            Control_InventoryTab_TextBox_Quantity.Dock = DockStyle.Fill;
+            Control_InventoryTab_TextBox_Quantity.Anchor = AnchorStyles.Left | AnchorStyles.Right;
             Control_InventoryTab_TextBox_Quantity.Location = new Point(87, 61);
             Control_InventoryTab_TextBox_Quantity.Name = "Control_InventoryTab_TextBox_Quantity";
+            Control_InventoryTab_TextBox_Quantity.PlaceholderText = "Enter Quantity";
             Control_InventoryTab_TextBox_Quantity.Size = new Size(1073, 23);
             Control_InventoryTab_TextBox_Quantity.TabIndex = 3;
+            Control_InventoryTab_TextBox_Quantity.TextAlign = HorizontalAlignment.Left;
             // 
-            // Control_InventoryTab_ComboBox_Operation
+            // Control_InventoryTab_TextBox_Operation
             // 
-            Control_InventoryTab_ComboBox_Operation.AutoCompleteMode = AutoCompleteMode.Suggest;
-            Control_InventoryTab_ComboBox_Operation.AutoCompleteSource = AutoCompleteSource.ListItems;
-            Control_InventoryTab_ComboBox_Operation.Dock = DockStyle.Fill;
-            Control_InventoryTab_ComboBox_Operation.Location = new Point(87, 32);
-            Control_InventoryTab_ComboBox_Operation.MaxDropDownItems = 6;
-            Control_InventoryTab_ComboBox_Operation.Name = "Control_InventoryTab_ComboBox_Operation";
-            Control_InventoryTab_ComboBox_Operation.Size = new Size(1073, 23);
-            Control_InventoryTab_ComboBox_Operation.TabIndex = 2;
+            Control_InventoryTab_TextBox_Operation.Anchor = AnchorStyles.Left | AnchorStyles.Right;
+            Control_InventoryTab_TextBox_Operation.Location = new Point(87, 32);
+            Control_InventoryTab_TextBox_Operation.Name = "Control_InventoryTab_TextBox_Operation";
+            Control_InventoryTab_TextBox_Operation.PlaceholderText = "Enter or Select Operation";
+            Control_InventoryTab_TextBox_Operation.Size = new Size(1073, 23);
+            Control_InventoryTab_TextBox_Operation.TabIndex = 2;
+            Control_InventoryTab_TextBox_Operation.TextAlign = HorizontalAlignment.Left;
             // 
-            // Control_InventoryTab_ComboBox_Part
+            // Control_InventoryTab_TextBox_Part
             // 
-            Control_InventoryTab_ComboBox_Part.AutoCompleteMode = AutoCompleteMode.Suggest;
-            Control_InventoryTab_ComboBox_Part.AutoCompleteSource = AutoCompleteSource.ListItems;
-            Control_InventoryTab_ComboBox_Part.Dock = DockStyle.Fill;
-            Control_InventoryTab_ComboBox_Part.ItemHeight = 15;
-            Control_InventoryTab_ComboBox_Part.Location = new Point(87, 3);
-            Control_InventoryTab_ComboBox_Part.MaxDropDownItems = 6;
-            Control_InventoryTab_ComboBox_Part.Name = "Control_InventoryTab_ComboBox_Part";
-            Control_InventoryTab_ComboBox_Part.Size = new Size(1073, 23);
-            Control_InventoryTab_ComboBox_Part.TabIndex = 1;
+            Control_InventoryTab_TextBox_Part.Anchor = AnchorStyles.Left | AnchorStyles.Right;
+            Control_InventoryTab_TextBox_Part.Location = new Point(87, 3);
+            Control_InventoryTab_TextBox_Part.Name = "Control_InventoryTab_TextBox_Part";
+            Control_InventoryTab_TextBox_Part.PlaceholderText = "Enter or Select Part Number";
+            Control_InventoryTab_TextBox_Part.Size = new Size(1073, 23);
+            Control_InventoryTab_TextBox_Part.TabIndex = 1;
+            Control_InventoryTab_TextBox_Part.TextAlign = HorizontalAlignment.Left;
             // 
             // Control_InventoryTab_Label_Loc
             // 
@@ -366,7 +366,6 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
         private TableLayoutPanel Control_InventoryTab_TableLayout_MiddleGroup;
         private Label Control_InventoryTab_Label_Notes;
         private RichTextBox Control_InventoryTab_RichTextBox_Notes;
-        private ComboBox Control_InventoryTab_ComboBox_Location;
         private Label Control_InventoryTab_Label_Loc;
         private Label Control_InventoryTab_Label_Qty;
         private Label Control_InventoryTab_Label_Op;

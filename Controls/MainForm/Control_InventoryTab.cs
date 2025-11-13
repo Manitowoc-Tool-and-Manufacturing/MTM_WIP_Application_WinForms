@@ -118,14 +118,15 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                 {
                     ["FocusHighlighting"] = "AUTO_APPLIED_BY_BASE",
                     ["ComboBoxColors"] = "Applied",
-                    ["InitialFocus"] = "Control_InventoryTab_ComboBox_Part",
+                    ["InitialFocus"] = "Control_InventoryTab_TextBox_Part",
                     ["QuantityTextBoxState"] = "Placeholder"
                 });
-            Control_InventoryTab_ComboBox_Part.ForeColor = Control_InventoryTab_ComboBox_Operation.ForeColor =
-                Control_InventoryTab_ComboBox_Location.ForeColor =
+            Control_InventoryTab_TextBox_Part.ForeColor = Control_InventoryTab_TextBox_Operation.ForeColor =
+                Control_InventoryTab_TextBox_Location.ForeColor =
                     Model_Application_Variables.UserUiColors.ComboBoxForeColor ?? Color.Red;
-            Control_InventoryTab_ComboBox_Part.Focus();
-            Control_InventoryTab_TextBox_Quantity.Text = "[ Enter Valid Quantity ]";
+            Control_InventoryTab_TextBox_Part.Focus();
+            
+            // PlaceholderText is now set in Designer instead of programmatically setting Text
             Control_InventoryTab_TextBox_Quantity.ForeColor =
                 Model_Application_Variables.UserUiColors.TextBoxErrorForeColor ?? Color.Red;
 
@@ -179,9 +180,9 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             // For Read-Only, set controls to ReadOnly/Disabled if applicable
             if (isReadOnly)
             {
-                Control_InventoryTab_ComboBox_Part.Enabled = false;
-                Control_InventoryTab_ComboBox_Operation.Enabled = false;
-                Control_InventoryTab_ComboBox_Location.Enabled = false;
+                Control_InventoryTab_TextBox_Part.Enabled = false;
+                Control_InventoryTab_TextBox_Operation.Enabled = false;
+                Control_InventoryTab_TextBox_Location.Enabled = false;
                 Control_InventoryTab_TextBox_Quantity.Enabled = false;
                 Control_InventoryTab_RichTextBox_Notes.ReadOnly = true;
                 Control_InventoryTab_Button_Save.Visible = false;
@@ -191,9 +192,9 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             }
             else
             {
-                Control_InventoryTab_ComboBox_Part.Enabled = true;
-                Control_InventoryTab_ComboBox_Operation.Enabled = true;
-                Control_InventoryTab_ComboBox_Location.Enabled = true;
+                Control_InventoryTab_TextBox_Part.Enabled = true;
+                Control_InventoryTab_TextBox_Operation.Enabled = true;
+                Control_InventoryTab_TextBox_Location.Enabled = true;
                 Control_InventoryTab_TextBox_Quantity.Enabled = true;
                 Control_InventoryTab_RichTextBox_Notes.ReadOnly = false;
                 Control_InventoryTab_Button_Save.Visible = true;
@@ -230,18 +231,32 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                 _progressHelper?.ShowProgress();
                 _progressHelper?.UpdateProgress(10, "Loading part data...");
                 
-                await Helper_UI_ComboBoxes.FillPartComboBoxesAsync(Control_InventoryTab_ComboBox_Part);
+                // Configure part number SuggestionTextBox
+                Control_InventoryTab_TextBox_Part.DataProvider = GetPartNumberSuggestionsAsync;
+                Control_InventoryTab_TextBox_Part.MaxResults = 100;
+                Control_InventoryTab_TextBox_Part.EnableWildcards = true;
+                Control_InventoryTab_TextBox_Part.ClearOnNoMatch = true;
                 
                 _progressHelper?.UpdateProgress(40, "Loading operation data...");
-                await Helper_UI_ComboBoxes.FillOperationComboBoxesAsync(Control_InventoryTab_ComboBox_Operation);
+                
+                // Configure operation SuggestionTextBox
+                Control_InventoryTab_TextBox_Operation.DataProvider = GetOperationSuggestionsAsync;
+                Control_InventoryTab_TextBox_Operation.MaxResults = 50;
+                Control_InventoryTab_TextBox_Operation.EnableWildcards = true;
+                Control_InventoryTab_TextBox_Operation.ClearOnNoMatch = true;
                 
                 _progressHelper?.UpdateProgress(70, "Loading location data...");
-                await Helper_UI_ComboBoxes.FillLocationComboBoxesAsync(Control_InventoryTab_ComboBox_Location);
+                
+                // Configure location SuggestionTextBox
+                Control_InventoryTab_TextBox_Location.DataProvider = GetLocationSuggestionsAsync;
+                Control_InventoryTab_TextBox_Location.MaxResults = 30;
+                Control_InventoryTab_TextBox_Location.EnableWildcards = true;
+                Control_InventoryTab_TextBox_Location.ClearOnNoMatch = true;
 
                 _progressHelper?.UpdateProgress(100, "Combo boxes loaded");
                 await Task.Delay(100);
                 
-                LoggingUtility.Log("Inventory tab ComboBoxes loaded.");
+                LoggingUtility.Log("Inventory tab suggestion controls configured.");
                 Service_DebugTracer.TraceMethodExit("Success", nameof(Control_InventoryTab), nameof(Control_InventoryTab_OnStartup_LoadDataComboBoxesAsync));
             }
             catch (Exception ex)
@@ -263,6 +278,154 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             finally
             {
                 _progressHelper?.HideProgress();
+            }
+        }
+
+        #endregion
+
+        #region Suggestion Data Providers
+
+        /// <summary>
+        /// Data provider for part number SuggestionTextBox.
+        /// Returns list of all part IDs from database.
+        /// </summary>
+        /// <returns>List of part ID strings.</returns>
+        private async Task<List<string>> GetPartNumberSuggestionsAsync()
+        {
+            try
+            {
+                var dataResult = await Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync(
+                    Model_Application_Variables.ConnectionString,
+                    "md_part_ids_Get_All",
+                    null);
+
+                if (!dataResult.IsSuccess || dataResult.Data == null)
+                {
+                    Service_ErrorHandler.ShowWarning(dataResult.ErrorMessage ?? "Failed to load part numbers");
+                    return new List<string>();
+                }
+
+                var suggestions = new List<string>();
+                foreach (System.Data.DataRow row in dataResult.Data.Rows)
+                {
+                    if (row["PartID"] != null && row["PartID"] != DBNull.Value)
+                    {
+                        suggestions.Add(row["PartID"].ToString() ?? string.Empty);
+                    }
+                }
+
+                return suggestions;
+            }
+            catch (Exception ex)
+            {
+                Service_ErrorHandler.HandleException(
+                    ex,
+                    Enum_ErrorSeverity.Medium,
+                    contextData: new Dictionary<string, object>
+                    {
+                        ["Control"] = nameof(Control_InventoryTab),
+                        ["Method"] = nameof(GetPartNumberSuggestionsAsync)
+                    },
+                    callerName: nameof(GetPartNumberSuggestionsAsync),
+                    controlName: this.Name);
+
+                return new List<string>();
+            }
+        }
+
+        /// <summary>
+        /// Data provider for operation SuggestionTextBox.
+        /// Returns list of all operation numbers from database.
+        /// </summary>
+        /// <returns>List of operation strings.</returns>
+        private async Task<List<string>> GetOperationSuggestionsAsync()
+        {
+            try
+            {
+                var dataResult = await Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync(
+                    Model_Application_Variables.ConnectionString,
+                    "md_operation_numbers_Get_All",
+                    null);
+
+                if (!dataResult.IsSuccess || dataResult.Data == null)
+                {
+                    Service_ErrorHandler.ShowWarning(dataResult.ErrorMessage ?? "Failed to load operations");
+                    return new List<string>();
+                }
+
+                var suggestions = new List<string>();
+                foreach (System.Data.DataRow row in dataResult.Data.Rows)
+                {
+                    if (row["Operation"] != null && row["Operation"] != DBNull.Value)
+                    {
+                        suggestions.Add(row["Operation"].ToString() ?? string.Empty);
+                    }
+                }
+
+                return suggestions;
+            }
+            catch (Exception ex)
+            {
+                Service_ErrorHandler.HandleException(
+                    ex,
+                    Enum_ErrorSeverity.Medium,
+                    contextData: new Dictionary<string, object>
+                    {
+                        ["Control"] = nameof(Control_InventoryTab),
+                        ["Method"] = nameof(GetOperationSuggestionsAsync)
+                    },
+                    callerName: nameof(GetOperationSuggestionsAsync),
+                    controlName: this.Name);
+
+                return new List<string>();
+            }
+        }
+
+        /// <summary>
+        /// Data provider for location SuggestionTextBox.
+        /// Returns list of all location values from database.
+        /// </summary>
+        /// <returns>List of location strings.</returns>
+        private async Task<List<string>> GetLocationSuggestionsAsync()
+        {
+            try
+            {
+                var dataResult = await Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync(
+                    Model_Application_Variables.ConnectionString,
+                    "md_locations_Get_All",
+                    null);
+
+                if (!dataResult.IsSuccess || dataResult.Data == null)
+                {
+                    Service_ErrorHandler.ShowWarning(dataResult.ErrorMessage ?? "Failed to load locations");
+                    return new List<string>();
+                }
+
+                var suggestions = new List<string>();
+                foreach (System.Data.DataRow row in dataResult.Data.Rows)
+                {
+                    if (row["Location"] != null && row["Location"] != DBNull.Value)
+                    {
+                        suggestions.Add(row["Location"].ToString() ?? string.Empty);
+                    }
+                }
+
+                return suggestions;
+            }
+            catch (Exception ex)
+            {
+                Service_ErrorHandler.HandleException(
+                    ex,
+                    Enum_ErrorSeverity.Medium,
+                    contextData: new Dictionary<string, object>
+                    {
+                        ["Control"] = nameof(Control_InventoryTab),
+                        ["Method"] = nameof(GetLocationSuggestionsAsync)
+                    },
+                    callerName: nameof(GetLocationSuggestionsAsync),
+                    controlName: this.Name);
+
+                return new List<string>();
             }
         }
 
@@ -568,26 +731,22 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                 Debug.WriteLine("[DEBUG] DataTables reset complete");
 
                 _progressHelper?.UpdateProgress(60, "Refilling combo boxes...");
-                Debug.WriteLine("[DEBUG] Refilling Part ComboBox");
-                await Helper_UI_ComboBoxes.FillPartComboBoxesAsync(Control_InventoryTab_ComboBox_Part);
-                Debug.WriteLine("[DEBUG] Refilling Operation ComboBox");
-                await Helper_UI_ComboBoxes.FillOperationComboBoxesAsync(Control_InventoryTab_ComboBox_Operation);
-                Debug.WriteLine("[DEBUG] Refilling Location ComboBox");
-                await Helper_UI_ComboBoxes.FillLocationComboBoxesAsync(Control_InventoryTab_ComboBox_Location);
 
                 Debug.WriteLine("[DEBUG] Resetting UI fields");
-                MainFormControlHelper.ResetComboBox(Control_InventoryTab_ComboBox_Part,
-                    Model_Application_Variables.UserUiColors.ComboBoxErrorForeColor ?? Color.Red, 0);
-                MainFormControlHelper.ResetComboBox(Control_InventoryTab_ComboBox_Operation,
-                    Model_Application_Variables.UserUiColors.ComboBoxErrorForeColor ?? Color.Red, 0);
-                MainFormControlHelper.ResetComboBox(Control_InventoryTab_ComboBox_Location,
-                    Model_Application_Variables.UserUiColors.ComboBoxErrorForeColor ?? Color.Red, 0);
+                // Reset SuggestionTextBox fields (Part, Operation, and Location)
+                Control_InventoryTab_TextBox_Part.Text = string.Empty;
+                Control_InventoryTab_TextBox_Part.ForeColor = Model_Application_Variables.UserUiColors.ComboBoxErrorForeColor ?? Color.Red;
+                Control_InventoryTab_TextBox_Operation.Text = string.Empty;
+                Control_InventoryTab_TextBox_Operation.ForeColor = Model_Application_Variables.UserUiColors.ComboBoxErrorForeColor ?? Color.Red;
+                Control_InventoryTab_TextBox_Location.Text = string.Empty;
+                Control_InventoryTab_TextBox_Location.ForeColor = Model_Application_Variables.UserUiColors.ComboBoxErrorForeColor ?? Color.Red;
+                
                 MainFormControlHelper.ResetTextBox(Control_InventoryTab_TextBox_Quantity,
-                    Model_Application_Variables.UserUiColors.TextBoxErrorForeColor ?? Color.Red, "[ Enter Valid Quantity ]");
+                    Model_Application_Variables.UserUiColors.TextBoxErrorForeColor ?? Color.Red, "Enter Quantity");
                 MainFormControlHelper.ResetRichTextBox(Control_InventoryTab_RichTextBox_Notes,
                     Model_Application_Variables.UserUiColors.RichTextBoxErrorForeColor ?? Color.Red, "");
 
-                Control_InventoryTab_ComboBox_Part.Focus();
+                Control_InventoryTab_TextBox_Part.Focus();
 
                 Control_InventoryTab_Update_SaveButtonState();
 
@@ -650,14 +809,16 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                 }
 
                 Debug.WriteLine("[DEBUG] Resetting UI fields");
-                MainFormControlHelper.ResetComboBox(Control_InventoryTab_ComboBox_Part,
-                    Model_Application_Variables.UserUiColors.ErrorColor ?? Color.Red, 0);
-                MainFormControlHelper.ResetComboBox(Control_InventoryTab_ComboBox_Operation,
-                    Model_Application_Variables.UserUiColors.ErrorColor ?? Color.Red, 0);
-                MainFormControlHelper.ResetComboBox(Control_InventoryTab_ComboBox_Location,
-                    Model_Application_Variables.UserUiColors.ErrorColor ?? Color.Red, 0);
+                // Reset SuggestionTextBox fields (Part and Operation)
+                Control_InventoryTab_TextBox_Part.Text = string.Empty;
+                Control_InventoryTab_TextBox_Part.ForeColor = Model_Application_Variables.UserUiColors.ErrorColor ?? Color.Red;
+                Control_InventoryTab_TextBox_Operation.Text = string.Empty;
+                Control_InventoryTab_TextBox_Operation.ForeColor = Model_Application_Variables.UserUiColors.ErrorColor ?? Color.Red;
+                Control_InventoryTab_TextBox_Location.Text = string.Empty;
+                Control_InventoryTab_TextBox_Location.ForeColor = Model_Application_Variables.UserUiColors.ErrorColor ?? Color.Red;
+                
                 MainFormControlHelper.ResetTextBox(Control_InventoryTab_TextBox_Quantity,
-                    Model_Application_Variables.UserUiColors.ErrorColor ?? Color.Red, "[ Enter Valid Quantity ]");
+                    Model_Application_Variables.UserUiColors.ErrorColor ?? Color.Red, "Enter Quantity");
                 MainFormControlHelper.ResetRichTextBox(Control_InventoryTab_RichTextBox_Notes,
                     Model_Application_Variables.UserUiColors.ErrorColor ?? Color.Red, "");
                 Control_InventoryTab_Button_Save.Enabled = false;
@@ -685,7 +846,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             {
                 Debug.WriteLine("[DEBUG] InventoryTab SoftReset button re-enabled");
                 Control_InventoryTab_Button_Reset.Enabled = true;
-                Control_InventoryTab_ComboBox_Part.Focus();
+                Control_InventoryTab_TextBox_Part.Focus();
                 if (MainFormInstance != null)
                 {
                     Debug.WriteLine("[DEBUG] Restoring status strip after reset");
@@ -713,38 +874,38 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                 _progressHelper?.UpdateProgress(10, "Saving inventory transaction...");
                 LoggingUtility.Log("Inventory Save button clicked.");
 
-                string partId = Control_InventoryTab_ComboBox_Part.Text;
-                string op = Control_InventoryTab_ComboBox_Operation.Text;
-                string loc = Control_InventoryTab_ComboBox_Location.Text;
+                string partId = Control_InventoryTab_TextBox_Part.Text;
+                string op = Control_InventoryTab_TextBox_Operation.Text;
+                string loc = Control_InventoryTab_TextBox_Location.Text;
                 string qtyText = Control_InventoryTab_TextBox_Quantity.Text.Trim();
                 string notes = Control_InventoryTab_RichTextBox_Notes.Text.Trim();
 
-                if (string.IsNullOrWhiteSpace(partId) || Control_InventoryTab_ComboBox_Part.SelectedIndex <= 0)
+                if (string.IsNullOrWhiteSpace(partId))
                 {
                     Service_ErrorHandler.HandleValidationError(
-                        "Please select a valid Part.",
-                        nameof(Control_InventoryTab_ComboBox_Part));
-                    Control_InventoryTab_ComboBox_Part.Focus();
+                        "Please enter a valid Part.",
+                        nameof(Control_InventoryTab_TextBox_Part));
+                    Control_InventoryTab_TextBox_Part.Focus();
                     Service_DebugTracer.TraceMethodExit("Validation failed: Part invalid", nameof(Control_InventoryTab), nameof(Control_InventoryTab_Button_Save_Click_Async));
                     return;
                 }
 
-                if (string.IsNullOrWhiteSpace(op) || Control_InventoryTab_ComboBox_Operation.SelectedIndex <= 0)
+                if (string.IsNullOrWhiteSpace(op))
                 {
                     Service_ErrorHandler.HandleValidationError(
-                        "Please select a valid Operation.",
-                        nameof(Control_InventoryTab_ComboBox_Operation));
-                    Control_InventoryTab_ComboBox_Operation.Focus();
+                        "Please enter a valid Operation.",
+                        nameof(Control_InventoryTab_TextBox_Operation));
+                    Control_InventoryTab_TextBox_Operation.Focus();
                     Service_DebugTracer.TraceMethodExit("Validation failed: Operation invalid", nameof(Control_InventoryTab), nameof(Control_InventoryTab_Button_Save_Click_Async));
                     return;
                 }
 
-                if (string.IsNullOrWhiteSpace(loc) || Control_InventoryTab_ComboBox_Location.SelectedIndex <= 0)
+                if (string.IsNullOrWhiteSpace(loc))
                 {
                     Service_ErrorHandler.HandleValidationError(
-                        "Please select a valid Location.",
-                        nameof(Control_InventoryTab_ComboBox_Location));
-                    Control_InventoryTab_ComboBox_Location.Focus();
+                        "Please enter a valid Location.",
+                        nameof(Control_InventoryTab_TextBox_Location));
+                    Control_InventoryTab_TextBox_Location.Focus();
                     Service_DebugTracer.TraceMethodExit("Validation failed: Location invalid", nameof(Control_InventoryTab), nameof(Control_InventoryTab_Button_Save_Click_Async));
                     return;
                 }
@@ -941,155 +1102,164 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
 
         #region ComboBox & UI Events
 
-        private void Control_InventoryTab_ComboBox_Location_SelectedIndexChanged()
+        // NOTE: SelectedIndexChanged event handlers commented out - Part, Operation, and Location now use SuggestionTextBox (TextBox-based)
+        // These controls don't have SelectedIndex property. Validation now handled via Text property and SuggestionSelected events.
+        
+        /*
+        private void Control_InventoryTab_TextBox_Location_SelectedIndexChanged()
         {
             Service_DebugTracer.TraceMethodEntry(new Dictionary<string, object>
             {
-                ["SelectedIndex"] = Control_InventoryTab_ComboBox_Location.SelectedIndex,
-                ["SelectedText"] = Control_InventoryTab_ComboBox_Location.Text
-            }, nameof(Control_InventoryTab), nameof(Control_InventoryTab_ComboBox_Location_SelectedIndexChanged));
+                ["SelectedIndex"] = Control_InventoryTab_TextBox_Location.SelectedIndex,
+                ["SelectedText"] = Control_InventoryTab_TextBox_Location.Text
+            }, nameof(Control_InventoryTab), nameof(Control_InventoryTab_TextBox_Location_SelectedIndexChanged));
 
             try
             {
                 LoggingUtility.Log("Inventory Location ComboBox selection changed.");
 
-                if (Control_InventoryTab_ComboBox_Location.SelectedIndex > 0)
+                if (Control_InventoryTab_TextBox_Location.SelectedIndex > 0)
                 {
-                    Control_InventoryTab_ComboBox_Location.ForeColor =
+                    Control_InventoryTab_TextBox_Location.ForeColor =
                         Model_Application_Variables.UserUiColors.ComboBoxForeColor ?? Color.Black;
-                    Model_Application_Variables.Location = Control_InventoryTab_ComboBox_Location.Text;
-                    Service_DebugTracer.TraceMethodExit(new { Valid = true, Location = Model_Application_Variables.Location }, nameof(Control_InventoryTab), nameof(Control_InventoryTab_ComboBox_Location_SelectedIndexChanged));
+                    Model_Application_Variables.Location = Control_InventoryTab_TextBox_Location.Text;
+                    Service_DebugTracer.TraceMethodExit(new { Valid = true, Location = Model_Application_Variables.Location }, nameof(Control_InventoryTab), nameof(Control_InventoryTab_TextBox_Location_SelectedIndexChanged));
                 }
                 else
                 {
-                    Control_InventoryTab_ComboBox_Location.ForeColor =
+                    Control_InventoryTab_TextBox_Location.ForeColor =
                         Model_Application_Variables.UserUiColors.ComboBoxErrorForeColor ?? Color.Red;
-                    if (Control_InventoryTab_ComboBox_Location.SelectedIndex != 0 &&
-                        Control_InventoryTab_ComboBox_Location.Items.Count > 0)
+                    if (Control_InventoryTab_TextBox_Location.SelectedIndex != 0 &&
+                        Control_InventoryTab_TextBox_Location.Items.Count > 0)
                     {
-                        Control_InventoryTab_ComboBox_Location.SelectedIndex = 0;
+                        Control_InventoryTab_TextBox_Location.SelectedIndex = 0;
                     }
 
                     Model_Application_Variables.Location = null;
-                    Service_DebugTracer.TraceMethodExit(new { Valid = false }, nameof(Control_InventoryTab), nameof(Control_InventoryTab_ComboBox_Location_SelectedIndexChanged));
+                    Service_DebugTracer.TraceMethodExit(new { Valid = false }, nameof(Control_InventoryTab), nameof(Control_InventoryTab_TextBox_Location_SelectedIndexChanged));
                 }
             }
             catch (Exception ex)
             {
                 LoggingUtility.LogApplicationError(ex);
-                Service_DebugTracer.TraceMethodExit(new { Exception = ex.Message }, nameof(Control_InventoryTab), nameof(Control_InventoryTab_ComboBox_Location_SelectedIndexChanged));
+                Service_DebugTracer.TraceMethodExit(new { Exception = ex.Message }, nameof(Control_InventoryTab), nameof(Control_InventoryTab_TextBox_Location_SelectedIndexChanged));
                 
                 Service_ErrorHandler.HandleException(
                     ex,
                     Enum_ErrorSeverity.Low,
                     contextData: new Dictionary<string, object>
                     {
-                        ["MethodName"] = nameof(Control_InventoryTab_ComboBox_Location_SelectedIndexChanged),
-                        ["SelectedIndex"] = Control_InventoryTab_ComboBox_Location.SelectedIndex
+                        ["MethodName"] = nameof(Control_InventoryTab_TextBox_Location_SelectedIndexChanged),
+                        ["SelectedIndex"] = Control_InventoryTab_TextBox_Location.SelectedIndex
                     },
-                    controlName: nameof(Control_InventoryTab_ComboBox_Location));
+                    controlName: nameof(Control_InventoryTab_TextBox_Location));
             }
         }
 
-        private void Control_InventoryTab_ComboBox_Operation_SelectedIndexChanged()
+        // NOTE: SelectedIndexChanged event handlers commented out - Part and Operation now use SuggestionTextBox (TextBox-based)
+        // These controls don't have SelectedIndex property. Validation now handled via Text property and SuggestionSelected events.
+        
+        /*
+        private void Control_InventoryTab_TextBox_Operation_SelectedIndexChanged()
         {
             Service_DebugTracer.TraceMethodEntry(new Dictionary<string, object>
             {
-                ["SelectedIndex"] = Control_InventoryTab_ComboBox_Operation.SelectedIndex,
-                ["SelectedText"] = Control_InventoryTab_ComboBox_Operation.Text
-            }, nameof(Control_InventoryTab), nameof(Control_InventoryTab_ComboBox_Operation_SelectedIndexChanged));
+                ["SelectedIndex"] = Control_InventoryTab_TextBox_Operation.SelectedIndex,
+                ["SelectedText"] = Control_InventoryTab_TextBox_Operation.Text
+            }, nameof(Control_InventoryTab), nameof(Control_InventoryTab_TextBox_Operation_SelectedIndexChanged));
 
             try
             {
                 LoggingUtility.Log("Inventory Op ComboBox selection changed.");
 
-                if (Control_InventoryTab_ComboBox_Operation.SelectedIndex > 0)
+                if (Control_InventoryTab_TextBox_Operation.SelectedIndex > 0)
                 {
-                    Control_InventoryTab_ComboBox_Operation.ForeColor =
+                    Control_InventoryTab_TextBox_Operation.ForeColor =
                         Model_Application_Variables.UserUiColors.ComboBoxForeColor ?? Color.Black;
-                    Model_Application_Variables.Operation = Control_InventoryTab_ComboBox_Operation.Text;
-                    Service_DebugTracer.TraceMethodExit(new { Valid = true, Operation = Model_Application_Variables.Operation }, nameof(Control_InventoryTab), nameof(Control_InventoryTab_ComboBox_Operation_SelectedIndexChanged));
+                    Model_Application_Variables.Operation = Control_InventoryTab_TextBox_Operation.Text;
+                    Service_DebugTracer.TraceMethodExit(new { Valid = true, Operation = Model_Application_Variables.Operation }, nameof(Control_InventoryTab), nameof(Control_InventoryTab_TextBox_Operation_SelectedIndexChanged));
                 }
                 else
                 {
-                    Control_InventoryTab_ComboBox_Operation.ForeColor =
+                    Control_InventoryTab_TextBox_Operation.ForeColor =
                         Model_Application_Variables.UserUiColors.ComboBoxErrorForeColor ?? Color.Red;
-                    if (Control_InventoryTab_ComboBox_Operation.SelectedIndex != 0 &&
-                        Control_InventoryTab_ComboBox_Operation.Items.Count > 0)
+                    if (Control_InventoryTab_TextBox_Operation.SelectedIndex != 0 &&
+                        Control_InventoryTab_TextBox_Operation.Items.Count > 0)
                     {
-                        Control_InventoryTab_ComboBox_Operation.SelectedIndex = 0;
+                        Control_InventoryTab_TextBox_Operation.SelectedIndex = 0;
                     }
 
                     Model_Application_Variables.Operation = null;
-                    Service_DebugTracer.TraceMethodExit(new { Valid = false }, nameof(Control_InventoryTab), nameof(Control_InventoryTab_ComboBox_Operation_SelectedIndexChanged));
+                    Service_DebugTracer.TraceMethodExit(new { Valid = false }, nameof(Control_InventoryTab), nameof(Control_InventoryTab_TextBox_Operation_SelectedIndexChanged));
                 }
             }
             catch (Exception ex)
             {
                 LoggingUtility.LogApplicationError(ex);
-                Service_DebugTracer.TraceMethodExit(new { Exception = ex.Message }, nameof(Control_InventoryTab), nameof(Control_InventoryTab_ComboBox_Operation_SelectedIndexChanged));
+                Service_DebugTracer.TraceMethodExit(new { Exception = ex.Message }, nameof(Control_InventoryTab), nameof(Control_InventoryTab_TextBox_Operation_SelectedIndexChanged));
                 
                 Service_ErrorHandler.HandleException(
                     ex,
                     Enum_ErrorSeverity.Low,
                     contextData: new Dictionary<string, object>
                     {
-                        ["MethodName"] = nameof(Control_InventoryTab_ComboBox_Operation_SelectedIndexChanged),
-                        ["SelectedIndex"] = Control_InventoryTab_ComboBox_Operation.SelectedIndex
+                        ["MethodName"] = nameof(Control_InventoryTab_TextBox_Operation_SelectedIndexChanged),
+                        ["SelectedIndex"] = Control_InventoryTab_TextBox_Operation.SelectedIndex
                     },
-                    controlName: nameof(Control_InventoryTab_ComboBox_Operation));
+                    controlName: nameof(Control_InventoryTab_TextBox_Operation));
             }
         }
 
-        private void Control_InventoryTab_ComboBox_Part_SelectedIndexChanged()
+        private void Control_InventoryTab_TextBox_Part_SelectedIndexChanged()
         {
             Service_DebugTracer.TraceMethodEntry(new Dictionary<string, object>
             {
-                ["SelectedIndex"] = Control_InventoryTab_ComboBox_Part.SelectedIndex,
-                ["SelectedText"] = Control_InventoryTab_ComboBox_Part.Text
-            }, nameof(Control_InventoryTab), nameof(Control_InventoryTab_ComboBox_Part_SelectedIndexChanged));
+                ["SelectedIndex"] = Control_InventoryTab_TextBox_Part.SelectedIndex,
+                ["SelectedText"] = Control_InventoryTab_TextBox_Part.Text
+            }, nameof(Control_InventoryTab), nameof(Control_InventoryTab_TextBox_Part_SelectedIndexChanged));
 
             try
             {
                 LoggingUtility.Log("Inventory Part ComboBox selection changed.");
 
-                if (Control_InventoryTab_ComboBox_Part.SelectedIndex > 0)
+                if (Control_InventoryTab_TextBox_Part.SelectedIndex > 0)
                 {
-                    Control_InventoryTab_ComboBox_Part.ForeColor =
+                    Control_InventoryTab_TextBox_Part.ForeColor =
                         Model_Application_Variables.UserUiColors.ComboBoxForeColor ?? Color.Black;
-                    Model_Application_Variables.PartId = Control_InventoryTab_ComboBox_Part.Text;
-                    Service_DebugTracer.TraceMethodExit(new { Valid = true, PartId = Model_Application_Variables.PartId }, nameof(Control_InventoryTab), nameof(Control_InventoryTab_ComboBox_Part_SelectedIndexChanged));
+                    Model_Application_Variables.PartId = Control_InventoryTab_TextBox_Part.Text;
+                    Service_DebugTracer.TraceMethodExit(new { Valid = true, PartId = Model_Application_Variables.PartId }, nameof(Control_InventoryTab), nameof(Control_InventoryTab_TextBox_Part_SelectedIndexChanged));
                 }
                 else
                 {
-                    Control_InventoryTab_ComboBox_Part.ForeColor =
+                    Control_InventoryTab_TextBox_Part.ForeColor =
                         Model_Application_Variables.UserUiColors.ComboBoxErrorForeColor ?? Color.Red;
-                    if (Control_InventoryTab_ComboBox_Part.SelectedIndex != 0 &&
-                        Control_InventoryTab_ComboBox_Part.Items.Count > 0)
+                    if (Control_InventoryTab_TextBox_Part.SelectedIndex != 0 &&
+                        Control_InventoryTab_TextBox_Part.Items.Count > 0)
                     {
-                        Control_InventoryTab_ComboBox_Part.SelectedIndex = 0;
+                        Control_InventoryTab_TextBox_Part.SelectedIndex = 0;
                     }
 
                     Model_Application_Variables.PartId = null;
-                    Service_DebugTracer.TraceMethodExit(new { Valid = false }, nameof(Control_InventoryTab), nameof(Control_InventoryTab_ComboBox_Part_SelectedIndexChanged));
+                    Service_DebugTracer.TraceMethodExit(new { Valid = false }, nameof(Control_InventoryTab), nameof(Control_InventoryTab_TextBox_Part_SelectedIndexChanged));
                 }
             }
             catch (Exception ex)
             {
                 LoggingUtility.LogApplicationError(ex);
-                Service_DebugTracer.TraceMethodExit(new { Exception = ex.Message }, nameof(Control_InventoryTab), nameof(Control_InventoryTab_ComboBox_Part_SelectedIndexChanged));
+                Service_DebugTracer.TraceMethodExit(new { Exception = ex.Message }, nameof(Control_InventoryTab), nameof(Control_InventoryTab_TextBox_Part_SelectedIndexChanged));
                 
                 Service_ErrorHandler.HandleException(
                     ex,
                     Enum_ErrorSeverity.Low,
                     contextData: new Dictionary<string, object>
                     {
-                        ["MethodName"] = nameof(Control_InventoryTab_ComboBox_Part_SelectedIndexChanged),
-                        ["SelectedIndex"] = Control_InventoryTab_ComboBox_Part.SelectedIndex
+                        ["MethodName"] = nameof(Control_InventoryTab_TextBox_Part_SelectedIndexChanged),
+                        ["SelectedIndex"] = Control_InventoryTab_TextBox_Part.SelectedIndex
                     },
-                    controlName: nameof(Control_InventoryTab_ComboBox_Part));
+                    controlName: nameof(Control_InventoryTab_TextBox_Part));
             }
         }
+        */
 
         private void Control_InventoryTab_TextBox_Quantity_TextChanged()
         {
@@ -1098,7 +1268,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                 LoggingUtility.Log("Inventory Quantity TextBox changed.");
 
                 string text = Control_InventoryTab_TextBox_Quantity.Text.Trim();
-                const string placeholder = "[ Enter Valid Quantity ]";
+                bool isEmpty = string.IsNullOrWhiteSpace(text);
                 bool isValid = int.TryParse(text, out int qty) && qty > 0;
 
                 if (isValid)
@@ -1106,16 +1276,17 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                     Control_InventoryTab_TextBox_Quantity.ForeColor =
                         Model_Application_Variables.UserUiColors.TextBoxForeColor ?? Color.Black;
                 }
-                else
+                else if (isEmpty)
                 {
+                    // Empty field - just set error color, PlaceholderText will show
                     Control_InventoryTab_TextBox_Quantity.ForeColor =
                         Model_Application_Variables.UserUiColors.TextBoxErrorForeColor ?? Color.Red;
-                    if (text != placeholder)
-                    {
-                        Control_InventoryTab_TextBox_Quantity.Text = placeholder;
-                        Control_InventoryTab_TextBox_Quantity.SelectionStart =
-                            Control_InventoryTab_TextBox_Quantity.Text.Length;
-                    }
+                }
+                else
+                {
+                    // Invalid input - set error color
+                    Control_InventoryTab_TextBox_Quantity.ForeColor =
+                        Model_Application_Variables.UserUiColors.TextBoxErrorForeColor ?? Color.Red;
                 }
             }
             catch (Exception ex)
@@ -1137,13 +1308,60 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
         {
             try
             {
-                bool partValid = Control_InventoryTab_ComboBox_Part.SelectedIndex > 0 &&
-                                 !string.IsNullOrWhiteSpace(Control_InventoryTab_ComboBox_Part.Text);
-                bool opValid = Control_InventoryTab_ComboBox_Operation.SelectedIndex > 0 &&
-                               !string.IsNullOrWhiteSpace(Control_InventoryTab_ComboBox_Operation.Text);
-                bool locValid = Control_InventoryTab_ComboBox_Location.SelectedIndex > 0 &&
-                                !string.IsNullOrWhiteSpace(Control_InventoryTab_ComboBox_Location.Text);
+                // Check validity: Either Model_Application_Variables is set (from overlay selection)
+                // OR the text matches a valid value in the master data (exact match typed)
+                string partText = Control_InventoryTab_TextBox_Part.Text?.Trim() ?? string.Empty;
+                string opText = Control_InventoryTab_TextBox_Operation.Text?.Trim() ?? string.Empty;
+                string locText = Control_InventoryTab_TextBox_Location.Text?.Trim() ?? string.Empty;
+                
+                bool partValid = !string.IsNullOrWhiteSpace(Model_Application_Variables.PartId) 
+                    || Helper_UI_ComboBoxes.IsValidPartId(partText);
+                bool opValid = !string.IsNullOrWhiteSpace(Model_Application_Variables.Operation) 
+                    || Helper_UI_ComboBoxes.IsValidOperation(opText);
+                bool locValid = !string.IsNullOrWhiteSpace(Model_Application_Variables.Location) 
+                    || Helper_UI_ComboBoxes.IsValidLocation(locText);
                 bool qtyValid = int.TryParse(Control_InventoryTab_TextBox_Quantity.Text.Trim(), out int qty) && qty > 0;
+                
+                // Update colors based on validation
+                if (partValid && !string.IsNullOrWhiteSpace(partText))
+                {
+                    Control_InventoryTab_TextBox_Part.ForeColor = Model_Application_Variables.UserUiColors.ComboBoxForeColor ?? Color.Black;
+                    if (string.IsNullOrWhiteSpace(Model_Application_Variables.PartId))
+                    {
+                        Model_Application_Variables.PartId = partText; // Set from exact match
+                    }
+                }
+                else if (!string.IsNullOrWhiteSpace(partText))
+                {
+                    Control_InventoryTab_TextBox_Part.ForeColor = Model_Application_Variables.UserUiColors.ComboBoxErrorForeColor ?? Color.Red;
+                }
+                
+                if (opValid && !string.IsNullOrWhiteSpace(opText))
+                {
+                    Control_InventoryTab_TextBox_Operation.ForeColor = Model_Application_Variables.UserUiColors.ComboBoxForeColor ?? Color.Black;
+                    if (string.IsNullOrWhiteSpace(Model_Application_Variables.Operation))
+                    {
+                        Model_Application_Variables.Operation = opText; // Set from exact match
+                    }
+                }
+                else if (!string.IsNullOrWhiteSpace(opText))
+                {
+                    Control_InventoryTab_TextBox_Operation.ForeColor = Model_Application_Variables.UserUiColors.ComboBoxErrorForeColor ?? Color.Red;
+                }
+                
+                if (locValid && !string.IsNullOrWhiteSpace(locText))
+                {
+                    Control_InventoryTab_TextBox_Location.ForeColor = Model_Application_Variables.UserUiColors.ComboBoxForeColor ?? Color.Black;
+                    if (string.IsNullOrWhiteSpace(Model_Application_Variables.Location))
+                    {
+                        Model_Application_Variables.Location = locText; // Set from exact match
+                    }
+                }
+                else if (!string.IsNullOrWhiteSpace(locText))
+                {
+                    Control_InventoryTab_TextBox_Location.ForeColor = Model_Application_Variables.UserUiColors.ComboBoxErrorForeColor ?? Color.Red;
+                }
+                
                 Control_InventoryTab_Button_Save.Enabled = partValid && opValid && locValid && qtyValid;
             }
             catch (Exception ex)
@@ -1168,63 +1386,81 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                     async (s, e) => await Control_InventoryTab_Button_Save_Click_Async();
                 Control_InventoryTab_Button_Reset.Click += (s, e) => Control_InventoryTab_Button_Reset_Click();
 
-                Control_InventoryTab_ComboBox_Part.SelectedIndexChanged += (s, e) =>
+                // NOTE: Part and Operation now use SuggestionTextBox - wire up SuggestionSelected events instead
+                Control_InventoryTab_TextBox_Part.SuggestionSelected += (s, e) =>
                 {
-                    Control_InventoryTab_ComboBox_Part_SelectedIndexChanged();
-                    Helper_UI_ComboBoxes.ValidateComboBoxItem(Control_InventoryTab_ComboBox_Part,
-                        "[ Enter Part Number ]");
+                    Model_Application_Variables.PartId = e.SelectedValue;
+                    Control_InventoryTab_TextBox_Part.ForeColor = Model_Application_Variables.UserUiColors.ComboBoxForeColor ?? Color.Black;
+                    LoggingUtility.Log($"Part suggestion selected: {e.SelectedValue}");
                     Control_InventoryTab_Update_SaveButtonState();
                 };
-                Control_InventoryTab_ComboBox_Part.Leave += (s, e) =>
+                
+                // Clear PartId when user manually types (not selecting from overlay)
+                Control_InventoryTab_TextBox_Part.TextChanged += (s, e) =>
                 {
-                    Helper_UI_ComboBoxes.ValidateComboBoxItem(Control_InventoryTab_ComboBox_Part,
-                        "[ Enter Part Number ]");
+                    // Only clear if text doesn't match the stored valid value
+                    if (Control_InventoryTab_TextBox_Part.Text != Model_Application_Variables.PartId)
+                    {
+                        Model_Application_Variables.PartId = null;
+                        Control_InventoryTab_TextBox_Part.ForeColor = Model_Application_Variables.UserUiColors.ComboBoxErrorForeColor ?? Color.Red;
+                        Control_InventoryTab_Update_SaveButtonState();
+                    }
+                };
+                
+                Control_InventoryTab_TextBox_Operation.SuggestionSelected += (s, e) =>
+                {
+                    Model_Application_Variables.Operation = e.SelectedValue;
+                    Control_InventoryTab_TextBox_Operation.ForeColor = Model_Application_Variables.UserUiColors.ComboBoxForeColor ?? Color.Black;
+                    LoggingUtility.Log($"Operation suggestion selected: {e.SelectedValue}");
+                    Control_InventoryTab_Update_SaveButtonState();
                 };
 
-                Control_InventoryTab_ComboBox_Operation.SelectedIndexChanged += (s, e) =>
+                // Clear Operation when user manually types
+                Control_InventoryTab_TextBox_Operation.TextChanged += (s, e) =>
                 {
-                    Control_InventoryTab_ComboBox_Operation_SelectedIndexChanged();
-                    Helper_UI_ComboBoxes.ValidateComboBoxItem(Control_InventoryTab_ComboBox_Operation,
-                        "[ Enter Operation ]");
-                    Control_InventoryTab_Update_SaveButtonState();
-                };
-                Control_InventoryTab_ComboBox_Operation.Leave += (s, e) =>
-                {
-                    Helper_UI_ComboBoxes.ValidateComboBoxItem(Control_InventoryTab_ComboBox_Operation,
-                        "[ Enter Operation ]");
+                    if (Control_InventoryTab_TextBox_Operation.Text != Model_Application_Variables.Operation)
+                    {
+                        Model_Application_Variables.Operation = null;
+                        Control_InventoryTab_TextBox_Operation.ForeColor = Model_Application_Variables.UserUiColors.ComboBoxErrorForeColor ?? Color.Red;
+                        Control_InventoryTab_Update_SaveButtonState();
+                    }
                 };
 
-                Control_InventoryTab_ComboBox_Location.SelectedIndexChanged += (s, e) =>
+                Control_InventoryTab_TextBox_Location.SuggestionSelected += (s, e) =>
                 {
-                    Control_InventoryTab_ComboBox_Location_SelectedIndexChanged();
-                    Helper_UI_ComboBoxes.ValidateComboBoxItem(Control_InventoryTab_ComboBox_Location,
-                        "[ Enter Location ]");
+                    Model_Application_Variables.Location = e.SelectedValue;
+                    Control_InventoryTab_TextBox_Location.ForeColor = Model_Application_Variables.UserUiColors.ComboBoxForeColor ?? Color.Black;
+                    LoggingUtility.Log($"Location suggestion selected: {e.SelectedValue}");
                     Control_InventoryTab_Update_SaveButtonState();
                 };
-                Control_InventoryTab_ComboBox_Location.Leave += (s, e) =>
+
+                // Clear Location when user manually types
+                Control_InventoryTab_TextBox_Location.TextChanged += (s, e) =>
                 {
-                    Helper_UI_ComboBoxes.ValidateComboBoxItem(Control_InventoryTab_ComboBox_Location,
-                        "[ Enter Location ]");
+                    if (Control_InventoryTab_TextBox_Location.Text != Model_Application_Variables.Location)
+                    {
+                        Model_Application_Variables.Location = null;
+                        Control_InventoryTab_TextBox_Location.ForeColor = Model_Application_Variables.UserUiColors.ComboBoxErrorForeColor ?? Color.Red;
+                        Control_InventoryTab_Update_SaveButtonState();
+                    }
                 };
 
                 Control_InventoryTab_TextBox_Quantity.TextChanged += (s, e) =>
                 {
                     Control_InventoryTab_TextBox_Quantity_TextChanged();
-                    Control_AdvancedInventory.ValidateQtyTextBox(Control_InventoryTab_TextBox_Quantity,
-                        "[ Enter Valid Quantity ]");
+                    Control_AdvancedInventory.ValidateQtyTextBox(Control_InventoryTab_TextBox_Quantity);
                     Control_InventoryTab_Update_SaveButtonState();
                 };
                 Control_InventoryTab_TextBox_Quantity.Leave += (s, e) =>
                 {
-                    Control_AdvancedInventory.ValidateQtyTextBox(Control_InventoryTab_TextBox_Quantity,
-                        "[ Enter Valid Quantity ]");
+                    Control_AdvancedInventory.ValidateQtyTextBox(Control_InventoryTab_TextBox_Quantity);                      
                 };
 
                 Control_InventoryTab_Button_AdvancedEntry.Click +=
                     (s, e) => Control_InventoryTab_Button_AdvancedEntry_Click();
 
                 Control_InventoryTab_TextBox_Quantity.KeyDown += (sender, e) =>
-                    MainFormControlHelper.AdjustQuantityByKey_Quantity(sender, e, "[ Enter Valid Quantity ]",
+                    MainFormControlHelper.AdjustQuantityByKey_Quantity(sender, e,
                         Model_Application_Variables.UserUiColors.TextBoxForeColor ?? Color.Black,
                         Model_Application_Variables.UserUiColors.TextBoxErrorForeColor ?? Color.Red);
 
