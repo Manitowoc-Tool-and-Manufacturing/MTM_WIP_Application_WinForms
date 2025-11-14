@@ -286,22 +286,6 @@ private static Dictionary<string, ItemGroup> GroupByPartId(List<InventoryItem> i
 - **New**: `ValueChanged` event
 - **Migration**: Rename event handlers, update logic to use `Value` property
 
-### Testing
-
-**Unit Tests Added:**
-- `UniversalSuggestionTextBoxTests.cs` (18 tests)
-- `SuggestionDataProviderTests.cs` (12 tests)
-- `SmartConfirmationDialogTests.cs` (8 tests)
-
-**Integration Tests Added:**
-- `InventoryTabAutocompleteTests.cs` (15 tests)
-- `TransferTabAutocompleteTests.cs` (12 tests)
-
-**Coverage:**
-- UniversalSuggestionTextBox: 95%
-- Data Providers: 88%
-- Confirmation Dialogs: 92%
-
 ---
 
 ## Version 6.1.0 - November 12, 2025
@@ -518,19 +502,6 @@ protected override void ApplyTheme(Model_Shared_UserUiColors theme)
 - Must inherit from `ThemedUserControl` instead of `UserControl`
 - Remove manual theme subscription code
 
-### Testing
-
-**New Tests:**
-- `ThemeProviderTests.cs` (24 tests)
-- `ThemedFormTests.cs` (18 tests)
-- `ThemedUserControlTests.cs` (15 tests)
-- `ThemeApplicationPerformanceTests.cs` (6 benchmarks)
-
-**Coverage:**
-- ThemeProvider: 100%
-- ThemedForm: 95%
-- ThemedUserControl: 95%
-
 ---
 
 ## Version 6.0.2 - November 8, 2025
@@ -560,10 +531,6 @@ await Helper_Database_StoredProcedure.ExecuteNonQueryAsync(
 **Database Schema:**
 - No changes required
 - Existing `usr_ui_settings_SetThemeJson` procedure already correct
-
-### Testing
-- Manual testing confirmed theme saves correctly
-- Integration tests added to prevent regression
 
 ---
 
@@ -628,11 +595,6 @@ partNumberComboBox.SelectedValue = button.PartID;  // Exact match on value
 
 ### Database Impact
 - None - all changes in application layer
-
-### Testing
-- QuickButtons duplicate cleanup tested with 100+ buttons
-- Value selection tested with all part number formats
-- Integration tests verify cleanup runs on app start
 
 ---
 
@@ -796,20 +758,6 @@ private async Task LoadPageAsync(int pageNumber)
 
 **API Changes:**
 - None - stored procedures are new, not modified
-
-### Testing
-
-**New Tests:**
-- `TransactionViewerTests.cs` (32 tests)
-- `TransactionSearchTests.cs` (24 tests)
-- `PaginationTests.cs` (12 tests)
-- `AnalyticsCalculationTests.cs` (8 tests)
-
-**Performance Tests:**
-- Search with no filters: < 2 seconds
-- Search with multiple filters: < 1.5 seconds
-- Analytics calculation: < 500ms
-- Page navigation: < 300ms
 
 ---
 
@@ -1079,41 +1027,6 @@ MaximumPoolSize=100;
 ConnectionTimeout=30;
 ```
 
-### Testing Infrastructure
-
-**Test Database:**
-- Separate `mtm_wip_application_winforms_test` database
-- Identical schema to production
-- Transaction-based tests (auto-rollback)
-- Isolated test data
-
-**Base Test Class:**
-```csharp
-public class BaseIntegrationTest : IDisposable
-{
-    protected TransactionScope TestScope { get; private set; }
-    
-    public BaseIntegrationTest()
-    {
-        // Switch to test database
-        Helper_Database_Variables.SwitchToTestDatabase();
-        
-        // Begin transaction
-        TestScope = TransactionScope.BeginAsync().Result;
-    }
-    
-    public void Dispose()
-    {
-        // Always rollback - tests never modify database
-        TestScope?.RollbackAsync().Wait();
-        TestScope?.Dispose();
-        
-        // Switch back to production database
-        Helper_Database_Variables.SwitchToProductionDatabase();
-    }
-}
-```
-
 ### Migration Guide
 
 **For Developers:**
@@ -1141,11 +1054,8 @@ public class BaseIntegrationTest : IDisposable
 |--------|-------|
 | Total Lines of Code | ~45,000 |
 | Number of Forms | 28 |
-| Number of DAOs | 12 |
-| Number of Stored Procedures | 68 |
-| Number of Unit Tests | 156 |
-| Number of Integration Tests | 136 |
-| Code Coverage | 83% |
+| Number of DAOs | 13 |
+| Number of Stored Procedures | 116 |
 | Average Build Time | 12 seconds |
 | Database Connection Pool | 5-100 connections |
 
