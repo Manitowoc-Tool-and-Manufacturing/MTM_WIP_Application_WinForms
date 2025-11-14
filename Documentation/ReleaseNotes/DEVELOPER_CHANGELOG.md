@@ -25,44 +25,56 @@
 ### Architecture Changes
 
 #### Command-Line Argument Parser
-**New Component**: `CommandLineArgumentParser` class in `Program.cs`
+**Implementation**: Inline `ParseCommandLineArguments()` method in `Program.cs` (lines 545-598)
 
 **Supported Arguments:**
 ```csharp
--env=production | -env=test          // Environment selection
--user="Display Name"                  // Override logged username
--server=hostname                      // Database server override
--port=3306                            // Database port override
--database=database_name               // Database name override
--username=db_user                     // Database username override
--password=db_pass                     // Database password override (⚠️ Security risk)
+-db=prod | -db=test | -db=<name>     // Database selection (maps prod/test to full names)
+-user="Display Name"                  // Override logged username (app username, not DB user)
+-dbuser=<username>                    // Database username override
+-dbpassword=<pass> | -dbpass=<pass>   // Database password override
+-password=<pass>                      // Database password override (⚠️ Security risk)
 ```
 
 **Implementation:**
 ```csharp
-public static Dictionary<string, string> ParseArguments(string[] args)
+private static void ParseCommandLineArguments(string[] args, 
+    out string? username, out string? password, out string? database)
 {
-    var arguments = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
-    
-    foreach (var arg in args)
+    username = null;
+    password = null;
+    database = null;
+
+    foreach (string arg in args)
     {
-        if (arg.StartsWith("-") || arg.StartsWith("/"))
+        // Handle both - and / prefixes
+        string normalizedArg = arg.TrimStart('-', '/').ToLowerInvariant();
+
+        if (normalizedArg.StartsWith("user="))
+            username = arg.Substring(arg.IndexOf('=') + 1);
+        else if (normalizedArg.StartsWith("password="))
+            password = arg.Substring(arg.IndexOf('=') + 1);
+        else if (normalizedArg.StartsWith("dbuser="))
+            Model_Application_Variables.DatabaseUser = arg.Substring(arg.IndexOf('=') + 1);
+        else if (normalizedArg.StartsWith("dbpassword=") || normalizedArg.StartsWith("dbpass="))
+            Model_Application_Variables.DatabasePassword = arg.Substring(arg.IndexOf('=') + 1);
+        else if (normalizedArg.StartsWith("db="))
         {
-            var parts = arg.Substring(1).Split(new[] { '=', ':' }, 2);
-            if (parts.Length == 2)
+            string dbArg = arg.Substring(arg.IndexOf('=') + 1).ToLowerInvariant();
+            database = dbArg switch
             {
-                arguments[parts[0].Trim()] = parts[1].Trim().Trim('"');
-            }
+                "prod" => "mtm_wip_application_winforms",
+                "test" => "mtm_wip_application_winforms_test",
+                _ => dbArg
+            };
         }
     }
-    
-    return arguments;
 }
 ```
 
 **Application Flow:**
-1. Parse arguments in `Program.Main()`
-2. Override `Model_Application_Variables` properties before DI setup
+1. Parse arguments in `Program.Main()` (line 52)
+2. Override `Model_Application_Variables` properties before database connection
 3. Database connection uses overridden values
 4. Log entry includes source (command-line vs config)
 

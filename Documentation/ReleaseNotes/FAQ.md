@@ -169,16 +169,18 @@
 **A:** Right-click desktop → New Shortcut → Point to MTM WIP Application.exe → Edit the Target field → Add arguments like `-env=production`. See Help → "Startup Arguments" for full instructions.
 
 ### Q: What arguments are available?
-- `-env=production` or `-env=test` - Launch into specific environment
-- `-user="John Smith"` - Set username for logs (useful on shared workstations)
-- `-server=localhost` - Specify database server (advanced)
-- `-database=mtm_wip_application_winforms` - Specify database name (advanced)
+- `-db=prod` or `-db=test` - Launch into specific database (Production or Test)
+- `-db=<database_name>` - Specify custom database name (advanced)
+- `-user="John Smith"` - Set app username for logs (useful on shared workstations)
+- `-dbuser=<username>` - Specify database username (advanced)
+- `-dbpassword=<password>` or `-dbpass=<password>` - Specify database password (⚠️ security risk)
+- `-password=<password>` - Same as -dbpassword (shortcut)
 
 ### Q: Is it safe to put my password in a shortcut?
 **A:** **No!** Anyone who can see the shortcut can see the password. Only use `-password=` on secured machines or test environments.
 
 ### Q: Can I have multiple shortcuts with different arguments?
-**A:** Yes! Create separate shortcuts: "MTM WIP - Production" and "MTM WIP - Test" with different `-env=` arguments.
+**A:** Yes! Create separate shortcuts: "MTM WIP - Production" and "MTM WIP - Test" with different `-db=` arguments.
 
 ### Q: What if I type the wrong argument?
 **A:** The app will show an error message and launch normally. Just correct the shortcut Target field.

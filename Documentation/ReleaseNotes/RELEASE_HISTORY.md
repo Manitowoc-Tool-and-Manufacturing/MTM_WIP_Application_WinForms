@@ -41,13 +41,11 @@ Optional startup argument support for environment selection and Help documentati
 
 **Supported Arguments:**
 ```
--env=production | -env=test
+-db=prod | -db=test | -db=<database_name>
 -user="Display Name"
--server=hostname
--port=3306
--database=database_name
--username=db_user
--password=db_pass (⚠️ Security risk on shared machines)
+-dbuser=<database_username>
+-dbpassword=<password> | -dbpass=<password>
+-password=<password> (⚠️ Security risk - treated as database password)
 ```
 
 #### Documentation

@@ -40,8 +40,8 @@ Create shortcuts that launch directly into Production or Test mode without chang
 4. Create separate shortcuts for Production and Test if needed
 
 **Examples:**
-- Production mode: Add `-env=production` to shortcut target
-- Test mode: Add `-env=test` to shortcut target  
+- Production mode: Add `-db=prod` to shortcut target
+- Test mode: Add `-db=test` to shortcut target  
 - Custom user: Add `-user="John Smith"` to shortcut target
 
 📖 **Full instructions**: Press F1 in the app → Search "Startup Arguments"
