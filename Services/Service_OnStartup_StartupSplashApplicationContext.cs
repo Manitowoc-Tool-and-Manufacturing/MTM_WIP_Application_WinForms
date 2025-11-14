@@ -207,6 +207,27 @@ namespace MTM_WIP_Application_Winforms.Services
                 }
                 await Task.Delay(50);
 
+                // 5.5. Load ColorCodeParts cache with error handling
+                progress = 55;
+                _splashScreen?.UpdateProgress(progress, "Loading color code cache...");
+                try
+                {
+                    await Model_Application_Variables.ReloadColorCodePartsAsync();
+                    progress = 58;
+                    _splashScreen?.UpdateProgress(progress, "Color code cache loaded.");
+                    LoggingUtility.Log($"[Splash] ColorCodeParts cache loaded: {Model_Application_Variables.ColorCodeParts.Count} parts flagged");
+                }
+                catch (Exception ex)
+                {
+                    // Cache loading failure is not critical - continue startup with empty cache
+                    Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Low,
+                        contextData: new Dictionary<string, object> { ["StartupStep"] = "Color Code Cache", ["IsCritical"] = false },
+                        callerName: "RunStartupAsync_ColorCodeCache",
+                        controlName: "StartupSplash_ColorCodeCache");
+                    LoggingUtility.Log("[Splash] Color code cache loading failed, continuing with empty cache");
+                }
+                await Task.Delay(50);
+
                 // 6. Initialize version checker with error handling
                 progress = 60;
                 _splashScreen?.UpdateProgress(progress, "Initializing version checker...");

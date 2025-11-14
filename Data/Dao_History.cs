@@ -31,7 +31,9 @@ internal class Dao_History
                 ["User"] = history.User,
                 ["ItemType"] = history.ItemType ?? (object)DBNull.Value,
                 ["BatchNumber"] = history.BatchNumber ?? (object)DBNull.Value,
-                ["ReceiveDate"] = history.DateTime
+                ["ReceiveDate"] = history.DateTime,
+                ["ColorCode"] = history.ColorCode ?? "Unknown",
+                ["WorkOrder"] = history.WorkOrder ?? "Unknown"
             };
 
             var result = await Helper_Database_StoredProcedure.ExecuteNonQueryWithStatusAsync(

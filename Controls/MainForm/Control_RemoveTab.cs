@@ -575,6 +575,8 @@ SetStyle(ControlStyles.OptimizedDoubleBuffer, true);
                         item.User,
                         item.BatchNumber,
                         "Removal reversed via Undo Button.",
+                        null,  // colorCode
+                        null,  // workOrder
                         true
                     );
                 }

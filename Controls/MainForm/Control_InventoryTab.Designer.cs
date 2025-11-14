@@ -28,6 +28,10 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
         public SuggestionTextBox Control_InventoryTab_TextBox_Part;
         private SuggestionTextBox Control_InventoryTab_TextBox_Location;
         private ToolTip Control_InventoryTab_Tooltip;
+        private Label Control_InventoryTab_Label_ColorCode;
+        private SuggestionTextBox Control_InventoryTab_TextBox_ColorCode;
+        private Label Control_InventoryTab_Label_WorkOrder;
+        private TextBox Control_InventoryTab_TextBox_WorkOrder;
         
 
         
@@ -62,6 +66,10 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             Control_InventoryTab_Label_Qty = new Label();
             Control_InventoryTab_Label_Op = new Label();
             Control_InventoryTab_Label_Part = new Label();
+            Control_InventoryTab_Label_ColorCode = new Label();
+            Control_InventoryTab_TextBox_ColorCode = new SuggestionTextBox();
+            Control_InventoryTab_Label_WorkOrder = new Label();
+            Control_InventoryTab_TextBox_WorkOrder = new TextBox();
             Control_InventoryTab_TableLayout_BottomGroup = new TableLayoutPanel();
             Control_InventoryTab_Button_Toggle_RightPanel = new Button();
             Control_InventoryTab_Label_Version = new Label();
@@ -158,15 +166,21 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             Control_InventoryTab_TableLayout_TopGroup.Controls.Add(Control_InventoryTab_Label_Qty, 0, 2);
             Control_InventoryTab_TableLayout_TopGroup.Controls.Add(Control_InventoryTab_Label_Op, 0, 1);
             Control_InventoryTab_TableLayout_TopGroup.Controls.Add(Control_InventoryTab_Label_Part, 0, 0);
+            Control_InventoryTab_TableLayout_TopGroup.Controls.Add(Control_InventoryTab_Label_ColorCode, 0, 4);
+            Control_InventoryTab_TableLayout_TopGroup.Controls.Add(Control_InventoryTab_TextBox_ColorCode, 1, 4);
+            Control_InventoryTab_TableLayout_TopGroup.Controls.Add(Control_InventoryTab_Label_WorkOrder, 0, 5);
+            Control_InventoryTab_TableLayout_TopGroup.Controls.Add(Control_InventoryTab_TextBox_WorkOrder, 1, 5);
             Control_InventoryTab_TableLayout_TopGroup.Dock = DockStyle.Fill;
             Control_InventoryTab_TableLayout_TopGroup.Location = new Point(3, 3);
             Control_InventoryTab_TableLayout_TopGroup.Name = "Control_InventoryTab_TableLayout_TopGroup";
-            Control_InventoryTab_TableLayout_TopGroup.RowCount = 4;
-            Control_InventoryTab_TableLayout_TopGroup.RowStyles.Add(new RowStyle(SizeType.Percent, 25F));
-            Control_InventoryTab_TableLayout_TopGroup.RowStyles.Add(new RowStyle(SizeType.Percent, 25F));
-            Control_InventoryTab_TableLayout_TopGroup.RowStyles.Add(new RowStyle(SizeType.Percent, 25F));
-            Control_InventoryTab_TableLayout_TopGroup.RowStyles.Add(new RowStyle(SizeType.Percent, 25F));
-            Control_InventoryTab_TableLayout_TopGroup.Size = new Size(1163, 116);
+            Control_InventoryTab_TableLayout_TopGroup.RowCount = 6;
+            Control_InventoryTab_TableLayout_TopGroup.RowStyles.Add(new RowStyle(SizeType.Percent, 16.666F));
+            Control_InventoryTab_TableLayout_TopGroup.RowStyles.Add(new RowStyle(SizeType.Percent, 16.666F));
+            Control_InventoryTab_TableLayout_TopGroup.RowStyles.Add(new RowStyle(SizeType.Percent, 16.666F));
+            Control_InventoryTab_TableLayout_TopGroup.RowStyles.Add(new RowStyle(SizeType.Percent, 16.666F));
+            Control_InventoryTab_TableLayout_TopGroup.RowStyles.Add(new RowStyle(SizeType.Percent, 16.666F));
+            Control_InventoryTab_TableLayout_TopGroup.RowStyles.Add(new RowStyle(SizeType.Percent, 16.666F));
+            Control_InventoryTab_TableLayout_TopGroup.Size = new Size(1163, 174);
             Control_InventoryTab_TableLayout_TopGroup.TabIndex = 7;
             // 
             // Control_InventoryTab_TextBox_Location
@@ -176,7 +190,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             Control_InventoryTab_TextBox_Location.Name = "Control_InventoryTab_TextBox_Location";
             Control_InventoryTab_TextBox_Location.PlaceholderText = "Enter or Select Location";
             Control_InventoryTab_TextBox_Location.Size = new Size(1073, 23);
-            Control_InventoryTab_TextBox_Location.TabIndex = 12;
+            Control_InventoryTab_TextBox_Location.TabIndex = 4;
             Control_InventoryTab_TextBox_Location.TextAlign = HorizontalAlignment.Left;
             // 
             // Control_InventoryTab_TextBox_Quantity
@@ -252,6 +266,48 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             Control_InventoryTab_Label_Part.TabIndex = 8;
             Control_InventoryTab_Label_Part.Text = "Part Number:";
             Control_InventoryTab_Label_Part.TextAlign = ContentAlignment.MiddleRight;
+            // 
+            // Control_InventoryTab_Label_ColorCode
+            // 
+            Control_InventoryTab_Label_ColorCode.AutoSize = true;
+            Control_InventoryTab_Label_ColorCode.Dock = DockStyle.Fill;
+            Control_InventoryTab_Label_ColorCode.Location = new Point(3, 116);
+            Control_InventoryTab_Label_ColorCode.Name = "Control_InventoryTab_Label_ColorCode";
+            Control_InventoryTab_Label_ColorCode.Size = new Size(78, 29);
+            Control_InventoryTab_Label_ColorCode.TabIndex = 9;
+            Control_InventoryTab_Label_ColorCode.Text = "Color Code:";
+            Control_InventoryTab_Label_ColorCode.TextAlign = ContentAlignment.MiddleRight;
+            Control_InventoryTab_Label_ColorCode.Visible = false;
+            // 
+            // Control_InventoryTab_TextBox_ColorCode
+            // 
+            Control_InventoryTab_TextBox_ColorCode.Dock = DockStyle.Fill;
+            Control_InventoryTab_TextBox_ColorCode.Location = new Point(87, 119);
+            Control_InventoryTab_TextBox_ColorCode.Name = "Control_InventoryTab_TextBox_ColorCode";
+            Control_InventoryTab_TextBox_ColorCode.Size = new Size(1073, 23);
+            Control_InventoryTab_TextBox_ColorCode.TabIndex = 5;
+            Control_InventoryTab_TextBox_ColorCode.Visible = false;
+            // 
+            // Control_InventoryTab_Label_WorkOrder
+            // 
+            Control_InventoryTab_Label_WorkOrder.AutoSize = true;
+            Control_InventoryTab_Label_WorkOrder.Dock = DockStyle.Fill;
+            Control_InventoryTab_Label_WorkOrder.Location = new Point(3, 145);
+            Control_InventoryTab_Label_WorkOrder.Name = "Control_InventoryTab_Label_WorkOrder";
+            Control_InventoryTab_Label_WorkOrder.Size = new Size(78, 29);
+            Control_InventoryTab_Label_WorkOrder.TabIndex = 10;
+            Control_InventoryTab_Label_WorkOrder.Text = "Work Order:";
+            Control_InventoryTab_Label_WorkOrder.TextAlign = ContentAlignment.MiddleRight;
+            Control_InventoryTab_Label_WorkOrder.Visible = false;
+            // 
+            // Control_InventoryTab_TextBox_WorkOrder
+            // 
+            Control_InventoryTab_TextBox_WorkOrder.Dock = DockStyle.Fill;
+            Control_InventoryTab_TextBox_WorkOrder.Location = new Point(87, 148);
+            Control_InventoryTab_TextBox_WorkOrder.Name = "Control_InventoryTab_TextBox_WorkOrder";
+            Control_InventoryTab_TextBox_WorkOrder.Size = new Size(1073, 23);
+            Control_InventoryTab_TextBox_WorkOrder.TabIndex = 6;
+            Control_InventoryTab_TextBox_WorkOrder.Visible = false;
             // 
             // Control_InventoryTab_TableLayout_BottomGroup
             // 

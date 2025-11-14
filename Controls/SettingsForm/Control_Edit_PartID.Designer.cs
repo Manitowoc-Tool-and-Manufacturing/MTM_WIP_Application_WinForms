@@ -23,6 +23,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
         private System.Windows.Forms.ComboBox Control_Edit_PartID_ComboBox_ItemType;
         private System.Windows.Forms.Label issuedByLabel;
         private System.Windows.Forms.Label issuedByValueLabel;
+        private System.Windows.Forms.CheckBox Control_Edit_PartID_CheckBox_RequiresColorCode;
         private System.Windows.Forms.Button saveButton;
         private System.Windows.Forms.Button cancelButton;
         
@@ -46,6 +47,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             Control_Edit_PartID_ComboBox_ItemType = new ComboBox();
             issuedByLabel = new Label();
             issuedByValueLabel = new Label();
+            Control_Edit_PartID_CheckBox_RequiresColorCode = new CheckBox();
             saveButton = new Button();
             cancelButton = new Button();
             SuspendLayout();
@@ -168,6 +170,17 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             issuedByValueLabel.Size = new Size(0, 15);
             issuedByValueLabel.TabIndex = 12;
             // 
+            // Control_Edit_PartID_CheckBox_RequiresColorCode
+            // 
+            Control_Edit_PartID_CheckBox_RequiresColorCode.AutoSize = true;
+            Control_Edit_PartID_CheckBox_RequiresColorCode.Enabled = false;
+            Control_Edit_PartID_CheckBox_RequiresColorCode.Location = new Point(120, 320);
+            Control_Edit_PartID_CheckBox_RequiresColorCode.Name = "Control_Edit_PartID_CheckBox_RequiresColorCode";
+            Control_Edit_PartID_CheckBox_RequiresColorCode.Size = new Size(213, 19);
+            Control_Edit_PartID_CheckBox_RequiresColorCode.TabIndex = 15;
+            Control_Edit_PartID_CheckBox_RequiresColorCode.Text = "Requires Color Code && Work Order";
+            Control_Edit_PartID_CheckBox_RequiresColorCode.UseVisualStyleBackColor = true;
+            // 
             // saveButton
             // 
             saveButton.Enabled = false;
@@ -195,6 +208,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             AutoScaleMode = AutoScaleMode.Dpi;
             Controls.Add(cancelButton);
             Controls.Add(saveButton);
+            Controls.Add(Control_Edit_PartID_CheckBox_RequiresColorCode);
             Controls.Add(issuedByValueLabel);
             Controls.Add(issuedByLabel);
             Controls.Add(Control_Edit_PartID_ComboBox_ItemType);

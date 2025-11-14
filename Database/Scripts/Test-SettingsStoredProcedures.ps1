@@ -228,7 +228,7 @@ Write-Host ""
 Write-Host "=== TEST SUMMARY ===" -ForegroundColor Cyan
 Write-Host "Total Tests: $($testsPassed + $testsFailed)" -ForegroundColor White
 Write-Host "Passed: $testsPassed" -ForegroundColor Green
-Write-Host "Failed: $testsFailed" -ForegroundColor $(if ($testsFailed -eq 0) { "Green" } else { "Red" })
+Write-Host "Failed: $testsFailed" -ForegroundColor $(if ($testsFailed -eq 0) { "GREEN" } else { "RED" })
 Write-Host ""
 
 # Export results

@@ -222,8 +222,8 @@ try {
         $result | ConvertTo-Json -Depth 4
     } else {
         Write-Host "`n=== Documentation Validation Results ===" -ForegroundColor Cyan
-        Write-Host "Status: $overallStatus" -ForegroundColor $(if ($passStatus) { "Green" } else { "Red" })
-        Write-Host "`nCoverage: $($coverage.Percentage)% ($($coverage.Existing)/$($coverage.Total))" -ForegroundColor $(if ($coverage.Percentage -ge $MinCoverage) { "Green" } else { "Yellow" })
+        Write-Host "Status: $overallStatus" -ForegroundColor $(if ($passStatus) { "GREEN" } else { "RED" })
+        Write-Host "`nCoverage: $($coverage.Percentage)% ($($coverage.Existing)/$($coverage.Total))" -ForegroundColor $(if ($coverage.Percentage -ge $MinCoverage) { "GREEN" } else { "YELLOW" })
         
         if ($coverage.Missing -gt 0) {
             Write-Host "`nMissing Documents:" -ForegroundColor Yellow

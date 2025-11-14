@@ -13,6 +13,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
         #region Fields
 
         private DataRow? _currentPart;
+        private bool _originalRequiresColorCode;
 
         #endregion
 
@@ -505,6 +506,18 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             Control_Edit_PartID_ComboBox_ItemType.SelectedIndex = index > 0 ? index : 0;
 
             issuedByValueLabel.Text = _currentPart["IssuedBy"].ToString();
+            
+            // Load RequiresColorCode checkbox
+            if (_currentPart.Table.Columns.Contains("RequiresColorCode"))
+            {
+                _originalRequiresColorCode = Convert.ToBoolean(_currentPart["RequiresColorCode"]);
+                Control_Edit_PartID_CheckBox_RequiresColorCode.Checked = _originalRequiresColorCode;
+            }
+            else
+            {
+                _originalRequiresColorCode = false;
+                Control_Edit_PartID_CheckBox_RequiresColorCode.Checked = false;
+            }
         }
 
         #endregion
@@ -517,6 +530,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             customerTextBox.Enabled = enabled;
             descriptionTextBox.Enabled = enabled;
             Control_Edit_PartID_ComboBox_ItemType.Enabled = enabled;
+            Control_Edit_PartID_CheckBox_RequiresColorCode.Enabled = enabled;
             saveButton.Enabled = enabled;
         }
 
@@ -533,14 +547,23 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             string description = descriptionTextBox.Text.Trim();
             string issuedBy = Model_Application_Variables.User;
             string type = Control_Edit_PartID_ComboBox_ItemType.Text;
+            bool requiresColorCode = Control_Edit_PartID_CheckBox_RequiresColorCode.Checked;
             
-            var result = await Dao_Part.UpdatePartAsync(id, itemNumber, customer, description, issuedBy, type);
+            var result = await Dao_Part.UpdatePartAsync(id, itemNumber, customer, description, issuedBy, type, requiresColorCode);
             if (!result.IsSuccess)
             {
                 Service_ErrorHandler.HandleDatabaseError(
                     result.Exception ?? new Exception(result.ErrorMessage),
                     controlName: nameof(Control_Edit_PartID));
                 throw new Exception($"Failed to update part: {result.ErrorMessage}");
+            }
+            
+            // If RequiresColorCode changed, trigger cache reload
+            if (requiresColorCode != _originalRequiresColorCode)
+            {
+                LoggingUtility.Log($"[Control_Edit_PartID] RequiresColorCode changed for part {itemNumber}: {_originalRequiresColorCode} -> {requiresColorCode}");
+                await Model_Application_Variables.ReloadColorCodePartsAsync();
+                LoggingUtility.Log($"[Control_Edit_PartID] ColorCodeParts cache reloaded: {Model_Application_Variables.ColorCodeParts.Count} parts flagged");
             }
         }
 
@@ -551,6 +574,8 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             descriptionTextBox.Clear();
             Control_Edit_PartID_ComboBox_ItemType.SelectedIndex = 0;
             issuedByValueLabel.Text = "";
+            Control_Edit_PartID_CheckBox_RequiresColorCode.Checked = false;
+            _originalRequiresColorCode = false;
             _currentPart = null;
         }
 

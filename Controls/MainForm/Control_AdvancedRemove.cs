@@ -701,6 +701,8 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                         item.User,
                         item.BatchNumber,
                         "Removal reversed via Undo Button.",
+                        null,  // colorCode
+                        null,  // workOrder
                         true
                     );
                 }

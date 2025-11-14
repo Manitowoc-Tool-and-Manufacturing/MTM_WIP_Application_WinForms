@@ -16,8 +16,8 @@ Based on your feature description for adding color codes and work order numbers 
 
 **Question**: What are the valid color code values material handlers use?
 
-- **Predefined list**: ("Red", "Blue", "Green", "Yellow", "Orange", "Purple", "Pink", "White", "Black", "Other", "Unknown")
-- **Other**: If "Other" is selected then user types in color.
+- **Predefined list**: ("RED", "BLUE", "GREEN", "YELLOW", "ORANGE", "PURPLE", "PINK", "WHITE", "BLACK", "OTHER", "UNKNOWN")
+- **Other**: If "OTHER" is selected then user types in color.
 - **Unknown**: Used for Preexisting data before this feature is implemented. (User can NOT select this, Default db value)
 
 ---
@@ -125,12 +125,12 @@ I've reviewed your answers - excellent details! I have just a few follow-up ques
 
 ## **Follow-up Questions**
 
-### **1. Color Code Table & "Other" Workflow**
+### **1. Color Code Table & "OTHER" Workflow**
 
-When a user selects **"Other"** for color code:
+When a user selects **"OTHER"** for color code:
 - **UI behavior**: Should this show a text input field immediately, or open a dialog? Open Dialog
-- **Validation**: Any restrictions on the "Other" text (max length, alphanumeric only, special characters allowed)? Max Length = 15, thats all
-- **Persistence**: Should custom "Other" values be saved to a history/cache for future suggestions, or is it always free-form entry? when user adds a color with "Other" ask them if they wish to save it to the database, if so add it to md_color_codes in first letter caps trailing format (example: user types blueberry, system records Blueberry, user types blueBerry, system records Blueberry)
+- **Validation**: Any restrictions on the "OTHER" text (max length, alphanumeric only, special characters allowed)? Max Length = 15, thats all
+- **Persistence**: Should custom "OTHER" values be saved to a history/cache for future suggestions, or is it always free-form entry? when user adds a color with "OTHER" ask them if they wish to save it to the database, if so add it to md_color_codes in first letter caps trailing format (example: user types blueberry, system records Blueberry, user types blueBerry, system records Blueberry)
 
 ---
 
@@ -267,9 +267,9 @@ Perfect! Your answers are comprehensive. I have just a few final clarifications 
 
 ## **Final Clarification Questions**
 
-### **1. "Other" Color Code - Save to Database Flow**
+### **1. "OTHER" Color Code - Save to Database Flow**
 
-When user selects "Other" and enters a custom color:
+When user selects "OTHER" and enters a custom color:
 - **Dialog prompt timing**: Should the "Save to database?" prompt appear:
   - After they click Save on the main inventory form
 - **Duplicate handling**: If user enters "Blueberry" but "Blueberry" already exists in `md_color_codes`:
@@ -317,10 +317,10 @@ When user enters invalid work order format (e.g., "ABC123" with letters):
 
 For the Color Code selection in `Control_InventoryTab.cs`:
 - **UI element**: Should it be:
-  - ComboBox (dropdown) with predefined colors + "Other" option?
+  - ComboBox (dropdown) with predefined colors + "OTHER" option?
   - Radio button list?
   - Different control? Textbox using `SuggestionTextBox` like PartID, Operation and Location already do in that Control
-- **"Other" dialog**: When "Other" is selected:
+- **"OTHER" dialog**: When "OTHER" is selected:
   - Simple input dialog with textbox? This
 - **Visibility**: Should color code/work order fields be:
   - Hidden entirely and shown dynamically when flagged part entered? This

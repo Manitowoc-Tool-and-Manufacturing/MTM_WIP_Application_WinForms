@@ -3,6 +3,7 @@ using System.Reflection;
 using MTM_WIP_Application_Winforms.Core;
 using MTM_WIP_Application_Winforms.Data;
 using MTM_WIP_Application_Winforms.Helpers;
+using MTM_WIP_Application_Winforms.Logging;
 using MTM_WIP_Application_Winforms.Models;
 using MTM_WIP_Application_Winforms.Services;
 
@@ -132,6 +133,14 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
 
                 MessageBox.Show(@"Part added successfully!", @"Success", MessageBoxButtons.OK,
                     MessageBoxIcon.Information);
+                
+                // If RequiresColorCode was checked, reload the cache
+                if (Control_Add_PartID_CheckBox_RequiresColorCode.Checked)
+                {
+                    await Model_Application_Variables.ReloadColorCodePartsAsync();
+                    LoggingUtility.Log($"[Control_Add_PartID] ColorCodeParts cache reloaded after adding part with RequiresColorCode=true");
+                }
+                
                 ClearForm();
                 PartAdded?.Invoke(this, EventArgs.Empty);
             }
@@ -147,8 +156,9 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             string itemNumber = itemNumberTextBox.Text.Trim();
             string issuedBy = Model_Application_Variables.User;
             string type = Control_Add_PartID_ComboBox_ItemType.Text ?? string.Empty;
+            bool requiresColorCode = Control_Add_PartID_CheckBox_RequiresColorCode.Checked;
             
-            return await Dao_Part.CreatePartAsync(itemNumber, string.Empty, string.Empty, issuedBy, type);
+            return await Dao_Part.CreatePartAsync(itemNumber, string.Empty, string.Empty, issuedBy, type, requiresColorCode);
         }
 
         private void CancelButton_Click(object sender, EventArgs e) => ClearForm();
@@ -160,6 +170,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
         private void ClearForm()
         {
             itemNumberTextBox.Clear();
+            Control_Add_PartID_CheckBox_RequiresColorCode.Checked = false;
 
             // Set ComboBox to "WIP" if it exists
             for (int i = 0; i < Control_Add_PartID_ComboBox_ItemType.Items.Count; i++)

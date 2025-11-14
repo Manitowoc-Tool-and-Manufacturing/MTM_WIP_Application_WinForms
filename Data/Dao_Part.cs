@@ -211,6 +211,59 @@ internal static class Dao_Part
         }
     }
 
+    /// <summary>
+    /// Retrieves all PartIDs that are flagged to require color code tracking.
+    /// </summary>
+    /// <returns>
+    /// Model_Dao_Result containing DataTable with PartID column.
+    /// Used to populate Model_Application_Variables.ColorCodeParts cache.
+    /// Check IsSuccess before accessing Data.
+    /// </returns>
+    /// <remarks>
+    /// Queries md_part_ids table for rows where RequiresColorCode = TRUE.
+    /// This cache is used during inventory entry to determine if color/work order
+    /// fields should be displayed for a given part.
+    /// </remarks>
+    internal static async Task<Model_Dao_Result<DataTable>> GetColorCodeFlaggedPartsAsync(
+        MySqlConnection? connection = null,
+        MySqlTransaction? transaction = null)
+    {
+        Service_DebugTracer.TraceMethodEntry(controlName: "Dao_Part");
+
+        try
+        {
+            var result = await Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync(
+                Model_Application_Variables.ConnectionString,
+                "md_part_ids_GetAllColorCodeFlagged",
+                parameters: null,
+                connection: connection,
+                transaction: transaction
+            );
+
+            if (result.IsSuccess && result.Data != null)
+            {
+                Service_DebugTracer.TraceMethodExit(result, controlName: "Dao_Part");
+                return Model_Dao_Result<DataTable>.Success(
+                    result.Data,
+                    $"Retrieved {result.Data.Rows.Count} color-code flagged parts");
+            }
+            else
+            {
+                Service_DebugTracer.TraceMethodExit(result, controlName: "Dao_Part");
+                return Model_Dao_Result<DataTable>.Failure(
+                    $"Failed to retrieve color-code flagged parts: {result.ErrorMessage}");
+            }
+        }
+        catch (Exception ex)
+        {
+            LoggingUtility.LogDatabaseError(ex);
+            await Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex, callerName: "GetColorCodeFlaggedPartsAsync");
+
+            Service_DebugTracer.TraceMethodExit(null, controlName: "Dao_Part");
+            return Model_Dao_Result<DataTable>.Failure("Error retrieving color-code flagged parts", ex);
+        }
+    }
+
     #endregion
 
     #region Create Operations
@@ -223,9 +276,11 @@ internal static class Dao_Part
     /// <param name="description">The part description.</param>
     /// <param name="issuedBy">The user creating the part.</param>
     /// <param name="type">The part type/category.</param>
+    /// <param name="requiresColorCode">Whether the part requires color code tracking (default: false).</param>
     /// <returns>A Model_Dao_Result indicating success or failure.</returns>
     internal static async Task<Model_Dao_Result> CreatePartAsync(string itemNumber, string customer, string description,
         string issuedBy, string type,
+        bool requiresColorCode = false,
         MySqlConnection? connection = null,
         MySqlTransaction? transaction = null)
     {
@@ -233,7 +288,8 @@ internal static class Dao_Part
         {
             ["itemNumber"] = itemNumber,
             ["customer"] = customer,
-            ["type"] = type
+            ["type"] = type,
+            ["requiresColorCode"] = requiresColorCode
         }, controlName: "Dao_Part");
 
         try
@@ -244,7 +300,8 @@ internal static class Dao_Part
                 ["Customer"] = customer,
                 ["Description"] = description,
                 ["IssuedBy"] = issuedBy,
-                ["ItemType"] = type
+                ["ItemType"] = type,
+                ["RequiresColorCode"] = requiresColorCode ? 1 : 0
             };
 
             var result = await Helper_Database_StoredProcedure.ExecuteNonQueryWithStatusAsync(
@@ -289,9 +346,11 @@ internal static class Dao_Part
     /// <param name="description">The part description.</param>
     /// <param name="issuedBy">The user updating the part.</param>
     /// <param name="type">The part type/category.</param>
+    /// <param name="requiresColorCode">Whether the part requires color code tracking.</param>
     /// <returns>A Model_Dao_Result indicating success or failure.</returns>
     internal static async Task<Model_Dao_Result> UpdatePartAsync(int id, string itemNumber, string customer,
         string description, string issuedBy, string type,
+        bool? requiresColorCode = null,
         MySqlConnection? connection = null,
         MySqlTransaction? transaction = null)
     {
@@ -300,7 +359,8 @@ internal static class Dao_Part
             ["id"] = id,
             ["itemNumber"] = itemNumber,
             ["customer"] = customer,
-            ["type"] = type
+            ["type"] = type,
+            ["requiresColorCode"] = requiresColorCode?.ToString() ?? "null"
         }, controlName: "Dao_Part");
 
         try
@@ -314,6 +374,11 @@ internal static class Dao_Part
                 ["IssuedBy"] = issuedBy,
                 ["ItemType"] = type
             };
+            
+            if (requiresColorCode.HasValue)
+            {
+                parameters["RequiresColorCode"] = requiresColorCode.Value ? 1 : 0;
+            }
 
             var result = await Helper_Database_StoredProcedure.ExecuteNonQueryWithStatusAsync(
                 Model_Application_Variables.ConnectionString,
@@ -388,6 +453,69 @@ internal static class Dao_Part
 
             Service_DebugTracer.TraceMethodExit(null, controlName: "Dao_Part");
             return Model_Dao_Result.Failure($"Error updating part {partNumber}", ex);
+        }
+    }
+
+    /// <summary>
+    /// Updates the RequiresColorCode flag for a specific part.
+    /// </summary>
+    /// <param name="partNumber">The part number to update.</param>
+    /// <param name="requiresColorCode">Whether the part requires color code tracking.</param>
+    /// <returns>
+    /// Model_Dao_Result indicating success or failure.
+    /// On success, triggers cache reload in calling code.
+    /// </returns>
+    /// <remarks>
+    /// This method uses the md_part_ids_UpdateColorCodeFlag stored procedure.
+    /// After successful update, the calling code should reload the ColorCodeParts cache.
+    /// </remarks>
+    internal static async Task<Model_Dao_Result> UpdateColorCodeFlagAsync(
+        string partNumber,
+        bool requiresColorCode,
+        MySqlConnection? connection = null,
+        MySqlTransaction? transaction = null)
+    {
+        Service_DebugTracer.TraceMethodEntry(new Dictionary<string, object>
+        {
+            ["partNumber"] = partNumber,
+            ["requiresColorCode"] = requiresColorCode
+        }, controlName: "Dao_Part");
+
+        try
+        {
+            Dictionary<string, object> parameters = new()
+            {
+                ["PartID"] = partNumber,
+                ["RequiresColorCode"] = requiresColorCode ? 1 : 0
+            };
+
+            var result = await Helper_Database_StoredProcedure.ExecuteNonQueryWithStatusAsync(
+                Model_Application_Variables.ConnectionString,
+                "md_part_ids_UpdateColorCodeFlag",
+                parameters,
+                connection: connection,
+                transaction: transaction
+            );
+
+            if (result.IsSuccess)
+            {
+                LoggingUtility.Log($"[Dao_Part] Color code flag updated for part {partNumber}: {requiresColorCode}");
+                Service_DebugTracer.TraceMethodExit(result, controlName: "Dao_Part");
+                return Model_Dao_Result.Success($"Color code flag updated for part {partNumber}");
+            }
+            else
+            {
+                Service_DebugTracer.TraceMethodExit(result, controlName: "Dao_Part");
+                return Model_Dao_Result.Failure($"Failed to update color code flag: {result.ErrorMessage}");
+            }
+        }
+        catch (Exception ex)
+        {
+            LoggingUtility.LogDatabaseError(ex);
+            await Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex, callerName: "UpdateColorCodeFlagAsync");
+
+            Service_DebugTracer.TraceMethodExit(null, controlName: "Dao_Part");
+            return Model_Dao_Result.Failure($"Error updating color code flag for part {partNumber}", ex);
         }
     }
 

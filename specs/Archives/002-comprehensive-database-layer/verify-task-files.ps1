@@ -153,9 +153,9 @@ foreach ($file in $conditionalFiles) {
 
 # Summary
 Write-Host "`n=== SUMMARY ===" -ForegroundColor Cyan
-Write-Host "Files to Create: $($results.FilesToCreate.Missing.Count)/$($results.FilesToCreate.Total) ready ($($results.FilesToCreate.Exists.Count) already exist)" -ForegroundColor $(if ($results.FilesToCreate.Exists.Count -eq 0) { "Green" } else { "Yellow" })
-Write-Host "Files to Refactor: $($results.FilesToRefactor.Exists.Count)/$($results.FilesToRefactor.Total) ready" -ForegroundColor $(if ($results.FilesToRefactor.Missing.Count -eq 0) { "Green" } else { "Red" })
-Write-Host "Conditional Files: $($results.ConditionalFiles.Exists.Count) exist, $($results.ConditionalFiles.Missing.Count) need decision" -ForegroundColor $(if ($results.ConditionalFiles.Missing.Count -eq 0) { "Green" } else { "Magenta" })
+Write-Host "Files to Create: $($results.FilesToCreate.Missing.Count)/$($results.FilesToCreate.Total) ready ($($results.FilesToCreate.Exists.Count) already exist)" -ForegroundColor $(if ($results.FilesToCreate.Exists.Count -eq 0) { "GREEN" } else { "YELLOW" })
+Write-Host "Files to Refactor: $($results.FilesToRefactor.Exists.Count)/$($results.FilesToRefactor.Total) ready" -ForegroundColor $(if ($results.FilesToRefactor.Missing.Count -eq 0) { "GREEN" } else { "RED" })
+Write-Host "Conditional Files: $($results.ConditionalFiles.Exists.Count) exist, $($results.ConditionalFiles.Missing.Count) need decision" -ForegroundColor $(if ($results.ConditionalFiles.Missing.Count -eq 0) { "GREEN" } else { "Magenta" })
 
 # Blocking issues?
 if ($results.FilesToRefactor.Missing.Count -gt 0) {

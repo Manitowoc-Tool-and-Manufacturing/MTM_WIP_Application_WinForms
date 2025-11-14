@@ -326,6 +326,8 @@ public static class Dao_Inventory
     /// <param name="user">User adding the item</param>
     /// <param name="batchNumber">Batch number (optional, will be generated)</param>
     /// <param name="notes">Notes</param>
+    /// <param name="colorCode">Color code for work order segregation (optional, defaults to 'Unknown')</param>
+    /// <param name="workOrder">Work order number (optional, defaults to 'Unknown')</param>
     /// <param name="useAsync">Legacy parameter (ignored)</param>
     /// <param name="connection">Optional connection for transaction support</param>
     /// <param name="transaction">Optional transaction for rollback support</param>
@@ -339,6 +341,8 @@ public static class Dao_Inventory
         string user,
         string? batchNumber,
         string notes,
+        string? colorCode = null,
+        string? workOrder = null,
         bool useAsync = false,
         MySqlConnection? connection = null,
         MySqlTransaction? transaction = null)
@@ -402,7 +406,9 @@ public static class Dao_Inventory
                     ["ItemType"] = itemType ?? "None",
                     ["User"] = user,
                     ["BatchNumber"] = batchNumber,
-                    ["Notes"] = notes
+                    ["Notes"] = notes,
+                    ["ColorCode"] = colorCode ?? "Unknown",
+                    ["WorkOrder"] = workOrder ?? "Unknown"
                 },
                 progressHelper: null, // No progress helper for this method
                 connection: connection,

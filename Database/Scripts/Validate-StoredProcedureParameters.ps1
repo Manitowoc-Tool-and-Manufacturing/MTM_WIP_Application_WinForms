@@ -329,7 +329,7 @@ ORDER BY ORDINAL_POSITION;
 Write-Host "=== SUMMARY ===" -ForegroundColor Cyan
 Write-Host "Total Checked: $totalChecked" -ForegroundColor White
 Write-Host "Passed: $($totalChecked - $totalIssues)" -ForegroundColor Green
-Write-Host "Issues Found: $totalIssues" -ForegroundColor $(if ($totalIssues -eq 0) { "Green" } else { "Red" })
+Write-Host "Issues Found: $totalIssues" -ForegroundColor $(if ($totalIssues -eq 0) { "GREEN" } else { "RED" })
 Write-Host ""
 
 # Export results
