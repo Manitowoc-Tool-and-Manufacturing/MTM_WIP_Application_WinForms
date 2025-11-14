@@ -54,20 +54,28 @@ Create shortcuts that launch directly into Production or Test mode without chang
 
 ## Version 6.2.0 (November 13, 2025)
 
-**Summary**: Faster data entry with type-to-search suggestions and safety confirmations for deletions/transfers.
+> ⚠️ **DEVELOPMENT STATUS**: This version describes features currently in development.  
+> The `SuggestionTextBox` control exists in the codebase but is **NOT YET INTEGRATED** into production forms.  
+> Features described below are planned but not yet available to users.  
+> **Current Status**: Code complete, integration pending.
+
+**Summary**: Planned usability improvements including type-to-search suggestions and confirmation dialogs (implementation in progress).
 
 ### 🎯 What's New
 
-#### 1. Smart Type-to-Search Fields
+#### 1. Smart Type-to-Search Fields (Planned)
 
-**What changed:**
+> **Implementation Note**: The `SuggestionTextBox` control has been implemented in `Controls/Shared/SuggestionTextBox.cs`  
+> but is not yet integrated into Inventory, Transfer, or Remove tabs. Integration work is ongoing.
+
+**What's planned:**
 Old dropdown lists (500+ parts to scroll through) → New autocomplete suggestions (type to filter instantly)
 
-**Where it works:**
-- **Inventory Tab**: Part Number, Operation, Location
-- **Transfer Tab**: Part Number, Operation, To Location
-- **Remove Tab**: Part Number, Operation
-- **QuickButton Editor**: Part Number, Operation
+**Where it will work:**
+- **Inventory Tab**: Part Number, Operation, Location (pending integration)
+- **Transfer Tab**: Part Number, Operation, To Location (pending integration)
+- **Remove Tab**: Part Number, Operation (pending integration)
+- **QuickButton Editor**: Part Number, Operation (pending integration)
 
 **How to use:**
 1. Start typing in any field (e.g., type "R-" in Part Number) then hit [TAB] or [ENTER]
@@ -82,78 +90,11 @@ Old dropdown lists (500+ parts to scroll through) → New autocomplete suggestio
 - **Escape**: Cancel, keep what you typed
 - **Double-click**: Select with mouse
 
-**Benefits:**
+**Expected benefits (when integrated):**
 - **3x faster**: Find parts in seconds, not minutes
-- **5x faster Tab loading times**: This was the reason for this update, each time a user changed tabs the applicaiton had to reload all dropdown menus with data, and due to PartIDs and Locations having 1000+ items each that took significant time.
+- **5x faster Tab loading**: No need to reload dropdown menus with 1000+ items
 - **Zero typos**: Only valid codes accepted
 - **Power user friendly**: Type exact codes and tab through without waiting
-- **Auto-format**: Everything uppercase automatically
-
-**Examples:**
-- Type `"R-"` → Shows all R- prefix parts
-- Type `"A1-01"` → Shows all Locations with `"A1-01"` in it `(R-A1-01, T-A1-01, X-A1-01)`...
-- Type `"DD"` → Shows `DD-A1-01`, `DD-A1-02`, `DD-A1-03`...
-- Type `"28841"` → Shows all Part Numbers with `"28841"` in it `(21-28841-006, 21-28841-007, 21-28841-008)`...
-
----
-
-#### 2. Update: Smart Deletion & Transfer Confirmations
-
-**What changed:**
-No confirmation → **Clear summary before any deletion or transfer**
-
-**Single item deletion:**
-```
-Are you sure you want to delete this item?
-
-Part ID: 0K2142
-Location: DD-A1-01
-Quantity: 16
-```
-
-**Multiple items (10+) - Grouped summary:**
-```
-Are you sure you want to delete 15 items?
-
-PartID: 0K2142, Location(s): 5, Quantity: 80
-PartID: R-123-01, Location(s): 3, Quantity: 45  
-PartID: X-456-02, Location(s): 7, Quantity: 120
-```
-
-**Benefits:**
-- **Prevents accidents**: No more "oops, I deleted the wrong batch"
-- **Clear feedback**: See exactly what happens before you commit
-- **No spam**: Smart grouping for bulk operations (no 50 confirmation boxes)
-- **Easy cancel**: Press Escape or click No
-
----
-
-#### 3. Improvements: Focus Highlighting
-
-**What's fixed:**
-- All text fields now highlight consistently when focused
-- Highlight now disappears when the user starts typing
-- Transfer Tab "To Location" field now highlights properly
-- Highlighting works even after fields are enabled/disabled
-
-**Why this matters:**
-- Always clear which field is active
-- Better for keyboard-only workflows
-- Improved accessibility
-
----
-
-#### 4. Bug Fix: Exact Match Validation
-
-**What's fixed:**
-- Type exact Part ID/Operation/Location/User Name and press Tab → Auto-validates
-- Save button enables immediately when all fields are valid
-- No forced interaction with suggestion overlay if you know the codes
-
-**Benefits:**
-- **Power users**: Type codes fast without interruption
-- **Still safe**: System validates everything against master data
-- **Responsive**: Save button activates as soon as data is valid
 
 ---
 
