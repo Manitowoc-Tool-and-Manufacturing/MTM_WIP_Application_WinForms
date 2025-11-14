@@ -4,9 +4,38 @@
 
 ---
 
+## Quick Summary
+
+| Date | Version | Summary | What to do |
+| --- | --- | --- | --- |
+| [Nov 13, 2025](#latest-update---november-13-2025-version-621) | [6.2.1](#latest-update---november-13-2025-version-621) | Start the app directly in Production/Test and set the user name shown in logs. | Optional: create dedicated shortcuts when you switch between environments. |
+| [Nov 13, 2025](#latest-update---november-13-2025-version-621) | [6.2.1](#latest-update---november-13-2025-version-621) | New Help page with step-by-step instructions for startup arguments. | Press F1 → search "Startup Arguments" to learn more. |
+| [Nov 13, 2025](#previous-update---november-13-2025-version-620) | [6.2.0](#previous-update---november-13-2025-version-620) | Universal suggestions replaced old dropdowns with type-to-search. | Nothing—feature is automatically available. |
+| [Nov 13, 2025](#previous-update---november-13-2025-version-620) | [6.2.0](#previous-update---november-13-2025-version-620) | Smart confirmations now summarize deletions and transfers before you commit. | Review the summary and click Yes to proceed. |
+| [Nov 13, 2025](#previous-update---november-13-2025-version-620) | [6.2.0](#previous-update---november-13-2025-version-620) | Focus highlighting improvements across all tabs. | Notice clearer visual feedback when typing. |
+| [Nov 13, 2025](#previous-update---november-13-2025-version-620) | [6.2.0](#previous-update---november-13-2025-version-620) | Data validation for exact matches when you type and tab. | Type exact codes and tab through—no need to wait for suggestions. |
+| [Nov 12, 2025](#previous-update---november-12-2025-version-610) | [6.1.0](#previous-update---november-12-2025-version-610) | Themes update instantly and reliably across all forms. | Try different themes in Settings before saving. |
+| [Nov 8, 2025](#previous-update---november-8-2025-version-602) | [6.0.2](#previous-update---november-8-2025-version-602) | Theme selection now saves correctly and remembers your choice. | Choose a theme and click Save so it sticks. |
+| [Nov 8, 2025](#previous-update---november-8-2025-version-602) | [6.0.2](#previous-update---november-8-2025-version-602) | QuickButtons list behaves reliably without duplicates. | Right-click to edit or reorder buttons. |
+| [Nov 8, 2025](#previous-update---november-8-2025-version-601) | [6.0.1](#previous-update---november-8-2025-version-601) | QuickButtons now use smart selection controls. | Right-click a QuickButton to edit with confidence. |
+| [Nov 8, 2025](#previous-update---november-8-2025-version-601) | [6.0.1](#previous-update---november-8-2025-version-601) | Duplicates no longer appear in QuickButtons list. | Cleaned up automatically on next restart. |
+| [Nov 8, 2025](#previous-update---november-8-2025-version-600) | [6.0.0](#previous-update---november-8-2025-version-600) | Transaction history got a full redesign with modern layout. | Use the new search filters to find what you need. |
+| [Nov 8, 2025](#previous-update---november-8-2025-version-600) | [6.0.0](#previous-update---november-8-2025-version-600) | Faster searches and analytics cards show real-time statistics. | Check the summary cards above search results. |
+| [Nov 2, 2025](#previous-update---november-2-2025-version-590) | [5.9.0](#previous-update---november-2-2025-version-590) | Settings form now works without crashes. | Open Settings to manage users or parts with confidence. |
+| [Nov 2, 2025](#previous-update---november-2-2025-version-590) | [5.9.0](#previous-update---november-2-2025-version-590) | User and part number management improvements. | Add parts with just Part Number and Item Type. |
+| [Oct 26, 2025](#update---october-26-2025-version-540) | [5.4.0](#update---october-26-2025-version-540) | New error report management system for IT and developers. | IT/Developers: use Development menu to browse reports. |
+| [Oct 26, 2025](#update---october-26-2025-version-530) | [5.3.0](#update---october-26-2025-version-530) | New "Report Issue" button in error messages. | Click "Report Issue" when you see an error to help us fix it faster. |
+| [Oct 25, 2025](#update---october-25-2025-version-532) | [5.3.2](#update---october-25-2025-version-532) | Automatic computer name tracking added to error reports. | Nothing—automatic improvement. |
+| [Oct 25, 2025](#update---october-25-2025-version-531) | [5.3.1](#update---october-25-2025-version-531) | Better display on different monitors and screen scaling. | Click "Restart" when prompted if you move between monitors. |
+| [Oct 25, 2025](#update---october-25-2025-version-531) | [5.3.1](#update---october-25-2025-version-531) | Error dialogs sized correctly on all screens. | Error messages now fit nicely on your screen. |
+| [Oct 22, 2025](#update---october-22-2025-version-520) | [5.2.0](#update---october-22-2025-version-520) | Rock-solid database operations with 136 integration tests passing. | Nothing—internal reliability improvements. |
+| [Oct 17-21, 2025](#update---october-17-21-2025-version-510) | [5.1.0](#update---october-17-21-2025-version-510) | Database layer modernization with improved error handling. | Nothing—internal improvements only. |
+
+---
+
 ## Latest Update - November 13, 2025 (Version 6.2.1)
 
-**What Changed**: Added Startup Arguments to choose database (Production/Test/custom), set username, and optionally provide DB credentials; new Help page explains how to use it.  
+**What Changed**: You can now start the app directly in Production or Test, and choose the name that appears in logs. A new Help page shows simple, step‑by‑step instructions.  
 **Do I Need To Do Anything?**: No. Optional feature — use if you need separate shortcuts for Production vs Test.
 
 ---
@@ -16,16 +45,14 @@
 #### Launch App With Database And User Selection (New)
 
 **What's new**:
-- Start the app with options like `-db=prod` (Production) or `-db=test` (Test)
-- Set your display name in logs with `-user=JDOE`
-- Advanced: override database username/password with `-dbuser=` and `-dbpassword=`
+- Create a desktop shortcut that opens Production or Test directly
+- Optionally set the name that appears in logs when you use the app
+- Advanced: IT can include database sign‑in details in the shortcut when needed
 
 **How to use**:
 1. Create a desktop shortcut to the app
-2. Edit the shortcut Target and add arguments, for example:
-   - Production: `-db=prod -user=JDOE`
-   - Test: `-db=test -user=QA_USER`
-   - Custom DB: `-db=mtm_wip_application_winforms_training`
+2. Make two shortcuts if helpful: one for Production and one for Test
+3. Open the shortcut’s Properties and follow the steps on the Help page to add the option
 
 **Where to learn more**:
 - Help → “Startup Arguments” page (F1 → search “Startup Arguments”)
@@ -36,7 +63,7 @@
 - Training or demo environments can use separate databases safely
 
 **Security note**:
-- If you include a password in a shortcut, anyone with access to the machine can view it. Prefer test environments or secured setups for `-dbpassword`.
+- If you put a password inside a shortcut, other people who can view that shortcut may see it. Only do this on secured machines or test environments.
 
 ---
 
@@ -48,19 +75,18 @@
 
 ## Previous Update - November 13, 2025 (Version 6.2.0)
 
-**What Changed**: Universal Suggestion System replacing all ComboBoxes with intelligent autocomplete + Smart confirmation dialogs for deletions and transfers  
+**What Changed**: New quick‑type suggestions replace the old pick‑lists, plus clearer confirmations before deleting or transferring items.  
 **Do I Need To Do Anything?**: No - data entry is now faster and safer with better feedback!
 
 #### Intelligent Part Number, Operation, and Location Entry
 
 **What's new**:
-- **Autocomplete everywhere**: Type anywhere in Part Number, Operation, or Location fields and see matching suggestions instantly
-- **Wildcard search support**: Use `%` to search flexibly (e.g., `R-%` shows all parts starting with R-, `%-01` shows all parts ending in 01)
-- **Keyboard-only operation**: Full arrow key navigation, Home/End to jump to first/last, Enter to select, Escape to cancel
-- **No more scrolling through long lists**: Type 2-3 characters and see only matching options
-- **Smart validation**: Fields only accept valid values from your database - prevents typos and invalid entries
-- **Uppercase standardization**: All entries automatically converted to uppercase for consistency
-- **Light dismiss**: Click outside suggestion box or press Escape to cancel without selecting
+- **Type to find**: Start typing in Part Number, Operation, or Location and matching options appear instantly
+- **Works the way you type**: Partial matches are supported; keep typing to narrow the list
+- **Keyboard friendly**: Use the arrow keys to move, Enter to select, Escape to cancel
+- **Less scrolling**: You’ll see only relevant matches instead of long lists
+- **Built‑in checks**: Only valid values can be saved, preventing typos
+- **Consistent formatting**: Entries are cleaned up for a uniform look
 
 **Where it works**:
 - **Inventory Tab**: Part Number, Operation, Location fields
@@ -77,11 +103,7 @@
    - **Enter**: Select highlighted suggestion
    - **Escape**: Cancel and keep what you typed
    - **Double-click**: Select with mouse
-4. **Wildcard patterns**:
-   - Type `R-%` to see all parts starting with "R-"
-   - Type `%-01` to see all parts ending in "01"
-   - Type `%2142%` to see all parts containing "2142"
-   - Type `10` for Operation to see 10, 100, 101, etc.
+4. **Refine as you go**: Keep typing to narrow the list until the right choice is highlighted, then press Enter
 
 **What's better now**:
 - **3x faster data entry**: No scrolling through 500+ parts to find what you need
@@ -230,11 +252,7 @@ PartID: X-456-02, 3 locations, 1 operation, Quantity: 48
 - **Rock solid**: Eliminates random theme glitches, missing colors, and inconsistent styling
 
 **Technical improvements (behind the scenes)**:
-- **Dependency injection architecture**: Modern design pattern makes themes more reliable and maintainable
-- **Observer pattern**: Forms automatically subscribe to theme changes and update themselves
-- **Strategy pattern**: Each control type has optimized theme application logic
-- **Debouncing**: Prevents rapid theme changes from causing visual glitches (300ms delay)
-- **Weak references**: Prevents memory leaks when forms close
+Under the hood, we also made reliability and performance improvements so theme changes stay smooth and responsive.
 
 **What you'll notice**:
 - **Change theme once, updates everywhere**: Set your theme in Settings and watch every open window update simultaneously
@@ -286,12 +304,12 @@ PartID: X-456-02, 3 locations, 1 operation, Quantity: 48
 **What's fixed**:
 - **Your theme choice is remembered**: When you change your theme in Settings, it now saves correctly and persists across application restarts
 - **No more reverting to default**: Fixed issue where theme selection would reset to "Lavender" on next login even after saving a different theme
-- **Proper JSON storage**: Theme preferences are now correctly stored in the database settings
+- **Settings stored correctly**: Theme choices now save in the right place
 
 **Why this was broken**:
-1. **Wrong database procedure**: Code was trying to update a non-existent table column instead of updating the JSON settings
-2. **Missing stored procedure**: The correct procedure for merging theme JSON wasn't being used
-3. **Data corruption prevention**: Fixed ComboBox data extraction that could corrupt user settings
+1. The app was saving the choice to the wrong place
+2. The save step wasn’t hooked up correctly in one path
+3. We also improved how the selection is read to prevent rare mix‑ups
 
 **What's better now**:
 - **Pick your theme and keep it**: Choose any of the 9 available themes (Arctic, Default, Fire Storm, Glacier, Ice, Lavender, Midnight, Neon, Sunset, Wood) and your choice is saved
@@ -336,7 +354,7 @@ PartID: X-456-02, 3 locations, 1 operation, Quantity: 48
 **What's fixed**:
 - **No more duplicate buttons**: Fixed issue where the same part/operation would appear multiple times in your QuickButtons list
 - **Proper display when clicking buttons**: QuickButtons now fill in Part Number and Operation fields correctly with full descriptions (was showing raw codes like "21-28841-006" instead of formatted "21-28841-006 | Customer Name | Description")
-- **Edit dialog with smart dropdowns**: Right-click Edit now shows ComboBoxes with autocomplete for Part ID and Operation - same experience as the main Inventory tab
+- **Edit dialog with smart dropdowns**: Right‑click Edit now shows dropdowns with type‑to‑search for Part Number and Operation — the same, familiar experience as on the main screen
 - **New buttons appear at top**: When you save a transaction as a QuickButton, it now appears at the top of your list immediately (was going to the bottom)
 - **Simplified reorder dialog**: Removed confusing Edit button from the "Change Order" dialog - use right-click Edit instead
 - **Better validation**: Edit dialog only accepts valid Part IDs and Operations from your database - prevents typos and invalid data
@@ -612,7 +630,7 @@ PartID: X-456-02, 3 locations, 1 operation, Quantity: 48
 
 ---
 
-## Update - October 26, 2025 (Version 5.3.0)
+## Update - October 26, 2025 (Version 5.3.3)
 
 **What Changed**: New error reporting feature  
 **Do I Need To Do Anything?**: No - but you can now help us fix problems faster!
@@ -755,7 +773,7 @@ PartID: X-456-02, 3 locations, 1 operation, Quantity: 48
 - **Most users**: No urgent need - update when convenient
 - **If you use multiple monitors or 4K displays**: Yes - this fixes annoying display issues
 
-**Version 5.3.0 (Error Reporting)**:
+**Version 5.3.3 (Error Reporting)**:
 - **All users**: Update when convenient - this is a helpful new feature, not a critical fix
 
 ---
