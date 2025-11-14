@@ -12,6 +12,38 @@ namespace MTM_WIP_Application_Winforms.Helpers
     /// </summary>
     public static class Helper_UI_SuggestionBoxes
     {
+        #region Helpers
+
+        private static bool HasAnyColumn(DataTable table, params string[] candidateNames)
+        {
+            foreach (DataColumn col in table.Columns)
+            {
+                foreach (var name in candidateNames)
+                {
+                    if (col.ColumnName.Equals(name, StringComparison.OrdinalIgnoreCase))
+                        return true;
+                }
+            }
+            return false;
+        }
+
+        private static string? GetValueCaseInsensitive(DataRow row, params string[] candidateNames)
+        {
+            foreach (DataColumn col in row.Table.Columns)
+            {
+                foreach (var name in candidateNames)
+                {
+                    if (col.ColumnName.Equals(name, StringComparison.OrdinalIgnoreCase))
+                    {
+                        return row[col]?.ToString();
+                    }
+                }
+            }
+            return null;
+        }
+
+        #endregion
+
         #region Private Variables - DataTables
 
         private static readonly DataTable PartIds_DataTable = new();
@@ -161,17 +193,18 @@ namespace MTM_WIP_Application_Winforms.Helpers
                         return false;
                     }
 
-                    // Check if PartID column exists
-                    if (!PartIds_DataTable.Columns.Contains("PartID"))
+                    // Accept common column name variants
+                    var partColumns = new[] { "PartID", "PartId", "Part" };
+                    if (!HasAnyColumn(PartIds_DataTable, partColumns))
                     {
-                        LoggingUtility.Log("[Helper_UI_SuggestionBoxes] PartID column not found in PartIds_DataTable");
+                        LoggingUtility.Log("[Helper_UI_SuggestionBoxes] PartID column not found (tried: PartID, PartId, Part) in PartIds_DataTable");
                         return false;
                     }
 
                     // Search for exact match (case-insensitive)
                     foreach (DataRow row in PartIds_DataTable.Rows)
                     {
-                        string? rowValue = row["PartID"]?.ToString();
+                        string? rowValue = GetValueCaseInsensitive(row, partColumns);
                         if (!string.IsNullOrEmpty(rowValue) && 
                             rowValue.Equals(partId, StringComparison.OrdinalIgnoreCase))
                         {
@@ -211,17 +244,18 @@ namespace MTM_WIP_Application_Winforms.Helpers
                         return false;
                     }
 
-                    // Check if OperationNumber column exists
-                    if (!Operations_DataTable.Columns.Contains("OperationNumber"))
+                    // Accept common column name variants (align with SP returns)
+                    var opColumns = new[] { "OperationNumber", "Operation", "Op", "OperationNo" };
+                    if (!HasAnyColumn(Operations_DataTable, opColumns))
                     {
-                        LoggingUtility.Log("[Helper_UI_SuggestionBoxes] OperationNumber column not found in Operations_DataTable");
+                        LoggingUtility.Log("[Helper_UI_SuggestionBoxes] OperationNumber column not found (tried: OperationNumber, Operation, Op, OperationNo) in Operations_DataTable");
                         return false;
                     }
 
                     // Search for exact match (case-insensitive)
                     foreach (DataRow row in Operations_DataTable.Rows)
                     {
-                        string? rowValue = row["OperationNumber"]?.ToString();
+                        string? rowValue = GetValueCaseInsensitive(row, opColumns);
                         if (!string.IsNullOrEmpty(rowValue) && 
                             rowValue.Equals(operation, StringComparison.OrdinalIgnoreCase))
                         {
@@ -261,17 +295,18 @@ namespace MTM_WIP_Application_Winforms.Helpers
                         return false;
                     }
 
-                    // Check if Location column exists
-                    if (!Locations_DataTable.Columns.Contains("Location"))
+                    // Accept common column name variants
+                    var locColumns = new[] { "Location", "Loc" };
+                    if (!HasAnyColumn(Locations_DataTable, locColumns))
                     {
-                        LoggingUtility.Log("[Helper_UI_SuggestionBoxes] Location column not found in Locations_DataTable");
+                        LoggingUtility.Log("[Helper_UI_SuggestionBoxes] Location column not found (tried: Location, Loc) in Locations_DataTable");
                         return false;
                     }
 
                     // Search for exact match (case-insensitive)
                     foreach (DataRow row in Locations_DataTable.Rows)
                     {
-                        string? rowValue = row["Location"]?.ToString();
+                        string? rowValue = GetValueCaseInsensitive(row, locColumns);
                         if (!string.IsNullOrEmpty(rowValue) && 
                             rowValue.Equals(location, StringComparison.OrdinalIgnoreCase))
                         {

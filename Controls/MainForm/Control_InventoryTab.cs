@@ -44,6 +44,124 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                 this.FindForm() ?? throw new InvalidOperationException("Control must be added to a form"));
         }
 
+        /// <summary>
+        /// Handles the "OTHER" color code selection by prompting user for custom color.
+        /// </summary>
+        /// <remarks>
+        /// When user selects "OTHER" from color code dropdown:
+        /// 1. Shows input dialog for custom color entry
+        /// 2. Formats color to title case
+        /// 3. Adds to database via Dao_ColorCode.AddCustomColorAsync
+        /// 4. Replaces "OTHER" text with the custom color
+        /// </remarks>
+        private async void HandleColorCodeOtherSelection()
+        {
+            if (Control_InventoryTab_TextBox_ColorCode.Text?.Trim().Equals("OTHER", StringComparison.OrdinalIgnoreCase) == true)
+            {
+                try
+                {
+                    using var dialog = new Form
+                    {
+                        Text = "Enter Custom Color",
+                        Width = 400,
+                        Height = 150,
+                        FormBorderStyle = FormBorderStyle.FixedDialog,
+                        StartPosition = FormStartPosition.CenterParent,
+                        MaximizeBox = false,
+                        MinimizeBox = false
+                    };
+
+                    var label = new Label { Left = 20, Top = 20, Text = "Color Name:", Width = 100 };
+                    var textBox = new TextBox { Left = 130, Top = 20, Width = 230 };
+                    var okButton = new Button { Text = "OK", Left = 130, Width = 100, Top = 60, DialogResult = DialogResult.OK };
+                    var cancelButton = new Button { Text = "Cancel", Left = 240, Width = 100, Top = 60, DialogResult = DialogResult.Cancel };
+
+                    dialog.Controls.Add(label);
+                    dialog.Controls.Add(textBox);
+                    dialog.Controls.Add(okButton);
+                    dialog.Controls.Add(cancelButton);
+                    dialog.AcceptButton = okButton;
+                    dialog.CancelButton = cancelButton;
+
+                    if (dialog.ShowDialog() == DialogResult.OK && !string.IsNullOrWhiteSpace(textBox.Text))
+                    {
+                        // Capture user-entered value; store to DB in ALL CAPS
+                        var userEnteredColor = textBox.Text.Trim();
+                        var colorForDatabase = userEnteredColor.ToUpperInvariant();
+
+                        // Add to database (stored as ALL CAPS)
+                        var dao = new Dao_ColorCode();
+                        var result = await dao.AddCustomColorAsync(colorForDatabase);
+
+                        if (result.IsSuccess)
+                        {
+                            // Reload cache to include new custom color
+                            await Model_Application_Variables.ReloadColorCodePartsAsync();
+                            
+                            // Do NOT change user's casing in the textbox
+                            Control_InventoryTab_TextBox_ColorCode.Text = userEnteredColor;
+                            LoggingUtility.Log($"Custom color added (DB stored as UPPER): {colorForDatabase}");
+                        }
+                        else
+                        {
+                            Service_ErrorHandler.ShowWarning($"Failed to add custom color: {result.ErrorMessage}");
+                            Control_InventoryTab_TextBox_ColorCode.Text = string.Empty;
+                        }
+                    }
+                    else
+                    {
+                        // User cancelled - clear the "OTHER" text
+                        Control_InventoryTab_TextBox_ColorCode.Text = string.Empty;
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Service_ErrorHandler.HandleException(
+                        ex,
+                        Enum_ErrorSeverity.Medium,
+                        contextData: new Dictionary<string, object>
+                        {
+                            ["Control"] = nameof(Control_InventoryTab),
+                            ["Method"] = nameof(HandleColorCodeOtherSelection)
+                        },
+                        callerName: nameof(HandleColorCodeOtherSelection),
+                        controlName: this.Name);
+
+                    Control_InventoryTab_TextBox_ColorCode.Text = string.Empty;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Validates and formats the work order number.
+        /// </summary>
+        /// <remarks>
+        /// Applies WO-###### formatting with zero-padding.
+        /// Accepts 5-6 digit numbers with or without WO- prefix.
+        /// Shows error message for invalid formats.
+        /// </remarks>
+        private void ValidateAndFormatWorkOrder()
+        {
+            var input = Control_InventoryTab_TextBox_WorkOrder.Text?.Trim();
+
+            if (string.IsNullOrWhiteSpace(input))
+            {
+                // Empty is valid - will default to "Unknown" on save
+                return;
+            }
+
+            if (Service_ColorCodeValidator.ValidateAndFormatWorkOrder(input, out string formatted, out string errorMessage))
+            {
+                Control_InventoryTab_TextBox_WorkOrder.Text = formatted;
+                Control_InventoryTab_TextBox_WorkOrder.ForeColor = Model_Application_Variables.UserUiColors.TextBoxForeColor ?? Color.Black;
+            }
+            else
+            {
+                Control_InventoryTab_TextBox_WorkOrder.ForeColor = Model_Application_Variables.UserUiColors.TextBoxErrorForeColor ?? Color.Red;
+                Service_ErrorHandler.ShowWarning(errorMessage);
+            }
+        }
+
         #endregion
 
         #region Constructors
@@ -232,6 +350,10 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                 // Load validation data for exact match checking
                 await Helper_UI_SuggestionBoxes.LoadAllDataAsync();
                 
+                _progressHelper?.UpdateProgress(8, "Loading color code caches...");
+                await Model_Application_Variables.ReloadColorCodePartsAsync();
+                LoggingUtility.Log("[InventoryTab Startup] Color code caches loaded: Parts=" + Model_Application_Variables.ColorCodeParts.Count + ", Colors=" + Model_Application_Variables.ValidColorCodes.Count);
+                
                 Control_InventoryTab_Button_Save.Enabled = false;
                 _progressHelper?.UpdateProgress(10, "Loading part data...");
                 
@@ -256,6 +378,14 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                 Control_InventoryTab_TextBox_Location.MaxResults = 30;
                 Control_InventoryTab_TextBox_Location.EnableWildcards = true;
                 Control_InventoryTab_TextBox_Location.ClearOnNoMatch = true;
+
+                _progressHelper?.UpdateProgress(85, "Loading color code data...");
+                
+                // Configure color code SuggestionTextBox
+                Control_InventoryTab_TextBox_ColorCode.DataProvider = GetColorCodeSuggestionsAsync;
+                Control_InventoryTab_TextBox_ColorCode.MaxResults = 20;
+                Control_InventoryTab_TextBox_ColorCode.EnableWildcards = false;
+                Control_InventoryTab_TextBox_ColorCode.ClearOnNoMatch = false;
 
                 _progressHelper?.UpdateProgress(100, "Combo boxes loaded");
                 await Task.Delay(100);
@@ -430,6 +560,55 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                     controlName: this.Name);
 
                 return new List<string>();
+            }
+        }
+
+        /// <summary>
+        /// Data provider for color code SuggestionTextBox.
+        /// Returns list of all color codes from database plus "OTHER" option.
+        /// </summary>
+        /// <returns>List of color code strings.</returns>
+        private async Task<List<string>> GetColorCodeSuggestionsAsync()
+        {
+            try
+            {
+                var dao = new Dao_ColorCode();
+                var dataResult = await dao.GetAllAsync();
+
+                if (!dataResult.IsSuccess || dataResult.Data == null)
+                {
+                    Service_ErrorHandler.ShowWarning(dataResult.ErrorMessage ?? "Failed to load color codes");
+                    return new List<string> { "OTHER" };
+                }
+
+                var suggestions = new List<string>();
+                foreach (System.Data.DataRow row in dataResult.Data.Rows)
+                {
+                    if (row["ColorCode"] != null && row["ColorCode"] != DBNull.Value)
+                    {
+                        suggestions.Add(row["ColorCode"].ToString() ?? string.Empty);
+                    }
+                }
+
+                // Add "OTHER" option at the end for custom colors
+                suggestions.Add("OTHER");
+
+                return suggestions;
+            }
+            catch (Exception ex)
+            {
+                Service_ErrorHandler.HandleException(
+                    ex,
+                    Enum_ErrorSeverity.Medium,
+                    contextData: new Dictionary<string, object>
+                    {
+                        ["Control"] = nameof(Control_InventoryTab),
+                        ["Method"] = nameof(GetColorCodeSuggestionsAsync)
+                    },
+                    callerName: nameof(GetColorCodeSuggestionsAsync),
+                    controlName: this.Name);
+
+                return new List<string> { "OTHER" };
             }
         }
 
@@ -883,6 +1062,8 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                 string loc = Control_InventoryTab_TextBox_Location.Text;
                 string qtyText = Control_InventoryTab_TextBox_Quantity.Text.Trim();
                 string notes = Control_InventoryTab_RichTextBox_Notes.Text.Trim();
+                string? colorCode = Control_InventoryTab_TextBox_ColorCode.Visible ? Control_InventoryTab_TextBox_ColorCode.Text?.Trim() : null;
+                string? workOrder = Control_InventoryTab_TextBox_WorkOrder.Visible ? Control_InventoryTab_TextBox_WorkOrder.Text?.Trim() : null;
 
                 if (string.IsNullOrWhiteSpace(partId))
                 {
@@ -952,6 +1133,8 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                     Model_Application_Variables.User,
                     "",
                     notes,
+                    colorCode,
+                    workOrder,
                     true);
 
                 Service_DebugTracer.TraceMethodExit(new { IsSuccess = inventoryResult.IsSuccess, Message = inventoryResult.StatusMessage }, nameof(Control_InventoryTab), "AddInventoryItemAsync");
@@ -1153,6 +1336,16 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
         {
             try
             {
+                Service_DebugTracer.TraceMethodEntry(new Dictionary<string, object>
+                {
+                    ["PartText"] = Control_InventoryTab_TextBox_Part.Text?.Trim() ?? "",
+                    ["OpText"] = Control_InventoryTab_TextBox_Operation.Text?.Trim() ?? "",
+                    ["LocText"] = Control_InventoryTab_TextBox_Location.Text?.Trim() ?? "",
+                    ["QtyText"] = Control_InventoryTab_TextBox_Quantity.Text?.Trim() ?? "",
+                    ["ColorText"] = Control_InventoryTab_TextBox_ColorCode.Visible ? (Control_InventoryTab_TextBox_ColorCode.Text?.Trim() ?? "") : "<hidden>",
+                    ["WoText"] = Control_InventoryTab_TextBox_WorkOrder.Visible ? (Control_InventoryTab_TextBox_WorkOrder.Text?.Trim() ?? "") : "<hidden>",
+                    ["ColorFieldsVisible"] = Control_InventoryTab_TextBox_ColorCode.Visible
+                }, nameof(Control_InventoryTab_Update_SaveButtonState), nameof(Control_InventoryTab));
                 // Check validity: Either Model_Application_Variables is set (from overlay selection)
                 // OR the text matches a valid value in the master data (exact match typed)
                 string partText = Control_InventoryTab_TextBox_Part.Text?.Trim() ?? string.Empty;
@@ -1166,6 +1359,56 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                 bool locValid = !string.IsNullOrWhiteSpace(Model_Application_Variables.Location) 
                     || Helper_UI_SuggestionBoxes.IsValidLocation(locText);
                 bool qtyValid = int.TryParse(Control_InventoryTab_TextBox_Quantity.Text.Trim(), out int qty) && qty > 0;
+                
+                // Check if color code is required and valid
+                bool colorCodeValid = true;
+                if (Control_InventoryTab_TextBox_ColorCode.Visible)
+                {
+                    string colorCodeText = Control_InventoryTab_TextBox_ColorCode.Text?.Trim() ?? string.Empty;
+                    
+                    // Color code is required when visible
+                    if (string.IsNullOrWhiteSpace(colorCodeText))
+                    {
+                        colorCodeValid = false;
+                        LoggingUtility.Log("[Save Button] ColorCode validation FAILED: empty (required)");
+                    }
+                    else
+                    {
+                        // Fallback: if cache not yet loaded treat as tentatively valid and will revalidate once cache populated
+                        if (Model_Application_Variables.ValidColorCodes.Count == 0)
+                        {
+                            colorCodeValid = true; // optimistic until cache loads
+                            LoggingUtility.Log("[Save Button] ColorCode tentative PASS (cache empty, will revalidate later)");
+                        }
+                        else
+                        {
+                            colorCodeValid = IsValidColorCode(colorCodeText);
+                            LoggingUtility.Log($"[Save Button] ColorCode validation '{colorCodeText}': {(colorCodeValid ? "PASSED" : "FAILED")} (cache has {Model_Application_Variables.ValidColorCodes.Count} colors)");
+                        }
+                    }
+                }
+                
+                // Check if work order is required and valid
+                bool workOrderValid = true;
+                if (Control_InventoryTab_TextBox_WorkOrder.Visible)
+                {
+                    string workOrderText = Control_InventoryTab_TextBox_WorkOrder.Text?.Trim() ?? string.Empty;
+                    
+                    // Work order is required when visible and must pass validator (without altering textbox)
+                    if (string.IsNullOrWhiteSpace(workOrderText))
+                    {
+                        workOrderValid = false;
+                        LoggingUtility.Log($"[Save Button] WorkOrder validation FAILED: empty (required)");
+                    }
+                    else
+                    {
+                        workOrderValid = Service_ColorCodeValidator.ValidateAndFormatWorkOrder(
+                            workOrderText,
+                            out _,
+                            out _);
+                        LoggingUtility.Log($"[Save Button] WorkOrder validation '{workOrderText}': {(workOrderValid ? "PASSED" : "FAILED")}");
+                    }
+                }
                 
                 // Update Model_Application_Variables from exact matches
                 if (partValid && !string.IsNullOrWhiteSpace(partText))
@@ -1192,7 +1435,23 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                     }
                 }
                 
-                Control_InventoryTab_Button_Save.Enabled = partValid && opValid && locValid && qtyValid;
+                bool saveEnabled = partValid && opValid && locValid && qtyValid && colorCodeValid && workOrderValid;
+                Service_DebugTracer.TraceUIAction("SAVE_BUTTON_VALIDATION", nameof(Control_InventoryTab), new Dictionary<string, object>
+                {
+                    ["PartValid"] = partValid,
+                    ["OperationValid"] = opValid,
+                    ["LocationValid"] = locValid,
+                    ["QuantityValid"] = qtyValid,
+                    ["ColorRequired"] = Control_InventoryTab_TextBox_ColorCode.Visible,
+                    ["ColorValid"] = colorCodeValid,
+                    ["WorkOrderRequired"] = Control_InventoryTab_TextBox_WorkOrder.Visible,
+                    ["WorkOrderValid"] = workOrderValid,
+                    ["ValidColorCodesCount"] = Model_Application_Variables.ValidColorCodes.Count,
+                    ["SaveEnabled"] = saveEnabled
+                });
+                Control_InventoryTab_Button_Save.Enabled = saveEnabled;
+
+                Service_DebugTracer.TraceMethodExit(null, nameof(Control_InventoryTab_Update_SaveButtonState), nameof(Control_InventoryTab));
             }
             catch (Exception ex)
             {
@@ -1208,7 +1467,45 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             }
         }
 
-        private void Control_InventoryTab_OnStartup_WireUpEvents()
+        /// <summary>
+        /// Validates if a color code exists in the cached color codes (case-insensitive match).
+        /// </summary>
+        /// <param name="colorCode">The color code to validate.</param>
+        /// <returns>True if the color code exists in the cache, false otherwise.</returns>
+        /// <remarks>
+        /// Uses Model_Application_Variables.ValidColorCodes cache for fast lookup (case-insensitive).
+        /// No database call is made - cache is loaded at startup.
+        /// Does not modify the textbox - only validates the input.
+        /// </remarks>
+        private bool IsValidColorCode(string colorCode)
+        {
+            Service_DebugTracer.TraceMethodEntry(new Dictionary<string, object>
+            {
+                ["Input"] = colorCode,
+                ["CacheCount"] = Model_Application_Variables.ValidColorCodes.Count
+            }, nameof(IsValidColorCode), nameof(Control_InventoryTab));
+
+            if (string.IsNullOrWhiteSpace(colorCode))
+            {
+                Service_DebugTracer.TraceMethodExit(false, nameof(IsValidColorCode), nameof(Control_InventoryTab));
+                return false;
+            }
+
+            var trimmed = colorCode.Trim();
+            bool contains = Model_Application_Variables.ValidColorCodes.Contains(trimmed);
+
+            Service_DebugTracer.TraceUIAction("COLOR_VALIDATION", nameof(Control_InventoryTab), new Dictionary<string, object>
+            {
+                ["Color"] = trimmed,
+                ["Result"] = contains,
+                ["CacheCount"] = Model_Application_Variables.ValidColorCodes.Count
+            });
+
+            Service_DebugTracer.TraceMethodExit(contains, nameof(IsValidColorCode), nameof(Control_InventoryTab));
+            return contains;
+        }
+    private void Control_InventoryTab_OnStartup_WireUpEvents()
+
         {
             try
             {
@@ -1233,6 +1530,9 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                         Model_Application_Variables.PartId = null;
                         Control_InventoryTab_Update_SaveButtonState();
                     }
+                    
+                    // Show/hide color code and work order fields based on part requirements
+                    UpdateColorCodeFieldsVisibility();
                 };
                 
                 Control_InventoryTab_TextBox_Operation.SuggestionSelected += (s, e) =>
@@ -1278,6 +1578,25 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                 Control_InventoryTab_TextBox_Quantity.Leave += (s, e) =>
                 {
                     Control_AdvancedInventory.ValidateQtyTextBox(Control_InventoryTab_TextBox_Quantity);                      
+                };
+
+                // Color code "OTHER" selection handler and validation
+                Control_InventoryTab_TextBox_ColorCode.TextChanged += (s, e) =>
+                {
+                    HandleColorCodeOtherSelection();
+                    Control_InventoryTab_Update_SaveButtonState();
+                };
+
+                // Work order validation and auto-formatting
+                Control_InventoryTab_TextBox_WorkOrder.Leave += (s, e) =>
+                {
+                    ValidateAndFormatWorkOrder();
+                };
+                
+                // Work order text changed - update save button state
+                Control_InventoryTab_TextBox_WorkOrder.TextChanged += (s, e) =>
+                {
+                    Control_InventoryTab_Update_SaveButtonState();
                 };
 
                 Control_InventoryTab_Button_AdvancedEntry.Click +=
@@ -1329,6 +1648,67 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             Control_InventoryTab_Label_Version.ForeColor = isOutOfDate
                 ? Model_Application_Variables.UserUiColors.ErrorColor ?? Color.Red
                 : Model_Application_Variables.UserUiColors.LabelForeColor ?? SystemColors.ControlText;
+        }
+
+        #endregion
+
+        #region Color Code Field Management
+
+        /// <summary>
+        /// Shows or hides the color code and work order fields based on the selected part.
+        /// </summary>
+        /// <remarks>
+        /// Color code fields are shown if the part is in the ColorCodeParts cache.
+        /// This method is called when the Part TextBox value changes.
+        /// </remarks>
+        private void UpdateColorCodeFieldsVisibility()
+        {
+            try
+            {
+                Service_DebugTracer.TraceMethodEntry(null, nameof(UpdateColorCodeFieldsVisibility), nameof(Control_InventoryTab));
+
+                var partText = Control_InventoryTab_TextBox_Part.Text?.Trim();
+                bool inCache = !string.IsNullOrWhiteSpace(partText) && Model_Application_Variables.ColorCodeParts.Contains(partText);
+
+                Service_DebugTracer.TraceUIAction("COLOR_FIELDS_VISIBILITY", nameof(Control_InventoryTab), new Dictionary<string, object>
+                {
+                    ["PartText"] = partText ?? "",
+                    ["ColorCodePartsCount"] = Model_Application_Variables.ColorCodeParts.Count,
+                    ["RequiresColorCode"] = inCache
+                });
+
+                // Show/hide color code and work order fields
+                Control_InventoryTab_Label_ColorCode.Visible = inCache;
+                Control_InventoryTab_TextBox_ColorCode.Visible = inCache;
+                Control_InventoryTab_Label_WorkOrder.Visible = inCache;
+                Control_InventoryTab_TextBox_WorkOrder.Visible = inCache;
+
+                // Clear fields when hiding
+                if (!inCache)
+                {
+                    Control_InventoryTab_TextBox_ColorCode.Text = string.Empty;
+                    Control_InventoryTab_TextBox_WorkOrder.Text = string.Empty;
+                }
+
+                Service_DebugTracer.TraceMethodExit(new Dictionary<string, object>
+                {
+                    ["Visible"] = inCache
+                }, nameof(UpdateColorCodeFieldsVisibility), nameof(Control_InventoryTab));
+            }
+            catch (Exception ex)
+            {
+                Service_ErrorHandler.HandleException(
+                    ex,
+                    Enum_ErrorSeverity.Low,
+                    contextData: new Dictionary<string, object>
+                    {
+                        ["Control"] = nameof(Control_InventoryTab),
+                        ["Method"] = nameof(UpdateColorCodeFieldsVisibility),
+                        ["PartText"] = Control_InventoryTab_TextBox_Part.Text ?? "NULL"
+                    },
+                    callerName: nameof(UpdateColorCodeFieldsVisibility),
+                    controlName: this.Name);
+            }
         }
 
         #endregion

@@ -6,6 +6,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `md_part_ids_Add_Part`(
     IN p_Description VARCHAR(300),
     IN p_IssuedBy VARCHAR(100),
     IN p_ItemType VARCHAR(100),
+    IN p_RequiresColorCode TINYINT,
     OUT p_Status INT,
     OUT p_ErrorMsg VARCHAR(500)
 )
@@ -24,8 +25,8 @@ BEGIN
         SET p_Status = -2;
         SET p_ErrorMsg = 'ItemType is required';
     ELSE
-        INSERT INTO `md_part_ids` (`PartID`, `Customer`, `Description`, `IssuedBy`, `ItemType`)
-        VALUES (p_ItemNumber, p_Customer, p_Description, p_IssuedBy, p_ItemType);
+        INSERT INTO `md_part_ids` (`PartID`, `Customer`, `Description`, `IssuedBy`, `ItemType`, `RequiresColorCode`)
+        VALUES (p_ItemNumber, p_Customer, p_Description, p_IssuedBy, p_ItemType, COALESCE(p_RequiresColorCode, 0));
         SET v_RowCount = ROW_COUNT();
         IF v_RowCount > 0 THEN
             SET p_Status = 1;

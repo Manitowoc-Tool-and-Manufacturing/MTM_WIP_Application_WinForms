@@ -266,9 +266,9 @@ public static class Core_AppThemes
                 {
                     fallbackTheme = "Dark";
                 }
-                else if (Themes.ContainsKey("Blue"))
+                else if (Themes.ContainsKey("BLUE"))
                 {
-                    fallbackTheme = "Blue";
+                    fallbackTheme = "BLUE";
                 }
                 else if (Themes.Count > 0)
                 {
@@ -401,7 +401,7 @@ public static class Core_AppThemes
             DataGridSelectionForeColor = Color.White
         };
 
-        themes["Blue"] = new AppTheme { Colors = blueColors, FormFont = null };
+        themes["BLUE"] = new AppTheme { Colors = blueColors, FormFont = null };
 
         LoggingUtility.Log("Created fallback theme collection with Default, Dark, and Blue themes.");
         return themes;

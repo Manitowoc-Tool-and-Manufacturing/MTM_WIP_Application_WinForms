@@ -7,6 +7,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `md_part_ids_Update_Part`(
     IN p_Description VARCHAR(300),
     IN p_IssuedBy VARCHAR(100),
     IN p_ItemType VARCHAR(100),
+    IN p_RequiresColorCode TINYINT,
     OUT p_Status INT,
     OUT p_ErrorMsg VARCHAR(500)
 )
@@ -33,7 +34,8 @@ BEGIN
             `Customer` = p_Customer,
             `Description` = p_Description,
             `IssuedBy` = p_IssuedBy,
-            `ItemType` = p_ItemType
+            `ItemType` = p_ItemType,
+            `RequiresColorCode` = COALESCE(p_RequiresColorCode, `RequiresColorCode`)
         WHERE `ID` = p_ID;
         SET v_RowCount = ROW_COUNT();
         IF v_RowCount > 0 THEN

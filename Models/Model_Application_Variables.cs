@@ -1,6 +1,8 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
+using System.Threading.Tasks;
 using MTM_WIP_Application_Winforms.Data;
 using MTM_WIP_Application_Winforms.Helpers;
 
@@ -39,6 +41,24 @@ namespace MTM_WIP_Application_Winforms.Models
         public static string? Location { get; set; }
         public static string? Operation { get; set; }
         public static string? Notes { get; set; }
+
+        #endregion
+
+        #region Color Code Tracking
+
+        /// <summary>
+        /// Cache of PartIDs that require color code tracking during inventory entry.
+        /// Populated at application startup from md_part_ids.RequiresColorCode flag.
+        /// Used for fast lookup during inventory save to determine if color/work order fields should be shown.
+        /// </summary>
+        public static HashSet<string> ColorCodeParts { get; set; } = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+
+        /// <summary>
+        /// Cache of valid color codes from md_color_codes table.
+        /// Populated at application startup and used for fast validation during inventory entry.
+        /// Case-sensitive HashSet for exact matching after title-case formatting.
+        /// </summary>
+        public static HashSet<string> ValidColorCodes { get; set; } = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
 
         #endregion
 
@@ -227,6 +247,68 @@ namespace MTM_WIP_Application_Winforms.Models
             /// Default: 5
             /// </summary>
             public int SyncProgressThreshold { get; set; } = 5;
+        }
+
+        #endregion
+
+        #region Methods
+
+        /// <summary>
+        /// Reloads the ColorCodeParts and ValidColorCodes caches from the database.
+        /// </summary>
+        /// <returns>Task representing the async operation.</returns>
+        /// <remarks>
+        /// - Queries md_part_ids for PartIDs where RequiresColorCode = TRUE (ColorCodeParts)
+        /// - Queries md_color_codes for all valid ColorCode values (ValidColorCodes)
+        /// Call this at startup and after any change to part flags or color codes.
+        /// </remarks>
+        public static async Task ReloadColorCodePartsAsync()
+        {
+            try
+            {
+                // Load parts that require color code tracking
+                var result = await Dao_Part.GetColorCodeFlaggedPartsAsync();
+
+                if (result.IsSuccess && result.Data != null)
+                {
+                    ColorCodeParts.Clear();
+                    foreach (System.Data.DataRow row in result.Data.Rows)
+                    {
+                        var partId = row["PartID"]?.ToString();
+                        if (!string.IsNullOrWhiteSpace(partId))
+                        {
+                            ColorCodeParts.Add(partId);
+                        }
+                    }
+                    Logging.LoggingUtility.Log($"[Model_Application_Variables] ColorCodeParts cache loaded: {ColorCodeParts.Count} parts");
+                }
+
+                // Load valid color codes for fast validation (case-insensitive set)
+                var colorDao = new Data.Dao_ColorCode();
+                var colorResult = await colorDao.GetAllAsync();
+                if (colorResult.IsSuccess && colorResult.Data != null)
+                {
+                    ValidColorCodes.Clear();
+                    foreach (System.Data.DataRow row in colorResult.Data.Rows)
+                    {
+                        var code = row["ColorCode"]?.ToString();
+                        if (!string.IsNullOrWhiteSpace(code))
+                        {
+                            ValidColorCodes.Add(code);
+                        }
+                    }
+                    Logging.LoggingUtility.Log($"[Model_Application_Variables] ValidColorCodes cache loaded: {ValidColorCodes.Count} colors");
+                }
+                else
+                {
+                    Logging.LoggingUtility.Log($"[Model_Application_Variables] Failed to load ValidColorCodes: {colorResult.ErrorMessage}");
+                }
+            }
+            catch (Exception ex)
+            {
+                // Log error but don't throw - cache remains in previous state
+                Logging.LoggingUtility.LogDatabaseError(ex);
+            }
         }
 
         #endregion

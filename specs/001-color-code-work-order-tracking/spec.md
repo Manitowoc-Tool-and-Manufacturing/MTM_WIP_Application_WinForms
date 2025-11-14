@@ -23,7 +23,7 @@ Material handlers need to inventory parts that require work order segregation by
 4. **Given** user enters invalid work order "ABC123" with letters, **When** field loses focus, **Then** system shows error "Invalid work order format. Enter 5-6 digit number or WO-######", clears field, and returns focus
 5. **Given** all required fields filled correctly, **When** user clicks Save, **Then** inventory record saves with color code and work order data to both inv_inventory and inv_transaction tables
 6. **Given** user attempts to save without entering required color code, **When** Save button clicked, **Then** system blocks save with validation error message
-7. **Given** user selects "Other" from color dropdown, **When** selection made, **Then** dialog appears prompting for custom color name (max 15 characters)
+7. **Given** user selects "OTHER" from color dropdown, **When** selection made, **Then** dialog appears prompting for custom color name (max 15 characters)
 8. **Given** user enters custom color "blueberry", **When** save confirmed, **Then** system prompts "Save this color to database for future use?" with Yes/No buttons
 9. **Given** user clicks Yes to save custom color, **When** confirmed, **Then** system adds "Blueberry" (title case) to md_color_codes table
 
@@ -146,7 +146,7 @@ Users need consistent "Show All" functionality across all tabs. Advanced Remove 
 - **FR-006**: System MUST auto-format work order input by padding numbers to 6 digits with leading zeros and adding "WO-" prefix
 - **FR-007**: System MUST reject work order input containing non-numeric characters (letters, special symbols) with validation error
 - **FR-008**: System MUST enforce mandatory color code and work order entry for parts flagged with RequiresColorCode=TRUE
-- **FR-009**: System MUST allow "Other" as color code option with custom text entry (max 15 characters)
+- **FR-009**: System MUST allow "OTHER" as color code option with custom text entry (max 15 characters)
 - **FR-010**: System MUST prompt user to save custom colors to database with title case formatting (first letter capitalized)
 
 #### UI Display & Interaction
@@ -188,7 +188,7 @@ Users need consistent "Show All" functionality across all tabs. Advanced Remove 
 
 ### Key Entities
 
-- **Color Code**: Represents the physical color tag applied to parts for work order segregation. Predefined list stored in md_color_codes table, supports custom colors via "Other" option. Max length 50 characters, default "Unknown" for legacy data.
+- **Color Code**: Represents the physical color tag applied to parts for work order segregation. Predefined list stored in md_color_codes table, supports custom colors via "OTHER" option. Max length 50 characters, default "Unknown" for legacy data.
 
 - **Work Order**: Represents the manufacturing work order number associated with inventory batches. Format: WO-###### (6 digits with leading zeros). User-entered during inventory, max length 10 characters, default "Unknown" for legacy data.
 
@@ -196,7 +196,7 @@ Users need consistent "Show All" functionality across all tabs. Advanced Remove 
 
 - **Inventory Record**: Extended to include ColorCode and WorkOrder attributes. Both fields mandatory when part is flagged, default to "Unknown" otherwise. Persisted in both inv_inventory (current state) and inv_transaction (historical record).
 
-- **Custom Color**: User-defined color code entered via "Other" option. Title-cased before storage, checked for duplicates, optionally saved to md_color_codes for future reuse. Max 15 characters.
+- **Custom Color**: User-defined color code entered via "OTHER" option. Title-cased before storage, checked for duplicates, optionally saved to md_color_codes for future reuse. Max 15 characters.
 
 ## Success Criteria *(mandatory)*
 
@@ -226,7 +226,7 @@ Users need consistent "Show All" functionality across all tabs. Advanced Remove 
 7. **Legacy Data Volume**: Majority of existing inventory records will have "Unknown" color code until naturally cycled out through normal operations
 8. **Settings Access**: All users have permission to add/edit parts in Settings (no administrator-only restriction for RequiresColorCode flag)
 9. **Performance Threshold**: 1000 record threshold for "Show All" warning is acceptable based on current database size and performance testing
-10. **Custom Color Frequency**: "Other" option used infrequently (less than 5% of entries), so duplicate checking on save is acceptable UX
+10. **Custom Color Frequency**: "OTHER" option used infrequently (less than 5% of entries), so duplicate checking on save is acceptable UX
 
 ## Implementation Notes
 
@@ -303,8 +303,8 @@ CREATE INDEX idx_requires_colorcode ON md_part_ids(RequiresColorCode);
 - Error message: "Invalid work order format. Enter 5-6 digit number or WO-######"
 
 **Color Code**:
-- Dropdown selection from predefined list + "Other"
-- "Other" opens dialog for custom entry (max 15 chars)
+- Dropdown selection from predefined list + "OTHER"
+- "OTHER" opens dialog for custom entry (max 15 chars)
 - Custom colors title-cased before save: "blueberry" → "Blueberry"
 - "Unknown" not selectable by user (database default only)
 

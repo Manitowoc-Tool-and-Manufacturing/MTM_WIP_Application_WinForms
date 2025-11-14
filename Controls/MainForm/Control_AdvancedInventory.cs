@@ -922,6 +922,8 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                         Model_Application_Variables.User,
                         null,
                         notes,
+                        null,  // colorCode
+                        null,  // workOrder
                         true);
 
                     if (!addResult.IsSuccess)
@@ -1507,6 +1509,8 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                         Model_Application_Variables.User,
                         null, // <-- ensure unique batch number
                         notes,
+                        null,  // colorCode
+                        null,  // workOrder
                         true);
 
                     locations.Add(loc);
@@ -1823,7 +1827,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                     {
                         // Pass null/empty for batchNumber for unique batch per transaction
                         await Dao_Inventory.AddInventoryItemAsync(
-                            part, loc, op, qty, "", Model_Application_Variables.User ?? Environment.UserName, null, notes, true);
+                            part, loc, op, qty, "", Model_Application_Variables.User ?? Environment.UserName, null, notes, null, null, true);
                     }
                     catch (Exception ex)
                     {

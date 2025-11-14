@@ -108,7 +108,7 @@ pie title LoggingUtility Dependents by Layer
     "Services" : 8
     "Helpers" : 10
     "Forms" : 12
-    "Other" : 7
+    "OTHER" : 7
 ```
 
 **Impact**: Changes to LoggingUtility ripple across 100+ files

@@ -11,6 +11,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
         private System.Windows.Forms.ComboBox Control_Add_PartID_ComboBox_ItemType;
         private System.Windows.Forms.Label issuedByLabel;
         private System.Windows.Forms.Label issuedByValueLabel;
+        private System.Windows.Forms.CheckBox Control_Add_PartID_CheckBox_RequiresColorCode;
         private System.Windows.Forms.Button saveButton;
         private System.Windows.Forms.Button cancelButton;
 
@@ -39,6 +40,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             Control_Add_PartID_ComboBox_ItemType = new ComboBox();
             issuedByLabel = new Label();
             issuedByValueLabel = new Label();
+            Control_Add_PartID_CheckBox_RequiresColorCode = new CheckBox();
             saveButton = new Button();
             cancelButton = new Button();
             Control_Add_PartID_GroupBox_NewPartID = new GroupBox();
@@ -106,6 +108,18 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             issuedByValueLabel.Text = "Current User";
             issuedByValueLabel.TextAlign = ContentAlignment.MiddleLeft;
             // 
+            // Control_Add_PartID_CheckBox_RequiresColorCode
+            // 
+            Control_Add_PartID_CheckBox_RequiresColorCode.AutoSize = true;
+            Control_Add_PartID_TableLayout_NewPartIDEntry.SetColumnSpan(Control_Add_PartID_CheckBox_RequiresColorCode, 3);
+            Control_Add_PartID_CheckBox_RequiresColorCode.Dock = DockStyle.Fill;
+            Control_Add_PartID_CheckBox_RequiresColorCode.Location = new Point(90, 116);
+            Control_Add_PartID_CheckBox_RequiresColorCode.Name = "Control_Add_PartID_CheckBox_RequiresColorCode";
+            Control_Add_PartID_CheckBox_RequiresColorCode.Size = new Size(343, 17);
+            Control_Add_PartID_CheckBox_RequiresColorCode.TabIndex = 13;
+            Control_Add_PartID_CheckBox_RequiresColorCode.Text = "Requires Color Code && Work Order";
+            Control_Add_PartID_CheckBox_RequiresColorCode.UseVisualStyleBackColor = true;
+            // 
             // saveButton
             // 
             saveButton.AutoSize = true;
@@ -154,6 +168,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             Control_Add_PartID_TableLayout_NewPartIDEntry.Controls.Add(typeLabel, 0, 2);
             Control_Add_PartID_TableLayout_NewPartIDEntry.Controls.Add(Control_Add_PartID_ComboBox_ItemType, 1, 2);
             Control_Add_PartID_TableLayout_NewPartIDEntry.Controls.Add(issuedByValueLabel, 1, 4);
+            Control_Add_PartID_TableLayout_NewPartIDEntry.Controls.Add(Control_Add_PartID_CheckBox_RequiresColorCode, 1, 5);
             Control_Add_PartID_TableLayout_NewPartIDEntry.Controls.Add(itemNumberTextBox, 1, 0);
             Control_Add_PartID_TableLayout_NewPartIDEntry.Controls.Add(cancelButton, 3, 6);
             Control_Add_PartID_TableLayout_NewPartIDEntry.Controls.Add(saveButton, 2, 6);

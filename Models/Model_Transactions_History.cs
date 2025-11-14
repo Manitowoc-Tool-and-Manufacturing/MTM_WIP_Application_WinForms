@@ -16,6 +16,8 @@ internal class Model_Transactions_History
     public string? ItemType { get; set; }
     public string? BatchNumber { get; set; }
     public DateTime DateTime { get; set; } = DateTime.Now;
+    public string? ColorCode { get; set; }
+    public string? WorkOrder { get; set; }
 
     #endregion
 }

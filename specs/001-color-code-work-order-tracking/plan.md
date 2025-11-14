@@ -1,0 +1,162 @@
+# Implementation Plan: Color Code & Work Order Tracking
+
+**Branch**: `001-color-code-work-order-tracking` | **Date**: 2025-11-13 | **Spec**: [spec.md](./spec.md)
+
+## Summary
+
+Add color code and work order tracking to the MTM WIP Application's inventory management system. Material handlers use physical color tags to segregate parts by work order on the shop floor. The application must capture color codes and work order numbers during inventory entry, enforce validation rules, and display this data during search/remove/transfer operations. Parts requiring color codes are flagged in the master data table, triggering dynamic UI changes that show color code and work order input fields. The system auto-formats work order numbers to WO-###### format, supports custom colors via "OTHER" option, and sorts search results by color then location for efficient work order processing.
+
+## Technical Context
+
+**Language/Version**: C# 12.0, .NET 8.0 Windows Forms  
+**Primary Dependencies**: MySql.Data 9.4.0, Microsoft.Extensions.DependencyInjection 8.0.0  
+**Storage**: MySQL 5.7.24 (MAMP localhost:3306) - mtm_wip_application_winforms database  
+**Testing**: Manual testing with test scenarios  
+**Target Platform**: Windows 10/11 Desktop Application  
+**Project Type**: Single WinForms application with layered architecture (Data/Services/Forms/Controls/Helpers)  
+**Performance Goals**: <500ms query operations, <30s inventory entry, <2s search results (up to 1000 records)  
+**Constraints**: MySQL 5.7.24 limitations (no JSON, CTEs, window functions), Single-threaded WinForms UI  
+**Scale/Scope**: 24 database tables, ~50 forms/controls, 10+ concurrent users, 10k+ inventory records
+
+## Constitution Check
+
+*GATE: All checks PASSED ✅ - Proceed to Phase 0 Research*
+
+### ✅ I. Centralized Error Handling
+All error handling uses `Service_ErrorHandler` methods. Work order validation errors use `HandleValidationError()`. Database operations wrapped with `HandleDatabaseError()`. No direct `MessageBox.Show()` except via `Service_ErrorHandler.ShowConfirmation()`.
+
+### ✅ II. Structured Logging
+All logging uses `LoggingUtility` methods. Feature logs: inventory events, validation errors, custom color additions, cache refreshes. Thread-safe CSV format with recursion prevention.
+
+### ✅ III. Model_Dao_Result Pattern
+All DAO methods return `Model_Dao_Result<T>`. New: `Dao_ColorCode.GetAllAsync()`, `Dao_Part.GetAllColorCodeFlaggedAsync()`. Modified: `Dao_Inventory.AddAsync()` with ColorCode/WorkOrder params.
+
+### ✅ IV. Async-First Operations
+All database operations use async/await. No `.Result` or `.Wait()` blocking calls. UI event handlers use `async void` with proper error handling.
+
+### ✅ V. WinForms Best Practices
+Forms inherit from `ThemedForm`, controls from `ThemedUserControl`. Proper disposal. `InvokeRequired` checks for cross-thread UI updates. SuggestionTextBox for consistency.
+
+### ✅ VI. Stored Procedure Conventions
+DAO methods pass parameters WITHOUT `p_` prefix. `Helper_Database_StoredProcedure` auto-detects prefixes. Standard output params: `p_Status INT`, `p_ErrorMsg VARCHAR(500)`.
+
+## Project Structure
+
+### Documentation
+```
+specs/001-color-code-work-order-tracking/
+├── plan.md          # This file
+├── research.md      # Phase 0 output
+├── data-model.md    # Phase 1 output
+├── quickstart.md    # Phase 1 output
+├── contracts/       # Phase 1 stored procedure contracts
+└── tasks.md         # Phase 2 (/speckit.tasks command)
+```
+
+### Source Code
+```
+MTM_WIP_Application_Winforms/
+├── Data/
+│   ├── Dao_ColorCode.cs           # NEW
+│   ├── Dao_Inventory.cs           # MODIFIED
+│   ├── Dao_Part.cs                # MODIFIED
+│   └── Dao_Transactions.cs        # MODIFIED
+├── Services/
+│   └── Service_ColorCodeValidator.cs  # NEW
+├── Helpers/
+│   └── Helper_UI_ComboBoxes.cs    # MODIFIED: color cache
+├── Models/
+│   ├── Model_Application_Variables.cs  # MODIFIED: flagged parts cache
+│   └── Model_ColorCode.cs         # NEW
+├── Controls/MainForm/
+│   ├── Control_InventoryTab.cs    # MODIFIED: dynamic color/WO fields
+│   ├── Control_RemoveTab.cs       # MODIFIED: columns + warning
+│   ├── Control_TransferTab.cs     # MODIFIED: read-only columns
+│   ├── Control_AdvancedRemove.cs  # MODIFIED: Show All button
+│   └── Control_AdvancedInventory.cs  # MODIFIED: validation
+├── Controls/SettingsForm/
+│   ├── Control_Add_PartID.cs      # MODIFIED: checkbox
+│   └── Control_Edit_PartID.cs     # MODIFIED: checkbox
+└── Database/
+    ├── UpdatedStoredProcedures/   # 8 new/modified procedures
+    ├── UpdatedTables/             # 4 migration scripts
+    └── Scripts/                   # Seed data + validation
+```
+
+## Phase Deliverables
+
+**Phase 0**: [research.md](./research.md) - Technology decisions, validation patterns, UI integration approaches  
+**Phase 1**: [data-model.md](./data-model.md), [contracts/](./contracts/), [quickstart.md](./quickstart.md)  
+**Phase 2**: tasks.md (generated by `/speckit.tasks` command - not part of this plan)
+
+## Implementation Checklist
+
+### Database Foundation
+- [ ] Create md_color_codes table with predefined colors
+- [ ] Add RequiresColorCode column to md_part_ids
+- [ ] Add ColorCode/WorkOrder columns to inv_inventory and inv_transaction
+- [ ] Create indexes for performance
+- [ ] Test schema in test database
+
+### Stored Procedures (8 total)
+- [ ] md_color_codes_GetAll (new)
+- [ ] md_color_codes_Add (new)
+- [ ] md_part_ids_GetAllColorCodeFlagged (new)
+- [ ] md_part_ids_UpdateColorCodeFlag (new)
+- [ ] inv_inventory_Add (modified)
+- [ ] inv_inventory_Search (modified)
+- [ ] inv_transaction_Add (modified)
+- [ ] inv_transactions_Search (modified)
+
+### DAO Layer
+- [ ] Create Dao_ColorCode class
+- [ ] Update Dao_Part with color-flagged methods
+- [ ] Update Dao_Inventory Add/Search methods
+- [ ] Update Dao_Transactions Add/Search methods
+- [ ] Add XML documentation
+
+### Services & Caching
+- [ ] Create Service_ColorCodeValidator
+- [ ] Update Helper_UI_ComboBoxes color cache
+- [ ] Update Model_Application_Variables cache
+- [ ] Implement Shift+Click refresh
+
+### UI - Inventory Tab
+- [ ] Add SuggestionTextBox for Color Code
+- [ ] Add TextBox for Work Order
+- [ ] Implement dynamic visibility
+- [ ] Add work order validation
+- [ ] Implement "OTHER" color dialog
+- [ ] Add title-case formatting
+
+### UI - Remove/Transfer/Advanced
+- [ ] Add Color/Work Order columns
+- [ ] Implement dynamic column visibility
+- [ ] Add auto-sort by color then location
+- [ ] Make Transfer columns read-only
+- [ ] Add Show All button to Advanced Remove
+- [ ] Add >1000 record warning
+
+### UI - Settings
+- [ ] Add checkbox to Control_Add_PartID
+- [ ] Add checkbox to Control_Edit_PartID
+- [ ] Implement restart prompt
+
+### Testing & Documentation
+- [ ] Manual test scenarios for all components
+- [ ] Update AGENTS.md
+- [ ] Create migration guide
+- [ ] User documentation
+
+## Success Metrics
+
+1. Work order validation catches 100% of invalid entries
+2. Search results display <2s for ≤1000 records
+3. Advanced Inventory blocks flagged parts with 100% accuracy
+4. Custom colors save with correct title-case formatting
+5. Legacy inventory displays "Unknown" correctly
+6. Transfer preserves color code and work order data
+7. Settings changes trigger restart prompt
+8. Material handler error rate reduction measurable
+9. Work order processing time improvement measurable
+10. All constitution checks remain passing
