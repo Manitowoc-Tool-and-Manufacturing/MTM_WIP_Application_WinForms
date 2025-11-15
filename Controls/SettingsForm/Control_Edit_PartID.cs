@@ -49,7 +49,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
                     });
 
                 InitializeComponent();
-                
+
                 Service_DebugTracer.TraceUIAction("EVENT_HANDLERS_BINDING", nameof(Control_Edit_PartID),
                     new Dictionary<string, object>
                     {
@@ -60,7 +60,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
                     Control_Edit_PartID_ComboBox_Part_SelectedIndexChanged;
                 saveButton.Click += SaveButton_Click;
                 cancelButton.Click += CancelButton_Click;
-                
+
                 Service_DebugTracer.TraceUIAction("LOADING_PART_TYPES", nameof(Control_Edit_PartID));
                 LoadPartTypes();
 
@@ -73,7 +73,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             }
             catch (Exception ex)
             {
-                Service_DebugTracer.TraceBusinessLogic("CONTROL_INITIALIZATION_ERROR", 
+                Service_DebugTracer.TraceBusinessLogic("CONTROL_INITIALIZATION_ERROR",
                     inputData: new Dictionary<string, object> { ["ControlType"] = nameof(Control_Edit_PartID) },
                     validationResults: new Dictionary<string, object>
                     {
@@ -82,10 +82,10 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
                         ["InnerException"] = ex.InnerException?.Message ?? "None"
                     });
 
-                Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.High, 
+                Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.High,
                     controlName: nameof(Control_Edit_PartID));
             }
-            
+
             Service_DebugTracer.TraceMethodExit(new Dictionary<string, object>
             {
                 ["InitializationSuccess"] = true
@@ -109,7 +109,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             }
             catch (Exception ex)
             {
-                Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Medium, 
+                Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Medium,
                     controlName: nameof(Control_Edit_PartID));
             }
         }
@@ -122,7 +122,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             }
             catch (Exception ex)
             {
-                Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Medium, 
+                Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Medium,
                     controlName: nameof(Control_Edit_PartID), callerName: nameof(LoadParts));
             }
         }
@@ -141,7 +141,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             }
             catch (Exception ex)
             {
-                Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.High, 
+                Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.High,
                     controlName: nameof(Control_Edit_PartID), callerName: nameof(OnLoad));
             }
         }
@@ -192,7 +192,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
                         controlName: nameof(Control_Edit_PartID));
                     return;
                 }
-                
+
                 _currentPart = result.Data;
                 if (_currentPart != null)
                 {
@@ -209,7 +209,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
         private async void SaveButton_Click(object sender, EventArgs e)
         {
             var performanceKey = Service_DebugTracer.StartPerformanceTrace("SAVE_PART_OPERATION");
-            
+
             Service_DebugTracer.TraceMethodEntry(new Dictionary<string, object>
             {
                 ["HasCurrentPart"] = _currentPart != null,
@@ -242,14 +242,11 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
                 // Collect all form data for debugging
                 var formData = new Dictionary<string, object>
                 {
-                    ["ItemNumber"] = itemNumberTextBox.Text?.Trim() ?? "",
-                    ["Customer"] = customerTextBox.Text?.Trim() ?? "",
-                    ["Description"] = descriptionTextBox.Text?.Trim() ?? "",
                     ["ItemTypeIndex"] = Control_Edit_PartID_ComboBox_ItemType.SelectedIndex,
                     ["ItemTypeText"] = Control_Edit_PartID_ComboBox_ItemType.Text ?? ""
                 };
 
-                Service_DebugTracer.TraceBusinessLogic("FORM_DATA_COLLECTION", 
+                Service_DebugTracer.TraceBusinessLogic("FORM_DATA_COLLECTION",
                     inputData: formData,
                     businessRules: new Dictionary<string, object>
                     {
@@ -259,46 +256,6 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
                         ["CustomerOptional"] = true
                     });
 
-                // Validation: Item Number
-                if (string.IsNullOrWhiteSpace(itemNumberTextBox.Text))
-                {
-                    Service_DebugTracer.TraceDataValidation("ITEM_NUMBER_VALIDATION",
-                        dataToValidate: itemNumberTextBox.Text,
-                        validationRules: new Dictionary<string, object> { ["Required"] = true },
-                        isValid: false,
-                        errorMessages: new List<string> { "Item Number is required" });
-
-                    Service_ErrorHandler.HandleValidationError(
-                        "Item Number is required to save the part.",
-                        "Item Number", controlName: nameof(Control_Edit_PartID));
-                    itemNumberTextBox.Focus();
-                    
-                    Service_DebugTracer.StopPerformanceTrace(performanceKey, new Dictionary<string, object> { ["Result"] = "VALIDATION_FAILED", ["Field"] = "ItemNumber" });
-                    return;
-                }
-
-                // Auto-correct customer field
-                if (string.IsNullOrWhiteSpace(customerTextBox.Text))
-                {
-                    Service_DebugTracer.TraceBusinessLogic("AUTO_CORRECT_CUSTOMER",
-                        inputData: new Dictionary<string, object> { ["OriginalValue"] = customerTextBox.Text ?? "" },
-                        outputData: new Dictionary<string, object> { ["CorrectedValue"] = "[ No Customer ]" },
-                        businessRules: new Dictionary<string, object> { ["Rule"] = "Empty customer field gets default value" });
-
-                    customerTextBox.Text = "[ No Customer ]";
-                    return;
-                }
-
-                // Auto-correct description: default to [ Empty ] when blank
-                if (string.IsNullOrWhiteSpace(descriptionTextBox.Text))
-                {
-                    Service_DebugTracer.TraceBusinessLogic("AUTO_CORRECT_DESCRIPTION",
-                        inputData: new Dictionary<string, object> { ["OriginalValue"] = descriptionTextBox.Text ?? "" },
-                        outputData: new Dictionary<string, object> { ["CorrectedValue"] = "[ Empty ]" },
-                        businessRules: new Dictionary<string, object> { ["Rule"] = "Empty description defaults to [ Empty ]" });
-
-                    descriptionTextBox.Text = "[ Empty ]";
-                }
 
                 // Validation: Item Type
                 if (Control_Edit_PartID_ComboBox_ItemType.SelectedIndex <= 0)
@@ -317,7 +274,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
                         "Please select a part type from the dropdown list.",
                         "Part Type", controlName: nameof(Control_Edit_PartID));
                     Control_Edit_PartID_ComboBox_ItemType.Focus();
-                    
+
                     Service_DebugTracer.StopPerformanceTrace(performanceKey, new Dictionary<string, object> { ["Result"] = "VALIDATION_FAILED", ["Field"] = "ItemType" });
                     return;
                 }
@@ -325,7 +282,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
                 // Check for duplicate part number
                 string? originalItemNumber = _currentPart["PartID"].ToString();
                 string newItemNumber = itemNumberTextBox.Text.Trim();
-                
+
                 Service_DebugTracer.TraceBusinessLogic("DUPLICATE_CHECK_LOGIC",
                     inputData: new Dictionary<string, object>
                     {
@@ -362,7 +319,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
                             $"Part number '{newItemNumber}' already exists. Please use a different part number.",
                             "Duplicate Part Number", controlName: nameof(Control_Edit_PartID));
                         itemNumberTextBox.Focus();
-                        
+
                         Service_DebugTracer.StopPerformanceTrace(performanceKey, new Dictionary<string, object> { ["Result"] = "VALIDATION_FAILED", ["Field"] = "DuplicateCheck" });
                         return;
                     }
@@ -387,7 +344,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
                     });
 
                 await UpdatePartAsync();
-                
+
                 Service_DebugTracer.TraceBusinessLogic("PART_UPDATE_COMPLETE",
                     outputData: new Dictionary<string, object>
                     {
@@ -406,7 +363,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
                 Service_ErrorHandler.ShowInformation(
                     "Part has been updated successfully!",
                     "Update Complete", controlName: nameof(Control_Edit_PartID));
-                
+
                 Service_DebugTracer.TraceUIAction("REFRESHING_DATA", nameof(Control_Edit_PartID),
                     new Dictionary<string, object>
                     {
@@ -417,8 +374,8 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
                 LoadParts();
                 PartUpdated?.Invoke(this, EventArgs.Empty);
 
-                var finalElapsed = Service_DebugTracer.StopPerformanceTrace(performanceKey, new Dictionary<string, object> 
-                { 
+                var finalElapsed = Service_DebugTracer.StopPerformanceTrace(performanceKey, new Dictionary<string, object>
+                {
                     ["Result"] = "SUCCESS",
                     ["PartUpdated"] = newItemNumber
                 });
@@ -442,9 +399,9 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
                     });
 
                 Service_ErrorHandler.HandleDatabaseError(ex, controlName: nameof(Control_Edit_PartID));
-                
-                Service_DebugTracer.StopPerformanceTrace(performanceKey, new Dictionary<string, object> 
-                { 
+
+                Service_DebugTracer.StopPerformanceTrace(performanceKey, new Dictionary<string, object>
+                {
                     ["Result"] = "EXCEPTION",
                     ["ExceptionType"] = ex.GetType().Name
                 });
@@ -481,8 +438,6 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             }
 
             itemNumberTextBox.Text = _currentPart["PartID"].ToString();
-            customerTextBox.Text = _currentPart["Customer"].ToString();
-            descriptionTextBox.Text = _currentPart["Description"].ToString();
             string? partType = _currentPart["ItemType"].ToString();
 
             int index = -1;
@@ -499,7 +454,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             Control_Edit_PartID_ComboBox_ItemType.SelectedIndex = index > 0 ? index : 0;
 
             issuedByValueLabel.Text = _currentPart["IssuedBy"].ToString();
-            
+
             // Load RequiresColorCode checkbox
             if (_currentPart.Table.Columns.Contains("RequiresColorCode"))
             {
@@ -520,8 +475,6 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
         private void SetFormEnabled(bool enabled)
         {
             itemNumberTextBox.Enabled = enabled;
-            customerTextBox.Enabled = enabled;
-            descriptionTextBox.Enabled = enabled;
             Control_Edit_PartID_ComboBox_ItemType.Enabled = enabled;
             Control_Edit_PartID_CheckBox_RequiresColorCode.Enabled = enabled;
             saveButton.Enabled = enabled;
@@ -536,13 +489,11 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
 
             int id = Convert.ToInt32(_currentPart["ID"]);
             string itemNumber = itemNumberTextBox.Text.Trim();
-            string customer = customerTextBox.Text.Trim();
-            string description = descriptionTextBox.Text.Trim();
             string issuedBy = Model_Application_Variables.User;
             string type = Control_Edit_PartID_ComboBox_ItemType.Text;
             bool requiresColorCode = Control_Edit_PartID_CheckBox_RequiresColorCode.Checked;
-            
-            var result = await Dao_Part.UpdatePartAsync(id, itemNumber, customer, description, issuedBy, type, requiresColorCode);
+
+            var result = await Dao_Part.UpdatePartAsync(id, itemNumber, "", "", issuedBy, type, requiresColorCode);
             if (!result.IsSuccess)
             {
                 Service_ErrorHandler.HandleDatabaseError(
@@ -550,7 +501,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
                     controlName: nameof(Control_Edit_PartID));
                 throw new Exception($"Failed to update part: {result.ErrorMessage}");
             }
-            
+
             // If RequiresColorCode changed, trigger cache reload
             if (requiresColorCode != _originalRequiresColorCode)
             {
@@ -563,8 +514,6 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
         private void ClearForm()
         {
             itemNumberTextBox.Clear();
-            customerTextBox.Clear();
-            descriptionTextBox.Clear();
             Control_Edit_PartID_ComboBox_ItemType.SelectedIndex = 0;
             issuedByValueLabel.Text = "";
             Control_Edit_PartID_CheckBox_RequiresColorCode.Checked = false;
@@ -588,11 +537,13 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             }
             catch (Exception ex)
             {
-                Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Low, 
+                Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Low,
                     controlName: nameof(Control_Edit_PartID));
             }
         }
 
         #endregion
+
+
     }
 }

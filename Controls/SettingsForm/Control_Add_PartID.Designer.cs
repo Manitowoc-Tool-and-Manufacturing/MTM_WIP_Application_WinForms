@@ -45,22 +45,28 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             cancelButton = new Button();
             Control_Add_PartID_GroupBox_NewPartID = new GroupBox();
             Control_Add_PartID_TableLayout_NewPartIDEntry = new TableLayoutPanel();
+            Control_Add_PartID_TableLayout_Inputs = new TableLayoutPanel();
+            Control_Add_PartID_TableLayout_Buttons = new TableLayoutPanel();
             Control_Add_PartID_GroupBox_NewPartID.SuspendLayout();
             Control_Add_PartID_TableLayout_NewPartIDEntry.SuspendLayout();
+            Control_Add_PartID_TableLayout_Inputs.SuspendLayout();
+            Control_Add_PartID_TableLayout_Buttons.SuspendLayout();
             SuspendLayout();
             // 
             // itemNumberLabel
             // 
-            itemNumberLabel.Location = new Point(3, 0);
+            itemNumberLabel.AutoSize = true;
+            itemNumberLabel.Dock = DockStyle.Fill;
+            itemNumberLabel.Location = new Point(3, 3);
+            itemNumberLabel.Margin = new Padding(3);
             itemNumberLabel.Name = "itemNumberLabel";
-            itemNumberLabel.Size = new Size(81, 29);
+            itemNumberLabel.Size = new Size(81, 23);
             itemNumberLabel.TabIndex = 1;
             itemNumberLabel.Text = "Item Number:";
             itemNumberLabel.TextAlign = ContentAlignment.MiddleRight;
             // 
             // itemNumberTextBox
             // 
-            Control_Add_PartID_TableLayout_NewPartIDEntry.SetColumnSpan(itemNumberTextBox, 3);
             itemNumberTextBox.Dock = DockStyle.Fill;
             itemNumberTextBox.Location = new Point(90, 3);
             itemNumberTextBox.Name = "itemNumberTextBox";
@@ -69,27 +75,32 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             // 
             // typeLabel
             // 
-            typeLabel.Location = new Point(3, 49);
+            typeLabel.AutoSize = true;
+            typeLabel.Dock = DockStyle.Fill;
+            typeLabel.Location = new Point(3, 32);
+            typeLabel.Margin = new Padding(3);
             typeLabel.Name = "typeLabel";
-            typeLabel.Size = new Size(81, 29);
+            typeLabel.Size = new Size(81, 23);
             typeLabel.TabIndex = 7;
             typeLabel.Text = "Type:";
             typeLabel.TextAlign = ContentAlignment.MiddleRight;
             // 
             // Control_Add_PartID_ComboBox_ItemType
             // 
-            Control_Add_PartID_TableLayout_NewPartIDEntry.SetColumnSpan(Control_Add_PartID_ComboBox_ItemType, 3);
             Control_Add_PartID_ComboBox_ItemType.Dock = DockStyle.Fill;
             Control_Add_PartID_ComboBox_ItemType.DropDownStyle = ComboBoxStyle.DropDownList;
             Control_Add_PartID_ComboBox_ItemType.FormattingEnabled = true;
-            Control_Add_PartID_ComboBox_ItemType.Location = new Point(90, 52);
+            Control_Add_PartID_ComboBox_ItemType.Location = new Point(90, 32);
             Control_Add_PartID_ComboBox_ItemType.Name = "Control_Add_PartID_ComboBox_ItemType";
             Control_Add_PartID_ComboBox_ItemType.Size = new Size(343, 23);
             Control_Add_PartID_ComboBox_ItemType.TabIndex = 8;
             // 
             // issuedByLabel
             // 
-            issuedByLabel.Location = new Point(3, 98);
+            issuedByLabel.AutoSize = true;
+            issuedByLabel.Dock = DockStyle.Fill;
+            issuedByLabel.Location = new Point(3, 61);
+            issuedByLabel.Margin = new Padding(3);
             issuedByLabel.Name = "issuedByLabel";
             issuedByLabel.Size = new Size(81, 15);
             issuedByLabel.TabIndex = 9;
@@ -99,9 +110,9 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             // issuedByValueLabel
             // 
             issuedByValueLabel.AutoSize = true;
-            Control_Add_PartID_TableLayout_NewPartIDEntry.SetColumnSpan(issuedByValueLabel, 3);
             issuedByValueLabel.Dock = DockStyle.Fill;
-            issuedByValueLabel.Location = new Point(90, 98);
+            issuedByValueLabel.Location = new Point(90, 61);
+            issuedByValueLabel.Margin = new Padding(3);
             issuedByValueLabel.Name = "issuedByValueLabel";
             issuedByValueLabel.Size = new Size(343, 15);
             issuedByValueLabel.TabIndex = 10;
@@ -111,20 +122,18 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             // Control_Add_PartID_CheckBox_RequiresColorCode
             // 
             Control_Add_PartID_CheckBox_RequiresColorCode.AutoSize = true;
-            Control_Add_PartID_TableLayout_NewPartIDEntry.SetColumnSpan(Control_Add_PartID_CheckBox_RequiresColorCode, 3);
-            Control_Add_PartID_CheckBox_RequiresColorCode.Dock = DockStyle.Fill;
-            Control_Add_PartID_CheckBox_RequiresColorCode.Location = new Point(90, 116);
+            Control_Add_PartID_TableLayout_Inputs.SetColumnSpan(Control_Add_PartID_CheckBox_RequiresColorCode, 2);
+            Control_Add_PartID_CheckBox_RequiresColorCode.Dock = DockStyle.Right;
+            Control_Add_PartID_CheckBox_RequiresColorCode.Location = new Point(222, 82);
             Control_Add_PartID_CheckBox_RequiresColorCode.Name = "Control_Add_PartID_CheckBox_RequiresColorCode";
-            Control_Add_PartID_CheckBox_RequiresColorCode.Size = new Size(343, 17);
+            Control_Add_PartID_CheckBox_RequiresColorCode.Size = new Size(211, 19);
             Control_Add_PartID_CheckBox_RequiresColorCode.TabIndex = 13;
             Control_Add_PartID_CheckBox_RequiresColorCode.Text = "Requires Color Code && Work Order";
             Control_Add_PartID_CheckBox_RequiresColorCode.UseVisualStyleBackColor = true;
             // 
             // saveButton
             // 
-            saveButton.AutoSize = true;
-            saveButton.Dock = DockStyle.Fill;
-            saveButton.Location = new Point(257, 136);
+            saveButton.Location = new Point(244, 3);
             saveButton.Name = "saveButton";
             saveButton.Size = new Size(66, 25);
             saveButton.TabIndex = 11;
@@ -134,9 +143,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             // 
             // cancelButton
             // 
-            cancelButton.AutoSize = true;
-            cancelButton.Dock = DockStyle.Fill;
-            cancelButton.Location = new Point(329, 136);
+            cancelButton.Location = new Point(328, 3);
             cancelButton.Name = "cancelButton";
             cancelButton.Size = new Size(104, 25);
             cancelButton.TabIndex = 12;
@@ -146,11 +153,13 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             // 
             // Control_Add_PartID_GroupBox_NewPartID
             // 
+            Control_Add_PartID_GroupBox_NewPartID.AutoSize = true;
+            Control_Add_PartID_GroupBox_NewPartID.AutoSizeMode = AutoSizeMode.GrowAndShrink;
             Control_Add_PartID_GroupBox_NewPartID.Controls.Add(Control_Add_PartID_TableLayout_NewPartIDEntry);
             Control_Add_PartID_GroupBox_NewPartID.Dock = DockStyle.Fill;
             Control_Add_PartID_GroupBox_NewPartID.Location = new Point(0, 0);
             Control_Add_PartID_GroupBox_NewPartID.Name = "Control_Add_PartID_GroupBox_NewPartID";
-            Control_Add_PartID_GroupBox_NewPartID.Size = new Size(442, 360);
+            Control_Add_PartID_GroupBox_NewPartID.Size = new Size(448, 169);
             Control_Add_PartID_GroupBox_NewPartID.TabIndex = 13;
             Control_Add_PartID_GroupBox_NewPartID.TabStop = false;
             Control_Add_PartID_GroupBox_NewPartID.Text = "New Part ID Entry";
@@ -158,53 +167,89 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             // Control_Add_PartID_TableLayout_NewPartIDEntry
             // 
             Control_Add_PartID_TableLayout_NewPartIDEntry.AutoSize = true;
-            Control_Add_PartID_TableLayout_NewPartIDEntry.ColumnCount = 4;
+            Control_Add_PartID_TableLayout_NewPartIDEntry.ColumnCount = 1;
             Control_Add_PartID_TableLayout_NewPartIDEntry.ColumnStyles.Add(new ColumnStyle());
-            Control_Add_PartID_TableLayout_NewPartIDEntry.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
-            Control_Add_PartID_TableLayout_NewPartIDEntry.ColumnStyles.Add(new ColumnStyle());
-            Control_Add_PartID_TableLayout_NewPartIDEntry.ColumnStyles.Add(new ColumnStyle());
-            Control_Add_PartID_TableLayout_NewPartIDEntry.Controls.Add(itemNumberLabel, 0, 0);
-            Control_Add_PartID_TableLayout_NewPartIDEntry.Controls.Add(issuedByLabel, 0, 4);
-            Control_Add_PartID_TableLayout_NewPartIDEntry.Controls.Add(typeLabel, 0, 2);
-            Control_Add_PartID_TableLayout_NewPartIDEntry.Controls.Add(Control_Add_PartID_ComboBox_ItemType, 1, 2);
-            Control_Add_PartID_TableLayout_NewPartIDEntry.Controls.Add(issuedByValueLabel, 1, 4);
-            Control_Add_PartID_TableLayout_NewPartIDEntry.Controls.Add(Control_Add_PartID_CheckBox_RequiresColorCode, 1, 5);
-            Control_Add_PartID_TableLayout_NewPartIDEntry.Controls.Add(itemNumberTextBox, 1, 0);
-            Control_Add_PartID_TableLayout_NewPartIDEntry.Controls.Add(cancelButton, 3, 6);
-            Control_Add_PartID_TableLayout_NewPartIDEntry.Controls.Add(saveButton, 2, 6);
+            Control_Add_PartID_TableLayout_NewPartIDEntry.Controls.Add(Control_Add_PartID_TableLayout_Buttons, 0, 1);
+            Control_Add_PartID_TableLayout_NewPartIDEntry.Controls.Add(Control_Add_PartID_TableLayout_Inputs, 0, 0);
             Control_Add_PartID_TableLayout_NewPartIDEntry.Dock = DockStyle.Fill;
             Control_Add_PartID_TableLayout_NewPartIDEntry.Location = new Point(3, 19);
             Control_Add_PartID_TableLayout_NewPartIDEntry.Name = "Control_Add_PartID_TableLayout_NewPartIDEntry";
-            Control_Add_PartID_TableLayout_NewPartIDEntry.RowCount = 8;
+            Control_Add_PartID_TableLayout_NewPartIDEntry.RowCount = 2;
             Control_Add_PartID_TableLayout_NewPartIDEntry.RowStyles.Add(new RowStyle());
-            Control_Add_PartID_TableLayout_NewPartIDEntry.RowStyles.Add(new RowStyle(SizeType.Absolute, 20F));
             Control_Add_PartID_TableLayout_NewPartIDEntry.RowStyles.Add(new RowStyle());
-            Control_Add_PartID_TableLayout_NewPartIDEntry.RowStyles.Add(new RowStyle(SizeType.Absolute, 20F));
-            Control_Add_PartID_TableLayout_NewPartIDEntry.RowStyles.Add(new RowStyle());
-            Control_Add_PartID_TableLayout_NewPartIDEntry.RowStyles.Add(new RowStyle(SizeType.Absolute, 20F));
-            Control_Add_PartID_TableLayout_NewPartIDEntry.RowStyles.Add(new RowStyle());
-            Control_Add_PartID_TableLayout_NewPartIDEntry.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
-            Control_Add_PartID_TableLayout_NewPartIDEntry.Size = new Size(436, 338);
+            Control_Add_PartID_TableLayout_NewPartIDEntry.Size = new Size(442, 147);
             Control_Add_PartID_TableLayout_NewPartIDEntry.TabIndex = 0;
+            // 
+            // Control_Add_PartID_TableLayout_Inputs
+            // 
+            Control_Add_PartID_TableLayout_Inputs.AutoSize = true;
+            Control_Add_PartID_TableLayout_Inputs.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            Control_Add_PartID_TableLayout_Inputs.ColumnCount = 2;
+            Control_Add_PartID_TableLayout_Inputs.ColumnStyles.Add(new ColumnStyle());
+            Control_Add_PartID_TableLayout_Inputs.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
+            Control_Add_PartID_TableLayout_Inputs.Controls.Add(itemNumberLabel, 0, 0);
+            Control_Add_PartID_TableLayout_Inputs.Controls.Add(typeLabel, 0, 1);
+            Control_Add_PartID_TableLayout_Inputs.Controls.Add(issuedByLabel, 0, 2);
+            Control_Add_PartID_TableLayout_Inputs.Controls.Add(issuedByValueLabel, 1, 2);
+            Control_Add_PartID_TableLayout_Inputs.Controls.Add(Control_Add_PartID_ComboBox_ItemType, 1, 1);
+            Control_Add_PartID_TableLayout_Inputs.Controls.Add(Control_Add_PartID_CheckBox_RequiresColorCode, 0, 3);
+            Control_Add_PartID_TableLayout_Inputs.Controls.Add(itemNumberTextBox, 1, 0);
+            Control_Add_PartID_TableLayout_Inputs.Dock = DockStyle.Fill;
+            Control_Add_PartID_TableLayout_Inputs.Location = new Point(3, 3);
+            Control_Add_PartID_TableLayout_Inputs.Name = "Control_Add_PartID_TableLayout_Inputs";
+            Control_Add_PartID_TableLayout_Inputs.RowCount = 5;
+            Control_Add_PartID_TableLayout_Inputs.RowStyles.Add(new RowStyle());
+            Control_Add_PartID_TableLayout_Inputs.RowStyles.Add(new RowStyle());
+            Control_Add_PartID_TableLayout_Inputs.RowStyles.Add(new RowStyle());
+            Control_Add_PartID_TableLayout_Inputs.RowStyles.Add(new RowStyle());
+            Control_Add_PartID_TableLayout_Inputs.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
+            Control_Add_PartID_TableLayout_Inputs.Size = new Size(436, 104);
+            Control_Add_PartID_TableLayout_Inputs.TabIndex = 15;
+            // 
+            // Control_Add_PartID_TableLayout_Buttons
+            // 
+            Control_Add_PartID_TableLayout_Buttons.AutoSize = true;
+            Control_Add_PartID_TableLayout_Buttons.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            Control_Add_PartID_TableLayout_Buttons.ColumnCount = 4;
+            Control_Add_PartID_TableLayout_Buttons.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 95F));
+            Control_Add_PartID_TableLayout_Buttons.ColumnStyles.Add(new ColumnStyle());
+            Control_Add_PartID_TableLayout_Buttons.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 5F));
+            Control_Add_PartID_TableLayout_Buttons.ColumnStyles.Add(new ColumnStyle());
+            Control_Add_PartID_TableLayout_Buttons.Controls.Add(saveButton, 1, 0);
+            Control_Add_PartID_TableLayout_Buttons.Controls.Add(cancelButton, 3, 0);
+            Control_Add_PartID_TableLayout_Buttons.Dock = DockStyle.Fill;
+            Control_Add_PartID_TableLayout_Buttons.Location = new Point(3, 113);
+            Control_Add_PartID_TableLayout_Buttons.Name = "Control_Add_PartID_TableLayout_Buttons";
+            Control_Add_PartID_TableLayout_Buttons.RowCount = 1;
+            Control_Add_PartID_TableLayout_Buttons.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
+            Control_Add_PartID_TableLayout_Buttons.Size = new Size(436, 31);
+            Control_Add_PartID_TableLayout_Buttons.TabIndex = 15;
             // 
             // Control_Add_PartID
             // 
             AutoScaleDimensions = new SizeF(96F, 96F);
             AutoScaleMode = AutoScaleMode.Dpi;
             AutoSize = true;
+            AutoSizeMode = AutoSizeMode.GrowAndShrink;
             Controls.Add(Control_Add_PartID_GroupBox_NewPartID);
             Name = "Control_Add_PartID";
-            Size = new Size(442, 360);
+            Size = new Size(448, 169);
             Control_Add_PartID_GroupBox_NewPartID.ResumeLayout(false);
             Control_Add_PartID_GroupBox_NewPartID.PerformLayout();
             Control_Add_PartID_TableLayout_NewPartIDEntry.ResumeLayout(false);
             Control_Add_PartID_TableLayout_NewPartIDEntry.PerformLayout();
+            Control_Add_PartID_TableLayout_Inputs.ResumeLayout(false);
+            Control_Add_PartID_TableLayout_Inputs.PerformLayout();
+            Control_Add_PartID_TableLayout_Buttons.ResumeLayout(false);
             ResumeLayout(false);
+            PerformLayout();
         }
 
         #endregion
 
         private GroupBox Control_Add_PartID_GroupBox_NewPartID;
         private TableLayoutPanel Control_Add_PartID_TableLayout_NewPartIDEntry;
+        private TableLayoutPanel Control_Add_PartID_TableLayout_Inputs;
+        private TableLayoutPanel Control_Add_PartID_TableLayout_Buttons;
     }
 }
