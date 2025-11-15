@@ -10,9 +10,9 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
 
         #endregion
         private System.Windows.Forms.Label selectPartLabel;
-        private System.Windows.Forms.ComboBox Control_Edit_PartID_ComboBox_Part;
+        private MTM_WIP_Application_Winforms.Controls.Shared.SuggestionTextBox Control_Edit_PartID_TextBox_Part;
         private System.Windows.Forms.Label typeLabel;
-        private System.Windows.Forms.ComboBox Control_Edit_PartID_ComboBox_ItemType;
+        private MTM_WIP_Application_Winforms.Controls.Shared.SuggestionTextBox Control_Edit_PartID_TextBox_ItemType;
         private System.Windows.Forms.Label issuedByLabel;
         private System.Windows.Forms.Label issuedByValueLabel;
 
@@ -24,16 +24,16 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
         private void InitializeComponent()
         {
             selectPartLabel = new Label();
-            Control_Edit_PartID_ComboBox_Part = new ComboBox();
+            Control_Edit_PartID_TextBox_Part = new MTM_WIP_Application_Winforms.Controls.Shared.SuggestionTextBox();
             typeLabel = new Label();
-            Control_Edit_PartID_ComboBox_ItemType = new ComboBox();
+            Control_Edit_PartID_TextBox_ItemType = new MTM_WIP_Application_Winforms.Controls.Shared.SuggestionTextBox();
             issuedByLabel = new Label();
             issuedByValueLabel = new Label();
             Control_Add_PartID_GroupBox_NewPartID = new GroupBox();
             Control_Add_PartID_TableLayout_NewPartIDEntry = new TableLayoutPanel();
             Control_Add_PartID_TableLayout_Buttons = new TableLayoutPanel();
             saveButton = new Button();
-            cancelButton = new Button();
+            resetButton = new Button();
             Control_Add_PartID_TableLayout_Inputs = new TableLayoutPanel();
             Control_Edit_PartID_CheckBox_RequiresColorCode = new CheckBox();
             itemNumberTextBox = new TextBox();
@@ -56,17 +56,14 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             selectPartLabel.Text = "Select Part:";
             selectPartLabel.TextAlign = ContentAlignment.MiddleRight;
             // 
-            // Control_Edit_PartID_ComboBox_Part
+            // Control_Edit_PartID_TextBox_Part
             // 
-            Control_Edit_PartID_ComboBox_Part.AutoCompleteMode = AutoCompleteMode.SuggestAppend;
-            Control_Edit_PartID_ComboBox_Part.AutoCompleteSource = AutoCompleteSource.ListItems;
-            Control_Edit_PartID_ComboBox_Part.Dock = DockStyle.Fill;
-            Control_Edit_PartID_ComboBox_Part.FormattingEnabled = true;
-            Control_Edit_PartID_ComboBox_Part.Location = new Point(78, 3);
-            Control_Edit_PartID_ComboBox_Part.Name = "Control_Edit_PartID_ComboBox_Part";
-            Control_Edit_PartID_ComboBox_Part.Size = new Size(300, 23);
-            Control_Edit_PartID_ComboBox_Part.TabIndex = 2;
-            Control_Edit_PartID_ComboBox_Part.SelectedIndexChanged += Control_Edit_PartID_ComboBox_Part_SelectedIndexChanged;
+            Control_Edit_PartID_TextBox_Part.Dock = DockStyle.Fill;
+            Control_Edit_PartID_TextBox_Part.Location = new Point(78, 3);
+            Control_Edit_PartID_TextBox_Part.Name = "Control_Edit_PartID_TextBox_Part";
+            Control_Edit_PartID_TextBox_Part.PlaceholderText = "Enter or Select Part Number (F4 to browse)";
+            Control_Edit_PartID_TextBox_Part.Size = new Size(300, 23);
+            Control_Edit_PartID_TextBox_Part.TabIndex = 2;
             // 
             // typeLabel
             // 
@@ -80,16 +77,15 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             typeLabel.Text = "Type:";
             typeLabel.TextAlign = ContentAlignment.MiddleRight;
             // 
-            // Control_Edit_PartID_ComboBox_ItemType
+            // Control_Edit_PartID_TextBox_ItemType
             // 
-            Control_Edit_PartID_ComboBox_ItemType.Dock = DockStyle.Fill;
-            Control_Edit_PartID_ComboBox_ItemType.DropDownStyle = ComboBoxStyle.DropDownList;
-            Control_Edit_PartID_ComboBox_ItemType.Enabled = false;
-            Control_Edit_PartID_ComboBox_ItemType.FormattingEnabled = true;
-            Control_Edit_PartID_ComboBox_ItemType.Location = new Point(78, 61);
-            Control_Edit_PartID_ComboBox_ItemType.Name = "Control_Edit_PartID_ComboBox_ItemType";
-            Control_Edit_PartID_ComboBox_ItemType.Size = new Size(300, 23);
-            Control_Edit_PartID_ComboBox_ItemType.TabIndex = 10;
+            Control_Edit_PartID_TextBox_ItemType.Dock = DockStyle.Fill;
+            Control_Edit_PartID_TextBox_ItemType.Enabled = false;
+            Control_Edit_PartID_TextBox_ItemType.Location = new Point(78, 61);
+            Control_Edit_PartID_TextBox_ItemType.Name = "Control_Edit_PartID_TextBox_ItemType";
+            Control_Edit_PartID_TextBox_ItemType.PlaceholderText = "Enter or Select Item Type (F4 to browse)";
+            Control_Edit_PartID_TextBox_ItemType.Size = new Size(300, 23);
+            Control_Edit_PartID_TextBox_ItemType.TabIndex = 10;
             // 
             // issuedByLabel
             // 
@@ -154,7 +150,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             Control_Add_PartID_TableLayout_Buttons.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 5F));
             Control_Add_PartID_TableLayout_Buttons.ColumnStyles.Add(new ColumnStyle());
             Control_Add_PartID_TableLayout_Buttons.Controls.Add(saveButton, 1, 0);
-            Control_Add_PartID_TableLayout_Buttons.Controls.Add(cancelButton, 3, 0);
+            Control_Add_PartID_TableLayout_Buttons.Controls.Add(resetButton, 3, 0);
             Control_Add_PartID_TableLayout_Buttons.Dock = DockStyle.Fill;
             Control_Add_PartID_TableLayout_Buttons.Location = new Point(3, 142);
             Control_Add_PartID_TableLayout_Buttons.Name = "Control_Add_PartID_TableLayout_Buttons";
@@ -172,14 +168,14 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             saveButton.Text = "Save";
             saveButton.UseVisualStyleBackColor = true;
             // 
-            // cancelButton
+            // resetButton
             // 
-            cancelButton.Location = new Point(273, 3);
-            cancelButton.Name = "cancelButton";
-            cancelButton.Size = new Size(104, 25);
-            cancelButton.TabIndex = 12;
-            cancelButton.Text = "Cancel";
-            cancelButton.UseVisualStyleBackColor = true;
+            resetButton.Location = new Point(273, 3);
+            resetButton.Name = "resetButton";
+            resetButton.Size = new Size(104, 25);
+            resetButton.TabIndex = 12;
+            resetButton.Text = "Reset";
+            resetButton.UseVisualStyleBackColor = true;
             // 
             // Control_Add_PartID_TableLayout_Inputs
             // 
@@ -189,12 +185,12 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             Control_Add_PartID_TableLayout_Inputs.ColumnStyles.Add(new ColumnStyle());
             Control_Add_PartID_TableLayout_Inputs.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
             Control_Add_PartID_TableLayout_Inputs.Controls.Add(label1, 0, 1);
-            Control_Add_PartID_TableLayout_Inputs.Controls.Add(Control_Edit_PartID_ComboBox_ItemType, 1, 2);
+            Control_Add_PartID_TableLayout_Inputs.Controls.Add(Control_Edit_PartID_TextBox_ItemType, 1, 2);
             Control_Add_PartID_TableLayout_Inputs.Controls.Add(issuedByValueLabel, 1, 3);
             Control_Add_PartID_TableLayout_Inputs.Controls.Add(typeLabel, 0, 2);
             Control_Add_PartID_TableLayout_Inputs.Controls.Add(issuedByLabel, 0, 3);
             Control_Add_PartID_TableLayout_Inputs.Controls.Add(Control_Edit_PartID_CheckBox_RequiresColorCode, 0, 4);
-            Control_Add_PartID_TableLayout_Inputs.Controls.Add(Control_Edit_PartID_ComboBox_Part, 1, 0);
+            Control_Add_PartID_TableLayout_Inputs.Controls.Add(Control_Edit_PartID_TextBox_Part, 1, 0);
             Control_Add_PartID_TableLayout_Inputs.Controls.Add(selectPartLabel, 0, 0);
             Control_Add_PartID_TableLayout_Inputs.Controls.Add(itemNumberTextBox, 1, 1);
             Control_Add_PartID_TableLayout_Inputs.Dock = DockStyle.Fill;
@@ -267,7 +263,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
         private TableLayoutPanel Control_Add_PartID_TableLayout_NewPartIDEntry;
         private TableLayoutPanel Control_Add_PartID_TableLayout_Buttons;
         private Button saveButton;
-        private Button cancelButton;
+        private Button resetButton;
         private TableLayoutPanel Control_Add_PartID_TableLayout_Inputs;
         private CheckBox Control_Edit_PartID_CheckBox_RequiresColorCode;
         private Label label1;

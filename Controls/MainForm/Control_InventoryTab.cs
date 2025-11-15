@@ -348,37 +348,34 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                 LoggingUtility.Log("[InventoryTab Startup] Color code caches loaded: Parts=" + Model_Application_Variables.ColorCodeParts.Count + ", Colors=" + Model_Application_Variables.ValidColorCodes.Count);
                 
                 Control_InventoryTab_Button_Save.Enabled = false;
-                _progressHelper?.UpdateProgress(10, "Loading part data...");
+                _progressHelper?.UpdateProgress(10, "Configuring part suggestions...");
                 
-                // Configure part number SuggestionTextBox
-                Control_InventoryTab_TextBox_Part.DataProvider = GetPartNumberSuggestionsAsync;
-                Control_InventoryTab_TextBox_Part.MaxResults = 100;
-                Control_InventoryTab_TextBox_Part.EnableWildcards = true;
-                Control_InventoryTab_TextBox_Part.ClearOnNoMatch = true;
+                // Configure SuggestionTextBox controls using helper methods with F4 support
+                Helper_SuggestionTextBox.ConfigureForPartNumbers(
+                    Control_InventoryTab_TextBox_Part, 
+                    GetPartNumberSuggestionsAsync, 
+                    enableF4: true);
                 
-                _progressHelper?.UpdateProgress(40, "Loading operation data...");
+                _progressHelper?.UpdateProgress(40, "Configuring operation suggestions...");
                 
-                // Configure operation SuggestionTextBox
-                Control_InventoryTab_TextBox_Operation.DataProvider = GetOperationSuggestionsAsync;
-                Control_InventoryTab_TextBox_Operation.MaxResults = 50;
-                Control_InventoryTab_TextBox_Operation.EnableWildcards = true;
-                Control_InventoryTab_TextBox_Operation.ClearOnNoMatch = true;
+                Helper_SuggestionTextBox.ConfigureForOperations(
+                    Control_InventoryTab_TextBox_Operation, 
+                    GetOperationSuggestionsAsync, 
+                    enableF4: true);
                 
-                _progressHelper?.UpdateProgress(70, "Loading location data...");
+                _progressHelper?.UpdateProgress(70, "Configuring location suggestions...");
                 
-                // Configure location SuggestionTextBox
-                Control_InventoryTab_TextBox_Location.DataProvider = GetLocationSuggestionsAsync;
-                Control_InventoryTab_TextBox_Location.MaxResults = 30;
-                Control_InventoryTab_TextBox_Location.EnableWildcards = true;
-                Control_InventoryTab_TextBox_Location.ClearOnNoMatch = true;
+                Helper_SuggestionTextBox.ConfigureForLocations(
+                    Control_InventoryTab_TextBox_Location, 
+                    GetLocationSuggestionsAsync, 
+                    enableF4: true);
 
-                _progressHelper?.UpdateProgress(85, "Loading color code data...");
+                _progressHelper?.UpdateProgress(85, "Configuring color code suggestions...");
                 
-                // Configure color code SuggestionTextBox
-                Control_InventoryTab_TextBox_ColorCode.DataProvider = GetColorCodeSuggestionsAsync;
-                Control_InventoryTab_TextBox_ColorCode.MaxResults = 20;
-                Control_InventoryTab_TextBox_ColorCode.EnableWildcards = false;
-                Control_InventoryTab_TextBox_ColorCode.ClearOnNoMatch = false;
+                Helper_SuggestionTextBox.ConfigureForColorCodes(
+                    Control_InventoryTab_TextBox_ColorCode, 
+                    GetColorCodeSuggestionsAsync, 
+                    enableF4: true);
 
                 _progressHelper?.UpdateProgress(100, "Combo boxes loaded");
                 await Task.Delay(100);
@@ -1709,6 +1706,37 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                 Control_InventoryTab_TextBox_ColorCode.Visible = inCache;
                 Control_InventoryTab_Label_WorkOrder.Visible = inCache;
                 Control_InventoryTab_TextBox_WorkOrder.Visible = inCache;
+
+                // Collapse/expand rows in the top group when fields are hidden/shown
+                if (Control_InventoryTab_TableLayout_TopGroup != null && Control_InventoryTab_TableLayout_TopGroup.RowStyles.Count >= 6)
+                {
+                    var tlp = Control_InventoryTab_TableLayout_TopGroup;
+                    tlp.SuspendLayout();
+                    try
+                    {
+                        if (inCache)
+                        {
+                            // Let rows auto-size when visible
+                            tlp.RowStyles[4].SizeType = SizeType.AutoSize;
+                            tlp.RowStyles[4].Height = 0; // Height ignored for AutoSize
+                            tlp.RowStyles[5].SizeType = SizeType.AutoSize;
+                            tlp.RowStyles[5].Height = 0;
+                        }
+                        else
+                        {
+                            // Collapse rows completely when hidden
+                            tlp.RowStyles[4].SizeType = SizeType.Absolute;
+                            tlp.RowStyles[4].Height = 0;
+                            tlp.RowStyles[5].SizeType = SizeType.Absolute;
+                            tlp.RowStyles[5].Height = 0;
+                        }
+                    }
+                    finally
+                    {
+                        tlp.ResumeLayout(true);
+                        tlp.PerformLayout();
+                    }
+                }
 
                 // Clear fields when hiding
                 if (!inCache)

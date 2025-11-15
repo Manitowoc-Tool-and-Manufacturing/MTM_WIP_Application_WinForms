@@ -317,27 +317,25 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                 _progressHelper?.ShowProgress();
                 _progressHelper?.UpdateProgress(10, "Configuring part suggestions...");
                 
-                // Configure part number SuggestionTextBox
-                Control_TransferTab_TextBox_Part.DataProvider = GetPartNumberSuggestionsAsync;
-                Control_TransferTab_TextBox_Part.MaxResults = 100;
-                Control_TransferTab_TextBox_Part.EnableWildcards = true;
-                Control_TransferTab_TextBox_Part.ClearOnNoMatch = true;
+                // Configure SuggestionTextBox controls using helper methods with F4 support
+                Helper_SuggestionTextBox.ConfigureForPartNumbers(
+                    Control_TransferTab_TextBox_Part, 
+                    GetPartNumberSuggestionsAsync, 
+                    enableF4: true);
                 
                 _progressHelper?.UpdateProgress(40, "Configuring operation suggestions...");
                 
-                // Configure operation SuggestionTextBox
-                Control_TransferTab_TextBox_Operation.DataProvider = GetOperationSuggestionsAsync;
-                Control_TransferTab_TextBox_Operation.MaxResults = 50;
-                Control_TransferTab_TextBox_Operation.EnableWildcards = true;
-                Control_TransferTab_TextBox_Operation.ClearOnNoMatch = true;
+                Helper_SuggestionTextBox.ConfigureForOperations(
+                    Control_TransferTab_TextBox_Operation, 
+                    GetOperationSuggestionsAsync, 
+                    enableF4: true);
                 
                 _progressHelper?.UpdateProgress(70, "Configuring location suggestions...");
                 
-                // Configure location SuggestionTextBox
-                Control_TransferTab_TextBox_ToLocation.DataProvider = GetLocationSuggestionsAsync;
-                Control_TransferTab_TextBox_ToLocation.MaxResults = 100;
-                Control_TransferTab_TextBox_ToLocation.EnableWildcards = true;
-                Control_TransferTab_TextBox_ToLocation.ClearOnNoMatch = true;
+                Helper_SuggestionTextBox.ConfigureForLocations(
+                    Control_TransferTab_TextBox_ToLocation, 
+                    GetLocationSuggestionsAsync, 
+                    enableF4: true);
 
                 _progressHelper?.UpdateProgress(100, "Suggestion controls configured");
                 await Task.Delay(100);

@@ -8,6 +8,10 @@ using MTM_WIP_Application_Winforms.Services;
 
 namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
 {
+    /// <summary>
+    /// Control for editing existing part IDs.
+    /// Provides part selection via SuggestionTextBox, item type assignment, and color code requirement configuration.
+    /// </summary>
     public partial class Control_Edit_PartID : UserControl
     {
         #region Fields
@@ -17,20 +21,21 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
 
         #endregion
 
-        #region Properties
+        #region Events
 
-        // Public properties would go here if needed
-
-        #endregion
-
-        #region Progress Control Methods
-
-        // Progress control methods would go here if needed for this control
+        /// <summary>
+        /// Event raised when a part has been successfully updated.
+        /// </summary>
+        public event EventHandler? PartUpdated;
 
         #endregion
 
         #region Constructors
 
+        /// <summary>
+        /// Initializes a new instance of the Control_Edit_PartID control.
+        /// Configures SuggestionTextBox controls for Part and ItemType selection with F4 support.
+        /// </summary>
         public Control_Edit_PartID()
         {
             Service_DebugTracer.TraceMethodEntry(new Dictionary<string, object>
@@ -41,55 +46,29 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
 
             try
             {
-                Service_DebugTracer.TraceUIAction("CONTROL_INITIALIZATION", nameof(Control_Edit_PartID),
-                    new Dictionary<string, object>
-                    {
-                        ["Phase"] = "START",
-                        ["ComponentType"] = "UserControl"
-                    });
-
                 InitializeComponent();
+                ConfigureSuggestionTextBoxes();
+                WireUpEventHandlers();
 
-                Service_DebugTracer.TraceUIAction("EVENT_HANDLERS_BINDING", nameof(Control_Edit_PartID),
-                    new Dictionary<string, object>
-                    {
-                        ["Handlers"] = new[] { "SelectedIndexChanged", "Click_Save", "Click_Cancel" }
-                    });
-
-                Control_Edit_PartID_ComboBox_Part.SelectedIndexChanged +=
-                    Control_Edit_PartID_ComboBox_Part_SelectedIndexChanged;
-                saveButton.Click += SaveButton_Click;
-                cancelButton.Click += CancelButton_Click;
-
-                Service_DebugTracer.TraceUIAction("LOADING_PART_TYPES", nameof(Control_Edit_PartID));
-                LoadPartTypes();
-
-                Service_DebugTracer.TraceUIAction("CONTROL_INITIALIZATION", nameof(Control_Edit_PartID),
-                    new Dictionary<string, object>
-                    {
-                        ["Phase"] = "COMPLETE",
-                        ["Status"] = "SUCCESS"
-                    });
+                LoggingUtility.Log($"[{nameof(Control_Edit_PartID)}] Control initialized successfully");
             }
             catch (Exception ex)
             {
-                Service_DebugTracer.TraceBusinessLogic("CONTROL_INITIALIZATION_ERROR",
-                    inputData: new Dictionary<string, object> { ["ControlType"] = nameof(Control_Edit_PartID) },
-                    validationResults: new Dictionary<string, object>
-                    {
-                        ["Exception"] = ex.GetType().Name,
-                        ["Message"] = ex.Message,
-                        ["InnerException"] = ex.InnerException?.Message ?? "None"
-                    });
-
                 Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.High,
-                    controlName: nameof(Control_Edit_PartID));
+                    contextData: new Dictionary<string, object>
+                    {
+                        ["InitializationPhase"] = "Constructor"
+                    },
+                    controlName: nameof(Control_Edit_PartID),
+                    callerName: nameof(Control_Edit_PartID));
             }
-
-            Service_DebugTracer.TraceMethodExit(new Dictionary<string, object>
+            finally
             {
-                ["InitializationSuccess"] = true
-            }, nameof(Control_Edit_PartID), nameof(Control_Edit_PartID));
+                Service_DebugTracer.TraceMethodExit(new Dictionary<string, object>
+                {
+                    ["InitializationSuccess"] = true
+                }, nameof(Control_Edit_PartID), nameof(Control_Edit_PartID));
+            }
         }
 
         #endregion
@@ -97,339 +76,345 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
         #region Initialization
 
         /// <summary>
-        /// Event for notifying when a part has been updated
+        /// Configures SuggestionTextBox controls with appropriate data providers and F4 key support.
         /// </summary>
-        public event EventHandler? PartUpdated;
-
-        private async void LoadPartTypes()
+        private void ConfigureSuggestionTextBoxes()
         {
-            try
-            {
-                await Helper_UI_ComboBoxes.FillItemTypeComboBoxesAsync(Control_Edit_PartID_ComboBox_ItemType);
-            }
-            catch (Exception ex)
-            {
-                Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Medium,
-                    controlName: nameof(Control_Edit_PartID));
-            }
+            // Configure Part Number field
+            Helper_SuggestionTextBox.ConfigureForPartNumbers(
+                Control_Edit_PartID_TextBox_Part,
+                GetPartNumberSuggestionsAsync,
+                enableF4: true);
+
+            // Configure Item Type field
+            Helper_SuggestionTextBox.ConfigureForItemTypes(
+                Control_Edit_PartID_TextBox_ItemType,
+                GetItemTypeSuggestionsAsync,
+                enableF4: true);
         }
 
-        private async void LoadParts()
+        /// <summary>
+        /// Wires up event handlers for controls.
+        /// </summary>
+        private void WireUpEventHandlers()
         {
-            try
-            {
-                await Helper_UI_ComboBoxes.FillPartComboBoxesAsync(Control_Edit_PartID_ComboBox_Part);
-            }
-            catch (Exception ex)
-            {
-                Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Medium,
-                    controlName: nameof(Control_Edit_PartID), callerName: nameof(LoadParts));
-            }
+            Control_Edit_PartID_TextBox_Part.SuggestionSelected += Control_Edit_PartID_TextBox_Part_SuggestionSelected;
+            saveButton.Click += SaveButton_Click;
+            resetButton.Click += ResetButton_Click;
         }
 
-        protected override async void OnLoad(EventArgs e)
+        /// <summary>
+        /// Handles control load event. Sets the issued by label to current user.
+        /// </summary>
+        protected override void OnLoad(EventArgs e)
         {
+            base.OnLoad(e);
+
             try
             {
-                base.OnLoad(e);
                 if (issuedByValueLabel != null)
                 {
                     issuedByValueLabel.Text = Model_Application_Variables.User ?? "Current User";
                 }
-
-                LoadParts();
             }
             catch (Exception ex)
             {
-                Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.High,
-                    controlName: nameof(Control_Edit_PartID), callerName: nameof(OnLoad));
+                Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Low,
+                    contextData: new Dictionary<string, object>
+                    {
+                        ["Operation"] = "SetIssuedByLabel"
+                    },
+                    controlName: nameof(Control_Edit_PartID),
+                    callerName: nameof(OnLoad));
             }
         }
 
         #endregion
 
-        #region Key Processing
+        #region Events
 
-        // Keyboard shortcut processing would go here if needed
-        // Currently not implemented for this settings control
-
-        #endregion
-
-        #region Button Clicks
-
-        // Button click event handlers will be moved here
-
-        #endregion
-
-        #region ComboBox & UI Events
-
-        private async void Control_Edit_PartID_ComboBox_Part_SelectedIndexChanged(object sender, EventArgs e)
+        /// <summary>
+        /// Handles part selection from SuggestionTextBox.
+        /// Loads selected part data and enables form controls for editing.
+        /// </summary>
+        private async void Control_Edit_PartID_TextBox_Part_SuggestionSelected(object? sender, SuggestionSelectedEventArgs e)
         {
-            if (Control_Edit_PartID_ComboBox_Part.SelectedIndex <= 0)
-            {
-                ClearForm();
-                SetFormEnabled(false);
-                return;
-            }
+            string selectedPart = e.SelectedValue;
 
             try
             {
-                string? selectedText = Control_Edit_PartID_ComboBox_Part.Text;
-                if (string.IsNullOrEmpty(selectedText))
-                {
-                    Service_ErrorHandler.HandleValidationError(
-                        "Please select a valid part from the dropdown list.",
-                        "Part Selection", controlName: nameof(Control_Edit_PartID));
-                    return;
-                }
+                LoggingUtility.Log($"[{nameof(Control_Edit_PartID)}] Part selected: {selectedPart}");
 
+                // Clear current part before loading new one
                 _currentPart = null;
-                var result = await Dao_Part.GetPartByNumberAsync(selectedText);
+                SetFormEnabled(false);
+
+                // Load part from database
+                var result = await Dao_Part.GetPartByNumberAsync(selectedPart);
+
                 if (!result.IsSuccess)
                 {
-                    Service_ErrorHandler.HandleDatabaseError(
-                        result.Exception ?? new Exception(result.ErrorMessage),
-                        controlName: nameof(Control_Edit_PartID));
+                    Service_ErrorHandler.ShowWarning($"Part '{selectedPart}' could not be loaded: {result.ErrorMessage}");
+                    ClearForm();
                     return;
                 }
 
-                _currentPart = result.Data;
-                if (_currentPart != null)
+                if (result.Data == null)
                 {
-                    LoadPartData();
-                    SetFormEnabled(true);
+                    Service_ErrorHandler.ShowWarning($"Part '{selectedPart}' was not found.");
+                    ClearForm();
+                    return;
                 }
+
+                // Load part data into form
+                _currentPart = result.Data;
+                LoadPartData();
+                SetFormEnabled(true);
+
+                LoggingUtility.Log($"[{nameof(Control_Edit_PartID)}] Part '{selectedPart}' loaded successfully");
             }
             catch (Exception ex)
             {
-                Service_ErrorHandler.HandleDatabaseError(ex, controlName: nameof(Control_Edit_PartID));
+                Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Medium,
+                    contextData: new Dictionary<string, object>
+                    {
+                        ["SelectedPart"] = selectedPart,
+                        ["Operation"] = "LoadPartData"
+                    },
+                    controlName: nameof(Control_Edit_PartID),
+                    callerName: nameof(Control_Edit_PartID_TextBox_Part_SuggestionSelected));
+
+                ClearForm();
             }
         }
 
-        private async void SaveButton_Click(object sender, EventArgs e)
+        /// <summary>
+        /// Handles save button click. Validates input and updates part in database.
+        /// </summary>
+        private async void SaveButton_Click(object? sender, EventArgs e)
         {
             var performanceKey = Service_DebugTracer.StartPerformanceTrace("SAVE_PART_OPERATION");
 
-            Service_DebugTracer.TraceMethodEntry(new Dictionary<string, object>
-            {
-                ["HasCurrentPart"] = _currentPart != null,
-                ["OriginalPartID"] = _currentPart?["PartID"]?.ToString() ?? "NULL"
-            }, nameof(SaveButton_Click), nameof(Control_Edit_PartID));
-
-            Service_DebugTracer.TraceUIAction("SAVE_BUTTON_CLICKED", nameof(Control_Edit_PartID),
-                new Dictionary<string, object>
-                {
-                    ["UserAction"] = "SAVE_PART_DATA",
-                    ["FormState"] = _currentPart != null ? "EDITING" : "NO_SELECTION"
-                });
-
-            if (_currentPart == null)
-            {
-                Service_DebugTracer.TraceBusinessLogic("SAVE_VALIDATION_FAILED",
-                    validationResults: new Dictionary<string, object>
-                    {
-                        ["Issue"] = "NO_CURRENT_PART",
-                        ["Action"] = "ABORT_SAVE"
-                    });
-
-                Service_DebugTracer.TraceMethodExit("ABORTED - No current part", nameof(SaveButton_Click), nameof(Control_Edit_PartID));
-                Service_DebugTracer.StopPerformanceTrace(performanceKey, new Dictionary<string, object> { ["Result"] = "ABORTED" });
-                return;
-            }
-
             try
             {
-                // Collect all form data for debugging
-                var formData = new Dictionary<string, object>
+                // Validate that a part is selected
+                if (_currentPart == null)
                 {
-                    ["ItemTypeIndex"] = Control_Edit_PartID_ComboBox_ItemType.SelectedIndex,
-                    ["ItemTypeText"] = Control_Edit_PartID_ComboBox_ItemType.Text ?? ""
-                };
-
-                Service_DebugTracer.TraceBusinessLogic("FORM_DATA_COLLECTION",
-                    inputData: formData,
-                    businessRules: new Dictionary<string, object>
-                    {
-                        ["ItemNumberRequired"] = true,
-                        ["DescriptionRequired"] = true,
-                        ["ItemTypeRequired"] = true,
-                        ["CustomerOptional"] = true
-                    });
-
-
-                // Validation: Item Type
-                if (Control_Edit_PartID_ComboBox_ItemType.SelectedIndex <= 0)
-                {
-                    Service_DebugTracer.TraceDataValidation("ITEM_TYPE_VALIDATION",
-                        dataToValidate: new Dictionary<string, object>
-                        {
-                            ["SelectedIndex"] = Control_Edit_PartID_ComboBox_ItemType.SelectedIndex,
-                            ["SelectedText"] = Control_Edit_PartID_ComboBox_ItemType.Text ?? ""
-                        },
-                        validationRules: new Dictionary<string, object> { ["MinIndex"] = 1, ["Required"] = true },
-                        isValid: false,
-                        errorMessages: new List<string> { "Item type selection required" });
-
-                    Service_ErrorHandler.HandleValidationError(
-                        "Please select a part type from the dropdown list.",
-                        "Part Type", controlName: nameof(Control_Edit_PartID));
-                    Control_Edit_PartID_ComboBox_ItemType.Focus();
-
-                    Service_DebugTracer.StopPerformanceTrace(performanceKey, new Dictionary<string, object> { ["Result"] = "VALIDATION_FAILED", ["Field"] = "ItemType" });
+                    LoggingUtility.Log($"[{nameof(Control_Edit_PartID)}] Save attempted with no part selected");
                     return;
                 }
 
-                // Check for duplicate part number
-                string? originalItemNumber = _currentPart["PartID"].ToString();
-                string newItemNumber = itemNumberTextBox.Text.Trim();
-
-                Service_DebugTracer.TraceBusinessLogic("DUPLICATE_CHECK_LOGIC",
-                    inputData: new Dictionary<string, object>
-                    {
-                        ["OriginalItemNumber"] = originalItemNumber ?? "NULL",
-                        ["NewItemNumber"] = newItemNumber,
-                        ["NumberChanged"] = originalItemNumber != newItemNumber
-                    });
-
-                if (originalItemNumber != newItemNumber)
+                // Validate item type is selected
+                if (string.IsNullOrWhiteSpace(Control_Edit_PartID_TextBox_ItemType.Text))
                 {
-                    var existsResult = await Dao_Part.PartExistsAsync(newItemNumber);
-                    if (!existsResult.IsSuccess)
-                    {
-                        Service_ErrorHandler.HandleDatabaseError(
-                            existsResult.Exception ?? new Exception(existsResult.ErrorMessage),
-                            controlName: nameof(Control_Edit_PartID));
-                        Service_DebugTracer.StopPerformanceTrace(performanceKey, new Dictionary<string, object> { ["Result"] = "DATABASE_ERROR" });
-                        return;
-                    }
-
-                    if (existsResult.Data)
-                    {
-                        Service_DebugTracer.TraceDataValidation("DUPLICATE_PART_CHECK",
-                            dataToValidate: new Dictionary<string, object>
-                            {
-                                ["NewPartNumber"] = newItemNumber,
-                                ["OriginalPartNumber"] = originalItemNumber ?? "NULL"
-                            },
-                            validationRules: new Dictionary<string, object> { ["MustBeUnique"] = true },
-                            isValid: false,
-                            errorMessages: new List<string> { $"Part number '{newItemNumber}' already exists" });
-
-                        Service_ErrorHandler.HandleValidationError(
-                            $"Part number '{newItemNumber}' already exists. Please use a different part number.",
-                            "Duplicate Part Number", controlName: nameof(Control_Edit_PartID));
-                        itemNumberTextBox.Focus();
-
-                        Service_DebugTracer.StopPerformanceTrace(performanceKey, new Dictionary<string, object> { ["Result"] = "VALIDATION_FAILED", ["Field"] = "DuplicateCheck" });
-                        return;
-                    }
+                    Service_ErrorHandler.ShowWarning("Please select a valid item type.");
+                    Control_Edit_PartID_TextBox_ItemType.Focus();
+                    return;
                 }
 
-                Service_DebugTracer.TraceBusinessLogic("ALL_VALIDATIONS_PASSED",
-                    inputData: formData,
-                    validationResults: new Dictionary<string, object>
-                    {
-                        ["ItemNumberValid"] = true,
-                        ["DescriptionValid"] = true,
-                        ["ItemTypeValid"] = true,
-                        ["NoDuplicates"] = true,
-                        ["ReadyForUpdate"] = true
-                    });
+                // Check for duplicate part number if changed
+                if (!await ValidatePartNumberNotDuplicateAsync())
+                {
+                    return;
+                }
 
-                Service_DebugTracer.TraceUIAction("INITIATING_DATABASE_UPDATE", nameof(Control_Edit_PartID),
-                    new Dictionary<string, object>
-                    {
-                        ["UpdateType"] = "PART_DATA_UPDATE",
-                        ["PartChanged"] = originalItemNumber != newItemNumber
-                    });
-
+                // Update part in database
                 await UpdatePartAsync();
 
-                Service_DebugTracer.TraceBusinessLogic("PART_UPDATE_COMPLETE",
-                    outputData: new Dictionary<string, object>
-                    {
-                        ["UpdateSuccess"] = true,
-                        ["UpdatedPartID"] = newItemNumber,
-                        ["DatabaseOperationComplete"] = true
-                    });
-
-                Service_DebugTracer.TraceUIAction("SHOWING_SUCCESS_MESSAGE", nameof(Control_Edit_PartID),
-                    new Dictionary<string, object>
-                    {
-                        ["MessageType"] = "SUCCESS_INFORMATION",
-                        ["UserNotification"] = "Part updated successfully"
-                    });
-
+                // Show success message
                 Service_ErrorHandler.ShowInformation(
                     "Part has been updated successfully!",
-                    "Update Complete", controlName: nameof(Control_Edit_PartID));
+                    "Update Complete",
+                    controlName: nameof(Control_Edit_PartID));
 
-                Service_DebugTracer.TraceUIAction("REFRESHING_DATA", nameof(Control_Edit_PartID),
-                    new Dictionary<string, object>
-                    {
-                        ["Action"] = "RELOAD_PARTS_LIST",
-                        ["TriggerEvent"] = "PartUpdated"
-                    });
-
-                LoadParts();
+                // Reset form and trigger refresh
+                ResetControlsAndRefreshBindings();
                 PartUpdated?.Invoke(this, EventArgs.Empty);
 
-                var finalElapsed = Service_DebugTracer.StopPerformanceTrace(performanceKey, new Dictionary<string, object>
-                {
-                    ["Result"] = "SUCCESS",
-                    ["PartUpdated"] = newItemNumber
-                });
-
-                Service_DebugTracer.TraceMethodExit(new Dictionary<string, object>
-                {
-                    ["Success"] = true,
-                    ["ElapsedMs"] = finalElapsed,
-                    ["UpdatedPartID"] = newItemNumber
-                }, nameof(SaveButton_Click), nameof(Control_Edit_PartID));
+                LoggingUtility.Log($"[{nameof(Control_Edit_PartID)}] Part updated successfully");
             }
             catch (Exception ex)
             {
-                Service_DebugTracer.TraceBusinessLogic("SAVE_OPERATION_ERROR",
-                    validationResults: new Dictionary<string, object>
+                Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Medium,
+                    contextData: new Dictionary<string, object>
                     {
-                        ["ExceptionType"] = ex.GetType().Name,
-                        ["ExceptionMessage"] = ex.Message,
-                        ["StackTracePreview"] = ex.StackTrace?.Substring(0, Math.Min(ex.StackTrace.Length, 300)) ?? "No stack trace",
-                        ["DatabaseError"] = ex.Message.ToLower().Contains("mysql") || ex.Message.ToLower().Contains("database")
-                    });
-
-                Service_ErrorHandler.HandleDatabaseError(ex, controlName: nameof(Control_Edit_PartID));
-
+                        ["Operation"] = "SavePart",
+                        ["PartID"] = _currentPart?["PartID"]?.ToString() ?? "Unknown"
+                    },
+                    controlName: nameof(Control_Edit_PartID),
+                    callerName: nameof(SaveButton_Click));
+            }
+            finally
+            {
                 Service_DebugTracer.StopPerformanceTrace(performanceKey, new Dictionary<string, object>
                 {
-                    ["Result"] = "EXCEPTION",
-                    ["ExceptionType"] = ex.GetType().Name
+                    ["Operation"] = "SavePart"
                 });
-
-                Service_DebugTracer.TraceMethodExit(new Dictionary<string, object>
-                {
-                    ["Success"] = false,
-                    ["Exception"] = ex.GetType().Name
-                }, nameof(SaveButton_Click), nameof(Control_Edit_PartID));
             }
         }
 
-        private void CancelButton_Click(object sender, EventArgs e)
+        /// <summary>
+        /// Handles reset button click. Resets control to initial load state (cleared and disabled).
+        /// </summary>
+        private void ResetButton_Click(object? sender, EventArgs e)
         {
-            if (_currentPart != null)
-            {
-                LoadPartData();
-            }
-            else
+            try
             {
                 ClearForm();
+                Control_Edit_PartID_TextBox_Part.Clear();
+                SetFormEnabled(false);
+                Control_Edit_PartID_TextBox_Part.Focus();
+
+                LoggingUtility.Log($"[{nameof(Control_Edit_PartID)}] Control reset to initial state");
             }
+            catch (Exception ex)
+            {
+                Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Low,
+                    contextData: new Dictionary<string, object>
+                    {
+                        ["Operation"] = "ResetControl"
+                    },
+                    controlName: nameof(Control_Edit_PartID),
+                    callerName: nameof(ResetButton_Click));
+            }
+        }
+
+        #endregion
+
+        #region Data Providers
+
+        /// <summary>
+        /// Data provider for part number SuggestionTextBox.
+        /// Returns list of all part IDs from database.
+        /// </summary>
+        private async Task<List<string>> GetPartNumberSuggestionsAsync()
+        {
+            return await GetSuggestionsFromDatabaseAsync(
+                "md_part_ids_Get_All",
+                "PartID",
+                "part numbers");
+        }
+
+        /// <summary>
+        /// Data provider for item type SuggestionTextBox.
+        /// Returns list of all item types from database.
+        /// </summary>
+        private async Task<List<string>> GetItemTypeSuggestionsAsync()
+        {
+            return await GetSuggestionsFromDatabaseAsync(
+                "md_item_types_Get_All",
+                "ItemType",
+                "item types");
+        }
+
+        /// <summary>
+        /// Generic method to load suggestions from database stored procedure.
+        /// </summary>
+        /// <param name="procedureName">Stored procedure name</param>
+        /// <param name="columnName">Column name to extract</param>
+        /// <param name="dataTypeName">Friendly name for error messages</param>
+        /// <returns>List of suggestion strings</returns>
+        private async Task<List<string>> GetSuggestionsFromDatabaseAsync(string procedureName, string columnName, string dataTypeName)
+        {
+            try
+            {
+                var result = await Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync(
+                    Model_Application_Variables.ConnectionString,
+                    procedureName,
+                    null);
+
+                if (!result.IsSuccess || result.Data == null)
+                {
+                    Service_ErrorHandler.ShowWarning(result.ErrorMessage ?? $"Failed to load {dataTypeName}");
+                    return new List<string>();
+                }
+
+                var suggestions = new List<string>(result.Data.Rows.Count);
+                foreach (DataRow row in result.Data.Rows)
+                {
+                    var value = row[columnName];
+                    if (value != null && value != DBNull.Value)
+                    {
+                        suggestions.Add(value.ToString() ?? string.Empty);
+                    }
+                }
+
+                return suggestions;
+            }
+            catch (Exception ex)
+            {
+                Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Medium,
+                    contextData: new Dictionary<string, object>
+                    {
+                        ["Procedure"] = procedureName,
+                        ["DataType"] = dataTypeName
+                    },
+                    controlName: nameof(Control_Edit_PartID),
+                    callerName: nameof(GetSuggestionsFromDatabaseAsync));
+                return new List<string>();
+            }
+        }
+
+        #endregion
+
+        #region Validation
+
+        /// <summary>
+        /// Validates that the new part number doesn't already exist (if changed).
+        /// </summary>
+        /// <returns>True if valid (not duplicate), false if duplicate found</returns>
+        private async Task<bool> ValidatePartNumberNotDuplicateAsync()
+        {
+            if (_currentPart == null)
+            {
+                return false;
+            }
+
+            string? originalPartNumber = _currentPart["PartID"]?.ToString();
+            string newPartNumber = itemNumberTextBox.Text.Trim();
+
+            // If part number unchanged, no need to check
+            if (originalPartNumber == newPartNumber)
+            {
+                return true;
+            }
+
+            // Check if new part number already exists
+            var existsResult = await Dao_Part.PartExistsAsync(newPartNumber);
+
+            if (!existsResult.IsSuccess)
+            {
+                Service_ErrorHandler.HandleDatabaseError(
+                    existsResult.Exception ?? new Exception(existsResult.ErrorMessage),
+                    contextData: new Dictionary<string, object>
+                    {
+                        ["Operation"] = "CheckDuplicatePart",
+                        ["PartNumber"] = newPartNumber
+                    },
+                    controlName: nameof(Control_Edit_PartID));
+                return false;
+            }
+
+            if (existsResult.Data)
+            {
+                Service_ErrorHandler.ShowWarning(
+                    $"Part number '{newPartNumber}' already exists. Please use a different part number.");
+                itemNumberTextBox.Focus();
+                itemNumberTextBox.SelectAll();
+                return false;
+            }
+
+            return true;
         }
 
         #endregion
 
         #region Methods
 
+
+        /// <summary>
+        /// Loads the currently selected part's data into form controls.
+        /// </summary>
         private void LoadPartData()
         {
             if (_currentPart == null)
@@ -437,34 +422,36 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
                 return;
             }
 
-            itemNumberTextBox.Text = _currentPart["PartID"].ToString();
-            string? partType = _currentPart["ItemType"].ToString();
-
-            int index = -1;
-            for (int i = 0; i < Control_Edit_PartID_ComboBox_ItemType.Items.Count; i++)
+            try
             {
-                if (Control_Edit_PartID_ComboBox_ItemType.GetItemText(Control_Edit_PartID_ComboBox_ItemType.Items[i]) ==
-                    partType)
+                // Load basic part information
+                itemNumberTextBox.Text = _currentPart["PartID"]?.ToString() ?? string.Empty;
+                Control_Edit_PartID_TextBox_ItemType.Text = _currentPart["ItemType"]?.ToString() ?? string.Empty;
+                issuedByValueLabel.Text = _currentPart["IssuedBy"]?.ToString() ?? string.Empty;
+
+                // Load RequiresColorCode checkbox with fallback
+                if (_currentPart.Table.Columns.Contains("RequiresColorCode"))
                 {
-                    index = i;
-                    break;
+                    var colorCodeValue = _currentPart["RequiresColorCode"];
+                    _originalRequiresColorCode = colorCodeValue != DBNull.Value && Convert.ToBoolean(colorCodeValue);
                 }
-            }
+                else
+                {
+                    _originalRequiresColorCode = false;
+                }
 
-            Control_Edit_PartID_ComboBox_ItemType.SelectedIndex = index > 0 ? index : 0;
-
-            issuedByValueLabel.Text = _currentPart["IssuedBy"].ToString();
-
-            // Load RequiresColorCode checkbox
-            if (_currentPart.Table.Columns.Contains("RequiresColorCode"))
-            {
-                _originalRequiresColorCode = Convert.ToBoolean(_currentPart["RequiresColorCode"]);
                 Control_Edit_PartID_CheckBox_RequiresColorCode.Checked = _originalRequiresColorCode;
             }
-            else
+            catch (Exception ex)
             {
-                _originalRequiresColorCode = false;
-                Control_Edit_PartID_CheckBox_RequiresColorCode.Checked = false;
+                Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Low,
+                    contextData: new Dictionary<string, object>
+                    {
+                        ["Operation"] = "LoadPartData",
+                        ["PartID"] = _currentPart["PartID"]?.ToString() ?? "Unknown"
+                    },
+                    controlName: nameof(Control_Edit_PartID),
+                    callerName: nameof(LoadPartData));
             }
         }
 
@@ -472,78 +459,131 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
 
         #region Helpers
 
+        /// <summary>
+        /// Enables or disables form controls for editing.
+        /// </summary>
+        /// <param name="enabled">True to enable controls, false to disable</param>
         private void SetFormEnabled(bool enabled)
         {
             itemNumberTextBox.Enabled = enabled;
-            Control_Edit_PartID_ComboBox_ItemType.Enabled = enabled;
+            Control_Edit_PartID_TextBox_ItemType.Enabled = enabled;
             Control_Edit_PartID_CheckBox_RequiresColorCode.Enabled = enabled;
             saveButton.Enabled = enabled;
         }
 
+        /// <summary>
+        /// Updates the part in the database with current form values.
+        /// Handles RequiresColorCode changes with cache reload.
+        /// </summary>
         private async Task UpdatePartAsync()
         {
             if (_currentPart == null)
             {
-                return;
+                throw new InvalidOperationException("Cannot update part: no part is currently selected");
             }
 
             int id = Convert.ToInt32(_currentPart["ID"]);
             string itemNumber = itemNumberTextBox.Text.Trim();
-            string issuedBy = Model_Application_Variables.User;
-            string type = Control_Edit_PartID_ComboBox_ItemType.Text;
+            string issuedBy = Model_Application_Variables.User ?? "System";
+            string type = Control_Edit_PartID_TextBox_ItemType.Text.Trim();
             bool requiresColorCode = Control_Edit_PartID_CheckBox_RequiresColorCode.Checked;
 
+            // Update part in database
             var result = await Dao_Part.UpdatePartAsync(id, itemNumber, "", "", issuedBy, type, requiresColorCode);
+
             if (!result.IsSuccess)
             {
-                Service_ErrorHandler.HandleDatabaseError(
-                    result.Exception ?? new Exception(result.ErrorMessage),
-                    controlName: nameof(Control_Edit_PartID));
                 throw new Exception($"Failed to update part: {result.ErrorMessage}");
             }
 
-            // If RequiresColorCode changed, trigger cache reload
+            // If RequiresColorCode changed, reload cache
             if (requiresColorCode != _originalRequiresColorCode)
             {
-                LoggingUtility.Log($"[Control_Edit_PartID] RequiresColorCode changed for part {itemNumber}: {_originalRequiresColorCode} -> {requiresColorCode}");
+                LoggingUtility.Log($"[{nameof(Control_Edit_PartID)}] RequiresColorCode changed for part {itemNumber}: {_originalRequiresColorCode} -> {requiresColorCode}");
                 await Model_Application_Variables.ReloadColorCodePartsAsync();
-                LoggingUtility.Log($"[Control_Edit_PartID] ColorCodeParts cache reloaded: {Model_Application_Variables.ColorCodeParts.Count} parts flagged");
+                LoggingUtility.Log($"[{nameof(Control_Edit_PartID)}] ColorCodeParts cache reloaded: {Model_Application_Variables.ColorCodeParts.Count} parts flagged");
             }
         }
 
+        /// <summary>
+        /// Clears all form fields and resets state.
+        /// </summary>
         private void ClearForm()
         {
             itemNumberTextBox.Clear();
-            Control_Edit_PartID_ComboBox_ItemType.SelectedIndex = 0;
-            issuedByValueLabel.Text = "";
+            Control_Edit_PartID_TextBox_ItemType.Clear();
+            issuedByValueLabel.Text = string.Empty;
             Control_Edit_PartID_CheckBox_RequiresColorCode.Checked = false;
             _originalRequiresColorCode = false;
             _currentPart = null;
+        }
+
+        /// <summary>
+        /// Resets form controls and refreshes data after save operation.
+        /// </summary>
+        private void ResetControlsAndRefreshBindings()
+        {
+            try
+            {
+                ClearForm();
+                Control_Edit_PartID_TextBox_Part.Clear();
+                SetFormEnabled(false);
+                Control_Edit_PartID_TextBox_Part.Focus();
+
+                LoggingUtility.Log($"[{nameof(Control_Edit_PartID)}] Controls reset after save");
+            }
+            catch (Exception ex)
+            {
+                Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Low,
+                    contextData: new Dictionary<string, object>
+                    {
+                        ["Operation"] = "ResetControls"
+                    },
+                    controlName: nameof(Control_Edit_PartID),
+                    callerName: nameof(ResetControlsAndRefreshBindings));
+            }
         }
 
         #endregion
 
         #region Cleanup
 
+        /// <summary>
+        /// Disposes resources used by this control.
+        /// </summary>
+        /// <param name="disposing">True if disposing managed resources</param>
         protected override void Dispose(bool disposing)
         {
-            try
+            if (disposing)
             {
-                if (disposing)
+                try
                 {
-                    // Dispose managed resources if any
+                    // Unsubscribe from events to prevent memory leaks
+                    if (Control_Edit_PartID_TextBox_Part != null)
+                    {
+                        Control_Edit_PartID_TextBox_Part.SuggestionSelected -= Control_Edit_PartID_TextBox_Part_SuggestionSelected;
+                    }
+
+                    if (saveButton != null)
+                    {
+                        saveButton.Click -= SaveButton_Click;
+                    }
+
+                    if (resetButton != null)
+                    {
+                        resetButton.Click -= ResetButton_Click;
+                    }
                 }
-                base.Dispose(disposing);
+                catch (Exception ex)
+                {
+                    // Log but don't throw during disposal
+                    LoggingUtility.LogApplicationError(ex);
+                }
             }
-            catch (Exception ex)
-            {
-                Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Low,
-                    controlName: nameof(Control_Edit_PartID));
-            }
+
+            base.Dispose(disposing);
         }
 
         #endregion
-
-
     }
 }
