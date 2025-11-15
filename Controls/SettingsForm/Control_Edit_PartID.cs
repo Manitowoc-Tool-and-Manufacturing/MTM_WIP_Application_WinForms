@@ -18,6 +18,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
 
         private DataRow? _currentPart;
         private bool _originalRequiresColorCode;
+        private bool _suppressNextValidation; // may be used by other fields; kept for safety
 
         #endregion
 
@@ -99,6 +100,8 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
         private void WireUpEventHandlers()
         {
             Control_Edit_PartID_TextBox_Part.SuggestionSelected += Control_Edit_PartID_TextBox_Part_SuggestionSelected;
+            Control_Edit_PartID_TextBox_Part.KeyDown += Control_Edit_PartID_TextBox_Part_KeyDown;
+            Control_Edit_PartID_TextBox_Part.Leave += Control_Edit_PartID_TextBox_Part_Leave;
             saveButton.Click += SaveButton_Click;
             resetButton.Click += ResetButton_Click;
         }
@@ -140,53 +143,90 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
         /// </summary>
         private async void Control_Edit_PartID_TextBox_Part_SuggestionSelected(object? sender, SuggestionSelectedEventArgs e)
         {
-            string selectedPart = e.SelectedValue;
+            // Selection via overlay; just load and do not let KeyDown/Leave interfere
+            _suppressNextValidation = true;
+            await LoadSelectedPartAsync(e.SelectedValue);
+        }
 
+        /// <summary>
+        /// Handles Enter key to validate and load typed part without opening suggestions.
+        /// </summary>
+        private async void Control_Edit_PartID_TextBox_Part_KeyDown(object? sender, KeyEventArgs e)
+        {
             try
             {
-                LoggingUtility.Log($"[{nameof(Control_Edit_PartID)}] Part selected: {selectedPart}");
-
-                // Clear current part before loading new one
-                _currentPart = null;
-                SetFormEnabled(false);
-
-                // Load part from database
-                var result = await Dao_Part.GetPartByNumberAsync(selectedPart);
-
-                if (!result.IsSuccess)
+                // If the suggestion overlay is visible, let the control handle Enter/keys
+                if (Control_Edit_PartID_TextBox_Part.IsOverlayVisible)
                 {
-                    Service_ErrorHandler.ShowWarning($"Part '{selectedPart}' could not be loaded: {result.ErrorMessage}");
-                    ClearForm();
                     return;
                 }
-
-                if (result.Data == null)
+                if (e.KeyCode == Keys.Enter)
                 {
-                    Service_ErrorHandler.ShowWarning($"Part '{selectedPart}' was not found.");
-                    ClearForm();
-                    return;
+                    var typed = Control_Edit_PartID_TextBox_Part.Text?.Trim().ToUpperInvariant() ?? string.Empty;
+                    if (typed.Length == 0)
+                    {
+                        return;
+                    }
+                    // Directly attempt to load; DAO determines validity
+                    e.Handled = true;
+                    await LoadSelectedPartAsync(typed);
                 }
-
-                // Load part data into form
-                _currentPart = result.Data;
-                LoadPartData();
-                SetFormEnabled(true);
-
-                LoggingUtility.Log($"[{nameof(Control_Edit_PartID)}] Part '{selectedPart}' loaded successfully");
             }
             catch (Exception ex)
             {
-                Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Medium,
+                Service_ErrorHandler.HandleException(
+                    ex,
+                    Enum_ErrorSeverity.Medium,
                     contextData: new Dictionary<string, object>
                     {
-                        ["SelectedPart"] = selectedPart,
-                        ["Operation"] = "LoadPartData",
-                        ["User"] = Model_Application_Variables.User ?? "Unknown"
+                        ["Operation"] = "ValidatePartOnEnter",
+                        ["Text"] = Control_Edit_PartID_TextBox_Part?.Text ?? string.Empty
                     },
                     controlName: nameof(Control_Edit_PartID),
-                    callerName: nameof(Control_Edit_PartID_TextBox_Part_SuggestionSelected));
+                    callerName: nameof(Control_Edit_PartID_TextBox_Part_KeyDown));
+            }
+        }
 
-                ClearForm();
+        /// <summary>
+        /// Validates and loads typed part when focus leaves the field (captures Tab navigation scenario).
+        /// </summary>
+        private async void Control_Edit_PartID_TextBox_Part_Leave(object? sender, EventArgs e)
+        {
+            try
+            {
+                if (Control_Edit_PartID_TextBox_Part.IsOverlayVisible)
+                {
+                    return;
+                }
+                var typed = Control_Edit_PartID_TextBox_Part.Text?.Trim().ToUpperInvariant() ?? string.Empty;
+                if (typed.Length == 0)
+                {
+                    return;
+                }
+
+                // Avoid re-loading if already the same part
+                var currentPartId = (_currentPart?.Table?.Columns.Contains("PartID") == true)
+                    ? _currentPart?["PartID"]?.ToString()?.ToUpperInvariant()
+                    : null;
+                if (!string.IsNullOrEmpty(currentPartId) && string.Equals(currentPartId, typed, StringComparison.Ordinal))
+                {
+                    return;
+                }
+
+                await LoadSelectedPartAsync(typed);
+            }
+            catch (Exception ex)
+            {
+                Service_ErrorHandler.HandleException(
+                    ex,
+                    Enum_ErrorSeverity.Low,
+                    contextData: new Dictionary<string, object>
+                    {
+                        ["Operation"] = "ValidatePartOnLeave",
+                        ["Text"] = Control_Edit_PartID_TextBox_Part?.Text ?? string.Empty
+                    },
+                    controlName: nameof(Control_Edit_PartID),
+                    callerName: nameof(Control_Edit_PartID_TextBox_Part_Leave));
             }
         }
 
@@ -408,6 +448,59 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             }
         }
 
+        /// <summary>
+        /// Loads a part by number, updating form state and enabling editing.
+        /// </summary>
+        /// <param name="selectedPart">The part number to load.</param>
+        private async Task LoadSelectedPartAsync(string selectedPart)
+        {
+            try
+            {
+                LoggingUtility.Log($"[{nameof(Control_Edit_PartID)}] Part selected: {selectedPart}");
+
+                _currentPart = null;
+                SetFormEnabled(false);
+
+                var result = await Dao_Part.GetPartByNumberAsync(selectedPart);
+
+                if (!result.IsSuccess)
+                {
+                    Service_ErrorHandler.ShowWarning($"Part '{selectedPart}' could not be loaded: {result.ErrorMessage}");
+                    ClearForm();
+                    return;
+                }
+
+                if (result.Data == null)
+                {
+                    Service_ErrorHandler.ShowWarning($"Part '{selectedPart}' was not found.");
+                    ClearForm();
+                    return;
+                }
+
+                _currentPart = result.Data;
+                LoadPartData();
+                SetFormEnabled(true);
+
+                LoggingUtility.Log($"[{nameof(Control_Edit_PartID)}] Part '{selectedPart}' loaded successfully");
+            }
+            catch (Exception ex)
+            {
+                Service_ErrorHandler.HandleException(
+                    ex,
+                    Enum_ErrorSeverity.Medium,
+                    contextData: new Dictionary<string, object>
+                    {
+                        ["SelectedPart"] = selectedPart,
+                        ["Operation"] = "LoadPartData",
+                        ["User"] = Model_Application_Variables.User ?? "Unknown"
+                    },
+                    controlName: nameof(Control_Edit_PartID),
+                    callerName: nameof(LoadSelectedPartAsync));
+
+                ClearForm();
+            }
+        }
+
         #endregion
 
         #region Helpers
@@ -515,6 +608,8 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
                     if (Control_Edit_PartID_TextBox_Part != null)
                     {
                         Control_Edit_PartID_TextBox_Part.SuggestionSelected -= Control_Edit_PartID_TextBox_Part_SuggestionSelected;
+                        Control_Edit_PartID_TextBox_Part.KeyDown -= Control_Edit_PartID_TextBox_Part_KeyDown;
+                        Control_Edit_PartID_TextBox_Part.Leave -= Control_Edit_PartID_TextBox_Part_Leave;
                     }
 
                     if (saveButton != null)
