@@ -342,6 +342,90 @@ namespace MTM_WIP_Application_Winforms.Helpers
 
         #endregion
 
+        #region Cached Data Providers
+
+        /// <summary>
+        /// Gets part numbers from the pre-loaded Helper_UI_ComboBoxes cache.
+        /// Returns empty list if cache not populated. Thread-safe access.
+        /// </summary>
+        /// <returns>List of all part IDs from cache</returns>
+        public static Task<List<string>> GetCachedPartNumbersAsync()
+        {
+            try
+            {
+                var cachedParts = Helper_UI_ComboBoxes.GetCachedPartNumbers();
+                LoggingUtility.Log($"[Helper_SuggestionTextBox] Retrieved {cachedParts.Count} part numbers from cache");
+                return Task.FromResult(cachedParts);
+            }
+            catch (Exception ex)
+            {
+                LoggingUtility.LogApplicationError(ex);
+                return Task.FromResult(new List<string>());
+            }
+        }
+
+        /// <summary>
+        /// Gets item types from the pre-loaded Helper_UI_ComboBoxes cache.
+        /// Returns empty list if cache not populated. Thread-safe access.
+        /// </summary>
+        /// <returns>List of all item types from cache</returns>
+        public static Task<List<string>> GetCachedItemTypesAsync()
+        {
+            try
+            {
+                var cachedItemTypes = Helper_UI_ComboBoxes.GetCachedItemTypes();
+                LoggingUtility.Log($"[Helper_SuggestionTextBox] Retrieved {cachedItemTypes.Count} item types from cache");
+                return Task.FromResult(cachedItemTypes);
+            }
+            catch (Exception ex)
+            {
+                LoggingUtility.LogApplicationError(ex);
+                return Task.FromResult(new List<string>());
+            }
+        }
+
+        /// <summary>
+        /// Gets operations from the pre-loaded Helper_UI_ComboBoxes cache.
+        /// Returns empty list if cache not populated. Thread-safe access.
+        /// </summary>
+        /// <returns>List of all operations from cache</returns>
+        public static Task<List<string>> GetCachedOperationsAsync()
+        {
+            try
+            {
+                var cachedOperations = Helper_UI_ComboBoxes.GetCachedOperations();
+                LoggingUtility.Log($"[Helper_SuggestionTextBox] Retrieved {cachedOperations.Count} operations from cache");
+                return Task.FromResult(cachedOperations);
+            }
+            catch (Exception ex)
+            {
+                LoggingUtility.LogApplicationError(ex);
+                return Task.FromResult(new List<string>());
+            }
+        }
+
+        /// <summary>
+        /// Gets locations from the pre-loaded Helper_UI_ComboBoxes cache.
+        /// Returns empty list if cache not populated. Thread-safe access.
+        /// </summary>
+        /// <returns>List of all locations from cache</returns>
+        public static Task<List<string>> GetCachedLocationsAsync()
+        {
+            try
+            {
+                var cachedLocations = Helper_UI_ComboBoxes.GetCachedLocations();
+                LoggingUtility.Log($"[Helper_SuggestionTextBox] Retrieved {cachedLocations.Count} locations from cache");
+                return Task.FromResult(cachedLocations);
+            }
+            catch (Exception ex)
+            {
+                LoggingUtility.LogApplicationError(ex);
+                return Task.FromResult(new List<string>());
+            }
+        }
+
+        #endregion
+
         #region State Management
 
         /// <summary>

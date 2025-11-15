@@ -1,0 +1,77 @@
+# Suggestion Template Configuration
+# Used by suggestiontextbox-constitution-audit.prompt.md to generate suggestion files
+
+metadata:
+  version: "1.0.0"
+  last_updated: "2025-11-15"
+  template_type: "suggestion_file"
+
+# File naming convention
+naming:
+  pattern: "{target_file_name}-suggestions.md"
+  examples:
+    - "Control_Edit_PartID-suggestions.md"
+    - "Service_ErrorHandler-suggestions.md"
+    - "Helper_SuggestionTextBox-suggestions.md"
+
+# Suggestion categories and their criteria
+categories:
+  file_only:
+    description: "Suggestions that only affect the audited file (and its .Designer.cs if applicable)"
+    output_location: ".github/suggestions/{filename}-suggestions.md"
+    requires_speckit: false
+    criteria:
+      - "Changes contained within single file"
+      - "No changes to interfaces, base classes, or shared infrastructure"
+      - "Can be implemented independently"
+    
+  system:
+    description: "Suggestions that affect a specific system/component (e.g., Service_ErrorHandler, Helper_SuggestionTextBox)"
+    output_location: ".github/suggestions/{system_name}-suggestions.md"
+    requires_speckit: false
+    criteria:
+      - "Changes affect multiple files in same subsystem"
+      - "Shared component improvements"
+      - "Can be implemented without breaking other features"
+    
+  multi_file:
+    description: "Suggestions requiring coordinated changes across multiple systems"
+    output_location: ".github/suggestions/speckit/{feature_name}-suggestion.md"
+    requires_speckit: true
+    criteria:
+      - "Architectural changes affecting multiple systems"
+      - "Breaking changes requiring migration"
+      - "New features requiring specification"
+
+# Suggestion priority scale
+priority_scale:
+  1-3: "Nice to Have"
+  4-6: "Helpful / Recommended"
+  7-8: "Important"
+  9-10: "Critical"
+
+# Scope scale
+scope_scale:
+  1-2: "Single method or small section"
+  3-4: "Single file or control"
+  5-6: "Multiple related files"
+  7-8: "System-wide changes"
+  9-10: "Architecture-level refactor"
+
+# Markdown template structure
+template_sections:
+  - header
+  - metadata
+  - toc
+  - summary
+  - suggestions_by_category
+  - implementation_notes
+  - related_files
+
+# Mermaid diagram types to use
+diagrams:
+  workflow: "Use for multi-step implementation processes"
+  sequence: "Use for interaction patterns and event flows"
+  class: "Use for architectural changes and relationships"
+  state: "Use for state management changes"
+  gantt: "Use for implementation timelines (speckit only)"
