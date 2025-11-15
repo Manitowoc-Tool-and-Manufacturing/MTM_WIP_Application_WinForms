@@ -289,22 +289,15 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
                     return;
                 }
 
-                // Validation: Description
+                // Auto-correct description: default to [ Empty ] when blank
                 if (string.IsNullOrWhiteSpace(descriptionTextBox.Text))
                 {
-                    Service_DebugTracer.TraceDataValidation("DESCRIPTION_VALIDATION",
-                        dataToValidate: descriptionTextBox.Text,
-                        validationRules: new Dictionary<string, object> { ["Required"] = true },
-                        isValid: false,
-                        errorMessages: new List<string> { "Description is required" });
+                    Service_DebugTracer.TraceBusinessLogic("AUTO_CORRECT_DESCRIPTION",
+                        inputData: new Dictionary<string, object> { ["OriginalValue"] = descriptionTextBox.Text ?? "" },
+                        outputData: new Dictionary<string, object> { ["CorrectedValue"] = "[ Empty ]" },
+                        businessRules: new Dictionary<string, object> { ["Rule"] = "Empty description defaults to [ Empty ]" });
 
-                    Service_ErrorHandler.HandleValidationError(
-                        "Description is required to save the part.",
-                        "Description", controlName: nameof(Control_Edit_PartID));
-                    descriptionTextBox.Focus();
-                    
-                    Service_DebugTracer.StopPerformanceTrace(performanceKey, new Dictionary<string, object> { ["Result"] = "VALIDATION_FAILED", ["Field"] = "Description" });
-                    return;
+                    descriptionTextBox.Text = "[ Empty ]";
                 }
 
                 // Validation: Item Type

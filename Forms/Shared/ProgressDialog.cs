@@ -10,48 +10,28 @@ namespace MTM_WIP_Application_Winforms.Forms.Shared;
 /// Simple cancelable progress dialog used for long-running export/preview operations.
 /// Migrated to ThemedForm for automatic DPI scaling and theme support.
 /// </summary>
-public class ProgressDialog : ThemedForm
+public partial class ProgressDialog : ThemedForm
 {
-    private readonly ProgressBar _progressBar = new();
-    private readonly Button _buttonCancel = new();
-    private readonly Label _labelStatus = new();
-
     public CancellationTokenSource CancellationSource { get; } = new();
-
-    public ProgressDialog(string title = "Progress")
+    public ProgressDialog() : this("Progress")
     {
+    }
+
+    public ProgressDialog(string title)
+    {
+        InitializeComponent();
+
+        // Apply window properties after designer init for VS compatibility
         Text = title;
         StartPosition = FormStartPosition.CenterParent;
         FormBorderStyle = FormBorderStyle.FixedDialog;
         MinimizeBox = false;
         MaximizeBox = false;
         ShowInTaskbar = false;
-        Width = 400;
-        Height = 120;
 
-        InitializeComponent();
-        // DPI scaling and layout now handled by ThemedForm.OnLoad
-    }
-
-    private void InitializeComponent()
-    {
-    _progressBar.Style = ProgressBarStyle.Continuous;
-    _progressBar.Dock = DockStyle.Top;
-    _progressBar.Height = 24;
-
-    _labelStatus.Text = "Working...";
-    _labelStatus.Dock = DockStyle.Top;
-    _labelStatus.Height = 20;
-    _labelStatus.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-
-    _buttonCancel.Text = "Cancel";
-    _buttonCancel.Dock = DockStyle.Bottom;
-    _buttonCancel.Height = 30; 
-        _buttonCancel.Click += (s, e) => CancellationSource.Cancel();
-
-        Controls.Add(_progressBar);
-        Controls.Add(_labelStatus);
-        Controls.Add(_buttonCancel);
+        // Configure embedded progress control to match Splash look
+        _progressControl.EnableCancel(true);
+        _progressControl.CancelRequested += () => CancellationSource.Cancel();
     }
 
     public void SetProgress(int percent, string? status = null)
@@ -64,11 +44,7 @@ public class ProgressDialog : ThemedForm
             return;
         }
 
-        _progressBar.Value = percent;
-        if (!string.IsNullOrEmpty(status))
-        {
-            _labelStatus.Text = status;
-        }
+        _progressControl.UpdateProgress(percent, status);
     }
 
     protected override void OnFormClosed(FormClosedEventArgs e)

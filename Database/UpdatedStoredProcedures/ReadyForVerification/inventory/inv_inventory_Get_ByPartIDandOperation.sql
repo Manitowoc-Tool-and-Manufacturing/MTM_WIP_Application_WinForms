@@ -33,7 +33,9 @@ BEGIN
             LastUpdated,
             User,
             BatchNumber AS `BatchNumber`,
-            Notes
+            Notes,
+            ColorCode,
+            WorkOrder
         FROM inv_inventory
         WHERE PartID = p_PartID AND Operation = p_Operation;
         SELECT FOUND_ROWS() INTO v_Count;

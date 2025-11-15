@@ -186,6 +186,27 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
         public void Control_TransferTab_Initialize()
         {
             Control_TransferTab_Button_Reset.TabStop = false;
+            // Non-tab targets: exclude from tab navigation
+            try
+            {
+                Control_TransferTab_Button_Toggle_RightPanel.TabStop = false;
+                Control_TransferTab_Button_Print.TabStop = false;
+                Control_TransferTab_Button_Toggle_Split.TabStop = false;
+                Control_TransferTab_DataGridView_Main.TabStop = false;
+            }
+            catch { /* Some controls may be null at design-time */ }
+
+            // Explicit tab order: Part (0), Operation (1), Search (2), Location (3), Quantity (4), Save/Transfer (5)
+            try
+            {
+                Control_TransferTab_TextBox_Part.TabIndex = 0;
+                Control_TransferTab_TextBox_Operation.TabIndex = 1;
+                Control_TransferTab_Button_Search.TabIndex = 2;
+                Control_TransferTab_TextBox_ToLocation.TabIndex = 3;
+                Control_TransferTab_NumericUpDown_Quantity.TabIndex = 4;
+                Control_TransferTab_Button_Transfer.TabIndex = 5;
+            }
+            catch { /* Controls may not be created in designer at design-time */ }
 
             Core_Themes.ApplyFocusHighlighting(this);
         }
@@ -567,6 +588,19 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
 
                 Control_TransferTab_TextBox_Part.Focus();
 
+                // Expand the search panel on reset
+                try
+                {
+                    if (Control_TransferTab_SplitContainer_Main != null)
+                    {
+                        Control_TransferTab_SplitContainer_Main.Panel1Collapsed = false;
+                        Control_TransferTab_Button_Toggle_Split.Text = "➡️";
+                        Control_TransferTab_Button_Toggle_Split.ForeColor =
+                            Model_Application_Variables.UserUiColors.SuccessColor ?? Color.Green;
+                    }
+                }
+                catch { }
+
                 Debug.WriteLine("[DEBUG] TransferTab HardReset - end");
             }
             catch (Exception ex)
@@ -623,6 +657,19 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                 Control_TransferTab_Button_Transfer.Enabled = false;
                 Control_TransferTab_NumericUpDown_Quantity.Value = Control_TransferTab_NumericUpDown_Quantity.Minimum;
                 Control_TransferTab_NumericUpDown_Quantity.Enabled = false;
+
+                // Expand the search panel on reset
+                try
+                {
+                    if (Control_TransferTab_SplitContainer_Main != null)
+                    {
+                        Control_TransferTab_SplitContainer_Main.Panel1Collapsed = false;
+                        Control_TransferTab_Button_Toggle_Split.Text = "➡️";
+                        Control_TransferTab_Button_Toggle_Split.ForeColor =
+                            Model_Application_Variables.UserUiColors.SuccessColor ?? Color.Green;
+                    }
+                }
+                catch { }
             }
             catch (Exception ex)
             {
@@ -704,8 +751,8 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                 Control_TransferTab_DataGridView_Main.DataSource = results;
                 Control_TransferTab_DataGridView_Main.ClearSelection();
 
-                // Only show columns in this order: Location, PartID, Operation, Quantity, Notes
-                string[] columnsToShow = { "Location", "PartID", "Operation", "Quantity", "Notes" };
+                // Only show columns in this order (match RemoveTab): Location, PartID, ColorCode, WorkOrder, Operation, Quantity, Notes
+                string[] columnsToShow = { "Location", "PartID", "ColorCode", "WorkOrder", "Operation", "Quantity", "Notes" };
                 foreach (DataGridViewColumn column in Control_TransferTab_DataGridView_Main.Columns)
                 {
                     column.Visible = columnsToShow.Contains(column.Name);
@@ -717,14 +764,47 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                     if (Control_TransferTab_DataGridView_Main.Columns.Contains(columnsToShow[i]))
                     {
                         Control_TransferTab_DataGridView_Main.Columns[columnsToShow[i]].DisplayIndex = i;
+                        // Friendly headers
+                        if (columnsToShow[i] == "ColorCode")
+                            Control_TransferTab_DataGridView_Main.Columns[columnsToShow[i]].HeaderText = "Color";
+                        if (columnsToShow[i] == "WorkOrder")
+                            Control_TransferTab_DataGridView_Main.Columns[columnsToShow[i]].HeaderText = "Work Order";
                     }
                 }
 
-                Core_Themes.ApplyThemeToDataGridView(Control_TransferTab_DataGridView_Main);
+                // Hide Color/WorkOrder columns if not a color-tracked part
+                bool colorTrackedPart = Model_Application_Variables.ColorCodeParts.Contains(partId);
+                if (Control_TransferTab_DataGridView_Main.Columns.Contains("ColorCode"))
+                    Control_TransferTab_DataGridView_Main.Columns["ColorCode"].Visible = colorTrackedPart;
+                if (Control_TransferTab_DataGridView_Main.Columns.Contains("WorkOrder"))
+                    Control_TransferTab_DataGridView_Main.Columns["WorkOrder"].Visible = colorTrackedPart;
+
+                if (!colorTrackedPart)
+                {
+                    Core_Themes.ApplyThemeToDataGridView(Control_TransferTab_DataGridView_Main);
+                }
+                else
+                {
+                    ApplyColorCodingToRows(Control_TransferTab_DataGridView_Main);
+                }
                 Core_Themes.SizeDataGrid(Control_TransferTab_DataGridView_Main);
 
                 Control_TransferTab_Image_NothingFound.Visible = results.Rows.Count == 0;
                 _progressHelper?.UpdateProgress(100, "Search complete");
+
+                // Collapse the search panel after search to maximize results area
+                try
+                {
+                    if (Control_TransferTab_SplitContainer_Main != null)
+                    {
+                        Control_TransferTab_SplitContainer_Main.Panel1Collapsed = true;
+                        // Arrow-only visual style: Collapsed => ⬅️ (red)
+                        Control_TransferTab_Button_Toggle_Split.Text = "⬅️";
+                        Control_TransferTab_Button_Toggle_Split.ForeColor =
+                            Model_Application_Variables.UserUiColors.ErrorColor ?? Color.Red;
+                    }
+                }
+                catch { }
             }
             catch (Exception ex)
             {
@@ -1228,6 +1308,59 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
 
         #region Helper Methods
 
+        private static readonly HashSet<string> PredefinedColorCodes = new(StringComparer.OrdinalIgnoreCase)
+        {
+            "Red","Blue","Green","Yellow","Orange","Purple","Pink","White","Black"
+        };
+
+        /// <summary>
+        /// Applies background coloring to rows based on ColorCode column.
+        /// Skips 'Unknown' and any non-predefined (user-defined) colors.
+        /// Uses light variants for dark colors to keep text readable.
+        /// </summary>
+        /// <param name="dgv">Target DataGridView</param>
+        private void ApplyColorCodingToRows(DataGridView dgv)
+        {
+            try
+            {
+                if (dgv.Columns.Contains("ColorCode") == false)
+                    return;
+
+                foreach (DataGridViewRow row in dgv.Rows)
+                {
+                    if (row.IsNewRow) continue;
+                    string colorCode = row.Cells["ColorCode"].Value?.ToString() ?? string.Empty;
+                    if (string.IsNullOrWhiteSpace(colorCode)) continue;
+                    if (colorCode.Equals("Unknown", StringComparison.OrdinalIgnoreCase)) continue;
+                    if (!PredefinedColorCodes.Contains(colorCode)) continue; // user-defined -> skip
+
+                    Color backColor;
+                    switch (colorCode.ToLowerInvariant())
+                    {
+                        case "red": backColor = Color.MistyRose; break;
+                        case "blue": backColor = Color.AliceBlue; break;
+                        case "green": backColor = Color.Honeydew; break;
+                        case "yellow": backColor = Color.LightYellow; break;
+                        case "orange": backColor = Color.Moccasin; break;
+                        case "purple": backColor = Color.Lavender; break;
+                        case "pink": backColor = Color.LavenderBlush; break;
+                        case "white": backColor = Color.WhiteSmoke; break;
+                        case "black": backColor = Color.Gainsboro; break; // light gray for readability
+                        default: continue;
+                    }
+
+                    row.DefaultCellStyle.BackColor = backColor;
+                    row.DefaultCellStyle.SelectionBackColor = backColor; // keep consistent; selection fore color handles contrast
+                    row.DefaultCellStyle.ForeColor = SystemColors.ControlText;
+                    row.DefaultCellStyle.SelectionForeColor = SystemColors.ControlText;
+                }
+            }
+            catch (Exception ex)
+            {
+                LoggingUtility.LogApplicationError(ex);
+            }
+        }
+
         /// <summary>
         /// Builds a concise confirmation message for inventory transfers.
         /// Groups items by Part ID for multiple selections to prevent message flooding.
@@ -1318,12 +1451,15 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             if (splitContainer.Panel1Collapsed)
             {
                 splitContainer.Panel1Collapsed = false;
-                button.Text = "Collapse ⬅️";
+                // Arrow-only style and color like RightPanel toggle
+                button.Text = "➡️";
+                button.ForeColor = Model_Application_Variables.UserUiColors.SuccessColor ?? Color.Green;
             }
             else
             {
                 splitContainer.Panel1Collapsed = true;
-                button.Text = "Expand ➡️";
+                button.Text = "⬅️";
+                button.ForeColor = Model_Application_Variables.UserUiColors.ErrorColor ?? Color.Red;
             }
         }
     }

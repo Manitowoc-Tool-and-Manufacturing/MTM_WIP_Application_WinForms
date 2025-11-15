@@ -280,9 +280,24 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                 {
                     Helper_UI_ComboBoxes.ValidateComboBoxItem(AdvancedInventory_Single_ComboBox_Part,
                         "Enter or Select Part Number");
+                    HandleAdvancedInventoryRedirect(AdvancedInventory_Single_ComboBox_Part);
                 };
 
+                AdvancedInventory_MultiLoc_ComboBox_Part.Leave += (s, e) =>
+                {
+                    Helper_UI_ComboBoxes.ValidateComboBoxItem(AdvancedInventory_MultiLoc_ComboBox_Part,
+                        "Enter or Select Part Number");
+                    HandleAdvancedInventoryRedirect(AdvancedInventory_MultiLoc_ComboBox_Part);
+                };
+
+
+
                 AdvancedInventory_Single_ComboBox_Op.SelectedIndexChanged += (s, e) =>
+                        /// <summary>
+                        /// Checks if the entered part requires color code and redirects to Inventory Tab if needed.
+                        /// </summary>
+                        /// <param name="comboBox">The ComboBox for PartID</param>
+
                 {
                     Helper_UI_ComboBoxes.ValidateComboBoxItem(AdvancedInventory_Single_ComboBox_Op,
                         "Enter or Select Operation");
@@ -315,11 +330,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                     UpdateMultiSaveButtonState();
                     LoggingUtility.Log("Multi Part ComboBox selection changed.");
                 };
-                AdvancedInventory_MultiLoc_ComboBox_Part.Leave += (s, e) =>
-                {
-                    Helper_UI_ComboBoxes.ValidateComboBoxItem(AdvancedInventory_MultiLoc_ComboBox_Part,
-                        "Enter or Select Part Number");
-                };
+                // Removed duplicate Leave handler for MultiLoc_ComboBox_Part to prevent double redirect.
 
                 AdvancedInventory_MultiLoc_ComboBox_Op.SelectedIndexChanged += (s, e) =>
                 {
@@ -412,6 +423,45 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                     "Control_AdvancedInventory_WireUpEvents");
             }
         }
+
+                        private void HandleAdvancedInventoryRedirect(ComboBox comboBox)
+                        {
+                            string? partId = comboBox.Text?.Trim();
+                            if (string.IsNullOrWhiteSpace(partId))
+                                return;
+                            if (!Model_Application_Variables.ColorCodeParts.Contains(partId))
+                                return;
+
+                            var result = Service_ErrorHandler.ShowConfirmation(
+                                "This part requires color code entry. Redirect to Inventory Tab?",
+                                "Redirect Required",
+                                MessageBoxButtons.YesNo,
+                                MessageBoxIcon.Question);
+
+                            if (result == DialogResult.Yes)
+                            {
+                                // Switch to Inventory Tab and pre-populate PartID
+                                if (MainFormInstance != null && MainFormInstance.MainForm_UserControl_InventoryTab != null)
+                                {
+                                    MainFormInstance.MainForm_UserControl_AdvancedInventory.Visible = false;
+                                    MainFormInstance.MainForm_UserControl_InventoryTab.Visible = true;
+                                    MainFormInstance.MainForm_TabControl.SelectedIndex = 0;
+                                    var invTab = MainFormInstance.MainForm_UserControl_InventoryTab;
+                                    if (invTab.Control_InventoryTab_TextBox_Part != null)
+                                    {
+                                        invTab.Control_InventoryTab_TextBox_Part.Text = partId;
+                                        invTab.Control_InventoryTab_TextBox_Part.Focus();
+                                        invTab.Control_InventoryTab_TextBox_Part.SelectAll();
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                // Clear PartID and return focus
+                                comboBox.Text = string.Empty;
+                                comboBox.Focus();
+                            }
+                        }
 
         #endregion
 

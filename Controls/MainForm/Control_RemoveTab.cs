@@ -566,6 +566,14 @@ SetStyle(ControlStyles.OptimizedDoubleBuffer, true);
             {
                 foreach (Model_History_Remove item in _lastRemovedItems)
                 {
+                    // Pass colorCode and workOrder if available (for color-tracked parts)
+                    string? colorCode = null;
+                    string? workOrder = null;
+                    if (item.GetType().GetProperty("ColorCode") != null)
+                        colorCode = (string?)item.GetType().GetProperty("ColorCode")?.GetValue(item);
+                    if (item.GetType().GetProperty("WorkOrder") != null)
+                        workOrder = (string?)item.GetType().GetProperty("WorkOrder")?.GetValue(item);
+
                     await Dao_Inventory.AddInventoryItemAsync(
                         item.PartId,
                         item.Location,
@@ -575,8 +583,8 @@ SetStyle(ControlStyles.OptimizedDoubleBuffer, true);
                         item.User,
                         item.BatchNumber,
                         "Removal reversed via Undo Button.",
-                        null,  // colorCode
-                        null,  // workOrder
+                        colorCode,
+                        workOrder,
                         true
                     );
                 }
@@ -589,7 +597,6 @@ SetStyle(ControlStyles.OptimizedDoubleBuffer, true);
 
                 Control_RemoveTab_Button_Undo.Enabled = false;
 
-
                 Control_RemoveTab_Button_Search_Click(null, null);
                 _progressHelper?.UpdateProgress(100, "Undo complete");
             }
@@ -598,12 +605,54 @@ SetStyle(ControlStyles.OptimizedDoubleBuffer, true);
                 LoggingUtility.LogApplicationError(ex);
                 Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Medium, 
                     controlName: nameof(Control_RemoveTab));
+                    // Show warning dialog if >1000 records before loading results
+
             }
             finally
             {
                 _progressHelper?.HideProgress();
             }
         }
+
+                    private bool ShowWarningIfTooManyRecords(DataTable results)
+                    {
+                        if (results.Rows.Count > 1000)
+                        {
+                            var confirmResult = Service_ErrorHandler.ShowConfirmation(
+                                $"Query returned {results.Rows.Count} results. Continue?",
+                                "Large Result Warning",
+                                MessageBoxButtons.YesNo,
+                                MessageBoxIcon.Warning);
+                            return confirmResult == DialogResult.Yes;
+                        }
+                        return true;
+                    }
+
+                    // Hide ColorCode/WorkOrder columns when Show All is active
+                    private void HideColorWorkOrderColumnsIfShowAll(DataGridView dgv, bool showAllActive)
+                    {
+                        if (dgv.Columns.Contains("ColorCode"))
+                            dgv.Columns["ColorCode"].Visible = !showAllActive;
+                        if (dgv.Columns.Contains("WorkOrder"))
+                            dgv.Columns["WorkOrder"].Visible = !showAllActive;
+                    }
+
+                    // Robust dynamic column visibility and sorting
+                    private void UpdateColorWorkOrderColumnVisibilityAndSort(DataGridView dgv, DataTable results, string partId, bool showAllActive)
+                    {
+                        bool colorTrackedPart = Model_Application_Variables.ColorCodeParts.Contains(partId);
+                        if (dgv.Columns.Contains("ColorCode"))
+                            dgv.Columns["ColorCode"].Visible = colorTrackedPart && !showAllActive;
+                        if (dgv.Columns.Contains("WorkOrder"))
+                            dgv.Columns["WorkOrder"].Visible = colorTrackedPart && !showAllActive;
+
+                        // Auto-sort: ColorCode ASC, Location ASC, Unknown at end
+                        if (colorTrackedPart && results.Columns.Contains("ColorCode") && results.Columns.Contains("Location"))
+                        {
+                            var dv = results.DefaultView;
+                            dv.Sort = "CASE WHEN ColorCode = 'Unknown' THEN 1 ELSE 0 END, ColorCode ASC, Location ASC";
+                        }
+                    }
 
         private void Control_RemoveTab_Button_Reset_Click()
         {
@@ -898,12 +947,34 @@ SetStyle(ControlStyles.OptimizedDoubleBuffer, true);
                     throw new Exception("No results returned from inventory query");
                 }
 
+                // Show warning if too many records
+                if (!ShowWarningIfTooManyRecords(results))
+                {
+                    _progressHelper?.HideProgress();
+                    return;
+                }
+
+                // Optional sort by ColorCode then Location if color codes present
+                if (results.Columns.Contains("ColorCode") && results.Columns.Contains("Location"))
+                {
+                    try
+                    {
+                        var dv = results.DefaultView;
+                        dv.Sort = "ColorCode ASC, Location ASC"; // Multi-column sort
+                        results = dv.ToTable();
+                    }
+                    catch (Exception sortEx)
+                    {
+                        LoggingUtility.LogApplicationError(sortEx);
+                    }
+                }
+
                 _progressHelper?.UpdateProgress(70, "Updating results...");
                 Control_RemoveTab_DataGridView_Main.DataSource = results;
                 Control_RemoveTab_DataGridView_Main.ClearSelection();
 
-                // Only show columns in this order: Location, PartID, Operation, Quantity, Notes
-                string[] columnsToShow = { "Location", "PartID", "Operation", "Quantity", "Notes" };
+                // Only show columns in this order: Location, PartID, ColorCode, WorkOrder, Operation, Quantity, Notes
+                string[] columnsToShow = { "Location", "PartID", "ColorCode", "WorkOrder", "Operation", "Quantity", "Notes" };
                 foreach (DataGridViewColumn column in Control_RemoveTab_DataGridView_Main.Columns)
                 {
                     column.Visible = columnsToShow.Contains(column.Name);
@@ -915,10 +986,30 @@ SetStyle(ControlStyles.OptimizedDoubleBuffer, true);
                     if (Control_RemoveTab_DataGridView_Main.Columns.Contains(columnsToShow[i]))
                     {
                         Control_RemoveTab_DataGridView_Main.Columns[columnsToShow[i]].DisplayIndex = i;
+                        // Friendly headers
+                        if (columnsToShow[i] == "ColorCode")
+                            Control_RemoveTab_DataGridView_Main.Columns[columnsToShow[i]].HeaderText = "Color";
+                        if (columnsToShow[i] == "WorkOrder")
+                            Control_RemoveTab_DataGridView_Main.Columns[columnsToShow[i]].HeaderText = "Work Order";
                     }
                 }
 
-                Core_Themes.ApplyThemeToDataGridView(Control_RemoveTab_DataGridView_Main);
+                // Hide Color/WorkOrder columns if not a color-tracked part
+                bool colorTrackedPart = Model_Application_Variables.ColorCodeParts.Contains(partId);
+                if (Control_RemoveTab_DataGridView_Main.Columns.Contains("ColorCode"))
+                    Control_RemoveTab_DataGridView_Main.Columns["ColorCode"].Visible = colorTrackedPart;
+                if (Control_RemoveTab_DataGridView_Main.Columns.Contains("WorkOrder"))
+                    Control_RemoveTab_DataGridView_Main.Columns["WorkOrder"].Visible = colorTrackedPart;
+
+                if (!colorTrackedPart)
+                {
+                    // Normal theming only when not viewing color-tracked part
+                    Core_Themes.ApplyThemeToDataGridView(Control_RemoveTab_DataGridView_Main);
+                }
+                else
+                {
+                    ApplyColorCodingToRows(Control_RemoveTab_DataGridView_Main);
+                }
                 Core_Themes.SizeDataGrid(Control_RemoveTab_DataGridView_Main);
 
                 Control_RemoveTab_Image_NothingFound.Visible = results.Rows.Count == 0;
@@ -1118,11 +1209,25 @@ SetStyle(ControlStyles.OptimizedDoubleBuffer, true);
                 DataTable dt = getAllResult.Data ?? new DataTable();
                 LoggingUtility.Log($"[SHOW ALL DEBUG] Retrieved {dt.Rows.Count} inventory records. Success: {getAllResult.IsSuccess}");
 
+                // Sort if columns exist
+                if (dt.Columns.Contains("ColorCode") && dt.Columns.Contains("Location"))
+                {
+                    try
+                    {
+                        var dv = dt.DefaultView;
+                        dv.Sort = "ColorCode ASC, Location ASC";
+                        dt = dv.ToTable();
+                    }
+                    catch (Exception exSort)
+                    {
+                        LoggingUtility.LogApplicationError(exSort);
+                    }
+                }
                 Control_RemoveTab_DataGridView_Main.DataSource = dt;
                 Control_RemoveTab_DataGridView_Main.ClearSelection();
 
-                // Only show columns in this order: Location, PartID, Operation, Quantity, Notes
-                string[] columnsToShow = { "Location", "PartID", "Operation", "Quantity", "Notes" };
+                // Only show columns in this order: Location, PartID, ColorCode, WorkOrder, Operation, Quantity, Notes
+                string[] columnsToShow = { "Location", "PartID", "ColorCode", "WorkOrder", "Operation", "Quantity", "Notes" };
                 foreach (DataGridViewColumn column in Control_RemoveTab_DataGridView_Main.Columns)
                 {
                     column.Visible = columnsToShow.Contains(column.Name);
@@ -1134,10 +1239,30 @@ SetStyle(ControlStyles.OptimizedDoubleBuffer, true);
                     if (Control_RemoveTab_DataGridView_Main.Columns.Contains(columnsToShow[i]))
                     {
                         Control_RemoveTab_DataGridView_Main.Columns[columnsToShow[i]].DisplayIndex = i;
+                        // Friendly headers
+                        if (columnsToShow[i] == "ColorCode")
+                            Control_RemoveTab_DataGridView_Main.Columns[columnsToShow[i]].HeaderText = "Color";
+                        if (columnsToShow[i] == "WorkOrder")
+                            Control_RemoveTab_DataGridView_Main.Columns[columnsToShow[i]].HeaderText = "Work Order";
                     }
                 }
 
-                Core_Themes.ApplyThemeToDataGridView(Control_RemoveTab_DataGridView_Main);
+                // Show-all may contain multiple parts; only disable theming if ALL rows are same flagged part
+                bool singlePart = false;
+                if (dt.Columns.Contains("PartID") && dt.Rows.Count > 0)
+                {
+                    string firstPart = dt.Rows[0]["PartID"]?.ToString() ?? string.Empty;
+                    singlePart = dt.AsEnumerable().All(r => (r["PartID"]?.ToString() ?? string.Empty) == firstPart)
+                                 && Model_Application_Variables.ColorCodeParts.Contains(firstPart);
+                }
+                if (!singlePart)
+                {
+                    Core_Themes.ApplyThemeToDataGridView(Control_RemoveTab_DataGridView_Main);
+                }
+                else
+                {
+                    ApplyColorCodingToRows(Control_RemoveTab_DataGridView_Main);
+                }
                 Core_Themes.SizeDataGrid(Control_RemoveTab_DataGridView_Main);
                 Control_RemoveTab_Image_NothingFound.Visible = dt.Rows.Count == 0;
                 
@@ -1163,6 +1288,59 @@ SetStyle(ControlStyles.OptimizedDoubleBuffer, true);
         #endregion
 
         #region Helpers
+
+        private static readonly HashSet<string> PredefinedColorCodes = new(StringComparer.OrdinalIgnoreCase)
+        {
+            "Red","Blue","Green","Yellow","Orange","Purple","Pink","White","Black"
+        };
+
+        /// <summary>
+        /// Applies background coloring to rows based on ColorCode column.
+        /// Skips 'Unknown' and any non-predefined (user-defined) colors.
+        /// Uses light variants for dark colors to keep text readable.
+        /// </summary>
+        /// <param name="dgv">Target DataGridView</param>
+        private void ApplyColorCodingToRows(DataGridView dgv)
+        {
+            try
+            {
+                if (dgv.Columns.Contains("ColorCode") == false)
+                    return;
+
+                foreach (DataGridViewRow row in dgv.Rows)
+                {
+                    if (row.IsNewRow) continue;
+                    string colorCode = row.Cells["ColorCode"].Value?.ToString() ?? string.Empty;
+                    if (string.IsNullOrWhiteSpace(colorCode)) continue;
+                    if (colorCode.Equals("Unknown", StringComparison.OrdinalIgnoreCase)) continue;
+                    if (!PredefinedColorCodes.Contains(colorCode)) continue; // user-defined -> skip
+
+                    Color backColor;
+                    switch (colorCode.ToLowerInvariant())
+                    {
+                        case "red": backColor = Color.MistyRose; break;
+                        case "blue": backColor = Color.AliceBlue; break;
+                        case "green": backColor = Color.Honeydew; break;
+                        case "yellow": backColor = Color.LightYellow; break;
+                        case "orange": backColor = Color.Moccasin; break;
+                        case "purple": backColor = Color.Lavender; break;
+                        case "pink": backColor = Color.LavenderBlush; break;
+                        case "white": backColor = Color.WhiteSmoke; break;
+                        case "black": backColor = Color.Gainsboro; break; // light gray for readability
+                        default: continue;
+                    }
+
+                    row.DefaultCellStyle.BackColor = backColor;
+                    row.DefaultCellStyle.SelectionBackColor = backColor; // keep consistent; selection fore color handles contrast
+                    row.DefaultCellStyle.ForeColor = SystemColors.ControlText;
+                    row.DefaultCellStyle.SelectionForeColor = SystemColors.ControlText;
+                }
+            }
+            catch (Exception ex)
+            {
+                LoggingUtility.LogApplicationError(ex);
+            }
+        }
 
         private List<(string PartID, string Location, int Quantity)> GetSelectedItemsToDelete(out string summary)
         {

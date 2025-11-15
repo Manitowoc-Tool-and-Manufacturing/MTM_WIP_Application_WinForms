@@ -1,6 +1,7 @@
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Text;
+using DocumentFormat.OpenXml.Office.CustomUI;
 using MTM_WIP_Application_Winforms.Core;
 using MTM_WIP_Application_Winforms.Data;
 using MTM_WIP_Application_Winforms.Forms.MainForm.Classes;
@@ -73,8 +74,8 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
 
                     var label = new Label { Left = 20, Top = 20, Text = "Color Name:", Width = 100 };
                     var textBox = new TextBox { Left = 130, Top = 20, Width = 230 };
-                    var okButton = new Button { Text = "OK", Left = 130, Width = 100, Top = 60, DialogResult = DialogResult.OK };
-                    var cancelButton = new Button { Text = "Cancel", Left = 240, Width = 100, Top = 60, DialogResult = DialogResult.Cancel };
+                    var okButton = new System.Windows.Forms.Button { Text = "OK", Left = 130, Width = 100, Top = 60, DialogResult = DialogResult.OK };
+                    var cancelButton = new System.Windows.Forms.Button { Text = "Cancel", Left = 240, Width = 100, Top = 60, DialogResult = DialogResult.Cancel };
 
                     dialog.Controls.Add(label);
                     dialog.Controls.Add(textBox);
@@ -153,12 +154,6 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             if (Service_ColorCodeValidator.ValidateAndFormatWorkOrder(input, out string formatted, out string errorMessage))
             {
                 Control_InventoryTab_TextBox_WorkOrder.Text = formatted;
-                Control_InventoryTab_TextBox_WorkOrder.ForeColor = Model_Application_Variables.UserUiColors.TextBoxForeColor ?? Color.Black;
-            }
-            else
-            {
-                Control_InventoryTab_TextBox_WorkOrder.ForeColor = Model_Application_Variables.UserUiColors.TextBoxErrorForeColor ?? Color.Red;
-                Service_ErrorHandler.ShowWarning(errorMessage);
             }
         }
 
@@ -243,9 +238,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             Control_InventoryTab_TextBox_Part.Focus();
             
             // PlaceholderText is now set in Designer instead of programmatically setting Text
-            Control_InventoryTab_TextBox_Quantity.ForeColor =
-                Model_Application_Variables.UserUiColors.TextBoxErrorForeColor ?? Color.Red;
-
+        
             Service_DebugTracer.TraceUIAction("PRIVILEGES_APPLIED", nameof(Control_InventoryTab));
             ApplyPrivileges();
 
@@ -751,52 +744,46 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
 
                 if (adv.GetType().GetField("AdvancedInventory_Single_ComboBox_Part",
                             System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance)
-                        ?.GetValue(adv) is ComboBox combo && combo.Items.Count > 0)
+                        ?.GetValue(adv) is System.Windows.Forms.ComboBox combo && combo.Items.Count > 0)
                 {
                     combo.SelectedIndex = 0;
-                    combo.ForeColor = Model_Application_Variables.UserUiColors.ErrorColor ?? Color.Red;
                     combo.Focus();
                     combo.SelectAll();
                 }
 
                 if (adv.GetType().GetField("AdvancedInventory_Single_ComboBox_Op",
                             System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance)
-                        ?.GetValue(adv) is ComboBox op && op.Items.Count > 0)
+                        ?.GetValue(adv) is System.Windows.Forms.ComboBox op && op.Items.Count > 0)
                 {
                     op.SelectedIndex = 0;
-                    op.ForeColor = Model_Application_Variables.UserUiColors.ErrorColor ?? Color.Red;
                 }
 
                 if (adv.GetType().GetField("AdvancedInventory_Single_ComboBox_Loc",
                             System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance)
-                        ?.GetValue(adv) is ComboBox loc && loc.Items.Count > 0)
+                        ?.GetValue(adv) is System.Windows.Forms.ComboBox loc && loc.Items.Count > 0)
                 {
                     loc.SelectedIndex = 0;
-                    loc.ForeColor = Model_Application_Variables.UserUiColors.ErrorColor ?? Color.Red;
                 }
 
                 if (adv.GetType().GetField("AdvancedInventory_MultiLoc_ComboBox_Part",
                             System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance)
-                        ?.GetValue(adv) is ComboBox multiPart && multiPart.Items.Count > 0)
+                        ?.GetValue(adv) is System.Windows.Forms.ComboBox multiPart && multiPart.Items.Count > 0)
                 {
                     multiPart.SelectedIndex = 0;
-                    multiPart.ForeColor = Model_Application_Variables.UserUiColors.ErrorColor ?? Color.Red;
                 }
 
                 if (adv.GetType().GetField("AdvancedInventory_MultiLoc_ComboBox_Op",
                             System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance)
-                        ?.GetValue(adv) is ComboBox multiOp && multiOp.Items.Count > 0)
+                        ?.GetValue(adv) is System.Windows.Forms.ComboBox multiOp && multiOp.Items.Count > 0)
                 {
                     multiOp.SelectedIndex = 0;
-                    multiOp.ForeColor = Model_Application_Variables.UserUiColors.ErrorColor ?? Color.Red;
                 }
 
                 if (adv.GetType().GetField("AdvancedInventory_MultiLoc_ComboBox_Loc",
                             System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance)
-                        ?.GetValue(adv) is ComboBox multiLoc && multiLoc.Items.Count > 0)
+                        ?.GetValue(adv) is System.Windows.Forms.ComboBox multiLoc && multiLoc.Items.Count > 0)
                 {
                     multiLoc.SelectedIndex = 0;
-                    multiLoc.ForeColor = Model_Application_Variables.UserUiColors.ErrorColor ?? Color.Red;
                 }
 
                 if (adv.GetType().GetField("AdvancedInventory_TabControl",
@@ -918,16 +905,13 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                 Debug.WriteLine("[DEBUG] Resetting UI fields");
                 // Reset SuggestionTextBox fields (Part, Operation, and Location)
                 Control_InventoryTab_TextBox_Part.Text = string.Empty;
-                Control_InventoryTab_TextBox_Part.ForeColor = Model_Application_Variables.UserUiColors.ComboBoxErrorForeColor ?? Color.Red;
                 Control_InventoryTab_TextBox_Operation.Text = string.Empty;
-                Control_InventoryTab_TextBox_Operation.ForeColor = Model_Application_Variables.UserUiColors.ComboBoxErrorForeColor ?? Color.Red;
                 Control_InventoryTab_TextBox_Location.Text = string.Empty;
-                Control_InventoryTab_TextBox_Location.ForeColor = Model_Application_Variables.UserUiColors.ComboBoxErrorForeColor ?? Color.Red;
                 
                 MainFormControlHelper.ResetTextBox(Control_InventoryTab_TextBox_Quantity,
-                    Model_Application_Variables.UserUiColors.TextBoxErrorForeColor ?? Color.Red, "Enter Quantity");
+                    Model_Application_Variables.UserUiColors.TextBoxForeColor ?? Color.Black, "");
                 MainFormControlHelper.ResetRichTextBox(Control_InventoryTab_RichTextBox_Notes,
-                    Model_Application_Variables.UserUiColors.RichTextBoxErrorForeColor ?? Color.Red, "");
+                    Model_Application_Variables.UserUiColors.RichTextBoxForeColor ?? Color.Black, "");
 
                 Control_InventoryTab_TextBox_Part.Focus();
 
@@ -994,16 +978,13 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                 Debug.WriteLine("[DEBUG] Resetting UI fields");
                 // Reset SuggestionTextBox fields (Part and Operation)
                 Control_InventoryTab_TextBox_Part.Text = string.Empty;
-                Control_InventoryTab_TextBox_Part.ForeColor = Model_Application_Variables.UserUiColors.ErrorColor ?? Color.Red;
                 Control_InventoryTab_TextBox_Operation.Text = string.Empty;
-                Control_InventoryTab_TextBox_Operation.ForeColor = Model_Application_Variables.UserUiColors.ErrorColor ?? Color.Red;
                 Control_InventoryTab_TextBox_Location.Text = string.Empty;
-                Control_InventoryTab_TextBox_Location.ForeColor = Model_Application_Variables.UserUiColors.ErrorColor ?? Color.Red;
                 
                 MainFormControlHelper.ResetTextBox(Control_InventoryTab_TextBox_Quantity,
-                    Model_Application_Variables.UserUiColors.ErrorColor ?? Color.Red, "Enter Quantity");
+                    Model_Application_Variables.UserUiColors.TextBoxForeColor ?? Color.Black, "");
                 MainFormControlHelper.ResetRichTextBox(Control_InventoryTab_RichTextBox_Notes,
-                    Model_Application_Variables.UserUiColors.ErrorColor ?? Color.Red, "");
+                    Model_Application_Variables.UserUiColors.TextBoxForeColor ?? Color.Black, "");
                 Control_InventoryTab_Button_Save.Enabled = false;
                 _progressHelper?.UpdateProgress(100, "Reset complete");
                 Service_DebugTracer.TraceMethodExit("Success", nameof(Control_InventoryTab), nameof(Control_InventoryTab_SoftReset));
@@ -1268,8 +1249,6 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                 MainFormInstance.MainForm_SplitContainer_Middle.Panel2Collapsed = true;
 
                 Control_InventoryTab_Button_Toggle_RightPanel.Text = "⬅️";
-                Control_InventoryTab_Button_Toggle_RightPanel.ForeColor =
-                    Model_Application_Variables.UserUiColors.ErrorColor ?? Color.Red;
             }
             else
             {
@@ -1277,8 +1256,6 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                 {
                     MainFormInstance.MainForm_SplitContainer_Middle.Panel2Collapsed = false;
                     Control_InventoryTab_Button_Toggle_RightPanel.Text = "➡️";
-                    Control_InventoryTab_Button_Toggle_RightPanel.ForeColor =
-                        Model_Application_Variables.UserUiColors.SuccessColor ?? Color.Green;
                 }
             }
 
@@ -1293,29 +1270,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
         {
             try
             {
-                LoggingUtility.Log("Inventory Quantity TextBox changed.");
-
-                string text = Control_InventoryTab_TextBox_Quantity.Text.Trim();
-                bool isEmpty = string.IsNullOrWhiteSpace(text);
-                bool isValid = int.TryParse(text, out int qty) && qty > 0;
-
-                if (isValid)
-                {
-                    Control_InventoryTab_TextBox_Quantity.ForeColor =
-                        Model_Application_Variables.UserUiColors.TextBoxForeColor ?? Color.Black;
-                }
-                else if (isEmpty)
-                {
-                    // Empty field - just set error color, PlaceholderText will show
-                    Control_InventoryTab_TextBox_Quantity.ForeColor =
-                        Model_Application_Variables.UserUiColors.TextBoxErrorForeColor ?? Color.Red;
-                }
-                else
-                {
-                    // Invalid input - set error color
-                    Control_InventoryTab_TextBox_Quantity.ForeColor =
-                        Model_Application_Variables.UserUiColors.TextBoxErrorForeColor ?? Color.Red;
-                }
+                // Intentionally left blank for future implementation
             }
             catch (Exception ex)
             {
@@ -1580,11 +1535,26 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                     Control_AdvancedInventory.ValidateQtyTextBox(Control_InventoryTab_TextBox_Quantity);                      
                 };
 
-                // Color code "OTHER" selection handler and validation
+                // Color code "OTHER" selection handler and standard validation
+                Control_InventoryTab_TextBox_ColorCode.SuggestionSelected += (s, e) =>
+                {
+                    LoggingUtility.Log($"Color code suggestion selected: {e.SelectedValue}");
+                    Control_InventoryTab_Update_SaveButtonState();
+                };
+
                 Control_InventoryTab_TextBox_ColorCode.TextChanged += (s, e) =>
                 {
                     HandleColorCodeOtherSelection();
                     Control_InventoryTab_Update_SaveButtonState();
+                };
+
+                Control_InventoryTab_TextBox_ColorCode.SuggestionCancelled += (s, e) =>
+                {
+                    // Clear textbox on cancel (no matches found)
+                    if (e.Reason == SuggestionCancelReason.NoMatches)
+                    {
+                        Control_InventoryTab_TextBox_ColorCode.Text = string.Empty;
+                    }
                 };
 
                 // Work order validation and auto-formatting
@@ -1605,7 +1575,17 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                 Control_InventoryTab_TextBox_Quantity.KeyDown += (sender, e) =>
                     MainFormControlHelper.AdjustQuantityByKey_Quantity(sender, e,
                         Model_Application_Variables.UserUiColors.TextBoxForeColor ?? Color.Black,
-                        Model_Application_Variables.UserUiColors.TextBoxErrorForeColor ?? Color.Red);
+                        Model_Application_Variables.UserUiColors.TextBoxForeColor ?? Color.Black);
+
+                // Make non-essential buttons not tabbable on Inventory tab
+                try
+                {
+                    Control_InventoryTab_Button_Reset.TabStop = false;
+                    Control_InventoryTab_Button_AdvancedEntry.TabStop = false;
+                    Control_InventoryTab_Button_Toggle_RightPanel.TabStop = false;
+                    // Keep Save button tabbable (default TabStop = true)
+                }
+                catch { /* Controls may not be available at design-time */ }
 
                 LoggingUtility.Log("Inventory tab events wired up.");
             }
@@ -1653,6 +1633,53 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
         #endregion
 
         #region Color Code Field Management
+
+        /// <summary>
+        /// Validates the color code input and shows the suggestion overlay if invalid.
+        /// </summary>
+        /// <remarks>
+        /// When user enters an invalid color (not in cache):
+        /// 1. Clears the color code textbox
+        /// 2. Opens the suggestion overlay showing all available colors
+        /// </remarks>
+        private async Task ValidateColorCodeAndShowOverlayAsync(bool allowblank = false)
+        {
+            try
+            {
+                var colorInput = Control_InventoryTab_TextBox_ColorCode.Text?.Trim();
+
+                // Skip validation if empty or "OTHER" (handled separately)
+                if (!allowblank && (string.IsNullOrWhiteSpace(colorInput) || colorInput.Equals("OTHER", StringComparison.OrdinalIgnoreCase)))
+                {
+                    return;
+                }
+
+                // Check if color exists in cache (only if not empty)
+                if (!string.IsNullOrWhiteSpace(colorInput) && !IsValidColorCode(colorInput))
+                {
+                    // Invalid color - clear and show overlay
+                    LoggingUtility.Log($"[Color Validation] Invalid color '{colorInput}' - clearing and showing overlay");
+                    
+                    Control_InventoryTab_TextBox_ColorCode.Text = string.Empty;
+                    
+                    // Show suggestion overlay with all colors
+                    await Control_InventoryTab_TextBox_ColorCode.ShowSuggestionsAsync();
+                }
+            }
+            catch (Exception ex)
+            {
+                Service_ErrorHandler.HandleException(
+                    ex,
+                    Enum_ErrorSeverity.Low,
+                    contextData: new Dictionary<string, object>
+                    {
+                        ["Control"] = nameof(Control_InventoryTab),
+                        ["Method"] = nameof(ValidateColorCodeAndShowOverlayAsync)
+                    },
+                    callerName: nameof(ValidateColorCodeAndShowOverlayAsync),
+                    controlName: this.Name);
+            }
+        }
 
         /// <summary>
         /// Shows or hides the color code and work order fields based on the selected part.
