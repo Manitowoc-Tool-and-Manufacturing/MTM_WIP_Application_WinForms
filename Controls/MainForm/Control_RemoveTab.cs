@@ -232,19 +232,18 @@ SetStyle(ControlStyles.OptimizedDoubleBuffer, true);
                 _progressHelper?.ShowProgress();
                 _progressHelper?.UpdateProgress(10, "Configuring part suggestions...");
 
-                // Configure part number SuggestionTextBox
-                Control_RemoveTab_TextBox_Part.DataProvider = GetPartNumberSuggestionsAsync;
-                Control_RemoveTab_TextBox_Part.MaxResults = 100;
-                Control_RemoveTab_TextBox_Part.EnableWildcards = true;
-                Control_RemoveTab_TextBox_Part.ClearOnNoMatch = true;
+                // Configure SuggestionTextBox controls using helper methods with F4 support
+                Helper_SuggestionTextBox.ConfigureForPartNumbers(
+                    Control_RemoveTab_TextBox_Part, 
+                    GetPartNumberSuggestionsAsync, 
+                    enableF4: true);
 
                 _progressHelper?.UpdateProgress(70, "Configuring operation suggestions...");
 
-                // Configure operation SuggestionTextBox
-                Control_RemoveTab_TextBox_Operation.DataProvider = GetOperationSuggestionsAsync;
-                Control_RemoveTab_TextBox_Operation.MaxResults = 50;
-                Control_RemoveTab_TextBox_Operation.EnableWildcards = true;
-                Control_RemoveTab_TextBox_Operation.ClearOnNoMatch = true;
+                Helper_SuggestionTextBox.ConfigureForOperations(
+                    Control_RemoveTab_TextBox_Operation, 
+                    GetOperationSuggestionsAsync, 
+                    enableF4: true);
 
                 _progressHelper?.UpdateProgress(100, "Suggestion controls configured");
                 await Task.Delay(100);

@@ -166,6 +166,16 @@ namespace MTM_WIP_Application_Winforms.Controls.Shared
         }
 
         /// <summary>
+        /// Manually raises the SuggestionSelected event.
+        /// Used by helper methods to trigger event after programmatic selection.
+        /// </summary>
+        /// <param name="e">Event arguments</param>
+        public void RaiseSuggestionSelectedEvent(SuggestionSelectedEventArgs e)
+        {
+            OnSuggestionSelected(e);
+        }
+
+        /// <summary>
         /// Clears any cached data source (if caching is implemented).
         /// Forces next trigger to re-query DataProvider.
         /// </summary>
