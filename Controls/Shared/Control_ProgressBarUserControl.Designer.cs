@@ -42,9 +42,11 @@ namespace MTM_WIP_Application_Winforms.Controls.Shared
             // 
             AutoScaleDimensions = new SizeF(96F, 96F);
             AutoScaleMode = AutoScaleMode.Dpi;
+            AutoSize = true;
+            AutoSizeMode = AutoSizeMode.GrowAndShrink;
             BorderStyle = BorderStyle.FixedSingle;
             Name = "Control_ProgressBarUserControl";
-            Size = new Size(298, 118);
+            Size = new Size(0, 0);
             ResumeLayout(false);
         }
 

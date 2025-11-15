@@ -9,10 +9,8 @@ namespace MTM_WIP_Application_Winforms.Forms.Splash
         #region Fields
 
         private System.ComponentModel.IContainer components = null!;
-        private Controls.Shared.Control_ProgressBarUserControl? _progressControl;
         private Label? _titleLabel;
         private Label? _versionLabel;
-        private PictureBox? _logoBox;
         private TableLayoutPanel? _mainLayout;
         private TableLayoutPanel? _headerLayout;
 
@@ -31,114 +29,149 @@ namespace MTM_WIP_Application_Winforms.Forms.Splash
 
         private void InitializeComponent()
         {
-            this.components = new System.ComponentModel.Container();
-            this._mainLayout = new System.Windows.Forms.TableLayoutPanel();
-            this._headerLayout = new System.Windows.Forms.TableLayoutPanel();
-            this._logoBox = new System.Windows.Forms.PictureBox();
-            this._titleLabel = new System.Windows.Forms.Label();
-            this._versionLabel = new System.Windows.Forms.Label();
-            this._progressControl = new Controls.Shared.Control_ProgressBarUserControl();
-            
-            this._mainLayout.SuspendLayout();
-            this._headerLayout.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this._logoBox)).BeginInit();
-            this.SuspendLayout();
-
+            _mainLayout = new TableLayoutPanel();
+            _headerLayout = new TableLayoutPanel();
+            _logoBox = new PictureBox();
+            _titleLabel = new Label();
+            _versionLabel = new Label();
+            _progressControl = new MTM_WIP_Application_Winforms.Controls.Shared.Control_ProgressBarUserControl();
+            _mainPanel = new Panel();
+            _mainLayout.SuspendLayout();
+            _headerLayout.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)_logoBox).BeginInit();
+            _mainPanel.SuspendLayout();
+            SuspendLayout();
             // 
-            // Form
+            // _mainLayout
             // 
-            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
-            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.ClientSize = new System.Drawing.Size(400, 250);
-            this.Name = "SplashScreenForm";
-            this.BackColor = System.Drawing.Color.FromArgb(30, 30, 30);
-            this.AutoScaleMode = AutoScaleMode.Dpi;
-
+            _mainLayout.AutoSize = true;
+            _mainLayout.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            _mainLayout.ColumnCount = 1;
+            _mainLayout.ColumnStyles.Add(new ColumnStyle());
+            _mainLayout.Controls.Add(_headerLayout, 0, 0);
+            _mainLayout.Controls.Add(_progressControl, 0, 1);
+            _mainLayout.Dock = DockStyle.Fill;
+            _mainLayout.Location = new Point(0, 0);
+            _mainLayout.Name = "_mainLayout";
+            _mainLayout.RowCount = 2;
+            _mainLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
+            _mainLayout.RowStyles.Add(new RowStyle());
+            _mainLayout.Size = new Size(670, 275);
+            _mainLayout.TabIndex = 0;
             // 
-            // _mainLayout - Main container (2 rows: header, progress)
+            // _headerLayout
             // 
-            this._mainLayout.ColumnCount = 1;
-            this._mainLayout.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this._mainLayout.RowCount = 2;
-            this._mainLayout.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.AutoSize));
-            this._mainLayout.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this._mainLayout.Dock = System.Windows.Forms.DockStyle.Fill;
-            this._mainLayout.Name = "_mainLayout";
-
-            // 
-            // _headerLayout - Header area (2 columns: logo, text)
-            // 
-            this._headerLayout.ColumnCount = 2;
-            this._headerLayout.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 35F));
-            this._headerLayout.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 65F));
-            this._headerLayout.RowCount = 4;            
-            this._headerLayout.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this._headerLayout.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.AutoSize));
-            this._headerLayout.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.AutoSize));
-            this._headerLayout.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this._headerLayout.Dock = System.Windows.Forms.DockStyle.Fill;
-            this._headerLayout.Name = "_headerLayout";
-
+            _headerLayout.AutoSize = true;
+            _headerLayout.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            _headerLayout.ColumnCount = 2;
+            _headerLayout.ColumnStyles.Add(new ColumnStyle());
+            _headerLayout.ColumnStyles.Add(new ColumnStyle());
+            _headerLayout.Controls.Add(_logoBox, 0, 0);
+            _headerLayout.Controls.Add(_titleLabel, 1, 1);
+            _headerLayout.Controls.Add(_versionLabel, 1, 3);
+            _headerLayout.Dock = DockStyle.Fill;
+            _headerLayout.Location = new Point(3, 3);
+            _headerLayout.Name = "_headerLayout";
+            _headerLayout.RowCount = 5;
+            _headerLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 33.3333321F));
+            _headerLayout.RowStyles.Add(new RowStyle());
+            _headerLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 33.3333321F));
+            _headerLayout.RowStyles.Add(new RowStyle());
+            _headerLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 33.3333321F));
+            _headerLayout.Size = new Size(664, 140);
+            _headerLayout.TabIndex = 0;
             // 
             // _logoBox
             // 
-            this._logoBox.Image = Properties.Resources.MTM;
-            this._logoBox.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this._logoBox.Dock = System.Windows.Forms.DockStyle.Fill;            
-            this._logoBox.Name = "_logoBox";
-            this._logoBox.TabStop = false;
-
+            _logoBox.Dock = DockStyle.Fill;
+            _logoBox.Image = Properties.Resources.MTM;
+            _logoBox.Location = new Point(3, 3);
+            _logoBox.Name = "_logoBox";
+            _headerLayout.SetRowSpan(_logoBox, 4);
+            _logoBox.Size = new Size(179, 114);
+            _logoBox.SizeMode = PictureBoxSizeMode.Zoom;
+            _logoBox.TabIndex = 0;
+            _logoBox.TabStop = false;
             // 
             // _titleLabel
             // 
-            this._titleLabel.AutoSize = true;
-            this._titleLabel.Dock = System.Windows.Forms.DockStyle.Fill;
-            this._titleLabel.Font = new System.Drawing.Font("Segoe UI", 16F, System.Drawing.FontStyle.Bold);
-            this._titleLabel.Margin = new System.Windows.Forms.Padding(3, 3, 3, 3);
-            this._titleLabel.ForeColor = System.Drawing.Color.White;
-            this._titleLabel.Name = "_titleLabel";
-            this._titleLabel.Text = "MTM WIP Application";
-            this._titleLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-
+            _titleLabel.AutoSize = true;
+            _titleLabel.Dock = DockStyle.Fill;
+            _titleLabel.Font = new Font("PMingLiU-ExtB", 18F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            _titleLabel.ForeColor = Color.White;
+            _titleLabel.Location = new Point(188, 21);
+            _titleLabel.Margin = new Padding(3);
+            _titleLabel.Name = "_titleLabel";
+            _titleLabel.Size = new Size(473, 48);
+            _titleLabel.TabIndex = 1;
+            _titleLabel.Text = "Manitowoc Tool and Manufacturing\r\nWork in Progress Application";
+            _titleLabel.TextAlign = ContentAlignment.MiddleCenter;
             // 
             // _versionLabel
             // 
-            this._versionLabel.AutoSize = true;
-            this._versionLabel.Dock = System.Windows.Forms.DockStyle.Fill;
-            this._versionLabel.Font = new System.Drawing.Font("Segoe UI", 9F);
-            this._versionLabel.Margin = new System.Windows.Forms.Padding(3, 3, 3, 3);
-            this._versionLabel.ForeColor = System.Drawing.Color.LightGray;
-            this._versionLabel.Name = "_versionLabel";
-            this._versionLabel.Text = Model_Application_Variables.Version;
-            this._versionLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-
+            _versionLabel.AutoSize = true;
+            _versionLabel.Dock = DockStyle.Fill;
+            _versionLabel.Font = new Font("PMingLiU-ExtB", 18F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            _versionLabel.ForeColor = Color.LightGray;
+            _versionLabel.Location = new Point(188, 93);
+            _versionLabel.Margin = new Padding(3);
+            _versionLabel.Name = "_versionLabel";
+            _versionLabel.Size = new Size(473, 24);
+            _versionLabel.TabIndex = 2;
+            _versionLabel.Text = "18.3.0.0";
+            _versionLabel.TextAlign = ContentAlignment.MiddleCenter;
             // 
             // _progressControl
             // 
-            this._progressControl.Dock = System.Windows.Forms.DockStyle.Fill;
-            this._progressControl.Name = "_progressControl";
-
+            _progressControl.BorderStyle = BorderStyle.FixedSingle;
+            _progressControl.Dock = DockStyle.Fill;
+            _progressControl.Location = new Point(3, 149);
+            _progressControl.Name = "_progressControl";
+            _progressControl.Size = new Size(664, 123);
+            _progressControl.TabIndex = 1;
             // 
-            // Add controls to layouts
+            // _mainPanel
             // 
-            this._headerLayout.Controls.Add(this._logoBox, 0, 0);
-            this._headerLayout.SetRowSpan(this._logoBox, 4);
-            this._headerLayout.Controls.Add(this._titleLabel, 1, 1);
-            this._headerLayout.Controls.Add(this._versionLabel, 1, 2);
-
-            this._mainLayout.Controls.Add(this._headerLayout, 0, 0);
-            this._mainLayout.Controls.Add(this._progressControl, 0, 1);
-
-            this.Controls.Add(this._mainLayout);
-
-            this._mainLayout.ResumeLayout(false);
-            this._headerLayout.ResumeLayout(false);
-            this._headerLayout.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this._logoBox)).EndInit();
-            this.ResumeLayout(false);
+            _mainPanel.AutoSize = true;
+            _mainPanel.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            _mainPanel.Controls.Add(_mainLayout);
+            _mainPanel.Dock = DockStyle.Fill;
+            _mainPanel.Location = new Point(0, 0);
+            _mainPanel.Name = "_mainPanel";
+            _mainPanel.Size = new Size(670, 275);
+            _mainPanel.TabIndex = 1;
+            // 
+            // SplashScreenForm
+            // 
+            AutoScaleDimensions = new SizeF(96F, 96F);
+            AutoScaleMode = AutoScaleMode.Dpi;
+            AutoSize = true;
+            AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            BackColor = Color.FromArgb(30, 30, 30);
+            ClientSize = new Size(670, 275);
+            Controls.Add(_mainPanel);
+            DoubleBuffered = true;
+            FormBorderStyle = FormBorderStyle.None;
+            MaximumSize = new Size(670, 275);
+            MinimumSize = new Size(670, 275);
+            Name = "SplashScreenForm";
+            StartPosition = FormStartPosition.CenterScreen;
+            _mainLayout.ResumeLayout(false);
+            _mainLayout.PerformLayout();
+            _headerLayout.ResumeLayout(false);
+            _headerLayout.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)_logoBox).EndInit();
+            _mainPanel.ResumeLayout(false);
+            _mainPanel.PerformLayout();
+            ResumeLayout(false);
+            PerformLayout();
         }
 
         #endregion
+
+        private Controls.Shared.Control_ProgressBarUserControl _progressControl;
+        private PictureBox _logoBox;
+        private Panel _mainPanel;
     }
 }
 

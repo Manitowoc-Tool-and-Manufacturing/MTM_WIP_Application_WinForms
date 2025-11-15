@@ -39,16 +39,18 @@ namespace MTM_WIP_Application_Winforms.Forms.Splash
                     ["DpiScaling"] = "APPLIED",
                     ["LayoutAdjustments"] = "APPLIED"
                 });
-                
+
             AutoScaleMode = AutoScaleMode.Dpi;
 
             Service_DebugTracer.TraceBusinessLogic("UI_COLORS_APPLICATION",
-                inputData: new {
+                inputData: new
+                {
                     UserBackColor = Model_Application_Variables.UserUiColors?.FormBackColor,
                     UserForeColor = Model_Application_Variables.UserUiColors?.LabelForeColor,
                     Version = Model_Application_Variables.Version
                 },
-                outputData: new {
+                outputData: new
+                {
                     AppliedBackColor = Model_Application_Variables.UserUiColors?.FormBackColor ?? BackColor,
                     AppliedForeColor = Model_Application_Variables.UserUiColors?.LabelForeColor,
                     VersionText = $"Version {Model_Application_Variables.Version ?? "4.6.0.0"}"
@@ -158,5 +160,7 @@ namespace MTM_WIP_Application_Winforms.Forms.Splash
         #endregion
 
         #endregion
+
+
     }
 }

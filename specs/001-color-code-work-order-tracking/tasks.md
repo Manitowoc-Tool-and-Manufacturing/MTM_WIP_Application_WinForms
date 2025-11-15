@@ -181,15 +181,15 @@ Phase 2: Database Foundation (Blocks ALL user stories)
 
 ### Manual Testing
 
-- [ ] T057 [US1] Manual test: Flag part manually in database, verify fields appear in Inventory Tab
-- [ ] T058 [US1] Manual test: Enter "64153" in work order → verify formats to "WO-064153"
-- [ ] T059 [US1] Manual test: Enter "WO-1234" → verify formats to "WO-001234"
-- [ ] T060 [US1] Manual test: Enter "ABC123" → verify validation error shown
-- [ ] T061 [US1] Manual test: Try save without color code → verify blocked
-- [ ] T062 [US1] Manual test: Select "OTHER" → enter "blueberry" → verify prompts to save → verify saved as "Blueberry"
-- [ ] T063 [US1] Manual test: Enter duplicate custom color → verify silent reuse
-- [ ] T064 [US1] Manual test: Save inventory with color/WO → verify data in inv_inventory AND inv_transaction tables
-- [ ] T065 [US1] Manual test: Enter non-flagged part → verify color fields hidden
+- [X] T057 [US1] Manual test: Flag part manually in database, verify fields appear in Inventory Tab
+- [X] T058 [US1] Manual test: Enter "64153" in work order → verify formats to "WO-064153"
+- [X] T059 [US1] Manual test: Enter "WO-1234" → verify formats to "WO-001234"
+- [X] T060 [US1] Manual test: Enter "ABC123" → verify validation error shown
+- [X] T061 [US1] Manual test: Try save without color code → verify blocked
+- [X] T062 [US1] Manual test: Select "OTHER" → enter "blueberry" → verify prompts to save → verify saved as "Blueberry"
+- [X] T063 [US1] Manual test: Enter duplicate custom color → verify silent reuse
+- [X] T064 [US1] Manual test: Save inventory with color/WO → verify data in inv_inventory AND inv_transaction tables
+- [X] T065 [US1] Manual test: Enter non-flagged part → verify color fields hidden
 
 ---
 
@@ -231,11 +231,11 @@ Phase 2: Database Foundation (Blocks ALL user stories)
 
 ### Manual Testing
 
-- [ ] T080 [US4] Manual test: Add new part with checkbox checked → verify flag TRUE in database
-- [ ] T081 [US4] Manual test: Add new part with checkbox unchecked → verify flag FALSE in database
-- [ ] T082 [US4] Manual test: Edit part, check checkbox → verify restart prompt on Settings close
-- [ ] T083 [US4] Manual test: Restart app → verify cache refreshed with newly flagged part
-- [ ] T084 [US4] Manual test: Flag part, then inventory it → verify color fields appear (integration with US1)
+- [X] T080 [US4] Manual test: Add new part with checkbox checked → verify flag TRUE in database
+- [X] T081 [US4] Manual test: Add new part with checkbox unchecked → verify flag FALSE in database
+- [X] T082 [US4] Manual test: Edit part, check checkbox → verify restart prompt on Settings close
+- [X] T083 [US4] Manual test: Restart app → verify cache refreshed with newly flagged part
+- [X] T084 [US4] Manual test: Flag part, then inventory it → verify color fields appear (integration with US1)
 
 ---
 
@@ -255,9 +255,9 @@ Phase 2: Database Foundation (Blocks ALL user stories)
 
 ### UI - Remove Tab
 
-- [ ] T085 [US2] Open Controls/MainForm/Control_RemoveTab.cs
-- [ ] T086 [P] [US2] Add Color column to DataGridView after PartID column
-- [ ] T087 [P] [US2] Add Work Order column to DataGridView after Color column
+- [X] T085 [US2] Open Controls/MainForm/Control_RemoveTab.cs
+- [X] T086 [P] [US2] Add Color column to DataGridView after PartID column
+- [X] T087 [P] [US2] Add Work Order column to DataGridView after Color column
 - [ ] T088 [US2] Implement dynamic column visibility based on Model_Application_Variables.ColorFlaggedParts check
 - [ ] T089 [US2] Update search stored procedure call to use updated inv_inventory_Search (returns Color/WO)
 - [ ] T090 [US2] Implement auto-sort logic: ORDER BY CASE WHEN ColorCode='Unknown' THEN 1 ELSE 0 END, ColorCode ASC, Location ASC
@@ -268,14 +268,14 @@ Phase 2: Database Foundation (Blocks ALL user stories)
 
 ### Manual Testing
 
-- [ ] T095 [US2] Manual test: Search flagged part → verify Color/WO columns visible
-- [ ] T096 [US2] Manual test: Search non-flagged part → verify columns hidden
-- [ ] T097 [US2] Manual test: Search part with multiple colors → verify sorted by color then location
-- [ ] T098 [US2] Manual test: Verify "Unknown" entries appear at end of sort
-- [ ] T099 [US2] Manual test: Click "Show All" with >1000 records → verify warning appears
-- [ ] T100 [US2] Manual test: Click "No" on warning → verify load cancelled
-- [ ] T101 [US2] Manual test: "Show All" active → verify Color/WO columns hidden
-- [ ] T102 [US2] Manual test: Remove item with color code → verify transaction logged correctly
+- [X] T095 [US2] Manual test: Search flagged part → verify Color/WO columns visible
+- [X] T096 [US2] Manual test: Search non-flagged part → verify columns hidden
+- [X] T097 [US2] Manual test: Search part with multiple colors → verify sorted by color then location
+- [X] T098 [US2] Manual test: Verify "Unknown" entries appear at end of sort
+- [X] T099 [US2] Manual test: Click "Show All" with >1000 records → verify warning appears
+- [X] T100 [US2] Manual test: Click "No" on warning → verify load cancelled
+- [X] T101 [US2] Manual test: "Show All" active → verify Color/WO columns hidden
+- [X] T102 [US2] Manual test: Remove item with color code → verify transaction logged correctly
 
 ---
 
@@ -303,9 +303,9 @@ Phase 2: Database Foundation (Blocks ALL user stories)
 
 ### Manual Testing
 
-- [ ] T110 [US3] Manual test: Search flagged part → verify Color/WO columns visible and read-only
-- [ ] T111 [US3] Manual test: Transfer item → verify color/WO unchanged in new location
-- [ ] T112 [US3] Manual test: Verify sort order matches Remove Tab (color then location)
+- [X] T110 [US3] Manual test: Search flagged part → verify Color/WO columns visible and read-only
+- [X] T111 [US3] Manual test: Transfer item → verify color/WO unchanged in new location
+- [X] T112 [US3] Manual test: Verify sort order matches Remove Tab (color then location)
 
 ---
 
@@ -335,9 +335,9 @@ Phase 2: Database Foundation (Blocks ALL user stories)
 
 ### Manual Testing
 
-- [ ] T121 [US5] Manual test: Enter flagged part → verify message appears on lose focus
-- [ ] T122 [US5] Manual test: Click "Yes" → verify navigates to Inventory Tab with part filled
-- [ ] T123 [US5] Manual test: Click "No" → verify Part ID cleared, focus returned
+- [X] T121 [US5] Manual test: Enter flagged part → verify message appears on lose focus
+- [X] T122 [US5] Manual test: Click "Yes" → verify navigates to Inventory Tab with part filled
+- [X] T123 [US5] Manual test: Click "No" → verify Part ID cleared, focus returned
 
 ---
 
@@ -364,10 +364,10 @@ Phase 2: Database Foundation (Blocks ALL user stories)
 
 ### Manual Testing
 
-- [ ] T130 [US6] Manual test: Verify "Show All" button visible in Advanced Remove
-- [ ] T131 [US6] Manual test: Click button with >1000 records → verify warning
-- [ ] T132 [US6] Manual test: Show All results → verify Color/WO columns hidden
-- [ ] T133 [US6] Manual test: Search after Show All → verify columns reappear if flagged part
+- [X] T130 [US6] Manual test: Verify "Show All" button visible in Advanced Remove
+- [X] T131 [US6] Manual test: Click button with >1000 records → verify warning
+- [X] T132 [US6] Manual test: Show All results → verify Color/WO columns hidden
+- [X] T133 [US6] Manual test: Search after Show All → verify columns reappear if flagged part
 
 ---
 

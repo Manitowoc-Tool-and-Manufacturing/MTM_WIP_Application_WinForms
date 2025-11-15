@@ -19,6 +19,7 @@ namespace MTM_WIP_Application_Winforms.Forms.Shared
 
         private List<string> _suggestions;
         private string? _selectedItem;
+        private Control? _parentControl;
 
         #endregion
 
@@ -75,6 +76,7 @@ namespace MTM_WIP_Application_Winforms.Forms.Shared
 
             _suggestions = suggestions;
             _selectedItem = null;
+            _parentControl = parentControl;
 
             // Calculate position relative to parent control
             this.StartPosition = FormStartPosition.Manual;
@@ -192,12 +194,21 @@ namespace MTM_WIP_Application_Winforms.Forms.Shared
         /// Cancels selection and closes form with DialogResult.Cancel.
         /// SelectedItem remains null.
         /// Triggered by Escape key or click outside.
+        /// Clears parent textbox to indicate no valid match.
         /// </summary>
         public void CancelSelection()
         {
             LoggingUtility.Log($"[SuggestionOverlay] CancelSelection called");
             
             _selectedItem = null;
+            
+            // Clear parent textbox when cancelling (no matches found)
+            if (_parentControl is TextBox textBox)
+            {
+                textBox.Text = string.Empty;
+                LoggingUtility.Log($"[SuggestionOverlay] Cleared parent textbox");
+            }
+            
             this.DialogResult = DialogResult.Cancel;
             this.Close();
         }
