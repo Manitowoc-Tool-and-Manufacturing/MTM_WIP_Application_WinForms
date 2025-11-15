@@ -57,10 +57,56 @@ Create a checklist of constitution requirements:
 - [ ] No memory leaks from event subscriptions
 - [ ] Proper null-conditional operators used
 
-#### 2.6: Code Organization
+#### 2.6: Stored Procedure Parameter Conventions (Principle VI)
+- [ ] Parameters passed WITHOUT prefixes in C# (helper adds them)
+- [ ] Model_ParameterPrefix_Cache used for auto-detection
+- [ ] Standard output parameters (p_Status, p_ErrorMsg) checked
+- [ ] Status code conventions followed (1=success with data, 0=success no data, negative=error)
+
+#### 2.7: XML Documentation Standards (Principle VII)
+- [ ] ALL public members have XML documentation
+- [ ] `<summary>` tags on all public classes, methods, properties, events
+- [ ] `<param>` tags for each method parameter
+- [ ] `<returns>` tags for methods returning values (including Model_Dao_Result usage guidance)
+- [ ] `<exception>` tags for documented exceptions
+- [ ] `<remarks>` tags for complex scenarios where needed
+- [ ] Inline comments (`//`) only for non-obvious logic, workarounds, complex algorithms
+
+#### 2.8: Null Safety Requirements (Principle VIII)
+- [ ] Nullable reference types enabled (`<Nullable>enable</Nullable>`)
+- [ ] `?` suffix used for nullable reference types (string?, DataRow?)
+- [ ] Null-conditional operators (`?.`) used for safe access
+- [ ] Null-coalescing (`??`) used appropriately
+- [ ] DBNull.Value checked before accessing DataRow/DataTable columns
+- [ ] Column existence verified with DataTable.Columns.Contains() before access
+- [ ] ArgumentNullException.ThrowIfNull() or ArgumentNullException.ThrowIfNullOrEmpty() for parameter validation
+
+#### 2.9: Theme System Integration (Principle IX)
+- [ ] Forms inherit from ThemedForm (NEVER Form directly)
+- [ ] User controls inherit from ThemedUserControl (NEVER UserControl directly)
+- [ ] NO manual BackColor, ForeColor, or Font assignment
+- [ ] NO direct MessageBox.Show() - use Service_ErrorHandler for themed dialogs
+- [ ] Theme tokens used for all styling
+
+#### 2.10: Resource Disposal (Principle X)
+- [ ] All IDisposable resources properly disposed
+- [ ] `using` statements for database connections, readers, streams
+- [ ] Dispose(bool disposing) override in forms/controls
+- [ ] ALL event handlers unsubscribed in Dispose() to prevent memory leaks
+- [ ] DataTables disposed after use
+- [ ] Try-catch in Dispose() to prevent exceptions during cleanup
+
+#### 2.11: Input Validation Service (Principle XI)
+- [ ] ALL user input validated through Service_Validation before database operations
+- [ ] Validation at UI layer BEFORE calling DAOs
+- [ ] Service_ErrorHandler.HandleValidationError() used for validation errors
+- [ ] Standard transformations applied (trim whitespace, ToUpperInvariant for codes)
+- [ ] Registered validators used for specific field types
+- [ ] Custom validators implement IValidator interface
+
+#### 2.12: Code Organization
 - [ ] Proper #region structure (Fields, Events, Constructors, etc.)
 - [ ] Methods in appropriate regions
-- [ ] XML documentation on all public methods
 - [ ] Consistent naming conventions
 
 ### Step 3: Create Audit Report
@@ -113,6 +159,73 @@ Generate a detailed audit report:
 ## Principle V: WinForms Best Practices
 {Similar detailed breakdown}
 
+## Principle VI: Stored Procedure Parameter Conventions
+{Similar detailed breakdown}
+
+## Principle VII: XML Documentation Standards
+### Critical Issues
+- [ ] Line {X}: Public method missing XML documentation - MUST add <summary>
+- [ ] Line {Y}: Method parameters missing <param> tags
+
+### Warnings
+- [ ] Line {X}: <returns> tag missing Model_Dao_Result usage guidance
+- [ ] Line {Y}: Complex method missing <remarks> tag
+
+### Compliant
+- ✅ Lines {X-Y}: Comprehensive XML documentation
+- ✅ Line {Z}: Model_Dao_Result return documented properly
+
+## Principle VIII: Null Safety Requirements
+### Critical Issues
+- [ ] Line {X}: Nullable reference types not enabled in project file
+- [ ] Line {Y}: DataRow access without DBNull.Value check - potential crash
+
+### Warnings
+- [ ] Line {X}: Could use null-conditional operator (?.)
+- [ ] Line {Y}: Missing column existence check
+
+### Compliant
+- ✅ Lines {X-Y}: Proper null-safe DataRow access
+- ✅ Line {Z}: Good use of null-coalescing operator
+
+## Principle IX: Theme System Integration
+### Critical Issues
+- [ ] Line {X}: Inherits from Form directly - MUST inherit from ThemedForm
+- [ ] Line {Y}: Direct MessageBox.Show() - MUST use Service_ErrorHandler
+
+### Warnings
+- [ ] Line {X}: Manual BackColor assignment - should use theme tokens
+
+### Compliant
+- ✅ Line {X}: Properly inherits from ThemedForm
+- ✅ Line {Y}: Uses Service_ErrorHandler for dialogs
+
+## Principle X: Resource Disposal
+### Critical Issues
+- [ ] Line {X}: Event handler not unsubscribed in Dispose() - memory leak!
+- [ ] Line {Y}: Database connection not disposed - resource leak!
+
+### Warnings
+- [ ] Line {X}: DataTable not disposed after use
+- [ ] Line {Y}: Missing try-catch in Dispose() method
+
+### Compliant
+- ✅ Lines {X-Y}: All event handlers properly unsubscribed
+- ✅ Line {Z}: using statement for database resources
+
+## Principle XI: Input Validation Service
+### Critical Issues
+- [ ] Line {X}: Direct DAO call without validation - MUST validate first
+- [ ] Line {Y}: Input validation missing for user input field
+
+### Warnings
+- [ ] Line {X}: Could use Service_Validation registered validator
+- [ ] Line {Y}: Missing input transformation (trim, uppercase)
+
+### Compliant
+- ✅ Lines {X-Y}: Proper Service_Validation usage before DAO
+- ✅ Line {Z}: Good use of HandleValidationError()
+
 ## Code Organization
 {Similar detailed breakdown}
 ```
@@ -130,7 +243,67 @@ MessageBox.Show("Error occurred!");
 Service_ErrorHandler.ShowWarning("Error occurred!");
 ```
 
-#### 4.2: Add Missing Error Handling
+#### 4.2: Fix Form/UserControl Inheritance
+```csharp
+// ❌ CRITICAL ISSUE - Direct Form inheritance
+public partial class MyForm : Form
+{
+    public MyForm()
+    {
+        InitializeComponent();
+        this.BackColor = Color.White; // Manual styling
+    }
+}
+
+// ✅ FIX - Inherit from ThemedForm
+public partial class MyForm : ThemedForm
+{
+    public MyForm()
+    {
+        InitializeComponent();
+        // Theme automatically applied by base class
+        // NO manual color/font setting needed
+    }
+}
+```
+
+#### 4.3: Add Input Validation Before DAO Calls
+```csharp
+// ❌ CRITICAL ISSUE - No validation before DAO
+private async void SaveButton_Click(object? sender, EventArgs e)
+{
+    await Dao_Part.InsertAsync(partNumberTextBox.Text, quantityTextBox.Text);
+}
+
+// ✅ FIX - Validate first
+private async void SaveButton_Click(object? sender, EventArgs e)
+{
+    // Validate part number
+    var partResult = Service_Validation.Validate("PartNumber", partNumberTextBox.Text, "Part Number");
+    if (partResult.IsFailure)
+    {
+        Service_ErrorHandler.HandleValidationError(
+            partResult.ErrorMessage,
+            field: partResult.FieldName);
+        partNumberTextBox.Focus();
+        return;
+    }
+
+    // Validate quantity
+    var qtyResult = Service_Validation.Validate("Quantity", quantityTextBox.Text, "Quantity");
+    if (qtyResult.IsFailure)
+    {
+        Service_ErrorHandler.HandleValidationError(qtyResult.ErrorMessage);
+        quantityTextBox.Focus();
+        return;
+    }
+
+    // All validations passed - safe to call DAO
+    await Dao_Part.InsertAsync(partNumberTextBox.Text, quantityTextBox.Text);
+}
+```
+
+#### 4.5: Add Missing Error Handling
 ```csharp
 // ❌ CRITICAL ISSUE - No error handling
 private async void SaveButton_Click(object sender, EventArgs e)
@@ -158,7 +331,7 @@ private async void SaveButton_Click(object? sender, EventArgs e)
 }
 ```
 
-#### 4.3: Replace Console.WriteLine
+#### 4.6: Replace Console.WriteLine
 ```csharp
 // ❌ CRITICAL ISSUE
 Console.WriteLine($"Part selected: {part}");
@@ -167,13 +340,107 @@ Console.WriteLine($"Part selected: {part}");
 LoggingUtility.Log($"[{nameof(MyControl)}] Part selected: {part}");
 ```
 
-#### 4.4: Fix Blocking Async Calls
+#### 4.7: Fix Blocking Async Calls
 ```csharp
 // ❌ CRITICAL ISSUE
 var result = GetDataAsync().Result; // Blocks UI thread!
 
 // ✅ FIX
 var result = await GetDataAsync();
+```
+
+#### 4.8: Add Missing XML Documentation
+```csharp
+// ❌ CRITICAL ISSUE - No XML documentation on public method
+public async Task<Model_Dao_Result<DataTable>> GetPartDataAsync(string partId)
+{
+    // implementation
+}
+
+// ✅ FIX - Comprehensive XML documentation
+/// <summary>
+/// Retrieves part data from database by part ID.
+/// </summary>
+/// <param name="partId">The unique part identifier to search for</param>
+/// <returns>
+/// Model_Dao_Result containing DataTable with part data on success.
+/// Check IsSuccess before accessing Data.
+/// ErrorMessage contains user-friendly message on failure.
+/// </returns>
+public async Task<Model_Dao_Result<DataTable>> GetPartDataAsync(string partId)
+{
+    // implementation
+}
+```
+
+#### 4.9: Fix Null Safety Issues
+```csharp
+// ❌ CRITICAL ISSUE - No DBNull check, no column existence check
+private void LoadPartData(DataRow row)
+{
+    string partId = row["PartID"].ToString(); // Can throw NullReferenceException!
+}
+
+// ✅ FIX - Null-safe with DBNull and column checks
+private void LoadPartData(DataRow? row)
+{
+    if (row == null)
+    {
+        return;
+    }
+
+    if (row.Table.Columns.Contains("PartID"))
+    {
+        var partIdValue = row["PartID"];
+        string partId = partIdValue != DBNull.Value 
+            ? partIdValue.ToString() ?? string.Empty 
+            : string.Empty;
+    }
+}
+```
+
+#### 4.10: Fix Event Handler Memory Leaks
+```csharp
+// ❌ CRITICAL ISSUE - Events not unsubscribed in Dispose()
+protected override void Dispose(bool disposing)
+{
+    if (disposing)
+    {
+        components?.Dispose();
+    }
+    base.Dispose(disposing);
+}
+
+// ✅ FIX - Properly unsubscribe all events
+protected override void Dispose(bool disposing)
+{
+    if (disposing)
+    {
+        try
+        {
+            // Unsubscribe from ALL events to prevent memory leaks
+            if (saveButton != null)
+            {
+                saveButton.Click -= SaveButton_Click;
+            }
+
+            if (partSuggestionTextBox != null)
+            {
+                partSuggestionTextBox.SuggestionSelected -= Part_SuggestionSelected;
+            }
+
+            // Dispose components
+            components?.Dispose();
+        }
+        catch (Exception ex)
+        {
+            // Log but don't throw during disposal
+            LoggingUtility.LogApplicationError(ex);
+        }
+    }
+
+    base.Dispose(disposing);
+}
 ```
 
 ### Step 5: Fix Warnings
