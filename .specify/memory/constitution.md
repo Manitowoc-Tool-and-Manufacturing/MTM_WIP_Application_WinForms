@@ -1,20 +1,30 @@
 # MTM WIP Application Constitution
 
 <!--
-Sync Impact Report (2025-11-11):
-- Version change: None → 1.0.0
-- Initial constitution creation based on codebase analysis
-- Principles derived from existing code patterns in:
-  * Service_ErrorHandler.cs (centralized error handling)
-  * LoggingUtility.cs (structured logging and CSV output)
-  * Helper_Database_StoredProcedure.cs (comprehensive database patterns)
-  * DAO layer patterns (Data/Dao_*.cs files)
+Sync Impact Report (2025-11-15):
+- Version change: 1.0.0 → 1.1.0
+- MINOR version bump: Five new core principles added
+- Added Principles:
+  * VII. XML Documentation Standards (mandatory documentation)
+  * VIII. Null Safety Requirements (nullable reference types)
+  * IX. Theme System Integration (UI consistency)
+  * X. Resource Disposal (memory leak prevention) [was XI, renumbered]
+  * XI. Input Validation Service (centralized validation with Service_Validation)
+- Modified sections:
+  * Development Standards → Added XML Documentation subsection
+  * Quality Assurance Standards → Added Null Safety and Disposal verification
+  * Code Review Requirements → Added Theme, Documentation, and Validation checks
 - Templates requiring updates:
-  ✅ plan-template.md - Aligned with MTM-specific patterns
-  ✅ spec-template.md - Aligned with MTM WIP workflow
-  ✅ tasks-template.md - Integrated MTM development phases
-- Follow-up TODOs: None
+  ✅ constitution.md - Updated with new principles
+  ⚠ plan-template.md - Needs XML documentation task phase
+  ⚠ spec-template.md - Needs validation service integration guidance
+  ⚠ tasks-template.md - Needs disposal verification and validation tasks
+- Follow-up TODOs:
+  * Implement Service_Validation (new service for centralized validation)
+  * Update suggestiontextbox-constitution-audit.prompt.md with new principles
+  * Create validation service specification
 -->
+
 
 ## Core Principles
 
@@ -390,6 +400,427 @@ public static async Task<Model_Dao_Result<DataTable>> GetSomeDataAsync(...)
 
 **Rationale**: Auto-detection eliminates parameter name mismatches, reduces DAO boilerplate, and ensures stored procedures can evolve independently of C# code.
 
+### VII. XML Documentation Standards (MANDATORY)
+
+**All public members MUST have XML documentation** using standard tags:
+- `<summary>` - Required for ALL public classes, methods, properties, events
+- `<param>` - Required for each method parameter
+- `<returns>` - Required for methods returning values (include Model_Dao_Result usage guidance)
+- `<exception>` - Document exceptions that can be thrown
+- `<remarks>` - Optional for complex scenarios, usage examples, important notes
+
+**Inline comments (`//`) are DISCOURAGED** except for:
+- Non-obvious business logic requiring explanation
+- Workarounds for known issues with ticket references
+- Complex algorithms where intent is not self-evident
+
+**XML Documentation format**:
+```csharp
+/// <summary>
+/// Updates the part in the database with current form values.
+/// Handles RequiresColorCode changes with automatic cache reload.
+/// </summary>
+/// <param name="partId">The unique identifier for the part to update</param>
+/// <param name="requiresColorCode">Whether this part requires color code tracking</param>
+/// <returns>
+/// Model_Dao_Result containing success/failure status.
+/// Check IsSuccess before accessing Data.
+/// ErrorMessage contains user-friendly message on failure.
+/// </returns>
+/// <exception cref="ArgumentException">Thrown when partId is null or empty</exception>
+/// <remarks>
+/// If RequiresColorCode changes, automatically triggers cache reload via
+/// Model_Application_Variables.ReloadColorCodePartsAsync().
+/// </remarks>
+public async Task<Model_Dao_Result<bool>> UpdatePartAsync(string partId, bool requiresColorCode)
+{
+    // Implementation
+}
+```
+
+**Rationale**: XML documentation enables IntelliSense for developers, maintains codebase searchability, enforces self-documenting code, and supports automated documentation generation.
+
+### VIII. Null Safety Requirements (ENFORCED)
+
+**Nullable reference types MUST be enabled** (`<Nullable>enable</Nullable>` in .csproj):
+- Use `?` suffix for nullable reference types (`string?`, `DataRow?`)
+- Use null-conditional operators (`?.`) and null-coalescing (`??`) for safe access
+- Check `DBNull.Value` before accessing DataRow/DataTable columns
+- Verify column existence with `DataTable.Columns.Contains()` before access
+
+**Null safety patterns**:
+```csharp
+// ✅ CORRECT - Null-safe DataRow access
+private void LoadPartData(DataRow? row)
+{
+    if (row == null)
+    {
+        return;
+    }
+
+    // Check column exists
+    if (row.Table.Columns.Contains("PartID"))
+    {
+        var partIdValue = row["PartID"];
+        string partId = partIdValue != DBNull.Value 
+            ? partIdValue.ToString() ?? string.Empty 
+            : string.Empty;
+    }
+}
+
+// ❌ WRONG - Assumes non-null
+private void LoadPartData(DataRow row)
+{
+    string partId = row["PartID"].ToString(); // Can throw NullReferenceException
+}
+```
+
+**Null parameter handling**:
+```csharp
+// Public methods - validate parameters
+public void ProcessPart(string partId)
+{
+    ArgumentNullException.ThrowIfNullOrEmpty(partId);
+    // Safe to proceed
+}
+
+// Event handlers - nullable parameters
+private void Button_Click(object? sender, EventArgs e)
+{
+    // sender can be null - check if needed
+}
+```
+
+**Rationale**: Prevents 90% of NullReferenceExceptions at compile time, eliminates runtime null checks through static analysis, improves code reliability, and enables better IntelliSense guidance.
+
+### IX. Theme System Integration (UI CONSISTENCY)
+
+**All UI components MUST use the centralized theme system**:
+- Forms inherit from `ThemedForm` (NEVER `Form` directly)
+- User controls inherit from `ThemedUserControl` (NEVER `UserControl` directly)
+- NO manual `BackColor`, `ForeColor`, or `Font` assignment - use theme tokens
+- NO direct `MessageBox.Show()` - use `Service_ErrorHandler` for themed dialogs
+
+**Theme integration pattern**:
+```csharp
+// ✅ CORRECT - Inherits theme automatically
+public partial class EditPartForm : ThemedForm
+{
+    public EditPartForm()
+    {
+        InitializeComponent();
+        // Theme automatically applied by base class
+        // NO manual color/font setting needed
+    }
+}
+
+// ❌ WRONG - Manual styling breaks theme consistency
+public partial class EditPartForm : Form
+{
+    public EditPartForm()
+    {
+        InitializeComponent();
+        this.BackColor = Color.White; // Hardcoded - breaks dark mode
+        this.Font = new Font("Arial", 10); // Ignores theme
+    }
+}
+```
+
+**Theme-aware dialogs**:
+```csharp
+// ✅ CORRECT - Uses themed error handler
+Service_ErrorHandler.ShowWarning("Part not found");
+
+// ❌ WRONG - Raw MessageBox bypasses theme
+MessageBox.Show("Part not found"); // Not themed, inconsistent
+```
+
+**Rationale**: Ensures consistent look/feel across application, supports dark mode and accessibility themes, centralizes UI updates (change theme tokens once, all UI updates), and improves user experience through visual consistency.
+
+### X. Resource Disposal (PREVENT MEMORY LEAKS)
+
+**All `IDisposable` resources MUST be properly disposed**:
+- Use `using` statements for database connections, readers, streams
+- Override `Dispose(bool disposing)` in forms/controls to clean up resources
+- Unsubscribe from ALL event handlers in `Dispose()` to prevent memory leaks
+- Dispose DataTables after use (or use `using` when appropriate)
+
+**Disposal patterns**:
+```csharp
+// Database resources - using statement
+public async Task<Model_Dao_Result<DataTable>> GetDataAsync()
+{
+    using var connection = new MySqlConnection(connectionString);
+    using var command = new MySqlCommand(sql, connection);
+    await connection.OpenAsync();
+    
+    using var reader = await command.ExecuteReaderAsync();
+    var table = new DataTable();
+    table.Load(reader);
+    return Model_Dao_Result<DataTable>.Success(table);
+    // connection, command, reader automatically disposed
+}
+
+// Form/Control disposal - event cleanup
+protected override void Dispose(bool disposing)
+{
+    if (disposing)
+    {
+        try
+        {
+            // Unsubscribe from events to prevent memory leaks
+            if (saveButton != null)
+            {
+                saveButton.Click -= SaveButton_Click;
+            }
+            
+            if (partSuggestionTextBox != null)
+            {
+                partSuggestionTextBox.SuggestionSelected -= Part_SuggestionSelected;
+            }
+            
+            // Dispose any IDisposable fields
+            _someDisposableResource?.Dispose();
+            
+            // Dispose components if present
+            components?.Dispose();
+        }
+        catch (Exception ex)
+        {
+            // Log but don't throw during disposal
+            LoggingUtility.LogApplicationError(ex);
+        }
+    }
+
+    base.Dispose(disposing);
+}
+```
+
+**Rationale**: Prevents memory leaks from undisposed resources, avoids handle exhaustion in long-running applications, ensures proper cleanup of database connections, and prevents event handler reference loops.
+
+### XI. Input Validation Service (CENTRALIZED)
+
+**All user input MUST be validated through Service_Validation before database operations**:
+- Validate at UI layer BEFORE calling DAOs
+- Use `Service_Validation` for all validation logic (centralized, extensible)
+- Report validation errors via `Service_ErrorHandler.HandleValidationError()`
+- Apply standard transformations (trim whitespace, ToUpperInvariant for codes)
+
+**Service_Validation architecture** (extensible validator pattern):
+```csharp
+public static class Service_Validation
+{
+    // Validator registry - easily add new validators
+    private static readonly Dictionary<string, IValidator> Validators = new()
+    {
+        ["PartNumber"] = new PartNumberValidator(),
+        ["ItemType"] = new ItemTypeValidator(),
+        ["ColorCode"] = new ColorCodeValidator(),
+        ["Quantity"] = new NumericValidator(min: 0, allowDecimals: true),
+        ["Operation"] = new OperationValidator()
+    };
+
+    /// <summary>
+    /// Validates input using registered validator.
+    /// Returns ValidationResult with success/failure and normalized value.
+    /// </summary>
+    public static ValidationResult Validate(string validatorKey, string input)
+    {
+        if (!Validators.TryGetValue(validatorKey, out var validator))
+        {
+            throw new InvalidOperationException($"No validator registered for '{validatorKey}'");
+        }
+
+        return validator.Validate(input);
+    }
+
+    /// <summary>
+    /// Registers a new validator for a field type.
+    /// Use during application startup or in audit process when new validation needed.
+    /// </summary>
+    public static void RegisterValidator(string key, IValidator validator)
+    {
+        Validators[key] = validator;
+    }
+}
+
+// Validator interface
+public interface IValidator
+{
+    ValidationResult Validate(string input);
+}
+
+// Validation result
+public class ValidationResult
+{
+    public bool IsValid { get; set; }
+    public string NormalizedValue { get; set; } = string.Empty;
+    public string ErrorMessage { get; set; } = string.Empty;
+    public string FieldName { get; set; } = string.Empty;
+}
+```
+
+**Usage in forms**:
+```csharp
+private bool ValidateInput()
+{
+    // Part number validation
+    var partResult = Service_Validation.Validate("PartNumber", partNumberTextBox.Text);
+    if (!partResult.IsValid)
+    {
+        Service_ErrorHandler.HandleValidationError(
+            partResult.ErrorMessage,
+            field: partResult.FieldName,
+            controlName: nameof(EditPartForm));
+        partNumberTextBox.Focus();
+        partNumberTextBox.SelectAll();
+        return false;
+    }
+    
+    // Use normalized value (trimmed, uppercased)
+    partNumberTextBox.Text = partResult.NormalizedValue;
+
+    // Quantity validation
+    var qtyResult = Service_Validation.Validate("Quantity", quantityTextBox.Text);
+    if (!qtyResult.IsValid)
+    {
+        Service_ErrorHandler.HandleValidationError(
+            qtyResult.ErrorMessage,
+            field: qtyResult.FieldName,
+            controlName: nameof(EditPartForm));
+        quantityTextBox.Focus();
+        return false;
+    }
+
+    return true;
+}
+
+private async void SaveButton_Click(object? sender, EventArgs e)
+{
+    // ALWAYS validate before DAO
+    if (!ValidateInput())
+    {
+        return; // Stop - don't call DAO with invalid data
+    }
+
+    // Safe to proceed with validated input
+    var result = await Dao_Part.UpdatePartAsync(...);
+}
+```
+
+**Standard validator implementations**:
+```csharp
+// Part number validator (format + business rules)
+public class PartNumberValidator : IValidator
+{
+    private static readonly Regex Pattern = new(@"^R-[A-Z0-9]+-\d{2}$", RegexOptions.Compiled);
+
+    public ValidationResult Validate(string input)
+    {
+        // Normalize first
+        string normalized = input.Trim().ToUpperInvariant();
+
+        // Required check
+        if (string.IsNullOrEmpty(normalized))
+        {
+            return new ValidationResult
+            {
+                IsValid = false,
+                ErrorMessage = "Part number is required.",
+                FieldName = "PartNumber"
+            };
+        }
+
+        // Format check
+        if (!Pattern.IsMatch(normalized))
+        {
+            return new ValidationResult
+            {
+                IsValid = false,
+                ErrorMessage = "Part number must follow format: R-ABC-01\n" +
+                              "(R- prefix, alphanumeric code, dash, 2-digit number)",
+                FieldName = "PartNumber"
+            };
+        }
+
+        return new ValidationResult
+        {
+            IsValid = true,
+            NormalizedValue = normalized,
+            FieldName = "PartNumber"
+        };
+    }
+}
+
+// Numeric validator (reusable with configuration)
+public class NumericValidator : IValidator
+{
+    private readonly decimal _min;
+    private readonly decimal _max;
+    private readonly bool _allowDecimals;
+
+    public NumericValidator(decimal min = 0, decimal max = decimal.MaxValue, bool allowDecimals = true)
+    {
+        _min = min;
+        _max = max;
+        _allowDecimals = allowDecimals;
+    }
+
+    public ValidationResult Validate(string input)
+    {
+        string normalized = input.Trim();
+
+        if (!decimal.TryParse(normalized, out decimal value))
+        {
+            return new ValidationResult
+            {
+                IsValid = false,
+                ErrorMessage = $"Must be a valid {(_allowDecimals ? "number" : "whole number")}.",
+                FieldName = "Quantity"
+            };
+        }
+
+        if (!_allowDecimals && value != Math.Floor(value))
+        {
+            return new ValidationResult
+            {
+                IsValid = false,
+                ErrorMessage = "Decimal values are not allowed.",
+                FieldName = "Quantity"
+            };
+        }
+
+        if (value < _min || value > _max)
+        {
+            return new ValidationResult
+            {
+                IsValid = false,
+                ErrorMessage = $"Must be between {_min} and {_max}.",
+                FieldName = "Quantity"
+            };
+        }
+
+        return new ValidationResult
+        {
+            IsValid = true,
+            NormalizedValue = normalized,
+            FieldName = "Quantity"
+        };
+    }
+}
+```
+
+**Extensibility for audit process**:
+```csharp
+// During audit, if new validation type needed, easily register:
+Service_Validation.RegisterValidator("LocationCode", new LocationCodeValidator());
+Service_Validation.RegisterValidator("WorkOrder", new WorkOrderValidator());
+
+// No need to modify Service_Validation class - just implement IValidator
+```
+
+**Rationale**: Centralized validation ensures consistency across forms, reduces code duplication, provides immediate user feedback with clear error messages, improves data quality by preventing bad data from reaching database, and offers easy extensibility through validator registration pattern enabling audit process to add new validators without modifying core service.
+
 ## Development Standards
 
 ### Code Organization
@@ -409,6 +840,23 @@ public static async Task<Model_Dao_Result<DataTable>> GetSomeDataAsync(...)
 - `#region Public Methods` - Public API surface
 - `#region Private Methods` - Internal implementation
 - `#region Event Handlers` - UI event handlers
+
+### XML Documentation
+
+**All public members require XML documentation**:
+- Methods: `<summary>`, `<param>`, `<returns>`, `<exception>` (if applicable)
+- Classes: `<summary>` describing purpose and usage
+- Properties: `<summary>` with get/set behavior if non-trivial
+- Events: `<summary>` describing when event is raised
+
+**Model_Dao_Result documentation standard**:
+```csharp
+/// <returns>
+/// Model_Dao_Result containing DataTable on success.
+/// Check IsSuccess before accessing Data.
+/// ErrorMessage contains user-friendly message on failure.
+/// </returns>
+```
 
 ### Error Handling Workflow
 
@@ -444,6 +892,11 @@ public static async Task<Model_Dao_Result<DataTable>> GetSomeDataAsync(...)
 - Async/await used correctly (no `.Result` or `.Wait()`)
 - Proper `using` statements for IDisposable resources
 - UI thread marshaling for cross-thread operations
+- XML documentation present on all public members
+- Nullable reference types enabled and properly annotated
+- Forms/Controls inherit from `ThemedForm`/`ThemedUserControl`
+- Event handlers unsubscribed in `Dispose()` override
+- Input validation uses `Service_Validation` before DAO calls
 
 ## Deployment and Versioning
 
@@ -502,12 +955,22 @@ public static async Task<Model_Dao_Result<DataTable>> GetSomeDataAsync(...)
 - Validate async/await patterns
 - Ensure CSV log format compliance
 - Test transaction rollback in integration tests
+- Verify XML documentation coverage on public members
+- Check null safety annotations (nullable types properly marked)
+- Confirm theme integration (ThemedForm/ThemedUserControl inheritance)
+- Validate disposal patterns (event cleanup, resource disposal)
+- Verify input validation through Service_Validation
 
 **Complexity justification required for**:
 - Direct MessageBox.Show() usage (MUST justify why Service_ErrorHandler insufficient)
 - Synchronous database calls (MUST justify why async impossible)
 - Console.WriteLine() logging (MUST justify why LoggingUtility insufficient)
 - Non-standard result types (MUST justify why Model_Dao_Result pattern inadequate)
+- Missing XML documentation (MUST justify why documentation not applicable)
+- Nullable warnings suppression (MUST justify why null case impossible)
+- Direct Form/UserControl inheritance (MUST justify why theme bypass needed)
+- Missing Dispose() override (MUST justify no disposable resources)
+- Bypassing Service_Validation (MUST justify why validation not applicable)
 
 ### Runtime Development Guidance
 
@@ -517,4 +980,4 @@ For AI agents implementing features, refer to:
 - `Database/` - Database documentation, schema snapshots, and stored procedure inventories
 - This constitution for non-negotiable patterns and standards
 
-**Version**: 1.0.0 | **Ratified**: 2025-11-11 | **Last Amended**: 2025-11-11
+**Version**: 1.1.0 | **Ratified**: 2025-11-11 | **Last Amended**: 2025-11-15

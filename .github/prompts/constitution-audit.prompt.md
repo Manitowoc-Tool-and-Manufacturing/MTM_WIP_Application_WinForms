@@ -434,191 +434,26 @@ Ensure:
 - [ ] No new warnings introduced
 - [ ] All changes backward compatible
 
-### Step 12: Generate Suggestion Files (Not Embedded in Code)
+### Step 12: Add Audit Results Reference (Optional)
 
-**IMPORTANT**: Do NOT embed suggestions in the code file. Generate separate markdown files instead.
-
-#### 12.1: Categorize Suggestions
-
-Group all proposed improvements into THREE categories:
-
-**1. File-Only Suggestions**
-- Affect ONLY the audited file (and `.Designer.cs` if applicable)
-- Can be implemented without touching other files
-- No breaking changes to interfaces or shared components
-- Examples: Add tooltips, improve validation messages, enhance logging context
-
-**2. System Suggestions**
-- Affect a specific system/component (e.g., `Service_ErrorHandler`, `Helper_SuggestionTextBox`)
-- Multiple files in same subsystem
-- Shared component improvements
-- Examples: Add new helper methods, enhance error handling patterns, improve caching
-
-**3. Multi-File / Speckit Suggestions**
-- Require coordinated changes across multiple systems
-- Architectural changes, breaking changes, new features
-- Database schema modifications
-- Examples: MVVM refactor, new security system, batch operations feature
-
-#### 12.2: Generate Suggestion Files
-
-Use the suggestion file template and generation script:
-
-**For File-Only Suggestions:**
-```
-Output: .github/suggestions/{FileName}-suggestions.md
-Example: .github/suggestions/Control_Edit_PartID-suggestions.md
-```
-
-**For System Suggestions:**
-```
-Output: .github/suggestions/{SystemName}-suggestions.md
-Example: .github/suggestions/Service_ErrorHandler-suggestions.md
-```
-
-**For Speckit Suggestions:**
-```
-Output: .github/suggestions/speckit/{FeatureName}-suggestion.md
-Example: .github/suggestions/speckit/MVVM-Pattern-Refactor-suggestion.md
-```
-
-#### 12.3: Check for Duplicate Suggestions
-
-Before creating new suggestion:
-1. Check if suggestion file already exists
-2. If exists, read content and search for similar suggestion ID
-3. If duplicate found:
-   - Compare your version with existing
-   - If different approach, UPDATE existing with reasoning
-   - If identical, SKIP (don't duplicate)
-4. If new suggestion, ADD to appropriate file
-
-#### 12.4: Suggestion File Structure
-
-Each suggestion must include:
-
-```markdown
-### {CATEGORY}-{ID}: {TITLE}
-**Priority**: {X}/10 _{PRIORITY_LABEL}_  
-**Scope**: {Y}/10 _{SCOPE_LABEL}_
-{**Requires Speckit**: ✅ Yes} _(if multi-file)_
-
-#### User Benefit
-{Plain English - what user experiences/gains}
-
-#### Why Needed  
-{Business justification - problem solved, pain point addressed}
-
-#### Current Behavior
-{What happens now that's suboptimal}
-
-#### Proposed Implementation
-```{LANGUAGE}
-{CODE_SAMPLE}
-```
-
-#### Affected Components
-- File: `{PATH}`
-- Methods: `{NAMES}`
-- Controls: `{NAMES}` _(if applicable)_
-
-#### Implementation Diagram _(if helpful)_
-```mermaid
-{DIAGRAM}
-```
-
-#### Estimated Effort
-- **Time**: {HOURS} hours
-- **Complexity**: {LOW|MEDIUM|HIGH}
-- **Risk**: {LOW|MEDIUM|HIGH}
-```
-
-#### 12.5: Priority and Scope Guidelines
-
-**Priority Scale:**
-- 1-3: Nice to Have (polish, minor UX improvements)
-- 4-6: Helpful/Recommended (workflow improvements, error prevention)
-- 7-8: Important/Very Important (compliance, data integrity)
-- 9-10: Critical (security, breaking bugs, regulatory)
-
-**Scope Scale:**
-- 1-2: Single file, minimal impact
-- 3-4: Few files, isolated feature
-- 5-6: Multiple files, moderate architectural impact
-- 7-8: System-wide changes, significant refactor
-- 9-10: Constitutional changes, codebase-wide
-
-**Speckit Required If:**
-- Scope >= 5
-- Architectural changes (MVVM, Command pattern, etc.)
-- Database schema changes
-- Security/permission system changes
-- New major features (forms, batch operations, workflows)
-
-#### 12.6: Use Mermaid Diagrams Effectively
-
-**When to use diagrams:**
-- Workflow changes (flowchart)
-- Interaction patterns (sequence)
-- Architecture refactors (class/graph)
-- State management (state)
-- Implementation timeline (gantt - speckit only)
-
-**Example - Architecture Change:**
-```mermaid
-graph TB
-    subgraph Current
-        A1[Form] -->|Direct Call| B1[DAO]
-        B1 --> C1[Database]
-    end
-    
-    subgraph Proposed
-        A2[Form] --> S[Service Layer]
-        S --> B2[DAO]
-        B2 --> C2[Database]
-    end
-    
-    style S fill:#f96,stroke:#333
-```
-
-#### 12.7: Update Audited File with Reference
-
-After generating suggestion files, add MINIMAL reference block to audited file:
+If desired, add a minimal reference block to audited file indicating compliance status:
 
 ```csharp
-#region PROPOSED_IMPROVEMENTS
+#region AUDIT_RESULTS
 
 /*
  * ═══════════════════════════════════════════════════════════════════════════════
- * CONSTITUTION COMPLIANCE AUDIT RESULTS
+ * CONSTITUTION COMPLIANCE AUDIT
  * ═══════════════════════════════════════════════════════════════════════════════
  * Audit Date: {YYYY-MM-DD}
  * Compliance Score: {XX}%
  * Critical Issues Fixed: {COUNT}
  * Warnings Fixed: {COUNT}
  * 
- * ═══════════════════════════════════════════════════════════════════════════════
- * PROPOSED IMPROVEMENTS
- * ═══════════════════════════════════════════════════════════════════════════════
+ * This file is now FULLY COMPLIANT with MTM Constitution requirements.
  * 
- * Suggestions have been extracted to dedicated files for better organization
- * and to avoid cluttering the codebase with extensive improvement proposals.
- * 
- * SUGGESTION FILES:
- * - File-Only: .github/suggestions/{FileName}-suggestions.md
- * - System: .github/suggestions/{SystemName}-suggestions.md (if applicable)
- * - Speckit: .github/suggestions/speckit/{FeatureName}-suggestion.md (if applicable)
- * 
- * SUGGESTION SUMMARY:
- * - File-Only Suggestions: {COUNT}
- * - System Suggestions: {COUNT}
- * - Multi-File (Speckit) Suggestions: {COUNT}
- * 
- * TO IMPLEMENT:
- * 1. Review suggestion files linked above
- * 2. Prioritize based on Priority and Scope ratings
- * 3. For Speckit suggestions, run /speckit.specify to create feature branch
- * 4. Implement and test incrementally
+ * For enhancement suggestions, run:
+ *   suggestiontextbox-generate-suggestions.prompt.md
  * 
  * ═══════════════════════════════════════════════════════════════════════════════
  */
@@ -626,7 +461,7 @@ After generating suggestion files, add MINIMAL reference block to audited file:
 #endregion
 ```
 
-**DO NOT** include the full suggestion list in the code file anymore.
+**Note**: This reference block is optional. The audit itself is complete once code is compliant.
 
 ## OUTPUT FORMAT
 
@@ -634,45 +469,40 @@ After generating suggestion files, add MINIMAL reference block to audited file:
 ```
 Constitution Compliance Audit Complete
 File: {target_file}
-Overall Compliance: 94% → 100% ✅
+Overall Compliance: {BEFORE}% → {AFTER}% ✅
 
-Critical Issues Fixed: 3
-- Replaced MessageBox.Show with Service_ErrorHandler
-- Added missing try-catch blocks
-- Fixed blocking .Result call
+Critical Issues Fixed: {COUNT}
+- {ISSUE_1}
+- {ISSUE_2}
+- {ISSUE_3}
 
-Warnings Fixed: 8
-- Added context dictionaries to 5 exception handlers
-- Improved error severity classification in 2 locations
-- Enhanced log messages with better context
+Warnings Fixed: {COUNT}
+- {WARNING_1}
+- {WARNING_2}
+- {WARNING_3}
 
-Code Organization Improvements: 4
-- Reorganized regions into proper structure
-- Added XML documentation to 8 methods
-- Removed 3 obsolete methods
-- Fixed 6 null safety issues
-
-Performance Optimizations: 2
-- Added List capacity hints
-- Improved string concatenation patterns
+Code Organization Improvements: {COUNT}
+- {IMPROVEMENT_1}
+- {IMPROVEMENT_2}
+- {IMPROVEMENT_3}
 ```
 
 ### 2. Before/After Metrics
 ```
 Code Quality Metrics:
-- Lines of Code: 580 → 595 (+15 documentation)
-- Methods: 24 → 21 (-3 obsolete)
-- XML Documented Methods: 12 → 21 (+9)
-- Error Handlers: 8 → 11 (+3)
-- Context Dictionaries: 3 → 11 (+8)
-- Log Statements: 6 → 14 (+8)
+- Lines of Code: {BEFORE} → {AFTER}
+- Methods: {BEFORE} → {AFTER}
+- XML Documented Methods: {BEFORE} → {AFTER}
+- Error Handlers: {BEFORE} → {AFTER}
+- Context Dictionaries: {BEFORE} → {AFTER}
+- Log Statements: {BEFORE} → {AFTER}
 
 Constitution Compliance:
-- Error Handling: 75% → 100% ✅
-- Structured Logging: 60% → 100% ✅
-- Async Patterns: 90% → 100% ✅
-- Code Organization: 80% → 100% ✅
-- Null Safety: 70% → 95% ✅
+- Error Handling: {BEFORE}% → {AFTER}% ✅
+- Structured Logging: {BEFORE}% → {AFTER}% ✅
+- Async Patterns: {BEFORE}% → {AFTER}% ✅
+- Code Organization: {BEFORE}% → {AFTER}% ✅
+- Null Safety: {BEFORE}% → {AFTER}% ✅
 ```
 
 ### 3. Testing Checklist
@@ -683,45 +513,28 @@ Verification Required:
 [ ] Error messages still user-friendly
 [ ] Performance not degraded
 [ ] Memory leaks addressed (events properly unsubscribed)
+[ ] Build succeeds with no new errors/warnings
 ```
 
-### 4. Proposed Improvements
+### 4. Next Steps
 ```
-Generated comprehensive improvement suggestions in 12 categories:
-✅ Architecture Enhancements
-✅ Performance Optimization
-✅ User Experience
-✅ Validation Improvements
-✅ Accessibility
-✅ Testing
-✅ Code Quality
-✅ Observability
-✅ Resilience
-✅ Security
-✅ Documentation
-✅ Maintainability
-
-See #region PROPOSED_IMPROVEMENTS at end of file for details.
-```
-
-### 5. Next Steps
-```
-✅ Constitution compliance achieved (100%)
+✅ Constitution compliance achieved
 ✅ Build successful with no errors
 ✅ Code quality improved
-✅ Proposed improvements documented
 
 RECOMMENDED ACTIONS:
 1. Manual testing of all affected workflows
 2. Code review by team member
 3. User acceptance testing
-4. Consider implementing high-priority proposed improvements
 
-SUGGESTED NEXT PROMPT:
-If more files need auditing:
-  Run "suggestiontextbox-constitution-audit.prompt.md" on next file
+NEXT PROMPTS:
+- For enhancement suggestions:
+  Run "generate-suggestions.prompt.md"
 
-If done with audits:
+- For more audits:
+  Run "constitution-audit.prompt.md" on next file
+
+- If all audits complete:
   Session complete - all SuggestionTextBox implementations are constitution-compliant
 ```
 
