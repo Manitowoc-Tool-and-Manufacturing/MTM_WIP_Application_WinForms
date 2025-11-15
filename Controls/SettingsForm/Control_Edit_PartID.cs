@@ -122,7 +122,8 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
                 Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Low,
                     contextData: new Dictionary<string, object>
                     {
-                        ["Operation"] = "SetIssuedByLabel"
+                        ["Operation"] = "SetIssuedByLabel",
+                        ["User"] = Model_Application_Variables.User ?? "Unknown"
                     },
                     controlName: nameof(Control_Edit_PartID),
                     callerName: nameof(OnLoad));
@@ -179,7 +180,8 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
                     contextData: new Dictionary<string, object>
                     {
                         ["SelectedPart"] = selectedPart,
-                        ["Operation"] = "LoadPartData"
+                        ["Operation"] = "LoadPartData",
+                        ["User"] = Model_Application_Variables.User ?? "Unknown"
                     },
                     controlName: nameof(Control_Edit_PartID),
                     callerName: nameof(Control_Edit_PartID_TextBox_Part_SuggestionSelected));
@@ -239,7 +241,10 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
                     contextData: new Dictionary<string, object>
                     {
                         ["Operation"] = "SavePart",
-                        ["PartID"] = _currentPart?["PartID"]?.ToString() ?? "Unknown"
+                        ["PartID"] = _currentPart?["PartID"]?.ToString() ?? "Unknown",
+                        ["ItemType"] = Control_Edit_PartID_TextBox_ItemType.Text,
+                        ["RequiresColorCode"] = Control_Edit_PartID_CheckBox_RequiresColorCode.Checked,
+                        ["User"] = Model_Application_Variables.User ?? "Unknown"
                     },
                     controlName: nameof(Control_Edit_PartID),
                     callerName: nameof(SaveButton_Click));
@@ -285,74 +290,20 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
 
         /// <summary>
         /// Data provider for part number SuggestionTextBox.
-        /// Returns list of all part IDs from database.
+        /// Delegates to Helper_SuggestionTextBox for cached data access.
         /// </summary>
-        private async Task<List<string>> GetPartNumberSuggestionsAsync()
+        private Task<List<string>> GetPartNumberSuggestionsAsync()
         {
-            return await GetSuggestionsFromDatabaseAsync(
-                "md_part_ids_Get_All",
-                "PartID",
-                "part numbers");
+            return Helper_SuggestionTextBox.GetCachedPartNumbersAsync();
         }
 
         /// <summary>
         /// Data provider for item type SuggestionTextBox.
-        /// Returns list of all item types from database.
+        /// Delegates to Helper_SuggestionTextBox for cached data access.
         /// </summary>
-        private async Task<List<string>> GetItemTypeSuggestionsAsync()
+        private Task<List<string>> GetItemTypeSuggestionsAsync()
         {
-            return await GetSuggestionsFromDatabaseAsync(
-                "md_item_types_Get_All",
-                "ItemType",
-                "item types");
-        }
-
-        /// <summary>
-        /// Generic method to load suggestions from database stored procedure.
-        /// </summary>
-        /// <param name="procedureName">Stored procedure name</param>
-        /// <param name="columnName">Column name to extract</param>
-        /// <param name="dataTypeName">Friendly name for error messages</param>
-        /// <returns>List of suggestion strings</returns>
-        private async Task<List<string>> GetSuggestionsFromDatabaseAsync(string procedureName, string columnName, string dataTypeName)
-        {
-            try
-            {
-                var result = await Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync(
-                    Model_Application_Variables.ConnectionString,
-                    procedureName,
-                    null);
-
-                if (!result.IsSuccess || result.Data == null)
-                {
-                    Service_ErrorHandler.ShowWarning(result.ErrorMessage ?? $"Failed to load {dataTypeName}");
-                    return new List<string>();
-                }
-
-                var suggestions = new List<string>(result.Data.Rows.Count);
-                foreach (DataRow row in result.Data.Rows)
-                {
-                    var value = row[columnName];
-                    if (value != null && value != DBNull.Value)
-                    {
-                        suggestions.Add(value.ToString() ?? string.Empty);
-                    }
-                }
-
-                return suggestions;
-            }
-            catch (Exception ex)
-            {
-                Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Medium,
-                    contextData: new Dictionary<string, object>
-                    {
-                        ["Procedure"] = procedureName,
-                        ["DataType"] = dataTypeName
-                    },
-                    controlName: nameof(Control_Edit_PartID),
-                    callerName: nameof(GetSuggestionsFromDatabaseAsync));
-                return new List<string>();
-            }
+            return Helper_SuggestionTextBox.GetCachedItemTypesAsync();
         }
 
         #endregion
@@ -401,6 +352,8 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
                     $"Part number '{newPartNumber}' already exists. Please use a different part number.");
                 itemNumberTextBox.Focus();
                 itemNumberTextBox.SelectAll();
+                
+                LoggingUtility.Log($"[{nameof(Control_Edit_PartID)}] Duplicate part number validation failed: {newPartNumber}");
                 return false;
             }
 
@@ -585,5 +538,6 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
         }
 
         #endregion
+
     }
 }

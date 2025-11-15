@@ -352,51 +352,6 @@ Verify:
 - [ ] No warnings related to changes
 - [ ] Designer file properly updated
 
-### Step 11: Create Proposed Improvements Section
-
-At the bottom of the file, add a commented-out region with suggestions:
-
-```csharp
-#region PROPOSED_IMPROVEMENTS
-
-/*
- * PROPOSED IMPROVEMENTS BEYOND SCOPE OF THIS REFACTOR
- * Generated: {current_date}
- * 
- * 1. PERFORMANCE OPTIMIZATION
- *    - Consider caching frequently accessed data providers
- *    - Implement data provider result caching in Helper_UI_SuggestionBoxes
- *    - Add background pre-loading for large datasets
- * 
- * 2. USER EXPERIENCE ENHANCEMENT
- *    - Add tooltips explaining F4 key functionality
- *    - Implement recent selections dropdown
- *    - Add "Add New" option for missing items
- * 
- * 3. VALIDATION IMPROVEMENTS
- *    - Add cross-field validation (e.g., Part + Operation compatibility)
- *    - Implement real-time validation feedback
- *    - Add validation summary panel
- * 
- * 4. ACCESSIBILITY
- *    - Add screen reader announcements for suggestions
- *    - Implement keyboard-only navigation improvements
- *    - Add high-contrast theme support
- * 
- * 5. CODE QUALITY
- *    - Extract common validation patterns to shared helper
- *    - Implement unit tests for data providers
- *    - Add integration tests for event workflows
- * 
- * 6. CONSTITUTION COMPLIANCE ENHANCEMENTS
- *    - Add performance tracing for slow data providers
- *    - Implement more granular error severity classification
- *    - Add structured logging for user interaction patterns
- */
-
-#endregion
-```
-
 ## OUTPUT FORMAT
 
 After execution, provide:
@@ -447,22 +402,12 @@ Manual Testing Required:
 [ ] Error messages are user-friendly
 ```
 
-### 4. Proposed Improvements
-```
-Generated proposed improvements section at end of file with:
-- Performance optimization suggestions
-- User experience enhancements
-- Validation improvements
-- Accessibility considerations
-- Code quality recommendations
-- Constitution compliance enhancements
-```
-
-### 5. Next Steps
+### 4. Next Steps
 ```
 ✅ Migration complete - file ready for testing
 ✅ Build succeeded with no errors
 ✅ Constitution compliance verified
+✅ Run suggestiontextbox-constitution-audit.prompt.md to generate improvement suggestions
 
 SUGGESTED NEXT PROMPT:
 If you have other forms with ComboBox controls, run:
@@ -499,7 +444,6 @@ Proceed: Yes
 9. Reorganizes regions
 10. Enhances error handling
 11. Builds successfully
-12. Creates proposed improvements section
 
 ## VERSION
 v1.0 - 2025-11-15

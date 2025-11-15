@@ -434,110 +434,199 @@ Ensure:
 - [ ] No new warnings introduced
 - [ ] All changes backward compatible
 
-### Step 12: Create Proposed Improvements Section
+### Step 12: Generate Suggestion Files (Not Embedded in Code)
 
-Add comprehensive suggestions beyond audit scope:
+**IMPORTANT**: Do NOT embed suggestions in the code file. Generate separate markdown files instead.
+
+#### 12.1: Categorize Suggestions
+
+Group all proposed improvements into THREE categories:
+
+**1. File-Only Suggestions**
+- Affect ONLY the audited file (and `.Designer.cs` if applicable)
+- Can be implemented without touching other files
+- No breaking changes to interfaces or shared components
+- Examples: Add tooltips, improve validation messages, enhance logging context
+
+**2. System Suggestions**
+- Affect a specific system/component (e.g., `Service_ErrorHandler`, `Helper_SuggestionTextBox`)
+- Multiple files in same subsystem
+- Shared component improvements
+- Examples: Add new helper methods, enhance error handling patterns, improve caching
+
+**3. Multi-File / Speckit Suggestions**
+- Require coordinated changes across multiple systems
+- Architectural changes, breaking changes, new features
+- Database schema modifications
+- Examples: MVVM refactor, new security system, batch operations feature
+
+#### 12.2: Generate Suggestion Files
+
+Use the suggestion file template and generation script:
+
+**For File-Only Suggestions:**
+```
+Output: .github/suggestions/{FileName}-suggestions.md
+Example: .github/suggestions/Control_Edit_PartID-suggestions.md
+```
+
+**For System Suggestions:**
+```
+Output: .github/suggestions/{SystemName}-suggestions.md
+Example: .github/suggestions/Service_ErrorHandler-suggestions.md
+```
+
+**For Speckit Suggestions:**
+```
+Output: .github/suggestions/speckit/{FeatureName}-suggestion.md
+Example: .github/suggestions/speckit/MVVM-Pattern-Refactor-suggestion.md
+```
+
+#### 12.3: Check for Duplicate Suggestions
+
+Before creating new suggestion:
+1. Check if suggestion file already exists
+2. If exists, read content and search for similar suggestion ID
+3. If duplicate found:
+   - Compare your version with existing
+   - If different approach, UPDATE existing with reasoning
+   - If identical, SKIP (don't duplicate)
+4. If new suggestion, ADD to appropriate file
+
+#### 12.4: Suggestion File Structure
+
+Each suggestion must include:
+
+```markdown
+### {CATEGORY}-{ID}: {TITLE}
+**Priority**: {X}/10 _{PRIORITY_LABEL}_  
+**Scope**: {Y}/10 _{SCOPE_LABEL}_
+{**Requires Speckit**: ✅ Yes} _(if multi-file)_
+
+#### User Benefit
+{Plain English - what user experiences/gains}
+
+#### Why Needed  
+{Business justification - problem solved, pain point addressed}
+
+#### Current Behavior
+{What happens now that's suboptimal}
+
+#### Proposed Implementation
+```{LANGUAGE}
+{CODE_SAMPLE}
+```
+
+#### Affected Components
+- File: `{PATH}`
+- Methods: `{NAMES}`
+- Controls: `{NAMES}` _(if applicable)_
+
+#### Implementation Diagram _(if helpful)_
+```mermaid
+{DIAGRAM}
+```
+
+#### Estimated Effort
+- **Time**: {HOURS} hours
+- **Complexity**: {LOW|MEDIUM|HIGH}
+- **Risk**: {LOW|MEDIUM|HIGH}
+```
+
+#### 12.5: Priority and Scope Guidelines
+
+**Priority Scale:**
+- 1-3: Nice to Have (polish, minor UX improvements)
+- 4-6: Helpful/Recommended (workflow improvements, error prevention)
+- 7-8: Important/Very Important (compliance, data integrity)
+- 9-10: Critical (security, breaking bugs, regulatory)
+
+**Scope Scale:**
+- 1-2: Single file, minimal impact
+- 3-4: Few files, isolated feature
+- 5-6: Multiple files, moderate architectural impact
+- 7-8: System-wide changes, significant refactor
+- 9-10: Constitutional changes, codebase-wide
+
+**Speckit Required If:**
+- Scope >= 5
+- Architectural changes (MVVM, Command pattern, etc.)
+- Database schema changes
+- Security/permission system changes
+- New major features (forms, batch operations, workflows)
+
+#### 12.6: Use Mermaid Diagrams Effectively
+
+**When to use diagrams:**
+- Workflow changes (flowchart)
+- Interaction patterns (sequence)
+- Architecture refactors (class/graph)
+- State management (state)
+- Implementation timeline (gantt - speckit only)
+
+**Example - Architecture Change:**
+```mermaid
+graph TB
+    subgraph Current
+        A1[Form] -->|Direct Call| B1[DAO]
+        B1 --> C1[Database]
+    end
+    
+    subgraph Proposed
+        A2[Form] --> S[Service Layer]
+        S --> B2[DAO]
+        B2 --> C2[Database]
+    end
+    
+    style S fill:#f96,stroke:#333
+```
+
+#### 12.7: Update Audited File with Reference
+
+After generating suggestion files, add MINIMAL reference block to audited file:
 
 ```csharp
 #region PROPOSED_IMPROVEMENTS
 
 /*
+ * ═══════════════════════════════════════════════════════════════════════════════
  * CONSTITUTION COMPLIANCE AUDIT RESULTS
- * Audit Date: {current_date}
- * Compliance Score: {percentage}%
- * Critical Issues Fixed: {count}
- * Warnings Fixed: {count}
+ * ═══════════════════════════════════════════════════════════════════════════════
+ * Audit Date: {YYYY-MM-DD}
+ * Compliance Score: {XX}%
+ * Critical Issues Fixed: {COUNT}
+ * Warnings Fixed: {COUNT}
  * 
- * PROPOSED IMPROVEMENTS BEYOND AUDIT SCOPE
+ * ═══════════════════════════════════════════════════════════════════════════════
+ * PROPOSED IMPROVEMENTS
+ * ═══════════════════════════════════════════════════════════════════════════════
  * 
- * 1. ARCHITECTURE ENHANCEMENTS
- *    - Extract common SuggestionTextBox patterns to base class
- *    - Implement MVVM pattern for better testability
- *    - Create dedicated ViewModel for form state management
- *    - Implement INotifyPropertyChanged for reactive UI updates
+ * Suggestions have been extracted to dedicated files for better organization
+ * and to avoid cluttering the codebase with extensive improvement proposals.
  * 
- * 2. PERFORMANCE OPTIMIZATION
- *    - Implement data provider result caching with expiration
- *    - Add background pre-loading for expensive operations
- *    - Use ValueTask<T> for frequently-called hot paths
- *    - Implement object pooling for large DataTable results
- *    - Add SQL query hints for better database performance
+ * SUGGESTION FILES:
+ * - File-Only: .github/suggestions/{FileName}-suggestions.md
+ * - System: .github/suggestions/{SystemName}-suggestions.md (if applicable)
+ * - Speckit: .github/suggestions/speckit/{FeatureName}-suggestion.md (if applicable)
  * 
- * 3. USER EXPERIENCE ENHANCEMENTS
- *    - Add "Recently Used" dropdown for frequently selected items
- *    - Implement suggestion ranking based on user history
- *    - Add tooltips with F4 key hint
- *    - Implement typeahead with debouncing for better responsiveness
- *    - Add visual feedback during async operations (spinner/progress bar)
- *    - Implement keyboard shortcuts for power users
+ * SUGGESTION SUMMARY:
+ * - File-Only Suggestions: {COUNT}
+ * - System Suggestions: {COUNT}
+ * - Multi-File (Speckit) Suggestions: {COUNT}
  * 
- * 4. VALIDATION IMPROVEMENTS
- *    - Add cross-field validation (Part + Operation compatibility)
- *    - Implement real-time validation feedback with visual indicators
- *    - Add business rule validation (active/inactive parts, etc.)
- *    - Create validation summary panel showing all errors at once
- *    - Implement progressive disclosure for complex validations
+ * TO IMPLEMENT:
+ * 1. Review suggestion files linked above
+ * 2. Prioritize based on Priority and Scope ratings
+ * 3. For Speckit suggestions, run /speckit.specify to create feature branch
+ * 4. Implement and test incrementally
  * 
- * 5. ACCESSIBILITY ENHANCEMENTS
- *    - Add ARIA labels and descriptions for screen readers
- *    - Implement keyboard-only navigation testing
- *    - Add high-contrast theme support
- *    - Ensure color-blind friendly error indicators
- *    - Add focus indicators for better visual feedback
- *    - Implement audible feedback for critical actions
- * 
- * 6. TESTING IMPROVEMENTS
- *    - Create unit tests for data providers
- *    - Implement integration tests for DAO operations
- *    - Add UI automation tests for user workflows
- *    - Create mock data providers for isolated testing
- *    - Implement property-based testing for validation logic
- * 
- * 7. CODE QUALITY ENHANCEMENTS
- *    - Extract magic strings to constants class
- *    - Implement strongly-typed configuration
- *    - Add code contracts for preconditions/postconditions
- *    - Create extension methods for common DataRow operations
- *    - Implement fluent API for complex configurations
- * 
- * 8. OBSERVABILITY IMPROVEMENTS
- *    - Add performance counters for slow operations
- *    - Implement telemetry for user interaction patterns
- *    - Add distributed tracing for multi-step workflows
- *    - Create dashboards for monitoring application health
- *    - Implement anomaly detection for unusual patterns
- * 
- * 9. RESILIENCE PATTERNS
- *    - Implement circuit breaker for database operations
- *    - Add retry policies with exponential backoff
- *    - Create fallback data providers for offline scenarios
- *    - Implement request deduplication for rapid clicks
- *    - Add timeout policies for long-running operations
- * 
- * 10. SECURITY ENHANCEMENTS
- *     - Implement input sanitization for SQL injection prevention
- *     - Add audit logging for data modifications
- *     - Implement role-based access control for sensitive operations
- *     - Add data encryption for sensitive fields
- *     - Implement secure session management
- * 
- * 11. DOCUMENTATION IMPROVEMENTS
- *     - Add examples to XML documentation
- *     - Create user guide for SuggestionTextBox features
- *     - Document keyboard shortcuts
- *     - Add troubleshooting guide
- *     - Create video tutorials for complex workflows
- * 
- * 12. MAINTAINABILITY ENHANCEMENTS
- *     - Create automated refactoring scripts
- *     - Implement code generation for repetitive patterns
- *     - Add static code analysis rules
- *     - Create custom analyzers for constitution compliance
- *     - Implement automated dependency updates
+ * ═══════════════════════════════════════════════════════════════════════════════
  */
 
 #endregion
 ```
+
+**DO NOT** include the full suggestion list in the code file anymore.
 
 ## OUTPUT FORMAT
 

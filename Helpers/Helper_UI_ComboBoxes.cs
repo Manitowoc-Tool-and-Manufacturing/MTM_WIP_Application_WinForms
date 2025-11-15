@@ -411,6 +411,150 @@ namespace MTM_WIP_Application_Winforms.Helpers
 
         #endregion
 
+        #region CachedDataAccess
+
+        /// <summary>
+        /// Gets cached part numbers from the pre-loaded ComboBoxPart_DataTable.
+        /// Returns empty list if cache not populated.
+        /// Thread-safe access to shared cache.
+        /// </summary>
+        /// <returns>List of all part IDs from cache</returns>
+        public static List<string> GetCachedPartNumbers()
+        {
+            lock (PartDataLock)
+            {
+                var suggestions = new List<string>(ComboBoxPart_DataTable.Rows.Count);
+                
+                if (!ComboBoxPart_DataTable.Columns.Contains("PartID"))
+                {
+                    LoggingUtility.Log("[Helper_UI_ComboBoxes] GetCachedPartNumbers: PartID column not found in cache");
+                    return suggestions;
+                }
+
+                foreach (DataRow row in ComboBoxPart_DataTable.Rows)
+                {
+                    var value = row["PartID"];
+                    if (value != null && value != DBNull.Value)
+                    {
+                        var partId = value.ToString() ?? string.Empty;
+                        if (!string.IsNullOrWhiteSpace(partId) && !partId.StartsWith("["))
+                        {
+                            suggestions.Add(partId);
+                        }
+                    }
+                }
+
+                return suggestions;
+            }
+        }
+
+        /// <summary>
+        /// Gets cached item types from the pre-loaded ComboBoxItemType_DataTable.
+        /// Returns empty list if cache not populated.
+        /// Thread-safe access to shared cache.
+        /// </summary>
+        /// <returns>List of all item types from cache</returns>
+        public static List<string> GetCachedItemTypes()
+        {
+            lock (ItemTypeDataLock)
+            {
+                var suggestions = new List<string>(ComboBoxItemType_DataTable.Rows.Count);
+                
+                if (!ComboBoxItemType_DataTable.Columns.Contains("ItemType"))
+                {
+                    LoggingUtility.Log("[Helper_UI_ComboBoxes] GetCachedItemTypes: ItemType column not found in cache");
+                    return suggestions;
+                }
+
+                foreach (DataRow row in ComboBoxItemType_DataTable.Rows)
+                {
+                    var value = row["ItemType"];
+                    if (value != null && value != DBNull.Value)
+                    {
+                        var itemType = value.ToString() ?? string.Empty;
+                        if (!string.IsNullOrWhiteSpace(itemType) && !itemType.StartsWith("["))
+                        {
+                            suggestions.Add(itemType);
+                        }
+                    }
+                }
+
+                return suggestions;
+            }
+        }
+
+        /// <summary>
+        /// Gets cached operations from the pre-loaded ComboBoxOperation_DataTable.
+        /// Returns empty list if cache not populated.
+        /// Thread-safe access to shared cache.
+        /// </summary>
+        /// <returns>List of all operations from cache</returns>
+        public static List<string> GetCachedOperations()
+        {
+            lock (OperationDataLock)
+            {
+                var suggestions = new List<string>(ComboBoxOperation_DataTable.Rows.Count);
+                
+                if (!ComboBoxOperation_DataTable.Columns.Contains("Operation"))
+                {
+                    LoggingUtility.Log("[Helper_UI_ComboBoxes] GetCachedOperations: Operation column not found in cache");
+                    return suggestions;
+                }
+
+                foreach (DataRow row in ComboBoxOperation_DataTable.Rows)
+                {
+                    var value = row["Operation"];
+                    if (value != null && value != DBNull.Value)
+                    {
+                        var operation = value.ToString() ?? string.Empty;
+                        if (!string.IsNullOrWhiteSpace(operation) && !operation.StartsWith("["))
+                        {
+                            suggestions.Add(operation);
+                        }
+                    }
+                }
+
+                return suggestions;
+            }
+        }
+
+        /// <summary>
+        /// Gets cached locations from the pre-loaded ComboBoxLocation_DataTable.
+        /// Returns empty list if cache not populated.
+        /// Thread-safe access to shared cache.
+        /// </summary>
+        /// <returns>List of all locations from cache</returns>
+        public static List<string> GetCachedLocations()
+        {
+            lock (LocationDataLock)
+            {
+                var suggestions = new List<string>(ComboBoxLocation_DataTable.Rows.Count);
+                
+                if (!ComboBoxLocation_DataTable.Columns.Contains("Location"))
+                {
+                    LoggingUtility.Log("[Helper_UI_ComboBoxes] GetCachedLocations: Location column not found in cache");
+                    return suggestions;
+                }
+
+                foreach (DataRow row in ComboBoxLocation_DataTable.Rows)
+                {
+                    var value = row["Location"];
+                    if (value != null && value != DBNull.Value)
+                    {
+                        var location = value.ToString() ?? string.Empty;
+                        if (!string.IsNullOrWhiteSpace(location) && !location.StartsWith("["))
+                        {
+                            suggestions.Add(location);
+                        }
+                    }
+                }
+
+                return suggestions;
+            }
+        }
+
+        #endregion
+
         #region DataTableResetAndRefresh
 
         public static async Task SetupDataTables()
