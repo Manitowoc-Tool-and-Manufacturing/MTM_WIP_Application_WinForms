@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using MTM_WIP_Application_Winforms.Forms.Shared;
@@ -379,7 +380,7 @@ namespace MTM_WIP_Application_Winforms.Controls.Shared
                 if (SuppressExactMatch && filteredSuggestions.Count == 0 &&
                     Service_SuggestionFilter.IsExactMatch(allSuggestions, _originalInput))
                 {
-                    // Exact match found, don't show overlay
+                    HandleExactMatchWithoutOverlay(allSuggestions);
                     return;
                 }
 
@@ -565,6 +566,43 @@ namespace MTM_WIP_Application_Winforms.Controls.Shared
         protected virtual void OnSuggestionOverlayClosed(EventArgs e)
         {
             SuggestionOverlayClosed?.Invoke(this, e);
+        }
+
+        #endregion
+
+        #region Exact Match Handling
+
+        /// <summary>
+        /// Treats manually typed exact matches like overlay selections so downstream handlers fire.
+        /// </summary>
+        /// <param name="source">Complete suggestion list.</param>
+        private void HandleExactMatchWithoutOverlay(List<string> source)
+        {
+            if (source == null || string.IsNullOrWhiteSpace(_originalInput))
+            {
+                return;
+            }
+
+            var matchedValue = source.FirstOrDefault(s => s.Equals(_originalInput, StringComparison.OrdinalIgnoreCase));
+            if (matchedValue == null)
+            {
+                return;
+            }
+
+            var normalizedValue = matchedValue.ToUpperInvariant();
+            if (!string.Equals(Text, normalizedValue, StringComparison.Ordinal))
+            {
+                Text = normalizedValue;
+            }
+
+            var selectionIndex = source.FindIndex(s => s.Equals(matchedValue, StringComparison.OrdinalIgnoreCase));
+            OnSuggestionSelected(new SuggestionSelectedEventArgs
+            {
+                OriginalInput = _originalInput,
+                SelectedValue = matchedValue,
+                SelectionIndex = selectionIndex < 0 ? 0 : selectionIndex,
+                FieldName = this.Name
+            });
         }
 
         #endregion

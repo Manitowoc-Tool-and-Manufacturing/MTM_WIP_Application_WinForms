@@ -32,6 +32,22 @@ public static class Helper_ValidatedTextBox
     }
 
     /// <summary>
+    /// Configures SuggestionTextBoxWithLabel for work order input.
+    /// Applies WO formatting validator (registered as "WorkOrder").
+    /// </summary>
+    /// <param name="control">The control to configure.</param>
+    /// <param name="showValidationColor">Whether to show validation colors (default: true).</param>
+    public static void ConfigureForWorkOrder(SuggestionTextBoxWithLabel control, bool showValidationColor = true)
+    {
+        if (control == null)
+        {
+            throw new ArgumentNullException(nameof(control));
+        }
+
+        control.ConfigureForValidation("WorkOrder", showValidationColor);
+    }
+
+    /// <summary>
     /// Configures SuggestionTextBoxWithLabel for weight input with decimals.
     /// Validation: Decimal 0-99,999.99.
     /// </summary>
