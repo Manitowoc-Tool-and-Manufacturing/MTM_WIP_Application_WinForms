@@ -21,16 +21,15 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
         private Button Control_InventoryTab_Button_Save;
         private Label Control_InventoryTab_Label_Version;
         private Button Control_InventoryTab_Button_AdvancedEntry;
-        private TextBox Control_InventoryTab_TextBox_Quantity;
+        private SuggestionTextBoxWithLabel Control_InventoryTab_SuggestionBox_Quantity;
         private TableLayoutPanel Control_InventoryTab_TableLayout_Main;
         private Button Control_InventoryTab_Button_Toggle_RightPanel;
         public SuggestionTextBoxWithLabel Control_InventoryTab_SuggestionBox_Part;
         private SuggestionTextBoxWithLabel Control_InventoryTab_SuggestionBox_Operation;
         private SuggestionTextBoxWithLabel Control_InventoryTab_SuggestionBox_Location;
-        private SuggestionTextBoxWithLabel Control_InventoryTab_SuggestionBox_ColorCode;
+        internal SuggestionTextBoxWithLabel Control_InventoryTab_SuggestionBox_ColorCode;
         private ToolTip Control_InventoryTab_Tooltip;
-        private Label Control_InventoryTab_Label_WorkOrder;
-        private TextBox Control_InventoryTab_TextBox_WorkOrder;
+        internal SuggestionTextBoxWithLabel Control_InventoryTab_SuggestionBox_WorkOrder;
         
 
         
@@ -60,12 +59,10 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             Control_InventoryTab_TableLayout_TopGroup = new TableLayoutPanel();
             Control_InventoryTab_SuggestionBox_Part = new SuggestionTextBoxWithLabel();
             Control_InventoryTab_SuggestionBox_Operation = new SuggestionTextBoxWithLabel();
-            Control_InventoryTab_Label_Qty = new Label();
-            Control_InventoryTab_TextBox_Quantity = new TextBox();
+            Control_InventoryTab_SuggestionBox_Quantity = new SuggestionTextBoxWithLabel();
             Control_InventoryTab_SuggestionBox_Location = new SuggestionTextBoxWithLabel();
             Control_InventoryTab_SuggestionBox_ColorCode = new SuggestionTextBoxWithLabel();
-            Control_InventoryTab_Label_WorkOrder = new Label();
-            Control_InventoryTab_TextBox_WorkOrder = new TextBox();
+            Control_InventoryTab_SuggestionBox_WorkOrder = new SuggestionTextBoxWithLabel();
             Control_InventoryTab_TableLayout_BottomGroup = new TableLayoutPanel();
             Control_InventoryTab_Button_Toggle_RightPanel = new Button();
             Control_InventoryTab_Label_Version = new Label();
@@ -161,7 +158,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             Control_InventoryTab_RichTextBox_Notes.Location = new Point(0, 0);
             Control_InventoryTab_RichTextBox_Notes.Name = "Control_InventoryTab_RichTextBox_Notes";
             Control_InventoryTab_RichTextBox_Notes.Size = new Size(440, 21);
-            Control_InventoryTab_RichTextBox_Notes.TabIndex = 6;
+            Control_InventoryTab_RichTextBox_Notes.TabIndex = 7;
             Control_InventoryTab_RichTextBox_Notes.Text = "";
             // 
             // Control_InventoryTab_TableLayout_TopGroup
@@ -170,14 +167,12 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             Control_InventoryTab_TableLayout_TopGroup.AutoSizeMode = AutoSizeMode.GrowAndShrink;
             Control_InventoryTab_TableLayout_TopGroup.ColumnCount = 1;
             Control_InventoryTab_TableLayout_TopGroup.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
-            Control_InventoryTab_TableLayout_TopGroup.Controls.Add(Control_InventoryTab_SuggestionBox_Location, 0, 4);
-            Control_InventoryTab_TableLayout_TopGroup.Controls.Add(Control_InventoryTab_TextBox_Quantity, 0, 3);
+            Control_InventoryTab_TableLayout_TopGroup.Controls.Add(Control_InventoryTab_SuggestionBox_Location, 0, 3);
+            Control_InventoryTab_TableLayout_TopGroup.Controls.Add(Control_InventoryTab_SuggestionBox_Quantity, 0, 2);
             Control_InventoryTab_TableLayout_TopGroup.Controls.Add(Control_InventoryTab_SuggestionBox_Operation, 0, 1);
             Control_InventoryTab_TableLayout_TopGroup.Controls.Add(Control_InventoryTab_SuggestionBox_Part, 0, 0);
-            Control_InventoryTab_TableLayout_TopGroup.Controls.Add(Control_InventoryTab_Label_Qty, 0, 2);
-            Control_InventoryTab_TableLayout_TopGroup.Controls.Add(Control_InventoryTab_SuggestionBox_ColorCode, 0, 5);
-            Control_InventoryTab_TableLayout_TopGroup.Controls.Add(Control_InventoryTab_Label_WorkOrder, 0, 6);
-            Control_InventoryTab_TableLayout_TopGroup.Controls.Add(Control_InventoryTab_TextBox_WorkOrder, 0, 7);
+            Control_InventoryTab_TableLayout_TopGroup.Controls.Add(Control_InventoryTab_SuggestionBox_ColorCode, 0, 4);
+            Control_InventoryTab_TableLayout_TopGroup.Controls.Add(Control_InventoryTab_SuggestionBox_WorkOrder, 0, 5);
             Control_InventoryTab_TableLayout_TopGroup.Dock = DockStyle.Fill;
             Control_InventoryTab_TableLayout_TopGroup.Location = new Point(3, 3);
             Control_InventoryTab_TableLayout_TopGroup.Name = "Control_InventoryTab_TableLayout_TopGroup";
@@ -207,16 +202,19 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             Control_InventoryTab_SuggestionBox_Location.Size = new Size(440, 29);
             Control_InventoryTab_SuggestionBox_Location.TabIndex = 4;
             // 
-            // Control_InventoryTab_TextBox_Quantity
+            // Control_InventoryTab_SuggestionBox_Quantity
             // 
-            Control_InventoryTab_TableLayout_TopGroup.SetColumnSpan(Control_InventoryTab_TextBox_Quantity, 2);
-            Control_InventoryTab_TextBox_Quantity.Dock = DockStyle.Fill;
-            Control_InventoryTab_TextBox_Quantity.Font = new Font("Segoe UI Emoji", 9F);
-            Control_InventoryTab_TextBox_Quantity.Location = new Point(87, 61);
-            Control_InventoryTab_TextBox_Quantity.Name = "Control_InventoryTab_TextBox_Quantity";
-            Control_InventoryTab_TextBox_Quantity.PlaceholderText = "Enter Quantity";
-            Control_InventoryTab_TextBox_Quantity.Size = new Size(356, 23);
-            Control_InventoryTab_TextBox_Quantity.TabIndex = 3;
+            Control_InventoryTab_SuggestionBox_Quantity.Dock = DockStyle.Fill;
+            Control_InventoryTab_SuggestionBox_Quantity.EnableSuggestions = false;
+            Control_InventoryTab_SuggestionBox_Quantity.LabelText = "Quantity";
+            Control_InventoryTab_SuggestionBox_Quantity.Location = new Point(3, 67);
+            Control_InventoryTab_SuggestionBox_Quantity.Name = "Control_InventoryTab_SuggestionBox_Quantity";
+            Control_InventoryTab_SuggestionBox_Quantity.PlaceholderText = "Enter Quantity";
+            Control_InventoryTab_SuggestionBox_Quantity.ShowF4Button = false;
+            Control_InventoryTab_SuggestionBox_Quantity.ShowValidationColor = true;
+            Control_InventoryTab_SuggestionBox_Quantity.Size = new Size(440, 29);
+            Control_InventoryTab_SuggestionBox_Quantity.TabIndex = 3;
+            Control_InventoryTab_SuggestionBox_Quantity.ValidatorType = "Quantity";
             // 
             // 
             // Control_InventoryTab_SuggestionBox_Operation
@@ -245,19 +243,6 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             // Control_InventoryTab_Label_Loc
             // 
                                                                                                                                     // 
-            // Control_InventoryTab_Label_Qty
-            // 
-            Control_InventoryTab_Label_Qty.AutoSize = true;
-            Control_InventoryTab_Label_Qty.Dock = DockStyle.Fill;
-            Control_InventoryTab_Label_Qty.Font = new Font("Segoe UI Emoji", 9F);
-            Control_InventoryTab_Label_Qty.Location = new Point(3, 61);
-            Control_InventoryTab_Label_Qty.Margin = new Padding(3);
-            Control_InventoryTab_Label_Qty.Name = "Control_InventoryTab_Label_Qty";
-            Control_InventoryTab_Label_Qty.Size = new Size(78, 23);
-            Control_InventoryTab_Label_Qty.TabIndex = 10;
-            Control_InventoryTab_Label_Qty.Text = "Quantity:";
-            Control_InventoryTab_Label_Qty.TextAlign = ContentAlignment.MiddleRight;
-            // 
             // Control_InventoryTab_Label_Op
             // 
                                                                                                                                     // 
@@ -280,31 +265,20 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             Control_InventoryTab_SuggestionBox_ColorCode.TabIndex = 5;
             Control_InventoryTab_SuggestionBox_ColorCode.Visible = false;
                         // 
-            // Control_InventoryTab_Label_WorkOrder
+            // Control_InventoryTab_SuggestionBox_WorkOrder
             // 
-            Control_InventoryTab_Label_WorkOrder.AutoSize = true;
-            Control_InventoryTab_Label_WorkOrder.Dock = DockStyle.Fill;
-            Control_InventoryTab_Label_WorkOrder.Font = new Font("Segoe UI Emoji", 9F);
-            Control_InventoryTab_Label_WorkOrder.Location = new Point(3, 148);
-            Control_InventoryTab_Label_WorkOrder.Margin = new Padding(3);
-            Control_InventoryTab_Label_WorkOrder.Name = "Control_InventoryTab_Label_WorkOrder";
-            Control_InventoryTab_Label_WorkOrder.Size = new Size(78, 23);
-            Control_InventoryTab_Label_WorkOrder.TabIndex = 10;
-            Control_InventoryTab_Label_WorkOrder.Text = "Work Order:";
-            Control_InventoryTab_Label_WorkOrder.TextAlign = ContentAlignment.MiddleRight;
-            Control_InventoryTab_Label_WorkOrder.Visible = false;
-            // 
-            // Control_InventoryTab_TextBox_WorkOrder
-            // 
-            Control_InventoryTab_TableLayout_TopGroup.SetColumnSpan(Control_InventoryTab_TextBox_WorkOrder, 2);
-            Control_InventoryTab_TextBox_WorkOrder.Dock = DockStyle.Fill;
-            Control_InventoryTab_TextBox_WorkOrder.Font = new Font("Segoe UI Emoji", 9F);
-            Control_InventoryTab_TextBox_WorkOrder.Location = new Point(87, 148);
-            Control_InventoryTab_TextBox_WorkOrder.Name = "Control_InventoryTab_TextBox_WorkOrder";
-            Control_InventoryTab_TextBox_WorkOrder.PlaceholderText = "Enter Work Order";
-            Control_InventoryTab_TextBox_WorkOrder.Size = new Size(356, 23);
-            Control_InventoryTab_TextBox_WorkOrder.TabIndex = 6;
-            Control_InventoryTab_TextBox_WorkOrder.Visible = false;
+            Control_InventoryTab_SuggestionBox_WorkOrder.Dock = DockStyle.Fill;
+            Control_InventoryTab_SuggestionBox_WorkOrder.EnableSuggestions = false;
+            Control_InventoryTab_SuggestionBox_WorkOrder.LabelText = "Work Order";
+            Control_InventoryTab_SuggestionBox_WorkOrder.Location = new Point(3, 161);
+            Control_InventoryTab_SuggestionBox_WorkOrder.Name = "Control_InventoryTab_SuggestionBox_WorkOrder";
+            Control_InventoryTab_SuggestionBox_WorkOrder.PlaceholderText = "Enter Work Order";
+            Control_InventoryTab_SuggestionBox_WorkOrder.ShowF4Button = false;
+            Control_InventoryTab_SuggestionBox_WorkOrder.ShowValidationColor = true;
+            Control_InventoryTab_SuggestionBox_WorkOrder.Size = new Size(440, 29);
+            Control_InventoryTab_SuggestionBox_WorkOrder.TabIndex = 6;
+            Control_InventoryTab_SuggestionBox_WorkOrder.ValidatorType = "WorkOrder";
+            Control_InventoryTab_SuggestionBox_WorkOrder.Visible = false;
             // 
             // Control_InventoryTab_Button_ColorF4
             // 
@@ -350,6 +324,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             Control_InventoryTab_Button_Toggle_RightPanel.Name = "Control_InventoryTab_Button_Toggle_RightPanel";
             Control_InventoryTab_Button_Toggle_RightPanel.Size = new Size(32, 32);
             Control_InventoryTab_Button_Toggle_RightPanel.TabIndex = 9;
+            Control_InventoryTab_Button_Toggle_RightPanel.TabStop = false;
             Control_InventoryTab_Button_Toggle_RightPanel.Text = "➡";
             Control_InventoryTab_Button_Toggle_RightPanel.UseVisualStyleBackColor = true;
             Control_InventoryTab_Button_Toggle_RightPanel.Click += Control_InventoryTab_Button_Toggle_RightPanel_Click;
@@ -378,7 +353,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             Control_InventoryTab_Button_Save.MinimumSize = new Size(100, 32);
             Control_InventoryTab_Button_Save.Name = "Control_InventoryTab_Button_Save";
             Control_InventoryTab_Button_Save.Size = new Size(100, 32);
-            Control_InventoryTab_Button_Save.TabIndex = 6;
+            Control_InventoryTab_Button_Save.TabIndex = 8;
             Control_InventoryTab_Button_Save.Text = "Save";
             Control_InventoryTab_Button_Save.UseVisualStyleBackColor = true;
             // 
@@ -395,6 +370,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             Control_InventoryTab_Button_AdvancedEntry.Name = "Control_InventoryTab_Button_AdvancedEntry";
             Control_InventoryTab_Button_AdvancedEntry.Size = new Size(100, 32);
             Control_InventoryTab_Button_AdvancedEntry.TabIndex = 8;
+            Control_InventoryTab_Button_AdvancedEntry.TabStop = false;
             Control_InventoryTab_Button_AdvancedEntry.Text = "Advanced";
             Control_InventoryTab_Button_AdvancedEntry.UseVisualStyleBackColor = true;
             // 
@@ -409,7 +385,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             Control_InventoryTab_Button_Reset.MinimumSize = new Size(100, 32);
             Control_InventoryTab_Button_Reset.Name = "Control_InventoryTab_Button_Reset";
             Control_InventoryTab_Button_Reset.Size = new Size(100, 32);
-            Control_InventoryTab_Button_Reset.TabIndex = 7;
+            Control_InventoryTab_Button_Reset.TabIndex = 9;
             Control_InventoryTab_Button_Reset.TabStop = false;
             Control_InventoryTab_Button_Reset.Text = "Reset";
             Control_InventoryTab_Button_Reset.UseVisualStyleBackColor = true;
@@ -440,7 +416,6 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
         private TableLayoutPanel Control_InventoryTab_TableLayout_TopGroup;
         private TableLayoutPanel Control_InventoryTab_TableLayout_MiddleGroup;
         private Label Control_InventoryTab_Label_Notes;
-        private Label Control_InventoryTab_Label_Qty;
         private TableLayoutPanel tableLayoutPanel3;
         private Panel NotesPanel;
         private RichTextBox Control_InventoryTab_RichTextBox_Notes;

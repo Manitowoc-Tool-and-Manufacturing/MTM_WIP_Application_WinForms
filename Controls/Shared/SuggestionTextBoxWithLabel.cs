@@ -85,14 +85,25 @@ namespace MTM_WIP_Application_Winforms.Controls.Shared
         }
 
         /// <summary>
-        /// Gets or sets the tab index of the textbox.
+        /// Sets the TabStop property of the F4 button.
+        /// Use this to exclude the F4 button from the tab order.
+        /// </summary>
+        /// <param name="tabStop">True to include in tab order, false to exclude</param>
+        public void SetF4ButtonTabStop(bool tabStop)
+        {
+            SuggestionTextBoxWithLabel_Button_F4.TabStop = tabStop;
+        }
+
+        /// <summary>
+        /// Gets or sets the tab index of the composite control.
+        /// This sets the tab index of the UserControl itself, which determines when focus enters the control.
         /// </summary>
         [Category("Behavior")]
-        [Description("Tab order of the textbox")]
+        [Description("Tab order of the control")]
         public new int TabIndex
         {
-            get => SuggestionTextBoxWithLabel_TextBox_Main.TabIndex;
-            set => SuggestionTextBoxWithLabel_TextBox_Main.TabIndex = value;
+            get => base.TabIndex;
+            set => base.TabIndex = value;
         }
 
         /// <summary>
@@ -109,7 +120,7 @@ namespace MTM_WIP_Application_Winforms.Controls.Shared
             {
                 _enableSuggestions = value;
                 ShowF4Button = value; // Hide F4 button when suggestions disabled
-                SuggestionTextBoxWithLabel_TextBox_Main.Enabled = value || _validator != null;
+                UpdateTextBoxEnabledState();
             }
         }
 
@@ -190,6 +201,17 @@ namespace MTM_WIP_Application_Winforms.Controls.Shared
         {
             InitializeComponent();
             WireUpEvents();
+            TabStop = true;
+            
+            // Ensure focus is forwarded to the internal TextBox when UserControl receives focus via Tab
+            // Use GotFocus instead of Enter for better tab navigation handling
+            this.GotFocus += (s, e) =>
+            {
+                if (!SuggestionTextBoxWithLabel_TextBox_Main.Focused)
+                {
+                    SuggestionTextBoxWithLabel_TextBox_Main.Focus();
+                }
+            };
         }
 
         #endregion
@@ -232,7 +254,7 @@ namespace MTM_WIP_Application_Winforms.Controls.Shared
         /// Validates the current text using the configured validator.
         /// </summary>
         /// <returns>Validation result</returns>
-        public Model_Validation_Result Validate()
+        public new Model_Validation_Result Validate()
         {
             if (_validator == null)
             {
@@ -259,6 +281,7 @@ namespace MTM_WIP_Application_Winforms.Controls.Shared
 
             // Get validator from Service_Validation
             _validator = Service_Validation.GetValidator(validatorType);
+            UpdateTextBoxEnabledState();
 
             if (_validator == null)
             {
@@ -280,6 +303,7 @@ namespace MTM_WIP_Application_Winforms.Controls.Shared
             _showValidationColor = showValidationColor;
             EnableSuggestions = false;
             ShowF4Button = false;
+            UpdateTextBoxEnabledState();
 
             // Wire up validation events
             WireUpValidationEvents();
@@ -323,6 +347,15 @@ namespace MTM_WIP_Application_Winforms.Controls.Shared
         #endregion
 
         #region Helpers
+
+        /// <summary>
+        /// Ensures the inner textbox is enabled when suggestions are on or a validator is configured.
+        /// </summary>
+        private void UpdateTextBoxEnabledState()
+        {
+            bool shouldEnable = _enableSuggestions || _validator != null;
+            SuggestionTextBoxWithLabel_TextBox_Main.Enabled = shouldEnable;
+        }
 
         /// <summary>
         /// Updates visual feedback based on validation result.

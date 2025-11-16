@@ -66,6 +66,7 @@ namespace MTM_WIP_Application_Winforms.Controls.Shared
             SuggestionTextBoxWithLabel_TableLayout_Main.RowStyles.Add(new RowStyle());
             SuggestionTextBoxWithLabel_TableLayout_Main.Size = new Size(296, 29);
             SuggestionTextBoxWithLabel_TableLayout_Main.TabIndex = 0;
+            SuggestionTextBoxWithLabel_TableLayout_Main.TabStop = false;
             // 
             // SuggestionTextBoxWithLabel_Label_Main
             // 
@@ -79,6 +80,7 @@ namespace MTM_WIP_Application_Winforms.Controls.Shared
             SuggestionTextBoxWithLabel_Label_Main.Name = "SuggestionTextBoxWithLabel_Label_Main";
             SuggestionTextBoxWithLabel_Label_Main.Size = new Size(120, 23);
             SuggestionTextBoxWithLabel_Label_Main.TabIndex = 0;
+            SuggestionTextBoxWithLabel_Label_Main.TabStop = false;
             SuggestionTextBoxWithLabel_Label_Main.Text = "Label:";
             SuggestionTextBoxWithLabel_Label_Main.TextAlign = ContentAlignment.MiddleRight;
             // 
@@ -105,6 +107,7 @@ namespace MTM_WIP_Application_Winforms.Controls.Shared
             SuggestionTextBoxWithLabel_Button_F4.Name = "SuggestionTextBoxWithLabel_Button_F4";
             SuggestionTextBoxWithLabel_Button_F4.Size = new Size(23, 23);
             SuggestionTextBoxWithLabel_Button_F4.TabIndex = 2;
+            SuggestionTextBoxWithLabel_Button_F4.TabStop = false;
             SuggestionTextBoxWithLabel_Button_F4.Text = "🔎";
             SuggestionTextBoxWithLabel_Button_F4.UseVisualStyleBackColor = true;
             // 

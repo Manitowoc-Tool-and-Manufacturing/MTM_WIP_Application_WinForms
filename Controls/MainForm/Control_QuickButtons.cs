@@ -638,10 +638,18 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
 
         private static void SetTextBoxText(object control, string fieldName, string value)
         {
-            FieldInfo? field = control.GetType().GetField(fieldName, BindingFlags.NonPublic | BindingFlags.Instance);
-            if (field?.GetValue(control) is TextBox tb)
+            const BindingFlags bindingFlags = BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance;
+            FieldInfo? field = control.GetType().GetField(fieldName, bindingFlags);
+            if (field?.GetValue(control) is SuggestionTextBoxWithLabel tb)
             {
                 tb.Text = value;
+                return;
+            }
+
+            field = control.GetType().GetField(fieldName, bindingFlags);
+            if (field?.GetValue(control) is SuggestionTextBox tbLegacy)
+            {
+                tbLegacy.Text = value;
             }
         }
 
@@ -705,11 +713,12 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
 
             if (mainForm.MainForm_UserControl_InventoryTab?.Visible == true)
             {
-                Control_InventoryTab? inv = mainForm.MainForm_UserControl_InventoryTab;
-                SetComboBoxes(inv, "Control_InventoryTab_TextBox_Part", "Control_InventoryTab_TextBox_Operation",
-                    partId, operation);
-                SetTextBoxText(inv, "Control_InventoryTab_TextBox_Quantity", quantity.ToString());
-                SetFocusOnControl(inv, "Control_InventoryTab_TextBox_Location");
+                Control_InventoryTab? inv = mainForm.MainForm_UserControl_InventoryTab;                
+                SetTextBoxText(inv, "Control_InventoryTab_SuggestionBox_Part", partId);
+                SetTextBoxText(inv, "Control_InventoryTab_SuggestionBox_Operation", operation);
+                SetTextBoxText(inv, "Control_InventoryTab_SuggestionBox_Quantity", quantity.ToString());
+                SetFocusOnControl(inv, "Control_InventoryTab_SuggestionBox_Location");
+                mainForm.MainForm_UserControl_InventoryTab.UpdateColorCodeFieldsVisibility();
                 return;
             }
 
