@@ -1,4 +1,4 @@
-namespace MTM_WIP_Application_Winforms.Controls.MainForm.Control_AdvancedInventory
+﻿namespace MTM_WIP_Application_Winforms.Controls.MainForm.Control_AdvancedInventory
 {
     partial class Control_AdvInv_BatchEntry
     {
