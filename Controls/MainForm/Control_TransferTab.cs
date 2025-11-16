@@ -593,9 +593,9 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                 // Expand the search panel on reset
                 try
                 {
-                    if (Control_TransferTab_SplitContainer_Main != null)
+                    if (Control_TransferTab_TableLayout_Main != null)
                     {
-                        Control_TransferTab_SplitContainer_Main.Panel1Collapsed = false;
+                        Control_TransferTab_TableLayout_Main.ColumnStyles[1].Width = 0;
                         Control_TransferTab_Button_Toggle_Split.Text = "➡️";
                         Control_TransferTab_Button_Toggle_Split.ForeColor =
                             Model_Application_Variables.UserUiColors.SuccessColor ?? Color.Green;
@@ -663,9 +663,9 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                 // Expand the search panel on reset
                 try
                 {
-                    if (Control_TransferTab_SplitContainer_Main != null)
+                    if (Control_TransferTab_TableLayout_Main != null)
                     {
-                        Control_TransferTab_SplitContainer_Main.Panel1Collapsed = false;
+                        Control_TransferTab_TableLayout_Main.ColumnStyles[1].Width = Control_TransferTab_TableLayout_Inputs.MaximumSize.Width;
                         Control_TransferTab_Button_Toggle_Split.Text = "➡️";
                         Control_TransferTab_Button_Toggle_Split.ForeColor =
                             Model_Application_Variables.UserUiColors.SuccessColor ?? Color.Green;
@@ -811,9 +811,9 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                 // Collapse the search panel after search to maximize results area
                 try
                 {
-                    if (Control_TransferTab_SplitContainer_Main != null)
+                    if (Control_TransferTab_TableLayout_Main != null)
                     {
-                        Control_TransferTab_SplitContainer_Main.Panel1Collapsed = true;
+                        Control_TransferTab_TableLayout_Main.ColumnStyles[1].Width = 0;
                         // Arrow-only visual style: Collapsed => ⬅️ (red)
                         Control_TransferTab_Button_Toggle_Split.Text = "⬅️";
                         Control_TransferTab_Button_Toggle_Split.ForeColor =
@@ -1500,19 +1500,19 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
 
         private void Control_TransferTab_Button_Toggle_Split_Click(object sender, EventArgs e)
         {
-            SplitContainer? splitContainer = Control_TransferTab_SplitContainer_Main;
+            TableLayoutPanel? tableLayout = Control_TransferTab_TableLayout_Main;
             Button? button = sender as Button ?? Control_TransferTab_Button_Toggle_Split;
 
-            if (splitContainer.Panel1Collapsed)
+            if (tableLayout.ColumnStyles[1].Width == 0)
             {
-                splitContainer.Panel1Collapsed = false;
+                tableLayout.ColumnStyles[1].Width = Control_TransferTab_TableLayout_Inputs.MaximumSize.Width;
                 // Arrow-only style and color like RightPanel toggle
                 button.Text = "➡️";
                 button.ForeColor = Model_Application_Variables.UserUiColors.SuccessColor ?? Color.Green;
             }
             else
             {
-                splitContainer.Panel1Collapsed = true;
+                tableLayout.ColumnStyles[1].Width = 0;
                 button.Text = "⬅️";
                 button.ForeColor = Model_Application_Variables.UserUiColors.ErrorColor ?? Color.Red;
             }
