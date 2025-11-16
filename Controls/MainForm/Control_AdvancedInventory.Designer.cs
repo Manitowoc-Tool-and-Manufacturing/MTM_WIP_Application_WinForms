@@ -830,7 +830,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             AdvancedInventory_Import_TableLayout.RowStyles.Add(new RowStyle(SizeType.Absolute, 44F));
             AdvancedInventory_Import_TableLayout.Size = new Size(786, 325);
             AdvancedInventory_Import_TableLayout.TabIndex = 6;
-            AdvancedInventory_Import_TableLayout.Visible = true;
+            AdvancedInventory_Import_TableLayout.Visible = false;
             // 
             // AdvancedInventory_Import_Panel_Middle
             // 
