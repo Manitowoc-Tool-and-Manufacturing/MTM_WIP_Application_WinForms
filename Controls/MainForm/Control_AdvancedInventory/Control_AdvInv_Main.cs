@@ -1,6 +1,6 @@
 ﻿using System.Windows.Forms;
 
-namespace MTM_WIP_Application_Winforms.Controls.MainForm.Control_AdvancedInventory
+namespace MTM_WIP_Application_Winforms.Controls.MainForm.Control_AdvInv
 {
     /// <summary>
     /// Step 1: Mode Selection - Choose entry method (Single, Batch, Excel, Templates)
