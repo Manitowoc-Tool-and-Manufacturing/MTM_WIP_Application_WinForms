@@ -1200,8 +1200,6 @@ SetStyle(ControlStyles.OptimizedDoubleBuffer, true);
                 MainFormInstance.MainForm_SplitContainer_Middle.Panel2Collapsed = true;
 
                 Control_RemoveTab_Button_Toggle_RightPanel.Text = "⬅️";
-                Control_RemoveTab_Button_Toggle_RightPanel.ForeColor =
-                    Model_Application_Variables.UserUiColors.ErrorColor ?? Color.Red;
             }
             else
             {
@@ -1209,8 +1207,6 @@ SetStyle(ControlStyles.OptimizedDoubleBuffer, true);
                 {
                     MainFormInstance.MainForm_SplitContainer_Middle.Panel2Collapsed = false;
                     Control_RemoveTab_Button_Toggle_RightPanel.Text = "➡️";
-                    Control_RemoveTab_Button_Toggle_RightPanel.ForeColor =
-                        Model_Application_Variables.UserUiColors.SuccessColor ?? Color.Green;
                 }
             }
 
