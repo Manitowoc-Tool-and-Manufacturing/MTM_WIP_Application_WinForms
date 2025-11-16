@@ -1,6 +1,6 @@
 using System.Windows.Forms;
 
-namespace MTM_WIP_Application_Winforms.Controls.MainForm.Control_AdvancedInventory
+namespace MTM_WIP_Application_Winforms.Controls.MainForm.Control_AdvInv
 {
     /// <summary>
     /// Excel Import Workflow - Import bulk transactions from Excel template
