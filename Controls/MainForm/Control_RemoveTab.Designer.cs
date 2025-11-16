@@ -73,11 +73,14 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             Control_RemoveTab_Button_Reset = new Button();
             Control_RemoveTab_Button_Print = new Button();
             Control_RemoveTab_Button_Undo = new Button();
+            RemoveTab_Single_Button_PartF4 = new Button();
+            RemoveTab_Single_Button_OperationF4 = new Button();
             Control_RemoveTab_GroupBox_MainControl.SuspendLayout();
             Control_RemoveTab_Panel_Main.SuspendLayout();
             Control_RemoveTab_Panel_DataGridView.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)Control_RemoveTab_Image_NothingFound).BeginInit();
             ((System.ComponentModel.ISupportInitialize)Control_RemoveTab_DataGridView_Main).BeginInit();
+            Control_RemoveTab_ContextMenu_DataGridView.SuspendLayout();
             Control_RemoveTab_Panel_Header.SuspendLayout();
             Control_RemoveTab_TableLayout_Top.SuspendLayout();
             Control_RemoveTab_TableLayout_Bottom.SuspendLayout();
@@ -86,18 +89,21 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             // Control_RemoveTab_GroupBox_MainControl
             // 
             Control_RemoveTab_GroupBox_MainControl.AutoSize = true;
+            Control_RemoveTab_GroupBox_MainControl.AutoSizeMode = AutoSizeMode.GrowAndShrink;
             Control_RemoveTab_GroupBox_MainControl.Controls.Add(Control_RemoveTab_Panel_Main);
             Control_RemoveTab_GroupBox_MainControl.Dock = DockStyle.Fill;
             Control_RemoveTab_GroupBox_MainControl.FlatStyle = FlatStyle.Flat;
             Control_RemoveTab_GroupBox_MainControl.Location = new Point(0, 0);
             Control_RemoveTab_GroupBox_MainControl.Name = "Control_RemoveTab_GroupBox_MainControl";
-            Control_RemoveTab_GroupBox_MainControl.Size = new Size(815, 400);
+            Control_RemoveTab_GroupBox_MainControl.Size = new Size(800, 375);
             Control_RemoveTab_GroupBox_MainControl.TabIndex = 17;
             Control_RemoveTab_GroupBox_MainControl.TabStop = false;
             Control_RemoveTab_GroupBox_MainControl.Text = "Part Lookup and Remove";
             // 
             // Control_RemoveTab_Panel_Main
             // 
+            Control_RemoveTab_Panel_Main.AutoSize = true;
+            Control_RemoveTab_Panel_Main.AutoSizeMode = AutoSizeMode.GrowAndShrink;
             Control_RemoveTab_Panel_Main.ColumnCount = 1;
             Control_RemoveTab_Panel_Main.ColumnStyles.Add(new ColumnStyle());
             Control_RemoveTab_Panel_Main.Controls.Add(Control_RemoveTab_Panel_DataGridView, 0, 1);
@@ -110,22 +116,24 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             Control_RemoveTab_Panel_Main.RowStyles.Add(new RowStyle());
             Control_RemoveTab_Panel_Main.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
             Control_RemoveTab_Panel_Main.RowStyles.Add(new RowStyle());
-            Control_RemoveTab_Panel_Main.Size = new Size(809, 378);
+            Control_RemoveTab_Panel_Main.Size = new Size(794, 353);
             Control_RemoveTab_Panel_Main.TabIndex = 0;
             // 
             // Control_RemoveTab_Panel_DataGridView
             // 
             Control_RemoveTab_Panel_DataGridView.AutoSize = true;
+            Control_RemoveTab_Panel_DataGridView.AutoSizeMode = AutoSizeMode.GrowAndShrink;
             Control_RemoveTab_Panel_DataGridView.Controls.Add(Control_RemoveTab_Image_NothingFound);
             Control_RemoveTab_Panel_DataGridView.Controls.Add(Control_RemoveTab_DataGridView_Main);
             Control_RemoveTab_Panel_DataGridView.Dock = DockStyle.Fill;
             Control_RemoveTab_Panel_DataGridView.Location = new Point(3, 38);
             Control_RemoveTab_Panel_DataGridView.Name = "Control_RemoveTab_Panel_DataGridView";
-            Control_RemoveTab_Panel_DataGridView.Size = new Size(803, 296);
+            Control_RemoveTab_Panel_DataGridView.Size = new Size(788, 271);
             Control_RemoveTab_Panel_DataGridView.TabIndex = 21;
             // 
             // Control_RemoveTab_Image_NothingFound
             // 
+            Control_RemoveTab_Image_NothingFound.BackgroundImageLayout = ImageLayout.Zoom;
             Control_RemoveTab_Image_NothingFound.BorderStyle = BorderStyle.FixedSingle;
             Control_RemoveTab_Image_NothingFound.Dock = DockStyle.Fill;
             Control_RemoveTab_Image_NothingFound.ErrorImage = null;
@@ -133,7 +141,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             Control_RemoveTab_Image_NothingFound.InitialImage = null;
             Control_RemoveTab_Image_NothingFound.Location = new Point(0, 0);
             Control_RemoveTab_Image_NothingFound.Name = "Control_RemoveTab_Image_NothingFound";
-            Control_RemoveTab_Image_NothingFound.Size = new Size(803, 296);
+            Control_RemoveTab_Image_NothingFound.Size = new Size(788, 271);
             Control_RemoveTab_Image_NothingFound.SizeMode = PictureBoxSizeMode.CenterImage;
             Control_RemoveTab_Image_NothingFound.TabIndex = 6;
             Control_RemoveTab_Image_NothingFound.TabStop = false;
@@ -164,7 +172,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             Control_RemoveTab_DataGridView_Main.ShowCellToolTips = false;
             Control_RemoveTab_DataGridView_Main.ShowEditingIcon = false;
             Control_RemoveTab_DataGridView_Main.ShowRowErrors = false;
-            Control_RemoveTab_DataGridView_Main.Size = new Size(803, 296);
+            Control_RemoveTab_DataGridView_Main.Size = new Size(788, 271);
             Control_RemoveTab_DataGridView_Main.StandardTab = true;
             Control_RemoveTab_DataGridView_Main.TabIndex = 4;
             // 
@@ -172,12 +180,12 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             // 
             Control_RemoveTab_ContextMenu_DataGridView.Items.AddRange(new ToolStripItem[] { Control_RemoveTab_ContextMenuItem_Print });
             Control_RemoveTab_ContextMenu_DataGridView.Name = "Control_RemoveTab_ContextMenu_DataGridView";
-            Control_RemoveTab_ContextMenu_DataGridView.Size = new Size(115, 26);
+            Control_RemoveTab_ContextMenu_DataGridView.Size = new Size(109, 26);
             // 
             // Control_RemoveTab_ContextMenuItem_Print
             // 
             Control_RemoveTab_ContextMenuItem_Print.Name = "Control_RemoveTab_ContextMenuItem_Print";
-            Control_RemoveTab_ContextMenuItem_Print.Size = new Size(114, 22);
+            Control_RemoveTab_ContextMenuItem_Print.Size = new Size(108, 22);
             Control_RemoveTab_ContextMenuItem_Print.Text = "&Print...";
             Control_RemoveTab_ContextMenuItem_Print.Click += Control_RemoveTab_ContextMenuItem_Print_Click;
             // 
@@ -188,37 +196,43 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             Control_RemoveTab_Panel_Header.Dock = DockStyle.Fill;
             Control_RemoveTab_Panel_Header.Location = new Point(3, 3);
             Control_RemoveTab_Panel_Header.Name = "Control_RemoveTab_Panel_Header";
-            Control_RemoveTab_Panel_Header.Size = new Size(803, 29);
+            Control_RemoveTab_Panel_Header.Size = new Size(788, 29);
             Control_RemoveTab_Panel_Header.TabIndex = 22;
             // 
             // Control_RemoveTab_TableLayout_Top
             // 
             Control_RemoveTab_TableLayout_Top.AutoSize = true;
-            Control_RemoveTab_TableLayout_Top.ColumnCount = 5;
+            Control_RemoveTab_TableLayout_Top.ColumnCount = 7;
             Control_RemoveTab_TableLayout_Top.ColumnStyles.Add(new ColumnStyle());
             Control_RemoveTab_TableLayout_Top.ColumnStyles.Add(new ColumnStyle());
-            Control_RemoveTab_TableLayout_Top.ColumnStyles.Add(new ColumnStyle());
-            Control_RemoveTab_TableLayout_Top.ColumnStyles.Add(new ColumnStyle());
+            Control_RemoveTab_TableLayout_Top.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 30F));
             Control_RemoveTab_TableLayout_Top.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
+            Control_RemoveTab_TableLayout_Top.ColumnStyles.Add(new ColumnStyle());
+            Control_RemoveTab_TableLayout_Top.ColumnStyles.Add(new ColumnStyle());
+            Control_RemoveTab_TableLayout_Top.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 30F));
+            Control_RemoveTab_TableLayout_Top.Controls.Add(RemoveTab_Single_Button_PartF4, 2, 0);
             Control_RemoveTab_TableLayout_Top.Controls.Add(Control_RemoveTab_Label_Part, 0, 0);
             Control_RemoveTab_TableLayout_Top.Controls.Add(Control_RemoveTab_TextBox_Part, 1, 0);
-            Control_RemoveTab_TableLayout_Top.Controls.Add(Control_RemoveTab_Label_Operation, 2, 0);
-            Control_RemoveTab_TableLayout_Top.Controls.Add(Control_RemoveTab_TextBox_Operation, 3, 0);
+            Control_RemoveTab_TableLayout_Top.Controls.Add(Control_RemoveTab_TextBox_Operation, 5, 0);
+            Control_RemoveTab_TableLayout_Top.Controls.Add(Control_RemoveTab_Label_Operation, 4, 0);
+            Control_RemoveTab_TableLayout_Top.Controls.Add(RemoveTab_Single_Button_OperationF4, 6, 0);
             Control_RemoveTab_TableLayout_Top.Dock = DockStyle.Fill;
             Control_RemoveTab_TableLayout_Top.Location = new Point(0, 0);
             Control_RemoveTab_TableLayout_Top.Name = "Control_RemoveTab_TableLayout_Top";
             Control_RemoveTab_TableLayout_Top.RowCount = 1;
-            Control_RemoveTab_TableLayout_Top.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
-            Control_RemoveTab_TableLayout_Top.Size = new Size(803, 29);
+            Control_RemoveTab_TableLayout_Top.RowStyles.Add(new RowStyle());
+            Control_RemoveTab_TableLayout_Top.Size = new Size(788, 29);
             Control_RemoveTab_TableLayout_Top.TabIndex = 6;
             // 
             // Control_RemoveTab_Label_Part
             // 
+            Control_RemoveTab_Label_Part.AutoEllipsis = true;
             Control_RemoveTab_Label_Part.AutoSize = true;
             Control_RemoveTab_Label_Part.Dock = DockStyle.Fill;
-            Control_RemoveTab_Label_Part.Location = new Point(3, 0);
+            Control_RemoveTab_Label_Part.Location = new Point(3, 3);
+            Control_RemoveTab_Label_Part.Margin = new Padding(3);
             Control_RemoveTab_Label_Part.Name = "Control_RemoveTab_Label_Part";
-            Control_RemoveTab_Label_Part.Size = new Size(78, 29);
+            Control_RemoveTab_Label_Part.Size = new Size(78, 23);
             Control_RemoveTab_Label_Part.TabIndex = 4;
             Control_RemoveTab_Label_Part.Text = "Part Number:";
             Control_RemoveTab_Label_Part.TextAlign = ContentAlignment.MiddleRight;
@@ -229,23 +243,26 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             Control_RemoveTab_TextBox_Part.Location = new Point(87, 3);
             Control_RemoveTab_TextBox_Part.Name = "Control_RemoveTab_TextBox_Part";
             Control_RemoveTab_TextBox_Part.PlaceholderText = "Enter or Select Part Number";
-            Control_RemoveTab_TextBox_Part.Size = new Size(279, 23);
+            Control_RemoveTab_TextBox_Part.Size = new Size(180, 23);
             Control_RemoveTab_TextBox_Part.TabIndex = 1;
             // 
             // Control_RemoveTab_Label_Operation
             // 
+            Control_RemoveTab_Label_Operation.AutoEllipsis = true;
             Control_RemoveTab_Label_Operation.AutoSize = true;
             Control_RemoveTab_Label_Operation.Dock = DockStyle.Fill;
-            Control_RemoveTab_Label_Operation.Location = new Point(372, 0);
+            Control_RemoveTab_Label_Operation.Location = new Point(506, 3);
+            Control_RemoveTab_Label_Operation.Margin = new Padding(3);
             Control_RemoveTab_Label_Operation.Name = "Control_RemoveTab_Label_Operation";
-            Control_RemoveTab_Label_Operation.Size = new Size(63, 29);
+            Control_RemoveTab_Label_Operation.Size = new Size(63, 23);
             Control_RemoveTab_Label_Operation.TabIndex = 5;
             Control_RemoveTab_Label_Operation.Text = "Operation:";
             Control_RemoveTab_Label_Operation.TextAlign = ContentAlignment.MiddleRight;
             // 
             // Control_RemoveTab_TextBox_Operation
             // 
-            Control_RemoveTab_TextBox_Operation.Location = new Point(441, 3);
+            Control_RemoveTab_TextBox_Operation.Dock = DockStyle.Fill;
+            Control_RemoveTab_TextBox_Operation.Location = new Point(575, 3);
             Control_RemoveTab_TextBox_Operation.Name = "Control_RemoveTab_TextBox_Operation";
             Control_RemoveTab_TextBox_Operation.PlaceholderText = "Enter or Select Operation";
             Control_RemoveTab_TextBox_Operation.Size = new Size(180, 23);
@@ -254,6 +271,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             // Control_RemoveTab_TableLayout_Bottom
             // 
             Control_RemoveTab_TableLayout_Bottom.AutoSize = true;
+            Control_RemoveTab_TableLayout_Bottom.AutoSizeMode = AutoSizeMode.GrowAndShrink;
             Control_RemoveTab_TableLayout_Bottom.ColumnCount = 9;
             Control_RemoveTab_TableLayout_Bottom.ColumnStyles.Add(new ColumnStyle());
             Control_RemoveTab_TableLayout_Bottom.ColumnStyles.Add(new ColumnStyle());
@@ -273,11 +291,11 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             Control_RemoveTab_TableLayout_Bottom.Controls.Add(Control_RemoveTab_Button_Print, 6, 0);
             Control_RemoveTab_TableLayout_Bottom.Controls.Add(Control_RemoveTab_Button_Undo, 5, 0);
             Control_RemoveTab_TableLayout_Bottom.Dock = DockStyle.Fill;
-            Control_RemoveTab_TableLayout_Bottom.Location = new Point(3, 340);
+            Control_RemoveTab_TableLayout_Bottom.Location = new Point(3, 315);
             Control_RemoveTab_TableLayout_Bottom.Name = "Control_RemoveTab_TableLayout_Bottom";
             Control_RemoveTab_TableLayout_Bottom.RowCount = 1;
-            Control_RemoveTab_TableLayout_Bottom.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
-            Control_RemoveTab_TableLayout_Bottom.Size = new Size(803, 35);
+            Control_RemoveTab_TableLayout_Bottom.RowStyles.Add(new RowStyle());
+            Control_RemoveTab_TableLayout_Bottom.Size = new Size(788, 35);
             Control_RemoveTab_TableLayout_Bottom.TabIndex = 23;
             // 
             // Control_RemoveTab_Button_ShowAll
@@ -332,7 +350,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             // 
             Control_RemoveTab_Button_Toggle_RightPanel.Dock = DockStyle.Fill;
             Control_RemoveTab_Button_Toggle_RightPanel.Font = new Font("Segoe UI Emoji", 9.75F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            Control_RemoveTab_Button_Toggle_RightPanel.Location = new Point(769, 3);
+            Control_RemoveTab_Button_Toggle_RightPanel.Location = new Point(754, 3);
             Control_RemoveTab_Button_Toggle_RightPanel.Name = "Control_RemoveTab_Button_Toggle_RightPanel";
             Control_RemoveTab_Button_Toggle_RightPanel.Size = new Size(31, 29);
             Control_RemoveTab_Button_Toggle_RightPanel.TabIndex = 9;
@@ -344,7 +362,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             // 
             Control_RemoveTab_Button_Reset.AutoSize = true;
             Control_RemoveTab_Button_Reset.Dock = DockStyle.Fill;
-            Control_RemoveTab_Button_Reset.Location = new Point(673, 3);
+            Control_RemoveTab_Button_Reset.Location = new Point(658, 3);
             Control_RemoveTab_Button_Reset.Name = "Control_RemoveTab_Button_Reset";
             Control_RemoveTab_Button_Reset.Size = new Size(90, 29);
             Control_RemoveTab_Button_Reset.TabIndex = 8;
@@ -357,7 +375,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             Control_RemoveTab_Button_Print.AutoSize = true;
             Control_RemoveTab_Button_Print.Dock = DockStyle.Fill;
             Control_RemoveTab_Button_Print.Enabled = false;
-            Control_RemoveTab_Button_Print.Location = new Point(577, 3);
+            Control_RemoveTab_Button_Print.Location = new Point(562, 3);
             Control_RemoveTab_Button_Print.Name = "Control_RemoveTab_Button_Print";
             Control_RemoveTab_Button_Print.Size = new Size(90, 29);
             Control_RemoveTab_Button_Print.TabIndex = 7;
@@ -369,7 +387,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             Control_RemoveTab_Button_Undo.AutoSize = true;
             Control_RemoveTab_Button_Undo.Dock = DockStyle.Fill;
             Control_RemoveTab_Button_Undo.Enabled = false;
-            Control_RemoveTab_Button_Undo.Location = new Point(481, 3);
+            Control_RemoveTab_Button_Undo.Location = new Point(466, 3);
             Control_RemoveTab_Button_Undo.Name = "Control_RemoveTab_Button_Undo";
             Control_RemoveTab_Button_Undo.Size = new Size(90, 29);
             Control_RemoveTab_Button_Undo.TabIndex = 6;
@@ -378,20 +396,43 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             Control_RemoveTab_Button_Undo.UseVisualStyleBackColor = true;
             Control_RemoveTab_Button_Undo.Click += Control_RemoveTab_Button_Undo_Click;
             // 
+            // RemoveTab_Single_Button_PartF4
+            // 
+            RemoveTab_Single_Button_PartF4.Location = new Point(273, 3);
+            RemoveTab_Single_Button_PartF4.Name = "RemoveTab_Single_Button_PartF4";
+            RemoveTab_Single_Button_PartF4.Size = new Size(23, 23);
+            RemoveTab_Single_Button_PartF4.TabIndex = 14;
+            RemoveTab_Single_Button_PartF4.Text = "🔎";
+            RemoveTab_Single_Button_PartF4.UseVisualStyleBackColor = true;
+            // 
+            // RemoveTab_Single_Button_OperationF4
+            // 
+            RemoveTab_Single_Button_OperationF4.Location = new Point(761, 3);
+            RemoveTab_Single_Button_OperationF4.Name = "RemoveTab_Single_Button_OperationF4";
+            RemoveTab_Single_Button_OperationF4.Size = new Size(23, 23);
+            RemoveTab_Single_Button_OperationF4.TabIndex = 15;
+            RemoveTab_Single_Button_OperationF4.Text = "🔎";
+            RemoveTab_Single_Button_OperationF4.UseVisualStyleBackColor = true;
+            // 
             // Control_RemoveTab
             // 
             AutoScaleDimensions = new SizeF(96F, 96F);
             AutoScaleMode = AutoScaleMode.Dpi;
             AutoSize = true;
+            AutoSizeMode = AutoSizeMode.GrowAndShrink;
             Controls.Add(Control_RemoveTab_GroupBox_MainControl);
+            MaximumSize = new Size(800, 375);
+            MinimumSize = new Size(800, 375);
             Name = "Control_RemoveTab";
-            Size = new Size(815, 400);
+            Size = new Size(800, 375);
             Control_RemoveTab_GroupBox_MainControl.ResumeLayout(false);
+            Control_RemoveTab_GroupBox_MainControl.PerformLayout();
             Control_RemoveTab_Panel_Main.ResumeLayout(false);
             Control_RemoveTab_Panel_Main.PerformLayout();
             Control_RemoveTab_Panel_DataGridView.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)Control_RemoveTab_Image_NothingFound).EndInit();
             ((System.ComponentModel.ISupportInitialize)Control_RemoveTab_DataGridView_Main).EndInit();
+            Control_RemoveTab_ContextMenu_DataGridView.ResumeLayout(false);
             Control_RemoveTab_Panel_Header.ResumeLayout(false);
             Control_RemoveTab_Panel_Header.PerformLayout();
             Control_RemoveTab_TableLayout_Top.ResumeLayout(false);
@@ -406,6 +447,8 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
         private Panel Control_RemoveTab_Panel_Header;
         private TableLayoutPanel Control_RemoveTab_TableLayout_Top;
         private Button Control_RemoveTab_Button_ShowAll;
+        private Button RemoveTab_Single_Button_PartF4;
+        private Button RemoveTab_Single_Button_OperationF4;
     }
 
         
