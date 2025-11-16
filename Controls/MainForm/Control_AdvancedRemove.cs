@@ -365,9 +365,6 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
 
         private async void Control_AdvancedRemove_Button_Search_Click(object? sender, EventArgs? e)
         {
-            // Collapse input panel when search is triggered
-            CollapseInputPanel();
-
             try
             {
                 // Gather search fields from textboxes and user combobox
@@ -989,7 +986,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             Control[] sidePanelBtn = Controls.Find("Control_AdvancedRemove_Button_SidePanel", true);
             if (sidePanelBtn.Length > 0 && sidePanelBtn[0] is Button btn)
             {
-                btn.Text = _isInputPanelCollapsed ? "➡️" : "⬅️";
+                btn.Text = _isInputPanelCollapsed ? "◄" : "►";
                 ToolTip toolTip = new();
                 toolTip.SetToolTip(btn, _isInputPanelCollapsed ? "Show Search Panel" : "Hide Search Panel");
             }
