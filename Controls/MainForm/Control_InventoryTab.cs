@@ -1703,6 +1703,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
 
                 // Show/hide color code and work order fields
                 Control_InventoryTab_Label_ColorCode.Visible = inCache;
+                Control_InventoryTab_Button_ColorF4.Visible = inCache;
                 Control_InventoryTab_TextBox_ColorCode.Visible = inCache;
                 Control_InventoryTab_Label_WorkOrder.Visible = inCache;
                 Control_InventoryTab_TextBox_WorkOrder.Visible = inCache;

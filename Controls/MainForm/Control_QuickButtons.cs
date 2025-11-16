@@ -746,15 +746,19 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                     TabPage? selectedTab = tabControl.SelectedTab;
                     if (selectedTab != null && selectedTab.Name == "AdvancedInventory_TabControl_MultiLoc")
                     {
-                        SetComboBoxes(advInv, "AdvancedInventory_MultiLoc_ComboBox_Part",
-                            "AdvancedInventory_MultiLoc_ComboBox_Op", partId, operation);
+                        // Multi-Location tab - use SuggestionTextBox controls
+                        SetTextBoxText(advInv, "AdvancedInventory_MultiLoc_TextBox_Part", partId);
+                        SetTextBoxText(advInv, "AdvancedInventory_MultiLoc_TextBox_Op", operation);
                         SetTextBoxText(advInv, "AdvancedInventory_MultiLoc_TextBox_Qty", quantity.ToString());
+                        SetFocusOnControl(advInv, "AdvancedInventory_MultiLoc_TextBox_Loc");
                     }
                     else
                     {
-                        SetComboBoxes(advInv, "AdvancedInventory_Single_ComboBox_Part",
-                            "AdvancedInventory_Single_ComboBox_Op", partId, operation);
+                        // Single Entry tab - use SuggestionTextBox controls
+                        SetTextBoxText(advInv, "AdvancedInventory_Single_TextBox_Part", partId);
+                        SetTextBoxText(advInv, "AdvancedInventory_Single_TextBox_Op", operation);
                         SetTextBoxText(advInv, "AdvancedInventory_Single_TextBox_Qty", quantity.ToString());
+                        SetFocusOnControl(advInv, "AdvancedInventory_Single_TextBox_Loc");
                     }
                 }
 

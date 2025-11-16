@@ -19,16 +19,6 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
         private Button AdvancedInventory_Single_Button_Reset;
         private TabPage AdvancedInventory_TabControl_MultiLoc;
         private GroupBox AdvancedInventory_MultiLoc_GroupBox_Item;
-        private Label AdvancedInventory_MultiLoc_Label_Part;
-        private ComboBox AdvancedInventory_MultiLoc_ComboBox_Part;
-        private Label AdvancedInventory_MultiLoc_Label_Op;
-        private ComboBox AdvancedInventory_MultiLoc_ComboBox_Op;
-        private Label AdvancedInventory_MultiLoc_Label_Qty;
-        private TextBox AdvancedInventory_MultiLoc_TextBox_Qty;
-        private Label AdvancedInventory_MultiLoc_Label_Notes;
-        private Label AdvancedInventory_MultiLoc_Label_Loc;
-        private ComboBox AdvancedInventory_MultiLoc_ComboBox_Loc;
-        private Button AdvancedInventory_MultiLoc_Button_AddLoc;
         private GroupBox AdvancedInventory_MultiLoc_GroupBox_Preview;
         private ListView AdvancedInventory_MultiLoc_ListView_Preview;
         private Button AdvancedInventory_MultiLoc_Button_SaveAll;
@@ -41,10 +31,13 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
         private Button AdvancedInventory_Import_Button_ImportExcel;
         private Button AdvancedInventory_Import_Button_Save;
         private GroupBox AdvancedInventory_Single_GroupBox_Right;
-        private ListView AdvancedInventory_Single_ListView;
+        private ListView AdvancedInventory_Single_ListView_Preview;
         private Button AdvancedInventory_Single_Button_Normal;
         private Button AdvancedInventory_Multi_Button_Normal;
         private Button AdvancedInventory_Import_Button_Normal;
+        private Controls.Shared.SuggestionTextBox AdvancedInventory_Single_TextBox_Part;
+        private Controls.Shared.SuggestionTextBox AdvancedInventory_Single_TextBox_Op;
+        private Controls.Shared.SuggestionTextBox AdvancedInventory_Single_TextBox_Loc;
         private GroupBox AdvancedInventory_GroupBox_Main;
         private TableLayoutPanel AdvancedInventory_TableLayout_Single;
         private TableLayoutPanel AdvancedInventory_TableLayoutPanel_Multi;
@@ -69,23 +62,26 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             AdvancedInventory_TableLayout_Single = new TableLayoutPanel();
             AdvancedInventory_Single_GroupBox_Right = new GroupBox();
             AdvancedInventory_Single_TableLayout_Right = new TableLayoutPanel();
-            AdvancedInventory_Single_ListView = new ListView();
+            AdvancedInventory_Single_ListView_Preview = new ListView();
             AdvancedInventory_Single_TableLayout_LowerRight = new TableLayoutPanel();
             AdvancedInventory_Single_Button_Save = new Button();
             AdvancedInventory_Single_Button_Reset = new Button();
             AdvancedInventory_Single_Button_Normal = new Button();
             AdvancedInventory_Single_GroupBox_Left = new GroupBox();
             AdvancedInventory_Single_TableLayout_Left = new TableLayoutPanel();
+            AdvancedInventory_Single_Button_LocationF4 = new Button();
+            AdvancedInventory_Single_Button_OperationF4 = new Button();
+            AdvancedInventory_Single_Button_PartF4 = new Button();
             AdvancedInventory_Single_Label_Part = new Label();
             AdvancedInventory_Single_Button_Send = new Button();
-            AdvancedInventory_Single_ComboBox_Part = new ComboBox();
+            AdvancedInventory_Single_TextBox_Part = new MTM_WIP_Application_Winforms.Controls.Shared.SuggestionTextBox();
             AdvancedInventory_Single_Label_Op = new Label();
             AdvancedInventory_Single_Label_Qty = new Label();
             AdvancedInventory_Single_Label_Loc = new Label();
-            AdvancedInventory_Single_ComboBox_Op = new ComboBox();
+            AdvancedInventory_Single_TextBox_Op = new MTM_WIP_Application_Winforms.Controls.Shared.SuggestionTextBox();
             AdvancedInventory_Single_Label_Count = new Label();
             AdvancedInventory_Single_TextBox_Qty = new TextBox();
-            AdvancedInventory_Single_ComboBox_Loc = new ComboBox();
+            AdvancedInventory_Single_TextBox_Loc = new MTM_WIP_Application_Winforms.Controls.Shared.SuggestionTextBox();
             AdvancedInventory_Single_Label_Notes = new Label();
             AdvancedInventory_Single_TextBox_Count = new TextBox();
             panel4 = new Panel();
@@ -101,21 +97,22 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             panel1 = new Panel();
             AdvancedInventory_MultiLoc_ListView_Preview = new ListView();
             AdvancedInventory_MultiLoc_GroupBox_Item = new GroupBox();
-            tableLayoutPanel1 = new TableLayoutPanel();
-            panel2 = new Panel();
-            AdvancedInventory_MultiLoc_Button_AddLoc = new Button();
             AdvancedInventory_Multi_TableLayout_Left = new TableLayoutPanel();
+            AdvancedInventory_MultiLoc_Button_LocationF4 = new Button();
+            AdvancedInventory_MultiLoc_Button_OperationF4 = new Button();
+            AdvancedInventory_MultiLoc_Button_AddLoc = new Button();
             AdvancedInventory_MultiLoc_Label_Part = new Label();
-            AdvancedInventory_MultiLoc_ComboBox_Part = new ComboBox();
+            AdvancedInventory_MultiLoc_TextBox_Part = new MTM_WIP_Application_Winforms.Controls.Shared.SuggestionTextBox();
             AdvancedInventory_MultiLoc_Label_Op = new Label();
-            AdvancedInventory_MultiLoc_ComboBox_Op = new ComboBox();
+            AdvancedInventory_MultiLoc_TextBox_Op = new MTM_WIP_Application_Winforms.Controls.Shared.SuggestionTextBox();
             AdvancedInventory_MultiLoc_Label_Qty = new Label();
             AdvancedInventory_MultiLoc_Label_Notes = new Label();
             AdvancedInventory_MultiLoc_TextBox_Qty = new TextBox();
             AdvancedInventory_MultiLoc_Label_Loc = new Label();
-            AdvancedInventory_MultiLoc_ComboBox_Loc = new ComboBox();
+            AdvancedInventory_MultiLoc_TextBox_Loc = new MTM_WIP_Application_Winforms.Controls.Shared.SuggestionTextBox();
             panel3 = new Panel();
             AdvancedInventory_MultiLoc_RichTextBox_Notes = new RichTextBox();
+            AdvancedInventory_MultiLoc_Button_PartF4 = new Button();
             AdvancedInventory_TabControl_Import = new TabPage();
             AdvancedInventory_Import_TableLayout = new TableLayoutPanel();
             AdvancedInventory_Import_Panel_Middle = new Panel();
@@ -127,6 +124,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             AdvancedInventory_Import_Button_OpenExcel = new Button();
             AdvancedInventory_Import_Button_ImportExcel = new Button();
             AdvancedInventory_GroupBox_Main = new GroupBox();
+            AdvancedInventory_Import_Button_CleanSheet = new Button();
             AdvancedInventory_TabControl.SuspendLayout();
             AdvancedInventory_TabControl_Single.SuspendLayout();
             AdvancedInventory_TableLayout_Single.SuspendLayout();
@@ -143,8 +141,6 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             AdvancedInventory_Multi_TableLayout_BottomRight.SuspendLayout();
             panel1.SuspendLayout();
             AdvancedInventory_MultiLoc_GroupBox_Item.SuspendLayout();
-            tableLayoutPanel1.SuspendLayout();
-            panel2.SuspendLayout();
             AdvancedInventory_Multi_TableLayout_Left.SuspendLayout();
             panel3.SuspendLayout();
             AdvancedInventory_TabControl_Import.SuspendLayout();
@@ -182,8 +178,8 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             // 
             AdvancedInventory_TableLayout_Single.AutoSize = true;
             AdvancedInventory_TableLayout_Single.ColumnCount = 2;
-            AdvancedInventory_TableLayout_Single.ColumnStyles.Add(new ColumnStyle());
-            AdvancedInventory_TableLayout_Single.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100.000008F));
+            AdvancedInventory_TableLayout_Single.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 35F));
+            AdvancedInventory_TableLayout_Single.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 65F));
             AdvancedInventory_TableLayout_Single.Controls.Add(AdvancedInventory_Single_GroupBox_Right, 1, 0);
             AdvancedInventory_TableLayout_Single.Controls.Add(AdvancedInventory_Single_GroupBox_Left, 0, 0);
             AdvancedInventory_TableLayout_Single.Dock = DockStyle.Fill;
@@ -198,12 +194,13 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             // AdvancedInventory_Single_GroupBox_Right
             // 
             AdvancedInventory_Single_GroupBox_Right.AutoSize = true;
+            AdvancedInventory_Single_GroupBox_Right.AutoSizeMode = AutoSizeMode.GrowAndShrink;
             AdvancedInventory_Single_GroupBox_Right.Controls.Add(AdvancedInventory_Single_TableLayout_Right);
             AdvancedInventory_Single_GroupBox_Right.Dock = DockStyle.Fill;
-            AdvancedInventory_Single_GroupBox_Right.Location = new Point(300, 0);
+            AdvancedInventory_Single_GroupBox_Right.Location = new Point(275, 0);
             AdvancedInventory_Single_GroupBox_Right.Margin = new Padding(0);
             AdvancedInventory_Single_GroupBox_Right.Name = "AdvancedInventory_Single_GroupBox_Right";
-            AdvancedInventory_Single_GroupBox_Right.Size = new Size(486, 325);
+            AdvancedInventory_Single_GroupBox_Right.Size = new Size(511, 325);
             AdvancedInventory_Single_GroupBox_Right.TabIndex = 1;
             AdvancedInventory_Single_GroupBox_Right.TabStop = false;
             AdvancedInventory_Single_GroupBox_Right.Text = "Transaction Preview";
@@ -211,35 +208,38 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             // AdvancedInventory_Single_TableLayout_Right
             // 
             AdvancedInventory_Single_TableLayout_Right.AutoSize = true;
+            AdvancedInventory_Single_TableLayout_Right.AutoSizeMode = AutoSizeMode.GrowAndShrink;
             AdvancedInventory_Single_TableLayout_Right.ColumnCount = 1;
             AdvancedInventory_Single_TableLayout_Right.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
-            AdvancedInventory_Single_TableLayout_Right.Controls.Add(AdvancedInventory_Single_ListView, 0, 0);
+            AdvancedInventory_Single_TableLayout_Right.Controls.Add(AdvancedInventory_Single_ListView_Preview, 0, 0);
             AdvancedInventory_Single_TableLayout_Right.Controls.Add(AdvancedInventory_Single_TableLayout_LowerRight, 0, 2);
             AdvancedInventory_Single_TableLayout_Right.Dock = DockStyle.Fill;
             AdvancedInventory_Single_TableLayout_Right.Location = new Point(3, 19);
             AdvancedInventory_Single_TableLayout_Right.Name = "AdvancedInventory_Single_TableLayout_Right";
             AdvancedInventory_Single_TableLayout_Right.RowCount = 3;
-            AdvancedInventory_Single_TableLayout_Right.RowStyles.Add(new RowStyle());
             AdvancedInventory_Single_TableLayout_Right.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
             AdvancedInventory_Single_TableLayout_Right.RowStyles.Add(new RowStyle());
-            AdvancedInventory_Single_TableLayout_Right.Size = new Size(480, 303);
+            AdvancedInventory_Single_TableLayout_Right.RowStyles.Add(new RowStyle());
+            AdvancedInventory_Single_TableLayout_Right.Size = new Size(505, 303);
             AdvancedInventory_Single_TableLayout_Right.TabIndex = 15;
             // 
-            // AdvancedInventory_Single_ListView
+            // AdvancedInventory_Single_ListView_Preview
             // 
-            AdvancedInventory_Single_ListView.Dock = DockStyle.Fill;
-            AdvancedInventory_Single_ListView.FullRowSelect = true;
-            AdvancedInventory_Single_ListView.GridLines = true;
-            AdvancedInventory_Single_ListView.Location = new Point(3, 3);
-            AdvancedInventory_Single_ListView.Name = "AdvancedInventory_Single_ListView";
-            AdvancedInventory_Single_ListView.Size = new Size(474, 262);
-            AdvancedInventory_Single_ListView.TabIndex = 0;
-            AdvancedInventory_Single_ListView.UseCompatibleStateImageBehavior = false;
-            AdvancedInventory_Single_ListView.View = View.Details;
+            AdvancedInventory_Single_ListView_Preview.Alignment = ListViewAlignment.SnapToGrid;
+            AdvancedInventory_Single_ListView_Preview.Dock = DockStyle.Fill;
+            AdvancedInventory_Single_ListView_Preview.FullRowSelect = true;
+            AdvancedInventory_Single_ListView_Preview.GridLines = true;
+            AdvancedInventory_Single_ListView_Preview.Location = new Point(3, 3);
+            AdvancedInventory_Single_ListView_Preview.Name = "AdvancedInventory_Single_ListView_Preview";
+            AdvancedInventory_Single_ListView_Preview.Size = new Size(499, 266);
+            AdvancedInventory_Single_ListView_Preview.TabIndex = 0;
+            AdvancedInventory_Single_ListView_Preview.UseCompatibleStateImageBehavior = false;
+            AdvancedInventory_Single_ListView_Preview.View = View.Details;
             // 
             // AdvancedInventory_Single_TableLayout_LowerRight
             // 
             AdvancedInventory_Single_TableLayout_LowerRight.AutoSize = true;
+            AdvancedInventory_Single_TableLayout_LowerRight.AutoSizeMode = AutoSizeMode.GrowAndShrink;
             AdvancedInventory_Single_TableLayout_LowerRight.ColumnCount = 4;
             AdvancedInventory_Single_TableLayout_LowerRight.ColumnStyles.Add(new ColumnStyle());
             AdvancedInventory_Single_TableLayout_LowerRight.ColumnStyles.Add(new ColumnStyle());
@@ -254,7 +254,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             AdvancedInventory_Single_TableLayout_LowerRight.Name = "AdvancedInventory_Single_TableLayout_LowerRight";
             AdvancedInventory_Single_TableLayout_LowerRight.RowCount = 1;
             AdvancedInventory_Single_TableLayout_LowerRight.RowStyles.Add(new RowStyle());
-            AdvancedInventory_Single_TableLayout_LowerRight.Size = new Size(480, 31);
+            AdvancedInventory_Single_TableLayout_LowerRight.Size = new Size(505, 31);
             AdvancedInventory_Single_TableLayout_LowerRight.TabIndex = 1;
             // 
             // AdvancedInventory_Single_Button_Save
@@ -262,7 +262,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             AdvancedInventory_Single_Button_Save.Dock = DockStyle.Fill;
             AdvancedInventory_Single_Button_Save.Location = new Point(3, 3);
             AdvancedInventory_Single_Button_Save.Name = "AdvancedInventory_Single_Button_Save";
-            AdvancedInventory_Single_Button_Save.Size = new Size(99, 25);
+            AdvancedInventory_Single_Button_Save.Size = new Size(100, 25);
             AdvancedInventory_Single_Button_Save.TabIndex = 7;
             AdvancedInventory_Single_Button_Save.Text = "Save All";
             AdvancedInventory_Single_Button_Save.Click += AdvancedInventory_Single_Button_Save_Click;
@@ -270,9 +270,9 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             // AdvancedInventory_Single_Button_Reset
             // 
             AdvancedInventory_Single_Button_Reset.Dock = DockStyle.Fill;
-            AdvancedInventory_Single_Button_Reset.Location = new Point(108, 3);
+            AdvancedInventory_Single_Button_Reset.Location = new Point(109, 3);
             AdvancedInventory_Single_Button_Reset.Name = "AdvancedInventory_Single_Button_Reset";
-            AdvancedInventory_Single_Button_Reset.Size = new Size(99, 25);
+            AdvancedInventory_Single_Button_Reset.Size = new Size(100, 25);
             AdvancedInventory_Single_Button_Reset.TabIndex = 13;
             AdvancedInventory_Single_Button_Reset.TabStop = false;
             AdvancedInventory_Single_Button_Reset.Text = "Reset";
@@ -282,9 +282,9 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             // 
             AdvancedInventory_Single_Button_Normal.Dock = DockStyle.Fill;
             AdvancedInventory_Single_Button_Normal.ForeColor = Color.DarkRed;
-            AdvancedInventory_Single_Button_Normal.Location = new Point(378, 3);
+            AdvancedInventory_Single_Button_Normal.Location = new Point(402, 3);
             AdvancedInventory_Single_Button_Normal.Name = "AdvancedInventory_Single_Button_Normal";
-            AdvancedInventory_Single_Button_Normal.Size = new Size(99, 25);
+            AdvancedInventory_Single_Button_Normal.Size = new Size(100, 25);
             AdvancedInventory_Single_Button_Normal.TabIndex = 14;
             AdvancedInventory_Single_Button_Normal.TabStop = false;
             AdvancedInventory_Single_Button_Normal.Text = "Back to Normal";
@@ -293,12 +293,13 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             // AdvancedInventory_Single_GroupBox_Left
             // 
             AdvancedInventory_Single_GroupBox_Left.AutoSize = true;
+            AdvancedInventory_Single_GroupBox_Left.AutoSizeMode = AutoSizeMode.GrowAndShrink;
             AdvancedInventory_Single_GroupBox_Left.Controls.Add(AdvancedInventory_Single_TableLayout_Left);
             AdvancedInventory_Single_GroupBox_Left.Dock = DockStyle.Fill;
             AdvancedInventory_Single_GroupBox_Left.Location = new Point(0, 0);
             AdvancedInventory_Single_GroupBox_Left.Margin = new Padding(0);
             AdvancedInventory_Single_GroupBox_Left.Name = "AdvancedInventory_Single_GroupBox_Left";
-            AdvancedInventory_Single_GroupBox_Left.Size = new Size(300, 325);
+            AdvancedInventory_Single_GroupBox_Left.Size = new Size(275, 325);
             AdvancedInventory_Single_GroupBox_Left.TabIndex = 0;
             AdvancedInventory_Single_GroupBox_Left.TabStop = false;
             AdvancedInventory_Single_GroupBox_Left.Text = "Single Item to 1 Location Multiple Times";
@@ -306,19 +307,24 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             // AdvancedInventory_Single_TableLayout_Left
             // 
             AdvancedInventory_Single_TableLayout_Left.AutoSize = true;
-            AdvancedInventory_Single_TableLayout_Left.ColumnCount = 2;
+            AdvancedInventory_Single_TableLayout_Left.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            AdvancedInventory_Single_TableLayout_Left.ColumnCount = 3;
             AdvancedInventory_Single_TableLayout_Left.ColumnStyles.Add(new ColumnStyle());
             AdvancedInventory_Single_TableLayout_Left.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
+            AdvancedInventory_Single_TableLayout_Left.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 30F));
+            AdvancedInventory_Single_TableLayout_Left.Controls.Add(AdvancedInventory_Single_Button_LocationF4, 2, 3);
+            AdvancedInventory_Single_TableLayout_Left.Controls.Add(AdvancedInventory_Single_Button_OperationF4, 2, 1);
+            AdvancedInventory_Single_TableLayout_Left.Controls.Add(AdvancedInventory_Single_Button_PartF4, 2, 0);
             AdvancedInventory_Single_TableLayout_Left.Controls.Add(AdvancedInventory_Single_Label_Part, 0, 0);
             AdvancedInventory_Single_TableLayout_Left.Controls.Add(AdvancedInventory_Single_Button_Send, 1, 6);
-            AdvancedInventory_Single_TableLayout_Left.Controls.Add(AdvancedInventory_Single_ComboBox_Part, 1, 0);
+            AdvancedInventory_Single_TableLayout_Left.Controls.Add(AdvancedInventory_Single_TextBox_Part, 1, 0);
             AdvancedInventory_Single_TableLayout_Left.Controls.Add(AdvancedInventory_Single_Label_Op, 0, 1);
             AdvancedInventory_Single_TableLayout_Left.Controls.Add(AdvancedInventory_Single_Label_Qty, 0, 2);
             AdvancedInventory_Single_TableLayout_Left.Controls.Add(AdvancedInventory_Single_Label_Loc, 0, 3);
-            AdvancedInventory_Single_TableLayout_Left.Controls.Add(AdvancedInventory_Single_ComboBox_Op, 1, 1);
+            AdvancedInventory_Single_TableLayout_Left.Controls.Add(AdvancedInventory_Single_TextBox_Op, 1, 1);
             AdvancedInventory_Single_TableLayout_Left.Controls.Add(AdvancedInventory_Single_Label_Count, 0, 4);
             AdvancedInventory_Single_TableLayout_Left.Controls.Add(AdvancedInventory_Single_TextBox_Qty, 1, 2);
-            AdvancedInventory_Single_TableLayout_Left.Controls.Add(AdvancedInventory_Single_ComboBox_Loc, 1, 3);
+            AdvancedInventory_Single_TableLayout_Left.Controls.Add(AdvancedInventory_Single_TextBox_Loc, 1, 3);
             AdvancedInventory_Single_TableLayout_Left.Controls.Add(AdvancedInventory_Single_Label_Notes, 0, 5);
             AdvancedInventory_Single_TableLayout_Left.Controls.Add(AdvancedInventory_Single_TextBox_Count, 1, 4);
             AdvancedInventory_Single_TableLayout_Left.Controls.Add(panel4, 1, 5);
@@ -334,138 +340,184 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             AdvancedInventory_Single_TableLayout_Left.RowStyles.Add(new RowStyle());
             AdvancedInventory_Single_TableLayout_Left.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
             AdvancedInventory_Single_TableLayout_Left.RowStyles.Add(new RowStyle());
-            AdvancedInventory_Single_TableLayout_Left.Size = new Size(294, 303);
+            AdvancedInventory_Single_TableLayout_Left.Size = new Size(269, 303);
             AdvancedInventory_Single_TableLayout_Left.TabIndex = 0;
+            // 
+            // AdvancedInventory_Single_Button_LocationF4
+            // 
+            AdvancedInventory_Single_Button_LocationF4.Location = new Point(242, 90);
+            AdvancedInventory_Single_Button_LocationF4.Name = "AdvancedInventory_Single_Button_LocationF4";
+            AdvancedInventory_Single_Button_LocationF4.Size = new Size(23, 23);
+            AdvancedInventory_Single_Button_LocationF4.TabIndex = 15;
+            AdvancedInventory_Single_Button_LocationF4.Text = "🔎";
+            AdvancedInventory_Single_Button_LocationF4.UseVisualStyleBackColor = true;
+            // 
+            // AdvancedInventory_Single_Button_OperationF4
+            // 
+            AdvancedInventory_Single_Button_OperationF4.Location = new Point(242, 32);
+            AdvancedInventory_Single_Button_OperationF4.Name = "AdvancedInventory_Single_Button_OperationF4";
+            AdvancedInventory_Single_Button_OperationF4.Size = new Size(23, 23);
+            AdvancedInventory_Single_Button_OperationF4.TabIndex = 13;
+            AdvancedInventory_Single_Button_OperationF4.Text = "🔎";
+            AdvancedInventory_Single_Button_OperationF4.UseVisualStyleBackColor = true;
+            // 
+            // AdvancedInventory_Single_Button_PartF4
+            // 
+            AdvancedInventory_Single_Button_PartF4.Location = new Point(242, 3);
+            AdvancedInventory_Single_Button_PartF4.Name = "AdvancedInventory_Single_Button_PartF4";
+            AdvancedInventory_Single_Button_PartF4.Size = new Size(23, 23);
+            AdvancedInventory_Single_Button_PartF4.TabIndex = 12;
+            AdvancedInventory_Single_Button_PartF4.Text = "🔎";
+            AdvancedInventory_Single_Button_PartF4.UseVisualStyleBackColor = true;
             // 
             // AdvancedInventory_Single_Label_Part
             // 
+            AdvancedInventory_Single_Label_Part.AutoEllipsis = true;
             AdvancedInventory_Single_Label_Part.AutoSize = true;
             AdvancedInventory_Single_Label_Part.Dock = DockStyle.Fill;
-            AdvancedInventory_Single_Label_Part.Location = new Point(3, 0);
+            AdvancedInventory_Single_Label_Part.Location = new Point(3, 3);
+            AdvancedInventory_Single_Label_Part.Margin = new Padding(3);
             AdvancedInventory_Single_Label_Part.Name = "AdvancedInventory_Single_Label_Part";
-            AdvancedInventory_Single_Label_Part.Size = new Size(75, 29);
+            AdvancedInventory_Single_Label_Part.Size = new Size(71, 23);
             AdvancedInventory_Single_Label_Part.TabIndex = 0;
             AdvancedInventory_Single_Label_Part.Text = "Part:";
             AdvancedInventory_Single_Label_Part.TextAlign = ContentAlignment.MiddleRight;
             // 
             // AdvancedInventory_Single_Button_Send
             // 
-            AdvancedInventory_Single_TableLayout_Left.SetColumnSpan(AdvancedInventory_Single_Button_Send, 2);
+            AdvancedInventory_Single_Button_Send.AutoSize = true;
+            AdvancedInventory_Single_Button_Send.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            AdvancedInventory_Single_TableLayout_Left.SetColumnSpan(AdvancedInventory_Single_Button_Send, 3);
             AdvancedInventory_Single_Button_Send.Dock = DockStyle.Fill;
             AdvancedInventory_Single_Button_Send.Location = new Point(3, 275);
             AdvancedInventory_Single_Button_Send.Name = "AdvancedInventory_Single_Button_Send";
-            AdvancedInventory_Single_Button_Send.Size = new Size(288, 25);
+            AdvancedInventory_Single_Button_Send.Size = new Size(263, 25);
             AdvancedInventory_Single_Button_Send.TabIndex = 1;
             AdvancedInventory_Single_Button_Send.TabStop = false;
             AdvancedInventory_Single_Button_Send.Text = "Send to Preview";
             AdvancedInventory_Single_Button_Send.Click += AdvancedInventory_Single_Button_Send_Click;
             // 
-            // AdvancedInventory_Single_ComboBox_Part
+            // AdvancedInventory_Single_TextBox_Part
             // 
-            AdvancedInventory_Single_ComboBox_Part.AutoCompleteMode = AutoCompleteMode.SuggestAppend;
-            AdvancedInventory_Single_ComboBox_Part.AutoCompleteSource = AutoCompleteSource.ListItems;
-            AdvancedInventory_Single_ComboBox_Part.Location = new Point(84, 3);
-            AdvancedInventory_Single_ComboBox_Part.Name = "AdvancedInventory_Single_ComboBox_Part";
-            AdvancedInventory_Single_ComboBox_Part.Size = new Size(207, 23);
-            AdvancedInventory_Single_ComboBox_Part.TabIndex = 1;
+            AdvancedInventory_Single_TextBox_Part.Dock = DockStyle.Fill;
+            AdvancedInventory_Single_TextBox_Part.Location = new Point(80, 3);
+            AdvancedInventory_Single_TextBox_Part.Name = "AdvancedInventory_Single_TextBox_Part";
+            AdvancedInventory_Single_TextBox_Part.PlaceholderText = "Enter Part Number";
+            AdvancedInventory_Single_TextBox_Part.Size = new Size(156, 23);
+            AdvancedInventory_Single_TextBox_Part.TabIndex = 1;
             // 
             // AdvancedInventory_Single_Label_Op
             // 
+            AdvancedInventory_Single_Label_Op.AutoEllipsis = true;
             AdvancedInventory_Single_Label_Op.AutoSize = true;
             AdvancedInventory_Single_Label_Op.Dock = DockStyle.Fill;
-            AdvancedInventory_Single_Label_Op.Location = new Point(3, 29);
+            AdvancedInventory_Single_Label_Op.Location = new Point(3, 32);
+            AdvancedInventory_Single_Label_Op.Margin = new Padding(3);
             AdvancedInventory_Single_Label_Op.Name = "AdvancedInventory_Single_Label_Op";
-            AdvancedInventory_Single_Label_Op.Size = new Size(75, 29);
+            AdvancedInventory_Single_Label_Op.Size = new Size(71, 23);
             AdvancedInventory_Single_Label_Op.TabIndex = 2;
             AdvancedInventory_Single_Label_Op.Text = "Op:";
             AdvancedInventory_Single_Label_Op.TextAlign = ContentAlignment.MiddleRight;
             // 
             // AdvancedInventory_Single_Label_Qty
             // 
+            AdvancedInventory_Single_Label_Qty.AutoEllipsis = true;
             AdvancedInventory_Single_Label_Qty.AutoSize = true;
             AdvancedInventory_Single_Label_Qty.Dock = DockStyle.Fill;
-            AdvancedInventory_Single_Label_Qty.Location = new Point(3, 58);
+            AdvancedInventory_Single_Label_Qty.Location = new Point(3, 61);
+            AdvancedInventory_Single_Label_Qty.Margin = new Padding(3);
             AdvancedInventory_Single_Label_Qty.Name = "AdvancedInventory_Single_Label_Qty";
-            AdvancedInventory_Single_Label_Qty.Size = new Size(75, 29);
+            AdvancedInventory_Single_Label_Qty.Size = new Size(71, 23);
             AdvancedInventory_Single_Label_Qty.TabIndex = 6;
             AdvancedInventory_Single_Label_Qty.Text = "Quantity:";
             AdvancedInventory_Single_Label_Qty.TextAlign = ContentAlignment.MiddleRight;
             // 
             // AdvancedInventory_Single_Label_Loc
             // 
+            AdvancedInventory_Single_Label_Loc.AutoEllipsis = true;
             AdvancedInventory_Single_Label_Loc.AutoSize = true;
             AdvancedInventory_Single_Label_Loc.Dock = DockStyle.Fill;
-            AdvancedInventory_Single_Label_Loc.Location = new Point(3, 87);
+            AdvancedInventory_Single_Label_Loc.Location = new Point(3, 90);
+            AdvancedInventory_Single_Label_Loc.Margin = new Padding(3);
             AdvancedInventory_Single_Label_Loc.Name = "AdvancedInventory_Single_Label_Loc";
-            AdvancedInventory_Single_Label_Loc.Size = new Size(75, 29);
+            AdvancedInventory_Single_Label_Loc.Size = new Size(71, 23);
             AdvancedInventory_Single_Label_Loc.TabIndex = 4;
             AdvancedInventory_Single_Label_Loc.Text = "Location:";
             AdvancedInventory_Single_Label_Loc.TextAlign = ContentAlignment.MiddleRight;
             // 
-            // AdvancedInventory_Single_ComboBox_Op
+            // AdvancedInventory_Single_TextBox_Op
             // 
-            AdvancedInventory_Single_ComboBox_Op.AutoCompleteMode = AutoCompleteMode.SuggestAppend;
-            AdvancedInventory_Single_ComboBox_Op.AutoCompleteSource = AutoCompleteSource.ListItems;
-            AdvancedInventory_Single_ComboBox_Op.Location = new Point(84, 32);
-            AdvancedInventory_Single_ComboBox_Op.Name = "AdvancedInventory_Single_ComboBox_Op";
-            AdvancedInventory_Single_ComboBox_Op.Size = new Size(207, 23);
-            AdvancedInventory_Single_ComboBox_Op.TabIndex = 2;
+            AdvancedInventory_Single_TextBox_Op.Dock = DockStyle.Fill;
+            AdvancedInventory_Single_TextBox_Op.Location = new Point(80, 32);
+            AdvancedInventory_Single_TextBox_Op.Name = "AdvancedInventory_Single_TextBox_Op";
+            AdvancedInventory_Single_TextBox_Op.PlaceholderText = "Enter Operation";
+            AdvancedInventory_Single_TextBox_Op.Size = new Size(156, 23);
+            AdvancedInventory_Single_TextBox_Op.TabIndex = 2;
             // 
             // AdvancedInventory_Single_Label_Count
             // 
+            AdvancedInventory_Single_Label_Count.AutoEllipsis = true;
             AdvancedInventory_Single_Label_Count.AutoSize = true;
             AdvancedInventory_Single_Label_Count.Dock = DockStyle.Fill;
-            AdvancedInventory_Single_Label_Count.Location = new Point(3, 116);
+            AdvancedInventory_Single_Label_Count.Location = new Point(3, 119);
+            AdvancedInventory_Single_Label_Count.Margin = new Padding(3);
             AdvancedInventory_Single_Label_Count.Name = "AdvancedInventory_Single_Label_Count";
-            AdvancedInventory_Single_Label_Count.Size = new Size(75, 29);
+            AdvancedInventory_Single_Label_Count.Size = new Size(71, 23);
             AdvancedInventory_Single_Label_Count.TabIndex = 8;
-            AdvancedInventory_Single_Label_Count.Text = "Transactions:";
+            AdvancedInventory_Single_Label_Count.Text = "How Many: ";
             AdvancedInventory_Single_Label_Count.TextAlign = ContentAlignment.MiddleRight;
             // 
             // AdvancedInventory_Single_TextBox_Qty
             // 
-            AdvancedInventory_Single_TextBox_Qty.Location = new Point(84, 61);
+            AdvancedInventory_Single_TableLayout_Left.SetColumnSpan(AdvancedInventory_Single_TextBox_Qty, 2);
+            AdvancedInventory_Single_TextBox_Qty.Dock = DockStyle.Fill;
+            AdvancedInventory_Single_TextBox_Qty.Location = new Point(80, 61);
             AdvancedInventory_Single_TextBox_Qty.Name = "AdvancedInventory_Single_TextBox_Qty";
-            AdvancedInventory_Single_TextBox_Qty.Size = new Size(207, 23);
+            AdvancedInventory_Single_TextBox_Qty.PlaceholderText = "Enter Quantity";
+            AdvancedInventory_Single_TextBox_Qty.Size = new Size(186, 23);
             AdvancedInventory_Single_TextBox_Qty.TabIndex = 3;
             // 
-            // AdvancedInventory_Single_ComboBox_Loc
+            // AdvancedInventory_Single_TextBox_Loc
             // 
-            AdvancedInventory_Single_ComboBox_Loc.AutoCompleteMode = AutoCompleteMode.SuggestAppend;
-            AdvancedInventory_Single_ComboBox_Loc.AutoCompleteSource = AutoCompleteSource.ListItems;
-            AdvancedInventory_Single_ComboBox_Loc.Location = new Point(84, 90);
-            AdvancedInventory_Single_ComboBox_Loc.Name = "AdvancedInventory_Single_ComboBox_Loc";
-            AdvancedInventory_Single_ComboBox_Loc.Size = new Size(207, 23);
-            AdvancedInventory_Single_ComboBox_Loc.TabIndex = 4;
+            AdvancedInventory_Single_TextBox_Loc.Dock = DockStyle.Fill;
+            AdvancedInventory_Single_TextBox_Loc.Location = new Point(80, 90);
+            AdvancedInventory_Single_TextBox_Loc.Name = "AdvancedInventory_Single_TextBox_Loc";
+            AdvancedInventory_Single_TextBox_Loc.PlaceholderText = "Enter Location";
+            AdvancedInventory_Single_TextBox_Loc.Size = new Size(156, 23);
+            AdvancedInventory_Single_TextBox_Loc.TabIndex = 4;
             // 
             // AdvancedInventory_Single_Label_Notes
             // 
             AdvancedInventory_Single_Label_Notes.AutoSize = true;
-            AdvancedInventory_Single_TableLayout_Left.SetColumnSpan(AdvancedInventory_Single_Label_Notes, 2);
+            AdvancedInventory_Single_TableLayout_Left.SetColumnSpan(AdvancedInventory_Single_Label_Notes, 3);
             AdvancedInventory_Single_Label_Notes.Dock = DockStyle.Fill;
-            AdvancedInventory_Single_Label_Notes.Location = new Point(3, 145);
+            AdvancedInventory_Single_Label_Notes.Location = new Point(3, 148);
+            AdvancedInventory_Single_Label_Notes.Margin = new Padding(3);
             AdvancedInventory_Single_Label_Notes.Name = "AdvancedInventory_Single_Label_Notes";
-            AdvancedInventory_Single_Label_Notes.Size = new Size(288, 15);
+            AdvancedInventory_Single_Label_Notes.Size = new Size(263, 15);
             AdvancedInventory_Single_Label_Notes.TabIndex = 10;
             AdvancedInventory_Single_Label_Notes.Text = "Notes";
             AdvancedInventory_Single_Label_Notes.TextAlign = ContentAlignment.BottomCenter;
             // 
             // AdvancedInventory_Single_TextBox_Count
             // 
-            AdvancedInventory_Single_TextBox_Count.Location = new Point(84, 119);
+            AdvancedInventory_Single_TableLayout_Left.SetColumnSpan(AdvancedInventory_Single_TextBox_Count, 2);
+            AdvancedInventory_Single_TextBox_Count.Dock = DockStyle.Fill;
+            AdvancedInventory_Single_TextBox_Count.Location = new Point(80, 119);
             AdvancedInventory_Single_TextBox_Count.Name = "AdvancedInventory_Single_TextBox_Count";
-            AdvancedInventory_Single_TextBox_Count.Size = new Size(207, 23);
+            AdvancedInventory_Single_TextBox_Count.PlaceholderText = "# of Transactions";
+            AdvancedInventory_Single_TextBox_Count.Size = new Size(186, 23);
             AdvancedInventory_Single_TextBox_Count.TabIndex = 6;
             // 
             // panel4
             // 
             panel4.AutoSize = true;
-            AdvancedInventory_Single_TableLayout_Left.SetColumnSpan(panel4, 2);
+            AdvancedInventory_Single_TableLayout_Left.SetColumnSpan(panel4, 3);
             panel4.Controls.Add(AdvancedInventory_Single_RichTextBox_Notes);
             panel4.Dock = DockStyle.Fill;
-            panel4.Location = new Point(3, 163);
+            panel4.Location = new Point(3, 169);
             panel4.Name = "panel4";
-            panel4.Size = new Size(288, 106);
+            panel4.Size = new Size(263, 100);
             panel4.TabIndex = 11;
             // 
             // AdvancedInventory_Single_RichTextBox_Notes
@@ -473,7 +525,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             AdvancedInventory_Single_RichTextBox_Notes.Dock = DockStyle.Fill;
             AdvancedInventory_Single_RichTextBox_Notes.Location = new Point(0, 0);
             AdvancedInventory_Single_RichTextBox_Notes.Name = "AdvancedInventory_Single_RichTextBox_Notes";
-            AdvancedInventory_Single_RichTextBox_Notes.Size = new Size(288, 106);
+            AdvancedInventory_Single_RichTextBox_Notes.Size = new Size(263, 100);
             AdvancedInventory_Single_RichTextBox_Notes.TabIndex = 5;
             AdvancedInventory_Single_RichTextBox_Notes.Text = "";
             // 
@@ -490,9 +542,10 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             // AdvancedInventory_TableLayoutPanel_Multi
             // 
             AdvancedInventory_TableLayoutPanel_Multi.AutoSize = true;
+            AdvancedInventory_TableLayoutPanel_Multi.AutoSizeMode = AutoSizeMode.GrowAndShrink;
             AdvancedInventory_TableLayoutPanel_Multi.ColumnCount = 2;
-            AdvancedInventory_TableLayoutPanel_Multi.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
-            AdvancedInventory_TableLayoutPanel_Multi.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
+            AdvancedInventory_TableLayoutPanel_Multi.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 35F));
+            AdvancedInventory_TableLayoutPanel_Multi.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 65F));
             AdvancedInventory_TableLayoutPanel_Multi.Controls.Add(AdvancedInventory_MultiLoc_GroupBox_Preview, 1, 0);
             AdvancedInventory_TableLayoutPanel_Multi.Controls.Add(AdvancedInventory_MultiLoc_GroupBox_Item, 0, 0);
             AdvancedInventory_TableLayoutPanel_Multi.Dock = DockStyle.Fill;
@@ -500,8 +553,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             AdvancedInventory_TableLayoutPanel_Multi.Margin = new Padding(0);
             AdvancedInventory_TableLayoutPanel_Multi.Name = "AdvancedInventory_TableLayoutPanel_Multi";
             AdvancedInventory_TableLayoutPanel_Multi.RowCount = 1;
-            AdvancedInventory_TableLayoutPanel_Multi.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
-            AdvancedInventory_TableLayoutPanel_Multi.RowStyles.Add(new RowStyle(SizeType.Absolute, 20F));
+            AdvancedInventory_TableLayoutPanel_Multi.RowStyles.Add(new RowStyle());
             AdvancedInventory_TableLayoutPanel_Multi.Size = new Size(786, 325);
             AdvancedInventory_TableLayoutPanel_Multi.TabIndex = 1;
             // 
@@ -510,10 +562,10 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             AdvancedInventory_MultiLoc_GroupBox_Preview.AutoSize = true;
             AdvancedInventory_MultiLoc_GroupBox_Preview.Controls.Add(AdvancedInventory_Multi_TableLayout_Right);
             AdvancedInventory_MultiLoc_GroupBox_Preview.Dock = DockStyle.Fill;
-            AdvancedInventory_MultiLoc_GroupBox_Preview.Location = new Point(393, 0);
+            AdvancedInventory_MultiLoc_GroupBox_Preview.Location = new Point(275, 0);
             AdvancedInventory_MultiLoc_GroupBox_Preview.Margin = new Padding(0);
             AdvancedInventory_MultiLoc_GroupBox_Preview.Name = "AdvancedInventory_MultiLoc_GroupBox_Preview";
-            AdvancedInventory_MultiLoc_GroupBox_Preview.Size = new Size(393, 325);
+            AdvancedInventory_MultiLoc_GroupBox_Preview.Size = new Size(511, 325);
             AdvancedInventory_MultiLoc_GroupBox_Preview.TabIndex = 0;
             AdvancedInventory_MultiLoc_GroupBox_Preview.TabStop = false;
             AdvancedInventory_MultiLoc_GroupBox_Preview.Text = "Transaction Preview";
@@ -521,6 +573,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             // AdvancedInventory_Multi_TableLayout_Right
             // 
             AdvancedInventory_Multi_TableLayout_Right.AutoSize = true;
+            AdvancedInventory_Multi_TableLayout_Right.AutoSizeMode = AutoSizeMode.GrowAndShrink;
             AdvancedInventory_Multi_TableLayout_Right.ColumnCount = 1;
             AdvancedInventory_Multi_TableLayout_Right.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
             AdvancedInventory_Multi_TableLayout_Right.Controls.Add(AdvancedInventory_Multi_TableLayout_BottomRight, 0, 2);
@@ -532,12 +585,13 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             AdvancedInventory_Multi_TableLayout_Right.RowStyles.Add(new RowStyle());
             AdvancedInventory_Multi_TableLayout_Right.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
             AdvancedInventory_Multi_TableLayout_Right.RowStyles.Add(new RowStyle());
-            AdvancedInventory_Multi_TableLayout_Right.Size = new Size(387, 303);
+            AdvancedInventory_Multi_TableLayout_Right.Size = new Size(505, 303);
             AdvancedInventory_Multi_TableLayout_Right.TabIndex = 16;
             // 
             // AdvancedInventory_Multi_TableLayout_BottomRight
             // 
             AdvancedInventory_Multi_TableLayout_BottomRight.AutoSize = true;
+            AdvancedInventory_Multi_TableLayout_BottomRight.AutoSizeMode = AutoSizeMode.GrowAndShrink;
             AdvancedInventory_Multi_TableLayout_BottomRight.ColumnCount = 4;
             AdvancedInventory_Multi_TableLayout_BottomRight.ColumnStyles.Add(new ColumnStyle());
             AdvancedInventory_Multi_TableLayout_BottomRight.ColumnStyles.Add(new ColumnStyle());
@@ -552,7 +606,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             AdvancedInventory_Multi_TableLayout_BottomRight.Name = "AdvancedInventory_Multi_TableLayout_BottomRight";
             AdvancedInventory_Multi_TableLayout_BottomRight.RowCount = 1;
             AdvancedInventory_Multi_TableLayout_BottomRight.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
-            AdvancedInventory_Multi_TableLayout_BottomRight.Size = new Size(387, 31);
+            AdvancedInventory_Multi_TableLayout_BottomRight.Size = new Size(505, 31);
             AdvancedInventory_Multi_TableLayout_BottomRight.TabIndex = 0;
             // 
             // AdvancedInventory_MultiLoc_Button_SaveAll
@@ -561,7 +615,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             AdvancedInventory_MultiLoc_Button_SaveAll.Dock = DockStyle.Fill;
             AdvancedInventory_MultiLoc_Button_SaveAll.Location = new Point(3, 3);
             AdvancedInventory_MultiLoc_Button_SaveAll.Name = "AdvancedInventory_MultiLoc_Button_SaveAll";
-            AdvancedInventory_MultiLoc_Button_SaveAll.Size = new Size(81, 25);
+            AdvancedInventory_MultiLoc_Button_SaveAll.Size = new Size(100, 25);
             AdvancedInventory_MultiLoc_Button_SaveAll.TabIndex = 1;
             AdvancedInventory_MultiLoc_Button_SaveAll.TabStop = false;
             AdvancedInventory_MultiLoc_Button_SaveAll.Text = "Save All";
@@ -571,9 +625,9 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             // 
             AdvancedInventory_MultiLoc_Button_Reset.AutoSize = true;
             AdvancedInventory_MultiLoc_Button_Reset.Dock = DockStyle.Fill;
-            AdvancedInventory_MultiLoc_Button_Reset.Location = new Point(90, 3);
+            AdvancedInventory_MultiLoc_Button_Reset.Location = new Point(109, 3);
             AdvancedInventory_MultiLoc_Button_Reset.Name = "AdvancedInventory_MultiLoc_Button_Reset";
-            AdvancedInventory_MultiLoc_Button_Reset.Size = new Size(81, 25);
+            AdvancedInventory_MultiLoc_Button_Reset.Size = new Size(100, 25);
             AdvancedInventory_MultiLoc_Button_Reset.TabIndex = 2;
             AdvancedInventory_MultiLoc_Button_Reset.TabStop = false;
             AdvancedInventory_MultiLoc_Button_Reset.Text = "Reset";
@@ -583,9 +637,9 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             // 
             AdvancedInventory_Multi_Button_Normal.AutoSize = true;
             AdvancedInventory_Multi_Button_Normal.ForeColor = Color.DarkRed;
-            AdvancedInventory_Multi_Button_Normal.Location = new Point(285, 3);
+            AdvancedInventory_Multi_Button_Normal.Location = new Point(402, 3);
             AdvancedInventory_Multi_Button_Normal.Name = "AdvancedInventory_Multi_Button_Normal";
-            AdvancedInventory_Multi_Button_Normal.Size = new Size(99, 25);
+            AdvancedInventory_Multi_Button_Normal.Size = new Size(100, 25);
             AdvancedInventory_Multi_Button_Normal.TabIndex = 15;
             AdvancedInventory_Multi_Button_Normal.TabStop = false;
             AdvancedInventory_Multi_Button_Normal.Text = "Back to Normal";
@@ -597,17 +651,18 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             panel1.Dock = DockStyle.Fill;
             panel1.Location = new Point(3, 3);
             panel1.Name = "panel1";
-            panel1.Size = new Size(381, 266);
+            panel1.Size = new Size(499, 266);
             panel1.TabIndex = 1;
             // 
             // AdvancedInventory_MultiLoc_ListView_Preview
             // 
+            AdvancedInventory_MultiLoc_ListView_Preview.Alignment = ListViewAlignment.SnapToGrid;
             AdvancedInventory_MultiLoc_ListView_Preview.Dock = DockStyle.Fill;
             AdvancedInventory_MultiLoc_ListView_Preview.FullRowSelect = true;
             AdvancedInventory_MultiLoc_ListView_Preview.GridLines = true;
             AdvancedInventory_MultiLoc_ListView_Preview.Location = new Point(0, 0);
             AdvancedInventory_MultiLoc_ListView_Preview.Name = "AdvancedInventory_MultiLoc_ListView_Preview";
-            AdvancedInventory_MultiLoc_ListView_Preview.Size = new Size(381, 266);
+            AdvancedInventory_MultiLoc_ListView_Preview.Size = new Size(499, 266);
             AdvancedInventory_MultiLoc_ListView_Preview.TabIndex = 0;
             AdvancedInventory_MultiLoc_ListView_Preview.UseCompatibleStateImageBehavior = false;
             AdvancedInventory_MultiLoc_ListView_Preview.View = View.Details;
@@ -615,130 +670,134 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             // AdvancedInventory_MultiLoc_GroupBox_Item
             // 
             AdvancedInventory_MultiLoc_GroupBox_Item.AutoSize = true;
-            AdvancedInventory_MultiLoc_GroupBox_Item.Controls.Add(tableLayoutPanel1);
+            AdvancedInventory_MultiLoc_GroupBox_Item.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            AdvancedInventory_MultiLoc_GroupBox_Item.Controls.Add(AdvancedInventory_Multi_TableLayout_Left);
             AdvancedInventory_MultiLoc_GroupBox_Item.Dock = DockStyle.Fill;
             AdvancedInventory_MultiLoc_GroupBox_Item.Location = new Point(0, 0);
             AdvancedInventory_MultiLoc_GroupBox_Item.Margin = new Padding(0);
             AdvancedInventory_MultiLoc_GroupBox_Item.Name = "AdvancedInventory_MultiLoc_GroupBox_Item";
-            AdvancedInventory_MultiLoc_GroupBox_Item.Size = new Size(393, 325);
+            AdvancedInventory_MultiLoc_GroupBox_Item.Size = new Size(275, 325);
             AdvancedInventory_MultiLoc_GroupBox_Item.TabIndex = 0;
             AdvancedInventory_MultiLoc_GroupBox_Item.TabStop = false;
             AdvancedInventory_MultiLoc_GroupBox_Item.Text = "Item Entry";
             // 
-            // Control_Shortcuts_TableLayout_Main
-            // 
-            tableLayoutPanel1.AutoSize = true;
-            tableLayoutPanel1.ColumnCount = 1;
-            tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
-            tableLayoutPanel1.Controls.Add(panel2, 0, 1);
-            tableLayoutPanel1.Controls.Add(AdvancedInventory_Multi_TableLayout_Left, 0, 0);
-            tableLayoutPanel1.Dock = DockStyle.Fill;
-            tableLayoutPanel1.Location = new Point(3, 19);
-            tableLayoutPanel1.Name = "Control_Shortcuts_TableLayout_Main";
-            tableLayoutPanel1.RowCount = 2;
-            tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
-            tableLayoutPanel1.RowStyles.Add(new RowStyle());
-            tableLayoutPanel1.Size = new Size(387, 303);
-            tableLayoutPanel1.TabIndex = 1;
-            // 
-            // panel2
-            // 
-            panel2.AutoSize = true;
-            panel2.Controls.Add(AdvancedInventory_MultiLoc_Button_AddLoc);
-            panel2.Dock = DockStyle.Fill;
-            panel2.Location = new Point(3, 275);
-            panel2.Name = "panel2";
-            panel2.Size = new Size(381, 25);
-            panel2.TabIndex = 0;
-            // 
-            // AdvancedInventory_MultiLoc_Button_AddLoc
-            // 
-            AdvancedInventory_MultiLoc_Button_AddLoc.AutoSize = true;
-            AdvancedInventory_MultiLoc_Button_AddLoc.Dock = DockStyle.Fill;
-            AdvancedInventory_MultiLoc_Button_AddLoc.Location = new Point(0, 0);
-            AdvancedInventory_MultiLoc_Button_AddLoc.Name = "AdvancedInventory_MultiLoc_Button_AddLoc";
-            AdvancedInventory_MultiLoc_Button_AddLoc.Size = new Size(381, 25);
-            AdvancedInventory_MultiLoc_Button_AddLoc.TabIndex = 6;
-            AdvancedInventory_MultiLoc_Button_AddLoc.Text = "Add Location";
-            AdvancedInventory_MultiLoc_Button_AddLoc.Click += AdvancedInventory_MultiLoc_Button_AddLoc_Click;
-            // 
             // AdvancedInventory_Multi_TableLayout_Left
             // 
-            AdvancedInventory_Multi_TableLayout_Left.ColumnCount = 2;
+            AdvancedInventory_Multi_TableLayout_Left.AutoSize = true;
+            AdvancedInventory_Multi_TableLayout_Left.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            AdvancedInventory_Multi_TableLayout_Left.ColumnCount = 3;
             AdvancedInventory_Multi_TableLayout_Left.ColumnStyles.Add(new ColumnStyle());
             AdvancedInventory_Multi_TableLayout_Left.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
+            AdvancedInventory_Multi_TableLayout_Left.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 30F));
+            AdvancedInventory_Multi_TableLayout_Left.Controls.Add(AdvancedInventory_MultiLoc_Button_LocationF4, 2, 3);
+            AdvancedInventory_Multi_TableLayout_Left.Controls.Add(AdvancedInventory_MultiLoc_Button_OperationF4, 2, 1);
+            AdvancedInventory_Multi_TableLayout_Left.Controls.Add(AdvancedInventory_MultiLoc_Button_AddLoc, 0, 6);
             AdvancedInventory_Multi_TableLayout_Left.Controls.Add(AdvancedInventory_MultiLoc_Label_Part, 0, 0);
-            AdvancedInventory_Multi_TableLayout_Left.Controls.Add(AdvancedInventory_MultiLoc_ComboBox_Part, 1, 0);
+            AdvancedInventory_Multi_TableLayout_Left.Controls.Add(AdvancedInventory_MultiLoc_TextBox_Part, 1, 0);
             AdvancedInventory_Multi_TableLayout_Left.Controls.Add(AdvancedInventory_MultiLoc_Label_Op, 0, 1);
-            AdvancedInventory_Multi_TableLayout_Left.Controls.Add(AdvancedInventory_MultiLoc_ComboBox_Op, 1, 1);
+            AdvancedInventory_Multi_TableLayout_Left.Controls.Add(AdvancedInventory_MultiLoc_TextBox_Op, 1, 1);
             AdvancedInventory_Multi_TableLayout_Left.Controls.Add(AdvancedInventory_MultiLoc_Label_Qty, 0, 2);
             AdvancedInventory_Multi_TableLayout_Left.Controls.Add(AdvancedInventory_MultiLoc_Label_Notes, 0, 4);
             AdvancedInventory_Multi_TableLayout_Left.Controls.Add(AdvancedInventory_MultiLoc_TextBox_Qty, 1, 2);
             AdvancedInventory_Multi_TableLayout_Left.Controls.Add(AdvancedInventory_MultiLoc_Label_Loc, 0, 3);
-            AdvancedInventory_Multi_TableLayout_Left.Controls.Add(AdvancedInventory_MultiLoc_ComboBox_Loc, 1, 3);
+            AdvancedInventory_Multi_TableLayout_Left.Controls.Add(AdvancedInventory_MultiLoc_TextBox_Loc, 1, 3);
             AdvancedInventory_Multi_TableLayout_Left.Controls.Add(panel3, 1, 4);
+            AdvancedInventory_Multi_TableLayout_Left.Controls.Add(AdvancedInventory_MultiLoc_Button_PartF4, 2, 0);
             AdvancedInventory_Multi_TableLayout_Left.Dock = DockStyle.Fill;
-            AdvancedInventory_Multi_TableLayout_Left.Location = new Point(3, 3);
+            AdvancedInventory_Multi_TableLayout_Left.Location = new Point(3, 19);
             AdvancedInventory_Multi_TableLayout_Left.Name = "AdvancedInventory_Multi_TableLayout_Left";
-            AdvancedInventory_Multi_TableLayout_Left.RowCount = 6;
+            AdvancedInventory_Multi_TableLayout_Left.RowCount = 7;
             AdvancedInventory_Multi_TableLayout_Left.RowStyles.Add(new RowStyle());
             AdvancedInventory_Multi_TableLayout_Left.RowStyles.Add(new RowStyle());
             AdvancedInventory_Multi_TableLayout_Left.RowStyles.Add(new RowStyle());
             AdvancedInventory_Multi_TableLayout_Left.RowStyles.Add(new RowStyle());
             AdvancedInventory_Multi_TableLayout_Left.RowStyles.Add(new RowStyle());
             AdvancedInventory_Multi_TableLayout_Left.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
-            AdvancedInventory_Multi_TableLayout_Left.Size = new Size(381, 266);
-            AdvancedInventory_Multi_TableLayout_Left.TabIndex = 0;
+            AdvancedInventory_Multi_TableLayout_Left.RowStyles.Add(new RowStyle());
+            AdvancedInventory_Multi_TableLayout_Left.Size = new Size(269, 303);
+            AdvancedInventory_Multi_TableLayout_Left.TabIndex = 1;
+            // 
+            // AdvancedInventory_MultiLoc_Button_LocationF4
+            // 
+            AdvancedInventory_MultiLoc_Button_LocationF4.Location = new Point(242, 90);
+            AdvancedInventory_MultiLoc_Button_LocationF4.Name = "AdvancedInventory_MultiLoc_Button_LocationF4";
+            AdvancedInventory_MultiLoc_Button_LocationF4.Size = new Size(23, 23);
+            AdvancedInventory_MultiLoc_Button_LocationF4.TabIndex = 13;
+            AdvancedInventory_MultiLoc_Button_LocationF4.Text = "🔎";
+            AdvancedInventory_MultiLoc_Button_LocationF4.UseVisualStyleBackColor = true;
+            // 
+            // AdvancedInventory_MultiLoc_Button_OperationF4
+            // 
+            AdvancedInventory_MultiLoc_Button_OperationF4.Location = new Point(242, 32);
+            AdvancedInventory_MultiLoc_Button_OperationF4.Name = "AdvancedInventory_MultiLoc_Button_OperationF4";
+            AdvancedInventory_MultiLoc_Button_OperationF4.Size = new Size(23, 23);
+            AdvancedInventory_MultiLoc_Button_OperationF4.TabIndex = 11;
+            AdvancedInventory_MultiLoc_Button_OperationF4.Text = "🔎";
+            AdvancedInventory_MultiLoc_Button_OperationF4.UseVisualStyleBackColor = true;
+            // 
+            // AdvancedInventory_MultiLoc_Button_AddLoc
+            // 
+            AdvancedInventory_MultiLoc_Button_AddLoc.AutoSize = true;
+            AdvancedInventory_MultiLoc_Button_AddLoc.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            AdvancedInventory_Multi_TableLayout_Left.SetColumnSpan(AdvancedInventory_MultiLoc_Button_AddLoc, 3);
+            AdvancedInventory_MultiLoc_Button_AddLoc.Dock = DockStyle.Fill;
+            AdvancedInventory_MultiLoc_Button_AddLoc.Location = new Point(3, 275);
+            AdvancedInventory_MultiLoc_Button_AddLoc.Name = "AdvancedInventory_MultiLoc_Button_AddLoc";
+            AdvancedInventory_MultiLoc_Button_AddLoc.Size = new Size(263, 25);
+            AdvancedInventory_MultiLoc_Button_AddLoc.TabIndex = 6;
+            AdvancedInventory_MultiLoc_Button_AddLoc.Text = "Add Location";
+            AdvancedInventory_MultiLoc_Button_AddLoc.Click += AdvancedInventory_MultiLoc_Button_AddLoc_Click;
             // 
             // AdvancedInventory_MultiLoc_Label_Part
             // 
             AdvancedInventory_MultiLoc_Label_Part.AutoSize = true;
             AdvancedInventory_MultiLoc_Label_Part.Dock = DockStyle.Fill;
-            AdvancedInventory_MultiLoc_Label_Part.Location = new Point(3, 0);
+            AdvancedInventory_MultiLoc_Label_Part.Location = new Point(3, 3);
+            AdvancedInventory_MultiLoc_Label_Part.Margin = new Padding(3);
             AdvancedInventory_MultiLoc_Label_Part.Name = "AdvancedInventory_MultiLoc_Label_Part";
-            AdvancedInventory_MultiLoc_Label_Part.Size = new Size(56, 29);
+            AdvancedInventory_MultiLoc_Label_Part.Size = new Size(56, 23);
             AdvancedInventory_MultiLoc_Label_Part.TabIndex = 0;
             AdvancedInventory_MultiLoc_Label_Part.Text = "Part:";
             AdvancedInventory_MultiLoc_Label_Part.TextAlign = ContentAlignment.MiddleRight;
             // 
-            // AdvancedInventory_MultiLoc_ComboBox_Part
+            // AdvancedInventory_MultiLoc_TextBox_Part
             // 
-            AdvancedInventory_MultiLoc_ComboBox_Part.AutoCompleteMode = AutoCompleteMode.SuggestAppend;
-            AdvancedInventory_MultiLoc_ComboBox_Part.AutoCompleteSource = AutoCompleteSource.ListItems;
-            AdvancedInventory_MultiLoc_ComboBox_Part.Dock = DockStyle.Fill;
-            AdvancedInventory_MultiLoc_ComboBox_Part.Location = new Point(65, 3);
-            AdvancedInventory_MultiLoc_ComboBox_Part.Name = "AdvancedInventory_MultiLoc_ComboBox_Part";
-            AdvancedInventory_MultiLoc_ComboBox_Part.Size = new Size(313, 23);
-            AdvancedInventory_MultiLoc_ComboBox_Part.TabIndex = 1;
+            AdvancedInventory_MultiLoc_TextBox_Part.Dock = DockStyle.Fill;
+            AdvancedInventory_MultiLoc_TextBox_Part.Location = new Point(65, 3);
+            AdvancedInventory_MultiLoc_TextBox_Part.Name = "AdvancedInventory_MultiLoc_TextBox_Part";
+            AdvancedInventory_MultiLoc_TextBox_Part.PlaceholderText = "Enter Part Number";
+            AdvancedInventory_MultiLoc_TextBox_Part.Size = new Size(171, 23);
+            AdvancedInventory_MultiLoc_TextBox_Part.TabIndex = 1;
             // 
             // AdvancedInventory_MultiLoc_Label_Op
             // 
             AdvancedInventory_MultiLoc_Label_Op.AutoSize = true;
             AdvancedInventory_MultiLoc_Label_Op.Dock = DockStyle.Fill;
-            AdvancedInventory_MultiLoc_Label_Op.Location = new Point(3, 29);
+            AdvancedInventory_MultiLoc_Label_Op.Location = new Point(3, 32);
+            AdvancedInventory_MultiLoc_Label_Op.Margin = new Padding(3);
             AdvancedInventory_MultiLoc_Label_Op.Name = "AdvancedInventory_MultiLoc_Label_Op";
-            AdvancedInventory_MultiLoc_Label_Op.Size = new Size(56, 29);
+            AdvancedInventory_MultiLoc_Label_Op.Size = new Size(56, 23);
             AdvancedInventory_MultiLoc_Label_Op.TabIndex = 2;
             AdvancedInventory_MultiLoc_Label_Op.Text = "Op:";
             AdvancedInventory_MultiLoc_Label_Op.TextAlign = ContentAlignment.MiddleRight;
             // 
-            // AdvancedInventory_MultiLoc_ComboBox_Op
+            // AdvancedInventory_MultiLoc_TextBox_Op
             // 
-            AdvancedInventory_MultiLoc_ComboBox_Op.AutoCompleteMode = AutoCompleteMode.SuggestAppend;
-            AdvancedInventory_MultiLoc_ComboBox_Op.AutoCompleteSource = AutoCompleteSource.ListItems;
-            AdvancedInventory_MultiLoc_ComboBox_Op.Dock = DockStyle.Fill;
-            AdvancedInventory_MultiLoc_ComboBox_Op.Location = new Point(65, 32);
-            AdvancedInventory_MultiLoc_ComboBox_Op.Name = "AdvancedInventory_MultiLoc_ComboBox_Op";
-            AdvancedInventory_MultiLoc_ComboBox_Op.Size = new Size(313, 23);
-            AdvancedInventory_MultiLoc_ComboBox_Op.TabIndex = 2;
+            AdvancedInventory_MultiLoc_TextBox_Op.Dock = DockStyle.Fill;
+            AdvancedInventory_MultiLoc_TextBox_Op.Location = new Point(65, 32);
+            AdvancedInventory_MultiLoc_TextBox_Op.Name = "AdvancedInventory_MultiLoc_TextBox_Op";
+            AdvancedInventory_MultiLoc_TextBox_Op.PlaceholderText = "Enter Operation";
+            AdvancedInventory_MultiLoc_TextBox_Op.Size = new Size(171, 23);
+            AdvancedInventory_MultiLoc_TextBox_Op.TabIndex = 2;
             // 
             // AdvancedInventory_MultiLoc_Label_Qty
             // 
             AdvancedInventory_MultiLoc_Label_Qty.AutoSize = true;
             AdvancedInventory_MultiLoc_Label_Qty.Dock = DockStyle.Fill;
-            AdvancedInventory_MultiLoc_Label_Qty.Location = new Point(3, 58);
+            AdvancedInventory_MultiLoc_Label_Qty.Location = new Point(3, 61);
+            AdvancedInventory_MultiLoc_Label_Qty.Margin = new Padding(3);
             AdvancedInventory_MultiLoc_Label_Qty.Name = "AdvancedInventory_MultiLoc_Label_Qty";
-            AdvancedInventory_MultiLoc_Label_Qty.Size = new Size(56, 29);
+            AdvancedInventory_MultiLoc_Label_Qty.Size = new Size(56, 23);
             AdvancedInventory_MultiLoc_Label_Qty.TabIndex = 4;
             AdvancedInventory_MultiLoc_Label_Qty.Text = "Quantity:";
             AdvancedInventory_MultiLoc_Label_Qty.TextAlign = ContentAlignment.MiddleRight;
@@ -746,53 +805,56 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             // AdvancedInventory_MultiLoc_Label_Notes
             // 
             AdvancedInventory_MultiLoc_Label_Notes.AutoSize = true;
-            AdvancedInventory_Multi_TableLayout_Left.SetColumnSpan(AdvancedInventory_MultiLoc_Label_Notes, 2);
+            AdvancedInventory_Multi_TableLayout_Left.SetColumnSpan(AdvancedInventory_MultiLoc_Label_Notes, 3);
             AdvancedInventory_MultiLoc_Label_Notes.Dock = DockStyle.Fill;
-            AdvancedInventory_MultiLoc_Label_Notes.Location = new Point(3, 116);
+            AdvancedInventory_MultiLoc_Label_Notes.Location = new Point(3, 119);
+            AdvancedInventory_MultiLoc_Label_Notes.Margin = new Padding(3);
             AdvancedInventory_MultiLoc_Label_Notes.Name = "AdvancedInventory_MultiLoc_Label_Notes";
-            AdvancedInventory_MultiLoc_Label_Notes.Size = new Size(375, 15);
+            AdvancedInventory_MultiLoc_Label_Notes.Size = new Size(263, 15);
             AdvancedInventory_MultiLoc_Label_Notes.TabIndex = 6;
             AdvancedInventory_MultiLoc_Label_Notes.Text = "Notes";
             AdvancedInventory_MultiLoc_Label_Notes.TextAlign = ContentAlignment.BottomCenter;
             // 
             // AdvancedInventory_MultiLoc_TextBox_Qty
             // 
+            AdvancedInventory_Multi_TableLayout_Left.SetColumnSpan(AdvancedInventory_MultiLoc_TextBox_Qty, 2);
             AdvancedInventory_MultiLoc_TextBox_Qty.Dock = DockStyle.Fill;
             AdvancedInventory_MultiLoc_TextBox_Qty.Location = new Point(65, 61);
             AdvancedInventory_MultiLoc_TextBox_Qty.Name = "AdvancedInventory_MultiLoc_TextBox_Qty";
-            AdvancedInventory_MultiLoc_TextBox_Qty.Size = new Size(313, 23);
+            AdvancedInventory_MultiLoc_TextBox_Qty.PlaceholderText = "Enter Quantity";
+            AdvancedInventory_MultiLoc_TextBox_Qty.Size = new Size(201, 23);
             AdvancedInventory_MultiLoc_TextBox_Qty.TabIndex = 3;
             // 
             // AdvancedInventory_MultiLoc_Label_Loc
             // 
             AdvancedInventory_MultiLoc_Label_Loc.AutoSize = true;
             AdvancedInventory_MultiLoc_Label_Loc.Dock = DockStyle.Fill;
-            AdvancedInventory_MultiLoc_Label_Loc.Location = new Point(3, 87);
+            AdvancedInventory_MultiLoc_Label_Loc.Location = new Point(3, 90);
+            AdvancedInventory_MultiLoc_Label_Loc.Margin = new Padding(3);
             AdvancedInventory_MultiLoc_Label_Loc.Name = "AdvancedInventory_MultiLoc_Label_Loc";
-            AdvancedInventory_MultiLoc_Label_Loc.Size = new Size(56, 29);
+            AdvancedInventory_MultiLoc_Label_Loc.Size = new Size(56, 23);
             AdvancedInventory_MultiLoc_Label_Loc.TabIndex = 8;
             AdvancedInventory_MultiLoc_Label_Loc.Text = "Location:";
             AdvancedInventory_MultiLoc_Label_Loc.TextAlign = ContentAlignment.MiddleRight;
             // 
-            // AdvancedInventory_MultiLoc_ComboBox_Loc
+            // AdvancedInventory_MultiLoc_TextBox_Loc
             // 
-            AdvancedInventory_MultiLoc_ComboBox_Loc.AutoCompleteMode = AutoCompleteMode.SuggestAppend;
-            AdvancedInventory_MultiLoc_ComboBox_Loc.AutoCompleteSource = AutoCompleteSource.ListItems;
-            AdvancedInventory_MultiLoc_ComboBox_Loc.Dock = DockStyle.Fill;
-            AdvancedInventory_MultiLoc_ComboBox_Loc.Location = new Point(65, 90);
-            AdvancedInventory_MultiLoc_ComboBox_Loc.Name = "AdvancedInventory_MultiLoc_ComboBox_Loc";
-            AdvancedInventory_MultiLoc_ComboBox_Loc.Size = new Size(313, 23);
-            AdvancedInventory_MultiLoc_ComboBox_Loc.TabIndex = 4;
+            AdvancedInventory_MultiLoc_TextBox_Loc.Dock = DockStyle.Fill;
+            AdvancedInventory_MultiLoc_TextBox_Loc.Location = new Point(65, 90);
+            AdvancedInventory_MultiLoc_TextBox_Loc.Name = "AdvancedInventory_MultiLoc_TextBox_Loc";
+            AdvancedInventory_MultiLoc_TextBox_Loc.PlaceholderText = "Enter Location";
+            AdvancedInventory_MultiLoc_TextBox_Loc.Size = new Size(171, 23);
+            AdvancedInventory_MultiLoc_TextBox_Loc.TabIndex = 4;
             // 
             // panel3
             // 
             panel3.AutoSize = true;
-            AdvancedInventory_Multi_TableLayout_Left.SetColumnSpan(panel3, 2);
+            AdvancedInventory_Multi_TableLayout_Left.SetColumnSpan(panel3, 3);
             panel3.Controls.Add(AdvancedInventory_MultiLoc_RichTextBox_Notes);
             panel3.Dock = DockStyle.Fill;
-            panel3.Location = new Point(3, 134);
+            panel3.Location = new Point(3, 140);
             panel3.Name = "panel3";
-            panel3.Size = new Size(375, 129);
+            panel3.Size = new Size(263, 129);
             panel3.TabIndex = 9;
             // 
             // AdvancedInventory_MultiLoc_RichTextBox_Notes
@@ -800,9 +862,18 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             AdvancedInventory_MultiLoc_RichTextBox_Notes.Dock = DockStyle.Fill;
             AdvancedInventory_MultiLoc_RichTextBox_Notes.Location = new Point(0, 0);
             AdvancedInventory_MultiLoc_RichTextBox_Notes.Name = "AdvancedInventory_MultiLoc_RichTextBox_Notes";
-            AdvancedInventory_MultiLoc_RichTextBox_Notes.Size = new Size(375, 129);
+            AdvancedInventory_MultiLoc_RichTextBox_Notes.Size = new Size(263, 129);
             AdvancedInventory_MultiLoc_RichTextBox_Notes.TabIndex = 5;
             AdvancedInventory_MultiLoc_RichTextBox_Notes.Text = "";
+            // 
+            // AdvancedInventory_MultiLoc_Button_PartF4
+            // 
+            AdvancedInventory_MultiLoc_Button_PartF4.Location = new Point(242, 3);
+            AdvancedInventory_MultiLoc_Button_PartF4.Name = "AdvancedInventory_MultiLoc_Button_PartF4";
+            AdvancedInventory_MultiLoc_Button_PartF4.Size = new Size(23, 23);
+            AdvancedInventory_MultiLoc_Button_PartF4.TabIndex = 10;
+            AdvancedInventory_MultiLoc_Button_PartF4.Text = "🔎";
+            AdvancedInventory_MultiLoc_Button_PartF4.UseVisualStyleBackColor = true;
             // 
             // AdvancedInventory_TabControl_Import
             // 
@@ -816,6 +887,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             // AdvancedInventory_Import_TableLayout
             // 
             AdvancedInventory_Import_TableLayout.AutoSize = true;
+            AdvancedInventory_Import_TableLayout.AutoSizeMode = AutoSizeMode.GrowAndShrink;
             AdvancedInventory_Import_TableLayout.ColumnCount = 1;
             AdvancedInventory_Import_TableLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
             AdvancedInventory_Import_TableLayout.Controls.Add(AdvancedInventory_Import_Panel_Middle, 0, 1);
@@ -825,15 +897,16 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             AdvancedInventory_Import_TableLayout.Location = new Point(0, 0);
             AdvancedInventory_Import_TableLayout.Name = "AdvancedInventory_Import_TableLayout";
             AdvancedInventory_Import_TableLayout.RowCount = 3;
-            AdvancedInventory_Import_TableLayout.RowStyles.Add(new RowStyle(SizeType.Absolute, 44F));
+            AdvancedInventory_Import_TableLayout.RowStyles.Add(new RowStyle());
             AdvancedInventory_Import_TableLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
-            AdvancedInventory_Import_TableLayout.RowStyles.Add(new RowStyle(SizeType.Absolute, 44F));
+            AdvancedInventory_Import_TableLayout.RowStyles.Add(new RowStyle());
             AdvancedInventory_Import_TableLayout.Size = new Size(786, 325);
             AdvancedInventory_Import_TableLayout.TabIndex = 6;
-            AdvancedInventory_Import_TableLayout.Visible = false;
             // 
             // AdvancedInventory_Import_Panel_Middle
             // 
+            AdvancedInventory_Import_Panel_Middle.AutoSize = true;
+            AdvancedInventory_Import_Panel_Middle.AutoSizeMode = AutoSizeMode.GrowAndShrink;
             AdvancedInventory_Import_Panel_Middle.Controls.Add(AdvancedInventory_Import_DataGridView);
             AdvancedInventory_Import_Panel_Middle.Dock = DockStyle.Fill;
             AdvancedInventory_Import_Panel_Middle.Location = new Point(3, 47);
@@ -852,29 +925,29 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             // AdvancedInventory_Import_TableLayout_Bottom
             // 
             AdvancedInventory_Import_TableLayout_Bottom.AutoSize = true;
-            AdvancedInventory_Import_TableLayout_Bottom.ColumnCount = 3;
+            AdvancedInventory_Import_TableLayout_Bottom.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            AdvancedInventory_Import_TableLayout_Bottom.ColumnCount = 4;
             AdvancedInventory_Import_TableLayout_Bottom.ColumnStyles.Add(new ColumnStyle());
             AdvancedInventory_Import_TableLayout_Bottom.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
             AdvancedInventory_Import_TableLayout_Bottom.ColumnStyles.Add(new ColumnStyle());
-            AdvancedInventory_Import_TableLayout_Bottom.Controls.Add(AdvancedInventory_Import_Button_Normal, 2, 0);
+            AdvancedInventory_Import_TableLayout_Bottom.ColumnStyles.Add(new ColumnStyle());
             AdvancedInventory_Import_TableLayout_Bottom.Controls.Add(AdvancedInventory_Import_Button_Save, 0, 0);
+            AdvancedInventory_Import_TableLayout_Bottom.Controls.Add(AdvancedInventory_Import_Button_Normal, 3, 0);
+            AdvancedInventory_Import_TableLayout_Bottom.Controls.Add(AdvancedInventory_Import_Button_CleanSheet, 2, 0);
             AdvancedInventory_Import_TableLayout_Bottom.Dock = DockStyle.Fill;
             AdvancedInventory_Import_TableLayout_Bottom.Location = new Point(3, 284);
             AdvancedInventory_Import_TableLayout_Bottom.Name = "AdvancedInventory_Import_TableLayout_Bottom";
             AdvancedInventory_Import_TableLayout_Bottom.RowCount = 1;
-            AdvancedInventory_Import_TableLayout_Bottom.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
-            AdvancedInventory_Import_TableLayout_Bottom.RowStyles.Add(new RowStyle(SizeType.Absolute, 20F));
+            AdvancedInventory_Import_TableLayout_Bottom.RowStyles.Add(new RowStyle());
             AdvancedInventory_Import_TableLayout_Bottom.Size = new Size(780, 38);
             AdvancedInventory_Import_TableLayout_Bottom.TabIndex = 3;
             // 
             // AdvancedInventory_Import_Button_Normal
             // 
-            AdvancedInventory_Import_Button_Normal.AutoSize = true;
-            AdvancedInventory_Import_Button_Normal.Dock = DockStyle.Fill;
-            AdvancedInventory_Import_Button_Normal.ForeColor = Color.DarkRed;
-            AdvancedInventory_Import_Button_Normal.Location = new Point(656, 3);
+            AdvancedInventory_Import_Button_Normal.ForeColor = SystemColors.ControlText;
+            AdvancedInventory_Import_Button_Normal.Location = new Point(657, 3);
             AdvancedInventory_Import_Button_Normal.Name = "AdvancedInventory_Import_Button_Normal";
-            AdvancedInventory_Import_Button_Normal.Size = new Size(121, 32);
+            AdvancedInventory_Import_Button_Normal.Size = new Size(120, 32);
             AdvancedInventory_Import_Button_Normal.TabIndex = 15;
             AdvancedInventory_Import_Button_Normal.TabStop = false;
             AdvancedInventory_Import_Button_Normal.Text = "Back to Normal";
@@ -882,11 +955,9 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             // 
             // AdvancedInventory_Import_Button_Save
             // 
-            AdvancedInventory_Import_Button_Save.AutoSize = true;
-            AdvancedInventory_Import_Button_Save.Dock = DockStyle.Fill;
             AdvancedInventory_Import_Button_Save.Location = new Point(3, 3);
             AdvancedInventory_Import_Button_Save.Name = "AdvancedInventory_Import_Button_Save";
-            AdvancedInventory_Import_Button_Save.Size = new Size(90, 32);
+            AdvancedInventory_Import_Button_Save.Size = new Size(120, 32);
             AdvancedInventory_Import_Button_Save.TabIndex = 4;
             AdvancedInventory_Import_Button_Save.Text = "Save";
             AdvancedInventory_Import_Button_Save.Click += AdvancedInventory_Import_Button_Save_Click;
@@ -894,6 +965,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             // AdvancedInventory_Import_TableLayout_Top
             // 
             AdvancedInventory_Import_TableLayout_Top.AutoSize = true;
+            AdvancedInventory_Import_TableLayout_Top.AutoSizeMode = AutoSizeMode.GrowAndShrink;
             AdvancedInventory_Import_TableLayout_Top.ColumnCount = 3;
             AdvancedInventory_Import_TableLayout_Top.ColumnStyles.Add(new ColumnStyle());
             AdvancedInventory_Import_TableLayout_Top.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
@@ -910,22 +982,18 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             // 
             // AdvancedInventory_Import_Button_OpenExcel
             // 
-            AdvancedInventory_Import_Button_OpenExcel.AutoSize = true;
-            AdvancedInventory_Import_Button_OpenExcel.Dock = DockStyle.Fill;
-            AdvancedInventory_Import_Button_OpenExcel.Location = new Point(687, 3);
+            AdvancedInventory_Import_Button_OpenExcel.Location = new Point(657, 3);
             AdvancedInventory_Import_Button_OpenExcel.Name = "AdvancedInventory_Import_Button_OpenExcel";
-            AdvancedInventory_Import_Button_OpenExcel.Size = new Size(90, 32);
+            AdvancedInventory_Import_Button_OpenExcel.Size = new Size(120, 32);
             AdvancedInventory_Import_Button_OpenExcel.TabIndex = 0;
             AdvancedInventory_Import_Button_OpenExcel.Text = "Open Excel";
             AdvancedInventory_Import_Button_OpenExcel.Click += AdvancedInventory_Import_Button_OpenExcel_Click;
             // 
             // AdvancedInventory_Import_Button_ImportExcel
             // 
-            AdvancedInventory_Import_Button_ImportExcel.AutoSize = true;
-            AdvancedInventory_Import_Button_ImportExcel.Dock = DockStyle.Fill;
             AdvancedInventory_Import_Button_ImportExcel.Location = new Point(3, 3);
             AdvancedInventory_Import_Button_ImportExcel.Name = "AdvancedInventory_Import_Button_ImportExcel";
-            AdvancedInventory_Import_Button_ImportExcel.Size = new Size(90, 32);
+            AdvancedInventory_Import_Button_ImportExcel.Size = new Size(120, 32);
             AdvancedInventory_Import_Button_ImportExcel.TabIndex = 1;
             AdvancedInventory_Import_Button_ImportExcel.Text = "Import Excel";
             AdvancedInventory_Import_Button_ImportExcel.Click += AdvancedInventory_Import_Button_ImportExcel_Click;
@@ -933,6 +1001,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             // AdvancedInventory_GroupBox_Main
             // 
             AdvancedInventory_GroupBox_Main.AutoSize = true;
+            AdvancedInventory_GroupBox_Main.AutoSizeMode = AutoSizeMode.GrowAndShrink;
             AdvancedInventory_GroupBox_Main.Controls.Add(AdvancedInventory_TabControl);
             AdvancedInventory_GroupBox_Main.Dock = DockStyle.Fill;
             AdvancedInventory_GroupBox_Main.Location = new Point(0, 0);
@@ -941,6 +1010,16 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             AdvancedInventory_GroupBox_Main.TabIndex = 2;
             AdvancedInventory_GroupBox_Main.TabStop = false;
             AdvancedInventory_GroupBox_Main.Text = "Advanced Inventory Entry";
+            // 
+            // AdvancedInventory_Import_Button_CleanSheet
+            // 
+            AdvancedInventory_Import_Button_CleanSheet.ForeColor = Color.DarkRed;
+            AdvancedInventory_Import_Button_CleanSheet.Location = new Point(531, 3);
+            AdvancedInventory_Import_Button_CleanSheet.Name = "AdvancedInventory_Import_Button_CleanSheet";
+            AdvancedInventory_Import_Button_CleanSheet.Size = new Size(120, 32);
+            AdvancedInventory_Import_Button_CleanSheet.TabIndex = 16;
+            AdvancedInventory_Import_Button_CleanSheet.TabStop = false;
+            AdvancedInventory_Import_Button_CleanSheet.Text = "Clean Excel File";
             // 
             // Control_AdvancedInventory
             // 
@@ -978,10 +1057,6 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             panel1.ResumeLayout(false);
             AdvancedInventory_MultiLoc_GroupBox_Item.ResumeLayout(false);
             AdvancedInventory_MultiLoc_GroupBox_Item.PerformLayout();
-            tableLayoutPanel1.ResumeLayout(false);
-            tableLayoutPanel1.PerformLayout();
-            panel2.ResumeLayout(false);
-            panel2.PerformLayout();
             AdvancedInventory_Multi_TableLayout_Left.ResumeLayout(false);
             AdvancedInventory_Multi_TableLayout_Left.PerformLayout();
             panel3.ResumeLayout(false);
@@ -992,9 +1067,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             AdvancedInventory_Import_Panel_Middle.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)AdvancedInventory_Import_DataGridView).EndInit();
             AdvancedInventory_Import_TableLayout_Bottom.ResumeLayout(false);
-            AdvancedInventory_Import_TableLayout_Bottom.PerformLayout();
             AdvancedInventory_Import_TableLayout_Top.ResumeLayout(false);
-            AdvancedInventory_Import_TableLayout_Top.PerformLayout();
             AdvancedInventory_GroupBox_Main.ResumeLayout(false);
             ResumeLayout(false);
             PerformLayout();
@@ -1016,17 +1089,32 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
         private TableLayoutPanel AdvancedInventory_Single_TableLayout_Left;
         private TableLayoutPanel AdvancedInventory_Single_TableLayout_Right;
         private TableLayoutPanel AdvancedInventory_Single_TableLayout_LowerRight;
-        private TableLayoutPanel AdvancedInventory_Multi_TableLayout_Left;
         private TableLayoutPanel AdvancedInventory_Multi_TableLayout_Right;
         private TableLayoutPanel AdvancedInventory_Multi_TableLayout_BottomRight;
         private TableLayoutPanel AdvancedInventory_Import_TableLayout_Bottom;
         private TableLayoutPanel AdvancedInventory_Import_TableLayout_Top;
         private Panel panel1;
-        private TableLayoutPanel tableLayoutPanel1;
-        private Panel panel2;
+        private Panel panel4;
+        private TableLayoutPanel AdvancedInventory_Multi_TableLayout_Left;
+        private Button AdvancedInventory_MultiLoc_Button_AddLoc;
+        private Label AdvancedInventory_MultiLoc_Label_Part;
+        private Shared.SuggestionTextBox AdvancedInventory_MultiLoc_TextBox_Part;
+        private Label AdvancedInventory_MultiLoc_Label_Op;
+        private Shared.SuggestionTextBox AdvancedInventory_MultiLoc_TextBox_Op;
+        private Label AdvancedInventory_MultiLoc_Label_Qty;
+        private Label AdvancedInventory_MultiLoc_Label_Notes;
+        private TextBox AdvancedInventory_MultiLoc_TextBox_Qty;
+        private Label AdvancedInventory_MultiLoc_Label_Loc;
+        private Shared.SuggestionTextBox AdvancedInventory_MultiLoc_TextBox_Loc;
         private Panel panel3;
         private RichTextBox AdvancedInventory_MultiLoc_RichTextBox_Notes;
-        private Panel panel4;
+        private Button AdvancedInventory_MultiLoc_Button_LocationF4;
+        private Button AdvancedInventory_MultiLoc_Button_OperationF4;
+        private Button AdvancedInventory_MultiLoc_Button_PartF4;
+        private Button AdvancedInventory_Single_Button_LocationF4;
+        private Button AdvancedInventory_Single_Button_OperationF4;
+        private Button AdvancedInventory_Single_Button_PartF4;
+        private Button AdvancedInventory_Import_Button_CleanSheet;
     }
 
         

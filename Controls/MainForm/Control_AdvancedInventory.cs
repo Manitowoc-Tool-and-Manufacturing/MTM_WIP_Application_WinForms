@@ -116,48 +116,47 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                 toolTip.SetToolTip(AdvancedInventory_Import_Button_Normal,
                     $"Shortcut: {Helper_UI_Shortcuts.ToShortcutString(Core_WipAppVariables.Shortcut_AdvInv_Import_Normal)}");
 
-                Helper_UI_ComboBoxes.ApplyStandardComboBoxProperties(AdvancedInventory_Single_ComboBox_Part);
-                Helper_UI_ComboBoxes.ApplyStandardComboBoxProperties(AdvancedInventory_Single_ComboBox_Op);
-                Helper_UI_ComboBoxes.ApplyStandardComboBoxProperties(AdvancedInventory_Single_ComboBox_Loc);
-                Helper_UI_ComboBoxes.ApplyStandardComboBoxProperties(AdvancedInventory_MultiLoc_ComboBox_Part);
-                Helper_UI_ComboBoxes.ApplyStandardComboBoxProperties(AdvancedInventory_MultiLoc_ComboBox_Op);
-                Helper_UI_ComboBoxes.ApplyStandardComboBoxProperties(AdvancedInventory_MultiLoc_ComboBox_Loc);
-
                 AdvancedInventory_Single_Button_Reset.TabStop = false;
                 AdvancedInventory_MultiLoc_Button_Reset.TabStop = false;
 
-                AdvancedInventory_Single_ComboBox_Part.ForeColor =
-                    Model_Application_Variables.UserUiColors.ComboBoxErrorForeColor ?? Color.Red;
-                AdvancedInventory_Single_ComboBox_Op.ForeColor =
-                    Model_Application_Variables.UserUiColors.ComboBoxErrorForeColor ?? Color.Red;
-                AdvancedInventory_Single_ComboBox_Loc.ForeColor =
-                    Model_Application_Variables.UserUiColors.ComboBoxErrorForeColor ?? Color.Red;
-                AdvancedInventory_MultiLoc_ComboBox_Part.ForeColor =
-                    Model_Application_Variables.UserUiColors.ComboBoxErrorForeColor ?? Color.Red;
-                AdvancedInventory_MultiLoc_ComboBox_Op.ForeColor =
-                    Model_Application_Variables.UserUiColors.ComboBoxErrorForeColor ?? Color.Red;
-                AdvancedInventory_MultiLoc_ComboBox_Loc.ForeColor =
-                    Model_Application_Variables.UserUiColors.ComboBoxErrorForeColor ?? Color.Red;
+                // Configure SuggestionTextBox controls for Single and Multi-Location tabs
+                ConfigureSuggestionTextBoxes();
 
                 WireUpEvents();
 
                 AdvancedInventory_MultiLoc_ListView_Preview.View = View.Details;
                 if (AdvancedInventory_MultiLoc_ListView_Preview.Columns.Count == 0)
                 {
-                    AdvancedInventory_MultiLoc_ListView_Preview.Columns.Add("Part", 80);
-                    AdvancedInventory_MultiLoc_ListView_Preview.Columns.Add("Operation", 80);
                     AdvancedInventory_MultiLoc_ListView_Preview.Columns.Add("Location", 150);
-                    AdvancedInventory_MultiLoc_ListView_Preview.Columns.Add("Quantity", 80);
+                    AdvancedInventory_MultiLoc_ListView_Preview.Columns.Add("Part ID", 150);
+                    AdvancedInventory_MultiLoc_ListView_Preview.Columns.Add("Quantity", 75);
                 }
-
-                AdvancedInventory_Single_ListView.View = View.Details;
-                if (AdvancedInventory_Single_ListView.Columns.Count == 0)
+                AdvancedInventory_MultiLoc_ListView_Preview.SizeChanged += (s, e) =>
                 {
-                    AdvancedInventory_Single_ListView.Columns.Add("Part", 80);
-                    AdvancedInventory_Single_ListView.Columns.Add("Operation", 80);
-                    AdvancedInventory_Single_ListView.Columns.Add("Location", 100);
-                    AdvancedInventory_Single_ListView.Columns.Add("Quantity", 80);
+                    int width = AdvancedInventory_MultiLoc_ListView_Preview.ClientSize.Width;
+                    AdvancedInventory_MultiLoc_ListView_Preview.Columns[0].Width = (int)(width * 0.30); // Location 40%
+                    AdvancedInventory_MultiLoc_ListView_Preview.Columns[1].Width = (int)(width * 0.40); // Part ID 40%
+                    AdvancedInventory_MultiLoc_ListView_Preview.Columns[2].Width = (int)(width * 0.30); // Quantity 20%
+                };
+
+                AdvancedInventory_Single_ListView_Preview.View = View.Details;
+                if (AdvancedInventory_Single_ListView_Preview.Columns.Count == 0)
+                {
+                    AdvancedInventory_Single_ListView_Preview.Columns.Add("Location", 150);
+                    AdvancedInventory_Single_ListView_Preview.Columns.Add("Part ID", 150);
+                    AdvancedInventory_Single_ListView_Preview.Columns.Add("Quantity", 75);
                 }
+                AdvancedInventory_Single_ListView_Preview.SizeChanged += (s, e) =>
+                {
+                    int width = AdvancedInventory_Single_ListView_Preview.ClientSize.Width;
+                    AdvancedInventory_Single_ListView_Preview.Columns[0].Width = (int)(width * 0.30); // Location 40%
+                    AdvancedInventory_Single_ListView_Preview.Columns[1].Width = (int)(width * 0.40); // Part ID 40%
+                    AdvancedInventory_Single_ListView_Preview.Columns[2].Width = (int)(width * 0.30); // Quantity 20%
+                };
+
+                // ListView KeyDown handlers for Delete key
+                AdvancedInventory_Single_ListView_Preview.KeyDown += AdvancedInventory_Single_ListView_KeyDown;
+                AdvancedInventory_MultiLoc_ListView_Preview.KeyDown += AdvancedInventory_MultiLoc_ListView_Preview_KeyDown;
 
                 if (AdvancedInventory_TabControl == null)
                 {
@@ -180,18 +179,18 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                 Enter += (s, e) =>
                 {
                     if (AdvancedInventory_TabControl.SelectedIndex == 0 &&
-                        AdvancedInventory_Single_ComboBox_Part.Visible &&
-                        AdvancedInventory_Single_ComboBox_Part.Enabled)
+                        AdvancedInventory_Single_TextBox_Part.Visible &&
+                        AdvancedInventory_Single_TextBox_Part.Enabled)
                     {
-                        AdvancedInventory_Single_ComboBox_Part.Focus();
-                        AdvancedInventory_Single_ComboBox_Part.SelectAll();
+                        AdvancedInventory_Single_TextBox_Part.Focus();
+                        AdvancedInventory_Single_TextBox_Part.SelectAll();
                     }
                     else if (AdvancedInventory_TabControl.SelectedIndex == 1 &&
-                             AdvancedInventory_MultiLoc_ComboBox_Part.Visible &&
-                             AdvancedInventory_MultiLoc_ComboBox_Part.Enabled)
+                             AdvancedInventory_MultiLoc_TextBox_Part.Visible &&
+                             AdvancedInventory_MultiLoc_TextBox_Part.Enabled)
                     {
-                        AdvancedInventory_MultiLoc_ComboBox_Part.Focus();
-                        AdvancedInventory_MultiLoc_ComboBox_Part.SelectAll();
+                        AdvancedInventory_MultiLoc_TextBox_Part.Focus();
+                        AdvancedInventory_MultiLoc_TextBox_Part.SelectAll();
                     }
                 };
                 Core_Themes.ApplyFocusHighlighting(this);
@@ -206,59 +205,56 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
 
         #endregion
 
-        #region Form Load
+        #region SuggestionTextBox Configuration
 
-        protected override async void OnLoad(EventArgs e)
+        /// <summary>
+        /// Configures SuggestionTextBox controls for Single Entry and Multi-Location tabs with appropriate data providers and F4 support.
+        /// </summary>
+        private void ConfigureSuggestionTextBoxes()
         {
-            base.OnLoad(e);
-            try
-            {
-                await LoadAllComboBoxesAsync();
-                AdvancedInventory_Single_ComboBox_Part.ForeColor =
-                    Model_Application_Variables.UserUiColors.ComboBoxErrorForeColor ?? Color.Red;
-                AdvancedInventory_Single_ComboBox_Op.ForeColor =
-                    Model_Application_Variables.UserUiColors.ComboBoxErrorForeColor ?? Color.Red;
-                AdvancedInventory_Single_ComboBox_Loc.ForeColor =
-                    Model_Application_Variables.UserUiColors.ComboBoxErrorForeColor ?? Color.Red;
-                AdvancedInventory_MultiLoc_ComboBox_Part.ForeColor =
-                    Model_Application_Variables.UserUiColors.ComboBoxErrorForeColor ?? Color.Red;
-                AdvancedInventory_MultiLoc_ComboBox_Op.ForeColor =
-                    Model_Application_Variables.UserUiColors.ComboBoxErrorForeColor ?? Color.Red;
-                AdvancedInventory_MultiLoc_ComboBox_Loc.ForeColor =
-                    Model_Application_Variables.UserUiColors.ComboBoxErrorForeColor ?? Color.Red;
-                AdvancedInventory_Single_ComboBox_Part.Focus();
-                Core_Themes.ApplyFocusHighlighting(this);
-            }
-            catch (Exception ex)
-            {
-                LoggingUtility.LogApplicationError(ex);
-                await Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex, callerName: "Control_AdvancedInventory.OnLoad");
-            }
-        }
+            // Single Entry tab
+            Helper_SuggestionTextBox.ConfigureForPartNumbers(
+                AdvancedInventory_Single_TextBox_Part,
+                Helper_SuggestionTextBox.GetCachedPartNumbersAsync,
+                enableF4: true);
 
-        #endregion
+            Helper_SuggestionTextBox.ConfigureForOperations(
+                AdvancedInventory_Single_TextBox_Op,
+                Helper_SuggestionTextBox.GetCachedOperationsAsync,
+                enableF4: true);
 
-        #region ComboBox Loading
+            Helper_SuggestionTextBox.ConfigureForLocations(
+                AdvancedInventory_Single_TextBox_Loc,
+                Helper_SuggestionTextBox.GetCachedLocationsAsync,
+                enableF4: true);
 
-        private async Task LoadAllComboBoxesAsync()
-        {
-            try
-            {
-                await Helper_UI_ComboBoxes.FillPartComboBoxesAsync(AdvancedInventory_Single_ComboBox_Part);
-                await Helper_UI_ComboBoxes.FillOperationComboBoxesAsync(AdvancedInventory_Single_ComboBox_Op);
-                await Helper_UI_ComboBoxes.FillLocationComboBoxesAsync(AdvancedInventory_Single_ComboBox_Loc);
-                await Helper_UI_ComboBoxes.FillPartComboBoxesAsync(AdvancedInventory_MultiLoc_ComboBox_Part);
-                await Helper_UI_ComboBoxes.FillOperationComboBoxesAsync(AdvancedInventory_MultiLoc_ComboBox_Op);
-                await Helper_UI_ComboBoxes.FillLocationComboBoxesAsync(AdvancedInventory_MultiLoc_ComboBox_Loc);
+            // Wire up SuggestionSelected event handlers for Single tab
+            AdvancedInventory_Single_TextBox_Part.SuggestionSelected += AdvancedInventory_Single_TextBox_Part_SuggestionSelected;
+            AdvancedInventory_Single_TextBox_Op.SuggestionSelected += AdvancedInventory_Single_TextBox_Op_SuggestionSelected;
+            AdvancedInventory_Single_TextBox_Loc.SuggestionSelected += AdvancedInventory_Single_TextBox_Loc_SuggestionSelected;
 
-                LoggingUtility.Log("Control_AdvancedInventory ComboBoxes loaded.");
-            }
-            catch (Exception ex)
-            {
-                LoggingUtility.LogApplicationError(ex);
-                await Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex,
-                    "Control_AdvancedInventory_LoadAllComboBoxesAsync");
-            }
+            // Multi-Location tab
+            Helper_SuggestionTextBox.ConfigureForPartNumbers(
+                AdvancedInventory_MultiLoc_TextBox_Part,
+                Helper_SuggestionTextBox.GetCachedPartNumbersAsync,
+                enableF4: true);
+
+            Helper_SuggestionTextBox.ConfigureForOperations(
+                AdvancedInventory_MultiLoc_TextBox_Op,
+                Helper_SuggestionTextBox.GetCachedOperationsAsync,
+                enableF4: true);
+
+            Helper_SuggestionTextBox.ConfigureForLocations(
+                AdvancedInventory_MultiLoc_TextBox_Loc,
+                Helper_SuggestionTextBox.GetCachedLocationsAsync,
+                enableF4: true);
+
+            // Wire up SuggestionSelected event handlers for Multi-Location tab
+            AdvancedInventory_MultiLoc_TextBox_Part.SuggestionSelected += AdvancedInventory_MultiLoc_TextBox_Part_SuggestionSelected;
+            AdvancedInventory_MultiLoc_TextBox_Op.SuggestionSelected += AdvancedInventory_MultiLoc_TextBox_Op_SuggestionSelected;
+            AdvancedInventory_MultiLoc_TextBox_Loc.SuggestionSelected += AdvancedInventory_MultiLoc_TextBox_Loc_SuggestionSelected;
+
+            LoggingUtility.Log("[Control_AdvancedInventory] SuggestionTextBox controls configured for Single Entry and Multi-Location tabs");
         }
 
         #endregion
@@ -269,94 +265,8 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
         {
             try
             {
-                AdvancedInventory_Single_ComboBox_Part.SelectedIndexChanged += (s, e) =>
-                {
-                    Helper_UI_ComboBoxes.ValidateComboBoxItem(AdvancedInventory_Single_ComboBox_Part,
-                        "Enter or Select Part Number");
-                    UpdateSingleSaveButtonState();
-                    LoggingUtility.Log("Single Part ComboBox selection changed.");
-                };
-                AdvancedInventory_Single_ComboBox_Part.Leave += (s, e) =>
-                {
-                    Helper_UI_ComboBoxes.ValidateComboBoxItem(AdvancedInventory_Single_ComboBox_Part,
-                        "Enter or Select Part Number");
-                    HandleAdvancedInventoryRedirect(AdvancedInventory_Single_ComboBox_Part);
-                };
-
-                AdvancedInventory_MultiLoc_ComboBox_Part.Leave += (s, e) =>
-                {
-                    Helper_UI_ComboBoxes.ValidateComboBoxItem(AdvancedInventory_MultiLoc_ComboBox_Part,
-                        "Enter or Select Part Number");
-                    HandleAdvancedInventoryRedirect(AdvancedInventory_MultiLoc_ComboBox_Part);
-                };
-
-
-
-                AdvancedInventory_Single_ComboBox_Op.SelectedIndexChanged += (s, e) =>
-                        /// <summary>
-                        /// Checks if the entered part requires color code and redirects to Inventory Tab if needed.
-                        /// </summary>
-                        /// <param name="comboBox">The ComboBox for PartID</param>
-
-                {
-                    Helper_UI_ComboBoxes.ValidateComboBoxItem(AdvancedInventory_Single_ComboBox_Op,
-                        "Enter or Select Operation");
-                    UpdateSingleSaveButtonState();
-                    LoggingUtility.Log("Single Op ComboBox selection changed.");
-                };
-                AdvancedInventory_Single_ComboBox_Op.Leave += (s, e) =>
-                {
-                    Helper_UI_ComboBoxes.ValidateComboBoxItem(AdvancedInventory_Single_ComboBox_Op,
-                        "Enter or Select Operation");
-                };
-
-                AdvancedInventory_Single_ComboBox_Loc.SelectedIndexChanged += (s, e) =>
-                {
-                    Helper_UI_ComboBoxes.ValidateComboBoxItem(AdvancedInventory_Single_ComboBox_Loc,
-                        "Enter or Select Location");
-                    UpdateSingleSaveButtonState();
-                    LoggingUtility.Log("Single Loc ComboBox selection changed.");
-                };
-                AdvancedInventory_Single_ComboBox_Loc.Leave += (s, e) =>
-                {
-                    Helper_UI_ComboBoxes.ValidateComboBoxItem(AdvancedInventory_Single_ComboBox_Loc,
-                        "Enter or Select Location");
-                };
-
-                AdvancedInventory_MultiLoc_ComboBox_Part.SelectedIndexChanged += (s, e) =>
-                {
-                    Helper_UI_ComboBoxes.ValidateComboBoxItem(AdvancedInventory_MultiLoc_ComboBox_Part,
-                        "Enter or Select Part Number");
-                    UpdateMultiSaveButtonState();
-                    LoggingUtility.Log("Multi Part ComboBox selection changed.");
-                };
-                // Removed duplicate Leave handler for MultiLoc_ComboBox_Part to prevent double redirect.
-
-                AdvancedInventory_MultiLoc_ComboBox_Op.SelectedIndexChanged += (s, e) =>
-                {
-                    Helper_UI_ComboBoxes.ValidateComboBoxItem(AdvancedInventory_MultiLoc_ComboBox_Op,
-                        "Enter or Select Operation");
-                    UpdateMultiSaveButtonState();
-                    LoggingUtility.Log("Multi Op ComboBox selection changed.");
-                };
-                AdvancedInventory_MultiLoc_ComboBox_Op.Leave += (s, e) =>
-                {
-                    Helper_UI_ComboBoxes.ValidateComboBoxItem(AdvancedInventory_MultiLoc_ComboBox_Op,
-                        "Enter or Select Operation");
-                };
-
-                AdvancedInventory_MultiLoc_ComboBox_Loc.SelectedIndexChanged += (s, e) =>
-                {
-                    Helper_UI_ComboBoxes.ValidateComboBoxItem(AdvancedInventory_MultiLoc_ComboBox_Loc,
-                        "Enter or Select Location");
-                    UpdateMultiSaveButtonState();
-                    LoggingUtility.Log("Multi Loc ComboBox selection changed.");
-                };
-                AdvancedInventory_MultiLoc_ComboBox_Loc.Leave += (s, e) =>
-                {
-                    Helper_UI_ComboBoxes.ValidateComboBoxItem(AdvancedInventory_MultiLoc_ComboBox_Loc,
-                        "Enter or Select Location");
-                };
+                // Single tab and Multi-Location tab SuggestionTextBox events are wired in ConfigureSuggestionTextBoxes()
+                // Part, Op, Loc now use SuggestionSelected events instead of SelectedIndexChanged/Leave
 
                 AdvancedInventory_Single_TextBox_Qty.TextChanged += (s, e) =>
                 {
@@ -404,6 +314,25 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                         Model_Application_Variables.UserUiColors.TextBoxErrorForeColor ?? Color.Red);
                 };
 
+                // Multi-Location tab TextChanged events for button state updates
+                AdvancedInventory_MultiLoc_TextBox_Part.TextChanged += (s, e) =>
+                {
+                    UpdateMultiSaveButtonState();
+                    LoggingUtility.Log("MultiLoc Part TextBox changed.");
+                };
+
+                AdvancedInventory_MultiLoc_TextBox_Op.TextChanged += (s, e) =>
+                {
+                    UpdateMultiSaveButtonState();
+                    LoggingUtility.Log("MultiLoc Op TextBox changed.");
+                };
+
+                AdvancedInventory_MultiLoc_TextBox_Loc.TextChanged += (s, e) =>
+                {
+                    UpdateMultiSaveButtonState();
+                    LoggingUtility.Log("MultiLoc Loc TextBox changed.");
+                };
+
                 AdvancedInventory_MultiLoc_TextBox_Qty.Text = "";
                 AdvancedInventory_MultiLoc_TextBox_Qty.TextChanged += (s, e) =>
                 {
@@ -415,6 +344,98 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                 {
                     ValidateQtyTextBox(AdvancedInventory_MultiLoc_TextBox_Qty);
                 };
+
+                // F4 Button Click Handlers - Single Tab
+                AdvancedInventory_Single_Button_PartF4.Click += (s, e) =>
+                {
+                    if (string.IsNullOrWhiteSpace(AdvancedInventory_Single_TextBox_Part.Text))
+                    {
+                        // Empty: Trigger F4 dropdown
+                        AdvancedInventory_Single_TextBox_Part.Focus();
+                        SendKeys.Send("{F4}");
+                    }
+                    else
+                    {
+                        // Has text: Trigger Enter (move to next field)
+                        AdvancedInventory_Single_TextBox_Op.Focus();
+                    }
+                };
+
+                AdvancedInventory_Single_Button_OperationF4.Click += (s, e) =>
+                {
+                    if (string.IsNullOrWhiteSpace(AdvancedInventory_Single_TextBox_Op.Text))
+                    {
+                        // Empty: Trigger F4 dropdown
+                        AdvancedInventory_Single_TextBox_Op.Focus();
+                        SendKeys.Send("{F4}");
+                    }
+                    else
+                    {
+                        // Has text: Trigger Enter (move to next field)
+                        AdvancedInventory_Single_TextBox_Loc.Focus();
+                    }
+                };
+
+                AdvancedInventory_Single_Button_LocationF4.Click += (s, e) =>
+                {
+                    if (string.IsNullOrWhiteSpace(AdvancedInventory_Single_TextBox_Loc.Text))
+                    {
+                        // Empty: Trigger F4 dropdown
+                        AdvancedInventory_Single_TextBox_Loc.Focus();
+                        SendKeys.Send("{F4}");
+                    }
+                    else
+                    {
+                        // Has text: Trigger Enter (move to next field)
+                        AdvancedInventory_Single_TextBox_Qty.Focus();
+                    }
+                };
+
+                // F4 Button Click Handlers - Multi-Location Tab
+                AdvancedInventory_MultiLoc_Button_PartF4.Click += (s, e) =>
+                {
+                    if (string.IsNullOrWhiteSpace(AdvancedInventory_MultiLoc_TextBox_Part.Text))
+                    {
+                        // Empty: Trigger F4 dropdown
+                        AdvancedInventory_MultiLoc_TextBox_Part.Focus();
+                        SendKeys.Send("{F4}");
+                    }
+                    else
+                    {
+                        // Has text: Trigger Enter (move to next field)
+                        AdvancedInventory_MultiLoc_TextBox_Op.Focus();
+                    }
+                };
+
+                AdvancedInventory_MultiLoc_Button_OperationF4.Click += (s, e) =>
+                {
+                    if (string.IsNullOrWhiteSpace(AdvancedInventory_MultiLoc_TextBox_Op.Text))
+                    {
+                        // Empty: Trigger F4 dropdown
+                        AdvancedInventory_MultiLoc_TextBox_Op.Focus();
+                        SendKeys.Send("{F4}");
+                    }
+                    else
+                    {
+                        // Has text: Trigger Enter (move to next field)
+                        AdvancedInventory_MultiLoc_TextBox_Loc.Focus();
+                    }
+                };
+
+                AdvancedInventory_MultiLoc_Button_LocationF4.Click += (s, e) =>
+                {
+                    if (string.IsNullOrWhiteSpace(AdvancedInventory_MultiLoc_TextBox_Loc.Text))
+                    {
+                        // Empty: Trigger F4 dropdown
+                        AdvancedInventory_MultiLoc_TextBox_Loc.Focus();
+                        SendKeys.Send("{F4}");
+                    }
+                    else
+                    {
+                        // Has text: Trigger Enter (move to next field)
+                        AdvancedInventory_MultiLoc_TextBox_Qty.Focus();
+                    }
+                };
             }
             catch (Exception ex)
             {
@@ -424,44 +445,202 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             }
         }
 
-                        private void HandleAdvancedInventoryRedirect(ComboBox comboBox)
-                        {
-                            string? partId = comboBox.Text?.Trim();
-                            if (string.IsNullOrWhiteSpace(partId))
-                                return;
-                            if (!Model_Application_Variables.ColorCodeParts.Contains(partId))
-                                return;
+        #endregion
 
-                            var result = Service_ErrorHandler.ShowConfirmation(
-                                "This part requires color code entry. Redirect to Inventory Tab?",
-                                "Redirect Required",
-                                MessageBoxButtons.YesNo,
-                                MessageBoxIcon.Question);
+        #region Single Tab SuggestionTextBox Events
 
-                            if (result == DialogResult.Yes)
-                            {
-                                // Switch to Inventory Tab and pre-populate PartID
-                                if (MainFormInstance != null && MainFormInstance.MainForm_UserControl_InventoryTab != null)
-                                {
-                                    MainFormInstance.MainForm_UserControl_AdvancedInventory.Visible = false;
-                                    MainFormInstance.MainForm_UserControl_InventoryTab.Visible = true;
-                                    MainFormInstance.MainForm_TabControl.SelectedIndex = 0;
-                                    var invTab = MainFormInstance.MainForm_UserControl_InventoryTab;
-                                    if (invTab.Control_InventoryTab_TextBox_Part != null)
-                                    {
-                                        invTab.Control_InventoryTab_TextBox_Part.Text = partId;
-                                        invTab.Control_InventoryTab_TextBox_Part.Focus();
-                                        invTab.Control_InventoryTab_TextBox_Part.SelectAll();
-                                    }
-                                }
-                            }
-                            else
-                            {
-                                // Clear PartID and return focus
-                                comboBox.Text = string.Empty;
-                                comboBox.Focus();
-                            }
-                        }
+        /// <summary>
+        /// Handles part selection from SuggestionTextBox for Single Entry tab.
+        /// Checks if part requires color code and redirects to Inventory Tab if needed.
+        /// Updates save button state.
+        /// </summary>
+        private void AdvancedInventory_Single_TextBox_Part_SuggestionSelected(object? sender, SuggestionSelectedEventArgs e)
+        {
+            string selectedPart = e.SelectedValue;
+            LoggingUtility.Log($"[Control_AdvancedInventory] Single Part selected: {selectedPart}");
+
+            // Check if part requires color code and redirect if necessary
+            HandleAdvancedInventoryRedirect(selectedPart);
+            
+            UpdateSingleSaveButtonState();
+        }
+
+        /// <summary>
+        /// Handles operation selection from SuggestionTextBox for Single Entry tab.
+        /// Updates save button state.
+        /// </summary>
+        private void AdvancedInventory_Single_TextBox_Op_SuggestionSelected(object? sender, SuggestionSelectedEventArgs e)
+        {
+            string selectedOp = e.SelectedValue;
+            LoggingUtility.Log($"[Control_AdvancedInventory] Single Op selected: {selectedOp}");
+            UpdateSingleSaveButtonState();
+        }
+
+        /// <summary>
+        /// Handles location selection from SuggestionTextBox for Single Entry tab.
+        /// Updates save button state.
+        /// </summary>
+        private void AdvancedInventory_Single_TextBox_Loc_SuggestionSelected(object? sender, SuggestionSelectedEventArgs e)
+        {
+            string selectedLoc = e.SelectedValue;
+            LoggingUtility.Log($"[Control_AdvancedInventory] Single Loc selected: {selectedLoc}");
+            UpdateSingleSaveButtonState();
+        }
+
+        /// <summary>
+        /// Checks if the entered part requires color code and redirects to Inventory Tab if needed.
+        /// Overload for SuggestionTextBox (string partId).
+        /// </summary>
+        /// <param name="partId">The part ID to check</param>
+        private void HandleAdvancedInventoryRedirect(string partId)
+        {
+            if (string.IsNullOrWhiteSpace(partId))
+                return;
+            if (!Model_Application_Variables.ColorCodeParts.Contains(partId))
+                return;
+
+            var result = Service_ErrorHandler.ShowConfirmation(
+                "This part requires color code entry. Redirect to Inventory Tab?",
+                "Redirect Required",
+                MessageBoxButtons.YesNo,
+                MessageBoxIcon.Question);
+
+            if (result == DialogResult.Yes)
+            {
+                // Switch to Inventory Tab and pre-populate PartID
+                if (MainFormInstance != null && MainFormInstance.MainForm_UserControl_InventoryTab != null)
+                {
+                    MainFormInstance.MainForm_UserControl_AdvancedInventory.Visible = false;
+                    MainFormInstance.MainForm_UserControl_InventoryTab.Visible = true;
+                    MainFormInstance.MainForm_TabControl.SelectedIndex = 0;
+                    var invTab = MainFormInstance.MainForm_UserControl_InventoryTab;
+                    if (invTab.Control_InventoryTab_TextBox_Part != null)
+                    {
+                        invTab.Control_InventoryTab_TextBox_Part.Text = partId;
+                        invTab.Control_InventoryTab_TextBox_Part.Focus();
+                        invTab.Control_InventoryTab_TextBox_Part.SelectAll();
+                    }
+                }
+            }
+            else
+            {
+                // Clear PartID and return focus
+                AdvancedInventory_Single_TextBox_Part.Text = string.Empty;
+                AdvancedInventory_Single_TextBox_Part.Focus();
+            }
+        }
+
+        #endregion
+
+        #region Multi-Location Tab SuggestionTextBox Events
+
+        /// <summary>
+        /// Handles part selection from SuggestionTextBox for Multi-Location tab.
+        /// Checks if part requires color code and redirects to Inventory Tab if needed.
+        /// Updates save button state and locks Part/Op fields after first location is added.
+        /// </summary>
+        private void AdvancedInventory_MultiLoc_TextBox_Part_SuggestionSelected(object? sender, SuggestionSelectedEventArgs e)
+        {
+            string selectedPart = e.SelectedValue;
+            LoggingUtility.Log($"[Control_AdvancedInventory] Multi-Loc Part selected: {selectedPart}");
+
+            // Check if part requires color code and redirect if necessary
+            HandleAdvancedInventoryRedirect(selectedPart);
+            
+            UpdateMultiSaveButtonState();
+        }
+
+        /// <summary>
+        /// Handles operation selection from SuggestionTextBox for Multi-Location tab.
+        /// Updates save button state.
+        /// </summary>
+        private void AdvancedInventory_MultiLoc_TextBox_Op_SuggestionSelected(object? sender, SuggestionSelectedEventArgs e)
+        {
+            string selectedOp = e.SelectedValue;
+            LoggingUtility.Log($"[Control_AdvancedInventory] Multi-Loc Op selected: {selectedOp}");
+            UpdateMultiSaveButtonState();
+        }
+
+        /// <summary>
+        /// Handles location selection from SuggestionTextBox for Multi-Location tab.
+        /// Updates save button state.
+        /// </summary>
+        private void AdvancedInventory_MultiLoc_TextBox_Loc_SuggestionSelected(object? sender, SuggestionSelectedEventArgs e)
+        {
+            string selectedLoc = e.SelectedValue;
+            LoggingUtility.Log($"[Control_AdvancedInventory] Multi-Loc Loc selected: {selectedLoc}");
+            UpdateMultiSaveButtonState();
+        }
+
+        #endregion
+
+        #region ListView Delete Key Handlers
+
+        /// <summary>
+        /// Handles Delete key press on Single Entry ListView to remove selected items.
+        /// Prompts user for confirmation before deletion.
+        /// </summary>
+        private void AdvancedInventory_Single_ListView_KeyDown(object? sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Delete && AdvancedInventory_Single_ListView_Preview.SelectedItems.Count > 0)
+            {
+                var result = Service_ErrorHandler.ShowConfirmation(
+                    $"Are you sure you want to delete the selected row(s)?",
+                    "Delete Confirmation",
+                    MessageBoxButtons.YesNo,
+                    MessageBoxIcon.Question);
+
+                if (result == DialogResult.Yes)
+                {
+                    // Remove selected items (iterate backwards to avoid index issues)
+                    for (int i = AdvancedInventory_Single_ListView_Preview.SelectedItems.Count - 1; i >= 0; i--)
+                    {
+                        AdvancedInventory_Single_ListView_Preview.Items.Remove(AdvancedInventory_Single_ListView_Preview.SelectedItems[i]);
+                    }
+                    
+                    UpdateSingleSaveButtonState();
+                    LoggingUtility.Log("[Control_AdvancedInventory] Deleted selected row(s) from Single ListView");
+                }
+                
+                e.Handled = true;
+            }
+        }
+
+        /// <summary>
+        /// Handles Delete key press on Multi-Location ListView to remove selected items.
+        /// Prompts user for confirmation before deletion.
+        /// </summary>
+        private void AdvancedInventory_MultiLoc_ListView_Preview_KeyDown(object? sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Delete && AdvancedInventory_MultiLoc_ListView_Preview.SelectedItems.Count > 0)
+            {
+                var result = Service_ErrorHandler.ShowConfirmation(
+                    $"Are you sure you want to delete the selected row(s)?",
+                    "Delete Confirmation",
+                    MessageBoxButtons.YesNo,
+                    MessageBoxIcon.Question);
+
+                if (result == DialogResult.Yes)
+                {
+                    // Remove selected items (iterate backwards to avoid index issues)
+                    for (int i = AdvancedInventory_MultiLoc_ListView_Preview.SelectedItems.Count - 1; i >= 0; i--)
+                    {
+                        AdvancedInventory_MultiLoc_ListView_Preview.Items.Remove(AdvancedInventory_MultiLoc_ListView_Preview.SelectedItems[i]);
+                    }
+                    
+                    // Re-enable Part field if all items removed
+                    if (AdvancedInventory_MultiLoc_ListView_Preview.Items.Count == 0)
+                    {
+                        AdvancedInventory_MultiLoc_TextBox_Part.Enabled = true;
+                    }
+                    
+                    UpdateMultiSaveButtonState();
+                    LoggingUtility.Log("[Control_AdvancedInventory] Deleted selected row(s) from Multi-Location ListView");
+                }
+                
+                e.Handled = true;
+            }
+        }
 
         #endregion
 
@@ -494,13 +673,10 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
 
         private void UpdateSingleSaveButtonState()
         {
-            AdvancedInventory_Single_Button_Save.Enabled = AdvancedInventory_Single_ListView.Items.Count > 0;
-            bool partValid = AdvancedInventory_Single_ComboBox_Part.SelectedIndex > 0 &&
-                             !string.IsNullOrWhiteSpace(AdvancedInventory_Single_ComboBox_Part.Text);
-            bool opValid = AdvancedInventory_Single_ComboBox_Op.SelectedIndex > 0 &&
-                           !string.IsNullOrWhiteSpace(AdvancedInventory_Single_ComboBox_Op.Text);
-            bool locValid = AdvancedInventory_Single_ComboBox_Loc.SelectedIndex > 0 &&
-                            !string.IsNullOrWhiteSpace(AdvancedInventory_Single_ComboBox_Loc.Text);
+            AdvancedInventory_Single_Button_Save.Enabled = AdvancedInventory_Single_ListView_Preview.Items.Count > 0;
+            bool partValid = !string.IsNullOrWhiteSpace(AdvancedInventory_Single_TextBox_Part.Text);
+            bool opValid = !string.IsNullOrWhiteSpace(AdvancedInventory_Single_TextBox_Op.Text);
+            bool locValid = !string.IsNullOrWhiteSpace(AdvancedInventory_Single_TextBox_Loc.Text);
             bool qtyValid = int.TryParse(AdvancedInventory_Single_TextBox_Qty.Text.Trim(), out int qty) && qty > 0;
             bool countValid = int.TryParse(AdvancedInventory_Single_TextBox_Count.Text.Trim(), out int count) &&
                               count > 0;
@@ -510,12 +686,9 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
 
         private void UpdateMultiSaveButtonState()
         {
-            bool partValid = AdvancedInventory_MultiLoc_ComboBox_Part.SelectedIndex > 0 &&
-                             !string.IsNullOrWhiteSpace(AdvancedInventory_MultiLoc_ComboBox_Part.Text);
-            bool opValid = AdvancedInventory_MultiLoc_ComboBox_Op.SelectedIndex > 0 &&
-                           !string.IsNullOrWhiteSpace(AdvancedInventory_MultiLoc_ComboBox_Op.Text);
-            bool locValid = AdvancedInventory_MultiLoc_ComboBox_Loc.SelectedIndex > 0 &&
-                            !string.IsNullOrWhiteSpace(AdvancedInventory_MultiLoc_ComboBox_Loc.Text);
+            bool partValid = !string.IsNullOrWhiteSpace(AdvancedInventory_MultiLoc_TextBox_Part.Text);
+            bool opValid = !string.IsNullOrWhiteSpace(AdvancedInventory_MultiLoc_TextBox_Op.Text);
+            bool locValid = !string.IsNullOrWhiteSpace(AdvancedInventory_MultiLoc_TextBox_Loc.Text);
             bool qtyValid = int.TryParse(AdvancedInventory_MultiLoc_TextBox_Qty.Text.Trim(), out int qty) && qty > 0;
             AdvancedInventory_MultiLoc_Button_AddLoc.Enabled = partValid && opValid && locValid && qtyValid;
             AdvancedInventory_MultiLoc_Button_SaveAll.Enabled =
@@ -735,39 +908,21 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
 
                 _progressHelper?.UpdateProgress(30, "Resetting data tables...");
 
-                Debug.WriteLine("[DEBUG] Unbinding ComboBox DataSources");
-                AdvancedInventory_Single_ComboBox_Part.DataSource = null;
-                AdvancedInventory_Single_ComboBox_Op.DataSource = null;
-                AdvancedInventory_Single_ComboBox_Loc.DataSource = null;
-
-                Debug.WriteLine("[DEBUG] Resetting and refreshing all ComboBox DataTables");
+                Debug.WriteLine("[DEBUG] Resetting and refreshing all TextBox DataTables");
                 await Helper_UI_ComboBoxes.ResetAndRefreshAllDataTablesAsync();
                 Debug.WriteLine("[DEBUG] DataTables reset complete");
 
-                _progressHelper?.UpdateProgress(60, "Refilling combo boxes...");
-                Debug.WriteLine("[DEBUG] Refilling Part ComboBox");
-                await Helper_UI_ComboBoxes.FillPartComboBoxesAsync(AdvancedInventory_Single_ComboBox_Part);
-                Debug.WriteLine("[DEBUG] Refilling Operation ComboBox");
-                await Helper_UI_ComboBoxes.FillOperationComboBoxesAsync(AdvancedInventory_Single_ComboBox_Op);
-                Debug.WriteLine("[DEBUG] Refilling Location ComboBox");
-                await Helper_UI_ComboBoxes.FillLocationComboBoxesAsync(AdvancedInventory_Single_ComboBox_Loc);
-
+                _progressHelper?.UpdateProgress(60, "Resetting UI fields...");
                 Debug.WriteLine("[DEBUG] Resetting UI fields");
-                MainFormControlHelper.ResetComboBox(AdvancedInventory_MultiLoc_ComboBox_Part,
-                    Model_Application_Variables.UserUiColors.ComboBoxErrorForeColor ?? Color.Red, 0);
-                MainFormControlHelper.ResetComboBox(AdvancedInventory_MultiLoc_ComboBox_Op,
-                    Model_Application_Variables.UserUiColors.ComboBoxErrorForeColor ?? Color.Red, 0);
-                MainFormControlHelper.ResetComboBox(AdvancedInventory_MultiLoc_ComboBox_Loc,
-                    Model_Application_Variables.UserUiColors.ComboBoxErrorForeColor ?? Color.Red, 0);
+                Helper_SuggestionTextBox.Clear(AdvancedInventory_MultiLoc_TextBox_Part);
+                Helper_SuggestionTextBox.Clear(AdvancedInventory_MultiLoc_TextBox_Op);
+                Helper_SuggestionTextBox.Clear(AdvancedInventory_MultiLoc_TextBox_Loc);
                 MainFormControlHelper.ResetTextBox(AdvancedInventory_MultiLoc_TextBox_Qty,
                     Model_Application_Variables.UserUiColors.TextBoxErrorForeColor ?? Color.Red,
                     "Enter Quantity");
-                MainFormControlHelper.ResetComboBox(AdvancedInventory_Single_ComboBox_Part,
-                    Model_Application_Variables.UserUiColors.ComboBoxErrorForeColor ?? Color.Red, 0);
-                MainFormControlHelper.ResetComboBox(AdvancedInventory_Single_ComboBox_Op,
-                    Model_Application_Variables.UserUiColors.ComboBoxErrorForeColor ?? Color.Red, 0);
-                MainFormControlHelper.ResetComboBox(AdvancedInventory_Single_ComboBox_Loc,
-                    Model_Application_Variables.UserUiColors.ComboBoxErrorForeColor ?? Color.Red, 0);
+                Helper_SuggestionTextBox.Clear(AdvancedInventory_Single_TextBox_Part);
+                Helper_SuggestionTextBox.Clear(AdvancedInventory_Single_TextBox_Op);
+                Helper_SuggestionTextBox.Clear(AdvancedInventory_Single_TextBox_Loc);
                 MainFormControlHelper.ResetTextBox(AdvancedInventory_Single_TextBox_Qty,
                     Model_Application_Variables.UserUiColors.TextBoxErrorForeColor ?? Color.Red,
                     "Enter Quantity");
@@ -775,18 +930,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                     Model_Application_Variables.UserUiColors.TextBoxErrorForeColor ?? Color.Red,
                     "Enter Enter How Many Times");
                 AdvancedInventory_Single_RichTextBox_Notes.Text = string.Empty;
-                AdvancedInventory_Single_ListView.Items.Clear();
-
-                AdvancedInventory_Single_ComboBox_Part.ForeColor =
-                    Model_Application_Variables.UserUiColors.ErrorColor ?? Color.Red;
-                AdvancedInventory_Single_ComboBox_Op.ForeColor =
-                    Model_Application_Variables.UserUiColors.ErrorColor ?? Color.Red;
-                AdvancedInventory_Single_ComboBox_Loc.ForeColor =
-                    Model_Application_Variables.UserUiColors.ErrorColor ?? Color.Red;
-                AdvancedInventory_Single_TextBox_Qty.ForeColor =
-                    Model_Application_Variables.UserUiColors.ErrorColor ?? Color.Red;
-                AdvancedInventory_Single_TextBox_Count.ForeColor =
-                    Model_Application_Variables.UserUiColors.ErrorColor ?? Color.Red;
+                AdvancedInventory_Single_ListView_Preview.Items.Clear();
 
                 UpdateSingleSaveButtonState();
 
@@ -829,21 +973,15 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                 }
 
                 Debug.WriteLine("[DEBUG] Resetting UI fields");
-                MainFormControlHelper.ResetComboBox(AdvancedInventory_MultiLoc_ComboBox_Part,
-                    Model_Application_Variables.UserUiColors.ErrorColor ?? Color.Red, 0);
-                MainFormControlHelper.ResetComboBox(AdvancedInventory_MultiLoc_ComboBox_Op,
-                    Model_Application_Variables.UserUiColors.ErrorColor ?? Color.Red, 0);
-                MainFormControlHelper.ResetComboBox(AdvancedInventory_MultiLoc_ComboBox_Loc,
-                    Model_Application_Variables.UserUiColors.ErrorColor ?? Color.Red, 0);
+                Helper_SuggestionTextBox.Clear(AdvancedInventory_MultiLoc_TextBox_Part);
+                Helper_SuggestionTextBox.Clear(AdvancedInventory_MultiLoc_TextBox_Op);
+                Helper_SuggestionTextBox.Clear(AdvancedInventory_MultiLoc_TextBox_Loc);
                 MainFormControlHelper.ResetTextBox(AdvancedInventory_MultiLoc_TextBox_Qty,
                     Model_Application_Variables.UserUiColors.ErrorColor ?? Color.Red,
                     "Enter Quantity");
-                MainFormControlHelper.ResetComboBox(AdvancedInventory_Single_ComboBox_Part,
-                    Model_Application_Variables.UserUiColors.ErrorColor ?? Color.Red, 0);
-                MainFormControlHelper.ResetComboBox(AdvancedInventory_Single_ComboBox_Op,
-                    Model_Application_Variables.UserUiColors.ErrorColor ?? Color.Red, 0);
-                MainFormControlHelper.ResetComboBox(AdvancedInventory_Single_ComboBox_Loc,
-                    Model_Application_Variables.UserUiColors.ErrorColor ?? Color.Red, 0);
+                Helper_SuggestionTextBox.Clear(AdvancedInventory_Single_TextBox_Part);
+                Helper_SuggestionTextBox.Clear(AdvancedInventory_Single_TextBox_Op);
+                Helper_SuggestionTextBox.Clear(AdvancedInventory_Single_TextBox_Loc);
                 MainFormControlHelper.ResetTextBox(AdvancedInventory_Single_TextBox_Qty,
                     Model_Application_Variables.UserUiColors.ErrorColor ?? Color.Red,
                     "Enter Quantity");
@@ -851,18 +989,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                     Model_Application_Variables.UserUiColors.ErrorColor ?? Color.Red,
                     "Enter Enter How Many Times");
                 AdvancedInventory_Single_RichTextBox_Notes.Text = string.Empty;
-                AdvancedInventory_Single_ListView.Items.Clear();
-
-                AdvancedInventory_Single_ComboBox_Part.ForeColor =
-                    Model_Application_Variables.UserUiColors.ErrorColor ?? Color.Red;
-                AdvancedInventory_Single_ComboBox_Op.ForeColor =
-                    Model_Application_Variables.UserUiColors.ErrorColor ?? Color.Red;
-                AdvancedInventory_Single_ComboBox_Loc.ForeColor =
-                    Model_Application_Variables.UserUiColors.ErrorColor ?? Color.Red;
-                AdvancedInventory_Single_TextBox_Qty.ForeColor =
-                    Model_Application_Variables.UserUiColors.ErrorColor ?? Color.Red;
-                AdvancedInventory_Single_TextBox_Count.ForeColor =
-                    Model_Application_Variables.UserUiColors.ErrorColor ?? Color.Red;
+                AdvancedInventory_Single_ListView_Preview.Items.Clear();
 
                 UpdateSingleSaveButtonState();
             }
@@ -877,7 +1004,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             {
                 Debug.WriteLine("[DEBUG] AdvancedInventory Single SoftReset button re-enabled");
                 AdvancedInventory_Single_Button_Reset.Enabled = true;
-                AdvancedInventory_Single_ComboBox_Part.Focus();
+                AdvancedInventory_Single_TextBox_Part.Focus();
                 if (MainFormInstance != null)
                 {
                     MainFormInstance.MainForm_StatusStrip_Disconnected.Visible = false;
@@ -917,7 +1044,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             {
                 LoggingUtility.Log("AdvancedInventory_Single_Button_Save_Click entered.");
 
-                if (AdvancedInventory_Single_ListView.Items.Count == 0)
+                if (AdvancedInventory_Single_ListView_Preview.Items.Count == 0)
                 {
                     Service_ErrorHandler.ShowWarning(
                         "No items to inventory. Please add at least one item to the list.",
@@ -935,7 +1062,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                 int savedCount = 0;
                 bool anyFailure = false;
 
-                foreach (ListViewItem item in AdvancedInventory_Single_ListView.Items)
+                foreach (ListViewItem item in AdvancedInventory_Single_ListView_Preview.Items)
                 {
                     string partId = item.SubItems.Count > 0 ? item.SubItems[0].Text : string.Empty;
                     string op = item.SubItems.Count > 1 ? item.SubItems[1].Text : string.Empty;
@@ -998,7 +1125,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
 
                 foreach (ListViewItem item in itemsToRemove)
                 {
-                    AdvancedInventory_Single_ListView.Items.Remove(item);
+                    AdvancedInventory_Single_ListView_Preview.Items.Remove(item);
                 }
 
                 UpdateSingleSaveButtonState();
@@ -1034,7 +1161,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                         }
                     }
 
-                    if (AdvancedInventory_Single_ListView.Items.Count == 0)
+                    if (AdvancedInventory_Single_ListView_Preview.Items.Count == 0)
                     {
                         AdvancedInventory_Single_SoftReset();
                     }
@@ -1072,33 +1199,33 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                 Debug.WriteLine("Send button clicked");
                 LoggingUtility.Log("Send button clicked");
 
-                string partId = AdvancedInventory_Single_ComboBox_Part.Text;
-                string op = AdvancedInventory_Single_ComboBox_Op.Text;
-                string loc = AdvancedInventory_Single_ComboBox_Loc.Text;
+                string partId = AdvancedInventory_Single_TextBox_Part.Text?.Trim() ?? string.Empty;
+                string op = AdvancedInventory_Single_TextBox_Op.Text?.Trim() ?? string.Empty;
+                string loc = AdvancedInventory_Single_TextBox_Loc.Text?.Trim() ?? string.Empty;
                 string qtyText = AdvancedInventory_Single_TextBox_Qty.Text.Trim();
                 string countText = AdvancedInventory_Single_TextBox_Count.Text.Trim();
                 string notes = AdvancedInventory_Single_RichTextBox_Notes.Text.Trim();
 
                 Debug.WriteLine($"partId: {partId}, op: {op}, loc: {loc}, qtyText: {qtyText}, countText: {countText}");
 
-                if (string.IsNullOrWhiteSpace(partId) || AdvancedInventory_Single_ComboBox_Part.SelectedIndex <= 0)
+                if (string.IsNullOrWhiteSpace(partId))
                 {
                     Service_ErrorHandler.HandleValidationError("Please select a valid Part.", "Part");
-                    AdvancedInventory_Single_ComboBox_Part.Focus();
+                    AdvancedInventory_Single_TextBox_Part.Focus();
                     return;
                 }
 
-                if (string.IsNullOrWhiteSpace(op) || AdvancedInventory_Single_ComboBox_Op.SelectedIndex <= 0)
+                if (string.IsNullOrWhiteSpace(op))
                 {
                     Service_ErrorHandler.HandleValidationError("Please select a valid Operation.", "Operation");
-                    AdvancedInventory_Single_ComboBox_Op.Focus();
+                    AdvancedInventory_Single_TextBox_Op.Focus();
                     return;
                 }
 
-                if (string.IsNullOrWhiteSpace(loc) || AdvancedInventory_Single_ComboBox_Loc.SelectedIndex <= 0)
+                if (string.IsNullOrWhiteSpace(loc))
                 {
                     Service_ErrorHandler.HandleValidationError("Please select a valid Location.", "Location");
-                    AdvancedInventory_Single_ComboBox_Loc.Focus();
+                    AdvancedInventory_Single_TextBox_Loc.Focus();
                     return;
                 }
 
@@ -1120,23 +1247,20 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
 
                 for (int i = 0; i < count; i++)
                 {
+                    // Column order: Location, Part ID (with Op), Quantity
                     ListViewItem listViewItem = new([
-                        partId,
-                        op,
                         loc,
+                        $"{partId} (Op: {op})",
                         qty.ToString()
                     ]);
-                    AdvancedInventory_Single_ListView.Items.Add(listViewItem);
+                    AdvancedInventory_Single_ListView_Preview.Items.Add(listViewItem);
                     Debug.WriteLine(
                         $"Added item to ListView: Part={partId}, Op={op}, Loc={loc}, Qty={qty}, Notes={notes}");
                 }
 
-                MainFormControlHelper.ResetComboBox(AdvancedInventory_Single_ComboBox_Part,
-                    Model_Application_Variables.UserUiColors.ComboBoxErrorForeColor ?? Color.Red, 0);
-                MainFormControlHelper.ResetComboBox(AdvancedInventory_Single_ComboBox_Op,
-                    Model_Application_Variables.UserUiColors.ComboBoxErrorForeColor ?? Color.Red, 0);
-                MainFormControlHelper.ResetComboBox(AdvancedInventory_Single_ComboBox_Loc,
-                    Model_Application_Variables.UserUiColors.ComboBoxErrorForeColor ?? Color.Red, 0);
+                Helper_SuggestionTextBox.Clear(AdvancedInventory_Single_TextBox_Part);
+                Helper_SuggestionTextBox.Clear(AdvancedInventory_Single_TextBox_Op);
+                Helper_SuggestionTextBox.Clear(AdvancedInventory_Single_TextBox_Loc);
                 MainFormControlHelper.ResetTextBox(AdvancedInventory_Single_TextBox_Qty,
                     Model_Application_Variables.UserUiColors.TextBoxErrorForeColor ?? Color.Red,
                     "Enter Quantity");
@@ -1145,7 +1269,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                     "Enter Enter How Many Times");
                 AdvancedInventory_Single_RichTextBox_Notes.Text = string.Empty;
 
-                AdvancedInventory_Single_ComboBox_Part.Focus();
+                AdvancedInventory_Single_TextBox_Part.Focus();
 
                 UpdateSingleSaveButtonState();
             }
@@ -1232,41 +1356,17 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                 }
 
                 _progressHelper?.UpdateProgress(30, "Resetting data tables...");
-                Debug.WriteLine("[DEBUG] Hiding ComboBoxes");
-
-                Debug.WriteLine("[DEBUG] Unbinding ComboBox DataSources");
-                AdvancedInventory_MultiLoc_ComboBox_Part.DataSource = null;
-                AdvancedInventory_MultiLoc_ComboBox_Op.DataSource = null;
-                AdvancedInventory_MultiLoc_ComboBox_Loc.DataSource = null;
-
-                Debug.WriteLine("[DEBUG] Resetting and refreshing all ComboBox DataTables");
-                await Helper_UI_ComboBoxes.ResetAndRefreshAllDataTablesAsync();
-                Debug.WriteLine("[DEBUG] DataTables reset complete");
-
-                _progressHelper?.UpdateProgress(60, "Refilling combo boxes...");
-                Debug.WriteLine("[DEBUG] Refilling Part ComboBox");
-                await Helper_UI_ComboBoxes.FillPartComboBoxesAsync(AdvancedInventory_MultiLoc_ComboBox_Part);
-                Debug.WriteLine("[DEBUG] Refilling Operation ComboBox");
-                await Helper_UI_ComboBoxes.FillOperationComboBoxesAsync(AdvancedInventory_MultiLoc_ComboBox_Op);
-                Debug.WriteLine("[DEBUG] Refilling Location ComboBox");
-                await Helper_UI_ComboBoxes.FillLocationComboBoxesAsync(AdvancedInventory_MultiLoc_ComboBox_Loc);
-
                 Debug.WriteLine("[DEBUG] Resetting UI fields");
-                MainFormControlHelper.ResetComboBox(AdvancedInventory_MultiLoc_ComboBox_Part,
-                    Model_Application_Variables.UserUiColors.ComboBoxErrorForeColor ?? Color.Red, 0);
-                MainFormControlHelper.ResetComboBox(AdvancedInventory_MultiLoc_ComboBox_Op,
-                    Model_Application_Variables.UserUiColors.ComboBoxErrorForeColor ?? Color.Red, 0);
-                MainFormControlHelper.ResetComboBox(AdvancedInventory_MultiLoc_ComboBox_Loc,
-                    Model_Application_Variables.UserUiColors.ComboBoxErrorForeColor ?? Color.Red, 0);
+
+                Helper_SuggestionTextBox.Clear(AdvancedInventory_MultiLoc_TextBox_Part);
+                Helper_SuggestionTextBox.Clear(AdvancedInventory_MultiLoc_TextBox_Op);
+                Helper_SuggestionTextBox.Clear(AdvancedInventory_MultiLoc_TextBox_Loc);
                 MainFormControlHelper.ResetTextBox(AdvancedInventory_MultiLoc_TextBox_Qty,
                     Model_Application_Variables.UserUiColors.TextBoxErrorForeColor ?? Color.Red,
                     "Enter Quantity");
-                MainFormControlHelper.ResetComboBox(AdvancedInventory_Single_ComboBox_Part,
-                    Model_Application_Variables.UserUiColors.ComboBoxErrorForeColor ?? Color.Red, 0);
-                MainFormControlHelper.ResetComboBox(AdvancedInventory_Single_ComboBox_Op,
-                    Model_Application_Variables.UserUiColors.ComboBoxErrorForeColor ?? Color.Red, 0);
-                MainFormControlHelper.ResetComboBox(AdvancedInventory_Single_ComboBox_Loc,
-                    Model_Application_Variables.UserUiColors.ComboBoxErrorForeColor ?? Color.Red, 0);
+                Helper_SuggestionTextBox.Clear(AdvancedInventory_Single_TextBox_Part);
+                Helper_SuggestionTextBox.Clear(AdvancedInventory_Single_TextBox_Op);
+                Helper_SuggestionTextBox.Clear(AdvancedInventory_Single_TextBox_Loc);
                 MainFormControlHelper.ResetTextBox(AdvancedInventory_Single_TextBox_Qty,
                     Model_Application_Variables.UserUiColors.TextBoxErrorForeColor ?? Color.Red,
                     "Enter Quantity");
@@ -1275,17 +1375,8 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                     "Enter Enter How Many Times");
                 AdvancedInventory_MultiLoc_RichTextBox_Notes.Text = string.Empty;
                 AdvancedInventory_MultiLoc_ListView_Preview.Items.Clear();
-                AdvancedInventory_MultiLoc_ComboBox_Part.Enabled = true;
-                AdvancedInventory_MultiLoc_ComboBox_Op.Enabled = true;
-
-                AdvancedInventory_MultiLoc_ComboBox_Part.ForeColor =
-                    Model_Application_Variables.UserUiColors.ErrorColor ?? Color.Red;
-                AdvancedInventory_MultiLoc_ComboBox_Op.ForeColor =
-                    Model_Application_Variables.UserUiColors.ErrorColor ?? Color.Red;
-                AdvancedInventory_MultiLoc_ComboBox_Loc.ForeColor =
-                    Model_Application_Variables.UserUiColors.ErrorColor ?? Color.Red;
-                AdvancedInventory_MultiLoc_TextBox_Qty.ForeColor =
-                    Model_Application_Variables.UserUiColors.ErrorColor ?? Color.Red;
+                AdvancedInventory_MultiLoc_TextBox_Part.Enabled = true;
+                AdvancedInventory_MultiLoc_TextBox_Op.Enabled = true;
 
                 UpdateMultiSaveButtonState();
 
@@ -1328,21 +1419,15 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                 }
 
                 Debug.WriteLine("[DEBUG] Resetting UI fields");
-                MainFormControlHelper.ResetComboBox(AdvancedInventory_MultiLoc_ComboBox_Part,
-                    Model_Application_Variables.UserUiColors.ErrorColor ?? Color.Red, 0);
-                MainFormControlHelper.ResetComboBox(AdvancedInventory_MultiLoc_ComboBox_Op,
-                    Model_Application_Variables.UserUiColors.ErrorColor ?? Color.Red, 0);
-                MainFormControlHelper.ResetComboBox(AdvancedInventory_MultiLoc_ComboBox_Loc,
-                    Model_Application_Variables.UserUiColors.ErrorColor ?? Color.Red, 0);
+                Helper_SuggestionTextBox.Clear(AdvancedInventory_MultiLoc_TextBox_Part);
+                Helper_SuggestionTextBox.Clear(AdvancedInventory_MultiLoc_TextBox_Op);
+                Helper_SuggestionTextBox.Clear(AdvancedInventory_MultiLoc_TextBox_Loc);
                 MainFormControlHelper.ResetTextBox(AdvancedInventory_MultiLoc_TextBox_Qty,
                     Model_Application_Variables.UserUiColors.ErrorColor ?? Color.Red,
                     "Enter Quantity");
-                MainFormControlHelper.ResetComboBox(AdvancedInventory_Single_ComboBox_Part,
-                    Model_Application_Variables.UserUiColors.ErrorColor ?? Color.Red, 0);
-                MainFormControlHelper.ResetComboBox(AdvancedInventory_Single_ComboBox_Op,
-                    Model_Application_Variables.UserUiColors.ErrorColor ?? Color.Red, 0);
-                MainFormControlHelper.ResetComboBox(AdvancedInventory_Single_ComboBox_Loc,
-                    Model_Application_Variables.UserUiColors.ErrorColor ?? Color.Red, 0);
+                Helper_SuggestionTextBox.Clear(AdvancedInventory_Single_TextBox_Part);
+                Helper_SuggestionTextBox.Clear(AdvancedInventory_Single_TextBox_Op);
+                Helper_SuggestionTextBox.Clear(AdvancedInventory_Single_TextBox_Loc);
                 MainFormControlHelper.ResetTextBox(AdvancedInventory_Single_TextBox_Qty,
                     Model_Application_Variables.UserUiColors.ErrorColor ?? Color.Red,
                     "Enter Quantity");
@@ -1351,17 +1436,8 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                     "Enter Enter How Many Times");
                 AdvancedInventory_MultiLoc_RichTextBox_Notes.Text = string.Empty;
                 AdvancedInventory_MultiLoc_ListView_Preview.Items.Clear();
-                AdvancedInventory_MultiLoc_ComboBox_Part.Enabled = true;
-                AdvancedInventory_MultiLoc_ComboBox_Op.Enabled = true;
-
-                AdvancedInventory_MultiLoc_ComboBox_Part.ForeColor =
-                    Model_Application_Variables.UserUiColors.ErrorColor ?? Color.Red;
-                AdvancedInventory_MultiLoc_ComboBox_Op.ForeColor =
-                    Model_Application_Variables.UserUiColors.ErrorColor ?? Color.Red;
-                AdvancedInventory_MultiLoc_ComboBox_Loc.ForeColor =
-                    Model_Application_Variables.UserUiColors.ErrorColor ?? Color.Red;
-                AdvancedInventory_MultiLoc_TextBox_Qty.ForeColor =
-                    Model_Application_Variables.UserUiColors.ErrorColor ?? Color.Red;
+                AdvancedInventory_MultiLoc_TextBox_Part.Enabled = true;
+                AdvancedInventory_MultiLoc_TextBox_Op.Enabled = true;
 
                 UpdateMultiSaveButtonState();
             }
@@ -1376,7 +1452,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             {
                 Debug.WriteLine("[DEBUG] AdvancedInventory MultiLoc SoftReset button re-enabled");
                 AdvancedInventory_MultiLoc_Button_Reset.Enabled = true;
-                AdvancedInventory_MultiLoc_ComboBox_Part.Focus();
+                AdvancedInventory_MultiLoc_TextBox_Part.Focus();
                 if (MainFormInstance != null)
                 {
                     MainFormInstance.MainForm_StatusStrip_Disconnected.Visible = false;
@@ -1416,30 +1492,30 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             {
                 LoggingUtility.Log("AdvancedInventory_MultiLoc_Button_AddLoc_Click entered.");
 
-                string partId = AdvancedInventory_MultiLoc_ComboBox_Part.Text;
-                string op = AdvancedInventory_MultiLoc_ComboBox_Op.Text;
-                string loc = AdvancedInventory_MultiLoc_ComboBox_Loc.Text;
+                string partId = AdvancedInventory_MultiLoc_TextBox_Part.Text?.Trim() ?? string.Empty;
+                string op = AdvancedInventory_MultiLoc_TextBox_Op.Text?.Trim() ?? string.Empty;
+                string loc = AdvancedInventory_MultiLoc_TextBox_Loc.Text?.Trim() ?? string.Empty;
                 string qtyText = AdvancedInventory_MultiLoc_TextBox_Qty.Text.Trim();
                 string notes = AdvancedInventory_MultiLoc_RichTextBox_Notes.Text.Trim();
 
-                if (string.IsNullOrWhiteSpace(partId) || AdvancedInventory_MultiLoc_ComboBox_Part.SelectedIndex <= 0)
+                if (string.IsNullOrWhiteSpace(partId))
                 {
-                    Service_ErrorHandler.HandleValidationError(@"Please select a valid Part.", nameof(AdvancedInventory_MultiLoc_ComboBox_Part));
-                    AdvancedInventory_MultiLoc_ComboBox_Part.Focus();
+                    Service_ErrorHandler.HandleValidationError(@"Please select a valid Part.", nameof(AdvancedInventory_MultiLoc_TextBox_Part));
+                    AdvancedInventory_MultiLoc_TextBox_Part.Focus();
                     return;
                 }
 
-                if (string.IsNullOrWhiteSpace(op) || AdvancedInventory_MultiLoc_ComboBox_Op.SelectedIndex <= 0)
+                if (string.IsNullOrWhiteSpace(op))
                 {
-                    Service_ErrorHandler.HandleValidationError(@"Please select a valid Operation.", nameof(AdvancedInventory_MultiLoc_ComboBox_Op));
-                    AdvancedInventory_MultiLoc_ComboBox_Op.Focus();
+                    Service_ErrorHandler.HandleValidationError(@"Please select a valid Operation.", nameof(AdvancedInventory_MultiLoc_TextBox_Op));
+                    AdvancedInventory_MultiLoc_TextBox_Op.Focus();
                     return;
                 }
 
-                if (string.IsNullOrWhiteSpace(loc) || AdvancedInventory_MultiLoc_ComboBox_Loc.SelectedIndex <= 0)
+                if (string.IsNullOrWhiteSpace(loc))
                 {
-                    Service_ErrorHandler.HandleValidationError(@"Please select a valid Location.", nameof(AdvancedInventory_MultiLoc_ComboBox_Loc));
-                    AdvancedInventory_MultiLoc_ComboBox_Loc.Focus();
+                    Service_ErrorHandler.HandleValidationError(@"Please select a valid Location.", nameof(AdvancedInventory_MultiLoc_TextBox_Loc));
+                    AdvancedInventory_MultiLoc_TextBox_Loc.Focus();
                     return;
                 }
 
@@ -1452,19 +1528,20 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
 
                 foreach (ListViewItem item in AdvancedInventory_MultiLoc_ListView_Preview.Items)
                 {
-                    // Always pass null/empty for batchNumber to ensure each transaction gets a unique batch number
+                    // Check if location already exists in preview list (Location is column 0)
                     if (string.Equals(item.SubItems[0].Text, loc, StringComparison.OrdinalIgnoreCase))
                     {
-                        Service_ErrorHandler.HandleValidationError(@"This location has already been added.", nameof(AdvancedInventory_MultiLoc_ComboBox_Loc));
-                        AdvancedInventory_MultiLoc_ComboBox_Loc.Focus();
+                        Service_ErrorHandler.HandleValidationError(@"This location has already been added.", nameof(AdvancedInventory_MultiLoc_TextBox_Loc));
+                        AdvancedInventory_MultiLoc_TextBox_Loc.Focus();
                         return;
                     }
                 }
 
+                // Column order: Location, Part ID (with Op), Quantity
                 ListViewItem listViewItem = new([
                     loc,
-                    qty.ToString(),
-                    notes
+                    $"{partId} (Op: {op})",
+                    qty.ToString()
                 ]);
                 AdvancedInventory_MultiLoc_ListView_Preview.Items.Add(listViewItem);
 
@@ -1473,12 +1550,11 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
 
                 if (AdvancedInventory_MultiLoc_ListView_Preview.Items.Count == 1)
                 {
-                    AdvancedInventory_MultiLoc_ComboBox_Part.Enabled = false;
+                    AdvancedInventory_MultiLoc_TextBox_Part.Enabled = false;
                 }
 
-                MainFormControlHelper.ResetComboBox(AdvancedInventory_MultiLoc_ComboBox_Loc,
-                    Model_Application_Variables.UserUiColors.ComboBoxErrorForeColor ?? Color.Red, 0);
-                AdvancedInventory_MultiLoc_ComboBox_Loc.Focus();
+                Helper_SuggestionTextBox.Clear(AdvancedInventory_MultiLoc_TextBox_Loc);
+                AdvancedInventory_MultiLoc_TextBox_Loc.Focus();
 
                 UpdateMultiSaveButtonState();
             }
@@ -1507,20 +1583,20 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                     return;
                 }
 
-                string partId = AdvancedInventory_MultiLoc_ComboBox_Part.Text;
-                string op = AdvancedInventory_MultiLoc_ComboBox_Op.Text;
+                string partId = AdvancedInventory_MultiLoc_TextBox_Part.Text?.Trim() ?? string.Empty;
+                string op = AdvancedInventory_MultiLoc_TextBox_Op.Text?.Trim() ?? string.Empty;
 
-                if (string.IsNullOrWhiteSpace(partId) || AdvancedInventory_MultiLoc_ComboBox_Part.SelectedIndex <= 0)
+                if (string.IsNullOrWhiteSpace(partId))
                 {
-                    Service_ErrorHandler.HandleValidationError(@"Please select a valid Part.", nameof(AdvancedInventory_MultiLoc_ComboBox_Part));
-                    AdvancedInventory_MultiLoc_ComboBox_Part.Focus();
+                    Service_ErrorHandler.HandleValidationError(@"Please select a valid Part.", nameof(AdvancedInventory_MultiLoc_TextBox_Part));
+                    AdvancedInventory_MultiLoc_TextBox_Part.Focus();
                     return;
                 }
 
-                if (string.IsNullOrWhiteSpace(op) || AdvancedInventory_MultiLoc_ComboBox_Op.SelectedIndex <= 0)
+                if (string.IsNullOrWhiteSpace(op))
                 {
-                    Service_ErrorHandler.HandleValidationError(@"Please select a valid Operation.", nameof(AdvancedInventory_MultiLoc_ComboBox_Op));
-                    AdvancedInventory_MultiLoc_ComboBox_Op.Focus();
+                    Service_ErrorHandler.HandleValidationError(@"Please select a valid Operation.", nameof(AdvancedInventory_MultiLoc_TextBox_Op));
+                    AdvancedInventory_MultiLoc_TextBox_Op.Focus();
                     return;
                 }
 
@@ -1529,10 +1605,10 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                 int savedCount = 0;
                 foreach (ListViewItem item in AdvancedInventory_MultiLoc_ListView_Preview.Items)
                 {
-                    // Always pass null/empty for batchNumber to ensure each transaction gets a unique batch number
+                    // ListView columns: Location (0), Part ID with Op (1), Quantity (2)
                     string loc = item.SubItems[0].Text;
-                    string qtyText = item.SubItems[1].Text;
-                    string notes = item.SubItems[2].Text;
+                    string qtyText = item.SubItems[2].Text;
+                    string notes = AdvancedInventory_MultiLoc_RichTextBox_Notes.Text.Trim();
 
                     if (!int.TryParse(qtyText, out int qty) || qty <= 0)
                     {
@@ -1648,6 +1724,60 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             }
             
             return filePath;
+        }
+
+        /// <summary>
+        /// Ensures the user's Excel import file exists. Creates it with template structure if missing.
+        /// Called during control initialization.
+        /// </summary>
+        private static async Task EnsureExcelFileExistsAsync()
+        {
+            try
+            {
+                string excelPath = await GetUserExcelFilePathAsync();
+                
+                if (!File.Exists(excelPath))
+                {
+                    LoggingUtility.Log($"[Control_AdvancedInventory] Excel file not found at {excelPath}, creating template...");
+                    
+                    // Create the directory if it doesn't exist
+                    string? directory = Path.GetDirectoryName(excelPath);
+                    if (!string.IsNullOrEmpty(directory) && !Directory.Exists(directory))
+                    {
+                        Directory.CreateDirectory(directory);
+                    }
+                    
+                    // Create Excel file with template structure
+                    using (XLWorkbook workbook = new())
+                    {
+                        IXLWorksheet worksheet = workbook.Worksheets.Add("Tab 1");
+                        
+                        // Add header row
+                        worksheet.Cell(1, 1).Value = "Part";
+                        worksheet.Cell(1, 2).Value = "Operation";
+                        worksheet.Cell(1, 3).Value = "Location";
+                        worksheet.Cell(1, 4).Value = "Quantity";
+                        worksheet.Cell(1, 5).Value = "Notes";
+                        
+                        // Format header row
+                        var headerRange = worksheet.Range(1, 1, 1, 5);
+                        headerRange.Style.Font.Bold = true;
+                        headerRange.Style.Fill.BackgroundColor = XLColor.LightGray;
+                        
+                        // Auto-fit columns
+                        worksheet.Columns().AdjustToContents();
+                        
+                        workbook.SaveAs(excelPath);
+                    }
+                    
+                    LoggingUtility.Log($"[Control_AdvancedInventory] Excel template created successfully at {excelPath}");
+                }
+            }
+            catch (Exception ex)
+            {
+                LoggingUtility.LogApplicationError(ex);
+                LoggingUtility.Log($"[Control_AdvancedInventory] Error ensuring Excel file exists: {ex.Message}");
+            }
         }
 
         // Fix for CS8600: Converting null literal or possible null value to non-nullable type.
@@ -1767,7 +1897,11 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
 
                 if (dt.Rows.Count == 0)
                 {
-                    Service_ErrorHandler.HandleValidationError(@"No data found in the Excel file to import.", nameof(AdvancedInventory_Import_Button_ImportExcel));
+                    MessageBox.Show(
+                        "No data found in the Excel file to import.",
+                        "No Data",
+                        MessageBoxButtons.OK,
+                        MessageBoxIcon.Information);
                     return;
                 }
 
@@ -1794,22 +1928,14 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             List<DataGridViewRow> rowsToRemove = new();
             bool anyError = false;
 
-            DataTable? partTable = AdvancedInventory_Single_ComboBox_Part.DataSource as DataTable;
-            DataTable? opTable = AdvancedInventory_Single_ComboBox_Op.DataSource as DataTable;
-            DataTable? locTable = AdvancedInventory_Single_ComboBox_Loc.DataSource as DataTable;
+            // Get validation data from cached sources (used by SuggestionTextBox controls)
+            var partNumbers = await Helper_SuggestionTextBox.GetCachedPartNumbersAsync();
+            var operations = await Helper_SuggestionTextBox.GetCachedOperationsAsync();
+            var locations = await Helper_SuggestionTextBox.GetCachedLocationsAsync();
 
-            HashSet<string?> validParts =
-                partTable?.AsEnumerable().Select(r => r.Field<string>("PartID"))
-                    .Where(s => !string.IsNullOrWhiteSpace(s)).ToHashSet(StringComparer.OrdinalIgnoreCase) ??
-                [];
-            HashSet<string?> validOps =
-                opTable?.AsEnumerable().Select(r => r.Field<string>("Operation"))
-                    .Where(s => !string.IsNullOrWhiteSpace(s))
-                    .ToHashSet(StringComparer.OrdinalIgnoreCase) ?? [];
-            HashSet<string?> validLocs =
-                locTable?.AsEnumerable().Select(r => r.Field<string>("Location"))
-                    .Where(s => !string.IsNullOrWhiteSpace(s))
-                    .ToHashSet(StringComparer.OrdinalIgnoreCase) ?? [];
+            HashSet<string> validParts = partNumbers.ToHashSet(StringComparer.OrdinalIgnoreCase);
+            HashSet<string> validOps = operations.ToHashSet(StringComparer.OrdinalIgnoreCase);
+            HashSet<string> validLocs = locations.ToHashSet(StringComparer.OrdinalIgnoreCase);
 
             string excelPath = await GetUserExcelFilePathAsync();
             XLWorkbook? workbook = null;

@@ -44,7 +44,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
         /// </remarks>
         public void SetProgressControls(ToolStripProgressBar progressBar, ToolStripStatusLabel statusLabel)
         {
-            _progressHelper = Helper_StoredProcedureProgress.Create(progressBar, statusLabel, 
+            _progressHelper = Helper_StoredProcedureProgress.Create(progressBar, statusLabel,
                 this.FindForm() ?? throw new InvalidOperationException("Control must be added to a form"));
         }
 
@@ -73,10 +73,10 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
 
             Control_TransferTab_Initialize();
             ApplyPrivileges();
-            
+
             // Initialize UI state immediately without heavy operations
             InitializeImmediateUI();
-            
+
             // Move heavy initialization to background thread
             _ = Task.Run(async () =>
             {
@@ -134,7 +134,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             {
                 // Load ComboBoxes asynchronously in background
                 await Control_TransferTab_OnStartup_LoadDataComboBoxesAsync();
-                
+
                 // Load user information asynchronously
                 try
                 {
@@ -316,36 +316,36 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             {
                 _progressHelper?.ShowProgress();
                 _progressHelper?.UpdateProgress(10, "Configuring part suggestions...");
-                
+
                 // Configure SuggestionTextBox controls using helper methods with F4 support
                 Helper_SuggestionTextBox.ConfigureForPartNumbers(
-                    Control_TransferTab_TextBox_Part, 
-                    GetPartNumberSuggestionsAsync, 
+                    Control_TransferTab_TextBox_Part,
+                    GetPartNumberSuggestionsAsync,
                     enableF4: true);
-                
+
                 _progressHelper?.UpdateProgress(40, "Configuring operation suggestions...");
-                
+
                 Helper_SuggestionTextBox.ConfigureForOperations(
-                    Control_TransferTab_TextBox_Operation, 
-                    GetOperationSuggestionsAsync, 
+                    Control_TransferTab_TextBox_Operation,
+                    GetOperationSuggestionsAsync,
                     enableF4: true);
-                
+
                 _progressHelper?.UpdateProgress(70, "Configuring location suggestions...");
-                
+
                 Helper_SuggestionTextBox.ConfigureForLocations(
-                    Control_TransferTab_TextBox_ToLocation, 
-                    GetLocationSuggestionsAsync, 
+                    Control_TransferTab_TextBox_ToLocation,
+                    GetLocationSuggestionsAsync,
                     enableF4: true);
 
                 _progressHelper?.UpdateProgress(100, "Suggestion controls configured");
                 await Task.Delay(100);
-                
+
                 LoggingUtility.Log("Transfer tab suggestion controls configured.");
             }
             catch (Exception ex)
             {
                 LoggingUtility.LogApplicationError(ex);
-                
+
                 Service_ErrorHandler.HandleException(
                     ex,
                     Enum_ErrorSeverity.High,
@@ -699,10 +699,10 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                 _progressHelper?.UpdateProgress(10, "Searching inventory...");
 
                 LoggingUtility.Log("TransferTab Search button clicked.");
-                
+
                 string partId = Control_TransferTab_TextBox_Part.Text?.Trim() ?? "";
                 string op = Control_TransferTab_TextBox_Operation.Text?.Trim() ?? "";
-                
+
                 if (string.IsNullOrWhiteSpace(partId) || string.IsNullOrWhiteSpace(Control_TransferTab_TextBox_Part.Text))
                 {
                     Service_ErrorHandler.HandleValidationError("Please select a valid Part.", "Part Selection");
@@ -739,7 +739,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                         throw new Exception(partResult.ErrorMessage ?? "Failed to retrieve inventory by part");
                     }
                 }
-                
+
                 if (results == null)
                 {
                     throw new Exception("Failed to retrieve inventory data");
@@ -846,7 +846,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                 // Build confirmation message showing what will be transferred
                 string toLocation = Control_TransferTab_TextBox_ToLocation.Text;
                 string confirmMessage = BuildTransferConfirmationMessage(selectedRows, toLocation);
-                
+
                 DialogResult confirmResult = Service_ErrorHandler.ShowConfirmation(
                     confirmMessage,
                     "Confirm Transfer",
@@ -999,12 +999,12 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                 BatchNumber = batchNumber,
                 DateTime = DateTime.Now
             });
-            
+
             if (!historyResult.IsSuccess)
             {
                 LoggingUtility.Log($"Failed to log transaction history: {historyResult.ErrorMessage}");
             }
-            
+
             if (MainFormInstance != null)
             {
                 MainFormInstance.MainForm_StatusStrip_SavedStatus.Text =
@@ -1046,7 +1046,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                 // TransferPartSimpleAsync transfers entire quantity - no quantity parameter needed
                 await Dao_Inventory.TransferPartSimpleAsync(
                     batchNumber, partId, operation, newLocation);
-                    
+
                 var historyResult = await Dao_History.AddTransactionHistoryAsync(new Model_Transactions_History
                 {
                     TransactionType = "TRANSFER",
@@ -1061,12 +1061,12 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                     BatchNumber = batchNumber,
                     DateTime = DateTime.Now
                 });
-                
+
                 if (!historyResult.IsSuccess)
                 {
                     LoggingUtility.Log($"Failed to log transaction history: {historyResult.ErrorMessage}");
                 }
-                
+
                 partIds.Add(partId);
                 operations.Add(operation);
                 fromLocations.Add(fromLocation);
@@ -1108,7 +1108,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             var callerFrame = callStack.GetFrame(1);
             var callerMethod = callerFrame?.GetMethod()?.Name ?? "Unknown";
             LoggingUtility.Log($"[PERF] Update_ButtonStates called from: {callerMethod}");
-            
+
             try
             {
                 // Cache frequently accessed properties to avoid repeated lookups
@@ -1122,7 +1122,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                 // Update control states efficiently
                 Control_TransferTab_Button_Search.Enabled = hasPart;
                 // ToLocation TextBox stays enabled (respects user privileges from ApplyPrivileges)
-                Control_TransferTab_NumericUpDown_Quantity.Enabled = hasData && 
+                Control_TransferTab_NumericUpDown_Quantity.Enabled = hasData &&
                     Control_TransferTab_DataGridView_Main.SelectedRows.Count <= 1;
 
                 // Check if destination location is same as source location (only if we have selection and destination)
@@ -1142,7 +1142,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                 // Update transfer button state
                 Control_TransferTab_Button_Transfer.Enabled =
                     hasData && hasSelection && hasToLocation && hasPart && hasQuantity && !toLocationIsSameAsRow;
-                
+
                 // Update print button state if it exists
                 if (Control_TransferTab_Button_Print != null)
                 {
@@ -1163,12 +1163,12 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             {
                 // Use lambda to match EventHandler signature for async void method
                 Control_TransferTab_Button_Reset.Click += (s, e) => Control_TransferTab_Button_Reset_Click();
-                
+
                 // TextBox events - update button states when text changes
                 Control_TransferTab_TextBox_Part.TextChanged += (s, e) => Control_TransferTab_Update_ButtonStates();
                 Control_TransferTab_TextBox_Operation.TextChanged += (s, e) => Control_TransferTab_Update_ButtonStates();
                 Control_TransferTab_TextBox_ToLocation.TextChanged += (s, e) => Control_TransferTab_Update_ButtonStates();
-                
+
                 // Transfer button
                 Control_TransferTab_Button_Transfer.Click +=
                     async (s, e) => await Control_TransferTab_Button_Save_ClickAsync(s, e);
@@ -1201,11 +1201,11 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             try
             {
                 var selectedRowCount = Control_TransferTab_DataGridView_Main.SelectedRows.Count;
-                
+
                 if (selectedRowCount == 1)
                 {
                     var row = Control_TransferTab_DataGridView_Main.SelectedRows[0];
-                    if (row?.DataBoundItem is DataRowView drv && 
+                    if (row?.DataBoundItem is DataRowView drv &&
                         int.TryParse(drv["Quantity"]?.ToString(), out int qty) && qty > 0)
                     {
                         Control_TransferTab_NumericUpDown_Quantity.Maximum = qty;
@@ -1267,14 +1267,14 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             Control_TransferTab_TextBox_Part.Enabled = hasAdminAccess || isNormal || isReadOnly;
             Control_TransferTab_TextBox_Operation.Enabled = hasAdminAccess || isNormal || isReadOnly;
             Control_TransferTab_TextBox_ToLocation.Enabled = hasAdminAccess || isNormal || isReadOnly;
-            
+
             // Apply focus highlighting to ToLocation after enabling (it starts disabled in designer)
             if (Control_TransferTab_TextBox_ToLocation.Enabled)
             {
-                Core.FocusUtils.ApplyFocusEventHandling(Control_TransferTab_TextBox_ToLocation, 
+                Core.FocusUtils.ApplyFocusEventHandling(Control_TransferTab_TextBox_ToLocation,
                     Model_Application_Variables.UserUiColors);
             }
-            
+
             // NumericUpDown
             Control_TransferTab_NumericUpDown_Quantity.ReadOnly = isReadOnly;
             Control_TransferTab_NumericUpDown_Quantity.Enabled = hasAdminAccess || isNormal || isReadOnly;
@@ -1393,7 +1393,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             {
                 // Multiple items - group by Part ID for concise summary
                 var items = new List<(string PartID, string FromLocation, string Operation, int Quantity)>();
-                
+
                 foreach (DataGridViewRow row in selectedRows)
                 {
                     if (row.DataBoundItem is DataRowView drv)
@@ -1423,13 +1423,13 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
 
                 StringBuilder sb = new();
                 sb.AppendLine($"Are you sure you want to transfer {items.Count} items to {toLocation}?\n");
-                
+
                 foreach (var group in groupedByPart)
                 {
                     string locationText = group.LocationCount > 1 ? $"{group.LocationCount} locations" : "1 location";
                     string operationText = group.OperationCount > 1 ? $"{group.OperationCount} operations" : "";
                     string opSuffix = !string.IsNullOrEmpty(operationText) ? $", {operationText}" : "";
-                    
+
                     sb.AppendLine($"PartID: {group.PartID}, {locationText}{opSuffix}, Quantity: {group.TotalQuantity}");
                 }
 
@@ -1460,6 +1460,8 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                 button.ForeColor = Model_Application_Variables.UserUiColors.ErrorColor ?? Color.Red;
             }
         }
+
+
     }
 
     #endregion
