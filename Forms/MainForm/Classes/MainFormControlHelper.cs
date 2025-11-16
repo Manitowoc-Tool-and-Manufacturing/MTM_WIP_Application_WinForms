@@ -81,7 +81,7 @@ public static class MainFormControlHelper
             return;
 
         validColor ??= Color.Black;
-        invalidColor ??= Model_Application_Variables.UserUiColors.ComboBoxErrorForeColor ?? Color.Red;
+        invalidColor ??= Model_Application_Variables.UserUiColors.TextBoxForeColor ?? Color.Black;
 
         // Check if textbox is empty (placeholder is shown) or contains a valid number
         var isEmpty = string.IsNullOrWhiteSpace(textBox.Text);
@@ -168,7 +168,7 @@ public static class MainFormControlHelper
             return;
 
         validColor ??= Color.Black;
-        invalidColor ??= Model_Application_Variables.UserUiColors.ComboBoxErrorForeColor ?? Color.Red;
+        invalidColor ??= Model_Application_Variables.UserUiColors.TextBoxForeColor ?? Color.Black;
 
         // Check if textbox is empty (placeholder is shown) or contains a valid number
         var isEmpty = string.IsNullOrWhiteSpace(textBox.Text);

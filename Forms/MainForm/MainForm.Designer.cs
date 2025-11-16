@@ -496,7 +496,7 @@ namespace MTM_WIP_Application_Winforms.Forms.MainForm
             // 
             AutoScaleDimensions = new SizeF(96F, 96F);
             AutoScaleMode = AutoScaleMode.Dpi;
-            ClientSize = new Size(884, 461);
+            ClientSize = new Size(900, 525);
             Controls.Add(MainForm_TableLayout);
             Icon = (Icon)resources.GetObject("$this.Icon");
             IsMdiContainer = true;

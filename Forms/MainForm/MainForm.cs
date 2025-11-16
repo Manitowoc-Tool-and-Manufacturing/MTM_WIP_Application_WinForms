@@ -356,11 +356,11 @@ namespace MTM_WIP_Application_Winforms.Forms.MainForm
         {
             try
             {
-                if (MainForm_UserControl_InventoryTab?.Control_InventoryTab_TextBox_Part != null)
+                if (MainForm_UserControl_InventoryTab?.Control_InventoryTab_SuggestionBox_Part != null)
                 {
-                    MainForm_UserControl_InventoryTab.Control_InventoryTab_TextBox_Part.Focus();
-                    MainForm_UserControl_InventoryTab.Control_InventoryTab_TextBox_Part.SelectAll();
-                    MainForm_UserControl_InventoryTab.Control_InventoryTab_TextBox_Part.BackColor =
+                    MainForm_UserControl_InventoryTab.Control_InventoryTab_SuggestionBox_Part.Focus();
+                    MainForm_UserControl_InventoryTab.Control_InventoryTab_SuggestionBox_Part.TextBox.SelectAll();
+                    MainForm_UserControl_InventoryTab.Control_InventoryTab_SuggestionBox_Part.TextBox.BackColor =
                         Model_Application_Variables.UserUiColors.ControlFocusedBackColor ?? Color.LightBlue;
                 }
             }
@@ -820,7 +820,7 @@ namespace MTM_WIP_Application_Winforms.Forms.MainForm
                 switch (MainForm_TabControl.SelectedIndex)
                 {
                     case 0:
-                        MainForm_UserControl_InventoryTab?.Control_InventoryTab_TextBox_Part?.Focus();
+                        MainForm_UserControl_InventoryTab?.Control_InventoryTab_SuggestionBox_Part?.Focus();
                         break;
                     case 1:
                         MainForm_UserControl_RemoveTab?.Control_RemoveTab_TextBox_Part?.Focus();

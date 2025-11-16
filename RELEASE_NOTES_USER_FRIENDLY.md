@@ -8,8 +8,10 @@
 
 | Date | Version | Summary | What to do |
 | --- | --- | --- | --- |
-| [Nov 13, 2025](#latest-update---november-13-2025-version-621) | [6.2.1](#latest-update---november-13-2025-version-621) | Start the app directly in Production/Test and set the user name shown in logs. | Optional: create dedicated shortcuts when you switch between environments. |
-| [Nov 13, 2025](#latest-update---november-13-2025-version-621) | [6.2.1](#latest-update---november-13-2025-version-621) | New Help page with step-by-step instructions for startup arguments. | Press F1 → search "Startup Arguments" to learn more. |
+| [Nov 15, 2025](#latest-update---november-15-2025-version-623) | [6.2.3](#latest-update---november-15-2025-version-623) | Search buttons added to all main entry tabs for quick access to full lists. | Nothing—just click 🔎 buttons to access dropdown lists! |
+| [Nov 15, 2025](#previous-update---november-15-2025-version-622) | [6.2.2](#previous-update---november-15-2025-version-622) | Advanced Inventory Entry modernized with smart suggestions and Excel auto-template. | Nothing—faster data entry is ready to use! |
+| [Nov 13, 2025](#previous-update---november-13-2025-version-621) | [6.2.1](#previous-update---november-13-2025-version-621) | Start the app directly in Production/Test and set the user name shown in logs. | Optional: create dedicated shortcuts when you switch between environments. |
+| [Nov 13, 2025](#previous-update---november-13-2025-version-621) | [6.2.1](#previous-update---november-13-2025-version-621) | New Help page with step-by-step instructions for startup arguments. | Press F1 → search "Startup Arguments" to learn more. |
 | [Nov 13, 2025](#previous-update---november-13-2025-version-620) | [6.2.0](#previous-update---november-13-2025-version-620) | Universal suggestions replaced old dropdowns with type-to-search. | Nothing—feature is automatically available. |
 | [Nov 13, 2025](#previous-update---november-13-2025-version-620) | [6.2.0](#previous-update---november-13-2025-version-620) | Smart confirmations now summarize deletions and transfers before you commit. | Review the summary and click Yes to proceed. |
 | [Nov 13, 2025](#previous-update---november-13-2025-version-620) | [6.2.0](#previous-update---november-13-2025-version-620) | Focus highlighting improvements across all tabs. | Notice clearer visual feedback when typing. |
@@ -33,7 +35,125 @@
 
 ---
 
-## Latest Update - November 13, 2025 (Version 6.2.1)
+## Latest Update - November 15, 2025 (Version 6.2.3)
+
+**What Changed**: All main entry tabs now have 🔎 search buttons next to Part, Operation, and Location fields for quick access to full dropdown lists.  
+**Do I Need To Do Anything?**: No—buttons work automatically! Click when you want to see all options.
+
+---
+
+### 🎯 What This Means For You
+
+#### Quick Access Search Buttons on All Tabs
+
+**What's new**:
+- **🔎 Search buttons** added next to key fields on Inventory, Transfer, and Remove tabs
+- **Smart behavior**: Buttons adapt based on whether the field has text
+- **Mouse-friendly alternative** to pressing F4 on the keyboard
+- **Consistent across all tabs** - same helpful buttons everywhere
+
+**Where they appear**:
+- **Inventory Tab**: Part Number, Operation, Location, Color Code (4 buttons)
+- **Transfer Tab**: Part Number, Operation, To Location (3 buttons)
+- **Remove Tab**: Part Number, Operation (2 buttons)
+
+**How to use them**:
+1. **When field is empty**: Click 🔎 button → Opens full dropdown list (same as pressing F4)
+2. **When field has text**: Click 🔎 button → Moves to next field (same as pressing Enter)
+
+**Example workflow**:
+1. Need to find a part? Click 🔎 next to Part Number → See all parts in a dropdown
+2. Already know the part? Type it and click 🔎 → Jumps straight to Operation field
+3. Want to browse operations? Click 🔎 next to Operation → See all available operations
+
+**Why this helps**:
+- **Less keyboard needed** - mouse users can access dropdowns without touching F4 key
+- **Faster navigation** - one click moves you forward when you're done
+- **Clearer interface** - easy to see where you can get help finding values
+- **Consistent experience** - same buttons work the same way on every tab
+
+**Pro tip**: These buttons work perfectly with the smart suggestion system - type a few letters to narrow the list, or click 🔎 to see everything!
+
+---
+
+## Previous Update - November 15, 2025 (Version 6.2.2)
+
+**What Changed**: The Advanced Inventory Entry screen is now faster and easier with smart suggestions, search buttons, and automatic Excel template creation.  
+**Do I Need To Do Anything?**: No—just enjoy the speed boost! Your Excel import files are created automatically now.
+
+---
+
+### 🎯 What This Means For You
+
+#### Advanced Inventory Entry Gets Smart Suggestions (Both Tabs)
+
+**What's new**:
+- **Type-to-search** now works in Advanced Inventory Entry (both "Single Item" and "Multiple Locations" tabs)
+- **Smart Part/Operation/Location fields** replace the old dropdown menus
+- **🔎 Search buttons** next to each field for quick access to full lists
+- **Keyboard shortcuts**: Press F4 to open suggestions, or just start typing
+- **Row deletion with confirmation**: Select a preview row and press Delete key to remove it (asks for confirmation first)
+
+**Where it works**:
+- **Advanced Inventory Entry → Single Item tab**: Part Number, Operation, Location fields
+- **Advanced Inventory Entry → Multiple Locations tab**: Part Number, Operation, Location fields
+- **Excel Import tab**: Validation against smart suggestion lists
+
+**How to use it**:
+1. Click in **Part Number**, **Operation**, or **Location** field
+2. **Start typing** to see matching suggestions instantly
+3. **Or click the 🔎 button** next to any field to see all available options
+4. **Press F4 anytime** to open the suggestion dropdown
+5. **Arrow keys** navigate suggestions; **Enter** selects; **Escape** cancels
+6. **If the field has text**: Clicking 🔎 or F4 moves to the next field (smart behavior!)
+
+**Preview list improvements**:
+- **New column layout**: Location (30%) | Part ID with Op (40%) | Quantity (30%)
+- **Operation shown with Part**: Displays as "Part-123 (Op: 90)" for clarity
+- **Delete rows easily**: Click a row and press Delete key (asks "Are you sure?" first)
+- **Columns resize automatically**: Adjust to window size for better readability
+
+**Why this helps**:
+- **3-5x faster data entry** - no more scrolling through long dropdown lists
+- **Fewer mistakes** - only valid Parts/Operations/Locations can be selected
+- **Less clicking** - type a few letters instead of hunting through lists
+- **QuickButtons work perfectly** - clicking a QuickButton now fills the smart suggestion fields correctly
+
+---
+
+#### Excel Import Template Auto-Creation
+
+**What's new**:
+- **Excel template created automatically** when you open Advanced Inventory Entry
+- **No more "file not found" errors** when trying to import
+- **Ready-to-use structure** with proper column headers (Part, Operation, Location, Quantity, Notes)
+- **Professional formatting** - header row is bold with gray background
+
+**Where it works**:
+- **Advanced Inventory Entry → Import from Excel tab**
+
+**How to use it**:
+1. Open Advanced Inventory Entry (nothing to do - file is created automatically!)
+2. Click "Open Excel" to edit your import file
+3. File is located in your user folder under WIP App Excel Files
+4. Add your data and click "Import Excel"
+
+**Why this helps**:
+- **No setup required** - template is ready the first time you use it
+- **Consistent format** - everyone uses the same column structure
+- **Fewer errors** - proper headers prevent import mistakes
+
+---
+
+#### Better Error Messages
+
+**What's fixed**:
+- **"No data found in Excel"** now shows a simple message box instead of error report
+- **Excel import validation** updated to work with smart suggestion lists (no more crashes)
+
+---
+
+## Previous Update - November 13, 2025 (Version 6.2.1)
 
 **What Changed**: You can now start the app directly in Production or Test, and choose the name that appears in logs. A new Help page shows simple, step‑by‑step instructions.  
 **Do I Need To Do Anything?**: No. Optional feature — use if you need separate shortcuts for Production vs Test.

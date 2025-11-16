@@ -553,6 +553,41 @@ namespace MTM_WIP_Application_Winforms.Helpers
             }
         }
 
+        /// <summary>
+        /// Gets cached users from the pre-loaded ComboBoxUser_DataTable.
+        /// Returns empty list if cache not populated.
+        /// Thread-safe access to shared cache.
+        /// </summary>
+        /// <returns>List of all users from cache</returns>
+        public static List<string> GetCachedUsers()
+        {
+            lock (UserDataLock)
+            {
+                var suggestions = new List<string>(ComboBoxUser_DataTable.Rows.Count);
+                
+                if (!ComboBoxUser_DataTable.Columns.Contains("User"))
+                {
+                    LoggingUtility.Log("[Helper_UI_ComboBoxes] GetCachedUsers: User column not found in cache");
+                    return suggestions;
+                }
+
+                foreach (DataRow row in ComboBoxUser_DataTable.Rows)
+                {
+                    var value = row["User"];
+                    if (value != null && value != DBNull.Value)
+                    {
+                        var user = value.ToString() ?? string.Empty;
+                        if (!string.IsNullOrWhiteSpace(user) && !user.StartsWith("["))
+                        {
+                            suggestions.Add(user);
+                        }
+                    }
+                }
+
+                return suggestions;
+            }
+        }
+
         #endregion
 
         #region DataTableResetAndRefresh

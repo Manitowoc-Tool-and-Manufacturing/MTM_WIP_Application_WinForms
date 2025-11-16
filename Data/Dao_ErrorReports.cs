@@ -54,17 +54,19 @@ internal static class Dao_ErrorReports
             // Get connection string
             string connectionString = Helper_Database_Variables.GetConnectionString(null, null, null, null);
 
-            // Prepare parameters (no p_ prefix - helper adds it)
+            // Prepare parameters (WITH p_ prefix - sp_error_reports_Insert uses p_ prefix)
+            // NOTE: Must include p_ prefix explicitly since this may be called during early startup
+            // before parameter prefix cache is fully initialized
             var parameters = new Dictionary<string, object>
             {
-                ["UserName"] = report.UserName ?? string.Empty,
-                ["MachineName"] = report.MachineName ?? (object)DBNull.Value,
-                ["AppVersion"] = report.AppVersion ?? (object)DBNull.Value,
-                ["ErrorType"] = report.ErrorType ?? (object)DBNull.Value,
-                ["ErrorSummary"] = report.ErrorSummary ?? (object)DBNull.Value,
-                ["UserNotes"] = report.UserNotes ?? (object)DBNull.Value,
-                ["TechnicalDetails"] = report.TechnicalDetails ?? (object)DBNull.Value,
-                ["CallStack"] = report.CallStack ?? (object)DBNull.Value
+                ["p_UserName"] = report.UserName ?? string.Empty,
+                ["p_MachineName"] = report.MachineName ?? (object)DBNull.Value,
+                ["p_AppVersion"] = report.AppVersion ?? (object)DBNull.Value,
+                ["p_ErrorType"] = report.ErrorType ?? (object)DBNull.Value,
+                ["p_ErrorSummary"] = report.ErrorSummary ?? (object)DBNull.Value,
+                ["p_UserNotes"] = report.UserNotes ?? (object)DBNull.Value,
+                ["p_TechnicalDetails"] = report.TechnicalDetails ?? (object)DBNull.Value,
+                ["p_CallStack"] = report.CallStack ?? (object)DBNull.Value
             };
 
             // Execute stored procedure

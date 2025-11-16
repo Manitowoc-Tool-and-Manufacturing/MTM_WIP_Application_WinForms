@@ -57,7 +57,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
         /// </remarks>
         private async void HandleColorCodeOtherSelection()
         {
-            if (Control_InventoryTab_TextBox_ColorCode.Text?.Trim().Equals("OTHER", StringComparison.OrdinalIgnoreCase) == true)
+            if (Control_InventoryTab_SuggestionBox_ColorCode.Text?.Trim().Equals("OTHER", StringComparison.OrdinalIgnoreCase) == true)
             {
                 try
                 {
@@ -100,19 +100,19 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                             await Model_Application_Variables.ReloadColorCodePartsAsync();
                             
                             // Do NOT change user's casing in the textbox
-                            Control_InventoryTab_TextBox_ColorCode.Text = userEnteredColor;
+                            Control_InventoryTab_SuggestionBox_ColorCode.Text = userEnteredColor;
                             LoggingUtility.Log($"Custom color added (DB stored as UPPER): {colorForDatabase}");
                         }
                         else
                         {
                             Service_ErrorHandler.ShowWarning($"Failed to add custom color: {result.ErrorMessage}");
-                            Control_InventoryTab_TextBox_ColorCode.Text = string.Empty;
+                            Control_InventoryTab_SuggestionBox_ColorCode.Text = string.Empty;
                         }
                     }
                     else
                     {
                         // User cancelled - clear the "OTHER" text
-                        Control_InventoryTab_TextBox_ColorCode.Text = string.Empty;
+                        Control_InventoryTab_SuggestionBox_ColorCode.Text = string.Empty;
                     }
                 }
                 catch (Exception ex)
@@ -128,7 +128,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                         callerName: nameof(HandleColorCodeOtherSelection),
                         controlName: this.Name);
 
-                    Control_InventoryTab_TextBox_ColorCode.Text = string.Empty;
+                    Control_InventoryTab_SuggestionBox_ColorCode.Text = string.Empty;
                 }
             }
         }
@@ -231,11 +231,11 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                 {
                     ["FocusHighlighting"] = "AUTO_APPLIED_BY_BASE",
                     ["ComboBoxColors"] = "Applied",
-                    ["InitialFocus"] = "Control_InventoryTab_TextBox_Part",
+                    ["InitialFocus"] = "Control_InventoryTab_SuggestionBox_Part",
                     ["QuantityTextBoxState"] = "Placeholder"
                 });
             // ForeColor is now managed automatically by SuggestionTextBox and validation logic
-            Control_InventoryTab_TextBox_Part.Focus();
+            Control_InventoryTab_SuggestionBox_Part.TextBox.Focus();
             
             // PlaceholderText is now set in Designer instead of programmatically setting Text
         
@@ -273,9 +273,9 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             Control_InventoryTab_Button_Save.Visible = hasAdminAccess || isNormal;
             Control_InventoryTab_Label_Version.Visible = true;
             Control_InventoryTab_Button_AdvancedEntry.Visible = hasAdminAccess || isNormal;
-            Control_InventoryTab_Label_Part.Visible = true;
-            Control_InventoryTab_Label_Op.Visible = true;
-            Control_InventoryTab_Label_Loc.Visible = true;
+            Control_InventoryTab_SuggestionBox_Part.Visible = true;
+            Control_InventoryTab_SuggestionBox_Operation.Visible = true;
+            Control_InventoryTab_SuggestionBox_Location.Visible = true;
             Control_InventoryTab_Label_Qty.Visible = true;
             Control_InventoryTab_TextBox_Quantity.Visible = hasAdminAccess || isNormal || isReadOnly;
             Control_InventoryTab_RichTextBox_Notes.Visible = hasAdminAccess || isNormal || isReadOnly;
@@ -289,9 +289,9 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             // For Read-Only, set controls to ReadOnly/Disabled if applicable
             if (isReadOnly)
             {
-                Control_InventoryTab_TextBox_Part.Enabled = false;
-                Control_InventoryTab_TextBox_Operation.Enabled = false;
-                Control_InventoryTab_TextBox_Location.Enabled = false;
+                Control_InventoryTab_SuggestionBox_Part.TextBox.Enabled = false;
+                Control_InventoryTab_SuggestionBox_Operation.TextBox.Enabled = false;
+                Control_InventoryTab_SuggestionBox_Location.TextBox.Enabled = false;
                 Control_InventoryTab_TextBox_Quantity.Enabled = false;
                 Control_InventoryTab_RichTextBox_Notes.ReadOnly = true;
                 Control_InventoryTab_Button_Save.Visible = false;
@@ -301,9 +301,9 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             }
             else
             {
-                Control_InventoryTab_TextBox_Part.Enabled = true;
-                Control_InventoryTab_TextBox_Operation.Enabled = true;
-                Control_InventoryTab_TextBox_Location.Enabled = true;
+                Control_InventoryTab_SuggestionBox_Part.TextBox.Enabled = true;
+                Control_InventoryTab_SuggestionBox_Operation.TextBox.Enabled = true;
+                Control_InventoryTab_SuggestionBox_Location.TextBox.Enabled = true;
                 Control_InventoryTab_TextBox_Quantity.Enabled = true;
                 Control_InventoryTab_RichTextBox_Notes.ReadOnly = false;
                 Control_InventoryTab_Button_Save.Visible = true;
@@ -352,30 +352,30 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                 
                 // Configure SuggestionTextBox controls using helper methods with F4 support
                 Helper_SuggestionTextBox.ConfigureForPartNumbers(
-                    Control_InventoryTab_TextBox_Part, 
+                    Control_InventoryTab_SuggestionBox_Part.TextBox, 
                     GetPartNumberSuggestionsAsync, 
-                    enableF4: true);
+                    enableF4: false); // F4 handled by composite control button
                 
                 _progressHelper?.UpdateProgress(40, "Configuring operation suggestions...");
                 
                 Helper_SuggestionTextBox.ConfigureForOperations(
-                    Control_InventoryTab_TextBox_Operation, 
+                    Control_InventoryTab_SuggestionBox_Operation.TextBox, 
                     GetOperationSuggestionsAsync, 
-                    enableF4: true);
+                    enableF4: false);
                 
                 _progressHelper?.UpdateProgress(70, "Configuring location suggestions...");
                 
                 Helper_SuggestionTextBox.ConfigureForLocations(
-                    Control_InventoryTab_TextBox_Location, 
+                    Control_InventoryTab_SuggestionBox_Location.TextBox, 
                     GetLocationSuggestionsAsync, 
-                    enableF4: true);
+                    enableF4: false);
 
                 _progressHelper?.UpdateProgress(85, "Configuring color code suggestions...");
                 
                 Helper_SuggestionTextBox.ConfigureForColorCodes(
-                    Control_InventoryTab_TextBox_ColorCode, 
+                    Control_InventoryTab_SuggestionBox_ColorCode.TextBox, 
                     GetColorCodeSuggestionsAsync, 
-                    enableF4: true);
+                    enableF4: false);
 
                 _progressHelper?.UpdateProgress(100, "Combo boxes loaded");
                 await Task.Delay(100);
@@ -901,16 +901,16 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
 
                 Debug.WriteLine("[DEBUG] Resetting UI fields");
                 // Reset SuggestionTextBox fields (Part, Operation, and Location)
-                Control_InventoryTab_TextBox_Part.Text = string.Empty;
-                Control_InventoryTab_TextBox_Operation.Text = string.Empty;
-                Control_InventoryTab_TextBox_Location.Text = string.Empty;
+                Control_InventoryTab_SuggestionBox_Part.Text = string.Empty;
+                Control_InventoryTab_SuggestionBox_Operation.Text = string.Empty;
+                Control_InventoryTab_SuggestionBox_Location.Text = string.Empty;
                 
                 MainFormControlHelper.ResetTextBox(Control_InventoryTab_TextBox_Quantity,
                     Model_Application_Variables.UserUiColors.TextBoxForeColor ?? Color.Black, "");
                 MainFormControlHelper.ResetRichTextBox(Control_InventoryTab_RichTextBox_Notes,
                     Model_Application_Variables.UserUiColors.RichTextBoxForeColor ?? Color.Black, "");
 
-                Control_InventoryTab_TextBox_Part.Focus();
+                Control_InventoryTab_SuggestionBox_Part.TextBox.Focus();
 
                 Control_InventoryTab_Update_SaveButtonState();
 
@@ -974,9 +974,9 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
 
                 Debug.WriteLine("[DEBUG] Resetting UI fields");
                 // Reset SuggestionTextBox fields (Part and Operation)
-                Control_InventoryTab_TextBox_Part.Text = string.Empty;
-                Control_InventoryTab_TextBox_Operation.Text = string.Empty;
-                Control_InventoryTab_TextBox_Location.Text = string.Empty;
+                Control_InventoryTab_SuggestionBox_Part.Text = string.Empty;
+                Control_InventoryTab_SuggestionBox_Operation.Text = string.Empty;
+                Control_InventoryTab_SuggestionBox_Location.Text = string.Empty;
                 
                 MainFormControlHelper.ResetTextBox(Control_InventoryTab_TextBox_Quantity,
                     Model_Application_Variables.UserUiColors.TextBoxForeColor ?? Color.Black, "");
@@ -1007,7 +1007,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             {
                 Debug.WriteLine("[DEBUG] InventoryTab SoftReset button re-enabled");
                 Control_InventoryTab_Button_Reset.Enabled = true;
-                Control_InventoryTab_TextBox_Part.Focus();
+                Control_InventoryTab_SuggestionBox_Part.TextBox.Focus();
                 if (MainFormInstance != null)
                 {
                     Debug.WriteLine("[DEBUG] Restoring status strip after reset");
@@ -1035,20 +1035,20 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                 _progressHelper?.UpdateProgress(10, "Saving inventory transaction...");
                 LoggingUtility.Log("Inventory Save button clicked.");
 
-                string partId = Control_InventoryTab_TextBox_Part.Text;
-                string op = Control_InventoryTab_TextBox_Operation.Text;
-                string loc = Control_InventoryTab_TextBox_Location.Text;
+                string partId = Control_InventoryTab_SuggestionBox_Part.Text;
+                string op = Control_InventoryTab_SuggestionBox_Operation.Text;
+                string loc = Control_InventoryTab_SuggestionBox_Location.Text;
                 string qtyText = Control_InventoryTab_TextBox_Quantity.Text.Trim();
                 string notes = Control_InventoryTab_RichTextBox_Notes.Text.Trim();
-                string? colorCode = Control_InventoryTab_TextBox_ColorCode.Visible ? Control_InventoryTab_TextBox_ColorCode.Text?.Trim() : null;
+                string? colorCode = Control_InventoryTab_SuggestionBox_ColorCode.TextBox.Visible ? Control_InventoryTab_SuggestionBox_ColorCode.Text?.Trim() : null;
                 string? workOrder = Control_InventoryTab_TextBox_WorkOrder.Visible ? Control_InventoryTab_TextBox_WorkOrder.Text?.Trim() : null;
 
                 if (string.IsNullOrWhiteSpace(partId))
                 {
                     Service_ErrorHandler.HandleValidationError(
                         "Please enter a valid Part.",
-                        nameof(Control_InventoryTab_TextBox_Part));
-                    Control_InventoryTab_TextBox_Part.Focus();
+                        nameof(Control_InventoryTab_SuggestionBox_Part));
+                    Control_InventoryTab_SuggestionBox_Part.TextBox.Focus();
                     Service_DebugTracer.TraceMethodExit("Validation failed: Part invalid", nameof(Control_InventoryTab), nameof(Control_InventoryTab_Button_Save_Click_Async));
                     return;
                 }
@@ -1057,8 +1057,8 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                 {
                     Service_ErrorHandler.HandleValidationError(
                         "Please enter a valid Operation.",
-                        nameof(Control_InventoryTab_TextBox_Operation));
-                    Control_InventoryTab_TextBox_Operation.Focus();
+                        nameof(Control_InventoryTab_SuggestionBox_Operation));
+                    Control_InventoryTab_SuggestionBox_Operation.TextBox.Focus();
                     Service_DebugTracer.TraceMethodExit("Validation failed: Operation invalid", nameof(Control_InventoryTab), nameof(Control_InventoryTab_Button_Save_Click_Async));
                     return;
                 }
@@ -1067,8 +1067,8 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                 {
                     Service_ErrorHandler.HandleValidationError(
                         "Please enter a valid Location.",
-                        nameof(Control_InventoryTab_TextBox_Location));
-                    Control_InventoryTab_TextBox_Location.Focus();
+                        nameof(Control_InventoryTab_SuggestionBox_Location));
+                    Control_InventoryTab_SuggestionBox_Location.TextBox.Focus();
                     Service_DebugTracer.TraceMethodExit("Validation failed: Location invalid", nameof(Control_InventoryTab), nameof(Control_InventoryTab_Button_Save_Click_Async));
                     return;
                 }
@@ -1290,19 +1290,19 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             {
                 Service_DebugTracer.TraceMethodEntry(new Dictionary<string, object>
                 {
-                    ["PartText"] = Control_InventoryTab_TextBox_Part.Text?.Trim() ?? "",
-                    ["OpText"] = Control_InventoryTab_TextBox_Operation.Text?.Trim() ?? "",
-                    ["LocText"] = Control_InventoryTab_TextBox_Location.Text?.Trim() ?? "",
+                    ["PartText"] = Control_InventoryTab_SuggestionBox_Part.Text?.Trim() ?? "",
+                    ["OpText"] = Control_InventoryTab_SuggestionBox_Operation.Text?.Trim() ?? "",
+                    ["LocText"] = Control_InventoryTab_SuggestionBox_Location.Text?.Trim() ?? "",
                     ["QtyText"] = Control_InventoryTab_TextBox_Quantity.Text?.Trim() ?? "",
-                    ["ColorText"] = Control_InventoryTab_TextBox_ColorCode.Visible ? (Control_InventoryTab_TextBox_ColorCode.Text?.Trim() ?? "") : "<hidden>",
+                    ["ColorText"] = Control_InventoryTab_SuggestionBox_ColorCode.TextBox.Visible ? (Control_InventoryTab_SuggestionBox_ColorCode.Text?.Trim() ?? "") : "<hidden>",
                     ["WoText"] = Control_InventoryTab_TextBox_WorkOrder.Visible ? (Control_InventoryTab_TextBox_WorkOrder.Text?.Trim() ?? "") : "<hidden>",
-                    ["ColorFieldsVisible"] = Control_InventoryTab_TextBox_ColorCode.Visible
+                    ["ColorFieldsVisible"] = Control_InventoryTab_SuggestionBox_ColorCode.TextBox.Visible
                 }, nameof(Control_InventoryTab_Update_SaveButtonState), nameof(Control_InventoryTab));
                 // Check validity: Either Model_Application_Variables is set (from overlay selection)
                 // OR the text matches a valid value in the master data (exact match typed)
-                string partText = Control_InventoryTab_TextBox_Part.Text?.Trim() ?? string.Empty;
-                string opText = Control_InventoryTab_TextBox_Operation.Text?.Trim() ?? string.Empty;
-                string locText = Control_InventoryTab_TextBox_Location.Text?.Trim() ?? string.Empty;
+                string partText = Control_InventoryTab_SuggestionBox_Part.Text?.Trim() ?? string.Empty;
+                string opText = Control_InventoryTab_SuggestionBox_Operation.Text?.Trim() ?? string.Empty;
+                string locText = Control_InventoryTab_SuggestionBox_Location.Text?.Trim() ?? string.Empty;
                 
                 bool partValid = !string.IsNullOrWhiteSpace(Model_Application_Variables.PartId) 
                     || Helper_UI_SuggestionBoxes.IsValidPartId(partText);
@@ -1314,9 +1314,9 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                 
                 // Check if color code is required and valid
                 bool colorCodeValid = true;
-                if (Control_InventoryTab_TextBox_ColorCode.Visible)
+                if (Control_InventoryTab_SuggestionBox_ColorCode.TextBox.Visible)
                 {
-                    string colorCodeText = Control_InventoryTab_TextBox_ColorCode.Text?.Trim() ?? string.Empty;
+                    string colorCodeText = Control_InventoryTab_SuggestionBox_ColorCode.Text?.Trim() ?? string.Empty;
                     
                     // Color code is required when visible
                     if (string.IsNullOrWhiteSpace(colorCodeText))
@@ -1394,7 +1394,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                     ["OperationValid"] = opValid,
                     ["LocationValid"] = locValid,
                     ["QuantityValid"] = qtyValid,
-                    ["ColorRequired"] = Control_InventoryTab_TextBox_ColorCode.Visible,
+                    ["ColorRequired"] = Control_InventoryTab_SuggestionBox_ColorCode.TextBox.Visible,
                     ["ColorValid"] = colorCodeValid,
                     ["WorkOrderRequired"] = Control_InventoryTab_TextBox_WorkOrder.Visible,
                     ["WorkOrderValid"] = workOrderValid,
@@ -1466,7 +1466,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                 Control_InventoryTab_Button_Reset.Click += (s, e) => Control_InventoryTab_Button_Reset_Click();
 
                 // NOTE: Part and Operation now use SuggestionTextBox - wire up SuggestionSelected events instead
-                Control_InventoryTab_TextBox_Part.SuggestionSelected += (s, e) =>
+                Control_InventoryTab_SuggestionBox_Part.TextBox.SuggestionSelected += (s, e) =>
                 {
                     Model_Application_Variables.PartId = e.SelectedValue;
                     LoggingUtility.Log($"Part suggestion selected: {e.SelectedValue}");
@@ -1474,10 +1474,10 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                 };
                 
                 // Clear PartId when user manually types (not selecting from overlay)
-                Control_InventoryTab_TextBox_Part.TextChanged += (s, e) =>
+                Control_InventoryTab_SuggestionBox_Part.TextChanged += (s, e) =>
                 {
                     // Only clear if text doesn't match the stored valid value
-                    if (Control_InventoryTab_TextBox_Part.Text != Model_Application_Variables.PartId)
+                    if (Control_InventoryTab_SuggestionBox_Part.Text != Model_Application_Variables.PartId)
                     {
                         Model_Application_Variables.PartId = null;
                         Control_InventoryTab_Update_SaveButtonState();
@@ -1487,7 +1487,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                     UpdateColorCodeFieldsVisibility();
                 };
                 
-                Control_InventoryTab_TextBox_Operation.SuggestionSelected += (s, e) =>
+                Control_InventoryTab_SuggestionBox_Operation.TextBox.SuggestionSelected += (s, e) =>
                 {
                     Model_Application_Variables.Operation = e.SelectedValue;
                     LoggingUtility.Log($"Operation suggestion selected: {e.SelectedValue}");
@@ -1495,16 +1495,16 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                 };
 
                 // Clear Operation when user manually types
-                Control_InventoryTab_TextBox_Operation.TextChanged += (s, e) =>
+                Control_InventoryTab_SuggestionBox_Operation.TextChanged += (s, e) =>
                 {
-                    if (Control_InventoryTab_TextBox_Operation.Text != Model_Application_Variables.Operation)
+                    if (Control_InventoryTab_SuggestionBox_Operation.Text != Model_Application_Variables.Operation)
                     {
                         Model_Application_Variables.Operation = null;
                         Control_InventoryTab_Update_SaveButtonState();
                     }
                 };
 
-                Control_InventoryTab_TextBox_Location.SuggestionSelected += (s, e) =>
+                Control_InventoryTab_SuggestionBox_Location.TextBox.SuggestionSelected += (s, e) =>
                 {
                     Model_Application_Variables.Location = e.SelectedValue;
                     LoggingUtility.Log($"Location suggestion selected: {e.SelectedValue}");
@@ -1512,9 +1512,9 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                 };
 
                 // Clear Location when user manually types
-                Control_InventoryTab_TextBox_Location.TextChanged += (s, e) =>
+                Control_InventoryTab_SuggestionBox_Location.TextChanged += (s, e) =>
                 {
-                    if (Control_InventoryTab_TextBox_Location.Text != Model_Application_Variables.Location)
+                    if (Control_InventoryTab_SuggestionBox_Location.Text != Model_Application_Variables.Location)
                     {
                         Model_Application_Variables.Location = null;
                         Control_InventoryTab_Update_SaveButtonState();
@@ -1533,24 +1533,24 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                 };
 
                 // Color code "OTHER" selection handler and standard validation
-                Control_InventoryTab_TextBox_ColorCode.SuggestionSelected += (s, e) =>
+                Control_InventoryTab_SuggestionBox_ColorCode.TextBox.SuggestionSelected += (s, e) =>
                 {
                     LoggingUtility.Log($"Color code suggestion selected: {e.SelectedValue}");
                     Control_InventoryTab_Update_SaveButtonState();
                 };
 
-                Control_InventoryTab_TextBox_ColorCode.TextChanged += (s, e) =>
+                Control_InventoryTab_SuggestionBox_ColorCode.TextChanged += (s, e) =>
                 {
                     HandleColorCodeOtherSelection();
                     Control_InventoryTab_Update_SaveButtonState();
                 };
 
-                Control_InventoryTab_TextBox_ColorCode.SuggestionCancelled += (s, e) =>
+                Control_InventoryTab_SuggestionBox_ColorCode.TextBox.SuggestionCancelled += (s, e) =>
                 {
                     // Clear textbox on cancel (no matches found)
                     if (e.Reason == SuggestionCancelReason.NoMatches)
                     {
-                        Control_InventoryTab_TextBox_ColorCode.Text = string.Empty;
+                        Control_InventoryTab_SuggestionBox_ColorCode.Text = string.Empty;
                     }
                 };
 
@@ -1573,6 +1573,9 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                     MainFormControlHelper.AdjustQuantityByKey_Quantity(sender, e,
                         Model_Application_Variables.UserUiColors.TextBoxForeColor ?? Color.Black,
                         Model_Application_Variables.UserUiColors.TextBoxForeColor ?? Color.Black);
+
+                // F4 buttons now handled automatically by SuggestionTextBoxWithLabel composite control
+                // The F4 button in each composite control automatically triggers Helper_SuggestionTextBox.ShowFullSuggestionListAsync
 
                 // Make non-essential buttons not tabbable on Inventory tab
                 try
@@ -1643,7 +1646,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
         {
             try
             {
-                var colorInput = Control_InventoryTab_TextBox_ColorCode.Text?.Trim();
+                var colorInput = Control_InventoryTab_SuggestionBox_ColorCode.Text?.Trim();
 
                 // Skip validation if empty or "OTHER" (handled separately)
                 if (!allowblank && (string.IsNullOrWhiteSpace(colorInput) || colorInput.Equals("OTHER", StringComparison.OrdinalIgnoreCase)))
@@ -1657,10 +1660,10 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                     // Invalid color - clear and show overlay
                     LoggingUtility.Log($"[Color Validation] Invalid color '{colorInput}' - clearing and showing overlay");
                     
-                    Control_InventoryTab_TextBox_ColorCode.Text = string.Empty;
+                    Control_InventoryTab_SuggestionBox_ColorCode.Text = string.Empty;
                     
                     // Show suggestion overlay with all colors
-                    await Control_InventoryTab_TextBox_ColorCode.ShowSuggestionsAsync();
+                    await Control_InventoryTab_SuggestionBox_ColorCode.TextBox.ShowSuggestionsAsync();
                 }
             }
             catch (Exception ex)
@@ -1691,7 +1694,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             {
                 Service_DebugTracer.TraceMethodEntry(null, nameof(UpdateColorCodeFieldsVisibility), nameof(Control_InventoryTab));
 
-                var partText = Control_InventoryTab_TextBox_Part.Text?.Trim();
+                var partText = Control_InventoryTab_SuggestionBox_Part.Text?.Trim();
                 bool inCache = !string.IsNullOrWhiteSpace(partText) && Model_Application_Variables.ColorCodeParts.Contains(partText);
 
                 Service_DebugTracer.TraceUIAction("COLOR_FIELDS_VISIBILITY", nameof(Control_InventoryTab), new Dictionary<string, object>
@@ -1702,9 +1705,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                 });
 
                 // Show/hide color code and work order fields
-                Control_InventoryTab_Label_ColorCode.Visible = inCache;
-                Control_InventoryTab_Button_ColorF4.Visible = inCache;
-                Control_InventoryTab_TextBox_ColorCode.Visible = inCache;
+                Control_InventoryTab_SuggestionBox_ColorCode.Visible = inCache;
                 Control_InventoryTab_Label_WorkOrder.Visible = inCache;
                 Control_InventoryTab_TextBox_WorkOrder.Visible = inCache;
 
@@ -1742,7 +1743,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                 // Clear fields when hiding
                 if (!inCache)
                 {
-                    Control_InventoryTab_TextBox_ColorCode.Text = string.Empty;
+                    Control_InventoryTab_SuggestionBox_ColorCode.Text = string.Empty;
                     Control_InventoryTab_TextBox_WorkOrder.Text = string.Empty;
                 }
 
@@ -1760,7 +1761,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                     {
                         ["Control"] = nameof(Control_InventoryTab),
                         ["Method"] = nameof(UpdateColorCodeFieldsVisibility),
-                        ["PartText"] = Control_InventoryTab_TextBox_Part.Text ?? "NULL"
+                        ["PartText"] = Control_InventoryTab_SuggestionBox_Part.Text ?? "NULL"
                     },
                     callerName: nameof(UpdateColorCodeFieldsVisibility),
                     controlName: this.Name);
