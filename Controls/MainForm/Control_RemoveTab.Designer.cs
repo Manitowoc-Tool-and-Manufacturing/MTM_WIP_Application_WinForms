@@ -11,13 +11,9 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
 
 
         private System.ComponentModel.IContainer components = null;
-
-        #endregion
-
         private GroupBox Control_RemoveTab_GroupBox_MainControl;
-        internal SuggestionTextBox Control_RemoveTab_TextBox_Part;
-        private Label Control_RemoveTab_Label_Part;
-        private Label Control_RemoveTab_Label_Operation;
+        internal SuggestionTextBoxWithLabel Control_RemoveTab_TextBox_Part;
+        internal SuggestionTextBoxWithLabel Control_RemoveTab_TextBox_Operation;
         private Panel Control_RemoveTab_Panel_DataGridView;
         private PictureBox Control_RemoveTab_Image_NothingFound;
         private DataGridView Control_RemoveTab_DataGridView_Main;
@@ -30,9 +26,14 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
         private Button Control_RemoveTab_Button_Toggle_RightPanel;
         private TableLayoutPanel Control_RemoveTab_Panel_Main;
         private Button Control_RemoveTab_Button_Undo;
-        
+        private Button Control_RemoveTab_Button_Print;
+        private TableLayoutPanel Control_RemoveTab_TableLayout_Bottom;
+        private Panel Control_RemoveTab_Panel_Header;
+        private TableLayoutPanel Control_RemoveTab_TableLayout_Top;
+        private Button Control_RemoveTab_Button_ShowAll;
 
-        
+        #endregion
+
         #region Methods
 
 
@@ -59,12 +60,8 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             Control_RemoveTab_ContextMenuItem_Print = new ToolStripMenuItem();
             Control_RemoveTab_Panel_Header = new Panel();
             Control_RemoveTab_TableLayout_Top = new TableLayoutPanel();
-            RemoveTab_Single_Button_PartF4 = new Button();
-            Control_RemoveTab_Label_Part = new Label();
-            Control_RemoveTab_TextBox_Part = new SuggestionTextBox();
-            Control_RemoveTab_TextBox_Operation = new SuggestionTextBox();
-            Control_RemoveTab_Label_Operation = new Label();
-            RemoveTab_Single_Button_OperationF4 = new Button();
+            Control_RemoveTab_TextBox_Part = new SuggestionTextBoxWithLabel();
+            Control_RemoveTab_TextBox_Operation = new SuggestionTextBoxWithLabel();
             Control_RemoveTab_TableLayout_Bottom = new TableLayoutPanel();
             Control_RemoveTab_Button_ShowAll = new Button();
             Control_RemoveTab_Button_AdvancedItemRemoval = new Button();
@@ -203,20 +200,11 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             // Control_RemoveTab_TableLayout_Top
             // 
             Control_RemoveTab_TableLayout_Top.AutoSize = true;
-            Control_RemoveTab_TableLayout_Top.ColumnCount = 7;
-            Control_RemoveTab_TableLayout_Top.ColumnStyles.Add(new ColumnStyle());
-            Control_RemoveTab_TableLayout_Top.ColumnStyles.Add(new ColumnStyle());
-            Control_RemoveTab_TableLayout_Top.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 30F));
-            Control_RemoveTab_TableLayout_Top.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
-            Control_RemoveTab_TableLayout_Top.ColumnStyles.Add(new ColumnStyle());
-            Control_RemoveTab_TableLayout_Top.ColumnStyles.Add(new ColumnStyle());
-            Control_RemoveTab_TableLayout_Top.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 30F));
-            Control_RemoveTab_TableLayout_Top.Controls.Add(RemoveTab_Single_Button_PartF4, 2, 0);
-            Control_RemoveTab_TableLayout_Top.Controls.Add(Control_RemoveTab_Label_Part, 0, 0);
-            Control_RemoveTab_TableLayout_Top.Controls.Add(Control_RemoveTab_TextBox_Part, 1, 0);
-            Control_RemoveTab_TableLayout_Top.Controls.Add(Control_RemoveTab_TextBox_Operation, 5, 0);
-            Control_RemoveTab_TableLayout_Top.Controls.Add(Control_RemoveTab_Label_Operation, 4, 0);
-            Control_RemoveTab_TableLayout_Top.Controls.Add(RemoveTab_Single_Button_OperationF4, 6, 0);
+            Control_RemoveTab_TableLayout_Top.ColumnCount = 2;
+            Control_RemoveTab_TableLayout_Top.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
+            Control_RemoveTab_TableLayout_Top.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
+            Control_RemoveTab_TableLayout_Top.Controls.Add(Control_RemoveTab_TextBox_Part, 0, 0);
+            Control_RemoveTab_TableLayout_Top.Controls.Add(Control_RemoveTab_TextBox_Operation, 1, 0);
             Control_RemoveTab_TableLayout_Top.Dock = DockStyle.Fill;
             Control_RemoveTab_TableLayout_Top.Location = new Point(0, 0);
             Control_RemoveTab_TableLayout_Top.Name = "Control_RemoveTab_TableLayout_Top";
@@ -225,79 +213,27 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             Control_RemoveTab_TableLayout_Top.Size = new Size(717, 29);
             Control_RemoveTab_TableLayout_Top.TabIndex = 6;
             // 
-            // RemoveTab_Single_Button_PartF4
-            // 
-            RemoveTab_Single_Button_PartF4.Dock = DockStyle.Fill;
-            RemoveTab_Single_Button_PartF4.Font = new Font("Segoe UI Emoji", 9F);
-            RemoveTab_Single_Button_PartF4.Location = new Point(273, 3);
-            RemoveTab_Single_Button_PartF4.MaximumSize = new Size(23, 23);
-            RemoveTab_Single_Button_PartF4.MinimumSize = new Size(23, 23);
-            RemoveTab_Single_Button_PartF4.Name = "RemoveTab_Single_Button_PartF4";
-            RemoveTab_Single_Button_PartF4.Size = new Size(23, 23);
-            RemoveTab_Single_Button_PartF4.TabIndex = 14;
-            RemoveTab_Single_Button_PartF4.Text = "🔎";
-            RemoveTab_Single_Button_PartF4.UseVisualStyleBackColor = true;
-            // 
-            // Control_RemoveTab_Label_Part
-            // 
-            Control_RemoveTab_Label_Part.AutoEllipsis = true;
-            Control_RemoveTab_Label_Part.AutoSize = true;
-            Control_RemoveTab_Label_Part.Dock = DockStyle.Fill;
-            Control_RemoveTab_Label_Part.Font = new Font("Segoe UI Emoji", 9F);
-            Control_RemoveTab_Label_Part.Location = new Point(3, 3);
-            Control_RemoveTab_Label_Part.Margin = new Padding(3);
-            Control_RemoveTab_Label_Part.Name = "Control_RemoveTab_Label_Part";
-            Control_RemoveTab_Label_Part.Size = new Size(78, 23);
-            Control_RemoveTab_Label_Part.TabIndex = 4;
-            Control_RemoveTab_Label_Part.Text = "Part Number:";
-            Control_RemoveTab_Label_Part.TextAlign = ContentAlignment.MiddleRight;
-            // 
             // Control_RemoveTab_TextBox_Part
             // 
             Control_RemoveTab_TextBox_Part.Dock = DockStyle.Fill;
-            Control_RemoveTab_TextBox_Part.Font = new Font("Segoe UI Emoji", 9F);
-            Control_RemoveTab_TextBox_Part.Location = new Point(87, 3);
+            Control_RemoveTab_TextBox_Part.LabelText = "Part Number";
+            Control_RemoveTab_TextBox_Part.Location = new Point(3, 3);
+            Control_RemoveTab_TextBox_Part.Margin = new Padding(3);
             Control_RemoveTab_TextBox_Part.Name = "Control_RemoveTab_TextBox_Part";
             Control_RemoveTab_TextBox_Part.PlaceholderText = "Enter Part Number";
-            Control_RemoveTab_TextBox_Part.Size = new Size(180, 23);
-            Control_RemoveTab_TextBox_Part.TabIndex = 1;
+            Control_RemoveTab_TextBox_Part.Size = new Size(352, 23);
+            Control_RemoveTab_TextBox_Part.TabIndex = 0;
             // 
             // Control_RemoveTab_TextBox_Operation
             // 
             Control_RemoveTab_TextBox_Operation.Dock = DockStyle.Fill;
-            Control_RemoveTab_TextBox_Operation.Font = new Font("Segoe UI Emoji", 9F);
-            Control_RemoveTab_TextBox_Operation.Location = new Point(504, 3);
+            Control_RemoveTab_TextBox_Operation.LabelText = "Operation";
+            Control_RemoveTab_TextBox_Operation.Location = new Point(361, 3);
+            Control_RemoveTab_TextBox_Operation.Margin = new Padding(3);
             Control_RemoveTab_TextBox_Operation.Name = "Control_RemoveTab_TextBox_Operation";
             Control_RemoveTab_TextBox_Operation.PlaceholderText = "Enter Operation";
-            Control_RemoveTab_TextBox_Operation.Size = new Size(180, 23);
-            Control_RemoveTab_TextBox_Operation.TabIndex = 2;
-            // 
-            // Control_RemoveTab_Label_Operation
-            // 
-            Control_RemoveTab_Label_Operation.AutoEllipsis = true;
-            Control_RemoveTab_Label_Operation.AutoSize = true;
-            Control_RemoveTab_Label_Operation.Dock = DockStyle.Fill;
-            Control_RemoveTab_Label_Operation.Font = new Font("Segoe UI Emoji", 9F);
-            Control_RemoveTab_Label_Operation.Location = new Point(435, 3);
-            Control_RemoveTab_Label_Operation.Margin = new Padding(3);
-            Control_RemoveTab_Label_Operation.Name = "Control_RemoveTab_Label_Operation";
-            Control_RemoveTab_Label_Operation.Size = new Size(63, 23);
-            Control_RemoveTab_Label_Operation.TabIndex = 5;
-            Control_RemoveTab_Label_Operation.Text = "Operation:";
-            Control_RemoveTab_Label_Operation.TextAlign = ContentAlignment.MiddleRight;
-            // 
-            // RemoveTab_Single_Button_OperationF4
-            // 
-            RemoveTab_Single_Button_OperationF4.Dock = DockStyle.Fill;
-            RemoveTab_Single_Button_OperationF4.Font = new Font("Segoe UI Emoji", 9F);
-            RemoveTab_Single_Button_OperationF4.Location = new Point(690, 3);
-            RemoveTab_Single_Button_OperationF4.MaximumSize = new Size(23, 23);
-            RemoveTab_Single_Button_OperationF4.MinimumSize = new Size(23, 23);
-            RemoveTab_Single_Button_OperationF4.Name = "RemoveTab_Single_Button_OperationF4";
-            RemoveTab_Single_Button_OperationF4.Size = new Size(23, 23);
-            RemoveTab_Single_Button_OperationF4.TabIndex = 15;
-            RemoveTab_Single_Button_OperationF4.Text = "🔎";
-            RemoveTab_Single_Button_OperationF4.UseVisualStyleBackColor = true;
+            Control_RemoveTab_TextBox_Operation.Size = new Size(353, 23);
+            Control_RemoveTab_TextBox_Operation.TabIndex = 1;
             // 
             // Control_RemoveTab_TableLayout_Bottom
             // 
@@ -481,16 +417,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             ResumeLayout(false);
             PerformLayout();
         }
-        private Button Control_RemoveTab_Button_Print;
-        private TableLayoutPanel Control_RemoveTab_TableLayout_Bottom;
-        private Panel Control_RemoveTab_Panel_Header;
-        private TableLayoutPanel Control_RemoveTab_TableLayout_Top;
-        private Button Control_RemoveTab_Button_ShowAll;
-        private Button RemoveTab_Single_Button_PartF4;
-        private Button RemoveTab_Single_Button_OperationF4;
-        internal SuggestionTextBox Control_RemoveTab_TextBox_Operation;
-    }
 
-        
         #endregion
     }
+}
