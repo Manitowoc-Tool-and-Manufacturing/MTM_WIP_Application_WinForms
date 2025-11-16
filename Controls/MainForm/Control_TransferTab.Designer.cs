@@ -42,16 +42,10 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             panel1 = new Panel();
             Control_TransferTab_SplitContainer_Main = new SplitContainer();
             tableLayoutPanel1 = new TableLayoutPanel();
-            TransferTab_Single_Button_LocationF4 = new Button();
-            TransferTab_Single_Button_OperationF4 = new Button();
-            TransferTab_Single_Button_PartF4 = new Button();
-            Control_TransferTab_TextBox_Operation = new SuggestionTextBox();
-            Control_TransferTab_TextBox_Part = new SuggestionTextBox();
+            Control_TransferTab_TextBox_Operation = new SuggestionTextBoxWithLabel();
+            Control_TransferTab_TextBox_Part = new SuggestionTextBoxWithLabel();
             Control_TransferTab_NumericUpDown_Quantity = new NumericUpDown();
-            Control_TransferTab_TextBox_ToLocation = new SuggestionTextBox();
-            Control_TransferTab_Label_Part = new Label();
-            Control_TransferTab_Label_Operation = new Label();
-            Control_TransferTab_Label_ToLocation = new Label();
+            Control_TransferTab_TextBox_ToLocation = new SuggestionTextBoxWithLabel();
             Control_TransferTab_Label_Quantity = new Label();
             tableLayoutPanel2 = new TableLayoutPanel();
             Control_TransferTab_Button_Transfer = new Button();
@@ -194,22 +188,19 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             // 
             tableLayoutPanel1.AutoSize = true;
             tableLayoutPanel1.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            tableLayoutPanel1.ColumnCount = 3;
+            tableLayoutPanel1.ColumnCount = 2;
             tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle());
             tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
-            tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 30F));
-            tableLayoutPanel1.Controls.Add(TransferTab_Single_Button_LocationF4, 2, 2);
-            tableLayoutPanel1.Controls.Add(TransferTab_Single_Button_OperationF4, 2, 1);
-            tableLayoutPanel1.Controls.Add(TransferTab_Single_Button_PartF4, 2, 0);
-            tableLayoutPanel1.Controls.Add(Control_TransferTab_TextBox_Operation, 1, 1);
-            tableLayoutPanel1.Controls.Add(Control_TransferTab_TextBox_Part, 1, 0);
-            tableLayoutPanel1.Controls.Add(Control_TransferTab_NumericUpDown_Quantity, 1, 3);
-            tableLayoutPanel1.Controls.Add(Control_TransferTab_TextBox_ToLocation, 1, 2);
-            tableLayoutPanel1.Controls.Add(Control_TransferTab_Label_Part, 0, 0);
-            tableLayoutPanel1.Controls.Add(Control_TransferTab_Label_Operation, 0, 1);
-            tableLayoutPanel1.Controls.Add(Control_TransferTab_Label_ToLocation, 0, 2);
+            tableLayoutPanel1.Controls.Add(Control_TransferTab_TextBox_Part, 0, 0);
+            tableLayoutPanel1.SetColumnSpan(Control_TransferTab_TextBox_Part, 2);
+            tableLayoutPanel1.Controls.Add(Control_TransferTab_TextBox_Operation, 0, 1);
+            tableLayoutPanel1.SetColumnSpan(Control_TransferTab_TextBox_Operation, 2);
+            tableLayoutPanel1.Controls.Add(Control_TransferTab_TextBox_ToLocation, 0, 2);
+            tableLayoutPanel1.SetColumnSpan(Control_TransferTab_TextBox_ToLocation, 2);
             tableLayoutPanel1.Controls.Add(Control_TransferTab_Label_Quantity, 0, 3);
+            tableLayoutPanel1.Controls.Add(Control_TransferTab_NumericUpDown_Quantity, 1, 3);
             tableLayoutPanel1.Controls.Add(tableLayoutPanel2, 0, 6);
+            tableLayoutPanel1.SetColumnSpan(tableLayoutPanel2, 2);
             tableLayoutPanel1.Dock = DockStyle.Fill;
             tableLayoutPanel1.Location = new Point(0, 0);
             tableLayoutPanel1.Name = "tableLayoutPanel1";
@@ -224,67 +215,36 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             tableLayoutPanel1.Size = new Size(250, 309);
             tableLayoutPanel1.TabIndex = 0;
             // 
-            // TransferTab_Single_Button_LocationF4
-            // 
-            TransferTab_Single_Button_LocationF4.Font = new Font("Segoe UI Emoji", 9F);
-            TransferTab_Single_Button_LocationF4.Location = new Point(223, 61);
-            TransferTab_Single_Button_LocationF4.Name = "TransferTab_Single_Button_LocationF4";
-            TransferTab_Single_Button_LocationF4.Size = new Size(23, 23);
-            TransferTab_Single_Button_LocationF4.TabIndex = 17;
-            TransferTab_Single_Button_LocationF4.Text = "🔎";
-            TransferTab_Single_Button_LocationF4.UseVisualStyleBackColor = true;
-            // 
-            // TransferTab_Single_Button_OperationF4
-            // 
-            TransferTab_Single_Button_OperationF4.Font = new Font("Segoe UI Emoji", 9F);
-            TransferTab_Single_Button_OperationF4.Location = new Point(223, 32);
-            TransferTab_Single_Button_OperationF4.Name = "TransferTab_Single_Button_OperationF4";
-            TransferTab_Single_Button_OperationF4.Size = new Size(23, 23);
-            TransferTab_Single_Button_OperationF4.TabIndex = 16;
-            TransferTab_Single_Button_OperationF4.Text = "🔎";
-            TransferTab_Single_Button_OperationF4.UseVisualStyleBackColor = true;
-            // 
-            // TransferTab_Single_Button_PartF4
-            // 
-            TransferTab_Single_Button_PartF4.Font = new Font("Segoe UI Emoji", 9F);
-            TransferTab_Single_Button_PartF4.Location = new Point(223, 3);
-            TransferTab_Single_Button_PartF4.Name = "TransferTab_Single_Button_PartF4";
-            TransferTab_Single_Button_PartF4.Size = new Size(23, 23);
-            TransferTab_Single_Button_PartF4.TabIndex = 15;
-            TransferTab_Single_Button_PartF4.Text = "🔎";
-            TransferTab_Single_Button_PartF4.UseVisualStyleBackColor = true;
-            // 
             // Control_TransferTab_TextBox_Operation
             // 
             Control_TransferTab_TextBox_Operation.Dock = DockStyle.Fill;
-            Control_TransferTab_TextBox_Operation.Font = new Font("Segoe UI Emoji", 9F);
-            Control_TransferTab_TextBox_Operation.Location = new Point(87, 32);
+            Control_TransferTab_TextBox_Operation.LabelText = "Operation";
+            Control_TransferTab_TextBox_Operation.Location = new Point(3, 41);
             Control_TransferTab_TextBox_Operation.Name = "Control_TransferTab_TextBox_Operation";
             Control_TransferTab_TextBox_Operation.PlaceholderText = "Enter Operation";
-            Control_TransferTab_TextBox_Operation.Size = new Size(130, 23);
+            Control_TransferTab_TextBox_Operation.Size = new Size(244, 32);
             Control_TransferTab_TextBox_Operation.TabIndex = 2;
             // 
             // Control_TransferTab_TextBox_Part
             // 
             Control_TransferTab_TextBox_Part.Dock = DockStyle.Fill;
-            Control_TransferTab_TextBox_Part.Font = new Font("Segoe UI Emoji", 9F);
-            Control_TransferTab_TextBox_Part.Location = new Point(87, 3);
+            Control_TransferTab_TextBox_Part.LabelText = "Part Number";
+            Control_TransferTab_TextBox_Part.Location = new Point(3, 3);
             Control_TransferTab_TextBox_Part.Name = "Control_TransferTab_TextBox_Part";
             Control_TransferTab_TextBox_Part.PlaceholderText = "Enter Part Number";
-            Control_TransferTab_TextBox_Part.Size = new Size(130, 23);
+            Control_TransferTab_TextBox_Part.Size = new Size(244, 32);
             Control_TransferTab_TextBox_Part.TabIndex = 1;
             // 
             // Control_TransferTab_NumericUpDown_Quantity
             // 
-            tableLayoutPanel1.SetColumnSpan(Control_TransferTab_NumericUpDown_Quantity, 2);
             Control_TransferTab_NumericUpDown_Quantity.Dock = DockStyle.Fill;
             Control_TransferTab_NumericUpDown_Quantity.Enabled = false;
             Control_TransferTab_NumericUpDown_Quantity.Font = new Font("Segoe UI Emoji", 9F);
-            Control_TransferTab_NumericUpDown_Quantity.Location = new Point(87, 90);
+            Control_TransferTab_NumericUpDown_Quantity.Location = new Point(119, 117);
             Control_TransferTab_NumericUpDown_Quantity.Maximum = new decimal(new int[] { 1000000, 0, 0, 0 });
             Control_TransferTab_NumericUpDown_Quantity.Minimum = new decimal(new int[] { 1, 0, 0, 0 });
             Control_TransferTab_NumericUpDown_Quantity.Name = "Control_TransferTab_NumericUpDown_Quantity";
-            Control_TransferTab_NumericUpDown_Quantity.Size = new Size(160, 23);
+            Control_TransferTab_NumericUpDown_Quantity.Size = new Size(128, 23);
             Control_TransferTab_NumericUpDown_Quantity.TabIndex = 4;
             Control_TransferTab_NumericUpDown_Quantity.Value = new decimal(new int[] { 1, 0, 0, 0 });
             // 
@@ -292,71 +252,32 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             // 
             Control_TransferTab_TextBox_ToLocation.Dock = DockStyle.Fill;
             Control_TransferTab_TextBox_ToLocation.Enabled = false;
-            Control_TransferTab_TextBox_ToLocation.Font = new Font("Segoe UI Emoji", 9F);
-            Control_TransferTab_TextBox_ToLocation.Location = new Point(87, 61);
+            Control_TransferTab_TextBox_ToLocation.LabelText = "To Location";
+            Control_TransferTab_TextBox_ToLocation.Location = new Point(3, 79);
             Control_TransferTab_TextBox_ToLocation.Name = "Control_TransferTab_TextBox_ToLocation";
             Control_TransferTab_TextBox_ToLocation.PlaceholderText = "Enter Location";
-            Control_TransferTab_TextBox_ToLocation.Size = new Size(130, 23);
+            Control_TransferTab_TextBox_ToLocation.Size = new Size(244, 32);
             Control_TransferTab_TextBox_ToLocation.TabIndex = 3;
-            // 
-            // Control_TransferTab_Label_Part
-            // 
-            Control_TransferTab_Label_Part.AutoSize = true;
-            Control_TransferTab_Label_Part.Dock = DockStyle.Fill;
-            Control_TransferTab_Label_Part.Font = new Font("Segoe UI Emoji", 9F);
-            Control_TransferTab_Label_Part.Location = new Point(3, 3);
-            Control_TransferTab_Label_Part.Margin = new Padding(3);
-            Control_TransferTab_Label_Part.Name = "Control_TransferTab_Label_Part";
-            Control_TransferTab_Label_Part.Size = new Size(78, 23);
-            Control_TransferTab_Label_Part.TabIndex = 4;
-            Control_TransferTab_Label_Part.Text = "Part Number:";
-            Control_TransferTab_Label_Part.TextAlign = ContentAlignment.MiddleRight;
-            // 
-            // Control_TransferTab_Label_Operation
-            // 
-            Control_TransferTab_Label_Operation.AutoSize = true;
-            Control_TransferTab_Label_Operation.Dock = DockStyle.Fill;
-            Control_TransferTab_Label_Operation.Font = new Font("Segoe UI Emoji", 9F);
-            Control_TransferTab_Label_Operation.Location = new Point(3, 32);
-            Control_TransferTab_Label_Operation.Margin = new Padding(3);
-            Control_TransferTab_Label_Operation.Name = "Control_TransferTab_Label_Operation";
-            Control_TransferTab_Label_Operation.Size = new Size(78, 23);
-            Control_TransferTab_Label_Operation.TabIndex = 5;
-            Control_TransferTab_Label_Operation.Text = "Operation:";
-            Control_TransferTab_Label_Operation.TextAlign = ContentAlignment.MiddleRight;
-            // 
-            // Control_TransferTab_Label_ToLocation
-            // 
-            Control_TransferTab_Label_ToLocation.AutoSize = true;
-            Control_TransferTab_Label_ToLocation.Dock = DockStyle.Fill;
-            Control_TransferTab_Label_ToLocation.Font = new Font("Segoe UI Emoji", 9F);
-            Control_TransferTab_Label_ToLocation.Location = new Point(3, 61);
-            Control_TransferTab_Label_ToLocation.Margin = new Padding(3);
-            Control_TransferTab_Label_ToLocation.Name = "Control_TransferTab_Label_ToLocation";
-            Control_TransferTab_Label_ToLocation.Size = new Size(78, 23);
-            Control_TransferTab_Label_ToLocation.TabIndex = 8;
-            Control_TransferTab_Label_ToLocation.Text = "To Location:";
-            Control_TransferTab_Label_ToLocation.TextAlign = ContentAlignment.MiddleRight;
             // 
             // Control_TransferTab_Label_Quantity
             // 
             Control_TransferTab_Label_Quantity.AutoSize = true;
             Control_TransferTab_Label_Quantity.Dock = DockStyle.Fill;
             Control_TransferTab_Label_Quantity.Font = new Font("Segoe UI Emoji", 9F);
-            Control_TransferTab_Label_Quantity.Location = new Point(3, 90);
+            Control_TransferTab_Label_Quantity.Location = new Point(3, 117);
             Control_TransferTab_Label_Quantity.Margin = new Padding(3);
             Control_TransferTab_Label_Quantity.Name = "Control_TransferTab_Label_Quantity";
-            Control_TransferTab_Label_Quantity.Size = new Size(78, 23);
+            Control_TransferTab_Label_Quantity.Size = new Size(110, 23);
             Control_TransferTab_Label_Quantity.TabIndex = 10;
             Control_TransferTab_Label_Quantity.Text = "Quantity:";
-            Control_TransferTab_Label_Quantity.TextAlign = ContentAlignment.MiddleRight;
+            Control_TransferTab_Label_Quantity.TextAlign = ContentAlignment.MiddleLeft;
             // 
             // tableLayoutPanel2
             // 
             tableLayoutPanel2.AutoSize = true;
             tableLayoutPanel2.AutoSizeMode = AutoSizeMode.GrowAndShrink;
             tableLayoutPanel2.ColumnCount = 5;
-            tableLayoutPanel1.SetColumnSpan(tableLayoutPanel2, 3);
+            tableLayoutPanel1.SetColumnSpan(tableLayoutPanel2, 2);
             tableLayoutPanel2.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 33.3333321F));
             tableLayoutPanel2.ColumnStyles.Add(new ColumnStyle());
             tableLayoutPanel2.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 33.3333321F));
@@ -555,13 +476,10 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
         private Panel panel1;
         private SplitContainer Control_TransferTab_SplitContainer_Main;
         private TableLayoutPanel tableLayoutPanel1;
-        private SuggestionTextBox Control_TransferTab_TextBox_Operation;
-        internal SuggestionTextBox Control_TransferTab_TextBox_Part;
+        private SuggestionTextBoxWithLabel Control_TransferTab_TextBox_Operation;
+        internal SuggestionTextBoxWithLabel Control_TransferTab_TextBox_Part;
         private NumericUpDown Control_TransferTab_NumericUpDown_Quantity;
-        private SuggestionTextBox Control_TransferTab_TextBox_ToLocation;
-        private Label Control_TransferTab_Label_Part;
-        private Label Control_TransferTab_Label_Operation;
-        private Label Control_TransferTab_Label_ToLocation;
+        private SuggestionTextBoxWithLabel Control_TransferTab_TextBox_ToLocation;
         private Label Control_TransferTab_Label_Quantity;
         private TableLayoutPanel tableLayoutPanel2;
         private Button Control_TransferTab_Button_Transfer;
@@ -571,9 +489,6 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
         private Panel Control_TransferTab_Panel_DataGridView;
         private PictureBox Control_TransferTab_Image_NothingFound;
         private DataGridView Control_TransferTab_DataGridView_Main;
-        private Button TransferTab_Single_Button_LocationF4;
-        private Button TransferTab_Single_Button_OperationF4;
-        private Button TransferTab_Single_Button_PartF4;
     }
 
         

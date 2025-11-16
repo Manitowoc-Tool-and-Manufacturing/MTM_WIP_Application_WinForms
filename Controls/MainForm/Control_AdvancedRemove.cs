@@ -181,20 +181,19 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                 Control_RemoveTab? removeTab = Control_RemoveTab.MainFormInstance?.MainForm_UserControl_RemoveTab;
                 if (removeTab != null)
                 {
-                    if (removeTab.Controls.Find("Control_RemoveTab_TextBox_Part", true).FirstOrDefault() is SuggestionTextBox
-                        part)
+                    if (removeTab.Controls.Find("Control_RemoveTab_TextBox_Part", true)
+                            .FirstOrDefault() is SuggestionTextBoxWithLabel part)
                     {
                         part.Text = string.Empty;
-                        part.ForeColor = Model_Application_Variables.UserUiColors.TextBoxForeColor ?? Color.Black;
+                        part.TextBox.ForeColor = Model_Application_Variables.UserUiColors.TextBoxForeColor ?? Color.Black;
                         part.Focus();
                     }
 
                     if (removeTab.Controls.Find("Control_RemoveTab_TextBox_Operation", true)
-                            .FirstOrDefault() is SuggestionTextBox
-                        op)
+                            .FirstOrDefault() is SuggestionTextBoxWithLabel op)
                     {
                         op.Text = string.Empty;
-                        op.ForeColor = Model_Application_Variables.UserUiColors.TextBoxForeColor ?? Color.Black;
+                        op.TextBox.ForeColor = Model_Application_Variables.UserUiColors.TextBoxForeColor ?? Color.Black;
                     }
                 }
             }
@@ -374,7 +373,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                 string qtyMinText = Control_AdvancedRemove_TextBox_QtyMin.Text.Trim();
                 string qtyMaxText = Control_AdvancedRemove_TextBox_QtyMax.Text.Trim();
                 string notes = Control_AdvancedRemove_TextBox_Notes.Text.Trim();
-                string user = Control_AdvancedRemove_SuggestionBox_User.Text.Trim();
+                string user = Control_AdvancedRemove_SuggestionBox_User?.Text?.Trim() ?? string.Empty;
 
                 DateTime? dateFrom =
                     Control_AdvancedRemove_DateTimePicker_From.Value.Date;

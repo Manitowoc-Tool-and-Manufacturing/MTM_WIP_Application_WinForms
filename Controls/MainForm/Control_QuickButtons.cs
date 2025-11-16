@@ -701,13 +701,22 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                 }
             }
 
-            void ClickSearchButtonIfAvailable(object control, string fieldName)
+            void ClickSearchButtonIfAvailable(object control, string fieldName, bool allowHidden = false, string? handlerName = null)
             {
                 FieldInfo? field =
                     control.GetType().GetField(fieldName, BindingFlags.NonPublic | BindingFlags.Instance);
-                if (field?.GetValue(control) is Button searchButton && searchButton.Enabled && searchButton.Visible)
+                if (field?.GetValue(control) is Button searchButton && searchButton.Enabled)
                 {
-                    searchButton.PerformClick();
+                    if (searchButton.Visible)
+                    {
+                        searchButton.PerformClick();
+                    }
+                    else if (allowHidden && !string.IsNullOrWhiteSpace(handlerName))
+                    {
+                        MethodInfo? handler = control.GetType().GetMethod(handlerName,
+                            BindingFlags.NonPublic | BindingFlags.Instance);
+                        handler?.Invoke(control, new object?[] { searchButton, EventArgs.Empty });
+                    }
                 }
             }
 
@@ -725,8 +734,9 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             if (mainForm.MainForm_UserControl_RemoveTab?.Visible == true)
             {
                 Control_RemoveTab? rem = mainForm.MainForm_UserControl_RemoveTab;
-                SetComboBoxes(rem, "Control_RemoveTab_TextBox_Part", "Control_RemoveTab_TextBox_Operation", partId,
-                    operation);
+                SetTextBoxText(rem, "Control_RemoveTab_TextBox_Part", partId);
+                SetTextBoxText(rem, "Control_RemoveTab_TextBox_Operation", operation);
+                SetFocusOnControl(rem, "Control_RemoveTab_TextBox_Operation");
                 rem.Focus();
                 TriggerEnterEvent(rem);
                 ClickSearchButtonIfAvailable(rem, "Control_RemoveTab_Button_Search");
@@ -736,11 +746,14 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             if (mainForm.MainForm_UserControl_TransferTab?.Visible == true)
             {
                 Control_TransferTab? trn = mainForm.MainForm_UserControl_TransferTab;
-                SetComboBoxes(trn, "Control_TransferTab_TextBox_Part", "Control_TransferTab_TextBox_Operation",
-                    partId, operation);
+                SetTextBoxText(trn, "Control_TransferTab_TextBox_Part", partId);
+                SetTextBoxText(trn, "Control_TransferTab_TextBox_Operation", operation);
                 trn.Focus();
                 TriggerEnterEvent(trn);
-                ClickSearchButtonIfAvailable(trn, "Control_TransferTab_Button_Search");
+                SetFocusOnControl(trn, "Control_TransferTab_TextBox_ToLocation");
+                ClickSearchButtonIfAvailable(trn, "Control_TransferTab_Button_Search",
+                    allowHidden: true,
+                    handlerName: "Control_TransferTab_Button_Search_Click");
                 return;
             }
 

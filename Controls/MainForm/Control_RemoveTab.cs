@@ -2,6 +2,7 @@ using System.ComponentModel;
 using System.Data;
 using System.Diagnostics;
 using System.Drawing.Printing;
+using System.Linq;
 using System.Text;
 using MTM_WIP_Application_Winforms.Controls.Shared;
 using MTM_WIP_Application_Winforms.Core;
@@ -57,40 +58,6 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
 
         #region Constructors
 
-        private void WireUpF4Buttons()
-        {
-            // F4 Button Click Handlers - Remove Tab
-            RemoveTab_Single_Button_PartF4.Click += (s, e) =>
-            {
-                if (string.IsNullOrWhiteSpace(Control_RemoveTab_TextBox_Part.Text))
-                {
-                    // Empty: Trigger F4 dropdown
-                    Control_RemoveTab_TextBox_Part.Focus();
-                    SendKeys.Send("{F4}");
-                }
-                else
-                {
-                    // Has text: Trigger Enter (move to next field)
-                    Control_RemoveTab_TextBox_Operation.Focus();
-                }
-            };
-
-            RemoveTab_Single_Button_OperationF4.Click += (s, e) =>
-            {
-                if (string.IsNullOrWhiteSpace(Control_RemoveTab_TextBox_Operation.Text))
-                {
-                    // Empty: Trigger F4 dropdown
-                    Control_RemoveTab_TextBox_Operation.Focus();
-                    SendKeys.Send("{F4}");
-                }
-                else
-                {
-                    // Has text: Focus stays on operation (end of form)
-                    Control_RemoveTab_Button_Search.Focus();
-                }
-            };
-        }
-
         public Control_RemoveTab()
         {
             Service_DebugTracer.TraceMethodEntry(new Dictionary<string, object>
@@ -129,7 +96,7 @@ SetStyle(ControlStyles.OptimizedDoubleBuffer, true);
                     ["ComboBoxes"] = new[] { "Part", "Operation" },
                     ["StandardProperties"] = "Applied"
                 });
-            // NOTE: SuggestionTextBox does not need ApplyStandardComboBoxProperties or manual ForeColor settings
+            // NOTE: SuggestionTextBoxWithLabel handles combo-like behaviors and theming automatically
             Control_RemoveTab_Image_NothingFound.Visible = false;
 
             Service_DebugTracer.TraceUIAction("DATA_LOADING_START", nameof(Control_RemoveTab),
@@ -213,6 +180,8 @@ SetStyle(ControlStyles.OptimizedDoubleBuffer, true);
         private void Control_RemoveTab_Initialize()
         {
             Control_RemoveTab_Button_Reset.TabStop = false;
+            Control_RemoveTab_TextBox_Part.SetF4ButtonTabStop(false);
+            Control_RemoveTab_TextBox_Operation.SetF4ButtonTabStop(false);
             Core_Themes.ApplyFocusHighlighting(this);
         }
 
@@ -257,7 +226,7 @@ SetStyle(ControlStyles.OptimizedDoubleBuffer, true);
         /// <returns>A task that completes when suggestion controls are configured</returns>
         /// <remarks>
         /// This method is called automatically during control construction and should not be called directly.
-        /// Configures SuggestionTextBox controls with data provider delegates.
+        /// Configures SuggestionTextBoxWithLabel controls with data provider delegates.
         /// Handles errors with Dao_ErrorLog.HandleException_GeneralError_CloseApp for critical initialization failures.
         /// </remarks>
         public async Task Control_RemoveTab_OnStartup_LoadDataComboBoxesAsync()
@@ -267,16 +236,16 @@ SetStyle(ControlStyles.OptimizedDoubleBuffer, true);
                 _progressHelper?.ShowProgress();
                 _progressHelper?.UpdateProgress(10, "Configuring part suggestions...");
 
-                // Configure SuggestionTextBox controls using helper methods with F4 support
+                // Configure SuggestionTextBoxWithLabel controls by wiring their inner textboxes
                 Helper_SuggestionTextBox.ConfigureForPartNumbers(
-                    Control_RemoveTab_TextBox_Part, 
+                    Control_RemoveTab_TextBox_Part.TextBox,
                     GetPartNumberSuggestionsAsync, 
                     enableF4: true);
 
                 _progressHelper?.UpdateProgress(70, "Configuring operation suggestions...");
 
                 Helper_SuggestionTextBox.ConfigureForOperations(
-                    Control_RemoveTab_TextBox_Operation, 
+                    Control_RemoveTab_TextBox_Operation.TextBox,
                     GetOperationSuggestionsAsync, 
                     enableF4: true);
 
@@ -683,8 +652,18 @@ SetStyle(ControlStyles.OptimizedDoubleBuffer, true);
                         // Auto-sort: ColorCode ASC, Location ASC, Unknown at end
                         if (colorTrackedPart && results.Columns.Contains("ColorCode") && results.Columns.Contains("Location"))
                         {
-                            var dv = results.DefaultView;
-                            dv.Sort = "CASE WHEN ColorCode = 'Unknown' THEN 1 ELSE 0 END, ColorCode ASC, Location ASC";
+                            try
+                            {
+                                DataTable sorted = SortInventoryByColorPriority(results, true);
+                                if (!ReferenceEquals(sorted, results))
+                                {
+                                    dgv.DataSource = sorted;
+                                }
+                            }
+                            catch (Exception ex)
+                            {
+                                LoggingUtility.LogApplicationError(ex);
+                            }
                         }
                     }
 
@@ -980,6 +959,8 @@ SetStyle(ControlStyles.OptimizedDoubleBuffer, true);
                     throw new Exception("No results returned from inventory query");
                 }
 
+                bool colorTrackedPart = Model_Application_Variables.ColorCodeParts.Contains(partId);
+
                 // Show warning if too many records
                 if (!ShowWarningIfTooManyRecords(results))
                 {
@@ -992,9 +973,16 @@ SetStyle(ControlStyles.OptimizedDoubleBuffer, true);
                 {
                     try
                     {
-                        var dv = results.DefaultView;
-                        dv.Sort = "ColorCode ASC, Location ASC"; // Multi-column sort
-                        results = dv.ToTable();
+                        if (colorTrackedPart)
+                        {
+                            results = SortInventoryByColorPriority(results, true);
+                        }
+                        else
+                        {
+                            var dv = results.DefaultView;
+                            dv.Sort = "ColorCode ASC, Location ASC"; // Multi-column sort fallback
+                            results = dv.ToTable();
+                        }
                     }
                     catch (Exception sortEx)
                     {
@@ -1028,7 +1016,6 @@ SetStyle(ControlStyles.OptimizedDoubleBuffer, true);
                 }
 
                 // Hide Color/WorkOrder columns if not a color-tracked part
-                bool colorTrackedPart = Model_Application_Variables.ColorCodeParts.Contains(partId);
                 if (Control_RemoveTab_DataGridView_Main.Columns.Contains("ColorCode"))
                     Control_RemoveTab_DataGridView_Main.Columns["ColorCode"].Visible = colorTrackedPart;
                 if (Control_RemoveTab_DataGridView_Main.Columns.Contains("WorkOrder"))
@@ -1152,8 +1139,8 @@ SetStyle(ControlStyles.OptimizedDoubleBuffer, true);
                 Control_RemoveTab_Button_Reset.Click += (s, e) => Control_RemoveTab_Button_Reset_Click();
                 
                 // SuggestionTextBox event handlers - simplified
-                Control_RemoveTab_TextBox_Part.TextChanged += (s, e) => Control_RemoveTab_Update_ButtonStates();
-                Control_RemoveTab_TextBox_Operation.TextChanged += (s, e) => Control_RemoveTab_Update_ButtonStates();
+                Control_RemoveTab_TextBox_Part.TextBox.TextChanged += (s, e) => Control_RemoveTab_Update_ButtonStates();
+                Control_RemoveTab_TextBox_Operation.TextBox.TextChanged += (s, e) => Control_RemoveTab_Update_ButtonStates();
 
                 Control_RemoveTab_Button_AdvancedItemRemoval.Click +=
                     (s, e) => Control_RemoveTab_Button_AdvancedItemRemoval_Click();
@@ -1172,7 +1159,7 @@ SetStyle(ControlStyles.OptimizedDoubleBuffer, true);
                     }
                 }
 
-                // NOTE: SuggestionTextBox does not need Enter/Leave/BackColor handlers - handled internally
+                // NOTE: SuggestionTextBoxWithLabel handles its own focus/visual states
 
                 Control_RemoveTab_DataGridView_Main.SelectionChanged +=
                     (s, e) => Control_RemoveTab_Update_ButtonStates();
@@ -1241,14 +1228,23 @@ SetStyle(ControlStyles.OptimizedDoubleBuffer, true);
                 DataTable dt = getAllResult.Data ?? new DataTable();
                 LoggingUtility.Log($"[SHOW ALL DEBUG] Retrieved {dt.Rows.Count} inventory records. Success: {getAllResult.IsSuccess}");
 
-                // Sort if columns exist
-                if (dt.Columns.Contains("ColorCode") && dt.Columns.Contains("Location"))
+                bool hasColorColumns = dt.Columns.Contains("ColorCode") && dt.Columns.Contains("Location");
+                bool singlePartColorTracked = IsSingleColorTrackedPart(dt);
+
+                if (hasColorColumns)
                 {
                     try
                     {
-                        var dv = dt.DefaultView;
-                        dv.Sort = "ColorCode ASC, Location ASC";
-                        dt = dv.ToTable();
+                        if (singlePartColorTracked)
+                        {
+                            dt = SortInventoryByColorPriority(dt, true);
+                        }
+                        else
+                        {
+                            var dv = dt.DefaultView;
+                            dv.Sort = "ColorCode ASC, Location ASC";
+                            dt = dv.ToTable();
+                        }
                     }
                     catch (Exception exSort)
                     {
@@ -1279,15 +1275,8 @@ SetStyle(ControlStyles.OptimizedDoubleBuffer, true);
                     }
                 }
 
-                // Show-all may contain multiple parts; only disable theming if ALL rows are same flagged part
-                bool singlePart = false;
-                if (dt.Columns.Contains("PartID") && dt.Rows.Count > 0)
-                {
-                    string firstPart = dt.Rows[0]["PartID"]?.ToString() ?? string.Empty;
-                    singlePart = dt.AsEnumerable().All(r => (r["PartID"]?.ToString() ?? string.Empty) == firstPart)
-                                 && Model_Application_Variables.ColorCodeParts.Contains(firstPart);
-                }
-                if (!singlePart)
+                // Show-all may contain multiple parts; only apply color theming if ALL rows are the same flagged part
+                if (!singlePartColorTracked)
                 {
                     Core_Themes.ApplyThemeToDataGridView(Control_RemoveTab_DataGridView_Main);
                 }
@@ -1325,6 +1314,69 @@ SetStyle(ControlStyles.OptimizedDoubleBuffer, true);
         {
             "Red","Blue","Green","Yellow","Orange","Purple","Pink","White","Black"
         };
+
+        private static int GetColorSortGroup(string? colorCode)
+        {
+            if (string.IsNullOrWhiteSpace(colorCode))
+            {
+                return 2; // Treat blanks as unknown
+            }
+
+            if (colorCode.Equals("Unknown", StringComparison.OrdinalIgnoreCase))
+            {
+                return 2;
+            }
+
+            return PredefinedColorCodes.Contains(colorCode) ? 0 : 1;
+        }
+
+        private static DataTable SortInventoryByColorPriority(DataTable source, bool colorTrackedPart)
+        {
+            if (!colorTrackedPart)
+            {
+                return source;
+            }
+
+            if (!source.Columns.Contains("ColorCode") || !source.Columns.Contains("Location") || source.Rows.Count == 0)
+            {
+                return source;
+            }
+
+            DataTable sortedTable = source.Clone();
+            foreach (DataRow row in source.AsEnumerable()
+                         .OrderBy(r => GetColorSortGroup(r["ColorCode"]?.ToString()))
+                         .ThenBy(r => r["ColorCode"]?.ToString(), StringComparer.OrdinalIgnoreCase)
+                         .ThenBy(r => r["Location"]?.ToString(), StringComparer.OrdinalIgnoreCase))
+            {
+                sortedTable.ImportRow(row);
+            }
+
+            return sortedTable;
+        }
+
+        private static bool IsSingleColorTrackedPart(DataTable table)
+        {
+            if (!table.Columns.Contains("PartID") || table.Rows.Count == 0)
+            {
+                return false;
+            }
+
+            string firstPart = table.Rows[0]["PartID"]?.ToString() ?? string.Empty;
+            if (string.IsNullOrWhiteSpace(firstPart))
+            {
+                return false;
+            }
+
+            if (!Model_Application_Variables.ColorCodeParts.Contains(firstPart))
+            {
+                return false;
+            }
+
+            return table.AsEnumerable().All(row => string.Equals(
+                row["PartID"]?.ToString() ?? string.Empty,
+                firstPart,
+                StringComparison.OrdinalIgnoreCase));
+        }
 
         /// <summary>
         /// Applies background coloring to rows based on ColorCode column.

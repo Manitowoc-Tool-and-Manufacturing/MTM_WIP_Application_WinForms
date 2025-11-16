@@ -2,6 +2,7 @@ using System.ComponentModel;
 using System.Data;
 using System.Diagnostics;
 using System.Drawing.Printing;
+using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
 using MTM_WIP_Application_Winforms.Core;
@@ -51,55 +52,6 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
         #endregion
 
         #region Initialization
-
-        private void WireUpF4Buttons()
-        {
-            // F4 Button Click Handlers - Transfer Tab
-            TransferTab_Single_Button_PartF4.Click += (s, e) =>
-            {
-                if (string.IsNullOrWhiteSpace(Control_TransferTab_TextBox_Part.Text))
-                {
-                    // Empty: Trigger F4 dropdown
-                    Control_TransferTab_TextBox_Part.Focus();
-                    SendKeys.Send("{F4}");
-                }
-                else
-                {
-                    // Has text: Trigger Enter (move to next field)
-                    Control_TransferTab_TextBox_Operation.Focus();
-                }
-            };
-
-            TransferTab_Single_Button_OperationF4.Click += (s, e) =>
-            {
-                if (string.IsNullOrWhiteSpace(Control_TransferTab_TextBox_Operation.Text))
-                {
-                    // Empty: Trigger F4 dropdown
-                    Control_TransferTab_TextBox_Operation.Focus();
-                    SendKeys.Send("{F4}");
-                }
-                else
-                {
-                    // Has text: Trigger Enter (move to next field)
-                    Control_TransferTab_TextBox_ToLocation.Focus();
-                }
-            };
-
-            TransferTab_Single_Button_LocationF4.Click += (s, e) =>
-            {
-                if (string.IsNullOrWhiteSpace(Control_TransferTab_TextBox_ToLocation.Text))
-                {
-                    // Empty: Trigger F4 dropdown
-                    Control_TransferTab_TextBox_ToLocation.Focus();
-                    SendKeys.Send("{F4}");
-                }
-                else
-                {
-                    // Has text: Focus stays on location (end of form)
-                    Control_TransferTab_Button_Search.Focus();
-                }
-            };
-        }
 
         public Control_TransferTab()
         {
@@ -235,6 +187,9 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
         public void Control_TransferTab_Initialize()
         {
             Control_TransferTab_Button_Reset.TabStop = false;
+            Control_TransferTab_TextBox_Part.SetF4ButtonTabStop(false);
+            Control_TransferTab_TextBox_Operation.SetF4ButtonTabStop(false);
+            Control_TransferTab_TextBox_ToLocation.SetF4ButtonTabStop(false);
             // Non-tab targets: exclude from tab navigation
             try
             {
@@ -368,21 +323,21 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
 
                 // Configure SuggestionTextBox controls using helper methods with F4 support
                 Helper_SuggestionTextBox.ConfigureForPartNumbers(
-                    Control_TransferTab_TextBox_Part,
+                    Control_TransferTab_TextBox_Part.TextBox,
                     GetPartNumberSuggestionsAsync,
                     enableF4: true);
 
                 _progressHelper?.UpdateProgress(40, "Configuring operation suggestions...");
 
                 Helper_SuggestionTextBox.ConfigureForOperations(
-                    Control_TransferTab_TextBox_Operation,
+                    Control_TransferTab_TextBox_Operation.TextBox,
                     GetOperationSuggestionsAsync,
                     enableF4: true);
 
                 _progressHelper?.UpdateProgress(70, "Configuring location suggestions...");
 
                 Helper_SuggestionTextBox.ConfigureForLocations(
-                    Control_TransferTab_TextBox_ToLocation,
+                    Control_TransferTab_TextBox_ToLocation.TextBox,
                     GetLocationSuggestionsAsync,
                     enableF4: true);
 
@@ -794,6 +749,21 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                     throw new Exception("Failed to retrieve inventory data");
                 }
 
+                bool colorTrackedPart = Model_Application_Variables.ColorCodeParts.Contains(partId);
+                if (colorTrackedPart)
+                {
+                    results = SortInventoryByColorPriority(results, true);
+                }
+                else if (results.Columns.Contains("Location"))
+                {
+                    string sortExpression = results.Columns.Contains("ColorCode")
+                        ? "ColorCode ASC, Location ASC"
+                        : "Location ASC";
+                    DataView sortedView = results.DefaultView;
+                    sortedView.Sort = sortExpression;
+                    results = sortedView.ToTable();
+                }
+
                 _progressHelper?.UpdateProgress(70, "Updating results...");
                 Control_TransferTab_DataGridView_Main.DataSource = results;
                 Control_TransferTab_DataGridView_Main.ClearSelection();
@@ -820,7 +790,6 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                 }
 
                 // Hide Color/WorkOrder columns if not a color-tracked part
-                bool colorTrackedPart = Model_Application_Variables.ColorCodeParts.Contains(partId);
                 if (Control_TransferTab_DataGridView_Main.Columns.Contains("ColorCode"))
                     Control_TransferTab_DataGridView_Main.Columns["ColorCode"].Visible = colorTrackedPart;
                 if (Control_TransferTab_DataGridView_Main.Columns.Contains("WorkOrder"))
@@ -1214,9 +1183,12 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                 Control_TransferTab_Button_Reset.Click += (s, e) => Control_TransferTab_Button_Reset_Click();
 
                 // TextBox events - update button states when text changes
-                Control_TransferTab_TextBox_Part.TextChanged += (s, e) => Control_TransferTab_Update_ButtonStates();
-                Control_TransferTab_TextBox_Operation.TextChanged += (s, e) => Control_TransferTab_Update_ButtonStates();
-                Control_TransferTab_TextBox_ToLocation.TextChanged += (s, e) => Control_TransferTab_Update_ButtonStates();
+                Control_TransferTab_TextBox_Part.TextBox.TextChanged += (s, e) => Control_TransferTab_Update_ButtonStates();
+                Control_TransferTab_TextBox_Operation.TextBox.TextChanged += (s, e) => Control_TransferTab_Update_ButtonStates();
+                Control_TransferTab_TextBox_ToLocation.TextBox.TextChanged += (s, e) => Control_TransferTab_Update_ButtonStates();
+
+                // Search button
+                Control_TransferTab_Button_Search.Click += Control_TransferTab_Button_Search_Click;
 
                 // Transfer button
                 Control_TransferTab_Button_Transfer.Click +=
@@ -1317,7 +1289,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             // Apply focus highlighting to ToLocation after enabling (it starts disabled in designer)
             if (Control_TransferTab_TextBox_ToLocation.Enabled)
             {
-                Core.FocusUtils.ApplyFocusEventHandling(Control_TransferTab_TextBox_ToLocation,
+                Core.FocusUtils.ApplyFocusEventHandling(Control_TransferTab_TextBox_ToLocation.TextBox,
                     Model_Application_Variables.UserUiColors);
             }
 
@@ -1356,6 +1328,45 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
         {
             "Red","Blue","Green","Yellow","Orange","Purple","Pink","White","Black"
         };
+
+        private static int GetColorSortGroup(string? colorCode)
+        {
+            if (string.IsNullOrWhiteSpace(colorCode))
+            {
+                return 2;
+            }
+
+            if (colorCode.Equals("Unknown", StringComparison.OrdinalIgnoreCase))
+            {
+                return 2;
+            }
+
+            return PredefinedColorCodes.Contains(colorCode) ? 0 : 1;
+        }
+
+        private static DataTable SortInventoryByColorPriority(DataTable source, bool colorTrackedPart)
+        {
+            if (!colorTrackedPart)
+            {
+                return source;
+            }
+
+            if (!source.Columns.Contains("ColorCode") || !source.Columns.Contains("Location") || source.Rows.Count == 0)
+            {
+                return source;
+            }
+
+            DataTable sortedTable = source.Clone();
+            foreach (DataRow row in source.AsEnumerable()
+                         .OrderBy(r => GetColorSortGroup(r["ColorCode"]?.ToString()))
+                         .ThenBy(r => r["ColorCode"]?.ToString(), StringComparer.OrdinalIgnoreCase)
+                         .ThenBy(r => r["Location"]?.ToString(), StringComparer.OrdinalIgnoreCase))
+            {
+                sortedTable.ImportRow(row);
+            }
+
+            return sortedTable;
+        }
 
         /// <summary>
         /// Applies background coloring to rows based on ColorCode column.
