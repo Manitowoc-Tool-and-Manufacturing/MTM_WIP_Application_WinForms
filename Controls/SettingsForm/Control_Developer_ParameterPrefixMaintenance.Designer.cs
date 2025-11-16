@@ -237,7 +237,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             // 
             // Control_Developer_ParameterPrefixMaintenance
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.Controls.Add(this.tableLayoutPanel1);
             this.Name = "Control_Developer_ParameterPrefixMaintenance";

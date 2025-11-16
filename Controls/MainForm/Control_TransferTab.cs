@@ -52,6 +52,55 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
 
         #region Initialization
 
+        private void WireUpF4Buttons()
+        {
+            // F4 Button Click Handlers - Transfer Tab
+            TransferTab_Single_Button_PartF4.Click += (s, e) =>
+            {
+                if (string.IsNullOrWhiteSpace(Control_TransferTab_TextBox_Part.Text))
+                {
+                    // Empty: Trigger F4 dropdown
+                    Control_TransferTab_TextBox_Part.Focus();
+                    SendKeys.Send("{F4}");
+                }
+                else
+                {
+                    // Has text: Trigger Enter (move to next field)
+                    Control_TransferTab_TextBox_Operation.Focus();
+                }
+            };
+
+            TransferTab_Single_Button_OperationF4.Click += (s, e) =>
+            {
+                if (string.IsNullOrWhiteSpace(Control_TransferTab_TextBox_Operation.Text))
+                {
+                    // Empty: Trigger F4 dropdown
+                    Control_TransferTab_TextBox_Operation.Focus();
+                    SendKeys.Send("{F4}");
+                }
+                else
+                {
+                    // Has text: Trigger Enter (move to next field)
+                    Control_TransferTab_TextBox_ToLocation.Focus();
+                }
+            };
+
+            TransferTab_Single_Button_LocationF4.Click += (s, e) =>
+            {
+                if (string.IsNullOrWhiteSpace(Control_TransferTab_TextBox_ToLocation.Text))
+                {
+                    // Empty: Trigger F4 dropdown
+                    Control_TransferTab_TextBox_ToLocation.Focus();
+                    SendKeys.Send("{F4}");
+                }
+                else
+                {
+                    // Has text: Focus stays on location (end of form)
+                    Control_TransferTab_Button_Search.Focus();
+                }
+            };
+        }
+
         public Control_TransferTab()
         {
             Service_DebugTracer.TraceMethodEntry(new Dictionary<string, object>
@@ -1192,7 +1241,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             {
                 LoggingUtility.LogApplicationError(ex);
                 _ = Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex,
-                    new StringBuilder().Append("MainForm_WireUpTransferTabEvents").ToString());
+                    new StringBuilder().Append("Control_TransferTab_WireUpEvents").ToString());
             }
         }
 

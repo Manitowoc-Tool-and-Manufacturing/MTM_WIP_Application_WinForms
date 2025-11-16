@@ -307,8 +307,8 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             // 
             // Control_About
             // 
-            AutoScaleDimensions = new SizeF(7F, 15F);
-            AutoScaleMode = AutoScaleMode.Font;
+            AutoScaleDimensions = new SizeF(96F, 96F);
+            AutoScaleMode = AutoScaleMode.Dpi;
             Controls.Add(Control_About_GroupBox_Main);
             Name = "Control_About";
             Size = new Size(751, 504);

@@ -1,4 +1,4 @@
-﻿using System.Drawing;
+using System.Drawing;
 using System.Windows.Forms;
 
 using MTM_WIP_Application_Winforms.Controls.Shared;
@@ -21,15 +21,14 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
         private Button Control_InventoryTab_Button_Save;
         private Label Control_InventoryTab_Label_Version;
         private Button Control_InventoryTab_Button_AdvancedEntry;
-        private SuggestionTextBox Control_InventoryTab_TextBox_Operation;
         private TextBox Control_InventoryTab_TextBox_Quantity;
         private TableLayoutPanel Control_InventoryTab_TableLayout_Main;
         private Button Control_InventoryTab_Button_Toggle_RightPanel;
-        public SuggestionTextBox Control_InventoryTab_TextBox_Part;
-        private SuggestionTextBox Control_InventoryTab_TextBox_Location;
+        public SuggestionTextBoxWithLabel Control_InventoryTab_SuggestionBox_Part;
+        private SuggestionTextBoxWithLabel Control_InventoryTab_SuggestionBox_Operation;
+        private SuggestionTextBoxWithLabel Control_InventoryTab_SuggestionBox_Location;
+        private SuggestionTextBoxWithLabel Control_InventoryTab_SuggestionBox_ColorCode;
         private ToolTip Control_InventoryTab_Tooltip;
-        private Label Control_InventoryTab_Label_ColorCode;
-        private SuggestionTextBox Control_InventoryTab_TextBox_ColorCode;
         private Label Control_InventoryTab_Label_WorkOrder;
         private TextBox Control_InventoryTab_TextBox_WorkOrder;
         
@@ -59,22 +58,14 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             NotesPanel = new Panel();
             Control_InventoryTab_RichTextBox_Notes = new RichTextBox();
             Control_InventoryTab_TableLayout_TopGroup = new TableLayoutPanel();
-            Control_InventoryTab_Button_PartF4 = new Button();
-            Control_InventoryTab_TextBox_Location = new SuggestionTextBox();
-            Control_InventoryTab_TextBox_Quantity = new TextBox();
-            Control_InventoryTab_TextBox_Operation = new SuggestionTextBox();
-            Control_InventoryTab_TextBox_Part = new SuggestionTextBox();
-            Control_InventoryTab_Label_Loc = new Label();
+            Control_InventoryTab_SuggestionBox_Part = new SuggestionTextBoxWithLabel();
+            Control_InventoryTab_SuggestionBox_Operation = new SuggestionTextBoxWithLabel();
             Control_InventoryTab_Label_Qty = new Label();
-            Control_InventoryTab_Label_Op = new Label();
-            Control_InventoryTab_Label_Part = new Label();
-            Control_InventoryTab_Label_ColorCode = new Label();
-            Control_InventoryTab_TextBox_ColorCode = new SuggestionTextBox();
+            Control_InventoryTab_TextBox_Quantity = new TextBox();
+            Control_InventoryTab_SuggestionBox_Location = new SuggestionTextBoxWithLabel();
+            Control_InventoryTab_SuggestionBox_ColorCode = new SuggestionTextBoxWithLabel();
             Control_InventoryTab_Label_WorkOrder = new Label();
             Control_InventoryTab_TextBox_WorkOrder = new TextBox();
-            Control_InventoryTab_Button_ColorF4 = new Button();
-            Control_InventoryTab_Button_LocationF4 = new Button();
-            Control_InventoryTab_Button_OperationF4 = new Button();
             Control_InventoryTab_TableLayout_BottomGroup = new TableLayoutPanel();
             Control_InventoryTab_Button_Toggle_RightPanel = new Button();
             Control_InventoryTab_Label_Version = new Label();
@@ -96,9 +87,10 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             Control_InventoryTab_GroupBox_Main.AutoSizeMode = AutoSizeMode.GrowAndShrink;
             Control_InventoryTab_GroupBox_Main.Controls.Add(Control_InventoryTab_TableLayout_Main);
             Control_InventoryTab_GroupBox_Main.Dock = DockStyle.Fill;
+            Control_InventoryTab_GroupBox_Main.Font = new Font("Segoe UI Emoji", 9F);
             Control_InventoryTab_GroupBox_Main.Location = new Point(0, 0);
             Control_InventoryTab_GroupBox_Main.Name = "Control_InventoryTab_GroupBox_Main";
-            Control_InventoryTab_GroupBox_Main.Size = new Size(800, 375);
+            Control_InventoryTab_GroupBox_Main.Size = new Size(458, 301);
             Control_InventoryTab_GroupBox_Main.TabIndex = 1;
             Control_InventoryTab_GroupBox_Main.TabStop = false;
             Control_InventoryTab_GroupBox_Main.Text = "Inventory Entry";
@@ -119,13 +111,11 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             Control_InventoryTab_TableLayout_Main.RowStyles.Add(new RowStyle());
             Control_InventoryTab_TableLayout_Main.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
             Control_InventoryTab_TableLayout_Main.RowStyles.Add(new RowStyle());
-            Control_InventoryTab_TableLayout_Main.Size = new Size(794, 353);
+            Control_InventoryTab_TableLayout_Main.Size = new Size(452, 279);
             Control_InventoryTab_TableLayout_Main.TabIndex = 0;
             // 
             // Control_InventoryTab_TableLayout_MiddleGroup
             // 
-            Control_InventoryTab_TableLayout_MiddleGroup.AutoSize = true;
-            Control_InventoryTab_TableLayout_MiddleGroup.AutoSizeMode = AutoSizeMode.GrowAndShrink;
             Control_InventoryTab_TableLayout_MiddleGroup.ColumnCount = 1;
             Control_InventoryTab_TableLayout_MiddleGroup.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
             Control_InventoryTab_TableLayout_MiddleGroup.Controls.Add(Control_InventoryTab_Label_Notes, 0, 0);
@@ -136,18 +126,18 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             Control_InventoryTab_TableLayout_MiddleGroup.RowCount = 2;
             Control_InventoryTab_TableLayout_MiddleGroup.RowStyles.Add(new RowStyle());
             Control_InventoryTab_TableLayout_MiddleGroup.RowStyles.Add(new RowStyle(SizeType.Absolute, 20F));
-            Control_InventoryTab_TableLayout_MiddleGroup.Size = new Size(788, 126);
+            Control_InventoryTab_TableLayout_MiddleGroup.Size = new Size(446, 49);
             Control_InventoryTab_TableLayout_MiddleGroup.TabIndex = 28;
             // 
             // Control_InventoryTab_Label_Notes
             // 
             Control_InventoryTab_Label_Notes.AutoSize = true;
             Control_InventoryTab_Label_Notes.Dock = DockStyle.Fill;
-            Control_InventoryTab_Label_Notes.Font = new Font("Segoe UI Emoji", 9F, FontStyle.Underline);
+            Control_InventoryTab_Label_Notes.Font = new Font("Segoe UI Emoji", 9F);
             Control_InventoryTab_Label_Notes.Location = new Point(3, 3);
             Control_InventoryTab_Label_Notes.Margin = new Padding(3);
             Control_InventoryTab_Label_Notes.Name = "Control_InventoryTab_Label_Notes";
-            Control_InventoryTab_Label_Notes.Size = new Size(782, 16);
+            Control_InventoryTab_Label_Notes.Size = new Size(440, 16);
             Control_InventoryTab_Label_Notes.TabIndex = 9;
             Control_InventoryTab_Label_Notes.Text = "Notes";
             Control_InventoryTab_Label_Notes.TextAlign = ContentAlignment.BottomCenter;
@@ -160,15 +150,17 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             NotesPanel.Dock = DockStyle.Fill;
             NotesPanel.Location = new Point(3, 25);
             NotesPanel.Name = "NotesPanel";
-            NotesPanel.Size = new Size(782, 98);
+            NotesPanel.Size = new Size(440, 21);
             NotesPanel.TabIndex = 10;
             // 
             // Control_InventoryTab_RichTextBox_Notes
             // 
+            Control_InventoryTab_RichTextBox_Notes.BorderStyle = BorderStyle.FixedSingle;
             Control_InventoryTab_RichTextBox_Notes.Dock = DockStyle.Fill;
+            Control_InventoryTab_RichTextBox_Notes.Font = new Font("Segoe UI Emoji", 9F);
             Control_InventoryTab_RichTextBox_Notes.Location = new Point(0, 0);
             Control_InventoryTab_RichTextBox_Notes.Name = "Control_InventoryTab_RichTextBox_Notes";
-            Control_InventoryTab_RichTextBox_Notes.Size = new Size(782, 98);
+            Control_InventoryTab_RichTextBox_Notes.Size = new Size(440, 21);
             Control_InventoryTab_RichTextBox_Notes.TabIndex = 6;
             Control_InventoryTab_RichTextBox_Notes.Text = "";
             // 
@@ -176,101 +168,88 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             // 
             Control_InventoryTab_TableLayout_TopGroup.AutoSize = true;
             Control_InventoryTab_TableLayout_TopGroup.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            Control_InventoryTab_TableLayout_TopGroup.ColumnCount = 3;
-            Control_InventoryTab_TableLayout_TopGroup.ColumnStyles.Add(new ColumnStyle());
+            Control_InventoryTab_TableLayout_TopGroup.ColumnCount = 1;
             Control_InventoryTab_TableLayout_TopGroup.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
-            Control_InventoryTab_TableLayout_TopGroup.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 30F));
-            Control_InventoryTab_TableLayout_TopGroup.Controls.Add(Control_InventoryTab_Button_PartF4, 2, 0);
-            Control_InventoryTab_TableLayout_TopGroup.Controls.Add(Control_InventoryTab_TextBox_Location, 1, 3);
-            Control_InventoryTab_TableLayout_TopGroup.Controls.Add(Control_InventoryTab_TextBox_Quantity, 1, 2);
-            Control_InventoryTab_TableLayout_TopGroup.Controls.Add(Control_InventoryTab_TextBox_Operation, 1, 1);
-            Control_InventoryTab_TableLayout_TopGroup.Controls.Add(Control_InventoryTab_TextBox_Part, 1, 0);
-            Control_InventoryTab_TableLayout_TopGroup.Controls.Add(Control_InventoryTab_Label_Loc, 0, 3);
+            Control_InventoryTab_TableLayout_TopGroup.Controls.Add(Control_InventoryTab_SuggestionBox_Location, 0, 4);
+            Control_InventoryTab_TableLayout_TopGroup.Controls.Add(Control_InventoryTab_TextBox_Quantity, 0, 3);
+            Control_InventoryTab_TableLayout_TopGroup.Controls.Add(Control_InventoryTab_SuggestionBox_Operation, 0, 1);
+            Control_InventoryTab_TableLayout_TopGroup.Controls.Add(Control_InventoryTab_SuggestionBox_Part, 0, 0);
             Control_InventoryTab_TableLayout_TopGroup.Controls.Add(Control_InventoryTab_Label_Qty, 0, 2);
-            Control_InventoryTab_TableLayout_TopGroup.Controls.Add(Control_InventoryTab_Label_Op, 0, 1);
-            Control_InventoryTab_TableLayout_TopGroup.Controls.Add(Control_InventoryTab_Label_Part, 0, 0);
-            Control_InventoryTab_TableLayout_TopGroup.Controls.Add(Control_InventoryTab_Label_ColorCode, 0, 4);
-            Control_InventoryTab_TableLayout_TopGroup.Controls.Add(Control_InventoryTab_TextBox_ColorCode, 1, 4);
-            Control_InventoryTab_TableLayout_TopGroup.Controls.Add(Control_InventoryTab_Label_WorkOrder, 0, 5);
-            Control_InventoryTab_TableLayout_TopGroup.Controls.Add(Control_InventoryTab_TextBox_WorkOrder, 1, 5);
-            Control_InventoryTab_TableLayout_TopGroup.Controls.Add(Control_InventoryTab_Button_ColorF4, 2, 4);
-            Control_InventoryTab_TableLayout_TopGroup.Controls.Add(Control_InventoryTab_Button_LocationF4, 2, 3);
-            Control_InventoryTab_TableLayout_TopGroup.Controls.Add(Control_InventoryTab_Button_OperationF4, 2, 1);
+            Control_InventoryTab_TableLayout_TopGroup.Controls.Add(Control_InventoryTab_SuggestionBox_ColorCode, 0, 5);
+            Control_InventoryTab_TableLayout_TopGroup.Controls.Add(Control_InventoryTab_Label_WorkOrder, 0, 6);
+            Control_InventoryTab_TableLayout_TopGroup.Controls.Add(Control_InventoryTab_TextBox_WorkOrder, 0, 7);
             Control_InventoryTab_TableLayout_TopGroup.Dock = DockStyle.Fill;
             Control_InventoryTab_TableLayout_TopGroup.Location = new Point(3, 3);
             Control_InventoryTab_TableLayout_TopGroup.Name = "Control_InventoryTab_TableLayout_TopGroup";
-            Control_InventoryTab_TableLayout_TopGroup.RowCount = 6;
+            Control_InventoryTab_TableLayout_TopGroup.RowCount = 8;
             Control_InventoryTab_TableLayout_TopGroup.RowStyles.Add(new RowStyle());
             Control_InventoryTab_TableLayout_TopGroup.RowStyles.Add(new RowStyle());
             Control_InventoryTab_TableLayout_TopGroup.RowStyles.Add(new RowStyle());
             Control_InventoryTab_TableLayout_TopGroup.RowStyles.Add(new RowStyle());
             Control_InventoryTab_TableLayout_TopGroup.RowStyles.Add(new RowStyle());
             Control_InventoryTab_TableLayout_TopGroup.RowStyles.Add(new RowStyle());
-            Control_InventoryTab_TableLayout_TopGroup.Size = new Size(788, 174);
+            Control_InventoryTab_TableLayout_TopGroup.RowStyles.Add(new RowStyle());
+            Control_InventoryTab_TableLayout_TopGroup.RowStyles.Add(new RowStyle());Control_InventoryTab_TableLayout_TopGroup.Size = new Size(446, 174);
             Control_InventoryTab_TableLayout_TopGroup.TabIndex = 7;
             // 
-            // InventoryTab_Single_Button_PartF4
+            // Control_InventoryTab_Button_PartF4
             // 
-            Control_InventoryTab_Button_PartF4.Location = new Point(761, 3);
-            Control_InventoryTab_Button_PartF4.Name = "InventoryTab_Single_Button_PartF4";
-            Control_InventoryTab_Button_PartF4.Size = new Size(23, 23);
-            Control_InventoryTab_Button_PartF4.TabIndex = 13;
-            Control_InventoryTab_Button_PartF4.Text = "🔎";
-            Control_InventoryTab_Button_PartF4.UseVisualStyleBackColor = true;
+                                                                                                                        // 
             // 
-            // Control_InventoryTab_TextBox_Location
+            // Control_InventoryTab_SuggestionBox_Location
             // 
-            Control_InventoryTab_TextBox_Location.Dock = DockStyle.Fill;
-            Control_InventoryTab_TextBox_Location.Location = new Point(87, 90);
-            Control_InventoryTab_TextBox_Location.Name = "Control_InventoryTab_TextBox_Location";
-            Control_InventoryTab_TextBox_Location.PlaceholderText = "Enter or Select Location";
-            Control_InventoryTab_TextBox_Location.Size = new Size(668, 23);
-            Control_InventoryTab_TextBox_Location.TabIndex = 4;
+            Control_InventoryTab_SuggestionBox_Location.Dock = DockStyle.Fill;
+            Control_InventoryTab_SuggestionBox_Location.LabelText = "Location: ";
+            Control_InventoryTab_SuggestionBox_Location.Location = new Point(3, 125);
+            Control_InventoryTab_SuggestionBox_Location.Name = "Control_InventoryTab_SuggestionBox_Location";
+            Control_InventoryTab_SuggestionBox_Location.PlaceholderText = "Enter or Select Location";
+            Control_InventoryTab_SuggestionBox_Location.ShowF4Button = true;
+            Control_InventoryTab_SuggestionBox_Location.Size = new Size(440, 29);
+            Control_InventoryTab_SuggestionBox_Location.TabIndex = 4;
             // 
             // Control_InventoryTab_TextBox_Quantity
             // 
             Control_InventoryTab_TableLayout_TopGroup.SetColumnSpan(Control_InventoryTab_TextBox_Quantity, 2);
             Control_InventoryTab_TextBox_Quantity.Dock = DockStyle.Fill;
+            Control_InventoryTab_TextBox_Quantity.Font = new Font("Segoe UI Emoji", 9F);
             Control_InventoryTab_TextBox_Quantity.Location = new Point(87, 61);
             Control_InventoryTab_TextBox_Quantity.Name = "Control_InventoryTab_TextBox_Quantity";
             Control_InventoryTab_TextBox_Quantity.PlaceholderText = "Enter Quantity";
-            Control_InventoryTab_TextBox_Quantity.Size = new Size(698, 23);
+            Control_InventoryTab_TextBox_Quantity.Size = new Size(356, 23);
             Control_InventoryTab_TextBox_Quantity.TabIndex = 3;
             // 
-            // Control_InventoryTab_TextBox_Operation
             // 
-            Control_InventoryTab_TextBox_Operation.Dock = DockStyle.Fill;
-            Control_InventoryTab_TextBox_Operation.Location = new Point(87, 32);
-            Control_InventoryTab_TextBox_Operation.Name = "Control_InventoryTab_TextBox_Operation";
-            Control_InventoryTab_TextBox_Operation.PlaceholderText = "Enter or Select Operation";
-            Control_InventoryTab_TextBox_Operation.Size = new Size(668, 23);
-            Control_InventoryTab_TextBox_Operation.TabIndex = 2;
+            // Control_InventoryTab_SuggestionBox_Operation
             // 
-            // Control_InventoryTab_TextBox_Part
+            Control_InventoryTab_SuggestionBox_Operation.Dock = DockStyle.Fill;
+            Control_InventoryTab_SuggestionBox_Operation.LabelText = "Operation: ";
+            Control_InventoryTab_SuggestionBox_Operation.Location = new Point(3, 38);
+            Control_InventoryTab_SuggestionBox_Operation.Name = "Control_InventoryTab_SuggestionBox_Operation";
+            Control_InventoryTab_SuggestionBox_Operation.PlaceholderText = "Enter or Select Operation";
+            Control_InventoryTab_SuggestionBox_Operation.ShowF4Button = true;
+            Control_InventoryTab_SuggestionBox_Operation.Size = new Size(440, 29);
+            Control_InventoryTab_SuggestionBox_Operation.TabIndex = 2;
             // 
-            Control_InventoryTab_TextBox_Part.Dock = DockStyle.Fill;
-            Control_InventoryTab_TextBox_Part.Location = new Point(87, 3);
-            Control_InventoryTab_TextBox_Part.Name = "Control_InventoryTab_TextBox_Part";
-            Control_InventoryTab_TextBox_Part.PlaceholderText = "Enter or Select Part Number";
-            Control_InventoryTab_TextBox_Part.Size = new Size(668, 23);
-            Control_InventoryTab_TextBox_Part.TabIndex = 1;
+            // 
+            // Control_InventoryTab_SuggestionBox_Part
+            // 
+            Control_InventoryTab_SuggestionBox_Part.Dock = DockStyle.Fill;
+            Control_InventoryTab_SuggestionBox_Part.LabelText = "Part Number: ";
+            Control_InventoryTab_SuggestionBox_Part.Location = new Point(3, 3);
+            Control_InventoryTab_SuggestionBox_Part.Name = "Control_InventoryTab_SuggestionBox_Part";
+            Control_InventoryTab_SuggestionBox_Part.PlaceholderText = "Enter or Select Part Number";
+            Control_InventoryTab_SuggestionBox_Part.ShowF4Button = true;
+            Control_InventoryTab_SuggestionBox_Part.Size = new Size(440, 29);
+            Control_InventoryTab_SuggestionBox_Part.TabIndex = 1;
             // 
             // Control_InventoryTab_Label_Loc
             // 
-            Control_InventoryTab_Label_Loc.AutoSize = true;
-            Control_InventoryTab_Label_Loc.Dock = DockStyle.Fill;
-            Control_InventoryTab_Label_Loc.Location = new Point(3, 90);
-            Control_InventoryTab_Label_Loc.Margin = new Padding(3);
-            Control_InventoryTab_Label_Loc.Name = "Control_InventoryTab_Label_Loc";
-            Control_InventoryTab_Label_Loc.Size = new Size(78, 23);
-            Control_InventoryTab_Label_Loc.TabIndex = 11;
-            Control_InventoryTab_Label_Loc.Text = "Location:";
-            Control_InventoryTab_Label_Loc.TextAlign = ContentAlignment.MiddleRight;
-            // 
+                                                                                                                                    // 
             // Control_InventoryTab_Label_Qty
             // 
             Control_InventoryTab_Label_Qty.AutoSize = true;
             Control_InventoryTab_Label_Qty.Dock = DockStyle.Fill;
+            Control_InventoryTab_Label_Qty.Font = new Font("Segoe UI Emoji", 9F);
             Control_InventoryTab_Label_Qty.Location = new Point(3, 61);
             Control_InventoryTab_Label_Qty.Margin = new Padding(3);
             Control_InventoryTab_Label_Qty.Name = "Control_InventoryTab_Label_Qty";
@@ -281,54 +260,31 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             // 
             // Control_InventoryTab_Label_Op
             // 
-            Control_InventoryTab_Label_Op.AutoSize = true;
-            Control_InventoryTab_Label_Op.Dock = DockStyle.Fill;
-            Control_InventoryTab_Label_Op.Location = new Point(3, 32);
-            Control_InventoryTab_Label_Op.Margin = new Padding(3);
-            Control_InventoryTab_Label_Op.Name = "Control_InventoryTab_Label_Op";
-            Control_InventoryTab_Label_Op.Size = new Size(78, 23);
-            Control_InventoryTab_Label_Op.TabIndex = 9;
-            Control_InventoryTab_Label_Op.Text = "Operation:";
-            Control_InventoryTab_Label_Op.TextAlign = ContentAlignment.MiddleRight;
-            // 
+                                                                                                                                    // 
             // Control_InventoryTab_Label_Part
             // 
-            Control_InventoryTab_Label_Part.AutoSize = true;
-            Control_InventoryTab_Label_Part.Dock = DockStyle.Fill;
-            Control_InventoryTab_Label_Part.Location = new Point(3, 3);
-            Control_InventoryTab_Label_Part.Margin = new Padding(3);
-            Control_InventoryTab_Label_Part.Name = "Control_InventoryTab_Label_Part";
-            Control_InventoryTab_Label_Part.Size = new Size(78, 23);
-            Control_InventoryTab_Label_Part.TabIndex = 8;
-            Control_InventoryTab_Label_Part.Text = "Part Number:";
-            Control_InventoryTab_Label_Part.TextAlign = ContentAlignment.MiddleRight;
-            // 
+                                                                                                                                    // 
             // Control_InventoryTab_Label_ColorCode
             // 
-            Control_InventoryTab_Label_ColorCode.AutoSize = true;
-            Control_InventoryTab_Label_ColorCode.Dock = DockStyle.Fill;
-            Control_InventoryTab_Label_ColorCode.Location = new Point(3, 119);
-            Control_InventoryTab_Label_ColorCode.Margin = new Padding(3);
-            Control_InventoryTab_Label_ColorCode.Name = "Control_InventoryTab_Label_ColorCode";
-            Control_InventoryTab_Label_ColorCode.Size = new Size(78, 23);
-            Control_InventoryTab_Label_ColorCode.TabIndex = 9;
-            Control_InventoryTab_Label_ColorCode.Text = "Color Code:";
-            Control_InventoryTab_Label_ColorCode.TextAlign = ContentAlignment.MiddleRight;
-            Control_InventoryTab_Label_ColorCode.Visible = false;
+                                                                                                                                                // 
             // 
-            // Control_InventoryTab_TextBox_ColorCode
+            // Control_InventoryTab_SuggestionBox_ColorCode
             // 
-            Control_InventoryTab_TextBox_ColorCode.Dock = DockStyle.Fill;
-            Control_InventoryTab_TextBox_ColorCode.Location = new Point(87, 119);
-            Control_InventoryTab_TextBox_ColorCode.Name = "Control_InventoryTab_TextBox_ColorCode";
-            Control_InventoryTab_TextBox_ColorCode.Size = new Size(668, 23);
-            Control_InventoryTab_TextBox_ColorCode.TabIndex = 5;
-            Control_InventoryTab_TextBox_ColorCode.Visible = false;
-            // 
+            Control_InventoryTab_SuggestionBox_ColorCode.Dock = DockStyle.Fill;
+            Control_InventoryTab_SuggestionBox_ColorCode.LabelText = "Color Code";
+            Control_InventoryTab_SuggestionBox_ColorCode.Location = new Point(3, 160);
+            Control_InventoryTab_SuggestionBox_ColorCode.Name = "Control_InventoryTab_SuggestionBox_ColorCode";
+            Control_InventoryTab_SuggestionBox_ColorCode.PlaceholderText = "Enter or Select Color Code";
+            Control_InventoryTab_SuggestionBox_ColorCode.ShowF4Button = true;
+            Control_InventoryTab_SuggestionBox_ColorCode.Size = new Size(440, 29);
+            Control_InventoryTab_SuggestionBox_ColorCode.TabIndex = 5;
+            Control_InventoryTab_SuggestionBox_ColorCode.Visible = false;
+                        // 
             // Control_InventoryTab_Label_WorkOrder
             // 
             Control_InventoryTab_Label_WorkOrder.AutoSize = true;
             Control_InventoryTab_Label_WorkOrder.Dock = DockStyle.Fill;
+            Control_InventoryTab_Label_WorkOrder.Font = new Font("Segoe UI Emoji", 9F);
             Control_InventoryTab_Label_WorkOrder.Location = new Point(3, 148);
             Control_InventoryTab_Label_WorkOrder.Margin = new Padding(3);
             Control_InventoryTab_Label_WorkOrder.Name = "Control_InventoryTab_Label_WorkOrder";
@@ -342,40 +298,23 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             // 
             Control_InventoryTab_TableLayout_TopGroup.SetColumnSpan(Control_InventoryTab_TextBox_WorkOrder, 2);
             Control_InventoryTab_TextBox_WorkOrder.Dock = DockStyle.Fill;
+            Control_InventoryTab_TextBox_WorkOrder.Font = new Font("Segoe UI Emoji", 9F);
             Control_InventoryTab_TextBox_WorkOrder.Location = new Point(87, 148);
             Control_InventoryTab_TextBox_WorkOrder.Name = "Control_InventoryTab_TextBox_WorkOrder";
-            Control_InventoryTab_TextBox_WorkOrder.Size = new Size(698, 23);
+            Control_InventoryTab_TextBox_WorkOrder.PlaceholderText = "Enter Work Order";
+            Control_InventoryTab_TextBox_WorkOrder.Size = new Size(356, 23);
             Control_InventoryTab_TextBox_WorkOrder.TabIndex = 6;
             Control_InventoryTab_TextBox_WorkOrder.Visible = false;
             // 
-            // InventoryTab_Single_Button_ColorF4
+            // Control_InventoryTab_Button_ColorF4
             // 
-            Control_InventoryTab_Button_ColorF4.Location = new Point(761, 119);
-            Control_InventoryTab_Button_ColorF4.Name = "InventoryTab_Single_Button_ColorF4";
-            Control_InventoryTab_Button_ColorF4.Size = new Size(23, 23);
-            Control_InventoryTab_Button_ColorF4.TabIndex = 16;
-            Control_InventoryTab_Button_ColorF4.Text = "🔎";
-            Control_InventoryTab_Button_ColorF4.UseVisualStyleBackColor = true;
-            Control_InventoryTab_Button_ColorF4.Visible = false;
+                                                                                                                                    // 
+            // Control_InventoryTab_Button_LocationF4
             // 
-            // InventoryTab_Single_Button_LocationF4
+                                                                                                                        // 
+            // Control_InventoryTab_Button_OperationF4
             // 
-            Control_InventoryTab_Button_LocationF4.Location = new Point(761, 90);
-            Control_InventoryTab_Button_LocationF4.Name = "InventoryTab_Single_Button_LocationF4";
-            Control_InventoryTab_Button_LocationF4.Size = new Size(23, 23);
-            Control_InventoryTab_Button_LocationF4.TabIndex = 15;
-            Control_InventoryTab_Button_LocationF4.Text = "🔎";
-            Control_InventoryTab_Button_LocationF4.UseVisualStyleBackColor = true;
-            // 
-            // InventoryTab_Single_Button_OperationF4
-            // 
-            Control_InventoryTab_Button_OperationF4.Location = new Point(761, 32);
-            Control_InventoryTab_Button_OperationF4.Name = "InventoryTab_Single_Button_OperationF4";
-            Control_InventoryTab_Button_OperationF4.Size = new Size(23, 23);
-            Control_InventoryTab_Button_OperationF4.TabIndex = 14;
-            Control_InventoryTab_Button_OperationF4.Text = "🔎";
-            Control_InventoryTab_Button_OperationF4.UseVisualStyleBackColor = true;
-            // 
+                                                                                                                        // 
             // Control_InventoryTab_TableLayout_BottomGroup
             // 
             Control_InventoryTab_TableLayout_BottomGroup.AutoSize = true;
@@ -392,19 +331,24 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             Control_InventoryTab_TableLayout_BottomGroup.Controls.Add(Control_InventoryTab_Button_AdvancedEntry, 1, 0);
             Control_InventoryTab_TableLayout_BottomGroup.Controls.Add(Control_InventoryTab_Button_Reset, 3, 0);
             Control_InventoryTab_TableLayout_BottomGroup.Dock = DockStyle.Fill;
-            Control_InventoryTab_TableLayout_BottomGroup.Location = new Point(3, 315);
+            Control_InventoryTab_TableLayout_BottomGroup.Location = new Point(3, 238);
             Control_InventoryTab_TableLayout_BottomGroup.Name = "Control_InventoryTab_TableLayout_BottomGroup";
             Control_InventoryTab_TableLayout_BottomGroup.RowCount = 1;
             Control_InventoryTab_TableLayout_BottomGroup.RowStyles.Add(new RowStyle());
-            Control_InventoryTab_TableLayout_BottomGroup.Size = new Size(788, 35);
+            Control_InventoryTab_TableLayout_BottomGroup.Size = new Size(446, 38);
             Control_InventoryTab_TableLayout_BottomGroup.TabIndex = 27;
             // 
             // Control_InventoryTab_Button_Toggle_RightPanel
             // 
-            Control_InventoryTab_Button_Toggle_RightPanel.Font = new Font("Segoe UI Emoji", 9.75F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            Control_InventoryTab_Button_Toggle_RightPanel.Location = new Point(747, 3);
+            Control_InventoryTab_Button_Toggle_RightPanel.AutoSize = true;
+            Control_InventoryTab_Button_Toggle_RightPanel.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            Control_InventoryTab_Button_Toggle_RightPanel.Dock = DockStyle.Fill;
+            Control_InventoryTab_Button_Toggle_RightPanel.Font = new Font("Segoe UI Emoji", 9F);
+            Control_InventoryTab_Button_Toggle_RightPanel.Location = new Point(411, 3);
+            Control_InventoryTab_Button_Toggle_RightPanel.MaximumSize = new Size(32, 32);
+            Control_InventoryTab_Button_Toggle_RightPanel.MinimumSize = new Size(32, 32);
             Control_InventoryTab_Button_Toggle_RightPanel.Name = "Control_InventoryTab_Button_Toggle_RightPanel";
-            Control_InventoryTab_Button_Toggle_RightPanel.Size = new Size(38, 29);
+            Control_InventoryTab_Button_Toggle_RightPanel.Size = new Size(32, 32);
             Control_InventoryTab_Button_Toggle_RightPanel.TabIndex = 9;
             Control_InventoryTab_Button_Toggle_RightPanel.Text = "➡";
             Control_InventoryTab_Button_Toggle_RightPanel.UseVisualStyleBackColor = true;
@@ -414,41 +358,57 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             // 
             Control_InventoryTab_Label_Version.AutoSize = true;
             Control_InventoryTab_Label_Version.Dock = DockStyle.Fill;
-            Control_InventoryTab_Label_Version.Font = new Font("Segoe UI Emoji", 7F);
-            Control_InventoryTab_Label_Version.Location = new Point(160, 3);
+            Control_InventoryTab_Label_Version.Font = new Font("Segoe UI Emoji", 9F);
+            Control_InventoryTab_Label_Version.Location = new Point(215, 3);
             Control_InventoryTab_Label_Version.Margin = new Padding(3);
             Control_InventoryTab_Label_Version.Name = "Control_InventoryTab_Label_Version";
-            Control_InventoryTab_Label_Version.Size = new Size(494, 29);
+            Control_InventoryTab_Label_Version.Size = new Size(84, 32);
             Control_InventoryTab_Label_Version.TabIndex = 8;
             Control_InventoryTab_Label_Version.Text = "Version: ";
             Control_InventoryTab_Label_Version.TextAlign = ContentAlignment.MiddleCenter;
             // 
             // Control_InventoryTab_Button_Save
             // 
-            Control_InventoryTab_Button_Save.Font = new Font("Segoe UI Emoji", 8F);
+            Control_InventoryTab_Button_Save.AutoSize = true;
+            Control_InventoryTab_Button_Save.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            Control_InventoryTab_Button_Save.Dock = DockStyle.Fill;
+            Control_InventoryTab_Button_Save.Font = new Font("Segoe UI Emoji", 9F);
             Control_InventoryTab_Button_Save.Location = new Point(3, 3);
+            Control_InventoryTab_Button_Save.MaximumSize = new Size(100, 32);
+            Control_InventoryTab_Button_Save.MinimumSize = new Size(100, 32);
             Control_InventoryTab_Button_Save.Name = "Control_InventoryTab_Button_Save";
-            Control_InventoryTab_Button_Save.Size = new Size(60, 29);
+            Control_InventoryTab_Button_Save.Size = new Size(100, 32);
             Control_InventoryTab_Button_Save.TabIndex = 6;
             Control_InventoryTab_Button_Save.Text = "Save";
             Control_InventoryTab_Button_Save.UseVisualStyleBackColor = true;
             // 
             // Control_InventoryTab_Button_AdvancedEntry
             // 
+            Control_InventoryTab_Button_AdvancedEntry.AutoSize = true;
+            Control_InventoryTab_Button_AdvancedEntry.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            Control_InventoryTab_Button_AdvancedEntry.Dock = DockStyle.Fill;
+            Control_InventoryTab_Button_AdvancedEntry.Font = new Font("Segoe UI Emoji", 9F);
             Control_InventoryTab_Button_AdvancedEntry.ForeColor = Color.DarkRed;
-            Control_InventoryTab_Button_AdvancedEntry.Location = new Point(69, 3);
+            Control_InventoryTab_Button_AdvancedEntry.Location = new Point(109, 3);
+            Control_InventoryTab_Button_AdvancedEntry.MaximumSize = new Size(100, 32);
+            Control_InventoryTab_Button_AdvancedEntry.MinimumSize = new Size(100, 32);
             Control_InventoryTab_Button_AdvancedEntry.Name = "Control_InventoryTab_Button_AdvancedEntry";
-            Control_InventoryTab_Button_AdvancedEntry.Size = new Size(85, 29);
+            Control_InventoryTab_Button_AdvancedEntry.Size = new Size(100, 32);
             Control_InventoryTab_Button_AdvancedEntry.TabIndex = 8;
             Control_InventoryTab_Button_AdvancedEntry.Text = "Advanced";
             Control_InventoryTab_Button_AdvancedEntry.UseVisualStyleBackColor = true;
             // 
             // Control_InventoryTab_Button_Reset
             // 
+            Control_InventoryTab_Button_Reset.AutoSize = true;
+            Control_InventoryTab_Button_Reset.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            Control_InventoryTab_Button_Reset.Dock = DockStyle.Fill;
             Control_InventoryTab_Button_Reset.Font = new Font("Segoe UI Emoji", 9F);
-            Control_InventoryTab_Button_Reset.Location = new Point(660, 3);
+            Control_InventoryTab_Button_Reset.Location = new Point(305, 3);
+            Control_InventoryTab_Button_Reset.MaximumSize = new Size(100, 32);
+            Control_InventoryTab_Button_Reset.MinimumSize = new Size(100, 32);
             Control_InventoryTab_Button_Reset.Name = "Control_InventoryTab_Button_Reset";
-            Control_InventoryTab_Button_Reset.Size = new Size(81, 29);
+            Control_InventoryTab_Button_Reset.Size = new Size(100, 32);
             Control_InventoryTab_Button_Reset.TabIndex = 7;
             Control_InventoryTab_Button_Reset.TabStop = false;
             Control_InventoryTab_Button_Reset.Text = "Reset";
@@ -461,7 +421,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             AutoSizeMode = AutoSizeMode.GrowAndShrink;
             Controls.Add(Control_InventoryTab_GroupBox_Main);
             Name = "Control_InventoryTab";
-            Size = new Size(800, 375);
+            Size = new Size(458, 301);
             Control_InventoryTab_GroupBox_Main.ResumeLayout(false);
             Control_InventoryTab_GroupBox_Main.PerformLayout();
             Control_InventoryTab_TableLayout_Main.ResumeLayout(false);
@@ -480,18 +440,11 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
         private TableLayoutPanel Control_InventoryTab_TableLayout_TopGroup;
         private TableLayoutPanel Control_InventoryTab_TableLayout_MiddleGroup;
         private Label Control_InventoryTab_Label_Notes;
-        private Label Control_InventoryTab_Label_Loc;
         private Label Control_InventoryTab_Label_Qty;
-        private Label Control_InventoryTab_Label_Op;
-        private Label Control_InventoryTab_Label_Part;
         private TableLayoutPanel tableLayoutPanel3;
         private Panel NotesPanel;
         private RichTextBox Control_InventoryTab_RichTextBox_Notes;
-        private Button Control_InventoryTab_Button_PartF4;
-        private Button Control_InventoryTab_Button_ColorF4;
-        private Button Control_InventoryTab_Button_LocationF4;
-        private Button Control_InventoryTab_Button_OperationF4;
-    }
+        }
 
         
         #endregion

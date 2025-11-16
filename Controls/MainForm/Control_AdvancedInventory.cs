@@ -514,11 +514,11 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                     MainFormInstance.MainForm_UserControl_InventoryTab.Visible = true;
                     MainFormInstance.MainForm_TabControl.SelectedIndex = 0;
                     var invTab = MainFormInstance.MainForm_UserControl_InventoryTab;
-                    if (invTab.Control_InventoryTab_TextBox_Part != null)
+                    if (invTab.Control_InventoryTab_SuggestionBox_Part != null)
                     {
-                        invTab.Control_InventoryTab_TextBox_Part.Text = partId;
-                        invTab.Control_InventoryTab_TextBox_Part.Focus();
-                        invTab.Control_InventoryTab_TextBox_Part.SelectAll();
+                        invTab.Control_InventoryTab_SuggestionBox_Part.Text = partId;
+                        invTab.Control_InventoryTab_SuggestionBox_Part.Focus();
+                        invTab.Control_InventoryTab_SuggestionBox_Part.TextBox.SelectAll();
                     }
                 }
             }
@@ -1300,18 +1300,18 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                     if (invTab is not null)
                     {
                         // Part, Operation, and Location now use SuggestionTextBox (TextBox-based)
-                        var part = invTab.Control_InventoryTab_TextBox_Part;
-                        var op = invTab.GetType().GetField("Control_InventoryTab_TextBox_Operation",
+                        var part = invTab.Control_InventoryTab_SuggestionBox_Part;
+                        var op = invTab.GetType().GetField("Control_InventoryTab_SuggestionBox_Operation",
                                 System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance)
-                            ?.GetValue(invTab) as Controls.Shared.SuggestionTextBox;
-                        var loc = invTab.GetType().GetField("Control_InventoryTab_TextBox_Location",
+                            ?.GetValue(invTab) as Controls.Shared.SuggestionTextBoxWithLabel;
+                        var loc = invTab.GetType().GetField("Control_InventoryTab_SuggestionBox_Location",
                                 System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance)
-                            ?.GetValue(invTab) as Controls.Shared.SuggestionTextBox;
+                            ?.GetValue(invTab) as Controls.Shared.SuggestionTextBoxWithLabel;
                         if (part is not null)
                         {
                             part.Text = string.Empty;
                             part.Focus();
-                            part.SelectAll();
+                            part.TextBox.SelectAll();
                             part.BackColor = Model_Application_Variables.UserUiColors.ControlFocusedBackColor ?? Color.LightBlue;
                         }
 

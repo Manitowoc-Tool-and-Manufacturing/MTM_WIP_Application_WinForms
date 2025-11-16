@@ -32,7 +32,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
         /// <param name="statusLabel">Status label control</param>
         public void SetProgressControls(ToolStripProgressBar progressBar, ToolStripStatusLabel statusLabel)
         {
-            _progressHelper = Helper_StoredProcedureProgress.Create(progressBar, statusLabel, 
+            _progressHelper = Helper_StoredProcedureProgress.Create(progressBar, statusLabel,
                 this.FindForm() ?? throw new InvalidOperationException("Control must be added to a form"));
         }
 
@@ -144,15 +144,11 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                 toolTip.SetToolTip(printButton, "Print the current results");
             }
 
-            Control_AdvancedRemove_CheckBox_Date.CheckedChanged += (s, e) =>
-            {
-                bool enabled = Control_AdvancedRemove_CheckBox_Date.Checked;
-                Control_AdvancedRemove_DateTimePicker_From.Enabled = enabled;
-                Control_AdvancedRemove_DateTimePicker_To.Enabled = enabled;
-            };
-            bool dateEnabled = Control_AdvancedRemove_CheckBox_Date.Checked;
-            Control_AdvancedRemove_DateTimePicker_From.Enabled = dateEnabled;
-            Control_AdvancedRemove_DateTimePicker_To.Enabled = dateEnabled;
+            // Wire up date range radio button events
+            WireUpDateRangeRadioButtons();
+
+            // Initialize date range defaults (sets Month as default)
+            InitializeDateRangeDefaults();
 
             _ = LoadComboBoxesAsync();
         }
@@ -188,7 +184,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                         part)
                     {
                         part.Text = string.Empty;
-                        part.ForeColor = Model_Application_Variables.UserUiColors.ComboBoxErrorForeColor ?? Color.Red;
+                        part.ForeColor = Model_Application_Variables.UserUiColors.TextBoxForeColor ?? Color.Black;
                         part.Focus();
                     }
 
@@ -197,7 +193,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                         op)
                     {
                         op.Text = string.Empty;
-                        op.ForeColor = Model_Application_Variables.UserUiColors.ComboBoxErrorForeColor ?? Color.Red;
+                        op.ForeColor = Model_Application_Variables.UserUiColors.TextBoxForeColor ?? Color.Black;
                     }
                 }
             }
@@ -214,15 +210,40 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             // No longer need to set ComboBox colors for removed controls
         }
 
-        private void ApplyStandardComboBoxProperties() =>
-            // Only apply to User ComboBox
-            Helper_UI_ComboBoxes.ApplyStandardComboBoxProperties(Control_AdvancedRemove_ComboBox_User);
+        /// <summary>
+        /// Wires up event handlers for date range radio buttons.
+        /// </summary>
+        private void WireUpDateRangeRadioButtons()
+        {
+            TransactionSearchControl_RadioButton_Today.CheckedChanged += QuickFilterChanged;
+            TransactionSearchControl_RadioButton_Week.CheckedChanged += QuickFilterChanged;
+            TransactionSearchControl_RadioButton_Month.CheckedChanged += QuickFilterChanged;
+            TransactionSearchControl_RadioButton_Custom.CheckedChanged += QuickFilterChanged;
+            TransactionSearchControl_RadioButton_Everything.CheckedChanged += QuickFilterChanged;
+        }
+
+        /// <summary>
+        /// Sets default date range to current month.
+        /// </summary>
+        private void InitializeDateRangeDefaults()
+        {
+            TransactionSearchControl_RadioButton_Month.Checked = true;
+            ApplyQuickFilter();
+        }
+
+        private void ApplyStandardComboBoxProperties()
+        {
+            // No standard ComboBoxes to configure - using SuggestionTextBoxWithLabel for Users
+        }
 
         private async Task LoadComboBoxesAsync()
         {
             try
             {
-                await Helper_UI_ComboBoxes.FillUserComboBoxesAsync(Control_AdvancedRemove_ComboBox_User);
+                // Configure SuggestionTextBoxWithLabel for Users
+                Helper_SuggestionTextBox.ConfigureForUsers(
+                    Control_AdvancedRemove_SuggestionBox_User,
+                    Helper_SuggestionTextBox.GetCachedUsersAsync);
             }
             catch (Exception ex)
             {
@@ -232,37 +253,113 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
 
         private void WireUpComboBoxEvents()
         {
-            // Only wire up User ComboBox events
-            Control_AdvancedRemove_ComboBox_User.SelectedIndexChanged += (s, e) =>
-            {
-                Helper_UI_ComboBoxes.ValidateComboBoxItem(Control_AdvancedRemove_ComboBox_User, "Enter or Select User");
-                if (Control_AdvancedRemove_ComboBox_User.SelectedIndex > 0)
-                {
-                    Control_AdvancedRemove_ComboBox_User.ForeColor =
-                        Model_Application_Variables.UserUiColors.ComboBoxForeColor ?? Color.Black;
-                }
-                else
-                {
-                    Control_AdvancedRemove_ComboBox_User.ForeColor =
-                        Model_Application_Variables.UserUiColors.ComboBoxErrorForeColor ?? Color.Red;
-                }
-            };
-            Control_AdvancedRemove_ComboBox_User.Leave += (s, e) =>
-            {
-                Helper_UI_ComboBoxes.ValidateComboBoxItem(Control_AdvancedRemove_ComboBox_User, "Enter or Select User");
-            };
-
-            Control_AdvancedRemove_ComboBox_User.Enter +=
-                (s, e) => Control_AdvancedRemove_ComboBox_User.BackColor =
+            // User selection event for SuggestionTextBoxWithLabel
+            Control_AdvancedRemove_SuggestionBox_User.TextBox.Enter += (s, e) =>
+                Control_AdvancedRemove_SuggestionBox_User.BackColor =
                     Model_Application_Variables.UserUiColors.ControlFocusedBackColor ?? Color.LightBlue;
-            Control_AdvancedRemove_ComboBox_User.Leave +=
-                (s, e) => Control_AdvancedRemove_ComboBox_User.BackColor =
+
+            Control_AdvancedRemove_SuggestionBox_User.TextBox.Leave += (s, e) =>
+                Control_AdvancedRemove_SuggestionBox_User.BackColor =
                     Model_Application_Variables.UserUiColors.ControlBackColor ?? SystemColors.Window;
 
             Control_AdvancedRemove_DataGridView_Results.SelectionChanged +=
                 (s, e) => Control_AdvancedRemove_Update_ButtonStates();
             Control_AdvancedRemove_DataGridView_Results.DataSourceChanged +=
                 (s, e) => Control_AdvancedRemove_Update_ButtonStates();
+        }
+
+        #endregion
+
+        #region Date Range Quick Filter Handlers
+
+        /// <summary>
+        /// Handles CheckedChanged event for date range radio buttons.
+        /// </summary>
+        private void QuickFilterChanged(object? sender, EventArgs e)
+        {
+            try
+            {
+                if (sender is RadioButton rdo && rdo.Checked)
+                {
+                    LoggingUtility.Log($"[{nameof(Control_AdvancedRemove)}] Quick filter changed: {rdo.Text}");
+                    ApplyQuickFilter();
+                }
+            }
+            catch (Exception ex)
+            {
+                LoggingUtility.LogApplicationError(ex);
+                Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Low,
+                    controlName: nameof(Control_AdvancedRemove));
+            }
+        }
+
+        /// <summary>
+        /// Applies the selected quick filter to the date range pickers.
+        /// Same logic as TransactionSearchControl for consistency.
+        /// </summary>
+        private void ApplyQuickFilter()
+        {
+            try
+            {
+                var now = DateTime.Now;
+
+                if (TransactionSearchControl_RadioButton_Today.Checked)
+                {
+                    // Today: 00:00 to 23:59
+                    Control_AdvancedRemove_DateTimePicker_From.Value = now.Date;
+                    Control_AdvancedRemove_DateTimePicker_To.Value = now.Date.AddDays(1).AddSeconds(-1);
+                    Control_AdvancedRemove_DateTimePicker_From.Enabled = false;
+                    Control_AdvancedRemove_DateTimePicker_To.Enabled = false;
+                    LoggingUtility.Log($"[{nameof(Control_AdvancedRemove)}] Quick filter applied: Today");
+                }
+                else if (TransactionSearchControl_RadioButton_Week.Checked)
+                {
+                    // This Week: Monday to Sunday
+                    int daysFromMonday = ((int)now.DayOfWeek - (int)DayOfWeek.Monday + 7) % 7;
+                    DateTime monday = now.Date.AddDays(-daysFromMonday);
+                    DateTime sunday = monday.AddDays(6);
+
+                    Control_AdvancedRemove_DateTimePicker_From.Value = monday;
+                    Control_AdvancedRemove_DateTimePicker_To.Value = sunday.AddDays(1).AddSeconds(-1);
+                    Control_AdvancedRemove_DateTimePicker_From.Enabled = false;
+                    Control_AdvancedRemove_DateTimePicker_To.Enabled = false;
+                    LoggingUtility.Log($"[{nameof(Control_AdvancedRemove)}] Quick filter applied: Week");
+                }
+                else if (TransactionSearchControl_RadioButton_Month.Checked)
+                {
+                    // This Month: 1st to last day
+                    DateTime firstDay = new DateTime(now.Year, now.Month, 1);
+                    DateTime lastDay = firstDay.AddMonths(1).AddDays(-1);
+
+                    Control_AdvancedRemove_DateTimePicker_From.Value = firstDay;
+                    Control_AdvancedRemove_DateTimePicker_To.Value = lastDay.AddDays(1).AddSeconds(-1);
+                    Control_AdvancedRemove_DateTimePicker_From.Enabled = false;
+                    Control_AdvancedRemove_DateTimePicker_To.Enabled = false;
+                    LoggingUtility.Log($"[{nameof(Control_AdvancedRemove)}] Quick filter applied: Month");
+                }
+                else if (TransactionSearchControl_RadioButton_Everything.Checked)
+                {
+                    // Everything: No date filtering - set to wide range (past 10 years to future 1 year)
+                    Control_AdvancedRemove_DateTimePicker_From.Value = now.AddYears(-10);
+                    Control_AdvancedRemove_DateTimePicker_To.Value = now.AddYears(1);
+                    Control_AdvancedRemove_DateTimePicker_From.Enabled = false;
+                    Control_AdvancedRemove_DateTimePicker_To.Enabled = false;
+                    LoggingUtility.Log($"[{nameof(Control_AdvancedRemove)}] Quick filter applied: Everything (all dates)");
+                }
+                else if (TransactionSearchControl_RadioButton_Custom.Checked)
+                {
+                    // Custom: user sets dates manually, enable date pickers
+                    Control_AdvancedRemove_DateTimePicker_From.Enabled = true;
+                    Control_AdvancedRemove_DateTimePicker_To.Enabled = true;
+                    LoggingUtility.Log($"[{nameof(Control_AdvancedRemove)}] Quick filter applied: Custom (user-defined dates)");
+                }
+            }
+            catch (Exception ex)
+            {
+                LoggingUtility.LogApplicationError(ex);
+                Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Low,
+                    controlName: nameof(Control_AdvancedRemove));
+            }
         }
 
         private async void Control_AdvancedRemove_Button_Search_Click(object? sender, EventArgs? e)
@@ -276,19 +373,16 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                 string qtyMinText = Control_AdvancedRemove_TextBox_QtyMin.Text.Trim();
                 string qtyMaxText = Control_AdvancedRemove_TextBox_QtyMax.Text.Trim();
                 string notes = Control_AdvancedRemove_TextBox_Notes.Text.Trim();
-                string user = Control_AdvancedRemove_ComboBox_User.Text.Trim();
-                bool filterByDate = Control_AdvancedRemove_CheckBox_Date.Checked;
+                string user = Control_AdvancedRemove_SuggestionBox_User.Text.Trim();
+
                 DateTime? dateFrom =
-                    filterByDate ? Control_AdvancedRemove_DateTimePicker_From.Value.Date : (DateTime?)null;
-                DateTime? dateTo = filterByDate
-                    ? Control_AdvancedRemove_DateTimePicker_To.Value.Date.AddDays(1).AddTicks(-1)
-                    : (DateTime?)null;
+                    Control_AdvancedRemove_DateTimePicker_From.Value.Date;
+                DateTime? dateTo = Control_AdvancedRemove_DateTimePicker_To.Value.Date.AddDays(1).AddTicks(-1);
 
                 int? qtyMin = int.TryParse(qtyMinText, out int qmin) ? qmin : null;
                 int? qtyMax = int.TryParse(qtyMaxText, out int qmax) ? qmax : null;
 
-                bool userSelected = Control_AdvancedRemove_ComboBox_User.SelectedIndex > 0 &&
-                                    !string.IsNullOrWhiteSpace(user);
+                bool userSelected = !string.IsNullOrWhiteSpace(user);
 
                 bool anyFieldFilled =
                     !string.IsNullOrWhiteSpace(part) ||
@@ -298,20 +392,29 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                     qtyMax.HasValue ||
                     !string.IsNullOrWhiteSpace(notes) ||
                     userSelected ||
-                    (filterByDate && dateFrom != null && dateTo != null);
+                    (dateFrom != null && dateTo != null);
 
                 if (!anyFieldFilled)
                 {
-                    MessageBox.Show(@"Please fill in at least one field to search.", @"Validation Error",
-                        MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    Service_ErrorHandler.HandleValidationError(
+                        "Please fill in at least one field to search.",
+                        "Search Criteria",
+                        controlName: nameof(Control_AdvancedRemove));
                     return;
                 }
 
-                if (filterByDate && dateFrom > dateTo)
+                // Skip date range validation when "Everything" is selected
+                if (!TransactionSearchControl_RadioButton_Everything.Checked)
                 {
-                    MessageBox.Show(@"The 'From' date cannot be after the 'To' date.", @"Validation Error",
-                        MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                    return;
+                    // Validate date range for non-Everything searches
+                    if (dateFrom > dateTo)
+                    {
+                        Service_ErrorHandler.HandleValidationError(
+                            "The 'From' date cannot be after the 'To' date.",
+                            "Date Range Validation",
+                            controlName: nameof(Control_AdvancedRemove));
+                        return;
+                    }
                 }
 
                 // FIXED: Use Helper_Database_StoredProcedure instead of hardcoded MySQL query
@@ -324,16 +427,23 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                     { "QtyMax", qtyMax ?? (object)DBNull.Value },
                     { "Notes", string.IsNullOrWhiteSpace(notes) ? (object)DBNull.Value : notes },
                     { "User", userSelected ? user : (object)DBNull.Value },
-                    { "FilterByDate", filterByDate },
+                    { "FilterByDate", !TransactionSearchControl_RadioButton_Everything.Checked },
                     { "DateFrom", dateFrom ?? (object)DBNull.Value },
                     { "DateTo", dateTo ?? (object)DBNull.Value }
                 };
 
-                LoggingUtility.Log($"[SEARCH DEBUG] Executing search with parameters: " +
-                    $"PartID='{part}', Operation='{op}', Location='{loc}', " +
-                    $"QtyMin={qtyMin}, QtyMax={qtyMax}, Notes='{notes}', " +
-                    $"User='{(userSelected ? user : "NULL")}', FilterByDate={filterByDate}, " +
-                    $"DateFrom={dateFrom}, DateTo={dateTo}");
+                if (TransactionSearchControl_RadioButton_Everything.Checked)
+                {
+                    LoggingUtility.Log($"[{nameof(Control_AdvancedRemove)}] Executing search (Everything mode). " +
+                        $"PartID='{part}', Operation='{op}', Location='{loc}', " +
+                        $"QtyMin={qtyMin}, QtyMax={qtyMax}, Notes='{notes}', User='{(userSelected ? user : "NULL")}'");
+                }
+                else
+                {
+                    LoggingUtility.Log($"[{nameof(Control_AdvancedRemove)}] Executing search with date range. " +
+                        $"DateRange={dateFrom:MM/dd/yy} - {dateTo:MM/dd/yy}, PartID='{part}', Operation='{op}', " +
+                        $"Location='{loc}', QtyMin={qtyMin}, QtyMax={qtyMax}, Notes='{notes}', User='{(userSelected ? user : "NULL")}'");
+                }
 
                 var searchResult = await Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync(
                     Model_Application_Variables.ConnectionString,
@@ -343,16 +453,16 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
 
                 if (!searchResult.IsSuccess)
                 {
-                    string errorMsg = !string.IsNullOrEmpty(searchResult.ErrorMessage) 
-                        ? searchResult.ErrorMessage 
+                    string errorMsg = !string.IsNullOrEmpty(searchResult.ErrorMessage)
+                        ? searchResult.ErrorMessage
                         : "Unknown error occurred during search";
-                    MessageBox.Show($"Search failed: {errorMsg}", @"Search Error", 
-                        MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    Service_ErrorHandler.ShowWarning($"Search failed: {errorMsg}");
+                    LoggingUtility.Log($"[{nameof(Control_AdvancedRemove)}] Search failed: {errorMsg}");
                     return;
                 }
 
                 DataTable dt = searchResult.Data ?? new DataTable();
-                LoggingUtility.Log($"[SEARCH DEBUG] Search completed. IsSuccess: {searchResult.IsSuccess}, Rows: {dt.Rows.Count}");
+                LoggingUtility.Log($"[{nameof(Control_AdvancedRemove)}] Search completed. IsSuccess: {searchResult.IsSuccess}, Rows: {dt.Rows.Count}");
 
                 Control_AdvancedRemove_DataGridView_Results.DataSource = dt;
                 Control_AdvancedRemove_DataGridView_Results.ClearSelection();
@@ -380,12 +490,11 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                 // Collapse the search panel after search to maximize results area
                 try
                 {
-                    if (Control_AdvancedRemove_SplitContainer_Main != null)
+                    if (Control_AdvancedRemove_SplitView != null)
                     {
-                        Control_AdvancedRemove_SplitContainer_Main.Panel1Collapsed = true;
+                        Control_AdvancedRemove_SplitView.Panel1Collapsed = true;
                         Control_AdvancedRemove_Button_SidePanel.Text = "⬅️";
-                        Control_AdvancedRemove_Button_SidePanel.ForeColor =
-                            Model_Application_Variables.UserUiColors.ErrorColor ?? Color.Red;
+
                     }
                 }
                 catch { }
@@ -393,8 +502,13 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             catch (Exception ex)
             {
                 LoggingUtility.LogApplicationError(ex);
-                MessageBox.Show($@"Error during advanced search: {ex.Message}", @"Search Error", MessageBoxButtons.OK,
-                    MessageBoxIcon.Error);
+                Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Medium,
+                    contextData: new Dictionary<string, object>
+                    {
+                        ["User"] = Model_Application_Variables.User,
+                        ["Operation"] = "AdvancedSearch"
+                    },
+                    controlName: nameof(Control_AdvancedRemove));
             }
         }
 
@@ -404,10 +518,10 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             {
                 DataGridView? dgv = Control_AdvancedRemove_DataGridView_Results;
                 int selectedCount = dgv.SelectedRows.Count;
-                LoggingUtility.Log($"[ADVANCED REMOVE] Delete clicked. Selected rows: {selectedCount}");
+                LoggingUtility.Log($"[{nameof(Control_AdvancedRemove)}] Delete clicked. Selected rows: {selectedCount}");
                 if (selectedCount == 0)
                 {
-                    LoggingUtility.Log("[ADVANCED REMOVE] No rows selected for deletion.");
+                    LoggingUtility.Log($"[{nameof(Control_AdvancedRemove)}] No rows selected for deletion.");
                     return;
                 }
 
@@ -448,13 +562,13 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                         .GroupBy(x => x.PartId)
                         .Select(g => new { PartId = g.Key, Count = g.Count(), TotalQty = g.Sum(x => x.Quantity) })
                         .ToList();
-                    
+
                     StringBuilder sb = new();
                     foreach (var group in groupedItems)
                     {
                         sb.AppendLine($"  • {group.PartId}: {group.Count} location(s), {group.TotalQty} total quantity");
                     }
-                    
+
                     confirmMessage = $"Are you sure you want to delete {_lastRemovedItems.Count} items?\n\n{sb}";
                 }
 
@@ -466,19 +580,19 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
 
                 if (confirmResult != DialogResult.Yes)
                 {
-                    LoggingUtility.Log("[ADVANCED REMOVE] User cancelled deletion.");
+                    LoggingUtility.Log($"[{nameof(Control_AdvancedRemove)}] User cancelled deletion.");
                     _lastRemovedItems.Clear();
                     return;
                 }
 
                 var removeResult = await Dao_Inventory.RemoveInventoryItemsFromDataGridViewAsync(dgv);
-                LoggingUtility.Log($"[ADVANCED REMOVE] Remove operation result: Success={removeResult.IsSuccess}, Message={removeResult.StatusMessage}");
-                
+                LoggingUtility.Log($"[{nameof(Control_AdvancedRemove)}] Remove operation result: Success={removeResult.IsSuccess}, Message={removeResult.StatusMessage}");
+
                 if (removeResult.IsSuccess)
                 {
                     int removedCount = removeResult.Data.RemovedCount;
                     List<string> errorMessages = removeResult.Data.ErrorMessages;
-                    
+
                     if (removedCount == 0)
                     {
                         string msg =
@@ -488,7 +602,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                             msg += "\n\n" + string.Join("\n", errorMessages);
                         }
 
-                        MessageBox.Show(msg, @"Delete", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        Service_ErrorHandler.ShowWarning(msg);
                         Control_AdvancedRemove_Button_Undo.Enabled = false;
                     }
                     else
@@ -499,10 +613,10 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                 }
                 else
                 {
-                    string errorMsg = !string.IsNullOrEmpty(removeResult.ErrorMessage) 
-                        ? removeResult.ErrorMessage 
+                    string errorMsg = !string.IsNullOrEmpty(removeResult.ErrorMessage)
+                        ? removeResult.ErrorMessage
                         : "Unknown error occurred during removal";
-                    MessageBox.Show($"Error removing items: {errorMsg}", @"Delete Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    Service_ErrorHandler.ShowWarning($"Error removing items: {errorMsg}");
                     Control_AdvancedRemove_Button_Undo.Enabled = false;
                 }
 
@@ -547,11 +661,9 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
 
                 _progressHelper?.UpdateProgress(60,
                     "Refilling combo boxes...");
-                Debug.WriteLine("[DEBUG] Refilling User ComboBox");
-                await Helper_UI_ComboBoxes.FillUserComboBoxesAsync(Control_AdvancedRemove_ComboBox_User);
-
-                MainFormControlHelper.ResetComboBox(Control_AdvancedRemove_ComboBox_User,
-                    Model_Application_Variables.UserUiColors.ComboBoxErrorForeColor ?? Color.Red, 0);
+                Debug.WriteLine("[DEBUG] Reloading User data");
+                await Helper_UI_ComboBoxes.SetupUserDataTable();
+                Helper_SuggestionTextBox.Clear(Control_AdvancedRemove_SuggestionBox_User.TextBox);
 
                 Control_AdvancedRemove_TextBox_QtyMin.Text = string.Empty;
                 Control_AdvancedRemove_TextBox_QtyMax.Text = string.Empty;
@@ -560,27 +672,25 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                 Control_AdvancedRemove_TextBox_Operation.Text = string.Empty;
                 Control_AdvancedRemove_TextBox_Location.Text = string.Empty;
 
-                Control_AdvancedRemove_CheckBox_Date.Checked = false;
-                Control_AdvancedRemove_DateTimePicker_From.Value = DateTime.Today;
-                Control_AdvancedRemove_DateTimePicker_To.Value = DateTime.Today;
-                Control_AdvancedRemove_DateTimePicker_From.Enabled = false;
-                Control_AdvancedRemove_DateTimePicker_To.Enabled = false;
+                // Reset date range to Month (default)
+                TransactionSearchControl_RadioButton_Month.Checked = true;
+                // ApplyQuickFilter() is called automatically by CheckedChanged event
 
                 Control_AdvancedRemove_DataGridView_Results.DataSource = null;
                 Control_AdvancedRemove_DataGridView_Results.Rows.Clear();
                 Control_AdvancedRemove_Image_NothingFound.Visible = false;
 
-                if (Control_AdvancedRemove_ComboBox_User.FindForm() is { } form)
+                if (Control_AdvancedRemove_SuggestionBox_User.FindForm() is { } form)
                 {
-                    MainFormControlHelper.SetActiveControl(form, Control_AdvancedRemove_ComboBox_User);
+                    MainFormControlHelper.SetActiveControl(form, Control_AdvancedRemove_SuggestionBox_User);
                 }
 
                 // Expand the search panel on reset
                 try
                 {
-                    if (Control_AdvancedRemove_SplitContainer_Main != null)
+                    if (Control_AdvancedRemove_SplitView != null)
                     {
-                        Control_AdvancedRemove_SplitContainer_Main.Panel1Collapsed = false;
+                        Control_AdvancedRemove_SplitView.Panel1Collapsed = false;
                         Control_AdvancedRemove_Button_SidePanel.Text = "➡️";
                         Control_AdvancedRemove_Button_SidePanel.ForeColor =
                             Model_Application_Variables.UserUiColors.SuccessColor ?? Color.Green;
@@ -634,31 +744,28 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                     MainFormInstance.MainForm_StatusStrip_SavedStatus.Visible = false;
                 }
 
-                MainFormControlHelper.ResetComboBox(Control_AdvancedRemove_ComboBox_User,
-                    Model_Application_Variables.UserUiColors.ErrorColor ?? Color.Red, 0);
+                Control_AdvancedRemove_SuggestionBox_User.Text = string.Empty;
                 Control_AdvancedRemove_TextBox_QtyMin.Text = string.Empty;
                 Control_AdvancedRemove_TextBox_QtyMin.ForeColor =
-                    Model_Application_Variables.UserUiColors.ErrorColor ?? Color.Red;
+                    Model_Application_Variables.UserUiColors.TextBoxForeColor ?? Color.Black;
                 Control_AdvancedRemove_TextBox_QtyMax.Text = string.Empty;
                 Control_AdvancedRemove_TextBox_QtyMax.ForeColor =
-                    Model_Application_Variables.UserUiColors.ErrorColor ?? Color.Red;
+                    Model_Application_Variables.UserUiColors.TextBoxForeColor ?? Color.Black;
                 Control_AdvancedRemove_TextBox_Notes.Text = string.Empty;
                 Control_AdvancedRemove_TextBox_Notes.ForeColor =
-                    Model_Application_Variables.UserUiColors.ErrorColor ?? Color.Red;
+                    Model_Application_Variables.UserUiColors.TextBoxForeColor ?? Color.Black;
                 Control_AdvancedRemove_TextBox_Part.Text = string.Empty;
-                Control_AdvancedRemove_TextBox_Part.ForeColor = Model_Application_Variables.UserUiColors.ErrorColor ?? Color.Red;
+                Control_AdvancedRemove_TextBox_Part.ForeColor = Model_Application_Variables.UserUiColors.TextBoxForeColor ?? Color.Black;
                 Control_AdvancedRemove_TextBox_Operation.Text = string.Empty;
                 Control_AdvancedRemove_TextBox_Operation.ForeColor =
-                    Model_Application_Variables.UserUiColors.ErrorColor ?? Color.Red;
+                    Model_Application_Variables.UserUiColors.TextBoxForeColor ?? Color.Black;
                 Control_AdvancedRemove_TextBox_Location.Text = string.Empty;
                 Control_AdvancedRemove_TextBox_Location.ForeColor =
-                    Model_Application_Variables.UserUiColors.ErrorColor ?? Color.Red;
+                    Model_Application_Variables.UserUiColors.TextBoxForeColor ?? Color.Black;
 
-                Control_AdvancedRemove_CheckBox_Date.Checked = false;
-                Control_AdvancedRemove_DateTimePicker_From.Value = DateTime.Today;
-                Control_AdvancedRemove_DateTimePicker_To.Value = DateTime.Today;
-                Control_AdvancedRemove_DateTimePicker_From.Enabled = false;
-                Control_AdvancedRemove_DateTimePicker_To.Enabled = false;
+                // Reset date range to Month (default)
+                TransactionSearchControl_RadioButton_Month.Checked = true;
+                // ApplyQuickFilter() is called automatically by CheckedChanged event
 
                 // Reset DataGridView as well
                 Control_AdvancedRemove_DataGridView_Results.DataSource = null;
@@ -668,9 +775,9 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                 // Expand the search panel on reset
                 try
                 {
-                    if (Control_AdvancedRemove_SplitContainer_Main != null)
+                    if (Control_AdvancedRemove_SplitView != null)
                     {
-                        Control_AdvancedRemove_SplitContainer_Main.Panel1Collapsed = false;
+                        Control_AdvancedRemove_SplitView.Panel1Collapsed = false;
                         Control_AdvancedRemove_Button_SidePanel.Text = "➡️";
                         Control_AdvancedRemove_Button_SidePanel.ForeColor =
                             Model_Application_Variables.UserUiColors.SuccessColor ?? Color.Green;
@@ -701,9 +808,9 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                         @"Disconnected from Server, please standby...";
                 }
 
-                if (Control_AdvancedRemove_ComboBox_User.FindForm() is { } form)
+                if (Control_AdvancedRemove_SuggestionBox_User.FindForm() is { } form)
                 {
-                    MainFormControlHelper.SetActiveControl(form, Control_AdvancedRemove_ComboBox_User);
+                    MainFormControlHelper.SetActiveControl(form, Control_AdvancedRemove_SuggestionBox_User);
                 }
             }
         }
@@ -746,9 +853,8 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                     );
                 }
 
-                MessageBox.Show(@"Undo successful. Removed items have been restored.", @"Undo", MessageBoxButtons.OK,
-                    MessageBoxIcon.Information);
-                LoggingUtility.Log("Undo: Removed items restored (Advanced Remove tab).");
+                Service_ErrorHandler.ShowInformation("Undo successful. Removed items have been restored.");
+                LoggingUtility.Log($"[{nameof(Control_AdvancedRemove)}] Undo: Removed items restored.");
 
                 _lastRemovedItems.Clear();
                 Control[] undoBtn = Controls.Find("Control_AdvancedRemove_Button_Undo", true);
@@ -762,8 +868,13 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             catch (Exception ex)
             {
                 LoggingUtility.LogApplicationError(ex);
-                MessageBox.Show(@"Undo failed: " + ex.Message, @"Undo Error", MessageBoxButtons.OK,
-                    MessageBoxIcon.Error);
+                Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Medium,
+                    contextData: new Dictionary<string, object>
+                    {
+                        ["User"] = Model_Application_Variables.User,
+                        ["ItemCount"] = _lastRemovedItems.Count
+                    },
+                    controlName: nameof(Control_AdvancedRemove));
             }
         }
 
@@ -773,7 +884,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             Service_ErrorHandler.ShowInformation(
                 "Print functionality is being rebuilt. Coming soon!",
                 "Feature Temporarily Unavailable");
-            
+
             /* OLD IMPLEMENTATION - Kept for reference, will be restored in Phase 7
             try
             {
@@ -853,24 +964,11 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
 
         private void Control_AdvancedRemove_Button_SidePanel_Click(object sender, EventArgs e)
         {
-            SplitContainer? splitContainer = Control_AdvancedRemove_SplitContainer_Main;
-            Button? button = sender as Button ?? Control_AdvancedRemove_Button_SidePanel;
 
-            if (splitContainer.Panel1Collapsed)
-            {
-                splitContainer.Panel1Collapsed = false;
-                // Arrow-only style and color to match TransferTab
-                button.Text = "➡️";
-                button.ForeColor = Model_Application_Variables.UserUiColors.SuccessColor ?? Color.Green;
-            }
-            else
-            {
-                splitContainer.Panel1Collapsed = true;
-                button.Text = "⬅️";
-                button.ForeColor = Model_Application_Variables.UserUiColors.ErrorColor ?? Color.Red;
-            }
         }
 
         #endregion
+
+
     }
 }

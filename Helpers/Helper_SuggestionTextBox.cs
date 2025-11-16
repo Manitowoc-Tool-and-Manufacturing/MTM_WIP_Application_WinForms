@@ -239,6 +239,107 @@ namespace MTM_WIP_Application_Winforms.Helpers
             LoggingUtility.Log($"[Helper_SuggestionTextBox] Configured {suggestionTextBox.Name} for Color Codes");
         }
 
+        /// <summary>
+        /// Configures a SuggestionTextBoxWithLabel for Part Number suggestions.
+        /// Standard configuration: MaxResults=100, EnableWildcards=true, ClearOnNoMatch=true, F4 button enabled.
+        /// </summary>
+        public static void ConfigureForPartNumbers(SuggestionTextBoxWithLabel control, Func<Task<List<string>>> dataProvider)
+        {
+            if (control == null)
+                throw new ArgumentNullException(nameof(control));
+
+            ConfigureForPartNumbers(control.TextBox, dataProvider, enableF4: false); // F4 handled by button
+            LoggingUtility.Log($"[Helper_SuggestionTextBox] Configured {control.Name} (composite) for Part Numbers");
+        }
+
+        /// <summary>
+        /// Configures a SuggestionTextBoxWithLabel for Operation suggestions.
+        /// Standard configuration: MaxResults=50, EnableWildcards=true, ClearOnNoMatch=true, F4 button enabled.
+        /// </summary>
+        public static void ConfigureForOperations(SuggestionTextBoxWithLabel control, Func<Task<List<string>>> dataProvider)
+        {
+            if (control == null)
+                throw new ArgumentNullException(nameof(control));
+
+            ConfigureForOperations(control.TextBox, dataProvider, enableF4: false); // F4 handled by button
+            LoggingUtility.Log($"[Helper_SuggestionTextBox] Configured {control.Name} (composite) for Operations");
+        }
+
+        /// <summary>
+        /// Configures a SuggestionTextBoxWithLabel for Location suggestions.
+        /// Standard configuration: MaxResults=100, EnableWildcards=true, ClearOnNoMatch=true, F4 button enabled.
+        /// </summary>
+        public static void ConfigureForLocations(SuggestionTextBoxWithLabel control, Func<Task<List<string>>> dataProvider)
+        {
+            if (control == null)
+                throw new ArgumentNullException(nameof(control));
+
+            ConfigureForLocations(control.TextBox, dataProvider, enableF4: false); // F4 handled by button
+            LoggingUtility.Log($"[Helper_SuggestionTextBox] Configured {control.Name} (composite) for Locations");
+        }
+
+        /// <summary>
+        /// Configures a SuggestionTextBoxWithLabel for Item Type suggestions.
+        /// Standard configuration: MaxResults=50, EnableWildcards=false, ClearOnNoMatch=true, F4 button enabled.
+        /// </summary>
+        public static void ConfigureForItemTypes(SuggestionTextBoxWithLabel control, Func<Task<List<string>>> dataProvider)
+        {
+            if (control == null)
+                throw new ArgumentNullException(nameof(control));
+
+            ConfigureForItemTypes(control.TextBox, dataProvider, enableF4: false); // F4 handled by button
+            LoggingUtility.Log($"[Helper_SuggestionTextBox] Configured {control.Name} (composite) for Item Types");
+        }
+
+        /// <summary>
+        /// Configures a SuggestionTextBoxWithLabel for Color Code suggestions.
+        /// Standard configuration: MaxResults=20, EnableWildcards=false, ClearOnNoMatch=false, F4 button enabled.
+        /// </summary>
+        public static void ConfigureForColorCodes(SuggestionTextBoxWithLabel control, Func<Task<List<string>>> dataProvider)
+        {
+            if (control == null)
+                throw new ArgumentNullException(nameof(control));
+
+            ConfigureForColorCodes(control.TextBox, dataProvider, enableF4: false); // F4 handled by button
+            LoggingUtility.Log($"[Helper_SuggestionTextBox] Configured {control.Name} (composite) for Color Codes");
+        }
+
+        /// <summary>
+        /// Configures a SuggestionTextBox for User suggestions.
+        /// Standard configuration: MaxResults=50, EnableWildcards=false, ClearOnNoMatch=true
+        /// </summary>
+        public static void ConfigureForUsers(SuggestionTextBox suggestionTextBox, Func<Task<List<string>>> dataProvider, bool enableF4 = true)
+        {
+            if (suggestionTextBox == null)
+                throw new ArgumentNullException(nameof(suggestionTextBox));
+
+            suggestionTextBox.DataProvider = dataProvider;
+            suggestionTextBox.MaxResults = 50;
+            suggestionTextBox.EnableWildcards = false; // User names are short, no wildcards needed
+            suggestionTextBox.ClearOnNoMatch = true;
+            suggestionTextBox.SuppressExactMatch = true;
+
+            if (enableF4)
+            {
+                RegisterF4Handler(suggestionTextBox);
+            }
+
+            LoggingUtility.Log($"[Helper_SuggestionTextBox] Configured {suggestionTextBox.Name} for Users");
+        }
+
+        /// <summary>
+        /// Configures a SuggestionTextBoxWithLabel for User suggestions.
+        /// Standard configuration: MaxResults=50, EnableWildcards=false, ClearOnNoMatch=true, F4 button enabled.
+        /// </summary>
+        public static void ConfigureForUsers(SuggestionTextBoxWithLabel control, Func<Task<List<string>>> dataProvider)
+        {
+            if (control == null)
+                throw new ArgumentNullException(nameof(control));
+
+            ConfigureForUsers(control.TextBox, dataProvider, enableF4: false); // F4 handled by button
+            LoggingUtility.Log($"[Helper_SuggestionTextBox] Configured {control.Name} (composite) for Users");
+        }
+
         #endregion
 
         #region Bulk Configuration
@@ -416,6 +517,26 @@ namespace MTM_WIP_Application_Winforms.Helpers
                 var cachedLocations = Helper_UI_ComboBoxes.GetCachedLocations();
                 LoggingUtility.Log($"[Helper_SuggestionTextBox] Retrieved {cachedLocations.Count} locations from cache");
                 return Task.FromResult(cachedLocations);
+            }
+            catch (Exception ex)
+            {
+                LoggingUtility.LogApplicationError(ex);
+                return Task.FromResult(new List<string>());
+            }
+        }
+
+        /// <summary>
+        /// Gets users from the pre-loaded Helper_UI_ComboBoxes cache.
+        /// Returns empty list if cache not populated. Thread-safe access.
+        /// </summary>
+        /// <returns>List of all users from cache</returns>
+        public static Task<List<string>> GetCachedUsersAsync()
+        {
+            try
+            {
+                var cachedUsers = Helper_UI_ComboBoxes.GetCachedUsers();
+                LoggingUtility.Log($"[Helper_SuggestionTextBox] Retrieved {cachedUsers.Count} users from cache");
+                return Task.FromResult(cachedUsers);
             }
             catch (Exception ex)
             {

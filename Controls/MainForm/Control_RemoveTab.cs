@@ -3,6 +3,7 @@ using System.Data;
 using System.Diagnostics;
 using System.Drawing.Printing;
 using System.Text;
+using MTM_WIP_Application_Winforms.Controls.Shared;
 using MTM_WIP_Application_Winforms.Core;
 using MTM_WIP_Application_Winforms.Data;
 using MTM_WIP_Application_Winforms.Forms.ErrorDialog;
@@ -55,6 +56,40 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
         #endregion
 
         #region Constructors
+
+        private void WireUpF4Buttons()
+        {
+            // F4 Button Click Handlers - Remove Tab
+            RemoveTab_Single_Button_PartF4.Click += (s, e) =>
+            {
+                if (string.IsNullOrWhiteSpace(Control_RemoveTab_TextBox_Part.Text))
+                {
+                    // Empty: Trigger F4 dropdown
+                    Control_RemoveTab_TextBox_Part.Focus();
+                    SendKeys.Send("{F4}");
+                }
+                else
+                {
+                    // Has text: Trigger Enter (move to next field)
+                    Control_RemoveTab_TextBox_Operation.Focus();
+                }
+            };
+
+            RemoveTab_Single_Button_OperationF4.Click += (s, e) =>
+            {
+                if (string.IsNullOrWhiteSpace(Control_RemoveTab_TextBox_Operation.Text))
+                {
+                    // Empty: Trigger F4 dropdown
+                    Control_RemoveTab_TextBox_Operation.Focus();
+                    SendKeys.Send("{F4}");
+                }
+                else
+                {
+                    // Has text: Focus stays on operation (end of form)
+                    Control_RemoveTab_Button_Search.Focus();
+                }
+            };
+        }
 
         public Control_RemoveTab()
         {
@@ -819,11 +854,10 @@ SetStyle(ControlStyles.OptimizedDoubleBuffer, true);
                         loc.ForeColor = Model_Application_Variables.UserUiColors.ComboBoxErrorForeColor ?? Color.Red;
                     }
 
-                    if (adv.Controls.Find("Control_AdvancedRemove_ComboBox_User", true).FirstOrDefault() is ComboBox
+                    if (adv.Controls.Find("Control_AdvancedRemove_SuggestionBox_User", true).FirstOrDefault() is SuggestionTextBoxWithLabel
                         user)
                     {
-                        user.SelectedIndex = 0;
-                        user.ForeColor = Model_Application_Variables.UserUiColors.ComboBoxErrorForeColor ?? Color.Red;
+                        user.Text = string.Empty;
                     }
                 }
             }
@@ -1127,11 +1161,14 @@ SetStyle(ControlStyles.OptimizedDoubleBuffer, true);
                 if (MainFormInstance != null)
                 {
                     Control_AdvancedRemove? adv = MainFormInstance.MainForm_UserControl_AdvancedRemove;
-                    Control[] btn = adv.Controls.Find("Control_AdvancedRemove_Button_Normal", true);
-                    if (btn.Length > 0 && btn[0] is Button normalBtn)
+                    if (adv != null)
                     {
-                        normalBtn.Click -= Control_RemoveTab_Button_Normal_Click;
-                        normalBtn.Click += Control_RemoveTab_Button_Normal_Click;
+                        Control[] btn = adv.Controls.Find("Control_AdvancedRemove_Button_Normal", true);
+                        if (btn.Length > 0 && btn[0] is Button normalBtn)
+                        {
+                            normalBtn.Click -= Control_RemoveTab_Button_Normal_Click;
+                            normalBtn.Click += Control_RemoveTab_Button_Normal_Click;
+                        }
                     }
                 }
 
@@ -1152,7 +1189,7 @@ SetStyle(ControlStyles.OptimizedDoubleBuffer, true);
             {
                 LoggingUtility.LogApplicationError(ex);
                 _ = Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex,
-                    new StringBuilder().Append("MainForm_WireUpRemoveTabEvents").ToString());
+                    new StringBuilder().Append("Control_RemoveTab_WireUpEvents").ToString());
             }
         }
 

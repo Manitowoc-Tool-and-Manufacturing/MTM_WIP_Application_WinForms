@@ -117,8 +117,8 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             // 
             // Control_Shortcuts
             // 
-            AutoScaleDimensions = new SizeF(7F, 15F);
-            AutoScaleMode = AutoScaleMode.Font;
+            AutoScaleDimensions = new SizeF(96F, 96F);
+            AutoScaleMode = AutoScaleMode.Dpi;
             Controls.Add(Control_Shortcuts_GroupBox_Main);
             Name = "Control_Shortcuts";
             Size = new Size(635, 389);
