@@ -20,6 +20,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
         private readonly List<Model_History_Remove> _lastRemovedItems = [];
         public static Forms.MainForm.MainForm? MainFormInstance { get; set; }
         private Helper_StoredProcedureProgress? _progressHelper;
+        private bool _isInputPanelCollapsed = false;
 
         #endregion
 
@@ -364,6 +365,9 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
 
         private async void Control_AdvancedRemove_Button_Search_Click(object? sender, EventArgs? e)
         {
+            // Collapse input panel when search is triggered
+            CollapseInputPanel();
+
             try
             {
                 // Gather search fields from textboxes and user combobox
@@ -631,6 +635,9 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
 
         private async Task Control_AdvancedRemove_HardReset()
         {
+            // Expand input panel when hard reset is triggered
+            ExpandInputPanel();
+
             Control[] resetBtn = Controls.Find("Control_AdvancedRemove_Button_Reset", true);
             if (resetBtn.Length > 0 && resetBtn[0] is Button btn)
             {
@@ -728,6 +735,9 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
 
         private void Control_AdvancedRemove_SoftReset()
         {
+            // Expand input panel when soft reset is triggered
+            ExpandInputPanel();
+
             Control[] resetBtn = Controls.Find("Control_AdvancedRemove_Button_Reset", true);
             if (resetBtn.Length > 0 && resetBtn[0] is Button btn)
             {
@@ -962,9 +972,56 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             return base.ProcessCmdKey(ref msg, keyData);
         }
 
+        /// <summary>
+        /// Toggles the visibility of the input panel (collapse/expand).
+        /// </summary>
+        private void ToggleInputPanel()
+        {
+            if (Control_AdvancedRemove_Panel_Inputs == null)
+                return;
+
+            _isInputPanelCollapsed = !_isInputPanelCollapsed;
+
+            // Toggle panel visibility
+            Control_AdvancedRemove_Panel_Inputs.Visible = !_isInputPanelCollapsed;
+
+            // Update button text to indicate current state
+            Control[] sidePanelBtn = Controls.Find("Control_AdvancedRemove_Button_SidePanel", true);
+            if (sidePanelBtn.Length > 0 && sidePanelBtn[0] is Button btn)
+            {
+                btn.Text = _isInputPanelCollapsed ? "➡️" : "⬅️";
+                ToolTip toolTip = new();
+                toolTip.SetToolTip(btn, _isInputPanelCollapsed ? "Show Search Panel" : "Hide Search Panel");
+            }
+
+            LoggingUtility.Log($"[{nameof(Control_AdvancedRemove)}] Input panel {(_isInputPanelCollapsed ? "collapsed" : "expanded")}");
+        }
+
+        /// <summary>
+        /// Collapses the input panel if it's currently expanded.
+        /// </summary>
+        private void CollapseInputPanel()
+        {
+            if (!_isInputPanelCollapsed)
+            {
+                ToggleInputPanel();
+            }
+        }
+
+        /// <summary>
+        /// Expands the input panel if it's currently collapsed.
+        /// </summary>
+        private void ExpandInputPanel()
+        {
+            if (_isInputPanelCollapsed)
+            {
+                ToggleInputPanel();
+            }
+        }
+
         private void Control_AdvancedRemove_Button_SidePanel_Click(object sender, EventArgs e)
         {
-
+            ToggleInputPanel();
         }
 
         #endregion

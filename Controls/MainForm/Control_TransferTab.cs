@@ -1290,9 +1290,6 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                 bool panelCollapsed = MainFormInstance.MainForm_SplitContainer_Middle.Panel2Collapsed;
                 MainFormInstance.MainForm_SplitContainer_Middle.Panel2Collapsed = !panelCollapsed;
                 Control_TransferTab_Button_Toggle_RightPanel.Text = panelCollapsed ? "➡️" : "⬅️";
-                Control_TransferTab_Button_Toggle_RightPanel.ForeColor = panelCollapsed
-                    ? Model_Application_Variables.UserUiColors.SuccessColor ?? Color.Green
-                    : Model_Application_Variables.UserUiColors.ErrorColor ?? Color.Red;
             }
 
             Helper_UI_ComboBoxes.DeselectAllComboBoxText(this);
