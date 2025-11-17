@@ -4,6 +4,18 @@ using System.Windows.Forms;
 namespace MTM_WIP_Application_Winforms.Controls.Shared
 {
     /// <summary>
+    /// Predefined animation presets for arrow directions or custom sequences.
+    /// </summary>
+    public enum TextAnimationPreset
+    {
+        Custom = 0,
+        Right,
+        Left,
+        Up,
+        Down
+    }
+
+    /// <summary>
     /// Provides a lightweight text animation engine that can drive the Text property of any Button (or other Control).
     /// Designed for assigning animated glyph sequences (e.g., progress chevrons) to button captions.
     /// </summary>
@@ -12,25 +24,71 @@ namespace MTM_WIP_Application_Winforms.Controls.Shared
     {
         #region Fields
 
-        private static readonly IReadOnlyList<string> DefaultFrames = new List<string>
+        private static readonly IReadOnlyList<string> RightArrowFrames = new List<string>
         {
-            "➩",
-            "➪",
-            "➫",
-            "➬",
-            "➭",
-            "➮",
-            "➯"
+            "🡢", // fa-chevron-right
+            "🡪", // fa-long-arrow-alt-right
+            "🡲", // fa-long-arrow-alt-right
+            "🡺", // fa-arrow-right
+            "🢂", // fa-long-arrow-alt-right            
+            "🡺", // fa-arrow-right
+            "🡲", // fa-long-arrow-alt-right            
+            "🡪", // fa-long-arrow-alt-right
+            "🡢" // fa-chevron-right
         };
 
+        private static readonly IReadOnlyList<string> LeftArrowFrames = new List<string>
+        {
+            "🡠", // fa-chevron-left
+            "🡨", // fa-chevron-double-left
+            "🡰", // fa-arrow-left
+            "🡸", // fa-long-arrow-alt-left
+            "🢀",  // fa-arrow-circle-left
+            "🡸", // fa-long-arrow-alt-left
+            "🡰", // fa-arrow-left
+            "🡨", // fa-chevron-double-left
+            "🡠" // fa-chevron-left
+        };
+
+        private static readonly IReadOnlyList<string> UpArrowFrames = new List<string>
+        {
+            "🡡", // arrow up light
+            "🡩", // arrow up normal
+            "🡹", // arrow up heavy
+            "🡹", // arrow up heavy
+            "🡩", // arrow up normal
+            "🡡" // arrow up light
+        };
+
+        private static readonly IReadOnlyList<string> DownArrowFrames = new List<string>
+        {
+            "🡣", // fa-chevron-down
+            "🡫", // fa-chevron-double-down
+            "🡻", // fa-arrow-down
+            "🡻", // fa-long-arrow-alt-down
+            "🡫", // fa-arrow-circle-down
+            "🡣" // fa-chevron-down
+        };
+
+        private static readonly IReadOnlyDictionary<TextAnimationPreset, IReadOnlyList<string>> PresetFrameMap =
+            new Dictionary<TextAnimationPreset, IReadOnlyList<string>>
+            {
+                [TextAnimationPreset.Right] = RightArrowFrames,
+                [TextAnimationPreset.Left] = LeftArrowFrames,
+                [TextAnimationPreset.Up] = UpArrowFrames,
+                [TextAnimationPreset.Down] = DownArrowFrames
+            };
+
         private readonly System.Windows.Forms.Timer _animationTimer;
-        private List<string> _frames = new(DefaultFrames);
+        private List<string> _frames = new(RightArrowFrames);
         private int _currentFrameIndex = -1;
         private Button? _targetButton;
+        private ToolStripItem? _targetToolStripItem;
         private string _originalButtonText = string.Empty;
         private string _prefixText = string.Empty;
         private string _suffixText = string.Empty;
         private bool _restoreOriginalTextOnStop = true;
+        private TextAnimationPreset _preset = TextAnimationPreset.Right;
 
         #endregion
 
@@ -57,7 +115,48 @@ namespace MTM_WIP_Application_Winforms.Controls.Shared
                 }
 
                 _targetButton = value;
-                _originalButtonText = _targetButton?.Text ?? string.Empty;
+                if (value != null)
+                {
+                    _targetToolStripItem = null;
+                    _originalButtonText = value.Text ?? string.Empty;
+                }
+                else
+                {
+                    _originalButtonText = string.Empty;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the tool strip item whose Text property will display the animation frames.
+        /// </summary>
+        [Category("Behavior")]
+        [Description("ToolStripItem that receives the animated text frames.")]
+        public ToolStripItem? TargetToolStripItem
+        {
+            get => _targetToolStripItem;
+            set
+            {
+                if (_targetToolStripItem == value)
+                {
+                    return;
+                }
+
+                if (_animationTimer.Enabled)
+                {
+                    StopAnimation();
+                }
+
+                _targetToolStripItem = value;
+                if (value != null)
+                {
+                    _targetButton = null;
+                    _originalButtonText = value.Text ?? string.Empty;
+                }
+                else
+                {
+                    _originalButtonText = string.Empty;
+                }
             }
         }
 
@@ -97,6 +196,7 @@ namespace MTM_WIP_Application_Winforms.Controls.Shared
 
                 _frames = value.ToList();
                 ResetAnimation();
+                _preset = TextAnimationPreset.Custom;
             }
         }
 
@@ -142,6 +242,12 @@ namespace MTM_WIP_Application_Winforms.Controls.Shared
         [Browsable(false)]
         public bool IsRunning => _animationTimer.Enabled;
 
+        /// <summary>
+        /// Gets the currently applied preset sequence.
+        /// </summary>
+        [Browsable(false)]
+        public TextAnimationPreset Preset => _preset;
+
         #endregion
 
         #region Constructors
@@ -170,16 +276,16 @@ namespace MTM_WIP_Application_Winforms.Controls.Shared
         #region Methods
 
         /// <summary>
-        /// Starts the animation. Throws if no target button is assigned.
+        /// Starts the animation. Throws if no target is assigned.
         /// </summary>
         public void StartAnimation()
         {
-            if (_targetButton == null)
+            if (_targetButton == null && _targetToolStripItem == null)
             {
-                throw new InvalidOperationException("TargetButton must be assigned before starting the animation.");
+                throw new InvalidOperationException("Assign TargetButton or TargetToolStripItem before starting the animation.");
             }
 
-            _originalButtonText = _targetButton.Text;
+            _originalButtonText = GetCurrentTargetText();
             if (!_animationTimer.Enabled)
             {
                 _animationTimer.Start();
@@ -204,7 +310,7 @@ namespace MTM_WIP_Application_Winforms.Controls.Shared
 
             if (_restoreOriginalTextOnStop && _targetButton != null)
             {
-                SetButtonText(_originalButtonText);
+                SetTargetText(_originalButtonText);
             }
         }
 
@@ -235,6 +341,38 @@ namespace MTM_WIP_Application_Winforms.Controls.Shared
 
             _frames = list;
             ResetAnimation();
+            _preset = TextAnimationPreset.Custom;
+        }
+
+        /// <summary>
+        /// Applies one of the built-in directional arrow presets (Right, Left, Up, Down).
+        /// </summary>
+        /// <param name="preset">Preset to apply.</param>
+        public void UsePreset(TextAnimationPreset preset)
+        {
+            if (preset == TextAnimationPreset.Custom)
+            {
+                throw new ArgumentException("Use SetFrames to configure custom presets.", nameof(preset));
+            }
+
+            if (!PresetFrameMap.TryGetValue(preset, out var presetFrames))
+            {
+                throw new ArgumentOutOfRangeException(nameof(preset), preset, "Unsupported preset value.");
+            }
+
+            _frames = presetFrames.ToList();
+            _preset = preset;
+            ResetAnimation();
+        }
+
+        /// <summary>
+        /// Applies the specified preset and immediately starts the animation.
+        /// </summary>
+        /// <param name="preset">Preset to activate.</param>
+        public void StartWithPreset(TextAnimationPreset preset)
+        {
+            UsePreset(preset);
+            StartAnimation();
         }
 
         #endregion
@@ -271,25 +409,53 @@ namespace MTM_WIP_Application_Winforms.Controls.Shared
             string currentFrame = _frames[_currentFrameIndex];
             string composedText = string.Concat(_prefixText, currentFrame, _suffixText);
 
-            SetButtonText(composedText);
+            SetTargetText(composedText);
             FrameChanged?.Invoke(this, currentFrame);
         }
 
-        private void SetButtonText(string text)
+        private void SetTargetText(string text)
         {
-            if (_targetButton == null)
+            if (_targetButton != null)
             {
+                if (_targetButton.InvokeRequired)
+                {
+                    _targetButton.BeginInvoke(new MethodInvoker(() => _targetButton.Text = text));
+                }
+                else
+                {
+                    _targetButton.Text = text;
+                }
+
                 return;
             }
 
-            if (_targetButton.InvokeRequired)
+            if (_targetToolStripItem != null)
             {
-                _targetButton.Invoke(new MethodInvoker(() => _targetButton.Text = text));
+                var parent = _targetToolStripItem.GetCurrentParent();
+                if (parent != null && parent.InvokeRequired)
+                {
+                    parent.BeginInvoke(new MethodInvoker(() => _targetToolStripItem.Text = text));
+                }
+                else
+                {
+                    _targetToolStripItem.Text = text;
+                }
             }
-            else
+        }
+
+        private string GetCurrentTargetText()
+        {
+            if (_targetButton != null)
             {
-                _targetButton.Text = text;
+                return _targetButton.Text ?? string.Empty;
             }
+
+            if (_targetToolStripItem != null)
+            {
+                return _targetToolStripItem.Text ?? string.Empty;
+            }
+
+            return string.Empty;
         }
 
         #endregion

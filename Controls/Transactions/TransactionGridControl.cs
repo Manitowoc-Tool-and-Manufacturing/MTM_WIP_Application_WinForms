@@ -1,3 +1,5 @@
+using System.ComponentModel;
+using MTM_WIP_Application_Winforms.Controls.Shared;
 using MTM_WIP_Application_Winforms.Core;
 using MTM_WIP_Application_Winforms.Forms.Shared;
 using MTM_WIP_Application_Winforms.Helpers;
@@ -21,6 +23,7 @@ internal partial class TransactionGridControl : ThemedUserControl
 
     private Model_Transactions_SearchResult? _currentResults;
     private int _currentPage = 1;
+    private Control_TextAnimationSequence? _goToPageAnimator;
 
     #endregion
 
@@ -95,6 +98,8 @@ internal partial class TransactionGridControl : ThemedUserControl
     public TransactionGridControl()
     {
         InitializeComponent();
+
+            InitializeArrowAnimations();
 
         LoggingUtility.Log("[TransactionGridControl] Initializing...");
 
@@ -212,6 +217,26 @@ internal partial class TransactionGridControl : ThemedUserControl
         // Set alternating row colors for better readability
         TransactionGridControl_DataGridView_Transactions.AlternatingRowsDefaultCellStyle.BackColor = System.Drawing.Color.FromArgb(248, 250, 252);
     }
+
+    private void InitializeArrowAnimations()
+        {
+            try
+            {
+                components ??= new Container();
+                _goToPageAnimator = new Control_TextAnimationSequence(components)
+                {
+                    TargetToolStripItem = TransactionGridControl_Button_GoToPage,
+                    Interval = 140,
+                    RestoreOriginalTextOnStop = false
+                };
+
+                _goToPageAnimator.StartWithPreset(TextAnimationPreset.Right);
+            }
+            catch (Exception ex)
+            {
+                LoggingUtility.LogApplicationError(ex);
+            }
+        }
 
     /// <summary>
     /// Wires up event handlers for pagination and selection.

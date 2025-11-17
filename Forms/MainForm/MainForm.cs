@@ -423,38 +423,13 @@ namespace MTM_WIP_Application_Winforms.Forms.MainForm
             try
             {
                 bool isCollapsed = MainForm_SplitContainer_Middle.Panel2Collapsed;
-                string text = isCollapsed ? "⬅️" : "➡️";
-
-                UpdateToggleButtonText(MainForm_UserControl_InventoryTab, text);
-                UpdateToggleButtonText(MainForm_UserControl_RemoveTab, text);
-                UpdateToggleButtonText(MainForm_UserControl_TransferTab, text);
+                MainForm_UserControl_InventoryTab?.SyncQuickButtonsPanelState(isCollapsed);
+                MainForm_UserControl_RemoveTab?.SyncQuickButtonsPanelState(isCollapsed);
+                MainForm_UserControl_TransferTab?.SyncQuickButtonsPanelState(isCollapsed);
             }
             catch (Exception ex)
             {
                 LoggingUtility.LogApplicationError(ex);
-            }
-        }
-
-        private static void UpdateToggleButtonText(Control? control, string text)
-        {
-            if (control == null) return;
-
-            try
-            {
-                // Use safe control search instead of reflection
-                var toggleButtons = control.Controls.Find("*Toggle_RightPanel", true)
-                    .OfType<Button>()
-                    .Where(b => b.Name.Contains("Toggle_RightPanel"));
-
-                foreach (Button btn in toggleButtons)
-                {
-                    btn.Text = text;
-                }
-            }
-            catch (Exception ex)
-            {
-                LoggingUtility.LogApplicationError(ex);
-                Debug.WriteLine($"[DEBUG] Error updating toggle button text for {control.Name}: {ex.Message}");
             }
         }
 

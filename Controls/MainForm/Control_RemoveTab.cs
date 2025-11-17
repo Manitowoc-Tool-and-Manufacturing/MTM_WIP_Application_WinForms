@@ -25,6 +25,10 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
 
         private readonly List<Model_History_Remove> _lastRemovedItems = [];
         private Helper_StoredProcedureProgress? _progressHelper;
+        private Control_TextAnimationSequence? _quickButtonsPanelAnimator;
+        private Control_TextAnimationSequence? _searchPanelAnimator;
+        private bool _isSearchPanelCollapsed;
+        private ToolTip? _searchPanelToggleToolTip;
 
         #endregion
 
@@ -125,9 +129,13 @@ SetStyle(ControlStyles.OptimizedDoubleBuffer, true);
                 $"Shortcut: {Helper_UI_Shortcuts.ToShortcutString(Core_WipAppVariables.Shortcut_Remove_Delete)}");
             toolTip.SetToolTip(Control_RemoveTab_Button_Reset,
                 $"Shortcut: {Helper_UI_Shortcuts.ToShortcutString(Core_WipAppVariables.Shortcut_Remove_Reset)}");
+            toolTip.SetToolTip(Control_RemoveTab_Button_Toggle_InputPanel, "Collapse search panel");
+            _searchPanelToggleToolTip = toolTip;
 
             Service_DebugTracer.TraceUIAction("PRIVILEGES_APPLIED", nameof(Control_RemoveTab));
             ApplyPrivileges();
+            InitializeQuickButtonsPanelAnimator();
+            InitializeSearchPanelToggleAnimator();
 
             Service_DebugTracer.TraceUIAction("REMOVE_TAB_INITIALIZATION", nameof(Control_RemoveTab),
                 new Dictionary<string, object>
@@ -416,6 +424,11 @@ SetStyle(ControlStyles.OptimizedDoubleBuffer, true);
         #endregion
 
         #region Button Clicks
+
+        private void Control_RemoveTab_Button_Toggle_InputPanel_Click(object? sender, EventArgs e)
+        {
+            ToggleSearchPanel();
+        }
 
         private async void Control_RemoveTab_Button_Delete_Click(object? sender, EventArgs? e)
         {
@@ -746,6 +759,7 @@ SetStyle(ControlStyles.OptimizedDoubleBuffer, true);
                 }
 
                 Control_RemoveTab_Button_Reset.Enabled = true;
+                SetSearchPanelCollapsed(false);
             }
         }
 
@@ -787,6 +801,8 @@ SetStyle(ControlStyles.OptimizedDoubleBuffer, true);
                     MainFormInstance.MainForm_StatusStrip_Disconnected.Text =
                         @"Disconnected from Server, please standby...";
                 }
+
+                SetSearchPanelCollapsed(false);
             }
         }
 
@@ -1034,6 +1050,7 @@ SetStyle(ControlStyles.OptimizedDoubleBuffer, true);
 
                 Control_RemoveTab_Image_NothingFound.Visible = results.Rows.Count == 0;
                 _progressHelper?.UpdateProgress(100, "Search complete");
+                SetSearchPanelCollapsed(true);
             }
             catch (Exception ex)
             {
@@ -1182,19 +1199,11 @@ SetStyle(ControlStyles.OptimizedDoubleBuffer, true);
 
         private void Control_RemoveTab_Button_Toggle_RightPanel_Click(object sender, EventArgs e)
         {
-            if (MainFormInstance != null && !MainFormInstance.MainForm_SplitContainer_Middle.Panel2Collapsed)
+            if (MainFormInstance != null)
             {
-                MainFormInstance.MainForm_SplitContainer_Middle.Panel2Collapsed = true;
-
-                Control_RemoveTab_Button_Toggle_RightPanel.Text = "⬅️";
-            }
-            else
-            {
-                if (MainFormInstance != null)
-                {
-                    MainFormInstance.MainForm_SplitContainer_Middle.Panel2Collapsed = false;
-                    Control_RemoveTab_Button_Toggle_RightPanel.Text = "➡️";
-                }
+                bool panelCollapsed = MainFormInstance.MainForm_SplitContainer_Middle.Panel2Collapsed;
+                MainFormInstance.MainForm_SplitContainer_Middle.Panel2Collapsed = !panelCollapsed;
+                UpdateQuickButtonsPanelArrow(!panelCollapsed);
             }
 
             Helper_UI_ComboBoxes.DeselectAllComboBoxText(this);
@@ -1286,6 +1295,7 @@ SetStyle(ControlStyles.OptimizedDoubleBuffer, true);
                 }
                 Core_Themes.SizeDataGrid(Control_RemoveTab_DataGridView_Main);
                 Control_RemoveTab_Image_NothingFound.Visible = dt.Rows.Count == 0;
+                SetSearchPanelCollapsed(true);
                 
                 // Show success message to replace any warning/error from stored procedure
                 if (dt.Rows.Count == 0)
@@ -1478,6 +1488,89 @@ SetStyle(ControlStyles.OptimizedDoubleBuffer, true);
 
             summary = sb.ToString();
             return itemsToDelete;
+        }
+
+        private void InitializeQuickButtonsPanelAnimator()
+        {
+            try
+            {
+                components ??= new Container();
+                _quickButtonsPanelAnimator = new Control_TextAnimationSequence(components)
+                {
+                    TargetButton = Control_RemoveTab_Button_Toggle_RightPanel,
+                    Interval = 140,
+                    RestoreOriginalTextOnStop = false
+                };
+
+                bool collapsed = MainFormInstance?.MainForm_SplitContainer_Middle.Panel2Collapsed ?? false;
+                UpdateQuickButtonsPanelArrow(collapsed);
+            }
+            catch (Exception ex)
+            {
+                LoggingUtility.LogApplicationError(ex);
+            }
+        }
+
+        private void UpdateQuickButtonsPanelArrow(bool panelCollapsed)
+        {
+            _quickButtonsPanelAnimator?.StartWithPreset(panelCollapsed
+                ? TextAnimationPreset.Left
+                : TextAnimationPreset.Right);
+        }
+
+        internal void SyncQuickButtonsPanelState(bool panelCollapsed)
+        {
+            UpdateQuickButtonsPanelArrow(panelCollapsed);
+        }
+
+        private void InitializeSearchPanelToggleAnimator()
+        {
+            try
+            {
+                components ??= new Container();
+                _searchPanelAnimator = new Control_TextAnimationSequence(components)
+                {
+                    TargetButton = Control_RemoveTab_Button_Toggle_InputPanel,
+                    Interval = 140,
+                    RestoreOriginalTextOnStop = false
+                };
+
+                UpdateSearchPanelToggleVisual(_isSearchPanelCollapsed);
+            }
+            catch (Exception ex)
+            {
+                LoggingUtility.LogApplicationError(ex);
+            }
+        }
+
+        private void ToggleSearchPanel()
+        {
+            SetSearchPanelCollapsed(!_isSearchPanelCollapsed);
+        }
+
+        private void SetSearchPanelCollapsed(bool collapse)
+        {
+            _isSearchPanelCollapsed = collapse;
+
+            if (Control_RemoveTab_Panel_Header != null)
+            {
+                Control_RemoveTab_Panel_Header.Visible = !collapse;
+            }
+
+            UpdateSearchPanelToggleVisual(collapse);
+
+            if (!collapse)
+            {
+                Control_RemoveTab_TextBox_Part?.Focus();
+            }
+        }
+
+        private void UpdateSearchPanelToggleVisual(bool collapsed)
+        {
+            _searchPanelAnimator?.StartWithPreset(collapsed ? TextAnimationPreset.Down : TextAnimationPreset.Up);
+            _searchPanelToggleToolTip?.SetToolTip(
+                Control_RemoveTab_Button_Toggle_InputPanel,
+                collapsed ? "Expand search panel" : "Collapse search panel");
         }
 
         #endregion
