@@ -20,6 +20,9 @@ namespace MTM_WIP_Application_Winforms.Helpers
     /// </summary>
     public static class Helper_SuggestionTextBox
     {
+        private static readonly object OverlayLock = new();
+        private static readonly HashSet<SuggestionTextBox> ActiveOverlayRequests = new();
+
         #region F4 Trigger (Show Full List)
 
         /// <summary>
@@ -36,6 +39,17 @@ namespace MTM_WIP_Application_Winforms.Helpers
             {
                 LoggingUtility.Log($"[Helper_SuggestionTextBox] Cannot show suggestions for {suggestionTextBox.Name} - DataProvider is null");
                 return;
+            }
+
+            lock (OverlayLock)
+            {
+                if (ActiveOverlayRequests.Contains(suggestionTextBox))
+                {
+                    LoggingUtility.Log($"[Helper_SuggestionTextBox] Overlay already active for {suggestionTextBox.Name}, skipping duplicate invocation");
+                    return;
+                }
+
+                ActiveOverlayRequests.Add(suggestionTextBox);
             }
 
             try
@@ -91,6 +105,13 @@ namespace MTM_WIP_Application_Winforms.Helpers
                 Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Low,
                     controlName: suggestionTextBox.Name,
                     callerName: nameof(ShowFullSuggestionListAsync));
+            }
+            finally
+            {
+                lock (OverlayLock)
+                {
+                    ActiveOverlayRequests.Remove(suggestionTextBox);
+                }
             }
         }
 

@@ -23,6 +23,7 @@ namespace MTM_WIP_Application_Winforms.Controls.Shared
         private IValidator? _validator;
         private bool _enableSuggestions = true;
         private bool _showValidationColor = true;
+        private bool _isSuggestionInvocationInProgress;
 
         #endregion
 
@@ -320,7 +321,54 @@ namespace MTM_WIP_Application_Winforms.Controls.Shared
             SuggestionTextBoxWithLabel_TextBox_Main.SuggestionCancelled += (sender, e) => SuggestionCancelled?.Invoke(this, e);
 
             // F4 button triggers suggestion display
-            SuggestionTextBoxWithLabel_Button_F4.Click += async (sender, e) => await Helper_SuggestionTextBox.ShowFullSuggestionListAsync(SuggestionTextBoxWithLabel_TextBox_Main);
+            SuggestionTextBoxWithLabel_Button_F4.Click += async (sender, e) =>
+            {
+                if (!_enableSuggestions)
+                {
+                    return;
+                }
+
+                await TriggerFullSuggestionListAsync();
+            };
+
+            // Keyboard shortcuts (F4 or Down arrow) should behave like standalone SuggestionTextBox
+            SuggestionTextBoxWithLabel_TextBox_Main.KeyDown += async (sender, e) =>
+            {
+                if (!_enableSuggestions)
+                {
+                    return;
+                }
+
+                bool isF4 = e.KeyCode == Keys.F4;
+                bool isDownOnEmptyInput = e.KeyCode == Keys.Down && SuggestionTextBoxWithLabel_TextBox_Main.Text.Length == 0;
+
+                if (!isF4 && !isDownOnEmptyInput)
+                {
+                    return;
+                }
+
+                e.Handled = true;
+                e.SuppressKeyPress = true;
+                await TriggerFullSuggestionListAsync();
+            };
+        }
+
+        private async Task TriggerFullSuggestionListAsync()
+        {
+            if (_isSuggestionInvocationInProgress)
+            {
+                return;
+            }
+
+            _isSuggestionInvocationInProgress = true;
+            try
+            {
+                await Helper_SuggestionTextBox.ShowFullSuggestionListAsync(SuggestionTextBoxWithLabel_TextBox_Main);
+            }
+            finally
+            {
+                _isSuggestionInvocationInProgress = false;
+            }
         }
 
         private void WireUpValidationEvents()

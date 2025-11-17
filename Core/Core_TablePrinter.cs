@@ -34,6 +34,8 @@ public class Core_TablePrinter : IDisposable
     private readonly Brush _headerBrush;
     private readonly Brush _cellBrush;
     private readonly Brush _watermarkBrush;
+    private readonly Brush _pageBackgroundBrush;
+    private readonly Brush _rowBackgroundBrush;
     private readonly Pen _gridPen;
     private readonly Color _headerBackColor;
 
@@ -69,18 +71,22 @@ public class Core_TablePrinter : IDisposable
         _pageFont = new Font("Segoe UI", 9, FontStyle.Regular);
 
         // Get theme colors from Model_Application_Variables
-    var colors = Model_Application_Variables.UserUiColors;
+        var colors = Model_Application_Variables.UserUiColors;
 
-    Color headerForeColor = EnsurePrintableColor(colors?.DataGridHeaderForeColor ?? SystemColors.ControlText);
-    Color cellForeColor = EnsurePrintableColor(colors?.DataGridForeColor ?? SystemColors.WindowText);
-    Color gridColor = EnsurePrintableColor(colors?.DataGridGridColor ?? SystemColors.ControlDark);
+        Color headerForeColor = EnsurePrintableColor(colors?.DataGridHeaderForeColor ?? SystemColors.ControlText);
+        Color cellForeColor = EnsurePrintableColor(colors?.DataGridForeColor ?? SystemColors.WindowText);
+        Color gridColor = EnsurePrintableColor(colors?.DataGridGridColor ?? SystemColors.ControlDark);
+        Color rowBackColor = EnsureReadableBackgroundColor(colors?.DataGridBackColor ?? SystemColors.Window);
+        Color headerBackColor = EnsureReadableBackgroundColor(colors?.DataGridHeaderBackColor ?? SystemColors.Control);
 
-    _titleBrush = new SolidBrush(headerForeColor);
-    _headerBrush = new SolidBrush(headerForeColor);
-    _cellBrush = new SolidBrush(cellForeColor);
-    _watermarkBrush = new SolidBrush(Color.FromArgb(30, SystemColors.ControlText));
-    _gridPen = new Pen(gridColor);
-    _headerBackColor = colors?.DataGridHeaderBackColor ?? SystemColors.Control;
+        _titleBrush = new SolidBrush(headerForeColor);
+        _headerBrush = new SolidBrush(headerForeColor);
+        _cellBrush = new SolidBrush(cellForeColor);
+        _watermarkBrush = new SolidBrush(Color.FromArgb(30, SystemColors.ControlText));
+        _pageBackgroundBrush = new SolidBrush(Color.White);
+        _rowBackgroundBrush = new SolidBrush(rowBackColor);
+        _gridPen = new Pen(gridColor);
+        _headerBackColor = headerBackColor;
 
         // Initialize PrintDocument
         _printDocument = new PrintDocument();
@@ -294,6 +300,9 @@ public class Core_TablePrinter : IDisposable
 
             int yPosition = topMargin;
 
+            // Paint page background to ensure dark application themes do not influence printouts
+            e.Graphics.FillRectangle(_pageBackgroundBrush, e.PageBounds);
+
             // Draw title
             var titleSize = e.Graphics.MeasureString(_title, _titleFont);
             e.Graphics.DrawString(_title, _titleFont, _titleBrush, 
@@ -334,8 +343,23 @@ public class Core_TablePrinter : IDisposable
 
                 foreach (var columnName in _visibleColumns)
                 {
-                    var cellValue = row[columnName]?.ToString() ?? string.Empty;
-                    e.Graphics.DrawRectangle(_gridPen, xPosition, yPosition, columnWidth, rowHeight);
+                    string cellValue = string.Empty;
+                    if (row.Table?.Columns.Contains(columnName) == true)
+                    {
+                        cellValue = row[columnName]?.ToString() ?? string.Empty;
+                    }
+                    else
+                    {
+                        string trimmedName = columnName.Trim();
+                        if (!string.Equals(trimmedName, columnName, StringComparison.Ordinal) && row.Table?.Columns.Contains(trimmedName) == true)
+                        {
+                            cellValue = row[trimmedName]?.ToString() ?? string.Empty;
+                        }
+                    }
+
+                    Rectangle cellBounds = new Rectangle(xPosition, yPosition, columnWidth, rowHeight);
+                    e.Graphics.FillRectangle(_rowBackgroundBrush, cellBounds);
+                    e.Graphics.DrawRectangle(_gridPen, cellBounds);
                     e.Graphics.DrawString(cellValue, _cellFont, _cellBrush,
                         new RectangleF(xPosition + 5, yPosition + 5, columnWidth - 10, rowHeight - 10));
                     xPosition += columnWidth;
@@ -452,6 +476,28 @@ public class Core_TablePrinter : IDisposable
         return opaqueColor;
     }
 
+    private static Color EnsureReadableBackgroundColor(Color color)
+    {
+        Color opaqueColor = Color.FromArgb(255, color);
+
+        if (opaqueColor.GetBrightness() <= 0.35f)
+        {
+            // Blend with white to avoid near-black backgrounds that hide text ink.
+            return BlendWithWhite(opaqueColor, 0.65f);
+        }
+
+        return opaqueColor;
+    }
+
+    private static Color BlendWithWhite(Color color, float whiteRatio)
+    {
+        whiteRatio = Math.Clamp(whiteRatio, 0f, 1f);
+        int r = (int)Math.Round(color.R * (1 - whiteRatio) + 255 * whiteRatio);
+        int g = (int)Math.Round(color.G * (1 - whiteRatio) + 255 * whiteRatio);
+        int b = (int)Math.Round(color.B * (1 - whiteRatio) + 255 * whiteRatio);
+        return Color.FromArgb(255, r, g, b);
+    }
+
     #endregion
 
     #region Cleanup
@@ -471,6 +517,8 @@ public class Core_TablePrinter : IDisposable
         _headerBrush?.Dispose();
         _cellBrush?.Dispose();
         _watermarkBrush?.Dispose();
+        _pageBackgroundBrush?.Dispose();
+        _rowBackgroundBrush?.Dispose();
         _gridPen?.Dispose();
         _pageBoundaries.Clear();
     }
