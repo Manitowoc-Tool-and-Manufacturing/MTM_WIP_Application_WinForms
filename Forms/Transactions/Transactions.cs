@@ -72,17 +72,19 @@ internal partial class Transactions : ThemedForm
     {
         try
         {
-            LoggingUtility.Log("[Transactions] Loading dropdown data (parts, users, locations)...");
+            LoggingUtility.Log("[Transactions] Loading dropdown data (parts, users, locations, operations)...");
 
             var partsTask = _viewModel.LoadPartsAsync();
             var usersTask = _viewModel.LoadUsersAsync(_currentUser, _isAdmin);
             var locationsTask = _viewModel.LoadLocationsAsync();
+            var operationsTask = _viewModel.LoadOperationsAsync();
 
-            await Task.WhenAll(partsTask, usersTask, locationsTask).ConfigureAwait(false);
+            await Task.WhenAll(partsTask, usersTask, locationsTask, operationsTask).ConfigureAwait(false);
 
             LoggingUtility.Log($"[Transactions] Data loaded - Parts: {(partsTask.Result.IsSuccess ? partsTask.Result.Data?.Count ?? 0 : 0)}, " +
                              $"Users: {(usersTask.Result.IsSuccess ? usersTask.Result.Data?.Count ?? 0 : 0)}, " +
-                             $"Locations: {(locationsTask.Result.IsSuccess ? locationsTask.Result.Data?.Count ?? 0 : 0)}");
+                             $"Locations: {(locationsTask.Result.IsSuccess ? locationsTask.Result.Data?.Count ?? 0 : 0)}, " +
+                             $"Operations: {(operationsTask.Result.IsSuccess ? operationsTask.Result.Data?.Count ?? 0 : 0)}");
 
             this.Invoke(() =>
             {
@@ -99,6 +101,11 @@ internal partial class Transactions : ThemedForm
                 if (locationsTask.Result.IsSuccess)
                 {
                     Transactions_UserControl_Search.LoadLocations(locationsTask.Result.Data ?? new List<string>());
+                }
+
+                if (operationsTask.Result.IsSuccess)
+                {
+                    Transactions_UserControl_Search.LoadOperations(operationsTask.Result.Data ?? new List<string>());
                 }
 
                 LoggingUtility.Log("[Transactions] Dropdown data loaded into search control.");

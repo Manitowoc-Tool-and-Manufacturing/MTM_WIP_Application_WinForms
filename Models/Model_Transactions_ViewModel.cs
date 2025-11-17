@@ -18,6 +18,7 @@ internal sealed class Model_Transactions_ViewModel
     private List<string>? _cachedParts;
     private List<string>? _cachedUsers;
     private List<string>? _cachedLocations;
+    private List<string>? _cachedOperations;
 
     #endregion
 
@@ -364,6 +365,64 @@ internal sealed class Model_Transactions_ViewModel
             LoggingUtility.Log($"[Model_Transactions_ViewModel] Exception message: {ex.Message}");
             LoggingUtility.LogApplicationError(ex);
             return Model_Dao_Result<List<string>>.Failure("Failed to load locations", ex);
+        }
+    }
+
+    /// <summary>
+    /// Loads all operation numbers for dropdown population.
+    /// Results are cached to improve performance on subsequent calls.
+    /// </summary>
+    /// <returns>Model_Dao_Result containing list of operation numbers</returns>
+    public async Task<Model_Dao_Result<List<string>>> LoadOperationsAsync()
+    {
+        try
+        {
+            LoggingUtility.Log("[Model_Transactions_ViewModel] LoadOperationsAsync starting...");
+
+            if (_cachedOperations != null)
+            {
+                LoggingUtility.Log($"[Model_Transactions_ViewModel] Returning {_cachedOperations.Count} cached operations");
+                return Model_Dao_Result<List<string>>.Success(
+                    _cachedOperations,
+                    $"Retrieved {_cachedOperations.Count} operations from cache"
+                );
+            }
+
+            var result = await Dao_Operation.GetAllOperations().ConfigureAwait(false);
+
+            if (!result.IsSuccess || result.Data == null)
+            {
+                LoggingUtility.Log($"[Model_Transactions_ViewModel] Failed to load operations: {result.ErrorMessage}");
+                return Model_Dao_Result<List<string>>.Failure(
+                    result.ErrorMessage ?? "Failed to load operations",
+                    result.Exception
+                );
+            }
+
+            var operations = new List<string>();
+            foreach (DataRow row in result.Data.Rows)
+            {
+                var operationNumber = row["Operation"]?.ToString();
+                if (!string.IsNullOrWhiteSpace(operationNumber))
+                {
+                    operations.Add(operationNumber.Trim());
+                }
+            }
+
+            _cachedOperations = operations;
+
+            LoggingUtility.Log($"[Model_Transactions_ViewModel] LoadOperationsAsync complete: {operations.Count} operations cached");
+
+            return Model_Dao_Result<List<string>>.Success(
+                operations,
+                $"Loaded {operations.Count} operations"
+            );
+        }
+        catch (Exception ex)
+        {
+            LoggingUtility.Log("[Model_Transactions_ViewModel] LoadOperationsAsync failed");
+            LoggingUtility.LogApplicationError(ex);
+            return Model_Dao_Result<List<string>>.Failure("Failed to load operations", ex);
         }
     }
 
