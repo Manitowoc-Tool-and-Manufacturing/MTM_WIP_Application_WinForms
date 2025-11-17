@@ -1,5 +1,10 @@
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using MTM_WIP_Application_Winforms.Controls.Shared;
 using MTM_WIP_Application_Winforms.Core;
 using MTM_WIP_Application_Winforms.Forms.Shared;
+using MTM_WIP_Application_Winforms.Helpers;
 using MTM_WIP_Application_Winforms.Logging;
 using MTM_WIP_Application_Winforms.Models;
 using MTM_WIP_Application_Winforms.Services;
@@ -38,6 +43,21 @@ internal partial class TransactionSearchControl : ThemedUserControl
     /// Raised when the user clicks the Print button to print search results.
     /// </summary>
     public event EventHandler? PrintRequested;
+
+    #endregion
+
+    #region Fields
+
+    private readonly List<string> _partOptions = new();
+    private readonly List<string> _userOptions = new();
+    private readonly List<string> _locationOptions = new();
+    private readonly List<string> _operationOptions = new();
+
+    private bool _partSuggestionsConfigured;
+    private bool _userSuggestionsConfigured;
+    private bool _fromLocationSuggestionsConfigured;
+    private bool _toLocationSuggestionsConfigured;
+    private bool _operationSuggestionsConfigured;
 
     #endregion
 
@@ -97,48 +117,64 @@ internal partial class TransactionSearchControl : ThemedUserControl
     #region Public Methods
 
     /// <summary>
-    /// Populates the Part Number dropdown with available parts.
+    /// Populates the Part Number suggestion box with available parts.
     /// </summary>
     /// <param name="parts">List of part numbers.</param>
     public void LoadParts(List<string> parts)
     {
         try
         {
-            LoggingUtility.Log($"[TransactionSearchControl] LoadParts called with {parts?.Count ?? 0} parts");
+            var incomingCount = parts?.Count ?? 0;
+            LoggingUtility.Log($"[TransactionSearchControl] LoadParts called with {incomingCount} parts");
 
-            TransactionSearchControl_ComboBox_PartNumber.Items.Clear();
-            TransactionSearchControl_ComboBox_PartNumber.Items.Add(""); // Add empty option for "All Parts"
-            
+            _partOptions.Clear();
+
             if (parts != null && parts.Count > 0)
             {
-                TransactionSearchControl_ComboBox_PartNumber.Items.AddRange(parts.ToArray());
+                var uniqueParts = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+                foreach (var part in parts)
+                {
+                    if (string.IsNullOrWhiteSpace(part))
+                    {
+                        continue;
+                    }
+
+                    var normalized = part.Trim().ToUpperInvariant();
+                    if (uniqueParts.Add(normalized))
+                    {
+                        _partOptions.Add(normalized);
+                    }
+                }
             }
-            
-            if (TransactionSearchControl_ComboBox_PartNumber.Items.Count > 0)
+
+            if (!_partSuggestionsConfigured)
             {
-                TransactionSearchControl_ComboBox_PartNumber.SelectedIndex = 0;
+                Helper_SuggestionTextBox.ConfigureForPartNumbers(TransactionSearchControl_Suggestion_PartNumber, GetPartSuggestionsAsync);
+                _partSuggestionsConfigured = true;
             }
-            
-            LoggingUtility.Log($"[TransactionSearchControl] Parts loaded: {TransactionSearchControl_ComboBox_PartNumber.Items.Count} items");
+
+            TransactionSearchControl_Suggestion_PartNumber.Text = string.Empty;
+
+            LoggingUtility.Log($"[TransactionSearchControl] Parts loaded: {_partOptions.Count} unique values");
         }
         catch (Exception ex)
         {
             LoggingUtility.Log($"[TransactionSearchControl] Exception in LoadParts: {ex.Message}");
             LoggingUtility.LogApplicationError(ex);
-            
+
             Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Medium,
                 contextData: new Dictionary<string, object>
                 {
                     ["PartsCount"] = parts?.Count ?? 0,
-                    ["Method"] = "LoadParts"
+                    ["Method"] = nameof(LoadParts)
                 },
                 controlName: nameof(TransactionSearchControl));
         }
     }
 
     /// <summary>
-    /// Populates the User dropdown with available users.
-    /// Defaults to current user. If user is not Admin/Developer, combobox is disabled (restricted to own transactions).
+    /// Populates the User suggestion box with available users.
+    /// Defaults to current user. If user is not Admin/Developer, control is disabled (restricted to own transactions).
     /// </summary>
     /// <param name="users">List of usernames.</param>
     public void LoadUsers(List<string> users)
@@ -146,72 +182,50 @@ internal partial class TransactionSearchControl : ThemedUserControl
         try
         {
             LoggingUtility.Log($"[TransactionSearchControl] LoadUsers called with {users?.Count ?? 0} users");
-
-            TransactionSearchControl_ComboBox_User.Items.Clear();
-            
-            // Check if current user is Admin or Developer
             bool isAdminOrDeveloper = Model_Application_Variables.UserTypeAdmin || Model_Application_Variables.UserTypeDeveloper;
-            
-            if (isAdminOrDeveloper)
-            {
-                // Admin/Developer: Can search all users, add empty option for "All Users"
-                TransactionSearchControl_ComboBox_User.Items.Add("");
-                LoggingUtility.Log("[TransactionSearchControl] User is Admin/Developer - enabling all users option");
-            }
-            
+            string currentUser = Model_Application_Variables.User;
+
+            _userOptions.Clear();
+
             if (users != null && users.Count > 0)
             {
-                TransactionSearchControl_ComboBox_User.Items.AddRange(users.ToArray());
-            }
-            
-            // Set default selection to current user
-            string currentUser = Model_Application_Variables.User;
-            int currentUserIndex = -1;
-            
-            // Find current user in the list
-            for (int i = 0; i < TransactionSearchControl_ComboBox_User.Items.Count; i++)
-            {
-                string? itemText = TransactionSearchControl_ComboBox_User.Items[i]?.ToString();
-                if (!string.IsNullOrEmpty(itemText) && itemText.Equals(currentUser, StringComparison.OrdinalIgnoreCase))
+                var uniqueUsers = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+                foreach (var user in users)
                 {
-                    currentUserIndex = i;
-                    break;
+                    if (string.IsNullOrWhiteSpace(user))
+                    {
+                        continue;
+                    }
+
+                    var normalized = user.Trim();
+                    if (uniqueUsers.Add(normalized))
+                    {
+                        _userOptions.Add(normalized);
+                    }
                 }
             }
-            
-            if (currentUserIndex >= 0)
+
+            if (!_userSuggestionsConfigured)
             {
-                // Current user found in list - select it
-                TransactionSearchControl_ComboBox_User.SelectedIndex = currentUserIndex;
-                LoggingUtility.Log($"[TransactionSearchControl] Current user '{currentUser}' found and selected at index {currentUserIndex}");
+                Helper_SuggestionTextBox.ConfigureForUsers(TransactionSearchControl_Suggestion_User, GetUserSuggestionsAsync);
+                _userSuggestionsConfigured = true;
             }
-            else if (TransactionSearchControl_ComboBox_User.Items.Count > 0)
-            {
-                // Current user not found - default to first item (empty for Admin, first user for Regular)
-                TransactionSearchControl_ComboBox_User.SelectedIndex = 0;
-                LoggingUtility.Log($"[TransactionSearchControl] Current user '{currentUser}' not found, defaulting to index 0");
-            }
-            
-            // Disable combobox for non-Admin/non-Developer users (they can only see own transactions)
-            TransactionSearchControl_ComboBox_User.Enabled = isAdminOrDeveloper;
-            
-            if (!isAdminOrDeveloper)
-            {
-                LoggingUtility.Log($"[TransactionSearchControl] User combobox disabled - user '{currentUser}' is not Admin/Developer");
-            }
-            
-            LoggingUtility.Log($"[TransactionSearchControl] Users loaded: {TransactionSearchControl_ComboBox_User.Items.Count} items, Enabled: {TransactionSearchControl_ComboBox_User.Enabled}");
+
+            TransactionSearchControl_Suggestion_User.Enabled = isAdminOrDeveloper;
+            TransactionSearchControl_Suggestion_User.Text = isAdminOrDeveloper ? string.Empty : currentUser;
+
+            LoggingUtility.Log($"[TransactionSearchControl] Users loaded: {_userOptions.Count} values, Enabled: {TransactionSearchControl_Suggestion_User.Enabled}");
         }
         catch (Exception ex)
         {
             LoggingUtility.Log($"[TransactionSearchControl] Exception in LoadUsers: {ex.Message}");
             LoggingUtility.LogApplicationError(ex);
-            
+
             Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Medium,
                 contextData: new Dictionary<string, object>
                 {
                     ["UsersCount"] = users?.Count ?? 0,
-                    ["Method"] = "LoadUsers",
+                    ["Method"] = nameof(LoadUsers),
                     ["CurrentUser"] = Model_Application_Variables.User,
                     ["IsAdmin"] = Model_Application_Variables.UserTypeAdmin,
                     ["IsDeveloper"] = Model_Application_Variables.UserTypeDeveloper
@@ -221,7 +235,7 @@ internal partial class TransactionSearchControl : ThemedUserControl
     }
 
     /// <summary>
-    /// Populates the location dropdowns with available locations.
+    /// Populates the location suggestion boxes with available locations.
     /// </summary>
     /// <param name="locations">List of location codes.</param>
     public void LoadLocations(List<string> locations)
@@ -236,69 +250,104 @@ internal partial class TransactionSearchControl : ThemedUserControl
                 return;
             }
 
-            // From Location
-            LoggingUtility.Log("[TransactionSearchControl] Loading FromLocation combobox...");
-            TransactionSearchControl_ComboBox_FromLocation.Items.Clear();
-            TransactionSearchControl_ComboBox_FromLocation.Items.Add(""); // Add empty option for "All Locations"
-            
+            _locationOptions.Clear();
+            var uniqueLocations = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
             foreach (var location in locations)
             {
-                if (!string.IsNullOrWhiteSpace(location))
+                if (string.IsNullOrWhiteSpace(location))
                 {
-                    TransactionSearchControl_ComboBox_FromLocation.Items.Add(location);
+                    continue;
                 }
-            }
-            
-            if (TransactionSearchControl_ComboBox_FromLocation.Items.Count > 0)
-            {
-                TransactionSearchControl_ComboBox_FromLocation.SelectedIndex = 0;
-            }
-            LoggingUtility.Log($"[TransactionSearchControl] FromLocation loaded: {TransactionSearchControl_ComboBox_FromLocation.Items.Count} items");
 
-            // To Location
-            LoggingUtility.Log("[TransactionSearchControl] Loading ToLocation combobox...");
-            TransactionSearchControl_ComboBox_ToLocation.Items.Clear();
-            TransactionSearchControl_ComboBox_ToLocation.Items.Add(""); // Add empty option for "All Locations"
-            
-            foreach (var location in locations)
-            {
-                if (!string.IsNullOrWhiteSpace(location))
+                var normalized = location.Trim().ToUpperInvariant();
+                if (uniqueLocations.Add(normalized))
                 {
-                    TransactionSearchControl_ComboBox_ToLocation.Items.Add(location);
+                    _locationOptions.Add(normalized);
                 }
             }
-            
-            if (TransactionSearchControl_ComboBox_ToLocation.Items.Count > 0)
+
+            if (!_fromLocationSuggestionsConfigured)
             {
-                TransactionSearchControl_ComboBox_ToLocation.SelectedIndex = 0;
+                Helper_SuggestionTextBox.ConfigureForLocations(TransactionSearchControl_Suggestion_FromLocation, GetLocationSuggestionsAsync);
+                _fromLocationSuggestionsConfigured = true;
             }
-            LoggingUtility.Log($"[TransactionSearchControl] ToLocation loaded: {TransactionSearchControl_ComboBox_ToLocation.Items.Count} items");
-        }
-        catch (ArgumentException argEx)
-        {
-            LoggingUtility.Log($"[TransactionSearchControl] ArgumentException in LoadLocations: {argEx.Message}");
-            LoggingUtility.Log($"[TransactionSearchControl] ArgumentException ParamName: {argEx.ParamName}");
-            LoggingUtility.Log($"[TransactionSearchControl] ArgumentException StackTrace: {argEx.StackTrace}");
-            LoggingUtility.LogApplicationError(argEx);
-            
-            Service_ErrorHandler.HandleException(argEx, Enum_ErrorSeverity.Medium,
-                contextData: new Dictionary<string, object>
-                {
-                    ["LocationsCount"] = locations?.Count ?? 0,
-                    ["Method"] = "LoadLocations"
-                },
-                controlName: nameof(TransactionSearchControl));
+
+            if (!_toLocationSuggestionsConfigured)
+            {
+                Helper_SuggestionTextBox.ConfigureForLocations(TransactionSearchControl_Suggestion_ToLocation, GetLocationSuggestionsAsync);
+                _toLocationSuggestionsConfigured = true;
+            }
+
+            TransactionSearchControl_Suggestion_FromLocation.Text = string.Empty;
+            TransactionSearchControl_Suggestion_ToLocation.Text = string.Empty;
+
+            LoggingUtility.Log($"[TransactionSearchControl] Locations loaded: {_locationOptions.Count} unique codes");
         }
         catch (Exception ex)
         {
             LoggingUtility.Log($"[TransactionSearchControl] Exception in LoadLocations: {ex.Message}");
             LoggingUtility.LogApplicationError(ex);
-            
+
             Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Medium,
                 contextData: new Dictionary<string, object>
                 {
                     ["LocationsCount"] = locations?.Count ?? 0,
-                    ["Method"] = "LoadLocations"
+                    ["Method"] = nameof(LoadLocations)
+                },
+                controlName: nameof(TransactionSearchControl));
+        }
+    }
+
+    /// <summary>
+    /// Populates the Operation suggestion box with available operations.
+    /// </summary>
+    /// <param name="operations">List of operation identifiers.</param>
+    public void LoadOperations(List<string> operations)
+    {
+        try
+        {
+            LoggingUtility.Log($"[TransactionSearchControl] LoadOperations called with {operations?.Count ?? 0} operations");
+
+            _operationOptions.Clear();
+
+            if (operations != null && operations.Count > 0)
+            {
+                var uniqueOperations = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+                foreach (var operation in operations)
+                {
+                    if (string.IsNullOrWhiteSpace(operation))
+                    {
+                        continue;
+                    }
+
+                    var normalized = operation.Trim().ToUpperInvariant();
+                    if (uniqueOperations.Add(normalized))
+                    {
+                        _operationOptions.Add(normalized);
+                    }
+                }
+            }
+
+            if (!_operationSuggestionsConfigured)
+            {
+                Helper_SuggestionTextBox.ConfigureForOperations(TransactionSearchControl_Suggestion_Operation, GetOperationSuggestionsAsync);
+                _operationSuggestionsConfigured = true;
+            }
+
+            TransactionSearchControl_Suggestion_Operation.Text = string.Empty;
+
+            LoggingUtility.Log($"[TransactionSearchControl] Operations loaded: {_operationOptions.Count} unique values");
+        }
+        catch (Exception ex)
+        {
+            LoggingUtility.Log($"[TransactionSearchControl] Exception in LoadOperations: {ex.Message}");
+            LoggingUtility.LogApplicationError(ex);
+
+            Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Medium,
+                contextData: new Dictionary<string, object>
+                {
+                    ["OperationsCount"] = operations?.Count ?? 0,
+                    ["Method"] = nameof(LoadOperations)
                 },
                 controlName: nameof(TransactionSearchControl));
         }
@@ -310,28 +359,20 @@ internal partial class TransactionSearchControl : ThemedUserControl
     /// </summary>
     public void ClearCriteria()
     {
-        TransactionSearchControl_ComboBox_PartNumber.SelectedIndex = 0;
-        
-        // Reset user to current user (same logic as LoadUsers)
-        string currentUser = Model_Application_Variables.User;
-        int currentUserIndex = -1;
-        
-        for (int i = 0; i < TransactionSearchControl_ComboBox_User.Items.Count; i++)
+        TransactionSearchControl_Suggestion_PartNumber.Text = string.Empty;
+        TransactionSearchControl_Suggestion_FromLocation.Text = string.Empty;
+        TransactionSearchControl_Suggestion_ToLocation.Text = string.Empty;
+        TransactionSearchControl_Suggestion_Operation.Text = string.Empty;
+        TransactionSearchControl_Suggestion_Notes.Text = string.Empty;
+
+        if (TransactionSearchControl_Suggestion_User.Enabled)
         {
-            string? itemText = TransactionSearchControl_ComboBox_User.Items[i]?.ToString();
-            if (!string.IsNullOrEmpty(itemText) && itemText.Equals(currentUser, StringComparison.OrdinalIgnoreCase))
-            {
-                currentUserIndex = i;
-                break;
-            }
+            TransactionSearchControl_Suggestion_User.Text = string.Empty;
         }
-        
-        TransactionSearchControl_ComboBox_User.SelectedIndex = currentUserIndex >= 0 ? currentUserIndex : 0;
-        
-        TransactionSearchControl_ComboBox_FromLocation.SelectedIndex = 0;
-        TransactionSearchControl_ComboBox_ToLocation.SelectedIndex = 0;
-        TransactionSearchControl_TextBox_Operation.Clear();
-        TransactionSearchControl_TextBox_Notes.Clear();
+        else
+        {
+            TransactionSearchControl_Suggestion_User.Text = Model_Application_Variables.User;
+        }
 
         // Reset transaction type checkboxes to all checked
         TransactionSearchControl_CheckBox_IN.Checked = true;
@@ -553,12 +594,12 @@ internal partial class TransactionSearchControl : ThemedUserControl
     {
         var criteria = new Model_Transactions_SearchCriteria
         {
-            PartID = string.IsNullOrWhiteSpace(TransactionSearchControl_ComboBox_PartNumber.Text) ? null : TransactionSearchControl_ComboBox_PartNumber.Text.Trim(),
-            User = string.IsNullOrWhiteSpace(TransactionSearchControl_ComboBox_User.Text) ? null : TransactionSearchControl_ComboBox_User.Text.Trim(),
-            FromLocation = string.IsNullOrWhiteSpace(TransactionSearchControl_ComboBox_FromLocation.Text) ? null : TransactionSearchControl_ComboBox_FromLocation.Text.Trim(),
-            ToLocation = string.IsNullOrWhiteSpace(TransactionSearchControl_ComboBox_ToLocation.Text) ? null : TransactionSearchControl_ComboBox_ToLocation.Text.Trim(),
-            Operation = string.IsNullOrWhiteSpace(TransactionSearchControl_TextBox_Operation.Text) ? null : TransactionSearchControl_TextBox_Operation.Text.Trim(),
-            Notes = string.IsNullOrWhiteSpace(TransactionSearchControl_TextBox_Notes.Text) ? null : TransactionSearchControl_TextBox_Notes.Text.Trim(),
+            PartID = NormalizeInput(TransactionSearchControl_Suggestion_PartNumber.Text, toUpper: true),
+            User = NormalizeInput(TransactionSearchControl_Suggestion_User.Text),
+            FromLocation = NormalizeInput(TransactionSearchControl_Suggestion_FromLocation.Text, toUpper: true),
+            ToLocation = NormalizeInput(TransactionSearchControl_Suggestion_ToLocation.Text, toUpper: true),
+            Operation = NormalizeInput(TransactionSearchControl_Suggestion_Operation.Text, toUpper: true),
+            Notes = NormalizeInput(TransactionSearchControl_Suggestion_Notes.Text),
             DateFrom = TransactionSearchControl_DateTimePicker_DateFrom.Value.Date,
             DateTo = TransactionSearchControl_DateTimePicker_DateTo.Value.Date.AddDays(1).AddSeconds(-1) // End of selected day
         };
@@ -572,6 +613,25 @@ internal partial class TransactionSearchControl : ThemedUserControl
         criteria.TransactionType = types.Count > 0 ? string.Join(",", types) : null;
 
         return criteria;
+    }
+
+    private Task<List<string>> GetPartSuggestionsAsync() => Task.FromResult(_partOptions.ToList());
+
+    private Task<List<string>> GetUserSuggestionsAsync() => Task.FromResult(_userOptions.ToList());
+
+    private Task<List<string>> GetLocationSuggestionsAsync() => Task.FromResult(_locationOptions.ToList());
+
+    private Task<List<string>> GetOperationSuggestionsAsync() => Task.FromResult(_operationOptions.ToList());
+
+    private static string? NormalizeInput(string? value, bool toUpper = false)
+    {
+        if (string.IsNullOrWhiteSpace(value))
+        {
+            return null;
+        }
+
+        var trimmed = value.Trim();
+        return toUpper ? trimmed.ToUpperInvariant() : trimmed;
     }
 
     #endregion
