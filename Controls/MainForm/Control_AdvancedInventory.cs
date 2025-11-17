@@ -40,6 +40,13 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
         private const float SingleInputFallbackWidth = 265f;
         private const float MultiInputFallbackWidth = 255f;
 
+        private const int SingleListViewLocationColumnIndex = 0;
+        private const int SingleListViewDisplayPartColumnIndex = 1;
+        private const int SingleListViewQuantityColumnIndex = 2;
+        private const int SingleListViewPartIdColumnIndex = 3;
+        private const int SingleListViewOperationColumnIndex = 4;
+        private const int SingleListViewNotesColumnIndex = 5;
+
         #endregion
 
         #region Progress Control Methods
@@ -154,20 +161,8 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
 
                 InitializePanelToggleButtons();
 
-                AdvancedInventory_Single_ListView_Preview.View = View.Details;
-                if (AdvancedInventory_Single_ListView_Preview.Columns.Count == 0)
-                {
-                    AdvancedInventory_Single_ListView_Preview.Columns.Add("Location", 150);
-                    AdvancedInventory_Single_ListView_Preview.Columns.Add("Part ID", 150);
-                    AdvancedInventory_Single_ListView_Preview.Columns.Add("Quantity", 75);
-                }
-                AdvancedInventory_Single_ListView_Preview.SizeChanged += (s, e) =>
-                {
-                    int width = AdvancedInventory_Single_ListView_Preview.ClientSize.Width;
-                    AdvancedInventory_Single_ListView_Preview.Columns[0].Width = (int)(width * 0.30); // Location 40%
-                    AdvancedInventory_Single_ListView_Preview.Columns[1].Width = (int)(width * 0.40); // Part ID 40%
-                    AdvancedInventory_Single_ListView_Preview.Columns[2].Width = (int)(width * 0.30); // Quantity 20%
-                };
+                ConfigureSingleListViewPreview();
+                AdvancedInventory_Single_ListView_Preview.SizeChanged += (_, _) => UpdateSingleListViewColumnWidths();
 
                 // ListView KeyDown handlers for Delete key
                 AdvancedInventory_Single_ListView_Preview.KeyDown += AdvancedInventory_Single_ListView_KeyDown;
@@ -1372,11 +1367,22 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
 
                 foreach (ListViewItem item in AdvancedInventory_Single_ListView_Preview.Items)
                 {
-                    string partId = item.SubItems.Count > 0 ? item.SubItems[0].Text : string.Empty;
-                    string op = item.SubItems.Count > 1 ? item.SubItems[1].Text : string.Empty;
-                    string loc = item.SubItems.Count > 2 ? item.SubItems[2].Text : string.Empty;
-                    string qtyText = item.SubItems.Count > 3 ? item.SubItems[3].Text : string.Empty;
-                    string notes = item.SubItems.Count > 4 ? item.SubItems[4].Text : string.Empty;
+                    string loc = GetSubItemText(item, SingleListViewLocationColumnIndex);
+                    string displayPart = GetSubItemText(item, SingleListViewDisplayPartColumnIndex);
+                    string qtyText = GetSubItemText(item, SingleListViewQuantityColumnIndex);
+                    string partId = GetSubItemText(item, SingleListViewPartIdColumnIndex);
+                    string op = GetSubItemText(item, SingleListViewOperationColumnIndex);
+                    string notes = GetSubItemText(item, SingleListViewNotesColumnIndex);
+
+                    if (string.IsNullOrWhiteSpace(partId))
+                    {
+                        partId = ExtractPartIdFromDisplay(displayPart);
+                    }
+
+                    if (string.IsNullOrWhiteSpace(op))
+                    {
+                        op = ExtractOperationFromDisplay(displayPart);
+                    }
 
                     if (string.IsNullOrWhiteSpace(partId) || string.IsNullOrWhiteSpace(op) ||
                         string.IsNullOrWhiteSpace(loc) || !int.TryParse(qtyText, out int qty) || qty <= 0)
@@ -1555,12 +1561,15 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
 
                 for (int i = 0; i < count; i++)
                 {
-                    // Column order: Location, Part ID (with Op), Quantity
                     ListViewItem listViewItem = new([
                         loc,
                         $"{partId} (Op: {op})",
-                        qty.ToString()
+                        qty.ToString(),
+                        partId,
+                        op,
+                        notes
                     ]);
+
                     AdvancedInventory_Single_ListView_Preview.Items.Add(listViewItem);
                     Debug.WriteLine(
                         $"Added item to ListView: Part={partId}, Op={op}, Loc={loc}, Qty={qty}, Notes={notes}");
@@ -2489,6 +2498,87 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
         #endregion
 
         #region Helpers
+
+        private void ConfigureSingleListViewPreview()
+        {
+            AdvancedInventory_Single_ListView_Preview.View = View.Details;
+            AdvancedInventory_Single_ListView_Preview.FullRowSelect = true;
+            AdvancedInventory_Single_ListView_Preview.HideSelection = false;
+            AdvancedInventory_Single_ListView_Preview.HeaderStyle = ColumnHeaderStyle.Nonclickable;
+
+            var columns = AdvancedInventory_Single_ListView_Preview.Columns;
+            if (columns.Count != 6)
+            {
+                columns.Clear();
+                columns.Add("Location", 150);
+                columns.Add("Part & Operation", 200);
+                columns.Add("Quantity", 75);
+                columns.Add("PartIdHidden", 0);
+                columns.Add("OperationHidden", 0);
+                columns.Add("NotesHidden", 0);
+            }
+
+            UpdateSingleListViewColumnWidths();
+        }
+
+        private void UpdateSingleListViewColumnWidths()
+        {
+            if (AdvancedInventory_Single_ListView_Preview.Columns.Count < 3)
+            {
+                return;
+            }
+
+            int width = Math.Max(AdvancedInventory_Single_ListView_Preview.ClientSize.Width, 1);
+            AdvancedInventory_Single_ListView_Preview.Columns[SingleListViewLocationColumnIndex].Width = (int)(width * 0.30);
+            AdvancedInventory_Single_ListView_Preview.Columns[SingleListViewDisplayPartColumnIndex].Width = (int)(width * 0.45);
+            AdvancedInventory_Single_ListView_Preview.Columns[SingleListViewQuantityColumnIndex].Width =
+                Math.Max(75, width -
+                    AdvancedInventory_Single_ListView_Preview.Columns[SingleListViewLocationColumnIndex].Width -
+                    AdvancedInventory_Single_ListView_Preview.Columns[SingleListViewDisplayPartColumnIndex].Width);
+
+            AdvancedInventory_Single_ListView_Preview.Columns[SingleListViewPartIdColumnIndex].Width = 0;
+            AdvancedInventory_Single_ListView_Preview.Columns[SingleListViewOperationColumnIndex].Width = 0;
+            AdvancedInventory_Single_ListView_Preview.Columns[SingleListViewNotesColumnIndex].Width = 0;
+        }
+
+        private static string GetSubItemText(ListViewItem item, int index)
+        {
+            return item.SubItems.Count > index ? item.SubItems[index].Text : string.Empty;
+        }
+
+        private static string ExtractPartIdFromDisplay(string displayText)
+        {
+            if (string.IsNullOrWhiteSpace(displayText))
+            {
+                return string.Empty;
+            }
+
+            int opIndex = displayText.IndexOf("(Op:", StringComparison.OrdinalIgnoreCase);
+            return opIndex > 0 ? displayText[..opIndex].Trim() : displayText.Trim();
+        }
+
+        private static string ExtractOperationFromDisplay(string displayText)
+        {
+            if (string.IsNullOrWhiteSpace(displayText))
+            {
+                return string.Empty;
+            }
+
+            int opIndex = displayText.IndexOf("(Op:", StringComparison.OrdinalIgnoreCase);
+            if (opIndex < 0)
+            {
+                return string.Empty;
+            }
+
+            int closingParen = displayText.IndexOf(')', opIndex);
+            if (closingParen < 0)
+            {
+                return string.Empty;
+            }
+
+            string opValue = displayText.Substring(opIndex + 4, closingParen - opIndex - 4);
+            return opValue.Replace(":", string.Empty, StringComparison.Ordinal).Trim();
+        }
 
         private static void HandleDaoFailure<T>(Model_Dao_Result<T> result, string fallbackMessage,
             Dictionary<string, object> contextData, string callerName)

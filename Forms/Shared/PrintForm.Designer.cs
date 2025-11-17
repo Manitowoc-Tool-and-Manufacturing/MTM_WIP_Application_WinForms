@@ -1052,6 +1052,8 @@ namespace MTM_WIP_Application_Winforms.Forms.Shared
             // PrintForm_PrintPreviewControl
             // 
             PrintForm_PrintPreviewControl.Dock = DockStyle.Fill;
+            PrintForm_PrintPreviewControl.BackColor = System.Drawing.Color.WhiteSmoke;
+            PrintForm_PrintPreviewControl.ForeColor = System.Drawing.Color.Black;
             PrintForm_PrintPreviewControl.Location = new Point(3, 3);
             PrintForm_PrintPreviewControl.Name = "PrintForm_PrintPreviewControl";
             PrintForm_PrintPreviewControl.Size = new Size(601, 793);
