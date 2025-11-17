@@ -6,6 +6,7 @@ using System.Security;
 using System.Windows.Forms;
 using ClosedXML.Excel;
 using MTM_WIP_Application_Winforms.Core;
+using MTM_WIP_Application_Winforms.Controls.Shared;
 using MTM_WIP_Application_Winforms.Data;
 using MTM_WIP_Application_Winforms.Forms.ErrorDialog;
 using MTM_WIP_Application_Winforms.Forms.MainForm.Classes;
@@ -26,6 +27,18 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
         public static Forms.MainForm.MainForm? MainFormInstance { get; set; }
 
         private Helper_StoredProcedureProgress? _progressHelper;
+        private Control_TextAnimationSequence? _singleInputAnimator;
+        private Control_TextAnimationSequence? _multiInputAnimator;
+        private Control_TextAnimationSequence? _singleQuickButtonAnimator;
+        private Control_TextAnimationSequence? _multiQuickButtonAnimator;
+        private Control_TextAnimationSequence? _importQuickButtonAnimator;
+        private bool _singleInputCollapsed;
+        private bool _multiInputCollapsed;
+        private float _singleInputStoredWidth = SingleInputFallbackWidth;
+        private float _multiInputStoredWidth = MultiInputFallbackWidth;
+
+        private const float SingleInputFallbackWidth = 265f;
+        private const float MultiInputFallbackWidth = 255f;
 
         #endregion
 
@@ -138,6 +151,8 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                     AdvancedInventory_MultiLoc_ListView_Preview.Columns[1].Width = (int)(width * 0.40); // Part ID 40%
                     AdvancedInventory_MultiLoc_ListView_Preview.Columns[2].Width = (int)(width * 0.30); // Quantity 20%
                 };
+
+                InitializePanelToggleButtons();
 
                 AdvancedInventory_Single_ListView_Preview.View = View.Details;
                 if (AdvancedInventory_Single_ListView_Preview.Columns.Count == 0)
@@ -640,6 +655,299 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                 
                 e.Handled = true;
             }
+        }
+
+        #endregion
+
+        #region Panel Toggle Logic
+
+        private void InitializePanelToggleButtons()
+        {
+            try
+            {
+                Helper_ButtonToggleAnimations.ValidateIconButton(
+                    AdvancedInventory_Single_Button_InputToggle,
+                    nameof(Control_AdvancedInventory));
+                Helper_ButtonToggleAnimations.ValidateIconButton(
+                    AdvancedInventory_Multi_Button_InputToggle,
+                    nameof(Control_AdvancedInventory));
+                Helper_ButtonToggleAnimations.ValidateIconButton(
+                    AdvancedInventory_Single_Button_QuickButtonToggle,
+                    nameof(Control_AdvancedInventory));
+                Helper_ButtonToggleAnimations.ValidateIconButton(
+                    AdvancedInventory_Multi_Button_QuickButtonToggle,
+                    nameof(Control_AdvancedInventory));
+                Helper_ButtonToggleAnimations.ValidateIconButton(
+                    AdvancedInventory_Import_Button_QuickButtonToggle,
+                    nameof(Control_AdvancedInventory));
+
+                if (AdvancedInventory_Single_Button_InputToggle != null)
+                {
+                    AdvancedInventory_Single_Button_InputToggle.Click -= AdvancedInventory_Single_Button_InputToggle_Click;
+                    AdvancedInventory_Single_Button_InputToggle.Click += AdvancedInventory_Single_Button_InputToggle_Click;
+                }
+
+                if (AdvancedInventory_Multi_Button_InputToggle != null)
+                {
+                    AdvancedInventory_Multi_Button_InputToggle.Click -= AdvancedInventory_Multi_Button_InputToggle_Click;
+                    AdvancedInventory_Multi_Button_InputToggle.Click += AdvancedInventory_Multi_Button_InputToggle_Click;
+                }
+
+                RegisterQuickButtonToggle(AdvancedInventory_Single_Button_QuickButtonToggle);
+                RegisterQuickButtonToggle(AdvancedInventory_Multi_Button_QuickButtonToggle);
+                RegisterQuickButtonToggle(AdvancedInventory_Import_Button_QuickButtonToggle);
+
+                if (AdvancedInventory_Single_GroupBox_Left != null)
+                {
+                    AdvancedInventory_Single_GroupBox_Left.SizeChanged -= AdvancedInventory_Single_GroupBox_Left_SizeChanged;
+                    AdvancedInventory_Single_GroupBox_Left.SizeChanged += AdvancedInventory_Single_GroupBox_Left_SizeChanged;
+                }
+
+                if (AdvancedInventory_MultiLoc_GroupBox_Item != null)
+                {
+                    AdvancedInventory_MultiLoc_GroupBox_Item.SizeChanged -= AdvancedInventory_MultiLoc_GroupBox_Item_SizeChanged;
+                    AdvancedInventory_MultiLoc_GroupBox_Item.SizeChanged += AdvancedInventory_MultiLoc_GroupBox_Item_SizeChanged;
+                }
+
+                CacheSingleInputWidth();
+                CacheMultiInputWidth();
+
+                bool desiredSingleState = _singleInputCollapsed;
+                _singleInputCollapsed = !desiredSingleState;
+                SetSingleInputPanelCollapsed(desiredSingleState);
+
+                bool desiredMultiState = _multiInputCollapsed;
+                _multiInputCollapsed = !desiredMultiState;
+                SetMultiInputPanelCollapsed(desiredMultiState);
+
+                bool quickButtonsCollapsed = MainFormInstance?.MainForm_SplitContainer_Middle.Panel2Collapsed ?? false;
+                UpdateQuickButtonToggleStates(quickButtonsCollapsed);
+            }
+            catch (Exception ex)
+            {
+                LoggingUtility.LogApplicationError(ex);
+            }
+        }
+
+        private void AdvancedInventory_Single_GroupBox_Left_SizeChanged(object? sender, EventArgs e)
+        {
+            if (!_singleInputCollapsed)
+            {
+                CacheSingleInputWidth();
+            }
+        }
+
+        private void AdvancedInventory_MultiLoc_GroupBox_Item_SizeChanged(object? sender, EventArgs e)
+        {
+            if (!_multiInputCollapsed)
+            {
+                CacheMultiInputWidth();
+            }
+        }
+
+        private void AdvancedInventory_Single_Button_InputToggle_Click(object? sender, EventArgs e)
+        {
+            SetSingleInputPanelCollapsed(!_singleInputCollapsed);
+        }
+
+        private void AdvancedInventory_Multi_Button_InputToggle_Click(object? sender, EventArgs e)
+        {
+            SetMultiInputPanelCollapsed(!_multiInputCollapsed);
+        }
+
+        private void AdvancedInventory_QuickButtonToggle_Click(object? sender, EventArgs e)
+        {
+            if (MainFormInstance == null)
+            {
+                return;
+            }
+
+            bool collapsed = MainFormInstance.MainForm_SplitContainer_Middle.Panel2Collapsed;
+            MainFormInstance.MainForm_SplitContainer_Middle.Panel2Collapsed = !collapsed;
+            UpdateQuickButtonToggleStates(!collapsed);
+        }
+
+        private void RegisterQuickButtonToggle(Button? button)
+        {
+            if (button == null)
+            {
+                return;
+            }
+
+            button.Click -= AdvancedInventory_QuickButtonToggle_Click;
+            button.Click += AdvancedInventory_QuickButtonToggle_Click;
+        }
+
+        private void SetSingleInputPanelCollapsed(bool collapse)
+        {
+            if (AdvancedInventory_TableLayout_Single?.ColumnStyles.Count < 2)
+            {
+                return;
+            }
+
+            if (_singleInputCollapsed == collapse)
+            {
+                UpdateSingleInputArrow(collapse);
+                return;
+            }
+
+            _singleInputCollapsed = collapse;
+
+            var inputColumn = AdvancedInventory_TableLayout_Single.ColumnStyles[0];
+            var previewColumn = AdvancedInventory_TableLayout_Single.ColumnStyles[1];
+
+            if (collapse)
+            {
+                CacheSingleInputWidth();
+                inputColumn.SizeType = SizeType.Absolute;
+                inputColumn.Width = 0;
+                if (AdvancedInventory_Single_GroupBox_Left != null)
+                {
+                    AdvancedInventory_Single_GroupBox_Left.Visible = false;
+                    AdvancedInventory_Single_GroupBox_Left.Enabled = false;
+                }
+            }
+            else
+            {
+                var width = _singleInputStoredWidth <= 0 ? SingleInputFallbackWidth : _singleInputStoredWidth;
+                inputColumn.SizeType = SizeType.Absolute;
+                inputColumn.Width = width;
+                if (AdvancedInventory_Single_GroupBox_Left != null)
+                {
+                    AdvancedInventory_Single_GroupBox_Left.Visible = true;
+                    AdvancedInventory_Single_GroupBox_Left.Enabled = true;
+                }
+            }
+
+            previewColumn.SizeType = SizeType.Percent;
+            previewColumn.Width = 100f;
+
+            UpdateSingleInputArrow(collapse);
+        }
+
+        private void SetMultiInputPanelCollapsed(bool collapse)
+        {
+            if (AdvancedInventory_TableLayoutPanel_Multi?.ColumnStyles.Count < 2)
+            {
+                return;
+            }
+
+            if (_multiInputCollapsed == collapse)
+            {
+                UpdateMultiInputArrow(collapse);
+                return;
+            }
+
+            _multiInputCollapsed = collapse;
+
+            var inputColumn = AdvancedInventory_TableLayoutPanel_Multi.ColumnStyles[0];
+            var previewColumn = AdvancedInventory_TableLayoutPanel_Multi.ColumnStyles[1];
+
+            if (collapse)
+            {
+                CacheMultiInputWidth();
+                inputColumn.SizeType = SizeType.Absolute;
+                inputColumn.Width = 0;
+                if (AdvancedInventory_MultiLoc_GroupBox_Item != null)
+                {
+                    AdvancedInventory_MultiLoc_GroupBox_Item.Visible = false;
+                    AdvancedInventory_MultiLoc_GroupBox_Item.Enabled = false;
+                }
+            }
+            else
+            {
+                var width = _multiInputStoredWidth <= 0 ? MultiInputFallbackWidth : _multiInputStoredWidth;
+                inputColumn.SizeType = SizeType.Absolute;
+                inputColumn.Width = width;
+                if (AdvancedInventory_MultiLoc_GroupBox_Item != null)
+                {
+                    AdvancedInventory_MultiLoc_GroupBox_Item.Visible = true;
+                    AdvancedInventory_MultiLoc_GroupBox_Item.Enabled = true;
+                }
+            }
+
+            previewColumn.SizeType = SizeType.Percent;
+            previewColumn.Width = 100f;
+
+            UpdateMultiInputArrow(collapse);
+        }
+
+        private void CacheSingleInputWidth()
+        {
+            if (AdvancedInventory_Single_GroupBox_Left?.Visible == true && AdvancedInventory_Single_GroupBox_Left.Width > 0)
+            {
+                _singleInputStoredWidth = AdvancedInventory_Single_GroupBox_Left.Width;
+                return;
+            }
+
+            if (AdvancedInventory_TableLayout_Single?.ColumnStyles.Count > 0)
+            {
+                float width = AdvancedInventory_TableLayout_Single.ColumnStyles[0].Width;
+                if (width > 0)
+                {
+                    _singleInputStoredWidth = width;
+                }
+            }
+        }
+
+        private void CacheMultiInputWidth()
+        {
+            if (AdvancedInventory_MultiLoc_GroupBox_Item?.Visible == true && AdvancedInventory_MultiLoc_GroupBox_Item.Width > 0)
+            {
+                _multiInputStoredWidth = AdvancedInventory_MultiLoc_GroupBox_Item.Width;
+                return;
+            }
+
+            if (AdvancedInventory_TableLayoutPanel_Multi?.ColumnStyles.Count > 0)
+            {
+                float width = AdvancedInventory_TableLayoutPanel_Multi.ColumnStyles[0].Width;
+                if (width > 0)
+                {
+                    _multiInputStoredWidth = width;
+                }
+            }
+        }
+
+        private void UpdateSingleInputArrow(bool collapsed)
+        {
+            Helper_ButtonToggleAnimations.ApplyHorizontalArrow(
+                ref _singleInputAnimator,
+                components,
+                AdvancedInventory_Single_Button_InputToggle,
+                collapsed);
+        }
+
+        private void UpdateMultiInputArrow(bool collapsed)
+        {
+            Helper_ButtonToggleAnimations.ApplyHorizontalArrow(
+                ref _multiInputAnimator,
+                components,
+                AdvancedInventory_Multi_Button_InputToggle,
+                collapsed);
+        }
+
+        private void UpdateQuickButtonToggleStates(bool collapsed)
+        {
+            Helper_ButtonToggleAnimations.ApplyHorizontalArrow(
+                ref _singleQuickButtonAnimator,
+                components,
+                AdvancedInventory_Single_Button_QuickButtonToggle,
+                collapsed);
+            Helper_ButtonToggleAnimations.ApplyHorizontalArrow(
+                ref _multiQuickButtonAnimator,
+                components,
+                AdvancedInventory_Multi_Button_QuickButtonToggle,
+                collapsed);
+            Helper_ButtonToggleAnimations.ApplyHorizontalArrow(
+                ref _importQuickButtonAnimator,
+                components,
+                AdvancedInventory_Import_Button_QuickButtonToggle,
+                collapsed);
+        }
+
+        internal void SyncQuickButtonsPanelState(bool panelCollapsed)
+        {
+            UpdateQuickButtonToggleStates(panelCollapsed);
         }
 
         #endregion

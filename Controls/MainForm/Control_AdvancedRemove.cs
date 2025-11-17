@@ -22,6 +22,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
         public static Forms.MainForm.MainForm? MainFormInstance { get; set; }
         private Helper_StoredProcedureProgress? _progressHelper;
         private Control_TextAnimationSequence? _sidePanelAnimator;
+        private Control_TextAnimationSequence? _quickButtonsAnimator;
         private bool _isInputPanelCollapsed = false;
 
         #endregion
@@ -154,6 +155,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             InitializeDateRangeDefaults();
 
             InitializeSidePanelAnimator();
+            InitializeQuickButtonsToggle();
 
             _ = LoadComboBoxesAsync();
         }
@@ -1017,18 +1019,10 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
         {
             try
             {
-                if(Model_Shared_Users.EnableAnimations)
-                {
-                                    components ??= new Container();
-                _sidePanelAnimator = new Control_TextAnimationSequence(components)
-                {
-                    TargetButton = Control_AdvancedRemove_Button_SidePanel,
-                    Interval = 140,
-                    RestoreOriginalTextOnStop = false
-                };
+                Helper_ButtonToggleAnimations.ValidateIconButton(
+                    Control_AdvancedRemove_Button_SidePanel,
+                    nameof(Control_AdvancedRemove));
 
-                }
-                
                 UpdateSidePanelArrow(_isInputPanelCollapsed);
             }
             catch (Exception ex)
@@ -1039,19 +1033,63 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
 
         private void UpdateSidePanelArrow(bool collapsed)
         {
-            if (Model_Shared_Users.EnableAnimations){
-                            _sidePanelAnimator?.StartWithPreset(collapsed
-                ? TextAnimationPreset.Left
-                : TextAnimationPreset.Right);
-            } else
-            {
-                Control_AdvancedRemove_Button_SidePanel.Text = collapsed ? "🡲" : "🡰";
-            }
-
+            Helper_ButtonToggleAnimations.ApplyHorizontalArrow(
+                ref _sidePanelAnimator,
+                components,
+                Control_AdvancedRemove_Button_SidePanel,
+                collapsed);
         }
 
-        #endregion
 
+        private void InitializeQuickButtonsToggle()
+        {
+            try
+            {
+                Helper_ButtonToggleAnimations.ValidateIconButton(
+                    Control_AdvancedRemove_Button_QuickButtonToggle,
+                    nameof(Control_AdvancedRemove));
+
+                if (Control_AdvancedRemove_Button_QuickButtonToggle != null)
+                {
+                    Control_AdvancedRemove_Button_QuickButtonToggle.Click -= Control_AdvancedRemove_Button_QuickButtonToggle_Click;
+                    Control_AdvancedRemove_Button_QuickButtonToggle.Click += Control_AdvancedRemove_Button_QuickButtonToggle_Click;
+                }
+
+                bool collapsed = MainFormInstance?.MainForm_SplitContainer_Middle.Panel2Collapsed ?? false;
+                UpdateQuickButtonsArrow(collapsed);
+            }
+            catch (Exception ex)
+            {
+                LoggingUtility.LogApplicationError(ex);
+            }
+        }
+
+        private void Control_AdvancedRemove_Button_QuickButtonToggle_Click(object? sender, EventArgs e)
+        {
+            if (MainFormInstance == null)
+            {
+                return;
+            }
+
+            bool collapsed = MainFormInstance.MainForm_SplitContainer_Middle.Panel2Collapsed;
+            MainFormInstance.MainForm_SplitContainer_Middle.Panel2Collapsed = !collapsed;
+            UpdateQuickButtonsArrow(!collapsed);
+        }
+
+        internal void SyncQuickButtonsPanelState(bool panelCollapsed)
+        {
+            UpdateQuickButtonsArrow(panelCollapsed);
+        }
+
+        private void UpdateQuickButtonsArrow(bool collapsed)
+        {
+            Helper_ButtonToggleAnimations.ApplyHorizontalArrow(
+                ref _quickButtonsAnimator,
+                components,
+                Control_AdvancedRemove_Button_QuickButtonToggle,
+                collapsed);
+        }
+        #endregion
 
     }
 }

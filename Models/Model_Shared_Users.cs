@@ -37,6 +37,15 @@ namespace MTM_WIP_Application_Winforms.Models
 
         public static bool EnableAnimations { get; set; } = false;
 
+        /// <summary>
+        /// Centralized check for whether 32x32 icon animations should run.
+        /// Provides a single place to expand validation logic (e.g., future performance guards).
+        /// </summary>
+        public static bool AreAnimationsEnabled()
+        {
+            return EnableAnimations;
+        }
+
         #endregion
     }
 }
