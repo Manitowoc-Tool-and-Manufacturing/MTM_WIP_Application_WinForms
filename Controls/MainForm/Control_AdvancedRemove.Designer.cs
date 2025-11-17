@@ -752,7 +752,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             Control_AdvancedRemove_Button_QuickButtonToggle.Location = new Point(753, 3);
             Control_AdvancedRemove_Button_QuickButtonToggle.MaximumSize = new Size(32, 32);
             Control_AdvancedRemove_Button_QuickButtonToggle.MinimumSize = new Size(32, 32);
-            Control_AdvancedRemove_Button_QuickButtonToggle.Name = "button1";
+            Control_AdvancedRemove_Button_QuickButtonToggle.Name = "Control_AdvancedRemove_Button_QuickButtonToggle";
             Control_AdvancedRemove_Button_QuickButtonToggle.Size = new Size(32, 32);
             Control_AdvancedRemove_Button_QuickButtonToggle.TabIndex = 17;
             Control_AdvancedRemove_Button_QuickButtonToggle.UseVisualStyleBackColor = true;

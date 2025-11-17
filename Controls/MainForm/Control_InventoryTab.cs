@@ -1782,18 +1782,10 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
         {
             try
             {
-                if (Model_Shared_Users.EnableAnimations)
-                {
-                    components ??= new Container();
-                    _quickButtonsPanelAnimator = new Control_TextAnimationSequence(components)
-                    {
-                        TargetButton = Control_InventoryTab_Button_Toggle_RightPanel,
-                        Interval = 140,
-                        PrefixText = string.Empty,
-                        SuffixText = string.Empty,
-                        RestoreOriginalTextOnStop = false
-                    };
-                }
+                Helper_ButtonToggleAnimations.ValidateIconButton(
+                    Control_InventoryTab_Button_Toggle_RightPanel,
+                    nameof(Control_InventoryTab));
+
                 bool collapsed = MainFormInstance?.MainForm_SplitContainer_Middle.Panel2Collapsed ?? false;
                 UpdateQuickButtonsPanelArrow(collapsed);
 
@@ -1815,20 +1807,12 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
 
         private void UpdateQuickButtonsPanelArrow(bool panelCollapsed)
         {
-            if (Model_Shared_Users.EnableAnimations)
-            {
-                if (_quickButtonsPanelAnimator == null)
-                {
-                    return;
-                }            
-                var preset = panelCollapsed ? TextAnimationPreset.Left : TextAnimationPreset.Right;            
-                _quickButtonsPanelAnimator.StartWithPreset(preset);
-            }
-            else
-            {
-                Control_InventoryTab_Button_Toggle_RightPanel.Text = panelCollapsed ? "🡲" : "🡰";
-            }
-            
+            Helper_ButtonToggleAnimations.ApplyHorizontalArrow(
+                ref _quickButtonsPanelAnimator,
+                components,
+                Control_InventoryTab_Button_Toggle_RightPanel,
+                panelCollapsed);
+
         }
 
         internal void SyncQuickButtonsPanelState(bool panelCollapsed)

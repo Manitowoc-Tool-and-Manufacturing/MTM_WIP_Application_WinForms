@@ -1494,13 +1494,9 @@ SetStyle(ControlStyles.OptimizedDoubleBuffer, true);
         {
             try
             {
-                components ??= new Container();
-                _quickButtonsPanelAnimator = new Control_TextAnimationSequence(components)
-                {
-                    TargetButton = Control_RemoveTab_Button_Toggle_RightPanel,
-                    Interval = 140,
-                    RestoreOriginalTextOnStop = false
-                };
+                Helper_ButtonToggleAnimations.ValidateIconButton(
+                    Control_RemoveTab_Button_Toggle_RightPanel,
+                    nameof(Control_RemoveTab));
 
                 bool collapsed = MainFormInstance?.MainForm_SplitContainer_Middle.Panel2Collapsed ?? false;
                 UpdateQuickButtonsPanelArrow(collapsed);
@@ -1513,9 +1509,11 @@ SetStyle(ControlStyles.OptimizedDoubleBuffer, true);
 
         private void UpdateQuickButtonsPanelArrow(bool panelCollapsed)
         {
-            _quickButtonsPanelAnimator?.StartWithPreset(panelCollapsed
-                ? TextAnimationPreset.Left
-                : TextAnimationPreset.Right);
+            Helper_ButtonToggleAnimations.ApplyHorizontalArrow(
+                ref _quickButtonsPanelAnimator,
+                components,
+                Control_RemoveTab_Button_Toggle_RightPanel,
+                panelCollapsed);
         }
 
         internal void SyncQuickButtonsPanelState(bool panelCollapsed)
@@ -1527,13 +1525,9 @@ SetStyle(ControlStyles.OptimizedDoubleBuffer, true);
         {
             try
             {
-                components ??= new Container();
-                _searchPanelAnimator = new Control_TextAnimationSequence(components)
-                {
-                    TargetButton = Control_RemoveTab_Button_Toggle_InputPanel,
-                    Interval = 140,
-                    RestoreOriginalTextOnStop = false
-                };
+                Helper_ButtonToggleAnimations.ValidateIconButton(
+                    Control_RemoveTab_Button_Toggle_InputPanel,
+                    nameof(Control_RemoveTab));
 
                 UpdateSearchPanelToggleVisual(_isSearchPanelCollapsed);
             }
@@ -1567,7 +1561,15 @@ SetStyle(ControlStyles.OptimizedDoubleBuffer, true);
 
         private void UpdateSearchPanelToggleVisual(bool collapsed)
         {
-            _searchPanelAnimator?.StartWithPreset(collapsed ? TextAnimationPreset.Down : TextAnimationPreset.Up);
+            Helper_ButtonToggleAnimations.ApplyAnimationState(
+                ref _searchPanelAnimator,
+                components,
+                Control_RemoveTab_Button_Toggle_InputPanel,
+                collapsed,
+                TextAnimationPreset.Down,
+                TextAnimationPreset.Up,
+                Helper_ButtonToggleAnimations.ArrowDown,
+                Helper_ButtonToggleAnimations.ArrowUp);
             _searchPanelToggleToolTip?.SetToolTip(
                 Control_RemoveTab_Button_Toggle_InputPanel,
                 collapsed ? "Expand search panel" : "Collapse search panel");
