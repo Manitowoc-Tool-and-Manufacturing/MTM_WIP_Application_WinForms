@@ -1,3 +1,4 @@
+using System.ComponentModel;
 using System.Data;
 using System.Diagnostics;
 using System.Drawing.Printing;
@@ -20,6 +21,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
         private readonly List<Model_History_Remove> _lastRemovedItems = [];
         public static Forms.MainForm.MainForm? MainFormInstance { get; set; }
         private Helper_StoredProcedureProgress? _progressHelper;
+        private Control_TextAnimationSequence? _sidePanelAnimator;
         private bool _isInputPanelCollapsed = false;
 
         #endregion
@@ -151,6 +153,8 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             // Initialize date range defaults (sets Month as default)
             InitializeDateRangeDefaults();
 
+            InitializeSidePanelAnimator();
+
             _ = LoadComboBoxesAsync();
         }
 
@@ -215,11 +219,11 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
         /// </summary>
         private void WireUpDateRangeRadioButtons()
         {
-            TransactionSearchControl_RadioButton_Today.CheckedChanged += QuickFilterChanged;
-            TransactionSearchControl_RadioButton_Week.CheckedChanged += QuickFilterChanged;
-            TransactionSearchControl_RadioButton_Month.CheckedChanged += QuickFilterChanged;
-            TransactionSearchControl_RadioButton_Custom.CheckedChanged += QuickFilterChanged;
-            TransactionSearchControl_RadioButton_Everything.CheckedChanged += QuickFilterChanged;
+            Control_AdvancedRemove_RadioButton_Today.CheckedChanged += QuickFilterChanged;
+            Control_AdvancedRemove_RadioButton_Week.CheckedChanged += QuickFilterChanged;
+            Control_AdvancedRemove_RadioButton_Month.CheckedChanged += QuickFilterChanged;
+            Control_AdvancedRemove_RadioButton_Custom.CheckedChanged += QuickFilterChanged;
+            Control_AdvancedRemove_RadioButton_Everything.CheckedChanged += QuickFilterChanged;
         }
 
         /// <summary>
@@ -227,7 +231,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
         /// </summary>
         private void InitializeDateRangeDefaults()
         {
-            TransactionSearchControl_RadioButton_Month.Checked = true;
+            Control_AdvancedRemove_RadioButton_Month.Checked = true;
             ApplyQuickFilter();
         }
 
@@ -303,7 +307,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             {
                 var now = DateTime.Now;
 
-                if (TransactionSearchControl_RadioButton_Today.Checked)
+                if (Control_AdvancedRemove_RadioButton_Today.Checked)
                 {
                     // Today: 00:00 to 23:59
                     Control_AdvancedRemove_DateTimePicker_From.Value = now.Date;
@@ -312,7 +316,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                     Control_AdvancedRemove_DateTimePicker_To.Enabled = false;
                     LoggingUtility.Log($"[{nameof(Control_AdvancedRemove)}] Quick filter applied: Today");
                 }
-                else if (TransactionSearchControl_RadioButton_Week.Checked)
+                else if (Control_AdvancedRemove_RadioButton_Week.Checked)
                 {
                     // This Week: Monday to Sunday
                     int daysFromMonday = ((int)now.DayOfWeek - (int)DayOfWeek.Monday + 7) % 7;
@@ -325,7 +329,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                     Control_AdvancedRemove_DateTimePicker_To.Enabled = false;
                     LoggingUtility.Log($"[{nameof(Control_AdvancedRemove)}] Quick filter applied: Week");
                 }
-                else if (TransactionSearchControl_RadioButton_Month.Checked)
+                else if (Control_AdvancedRemove_RadioButton_Month.Checked)
                 {
                     // This Month: 1st to last day
                     DateTime firstDay = new DateTime(now.Year, now.Month, 1);
@@ -337,7 +341,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                     Control_AdvancedRemove_DateTimePicker_To.Enabled = false;
                     LoggingUtility.Log($"[{nameof(Control_AdvancedRemove)}] Quick filter applied: Month");
                 }
-                else if (TransactionSearchControl_RadioButton_Everything.Checked)
+                else if (Control_AdvancedRemove_RadioButton_Everything.Checked)
                 {
                     // Everything: No date filtering - set to wide range (past 10 years to future 1 year)
                     Control_AdvancedRemove_DateTimePicker_From.Value = now.AddYears(-10);
@@ -346,7 +350,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                     Control_AdvancedRemove_DateTimePicker_To.Enabled = false;
                     LoggingUtility.Log($"[{nameof(Control_AdvancedRemove)}] Quick filter applied: Everything (all dates)");
                 }
-                else if (TransactionSearchControl_RadioButton_Custom.Checked)
+                else if (Control_AdvancedRemove_RadioButton_Custom.Checked)
                 {
                     // Custom: user sets dates manually, enable date pickers
                     Control_AdvancedRemove_DateTimePicker_From.Enabled = true;
@@ -404,7 +408,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                 }
 
                 // Skip date range validation when "Everything" is selected
-                if (!TransactionSearchControl_RadioButton_Everything.Checked)
+                if (!Control_AdvancedRemove_RadioButton_Everything.Checked)
                 {
                     // Validate date range for non-Everything searches
                     if (dateFrom > dateTo)
@@ -427,12 +431,12 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                     { "QtyMax", qtyMax ?? (object)DBNull.Value },
                     { "Notes", string.IsNullOrWhiteSpace(notes) ? (object)DBNull.Value : notes },
                     { "User", userSelected ? user : (object)DBNull.Value },
-                    { "FilterByDate", !TransactionSearchControl_RadioButton_Everything.Checked },
+                    { "FilterByDate", !Control_AdvancedRemove_RadioButton_Everything.Checked },
                     { "DateFrom", dateFrom ?? (object)DBNull.Value },
                     { "DateTo", dateTo ?? (object)DBNull.Value }
                 };
 
-                if (TransactionSearchControl_RadioButton_Everything.Checked)
+                if (Control_AdvancedRemove_RadioButton_Everything.Checked)
                 {
                     LoggingUtility.Log($"[{nameof(Control_AdvancedRemove)}] Executing search (Everything mode). " +
                         $"PartID='{part}', Operation='{op}', Location='{loc}', " +
@@ -493,7 +497,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                     if (Control_AdvancedRemove_SplitView != null)
                     {
                         Control_AdvancedRemove_SplitView.Panel1Collapsed = true;
-                        Control_AdvancedRemove_Button_SidePanel.Text = "⬅️";
+                        UpdateSidePanelArrow(true);
 
                     }
                 }
@@ -676,7 +680,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                 Control_AdvancedRemove_TextBox_Location.Text = string.Empty;
 
                 // Reset date range to Month (default)
-                TransactionSearchControl_RadioButton_Month.Checked = true;
+                Control_AdvancedRemove_RadioButton_Month.Checked = true;
                 // ApplyQuickFilter() is called automatically by CheckedChanged event
 
                 Control_AdvancedRemove_DataGridView_Results.DataSource = null;
@@ -694,7 +698,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                     if (Control_AdvancedRemove_SplitView != null)
                     {
                         Control_AdvancedRemove_SplitView.Panel1Collapsed = false;
-                        Control_AdvancedRemove_Button_SidePanel.Text = "➡️";
+                        UpdateSidePanelArrow(false);
                         Control_AdvancedRemove_Button_SidePanel.ForeColor =
                             Model_Application_Variables.UserUiColors.SuccessColor ?? Color.Green;
                     }
@@ -770,7 +774,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                     Model_Application_Variables.UserUiColors.TextBoxForeColor ?? Color.Black;
 
                 // Reset date range to Month (default)
-                TransactionSearchControl_RadioButton_Month.Checked = true;
+                Control_AdvancedRemove_RadioButton_Month.Checked = true;
                 // ApplyQuickFilter() is called automatically by CheckedChanged event
 
                 // Reset DataGridView as well
@@ -784,7 +788,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                     if (Control_AdvancedRemove_SplitView != null)
                     {
                         Control_AdvancedRemove_SplitView.Panel1Collapsed = false;
-                        Control_AdvancedRemove_Button_SidePanel.Text = "➡️";
+                        UpdateSidePanelArrow(false);
                         Control_AdvancedRemove_Button_SidePanel.ForeColor =
                             Model_Application_Variables.UserUiColors.SuccessColor ?? Color.Green;
                     }
@@ -985,23 +989,12 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             Control[] sidePanelBtn = Controls.Find("Control_AdvancedRemove_Button_SidePanel", true);
             if (sidePanelBtn.Length > 0 && sidePanelBtn[0] is Button btn)
             {
-                btn.Text = _isInputPanelCollapsed ? "◄" : "►";
+                UpdateSidePanelArrow(_isInputPanelCollapsed);
                 ToolTip toolTip = new();
                 toolTip.SetToolTip(btn, _isInputPanelCollapsed ? "Show Search Panel" : "Hide Search Panel");
             }
 
             LoggingUtility.Log($"[{nameof(Control_AdvancedRemove)}] Input panel {(_isInputPanelCollapsed ? "collapsed" : "expanded")}");
-        }
-
-        /// <summary>
-        /// Collapses the input panel if it's currently expanded.
-        /// </summary>
-        private void CollapseInputPanel()
-        {
-            if (!_isInputPanelCollapsed)
-            {
-                ToggleInputPanel();
-            }
         }
 
         /// <summary>
@@ -1018,6 +1011,43 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
         private void Control_AdvancedRemove_Button_SidePanel_Click(object sender, EventArgs e)
         {
             ToggleInputPanel();
+        }
+
+        private void InitializeSidePanelAnimator()
+        {
+            try
+            {
+                if(Model_Shared_Users.EnableAnimations)
+                {
+                                    components ??= new Container();
+                _sidePanelAnimator = new Control_TextAnimationSequence(components)
+                {
+                    TargetButton = Control_AdvancedRemove_Button_SidePanel,
+                    Interval = 140,
+                    RestoreOriginalTextOnStop = false
+                };
+
+                }
+                
+                UpdateSidePanelArrow(_isInputPanelCollapsed);
+            }
+            catch (Exception ex)
+            {
+                LoggingUtility.LogApplicationError(ex);
+            }
+        }
+
+        private void UpdateSidePanelArrow(bool collapsed)
+        {
+            if (Model_Shared_Users.EnableAnimations){
+                            _sidePanelAnimator?.StartWithPreset(collapsed
+                ? TextAnimationPreset.Left
+                : TextAnimationPreset.Right);
+            } else
+            {
+                Control_AdvancedRemove_Button_SidePanel.Text = collapsed ? "🡲" : "🡰";
+            }
+
         }
 
         #endregion

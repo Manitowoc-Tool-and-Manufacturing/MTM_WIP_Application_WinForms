@@ -6,6 +6,7 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
 using MTM_WIP_Application_Winforms.Core;
+using MTM_WIP_Application_Winforms.Controls.Shared;
 using MTM_WIP_Application_Winforms.Data;
 using MTM_WIP_Application_Winforms.Forms.MainForm.Classes;
 using MTM_WIP_Application_Winforms.Helpers;
@@ -27,6 +28,11 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
         // Cache ToolTip to avoid repeated instantiation
         private static readonly ToolTip SharedToolTip = new();
         private Helper_StoredProcedureProgress? _progressHelper;
+        private Control_TextAnimationSequence? _inputPanelAnimator;
+        private Control_TextAnimationSequence? _rightPanelAnimator;
+        private float _inputPanelStoredWidth = InputPanelFallbackWidth;
+
+        private const float InputPanelFallbackWidth = 320f;
 
         #endregion
 
@@ -77,6 +83,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
 
             // Initialize UI state immediately without heavy operations
             InitializeImmediateUI();
+            InitializeArrowToggleAnimations();
 
             // Move heavy initialization to background thread
             _ = Task.Run(async () =>
@@ -127,6 +134,14 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             Control_TransferTab_Button_Print.Click -= Control_TransferTab_Button_Print_Click;
             Control_TransferTab_Button_Print.Click += Control_TransferTab_Button_Print_Click;
             SharedToolTip.SetToolTip(Control_TransferTab_Button_Print, "Print the current results");
+
+            if (Control_TransferTab_Panel_Inputs != null)
+            {
+                Control_TransferTab_Panel_Inputs.SizeChanged -= Control_TransferTab_Panel_Inputs_SizeChanged;
+                Control_TransferTab_Panel_Inputs.SizeChanged += Control_TransferTab_Panel_Inputs_SizeChanged;
+            }
+
+            CacheInputPanelWidth();
         }
 
         private async Task InitializeBackgroundOperationsAsync()
@@ -590,18 +605,8 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
 
                 Control_TransferTab_TextBox_Part.Focus();
 
-                // Expand the search panel on reset
-                try
-                {
-                    if (Control_TransferTab_TableLayout_Main != null)
-                    {
-                        Control_TransferTab_TableLayout_Main.ColumnStyles[1].Width = 0;
-                        Control_TransferTab_Button_Toggle_Split.Text = "➡️";
-                        Control_TransferTab_Button_Toggle_Split.ForeColor =
-                            Model_Application_Variables.UserUiColors.SuccessColor ?? Color.Green;
-                    }
-                }
-                catch { }
+                // Ensure the input panel is visible after a full reset
+                SetInputPanelCollapsed(false, Control_TransferTab_Button_Toggle_Split);
 
                 Debug.WriteLine("[DEBUG] TransferTab HardReset - end");
             }
@@ -660,18 +665,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                 Control_TransferTab_NumericUpDown_Quantity.Value = Control_TransferTab_NumericUpDown_Quantity.Minimum;
                 Control_TransferTab_NumericUpDown_Quantity.Enabled = false;
 
-                // Expand the search panel on reset
-                try
-                {
-                    if (Control_TransferTab_TableLayout_Main != null)
-                    {
-                        Control_TransferTab_TableLayout_Main.ColumnStyles[1].Width = Control_TransferTab_TableLayout_Inputs.MaximumSize.Width;
-                        Control_TransferTab_Button_Toggle_Split.Text = "➡️";
-                        Control_TransferTab_Button_Toggle_Split.ForeColor =
-                            Model_Application_Variables.UserUiColors.SuccessColor ?? Color.Green;
-                    }
-                }
-                catch { }
+                SetInputPanelCollapsed(false, Control_TransferTab_Button_Toggle_Split);
             }
             catch (Exception ex)
             {
@@ -808,19 +802,8 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                 Control_TransferTab_Image_NothingFound.Visible = results.Rows.Count == 0;
                 _progressHelper?.UpdateProgress(100, "Search complete");
 
-                // Collapse the search panel after search to maximize results area
-                try
-                {
-                    if (Control_TransferTab_TableLayout_Main != null)
-                    {
-                        Control_TransferTab_TableLayout_Main.ColumnStyles[1].Width = 0;
-                        // Arrow-only visual style: Collapsed => ⬅️ (red)
-                        Control_TransferTab_Button_Toggle_Split.Text = "⬅️";
-                        Control_TransferTab_Button_Toggle_Split.ForeColor =
-                            Model_Application_Variables.UserUiColors.ErrorColor ?? Color.Red;
-                    }
-                }
-                catch { }
+                // Collapse the input panel after search to maximize results area
+                SetInputPanelCollapsed(true, Control_TransferTab_Button_Toggle_Split);
             }
             catch (Exception ex)
             {
@@ -989,7 +972,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             }
 
             int transferQuantity = Math.Min((int)Control_TransferTab_NumericUpDown_Quantity.Value, originalQuantity);
-            string newLocation = Control_TransferTab_TextBox_ToLocation.Text;
+            string newLocation = Control_TransferTab_TextBox_ToLocation.Text ?? string.Empty;
             string user = Model_Application_Variables.User ?? Environment.UserName;
             if (transferQuantity < originalQuantity)
             {
@@ -1032,7 +1015,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
 
         private async Task TransferMultipleRowsAsync(DataGridViewSelectedRowCollection selectedRows)
         {
-            string newLocation = Control_TransferTab_TextBox_ToLocation.Text;
+            string newLocation = Control_TransferTab_TextBox_ToLocation.Text ?? string.Empty;
             string user = Model_Application_Variables.User ?? Environment.UserName;
             HashSet<string> partIds = new();
             HashSet<string> operations = new();
@@ -1261,7 +1244,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             {
                 bool panelCollapsed = MainFormInstance.MainForm_SplitContainer_Middle.Panel2Collapsed;
                 MainFormInstance.MainForm_SplitContainer_Middle.Panel2Collapsed = !panelCollapsed;
-                Control_TransferTab_Button_Toggle_RightPanel.Text = panelCollapsed ? "➡️" : "⬅️";
+                UpdateRightPanelArrow(!panelCollapsed);
             }
 
             Helper_UI_ComboBoxes.DeselectAllComboBoxText(this);
@@ -1317,12 +1300,231 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                 Control_TransferTab_Button_Transfer.Visible = false;
                 Control_TransferTab_Button_Transfer.Enabled = false;
             }
-            // TODO: If there are TreeView branches, set their .Visible property here as well.
         }
 
         #endregion
 
         #region Helper Methods
+
+        #region Arrow Animations
+
+        private void InitializeArrowToggleAnimations()
+        {
+            try
+            {
+                if(Model_Shared_Users.EnableAnimations)
+                {                
+                    components ??= new Container();
+                    _inputPanelAnimator = new Control_TextAnimationSequence(components)
+                    {
+                        TargetButton = Control_TransferTab_Button_Toggle_Split,
+                        Interval = 140,
+                        RestoreOriginalTextOnStop = false
+                    };
+
+                    _rightPanelAnimator = new Control_TextAnimationSequence(components)
+                    {
+                        TargetButton = Control_TransferTab_Button_Toggle_RightPanel,
+                        Interval = 140,
+                        RestoreOriginalTextOnStop = false
+                    };
+
+                    var initialInputPreset = IsInputPanelCollapsed() ? TextAnimationPreset.Left : TextAnimationPreset.Right;
+                    ApplyInputPanelArrowStyle(initialInputPreset);
+                    bool collapsed = MainFormInstance?.MainForm_SplitContainer_Middle.Panel2Collapsed ?? false;
+                    UpdateRightPanelArrow(collapsed);
+                } else {
+                    SetStaticInputPanelArrow(IsInputPanelCollapsed());
+                    bool quickButtonsCollapsed = MainFormInstance?.MainForm_SplitContainer_Middle.Panel2Collapsed ?? false;
+                    SetStaticRightPanelArrow(quickButtonsCollapsed);
+                }
+            }
+            catch (Exception ex)
+            {
+                LoggingUtility.LogApplicationError(ex);
+            }
+        }
+
+        private bool IsInputPanelCollapsed()
+        {
+            if (Control_TransferTab_Panel_Inputs == null)
+            {
+                return false;
+            }
+
+            return !Control_TransferTab_Panel_Inputs.Visible;
+        }
+
+        private void UpdateInputPanelArrow(bool collapsed)
+        {
+            if (Model_Shared_Users.EnableAnimations)
+            {
+                _inputPanelAnimator?.StartWithPreset(collapsed ? TextAnimationPreset.Left : TextAnimationPreset.Right);
+            }
+            else
+            {
+                SetStaticInputPanelArrow(collapsed);
+            }
+        }
+
+        private void UpdateRightPanelArrow(bool collapsed)
+        {
+            if (Model_Shared_Users.EnableAnimations)
+            {
+                _rightPanelAnimator?.StartWithPreset(collapsed ? TextAnimationPreset.Left : TextAnimationPreset.Right);
+            }
+            else
+            {
+                SetStaticRightPanelArrow(collapsed);
+            }
+        }
+
+        internal void SyncQuickButtonsPanelState(bool panelCollapsed)
+        {
+            UpdateRightPanelArrow(panelCollapsed);
+        }
+
+        private void ApplyInputPanelArrowStyle(TextAnimationPreset preset, Button? targetButton = null)
+        {
+            if (preset != TextAnimationPreset.Left && preset != TextAnimationPreset.Right)
+            {
+                preset = TextAnimationPreset.Right;
+            }
+
+            bool collapsed = preset == TextAnimationPreset.Left;
+            UpdateInputPanelArrow(collapsed);
+
+            _ = targetButton; // Reserved for future visual tweaks; intentionally no-op to avoid color changes.
+        }
+
+        private void SetStaticInputPanelArrow(bool collapsed)
+        {
+            if (Control_TransferTab_Button_Toggle_Split == null)
+            {
+                return;
+            }
+
+            Control_TransferTab_Button_Toggle_Split.Text = collapsed ? "🡲" : "🡰";
+        }
+
+        private void SetStaticRightPanelArrow(bool collapsed)
+        {
+            if (Control_TransferTab_Button_Toggle_RightPanel == null)
+            {
+                return;
+            }
+
+            Control_TransferTab_Button_Toggle_RightPanel.Text = collapsed ? "🡰" : "🡲";
+        }
+
+        private void CacheInputPanelWidth()
+        {
+            float width = 0;
+
+            if (Control_TransferTab_Panel_Inputs?.Width > 0)
+            {
+                width = Control_TransferTab_Panel_Inputs.Width;
+            }
+            else if (Control_TransferTab_TableLayout_Inputs?.Width > 0)
+            {
+                width = Control_TransferTab_TableLayout_Inputs.Width;
+            }
+            else if (Control_TransferTab_TableLayout_Inputs?.MaximumSize.Width > 0)
+            {
+                width = Control_TransferTab_TableLayout_Inputs.MaximumSize.Width;
+            }
+            else if (Control_TransferTab_TableLayout_Inputs?.PreferredSize.Width > 0)
+            {
+                width = Control_TransferTab_TableLayout_Inputs.PreferredSize.Width;
+            }
+
+            if (width <= 0)
+            {
+                width = InputPanelFallbackWidth;
+            }
+
+            _inputPanelStoredWidth = width;
+        }
+
+        private void Control_TransferTab_Panel_Inputs_SizeChanged(object? sender, EventArgs e)
+        {
+            if (Control_TransferTab_Panel_Inputs?.Visible == true)
+            {
+                CacheInputPanelWidth();
+            }
+        }
+
+        private void SetInputPanelCollapsed(bool collapse, Button? targetButton = null)
+        {
+            if (Control_TransferTab_TableLayout_Main == null || Control_TransferTab_TableLayout_Main.ColumnStyles.Count == 0)
+            {
+                return;
+            }
+
+            bool currentlyCollapsed = IsInputPanelCollapsed();
+            if (collapse == currentlyCollapsed)
+            {
+                ApplyInputPanelArrowStyle(collapse ? TextAnimationPreset.Left : TextAnimationPreset.Right, targetButton);
+                return;
+            }
+
+            Control_TransferTab_TableLayout_Main.SuspendLayout();
+            try
+            {
+                var inputsColumn = Control_TransferTab_TableLayout_Main.ColumnStyles[0];
+                var gridColumn = Control_TransferTab_TableLayout_Main.ColumnStyles.Count > 1
+                    ? Control_TransferTab_TableLayout_Main.ColumnStyles[1]
+                    : null;
+
+                if (collapse)
+                {
+                    CacheInputPanelWidth();
+                    inputsColumn.SizeType = SizeType.Absolute;
+                    inputsColumn.Width = 0;
+
+                    if (Control_TransferTab_Panel_Inputs != null)
+                    {
+                        Control_TransferTab_Panel_Inputs.Visible = false;
+                        Control_TransferTab_Panel_Inputs.Enabled = false;
+                    }
+
+                    ApplyInputPanelArrowStyle(TextAnimationPreset.Left, targetButton);
+                }
+                else
+                {
+                    if (_inputPanelStoredWidth <= 0)
+                    {
+                        _inputPanelStoredWidth = InputPanelFallbackWidth;
+                    }
+
+                    if (Control_TransferTab_Panel_Inputs != null)
+                    {
+                        Control_TransferTab_Panel_Inputs.Visible = true;
+                        Control_TransferTab_Panel_Inputs.Enabled = true;
+                    }
+
+                    inputsColumn.SizeType = SizeType.Absolute;
+                    inputsColumn.Width = _inputPanelStoredWidth;
+
+                    ApplyInputPanelArrowStyle(TextAnimationPreset.Right, targetButton);
+                }
+
+                if (gridColumn != null)
+                {
+                    gridColumn.SizeType = SizeType.Percent;
+                    gridColumn.Width = 100f;
+                }
+            }
+            finally
+            {
+                Control_TransferTab_TableLayout_Main.ResumeLayout(true);
+                Control_TransferTab_TableLayout_Main.PerformLayout();
+            }
+        }
+            
+        
+
+        #endregion
 
         private static readonly HashSet<string> PredefinedColorCodes = new(StringComparer.OrdinalIgnoreCase)
         {
@@ -1500,22 +1702,10 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
 
         private void Control_TransferTab_Button_Toggle_Split_Click(object sender, EventArgs e)
         {
-            TableLayoutPanel? tableLayout = Control_TransferTab_TableLayout_Main;
             Button? button = sender as Button ?? Control_TransferTab_Button_Toggle_Split;
 
-            if (tableLayout.ColumnStyles[1].Width == 0)
-            {
-                tableLayout.ColumnStyles[1].Width = Control_TransferTab_TableLayout_Inputs.MaximumSize.Width;
-                // Arrow-only style and color like RightPanel toggle
-                button.Text = "➡️";
-                button.ForeColor = Model_Application_Variables.UserUiColors.SuccessColor ?? Color.Green;
-            }
-            else
-            {
-                tableLayout.ColumnStyles[1].Width = 0;
-                button.Text = "⬅️";
-                button.ForeColor = Model_Application_Variables.UserUiColors.ErrorColor ?? Color.Red;
-            }
+            bool collapse = !IsInputPanelCollapsed();
+            SetInputPanelCollapsed(collapse, button);
         }
 
 

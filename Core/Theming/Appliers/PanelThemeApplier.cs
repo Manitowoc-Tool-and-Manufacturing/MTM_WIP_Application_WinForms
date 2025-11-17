@@ -26,9 +26,17 @@ public class PanelThemeApplier : ThemeApplierBase
 
         try
         {
-            panel.BackColor = GetColorOrDefault(theme.PanelBackColor, Color.White);
-            panel.BorderStyle = BorderStyle.None;
-            
+            if (panel.BorderStyle != BorderStyle.None)
+            {
+                panel.BackColor = GetColorOrDefault(theme.PanelBackColor, Color.White);
+                panel.BorderStyle = panel.BorderStyle;
+            }
+            else
+            {
+                panel.BackColor = GetColorOrDefault(theme.PanelBackColor, Color.White);
+                panel.BorderStyle = BorderStyle.None;
+            }
+
             Logger.LogDebug("Applied theme to Panel '{ControlName}'", panel.Name);
         }
         catch (Exception ex)

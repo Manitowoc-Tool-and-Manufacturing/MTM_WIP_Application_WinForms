@@ -3,6 +3,7 @@ using System.Diagnostics;
 using System.Text;
 using DocumentFormat.OpenXml.Office.CustomUI;
 using MTM_WIP_Application_Winforms.Core;
+using MTM_WIP_Application_Winforms.Controls.Shared;
 using MTM_WIP_Application_Winforms.Data;
 using MTM_WIP_Application_Winforms.Forms.MainForm.Classes;
 using MTM_WIP_Application_Winforms.Forms.Shared;
@@ -24,6 +25,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
         public static Forms.MainForm.MainForm? MainFormInstance { get; set; }
 
         private Helper_StoredProcedureProgress? _progressHelper;
+        private Control_TextAnimationSequence? _quickButtonsPanelAnimator;
 
         #endregion
 
@@ -205,6 +207,8 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                 $"Shortcut: {Helper_UI_Shortcuts.ToShortcutString(Core_WipAppVariables.Shortcut_Inventory_Reset)}");
             Control_InventoryTab_Tooltip.SetToolTip(Control_InventoryTab_Button_Toggle_RightPanel,
                 $"Shortcut: {Helper_UI_Shortcuts.ToShortcutString(Core_WipAppVariables.Shortcut_Inventory_ToggleRightPanel_Left)}/{Helper_UI_Shortcuts.ToShortcutString(Core_WipAppVariables.Shortcut_Inventory_ToggleRightPanel_Right)}");
+
+            InitializeQuickButtonsPanelAnimator();
 
             Service_DebugTracer.TraceUIAction("VERSION_TIMER_SETUP", nameof(Control_InventoryTab),
                 new Dictionary<string, object> { ["TimerInstance"] = "Service_Timer_VersionChecker" });
@@ -1254,19 +1258,11 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
 
         private void Control_InventoryTab_Button_Toggle_RightPanel_Click(object sender, EventArgs e)
         {
-            if (MainFormInstance != null && !MainFormInstance.MainForm_SplitContainer_Middle.Panel2Collapsed)
+            if (MainFormInstance != null)
             {
-                MainFormInstance.MainForm_SplitContainer_Middle.Panel2Collapsed = true;
-
-                Control_InventoryTab_Button_Toggle_RightPanel.Text = "⬅️";
-            }
-            else
-            {
-                if (MainFormInstance != null)
-                {
-                    MainFormInstance.MainForm_SplitContainer_Middle.Panel2Collapsed = false;
-                    Control_InventoryTab_Button_Toggle_RightPanel.Text = "➡️";
-                }
+                bool panelCollapsed = MainFormInstance.MainForm_SplitContainer_Middle.Panel2Collapsed;
+                MainFormInstance.MainForm_SplitContainer_Middle.Panel2Collapsed = !panelCollapsed;
+                UpdateQuickButtonsPanelArrow(!panelCollapsed);
             }
 
             Helper_UI_ComboBoxes.DeselectAllComboBoxText(this);
@@ -1776,6 +1772,68 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                     callerName: nameof(UpdateColorCodeFieldsVisibility),
                     controlName: this.Name);
             }
+        }
+
+        #endregion
+
+        #region Helpers
+
+        private void InitializeQuickButtonsPanelAnimator()
+        {
+            try
+            {
+                if (Model_Shared_Users.EnableAnimations)
+                {
+                    components ??= new Container();
+                    _quickButtonsPanelAnimator = new Control_TextAnimationSequence(components)
+                    {
+                        TargetButton = Control_InventoryTab_Button_Toggle_RightPanel,
+                        Interval = 140,
+                        PrefixText = string.Empty,
+                        SuffixText = string.Empty,
+                        RestoreOriginalTextOnStop = false
+                    };
+                }
+                bool collapsed = MainFormInstance?.MainForm_SplitContainer_Middle.Panel2Collapsed ?? false;
+                UpdateQuickButtonsPanelArrow(collapsed);
+
+            }
+            catch (Exception ex)
+            {
+                LoggingUtility.LogApplicationError(ex);
+                Service_DebugTracer.TraceBusinessLogic("INVENTORY_TAB_ANIMATION_INIT_FAILED",
+                    inputData: new Dictionary<string, object>
+                    {
+                        ["Control"] = nameof(Control_InventoryTab_Button_Toggle_RightPanel)
+                    },
+                    validationResults: new Dictionary<string, object>
+                    {
+                        ["Exception"] = ex.Message
+                    });
+            }
+        }
+
+        private void UpdateQuickButtonsPanelArrow(bool panelCollapsed)
+        {
+            if (Model_Shared_Users.EnableAnimations)
+            {
+                if (_quickButtonsPanelAnimator == null)
+                {
+                    return;
+                }            
+                var preset = panelCollapsed ? TextAnimationPreset.Left : TextAnimationPreset.Right;            
+                _quickButtonsPanelAnimator.StartWithPreset(preset);
+            }
+            else
+            {
+                Control_InventoryTab_Button_Toggle_RightPanel.Text = panelCollapsed ? "🡲" : "🡰";
+            }
+            
+        }
+
+        internal void SyncQuickButtonsPanelState(bool panelCollapsed)
+        {
+            UpdateQuickButtonsPanelArrow(panelCollapsed);
         }
 
         #endregion

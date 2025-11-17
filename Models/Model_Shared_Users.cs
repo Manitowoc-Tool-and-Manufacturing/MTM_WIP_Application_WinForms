@@ -35,6 +35,8 @@ namespace MTM_WIP_Application_Winforms.Models
 
         public static string WipServerPort { get; set; } = "3306";
 
+        public static bool EnableAnimations { get; set; } = false;
+
         #endregion
     }
 }

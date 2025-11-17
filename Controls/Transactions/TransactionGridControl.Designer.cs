@@ -182,7 +182,7 @@ namespace MTM_WIP_Application_Winforms.Controls.Transactions
             TransactionGridControl_Button_GoToPage.Margin = new Padding(3);
             TransactionGridControl_Button_GoToPage.Name = "TransactionGridControl_Button_GoToPage";
             TransactionGridControl_Button_GoToPage.Size = new Size(26, 23);
-            TransactionGridControl_Button_GoToPage.Text = "➡️";
+            TransactionGridControl_Button_GoToPage.Text = string.Empty;
             TransactionGridControl_Button_GoToPage.ToolTipText = "Go to entered page number";
             // 
             // TransactionGridControl_ToolStripSeparator2
