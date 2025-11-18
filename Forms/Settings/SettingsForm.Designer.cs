@@ -51,6 +51,7 @@
             SettingsForm_Panel_EditUser = new Panel();
             SettingsForm_Panel_DeleteUser = new Panel();
             SettingsForm_Panel_Theme = new Panel();
+            SettingsForm_Panel_Home = new Panel();
             SettingsForm_Panel_Right_Main = new Panel();
             ((System.ComponentModel.ISupportInitialize)SettingsForm_SplitContainer_Main).BeginInit();
             SettingsForm_SplitContainer_Main.Panel1.SuspendLayout();
@@ -148,7 +149,10 @@
             SettingsForm_Panel_Right.Controls.Add(SettingsForm_Panel_AddUser);
             SettingsForm_Panel_Right.Controls.Add(SettingsForm_Panel_EditUser);
             SettingsForm_Panel_Right.Controls.Add(SettingsForm_Panel_DeleteUser);
+            SettingsForm_Panel_Right.Controls.Add(SettingsForm_Panel_DeleteUser);
             SettingsForm_Panel_Right.Controls.Add(SettingsForm_Panel_Theme);
+            SettingsForm_Panel_Right.Controls.Add(SettingsForm_Panel_Theme);
+            SettingsForm_Panel_Right.Controls.Add(SettingsForm_Panel_Home);
             SettingsForm_Panel_Right.Dock = DockStyle.Fill;
             SettingsForm_Panel_Right.Location = new Point(3, 3);
             SettingsForm_Panel_Right.Name = "SettingsForm_Panel_Right";
@@ -364,6 +368,16 @@
             SettingsForm_Panel_Theme.Size = new Size(622, 458);
             SettingsForm_Panel_Theme.TabIndex = 40;
             // 
+            // SettingsForm_Panel_Home
+            // 
+            SettingsForm_Panel_Home.AutoSize = true;
+            SettingsForm_Panel_Home.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            SettingsForm_Panel_Home.Dock = DockStyle.Fill;
+            SettingsForm_Panel_Home.Location = new Point(3, 3);
+            SettingsForm_Panel_Home.Name = "SettingsForm_Panel_Home";
+            SettingsForm_Panel_Home.Size = new Size(622, 458);
+            SettingsForm_Panel_Home.TabIndex = 50;
+            // 
             // SettingsForm_Panel_Right_Main
             // 
             SettingsForm_Panel_Right_Main.AutoSize = true;
@@ -426,6 +440,7 @@
         private Panel SettingsForm_Panel_EditUser;
         private Panel SettingsForm_Panel_DeleteUser;
         private Panel SettingsForm_Panel_Theme;
+        private Panel SettingsForm_Panel_Home;
         private ToolStripProgressBar SettingsForm_ProgressBar;
     }
 }
