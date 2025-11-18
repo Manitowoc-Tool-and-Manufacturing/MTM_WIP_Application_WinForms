@@ -45,15 +45,15 @@ namespace MTM_WIP_Application_Winforms.Data
 
                 if (!result.IsSuccess)
                 {
-                    LoggingUtility.Log($"[Dao_QuickButtons] UpdateQuickButtonAsync failed: {result.ErrorMessage}");
+
                     return Model_Dao_Result.Failure($"Failed to update quick button: {result.ErrorMessage}", result.Exception);
                 }
 
-                LoggingUtility.Log($"[Dao_QuickButtons] UpdateQuickButtonAsync succeeded: Position {position} → {partId}+Op:{operation} Qty:{quantity} for user {user}");
-                
+
+
                 // CRITICAL: Always cleanup after update to ensure no duplicates or gaps
                 await CleanupGapsAndDuplicatesAsync(user, connectionString, connection, transaction);
-                
+
                 return Model_Dao_Result.Success();
             }
             catch (MySqlException ex)
@@ -97,15 +97,15 @@ namespace MTM_WIP_Application_Winforms.Data
 
                 if (!result.IsSuccess)
                 {
-                    LoggingUtility.Log($"[Dao_QuickButtons] RemoveQuickButtonAndShiftAsync failed: {result.StatusMessage}");
+
                     return Model_Dao_Result.Failure($"Failed to remove quick button: {result.StatusMessage}", result.Exception);
                 }
 
-                LoggingUtility.Log($"[Dao_QuickButtons] RemoveQuickButtonAndShiftAsync succeeded: Removed position {safePosition} for user {user}");
-                
+
+
                 // CRITICAL: Always cleanup after remove to ensure no gaps
                 await CleanupGapsAndDuplicatesAsync(user, connectionString, connection, transaction);
-                
+
                 return Model_Dao_Result.Success();
             }
             catch (MySqlException ex)
@@ -152,11 +152,11 @@ namespace MTM_WIP_Application_Winforms.Data
 
                 if (!result.IsSuccess)
                 {
-                    LoggingUtility.Log($"[Dao_QuickButtons] AddQuickButtonAsync failed: {result.StatusMessage}");
+
                     return Model_Dao_Result.Failure($"Failed to add quick button: {result.StatusMessage}", result.Exception);
                 }
 
-                LoggingUtility.Log($"[Dao_QuickButtons] AddQuickButtonAsync succeeded: Added {partId}+Op:{operation} at position {position} for user {user}");
+
                 return Model_Dao_Result.Success();
             }
             catch (MySqlException ex)
@@ -204,11 +204,11 @@ namespace MTM_WIP_Application_Winforms.Data
 
                 if (!result.IsSuccess)
                 {
-                    LoggingUtility.Log($"[Dao_QuickButtons] MoveQuickButtonAsync failed: {result.StatusMessage}");
+
                     return Model_Dao_Result.Failure($"Failed to move quick button: {result.StatusMessage}", result.Exception);
                 }
 
-                LoggingUtility.Log($"[Dao_QuickButtons] MoveQuickButtonAsync succeeded: Moved from {safeFrom} to {safeTo} for user {user}");
+
                 return Model_Dao_Result.Success();
             }
             catch (MySqlException ex)
@@ -247,11 +247,11 @@ namespace MTM_WIP_Application_Winforms.Data
 
                 if (!result.IsSuccess)
                 {
-                    LoggingUtility.Log($"[Dao_QuickButtons] DeleteAllQuickButtonsForUserAsync failed: {result.StatusMessage}");
+
                     return Model_Dao_Result.Failure($"Failed to delete all quick buttons: {result.StatusMessage}", result.Exception);
                 }
 
-                LoggingUtility.Log($"[Dao_QuickButtons] DeleteAllQuickButtonsForUserAsync succeeded for user {user}");
+
                 return Model_Dao_Result.Success();
             }
             catch (MySqlException ex)
@@ -277,16 +277,16 @@ namespace MTM_WIP_Application_Winforms.Data
         {
             try
             {
-                LoggingUtility.Log($"[Dao_QuickButtons] ═══════════════════════════════════════════════════════");
-                LoggingUtility.Log($"[Dao_QuickButtons] AddOrShiftQuickButtonAsync STARTED");
-                LoggingUtility.Log($"[Dao_QuickButtons]   User: {user}");
-                LoggingUtility.Log($"[Dao_QuickButtons]   PartID: {partId}");
-                LoggingUtility.Log($"[Dao_QuickButtons]   Operation: {operation}");
-                LoggingUtility.Log($"[Dao_QuickButtons]   Quantity: {quantity}");
-                LoggingUtility.Log($"[Dao_QuickButtons] ═══════════════════════════════════════════════════════");
-                
+
+
+
+
+
+
+
+
                 // STEP 1: Get current buttons to check for duplicates
-                LoggingUtility.Log($"[Dao_QuickButtons] STEP 1: Checking for existing duplicate");
+
                 var existingButtonsResult = await Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync(
                     connectionString ?? Model_Application_Variables.ConnectionString,
                     "sys_last_10_transactions_Get_ByUser",
@@ -295,43 +295,43 @@ namespace MTM_WIP_Application_Winforms.Data
                     connection: connection,
                     transaction: transaction
                 );
-                
+
                 if (!existingButtonsResult.IsSuccess || existingButtonsResult.Data == null)
                 {
-                    LoggingUtility.Log($"[Dao_QuickButtons] STEP 1: Failed to get existing buttons or no data: {existingButtonsResult.ErrorMessage}");
+
                 }
                 else
                 {
-                    LoggingUtility.Log($"[Dao_QuickButtons] STEP 1: Retrieved {existingButtonsResult.Data.Rows.Count} existing buttons");
+
                     int currentPosition = 1;
                     foreach (DataRow row in existingButtonsResult.Data.Rows)
                     {
                         string existingPartId = row["PartID"]?.ToString() ?? "";
                         string existingOperation = row["Operation"]?.ToString() ?? "";
                         int existingQuantity = row["Quantity"] != DBNull.Value ? Convert.ToInt32(row["Quantity"]) : 0;
-                        
-                        LoggingUtility.Log($"[Dao_QuickButtons]   Position {currentPosition}: {existingPartId} + Op:{existingOperation} (Qty: {existingQuantity})");
-                        
+
+
+
                         // Check if this PartID AND Operation combination already exists
                         if (string.Equals(existingPartId, partId, StringComparison.OrdinalIgnoreCase) &&
                             string.Equals(existingOperation, operation, StringComparison.OrdinalIgnoreCase))
                         {
-                            LoggingUtility.Log($"[Dao_QuickButtons] ╔════════════════════════════════════════════════════╗");
-                            LoggingUtility.Log($"[Dao_QuickButtons] ║ DUPLICATE FOUND at position {currentPosition}");
-                            LoggingUtility.Log($"[Dao_QuickButtons] ║ PartID '{partId}' + Operation '{operation}' already exists");
-                            LoggingUtility.Log($"[Dao_QuickButtons] ║ ACTION: DO NOTHING - Return success without changes");
-                            LoggingUtility.Log($"[Dao_QuickButtons] ╚════════════════════════════════════════════════════╝");
-                            LoggingUtility.Log($"[Dao_QuickButtons] AddOrShiftQuickButtonAsync COMPLETED (duplicate skipped)");
-                            LoggingUtility.Log($"[Dao_QuickButtons] ═══════════════════════════════════════════════════════");
+
+
+
+
+
+
+
                             return Model_Dao_Result.Success("Quick button already exists - no changes made");
                         }
                         currentPosition++;
                     }
-                    LoggingUtility.Log($"[Dao_QuickButtons] STEP 1: No duplicate found - proceeding with add");
+
                 }
 
                 // STEP 2: Add at position 1 (shifts all others down)
-                LoggingUtility.Log($"[Dao_QuickButtons] STEP 2: Adding new button at position 1");
+
                 Dictionary<string, object> parameters = new()
                 {
                     ["User"] = user,
@@ -341,7 +341,7 @@ namespace MTM_WIP_Application_Winforms.Data
                     ["Position"] = 1
                 };
 
-                LoggingUtility.Log($"[Dao_QuickButtons] STEP 2: Calling sys_last_10_transactions_AddQuickButton");
+
                 var result = await Helper_Database_StoredProcedure.ExecuteNonQueryWithStatusAsync(
                     connectionString ?? Model_Application_Variables.ConnectionString,
                     "sys_last_10_transactions_AddQuickButton",
@@ -353,40 +353,40 @@ namespace MTM_WIP_Application_Winforms.Data
 
                 if (!result.IsSuccess)
                 {
-                    LoggingUtility.Log($"[Dao_QuickButtons] ╔════════════════════════════════════════════════════╗");
-                    LoggingUtility.Log($"[Dao_QuickButtons] ║ STEP 2: ADD FAILED");
-                    LoggingUtility.Log($"[Dao_QuickButtons] ║ Error: {result.StatusMessage}");
-                    LoggingUtility.Log($"[Dao_QuickButtons] ╚════════════════════════════════════════════════════╝");
+
+
+
+
                     return Model_Dao_Result.Failure($"Failed to add quick button: {result.StatusMessage}", result.Exception);
                 }
 
-                LoggingUtility.Log($"[Dao_QuickButtons] STEP 2: Add succeeded - button inserted at position 1");
-                
-                LoggingUtility.Log($"[Dao_QuickButtons] ╔════════════════════════════════════════════════════╗");
-                LoggingUtility.Log($"[Dao_QuickButtons] ║ SUCCESS: New button added at position 1");
-                LoggingUtility.Log($"[Dao_QuickButtons] ║ {partId} + Op:{operation} (Qty: {quantity})");
-                LoggingUtility.Log($"[Dao_QuickButtons] ║ NOTE: Cleanup skipped - will run on next load");
-                LoggingUtility.Log($"[Dao_QuickButtons] ╚════════════════════════════════════════════════════╝");
-                LoggingUtility.Log($"[Dao_QuickButtons] AddOrShiftQuickButtonAsync COMPLETED (new button added)");
-                LoggingUtility.Log($"[Dao_QuickButtons] ═══════════════════════════════════════════════════════");
-                
+
+
+
+
+
+
+
+
+
+
                 return Model_Dao_Result.Success();
             }
             catch (MySqlException ex)
             {
-                LoggingUtility.Log($"[Dao_QuickButtons] ╔════════════════════════════════════════════════════╗");
-                LoggingUtility.Log($"[Dao_QuickButtons] ║ DATABASE ERROR");
-                LoggingUtility.Log($"[Dao_QuickButtons] ║ {ex.Message}");
-                LoggingUtility.Log($"[Dao_QuickButtons] ╚════════════════════════════════════════════════════╝");
+
+
+
+
                 LoggingUtility.LogDatabaseError(ex);
                 return Model_Dao_Result.Failure($"Database error adding/shifting quick button: {ex.Message}", ex);
             }
             catch (Exception ex)
             {
-                LoggingUtility.Log($"[Dao_QuickButtons] ╔════════════════════════════════════════════════════╗");
-                LoggingUtility.Log($"[Dao_QuickButtons] ║ UNEXPECTED ERROR");
-                LoggingUtility.Log($"[Dao_QuickButtons] ║ {ex.Message}");
-                LoggingUtility.Log($"[Dao_QuickButtons] ╚════════════════════════════════════════════════════╝");
+
+
+
+
                 LoggingUtility.LogApplicationError(ex);
                 return Model_Dao_Result.Failure($"Unexpected error adding/shifting quick button: {ex.Message}", ex);
             }
@@ -420,11 +420,11 @@ namespace MTM_WIP_Application_Winforms.Data
 
                 if (!result.IsSuccess)
                 {
-                    LoggingUtility.Log($"[Dao_QuickButtons] RemoveAndShiftQuickButtonAsync failed: {result.StatusMessage}");
+
                     return Model_Dao_Result.Failure($"Failed to remove/shift quick button: {result.StatusMessage}", result.Exception);
                 }
 
-                LoggingUtility.Log($"[Dao_QuickButtons] RemoveAndShiftQuickButtonAsync succeeded: Removed position {position} for user {user}");
+
                 return Model_Dao_Result.Success();
             }
             catch (MySqlException ex)
@@ -471,11 +471,11 @@ namespace MTM_WIP_Application_Winforms.Data
 
                 if (!result.IsSuccess)
                 {
-                    LoggingUtility.Log($"[Dao_QuickButtons] AddQuickButtonAtPositionAsync failed: {result.StatusMessage}");
+
                     return Model_Dao_Result.Failure($"Failed to add quick button at position: {result.StatusMessage}", result.Exception);
                 }
 
-                LoggingUtility.Log($"[Dao_QuickButtons] AddQuickButtonAtPositionAsync succeeded: Added {partId}+Op:{operation} at position {position} for user {user}");
+
                 return Model_Dao_Result.Success();
             }
             catch (MySqlException ex)
@@ -501,11 +501,11 @@ namespace MTM_WIP_Application_Winforms.Data
             MySqlTransaction? transaction = null)
         {
             List<(string PartId, string Operation, int Quantity)>? cleanButtonsArray = null;
-            
+
             try
             {
                 // STEP 1: Pull current button data from database to array
-                LoggingUtility.Log($"[Dao_QuickButtons] STEP 1: Pulling current button data for user {user}");
+
                 var buttonsResult = await Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync(
                     connectionString ?? Model_Application_Variables.ConnectionString,
                     "sys_last_10_transactions_Get_ByUser",
@@ -517,12 +517,12 @@ namespace MTM_WIP_Application_Winforms.Data
 
                 if (!buttonsResult.IsSuccess || buttonsResult.Data == null || buttonsResult.Data.Rows.Count == 0)
                 {
-                    LoggingUtility.Log($"[Dao_QuickButtons] No buttons found for user {user} - cleanup complete");
+
                     return Model_Dao_Result.Success("No buttons to clean");
                 }
 
                 // STEP 2: Remove duplicates from array and restructure/reorder
-                LoggingUtility.Log($"[Dao_QuickButtons] STEP 2: Removing duplicates and restructuring array");
+
                 cleanButtonsArray = new List<(string PartId, string Operation, int Quantity)>();
                 var seenCombinations = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
                 int duplicatesRemoved = 0;
@@ -539,20 +539,20 @@ namespace MTM_WIP_Application_Winforms.Data
                     {
                         // Not a duplicate - add to clean array
                         cleanButtonsArray.Add((partId, operation, quantity));
-                        LoggingUtility.Log($"[Dao_QuickButtons] Added to array: {partId} + {operation} (Qty: {quantity})");
+
                     }
                     else
                     {
                         // Duplicate found - skip it
                         duplicatesRemoved++;
-                        LoggingUtility.Log($"[Dao_QuickButtons] Skipping duplicate: {partId} + {operation}");
+
                     }
                 }
 
-                LoggingUtility.Log($"[Dao_QuickButtons] Array restructured: {cleanButtonsArray.Count} unique buttons, {duplicatesRemoved} duplicates removed");
+
 
                 // STEP 3: Delete ALL buttons for this user at once (avoid position shifting issues)
-                LoggingUtility.Log($"[Dao_QuickButtons] STEP 3: Deleting ALL buttons from database");
+
                 await Helper_Database_StoredProcedure.ExecuteNonQueryWithStatusAsync(
                     connectionString ?? Model_Application_Variables.ConnectionString,
                     "sys_last_10_transactions_DeleteAll_ByUser",
@@ -561,16 +561,16 @@ namespace MTM_WIP_Application_Winforms.Data
                     connection: connection,
                     transaction: transaction
                 );
-                LoggingUtility.Log($"[Dao_QuickButtons] All buttons deleted from database");
+
 
                 // STEP 4: Use array data to create new buttons in database (consecutive positions 1,2,3...)
-                LoggingUtility.Log($"[Dao_QuickButtons] STEP 4: Creating new buttons from array data");
+
                 int newPosition = 1;
                 foreach (var button in cleanButtonsArray)
                 {
-                    if (newPosition > 10) 
+                    if (newPosition > 10)
                     {
-                        LoggingUtility.Log($"[Dao_QuickButtons] Max 10 buttons limit reached - stopping");
+
                         break;
                     }
 
@@ -592,21 +592,21 @@ namespace MTM_WIP_Application_Winforms.Data
 
                     if (!insertResult.IsSuccess)
                     {
-                        LoggingUtility.Log($"[Dao_QuickButtons] Failed to insert button at position {newPosition}: {insertResult.StatusMessage}");
+
                     }
                     else
                     {
-                        LoggingUtility.Log($"[Dao_QuickButtons] Created button at position {newPosition}: {button.PartId} + {button.Operation} (Qty: {button.Quantity})");
+
                     }
 
                     newPosition++;
                 }
 
-                LoggingUtility.Log($"[Dao_QuickButtons] Created {newPosition - 1} buttons in database");
+
 
                 // STEP 5: Dispose array (will happen in finally block)
                 string summary = $"Cleanup complete: {duplicatesRemoved} duplicates removed, {cleanButtonsArray.Count} buttons remain";
-                LoggingUtility.Log($"[Dao_QuickButtons] {summary}");
+
                 return Model_Dao_Result.Success(summary);
             }
             catch (MySqlException ex)
@@ -626,7 +626,7 @@ namespace MTM_WIP_Application_Winforms.Data
                 {
                     cleanButtonsArray.Clear();
                     cleanButtonsArray = null;
-                    LoggingUtility.Log($"[Dao_QuickButtons] STEP 5: Array disposed");
+
                 }
             }
         }

@@ -36,7 +36,7 @@ namespace MTM_WIP_Application_Winforms
             // Build the service provider
             ServiceProvider = services.BuildServiceProvider();
 
-            LoggingUtility.Log("[Startup] Dependency injection container configured successfully");
+
         }
 
         #endregion
@@ -163,7 +163,7 @@ namespace MTM_WIP_Application_Winforms
                     if (!string.IsNullOrWhiteSpace(argUsername))
                     {
                         Model_Application_Variables.User = argUsername;
-                        LoggingUtility.Log($"[Startup] Using command-line username: {Model_Application_Variables.User}");
+
                     }
                     else
                     {
@@ -231,17 +231,17 @@ namespace MTM_WIP_Application_Winforms
                         /// <remarks>
                         /// Supported argument formats:
                         /// - Username: -user=username or /user=username
-                        /// - Password: -password=password or /password=password  
+                        /// - Password: -password=password or /password=password
                         /// - Database: -db=prod, -db=test, /db=prod, or /db=test
                         ///   - 'prod' maps to 'mtm_wip_application_winforms'
                         ///   - 'test' maps to 'mtm_wip_application_winforms_test'
                         ///   - Or provide full database name directly
-                        /// 
+                        ///
                         /// Example usage:
                         ///   MTM_WIP_Application_Winforms.exe -user=JohnDoe -password=SecurePass123 -db=test
                         ///   MTM_WIP_Application_Winforms.exe /user=JaneSmith /db=prod
                         /// </remarks>
-  
+
                     // DEBUG: Output exactly what's in the status message
                     Console.WriteLine($"[DEBUG] connectivityResult.StatusMessage: '{connectivityResult.StatusMessage}'");
                     Console.WriteLine($"[DEBUG] connectivityResult.ErrorMessage: '{connectivityResult.ErrorMessage}'");
@@ -544,7 +544,7 @@ namespace MTM_WIP_Application_Winforms
 
         private static void ParseCommandLineArguments(string[] args, out string? username, out string? password, out string? database)
         {
-            
+
             username = null;
             password = null;
             database = null;
@@ -576,7 +576,7 @@ namespace MTM_WIP_Application_Winforms
                 else if (normalizedArg.StartsWith("db="))
                 {
                     string dbArg = arg.Substring(arg.IndexOf('=') + 1).ToLowerInvariant();
-    
+
                     // Map 'prod' and 'test' to full database names
                     database = dbArg switch
                     {
@@ -611,12 +611,12 @@ namespace MTM_WIP_Application_Winforms
         /// <remarks>
         /// Supported argument formats:
         /// - Username: -user=username or /user=username
-        /// - Password: -password=password or /password=password  
+        /// - Password: -password=password or /password=password
         /// - Database: -db=prod, -db=test, /db=prod, or /db=test
         ///   - 'prod' maps to 'mtm_wip_application_winforms'
         ///   - 'test' maps to 'mtm_wip_application_winforms_test'
         ///   - Or provide full database name directly
-        /// 
+        ///
         /// Example usage:
         ///   MTM_WIP_Application_Winforms.exe -user=JohnDoe -password=SecurePass123 -db=test
         ///   MTM_WIP_Application_Winforms.exe /user=JaneSmith /db=prod

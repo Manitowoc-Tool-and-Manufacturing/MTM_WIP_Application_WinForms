@@ -562,7 +562,7 @@ namespace MTM_WIP_Application_Winforms.Forms.ErrorDialog
                 
                 if (string.IsNullOrWhiteSpace(currentUsername) || currentUsername == "Default User")
                 {
-                    LoggingUtility.Log("[EnhancedErrorDialog] Cannot open log viewer: No valid user logged in");
+                    
                     MessageBox.Show("Unable to determine current user. Please log in and try again.",
                         "View Logs", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     return;
@@ -572,7 +572,7 @@ namespace MTM_WIP_Application_Winforms.Forms.ErrorDialog
                 var logViewerForm = new ViewLogs.ViewApplicationLogsForm(currentUsername);
                 logViewerForm.Show();
                 
-                LoggingUtility.Log($"[EnhancedErrorDialog] Opened log viewer for user: {currentUsername}");
+                
             }
             catch (Exception ex)
             {

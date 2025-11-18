@@ -170,7 +170,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             {
                 if (Services.Service_Timer_VersionChecker.MainFormInstance == null)
                 {
-                    LoggingUtility.Log("MainForm instance is null, cannot return to normal Remove tab.");
+
                     return;
                 }
 
@@ -287,7 +287,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             {
                 if (sender is RadioButton rdo && rdo.Checked)
                 {
-                    LoggingUtility.Log($"[{nameof(Control_AdvancedRemove)}] Quick filter changed: {rdo.Text}");
+
                     ApplyQuickFilter();
                 }
             }
@@ -316,7 +316,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                     Control_AdvancedRemove_DateTimePicker_To.Value = now.Date.AddDays(1).AddSeconds(-1);
                     Control_AdvancedRemove_DateTimePicker_From.Enabled = false;
                     Control_AdvancedRemove_DateTimePicker_To.Enabled = false;
-                    LoggingUtility.Log($"[{nameof(Control_AdvancedRemove)}] Quick filter applied: Today");
+
                 }
                 else if (Control_AdvancedRemove_RadioButton_Week.Checked)
                 {
@@ -329,7 +329,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                     Control_AdvancedRemove_DateTimePicker_To.Value = sunday.AddDays(1).AddSeconds(-1);
                     Control_AdvancedRemove_DateTimePicker_From.Enabled = false;
                     Control_AdvancedRemove_DateTimePicker_To.Enabled = false;
-                    LoggingUtility.Log($"[{nameof(Control_AdvancedRemove)}] Quick filter applied: Week");
+
                 }
                 else if (Control_AdvancedRemove_RadioButton_Month.Checked)
                 {
@@ -341,7 +341,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                     Control_AdvancedRemove_DateTimePicker_To.Value = lastDay.AddDays(1).AddSeconds(-1);
                     Control_AdvancedRemove_DateTimePicker_From.Enabled = false;
                     Control_AdvancedRemove_DateTimePicker_To.Enabled = false;
-                    LoggingUtility.Log($"[{nameof(Control_AdvancedRemove)}] Quick filter applied: Month");
+
                 }
                 else if (Control_AdvancedRemove_RadioButton_Everything.Checked)
                 {
@@ -350,14 +350,14 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                     Control_AdvancedRemove_DateTimePicker_To.Value = now.AddYears(1);
                     Control_AdvancedRemove_DateTimePicker_From.Enabled = false;
                     Control_AdvancedRemove_DateTimePicker_To.Enabled = false;
-                    LoggingUtility.Log($"[{nameof(Control_AdvancedRemove)}] Quick filter applied: Everything (all dates)");
+
                 }
                 else if (Control_AdvancedRemove_RadioButton_Custom.Checked)
                 {
                     // Custom: user sets dates manually, enable date pickers
                     Control_AdvancedRemove_DateTimePicker_From.Enabled = true;
                     Control_AdvancedRemove_DateTimePicker_To.Enabled = true;
-                    LoggingUtility.Log($"[{nameof(Control_AdvancedRemove)}] Quick filter applied: Custom (user-defined dates)");
+
                 }
             }
             catch (Exception ex)
@@ -463,12 +463,12 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                         ? searchResult.ErrorMessage
                         : "Unknown error occurred during search";
                     Service_ErrorHandler.ShowWarning($"Search failed: {errorMsg}");
-                    LoggingUtility.Log($"[{nameof(Control_AdvancedRemove)}] Search failed: {errorMsg}");
+
                     return;
                 }
 
                 DataTable dt = searchResult.Data ?? new DataTable();
-                LoggingUtility.Log($"[{nameof(Control_AdvancedRemove)}] Search completed. IsSuccess: {searchResult.IsSuccess}, Rows: {dt.Rows.Count}");
+
 
                 Control_AdvancedRemove_DataGridView_Results.DataSource = dt;
                 Control_AdvancedRemove_DataGridView_Results.ClearSelection();
@@ -524,10 +524,10 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             {
                 DataGridView? dgv = Control_AdvancedRemove_DataGridView_Results;
                 int selectedCount = dgv.SelectedRows.Count;
-                LoggingUtility.Log($"[{nameof(Control_AdvancedRemove)}] Delete clicked. Selected rows: {selectedCount}");
+
                 if (selectedCount == 0)
                 {
-                    LoggingUtility.Log($"[{nameof(Control_AdvancedRemove)}] No rows selected for deletion.");
+
                     return;
                 }
 
@@ -586,13 +586,13 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
 
                 if (confirmResult != DialogResult.Yes)
                 {
-                    LoggingUtility.Log($"[{nameof(Control_AdvancedRemove)}] User cancelled deletion.");
+
                     _lastRemovedItems.Clear();
                     return;
                 }
 
                 var removeResult = await Dao_Inventory.RemoveInventoryItemsFromDataGridViewAsync(dgv);
-                LoggingUtility.Log($"[{nameof(Control_AdvancedRemove)}] Remove operation result: Success={removeResult.IsSuccess}, Message={removeResult.StatusMessage}");
+
 
                 if (removeResult.IsSuccess)
                 {
@@ -866,7 +866,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                 }
 
                 Service_ErrorHandler.ShowInformation("Undo successful. Removed items have been restored.");
-                LoggingUtility.Log($"[{nameof(Control_AdvancedRemove)}] Undo: Removed items restored.");
+
 
                 _lastRemovedItems.Clear();
                 Control[] undoBtn = Controls.Find("Control_AdvancedRemove_Button_Undo", true);
@@ -996,7 +996,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                 toolTip.SetToolTip(btn, _isInputPanelCollapsed ? "Show Search Panel" : "Hide Search Panel");
             }
 
-            LoggingUtility.Log($"[{nameof(Control_AdvancedRemove)}] Input panel {(_isInputPanelCollapsed ? "collapsed" : "expanded")}");
+
         }
 
         /// <summary>

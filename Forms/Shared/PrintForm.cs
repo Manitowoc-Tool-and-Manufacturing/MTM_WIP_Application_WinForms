@@ -105,13 +105,13 @@ public partial class PrintForm : ThemedForm
         _printJob = printJob;
         _printSettings = printSettings;
 
-        LoggingUtility.Log($"[PrintForm] Constructor: Incoming printJob.CurrentPage={printJob.CurrentPage}, TotalPages={printJob.TotalPages}");
+        
 
         InitializeComponent();
         // DPI scaling and layout now handled by ThemedForm.OnLoad
         ApplyThemeColors();
 
-        LoggingUtility.Log($"[PrintForm] Constructor: After InitializeComponent, Control.StartPage={PrintForm_PrintPreviewControl.StartPage}");
+        
 
         Shown += PrintForm_Shown;
         PrintForm_PrintPreviewControl.StartPageChanged += PrintForm_PrintPreviewControl_StartPageChanged;
@@ -119,7 +119,7 @@ public partial class PrintForm : ThemedForm
         LoadSettings();
         InitializeSections();
         
-        LoggingUtility.Log($"[PrintForm] Constructor complete: CurrentPage={_printJob.CurrentPage}, Control.StartPage={PrintForm_PrintPreviewControl.StartPage}");
+        
     }
 
     #endregion
@@ -165,7 +165,7 @@ public partial class PrintForm : ThemedForm
 
     private async Task GeneratePreviewAsync()
     {
-        LoggingUtility.Log($"[PrintForm] GeneratePreviewAsync ENTRY: CurrentPage={_printJob.CurrentPage}, TotalPages={_printJob.TotalPages}, PageRangeType={_printJob.PageRangeType}");
+        
 
         if (_isGeneratingPreview)
         {
@@ -186,14 +186,14 @@ public partial class PrintForm : ThemedForm
 
         // Reset to page 1 for initial preview generation
         _printJob.CurrentPage = 1;
-        LoggingUtility.Log($"[PrintForm] After reset: CurrentPage={_printJob.CurrentPage}");
+        
 
         Enum_PrintRangeType originalRange = _printJob.PageRangeType;
         int originalFromPage = _printJob.FromPage;
         int originalToPage = _printJob.ToPage;
         int originalCurrentPage = 1;
         
-        LoggingUtility.Log($"[PrintForm] Captured original values: Range={originalRange}, From={originalFromPage}, To={originalToPage}, Current={originalCurrentPage}");
+        
 
         PreviewPageInfo[] pageInfos = Array.Empty<PreviewPageInfo>();
         PrintDocument? previewDocument = null;
@@ -274,8 +274,8 @@ public partial class PrintForm : ThemedForm
             ? Math.Clamp(originalCurrentPage - 1, 0, _previewTotalPages - 1)
             : 0;
 
-        LoggingUtility.Log($"[PrintForm] Preview setup: TotalPages={_previewTotalPages}, TargetIndex={targetIndex}, OriginalCurrentPage={originalCurrentPage}");
-        LoggingUtility.Log($"[PrintForm] Before setting Document: Control.StartPage={PrintForm_PrintPreviewControl.StartPage}");
+        
+        
 
         // Clear document first to reset internal state
         PrintForm_PrintPreviewControl.Document = null;
@@ -287,7 +287,7 @@ public partial class PrintForm : ThemedForm
         // The control's internal rendering uses StartPage to determine scroll position
         PrintForm_PrintPreviewControl.StartPage = targetIndex;
         
-        LoggingUtility.Log($"[PrintForm] After setting Document and StartPage={targetIndex}: Control.StartPage={PrintForm_PrintPreviewControl.StartPage}");
+        
         
         // Force the control to re-render with the correct StartPage
         PrintForm_PrintPreviewControl.InvalidatePreview();
@@ -296,7 +296,7 @@ public partial class PrintForm : ThemedForm
 
         _printJob.CurrentPage = _previewTotalPages > 0 ? targetIndex + 1 : 1;
         
-        LoggingUtility.Log($"[PrintForm] Final CurrentPage set to: {_printJob.CurrentPage}, StartPage={PrintForm_PrintPreviewControl.StartPage}");
+        
 
         ApplyZoomSelection();
         UpdatePreviewNavigationState();
@@ -328,9 +328,9 @@ public partial class PrintForm : ThemedForm
         PrintForm_PrintPreviewControl.AutoZoom = true;
         PrintForm_PrintPreviewControl.Zoom = 1.0;
         
-        LoggingUtility.Log($"[PrintForm] InitializePreviewSection: Before reset StartPage={PrintForm_PrintPreviewControl.StartPage}");
+        
         PrintForm_PrintPreviewControl.StartPage = 0;
-        LoggingUtility.Log($"[PrintForm] InitializePreviewSection: After reset StartPage={PrintForm_PrintPreviewControl.StartPage}");
+        
         
         UpdatePreviewNavigationState();
     }
@@ -355,7 +355,7 @@ public partial class PrintForm : ThemedForm
             int currentIndex = Math.Clamp(PrintForm_PrintPreviewControl.StartPage, 0, Math.Max(0, _previewTotalPages - 1));
             int displayPage = _previewTotalPages > 0 ? currentIndex + 1 : 0;
             
-            LoggingUtility.Log($"[PrintForm] UpdatePreviewNavigationState: StartPage={PrintForm_PrintPreviewControl.StartPage}, CurrentIndex={currentIndex}, DisplayPage={displayPage}, TotalPages={_previewTotalPages}");
+            
             
             PrintForm_Label_PageCounter.Text = $"Page {displayPage} / {_previewTotalPages}";
 
@@ -370,7 +370,7 @@ public partial class PrintForm : ThemedForm
 
             _printJob.CurrentPage = hasPages ? currentIndex + 1 : 1;
             
-            LoggingUtility.Log($"[PrintForm] UpdatePreviewNavigationState: Set CurrentPage to {_printJob.CurrentPage}");
+            
 
             if (_printJob.PageRangeType == Enum_PrintRangeType.AllPages)
             {
@@ -691,7 +691,7 @@ public partial class PrintForm : ThemedForm
 
     private void PrintForm_PrintPreviewControl_StartPageChanged(object? sender, EventArgs e)
     {
-        LoggingUtility.Log($"[PrintForm] StartPageChanged EVENT: StartPage={PrintForm_PrintPreviewControl.StartPage}");
+        
         
         UpdatePreviewNavigationState();
 

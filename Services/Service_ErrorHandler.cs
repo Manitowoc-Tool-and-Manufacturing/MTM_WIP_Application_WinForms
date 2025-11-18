@@ -126,7 +126,7 @@ internal static class Service_ErrorHandler
     {
         try
         {
-            LoggingUtility.Log($"Validation error in {callerName}: {message}");
+
 
             var validationEx = new ArgumentException($"Validation failed for {field}: {message}");
             var contextData = new Dictionary<string, object>
@@ -231,7 +231,7 @@ internal static class Service_ErrorHandler
     {
         try
         {
-            LoggingUtility.Log($"Confirmation dialog shown: {title} - {message}");
+
             return MessageBox.Show(message, title, buttons, icon);
         }
         catch (Exception ex)
@@ -250,7 +250,7 @@ internal static class Service_ErrorHandler
     {
         try
         {
-            LoggingUtility.Log($"Warning dialog shown: {title} - {message}");
+
             return MessageBox.Show(message, title, buttons, icon);
         }
         catch (Exception ex)
@@ -275,7 +275,7 @@ internal static class Service_ErrorHandler
             {
                 logMessage += $" (Control: {controlName})";
             }
-            LoggingUtility.Log(logMessage);
+
             return MessageBox.Show(message, title, buttons, icon);
         }
         catch (Exception ex)
@@ -294,7 +294,7 @@ internal static class Service_ErrorHandler
         {
             _lastErrorTimestamp.Clear();
             _errorFrequency.Clear();
-            LoggingUtility.Log("[ErrorCooldown] Cooldown state cleared");
+
         }
     }
 
@@ -334,7 +334,7 @@ internal static class Service_ErrorHandler
             {
                 contextLog += $", Context: {string.Join(", ", contextData.Select(kvp => $"{kvp.Key}={kvp.Value}"))}";
             }
-            LoggingUtility.Log(contextLog);
+
         }
         catch (Exception logEx)
         {
@@ -401,7 +401,7 @@ internal static class Service_ErrorHandler
                 // Log that we're suppressing the UI display but still logging to database
                 if (timeSinceLastError < ErrorCooldownPeriod)
                 {
-                    LoggingUtility.Log($"[ErrorCooldown] Suppressing duplicate UI error (shown {timeSinceLastError.TotalSeconds:F1}s ago): {errorKey}");
+
                     // Update timestamp for next occurrence
                     _lastErrorTimestamp[errorKey] = now;
                     return true; // Suppress UI display
@@ -413,7 +413,7 @@ internal static class Service_ErrorHandler
                 // Suppress if we've seen this error more than 10 times in this session (spam protection)
                 if (_errorFrequency[errorKey] > 10)
                 {
-                    LoggingUtility.Log($"[ErrorCooldown] Suppressing high-frequency error (occurrence #{_errorFrequency[errorKey]}): {errorKey}");
+
                     return true;
                 }
 
@@ -431,7 +431,7 @@ internal static class Service_ErrorHandler
     {
         try
         {
-            LoggingUtility.Log($"Fatal error occurred in {callerName} ({controlName}). Application will terminate.");
+
 
             // Give user a chance to save work or see what happened
             var message = $"A fatal error has occurred and the application must close.\n\n" +

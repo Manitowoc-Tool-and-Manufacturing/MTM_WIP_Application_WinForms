@@ -95,7 +95,7 @@ public partial class ViewApplicationLogsForm : ThemedForm
         };
         _autoRefreshTimer.Tick += AutoRefreshTimer_Tick;
 
-        LoggingUtility.Log("[ViewApplicationLogsForm] Auto-refresh timer initialized with 5s interval");
+        
     }
 
     /// <summary>
@@ -172,7 +172,7 @@ public partial class ViewApplicationLogsForm : ThemedForm
         panelPromptFilters.Parent = panelEntryDisplay;
         panelPromptFilters.BringToFront();
 
-        LoggingUtility.Log("[ViewApplicationLogsForm] Prompt status filter controls initialized");
+        
     }
 
     /// <summary>
@@ -229,11 +229,11 @@ public partial class ViewApplicationLogsForm : ThemedForm
 
             await LoadLogFilesAsync(_selectedUsername);
 
-            LoggingUtility.Log("[ViewApplicationLogsForm] Auto-refresh completed");
+            
         }
         catch (Exception ex)
         {
-            LoggingUtility.Log("[ViewApplicationLogsForm] Auto-refresh failed");
+            
             LoggingUtility.LogApplicationError(ex);
         }
         finally
@@ -276,7 +276,7 @@ public partial class ViewApplicationLogsForm : ThemedForm
         }
         catch (Exception ex)
         {
-            LoggingUtility.Log($"[ViewApplicationLogsForm] Error during form load");
+            
             LoggingUtility.LogApplicationError(ex);
             Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Medium, controlName: nameof(ViewApplicationLogsForm));
         }
@@ -301,7 +301,7 @@ public partial class ViewApplicationLogsForm : ThemedForm
 
             if (baseLogDirs.Length == 0 || !baseLogDirs.Any(Directory.Exists))
             {
-                LoggingUtility.Log($"[ViewApplicationLogsForm] No log directories found");
+                
                 Service_ErrorHandler.ShowInformation(
                     "No log directory found. Logs will be created when the application generates its first log entry.",
                     "No Logs Available");
@@ -328,11 +328,11 @@ public partial class ViewApplicationLogsForm : ThemedForm
                                 allUsers.Add(user!);
                             }
 
-                            LoggingUtility.Log($"[ViewApplicationLogsForm] Found {users.Count()} users in {baseLogDir}");
+                            
                         }
                         catch (Exception ex)
                         {
-                            LoggingUtility.Log($"[ViewApplicationLogsForm] Error enumerating {baseLogDir}: {ex.Message}");
+                            
                         }
                     }
                 }
@@ -351,10 +351,10 @@ public partial class ViewApplicationLogsForm : ThemedForm
             // T048: Performance logging - SC-001: Load user list <500ms
             if (stopwatch.ElapsedMilliseconds > 500)
             {
-                LoggingUtility.Log($"[Performance] LoadUserListAsync took {stopwatch.ElapsedMilliseconds}ms for {userDirectories.Count} users (target <500ms)");
+                
             }
 
-            LoggingUtility.Log($"[ViewApplicationLogsForm] Loaded {userDirectories.Count} users with log directories in {stopwatch.ElapsedMilliseconds}ms from {baseLogDirs.Length} locations");
+            
 
             if (cmbUsers.Items.Count > 0)
             {
@@ -371,7 +371,7 @@ public partial class ViewApplicationLogsForm : ThemedForm
                         cmbUsers.SelectedIndex = index;
                         cmbUsers.SelectedIndexChanged += cmbUsers_SelectedIndexChanged;
 
-                        LoggingUtility.Log($"[ViewApplicationLogsForm] Restored user selection: {previouslySelectedUser}");
+                        
                     }
                 }
             }
@@ -382,7 +382,7 @@ public partial class ViewApplicationLogsForm : ThemedForm
         }
         catch (UnauthorizedAccessException ex)
         {
-            LoggingUtility.Log($"[ViewApplicationLogsForm] Access denied loading user list");
+            
             LoggingUtility.LogApplicationError(ex);
             Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Medium,
                 contextData: new Dictionary<string, object> { ["Operation"] = "LoadUserList" },
@@ -390,7 +390,7 @@ public partial class ViewApplicationLogsForm : ThemedForm
         }
         catch (Exception ex)
         {
-            LoggingUtility.Log($"[ViewApplicationLogsForm] Error loading user list");
+            
             LoggingUtility.LogApplicationError(ex);
             Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Medium, controlName: nameof(ViewApplicationLogsForm));
         }
@@ -436,7 +436,7 @@ public partial class ViewApplicationLogsForm : ThemedForm
         {
             // Pause auto-refresh when minimized
             _autoRefreshTimer.Stop();
-            LoggingUtility.Log("[ViewApplicationLogsForm] Auto-refresh paused (form minimized)");
+            
         }
         else if (WindowState == FormWindowState.Normal || WindowState == FormWindowState.Maximized)
         {
@@ -444,7 +444,7 @@ public partial class ViewApplicationLogsForm : ThemedForm
             if (chkAutoRefresh.Checked && !string.IsNullOrWhiteSpace(_selectedUsername))
             {
                 _autoRefreshTimer.Start();
-                LoggingUtility.Log("[ViewApplicationLogsForm] Auto-refresh resumed (form restored)");
+                
             }
         }
     }
@@ -461,7 +461,7 @@ public partial class ViewApplicationLogsForm : ThemedForm
     {
         if (string.IsNullOrWhiteSpace(filePath))
         {
-            LoggingUtility.Log($"[ViewApplicationLogsForm] LoadLogFileAsync called with empty filePath");
+            
             return;
         }
 
@@ -477,7 +477,7 @@ public partial class ViewApplicationLogsForm : ThemedForm
 
             // Determine log format from selected file
             LogFormat logFormat = _selectedLogFile?.LogType ?? LogFormat.Normal;
-            LoggingUtility.Log($"[ViewApplicationLogsForm] LoadLogFileAsync: Using LogFormat={logFormat} for parsing");
+            
 
             // Load first 1000 entries (windowed loading per FR-044)
             var rawEntries = await Service_LogFileReader.LoadEntriesAsync(filePath, 0, 1000).ConfigureAwait(true);
@@ -506,14 +506,14 @@ public partial class ViewApplicationLogsForm : ThemedForm
             // T048: Performance logging - SC-003: Load and parse <2s for 1000 entries
             if (stopwatch.ElapsedMilliseconds > 2000)
             {
-                LoggingUtility.Log($"[Performance] LoadLogFileAsync took {stopwatch.ElapsedMilliseconds}ms for {_currentEntries.Count} entries (target <2000ms)");
+                
             }
 
-            LoggingUtility.Log($"[ViewApplicationLogsForm] Loaded {_currentEntries.Count} entries from: {filePath} in {stopwatch.ElapsedMilliseconds}ms");
+            
         }
         catch (UnauthorizedAccessException ex)
         {
-            LoggingUtility.Log($"[ViewApplicationLogsForm] Access denied loading file: {filePath}");
+            
             LoggingUtility.LogApplicationError(ex);
             lblStatus.Text = "Access denied";
             Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Medium,
@@ -522,7 +522,7 @@ public partial class ViewApplicationLogsForm : ThemedForm
         }
         catch (Exception ex)
         {
-            LoggingUtility.Log($"[ViewApplicationLogsForm] Error loading file: {filePath}");
+            
             LoggingUtility.LogApplicationError(ex);
             lblStatus.Text = "Error loading file";
             Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Medium, controlName: nameof(ViewApplicationLogsForm));
@@ -538,7 +538,7 @@ public partial class ViewApplicationLogsForm : ThemedForm
     {
         if (string.IsNullOrWhiteSpace(username))
         {
-            LoggingUtility.Log($"[ViewApplicationLogsForm] LoadLogFilesAsync called with empty username");
+            
             return;
         }
 
@@ -600,14 +600,14 @@ public partial class ViewApplicationLogsForm : ThemedForm
             // T048: Performance logging - SC-002: Enumerate files <1s
             if (stopwatch.ElapsedMilliseconds > 1000)
             {
-                LoggingUtility.Log($"[Performance] LoadLogFilesAsync took {stopwatch.ElapsedMilliseconds}ms for {_currentLogFiles.Count} files (target <1000ms)");
+                
             }
 
-            LoggingUtility.Log($"[ViewApplicationLogsForm] Loaded {_currentLogFiles.Count} log files for user: {username} in {stopwatch.ElapsedMilliseconds}ms");
+            
         }
         catch (UnauthorizedAccessException ex)
         {
-            LoggingUtility.Log($"[ViewApplicationLogsForm] Access denied loading log files for: {username}");
+            
             LoggingUtility.LogApplicationError(ex);
             lblStatus.Text = "Access denied";
             Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Medium,
@@ -616,7 +616,7 @@ public partial class ViewApplicationLogsForm : ThemedForm
         }
         catch (Exception ex)
         {
-            LoggingUtility.Log($"[ViewApplicationLogsForm] Error loading log files for: {username}");
+            
             LoggingUtility.LogApplicationError(ex);
             lblStatus.Text = "Error loading files";
             Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Medium, controlName: nameof(ViewApplicationLogsForm));
@@ -643,7 +643,7 @@ public partial class ViewApplicationLogsForm : ThemedForm
 
         if (_currentEntryIndex < 0 || _currentEntryIndex >= _currentEntries.Count)
         {
-            LoggingUtility.Log($"[ViewApplicationLogsForm] Invalid entry index: {_currentEntryIndex}");
+            
             ClearEntryDisplay("Invalid entry index");
             btnCreatePrompt.Enabled = false; // T062: Disable for invalid index
             return;
@@ -664,7 +664,7 @@ public partial class ViewApplicationLogsForm : ThemedForm
             txtRawView.Visible = true;
             txtRawView.Text = $"═══ Parse Failed - Showing Raw Text ═══\n\n{entry.RawText}";
             lblStatus.Text = "Parse failed - showing raw view";
-            LoggingUtility.Log($"[ViewApplicationLogsForm] Entry {_currentEntryIndex + 1} parse failed, showing raw view");
+            
             UpdateNavigationButtons();
             return;
         }
@@ -695,7 +695,7 @@ public partial class ViewApplicationLogsForm : ThemedForm
 
         UpdateNavigationButtons();
 
-        LoggingUtility.Log($"[ViewApplicationLogsForm] Showing entry {_currentEntryIndex + 1} of {_currentEntries.Count} in {(_isParsedView ? "parsed" : "raw")} view");
+        
     }
 
     /// <summary>
@@ -815,14 +815,14 @@ public partial class ViewApplicationLogsForm : ThemedForm
             if (WindowState != FormWindowState.Minimized)
             {
                 _autoRefreshTimer.Start();
-                LoggingUtility.Log("[ViewApplicationLogsForm] Auto-refresh enabled");
+                
             }
         }
         else
         {
             // Disable auto-refresh
             _autoRefreshTimer.Stop();
-            LoggingUtility.Log("[ViewApplicationLogsForm] Auto-refresh disabled");
+            
         }
     }
 
@@ -913,7 +913,7 @@ public partial class ViewApplicationLogsForm : ThemedForm
 
         // Update status
         lblStatus.Text = _isParsedView ? "Showing parsed view" : "Showing raw view";
-        LoggingUtility.Log($"[ViewApplicationLogsForm] View toggled to {(_isParsedView ? "parsed" : "raw")}");
+        
     }
 
     /// <summary>
@@ -955,11 +955,11 @@ public partial class ViewApplicationLogsForm : ThemedForm
                 // Performance logging (SC-006: 500 entries in <1s)
                 if (stopwatch.ElapsedMilliseconds > 1000 && _currentEntries.Count >= 500)
                 {
-                    LoggingUtility.Log($"[ViewApplicationLogsForm] WARNING: Export took {stopwatch.ElapsedMilliseconds}ms for {_currentEntries.Count} entries (target <1s)");
+                    
                 }
 
                 lblStatus.Text = $"Exported {_currentEntries.Count} entries to {Path.GetFileName(saveDialog.FileName)}";
-                LoggingUtility.Log($"[ViewApplicationLogsForm] Exported {_currentEntries.Count} entries in {stopwatch.ElapsedMilliseconds}ms");
+                
             }
         }
         catch (Exception ex)
@@ -1001,7 +1001,7 @@ public partial class ViewApplicationLogsForm : ThemedForm
             if (string.IsNullOrWhiteSpace(logDirectory) || !Directory.Exists(logDirectory))
             {
                 lblStatus.Text = $"Log directory not found: {logDirectory}";
-                LoggingUtility.Log($"[ViewApplicationLogsForm] Log directory not found for user {_selectedUsername}: {logDirectory}");
+                
                 return;
             }
 
@@ -1009,7 +1009,7 @@ public partial class ViewApplicationLogsForm : ThemedForm
             System.Diagnostics.Process.Start("explorer.exe", logDirectory);
 
             lblStatus.Text = $"Opened log directory for {_selectedUsername}";
-            LoggingUtility.Log($"[ViewApplicationLogsForm] Opened log directory: {logDirectory}");
+            
         }
         catch (Exception ex)
         {
@@ -1131,7 +1131,7 @@ public partial class ViewApplicationLogsForm : ThemedForm
                     // Open existing prompt in default markdown editor
                     try
                     {
-                        LoggingUtility.Log($"[ViewApplicationLogsForm] Attempting to open prompt file: {promptFilePath}");
+                        
 
                         // Verify file exists before opening
                         if (!File.Exists(promptFilePath))
@@ -1158,11 +1158,11 @@ public partial class ViewApplicationLogsForm : ThemedForm
                             System.Diagnostics.Process.Start(explorerInfo);
                             opened = true;
                             lblStatus.Text = $"Opened folder with prompt file: {methodName}";
-                            LoggingUtility.Log($"[ViewApplicationLogsForm] Opened explorer with file selected: {promptFilePath}");
+                            
                         }
                         catch (Exception explorerEx)
                         {
-                            LoggingUtility.Log($"[ViewApplicationLogsForm] Explorer approach failed: {explorerEx.Message}");
+                            
 
                             // Approach 2: Try direct file association
                             try
@@ -1180,12 +1180,12 @@ public partial class ViewApplicationLogsForm : ThemedForm
                                 if (opened)
                                 {
                                     lblStatus.Text = $"Opened existing prompt: {methodName}";
-                                    LoggingUtility.Log($"[ViewApplicationLogsForm] Opened prompt file directly: {promptFilePath}");
+                                    
                                 }
                             }
                             catch (Exception directEx)
                             {
-                                LoggingUtility.Log($"[ViewApplicationLogsForm] Direct file open failed: {directEx.Message}");
+                                
                             }
                         }
 
@@ -1216,7 +1216,7 @@ public partial class ViewApplicationLogsForm : ThemedForm
                     }
                     catch (Exception ex)
                     {
-                        LoggingUtility.Log($"[ViewApplicationLogsForm] Error opening prompt file: {promptFilePath}");
+                        
                         LoggingUtility.LogApplicationError(ex);
                         lblStatus.Text = "Error opening file";
 
@@ -1256,7 +1256,7 @@ public partial class ViewApplicationLogsForm : ThemedForm
                     $"Copilot prompt file has been created successfully:\n\nMethod: {methodName}\nLocation: {promptFilePath ?? "Prompt Fixes directory"}",
                     "Prompt Created");
 
-                LoggingUtility.Log($"[ViewApplicationLogsForm] Created prompt file for method: {methodName}");
+                
             }
             else
             {
@@ -1268,7 +1268,7 @@ public partial class ViewApplicationLogsForm : ThemedForm
         }
         catch (Exception ex)
         {
-            LoggingUtility.Log($"[ViewApplicationLogsForm] Error creating prompt");
+            
             LoggingUtility.LogApplicationError(ex);
             lblStatus.Text = "Error creating prompt";
             Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Medium,
@@ -1294,7 +1294,7 @@ public partial class ViewApplicationLogsForm : ThemedForm
             using var dialog = new PromptStatusManagerDialog();
             dialog.ShowDialog(this);
 
-            LoggingUtility.Log("[ViewApplicationLogsForm] Manage Prompt Status dialog closed");
+            
         }
         catch (Exception ex)
         {
@@ -1333,7 +1333,7 @@ public partial class ViewApplicationLogsForm : ThemedForm
             dialog.ShowDialog(this);
 
             lblStatus.Text = "Error analysis report dialog closed";
-            LoggingUtility.Log("[ViewApplicationLogsForm] Error Analysis Report dialog opened");
+            
         }
         catch (Exception ex)
         {
@@ -1387,7 +1387,7 @@ public partial class ViewApplicationLogsForm : ThemedForm
             });
 
             lblStatus.Text = $"Opened Prompt Fixes folder";
-            LoggingUtility.Log($"[ViewApplicationLogsForm] Opened Prompt Fixes directory: {promptDirectory}");
+            
         }
         catch (Exception ex)
         {
@@ -1434,7 +1434,7 @@ public partial class ViewApplicationLogsForm : ThemedForm
         try
         {
             lblStatus.Text = "Scanning for errors...";
-            LoggingUtility.Log("[ViewApplicationLogsForm] Starting batch prompt generation");
+            
 
             // Find all error entries (ERROR or CRITICAL)
             var errorEntries = _currentEntries.Where(entry =>
@@ -1478,7 +1478,7 @@ public partial class ViewApplicationLogsForm : ThemedForm
             }
 
             lblStatus.Text = $"Found {uniqueMethods.Count} unique errors, generating prompts...";
-            LoggingUtility.Log($"[ViewApplicationLogsForm] Found {uniqueMethods.Count} unique methods for batch generation");
+            
 
             int created = 0;
             int skipped = 0;
@@ -1500,7 +1500,7 @@ public partial class ViewApplicationLogsForm : ThemedForm
                     if (promptFilePath != null && File.Exists(promptFilePath))
                     {
                         skipped++;
-                        LoggingUtility.Log($"[ViewApplicationLogsForm] Skipped existing prompt: {methodName}");
+                        
 
                         // T067: Track skipped result
                         detailedResults.Add(new BatchPromptResult
@@ -1517,7 +1517,7 @@ public partial class ViewApplicationLogsForm : ThemedForm
                     if (string.IsNullOrWhiteSpace(promptContent))
                     {
                         failed++;
-                        LoggingUtility.Log($"[ViewApplicationLogsForm] Failed to generate prompt content: {methodName}");
+                        
 
                         // T067: Track failed result
                         detailedResults.Add(new BatchPromptResult
@@ -1534,7 +1534,7 @@ public partial class ViewApplicationLogsForm : ThemedForm
                     if (success)
                     {
                         created++;
-                        LoggingUtility.Log($"[ViewApplicationLogsForm] Created prompt: {methodName}");
+                        
 
                         // T067: Track created result
                         detailedResults.Add(new BatchPromptResult
@@ -1547,7 +1547,7 @@ public partial class ViewApplicationLogsForm : ThemedForm
                     else
                     {
                         failed++;
-                        LoggingUtility.Log($"[ViewApplicationLogsForm] Failed to write prompt file: {methodName}");
+                        
 
                         // T067: Track failed result
                         detailedResults.Add(new BatchPromptResult
@@ -1561,7 +1561,7 @@ public partial class ViewApplicationLogsForm : ThemedForm
                 catch (Exception ex)
                 {
                     failed++;
-                    LoggingUtility.Log($"[ViewApplicationLogsForm] Exception generating prompt for {methodName}: {ex.Message}");
+                    
                     LoggingUtility.LogApplicationError(ex);
 
                     // T067: Track exception result
@@ -1579,7 +1579,7 @@ public partial class ViewApplicationLogsForm : ThemedForm
             }
 
             lblStatus.Text = $"Batch generation complete: {created} created, {skipped} skipped, {failed} failed";
-            LoggingUtility.Log($"[ViewApplicationLogsForm] Batch generation complete - Created: {created}, Skipped: {skipped}, Failed: {failed}");
+            
 
             // T067: Show detailed batch report dialog
             using (var reportDialog = new BatchGenerationReportDialog(detailedResults, created, skipped, failed))
@@ -1615,7 +1615,7 @@ public partial class ViewApplicationLogsForm : ThemedForm
 
         if (string.IsNullOrWhiteSpace(username))
         {
-            LoggingUtility.Log($"[ViewApplicationLogsForm] Invalid username selected");
+            
             return;
         }
 
@@ -1623,7 +1623,7 @@ public partial class ViewApplicationLogsForm : ThemedForm
         string? userDirectory = Helper_LogPath.GetUserLogDirectory(username);
         if (userDirectory == null)
         {
-            LoggingUtility.Log($"[ViewApplicationLogsForm] Username validation failed: {username}");
+            
             Service_ErrorHandler.HandleValidationError("Invalid username selected.", nameof(cmbUsers));
             return;
         }
@@ -1635,7 +1635,7 @@ public partial class ViewApplicationLogsForm : ThemedForm
         if (chkAutoRefresh.Checked && _autoRefreshTimer != null && WindowState != FormWindowState.Minimized)
         {
             _autoRefreshTimer.Start();
-            LoggingUtility.Log("[ViewApplicationLogsForm] Auto-refresh timer started");
+            
         }
     }
 
@@ -1671,7 +1671,7 @@ public partial class ViewApplicationLogsForm : ThemedForm
         }
         catch (Exception ex)
         {
-            LoggingUtility.Log($"[ViewApplicationLogsForm] Unexpected error in file selection handler");
+            
             LoggingUtility.LogApplicationError(ex);
             Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Medium, controlName: nameof(ViewApplicationLogsForm));
         }
@@ -1784,7 +1784,7 @@ public partial class ViewApplicationLogsForm : ThemedForm
             _groupedEntries[groupKey].Add(i);
         }
 
-        LoggingUtility.Log($"[ViewApplicationLogsForm] Grouped {_currentEntries.Count} entries into {_groupKeys.Count} unique errors");
+        
     }
 
     /// <summary>
@@ -1916,7 +1916,7 @@ public partial class ViewApplicationLogsForm : ThemedForm
                     ShowCurrentEntry();
                 }
 
-                LoggingUtility.Log($"[ViewApplicationLogsForm] Restored selection: {fileName} at entry {entryIndex}");
+                
                 break;
             }
         }
@@ -2059,7 +2059,7 @@ public partial class ViewApplicationLogsForm : ThemedForm
         // - ApplicationError: No checkboxes (all errors same severity)
         // - Unknown: No checkboxes
 
-        LoggingUtility.Log($"[ViewApplicationLogsForm] Severity options updated for {logType}");
+        
     }
 
     /// <summary>
@@ -2090,7 +2090,7 @@ public partial class ViewApplicationLogsForm : ThemedForm
             .OrderBy(s => s)
             .ToList();
 
-        LoggingUtility.Log($"[ViewApplicationLogsForm] Found {uniqueSources.Count} unique source components");
+        
     }
 
     /// <summary>
@@ -2110,7 +2110,7 @@ public partial class ViewApplicationLogsForm : ThemedForm
         // 5. Update navigation buttons
         // 6. Log performance warning if >300ms
 
-        LoggingUtility.Log($"[ViewApplicationLogsForm] Filter applied: {_activeFilter?.HasActiveFilters ?? false}");
+        
     }
 
     /// <summary>
@@ -2134,7 +2134,7 @@ public partial class ViewApplicationLogsForm : ThemedForm
         // 4. Update lblStatus with "Filters cleared"
 
         _activeFilter = Model_LogFilter.CreateDefault();
-        LoggingUtility.Log("[ViewApplicationLogsForm] All filters cleared");
+        
     }
 
     /// <summary>
@@ -2154,7 +2154,7 @@ public partial class ViewApplicationLogsForm : ThemedForm
         // 3. Call ApplyCurrentFilter()
         // 4. Update lblStatus with "Showing errors only"
 
-        LoggingUtility.Log("[ViewApplicationLogsForm] Errors only filter applied");
+        
     }
 
     /// <summary>
@@ -2172,7 +2172,7 @@ public partial class ViewApplicationLogsForm : ThemedForm
         // 3. Call ApplyCurrentFilter()
         // 4. Update lblStatus with "Showing performance entries"
 
-        LoggingUtility.Log("[ViewApplicationLogsForm] Performance filter applied");
+        
     }
 
     /// <summary>
@@ -2192,7 +2192,7 @@ public partial class ViewApplicationLogsForm : ThemedForm
         // 3. Call ApplyCurrentFilter()
         // 4. Update lblStatus with "Showing today's entries"
 
-        LoggingUtility.Log("[ViewApplicationLogsForm] Today filter applied");
+        
     }
 
     /// <summary>
@@ -2210,7 +2210,7 @@ public partial class ViewApplicationLogsForm : ThemedForm
         // 2. Use Clone() method to create independent copy
         // 3. Restore filter when loading log of same type
 
-        LoggingUtility.Log($"[ViewApplicationLogsForm] Filter state persisted for {logType}");
+        
     }
 
     /// <summary>
@@ -2230,7 +2230,7 @@ public partial class ViewApplicationLogsForm : ThemedForm
         // 3. Update all UI controls to reflect restored filter
         // 4. Return true if restored, false otherwise
 
-        LoggingUtility.Log($"[ViewApplicationLogsForm] Attempted to restore filter state for {logType}");
+        
         return false;
     }
 
@@ -2277,12 +2277,12 @@ public partial class ViewApplicationLogsForm : ThemedForm
             {
                 Clipboard.SetText(textToCopy);
                 lblStatus.Text = "Entry copied to clipboard";
-                LoggingUtility.Log($"[ViewApplicationLogsForm] Entry {_currentEntryIndex + 1} copied to clipboard");
+                
             }
         }
         catch (Exception ex)
         {
-            LoggingUtility.Log($"[ViewApplicationLogsForm] Error copying to clipboard");
+            
             LoggingUtility.LogApplicationError(ex);
             Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Low,
                 contextData: new Dictionary<string, object> { ["Operation"] = "CopyEntry" },
@@ -2396,11 +2396,11 @@ public partial class ViewApplicationLogsForm : ThemedForm
                 "Error context has been copied to your clipboard.\n\nYou can now paste it into Copilot Chat for analysis.",
                 "Error Context Copied");
 
-            LoggingUtility.Log($"[ViewApplicationLogsForm] Error context copied for entry {_currentEntryIndex + 1}, method: {methodName}");
+            
         }
         catch (Exception ex)
         {
-            LoggingUtility.Log($"[ViewApplicationLogsForm] Error copying error context");
+            
             LoggingUtility.LogApplicationError(ex);
             lblStatus.Text = "Error copying context";
             Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Low,
@@ -2699,7 +2699,7 @@ public partial class ViewApplicationLogsForm : ThemedForm
             // Note: Service_LogFileReader is static, no disposal needed
             // Note: Helper_LogPath is static, no disposal needed
 
-            LoggingUtility.Log($"[ViewApplicationLogsForm] Form disposed, resources cleaned up");
+            
         }
 
         base.Dispose(disposing);

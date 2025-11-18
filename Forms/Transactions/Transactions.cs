@@ -32,7 +32,7 @@ internal partial class Transactions : ThemedForm
     {
         InitializeComponent();
 
-        LoggingUtility.Log("[Transactions] Form initializing...");
+        
         // DPI scaling and layout now handled by ThemedForm.OnLoad
         SetStyle(ControlStyles.OptimizedDoubleBuffer, true);
 
@@ -40,14 +40,14 @@ internal partial class Transactions : ThemedForm
         _isAdmin = Model_Application_Variables.UserTypeDeveloper || Model_Application_Variables.UserTypeAdmin;
         _viewModel = new Model_Transactions_ViewModel();
 
-        LoggingUtility.Log($"[Transactions] User: {_currentUser}, IsAdmin: {_isAdmin}");
+        
 
         Transactions_UserControl_Search.SetExportPrintButtonsEnabled(false);
         Transactions_UserControl_Search.SetInformationPanelCollapsed(!Transactions_UserControl_Grid.InformationPanelVisible);
 
         WireUpEvents();
         
-        LoggingUtility.Log("[Transactions] Starting async initialization...");
+        
         _ = InitializeAsync();
     }
 
@@ -77,7 +77,7 @@ internal partial class Transactions : ThemedForm
     {
         try
         {
-            LoggingUtility.Log("[Transactions] Loading dropdown data (parts, users, locations, operations)...");
+            
 
             var partsTask = _viewModel.LoadPartsAsync();
             var usersTask = _viewModel.LoadUsersAsync(_currentUser, _isAdmin);
@@ -113,7 +113,7 @@ internal partial class Transactions : ThemedForm
                     Transactions_UserControl_Search.LoadOperations(operationsTask.Result.Data ?? new List<string>());
                 }
 
-                LoggingUtility.Log("[Transactions] Dropdown data loaded into search control.");
+                
             });
         }
         catch (Exception ex)
@@ -132,14 +132,14 @@ internal partial class Transactions : ThemedForm
     private void Transactions_Load(object? sender, EventArgs e)
     {
         this.Text = $"Transaction Viewer - {_currentUser}" + (_isAdmin ? " (Admin)" : "");
-        LoggingUtility.Log($"[Transactions] Form loaded. Title: {this.Text}");
+        
     }
 
     private async void SearchControl_SearchRequested(object? sender, Model_Transactions_SearchCriteria criteria)
     {
         try
         {
-            LoggingUtility.Log($"[Transactions] Search requested with criteria: {criteria}");
+            
 
             // Clear previous results before new search
             Transactions_UserControl_Grid.ClearResults();
@@ -148,13 +148,13 @@ internal partial class Transactions : ThemedForm
             var result = await _viewModel.SearchTransactionsAsync(criteria, _currentUser, _isAdmin, page: 1)
                 .ConfigureAwait(false);
 
-            LoggingUtility.Log($"[Transactions] Search completed. Success: {result.IsSuccess}, HasData: {result.Data != null}");
+            
 
             this.Invoke(() =>
             {
                 if (result.IsSuccess && result.Data != null)
                 {
-                    LoggingUtility.Log($"[Transactions] Displaying {result.Data.Transactions.Count} transactions (Page {result.Data.CurrentPage} of {result.Data.TotalPages})");
+                    
                     _currentSearchResults = result.Data; // Store for analytics
                     Transactions_UserControl_Grid.DisplayResults(result.Data);
 
@@ -163,7 +163,7 @@ internal partial class Transactions : ThemedForm
                 }
                 else
                 {
-                    LoggingUtility.Log($"[Transactions] Search failed or returned no data. Error: {result.ErrorMessage}");
+                    
                     Service_ErrorHandler.HandleValidationError(result.ErrorMessage ?? "Search failed", "Search");
                     Transactions_UserControl_Search.SetExportPrintButtonsEnabled(false);
                 }
@@ -185,7 +185,7 @@ internal partial class Transactions : ThemedForm
 
     private void SearchControl_ResetRequested(object? sender, EventArgs e)
     {
-        LoggingUtility.Log("[Transactions] Reset requested, clearing grid results.");
+        
         Transactions_UserControl_Grid.ClearResults();
         Transactions_UserControl_Search.SetExportPrintButtonsEnabled(false);
     }
@@ -194,12 +194,12 @@ internal partial class Transactions : ThemedForm
     {
         try
         {
-            LoggingUtility.Log("[Transactions] Export requested.");
+            
 
             // Check if there are results to export
             if (_viewModel.CurrentResults == null || _viewModel.CurrentResults.Transactions == null || _viewModel.CurrentResults.Transactions.Count == 0)
             {
-                LoggingUtility.Log("[Transactions] Export aborted - no results to export.");
+                
                 Service_ErrorHandler.HandleValidationError("No transactions to export. Please perform a search first.", "Export");
                 return;
             }
@@ -225,7 +225,7 @@ internal partial class Transactions : ThemedForm
                 // Validate file path (security best practice)
                 if (string.IsNullOrWhiteSpace(filePath))
                 {
-                    LoggingUtility.Log("[Transactions] Export aborted - invalid file path.");
+                    
                     Service_ErrorHandler.HandleValidationError("Invalid file path selected.", "Export");
                     return;
                 }
@@ -234,12 +234,12 @@ internal partial class Transactions : ThemedForm
                 string? directory = Path.GetDirectoryName(filePath);
                 if (string.IsNullOrWhiteSpace(directory) || !Directory.Exists(directory))
                 {
-                    LoggingUtility.Log($"[Transactions] Export aborted - directory does not exist: {directory}");
+                    
                     Service_ErrorHandler.HandleValidationError("Selected directory does not exist.", "Export");
                     return;
                 }
 
-                LoggingUtility.Log($"[Transactions] Exporting {_viewModel.CurrentResults.Transactions.Count} transactions to: {filePath}");
+                
 
                 // Call ViewModel export method
                 var exportResult = await _viewModel.ExportToExcelAsync(filePath, null).ConfigureAwait(false);
@@ -248,19 +248,19 @@ internal partial class Transactions : ThemedForm
                 {
                     if (exportResult.IsSuccess)
                     {
-                        LoggingUtility.Log($"[Transactions] Export successful: {filePath}");
+                        
                         Service_ErrorHandler.ShowConfirmation($"Transactions exported successfully!\n\nFile: {Path.GetFileName(filePath)}\nLocation: {directory}", "Export Complete");
                     }
                     else
                     {
-                        LoggingUtility.Log($"[Transactions] Export failed: {exportResult.ErrorMessage}");
+                        
                         Service_ErrorHandler.HandleValidationError(exportResult.ErrorMessage ?? "Export failed", "Export");
                     }
                 });
             }
             else
             {
-                LoggingUtility.Log("[Transactions] Export cancelled by user.");
+                
             }
         }
         catch (Exception ex)
@@ -280,12 +280,12 @@ internal partial class Transactions : ThemedForm
     {
         try
         {
-            LoggingUtility.Log("[Transactions] Print requested.");
+            
 
             // Check if there are results to print
             if (_viewModel.CurrentResults == null || _viewModel.CurrentResults.Transactions == null || _viewModel.CurrentResults.Transactions.Count == 0)
             {
-                LoggingUtility.Log("[Transactions] Print aborted - no results to print.");
+                
                 Service_ErrorHandler.HandleValidationError("No transactions to print. Please perform a search first.", "Print");
                 return;
             }
@@ -296,7 +296,7 @@ internal partial class Transactions : ThemedForm
             {
                 if (t.IsCompletedSuccessfully)
                 {
-                    LoggingUtility.Log($"[Transactions] Print dialog closed with result: {t.Result}");
+                    
                 }
                 else if (t.IsFaulted)
                 {
@@ -323,11 +323,11 @@ internal partial class Transactions : ThemedForm
         {
             if (_viewModel.CurrentCriteria == null)
             {
-                LoggingUtility.Log("[Transactions] Page change requested but no current criteria available.");
+                
                 return;
             }
 
-            LoggingUtility.Log($"[Transactions] Page change requested to page {newPage}.");
+            
 
             var result = await _viewModel.SearchTransactionsAsync(_viewModel.CurrentCriteria, _currentUser, _isAdmin, page: newPage)
                 .ConfigureAwait(false);
@@ -336,7 +336,7 @@ internal partial class Transactions : ThemedForm
             {
                 if (result.IsSuccess && result.Data != null)
                 {
-                    LoggingUtility.Log($"[Transactions] Page {newPage} loaded with {result.Data.Transactions.Count} transactions.");
+                    
                     _currentSearchResults = result.Data; // Store for analytics
                     Transactions_UserControl_Grid.DisplayResults(result.Data);
 
@@ -345,7 +345,7 @@ internal partial class Transactions : ThemedForm
                 }
                 else
                 {
-                    LoggingUtility.Log($"[Transactions] Failed to load page {newPage}. Error: {result.ErrorMessage}");
+                    
                     Service_ErrorHandler.HandleValidationError(result.ErrorMessage ?? "Failed to load page", "Pagination");
                     Transactions_UserControl_Search.SetExportPrintButtonsEnabled(false);
                 }
@@ -364,7 +364,7 @@ internal partial class Transactions : ThemedForm
     {
         if (transaction != null)
         {
-            LoggingUtility.Log($"[Transactions] Row selected: Transaction #{transaction.ID} ({transaction.TransactionType})");
+            
             this.Text = $"Transaction Viewer - Selected: {transaction.TransactionType} #{transaction.ID}";
         }
     }
@@ -373,7 +373,7 @@ internal partial class Transactions : ThemedForm
     {
         try
         {
-            LoggingUtility.Log("[Transactions] Information panel toggle requested from search control.");
+            
             Transactions_UserControl_Grid.ToggleInformationPanel();
         }
         catch (Exception ex)
@@ -392,7 +392,7 @@ internal partial class Transactions : ThemedForm
     private void GridControl_ToggleSearchRequested(object? sender, EventArgs e)
     {
         Transactions_Panel_Search.Visible = !Transactions_Panel_Search.Visible;
-        LoggingUtility.Log($"[Transactions] Search panel toggled. Now visible: {Transactions_Panel_Search.Visible}");
+        
     }
 
     private async void GridControl_AnalyticsRequested(object? sender, EventArgs e)
@@ -402,11 +402,11 @@ internal partial class Transactions : ThemedForm
             // Check if analytics panel is now visible
             if (!Transactions_UserControl_Grid.AnalyticsControl.Visible)
             {
-                LoggingUtility.Log("[Transactions] Analytics panel hidden, no data load needed.");
+                
                 return;
             }
 
-            LoggingUtility.Log("[Transactions] Analytics panel shown, loading analytics data from database...");
+            
 
             // Use a wide date range to capture all transactions
             // TODO: Store search criteria to use actual date range from search filters
@@ -418,7 +418,7 @@ internal partial class Transactions : ThemedForm
 
             if (!analyticsResult.IsSuccess || analyticsResult.Data == null)
             {
-                LoggingUtility.Log($"[Transactions] Analytics load failed: {analyticsResult.ErrorMessage}");
+                
                 this.Invoke(() =>
                 {
                     Service_ErrorHandler.HandleValidationError(
@@ -468,7 +468,7 @@ internal partial class Transactions : ThemedForm
             
             if (dgv.SelectedRows.Count == 0)
             {
-                LoggingUtility.Log("[Transactions] Delete key pressed but no rows selected");
+                
                 return;
             }
 
@@ -486,7 +486,7 @@ internal partial class Transactions : ThemedForm
 
             if (selectedTransactions.Count == 0)
             {
-                LoggingUtility.Log("[Transactions] No valid transactions selected for deletion");
+                
                 return;
             }
 
@@ -515,12 +515,12 @@ internal partial class Transactions : ThemedForm
 
             if (confirmResult != DialogResult.Yes)
             {
-                LoggingUtility.Log($"[Transactions] User cancelled deletion of {selectedTransactions.Count} transaction(s)");
+                
                 return;
             }
 
             // Delete transactions
-            LoggingUtility.Log($"[Transactions] User confirmed deletion of {selectedTransactions.Count} transaction(s)");
+            
             
             int successCount = 0;
             int failureCount = 0;
@@ -535,14 +535,14 @@ internal partial class Transactions : ThemedForm
                 if (deleteResult.IsSuccess)
                 {
                     successCount++;
-                    LoggingUtility.Log($"[Transactions] Successfully deleted transaction ID {ID}");
+                    
                 }
                 else
                 {
                     failureCount++;
                     string errorMsg = $"ID {ID}: {deleteResult.ErrorMessage}";
                     errors.Add(errorMsg);
-                    LoggingUtility.Log($"[Transactions] Failed to delete transaction ID {ID}: {deleteResult.ErrorMessage}");
+                    
                 }
             }
 
@@ -577,7 +577,7 @@ internal partial class Transactions : ThemedForm
             // Refresh the grid if any deletions were successful
             if (successCount > 0 && _viewModel.CurrentCriteria != null)
             {
-                LoggingUtility.Log("[Transactions] Refreshing grid after deletion");
+                
                 
                 var refreshResult = await _viewModel.SearchTransactionsAsync(
                     _viewModel.CurrentCriteria,

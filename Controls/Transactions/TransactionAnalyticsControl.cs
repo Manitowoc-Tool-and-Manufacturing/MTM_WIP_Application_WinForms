@@ -41,11 +41,11 @@ namespace MTM_WIP_Application_Winforms.Controls.Transactions
         public Model_Transactions_Core_AnalyticsControl()
         {
 
-            LoggingUtility.Log("[Model_Transactions_Core_AnalyticsControl] Initializing...");
-            
+
+
             InitializeComponent();
 
-            LoggingUtility.Log("[Model_Transactions_Core_AnalyticsControl] Initialization complete.");
+
         }
 
         #endregion
@@ -65,7 +65,7 @@ namespace MTM_WIP_Application_Winforms.Controls.Transactions
 
             try
             {
-                LoggingUtility.Log($"[Model_Transactions_Core_AnalyticsControl] Displaying analytics: Total={_analytics.TotalTransactions}");
+
 
                 // Total count card
                 Model_Transactions_Core_AnalyticsControl_Label_TotalValue.Text = _analytics.TotalTransactions.ToString("N0");
@@ -200,7 +200,7 @@ namespace MTM_WIP_Application_Winforms.Controls.Transactions
                     Model_Transactions_Core_AnalyticsControl_Label_PeakHourCount.Text = "0 transactions";
                 }
 
-                LoggingUtility.Log("[Model_Transactions_Core_AnalyticsControl] Analytics displayed successfully.");
+
             }
             catch (Exception ex)
             {
@@ -217,7 +217,7 @@ namespace MTM_WIP_Application_Winforms.Controls.Transactions
         {
             try
             {
-                LoggingUtility.Log("[Model_Transactions_Core_AnalyticsControl] Clearing analytics.");
+
 
                 _analytics = null;
 
@@ -250,7 +250,7 @@ namespace MTM_WIP_Application_Winforms.Controls.Transactions
                 Model_Transactions_Core_AnalyticsControl_Label_PeakHourValue.Text = "—";
                 Model_Transactions_Core_AnalyticsControl_Label_PeakHourCount.Text = "0 transactions";
 
-                LoggingUtility.Log("[Model_Transactions_Core_AnalyticsControl] Analytics cleared.");
+
             }
             catch (Exception ex)
             {

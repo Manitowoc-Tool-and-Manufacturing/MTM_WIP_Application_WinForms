@@ -179,14 +179,14 @@ namespace MTM_WIP_Application_Winforms.Forms.Shared
             {
                 _selectedItem = suggestionListBox.SelectedItem.ToString();
                 
-                LoggingUtility.Log($"[SuggestionOverlay] AcceptSelection called: SelectedItem='{_selectedItem}'");
+                
                 
                 this.DialogResult = DialogResult.OK;
                 this.Close();
             }
             else
             {
-                LoggingUtility.Log($"[SuggestionOverlay] AcceptSelection called but SelectedItem is NULL");
+                
             }
         }
 
@@ -198,7 +198,7 @@ namespace MTM_WIP_Application_Winforms.Forms.Shared
         /// </summary>
         public void CancelSelection()
         {
-            LoggingUtility.Log($"[SuggestionOverlay] CancelSelection called");
+            
             
             _selectedItem = null;
             
@@ -206,7 +206,7 @@ namespace MTM_WIP_Application_Winforms.Forms.Shared
             if (_parentControl is TextBox textBox)
             {
                 textBox.Text = string.Empty;
-                LoggingUtility.Log($"[SuggestionOverlay] Cleared parent textbox");
+                
             }
             
             this.DialogResult = DialogResult.Cancel;

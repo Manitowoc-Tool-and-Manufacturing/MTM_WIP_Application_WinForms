@@ -53,7 +53,7 @@ internal static class Service_ErrorReportQueue
             // Write to file
             await File.WriteAllTextAsync(filePath, sqlContent, Encoding.UTF8);
 
-            LoggingUtility.Log($"[Service_ErrorReportQueue] Queued error report: {filename}");
+
 
             return Model_Dao_Result<string>.Success(
                 filePath,

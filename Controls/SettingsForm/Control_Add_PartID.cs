@@ -133,14 +133,14 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
 
                 MessageBox.Show(@"Part added successfully!", @"Success", MessageBoxButtons.OK,
                     MessageBoxIcon.Information);
-                
+
                 // If RequiresColorCode was checked, reload the cache
                 if (Control_Add_PartID_CheckBox_RequiresColorCode.Checked)
                 {
                     await Model_Application_Variables.ReloadColorCodePartsAsync();
-                    LoggingUtility.Log($"[Control_Add_PartID] ColorCodeParts cache reloaded after adding part with RequiresColorCode=true");
+
                 }
-                
+
                 ClearForm();
                 PartAdded?.Invoke(this, EventArgs.Empty);
             }
@@ -157,7 +157,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             string issuedBy = Model_Application_Variables.User;
             string type = Control_Add_PartID_ComboBox_ItemType.Text ?? string.Empty;
             bool requiresColorCode = Control_Add_PartID_CheckBox_RequiresColorCode.Checked;
-            
+
             return await Dao_Part.CreatePartAsync(itemNumber, string.Empty, string.Empty, issuedBy, type, requiresColorCode);
         }
 

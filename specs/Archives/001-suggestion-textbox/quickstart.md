@@ -88,7 +88,7 @@ suggestionTextBoxPartNumber.SuggestionCancelled += SuggestionTextBoxPartNumber_S
 
 private void SuggestionTextBoxPartNumber_SuggestionSelected(object sender, SuggestionSelectedEventArgs e)
 {
-    LoggingUtility.Log($"Part number selected: {e.SelectedValue} (from '{e.OriginalInput}')");
+    
     
     // Optional: Trigger dependent field updates
     LoadPartDetailsAsync(e.SelectedValue);
@@ -98,7 +98,7 @@ private void SuggestionTextBoxPartNumber_SuggestionCancelled(object sender, Sugg
 {
     if (e.Reason == SuggestionCancelReason.NoMatches)
     {
-        LoggingUtility.Log($"No matches found for part number: {e.OriginalInput}");
+        
     }
 }
 ```
@@ -305,18 +305,18 @@ private async Task<List<string>> GetDataAsync()
 // Selection events
 suggestionTextBox1.SuggestionSelected += (sender, e) =>
 {
-    LoggingUtility.Log($"Suggestion selected: Field={e.FieldName}, Value={e.SelectedValue}, Original={e.OriginalInput}");
+    
 };
 
 suggestionTextBox1.SuggestionCancelled += (sender, e) =>
 {
-    LoggingUtility.Log($"Suggestion cancelled: Field={e.FieldName}, Reason={e.Reason}, Input={e.OriginalInput}");
+    
 };
 
 // Overlay events (optional, for diagnostics)
 suggestionTextBox1.SuggestionOverlayOpened += (sender, e) =>
 {
-    LoggingUtility.Log($"Suggestion overlay opened: Field={((SuggestionTextBox)sender).Name}");
+    
 };
 ```
 
@@ -379,9 +379,9 @@ suggestionTextBox1.SuggestionOverlayOpened += (sender, e) =>
 ```csharp
 private async Task<List<string>> GetDataAsync()
 {
-    LoggingUtility.Log("DataProvider called");
+    
     var result = await dao.GetAllAsync();
-    LoggingUtility.Log($"DataProvider returned {result.Data?.Rows.Count ?? 0} items");
+    
     return ...; 
 }
 ```

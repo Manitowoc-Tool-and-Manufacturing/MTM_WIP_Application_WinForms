@@ -43,12 +43,12 @@ namespace MTM_WIP_Application_Winforms.Services
                 VersionTimer.AutoReset = true;
                 VersionTimer.Start();
                 Debug.WriteLine("VersionTimer initialized and started.");
-                LoggingUtility.Log("VersionTimer initialized and started successfully.");
+
             }
             catch (Exception ex)
             {
                 Debug.WriteLine($"Error initializing VersionTimer: {ex.Message}");
-                LoggingUtility.Log($"Error initializing VersionTimer: {ex.Message}");
+
             }
 
             // Perform initial version check
@@ -62,7 +62,7 @@ namespace MTM_WIP_Application_Winforms.Services
         public static async void VersionChecker(object? sender, ElapsedEventArgs? e)
         {
             Debug.WriteLine("Running VersionChecker...");
-            LoggingUtility.Log("Running VersionChecker - checking database version information.");
+
 
             try
             {
@@ -84,7 +84,7 @@ namespace MTM_WIP_Application_Winforms.Services
                     LastCheckedDatabaseVersion = databaseVersion ?? "Unknown Version";
 
                     Debug.WriteLine($"Database version retrieved: {LastCheckedDatabaseVersion}");
-                    LoggingUtility.Log($"Version check successful - Database version: {LastCheckedDatabaseVersion}");
+
 
                     // Update UI with version information (thread-safe)
                     UpdateVersionLabel(Model_Application_Variables.UserVersion, LastCheckedDatabaseVersion);
@@ -94,7 +94,7 @@ namespace MTM_WIP_Application_Winforms.Services
                 // Handle case where procedure succeeds but returns no data
                 if (dataResult.IsSuccess && (dataResult.Data == null || dataResult.Data.Rows.Count == 0))
                 {
-                    LoggingUtility.Log("VersionChecker: log_changelog_Get_Current returned no data - no changelog entries exist yet.");
+
                     LastCheckedDatabaseVersion = "No Version Data";
                     UpdateVersionLabel(Model_Application_Variables.UserVersion, "No Version Data");
                     return;
@@ -103,41 +103,41 @@ namespace MTM_WIP_Application_Winforms.Services
                 // Handle warning status (Status = 1)
                 if (dataResult.Status == 1)
                 {
-                    LoggingUtility.Log($"VersionChecker: Warning from stored procedure - {dataResult.ErrorMessage}");
+
                     LastCheckedDatabaseVersion = "Database Version Warning";
                     UpdateVersionLabel(Model_Application_Variables.UserVersion, "Database Version Warning");
                     return;
                 }
 
                 // Handle error status (Status = -1)
-                LoggingUtility.Log($"VersionChecker: Stored procedure returned error - {dataResult.ErrorMessage}");
+
                 LastCheckedDatabaseVersion = "Database Version Error";
                 UpdateVersionLabel(Model_Application_Variables.UserVersion, "Database Version Error");
             }
             catch (MySql.Data.MySqlClient.MySqlException ex) when (ex.Number == 1305) // Procedure doesn't exist
             {
-                LoggingUtility.Log("VersionChecker: log_changelog_Get_Current stored procedure not found. This is normal during development - procedure may not be deployed yet.");
+
                 // TEMPORARY: More descriptive message to help with debugging
                 LastCheckedDatabaseVersion = "Deploy Procedures Required";
                 UpdateVersionLabel(Model_Application_Variables.UserVersion, "Deploy Procedures Required");
             }
             catch (MySql.Data.MySqlClient.MySqlException ex) when (ex.Number == 1054) // Column doesn't exist
             {
-                LoggingUtility.Log($"VersionChecker: Column not found in log_changelog table - {ex.Message}. This may indicate the table structure needs updating.");
+
                 LastCheckedDatabaseVersion = "Database Schema Issue";
                 UpdateVersionLabel(Model_Application_Variables.UserVersion, "Database Schema Issue");
             }
             catch (MySql.Data.MySqlClient.MySqlException ex)
             {
                 LoggingUtility.LogDatabaseError(ex);
-                LoggingUtility.Log($"VersionChecker: Database error occurred - {ex.Message}");
+
                 LastCheckedDatabaseVersion = "Database Connection Error";
                 UpdateVersionLabel(Model_Application_Variables.UserVersion, "Database Connection Error");
             }
             catch (Exception ex)
             {
                 LoggingUtility.LogApplicationError(ex);
-                LoggingUtility.Log($"VersionChecker: General error occurred - {ex.Message}");
+
                 LastCheckedDatabaseVersion = "Version Check Error";
                 UpdateVersionLabel(Model_Application_Variables.UserVersion, "Version Check Error");
             }
@@ -174,7 +174,7 @@ namespace MTM_WIP_Application_Winforms.Services
             }
             catch (Exception ex)
             {
-                LoggingUtility.Log($"VersionChecker: Error updating version label - {ex.Message}");
+
                 Debug.WriteLine($"Error updating version label: {ex.Message}");
             }
         }
@@ -188,12 +188,12 @@ namespace MTM_WIP_Application_Winforms.Services
             {
                 VersionTimer?.Stop();
                 VersionTimer?.Dispose();
-                LoggingUtility.Log("VersionTimer stopped and disposed successfully.");
+
                 Debug.WriteLine("VersionTimer stopped and disposed.");
             }
             catch (Exception ex)
             {
-                LoggingUtility.Log($"Error stopping VersionTimer: {ex.Message}");
+
                 Debug.WriteLine($"Error stopping VersionTimer: {ex.Message}");
             }
         }

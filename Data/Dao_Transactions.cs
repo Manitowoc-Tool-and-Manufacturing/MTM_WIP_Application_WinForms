@@ -107,9 +107,9 @@ internal class Dao_Transactions
                 }
             }
 
-            LoggingUtility.Log($"[Dao_Transactions.SearchTransactionsAsync] Retrieved {transactions.Count} transactions from DB");
-            LoggingUtility.Log($"[Dao_Transactions.SearchTransactionsAsync] result.StatusMessage: '{result.StatusMessage}'");
-            LoggingUtility.Log($"[Dao_Transactions.SearchTransactionsAsync] result.RowsAffected: {result.RowsAffected}");
+
+
+
 
             // Parse total count from status message (format: "Found X transaction(s) matching criteria")
             // The stored procedure returns the total count in the status message
@@ -120,22 +120,22 @@ internal class Dao_Transactions
                 if (parts.Length >= 2 && int.TryParse(parts[1], out int parsedCount))
                 {
                     totalCount = parsedCount;
-                    LoggingUtility.Log($"[Dao_Transactions.SearchTransactionsAsync] Parsed totalCount from StatusMessage: {totalCount}");
+
                 }
                 else
                 {
-                    LoggingUtility.Log($"[Dao_Transactions.SearchTransactionsAsync] Failed to parse totalCount from StatusMessage");
+
                 }
             }
-            
+
             // Fallback to transactions count if parsing failed
             if (totalCount == 0)
             {
                 totalCount = transactions.Count;
-                LoggingUtility.Log($"[Dao_Transactions.SearchTransactionsAsync] Using fallback totalCount: {totalCount}");
+
             }
 
-            LoggingUtility.Log($"[Dao_Transactions.SearchTransactionsAsync] Final totalCount: {totalCount}, page: {page}, pageSize: {pageSize}");
+
 
             return Model_Dao_Result<List<Model_Transactions_Core>>.Success(
                 transactions,
@@ -231,38 +231,38 @@ internal class Dao_Transactions
     {
         // CRITICAL DEBUGGING: Log method entry IMMEDIATELY
         var entryMessage = $"[Dao_Transactions.SearchAsync] ===== METHOD ENTRY ===== User: {userName}, IsAdmin: {isAdmin}, Page: {page}";
-        LoggingUtility.Log(entryMessage);
+
         Console.WriteLine(entryMessage);  // Also write to console
         System.Diagnostics.Debug.WriteLine(entryMessage);  // And debug output
-        
+
         try
         {
-            LoggingUtility.Log($"[Dao_Transactions] SearchAsync called. User: {userName}, IsAdmin: {isAdmin}, Page: {page}, PageSize: {pageSize}");
-            LoggingUtility.Log($"[Dao_Transactions] Criteria: {criteria}");
+
+
 
             if (criteria == null)
             {
-                LoggingUtility.Log("[Dao_Transactions] ERROR: Criteria is null");
+
                 return Model_Dao_Result<List<Model_Transactions_Core>>.Failure("Search criteria cannot be null");
             }
 
-            LoggingUtility.Log($"[Dao_Transactions] Criteria.TransactionType raw value: '{criteria.TransactionType}'");
+
 
             // ISSUE: The stored procedure inv_transactions_Search expects a single TransactionType value,
             // but criteria.TransactionType is a comma-separated string like "IN,OUT,TRANSFER".
             // When all types are selected, we should pass empty string to the SP to match all.
             // When specific types are selected, we need to call the SP multiple times OR use SmartSearch instead.
-            
+
             // For now, if multiple transaction types are specified (contains comma), pass empty string to match all
             TransactionType? transactionType = null;
             string transactionTypeString = "";
-            
+
             if (!string.IsNullOrWhiteSpace(criteria.TransactionType))
             {
                 // If it contains comma, it's multiple types - pass empty to search all
                 if (criteria.TransactionType.Contains(','))
                 {
-                    LoggingUtility.Log($"[Dao_Transactions] Multiple transaction types specified: '{criteria.TransactionType}'. Searching all types.");
+
                     transactionTypeString = "";  // Empty string tells SP to match all types
                 }
                 else
@@ -272,29 +272,29 @@ internal class Dao_Transactions
                     {
                         transactionType = type;
                         transactionTypeString = type.ToString();
-                        LoggingUtility.Log($"[Dao_Transactions] Single transaction type parsed: {transactionTypeString}");
+
                     }
                     else
                     {
-                        LoggingUtility.Log($"[Dao_Transactions] WARNING: Failed to parse transaction type: '{criteria.TransactionType}'");
+
                     }
                 }
             }
             else
             {
-                LoggingUtility.Log("[Dao_Transactions] No transaction type specified, will search all");
+
             }
 
-            LoggingUtility.Log($"[Dao_Transactions] Calling SearchTransactionsAsync with:");
-            LoggingUtility.Log($"  - PartID: '{criteria.PartID ?? ""}'");
-            LoggingUtility.Log($"  - User: '{criteria.User ?? ""}'");
-            LoggingUtility.Log($"  - FromLocation: '{criteria.FromLocation ?? ""}'");
-            LoggingUtility.Log($"  - ToLocation: '{criteria.ToLocation ?? ""}'");
-            LoggingUtility.Log($"  - Operation: '{criteria.Operation ?? ""}'");
-            LoggingUtility.Log($"  - TransactionType: '{transactionTypeString}' (parsed: {transactionType})");
-            LoggingUtility.Log($"  - Notes: '{criteria.Notes ?? ""}'");
-            LoggingUtility.Log($"  - DateFrom: {criteria.DateFrom}");
-            LoggingUtility.Log($"  - DateTo: {criteria.DateTo}");
+
+
+
+
+
+
+
+
+
+
 
             var result = await SearchTransactionsAsync(
                 userName: criteria.User ?? "",  // Pass empty string if no user filter, specific user if selected
@@ -316,13 +316,13 @@ internal class Dao_Transactions
                 pageSize: pageSize
             ).ConfigureAwait(false);
 
-            LoggingUtility.Log($"[Dao_Transactions] SearchTransactionsAsync returned. Success: {result.IsSuccess}, Count: {result.Data?.Count ?? 0}");
+
 
             return result;
         }
         catch (Exception ex)
         {
-            LoggingUtility.Log($"[Dao_Transactions] SearchAsync exception: {ex.Message}");
+
             LoggingUtility.LogDatabaseError(ex);
             await Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex, callerName: "SearchAsync");
             return Model_Dao_Result<List<Model_Transactions_Core>>.Failure(
@@ -356,7 +356,7 @@ internal class Dao_Transactions
                 );
             }
 
-            LoggingUtility.Log($"[Dao_Transactions.GetBatchLifecycleAsync] Retrieving lifecycle for batch: {batchNumber}");
+
 
             var parameters = new Dictionary<string, object>
             {
@@ -389,7 +389,7 @@ internal class Dao_Transactions
                 }
             }
 
-            LoggingUtility.Log($"[Dao_Transactions.GetBatchLifecycleAsync] Retrieved {transactions.Count} transactions for batch {batchNumber}");
+
 
             return Model_Dao_Result<List<Model_Transactions_Core>>.Success(
                 transactions,
@@ -398,7 +398,7 @@ internal class Dao_Transactions
         }
         catch (Exception ex)
         {
-            LoggingUtility.Log($"[Dao_Transactions] GetBatchLifecycleAsync exception: {ex.Message}");
+
             LoggingUtility.LogDatabaseError(ex);
             await Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex, callerName: "GetBatchLifecycleAsync");
             return Model_Dao_Result<List<Model_Transactions_Core>>.Failure(
@@ -587,9 +587,9 @@ internal class Dao_Transactions
             }
 
             System.Diagnostics.Debug.WriteLine($"[DAO DEBUG] Mapped {transactions.Count} transactions from result");
-            LoggingUtility.Log($"[Dao_Transactions.SmartSearchAsync] Retrieved {transactions.Count} transactions from DB");
-            LoggingUtility.Log($"[Dao_Transactions.SmartSearchAsync] result.StatusMessage: '{result.StatusMessage}'");
-            LoggingUtility.Log($"[Dao_Transactions.SmartSearchAsync] result.RowsAffected: {result.RowsAffected}");
+
+
+
 
             // Get total count from the result's StatusMessage (format: "Found X transaction(s) matching criteria")
             int totalCount = result.RowsAffected;
@@ -599,20 +599,20 @@ internal class Dao_Transactions
                 if (parts.Length >= 2 && int.TryParse(parts[1], out int parsedCount))
                 {
                     totalCount = parsedCount;
-                    LoggingUtility.Log($"[Dao_Transactions.SmartSearchAsync] Parsed totalCount from StatusMessage: {totalCount}");
+
                 }
                 else
                 {
-                    LoggingUtility.Log($"[Dao_Transactions.SmartSearchAsync] Failed to parse totalCount from StatusMessage");
+
                 }
             }
             if (totalCount == 0)
             {
                 totalCount = transactions.Count; // Final fallback
-                LoggingUtility.Log($"[Dao_Transactions.SmartSearchAsync] Using fallback totalCount: {totalCount}");
+
             }
 
-            LoggingUtility.Log($"[Dao_Transactions.SmartSearchAsync] Final totalCount: {totalCount}, page: {page}, pageSize: {pageSize}");
+
             System.Diagnostics.Debug.WriteLine($"[DAO DEBUG] === DAO SmartSearchAsync Complete ===");
 
             return Model_Dao_Result<List<Model_Transactions_Core>>.Success(
@@ -748,7 +748,7 @@ internal class Dao_Transactions
 
             if (!result.IsSuccess)
             {
-                LoggingUtility.Log($"[Dao_Transactions.GetAnalyticsAsync] Error from SP: {result.StatusMessage}");
+
                 return Model_Dao_Result<Model_Transactions_Core_Analytics>.Failure(
                     result.StatusMessage ?? "Failed to retrieve transaction analytics"
                 );
@@ -756,7 +756,7 @@ internal class Dao_Transactions
 
             if (result.Data == null)
             {
-                LoggingUtility.Log("[Dao_Transactions.GetAnalyticsAsync] No data returned from stored procedure");
+
                 return Model_Dao_Result<Model_Transactions_Core_Analytics>.Failure(
                     "No data returned from stored procedure"
                 );
@@ -764,7 +764,7 @@ internal class Dao_Transactions
 
             if (result.Data.Tables.Count < 10)
             {
-                LoggingUtility.Log($"[Dao_Transactions.GetAnalyticsAsync] Expected 10 result sets but got {result.Data.Tables.Count}");
+
                 return Model_Dao_Result<Model_Transactions_Core_Analytics>.Failure(
                     $"Invalid analytics data: Expected 10 result sets but received {result.Data.Tables.Count}"
                 );
@@ -898,8 +898,8 @@ internal class Dao_Transactions
 
             return Model_Dao_Result<Model_Transactions_Core_Analytics>.Success(
                 analytics,
-                analytics.TotalTransactions > 0 
-                    ? "Transaction analytics retrieved successfully" 
+                analytics.TotalTransactions > 0
+                    ? "Transaction analytics retrieved successfully"
                     : "No transaction data found for the specified period"
             );
         }
@@ -932,7 +932,7 @@ internal class Dao_Transactions
     {
         try
         {
-            LoggingUtility.Log($"[Dao_Transactions] Deleting transaction ID: {transactionId}");
+
 
             var parameters = new Dictionary<string, object>
             {
@@ -948,12 +948,12 @@ internal class Dao_Transactions
 
             if (result.IsSuccess)
             {
-                LoggingUtility.Log($"[Dao_Transactions] Transaction ID {transactionId} deleted successfully");
+
                 return Model_Dao_Result.Success($"Transaction ID {transactionId} deleted successfully");
             }
             else
             {
-                LoggingUtility.Log($"[Dao_Transactions] Failed to delete transaction ID {transactionId}: {result.ErrorMessage}");
+
                 return Model_Dao_Result.Failure($"Failed to delete transaction: {result.ErrorMessage}");
             }
         }

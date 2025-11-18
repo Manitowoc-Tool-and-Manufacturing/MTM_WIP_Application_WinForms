@@ -77,14 +77,14 @@ internal partial class TransactionSearchControl : ThemedUserControl
     {
         InitializeComponent();
 
-        LoggingUtility.Log("[TransactionSearchControl] Initializing...");
+
 
         WireUpEvents();
         InitializeDateRangeDefaults();
         SetExportPrintButtonsEnabled(false);
         InitializeInformationPanelToggle();
 
-        LoggingUtility.Log("[TransactionSearchControl] Initialization complete.");
+
     }
 
     #endregion
@@ -143,7 +143,7 @@ internal partial class TransactionSearchControl : ThemedUserControl
         try
         {
             var incomingCount = parts?.Count ?? 0;
-            LoggingUtility.Log($"[TransactionSearchControl] LoadParts called with {incomingCount} parts");
+
 
             _partOptions.Clear();
 
@@ -173,11 +173,11 @@ internal partial class TransactionSearchControl : ThemedUserControl
 
             TransactionSearchControl_Suggestion_PartNumber.Text = string.Empty;
 
-            LoggingUtility.Log($"[TransactionSearchControl] Parts loaded: {_partOptions.Count} unique values");
+
         }
         catch (Exception ex)
         {
-            LoggingUtility.Log($"[TransactionSearchControl] Exception in LoadParts: {ex.Message}");
+
             LoggingUtility.LogApplicationError(ex);
 
             Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Medium,
@@ -199,7 +199,7 @@ internal partial class TransactionSearchControl : ThemedUserControl
     {
         try
         {
-            LoggingUtility.Log($"[TransactionSearchControl] LoadUsers called with {users?.Count ?? 0} users");
+
             bool isAdminOrDeveloper = Model_Application_Variables.UserTypeAdmin || Model_Application_Variables.UserTypeDeveloper;
             string currentUser = Model_Application_Variables.User;
 
@@ -232,11 +232,11 @@ internal partial class TransactionSearchControl : ThemedUserControl
             TransactionSearchControl_Suggestion_User.Enabled = isAdminOrDeveloper;
             TransactionSearchControl_Suggestion_User.Text = isAdminOrDeveloper ? string.Empty : currentUser;
 
-            LoggingUtility.Log($"[TransactionSearchControl] Users loaded: {_userOptions.Count} values, Enabled: {TransactionSearchControl_Suggestion_User.Enabled}");
+
         }
         catch (Exception ex)
         {
-            LoggingUtility.Log($"[TransactionSearchControl] Exception in LoadUsers: {ex.Message}");
+
             LoggingUtility.LogApplicationError(ex);
 
             Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Medium,
@@ -260,11 +260,11 @@ internal partial class TransactionSearchControl : ThemedUserControl
     {
         try
         {
-            LoggingUtility.Log($"[TransactionSearchControl] LoadLocations called with {locations?.Count ?? 0} locations");
+
 
             if (locations == null || locations.Count == 0)
             {
-                LoggingUtility.Log("[TransactionSearchControl] WARNING: Locations list is null or empty");
+
                 return;
             }
 
@@ -299,11 +299,11 @@ internal partial class TransactionSearchControl : ThemedUserControl
             TransactionSearchControl_Suggestion_FromLocation.Text = string.Empty;
             TransactionSearchControl_Suggestion_ToLocation.Text = string.Empty;
 
-            LoggingUtility.Log($"[TransactionSearchControl] Locations loaded: {_locationOptions.Count} unique codes");
+
         }
         catch (Exception ex)
         {
-            LoggingUtility.Log($"[TransactionSearchControl] Exception in LoadLocations: {ex.Message}");
+
             LoggingUtility.LogApplicationError(ex);
 
             Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Medium,
@@ -324,7 +324,7 @@ internal partial class TransactionSearchControl : ThemedUserControl
     {
         try
         {
-            LoggingUtility.Log($"[TransactionSearchControl] LoadOperations called with {operations?.Count ?? 0} operations");
+
 
             _operationOptions.Clear();
 
@@ -354,11 +354,11 @@ internal partial class TransactionSearchControl : ThemedUserControl
 
             TransactionSearchControl_Suggestion_Operation.Text = string.Empty;
 
-            LoggingUtility.Log($"[TransactionSearchControl] Operations loaded: {_operationOptions.Count} unique values");
+
         }
         catch (Exception ex)
         {
-            LoggingUtility.Log($"[TransactionSearchControl] Exception in LoadOperations: {ex.Message}");
+
             LoggingUtility.LogApplicationError(ex);
 
             Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Medium,
@@ -410,7 +410,7 @@ internal partial class TransactionSearchControl : ThemedUserControl
         TransactionSearchControl_Button_Export.Enabled = enabled;
         TransactionSearchControl_Button_Print.Enabled = enabled;
 
-        LoggingUtility.Log($"[TransactionSearchControl] Export/Print buttons {(enabled ? "enabled" : "disabled")}");
+
     }
 
     /// <summary>
@@ -431,14 +431,14 @@ internal partial class TransactionSearchControl : ThemedUserControl
     {
         try
         {
-            LoggingUtility.Log("[TransactionSearchControl] Search button clicked.");
+
 
             var criteria = BuildCriteria();
 
             // Validate criteria
             if (!criteria.IsValid())
             {
-                LoggingUtility.Log("[TransactionSearchControl] Search validation failed: Incomplete criteria.");
+
                 Service_ErrorHandler.HandleValidationError(
                     "Search criteria is incomplete. Please check your inputs.",
                     "Search Validation"
@@ -452,7 +452,7 @@ internal partial class TransactionSearchControl : ThemedUserControl
                 // Validate date range for non-Everything searches
                 if (!criteria.IsDateRangeValid())
                 {
-                    LoggingUtility.Log("[TransactionSearchControl] Search validation failed: Invalid date range.");
+
                     Service_ErrorHandler.HandleValidationError(
                         "Invalid date range. 'Date From' must be before or equal to 'Date To'.",
                         "Date Range Validation"
@@ -464,7 +464,7 @@ internal partial class TransactionSearchControl : ThemedUserControl
             // Validate at least one transaction type is selected
             if (string.IsNullOrWhiteSpace(criteria.TransactionType))
             {
-                LoggingUtility.Log("[TransactionSearchControl] Search validation failed: No transaction type selected.");
+
                 Service_ErrorHandler.HandleValidationError(
                     "Please select at least one transaction type (IN, OUT, or TRANSFER).",
                     "Transaction Type Validation"
@@ -474,11 +474,11 @@ internal partial class TransactionSearchControl : ThemedUserControl
 
             if (TransactionSearchControl_RadioButton_Everything.Checked)
             {
-                LoggingUtility.Log($"[TransactionSearchControl] Search criteria validated (Everything mode). Types: {criteria.TransactionType}");
+
             }
             else
             {
-                LoggingUtility.Log($"[TransactionSearchControl] Search criteria validated. DateRange: {criteria.DateFrom:MM/dd/yy} - {criteria.DateTo:MM/dd/yy}, Types: {criteria.TransactionType}");
+
             }
 
             // Raise event with valid criteria
@@ -496,10 +496,10 @@ internal partial class TransactionSearchControl : ThemedUserControl
     {
         try
         {
-            LoggingUtility.Log("[TransactionSearchControl] Reset button clicked.");
+
             ClearCriteria();
             ResetRequested?.Invoke(this, EventArgs.Empty);
-            LoggingUtility.Log("[TransactionSearchControl] Search criteria reset successfully.");
+
         }
         catch (Exception ex)
         {
@@ -513,7 +513,7 @@ internal partial class TransactionSearchControl : ThemedUserControl
     {
         try
         {
-            LoggingUtility.Log("[TransactionSearchControl] Export button clicked.");
+
             ExportRequested?.Invoke(this, EventArgs.Empty);
         }
         catch (Exception ex)
@@ -528,7 +528,7 @@ internal partial class TransactionSearchControl : ThemedUserControl
     {
         try
         {
-            LoggingUtility.Log("[TransactionSearchControl] Print button clicked.");
+
             PrintRequested?.Invoke(this, EventArgs.Empty);
         }
         catch (Exception ex)
@@ -543,7 +543,7 @@ internal partial class TransactionSearchControl : ThemedUserControl
     {
         try
         {
-            LoggingUtility.Log("[TransactionSearchControl] Information panel toggle button clicked.");
+
             ToggleInformationPanelRequested?.Invoke(this, EventArgs.Empty);
         }
         catch (Exception ex)
@@ -564,7 +564,7 @@ internal partial class TransactionSearchControl : ThemedUserControl
         {
             if (sender is RadioButton rdo && rdo.Checked)
             {
-                LoggingUtility.Log($"[TransactionSearchControl] Quick filter changed: {rdo.Text}");
+
                 ApplyQuickFilter();
             }
         }
@@ -589,7 +589,7 @@ internal partial class TransactionSearchControl : ThemedUserControl
                 TransactionSearchControl_DateTimePicker_DateTo.Value = now.Date.AddDays(1).AddSeconds(-1);
                 TransactionSearchControl_DateTimePicker_DateFrom.Enabled = false;
                 TransactionSearchControl_DateTimePicker_DateTo.Enabled = false;
-                LoggingUtility.Log("[TransactionSearchControl] Quick filter applied: Today");
+
             }
             else if (TransactionSearchControl_RadioButton_Week.Checked)
             {
@@ -602,7 +602,7 @@ internal partial class TransactionSearchControl : ThemedUserControl
                 TransactionSearchControl_DateTimePicker_DateTo.Value = sunday.AddDays(1).AddSeconds(-1);
                 TransactionSearchControl_DateTimePicker_DateFrom.Enabled = false;
                 TransactionSearchControl_DateTimePicker_DateTo.Enabled = false;
-                LoggingUtility.Log("[TransactionSearchControl] Quick filter applied: Week");
+
             }
             else if (TransactionSearchControl_RadioButton_Month.Checked)
             {
@@ -614,7 +614,7 @@ internal partial class TransactionSearchControl : ThemedUserControl
                 TransactionSearchControl_DateTimePicker_DateTo.Value = lastDay.AddDays(1).AddSeconds(-1);
                 TransactionSearchControl_DateTimePicker_DateFrom.Enabled = false;
                 TransactionSearchControl_DateTimePicker_DateTo.Enabled = false;
-                LoggingUtility.Log("[TransactionSearchControl] Quick filter applied: Month");
+
             }
             else if (TransactionSearchControl_RadioButton_Everything.Checked)
             {
@@ -623,14 +623,14 @@ internal partial class TransactionSearchControl : ThemedUserControl
                 TransactionSearchControl_DateTimePicker_DateTo.Value = now.AddYears(1);
                 TransactionSearchControl_DateTimePicker_DateFrom.Enabled = false;
                 TransactionSearchControl_DateTimePicker_DateTo.Enabled = false;
-                LoggingUtility.Log("[TransactionSearchControl] Quick filter applied: Everything (all dates)");
+
             }
             else if (TransactionSearchControl_RadioButton_Custom.Checked)
             {
                 // Custom: user sets dates manually, enable date pickers
                 TransactionSearchControl_DateTimePicker_DateFrom.Enabled = true;
                 TransactionSearchControl_DateTimePicker_DateTo.Enabled = true;
-                LoggingUtility.Log("[TransactionSearchControl] Quick filter applied: Custom (user-defined dates)");
+
             }
         }
         catch (Exception ex)
@@ -662,7 +662,7 @@ internal partial class TransactionSearchControl : ThemedUserControl
 
             if (!anyTypeSelected)
             {
-                LoggingUtility.Log("[TransactionSearchControl] Search button disabled - no transaction types selected");
+
             }
         }
         catch (Exception ex)

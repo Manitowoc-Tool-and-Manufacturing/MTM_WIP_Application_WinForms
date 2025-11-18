@@ -47,7 +47,7 @@ public partial class PromptStatusManagerDialog : ThemedForm
         InitializeDataGridView();
         WireUpEvents();
 
-        LoggingUtility.Log("[PromptStatusManagerDialog] Dialog initialized");
+        
     }
 
     #endregion
@@ -148,7 +148,7 @@ public partial class PromptStatusManagerDialog : ThemedForm
             }
         });
 
-        LoggingUtility.Log("[PromptStatusManagerDialog] DataGridView columns initialized");
+        
     }
 
     /// <summary>
@@ -165,7 +165,7 @@ public partial class PromptStatusManagerDialog : ThemedForm
         btnSave.Click += BtnSave_Click;
         btnClose.Click += BtnClose_Click;
 
-        LoggingUtility.Log("[PromptStatusManagerDialog] Event handlers wired up");
+        
     }
 
     #endregion
@@ -242,7 +242,7 @@ public partial class PromptStatusManagerDialog : ThemedForm
         lblStatus.Text = $"Modified: {_modifiedStatuses.Count} item(s)";
         btnSave.Enabled = true;
 
-        LoggingUtility.Log($"[PromptStatusManagerDialog] Status modified: {status.MethodName}");
+        
     }
 
     /// <summary>
@@ -371,7 +371,7 @@ public partial class PromptStatusManagerDialog : ThemedForm
 
             lblStatus.Text = $"Loaded {_statuses.Count} prompt status(es)";
 
-            LoggingUtility.Log($"[PromptStatusManagerDialog] Loaded {_statuses.Count} prompt statuses");
+            
         }
         catch (Exception ex)
         {
@@ -404,7 +404,7 @@ public partial class PromptStatusManagerDialog : ThemedForm
                 btnSave.Enabled = false;
                 lblStatus.Text = $"Saved successfully at {DateTime.Now:HH:mm:ss}";
 
-                LoggingUtility.Log($"[PromptStatusManagerDialog] Saved {_statuses.Count} prompt statuses");
+                
 
                 MessageBox.Show(
                     "Changes saved successfully.",

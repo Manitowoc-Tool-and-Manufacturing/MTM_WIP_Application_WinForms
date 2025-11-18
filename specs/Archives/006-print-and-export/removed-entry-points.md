@@ -133,17 +133,17 @@ Transactions_UserControl_Grid.PrintRequested += SearchControl_PrintRequested;
 // Line 292 (handler method)
 private void SearchControl_PrintRequested(object? sender, EventArgs e)
 {
-    LoggingUtility.Log("[Transactions] Print requested.");
+    
     
     // Check if there are results to print
     if (_viewModel.CurrentResults.Transactions.Count == 0)
     {
-        LoggingUtility.Log("[Transactions] Print aborted - no results to print.");
+        
         Service_ErrorHandler.HandleValidationError("No transactions to print. Please perform a search first.", "Print");
         return;
     }
     
-    LoggingUtility.Log($"[Transactions] Printing {_viewModel.CurrentResults.Transactions.Count} transactions.");
+    
     
     // Open print dialog with the grid's DataGridView
     using var printForm = new Shared.PrintForm(Transactions_UserControl_Grid.DataGridView);

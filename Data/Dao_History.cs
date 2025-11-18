@@ -47,7 +47,7 @@ internal class Dao_History
 
             if (!result.IsSuccess)
             {
-                LoggingUtility.Log($"AddTransactionHistoryAsync failed: {result.ErrorMessage}");
+
                 return Model_Dao_Result.Failure(result.ErrorMessage ?? "Failed to add transaction history", result.Exception);
             }
 

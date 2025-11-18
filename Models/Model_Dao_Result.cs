@@ -62,7 +62,7 @@ namespace MTM_WIP_Application_Winforms.Models
     ///     {
     ///         // Access data via result.Data
     ///         dataGridView.DataSource = result.Data;
-    ///         LoggingUtility.Log($"Loaded {result.Data.Count} items: {result.StatusMessage}");
+    ///
     ///     }
     ///     else
     ///     {
@@ -570,7 +570,7 @@ namespace MTM_WIP_Application_Winforms.Models
         /// Console.WriteLine(failResult); // Output: "Failed: Connection timeout"
         ///
         /// // Useful for logging
-        /// LoggingUtility.Log($"[DAO] {result}");
+        ///
         /// </code>
         /// </example>
         public override string ToString()

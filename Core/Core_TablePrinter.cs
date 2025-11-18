@@ -274,8 +274,8 @@ public class Core_TablePrinter : IDisposable
         _currentRow = _startRowIndex;
         _pageNumber = _firstPageNumber - 1;
         _completionLogged = false;
-        
-        LoggingUtility.Log($"[Core_TablePrinter] BeginPrint: Reset to StartRow={_currentRow}, PageNumber will start at {_pageNumber + 1}");
+
+
     }
 
     private void PrintDocument_PrintPage(object? sender, PrintPageEventArgs e)
@@ -289,7 +289,7 @@ public class Core_TablePrinter : IDisposable
         try
         {
             _pageNumber++;
-            
+
             // Calculate margins
             int leftMargin = e.MarginBounds.Left;
             int topMargin = e.MarginBounds.Top;
@@ -305,7 +305,7 @@ public class Core_TablePrinter : IDisposable
 
             // Draw title
             var titleSize = e.Graphics.MeasureString(_title, _titleFont);
-            e.Graphics.DrawString(_title, _titleFont, _titleBrush, 
+            e.Graphics.DrawString(_title, _titleFont, _titleBrush,
                 leftMargin + (printableWidth - titleSize.Width) / 2, yPosition);
             yPosition += (int)titleSize.Height + 20;
 
@@ -327,7 +327,7 @@ public class Core_TablePrinter : IDisposable
             foreach (var columnName in _visibleColumns)
             {
                 e.Graphics.DrawRectangle(_gridPen, xPosition, yPosition, columnWidth, 30);
-                e.Graphics.DrawString(columnName, _headerFont, _headerBrush, 
+                e.Graphics.DrawString(columnName, _headerFont, _headerBrush,
                     new RectangleF(xPosition + 5, yPosition + 7, columnWidth - 10, 20));
                 xPosition += columnWidth;
             }
@@ -395,10 +395,10 @@ public class Core_TablePrinter : IDisposable
 
             // Check if more pages needed
             e.HasMorePages = _currentRow < _endRowIndexExclusive;
-            
+
             if (!e.HasMorePages && !_completionLogged)
             {
-                LoggingUtility.Log($"[Core_TablePrinter] Printing complete: {_pageNumber} page(s), {_currentRow} rows printed");
+
                 _printJob?.SetPageBoundaries(_pageBoundaries);
                 _completionLogged = true;
             }

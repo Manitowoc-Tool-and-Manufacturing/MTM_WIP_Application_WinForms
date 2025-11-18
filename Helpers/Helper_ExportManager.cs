@@ -132,7 +132,7 @@ public static class Helper_ExportManager
         }
         catch (OperationCanceledException)
         {
-            LoggingUtility.Log("[Helper_ExportManager] PDF export cancelled by caller.");
+            
             return Model_Dao_Result.Failure("PDF export was cancelled.");
         }
         catch (Exception ex)
@@ -274,7 +274,7 @@ public static class Helper_ExportManager
         }
         catch (OperationCanceledException)
         {
-            LoggingUtility.Log("[Helper_ExportManager] Excel export cancelled by caller.");
+            
             return Model_Dao_Result.Failure("Excel export was cancelled.");
         }
         catch (Exception ex)

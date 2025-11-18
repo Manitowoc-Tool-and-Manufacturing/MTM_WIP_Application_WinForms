@@ -13,13 +13,13 @@ namespace MTM_WIP_Application_Winforms.Core.Theming;
 public class ThemeStore : IThemeStore
 {
     private readonly ILogger<ThemeStore> _logger;
-    
+
     // Level 1 cache: Theme objects by name
     private readonly Dictionary<string, Model_Shared_UserUiColors> _themeCache = new();
-    
+
     // Level 2 cache: Last applied theme per control (for performance optimization)
     private readonly Dictionary<Control, Model_Shared_UserUiColors> _appliedCache = new();
-    
+
     private readonly object _cacheLock = new();
 
     /// <summary>
@@ -92,25 +92,25 @@ public class ThemeStore : IThemeStore
             // Use Core_AppThemes to load themes from database
             // Core_AppThemes.LoadThemesFromDatabaseAsync() has already been called during startup
             // So we just need to access Core_AppThemes.Themes dictionary
-            
+
             lock (_cacheLock)
             {
                 _themeCache.Clear();
-                
+
                 // Copy all themes from Core_AppThemes into our cache
                 var themeNames = Core_AppThemes.GetThemeNames();
-                
+
                 foreach (var themeName in themeNames)
                 {
                     var appTheme = Core_AppThemes.GetTheme(themeName);
-                    
+
                     if (appTheme?.Colors != null)
                     {
                         _themeCache[themeName] = appTheme.Colors;
                         _logger.LogDebug("Cached theme '{ThemeName}' from Core_AppThemes", themeName);
                     }
                 }
-                
+
                 // Ensure default theme exists
                 if (!_themeCache.ContainsKey("Default"))
                 {
@@ -120,7 +120,7 @@ public class ThemeStore : IThemeStore
             }
 
             _logger.LogInformation("Loaded {ThemeCount} themes into ThemeStore cache", _themeCache.Count);
-            LoggingUtility.Log($"ThemeStore loaded {_themeCache.Count} themes: {string.Join(", ", _themeCache.Keys)}");
+
 
             await Task.CompletedTask;
         }
@@ -128,7 +128,7 @@ public class ThemeStore : IThemeStore
         {
             _logger.LogError(ex, "Failed to load themes from database");
             LoggingUtility.LogApplicationError(ex);
-            
+
             // Ensure at least default theme is available
             lock (_cacheLock)
             {

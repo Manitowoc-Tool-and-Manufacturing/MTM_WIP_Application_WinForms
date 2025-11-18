@@ -25,7 +25,7 @@ namespace MTM_WIP_Application_Winforms.Services
             }
             catch (Exception ex)
             {
-                LoggingUtility.Log($"Error deleting contents of directory {directoryPath}: {ex.Message}");
+
             }
         }
 
@@ -43,7 +43,7 @@ namespace MTM_WIP_Application_Winforms.Services
             }
             catch (Exception ex)
             {
-                LoggingUtility.Log($"Error wiping MTM_WIP_Application_Winforms folders: {ex.Message}");
+
             }
         }
 
@@ -62,7 +62,7 @@ namespace MTM_WIP_Application_Winforms.Services
             }
             catch (Exception ex)
             {
-                LoggingUtility.Log($"Error deleting directory {path}: {ex.Message}");
+
             }
         }
 

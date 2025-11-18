@@ -121,7 +121,7 @@ internal static class Dao_ErrorReports
                 }
                 else
                 {
-                    LoggingUtility.Log($"[Dao_ErrorReports] Failed to insert error report: {result.StatusMessage}");
+
                 }
 
                 return Model_Dao_Result<int>.Failure(

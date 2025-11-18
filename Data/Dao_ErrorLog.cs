@@ -50,16 +50,16 @@ internal static class Dao_ErrorLog
             }
             else
             {
-                LoggingUtility.Log($"GetUniqueErrors failed: {dataResult.ErrorMessage}");
+
             }
 
-            LoggingUtility.Log("GetUniqueErrors executed successfully.");
+
         }
         catch (Exception ex)
         {
             LoggingUtility.LogApplicationError(ex);
             // Don't call HandleException_GeneralError_CloseApp here to avoid recursion during startup
-            LoggingUtility.Log($"GetUniqueErrors failed with exception: {ex.Message}");
+
         }
 
         return uniqueErrors;
@@ -105,7 +105,7 @@ internal static class Dao_ErrorLog
             }
             else
             {
-                LoggingUtility.Log($"{procedureName} failed: {dataResult.ErrorMessage}");
+
                 return Model_Dao_Result<DataTable>.Failure(dataResult.ErrorMessage ?? "Unknown error", dataResult.Exception);
             }
         }
@@ -113,7 +113,7 @@ internal static class Dao_ErrorLog
         {
             LoggingUtility.LogApplicationError(ex);
             // Don't call HandleException_GeneralError_CloseApp here to avoid recursion during startup
-            LoggingUtility.Log($"{procedureName} failed with exception: {ex.Message}");
+
             return Model_Dao_Result<DataTable>.Failure($"{procedureName} failed", ex);
         }
     }
@@ -147,7 +147,7 @@ internal static class Dao_ErrorLog
 
             if (!result.IsSuccess)
             {
-                LoggingUtility.Log($"{procedureName} failed: {result.ErrorMessage}");
+
                 return Model_Dao_Result.Failure(result.ErrorMessage ?? "Unknown error", result.Exception);
             }
 
@@ -165,7 +165,7 @@ internal static class Dao_ErrorLog
             }
 
             // Don't call HandleException_GeneralError_CloseApp here to avoid recursion during startup
-            LoggingUtility.Log($"{procedureName} failed with exception: {ex.Message}");
+
             return Model_Dao_Result.Failure($"{procedureName} failed", ex);
         }
     }
@@ -239,12 +239,12 @@ internal static class Dao_ErrorLog
         try
         {
             LoggingUtility.LogDatabaseError(ex);
-            LoggingUtility.Log($"SQL Error in method: {callerName}, Control: {controlName}");
+
 
             if (ex is MySqlException mysqlEx)
             {
-                LoggingUtility.Log($"MySQL Error Code: {mysqlEx.Number}");
-                LoggingUtility.Log($"MySQL Error Details: {mysqlEx.Message}");
+
+
             }
 
             bool isConnectionError = ex.Message.Contains("Unable to connect to any of the specified MySQL hosts.")
@@ -360,7 +360,7 @@ internal static class Dao_ErrorLog
                 }
             }
 
-            LoggingUtility.Log("HandleException_GeneralError_CloseApp executed successfully.");
+
             return Model_Dao_Result.Success();
         }
         catch (Exception innerEx)
@@ -410,7 +410,7 @@ internal static class Dao_ErrorLog
             if (!result.IsSuccess)
             {
                 // If database logging fails, just log to file system
-                LoggingUtility.Log($"Failed to log error to database: {result.ErrorMessage}");
+
             }
         }
         catch (Exception ex)
@@ -433,7 +433,7 @@ internal static class Dao_ErrorLog
         string methodName = "")
     {
         LoggingUtility.LogApplicationError(ex);
-        LoggingUtility.Log($"Error in {methodName}: {ex.Message}");
+
     }
 
     #endregion

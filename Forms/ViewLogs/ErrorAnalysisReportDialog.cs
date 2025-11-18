@@ -427,7 +427,7 @@ namespace MTM_WIP_Application_Winforms.Forms.ViewLogs
             }
             catch (Exception ex)
             {
-                LoggingUtility.Log($"[ErrorAnalysisReport] Failed to process {filePath}: {ex.Message}");
+                
             }
         }
 
@@ -519,7 +519,7 @@ namespace MTM_WIP_Application_Winforms.Forms.ViewLogs
             }
             catch (Exception ex)
             {
-                LoggingUtility.Log($"[ErrorAnalysisReport] Failed to enumerate prompt files: {ex.Message}");
+                
             }
 
             return promptFiles;

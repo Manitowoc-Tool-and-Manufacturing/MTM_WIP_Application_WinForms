@@ -111,7 +111,7 @@ internal static class Dao_System
             if (!dataResult.IsSuccess)
             {
                 // If stored procedure fails, create a default developer user
-                LoggingUtility.Log($"sys_GetUserAccessType failed: {dataResult.ErrorMessage}. Creating default developer user.");
+
 
                 // Set current user as developer by default when stored procedures have issues
                 Model_Application_Variables.UserTypeDeveloper = true;
@@ -160,7 +160,7 @@ internal static class Dao_System
             else
             {
                 // No users found, create default developer
-                LoggingUtility.Log($"No users found in sys_GetUserAccessType. Creating default developer user: {user}");
+
                 Model_Application_Variables.UserTypeDeveloper = true;
                 Model_Application_Variables.UserTypeAdmin = false;
                 Model_Application_Variables.UserTypeReadOnly = false;
@@ -173,7 +173,7 @@ internal static class Dao_System
                 result.Add(defaultUser);
             }
 
-            LoggingUtility.Log($"System_UserAccessType executed successfully for user: {user}");
+
             return Model_Dao_Result<List<Model_Shared_Users>>.Success(result, $"Retrieved {result.Count} users with access types");
         }
         catch (Exception ex)
@@ -181,7 +181,7 @@ internal static class Dao_System
             LoggingUtility.LogApplicationError(ex);
 
             // FALLBACK: If everything fails, grant default developer access to prevent application lockup
-            LoggingUtility.Log($"System_UserAccessType fallback: Granting default developer access to user: {user}");
+
             Model_Application_Variables.UserTypeDeveloper = true;
             Model_Application_Variables.UserTypeAdmin = false;
             Model_Application_Variables.UserTypeReadOnly = false;
@@ -302,12 +302,12 @@ internal static class Dao_System
 
             if (result.IsSuccess)
             {
-                LoggingUtility.Log($"[Dao_System] Retrieved {result.Data?.Rows.Count ?? 0} themes using stored procedure");
+
                 return Model_Dao_Result<DataTable>.Success(result.Data ?? new DataTable(), $"Successfully retrieved {result.Data?.Rows.Count ?? 0} themes");
             }
             else
             {
-                LoggingUtility.Log($"[Dao_System] Failed to retrieve themes: {result.ErrorMessage}");
+
                 return Model_Dao_Result<DataTable>.Failure($"Failed to retrieve themes: {result.ErrorMessage}");
             }
         }
@@ -331,7 +331,7 @@ internal static class Dao_System
     {
         try
         {
-            LoggingUtility.Log("[Dao_System] Starting JSON validation for theme and user settings");
+
             var report = new System.Text.StringBuilder();
             int totalErrors = 0;
             int totalChecked = 0;
@@ -465,7 +465,7 @@ internal static class Dao_System
             report.AppendLine($"Success rate: {(totalChecked > 0 ? ((totalChecked - totalErrors) * 100.0 / totalChecked).ToString("F1") : "N/A")}%");
 
             string finalReport = report.ToString();
-            LoggingUtility.Log($"[Dao_System] JSON validation complete:\n{finalReport}");
+
 
             if (totalErrors > 0)
             {
@@ -510,7 +510,7 @@ internal static class Dao_System
     {
         try
         {
-            LoggingUtility.Log("[Dao_System] Checking database connectivity");
+
 
             // Attempt a simple SELECT query to validate connectivity
             var result = await Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync(
@@ -521,14 +521,14 @@ internal static class Dao_System
 
             if (result.IsSuccess)
             {
-                LoggingUtility.Log("[Dao_System] Database connectivity check passed");
+
                 return Model_Dao_Result.Success("Database connection successful");
             }
             else
             {
                 // Helper already provides user-friendly error messages
                 string errorMessage = result.StatusMessage ?? result.ErrorMessage ?? "Unable to connect to database";
-                LoggingUtility.Log($"[Dao_System] Database connectivity check failed: {errorMessage}");
+
                 return Model_Dao_Result.Failure(
                     errorMessage,
                     exception: result.Exception ?? new Exception(errorMessage));

@@ -37,7 +37,7 @@ namespace MTM_WIP_Application_Winforms.Helpers
 
             if (suggestionTextBox.DataProvider == null)
             {
-                LoggingUtility.Log($"[Helper_SuggestionTextBox] Cannot show suggestions for {suggestionTextBox.Name} - DataProvider is null");
+                
                 return;
             }
 
@@ -45,7 +45,7 @@ namespace MTM_WIP_Application_Winforms.Helpers
             {
                 if (ActiveOverlayRequests.Contains(suggestionTextBox))
                 {
-                    LoggingUtility.Log($"[Helper_SuggestionTextBox] Overlay already active for {suggestionTextBox.Name}, skipping duplicate invocation");
+                    
                     return;
                 }
 
@@ -72,7 +72,7 @@ namespace MTM_WIP_Application_Winforms.Helpers
                 
                 if (parentForm == null)
                 {
-                    LoggingUtility.Log($"[Helper_SuggestionTextBox] Cannot find parent form for {suggestionTextBox.Name}");
+                    
                     return;
                 }
 
@@ -138,7 +138,7 @@ namespace MTM_WIP_Application_Winforms.Helpers
                 }
             };
 
-            LoggingUtility.Log($"[Helper_SuggestionTextBox] F4 handler registered for {suggestionTextBox.Name}");
+            
         }
 
         #endregion
@@ -165,7 +165,7 @@ namespace MTM_WIP_Application_Winforms.Helpers
                 RegisterF4Handler(suggestionTextBox);
             }
 
-            LoggingUtility.Log($"[Helper_SuggestionTextBox] Configured {suggestionTextBox.Name} for Part Numbers");
+            
         }
 
         /// <summary>
@@ -188,7 +188,7 @@ namespace MTM_WIP_Application_Winforms.Helpers
                 RegisterF4Handler(suggestionTextBox);
             }
 
-            LoggingUtility.Log($"[Helper_SuggestionTextBox] Configured {suggestionTextBox.Name} for Operations");
+            
         }
 
         /// <summary>
@@ -211,7 +211,7 @@ namespace MTM_WIP_Application_Winforms.Helpers
                 RegisterF4Handler(suggestionTextBox);
             }
 
-            LoggingUtility.Log($"[Helper_SuggestionTextBox] Configured {suggestionTextBox.Name} for Locations");
+            
         }
 
         /// <summary>
@@ -234,7 +234,7 @@ namespace MTM_WIP_Application_Winforms.Helpers
                 RegisterF4Handler(suggestionTextBox);
             }
 
-            LoggingUtility.Log($"[Helper_SuggestionTextBox] Configured {suggestionTextBox.Name} for Item Types");
+            
         }
 
         /// <summary>
@@ -257,7 +257,7 @@ namespace MTM_WIP_Application_Winforms.Helpers
                 RegisterF4Handler(suggestionTextBox);
             }
 
-            LoggingUtility.Log($"[Helper_SuggestionTextBox] Configured {suggestionTextBox.Name} for Color Codes");
+            
         }
 
         /// <summary>
@@ -270,7 +270,7 @@ namespace MTM_WIP_Application_Winforms.Helpers
                 throw new ArgumentNullException(nameof(control));
 
             ConfigureForPartNumbers(control.TextBox, dataProvider, enableF4: false); // F4 handled by button
-            LoggingUtility.Log($"[Helper_SuggestionTextBox] Configured {control.Name} (composite) for Part Numbers");
+            
         }
 
         /// <summary>
@@ -283,7 +283,7 @@ namespace MTM_WIP_Application_Winforms.Helpers
                 throw new ArgumentNullException(nameof(control));
 
             ConfigureForOperations(control.TextBox, dataProvider, enableF4: false); // F4 handled by button
-            LoggingUtility.Log($"[Helper_SuggestionTextBox] Configured {control.Name} (composite) for Operations");
+            
         }
 
         /// <summary>
@@ -296,7 +296,7 @@ namespace MTM_WIP_Application_Winforms.Helpers
                 throw new ArgumentNullException(nameof(control));
 
             ConfigureForLocations(control.TextBox, dataProvider, enableF4: false); // F4 handled by button
-            LoggingUtility.Log($"[Helper_SuggestionTextBox] Configured {control.Name} (composite) for Locations");
+            
         }
 
         /// <summary>
@@ -309,7 +309,7 @@ namespace MTM_WIP_Application_Winforms.Helpers
                 throw new ArgumentNullException(nameof(control));
 
             ConfigureForItemTypes(control.TextBox, dataProvider, enableF4: false); // F4 handled by button
-            LoggingUtility.Log($"[Helper_SuggestionTextBox] Configured {control.Name} (composite) for Item Types");
+            
         }
 
         /// <summary>
@@ -322,7 +322,7 @@ namespace MTM_WIP_Application_Winforms.Helpers
                 throw new ArgumentNullException(nameof(control));
 
             ConfigureForColorCodes(control.TextBox, dataProvider, enableF4: false); // F4 handled by button
-            LoggingUtility.Log($"[Helper_SuggestionTextBox] Configured {control.Name} (composite) for Color Codes");
+            
         }
 
         /// <summary>
@@ -345,7 +345,7 @@ namespace MTM_WIP_Application_Winforms.Helpers
                 RegisterF4Handler(suggestionTextBox);
             }
 
-            LoggingUtility.Log($"[Helper_SuggestionTextBox] Configured {suggestionTextBox.Name} for Users");
+            
         }
 
         /// <summary>
@@ -358,7 +358,7 @@ namespace MTM_WIP_Application_Winforms.Helpers
                 throw new ArgumentNullException(nameof(control));
 
             ConfigureForUsers(control.TextBox, dataProvider, enableF4: false); // F4 handled by button
-            LoggingUtility.Log($"[Helper_SuggestionTextBox] Configured {control.Name} (composite) for Users");
+            
         }
 
         #endregion
@@ -476,7 +476,7 @@ namespace MTM_WIP_Application_Winforms.Helpers
             try
             {
                 var cachedParts = Helper_UI_ComboBoxes.GetCachedPartNumbers();
-                LoggingUtility.Log($"[Helper_SuggestionTextBox] Retrieved {cachedParts.Count} part numbers from cache");
+                
                 return Task.FromResult(cachedParts);
             }
             catch (Exception ex)
@@ -496,7 +496,7 @@ namespace MTM_WIP_Application_Winforms.Helpers
             try
             {
                 var cachedItemTypes = Helper_UI_ComboBoxes.GetCachedItemTypes();
-                LoggingUtility.Log($"[Helper_SuggestionTextBox] Retrieved {cachedItemTypes.Count} item types from cache");
+                
                 return Task.FromResult(cachedItemTypes);
             }
             catch (Exception ex)
@@ -516,7 +516,7 @@ namespace MTM_WIP_Application_Winforms.Helpers
             try
             {
                 var cachedOperations = Helper_UI_ComboBoxes.GetCachedOperations();
-                LoggingUtility.Log($"[Helper_SuggestionTextBox] Retrieved {cachedOperations.Count} operations from cache");
+                
                 return Task.FromResult(cachedOperations);
             }
             catch (Exception ex)
@@ -536,7 +536,7 @@ namespace MTM_WIP_Application_Winforms.Helpers
             try
             {
                 var cachedLocations = Helper_UI_ComboBoxes.GetCachedLocations();
-                LoggingUtility.Log($"[Helper_SuggestionTextBox] Retrieved {cachedLocations.Count} locations from cache");
+                
                 return Task.FromResult(cachedLocations);
             }
             catch (Exception ex)
@@ -556,7 +556,7 @@ namespace MTM_WIP_Application_Winforms.Helpers
             try
             {
                 var cachedUsers = Helper_UI_ComboBoxes.GetCachedUsers();
-                LoggingUtility.Log($"[Helper_SuggestionTextBox] Retrieved {cachedUsers.Count} users from cache");
+                
                 return Task.FromResult(cachedUsers);
             }
             catch (Exception ex)

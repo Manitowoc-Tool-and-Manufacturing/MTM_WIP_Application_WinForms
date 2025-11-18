@@ -90,7 +90,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                         ["ComponentType"] = "UserControl"
                     });
 
-                LoggingUtility.Log("Control_AdvancedInventory constructor entered.");
+
                 InitializeComponent();
                 SetStyle(ControlStyles.OptimizedDoubleBuffer, true);
                 Service_DebugTracer.TraceUIAction("THEME_APPLICATION", nameof(Control_AdvancedInventory),
@@ -204,7 +204,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                     }
                 };
                 Core_Themes.ApplyFocusHighlighting(this);
-                LoggingUtility.Log("Control_AdvancedInventory constructor exited.");
+
             }
             catch (Exception ex)
             {
@@ -264,7 +264,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             AdvancedInventory_MultiLoc_TextBox_Op.SuggestionSelected += AdvancedInventory_MultiLoc_TextBox_Op_SuggestionSelected;
             AdvancedInventory_MultiLoc_TextBox_Loc.SuggestionSelected += AdvancedInventory_MultiLoc_TextBox_Loc_SuggestionSelected;
 
-            LoggingUtility.Log("[Control_AdvancedInventory] SuggestionTextBox controls configured for Single Entry and Multi-Location tabs");
+
         }
 
         #endregion
@@ -283,7 +283,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                     InventoryTextBoxQty_TextChanged(AdvancedInventory_Single_TextBox_Qty);
                     ValidateQtyTextBox(AdvancedInventory_Single_TextBox_Qty);
                     UpdateSingleSaveButtonState();
-                    LoggingUtility.Log("Single Qty TextBox changed.");
+
                 };
                 AdvancedInventory_Single_TextBox_Qty.Leave += (s, e) =>
                 {
@@ -306,7 +306,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                 {
                     ValidateQtyTextBox(AdvancedInventory_Single_TextBox_Count);
                     UpdateSingleSaveButtonState();
-                    LoggingUtility.Log("Single Count TextBox changed.");
+
                 };
                 AdvancedInventory_Single_TextBox_Count.Leave += (s, e) =>
                 {
@@ -328,19 +328,19 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                 AdvancedInventory_MultiLoc_TextBox_Part.TextChanged += (s, e) =>
                 {
                     UpdateMultiSaveButtonState();
-                    LoggingUtility.Log("MultiLoc Part TextBox changed.");
+
                 };
 
                 AdvancedInventory_MultiLoc_TextBox_Op.TextChanged += (s, e) =>
                 {
                     UpdateMultiSaveButtonState();
-                    LoggingUtility.Log("MultiLoc Op TextBox changed.");
+
                 };
 
                 AdvancedInventory_MultiLoc_TextBox_Loc.TextChanged += (s, e) =>
                 {
                     UpdateMultiSaveButtonState();
-                    LoggingUtility.Log("MultiLoc Loc TextBox changed.");
+
                 };
 
                 AdvancedInventory_MultiLoc_TextBox_Qty.Text = "";
@@ -348,7 +348,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                 {
                     ValidateQtyTextBox(AdvancedInventory_MultiLoc_TextBox_Qty);
                     UpdateMultiSaveButtonState();
-                    LoggingUtility.Log("MultiLoc Qty TextBox changed.");
+
                 };
                 AdvancedInventory_MultiLoc_TextBox_Qty.Leave += (s, e) =>
                 {
@@ -467,11 +467,11 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
         private void AdvancedInventory_Single_TextBox_Part_SuggestionSelected(object? sender, SuggestionSelectedEventArgs e)
         {
             string selectedPart = e.SelectedValue;
-            LoggingUtility.Log($"[Control_AdvancedInventory] Single Part selected: {selectedPart}");
+
 
             // Check if part requires color code and redirect if necessary
             HandleAdvancedInventoryRedirect(selectedPart);
-            
+
             UpdateSingleSaveButtonState();
         }
 
@@ -482,7 +482,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
         private void AdvancedInventory_Single_TextBox_Op_SuggestionSelected(object? sender, SuggestionSelectedEventArgs e)
         {
             string selectedOp = e.SelectedValue;
-            LoggingUtility.Log($"[Control_AdvancedInventory] Single Op selected: {selectedOp}");
+
             UpdateSingleSaveButtonState();
         }
 
@@ -493,7 +493,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
         private void AdvancedInventory_Single_TextBox_Loc_SuggestionSelected(object? sender, SuggestionSelectedEventArgs e)
         {
             string selectedLoc = e.SelectedValue;
-            LoggingUtility.Log($"[Control_AdvancedInventory] Single Loc selected: {selectedLoc}");
+
             UpdateSingleSaveButtonState();
         }
 
@@ -552,11 +552,11 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
         private void AdvancedInventory_MultiLoc_TextBox_Part_SuggestionSelected(object? sender, SuggestionSelectedEventArgs e)
         {
             string selectedPart = e.SelectedValue;
-            LoggingUtility.Log($"[Control_AdvancedInventory] Multi-Loc Part selected: {selectedPart}");
+
 
             // Check if part requires color code and redirect if necessary
             HandleAdvancedInventoryRedirect(selectedPart);
-            
+
             UpdateMultiSaveButtonState();
         }
 
@@ -567,7 +567,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
         private void AdvancedInventory_MultiLoc_TextBox_Op_SuggestionSelected(object? sender, SuggestionSelectedEventArgs e)
         {
             string selectedOp = e.SelectedValue;
-            LoggingUtility.Log($"[Control_AdvancedInventory] Multi-Loc Op selected: {selectedOp}");
+
             UpdateMultiSaveButtonState();
         }
 
@@ -578,7 +578,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
         private void AdvancedInventory_MultiLoc_TextBox_Loc_SuggestionSelected(object? sender, SuggestionSelectedEventArgs e)
         {
             string selectedLoc = e.SelectedValue;
-            LoggingUtility.Log($"[Control_AdvancedInventory] Multi-Loc Loc selected: {selectedLoc}");
+
             UpdateMultiSaveButtonState();
         }
 
@@ -607,11 +607,11 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                     {
                         AdvancedInventory_Single_ListView_Preview.Items.Remove(AdvancedInventory_Single_ListView_Preview.SelectedItems[i]);
                     }
-                    
+
                     UpdateSingleSaveButtonState();
-                    LoggingUtility.Log("[Control_AdvancedInventory] Deleted selected row(s) from Single ListView");
+
                 }
-                
+
                 e.Handled = true;
             }
         }
@@ -637,17 +637,17 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                     {
                         AdvancedInventory_MultiLoc_ListView_Preview.Items.Remove(AdvancedInventory_MultiLoc_ListView_Preview.SelectedItems[i]);
                     }
-                    
+
                     // Re-enable Part field if all items removed
                     if (AdvancedInventory_MultiLoc_ListView_Preview.Items.Count == 0)
                     {
                         AdvancedInventory_MultiLoc_TextBox_Part.Enabled = true;
                     }
-                    
+
                     UpdateMultiSaveButtonState();
-                    LoggingUtility.Log("[Control_AdvancedInventory] Deleted selected row(s) from Multi-Location ListView");
+
                 }
-                
+
                 e.Handled = true;
             }
         }
@@ -1345,7 +1345,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
         {
             try
             {
-                LoggingUtility.Log("AdvancedInventory_Single_Button_Save_Click entered.");
+
 
                 if (AdvancedInventory_Single_ListView_Preview.Items.Count == 0)
                 {
@@ -1451,7 +1451,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                         "Inventory Saved",
                         controlName: nameof(Control_AdvancedInventory));
 
-                    LoggingUtility.Log($"Saved {savedCount} inventory transaction(s) from ListView.");
+
 
                     if (MainFormInstance != null)
                     {
@@ -1511,7 +1511,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             try
             {
                 Debug.WriteLine("Send button clicked");
-                LoggingUtility.Log("Send button clicked");
+
 
                 string partId = AdvancedInventory_Single_TextBox_Part.Text?.Trim() ?? string.Empty;
                 string op = AdvancedInventory_Single_TextBox_Op.Text?.Trim() ?? string.Empty;
@@ -1604,7 +1604,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             {
                 if (Service_Timer_VersionChecker.MainFormInstance is null)
                 {
-                    LoggingUtility.Log("MainForm instance is null, cannot open Advanced Inventory Entry.");
+
                     return;
                 }
 
@@ -1807,7 +1807,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
         {
             try
             {
-                LoggingUtility.Log("AdvancedInventory_MultiLoc_Button_AddLoc_Click entered.");
+
 
                 string partId = AdvancedInventory_MultiLoc_TextBox_Part.Text?.Trim() ?? string.Empty;
                 string op = AdvancedInventory_MultiLoc_TextBox_Op.Text?.Trim() ?? string.Empty;
@@ -1892,7 +1892,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
         {
             try
             {
-                LoggingUtility.Log("AdvancedInventory_MultiLoc_Button_SaveAll_Click entered.");
+
 
                 if (AdvancedInventory_MultiLoc_ListView_Preview.Items.Count == 0)
                 {
@@ -1994,16 +1994,16 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
         {
             string? server = new MySqlConnectionStringBuilder(Model_Application_Variables.ConnectionString).Server;
             string userName = Model_Application_Variables.User ?? Environment.UserName;
-            
+
             // Sanitize username to prevent path traversal
             userName = Path.GetInvalidFileNameChars()
                 .Aggregate(userName, (current, c) => current.Replace(c.ToString(), "_"));
-            
+
             string logFilePath = await Helper_Database_Variables.GetLogFilePathAsync(server, userName);
             string logDir = Directory.GetParent(logFilePath)?.Parent?.FullName ?? "";
             string excelRoot = Path.Combine(logDir, "WIP App Excel Files");
             string userFolder = Path.Combine(excelRoot, userName);
-            
+
             // Validate the path is within the expected directory (prevent directory traversal)
             string fullExcelRoot = Path.GetFullPath(excelRoot);
             string fullUserFolder = Path.GetFullPath(userFolder);
@@ -2011,7 +2011,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             {
                 throw new SecurityException($"Path traversal detected: {userFolder}");
             }
-            
+
             if (!Directory.Exists(userFolder))
             {
                 Directory.CreateDirectory(userFolder);
@@ -2024,14 +2024,14 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
         {
             string userFolder = await GetWipAppExcelUserFolderAsync();
             string userName = Model_Application_Variables.User ?? Environment.UserName;
-            
+
             // Sanitize username for filename
             userName = Path.GetInvalidFileNameChars()
                 .Aggregate(userName, (current, c) => current.Replace(c.ToString(), "_"));
-            
+
             string fileName = $"{userName}_import.xlsx";
             string filePath = Path.Combine(userFolder, fileName);
-            
+
             // Validate the file path is within the user folder (prevent directory traversal)
             string fullUserFolder = Path.GetFullPath(userFolder);
             string fullFilePath = Path.GetFullPath(filePath);
@@ -2039,7 +2039,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             {
                 throw new SecurityException($"Path traversal detected: {filePath}");
             }
-            
+
             return filePath;
         }
 
@@ -2052,48 +2052,48 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             try
             {
                 string excelPath = await GetUserExcelFilePathAsync();
-                
+
                 if (!File.Exists(excelPath))
                 {
-                    LoggingUtility.Log($"[Control_AdvancedInventory] Excel file not found at {excelPath}, creating template...");
-                    
+
+
                     // Create the directory if it doesn't exist
                     string? directory = Path.GetDirectoryName(excelPath);
                     if (!string.IsNullOrEmpty(directory) && !Directory.Exists(directory))
                     {
                         Directory.CreateDirectory(directory);
                     }
-                    
+
                     // Create Excel file with template structure
                     using (XLWorkbook workbook = new())
                     {
                         IXLWorksheet worksheet = workbook.Worksheets.Add("Tab 1");
-                        
+
                         // Add header row
                         worksheet.Cell(1, 1).Value = "Part";
                         worksheet.Cell(1, 2).Value = "Operation";
                         worksheet.Cell(1, 3).Value = "Location";
                         worksheet.Cell(1, 4).Value = "Quantity";
                         worksheet.Cell(1, 5).Value = "Notes";
-                        
+
                         // Format header row
                         var headerRange = worksheet.Range(1, 1, 1, 5);
                         headerRange.Style.Font.Bold = true;
                         headerRange.Style.Fill.BackgroundColor = XLColor.LightGray;
-                        
+
                         // Auto-fit columns
                         worksheet.Columns().AdjustToContents();
-                        
+
                         workbook.SaveAs(excelPath);
                     }
-                    
-                    LoggingUtility.Log($"[Control_AdvancedInventory] Excel template created successfully at {excelPath}");
+
+
                 }
             }
             catch (Exception ex)
             {
                 LoggingUtility.LogApplicationError(ex);
-                LoggingUtility.Log($"[Control_AdvancedInventory] Error ensuring Excel file exists: {ex.Message}");
+
             }
         }
 
@@ -2118,7 +2118,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
 
                     string templatePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Controls",
                         "MainForm", "WIPAppTemplate.xlsx");
-                    
+
                     // Validate template path is within application directory (prevent directory traversal)
                     string fullBaseDir = Path.GetFullPath(AppDomain.CurrentDomain.BaseDirectory);
                     string fullTemplatePath = Path.GetFullPath(templatePath);
@@ -2130,7 +2130,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                             controlName: nameof(AdvancedInventory_Import_Button_OpenExcel));
                         return;
                     }
-                    
+
                     if (File.Exists(templatePath))
                     {
                         File.Copy(templatePath, excelPath, false);

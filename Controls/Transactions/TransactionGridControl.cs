@@ -101,15 +101,16 @@ internal partial class TransactionGridControl : ThemedUserControl
     {
         InitializeComponent();
 
-        LoggingUtility.Log("[TransactionGridControl] Initializing...");
+
 
         InitializeColumns();
         WireUpEvents();
+        ApplyAnalyticsVisibility(false);
 
         // Initially disable Export and Print buttons until grid has data
         SetExportPrintButtonsEnabled(false);
 
-        LoggingUtility.Log("[TransactionGridControl] Initialization complete.");
+
     }
 
     #endregion
@@ -257,7 +258,7 @@ internal partial class TransactionGridControl : ThemedUserControl
 
         try
         {
-            LoggingUtility.Log($"[TransactionGridControl] Displaying {results.Transactions.Count} transactions (Page {results.CurrentPage} of {results.TotalPages}).");
+
 
             _currentResults = results;
             _currentPage = results.CurrentPage;
@@ -280,7 +281,7 @@ internal partial class TransactionGridControl : ThemedUserControl
                 bool hasData = results.Transactions != null && results.Transactions.Count > 0;
                 SetExportPrintButtonsEnabled(hasData);
 
-                LoggingUtility.Log($"[TransactionGridControl] Results displayed successfully.");
+
             }
             finally
             {
@@ -305,7 +306,7 @@ internal partial class TransactionGridControl : ThemedUserControl
         TransactionGridControl_DataGridView_Transactions.DataSource = null;
         TransactionGridControl_TransactionDetailPanel.ClearDetails();
         UpdatePaginationControls();
-        
+
         // Disable Export and Print buttons when grid is cleared
         SetExportPrintButtonsEnabled(false);
     }
@@ -318,8 +319,8 @@ internal partial class TransactionGridControl : ThemedUserControl
     {
         TransactionGridControl_Button_Export.Enabled = enabled;
         TransactionGridControl_Button_Print.Enabled = enabled;
-        
-        LoggingUtility.Log($"[TransactionGridControl] Export/Print buttons {(enabled ? "enabled" : "disabled")}");
+
+
     }
 
     /// <summary>
@@ -346,7 +347,7 @@ internal partial class TransactionGridControl : ThemedUserControl
         {
             if (_currentResults != null && _currentResults.HasPreviousPage)
             {
-                LoggingUtility.Log($"[TransactionGridControl] Previous button clicked. Navigating to page {_currentPage - 1}.");
+
                 PageChanged?.Invoke(this, _currentPage - 1);
             }
         }
@@ -364,7 +365,7 @@ internal partial class TransactionGridControl : ThemedUserControl
         {
             if (_currentResults != null && _currentResults.HasNextPage)
             {
-                LoggingUtility.Log($"[TransactionGridControl] Next button clicked. Navigating to page {_currentPage + 1}.");
+
                 PageChanged?.Invoke(this, _currentPage + 1);
             }
         }
@@ -380,7 +381,7 @@ internal partial class TransactionGridControl : ThemedUserControl
     {
         try
         {
-            LoggingUtility.Log("[TransactionGridControl] Go To Page button clicked.");
+
             GoToPageFromTextBox();
         }
         catch (Exception ex)
@@ -395,7 +396,7 @@ internal partial class TransactionGridControl : ThemedUserControl
     {
         try
         {
-            LoggingUtility.Log("[TransactionGridControl] Show/Hide Search button clicked.");
+
             ToggleSearchRequested?.Invoke(this, EventArgs.Empty);
         }
         catch (Exception ex)
@@ -410,7 +411,7 @@ internal partial class TransactionGridControl : ThemedUserControl
     {
         try
         {
-            LoggingUtility.Log("[TransactionGridControl] Toggle Details button clicked.");
+
             ToggleInformationPanel();
         }
         catch (Exception ex)
@@ -425,8 +426,8 @@ internal partial class TransactionGridControl : ThemedUserControl
     {
         try
         {
-            LoggingUtility.Log("[TransactionGridControl] Export button clicked.");
-            
+
+
             // Raise export event for parent form to handle
             ExportRequested?.Invoke(this, EventArgs.Empty);
         }
@@ -442,7 +443,7 @@ internal partial class TransactionGridControl : ThemedUserControl
     {
         try
         {
-            LoggingUtility.Log("[TransactionGridControl] Print button clicked.");
+
 
             // Raise print event for parent form to handle
             PrintRequested?.Invoke(this, EventArgs.Empty);
@@ -459,26 +460,9 @@ internal partial class TransactionGridControl : ThemedUserControl
     {
         try
         {
-            LoggingUtility.Log("[TransactionGridControl] Analytics button clicked.");
-            
-            // Toggle analytics visibility - hide/show in place of DataGridView
-            TransactionGridControl_Model_Transactions_Core_AnalyticsControl.Visible = !TransactionGridControl_Model_Transactions_Core_AnalyticsControl.Visible;
-            TransactionGridControl_DataGridView_Transactions.Visible = !TransactionGridControl_Model_Transactions_Core_AnalyticsControl.Visible;
-            
-            // Update button text to indicate current state
-            if (TransactionGridControl_Model_Transactions_Core_AnalyticsControl.Visible)
-            {
-                TransactionGridControl_Button_Analytics.Text = "📋";
-                TransactionGridControl_Button_Analytics.ToolTipText = "Show transaction grid";
-                LoggingUtility.Log("[TransactionGridControl] Analytics panel shown, DataGridView hidden.");
-            }
-            else
-            {
-                TransactionGridControl_Button_Analytics.Text = "📈";
-                TransactionGridControl_Button_Analytics.ToolTipText = "Show analytics summary";
-                LoggingUtility.Log("[TransactionGridControl] Analytics panel hidden, DataGridView shown.");
-            }
-            
+
+            ApplyAnalyticsVisibility(!TransactionGridControl_Model_Transactions_Core_AnalyticsControl.Visible);
+
             // Raise analytics event for parent form to handle (e.g., refresh analytics data)
             AnalyticsRequested?.Invoke(this, EventArgs.Empty);
         }
@@ -499,7 +483,7 @@ internal partial class TransactionGridControl : ThemedUserControl
     {
         try
         {
-            LoggingUtility.Log("[TransactionGridControl] Toggle Privileges button clicked (Debug mode).");
+
 
             // Get current user ID from database
             var userResult = await Data.Dao_User.GetUserByUsernameAsync(Model_Application_Variables.User);
@@ -532,7 +516,7 @@ internal partial class TransactionGridControl : ThemedUserControl
                 _ => "User"
             };
 
-            LoggingUtility.Log($"[TransactionGridControl] Cycling role from {currentRole} to {nextRole}");
+
 
             // Get the next role ID
             var getRoleIdParams = new Dictionary<string, object>
@@ -592,7 +576,7 @@ internal partial class TransactionGridControl : ThemedUserControl
             Model_Application_Variables.UserTypeReadOnly = nextRole == "ReadOnly";
             Model_Application_Variables.UserTypeNormal = nextRole == "User";
 
-            LoggingUtility.Log($"[TransactionGridControl] Successfully changed role to {nextRole}");
+
 
             // Show confirmation message using Service_ErrorHandler
             Service_ErrorHandler.ShowInformation(
@@ -644,11 +628,11 @@ internal partial class TransactionGridControl : ThemedUserControl
             var selectedTransaction = SelectedTransaction;
             if (selectedTransaction != null)
             {
-                LoggingUtility.Log($"[TransactionGridControl] Row selected: Transaction ID {selectedTransaction.ID}");
-                
+
+
                 // Update the detail panel with the selected transaction
                 TransactionGridControl_TransactionDetailPanel.Transaction = selectedTransaction;
-                
+
                 // Raise event for parent form
                 RowSelected?.Invoke(this, selectedTransaction);
             }
@@ -670,11 +654,11 @@ internal partial class TransactionGridControl : ThemedUserControl
     /// </summary>
     private void UpdatePaginationControls()
     {
-        LoggingUtility.Log($"[TransactionGridControl.UpdatePaginationControls] Called");
-        
+
+
         if (_currentResults == null)
         {
-            LoggingUtility.Log($"[TransactionGridControl.UpdatePaginationControls] _currentResults is NULL");
+
             TransactionGridControl_Button_Previous.Enabled = false;
             TransactionGridControl_Button_Next.Enabled = false;
             TransactionGridControl_Label_PageIndicator.Text = "Page 0 of 0";
@@ -684,20 +668,20 @@ internal partial class TransactionGridControl : ThemedUserControl
             return;
         }
 
-        LoggingUtility.Log($"[TransactionGridControl.UpdatePaginationControls] _currentResults:");
-        LoggingUtility.Log($"  - TotalRecordCount: {_currentResults.TotalRecordCount}");
-        LoggingUtility.Log($"  - CurrentPage: {_currentResults.CurrentPage}");
-        LoggingUtility.Log($"  - TotalPages: {_currentResults.TotalPages}");
-        LoggingUtility.Log($"  - HasPreviousPage: {_currentResults.HasPreviousPage}");
-        LoggingUtility.Log($"  - HasNextPage: {_currentResults.HasNextPage}");
+
+
+
+
+
+
 
         // Enable/disable navigation buttons
         TransactionGridControl_Button_Previous.Enabled = _currentResults.HasPreviousPage;
         TransactionGridControl_Button_Next.Enabled = _currentResults.HasNextPage;
 
-        LoggingUtility.Log($"[TransactionGridControl.UpdatePaginationControls] Button states:");
-        LoggingUtility.Log($"  - Previous.Enabled: {TransactionGridControl_Button_Previous.Enabled}");
-        LoggingUtility.Log($"  - Next.Enabled: {TransactionGridControl_Button_Next.Enabled}");
+
+
+
 
         // Update labels
         TransactionGridControl_Label_PageIndicator.Text = $"Page {_currentResults.CurrentPage} of {_currentResults.TotalPages}";
@@ -776,7 +760,7 @@ internal partial class TransactionGridControl : ThemedUserControl
                 }
             }
 
-            LoggingUtility.Log($"[TransactionGridControl] Row colors applied to {TransactionGridControl_DataGridView_Transactions.Rows.Count} rows.");
+
         }
         catch (Exception ex)
         {
@@ -792,19 +776,39 @@ internal partial class TransactionGridControl : ThemedUserControl
 
         if (visible)
         {
-            TransactionGridControl_TableLayout_Main.SetColumnSpan(TransactionGridControl_DataGridView_Transactions, 1);
+            TransactionGridControl_TableLayout_Main.SetColumnSpan(TransactionGridControl_Panel_DataGridView, 1);
             TransactionGridControl_Button_ToggleDetails.Text = "◀ 📋";
             TransactionGridControl_Button_ToggleDetails.ToolTipText = "Hide transaction details panel";
         }
         else
         {
-            TransactionGridControl_TableLayout_Main.SetColumnSpan(TransactionGridControl_DataGridView_Transactions, 2);
+            TransactionGridControl_TableLayout_Main.SetColumnSpan(TransactionGridControl_Panel_DataGridView, 2);
             TransactionGridControl_Button_ToggleDetails.Text = "📋 ▶";
             TransactionGridControl_Button_ToggleDetails.ToolTipText = "Show transaction details panel";
         }
 
-        LoggingUtility.Log($"[TransactionGridControl] Details panel visibility: {visible}");
         InformationPanelToggled?.Invoke(this, visible);
+    }
+
+    private void ApplyAnalyticsVisibility(bool showAnalytics)
+    {
+        TransactionGridControl_Model_Transactions_Core_AnalyticsControl.Visible = showAnalytics;
+        TransactionGridControl_DataGridView_Transactions.Visible = !showAnalytics;
+
+        if (showAnalytics)
+        {
+            TransactionGridControl_Model_Transactions_Core_AnalyticsControl.BringToFront();
+            TransactionGridControl_Button_Analytics.Text = "Grid";
+            TransactionGridControl_Button_Analytics.ToolTipText = "Show transaction grid";
+
+        }
+        else
+        {
+            TransactionGridControl_DataGridView_Transactions.BringToFront();
+            TransactionGridControl_Button_Analytics.Text = "Analytics";
+            TransactionGridControl_Button_Analytics.ToolTipText = "Show analytics summary";
+
+        }
     }
 
     #endregion

@@ -209,7 +209,7 @@ suggestionTextBox1.ApplyConfig(config);
 ```csharp
 suggestionTextBox1.SuggestionSelected += (sender, e) =>
 {
-    LoggingUtility.Log($"User selected '{e.SelectedValue}' from '{e.OriginalInput}'");
+    
     // Optional: trigger dependent field updates
 };
 ```

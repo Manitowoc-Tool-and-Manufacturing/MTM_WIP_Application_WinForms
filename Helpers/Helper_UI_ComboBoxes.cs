@@ -427,7 +427,7 @@ namespace MTM_WIP_Application_Winforms.Helpers
                 
                 if (!ComboBoxPart_DataTable.Columns.Contains("PartID"))
                 {
-                    LoggingUtility.Log("[Helper_UI_ComboBoxes] GetCachedPartNumbers: PartID column not found in cache");
+                    
                     return suggestions;
                 }
 
@@ -462,7 +462,7 @@ namespace MTM_WIP_Application_Winforms.Helpers
                 
                 if (!ComboBoxItemType_DataTable.Columns.Contains("ItemType"))
                 {
-                    LoggingUtility.Log("[Helper_UI_ComboBoxes] GetCachedItemTypes: ItemType column not found in cache");
+                    
                     return suggestions;
                 }
 
@@ -497,7 +497,7 @@ namespace MTM_WIP_Application_Winforms.Helpers
                 
                 if (!ComboBoxOperation_DataTable.Columns.Contains("Operation"))
                 {
-                    LoggingUtility.Log("[Helper_UI_ComboBoxes] GetCachedOperations: Operation column not found in cache");
+                    
                     return suggestions;
                 }
 
@@ -532,7 +532,7 @@ namespace MTM_WIP_Application_Winforms.Helpers
                 
                 if (!ComboBoxLocation_DataTable.Columns.Contains("Location"))
                 {
-                    LoggingUtility.Log("[Helper_UI_ComboBoxes] GetCachedLocations: Location column not found in cache");
+                    
                     return suggestions;
                 }
 
@@ -567,7 +567,7 @@ namespace MTM_WIP_Application_Winforms.Helpers
                 
                 if (!ComboBoxUser_DataTable.Columns.Contains("User"))
                 {
-                    LoggingUtility.Log("[Helper_UI_ComboBoxes] GetCachedUsers: User column not found in cache");
+                    
                     return suggestions;
                 }
 
@@ -733,7 +733,7 @@ namespace MTM_WIP_Application_Winforms.Helpers
         {
             if (source == null || source.Rows.Count == 0)
             {
-                LoggingUtility.Log($"[DataTable] {tableName}: Source DataTable is null or empty, skipping merge");
+                
                 return true; // Not an error, just nothing to merge
             }
 
@@ -759,10 +759,10 @@ namespace MTM_WIP_Application_Winforms.Helpers
                     var sourceColumns = string.Join(", ", sourceSchema.Select(c => $"{c.ColumnName}({c.DataType.Name})"));
                     var targetColumns = string.Join(", ", targetSchema.Select(c => $"{c.ColumnName}({c.DataType.Name})"));
 
-                    LoggingUtility.Log($"[DataTable] {tableName}: Schema mismatch detected");
-                    LoggingUtility.Log($"[DataTable] {tableName}: Source schema: {sourceColumns}");
-                    LoggingUtility.Log($"[DataTable] {tableName}: Target schema: {targetColumns}");
-                    LoggingUtility.Log($"[DataTable] {tableName}: Replacing target table with source copy instead of merging");
+                    
+                    
+                    
+                    
 
                     // Clear and replace with a copy of the source
                     target.Clear();
@@ -774,13 +774,13 @@ namespace MTM_WIP_Application_Winforms.Helpers
 
                 // Schemas match, safe to merge
                 target.Merge(source);
-                LoggingUtility.Log($"[DataTable] {tableName}: Successfully merged {source.Rows.Count} rows");
+                
                 return true;
             }
             catch (ArgumentException ex)
             {
                 // Handle constraint violations during merge
-                LoggingUtility.Log($"[DataTable] {tableName}: ArgumentException during merge: {ex.Message}");
+                
                 LoggingUtility.LogApplicationError(ex);
 
                 // Fallback: Replace instead of merge
@@ -789,19 +789,19 @@ namespace MTM_WIP_Application_Winforms.Helpers
                     target.Clear();
                     target.Columns.Clear();
                     target.Merge(source.Copy());
-                    LoggingUtility.Log($"[DataTable] {tableName}: Replaced table after merge failure");
+                    
                     return false;
                 }
                 catch (Exception replaceEx)
                 {
-                    LoggingUtility.Log($"[DataTable] {tableName}: Failed to replace table: {replaceEx.Message}");
+                    
                     LoggingUtility.LogApplicationError(replaceEx);
                     return false;
                 }
             }
             catch (Exception ex)
             {
-                LoggingUtility.Log($"[DataTable] {tableName}: Unexpected error during merge: {ex.Message}");
+                
                 LoggingUtility.LogApplicationError(ex);
                 return false;
             }

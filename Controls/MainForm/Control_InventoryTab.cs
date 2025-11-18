@@ -43,7 +43,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
         /// </remarks>
         public void SetProgressControls(ToolStripProgressBar progressBar, ToolStripStatusLabel statusLabel)
         {
-            _progressHelper = Helper_StoredProcedureProgress.Create(progressBar, statusLabel, 
+            _progressHelper = Helper_StoredProcedureProgress.Create(progressBar, statusLabel,
                 this.FindForm() ?? throw new InvalidOperationException("Control must be added to a form"));
         }
 
@@ -100,10 +100,10 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                         {
                             // Reload cache to include new custom color
                             await Model_Application_Variables.ReloadColorCodePartsAsync();
-                            
+
                             // Do NOT change user's casing in the textbox
                             Control_InventoryTab_SuggestionBox_ColorCode.Text = userEnteredColor;
-                            LoggingUtility.Log($"Custom color added (DB stored as UPPER): {colorForDatabase}");
+
                         }
                         else
                         {
@@ -191,7 +191,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                     ["LayoutAdjustments"] = "AUTO_APPLIED_BY_BASE",
                     ["FocusHighlighting"] = "AUTO_APPLIED_BY_BASE"
                 });
-                
+
 
             Service_DebugTracer.TraceUIAction("TOOLTIPS_SETUP", nameof(Control_InventoryTab),
                 new Dictionary<string, object>
@@ -244,15 +244,15 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                 });
             // ForeColor is now managed automatically by SuggestionTextBox and validation logic
             Control_InventoryTab_SuggestionBox_Part.TextBox.Focus();
-            
+
             // PlaceholderText is now set in Designer instead of programmatically setting Text
-            
+
             // Disable tab stop on F4 buttons - they should not be in tab order
             Control_InventoryTab_SuggestionBox_Part.SetF4ButtonTabStop(false);
             Control_InventoryTab_SuggestionBox_Operation.SetF4ButtonTabStop(false);
             Control_InventoryTab_SuggestionBox_Location.SetF4ButtonTabStop(false);
             Control_InventoryTab_SuggestionBox_ColorCode.SetF4ButtonTabStop(false);
-        
+
             Service_DebugTracer.TraceUIAction("PRIVILEGES_APPLIED", nameof(Control_InventoryTab));
             ApplyPrivileges();
 
@@ -352,55 +352,55 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             {
                 _progressHelper?.ShowProgress();
                 _progressHelper?.UpdateProgress(5, "Loading validation data...");
-                
+
                 // Load validation data for exact match checking
                 await Helper_UI_SuggestionBoxes.LoadAllDataAsync();
-                
+
                 _progressHelper?.UpdateProgress(8, "Loading color code caches...");
                 await Model_Application_Variables.ReloadColorCodePartsAsync();
-                LoggingUtility.Log("[InventoryTab Startup] Color code caches loaded: Parts=" + Model_Application_Variables.ColorCodeParts.Count + ", Colors=" + Model_Application_Variables.ValidColorCodes.Count);
-                
+
+
                 Control_InventoryTab_Button_Save.Enabled = false;
                 _progressHelper?.UpdateProgress(10, "Configuring part suggestions...");
-                
+
                 // Configure SuggestionTextBox controls using helper methods with F4 support
                 Helper_SuggestionTextBox.ConfigureForPartNumbers(
-                    Control_InventoryTab_SuggestionBox_Part.TextBox, 
-                    GetPartNumberSuggestionsAsync, 
+                    Control_InventoryTab_SuggestionBox_Part.TextBox,
+                    GetPartNumberSuggestionsAsync,
                     enableF4: false); // F4 handled by composite control button
-                
+
                 _progressHelper?.UpdateProgress(40, "Configuring operation suggestions...");
-                
+
                 Helper_SuggestionTextBox.ConfigureForOperations(
-                    Control_InventoryTab_SuggestionBox_Operation.TextBox, 
-                    GetOperationSuggestionsAsync, 
+                    Control_InventoryTab_SuggestionBox_Operation.TextBox,
+                    GetOperationSuggestionsAsync,
                     enableF4: false);
-                
+
                 _progressHelper?.UpdateProgress(70, "Configuring location suggestions...");
-                
+
                 Helper_SuggestionTextBox.ConfigureForLocations(
-                    Control_InventoryTab_SuggestionBox_Location.TextBox, 
-                    GetLocationSuggestionsAsync, 
+                    Control_InventoryTab_SuggestionBox_Location.TextBox,
+                    GetLocationSuggestionsAsync,
                     enableF4: false);
 
                 _progressHelper?.UpdateProgress(85, "Configuring color code suggestions...");
-                
+
                 Helper_SuggestionTextBox.ConfigureForColorCodes(
-                    Control_InventoryTab_SuggestionBox_ColorCode.TextBox, 
-                    GetColorCodeSuggestionsAsync, 
+                    Control_InventoryTab_SuggestionBox_ColorCode.TextBox,
+                    GetColorCodeSuggestionsAsync,
                     enableF4: false);
 
                 _progressHelper?.UpdateProgress(100, "Combo boxes loaded");
                 await Task.Delay(100);
-                
-                LoggingUtility.Log("Inventory tab suggestion controls configured.");
+
+
                 Service_DebugTracer.TraceMethodExit("Success", nameof(Control_InventoryTab), nameof(Control_InventoryTab_OnStartup_LoadDataComboBoxesAsync));
             }
             catch (Exception ex)
             {
                 LoggingUtility.LogApplicationError(ex);
                 Service_DebugTracer.TraceMethodExit(new { Exception = ex.Message }, nameof(Control_InventoryTab), nameof(Control_InventoryTab_OnStartup_LoadDataComboBoxesAsync));
-                
+
                 Service_ErrorHandler.HandleException(
                     ex,
                     Enum_ErrorSeverity.High,
@@ -699,7 +699,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             {
                 LoggingUtility.LogApplicationError(ex);
                 Service_DebugTracer.TraceMethodExit(new { Exception = ex.Message }, nameof(Control_InventoryTab), nameof(ProcessCmdKey));
-                
+
                 Service_ErrorHandler.HandleException(
                     ex,
                     Enum_ErrorSeverity.Medium,
@@ -709,7 +709,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                         ["KeyData"] = keyData.ToString()
                     },
                     controlName: nameof(Control_InventoryTab));
-                
+
                 return false;
             }
         }
@@ -729,7 +729,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             {
                 if (Service_Timer_VersionChecker.MainFormInstance is null)
                 {
-                    LoggingUtility.Log("MainForm instance is null, cannot open Advanced Inventory Removal.");
+
                     Service_DebugTracer.TraceMethodExit("MainForm instance null", nameof(Control_InventoryTab), nameof(Control_InventoryTab_Button_AdvancedEntry_Click));
                     return;
                 }
@@ -809,7 +809,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             {
                 LoggingUtility.LogApplicationError(ex);
                 Service_DebugTracer.TraceMethodExit(new { Exception = ex.Message }, nameof(Control_InventoryTab), nameof(Control_InventoryTab_Button_AdvancedEntry_Click));
-                
+
                 Service_ErrorHandler.HandleException(
                     ex,
                     Enum_ErrorSeverity.Medium,
@@ -850,7 +850,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             {
                 LoggingUtility.LogApplicationError(ex);
                 Service_DebugTracer.TraceMethodExit(new { Exception = ex.Message }, nameof(Control_InventoryTab), nameof(Control_InventoryTab_Button_Reset_Click));
-                
+
                 Service_ErrorHandler.HandleException(
                     ex,
                     Enum_ErrorSeverity.Medium,
@@ -877,7 +877,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
         /// - Refills all combo boxes with fresh data
         /// - Resets all input fields to default placeholder values
         /// - Resets focus to Part combo box
-        /// 
+        ///
         /// Use when master data may have changed or combo boxes are out of sync.
         /// Triggered by: Shift + Click on Reset button or Shift + Keyboard shortcut.
         /// </remarks>
@@ -917,7 +917,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                 Control_InventoryTab_SuggestionBox_Part.Text = string.Empty;
                 Control_InventoryTab_SuggestionBox_Operation.Text = string.Empty;
                 Control_InventoryTab_SuggestionBox_Location.Text = string.Empty;
-                
+
                 Control_InventoryTab_SuggestionBox_Quantity.Text = string.Empty;
                 Control_InventoryTab_SuggestionBox_ColorCode.Text = string.Empty;
                 Control_InventoryTab_SuggestionBox_WorkOrder.Text = string.Empty;
@@ -938,7 +938,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                 Debug.WriteLine($"[ERROR] Exception in InventoryTab Reset: {ex}");
                 LoggingUtility.LogApplicationError(ex);
                 Service_DebugTracer.TraceMethodExit(new { Exception = ex.Message }, nameof(Control_InventoryTab), nameof(Control_InventoryTab_HardReset));
-                
+
                 Service_ErrorHandler.HandleException(
                     ex,
                     Enum_ErrorSeverity.High,
@@ -992,7 +992,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                 Control_InventoryTab_SuggestionBox_Part.Text = string.Empty;
                 Control_InventoryTab_SuggestionBox_Operation.Text = string.Empty;
                 Control_InventoryTab_SuggestionBox_Location.Text = string.Empty;
-                
+
                 Control_InventoryTab_SuggestionBox_Quantity.Text = string.Empty;
                 Control_InventoryTab_SuggestionBox_ColorCode.Text = string.Empty;
                 Control_InventoryTab_SuggestionBox_WorkOrder.Text = string.Empty;
@@ -1008,7 +1008,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                 Debug.WriteLine($"[ERROR] Exception in InventoryTab SoftReset: {ex}");
                 LoggingUtility.LogApplicationError(ex);
                 Service_DebugTracer.TraceMethodExit(new { Exception = ex.Message }, nameof(Control_InventoryTab), nameof(Control_InventoryTab_SoftReset));
-                
+
                 Service_ErrorHandler.HandleException(
                     ex,
                     Enum_ErrorSeverity.Medium,
@@ -1050,7 +1050,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             {
                 _progressHelper?.ShowProgress();
                 _progressHelper?.UpdateProgress(10, "Saving inventory transaction...");
-                LoggingUtility.Log("Inventory Save button clicked.");
+
 
                 string partId = Control_InventoryTab_SuggestionBox_Part.Text ?? string.Empty;
                 string op = Control_InventoryTab_SuggestionBox_Operation.Text ?? string.Empty;
@@ -1108,7 +1108,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                 Model_Application_Variables.User ??= Environment.UserName;
 
                 _progressHelper?.UpdateProgress(40, "Adding inventory item...");
-                
+
                 Service_DebugTracer.TraceMethodEntry(new Dictionary<string, object>
                 {
                     ["PartId"] = partId,
@@ -1117,7 +1117,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                     ["Quantity"] = qty,
                     ["User"] = Model_Application_Variables.User
                 }, nameof(Control_InventoryTab), "AddInventoryItemAsync");
-                
+
                 // Verify the transaction succeeded before proceeding
                 var inventoryResult = await Dao_Inventory.AddInventoryItemAsync(
                     partId,
@@ -1138,7 +1138,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                 if (!inventoryResult.IsSuccess)
                 {
                     LoggingUtility.LogApplicationError(new Exception($"Inventory transaction failed: {inventoryResult.ErrorMessage}"));
-                    
+
                     Service_ErrorHandler.HandleException(
                         inventoryResult.Exception ?? new Exception(inventoryResult.ErrorMessage),
                         Enum_ErrorSeverity.Medium,
@@ -1152,20 +1152,20 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                             ["User"] = Model_Application_Variables.User
                         },
                         controlName: nameof(Control_InventoryTab_Button_Save));
-                    
+
                     // Update status to show failure
                     if (MainFormInstance != null)
                     {
-                        MainFormInstance.MainForm_StatusStrip_SavedStatus.Text = 
+                        MainFormInstance.MainForm_StatusStrip_SavedStatus.Text =
                             $@"Failed to save inventory transaction @ {DateTime.Now:hh:mm tt}";
                     }
-                    
+
                     Service_DebugTracer.TraceMethodExit("Save failed: DAO returned error", nameof(Control_InventoryTab), nameof(Control_InventoryTab_Button_Save_Click_Async));
                     return;
                 }
 
-                LoggingUtility.Log($"Inventory transaction verified successful: {inventoryResult.StatusMessage}");
-                
+
+
                 _progressHelper?.UpdateProgress(70, "Updating recent transactions...");
                 await AddToLast10TransactionsIfUniqueAsync(Model_Application_Variables.User, partId, op, qty);
 
@@ -1184,20 +1184,20 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                 }
 
                 _progressHelper?.UpdateProgress(100, "Save complete");
-                LoggingUtility.Log("Inventory Save operation completed successfully.");
+
                 Service_DebugTracer.TraceMethodExit("Success", nameof(Control_InventoryTab), nameof(Control_InventoryTab_Button_Save_Click_Async));
             }
             catch (Exception ex)
             {
                 LoggingUtility.LogApplicationError(ex);
-                
+
                 // Update status to show error occurred
                 if (MainFormInstance != null)
                 {
-                    MainFormInstance.MainForm_StatusStrip_SavedStatus.Text = 
+                    MainFormInstance.MainForm_StatusStrip_SavedStatus.Text =
                         $@"Error occurred during save operation @ {DateTime.Now:hh:mm tt}";
                 }
-                
+
                 Service_ErrorHandler.HandleException(
                     ex,
                     Enum_ErrorSeverity.High,
@@ -1208,7 +1208,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                         ["ControlType"] = nameof(Control_InventoryTab)
                     },
                     controlName: nameof(Control_InventoryTab));
-                
+
                 Service_DebugTracer.TraceMethodExit(new { Exception = ex.Message }, nameof(Control_InventoryTab), nameof(Control_InventoryTab_Button_Save_Click_Async));
             }
             finally
@@ -1312,26 +1312,26 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                 string partText = Control_InventoryTab_SuggestionBox_Part.Text?.Trim() ?? string.Empty;
                 string opText = Control_InventoryTab_SuggestionBox_Operation.Text?.Trim() ?? string.Empty;
                 string locText = Control_InventoryTab_SuggestionBox_Location.Text?.Trim() ?? string.Empty;
-                
-                bool partValid = !string.IsNullOrWhiteSpace(Model_Application_Variables.PartId) 
+
+                bool partValid = !string.IsNullOrWhiteSpace(Model_Application_Variables.PartId)
                     || Helper_UI_SuggestionBoxes.IsValidPartId(partText);
-                bool opValid = !string.IsNullOrWhiteSpace(Model_Application_Variables.Operation) 
+                bool opValid = !string.IsNullOrWhiteSpace(Model_Application_Variables.Operation)
                     || Helper_UI_SuggestionBoxes.IsValidOperation(opText);
-                bool locValid = !string.IsNullOrWhiteSpace(Model_Application_Variables.Location) 
+                bool locValid = !string.IsNullOrWhiteSpace(Model_Application_Variables.Location)
                     || Helper_UI_SuggestionBoxes.IsValidLocation(locText);
                 bool qtyValid = int.TryParse(Control_InventoryTab_SuggestionBox_Quantity.Text?.Trim() ?? "", out int qty) && qty > 0;
-                
+
                 // Check if color code is required and valid
                 bool colorCodeValid = true;
                 if (Control_InventoryTab_SuggestionBox_ColorCode.TextBox.Visible)
                 {
                     string colorCodeText = Control_InventoryTab_SuggestionBox_ColorCode.Text?.Trim() ?? string.Empty;
-                    
+
                     // Color code is required when visible
                     if (string.IsNullOrWhiteSpace(colorCodeText))
                     {
                         colorCodeValid = false;
-                        LoggingUtility.Log("[Save Button] ColorCode validation FAILED: empty (required)");
+
                     }
                     else
                     {
@@ -1339,27 +1339,27 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                         if (Model_Application_Variables.ValidColorCodes.Count == 0)
                         {
                             colorCodeValid = true; // optimistic until cache loads
-                            LoggingUtility.Log("[Save Button] ColorCode tentative PASS (cache empty, will revalidate later)");
+
                         }
                         else
                         {
                             colorCodeValid = IsValidColorCode(colorCodeText);
-                            LoggingUtility.Log($"[Save Button] ColorCode validation '{colorCodeText}': {(colorCodeValid ? "PASSED" : "FAILED")} (cache has {Model_Application_Variables.ValidColorCodes.Count} colors)");
+
                         }
                     }
                 }
-                
+
                 // Check if work order is required and valid
                 bool workOrderValid = true;
                 if (Control_InventoryTab_SuggestionBox_WorkOrder.Visible)
                 {
                     string workOrderText = Control_InventoryTab_SuggestionBox_WorkOrder.Text?.Trim() ?? string.Empty;
-                    
+
                     // Work order is required when visible and must pass validator (without altering textbox)
                     if (string.IsNullOrWhiteSpace(workOrderText))
                     {
                         workOrderValid = false;
-                        LoggingUtility.Log($"[Save Button] WorkOrder validation FAILED: empty (required)");
+
                     }
                     else
                     {
@@ -1367,10 +1367,10 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                             workOrderText,
                             out _,
                             out _);
-                        LoggingUtility.Log($"[Save Button] WorkOrder validation '{workOrderText}': {(workOrderValid ? "PASSED" : "FAILED")}");
+
                     }
                 }
-                
+
                 // Update Model_Application_Variables from exact matches
                 if (partValid && !string.IsNullOrWhiteSpace(partText))
                 {
@@ -1379,7 +1379,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                         Model_Application_Variables.PartId = partText; // Set from exact match
                     }
                 }
-                
+
                 if (opValid && !string.IsNullOrWhiteSpace(opText))
                 {
                     if (string.IsNullOrWhiteSpace(Model_Application_Variables.Operation))
@@ -1387,7 +1387,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                         Model_Application_Variables.Operation = opText; // Set from exact match
                     }
                 }
-                
+
                 if (locValid && !string.IsNullOrWhiteSpace(locText))
                 {
                     if (string.IsNullOrWhiteSpace(Model_Application_Variables.Location))
@@ -1395,7 +1395,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                         Model_Application_Variables.Location = locText; // Set from exact match
                     }
                 }
-                
+
                 bool saveEnabled = partValid && opValid && locValid && qtyValid && colorCodeValid && workOrderValid;
                 Service_DebugTracer.TraceUIAction("SAVE_BUTTON_VALIDATION", nameof(Control_InventoryTab), new Dictionary<string, object>
                 {
@@ -1478,13 +1478,13 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                 Control_InventoryTab_SuggestionBox_Part.TextBox.SuggestionSelected += (s, e) =>
                 {
                     Model_Application_Variables.PartId = e.SelectedValue;
-                    LoggingUtility.Log($"Part suggestion selected: {e.SelectedValue}");
+
                     Control_InventoryTab_Update_SaveButtonState();
-                    
+
                     // Show/hide color code and work order fields based on part requirements
                     UpdateColorCodeFieldsVisibility();
                 };
-                
+
                 // Clear PartId when user manually types (not selecting from overlay)
                 Control_InventoryTab_SuggestionBox_Part.TextChanged += (s, e) =>
                 {
@@ -1494,15 +1494,15 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                         Model_Application_Variables.PartId = null;
                         Control_InventoryTab_Update_SaveButtonState();
                     }
-                    
+
                     // Show/hide color code and work order fields based on part requirements
                     UpdateColorCodeFieldsVisibility();
                 };
-                
+
                 Control_InventoryTab_SuggestionBox_Operation.TextBox.SuggestionSelected += (s, e) =>
                 {
                     Model_Application_Variables.Operation = e.SelectedValue;
-                    LoggingUtility.Log($"Operation suggestion selected: {e.SelectedValue}");
+
                     Control_InventoryTab_Update_SaveButtonState();
                 };
 
@@ -1519,7 +1519,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                 Control_InventoryTab_SuggestionBox_Location.TextBox.SuggestionSelected += (s, e) =>
                 {
                     Model_Application_Variables.Location = e.SelectedValue;
-                    LoggingUtility.Log($"Location suggestion selected: {e.SelectedValue}");
+
                     Control_InventoryTab_Update_SaveButtonState();
                 };
 
@@ -1547,7 +1547,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                 // Color code "OTHER" selection handler and standard validation
                 Control_InventoryTab_SuggestionBox_ColorCode.TextBox.SuggestionSelected += (s, e) =>
                 {
-                    LoggingUtility.Log($"Color code suggestion selected: {e.SelectedValue}");
+
                     Control_InventoryTab_Update_SaveButtonState();
                 };
 
@@ -1571,7 +1571,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                 {
                     ValidateAndFormatWorkOrder();
                 };
-                
+
                 // Work order text changed - update save button state
                 Control_InventoryTab_SuggestionBox_WorkOrder.TextBox.TextChanged += (s, e) =>
                 {
@@ -1594,7 +1594,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                 }
                 catch { /* Controls may not be available at design-time */ }
 
-                LoggingUtility.Log("Inventory tab events wired up.");
+
             }
             catch (Exception ex)
             {
@@ -1665,10 +1665,10 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                 if (!string.IsNullOrWhiteSpace(colorInput) && !IsValidColorCode(colorInput))
                 {
                     // Invalid color - clear and show overlay
-                    LoggingUtility.Log($"[Color Validation] Invalid color '{colorInput}' - clearing and showing overlay");
-                    
+
+
                     Control_InventoryTab_SuggestionBox_ColorCode.Text = string.Empty;
-                    
+
                     // Show suggestion overlay with all colors
                     await Control_InventoryTab_SuggestionBox_ColorCode.TextBox.ShowSuggestionsAsync();
                 }

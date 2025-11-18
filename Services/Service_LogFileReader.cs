@@ -20,19 +20,19 @@ public class Service_LogFileReader
     private const int DefaultWindowSize = 500;
 
     /// <summary>
-    /// Regex pattern for detecting normal log filename format: 
+    /// Regex pattern for detecting normal log filename format:
     /// - USERNAME YYYY-MM-DD @ H-MM [AM/PM]_normal.csv
     /// </summary>
     private static readonly Regex NormalLogPattern = new(@"_normal\.csv$", RegexOptions.Compiled | RegexOptions.IgnoreCase);
 
     /// <summary>
-    /// Regex pattern for detecting application error filename format: 
+    /// Regex pattern for detecting application error filename format:
     /// - USERNAME YYYY-MM-DD @ H-MM [AM/PM]_app_error.csv
     /// </summary>
     private static readonly Regex AppErrorPattern = new(@"_app_error\.csv$", RegexOptions.Compiled | RegexOptions.IgnoreCase);
 
     /// <summary>
-    /// Regex pattern for detecting database error filename format: 
+    /// Regex pattern for detecting database error filename format:
     /// - USERNAME YYYY-MM-DD @ H-MM [AM/PM]_db_error.csv
     /// </summary>
     private static readonly Regex DbErrorPattern = new(@"_db_error\.csv$", RegexOptions.Compiled | RegexOptions.IgnoreCase);
@@ -59,14 +59,14 @@ public class Service_LogFileReader
         string? userDirectory = Helper_LogPath.GetUserLogDirectory(username);
         if (userDirectory == null)
         {
-            LoggingUtility.Log($"[Service_LogFileReader] Invalid username or directory path: {username}");
+
             return new List<Model_LogFile>();
         }
 
         // Ensure directory exists
         if (!Directory.Exists(userDirectory))
         {
-            LoggingUtility.Log($"[Service_LogFileReader] Directory does not exist: {userDirectory}");
+
             return new List<Model_LogFile>();
         }
 
@@ -86,7 +86,7 @@ public class Service_LogFileReader
                         // Validate path security
                         if (!Helper_LogPath.IsPathSafe(filePath))
                         {
-                            LoggingUtility.Log($"[Service_LogFileReader] Skipping unsafe path: {filePath}");
+
                             continue;
                         }
 
@@ -99,7 +99,7 @@ public class Service_LogFileReader
                         // Skip empty files - don't show them in the viewer
                         if (fileInfo.Length == 0)
                         {
-                            LoggingUtility.Log($"[Service_LogFileReader] Skipping empty file: {fileInfo.Name}");
+
                             continue;
                         }
 
@@ -123,7 +123,7 @@ public class Service_LogFileReader
                     }
                     catch (Exception ex)
                     {
-                        LoggingUtility.Log($"[Service_LogFileReader] Error processing file: {filePath}");
+
                         LoggingUtility.LogApplicationError(ex);
                     }
                 }
@@ -132,17 +132,17 @@ public class Service_LogFileReader
             // Sort by modified date descending (most recent first)
             logFiles = logFiles.OrderByDescending(f => f.ModifiedDate).ToList();
 
-            LoggingUtility.Log($"[Service_LogFileReader] Enumerated {logFiles.Count} log files for user: {username}");
+
         }
         catch (UnauthorizedAccessException ex)
         {
-            LoggingUtility.Log($"[Service_LogFileReader] Access denied to directory: {userDirectory}");
+
             LoggingUtility.LogApplicationError(ex);
             throw;
         }
         catch (Exception ex)
         {
-            LoggingUtility.Log($"[Service_LogFileReader] Error enumerating log files for user: {username}");
+
             LoggingUtility.LogApplicationError(ex);
             throw;
         }
@@ -198,7 +198,7 @@ public class Service_LogFileReader
 
         var lineBuilder = new StringBuilder();
         bool inQuotes = false;
-        
+
         while (!reader.EndOfStream)
         {
             string? physicalLine = await reader.ReadLineAsync().ConfigureAwait(false);
@@ -211,7 +211,7 @@ public class Service_LogFileReader
             {
                 lineBuilder.AppendLine(); // Preserve newline within quoted field
             }
-            
+
             lineBuilder.Append(physicalLine);
 
             // Count quotes in this line to determine if we're inside a quoted field
@@ -307,7 +307,7 @@ public class Service_LogFileReader
                 string? header = await ReadCsvLineAsync(reader).ConfigureAwait(false);
                 if (header != null && header.StartsWith("Timestamp,", StringComparison.OrdinalIgnoreCase))
                 {
-                    LoggingUtility.Log($"[Service_LogFileReader] Skipped CSV header in {Path.GetFileName(filePath)}");
+
                 }
                 else
                 {
@@ -343,17 +343,17 @@ public class Service_LogFileReader
                 currentIndex++;
             }
 
-            LoggingUtility.Log($"[Service_LogFileReader] Loaded {entries.Count} CSV entries from {Path.GetFileName(filePath)} (start: {startIndex}, requested: {count})");
+
         }
         catch (UnauthorizedAccessException ex)
         {
-            LoggingUtility.Log($"[Service_LogFileReader] Access denied to file: {filePath}");
+
             LoggingUtility.LogApplicationError(ex);
             throw;
         }
         catch (Exception ex)
         {
-            LoggingUtility.Log($"[Service_LogFileReader] Error loading CSV entries from file: {filePath}");
+
             LoggingUtility.LogApplicationError(ex);
             throw;
         }
@@ -423,11 +423,11 @@ public class Service_LogFileReader
                 entryCount++;
             }
 
-            LoggingUtility.Log($"[Service_LogFileReader] Counted {entryCount} CSV entries in {Path.GetFileName(filePath)}{(skippedHeader ? " (header excluded)" : "")}");
+
         }
         catch (Exception ex)
         {
-            LoggingUtility.Log($"[Service_LogFileReader] Error counting CSV entries in file: {filePath}");
+
             LoggingUtility.LogApplicationError(ex);
             throw;
         }

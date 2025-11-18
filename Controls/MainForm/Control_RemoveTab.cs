@@ -47,7 +47,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
         /// </remarks>
         public void SetProgressControls(ToolStripProgressBar progressBar, ToolStripStatusLabel statusLabel)
         {
-            _progressHelper = Helper_StoredProcedureProgress.Create(progressBar, statusLabel, 
+            _progressHelper = Helper_StoredProcedureProgress.Create(progressBar, statusLabel,
                 this.FindForm() ?? throw new InvalidOperationException("Control must be added to a form"));
         }
 
@@ -203,7 +203,7 @@ SetStyle(ControlStyles.OptimizedDoubleBuffer, true);
             {
                 await Control_RemoveTab_OnStartup_LoadDataComboBoxesAsync();
                 Control_RemoveTab_OnStartup_WireUpEvents();
-                LoggingUtility.Log("Initial setup of ComboBoxes in the Remove Tab.");
+
                 Control_RemoveTab_Button_Search.Enabled = false;
                 Control_RemoveTab_Button_Delete.Enabled = false;
 
@@ -211,7 +211,7 @@ SetStyle(ControlStyles.OptimizedDoubleBuffer, true);
                 {
                     Model_Application_Variables.UserFullName =
                         await Dao_User.GetUserFullNameAsync(Model_Application_Variables.User);
-                    LoggingUtility.Log($"User full name loaded: {Model_Application_Variables.UserFullName}");
+
                 }
                 catch (Exception ex)
                 {
@@ -247,20 +247,20 @@ SetStyle(ControlStyles.OptimizedDoubleBuffer, true);
                 // Configure SuggestionTextBoxWithLabel controls by wiring their inner textboxes
                 Helper_SuggestionTextBox.ConfigureForPartNumbers(
                     Control_RemoveTab_TextBox_Part.TextBox,
-                    GetPartNumberSuggestionsAsync, 
+                    GetPartNumberSuggestionsAsync,
                     enableF4: true);
 
                 _progressHelper?.UpdateProgress(70, "Configuring operation suggestions...");
 
                 Helper_SuggestionTextBox.ConfigureForOperations(
                     Control_RemoveTab_TextBox_Operation.TextBox,
-                    GetOperationSuggestionsAsync, 
+                    GetOperationSuggestionsAsync,
                     enableF4: true);
 
                 _progressHelper?.UpdateProgress(100, "Suggestion controls configured");
                 await Task.Delay(100);
 
-                LoggingUtility.Log("Remove tab suggestion controls configured.");
+
             }
             catch (Exception ex)
             {
@@ -439,17 +439,17 @@ SetStyle(ControlStyles.OptimizedDoubleBuffer, true);
 
                 DataGridView? dgv = Control_RemoveTab_DataGridView_Main;
                 int selectedCount = dgv.SelectedRows.Count;
-                LoggingUtility.Log($"Delete clicked. Selected rows: {selectedCount}");
+
 
                 if (selectedCount == 0)
                 {
-                    LoggingUtility.Log("No rows selected for deletion.");
+
                     return;
                 }
 
                 // Build confirmation message showing what will be deleted
                 var itemsToDelete = GetSelectedItemsToDelete(out string itemsSummary);
-                
+
                 string confirmMessage;
                 if (itemsToDelete.Count == 1)
                 {
@@ -469,7 +469,7 @@ SetStyle(ControlStyles.OptimizedDoubleBuffer, true);
 
                 if (confirmResult != DialogResult.Yes)
                 {
-                    LoggingUtility.Log("User cancelled deletion.");
+
                     return;
                 }
 
@@ -478,11 +478,11 @@ SetStyle(ControlStyles.OptimizedDoubleBuffer, true);
                 StringBuilder sb = new();
                 int attempted = 0;
                 var removeResult = await Dao_Inventory.RemoveInventoryItemsFromDataGridViewAsync(dgv, true);
-                LoggingUtility.Log($"Remove operation result: Success={removeResult.IsSuccess}, StatusMessage={removeResult.StatusMessage}");
-                
+
+
                 int removedCount = 0;
                 List<string> errorMessages = new();
-                
+
                 if (removeResult.IsSuccess)
                 {
                     removedCount = removeResult.Data.RemovedCount;
@@ -607,7 +607,7 @@ SetStyle(ControlStyles.OptimizedDoubleBuffer, true);
 
                 _progressHelper?.UpdateProgress(80, "Refreshing results...");
                 Service_ErrorHandler.ShowConfirmation(@"Undo successful. Removed items have been restored.", @"Undo", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                LoggingUtility.Log("Undo: Removed items restored.");
+
 
                 _lastRemovedItems.Clear();
 
@@ -619,7 +619,7 @@ SetStyle(ControlStyles.OptimizedDoubleBuffer, true);
             catch (Exception ex)
             {
                 LoggingUtility.LogApplicationError(ex);
-                Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Medium, 
+                Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Medium,
                     controlName: nameof(Control_RemoveTab));
                     // Show warning dialog if >1000 records before loading results
 
@@ -812,7 +812,7 @@ SetStyle(ControlStyles.OptimizedDoubleBuffer, true);
             {
                 if (Service_Timer_VersionChecker.MainFormInstance == null)
                 {
-                    LoggingUtility.Log("MainForm instance is null, cannot open Advanced Inventory Removal.");
+
                     return;
                 }
 
@@ -870,7 +870,7 @@ SetStyle(ControlStyles.OptimizedDoubleBuffer, true);
             {
                 if (Service_Timer_VersionChecker.MainFormInstance == null)
                 {
-                    LoggingUtility.Log("MainForm instance is null, cannot return to normal Remove tab.");
+
                     return;
                 }
 
@@ -899,7 +899,7 @@ SetStyle(ControlStyles.OptimizedDoubleBuffer, true);
                 _progressHelper?.ShowProgress();
                 _progressHelper?.UpdateProgress(10, "Searching inventory...");
 
-                LoggingUtility.Log("RemoveTab Search button clicked.");
+
 
                 string partId = Control_RemoveTab_TextBox_Part.Text?.Trim() ?? "";
                 string op = Control_RemoveTab_TextBox_Operation.Text?.Trim() ?? "";
@@ -927,7 +927,7 @@ SetStyle(ControlStyles.OptimizedDoubleBuffer, true);
                         LoggingUtility.LogDatabaseError(
                             partOpResult.Exception ?? new Exception(partOpResult.ErrorMessage),
                             Enum_DatabaseEnum_ErrorSeverity.Error);
-                        
+
                         Service_ErrorHandler.HandleException(
                             partOpResult.Exception ?? new Exception(partOpResult.ErrorMessage ?? "Failed to retrieve inventory by part and operation"),
                             Enum_ErrorSeverity.High,
@@ -955,7 +955,7 @@ SetStyle(ControlStyles.OptimizedDoubleBuffer, true);
                         LoggingUtility.LogDatabaseError(
                             partResult.Exception ?? new Exception(partResult.ErrorMessage),
                             Enum_DatabaseEnum_ErrorSeverity.Error);
-                        
+
                         Service_ErrorHandler.HandleException(
                             partResult.Exception ?? new Exception(partResult.ErrorMessage ?? "Failed to retrieve inventory by part"),
                             Enum_ErrorSeverity.High,
@@ -1068,11 +1068,11 @@ SetStyle(ControlStyles.OptimizedDoubleBuffer, true);
         {
             try
             {
-                LoggingUtility.Log("[RemoveTab] Print requested.");
+
 
                 if (Control_RemoveTab_DataGridView_Main is null || Control_RemoveTab_DataGridView_Main.Rows.Count == 0)
                 {
-                    LoggingUtility.Log("[RemoveTab] Print aborted - grid is empty.");
+
                     Service_ErrorHandler.HandleValidationError(
                         "No records available to print. Run a search or perform an inventory removal first.",
                         "Print");
@@ -1090,7 +1090,7 @@ SetStyle(ControlStyles.OptimizedDoubleBuffer, true);
                 {
                     if (t.IsCompletedSuccessfully)
                     {
-                        LoggingUtility.Log($"[RemoveTab] Print dialog closed with result: {t.Result}.");
+
                     }
                     else if (t.IsFaulted)
                     {
@@ -1154,7 +1154,7 @@ SetStyle(ControlStyles.OptimizedDoubleBuffer, true);
             try
             {
                 Control_RemoveTab_Button_Reset.Click += (s, e) => Control_RemoveTab_Button_Reset_Click();
-                
+
                 // SuggestionTextBox event handlers - simplified
                 Control_RemoveTab_TextBox_Part.TextBox.TextChanged += (s, e) => Control_RemoveTab_Update_ButtonStates();
                 Control_RemoveTab_TextBox_Operation.TextBox.TextChanged += (s, e) => Control_RemoveTab_Update_ButtonStates();
@@ -1187,7 +1187,7 @@ SetStyle(ControlStyles.OptimizedDoubleBuffer, true);
 
                 Control_RemoveTab_Button_Delete.Click += Control_RemoveTab_Button_Delete_Click;
 
-                LoggingUtility.Log("Removal tab events wired up.");
+
             }
             catch (Exception ex)
             {
@@ -1225,17 +1225,17 @@ SetStyle(ControlStyles.OptimizedDoubleBuffer, true);
 
                 if (!getAllResult.IsSuccess)
                 {
-                    string errorMsg = !string.IsNullOrEmpty(getAllResult.ErrorMessage) 
-                        ? getAllResult.ErrorMessage 
+                    string errorMsg = !string.IsNullOrEmpty(getAllResult.ErrorMessage)
+                        ? getAllResult.ErrorMessage
                         : "Unknown error occurred while loading inventory";
                     var dbException = new Exception($"Show All failed: {errorMsg}");
-                    Service_ErrorHandler.HandleDatabaseError(dbException, 
+                    Service_ErrorHandler.HandleDatabaseError(dbException,
                         controlName: nameof(Control_RemoveTab));
                     return;
                 }
 
                 DataTable dt = getAllResult.Data ?? new DataTable();
-                LoggingUtility.Log($"[SHOW ALL DEBUG] Retrieved {dt.Rows.Count} inventory records. Success: {getAllResult.IsSuccess}");
+
 
                 bool hasColorColumns = dt.Columns.Contains("ColorCode") && dt.Columns.Contains("Location");
                 bool singlePartColorTracked = IsSingleColorTrackedPart(dt);
@@ -1296,7 +1296,7 @@ SetStyle(ControlStyles.OptimizedDoubleBuffer, true);
                 Core_Themes.SizeDataGrid(Control_RemoveTab_DataGridView_Main);
                 Control_RemoveTab_Image_NothingFound.Visible = dt.Rows.Count == 0;
                 SetSearchPanelCollapsed(true);
-                
+
                 // Show success message to replace any warning/error from stored procedure
                 if (dt.Rows.Count == 0)
                 {
@@ -1310,7 +1310,7 @@ SetStyle(ControlStyles.OptimizedDoubleBuffer, true);
             catch (Exception ex)
             {
                 LoggingUtility.LogApplicationError(ex);
-                Service_ErrorHandler.HandleDatabaseError(ex, 
+                Service_ErrorHandler.HandleDatabaseError(ex,
                     controlName: nameof(Control_RemoveTab));
                 _progressHelper?.ShowError("Failed to load inventory");
             }

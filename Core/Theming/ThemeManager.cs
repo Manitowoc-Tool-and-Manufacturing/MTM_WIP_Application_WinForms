@@ -92,10 +92,10 @@ public class ThemeManager : IThemeProvider, IDisposable
             if (!Model_Application_Variables.ThemeEnabled && reason != ThemeChangeReason.Preview)
             {
                 _logger.LogInformation("Theme change to '{ThemeName}' skipped - theming is disabled", themeName);
-                LoggingUtility.Log($"Theme change to '{themeName}' skipped - theming is disabled globally");
+
                 return;
             }
-            
+
             var oldTheme = CurrentTheme;
             var newTheme = await _themeStore.GetThemeAsync(themeName);
 
@@ -113,7 +113,7 @@ public class ThemeManager : IThemeProvider, IDisposable
                 reason,
                 userId ?? "<none>");
 
-            LoggingUtility.Log($"Theme changed to '{themeName}' - Reason: {reason}");
+
 
             // Notify all subscribers
             NotifySubscribers(oldTheme, newTheme, userId, reason);
@@ -306,7 +306,7 @@ public class ThemeManager : IThemeProvider, IDisposable
         {
             _logger.LogInformation("Applying queued theme '{ThemeName}' to form '{FormName}' after load complete",
                 pending.ThemeName, form.Name);
-            
+
             await SetThemeAsync(pending.ThemeName, pending.Reason, pending.UserId);
         }
     }
@@ -335,7 +335,7 @@ public class ThemeManager : IThemeProvider, IDisposable
         }
 
         _debouncer.Dispose();
-        
+
         lock (_subscriberLock)
         {
             _subscribers.Clear();

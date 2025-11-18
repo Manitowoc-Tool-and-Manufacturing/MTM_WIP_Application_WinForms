@@ -47,10 +47,10 @@ public static class Service_PromptStatusManager
         try
         {
             string? filePath = GetStatusFilePath();
-            
+
             if (filePath == null)
             {
-                LoggingUtility.Log("[Service_PromptStatusManager] Failed to get status file path");
+
                 return new List<Model_PromptStatus>();
             }
 
@@ -59,36 +59,36 @@ public static class Service_PromptStatusManager
                 // Create empty JSON file if it doesn't exist
                 if (!File.Exists(filePath))
                 {
-                    LoggingUtility.Log($"[Service_PromptStatusManager] Creating new status file: {filePath}");
+
                     InitializeEmptyStatusFile(filePath);
                     return new List<Model_PromptStatus>();
                 }
 
                 // Read and deserialize JSON
                 string json = File.ReadAllText(filePath);
-                
+
                 if (string.IsNullOrWhiteSpace(json))
                 {
-                    LoggingUtility.Log("[Service_PromptStatusManager] Status file is empty, returning empty list");
+
                     return new List<Model_PromptStatus>();
                 }
 
                 var statuses = JsonSerializer.Deserialize<List<Model_PromptStatus>>(json, _jsonOptions);
-                
-                LoggingUtility.Log($"[Service_PromptStatusManager] Loaded {statuses?.Count ?? 0} prompt statuses");
-                
+
+
+
                 return statuses ?? new List<Model_PromptStatus>();
             }
         }
         catch (JsonException ex)
         {
-            LoggingUtility.Log("[Service_PromptStatusManager] JSON deserialization error loading statuses");
+
             LoggingUtility.LogApplicationError(ex);
             return new List<Model_PromptStatus>();
         }
         catch (Exception ex)
         {
-            LoggingUtility.Log("[Service_PromptStatusManager] Error loading prompt statuses");
+
             LoggingUtility.LogApplicationError(ex);
             return new List<Model_PromptStatus>();
         }
@@ -104,7 +104,7 @@ public static class Service_PromptStatusManager
     {
         if (statuses == null)
         {
-            LoggingUtility.Log("[Service_PromptStatusManager] SaveStatus called with null statuses list");
+
             return false;
         }
 
@@ -113,15 +113,15 @@ public static class Service_PromptStatusManager
             // Ensure Prompt Fixes directory exists
             if (!Helper_LogPath.CreatePromptFixesDirectory())
             {
-                LoggingUtility.Log("[Service_PromptStatusManager] Failed to create Prompt Fixes directory");
+
                 return false;
             }
 
             string? filePath = GetStatusFilePath();
-            
+
             if (filePath == null)
             {
-                LoggingUtility.Log("[Service_PromptStatusManager] Failed to get status file path");
+
                 return false;
             }
 
@@ -129,24 +129,24 @@ public static class Service_PromptStatusManager
             {
                 // Serialize to JSON with indentation
                 string json = JsonSerializer.Serialize(statuses, _jsonOptions);
-                
+
                 // Write to file
                 File.WriteAllText(filePath, json);
-                
-                LoggingUtility.Log($"[Service_PromptStatusManager] Saved {statuses.Count} prompt statuses to {filePath}");
-                
+
+
+
                 return true;
             }
         }
         catch (JsonException ex)
         {
-            LoggingUtility.Log("[Service_PromptStatusManager] JSON serialization error saving statuses");
+
             LoggingUtility.LogApplicationError(ex);
             return false;
         }
         catch (Exception ex)
         {
-            LoggingUtility.Log("[Service_PromptStatusManager] Error saving prompt statuses");
+
             LoggingUtility.LogApplicationError(ex);
             return false;
         }
@@ -165,7 +165,7 @@ public static class Service_PromptStatusManager
         }
 
         var statuses = LoadStatus();
-        return statuses.FirstOrDefault(s => 
+        return statuses.FirstOrDefault(s =>
             s.MethodName.Equals(methodName, StringComparison.OrdinalIgnoreCase));
     }
 
@@ -182,16 +182,16 @@ public static class Service_PromptStatusManager
     {
         if (string.IsNullOrWhiteSpace(methodName))
         {
-            LoggingUtility.Log("[Service_PromptStatusManager] UpdateStatus called with empty method name");
+
             return false;
         }
 
         try
         {
             var statuses = LoadStatus();
-            
+
             // Find existing status
-            var existing = statuses.FirstOrDefault(s => 
+            var existing = statuses.FirstOrDefault(s =>
                 s.MethodName.Equals(methodName, StringComparison.OrdinalIgnoreCase));
 
             if (existing != null)
@@ -199,18 +199,18 @@ public static class Service_PromptStatusManager
                 // Update existing record
                 existing.Status = status;
                 existing.LastUpdated = DateTime.Now;
-                
+
                 if (assignee != null)
                 {
                     existing.Assignee = assignee;
                 }
-                
+
                 if (notes != null)
                 {
                     existing.Notes = notes;
                 }
-                
-                LoggingUtility.Log($"[Service_PromptStatusManager] Updated status for method: {methodName}");
+
+
             }
             else
             {
@@ -225,17 +225,17 @@ public static class Service_PromptStatusManager
                     Assignee = assignee,
                     Notes = notes
                 };
-                
+
                 statuses.Add(newStatus);
-                
-                LoggingUtility.Log($"[Service_PromptStatusManager] Created new status for method: {methodName}");
+
+
             }
 
             return SaveStatus(statuses);
         }
         catch (Exception ex)
         {
-            LoggingUtility.Log($"[Service_PromptStatusManager] Error updating status for method: {methodName}");
+
             LoggingUtility.LogApplicationError(ex);
             return false;
         }
@@ -264,7 +264,7 @@ public static class Service_PromptStatusManager
         try
         {
             string? promptFixesDir = Helper_LogPath.GetPromptFixesDirectory();
-            
+
             if (promptFixesDir == null)
             {
                 return null;
@@ -274,7 +274,7 @@ public static class Service_PromptStatusManager
         }
         catch (Exception ex)
         {
-            LoggingUtility.Log("[Service_PromptStatusManager] Error getting status file path");
+
             LoggingUtility.LogApplicationError(ex);
             return null;
         }
@@ -291,12 +291,12 @@ public static class Service_PromptStatusManager
             var emptyList = new List<Model_PromptStatus>();
             string json = JsonSerializer.Serialize(emptyList, _jsonOptions);
             File.WriteAllText(filePath, json);
-            
-            LoggingUtility.Log($"[Service_PromptStatusManager] Initialized empty status file: {filePath}");
+
+
         }
         catch (Exception ex)
         {
-            LoggingUtility.Log($"[Service_PromptStatusManager] Error initializing status file: {filePath}");
+
             LoggingUtility.LogApplicationError(ex);
         }
     }

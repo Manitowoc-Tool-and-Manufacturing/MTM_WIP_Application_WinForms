@@ -426,7 +426,7 @@ private Model_LogEntry ParseEntryWithFallback(string rawText)
             return entry;
         
         // FR-040: Log parse failure
-        LoggingUtility.Log($"[LogViewer] Parse failed for entry, using raw view: {rawText.Substring(0, Math.Min(50, rawText.Length))}");
+        
         
         return Model_LogEntry.CreateRawEntry(rawText);
     }
@@ -481,7 +481,7 @@ private async Task LoadFileWithProgressAsync(string filePath)
         // Performance logging
         if (stopwatch.ElapsedMilliseconds > 2000)
         {
-            LoggingUtility.Log($"[Performance] Slow log file load: {stopwatch.ElapsedMilliseconds}ms for {entries.Count} entries");
+            
         }
         
         _progressHelper?.ShowSuccess($"Loaded {entries.Count} entries in {stopwatch.ElapsedMilliseconds}ms");
@@ -645,7 +645,7 @@ private async Task ExportVisibleEntriesAsync()
         // SC-006: Export 500 entries in <1s
         if (stopwatch.ElapsedMilliseconds > 1000)
         {
-            LoggingUtility.Log($"[Performance] Slow export: {stopwatch.ElapsedMilliseconds}ms for {filteredEntries.Count} entries");
+            
         }
         
         Service_ErrorHandler.ShowInformation($"Exported {filteredEntries.Count} entries to {Path.GetFileName(dialog.FileName)}");

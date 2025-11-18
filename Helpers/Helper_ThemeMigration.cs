@@ -29,7 +29,7 @@ public static class Helper_ThemeMigration
         _themeProvider = themeProvider;
         _initialized = true;
 
-        LoggingUtility.Log("[ThemeMigration] Migration helper initialized with DI theme provider");
+        
     }
 
     /// <summary>
@@ -49,7 +49,7 @@ public static class Helper_ThemeMigration
         // Check if form is using new DI-based ThemedForm
         if (form is ThemedForm themedForm)
         {
-            LoggingUtility.Log($"[ThemeMigration] Form '{form.Name}' is ThemedForm - using DI-based theme system");
+            
 
             // ThemedForm handles its own theme subscription automatically via constructor
             // No manual theme application needed - it's already subscribed to theme changes
@@ -82,20 +82,20 @@ public static class Helper_ThemeMigration
 
         if (!_initialized || _themeProvider == null)
         {
-            LoggingUtility.Log($"[ThemeMigration] Cannot subscribe form '{form.Name}' - migration helper not initialized");
+            
             return;
         }
 
         if (form is ThemedForm)
         {
             // ThemedForm already subscribes in its constructor
-            LoggingUtility.Log($"[ThemeMigration] Form '{form.Name}' is ThemedForm - already auto-subscribed");
+            
             return;
         }
 
         // For legacy forms, subscribe manually via migration adapter
         _themeProvider.Subscribe(form);
-        LoggingUtility.Log($"[ThemeMigration] Manually subscribed legacy form '{form.Name}' to theme changes");
+        
     }
 
     /// <summary>
@@ -110,6 +110,6 @@ public static class Helper_ThemeMigration
         }
 
         _themeProvider.Unsubscribe(form);
-        LoggingUtility.Log($"[ThemeMigration] Unsubscribed form '{form.Name}' from theme changes");
+        
     }
 }
