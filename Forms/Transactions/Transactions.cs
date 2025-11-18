@@ -42,6 +42,9 @@ internal partial class Transactions : ThemedForm
 
         LoggingUtility.Log($"[Transactions] User: {_currentUser}, IsAdmin: {_isAdmin}");
 
+        Transactions_UserControl_Search.SetExportPrintButtonsEnabled(false);
+        Transactions_UserControl_Search.SetInformationPanelCollapsed(!Transactions_UserControl_Grid.InformationPanelVisible);
+
         WireUpEvents();
         
         LoggingUtility.Log("[Transactions] Starting async initialization...");
@@ -58,12 +61,14 @@ internal partial class Transactions : ThemedForm
         Transactions_UserControl_Search.ResetRequested += SearchControl_ResetRequested;
         Transactions_UserControl_Search.ExportRequested += SearchControl_ExportRequested;
         Transactions_UserControl_Search.PrintRequested += SearchControl_PrintRequested;
+        Transactions_UserControl_Search.ToggleInformationPanelRequested += SearchControl_ToggleInformationPanelRequested;
         Transactions_UserControl_Grid.PageChanged += GridControl_PageChanged;
         Transactions_UserControl_Grid.RowSelected += GridControl_RowSelected;
         Transactions_UserControl_Grid.ToggleSearchRequested += GridControl_ToggleSearchRequested;
         Transactions_UserControl_Grid.ExportRequested += SearchControl_ExportRequested;
         Transactions_UserControl_Grid.PrintRequested += SearchControl_PrintRequested;
         Transactions_UserControl_Grid.AnalyticsRequested += GridControl_AnalyticsRequested;
+        Transactions_UserControl_Grid.InformationPanelToggled += GridControl_InformationPanelToggled;
         Transactions_UserControl_Grid.DataGridView.KeyDown += DataGridView_KeyDown;
         this.Load += Transactions_Load;
     }
@@ -138,6 +143,7 @@ internal partial class Transactions : ThemedForm
 
             // Clear previous results before new search
             Transactions_UserControl_Grid.ClearResults();
+            Transactions_UserControl_Search.SetExportPrintButtonsEnabled(false);
 
             var result = await _viewModel.SearchTransactionsAsync(criteria, _currentUser, _isAdmin, page: 1)
                 .ConfigureAwait(false);
@@ -151,11 +157,15 @@ internal partial class Transactions : ThemedForm
                     LoggingUtility.Log($"[Transactions] Displaying {result.Data.Transactions.Count} transactions (Page {result.Data.CurrentPage} of {result.Data.TotalPages})");
                     _currentSearchResults = result.Data; // Store for analytics
                     Transactions_UserControl_Grid.DisplayResults(result.Data);
+
+                    bool hasData = result.Data.Transactions != null && result.Data.Transactions.Count > 0;
+                    Transactions_UserControl_Search.SetExportPrintButtonsEnabled(hasData);
                 }
                 else
                 {
                     LoggingUtility.Log($"[Transactions] Search failed or returned no data. Error: {result.ErrorMessage}");
                     Service_ErrorHandler.HandleValidationError(result.ErrorMessage ?? "Search failed", "Search");
+                    Transactions_UserControl_Search.SetExportPrintButtonsEnabled(false);
                 }
             });
         }
@@ -165,6 +175,11 @@ internal partial class Transactions : ThemedForm
             Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Medium, retryAction: null,
                 contextData: new Dictionary<string, object> { ["Criteria"] = criteria.ToString() },
                 controlName: nameof(Transactions_UserControl_Search));
+
+            if (!IsDisposed)
+            {
+                this.Invoke(() => Transactions_UserControl_Search.SetExportPrintButtonsEnabled(false));
+            }
         }
     }
 
@@ -172,6 +187,7 @@ internal partial class Transactions : ThemedForm
     {
         LoggingUtility.Log("[Transactions] Reset requested, clearing grid results.");
         Transactions_UserControl_Grid.ClearResults();
+        Transactions_UserControl_Search.SetExportPrintButtonsEnabled(false);
     }
 
     private async void SearchControl_ExportRequested(object? sender, EventArgs e)
@@ -323,11 +339,15 @@ internal partial class Transactions : ThemedForm
                     LoggingUtility.Log($"[Transactions] Page {newPage} loaded with {result.Data.Transactions.Count} transactions.");
                     _currentSearchResults = result.Data; // Store for analytics
                     Transactions_UserControl_Grid.DisplayResults(result.Data);
+
+                    bool hasData = result.Data.Transactions != null && result.Data.Transactions.Count > 0;
+                    Transactions_UserControl_Search.SetExportPrintButtonsEnabled(hasData);
                 }
                 else
                 {
                     LoggingUtility.Log($"[Transactions] Failed to load page {newPage}. Error: {result.ErrorMessage}");
                     Service_ErrorHandler.HandleValidationError(result.ErrorMessage ?? "Failed to load page", "Pagination");
+                    Transactions_UserControl_Search.SetExportPrintButtonsEnabled(false);
                 }
             });
         }
@@ -347,6 +367,26 @@ internal partial class Transactions : ThemedForm
             LoggingUtility.Log($"[Transactions] Row selected: Transaction #{transaction.ID} ({transaction.TransactionType})");
             this.Text = $"Transaction Viewer - Selected: {transaction.TransactionType} #{transaction.ID}";
         }
+    }
+
+    private void SearchControl_ToggleInformationPanelRequested(object? sender, EventArgs e)
+    {
+        try
+        {
+            LoggingUtility.Log("[Transactions] Information panel toggle requested from search control.");
+            Transactions_UserControl_Grid.ToggleInformationPanel();
+        }
+        catch (Exception ex)
+        {
+            LoggingUtility.LogApplicationError(ex);
+            Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Low,
+                controlName: nameof(Transactions_UserControl_Grid));
+        }
+    }
+
+    private void GridControl_InformationPanelToggled(object? sender, bool isVisible)
+    {
+        Transactions_UserControl_Search.SetInformationPanelCollapsed(!isVisible);
     }
 
     private void GridControl_ToggleSearchRequested(object? sender, EventArgs e)

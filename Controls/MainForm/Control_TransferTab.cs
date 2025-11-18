@@ -31,8 +31,10 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
         private Control_TextAnimationSequence? _inputPanelAnimator;
         private Control_TextAnimationSequence? _rightPanelAnimator;
         private float _inputPanelStoredWidth = InputPanelFallbackWidth;
+        private float _inputPanelOriginalWidth = InputPanelFallbackWidth;
+        private bool _inputPanelInitialWidthCaptured;
 
-        private const float InputPanelFallbackWidth = 320f;
+        private const float InputPanelFallbackWidth = 312f;
 
         #endregion
 
@@ -1366,22 +1368,27 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
         private void CacheInputPanelWidth()
         {
             float width = 0;
+            bool hasRealMeasurement = false;
 
-            if (Control_TransferTab_Panel_Inputs?.Width > 0)
+            if (Control_TransferTab_Panel_Inputs?.Visible == true && Control_TransferTab_Panel_Inputs.Width > 0)
             {
                 width = Control_TransferTab_Panel_Inputs.Width;
+                hasRealMeasurement = true;
             }
-            else if (Control_TransferTab_TableLayout_Inputs?.Width > 0)
+            else if (Control_TransferTab_TableLayout_Inputs?.Visible == true && Control_TransferTab_TableLayout_Inputs.Width > 0)
             {
                 width = Control_TransferTab_TableLayout_Inputs.Width;
+                hasRealMeasurement = true;
             }
             else if (Control_TransferTab_TableLayout_Inputs?.MaximumSize.Width > 0)
             {
                 width = Control_TransferTab_TableLayout_Inputs.MaximumSize.Width;
+                hasRealMeasurement = true;
             }
             else if (Control_TransferTab_TableLayout_Inputs?.PreferredSize.Width > 0)
             {
                 width = Control_TransferTab_TableLayout_Inputs.PreferredSize.Width;
+                hasRealMeasurement = true;
             }
 
             if (width <= 0)
@@ -1389,7 +1396,25 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                 width = InputPanelFallbackWidth;
             }
 
-            _inputPanelStoredWidth = width;
+            if (!_inputPanelInitialWidthCaptured)
+            {
+                if (hasRealMeasurement)
+                {
+                    _inputPanelOriginalWidth = 312f;
+                    _inputPanelStoredWidth = 312f;
+                    _inputPanelInitialWidthCaptured = true;
+                }
+                else
+                {
+                    // Use fallback for now but keep looking for the first real measurement.
+                    _inputPanelStoredWidth = 312f;
+                }
+            }
+            else if (hasRealMeasurement && width > 0)
+            {
+                // Maintain stored width in case layout needs it later, but keep the original locked.
+                _inputPanelStoredWidth = 312f;
+            }
         }
 
         private void Control_TransferTab_Panel_Inputs_SizeChanged(object? sender, EventArgs e)

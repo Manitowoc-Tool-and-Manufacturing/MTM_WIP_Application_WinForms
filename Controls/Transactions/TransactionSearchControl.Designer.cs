@@ -39,25 +39,18 @@ namespace MTM_WIP_Application_Winforms.Controls.Transactions
             TransactionSearchControl_GroupBox_DateRange = new GroupBox();
             TransactionSearchControl_TableLayout_DateTimePicker = new TableLayoutPanel();
             TransactionSearchControl_DateTimePicker_DateFrom = new DateTimePicker();
-            TransactionSearchControl_TableLayout_Buttons = new TableLayoutPanel();
-            TransactionSearchControl_Button_Search = new Button();
-            TransactionSearchControl_Button_Reset = new Button();
-            TransactionSearchControl_Button_Export = new Button();
-            TransactionSearchControl_Button_Print = new Button();
             TransactionSearchControl_DateTimePicker_DateTo = new DateTimePicker();
             TransactionSearchControl_Label_DateFrom = new Label();
             TransactionSearchControl_Label_DateTo = new Label();
+            TransactionSearchControl_Panel_Buttons = new Panel();
+            TransactionSearchControl_TableLayout_Buttons = new TableLayoutPanel();
+            TransactionSearchControl_Button_Search = new Button();
+            TransactionSearchControl_Button_Reset = new Button();
+            TransactionSearchControl_Button_InfoPanel = new Button();
+            TransactionSearchControl_Button_Export = new Button();
+            TransactionSearchControl_Button_Print = new Button();
             TransactionSearchControl_GroupBox_Search = new GroupBox();
             TransactionSearchControl_TableLayout_Search = new TableLayoutPanel();
-            TransactionSearchControl_Suggestion_PartNumber = new SuggestionTextBoxWithLabel();
-            TransactionSearchControl_Suggestion_FromLocation = new SuggestionTextBoxWithLabel();
-            TransactionSearchControl_GroupBox_RadioButtons = new GroupBox();
-            TransactionSearchControl_TableLayout_QuickFilters = new TableLayoutPanel();
-            TransactionSearchControl_RadioButton_Custom = new RadioButton();
-            TransactionSearchControl_RadioButton_Month = new RadioButton();
-            TransactionSearchControl_RadioButton_Week = new RadioButton();
-            TransactionSearchControl_RadioButton_Today = new RadioButton();
-            TransactionSearchControl_RadioButton_Everything = new RadioButton();
             TransactionSearchControl_Suggestion_User = new SuggestionTextBoxWithLabel();
             TransactionSearchControl_Suggestion_ToLocation = new SuggestionTextBoxWithLabel();
             TransactionSearchControl_GroupBox_TransactionTypes = new GroupBox();
@@ -67,20 +60,28 @@ namespace MTM_WIP_Application_Winforms.Controls.Transactions
             TransactionSearchControl_CheckBox_IN = new CheckBox();
             TransactionSearchControl_Suggestion_Operation = new SuggestionTextBoxWithLabel();
             TransactionSearchControl_Suggestion_Notes = new SuggestionTextBoxWithLabel();
-            TransactionSearchControl_Panel_Buttons = new Panel();
+            TransactionSearchControl_TableLayout_QuickFilters = new TableLayoutPanel();
+            TransactionSearchControl_RadioButton_Everything = new RadioButton();
+            TransactionSearchControl_RadioButton_Today = new RadioButton();
+            TransactionSearchControl_RadioButton_Week = new RadioButton();
+            TransactionSearchControl_RadioButton_Month = new RadioButton();
+            TransactionSearchControl_RadioButton_Custom = new RadioButton();
+            TransactionSearchControl_GroupBox_RadioButtons = new GroupBox();
+            TransactionSearchControl_Suggestion_FromLocation = new SuggestionTextBoxWithLabel();
+            TransactionSearchControl_Suggestion_PartNumber = new SuggestionTextBoxWithLabel();
             TransactionSearchControl_TableLayout_Main.SuspendLayout();
             TransactionSearchControl_TableLayout_Filters.SuspendLayout();
             TransactionSearchControl_TableLayout_Controls.SuspendLayout();
             TransactionSearchControl_GroupBox_DateRange.SuspendLayout();
             TransactionSearchControl_TableLayout_DateTimePicker.SuspendLayout();
+            TransactionSearchControl_Panel_Buttons.SuspendLayout();
             TransactionSearchControl_TableLayout_Buttons.SuspendLayout();
             TransactionSearchControl_GroupBox_Search.SuspendLayout();
             TransactionSearchControl_TableLayout_Search.SuspendLayout();
-            TransactionSearchControl_GroupBox_RadioButtons.SuspendLayout();
-            TransactionSearchControl_TableLayout_QuickFilters.SuspendLayout();
             TransactionSearchControl_GroupBox_TransactionTypes.SuspendLayout();
             TransactionSearchControl_TableLayout_TransactionTypes.SuspendLayout();
-            TransactionSearchControl_Panel_Buttons.SuspendLayout();
+            TransactionSearchControl_TableLayout_QuickFilters.SuspendLayout();
+            TransactionSearchControl_GroupBox_RadioButtons.SuspendLayout();
             SuspendLayout();
             // 
             // TransactionSearchControl_TableLayout_Main
@@ -96,8 +97,8 @@ namespace MTM_WIP_Application_Winforms.Controls.Transactions
             TransactionSearchControl_TableLayout_Main.Name = "TransactionSearchControl_TableLayout_Main";
             TransactionSearchControl_TableLayout_Main.RowCount = 2;
             TransactionSearchControl_TableLayout_Main.RowStyles.Add(new RowStyle());
-            TransactionSearchControl_TableLayout_Main.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
-            TransactionSearchControl_TableLayout_Main.Size = new Size(1159, 161);
+            TransactionSearchControl_TableLayout_Main.RowStyles.Add(new RowStyle());
+            TransactionSearchControl_TableLayout_Main.Size = new Size(1244, 161);
             TransactionSearchControl_TableLayout_Main.TabIndex = 0;
             // 
             // TransactionSearchControl_TableLayout_Filters
@@ -121,7 +122,7 @@ namespace MTM_WIP_Application_Winforms.Controls.Transactions
             TransactionSearchControl_TableLayout_Filters.RowStyles.Add(new RowStyle());
             TransactionSearchControl_TableLayout_Filters.RowStyles.Add(new RowStyle());
             TransactionSearchControl_TableLayout_Filters.RowStyles.Add(new RowStyle());
-            TransactionSearchControl_TableLayout_Filters.Size = new Size(1159, 161);
+            TransactionSearchControl_TableLayout_Filters.Size = new Size(1244, 161);
             TransactionSearchControl_TableLayout_Filters.TabIndex = 1;
             // 
             // TransactionSearchControl_TableLayout_Controls
@@ -132,7 +133,7 @@ namespace MTM_WIP_Application_Winforms.Controls.Transactions
             TransactionSearchControl_TableLayout_Controls.ColumnStyles.Add(new ColumnStyle());
             TransactionSearchControl_TableLayout_Controls.Controls.Add(TransactionSearchControl_GroupBox_DateRange, 0, 0);
             TransactionSearchControl_TableLayout_Controls.Dock = DockStyle.Fill;
-            TransactionSearchControl_TableLayout_Controls.Location = new Point(920, 2);
+            TransactionSearchControl_TableLayout_Controls.Location = new Point(946, 2);
             TransactionSearchControl_TableLayout_Controls.Margin = new Padding(0);
             TransactionSearchControl_TableLayout_Controls.Name = "TransactionSearchControl_TableLayout_Controls";
             TransactionSearchControl_TableLayout_Controls.RowCount = 1;
@@ -140,7 +141,7 @@ namespace MTM_WIP_Application_Winforms.Controls.Transactions
             TransactionSearchControl_TableLayout_Controls.RowStyles.Add(new RowStyle(SizeType.Absolute, 20F));
             TransactionSearchControl_TableLayout_Controls.RowStyles.Add(new RowStyle(SizeType.Absolute, 20F));
             TransactionSearchControl_TableLayout_Controls.RowStyles.Add(new RowStyle(SizeType.Absolute, 20F));
-            TransactionSearchControl_TableLayout_Controls.Size = new Size(237, 157);
+            TransactionSearchControl_TableLayout_Controls.Size = new Size(296, 157);
             TransactionSearchControl_TableLayout_Controls.TabIndex = 0;
             // 
             // TransactionSearchControl_GroupBox_DateRange
@@ -151,7 +152,7 @@ namespace MTM_WIP_Application_Winforms.Controls.Transactions
             TransactionSearchControl_GroupBox_DateRange.Dock = DockStyle.Fill;
             TransactionSearchControl_GroupBox_DateRange.Location = new Point(3, 3);
             TransactionSearchControl_GroupBox_DateRange.Name = "TransactionSearchControl_GroupBox_DateRange";
-            TransactionSearchControl_GroupBox_DateRange.Size = new Size(231, 151);
+            TransactionSearchControl_GroupBox_DateRange.Size = new Size(290, 151);
             TransactionSearchControl_GroupBox_DateRange.TabIndex = 17;
             TransactionSearchControl_GroupBox_DateRange.TabStop = false;
             TransactionSearchControl_GroupBox_DateRange.Text = "Select a Date Range";
@@ -176,7 +177,7 @@ namespace MTM_WIP_Application_Winforms.Controls.Transactions
             TransactionSearchControl_TableLayout_DateTimePicker.RowStyles.Add(new RowStyle());
             TransactionSearchControl_TableLayout_DateTimePicker.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
             TransactionSearchControl_TableLayout_DateTimePicker.RowStyles.Add(new RowStyle());
-            TransactionSearchControl_TableLayout_DateTimePicker.Size = new Size(225, 129);
+            TransactionSearchControl_TableLayout_DateTimePicker.Size = new Size(284, 129);
             TransactionSearchControl_TableLayout_DateTimePicker.TabIndex = 17;
             // 
             // TransactionSearchControl_DateTimePicker_DateFrom
@@ -186,100 +187,8 @@ namespace MTM_WIP_Application_Winforms.Controls.Transactions
             TransactionSearchControl_DateTimePicker_DateFrom.Location = new Point(47, 3);
             TransactionSearchControl_DateTimePicker_DateFrom.MinimumSize = new Size(175, 23);
             TransactionSearchControl_DateTimePicker_DateFrom.Name = "TransactionSearchControl_DateTimePicker_DateFrom";
-            TransactionSearchControl_DateTimePicker_DateFrom.Size = new Size(175, 23);
+            TransactionSearchControl_DateTimePicker_DateFrom.Size = new Size(234, 23);
             TransactionSearchControl_DateTimePicker_DateFrom.TabIndex = 2;
-            // 
-            // TransactionSearchControl_TableLayout_Buttons
-            // 
-            TransactionSearchControl_TableLayout_Buttons.AutoSize = true;
-            TransactionSearchControl_TableLayout_Buttons.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            TransactionSearchControl_TableLayout_Buttons.ColumnCount = 9;
-            TransactionSearchControl_TableLayout_Buttons.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 20F));
-            TransactionSearchControl_TableLayout_Buttons.ColumnStyles.Add(new ColumnStyle());
-            TransactionSearchControl_TableLayout_Buttons.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 10F));
-            TransactionSearchControl_TableLayout_Buttons.ColumnStyles.Add(new ColumnStyle());
-            TransactionSearchControl_TableLayout_Buttons.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 10F));
-            TransactionSearchControl_TableLayout_Buttons.ColumnStyles.Add(new ColumnStyle());
-            TransactionSearchControl_TableLayout_Buttons.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 10F));
-            TransactionSearchControl_TableLayout_Buttons.ColumnStyles.Add(new ColumnStyle());
-            TransactionSearchControl_TableLayout_Buttons.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 20F));
-            TransactionSearchControl_TableLayout_Buttons.Controls.Add(TransactionSearchControl_Button_Search, 1, 0);
-            TransactionSearchControl_TableLayout_Buttons.Controls.Add(TransactionSearchControl_Button_Reset, 3, 0);
-            TransactionSearchControl_TableLayout_Buttons.Controls.Add(TransactionSearchControl_Button_Export, 5, 0);
-            TransactionSearchControl_TableLayout_Buttons.Controls.Add(TransactionSearchControl_Button_Print, 7, 0);
-            TransactionSearchControl_TableLayout_Buttons.Dock = DockStyle.Fill;
-            TransactionSearchControl_TableLayout_Buttons.Location = new Point(0, 0);
-            TransactionSearchControl_TableLayout_Buttons.Name = "TransactionSearchControl_TableLayout_Buttons";
-            TransactionSearchControl_TableLayout_Buttons.Padding = new Padding(3);
-            TransactionSearchControl_TableLayout_Buttons.RowCount = 1;
-            TransactionSearchControl_TableLayout_Buttons.RowStyles.Add(new RowStyle());
-            TransactionSearchControl_TableLayout_Buttons.Size = new Size(217, 52);
-            TransactionSearchControl_TableLayout_Buttons.TabIndex = 0;
-            // 
-            // TransactionSearchControl_Button_Search
-            // 
-            TransactionSearchControl_Button_Search.AutoSize = true;
-            TransactionSearchControl_Button_Search.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            TransactionSearchControl_Button_Search.BackColor = Color.FromArgb(59, 130, 246);
-            TransactionSearchControl_Button_Search.FlatStyle = FlatStyle.Flat;
-            TransactionSearchControl_Button_Search.Font = new Font("Segoe UI", 10F, FontStyle.Bold);
-            TransactionSearchControl_Button_Search.ForeColor = Color.White;
-            TransactionSearchControl_Button_Search.Location = new Point(35, 6);
-            TransactionSearchControl_Button_Search.MaximumSize = new Size(40, 40);
-            TransactionSearchControl_Button_Search.MinimumSize = new Size(40, 40);
-            TransactionSearchControl_Button_Search.Name = "TransactionSearchControl_Button_Search";
-            TransactionSearchControl_Button_Search.Size = new Size(40, 40);
-            TransactionSearchControl_Button_Search.TabIndex = 10;
-            TransactionSearchControl_Button_Search.Text = "🔎";
-            TransactionSearchControl_Button_Search.UseVisualStyleBackColor = false;
-            // 
-            // TransactionSearchControl_Button_Reset
-            // 
-            TransactionSearchControl_Button_Reset.AutoSize = true;
-            TransactionSearchControl_Button_Reset.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            TransactionSearchControl_Button_Reset.BackColor = Color.FromArgb(226, 232, 240);
-            TransactionSearchControl_Button_Reset.FlatStyle = FlatStyle.Flat;
-            TransactionSearchControl_Button_Reset.Font = new Font("Segoe UI", 10F, FontStyle.Bold);
-            TransactionSearchControl_Button_Reset.Location = new Point(140, 6);
-            TransactionSearchControl_Button_Reset.MaximumSize = new Size(40, 40);
-            TransactionSearchControl_Button_Reset.MinimumSize = new Size(40, 40);
-            TransactionSearchControl_Button_Reset.Name = "TransactionSearchControl_Button_Reset";
-            TransactionSearchControl_Button_Reset.Size = new Size(40, 40);
-            TransactionSearchControl_Button_Reset.TabIndex = 15;
-            TransactionSearchControl_Button_Reset.Text = "🔄";
-            TransactionSearchControl_Button_Reset.UseVisualStyleBackColor = false;
-            // 
-            // TransactionSearchControl_Button_Export
-            // 
-            TransactionSearchControl_Button_Export.AutoSize = true;
-            TransactionSearchControl_Button_Export.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            TransactionSearchControl_Button_Export.BackColor = Color.FromArgb(248, 250, 252);
-            TransactionSearchControl_Button_Export.FlatStyle = FlatStyle.Flat;
-            TransactionSearchControl_Button_Export.Font = new Font("Segoe UI", 10F, FontStyle.Bold);
-            TransactionSearchControl_Button_Export.Location = new Point(175, 6);
-            TransactionSearchControl_Button_Export.MaximumSize = new Size(40, 40);
-            TransactionSearchControl_Button_Export.MinimumSize = new Size(40, 40);
-            TransactionSearchControl_Button_Export.Name = "TransactionSearchControl_Button_Export";
-            TransactionSearchControl_Button_Export.Size = new Size(40, 40);
-            TransactionSearchControl_Button_Export.TabIndex = 16;
-            TransactionSearchControl_Button_Export.Text = "📊";
-            TransactionSearchControl_Button_Export.UseVisualStyleBackColor = false;
-            // 
-            // TransactionSearchControl_Button_Print
-            // 
-            TransactionSearchControl_Button_Print.AutoSize = true;
-            TransactionSearchControl_Button_Print.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            TransactionSearchControl_Button_Print.BackColor = Color.FromArgb(248, 250, 252);
-            TransactionSearchControl_Button_Print.FlatStyle = FlatStyle.Flat;
-            TransactionSearchControl_Button_Print.Font = new Font("Segoe UI", 10F, FontStyle.Bold);
-            TransactionSearchControl_Button_Print.Location = new Point(221, 6);
-            TransactionSearchControl_Button_Print.MaximumSize = new Size(40, 40);
-            TransactionSearchControl_Button_Print.MinimumSize = new Size(40, 40);
-            TransactionSearchControl_Button_Print.Name = "TransactionSearchControl_Button_Print";
-            TransactionSearchControl_Button_Print.Size = new Size(40, 40);
-            TransactionSearchControl_Button_Print.TabIndex = 17;
-            TransactionSearchControl_Button_Print.Text = "🖨️";
-            TransactionSearchControl_Button_Print.UseVisualStyleBackColor = false;
             // 
             // TransactionSearchControl_DateTimePicker_DateTo
             // 
@@ -288,7 +197,7 @@ namespace MTM_WIP_Application_Winforms.Controls.Transactions
             TransactionSearchControl_DateTimePicker_DateTo.Location = new Point(47, 32);
             TransactionSearchControl_DateTimePicker_DateTo.MinimumSize = new Size(175, 23);
             TransactionSearchControl_DateTimePicker_DateTo.Name = "TransactionSearchControl_DateTimePicker_DateTo";
-            TransactionSearchControl_DateTimePicker_DateTo.Size = new Size(175, 23);
+            TransactionSearchControl_DateTimePicker_DateTo.Size = new Size(234, 23);
             TransactionSearchControl_DateTimePicker_DateTo.TabIndex = 4;
             // 
             // TransactionSearchControl_Label_DateFrom
@@ -315,16 +224,139 @@ namespace MTM_WIP_Application_Winforms.Controls.Transactions
             TransactionSearchControl_Label_DateTo.Text = "To:";
             TransactionSearchControl_Label_DateTo.TextAlign = ContentAlignment.MiddleRight;
             // 
+            // TransactionSearchControl_Panel_Buttons
+            // 
+            TransactionSearchControl_Panel_Buttons.AutoSize = true;
+            TransactionSearchControl_Panel_Buttons.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            TransactionSearchControl_Panel_Buttons.BorderStyle = BorderStyle.FixedSingle;
+            TransactionSearchControl_TableLayout_DateTimePicker.SetColumnSpan(TransactionSearchControl_Panel_Buttons, 2);
+            TransactionSearchControl_Panel_Buttons.Controls.Add(TransactionSearchControl_TableLayout_Buttons);
+            TransactionSearchControl_Panel_Buttons.Dock = DockStyle.Fill;
+            TransactionSearchControl_Panel_Buttons.Location = new Point(3, 72);
+            TransactionSearchControl_Panel_Buttons.Name = "TransactionSearchControl_Panel_Buttons";
+            TransactionSearchControl_Panel_Buttons.Size = new Size(278, 54);
+            TransactionSearchControl_Panel_Buttons.TabIndex = 5;
+            // 
+            // TransactionSearchControl_TableLayout_Buttons
+            // 
+            TransactionSearchControl_TableLayout_Buttons.AutoSize = true;
+            TransactionSearchControl_TableLayout_Buttons.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            TransactionSearchControl_TableLayout_Buttons.ColumnCount = 11;
+            TransactionSearchControl_TableLayout_Buttons.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 20F));
+            TransactionSearchControl_TableLayout_Buttons.ColumnStyles.Add(new ColumnStyle());
+            TransactionSearchControl_TableLayout_Buttons.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 10F));
+            TransactionSearchControl_TableLayout_Buttons.ColumnStyles.Add(new ColumnStyle());
+            TransactionSearchControl_TableLayout_Buttons.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 10F));
+            TransactionSearchControl_TableLayout_Buttons.ColumnStyles.Add(new ColumnStyle());
+            TransactionSearchControl_TableLayout_Buttons.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 10F));
+            TransactionSearchControl_TableLayout_Buttons.ColumnStyles.Add(new ColumnStyle());
+            TransactionSearchControl_TableLayout_Buttons.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 10F));
+            TransactionSearchControl_TableLayout_Buttons.ColumnStyles.Add(new ColumnStyle());
+            TransactionSearchControl_TableLayout_Buttons.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 20F));
+            TransactionSearchControl_TableLayout_Buttons.Controls.Add(TransactionSearchControl_Button_Search, 1, 0);
+            TransactionSearchControl_TableLayout_Buttons.Controls.Add(TransactionSearchControl_Button_Reset, 3, 0);
+            TransactionSearchControl_TableLayout_Buttons.Controls.Add(TransactionSearchControl_Button_InfoPanel, 5, 0);
+            TransactionSearchControl_TableLayout_Buttons.Controls.Add(TransactionSearchControl_Button_Export, 7, 0);
+            TransactionSearchControl_TableLayout_Buttons.Controls.Add(TransactionSearchControl_Button_Print, 9, 0);
+            TransactionSearchControl_TableLayout_Buttons.Dock = DockStyle.Fill;
+            TransactionSearchControl_TableLayout_Buttons.Location = new Point(0, 0);
+            TransactionSearchControl_TableLayout_Buttons.Name = "TransactionSearchControl_TableLayout_Buttons";
+            TransactionSearchControl_TableLayout_Buttons.Padding = new Padding(3);
+            TransactionSearchControl_TableLayout_Buttons.RowCount = 1;
+            TransactionSearchControl_TableLayout_Buttons.RowStyles.Add(new RowStyle());
+            TransactionSearchControl_TableLayout_Buttons.Size = new Size(276, 52);
+            TransactionSearchControl_TableLayout_Buttons.TabIndex = 0;
+            // 
+            // TransactionSearchControl_Button_Search
+            // 
+            TransactionSearchControl_Button_Search.AutoSize = true;
+            TransactionSearchControl_Button_Search.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            TransactionSearchControl_Button_Search.BackColor = Color.FromArgb(59, 130, 246);
+            TransactionSearchControl_Button_Search.FlatStyle = FlatStyle.Flat;
+            TransactionSearchControl_Button_Search.Font = new Font("Segoe UI", 10F, FontStyle.Bold);
+            TransactionSearchControl_Button_Search.ForeColor = Color.White;
+            TransactionSearchControl_Button_Search.Location = new Point(6, 6);
+            TransactionSearchControl_Button_Search.MaximumSize = new Size(40, 40);
+            TransactionSearchControl_Button_Search.MinimumSize = new Size(40, 40);
+            TransactionSearchControl_Button_Search.Name = "TransactionSearchControl_Button_Search";
+            TransactionSearchControl_Button_Search.Size = new Size(40, 40);
+            TransactionSearchControl_Button_Search.TabIndex = 10;
+            TransactionSearchControl_Button_Search.Text = "🔎";
+            TransactionSearchControl_Button_Search.UseVisualStyleBackColor = false;
+            // 
+            // TransactionSearchControl_Button_Reset
+            // 
+            TransactionSearchControl_Button_Reset.AutoSize = true;
+            TransactionSearchControl_Button_Reset.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            TransactionSearchControl_Button_Reset.BackColor = Color.FromArgb(226, 232, 240);
+            TransactionSearchControl_Button_Reset.FlatStyle = FlatStyle.Flat;
+            TransactionSearchControl_Button_Reset.Font = new Font("Segoe UI", 10F, FontStyle.Bold);
+            TransactionSearchControl_Button_Reset.Location = new Point(62, 6);
+            TransactionSearchControl_Button_Reset.MaximumSize = new Size(40, 40);
+            TransactionSearchControl_Button_Reset.MinimumSize = new Size(40, 40);
+            TransactionSearchControl_Button_Reset.Name = "TransactionSearchControl_Button_Reset";
+            TransactionSearchControl_Button_Reset.Size = new Size(40, 40);
+            TransactionSearchControl_Button_Reset.TabIndex = 15;
+            TransactionSearchControl_Button_Reset.Text = "🔄";
+            TransactionSearchControl_Button_Reset.UseVisualStyleBackColor = false;
+            // 
+            // TransactionSearchControl_Button_InfoPanel
+            // 
+            TransactionSearchControl_Button_InfoPanel.AutoSize = true;
+            TransactionSearchControl_Button_InfoPanel.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            TransactionSearchControl_Button_InfoPanel.BackColor = Color.FromArgb(248, 250, 252);
+            TransactionSearchControl_Button_InfoPanel.FlatStyle = FlatStyle.Flat;
+            TransactionSearchControl_Button_InfoPanel.Font = new Font("Segoe UI", 10F, FontStyle.Bold);
+            TransactionSearchControl_Button_InfoPanel.Location = new Point(118, 6);
+            TransactionSearchControl_Button_InfoPanel.MaximumSize = new Size(40, 40);
+            TransactionSearchControl_Button_InfoPanel.MinimumSize = new Size(40, 40);
+            TransactionSearchControl_Button_InfoPanel.Name = "TransactionSearchControl_Button_InfoPanel";
+            TransactionSearchControl_Button_InfoPanel.Size = new Size(40, 40);
+            TransactionSearchControl_Button_InfoPanel.TabIndex = 16;
+            TransactionSearchControl_Button_InfoPanel.Text = "🡲";
+            TransactionSearchControl_Button_InfoPanel.UseVisualStyleBackColor = false;
+            // 
+            // TransactionSearchControl_Button_Export
+            // 
+            TransactionSearchControl_Button_Export.AutoSize = true;
+            TransactionSearchControl_Button_Export.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            TransactionSearchControl_Button_Export.BackColor = Color.FromArgb(248, 250, 252);
+            TransactionSearchControl_Button_Export.FlatStyle = FlatStyle.Flat;
+            TransactionSearchControl_Button_Export.Font = new Font("Segoe UI", 10F, FontStyle.Bold);
+            TransactionSearchControl_Button_Export.Location = new Point(174, 6);
+            TransactionSearchControl_Button_Export.MaximumSize = new Size(40, 40);
+            TransactionSearchControl_Button_Export.MinimumSize = new Size(40, 40);
+            TransactionSearchControl_Button_Export.Name = "TransactionSearchControl_Button_Export";
+            TransactionSearchControl_Button_Export.Size = new Size(40, 40);
+            TransactionSearchControl_Button_Export.TabIndex = 17;
+            TransactionSearchControl_Button_Export.Text = "📊";
+            TransactionSearchControl_Button_Export.UseVisualStyleBackColor = false;
+            // 
+            // TransactionSearchControl_Button_Print
+            // 
+            TransactionSearchControl_Button_Print.AutoSize = true;
+            TransactionSearchControl_Button_Print.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            TransactionSearchControl_Button_Print.BackColor = Color.FromArgb(248, 250, 252);
+            TransactionSearchControl_Button_Print.FlatStyle = FlatStyle.Flat;
+            TransactionSearchControl_Button_Print.Font = new Font("Segoe UI", 10F, FontStyle.Bold);
+            TransactionSearchControl_Button_Print.Location = new Point(230, 6);
+            TransactionSearchControl_Button_Print.MaximumSize = new Size(40, 40);
+            TransactionSearchControl_Button_Print.MinimumSize = new Size(40, 40);
+            TransactionSearchControl_Button_Print.Name = "TransactionSearchControl_Button_Print";
+            TransactionSearchControl_Button_Print.Size = new Size(40, 40);
+            TransactionSearchControl_Button_Print.TabIndex = 18;
+            TransactionSearchControl_Button_Print.Text = "🖨️";
+            TransactionSearchControl_Button_Print.UseVisualStyleBackColor = false;
+            // 
             // TransactionSearchControl_GroupBox_Search
             // 
-            TransactionSearchControl_GroupBox_Search.AutoSize = true;
             TransactionSearchControl_GroupBox_Search.AutoSizeMode = AutoSizeMode.GrowAndShrink;
             TransactionSearchControl_TableLayout_Filters.SetColumnSpan(TransactionSearchControl_GroupBox_Search, 3);
             TransactionSearchControl_GroupBox_Search.Controls.Add(TransactionSearchControl_TableLayout_Search);
             TransactionSearchControl_GroupBox_Search.Dock = DockStyle.Fill;
             TransactionSearchControl_GroupBox_Search.Location = new Point(5, 5);
             TransactionSearchControl_GroupBox_Search.Name = "TransactionSearchControl_GroupBox_Search";
-            TransactionSearchControl_GroupBox_Search.Size = new Size(912, 151);
+            TransactionSearchControl_GroupBox_Search.Size = new Size(938, 151);
             TransactionSearchControl_GroupBox_Search.TabIndex = 20;
             TransactionSearchControl_GroupBox_Search.TabStop = false;
             TransactionSearchControl_GroupBox_Search.Text = "Step 1: Enter Search Criteria";
@@ -334,16 +366,16 @@ namespace MTM_WIP_Application_Winforms.Controls.Transactions
             TransactionSearchControl_TableLayout_Search.AutoSize = true;
             TransactionSearchControl_TableLayout_Search.AutoSizeMode = AutoSizeMode.GrowAndShrink;
             TransactionSearchControl_TableLayout_Search.ColumnCount = 4;
-            TransactionSearchControl_TableLayout_Search.ColumnStyles.Add(new ColumnStyle());
-            TransactionSearchControl_TableLayout_Search.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
-            TransactionSearchControl_TableLayout_Search.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
-            TransactionSearchControl_TableLayout_Search.ColumnStyles.Add(new ColumnStyle());
+            TransactionSearchControl_TableLayout_Search.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 33.3333321F));
+            TransactionSearchControl_TableLayout_Search.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 16.6666718F));
+            TransactionSearchControl_TableLayout_Search.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 16.6666622F));
+            TransactionSearchControl_TableLayout_Search.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 33.3333321F));
             TransactionSearchControl_TableLayout_Search.Controls.Add(TransactionSearchControl_Suggestion_PartNumber, 0, 0);
             TransactionSearchControl_TableLayout_Search.Controls.Add(TransactionSearchControl_Suggestion_FromLocation, 0, 1);
             TransactionSearchControl_TableLayout_Search.Controls.Add(TransactionSearchControl_GroupBox_RadioButtons, 0, 2);
+            TransactionSearchControl_TableLayout_Search.Controls.Add(TransactionSearchControl_GroupBox_TransactionTypes, 2, 2);
             TransactionSearchControl_TableLayout_Search.Controls.Add(TransactionSearchControl_Suggestion_User, 1, 0);
             TransactionSearchControl_TableLayout_Search.Controls.Add(TransactionSearchControl_Suggestion_ToLocation, 1, 1);
-            TransactionSearchControl_TableLayout_Search.Controls.Add(TransactionSearchControl_GroupBox_TransactionTypes, 2, 2);
             TransactionSearchControl_TableLayout_Search.Controls.Add(TransactionSearchControl_Suggestion_Operation, 3, 0);
             TransactionSearchControl_TableLayout_Search.Controls.Add(TransactionSearchControl_Suggestion_Notes, 3, 1);
             TransactionSearchControl_TableLayout_Search.Dock = DockStyle.Fill;
@@ -353,50 +385,145 @@ namespace MTM_WIP_Application_Winforms.Controls.Transactions
             TransactionSearchControl_TableLayout_Search.RowStyles.Add(new RowStyle());
             TransactionSearchControl_TableLayout_Search.RowStyles.Add(new RowStyle());
             TransactionSearchControl_TableLayout_Search.RowStyles.Add(new RowStyle());
-            TransactionSearchControl_TableLayout_Search.Size = new Size(906, 129);
+            TransactionSearchControl_TableLayout_Search.Size = new Size(932, 129);
             TransactionSearchControl_TableLayout_Search.TabIndex = 0;
             // 
-            // TransactionSearchControl_Suggestion_PartNumber
+            // TransactionSearchControl_Suggestion_User
             // 
-            TransactionSearchControl_Suggestion_PartNumber.AutoSize = true;
-            TransactionSearchControl_Suggestion_PartNumber.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            TransactionSearchControl_Suggestion_PartNumber.Dock = DockStyle.Fill;
-            TransactionSearchControl_Suggestion_PartNumber.LabelText = "🔍 Part Number";
-            TransactionSearchControl_Suggestion_PartNumber.Location = new Point(3, 3);
-            TransactionSearchControl_Suggestion_PartNumber.MaximumSize = new Size(0, 32);
-            TransactionSearchControl_Suggestion_PartNumber.MinimumSize = new Size(0, 32);
-            TransactionSearchControl_Suggestion_PartNumber.Name = "TransactionSearchControl_Suggestion_PartNumber";
-            TransactionSearchControl_Suggestion_PartNumber.PlaceholderText = "Enter or select part";
-            TransactionSearchControl_Suggestion_PartNumber.Size = new Size(296, 32);
-            TransactionSearchControl_Suggestion_PartNumber.TabIndex = 1;
+            TransactionSearchControl_Suggestion_User.AutoSize = true;
+            TransactionSearchControl_Suggestion_User.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            TransactionSearchControl_TableLayout_Search.SetColumnSpan(TransactionSearchControl_Suggestion_User, 2);
+            TransactionSearchControl_Suggestion_User.Dock = DockStyle.Fill;
+            TransactionSearchControl_Suggestion_User.LabelText = "👤 User";
+            TransactionSearchControl_Suggestion_User.Location = new Point(313, 3);
+            TransactionSearchControl_Suggestion_User.MaximumSize = new Size(0, 32);
+            TransactionSearchControl_Suggestion_User.MinimumSize = new Size(0, 32);
+            TransactionSearchControl_Suggestion_User.Name = "TransactionSearchControl_Suggestion_User";
+            TransactionSearchControl_Suggestion_User.PlaceholderText = "Leave blank for all users";
+            TransactionSearchControl_Suggestion_User.Size = new Size(304, 32);
+            TransactionSearchControl_Suggestion_User.TabIndex = 2;
             // 
-            // TransactionSearchControl_Suggestion_FromLocation
+            // TransactionSearchControl_Suggestion_ToLocation
             // 
-            TransactionSearchControl_Suggestion_FromLocation.AutoSize = true;
-            TransactionSearchControl_Suggestion_FromLocation.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            TransactionSearchControl_Suggestion_FromLocation.Dock = DockStyle.Fill;
-            TransactionSearchControl_Suggestion_FromLocation.LabelText = "📍 From Location";
-            TransactionSearchControl_Suggestion_FromLocation.Location = new Point(3, 41);
-            TransactionSearchControl_Suggestion_FromLocation.MaximumSize = new Size(0, 32);
-            TransactionSearchControl_Suggestion_FromLocation.MinimumSize = new Size(0, 32);
-            TransactionSearchControl_Suggestion_FromLocation.Name = "TransactionSearchControl_Suggestion_FromLocation";
-            TransactionSearchControl_Suggestion_FromLocation.PlaceholderText = "Optional filter";
-            TransactionSearchControl_Suggestion_FromLocation.Size = new Size(296, 32);
-            TransactionSearchControl_Suggestion_FromLocation.TabIndex = 4;
+            TransactionSearchControl_Suggestion_ToLocation.AutoSize = true;
+            TransactionSearchControl_Suggestion_ToLocation.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            TransactionSearchControl_TableLayout_Search.SetColumnSpan(TransactionSearchControl_Suggestion_ToLocation, 2);
+            TransactionSearchControl_Suggestion_ToLocation.Dock = DockStyle.Fill;
+            TransactionSearchControl_Suggestion_ToLocation.LabelText = "📍 To Location";
+            TransactionSearchControl_Suggestion_ToLocation.Location = new Point(313, 41);
+            TransactionSearchControl_Suggestion_ToLocation.MaximumSize = new Size(0, 32);
+            TransactionSearchControl_Suggestion_ToLocation.MinimumSize = new Size(0, 32);
+            TransactionSearchControl_Suggestion_ToLocation.Name = "TransactionSearchControl_Suggestion_ToLocation";
+            TransactionSearchControl_Suggestion_ToLocation.PlaceholderText = "Optional filter";
+            TransactionSearchControl_Suggestion_ToLocation.Size = new Size(304, 32);
+            TransactionSearchControl_Suggestion_ToLocation.TabIndex = 5;
             // 
-            // TransactionSearchControl_GroupBox_RadioButtons
+            // TransactionSearchControl_GroupBox_TransactionTypes
             // 
-            TransactionSearchControl_GroupBox_RadioButtons.AutoSize = true;
-            TransactionSearchControl_GroupBox_RadioButtons.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            TransactionSearchControl_TableLayout_Search.SetColumnSpan(TransactionSearchControl_GroupBox_RadioButtons, 2);
-            TransactionSearchControl_GroupBox_RadioButtons.Controls.Add(TransactionSearchControl_TableLayout_QuickFilters);
-            TransactionSearchControl_GroupBox_RadioButtons.Dock = DockStyle.Fill;
-            TransactionSearchControl_GroupBox_RadioButtons.Location = new Point(3, 79);
-            TransactionSearchControl_GroupBox_RadioButtons.Name = "TransactionSearchControl_GroupBox_RadioButtons";
-            TransactionSearchControl_GroupBox_RadioButtons.Size = new Size(447, 47);
-            TransactionSearchControl_GroupBox_RadioButtons.TabIndex = 18;
-            TransactionSearchControl_GroupBox_RadioButtons.TabStop = false;
-            TransactionSearchControl_GroupBox_RadioButtons.Text = "Simple Date Filter";
+            TransactionSearchControl_GroupBox_TransactionTypes.AutoSize = true;
+            TransactionSearchControl_GroupBox_TransactionTypes.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            TransactionSearchControl_TableLayout_Search.SetColumnSpan(TransactionSearchControl_GroupBox_TransactionTypes, 2);
+            TransactionSearchControl_GroupBox_TransactionTypes.Controls.Add(TransactionSearchControl_TableLayout_TransactionTypes);
+            TransactionSearchControl_GroupBox_TransactionTypes.Dock = DockStyle.Fill;
+            TransactionSearchControl_GroupBox_TransactionTypes.Location = new Point(468, 79);
+            TransactionSearchControl_GroupBox_TransactionTypes.Name = "TransactionSearchControl_GroupBox_TransactionTypes";
+            TransactionSearchControl_GroupBox_TransactionTypes.Size = new Size(461, 47);
+            TransactionSearchControl_GroupBox_TransactionTypes.TabIndex = 11;
+            TransactionSearchControl_GroupBox_TransactionTypes.TabStop = false;
+            TransactionSearchControl_GroupBox_TransactionTypes.Text = "Filter by Transaction Types";
+            // 
+            // TransactionSearchControl_TableLayout_TransactionTypes
+            // 
+            TransactionSearchControl_TableLayout_TransactionTypes.AutoSize = true;
+            TransactionSearchControl_TableLayout_TransactionTypes.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            TransactionSearchControl_TableLayout_TransactionTypes.ColumnCount = 7;
+            TransactionSearchControl_TableLayout_TransactionTypes.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 25F));
+            TransactionSearchControl_TableLayout_TransactionTypes.ColumnStyles.Add(new ColumnStyle());
+            TransactionSearchControl_TableLayout_TransactionTypes.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 25F));
+            TransactionSearchControl_TableLayout_TransactionTypes.ColumnStyles.Add(new ColumnStyle());
+            TransactionSearchControl_TableLayout_TransactionTypes.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 25F));
+            TransactionSearchControl_TableLayout_TransactionTypes.ColumnStyles.Add(new ColumnStyle());
+            TransactionSearchControl_TableLayout_TransactionTypes.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 25F));
+            TransactionSearchControl_TableLayout_TransactionTypes.Controls.Add(TransactionSearchControl_CheckBox_TRANSFER, 5, 0);
+            TransactionSearchControl_TableLayout_TransactionTypes.Controls.Add(TransactionSearchControl_CheckBox_OUT, 3, 0);
+            TransactionSearchControl_TableLayout_TransactionTypes.Controls.Add(TransactionSearchControl_CheckBox_IN, 1, 0);
+            TransactionSearchControl_TableLayout_TransactionTypes.Dock = DockStyle.Fill;
+            TransactionSearchControl_TableLayout_TransactionTypes.Location = new Point(3, 19);
+            TransactionSearchControl_TableLayout_TransactionTypes.Name = "TransactionSearchControl_TableLayout_TransactionTypes";
+            TransactionSearchControl_TableLayout_TransactionTypes.RowCount = 1;
+            TransactionSearchControl_TableLayout_TransactionTypes.RowStyles.Add(new RowStyle());
+            TransactionSearchControl_TableLayout_TransactionTypes.Size = new Size(455, 25);
+            TransactionSearchControl_TableLayout_TransactionTypes.TabIndex = 0;
+            // 
+            // TransactionSearchControl_CheckBox_TRANSFER
+            // 
+            TransactionSearchControl_CheckBox_TRANSFER.AutoSize = true;
+            TransactionSearchControl_CheckBox_TRANSFER.Checked = true;
+            TransactionSearchControl_CheckBox_TRANSFER.CheckState = CheckState.Checked;
+            TransactionSearchControl_CheckBox_TRANSFER.Dock = DockStyle.Fill;
+            TransactionSearchControl_CheckBox_TRANSFER.Location = new Point(301, 3);
+            TransactionSearchControl_CheckBox_TRANSFER.Name = "TransactionSearchControl_CheckBox_TRANSFER";
+            TransactionSearchControl_CheckBox_TRANSFER.Size = new Size(82, 19);
+            TransactionSearchControl_CheckBox_TRANSFER.TabIndex = 2;
+            TransactionSearchControl_CheckBox_TRANSFER.Text = "TRANSFER";
+            TransactionSearchControl_CheckBox_TRANSFER.UseVisualStyleBackColor = true;
+            // 
+            // TransactionSearchControl_CheckBox_OUT
+            // 
+            TransactionSearchControl_CheckBox_OUT.AutoSize = true;
+            TransactionSearchControl_CheckBox_OUT.Checked = true;
+            TransactionSearchControl_CheckBox_OUT.CheckState = CheckState.Checked;
+            TransactionSearchControl_CheckBox_OUT.Dock = DockStyle.Fill;
+            TransactionSearchControl_CheckBox_OUT.Location = new Point(179, 3);
+            TransactionSearchControl_CheckBox_OUT.Name = "TransactionSearchControl_CheckBox_OUT";
+            TransactionSearchControl_CheckBox_OUT.Size = new Size(50, 19);
+            TransactionSearchControl_CheckBox_OUT.TabIndex = 1;
+            TransactionSearchControl_CheckBox_OUT.Text = "OUT";
+            TransactionSearchControl_CheckBox_OUT.UseVisualStyleBackColor = true;
+            // 
+            // TransactionSearchControl_CheckBox_IN
+            // 
+            TransactionSearchControl_CheckBox_IN.AutoSize = true;
+            TransactionSearchControl_CheckBox_IN.Checked = true;
+            TransactionSearchControl_CheckBox_IN.CheckState = CheckState.Checked;
+            TransactionSearchControl_CheckBox_IN.Dock = DockStyle.Fill;
+            TransactionSearchControl_CheckBox_IN.Location = new Point(69, 3);
+            TransactionSearchControl_CheckBox_IN.Name = "TransactionSearchControl_CheckBox_IN";
+            TransactionSearchControl_CheckBox_IN.Size = new Size(38, 19);
+            TransactionSearchControl_CheckBox_IN.TabIndex = 0;
+            TransactionSearchControl_CheckBox_IN.Text = "IN";
+            TransactionSearchControl_CheckBox_IN.UseVisualStyleBackColor = true;
+            // 
+            // TransactionSearchControl_Suggestion_Operation
+            // 
+            TransactionSearchControl_Suggestion_Operation.AutoSize = true;
+            TransactionSearchControl_Suggestion_Operation.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            TransactionSearchControl_Suggestion_Operation.Dock = DockStyle.Fill;
+            TransactionSearchControl_Suggestion_Operation.LabelText = "⚙️ Operation";
+            TransactionSearchControl_Suggestion_Operation.Location = new Point(623, 3);
+            TransactionSearchControl_Suggestion_Operation.MaximumSize = new Size(0, 32);
+            TransactionSearchControl_Suggestion_Operation.MinimumSize = new Size(0, 32);
+            TransactionSearchControl_Suggestion_Operation.Name = "TransactionSearchControl_Suggestion_Operation";
+            TransactionSearchControl_Suggestion_Operation.PlaceholderText = "e.g., 90, 100";
+            TransactionSearchControl_Suggestion_Operation.Size = new Size(306, 32);
+            TransactionSearchControl_Suggestion_Operation.TabIndex = 3;
+            // 
+            // TransactionSearchControl_Suggestion_Notes
+            // 
+            TransactionSearchControl_Suggestion_Notes.AutoSize = true;
+            TransactionSearchControl_Suggestion_Notes.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            TransactionSearchControl_Suggestion_Notes.Dock = DockStyle.Fill;
+            TransactionSearchControl_Suggestion_Notes.EnableSuggestions = false;
+            TransactionSearchControl_Suggestion_Notes.LabelText = "📝 Notes Keyword";
+            TransactionSearchControl_Suggestion_Notes.Location = new Point(623, 41);
+            TransactionSearchControl_Suggestion_Notes.MaximumSize = new Size(0, 32);
+            TransactionSearchControl_Suggestion_Notes.MinimumSize = new Size(0, 32);
+            TransactionSearchControl_Suggestion_Notes.Name = "TransactionSearchControl_Suggestion_Notes";
+            TransactionSearchControl_Suggestion_Notes.PlaceholderText = "Partial match supported";
+            TransactionSearchControl_Suggestion_Notes.ShowF4Button = false;
+            TransactionSearchControl_Suggestion_Notes.ShowValidationColor = false;
+            TransactionSearchControl_Suggestion_Notes.Size = new Size(306, 32);
+            TransactionSearchControl_Suggestion_Notes.TabIndex = 6;
             // 
             // TransactionSearchControl_TableLayout_QuickFilters
             // 
@@ -424,26 +551,48 @@ namespace MTM_WIP_Application_Winforms.Controls.Transactions
             TransactionSearchControl_TableLayout_QuickFilters.Name = "TransactionSearchControl_TableLayout_QuickFilters";
             TransactionSearchControl_TableLayout_QuickFilters.RowCount = 1;
             TransactionSearchControl_TableLayout_QuickFilters.RowStyles.Add(new RowStyle());
-            TransactionSearchControl_TableLayout_QuickFilters.Size = new Size(441, 25);
+            TransactionSearchControl_TableLayout_QuickFilters.Size = new Size(453, 25);
             TransactionSearchControl_TableLayout_QuickFilters.TabIndex = 16;
             // 
-            // TransactionSearchControl_RadioButton_Custom
+            // TransactionSearchControl_RadioButton_Everything
             // 
-            TransactionSearchControl_RadioButton_Custom.AutoSize = true;
-            TransactionSearchControl_RadioButton_Custom.Dock = DockStyle.Fill;
-            TransactionSearchControl_RadioButton_Custom.Location = new Point(253, 3);
-            TransactionSearchControl_RadioButton_Custom.Name = "TransactionSearchControl_RadioButton_Custom";
-            TransactionSearchControl_RadioButton_Custom.Size = new Size(67, 19);
-            TransactionSearchControl_RadioButton_Custom.TabIndex = 3;
-            TransactionSearchControl_RadioButton_Custom.Text = "Custom";
-            TransactionSearchControl_RadioButton_Custom.UseVisualStyleBackColor = true;
+            TransactionSearchControl_RadioButton_Everything.AutoSize = true;
+            TransactionSearchControl_RadioButton_Everything.Dock = DockStyle.Fill;
+            TransactionSearchControl_RadioButton_Everything.Location = new Point(351, 3);
+            TransactionSearchControl_RadioButton_Everything.Name = "TransactionSearchControl_RadioButton_Everything";
+            TransactionSearchControl_RadioButton_Everything.Size = new Size(81, 19);
+            TransactionSearchControl_RadioButton_Everything.TabIndex = 4;
+            TransactionSearchControl_RadioButton_Everything.Text = "Everything";
+            TransactionSearchControl_RadioButton_Everything.UseVisualStyleBackColor = true;
+            // 
+            // TransactionSearchControl_RadioButton_Today
+            // 
+            TransactionSearchControl_RadioButton_Today.AutoSize = true;
+            TransactionSearchControl_RadioButton_Today.Dock = DockStyle.Fill;
+            TransactionSearchControl_RadioButton_Today.Location = new Point(20, 3);
+            TransactionSearchControl_RadioButton_Today.Name = "TransactionSearchControl_RadioButton_Today";
+            TransactionSearchControl_RadioButton_Today.Size = new Size(57, 19);
+            TransactionSearchControl_RadioButton_Today.TabIndex = 0;
+            TransactionSearchControl_RadioButton_Today.Text = "Today";
+            TransactionSearchControl_RadioButton_Today.UseVisualStyleBackColor = true;
+            // 
+            // TransactionSearchControl_RadioButton_Week
+            // 
+            TransactionSearchControl_RadioButton_Week.AutoSize = true;
+            TransactionSearchControl_RadioButton_Week.Dock = DockStyle.Fill;
+            TransactionSearchControl_RadioButton_Week.Location = new Point(100, 3);
+            TransactionSearchControl_RadioButton_Week.Name = "TransactionSearchControl_RadioButton_Week";
+            TransactionSearchControl_RadioButton_Week.Size = new Size(54, 19);
+            TransactionSearchControl_RadioButton_Week.TabIndex = 1;
+            TransactionSearchControl_RadioButton_Week.Text = "Week";
+            TransactionSearchControl_RadioButton_Week.UseVisualStyleBackColor = true;
             // 
             // TransactionSearchControl_RadioButton_Month
             // 
             TransactionSearchControl_RadioButton_Month.AutoSize = true;
             TransactionSearchControl_RadioButton_Month.Checked = true;
             TransactionSearchControl_RadioButton_Month.Dock = DockStyle.Fill;
-            TransactionSearchControl_RadioButton_Month.Location = new Point(171, 3);
+            TransactionSearchControl_RadioButton_Month.Location = new Point(177, 3);
             TransactionSearchControl_RadioButton_Month.Name = "TransactionSearchControl_RadioButton_Month";
             TransactionSearchControl_RadioButton_Month.Size = new Size(61, 19);
             TransactionSearchControl_RadioButton_Month.TabIndex = 2;
@@ -451,188 +600,58 @@ namespace MTM_WIP_Application_Winforms.Controls.Transactions
             TransactionSearchControl_RadioButton_Month.Text = "Month";
             TransactionSearchControl_RadioButton_Month.UseVisualStyleBackColor = true;
             // 
-            // TransactionSearchControl_RadioButton_Week
+            // TransactionSearchControl_RadioButton_Custom
             // 
-            TransactionSearchControl_RadioButton_Week.AutoSize = true;
-            TransactionSearchControl_RadioButton_Week.Dock = DockStyle.Fill;
-            TransactionSearchControl_RadioButton_Week.Location = new Point(96, 3);
-            TransactionSearchControl_RadioButton_Week.Name = "TransactionSearchControl_RadioButton_Week";
-            TransactionSearchControl_RadioButton_Week.Size = new Size(54, 19);
-            TransactionSearchControl_RadioButton_Week.TabIndex = 1;
-            TransactionSearchControl_RadioButton_Week.Text = "Week";
-            TransactionSearchControl_RadioButton_Week.UseVisualStyleBackColor = true;
+            TransactionSearchControl_RadioButton_Custom.AutoSize = true;
+            TransactionSearchControl_RadioButton_Custom.Dock = DockStyle.Fill;
+            TransactionSearchControl_RadioButton_Custom.Location = new Point(261, 3);
+            TransactionSearchControl_RadioButton_Custom.Name = "TransactionSearchControl_RadioButton_Custom";
+            TransactionSearchControl_RadioButton_Custom.Size = new Size(67, 19);
+            TransactionSearchControl_RadioButton_Custom.TabIndex = 3;
+            TransactionSearchControl_RadioButton_Custom.Text = "Custom";
+            TransactionSearchControl_RadioButton_Custom.UseVisualStyleBackColor = true;
             // 
-            // TransactionSearchControl_RadioButton_Today
+            // TransactionSearchControl_GroupBox_RadioButtons
             // 
-            TransactionSearchControl_RadioButton_Today.AutoSize = true;
-            TransactionSearchControl_RadioButton_Today.Dock = DockStyle.Fill;
-            TransactionSearchControl_RadioButton_Today.Location = new Point(18, 3);
-            TransactionSearchControl_RadioButton_Today.Name = "TransactionSearchControl_RadioButton_Today";
-            TransactionSearchControl_RadioButton_Today.Size = new Size(57, 19);
-            TransactionSearchControl_RadioButton_Today.TabIndex = 0;
-            TransactionSearchControl_RadioButton_Today.Text = "Today";
-            TransactionSearchControl_RadioButton_Today.UseVisualStyleBackColor = true;
+            TransactionSearchControl_GroupBox_RadioButtons.AutoSize = true;
+            TransactionSearchControl_GroupBox_RadioButtons.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            TransactionSearchControl_TableLayout_Search.SetColumnSpan(TransactionSearchControl_GroupBox_RadioButtons, 2);
+            TransactionSearchControl_GroupBox_RadioButtons.Controls.Add(TransactionSearchControl_TableLayout_QuickFilters);
+            TransactionSearchControl_GroupBox_RadioButtons.Dock = DockStyle.Fill;
+            TransactionSearchControl_GroupBox_RadioButtons.Location = new Point(3, 79);
+            TransactionSearchControl_GroupBox_RadioButtons.Name = "TransactionSearchControl_GroupBox_RadioButtons";
+            TransactionSearchControl_GroupBox_RadioButtons.Size = new Size(459, 47);
+            TransactionSearchControl_GroupBox_RadioButtons.TabIndex = 18;
+            TransactionSearchControl_GroupBox_RadioButtons.TabStop = false;
+            TransactionSearchControl_GroupBox_RadioButtons.Text = "Simple Date Filter";
             // 
-            // TransactionSearchControl_RadioButton_Everything
+            // TransactionSearchControl_Suggestion_FromLocation
             // 
-            TransactionSearchControl_RadioButton_Everything.AutoSize = true;
-            TransactionSearchControl_RadioButton_Everything.Dock = DockStyle.Fill;
-            TransactionSearchControl_RadioButton_Everything.Location = new Point(341, 3);
-            TransactionSearchControl_RadioButton_Everything.Name = "TransactionSearchControl_RadioButton_Everything";
-            TransactionSearchControl_RadioButton_Everything.Size = new Size(81, 19);
-            TransactionSearchControl_RadioButton_Everything.TabIndex = 4;
-            TransactionSearchControl_RadioButton_Everything.Text = "Everything";
-            TransactionSearchControl_RadioButton_Everything.UseVisualStyleBackColor = true;
+            TransactionSearchControl_Suggestion_FromLocation.AutoSize = true;
+            TransactionSearchControl_Suggestion_FromLocation.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            TransactionSearchControl_Suggestion_FromLocation.Dock = DockStyle.Fill;
+            TransactionSearchControl_Suggestion_FromLocation.LabelText = "📍 From Location";
+            TransactionSearchControl_Suggestion_FromLocation.Location = new Point(3, 41);
+            TransactionSearchControl_Suggestion_FromLocation.MaximumSize = new Size(0, 32);
+            TransactionSearchControl_Suggestion_FromLocation.MinimumSize = new Size(0, 32);
+            TransactionSearchControl_Suggestion_FromLocation.Name = "TransactionSearchControl_Suggestion_FromLocation";
+            TransactionSearchControl_Suggestion_FromLocation.PlaceholderText = "Optional filter";
+            TransactionSearchControl_Suggestion_FromLocation.Size = new Size(304, 32);
+            TransactionSearchControl_Suggestion_FromLocation.TabIndex = 4;
             // 
-            // TransactionSearchControl_Suggestion_User
+            // TransactionSearchControl_Suggestion_PartNumber
             // 
-            TransactionSearchControl_Suggestion_User.AutoSize = true;
-            TransactionSearchControl_Suggestion_User.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            TransactionSearchControl_TableLayout_Search.SetColumnSpan(TransactionSearchControl_Suggestion_User, 2);
-            TransactionSearchControl_Suggestion_User.Dock = DockStyle.Fill;
-            TransactionSearchControl_Suggestion_User.LabelText = "👤 User";
-            TransactionSearchControl_Suggestion_User.Location = new Point(305, 3);
-            TransactionSearchControl_Suggestion_User.MaximumSize = new Size(0, 32);
-            TransactionSearchControl_Suggestion_User.MinimumSize = new Size(0, 32);
-            TransactionSearchControl_Suggestion_User.Name = "TransactionSearchControl_Suggestion_User";
-            TransactionSearchControl_Suggestion_User.PlaceholderText = "Leave blank for all users";
-            TransactionSearchControl_Suggestion_User.Size = new Size(296, 32);
-            TransactionSearchControl_Suggestion_User.TabIndex = 2;
-            // 
-            // TransactionSearchControl_Suggestion_ToLocation
-            // 
-            TransactionSearchControl_Suggestion_ToLocation.AutoSize = true;
-            TransactionSearchControl_Suggestion_ToLocation.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            TransactionSearchControl_TableLayout_Search.SetColumnSpan(TransactionSearchControl_Suggestion_ToLocation, 2);
-            TransactionSearchControl_Suggestion_ToLocation.Dock = DockStyle.Fill;
-            TransactionSearchControl_Suggestion_ToLocation.LabelText = "📍 To Location";
-            TransactionSearchControl_Suggestion_ToLocation.Location = new Point(305, 41);
-            TransactionSearchControl_Suggestion_ToLocation.MaximumSize = new Size(0, 32);
-            TransactionSearchControl_Suggestion_ToLocation.MinimumSize = new Size(0, 32);
-            TransactionSearchControl_Suggestion_ToLocation.Name = "TransactionSearchControl_Suggestion_ToLocation";
-            TransactionSearchControl_Suggestion_ToLocation.PlaceholderText = "Optional filter";
-            TransactionSearchControl_Suggestion_ToLocation.Size = new Size(296, 32);
-            TransactionSearchControl_Suggestion_ToLocation.TabIndex = 5;
-            // 
-            // TransactionSearchControl_GroupBox_TransactionTypes
-            // 
-            TransactionSearchControl_GroupBox_TransactionTypes.AutoSize = true;
-            TransactionSearchControl_GroupBox_TransactionTypes.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            TransactionSearchControl_TableLayout_Search.SetColumnSpan(TransactionSearchControl_GroupBox_TransactionTypes, 2);
-            TransactionSearchControl_GroupBox_TransactionTypes.Controls.Add(TransactionSearchControl_TableLayout_TransactionTypes);
-            TransactionSearchControl_GroupBox_TransactionTypes.Dock = DockStyle.Fill;
-            TransactionSearchControl_GroupBox_TransactionTypes.Location = new Point(456, 79);
-            TransactionSearchControl_GroupBox_TransactionTypes.Name = "TransactionSearchControl_GroupBox_TransactionTypes";
-            TransactionSearchControl_GroupBox_TransactionTypes.Size = new Size(447, 47);
-            TransactionSearchControl_GroupBox_TransactionTypes.TabIndex = 11;
-            TransactionSearchControl_GroupBox_TransactionTypes.TabStop = false;
-            TransactionSearchControl_GroupBox_TransactionTypes.Text = "Filter by Transaction Types";
-            // 
-            // TransactionSearchControl_TableLayout_TransactionTypes
-            // 
-            TransactionSearchControl_TableLayout_TransactionTypes.AutoSize = true;
-            TransactionSearchControl_TableLayout_TransactionTypes.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            TransactionSearchControl_TableLayout_TransactionTypes.ColumnCount = 7;
-            TransactionSearchControl_TableLayout_TransactionTypes.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 25F));
-            TransactionSearchControl_TableLayout_TransactionTypes.ColumnStyles.Add(new ColumnStyle());
-            TransactionSearchControl_TableLayout_TransactionTypes.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 25F));
-            TransactionSearchControl_TableLayout_TransactionTypes.ColumnStyles.Add(new ColumnStyle());
-            TransactionSearchControl_TableLayout_TransactionTypes.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 25F));
-            TransactionSearchControl_TableLayout_TransactionTypes.ColumnStyles.Add(new ColumnStyle());
-            TransactionSearchControl_TableLayout_TransactionTypes.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 25F));
-            TransactionSearchControl_TableLayout_TransactionTypes.Controls.Add(TransactionSearchControl_CheckBox_TRANSFER, 5, 0);
-            TransactionSearchControl_TableLayout_TransactionTypes.Controls.Add(TransactionSearchControl_CheckBox_OUT, 3, 0);
-            TransactionSearchControl_TableLayout_TransactionTypes.Controls.Add(TransactionSearchControl_CheckBox_IN, 1, 0);
-            TransactionSearchControl_TableLayout_TransactionTypes.Dock = DockStyle.Fill;
-            TransactionSearchControl_TableLayout_TransactionTypes.Location = new Point(3, 19);
-            TransactionSearchControl_TableLayout_TransactionTypes.Name = "TransactionSearchControl_TableLayout_TransactionTypes";
-            TransactionSearchControl_TableLayout_TransactionTypes.RowCount = 1;
-            TransactionSearchControl_TableLayout_TransactionTypes.RowStyles.Add(new RowStyle());
-            TransactionSearchControl_TableLayout_TransactionTypes.Size = new Size(441, 25);
-            TransactionSearchControl_TableLayout_TransactionTypes.TabIndex = 0;
-            // 
-            // TransactionSearchControl_CheckBox_TRANSFER
-            // 
-            TransactionSearchControl_CheckBox_TRANSFER.AutoSize = true;
-            TransactionSearchControl_CheckBox_TRANSFER.Checked = true;
-            TransactionSearchControl_CheckBox_TRANSFER.CheckState = CheckState.Checked;
-            TransactionSearchControl_CheckBox_TRANSFER.Dock = DockStyle.Fill;
-            TransactionSearchControl_CheckBox_TRANSFER.Location = new Point(292, 3);
-            TransactionSearchControl_CheckBox_TRANSFER.Name = "TransactionSearchControl_CheckBox_TRANSFER";
-            TransactionSearchControl_CheckBox_TRANSFER.Size = new Size(82, 19);
-            TransactionSearchControl_CheckBox_TRANSFER.TabIndex = 2;
-            TransactionSearchControl_CheckBox_TRANSFER.Text = "TRANSFER";
-            TransactionSearchControl_CheckBox_TRANSFER.UseVisualStyleBackColor = true;
-            // 
-            // TransactionSearchControl_CheckBox_OUT
-            // 
-            TransactionSearchControl_CheckBox_OUT.AutoSize = true;
-            TransactionSearchControl_CheckBox_OUT.Checked = true;
-            TransactionSearchControl_CheckBox_OUT.CheckState = CheckState.Checked;
-            TransactionSearchControl_CheckBox_OUT.Dock = DockStyle.Fill;
-            TransactionSearchControl_CheckBox_OUT.Location = new Point(173, 3);
-            TransactionSearchControl_CheckBox_OUT.Name = "TransactionSearchControl_CheckBox_OUT";
-            TransactionSearchControl_CheckBox_OUT.Size = new Size(50, 19);
-            TransactionSearchControl_CheckBox_OUT.TabIndex = 1;
-            TransactionSearchControl_CheckBox_OUT.Text = "OUT";
-            TransactionSearchControl_CheckBox_OUT.UseVisualStyleBackColor = true;
-            // 
-            // TransactionSearchControl_CheckBox_IN
-            // 
-            TransactionSearchControl_CheckBox_IN.AutoSize = true;
-            TransactionSearchControl_CheckBox_IN.Checked = true;
-            TransactionSearchControl_CheckBox_IN.CheckState = CheckState.Checked;
-            TransactionSearchControl_CheckBox_IN.Dock = DockStyle.Fill;
-            TransactionSearchControl_CheckBox_IN.Location = new Point(66, 3);
-            TransactionSearchControl_CheckBox_IN.Name = "TransactionSearchControl_CheckBox_IN";
-            TransactionSearchControl_CheckBox_IN.Size = new Size(38, 19);
-            TransactionSearchControl_CheckBox_IN.TabIndex = 0;
-            TransactionSearchControl_CheckBox_IN.Text = "IN";
-            TransactionSearchControl_CheckBox_IN.UseVisualStyleBackColor = true;
-            // 
-            // TransactionSearchControl_Suggestion_Operation
-            // 
-            TransactionSearchControl_Suggestion_Operation.AutoSize = true;
-            TransactionSearchControl_Suggestion_Operation.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            TransactionSearchControl_Suggestion_Operation.Dock = DockStyle.Fill;
-            TransactionSearchControl_Suggestion_Operation.LabelText = "⚙️ Operation";
-            TransactionSearchControl_Suggestion_Operation.Location = new Point(607, 3);
-            TransactionSearchControl_Suggestion_Operation.MaximumSize = new Size(0, 32);
-            TransactionSearchControl_Suggestion_Operation.MinimumSize = new Size(0, 32);
-            TransactionSearchControl_Suggestion_Operation.Name = "TransactionSearchControl_Suggestion_Operation";
-            TransactionSearchControl_Suggestion_Operation.PlaceholderText = "e.g., 90, 100";
-            TransactionSearchControl_Suggestion_Operation.Size = new Size(296, 32);
-            TransactionSearchControl_Suggestion_Operation.TabIndex = 3;
-            // 
-            // TransactionSearchControl_Suggestion_Notes
-            // 
-            TransactionSearchControl_Suggestion_Notes.AutoSize = true;
-            TransactionSearchControl_Suggestion_Notes.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            TransactionSearchControl_Suggestion_Notes.Dock = DockStyle.Fill;
-            TransactionSearchControl_Suggestion_Notes.EnableSuggestions = false;
-            TransactionSearchControl_Suggestion_Notes.LabelText = "📝 Notes Keyword";
-            TransactionSearchControl_Suggestion_Notes.Location = new Point(607, 41);
-            TransactionSearchControl_Suggestion_Notes.MaximumSize = new Size(0, 32);
-            TransactionSearchControl_Suggestion_Notes.MinimumSize = new Size(0, 32);
-            TransactionSearchControl_Suggestion_Notes.Name = "TransactionSearchControl_Suggestion_Notes";
-            TransactionSearchControl_Suggestion_Notes.PlaceholderText = "Partial match supported";
-            TransactionSearchControl_Suggestion_Notes.ShowF4Button = false;
-            TransactionSearchControl_Suggestion_Notes.ShowValidationColor = false;
-            TransactionSearchControl_Suggestion_Notes.Size = new Size(296, 32);
-            TransactionSearchControl_Suggestion_Notes.TabIndex = 6;
-            // 
-            // TransactionSearchControl_Panel_Buttons
-            // 
-            TransactionSearchControl_Panel_Buttons.AutoSize = true;
-            TransactionSearchControl_Panel_Buttons.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            TransactionSearchControl_Panel_Buttons.BorderStyle = BorderStyle.FixedSingle;
-            TransactionSearchControl_TableLayout_DateTimePicker.SetColumnSpan(TransactionSearchControl_Panel_Buttons, 2);
-            TransactionSearchControl_Panel_Buttons.Controls.Add(TransactionSearchControl_TableLayout_Buttons);
-            TransactionSearchControl_Panel_Buttons.Dock = DockStyle.Fill;
-            TransactionSearchControl_Panel_Buttons.Location = new Point(3, 72);
-            TransactionSearchControl_Panel_Buttons.Name = "TransactionSearchControl_Panel_Buttons";
-            TransactionSearchControl_Panel_Buttons.Size = new Size(219, 54);
-            TransactionSearchControl_Panel_Buttons.TabIndex = 5;
+            TransactionSearchControl_Suggestion_PartNumber.AutoSize = true;
+            TransactionSearchControl_Suggestion_PartNumber.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            TransactionSearchControl_Suggestion_PartNumber.Dock = DockStyle.Fill;
+            TransactionSearchControl_Suggestion_PartNumber.LabelText = "🔍 Part Number";
+            TransactionSearchControl_Suggestion_PartNumber.Location = new Point(3, 3);
+            TransactionSearchControl_Suggestion_PartNumber.MaximumSize = new Size(0, 32);
+            TransactionSearchControl_Suggestion_PartNumber.MinimumSize = new Size(0, 32);
+            TransactionSearchControl_Suggestion_PartNumber.Name = "TransactionSearchControl_Suggestion_PartNumber";
+            TransactionSearchControl_Suggestion_PartNumber.PlaceholderText = "Enter or select part";
+            TransactionSearchControl_Suggestion_PartNumber.Size = new Size(304, 32);
+            TransactionSearchControl_Suggestion_PartNumber.TabIndex = 1;
             // 
             // TransactionSearchControl
             // 
@@ -642,8 +661,10 @@ namespace MTM_WIP_Application_Winforms.Controls.Transactions
             AutoSizeMode = AutoSizeMode.GrowAndShrink;
             Controls.Add(TransactionSearchControl_TableLayout_Main);
             Margin = new Padding(0);
+            MaximumSize = new Size(1244, 161);
+            MinimumSize = new Size(1244, 161);
             Name = "TransactionSearchControl";
-            Size = new Size(1159, 161);
+            Size = new Size(1244, 161);
             TransactionSearchControl_TableLayout_Main.ResumeLayout(false);
             TransactionSearchControl_TableLayout_Main.PerformLayout();
             TransactionSearchControl_TableLayout_Filters.ResumeLayout(false);
@@ -654,22 +675,22 @@ namespace MTM_WIP_Application_Winforms.Controls.Transactions
             TransactionSearchControl_GroupBox_DateRange.PerformLayout();
             TransactionSearchControl_TableLayout_DateTimePicker.ResumeLayout(false);
             TransactionSearchControl_TableLayout_DateTimePicker.PerformLayout();
+            TransactionSearchControl_Panel_Buttons.ResumeLayout(false);
+            TransactionSearchControl_Panel_Buttons.PerformLayout();
             TransactionSearchControl_TableLayout_Buttons.ResumeLayout(false);
             TransactionSearchControl_TableLayout_Buttons.PerformLayout();
             TransactionSearchControl_GroupBox_Search.ResumeLayout(false);
             TransactionSearchControl_GroupBox_Search.PerformLayout();
             TransactionSearchControl_TableLayout_Search.ResumeLayout(false);
             TransactionSearchControl_TableLayout_Search.PerformLayout();
-            TransactionSearchControl_GroupBox_RadioButtons.ResumeLayout(false);
-            TransactionSearchControl_GroupBox_RadioButtons.PerformLayout();
-            TransactionSearchControl_TableLayout_QuickFilters.ResumeLayout(false);
-            TransactionSearchControl_TableLayout_QuickFilters.PerformLayout();
             TransactionSearchControl_GroupBox_TransactionTypes.ResumeLayout(false);
             TransactionSearchControl_GroupBox_TransactionTypes.PerformLayout();
             TransactionSearchControl_TableLayout_TransactionTypes.ResumeLayout(false);
             TransactionSearchControl_TableLayout_TransactionTypes.PerformLayout();
-            TransactionSearchControl_Panel_Buttons.ResumeLayout(false);
-            TransactionSearchControl_Panel_Buttons.PerformLayout();
+            TransactionSearchControl_TableLayout_QuickFilters.ResumeLayout(false);
+            TransactionSearchControl_TableLayout_QuickFilters.PerformLayout();
+            TransactionSearchControl_GroupBox_RadioButtons.ResumeLayout(false);
+            TransactionSearchControl_GroupBox_RadioButtons.PerformLayout();
             ResumeLayout(false);
             PerformLayout();
         }
@@ -690,6 +711,21 @@ namespace MTM_WIP_Application_Winforms.Controls.Transactions
         private DateTimePicker TransactionSearchControl_DateTimePicker_DateTo;
         private Label TransactionSearchControl_Label_DateFrom;
         private Label TransactionSearchControl_Label_DateTo;
+        private GroupBox TransactionSearchControl_GroupBox_Search;
+        private TableLayoutPanel TransactionSearchControl_TableLayout_Search;
+        private SuggestionTextBoxWithLabel TransactionSearchControl_Suggestion_User;
+        private SuggestionTextBoxWithLabel TransactionSearchControl_Suggestion_Operation;
+        private SuggestionTextBoxWithLabel TransactionSearchControl_Suggestion_ToLocation;
+        private SuggestionTextBoxWithLabel TransactionSearchControl_Suggestion_Notes;
+        private TableLayoutPanel TransactionSearchControl_TableLayout_Buttons;
+        private Button TransactionSearchControl_Button_Search;
+        private Button TransactionSearchControl_Button_Reset;
+        private Button TransactionSearchControl_Button_InfoPanel;
+        private Button TransactionSearchControl_Button_Export;
+        private Button TransactionSearchControl_Button_Print;
+        private Panel TransactionSearchControl_Panel_Buttons;
+        private SuggestionTextBoxWithLabel TransactionSearchControl_Suggestion_PartNumber;
+        private SuggestionTextBoxWithLabel TransactionSearchControl_Suggestion_FromLocation;
         private GroupBox TransactionSearchControl_GroupBox_RadioButtons;
         private TableLayoutPanel TransactionSearchControl_TableLayout_QuickFilters;
         private RadioButton TransactionSearchControl_RadioButton_Custom;
@@ -697,20 +733,6 @@ namespace MTM_WIP_Application_Winforms.Controls.Transactions
         private RadioButton TransactionSearchControl_RadioButton_Week;
         private RadioButton TransactionSearchControl_RadioButton_Today;
         private RadioButton TransactionSearchControl_RadioButton_Everything;
-        private GroupBox TransactionSearchControl_GroupBox_Search;
-        private TableLayoutPanel TransactionSearchControl_TableLayout_Search;
-        private SuggestionTextBoxWithLabel TransactionSearchControl_Suggestion_PartNumber;
-        private SuggestionTextBoxWithLabel TransactionSearchControl_Suggestion_User;
-        private SuggestionTextBoxWithLabel TransactionSearchControl_Suggestion_Operation;
-        private SuggestionTextBoxWithLabel TransactionSearchControl_Suggestion_FromLocation;
-        private SuggestionTextBoxWithLabel TransactionSearchControl_Suggestion_ToLocation;
-        private SuggestionTextBoxWithLabel TransactionSearchControl_Suggestion_Notes;
-        private TableLayoutPanel TransactionSearchControl_TableLayout_Buttons;
-        private Button TransactionSearchControl_Button_Search;
-        private Button TransactionSearchControl_Button_Reset;
-        private Button TransactionSearchControl_Button_Export;
-        private Button TransactionSearchControl_Button_Print;
-        private Panel TransactionSearchControl_Panel_Buttons;
     }
 }
 

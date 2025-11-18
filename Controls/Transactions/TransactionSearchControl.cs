@@ -44,6 +44,11 @@ internal partial class TransactionSearchControl : ThemedUserControl
     /// </summary>
     public event EventHandler? PrintRequested;
 
+    /// <summary>
+    /// Raised when the user clicks the information panel toggle button.
+    /// </summary>
+    public event EventHandler? ToggleInformationPanelRequested;
+
     #endregion
 
     #region Fields
@@ -58,6 +63,8 @@ internal partial class TransactionSearchControl : ThemedUserControl
     private bool _fromLocationSuggestionsConfigured;
     private bool _toLocationSuggestionsConfigured;
     private bool _operationSuggestionsConfigured;
+    private Control_TextAnimationSequence? _informationPanelAnimator;
+    private bool _informationPanelCollapsed;
 
     #endregion
 
@@ -74,6 +81,8 @@ internal partial class TransactionSearchControl : ThemedUserControl
 
         WireUpEvents();
         InitializeDateRangeDefaults();
+        SetExportPrintButtonsEnabled(false);
+        InitializeInformationPanelToggle();
 
         LoggingUtility.Log("[TransactionSearchControl] Initialization complete.");
     }
@@ -91,6 +100,7 @@ internal partial class TransactionSearchControl : ThemedUserControl
         TransactionSearchControl_Button_Reset.Click += BtnReset_Click;
         TransactionSearchControl_Button_Export.Click += BtnExport_Click;
         TransactionSearchControl_Button_Print.Click += BtnPrint_Click;
+        TransactionSearchControl_Button_InfoPanel.Click += BtnInformationPanel_Click;
 
         // Quick filter radio buttons
         TransactionSearchControl_RadioButton_Today.CheckedChanged += QuickFilterChanged;
@@ -112,6 +122,12 @@ internal partial class TransactionSearchControl : ThemedUserControl
     {
         TransactionSearchControl_RadioButton_Month.Checked = true;
         ApplyQuickFilter();
+    }
+
+    private void InitializeInformationPanelToggle()
+    {
+        Helper_ButtonToggleAnimations.ValidateIconButton(TransactionSearchControl_Button_InfoPanel, nameof(TransactionSearchControl));
+        SetInformationPanelCollapsed(collapsed: false);
     }
 
     #endregion
@@ -385,6 +401,28 @@ internal partial class TransactionSearchControl : ThemedUserControl
         TransactionSearchControl_RadioButton_Month.Checked = true;
     }
 
+    /// <summary>
+    /// Enables or disables the Export and Print buttons that depend on search results.
+    /// </summary>
+    /// <param name="enabled">True to enable the buttons, false to disable them.</param>
+    public void SetExportPrintButtonsEnabled(bool enabled)
+    {
+        TransactionSearchControl_Button_Export.Enabled = enabled;
+        TransactionSearchControl_Button_Print.Enabled = enabled;
+
+        LoggingUtility.Log($"[TransactionSearchControl] Export/Print buttons {(enabled ? "enabled" : "disabled")}");
+    }
+
+    /// <summary>
+    /// Updates the information panel toggle button to reflect the collapsed state.
+    /// </summary>
+    /// <param name="collapsed">True when the information panel is hidden.</param>
+    public void SetInformationPanelCollapsed(bool collapsed)
+    {
+        _informationPanelCollapsed = collapsed;
+        UpdateInformationPanelButton();
+    }
+
     #endregion
 
     #region Button Clicks
@@ -492,6 +530,21 @@ internal partial class TransactionSearchControl : ThemedUserControl
         {
             LoggingUtility.Log("[TransactionSearchControl] Print button clicked.");
             PrintRequested?.Invoke(this, EventArgs.Empty);
+        }
+        catch (Exception ex)
+        {
+            LoggingUtility.LogApplicationError(ex);
+            Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Low,
+                controlName: nameof(TransactionSearchControl));
+        }
+    }
+
+    private void BtnInformationPanel_Click(object? sender, EventArgs e)
+    {
+        try
+        {
+            LoggingUtility.Log("[TransactionSearchControl] Information panel toggle button clicked.");
+            ToggleInformationPanelRequested?.Invoke(this, EventArgs.Empty);
         }
         catch (Exception ex)
         {
@@ -664,6 +717,23 @@ internal partial class TransactionSearchControl : ThemedUserControl
 
         var trimmed = value.Trim();
         return toUpper ? trimmed.ToUpperInvariant() : trimmed;
+    }
+
+    private void UpdateInformationPanelButton()
+    {
+        Helper_ButtonToggleAnimations.ApplyHorizontalArrow(
+            ref _informationPanelAnimator,
+            components,
+            TransactionSearchControl_Button_InfoPanel,
+            _informationPanelCollapsed);
+
+        if (TransactionSearchControl_Button_InfoPanel != null)
+        {
+            TransactionSearchControl_Button_InfoPanel.AccessibleName = _informationPanelCollapsed
+                ? "Show information panel"
+                : "Hide information panel";
+            TransactionSearchControl_Button_InfoPanel.AccessibleDescription = TransactionSearchControl_Button_InfoPanel.AccessibleName;
+        }
     }
 
     #endregion
