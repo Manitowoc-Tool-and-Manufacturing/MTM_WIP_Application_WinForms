@@ -61,47 +61,47 @@ namespace MTM_WIP_Application_Winforms.Controls.Shared
             SuggestionTextBoxWithLabel_TableLayout_Main.Controls.Add(SuggestionTextBoxWithLabel_Button_F4, 2, 0);
             SuggestionTextBoxWithLabel_TableLayout_Main.Dock = DockStyle.Fill;
             SuggestionTextBoxWithLabel_TableLayout_Main.Location = new Point(0, 0);
+            SuggestionTextBoxWithLabel_TableLayout_Main.MaximumSize = new Size(0, 23);
+            SuggestionTextBoxWithLabel_TableLayout_Main.MinimumSize = new Size(0, 23);
             SuggestionTextBoxWithLabel_TableLayout_Main.Name = "SuggestionTextBoxWithLabel_TableLayout_Main";
             SuggestionTextBoxWithLabel_TableLayout_Main.RowCount = 1;
             SuggestionTextBoxWithLabel_TableLayout_Main.RowStyles.Add(new RowStyle());
-            SuggestionTextBoxWithLabel_TableLayout_Main.Size = new Size(296, 29);
+            SuggestionTextBoxWithLabel_TableLayout_Main.Size = new Size(123, 23);
             SuggestionTextBoxWithLabel_TableLayout_Main.TabIndex = 0;
-            SuggestionTextBoxWithLabel_TableLayout_Main.TabStop = false;
             // 
             // SuggestionTextBoxWithLabel_Label_Main
             // 
             SuggestionTextBoxWithLabel_Label_Main.AutoSize = true;
             SuggestionTextBoxWithLabel_Label_Main.Dock = DockStyle.Fill;
             SuggestionTextBoxWithLabel_Label_Main.Font = new Font("Segoe UI Emoji", 9F);
-            SuggestionTextBoxWithLabel_Label_Main.Location = new Point(3, 3);
-            SuggestionTextBoxWithLabel_Label_Main.Margin = new Padding(3, 3, 0, 3);
-            SuggestionTextBoxWithLabel_Label_Main.MaximumSize = new Size(120, 23);
-            SuggestionTextBoxWithLabel_Label_Main.MinimumSize = new Size(120, 23);
+            SuggestionTextBoxWithLabel_Label_Main.Location = new Point(0, 0);
+            SuggestionTextBoxWithLabel_Label_Main.Margin = new Padding(0);
+            SuggestionTextBoxWithLabel_Label_Main.MaximumSize = new Size(100, 23);
+            SuggestionTextBoxWithLabel_Label_Main.MinimumSize = new Size(100, 23);
             SuggestionTextBoxWithLabel_Label_Main.Name = "SuggestionTextBoxWithLabel_Label_Main";
-            SuggestionTextBoxWithLabel_Label_Main.Size = new Size(120, 23);
+            SuggestionTextBoxWithLabel_Label_Main.Size = new Size(100, 23);
             SuggestionTextBoxWithLabel_Label_Main.TabIndex = 0;
-            SuggestionTextBoxWithLabel_Label_Main.TabStop = false;
-            SuggestionTextBoxWithLabel_Label_Main.Text = "Label:";
             SuggestionTextBoxWithLabel_Label_Main.TextAlign = ContentAlignment.MiddleRight;
             // 
             // SuggestionTextBoxWithLabel_TextBox_Main
             // 
+            SuggestionTextBoxWithLabel_TextBox_Main.AutoSize = true;
+            SuggestionTextBoxWithLabel_TextBox_Main.AutoSizeMode = AutoSizeMode.GrowAndShrink;
             SuggestionTextBoxWithLabel_TextBox_Main.Dock = DockStyle.Fill;
-            SuggestionTextBoxWithLabel_TextBox_Main.Font = new Font("Segoe UI Emoji", 9F);
-            SuggestionTextBoxWithLabel_TextBox_Main.Location = new Point(123, 3);
-            SuggestionTextBoxWithLabel_TextBox_Main.Margin = new Padding(0, 3, 0, 3);
+            SuggestionTextBoxWithLabel_TextBox_Main.Location = new Point(100, 0);
+            SuggestionTextBoxWithLabel_TextBox_Main.Margin = new Padding(0);
             SuggestionTextBoxWithLabel_TextBox_Main.MaximumSize = new Size(0, 23);
             SuggestionTextBoxWithLabel_TextBox_Main.MinimumSize = new Size(0, 23);
             SuggestionTextBoxWithLabel_TextBox_Main.Name = "SuggestionTextBoxWithLabel_TextBox_Main";
-            SuggestionTextBoxWithLabel_TextBox_Main.Size = new Size(150, 23);
+            SuggestionTextBoxWithLabel_TextBox_Main.Size = new Size(1, 23);
             SuggestionTextBoxWithLabel_TextBox_Main.TabIndex = 1;
             // 
             // SuggestionTextBoxWithLabel_Button_F4
             // 
             SuggestionTextBoxWithLabel_Button_F4.Dock = DockStyle.Fill;
             SuggestionTextBoxWithLabel_Button_F4.Font = new Font("Segoe UI Emoji", 9F);
-            SuggestionTextBoxWithLabel_Button_F4.Location = new Point(273, 3);
-            SuggestionTextBoxWithLabel_Button_F4.Margin = new Padding(0, 3, 0, 3);
+            SuggestionTextBoxWithLabel_Button_F4.Location = new Point(100, 0);
+            SuggestionTextBoxWithLabel_Button_F4.Margin = new Padding(0);
             SuggestionTextBoxWithLabel_Button_F4.MaximumSize = new Size(23, 23);
             SuggestionTextBoxWithLabel_Button_F4.MinimumSize = new Size(23, 23);
             SuggestionTextBoxWithLabel_Button_F4.Name = "SuggestionTextBoxWithLabel_Button_F4";
@@ -119,7 +119,7 @@ namespace MTM_WIP_Application_Winforms.Controls.Shared
             AutoSizeMode = AutoSizeMode.GrowAndShrink;
             Controls.Add(SuggestionTextBoxWithLabel_TableLayout_Main);
             Name = "SuggestionTextBoxWithLabel";
-            Size = new Size(296, 29);
+            Size = new Size(123, 23);
             SuggestionTextBoxWithLabel_TableLayout_Main.ResumeLayout(false);
             SuggestionTextBoxWithLabel_TableLayout_Main.PerformLayout();
             ResumeLayout(false);

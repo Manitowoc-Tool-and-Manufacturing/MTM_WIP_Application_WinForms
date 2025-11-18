@@ -145,7 +145,7 @@ namespace MTM_WIP_Application_Winforms.Controls.Transactions
             Model_Transactions_Core_AnalyticsControl_TableLayout_Main.RowStyles.Add(new RowStyle(SizeType.Percent, 33.3333321F));
             Model_Transactions_Core_AnalyticsControl_TableLayout_Main.RowStyles.Add(new RowStyle(SizeType.Percent, 33.3333321F));
             Model_Transactions_Core_AnalyticsControl_TableLayout_Main.RowStyles.Add(new RowStyle(SizeType.Percent, 33.3333321F));
-            Model_Transactions_Core_AnalyticsControl_TableLayout_Main.Size = new Size(846, 328);
+            Model_Transactions_Core_AnalyticsControl_TableLayout_Main.Size = new Size(1092, 525);
             Model_Transactions_Core_AnalyticsControl_TableLayout_Main.TabIndex = 0;
             // 
             // Model_Transactions_Core_AnalyticsControl_Panel_Total
@@ -160,7 +160,7 @@ namespace MTM_WIP_Application_Winforms.Controls.Transactions
             Model_Transactions_Core_AnalyticsControl_Panel_Total.MinimumSize = new Size(180, 90);
             Model_Transactions_Core_AnalyticsControl_Panel_Total.Name = "Model_Transactions_Core_AnalyticsControl_Panel_Total";
             Model_Transactions_Core_AnalyticsControl_Panel_Total.Padding = new Padding(10);
-            Model_Transactions_Core_AnalyticsControl_Panel_Total.Size = new Size(203, 100);
+            Model_Transactions_Core_AnalyticsControl_Panel_Total.Size = new Size(264, 165);
             Model_Transactions_Core_AnalyticsControl_Panel_Total.TabIndex = 0;
             // 
             // Model_Transactions_Core_AnalyticsControl_TableLayout_Total
@@ -176,8 +176,8 @@ namespace MTM_WIP_Application_Winforms.Controls.Transactions
             Model_Transactions_Core_AnalyticsControl_TableLayout_Total.Name = "Model_Transactions_Core_AnalyticsControl_TableLayout_Total";
             Model_Transactions_Core_AnalyticsControl_TableLayout_Total.RowCount = 2;
             Model_Transactions_Core_AnalyticsControl_TableLayout_Total.RowStyles.Add(new RowStyle());
-            Model_Transactions_Core_AnalyticsControl_TableLayout_Total.RowStyles.Add(new RowStyle());
-            Model_Transactions_Core_AnalyticsControl_TableLayout_Total.Size = new Size(181, 78);
+            Model_Transactions_Core_AnalyticsControl_TableLayout_Total.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
+            Model_Transactions_Core_AnalyticsControl_TableLayout_Total.Size = new Size(242, 143);
             Model_Transactions_Core_AnalyticsControl_TableLayout_Total.TabIndex = 0;
             // 
             // Model_Transactions_Core_AnalyticsControl_Label_TotalCaption
@@ -189,7 +189,7 @@ namespace MTM_WIP_Application_Winforms.Controls.Transactions
             Model_Transactions_Core_AnalyticsControl_Label_TotalCaption.Location = new Point(3, 3);
             Model_Transactions_Core_AnalyticsControl_Label_TotalCaption.Margin = new Padding(3);
             Model_Transactions_Core_AnalyticsControl_Label_TotalCaption.Name = "Model_Transactions_Core_AnalyticsControl_Label_TotalCaption";
-            Model_Transactions_Core_AnalyticsControl_Label_TotalCaption.Size = new Size(175, 20);
+            Model_Transactions_Core_AnalyticsControl_Label_TotalCaption.Size = new Size(236, 20);
             Model_Transactions_Core_AnalyticsControl_Label_TotalCaption.TabIndex = 0;
             Model_Transactions_Core_AnalyticsControl_Label_TotalCaption.Text = "Total Transactions";
             Model_Transactions_Core_AnalyticsControl_Label_TotalCaption.TextAlign = ContentAlignment.MiddleCenter;
@@ -202,7 +202,7 @@ namespace MTM_WIP_Application_Winforms.Controls.Transactions
             Model_Transactions_Core_AnalyticsControl_Label_TotalValue.Location = new Point(3, 29);
             Model_Transactions_Core_AnalyticsControl_Label_TotalValue.Margin = new Padding(3);
             Model_Transactions_Core_AnalyticsControl_Label_TotalValue.Name = "Model_Transactions_Core_AnalyticsControl_Label_TotalValue";
-            Model_Transactions_Core_AnalyticsControl_Label_TotalValue.Size = new Size(175, 46);
+            Model_Transactions_Core_AnalyticsControl_Label_TotalValue.Size = new Size(236, 111);
             Model_Transactions_Core_AnalyticsControl_Label_TotalValue.TabIndex = 1;
             Model_Transactions_Core_AnalyticsControl_Label_TotalValue.Text = "—";
             Model_Transactions_Core_AnalyticsControl_Label_TotalValue.TextAlign = ContentAlignment.MiddleCenter;
@@ -215,11 +215,11 @@ namespace MTM_WIP_Application_Winforms.Controls.Transactions
             Model_Transactions_Core_AnalyticsControl_Panel_In.BorderStyle = BorderStyle.FixedSingle;
             Model_Transactions_Core_AnalyticsControl_Panel_In.Controls.Add(Model_Transactions_Core_AnalyticsControl_TableLayout_In);
             Model_Transactions_Core_AnalyticsControl_Panel_In.Dock = DockStyle.Fill;
-            Model_Transactions_Core_AnalyticsControl_Panel_In.Location = new Point(217, 8);
+            Model_Transactions_Core_AnalyticsControl_Panel_In.Location = new Point(278, 8);
             Model_Transactions_Core_AnalyticsControl_Panel_In.MinimumSize = new Size(180, 90);
             Model_Transactions_Core_AnalyticsControl_Panel_In.Name = "Model_Transactions_Core_AnalyticsControl_Panel_In";
             Model_Transactions_Core_AnalyticsControl_Panel_In.Padding = new Padding(10);
-            Model_Transactions_Core_AnalyticsControl_Panel_In.Size = new Size(203, 100);
+            Model_Transactions_Core_AnalyticsControl_Panel_In.Size = new Size(264, 165);
             Model_Transactions_Core_AnalyticsControl_Panel_In.TabIndex = 1;
             // 
             // Model_Transactions_Core_AnalyticsControl_TableLayout_In
@@ -227,8 +227,8 @@ namespace MTM_WIP_Application_Winforms.Controls.Transactions
             Model_Transactions_Core_AnalyticsControl_TableLayout_In.AutoSize = true;
             Model_Transactions_Core_AnalyticsControl_TableLayout_In.AutoSizeMode = AutoSizeMode.GrowAndShrink;
             Model_Transactions_Core_AnalyticsControl_TableLayout_In.ColumnCount = 2;
-            Model_Transactions_Core_AnalyticsControl_TableLayout_In.ColumnStyles.Add(new ColumnStyle());
-            Model_Transactions_Core_AnalyticsControl_TableLayout_In.ColumnStyles.Add(new ColumnStyle());
+            Model_Transactions_Core_AnalyticsControl_TableLayout_In.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
+            Model_Transactions_Core_AnalyticsControl_TableLayout_In.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
             Model_Transactions_Core_AnalyticsControl_TableLayout_In.Controls.Add(Model_Transactions_Core_AnalyticsControl_Label_InCaption, 0, 0);
             Model_Transactions_Core_AnalyticsControl_TableLayout_In.Controls.Add(Model_Transactions_Core_AnalyticsControl_Label_InValue, 0, 1);
             Model_Transactions_Core_AnalyticsControl_TableLayout_In.Controls.Add(Model_Transactions_Core_AnalyticsControl_Label_InPercentage, 1, 1);
@@ -237,8 +237,8 @@ namespace MTM_WIP_Application_Winforms.Controls.Transactions
             Model_Transactions_Core_AnalyticsControl_TableLayout_In.Name = "Model_Transactions_Core_AnalyticsControl_TableLayout_In";
             Model_Transactions_Core_AnalyticsControl_TableLayout_In.RowCount = 2;
             Model_Transactions_Core_AnalyticsControl_TableLayout_In.RowStyles.Add(new RowStyle());
-            Model_Transactions_Core_AnalyticsControl_TableLayout_In.RowStyles.Add(new RowStyle());
-            Model_Transactions_Core_AnalyticsControl_TableLayout_In.Size = new Size(181, 78);
+            Model_Transactions_Core_AnalyticsControl_TableLayout_In.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
+            Model_Transactions_Core_AnalyticsControl_TableLayout_In.Size = new Size(242, 143);
             Model_Transactions_Core_AnalyticsControl_TableLayout_In.TabIndex = 0;
             // 
             // Model_Transactions_Core_AnalyticsControl_Label_InCaption
@@ -251,7 +251,7 @@ namespace MTM_WIP_Application_Winforms.Controls.Transactions
             Model_Transactions_Core_AnalyticsControl_Label_InCaption.Location = new Point(3, 3);
             Model_Transactions_Core_AnalyticsControl_Label_InCaption.Margin = new Padding(3);
             Model_Transactions_Core_AnalyticsControl_Label_InCaption.Name = "Model_Transactions_Core_AnalyticsControl_Label_InCaption";
-            Model_Transactions_Core_AnalyticsControl_Label_InCaption.Size = new Size(175, 20);
+            Model_Transactions_Core_AnalyticsControl_Label_InCaption.Size = new Size(236, 20);
             Model_Transactions_Core_AnalyticsControl_Label_InCaption.TabIndex = 0;
             Model_Transactions_Core_AnalyticsControl_Label_InCaption.Text = "📥 IN";
             Model_Transactions_Core_AnalyticsControl_Label_InCaption.TextAlign = ContentAlignment.MiddleCenter;
@@ -265,7 +265,7 @@ namespace MTM_WIP_Application_Winforms.Controls.Transactions
             Model_Transactions_Core_AnalyticsControl_Label_InValue.Location = new Point(3, 29);
             Model_Transactions_Core_AnalyticsControl_Label_InValue.Margin = new Padding(3);
             Model_Transactions_Core_AnalyticsControl_Label_InValue.Name = "Model_Transactions_Core_AnalyticsControl_Label_InValue";
-            Model_Transactions_Core_AnalyticsControl_Label_InValue.Size = new Size(22, 46);
+            Model_Transactions_Core_AnalyticsControl_Label_InValue.Size = new Size(115, 111);
             Model_Transactions_Core_AnalyticsControl_Label_InValue.TabIndex = 1;
             Model_Transactions_Core_AnalyticsControl_Label_InValue.Text = "—";
             Model_Transactions_Core_AnalyticsControl_Label_InValue.TextAlign = ContentAlignment.MiddleCenter;
@@ -276,10 +276,10 @@ namespace MTM_WIP_Application_Winforms.Controls.Transactions
             Model_Transactions_Core_AnalyticsControl_Label_InPercentage.Dock = DockStyle.Fill;
             Model_Transactions_Core_AnalyticsControl_Label_InPercentage.Font = new Font("Segoe UI", 9F);
             Model_Transactions_Core_AnalyticsControl_Label_InPercentage.ForeColor = Color.FromArgb(22, 163, 74);
-            Model_Transactions_Core_AnalyticsControl_Label_InPercentage.Location = new Point(31, 29);
+            Model_Transactions_Core_AnalyticsControl_Label_InPercentage.Location = new Point(124, 29);
             Model_Transactions_Core_AnalyticsControl_Label_InPercentage.Margin = new Padding(3);
             Model_Transactions_Core_AnalyticsControl_Label_InPercentage.Name = "Model_Transactions_Core_AnalyticsControl_Label_InPercentage";
-            Model_Transactions_Core_AnalyticsControl_Label_InPercentage.Size = new Size(147, 46);
+            Model_Transactions_Core_AnalyticsControl_Label_InPercentage.Size = new Size(115, 111);
             Model_Transactions_Core_AnalyticsControl_Label_InPercentage.TabIndex = 2;
             Model_Transactions_Core_AnalyticsControl_Label_InPercentage.TextAlign = ContentAlignment.MiddleCenter;
             // 
@@ -291,11 +291,11 @@ namespace MTM_WIP_Application_Winforms.Controls.Transactions
             Model_Transactions_Core_AnalyticsControl_Panel_Out.BorderStyle = BorderStyle.FixedSingle;
             Model_Transactions_Core_AnalyticsControl_Panel_Out.Controls.Add(Model_Transactions_Core_AnalyticsControl_TableLayout_Out);
             Model_Transactions_Core_AnalyticsControl_Panel_Out.Dock = DockStyle.Fill;
-            Model_Transactions_Core_AnalyticsControl_Panel_Out.Location = new Point(426, 8);
+            Model_Transactions_Core_AnalyticsControl_Panel_Out.Location = new Point(548, 8);
             Model_Transactions_Core_AnalyticsControl_Panel_Out.MinimumSize = new Size(180, 90);
             Model_Transactions_Core_AnalyticsControl_Panel_Out.Name = "Model_Transactions_Core_AnalyticsControl_Panel_Out";
             Model_Transactions_Core_AnalyticsControl_Panel_Out.Padding = new Padding(10);
-            Model_Transactions_Core_AnalyticsControl_Panel_Out.Size = new Size(203, 100);
+            Model_Transactions_Core_AnalyticsControl_Panel_Out.Size = new Size(264, 165);
             Model_Transactions_Core_AnalyticsControl_Panel_Out.TabIndex = 2;
             // 
             // Model_Transactions_Core_AnalyticsControl_TableLayout_Out
@@ -303,8 +303,8 @@ namespace MTM_WIP_Application_Winforms.Controls.Transactions
             Model_Transactions_Core_AnalyticsControl_TableLayout_Out.AutoSize = true;
             Model_Transactions_Core_AnalyticsControl_TableLayout_Out.AutoSizeMode = AutoSizeMode.GrowAndShrink;
             Model_Transactions_Core_AnalyticsControl_TableLayout_Out.ColumnCount = 2;
-            Model_Transactions_Core_AnalyticsControl_TableLayout_Out.ColumnStyles.Add(new ColumnStyle());
-            Model_Transactions_Core_AnalyticsControl_TableLayout_Out.ColumnStyles.Add(new ColumnStyle());
+            Model_Transactions_Core_AnalyticsControl_TableLayout_Out.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
+            Model_Transactions_Core_AnalyticsControl_TableLayout_Out.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
             Model_Transactions_Core_AnalyticsControl_TableLayout_Out.Controls.Add(Model_Transactions_Core_AnalyticsControl_Label_OutCaption);
             Model_Transactions_Core_AnalyticsControl_TableLayout_Out.Controls.Add(Model_Transactions_Core_AnalyticsControl_Label_OutValue, 0, 1);
             Model_Transactions_Core_AnalyticsControl_TableLayout_Out.Controls.Add(Model_Transactions_Core_AnalyticsControl_Label_OutPercentage, 1, 1);
@@ -314,8 +314,8 @@ namespace MTM_WIP_Application_Winforms.Controls.Transactions
             Model_Transactions_Core_AnalyticsControl_TableLayout_Out.Name = "Model_Transactions_Core_AnalyticsControl_TableLayout_Out";
             Model_Transactions_Core_AnalyticsControl_TableLayout_Out.RowCount = 2;
             Model_Transactions_Core_AnalyticsControl_TableLayout_Out.RowStyles.Add(new RowStyle());
-            Model_Transactions_Core_AnalyticsControl_TableLayout_Out.RowStyles.Add(new RowStyle());
-            Model_Transactions_Core_AnalyticsControl_TableLayout_Out.Size = new Size(181, 78);
+            Model_Transactions_Core_AnalyticsControl_TableLayout_Out.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
+            Model_Transactions_Core_AnalyticsControl_TableLayout_Out.Size = new Size(242, 143);
             Model_Transactions_Core_AnalyticsControl_TableLayout_Out.TabIndex = 0;
             // 
             // Model_Transactions_Core_AnalyticsControl_Label_OutCaption
@@ -328,7 +328,7 @@ namespace MTM_WIP_Application_Winforms.Controls.Transactions
             Model_Transactions_Core_AnalyticsControl_Label_OutCaption.Location = new Point(3, 3);
             Model_Transactions_Core_AnalyticsControl_Label_OutCaption.Margin = new Padding(3);
             Model_Transactions_Core_AnalyticsControl_Label_OutCaption.Name = "Model_Transactions_Core_AnalyticsControl_Label_OutCaption";
-            Model_Transactions_Core_AnalyticsControl_Label_OutCaption.Size = new Size(175, 20);
+            Model_Transactions_Core_AnalyticsControl_Label_OutCaption.Size = new Size(236, 20);
             Model_Transactions_Core_AnalyticsControl_Label_OutCaption.TabIndex = 0;
             Model_Transactions_Core_AnalyticsControl_Label_OutCaption.Text = "📤 OUT";
             Model_Transactions_Core_AnalyticsControl_Label_OutCaption.TextAlign = ContentAlignment.MiddleCenter;
@@ -342,7 +342,7 @@ namespace MTM_WIP_Application_Winforms.Controls.Transactions
             Model_Transactions_Core_AnalyticsControl_Label_OutValue.Location = new Point(3, 29);
             Model_Transactions_Core_AnalyticsControl_Label_OutValue.Margin = new Padding(3);
             Model_Transactions_Core_AnalyticsControl_Label_OutValue.Name = "Model_Transactions_Core_AnalyticsControl_Label_OutValue";
-            Model_Transactions_Core_AnalyticsControl_Label_OutValue.Size = new Size(22, 46);
+            Model_Transactions_Core_AnalyticsControl_Label_OutValue.Size = new Size(115, 111);
             Model_Transactions_Core_AnalyticsControl_Label_OutValue.TabIndex = 1;
             Model_Transactions_Core_AnalyticsControl_Label_OutValue.Text = "—";
             Model_Transactions_Core_AnalyticsControl_Label_OutValue.TextAlign = ContentAlignment.MiddleCenter;
@@ -353,10 +353,10 @@ namespace MTM_WIP_Application_Winforms.Controls.Transactions
             Model_Transactions_Core_AnalyticsControl_Label_OutPercentage.Dock = DockStyle.Fill;
             Model_Transactions_Core_AnalyticsControl_Label_OutPercentage.Font = new Font("Segoe UI Emoji", 12F);
             Model_Transactions_Core_AnalyticsControl_Label_OutPercentage.ForeColor = Color.FromArgb(220, 38, 38);
-            Model_Transactions_Core_AnalyticsControl_Label_OutPercentage.Location = new Point(31, 29);
+            Model_Transactions_Core_AnalyticsControl_Label_OutPercentage.Location = new Point(124, 29);
             Model_Transactions_Core_AnalyticsControl_Label_OutPercentage.Margin = new Padding(3);
             Model_Transactions_Core_AnalyticsControl_Label_OutPercentage.Name = "Model_Transactions_Core_AnalyticsControl_Label_OutPercentage";
-            Model_Transactions_Core_AnalyticsControl_Label_OutPercentage.Size = new Size(147, 46);
+            Model_Transactions_Core_AnalyticsControl_Label_OutPercentage.Size = new Size(115, 111);
             Model_Transactions_Core_AnalyticsControl_Label_OutPercentage.TabIndex = 2;
             Model_Transactions_Core_AnalyticsControl_Label_OutPercentage.TextAlign = ContentAlignment.MiddleCenter;
             // 
@@ -368,11 +368,11 @@ namespace MTM_WIP_Application_Winforms.Controls.Transactions
             Model_Transactions_Core_AnalyticsControl_Panel_Transfer.BorderStyle = BorderStyle.FixedSingle;
             Model_Transactions_Core_AnalyticsControl_Panel_Transfer.Controls.Add(Model_Transactions_Core_AnalyticsControl_TableLayout_Transfer);
             Model_Transactions_Core_AnalyticsControl_Panel_Transfer.Dock = DockStyle.Fill;
-            Model_Transactions_Core_AnalyticsControl_Panel_Transfer.Location = new Point(635, 8);
+            Model_Transactions_Core_AnalyticsControl_Panel_Transfer.Location = new Point(818, 8);
             Model_Transactions_Core_AnalyticsControl_Panel_Transfer.MinimumSize = new Size(180, 90);
             Model_Transactions_Core_AnalyticsControl_Panel_Transfer.Name = "Model_Transactions_Core_AnalyticsControl_Panel_Transfer";
             Model_Transactions_Core_AnalyticsControl_Panel_Transfer.Padding = new Padding(10);
-            Model_Transactions_Core_AnalyticsControl_Panel_Transfer.Size = new Size(203, 100);
+            Model_Transactions_Core_AnalyticsControl_Panel_Transfer.Size = new Size(266, 165);
             Model_Transactions_Core_AnalyticsControl_Panel_Transfer.TabIndex = 3;
             // 
             // Model_Transactions_Core_AnalyticsControl_TableLayout_Transfer
@@ -380,8 +380,8 @@ namespace MTM_WIP_Application_Winforms.Controls.Transactions
             Model_Transactions_Core_AnalyticsControl_TableLayout_Transfer.AutoSize = true;
             Model_Transactions_Core_AnalyticsControl_TableLayout_Transfer.AutoSizeMode = AutoSizeMode.GrowAndShrink;
             Model_Transactions_Core_AnalyticsControl_TableLayout_Transfer.ColumnCount = 2;
-            Model_Transactions_Core_AnalyticsControl_TableLayout_Transfer.ColumnStyles.Add(new ColumnStyle());
-            Model_Transactions_Core_AnalyticsControl_TableLayout_Transfer.ColumnStyles.Add(new ColumnStyle());
+            Model_Transactions_Core_AnalyticsControl_TableLayout_Transfer.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
+            Model_Transactions_Core_AnalyticsControl_TableLayout_Transfer.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
             Model_Transactions_Core_AnalyticsControl_TableLayout_Transfer.Controls.Add(Model_Transactions_Core_AnalyticsControl_Label_TransferCaption);
             Model_Transactions_Core_AnalyticsControl_TableLayout_Transfer.Controls.Add(Model_Transactions_Core_AnalyticsControl_Label_TransferValue, 0, 1);
             Model_Transactions_Core_AnalyticsControl_TableLayout_Transfer.Controls.Add(Model_Transactions_Core_AnalyticsControl_Label_TransferPercentage, 1, 1);
@@ -391,9 +391,8 @@ namespace MTM_WIP_Application_Winforms.Controls.Transactions
             Model_Transactions_Core_AnalyticsControl_TableLayout_Transfer.Name = "Model_Transactions_Core_AnalyticsControl_TableLayout_Transfer";
             Model_Transactions_Core_AnalyticsControl_TableLayout_Transfer.RowCount = 2;
             Model_Transactions_Core_AnalyticsControl_TableLayout_Transfer.RowStyles.Add(new RowStyle());
-            Model_Transactions_Core_AnalyticsControl_TableLayout_Transfer.RowStyles.Add(new RowStyle());
-            Model_Transactions_Core_AnalyticsControl_TableLayout_Transfer.RowStyles.Add(new RowStyle(SizeType.Absolute, 20F));
-            Model_Transactions_Core_AnalyticsControl_TableLayout_Transfer.Size = new Size(181, 78);
+            Model_Transactions_Core_AnalyticsControl_TableLayout_Transfer.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
+            Model_Transactions_Core_AnalyticsControl_TableLayout_Transfer.Size = new Size(244, 143);
             Model_Transactions_Core_AnalyticsControl_TableLayout_Transfer.TabIndex = 0;
             // 
             // Model_Transactions_Core_AnalyticsControl_Label_TransferCaption
@@ -406,7 +405,7 @@ namespace MTM_WIP_Application_Winforms.Controls.Transactions
             Model_Transactions_Core_AnalyticsControl_Label_TransferCaption.Location = new Point(3, 3);
             Model_Transactions_Core_AnalyticsControl_Label_TransferCaption.Margin = new Padding(3);
             Model_Transactions_Core_AnalyticsControl_Label_TransferCaption.Name = "Model_Transactions_Core_AnalyticsControl_Label_TransferCaption";
-            Model_Transactions_Core_AnalyticsControl_Label_TransferCaption.Size = new Size(175, 20);
+            Model_Transactions_Core_AnalyticsControl_Label_TransferCaption.Size = new Size(238, 20);
             Model_Transactions_Core_AnalyticsControl_Label_TransferCaption.TabIndex = 0;
             Model_Transactions_Core_AnalyticsControl_Label_TransferCaption.Text = "🔄 TRANSFER";
             Model_Transactions_Core_AnalyticsControl_Label_TransferCaption.TextAlign = ContentAlignment.MiddleCenter;
@@ -420,7 +419,7 @@ namespace MTM_WIP_Application_Winforms.Controls.Transactions
             Model_Transactions_Core_AnalyticsControl_Label_TransferValue.Location = new Point(3, 29);
             Model_Transactions_Core_AnalyticsControl_Label_TransferValue.Margin = new Padding(3);
             Model_Transactions_Core_AnalyticsControl_Label_TransferValue.Name = "Model_Transactions_Core_AnalyticsControl_Label_TransferValue";
-            Model_Transactions_Core_AnalyticsControl_Label_TransferValue.Size = new Size(22, 46);
+            Model_Transactions_Core_AnalyticsControl_Label_TransferValue.Size = new Size(116, 111);
             Model_Transactions_Core_AnalyticsControl_Label_TransferValue.TabIndex = 1;
             Model_Transactions_Core_AnalyticsControl_Label_TransferValue.Text = "—";
             Model_Transactions_Core_AnalyticsControl_Label_TransferValue.TextAlign = ContentAlignment.MiddleCenter;
@@ -431,10 +430,10 @@ namespace MTM_WIP_Application_Winforms.Controls.Transactions
             Model_Transactions_Core_AnalyticsControl_Label_TransferPercentage.Dock = DockStyle.Fill;
             Model_Transactions_Core_AnalyticsControl_Label_TransferPercentage.Font = new Font("Segoe UI Emoji", 12F);
             Model_Transactions_Core_AnalyticsControl_Label_TransferPercentage.ForeColor = Color.FromArgb(161, 98, 7);
-            Model_Transactions_Core_AnalyticsControl_Label_TransferPercentage.Location = new Point(31, 29);
+            Model_Transactions_Core_AnalyticsControl_Label_TransferPercentage.Location = new Point(125, 29);
             Model_Transactions_Core_AnalyticsControl_Label_TransferPercentage.Margin = new Padding(3);
             Model_Transactions_Core_AnalyticsControl_Label_TransferPercentage.Name = "Model_Transactions_Core_AnalyticsControl_Label_TransferPercentage";
-            Model_Transactions_Core_AnalyticsControl_Label_TransferPercentage.Size = new Size(147, 46);
+            Model_Transactions_Core_AnalyticsControl_Label_TransferPercentage.Size = new Size(116, 111);
             Model_Transactions_Core_AnalyticsControl_Label_TransferPercentage.TabIndex = 2;
             Model_Transactions_Core_AnalyticsControl_Label_TransferPercentage.TextAlign = ContentAlignment.MiddleCenter;
             // 
@@ -446,11 +445,11 @@ namespace MTM_WIP_Application_Winforms.Controls.Transactions
             Model_Transactions_Core_AnalyticsControl_Panel_DatabaseLifespan.BorderStyle = BorderStyle.FixedSingle;
             Model_Transactions_Core_AnalyticsControl_Panel_DatabaseLifespan.Controls.Add(Model_Transactions_Core_AnalyticsControl_TableLayout_DatabaseLifespan);
             Model_Transactions_Core_AnalyticsControl_Panel_DatabaseLifespan.Dock = DockStyle.Fill;
-            Model_Transactions_Core_AnalyticsControl_Panel_DatabaseLifespan.Location = new Point(8, 114);
+            Model_Transactions_Core_AnalyticsControl_Panel_DatabaseLifespan.Location = new Point(8, 179);
             Model_Transactions_Core_AnalyticsControl_Panel_DatabaseLifespan.MinimumSize = new Size(180, 90);
             Model_Transactions_Core_AnalyticsControl_Panel_DatabaseLifespan.Name = "Model_Transactions_Core_AnalyticsControl_Panel_DatabaseLifespan";
             Model_Transactions_Core_AnalyticsControl_Panel_DatabaseLifespan.Padding = new Padding(10);
-            Model_Transactions_Core_AnalyticsControl_Panel_DatabaseLifespan.Size = new Size(203, 100);
+            Model_Transactions_Core_AnalyticsControl_Panel_DatabaseLifespan.Size = new Size(264, 165);
             Model_Transactions_Core_AnalyticsControl_Panel_DatabaseLifespan.TabIndex = 4;
             // 
             // Model_Transactions_Core_AnalyticsControl_TableLayout_DatabaseLifespan
@@ -458,7 +457,7 @@ namespace MTM_WIP_Application_Winforms.Controls.Transactions
             Model_Transactions_Core_AnalyticsControl_TableLayout_DatabaseLifespan.AutoSize = true;
             Model_Transactions_Core_AnalyticsControl_TableLayout_DatabaseLifespan.AutoSizeMode = AutoSizeMode.GrowAndShrink;
             Model_Transactions_Core_AnalyticsControl_TableLayout_DatabaseLifespan.ColumnCount = 1;
-            Model_Transactions_Core_AnalyticsControl_TableLayout_DatabaseLifespan.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
+            Model_Transactions_Core_AnalyticsControl_TableLayout_DatabaseLifespan.ColumnStyles.Add(new ColumnStyle());
             Model_Transactions_Core_AnalyticsControl_TableLayout_DatabaseLifespan.Controls.Add(Model_Transactions_Core_AnalyticsControl_Label_DatabaseLifespanCaption);
             Model_Transactions_Core_AnalyticsControl_TableLayout_DatabaseLifespan.Controls.Add(Model_Transactions_Core_AnalyticsControl_Label_DatabaseLifespanValue);
             Model_Transactions_Core_AnalyticsControl_TableLayout_DatabaseLifespan.Controls.Add(Model_Transactions_Core_AnalyticsControl_Label_AvgDaily);
@@ -467,10 +466,10 @@ namespace MTM_WIP_Application_Winforms.Controls.Transactions
             Model_Transactions_Core_AnalyticsControl_TableLayout_DatabaseLifespan.Margin = new Padding(0);
             Model_Transactions_Core_AnalyticsControl_TableLayout_DatabaseLifespan.Name = "Model_Transactions_Core_AnalyticsControl_TableLayout_DatabaseLifespan";
             Model_Transactions_Core_AnalyticsControl_TableLayout_DatabaseLifespan.RowCount = 2;
-            Model_Transactions_Core_AnalyticsControl_TableLayout_DatabaseLifespan.RowStyles.Add(new RowStyle());
-            Model_Transactions_Core_AnalyticsControl_TableLayout_DatabaseLifespan.RowStyles.Add(new RowStyle());
-            Model_Transactions_Core_AnalyticsControl_TableLayout_DatabaseLifespan.RowStyles.Add(new RowStyle());
-            Model_Transactions_Core_AnalyticsControl_TableLayout_DatabaseLifespan.Size = new Size(181, 78);
+            Model_Transactions_Core_AnalyticsControl_TableLayout_DatabaseLifespan.RowStyles.Add(new RowStyle(SizeType.Percent, 33.3333321F));
+            Model_Transactions_Core_AnalyticsControl_TableLayout_DatabaseLifespan.RowStyles.Add(new RowStyle(SizeType.Percent, 33.3333321F));
+            Model_Transactions_Core_AnalyticsControl_TableLayout_DatabaseLifespan.RowStyles.Add(new RowStyle(SizeType.Percent, 33.3333321F));
+            Model_Transactions_Core_AnalyticsControl_TableLayout_DatabaseLifespan.Size = new Size(242, 143);
             Model_Transactions_Core_AnalyticsControl_TableLayout_DatabaseLifespan.TabIndex = 0;
             // 
             // Model_Transactions_Core_AnalyticsControl_Label_DatabaseLifespanCaption
@@ -482,7 +481,7 @@ namespace MTM_WIP_Application_Winforms.Controls.Transactions
             Model_Transactions_Core_AnalyticsControl_Label_DatabaseLifespanCaption.Location = new Point(3, 3);
             Model_Transactions_Core_AnalyticsControl_Label_DatabaseLifespanCaption.Margin = new Padding(3);
             Model_Transactions_Core_AnalyticsControl_Label_DatabaseLifespanCaption.Name = "Model_Transactions_Core_AnalyticsControl_Label_DatabaseLifespanCaption";
-            Model_Transactions_Core_AnalyticsControl_Label_DatabaseLifespanCaption.Size = new Size(175, 20);
+            Model_Transactions_Core_AnalyticsControl_Label_DatabaseLifespanCaption.Size = new Size(236, 41);
             Model_Transactions_Core_AnalyticsControl_Label_DatabaseLifespanCaption.TabIndex = 0;
             Model_Transactions_Core_AnalyticsControl_Label_DatabaseLifespanCaption.Text = "📅 Database Lifespan";
             Model_Transactions_Core_AnalyticsControl_Label_DatabaseLifespanCaption.TextAlign = ContentAlignment.MiddleCenter;
@@ -493,10 +492,10 @@ namespace MTM_WIP_Application_Winforms.Controls.Transactions
             Model_Transactions_Core_AnalyticsControl_Label_DatabaseLifespanValue.Dock = DockStyle.Fill;
             Model_Transactions_Core_AnalyticsControl_Label_DatabaseLifespanValue.Font = new Font("Segoe UI Emoji", 9.75F, FontStyle.Bold);
             Model_Transactions_Core_AnalyticsControl_Label_DatabaseLifespanValue.ForeColor = SystemColors.ControlText;
-            Model_Transactions_Core_AnalyticsControl_Label_DatabaseLifespanValue.Location = new Point(3, 29);
+            Model_Transactions_Core_AnalyticsControl_Label_DatabaseLifespanValue.Location = new Point(3, 50);
             Model_Transactions_Core_AnalyticsControl_Label_DatabaseLifespanValue.Margin = new Padding(3);
             Model_Transactions_Core_AnalyticsControl_Label_DatabaseLifespanValue.Name = "Model_Transactions_Core_AnalyticsControl_Label_DatabaseLifespanValue";
-            Model_Transactions_Core_AnalyticsControl_Label_DatabaseLifespanValue.Size = new Size(175, 17);
+            Model_Transactions_Core_AnalyticsControl_Label_DatabaseLifespanValue.Size = new Size(236, 41);
             Model_Transactions_Core_AnalyticsControl_Label_DatabaseLifespanValue.TabIndex = 1;
             Model_Transactions_Core_AnalyticsControl_Label_DatabaseLifespanValue.Text = "—";
             Model_Transactions_Core_AnalyticsControl_Label_DatabaseLifespanValue.TextAlign = ContentAlignment.MiddleCenter;
@@ -507,10 +506,10 @@ namespace MTM_WIP_Application_Winforms.Controls.Transactions
             Model_Transactions_Core_AnalyticsControl_Label_AvgDaily.Dock = DockStyle.Fill;
             Model_Transactions_Core_AnalyticsControl_Label_AvgDaily.Font = new Font("Segoe UI Emoji", 9.75F);
             Model_Transactions_Core_AnalyticsControl_Label_AvgDaily.ForeColor = SystemColors.ControlText;
-            Model_Transactions_Core_AnalyticsControl_Label_AvgDaily.Location = new Point(3, 52);
+            Model_Transactions_Core_AnalyticsControl_Label_AvgDaily.Location = new Point(3, 97);
             Model_Transactions_Core_AnalyticsControl_Label_AvgDaily.Margin = new Padding(3);
             Model_Transactions_Core_AnalyticsControl_Label_AvgDaily.Name = "Model_Transactions_Core_AnalyticsControl_Label_AvgDaily";
-            Model_Transactions_Core_AnalyticsControl_Label_AvgDaily.Size = new Size(175, 23);
+            Model_Transactions_Core_AnalyticsControl_Label_AvgDaily.Size = new Size(236, 43);
             Model_Transactions_Core_AnalyticsControl_Label_AvgDaily.TabIndex = 2;
             Model_Transactions_Core_AnalyticsControl_Label_AvgDaily.Text = "Avg. Daily: —";
             Model_Transactions_Core_AnalyticsControl_Label_AvgDaily.TextAlign = ContentAlignment.MiddleCenter;
@@ -523,11 +522,11 @@ namespace MTM_WIP_Application_Winforms.Controls.Transactions
             Model_Transactions_Core_AnalyticsControl_Panel_TopUser.BorderStyle = BorderStyle.FixedSingle;
             Model_Transactions_Core_AnalyticsControl_Panel_TopUser.Controls.Add(Model_Transactions_Core_AnalyticsControl_TableLayout_TopUser);
             Model_Transactions_Core_AnalyticsControl_Panel_TopUser.Dock = DockStyle.Fill;
-            Model_Transactions_Core_AnalyticsControl_Panel_TopUser.Location = new Point(217, 114);
+            Model_Transactions_Core_AnalyticsControl_Panel_TopUser.Location = new Point(278, 179);
             Model_Transactions_Core_AnalyticsControl_Panel_TopUser.MinimumSize = new Size(180, 90);
             Model_Transactions_Core_AnalyticsControl_Panel_TopUser.Name = "Model_Transactions_Core_AnalyticsControl_Panel_TopUser";
             Model_Transactions_Core_AnalyticsControl_Panel_TopUser.Padding = new Padding(10);
-            Model_Transactions_Core_AnalyticsControl_Panel_TopUser.Size = new Size(203, 100);
+            Model_Transactions_Core_AnalyticsControl_Panel_TopUser.Size = new Size(264, 165);
             Model_Transactions_Core_AnalyticsControl_Panel_TopUser.TabIndex = 5;
             // 
             // Model_Transactions_Core_AnalyticsControl_TableLayout_TopUser
@@ -545,9 +544,9 @@ namespace MTM_WIP_Application_Winforms.Controls.Transactions
             Model_Transactions_Core_AnalyticsControl_TableLayout_TopUser.Name = "Model_Transactions_Core_AnalyticsControl_TableLayout_TopUser";
             Model_Transactions_Core_AnalyticsControl_TableLayout_TopUser.RowCount = 3;
             Model_Transactions_Core_AnalyticsControl_TableLayout_TopUser.RowStyles.Add(new RowStyle(SizeType.Percent, 33.3333321F));
-            Model_Transactions_Core_AnalyticsControl_TableLayout_TopUser.RowStyles.Add(new RowStyle(SizeType.Percent, 33.3333321F));
-            Model_Transactions_Core_AnalyticsControl_TableLayout_TopUser.RowStyles.Add(new RowStyle(SizeType.Percent, 33.3333321F));
-            Model_Transactions_Core_AnalyticsControl_TableLayout_TopUser.Size = new Size(181, 78);
+            Model_Transactions_Core_AnalyticsControl_TableLayout_TopUser.RowStyles.Add(new RowStyle(SizeType.Percent, 33.3333359F));
+            Model_Transactions_Core_AnalyticsControl_TableLayout_TopUser.RowStyles.Add(new RowStyle(SizeType.Percent, 33.3333359F));
+            Model_Transactions_Core_AnalyticsControl_TableLayout_TopUser.Size = new Size(242, 143);
             Model_Transactions_Core_AnalyticsControl_TableLayout_TopUser.TabIndex = 0;
             // 
             // Model_Transactions_Core_AnalyticsControl_Label_TopUserCaption
@@ -559,7 +558,7 @@ namespace MTM_WIP_Application_Winforms.Controls.Transactions
             Model_Transactions_Core_AnalyticsControl_Label_TopUserCaption.Location = new Point(3, 3);
             Model_Transactions_Core_AnalyticsControl_Label_TopUserCaption.Margin = new Padding(3);
             Model_Transactions_Core_AnalyticsControl_Label_TopUserCaption.Name = "Model_Transactions_Core_AnalyticsControl_Label_TopUserCaption";
-            Model_Transactions_Core_AnalyticsControl_Label_TopUserCaption.Size = new Size(175, 20);
+            Model_Transactions_Core_AnalyticsControl_Label_TopUserCaption.Size = new Size(236, 41);
             Model_Transactions_Core_AnalyticsControl_Label_TopUserCaption.TabIndex = 0;
             Model_Transactions_Core_AnalyticsControl_Label_TopUserCaption.Text = "👤 Most Active User";
             Model_Transactions_Core_AnalyticsControl_Label_TopUserCaption.TextAlign = ContentAlignment.MiddleCenter;
@@ -570,10 +569,10 @@ namespace MTM_WIP_Application_Winforms.Controls.Transactions
             Model_Transactions_Core_AnalyticsControl_Label_TopUserName.Dock = DockStyle.Fill;
             Model_Transactions_Core_AnalyticsControl_Label_TopUserName.Font = new Font("Segoe UI Emoji", 9.75F, FontStyle.Bold);
             Model_Transactions_Core_AnalyticsControl_Label_TopUserName.ForeColor = SystemColors.ControlText;
-            Model_Transactions_Core_AnalyticsControl_Label_TopUserName.Location = new Point(3, 29);
+            Model_Transactions_Core_AnalyticsControl_Label_TopUserName.Location = new Point(3, 50);
             Model_Transactions_Core_AnalyticsControl_Label_TopUserName.Margin = new Padding(3);
             Model_Transactions_Core_AnalyticsControl_Label_TopUserName.Name = "Model_Transactions_Core_AnalyticsControl_Label_TopUserName";
-            Model_Transactions_Core_AnalyticsControl_Label_TopUserName.Size = new Size(175, 20);
+            Model_Transactions_Core_AnalyticsControl_Label_TopUserName.Size = new Size(236, 41);
             Model_Transactions_Core_AnalyticsControl_Label_TopUserName.TabIndex = 1;
             Model_Transactions_Core_AnalyticsControl_Label_TopUserName.Text = "—";
             Model_Transactions_Core_AnalyticsControl_Label_TopUserName.TextAlign = ContentAlignment.MiddleCenter;
@@ -584,10 +583,10 @@ namespace MTM_WIP_Application_Winforms.Controls.Transactions
             Model_Transactions_Core_AnalyticsControl_Label_TopUserCount.Dock = DockStyle.Fill;
             Model_Transactions_Core_AnalyticsControl_Label_TopUserCount.Font = new Font("Segoe UI Emoji", 9.75F);
             Model_Transactions_Core_AnalyticsControl_Label_TopUserCount.ForeColor = SystemColors.ControlText;
-            Model_Transactions_Core_AnalyticsControl_Label_TopUserCount.Location = new Point(3, 55);
+            Model_Transactions_Core_AnalyticsControl_Label_TopUserCount.Location = new Point(3, 97);
             Model_Transactions_Core_AnalyticsControl_Label_TopUserCount.Margin = new Padding(3);
             Model_Transactions_Core_AnalyticsControl_Label_TopUserCount.Name = "Model_Transactions_Core_AnalyticsControl_Label_TopUserCount";
-            Model_Transactions_Core_AnalyticsControl_Label_TopUserCount.Size = new Size(175, 20);
+            Model_Transactions_Core_AnalyticsControl_Label_TopUserCount.Size = new Size(236, 43);
             Model_Transactions_Core_AnalyticsControl_Label_TopUserCount.TabIndex = 2;
             Model_Transactions_Core_AnalyticsControl_Label_TopUserCount.Text = "0 transactions";
             Model_Transactions_Core_AnalyticsControl_Label_TopUserCount.TextAlign = ContentAlignment.MiddleCenter;
@@ -600,11 +599,11 @@ namespace MTM_WIP_Application_Winforms.Controls.Transactions
             Model_Transactions_Core_AnalyticsControl_Panel_TopPart.BorderStyle = BorderStyle.FixedSingle;
             Model_Transactions_Core_AnalyticsControl_Panel_TopPart.Controls.Add(Model_Transactions_Core_AnalyticsControl_TableLayout_TopPart);
             Model_Transactions_Core_AnalyticsControl_Panel_TopPart.Dock = DockStyle.Fill;
-            Model_Transactions_Core_AnalyticsControl_Panel_TopPart.Location = new Point(426, 114);
+            Model_Transactions_Core_AnalyticsControl_Panel_TopPart.Location = new Point(548, 179);
             Model_Transactions_Core_AnalyticsControl_Panel_TopPart.MinimumSize = new Size(180, 90);
             Model_Transactions_Core_AnalyticsControl_Panel_TopPart.Name = "Model_Transactions_Core_AnalyticsControl_Panel_TopPart";
             Model_Transactions_Core_AnalyticsControl_Panel_TopPart.Padding = new Padding(10);
-            Model_Transactions_Core_AnalyticsControl_Panel_TopPart.Size = new Size(203, 100);
+            Model_Transactions_Core_AnalyticsControl_Panel_TopPart.Size = new Size(264, 165);
             Model_Transactions_Core_AnalyticsControl_Panel_TopPart.TabIndex = 6;
             // 
             // Model_Transactions_Core_AnalyticsControl_TableLayout_TopPart
@@ -612,7 +611,7 @@ namespace MTM_WIP_Application_Winforms.Controls.Transactions
             Model_Transactions_Core_AnalyticsControl_TableLayout_TopPart.AutoSize = true;
             Model_Transactions_Core_AnalyticsControl_TableLayout_TopPart.AutoSizeMode = AutoSizeMode.GrowAndShrink;
             Model_Transactions_Core_AnalyticsControl_TableLayout_TopPart.ColumnCount = 1;
-            Model_Transactions_Core_AnalyticsControl_TableLayout_TopPart.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
+            Model_Transactions_Core_AnalyticsControl_TableLayout_TopPart.ColumnStyles.Add(new ColumnStyle());
             Model_Transactions_Core_AnalyticsControl_TableLayout_TopPart.Controls.Add(Model_Transactions_Core_AnalyticsControl_Label_TopPartCaption);
             Model_Transactions_Core_AnalyticsControl_TableLayout_TopPart.Controls.Add(Model_Transactions_Core_AnalyticsControl_Label_TopPartID);
             Model_Transactions_Core_AnalyticsControl_TableLayout_TopPart.Controls.Add(Model_Transactions_Core_AnalyticsControl_Label_TopPartCount);
@@ -622,9 +621,9 @@ namespace MTM_WIP_Application_Winforms.Controls.Transactions
             Model_Transactions_Core_AnalyticsControl_TableLayout_TopPart.Name = "Model_Transactions_Core_AnalyticsControl_TableLayout_TopPart";
             Model_Transactions_Core_AnalyticsControl_TableLayout_TopPart.RowCount = 3;
             Model_Transactions_Core_AnalyticsControl_TableLayout_TopPart.RowStyles.Add(new RowStyle(SizeType.Percent, 33.3333321F));
-            Model_Transactions_Core_AnalyticsControl_TableLayout_TopPart.RowStyles.Add(new RowStyle(SizeType.Percent, 33.3333321F));
-            Model_Transactions_Core_AnalyticsControl_TableLayout_TopPart.RowStyles.Add(new RowStyle(SizeType.Percent, 33.3333321F));
-            Model_Transactions_Core_AnalyticsControl_TableLayout_TopPart.Size = new Size(181, 78);
+            Model_Transactions_Core_AnalyticsControl_TableLayout_TopPart.RowStyles.Add(new RowStyle(SizeType.Percent, 33.3333359F));
+            Model_Transactions_Core_AnalyticsControl_TableLayout_TopPart.RowStyles.Add(new RowStyle(SizeType.Percent, 33.3333359F));
+            Model_Transactions_Core_AnalyticsControl_TableLayout_TopPart.Size = new Size(242, 143);
             Model_Transactions_Core_AnalyticsControl_TableLayout_TopPart.TabIndex = 0;
             // 
             // Model_Transactions_Core_AnalyticsControl_Label_TopPartCaption
@@ -636,7 +635,7 @@ namespace MTM_WIP_Application_Winforms.Controls.Transactions
             Model_Transactions_Core_AnalyticsControl_Label_TopPartCaption.Location = new Point(3, 3);
             Model_Transactions_Core_AnalyticsControl_Label_TopPartCaption.Margin = new Padding(3);
             Model_Transactions_Core_AnalyticsControl_Label_TopPartCaption.Name = "Model_Transactions_Core_AnalyticsControl_Label_TopPartCaption";
-            Model_Transactions_Core_AnalyticsControl_Label_TopPartCaption.Size = new Size(175, 20);
+            Model_Transactions_Core_AnalyticsControl_Label_TopPartCaption.Size = new Size(236, 41);
             Model_Transactions_Core_AnalyticsControl_Label_TopPartCaption.TabIndex = 0;
             Model_Transactions_Core_AnalyticsControl_Label_TopPartCaption.Text = "📥Most Used Part📤";
             Model_Transactions_Core_AnalyticsControl_Label_TopPartCaption.TextAlign = ContentAlignment.MiddleCenter;
@@ -647,10 +646,10 @@ namespace MTM_WIP_Application_Winforms.Controls.Transactions
             Model_Transactions_Core_AnalyticsControl_Label_TopPartID.Dock = DockStyle.Fill;
             Model_Transactions_Core_AnalyticsControl_Label_TopPartID.Font = new Font("Segoe UI Emoji", 9.75F, FontStyle.Bold);
             Model_Transactions_Core_AnalyticsControl_Label_TopPartID.ForeColor = SystemColors.ControlText;
-            Model_Transactions_Core_AnalyticsControl_Label_TopPartID.Location = new Point(3, 29);
+            Model_Transactions_Core_AnalyticsControl_Label_TopPartID.Location = new Point(3, 50);
             Model_Transactions_Core_AnalyticsControl_Label_TopPartID.Margin = new Padding(3);
             Model_Transactions_Core_AnalyticsControl_Label_TopPartID.Name = "Model_Transactions_Core_AnalyticsControl_Label_TopPartID";
-            Model_Transactions_Core_AnalyticsControl_Label_TopPartID.Size = new Size(175, 20);
+            Model_Transactions_Core_AnalyticsControl_Label_TopPartID.Size = new Size(236, 41);
             Model_Transactions_Core_AnalyticsControl_Label_TopPartID.TabIndex = 1;
             Model_Transactions_Core_AnalyticsControl_Label_TopPartID.Text = "—";
             Model_Transactions_Core_AnalyticsControl_Label_TopPartID.TextAlign = ContentAlignment.MiddleCenter;
@@ -661,10 +660,10 @@ namespace MTM_WIP_Application_Winforms.Controls.Transactions
             Model_Transactions_Core_AnalyticsControl_Label_TopPartCount.Dock = DockStyle.Fill;
             Model_Transactions_Core_AnalyticsControl_Label_TopPartCount.Font = new Font("Segoe UI Emoji", 9.75F);
             Model_Transactions_Core_AnalyticsControl_Label_TopPartCount.ForeColor = SystemColors.ControlText;
-            Model_Transactions_Core_AnalyticsControl_Label_TopPartCount.Location = new Point(3, 55);
+            Model_Transactions_Core_AnalyticsControl_Label_TopPartCount.Location = new Point(3, 97);
             Model_Transactions_Core_AnalyticsControl_Label_TopPartCount.Margin = new Padding(3);
             Model_Transactions_Core_AnalyticsControl_Label_TopPartCount.Name = "Model_Transactions_Core_AnalyticsControl_Label_TopPartCount";
-            Model_Transactions_Core_AnalyticsControl_Label_TopPartCount.Size = new Size(175, 20);
+            Model_Transactions_Core_AnalyticsControl_Label_TopPartCount.Size = new Size(236, 43);
             Model_Transactions_Core_AnalyticsControl_Label_TopPartCount.TabIndex = 2;
             Model_Transactions_Core_AnalyticsControl_Label_TopPartCount.Text = "0 transactions";
             Model_Transactions_Core_AnalyticsControl_Label_TopPartCount.TextAlign = ContentAlignment.MiddleCenter;
@@ -677,11 +676,11 @@ namespace MTM_WIP_Application_Winforms.Controls.Transactions
             Model_Transactions_Core_AnalyticsControl_Panel_TransactionRate.BorderStyle = BorderStyle.FixedSingle;
             Model_Transactions_Core_AnalyticsControl_Panel_TransactionRate.Controls.Add(Model_Transactions_Core_AnalyticsControl_TableLayout_TransactionRate);
             Model_Transactions_Core_AnalyticsControl_Panel_TransactionRate.Dock = DockStyle.Fill;
-            Model_Transactions_Core_AnalyticsControl_Panel_TransactionRate.Location = new Point(217, 220);
+            Model_Transactions_Core_AnalyticsControl_Panel_TransactionRate.Location = new Point(278, 350);
             Model_Transactions_Core_AnalyticsControl_Panel_TransactionRate.MinimumSize = new Size(180, 90);
             Model_Transactions_Core_AnalyticsControl_Panel_TransactionRate.Name = "Model_Transactions_Core_AnalyticsControl_Panel_TransactionRate";
             Model_Transactions_Core_AnalyticsControl_Panel_TransactionRate.Padding = new Padding(10);
-            Model_Transactions_Core_AnalyticsControl_Panel_TransactionRate.Size = new Size(203, 100);
+            Model_Transactions_Core_AnalyticsControl_Panel_TransactionRate.Size = new Size(264, 167);
             Model_Transactions_Core_AnalyticsControl_Panel_TransactionRate.TabIndex = 9;
             // 
             // Model_Transactions_Core_AnalyticsControl_TableLayout_TransactionRate
@@ -699,9 +698,9 @@ namespace MTM_WIP_Application_Winforms.Controls.Transactions
             Model_Transactions_Core_AnalyticsControl_TableLayout_TransactionRate.Name = "Model_Transactions_Core_AnalyticsControl_TableLayout_TransactionRate";
             Model_Transactions_Core_AnalyticsControl_TableLayout_TransactionRate.RowCount = 3;
             Model_Transactions_Core_AnalyticsControl_TableLayout_TransactionRate.RowStyles.Add(new RowStyle(SizeType.Percent, 33.3333321F));
-            Model_Transactions_Core_AnalyticsControl_TableLayout_TransactionRate.RowStyles.Add(new RowStyle(SizeType.Percent, 33.3333321F));
-            Model_Transactions_Core_AnalyticsControl_TableLayout_TransactionRate.RowStyles.Add(new RowStyle(SizeType.Percent, 33.3333321F));
-            Model_Transactions_Core_AnalyticsControl_TableLayout_TransactionRate.Size = new Size(181, 78);
+            Model_Transactions_Core_AnalyticsControl_TableLayout_TransactionRate.RowStyles.Add(new RowStyle(SizeType.Percent, 33.3333359F));
+            Model_Transactions_Core_AnalyticsControl_TableLayout_TransactionRate.RowStyles.Add(new RowStyle(SizeType.Percent, 33.3333359F));
+            Model_Transactions_Core_AnalyticsControl_TableLayout_TransactionRate.Size = new Size(242, 145);
             Model_Transactions_Core_AnalyticsControl_TableLayout_TransactionRate.TabIndex = 0;
             // 
             // Model_Transactions_Core_AnalyticsControl_Label_TransactionRateCaption
@@ -713,7 +712,7 @@ namespace MTM_WIP_Application_Winforms.Controls.Transactions
             Model_Transactions_Core_AnalyticsControl_Label_TransactionRateCaption.Location = new Point(3, 3);
             Model_Transactions_Core_AnalyticsControl_Label_TransactionRateCaption.Margin = new Padding(3);
             Model_Transactions_Core_AnalyticsControl_Label_TransactionRateCaption.Name = "Model_Transactions_Core_AnalyticsControl_Label_TransactionRateCaption";
-            Model_Transactions_Core_AnalyticsControl_Label_TransactionRateCaption.Size = new Size(175, 20);
+            Model_Transactions_Core_AnalyticsControl_Label_TransactionRateCaption.Size = new Size(236, 42);
             Model_Transactions_Core_AnalyticsControl_Label_TransactionRateCaption.TabIndex = 0;
             Model_Transactions_Core_AnalyticsControl_Label_TransactionRateCaption.Text = "📈 Transaction Rate";
             Model_Transactions_Core_AnalyticsControl_Label_TransactionRateCaption.TextAlign = ContentAlignment.MiddleCenter;
@@ -724,10 +723,10 @@ namespace MTM_WIP_Application_Winforms.Controls.Transactions
             Model_Transactions_Core_AnalyticsControl_Label_TransactionRateValue.Dock = DockStyle.Fill;
             Model_Transactions_Core_AnalyticsControl_Label_TransactionRateValue.Font = new Font("Segoe UI Emoji", 9.75F, FontStyle.Bold);
             Model_Transactions_Core_AnalyticsControl_Label_TransactionRateValue.ForeColor = SystemColors.ControlText;
-            Model_Transactions_Core_AnalyticsControl_Label_TransactionRateValue.Location = new Point(3, 29);
+            Model_Transactions_Core_AnalyticsControl_Label_TransactionRateValue.Location = new Point(3, 51);
             Model_Transactions_Core_AnalyticsControl_Label_TransactionRateValue.Margin = new Padding(3);
             Model_Transactions_Core_AnalyticsControl_Label_TransactionRateValue.Name = "Model_Transactions_Core_AnalyticsControl_Label_TransactionRateValue";
-            Model_Transactions_Core_AnalyticsControl_Label_TransactionRateValue.Size = new Size(175, 20);
+            Model_Transactions_Core_AnalyticsControl_Label_TransactionRateValue.Size = new Size(236, 42);
             Model_Transactions_Core_AnalyticsControl_Label_TransactionRateValue.TabIndex = 1;
             Model_Transactions_Core_AnalyticsControl_Label_TransactionRateValue.Text = "—";
             Model_Transactions_Core_AnalyticsControl_Label_TransactionRateValue.TextAlign = ContentAlignment.MiddleCenter;
@@ -738,10 +737,10 @@ namespace MTM_WIP_Application_Winforms.Controls.Transactions
             Model_Transactions_Core_AnalyticsControl_Label_TransactionRateTrend.Dock = DockStyle.Fill;
             Model_Transactions_Core_AnalyticsControl_Label_TransactionRateTrend.Font = new Font("Segoe UI Emoji", 9.75F);
             Model_Transactions_Core_AnalyticsControl_Label_TransactionRateTrend.ForeColor = SystemColors.ControlText;
-            Model_Transactions_Core_AnalyticsControl_Label_TransactionRateTrend.Location = new Point(3, 55);
+            Model_Transactions_Core_AnalyticsControl_Label_TransactionRateTrend.Location = new Point(3, 99);
             Model_Transactions_Core_AnalyticsControl_Label_TransactionRateTrend.Margin = new Padding(3);
             Model_Transactions_Core_AnalyticsControl_Label_TransactionRateTrend.Name = "Model_Transactions_Core_AnalyticsControl_Label_TransactionRateTrend";
-            Model_Transactions_Core_AnalyticsControl_Label_TransactionRateTrend.Size = new Size(175, 20);
+            Model_Transactions_Core_AnalyticsControl_Label_TransactionRateTrend.Size = new Size(236, 43);
             Model_Transactions_Core_AnalyticsControl_Label_TransactionRateTrend.TabIndex = 2;
             Model_Transactions_Core_AnalyticsControl_Label_TransactionRateTrend.Text = "Trend: —";
             Model_Transactions_Core_AnalyticsControl_Label_TransactionRateTrend.TextAlign = ContentAlignment.MiddleCenter;
@@ -754,11 +753,11 @@ namespace MTM_WIP_Application_Winforms.Controls.Transactions
             Model_Transactions_Core_AnalyticsControl_Panel_BusiestDay.BorderStyle = BorderStyle.FixedSingle;
             Model_Transactions_Core_AnalyticsControl_Panel_BusiestDay.Controls.Add(Model_Transactions_Core_AnalyticsControl_TableLayout_BusiestDay);
             Model_Transactions_Core_AnalyticsControl_Panel_BusiestDay.Dock = DockStyle.Fill;
-            Model_Transactions_Core_AnalyticsControl_Panel_BusiestDay.Location = new Point(426, 220);
+            Model_Transactions_Core_AnalyticsControl_Panel_BusiestDay.Location = new Point(548, 350);
             Model_Transactions_Core_AnalyticsControl_Panel_BusiestDay.MinimumSize = new Size(180, 90);
             Model_Transactions_Core_AnalyticsControl_Panel_BusiestDay.Name = "Model_Transactions_Core_AnalyticsControl_Panel_BusiestDay";
             Model_Transactions_Core_AnalyticsControl_Panel_BusiestDay.Padding = new Padding(10);
-            Model_Transactions_Core_AnalyticsControl_Panel_BusiestDay.Size = new Size(203, 100);
+            Model_Transactions_Core_AnalyticsControl_Panel_BusiestDay.Size = new Size(264, 167);
             Model_Transactions_Core_AnalyticsControl_Panel_BusiestDay.TabIndex = 10;
             // 
             // Model_Transactions_Core_AnalyticsControl_TableLayout_BusiestDay
@@ -776,9 +775,9 @@ namespace MTM_WIP_Application_Winforms.Controls.Transactions
             Model_Transactions_Core_AnalyticsControl_TableLayout_BusiestDay.Name = "Model_Transactions_Core_AnalyticsControl_TableLayout_BusiestDay";
             Model_Transactions_Core_AnalyticsControl_TableLayout_BusiestDay.RowCount = 3;
             Model_Transactions_Core_AnalyticsControl_TableLayout_BusiestDay.RowStyles.Add(new RowStyle(SizeType.Percent, 33.3333321F));
-            Model_Transactions_Core_AnalyticsControl_TableLayout_BusiestDay.RowStyles.Add(new RowStyle(SizeType.Percent, 33.3333321F));
-            Model_Transactions_Core_AnalyticsControl_TableLayout_BusiestDay.RowStyles.Add(new RowStyle(SizeType.Percent, 33.3333321F));
-            Model_Transactions_Core_AnalyticsControl_TableLayout_BusiestDay.Size = new Size(181, 78);
+            Model_Transactions_Core_AnalyticsControl_TableLayout_BusiestDay.RowStyles.Add(new RowStyle(SizeType.Percent, 33.3333359F));
+            Model_Transactions_Core_AnalyticsControl_TableLayout_BusiestDay.RowStyles.Add(new RowStyle(SizeType.Percent, 33.3333359F));
+            Model_Transactions_Core_AnalyticsControl_TableLayout_BusiestDay.Size = new Size(242, 145);
             Model_Transactions_Core_AnalyticsControl_TableLayout_BusiestDay.TabIndex = 0;
             // 
             // Model_Transactions_Core_AnalyticsControl_Label_BusiestDayCaption
@@ -790,7 +789,7 @@ namespace MTM_WIP_Application_Winforms.Controls.Transactions
             Model_Transactions_Core_AnalyticsControl_Label_BusiestDayCaption.Location = new Point(3, 3);
             Model_Transactions_Core_AnalyticsControl_Label_BusiestDayCaption.Margin = new Padding(3);
             Model_Transactions_Core_AnalyticsControl_Label_BusiestDayCaption.Name = "Model_Transactions_Core_AnalyticsControl_Label_BusiestDayCaption";
-            Model_Transactions_Core_AnalyticsControl_Label_BusiestDayCaption.Size = new Size(175, 20);
+            Model_Transactions_Core_AnalyticsControl_Label_BusiestDayCaption.Size = new Size(236, 42);
             Model_Transactions_Core_AnalyticsControl_Label_BusiestDayCaption.TabIndex = 0;
             Model_Transactions_Core_AnalyticsControl_Label_BusiestDayCaption.Text = "📅 Busiest Day";
             Model_Transactions_Core_AnalyticsControl_Label_BusiestDayCaption.TextAlign = ContentAlignment.MiddleCenter;
@@ -801,10 +800,10 @@ namespace MTM_WIP_Application_Winforms.Controls.Transactions
             Model_Transactions_Core_AnalyticsControl_Label_BusiestDayValue.Dock = DockStyle.Fill;
             Model_Transactions_Core_AnalyticsControl_Label_BusiestDayValue.Font = new Font("Segoe UI Emoji", 9.75F, FontStyle.Bold);
             Model_Transactions_Core_AnalyticsControl_Label_BusiestDayValue.ForeColor = SystemColors.ControlText;
-            Model_Transactions_Core_AnalyticsControl_Label_BusiestDayValue.Location = new Point(3, 29);
+            Model_Transactions_Core_AnalyticsControl_Label_BusiestDayValue.Location = new Point(3, 51);
             Model_Transactions_Core_AnalyticsControl_Label_BusiestDayValue.Margin = new Padding(3);
             Model_Transactions_Core_AnalyticsControl_Label_BusiestDayValue.Name = "Model_Transactions_Core_AnalyticsControl_Label_BusiestDayValue";
-            Model_Transactions_Core_AnalyticsControl_Label_BusiestDayValue.Size = new Size(175, 20);
+            Model_Transactions_Core_AnalyticsControl_Label_BusiestDayValue.Size = new Size(236, 42);
             Model_Transactions_Core_AnalyticsControl_Label_BusiestDayValue.TabIndex = 1;
             Model_Transactions_Core_AnalyticsControl_Label_BusiestDayValue.Text = "—";
             Model_Transactions_Core_AnalyticsControl_Label_BusiestDayValue.TextAlign = ContentAlignment.MiddleCenter;
@@ -815,10 +814,10 @@ namespace MTM_WIP_Application_Winforms.Controls.Transactions
             Model_Transactions_Core_AnalyticsControl_Label_BusiestDayCount.Dock = DockStyle.Fill;
             Model_Transactions_Core_AnalyticsControl_Label_BusiestDayCount.Font = new Font("Segoe UI Emoji", 9.75F);
             Model_Transactions_Core_AnalyticsControl_Label_BusiestDayCount.ForeColor = SystemColors.ControlText;
-            Model_Transactions_Core_AnalyticsControl_Label_BusiestDayCount.Location = new Point(3, 55);
+            Model_Transactions_Core_AnalyticsControl_Label_BusiestDayCount.Location = new Point(3, 99);
             Model_Transactions_Core_AnalyticsControl_Label_BusiestDayCount.Margin = new Padding(3);
             Model_Transactions_Core_AnalyticsControl_Label_BusiestDayCount.Name = "Model_Transactions_Core_AnalyticsControl_Label_BusiestDayCount";
-            Model_Transactions_Core_AnalyticsControl_Label_BusiestDayCount.Size = new Size(175, 20);
+            Model_Transactions_Core_AnalyticsControl_Label_BusiestDayCount.Size = new Size(236, 43);
             Model_Transactions_Core_AnalyticsControl_Label_BusiestDayCount.TabIndex = 2;
             Model_Transactions_Core_AnalyticsControl_Label_BusiestDayCount.Text = "Transactions: —";
             Model_Transactions_Core_AnalyticsControl_Label_BusiestDayCount.TextAlign = ContentAlignment.MiddleCenter;
@@ -831,11 +830,11 @@ namespace MTM_WIP_Application_Winforms.Controls.Transactions
             Model_Transactions_Core_AnalyticsControl_Panel_PeakHour.BorderStyle = BorderStyle.FixedSingle;
             Model_Transactions_Core_AnalyticsControl_Panel_PeakHour.Controls.Add(Model_Transactions_Core_AnalyticsControl_TableLayout_PeakHour);
             Model_Transactions_Core_AnalyticsControl_Panel_PeakHour.Dock = DockStyle.Fill;
-            Model_Transactions_Core_AnalyticsControl_Panel_PeakHour.Location = new Point(635, 220);
+            Model_Transactions_Core_AnalyticsControl_Panel_PeakHour.Location = new Point(818, 350);
             Model_Transactions_Core_AnalyticsControl_Panel_PeakHour.MinimumSize = new Size(180, 90);
             Model_Transactions_Core_AnalyticsControl_Panel_PeakHour.Name = "Model_Transactions_Core_AnalyticsControl_Panel_PeakHour";
             Model_Transactions_Core_AnalyticsControl_Panel_PeakHour.Padding = new Padding(10);
-            Model_Transactions_Core_AnalyticsControl_Panel_PeakHour.Size = new Size(203, 100);
+            Model_Transactions_Core_AnalyticsControl_Panel_PeakHour.Size = new Size(266, 167);
             Model_Transactions_Core_AnalyticsControl_Panel_PeakHour.TabIndex = 11;
             // 
             // Model_Transactions_Core_AnalyticsControl_TableLayout_PeakHour
@@ -852,10 +851,10 @@ namespace MTM_WIP_Application_Winforms.Controls.Transactions
             Model_Transactions_Core_AnalyticsControl_TableLayout_PeakHour.Margin = new Padding(0);
             Model_Transactions_Core_AnalyticsControl_TableLayout_PeakHour.Name = "Model_Transactions_Core_AnalyticsControl_TableLayout_PeakHour";
             Model_Transactions_Core_AnalyticsControl_TableLayout_PeakHour.RowCount = 3;
-            Model_Transactions_Core_AnalyticsControl_TableLayout_PeakHour.RowStyles.Add(new RowStyle(SizeType.Percent, 33.3333321F));
+            Model_Transactions_Core_AnalyticsControl_TableLayout_PeakHour.RowStyles.Add(new RowStyle(SizeType.Percent, 33.33333F));
             Model_Transactions_Core_AnalyticsControl_TableLayout_PeakHour.RowStyles.Add(new RowStyle(SizeType.Percent, 33.3333359F));
             Model_Transactions_Core_AnalyticsControl_TableLayout_PeakHour.RowStyles.Add(new RowStyle(SizeType.Percent, 33.3333359F));
-            Model_Transactions_Core_AnalyticsControl_TableLayout_PeakHour.Size = new Size(181, 78);
+            Model_Transactions_Core_AnalyticsControl_TableLayout_PeakHour.Size = new Size(244, 145);
             Model_Transactions_Core_AnalyticsControl_TableLayout_PeakHour.TabIndex = 0;
             // 
             // Model_Transactions_Core_AnalyticsControl_Label_PeakHourCaption
@@ -867,7 +866,7 @@ namespace MTM_WIP_Application_Winforms.Controls.Transactions
             Model_Transactions_Core_AnalyticsControl_Label_PeakHourCaption.Location = new Point(3, 3);
             Model_Transactions_Core_AnalyticsControl_Label_PeakHourCaption.Margin = new Padding(3);
             Model_Transactions_Core_AnalyticsControl_Label_PeakHourCaption.Name = "Model_Transactions_Core_AnalyticsControl_Label_PeakHourCaption";
-            Model_Transactions_Core_AnalyticsControl_Label_PeakHourCaption.Size = new Size(175, 19);
+            Model_Transactions_Core_AnalyticsControl_Label_PeakHourCaption.Size = new Size(238, 42);
             Model_Transactions_Core_AnalyticsControl_Label_PeakHourCaption.TabIndex = 0;
             Model_Transactions_Core_AnalyticsControl_Label_PeakHourCaption.Text = "⏰ Peak Hour Activity";
             Model_Transactions_Core_AnalyticsControl_Label_PeakHourCaption.TextAlign = ContentAlignment.MiddleCenter;
@@ -878,10 +877,10 @@ namespace MTM_WIP_Application_Winforms.Controls.Transactions
             Model_Transactions_Core_AnalyticsControl_Label_PeakHourValue.Dock = DockStyle.Fill;
             Model_Transactions_Core_AnalyticsControl_Label_PeakHourValue.Font = new Font("Segoe UI Emoji", 9.75F, FontStyle.Bold);
             Model_Transactions_Core_AnalyticsControl_Label_PeakHourValue.ForeColor = SystemColors.ControlText;
-            Model_Transactions_Core_AnalyticsControl_Label_PeakHourValue.Location = new Point(3, 28);
+            Model_Transactions_Core_AnalyticsControl_Label_PeakHourValue.Location = new Point(3, 51);
             Model_Transactions_Core_AnalyticsControl_Label_PeakHourValue.Margin = new Padding(3);
             Model_Transactions_Core_AnalyticsControl_Label_PeakHourValue.Name = "Model_Transactions_Core_AnalyticsControl_Label_PeakHourValue";
-            Model_Transactions_Core_AnalyticsControl_Label_PeakHourValue.Size = new Size(175, 20);
+            Model_Transactions_Core_AnalyticsControl_Label_PeakHourValue.Size = new Size(238, 42);
             Model_Transactions_Core_AnalyticsControl_Label_PeakHourValue.TabIndex = 1;
             Model_Transactions_Core_AnalyticsControl_Label_PeakHourValue.Text = "—";
             Model_Transactions_Core_AnalyticsControl_Label_PeakHourValue.TextAlign = ContentAlignment.MiddleCenter;
@@ -892,10 +891,10 @@ namespace MTM_WIP_Application_Winforms.Controls.Transactions
             Model_Transactions_Core_AnalyticsControl_Label_PeakHourCount.Dock = DockStyle.Fill;
             Model_Transactions_Core_AnalyticsControl_Label_PeakHourCount.Font = new Font("Segoe UI Emoji", 9.75F);
             Model_Transactions_Core_AnalyticsControl_Label_PeakHourCount.ForeColor = SystemColors.ControlText;
-            Model_Transactions_Core_AnalyticsControl_Label_PeakHourCount.Location = new Point(3, 54);
+            Model_Transactions_Core_AnalyticsControl_Label_PeakHourCount.Location = new Point(3, 99);
             Model_Transactions_Core_AnalyticsControl_Label_PeakHourCount.Margin = new Padding(3);
             Model_Transactions_Core_AnalyticsControl_Label_PeakHourCount.Name = "Model_Transactions_Core_AnalyticsControl_Label_PeakHourCount";
-            Model_Transactions_Core_AnalyticsControl_Label_PeakHourCount.Size = new Size(175, 21);
+            Model_Transactions_Core_AnalyticsControl_Label_PeakHourCount.Size = new Size(238, 43);
             Model_Transactions_Core_AnalyticsControl_Label_PeakHourCount.TabIndex = 2;
             Model_Transactions_Core_AnalyticsControl_Label_PeakHourCount.Text = "Transactions: —";
             Model_Transactions_Core_AnalyticsControl_Label_PeakHourCount.TextAlign = ContentAlignment.MiddleCenter;
@@ -908,11 +907,11 @@ namespace MTM_WIP_Application_Winforms.Controls.Transactions
             Model_Transactions_Core_AnalyticsControl_Panel_BusiestLocation.BorderStyle = BorderStyle.FixedSingle;
             Model_Transactions_Core_AnalyticsControl_Panel_BusiestLocation.Controls.Add(Model_Transactions_Core_AnalyticsControl_TableLayout_BusiestLocation);
             Model_Transactions_Core_AnalyticsControl_Panel_BusiestLocation.Dock = DockStyle.Fill;
-            Model_Transactions_Core_AnalyticsControl_Panel_BusiestLocation.Location = new Point(8, 220);
+            Model_Transactions_Core_AnalyticsControl_Panel_BusiestLocation.Location = new Point(8, 350);
             Model_Transactions_Core_AnalyticsControl_Panel_BusiestLocation.MinimumSize = new Size(180, 90);
             Model_Transactions_Core_AnalyticsControl_Panel_BusiestLocation.Name = "Model_Transactions_Core_AnalyticsControl_Panel_BusiestLocation";
             Model_Transactions_Core_AnalyticsControl_Panel_BusiestLocation.Padding = new Padding(10);
-            Model_Transactions_Core_AnalyticsControl_Panel_BusiestLocation.Size = new Size(203, 100);
+            Model_Transactions_Core_AnalyticsControl_Panel_BusiestLocation.Size = new Size(264, 167);
             Model_Transactions_Core_AnalyticsControl_Panel_BusiestLocation.TabIndex = 7;
             // 
             // Model_Transactions_Core_AnalyticsControl_TableLayout_BusiestLocation
@@ -920,7 +919,7 @@ namespace MTM_WIP_Application_Winforms.Controls.Transactions
             Model_Transactions_Core_AnalyticsControl_TableLayout_BusiestLocation.AutoSize = true;
             Model_Transactions_Core_AnalyticsControl_TableLayout_BusiestLocation.AutoSizeMode = AutoSizeMode.GrowAndShrink;
             Model_Transactions_Core_AnalyticsControl_TableLayout_BusiestLocation.ColumnCount = 1;
-            Model_Transactions_Core_AnalyticsControl_TableLayout_BusiestLocation.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
+            Model_Transactions_Core_AnalyticsControl_TableLayout_BusiestLocation.ColumnStyles.Add(new ColumnStyle());
             Model_Transactions_Core_AnalyticsControl_TableLayout_BusiestLocation.Controls.Add(Model_Transactions_Core_AnalyticsControl_Label_BusiestLocationCaption);
             Model_Transactions_Core_AnalyticsControl_TableLayout_BusiestLocation.Controls.Add(Model_Transactions_Core_AnalyticsControl_Label_BusiestLocationName);
             Model_Transactions_Core_AnalyticsControl_TableLayout_BusiestLocation.Controls.Add(Model_Transactions_Core_AnalyticsControl_Label_BusiestLocationCount);
@@ -930,9 +929,9 @@ namespace MTM_WIP_Application_Winforms.Controls.Transactions
             Model_Transactions_Core_AnalyticsControl_TableLayout_BusiestLocation.Name = "Model_Transactions_Core_AnalyticsControl_TableLayout_BusiestLocation";
             Model_Transactions_Core_AnalyticsControl_TableLayout_BusiestLocation.RowCount = 3;
             Model_Transactions_Core_AnalyticsControl_TableLayout_BusiestLocation.RowStyles.Add(new RowStyle(SizeType.Percent, 33.3333321F));
-            Model_Transactions_Core_AnalyticsControl_TableLayout_BusiestLocation.RowStyles.Add(new RowStyle(SizeType.Percent, 33.3333321F));
-            Model_Transactions_Core_AnalyticsControl_TableLayout_BusiestLocation.RowStyles.Add(new RowStyle(SizeType.Percent, 33.3333321F));
-            Model_Transactions_Core_AnalyticsControl_TableLayout_BusiestLocation.Size = new Size(181, 78);
+            Model_Transactions_Core_AnalyticsControl_TableLayout_BusiestLocation.RowStyles.Add(new RowStyle(SizeType.Percent, 33.3333359F));
+            Model_Transactions_Core_AnalyticsControl_TableLayout_BusiestLocation.RowStyles.Add(new RowStyle(SizeType.Percent, 33.3333359F));
+            Model_Transactions_Core_AnalyticsControl_TableLayout_BusiestLocation.Size = new Size(242, 145);
             Model_Transactions_Core_AnalyticsControl_TableLayout_BusiestLocation.TabIndex = 0;
             // 
             // Model_Transactions_Core_AnalyticsControl_Label_BusiestLocationCaption
@@ -944,7 +943,7 @@ namespace MTM_WIP_Application_Winforms.Controls.Transactions
             Model_Transactions_Core_AnalyticsControl_Label_BusiestLocationCaption.Location = new Point(3, 3);
             Model_Transactions_Core_AnalyticsControl_Label_BusiestLocationCaption.Margin = new Padding(3);
             Model_Transactions_Core_AnalyticsControl_Label_BusiestLocationCaption.Name = "Model_Transactions_Core_AnalyticsControl_Label_BusiestLocationCaption";
-            Model_Transactions_Core_AnalyticsControl_Label_BusiestLocationCaption.Size = new Size(175, 20);
+            Model_Transactions_Core_AnalyticsControl_Label_BusiestLocationCaption.Size = new Size(236, 42);
             Model_Transactions_Core_AnalyticsControl_Label_BusiestLocationCaption.TabIndex = 0;
             Model_Transactions_Core_AnalyticsControl_Label_BusiestLocationCaption.Text = "📍 Busiest Location";
             Model_Transactions_Core_AnalyticsControl_Label_BusiestLocationCaption.TextAlign = ContentAlignment.MiddleCenter;
@@ -955,10 +954,10 @@ namespace MTM_WIP_Application_Winforms.Controls.Transactions
             Model_Transactions_Core_AnalyticsControl_Label_BusiestLocationName.Dock = DockStyle.Fill;
             Model_Transactions_Core_AnalyticsControl_Label_BusiestLocationName.Font = new Font("Segoe UI Emoji", 9.75F, FontStyle.Bold);
             Model_Transactions_Core_AnalyticsControl_Label_BusiestLocationName.ForeColor = SystemColors.ControlText;
-            Model_Transactions_Core_AnalyticsControl_Label_BusiestLocationName.Location = new Point(3, 29);
+            Model_Transactions_Core_AnalyticsControl_Label_BusiestLocationName.Location = new Point(3, 51);
             Model_Transactions_Core_AnalyticsControl_Label_BusiestLocationName.Margin = new Padding(3);
             Model_Transactions_Core_AnalyticsControl_Label_BusiestLocationName.Name = "Model_Transactions_Core_AnalyticsControl_Label_BusiestLocationName";
-            Model_Transactions_Core_AnalyticsControl_Label_BusiestLocationName.Size = new Size(175, 20);
+            Model_Transactions_Core_AnalyticsControl_Label_BusiestLocationName.Size = new Size(236, 42);
             Model_Transactions_Core_AnalyticsControl_Label_BusiestLocationName.TabIndex = 1;
             Model_Transactions_Core_AnalyticsControl_Label_BusiestLocationName.Text = "—";
             Model_Transactions_Core_AnalyticsControl_Label_BusiestLocationName.TextAlign = ContentAlignment.MiddleCenter;
@@ -969,10 +968,10 @@ namespace MTM_WIP_Application_Winforms.Controls.Transactions
             Model_Transactions_Core_AnalyticsControl_Label_BusiestLocationCount.Dock = DockStyle.Fill;
             Model_Transactions_Core_AnalyticsControl_Label_BusiestLocationCount.Font = new Font("Segoe UI Emoji", 9.75F);
             Model_Transactions_Core_AnalyticsControl_Label_BusiestLocationCount.ForeColor = SystemColors.ControlText;
-            Model_Transactions_Core_AnalyticsControl_Label_BusiestLocationCount.Location = new Point(3, 55);
+            Model_Transactions_Core_AnalyticsControl_Label_BusiestLocationCount.Location = new Point(3, 99);
             Model_Transactions_Core_AnalyticsControl_Label_BusiestLocationCount.Margin = new Padding(3);
             Model_Transactions_Core_AnalyticsControl_Label_BusiestLocationCount.Name = "Model_Transactions_Core_AnalyticsControl_Label_BusiestLocationCount";
-            Model_Transactions_Core_AnalyticsControl_Label_BusiestLocationCount.Size = new Size(175, 20);
+            Model_Transactions_Core_AnalyticsControl_Label_BusiestLocationCount.Size = new Size(236, 43);
             Model_Transactions_Core_AnalyticsControl_Label_BusiestLocationCount.TabIndex = 2;
             Model_Transactions_Core_AnalyticsControl_Label_BusiestLocationCount.Text = "0 transactions";
             Model_Transactions_Core_AnalyticsControl_Label_BusiestLocationCount.TextAlign = ContentAlignment.MiddleCenter;
@@ -985,11 +984,11 @@ namespace MTM_WIP_Application_Winforms.Controls.Transactions
             Model_Transactions_Core_AnalyticsControl_Panel_MostTransferredPart.BorderStyle = BorderStyle.FixedSingle;
             Model_Transactions_Core_AnalyticsControl_Panel_MostTransferredPart.Controls.Add(Model_Transactions_Core_AnalyticsControl_TableLayout_MostTransferredPart);
             Model_Transactions_Core_AnalyticsControl_Panel_MostTransferredPart.Dock = DockStyle.Fill;
-            Model_Transactions_Core_AnalyticsControl_Panel_MostTransferredPart.Location = new Point(635, 114);
+            Model_Transactions_Core_AnalyticsControl_Panel_MostTransferredPart.Location = new Point(818, 179);
             Model_Transactions_Core_AnalyticsControl_Panel_MostTransferredPart.MinimumSize = new Size(180, 90);
             Model_Transactions_Core_AnalyticsControl_Panel_MostTransferredPart.Name = "Model_Transactions_Core_AnalyticsControl_Panel_MostTransferredPart";
             Model_Transactions_Core_AnalyticsControl_Panel_MostTransferredPart.Padding = new Padding(10);
-            Model_Transactions_Core_AnalyticsControl_Panel_MostTransferredPart.Size = new Size(203, 100);
+            Model_Transactions_Core_AnalyticsControl_Panel_MostTransferredPart.Size = new Size(266, 165);
             Model_Transactions_Core_AnalyticsControl_Panel_MostTransferredPart.TabIndex = 8;
             // 
             // Model_Transactions_Core_AnalyticsControl_TableLayout_MostTransferredPart
@@ -1006,10 +1005,10 @@ namespace MTM_WIP_Application_Winforms.Controls.Transactions
             Model_Transactions_Core_AnalyticsControl_TableLayout_MostTransferredPart.Location = new Point(10, 10);
             Model_Transactions_Core_AnalyticsControl_TableLayout_MostTransferredPart.Name = "Model_Transactions_Core_AnalyticsControl_TableLayout_MostTransferredPart";
             Model_Transactions_Core_AnalyticsControl_TableLayout_MostTransferredPart.RowCount = 3;
-            Model_Transactions_Core_AnalyticsControl_TableLayout_MostTransferredPart.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
-            Model_Transactions_Core_AnalyticsControl_TableLayout_MostTransferredPart.RowStyles.Add(new RowStyle());
-            Model_Transactions_Core_AnalyticsControl_TableLayout_MostTransferredPart.RowStyles.Add(new RowStyle());
-            Model_Transactions_Core_AnalyticsControl_TableLayout_MostTransferredPart.Size = new Size(181, 78);
+            Model_Transactions_Core_AnalyticsControl_TableLayout_MostTransferredPart.RowStyles.Add(new RowStyle(SizeType.Percent, 33.3333321F));
+            Model_Transactions_Core_AnalyticsControl_TableLayout_MostTransferredPart.RowStyles.Add(new RowStyle(SizeType.Percent, 33.3333359F));
+            Model_Transactions_Core_AnalyticsControl_TableLayout_MostTransferredPart.RowStyles.Add(new RowStyle(SizeType.Percent, 33.3333359F));
+            Model_Transactions_Core_AnalyticsControl_TableLayout_MostTransferredPart.Size = new Size(244, 143);
             Model_Transactions_Core_AnalyticsControl_TableLayout_MostTransferredPart.TabIndex = 0;
             // 
             // Model_Transactions_Core_AnalyticsControl_Label_MostTransferredPartCaption
@@ -1021,7 +1020,7 @@ namespace MTM_WIP_Application_Winforms.Controls.Transactions
             Model_Transactions_Core_AnalyticsControl_Label_MostTransferredPartCaption.Location = new Point(3, 3);
             Model_Transactions_Core_AnalyticsControl_Label_MostTransferredPartCaption.Margin = new Padding(3);
             Model_Transactions_Core_AnalyticsControl_Label_MostTransferredPartCaption.Name = "Model_Transactions_Core_AnalyticsControl_Label_MostTransferredPartCaption";
-            Model_Transactions_Core_AnalyticsControl_Label_MostTransferredPartCaption.Size = new Size(175, 26);
+            Model_Transactions_Core_AnalyticsControl_Label_MostTransferredPartCaption.Size = new Size(238, 41);
             Model_Transactions_Core_AnalyticsControl_Label_MostTransferredPartCaption.TabIndex = 0;
             Model_Transactions_Core_AnalyticsControl_Label_MostTransferredPartCaption.Text = "🔄 Most Moved Part";
             Model_Transactions_Core_AnalyticsControl_Label_MostTransferredPartCaption.TextAlign = ContentAlignment.MiddleCenter;
@@ -1032,10 +1031,10 @@ namespace MTM_WIP_Application_Winforms.Controls.Transactions
             Model_Transactions_Core_AnalyticsControl_Label_MostTransferredPartID.Dock = DockStyle.Fill;
             Model_Transactions_Core_AnalyticsControl_Label_MostTransferredPartID.Font = new Font("Segoe UI Emoji", 9.75F, FontStyle.Bold);
             Model_Transactions_Core_AnalyticsControl_Label_MostTransferredPartID.ForeColor = SystemColors.ControlText;
-            Model_Transactions_Core_AnalyticsControl_Label_MostTransferredPartID.Location = new Point(3, 35);
+            Model_Transactions_Core_AnalyticsControl_Label_MostTransferredPartID.Location = new Point(3, 50);
             Model_Transactions_Core_AnalyticsControl_Label_MostTransferredPartID.Margin = new Padding(3);
             Model_Transactions_Core_AnalyticsControl_Label_MostTransferredPartID.Name = "Model_Transactions_Core_AnalyticsControl_Label_MostTransferredPartID";
-            Model_Transactions_Core_AnalyticsControl_Label_MostTransferredPartID.Size = new Size(175, 17);
+            Model_Transactions_Core_AnalyticsControl_Label_MostTransferredPartID.Size = new Size(238, 41);
             Model_Transactions_Core_AnalyticsControl_Label_MostTransferredPartID.TabIndex = 1;
             Model_Transactions_Core_AnalyticsControl_Label_MostTransferredPartID.Text = "—";
             Model_Transactions_Core_AnalyticsControl_Label_MostTransferredPartID.TextAlign = ContentAlignment.MiddleCenter;
@@ -1046,10 +1045,10 @@ namespace MTM_WIP_Application_Winforms.Controls.Transactions
             Model_Transactions_Core_AnalyticsControl_Label_MostTransferredPartCount.Dock = DockStyle.Fill;
             Model_Transactions_Core_AnalyticsControl_Label_MostTransferredPartCount.Font = new Font("Segoe UI Emoji", 9.75F);
             Model_Transactions_Core_AnalyticsControl_Label_MostTransferredPartCount.ForeColor = SystemColors.ControlText;
-            Model_Transactions_Core_AnalyticsControl_Label_MostTransferredPartCount.Location = new Point(3, 58);
+            Model_Transactions_Core_AnalyticsControl_Label_MostTransferredPartCount.Location = new Point(3, 97);
             Model_Transactions_Core_AnalyticsControl_Label_MostTransferredPartCount.Margin = new Padding(3);
             Model_Transactions_Core_AnalyticsControl_Label_MostTransferredPartCount.Name = "Model_Transactions_Core_AnalyticsControl_Label_MostTransferredPartCount";
-            Model_Transactions_Core_AnalyticsControl_Label_MostTransferredPartCount.Size = new Size(175, 17);
+            Model_Transactions_Core_AnalyticsControl_Label_MostTransferredPartCount.Size = new Size(238, 43);
             Model_Transactions_Core_AnalyticsControl_Label_MostTransferredPartCount.TabIndex = 2;
             Model_Transactions_Core_AnalyticsControl_Label_MostTransferredPartCount.Text = "0 transactions";
             Model_Transactions_Core_AnalyticsControl_Label_MostTransferredPartCount.TextAlign = ContentAlignment.MiddleCenter;
@@ -1058,12 +1057,11 @@ namespace MTM_WIP_Application_Winforms.Controls.Transactions
             // 
             AutoScaleDimensions = new SizeF(96F, 96F);
             AutoScaleMode = AutoScaleMode.Dpi;
-            AutoSize = true;
             AutoSizeMode = AutoSizeMode.GrowAndShrink;
             Controls.Add(Model_Transactions_Core_AnalyticsControl_TableLayout_Main);
             MinimumSize = new Size(600, 200);
             Name = "Model_Transactions_Core_AnalyticsControl";
-            Size = new Size(846, 328);
+            Size = new Size(1092, 525);
             Model_Transactions_Core_AnalyticsControl_TableLayout_Main.ResumeLayout(false);
             Model_Transactions_Core_AnalyticsControl_TableLayout_Main.PerformLayout();
             Model_Transactions_Core_AnalyticsControl_Panel_Total.ResumeLayout(false);

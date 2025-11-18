@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics.CodeAnalysis;
+using System.Drawing;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -19,7 +21,7 @@ namespace MTM_WIP_Application_Winforms.Controls.Shared
     [DesignerCategory("Component")]
     [ToolboxItem(true)]
     [Description("TextBox with intelligent suggestion/autocomplete support")]
-    public class SuggestionTextBox : TextBox
+    public partial class SuggestionTextBox : UserControl
     {
         #region Fields
 
@@ -114,6 +116,89 @@ namespace MTM_WIP_Application_Winforms.Controls.Shared
         [Browsable(false)]
         public bool IsOverlayVisible => _isOverlayVisible;
 
+        /// <summary>
+        /// Provides access to the inner TextBox used for rendering.
+        /// </summary>
+        internal TextBox InnerTextBox => SuggestionTextBox_TextBox;
+
+        /// <inheritdoc />
+        [Browsable(true)]
+        [Category("Appearance")]
+        [AllowNull]
+        public override string Text
+        {
+            get => SuggestionTextBox_TextBox.Text;
+            set => SuggestionTextBox_TextBox.Text = value ?? string.Empty;
+        }
+
+        /// <inheritdoc />
+        [AllowNull]
+        public override Font Font
+        {
+            get => SuggestionTextBox_TextBox.Font;
+            set => SuggestionTextBox_TextBox.Font = value ?? SuggestionTextBox_TextBox.Font;
+        }
+
+        /// <inheritdoc />
+        public override Color BackColor
+        {
+            get => SuggestionTextBox_TextBox.BackColor;
+            set => SuggestionTextBox_TextBox.BackColor = value;
+        }
+
+        /// <inheritdoc />
+        public override Color ForeColor
+        {
+            get => SuggestionTextBox_TextBox.ForeColor;
+            set => SuggestionTextBox_TextBox.ForeColor = value;
+        }
+
+        /// <summary>
+        /// Gets or sets the border style applied to the inner text box.
+        /// </summary>
+        [Category("Appearance")]
+        [DefaultValue(BorderStyle.FixedSingle)]
+        public new BorderStyle BorderStyle
+        {
+            get => SuggestionTextBox_TextBox.BorderStyle;
+            set => SuggestionTextBox_TextBox.BorderStyle = value;
+        }
+
+        /// <summary>
+        /// Gets or sets whether the inner text box is read-only.
+        /// </summary>
+        [Category("Behavior")]
+        [DefaultValue(false)]
+        public bool ReadOnly
+        {
+            get => SuggestionTextBox_TextBox.ReadOnly;
+            set => SuggestionTextBox_TextBox.ReadOnly = value;
+        }
+
+        /// <summary>
+        /// Gets or sets the placeholder text shown when the control is empty.
+        /// </summary>
+        [Category("Appearance")]
+        [DefaultValue("")]
+        public string PlaceholderText
+        {
+            get => SuggestionTextBox_TextBox.PlaceholderText;
+            set => SuggestionTextBox_TextBox.PlaceholderText = value;
+        }
+
+        #endregion
+
+        #region Constructors
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="SuggestionTextBox"/> class.
+        /// </summary>
+        public SuggestionTextBox()
+        {
+            InitializeComponent();
+            WireInnerTextBoxEvents();
+        }
+
         #endregion
 
         #region Events
@@ -152,6 +237,18 @@ namespace MTM_WIP_Application_Winforms.Controls.Shared
 
         #region Methods
 
+            private void WireInnerTextBoxEvents()
+            {
+                SuggestionTextBox_TextBox.LostFocus += InnerTextBox_LostFocus;
+                SuggestionTextBox_TextBox.KeyDown += InnerTextBox_KeyDown;
+                SuggestionTextBox_TextBox.Leave += InnerTextBox_Leave;
+                SuggestionTextBox_TextBox.KeyPress += InnerTextBox_KeyPress;
+                SuggestionTextBox_TextBox.KeyUp += InnerTextBox_KeyUp;
+                SuggestionTextBox_TextBox.TextChanged += InnerTextBox_TextChanged;
+                SuggestionTextBox_TextBox.Click += InnerTextBox_Click;
+                SuggestionTextBox_TextBox.DoubleClick += InnerTextBox_DoubleClick;
+            }
+
         /// <summary>
         /// Manually triggers suggestion display for current Text value.
         /// Useful for programmatically showing suggestions without focus change.
@@ -186,6 +283,22 @@ namespace MTM_WIP_Application_Winforms.Controls.Shared
         }
 
         /// <summary>
+        /// Clears the current text value.
+        /// </summary>
+        public void Clear()
+        {
+            SuggestionTextBox_TextBox.Clear();
+        }
+
+        /// <summary>
+        /// Selects all text inside the inner text box.
+        /// </summary>
+        public void SelectAll()
+        {
+            SuggestionTextBox_TextBox.SelectAll();
+        }
+
+        /// <summary>
         /// Applies configuration from Model_Suggestion_Config.
         /// Convenience method to set multiple properties at once.
         /// </summary>
@@ -212,104 +325,71 @@ namespace MTM_WIP_Application_Winforms.Controls.Shared
 
         #region Overrides
 
-        /// <summary>
-        /// Handles LostFocus event to trigger suggestion overlay.
-        /// This is the primary trigger point for suggestion display.
-        /// </summary>
-        /// <param name="e">Event arguments.</param>
-        protected override async void OnLostFocus(EventArgs e)
+        /// <inheritdoc />
+        protected override void OnEnter(EventArgs e)
         {
-            base.OnLostFocus(e);
+            base.OnEnter(e);
+            SuggestionTextBox_TextBox.Focus();
+        }
 
-            // Don't trigger if DataProvider not set
-            if (DataProvider == null) return;
+        /// <inheritdoc />
+        protected override void OnGotFocus(EventArgs e)
+        {
+            base.OnGotFocus(e);
+            if (!SuggestionTextBox_TextBox.Focused)
+            {
+                SuggestionTextBox_TextBox.Focus();
+            }
+        }
 
-            // Don't trigger if overlay already visible
-            if (_isOverlayVisible) return;
+        /// <inheritdoc />
+        protected override void OnFontChanged(EventArgs e)
+        {
+            base.OnFontChanged(e);
+            SuggestionTextBox_TextBox.Font = this.Font;
+        }
 
-            // Check minimum input length
-            if (this.Text.Length < MinimumInputLength) return;
+        /// <inheritdoc />
+        protected override void OnBackColorChanged(EventArgs e)
+        {
+            base.OnBackColorChanged(e);
+            SuggestionTextBox_TextBox.BackColor = this.BackColor;
+        }
 
-            // Show suggestions
-            await ShowSuggestionOverlayAsync();
+        /// <inheritdoc />
+        protected override void OnForeColorChanged(EventArgs e)
+        {
+            base.OnForeColorChanged(e);
+            SuggestionTextBox_TextBox.ForeColor = this.ForeColor;
+        }
+
+        /// <inheritdoc />
+        protected override void OnEnabledChanged(EventArgs e)
+        {
+            base.OnEnabledChanged(e);
+            SuggestionTextBox_TextBox.Enabled = this.Enabled;
         }
 
         /// <summary>
-        /// Handles keyboard input to intercept navigation keys when overlay is visible.
-        /// Arrow keys, Enter, Escape, Home, End are intercepted and delegated to overlay.
+        /// Moves the focus to the inner text box.
         /// </summary>
-        /// <param name="e">Key event arguments.</param>
-        protected override void OnKeyDown(KeyEventArgs e)
+        public new bool Focus()
         {
-            if (_isOverlayVisible && _currentOverlay != null)
-            {
-                switch (e.KeyCode)
-                {
-                    case Keys.Down:
-                        _currentOverlay.SelectNext();
-                        e.Handled = true;
-                        e.SuppressKeyPress = true;
-                        return;
-
-                    case Keys.Up:
-                        _currentOverlay.SelectPrevious();
-                        e.Handled = true;
-                        e.SuppressKeyPress = true;
-                        return;
-
-                    case Keys.Enter:
-                        _currentOverlay.AcceptSelection();
-                        e.Handled = true;
-                        e.SuppressKeyPress = true;
-                        return;
-
-                    case Keys.Escape:
-                        _currentOverlay.CancelSelection();
-                        e.Handled = true;
-                        e.SuppressKeyPress = true;
-                        return;
-
-                    case Keys.Home:
-                        _currentOverlay.SelectFirst();
-                        e.Handled = true;
-                        e.SuppressKeyPress = true;
-                        return;
-
-                    case Keys.End:
-                        _currentOverlay.SelectLast();
-                        e.Handled = true;
-                        e.SuppressKeyPress = true;
-                        return;
-                }
-            }
-
-            base.OnKeyDown(e);
+            return SuggestionTextBox_TextBox.Focus();
         }
 
-        /// <summary>
-        /// Handles Leave event to capitalize valid input.
-        /// If the user has entered text and no overlay is showing, capitalize it.
-        /// </summary>
-        /// <param name="e">Event arguments.</param>
-        protected override void OnLeave(EventArgs e)
+        /// <inheritdoc />
+        protected override void OnTabIndexChanged(EventArgs e)
         {
-            base.OnLeave(e);
+            base.OnTabIndexChanged(e);
+            SuggestionTextBox_TextBox.TabIndex = this.TabIndex;
+        }
 
-            // If there's text and we're not showing the overlay, capitalize it
-            if (!string.IsNullOrWhiteSpace(this.Text) && !_isOverlayVisible)
-            {
-                // Store cursor position
-                int cursorPosition = this.SelectionStart;
-                
-                // Capitalize the text
-                this.Text = this.Text.ToUpperInvariant();
-                
-                // Restore cursor position (adjust if needed)
-                if (cursorPosition <= this.Text.Length)
-                {
-                    this.SelectionStart = cursorPosition;
-                }
-            }
+        /// <inheritdoc />
+        protected override void OnTabStopChanged(EventArgs e)
+        {
+            base.OnTabStopChanged(e);
+            SuggestionTextBox_TextBox.TabStop = this.TabStop;
         }
 
         /// <summary>
@@ -321,6 +401,8 @@ namespace MTM_WIP_Application_Winforms.Controls.Shared
         {
             if (disposing)
             {
+                components?.Dispose();
+
                 if (_currentOverlay != null && !_currentOverlay.IsDisposed)
                 {
                     _currentOverlay.Dispose();
@@ -423,7 +505,7 @@ namespace MTM_WIP_Application_Winforms.Controls.Shared
 
                 LoggingUtility.Log($"[SuggestionTextBox] Overlay opened: Field={this.Name}, Matches={suggestions.Count}, Input='{_originalInput}'");
 
-                _currentOverlay = new SuggestionOverlayForm(suggestions, this);
+                _currentOverlay = new SuggestionOverlayForm(suggestions, SuggestionTextBox_TextBox);
                 
                 var parentForm = this.FindForm();
                 if (parentForm == null)
@@ -503,7 +585,7 @@ namespace MTM_WIP_Application_Winforms.Controls.Shared
                     LoggingUtility.Log($"[SuggestionTextBox] Suggestion cancelled: Field={this.Name}, Reason=Escape, Input='{_originalInput}'");
                     
                     // Ensure focus returns to this field (prevents focus moving to next field)
-                    this.Focus();
+                    SuggestionTextBox_TextBox.Focus();
                     LoggingUtility.Log($"[SuggestionTextBox] Focus restored to field: {this.Name}");
                 }
             }
@@ -566,6 +648,121 @@ namespace MTM_WIP_Application_Winforms.Controls.Shared
         protected virtual void OnSuggestionOverlayClosed(EventArgs e)
         {
             SuggestionOverlayClosed?.Invoke(this, e);
+        }
+
+        #endregion
+
+        #region Inner TextBox Event Handlers
+
+        private async void InnerTextBox_LostFocus(object? sender, EventArgs e)
+        {
+            base.OnLostFocus(e);
+
+            if (DataProvider == null)
+            {
+                return;
+            }
+
+            if (_isOverlayVisible)
+            {
+                return;
+            }
+
+            if (Text.Length < MinimumInputLength)
+            {
+                return;
+            }
+
+            await ShowSuggestionOverlayAsync();
+        }
+
+        private void InnerTextBox_KeyDown(object? sender, KeyEventArgs e)
+        {
+            if (_isOverlayVisible && _currentOverlay != null)
+            {
+                switch (e.KeyCode)
+                {
+                    case Keys.Down:
+                        _currentOverlay.SelectNext();
+                        e.Handled = true;
+                        e.SuppressKeyPress = true;
+                        return;
+
+                    case Keys.Up:
+                        _currentOverlay.SelectPrevious();
+                        e.Handled = true;
+                        e.SuppressKeyPress = true;
+                        return;
+
+                    case Keys.Enter:
+                        _currentOverlay.AcceptSelection();
+                        e.Handled = true;
+                        e.SuppressKeyPress = true;
+                        return;
+
+                    case Keys.Escape:
+                        _currentOverlay.CancelSelection();
+                        e.Handled = true;
+                        e.SuppressKeyPress = true;
+                        return;
+
+                    case Keys.Home:
+                        _currentOverlay.SelectFirst();
+                        e.Handled = true;
+                        e.SuppressKeyPress = true;
+                        return;
+
+                    case Keys.End:
+                        _currentOverlay.SelectLast();
+                        e.Handled = true;
+                        e.SuppressKeyPress = true;
+                        return;
+                }
+            }
+
+            base.OnKeyDown(e);
+        }
+
+        private void InnerTextBox_Leave(object? sender, EventArgs e)
+        {
+            base.OnLeave(e);
+
+            if (!string.IsNullOrWhiteSpace(Text) && !_isOverlayVisible)
+            {
+                int cursorPosition = SuggestionTextBox_TextBox.SelectionStart;
+
+                Text = Text.ToUpperInvariant();
+
+                if (cursorPosition <= Text.Length)
+                {
+                    SuggestionTextBox_TextBox.SelectionStart = cursorPosition;
+                }
+            }
+        }
+
+        private void InnerTextBox_KeyPress(object? sender, KeyPressEventArgs e)
+        {
+            base.OnKeyPress(e);
+        }
+
+        private void InnerTextBox_KeyUp(object? sender, KeyEventArgs e)
+        {
+            base.OnKeyUp(e);
+        }
+
+        private void InnerTextBox_TextChanged(object? sender, EventArgs e)
+        {
+            base.OnTextChanged(e);
+        }
+
+        private void InnerTextBox_Click(object? sender, EventArgs e)
+        {
+            base.OnClick(e);
+        }
+
+        private void InnerTextBox_DoubleClick(object? sender, EventArgs e)
+        {
+            base.OnDoubleClick(e);
         }
 
         #endregion

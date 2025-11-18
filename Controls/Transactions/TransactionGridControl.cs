@@ -1,5 +1,3 @@
-using System.ComponentModel;
-using MTM_WIP_Application_Winforms.Controls.Shared;
 using MTM_WIP_Application_Winforms.Core;
 using MTM_WIP_Application_Winforms.Forms.Shared;
 using MTM_WIP_Application_Winforms.Helpers;
@@ -23,7 +21,6 @@ internal partial class TransactionGridControl : ThemedUserControl
 
     private Model_Transactions_SearchResult? _currentResults;
     private int _currentPage = 1;
-    private Control_TextAnimationSequence? _goToPageAnimator;
 
     #endregion
 
@@ -58,6 +55,11 @@ internal partial class TransactionGridControl : ThemedUserControl
     /// Raised when the user clicks the Analytics button.
     /// </summary>
     public event EventHandler? AnalyticsRequested;
+
+    /// <summary>
+    /// Raised whenever the transaction information panel visibility changes.
+    /// </summary>
+    public event EventHandler<bool>? InformationPanelToggled;
 
     #endregion
 
@@ -98,8 +100,6 @@ internal partial class TransactionGridControl : ThemedUserControl
     public TransactionGridControl()
     {
         InitializeComponent();
-
-            InitializeArrowAnimations();
 
         LoggingUtility.Log("[TransactionGridControl] Initializing...");
 
@@ -218,26 +218,6 @@ internal partial class TransactionGridControl : ThemedUserControl
         TransactionGridControl_DataGridView_Transactions.AlternatingRowsDefaultCellStyle.BackColor = System.Drawing.Color.FromArgb(248, 250, 252);
     }
 
-    private void InitializeArrowAnimations()
-        {
-            try
-            {
-                components ??= new Container();
-                _goToPageAnimator = new Control_TextAnimationSequence(components)
-                {
-                    TargetToolStripItem = TransactionGridControl_Button_GoToPage,
-                    Interval = 140,
-                    RestoreOriginalTextOnStop = false
-                };
-
-                _goToPageAnimator.StartWithPreset(TextAnimationPreset.Right);
-            }
-            catch (Exception ex)
-            {
-                LoggingUtility.LogApplicationError(ex);
-            }
-        }
-
     /// <summary>
     /// Wires up event handlers for pagination and selection.
     /// </summary>
@@ -342,6 +322,20 @@ internal partial class TransactionGridControl : ThemedUserControl
         LoggingUtility.Log($"[TransactionGridControl] Export/Print buttons {(enabled ? "enabled" : "disabled")}");
     }
 
+    /// <summary>
+    /// Gets whether the information panel is currently visible.
+    /// </summary>
+    public bool InformationPanelVisible => TransactionGridControl_TransactionDetailPanel.Visible;
+
+    /// <summary>
+    /// Toggles the information panel visibility and returns the new state.
+    /// </summary>
+    public bool ToggleInformationPanel()
+    {
+        ApplyInformationPanelVisibility(!TransactionGridControl_TransactionDetailPanel.Visible);
+        return TransactionGridControl_TransactionDetailPanel.Visible;
+    }
+
     #endregion
 
     #region Button Clicks
@@ -417,27 +411,7 @@ internal partial class TransactionGridControl : ThemedUserControl
         try
         {
             LoggingUtility.Log("[TransactionGridControl] Toggle Details button clicked.");
-            
-            // Toggle the detail panel visibility
-            TransactionGridControl_TransactionDetailPanel.Visible = !TransactionGridControl_TransactionDetailPanel.Visible;
-            
-            // Update column span of DataGridView to fill space when details hidden
-            if (TransactionGridControl_TransactionDetailPanel.Visible)
-            {
-                // Details visible - DataGridView uses only column 0, details panel uses column 1
-                TransactionGridControl_TableLayout_Main.SetColumnSpan(TransactionGridControl_DataGridView_Transactions, 1);
-                TransactionGridControl_Button_ToggleDetails.Text = "◀ 📋";
-                TransactionGridControl_Button_ToggleDetails.ToolTipText = "Hide transaction details panel";
-            }
-            else
-            {
-                // Details hidden - DataGridView spans both columns to fill entire width
-                TransactionGridControl_TableLayout_Main.SetColumnSpan(TransactionGridControl_DataGridView_Transactions, 2);
-                TransactionGridControl_Button_ToggleDetails.Text = "📋 ▶";
-                TransactionGridControl_Button_ToggleDetails.ToolTipText = "Show transaction details panel";
-            }
-            
-            LoggingUtility.Log($"[TransactionGridControl] Details panel visibility: {TransactionGridControl_TransactionDetailPanel.Visible}");
+            ToggleInformationPanel();
         }
         catch (Exception ex)
         {
@@ -810,6 +784,27 @@ internal partial class TransactionGridControl : ThemedUserControl
             Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Low,
                 controlName: nameof(TransactionGridControl));
         }
+    }
+
+    private void ApplyInformationPanelVisibility(bool visible)
+    {
+        TransactionGridControl_TransactionDetailPanel.Visible = visible;
+
+        if (visible)
+        {
+            TransactionGridControl_TableLayout_Main.SetColumnSpan(TransactionGridControl_DataGridView_Transactions, 1);
+            TransactionGridControl_Button_ToggleDetails.Text = "◀ 📋";
+            TransactionGridControl_Button_ToggleDetails.ToolTipText = "Hide transaction details panel";
+        }
+        else
+        {
+            TransactionGridControl_TableLayout_Main.SetColumnSpan(TransactionGridControl_DataGridView_Transactions, 2);
+            TransactionGridControl_Button_ToggleDetails.Text = "📋 ▶";
+            TransactionGridControl_Button_ToggleDetails.ToolTipText = "Show transaction details panel";
+        }
+
+        LoggingUtility.Log($"[TransactionGridControl] Details panel visibility: {visible}");
+        InformationPanelToggled?.Invoke(this, visible);
     }
 
     #endregion
