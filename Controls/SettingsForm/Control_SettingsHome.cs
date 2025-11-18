@@ -15,10 +15,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
     {
         #region Fields
 
-        private readonly Dictionary<string, CategoryTile> _categoryTiles = new();
-        private TableLayoutPanel? _mainLayout;
-        private Label? _headerLabel;
-        private FlowLayoutPanel? _tilesContainer;
+        private readonly Dictionary<string, Control> _categoryControls = new();
 
         #endregion
 
@@ -36,7 +33,6 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
         public Control_SettingsHome()
         {
             InitializeComponent();
-            BuildModernLayout();
         }
 
         #endregion
@@ -44,59 +40,12 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
         #region Methods
 
         /// <summary>
-        /// Builds the modern card-based homepage layout.
-        /// </summary>
-        private void BuildModernLayout()
-        {
-            this.SuspendLayout();
-
-            // Main container
-            _mainLayout = new TableLayoutPanel
-            {
-                Dock = DockStyle.Fill,
-                ColumnCount = 1,
-                RowCount = 2,
-                Padding = new Padding(20),
-                BackColor = SystemColors.Control
-            };
-            _mainLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
-            _mainLayout.RowStyles.Add(new RowStyle(SizeType.Absolute, 80F)); // Header
-            _mainLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 100F)); // Tiles
-
-            // Header
-            _headerLabel = new Label
-            {
-                Text = "Settings",
-                Font = new Font("Segoe UI", 24F, FontStyle.Bold),
-                Dock = DockStyle.Fill,
-                TextAlign = ContentAlignment.MiddleLeft,
-                ForeColor = Color.FromArgb(45, 45, 45)
-            };
-            _mainLayout.Controls.Add(_headerLabel, 0, 0);
-
-            // Tiles container
-            _tilesContainer = new FlowLayoutPanel
-            {
-                Dock = DockStyle.Fill,
-                AutoScroll = true,
-                Padding = new Padding(0),
-                WrapContents = true,
-                FlowDirection = FlowDirection.LeftToRight
-            };
-            _mainLayout.Controls.Add(_tilesContainer, 0, 1);
-
-            this.Controls.Add(_mainLayout);
-            this.ResumeLayout(false);
-            this.PerformLayout();
-        }
-
-        /// <summary>
         /// Initializes category tiles based on user privileges.
         /// </summary>
         public void InitializeCategories()
         {
-            _tilesContainer?.Controls.Clear();
-            _categoryTiles.Clear();
+            Control_SettingsHome_FlowPanel_Tiles?.Controls.Clear();
+            _categoryControls.Clear();
 
             bool isDeveloper = Model_Application_Variables.UserTypeDeveloper;
             bool isAdmin = Model_Application_Variables.UserTypeAdmin;
@@ -227,173 +176,47 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
         private void AddCategoryTile(string title, string? navigationTarget, string description,
             Color accentColor, string icon, List<SubcategoryInfo>? subcategories = null)
         {
-            var tile = new CategoryTile(title, navigationTarget, description, accentColor, icon, subcategories);
-            tile.NavigationRequested += (s, e) => NavigationRequested?.Invoke(this, e);
-            _categoryTiles[title] = tile;
-            _tilesContainer?.Controls.Add(tile);
+            if (subcategories?.Any() == true)
+            {
+                // Use card for categories with subcategories
+                var card = new Control_SettingsCategoryCard
+                {
+                    CardTitle = title,
+                    CardDescription = description,
+                    CardIcon = icon,
+                    AccentColor = accentColor
+                };
+                card.NavigationRequested += (s, target) => NavigationRequested?.Invoke(this, new NavigationEventArgs(target));
+                
+                foreach (var subcat in subcategories)
+                {
+                    card.AddSubcategoryLink(subcat.Title, subcat.NavigationTarget);
+                }
+                
+                _categoryControls[title] = card;
+                Control_SettingsHome_FlowPanel_Tiles?.Controls.Add(card);
+            }
+            else
+            {
+                // Use simple tile for categories without subcategories
+                var tile = new Control_SettingsCategoryTile
+                {
+                    TileTitle = title,
+                    TileDescription = description,
+                    TileIcon = icon,
+                    AccentColor = accentColor,
+                    NavigationTarget = navigationTarget
+                };
+                tile.TileClicked += (s, target) => NavigationRequested?.Invoke(this, new NavigationEventArgs(target));
+                
+                _categoryControls[title] = tile;
+                Control_SettingsHome_FlowPanel_Tiles?.Controls.Add(tile);
+            }
         }
 
         #endregion
 
         #region Nested Types
-
-        /// <summary>
-        /// Represents a modern card-style category tile.
-        /// </summary>
-        private class CategoryTile : Panel
-        {
-            private readonly string? _navigationTarget;
-            private readonly List<SubcategoryInfo>? _subcategories;
-            private Panel? _subcategoryPanel;
-            private bool _expanded;
-
-            public event EventHandler<NavigationEventArgs>? NavigationRequested;
-
-            public CategoryTile(string title, string? navigationTarget, string description,
-                Color accentColor, string icon, List<SubcategoryInfo>? subcategories = null)
-            {
-                _navigationTarget = navigationTarget;
-                _subcategories = subcategories;
-
-                this.Size = new Size(280, subcategories?.Any() == true ? 180 : 140);
-                this.Margin = new Padding(10);
-                this.BackColor = Color.White;
-                this.BorderStyle = BorderStyle.None;
-                this.Cursor = Cursors.Hand;
-
-                // Paint border manually for modern look
-                this.Paint += (s, e) =>
-                {
-                    using var pen = new Pen(Color.FromArgb(200, 200, 200), 1);
-                    e.Graphics.DrawRectangle(pen, 0, 0, Width - 1, Height - 1);
-                };
-
-                var mainContent = new TableLayoutPanel
-                {
-                    Dock = DockStyle.Fill,
-                    RowCount = 3,
-                    ColumnCount = 1,
-                    Padding = new Padding(15)
-                };
-                mainContent.RowStyles.Add(new RowStyle(SizeType.Absolute, 8F)); // Accent bar
-                mainContent.RowStyles.Add(new RowStyle(SizeType.AutoSize)); // Content
-                mainContent.RowStyles.Add(new RowStyle(SizeType.Percent, 100F)); // Subcategories
-                mainContent.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
-
-                // Accent bar
-                var accentBar = new Panel
-                {
-                    Height = 4,
-                    Dock = DockStyle.Top,
-                    BackColor = accentColor,
-                    Margin = new Padding(0, 0, 0, 10)
-                };
-                mainContent.Controls.Add(accentBar, 0, 0);
-
-                // Content area
-                var contentPanel = new Panel
-                {
-                    AutoSize = true,
-                    Dock = DockStyle.Top
-                };
-
-                var iconLabel = new Label
-                {
-                    Text = icon,
-                    Font = new Font("Segoe UI Emoji", 24F),
-                    AutoSize = true,
-                    Location = new Point(0, 0)
-                };
-                contentPanel.Controls.Add(iconLabel);
-
-                var titleLabel = new Label
-                {
-                    Text = title,
-                    Font = new Font("Segoe UI Semibold", 12F, FontStyle.Bold),
-                    AutoSize = true,
-                    Location = new Point(0, 35),
-                    ForeColor = Color.FromArgb(45, 45, 45)
-                };
-                contentPanel.Controls.Add(titleLabel);
-
-                var descLabel = new Label
-                {
-                    Text = description,
-                    Font = new Font("Segoe UI", 9F),
-                    AutoSize = true,
-                    MaximumSize = new Size(240, 0),
-                    Location = new Point(0, 58),
-                    ForeColor = Color.FromArgb(96, 94, 92)
-                };
-                contentPanel.Controls.Add(descLabel);
-
-                contentPanel.Height = 85;
-                mainContent.Controls.Add(contentPanel, 0, 1);
-
-                // Subcategories
-                if (subcategories?.Any() == true)
-                {
-                    _subcategoryPanel = new FlowLayoutPanel
-                    {
-                        Dock = DockStyle.Top,
-                        AutoSize = true,
-                        FlowDirection = FlowDirection.TopDown,
-                        WrapContents = false,
-                        Padding = new Padding(0, 5, 0, 0)
-                    };
-
-                    foreach (var subcat in subcategories)
-                    {
-                        var subcatLink = new LinkLabel
-                        {
-                            Text = $"→ {subcat.Title}",
-                            Font = new Font("Segoe UI", 9F),
-                            AutoSize = true,
-                            Margin = new Padding(0, 2, 0, 2),
-                            LinkColor = accentColor,
-                            ActiveLinkColor = Color.FromArgb(
-                                Math.Max(0, accentColor.R - 30),
-                                Math.Max(0, accentColor.G - 30),
-                                Math.Max(0, accentColor.B - 30)),
-                            Tag = subcat.NavigationTarget
-                        };
-                        subcatLink.LinkClicked += SubcategoryLink_Clicked;
-                        _subcategoryPanel.Controls.Add(subcatLink);
-                    }
-
-                    mainContent.Controls.Add(_subcategoryPanel, 0, 2);
-                }
-
-                this.Controls.Add(mainContent);
-
-                // Hover effect
-                this.MouseEnter += (s, e) => this.BackColor = Color.FromArgb(250, 250, 250);
-                this.MouseLeave += (s, e) => this.BackColor = Color.White;
-
-                // Click handler for direct navigation
-                if (_navigationTarget != null)
-                {
-                    this.Click += (s, e) => NavigationRequested?.Invoke(this,
-                        new NavigationEventArgs(_navigationTarget));
-                    contentPanel.Click += (s, e) => NavigationRequested?.Invoke(this,
-                        new NavigationEventArgs(_navigationTarget));
-                    iconLabel.Click += (s, e) => NavigationRequested?.Invoke(this,
-                        new NavigationEventArgs(_navigationTarget));
-                    titleLabel.Click += (s, e) => NavigationRequested?.Invoke(this,
-                        new NavigationEventArgs(_navigationTarget));
-                    descLabel.Click += (s, e) => NavigationRequested?.Invoke(this,
-                        new NavigationEventArgs(_navigationTarget));
-                }
-            }
-
-            private void SubcategoryLink_Clicked(object? sender, LinkLabelLinkClickedEventArgs e)
-            {
-                if (sender is LinkLabel link && link.Tag is string target)
-                {
-                    NavigationRequested?.Invoke(this, new NavigationEventArgs(target));
-                }
-            }
-        }
 
         /// <summary>
         /// Subcategory information for tile rendering.
