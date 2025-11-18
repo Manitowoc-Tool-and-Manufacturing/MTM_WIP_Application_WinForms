@@ -109,7 +109,7 @@ public static async Task<Model_Dao_Result<Model_ErrorReport_Core>> GetErrorRepor
 
         if (!result.IsSuccess)
         {
-            LoggingUtility.Log($"[Dao_ErrorReports] Failed to retrieve report {reportId}: {result.StatusMessage}");
+            
             return Model_Dao_Result<Model_ErrorReport_Core>.Failure(result.StatusMessage);
         }
 

@@ -60,7 +60,7 @@ public partial class BatchGenerationReportDialog : ThemedForm
             PopulateSummary();
             PopulateDetailsGrid();
             
-            LoggingUtility.Log("[BatchGenerationReportDialog] Report dialog loaded");
+            
         }
         catch (Exception ex)
         {
@@ -185,7 +185,7 @@ public partial class BatchGenerationReportDialog : ThemedForm
                 Verb = "open"
             });
             
-            LoggingUtility.Log($"[BatchGenerationReportDialog] Opened Prompt Fixes directory: {promptDirectory}");
+            
         }
         catch (Exception ex)
         {

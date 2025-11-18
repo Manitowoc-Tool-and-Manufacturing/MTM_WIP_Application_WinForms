@@ -62,22 +62,22 @@ public class ThemedUserControl : UserControl
                         }
                     };
 
-                    LoggingUtility.Log($"[ThemedUserControl] {this.GetType().Name} initialized with automatic theme support");
+                    
                 }
                 else
                 {
-                    LoggingUtility.Log($"[ThemedUserControl] {this.GetType().Name} - Theme services not available in ServiceProvider");
+                    
                 }
             }
             catch (Exception ex)
             {
                 // Log but don't fail - control will work without theming
-                LoggingUtility.Log($"[ThemedUserControl] {this.GetType().Name} could not resolve theme dependencies: {ex.Message}");
+                
             }
         }
         else
         {
-            LoggingUtility.Log($"[ThemedUserControl] {this.GetType().Name} - Program.ServiceProvider is null (designer mode or pre-DI initialization)");
+            
         }
     }
 
@@ -149,13 +149,13 @@ public class ThemedUserControl : UserControl
             var controlApplier = ThemeAppliers?.FirstOrDefault(a => a.CanApply(this));
             if (controlApplier != null)
             {
-                LoggingUtility.Log($"[ThemedUserControl] Using applier for {Name}");
+                
                 controlApplier.Apply(this, theme);
             }
             else
             {
                 // Fallback if no applier found
-                LoggingUtility.Log($"[ThemedUserControl] No applier found for {Name}, using fallback. ThemeAppliers count: {ThemeAppliers?.Count() ?? 0}");
+                
                 BackColor = theme.ControlBackColor ?? Color.White;
                 ForeColor = theme.ControlForeColor ?? Color.Black;
             }

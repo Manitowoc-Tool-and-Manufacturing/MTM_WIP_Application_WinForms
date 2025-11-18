@@ -39,7 +39,7 @@ internal partial class TransactionLifecycleForm : ThemedForm
     {
         InitializeComponent();
 
-        LoggingUtility.Log("[TransactionLifecycleForm] Initializing...");
+        
 
         // DPI scaling and layout now handled by ThemedForm.OnLoad
         SetStyle(ControlStyles.OptimizedDoubleBuffer, true);
@@ -59,7 +59,7 @@ internal partial class TransactionLifecycleForm : ThemedForm
         // Load lifecycle data asynchronously after form is shown
         this.Load += async (s, e) => await LoadLifecycleAsync();
 
-        LoggingUtility.Log($"[TransactionLifecycleForm] Initialized for Part: {_partId}, Batch: {_batchNumber}");
+        
     }
 
     #endregion
@@ -88,7 +88,7 @@ internal partial class TransactionLifecycleForm : ThemedForm
     {
         try
         {
-            LoggingUtility.Log($"[TransactionLifecycleForm] Loading lifecycle for batch: {_batchNumber}");
+            
 
             // Retrieve lifecycle data from database
             var result = await _daoTransactions.GetBatchLifecycleAsync(_batchNumber);
@@ -103,7 +103,7 @@ internal partial class TransactionLifecycleForm : ThemedForm
             }
 
             var transactions = result.Data;
-            LoggingUtility.Log($"[TransactionLifecycleForm] Retrieved {transactions.Count} transactions");
+            
 
             if (transactions.Count == 0)
             {
@@ -117,7 +117,7 @@ internal partial class TransactionLifecycleForm : ThemedForm
             // Build the TreeView from transactions
             BuildLifecycleTree(transactions);
 
-            LoggingUtility.Log("[TransactionLifecycleForm] Lifecycle loaded successfully");
+            
         }
         catch (Exception ex)
         {
@@ -322,7 +322,7 @@ internal partial class TransactionLifecycleForm : ThemedForm
         {
             if (e.Node?.Tag is Model_Transactions_Core transaction)
             {
-                LoggingUtility.Log($"[TransactionLifecycleForm] Node selected: Transaction ID {transaction.ID}");
+                
                 TransactionLifecycleForm_DetailPanel.Transaction = transaction;
             }
             else
@@ -346,7 +346,7 @@ internal partial class TransactionLifecycleForm : ThemedForm
     {
         try
         {
-            LoggingUtility.Log("[TransactionLifecycleForm] Export button clicked.");
+            
             
             // TODO: T069+ - Implement lifecycle export functionality
             Service_ErrorHandler.ShowConfirmation(
@@ -372,7 +372,7 @@ internal partial class TransactionLifecycleForm : ThemedForm
         /* OLD IMPLEMENTATION - Kept for reference, will be restored in Phase 7
         try
         {
-            LoggingUtility.Log("[TransactionLifecycleForm] Print button clicked.");
+            
             
             // TODO: T069+ - Implement lifecycle print functionality
             Service_ErrorHandler.ShowConfirmation(
@@ -393,7 +393,7 @@ internal partial class TransactionLifecycleForm : ThemedForm
     {
         try
         {
-            LoggingUtility.Log("[TransactionLifecycleForm] Close button clicked.");
+            
             this.DialogResult = DialogResult.Cancel;
             this.Close();
         }

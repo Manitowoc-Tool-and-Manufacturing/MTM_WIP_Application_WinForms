@@ -374,7 +374,7 @@ internal static class Dao_Part
                 ["IssuedBy"] = issuedBy,
                 ["ItemType"] = type
             };
-            
+
             if (requiresColorCode.HasValue)
             {
                 parameters["RequiresColorCode"] = requiresColorCode.Value ? 1 : 0;
@@ -499,7 +499,7 @@ internal static class Dao_Part
 
             if (result.IsSuccess)
             {
-                LoggingUtility.Log($"[Dao_Part] Color code flag updated for part {partNumber}: {requiresColorCode}");
+
                 Service_DebugTracer.TraceMethodExit(result, controlName: "Dao_Part");
                 return Model_Dao_Result.Success($"Color code flag updated for part {partNumber}");
             }

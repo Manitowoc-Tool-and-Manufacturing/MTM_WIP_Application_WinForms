@@ -318,7 +318,7 @@ public class Dao_Inventory
 {
     public async Task<DataTable> GetInventoryAsync()
     {
-        LoggingUtility.Log("Getting inventory data"); // Static call
+         // Static call
         // ...
     }
 }
@@ -534,12 +534,12 @@ public class Dao_Inventory
 {
     public async Task<DataTable> GetInventoryAsync()
     {
-        LoggingUtility.Log("Starting inventory query"); // Static!
+         // Static!
         
         try
         {
             var data = await ExecuteQueryAsync();
-            LoggingUtility.Log("Inventory query successful");
+            
             return data;
         }
         catch (Exception ex)

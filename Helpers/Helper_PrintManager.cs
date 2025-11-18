@@ -34,7 +34,7 @@ public class Helper_PrintManager : IDisposable
     public Helper_PrintManager(Model_Print_Job printJob)
     {
         _printJob = printJob ?? throw new ArgumentNullException(nameof(printJob));
-        LoggingUtility.Log("[Helper_PrintManager] Print manager initialized");
+        
     }
 
     #endregion
@@ -49,7 +49,7 @@ public class Helper_PrintManager : IDisposable
     {
         try
         {
-            LoggingUtility.Log("[Helper_PrintManager] Preparing print document...");
+            
 
             // Dispose existing printer if any
             _tablePrinter?.Dispose();
@@ -63,7 +63,7 @@ public class Helper_PrintManager : IDisposable
             // Apply print job settings to PrintDocument
             _printJob.ApplyToPrintDocument(_tablePrinter.PrintDocument);
 
-            LoggingUtility.Log($"[Helper_PrintManager] Print document prepared: {_printJob.Data.Rows.Count} rows, Printer: {_printJob.PrinterName ?? "Default"}");
+            
 
             return _tablePrinter.PrintDocument;
         }
@@ -89,12 +89,12 @@ public class Helper_PrintManager : IDisposable
     {
         try
         {
-            LoggingUtility.Log("[Helper_PrintManager] Starting print operation...");
+            
 
             var printDocument = PreparePrintDocument();
             if (printDocument == null)
             {
-                LoggingUtility.Log("[Helper_PrintManager] Print aborted - failed to prepare document");
+                
                 return false;
             }
 
@@ -110,15 +110,15 @@ public class Helper_PrintManager : IDisposable
             if (printDialog.ShowDialog() == DialogResult.OK)
             {
                 // User confirmed - start printing
-                LoggingUtility.Log($"[Helper_PrintManager] User confirmed print: {printDialog.PrinterSettings.PrinterName}");
+                
                 printDocument.Print();
                 SyncPageBoundariesFromPrinter();
-                LoggingUtility.Log("[Helper_PrintManager] Print operation initiated successfully");
+                
                 return true;
             }
             else
             {
-                LoggingUtility.Log("[Helper_PrintManager] Print cancelled by user");
+                
                 return false;
             }
         }
@@ -153,7 +153,7 @@ public class Helper_PrintManager : IDisposable
         _disposed = true;
         GC.SuppressFinalize(this);
 
-        LoggingUtility.Log("[Helper_PrintManager] Print manager disposed");
+        
     }
 
     /// <summary>

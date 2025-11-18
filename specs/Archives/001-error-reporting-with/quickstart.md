@@ -231,7 +231,7 @@ public static async Task<Model_Dao_Result<string>> QueueReportAsync(Model_ErrorR
         // Write to file
         await File.WriteAllTextAsync(filePath, sql);
 
-        LoggingUtility.Log($"Error report queued: {fileName}");
+        
         return Model_Dao_Result<string>.Success(filePath, "Report queued for later submission");
     }
     catch (Exception ex)
@@ -299,13 +299,13 @@ public static async Task<Model_Dao_Result<int>> SyncOnStartupAsync()
         // Check database connectivity first
         if (!await IsDatabaseAvailableAsync())
         {
-            LoggingUtility.Log("Database unavailable, skipping startup sync");
+            
             return Model_Dao_Result<int>.Success(0, "Database unavailable");
         }
 
         int successCount = await ProcessPendingFilesAsync();
         
-        LoggingUtility.Log($"Startup sync completed: {successCount} reports submitted");
+        
         return Model_Dao_Result<int>.Success(successCount, $"{successCount} reports synced");
     }
     finally

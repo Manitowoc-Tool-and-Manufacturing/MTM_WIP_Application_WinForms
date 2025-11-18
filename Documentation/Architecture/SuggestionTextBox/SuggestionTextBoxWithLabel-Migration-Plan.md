@@ -136,7 +136,7 @@ AdvancedInventory_Single_TextBox_Qty.TextChanged += (s, e) =>
     InventoryTextBoxQty_TextChanged(AdvancedInventory_Single_TextBox_Qty);
     ValidateQtyTextBox(AdvancedInventory_Single_TextBox_Qty);
     UpdateSingleSaveButtonState();
-    LoggingUtility.Log("Single Qty TextBox changed.");
+    
 };
 
 // Leave event (line 278)
@@ -195,7 +195,7 @@ AdvancedInventory_Single_TextBox_Count.TextChanged += (s, e) =>
 {
     ValidateQtyTextBox(AdvancedInventory_Single_TextBox_Count);
     UpdateSingleSaveButtonState();
-    LoggingUtility.Log("Single Count TextBox changed.");
+    
 };
 
 // Leave event (line 301)
@@ -245,7 +245,7 @@ AdvancedInventory_MultiLoc_TextBox_Qty.TextChanged += (s, e) =>
 {
     ValidateQtyTextBox(AdvancedInventory_MultiLoc_TextBox_Qty);
     UpdateMultiLocSaveButtonState();
-    LoggingUtility.Log("Multi-Loc Qty TextBox changed.");
+    
 };
 
 // Leave event (line 343)

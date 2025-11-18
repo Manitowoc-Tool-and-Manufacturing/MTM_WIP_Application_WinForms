@@ -27,7 +27,7 @@ namespace MTM_WIP_Application_Winforms.Services
         {
             try
             {
-                LoggingUtility.Log("[Splash] Initializing splash screen");
+
                 _splashScreen = new SplashScreenForm();
                 _splashScreen.Shown += async (s, e) => await RunStartupAsync();
                 _splashScreen.FormClosed += SplashScreen_FormClosed;
@@ -53,7 +53,7 @@ namespace MTM_WIP_Application_Winforms.Services
             {
                 if (_mainForm == null || _mainForm.IsDisposed)
                 {
-                    LoggingUtility.Log("[Splash] Exiting application thread - MainForm not available");
+
                     ExitThread();
                 }
             }
@@ -75,7 +75,7 @@ namespace MTM_WIP_Application_Winforms.Services
         {
             try
             {
-                LoggingUtility.Log("[Splash] Starting startup sequence");
+
                 int progress = 0;
                 _splashScreen?.UpdateProgress(progress, "Starting startup sequence...");
                 await Task.Delay(100);
@@ -88,7 +88,7 @@ namespace MTM_WIP_Application_Winforms.Services
                     await LoggingUtility.InitializeLoggingAsync();
                     progress = 10;
                     _splashScreen?.UpdateProgress(progress, "Logging initialized.");
-                    LoggingUtility.Log("[Splash] Logging system initialized");
+
                 }
                 catch (Exception ex)
                 {
@@ -109,7 +109,7 @@ namespace MTM_WIP_Application_Winforms.Services
                     await LoggingUtility.CleanUpOldLogsIfNeededAsync();
                     progress = 20;
                     _splashScreen?.UpdateProgress(progress, "Old logs cleaned up.");
-                    LoggingUtility.Log("[Splash] Log cleanup completed");
+
                 }
                 catch (Exception ex)
                 {
@@ -118,7 +118,7 @@ namespace MTM_WIP_Application_Winforms.Services
                         contextData: new Dictionary<string, object> { ["StartupStep"] = "Log Cleanup", ["IsCritical"] = false },
                         callerName: "RunStartupAsync_LogCleanup",
                         controlName: "StartupSplash_LogCleanup");
-                    LoggingUtility.Log("[Splash] Log cleanup failed, continuing startup");
+
                 }
                 await Task.Delay(50);
 
@@ -130,7 +130,7 @@ namespace MTM_WIP_Application_Winforms.Services
                     await Task.Run(() => Service_OnStartup_AppDataCleaner.WipeAppDataFolders());
                     progress = 30;
                     _splashScreen?.UpdateProgress(progress, "App data folders wiped.");
-                    LoggingUtility.Log("[Splash] App data cleanup completed");
+
                 }
                 catch (Exception ex)
                 {
@@ -139,7 +139,7 @@ namespace MTM_WIP_Application_Winforms.Services
                         contextData: new Dictionary<string, object> { ["StartupStep"] = "App Data Cleanup", ["IsCritical"] = false },
                         callerName: "RunStartupAsync_AppDataCleanup",
                         controlName: "StartupSplash_AppDataCleanup");
-                    LoggingUtility.Log("[Splash] App data cleanup failed, continuing startup");
+
                 }
                 await Task.Delay(50);
 
@@ -151,14 +151,14 @@ namespace MTM_WIP_Application_Winforms.Services
                     var connectivityResult = await VerifyDatabaseConnectivityWithHelperAsync();
                     if (!connectivityResult.IsSuccess)
                     {
-                        LoggingUtility.Log($"[Splash] Database connectivity verification failed: {connectivityResult.StatusMessage}");
+
                         // Error already shown in VerifyDatabaseConnectivityWithHelperAsync
                         _splashScreen?.Close();
                         return;
                     }
                     progress = 40;
                     _splashScreen?.UpdateProgress(progress, "Database connectivity verified.");
-                    LoggingUtility.Log("[Splash] Database connectivity verified during startup");
+
                 }
                 catch (Exception ex)
                 {
@@ -184,7 +184,7 @@ namespace MTM_WIP_Application_Winforms.Services
                     await Helper_UI_ComboBoxes.SetupDataTables();
                     progress = 50;
                     _splashScreen?.UpdateProgress(progress, "Data Tables set up.");
-                    LoggingUtility.Log("[Splash] Data tables setup completed");
+
                 }
                 catch (MySqlException ex)
                 {
@@ -215,7 +215,7 @@ namespace MTM_WIP_Application_Winforms.Services
                     await Model_Application_Variables.ReloadColorCodePartsAsync();
                     progress = 58;
                     _splashScreen?.UpdateProgress(progress, "Color code cache loaded.");
-                    LoggingUtility.Log($"[Splash] ColorCodeParts cache loaded: {Model_Application_Variables.ColorCodeParts.Count} parts flagged");
+
                 }
                 catch (Exception ex)
                 {
@@ -224,7 +224,7 @@ namespace MTM_WIP_Application_Winforms.Services
                         contextData: new Dictionary<string, object> { ["StartupStep"] = "Color Code Cache", ["IsCritical"] = false },
                         callerName: "RunStartupAsync_ColorCodeCache",
                         controlName: "StartupSplash_ColorCodeCache");
-                    LoggingUtility.Log("[Splash] Color code cache loading failed, continuing with empty cache");
+
                 }
                 await Task.Delay(50);
 
@@ -236,7 +236,7 @@ namespace MTM_WIP_Application_Winforms.Services
                     Service_Timer_VersionChecker.Initialize();
                     progress = 65;
                     _splashScreen?.UpdateProgress(progress, "Version checker initialized.");
-                    LoggingUtility.Log("[Splash] Version checker initialized");
+
                 }
                 catch (Exception ex)
                 {
@@ -245,7 +245,7 @@ namespace MTM_WIP_Application_Winforms.Services
                         contextData: new Dictionary<string, object> { ["StartupStep"] = "Version Checker", ["IsCritical"] = false },
                         callerName: "RunStartupAsync_VersionChecker",
                         controlName: "StartupSplash_VersionChecker");
-                    LoggingUtility.Log("[Splash] Version checker initialization failed, continuing startup");
+
                 }
                 await Task.Delay(50);
 
@@ -255,19 +255,19 @@ namespace MTM_WIP_Application_Winforms.Services
                 try
                 {
                     await Core_AppThemes.InitializeThemeSystemAsync(Model_Application_Variables.User);
-                    
+
                     // Initialize ThemeStore cache from Core_AppThemes
                     var themeStore = Program.ServiceProvider?.GetService<IThemeStore>();
                     if (themeStore != null)
                     {
                         await themeStore.LoadFromDatabaseAsync();
-                        LoggingUtility.Log("[Splash] ThemeStore loaded from database");
+
                     }
                     else
                     {
-                        LoggingUtility.Log("[Splash] WARNING: ThemeStore not available in ServiceProvider");
+
                     }
-                    
+
                     // Set ThemeManager's current theme to the user's preference (only if enabled)
                     var themeProvider = Program.ServiceProvider?.GetService<IThemeProvider>();
                     if (themeProvider != null && Model_Application_Variables.ThemeEnabled && !string.IsNullOrEmpty(Model_Application_Variables.ThemeName))
@@ -276,20 +276,20 @@ namespace MTM_WIP_Application_Winforms.Services
                             Model_Application_Variables.ThemeName,
                             Core.Theming.ThemeChangeReason.Login,
                             Model_Application_Variables.User);
-                        LoggingUtility.Log($"[Splash] ThemeManager initialized with '{Model_Application_Variables.ThemeName}' theme");
+
                     }
                     else if (!Model_Application_Variables.ThemeEnabled)
                     {
-                        LoggingUtility.Log("[Splash] Theme system is disabled by user preference - skipping theme application");
+
                     }
                     else
                     {
-                        LoggingUtility.Log("[Splash] WARNING: ThemeProvider not available or theme name is empty");
+
                     }
-                    
+
                     progress = 75;
                     _splashScreen?.UpdateProgress(progress, "Theme system initialized.");
-                    LoggingUtility.Log("[Splash] Theme system initialized");
+
                 }
                 catch (MySqlException ex)
                 {
@@ -309,14 +309,14 @@ namespace MTM_WIP_Application_Winforms.Services
                         contextData: new Dictionary<string, object> { ["StartupStep"] = "Theme System", ["IsCritical"] = false, ["User"] = Model_Application_Variables.User },
                         callerName: "RunStartupAsync_ThemeSystem_General",
                         controlName: "StartupSplash_ThemeSystem");
-                    LoggingUtility.Log("[Splash] Theme system initialization failed, using defaults");
+
                 }
                 await Task.Delay(50);
 
                 // 8. Load user context (no database dependency)
                 progress = 80;
                 _splashScreen?.UpdateProgress(progress, $"User Full Name loaded: {Model_Application_Variables.User}");
-                LoggingUtility.Log($"[Splash] User context loaded: {Model_Application_Variables.User}");
+
                 await Task.Delay(50);
 
                 // 9. Load theme settings with error handling
@@ -327,7 +327,7 @@ namespace MTM_WIP_Application_Winforms.Services
                     await LoadThemeSettingsAsync();
                     progress = 90;
                     _splashScreen?.UpdateProgress(progress, "Theme settings loaded.");
-                    LoggingUtility.Log("[Splash] Theme settings loaded");
+
                 }
                 catch (MySqlException ex)
                 {
@@ -347,14 +347,14 @@ namespace MTM_WIP_Application_Winforms.Services
                         contextData: new Dictionary<string, object> { ["StartupStep"] = "Theme Settings", ["IsCritical"] = false, ["User"] = Model_Application_Variables.User },
                         callerName: "RunStartupAsync_ThemeSettings_General",
                         controlName: "StartupSplash_ThemeSettings");
-                    LoggingUtility.Log("[Splash] Theme settings loading failed, using defaults");
+
                 }
                 await Task.Delay(50);
 
                 // 10. Complete core startup
                 progress = 93;
                 _splashScreen?.UpdateProgress(progress, "Startup sequence completed.");
-                LoggingUtility.Log("[Splash] Core startup sequence completed");
+
                 await Task.Delay(100);
 
                 // 11. Create main form with error handling - CRITICAL STEP
@@ -365,7 +365,7 @@ namespace MTM_WIP_Application_Winforms.Services
                     await Task.Delay(200);
                     _mainForm = new MainForm();
                     _mainForm.FormClosed += (s, e) => ExitThread();
-                    LoggingUtility.Log("[Splash] MainForm created");
+
                 }
                 catch (MySqlException ex)
                 {
@@ -393,7 +393,7 @@ namespace MTM_WIP_Application_Winforms.Services
                 try
                 {
                     ConfigureFormInstances();
-                    LoggingUtility.Log("[Splash] Form instances configured");
+
                 }
                 catch (Exception ex)
                 {
@@ -411,7 +411,7 @@ namespace MTM_WIP_Application_Winforms.Services
                 try
                 {
                     ApplyThemeToMainForm();
-                    LoggingUtility.Log("[Splash] Theme applied to MainForm");
+
                 }
                 catch (Exception ex)
                 {
@@ -420,7 +420,7 @@ namespace MTM_WIP_Application_Winforms.Services
                         contextData: new Dictionary<string, object> { ["StartupStep"] = "Theme Application", ["IsCritical"] = false },
                         callerName: "RunStartupAsync_ThemeApplication",
                         controlName: "StartupSplash_ThemeApplication");
-                    LoggingUtility.Log("[Splash] Theme application failed, continuing with default theme");
+
                 }
 
                 // 14. Show application with error handling - CRITICAL STEP
@@ -431,13 +431,13 @@ namespace MTM_WIP_Application_Winforms.Services
                 try
                 {
                     ShowMainForm();
-                    LoggingUtility.Log("[Splash] MainForm displayed - startup complete");
+
 
                     if (_splashScreen != null)
                     {
                         _splashScreen.FormClosed -= SplashScreen_FormClosed;
                         _splashScreen.Close();
-                        LoggingUtility.Log("[Splash] Splash screen closed");
+
                     }
                 }
                 catch (Exception ex)
@@ -477,7 +477,7 @@ namespace MTM_WIP_Application_Winforms.Services
         {
             try
             {
-                LoggingUtility.Log("[Splash] Starting async database connectivity verification");
+
 
                 // Use consistent timeout settings
                 var connectionStringBuilder = new MySqlConnectionStringBuilder(Model_Application_Variables.ConnectionString)
@@ -495,13 +495,13 @@ namespace MTM_WIP_Application_Winforms.Services
 
                 if (version != null)
                 {
-                    LoggingUtility.Log($"[Splash] Database connectivity verified. MySQL version: {version}");
+
                     return Model_Dao_Result.Success($"Database connectivity verified. MySQL version: {version}");
                 }
                 else
                 {
                     const string errorMsg = "Database version query returned null";
-                    LoggingUtility.Log($"[Splash] {errorMsg}");
+
                     return Model_Dao_Result.Failure(errorMsg);
                 }
             }
@@ -749,7 +749,7 @@ namespace MTM_WIP_Application_Winforms.Services
         {
             try
             {
-                LoggingUtility.Log("[Splash] Loading theme settings");
+
 
                 // Load theme enabled/disabled setting
                 var themeEnabledResult = await Dao_User.GetThemeEnabledAsync(Model_Application_Variables.User);
@@ -760,7 +760,7 @@ namespace MTM_WIP_Application_Winforms.Services
 
                 Model_Application_Variables.UserUiColors = await Core_Themes.GetUserThemeColorsAsync(Model_Application_Variables.User);
 
-                LoggingUtility.Log($"[Splash] Theme settings loaded - Theme Enabled: {Model_Application_Variables.ThemeEnabled}, Font size: {Model_Application_Variables.ThemeFontSize}");
+
             }
             catch (Exception ex)
             {
@@ -776,7 +776,7 @@ namespace MTM_WIP_Application_Winforms.Services
                 // Set defaults if theme loading fails
                 Model_Application_Variables.ThemeEnabled = true;
                 Model_Application_Variables.ThemeFontSize = 9;
-                LoggingUtility.Log("[Splash] Using default theme settings due to loading error");
+
             }
         }
 
@@ -798,7 +798,7 @@ namespace MTM_WIP_Application_Winforms.Services
                 Helper_UI_ComboBoxes.MainFormInstance = _mainForm;
                 Service_Timer_VersionChecker.MainFormInstance = _mainForm;
 
-                LoggingUtility.Log("[Splash] All form instances configured successfully");
+
             }
             catch (Exception ex)
             {
@@ -824,7 +824,7 @@ namespace MTM_WIP_Application_Winforms.Services
                 // here would OVERRIDE the ThemedForm colors with fallback values, causing the
                 // black and white appearance instead of the actual theme colors.
                 // The theme is already applied by ThemedForm.Shown event handler.
-                
+
                 // OLD CODE - DO NOT RE-ENABLE:
                 // if (_mainForm.InvokeRequired)
                 // {
@@ -835,7 +835,7 @@ namespace MTM_WIP_Application_Winforms.Services
                 //     Core_Themes.ApplyTheme(_mainForm);
                 // }
 
-                LoggingUtility.Log("[Splash] MainForm uses ThemedForm - automatic theme application");
+
             }
             catch (Exception ex)
             {
@@ -848,7 +848,7 @@ namespace MTM_WIP_Application_Winforms.Services
                     callerName: "ApplyThemeToMainForm",
                     controlName: "StartupSplash_ApplyThemeToMainForm");
                 // Theme application failure is not critical for startup
-                LoggingUtility.Log("[Splash] Theme application failed, continuing with default theme");
+
             }
         }
 
@@ -870,7 +870,7 @@ namespace MTM_WIP_Application_Winforms.Services
                     _mainForm.Show();
                 }
 
-                LoggingUtility.Log("[Splash] MainForm displayed successfully");
+
             }
             catch (Exception ex)
             {

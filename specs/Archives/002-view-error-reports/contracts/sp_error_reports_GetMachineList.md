@@ -83,7 +83,7 @@ public static async Task<Model_Dao_Result<List<string>>> GetMachineListAsync()
 
         if (!result.IsSuccess)
         {
-            LoggingUtility.Log($"[Dao_ErrorReports] Failed to retrieve machine list: {result.StatusMessage}");
+            
             return Model_Dao_Result<List<string>>.Failure(result.StatusMessage);
         }
 

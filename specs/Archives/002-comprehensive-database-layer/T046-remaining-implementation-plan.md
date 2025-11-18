@@ -289,7 +289,7 @@ catch (MySqlException ex)
 var result = await Dao_QuickButtons.UpdateQuickButtonAsync(...);
 if (!result.IsSuccess)
 {
-    LoggingUtility.Log($"QuickButton update failed: {result.ErrorMessage}");
+    
     MessageBox.Show($"Failed to update quick button: {result.ErrorMessage}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
 }
 ```
@@ -308,7 +308,7 @@ await Dao_QuickButtons.AddOrShiftQuickButtonAsync(user, partId, operation, quant
 var result = await Dao_QuickButtons.AddOrShiftQuickButtonAsync(user, partId, operation, quantity);
 if (!result.IsSuccess)
 {
-    LoggingUtility.Log($"Failed to add to quick buttons: {result.ErrorMessage}");
+    
     // Non-critical error - continue execution
 }
 ```
@@ -339,7 +339,7 @@ else
     Model_Application_Variables.UserFullName = Model_Application_Variables.User; // Fallback
     if (!userNameResult.IsSuccess)
     {
-        LoggingUtility.Log($"Failed to load user full name: {userNameResult.ErrorMessage}");
+        
     }
 }
 ```
@@ -364,14 +364,14 @@ if (versionResult.IsSuccess)
 var hideChangeLogResult = await Dao_User.SetHideChangeLogAsync(Model_Application_Variables.User, "false");
 if (!hideChangeLogResult.IsSuccess)
 {
-    LoggingUtility.Log($"Failed to set hide changelog: {hideChangeLogResult.ErrorMessage}");
+    
 }
 
 // Line 23 - SetLastShownVersionAsync
 var setVersionResult = await Dao_User.SetLastShownVersionAsync(Model_Application_Variables.User, Model_Application_Variables.Version);
 if (!setVersionResult.IsSuccess)
 {
-    LoggingUtility.Log($"Failed to set last shown version: {setVersionResult.ErrorMessage}");
+    
 }
 
 // Line 26-30 - Multiple Get* methods
@@ -417,7 +417,7 @@ if (fontSizeResult.IsSuccess)
 else
 {
     Model_Application_Variables.ThemeFontSize = 9; // Default fallback
-    LoggingUtility.Log($"Failed to load theme font size: {fontSizeResult.ErrorMessage}");
+    
 }
 ```
 

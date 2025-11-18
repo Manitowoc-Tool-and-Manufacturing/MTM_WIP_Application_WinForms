@@ -51,7 +51,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
                 ConfigureSuggestionTextBoxes();
                 WireUpEventHandlers();
 
-                LoggingUtility.Log($"[{nameof(Control_Edit_PartID)}] Control initialized successfully");
+
             }
             catch (Exception ex)
             {
@@ -242,7 +242,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
                 // Validate that a part is selected
                 if (_currentPart == null)
                 {
-                    LoggingUtility.Log($"[{nameof(Control_Edit_PartID)}] Save attempted with no part selected");
+
                     return;
                 }
 
@@ -273,7 +273,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
                 ResetControlsAndRefreshBindings();
                 PartUpdated?.Invoke(this, EventArgs.Empty);
 
-                LoggingUtility.Log($"[{nameof(Control_Edit_PartID)}] Part updated successfully");
+
             }
             catch (Exception ex)
             {
@@ -310,7 +310,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
                 SetFormEnabled(false);
                 Control_Edit_PartID_TextBox_Part.Focus();
 
-                LoggingUtility.Log($"[{nameof(Control_Edit_PartID)}] Control reset to initial state");
+
             }
             catch (Exception ex)
             {
@@ -392,8 +392,8 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
                     $"Part number '{newPartNumber}' already exists. Please use a different part number.");
                 itemNumberTextBox.Focus();
                 itemNumberTextBox.SelectAll();
-                
-                LoggingUtility.Log($"[{nameof(Control_Edit_PartID)}] Duplicate part number validation failed: {newPartNumber}");
+
+
                 return false;
             }
 
@@ -456,7 +456,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
         {
             try
             {
-                LoggingUtility.Log($"[{nameof(Control_Edit_PartID)}] Part selected: {selectedPart}");
+
 
                 _currentPart = null;
                 SetFormEnabled(false);
@@ -481,7 +481,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
                 LoadPartData();
                 SetFormEnabled(true);
 
-                LoggingUtility.Log($"[{nameof(Control_Edit_PartID)}] Part '{selectedPart}' loaded successfully");
+
             }
             catch (Exception ex)
             {
@@ -545,9 +545,9 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             // If RequiresColorCode changed, reload cache
             if (requiresColorCode != _originalRequiresColorCode)
             {
-                LoggingUtility.Log($"[{nameof(Control_Edit_PartID)}] RequiresColorCode changed for part {itemNumber}: {_originalRequiresColorCode} -> {requiresColorCode}");
+
                 await Model_Application_Variables.ReloadColorCodePartsAsync();
-                LoggingUtility.Log($"[{nameof(Control_Edit_PartID)}] ColorCodeParts cache reloaded: {Model_Application_Variables.ColorCodeParts.Count} parts flagged");
+
             }
         }
 
@@ -576,7 +576,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
                 SetFormEnabled(false);
                 Control_Edit_PartID_TextBox_Part.Focus();
 
-                LoggingUtility.Log($"[{nameof(Control_Edit_PartID)}] Controls reset after save");
+
             }
             catch (Exception ex)
             {
@@ -644,33 +644,33 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
          * Compliance Score: 100%
          * Critical Issues Fixed: 0
          * Warnings Fixed: 0
-         * 
+         *
          * This file is FULLY COMPLIANT with MTM Constitution requirements.
          * No mandatory fixes required.
-         * 
+         *
          * ═══════════════════════════════════════════════════════════════════════════════
          * PROPOSED IMPROVEMENTS
          * ═══════════════════════════════════════════════════════════════════════════════
-         * 
+         *
          * Enhancement suggestions have been extracted to dedicated markdown files for
          * better organization and to avoid cluttering the codebase.
-         * 
+         *
          * SUGGESTION FILES:
          * - File-Only: .github/suggestions/Control_Edit_PartID-suggestions.md
          * - System (Performance): .github/suggestions/Helper_SuggestionTextBox-suggestions.md
          * - Speckit: .github/suggestions/speckit/ (multiple feature suggestions)
-         * 
+         *
          * SUGGESTION SUMMARY (Total: 38 suggestions):
          * - File-Only Suggestions: 22 (UI, UX, Validation, Accessibility)
          * - System Suggestions: 8 (Helper methods, Cache management, Error handling)
          * - Multi-File (Speckit) Suggestions: 8 (Architecture, Security, Batch Operations)
-         * 
+         *
          * TO IMPLEMENT:
          * 1. Review suggestion files linked above
          * 2. Prioritize based on Priority (1-10) and Scope (1-10) ratings
          * 3. For Speckit suggestions, run `/speckit.specify` to create feature branch
          * 4. Implement and test incrementally
-         * 
+         *
          * ═══════════════════════════════════════════════════════════════════════════════
          */
 

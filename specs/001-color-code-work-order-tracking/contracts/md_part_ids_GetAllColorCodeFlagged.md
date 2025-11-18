@@ -131,12 +131,12 @@ public static async Task ReloadColorCodeCachesAsync()
             .Select(row => row["PartID"].ToString()!)
             .ToList();
             
-        LoggingUtility.Log($"Loaded {Model_Application_Variables.ColorFlaggedParts.Count} color-flagged parts into cache");
+        
     }
     else
     {
         Model_Application_Variables.ColorFlaggedParts = new List<string>();
-        LoggingUtility.Log("No color-flagged parts found (cache empty)");
+        
     }
 }
 ```

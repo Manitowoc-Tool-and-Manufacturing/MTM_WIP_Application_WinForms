@@ -72,29 +72,29 @@ internal sealed class Model_Transactions_ViewModel
     {
         try
         {
-            LoggingUtility.Log($"[Model_Transactions_ViewModel] SearchTransactionsAsync starting. User: {userName}, IsAdmin: {isAdmin}, Page: {page}");
-            LoggingUtility.Log($"[Model_Transactions_ViewModel] Criteria: {criteria}");
+
+
 
             // Validate criteria
             if (criteria == null)
             {
-                LoggingUtility.Log("[Model_Transactions_ViewModel] ERROR: Criteria is null");
+
                 return Model_Dao_Result<Model_Transactions_SearchResult>.Failure("Search criteria cannot be null");
             }
 
             if (!criteria.IsValid())
             {
-                LoggingUtility.Log("[Model_Transactions_ViewModel] ERROR: Criteria is invalid (no filters specified)");
+
                 return Model_Dao_Result<Model_Transactions_SearchResult>.Failure("At least one search filter must be specified");
             }
 
             if (!criteria.IsDateRangeValid())
             {
-                LoggingUtility.Log($"[Model_Transactions_ViewModel] ERROR: Invalid date range. From: {criteria.DateFrom}, To: {criteria.DateTo}");
+
                 return Model_Dao_Result<Model_Transactions_SearchResult>.Failure("Date range is invalid: From date must be before To date");
             }
 
-            LoggingUtility.Log("[Model_Transactions_ViewModel] Calling DAO SearchAsync...");
+
 
             // Execute search via DAO
             var daoResult = await _dao.SearchAsync(
@@ -105,11 +105,11 @@ internal sealed class Model_Transactions_ViewModel
                 PageSize
             ).ConfigureAwait(false);
 
-            LoggingUtility.Log($"[Model_Transactions_ViewModel] DAO returned. Success: {daoResult.IsSuccess}, DataCount: {daoResult.Data?.Count ?? 0}");
+
 
             if (!daoResult.IsSuccess)
             {
-                LoggingUtility.Log($"[Model_Transactions_ViewModel] DAO search failed: {daoResult.ErrorMessage}");
+
                 return Model_Dao_Result<Model_Transactions_SearchResult>.Failure(daoResult.ErrorMessage, daoResult.Exception);
             }
 
@@ -122,14 +122,14 @@ internal sealed class Model_Transactions_ViewModel
                 PageSize = PageSize
             };
 
-            LoggingUtility.Log($"[Model_Transactions_ViewModel] SearchResult created:");
-            LoggingUtility.Log($"  - TotalRecordCount: {searchResult.TotalRecordCount}");
-            LoggingUtility.Log($"  - CurrentPage: {searchResult.CurrentPage}");
-            LoggingUtility.Log($"  - PageSize: {searchResult.PageSize}");
-            LoggingUtility.Log($"  - TotalPages: {searchResult.TotalPages}");
-            LoggingUtility.Log($"  - HasPreviousPage: {searchResult.HasPreviousPage}");
-            LoggingUtility.Log($"  - HasNextPage: {searchResult.HasNextPage}");
-            LoggingUtility.Log($"  - Transactions.Count: {searchResult.Transactions.Count}");
+
+
+
+
+
+
+
+
 
             // Update current state
             _currentCriteria = criteria;
@@ -142,7 +142,7 @@ internal sealed class Model_Transactions_ViewModel
         }
         catch (Exception ex)
         {
-            LoggingUtility.Log($"[Model_Transactions_ViewModel] SearchTransactionsAsync failed. Criteria: {criteria?.ToString() ?? "null"}");
+
             LoggingUtility.LogApplicationError(ex);
             return Model_Dao_Result<Model_Transactions_SearchResult>.Failure(
                 "Failed to search transactions",
@@ -201,7 +201,7 @@ internal sealed class Model_Transactions_ViewModel
         }
         catch (Exception ex)
         {
-            LoggingUtility.Log("[Model_Transactions_ViewModel] LoadPartsAsync failed");
+
             LoggingUtility.LogApplicationError(ex);
             return Model_Dao_Result<List<string>>.Failure("Failed to load parts", ex);
         }
@@ -275,7 +275,7 @@ internal sealed class Model_Transactions_ViewModel
         }
         catch (Exception ex)
         {
-            LoggingUtility.Log($"[Model_Transactions_ViewModel] LoadUsersAsync failed. CurrentUser: {currentUser}, IsAdmin: {isAdmin}");
+
             LoggingUtility.LogApplicationError(ex);
             return Model_Dao_Result<List<string>>.Failure("Failed to load users", ex);
         }
@@ -290,12 +290,12 @@ internal sealed class Model_Transactions_ViewModel
     {
         try
         {
-            LoggingUtility.Log("[Model_Transactions_ViewModel] LoadLocationsAsync starting...");
+
 
             // Return cached data if available
             if (_cachedLocations != null)
             {
-                LoggingUtility.Log($"[Model_Transactions_ViewModel] Returning {_cachedLocations.Count} cached locations");
+
                 return Model_Dao_Result<List<string>>.Success(
                     _cachedLocations,
                     $"Retrieved {_cachedLocations.Count} locations from cache"
@@ -303,29 +303,29 @@ internal sealed class Model_Transactions_ViewModel
             }
 
             // Load locations from database
-            LoggingUtility.Log("[Model_Transactions_ViewModel] Calling Dao_Location.GetAllLocations...");
+
             var result = await Dao_Location.GetAllLocations().ConfigureAwait(false);
 
-            LoggingUtility.Log($"[Model_Transactions_ViewModel] DAO returned. Success: {result.IsSuccess}, HasData: {result.Data != null}");
+
 
             if (!result.IsSuccess || result.Data == null)
             {
-                LoggingUtility.Log($"[Model_Transactions_ViewModel] Failed to load locations: {result.ErrorMessage}");
+
                 return Model_Dao_Result<List<string>>.Failure(
                     result.ErrorMessage ?? "Failed to load locations",
                     result.Exception
                 );
             }
 
-            LoggingUtility.Log($"[Model_Transactions_ViewModel] DataTable has {result.Data.Rows.Count} rows, {result.Data.Columns.Count} columns");
-            
+
+
             // Log column names to debug the issue
             var columnNames = new List<string>();
             foreach (System.Data.DataColumn col in result.Data.Columns)
             {
                 columnNames.Add(col.ColumnName);
             }
-            LoggingUtility.Log($"[Model_Transactions_ViewModel] DataTable columns: {string.Join(", ", columnNames)}");
+
 
             // Extract location codes from DataTable
             var locations = new List<string>();
@@ -339,20 +339,20 @@ internal sealed class Model_Transactions_ViewModel
                         locations.Add(locationCode);
                     }
                 }
-                
-                LoggingUtility.Log($"[Model_Transactions_ViewModel] Extracted {locations.Count} non-empty locations from DataTable");
+
+
             }
             catch (ArgumentException argEx)
             {
-                LoggingUtility.Log($"[Model_Transactions_ViewModel] ArgumentException extracting locations: {argEx.Message}");
-                LoggingUtility.Log($"[Model_Transactions_ViewModel] ArgumentException ParamName: {argEx.ParamName}");
+
+
                 throw;
             }
 
             // Cache results
             _cachedLocations = locations;
 
-            LoggingUtility.Log($"[Model_Transactions_ViewModel] LoadLocationsAsync complete: {locations.Count} locations cached");
+
 
             return Model_Dao_Result<List<string>>.Success(
                 locations,
@@ -361,8 +361,8 @@ internal sealed class Model_Transactions_ViewModel
         }
         catch (Exception ex)
         {
-            LoggingUtility.Log($"[Model_Transactions_ViewModel] LoadLocationsAsync failed with exception: {ex.GetType().Name}");
-            LoggingUtility.Log($"[Model_Transactions_ViewModel] Exception message: {ex.Message}");
+
+
             LoggingUtility.LogApplicationError(ex);
             return Model_Dao_Result<List<string>>.Failure("Failed to load locations", ex);
         }
@@ -377,11 +377,11 @@ internal sealed class Model_Transactions_ViewModel
     {
         try
         {
-            LoggingUtility.Log("[Model_Transactions_ViewModel] LoadOperationsAsync starting...");
+
 
             if (_cachedOperations != null)
             {
-                LoggingUtility.Log($"[Model_Transactions_ViewModel] Returning {_cachedOperations.Count} cached operations");
+
                 return Model_Dao_Result<List<string>>.Success(
                     _cachedOperations,
                     $"Retrieved {_cachedOperations.Count} operations from cache"
@@ -392,7 +392,7 @@ internal sealed class Model_Transactions_ViewModel
 
             if (!result.IsSuccess || result.Data == null)
             {
-                LoggingUtility.Log($"[Model_Transactions_ViewModel] Failed to load operations: {result.ErrorMessage}");
+
                 return Model_Dao_Result<List<string>>.Failure(
                     result.ErrorMessage ?? "Failed to load operations",
                     result.Exception
@@ -411,7 +411,7 @@ internal sealed class Model_Transactions_ViewModel
 
             _cachedOperations = operations;
 
-            LoggingUtility.Log($"[Model_Transactions_ViewModel] LoadOperationsAsync complete: {operations.Count} operations cached");
+
 
             return Model_Dao_Result<List<string>>.Success(
                 operations,
@@ -420,7 +420,7 @@ internal sealed class Model_Transactions_ViewModel
         }
         catch (Exception ex)
         {
-            LoggingUtility.Log("[Model_Transactions_ViewModel] LoadOperationsAsync failed");
+
             LoggingUtility.LogApplicationError(ex);
             return Model_Dao_Result<List<string>>.Failure("Failed to load operations", ex);
         }
@@ -437,7 +437,7 @@ internal sealed class Model_Transactions_ViewModel
     public async Task<Model_Dao_Result<bool>> PrintAsync(List<Model_Transactions_Core>? transactions = null)
     {
         await Task.CompletedTask; // Satisfy async signature
-        
+
         // NOTE: ViewModels should not have UI dependencies (DataGridView).
         // The calling Form/Control should directly invoke:
         //
@@ -445,9 +445,9 @@ internal sealed class Model_Transactions_ViewModel
         //   printForm.ShowDialog();
         //
         // This keeps the ViewModel testable and UI-independent.
-        
+
         return Model_Dao_Result<bool>.Success(
-            true, 
+            true,
             "Print should be invoked from the Form/Control using new Forms.Shared.PrintForm(dataGridView)"
         );
     }
@@ -471,7 +471,7 @@ internal sealed class Model_Transactions_ViewModel
         try
         {
             var dataToExport = transactions ?? CurrentResults?.Transactions ?? new List<Model_Transactions_Core>();
-            
+
             if (dataToExport.Count == 0)
             {
                 return Model_Dao_Result<string>.Failure("No transactions to export");
@@ -529,7 +529,7 @@ internal sealed class Model_Transactions_ViewModel
                 workbook.SaveAs(filePath);
             }).ConfigureAwait(false);
 
-            LoggingUtility.Log($"[Model_Transactions_ViewModel] Successfully exported {dataToExport.Count} transactions to {filePath}");
+
             return Model_Dao_Result<string>.Success(filePath, $"Exported {dataToExport.Count} transactions");
         }
         catch (Exception ex)
@@ -558,7 +558,7 @@ internal sealed class Model_Transactions_ViewModel
             var isAdmin = Model_Application_Variables.UserTypeAdmin;
 
             var result = await _dao.GetAnalyticsAsync(userName, isAdmin, fromDate, toDate);
-            
+
             if (!result.IsSuccess || result.Data == null)
             {
                 return Model_Dao_Result<Model_Transactions_Core_Analytics>.Failure(result.ErrorMessage ?? "Failed to retrieve analytics", result.Exception);

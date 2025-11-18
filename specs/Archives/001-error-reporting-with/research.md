@@ -180,7 +180,7 @@ private async Task<bool> ExecuteSqlFileAsync(string filePath)
         // Step 3: Check for existing report (idempotent)
         if (await ReportExistsAsync(fileInfo.UserName, fileInfo.Timestamp))
         {
-            LoggingUtility.Log($"Report already exists, skipping: {filePath}");
+            
             // Move to Sent folder (already processed)
             File.Move(filePath, GetArchivePath(filePath));
             return true;
@@ -304,7 +304,7 @@ private async Task ProcessQueuedFilesAsync()
         }
     }
     
-    LoggingUtility.Log($"Queue sync complete: {successCount} success, {failureCount} failures");
+    
 }
 
 private void HandleCorruptFile(string filePath, Exception ex)
@@ -373,7 +373,7 @@ private async Task CleanupOldReportsAsync()
             try
             {
                 File.Delete(file);
-                LoggingUtility.Log($"Deleted old sent report: {file}");
+                
             }
             catch (Exception ex)
             {
@@ -389,7 +389,7 @@ private async Task CleanupOldReportsAsync()
         
         if (stalePending.Any())
         {
-            LoggingUtility.Log($"Warning: {stalePending.Count} stale pending reports detected (>30 days old)");
+            
             // Optional: Move to .stale extension or separate folder for admin review
         }
     }

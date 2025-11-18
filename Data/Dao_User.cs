@@ -165,7 +165,7 @@ internal static class Dao_User
         try
         {
             var result = await GetSettingsJsonInternalAsync("Theme_Enabled", user, connection, transaction);
-            
+
             // Parse the value - default to true if not set or invalid
             bool enabled = string.IsNullOrEmpty(result) || result.Equals("true", StringComparison.OrdinalIgnoreCase);
 
@@ -203,7 +203,7 @@ internal static class Dao_User
         catch (Exception ex)
         {
             LoggingUtility.LogDatabaseError(ex);
-            LoggingUtility.Log($"SetThemeEnabledAsync failed with exception: {ex.Message}");
+
 
             Service_DebugTracer.TraceMethodExit(null, controlName: "Dao_User");
             return Model_Dao_Result.Failure($"Error setting Theme_Enabled for user {user}", ex);
@@ -232,7 +232,7 @@ internal static class Dao_User
         catch (Exception ex)
         {
             LoggingUtility.LogDatabaseError(ex);
-            LoggingUtility.Log($"GetThemeFontSizeAsync failed with exception: {ex.Message}");
+
 
             Service_DebugTracer.TraceMethodExit(null, controlName: "Dao_User");
             return Model_Dao_Result<int?>.Failure($"Error retrieving Theme_FontSize for user {user}", ex);
@@ -589,7 +589,7 @@ internal static class Dao_User
         catch (Exception ex)
         {
             LoggingUtility.LogDatabaseError(ex);
-            LoggingUtility.Log($"GetUserFullNameAsync failed with exception: {ex.Message}");
+
 
             Service_DebugTracer.TraceMethodExit(null, controlName: "Dao_User");
             return Model_Dao_Result<string?>.Failure($"Error retrieving full name for user {user}", ex);
@@ -649,7 +649,7 @@ internal static class Dao_User
                         {
                             // JSON parsing failed - log and return empty string
                             // This is expected when SettingsJson doesn't contain the requested field
-                            LoggingUtility.Log($"[Dao_User.GetSettingsJsonInternalAsync] JSON parsing failed for field '{field}', user '{user}': {ex.Message}");
+
                             Service_DebugTracer.TraceMethodExit(string.Empty, controlName: "Dao_User");
                             return string.Empty;
                         }
@@ -711,7 +711,7 @@ internal static class Dao_User
         catch (Exception ex)
         {
             LoggingUtility.LogDatabaseError(ex);
-            LoggingUtility.Log($"SetSettingsJsonAsync failed with exception: {ex.Message}");
+
 
             Service_DebugTracer.TraceMethodExit(null, controlName: "Dao_User");
             return Model_Dao_Result.Failure($"Error setting theme JSON for user {userId}", ex);
@@ -762,7 +762,7 @@ internal static class Dao_User
         catch (Exception ex)
         {
             LoggingUtility.LogDatabaseError(ex);
-            LoggingUtility.Log($"SetGridViewSettingsJsonAsync failed with exception: {ex.Message}");
+
 
             Service_DebugTracer.TraceMethodExit(null, controlName: "Dao_User");
             return Model_Dao_Result.Failure($"Error setting grid view settings for {dgvName}", ex);
@@ -805,7 +805,7 @@ internal static class Dao_User
         catch (Exception ex)
         {
             LoggingUtility.LogDatabaseError(ex);
-            LoggingUtility.Log($"GetGridViewSettingsJsonAsync failed with exception: {ex.Message}");
+
 
             Service_DebugTracer.TraceMethodExit("", controlName: "Dao_User");
             return Model_Dao_Result<string>.Failure($"Error retrieving grid view settings for user {userId}", ex);
@@ -841,7 +841,7 @@ internal static class Dao_User
 
             if (!result.IsSuccess)
             {
-                LoggingUtility.Log($"SetUserSettingInternalAsync failed: {result.ErrorMessage}");
+
             }
 
             Service_DebugTracer.TraceMethodExit(controlName: "Dao_User");
@@ -849,7 +849,7 @@ internal static class Dao_User
         catch (Exception ex)
         {
             LoggingUtility.LogDatabaseError(ex);
-            LoggingUtility.Log($"SetUserSettingInternalAsync failed with exception: {ex.Message}");
+
 
             Service_DebugTracer.TraceMethodExit(controlName: "Dao_User");
         }
@@ -1227,7 +1227,7 @@ internal static class Dao_User
         catch (Exception ex)
         {
             LoggingUtility.LogDatabaseError(ex);
-            LoggingUtility.Log($"GetShortcutsJsonAsync failed with exception: {ex.Message}");
+
 
             Service_DebugTracer.TraceMethodExit("", controlName: "Dao_User");
             return Model_Dao_Result<string>.Failure($"Error retrieving shortcuts JSON for user {userId}", ex);
@@ -1276,7 +1276,7 @@ internal static class Dao_User
         catch (Exception ex)
         {
             LoggingUtility.LogDatabaseError(ex);
-            LoggingUtility.Log($"SetShortcutsJsonAsync failed with exception: {ex.Message}");
+
 
             Service_DebugTracer.TraceMethodExit(null, controlName: "Dao_User");
             return Model_Dao_Result.Failure($"Error setting shortcuts JSON for user {userId}", ex);
@@ -1307,13 +1307,13 @@ internal static class Dao_User
         catch (Exception ex)
         {
             LoggingUtility.LogDatabaseError(ex);
-            LoggingUtility.Log($"SetThemeNameAsync failed with exception: {ex.Message}");
+
 
             Service_DebugTracer.TraceMethodExit(null, controlName: "Dao_User");
             return Model_Dao_Result.Failure($"Error setting theme name for user {user}", ex);
         }
     }
-    
+
     /// <summary>
     /// Sets a single field in the user's SettingsJson.
     /// </summary>
@@ -1326,10 +1326,10 @@ internal static class Dao_User
     {
         // Use the existing usr_ui_settings_SetThemeJson procedure which merges JSON
         string connectionString = Model_Application_Variables.BootstrapConnectionString;
-        
+
         // Create a simple JSON object with just this field
         string themeJson = $"{{\"{field}\": \"{value}\"}}";
-        
+
         // This procedure will merge the JSON with existing settings
         await Helper_Database_StoredProcedure.ExecuteNonQueryWithStatusAsync(
             connectionString,

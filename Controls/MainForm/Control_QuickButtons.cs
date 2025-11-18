@@ -29,7 +29,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
 
         public void SetProgressControls(ToolStripProgressBar progressBar, ToolStripStatusLabel statusLabel)
         {
-            _progressHelper = Helper_StoredProcedureProgress.Create(progressBar, statusLabel, 
+            _progressHelper = Helper_StoredProcedureProgress.Create(progressBar, statusLabel,
                 this.FindForm() ?? throw new InvalidOperationException("Control must be added to a form"));
         }
 
@@ -61,10 +61,10 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                     ["RowCount"] = 10,
                     ["LayoutType"] = "TableLayoutPanel"
                 });
-            
+
             Control_QuickButtons_TableLayoutPanel_Main.RowCount = 10;
             Control_QuickButtons_TableLayoutPanel_Main.RowStyles.Clear();
-            
+
             for (int i = 0; i < 10; i++)
             {
                 Control_QuickButtons_TableLayoutPanel_Main.RowStyles.Add(new RowStyle(SizeType.Percent, 10F));
@@ -89,17 +89,17 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                     UseMnemonic = false,
                     ContextMenuStrip = Control_QuickButtons_ContextMenu
                 };
-                
+
                 btn.Click += QuickButton_Click;
                 quickButtons.Add(btn);
-                
+
                 // Add button to its proper row in the TableLayoutPanel
                 Control_QuickButtons_TableLayoutPanel_Main.Controls.Add(btn, 0, i);
             }
 
             this.Resize += Control_QuickButtons_Resize;
 
-            this.Load += async (s, e) => 
+            this.Load += async (s, e) =>
             {
                 try
                 {
@@ -139,7 +139,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                         });
                 }
             };
-            
+
             Service_DebugTracer.TraceUIAction("QUICK_BUTTONS_POST_CONSTRUCTOR", nameof(Control_QuickButtons),
                 new Dictionary<string, object>
                 {
@@ -173,7 +173,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                     string partId = tag.partId?.ToString() ?? "";
                     string operation = tag.operation?.ToString() ?? "";
                     int quantity = tag.quantity != null ? Convert.ToInt32(tag.quantity) : 0;
-                    
+
                     // Repopulate with adaptive font sizes based on new button height
                     PopulateQuickButtonLayout(btn, partId, operation, quantity);
                 }
@@ -184,11 +184,11 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
         {
             try
             {
-                LoggingUtility.Log($"");
-                LoggingUtility.Log($"[QuickButtons] ════════════════════════════════════════════════════════════");
-                LoggingUtility.Log($"[QuickButtons] LoadLast10Transactions STARTED");
-                LoggingUtility.Log($"[QuickButtons]   User: {currentUser}");
-                LoggingUtility.Log($"[QuickButtons] ════════════════════════════════════════════════════════════");
+
+
+
+
+
 
                 Service_DebugTracer.TraceMethodEntry(new Dictionary<string, object>
                 {
@@ -201,19 +201,19 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                 if (string.IsNullOrEmpty(currentUser)) { currentUser = string.Empty; }
 
                 // STEP 1: Cleanup duplicates and gaps BEFORE loading
-                LoggingUtility.Log($"[QuickButtons] STEP 1: Running cleanup before loading");
+
                 var cleanupResult = await Dao_QuickButtons.CleanupGapsAndDuplicatesAsync(currentUser);
                 if (!cleanupResult.IsSuccess)
                 {
-                    LoggingUtility.Log($"[QuickButtons] STEP 1: ⚠ Cleanup failed: {cleanupResult.ErrorMessage}");
+
                 }
                 else
                 {
-                    LoggingUtility.Log($"[QuickButtons] STEP 1: ✓ Cleanup completed: {cleanupResult.StatusMessage}");
+
                 }
 
                 // STEP 2: Load data from database
-                LoggingUtility.Log($"[QuickButtons] STEP 2: Loading data from database");
+
                 var dataResult = await Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync(
                     Model_Application_Variables.BootstrapConnectionString,
                     "sys_last_10_transactions_Get_ByUser",
@@ -221,10 +221,10 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                     null // No progress helper for this method
                 );
 
-                Service_DebugTracer.TraceBusinessLogic("QUICK_BUTTONS_DATA_RESULT", 
+                Service_DebugTracer.TraceBusinessLogic("QUICK_BUTTONS_DATA_RESULT",
                     inputData: new { User = currentUser },
-                    outputData: new 
-                    { 
+                    outputData: new
+                    {
                         IsSuccess = dataResult.IsSuccess,
                         RowCount = dataResult.Data?.Rows.Count ?? 0,
                         ErrorMessage = dataResult.ErrorMessage
@@ -232,8 +232,8 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
 
                 if (!dataResult.IsSuccess || dataResult.Data == null)
                 {
-                    LoggingUtility.Log($"[QuickButtons] STEP 2: ✗ Failed to load or no data: {dataResult.ErrorMessage}");
-                    
+
+
                     Service_DebugTracer.TraceBusinessLogic("QUICK_BUTTONS_LOAD_FAILED",
                         inputData: new { User = currentUser },
                         outputData: new { ErrorMessage = dataResult.ErrorMessage });
@@ -241,7 +241,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                     // Clear all buttons if no data can be loaded
                     if (quickButtons != null)
                     {
-                        LoggingUtility.Log($"[QuickButtons] STEP 2: Clearing all {quickButtons.Count} buttons");
+
                         for (int j = 0; j < quickButtons.Count; j++)
                         {
                             quickButtons[j].Text = string.Empty;
@@ -258,34 +258,34 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                         RefreshButtonLayout();
                     }
 
-                    LoggingUtility.Log($"[QuickButtons] LoadLast10Transactions COMPLETED (no data)");
-                    LoggingUtility.Log($"[QuickButtons] ════════════════════════════════════════════════════════════");
+
+
                     Service_DebugTracer.TraceMethodExit(null, nameof(Control_QuickButtons), nameof(LoadLast10Transactions));
                     return;
                 }
 
                 var dataTable = dataResult.Data;
-                LoggingUtility.Log($"[QuickButtons] STEP 2: ✓ Retrieved {dataTable.Rows.Count} button(s) from database");
-                
+
+
                 // STEP 3: Populate UI buttons with database data
-                LoggingUtility.Log($"[QuickButtons] STEP 3: Populating UI buttons");
+
                 int i = 0;
-                
+
                 // Fill buttons with data from DB
                 foreach (System.Data.DataRow row in dataTable.Rows)
                 {
                     if (i >= quickButtons?.Count) break;
-                    
+
                     string? partId = row["PartID"] == DBNull.Value ? null : row["PartID"].ToString();
                     string? operation = row["Operation"] == DBNull.Value ? null : row["Operation"].ToString();
                     int? quantity = row["Quantity"] == DBNull.Value ? null :
                         row["Quantity"] is int q ? q : Convert.ToInt32(row["Quantity"]);
-                    
+
                     // Always set position 1-10, no duplicates
                     int displayPosition = i + 1;
 
-                    LoggingUtility.Log($"[QuickButtons] STEP 3:   Button {displayPosition}: {partId ?? "NULL"} + Op:{operation ?? "NULL"} (Qty: {quantity?.ToString() ?? "NULL"})");
-                    
+
+
                     if (quickButtons != null)
                     {
                         // Create structured layout inside button
@@ -298,24 +298,24 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                             quickButtons[i].Controls.Clear();
                             quickButtons[i].Text = string.Empty;
                         }
-                        
+
                         string tooltipText = partId != null && operation != null && quantity != null
                             ? $"Part ID: {partId}, Operation: {operation}, Quantity: {quantity}\nPosition: {displayPosition}"
                             : $"Position: {displayPosition}";
                         Control_QuickButtons_Tooltip.SetToolTip(quickButtons[i], tooltipText);
-                        
+
                         quickButtons[i].Tag = new { partId, operation, quantity, position = displayPosition };
                         quickButtons[i].Visible = partId != null && operation != null && quantity != null;
                     }
                     i++;
                 }
 
-                LoggingUtility.Log($"[QuickButtons] STEP 3: Filled {i} button(s) with data");
+
 
                 // Clear remaining buttons
                 if (quickButtons != null && i < quickButtons.Count)
                 {
-                    LoggingUtility.Log($"[QuickButtons] STEP 3: Clearing remaining {quickButtons.Count - i} button(s)");
+
                     for (; i < quickButtons.Count; i++)
                     {
                         quickButtons[i].Controls.Clear();
@@ -333,33 +333,33 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                 }
 
                 // STEP 4: Refresh UI layout
-                LoggingUtility.Log($"[QuickButtons] STEP 4: Refreshing button layout");
+
                 if (quickButtons != null)
                 {
                     RefreshButtonLayout();
                     int visibleCount = quickButtons.Count(b => b.Visible);
-                    LoggingUtility.Log($"[QuickButtons] STEP 4: Layout refreshed - {visibleCount} visible button(s)");
+
                 }
 
-                LoggingUtility.Log($"[QuickButtons] ╔══════════════════════════════════════════════════════════╗");
-                LoggingUtility.Log($"[QuickButtons] ║ LoadLast10Transactions COMPLETED SUCCESSFULLY");
-                LoggingUtility.Log($"[QuickButtons] ║ User: {currentUser}");
-                LoggingUtility.Log($"[QuickButtons] ║ Visible Buttons: {quickButtons?.Count(b => b.Visible) ?? 0}");
-                LoggingUtility.Log($"[QuickButtons] ╚══════════════════════════════════════════════════════════╝");
-                LoggingUtility.Log($"[QuickButtons] ════════════════════════════════════════════════════════════");
-                LoggingUtility.Log($"");
-                
-                Service_DebugTracer.TraceMethodExit(new { VisibleButtons = quickButtons?.Count(b => b.Visible) ?? 0 }, 
+
+
+
+
+
+
+
+
+                Service_DebugTracer.TraceMethodExit(new { VisibleButtons = quickButtons?.Count(b => b.Visible) ?? 0 },
                     nameof(Control_QuickButtons), nameof(LoadLast10Transactions));
             }
             catch (Exception ex)
             {
-                LoggingUtility.Log($"[QuickButtons] ╔══════════════════════════════════════════════════════════╗");
-                LoggingUtility.Log($"[QuickButtons] ║ ERROR in LoadLast10Transactions");
-                LoggingUtility.Log($"[QuickButtons] ║ {ex.Message}");
-                LoggingUtility.Log($"[QuickButtons] ╚══════════════════════════════════════════════════════════╝");
+
+
+
+
                 LoggingUtility.LogApplicationError(ex);
-                
+
                 // Clear all buttons on error to prevent showing control names
                 if (quickButtons != null)
                 {
@@ -378,7 +378,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             // Force UI refresh: clear and re-add only visible buttons
             Control_QuickButtons_TableLayoutPanel_Main.SuspendLayout();
             Control_QuickButtons_TableLayoutPanel_Main.Controls.Clear();
-            
+
             if (quickButtons != null)
             {
                 for (int j = 0; j < quickButtons.Count; j++)
@@ -389,7 +389,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                     }
                 }
             }
-            
+
             Control_QuickButtons_TableLayoutPanel_Main.ResumeLayout();
         }
 
@@ -397,7 +397,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
         {
             button.Controls.Clear();
             button.Text = string.Empty;
-            
+
             // Button configuration: Auto-fill row, minimal padding
             button.Padding = new Padding(4);
             button.AutoSize = false; // Button fills row, doesn't auto-size
@@ -490,7 +490,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             button.MouseLeave += QuickButton_MouseLeave;
             button.MouseDown += QuickButton_MouseDown;
             button.MouseUp += QuickButton_MouseUp;
-            
+
             // Wire child control events to propagate to button
             WireMouseEventsToChildren(button, tableLayout);
             WireMouseEventsToChildren(button, lblPartId);
@@ -570,17 +570,17 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
         {
             FieldInfo? field = control.GetType().GetField(fieldName,
                 BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance);
-            
+
             var fieldValue = field?.GetValue(control);
-            
+
             // Handle TextBox/SuggestionTextBox controls
             if (fieldValue is TextBox tb)
             {
                 tb.Text = value;
-                
+
                 // Set proper ForeColor for SuggestionTextBox to prevent error coloring
                 tb.ForeColor = Model_Application_Variables.UserUiColors.ComboBoxForeColor ?? Color.Black;
-                
+
                 // Update Model_Application_Variables based on field name to sync state
                 if (fieldName.Contains("Part"))
                 {
@@ -594,10 +594,10 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                 {
                     Model_Application_Variables.Location = value;
                 }
-                
+
                 return;
             }
-            
+
             // Handle ComboBox controls (legacy)
             if (fieldValue is not ComboBox cb)
             {
@@ -613,7 +613,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                 {
                     string? displayText = cb.GetItemText(cb.Items[i]);
                     if (string.IsNullOrEmpty(displayText)) continue;
-                    
+
                     // Match if display text starts with the value (handles "PartID | Customer | Description" format)
                     if (displayText.StartsWith(value, StringComparison.OrdinalIgnoreCase))
                     {
@@ -621,7 +621,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                         return;
                     }
                 }
-                
+
                 // If no match found, set text directly (allows typing)
                 cb.Text = value;
             }
@@ -722,7 +722,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
 
             if (mainForm.MainForm_UserControl_InventoryTab?.Visible == true)
             {
-                Control_InventoryTab? inv = mainForm.MainForm_UserControl_InventoryTab;                
+                Control_InventoryTab? inv = mainForm.MainForm_UserControl_InventoryTab;
                 SetTextBoxText(inv, "Control_InventoryTab_SuggestionBox_Part", partId);
                 SetTextBoxText(inv, "Control_InventoryTab_SuggestionBox_Operation", operation);
                 SetTextBoxText(inv, "Control_InventoryTab_SuggestionBox_Quantity", quantity.ToString());
@@ -826,7 +826,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                     foreach (Button otherBtn in quickButtons)
                     {
                         if (otherBtn == btn) continue; // Skip the current button being edited
-                        
+
                         if (otherBtn.Tag != null)
                         {
                             object otherTagObj = otherBtn.Tag;
@@ -834,7 +834,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                             dynamic otherTag = otherTagObj;
                             string otherPartId = otherTag.partId?.ToString() ?? "";
                             string otherOperation = otherTag.operation?.ToString() ?? "";
-                            
+
                             if (string.Equals(otherPartId, dlg.PartId, StringComparison.OrdinalIgnoreCase) &&
                                 string.Equals(otherOperation, dlg.Operation, StringComparison.OrdinalIgnoreCase))
                             {
@@ -843,10 +843,10 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                             }
                         }
                     }
-                    
+
                     if (isDuplicate)
                     {
-                        LoggingUtility.Log($"[QuickButtons] Edit cancelled - PartID '{dlg.PartId}' + Operation '{dlg.Operation}' already exists");
+
                         MessageBox.Show(
                             $"A quick button for Part '{dlg.PartId}' with Operation '{dlg.Operation}' already exists.\n\nNo changes were made.",
                             "Duplicate Quick Button",
@@ -854,7 +854,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                             MessageBoxIcon.Information);
                         return;
                     }
-                    
+
                     try
                     {
                         // Update the button in the database
@@ -877,10 +877,10 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                                 dbSeverity: Enum_DatabaseEnum_ErrorSeverity.Error);
                             return;
                         }
-                        
+
                         // CRITICAL: Reload from database to ensure UI matches database state
                         await LoadLast10Transactions(user);
-                        LoggingUtility.Log($"[QuickButtons] Successfully updated quick button at position {position}");
+
                     }
                     catch (MySqlException ex)
                     {
@@ -920,7 +920,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                 {
                     string user = Model_Application_Variables.User;
                     int position = idx + 1; // Convert 0-based index to 1-based position
-                    
+
                     try
                     {
                         var result = await Dao_QuickButtons.RemoveQuickButtonAndShiftAsync(user, position);
@@ -938,10 +938,10 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                                 dbSeverity: Enum_DatabaseEnum_ErrorSeverity.Error);
                             return;
                         }
-                        
+
                         // CRITICAL: Reload from database to ensure UI matches database state
                         await LoadLast10Transactions(user);
-                        LoggingUtility.Log($"[QuickButtons] Successfully removed quick button at position {position}");
+
                     }
                     catch (MySqlException ex)
                     {
@@ -971,7 +971,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                 }
                 else
                 {
-                    LoggingUtility.Log($"[QuickButtons] MenuItemRemove_Click: Invalid button index or Tag is null. idx={idx}");
+
                 }
             }
         }
@@ -988,7 +988,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             {
                 List<Button> newOrder = dlg.GetButtonOrder();
                 string user = Model_Application_Variables.User;
-                
+
                 // Remove all quick buttons for the user from the server
                 var deleteResult = await Dao_QuickButtons.DeleteAllQuickButtonsForUserAsync(user);
                 if (!deleteResult.IsSuccess)
@@ -1004,18 +1004,18 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                         dbSeverity: Enum_DatabaseEnum_ErrorSeverity.Error);
                     return;
                 }
-                
+
                 // Re-add them in the exact order shown in ListView
                 for (int i = 0; i < newOrder.Count; i++)
                 {
                     Button btn = newOrder[i];
                     if (btn.Tag == null) continue; // Skip if no tag
-                    
+
                     dynamic tag = btn.Tag!; // Null-forgiving operator since we checked above
                     string partId = tag?.partId ?? string.Empty;
                     string operation = tag?.operation ?? string.Empty;
                     int quantity = tag?.quantity ?? 0;
-                    
+
                     // Use the new method that doesn't shift - directly insert at position i+1
                     var addResult = await Dao_QuickButtons.AddQuickButtonAtPositionAsync(user, partId, operation, quantity, i + 1);
                     if (!addResult.IsSuccess)
@@ -1040,7 +1040,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                 var cleanupResult = await Dao_QuickButtons.CleanupGapsAndDuplicatesAsync(user);
                 if (!cleanupResult.IsSuccess)
                 {
-                    LoggingUtility.Log($"[QuickButtons] Cleanup after reorder failed: {cleanupResult.ErrorMessage}");
+
                 }
 
                 // CRITICAL: Reload from database to ensure UI matches database state

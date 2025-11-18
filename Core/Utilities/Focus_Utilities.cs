@@ -10,21 +10,12 @@ public static class FocusUtils
 
     public static void ApplyFocusEventHandling(Control control, Model_Shared_UserUiColors colors)
     {
-        if (!CanControlReceiveFocus(control))
-        {
-            LoggingUtility.Log($"[FocusUtils] ApplyFocusEventHandling: {control.Name} ({control.GetType().Name}) - SKIPPED (CanControlReceiveFocus=false)");
-            return;
-        }
-
-        LoggingUtility.Log($"[FocusUtils] ApplyFocusEventHandling: {control.Name} ({control.GetType().Name}) - APPLYING");
         Apply(control, colors);
     }
 
     public static void ApplyFocusEventHandlingToControls(Control.ControlCollection controls,
         Model_Shared_UserUiColors colors)
     {
-        LoggingUtility.Log($"[FocusUtils] ApplyFocusEventHandlingToControls: Processing {controls.Count} controls");
-        
         foreach (Control ctrl in controls)
         {
             ApplyFocusEventHandling(ctrl, colors);
@@ -39,55 +30,55 @@ public static class FocusUtils
     {
         if (sender is Control ctrl && ctrl.Focused)
         {
-            LoggingUtility.Log($"[FocusUtils] Control_GotFocus_Handler: {ctrl.Name} ({ctrl.GetType().Name}) - ENTERING");
-            
+
+
             Model_Shared_UserUiColors colors = Core_AppThemes.GetCurrentTheme().Colors;
             Color focusBackColor = colors.ControlFocusedBackColor ?? Color.LightBlue;
-            
-            LoggingUtility.Log($"[FocusUtils] Setting BackColor to: {focusBackColor} for {ctrl.Name}");
+
+
             ctrl.BackColor = focusBackColor;
 
             switch (ctrl)
             {
-                case TextBox tb: 
-                    LoggingUtility.Log($"[FocusUtils] Calling SelectAll on TextBox: {tb.Name}");
-                    tb.SelectAll(); 
+                case TextBox tb:
+
+                    tb.SelectAll();
                     break;
-                case MaskedTextBox mtb: 
-                    LoggingUtility.Log($"[FocusUtils] Calling SelectAll on MaskedTextBox: {mtb.Name}");
-                    mtb.SelectAll(); 
+                case MaskedTextBox mtb:
+
+                    mtb.SelectAll();
                     break;
-                case RichTextBox rtb: 
-                    LoggingUtility.Log($"[FocusUtils] Calling SelectAll on RichTextBox: {rtb.Name}");
-                    rtb.SelectAll(); 
+                case RichTextBox rtb:
+
+                    rtb.SelectAll();
                     break;
-                case ComboBox cb when cb.DropDownStyle != ComboBoxStyle.DropDownList: 
-                    LoggingUtility.Log($"[FocusUtils] Calling SelectAll on ComboBox: {cb.Name}");
-                    cb.SelectAll(); 
+                case ComboBox cb when cb.DropDownStyle != ComboBoxStyle.DropDownList:
+
+                    cb.SelectAll();
                     break;
             }
 
             // Attach TextChanged handlers AFTER the current event processing completes
             // This prevents SelectAll() from triggering the handlers and clearing the highlight
-            LoggingUtility.Log($"[FocusUtils] Queueing BeginInvoke to attach handlers for {ctrl.Name}");
+
             ctrl.BeginInvoke(new Action(() =>
             {
                 lock (_controlsWithActiveHandlers)
                 {
                     if (!_controlsWithActiveHandlers.Contains(ctrl))
                     {
-                        LoggingUtility.Log($"[FocusUtils] BeginInvoke executing: Attaching TextChanged handlers for {ctrl.Name}");
+
                         _controlsWithActiveHandlers.Add(ctrl);
                         AttachTextChangedHandlers(ctrl);
                     }
                     else
                     {
-                        LoggingUtility.Log($"[FocusUtils] BeginInvoke executing: Handlers already attached for {ctrl.Name}");
+
                     }
                 }
             }));
-            
-            LoggingUtility.Log($"[FocusUtils] Control_GotFocus_Handler: {ctrl.Name} - EXITING");
+
+
         }
     }
 
@@ -95,8 +86,8 @@ public static class FocusUtils
     {
         if (sender is Control ctrl)
         {
-            LoggingUtility.Log($"[FocusUtils] Control_LostFocus_Handler: {ctrl.Name} - Checking if should restore normal BackColor");
-            
+
+
             // Use BeginInvoke to delay the color restoration slightly
             // This prevents the Leave event from clearing the highlight before it's visible
             ctrl.BeginInvoke(new Action(() =>
@@ -104,17 +95,17 @@ public static class FocusUtils
                 // Only restore if control no longer has focus
                 if (!ctrl.Focused)
                 {
-                    LoggingUtility.Log($"[FocusUtils] Control_LostFocus_Handler: {ctrl.Name} - Control not focused, restoring normal BackColor");
-                    
+
+
                     Model_Shared_UserUiColors colors = Core_AppThemes.GetCurrentTheme().Colors;
                     Color normalBackColor = GetControlThemeBackColor(ctrl, colors);
                     ctrl.BackColor = normalBackColor;
-                    
-                    LoggingUtility.Log($"[FocusUtils] BackColor set to: {normalBackColor} for {ctrl.Name}");
+
+
                 }
                 else
                 {
-                    LoggingUtility.Log($"[FocusUtils] Control_LostFocus_Handler: {ctrl.Name} - Control still focused, keeping highlight");
+
                 }
             }));
         }
@@ -127,13 +118,13 @@ public static class FocusUtils
     {
         if (sender is TextBox tb)
         {
-            LoggingUtility.Log($"[FocusUtils] TextBox_TextChanged_Handler: {tb.Name} - Clearing highlight");
-            
+
+
             Model_Shared_UserUiColors colors = Core_AppThemes.GetCurrentTheme().Colors;
             Color normalBackColor = GetControlThemeBackColor(tb, colors);
             tb.BackColor = normalBackColor;
-            
-            LoggingUtility.Log($"[FocusUtils] BackColor set to: {normalBackColor} for {tb.Name}");
+
+
         }
     }
 
@@ -144,8 +135,8 @@ public static class FocusUtils
     {
         if (sender is RichTextBox rtb)
         {
-            LoggingUtility.Log($"[FocusUtils] RichTextBox_TextChanged_Handler: {rtb.Name} - Clearing highlight");
-            
+
+
             Model_Shared_UserUiColors colors = Core_AppThemes.GetCurrentTheme().Colors;
             Color normalBackColor = GetControlThemeBackColor(rtb, colors);
             rtb.BackColor = normalBackColor;
@@ -159,8 +150,8 @@ public static class FocusUtils
     {
         if (sender is MaskedTextBox mtb)
         {
-            LoggingUtility.Log($"[FocusUtils] MaskedTextBox_TextChanged_Handler: {mtb.Name} - Clearing highlight");
-            
+
+
             Model_Shared_UserUiColors colors = Core_AppThemes.GetCurrentTheme().Colors;
             Color normalBackColor = GetControlThemeBackColor(mtb, colors);
             mtb.BackColor = normalBackColor;
@@ -174,8 +165,8 @@ public static class FocusUtils
     {
         if (sender is ComboBox cb)
         {
-            LoggingUtility.Log($"[FocusUtils] ComboBox_TextChanged_Handler: {cb.Name} - Clearing highlight");
-            
+
+
             Model_Shared_UserUiColors colors = Core_AppThemes.GetCurrentTheme().Colors;
             Color normalBackColor = GetControlThemeBackColor(cb, colors);
             cb.BackColor = normalBackColor;
@@ -189,8 +180,8 @@ public static class FocusUtils
     {
         if (sender is NumericUpDown nud)
         {
-            LoggingUtility.Log($"[FocusUtils] NumericUpDown_ValueChanged_Handler: {nud.Name} - Clearing highlight");
-            
+
+
             Model_Shared_UserUiColors colors = Core_AppThemes.GetCurrentTheme().Colors;
             Color normalBackColor = GetControlThemeBackColor(nud, colors);
             nud.BackColor = normalBackColor;
@@ -204,8 +195,8 @@ public static class FocusUtils
     {
         if (sender is DateTimePicker dtp)
         {
-            LoggingUtility.Log($"[FocusUtils] DateTimePicker_ValueChanged_Handler: {dtp.Name} - Clearing highlight");
-            
+
+
             Model_Shared_UserUiColors colors = Core_AppThemes.GetCurrentTheme().Colors;
             Color normalBackColor = GetControlThemeBackColor(dtp, colors);
             dtp.BackColor = normalBackColor;
@@ -261,51 +252,51 @@ public static class FocusUtils
     /// </summary>
     private static void AttachTextChangedHandlers(Control control)
     {
-        LoggingUtility.Log($"[FocusUtils] AttachTextChangedHandlers: Attaching to {control.Name} ({control.GetType().Name})");
-        
+
+
         switch (control)
         {
             case TextBox tb:
                 tb.TextChanged += TextBox_TextChanged_Handler;
-                LoggingUtility.Log($"[FocusUtils] Attached TextChanged to TextBox: {tb.Name}");
+
                 break;
             case ComboBox cb:
                 cb.TextChanged += ComboBox_TextChanged_Handler;
-                LoggingUtility.Log($"[FocusUtils] Attached TextChanged to ComboBox: {cb.Name}");
+
                 break;
             case RichTextBox rtb:
                 rtb.TextChanged += RichTextBox_TextChanged_Handler;
-                LoggingUtility.Log($"[FocusUtils] Attached TextChanged to RichTextBox: {rtb.Name}");
+
                 break;
             case MaskedTextBox mtb:
                 mtb.TextChanged += MaskedTextBox_TextChanged_Handler;
-                LoggingUtility.Log($"[FocusUtils] Attached TextChanged to MaskedTextBox: {mtb.Name}");
+
                 break;
             case NumericUpDown nud:
                 nud.ValueChanged += NumericUpDown_ValueChanged_Handler;
-                LoggingUtility.Log($"[FocusUtils] Attached ValueChanged to NumericUpDown: {nud.Name}");
+
                 break;
             case DateTimePicker dtp:
                 dtp.ValueChanged += DateTimePicker_ValueChanged_Handler;
-                LoggingUtility.Log($"[FocusUtils] Attached ValueChanged to DateTimePicker: {dtp.Name}");
+
                 break;
         }
     }
 
     private static void Apply(Control control, Model_Shared_UserUiColors colors)
     {
-        LoggingUtility.Log($"[FocusUtils] Apply: Starting for {control.Name} ({control.GetType().Name})");
-        
+
+
         // Remove existing handlers to prevent duplicates
         // Use GotFocus/LostFocus instead of Enter/Leave because they fire even when focus is set programmatically
         control.GotFocus -= Control_GotFocus_Handler;
         control.LostFocus -= Control_LostFocus_Handler;
-        
-        LoggingUtility.Log($"[FocusUtils] Apply: Removed old GotFocus/LostFocus handlers for {control.Name}");
-        
+
+
+
         // Remove control-specific handlers (in case they were attached)
         DetachTextChangedHandlers(control);
-        
+
         // Remove Click handlers
         switch (control)
         {
@@ -320,26 +311,26 @@ public static class FocusUtils
         // Add focus event handlers (GotFocus/LostFocus work with programmatic focus changes)
         control.GotFocus += Control_GotFocus_Handler;
         control.LostFocus += Control_LostFocus_Handler;
-        
-        LoggingUtility.Log($"[FocusUtils] Apply: Attached GotFocus/LostFocus handlers for {control.Name}");
-        
+
+
+
         // Add Click handlers for SelectAll
         switch (control)
         {
             case TextBox tbx:
                 tbx.Click += TextBox_Click_SelectAll;
-                LoggingUtility.Log($"[FocusUtils] Apply: Attached Click handler for TextBox {tbx.Name}");
+
                 break;
             case ComboBox cbx:
                 cbx.DropDown += ComboBox_DropDown_SelectAll;
-                LoggingUtility.Log($"[FocusUtils] Apply: Attached DropDown handler for ComboBox {cbx.Name}");
+
                 break;
         }
-        
+
         // NOTE: TextChanged/ValueChanged handlers are NOT attached here
         // They will be attached on first focus by Control_GotFocus_Handler
-        
-        LoggingUtility.Log($"[FocusUtils] Apply: Completed for {control.Name}");
+
+
     }
 
     public static bool CanControlReceiveFocus(Control control)
@@ -348,7 +339,7 @@ public static class FocusUtils
         // Only check if control is enabled and visible
         if (!control.Enabled || !control.Visible)
         {
-            LoggingUtility.Log($"[FocusUtils] CanControlReceiveFocus: {control.Name} - FALSE (Enabled={control.Enabled}, Visible={control.Visible})");
+
             return false;
         }
 
@@ -376,12 +367,12 @@ public static class FocusUtils
             ProgressBar => false,
             _ => false
         };
-        
+
         if (!canFocus)
         {
-            LoggingUtility.Log($"[FocusUtils] CanControlReceiveFocus: {control.Name} ({control.GetType().Name}) - FALSE (control type cannot receive focus)");
+
         }
-        
+
         return canFocus;
     }
 

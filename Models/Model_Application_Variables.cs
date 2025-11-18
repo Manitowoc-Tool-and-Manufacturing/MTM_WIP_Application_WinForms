@@ -280,7 +280,6 @@ namespace MTM_WIP_Application_Winforms.Models
                             ColorCodeParts.Add(partId);
                         }
                     }
-                    Logging.LoggingUtility.Log($"[Model_Application_Variables] ColorCodeParts cache loaded: {ColorCodeParts.Count} parts");
                 }
 
                 // Load valid color codes for fast validation (case-insensitive set)
@@ -297,11 +296,6 @@ namespace MTM_WIP_Application_Winforms.Models
                             ValidColorCodes.Add(code);
                         }
                     }
-                    Logging.LoggingUtility.Log($"[Model_Application_Variables] ValidColorCodes cache loaded: {ValidColorCodes.Count} colors");
-                }
-                else
-                {
-                    Logging.LoggingUtility.Log($"[Model_Application_Variables] Failed to load ValidColorCodes: {colorResult.ErrorMessage}");
                 }
             }
             catch (Exception ex)

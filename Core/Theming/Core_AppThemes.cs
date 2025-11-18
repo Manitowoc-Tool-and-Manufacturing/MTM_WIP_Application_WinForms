@@ -35,17 +35,11 @@ public static class Core_AppThemes
             if (string.IsNullOrWhiteSpace(themeName))
             {
                 themeName = "Default";
-                LoggingUtility.Log($"No theme preference found for user {userId}, using Default theme");
-            }
-            else
-            {
-                LoggingUtility.Log($"Loaded theme preference for user {userId}: {themeName}");
             }
 
             // Set the theme name in Model_Application_Variables
             Model_Application_Variables.ThemeName = themeName;
 
-            LoggingUtility.Log($"Set Model_Application_Variables.ThemeName to: {themeName}");
             return themeName;
         }
         catch (Exception ex)
@@ -53,7 +47,7 @@ public static class Core_AppThemes
             LoggingUtility.LogApplicationError(ex);
             // On error, default to "Default" theme
             Model_Application_Variables.ThemeName = "Default";
-            LoggingUtility.Log("Error loading user theme preference, defaulting to Default theme");
+
             return "Default";
         }
     }
@@ -66,7 +60,6 @@ public static class Core_AppThemes
 
             try
             {
-                LoggingUtility.Log("Attempting to load themes from database using Dao_System.GetAllThemesAsync...");
 
                 // UPDATED: Use Dao_System.GetAllThemesAsync instead of non-existent stored procedure
                 var dataResult = await Dao_System.GetAllThemesAsync();
@@ -74,7 +67,6 @@ public static class Core_AppThemes
                 if (dataResult.IsSuccess && dataResult.Data != null)
                 {
                     DataTable dt = dataResult.Data;
-                    LoggingUtility.Log($"Successfully loaded {dt.Rows.Count} themes from database");
 
                     foreach (DataRow row in dt.Rows)
                     {
@@ -84,12 +76,7 @@ public static class Core_AppThemes
                         {
                             try
                             {
-                                // DEBUG: Log the actual JSON being deserialized for Urban Bloom
-                                if (themeName == "Urban Bloom")
-                                {
-                                    LoggingUtility.Log($"[DEBUG] Urban Bloom JSON preview: {(settingsJson.Length > 500 ? settingsJson.Substring(0, 500) : settingsJson)}");
-                                }
-                                
+
                                 JsonSerializerOptions options = new()
                                 {
                                     AllowTrailingCommas = true,
@@ -104,43 +91,36 @@ public static class Core_AppThemes
 
                                 if (colors != null)
                                 {
-                                    // DEBUG: Log the deserialized colors for Urban Bloom
-                                    if (themeName == "Urban Bloom")
-                                    {
-                                        LoggingUtility.Log($"[DEBUG] Urban Bloom deserialized - FormBackColor: {colors.FormBackColor?.ToString() ?? "NULL"}, FormForeColor: {colors.FormForeColor?.ToString() ?? "NULL"}");
-                                    }
-                                    
                                     themes[themeName] = new AppTheme { Colors = colors, FormFont = null };
-                                    LoggingUtility.Log($"✓ Successfully loaded theme '{themeName}' from database");
                                 }
                                 else
                                 {
-                                    LoggingUtility.Log($"✗ Failed to deserialize theme '{themeName}' - JSON returned null");
+
                                 }
                             }
                             catch (JsonException jsonEx)
                             {
                                 LoggingUtility.LogApplicationError(jsonEx);
-                                LoggingUtility.Log($"✗ JSON parsing error for theme '{themeName}': {jsonEx.Message}");
-                                LoggingUtility.Log($"   JSON preview: {(settingsJson.Length > 200 ? settingsJson.Substring(0, 200) + "..." : settingsJson)}");
+
+
                             }
                             catch (Exception ex)
                             {
                                 LoggingUtility.LogApplicationError(ex);
-                                LoggingUtility.Log($"✗ Unexpected error loading theme '{themeName}': {ex.Message}");
+
                             }
                         }
                     }
                 }
                 else
                 {
-                    LoggingUtility.Log($"Database theme loading failed: {dataResult.ErrorMessage}. Creating fallback themes.");
+
                     themes = CreateDefaultThemes();
                 }
             }
             catch (Exception dbEx)
             {
-                LoggingUtility.Log($"Exception during database theme loading: {dbEx.Message}. Creating fallback themes.");
+
                 LoggingUtility.LogApplicationError(dbEx);
                 themes = CreateDefaultThemes();
             }
@@ -148,16 +128,16 @@ public static class Core_AppThemes
             // Ensure we always have at least default themes
             if (themes.Count == 0)
             {
-                LoggingUtility.Log("No themes loaded, creating fallback default themes");
+
                 themes = CreateDefaultThemes();
             }
 
             // Log which themes were loaded
             string themeList = string.Join(", ", themes.Keys);
-            LoggingUtility.Log($"Final theme collection contains: {themeList}");
+
 
             Themes = themes;
-            LoggingUtility.Log($"Theme system initialized with {themes.Count} themes available: {themeList}");
+
         }
         catch (Exception ex)
         {
@@ -234,17 +214,16 @@ public static class Core_AppThemes
         {
             // First load all available themes from database
             await LoadThemesFromDatabaseAsync();
-            
+
             // Load theme enabled/disabled setting
             var themeEnabledResult = await Dao_User.GetThemeEnabledAsync(userId);
             if (themeEnabledResult.IsSuccess)
             {
                 Model_Application_Variables.ThemeEnabled = themeEnabledResult.Data;
-                LoggingUtility.Log($"Theme system enabled status for user {userId}: {themeEnabledResult.Data}");
             }
             else
             {
-                LoggingUtility.Log($"Failed to load theme enabled setting for user {userId}: {themeEnabledResult.ErrorMessage}. Defaulting to enabled.");
+
                 Model_Application_Variables.ThemeEnabled = true; // Default to enabled
             }
 
@@ -254,7 +233,7 @@ public static class Core_AppThemes
             // Check if the user's preferred theme actually exists in our loaded themes
             if (!string.IsNullOrWhiteSpace(userThemeName) && !Themes.ContainsKey(userThemeName))
             {
-                LoggingUtility.Log($"User {userId} has theme preference '{userThemeName}' but this theme doesn't exist in database. Available themes: {string.Join(", ", Themes.Keys)}");
+
 
                 // Try to find a suitable fallback theme from available database themes
                 string fallbackTheme = "Default";
@@ -275,7 +254,7 @@ public static class Core_AppThemes
                     fallbackTheme = Themes.Keys.First();
                 }
 
-                LoggingUtility.Log($"Using fallback theme '{fallbackTheme}' for user {userId}");
+
                 Model_Application_Variables.ThemeName = fallbackTheme;
             }
 
@@ -294,7 +273,7 @@ public static class Core_AppThemes
             }
 
             string finalTheme = Model_Application_Variables.ThemeName ?? "Default";
-            LoggingUtility.Log($"Theme system initialized for user {userId}. Final theme: {finalTheme}, Available themes: {string.Join(", ", Themes.Keys)}, Font size: {Model_Application_Variables.ThemeFontSize}");
+
         }
         catch (Exception ex)
         {
@@ -305,7 +284,7 @@ public static class Core_AppThemes
                 Themes = CreateDefaultThemes();
             }
             Model_Application_Variables.ThemeName = Themes.Keys.FirstOrDefault() ?? "Default";
-            LoggingUtility.Log($"Error initializing theme system, using fallback theme: {Model_Application_Variables.ThemeName}");
+
             throw;
         }
     }
@@ -403,7 +382,7 @@ public static class Core_AppThemes
 
         themes["BLUE"] = new AppTheme { Colors = blueColors, FormFont = null };
 
-        LoggingUtility.Log("Created fallback theme collection with Default, Dark, and Blue themes.");
+
         return themes;
     }
 

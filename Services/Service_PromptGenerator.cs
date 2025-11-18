@@ -61,7 +61,7 @@ public static class Service_PromptGenerator
     {
         if (string.IsNullOrWhiteSpace(stackTrace))
         {
-            LoggingUtility.Log("[Service_PromptGenerator] ExtractMethodName: Stack trace is null or empty");
+
             return null;
         }
 
@@ -81,7 +81,7 @@ public static class Service_PromptGenerator
 
                 // Split the full path to get namespace parts and class name
                 var parts = fullPath.Split('.');
-                
+
                 if (parts.Length == 0)
                 {
                     continue;
@@ -89,7 +89,7 @@ public static class Service_PromptGenerator
 
                 // Check if this is a framework/library namespace (first part of path)
                 string rootNamespace = parts[0];
-                bool isExcluded = ExcludedNamespaces.Any(excluded => 
+                bool isExcluded = ExcludedNamespaces.Any(excluded =>
                     rootNamespace.StartsWith(excluded, StringComparison.OrdinalIgnoreCase));
 
                 if (isExcluded)
@@ -114,23 +114,23 @@ public static class Service_PromptGenerator
 
                 if (!string.IsNullOrWhiteSpace(sanitized))
                 {
-                    LoggingUtility.Log($"[Service_PromptGenerator] Extracted method name: {sanitized} from path: {fullPath}");
+
                     return sanitized;
                 }
             }
 
-            LoggingUtility.Log("[Service_PromptGenerator] No application method found in stack trace");
+
             return null;
         }
         catch (RegexMatchTimeoutException ex)
         {
-            LoggingUtility.Log("[Service_PromptGenerator] Regex timeout during method extraction");
+
             LoggingUtility.LogApplicationError(ex);
             return null;
         }
         catch (Exception ex)
         {
-            LoggingUtility.Log("[Service_PromptGenerator] Error extracting method name from stack trace");
+
             LoggingUtility.LogApplicationError(ex);
             return null;
         }
@@ -155,7 +155,7 @@ public static class Service_PromptGenerator
             string cleanName = match.Groups[1].Value;
             // Replace the entire async wrapper with just the method name
             methodName = asyncPattern.Replace(methodName, cleanName);
-            
+
             // Remove .MoveNext if present
             methodName = methodName.Replace(".MoveNext", string.Empty);
         }
@@ -360,12 +360,12 @@ public static class Service_PromptGenerator
             if (!string.IsNullOrWhiteSpace(promptDirectory))
             {
                 string customTemplatesPath = Path.Combine(promptDirectory, "QuickFixTemplates.json");
-                
+
                 if (File.Exists(customTemplatesPath))
                 {
                     string jsonContent = File.ReadAllText(customTemplatesPath);
                     var customTemplates = System.Text.Json.JsonSerializer.Deserialize<Dictionary<string, string>>(jsonContent);
-                    
+
                     if (customTemplates != null)
                     {
                         // Merge custom templates (they override built-in ones)
@@ -373,8 +373,8 @@ public static class Service_PromptGenerator
                         {
                             templates[kvp.Key] = kvp.Value;
                         }
-                        
-                        LoggingUtility.Log($"[Service_PromptGenerator] Loaded {customTemplates.Count} custom templates from QuickFixTemplates.json");
+
+
                     }
                 }
             }
@@ -382,7 +382,7 @@ public static class Service_PromptGenerator
         catch (Exception ex)
         {
             // Log but don't fail - just use built-in templates
-            LoggingUtility.Log($"[Service_PromptGenerator] Could not load custom templates: {ex.Message}");
+
         }
 
         return templates;
@@ -402,7 +402,7 @@ public static class Service_PromptGenerator
     {
         if (logEntry == null)
         {
-            LoggingUtility.Log("[Service_PromptGenerator] GeneratePrompt: Log entry is null");
+
             return null;
         }
 
@@ -412,7 +412,7 @@ public static class Service_PromptGenerator
             string? methodName = ExtractMethodName(logEntry.StackTrace);
             if (string.IsNullOrWhiteSpace(methodName))
             {
-                LoggingUtility.Log("[Service_PromptGenerator] Could not extract method name from stack trace");
+
                 return null;
             }
 
@@ -427,10 +427,10 @@ public static class Service_PromptGenerator
             prompt.AppendLine("## Error Summary");
             prompt.AppendLine();
             prompt.AppendLine($"**Timestamp:** {logEntry.Timestamp:yyyy-MM-dd HH:mm:ss}");
-            
+
             string errorType = logEntry.ErrorType ?? logEntry.Severity ?? "Unknown Error";
             prompt.AppendLine($"**Error Type:** {errorType}");
-            
+
             prompt.AppendLine($"**Method:** `{methodName}`");
             prompt.AppendLine();
 
@@ -479,13 +479,13 @@ public static class Service_PromptGenerator
             prompt.AppendLine($"*Generated: {DateTime.Now:yyyy-MM-dd HH:mm:ss}*");
 
             string result = prompt.ToString();
-            LoggingUtility.Log($"[Service_PromptGenerator] Generated prompt for method: {methodName}");
-            
+
+
             return result;
         }
         catch (Exception ex)
         {
-            LoggingUtility.Log("[Service_PromptGenerator] Error generating prompt");
+
             LoggingUtility.LogApplicationError(ex);
             return null;
         }
@@ -534,7 +534,7 @@ public static class Service_PromptGenerator
     {
         if (string.IsNullOrWhiteSpace(methodName) || string.IsNullOrWhiteSpace(promptContent))
         {
-            LoggingUtility.Log("[Service_PromptGenerator] WritePromptToFile: Invalid parameters");
+
             return false;
         }
 
@@ -543,7 +543,7 @@ public static class Service_PromptGenerator
             // Ensure Prompt Fixes directory exists
             if (!Helper_LogPath.CreatePromptFixesDirectory())
             {
-                LoggingUtility.Log("[Service_PromptGenerator] Failed to create Prompt Fixes directory");
+
                 return false;
             }
 
@@ -551,36 +551,36 @@ public static class Service_PromptGenerator
             string? filePath = Helper_LogPath.GetPromptFilePath(methodName);
             if (filePath == null)
             {
-                LoggingUtility.Log($"[Service_PromptGenerator] Failed to get prompt file path for method: {methodName}");
+
                 return false;
             }
 
             // Write prompt to file
             File.WriteAllText(filePath, promptContent, Encoding.UTF8);
-            LoggingUtility.Log($"[Service_PromptGenerator] Wrote prompt file: {filePath}");
-            
+
+
             // T064: Create status record with "New" status
             bool statusCreated = Service_PromptStatusManager.UpdateStatus(
-                methodName, 
-                PromptStatusEnum.New, 
-                assignee: null, 
+                methodName,
+                PromptStatusEnum.New,
+                assignee: null,
                 notes: "Prompt automatically generated");
-            
+
             if (statusCreated)
             {
-                LoggingUtility.Log($"[Service_PromptGenerator] Created status record for method: {methodName}");
+
             }
             else
             {
-                LoggingUtility.Log($"[Service_PromptGenerator] Warning: Failed to create status record for method: {methodName}");
+
                 // Don't fail the entire operation if status creation fails
             }
-            
+
             return true;
         }
         catch (Exception ex)
         {
-            LoggingUtility.Log($"[Service_PromptGenerator] Error writing prompt file for method: {methodName}");
+
             LoggingUtility.LogApplicationError(ex);
             return false;
         }

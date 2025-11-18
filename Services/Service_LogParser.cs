@@ -80,7 +80,7 @@ public static class Service_LogParser
             // Skip header row if present
             if (csvLine.StartsWith("Timestamp,", StringComparison.OrdinalIgnoreCase))
             {
-                LoggingUtility.Log("[Service_LogParser] Skipping CSV header row");
+
                 return Model_LogEntry.CreateRawEntry(DateTime.Now, csvLine);
             }
 
@@ -89,7 +89,7 @@ public static class Service_LogParser
             // Validate field count (should be 5: Timestamp, Level, Source, Message, Details)
             if (fields.Length < 4)
             {
-                LoggingUtility.Log($"[Service_LogParser] Invalid CSV format - expected 5 fields, got {fields.Length}");
+
                 return Model_LogEntry.CreateRawEntry(DateTime.Now, csvLine);
             }
 
@@ -103,7 +103,7 @@ public static class Service_LogParser
             // Parse timestamp
             if (!DateTime.TryParse(timestampStr, out DateTime timestamp))
             {
-                LoggingUtility.Log($"[Service_LogParser] Failed to parse timestamp: {timestampStr}");
+
                 timestamp = DateTime.Now;
             }
 
@@ -138,7 +138,7 @@ public static class Service_LogParser
         }
         catch (Exception ex)
         {
-            LoggingUtility.Log($"[Service_LogParser] Error parsing CSV entry: {ex.Message}");
+
             LoggingUtility.LogApplicationError(ex);
             return Model_LogEntry.CreateRawEntry(DateTime.Now, csvLine);
         }

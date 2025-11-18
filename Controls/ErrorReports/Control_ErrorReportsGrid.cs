@@ -362,7 +362,7 @@ namespace MTM_WIP_Application_Winforms.Controls.ErrorReports
             var filter = BuildFilterFromControls();
 
             // Debug: Log filter state
-            LoggingUtility.Log($"[Filter] Applying filters: HasFilters={filter.HasFilters}, DateFrom={filter.DateFrom}, DateTo={filter.DateTo}, User={filter.UserName ?? "null"}, Machine={filter.MachineName ?? "null"}, Status={filter.Status ?? "null"}, Search={filter.SearchText ?? "null"}");
+
 
             if (!filter.TryValidate(out var validationMessage))
             {
@@ -375,12 +375,12 @@ namespace MTM_WIP_Application_Winforms.Controls.ErrorReports
 
             if (!filter.HasFilters)
             {
-                LoggingUtility.Log("[Filter] No filters applied, loading all reports");
+
                 await LoadReportsAsync(null);
                 return;
             }
 
-            LoggingUtility.Log("[Filter] Loading filtered reports");
+
             await LoadReportsAsync(filter);
         }
 

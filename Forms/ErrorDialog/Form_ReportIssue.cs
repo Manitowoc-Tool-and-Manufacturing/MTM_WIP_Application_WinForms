@@ -58,9 +58,9 @@ public partial class Form_ReportIssue : ThemedForm
         
         // Populate error summary (read-only display of exception details)
         // DEBUG: Log what we're setting
-        LoggingUtility.Log($"[Form_ReportIssue] Setting txtErrorSummary.Text to: '{_report.ErrorSummary ?? "(null)"}'");
+        
         txtErrorSummary.Text = _report.ErrorSummary ?? "An error occurred.";
-        LoggingUtility.Log($"[Form_ReportIssue] After setting, txtErrorSummary.Text = '{txtErrorSummary.Text}'");
+        
         
         // Set focus to user notes field
         txtUserNotes.Select();
@@ -197,13 +197,13 @@ public partial class Form_ReportIssue : ThemedForm
                     await command.ExecuteScalarAsync();
                 }
                 
-                LoggingUtility.Log("[Form_ReportIssue] Database connectivity check: ONLINE");
+                
                 return true;
             }
         }
         catch (Exception ex)
         {
-            LoggingUtility.Log($"[Form_ReportIssue] Database connectivity check: OFFLINE - {ex.Message}");
+            
             return false;
         }
     }

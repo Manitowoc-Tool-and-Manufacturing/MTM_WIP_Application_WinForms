@@ -642,7 +642,7 @@ public class Service_LogParser_Tests
 ```csharp
 // In Program.cs or form constructor
 Service_DebugTracer.SetDebugLevel(DebugLevel.HIGH);
-LoggingUtility.Log("[LogViewer] Debugging enabled");
+
 ```
 
 **Performance Profiling**:
@@ -652,7 +652,7 @@ LoggingUtility.Log("[LogViewer] Debugging enabled");
 var sw = Stopwatch.StartNew();
 await LoadLogFileAsync(filePath);
 sw.Stop();
-LoggingUtility.Log($"[Performance] LoadLogFile took {sw.ElapsedMilliseconds}ms");
+
 ```
 
 **Regex Testing**:

@@ -36,23 +36,23 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
                 Control_Themes_ComboBox_Theme.Items.AddRange(themeNames);
 
                 string user = Model_Application_Variables.User;
-                
+
                 // DEFENSIVE: Validate user is not corrupted (should never be a type name)
                 if (string.IsNullOrWhiteSpace(user) || user.Contains("System.") || user.Contains("DataRow"))
                 {
-                    LoggingUtility.Log($"[Control_Theme] WARNING: Model_Application_Variables.User is invalid: '{user}'. Using Environment.UserName as fallback.");
+
                     user = Environment.UserName?.ToUpperInvariant() ?? "UNKNOWN";
                 }
-                
+
                 // Load theme enabled/disabled setting
                 var themeEnabledResult = await Dao_User.GetThemeEnabledAsync(user);
                 bool themeEnabled = themeEnabledResult.Data; // Defaults to true
                 Control_Themes_CheckBox_EnableTheming.Checked = themeEnabled;
-                
+
                 // Enable/disable theme controls based on checkbox
                 Control_Themes_ComboBox_Theme.Enabled = themeEnabled;
                 Control_Themes_Button_Preview.Enabled = themeEnabled;
-                
+
                 var themeResult = await Dao_User.GetThemeNameAsync(user);
 
                 if (themeResult.IsSuccess)
@@ -115,13 +115,13 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             try
             {
                 Control_Themes_Button_Save.Enabled = false;
-                
+
                 string user = Model_Application_Variables.User;
-                
+
                 // DEFENSIVE: Validate user is not corrupted before saving
                 if (string.IsNullOrWhiteSpace(user) || user.Contains("System.") || user.Contains("DataRow"))
                 {
-                    LoggingUtility.Log($"[Control_Theme] ERROR: Cannot save theme - Model_Application_Variables.User is invalid: '{user}'");
+
                     Service_ErrorHandler.HandleValidationError(
                         $"Cannot save theme: User identity is corrupted ('{user}'). Please restart the application.",
                         "User Identity",
@@ -133,7 +133,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
                 // Save theme enabled/disabled setting
                 bool themeEnabled = Control_Themes_CheckBox_EnableTheming.Checked;
                 var saveEnabledResult = await Dao_User.SetThemeEnabledAsync(user, themeEnabled);
-                
+
                 if (!saveEnabledResult.IsSuccess)
                 {
                     Service_ErrorHandler.HandleDatabaseError(
@@ -149,7 +149,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
                     StatusMessageChanged?.Invoke(this, $"Error saving theme settings: {saveEnabledResult.ErrorMessage}");
                     return;
                 }
-                
+
                 // Save theme name (only if theming is enabled)
                 string? selectedTheme = Control_Themes_ComboBox_Theme.SelectedItem?.ToString();
                 if (themeEnabled)
@@ -189,7 +189,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
                 {
                     Model_Application_Variables.ThemeName = selectedTheme;
                 }
-                
+
                 // Use new theme system: ThemeManager will notify all ThemedForm subscribers
                 var themeProvider = Program.ServiceProvider?.GetService<IThemeProvider>();
                 if (themeProvider != null)
@@ -198,23 +198,23 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
                     {
                         // Apply theme
                         await themeProvider.SetThemeAsync(selectedTheme, ThemeChangeReason.UserSelection, user);
-                        LoggingUtility.Log($"[Control_Theme] Theme '{selectedTheme}' applied via ThemeManager to all subscribed forms");
+
                     }
                     else if (!themeEnabled)
                     {
                         // Theming disabled - forms will reset to system colors on next theme change event
                         // Trigger a system default "theme" to reset all forms
-                        LoggingUtility.Log("[Control_Theme] Theming disabled - forms should reset to system colors");
+
                     }
                 }
                 else if (themeProvider == null)
                 {
-                    LoggingUtility.Log("[Control_Theme] ERROR: ThemeProvider not available - forms will not receive theme updates!");
+
                 }
 
                 ThemeChanged?.Invoke(this, EventArgs.Empty);
-                StatusMessageChanged?.Invoke(this, themeEnabled 
-                    ? "Theme saved and applied successfully!" 
+                StatusMessageChanged?.Invoke(this, themeEnabled
+                    ? "Theme saved and applied successfully!"
                     : "Theme system disabled successfully!");
             }
             catch (Exception ex)
@@ -250,19 +250,19 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
 
                 string? originalTheme = Model_Application_Variables.ThemeName;
                 Model_Application_Variables.ThemeName = selectedTheme;
-                
+
                 // Use new theme system: ThemeManager will notify all ThemedForm subscribers
                 var themeProvider = Program.ServiceProvider?.GetService<IThemeProvider>();
                 if (themeProvider != null)
                 {
                     await themeProvider.SetThemeAsync(selectedTheme, ThemeChangeReason.Preview, Model_Application_Variables.User);
-                    LoggingUtility.Log($"[Control_Theme] Preview theme '{selectedTheme}' applied via ThemeManager to all subscribed forms");
+
                 }
                 else
                 {
-                    LoggingUtility.Log("[Control_Theme] ERROR: ThemeProvider not available - preview will not work!");
+
                 }
-                
+
                 Model_Application_Variables.ThemeName = originalTheme;
                 StatusMessageChanged?.Invoke(this, $"Theme preview applied: {selectedTheme}");
             }

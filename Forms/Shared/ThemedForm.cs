@@ -69,22 +69,22 @@ public class ThemedForm : Form
                         }
                     };
 
-                    LoggingUtility.Log($"[ThemedForm] {this.GetType().Name} initialized with automatic theme support");
+                    
                 }
                 else
                 {
-                    LoggingUtility.Log($"[ThemedForm] {this.GetType().Name} - Theme services not available in ServiceProvider");
+                    
                 }
             }
             catch (Exception ex)
             {
                 // Log but don't fail - form will work without theming
-                LoggingUtility.Log($"[ThemedForm] {this.GetType().Name} could not resolve theme dependencies: {ex.Message}");
+                
             }
         }
         else
         {
-            LoggingUtility.Log($"[ThemedForm] {this.GetType().Name} - Program.ServiceProvider is null (designer mode or pre-DI initialization)");
+            
         }
     }
 
@@ -218,13 +218,13 @@ public class ThemedForm : Form
             var formApplier = ThemeAppliers?.FirstOrDefault(a => a.CanApply(this));
             if (formApplier != null)
             {
-                LoggingUtility.Log($"[ThemedForm] Using FormThemeApplier for {Name}");
+                
                 formApplier.Apply(this, theme);
             }
             else
             {
                 // Fallback if no applier found
-                LoggingUtility.Log($"[ThemedForm] No applier found for {Name}, using fallback. ThemeAppliers count: {ThemeAppliers?.Count() ?? 0}");
+                
                 BackColor = theme.FormBackColor ?? theme.ControlBackColor ?? Color.White;
                 ForeColor = theme.FormForeColor ?? theme.ControlForeColor ?? Color.Black;
             }

@@ -157,7 +157,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                 try
                 {
                     Model_Application_Variables.UserFullName = await Dao_User.GetUserFullNameAsync(Model_Application_Variables.User);
-                    LoggingUtility.Log($"User full name loaded: {Model_Application_Variables.UserFullName}");
+
                 }
                 catch (Exception ex)
                 {
@@ -173,7 +173,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                         try
                         {
                             Control_TransferTab_Update_ButtonStates();
-                            LoggingUtility.Log("Transfer tab background initialization completed successfully.");
+
                         }
                         catch (Exception ex)
                         {
@@ -361,7 +361,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                 _progressHelper?.UpdateProgress(100, "Suggestion controls configured");
                 await Task.Delay(100);
 
-                LoggingUtility.Log("Transfer tab suggestion controls configured.");
+
             }
             catch (Exception ex)
             {
@@ -698,7 +698,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                 _progressHelper?.ShowProgress();
                 _progressHelper?.UpdateProgress(10, "Searching inventory...");
 
-                LoggingUtility.Log("TransferTab Search button clicked.");
+
 
                 string partId = Control_TransferTab_TextBox_Part.Text?.Trim() ?? "";
                 string op = Control_TransferTab_TextBox_Operation.Text?.Trim() ?? "";
@@ -858,7 +858,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
 
                 if (confirmResult != DialogResult.Yes)
                 {
-                    LoggingUtility.Log("User cancelled transfer.");
+
                     return;
                 }
 
@@ -894,11 +894,11 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
         {
             try
             {
-                LoggingUtility.Log("[TransferTab] Print requested.");
+
 
                 if (Control_TransferTab_DataGridView_Main is null || Control_TransferTab_DataGridView_Main.Rows.Count == 0)
                 {
-                    LoggingUtility.Log("[TransferTab] Print aborted - grid is empty.");
+
                     Service_ErrorHandler.HandleValidationError(
                         "No records available to print. Run a search or perform an inventory transfer first.",
                         "Print");
@@ -914,7 +914,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                 {
                     if (t.IsCompletedSuccessfully)
                     {
-                        LoggingUtility.Log($"[TransferTab] Print dialog closed with result: {t.Result}.");
+
                     }
                     else if (t.IsFaulted)
                     {
@@ -1005,7 +1005,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
 
             if (!historyResult.IsSuccess)
             {
-                LoggingUtility.Log($"Failed to log transaction history: {historyResult.ErrorMessage}");
+
             }
 
             if (MainFormInstance != null)
@@ -1067,7 +1067,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
 
                 if (!historyResult.IsSuccess)
                 {
-                    LoggingUtility.Log($"Failed to log transaction history: {historyResult.ErrorMessage}");
+
                 }
 
                 partIds.Add(partId);
@@ -1110,7 +1110,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             var callStack = new System.Diagnostics.StackTrace();
             var callerFrame = callStack.GetFrame(1);
             var callerMethod = callerFrame?.GetMethod()?.Name ?? "Unknown";
-            LoggingUtility.Log($"[PERF] Update_ButtonStates called from: {callerMethod}");
+
 
             try
             {
@@ -1192,7 +1192,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                     (s, e) => Control_TransferTab_Update_ButtonStates();
 
 
-                LoggingUtility.Log("Transfer tab events wired up.");
+
             }
             catch (Exception ex)
             {
@@ -1492,8 +1492,8 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                 Control_TransferTab_TableLayout_Main.PerformLayout();
             }
         }
-            
-        
+
+
 
         #endregion
 

@@ -78,7 +78,7 @@ namespace MTM_WIP_Application_Winforms.Controls.Transactions
         {
             InitializeComponent();
 
-            LoggingUtility.Log("[TransactionDetailPanel] Initializing...");
+
 
             _notesRowOriginalHeight = TransactionDetailPanel_TableLayout_Main.RowStyles.Count > 3
                 ? TransactionDetailPanel_TableLayout_Main.RowStyles[3].Height
@@ -90,7 +90,7 @@ namespace MTM_WIP_Application_Winforms.Controls.Transactions
 
             WireUpEvents();
 
-            LoggingUtility.Log("[TransactionDetailPanel] Initialization complete.");
+
         }
 
         /// <summary>
@@ -110,7 +110,7 @@ namespace MTM_WIP_Application_Winforms.Controls.Transactions
         {
             // Event handlers are wired in Designer.cs
             // No manual wiring needed to prevent double-subscription
-            
+
             // Wire up collapse/expand button click
             TransactionDetailPanel_GroupBox_Main.Click += GroupBox_Header_Click;
         }
@@ -128,32 +128,32 @@ namespace MTM_WIP_Application_Winforms.Controls.Transactions
                 // Validate that we have a transaction with required data
                 if (_transaction == null)
                 {
-                    LoggingUtility.Log("[TransactionDetailPanel] Cannot open lifecycle - no transaction loaded.");
+
                     Service_ErrorHandler.HandleValidationError("No transaction selected.", "Transaction Lifecycle");
                     return;
                 }
 
                 if (string.IsNullOrWhiteSpace(_transaction.PartID))
                 {
-                    LoggingUtility.Log("[TransactionDetailPanel] Cannot open lifecycle - missing PartID.");
+
                     Service_ErrorHandler.HandleValidationError("Transaction is missing Part ID.", "Transaction Lifecycle");
                     return;
                 }
 
                 if (string.IsNullOrWhiteSpace(_transaction.BatchNumber))
                 {
-                    LoggingUtility.Log("[TransactionDetailPanel] Cannot open lifecycle - missing BatchNumber.");
+
                     Service_ErrorHandler.HandleValidationError("Transaction is missing Batch Number.", "Transaction Lifecycle");
                     return;
                 }
 
-                LoggingUtility.Log($"[TransactionDetailPanel] Opening lifecycle form for Part: {_transaction.PartID}, Batch: {_transaction.BatchNumber}");
+
 
                 // Create and show the lifecycle form as a modal dialog
                 using var lifecycleForm = new Forms.Transactions.TransactionLifecycleForm(_transaction.PartID, _transaction.BatchNumber);
                 lifecycleForm.ShowDialog(this.FindForm());
 
-                LoggingUtility.Log("[TransactionDetailPanel] Lifecycle form closed.");
+
             }
             catch (Exception ex)
             {
@@ -183,11 +183,11 @@ namespace MTM_WIP_Application_Winforms.Controls.Transactions
 
             try
             {
-                LoggingUtility.Log($"[TransactionDetailPanel] Loading transaction details for ID: {_transaction.ID}");
+
 
                 // Update GroupBox title with collapse indicator
                 UpdateGroupBoxTitle();
-                
+
                 // Populate caption labels (left column)
                 TransactionDetailPanel_Label_IdCaption.Text = "ID:";
                 TransactionDetailPanel_Label_TypeCaption.Text = "Type:";
@@ -200,7 +200,7 @@ namespace MTM_WIP_Application_Winforms.Controls.Transactions
                 TransactionDetailPanel_Label_OperationCaption.Text = "Operation:";
                 TransactionDetailPanel_Label_UserCaption.Text = "User:";
                 TransactionDetailPanel_Label_DateCaption.Text = "Date/Time:";
-                
+
                 // Populate value labels (right column)
                 TransactionDetailPanel_Label_IdValue.Text = _transaction.ID.ToString();
                 TransactionDetailPanel_Label_TypeValue.Text = _transaction.TransactionType.ToString();
@@ -215,7 +215,7 @@ namespace MTM_WIP_Application_Winforms.Controls.Transactions
                 TransactionDetailPanel_Label_DateValue.Text = _transaction.DateTime.ToString("MM/dd/yyyy HH:mm:ss");
                 TransactionDetailPanel_TextBox_Notes.Text = string.IsNullOrWhiteSpace(_transaction.Notes) ? "—" : _transaction.Notes;
 
-                LoggingUtility.Log($"[TransactionDetailPanel] Transaction details loaded successfully.");
+
             }
             catch (Exception ex)
             {
@@ -232,7 +232,7 @@ namespace MTM_WIP_Application_Winforms.Controls.Transactions
         {
             try
             {
-                LoggingUtility.Log("[TransactionDetailPanel] Clearing transaction details.");
+
 
                 _transaction = null;
 
@@ -266,7 +266,7 @@ namespace MTM_WIP_Application_Winforms.Controls.Transactions
                 TransactionDetailPanel_Label_DateValue.Text = "—";
                 TransactionDetailPanel_TextBox_Notes.Text = "—";
 
-                LoggingUtility.Log("[TransactionDetailPanel] Transaction details cleared successfully.");
+
             }
             catch (Exception ex)
             {
@@ -289,29 +289,29 @@ namespace MTM_WIP_Application_Winforms.Controls.Transactions
                     // Hide the entire Related Transactions section when embedded
                     TransactionDetailPanel_TableLayout_RelatedHeader.Visible = false;
                     TransactionDetailPanel_Label_RelatedStatus.Visible = false;
-                    
+
                     // Collapse the row containing related transactions
                     if (TransactionDetailPanel_TableLayout_Main.RowStyles.Count > 3)
                     {
                         TransactionDetailPanel_TableLayout_Main.RowStyles[3].SizeType = SizeType.Absolute;
                         TransactionDetailPanel_TableLayout_Main.RowStyles[3].Height = 0;
                     }
-                    
-                    LoggingUtility.Log("[TransactionDetailPanel] Configured for embedded mode - related transactions section hidden.");
+
+
                 }
                 else
                 {
                     // Show everything in standalone mode
                     TransactionDetailPanel_TableLayout_RelatedHeader.Visible = true;
                     TransactionDetailPanel_Label_RelatedStatus.Visible = true;
-                    
+
                     // Restore the row height
                     if (TransactionDetailPanel_TableLayout_Main.RowStyles.Count > 3)
                     {
                         TransactionDetailPanel_TableLayout_Main.RowStyles[3].SizeType = SizeType.AutoSize;
                     }
-                    
-                    LoggingUtility.Log("[TransactionDetailPanel] Configured for standalone mode.");
+
+
                 }
             }
             catch (Exception ex)
@@ -319,7 +319,7 @@ namespace MTM_WIP_Application_Winforms.Controls.Transactions
                 LoggingUtility.LogApplicationError(ex);
             }
         }
-      
+
         /// <summary>
         /// Toggles the collapsed/expanded state of the transaction details section.
         /// </summary>
@@ -329,7 +329,7 @@ namespace MTM_WIP_Application_Winforms.Controls.Transactions
             {
                 _detailsCollapsed = !_detailsCollapsed;
 
-                LoggingUtility.Log($"[TransactionDetailPanel] Toggling details. Collapsed: {_detailsCollapsed}");
+
 
                 if (_detailsCollapsed)
                 {
@@ -349,7 +349,7 @@ namespace MTM_WIP_Application_Winforms.Controls.Transactions
                     TransactionDetailPanel_TableLayout_Details.Visible = true;
                     TransactionDetailPanel_TextBox_Notes.Visible = true;
                     TransactionDetailPanel_Label_NotesCaption.Visible = true;
-                    
+
                     // Only show related section if not in embedded mode
                     if (!_isEmbeddedMode)
                     {
@@ -378,7 +378,7 @@ namespace MTM_WIP_Application_Winforms.Controls.Transactions
             {
                 var indicator = _detailsCollapsed ? "▶" : "▼";
                 var transactionId = _transaction?.ID.ToString() ?? "";
-                
+
                 if (string.IsNullOrEmpty(transactionId))
                 {
                     TransactionDetailPanel_GroupBox_Main.Text = $"{indicator} Transaction Details (Click to {(_detailsCollapsed ? "Expand" : "Collapse")})";

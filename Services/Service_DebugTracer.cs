@@ -592,7 +592,7 @@ internal static class Service_DebugTracer
             Debug.WriteLine(formattedMessage);
 
             // Write to logging system
-            LoggingUtility.Log(formattedMessage);
+
 
             // If we have structured data, log it as JSON for detailed analysis
             if (data?.Any() == true && level >= Enum_DebugLevel.High)
@@ -605,7 +605,7 @@ internal static class Service_DebugTracer
                         DefaultIgnoreCondition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull,
                         Encoder = System.Text.Encodings.Web.JavaScriptEncoder.UnsafeRelaxedJsonEscaping // Prevent Unicode escaping
                     });
-                    LoggingUtility.Log($"[{timestamp}] [DATA  ] {jsonData}");
+
                 }
                 catch (Exception jsonEx)
                 {

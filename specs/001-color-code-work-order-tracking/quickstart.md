@@ -383,7 +383,7 @@ catch (Exception ex)
 
 ```csharp
 // Application events
-LoggingUtility.Log("User added custom color: " + colorName);
+
 
 // Application errors
 LoggingUtility.LogApplicationError(exception);

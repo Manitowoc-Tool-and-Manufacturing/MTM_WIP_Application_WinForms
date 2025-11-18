@@ -103,7 +103,7 @@ public static async Task<Model_Dao_Result<bool>> UpdateErrorReportStatusAsync(
 
         if (!result.IsSuccess)
         {
-            LoggingUtility.Log($"[Dao_ErrorReports] Failed to update report {reportId}: {result.StatusMessage}");
+            
             return Model_Dao_Result<bool>.Failure(result.StatusMessage);
         }
 

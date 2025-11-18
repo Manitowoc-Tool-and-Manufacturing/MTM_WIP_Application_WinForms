@@ -856,7 +856,7 @@ public static class Helper_Database_StoredProcedure
 
                 int delayMs = BASE_RETRY_DELAY_MS * (int)Math.Pow(2, attempt - 1); // Exponential backoff
 
-                LoggingUtility.Log($"[Database] Transient error detected (attempt {attempt}/{MAX_RETRY_ATTEMPTS}): {ex.Message}. Retrying in {delayMs}ms...");
+                
 
                 await Task.Delay(delayMs);
             }
@@ -902,7 +902,7 @@ public static class Helper_Database_StoredProcedure
 
         if (elapsedMs > thresholdMs)
         {
-            LoggingUtility.Log($"[Performance Warning] Stored procedure '{procedureName}' ({operationType}) took {elapsedMs}ms (threshold: {thresholdMs}ms)");
+            
         }
     }
 

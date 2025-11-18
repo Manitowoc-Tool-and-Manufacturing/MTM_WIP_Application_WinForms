@@ -59,7 +59,7 @@ public static class Helper_LogPath
     {
         if (string.IsNullOrWhiteSpace(filePath))
         {
-            LoggingUtility.Log("[Helper_LogPath] Validation failed: Path is null or empty");
+            
             return false;
         }
 
@@ -76,14 +76,14 @@ public static class Helper_LogPath
 
             if (!isWithinPrimary && !isWithinFallback)
             {
-                LoggingUtility.Log($"[Helper_LogPath] Validation failed: Path outside allowed directories. Path: {fullPath}, Primary: {primaryFullPath}, Fallback: {fallbackFullPath}");
+                
             }
 
             return isWithinPrimary || isWithinFallback;
         }
         catch (Exception ex)
         {
-            LoggingUtility.Log($"[Helper_LogPath] Path validation exception for: {filePath}");
+            
             LoggingUtility.LogApplicationError(ex);
             return false;
         }
@@ -149,7 +149,7 @@ public static class Helper_LogPath
     {
         if (string.IsNullOrWhiteSpace(username))
         {
-            LoggingUtility.Log("[Helper_LogPath] GetUserLogDirectory failed: Username is null or empty");
+            
             return null;
         }
 
@@ -158,7 +158,7 @@ public static class Helper_LogPath
 
         if (string.IsNullOrWhiteSpace(safeUsername))
         {
-            LoggingUtility.Log($"[Helper_LogPath] GetUserLogDirectory failed: Username contains only invalid characters: {username}");
+            
             return null;
         }
 
@@ -182,7 +182,7 @@ public static class Helper_LogPath
         // Validate the constructed path
         if (!IsDirectorySafe(userDirectory))
         {
-            LoggingUtility.Log($"[Helper_LogPath] GetUserLogDirectory failed security check: {userDirectory}");
+            
             return null;
         }
 
@@ -205,7 +205,7 @@ public static class Helper_LogPath
 
         if (string.IsNullOrWhiteSpace(filename))
         {
-            LoggingUtility.Log("[Helper_LogPath] GetUserLogFilePath failed: Filename is null or empty");
+            
             return null;
         }
 
@@ -214,7 +214,7 @@ public static class Helper_LogPath
 
         if (string.IsNullOrWhiteSpace(safeFilename))
         {
-            LoggingUtility.Log($"[Helper_LogPath] GetUserLogFilePath failed: Filename contains only invalid characters: {filename}");
+            
             return null;
         }
 
@@ -223,7 +223,7 @@ public static class Helper_LogPath
         // Validate the constructed path
         if (!IsPathSafe(filePath))
         {
-            LoggingUtility.Log($"[Helper_LogPath] GetUserLogFilePath failed security check: {filePath}");
+            
             return null;
         }
 
@@ -276,13 +276,13 @@ public static class Helper_LogPath
             if (!Directory.Exists(BaseLogDirectory))
             {
                 Directory.CreateDirectory(BaseLogDirectory);
-                LoggingUtility.Log($"[Helper_LogPath] Created base log directory: {BaseLogDirectory}");
+                
             }
             return true;
         }
         catch (Exception ex)
         {
-            LoggingUtility.Log($"[Helper_LogPath] Failed to create base log directory: {BaseLogDirectory}");
+            
             LoggingUtility.LogApplicationError(ex);
             return false;
         }
@@ -306,13 +306,13 @@ public static class Helper_LogPath
             if (!Directory.Exists(userDirectory))
             {
                 Directory.CreateDirectory(userDirectory);
-                LoggingUtility.Log($"[Helper_LogPath] Created user log directory: {userDirectory}");
+                
             }
             return true;
         }
         catch (Exception ex)
         {
-            LoggingUtility.Log($"[Helper_LogPath] Failed to create user log directory: {userDirectory}");
+            
             LoggingUtility.LogApplicationError(ex);
             return false;
         }
@@ -344,21 +344,21 @@ public static class Helper_LogPath
             // Validate the constructed path for security
             if (!IsDirectorySafe(promptFixesDir))
             {
-                LoggingUtility.Log($"[Helper_LogPath] Prompt Fixes directory failed security check: {promptFixesDir}");
+                
                 return false;
             }
 
             if (!Directory.Exists(promptFixesDir))
             {
                 Directory.CreateDirectory(promptFixesDir);
-                LoggingUtility.Log($"[Helper_LogPath] Created Prompt Fixes directory: {promptFixesDir}");
+                
             }
             
             return true;
         }
         catch (Exception ex)
         {
-            LoggingUtility.Log("[Helper_LogPath] Failed to create Prompt Fixes directory");
+            
             LoggingUtility.LogApplicationError(ex);
             return false;
         }
@@ -374,7 +374,7 @@ public static class Helper_LogPath
     {
         if (string.IsNullOrWhiteSpace(methodName))
         {
-            LoggingUtility.Log("[Helper_LogPath] GetPromptFilePath failed: Method name is null or empty");
+            
             return null;
         }
 
@@ -383,7 +383,7 @@ public static class Helper_LogPath
 
         if (string.IsNullOrWhiteSpace(safeMethodName))
         {
-            LoggingUtility.Log($"[Helper_LogPath] GetPromptFilePath failed: Method name contains only invalid characters: {methodName}");
+            
             return null;
         }
 
@@ -394,7 +394,7 @@ public static class Helper_LogPath
         // Validate the constructed path
         if (!IsPathSafe(filePath))
         {
-            LoggingUtility.Log($"[Helper_LogPath] GetPromptFilePath failed security check: {filePath}");
+            
             return null;
         }
 

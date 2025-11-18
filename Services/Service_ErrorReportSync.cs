@@ -42,7 +42,7 @@ internal static class Service_ErrorReportSync
 
         if (!lockAcquired)
         {
-            LoggingUtility.Log("[Service_ErrorReportSync] Sync already in progress, skipping startup sync");
+
             return Model_Dao_Result<int>.Failure("Sync operation already in progress");
         }
 
@@ -51,14 +51,14 @@ internal static class Service_ErrorReportSync
             // Check database connectivity
             if (!await IsDatabaseAvailableAsync())
             {
-                LoggingUtility.Log("[Service_ErrorReportSync] Database unavailable, skipping startup sync");
+
                 return Model_Dao_Result<int>.Success(0, "Database unavailable - sync deferred");
             }
 
             // Process pending files
             int successCount = await ProcessPendingFilesAsync();
 
-            LoggingUtility.Log($"[Service_ErrorReportSync] Startup sync completed: {successCount} reports submitted");
+
 
             return Model_Dao_Result<int>.Success(
                 successCount,
@@ -113,13 +113,13 @@ internal static class Service_ErrorReportSync
 
             if (showProgress)
             {
-                LoggingUtility.Log($"[Service_ErrorReportSync] Starting manual sync of {pendingCount} reports (progress will be shown)");
+
             }
 
             // Process pending files
             int successCount = await ProcessPendingFilesAsync();
 
-            LoggingUtility.Log($"[Service_ErrorReportSync] Manual sync completed: {successCount} of {pendingCount} reports submitted");
+
 
             return Model_Dao_Result<int>.Success(
                 successCount,
@@ -153,7 +153,7 @@ internal static class Service_ErrorReportSync
         }
         catch (Exception ex)
         {
-            LoggingUtility.Log($"[Service_ErrorReportSync] Error getting pending count: {ex.Message}");
+
             return 0;
         }
     }
@@ -201,7 +201,7 @@ internal static class Service_ErrorReportSync
             }
         }
 
-        LoggingUtility.Log($"[Service_ErrorReportSync] Queue sync complete: {successCount} success, {failureCount} failures");
+
 
         return successCount;
     }
@@ -225,7 +225,7 @@ internal static class Service_ErrorReportSync
             // Check if report already exists (idempotent operation)
             if (await ReportExistsAsync(userName, timestamp))
             {
-                LoggingUtility.Log($"[Service_ErrorReportSync] Report already exists, skipping: {Path.GetFileName(filePath)}");
+
 
                 // Move to archive to prevent reprocessing
                 MoveToArchive(filePath);
@@ -251,7 +251,7 @@ internal static class Service_ErrorReportSync
             // Success - move to archive
             MoveToArchive(filePath);
 
-            LoggingUtility.Log($"[Service_ErrorReportSync] Successfully processed: {Path.GetFileName(filePath)}");
+
 
             return true;
         }
@@ -267,7 +267,7 @@ internal static class Service_ErrorReportSync
         catch (IOException ex)
         {
             // File move failure - log but leave in pending for retry
-            LoggingUtility.Log($"[Service_ErrorReportSync] File operation failed for {Path.GetFileName(filePath)}: {ex.Message}");
+
 
             return false;
         }
@@ -323,7 +323,7 @@ internal static class Service_ErrorReportSync
         }
         catch (Exception ex)
         {
-            LoggingUtility.Log($"[Service_ErrorReportSync] Error checking for duplicate report: {ex.Message}");
+
 
             // On error, assume report doesn't exist to allow retry
             return false;
@@ -379,12 +379,12 @@ internal static class Service_ErrorReportSync
 
             File.Move(filePath, corruptPath);
 
-            LoggingUtility.Log($"[Service_ErrorReportSync] Marked file as corrupt: {Path.GetFileName(corruptPath)}");
+
             LoggingUtility.LogApplicationError(ex);
         }
         catch (IOException ioEx)
         {
-            LoggingUtility.Log($"[Service_ErrorReportSync] Failed to rename corrupt file {Path.GetFileName(filePath)}: {ioEx.Message}");
+
         }
     }
 
@@ -419,7 +419,7 @@ internal static class Service_ErrorReportSync
         }
         catch (Exception ex)
         {
-            LoggingUtility.Log($"[Service_ErrorReportSync] Error parsing filename {Path.GetFileName(filePath)}: {ex.Message}");
+
         }
 
         // Return defaults on parse failure
@@ -452,7 +452,7 @@ internal static class Service_ErrorReportSync
         }
         catch (IOException ex)
         {
-            LoggingUtility.Log($"[Service_ErrorReportSync] Failed to move file to archive: {ex.Message}");
+
             throw; // Re-throw to indicate file move failure
         }
     }
@@ -487,13 +487,13 @@ internal static class Service_ErrorReportSync
                     }
                     catch (Exception ex)
                     {
-                        LoggingUtility.Log($"[Service_ErrorReportSync] Failed to delete old archive file {Path.GetFileName(file)}: {ex.Message}");
+
                     }
                 }
 
                 if (deletedCount > 0)
                 {
-                    LoggingUtility.Log($"[Service_ErrorReportSync] Cleaned up {deletedCount} old archived error reports");
+
                 }
             }
 
@@ -507,7 +507,7 @@ internal static class Service_ErrorReportSync
 
                 if (stalePendingFiles.Any())
                 {
-                    LoggingUtility.Log($"[Service_ErrorReportSync] WARNING: {stalePendingFiles.Count} pending error reports are older than {Model_Application_Variables.ErrorReporting.MaxPendingAgeDays} days. Manual review recommended.");
+
                 }
             }
 

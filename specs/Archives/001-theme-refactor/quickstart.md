@@ -237,7 +237,7 @@ public partial class SettingsForm : ThemedForm
         
         if (success)
         {
-            LoggingUtility.Log($"Theme changed to '{selectedTheme}'");
+            
         }
         else
         {
@@ -265,7 +265,7 @@ private async void btnSaveThemePreference_Click(object sender, EventArgs e)
         // Apply theme
         await _themeProvider.SetThemeAsync(selectedTheme);
         
-        LoggingUtility.Log($"User '{userId}' theme preference saved: '{selectedTheme}'");
+        
     }
     else
     {

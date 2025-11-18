@@ -331,7 +331,7 @@ namespace MTM_WIP_Application_Winforms.Forms.MainForm
                         {
                             ["Warning"] = "developmentToolStripMenuItem is null"
                         });
-                    LoggingUtility.Log("Development Menu item not found during visibility configuration");
+                    
                 }
             }
             catch (Exception ex)
@@ -480,7 +480,7 @@ namespace MTM_WIP_Application_Winforms.Forms.MainForm
                     try
                     {
                         // Prompt user to restart instead of auto-refresh
-                        LoggingUtility.Log("Display settings changed - prompting user for restart");
+                        
 
                         // Note: We don't auto-refresh here because the DpiChanged event
                         // on the form will handle it and prompt the user
@@ -491,7 +491,7 @@ namespace MTM_WIP_Application_Winforms.Forms.MainForm
                     }
                 };
 
-                LoggingUtility.Log("DPI change event handlers wired up successfully");
+                
             }
             catch (Exception ex)
             {
@@ -507,7 +507,7 @@ namespace MTM_WIP_Application_Winforms.Forms.MainForm
         {
             try
             {
-                LoggingUtility.Log($"MainForm DPI changed from {e.DeviceDpiOld} to {e.DeviceDpiNew}");
+                
 
                 // Calculate scaling percentage for user-friendly message
                 int oldPercent = (int)Math.Round(e.DeviceDpiOld / 96.0 * 100);
@@ -528,7 +528,7 @@ namespace MTM_WIP_Application_Winforms.Forms.MainForm
                 if (result == DialogResult.Yes)
                 {
                     // User chose to restart - save state and restart application
-                    LoggingUtility.Log("User chose to restart application after DPI change");
+                    
 
                     // Get the application executable path
                     string appPath = Application.ExecutablePath;
@@ -541,14 +541,14 @@ namespace MTM_WIP_Application_Winforms.Forms.MainForm
                 }
                 else if (result == DialogResult.No)
                 {
-                    LoggingUtility.Log("User chose auto-resize after DPI change");
+                    
                     // Theme reapplied automatically by ThemedForm base class
-                    LoggingUtility.Log("MainForm DPI change handling completed");
+                    
                 }
                 else
                 {
                     // User cancelled - do nothing
-                    LoggingUtility.Log("User cancelled DPI change handling");
+                    
                 }
             }
             catch (Exception ex)
@@ -1164,7 +1164,7 @@ namespace MTM_WIP_Application_Winforms.Forms.MainForm
 
                     _viewApplicationLogsForm.BringToFront();
                     _viewApplicationLogsForm.Focus();
-                    LoggingUtility.Log($"[MainForm] View Application Logs form brought to front (already open)");
+                    
                     return;
                 }
 
@@ -1173,12 +1173,12 @@ namespace MTM_WIP_Application_Winforms.Forms.MainForm
                 if (!string.IsNullOrWhiteSpace(currentUser))
                 {
                     _viewApplicationLogsForm = new Forms.ViewLogs.ViewApplicationLogsForm(currentUser);
-                    LoggingUtility.Log($"[MainForm] View Application Logs form created with user pre-selected: {currentUser}");
+                    
                 }
                 else
                 {
                     _viewApplicationLogsForm = new Forms.ViewLogs.ViewApplicationLogsForm();
-                    LoggingUtility.Log($"[MainForm] View Application Logs form created without user pre-selection");
+                    
                 }
 
                 // Wire up form closed event to clean up reference
@@ -1187,7 +1187,7 @@ namespace MTM_WIP_Application_Winforms.Forms.MainForm
                 // Show as modeless dialog
                 _viewApplicationLogsForm.Show(this);
 
-                LoggingUtility.Log($"[MainForm] View Application Logs form opened successfully");
+                
             }
             catch (Exception ex)
             {

@@ -75,7 +75,7 @@ public static async Task<Model_Dao_Result<List<string>>> GetUserListAsync()
 
         if (!result.IsSuccess)
         {
-            LoggingUtility.Log($"[Dao_ErrorReports] Failed to retrieve user list: {result.StatusMessage}");
+            
             return Model_Dao_Result<List<string>>.Failure(result.StatusMessage);
         }
 

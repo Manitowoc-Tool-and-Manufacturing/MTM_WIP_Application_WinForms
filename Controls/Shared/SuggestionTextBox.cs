@@ -503,10 +503,10 @@ namespace MTM_WIP_Application_Winforms.Controls.Shared
                 _isOverlayVisible = true;
                 OnSuggestionOverlayOpened(EventArgs.Empty);
 
-                LoggingUtility.Log($"[SuggestionTextBox] Overlay opened: Field={this.Name}, Matches={suggestions.Count}, Input='{_originalInput}'");
+
 
                 _currentOverlay = new SuggestionOverlayForm(suggestions, SuggestionTextBox_TextBox);
-                
+
                 var parentForm = this.FindForm();
                 if (parentForm == null)
                 {
@@ -516,21 +516,21 @@ namespace MTM_WIP_Application_Winforms.Controls.Shared
                     _isOverlayVisible = false;
                     return;
                 }
-                
-                LoggingUtility.Log($"[SuggestionTextBox] About to show dialog");
+
+
                 var result = _currentOverlay.ShowDialog(parentForm);
-                LoggingUtility.Log($"[SuggestionTextBox] Dialog closed with result: {result}");
+
 
                 // Capture selected item IMMEDIATELY after dialog closes (before any disposal)
                 string? selectedValue = null;
                 try
                 {
                     selectedValue = _currentOverlay?.SelectedItem;
-                    LoggingUtility.Log($"[SuggestionTextBox] Captured selectedValue: '{selectedValue}'");
+
                 }
                 catch (Exception ex)
                 {
-                    LoggingUtility.Log($"[SuggestionTextBox] ERROR capturing selectedValue: {ex.Message}");
+
                 }
 
                 // Dispose overlay safely
@@ -540,7 +540,7 @@ namespace MTM_WIP_Application_Winforms.Controls.Shared
                 }
                 catch (Exception ex)
                 {
-                    LoggingUtility.Log($"[SuggestionTextBox] ERROR disposing overlay: {ex.Message}");
+
                 }
                 finally
                 {
@@ -550,11 +550,11 @@ namespace MTM_WIP_Application_Winforms.Controls.Shared
                 if (result == DialogResult.OK && selectedValue != null)
                 {
                     // User accepted selection - update TextBox with capitalized value
-                    LoggingUtility.Log($"[SuggestionTextBox] BEFORE text assignment: Field={this.Name}, Current Text='{this.Text}', Will set to='{selectedValue}'");
-                    
+
+
                     this.Text = selectedValue.ToUpperInvariant();
-                    
-                    LoggingUtility.Log($"[SuggestionTextBox] AFTER text assignment: Field={this.Name}, Text is now='{this.Text}'");
+
+
 
                     OnSuggestionSelected(new SuggestionSelectedEventArgs
                     {
@@ -564,17 +564,17 @@ namespace MTM_WIP_Application_Winforms.Controls.Shared
                         FieldName = this.Name
                     });
 
-                    LoggingUtility.Log($"[SuggestionTextBox] Suggestion selected event raised: Field={this.Name}, Value='{selectedValue}', Original='{_originalInput}'");
+
 
                     // Move focus to next control
                     var nextControlFocused = this.FindForm()?.SelectNextControl(this, forward: true, tabStopOnly: true, nested: true, wrap: false);
-                    LoggingUtility.Log($"[SuggestionTextBox] Focus moved to next control: {nextControlFocused}");
+
                 }
                 else
                 {
                     // User cancelled - restore focus to this field
-                    LoggingUtility.Log($"[SuggestionTextBox] User cancelled - result={result}, selectedValue={selectedValue}");
-                    
+
+
                     OnSuggestionCancelled(new SuggestionCancelledEventArgs
                     {
                         OriginalInput = _originalInput,
@@ -582,18 +582,18 @@ namespace MTM_WIP_Application_Winforms.Controls.Shared
                         FieldName = this.Name
                     });
 
-                    LoggingUtility.Log($"[SuggestionTextBox] Suggestion cancelled: Field={this.Name}, Reason=Escape, Input='{_originalInput}'");
-                    
+
+
                     // Ensure focus returns to this field (prevents focus moving to next field)
                     SuggestionTextBox_TextBox.Focus();
-                    LoggingUtility.Log($"[SuggestionTextBox] Focus restored to field: {this.Name}");
+
                 }
             }
             finally
             {
                 _isOverlayVisible = false;
                 OnSuggestionOverlayClosed(EventArgs.Empty);
-                LoggingUtility.Log($"[SuggestionTextBox] Overlay closed finally block");
+
             }
         }
 
@@ -609,7 +609,7 @@ namespace MTM_WIP_Application_Winforms.Controls.Shared
                 FieldName = this.Name
             });
 
-            LoggingUtility.Log($"No matches found: Field={this.Name}, Input='{_originalInput}'");
+
 
             if (ClearOnNoMatch)
             {

@@ -197,7 +197,7 @@ namespace MTM_WIP_Application_Winforms.Helpers
                     var partColumns = new[] { "PartID", "PartId", "Part" };
                     if (!HasAnyColumn(PartIds_DataTable, partColumns))
                     {
-                        LoggingUtility.Log("[Helper_UI_SuggestionBoxes] PartID column not found (tried: PartID, PartId, Part) in PartIds_DataTable");
+
                         return false;
                     }
 
@@ -205,7 +205,7 @@ namespace MTM_WIP_Application_Winforms.Helpers
                     foreach (DataRow row in PartIds_DataTable.Rows)
                     {
                         string? rowValue = GetValueCaseInsensitive(row, partColumns);
-                        if (!string.IsNullOrEmpty(rowValue) && 
+                        if (!string.IsNullOrEmpty(rowValue) &&
                             rowValue.Equals(partId, StringComparison.OrdinalIgnoreCase))
                         {
                             return true;
@@ -248,7 +248,7 @@ namespace MTM_WIP_Application_Winforms.Helpers
                     var opColumns = new[] { "OperationNumber", "Operation", "Op", "OperationNo" };
                     if (!HasAnyColumn(Operations_DataTable, opColumns))
                     {
-                        LoggingUtility.Log("[Helper_UI_SuggestionBoxes] OperationNumber column not found (tried: OperationNumber, Operation, Op, OperationNo) in Operations_DataTable");
+
                         return false;
                     }
 
@@ -256,7 +256,7 @@ namespace MTM_WIP_Application_Winforms.Helpers
                     foreach (DataRow row in Operations_DataTable.Rows)
                     {
                         string? rowValue = GetValueCaseInsensitive(row, opColumns);
-                        if (!string.IsNullOrEmpty(rowValue) && 
+                        if (!string.IsNullOrEmpty(rowValue) &&
                             rowValue.Equals(operation, StringComparison.OrdinalIgnoreCase))
                         {
                             return true;
@@ -299,7 +299,7 @@ namespace MTM_WIP_Application_Winforms.Helpers
                     var locColumns = new[] { "Location", "Loc" };
                     if (!HasAnyColumn(Locations_DataTable, locColumns))
                     {
-                        LoggingUtility.Log("[Helper_UI_SuggestionBoxes] Location column not found (tried: Location, Loc) in Locations_DataTable");
+
                         return false;
                     }
 
@@ -307,7 +307,7 @@ namespace MTM_WIP_Application_Winforms.Helpers
                     foreach (DataRow row in Locations_DataTable.Rows)
                     {
                         string? rowValue = GetValueCaseInsensitive(row, locColumns);
-                        if (!string.IsNullOrEmpty(rowValue) && 
+                        if (!string.IsNullOrEmpty(rowValue) &&
                             rowValue.Equals(location, StringComparison.OrdinalIgnoreCase))
                         {
                             return true;

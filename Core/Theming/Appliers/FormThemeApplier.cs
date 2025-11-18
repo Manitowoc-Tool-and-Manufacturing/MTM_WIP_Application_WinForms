@@ -43,15 +43,15 @@ public class FormThemeApplier : ThemeApplierBase
             // Use ControlBackColor as fallback if FormBackColor is not set
             var backColor = GetColorOrDefault(theme.FormBackColor ?? theme.ControlBackColor, Color.White);
             var foreColor = GetColorOrDefault(theme.FormForeColor ?? theme.ControlForeColor, Color.Black);
-            
+
             // DEBUG: Log what colors we're actually using
-            LoggingUtility.Log($"[FormThemeApplier] Applying to '{control.Name}' - FormBackColor: {theme.FormBackColor?.ToString() ?? "NULL"}, ControlBackColor: {theme.ControlBackColor?.ToString() ?? "NULL"}, Final BackColor: {backColor}");
-            LoggingUtility.Log($"[FormThemeApplier] Applying to '{control.Name}' - FormForeColor: {theme.FormForeColor?.ToString() ?? "NULL"}, ControlForeColor: {theme.ControlForeColor?.ToString() ?? "NULL"}, Final ForeColor: {foreColor}");
-            
+
+
+
             control.BackColor = backColor;
             control.ForeColor = foreColor;
-            
-            Logger?.LogDebug("Applied theme to {ControlType} '{ControlName}' - BackColor: {BackColor}, ForeColor: {ForeColor}", 
+
+            Logger?.LogDebug("Applied theme to {ControlType} '{ControlName}' - BackColor: {BackColor}, ForeColor: {ForeColor}",
                 control.GetType().Name, control.Name, backColor, foreColor);
 
             // T073: Recursively traverse all children, grandchildren, etc.
@@ -103,9 +103,9 @@ public class FormThemeApplier : ThemeApplierBase
                 else
                 {
                     // T075: Log controls without matching applier and use fallback
-                    Logger?.LogDebug("No specific applier found for {ControlType} '{ControlName}', using common styles fallback", 
+                    Logger?.LogDebug("No specific applier found for {ControlType} '{ControlName}', using common styles fallback",
                         child.GetType().Name, child.Name);
-                    
+
                     // Apply common styles as fallback (regardless of visibility)
                     ApplyCommonStyles(child, theme);
                 }
@@ -125,7 +125,7 @@ public class FormThemeApplier : ThemeApplierBase
             {
                 // Log error but continue with other controls
                 LoggingUtility.LogApplicationError(ex);
-                Logger?.LogError(ex, "Error applying theme to child control '{ControlName}' of type {ControlType}", 
+                Logger?.LogError(ex, "Error applying theme to child control '{ControlName}' of type {ControlType}",
                     child.Name, child.GetType().Name);
             }
         }
