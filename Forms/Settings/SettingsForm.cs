@@ -55,6 +55,7 @@ namespace MTM_WIP_Application_Winforms.Forms.Settings
 
             _settingsPanels = new Dictionary<string, Panel>
             {
+                ["Home"] = SettingsForm_Panel_Home,
                 ["Database"] = SettingsForm_Panel_Database,
                 ["Add User"] = SettingsForm_Panel_AddUser,
                 ["Edit User"] = SettingsForm_Panel_EditUser,
@@ -101,8 +102,12 @@ namespace MTM_WIP_Application_Winforms.Forms.Settings
 
         private void InitializeCategoryTreeView()
         {
+            // Temporarily unhook the AfterSelect event to prevent navigation during rebuild
+            SettingsForm_TreeView_Category.AfterSelect -= CategoryTreeView_AfterSelect;
+            
             SettingsForm_TreeView_Category.Nodes.Clear();
 
+            TreeNode homeNode = SettingsForm_TreeView_Category.Nodes.Add("Home", "Home");
             TreeNode databaseNode = SettingsForm_TreeView_Category.Nodes.Add("Database", "Database");
 
             TreeNode usersNode = SettingsForm_TreeView_Category.Nodes.Add("Users", "Users");
@@ -136,11 +141,26 @@ namespace MTM_WIP_Application_Winforms.Forms.Settings
 
             SettingsForm_TreeView_Category.CollapseAll();
 
-            SettingsForm_TreeView_Category.SelectedNode = databaseNode;
+            // Re-hook the AfterSelect event after initialization is complete
+            SettingsForm_TreeView_Category.AfterSelect += CategoryTreeView_AfterSelect;
+            
+            // Don't auto-select any node - homepage is the default view
         }
 
         private void InitializeUserControls()
         {
+            // Homepage control
+            Control_SettingsHome controlHome = new() { Dock = DockStyle.Fill };
+            controlHome.NavigationRequested += (s, e) =>
+            {
+                ShowPanel(e.Target);
+                // Update TreeView selection to match
+                SelectTreeNodeByName(e.Target);
+            };
+            SettingsForm_Panel_Home.Controls.Add(controlHome);
+            // Initialize categories based on privileges - call after form is shown
+            this.Shown += (s, e) => controlHome.InitializeCategories();
+
             Control_Shortcuts controlShortcuts = new() { Dock = DockStyle.Fill };
             controlShortcuts.ShortcutsUpdated += (s, e) =>
             {
@@ -322,7 +342,7 @@ namespace MTM_WIP_Application_Winforms.Forms.Settings
             }
 
             InitializeCategoryTreeView();
-            ShowPanel("Database");
+            ShowPanel("Home");
 
             ApplyPrivileges();
         }
@@ -418,6 +438,7 @@ namespace MTM_WIP_Application_Winforms.Forms.Settings
 
             string selected = e.Node.Name;
 
+            // Don't navigate if this is a parent node with children
             if (e.Node.Nodes.Count > 0)
             {
                 return;
@@ -460,6 +481,32 @@ namespace MTM_WIP_Application_Winforms.Forms.Settings
         }
 
         private void UpdateStatus(string message) => SettingsForm_StatusText.Text = message;
+
+        /// <summary>
+        /// Selects a TreeView node by its name, expanding parent nodes as needed.
+        /// </summary>
+        private void SelectTreeNodeByName(string nodeName)
+        {
+            TreeNode? FindNode(TreeNodeCollection nodes, string name)
+            {
+                foreach (TreeNode node in nodes)
+                {
+                    if (node.Name == name)
+                        return node;
+                    var found = FindNode(node.Nodes, name);
+                    if (found != null)
+                        return found;
+                }
+                return null;
+            }
+
+            var targetNode = FindNode(SettingsForm_TreeView_Category.Nodes, nodeName);
+            if (targetNode != null)
+            {
+                targetNode.Parent?.Expand();
+                SettingsForm_TreeView_Category.SelectedNode = targetNode;
+            }
+        }
 
         protected override void OnFormClosing(FormClosingEventArgs e)
         {
