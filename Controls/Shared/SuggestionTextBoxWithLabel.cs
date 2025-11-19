@@ -335,7 +335,7 @@ namespace MTM_WIP_Application_Winforms.Controls.Shared
                 await TriggerFullSuggestionListAsync();
             };
 
-            // Keyboard shortcuts (F4 or Down arrow) should behave like standalone SuggestionTextBox
+            // Keyboard shortcuts (F4, Tab, or Down arrow on empty input) should behave like standalone SuggestionTextBox
             SuggestionTextBoxWithLabel_TextBox_Main.KeyDown += async (sender, e) =>
             {
                 if (!_enableSuggestions)
@@ -345,8 +345,9 @@ namespace MTM_WIP_Application_Winforms.Controls.Shared
 
                 bool isF4 = e.KeyCode == Keys.F4;
                 bool isDownOnEmptyInput = e.KeyCode == Keys.Down && SuggestionTextBoxWithLabel_TextBox_Main.Text.Length == 0;
+                bool isTabOnEmptyInput = e.KeyCode == Keys.Tab && SuggestionTextBoxWithLabel_TextBox_Main.Text.Length == 0;
 
-                if (!isF4 && !isDownOnEmptyInput)
+                if (!isF4 && !isDownOnEmptyInput && !isTabOnEmptyInput)
                 {
                     return;
                 }
