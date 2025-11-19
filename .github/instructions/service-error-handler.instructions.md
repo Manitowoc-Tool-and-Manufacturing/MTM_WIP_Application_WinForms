@@ -5,6 +5,18 @@ applyTo: '**/*.cs'
 
 # Service_ErrorHandler Implementation Guide
 
+## Table of Contents
+- **System Architecture Overview**: Core responsibilities and flow of the error handling system.
+- **Core Patterns**: Mandatory patterns for Basic Exception Handling, Retry Logic, Database Errors, and Validation.
+- **Service_ErrorHandler Methods**: Detailed API documentation for `HandleException`, `HandleDatabaseError`, etc.
+- **Error Frequency Tracking**: How the system prevents error spam.
+- **Thread Safety**: Automatic UI thread marshaling.
+- **Context Data Best Practices**: What to include (and what NOT to include) in error logs.
+- **Integration with LoggingUtility**: How errors are automatically logged to CSV.
+- **WinForms Dialog Integration**: Features of the EnhancedErrorDialog.
+- **Common Use Cases**: Examples for Form Load, Button Clicks, and Background Workers.
+- **Constitution Compliance**: Mandatory rules for error handling.
+
 **CRITICAL**: Service_ErrorHandler is the ONLY approved mechanism for error handling and user notifications. MessageBox.Show is FORBIDDEN.
 
 ## System Architecture Overview

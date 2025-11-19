@@ -5,6 +5,18 @@ applyTo: '**/*.cs'
 
 # LoggingUtility Implementation Guide
 
+## Table of Contents
+- **System Architecture Overview**: Responsibilities, flow, and file structure of the logging system.
+- **Log File Locations**: Where logs are stored and how they are named.
+- **Core Methods**: API documentation for `Log`, `LogDatabaseError`, and `LogApplicationError`.
+- **Core Patterns**: Examples for Normal, Database, Async, Form Lifecycle, and User Action logging.
+- **CSV Log Format**: Structure of the log files.
+- **Thread Safety**: Locking and async file operations.
+- **Log Rotation and Cleanup**: Automatic maintenance of log files.
+- **Integration with Service_ErrorHandler**: How logging works with error handling.
+- **WinForms-Specific Patterns**: Logging for Control Events, Grids, and Timers.
+- **Debug Levels**: Controlling verbosity.
+
 Centralized CSV-based logging system for the MTM WIP Application with thread-safe file operations and automatic log rotation.
 
 ## System Architecture Overview

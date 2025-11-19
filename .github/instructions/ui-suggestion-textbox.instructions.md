@@ -5,6 +5,13 @@ applyTo: '**/*.Designer.cs, **/*.cs'
 
 # SuggestionTextBoxWithLabel Implementation Guide
 
+## Table of Contents
+- **Control Overview**: Purpose and usage of the `SuggestionTextBoxWithLabel` control.
+- **Implementation Patterns**: Code examples for Standard Entity Input, Custom Data Sources, and Validated Input.
+- **Migration Guide**: Steps to replace legacy Label+TextBox pairs.
+- **Best Practices**: Naming, initialization, and disposal rules.
+- **Troubleshooting**: Common issues with suggestions and validation.
+
 Standardized pattern for implementing intelligent suggestion inputs using the `SuggestionTextBoxWithLabel` composite control.
 
 ## Control Overview
