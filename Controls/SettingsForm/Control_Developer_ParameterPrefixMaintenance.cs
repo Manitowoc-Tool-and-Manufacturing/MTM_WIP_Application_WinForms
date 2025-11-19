@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using MTM_WIP_Application_Winforms.Core;
 using MTM_WIP_Application_Winforms.Data;
+using MTM_WIP_Application_Winforms.Forms.Shared;
 using MTM_WIP_Application_Winforms.Logging;
 using MTM_WIP_Application_Winforms.Models;
 using MTM_WIP_Application_Winforms.Services;
@@ -16,7 +17,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
     /// Developer control for managing parameter prefix overrides.
     /// Provides CRUD interface for sys_parameter_prefix_overrides table with real-time cache refresh.
     /// </summary>
-    public partial class Control_Developer_ParameterPrefixMaintenance : UserControl
+    public partial class Control_Developer_ParameterPrefixMaintenance : ThemedUserControl
     {
         #region Fields
 

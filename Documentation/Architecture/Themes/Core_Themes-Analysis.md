@@ -571,7 +571,7 @@ graph LR
 
 ```csharp
 // ❌ BEFORE - Static, tightly coupled
-public class TransactionGridControl : UserControl
+public class TransactionGridControl : ThemedUserControl
 {
     public TransactionGridControl()
     {
@@ -730,7 +730,7 @@ public class ThemedForm : Form
     // Dependency injection + observer pattern
 }
 
-public class ThemedUserControl : UserControl
+public class ThemedUserControl : ThemedUserControl
 {
     // Dependency injection + observer pattern
 }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
 using System.Windows.Forms;
+using MTM_WIP_Application_Winforms.Forms.Shared;
 
 namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
 {
@@ -10,7 +11,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
     /// Reusable category card with subcategory links.
     /// Fully editable in Visual Studio designer.
     /// </summary>
-    public partial class Control_SettingsCategoryCard : UserControl
+    public partial class Control_SettingsCategoryCard : ThemedUserControl
     {
         #region Fields
 

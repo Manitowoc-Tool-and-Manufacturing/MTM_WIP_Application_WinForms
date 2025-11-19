@@ -5,12 +5,13 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using MTM_WIP_Application_Winforms.Core;
 using MTM_WIP_Application_Winforms.Data;
+using MTM_WIP_Application_Winforms.Forms.Shared;
 using MTM_WIP_Application_Winforms.Helpers;
 using MTM_WIP_Application_Winforms.Logging;
 
 namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
 {
-    public partial class Control_Shortcuts : UserControl
+    public partial class Control_Shortcuts : ThemedUserControl
     {
         public event EventHandler? ShortcutsUpdated;
         public event EventHandler<string>? StatusMessageChanged;

@@ -1,6 +1,7 @@
 using System.Data;
 using MTM_WIP_Application_Winforms.Core;
 using MTM_WIP_Application_Winforms.Data;
+using MTM_WIP_Application_Winforms.Forms.Shared;
 using MTM_WIP_Application_Winforms.Helpers;
 using MTM_WIP_Application_Winforms.Logging;
 using MTM_WIP_Application_Winforms.Models;
@@ -12,7 +13,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
     /// Control for editing existing part IDs.
     /// Provides part selection via SuggestionTextBox, item type assignment, and color code requirement configuration.
     /// </summary>
-    public partial class Control_Edit_PartID : UserControl
+    public partial class Control_Edit_PartID : ThemedUserControl
     {
         #region Fields
 

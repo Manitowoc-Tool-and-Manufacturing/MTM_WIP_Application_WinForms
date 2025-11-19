@@ -3,6 +3,7 @@ using System.Drawing;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using MTM_WIP_Application_Winforms.Data;
+using MTM_WIP_Application_Winforms.Forms.Shared;
 using MTM_WIP_Application_Winforms.Helpers;
 using MTM_WIP_Application_Winforms.Models;
 using MTM_WIP_Application_Winforms.Services;
@@ -13,7 +14,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
     /// Database connection settings control.
     /// Allows administrators and developers to configure MySQL connection parameters.
     /// </summary>
-    public partial class Control_Database : UserControl
+    public partial class Control_Database : ThemedUserControl
     {
         #region Events
 

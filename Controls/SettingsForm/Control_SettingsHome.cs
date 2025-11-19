@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
+using MTM_WIP_Application_Winforms.Forms.Shared;
 using MTM_WIP_Application_Winforms.Models;
 
 namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
@@ -11,7 +12,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
     /// Modern homepage control for Settings form that provides tile-based navigation.
     /// Replaces traditional TreeView with card-based interface.
     /// </summary>
-    public partial class Control_SettingsHome : UserControl
+    public partial class Control_SettingsHome : ThemedUserControl
     {
         #region Fields
 

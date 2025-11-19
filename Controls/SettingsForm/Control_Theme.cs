@@ -10,10 +10,11 @@ using MTM_WIP_Application_Winforms.Models;
 using MTM_WIP_Application_Winforms.Logging;
 using MTM_WIP_Application_Winforms.Services;
 using Microsoft.Extensions.DependencyInjection;
+using MTM_WIP_Application_Winforms.Forms.Shared;
 
 namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
 {
-    public partial class Control_Theme : UserControl
+    public partial class Control_Theme : ThemedUserControl
     {
         public event EventHandler? ThemeChanged;
         public event EventHandler<string>? StatusMessageChanged;

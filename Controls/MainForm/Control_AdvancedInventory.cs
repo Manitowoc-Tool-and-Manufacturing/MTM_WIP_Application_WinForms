@@ -16,10 +16,11 @@ using MTM_WIP_Application_Winforms.Models;
 using MTM_WIP_Application_Winforms.Services;
 using MySql.Data.MySqlClient;
 using Color = System.Drawing.Color;
+using MTM_WIP_Application_Winforms.Forms.Shared;
 
 namespace MTM_WIP_Application_Winforms.Controls.MainForm
 {
-    public partial class Control_AdvancedInventory : UserControl
+    public partial class Control_AdvancedInventory : ThemedUserControl
     {
         #region Fields
 

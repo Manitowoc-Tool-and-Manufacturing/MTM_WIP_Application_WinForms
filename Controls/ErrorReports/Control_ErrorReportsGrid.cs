@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using MTM_WIP_Application_Winforms.Core;
 using MTM_WIP_Application_Winforms.Data;
+using MTM_WIP_Application_Winforms.Forms.Shared;
 using MTM_WIP_Application_Winforms.Helpers;
 using MTM_WIP_Application_Winforms.Logging;
 using MTM_WIP_Application_Winforms.Models;
@@ -15,7 +16,7 @@ using MTM_WIP_Application_WinForms.Models;
 
 namespace MTM_WIP_Application_Winforms.Controls.ErrorReports
 {
-    public partial class Control_ErrorReportsGrid : UserControl
+    public partial class Control_ErrorReportsGrid : ThemedUserControl
     {
         #region Fields
 

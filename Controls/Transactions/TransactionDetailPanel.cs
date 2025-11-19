@@ -1,4 +1,5 @@
 using MTM_WIP_Application_Winforms.Core;
+using MTM_WIP_Application_Winforms.Forms.Shared;
 using MTM_WIP_Application_Winforms.Logging;
 using MTM_WIP_Application_Winforms.Models;
 using MTM_WIP_Application_Winforms.Services;
@@ -9,7 +10,7 @@ namespace MTM_WIP_Application_Winforms.Controls.Transactions
     /// UserControl for displaying detailed information about a single transaction.
     /// Phase 1 shell implementation - full details UI to be implemented in Phase 2.
     /// </summary>
-    public partial class TransactionDetailPanel : UserControl
+    public partial class TransactionDetailPanel : ThemedUserControl
     {
         #region Fields
 

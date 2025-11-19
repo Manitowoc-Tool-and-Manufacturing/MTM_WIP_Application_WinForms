@@ -1,4 +1,5 @@
 using MTM_WIP_Application_Winforms.Core;
+using MTM_WIP_Application_Winforms.Forms.Shared;
 using MTM_WIP_Application_Winforms.Logging;
 using MTM_WIP_Application_Winforms.Models;
 
@@ -8,7 +9,7 @@ namespace MTM_WIP_Application_Winforms.Controls.Transactions
     /// UserControl for displaying transaction analytics with summary cards.
     /// Shows total transactions, IN/OUT/TRANSFER counts and percentages.
     /// </summary>
-    public partial class Model_Transactions_Core_AnalyticsControl : UserControl
+    public partial class Model_Transactions_Core_AnalyticsControl : ThemedUserControl
     {
         #region Fields
 
