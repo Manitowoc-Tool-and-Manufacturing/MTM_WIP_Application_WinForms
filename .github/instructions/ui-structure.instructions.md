@@ -91,6 +91,26 @@ For navigation or settings summaries (like `Control_SettingsHome`):
 - **Settings Form Controls**: When building Settings tab content (e.g., Database, Theme, About), follow the card-based layout pattern from `Control_Database.Designer.cs` instead of nested `GroupBox` controls. This ensures consistent spacing, typography, and iconography.
 - **Reusable Components**: If a new card type or custom UI element is required, create it as a separate control (e.g., `Controls/Shared` or `Controls/SettingsForm`) rather than inlining it inside the current file so that it can be reused by future settings tabs.
 
+### Card-Based Management Controls (e.g., Control_PartIDManagement, Control_LocationManagement)
+For settings screens that manage Add/Edit/Remove operations:
+- **Structure**:
+  - Home panel with 3 clickable navigation tiles (Add, Edit, Remove)
+  - Container panel holding all cards with visibility toggling
+  - Back button at bottom (visible only when viewing a card)
+- **Home Tiles Pattern**:
+  ```csharp
+  // 3-column TableLayoutPanel with accent-colored tiles
+  // Each tile: emoji icon, title, description, colored accent bar (4px)
+  // Tile click handlers navigate to respective card
+  ```
+- **Card Pattern**:
+  - Light gray background (`#FAFAFA`) for contrast
+  - 4px colored accent bar at top (Green=Add, Blue=Edit, Red=Remove)
+  - Padding: 16px for content
+  - All cards hidden initially, shown on navigation
+- **Navigation Flow**: Home → Select action → Perform task → Back to home (clearing forms)
+- **Visual Consistency**: Match `Control_SettingsHome` styling (accent bars, backgrounds, borders)
+
 ## 4. Inheritance Requirements
 
 - **Forms**: MUST inherit from `ThemedForm`.

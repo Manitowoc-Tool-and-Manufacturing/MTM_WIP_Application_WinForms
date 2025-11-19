@@ -1,0 +1,636 @@
+using System.Data;
+using System.Threading.Tasks;
+using System.Windows.Forms;
+using MTM_WIP_Application_Winforms.Controls.Shared;
+using MTM_WIP_Application_Winforms.Data;
+using MTM_WIP_Application_Winforms.Forms.Shared;
+using MTM_WIP_Application_Winforms.Helpers;
+using MTM_WIP_Application_Winforms.Logging;
+using MTM_WIP_Application_Winforms.Models;
+using MTM_WIP_Application_Winforms.Services;
+
+namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
+{
+    /// <summary>
+    /// Unified control that manages adding, editing, and removing locations using the new Settings card layout.
+    /// </summary>
+    public partial class Control_LocationManagement : ThemedUserControl
+    {
+        #region Fields
+
+        private DataRow? _selectedEditLocation;
+        private DataRow? _selectedRemoveLocation;
+
+        #endregion
+
+        #region Properties
+
+        #endregion
+
+        #region Constructors
+
+        /// <summary>
+        /// Initializes a new instance of the location management control.
+        /// </summary>
+        public Control_LocationManagement()
+        {
+            InitializeComponent();
+            ConfigureInputs();
+            WireUpEventHandlers();
+            WireUpNavigationHandlers();
+        }
+
+        #endregion
+
+        #region Methods
+
+        /// <inheritdoc />
+        protected override void OnLoad(EventArgs e)
+        {
+            base.OnLoad(e);
+            UpdateIssuedByLabels();
+            LoadBuildingOptions(Control_LocationManagement_ComboBox_AddBuilding);
+            LoadBuildingOptions(Control_LocationManagement_ComboBox_EditBuilding);
+            SetEditSectionEnabled(false);
+            SetRemoveSectionEnabled(false);
+        }
+
+        private void ConfigureInputs()
+        {
+            Helper_SuggestionTextBox.ConfigureForLocations(
+                Control_LocationManagement_Suggestion_EditSelectLocation,
+                Helper_SuggestionTextBox.GetCachedLocationsAsync);
+
+            Helper_SuggestionTextBox.ConfigureForLocations(
+                Control_LocationManagement_Suggestion_RemoveSelectLocation,
+                Helper_SuggestionTextBox.GetCachedLocationsAsync);
+        }
+
+        private void WireUpEventHandlers()
+        {
+            if (Control_LocationManagement_Suggestion_EditSelectLocation != null)
+            {
+                Control_LocationManagement_Suggestion_EditSelectLocation.SuggestionSelected += async (_, args) =>
+                    await LoadEditLocationAsync(args.SelectedValue);
+            }
+
+            if (Control_LocationManagement_Suggestion_RemoveSelectLocation != null)
+            {
+                Control_LocationManagement_Suggestion_RemoveSelectLocation.SuggestionSelected += async (_, args) =>
+                    await LoadRemoveLocationAsync(args.SelectedValue);
+            }
+
+            Control_LocationManagement_Button_AddSave.Click += async (_, _) => await HandleAddLocationAsync();
+            Control_LocationManagement_Button_AddClear.Click += (_, _) => ClearAddSection();
+
+            Control_LocationManagement_Button_EditSave.Click += async (_, _) => await HandleEditLocationSaveAsync();
+            Control_LocationManagement_Button_EditReset.Click += (_, _) => ClearEditSection();
+
+            Control_LocationManagement_Button_RemoveConfirm.Click += async (_, _) => await HandleRemoveLocationAsync();
+            Control_LocationManagement_Button_RemoveCancel.Click += (_, _) => ClearRemoveSection();
+        }
+
+        private void WireUpNavigationHandlers()
+        {
+            // Home tile clicks
+            Control_LocationManagement_Panel_HomeTile_Add.Click += (_, _) => ShowCard(0);
+            Control_LocationManagement_Panel_HomeTile_Edit.Click += (_, _) => ShowCard(1);
+            Control_LocationManagement_Panel_HomeTile_Remove.Click += (_, _) => ShowCard(2);
+            
+            // Make all child controls of home tiles also clickable
+            foreach (Control control in Control_LocationManagement_Panel_HomeTile_Add.Controls)
+            {
+                WireUpTileControlClick(control, 0);
+            }
+            foreach (Control control in Control_LocationManagement_Panel_HomeTile_Edit.Controls)
+            {
+                WireUpTileControlClick(control, 1);
+            }
+            foreach (Control control in Control_LocationManagement_Panel_HomeTile_Remove.Controls)
+            {
+                WireUpTileControlClick(control, 2);
+            }
+            
+            // Back button
+            Control_LocationManagement_Button_Back.Click += (_, _) => ShowHome();
+        }
+
+        private void WireUpTileControlClick(Control control, int cardIndex)
+        {
+            control.Click += (_, _) => ShowCard(cardIndex);
+            control.Cursor = Cursors.Hand;
+            
+            // Recursively wire up child controls
+            foreach (Control child in control.Controls)
+            {
+                WireUpTileControlClick(child, cardIndex);
+            }
+        }
+
+        private void ShowCard(int cardIndex)
+        {
+            // Hide home, show cards container and back button
+            Control_LocationManagement_Panel_Home.Visible = false;
+            Control_LocationManagement_TableLayout_Cards.Visible = true;
+            Control_LocationManagement_FlowPanel_BackButton.Visible = true;
+            
+            // Hide all cards first
+            Control_LocationManagement_Panel_AddCard.Visible = false;
+            Control_LocationManagement_Panel_EditCard.Visible = false;
+            Control_LocationManagement_Panel_RemoveCard.Visible = false;
+            
+            // Show selected card
+            switch (cardIndex)
+            {
+                case 0:
+                    Control_LocationManagement_Panel_AddCard.Visible = true;
+                    Control_LocationManagement_TextBox_AddLocation.Focus();
+                    break;
+                case 1:
+                    Control_LocationManagement_Panel_EditCard.Visible = true;
+                    Control_LocationManagement_Suggestion_EditSelectLocation.Focus();
+                    break;
+                case 2:
+                    Control_LocationManagement_Panel_RemoveCard.Visible = true;
+                    Control_LocationManagement_Suggestion_RemoveSelectLocation.Focus();
+                    break;
+            }
+        }
+
+        private void ShowHome()
+        {
+            // Clear all sections
+            ClearAddSection();
+            ClearEditSection();
+            ClearRemoveSection();
+            
+            // Show home, hide cards and back button
+            Control_LocationManagement_Panel_Home.Visible = true;
+            Control_LocationManagement_TableLayout_Cards.Visible = false;
+            Control_LocationManagement_FlowPanel_BackButton.Visible = false;
+        }
+
+        private void UpdateIssuedByLabels()
+        {
+            string issuedBy = Model_Application_Variables.User ?? "Current User";
+            Control_LocationManagement_Label_AddIssuedByValue.Text = issuedBy;
+            Control_LocationManagement_Label_EditIssuedByValue.Text = issuedBy;
+            Control_LocationManagement_Label_RemoveIssuedByValue.Text = issuedBy;
+        }
+
+        private void LoadBuildingOptions(ComboBox comboBox)
+        {
+            comboBox.Items.Clear();
+            comboBox.Items.Add("[ Select Building ]");
+            comboBox.Items.Add("Expo");
+            comboBox.Items.Add("Vits");
+            comboBox.SelectedIndex = 0;
+        }
+
+        private async Task HandleAddLocationAsync()
+        {
+            string location = Control_LocationManagement_TextBox_AddLocation.Text?.Trim() ?? string.Empty;
+            string building = Control_LocationManagement_ComboBox_AddBuilding.Text?.Trim() ?? string.Empty;
+
+            if (string.IsNullOrWhiteSpace(location))
+            {
+                ShowWarning("Location is required before saving.");
+                Control_LocationManagement_TextBox_AddLocation.Focus();
+                return;
+            }
+
+            if (Control_LocationManagement_ComboBox_AddBuilding.SelectedIndex <= 0 ||
+                building == "[ Select Building ]")
+            {
+                ShowWarning("Building is required before saving.");
+                Control_LocationManagement_ComboBox_AddBuilding.Focus();
+                return;
+            }
+
+            // Check if location already exists
+            var existsResult = await Dao_Location.LocationExists(location);
+            if (!existsResult.IsSuccess)
+            {
+                Service_ErrorHandler.HandleDatabaseError(
+                    new Exception(existsResult.ErrorMessage ?? "Failed to check if location exists"),
+                    contextData: new Dictionary<string, object>
+                    {
+                        ["Location"] = location,
+                        ["User"] = Model_Application_Variables.User ?? "Unknown"
+                    },
+                    callerName: nameof(HandleAddLocationAsync),
+                    controlName: this.Name);
+                return;
+            }
+
+            if (existsResult.Data)
+            {
+                ShowWarning($"Location '{location}' already exists.");
+                Control_LocationManagement_TextBox_AddLocation.Focus();
+                Control_LocationManagement_TextBox_AddLocation.SelectAll();
+                return;
+            }
+
+            // Insert new location
+            var insertResult = await Dao_Location.InsertLocation(location, building);
+            if (!insertResult.IsSuccess)
+            {
+                Service_ErrorHandler.HandleDatabaseError(
+                    new Exception(insertResult.ErrorMessage ?? "Failed to insert location"),
+                    contextData: new Dictionary<string, object>
+                    {
+                        ["Location"] = location,
+                        ["Building"] = building,
+                        ["User"] = Model_Application_Variables.User ?? "Unknown"
+                    },
+                    callerName: nameof(HandleAddLocationAsync),
+                    controlName: this.Name);
+                return;
+            }
+
+            LoggingUtility.Log($"[{this.Name}] Location added successfully: Location={location}, Building={building}");
+            ShowSuccess($"Location '{location}' added successfully.");
+            
+            // Refresh caches
+            await RefreshLocationCachesAsync();
+            NotifyLocationListChanged();
+            
+            // Clear form
+            ClearAddSection();
+            Control_LocationManagement_TextBox_AddLocation.Focus();
+        }
+
+        private async Task HandleEditLocationSaveAsync()
+        {
+            if (_selectedEditLocation == null)
+            {
+                ShowWarning("Please select a location to edit first.");
+                return;
+            }
+
+            string originalLocation = _selectedEditLocation["Location"]?.ToString() ?? string.Empty;
+            string newLocation = Control_LocationManagement_TextBox_EditNewLocation.Text?.Trim() ?? string.Empty;
+            string newBuilding = Control_LocationManagement_ComboBox_EditBuilding.Text?.Trim() ?? string.Empty;
+
+            if (string.IsNullOrWhiteSpace(newLocation))
+            {
+                ShowWarning("Location name is required.");
+                Control_LocationManagement_TextBox_EditNewLocation.Focus();
+                return;
+            }
+
+            if (Control_LocationManagement_ComboBox_EditBuilding.SelectedIndex <= 0 ||
+                newBuilding == "[ Select Building ]")
+            {
+                ShowWarning("Building is required.");
+                Control_LocationManagement_ComboBox_EditBuilding.Focus();
+                return;
+            }
+
+            // Check for duplicates if name changed
+            if (newLocation != originalLocation)
+            {
+                var existsResult = await Dao_Location.LocationExists(newLocation);
+                if (!existsResult.IsSuccess)
+                {
+                    Service_ErrorHandler.HandleDatabaseError(
+                        new Exception(existsResult.ErrorMessage ?? "Failed to check if location exists"),
+                        contextData: new Dictionary<string, object>
+                        {
+                            ["OriginalLocation"] = originalLocation,
+                            ["NewLocation"] = newLocation,
+                            ["User"] = Model_Application_Variables.User ?? "Unknown"
+                        },
+                        callerName: nameof(HandleEditLocationSaveAsync),
+                        controlName: this.Name);
+                    return;
+                }
+
+                if (existsResult.Data)
+                {
+                    ShowWarning($"Location '{newLocation}' already exists.");
+                    Control_LocationManagement_TextBox_EditNewLocation.Focus();
+                    Control_LocationManagement_TextBox_EditNewLocation.SelectAll();
+                    return;
+                }
+            }
+
+            // Update location
+            var updateResult = await Dao_Location.UpdateLocation(
+                originalLocation,
+                newLocation,
+                Model_Application_Variables.User ?? "Unknown");
+
+            if (!updateResult.IsSuccess)
+            {
+                Service_ErrorHandler.HandleDatabaseError(
+                    new Exception(updateResult.ErrorMessage ?? "Failed to update location"),
+                    contextData: new Dictionary<string, object>
+                    {
+                        ["OriginalLocation"] = originalLocation,
+                        ["NewLocation"] = newLocation,
+                        ["Building"] = newBuilding,
+                        ["User"] = Model_Application_Variables.User ?? "Unknown"
+                    },
+                    callerName: nameof(HandleEditLocationSaveAsync),
+                    controlName: this.Name);
+                return;
+            }
+
+            LoggingUtility.Log($"[{this.Name}] Location updated successfully: Original={originalLocation}, New={newLocation}, Building={newBuilding}");
+            ShowSuccess($"Location '{newLocation}' updated successfully.");
+            
+            // Refresh caches
+            await RefreshLocationCachesAsync();
+            NotifyLocationListChanged();
+            
+            // Clear form
+            ClearEditSection();
+            Control_LocationManagement_Suggestion_EditSelectLocation.Focus();
+        }
+
+        private async Task HandleRemoveLocationAsync()
+        {
+            if (_selectedRemoveLocation == null)
+            {
+                ShowWarning("Please select a location to remove first.");
+                return;
+            }
+
+            string location = _selectedRemoveLocation["Location"]?.ToString() ?? string.Empty;
+
+            if (string.IsNullOrWhiteSpace(location))
+            {
+                ShowWarning("Invalid location selection.");
+                return;
+            }
+
+            // Confirm deletion
+            var confirmation = MessageBox.Show(
+                $"Are you sure you want to permanently remove location '{location}'?\n\nThis action cannot be undone.",
+                "Confirm Removal",
+                MessageBoxButtons.YesNo,
+                MessageBoxIcon.Warning,
+                MessageBoxDefaultButton.Button2);
+
+            if (confirmation != DialogResult.Yes)
+            {
+                return;
+            }
+
+            // Delete location
+            var deleteResult = await Dao_Location.DeleteLocation(location);
+            if (!deleteResult.IsSuccess)
+            {
+                Service_ErrorHandler.HandleDatabaseError(
+                    new Exception(deleteResult.ErrorMessage ?? "Failed to delete location"),
+                    contextData: new Dictionary<string, object>
+                    {
+                        ["Location"] = location,
+                        ["User"] = Model_Application_Variables.User ?? "Unknown"
+                    },
+                    callerName: nameof(HandleRemoveLocationAsync),
+                    controlName: this.Name);
+                return;
+            }
+
+            LoggingUtility.Log($"[{this.Name}] Location removed successfully: Location={location}");
+            ShowSuccess($"Location '{location}' removed successfully.");
+            
+            // Refresh caches
+            await RefreshLocationCachesAsync();
+            NotifyLocationListChanged();
+            
+            // Clear form
+            ClearRemoveSection();
+            Control_LocationManagement_Suggestion_RemoveSelectLocation.Focus();
+        }
+
+        private async Task LoadEditLocationAsync(string locationName)
+        {
+            if (string.IsNullOrWhiteSpace(locationName))
+            {
+                SetEditSectionEnabled(false);
+                return;
+            }
+
+            var result = await Dao_Location.GetLocationByName(locationName);
+            if (!result.IsSuccess || result.Data == null)
+            {
+                Service_ErrorHandler.HandleDatabaseError(
+                    new Exception(result.ErrorMessage ?? "Failed to load location details"),
+                    contextData: new Dictionary<string, object>
+                    {
+                        ["Location"] = locationName,
+                        ["User"] = Model_Application_Variables.User ?? "Unknown"
+                    },
+                    callerName: nameof(LoadEditLocationAsync),
+                    controlName: this.Name);
+                SetEditSectionEnabled(false);
+                return;
+            }
+
+            _selectedEditLocation = result.Data;
+            
+            // Populate fields
+            string location = _selectedEditLocation["Location"]?.ToString() ?? string.Empty;
+            string building = _selectedEditLocation["Building"]?.ToString() ?? string.Empty;
+            string issuedBy = _selectedEditLocation["IssuedBy"]?.ToString() ?? "Unknown";
+
+            Control_LocationManagement_TextBox_EditNewLocation.Text = location;
+            
+            // Set building dropdown
+            if (building == "Expo")
+                Control_LocationManagement_ComboBox_EditBuilding.SelectedIndex = 1;
+            else if (building == "Vits")
+                Control_LocationManagement_ComboBox_EditBuilding.SelectedIndex = 2;
+            else
+                Control_LocationManagement_ComboBox_EditBuilding.SelectedIndex = 0;
+
+            Control_LocationManagement_Label_EditIssuedByValue.Text = issuedBy;
+
+            SetEditSectionEnabled(true);
+        }
+
+        private async Task LoadRemoveLocationAsync(string locationName)
+        {
+            if (string.IsNullOrWhiteSpace(locationName))
+            {
+                SetRemoveSectionEnabled(false);
+                return;
+            }
+
+            var result = await Dao_Location.GetLocationByName(locationName);
+            if (!result.IsSuccess || result.Data == null)
+            {
+                Service_ErrorHandler.HandleDatabaseError(
+                    new Exception(result.ErrorMessage ?? "Failed to load location details"),
+                    contextData: new Dictionary<string, object>
+                    {
+                        ["Location"] = locationName,
+                        ["User"] = Model_Application_Variables.User ?? "Unknown"
+                    },
+                    callerName: nameof(LoadRemoveLocationAsync),
+                    controlName: this.Name);
+                SetRemoveSectionEnabled(false);
+                return;
+            }
+
+            _selectedRemoveLocation = result.Data;
+            
+            // Display details
+            string location = _selectedRemoveLocation["Location"]?.ToString() ?? "N/A";
+            string building = _selectedRemoveLocation["Building"]?.ToString() ?? "N/A";
+            string issuedBy = _selectedRemoveLocation["IssuedBy"]?.ToString() ?? "Unknown";
+
+            Control_LocationManagement_Label_RemoveLocationValue.Text = location;
+            Control_LocationManagement_Label_RemoveBuildingValue.Text = building;
+            Control_LocationManagement_Label_RemoveIssuedByValue.Text = issuedBy;
+
+            SetRemoveSectionEnabled(true);
+        }
+
+        private void SetEditSectionEnabled(bool enabled)
+        {
+            Control_LocationManagement_TextBox_EditNewLocation.Enabled = enabled;
+            Control_LocationManagement_ComboBox_EditBuilding.Enabled = enabled;
+            Control_LocationManagement_Button_EditSave.Enabled = enabled;
+            Control_LocationManagement_Button_EditReset.Enabled = enabled;
+        }
+
+        private void SetRemoveSectionEnabled(bool enabled)
+        {
+            Control_LocationManagement_Button_RemoveConfirm.Enabled = enabled;
+            Control_LocationManagement_Button_RemoveCancel.Enabled = enabled;
+        }
+
+        private void ClearAddSection()
+        {
+            Control_LocationManagement_TextBox_AddLocation.Clear();
+            Control_LocationManagement_ComboBox_AddBuilding.SelectedIndex = 0;
+        }
+
+        private void ClearEditSection()
+        {
+            _selectedEditLocation = null;
+            Control_LocationManagement_Suggestion_EditSelectLocation.ClearTextBox();
+            Control_LocationManagement_TextBox_EditNewLocation.Clear();
+            Control_LocationManagement_ComboBox_EditBuilding.SelectedIndex = 0;
+            Control_LocationManagement_Label_EditIssuedByValue.Text = Model_Application_Variables.User ?? "Current User";
+            SetEditSectionEnabled(false);
+        }
+
+        private void ClearRemoveSection()
+        {
+            _selectedRemoveLocation = null;
+            Control_LocationManagement_Suggestion_RemoveSelectLocation.ClearTextBox();
+            Control_LocationManagement_Label_RemoveLocationValue.Text = string.Empty;
+            Control_LocationManagement_Label_RemoveBuildingValue.Text = string.Empty;
+            Control_LocationManagement_Label_RemoveIssuedByValue.Text = Model_Application_Variables.User ?? "Current User";
+            SetRemoveSectionEnabled(false);
+        }
+
+        private void NotifyLocationListChanged()
+        {
+            LocationListChanged?.Invoke(this, EventArgs.Empty);
+        }
+
+        /// <summary>
+        /// Applies privilege-based visibility and enabled states for each card.
+        /// </summary>
+        /// <param name="canAdd">If true, add card remains visible and interactive.</param>
+        /// <param name="canEdit">If true, edit card remains visible and interactive.</param>
+        /// <param name="canRemove">If true, remove card remains visible and interactive.</param>
+        public void ApplyPrivileges(bool canAdd, bool canEdit, bool canRemove)
+        {
+            // Home tiles
+            Control_LocationManagement_Panel_HomeTile_Add.Visible = canAdd;
+            Control_LocationManagement_Panel_HomeTile_Edit.Visible = canEdit;
+            Control_LocationManagement_Panel_HomeTile_Remove.Visible = canRemove;
+            
+            // Add card
+            Control_LocationManagement_Panel_AddCard.Visible = canAdd;
+            Control_LocationManagement_TextBox_AddLocation.Enabled = canAdd;
+            Control_LocationManagement_ComboBox_AddBuilding.Enabled = canAdd;
+            Control_LocationManagement_Button_AddSave.Enabled = canAdd;
+            Control_LocationManagement_Button_AddClear.Enabled = canAdd;
+
+            // Edit card
+            Control_LocationManagement_Panel_EditCard.Visible = canEdit;
+            Control_LocationManagement_Suggestion_EditSelectLocation.Enabled = canEdit;
+            Control_LocationManagement_TextBox_EditNewLocation.Enabled = canEdit;
+            Control_LocationManagement_ComboBox_EditBuilding.Enabled = canEdit;
+            Control_LocationManagement_Button_EditSave.Enabled = canEdit;
+            Control_LocationManagement_Button_EditReset.Enabled = canEdit;
+
+            // Remove card
+            Control_LocationManagement_Panel_RemoveCard.Visible = canRemove;
+            Control_LocationManagement_Suggestion_RemoveSelectLocation.Enabled = canRemove;
+            Control_LocationManagement_Button_RemoveConfirm.Enabled = canRemove && _selectedRemoveLocation != null;
+            Control_LocationManagement_Button_RemoveCancel.Enabled = canRemove;
+
+            if (!canEdit)
+            {
+                ClearEditSection();
+            }
+
+            if (!canRemove)
+            {
+                ClearRemoveSection();
+            }
+            
+            // If user has no privileges at all, show message
+            if (!canAdd && !canEdit && !canRemove)
+            {
+                Control_LocationManagement_Label_Subtitle.Text = "You do not have permissions to manage locations.";
+                Control_LocationManagement_Panel_Home.Visible = false;
+            }
+        }
+
+        #endregion
+
+        #region Events
+
+        /// <summary>
+        /// Raised when location data has changed (add, edit, remove) so parent views can refresh caches.
+        /// </summary>
+        public event EventHandler? LocationListChanged;
+
+        #endregion
+
+        #region Helpers
+
+        private static async Task RefreshLocationCachesAsync()
+        {
+            try
+            {
+                await Helper_SuggestionTextBox.GetCachedLocationsAsync();
+                await Helper_UI_ComboBoxes.FillLocationComboBoxesAsync(new ComboBox());
+            }
+            catch (Exception ex)
+            {
+                LoggingUtility.LogApplicationError(ex);
+            }
+        }
+
+        private static void ShowWarning(string message)
+        {
+            MessageBox.Show(message, "Validation Warning",
+                MessageBoxButtons.OK,
+                MessageBoxIcon.Warning);
+        }
+
+        private static void ShowSuccess(string message)
+        {
+            MessageBox.Show(message, "Success",
+                MessageBoxButtons.OK,
+                MessageBoxIcon.Information);
+        }
+
+        #endregion
+
+        #region Cleanup / Dispose
+
+        #endregion
+    }
+}

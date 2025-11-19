@@ -46,9 +46,8 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             Control_SettingsHome_Card_Users.AddSubcategoryLink("Edit User", "Edit User");
             Control_SettingsHome_Card_Users.AddSubcategoryLink("Delete User", "Delete User");
 
-            Control_SettingsHome_Card_Parts.AddSubcategoryLink("Add Part Number", "Add Part Number");
-            Control_SettingsHome_Card_Parts.AddSubcategoryLink("Edit Part Number", "Edit Part Number");
-            Control_SettingsHome_Card_Parts.AddSubcategoryLink("Remove Part Number", "Remove Part Number");
+            Control_SettingsHome_Card_Parts.ClearSubcategoryLinks();
+            Control_SettingsHome_Card_Parts.AddSubcategoryLink("Manage Part Numbers", "Part Numbers");
 
             Control_SettingsHome_Card_Operations.AddSubcategoryLink("Add Operation", "Add Operation");
             Control_SettingsHome_Card_Operations.AddSubcategoryLink("Edit Operation", "Edit Operation");
@@ -89,13 +88,6 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
                 // Normal users only see Add User
                 Control_SettingsHome_Card_Users.ClearSubcategoryLinks();
                 Control_SettingsHome_Card_Users.AddSubcategoryLink("Add User", "Add User");
-            }
-            
-            // Adjust Part Numbers subcategories
-            if (!hasAdminAccess && !isReadOnly)
-            {
-                Control_SettingsHome_Card_Parts.ClearSubcategoryLinks();
-                Control_SettingsHome_Card_Parts.AddSubcategoryLink("Add Part Number", "Add Part Number");
             }
             
             // Adjust Operations subcategories
