@@ -6,12 +6,10 @@ This plan aims to synchronize the codebase with the "Constitution" (documentatio
 1. **Create Missing Instructions**:
    - Create `.github/instructions/dao-patterns.instructions.md` (Define `Model_Dao_Result`, `Helper_Database_StoredProcedure` usage, Async patterns).
    - Create `.github/instructions/stored-procedures.instructions.md` (MySQL 5.7 constraints, Naming conventions `md_`/`inv_`/`sys_`, Parameter prefixes).
-   - Create `.github/instructions/testing-standards.instructions.md` (Integration testing patterns, `BaseIntegrationTest` usage).
    - Create `.github/instructions/helper-utilities.instructions.md` (Static vs Instance, Naming `Helper_`).
 
 2. **Update Existing Documentation**:
    - Update `.github/copilot-instructions.md` to include `Service_DebugTracer` patterns found in code.
-   - Update `.github/copilot-instructions.md` to clarify DAO patterns (Instance vs Static discrepancy).
 
 3. **Run Health Check (Code Discrepancies)**:
    - Scan for `MessageBox.Show` (Forbidden).
@@ -35,45 +33,71 @@ This plan aims to synchronize the codebase with the "Constitution" (documentatio
 1. Should we enforce Dependency Injection for DAOs (requires refactoring static DAOs to instance)? If this only affects the dao files then yes, but if a full refactor is needed across multiple layers, we may need to reconsider.
 2. Should `Service_DebugTracer` be integrated into `Service_ErrorHandler` or kept separate? What would the benefits be of each approach?
 
-### Verification Questions (Pending User Approval)
-1. **DAO Pattern Mismatch**: The codebase uses `static class Dao_*` (e.g., `Dao_Inventory`), but documentation specifies `public class Dao_*` (Instance-based).
-   - **Option A**: Update documentation to reflect the `static` pattern (Match Code).
-   - **Option B**: Refactor codebase to use Instance/DI pattern (Match Docs).
-   - *Recommendation*: Option A for immediate consistency, Option B for long-term architecture.
-   If Option B only requires the dao files to be refactored, then we can go with that. otherwise, Option A is preferred.
+### Tasks Generated from Audit (2025-11-19)
 
-2. **Error Handling Architecture**: `Dao_ErrorLog` currently violates separation of concerns by handling both Database logging and UI (`MessageBox.Show`).
-   - **Question**: Should we refactor `Dao_ErrorLog` to be a pure Data Access Object and move all UI logic to `Service_ErrorHandler`?
-   Yes, as long as it only affects the dao and service layers.
+#### 1. Cleanup Legacy Async Parameters
+- **Target**: `Data/Dao_Part.cs`, `Data/Dao_Inventory.cs`
+- **Action**: Remove `bool useAsync` parameter from all methods. It is ignored by `Helper_Database_StoredProcedure` which is always async.
+- **Files**:
+  - `Data/Dao_Part.cs`: `InsertPart`, `UpdatePart`, `DeletePart`, `GetAllParts`, `GetPartByNumber`, `PartExists`, `GetPartTypes`
+  - `Data/Dao_Inventory.cs`: `GetAllInventoryAsync`, `SearchInventoryAsync`, `GetInventoryByPartIdAsync`, `GetInventoryByPartIdAndOperationAsync`, `AddInventoryItemAsync`, `RemoveInventoryItemsFromDataGridViewAsync`, `RemoveInventoryItemAsync`
 
-3. **Forbidden UI Cleanup**: Detected ~20+ instances of `MessageBox.Show` in `Controls/SettingsForm/` and `Dao_ErrorLog.cs`.
-   - **Question**: Authorize bulk refactor to replace all `MessageBox.Show` with `Service_ErrorHandler.ShowUserError()`?
-   Read what each MessageBox.Show is doing first to ensure that it is appropriate to replace it with ShowUserError().
+#### 2. Refactor Forbidden UI Logic
+- **Target**: `Services/Service_ErrorHandler.cs`, `Program.cs`, `Forms/ViewLogs/PromptStatusManagerDialog.cs`
+- **Action**: Replace `MessageBox.Show` with `Service_ErrorHandler.ShowUserError` or `Service_ErrorHandler.ShowUserMessage`.
+- **Note**: `Service_ErrorHandler.cs` itself uses `MessageBox.Show` internally - this is the *only* allowed place, but it should be reviewed to ensure it's not overused.
+- **Critical**: `Program.cs` has raw `MessageBox.Show` calls in exception handlers. These should use `Service_ErrorHandler`.
 
-4. **Missing Test Infrastructure**: `BaseIntegrationTest` is referenced in docs but missing from the workspace.
-   - **Question**: Create `BaseIntegrationTest.cs` with transaction rollback support?
-   Integration Tests were removed, so we should remove references to it in the documentation.
+#### 3. Refactor Dao_ErrorLog
+- **Target**: `Data/Dao_ErrorLog.cs` (and all callers)
+- **Action**: `Dao_ErrorLog` currently mixes data access with UI logic (`HandleException_GeneralError_CloseApp`).
+- **Plan**:
+  1. Create `Service_ErrorHandling_Logic` (or similar) to contain the business logic of *how* to handle errors (logging + UI).
+  2. Reduce `Dao_ErrorLog` to *only* database operations (`InsertError`, `GetErrors`).
+  3. Update all `Dao_*.cs` files to call `Service_ErrorHandler` instead of `Dao_ErrorLog.HandleException...`.
 
-5. **Service_DebugTracer**: Found extensive usage of `Service_DebugTracer` but no documentation.
-   - **Question**: Create new `.github/instructions/service-debug-tracer.instructions.md` to standardize its usage?
-    Yes, create the new instructions file to document its usage.
+#### 4. Service_ErrorHandler Refactor
+- **Target**: `Services/Service_ErrorHandler.cs`
+- **Action**: Centralize all error handling logic, currently spread across `Dao_ErrorLog` and `Service_ErrorHandler`.
+- **Plan**:
+  1. Move relevant code from `Dao_ErrorLog` to `Service_ErrorHandler`.
+  2. Ensure `Service_ErrorHandler` has methods for all necessary error handling paths (e.g., logging, user notifications).
+  3. Update all calls from `Dao_ErrorLog` to the new centralized methods in `Service_ErrorHandler`.
 
-6. **Stored Procedure Naming Standards**: Found `usr_` prefix in `Dao_System` (e.g., `usr_settings_Get_All`) which is not in the proposed standard (`md_`, `inv_`, `sys_`).
-   - **Question**: Add `usr_` to the allowed prefixes list?
-    Yes, add `usr_` to the allowed prefixes list.
+#### 5. Document Service_DebugTracer Usage
+- **Target**: `Services/Service_DebugTracer.cs`
+- **Action**: Comprehensive documentation of `Service_DebugTracer` usage patterns and examples.
+- **Output**: Update `service-logging.instructions.md` or create a new dedicated document.
 
-7. **Legacy Async Parameter**: DAOs accept `bool useAsync = true` but `Helper_Database_StoredProcedure` ignores it (always async).
-   - **Question**: Remove `bool useAsync` parameter from all DAO methods to clean up the API?
-    Yes, remove the parameter to clean up the API.
+#### 6. Dependency Injection Feasibility Study --- DONE
+- **Target**: Entire codebase
+- **Action**: Analyze the impact of enforcing Dependency Injection for DAOs.
+- **Decision**: **Hybrid Approach**. Legacy DAOs remain static. New DAOs must be Instance/DI. Documentation updated.
 
-8. **Unthemed Forms**: Detected ~10 forms inheriting directly from `Form` (e.g., `Transactions`, `SplashScreenForm`).
-   - **Question**: Create a task to migrate all remaining forms to `ThemedForm`?
-   Yes, but not SplashScreenForm as it is run at startup before themes are applied.
+#### 7. Inline SQL Cleanup
+- **Target**: `Services/Service_ErrorReportQueue.cs`, `Services/Service_OnStartup_StartupSplashApplicationContext.cs`, `Services/Service_ErrorReportSync.cs`, `Forms/ErrorDialog/Form_ReportIssue.cs`
+- **Action**: Found inline SQL ("SELECT ...").
+- **Task**: Move these queries to Stored Procedures and call them via `Helper_Database_StoredProcedure`.
+- **Specifics**:
+  - `Service_ErrorReportQueue.cs`: `SELECT @status AS Status...`
+  - `Service_OnStartup_StartupSplashApplicationContext.cs`: `SELECT VERSION()`
+  - `Service_ErrorReportSync.cs`: `SELECT 1` (Connectivity check?) - Y
+  - `Form_ReportIssue.cs`: `SELECT 1`
 
-9. **Deprecated Helper Methods**: `Helper_Database_StoredProcedure` contains deprecated compatibility wrappers.
-   - **Question**: Schedule removal of deprecated wrappers (marked "remove after Phase 7")?
-   Just did this manually
+#### 8. UserControl Inheritance
+- **Target**: `Controls/**/*.cs`
+- **Action**: Verify all UserControls inherit from `ThemedUserControl`.
+- **Finding**: `grep` for `:\s*UserControl\b` returned no matches, which suggests they might already be migrated or the regex missed them.
+- **Task**: Manual spot check of 3-5 random controls to confirm `ThemedUserControl` inheritance.
 
-10. **JSON Standard**: `Dao_System` uses `System.Text.Json`.
-    - **Question**: Standardize on `System.Text.Json` and document it?
-    Yes, standardize on System.Text.Json and document it.
+#### 9. Hardcoded Paths
+- **Target**: `**/*.cs`
+- **Action**: `grep` for `[a-zA-Z]:\\` returned no matches.
+- **Task**: Verify `Helper_LogPath` is used for all file operations and no other hardcoded paths exist (e.g. `C:\MAMP`).
+
+#### 10. Service Pattern Verification
+- **Target**: `Services/`
+- **Action**:
+  - `Service_DebugTracer.cs`: Needs documentation (already noted).
+  - `Service_ErrorReportQueue.cs`: Contains inline SQL (noted above).
+  - `Service_OnStartup_*.cs`: Check if these should be in a `Startup` folder or if the naming convention is sufficient.

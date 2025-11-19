@@ -68,6 +68,15 @@ MTM_WIP_Application_WinForms/
 5. **ALL errors use Service_ErrorHandler** (NEVER MessageBox.Show)
 6. **ALL logging uses LoggingUtility** (structured CSV format)
 
+## Dependency Injection Strategy (Hybrid Approach)
+
+**Policy**:
+- **Legacy DAOs**: Keep as `static` classes (non-injected). Do NOT refactor existing static DAOs to DI unless explicitly requested.
+- **New Components**: All NEW Services, DAOs, and Forms MUST be designed for Dependency Injection.
+  - Use Interfaces (`IUserService`, `IInventoryDao`).
+  - Register in `Program.cs` or `Startup.cs`.
+  - Inject via constructor.
+
 ## Naming Conventions
 
 ### Classes
@@ -130,8 +139,18 @@ Every C# file MUST have #region blocks in this exact order:
 
 ### DAO Pattern (MANDATORY for all database access)
 
+**Note**: Existing DAOs are `static`. New DAOs must be instance-based and implement an interface for DI.
+
 ```csharp
-public class Dao_Entity
+// Interface for DI (New DAOs)
+public interface IDao_Entity
+{
+    Task<Model_Dao_Result<DataTable>> GetAllAsync();
+    Task<Model_Dao_Result<bool>> InsertAsync(string name);
+}
+
+// Implementation
+public class Dao_Entity : IDao_Entity
 {
     /// <summary>
     /// Gets all entities from database.
