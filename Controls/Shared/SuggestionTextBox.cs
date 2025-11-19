@@ -21,7 +21,7 @@ namespace MTM_WIP_Application_Winforms.Controls.Shared
     [DesignerCategory("Component")]
     [ToolboxItem(true)]
     [Description("TextBox with intelligent suggestion/autocomplete support")]
-    public partial class SuggestionTextBox : UserControl
+    public partial class SuggestionTextBox : ThemedUserControl
     {
         #region Fields
 

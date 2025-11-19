@@ -1,11 +1,12 @@
 using System.Data;
 using MTM_WIP_Application_Winforms.Data;
+using MTM_WIP_Application_Winforms.Forms.Shared;
 using MTM_WIP_Application_Winforms.Helpers;
 using MTM_WIP_Application_Winforms.Models;
 
 namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
 {
-    public partial class Control_Edit_Operation : UserControl
+    public partial class Control_Edit_Operation : ThemedUserControl
     {
         #region Events
 

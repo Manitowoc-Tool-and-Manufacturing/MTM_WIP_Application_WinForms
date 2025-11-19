@@ -1,13 +1,14 @@
 using System.Data;
 using MTM_WIP_Application_Winforms.Core;
 using MTM_WIP_Application_Winforms.Data;
+using MTM_WIP_Application_Winforms.Forms.Shared;
 using MTM_WIP_Application_Winforms.Helpers;
 using MTM_WIP_Application_Winforms.Logging;
 using MTM_WIP_Application_Winforms.Models;
 
 namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
 {
-    public partial class Control_Remove_PartID : UserControl
+    public partial class Control_Remove_PartID : ThemedUserControl
     {
         #region Events
 

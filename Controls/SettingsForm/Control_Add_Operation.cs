@@ -7,10 +7,11 @@ using MTM_WIP_Application_Winforms.Helpers;
 using MTM_WIP_Application_Winforms.Logging;
 using MTM_WIP_Application_Winforms.Services;
 using MTM_WIP_Application_Winforms.Core;
+using MTM_WIP_Application_Winforms.Forms.Shared;
 
 namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
 {
-    public partial class Control_Add_Operation : UserControl
+    public partial class Control_Add_Operation : ThemedUserControl
     {
         #region Events
 

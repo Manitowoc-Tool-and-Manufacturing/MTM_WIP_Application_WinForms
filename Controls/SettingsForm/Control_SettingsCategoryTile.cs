@@ -2,6 +2,7 @@ using System;
 using System.ComponentModel;
 using System.Drawing;
 using System.Windows.Forms;
+using MTM_WIP_Application_Winforms.Forms.Shared;
 
 namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
 {
@@ -9,7 +10,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
     /// Reusable category tile for settings homepage.
     /// Fully editable in Visual Studio designer.
     /// </summary>
-    public partial class Control_SettingsCategoryTile : UserControl
+    public partial class Control_SettingsCategoryTile : ThemedUserControl
     {
         #region Fields
 

@@ -69,7 +69,7 @@ graph TD
 
 ```csharp
 // ❌ UI Control directly accessing DAO
-public class Control_InventoryTab : UserControl
+public class Control_InventoryTab : ThemedUserControl
 {
     private async void btnSearch_Click(object sender, EventArgs e)
     {
@@ -544,7 +544,7 @@ public class InventoryService : IInventoryService
 
 ```csharp
 // ✅ UI using service layer
-public class Control_TransferTab : UserControl
+public class Control_TransferTab : ThemedUserControl
 {
     private readonly IInventoryService _inventoryService;
     private readonly ILoggingService _logger;

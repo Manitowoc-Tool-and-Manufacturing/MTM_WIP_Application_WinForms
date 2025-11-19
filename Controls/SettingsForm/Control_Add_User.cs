@@ -9,10 +9,11 @@ using MTM_WIP_Application_Winforms.Models;
 using MTM_WIP_Application_Winforms.Logging;
 using MTM_WIP_Application_Winforms.Helpers;
 using MTM_WIP_Application_Winforms.Services;
+using MTM_WIP_Application_Winforms.Forms.Shared;
 
 namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
 {
-    public partial class Control_Add_User : UserControl
+    public partial class Control_Add_User : ThemedUserControl
     {
         #region Events
 

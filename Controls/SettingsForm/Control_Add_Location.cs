@@ -1,11 +1,12 @@
 using MTM_WIP_Application_Winforms.Core;
 using MTM_WIP_Application_Winforms.Data;
+using MTM_WIP_Application_Winforms.Forms.Shared;
 using MTM_WIP_Application_Winforms.Models;
 using MTM_WIP_Application_Winforms.Services;
 
 namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
 {
-    public partial class Control_Add_Location : UserControl
+    public partial class Control_Add_Location : ThemedUserControl
     {
         #region Events
 

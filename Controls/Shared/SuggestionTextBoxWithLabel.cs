@@ -4,6 +4,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Drawing;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using MTM_WIP_Application_Winforms.Forms.Shared;
 using MTM_WIP_Application_Winforms.Helpers;
 using MTM_WIP_Application_Winforms.Models;
 using MTM_WIP_Application_Winforms.Services;
@@ -17,7 +18,7 @@ namespace MTM_WIP_Application_Winforms.Controls.Shared
     [DesignerCategory("Component")]
     [ToolboxItem(true)]
     [Description("SuggestionTextBox with integrated label, F4 button, and validation support")]
-    public partial class SuggestionTextBoxWithLabel : UserControl
+    public partial class SuggestionTextBoxWithLabel : ThemedUserControl
     {
         #region Fields
 

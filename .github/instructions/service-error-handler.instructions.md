@@ -400,17 +400,21 @@ public static bool HandleException(
 #### HandleDatabaseError
 
 ```csharp
-public static void HandleDatabaseError(
+public static bool HandleDatabaseError(
     Exception ex,
+    Func<bool>? retryAction = null,
     Dictionary<string, object>? contextData = null,
     [CallerMemberName] string callerName = "",
-    string controlName = "")
+    string controlName = "",
+    string methodName = "",
+    Enum_DatabaseEnum_ErrorSeverity dbSeverity = Enum_DatabaseEnum_ErrorSeverity.Error)
 ```
 
 **Specialized for database errors:**
-- Automatically sets severity to High
+- Automatically sets severity to High (or based on dbSeverity)
 - Triggers Service_ConnectionRecoveryManager
 - Includes database-specific context logging
+- Returns `true` if retry succeeded (if retryAction provided)
 
 #### HandleValidationError
 
