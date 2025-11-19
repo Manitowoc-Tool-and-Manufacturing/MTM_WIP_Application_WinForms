@@ -68,12 +68,11 @@ namespace MTM_WIP_Application_Winforms.Services
             {
                 // Updated to work with uniform parameter naming system (p_ prefixes)
                 // The log_changelog_Get_Current procedure now uses p_Status and p_ErrorMsg output parameters
-                var dataResult = await Helper_Database_StoredProcedure.ExecuteDataTableWithStatus(
+                var dataResult = await Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync(
                     Helper_Database_Variables.GetConnectionString(null, null, null, null),
                     "log_changelog_Get_Current",
                     null, // No input parameters needed for this procedure
-                    null, // No progress helper for background service
-                    true  // Use async execution
+                    null  // Use async execution
                 );
 
                 // Handle successful execution
@@ -100,13 +99,16 @@ namespace MTM_WIP_Application_Winforms.Services
                     return;
                 }
 
-                // Handle warning status (Status = 1)
-                if (dataResult.Status == 1)
+                // Handle warning status if available (example: check for a Status column in the returned DataTable)
+                if (dataResult.Data != null && dataResult.Data.Rows.Count > 0 && dataResult.Data.Columns.Contains("Status"))
                 {
-
-                    LastCheckedDatabaseVersion = "Database Version Warning";
-                    UpdateVersionLabel(Model_Application_Variables.UserVersion, "Database Version Warning");
-                    return;
+                    var statusObj = dataResult.Data.Rows[0]["Status"];
+                    if (statusObj != null && int.TryParse(statusObj.ToString(), out int status) && status == 1)
+                    {
+                        LastCheckedDatabaseVersion = "Database Version Warning";
+                        UpdateVersionLabel(Model_Application_Variables.UserVersion, "Database Version Warning");
+                        return;
+                    }
                 }
 
                 // Handle error status (Status = -1)

@@ -427,7 +427,7 @@ namespace MTM_WIP_Application_Winforms.Forms.ViewLogs
             }
             catch (Exception ex)
             {
-                
+                LoggingUtility.LogApplicationError(ex);
             }
         }
 
@@ -519,7 +519,7 @@ namespace MTM_WIP_Application_Winforms.Forms.ViewLogs
             }
             catch (Exception ex)
             {
-                
+                LoggingUtility.LogApplicationError(ex);
             }
 
             return promptFiles;

@@ -203,7 +203,7 @@ public partial class Form_ReportIssue : ThemedForm
         }
         catch (Exception ex)
         {
-            
+            LoggingUtility.LogApplicationError(ex);
             return false;
         }
     }

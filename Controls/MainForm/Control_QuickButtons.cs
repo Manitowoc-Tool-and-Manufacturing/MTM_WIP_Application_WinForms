@@ -205,17 +205,26 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                 var cleanupResult = await Dao_QuickButtons.CleanupGapsAndDuplicatesAsync(currentUser);
                 if (!cleanupResult.IsSuccess)
                 {
-
+                    Service_DebugTracer.TraceBusinessLogic("QUICK_BUTTONS_CLEANUP_FAILED",
+                        inputData: new { User = currentUser },
+                        outputData: new { ErrorMessage = cleanupResult.ErrorMessage });
                 }
                 else
                 {
-
+                    Service_DebugTracer.TraceBusinessLogic("QUICK_BUTTONS_CLEANUP_SUCCESS",
+                        inputData: new { User = currentUser },
+                        outputData: new { });
                 }
 
+
                 // STEP 2: Load data from database
+                if (string.IsNullOrEmpty(Model_Application_Variables.ConnectionString))
+                {
+                    throw new InvalidOperationException("Database connection string is not set.");
+                }
 
                 var dataResult = await Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync(
-                    Model_Application_Variables.ConnectionString,
+                    Model_Application_Variables.ConnectionString!,
                     "sys_last_10_transactions_Get_ByUser",
                     new Dictionary<string, object> { ["User"] = currentUser },
                     null // No progress helper for this method

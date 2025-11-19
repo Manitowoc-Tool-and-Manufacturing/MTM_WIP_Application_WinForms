@@ -1,3 +1,4 @@
+using Microsoft.Extensions.Logging;
 using MTM_WIP_Application_Winforms.Core;
 using MTM_WIP_Application_Winforms.Forms.Shared;
 using MTM_WIP_Application_Winforms.Helpers;
@@ -332,7 +333,8 @@ public partial class ViewApplicationLogsForm : ThemedForm
                         }
                         catch (Exception ex)
                         {
-                            
+                            LoggingUtility.LogApplicationError(ex);
+                            // Continue with other directories
                         }
                     }
                 }
@@ -1160,10 +1162,8 @@ public partial class ViewApplicationLogsForm : ThemedForm
                             lblStatus.Text = $"Opened folder with prompt file: {methodName}";
                             
                         }
-                        catch (Exception explorerEx)
+                        catch (Exception)
                         {
-                            
-
                             // Approach 2: Try direct file association
                             try
                             {
@@ -1183,9 +1183,9 @@ public partial class ViewApplicationLogsForm : ThemedForm
                                     
                                 }
                             }
-                            catch (Exception directEx)
+                            catch (Exception)
                             {
-                                
+                                LoggingUtility.LogApplicationError(new Exception("Failed to open prompt file via direct association."));
                             }
                         }
 

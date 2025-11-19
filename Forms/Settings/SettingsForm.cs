@@ -203,7 +203,6 @@ namespace MTM_WIP_Application_Winforms.Forms.Settings
                 UpdateStatus("User added successfully.");
                 HasChanges = true;
             };
-            controlAddUser.StatusMessageChanged += (s, message) => { UpdateStatus(message); };
 
             Control_Edit_User controlEditUser = new() { Dock = DockStyle.Fill };
             SettingsForm_Panel_EditUser.Controls.Add(controlEditUser);
@@ -429,7 +428,7 @@ namespace MTM_WIP_Application_Winforms.Forms.Settings
             }
         }
 
-        private async void CategoryTreeView_AfterSelect(object sender, TreeViewEventArgs e)
+        private async void CategoryTreeView_AfterSelect(object? sender, TreeViewEventArgs e)
         {
             if (e.Node == null || string.IsNullOrEmpty(e.Node.Name))
             {

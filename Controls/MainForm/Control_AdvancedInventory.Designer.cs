@@ -1213,13 +1213,10 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
         }
         private Label AdvancedInventory_Single_Label_Part;
         private Button AdvancedInventory_Single_Button_Send;
-        internal ComboBox AdvancedInventory_Single_ComboBox_Part;
         private Label AdvancedInventory_Single_Label_Op;
-        private ComboBox AdvancedInventory_Single_ComboBox_Op;
         private RichTextBox AdvancedInventory_Single_RichTextBox_Notes;
         private Label AdvancedInventory_Single_Label_Loc;
         private Label AdvancedInventory_Single_Label_Notes;
-        private ComboBox AdvancedInventory_Single_ComboBox_Loc;
         private TextBox AdvancedInventory_Single_TextBox_Count;
         private Label AdvancedInventory_Single_Label_Qty;
         private Label AdvancedInventory_Single_Label_Count;

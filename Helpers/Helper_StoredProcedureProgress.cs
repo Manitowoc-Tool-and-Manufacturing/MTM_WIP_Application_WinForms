@@ -184,7 +184,7 @@ namespace MTM_WIP_Application_Winforms.Helpers
         /// <param name="errorMessage">Error/success message from stored procedure</param>
         /// <param name="successMessage">Custom success message (optional)</param>
         /// <param name="finalProgress">Final progress percentage (defaults to 100)</param>
-        public void ProcessStoredProcedureResult(int status, string errorMessage, string successMessage = null, int finalProgress = 100)
+        public void ProcessStoredProcedureResult(int status, string errorMessage, string? successMessage = null, int finalProgress = 100)
         {
             switch (status)
             {

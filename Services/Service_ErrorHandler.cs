@@ -20,7 +20,6 @@ internal static class Service_ErrorHandler
     private static readonly Dictionary<string, DateTime> _lastErrorTimestamp = new();
     private static readonly object _errorLock = new();
     private static readonly TimeSpan ErrorCooldownPeriod = TimeSpan.FromSeconds(5);
-    private static bool _connectionErrorDialogOpen = false;
 
     #endregion
 

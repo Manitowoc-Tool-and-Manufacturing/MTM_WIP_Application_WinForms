@@ -25,7 +25,7 @@ namespace MTM_WIP_Application_Winforms.Services
             }
             catch (Exception ex)
             {
-
+                LoggingUtility.LogApplicationError(ex);
             }
         }
 
@@ -43,7 +43,7 @@ namespace MTM_WIP_Application_Winforms.Services
             }
             catch (Exception ex)
             {
-
+                LoggingUtility.LogApplicationError(ex);
             }
         }
 
@@ -62,7 +62,7 @@ namespace MTM_WIP_Application_Winforms.Services
             }
             catch (Exception ex)
             {
-
+                LoggingUtility.LogApplicationError(ex);
             }
         }
 

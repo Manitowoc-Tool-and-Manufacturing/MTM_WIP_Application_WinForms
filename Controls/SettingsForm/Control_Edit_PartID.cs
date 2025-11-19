@@ -18,7 +18,6 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
 
         private DataRow? _currentPart;
         private bool _originalRequiresColorCode;
-        private bool _suppressNextValidation; // may be used by other fields; kept for safety
 
         #endregion
 
@@ -77,21 +76,19 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
         #region Initialization
 
         /// <summary>
-        /// Configures SuggestionTextBox controls with appropriate data providers and F4 key support.
+        /// Configures SuggestionTextBoxWithLabel controls with appropriate data providers.
         /// </summary>
         private void ConfigureSuggestionTextBoxes()
         {
             // Configure Part Number field
             Helper_SuggestionTextBox.ConfigureForPartNumbers(
-                Control_Edit_PartID_TextBox_Part,
-                GetPartNumberSuggestionsAsync,
-                enableF4: true);
+                Control_Edit_PartID_SuggestionBox_Part,
+                Helper_SuggestionTextBox.GetCachedPartNumbersAsync);
 
             // Configure Item Type field
             Helper_SuggestionTextBox.ConfigureForItemTypes(
-                Control_Edit_PartID_TextBox_ItemType,
-                GetItemTypeSuggestionsAsync,
-                enableF4: true);
+                Control_Edit_PartID_SuggestionBox_ItemType,
+                Helper_SuggestionTextBox.GetCachedItemTypesAsync);
         }
 
         /// <summary>
@@ -99,9 +96,8 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
         /// </summary>
         private void WireUpEventHandlers()
         {
-            Control_Edit_PartID_TextBox_Part.SuggestionSelected += Control_Edit_PartID_TextBox_Part_SuggestionSelected;
-            Control_Edit_PartID_TextBox_Part.KeyDown += Control_Edit_PartID_TextBox_Part_KeyDown;
-            Control_Edit_PartID_TextBox_Part.Leave += Control_Edit_PartID_TextBox_Part_Leave;
+            Control_Edit_PartID_SuggestionBox_Part.SuggestionSelected += Control_Edit_PartID_Part_SuggestionSelected;
+            Control_Edit_PartID_SuggestionBox_Part.TextBox.Leave += Control_Edit_PartID_Part_Leave;
             saveButton.Click += SaveButton_Click;
             resetButton.Click += ResetButton_Click;
         }
@@ -138,68 +134,26 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
         #region Events
 
         /// <summary>
-        /// Handles part selection from SuggestionTextBox.
+        /// Handles part selection from SuggestionTextBoxWithLabel.
         /// Loads selected part data and enables form controls for editing.
         /// </summary>
-        private async void Control_Edit_PartID_TextBox_Part_SuggestionSelected(object? sender, SuggestionSelectedEventArgs e)
+        private async void Control_Edit_PartID_Part_SuggestionSelected(object? sender, SuggestionSelectedEventArgs e)
         {
-            // Selection via overlay; just load and do not let KeyDown/Leave interfere
-            _suppressNextValidation = true;
             await LoadSelectedPartAsync(e.SelectedValue);
         }
 
-        /// <summary>
-        /// Handles Enter key to validate and load typed part without opening suggestions.
-        /// </summary>
-        private async void Control_Edit_PartID_TextBox_Part_KeyDown(object? sender, KeyEventArgs e)
-        {
-            try
-            {
-                // If the suggestion overlay is visible, let the control handle Enter/keys
-                if (Control_Edit_PartID_TextBox_Part.IsOverlayVisible)
-                {
-                    return;
-                }
-                if (e.KeyCode == Keys.Enter)
-                {
-                    var typed = Control_Edit_PartID_TextBox_Part.Text?.Trim().ToUpperInvariant() ?? string.Empty;
-                    if (typed.Length == 0)
-                    {
-                        return;
-                    }
-                    // Directly attempt to load; DAO determines validity
-                    e.Handled = true;
-                    await LoadSelectedPartAsync(typed);
-                }
-            }
-            catch (Exception ex)
-            {
-                Service_ErrorHandler.HandleException(
-                    ex,
-                    Enum_ErrorSeverity.Medium,
-                    contextData: new Dictionary<string, object>
-                    {
-                        ["Operation"] = "ValidatePartOnEnter",
-                        ["Text"] = Control_Edit_PartID_TextBox_Part?.Text ?? string.Empty
-                    },
-                    controlName: nameof(Control_Edit_PartID),
-                    callerName: nameof(Control_Edit_PartID_TextBox_Part_KeyDown));
-            }
-        }
+
 
         /// <summary>
-        /// Validates and loads typed part when focus leaves the field (captures Tab navigation scenario).
+        /// Validates typed part when focus leaves the field.
+        /// Only attempts to load if the text exactly matches a valid part number.
         /// </summary>
-        private async void Control_Edit_PartID_TextBox_Part_Leave(object? sender, EventArgs e)
+        private async void Control_Edit_PartID_Part_Leave(object? sender, EventArgs e)
         {
             try
             {
-                if (Control_Edit_PartID_TextBox_Part.IsOverlayVisible)
-                {
-                    return;
-                }
-                var typed = Control_Edit_PartID_TextBox_Part.Text?.Trim().ToUpperInvariant() ?? string.Empty;
-                if (typed.Length == 0)
+                var typed = Control_Edit_PartID_SuggestionBox_Part.Text?.Trim().ToUpperInvariant() ?? string.Empty;
+                if (string.IsNullOrEmpty(typed))
                 {
                     return;
                 }
@@ -213,7 +167,25 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
                     return;
                 }
 
-                await LoadSelectedPartAsync(typed);
+                // Validate that the typed text is an exact match before attempting to load
+                // This prevents errors when user types partial part numbers
+                var allParts = await Helper_SuggestionTextBox.GetCachedPartNumbersAsync();
+                var exactMatch = allParts.FirstOrDefault(p => 
+                    string.Equals(p, typed, StringComparison.OrdinalIgnoreCase));
+
+                if (exactMatch != null)
+                {
+                    // Valid part number - load it (suppress errors since we already validated)
+                    await LoadSelectedPartAsync(exactMatch, showErrorsIfNotFound: false);
+                }
+                else if (!string.IsNullOrEmpty(typed))
+                {
+                    // Invalid part number - clear the field silently
+                    // (User was likely just typing/searching and hasn't selected yet)
+                    Control_Edit_PartID_SuggestionBox_Part.ClearTextBox();
+                    ClearForm();
+                    SetFormEnabled(false);
+                }
             }
             catch (Exception ex)
             {
@@ -223,10 +195,10 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
                     contextData: new Dictionary<string, object>
                     {
                         ["Operation"] = "ValidatePartOnLeave",
-                        ["Text"] = Control_Edit_PartID_TextBox_Part?.Text ?? string.Empty
+                        ["Text"] = Control_Edit_PartID_SuggestionBox_Part?.Text ?? string.Empty
                     },
                     controlName: nameof(Control_Edit_PartID),
-                    callerName: nameof(Control_Edit_PartID_TextBox_Part_Leave));
+                    callerName: nameof(Control_Edit_PartID_Part_Leave));
             }
         }
 
@@ -247,10 +219,10 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
                 }
 
                 // Validate item type is selected
-                if (string.IsNullOrWhiteSpace(Control_Edit_PartID_TextBox_ItemType.Text))
+                if (string.IsNullOrWhiteSpace(Control_Edit_PartID_SuggestionBox_ItemType.Text))
                 {
                     Service_ErrorHandler.ShowWarning("Please select a valid item type.");
-                    Control_Edit_PartID_TextBox_ItemType.Focus();
+                    Control_Edit_PartID_SuggestionBox_ItemType.Focus();
                     return;
                 }
 
@@ -282,7 +254,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
                     {
                         ["Operation"] = "SavePart",
                         ["PartID"] = _currentPart?["PartID"]?.ToString() ?? "Unknown",
-                        ["ItemType"] = Control_Edit_PartID_TextBox_ItemType.Text,
+                        ["ItemType"] = Control_Edit_PartID_SuggestionBox_ItemType.Text ?? string.Empty,
                         ["RequiresColorCode"] = Control_Edit_PartID_CheckBox_RequiresColorCode.Checked,
                         ["User"] = Model_Application_Variables.User ?? "Unknown"
                     },
@@ -306,9 +278,9 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             try
             {
                 ClearForm();
-                Control_Edit_PartID_TextBox_Part.Clear();
+                Control_Edit_PartID_SuggestionBox_Part.ClearTextBox();
                 SetFormEnabled(false);
-                Control_Edit_PartID_TextBox_Part.Focus();
+                Control_Edit_PartID_SuggestionBox_Part.Focus();
 
 
             }
@@ -326,27 +298,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
 
         #endregion
 
-        #region Data Providers
 
-        /// <summary>
-        /// Data provider for part number SuggestionTextBox.
-        /// Delegates to Helper_SuggestionTextBox for cached data access.
-        /// </summary>
-        private Task<List<string>> GetPartNumberSuggestionsAsync()
-        {
-            return Helper_SuggestionTextBox.GetCachedPartNumbersAsync();
-        }
-
-        /// <summary>
-        /// Data provider for item type SuggestionTextBox.
-        /// Delegates to Helper_SuggestionTextBox for cached data access.
-        /// </summary>
-        private Task<List<string>> GetItemTypeSuggestionsAsync()
-        {
-            return Helper_SuggestionTextBox.GetCachedItemTypesAsync();
-        }
-
-        #endregion
 
         #region Validation
 
@@ -419,7 +371,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             {
                 // Load basic part information
                 itemNumberTextBox.Text = _currentPart["PartID"]?.ToString() ?? string.Empty;
-                Control_Edit_PartID_TextBox_ItemType.Text = _currentPart["ItemType"]?.ToString() ?? string.Empty;
+                Control_Edit_PartID_SuggestionBox_ItemType.Text = _currentPart["ItemType"]?.ToString() ?? string.Empty;
                 issuedByValueLabel.Text = _currentPart["IssuedBy"]?.ToString() ?? string.Empty;
 
                 // Load RequiresColorCode checkbox with fallback
@@ -452,7 +404,8 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
         /// Loads a part by number, updating form state and enabling editing.
         /// </summary>
         /// <param name="selectedPart">The part number to load.</param>
-        private async Task LoadSelectedPartAsync(string selectedPart)
+        /// <param name="showErrorsIfNotFound">Whether to show error messages if part is not found. Default true.</param>
+        private async Task LoadSelectedPartAsync(string selectedPart, bool showErrorsIfNotFound = true)
         {
             try
             {
@@ -465,14 +418,20 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
 
                 if (!result.IsSuccess)
                 {
-                    Service_ErrorHandler.ShowWarning($"Part '{selectedPart}' could not be loaded: {result.ErrorMessage}");
+                    if (showErrorsIfNotFound)
+                    {
+                        Service_ErrorHandler.ShowWarning($"Part '{selectedPart}' could not be loaded: {result.ErrorMessage}");
+                    }
                     ClearForm();
                     return;
                 }
 
                 if (result.Data == null)
                 {
-                    Service_ErrorHandler.ShowWarning($"Part '{selectedPart}' was not found.");
+                    if (showErrorsIfNotFound)
+                    {
+                        Service_ErrorHandler.ShowWarning($"Part '{selectedPart}' was not found.");
+                    }
                     ClearForm();
                     return;
                 }
@@ -485,17 +444,20 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             }
             catch (Exception ex)
             {
-                Service_ErrorHandler.HandleException(
-                    ex,
-                    Enum_ErrorSeverity.Medium,
-                    contextData: new Dictionary<string, object>
-                    {
-                        ["SelectedPart"] = selectedPart,
-                        ["Operation"] = "LoadPartData",
-                        ["User"] = Model_Application_Variables.User ?? "Unknown"
-                    },
-                    controlName: nameof(Control_Edit_PartID),
-                    callerName: nameof(LoadSelectedPartAsync));
+                if (showErrorsIfNotFound)
+                {
+                    Service_ErrorHandler.HandleException(
+                        ex,
+                        Enum_ErrorSeverity.Medium,
+                        contextData: new Dictionary<string, object>
+                        {
+                            ["SelectedPart"] = selectedPart,
+                            ["Operation"] = "LoadPartData",
+                            ["User"] = Model_Application_Variables.User ?? "Unknown"
+                        },
+                        controlName: nameof(Control_Edit_PartID),
+                        callerName: nameof(LoadSelectedPartAsync));
+                }
 
                 ClearForm();
             }
@@ -512,7 +474,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
         private void SetFormEnabled(bool enabled)
         {
             itemNumberTextBox.Enabled = enabled;
-            Control_Edit_PartID_TextBox_ItemType.Enabled = enabled;
+            Control_Edit_PartID_SuggestionBox_ItemType.Enabled = enabled;
             Control_Edit_PartID_CheckBox_RequiresColorCode.Enabled = enabled;
             saveButton.Enabled = enabled;
         }
@@ -529,9 +491,10 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             }
 
             int id = Convert.ToInt32(_currentPart["ID"]);
+
             string itemNumber = itemNumberTextBox.Text.Trim();
             string issuedBy = Model_Application_Variables.User ?? "System";
-            string type = Control_Edit_PartID_TextBox_ItemType.Text.Trim();
+            string type = Control_Edit_PartID_SuggestionBox_ItemType?.Text?.Trim() ?? string.Empty;
             bool requiresColorCode = Control_Edit_PartID_CheckBox_RequiresColorCode.Checked;
 
             // Update part in database
@@ -557,7 +520,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
         private void ClearForm()
         {
             itemNumberTextBox.Clear();
-            Control_Edit_PartID_TextBox_ItemType.Clear();
+            Control_Edit_PartID_SuggestionBox_ItemType.ClearTextBox();
             issuedByValueLabel.Text = string.Empty;
             Control_Edit_PartID_CheckBox_RequiresColorCode.Checked = false;
             _originalRequiresColorCode = false;
@@ -572,9 +535,9 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             try
             {
                 ClearForm();
-                Control_Edit_PartID_TextBox_Part.Clear();
+                Control_Edit_PartID_SuggestionBox_Part.ClearTextBox();
                 SetFormEnabled(false);
-                Control_Edit_PartID_TextBox_Part.Focus();
+                Control_Edit_PartID_SuggestionBox_Part.Focus();
 
 
             }
@@ -605,11 +568,13 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
                 try
                 {
                     // Unsubscribe from events to prevent memory leaks
-                    if (Control_Edit_PartID_TextBox_Part != null)
+                    if (Control_Edit_PartID_SuggestionBox_Part != null)
                     {
-                        Control_Edit_PartID_TextBox_Part.SuggestionSelected -= Control_Edit_PartID_TextBox_Part_SuggestionSelected;
-                        Control_Edit_PartID_TextBox_Part.KeyDown -= Control_Edit_PartID_TextBox_Part_KeyDown;
-                        Control_Edit_PartID_TextBox_Part.Leave -= Control_Edit_PartID_TextBox_Part_Leave;
+                        Control_Edit_PartID_SuggestionBox_Part.SuggestionSelected -= Control_Edit_PartID_Part_SuggestionSelected;
+                        if (Control_Edit_PartID_SuggestionBox_Part.TextBox != null)
+                        {
+                            Control_Edit_PartID_SuggestionBox_Part.TextBox.Leave -= Control_Edit_PartID_Part_Leave;
+                        }
                     }
 
                     if (saveButton != null)

@@ -52,12 +52,11 @@ namespace MTM_WIP_Application_Winforms.Helpers
             {
                 // FIXED: Use Helper_Database_StoredProcedure instead of Helper_Database_Core
                 // because our stored procedures HAVE p_Status and p_ErrorMsg parameters
-                var dataResult = await Helper_Database_StoredProcedure.ExecuteDataTableWithStatus(
+                var dataResult = await Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync(
                     Model_Application_Variables.ConnectionString,
                     "md_part_ids_Get_All",
                     null, // No parameters needed
-                    null, // No progress helper for this method
-                    true  // Use async
+                    null // No progress helper for this method
                 );
 
                 lock (PartDataLock)
@@ -85,12 +84,11 @@ namespace MTM_WIP_Application_Winforms.Helpers
             try
             {
                 // FIXED: Use Helper_Database_StoredProcedure instead of Helper_Database_Core
-                var dataResult = await Helper_Database_StoredProcedure.ExecuteDataTableWithStatus(
+                var dataResult = await Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync(
                     Model_Application_Variables.ConnectionString,
                     "md_operation_numbers_Get_All",
                     null, // No parameters needed
-                    null, // No progress helper for this method
-                    true  // Use async
+                    null // No progress helper for this method
                 );
 
                 lock (OperationDataLock)
@@ -118,12 +116,11 @@ namespace MTM_WIP_Application_Winforms.Helpers
             try
             {
                 // FIXED: Use Helper_Database_StoredProcedure instead of Helper_Database_Core
-                var dataResult = await Helper_Database_StoredProcedure.ExecuteDataTableWithStatus(
+                var dataResult = await Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync(
                     Model_Application_Variables.ConnectionString,
                     "md_locations_Get_All",
                     null, // No parameters needed
-                    null, // No progress helper for this method
-                    true  // Use async
+                    null // No progress helper for this method
                 );
 
                 lock (LocationDataLock)
@@ -151,12 +148,11 @@ namespace MTM_WIP_Application_Winforms.Helpers
             try
             {
                 // FIXED: Use Helper_Database_StoredProcedure instead of Helper_Database_Core
-                var dataResult = await Helper_Database_StoredProcedure.ExecuteDataTableWithStatus(
+                var dataResult = await Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync(
                     Model_Application_Variables.ConnectionString,
                     "usr_users_Get_All",
                     null, // No parameters needed
-                    null, // No progress helper for this method
-                    true  // Use async
+                    null // No progress helper for this method
                 );
 
                 lock (UserDataLock)
@@ -201,12 +197,11 @@ namespace MTM_WIP_Application_Winforms.Helpers
             try
             {
                 // FIXED: Use Helper_Database_StoredProcedure instead of Helper_Database_Core
-                var dataResult = await Helper_Database_StoredProcedure.ExecuteDataTableWithStatus(
+                var dataResult = await Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync(
                     Model_Application_Variables.ConnectionString,
                     "md_item_types_Get_All",
                     null, // No parameters needed
-                    null, // No progress helper for this method
-                    true  // Use async
+                    null  // No progress helper for this method
                 );
 
                 lock (ItemTypeDataLock)

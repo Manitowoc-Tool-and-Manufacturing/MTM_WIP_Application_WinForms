@@ -186,16 +186,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             itemNumberTextBox.Focus();
         }
 
-        // Helper class for ComboBox items
-        private class ComboBoxItem
-        {
-            public string Display { get; set; }
-            public string FullName { get; set; }
-            public string FileName { get; set; }
-            public override string ToString() => Display;
-        }
-
-        #endregion
+         #endregion
 
         #endregion
     }

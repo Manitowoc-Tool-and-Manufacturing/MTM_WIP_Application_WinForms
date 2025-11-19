@@ -32,7 +32,8 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
                 Control_Shortcuts_DataGridView_Shortcuts.Rows.Clear();
 
                 string user = Core_WipAppVariables.User;
-                string shortcutsJson = await Dao_User.GetShortcutsJsonAsync(user);
+                string? rawShortcutsJson = await Dao_User.GetShortcutsJsonAsync(user);
+                string shortcutsJson = rawShortcutsJson ?? string.Empty;
 
                 Dictionary<string, Keys> shortcutDict = Helper_UI_Shortcuts.GetShortcutDictionary();
 

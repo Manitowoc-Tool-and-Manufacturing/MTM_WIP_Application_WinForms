@@ -5,12 +5,6 @@ namespace MTM_WIP_Application_Winforms.Forms.Transactions
 {
     partial class Transactions
     {
-        #region Fields
-
-        private System.ComponentModel.IContainer components = null;
-
-        #endregion
-
         private Panel Transactions_Panel_Main;
         private TableLayoutPanel Transactions_TableLayout_Main;
         private Panel Transactions_Panel_Search;

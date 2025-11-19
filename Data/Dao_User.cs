@@ -647,9 +647,7 @@ internal static class Dao_User
                         }
                         catch (JsonException ex)
                         {
-                            // JSON parsing failed - log and return empty string
-                            // This is expected when SettingsJson doesn't contain the requested field
-
+                            LoggingUtility.LogDatabaseError(ex);
                             Service_DebugTracer.TraceMethodExit(string.Empty, controlName: "Dao_User");
                             return string.Empty;
                         }

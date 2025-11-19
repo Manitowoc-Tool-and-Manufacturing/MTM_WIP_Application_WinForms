@@ -341,14 +341,20 @@ internal sealed class Model_Transactions_ViewModel
                 }
 
 
-            }
-            catch (ArgumentException argEx)
+            } 
+            catch (KeyNotFoundException)
             {
-
-
-                throw;
+                LoggingUtility.Log(
+                    "KeyNotFoundException when accessing 'Location' column. Available columns: " +
+                    string.Join(", ", columnNames)
+                );
+                throw; // Re-throw to be caught by outer catch      
             }
-
+            catch (Exception ex)    
+            {
+                LoggingUtility.LogApplicationError(ex);
+                return Model_Dao_Result<List<string>>.Failure("Failed to load locations", ex);
+            }
             // Cache results
             _cachedLocations = locations;
 

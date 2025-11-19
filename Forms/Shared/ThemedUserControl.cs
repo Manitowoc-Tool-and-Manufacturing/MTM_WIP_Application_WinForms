@@ -71,8 +71,8 @@ public class ThemedUserControl : UserControl
             }
             catch (Exception ex)
             {
-                // Log but don't fail - control will work without theming
-                
+                LoggingUtility.LogApplicationError(ex);
+                // Log but don't fail - control will work without theming                
             }
         }
         else
