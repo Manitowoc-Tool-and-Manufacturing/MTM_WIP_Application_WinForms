@@ -17,8 +17,15 @@ BEGIN
         SET p_Status = -2;
         SET p_ErrorMsg = 'User is required';
     ELSE
-        SELECT * FROM usr_users
-        WHERE `User` = p_User;
+        -- Return combined data from usr_users and usr_settings
+        SELECT 
+            u.*,
+            JSON_UNQUOTE(JSON_EXTRACT(s.SettingsJson, '$.VisualUserName')) AS VisualUserName,
+            JSON_UNQUOTE(JSON_EXTRACT(s.SettingsJson, '$.VisualPassword')) AS VisualPassword
+        FROM usr_users u
+        LEFT JOIN usr_settings s ON u.User = s.UserId
+        WHERE u.`User` = p_User;
+        
         SELECT FOUND_ROWS() INTO v_Count;
         IF v_Count > 0 THEN
             SET p_Status = 1;

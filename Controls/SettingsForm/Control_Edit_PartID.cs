@@ -49,8 +49,6 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
                 InitializeComponent();
                 ConfigureSuggestionTextBoxes();
                 WireUpEventHandlers();
-
-
             }
             catch (Exception ex)
             {
@@ -82,13 +80,15 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
         {
             // Configure Part Number field
             Helper_SuggestionTextBox.ConfigureForPartNumbers(
-                Control_Edit_PartID_SuggestionBox_Part,
-                Helper_SuggestionTextBox.GetCachedPartNumbersAsync);
+                Control_Edit_PartID_SuggestionBox_Part.TextBox,
+                Helper_SuggestionTextBox.GetCachedPartNumbersAsync,
+                enableF4: true);
 
             // Configure Item Type field
             Helper_SuggestionTextBox.ConfigureForItemTypes(
-                Control_Edit_PartID_SuggestionBox_ItemType,
-                Helper_SuggestionTextBox.GetCachedItemTypesAsync);
+                Control_Edit_PartID_SuggestionBox_ItemType.TextBox,
+                Helper_SuggestionTextBox.GetCachedItemTypesAsync,
+                enableF4: true);
         }
 
         /// <summary>
@@ -97,7 +97,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
         private void WireUpEventHandlers()
         {
             Control_Edit_PartID_SuggestionBox_Part.SuggestionSelected += Control_Edit_PartID_Part_SuggestionSelected;
-            Control_Edit_PartID_SuggestionBox_Part.TextBox.Leave += Control_Edit_PartID_Part_Leave;
+            Control_Edit_PartID_SuggestionBox_ItemType.SuggestionSelected += Control_Edit_PartID_ItemType_SuggestionSelected;
             saveButton.Click += SaveButton_Click;
             resetButton.Click += ResetButton_Click;
         }
@@ -145,61 +145,12 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
 
 
         /// <summary>
-        /// Validates typed part when focus leaves the field.
-        /// Only attempts to load if the text exactly matches a valid part number.
+        /// Handles item type selection updates for consistency with AdvancedInventory patterns.
         /// </summary>
-        private async void Control_Edit_PartID_Part_Leave(object? sender, EventArgs e)
+        private void Control_Edit_PartID_ItemType_SuggestionSelected(object? sender, SuggestionSelectedEventArgs e)
         {
-            try
-            {
-                var typed = Control_Edit_PartID_SuggestionBox_Part.Text?.Trim().ToUpperInvariant() ?? string.Empty;
-                if (string.IsNullOrEmpty(typed))
-                {
-                    return;
-                }
-
-                // Avoid re-loading if already the same part
-                var currentPartId = (_currentPart?.Table?.Columns.Contains("PartID") == true)
-                    ? _currentPart?["PartID"]?.ToString()?.ToUpperInvariant()
-                    : null;
-                if (!string.IsNullOrEmpty(currentPartId) && string.Equals(currentPartId, typed, StringComparison.Ordinal))
-                {
-                    return;
-                }
-
-                // Validate that the typed text is an exact match before attempting to load
-                // This prevents errors when user types partial part numbers
-                var allParts = await Helper_SuggestionTextBox.GetCachedPartNumbersAsync();
-                var exactMatch = allParts.FirstOrDefault(p => 
-                    string.Equals(p, typed, StringComparison.OrdinalIgnoreCase));
-
-                if (exactMatch != null)
-                {
-                    // Valid part number - load it (suppress errors since we already validated)
-                    await LoadSelectedPartAsync(exactMatch, showErrorsIfNotFound: false);
-                }
-                else if (!string.IsNullOrEmpty(typed))
-                {
-                    // Invalid part number - clear the field silently
-                    // (User was likely just typing/searching and hasn't selected yet)
-                    Control_Edit_PartID_SuggestionBox_Part.ClearTextBox();
-                    ClearForm();
-                    SetFormEnabled(false);
-                }
-            }
-            catch (Exception ex)
-            {
-                Service_ErrorHandler.HandleException(
-                    ex,
-                    Enum_ErrorSeverity.Low,
-                    contextData: new Dictionary<string, object>
-                    {
-                        ["Operation"] = "ValidatePartOnLeave",
-                        ["Text"] = Control_Edit_PartID_SuggestionBox_Part?.Text ?? string.Empty
-                    },
-                    controlName: nameof(Control_Edit_PartID),
-                    callerName: nameof(Control_Edit_PartID_Part_Leave));
-            }
+            // No additional logic needed currently, but method retained to mirror AdvancedInventory pattern
+            // and to simplify future enhancements (e.g., save button enablement, validation, logging).
         }
 
         /// <summary>
@@ -278,7 +229,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             try
             {
                 ClearForm();
-                Control_Edit_PartID_SuggestionBox_Part.ClearTextBox();
+                Helper_SuggestionTextBox.Clear(Control_Edit_PartID_SuggestionBox_Part.TextBox);
                 SetFormEnabled(false);
                 Control_Edit_PartID_SuggestionBox_Part.Focus();
 
@@ -520,7 +471,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
         private void ClearForm()
         {
             itemNumberTextBox.Clear();
-            Control_Edit_PartID_SuggestionBox_ItemType.ClearTextBox();
+            Helper_SuggestionTextBox.Clear(Control_Edit_PartID_SuggestionBox_ItemType.TextBox);
             issuedByValueLabel.Text = string.Empty;
             Control_Edit_PartID_CheckBox_RequiresColorCode.Checked = false;
             _originalRequiresColorCode = false;
@@ -535,7 +486,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             try
             {
                 ClearForm();
-                Control_Edit_PartID_SuggestionBox_Part.ClearTextBox();
+                Helper_SuggestionTextBox.Clear(Control_Edit_PartID_SuggestionBox_Part.TextBox);
                 SetFormEnabled(false);
                 Control_Edit_PartID_SuggestionBox_Part.Focus();
 
@@ -571,10 +522,11 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
                     if (Control_Edit_PartID_SuggestionBox_Part != null)
                     {
                         Control_Edit_PartID_SuggestionBox_Part.SuggestionSelected -= Control_Edit_PartID_Part_SuggestionSelected;
-                        if (Control_Edit_PartID_SuggestionBox_Part.TextBox != null)
-                        {
-                            Control_Edit_PartID_SuggestionBox_Part.TextBox.Leave -= Control_Edit_PartID_Part_Leave;
-                        }
+                    }
+
+                    if (Control_Edit_PartID_SuggestionBox_ItemType != null)
+                    {
+                        Control_Edit_PartID_SuggestionBox_ItemType.SuggestionSelected -= Control_Edit_PartID_ItemType_SuggestionSelected;
                     }
 
                     if (saveButton != null)

@@ -12,6 +12,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `usr_users_Update_User`(
 )
 BEGIN
     DECLARE v_RowCount INT DEFAULT 0;
+    DECLARE v_SettingsJson JSON;
     -- Transaction management removed: Works within caller's transaction context (tests use transactions)`r`n    DECLARE EXIT HANDLER FOR SQLEXCEPTION
     BEGIN
         GET DIAGNOSTICS CONDITION 1
@@ -22,15 +23,37 @@ BEGIN
         SET p_Status = -2;
         SET p_ErrorMsg = 'User is required';
     ELSE
+        -- Update core user info in usr_users
         UPDATE usr_users SET
             `Full Name` = p_FullName,
             `Shift` = p_Shift,
-            `Pin` = p_Pin,
-            `VisualUserName` = p_VisualUserName,
-            `VisualPassword` = p_VisualPassword
+            `Pin` = p_Pin
         WHERE `User` = p_User;
         SET v_RowCount = ROW_COUNT();
+        
         IF v_RowCount > 0 THEN
+            -- Update settings in usr_settings.SettingsJson
+            UPDATE usr_settings
+            SET SettingsJson = JSON_SET(
+                COALESCE(SettingsJson, JSON_OBJECT()),
+                '$.VisualUserName', p_VisualUserName,
+                '$.VisualPassword', p_VisualPassword
+            )
+            WHERE UserId = p_User;
+            
+            -- If no settings row exists, create one
+            IF ROW_COUNT() = 0 THEN
+                INSERT INTO usr_settings (UserId, SettingsJson, ShortcutsJson)
+                VALUES (
+                    p_User,
+                    JSON_OBJECT(
+                        'VisualUserName', p_VisualUserName,
+                        'VisualPassword', p_VisualPassword
+                    ),
+                    JSON_OBJECT()
+                );
+            END IF;
+            
             SET p_Status = 1;
             SET p_ErrorMsg = CONCAT('User "', p_User, '" updated successfully');
         ELSE
