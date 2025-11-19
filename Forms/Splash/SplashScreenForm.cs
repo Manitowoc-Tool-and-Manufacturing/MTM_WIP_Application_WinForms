@@ -1,5 +1,4 @@
-using System.Drawing.Imaging;
-using MTM_WIP_Application_Winforms.Core;
+using System.Diagnostics.CodeAnalysis;
 using MTM_WIP_Application_Winforms.Models;
 using MTM_WIP_Application_Winforms.Services;
 
@@ -7,8 +6,6 @@ namespace MTM_WIP_Application_Winforms.Forms.Splash
 {
     public partial class SplashScreenForm : Form
     {
-        #region Constructors
-
         #region Constructors
 
         public SplashScreenForm()
@@ -30,7 +27,7 @@ namespace MTM_WIP_Application_Winforms.Forms.Splash
                     ["ComponentType"] = "SplashScreenForm"
                 });
 
-            InitializeComponent();
+            InitializeSplashComponents();
 
             Service_DebugTracer.TraceUIAction("THEME_APPLICATION", nameof(SplashScreenForm),
                 new Dictionary<string, object>
@@ -81,9 +78,20 @@ namespace MTM_WIP_Application_Winforms.Forms.Splash
 
         #region Methods
 
-        #endregion
+        [MemberNotNull(nameof(_progressControl), nameof(_logoBox), nameof(_mainPanel))]
+        private void InitializeSplashComponents()
+        {
+            // InitializeComponent initializes designer-generated controls.
+            InitializeComponent();
 
-        #region Methods
+            // Ensure required designer components are instantiated; otherwise throw to satisfy MemberNotNull contract.
+            if (_progressControl is null)
+                throw new InvalidOperationException("_progressControl was not initialized by InitializeComponent().");
+            if (_logoBox is null)
+                throw new InvalidOperationException("_logoBox was not initialized by InitializeComponent().");
+            if (_mainPanel is null)
+                throw new InvalidOperationException("_mainPanel was not initialized by InitializeComponent().");
+        }
 
         public void ShowSplash()
         {
@@ -113,54 +121,6 @@ namespace MTM_WIP_Application_Winforms.Forms.Splash
             Application.DoEvents();
         }
 
-        public async Task CompleteSplashAsync()
-        {
-            System.Diagnostics.Debug.WriteLine("[DEBUG] [SplashScreenForm.CompleteSplashAsync] Completing splash...");
-            await _progressControl!.CompleteProgressAsync();
-            Close();
-            System.Diagnostics.Debug.WriteLine("[DEBUG] [SplashScreenForm.CompleteSplashAsync] Splash closed.");
-        }
-
-        protected override void SetVisibleCore(bool value) => base.SetVisibleCore(value && !DesignMode);
-
-        protected override void OnPaintBackground(PaintEventArgs e)
-        {
-            base.OnPaintBackground(e);
-
-            Bitmap? watermark = Properties.Resources.MTM;
-            if (watermark != null)
-            {
-                Graphics g = e.Graphics;
-                int margin = 16;
-
-                float scale = 0.9f;
-                int drawWidth = (int)(watermark.Width * scale);
-                int drawHeight = (int)(watermark.Height * scale);
-
-                int x = margin;
-                int y = margin;
-
-                ColorMatrix colorMatrix = new() { Matrix33 = 0.15f };
-                ImageAttributes imageAttributes = new();
-                imageAttributes.SetColorMatrix(colorMatrix, System.Drawing.Imaging.ColorMatrixFlag.Default,
-                    System.Drawing.Imaging.ColorAdjustType.Bitmap);
-
-                Rectangle destRect = new(x, y, drawWidth, drawHeight);
-
-                g.DrawImage(
-                    watermark,
-                    destRect,
-                    0, 0, watermark.Width, watermark.Height,
-                    GraphicsUnit.Pixel,
-                    imageAttributes
-                );
-            }
-        }
-
         #endregion
-
-        #endregion
-
-
     }
 }

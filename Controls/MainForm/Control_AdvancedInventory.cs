@@ -775,7 +775,9 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
 
         private void SetSingleInputPanelCollapsed(bool collapse)
         {
-            if (AdvancedInventory_TableLayout_Single?.ColumnStyles.Count < 2)
+            // Capture in local to satisfy nullable flow analysis and prevent CS8602 (possible null dereference)
+            var table = AdvancedInventory_TableLayout_Single;
+            if (table == null || table.ColumnStyles.Count < 2)
             {
                 return;
             }
@@ -788,8 +790,8 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
 
             _singleInputCollapsed = collapse;
 
-            var inputColumn = AdvancedInventory_TableLayout_Single.ColumnStyles[0];
-            var previewColumn = AdvancedInventory_TableLayout_Single.ColumnStyles[1];
+            var inputColumn = table.ColumnStyles[0];
+            var previewColumn = table.ColumnStyles[1];
 
             if (collapse)
             {
@@ -822,7 +824,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
 
         private void SetMultiInputPanelCollapsed(bool collapse)
         {
-            if (AdvancedInventory_TableLayoutPanel_Multi?.ColumnStyles.Count < 2)
+            if (AdvancedInventory_TableLayoutPanel_Multi == null || AdvancedInventory_TableLayoutPanel_Multi.ColumnStyles.Count < 2)
             {
                 return;
             }

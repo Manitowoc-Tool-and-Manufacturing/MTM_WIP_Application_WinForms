@@ -416,7 +416,6 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
         private TableLayoutPanel Control_InventoryTab_TableLayout_TopGroup;
         private TableLayoutPanel Control_InventoryTab_TableLayout_MiddleGroup;
         private Label Control_InventoryTab_Label_Notes;
-        private TableLayoutPanel tableLayoutPanel3;
         private Panel NotesPanel;
         private RichTextBox Control_InventoryTab_RichTextBox_Notes;
         }

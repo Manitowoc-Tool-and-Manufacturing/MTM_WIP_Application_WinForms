@@ -34,10 +34,6 @@ namespace MTM_WIP_Application_Winforms.Forms.MainForm
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public Service_ConnectionRecoveryManager ConnectionRecoveryManager { get; private set; } = null!;
 
-        public Helper_StoredProcedureProgress? ProgressHelper => _progressHelper;
-
-        private CancellationTokenSource? _batchCancelTokenSource;
-
         #endregion
 
         #region Constructors
@@ -608,8 +604,9 @@ namespace MTM_WIP_Application_Winforms.Forms.MainForm
 
         #region Tab Control
 
-        private void MainForm_TabControl_Selecting(object sender, TabControlCancelEventArgs e)
+        private void MainForm_TabControl_Selecting(object? sender, TabControlCancelEventArgs e)
         {
+            ArgumentNullException.ThrowIfNull(sender);
             try
             {
                 Control_AdvancedInventory? advancedInvTab = MainForm_UserControl_AdvancedInventory;
@@ -636,7 +633,7 @@ namespace MTM_WIP_Application_Winforms.Forms.MainForm
             }
         }
 
-        private async void MainForm_TabControl_SelectedIndexChanged(object sender, EventArgs e)
+        private async void MainForm_TabControl_SelectedIndexChanged(object? sender, EventArgs e)
         {
             try
             {

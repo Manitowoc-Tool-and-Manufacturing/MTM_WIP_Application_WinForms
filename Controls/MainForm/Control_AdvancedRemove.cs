@@ -492,18 +492,6 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                 Core_Themes.SizeDataGrid(Control_AdvancedRemove_DataGridView_Results);
                 Control_AdvancedRemove_Image_NothingFound.Visible = dt.Rows.Count == 0;
                 Control_AdvancedRemove_Update_ButtonStates();
-
-                // Collapse the search panel after search to maximize results area
-                try
-                {
-                    if (Control_AdvancedRemove_SplitView != null)
-                    {
-                        Control_AdvancedRemove_SplitView.Panel1Collapsed = true;
-                        UpdateSidePanelArrow(true);
-
-                    }
-                }
-                catch { }
             }
             catch (Exception ex)
             {
@@ -694,19 +682,6 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                     MainFormControlHelper.SetActiveControl(form, Control_AdvancedRemove_SuggestionBox_User);
                 }
 
-                // Expand the search panel on reset
-                try
-                {
-                    if (Control_AdvancedRemove_SplitView != null)
-                    {
-                        Control_AdvancedRemove_SplitView.Panel1Collapsed = false;
-                        UpdateSidePanelArrow(false);
-                        Control_AdvancedRemove_Button_SidePanel.ForeColor =
-                            Model_Application_Variables.UserUiColors.SuccessColor ?? Color.Green;
-                    }
-                }
-                catch { }
-
                 Debug.WriteLine("[DEBUG] AdvancedRemove HardReset - end");
             }
             catch (Exception ex)
@@ -783,19 +758,6 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                 Control_AdvancedRemove_DataGridView_Results.DataSource = null;
                 Control_AdvancedRemove_DataGridView_Results.Rows.Clear();
                 Control_AdvancedRemove_Image_NothingFound.Visible = false;
-
-                // Expand the search panel on reset
-                try
-                {
-                    if (Control_AdvancedRemove_SplitView != null)
-                    {
-                        Control_AdvancedRemove_SplitView.Panel1Collapsed = false;
-                        UpdateSidePanelArrow(false);
-                        Control_AdvancedRemove_Button_SidePanel.ForeColor =
-                            Model_Application_Variables.UserUiColors.SuccessColor ?? Color.Green;
-                    }
-                }
-                catch { }
             }
             catch (Exception ex)
             {

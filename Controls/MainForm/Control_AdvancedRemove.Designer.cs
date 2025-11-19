@@ -34,8 +34,6 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
         private Button Control_AdvancedRemove_Button_Undo;
         private Button Control_AdvancedRemove_Button_Delete;
         private Button Control_AdvancedRemove_Button_Search;
-        private Panel Control_AdvancedRemove_Panel_SplitView;
-        private SplitContainer Control_AdvancedRemove_SplitView;
         private TableLayoutPanel Control_AdvancedRemove_TableLayout_Inputs;
         private Button Control_AdvancedRemove_Button_SidePanel;
         

@@ -78,8 +78,8 @@ public class ThemedForm : Form
             }
             catch (Exception ex)
             {
-                // Log but don't fail - form will work without theming
-                
+                LoggingUtility.LogApplicationError(ex);
+                // Log but don't fail - form will work without theming                
             }
         }
         else

@@ -166,7 +166,7 @@ namespace MTM_WIP_Application_Winforms.Services
                         contextData: new Dictionary<string, object>
                         {
                             ["StartupStep"] = "Database Connectivity",
-                            ["DatabaseName"] = Model_Shared_Users.Database,
+                            ["DatabaseName"] = Model_Shared_Users.Database ?? "mtm_wip_application_winforms",
                             ["ServerAddress"] = Model_Shared_Users.WipServerAddress
                         },
                         callerName: "RunStartupAsync_DatabaseConnectivity",
@@ -519,7 +519,7 @@ namespace MTM_WIP_Application_Winforms.Services
                         Enum_ErrorSeverity.Fatal,
                         contextData: new Dictionary<string, object>
                         {
-                            ["DatabaseName"] = Model_Shared_Users.Database,
+                            ["DatabaseName"] = Model_Shared_Users.Database ?? "mtm_wip_application_winforms",
                             ["ServerAddress"] = Model_Shared_Users.WipServerAddress,
                             ["MethodName"] = "ValidateConnectivityAsync",
                             ["ErrorType"] = "MySqlException_StartupConnectivity"
@@ -553,7 +553,7 @@ namespace MTM_WIP_Application_Winforms.Services
                         Enum_ErrorSeverity.Fatal,
                         contextData: new Dictionary<string, object>
                         {
-                            ["DatabaseName"] = Model_Shared_Users.Database,
+                            ["DatabaseName"] = Model_Shared_Users.Database ?? "mtm_wip_application_winforms",
                             ["ServerAddress"] = Model_Shared_Users.WipServerAddress,
                             ["MethodName"] = "ValidateConnectivityAsync",
                             ["ErrorType"] = "GeneralException_StartupConnectivity"
@@ -581,7 +581,7 @@ namespace MTM_WIP_Application_Winforms.Services
         {
             if (ex.Message.Contains("Unknown database"))
             {
-                string dbName = Model_Shared_Users.Database;
+                string dbName = Model_Shared_Users.Database ?? "mtm_wip_application_winforms";
                 string serverAddress = Model_Shared_Users.WipServerAddress;
 
 #if DEBUG

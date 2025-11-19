@@ -153,7 +153,7 @@ internal static class Service_ErrorReportSync
         }
         catch (Exception ex)
         {
-
+            LoggingUtility.LogApplicationError(ex);
             return 0;
         }
     }
@@ -266,9 +266,7 @@ internal static class Service_ErrorReportSync
         }
         catch (IOException ex)
         {
-            // File move failure - log but leave in pending for retry
-
-
+            LoggingUtility.LogApplicationError(ex);
             return false;
         }
         catch (Exception ex)
@@ -315,7 +313,8 @@ internal static class Service_ErrorReportSync
                     command.Parameters.AddWithValue("@userName", userName);
                     command.Parameters.AddWithValue("@reportDate", reportDate);
 
-                    long count = (long)await command.ExecuteScalarAsync();
+                    var scalar = await command.ExecuteScalarAsync();
+                    long count = (scalar is null || scalar is DBNull) ? 0L : Convert.ToInt64(scalar);
 
                     return count > 0;
                 }
@@ -323,8 +322,7 @@ internal static class Service_ErrorReportSync
         }
         catch (Exception ex)
         {
-
-
+            LoggingUtility.LogApplicationError(ex);
             // On error, assume report doesn't exist to allow retry
             return false;
         }
@@ -384,7 +382,7 @@ internal static class Service_ErrorReportSync
         }
         catch (IOException ioEx)
         {
-
+            LoggingUtility.LogApplicationError(ioEx);
         }
     }
 
@@ -419,7 +417,7 @@ internal static class Service_ErrorReportSync
         }
         catch (Exception ex)
         {
-
+            LoggingUtility.LogApplicationError(ex);
         }
 
         // Return defaults on parse failure
@@ -452,7 +450,7 @@ internal static class Service_ErrorReportSync
         }
         catch (IOException ex)
         {
-
+            LoggingUtility.LogApplicationError(ex);
             throw; // Re-throw to indicate file move failure
         }
     }
@@ -487,7 +485,7 @@ internal static class Service_ErrorReportSync
                     }
                     catch (Exception ex)
                     {
-
+                        LoggingUtility.LogApplicationError(ex);
                     }
                 }
 

@@ -17,7 +17,6 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
         #region Events
 
         public event EventHandler? UserAdded;
-        public event EventHandler<string>? StatusMessageChanged;
 
         #endregion
 

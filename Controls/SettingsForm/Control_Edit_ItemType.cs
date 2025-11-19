@@ -40,6 +40,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             }
             catch (Exception ex)
             {
+                LoggingUtility.LogApplicationError(ex);
                 // Log and rethrow to be caught in OnLoad
             }
         }

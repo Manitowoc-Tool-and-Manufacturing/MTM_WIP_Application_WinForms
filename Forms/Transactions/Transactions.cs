@@ -280,12 +280,9 @@ internal partial class Transactions : ThemedForm
     {
         try
         {
-            
-
-            // Check if there are results to print
             if (_viewModel.CurrentResults == null || _viewModel.CurrentResults.Transactions == null || _viewModel.CurrentResults.Transactions.Count == 0)
             {
-                
+
                 Service_ErrorHandler.HandleValidationError("No transactions to print. Please perform a search first.", "Print");
                 return;
             }
@@ -296,11 +293,11 @@ internal partial class Transactions : ThemedForm
             {
                 if (t.IsCompletedSuccessfully)
                 {
-                    
+
                 }
-                else if (t.IsFaulted)
+                else if (t.IsFaulted && t.Exception != null)
                 {
-                    LoggingUtility.LogApplicationError(t.Exception?.GetBaseException());
+                    LoggingUtility.LogApplicationError(t.Exception.GetBaseException() ?? t.Exception);
                 }
             });
         }
@@ -308,8 +305,8 @@ internal partial class Transactions : ThemedForm
         {
             LoggingUtility.LogApplicationError(ex);
             Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Low, retryAction: null,
-                contextData: new Dictionary<string, object> 
-                { 
+                contextData: new Dictionary<string, object>
+                {
                     ["User"] = _currentUser,
                     ["TransactionCount"] = _viewModel.CurrentResults?.Transactions?.Count ?? 0
                 },

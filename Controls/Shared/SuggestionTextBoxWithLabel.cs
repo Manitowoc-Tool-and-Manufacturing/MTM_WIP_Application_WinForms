@@ -1,5 +1,6 @@
 using System;
 using System.ComponentModel;
+using System.Diagnostics.CodeAnalysis;
 using System.Drawing;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -57,7 +58,10 @@ namespace MTM_WIP_Application_Winforms.Controls.Shared
         [DefaultValue("")]
         public override string? Text
         {
-            get => SuggestionTextBoxWithLabel_TextBox_Main.Text;
+            #pragma warning disable CS8764 // Nullability of return type doesn't match overridden member (possibly because of nullability attributes).
+                get => SuggestionTextBoxWithLabel_TextBox_Main.Text;
+            #pragma warning restore CS8764 // Nullability of return type doesn't match overridden member (possibly because of nullability attributes).
+
             set => SuggestionTextBoxWithLabel_TextBox_Main.Text = value;
         }
 

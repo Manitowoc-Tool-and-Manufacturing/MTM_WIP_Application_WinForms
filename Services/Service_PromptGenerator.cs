@@ -381,8 +381,7 @@ public static class Service_PromptGenerator
         }
         catch (Exception ex)
         {
-            // Log but don't fail - just use built-in templates
-
+            LoggingUtility.LogApplicationError(ex);
         }
 
         return templates;

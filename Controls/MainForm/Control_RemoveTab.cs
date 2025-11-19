@@ -1425,9 +1425,9 @@ SetStyle(ControlStyles.OptimizedDoubleBuffer, true);
                     }
 
                     row.DefaultCellStyle.BackColor = backColor;
-                    row.DefaultCellStyle.SelectionBackColor = backColor; // keep consistent; selection fore color handles contrast
+                    row.DefaultCellStyle.SelectionBackColor = Color.FromArgb(Math.Max(0, backColor.R - 60), Math.Max(0, backColor.G - 60), Math.Max(0, backColor.B - 60)); // Darker shade for visible selection
                     row.DefaultCellStyle.ForeColor = SystemColors.ControlText;
-                    row.DefaultCellStyle.SelectionForeColor = SystemColors.ControlText;
+                    row.DefaultCellStyle.SelectionForeColor = Color.White;
                 }
             }
             catch (Exception ex)

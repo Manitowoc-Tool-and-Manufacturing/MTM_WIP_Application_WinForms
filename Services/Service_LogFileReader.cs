@@ -401,14 +401,12 @@ public class Service_LogFileReader
 
             using var reader = new StreamReader(stream, Encoding.UTF8);
 
-            // Skip CSV header if present
-            bool skippedHeader = false;
             if (!reader.EndOfStream)
             {
                 string? firstLine = await ReadCsvLineAsync(reader).ConfigureAwait(false);
                 if (firstLine != null && firstLine.StartsWith("Timestamp,", StringComparison.OrdinalIgnoreCase))
                 {
-                    skippedHeader = true;
+                    // Header detected, do not count as data
                 }
                 else
                 {

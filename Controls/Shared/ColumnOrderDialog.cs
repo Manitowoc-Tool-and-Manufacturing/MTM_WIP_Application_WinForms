@@ -14,14 +14,14 @@ namespace MTM_WIP_Application_Winforms.Controls.Shared
     {
         #region Fields
 
-        private  ListBox listBox;
-        private  Button btnOK;
-        private  Button btnCancel;
-        private  Label infoLabel;
-        private  Label lblInstructions;
-        private  List<string> columnNames; // all columns, visible+hidden, in display order
-        private  List<string> visibleColumnNames; // only visible columns, in display order
-        private  List<string> hiddenColumnNames; // only hidden columns, in display order
+        private  ListBox? _listBox = null;
+        private  Button? _btnOK = null;
+        private  Button? _btnCancel = null;
+        private  Label? _infoLabel = null;
+        private  Label? _lblInstructions = null;
+        private  List<string> _columnNames = [];
+        private  List<string> _visibleColumnNames = [];
+        private  List<string> _hiddenColumnNames = [];
         private int dragIndex = -1;
 
         #endregion
@@ -64,18 +64,18 @@ namespace MTM_WIP_Application_Winforms.Controls.Shared
         /// <param name="dgv">DataGridView to analyze</param>
         private void InitializeColumnData(DataGridView dgv)
         {
-            columnNames = dgv.Columns.Cast<DataGridViewColumn>()
+            _columnNames = dgv.Columns.Cast<DataGridViewColumn>()
                 .OrderBy(c => c.DisplayIndex)
                 .Select(c => c.Name)
                 .ToList();
             
-            visibleColumnNames = dgv.Columns.Cast<DataGridViewColumn>()
+            _visibleColumnNames = dgv.Columns.Cast<DataGridViewColumn>()
                 .Where(c => c.Visible)
                 .OrderBy(c => c.DisplayIndex)
                 .Select(c => c.Name)
                 .ToList();
             
-            hiddenColumnNames = dgv.Columns.Cast<DataGridViewColumn>()
+            _hiddenColumnNames = dgv.Columns.Cast<DataGridViewColumn>()
                 .Where(c => !c.Visible)
                 .OrderBy(c => c.DisplayIndex)
                 .Select(c => c.Name)
@@ -89,21 +89,21 @@ namespace MTM_WIP_Application_Winforms.Controls.Shared
         private void InitializeControls(DataGridView dgv)
         {
             // Initialize ListBox
-            listBox = new ListBox
+            _listBox = new ListBox
             {
                 Dock = DockStyle.Top,
                 Height = 320,
                 AllowDrop = true
             };
             
-            foreach (var col in visibleColumnNames)
+            foreach (var col in _visibleColumnNames)
             {
                 var gridCol = dgv.Columns[col];
-                listBox.Items.Add(gridCol.HeaderText);
+                _listBox.Items.Add(gridCol.HeaderText);
             }
 
             // Initialize Labels
-            infoLabel = new Label
+            _infoLabel = new Label
             {
                 Text = "Drag and drop columns to reorder.\r\nUse Shift+Up/Down to move the selected column.\r\nOnly visible columns are shown. Hidden columns will always appear to the right.",
                 Dock = DockStyle.Top,
@@ -116,7 +116,7 @@ namespace MTM_WIP_Application_Winforms.Controls.Shared
                 BackColor = Color.Transparent
             };
 
-            lblInstructions = new Label
+            _lblInstructions = new Label
             {
                 Text = "How to use this form:\n\n- Drag and drop column names to change their order.\n- Use Shift+Up/Down to move a selected column.\n- Only visible columns are shown. Hidden columns will always appear to the right.\n- Click OK to save your changes.",
                 Dock = DockStyle.Top,
@@ -128,18 +128,18 @@ namespace MTM_WIP_Application_Winforms.Controls.Shared
             };
 
             // Initialize Buttons
-            btnOK = new Button { Text = "OK", DialogResult = DialogResult.OK, Dock = DockStyle.Bottom };
-            btnCancel = new Button { Text = "Cancel", DialogResult = DialogResult.Cancel, Dock = DockStyle.Bottom };
+            _btnOK = new Button { Text = "OK", DialogResult = DialogResult.OK, Dock = DockStyle.Bottom };
+            _btnCancel = new Button { Text = "Cancel", DialogResult = DialogResult.Cancel, Dock = DockStyle.Bottom };
 
             // Add controls to form
-            Controls.Add(btnOK);
-            Controls.Add(btnCancel);
-            Controls.Add(lblInstructions);
-            Controls.Add(infoLabel);
-            Controls.Add(listBox);
+            Controls.Add(_btnOK);
+            Controls.Add(_btnCancel);
+            Controls.Add(_lblInstructions);
+            Controls.Add(_infoLabel);
+            Controls.Add(_listBox);
 
-            AcceptButton = btnOK;
-            CancelButton = btnCancel;
+            AcceptButton = _btnOK;
+            CancelButton = _btnCancel;
         }
 
         /// <summary>
@@ -147,11 +147,12 @@ namespace MTM_WIP_Application_Winforms.Controls.Shared
         /// </summary>
         private void SetupEventHandlers()
         {
-            listBox.MouseDown += ListBox_MouseDown;
-            listBox.MouseMove += ListBox_MouseMove;
-            listBox.DragOver += ListBox_DragOver;
-            listBox.DragDrop += ListBox_DragDrop;
-            listBox.KeyDown += ListBox_KeyDown;
+            if (_listBox == null) return; // Guard against null reference
+            _listBox.MouseDown += ListBox_MouseDown;
+            _listBox.MouseMove += ListBox_MouseMove;
+            _listBox.DragOver += ListBox_DragOver;
+            _listBox.DragDrop += ListBox_DragDrop;
+            _listBox.KeyDown += ListBox_KeyDown;
         }
 
         #endregion
@@ -163,7 +164,8 @@ namespace MTM_WIP_Application_Winforms.Controls.Shared
         /// </summary>
         private void ListBox_MouseDown(object? sender, MouseEventArgs e)
         {
-            dragIndex = listBox.IndexFromPoint(e.Location);
+            if (_listBox == null) return; // Guard against null reference
+            dragIndex = _listBox.IndexFromPoint(e.Location);
         }
 
         /// <summary>
@@ -173,7 +175,8 @@ namespace MTM_WIP_Application_Winforms.Controls.Shared
         {
             if (dragIndex >= 0 && e.Button == MouseButtons.Left)
             {
-                listBox.DoDragDrop(listBox.Items[dragIndex], DragDropEffects.Move);
+                if (_listBox == null) return; // Guard against null reference
+                _listBox.DoDragDrop(_listBox.Items[dragIndex], DragDropEffects.Move);
             }
         }
 
@@ -190,15 +193,16 @@ namespace MTM_WIP_Application_Winforms.Controls.Shared
         /// </summary>
         private void ListBox_DragDrop(object? sender, DragEventArgs e)
         {
-            Point point = listBox.PointToClient(new Point(e.X, e.Y));
-            int index = listBox.IndexFromPoint(point);
-            if (index < 0) index = listBox.Items.Count - 1;
+            if (_listBox == null) return; // Guard against null reference
+            Point point = _listBox.PointToClient(new Point(e.X, e.Y));
+            int index = _listBox.IndexFromPoint(point);
+            if (index < 0) index = _listBox.Items.Count - 1;
             object data = e.Data?.GetData(typeof(string)) ?? "";
-            if (dragIndex >= 0 && dragIndex < listBox.Items.Count)
+            if (dragIndex >= 0 && dragIndex < _listBox.Items.Count)
             {
-                listBox.Items.RemoveAt(dragIndex);
-                listBox.Items.Insert(index, data);
-                listBox.SelectedIndex = index;
+                _listBox.Items.RemoveAt(dragIndex);
+                _listBox.Items.Insert(index, data);
+                _listBox.SelectedIndex = index;
                 dragIndex = -1;
             }
         }
@@ -208,23 +212,25 @@ namespace MTM_WIP_Application_Winforms.Controls.Shared
         /// </summary>
         private void ListBox_KeyDown(object? sender, KeyEventArgs e)
         {
-            if (e.Shift && listBox.SelectedIndex >= 0)
+            if (_listBox == null) return; // Guard against null reference
+
+            if (e.Shift && _listBox.SelectedIndex >= 0)
             {
-                int idx = listBox.SelectedIndex;
+                int idx = _listBox.SelectedIndex;
                 if (e.KeyCode == Keys.Up && idx > 0)
                 {
-                    var item = listBox.Items[idx];
-                    listBox.Items.RemoveAt(idx);
-                    listBox.Items.Insert(idx - 1, item);
-                    listBox.SelectedIndex = idx - 1;
+                    var item = _listBox.Items[idx];
+                    _listBox.Items.RemoveAt(idx);
+                    _listBox.Items.Insert(idx - 1, item);
+                    _listBox.SelectedIndex = idx - 1;
                     e.Handled = true;
                 }
-                else if (e.KeyCode == Keys.Down && idx < listBox.Items.Count - 1)
+                else if (e.KeyCode == Keys.Down && idx < _listBox.Items.Count - 1)
                 {
-                    var item = listBox.Items[idx];
-                    listBox.Items.RemoveAt(idx);
-                    listBox.Items.Insert(idx + 1, item);
-                    listBox.SelectedIndex = idx + 1;
+                    var item = _listBox.Items[idx];
+                    _listBox.Items.RemoveAt(idx);
+                    _listBox.Items.Insert(idx + 1, item);
+                    _listBox.SelectedIndex = idx + 1;
                     e.Handled = true;
                 }
             }
@@ -240,34 +246,35 @@ namespace MTM_WIP_Application_Winforms.Controls.Shared
         /// <returns>List of column names in the new order</returns>
         public List<string> GetColumnOrder()
         {
-            // Map header text back to column names for visible columns
-            var visibleOrder = new List<string>();
-            foreach (string header in listBox.Items)
+            if (_listBox == null)
             {
-                string? colName = visibleColumnNames.FirstOrDefault(n => header == n || header == n || header == n);
-                // Actually, match by header text to column name
-                colName = visibleColumnNames.FirstOrDefault(n => header == n);
+                // If listbox was not initialized, return original order
+                return new List<string>(_columnNames);
+            }
+
+            var visibleOrder = new List<string>();
+            foreach (var item in _listBox.Items)
+            {
+                var header = item?.ToString();
+                if (string.IsNullOrEmpty(header)) continue;
+
+                // Attempt to match header text to a visible column name (header text assumed equal to name)
+                var colName = _visibleColumnNames.FirstOrDefault(n => string.Equals(header, n, StringComparison.Ordinal));
                 if (colName == null)
                 {
-                    // fallback: match by header text
-                    colName = columnNames.FirstOrDefault(n => header == n);
+                    // Fallback: check all columns
+                    colName = _columnNames.FirstOrDefault(n => string.Equals(header, n, StringComparison.Ordinal));
                 }
                 if (colName == null)
                 {
-                    // fallback: try to match by header text in DataGridView
-                    colName = visibleColumnNames.FirstOrDefault(n => header == n);
-                }
-                if (colName == null)
-                {
-                    // fallback: just skip
-                    continue;
+                    continue; // Skip if no match found
                 }
                 visibleOrder.Add(colName);
             }
             
             // Append hidden columns in their original order
             var finalOrder = new List<string>(visibleOrder);
-            finalOrder.AddRange(hiddenColumnNames);
+            finalOrder.AddRange(_hiddenColumnNames);
             return finalOrder;
         }
 
