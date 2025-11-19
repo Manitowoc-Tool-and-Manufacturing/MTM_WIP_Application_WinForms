@@ -35,9 +35,7 @@
             SettingsForm_Panel_Database = new Panel();
             SettingsForm_Panel_Shortcuts = new Panel();
             SettingsForm_Panel_About = new Panel();
-            SettingsForm_Panel_AddPart = new Panel();
-            SettingsForm_Panel_EditPart = new Panel();
-            SettingsForm_Panel_RemovePart = new Panel();
+            SettingsForm_Panel_PartNumbers = new Panel();
             SettingsForm_Panel_AddOperation = new Panel();
             SettingsForm_Panel_EditOperation = new Panel();
             SettingsForm_Panel_RemoveOperation = new Panel();
@@ -134,15 +132,11 @@
             SettingsForm_Panel_Right.Controls.Add(SettingsForm_Panel_Database);
             SettingsForm_Panel_Right.Controls.Add(SettingsForm_Panel_Shortcuts);
             SettingsForm_Panel_Right.Controls.Add(SettingsForm_Panel_About);
-            SettingsForm_Panel_Right.Controls.Add(SettingsForm_Panel_AddPart);
-            SettingsForm_Panel_Right.Controls.Add(SettingsForm_Panel_EditPart);
-            SettingsForm_Panel_Right.Controls.Add(SettingsForm_Panel_RemovePart);
+            SettingsForm_Panel_Right.Controls.Add(SettingsForm_Panel_PartNumbers);
             SettingsForm_Panel_Right.Controls.Add(SettingsForm_Panel_AddOperation);
             SettingsForm_Panel_Right.Controls.Add(SettingsForm_Panel_EditOperation);
             SettingsForm_Panel_Right.Controls.Add(SettingsForm_Panel_RemoveOperation);
             SettingsForm_Panel_Right.Controls.Add(SettingsForm_Panel_AddLocation);
-            SettingsForm_Panel_Right.Controls.Add(SettingsForm_Panel_EditLocation);
-            SettingsForm_Panel_Right.Controls.Add(SettingsForm_Panel_RemoveLocation);
             SettingsForm_Panel_Right.Controls.Add(SettingsForm_Panel_AddItemType);
             SettingsForm_Panel_Right.Controls.Add(SettingsForm_Panel_EditItemType);
             SettingsForm_Panel_Right.Controls.Add(SettingsForm_Panel_RemoveItemType);
@@ -193,38 +187,16 @@
             SettingsForm_Panel_About.TabIndex = 43;
             SettingsForm_Panel_About.Visible = false;
             // 
-            // SettingsForm_Panel_AddPart
+            // SettingsForm_Panel_PartNumbers
             // 
-            SettingsForm_Panel_AddPart.AutoSize = true;
-            SettingsForm_Panel_AddPart.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            SettingsForm_Panel_AddPart.Dock = DockStyle.Fill;
-            SettingsForm_Panel_AddPart.Location = new Point(3, 3);
-            SettingsForm_Panel_AddPart.Name = "SettingsForm_Panel_AddPart";
-            SettingsForm_Panel_AddPart.Size = new Size(622, 458);
-            SettingsForm_Panel_AddPart.TabIndex = 44;
-            SettingsForm_Panel_AddPart.Visible = false;
-            // 
-            // SettingsForm_Panel_EditPart
-            // 
-            SettingsForm_Panel_EditPart.AutoSize = true;
-            SettingsForm_Panel_EditPart.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            SettingsForm_Panel_EditPart.Dock = DockStyle.Fill;
-            SettingsForm_Panel_EditPart.Location = new Point(3, 3);
-            SettingsForm_Panel_EditPart.Name = "SettingsForm_Panel_EditPart";
-            SettingsForm_Panel_EditPart.Size = new Size(622, 458);
-            SettingsForm_Panel_EditPart.TabIndex = 45;
-            SettingsForm_Panel_EditPart.Visible = false;
-            // 
-            // SettingsForm_Panel_RemovePart
-            // 
-            SettingsForm_Panel_RemovePart.AutoSize = true;
-            SettingsForm_Panel_RemovePart.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            SettingsForm_Panel_RemovePart.Dock = DockStyle.Fill;
-            SettingsForm_Panel_RemovePart.Location = new Point(3, 3);
-            SettingsForm_Panel_RemovePart.Name = "SettingsForm_Panel_RemovePart";
-            SettingsForm_Panel_RemovePart.Size = new Size(622, 458);
-            SettingsForm_Panel_RemovePart.TabIndex = 46;
-            SettingsForm_Panel_RemovePart.Visible = false;
+            SettingsForm_Panel_PartNumbers.AutoSize = true;
+            SettingsForm_Panel_PartNumbers.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            SettingsForm_Panel_PartNumbers.Dock = DockStyle.Fill;
+            SettingsForm_Panel_PartNumbers.Location = new Point(3, 3);
+            SettingsForm_Panel_PartNumbers.Name = "SettingsForm_Panel_PartNumbers";
+            SettingsForm_Panel_PartNumbers.Size = new Size(622, 458);
+            SettingsForm_Panel_PartNumbers.TabIndex = 44;
+            SettingsForm_Panel_PartNumbers.Visible = false;
             // 
             // SettingsForm_Panel_AddOperation
             // 
@@ -424,9 +396,7 @@
         private Panel SettingsForm_Panel_Database;
         private Panel SettingsForm_Panel_Shortcuts;
         private Panel SettingsForm_Panel_About;
-        private Panel SettingsForm_Panel_AddPart;
-        private Panel SettingsForm_Panel_EditPart;
-        private Panel SettingsForm_Panel_RemovePart;
+        private Panel SettingsForm_Panel_PartNumbers;
         private Panel SettingsForm_Panel_AddOperation;
         private Panel SettingsForm_Panel_EditOperation;
         private Panel SettingsForm_Panel_RemoveOperation;

@@ -15,6 +15,9 @@ namespace MTM_WIP_Application_Winforms.Forms.Settings
 
         public bool HasChanges = false;
         private readonly Dictionary<string, Panel> _settingsPanels;
+        private Control_PartIDManagement? _controlPartManagement;
+        private Control_LocationManagement? _controlLocationManagement;
+        private Control_OperationManagement? _controlOperationManagement;
 
         #endregion
 
@@ -49,7 +52,7 @@ namespace MTM_WIP_Application_Winforms.Forms.Settings
             Service_DebugTracer.TraceUIAction("SETTINGS_PANELS_INITIALIZATION", nameof(SettingsForm),
                 new Dictionary<string, object>
                 {
-                    ["PanelsCount"] = 19,
+                    ["PanelsCount"] = 18,
                     ["PanelTypes"] = new[] { "Database", "User Management", "Part Management", "Operations", "Locations", "ItemTypes", "Theme", "About" }
                 });
 
@@ -60,15 +63,9 @@ namespace MTM_WIP_Application_Winforms.Forms.Settings
                 ["Add User"] = SettingsForm_Panel_AddUser,
                 ["Edit User"] = SettingsForm_Panel_EditUser,
                 ["Delete User"] = SettingsForm_Panel_DeleteUser,
-                ["Add Part Number"] = SettingsForm_Panel_AddPart,
-                ["Edit Part Number"] = SettingsForm_Panel_EditPart,
-                ["Remove Part Number"] = SettingsForm_Panel_RemovePart,
-                ["Add Operation"] = SettingsForm_Panel_AddOperation,
-                ["Edit Operation"] = SettingsForm_Panel_EditOperation,
-                ["Remove Operation"] = SettingsForm_Panel_RemoveOperation,
-                ["Add Location"] = SettingsForm_Panel_AddLocation,
-                ["Edit Location"] = SettingsForm_Panel_EditLocation,
-                ["Remove Location"] = SettingsForm_Panel_RemoveLocation,
+                ["Part Numbers"] = SettingsForm_Panel_PartNumbers,
+                ["Operations"] = SettingsForm_Panel_AddOperation,
+                ["Locations"] = SettingsForm_Panel_AddLocation,
                 ["Add ItemType"] = SettingsForm_Panel_AddItemType,
                 ["Edit ItemType"] = SettingsForm_Panel_EditItemType,
                 ["Remove ItemType"] = SettingsForm_Panel_RemoveItemType,
@@ -115,20 +112,11 @@ namespace MTM_WIP_Application_Winforms.Forms.Settings
             usersNode.Nodes.Add("Edit User", "Edit User");
             usersNode.Nodes.Add("Delete User", "Delete User");
 
-            TreeNode partNumbersNode = SettingsForm_TreeView_Category.Nodes.Add("Part Numbers", "Part Numbers");
-            partNumbersNode.Nodes.Add("Add Part Number", "Add Part Number");
-            partNumbersNode.Nodes.Add("Edit Part Number", "Edit Part Number");
-            partNumbersNode.Nodes.Add("Remove Part Number", "Remove Part Number");
+            SettingsForm_TreeView_Category.Nodes.Add("Part Numbers", "Part Numbers");
 
-            TreeNode operationsNode = SettingsForm_TreeView_Category.Nodes.Add("Operations", "Operations");
-            operationsNode.Nodes.Add("Add Operation", "Add Operation");
-            operationsNode.Nodes.Add("Edit Operation", "Edit Operation");
-            operationsNode.Nodes.Add("Remove Operation", "Remove Operation");
+            SettingsForm_TreeView_Category.Nodes.Add("Operations", "Operations");
 
-            TreeNode locationsNode = SettingsForm_TreeView_Category.Nodes.Add("Locations", "Locations");
-            locationsNode.Nodes.Add("Add Location", "Add Location");
-            locationsNode.Nodes.Add("Edit Location", "Edit Location");
-            locationsNode.Nodes.Add("Remove Location", "Remove Location");
+            SettingsForm_TreeView_Category.Nodes.Add("Locations", "Locations");
 
             TreeNode itemTypesNode = SettingsForm_TreeView_Category.Nodes.Add("ItemTypes", "ItemTypes");
             itemTypesNode.Nodes.Add("Add ItemType", "Add ItemType");
@@ -225,82 +213,36 @@ namespace MTM_WIP_Application_Winforms.Forms.Settings
                 HasChanges = true;
             };
 
-            Control_Add_PartID controlAddPart = new() { Dock = DockStyle.Fill };
-            SettingsForm_Panel_AddPart.Controls.Add(controlAddPart);
-            controlAddPart.PartAdded += (s, e) =>
+            _controlPartManagement = new Control_PartIDManagement { Dock = DockStyle.Fill };
+            _controlPartManagement.PartListChanged += (_, _) =>
             {
-                UpdateStatus("Part added successfully - lists refreshed");
+                UpdateStatus("Part numbers updated successfully.");
                 HasChanges = true;
             };
+            SettingsForm_Panel_PartNumbers.Controls.Add(_controlPartManagement);
 
-            Control_Edit_PartID controlEditPartId = new() { Dock = DockStyle.Fill };
-            SettingsForm_Panel_EditPart.Controls.Add(controlEditPartId);
-            controlEditPartId.PartUpdated += (s, e) =>
+            _controlOperationManagement = new Control_OperationManagement { Dock = DockStyle.Fill };
+            _controlOperationManagement.SetProgressControls(SettingsForm_ProgressBar, SettingsForm_StatusText);
+            _controlOperationManagement.OperationListChanged += (_, _) =>
             {
-                UpdateStatus("Part updated successfully - lists refreshed");
+                UpdateStatus("Operations updated successfully.");
                 HasChanges = true;
             };
+            _controlOperationManagement.StatusMessageChanged += (_, message) => UpdateStatus(message);
+            SettingsForm_Panel_AddOperation.Controls.Add(_controlOperationManagement);
+            SettingsForm_Panel_EditOperation.Visible = false;
+            SettingsForm_Panel_RemoveOperation.Visible = false;
 
-            Control_Remove_PartID controlRemovePartId = new() { Dock = DockStyle.Fill };
-            SettingsForm_Panel_RemovePart.Controls.Add(controlRemovePartId);
-            controlRemovePartId.PartRemoved += (s, e) =>
+            _controlLocationManagement = new Control_LocationManagement { Dock = DockStyle.Fill };
+            _controlLocationManagement.LocationListChanged += (_, _) =>
             {
-                UpdateStatus("Part removed successfully - lists refreshed");
+                UpdateStatus("Locations updated successfully.");
                 HasChanges = true;
             };
-
-            Control_Add_Operation controlAddOperation = new() { Dock = DockStyle.Fill };
-            SettingsForm_Panel_AddOperation.Controls.Add(controlAddOperation);
-            
-            // Pass the ToolStrip progress controls
-            controlAddOperation.SetProgressControls(SettingsForm_ProgressBar, SettingsForm_StatusText);
-            
-            controlAddOperation.OperationAdded += (s, e) =>
-            {
-                UpdateStatus("Operation added successfully - lists refreshed");
-                HasChanges = true;
-            };
-            controlAddOperation.StatusMessageChanged += (s, message) => { UpdateStatus(message); };
-
-            Control_Edit_Operation controlEditOperation = new() { Dock = DockStyle.Fill };
-            SettingsForm_Panel_EditOperation.Controls.Add(controlEditOperation);
-            controlEditOperation.OperationUpdated += (s, e) =>
-            {
-                UpdateStatus("Operation updated successfully - lists refreshed");
-                HasChanges = true;
-            };
-
-            Control_Remove_Operation controlRemoveOperation = new() { Dock = DockStyle.Fill };
-            SettingsForm_Panel_RemoveOperation.Controls.Add(controlRemoveOperation);
-            controlRemoveOperation.OperationRemoved += (s, e) =>
-            {
-                UpdateStatus("Operation removed successfully - lists refreshed");
-                HasChanges = true;
-            };
-
-            Control_Add_Location controlAddLocation = new() { Dock = DockStyle.Fill };
-            SettingsForm_Panel_AddLocation.Controls.Add(controlAddLocation);
-            controlAddLocation.LocationAdded += (s, e) =>
-            {
-                UpdateStatus("Location added successfully - lists refreshed");
-                HasChanges = true;
-            };
-
-            Control_Edit_Location controlEditLocation = new() { Dock = DockStyle.Fill };
-            SettingsForm_Panel_EditLocation.Controls.Add(controlEditLocation);
-            controlEditLocation.LocationUpdated += (s, e) =>
-            {
-                UpdateStatus("Location updated successfully - lists refreshed");
-                HasChanges = true;
-            };
-
-            Control_Remove_Location controlRemoveLocation = new() { Dock = DockStyle.Fill };
-            SettingsForm_Panel_RemoveLocation.Controls.Add(controlRemoveLocation);
-            controlRemoveLocation.LocationRemoved += (s, e) =>
-            {
-                UpdateStatus("Location removed successfully - lists refreshed");
-                HasChanges = true;
-            };
+            // Use AddLocation panel as the container (hide Edit/Remove panels)
+            SettingsForm_Panel_AddLocation.Controls.Add(_controlLocationManagement);
+            SettingsForm_Panel_EditLocation.Visible = false;
+            SettingsForm_Panel_RemoveLocation.Visible = false;
 
             Control_Add_ItemType controlAddItemType = new() { Dock = DockStyle.Fill };
             SettingsForm_Panel_AddItemType.Controls.Add(controlAddItemType);
@@ -394,6 +336,17 @@ namespace MTM_WIP_Application_Winforms.Forms.Settings
                 }
             }
 
+            bool canAddParts = hasAdminAccess || isNormal;
+            bool canEditParts = hasAdminAccess;
+            bool canRemoveParts = hasAdminAccess;
+
+            _controlPartManagement?.ApplyPrivileges(canAddParts, canEditParts, canRemoveParts);
+
+            if (!canAddParts && !canEditParts && !canRemoveParts)
+            {
+                HideNode("Part Numbers");
+            }
+
             if (hasAdminAccess)
             {
                 // All nodes shown for Admin and Developer
@@ -404,8 +357,6 @@ namespace MTM_WIP_Application_Winforms.Forms.Settings
             {
                 HideNode("Database");
                 HideNode("Users");
-                HideNode("Part Numbers", "Edit Part Number");
-                HideNode("Part Numbers", "Remove Part Number");
                 HideNode("Operations", "Edit Operation");
                 HideNode("Operations", "Remove Operation");
                 HideNode("Locations", "Edit Location");
