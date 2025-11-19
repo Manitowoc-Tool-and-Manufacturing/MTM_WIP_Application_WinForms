@@ -369,7 +369,7 @@ FodyWeavers.xsd
 .DS_Store
 Thumbs.db
 *.swp
-.vscode/
+#.vscode/
 .idea/
 
 # Developer Tools - Debug Dashboard logs

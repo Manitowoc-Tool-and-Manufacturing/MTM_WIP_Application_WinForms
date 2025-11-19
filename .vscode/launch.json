@@ -1,0 +1,66 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Launch MTM WIP Application (Debug)",
+      "type": "coreclr",
+      "request": "launch",
+      "preLaunchTask": "build",
+      "program": "${workspaceFolder}/bin/Debug/net8.0-windows/MTM_WIP_Application_Winforms.exe",
+      "args": [],
+      "cwd": "${workspaceFolder}",
+      "console": "internalConsole",
+      "stopAtEntry": false,
+      "justMyCode": true,
+      "requireExactSource": false,
+      "enableStepFiltering": true,
+      "logging": {
+        "moduleLoad": false,
+        "exceptions": true,
+        "programOutput": true
+      },
+      "symbolOptions": {
+        "searchPaths": [],
+        "searchMicrosoftSymbolServer": false,
+        "searchNuGetOrgSymbolServer": false,
+        "moduleFilter": {
+          "mode": "loadAllButExcluded",
+          "excludedModules": [
+            "DocumentFormat.OpenXml.dll",
+            "DocumentFormat.OpenXml.Framework.dll",
+            "System.Security.Permissions.dll",
+            "System.Configuration.ConfigurationManager.dll",
+            "Microsoft.Win32.SystemEvents.dll",
+            "System.Resources.Extensions.dll",
+            "System.Drawing.dll",
+            "Microsoft.Web.WebView2.*.dll"
+          ]
+        }
+      }
+    },
+    {
+      "name": "Launch MTM WIP Application (Release)",
+      "type": "coreclr",
+      "request": "launch",
+      "preLaunchTask": "build-release",
+      "program": "${workspaceFolder}/bin/Release/net8.0-windows/MTM_WIP_Application_Winforms.exe",
+      "args": [],
+      "cwd": "${workspaceFolder}",
+      "console": "internalConsole",
+      "stopAtEntry": false,
+      "justMyCode": true,
+      "requireExactSource": false,
+      "enableStepFiltering": true,
+      "logging": {
+        "moduleLoad": false,
+        "exceptions": true,
+        "programOutput": true
+      },
+      "symbolOptions": {
+        "searchPaths": [],
+        "searchMicrosoftSymbolServer": false,
+        "searchNuGetOrgSymbolServer": false
+      }
+    }
+  ]
+}
