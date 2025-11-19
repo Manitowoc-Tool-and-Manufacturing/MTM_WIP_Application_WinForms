@@ -1,4 +1,4 @@
-﻿// Licensed to the .NET Foundation under one or more agreements.
+// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
 namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
@@ -38,10 +38,10 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
         private void InitializeComponent()
         {
             Control_About_GroupBox_Main = new GroupBox();
-            Control_About_TableLayout_1 = new TableLayoutPanel();
-            Control_About_TableLayout_2 = new TableLayoutPanel();
+            Control_About_TableLayout_Main = new TableLayoutPanel();
+            Control_About_TableLayout_Bottom = new TableLayoutPanel();
             Control_About_TableLayout_Top = new TableLayoutPanel();
-            Control_About_TableLayout_3 = new TableLayoutPanel();
+            Control_About_TableLayout_Info = new TableLayoutPanel();
             Control_About_Label_Version_Data = new Label();
             Control_About_Label_Version = new Label();
             Control_About_Label_LastUpdate_Data = new Label();
@@ -51,20 +51,20 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             Control_About_Label_Author_Data = new Label();
             Control_About_Label_Author = new Label();
             Control_About_Label_Main = new Label();
-            Control_About_TableLayout_4 = new TableLayoutPanel();
+            Control_About_TableLayout_Changelog = new TableLayoutPanel();
             Control_About_Label_ChangeLog = new Label();
             Control_About_Label_WebView_ChangeLogView = new Microsoft.Web.WebView2.WinForms.WebView2();
             Control_About_GroupBox_Main.SuspendLayout();
-            Control_About_TableLayout_1.SuspendLayout();
+            Control_About_TableLayout_Main.SuspendLayout();
             Control_About_TableLayout_Top.SuspendLayout();
-            Control_About_TableLayout_3.SuspendLayout();
-            Control_About_TableLayout_4.SuspendLayout();
+            Control_About_TableLayout_Info.SuspendLayout();
+            Control_About_TableLayout_Changelog.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)Control_About_Label_WebView_ChangeLogView).BeginInit();
             SuspendLayout();
             // 
             // Control_About_GroupBox_Main
             // 
-            Control_About_GroupBox_Main.Controls.Add(Control_About_TableLayout_1);
+            Control_About_GroupBox_Main.Controls.Add(Control_About_TableLayout_Main);
             Control_About_GroupBox_Main.Dock = DockStyle.Fill;
             Control_About_GroupBox_Main.Location = new Point(0, 0);
             Control_About_GroupBox_Main.Name = "Control_About_GroupBox_Main";
@@ -73,36 +73,36 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             Control_About_GroupBox_Main.TabStop = false;
             Control_About_GroupBox_Main.Text = "About Application";
             // 
-            // Control_About_TableLayout_1
+            // Control_About_TableLayout_Main
             // 
-            Control_About_TableLayout_1.AutoSize = true;
-            Control_About_TableLayout_1.ColumnCount = 1;
-            Control_About_TableLayout_1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
-            Control_About_TableLayout_1.Controls.Add(Control_About_TableLayout_2, 0, 1);
-            Control_About_TableLayout_1.Controls.Add(Control_About_TableLayout_Top, 0, 0);
-            Control_About_TableLayout_1.Dock = DockStyle.Fill;
-            Control_About_TableLayout_1.Location = new Point(3, 19);
-            Control_About_TableLayout_1.Name = "Control_About_TableLayout_1";
-            Control_About_TableLayout_1.RowCount = 2;
-            Control_About_TableLayout_1.RowStyles.Add(new RowStyle(SizeType.Percent, 83.3333359F));
-            Control_About_TableLayout_1.RowStyles.Add(new RowStyle(SizeType.Percent, 16.666666F));
-            Control_About_TableLayout_1.Size = new Size(745, 482);
-            Control_About_TableLayout_1.TabIndex = 0;
+            Control_About_TableLayout_Main.AutoSize = true;
+            Control_About_TableLayout_Main.ColumnCount = 1;
+            Control_About_TableLayout_Main.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
+            Control_About_TableLayout_Main.Controls.Add(Control_About_TableLayout_Bottom, 0, 1);
+            Control_About_TableLayout_Main.Controls.Add(Control_About_TableLayout_Top, 0, 0);
+            Control_About_TableLayout_Main.Dock = DockStyle.Fill;
+            Control_About_TableLayout_Main.Location = new Point(3, 19);
+            Control_About_TableLayout_Main.Name = "Control_About_TableLayout_Main";
+            Control_About_TableLayout_Main.RowCount = 2;
+            Control_About_TableLayout_Main.RowStyles.Add(new RowStyle(SizeType.Percent, 83.3333359F));
+            Control_About_TableLayout_Main.RowStyles.Add(new RowStyle(SizeType.Percent, 16.666666F));
+            Control_About_TableLayout_Main.Size = new Size(745, 482);
+            Control_About_TableLayout_Main.TabIndex = 0;
             // 
-            // Control_About_TableLayout_2
+            // Control_About_TableLayout_Bottom
             // 
-            Control_About_TableLayout_2.AutoSize = true;
-            Control_About_TableLayout_2.ColumnCount = 3;
-            Control_About_TableLayout_2.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 33.3333321F));
-            Control_About_TableLayout_2.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 33.3333359F));
-            Control_About_TableLayout_2.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 33.3333359F));
-            Control_About_TableLayout_2.Dock = DockStyle.Fill;
-            Control_About_TableLayout_2.Location = new Point(3, 404);
-            Control_About_TableLayout_2.Name = "Control_About_TableLayout_2";
-            Control_About_TableLayout_2.RowCount = 1;
-            Control_About_TableLayout_2.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
-            Control_About_TableLayout_2.Size = new Size(739, 75);
-            Control_About_TableLayout_2.TabIndex = 0;
+            Control_About_TableLayout_Bottom.AutoSize = true;
+            Control_About_TableLayout_Bottom.ColumnCount = 3;
+            Control_About_TableLayout_Bottom.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 33.3333321F));
+            Control_About_TableLayout_Bottom.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 33.3333359F));
+            Control_About_TableLayout_Bottom.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 33.3333359F));
+            Control_About_TableLayout_Bottom.Dock = DockStyle.Fill;
+            Control_About_TableLayout_Bottom.Location = new Point(3, 404);
+            Control_About_TableLayout_Bottom.Name = "Control_About_TableLayout_Bottom";
+            Control_About_TableLayout_Bottom.RowCount = 1;
+            Control_About_TableLayout_Bottom.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
+            Control_About_TableLayout_Bottom.Size = new Size(739, 75);
+            Control_About_TableLayout_Bottom.TabIndex = 0;
             // 
             // Control_About_TableLayout_Top
             // 
@@ -110,8 +110,8 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             Control_About_TableLayout_Top.ColumnCount = 2;
             Control_About_TableLayout_Top.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
             Control_About_TableLayout_Top.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
-            Control_About_TableLayout_Top.Controls.Add(Control_About_TableLayout_3, 0, 0);
-            Control_About_TableLayout_Top.Controls.Add(Control_About_TableLayout_4, 1, 0);
+            Control_About_TableLayout_Top.Controls.Add(Control_About_TableLayout_Info, 0, 0);
+            Control_About_TableLayout_Top.Controls.Add(Control_About_TableLayout_Changelog, 1, 0);
             Control_About_TableLayout_Top.Dock = DockStyle.Fill;
             Control_About_TableLayout_Top.Location = new Point(3, 3);
             Control_About_TableLayout_Top.Name = "Control_About_TableLayout_Top";
@@ -121,31 +121,31 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             Control_About_TableLayout_Top.Size = new Size(739, 395);
             Control_About_TableLayout_Top.TabIndex = 1;
             // 
-            // Control_About_TableLayout_3
+            // Control_About_TableLayout_Info
             // 
-            Control_About_TableLayout_3.ColumnCount = 2;
-            Control_About_TableLayout_3.ColumnStyles.Add(new ColumnStyle());
-            Control_About_TableLayout_3.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
-            Control_About_TableLayout_3.Controls.Add(Control_About_Label_Version_Data, 1, 4);
-            Control_About_TableLayout_3.Controls.Add(Control_About_Label_Version, 0, 4);
-            Control_About_TableLayout_3.Controls.Add(Control_About_Label_LastUpdate_Data, 1, 3);
-            Control_About_TableLayout_3.Controls.Add(Control_About_Label_LastUpdate, 0, 3);
-            Control_About_TableLayout_3.Controls.Add(Control_About_Label_Copyright_Data, 1, 2);
-            Control_About_TableLayout_3.Controls.Add(Control_About_Label_Copyright, 0, 2);
-            Control_About_TableLayout_3.Controls.Add(Control_About_Label_Author_Data, 1, 1);
-            Control_About_TableLayout_3.Controls.Add(Control_About_Label_Author, 0, 1);
-            Control_About_TableLayout_3.Controls.Add(Control_About_Label_Main, 0, 0);
-            Control_About_TableLayout_3.Location = new Point(3, 3);
-            Control_About_TableLayout_3.Name = "Control_About_TableLayout_3";
-            Control_About_TableLayout_3.RowCount = 6;
-            Control_About_TableLayout_3.RowStyles.Add(new RowStyle());
-            Control_About_TableLayout_3.RowStyles.Add(new RowStyle());
-            Control_About_TableLayout_3.RowStyles.Add(new RowStyle());
-            Control_About_TableLayout_3.RowStyles.Add(new RowStyle());
-            Control_About_TableLayout_3.RowStyles.Add(new RowStyle());
-            Control_About_TableLayout_3.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
-            Control_About_TableLayout_3.Size = new Size(360, 389);
-            Control_About_TableLayout_3.TabIndex = 0;
+            Control_About_TableLayout_Info.ColumnCount = 2;
+            Control_About_TableLayout_Info.ColumnStyles.Add(new ColumnStyle());
+            Control_About_TableLayout_Info.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
+            Control_About_TableLayout_Info.Controls.Add(Control_About_Label_Version_Data, 1, 4);
+            Control_About_TableLayout_Info.Controls.Add(Control_About_Label_Version, 0, 4);
+            Control_About_TableLayout_Info.Controls.Add(Control_About_Label_LastUpdate_Data, 1, 3);
+            Control_About_TableLayout_Info.Controls.Add(Control_About_Label_LastUpdate, 0, 3);
+            Control_About_TableLayout_Info.Controls.Add(Control_About_Label_Copyright_Data, 1, 2);
+            Control_About_TableLayout_Info.Controls.Add(Control_About_Label_Copyright, 0, 2);
+            Control_About_TableLayout_Info.Controls.Add(Control_About_Label_Author_Data, 1, 1);
+            Control_About_TableLayout_Info.Controls.Add(Control_About_Label_Author, 0, 1);
+            Control_About_TableLayout_Info.Controls.Add(Control_About_Label_Main, 0, 0);
+            Control_About_TableLayout_Info.Location = new Point(3, 3);
+            Control_About_TableLayout_Info.Name = "Control_About_TableLayout_Info";
+            Control_About_TableLayout_Info.RowCount = 6;
+            Control_About_TableLayout_Info.RowStyles.Add(new RowStyle());
+            Control_About_TableLayout_Info.RowStyles.Add(new RowStyle());
+            Control_About_TableLayout_Info.RowStyles.Add(new RowStyle());
+            Control_About_TableLayout_Info.RowStyles.Add(new RowStyle());
+            Control_About_TableLayout_Info.RowStyles.Add(new RowStyle());
+            Control_About_TableLayout_Info.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
+            Control_About_TableLayout_Info.Size = new Size(360, 389);
+            Control_About_TableLayout_Info.TabIndex = 0;
             // 
             // Control_About_Label_Version_Data
             // 
@@ -252,7 +252,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             // Control_About_Label_Main
             // 
             Control_About_Label_Main.AutoSize = true;
-            Control_About_TableLayout_3.SetColumnSpan(Control_About_Label_Main, 2);
+            Control_About_TableLayout_Info.SetColumnSpan(Control_About_Label_Main, 2);
             Control_About_Label_Main.Dock = DockStyle.Fill;
             Control_About_Label_Main.Font = new Font("Segoe UI", 9.75F, FontStyle.Bold | FontStyle.Underline, GraphicsUnit.Point, 0);
             Control_About_Label_Main.Location = new Point(3, 3);
@@ -263,26 +263,26 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             Control_About_Label_Main.Text = "Manitowoc Tool and Manufacturing WIP Application";
             Control_About_Label_Main.TextAlign = ContentAlignment.MiddleCenter;
             // 
-            // Control_About_TableLayout_4
+            // Control_About_TableLayout_Changelog
             // 
-            Control_About_TableLayout_4.AutoSize = true;
-            Control_About_TableLayout_4.ColumnCount = 1;
-            Control_About_TableLayout_4.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
-            Control_About_TableLayout_4.Controls.Add(Control_About_Label_ChangeLog, 0, 0);
-            Control_About_TableLayout_4.Controls.Add(Control_About_Label_WebView_ChangeLogView, 0, 1);
-            Control_About_TableLayout_4.Dock = DockStyle.Fill;
-            Control_About_TableLayout_4.Location = new Point(372, 3);
-            Control_About_TableLayout_4.Name = "Control_About_TableLayout_4";
-            Control_About_TableLayout_4.RowCount = 2;
-            Control_About_TableLayout_4.RowStyles.Add(new RowStyle());
-            Control_About_TableLayout_4.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
-            Control_About_TableLayout_4.Size = new Size(364, 389);
-            Control_About_TableLayout_4.TabIndex = 1;
+            Control_About_TableLayout_Changelog.AutoSize = true;
+            Control_About_TableLayout_Changelog.ColumnCount = 1;
+            Control_About_TableLayout_Changelog.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
+            Control_About_TableLayout_Changelog.Controls.Add(Control_About_Label_ChangeLog, 0, 0);
+            Control_About_TableLayout_Changelog.Controls.Add(Control_About_Label_WebView_ChangeLogView, 0, 1);
+            Control_About_TableLayout_Changelog.Dock = DockStyle.Fill;
+            Control_About_TableLayout_Changelog.Location = new Point(372, 3);
+            Control_About_TableLayout_Changelog.Name = "Control_About_TableLayout_Changelog";
+            Control_About_TableLayout_Changelog.RowCount = 2;
+            Control_About_TableLayout_Changelog.RowStyles.Add(new RowStyle());
+            Control_About_TableLayout_Changelog.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
+            Control_About_TableLayout_Changelog.Size = new Size(364, 389);
+            Control_About_TableLayout_Changelog.TabIndex = 1;
             // 
             // Control_About_Label_ChangeLog
             // 
             Control_About_Label_ChangeLog.AutoSize = true;
-            Control_About_TableLayout_4.SetColumnSpan(Control_About_Label_ChangeLog, 2);
+            Control_About_TableLayout_Changelog.SetColumnSpan(Control_About_Label_ChangeLog, 2);
             Control_About_Label_ChangeLog.Dock = DockStyle.Fill;
             Control_About_Label_ChangeLog.Font = new Font("Segoe UI", 9.75F, FontStyle.Bold | FontStyle.Underline, GraphicsUnit.Point, 0);
             Control_About_Label_ChangeLog.Location = new Point(3, 3);
@@ -314,14 +314,14 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             Size = new Size(751, 504);
             Control_About_GroupBox_Main.ResumeLayout(false);
             Control_About_GroupBox_Main.PerformLayout();
-            Control_About_TableLayout_1.ResumeLayout(false);
-            Control_About_TableLayout_1.PerformLayout();
+            Control_About_TableLayout_Main.ResumeLayout(false);
+            Control_About_TableLayout_Main.PerformLayout();
             Control_About_TableLayout_Top.ResumeLayout(false);
             Control_About_TableLayout_Top.PerformLayout();
-            Control_About_TableLayout_3.ResumeLayout(false);
-            Control_About_TableLayout_3.PerformLayout();
-            Control_About_TableLayout_4.ResumeLayout(false);
-            Control_About_TableLayout_4.PerformLayout();
+            Control_About_TableLayout_Info.ResumeLayout(false);
+            Control_About_TableLayout_Info.PerformLayout();
+            Control_About_TableLayout_Changelog.ResumeLayout(false);
+            Control_About_TableLayout_Changelog.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)Control_About_Label_WebView_ChangeLogView).EndInit();
             ResumeLayout(false);
         }
@@ -329,10 +329,10 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
         #endregion
 
         private GroupBox Control_About_GroupBox_Main;
-        private TableLayoutPanel Control_About_TableLayout_1;
-        private TableLayoutPanel Control_About_TableLayout_2;
+        private TableLayoutPanel Control_About_TableLayout_Main;
+        private TableLayoutPanel Control_About_TableLayout_Bottom;
         private TableLayoutPanel Control_About_TableLayout_Top;
-        private TableLayoutPanel Control_About_TableLayout_3;
+        private TableLayoutPanel Control_About_TableLayout_Info;
         private Label Control_About_Label_Version_Data;
         private Label Control_About_Label_Version;
         private Label Control_About_Label_LastUpdate_Data;
@@ -342,7 +342,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
         private Label Control_About_Label_Author_Data;
         private Label Control_About_Label_Author;
         private Label Control_About_Label_Main;
-        private TableLayoutPanel Control_About_TableLayout_4;
+        private TableLayoutPanel Control_About_TableLayout_Changelog;
         private Label Control_About_Label_ChangeLog;
         private Microsoft.Web.WebView2.WinForms.WebView2 Control_About_Label_WebView_ChangeLogView;
     }

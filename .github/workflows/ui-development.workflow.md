@@ -32,6 +32,9 @@ Follow this process when creating a new Form or UserControl.
 3.  **Add Actions**:
     -   Use `FlowLayoutPanel` for button groups.
     -   Name buttons `[Context]_Button_[Action]`.
+4.  **Settings-Specific UI**:
+    -   When working inside the Settings area, use the card/tile pattern from `Control_SettingsHome.Designer.cs` and `Control_Database.Designer.cs` instead of `GroupBox` layouts.
+    -   Create any new card/tile variations as separate reusable controls so other settings tabs can consume them.
 
 ### Phase 4: Theme Verification
 1.  **Check Code**: Ensure NO `Core_Themes.ApplyTheme()` calls exist.

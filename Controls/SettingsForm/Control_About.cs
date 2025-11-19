@@ -1,6 +1,6 @@
-﻿using System;
+using System;
+using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -12,6 +12,9 @@ using MTM_WIP_Application_Winforms.Services;
 
 namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
 {
+    /// <summary>
+    /// Control for displaying application information and changelog.
+    /// </summary>
     public partial class Control_About : ThemedUserControl
     {
         #region Fields
@@ -23,6 +26,9 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
 
         #region Constructors
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Control_About"/> class.
+        /// </summary>
         public Control_About()
         {
             InitializeComponent();
@@ -38,6 +44,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
 
         private async void Control_About_LoadControl()
         {
+            LoggingUtility.Log("[Control_About] Loading control started");
             try
             {
                 // Use Model_Application_Variables instead of direct assembly calls
@@ -48,6 +55,8 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
 
                 // Initialize WebView2 and load PDF
                 await LoadChangelogAsync();
+                
+                LoggingUtility.Log("[Control_About] Loading control completed");
             }
             catch (Exception ex)
             {
@@ -68,8 +77,12 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
 
         #region Changelog Loading
 
+        /// <summary>
+        /// Loads the changelog PDF into the WebView2 control.
+        /// </summary>
         private async Task LoadChangelogAsync()
         {
+            LoggingUtility.Log("[Control_About] Loading changelog started");
             try
             {
                 // Ensure WebView2 runtime is initialized first
@@ -89,12 +102,14 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
                     Control_About_Label_WebView_ChangeLogView.Source = new Uri(fileUri);
                     
                     StatusMessageChanged?.Invoke(this, "Changelog loaded successfully.");
+                    LoggingUtility.Log($"[Control_About] Changelog PDF loaded - Path={pdfPath}");
                 }
                 else
                 {
                     // If PDF is not available, show fallback content
                     ShowFallbackContent();
                     StatusMessageChanged?.Invoke(this, "Showing fallback changelog content.");
+                    LoggingUtility.Log("[Control_About] Changelog PDF not found, showing fallback");
                 }
             }
             catch (Exception ex)
@@ -113,6 +128,10 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             }
         }
 
+        /// <summary>
+        /// Retrieves the path to the changelog PDF file.
+        /// </summary>
+        /// <returns>The path to the PDF file, or null if not found.</returns>
         private async Task<string?> GetChangelogPdfPathAsync()
         {
             try
@@ -331,8 +350,9 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
                         File.Delete(_currentTempPdfPath);
                         _currentTempPdfPath = null;
                     }
-                    catch
+                    catch (Exception ex)
                     {
+                        LoggingUtility.LogApplicationError(ex);
                         // Ignore cleanup errors - file may be in use
                     }
                 }
@@ -350,14 +370,16 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
                             File.Delete(file);
                         }
                     }
-                    catch
+                    catch (Exception ex)
                     {
+                        LoggingUtility.LogApplicationError(ex);
                         // Ignore cleanup errors - files may be in use
                     }
                 }
             }
-            catch
+            catch (Exception ex)
             {
+                LoggingUtility.LogApplicationError(ex);
                 // Ignore cleanup errors
             }
         }
@@ -377,14 +399,16 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
                     {
                         File.Delete(file);
                     }
-                    catch
+                    catch (Exception ex)
                     {
+                        LoggingUtility.LogApplicationError(ex);
                         // Ignore cleanup errors - files may be in use
                     }
                 }
             }
-            catch
+            catch (Exception ex)
             {
+                LoggingUtility.LogApplicationError(ex);
                 // Ignore cleanup errors
             }
         }
