@@ -122,11 +122,11 @@ Manual overrides pause execution and request guidance when automation cannot det
 
 ## Users Domain (12 procedures)
 
-- [ ] **usr_ui_settings_Get** — Pattern: QUERY — Status: _Pending validation_ — Notes: _[Automation fills]_ 
-- [ ] **usr_ui_settings_GetShortcutsJson** — Pattern: QUERY — Status: _Pending validation_ — Notes: _[Automation fills]_ 
-- [ ] **usr_ui_settings_SetJsonSetting** — Pattern: SIMPLE_UPDATE — Status: _Pending validation_ — Notes: _[Automation fills]_ 
-- [ ] **usr_ui_settings_SetShortcutsJson** — Pattern: SIMPLE_UPDATE — Status: _Pending validation_ — Notes: _[Automation fills]_ 
-- [ ] **usr_ui_settings_SetThemeJson** — Pattern: SIMPLE_UPDATE — Status: _Pending validation_ — Notes: _[Automation fills]_ 
+- [ ] **usr_settings_Get** — Pattern: QUERY — Status: _Pending validation_ — Notes: _[Automation fills]_ 
+- [ ] **usr_settings_GetShortcutsJson** — Pattern: QUERY — Status: _Pending validation_ — Notes: _[Automation fills]_ 
+- [ ] **usr_settings_SetJsonSetting** — Pattern: SIMPLE_UPDATE — Status: _Pending validation_ — Notes: _[Automation fills]_ 
+- [ ] **usr_settings_SetShortcutsJson** — Pattern: SIMPLE_UPDATE — Status: _Pending validation_ — Notes: _[Automation fills]_ 
+- [ ] **usr_settings_SetThemeJson** — Pattern: SIMPLE_UPDATE — Status: _Pending validation_ — Notes: _[Automation fills]_ 
 - [ ] **usr_users_Add_User** — Pattern: SIMPLE_INSERT — Status: _Pending validation_ — Notes: _[Automation fills]_ 
 - [ ] **usr_users_Delete_User** — Pattern: SIMPLE_DELETE — Status: _Pending validation_ — Notes: _[Automation fills]_ 
 - [ ] **usr_users_Exists** — Pattern: QUERY — Status: _Pending validation_ — Notes: _[Automation fills]_ 

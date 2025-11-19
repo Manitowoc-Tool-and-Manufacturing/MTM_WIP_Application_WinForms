@@ -12,10 +12,10 @@ BEGIN
             p_ErrorMsg = MESSAGE_TEXT;
         SET p_Status = -1;
     END;
-    INSERT INTO `MTM_WIP_Application_Winforms`.usr_ui_settings (UserId, SettingsJson, ShortcutsJson, UpdatedAt)
+    INSERT INTO `MTM_WIP_Application_Winforms`.usr_settings (UserId, SettingsJson, ShortcutsJson, UpdatedAt)
     SELECT u.User, '{"Theme_Name": "Default"}', '{}', NOW()
     FROM `MTM_WIP_Application_Winforms`.usr_users u
-    LEFT JOIN `MTM_WIP_Application_Winforms`.usr_ui_settings s ON s.UserId = u.User
+    LEFT JOIN `MTM_WIP_Application_Winforms`.usr_settings s ON s.UserId = u.User
     WHERE s.UserId IS NULL;
     SET v_RowCount = ROW_COUNT();
     IF v_RowCount > 0 THEN

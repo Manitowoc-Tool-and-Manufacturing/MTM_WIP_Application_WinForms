@@ -1,6 +1,6 @@
 DELIMITER //
-DROP PROCEDURE IF EXISTS `usr_ui_settings_Get`//
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usr_ui_settings_Get`(
+DROP PROCEDURE IF EXISTS `usr_settings_Get`//
+CREATE DEFINER=`root`@`localhost` PROCEDURE `usr_settings_Get`(
     IN p_UserId VARCHAR(64),
     OUT p_Status INT,
     OUT p_ErrorMsg VARCHAR(500)
@@ -18,7 +18,7 @@ BEGIN
         SET p_ErrorMsg = 'UserId is required';
     ELSE
         SELECT SettingsJson
-        FROM usr_ui_settings
+        FROM usr_settings
         WHERE UserId = p_UserId;
         SELECT FOUND_ROWS() INTO v_Count;
         IF v_Count > 0 THEN

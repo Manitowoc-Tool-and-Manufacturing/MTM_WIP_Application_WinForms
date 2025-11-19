@@ -1008,7 +1008,7 @@ Under the hood, we also made reliability and performance improvements so theme c
 ### 📱 Common Questions
 
 **Q: Why wasn't my theme saving before?**  
-A: The code was calling a stored procedure that doesn't exist (`usr_ui_settings_Upsert`). Now it uses the correct procedure (`usr_ui_settings_SetThemeJson`) that properly merges your theme choice into your settings.
+A: The code was calling a stored procedure that doesn't exist (`usr_settings_Upsert`). Now it uses the correct procedure (`usr_settings_SetThemeJson`) that properly merges your theme choice into your settings.
 
 **Q: Will changing my theme affect other users?**  
 A: No - themes are per-user. Your theme choice only affects your login, not anyone else's.

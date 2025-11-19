@@ -1,6 +1,6 @@
 DELIMITER //
-DROP PROCEDURE IF EXISTS `usr_ui_settings_SetShortcutsJson`//
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usr_ui_settings_SetShortcutsJson`(
+DROP PROCEDURE IF EXISTS `usr_settings_SetShortcutsJson`//
+CREATE DEFINER=`root`@`localhost` PROCEDURE `usr_settings_SetShortcutsJson`(
     IN p_UserId VARCHAR(255),
     IN p_ShortcutsJson JSON,
     OUT p_Status INT,
@@ -21,7 +21,7 @@ BEGIN
         SET p_Status = -2;
         SET p_ErrorMsg = 'ShortcutsJson is required';
     ELSE
-        UPDATE usr_ui_settings
+        UPDATE usr_settings
         SET ShortcutsJson = p_ShortcutsJson
         WHERE UserId = p_UserId;
         SET v_RowCount = ROW_COUNT();

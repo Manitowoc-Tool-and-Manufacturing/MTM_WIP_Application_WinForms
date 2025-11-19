@@ -210,7 +210,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
 
                 // The stored procedure usr_users_Delete_User handles ALL deletions:
                 // - sys_user_roles (FK constraint)
-                // - usr_ui_settings (FK constraint)
+                // - usr_settings (FK constraint)
                 // - usr_users (main table)
                 
                 UpdateProgress(50, "Deleting user account and related data...");

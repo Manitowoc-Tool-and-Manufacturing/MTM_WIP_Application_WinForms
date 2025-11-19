@@ -433,31 +433,31 @@ For each stored procedure, the automated validation follows this logic:
 
 ## Users Domain (12 procedures)
 
-- [ ] **usr_ui_settings_Get**
+- [ ] **usr_settings_Get**
   - Domain: Users
   - Pattern: QUERY
   - Status: _Pending validation_
   - Validation Notes: _[To be filled during automated validation]_
 
-- [ ] **usr_ui_settings_GetShortcutsJson**
+- [ ] **usr_settings_GetShortcutsJson**
   - Domain: Users
   - Pattern: QUERY
   - Status: _Pending validation_
   - Validation Notes: _[To be filled during automated validation]_
 
-- [ ] **usr_ui_settings_SetJsonSetting**
+- [ ] **usr_settings_SetJsonSetting**
   - Domain: Users
   - Pattern: SIMPLE_UPDATE
   - Status: _Pending validation_
   - Validation Notes: _[To be filled during automated validation]_
 
-- [ ] **usr_ui_settings_SetShortcutsJson**
+- [ ] **usr_settings_SetShortcutsJson**
   - Domain: Users
   - Pattern: SIMPLE_UPDATE
   - Status: _Pending validation_
   - Validation Notes: _[To be filled during automated validation]_
 
-- [ ] **usr_ui_settings_SetThemeJson**
+- [ ] **usr_settings_SetThemeJson**
   - Domain: Users
   - Pattern: SIMPLE_UPDATE
   - Status: _Pending validation_

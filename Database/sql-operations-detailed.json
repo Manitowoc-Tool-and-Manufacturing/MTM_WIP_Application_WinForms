@@ -84,18 +84,18 @@
     "TotalOperations": 0,
     "Operations": []
   },
-  "usr_ui_settings_SetThemeJson": {
-    "ProcedureName": "usr_ui_settings_SetThemeJson",
+  "usr_settings_SetThemeJson": {
+    "ProcedureName": "usr_settings_SetThemeJson",
     "TotalOperations": 1,
     "Operations": [
       {
         "Index": 1,
         "Type": "UPDATE",
-        "Table": "usr_ui_settings",
+        "Table": "usr_settings",
         "SetClauses": "SettingsJson = v_SettingsJson",
         "WhereConditions": "UserId = p_UserId",
         "HasWhere": true,
-        "RawSQL": "UPDATE usr_ui_settings\n\n            SET SettingsJson = v_SettingsJson\n\n            WHERE UserId = p_UserId"
+        "RawSQL": "UPDATE usr_settings\n\n            SET SettingsJson = v_SettingsJson\n\n            WHERE UserId = p_UserId"
       }
     ]
   },
@@ -201,8 +201,8 @@
       }
     ]
   },
-  "usr_ui_settings_Get": {
-    "ProcedureName": "usr_ui_settings_Get",
+  "usr_settings_Get": {
+    "ProcedureName": "usr_settings_Get",
     "TotalOperations": 0,
     "Operations": []
   },
@@ -899,18 +899,18 @@
       }
     ]
   },
-  "usr_ui_settings_SetShortcutsJson": {
-    "ProcedureName": "usr_ui_settings_SetShortcutsJson",
+  "usr_settings_SetShortcutsJson": {
+    "ProcedureName": "usr_settings_SetShortcutsJson",
     "TotalOperations": 1,
     "Operations": [
       {
         "Index": 1,
         "Type": "UPDATE",
-        "Table": "usr_ui_settings",
+        "Table": "usr_settings",
         "SetClauses": "ShortcutsJson = p_ShortcutsJson",
         "WhereConditions": "UserId = p_UserId",
         "HasWhere": true,
-        "RawSQL": "UPDATE usr_ui_settings\n\n        SET ShortcutsJson = p_ShortcutsJson\n\n        WHERE UserId = p_UserId"
+        "RawSQL": "UPDATE usr_settings\n\n        SET ShortcutsJson = p_ShortcutsJson\n\n        WHERE UserId = p_UserId"
       }
     ]
   },
@@ -1074,8 +1074,8 @@
       }
     ]
   },
-  "usr_ui_settings_GetShortcutsJson": {
-    "ProcedureName": "usr_ui_settings_GetShortcutsJson",
+  "usr_settings_GetShortcutsJson": {
+    "ProcedureName": "usr_settings_GetShortcutsJson",
     "TotalOperations": 0,
     "Operations": []
   },
@@ -1224,14 +1224,14 @@
     "TotalOperations": 0,
     "Operations": []
   },
-  "usr_ui_settings_SetJsonSetting": {
-    "ProcedureName": "usr_ui_settings_SetJsonSetting",
+  "usr_settings_SetJsonSetting": {
+    "ProcedureName": "usr_settings_SetJsonSetting",
     "TotalOperations": 2,
     "Operations": [
       {
         "Index": 1,
         "Type": "INSERT",
-        "Table": "usr_ui_settings",
+        "Table": "usr_settings",
         "Columns": [
           "UserId",
           "SettingsJson"
@@ -1245,19 +1245,19 @@
           "UserId = p_UserId",
           "SettingsJson = JSON_OBJECT(p_DgvName"
         ],
-        "RawSQL": "INSERT INTO usr_ui_settings (UserId, SettingsJson)\n\n            VALUES (p_UserId, JSON_OBJECT(p_DgvName, p_SettingJson)"
+        "RawSQL": "INSERT INTO usr_settings (UserId, SettingsJson)\n\n            VALUES (p_UserId, JSON_OBJECT(p_DgvName, p_SettingJson)"
       },
       {
         "Index": 2,
         "Type": "UPDATE",
-        "Table": "usr_ui_settings",
+        "Table": "usr_settings",
         "SetClauses": [
           "SettingsJson = v_CurrentJson",
           "UpdatedAt = NOW()"
         ],
         "WhereConditions": "UserId = p_UserId",
         "HasWhere": true,
-        "RawSQL": "UPDATE usr_ui_settings \n\n            SET SettingsJson = v_CurrentJson, UpdatedAt = NOW() \n\n            WHERE UserId = p_UserId"
+        "RawSQL": "UPDATE usr_settings \n\n            SET SettingsJson = v_CurrentJson, UpdatedAt = NOW() \n\n            WHERE UserId = p_UserId"
       }
     ]
   },

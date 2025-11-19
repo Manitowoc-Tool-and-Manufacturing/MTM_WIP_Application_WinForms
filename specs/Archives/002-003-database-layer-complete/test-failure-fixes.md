@@ -894,10 +894,10 @@ This refactoring will fix ~30 of the 43 remaining failures. After completion, re
 -   **Error**: `Found 5 parameters with unusual data types: enum, json (4 occurrences)`
 -   **Parameters**:
     -   inv_transaction_Add.p_TransactionType (enum)
-    -   usr_ui_settings_GetShortcutsJson.p_ShortcutsJson (json)
-    -   usr_ui_settings_SetJsonSetting.p_SettingJson (json)
-    -   usr_ui_settings_SetShortcutsJson.p_ShortcutsJson (json)
-    -   usr_ui_settings_SetThemeJson.p_ThemeJson (json)
+    -   usr_settings_GetShortcutsJson.p_ShortcutsJson (json)
+    -   usr_settings_SetJsonSetting.p_SettingJson (json)
+    -   usr_settings_SetShortcutsJson.p_ShortcutsJson (json)
+    -   usr_settings_SetThemeJson.p_ThemeJson (json)
 -   **Action Required**:
     -   [ ] Document as expected (JSON stored as VARCHAR/TEXT)
     -   [ ] Update test to accept JSON type

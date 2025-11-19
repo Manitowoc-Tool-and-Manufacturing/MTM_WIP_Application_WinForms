@@ -85,16 +85,16 @@
       }
     }
   ],
-  "usr_ui_settings_SetThemeJson": [
+  "usr_settings_SetThemeJson": [
     {
       "Status": "Called from DAO (no UI event handler traced)",
       "DAO": {
         "File": "Dao_User.cs",
         "Method": "SetSettingsJsonAsync"
       },
-      "StoredProcedure": "usr_ui_settings_SetThemeJson",
+      "StoredProcedure": "usr_settings_SetThemeJson",
       "Tables": [
-        "usr_ui_settings",
+        "usr_settings",
         "settings",
         "was"
       ],
@@ -179,15 +179,15 @@
       }
     }
   ],
-  "usr_ui_settings_Get": [
+  "usr_settings_Get": [
     {
       "Status": "Called from DAO (no UI event handler traced)",
       "DAO": {
         "File": "Dao_User.cs",
         "Method": "GetSettingsJsonInternalAsync"
       },
-      "StoredProcedure": "usr_ui_settings_Get",
-      "Tables": "usr_ui_settings",
+      "StoredProcedure": "usr_settings_Get",
+      "Tables": "usr_settings",
       "ReturnType": "Task<string>"
     }
   ],
@@ -727,7 +727,7 @@
       "ReturnType": "Task<Model_Dao_Result>"
     }
   ],
-  "usr_ui_settings_SetShortcutsJson": [
+  "usr_settings_SetShortcutsJson": [
     {
       "Status": "Called from UI",
       "EventHandler": "ShortcutsDataGridView_CellValidating",
@@ -736,10 +736,10 @@
         "File": "Dao_User.cs",
         "Method": "SetShortcutsJsonAsync"
       },
-      "StoredProcedure": "usr_ui_settings_SetShortcutsJson",
+      "StoredProcedure": "usr_settings_SetShortcutsJson",
       "Tables": [
         "shortcuts",
-        "usr_ui_settings",
+        "usr_settings",
         "was"
       ],
       "ReturnType": "Task<Model_Dao_Result>",
@@ -851,7 +851,7 @@
       "Note": "May be legacy, unused, called from other stored procedures, or background services"
     }
   ],
-  "usr_ui_settings_GetShortcutsJson": [
+  "usr_settings_GetShortcutsJson": [
     {
       "Status": "Called from UI",
       "EventHandler": "ShortcutsDataGridView_CellValidating",
@@ -860,8 +860,8 @@
         "File": "Dao_User.cs",
         "Method": "GetShortcutsJsonAsync"
       },
-      "StoredProcedure": "usr_ui_settings_GetShortcutsJson",
-      "Tables": "usr_ui_settings",
+      "StoredProcedure": "usr_settings_GetShortcutsJson",
+      "Tables": "usr_settings",
       "ReturnType": "Task<Model_Dao_Result<string>>",
       "UIElementUpdated": {
         "OnSuccess": "None detected",
@@ -1091,16 +1091,16 @@
       }
     }
   ],
-  "usr_ui_settings_SetJsonSetting": [
+  "usr_settings_SetJsonSetting": [
     {
       "Status": "Called from DAO (no UI event handler traced)",
       "DAO": {
         "File": "Dao_User.cs",
         "Method": "SetGridViewSettingsJsonAsync"
       },
-      "StoredProcedure": "usr_ui_settings_SetJsonSetting",
+      "StoredProcedure": "usr_settings_SetJsonSetting",
       "Tables": [
-        "usr_ui_settings",
+        "usr_settings",
         "existing"
       ],
       "ReturnType": "Task<Model_Dao_Result>"

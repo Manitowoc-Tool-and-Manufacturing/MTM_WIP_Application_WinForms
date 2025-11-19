@@ -1,6 +1,6 @@
 DELIMITER //
-DROP PROCEDURE IF EXISTS `usr_ui_settings_GetShortcutsJson`//
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usr_ui_settings_GetShortcutsJson`(
+DROP PROCEDURE IF EXISTS `usr_settings_GetShortcutsJson`//
+CREATE DEFINER=`root`@`localhost` PROCEDURE `usr_settings_GetShortcutsJson`(
     IN p_UserId VARCHAR(255),
     OUT p_Status INT,
     OUT p_ErrorMsg VARCHAR(500)
@@ -19,7 +19,7 @@ BEGIN
     ELSE
         -- Return ShortcutsJson as a result set (not OUT parameter)
         SELECT ShortcutsJson AS SettingJson
-        FROM usr_ui_settings
+        FROM usr_settings
         WHERE UserId = p_UserId
         LIMIT 1;
         

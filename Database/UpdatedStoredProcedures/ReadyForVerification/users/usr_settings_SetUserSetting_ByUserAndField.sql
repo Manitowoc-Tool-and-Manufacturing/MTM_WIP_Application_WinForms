@@ -1,16 +1,15 @@
 -- =============================================
--- Procedure: usr_users_SetUserSetting_ByUserAndField
+-- Procedure: usr_settings_SetUserSetting_ByUserAndField
 -- Domain: users
--- Created: 2025-10-17
--- Purpose: Updates a single user field dynamically
--- Note: This uses prepared statements for dynamic column names
+-- Created: 2025-11-18
+-- Purpose: Updates a single user setting field in usr_settings.SettingsJson
 -- =============================================
 
 DELIMITER //
 
-DROP PROCEDURE IF EXISTS `usr_users_SetUserSetting_ByUserAndField`//
+DROP PROCEDURE IF EXISTS `usr_settings_SetUserSetting_ByUserAndField`//
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usr_users_SetUserSetting_ByUserAndField`(
+CREATE DEFINER=`root`@`localhost` PROCEDURE `usr_settings_SetUserSetting_ByUserAndField`(
     IN p_User VARCHAR(100),
     IN p_Field VARCHAR(100),
     IN p_Value VARCHAR(500),
@@ -19,14 +18,15 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `usr_users_SetUserSetting_ByUserAndF
 )
 BEGIN
     DECLARE v_RowsAffected INT DEFAULT 0;
-    DECLARE v_AllowedFields VARCHAR(1000) DEFAULT 'LastShownVersion,HideChangeLog';
-    -- Transaction management removed: Works within caller's transaction context (tests use transactions)`r`n    
+    DECLARE v_AllowedFields VARCHAR(1000) DEFAULT 'Theme_Name,Theme_FontSize,VisualUserName,VisualPassword,WipServerAddress,WIPDatabase,WipServerPort';
+    
     DECLARE EXIT HANDLER FOR SQLEXCEPTION
     BEGIN
         GET DIAGNOSTICS CONDITION 1
             p_ErrorMsg = MESSAGE_TEXT;
         SET p_Status = -1;
     END;
+    
     -- Validate inputs
     IF p_User IS NULL OR TRIM(p_User) = '' THEN
         SET p_Status = -2;
@@ -38,13 +38,15 @@ BEGIN
         SET p_Status = -4;
         SET p_ErrorMsg = CONCAT('Field "', p_Field, '" is not in allowed fields list: ', v_AllowedFields);
     ELSE
-        -- Use prepared statement for dynamic column update
-        SET @sql = CONCAT('UPDATE usr_users SET ', p_Field, ' = ? WHERE User = ?');
-        PREPARE stmt FROM @sql;
-        SET @value = p_Value;
-        SET @user = p_User;
-        EXECUTE stmt USING @value, @user;
-        DEALLOCATE PREPARE stmt;
+        -- Insert or update the setting in SettingsJson
+        INSERT INTO usr_settings (UserId, SettingsJson, ShortcutsJson)
+        VALUES (
+            p_User,
+            JSON_OBJECT(p_Field, p_Value),
+            JSON_OBJECT()
+        )
+        ON DUPLICATE KEY UPDATE
+            SettingsJson = JSON_SET(SettingsJson, CONCAT('$.', p_Field), p_Value);
         
         SET v_RowsAffected = ROW_COUNT();
         
@@ -53,7 +55,7 @@ BEGIN
             SET p_ErrorMsg = CONCAT('Updated field "', p_Field, '" for user "', p_User, '"');
         ELSE
             SET p_Status = 0;
-            SET p_ErrorMsg = CONCAT('User "', p_User, '" not found');
+            SET p_ErrorMsg = CONCAT('No changes made for user "', p_User, '"');
         END IF;
     END IF;
 END
@@ -62,5 +64,5 @@ END
 DELIMITER ;
 
 -- =============================================
--- End of usr_users_SetUserSetting_ByUserAndField
+-- End of usr_settings_SetUserSetting_ByUserAndField
 -- =============================================

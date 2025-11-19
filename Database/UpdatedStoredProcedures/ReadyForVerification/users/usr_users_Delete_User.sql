@@ -1,6 +1,6 @@
 -- Stored procedure to delete a user from usr_users table
 -- Note: Does NOT drop MySQL user account - that must be handled separately if needed
--- Note: Deletes related records from sys_user_roles and usr_ui_settings due to FK constraints
+-- Note: Deletes related records from sys_user_roles and usr_settings due to FK constraints
 DELIMITER //
 DROP PROCEDURE IF EXISTS `usr_users_Delete_User`//
 CREATE DEFINER=`root`@`localhost` PROCEDURE `usr_users_Delete_User`(
@@ -33,7 +33,7 @@ BEGIN
         ELSE
             -- Delete related records first (FK constraints)
             DELETE FROM sys_user_roles WHERE UserID = v_UserId;
-            DELETE FROM usr_ui_settings WHERE UserId = p_User;
+            DELETE FROM usr_settings WHERE UserId = p_User;
             
             -- Now delete the user
             DELETE FROM usr_users WHERE `User` = p_User;

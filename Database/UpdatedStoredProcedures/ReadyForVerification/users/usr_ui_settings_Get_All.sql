@@ -1,10 +1,10 @@
 -- =============================================
 -- Drop procedure if it exists
 -- =============================================
-DROP PROCEDURE IF EXISTS `usr_ui_settings_Get_All`;
+DROP PROCEDURE IF EXISTS `usr_settings_Get_All`;
 
 -- =============================================
--- Stored Procedure: usr_ui_settings_Get_All
+-- Stored Procedure: usr_settings_Get_All
 -- Description: Retrieves all user UI settings for validation/reporting
 -- Parameters:
 --   OUT p_Status INT - Status code (1=Success, 0=No data, -1=Error)
@@ -12,7 +12,7 @@ DROP PROCEDURE IF EXISTS `usr_ui_settings_Get_All`;
 -- Returns: ResultSet with all user settings (UserId, SettingsJson, UpdatedAt)
 -- =============================================
 DELIMITER //
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usr_ui_settings_Get_All`(
+CREATE DEFINER=`root`@`localhost` PROCEDURE `usr_settings_Get_All`(
     OUT p_Status INT,
     OUT p_ErrorMsg VARCHAR(500)
 )
@@ -31,7 +31,7 @@ BEGIN
         UserId,
         SettingsJson,
         UpdatedAt
-    FROM usr_ui_settings
+    FROM usr_settings
     ORDER BY UserId;
     
     SELECT FOUND_ROWS() INTO v_Count;

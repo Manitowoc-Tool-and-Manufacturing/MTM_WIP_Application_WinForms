@@ -103,49 +103,49 @@ if ($status -eq "1") {
     $testResults += [PSCustomObject]@{ Test = "usr_users_Get_All"; Result = "FAIL"; Details = "Expected 1, got $status" }
 }
 
-# Test 5: usr_ui_settings_Get
-Write-Host "[5] Testing usr_ui_settings_Get..." -ForegroundColor Yellow
-$result = Invoke-MySqlQuery "CALL usr_ui_settings_Get('$existingUser', @status, @msg); SELECT @status as status;"
+# Test 5: usr_settings_Get
+Write-Host "[5] Testing usr_settings_Get..." -ForegroundColor Yellow
+$result = Invoke-MySqlQuery "CALL usr_settings_Get('$existingUser', @status, @msg); SELECT @status as status;"
 $status = ($result | Select-String -Pattern "^[0-1]$" | Select-Object -First 1)
 
 if ($status -eq "1" -or $status -eq "0") {
     Write-Host "  ✅ PASS: Retrieved settings for user '$existingUser' (status: $status)" -ForegroundColor Green
     $testsPassed++
-    $testResults += [PSCustomObject]@{ Test = "usr_ui_settings_Get"; Result = "PASS"; Details = "User: $existingUser, Status: $status" }
+    $testResults += [PSCustomObject]@{ Test = "usr_settings_Get"; Result = "PASS"; Details = "User: $existingUser, Status: $status" }
 } else {
     Write-Host "  ❌ FAIL: Unexpected status $status" -ForegroundColor Red
     $testsFailed++
-    $testResults += [PSCustomObject]@{ Test = "usr_ui_settings_Get"; Result = "FAIL"; Details = "Unexpected status: $status" }
+    $testResults += [PSCustomObject]@{ Test = "usr_settings_Get"; Result = "FAIL"; Details = "Unexpected status: $status" }
 }
 
-# Test 6: usr_ui_settings_GetJsonSetting
-Write-Host "[6] Testing usr_ui_settings_GetJsonSetting..." -ForegroundColor Yellow
-$result = Invoke-MySqlQuery "CALL usr_ui_settings_GetJsonSetting('$existingUser', @status, @msg); SELECT @status as status;"
+# Test 6: usr_settings_GetJsonSetting
+Write-Host "[6] Testing usr_settings_GetJsonSetting..." -ForegroundColor Yellow
+$result = Invoke-MySqlQuery "CALL usr_settings_GetJsonSetting('$existingUser', @status, @msg); SELECT @status as status;"
 $status = ($result | Select-String -Pattern "^[0-1]$" | Select-Object -First 1)
 
 if ($status -eq "1" -or $status -eq "0") {
     Write-Host "  ✅ PASS: Retrieved JSON settings for user '$existingUser' (status: $status)" -ForegroundColor Green
     $testsPassed++
-    $testResults += [PSCustomObject]@{ Test = "usr_ui_settings_GetJsonSetting"; Result = "PASS"; Details = "User: $existingUser, Status: $status" }
+    $testResults += [PSCustomObject]@{ Test = "usr_settings_GetJsonSetting"; Result = "PASS"; Details = "User: $existingUser, Status: $status" }
 } else {
     Write-Host "  ❌ FAIL: Unexpected status $status" -ForegroundColor Red
     $testsFailed++
-    $testResults += [PSCustomObject]@{ Test = "usr_ui_settings_GetJsonSetting"; Result = "FAIL"; Details = "Unexpected status: $status" }
+    $testResults += [PSCustomObject]@{ Test = "usr_settings_GetJsonSetting"; Result = "FAIL"; Details = "Unexpected status: $status" }
 }
 
-# Test 7: usr_ui_settings_GetShortcutsJson
-Write-Host "[7] Testing usr_ui_settings_GetShortcutsJson..." -ForegroundColor Yellow
-$result = Invoke-MySqlQuery "CALL usr_ui_settings_GetShortcutsJson('$existingUser', @status, @msg); SELECT @status as status;"
+# Test 7: usr_settings_GetShortcutsJson
+Write-Host "[7] Testing usr_settings_GetShortcutsJson..." -ForegroundColor Yellow
+$result = Invoke-MySqlQuery "CALL usr_settings_GetShortcutsJson('$existingUser', @status, @msg); SELECT @status as status;"
 $status = ($result | Select-String -Pattern "^[0-1]$" | Select-Object -First 1)
 
 if ($status -eq "1" -or $status -eq "0") {
     Write-Host "  ✅ PASS: Retrieved shortcuts for user '$existingUser' (status: $status)" -ForegroundColor Green
     $testsPassed++
-    $testResults += [PSCustomObject]@{ Test = "usr_ui_settings_GetShortcutsJson"; Result = "PASS"; Details = "User: $existingUser, Status: $status" }
+    $testResults += [PSCustomObject]@{ Test = "usr_settings_GetShortcutsJson"; Result = "PASS"; Details = "User: $existingUser, Status: $status" }
 } else {
     Write-Host "  ❌ FAIL: Unexpected status $status" -ForegroundColor Red
     $testsFailed++
-    $testResults += [PSCustomObject]@{ Test = "usr_ui_settings_GetShortcutsJson"; Result = "FAIL"; Details = "Unexpected status: $status" }
+    $testResults += [PSCustomObject]@{ Test = "usr_settings_GetShortcutsJson"; Result = "FAIL"; Details = "Unexpected status: $status" }
 }
 
 # Test 8: usr_users_Add_User (with rollback)

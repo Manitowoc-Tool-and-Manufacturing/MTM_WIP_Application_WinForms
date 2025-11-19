@@ -35,8 +35,8 @@ Integration tests revealed 65 failures, with many caused by missing stored proce
 | 9   | `sys_last_10_transactions_Add_AtPosition.sql`             | system/       | Quick Buttons | Dao_QuickButtons.cs:103 |
 | 10  | `sys_last_10_transactions_Delete_ByUserAndPosition_1.sql` | system/       | Quick Buttons | Dao_QuickButtons.cs:247 |
 | 11  | `sys_last_10_transactions_DeleteAll_ByUser.sql`           | system/       | Quick Buttons | Dao_QuickButtons.cs:173 |
-| 12  | `usr_ui_settings_Delete_ByUserId.sql`                     | users/        | User Settings | Dao_User.cs:743         |
-| 13  | `usr_ui_settings_GetJsonSetting.sql`                      | users/        | User Settings | Dao_User.cs:664         |
+| 12  | `usr_settings_Delete_ByUserId.sql`                     | users/        | User Settings | Dao_User.cs:743         |
+| 13  | `usr_settings_GetJsonSetting.sql`                      | users/        | User Settings | Dao_User.cs:664         |
 | 14  | `usr_users_SetUserSetting_ByUserAndField.sql`             | users/        | User Settings | Dao_User.cs:701         |
 
 ### 📊 New File Counts

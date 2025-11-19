@@ -48,21 +48,21 @@
         "usr_users_Update_User"
       ]
     },
-    "usr_ui_settings": {
-      "Name": "usr_ui_settings",
+    "usr_settings": {
+      "Name": "usr_settings",
       "UsedBy": [
-        "usr_ui_settings_Delete_ByUserId",
-        "usr_ui_settings_Get",
-        "usr_ui_settings_GetJsonSetting",
-        "usr_ui_settings_GetShortcutsJson",
-        "usr_ui_settings_SetJsonSetting",
-        "usr_ui_settings_SetJsonSetting",
-        "usr_ui_settings_SetJsonSetting",
-        "usr_ui_settings_SetJsonSetting",
-        "usr_ui_settings_SetShortcutsJson",
-        "usr_ui_settings_SetThemeJson",
-        "usr_ui_settings_SetThemeJson",
-        "usr_ui_settings_SetThemeJson"
+        "usr_settings_Delete_ByUserId",
+        "usr_settings_Get",
+        "usr_settings_GetJsonSetting",
+        "usr_settings_GetShortcutsJson",
+        "usr_settings_SetJsonSetting",
+        "usr_settings_SetJsonSetting",
+        "usr_settings_SetJsonSetting",
+        "usr_settings_SetJsonSetting",
+        "usr_settings_SetShortcutsJson",
+        "usr_settings_SetThemeJson",
+        "usr_settings_SetThemeJson",
+        "usr_settings_SetThemeJson"
       ]
     },
     "sys_last_": {

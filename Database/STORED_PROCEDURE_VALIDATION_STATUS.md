@@ -82,7 +82,7 @@ The PowerShell validation script (`Validate-StoredProcedureParameters.ps1`):
 **Examples:**
 - `inv_transactions_GetAnalytics`: Missing `UserName, IsAdmin, FromDate, ToDate`
 - `md_part_ids_Add_Part`: Missing `Description, IssuedBy, ItemType`
-- `usr_ui_settings_SetShortcutsJson`: Missing `UserId, ShortcutsJson`
+- `usr_settings_SetShortcutsJson`: Missing `UserId, ShortcutsJson`
 
 **Fix Strategy:** Add missing parameters or remove extra ones based on SP definition
 
@@ -147,11 +147,11 @@ The PowerShell validation script (`Validate-StoredProcedureParameters.ps1`):
 - `usr_users_Get_All` (no parameters)
 
 **UI Settings:**
-- `usr_ui_settings_Delete_ByUserId` ✅
-- `usr_ui_settings_Get` ✅
-- `usr_ui_settings_GetJsonSetting` ✅
-- `usr_ui_settings_GetShortcutsJson` ✅
-- `usr_ui_settings_Get_All` (no parameters)
+- `usr_settings_Delete_ByUserId` ✅
+- `usr_settings_Get` ✅
+- `usr_settings_GetJsonSetting` ✅
+- `usr_settings_GetShortcutsJson` ✅
+- `usr_settings_Get_All` (no parameters)
 
 ### ⚠️ Parameter Mismatches (18 procedures)
 
@@ -183,9 +183,9 @@ The PowerShell validation script (`Validate-StoredProcedureParameters.ps1`):
 15. `md_part_ids_Update_Part` - Missing 6 parameters / Extra: `partNumber, partType, user`
 
 **UI Settings:**
-16. `usr_ui_settings_SetJsonSetting` - Missing: `DgvName, SettingJson`
-17. `usr_ui_settings_SetShortcutsJson` - Missing: `UserId, ShortcutsJson` / Extra: `user`
-18. `usr_ui_settings_SetThemeJson` - Missing: `ThemeJson`
+16. `usr_settings_SetJsonSetting` - Missing: `DgvName, SettingJson`
+17. `usr_settings_SetShortcutsJson` - Missing: `UserId, ShortcutsJson` / Extra: `user`
+18. `usr_settings_SetThemeJson` - Missing: `ThemeJson`
 
 ### 🔍 Parse Errors - Need Manual Inspection (22 procedures)
 
@@ -249,8 +249,8 @@ Reorder parameters to match SP definitions:
 Investigate and add missing parameters:
 - `inv_transactions_GetAnalytics`
 - `inv_transactions_Search`
-- `usr_ui_settings_SetJsonSetting`
-- `usr_ui_settings_SetThemeJson`
+- `usr_settings_SetJsonSetting`
+- `usr_settings_SetThemeJson`
 
 ### Priority 4: Manual Inspection of Parse Errors (22 procedures)
 

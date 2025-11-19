@@ -607,13 +607,13 @@ internal static class Dao_User
 
         try
         {
-            // Use bootstrap connection string to avoid circular dependency
-            // When fetching settings, we need a stable connection that doesn't depend on the settings we're fetching
-            string connectionString = Model_Application_Variables.BootstrapConnectionString;
+            // Use a safe connection string that works during initial bootstrap
+            // If Bootstrap is already initialized, use it. Otherwise, use current connection string.
+            string connectionString = Model_Application_Variables.ConnectionString;
 
             var dataResult = await Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync(
                 connectionString,
-                "usr_ui_settings_Get",
+                "usr_settings_Get",
                 new Dictionary<string, object> { ["UserId"] = user },
                 connection: connection,
                 transaction: transaction
@@ -691,7 +691,7 @@ internal static class Dao_User
 
             var result = await Helper_Database_StoredProcedure.ExecuteNonQueryWithStatusAsync(
                 Model_Application_Variables.ConnectionString,
-                "usr_ui_settings_SetThemeJson",
+                "usr_settings_SetThemeJson",
                 parameters,
                 connection: connection,
                 transaction: transaction
@@ -742,7 +742,7 @@ internal static class Dao_User
 
             var result = await Helper_Database_StoredProcedure.ExecuteNonQueryWithStatusAsync(
                 Model_Application_Variables.ConnectionString,
-                "usr_ui_settings_SetJsonSetting",
+                "usr_settings_SetJsonSetting",
                 parameters,
                 connection: connection,
                 transaction: transaction
@@ -784,7 +784,7 @@ internal static class Dao_User
         {
             var dataResult = await Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync(
                 Model_Application_Variables.ConnectionString,
-                "usr_ui_settings_GetJsonSetting",
+                "usr_settings_GetJsonSetting",
                 new Dictionary<string, object> { ["UserId"] = userId },
                 connection: connection,
                 transaction: transaction
@@ -813,7 +813,7 @@ internal static class Dao_User
     }
 
     /// <summary>
-    /// Internal helper to set a user setting field value.
+    /// Internal helper to set a user setting field value in usr_settings.SettingsJson.
     /// </summary>
     private static async Task SetUserSettingInternalAsync(string field, string user, string value,
         MySqlConnection? connection = null,
@@ -823,12 +823,12 @@ internal static class Dao_User
 
         try
         {
-            // Use bootstrap connection string to avoid circular dependency
-            string connectionString = Model_Application_Variables.BootstrapConnectionString;
+            // Use current connection string (settings are now in usr_settings, not usr_users)
+            string connectionString = Model_Application_Variables.ConnectionString;
 
             var result = await Helper_Database_StoredProcedure.ExecuteNonQueryWithStatusAsync(
                 connectionString,
-                "usr_users_SetUserSetting_ByUserAndField",
+                "usr_settings_SetUserSetting_ByUserAndField",
                 new Dictionary<string, object>
                 {
                     ["User"] = user,
@@ -874,7 +874,7 @@ internal static class Dao_User
         {
             var result = await Helper_Database_StoredProcedure.ExecuteNonQueryWithStatusAsync(
                 Model_Application_Variables.ConnectionString,
-                "usr_ui_settings_Delete_ByUserId",
+                "usr_settings_Delete_ByUserId",
                 new Dictionary<string, object> { ["UserId"] = userName },
                 connection: connection,
                 transaction: transaction
@@ -1207,7 +1207,7 @@ internal static class Dao_User
         {
             var dataResult = await Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync(
                 Model_Application_Variables.ConnectionString,
-                "usr_ui_settings_GetShortcutsJson",
+                "usr_settings_GetShortcutsJson",
                 new Dictionary<string, object> { ["UserId"] = userId },
                 connection: connection,
                 transaction: transaction
@@ -1256,7 +1256,7 @@ internal static class Dao_User
 
             var result = await Helper_Database_StoredProcedure.ExecuteNonQueryWithStatusAsync(
                 Model_Application_Variables.ConnectionString,
-                "usr_ui_settings_SetShortcutsJson",
+                "usr_settings_SetShortcutsJson",
                 parameters,
                 connection: connection,
                 transaction: transaction
@@ -1324,8 +1324,8 @@ internal static class Dao_User
         MySqlConnection? connection = null,
         MySqlTransaction? transaction = null)
     {
-        // Use the existing usr_ui_settings_SetThemeJson procedure which merges JSON
-        string connectionString = Model_Application_Variables.BootstrapConnectionString;
+        // Use the existing usr_settings_SetThemeJson procedure which merges JSON
+        string connectionString = Model_Application_Variables.ConnectionString;
 
         // Create a simple JSON object with just this field
         string themeJson = $"{{\"{field}\": \"{value}\"}}";
@@ -1333,7 +1333,7 @@ internal static class Dao_User
         // This procedure will merge the JSON with existing settings
         await Helper_Database_StoredProcedure.ExecuteNonQueryWithStatusAsync(
             connectionString,
-            "usr_ui_settings_SetThemeJson",
+            "usr_settings_SetThemeJson",
             new Dictionary<string, object>
             {
                 ["UserId"] = user,

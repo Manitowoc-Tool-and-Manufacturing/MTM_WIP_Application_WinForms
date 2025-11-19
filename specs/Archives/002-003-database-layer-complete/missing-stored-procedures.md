@@ -21,7 +21,7 @@ The entries below come from a repository-wide scan of non-test C# files. Each st
 | `sys_last_10_transactions_Delete_ByUserAndPosition_1` | Data/Dao_QuickButtons.cs | Needs to be created, validate with Caller what needs to be returned |
 | `sys_last_10_transactions_DeleteAll_ByUser` | Data/Dao_QuickButtons.cs | Needs to be created, validate with Caller what needs to be returned |
 | `sys_last_10_transactions_Move` | Data/Dao_QuickButtons.cs | sys_last_10_transactions_Move_1 |
-| `usr_ui_settings_Delete_ByUserId` | Data/Dao_User.cs | Needs to be created, validate with Caller what needs to be returned |
-| `usr_ui_settings_GetJsonSetting` | Data/Dao_User.cs | Needs to be created, validate with Caller what needs to be returned |
+| `usr_settings_Delete_ByUserId` | Data/Dao_User.cs | Needs to be created, validate with Caller what needs to be returned |
+| `usr_settings_GetJsonSetting` | Data/Dao_User.cs | Needs to be created, validate with Caller what needs to be returned |
 | `usr_user_roles_GetRoleId_ByUserId` | Data/Dao_User.cs | sys_user_roles_Get_ById |
 | `usr_users_SetUserSetting_ByUserAndField` | Data/Dao_User.cs | Needs to be created, validate with Caller what needs to be returned |

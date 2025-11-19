@@ -189,11 +189,11 @@ All procedures follow MTM standards:
 64. sys_parameter_prefix_overrides_Update_ById
 
 ### User (usr_*)
-65. usr_ui_settings_Get
-66. usr_ui_settings_GetShortcutsJson
-67. usr_ui_settings_SetJsonSetting
-68. usr_ui_settings_SetShortcutsJson
-69. usr_ui_settings_SetThemeJson
+65. usr_settings_Get
+66. usr_settings_GetShortcutsJson
+67. usr_settings_SetJsonSetting
+68. usr_settings_SetShortcutsJson
+69. usr_settings_SetThemeJson
 70. usr_users_Add_User
 71. usr_users_Delete_User
 72. usr_users_Exists

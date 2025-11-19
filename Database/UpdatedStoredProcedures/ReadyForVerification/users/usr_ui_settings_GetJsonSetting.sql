@@ -1,5 +1,5 @@
 -- =============================================
--- Procedure: usr_ui_settings_GetJsonSetting
+-- Procedure: usr_settings_GetJsonSetting
 -- Domain: users
 -- Created: 2025-10-17
 -- Purpose: Returns JSON settings for a user
@@ -7,9 +7,9 @@
 
 DELIMITER //
 
-DROP PROCEDURE IF EXISTS `usr_ui_settings_GetJsonSetting`//
+DROP PROCEDURE IF EXISTS `usr_settings_GetJsonSetting`//
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usr_ui_settings_GetJsonSetting`(
+CREATE DEFINER=`root`@`localhost` PROCEDURE `usr_settings_GetJsonSetting`(
     IN p_UserId INT,
     OUT p_Status INT,
     OUT p_ErrorMsg VARCHAR(500)
@@ -30,7 +30,7 @@ BEGIN
     ELSE
         -- Get JSON setting for user
         SELECT SettingJson INTO v_JsonSetting
-        FROM usr_ui_settings
+        FROM usr_settings
         WHERE UserId = p_UserId
         LIMIT 1;
         
@@ -54,5 +54,5 @@ END
 DELIMITER ;
 
 -- =============================================
--- End of usr_ui_settings_GetJsonSetting
+-- End of usr_settings_GetJsonSetting
 -- =============================================

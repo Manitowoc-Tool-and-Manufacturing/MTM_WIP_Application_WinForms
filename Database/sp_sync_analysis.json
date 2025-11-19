@@ -25,10 +25,10 @@
       "Path": "C:\\Users\\johnk\\source\\repos\\MTM_WIP_Application_WinForms\\Database\\UpdatedStoredProcedures\\ReadyForVerification\\system\\sys_last_10_transactions_Move.sql",
       "Folder": "system"
     },
-    "usr_ui_settings_GetJsonSetting": {
-      "Name": "usr_ui_settings_GetJsonSetting",
-      "RelativePath": "users\\usr_ui_settings_GetJsonSetting.sql",
-      "Path": "C:\\Users\\johnk\\source\\repos\\MTM_WIP_Application_WinForms\\Database\\UpdatedStoredProcedures\\ReadyForVerification\\users\\usr_ui_settings_GetJsonSetting.sql",
+    "usr_settings_GetJsonSetting": {
+      "Name": "usr_settings_GetJsonSetting",
+      "RelativePath": "users\\usr_settings_GetJsonSetting.sql",
+      "Path": "C:\\Users\\johnk\\source\\repos\\MTM_WIP_Application_WinForms\\Database\\UpdatedStoredProcedures\\ReadyForVerification\\users\\usr_settings_GetJsonSetting.sql",
       "Folder": "users"
     },
     "sys_user_access_SetType": {
@@ -37,10 +37,10 @@
       "Path": "C:\\Users\\johnk\\source\\repos\\MTM_WIP_Application_WinForms\\Database\\UpdatedStoredProcedures\\ReadyForVerification\\system\\sys_user_access_SetType.sql",
       "Folder": "system"
     },
-    "usr_ui_settings_SetJsonSetting": {
-      "Name": "usr_ui_settings_SetJsonSetting",
-      "RelativePath": "users\\usr_ui_settings_SetJsonSetting.sql",
-      "Path": "C:\\Users\\johnk\\source\\repos\\MTM_WIP_Application_WinForms\\Database\\UpdatedStoredProcedures\\ReadyForVerification\\users\\usr_ui_settings_SetJsonSetting.sql",
+    "usr_settings_SetJsonSetting": {
+      "Name": "usr_settings_SetJsonSetting",
+      "RelativePath": "users\\usr_settings_SetJsonSetting.sql",
+      "Path": "C:\\Users\\johnk\\source\\repos\\MTM_WIP_Application_WinForms\\Database\\UpdatedStoredProcedures\\ReadyForVerification\\users\\usr_settings_SetJsonSetting.sql",
       "Folder": "users"
     },
     "inv_inventory_Transfer_Quantity": {
@@ -139,10 +139,10 @@
       "Path": "C:\\Users\\johnk\\source\\repos\\MTM_WIP_Application_WinForms\\Database\\UpdatedStoredProcedures\\ReadyForVerification\\system\\sys_parameter_prefix_overrides_Get_ById.sql",
       "Folder": "system"
     },
-    "usr_ui_settings_Get": {
-      "Name": "usr_ui_settings_Get",
-      "RelativePath": "users\\usr_ui_settings_Get.sql",
-      "Path": "C:\\Users\\johnk\\source\\repos\\MTM_WIP_Application_WinForms\\Database\\UpdatedStoredProcedures\\ReadyForVerification\\users\\usr_ui_settings_Get.sql",
+    "usr_settings_Get": {
+      "Name": "usr_settings_Get",
+      "RelativePath": "users\\usr_settings_Get.sql",
+      "Path": "C:\\Users\\johnk\\source\\repos\\MTM_WIP_Application_WinForms\\Database\\UpdatedStoredProcedures\\ReadyForVerification\\users\\usr_settings_Get.sql",
       "Folder": "users"
     },
     "log_error_Get_Unique": {
@@ -241,10 +241,10 @@
       "Path": "C:\\Users\\johnk\\source\\repos\\MTM_WIP_Application_WinForms\\Database\\UpdatedStoredProcedures\\ReadyForVerification\\logging\\log_error_Delete_All.sql",
       "Folder": "logging"
     },
-    "usr_ui_settings_Get_All": {
-      "Name": "usr_ui_settings_Get_All",
-      "RelativePath": "users\\usr_ui_settings_Get_All.sql",
-      "Path": "C:\\Users\\johnk\\source\\repos\\MTM_WIP_Application_WinForms\\Database\\UpdatedStoredProcedures\\ReadyForVerification\\users\\usr_ui_settings_Get_All.sql",
+    "usr_settings_Get_All": {
+      "Name": "usr_settings_Get_All",
+      "RelativePath": "users\\usr_settings_Get_All.sql",
+      "Path": "C:\\Users\\johnk\\source\\repos\\MTM_WIP_Application_WinForms\\Database\\UpdatedStoredProcedures\\ReadyForVerification\\users\\usr_settings_Get_All.sql",
       "Folder": "users"
     },
     "inv_inventory_Get_ByUser": {
@@ -259,10 +259,10 @@
       "Path": "C:\\Users\\johnk\\source\\repos\\MTM_WIP_Application_WinForms\\Database\\UpdatedStoredProcedures\\ReadyForVerification\\error-reports\\sp_error_reports_GetMachineList.sql",
       "Folder": "error-reports"
     },
-    "usr_ui_settings_GetShortcutsJson": {
-      "Name": "usr_ui_settings_GetShortcutsJson",
-      "RelativePath": "users\\usr_ui_settings_GetShortcutsJson.sql",
-      "Path": "C:\\Users\\johnk\\source\\repos\\MTM_WIP_Application_WinForms\\Database\\UpdatedStoredProcedures\\ReadyForVerification\\users\\usr_ui_settings_GetShortcutsJson.sql",
+    "usr_settings_GetShortcutsJson": {
+      "Name": "usr_settings_GetShortcutsJson",
+      "RelativePath": "users\\usr_settings_GetShortcutsJson.sql",
+      "Path": "C:\\Users\\johnk\\source\\repos\\MTM_WIP_Application_WinForms\\Database\\UpdatedStoredProcedures\\ReadyForVerification\\users\\usr_settings_GetShortcutsJson.sql",
       "Folder": "users"
     },
     "inv_transaction_Add": {
@@ -313,10 +313,10 @@
       "Path": "C:\\Users\\johnk\\source\\repos\\MTM_WIP_Application_WinForms\\Database\\UpdatedStoredProcedures\\ReadyForVerification\\logging\\log_error_Get_ByDateRange.sql",
       "Folder": "logging"
     },
-    "usr_ui_settings_SetShortcutsJson": {
-      "Name": "usr_ui_settings_SetShortcutsJson",
-      "RelativePath": "users\\usr_ui_settings_SetShortcutsJson.sql",
-      "Path": "C:\\Users\\johnk\\source\\repos\\MTM_WIP_Application_WinForms\\Database\\UpdatedStoredProcedures\\ReadyForVerification\\users\\usr_ui_settings_SetShortcutsJson.sql",
+    "usr_settings_SetShortcutsJson": {
+      "Name": "usr_settings_SetShortcutsJson",
+      "RelativePath": "users\\usr_settings_SetShortcutsJson.sql",
+      "Path": "C:\\Users\\johnk\\source\\repos\\MTM_WIP_Application_WinForms\\Database\\UpdatedStoredProcedures\\ReadyForVerification\\users\\usr_settings_SetShortcutsJson.sql",
       "Folder": "users"
     },
     "sys_last_10_transactions_Update_ByUserAndPosition": {
@@ -361,10 +361,10 @@
       "Path": "C:\\Users\\johnk\\source\\repos\\MTM_WIP_Application_WinForms\\Database\\UpdatedStoredProcedures\\ReadyForVerification\\inventory\\inv_inventory_Fix_BatchNumbers.sql",
       "Folder": "inventory"
     },
-    "usr_ui_settings_Delete_ByUserId": {
-      "Name": "usr_ui_settings_Delete_ByUserId",
-      "RelativePath": "users\\usr_ui_settings_Delete_ByUserId.sql",
-      "Path": "C:\\Users\\johnk\\source\\repos\\MTM_WIP_Application_WinForms\\Database\\UpdatedStoredProcedures\\ReadyForVerification\\users\\usr_ui_settings_Delete_ByUserId.sql",
+    "usr_settings_Delete_ByUserId": {
+      "Name": "usr_settings_Delete_ByUserId",
+      "RelativePath": "users\\usr_settings_Delete_ByUserId.sql",
+      "Path": "C:\\Users\\johnk\\source\\repos\\MTM_WIP_Application_WinForms\\Database\\UpdatedStoredProcedures\\ReadyForVerification\\users\\usr_settings_Delete_ByUserId.sql",
       "Folder": "users"
     },
     "inv_inventory_Search_Advanced": {
@@ -445,10 +445,10 @@
       "Path": "C:\\Users\\johnk\\source\\repos\\MTM_WIP_Application_WinForms\\Database\\UpdatedStoredProcedures\\ReadyForVerification\\master-data\\md_part_ids_Delete_ByItemNumber.sql",
       "Folder": "master-data"
     },
-    "usr_ui_settings_SetThemeJson": {
-      "Name": "usr_ui_settings_SetThemeJson",
-      "RelativePath": "users\\usr_ui_settings_SetThemeJson.sql",
-      "Path": "C:\\Users\\johnk\\source\\repos\\MTM_WIP_Application_WinForms\\Database\\UpdatedStoredProcedures\\ReadyForVerification\\users\\usr_ui_settings_SetThemeJson.sql",
+    "usr_settings_SetThemeJson": {
+      "Name": "usr_settings_SetThemeJson",
+      "RelativePath": "users\\usr_settings_SetThemeJson.sql",
+      "Path": "C:\\Users\\johnk\\source\\repos\\MTM_WIP_Application_WinForms\\Database\\UpdatedStoredProcedures\\ReadyForVerification\\users\\usr_settings_SetThemeJson.sql",
       "Folder": "users"
     },
     "md_operation_numbers_Add_Operation": {
@@ -619,8 +619,8 @@
       "sys_last_10_transactions_Add_AtPosition",
       "md_part_ids_Update_Part",
       "sys_last_10_transactions_Move",
-      "usr_ui_settings_GetJsonSetting",
-      "usr_ui_settings_SetJsonSetting",
+      "usr_settings_GetJsonSetting",
+      "usr_settings_SetJsonSetting",
       "inv_inventory_transfer_quantity",
       "sys_last_10_transactions_Get_ByUser",
       "usr_users_Exists",
@@ -633,7 +633,7 @@
       "inv_inventory_Get_All",
       "sys_user_roles_Add",
       "sys_parameter_prefix_overrides_Get_ById",
-      "usr_ui_settings_Get",
+      "usr_settings_Get",
       "log_error_Get_Unique",
       "usr_users_Get_All",
       "sys_last_10_transactions_DeleteAll_ByUser",
@@ -650,10 +650,10 @@
       "md_item_types_GetDistinct",
       "sys_parameter_prefix_overrides_Add",
       "md_item_types_Delete_ByType",
-      "usr_ui_settings_Get_All",
+      "usr_settings_Get_All",
       "inv_inventory_Get_ByUser",
       "sp_error_reports_GetUserList",
-      "usr_ui_settings_GetShortcutsJson",
+      "usr_settings_GetShortcutsJson",
       "inv_transaction_Add",
       "sp_error_reports_UpdateStatus",
       "sys_user_GetIdByName",
@@ -661,7 +661,7 @@
       "sys_parameter_prefix_overrides_Update_ById",
       "sys_last_10_transactions_Delete_ByUserAndPosition",
       "md_item_types_Exists_ByType",
-      "usr_ui_settings_SetShortcutsJson",
+      "usr_settings_SetShortcutsJson",
       "sys_last_10_transactions_Update_ByUserAndPosition",
       "sys_user_roles_Get_ById",
       "usr_users_Add_User",
@@ -669,7 +669,7 @@
       "usr_users_Update_User",
       "md_part_ids_Get_All",
       "inv_inventory_Fix_BatchNumbers",
-      "usr_ui_settings_Delete_ByUserId",
+      "usr_settings_Delete_ByUserId",
       "inv_inventory_Search_Advanced",
       "md_operation_numbers_Update_Operation",
       "md_item_types_Add_ItemType",
@@ -698,7 +698,7 @@
       "sys_last_10_transactions_AddQuickButton",
       "md_locations_Get_All",
       "usr_users_SetUserSetting_ByUserAndField",
-      "usr_ui_settings_SetThemeJson",
+      "usr_settings_SetThemeJson",
       "inv_inventory_Get_ByPartIDandOperation",
       "md_operation_numbers_Exists_ByOperation"
     ],
@@ -743,14 +743,14 @@
         "Dao_QuickButtons.cs"
       ]
     },
-    "usr_ui_settings_GetJsonSetting": {
-      "Name": "usr_ui_settings_GetJsonSetting",
+    "usr_settings_GetJsonSetting": {
+      "Name": "usr_settings_GetJsonSetting",
       "CalledInFiles": [
         "Dao_User.cs"
       ]
     },
-    "usr_ui_settings_SetJsonSetting": {
-      "Name": "usr_ui_settings_SetJsonSetting",
+    "usr_settings_SetJsonSetting": {
+      "Name": "usr_settings_SetJsonSetting",
       "CalledInFiles": [
         "Dao_User.cs"
       ]
@@ -827,8 +827,8 @@
         "Dao_ParameterPrefixOverrides.cs"
       ]
     },
-    "usr_ui_settings_Get": {
-      "Name": "usr_ui_settings_Get",
+    "usr_settings_Get": {
+      "Name": "usr_settings_Get",
       "CalledInFiles": [
         "Dao_User.cs"
       ]
@@ -929,8 +929,8 @@
         "Dao_ItemType.cs"
       ]
     },
-    "usr_ui_settings_Get_All": {
-      "Name": "usr_ui_settings_Get_All",
+    "usr_settings_Get_All": {
+      "Name": "usr_settings_Get_All",
       "CalledInFiles": [
         "Dao_System.cs"
       ]
@@ -947,8 +947,8 @@
         "Dao_ErrorReports.cs"
       ]
     },
-    "usr_ui_settings_GetShortcutsJson": {
-      "Name": "usr_ui_settings_GetShortcutsJson",
+    "usr_settings_GetShortcutsJson": {
+      "Name": "usr_settings_GetShortcutsJson",
       "CalledInFiles": [
         "Dao_User.cs"
       ]
@@ -995,8 +995,8 @@
         "Dao_ItemType.cs"
       ]
     },
-    "usr_ui_settings_SetShortcutsJson": {
-      "Name": "usr_ui_settings_SetShortcutsJson",
+    "usr_settings_SetShortcutsJson": {
+      "Name": "usr_settings_SetShortcutsJson",
       "CalledInFiles": [
         "Dao_User.cs"
       ]
@@ -1043,8 +1043,8 @@
         "Dao_Inventory.cs"
       ]
     },
-    "usr_ui_settings_Delete_ByUserId": {
-      "Name": "usr_ui_settings_Delete_ByUserId",
+    "usr_settings_Delete_ByUserId": {
+      "Name": "usr_settings_Delete_ByUserId",
       "CalledInFiles": [
         "Dao_User.cs"
       ]
@@ -1217,8 +1217,8 @@
         "Dao_User.cs"
       ]
     },
-    "usr_ui_settings_SetThemeJson": {
-      "Name": "usr_ui_settings_SetThemeJson",
+    "usr_settings_SetThemeJson": {
+      "Name": "usr_settings_SetThemeJson",
       "CalledInFiles": [
         "Dao_User.cs"
       ]
