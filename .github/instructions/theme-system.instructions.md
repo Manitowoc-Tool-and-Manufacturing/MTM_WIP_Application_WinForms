@@ -5,6 +5,17 @@ applyTo: '**/*.cs,**/*.Designer.cs'
 
 # WinForms Theme System Implementation Guide
 
+## Table of Contents
+- **System Architecture Overview**: Components and relationships of the DI-based theme system.
+- **Implementing Themes in New Forms**: Step-by-step guide for creating themed forms.
+- **Implementing Themes in User Controls**: Step-by-step guide for creating themed user controls.
+- **Theme System Lifecycle**: How themes are applied and updated at runtime.
+- **Common Patterns**: Examples for Dialogs, Dynamic Controls, and Nested Controls.
+- **Migration from Legacy System**: How to move from `Core_Themes` to the new system.
+- **Troubleshooting**: Common issues and solutions.
+- **Performance Characteristics**: Metrics on theme change speed and memory usage.
+- **Best Practices**: Do's and Don'ts for theming.
+
 Comprehensive guide for implementing the dependency injection-based theme system in MTM WIP Application.
 
 ## System Architecture Overview

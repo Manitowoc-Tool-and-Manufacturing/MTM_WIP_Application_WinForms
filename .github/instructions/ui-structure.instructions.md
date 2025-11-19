@@ -5,6 +5,16 @@ applyTo: '**/*.Designer.cs, **/*.cs'
 
 # UI Structure & Designer Guidelines
 
+## Table of Contents
+- **Naming Conventions**: Strict rules for naming controls in Designer files.
+- **Layout Architecture**: TableLayout-first approach and root structure guidelines.
+- **Standard Control Patterns**: Guidelines for Inputs, Grids, Action Bars, and Cards.
+- **Inheritance Requirements**: Mandatory base classes for Forms and UserControls.
+- **Designer File Structure**: Required #region blocks and organization.
+- **Workflow for Creating New UI**: Step-by-step process for new screens.
+- **Specific Screen Patterns**: Structural guides for Transactions, Edit Screens, and Tabs.
+- **Workflow for Refactoring Existing UI**: Checklist for modernizing legacy screens.
+
 This document defines the standard patterns for constructing User Interfaces in the MTM WIP Application. These patterns are derived from existing controls (InventoryTab, Transactions, Settings) and must be followed for all new UI development to ensure consistency.
 
 ## 1. Naming Conventions
@@ -147,3 +157,34 @@ partial class MyControl
 - **Structure**:
   - `GroupBox` as the visual container.
   - `TableLayoutPanel` to organize Top (Inputs), Middle (Notes/Extras), Bottom (Actions).
+
+## 8. Workflow for Refactoring Existing UI
+
+When updating legacy forms or controls to meet these standards:
+
+1.  **Update Inheritance**:
+    -   Change inheritance from `Form` to `ThemedForm`.
+    -   Change inheritance from `UserControl` to `ThemedUserControl`.
+    -   Remove any manual `Core_Themes.ApplyTheme()` calls.
+
+2.  **Standardize Layout**:
+    -   If the form uses absolute positioning, introduce a root `TableLayoutPanel` (`Dock = Fill`).
+    -   Move existing controls into the TableLayout cells.
+    -   Replace `Anchor` logic with `Dock` logic where appropriate.
+
+3.  **Replace Legacy Inputs**:
+    -   Identify `Label` + `TextBox` pairs.
+    -   Replace them with a single `SuggestionTextBoxWithLabel`.
+    -   Update code-behind to use the new control's properties (`.Text`, `.LabelText`).
+
+4.  **Rename Controls**:
+    -   Go through the `.Designer.cs` file (or use the Properties window).
+    -   Rename every control to follow `[Context]_[Type]_[Name]`.
+    -   *Tip*: Do this one by one to catch compile errors in code-behind immediately.
+
+5.  **Clean Up Designer Code**:
+    -   Ensure the `#region` structure matches the standard.
+    -   Remove unused fields or components.
+
+6.  **Verify Tab Order**:
+    -   Use the "View > Tab Order" tool in Visual Studio to reset the tab sequence, as moving controls to TableLayouts often breaks it.

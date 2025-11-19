@@ -1,5 +1,12 @@
 # DAO Patterns & Standards
 
+## Table of Contents
+- **Dependency Injection Strategy**: Rules for Legacy (static) vs New (DI) DAOs.
+- **Standard DAO Pattern**: Code structure for Interfaces and Implementations.
+- **Method Standards**: Return types (`Model_Dao_Result`), Async/Await rules, and Helper usage.
+- **Error Handling**: How to handle exceptions, logging, and UI notifications.
+- **Example Implementation**: A complete code example of a compliant DAO method.
+
 ## Dependency Injection Strategy (Hybrid)
 
 **Policy**:
