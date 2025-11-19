@@ -1,7 +1,7 @@
-# Fix: usr_ui_settings_Get_All Missing Procedure
+# Fix: usr_settings_Get_All Missing Procedure
 
 **Date**: November 4, 2025  
-**Issue**: Code referenced `usr_ui_settings_Get_All` but procedure didn't exist in database  
+**Issue**: Code referenced `usr_settings_Get_All` but procedure didn't exist in database  
 **Status**: ✅ RESOLVED
 
 ---
@@ -10,18 +10,18 @@
 
 ### Symptoms
 - Stored procedure synchronization analysis showed 1 procedure called by code but missing from database
-- Procedure name: `usr_ui_settings_Get_All`
+- Procedure name: `usr_settings_Get_All`
 - Called from: `Data/Dao_System.cs` line 400 (in validation reporting method)
 
 ### Root Cause
-The database only had `usr_ui_settings_Get(p_UserId)` which requires a user ID parameter. The code needed a variant that returns ALL user settings for system validation/reporting purposes.
+The database only had `usr_settings_Get(p_UserId)` which requires a user ID parameter. The code needed a variant that returns ALL user settings for system validation/reporting purposes.
 
 ---
 
 ## Solution Implemented
 
 ### Created New Stored Procedure
-**File**: `Database/UpdatedStoredProcedures/ReadyForVerification/users/usr_ui_settings_Get_All.sql`
+**File**: `Database/UpdatedStoredProcedures/ReadyForVerification/users/usr_settings_Get_All.sql`
 
 **Functionality**:
 - Retrieves all user UI settings records (no user ID required)
@@ -46,7 +46,7 @@ The database only had `usr_ui_settings_Get(p_UserId)` which requires a user ID p
 ### Before Fix
 ```
 ✅ Procedures in sync: 84
-❌ Called but not in DB: 1 (usr_ui_settings_Get_All)
+❌ Called but not in DB: 1 (usr_settings_Get_All)
 ```
 
 ### After Fix
@@ -57,7 +57,7 @@ The database only had `usr_ui_settings_Get(p_UserId)` which requires a user ID p
 
 ### Test Execution
 ```sql
-CALL usr_ui_settings_Get_All(@status, @msg);
+CALL usr_settings_Get_All(@status, @msg);
 -- Returns 84 rows with UserId, SettingsJson, UpdatedAt
 -- Status: 1, Message: "Retrieved 84 user settings records"
 ```
@@ -68,7 +68,7 @@ CALL usr_ui_settings_Get_All(@status, @msg);
 
 ### Table Structure
 ```sql
-usr_ui_settings (
+usr_settings (
     UserId VARCHAR(64) PRIMARY KEY,
     SettingsJson JSON NOT NULL,
     ShortcutsJson JSON NOT NULL,
@@ -78,7 +78,7 @@ usr_ui_settings (
 
 ### Procedure Signature
 ```sql
-CREATE PROCEDURE usr_ui_settings_Get_All(
+CREATE PROCEDURE usr_settings_Get_All(
     OUT p_Status INT,
     OUT p_ErrorMsg VARCHAR(500)
 )
@@ -88,7 +88,7 @@ CREATE PROCEDURE usr_ui_settings_Get_All(
 ```csharp
 var userSettingsResult = await Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync(
     Model_Application_Variables.ConnectionString,
-    "usr_ui_settings_Get_All",
+    "usr_settings_Get_All",
     null  // No parameters needed
 );
 ```
@@ -97,9 +97,9 @@ var userSettingsResult = await Helper_Database_StoredProcedure.ExecuteDataTableW
 
 ## Related Files
 
-- **SQL File**: `Database/UpdatedStoredProcedures/ReadyForVerification/users/usr_ui_settings_Get_All.sql`
+- **SQL File**: `Database/UpdatedStoredProcedures/ReadyForVerification/users/usr_settings_Get_All.sql`
 - **Called From**: `Data/Dao_System.cs` (validation reporting)
-- **Companion Procedure**: `usr_ui_settings_Get(p_UserId)` - gets single user settings
+- **Companion Procedure**: `usr_settings_Get(p_UserId)` - gets single user settings
 
 ---
 

@@ -19,7 +19,7 @@
 | **Procedures in Sync** | 85 ✅ |
 | **Files Archived** | 9 |
 | **DROP Statements Added** | 1 |
-| **New Procedures Created** | 1 (usr_ui_settings_Get_All) |
+| **New Procedures Created** | 1 (usr_settings_Get_All) |
 
 ---
 
@@ -31,7 +31,7 @@ All 85 procedures are:
 - Have SQL files in ReadyForVerification
 - Exist in the database
 
-**Update (2025-11-04)**: Created `usr_ui_settings_Get_All` procedure to resolve the last missing procedure. All code calls are now satisfied.
+**Update (2025-11-04)**: Created `usr_settings_Get_All` procedure to resolve the last missing procedure. All code calls are now satisfied.
 
 ### 📦 Files Archived (9)
 
@@ -139,19 +139,19 @@ Database/UpdatedStoredProcedures/ReadyForVerification/
 
 ### ✅ All Issues Resolved
 
-**Previous Issue - usr_ui_settings_Get_All**: RESOLVED  
+**Previous Issue - usr_settings_Get_All**: RESOLVED  
 - **Problem**: Code referenced procedure that didn't exist in database
 - **Solution**: Created new stored procedure that returns all user settings for validation/reporting
-- **File**: `Database/UpdatedStoredProcedures/ReadyForVerification/users/usr_ui_settings_Get_All.sql`
+- **File**: `Database/UpdatedStoredProcedures/ReadyForVerification/users/usr_settings_Get_All.sql`
 - **Status**: Installed to database and verified working
-- **See**: `usr_ui_settings_Get_All_FIX_NOTES.md` for details
+- **See**: `usr_settings_Get_All_FIX_NOTES.md` for details
 
 ---
 
 ## Recommendations
 
 ### 1. Immediate Actions
-- [x] ✅ Resolve `usr_ui_settings_Get_All` naming mismatch - COMPLETED
+- [x] ✅ Resolve `usr_settings_Get_All` naming mismatch - COMPLETED
 - [ ] Test application to ensure archived procedures were truly unused
 - [ ] Update any documentation referencing archived procedures
 
@@ -210,7 +210,7 @@ The ReadyForVerification folder now contains:
 - Only active procedures (maintenance utilities retained) ✅
 - Complete audit trail via archive folder ✅
 
-**Issue Resolution**: Created `usr_ui_settings_Get_All` procedure to complete synchronization.
+**Issue Resolution**: Created `usr_settings_Get_All` procedure to complete synchronization.
 
 **Next Steps**: Run integration tests to verify application functionality with all procedures in place.
 
@@ -220,4 +220,4 @@ The ReadyForVerification folder now contains:
 **Last Updated**: 2025-11-04  
 **Scripts Location**: `Database/Scripts/`  
 **Archive Location**: `Database/UpdatedStoredProcedures/Archive/unused-procedures-2025-11-04/`  
-**Fix Details**: See `usr_ui_settings_Get_All_FIX_NOTES.md` for complete issue resolution documentation
+**Fix Details**: See `usr_settings_Get_All_FIX_NOTES.md` for complete issue resolution documentation

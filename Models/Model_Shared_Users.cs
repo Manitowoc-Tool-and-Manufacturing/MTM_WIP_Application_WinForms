@@ -16,21 +16,9 @@ namespace MTM_WIP_Application_Winforms.Models
         public static string VisualPassword { get; set; } = "Password";
         public static string VisualUserName { get; set; } = "User Name";
         public bool VitsUser { get; set; } = false;
-        public static string Database
-        {
-            get => _database ?? (
-#if DEBUG
-                "MTM_WIP_Application_Winforms"  // Changed to use main database in debug mode
-#else
-        "MTM_WIP_Application_Winforms"
-#endif
-            );
-            set => _database = value;
-        }
+        public static string? Database { get; set; } = "mtm_wip_application_winforms";
 
-        private static string? _database;
-
-        public static string WipServerAddress = "localhost";
+        public static string WipServerAddress { get; set; } = "localhost";
       
 
         public static string WipServerPort { get; set; } = "3306";

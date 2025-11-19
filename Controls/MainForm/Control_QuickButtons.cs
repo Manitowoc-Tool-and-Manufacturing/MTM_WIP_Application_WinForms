@@ -215,7 +215,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                 // STEP 2: Load data from database
 
                 var dataResult = await Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync(
-                    Model_Application_Variables.BootstrapConnectionString,
+                    Model_Application_Variables.ConnectionString,
                     "sys_last_10_transactions_Get_ByUser",
                     new Dictionary<string, object> { ["User"] = currentUser },
                     null // No progress helper for this method

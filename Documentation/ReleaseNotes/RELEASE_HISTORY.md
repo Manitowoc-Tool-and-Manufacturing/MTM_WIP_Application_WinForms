@@ -224,8 +224,8 @@ Critical fix for theme selection saving + QuickButtons list stability improvemen
 
 #### Theme Selection Persistence
 - **Fixed**: Theme choices now persist across application restarts
-- **Root Cause**: App was calling non-existent stored procedure `usr_ui_settings_Upsert`
-- **Solution**: Switched to correct procedure `usr_ui_settings_SetThemeJson`
+- **Root Cause**: App was calling non-existent stored procedure `usr_settings_Upsert`
+- **Solution**: Switched to correct procedure `usr_settings_SetThemeJson`
 - **Impact**: Theme selections now save correctly in database
 
 **Technical Details:**

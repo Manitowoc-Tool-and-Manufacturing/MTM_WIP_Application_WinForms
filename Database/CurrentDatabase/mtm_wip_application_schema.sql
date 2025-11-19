@@ -324,19 +324,19 @@ CREATE TABLE `sys_user_roles` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Table structure for table `usr_ui_settings`
+-- Table structure for table `usr_settings`
 --
 
-DROP TABLE IF EXISTS `usr_ui_settings`;
+DROP TABLE IF EXISTS `usr_settings`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `usr_ui_settings` (
+CREATE TABLE `usr_settings` (
   `UserId` varchar(64) NOT NULL,
   `SettingsJson` json NOT NULL,
   `ShortcutsJson` json NOT NULL,
   `UpdatedAt` datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`UserId`),
-  CONSTRAINT `usr_ui_settings_ibfk_1` FOREIGN KEY (`UserId`) REFERENCES `usr_users` (`User`)
+  CONSTRAINT `usr_settings_ibfk_1` FOREIGN KEY (`UserId`) REFERENCES `usr_users` (`User`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 

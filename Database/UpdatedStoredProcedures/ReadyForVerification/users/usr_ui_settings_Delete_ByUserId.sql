@@ -1,5 +1,5 @@
 -- =============================================
--- Procedure: usr_ui_settings_Delete_ByUserId
+-- Procedure: usr_settings_Delete_ByUserId
 -- Domain: users
 -- Created: 2025-10-17
 -- Purpose: Deletes all UI settings for a user
@@ -7,9 +7,9 @@
 
 DELIMITER //
 
-DROP PROCEDURE IF EXISTS `usr_ui_settings_Delete_ByUserId`//
+DROP PROCEDURE IF EXISTS `usr_settings_Delete_ByUserId`//
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usr_ui_settings_Delete_ByUserId`(
+CREATE DEFINER=`root`@`localhost` PROCEDURE `usr_settings_Delete_ByUserId`(
     IN p_UserId INT,
     OUT p_Status INT,
     OUT p_ErrorMsg VARCHAR(500)
@@ -29,7 +29,7 @@ BEGIN
         SET p_ErrorMsg = 'Valid UserId is required';
     ELSE
         -- Delete all UI settings for user
-        DELETE FROM usr_ui_settings
+        DELETE FROM usr_settings
         WHERE UserId = p_UserId;
         
         SET v_RowsAffected = ROW_COUNT();
@@ -48,5 +48,5 @@ END
 DELIMITER ;
 
 -- =============================================
--- End of usr_ui_settings_Delete_ByUserId
+-- End of usr_settings_Delete_ByUserId
 -- =============================================

@@ -81,24 +81,11 @@ namespace MTM_WIP_Application_Winforms.Models
             }
         }
 
-        public static string? WipServerPort { get; set; } = "3306";
+        public static string? WipServerPort { get; set; } = Model_Shared_Users.WipServerPort;
+
         public static string? Version { get; set; } = Assembly.GetEntryAssembly()?.GetName().Version?.ToString();
 
-        /// <summary>
-        /// Optional override for database name. When set, all connection strings will use this value.
-        /// Defaults to Model_Shared_Users.Database when not explicitly overridden.
-        /// </summary>
-        private static string? _databaseNameOverride;
-
-        /// <summary>
-        /// Gets or sets the database name used for connections.
-        /// When not set, falls back to Model_Shared_Users.Database (legacy location).
-        /// </summary>
-        public static string DatabaseName
-        {
-            get => _databaseNameOverride ?? (Model_Shared_Users.Database ?? "MTM_WIP_Application_Winforms");
-            set => _databaseNameOverride = value;
-        }
+        public static string? DatabaseName { get; set;} = Model_Shared_Users.Database;
 
         /// <summary>
         /// Database username used in connection strings. Default: root (MAMP default)
@@ -111,39 +98,11 @@ namespace MTM_WIP_Application_Winforms.Models
         public static string DatabasePassword { get; set; } = "root";
 
         /// <summary>
-        /// Bootstrap connection string cached at application startup.
-        /// Used for fetching user settings to avoid circular dependency.
-        /// This uses the initial default values and never changes.
-        /// </summary>
-        private static string? _bootstrapConnectionString;
-
-        /// <summary>
-        /// Gets the bootstrap connection string, initializing it on first access.
-        /// This connection string uses default values and is immune to changes in Model_Shared_Users properties.
-        /// </summary>
-        public static string BootstrapConnectionString
-        {
-            get
-            {
-                if (_bootstrapConnectionString == null)
-                {
-                    // Capture initial values - these should never change during settings fetch
-                    string server = Model_Shared_Users.WipServerAddress ?? "localhost";
-                    string database = Model_Shared_Users.Database ?? "MTM_WIP_Application_Winforms";
-                    // Bootstrap uses initial defaults intentionally
-                    _bootstrapConnectionString = Helper_Database_Variables.GetConnectionString(server, database, DatabaseUser, DatabasePassword);
-                }
-                return _bootstrapConnectionString;
-            }
-        }
-
-        /// <summary>
         /// Dynamic connection string that uses current Model_Shared_Users values.
         /// This will reflect any changes made to server/database/port settings.
         /// </summary>
         public static string ConnectionString =>
             Helper_Database_Variables.GetConnectionString(null, null, null, null);
-
         #endregion
 
         #region Database Performance Thresholds

@@ -15,8 +15,6 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
     {
         #region Fields
 
-        private readonly Dictionary<string, Control> _categoryControls = new();
-
         #endregion
 
         #region Events
@@ -33,195 +31,111 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
         public Control_SettingsHome()
         {
             InitializeComponent();
+            InitializeEventHandlers();
         }
 
         #endregion
 
         #region Methods
 
+        private void InitializeEventHandlers()
+        {
+            // Wire up card subcategory links for admin users (will be shown in InitializeCategories)
+            Control_SettingsHome_Card_Users.AddSubcategoryLink("Add User", "Add User");
+            Control_SettingsHome_Card_Users.AddSubcategoryLink("Edit User", "Edit User");
+            Control_SettingsHome_Card_Users.AddSubcategoryLink("Delete User", "Delete User");
+
+            Control_SettingsHome_Card_Parts.AddSubcategoryLink("Add Part Number", "Add Part Number");
+            Control_SettingsHome_Card_Parts.AddSubcategoryLink("Edit Part Number", "Edit Part Number");
+            Control_SettingsHome_Card_Parts.AddSubcategoryLink("Remove Part Number", "Remove Part Number");
+
+            Control_SettingsHome_Card_Operations.AddSubcategoryLink("Add Operation", "Add Operation");
+            Control_SettingsHome_Card_Operations.AddSubcategoryLink("Edit Operation", "Edit Operation");
+            Control_SettingsHome_Card_Operations.AddSubcategoryLink("Remove Operation", "Remove Operation");
+
+            Control_SettingsHome_Card_Locations.AddSubcategoryLink("Add Location", "Add Location");
+            Control_SettingsHome_Card_Locations.AddSubcategoryLink("Edit Location", "Edit Location");
+            Control_SettingsHome_Card_Locations.AddSubcategoryLink("Remove Location", "Remove Location");
+
+            Control_SettingsHome_Card_ItemTypes.AddSubcategoryLink("Add ItemType", "Add ItemType");
+            Control_SettingsHome_Card_ItemTypes.AddSubcategoryLink("Edit ItemType", "Edit ItemType");
+            Control_SettingsHome_Card_ItemTypes.AddSubcategoryLink("Remove ItemType", "Remove ItemType");
+        }
+
         /// <summary>
         /// Initializes category tiles based on user privileges.
         /// </summary>
         public void InitializeCategories()
         {
-            Control_SettingsHome_FlowPanel_Tiles?.Controls.Clear();
-            _categoryControls.Clear();
-
             bool isDeveloper = Model_Application_Variables.UserTypeDeveloper;
             bool isAdmin = Model_Application_Variables.UserTypeAdmin;
             bool isNormal = Model_Application_Variables.UserTypeNormal;
             bool isReadOnly = Model_Application_Variables.UserTypeReadOnly;
             bool hasAdminAccess = isDeveloper || isAdmin;
 
-            // Database
-            if (hasAdminAccess)
+            // Configure visibility based on privileges
+            Control_SettingsHome_Tile_Database.Visible = hasAdminAccess;
+            Control_SettingsHome_Card_Users.Visible = hasAdminAccess || isNormal;
+            Control_SettingsHome_Card_Parts.Visible = !isReadOnly;
+            Control_SettingsHome_Card_Operations.Visible = !isReadOnly;
+            Control_SettingsHome_Card_Locations.Visible = !isReadOnly;
+            Control_SettingsHome_Card_ItemTypes.Visible = !isReadOnly;
+            Control_SettingsHome_Tile_Shortcuts.Visible = !isReadOnly;
+            
+            // Adjust Users card subcategories based on privileges
+            if (isNormal && !hasAdminAccess)
             {
-                AddCategoryTile("Database", "Database", "Configure database connection and settings",
-                    Color.FromArgb(0, 120, 212), "🗄️");
+                // Normal users only see Add User
+                Control_SettingsHome_Card_Users.ClearSubcategoryLinks();
+                Control_SettingsHome_Card_Users.AddSubcategoryLink("Add User", "Add User");
             }
-
-            // Users
-            if (hasAdminAccess)
+            
+            // Adjust Part Numbers subcategories
+            if (!hasAdminAccess && !isReadOnly)
             {
-                var userSubcategories = new List<SubcategoryInfo>
-                {
-                    new("Add User", "Add User", "Create new user accounts"),
-                    new("Edit User", "Edit User", "Modify existing user accounts"),
-                    new("Delete User", "Delete User", "Remove user accounts")
-                };
-                AddCategoryTile("Users", null, "Manage user accounts and permissions",
-                    Color.FromArgb(16, 124, 16), "👥", userSubcategories);
+                Control_SettingsHome_Card_Parts.ClearSubcategoryLinks();
+                Control_SettingsHome_Card_Parts.AddSubcategoryLink("Add Part Number", "Add Part Number");
             }
-            else if (isNormal)
+            
+            // Adjust Operations subcategories
+            if (!hasAdminAccess && !isReadOnly)
             {
-                var userSubcategories = new List<SubcategoryInfo>
-                {
-                    new("Add User", "Add User", "Create new user accounts")
-                };
-                AddCategoryTile("Users", null, "Manage user accounts",
-                    Color.FromArgb(16, 124, 16), "👥", userSubcategories);
+                Control_SettingsHome_Card_Operations.ClearSubcategoryLinks();
+                Control_SettingsHome_Card_Operations.AddSubcategoryLink("Add Operation", "Add Operation");
             }
-
-            // Part Numbers
-            if (!isReadOnly)
+            
+            // Adjust Locations subcategories
+            if (!hasAdminAccess && !isReadOnly)
             {
-                var partSubcategories = new List<SubcategoryInfo>
-                {
-                    new("Add Part Number", "Add Part Number", "Add new part numbers to inventory")
-                };
-
-                if (hasAdminAccess)
-                {
-                    partSubcategories.Add(new("Edit Part Number", "Edit Part Number", "Modify existing part numbers"));
-                    partSubcategories.Add(new("Remove Part Number", "Remove Part Number", "Delete part numbers"));
-                }
-
-                AddCategoryTile("Part Numbers", null, "Manage inventory part numbers",
-                    Color.FromArgb(232, 17, 35), "📦", partSubcategories);
+                Control_SettingsHome_Card_Locations.ClearSubcategoryLinks();
+                Control_SettingsHome_Card_Locations.AddSubcategoryLink("Add Location", "Add Location");
             }
-
-            // Operations
-            if (!isReadOnly)
+            
+            // Adjust ItemTypes subcategories
+            if (!hasAdminAccess && !isReadOnly)
             {
-                var operationSubcategories = new List<SubcategoryInfo>
-                {
-                    new("Add Operation", "Add Operation", "Add new operation codes")
-                };
-
-                if (hasAdminAccess)
-                {
-                    operationSubcategories.Add(new("Edit Operation", "Edit Operation", "Modify existing operations"));
-                    operationSubcategories.Add(new("Remove Operation", "Remove Operation", "Delete operation codes"));
-                }
-
-                AddCategoryTile("Operations", null, "Manage operation codes",
-                    Color.FromArgb(255, 140, 0), "⚙️", operationSubcategories);
-            }
-
-            // Locations
-            if (!isReadOnly)
-            {
-                var locationSubcategories = new List<SubcategoryInfo>
-                {
-                    new("Add Location", "Add Location", "Add new locations")
-                };
-
-                if (hasAdminAccess)
-                {
-                    locationSubcategories.Add(new("Edit Location", "Edit Location", "Modify existing locations"));
-                    locationSubcategories.Add(new("Remove Location", "Remove Location", "Delete locations"));
-                }
-
-                AddCategoryTile("Locations", null, "Manage storage locations",
-                    Color.FromArgb(142, 68, 173), "📍", locationSubcategories);
-            }
-
-            // ItemTypes
-            if (!isReadOnly)
-            {
-                var itemTypeSubcategories = new List<SubcategoryInfo>
-                {
-                    new("Add ItemType", "Add ItemType", "Add new item types")
-                };
-
-                if (hasAdminAccess)
-                {
-                    itemTypeSubcategories.Add(new("Edit ItemType", "Edit ItemType", "Modify existing item types"));
-                    itemTypeSubcategories.Add(new("Remove ItemType", "Remove ItemType", "Delete item types"));
-                }
-
-                AddCategoryTile("ItemTypes", null, "Manage item type classifications",
-                    Color.FromArgb(0, 153, 188), "🏷️", itemTypeSubcategories);
-            }
-
-            // Theme
-            AddCategoryTile("Theme", "Theme", "Customize application appearance and colors",
-                Color.FromArgb(104, 33, 122), "🎨");
-
-            // Shortcuts
-            if (!isReadOnly)
-            {
-                AddCategoryTile("Shortcuts", "Shortcuts", "Configure keyboard shortcuts",
-                    Color.FromArgb(0, 99, 177), "⌨️");
-            }
-
-            // About
-            AddCategoryTile("About", "About", "View application information and version",
-                Color.FromArgb(76, 74, 72), "ℹ️");
-        }
-
-        /// <summary>
-        /// Creates and adds a category tile to the homepage.
-        /// </summary>
-        private void AddCategoryTile(string title, string? navigationTarget, string description,
-            Color accentColor, string icon, List<SubcategoryInfo>? subcategories = null)
-        {
-            if (subcategories?.Any() == true)
-            {
-                // Use card for categories with subcategories
-                var card = new Control_SettingsCategoryCard
-                {
-                    CardTitle = title,
-                    CardDescription = description,
-                    CardIcon = icon,
-                    AccentColor = accentColor
-                };
-                card.NavigationRequested += (s, target) => NavigationRequested?.Invoke(this, new NavigationEventArgs(target));
-                
-                foreach (var subcat in subcategories)
-                {
-                    card.AddSubcategoryLink(subcat.Title, subcat.NavigationTarget);
-                }
-                
-                _categoryControls[title] = card;
-                Control_SettingsHome_FlowPanel_Tiles?.Controls.Add(card);
-            }
-            else
-            {
-                // Use simple tile for categories without subcategories
-                var tile = new Control_SettingsCategoryTile
-                {
-                    TileTitle = title,
-                    TileDescription = description,
-                    TileIcon = icon,
-                    AccentColor = accentColor,
-                    NavigationTarget = navigationTarget
-                };
-                tile.TileClicked += (s, target) => NavigationRequested?.Invoke(this, new NavigationEventArgs(target));
-                
-                _categoryControls[title] = tile;
-                Control_SettingsHome_FlowPanel_Tiles?.Controls.Add(tile);
+                Control_SettingsHome_Card_ItemTypes.ClearSubcategoryLinks();
+                Control_SettingsHome_Card_ItemTypes.AddSubcategoryLink("Add ItemType", "Add ItemType");
             }
         }
 
         #endregion
 
-        #region Nested Types
+        #region Event Handlers
 
-        /// <summary>
-        /// Subcategory information for tile rendering.
-        /// </summary>
-        private record SubcategoryInfo(string Title, string NavigationTarget, string Description);
+        private void Control_SettingsHome_Tile_TileClicked(object? sender, string target)
+        {
+            NavigationRequested?.Invoke(this, new NavigationEventArgs(target));
+        }
+
+        private void Control_SettingsHome_Card_NavigationRequested(object? sender, string target)
+        {
+            NavigationRequested?.Invoke(this, new NavigationEventArgs(target));
+        }
+
+        #endregion
+
+        #region Nested Types
 
         #endregion
     }

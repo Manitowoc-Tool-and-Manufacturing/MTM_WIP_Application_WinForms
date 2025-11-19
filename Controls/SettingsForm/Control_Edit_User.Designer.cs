@@ -56,52 +56,52 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             Control_Edit_User_ComboBox_Users = new ComboBox();
             Control_Edit_User_Label_SelectUser = new Label();
             Control_Edit_User_GroupBox_UserInfo = new GroupBox();
+            tableLayoutPanel4 = new TableLayoutPanel();
+            tableLayoutPanel2 = new TableLayoutPanel();
+            Control_Edit_User_Label_FirstName = new Label();
+            Control_Edit_User_Label_LastName = new Label();
+            Control_Edit_User_ComboBox_Shift = new ComboBox();
+            Control_Edit_User_TextBox_LastName = new TextBox();
+            Control_Edit_User_TextBox_FirstName = new TextBox();
+            Control_Edit_User_Label_Shift = new Label();
+            Control_Edit_User_GroupBox_Creds = new GroupBox();
+            tableLayoutPanel3 = new TableLayoutPanel();
+            Control_Edit_User_Label_UserName = new Label();
             Control_Edit_User_Label_UserNameWarning = new Label();
-            Control_Edit_User_TextBox_Pin = new TextBox();
             Control_Edit_User_Label_Pin = new Label();
             Control_Edit_User_TextBox_UserName = new TextBox();
-            Control_Edit_User_Label_UserName = new Label();
-            Control_Edit_User_Label_FirstName = new Label();
-            Control_Edit_User_TextBox_FirstName = new TextBox();
-            Control_Edit_User_Label_LastName = new Label();
-            Control_Edit_User_TextBox_LastName = new TextBox();
-            Control_Edit_User_Label_Shift = new Label();
-            Control_Edit_User_ComboBox_Shift = new ComboBox();
+            Control_Edit_User_TextBox_Pin = new TextBox();
             Control_Edit_User_GroupBox_VisualInfo = new GroupBox();
+            tableLayoutPanel8 = new TableLayoutPanel();
             Control_Edit_User_CheckBox_VisualAccess = new CheckBox();
+            Control_Edit_User_Label_VisualPassword = new Label();
             Control_Edit_User_Label_VisualUserName = new Label();
             Control_Edit_User_TextBox_VisualUserName = new TextBox();
-            Control_Edit_User_Label_VisualPassword = new Label();
             Control_Edit_User_TextBox_VisualPassword = new TextBox();
             Control_Edit_User_GroupBox_UserPrivileges = new GroupBox();
+            tableLayoutPanel1 = new TableLayoutPanel();
             Control_Edit_User_RadioButton_ReadOnly = new RadioButton();
             Control_Edit_User_RadioButton_NormalUser = new RadioButton();
             Control_Edit_User_RadioButton_Administrator = new RadioButton();
+            Control_Edit_User_RadioButton_Developer = new RadioButton();
             Control_Edit_User_CheckBox_ViewHidePasswords = new CheckBox();
             Control_Edit_User_Button_Clear = new Button();
             Control_Edit_User_Button_Save = new Button();
-            tableLayoutPanel1 = new TableLayoutPanel();
-            Control_Edit_User_RadioButton_Developer = new RadioButton();
-            tableLayoutPanel2 = new TableLayoutPanel();
-            tableLayoutPanel3 = new TableLayoutPanel();
-            Control_Edit_User_GroupBox_Creds = new GroupBox();
-            tableLayoutPanel4 = new TableLayoutPanel();
             tableLayoutPanel5 = new TableLayoutPanel();
             tableLayoutPanel6 = new TableLayoutPanel();
             tableLayoutPanel7 = new TableLayoutPanel();
-            tableLayoutPanel8 = new TableLayoutPanel();
             Control_Edit_User_GroupBox_UserInfo.SuspendLayout();
+            tableLayoutPanel4.SuspendLayout();
+            tableLayoutPanel2.SuspendLayout();
+            Control_Edit_User_GroupBox_Creds.SuspendLayout();
+            tableLayoutPanel3.SuspendLayout();
             Control_Edit_User_GroupBox_VisualInfo.SuspendLayout();
+            tableLayoutPanel8.SuspendLayout();
             Control_Edit_User_GroupBox_UserPrivileges.SuspendLayout();
             tableLayoutPanel1.SuspendLayout();
-            tableLayoutPanel2.SuspendLayout();
-            tableLayoutPanel3.SuspendLayout();
-            Control_Edit_User_GroupBox_Creds.SuspendLayout();
-            tableLayoutPanel4.SuspendLayout();
             tableLayoutPanel5.SuspendLayout();
             tableLayoutPanel6.SuspendLayout();
             tableLayoutPanel7.SuspendLayout();
-            tableLayoutPanel8.SuspendLayout();
             SuspendLayout();
             // 
             // Control_Edit_User_ComboBox_Users
@@ -140,6 +140,150 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             Control_Edit_User_GroupBox_UserInfo.TabStop = false;
             Control_Edit_User_GroupBox_UserInfo.Text = "User Information";
             // 
+            // tableLayoutPanel4
+            // 
+            tableLayoutPanel4.AutoSize = true;
+            tableLayoutPanel4.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            tableLayoutPanel4.ColumnCount = 1;
+            tableLayoutPanel4.ColumnStyles.Add(new ColumnStyle());
+            tableLayoutPanel4.Controls.Add(tableLayoutPanel2, 0, 0);
+            tableLayoutPanel4.Controls.Add(Control_Edit_User_GroupBox_Creds, 0, 1);
+            tableLayoutPanel4.Dock = DockStyle.Fill;
+            tableLayoutPanel4.Location = new Point(3, 19);
+            tableLayoutPanel4.Name = "tableLayoutPanel4";
+            tableLayoutPanel4.RowCount = 2;
+            tableLayoutPanel4.RowStyles.Add(new RowStyle());
+            tableLayoutPanel4.RowStyles.Add(new RowStyle());
+            tableLayoutPanel4.Size = new Size(355, 212);
+            tableLayoutPanel4.TabIndex = 14;
+            // 
+            // tableLayoutPanel2
+            // 
+            tableLayoutPanel2.ColumnCount = 2;
+            tableLayoutPanel2.ColumnStyles.Add(new ColumnStyle());
+            tableLayoutPanel2.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
+            tableLayoutPanel2.Controls.Add(Control_Edit_User_Label_FirstName, 0, 0);
+            tableLayoutPanel2.Controls.Add(Control_Edit_User_Label_LastName, 0, 1);
+            tableLayoutPanel2.Controls.Add(Control_Edit_User_ComboBox_Shift, 1, 2);
+            tableLayoutPanel2.Controls.Add(Control_Edit_User_TextBox_LastName, 1, 1);
+            tableLayoutPanel2.Controls.Add(Control_Edit_User_TextBox_FirstName, 1, 0);
+            tableLayoutPanel2.Controls.Add(Control_Edit_User_Label_Shift, 0, 2);
+            tableLayoutPanel2.Dock = DockStyle.Fill;
+            tableLayoutPanel2.Location = new Point(3, 3);
+            tableLayoutPanel2.Name = "tableLayoutPanel2";
+            tableLayoutPanel2.Padding = new Padding(2);
+            tableLayoutPanel2.RowCount = 3;
+            tableLayoutPanel2.RowStyles.Add(new RowStyle());
+            tableLayoutPanel2.RowStyles.Add(new RowStyle());
+            tableLayoutPanel2.RowStyles.Add(new RowStyle());
+            tableLayoutPanel2.Size = new Size(349, 100);
+            tableLayoutPanel2.TabIndex = 11;
+            // 
+            // Control_Edit_User_Label_FirstName
+            // 
+            Control_Edit_User_Label_FirstName.AutoSize = true;
+            Control_Edit_User_Label_FirstName.Dock = DockStyle.Fill;
+            Control_Edit_User_Label_FirstName.Location = new Point(5, 5);
+            Control_Edit_User_Label_FirstName.Margin = new Padding(3);
+            Control_Edit_User_Label_FirstName.Name = "Control_Edit_User_Label_FirstName";
+            Control_Edit_User_Label_FirstName.Size = new Size(67, 23);
+            Control_Edit_User_Label_FirstName.TabIndex = 0;
+            Control_Edit_User_Label_FirstName.Text = "First Name:";
+            Control_Edit_User_Label_FirstName.TextAlign = ContentAlignment.MiddleRight;
+            // 
+            // Control_Edit_User_Label_LastName
+            // 
+            Control_Edit_User_Label_LastName.AutoSize = true;
+            Control_Edit_User_Label_LastName.Dock = DockStyle.Fill;
+            Control_Edit_User_Label_LastName.Location = new Point(5, 34);
+            Control_Edit_User_Label_LastName.Margin = new Padding(3);
+            Control_Edit_User_Label_LastName.Name = "Control_Edit_User_Label_LastName";
+            Control_Edit_User_Label_LastName.Size = new Size(67, 23);
+            Control_Edit_User_Label_LastName.TabIndex = 2;
+            Control_Edit_User_Label_LastName.Text = "Last Name:";
+            Control_Edit_User_Label_LastName.TextAlign = ContentAlignment.MiddleRight;
+            // 
+            // Control_Edit_User_ComboBox_Shift
+            // 
+            Control_Edit_User_ComboBox_Shift.Dock = DockStyle.Fill;
+            Control_Edit_User_ComboBox_Shift.DropDownStyle = ComboBoxStyle.DropDownList;
+            Control_Edit_User_ComboBox_Shift.Location = new Point(78, 63);
+            Control_Edit_User_ComboBox_Shift.Name = "Control_Edit_User_ComboBox_Shift";
+            Control_Edit_User_ComboBox_Shift.Size = new Size(266, 23);
+            Control_Edit_User_ComboBox_Shift.TabIndex = 7;
+            // 
+            // Control_Edit_User_TextBox_LastName
+            // 
+            Control_Edit_User_TextBox_LastName.Dock = DockStyle.Fill;
+            Control_Edit_User_TextBox_LastName.Location = new Point(78, 34);
+            Control_Edit_User_TextBox_LastName.Name = "Control_Edit_User_TextBox_LastName";
+            Control_Edit_User_TextBox_LastName.Size = new Size(266, 23);
+            Control_Edit_User_TextBox_LastName.TabIndex = 3;
+            // 
+            // Control_Edit_User_TextBox_FirstName
+            // 
+            Control_Edit_User_TextBox_FirstName.Dock = DockStyle.Fill;
+            Control_Edit_User_TextBox_FirstName.Location = new Point(78, 5);
+            Control_Edit_User_TextBox_FirstName.Name = "Control_Edit_User_TextBox_FirstName";
+            Control_Edit_User_TextBox_FirstName.Size = new Size(266, 23);
+            Control_Edit_User_TextBox_FirstName.TabIndex = 1;
+            // 
+            // Control_Edit_User_Label_Shift
+            // 
+            Control_Edit_User_Label_Shift.AutoSize = true;
+            Control_Edit_User_Label_Shift.Dock = DockStyle.Fill;
+            Control_Edit_User_Label_Shift.Location = new Point(5, 63);
+            Control_Edit_User_Label_Shift.Margin = new Padding(3);
+            Control_Edit_User_Label_Shift.Name = "Control_Edit_User_Label_Shift";
+            Control_Edit_User_Label_Shift.Size = new Size(67, 32);
+            Control_Edit_User_Label_Shift.TabIndex = 6;
+            Control_Edit_User_Label_Shift.Text = "Shift:";
+            Control_Edit_User_Label_Shift.TextAlign = ContentAlignment.MiddleRight;
+            // 
+            // Control_Edit_User_GroupBox_Creds
+            // 
+            Control_Edit_User_GroupBox_Creds.Controls.Add(tableLayoutPanel3);
+            Control_Edit_User_GroupBox_Creds.Dock = DockStyle.Fill;
+            Control_Edit_User_GroupBox_Creds.Location = new Point(3, 109);
+            Control_Edit_User_GroupBox_Creds.Name = "Control_Edit_User_GroupBox_Creds";
+            Control_Edit_User_GroupBox_Creds.Size = new Size(349, 100);
+            Control_Edit_User_GroupBox_Creds.TabIndex = 13;
+            Control_Edit_User_GroupBox_Creds.TabStop = false;
+            Control_Edit_User_GroupBox_Creds.Text = "Login Information";
+            // 
+            // tableLayoutPanel3
+            // 
+            tableLayoutPanel3.AutoSize = true;
+            tableLayoutPanel3.ColumnCount = 2;
+            tableLayoutPanel3.ColumnStyles.Add(new ColumnStyle());
+            tableLayoutPanel3.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
+            tableLayoutPanel3.Controls.Add(Control_Edit_User_Label_UserName, 0, 0);
+            tableLayoutPanel3.Controls.Add(Control_Edit_User_Label_UserNameWarning, 0, 2);
+            tableLayoutPanel3.Controls.Add(Control_Edit_User_Label_Pin, 0, 1);
+            tableLayoutPanel3.Controls.Add(Control_Edit_User_TextBox_UserName, 1, 0);
+            tableLayoutPanel3.Controls.Add(Control_Edit_User_TextBox_Pin, 1, 1);
+            tableLayoutPanel3.Dock = DockStyle.Fill;
+            tableLayoutPanel3.Location = new Point(3, 19);
+            tableLayoutPanel3.Name = "tableLayoutPanel3";
+            tableLayoutPanel3.RowCount = 3;
+            tableLayoutPanel3.RowStyles.Add(new RowStyle());
+            tableLayoutPanel3.RowStyles.Add(new RowStyle());
+            tableLayoutPanel3.RowStyles.Add(new RowStyle());
+            tableLayoutPanel3.Size = new Size(343, 78);
+            tableLayoutPanel3.TabIndex = 12;
+            // 
+            // Control_Edit_User_Label_UserName
+            // 
+            Control_Edit_User_Label_UserName.AutoSize = true;
+            Control_Edit_User_Label_UserName.Dock = DockStyle.Fill;
+            Control_Edit_User_Label_UserName.Location = new Point(3, 3);
+            Control_Edit_User_Label_UserName.Margin = new Padding(3);
+            Control_Edit_User_Label_UserName.Name = "Control_Edit_User_Label_UserName";
+            Control_Edit_User_Label_UserName.Size = new Size(68, 23);
+            Control_Edit_User_Label_UserName.TabIndex = 4;
+            Control_Edit_User_Label_UserName.Text = "User Name:";
+            Control_Edit_User_Label_UserName.TextAlign = ContentAlignment.MiddleRight;
+            // 
             // Control_Edit_User_Label_UserNameWarning
             // 
             Control_Edit_User_Label_UserNameWarning.AutoSize = true;
@@ -153,14 +297,6 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             Control_Edit_User_Label_UserNameWarning.TabIndex = 10;
             Control_Edit_User_Label_UserNameWarning.Text = "User Name cannot be changed.";
             Control_Edit_User_Label_UserNameWarning.TextAlign = ContentAlignment.MiddleCenter;
-            // 
-            // Control_Edit_User_TextBox_Pin
-            // 
-            Control_Edit_User_TextBox_Pin.Dock = DockStyle.Fill;
-            Control_Edit_User_TextBox_Pin.Location = new Point(77, 32);
-            Control_Edit_User_TextBox_Pin.Name = "Control_Edit_User_TextBox_Pin";
-            Control_Edit_User_TextBox_Pin.Size = new Size(263, 23);
-            Control_Edit_User_TextBox_Pin.TabIndex = 9;
             // 
             // Control_Edit_User_Label_Pin
             // 
@@ -183,78 +319,13 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             Control_Edit_User_TextBox_UserName.Size = new Size(263, 23);
             Control_Edit_User_TextBox_UserName.TabIndex = 5;
             // 
-            // Control_Edit_User_Label_UserName
+            // Control_Edit_User_TextBox_Pin
             // 
-            Control_Edit_User_Label_UserName.AutoSize = true;
-            Control_Edit_User_Label_UserName.Dock = DockStyle.Fill;
-            Control_Edit_User_Label_UserName.Location = new Point(3, 3);
-            Control_Edit_User_Label_UserName.Margin = new Padding(3);
-            Control_Edit_User_Label_UserName.Name = "Control_Edit_User_Label_UserName";
-            Control_Edit_User_Label_UserName.Size = new Size(68, 23);
-            Control_Edit_User_Label_UserName.TabIndex = 4;
-            Control_Edit_User_Label_UserName.Text = "User Name:";
-            Control_Edit_User_Label_UserName.TextAlign = ContentAlignment.MiddleRight;
-            // 
-            // Control_Edit_User_Label_FirstName
-            // 
-            Control_Edit_User_Label_FirstName.AutoSize = true;
-            Control_Edit_User_Label_FirstName.Dock = DockStyle.Fill;
-            Control_Edit_User_Label_FirstName.Location = new Point(5, 5);
-            Control_Edit_User_Label_FirstName.Margin = new Padding(3);
-            Control_Edit_User_Label_FirstName.Name = "Control_Edit_User_Label_FirstName";
-            Control_Edit_User_Label_FirstName.Size = new Size(67, 23);
-            Control_Edit_User_Label_FirstName.TabIndex = 0;
-            Control_Edit_User_Label_FirstName.Text = "First Name:";
-            Control_Edit_User_Label_FirstName.TextAlign = ContentAlignment.MiddleRight;
-            // 
-            // Control_Edit_User_TextBox_FirstName
-            // 
-            Control_Edit_User_TextBox_FirstName.Dock = DockStyle.Fill;
-            Control_Edit_User_TextBox_FirstName.Location = new Point(78, 5);
-            Control_Edit_User_TextBox_FirstName.Name = "Control_Edit_User_TextBox_FirstName";
-            Control_Edit_User_TextBox_FirstName.Size = new Size(266, 23);
-            Control_Edit_User_TextBox_FirstName.TabIndex = 1;
-            // 
-            // Control_Edit_User_Label_LastName
-            // 
-            Control_Edit_User_Label_LastName.AutoSize = true;
-            Control_Edit_User_Label_LastName.Dock = DockStyle.Fill;
-            Control_Edit_User_Label_LastName.Location = new Point(5, 34);
-            Control_Edit_User_Label_LastName.Margin = new Padding(3);
-            Control_Edit_User_Label_LastName.Name = "Control_Edit_User_Label_LastName";
-            Control_Edit_User_Label_LastName.Size = new Size(67, 23);
-            Control_Edit_User_Label_LastName.TabIndex = 2;
-            Control_Edit_User_Label_LastName.Text = "Last Name:";
-            Control_Edit_User_Label_LastName.TextAlign = ContentAlignment.MiddleRight;
-            // 
-            // Control_Edit_User_TextBox_LastName
-            // 
-            Control_Edit_User_TextBox_LastName.Dock = DockStyle.Fill;
-            Control_Edit_User_TextBox_LastName.Location = new Point(78, 34);
-            Control_Edit_User_TextBox_LastName.Name = "Control_Edit_User_TextBox_LastName";
-            Control_Edit_User_TextBox_LastName.Size = new Size(266, 23);
-            Control_Edit_User_TextBox_LastName.TabIndex = 3;
-            // 
-            // Control_Edit_User_Label_Shift
-            // 
-            Control_Edit_User_Label_Shift.AutoSize = true;
-            Control_Edit_User_Label_Shift.Dock = DockStyle.Fill;
-            Control_Edit_User_Label_Shift.Location = new Point(5, 63);
-            Control_Edit_User_Label_Shift.Margin = new Padding(3);
-            Control_Edit_User_Label_Shift.Name = "Control_Edit_User_Label_Shift";
-            Control_Edit_User_Label_Shift.Size = new Size(67, 32);
-            Control_Edit_User_Label_Shift.TabIndex = 6;
-            Control_Edit_User_Label_Shift.Text = "Shift:";
-            Control_Edit_User_Label_Shift.TextAlign = ContentAlignment.MiddleRight;
-            // 
-            // Control_Edit_User_ComboBox_Shift
-            // 
-            Control_Edit_User_ComboBox_Shift.Dock = DockStyle.Fill;
-            Control_Edit_User_ComboBox_Shift.DropDownStyle = ComboBoxStyle.DropDownList;
-            Control_Edit_User_ComboBox_Shift.Location = new Point(78, 63);
-            Control_Edit_User_ComboBox_Shift.Name = "Control_Edit_User_ComboBox_Shift";
-            Control_Edit_User_ComboBox_Shift.Size = new Size(266, 23);
-            Control_Edit_User_ComboBox_Shift.TabIndex = 7;
+            Control_Edit_User_TextBox_Pin.Dock = DockStyle.Fill;
+            Control_Edit_User_TextBox_Pin.Location = new Point(77, 32);
+            Control_Edit_User_TextBox_Pin.Name = "Control_Edit_User_TextBox_Pin";
+            Control_Edit_User_TextBox_Pin.Size = new Size(263, 23);
+            Control_Edit_User_TextBox_Pin.TabIndex = 9;
             // 
             // Control_Edit_User_GroupBox_VisualInfo
             // 
@@ -270,6 +341,28 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             Control_Edit_User_GroupBox_VisualInfo.TabStop = false;
             Control_Edit_User_GroupBox_VisualInfo.Text = "Infor VISUAL Information";
             // 
+            // tableLayoutPanel8
+            // 
+            tableLayoutPanel8.AutoSize = true;
+            tableLayoutPanel8.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            tableLayoutPanel8.ColumnCount = 2;
+            tableLayoutPanel8.ColumnStyles.Add(new ColumnStyle());
+            tableLayoutPanel8.ColumnStyles.Add(new ColumnStyle());
+            tableLayoutPanel8.Controls.Add(Control_Edit_User_CheckBox_VisualAccess, 0, 0);
+            tableLayoutPanel8.Controls.Add(Control_Edit_User_Label_VisualPassword, 0, 2);
+            tableLayoutPanel8.Controls.Add(Control_Edit_User_Label_VisualUserName, 0, 1);
+            tableLayoutPanel8.Controls.Add(Control_Edit_User_TextBox_VisualUserName, 1, 1);
+            tableLayoutPanel8.Controls.Add(Control_Edit_User_TextBox_VisualPassword, 1, 2);
+            tableLayoutPanel8.Dock = DockStyle.Fill;
+            tableLayoutPanel8.Location = new Point(3, 19);
+            tableLayoutPanel8.Name = "tableLayoutPanel8";
+            tableLayoutPanel8.RowCount = 3;
+            tableLayoutPanel8.RowStyles.Add(new RowStyle());
+            tableLayoutPanel8.RowStyles.Add(new RowStyle());
+            tableLayoutPanel8.RowStyles.Add(new RowStyle());
+            tableLayoutPanel8.Size = new Size(480, 83);
+            tableLayoutPanel8.TabIndex = 5;
+            // 
             // Control_Edit_User_CheckBox_VisualAccess
             // 
             Control_Edit_User_CheckBox_VisualAccess.AutoSize = true;
@@ -281,6 +374,18 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             Control_Edit_User_CheckBox_VisualAccess.TabIndex = 0;
             Control_Edit_User_CheckBox_VisualAccess.Text = "Visual Access?";
             Control_Edit_User_CheckBox_VisualAccess.UseVisualStyleBackColor = true;
+            // 
+            // Control_Edit_User_Label_VisualPassword
+            // 
+            Control_Edit_User_Label_VisualPassword.AutoSize = true;
+            Control_Edit_User_Label_VisualPassword.Dock = DockStyle.Fill;
+            Control_Edit_User_Label_VisualPassword.Location = new Point(3, 57);
+            Control_Edit_User_Label_VisualPassword.Margin = new Padding(3);
+            Control_Edit_User_Label_VisualPassword.Name = "Control_Edit_User_Label_VisualPassword";
+            Control_Edit_User_Label_VisualPassword.Size = new Size(68, 23);
+            Control_Edit_User_Label_VisualPassword.TabIndex = 3;
+            Control_Edit_User_Label_VisualPassword.Text = "Password:";
+            Control_Edit_User_Label_VisualPassword.TextAlign = ContentAlignment.MiddleRight;
             // 
             // Control_Edit_User_Label_VisualUserName
             // 
@@ -302,18 +407,6 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             Control_Edit_User_TextBox_VisualUserName.Size = new Size(400, 23);
             Control_Edit_User_TextBox_VisualUserName.TabIndex = 2;
             // 
-            // Control_Edit_User_Label_VisualPassword
-            // 
-            Control_Edit_User_Label_VisualPassword.AutoSize = true;
-            Control_Edit_User_Label_VisualPassword.Dock = DockStyle.Fill;
-            Control_Edit_User_Label_VisualPassword.Location = new Point(3, 57);
-            Control_Edit_User_Label_VisualPassword.Margin = new Padding(3);
-            Control_Edit_User_Label_VisualPassword.Name = "Control_Edit_User_Label_VisualPassword";
-            Control_Edit_User_Label_VisualPassword.Size = new Size(68, 23);
-            Control_Edit_User_Label_VisualPassword.TabIndex = 3;
-            Control_Edit_User_Label_VisualPassword.Text = "Password:";
-            Control_Edit_User_Label_VisualPassword.TextAlign = ContentAlignment.MiddleRight;
-            // 
             // Control_Edit_User_TextBox_VisualPassword
             // 
             Control_Edit_User_TextBox_VisualPassword.Dock = DockStyle.Fill;
@@ -333,6 +426,32 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             Control_Edit_User_GroupBox_UserPrivileges.TabIndex = 11;
             Control_Edit_User_GroupBox_UserPrivileges.TabStop = false;
             Control_Edit_User_GroupBox_UserPrivileges.Text = "User Privileges";
+            // 
+            // tableLayoutPanel1
+            // 
+            tableLayoutPanel1.AutoSize = true;
+            tableLayoutPanel1.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            tableLayoutPanel1.ColumnCount = 1;
+            tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle());
+            tableLayoutPanel1.Controls.Add(Control_Edit_User_RadioButton_ReadOnly, 0, 1);
+            tableLayoutPanel1.Controls.Add(Control_Edit_User_RadioButton_NormalUser, 0, 3);
+            tableLayoutPanel1.Controls.Add(Control_Edit_User_RadioButton_Administrator, 0, 5);
+            tableLayoutPanel1.Controls.Add(Control_Edit_User_RadioButton_Developer, 0, 7);
+            tableLayoutPanel1.Dock = DockStyle.Fill;
+            tableLayoutPanel1.Location = new Point(3, 19);
+            tableLayoutPanel1.Name = "tableLayoutPanel1";
+            tableLayoutPanel1.RowCount = 9;
+            tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Percent, 20F));
+            tableLayoutPanel1.RowStyles.Add(new RowStyle());
+            tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Percent, 20F));
+            tableLayoutPanel1.RowStyles.Add(new RowStyle());
+            tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Percent, 20F));
+            tableLayoutPanel1.RowStyles.Add(new RowStyle());
+            tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Percent, 20F));
+            tableLayoutPanel1.RowStyles.Add(new RowStyle());
+            tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Percent, 20F));
+            tableLayoutPanel1.Size = new Size(113, 212);
+            tableLayoutPanel1.TabIndex = 3;
             // 
             // Control_Edit_User_RadioButton_ReadOnly
             // 
@@ -370,6 +489,18 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             Control_Edit_User_RadioButton_Administrator.Text = "Administrator";
             Control_Edit_User_RadioButton_Administrator.UseVisualStyleBackColor = true;
             // 
+            // Control_Edit_User_RadioButton_Developer
+            // 
+            Control_Edit_User_RadioButton_Developer.AutoSize = true;
+            Control_Edit_User_RadioButton_Developer.Dock = DockStyle.Fill;
+            Control_Edit_User_RadioButton_Developer.Location = new Point(3, 166);
+            Control_Edit_User_RadioButton_Developer.Name = "Control_Edit_User_RadioButton_Developer";
+            Control_Edit_User_RadioButton_Developer.Size = new Size(107, 19);
+            Control_Edit_User_RadioButton_Developer.TabIndex = 3;
+            Control_Edit_User_RadioButton_Developer.TabStop = true;
+            Control_Edit_User_RadioButton_Developer.Text = "Developer";
+            Control_Edit_User_RadioButton_Developer.UseVisualStyleBackColor = true;
+            // 
             // Control_Edit_User_CheckBox_ViewHidePasswords
             // 
             Control_Edit_User_CheckBox_ViewHidePasswords.AutoSize = true;
@@ -400,115 +531,6 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             Control_Edit_User_Button_Save.TabIndex = 0;
             Control_Edit_User_Button_Save.Text = "Save";
             Control_Edit_User_Button_Save.UseVisualStyleBackColor = true;
-            // 
-            // tableLayoutPanel1
-            // 
-            tableLayoutPanel1.AutoSize = true;
-            tableLayoutPanel1.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            tableLayoutPanel1.ColumnCount = 1;
-            tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle());
-            tableLayoutPanel1.Controls.Add(Control_Edit_User_RadioButton_ReadOnly, 0, 1);
-            tableLayoutPanel1.Controls.Add(Control_Edit_User_RadioButton_NormalUser, 0, 3);
-            tableLayoutPanel1.Controls.Add(Control_Edit_User_RadioButton_Administrator, 0, 5);
-            tableLayoutPanel1.Controls.Add(Control_Edit_User_RadioButton_Developer, 0, 7);
-            tableLayoutPanel1.Dock = DockStyle.Fill;
-            tableLayoutPanel1.Location = new Point(3, 19);
-            tableLayoutPanel1.Name = "tableLayoutPanel1";
-            tableLayoutPanel1.RowCount = 9;
-            tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Percent, 20F));
-            tableLayoutPanel1.RowStyles.Add(new RowStyle());
-            tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Percent, 20F));
-            tableLayoutPanel1.RowStyles.Add(new RowStyle());
-            tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Percent, 20F));
-            tableLayoutPanel1.RowStyles.Add(new RowStyle());
-            tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Percent, 20F));
-            tableLayoutPanel1.RowStyles.Add(new RowStyle());
-            tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Percent, 20F));
-            tableLayoutPanel1.Size = new Size(113, 212);
-            tableLayoutPanel1.TabIndex = 3;
-            // 
-            // Control_Edit_User_RadioButton_Developer
-            // 
-            Control_Edit_User_RadioButton_Developer.AutoSize = true;
-            Control_Edit_User_RadioButton_Developer.Dock = DockStyle.Fill;
-            Control_Edit_User_RadioButton_Developer.Location = new Point(3, 166);
-            Control_Edit_User_RadioButton_Developer.Name = "Control_Edit_User_RadioButton_Developer";
-            Control_Edit_User_RadioButton_Developer.Size = new Size(107, 19);
-            Control_Edit_User_RadioButton_Developer.TabIndex = 3;
-            Control_Edit_User_RadioButton_Developer.TabStop = true;
-            Control_Edit_User_RadioButton_Developer.Text = "Developer";
-            Control_Edit_User_RadioButton_Developer.UseVisualStyleBackColor = true;
-            // 
-            // tableLayoutPanel2
-            // 
-            tableLayoutPanel2.ColumnCount = 2;
-            tableLayoutPanel2.ColumnStyles.Add(new ColumnStyle());
-            tableLayoutPanel2.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
-            tableLayoutPanel2.Controls.Add(Control_Edit_User_Label_FirstName, 0, 0);
-            tableLayoutPanel2.Controls.Add(Control_Edit_User_Label_LastName, 0, 1);
-            tableLayoutPanel2.Controls.Add(Control_Edit_User_ComboBox_Shift, 1, 2);
-            tableLayoutPanel2.Controls.Add(Control_Edit_User_TextBox_LastName, 1, 1);
-            tableLayoutPanel2.Controls.Add(Control_Edit_User_TextBox_FirstName, 1, 0);
-            tableLayoutPanel2.Controls.Add(Control_Edit_User_Label_Shift, 0, 2);
-            tableLayoutPanel2.Dock = DockStyle.Fill;
-            tableLayoutPanel2.Location = new Point(3, 3);
-            tableLayoutPanel2.Name = "tableLayoutPanel2";
-            tableLayoutPanel2.Padding = new Padding(2);
-            tableLayoutPanel2.RowCount = 3;
-            tableLayoutPanel2.RowStyles.Add(new RowStyle());
-            tableLayoutPanel2.RowStyles.Add(new RowStyle());
-            tableLayoutPanel2.RowStyles.Add(new RowStyle());
-            tableLayoutPanel2.Size = new Size(349, 100);
-            tableLayoutPanel2.TabIndex = 11;
-            // 
-            // tableLayoutPanel3
-            // 
-            tableLayoutPanel3.AutoSize = true;
-            tableLayoutPanel3.ColumnCount = 2;
-            tableLayoutPanel3.ColumnStyles.Add(new ColumnStyle());
-            tableLayoutPanel3.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
-            tableLayoutPanel3.Controls.Add(Control_Edit_User_Label_UserName, 0, 0);
-            tableLayoutPanel3.Controls.Add(Control_Edit_User_Label_UserNameWarning, 0, 2);
-            tableLayoutPanel3.Controls.Add(Control_Edit_User_Label_Pin, 0, 1);
-            tableLayoutPanel3.Controls.Add(Control_Edit_User_TextBox_UserName, 1, 0);
-            tableLayoutPanel3.Controls.Add(Control_Edit_User_TextBox_Pin, 1, 1);
-            tableLayoutPanel3.Dock = DockStyle.Fill;
-            tableLayoutPanel3.Location = new Point(3, 19);
-            tableLayoutPanel3.Name = "tableLayoutPanel3";
-            tableLayoutPanel3.RowCount = 3;
-            tableLayoutPanel3.RowStyles.Add(new RowStyle());
-            tableLayoutPanel3.RowStyles.Add(new RowStyle());
-            tableLayoutPanel3.RowStyles.Add(new RowStyle());
-            tableLayoutPanel3.Size = new Size(343, 78);
-            tableLayoutPanel3.TabIndex = 12;
-            // 
-            // Control_Edit_User_GroupBox_Creds
-            // 
-            Control_Edit_User_GroupBox_Creds.Controls.Add(tableLayoutPanel3);
-            Control_Edit_User_GroupBox_Creds.Dock = DockStyle.Fill;
-            Control_Edit_User_GroupBox_Creds.Location = new Point(3, 109);
-            Control_Edit_User_GroupBox_Creds.Name = "Control_Edit_User_GroupBox_Creds";
-            Control_Edit_User_GroupBox_Creds.Size = new Size(349, 100);
-            Control_Edit_User_GroupBox_Creds.TabIndex = 13;
-            Control_Edit_User_GroupBox_Creds.TabStop = false;
-            Control_Edit_User_GroupBox_Creds.Text = "Login Information";
-            // 
-            // tableLayoutPanel4
-            // 
-            tableLayoutPanel4.AutoSize = true;
-            tableLayoutPanel4.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            tableLayoutPanel4.ColumnCount = 1;
-            tableLayoutPanel4.ColumnStyles.Add(new ColumnStyle());
-            tableLayoutPanel4.Controls.Add(tableLayoutPanel2, 0, 0);
-            tableLayoutPanel4.Controls.Add(Control_Edit_User_GroupBox_Creds, 0, 1);
-            tableLayoutPanel4.Dock = DockStyle.Fill;
-            tableLayoutPanel4.Location = new Point(3, 19);
-            tableLayoutPanel4.Name = "tableLayoutPanel4";
-            tableLayoutPanel4.RowCount = 2;
-            tableLayoutPanel4.RowStyles.Add(new RowStyle());
-            tableLayoutPanel4.RowStyles.Add(new RowStyle());
-            tableLayoutPanel4.Size = new Size(355, 212);
-            tableLayoutPanel4.TabIndex = 14;
             // 
             // tableLayoutPanel5
             // 
@@ -571,28 +593,6 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             tableLayoutPanel7.Size = new Size(486, 31);
             tableLayoutPanel7.TabIndex = 0;
             // 
-            // tableLayoutPanel8
-            // 
-            tableLayoutPanel8.AutoSize = true;
-            tableLayoutPanel8.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            tableLayoutPanel8.ColumnCount = 2;
-            tableLayoutPanel8.ColumnStyles.Add(new ColumnStyle());
-            tableLayoutPanel8.ColumnStyles.Add(new ColumnStyle());
-            tableLayoutPanel8.Controls.Add(Control_Edit_User_CheckBox_VisualAccess, 0, 0);
-            tableLayoutPanel8.Controls.Add(Control_Edit_User_Label_VisualPassword, 0, 2);
-            tableLayoutPanel8.Controls.Add(Control_Edit_User_Label_VisualUserName, 0, 1);
-            tableLayoutPanel8.Controls.Add(Control_Edit_User_TextBox_VisualUserName, 1, 1);
-            tableLayoutPanel8.Controls.Add(Control_Edit_User_TextBox_VisualPassword, 1, 2);
-            tableLayoutPanel8.Dock = DockStyle.Fill;
-            tableLayoutPanel8.Location = new Point(3, 19);
-            tableLayoutPanel8.Name = "tableLayoutPanel8";
-            tableLayoutPanel8.RowCount = 3;
-            tableLayoutPanel8.RowStyles.Add(new RowStyle());
-            tableLayoutPanel8.RowStyles.Add(new RowStyle());
-            tableLayoutPanel8.RowStyles.Add(new RowStyle());
-            tableLayoutPanel8.Size = new Size(480, 83);
-            tableLayoutPanel8.TabIndex = 5;
-            // 
             // Control_Edit_User
             // 
             AutoScaleDimensions = new SizeF(96F, 96F);
@@ -604,27 +604,27 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             Size = new Size(492, 423);
             Control_Edit_User_GroupBox_UserInfo.ResumeLayout(false);
             Control_Edit_User_GroupBox_UserInfo.PerformLayout();
+            tableLayoutPanel4.ResumeLayout(false);
+            tableLayoutPanel2.ResumeLayout(false);
+            tableLayoutPanel2.PerformLayout();
+            Control_Edit_User_GroupBox_Creds.ResumeLayout(false);
+            Control_Edit_User_GroupBox_Creds.PerformLayout();
+            tableLayoutPanel3.ResumeLayout(false);
+            tableLayoutPanel3.PerformLayout();
             Control_Edit_User_GroupBox_VisualInfo.ResumeLayout(false);
             Control_Edit_User_GroupBox_VisualInfo.PerformLayout();
+            tableLayoutPanel8.ResumeLayout(false);
+            tableLayoutPanel8.PerformLayout();
             Control_Edit_User_GroupBox_UserPrivileges.ResumeLayout(false);
             Control_Edit_User_GroupBox_UserPrivileges.PerformLayout();
             tableLayoutPanel1.ResumeLayout(false);
             tableLayoutPanel1.PerformLayout();
-            tableLayoutPanel2.ResumeLayout(false);
-            tableLayoutPanel2.PerformLayout();
-            tableLayoutPanel3.ResumeLayout(false);
-            tableLayoutPanel3.PerformLayout();
-            Control_Edit_User_GroupBox_Creds.ResumeLayout(false);
-            Control_Edit_User_GroupBox_Creds.PerformLayout();
-            tableLayoutPanel4.ResumeLayout(false);
             tableLayoutPanel5.ResumeLayout(false);
             tableLayoutPanel5.PerformLayout();
             tableLayoutPanel6.ResumeLayout(false);
             tableLayoutPanel6.PerformLayout();
             tableLayoutPanel7.ResumeLayout(false);
             tableLayoutPanel7.PerformLayout();
-            tableLayoutPanel8.ResumeLayout(false);
-            tableLayoutPanel8.PerformLayout();
             ResumeLayout(false);
             PerformLayout();
         }

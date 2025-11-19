@@ -324,7 +324,7 @@ internal static class Dao_System
     #region JSON Validation
 
     /// <summary>
-    /// Validates JSON settings in app_themes and usr_ui_settings tables
+    /// Validates JSON settings in app_themes and usr_settings tables
     /// </summary>
     /// <returns>Model_Dao_Result with validation report</returns>
     internal static async Task<Model_Dao_Result<string>> ValidateJsonSettingsAsync()
@@ -397,7 +397,7 @@ internal static class Dao_System
             {
                 var userSettingsResult = await Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync(
                     Model_Application_Variables.ConnectionString,
-                    "usr_ui_settings_Get_All",
+                    "usr_settings_Get_All",
                     null
                 );
 

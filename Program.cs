@@ -48,9 +48,6 @@ namespace MTM_WIP_Application_Winforms
         {
             try
             {
-            // Parse command-line arguments
-            ParseCommandLineArguments(args, out string? argUsername, out string? argPassword, out string? argDatabase);
-
                 // Initialize debugging system first (before any other operations)
                 #if DEBUG
                 Service_DebugTracer.Initialize(Enum_DebugLevel.High);
@@ -159,19 +156,7 @@ namespace MTM_WIP_Application_Winforms
                 // User identification with error handling
                 try
                 {
-                    // Use command-line argument if provided, otherwise get from system
-                    if (!string.IsNullOrWhiteSpace(argUsername))
-                    {
-                        Model_Application_Variables.User = argUsername;
-
-                    }
-                    else
-                    {
-                        Model_Application_Variables.User = Dao_System.System_GetUserName();
-                        //Model_Application_Variables.User = "TestUser"; // TEMPORARY OVERRIDE FOR TESTING - REMOVE IN PRODUCTION
-                    }
-
-
+                    Model_Application_Variables.User = Dao_System.System_GetUserName();
                     LoggingUtility.Log($"[Startup] User identified: {Model_Application_Variables.User}");
                 }
                 catch (Exception ex)
@@ -192,7 +177,7 @@ namespace MTM_WIP_Application_Winforms
                     }
                     catch (Exception fallbackEx)
                     {
-                        Model_Application_Variables.User = "Unknown";
+                        Model_Application_Variables.User = "SHOP2";
                         LoggingUtility.LogApplicationError(fallbackEx);
                         ShowNonCriticalError("User Identification Error",
                             "Failed to identify current user. Using 'Unknown' as username.\n" +
@@ -200,19 +185,65 @@ namespace MTM_WIP_Application_Winforms
                     }
                 }
 
-                // Apply command-line database argument if provided
-                if (!string.IsNullOrWhiteSpace(argDatabase))
-                {
-                    Model_Application_Variables.DatabaseName = argDatabase;
-                    LoggingUtility.Log($"[Startup] Using command-line database: {argDatabase}");
-                }
+                    try
+                    {
+                        var serverResult = Dao_User.GetWipServerAddressAsync(Model_Application_Variables.User).GetAwaiter().GetResult();
+                        var portResult = Dao_User.GetWipServerPortAsync(Model_Application_Variables.User).GetAwaiter().GetResult();
+                        var databaseResult = Dao_User.GetDatabaseAsync(Model_Application_Variables.User).GetAwaiter().GetResult();
 
-                // Apply command-line DB user/password overrides when provided
-                if (!string.IsNullOrWhiteSpace(argPassword))
-                {
-                    Model_Application_Variables.DatabasePassword = argPassword;
-                    LoggingUtility.Log("[Startup] Database password override provided via command-line");
-                }
+                        if (serverResult.IsSuccess && !string.IsNullOrWhiteSpace(serverResult.Data))
+                        {
+                            Model_Shared_Users.WipServerAddress = serverResult.Data;
+                            LoggingUtility.Log($"[Startup] Loaded user database server setting: {serverResult.Data}");
+                        }
+
+                        if (portResult.IsSuccess && !string.IsNullOrWhiteSpace(portResult.Data))
+                        {
+                            Model_Shared_Users.WipServerPort = portResult.Data;
+                            LoggingUtility.Log($"[Startup] Loaded user database port setting: {portResult.Data}");
+                        }
+
+                        if (databaseResult.IsSuccess && !string.IsNullOrWhiteSpace(databaseResult.Data))
+                        {
+                            // Validate database name
+                            string dbName = databaseResult.Data;
+                            if (dbName != "mtm_wip_application_winforms" && dbName != "mtm_wip_application_winforms_test")
+                            {
+                                // Invalid database name detected - reset to default database
+                                string defaultDb = "mtm_wip_application_winforms";
+                                LoggingUtility.Log($"[Startup] Invalid database name detected: '{dbName}'. Resetting to default: '{defaultDb}'");
+                                
+                                Model_Shared_Users.Database = defaultDb;
+                                
+                                // Update the database setting in usr_settings
+                                try
+                                {
+                                    Dao_User.SetDatabaseAsync(Model_Application_Variables.User, defaultDb).GetAwaiter().GetResult();
+                                }
+                                catch (Exception dbEx)
+                                {
+                                    LoggingUtility.Log($"[Startup] Could not save corrected database setting: {dbEx.Message}");
+                                }
+                                
+                                // Show warning to user
+                                ShowNonCriticalError("Invalid Database Setting",
+                                    $"An invalid database name was detected in your settings:\n\n'{dbName}'\n\n" +
+                                    $"The system has reset your database to the default database:\n'{defaultDb}'\n\n" +
+                                    "You can change this in Settings → Database if needed.");
+                            }
+                            else
+                            {
+                                Model_Shared_Users.Database = dbName;
+                                LoggingUtility.Log($"[Startup] Loaded user database name setting: {dbName}");
+                            }
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        // If we can't load user settings, use defaults (already set in Model_Shared_Users)
+                        LoggingUtility.Log($"[Startup] Could not load user database settings, using defaults: {ex.Message}");
+                    }
+                
 
                 // ENHANCED: Validate database connectivity using Dao_System.CheckConnectivityAsync per FR-014
                 // NOTE: Using .GetAwaiter().GetResult() in Main as it's synchronous entry point
@@ -540,65 +571,6 @@ namespace MTM_WIP_Application_Winforms
 
         #endregion
 
-        #region Command-Line Argument Parsing
-
-        private static void ParseCommandLineArguments(string[] args, out string? username, out string? password, out string? database)
-        {
-
-            username = null;
-            password = null;
-            database = null;
-
-            foreach (string arg in args)
-            {
-                // Handle both - and / prefixes
-                string normalizedArg = arg.TrimStart('-', '/').ToLowerInvariant();
-
-                if (normalizedArg.StartsWith("user="))
-                {
-                    username = arg.Substring(arg.IndexOf('=') + 1);
-                }
-                else if (normalizedArg.StartsWith("password="))
-                {
-                    // Treat generic -password as database password override
-                    password = arg.Substring(arg.IndexOf('=') + 1);
-                }
-                else if (normalizedArg.StartsWith("dbuser="))
-                {
-                    var val = arg.Substring(arg.IndexOf('=') + 1);
-                    Model_Application_Variables.DatabaseUser = val;
-                }
-                else if (normalizedArg.StartsWith("dbpassword=") || normalizedArg.StartsWith("dbpass="))
-                {
-                    var val = arg.Substring(arg.IndexOf('=') + 1);
-                    Model_Application_Variables.DatabasePassword = val;
-                }
-                else if (normalizedArg.StartsWith("db="))
-                {
-                    string dbArg = arg.Substring(arg.IndexOf('=') + 1).ToLowerInvariant();
-
-                    // Map 'prod' and 'test' to full database names
-                    database = dbArg switch
-                    {
-                        "prod" => "mtm_wip_application_winforms",
-                        "test" => "mtm_wip_application_winforms_test",
-                        _ => dbArg // Use as-is if not 'prod' or 'test'
-                    };
-                }
-            }
-
-            // Log parsed arguments (without password for security)
-            if (username != null || password != null || database != null)
-            {
-                Console.WriteLine("[Startup] Command-line arguments parsed:");
-                if (username != null) Console.WriteLine($"  - Username: {username}");
-                if (password != null) Console.WriteLine("  - Password: [PROVIDED]");
-                if (database != null) Console.WriteLine($"  - Database: {database}");
-            }
-        }
-
-        #endregion Command-Line Argument Parsing
-
         #region Global Exception Handling
 
         /// <summary>
@@ -827,237 +799,6 @@ namespace MTM_WIP_Application_Winforms
 
         #endregion
 
-        #region Database Connectivity Validation
-
-        /// <summary>
-        /// Validate database connectivity using Helper_Database_StoredProcedure patterns
-        /// </summary>
-        /// <returns>Model_Dao_Result indicating success or failure with user-friendly message</returns>
-        private static Model_Dao_Result ValidateDatabaseConnectivityWithHelper()
-        {
-            try
-            {
-                Console.WriteLine("[Startup] Validating database connectivity...");
-                LoggingUtility.Log("[Startup] Starting database connectivity validation");
-
-                // First validate connection string format
-                var formatResult = ValidateConnectionStringFormat();
-                if (!formatResult.IsSuccess)
-                {
-                    return formatResult;
-                }
-
-                // Use helper for database health check with stored procedure approach
-                var healthCheckResult = ValidateDatabaseHealthWithStoredProcedure();
-                if (!healthCheckResult.IsSuccess)
-                {
-                    return healthCheckResult;
-                }
-
-                Console.WriteLine("[Startup] Database connectivity validated successfully.");
-                LoggingUtility.Log("[Startup] Database connectivity validation completed successfully");
-                return Model_Dao_Result.Success("Database connectivity validated successfully");
-            }
-            catch (MySqlException ex)
-            {
-                string errorMsg = GetDatabaseConnectionErrorMessage(ex);
-                Console.WriteLine($"[Startup] MySQL Error: {errorMsg}");
-                LoggingUtility.LogDatabaseError(ex);
-
-                return Model_Dao_Result.Failure(errorMsg, ex);
-            }
-            catch (Exception ex)
-            {
-                string errorMsg = $"Database connectivity validation failed: {ex.Message}";
-                Console.WriteLine($"[Startup] {errorMsg}");
-                LoggingUtility.LogApplicationError(ex);
-
-                return Model_Dao_Result.Failure(errorMsg, ex);
-            }
-        }
-
-        /// <summary>
-        /// Validate database health using stored procedure approach consistent with application patterns
-        /// </summary>
-        /// <returns>Model_Dao_Result indicating database health status</returns>
-        private static Model_Dao_Result ValidateDatabaseHealthWithStoredProcedure()
-        {
-            try
-            {
-                // First attempt: Try using existing stored procedure if available
-                var healthResult = AttemptStoredProcedureHealthCheck();
-                if (healthResult.IsSuccess)
-                {
-                    return healthResult;
-                }
-
-                // Fallback: Basic connectivity test using helper pattern
-                return ValidateBasicConnectivityWithHelper();
-            }
-            catch (MySqlException ex)
-            {
-                string userMessage = GetDatabaseConnectionErrorMessage(ex);
-                LoggingUtility.LogDatabaseError(ex);
-                return Model_Dao_Result.Failure(userMessage, ex);
-            }
-            catch (TimeoutException ex)
-            {
-                string userMessage = "Database connection timed out during health check.\n\n" +
-                                   "This usually means:\n" +
-                                   "• The database server is responding slowly\n" +
-                                   "• Network connectivity issues\n" +
-                                   "• Server is overloaded\n\n" +
-                                   "Please try again or contact your system administrator.";
-                LoggingUtility.LogApplicationError(ex);
-                return Model_Dao_Result.Failure(userMessage, ex);
-            }
-            catch (Exception ex)
-            {
-                string errorMsg = $"Database health validation failed: {ex.Message}";
-                LoggingUtility.LogApplicationError(ex);
-                return Model_Dao_Result.Failure(errorMsg, ex);
-            }
-        }
-
-        /// <summary>
-        /// Attempt to use stored procedure for health check if available
-        /// </summary>
-        /// <returns>Model_Dao_Result indicating stored procedure health check result</returns>
-        private static Model_Dao_Result AttemptStoredProcedureHealthCheck()
-        {
-            try
-            {
-                LoggingUtility.Log("[Startup] Attempting stored procedure health check");
-
-                // Use a basic connectivity test first
-                using var connection = new MySqlConnection(Model_Application_Variables.ConnectionString);
-                connection.Open();
-
-                // Test if critical stored procedures exist
-                const string checkProcedureQuery = @"
-                    SELECT COUNT(*)
-                    FROM INFORMATION_SCHEMA.ROUTINES
-                    WHERE ROUTINE_SCHEMA = DATABASE()
-                    AND ROUTINE_NAME IN ('sys_GetUserAccessType', 'sys_SetUserAccessType')";
-
-                using var command = new MySqlCommand(checkProcedureQuery, connection);
-                var procedureCount = Convert.ToInt32(command.ExecuteScalar());
-
-                if (procedureCount >= 1)
-                {
-                    LoggingUtility.Log($"[Startup] Found {procedureCount} critical stored procedures");
-                    return Model_Dao_Result.Success("Critical stored procedures are available");
-                }
-                else
-                {
-                    LoggingUtility.Log("[Startup] Warning: Critical stored procedures may not be deployed");
-                    // Don't fail startup - let the application handle this gracefully
-                    return Model_Dao_Result.Success("Database accessible but stored procedures may need deployment");
-                }
-            }
-            catch (MySqlException ex)
-            {
-                LoggingUtility.LogDatabaseError(ex);
-                return Model_Dao_Result.Failure($"MySQL error during health check: {ex.Message}", ex);
-            }
-            catch (Exception ex)
-            {
-                LoggingUtility.Log($"[Startup] Stored procedure health check failed: {ex.Message}");
-                // This is not critical - fallback to basic connectivity
-                return Model_Dao_Result.Failure("Stored procedure check failed, will attempt basic connectivity", ex);
-            }
-        }
-
-        /// <summary>
-        /// Basic connectivity validation using helper-consistent patterns
-        /// </summary>
-        /// <returns>Model_Dao_Result indicating basic connectivity status</returns>
-        private static Model_Dao_Result ValidateBasicConnectivityWithHelper()
-        {
-            try
-            {
-                LoggingUtility.Log("[Startup] Performing basic connectivity validation");
-
-                // Build connection with appropriate timeouts for startup validation
-                var connectionStringBuilder = new MySqlConnectionStringBuilder(Model_Application_Variables.ConnectionString)
-                {
-                    ConnectionTimeout = 10, // 10 second timeout for startup validation
-                    DefaultCommandTimeout = 10
-                };
-
-                using var connection = new MySqlConnection(connectionStringBuilder.ConnectionString);
-                connection.Open();
-
-                // Test basic query to ensure database is functional
-                using var command = new MySqlCommand("SELECT VERSION() as mysql_version", connection);
-                var version = command.ExecuteScalar();
-
-                if (version != null)
-                {
-                    LoggingUtility.Log($"[Startup] Database connectivity confirmed. MySQL version: {version}");
-                    return Model_Dao_Result.Success($"Database connectivity verified. MySQL version: {version}");
-                }
-                else
-                {
-                    string errorMsg = "Database connection established but version query returned null";
-                    LoggingUtility.Log($"[Startup] {errorMsg}");
-                    return Model_Dao_Result.Failure(errorMsg);
-                }
-            }
-            catch (MySqlException ex)
-            {
-                string errorMsg = GetDatabaseConnectionErrorMessage(ex);
-                LoggingUtility.LogDatabaseError(ex);
-                return Model_Dao_Result.Failure(errorMsg, ex);
-            }
-            catch (Exception ex)
-            {
-                string errorMsg = $"Basic connectivity validation failed: {ex.Message}";
-                LoggingUtility.LogApplicationError(ex);
-                return Model_Dao_Result.Failure(errorMsg, ex);
-            }
-        }
-
-        /// <summary>
-        /// Validate connection string format before attempting connection
-        /// </summary>
-        /// <returns>Model_Dao_Result indicating validation success or failure</returns>
-        private static Model_Dao_Result ValidateConnectionStringFormat()
-        {
-            try
-            {
-                var connectionString = Model_Application_Variables.ConnectionString;
-
-                if (string.IsNullOrEmpty(connectionString))
-                {
-                    const string errorMsg = "Database connection string is not configured.\n\n" +
-                                          "Please contact your system administrator to configure the database connection.";
-                    LoggingUtility.Log($"[Startup] {errorMsg}");
-                    return Model_Dao_Result.Failure(errorMsg);
-                }
-
-                // Basic connection string validation
-                if (!connectionString.Contains("SERVER=") || !connectionString.Contains("DATABASE="))
-                {
-                    const string errorMsg = "Database connection string is invalid.\n\n" +
-                                          "Please contact your system administrator to verify the database configuration.";
-                    LoggingUtility.Log($"[Startup] {errorMsg}");
-                    return Model_Dao_Result.Failure(errorMsg);
-                }
-
-                LoggingUtility.Log("[Startup] Connection string format validation passed");
-                return Model_Dao_Result.Success("Connection string format is valid");
-            }
-            catch (Exception ex)
-            {
-                string errorMsg = $"Error validating database configuration:\n\n{ex.Message}";
-                LoggingUtility.LogApplicationError(ex);
-                return Model_Dao_Result.Failure(errorMsg, ex);
-            }
-        }
-
-        #endregion
-
         #region Error Message Generation
 
         /// <summary>
@@ -1124,24 +865,6 @@ namespace MTM_WIP_Application_Winforms
         #endregion
 
         #region UI Error Display
-
-        /// <summary>
-        /// Show user-friendly database connection error message
-        /// </summary>
-        /// <param name="title">Error dialog title</param>
-        /// <param name="message">Error message</param>
-        private static void ShowDatabaseConnectionError(string title, string message)
-        {
-            try
-            {
-                MessageBox.Show(message, title, MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"[Critical] Failed to show database connection error dialog: {ex.Message}");
-                Console.WriteLine($"[Critical] Original message: {message}");
-            }
-        }
 
         /// <summary>
         /// Show generic database error message

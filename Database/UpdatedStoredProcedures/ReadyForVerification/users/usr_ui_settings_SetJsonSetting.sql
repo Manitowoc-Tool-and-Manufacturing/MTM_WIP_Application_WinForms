@@ -1,6 +1,6 @@
 DELIMITER //
-DROP PROCEDURE IF EXISTS `usr_ui_settings_SetJsonSetting`//
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usr_ui_settings_SetJsonSetting`(
+DROP PROCEDURE IF EXISTS `usr_settings_SetJsonSetting`//
+CREATE DEFINER=`root`@`localhost` PROCEDURE `usr_settings_SetJsonSetting`(
     IN p_UserId VARCHAR(64),
     IN p_DgvName VARCHAR(128),
     IN p_SettingJson JSON,
@@ -28,20 +28,20 @@ BEGIN
         SET p_ErrorMsg = 'SettingJson is required';
     ELSE
         SELECT COUNT(*) INTO v_Existing
-        FROM usr_ui_settings
+        FROM usr_settings
         WHERE UserId = p_UserId;
         IF v_Existing = 0 THEN
-            INSERT INTO usr_ui_settings (UserId, SettingsJson)
+            INSERT INTO usr_settings (UserId, SettingsJson)
             VALUES (p_UserId, JSON_OBJECT(p_DgvName, p_SettingJson));
             SET v_RowCount = ROW_COUNT();
         ELSE
             SELECT SettingsJson INTO v_CurrentJson
-            FROM usr_ui_settings
+            FROM usr_settings
             WHERE UserId = p_UserId
             LIMIT 1;
             SET v_CurrentJson = JSON_SET(IFNULL(v_CurrentJson, JSON_OBJECT()),
                                         CONCAT('$.', p_DgvName), p_SettingJson);
-            UPDATE usr_ui_settings
+            UPDATE usr_settings
             SET SettingsJson = v_CurrentJson, UpdatedAt = NOW()
             WHERE UserId = p_UserId;
             SET v_RowCount = ROW_COUNT();

@@ -69,7 +69,7 @@ All architectural questions have been resolved. See `2-Clarification-Questions.m
 - **19 UserControls**: 5 CRUD entities (User, PartID, Location, Operation, ItemType) with Add/Edit/Remove operations, plus 5 settings panels (Database, Theme, Shortcuts, About, Developer Tools)
 - **Fragmented State**: Settings scattered across `Model_Application_Variables`, `Model_Shared_Users`, `Dao_User` (18 getter/setter pairs), and direct database access
 - **Inconsistent Patterns**: Each control implements its own save/load logic with varying error handling and validation approaches
-- **Database Schema**: 10 primary tables (usr_users, usr_ui_settings, md_part_ids, md_locations, md_operation_numbers, md_item_types, sys_roles, sys_user_roles, sys_parameter_prefix_overrides)
+- **Database Schema**: 10 primary tables (usr_users, usr_settings, md_part_ids, md_locations, md_operation_numbers, md_item_types, sys_roles, sys_user_roles, sys_parameter_prefix_overrides)
 - **Integration Points**: 23 files integrate with Theme System, 15 with Error Handling, 4 with Progress Reporting, 4 with Shortcut System
 
 ### Key Pain Points
@@ -510,7 +510,7 @@ The Settings System v2.0 introduces a layered architecture:
   - Purpose: Store up to 10 quick buttons per user with usage tracking
 
 **Modified Tables**:
-- **usr_ui_settings**: Add JsonSchema column for structured settings, deprecate individual columns over time
+- **usr_settings**: Add JsonSchema column for structured settings, deprecate individual columns over time
 - **md_part_ids**, **md_locations**, **md_operations**, **md_item_types**: Add IsActive, CreatedBy, CreatedDate, ModifiedBy, ModifiedDate columns
 
 **Stored Procedures**:

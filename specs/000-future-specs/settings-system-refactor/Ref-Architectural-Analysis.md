@@ -82,7 +82,7 @@ This document provides a deep architectural analysis of the current Settings Sys
 
 **Database Schema**:
 - `usr_users`: User accounts
-- `usr_ui_settings`: JSON-based user preferences
+- `usr_settings`: JSON-based user preferences
 - `md_part_ids`, `md_locations`, `md_operation_numbers`, `md_item_types`: Master data tables
 - `sys_roles`, `sys_user_roles`: Role-based access control
 - `sys_parameter_prefix_overrides`: Developer tool data
@@ -116,7 +116,7 @@ UI Controls (manual data binding)
 
 Settings exist in 3 locations simultaneously:
 1. **Memory** (`Model_Application_Variables`, `Model_Shared_Users`): Static properties, no change notification
-2. **Database** (`usr_ui_settings`, `usr_users`): Persistent storage
+2. **Database** (`usr_settings`, `usr_users`): Persistent storage
 3. **UserControl State**: Local variables in each control
 
 **Synchronization Issues**:
@@ -642,7 +642,7 @@ Methods (all async):
 
 ### 5.1 Normalized Schema
 
-**Current State**: usr_ui_settings table has 1 row per user with JSON blob
+**Current State**: usr_settings table has 1 row per user with JSON blob
 
 **Proposed State**:
 - **usr_users**: User core (id, username, pin, first_name, last_name, shift)
@@ -911,7 +911,7 @@ All procedures must have:
 **Current Issues**:
 - N+1 queries when loading users with roles
 - Lack of covering indexes on frequently queried columns
-- Full table scans on usr_ui_settings JSON column
+- Full table scans on usr_settings JSON column
 
 **Proposed Optimizations**:
 1. **Eager Loading**: Single query to fetch user + roles + settings using JOINs

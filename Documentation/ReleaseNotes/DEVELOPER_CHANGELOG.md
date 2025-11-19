@@ -531,12 +531,12 @@ protected override void ApplyTheme(Model_Shared_UserUiColors theme)
 ```csharp
 // Old - WRONG stored procedure
 await Helper_Database_StoredProcedure.ExecuteNonQueryAsync(
-    "usr_ui_settings_Upsert",  // ❌ This procedure doesn't exist
+    "usr_settings_Upsert",  // ❌ This procedure doesn't exist
     parameters);
 
 // New - CORRECT stored procedure
 await Helper_Database_StoredProcedure.ExecuteNonQueryAsync(
-    "usr_ui_settings_SetThemeJson",  // ✅ This exists
+    "usr_settings_SetThemeJson",  // ✅ This exists
     parameters);
 ```
 
@@ -547,7 +547,7 @@ await Helper_Database_StoredProcedure.ExecuteNonQueryAsync(
 
 **Database Schema:**
 - No changes required
-- Existing `usr_ui_settings_SetThemeJson` procedure already correct
+- Existing `usr_settings_SetThemeJson` procedure already correct
 
 ### Testing
 - Manual testing confirmed theme saves correctly

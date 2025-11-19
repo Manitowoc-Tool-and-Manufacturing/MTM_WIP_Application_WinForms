@@ -1,6 +1,6 @@
 DELIMITER //
-DROP PROCEDURE IF EXISTS `usr_ui_settings_SetThemeJson`//
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usr_ui_settings_SetThemeJson`(
+DROP PROCEDURE IF EXISTS `usr_settings_SetThemeJson`//
+CREATE DEFINER=`root`@`localhost` PROCEDURE `usr_settings_SetThemeJson`(
     IN p_UserId VARCHAR(64),
     IN p_ThemeJson JSON,
     OUT p_Status INT,
@@ -24,14 +24,14 @@ BEGIN
         SET p_ErrorMsg = 'ThemeJson is required';
     ELSE
         SELECT COUNT(*) INTO v_Exists
-        FROM usr_ui_settings
+        FROM usr_settings
         WHERE UserId = p_UserId;
         IF v_Exists = 0 THEN
             SET p_Status = -4;
-            SET p_ErrorMsg = CONCAT('User "', p_UserId, '" does not exist in usr_ui_settings');
+            SET p_ErrorMsg = CONCAT('User "', p_UserId, '" does not exist in usr_settings');
         ELSE
             SELECT SettingsJson INTO v_SettingsJson
-            FROM usr_ui_settings
+            FROM usr_settings
             WHERE UserId = p_UserId
             FOR UPDATE;
             IF v_SettingsJson IS NULL THEN
@@ -39,7 +39,7 @@ BEGIN
             ELSE
                 SET v_SettingsJson = JSON_MERGE_PATCH(v_SettingsJson, p_ThemeJson);
             END IF;
-            UPDATE usr_ui_settings
+            UPDATE usr_settings
             SET SettingsJson = v_SettingsJson
             WHERE UserId = p_UserId;
             SET v_RowCount = ROW_COUNT();

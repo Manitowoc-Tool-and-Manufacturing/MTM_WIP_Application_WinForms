@@ -970,7 +970,7 @@
     },
     {
       "ROUTINE_SCHEMA": "MTM_WIP_Application_Winforms",
-      "ROUTINE_NAME": "usr_ui_settings_Get",
+      "ROUTINE_NAME": "usr_settings_Get",
       "ROUTINE_TYPE": "PROCEDURE",
       "DATA_TYPE": "",
       "DTD_IDENTIFIER": "NULL",
@@ -985,7 +985,7 @@
     },
     {
       "ROUTINE_SCHEMA": "MTM_WIP_Application_Winforms",
-      "ROUTINE_NAME": "usr_ui_settings_GetShortcutsJson",
+      "ROUTINE_NAME": "usr_settings_GetShortcutsJson",
       "ROUTINE_TYPE": "PROCEDURE",
       "DATA_TYPE": "",
       "DTD_IDENTIFIER": "NULL",
@@ -1000,7 +1000,7 @@
     },
     {
       "ROUTINE_SCHEMA": "MTM_WIP_Application_Winforms",
-      "ROUTINE_NAME": "usr_ui_settings_SetJsonSetting",
+      "ROUTINE_NAME": "usr_settings_SetJsonSetting",
       "ROUTINE_TYPE": "PROCEDURE",
       "DATA_TYPE": "",
       "DTD_IDENTIFIER": "NULL",
@@ -1015,7 +1015,7 @@
     },
     {
       "ROUTINE_SCHEMA": "MTM_WIP_Application_Winforms",
-      "ROUTINE_NAME": "usr_ui_settings_SetShortcutsJson",
+      "ROUTINE_NAME": "usr_settings_SetShortcutsJson",
       "ROUTINE_TYPE": "PROCEDURE",
       "DATA_TYPE": "",
       "DTD_IDENTIFIER": "NULL",
@@ -1030,7 +1030,7 @@
     },
     {
       "ROUTINE_SCHEMA": "MTM_WIP_Application_Winforms",
-      "ROUTINE_NAME": "usr_ui_settings_SetThemeJson",
+      "ROUTINE_NAME": "usr_settings_SetThemeJson",
       "ROUTINE_TYPE": "PROCEDURE",
       "DATA_TYPE": "",
       "DTD_IDENTIFIER": "NULL",
@@ -4520,7 +4520,7 @@
     },
     {
       "SPECIFIC_SCHEMA": "MTM_WIP_Application_Winforms",
-      "SPECIFIC_NAME": "usr_ui_settings_Get",
+      "SPECIFIC_NAME": "usr_settings_Get",
       "ORDINAL_POSITION": "1",
       "PARAMETER_MODE": "IN",
       "PARAMETER_NAME": "p_UserId",
@@ -4532,7 +4532,7 @@
     },
     {
       "SPECIFIC_SCHEMA": "MTM_WIP_Application_Winforms",
-      "SPECIFIC_NAME": "usr_ui_settings_Get",
+      "SPECIFIC_NAME": "usr_settings_Get",
       "ORDINAL_POSITION": "2",
       "PARAMETER_MODE": "OUT",
       "PARAMETER_NAME": "p_Status",
@@ -4544,7 +4544,7 @@
     },
     {
       "SPECIFIC_SCHEMA": "MTM_WIP_Application_Winforms",
-      "SPECIFIC_NAME": "usr_ui_settings_Get",
+      "SPECIFIC_NAME": "usr_settings_Get",
       "ORDINAL_POSITION": "3",
       "PARAMETER_MODE": "OUT",
       "PARAMETER_NAME": "p_ErrorMsg",
@@ -4556,7 +4556,7 @@
     },
     {
       "SPECIFIC_SCHEMA": "MTM_WIP_Application_Winforms",
-      "SPECIFIC_NAME": "usr_ui_settings_GetShortcutsJson",
+      "SPECIFIC_NAME": "usr_settings_GetShortcutsJson",
       "ORDINAL_POSITION": "1",
       "PARAMETER_MODE": "IN",
       "PARAMETER_NAME": "p_UserId",
@@ -4568,7 +4568,7 @@
     },
     {
       "SPECIFIC_SCHEMA": "MTM_WIP_Application_Winforms",
-      "SPECIFIC_NAME": "usr_ui_settings_GetShortcutsJson",
+      "SPECIFIC_NAME": "usr_settings_GetShortcutsJson",
       "ORDINAL_POSITION": "2",
       "PARAMETER_MODE": "OUT",
       "PARAMETER_NAME": "p_ShortcutsJson",
@@ -4580,7 +4580,7 @@
     },
     {
       "SPECIFIC_SCHEMA": "MTM_WIP_Application_Winforms",
-      "SPECIFIC_NAME": "usr_ui_settings_GetShortcutsJson",
+      "SPECIFIC_NAME": "usr_settings_GetShortcutsJson",
       "ORDINAL_POSITION": "3",
       "PARAMETER_MODE": "OUT",
       "PARAMETER_NAME": "p_Status",
@@ -4592,7 +4592,7 @@
     },
     {
       "SPECIFIC_SCHEMA": "MTM_WIP_Application_Winforms",
-      "SPECIFIC_NAME": "usr_ui_settings_GetShortcutsJson",
+      "SPECIFIC_NAME": "usr_settings_GetShortcutsJson",
       "ORDINAL_POSITION": "4",
       "PARAMETER_MODE": "OUT",
       "PARAMETER_NAME": "p_ErrorMsg",
@@ -4604,7 +4604,7 @@
     },
     {
       "SPECIFIC_SCHEMA": "MTM_WIP_Application_Winforms",
-      "SPECIFIC_NAME": "usr_ui_settings_SetJsonSetting",
+      "SPECIFIC_NAME": "usr_settings_SetJsonSetting",
       "ORDINAL_POSITION": "1",
       "PARAMETER_MODE": "IN",
       "PARAMETER_NAME": "p_UserId",
@@ -4616,7 +4616,7 @@
     },
     {
       "SPECIFIC_SCHEMA": "MTM_WIP_Application_Winforms",
-      "SPECIFIC_NAME": "usr_ui_settings_SetJsonSetting",
+      "SPECIFIC_NAME": "usr_settings_SetJsonSetting",
       "ORDINAL_POSITION": "2",
       "PARAMETER_MODE": "IN",
       "PARAMETER_NAME": "p_DgvName",
@@ -4628,7 +4628,7 @@
     },
     {
       "SPECIFIC_SCHEMA": "MTM_WIP_Application_Winforms",
-      "SPECIFIC_NAME": "usr_ui_settings_SetJsonSetting",
+      "SPECIFIC_NAME": "usr_settings_SetJsonSetting",
       "ORDINAL_POSITION": "3",
       "PARAMETER_MODE": "IN",
       "PARAMETER_NAME": "p_SettingJson",
@@ -4640,7 +4640,7 @@
     },
     {
       "SPECIFIC_SCHEMA": "MTM_WIP_Application_Winforms",
-      "SPECIFIC_NAME": "usr_ui_settings_SetJsonSetting",
+      "SPECIFIC_NAME": "usr_settings_SetJsonSetting",
       "ORDINAL_POSITION": "4",
       "PARAMETER_MODE": "OUT",
       "PARAMETER_NAME": "p_Status",
@@ -4652,7 +4652,7 @@
     },
     {
       "SPECIFIC_SCHEMA": "MTM_WIP_Application_Winforms",
-      "SPECIFIC_NAME": "usr_ui_settings_SetJsonSetting",
+      "SPECIFIC_NAME": "usr_settings_SetJsonSetting",
       "ORDINAL_POSITION": "5",
       "PARAMETER_MODE": "OUT",
       "PARAMETER_NAME": "p_ErrorMsg",
@@ -4664,7 +4664,7 @@
     },
     {
       "SPECIFIC_SCHEMA": "MTM_WIP_Application_Winforms",
-      "SPECIFIC_NAME": "usr_ui_settings_SetShortcutsJson",
+      "SPECIFIC_NAME": "usr_settings_SetShortcutsJson",
       "ORDINAL_POSITION": "1",
       "PARAMETER_MODE": "IN",
       "PARAMETER_NAME": "p_UserId",
@@ -4676,7 +4676,7 @@
     },
     {
       "SPECIFIC_SCHEMA": "MTM_WIP_Application_Winforms",
-      "SPECIFIC_NAME": "usr_ui_settings_SetShortcutsJson",
+      "SPECIFIC_NAME": "usr_settings_SetShortcutsJson",
       "ORDINAL_POSITION": "2",
       "PARAMETER_MODE": "IN",
       "PARAMETER_NAME": "p_ShortcutsJson",
@@ -4688,7 +4688,7 @@
     },
     {
       "SPECIFIC_SCHEMA": "MTM_WIP_Application_Winforms",
-      "SPECIFIC_NAME": "usr_ui_settings_SetShortcutsJson",
+      "SPECIFIC_NAME": "usr_settings_SetShortcutsJson",
       "ORDINAL_POSITION": "3",
       "PARAMETER_MODE": "OUT",
       "PARAMETER_NAME": "p_Status",
@@ -4700,7 +4700,7 @@
     },
     {
       "SPECIFIC_SCHEMA": "MTM_WIP_Application_Winforms",
-      "SPECIFIC_NAME": "usr_ui_settings_SetShortcutsJson",
+      "SPECIFIC_NAME": "usr_settings_SetShortcutsJson",
       "ORDINAL_POSITION": "4",
       "PARAMETER_MODE": "OUT",
       "PARAMETER_NAME": "p_ErrorMsg",
@@ -4712,7 +4712,7 @@
     },
     {
       "SPECIFIC_SCHEMA": "MTM_WIP_Application_Winforms",
-      "SPECIFIC_NAME": "usr_ui_settings_SetThemeJson",
+      "SPECIFIC_NAME": "usr_settings_SetThemeJson",
       "ORDINAL_POSITION": "1",
       "PARAMETER_MODE": "IN",
       "PARAMETER_NAME": "p_UserId",
@@ -4724,7 +4724,7 @@
     },
     {
       "SPECIFIC_SCHEMA": "MTM_WIP_Application_Winforms",
-      "SPECIFIC_NAME": "usr_ui_settings_SetThemeJson",
+      "SPECIFIC_NAME": "usr_settings_SetThemeJson",
       "ORDINAL_POSITION": "2",
       "PARAMETER_MODE": "IN",
       "PARAMETER_NAME": "p_ThemeJson",
@@ -4736,7 +4736,7 @@
     },
     {
       "SPECIFIC_SCHEMA": "MTM_WIP_Application_Winforms",
-      "SPECIFIC_NAME": "usr_ui_settings_SetThemeJson",
+      "SPECIFIC_NAME": "usr_settings_SetThemeJson",
       "ORDINAL_POSITION": "3",
       "PARAMETER_MODE": "OUT",
       "PARAMETER_NAME": "p_Status",
@@ -4748,7 +4748,7 @@
     },
     {
       "SPECIFIC_SCHEMA": "MTM_WIP_Application_Winforms",
-      "SPECIFIC_NAME": "usr_ui_settings_SetThemeJson",
+      "SPECIFIC_NAME": "usr_settings_SetThemeJson",
       "ORDINAL_POSITION": "4",
       "PARAMETER_MODE": "OUT",
       "PARAMETER_NAME": "p_ErrorMsg",
@@ -5534,7 +5534,7 @@
     },
     {
       "TABLE_SCHEMA": "MTM_WIP_Application_Winforms",
-      "TABLE_NAME": "usr_ui_settings",
+      "TABLE_NAME": "usr_settings",
       "TABLE_TYPE": "BASE TABLE",
       "ENGINE": "InnoDB",
       "VERSION": "10",
@@ -7131,7 +7131,7 @@
     },
     {
       "TABLE_SCHEMA": "MTM_WIP_Application_Winforms",
-      "TABLE_NAME": "usr_ui_settings",
+      "TABLE_NAME": "usr_settings",
       "COLUMN_NAME": "UserId",
       "ORDINAL_POSITION": "1",
       "COLUMN_DEFAULT": null,
@@ -7147,7 +7147,7 @@
     },
     {
       "TABLE_SCHEMA": "MTM_WIP_Application_Winforms",
-      "TABLE_NAME": "usr_ui_settings",
+      "TABLE_NAME": "usr_settings",
       "COLUMN_NAME": "SettingsJson",
       "ORDINAL_POSITION": "2",
       "COLUMN_DEFAULT": null,
@@ -7163,7 +7163,7 @@
     },
     {
       "TABLE_SCHEMA": "MTM_WIP_Application_Winforms",
-      "TABLE_NAME": "usr_ui_settings",
+      "TABLE_NAME": "usr_settings",
       "COLUMN_NAME": "ShortcutsJson",
       "ORDINAL_POSITION": "3",
       "COLUMN_DEFAULT": null,
@@ -7179,7 +7179,7 @@
     },
     {
       "TABLE_SCHEMA": "MTM_WIP_Application_Winforms",
-      "TABLE_NAME": "usr_ui_settings",
+      "TABLE_NAME": "usr_settings",
       "COLUMN_NAME": "UpdatedAt",
       "ORDINAL_POSITION": "4",
       "COLUMN_DEFAULT": "CURRENT_TIMESTAMP",

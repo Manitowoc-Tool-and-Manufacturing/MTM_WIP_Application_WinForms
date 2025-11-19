@@ -171,15 +171,15 @@ Validate and update ALL release documentation files in `Documentation/ReleaseNot
 ### 4. Version 6.0.2 - Theme Saving Fix
 
 **Claims to Validate:**
-- [ ] Theme save was calling `usr_ui_settings_Upsert` (non-existent procedure)
-- [ ] Fix changed to call `usr_ui_settings_SetThemeJson` (correct procedure)
+- [ ] Theme save was calling `usr_settings_Upsert` (non-existent procedure)
+- [ ] Fix changed to call `usr_settings_SetThemeJson` (correct procedure)
 - [ ] Error recovery added for missing theme settings
 - [ ] Default theme fallback implemented
 
 **Files to Check:**
 - `Forms/Settings/*` - Theme save implementation
 - `Data/Dao_User.cs` - Theme persistence methods
-- Database stored procedure list for `usr_ui_settings_SetThemeJson`
+- Database stored procedure list for `usr_settings_SetThemeJson`
 
 **Actions:**
 - Verify stored procedure name in code matches documentation
