@@ -86,8 +86,10 @@ Buttons should be grouped together, typically at the bottom or right of a view.
 
 ### Settings/Dashboard "Cards"
 For navigation or settings summaries (like `Control_SettingsHome`):
-- Use `Control_SettingsCategoryCard` or `Control_SettingsCategoryTile`.
-- Place them inside a `FlowLayoutPanel` with `AutoScroll = true`.
+- Use the existing card/tile controls (`Control_SettingsCategoryCard`, `Control_SettingsCategoryTile`) shown in `Control_SettingsHome.Designer.cs`.
+- Place them inside a `FlowLayoutPanel` or `TableLayoutPanel` with `AutoScroll = true`.
+- **Settings Form Controls**: When building Settings tab content (e.g., Database, Theme, About), follow the card-based layout pattern from `Control_Database.Designer.cs` instead of nested `GroupBox` controls. This ensures consistent spacing, typography, and iconography.
+- **Reusable Components**: If a new card type or custom UI element is required, create it as a separate control (e.g., `Controls/Shared` or `Controls/SettingsForm`) rather than inlining it inside the current file so that it can be reused by future settings tabs.
 
 ## 4. Inheritance Requirements
 
