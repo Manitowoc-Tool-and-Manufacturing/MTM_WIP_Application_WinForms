@@ -167,6 +167,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             Control_LocationManagement_Label_AddIssuedByValue = new Label();
             Control_LocationManagement_Label_EditIssuedBy = new Label();
             Control_LocationManagement_Label_EditIssuedByValue = new Label();
+            Control_LocationManagement_Button_Home = new Button();
             Control_LocationManagement_TableLayoutPanel_Main.SuspendLayout();
             Control_LocationManagement_Panel_Container.SuspendLayout();
             Control_LocationManagement_Panel_Home.SuspendLayout();
@@ -1159,9 +1160,11 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             // 
             Control_LocationManagement_TableLayoutPanel_BackButton.AutoSize = true;
             Control_LocationManagement_TableLayoutPanel_BackButton.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            Control_LocationManagement_TableLayoutPanel_BackButton.ColumnCount = 2;
+            Control_LocationManagement_TableLayoutPanel_BackButton.ColumnCount = 3;
             Control_LocationManagement_TableLayoutPanel_BackButton.ColumnStyles.Add(new ColumnStyle());
+            Control_LocationManagement_TableLayoutPanel_BackButton.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
             Control_LocationManagement_TableLayoutPanel_BackButton.ColumnStyles.Add(new ColumnStyle());
+            Control_LocationManagement_TableLayoutPanel_BackButton.Controls.Add(Control_LocationManagement_Button_Home, 2, 0);
             Control_LocationManagement_TableLayoutPanel_BackButton.Controls.Add(Control_LocationManagement_Button_Back, 0, 0);
             Control_LocationManagement_TableLayoutPanel_BackButton.Dock = DockStyle.Fill;
             Control_LocationManagement_TableLayoutPanel_BackButton.Location = new Point(23, 323);
@@ -1170,7 +1173,6 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             Control_LocationManagement_TableLayoutPanel_BackButton.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
             Control_LocationManagement_TableLayoutPanel_BackButton.Size = new Size(446, 43);
             Control_LocationManagement_TableLayoutPanel_BackButton.TabIndex = 0;
-            Control_LocationManagement_TableLayoutPanel_BackButton.Visible = false;
             // 
             // Control_LocationManagement_Button_Back
             // 
@@ -1181,6 +1183,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             Control_LocationManagement_Button_Back.Size = new Size(152, 37);
             Control_LocationManagement_Button_Back.TabIndex = 0;
             Control_LocationManagement_Button_Back.Text = "← Back to Selection";
+            Control_LocationManagement_Button_Back.Visible = false;
             // 
             // Control_LocationManagement_Label_AddIssuedBy
             // 
@@ -1214,6 +1217,16 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             Control_LocationManagement_Label_EditIssuedByValue.Name = "Control_LocationManagement_Label_EditIssuedByValue";
             Control_LocationManagement_Label_EditIssuedByValue.Size = new Size(100, 23);
             Control_LocationManagement_Label_EditIssuedByValue.TabIndex = 0;
+            // 
+            // Control_LocationManagement_Button_Home
+            // 
+            Control_LocationManagement_Button_Home.AutoSize = true;
+            Control_LocationManagement_Button_Home.Location = new Point(304, 3);
+            Control_LocationManagement_Button_Home.Name = "Control_LocationManagement_Button_Home";
+            Control_LocationManagement_Button_Home.Padding = new Padding(16, 6, 16, 6);
+            Control_LocationManagement_Button_Home.Size = new Size(139, 37);
+            Control_LocationManagement_Button_Home.TabIndex = 2;
+            Control_LocationManagement_Button_Home.Text = "🏠 Back to Home";
             // 
             // Control_LocationManagement
             // 
@@ -1366,5 +1379,6 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
         private Label label3;
         private Label label4;
         private TableLayoutPanel tableLayoutPanel3;
+        private Button Control_LocationManagement_Button_Home;
     }
 }

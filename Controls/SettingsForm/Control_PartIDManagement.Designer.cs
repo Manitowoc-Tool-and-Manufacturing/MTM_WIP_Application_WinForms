@@ -100,6 +100,23 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
         {
             Control_PartIDManagement_TableLayout_Main = new TableLayoutPanel();
             Control_PartIDManagement_Panel_Container = new Panel();
+            Control_PartIDManagement_Panel_Home = new Panel();
+            Control_PartIDManagement_TableLayout_Home = new TableLayoutPanel();
+            Control_PartIDManagement_Panel_HomeTile_Add = new Panel();
+            Control_PartIDManagement_TableLayout_HomeTile_Add = new TableLayoutPanel();
+            Control_PartIDManagement_Label_HomeTile_AddInstruction = new Label();
+            Control_PartIDManagement_Label_HomeTile_AddTitle = new Label();
+            Control_PartIDManagement_Label_HomeTile_AddIcon = new Label();
+            Control_PartIDManagement_Panel_HomeTile_Edit = new Panel();
+            Control_PartIDManagement_TableLayout_HomeTile_Edit = new TableLayoutPanel();
+            Control_PartIDManagement_Label_HomeTile_EditIcon = new Label();
+            Control_PartIDManagement_Label_HomeTile_EditTitle = new Label();
+            Control_PartIDManagement_Label_HomeTile_EditInstruction = new Label();
+            Control_PartIDManagement_Panel_HomeTile_Remove = new Panel();
+            Control_PartIDManagement_TableLayout_HomeTile_Remove = new TableLayoutPanel();
+            Control_PartIDManagement_Label_HomeTile_RemoveIcon = new Label();
+            Control_PartIDManagement_Label_HomeTile_RemoveInstruction = new Label();
+            Control_PartIDManagement_Label_HomeTile_RemoveTitle = new Label();
             Control_PartIDManagement_TableLayout_Cards = new TableLayoutPanel();
             Control_PartIDManagement_Panel_RemoveCard = new Panel();
             Control_PartIDManagement_TableLayout_Remove = new TableLayoutPanel();
@@ -148,23 +165,6 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             Control_PartIDManagement_Suggestion_EditItemType = new SuggestionTextBoxWithLabel();
             Control_PartIDManagement_CheckBox_EditRequiresColorCode = new CheckBox();
             Control_PartIDManagement_Suggestion_EditNewPartNumber = new SuggestionTextBoxWithLabel();
-            Control_PartIDManagement_Panel_Home = new Panel();
-            Control_PartIDManagement_TableLayout_Home = new TableLayoutPanel();
-            Control_PartIDManagement_Panel_HomeTile_Add = new Panel();
-            Control_PartIDManagement_TableLayout_HomeTile_Add = new TableLayoutPanel();
-            Control_PartIDManagement_Label_HomeTile_AddInstruction = new Label();
-            Control_PartIDManagement_Label_HomeTile_AddTitle = new Label();
-            Control_PartIDManagement_Label_HomeTile_AddIcon = new Label();
-            Control_PartIDManagement_Panel_HomeTile_Edit = new Panel();
-            Control_PartIDManagement_TableLayout_HomeTile_Edit = new TableLayoutPanel();
-            Control_PartIDManagement_Label_HomeTile_EditIcon = new Label();
-            Control_PartIDManagement_Label_HomeTile_EditTitle = new Label();
-            Control_PartIDManagement_Label_HomeTile_EditInstruction = new Label();
-            Control_PartIDManagement_Panel_HomeTile_Remove = new Panel();
-            Control_PartIDManagement_TableLayout_HomeTile_Remove = new TableLayoutPanel();
-            Control_PartIDManagement_Label_HomeTile_RemoveIcon = new Label();
-            Control_PartIDManagement_Label_HomeTile_RemoveInstruction = new Label();
-            Control_PartIDManagement_Label_HomeTile_RemoveTitle = new Label();
             Control_PartIDManagement_TableLayoutPanel_BackButton = new TableLayoutPanel();
             Control_PartIDManagement_Button_Back = new Button();
             Control_PartIDManagement_Label_Header = new Label();
@@ -173,8 +173,17 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             Control_PartIDManagement_Label_AddIssuedByValue = new Label();
             Control_PartIDManagement_Label_EditIssuedBy = new Label();
             Control_PartIDManagement_Label_EditIssuedByValue = new Label();
+            Control_PartManagement_Button_Home = new Button();
             Control_PartIDManagement_TableLayout_Main.SuspendLayout();
             Control_PartIDManagement_Panel_Container.SuspendLayout();
+            Control_PartIDManagement_Panel_Home.SuspendLayout();
+            Control_PartIDManagement_TableLayout_Home.SuspendLayout();
+            Control_PartIDManagement_Panel_HomeTile_Add.SuspendLayout();
+            Control_PartIDManagement_TableLayout_HomeTile_Add.SuspendLayout();
+            Control_PartIDManagement_Panel_HomeTile_Edit.SuspendLayout();
+            Control_PartIDManagement_TableLayout_HomeTile_Edit.SuspendLayout();
+            Control_PartIDManagement_Panel_HomeTile_Remove.SuspendLayout();
+            Control_PartIDManagement_TableLayout_HomeTile_Remove.SuspendLayout();
             Control_PartIDManagement_TableLayout_Cards.SuspendLayout();
             Control_PartIDManagement_Panel_RemoveCard.SuspendLayout();
             Control_PartIDManagement_TableLayout_Remove.SuspendLayout();
@@ -192,14 +201,6 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             Control_PartIDManagement_TableLayoutPanel_Title.SuspendLayout();
             Control_PartIDManagement_TableLayout_EditContent.SuspendLayout();
             Control_PartIDManagement_TableLayoutPanel_EditActions.SuspendLayout();
-            Control_PartIDManagement_Panel_Home.SuspendLayout();
-            Control_PartIDManagement_TableLayout_Home.SuspendLayout();
-            Control_PartIDManagement_Panel_HomeTile_Add.SuspendLayout();
-            Control_PartIDManagement_TableLayout_HomeTile_Add.SuspendLayout();
-            Control_PartIDManagement_Panel_HomeTile_Edit.SuspendLayout();
-            Control_PartIDManagement_TableLayout_HomeTile_Edit.SuspendLayout();
-            Control_PartIDManagement_Panel_HomeTile_Remove.SuspendLayout();
-            Control_PartIDManagement_TableLayout_HomeTile_Remove.SuspendLayout();
             Control_PartIDManagement_TableLayoutPanel_BackButton.SuspendLayout();
             SuspendLayout();
             // 
@@ -234,6 +235,260 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             Control_PartIDManagement_Panel_Container.Name = "Control_PartIDManagement_Panel_Container";
             Control_PartIDManagement_Panel_Container.Size = new Size(446, 226);
             Control_PartIDManagement_Panel_Container.TabIndex = 2;
+            // 
+            // Control_PartIDManagement_Panel_Home
+            // 
+            Control_PartIDManagement_Panel_Home.AutoSize = true;
+            Control_PartIDManagement_Panel_Home.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            Control_PartIDManagement_Panel_Home.Controls.Add(Control_PartIDManagement_TableLayout_Home);
+            Control_PartIDManagement_Panel_Home.Dock = DockStyle.Fill;
+            Control_PartIDManagement_Panel_Home.Location = new Point(0, 0);
+            Control_PartIDManagement_Panel_Home.Name = "Control_PartIDManagement_Panel_Home";
+            Control_PartIDManagement_Panel_Home.Size = new Size(446, 226);
+            Control_PartIDManagement_Panel_Home.TabIndex = 0;
+            // 
+            // Control_PartIDManagement_TableLayout_Home
+            // 
+            Control_PartIDManagement_TableLayout_Home.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            Control_PartIDManagement_TableLayout_Home.ColumnCount = 3;
+            Control_PartIDManagement_TableLayout_Home.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 33.33F));
+            Control_PartIDManagement_TableLayout_Home.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 33.33F));
+            Control_PartIDManagement_TableLayout_Home.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 33.34F));
+            Control_PartIDManagement_TableLayout_Home.Controls.Add(Control_PartIDManagement_Panel_HomeTile_Add, 0, 0);
+            Control_PartIDManagement_TableLayout_Home.Controls.Add(Control_PartIDManagement_Panel_HomeTile_Edit, 1, 0);
+            Control_PartIDManagement_TableLayout_Home.Controls.Add(Control_PartIDManagement_Panel_HomeTile_Remove, 2, 0);
+            Control_PartIDManagement_TableLayout_Home.Dock = DockStyle.Fill;
+            Control_PartIDManagement_TableLayout_Home.Location = new Point(0, 0);
+            Control_PartIDManagement_TableLayout_Home.Name = "Control_PartIDManagement_TableLayout_Home";
+            Control_PartIDManagement_TableLayout_Home.RowCount = 1;
+            Control_PartIDManagement_TableLayout_Home.RowStyles.Add(new RowStyle());
+            Control_PartIDManagement_TableLayout_Home.Size = new Size(446, 226);
+            Control_PartIDManagement_TableLayout_Home.TabIndex = 0;
+            // 
+            // Control_PartIDManagement_Panel_HomeTile_Add
+            // 
+            Control_PartIDManagement_Panel_HomeTile_Add.AutoSize = true;
+            Control_PartIDManagement_Panel_HomeTile_Add.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            Control_PartIDManagement_Panel_HomeTile_Add.BorderStyle = BorderStyle.FixedSingle;
+            Control_PartIDManagement_Panel_HomeTile_Add.Controls.Add(Control_PartIDManagement_TableLayout_HomeTile_Add);
+            Control_PartIDManagement_Panel_HomeTile_Add.Cursor = Cursors.Hand;
+            Control_PartIDManagement_Panel_HomeTile_Add.Dock = DockStyle.Fill;
+            Control_PartIDManagement_Panel_HomeTile_Add.Location = new Point(3, 3);
+            Control_PartIDManagement_Panel_HomeTile_Add.Name = "Control_PartIDManagement_Panel_HomeTile_Add";
+            Control_PartIDManagement_Panel_HomeTile_Add.Size = new Size(142, 220);
+            Control_PartIDManagement_Panel_HomeTile_Add.TabIndex = 0;
+            // 
+            // Control_PartIDManagement_TableLayout_HomeTile_Add
+            // 
+            Control_PartIDManagement_TableLayout_HomeTile_Add.AutoSize = true;
+            Control_PartIDManagement_TableLayout_HomeTile_Add.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            Control_PartIDManagement_TableLayout_HomeTile_Add.ColumnCount = 1;
+            Control_PartIDManagement_TableLayout_HomeTile_Add.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
+            Control_PartIDManagement_TableLayout_HomeTile_Add.Controls.Add(Control_PartIDManagement_Label_HomeTile_AddInstruction, 0, 3);
+            Control_PartIDManagement_TableLayout_HomeTile_Add.Controls.Add(Control_PartIDManagement_Label_HomeTile_AddTitle, 0, 1);
+            Control_PartIDManagement_TableLayout_HomeTile_Add.Controls.Add(Control_PartIDManagement_Label_HomeTile_AddIcon, 0, 0);
+            Control_PartIDManagement_TableLayout_HomeTile_Add.Dock = DockStyle.Fill;
+            Control_PartIDManagement_TableLayout_HomeTile_Add.Location = new Point(0, 0);
+            Control_PartIDManagement_TableLayout_HomeTile_Add.Name = "Control_PartIDManagement_TableLayout_HomeTile_Add";
+            Control_PartIDManagement_TableLayout_HomeTile_Add.Padding = new Padding(3);
+            Control_PartIDManagement_TableLayout_HomeTile_Add.RowCount = 5;
+            Control_PartIDManagement_TableLayout_HomeTile_Add.RowStyles.Add(new RowStyle());
+            Control_PartIDManagement_TableLayout_HomeTile_Add.RowStyles.Add(new RowStyle());
+            Control_PartIDManagement_TableLayout_HomeTile_Add.RowStyles.Add(new RowStyle(SizeType.Percent, 49.9999962F));
+            Control_PartIDManagement_TableLayout_HomeTile_Add.RowStyles.Add(new RowStyle());
+            Control_PartIDManagement_TableLayout_HomeTile_Add.RowStyles.Add(new RowStyle(SizeType.Percent, 50F));
+            Control_PartIDManagement_TableLayout_HomeTile_Add.Size = new Size(140, 218);
+            Control_PartIDManagement_TableLayout_HomeTile_Add.TabIndex = 0;
+            // 
+            // Control_PartIDManagement_Label_HomeTile_AddInstruction
+            // 
+            Control_PartIDManagement_Label_HomeTile_AddInstruction.AutoSize = true;
+            Control_PartIDManagement_Label_HomeTile_AddInstruction.Dock = DockStyle.Fill;
+            Control_PartIDManagement_Label_HomeTile_AddInstruction.Font = new Font("Segoe UI", 9F, FontStyle.Italic);
+            Control_PartIDManagement_Label_HomeTile_AddInstruction.ForeColor = Color.FromArgb(100, 100, 100);
+            Control_PartIDManagement_Label_HomeTile_AddInstruction.Location = new Point(6, 167);
+            Control_PartIDManagement_Label_HomeTile_AddInstruction.Margin = new Padding(3);
+            Control_PartIDManagement_Label_HomeTile_AddInstruction.Name = "Control_PartIDManagement_Label_HomeTile_AddInstruction";
+            Control_PartIDManagement_Label_HomeTile_AddInstruction.Size = new Size(128, 30);
+            Control_PartIDManagement_Label_HomeTile_AddInstruction.TabIndex = 2;
+            Control_PartIDManagement_Label_HomeTile_AddInstruction.Text = "Click to add new part numbers";
+            Control_PartIDManagement_Label_HomeTile_AddInstruction.TextAlign = ContentAlignment.MiddleCenter;
+            // 
+            // Control_PartIDManagement_Label_HomeTile_AddTitle
+            // 
+            Control_PartIDManagement_Label_HomeTile_AddTitle.AutoSize = true;
+            Control_PartIDManagement_Label_HomeTile_AddTitle.Dock = DockStyle.Fill;
+            Control_PartIDManagement_Label_HomeTile_AddTitle.Font = new Font("Segoe UI", 14F, FontStyle.Bold);
+            Control_PartIDManagement_Label_HomeTile_AddTitle.Location = new Point(6, 97);
+            Control_PartIDManagement_Label_HomeTile_AddTitle.Margin = new Padding(3);
+            Control_PartIDManagement_Label_HomeTile_AddTitle.Name = "Control_PartIDManagement_Label_HomeTile_AddTitle";
+            Control_PartIDManagement_Label_HomeTile_AddTitle.Size = new Size(128, 50);
+            Control_PartIDManagement_Label_HomeTile_AddTitle.TabIndex = 1;
+            Control_PartIDManagement_Label_HomeTile_AddTitle.Text = "Add\r\nPart";
+            Control_PartIDManagement_Label_HomeTile_AddTitle.TextAlign = ContentAlignment.MiddleCenter;
+            // 
+            // Control_PartIDManagement_Label_HomeTile_AddIcon
+            // 
+            Control_PartIDManagement_Label_HomeTile_AddIcon.AutoSize = true;
+            Control_PartIDManagement_Label_HomeTile_AddIcon.Dock = DockStyle.Fill;
+            Control_PartIDManagement_Label_HomeTile_AddIcon.Font = new Font("Segoe UI Emoji", 48F);
+            Control_PartIDManagement_Label_HomeTile_AddIcon.Location = new Point(6, 6);
+            Control_PartIDManagement_Label_HomeTile_AddIcon.Margin = new Padding(3);
+            Control_PartIDManagement_Label_HomeTile_AddIcon.Name = "Control_PartIDManagement_Label_HomeTile_AddIcon";
+            Control_PartIDManagement_Label_HomeTile_AddIcon.Size = new Size(128, 85);
+            Control_PartIDManagement_Label_HomeTile_AddIcon.TabIndex = 0;
+            Control_PartIDManagement_Label_HomeTile_AddIcon.Text = "🆕";
+            Control_PartIDManagement_Label_HomeTile_AddIcon.TextAlign = ContentAlignment.MiddleCenter;
+            // 
+            // Control_PartIDManagement_Panel_HomeTile_Edit
+            // 
+            Control_PartIDManagement_Panel_HomeTile_Edit.AutoSize = true;
+            Control_PartIDManagement_Panel_HomeTile_Edit.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            Control_PartIDManagement_Panel_HomeTile_Edit.BorderStyle = BorderStyle.FixedSingle;
+            Control_PartIDManagement_Panel_HomeTile_Edit.Controls.Add(Control_PartIDManagement_TableLayout_HomeTile_Edit);
+            Control_PartIDManagement_Panel_HomeTile_Edit.Cursor = Cursors.Hand;
+            Control_PartIDManagement_Panel_HomeTile_Edit.Dock = DockStyle.Fill;
+            Control_PartIDManagement_Panel_HomeTile_Edit.Location = new Point(151, 3);
+            Control_PartIDManagement_Panel_HomeTile_Edit.Name = "Control_PartIDManagement_Panel_HomeTile_Edit";
+            Control_PartIDManagement_Panel_HomeTile_Edit.Size = new Size(142, 220);
+            Control_PartIDManagement_Panel_HomeTile_Edit.TabIndex = 1;
+            // 
+            // Control_PartIDManagement_TableLayout_HomeTile_Edit
+            // 
+            Control_PartIDManagement_TableLayout_HomeTile_Edit.AutoSize = true;
+            Control_PartIDManagement_TableLayout_HomeTile_Edit.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            Control_PartIDManagement_TableLayout_HomeTile_Edit.ColumnCount = 1;
+            Control_PartIDManagement_TableLayout_HomeTile_Edit.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
+            Control_PartIDManagement_TableLayout_HomeTile_Edit.Controls.Add(Control_PartIDManagement_Label_HomeTile_EditIcon, 0, 0);
+            Control_PartIDManagement_TableLayout_HomeTile_Edit.Controls.Add(Control_PartIDManagement_Label_HomeTile_EditTitle, 0, 1);
+            Control_PartIDManagement_TableLayout_HomeTile_Edit.Controls.Add(Control_PartIDManagement_Label_HomeTile_EditInstruction, 0, 3);
+            Control_PartIDManagement_TableLayout_HomeTile_Edit.Dock = DockStyle.Fill;
+            Control_PartIDManagement_TableLayout_HomeTile_Edit.Location = new Point(0, 0);
+            Control_PartIDManagement_TableLayout_HomeTile_Edit.Name = "Control_PartIDManagement_TableLayout_HomeTile_Edit";
+            Control_PartIDManagement_TableLayout_HomeTile_Edit.Padding = new Padding(3);
+            Control_PartIDManagement_TableLayout_HomeTile_Edit.RowCount = 5;
+            Control_PartIDManagement_TableLayout_HomeTile_Edit.RowStyles.Add(new RowStyle());
+            Control_PartIDManagement_TableLayout_HomeTile_Edit.RowStyles.Add(new RowStyle());
+            Control_PartIDManagement_TableLayout_HomeTile_Edit.RowStyles.Add(new RowStyle(SizeType.Percent, 50F));
+            Control_PartIDManagement_TableLayout_HomeTile_Edit.RowStyles.Add(new RowStyle());
+            Control_PartIDManagement_TableLayout_HomeTile_Edit.RowStyles.Add(new RowStyle(SizeType.Percent, 50F));
+            Control_PartIDManagement_TableLayout_HomeTile_Edit.Size = new Size(140, 218);
+            Control_PartIDManagement_TableLayout_HomeTile_Edit.TabIndex = 0;
+            // 
+            // Control_PartIDManagement_Label_HomeTile_EditIcon
+            // 
+            Control_PartIDManagement_Label_HomeTile_EditIcon.AutoSize = true;
+            Control_PartIDManagement_Label_HomeTile_EditIcon.Dock = DockStyle.Fill;
+            Control_PartIDManagement_Label_HomeTile_EditIcon.Font = new Font("Segoe UI Emoji", 48F);
+            Control_PartIDManagement_Label_HomeTile_EditIcon.Location = new Point(6, 6);
+            Control_PartIDManagement_Label_HomeTile_EditIcon.Margin = new Padding(3);
+            Control_PartIDManagement_Label_HomeTile_EditIcon.Name = "Control_PartIDManagement_Label_HomeTile_EditIcon";
+            Control_PartIDManagement_Label_HomeTile_EditIcon.Size = new Size(128, 85);
+            Control_PartIDManagement_Label_HomeTile_EditIcon.TabIndex = 0;
+            Control_PartIDManagement_Label_HomeTile_EditIcon.Text = "✏️";
+            Control_PartIDManagement_Label_HomeTile_EditIcon.TextAlign = ContentAlignment.MiddleCenter;
+            // 
+            // Control_PartIDManagement_Label_HomeTile_EditTitle
+            // 
+            Control_PartIDManagement_Label_HomeTile_EditTitle.AutoSize = true;
+            Control_PartIDManagement_Label_HomeTile_EditTitle.Dock = DockStyle.Fill;
+            Control_PartIDManagement_Label_HomeTile_EditTitle.Font = new Font("Segoe UI", 14F, FontStyle.Bold);
+            Control_PartIDManagement_Label_HomeTile_EditTitle.Location = new Point(6, 97);
+            Control_PartIDManagement_Label_HomeTile_EditTitle.Margin = new Padding(3);
+            Control_PartIDManagement_Label_HomeTile_EditTitle.Name = "Control_PartIDManagement_Label_HomeTile_EditTitle";
+            Control_PartIDManagement_Label_HomeTile_EditTitle.Size = new Size(128, 50);
+            Control_PartIDManagement_Label_HomeTile_EditTitle.TabIndex = 1;
+            Control_PartIDManagement_Label_HomeTile_EditTitle.Text = "Edit\r\nPart";
+            Control_PartIDManagement_Label_HomeTile_EditTitle.TextAlign = ContentAlignment.MiddleCenter;
+            // 
+            // Control_PartIDManagement_Label_HomeTile_EditInstruction
+            // 
+            Control_PartIDManagement_Label_HomeTile_EditInstruction.AutoSize = true;
+            Control_PartIDManagement_Label_HomeTile_EditInstruction.Dock = DockStyle.Fill;
+            Control_PartIDManagement_Label_HomeTile_EditInstruction.Font = new Font("Segoe UI", 9F, FontStyle.Italic);
+            Control_PartIDManagement_Label_HomeTile_EditInstruction.ForeColor = Color.FromArgb(100, 100, 100);
+            Control_PartIDManagement_Label_HomeTile_EditInstruction.Location = new Point(6, 167);
+            Control_PartIDManagement_Label_HomeTile_EditInstruction.Margin = new Padding(3);
+            Control_PartIDManagement_Label_HomeTile_EditInstruction.Name = "Control_PartIDManagement_Label_HomeTile_EditInstruction";
+            Control_PartIDManagement_Label_HomeTile_EditInstruction.Size = new Size(128, 30);
+            Control_PartIDManagement_Label_HomeTile_EditInstruction.TabIndex = 2;
+            Control_PartIDManagement_Label_HomeTile_EditInstruction.Text = "Click to edit existing parts";
+            Control_PartIDManagement_Label_HomeTile_EditInstruction.TextAlign = ContentAlignment.MiddleCenter;
+            // 
+            // Control_PartIDManagement_Panel_HomeTile_Remove
+            // 
+            Control_PartIDManagement_Panel_HomeTile_Remove.AutoSize = true;
+            Control_PartIDManagement_Panel_HomeTile_Remove.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            Control_PartIDManagement_Panel_HomeTile_Remove.BorderStyle = BorderStyle.FixedSingle;
+            Control_PartIDManagement_Panel_HomeTile_Remove.Controls.Add(Control_PartIDManagement_TableLayout_HomeTile_Remove);
+            Control_PartIDManagement_Panel_HomeTile_Remove.Cursor = Cursors.Hand;
+            Control_PartIDManagement_Panel_HomeTile_Remove.Dock = DockStyle.Fill;
+            Control_PartIDManagement_Panel_HomeTile_Remove.Location = new Point(299, 3);
+            Control_PartIDManagement_Panel_HomeTile_Remove.Name = "Control_PartIDManagement_Panel_HomeTile_Remove";
+            Control_PartIDManagement_Panel_HomeTile_Remove.Size = new Size(144, 220);
+            Control_PartIDManagement_Panel_HomeTile_Remove.TabIndex = 2;
+            // 
+            // Control_PartIDManagement_TableLayout_HomeTile_Remove
+            // 
+            Control_PartIDManagement_TableLayout_HomeTile_Remove.AutoSize = true;
+            Control_PartIDManagement_TableLayout_HomeTile_Remove.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            Control_PartIDManagement_TableLayout_HomeTile_Remove.ColumnCount = 1;
+            Control_PartIDManagement_TableLayout_HomeTile_Remove.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
+            Control_PartIDManagement_TableLayout_HomeTile_Remove.Controls.Add(Control_PartIDManagement_Label_HomeTile_RemoveIcon, 0, 0);
+            Control_PartIDManagement_TableLayout_HomeTile_Remove.Controls.Add(Control_PartIDManagement_Label_HomeTile_RemoveInstruction, 0, 3);
+            Control_PartIDManagement_TableLayout_HomeTile_Remove.Controls.Add(Control_PartIDManagement_Label_HomeTile_RemoveTitle, 0, 1);
+            Control_PartIDManagement_TableLayout_HomeTile_Remove.Dock = DockStyle.Fill;
+            Control_PartIDManagement_TableLayout_HomeTile_Remove.Location = new Point(0, 0);
+            Control_PartIDManagement_TableLayout_HomeTile_Remove.Name = "Control_PartIDManagement_TableLayout_HomeTile_Remove";
+            Control_PartIDManagement_TableLayout_HomeTile_Remove.Padding = new Padding(3);
+            Control_PartIDManagement_TableLayout_HomeTile_Remove.RowCount = 5;
+            Control_PartIDManagement_TableLayout_HomeTile_Remove.RowStyles.Add(new RowStyle());
+            Control_PartIDManagement_TableLayout_HomeTile_Remove.RowStyles.Add(new RowStyle());
+            Control_PartIDManagement_TableLayout_HomeTile_Remove.RowStyles.Add(new RowStyle(SizeType.Percent, 50F));
+            Control_PartIDManagement_TableLayout_HomeTile_Remove.RowStyles.Add(new RowStyle());
+            Control_PartIDManagement_TableLayout_HomeTile_Remove.RowStyles.Add(new RowStyle(SizeType.Percent, 50F));
+            Control_PartIDManagement_TableLayout_HomeTile_Remove.Size = new Size(142, 218);
+            Control_PartIDManagement_TableLayout_HomeTile_Remove.TabIndex = 0;
+            // 
+            // Control_PartIDManagement_Label_HomeTile_RemoveIcon
+            // 
+            Control_PartIDManagement_Label_HomeTile_RemoveIcon.AutoSize = true;
+            Control_PartIDManagement_Label_HomeTile_RemoveIcon.Dock = DockStyle.Fill;
+            Control_PartIDManagement_Label_HomeTile_RemoveIcon.Font = new Font("Segoe UI Emoji", 48F);
+            Control_PartIDManagement_Label_HomeTile_RemoveIcon.Location = new Point(6, 6);
+            Control_PartIDManagement_Label_HomeTile_RemoveIcon.Margin = new Padding(3);
+            Control_PartIDManagement_Label_HomeTile_RemoveIcon.Name = "Control_PartIDManagement_Label_HomeTile_RemoveIcon";
+            Control_PartIDManagement_Label_HomeTile_RemoveIcon.Size = new Size(130, 85);
+            Control_PartIDManagement_Label_HomeTile_RemoveIcon.TabIndex = 0;
+            Control_PartIDManagement_Label_HomeTile_RemoveIcon.Text = "🗑️";
+            Control_PartIDManagement_Label_HomeTile_RemoveIcon.TextAlign = ContentAlignment.MiddleCenter;
+            // 
+            // Control_PartIDManagement_Label_HomeTile_RemoveInstruction
+            // 
+            Control_PartIDManagement_Label_HomeTile_RemoveInstruction.AutoSize = true;
+            Control_PartIDManagement_Label_HomeTile_RemoveInstruction.Dock = DockStyle.Fill;
+            Control_PartIDManagement_Label_HomeTile_RemoveInstruction.Font = new Font("Segoe UI", 9F, FontStyle.Italic);
+            Control_PartIDManagement_Label_HomeTile_RemoveInstruction.ForeColor = Color.FromArgb(100, 100, 100);
+            Control_PartIDManagement_Label_HomeTile_RemoveInstruction.Location = new Point(6, 167);
+            Control_PartIDManagement_Label_HomeTile_RemoveInstruction.Margin = new Padding(3);
+            Control_PartIDManagement_Label_HomeTile_RemoveInstruction.Name = "Control_PartIDManagement_Label_HomeTile_RemoveInstruction";
+            Control_PartIDManagement_Label_HomeTile_RemoveInstruction.Size = new Size(130, 30);
+            Control_PartIDManagement_Label_HomeTile_RemoveInstruction.TabIndex = 2;
+            Control_PartIDManagement_Label_HomeTile_RemoveInstruction.Text = "Click to remove part numbers";
+            Control_PartIDManagement_Label_HomeTile_RemoveInstruction.TextAlign = ContentAlignment.MiddleCenter;
+            // 
+            // Control_PartIDManagement_Label_HomeTile_RemoveTitle
+            // 
+            Control_PartIDManagement_Label_HomeTile_RemoveTitle.AutoSize = true;
+            Control_PartIDManagement_Label_HomeTile_RemoveTitle.Dock = DockStyle.Fill;
+            Control_PartIDManagement_Label_HomeTile_RemoveTitle.Font = new Font("Segoe UI", 14F, FontStyle.Bold);
+            Control_PartIDManagement_Label_HomeTile_RemoveTitle.Location = new Point(6, 97);
+            Control_PartIDManagement_Label_HomeTile_RemoveTitle.Margin = new Padding(3);
+            Control_PartIDManagement_Label_HomeTile_RemoveTitle.Name = "Control_PartIDManagement_Label_HomeTile_RemoveTitle";
+            Control_PartIDManagement_Label_HomeTile_RemoveTitle.Size = new Size(130, 50);
+            Control_PartIDManagement_Label_HomeTile_RemoveTitle.TabIndex = 1;
+            Control_PartIDManagement_Label_HomeTile_RemoveTitle.Text = "Remove\r\nPart";
+            Control_PartIDManagement_Label_HomeTile_RemoveTitle.TextAlign = ContentAlignment.MiddleCenter;
             // 
             // Control_PartIDManagement_TableLayout_Cards
             // 
@@ -897,267 +1152,15 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             Control_PartIDManagement_Suggestion_EditNewPartNumber.Size = new Size(394, 31);
             Control_PartIDManagement_Suggestion_EditNewPartNumber.TabIndex = 1;
             // 
-            // Control_PartIDManagement_Panel_Home
-            // 
-            Control_PartIDManagement_Panel_Home.AutoSize = true;
-            Control_PartIDManagement_Panel_Home.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            Control_PartIDManagement_Panel_Home.Controls.Add(Control_PartIDManagement_TableLayout_Home);
-            Control_PartIDManagement_Panel_Home.Dock = DockStyle.Fill;
-            Control_PartIDManagement_Panel_Home.Location = new Point(0, 0);
-            Control_PartIDManagement_Panel_Home.Name = "Control_PartIDManagement_Panel_Home";
-            Control_PartIDManagement_Panel_Home.Size = new Size(446, 226);
-            Control_PartIDManagement_Panel_Home.TabIndex = 0;
-            // 
-            // Control_PartIDManagement_TableLayout_Home
-            // 
-            Control_PartIDManagement_TableLayout_Home.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            Control_PartIDManagement_TableLayout_Home.ColumnCount = 3;
-            Control_PartIDManagement_TableLayout_Home.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 33.33F));
-            Control_PartIDManagement_TableLayout_Home.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 33.33F));
-            Control_PartIDManagement_TableLayout_Home.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 33.34F));
-            Control_PartIDManagement_TableLayout_Home.Controls.Add(Control_PartIDManagement_Panel_HomeTile_Add, 0, 0);
-            Control_PartIDManagement_TableLayout_Home.Controls.Add(Control_PartIDManagement_Panel_HomeTile_Edit, 1, 0);
-            Control_PartIDManagement_TableLayout_Home.Controls.Add(Control_PartIDManagement_Panel_HomeTile_Remove, 2, 0);
-            Control_PartIDManagement_TableLayout_Home.Dock = DockStyle.Fill;
-            Control_PartIDManagement_TableLayout_Home.Location = new Point(0, 0);
-            Control_PartIDManagement_TableLayout_Home.Name = "Control_PartIDManagement_TableLayout_Home";
-            Control_PartIDManagement_TableLayout_Home.RowCount = 1;
-            Control_PartIDManagement_TableLayout_Home.RowStyles.Add(new RowStyle());
-            Control_PartIDManagement_TableLayout_Home.Size = new Size(446, 226);
-            Control_PartIDManagement_TableLayout_Home.TabIndex = 0;
-            // 
-            // Control_PartIDManagement_Panel_HomeTile_Add
-            // 
-            Control_PartIDManagement_Panel_HomeTile_Add.AutoSize = true;
-            Control_PartIDManagement_Panel_HomeTile_Add.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            Control_PartIDManagement_Panel_HomeTile_Add.BorderStyle = BorderStyle.FixedSingle;
-            Control_PartIDManagement_Panel_HomeTile_Add.Controls.Add(Control_PartIDManagement_TableLayout_HomeTile_Add);
-            Control_PartIDManagement_Panel_HomeTile_Add.Cursor = Cursors.Hand;
-            Control_PartIDManagement_Panel_HomeTile_Add.Dock = DockStyle.Fill;
-            Control_PartIDManagement_Panel_HomeTile_Add.Location = new Point(3, 3);
-            Control_PartIDManagement_Panel_HomeTile_Add.Name = "Control_PartIDManagement_Panel_HomeTile_Add";
-            Control_PartIDManagement_Panel_HomeTile_Add.Size = new Size(142, 220);
-            Control_PartIDManagement_Panel_HomeTile_Add.TabIndex = 0;
-            // 
-            // Control_PartIDManagement_TableLayout_HomeTile_Add
-            // 
-            Control_PartIDManagement_TableLayout_HomeTile_Add.AutoSize = true;
-            Control_PartIDManagement_TableLayout_HomeTile_Add.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            Control_PartIDManagement_TableLayout_HomeTile_Add.ColumnCount = 1;
-            Control_PartIDManagement_TableLayout_HomeTile_Add.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
-            Control_PartIDManagement_TableLayout_HomeTile_Add.Controls.Add(Control_PartIDManagement_Label_HomeTile_AddInstruction, 0, 3);
-            Control_PartIDManagement_TableLayout_HomeTile_Add.Controls.Add(Control_PartIDManagement_Label_HomeTile_AddTitle, 0, 1);
-            Control_PartIDManagement_TableLayout_HomeTile_Add.Controls.Add(Control_PartIDManagement_Label_HomeTile_AddIcon, 0, 0);
-            Control_PartIDManagement_TableLayout_HomeTile_Add.Dock = DockStyle.Fill;
-            Control_PartIDManagement_TableLayout_HomeTile_Add.Location = new Point(0, 0);
-            Control_PartIDManagement_TableLayout_HomeTile_Add.Name = "Control_PartIDManagement_TableLayout_HomeTile_Add";
-            Control_PartIDManagement_TableLayout_HomeTile_Add.Padding = new Padding(3);
-            Control_PartIDManagement_TableLayout_HomeTile_Add.RowCount = 5;
-            Control_PartIDManagement_TableLayout_HomeTile_Add.RowStyles.Add(new RowStyle());
-            Control_PartIDManagement_TableLayout_HomeTile_Add.RowStyles.Add(new RowStyle());
-            Control_PartIDManagement_TableLayout_HomeTile_Add.RowStyles.Add(new RowStyle(SizeType.Percent, 49.9999962F));
-            Control_PartIDManagement_TableLayout_HomeTile_Add.RowStyles.Add(new RowStyle());
-            Control_PartIDManagement_TableLayout_HomeTile_Add.RowStyles.Add(new RowStyle(SizeType.Percent, 50F));
-            Control_PartIDManagement_TableLayout_HomeTile_Add.Size = new Size(140, 218);
-            Control_PartIDManagement_TableLayout_HomeTile_Add.TabIndex = 0;
-            // 
-            // Control_PartIDManagement_Label_HomeTile_AddInstruction
-            // 
-            Control_PartIDManagement_Label_HomeTile_AddInstruction.AutoSize = true;
-            Control_PartIDManagement_Label_HomeTile_AddInstruction.Dock = DockStyle.Fill;
-            Control_PartIDManagement_Label_HomeTile_AddInstruction.Font = new Font("Segoe UI", 9F, FontStyle.Italic);
-            Control_PartIDManagement_Label_HomeTile_AddInstruction.ForeColor = Color.FromArgb(100, 100, 100);
-            Control_PartIDManagement_Label_HomeTile_AddInstruction.Location = new Point(6, 167);
-            Control_PartIDManagement_Label_HomeTile_AddInstruction.Margin = new Padding(3);
-            Control_PartIDManagement_Label_HomeTile_AddInstruction.Name = "Control_PartIDManagement_Label_HomeTile_AddInstruction";
-            Control_PartIDManagement_Label_HomeTile_AddInstruction.Size = new Size(128, 30);
-            Control_PartIDManagement_Label_HomeTile_AddInstruction.TabIndex = 2;
-            Control_PartIDManagement_Label_HomeTile_AddInstruction.Text = "Click to add new part numbers";
-            Control_PartIDManagement_Label_HomeTile_AddInstruction.TextAlign = ContentAlignment.MiddleCenter;
-            // 
-            // Control_PartIDManagement_Label_HomeTile_AddTitle
-            // 
-            Control_PartIDManagement_Label_HomeTile_AddTitle.AutoSize = true;
-            Control_PartIDManagement_Label_HomeTile_AddTitle.Dock = DockStyle.Fill;
-            Control_PartIDManagement_Label_HomeTile_AddTitle.Font = new Font("Segoe UI", 14F, FontStyle.Bold);
-            Control_PartIDManagement_Label_HomeTile_AddTitle.Location = new Point(6, 97);
-            Control_PartIDManagement_Label_HomeTile_AddTitle.Margin = new Padding(3);
-            Control_PartIDManagement_Label_HomeTile_AddTitle.Name = "Control_PartIDManagement_Label_HomeTile_AddTitle";
-            Control_PartIDManagement_Label_HomeTile_AddTitle.Size = new Size(128, 50);
-            Control_PartIDManagement_Label_HomeTile_AddTitle.TabIndex = 1;
-            Control_PartIDManagement_Label_HomeTile_AddTitle.Text = "Add\r\nPart";
-            Control_PartIDManagement_Label_HomeTile_AddTitle.TextAlign = ContentAlignment.MiddleCenter;
-            // 
-            // Control_PartIDManagement_Label_HomeTile_AddIcon
-            // 
-            Control_PartIDManagement_Label_HomeTile_AddIcon.AutoSize = true;
-            Control_PartIDManagement_Label_HomeTile_AddIcon.Dock = DockStyle.Fill;
-            Control_PartIDManagement_Label_HomeTile_AddIcon.Font = new Font("Segoe UI Emoji", 48F);
-            Control_PartIDManagement_Label_HomeTile_AddIcon.Location = new Point(6, 6);
-            Control_PartIDManagement_Label_HomeTile_AddIcon.Margin = new Padding(3);
-            Control_PartIDManagement_Label_HomeTile_AddIcon.Name = "Control_PartIDManagement_Label_HomeTile_AddIcon";
-            Control_PartIDManagement_Label_HomeTile_AddIcon.Size = new Size(128, 85);
-            Control_PartIDManagement_Label_HomeTile_AddIcon.TabIndex = 0;
-            Control_PartIDManagement_Label_HomeTile_AddIcon.Text = "🆕";
-            Control_PartIDManagement_Label_HomeTile_AddIcon.TextAlign = ContentAlignment.MiddleCenter;
-            // 
-            // Control_PartIDManagement_Panel_HomeTile_Edit
-            // 
-            Control_PartIDManagement_Panel_HomeTile_Edit.AutoSize = true;
-            Control_PartIDManagement_Panel_HomeTile_Edit.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            Control_PartIDManagement_Panel_HomeTile_Edit.BorderStyle = BorderStyle.FixedSingle;
-            Control_PartIDManagement_Panel_HomeTile_Edit.Controls.Add(Control_PartIDManagement_TableLayout_HomeTile_Edit);
-            Control_PartIDManagement_Panel_HomeTile_Edit.Cursor = Cursors.Hand;
-            Control_PartIDManagement_Panel_HomeTile_Edit.Dock = DockStyle.Fill;
-            Control_PartIDManagement_Panel_HomeTile_Edit.Location = new Point(151, 3);
-            Control_PartIDManagement_Panel_HomeTile_Edit.Name = "Control_PartIDManagement_Panel_HomeTile_Edit";
-            Control_PartIDManagement_Panel_HomeTile_Edit.Size = new Size(142, 220);
-            Control_PartIDManagement_Panel_HomeTile_Edit.TabIndex = 1;
-            // 
-            // Control_PartIDManagement_TableLayout_HomeTile_Edit
-            // 
-            Control_PartIDManagement_TableLayout_HomeTile_Edit.AutoSize = true;
-            Control_PartIDManagement_TableLayout_HomeTile_Edit.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            Control_PartIDManagement_TableLayout_HomeTile_Edit.ColumnCount = 1;
-            Control_PartIDManagement_TableLayout_HomeTile_Edit.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
-            Control_PartIDManagement_TableLayout_HomeTile_Edit.Controls.Add(Control_PartIDManagement_Label_HomeTile_EditIcon, 0, 0);
-            Control_PartIDManagement_TableLayout_HomeTile_Edit.Controls.Add(Control_PartIDManagement_Label_HomeTile_EditTitle, 0, 1);
-            Control_PartIDManagement_TableLayout_HomeTile_Edit.Controls.Add(Control_PartIDManagement_Label_HomeTile_EditInstruction, 0, 3);
-            Control_PartIDManagement_TableLayout_HomeTile_Edit.Dock = DockStyle.Fill;
-            Control_PartIDManagement_TableLayout_HomeTile_Edit.Location = new Point(0, 0);
-            Control_PartIDManagement_TableLayout_HomeTile_Edit.Name = "Control_PartIDManagement_TableLayout_HomeTile_Edit";
-            Control_PartIDManagement_TableLayout_HomeTile_Edit.Padding = new Padding(3);
-            Control_PartIDManagement_TableLayout_HomeTile_Edit.RowCount = 5;
-            Control_PartIDManagement_TableLayout_HomeTile_Edit.RowStyles.Add(new RowStyle());
-            Control_PartIDManagement_TableLayout_HomeTile_Edit.RowStyles.Add(new RowStyle());
-            Control_PartIDManagement_TableLayout_HomeTile_Edit.RowStyles.Add(new RowStyle(SizeType.Percent, 50F));
-            Control_PartIDManagement_TableLayout_HomeTile_Edit.RowStyles.Add(new RowStyle());
-            Control_PartIDManagement_TableLayout_HomeTile_Edit.RowStyles.Add(new RowStyle(SizeType.Percent, 50F));
-            Control_PartIDManagement_TableLayout_HomeTile_Edit.Size = new Size(140, 218);
-            Control_PartIDManagement_TableLayout_HomeTile_Edit.TabIndex = 0;
-            // 
-            // Control_PartIDManagement_Label_HomeTile_EditIcon
-            // 
-            Control_PartIDManagement_Label_HomeTile_EditIcon.AutoSize = true;
-            Control_PartIDManagement_Label_HomeTile_EditIcon.Dock = DockStyle.Fill;
-            Control_PartIDManagement_Label_HomeTile_EditIcon.Font = new Font("Segoe UI Emoji", 48F);
-            Control_PartIDManagement_Label_HomeTile_EditIcon.Location = new Point(6, 6);
-            Control_PartIDManagement_Label_HomeTile_EditIcon.Margin = new Padding(3);
-            Control_PartIDManagement_Label_HomeTile_EditIcon.Name = "Control_PartIDManagement_Label_HomeTile_EditIcon";
-            Control_PartIDManagement_Label_HomeTile_EditIcon.Size = new Size(128, 85);
-            Control_PartIDManagement_Label_HomeTile_EditIcon.TabIndex = 0;
-            Control_PartIDManagement_Label_HomeTile_EditIcon.Text = "✏️";
-            Control_PartIDManagement_Label_HomeTile_EditIcon.TextAlign = ContentAlignment.MiddleCenter;
-            // 
-            // Control_PartIDManagement_Label_HomeTile_EditTitle
-            // 
-            Control_PartIDManagement_Label_HomeTile_EditTitle.AutoSize = true;
-            Control_PartIDManagement_Label_HomeTile_EditTitle.Dock = DockStyle.Fill;
-            Control_PartIDManagement_Label_HomeTile_EditTitle.Font = new Font("Segoe UI", 14F, FontStyle.Bold);
-            Control_PartIDManagement_Label_HomeTile_EditTitle.Location = new Point(6, 97);
-            Control_PartIDManagement_Label_HomeTile_EditTitle.Margin = new Padding(3);
-            Control_PartIDManagement_Label_HomeTile_EditTitle.Name = "Control_PartIDManagement_Label_HomeTile_EditTitle";
-            Control_PartIDManagement_Label_HomeTile_EditTitle.Size = new Size(128, 50);
-            Control_PartIDManagement_Label_HomeTile_EditTitle.TabIndex = 1;
-            Control_PartIDManagement_Label_HomeTile_EditTitle.Text = "Edit\r\nPart";
-            Control_PartIDManagement_Label_HomeTile_EditTitle.TextAlign = ContentAlignment.MiddleCenter;
-            // 
-            // Control_PartIDManagement_Label_HomeTile_EditInstruction
-            // 
-            Control_PartIDManagement_Label_HomeTile_EditInstruction.AutoSize = true;
-            Control_PartIDManagement_Label_HomeTile_EditInstruction.Dock = DockStyle.Fill;
-            Control_PartIDManagement_Label_HomeTile_EditInstruction.Font = new Font("Segoe UI", 9F, FontStyle.Italic);
-            Control_PartIDManagement_Label_HomeTile_EditInstruction.ForeColor = Color.FromArgb(100, 100, 100);
-            Control_PartIDManagement_Label_HomeTile_EditInstruction.Location = new Point(6, 167);
-            Control_PartIDManagement_Label_HomeTile_EditInstruction.Margin = new Padding(3);
-            Control_PartIDManagement_Label_HomeTile_EditInstruction.Name = "Control_PartIDManagement_Label_HomeTile_EditInstruction";
-            Control_PartIDManagement_Label_HomeTile_EditInstruction.Size = new Size(128, 30);
-            Control_PartIDManagement_Label_HomeTile_EditInstruction.TabIndex = 2;
-            Control_PartIDManagement_Label_HomeTile_EditInstruction.Text = "Click to edit existing parts";
-            Control_PartIDManagement_Label_HomeTile_EditInstruction.TextAlign = ContentAlignment.MiddleCenter;
-            // 
-            // Control_PartIDManagement_Panel_HomeTile_Remove
-            // 
-            Control_PartIDManagement_Panel_HomeTile_Remove.AutoSize = true;
-            Control_PartIDManagement_Panel_HomeTile_Remove.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            Control_PartIDManagement_Panel_HomeTile_Remove.BorderStyle = BorderStyle.FixedSingle;
-            Control_PartIDManagement_Panel_HomeTile_Remove.Controls.Add(Control_PartIDManagement_TableLayout_HomeTile_Remove);
-            Control_PartIDManagement_Panel_HomeTile_Remove.Cursor = Cursors.Hand;
-            Control_PartIDManagement_Panel_HomeTile_Remove.Dock = DockStyle.Fill;
-            Control_PartIDManagement_Panel_HomeTile_Remove.Location = new Point(299, 3);
-            Control_PartIDManagement_Panel_HomeTile_Remove.Name = "Control_PartIDManagement_Panel_HomeTile_Remove";
-            Control_PartIDManagement_Panel_HomeTile_Remove.Size = new Size(144, 220);
-            Control_PartIDManagement_Panel_HomeTile_Remove.TabIndex = 2;
-            // 
-            // Control_PartIDManagement_TableLayout_HomeTile_Remove
-            // 
-            Control_PartIDManagement_TableLayout_HomeTile_Remove.AutoSize = true;
-            Control_PartIDManagement_TableLayout_HomeTile_Remove.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            Control_PartIDManagement_TableLayout_HomeTile_Remove.ColumnCount = 1;
-            Control_PartIDManagement_TableLayout_HomeTile_Remove.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
-            Control_PartIDManagement_TableLayout_HomeTile_Remove.Controls.Add(Control_PartIDManagement_Label_HomeTile_RemoveIcon, 0, 0);
-            Control_PartIDManagement_TableLayout_HomeTile_Remove.Controls.Add(Control_PartIDManagement_Label_HomeTile_RemoveInstruction, 0, 3);
-            Control_PartIDManagement_TableLayout_HomeTile_Remove.Controls.Add(Control_PartIDManagement_Label_HomeTile_RemoveTitle, 0, 1);
-            Control_PartIDManagement_TableLayout_HomeTile_Remove.Dock = DockStyle.Fill;
-            Control_PartIDManagement_TableLayout_HomeTile_Remove.Location = new Point(0, 0);
-            Control_PartIDManagement_TableLayout_HomeTile_Remove.Name = "Control_PartIDManagement_TableLayout_HomeTile_Remove";
-            Control_PartIDManagement_TableLayout_HomeTile_Remove.Padding = new Padding(3);
-            Control_PartIDManagement_TableLayout_HomeTile_Remove.RowCount = 5;
-            Control_PartIDManagement_TableLayout_HomeTile_Remove.RowStyles.Add(new RowStyle());
-            Control_PartIDManagement_TableLayout_HomeTile_Remove.RowStyles.Add(new RowStyle());
-            Control_PartIDManagement_TableLayout_HomeTile_Remove.RowStyles.Add(new RowStyle(SizeType.Percent, 50F));
-            Control_PartIDManagement_TableLayout_HomeTile_Remove.RowStyles.Add(new RowStyle());
-            Control_PartIDManagement_TableLayout_HomeTile_Remove.RowStyles.Add(new RowStyle(SizeType.Percent, 50F));
-            Control_PartIDManagement_TableLayout_HomeTile_Remove.Size = new Size(142, 218);
-            Control_PartIDManagement_TableLayout_HomeTile_Remove.TabIndex = 0;
-            // 
-            // Control_PartIDManagement_Label_HomeTile_RemoveIcon
-            // 
-            Control_PartIDManagement_Label_HomeTile_RemoveIcon.AutoSize = true;
-            Control_PartIDManagement_Label_HomeTile_RemoveIcon.Dock = DockStyle.Fill;
-            Control_PartIDManagement_Label_HomeTile_RemoveIcon.Font = new Font("Segoe UI Emoji", 48F);
-            Control_PartIDManagement_Label_HomeTile_RemoveIcon.Location = new Point(6, 6);
-            Control_PartIDManagement_Label_HomeTile_RemoveIcon.Margin = new Padding(3);
-            Control_PartIDManagement_Label_HomeTile_RemoveIcon.Name = "Control_PartIDManagement_Label_HomeTile_RemoveIcon";
-            Control_PartIDManagement_Label_HomeTile_RemoveIcon.Size = new Size(130, 85);
-            Control_PartIDManagement_Label_HomeTile_RemoveIcon.TabIndex = 0;
-            Control_PartIDManagement_Label_HomeTile_RemoveIcon.Text = "🗑️";
-            Control_PartIDManagement_Label_HomeTile_RemoveIcon.TextAlign = ContentAlignment.MiddleCenter;
-            // 
-            // Control_PartIDManagement_Label_HomeTile_RemoveInstruction
-            // 
-            Control_PartIDManagement_Label_HomeTile_RemoveInstruction.AutoSize = true;
-            Control_PartIDManagement_Label_HomeTile_RemoveInstruction.Dock = DockStyle.Fill;
-            Control_PartIDManagement_Label_HomeTile_RemoveInstruction.Font = new Font("Segoe UI", 9F, FontStyle.Italic);
-            Control_PartIDManagement_Label_HomeTile_RemoveInstruction.ForeColor = Color.FromArgb(100, 100, 100);
-            Control_PartIDManagement_Label_HomeTile_RemoveInstruction.Location = new Point(6, 167);
-            Control_PartIDManagement_Label_HomeTile_RemoveInstruction.Margin = new Padding(3);
-            Control_PartIDManagement_Label_HomeTile_RemoveInstruction.Name = "Control_PartIDManagement_Label_HomeTile_RemoveInstruction";
-            Control_PartIDManagement_Label_HomeTile_RemoveInstruction.Size = new Size(130, 30);
-            Control_PartIDManagement_Label_HomeTile_RemoveInstruction.TabIndex = 2;
-            Control_PartIDManagement_Label_HomeTile_RemoveInstruction.Text = "Click to remove part numbers";
-            Control_PartIDManagement_Label_HomeTile_RemoveInstruction.TextAlign = ContentAlignment.MiddleCenter;
-            // 
-            // Control_PartIDManagement_Label_HomeTile_RemoveTitle
-            // 
-            Control_PartIDManagement_Label_HomeTile_RemoveTitle.AutoSize = true;
-            Control_PartIDManagement_Label_HomeTile_RemoveTitle.Dock = DockStyle.Fill;
-            Control_PartIDManagement_Label_HomeTile_RemoveTitle.Font = new Font("Segoe UI", 14F, FontStyle.Bold);
-            Control_PartIDManagement_Label_HomeTile_RemoveTitle.Location = new Point(6, 97);
-            Control_PartIDManagement_Label_HomeTile_RemoveTitle.Margin = new Padding(3);
-            Control_PartIDManagement_Label_HomeTile_RemoveTitle.Name = "Control_PartIDManagement_Label_HomeTile_RemoveTitle";
-            Control_PartIDManagement_Label_HomeTile_RemoveTitle.Size = new Size(130, 50);
-            Control_PartIDManagement_Label_HomeTile_RemoveTitle.TabIndex = 1;
-            Control_PartIDManagement_Label_HomeTile_RemoveTitle.Text = "Remove\r\nPart";
-            Control_PartIDManagement_Label_HomeTile_RemoveTitle.TextAlign = ContentAlignment.MiddleCenter;
-            // 
             // Control_PartIDManagement_TableLayoutPanel_BackButton
             // 
             Control_PartIDManagement_TableLayoutPanel_BackButton.AutoSize = true;
             Control_PartIDManagement_TableLayoutPanel_BackButton.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            Control_PartIDManagement_TableLayoutPanel_BackButton.ColumnCount = 2;
+            Control_PartIDManagement_TableLayoutPanel_BackButton.ColumnCount = 3;
             Control_PartIDManagement_TableLayoutPanel_BackButton.ColumnStyles.Add(new ColumnStyle());
             Control_PartIDManagement_TableLayoutPanel_BackButton.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
+            Control_PartIDManagement_TableLayoutPanel_BackButton.ColumnStyles.Add(new ColumnStyle());
+            Control_PartIDManagement_TableLayoutPanel_BackButton.Controls.Add(Control_PartManagement_Button_Home, 2, 0);
             Control_PartIDManagement_TableLayoutPanel_BackButton.Controls.Add(Control_PartIDManagement_Button_Back, 0, 0);
             Control_PartIDManagement_TableLayoutPanel_BackButton.Dock = DockStyle.Fill;
             Control_PartIDManagement_TableLayoutPanel_BackButton.Location = new Point(23, 323);
@@ -1166,7 +1169,6 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             Control_PartIDManagement_TableLayoutPanel_BackButton.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
             Control_PartIDManagement_TableLayoutPanel_BackButton.Size = new Size(446, 43);
             Control_PartIDManagement_TableLayoutPanel_BackButton.TabIndex = 3;
-            Control_PartIDManagement_TableLayoutPanel_BackButton.Visible = false;
             // 
             // Control_PartIDManagement_Button_Back
             // 
@@ -1177,6 +1179,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             Control_PartIDManagement_Button_Back.Size = new Size(152, 37);
             Control_PartIDManagement_Button_Back.TabIndex = 0;
             Control_PartIDManagement_Button_Back.Text = "← Back to Selection";
+            Control_PartIDManagement_Button_Back.Visible = false;
             // 
             // Control_PartIDManagement_Label_Header
             // 
@@ -1234,6 +1237,16 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             Control_PartIDManagement_Label_EditIssuedByValue.Size = new Size(100, 23);
             Control_PartIDManagement_Label_EditIssuedByValue.TabIndex = 0;
             // 
+            // Control_PartManagement_Button_Home
+            // 
+            Control_PartManagement_Button_Home.AutoSize = true;
+            Control_PartManagement_Button_Home.Location = new Point(291, 3);
+            Control_PartManagement_Button_Home.Name = "Control_PartManagement_Button_Home";
+            Control_PartManagement_Button_Home.Padding = new Padding(16, 6, 16, 6);
+            Control_PartManagement_Button_Home.Size = new Size(152, 37);
+            Control_PartManagement_Button_Home.TabIndex = 2;
+            Control_PartManagement_Button_Home.Text = "🏠 Back to Home";
+            // 
             // Control_PartIDManagement
             // 
             AutoScaleDimensions = new SizeF(96F, 96F);
@@ -1247,6 +1260,21 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             Control_PartIDManagement_TableLayout_Main.PerformLayout();
             Control_PartIDManagement_Panel_Container.ResumeLayout(false);
             Control_PartIDManagement_Panel_Container.PerformLayout();
+            Control_PartIDManagement_Panel_Home.ResumeLayout(false);
+            Control_PartIDManagement_TableLayout_Home.ResumeLayout(false);
+            Control_PartIDManagement_TableLayout_Home.PerformLayout();
+            Control_PartIDManagement_Panel_HomeTile_Add.ResumeLayout(false);
+            Control_PartIDManagement_Panel_HomeTile_Add.PerformLayout();
+            Control_PartIDManagement_TableLayout_HomeTile_Add.ResumeLayout(false);
+            Control_PartIDManagement_TableLayout_HomeTile_Add.PerformLayout();
+            Control_PartIDManagement_Panel_HomeTile_Edit.ResumeLayout(false);
+            Control_PartIDManagement_Panel_HomeTile_Edit.PerformLayout();
+            Control_PartIDManagement_TableLayout_HomeTile_Edit.ResumeLayout(false);
+            Control_PartIDManagement_TableLayout_HomeTile_Edit.PerformLayout();
+            Control_PartIDManagement_Panel_HomeTile_Remove.ResumeLayout(false);
+            Control_PartIDManagement_Panel_HomeTile_Remove.PerformLayout();
+            Control_PartIDManagement_TableLayout_HomeTile_Remove.ResumeLayout(false);
+            Control_PartIDManagement_TableLayout_HomeTile_Remove.PerformLayout();
             Control_PartIDManagement_TableLayout_Cards.ResumeLayout(false);
             Control_PartIDManagement_TableLayout_Cards.PerformLayout();
             Control_PartIDManagement_Panel_RemoveCard.ResumeLayout(false);
@@ -1277,21 +1305,6 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             Control_PartIDManagement_TableLayout_EditContent.ResumeLayout(false);
             Control_PartIDManagement_TableLayout_EditContent.PerformLayout();
             Control_PartIDManagement_TableLayoutPanel_EditActions.ResumeLayout(false);
-            Control_PartIDManagement_Panel_Home.ResumeLayout(false);
-            Control_PartIDManagement_TableLayout_Home.ResumeLayout(false);
-            Control_PartIDManagement_TableLayout_Home.PerformLayout();
-            Control_PartIDManagement_Panel_HomeTile_Add.ResumeLayout(false);
-            Control_PartIDManagement_Panel_HomeTile_Add.PerformLayout();
-            Control_PartIDManagement_TableLayout_HomeTile_Add.ResumeLayout(false);
-            Control_PartIDManagement_TableLayout_HomeTile_Add.PerformLayout();
-            Control_PartIDManagement_Panel_HomeTile_Edit.ResumeLayout(false);
-            Control_PartIDManagement_Panel_HomeTile_Edit.PerformLayout();
-            Control_PartIDManagement_TableLayout_HomeTile_Edit.ResumeLayout(false);
-            Control_PartIDManagement_TableLayout_HomeTile_Edit.PerformLayout();
-            Control_PartIDManagement_Panel_HomeTile_Remove.ResumeLayout(false);
-            Control_PartIDManagement_Panel_HomeTile_Remove.PerformLayout();
-            Control_PartIDManagement_TableLayout_HomeTile_Remove.ResumeLayout(false);
-            Control_PartIDManagement_TableLayout_HomeTile_Remove.PerformLayout();
             Control_PartIDManagement_TableLayoutPanel_BackButton.ResumeLayout(false);
             Control_PartIDManagement_TableLayoutPanel_BackButton.PerformLayout();
             ResumeLayout(false);
@@ -1308,5 +1321,6 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
         private TableLayoutPanel Control_PartIDManagement_TableLayout_Title;
         private TableLayoutPanel Control_PartIDManagement_TableLayoutPanel_BackButton;
         private Button Control_PartIDManagement_Button_Back;
+        private Button Control_PartManagement_Button_Home;
     }
 }

@@ -215,6 +215,7 @@ namespace MTM_WIP_Application_Winforms.Forms.Settings
                 UpdateStatus("Part numbers updated successfully.");
                 HasChanges = true;
             };
+            _controlPartManagement.BackToHomeRequested += (_, _) => ShowPanel("Home");
             SettingsForm_Panel_PartNumbers.Controls.Add(_controlPartManagement);
 
             _controlOperationManagement = new Control_OperationManagement { Dock = DockStyle.Fill };
@@ -225,6 +226,7 @@ namespace MTM_WIP_Application_Winforms.Forms.Settings
                 HasChanges = true;
             };
             _controlOperationManagement.StatusMessageChanged += (_, message) => UpdateStatus(message);
+            _controlOperationManagement.BackToHomeRequested += (_, _) => ShowPanel("Home");
             SettingsForm_Panel_AddOperation.Controls.Add(_controlOperationManagement);
             SettingsForm_Panel_EditOperation.Visible = false;
             SettingsForm_Panel_RemoveOperation.Visible = false;
@@ -235,6 +237,7 @@ namespace MTM_WIP_Application_Winforms.Forms.Settings
                 UpdateStatus("Locations updated successfully.");
                 HasChanges = true;
             };
+            _controlLocationManagement.BackToHomeRequested += (_, _) => ShowPanel("Home");
             // Use AddLocation panel as the container (hide Edit/Remove panels)
             SettingsForm_Panel_AddLocation.Controls.Add(_controlLocationManagement);
             SettingsForm_Panel_EditLocation.Visible = false;
@@ -248,6 +251,7 @@ namespace MTM_WIP_Application_Winforms.Forms.Settings
                 HasChanges = true;
             };
             _controlItemTypeManagement.StatusMessageChanged += (_, message) => UpdateStatus(message);
+            _controlItemTypeManagement.BackToHomeRequested += (_, _) => ShowPanel("Home");
             SettingsForm_Panel_AddItemType.Controls.Add(_controlItemTypeManagement);
             SettingsForm_Panel_EditItemType.Visible = false;
             SettingsForm_Panel_RemoveItemType.Visible = false;
@@ -341,6 +345,30 @@ namespace MTM_WIP_Application_Winforms.Forms.Settings
             if (!canAddItemTypes && !canEditItemTypes && !canRemoveItemTypes)
             {
                 HideNode("ItemTypes");
+            }
+
+            // Operations privileges
+            bool canAddOperations = hasAdminAccess || isNormal;
+            bool canEditOperations = hasAdminAccess;
+            bool canRemoveOperations = hasAdminAccess;
+
+            _controlOperationManagement?.ApplyPrivileges(canAddOperations, canEditOperations, canRemoveOperations);
+
+            if (!canAddOperations && !canEditOperations && !canRemoveOperations)
+            {
+                HideNode("Operations");
+            }
+
+            // Locations privileges
+            bool canAddLocations = hasAdminAccess || isNormal;
+            bool canEditLocations = hasAdminAccess;
+            bool canRemoveLocations = hasAdminAccess;
+
+            _controlLocationManagement?.ApplyPrivileges(canAddLocations, canEditLocations, canRemoveLocations);
+
+            if (!canAddLocations && !canEditLocations && !canRemoveLocations)
+            {
+                HideNode("Locations");
             }
 
             if (hasAdminAccess)

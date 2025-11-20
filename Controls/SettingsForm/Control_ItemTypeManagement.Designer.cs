@@ -118,6 +118,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             Control_ItemTypeManagement_TableLayout_Cards = new TableLayoutPanel();
             Control_ItemTypeManagement_Panel_AddCard = new Panel();
             Control_ItemTypeManagement_TableLayout_Add = new TableLayoutPanel();
+            Control_ItemTypeManagement_TableLayout_AddHeader = new TableLayoutPanel();
             Control_ItemTypeManagement_Label_AddIcon = new Label();
             Control_ItemTypeManagement_Label_AddTitle = new Label();
             Control_ItemTypeManagement_TableLayout_AddContent = new TableLayoutPanel();
@@ -127,6 +128,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             Control_ItemTypeManagement_Button_AddClear = new Button();
             Control_ItemTypeManagement_Panel_EditCard = new Panel();
             Control_ItemTypeManagement_TableLayout_Edit = new TableLayoutPanel();
+            Control_ItemTypeManagement_TableLayout_EditHeader = new TableLayoutPanel();
             Control_ItemTypeManagement_Label_EditIcon = new Label();
             Control_ItemTypeManagement_Label_EditTitle = new Label();
             Control_ItemTypeManagement_TableLayout_EditContent = new TableLayoutPanel();
@@ -137,8 +139,6 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             Control_ItemTypeManagement_Button_EditReset = new Button();
             Control_ItemTypeManagement_Panel_RemoveCard = new Panel();
             Control_ItemTypeManagement_TableLayout_Remove = new TableLayoutPanel();
-            Control_ItemTypeManagement_Label_RemoveIcon = new Label();
-            Control_ItemTypeManagement_Label_RemoveTitle = new Label();
             Control_ItemTypeManagement_TableLayout_RemoveContent = new TableLayoutPanel();
             Control_ItemTypeManagement_Suggestion_RemoveSelectItemType = new SuggestionTextBoxWithLabel();
             Control_ItemTypeManagement_TableLayout_RemoveDetails = new TableLayoutPanel();
@@ -150,15 +150,16 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             Control_ItemTypeManagement_TableLayout_RemoveActions = new TableLayoutPanel();
             Control_ItemTypeManagement_Button_RemoveConfirm = new Button();
             Control_ItemTypeManagement_Button_RemoveCancel = new Button();
+            Control_ItemTypeManagement_TableLayout_RemoveHeader = new TableLayoutPanel();
+            Control_ItemTypeManagement_Label_RemoveIcon = new Label();
+            Control_ItemTypeManagement_Label_RemoveTitle = new Label();
             Control_ItemTypeManagement_TableLayout_BackButton = new TableLayoutPanel();
             Control_ItemTypeManagement_Button_Back = new Button();
             Control_ItemTypeManagement_Label_AddIssuedBy = new Label();
             Control_ItemTypeManagement_Label_AddIssuedByValue = new Label();
             Control_ItemTypeManagement_Label_EditIssuedBy = new Label();
             Control_ItemTypeManagement_Label_EditIssuedByValue = new Label();
-            Control_ItemTypeManagement_TableLayout_AddHeader = new TableLayoutPanel();
-            Control_ItemTypeManagement_TableLayout_RemoveHeader = new TableLayoutPanel();
-            Control_ItemTypeManagement_TableLayout_EditHeader = new TableLayoutPanel();
+            Control_ItemTypeManagement_Button_Home = new Button();
             Control_ItemTypeManagement_TableLayout_Main.SuspendLayout();
             Control_ItemTypeManagement_Panel_Container.SuspendLayout();
             Control_ItemTypeManagement_Panel_Home.SuspendLayout();
@@ -172,10 +173,12 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             Control_ItemTypeManagement_TableLayout_Cards.SuspendLayout();
             Control_ItemTypeManagement_Panel_AddCard.SuspendLayout();
             Control_ItemTypeManagement_TableLayout_Add.SuspendLayout();
+            Control_ItemTypeManagement_TableLayout_AddHeader.SuspendLayout();
             Control_ItemTypeManagement_TableLayout_AddContent.SuspendLayout();
             Control_ItemTypeManagement_TableLayout_AddActions.SuspendLayout();
             Control_ItemTypeManagement_Panel_EditCard.SuspendLayout();
             Control_ItemTypeManagement_TableLayout_Edit.SuspendLayout();
+            Control_ItemTypeManagement_TableLayout_EditHeader.SuspendLayout();
             Control_ItemTypeManagement_TableLayout_EditContent.SuspendLayout();
             Control_ItemTypeManagement_TableLayout_EditActions.SuspendLayout();
             Control_ItemTypeManagement_Panel_RemoveCard.SuspendLayout();
@@ -183,10 +186,8 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             Control_ItemTypeManagement_TableLayout_RemoveContent.SuspendLayout();
             Control_ItemTypeManagement_TableLayout_RemoveDetails.SuspendLayout();
             Control_ItemTypeManagement_TableLayout_RemoveActions.SuspendLayout();
-            Control_ItemTypeManagement_TableLayout_BackButton.SuspendLayout();
-            Control_ItemTypeManagement_TableLayout_AddHeader.SuspendLayout();
             Control_ItemTypeManagement_TableLayout_RemoveHeader.SuspendLayout();
-            Control_ItemTypeManagement_TableLayout_EditHeader.SuspendLayout();
+            Control_ItemTypeManagement_TableLayout_BackButton.SuspendLayout();
             SuspendLayout();
             // 
             // Control_ItemTypeManagement_TableLayout_Main
@@ -554,6 +555,23 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             Control_ItemTypeManagement_TableLayout_Add.Size = new Size(438, 173);
             Control_ItemTypeManagement_TableLayout_Add.TabIndex = 0;
             // 
+            // Control_ItemTypeManagement_TableLayout_AddHeader
+            // 
+            Control_ItemTypeManagement_TableLayout_AddHeader.AutoSize = true;
+            Control_ItemTypeManagement_TableLayout_AddHeader.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            Control_ItemTypeManagement_TableLayout_AddHeader.ColumnCount = 2;
+            Control_ItemTypeManagement_TableLayout_AddHeader.ColumnStyles.Add(new ColumnStyle());
+            Control_ItemTypeManagement_TableLayout_AddHeader.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
+            Control_ItemTypeManagement_TableLayout_AddHeader.Controls.Add(Control_ItemTypeManagement_Label_AddIcon, 0, 0);
+            Control_ItemTypeManagement_TableLayout_AddHeader.Controls.Add(Control_ItemTypeManagement_Label_AddTitle, 1, 0);
+            Control_ItemTypeManagement_TableLayout_AddHeader.Dock = DockStyle.Fill;
+            Control_ItemTypeManagement_TableLayout_AddHeader.Location = new Point(19, 19);
+            Control_ItemTypeManagement_TableLayout_AddHeader.Name = "Control_ItemTypeManagement_TableLayout_AddHeader";
+            Control_ItemTypeManagement_TableLayout_AddHeader.RowCount = 1;
+            Control_ItemTypeManagement_TableLayout_AddHeader.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
+            Control_ItemTypeManagement_TableLayout_AddHeader.Size = new Size(400, 57);
+            Control_ItemTypeManagement_TableLayout_AddHeader.TabIndex = 2;
+            // 
             // Control_ItemTypeManagement_Label_AddIcon
             // 
             Control_ItemTypeManagement_Label_AddIcon.AutoSize = true;
@@ -673,6 +691,23 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             Control_ItemTypeManagement_TableLayout_Edit.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
             Control_ItemTypeManagement_TableLayout_Edit.Size = new Size(438, 224);
             Control_ItemTypeManagement_TableLayout_Edit.TabIndex = 0;
+            // 
+            // Control_ItemTypeManagement_TableLayout_EditHeader
+            // 
+            Control_ItemTypeManagement_TableLayout_EditHeader.AutoSize = true;
+            Control_ItemTypeManagement_TableLayout_EditHeader.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            Control_ItemTypeManagement_TableLayout_EditHeader.ColumnCount = 2;
+            Control_ItemTypeManagement_TableLayout_EditHeader.ColumnStyles.Add(new ColumnStyle());
+            Control_ItemTypeManagement_TableLayout_EditHeader.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
+            Control_ItemTypeManagement_TableLayout_EditHeader.Controls.Add(Control_ItemTypeManagement_Label_EditIcon, 0, 0);
+            Control_ItemTypeManagement_TableLayout_EditHeader.Controls.Add(Control_ItemTypeManagement_Label_EditTitle, 1, 0);
+            Control_ItemTypeManagement_TableLayout_EditHeader.Dock = DockStyle.Fill;
+            Control_ItemTypeManagement_TableLayout_EditHeader.Location = new Point(19, 19);
+            Control_ItemTypeManagement_TableLayout_EditHeader.Name = "Control_ItemTypeManagement_TableLayout_EditHeader";
+            Control_ItemTypeManagement_TableLayout_EditHeader.RowCount = 1;
+            Control_ItemTypeManagement_TableLayout_EditHeader.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
+            Control_ItemTypeManagement_TableLayout_EditHeader.Size = new Size(400, 57);
+            Control_ItemTypeManagement_TableLayout_EditHeader.TabIndex = 4;
             // 
             // Control_ItemTypeManagement_Label_EditIcon
             // 
@@ -812,32 +847,6 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             Control_ItemTypeManagement_TableLayout_Remove.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
             Control_ItemTypeManagement_TableLayout_Remove.Size = new Size(440, 252);
             Control_ItemTypeManagement_TableLayout_Remove.TabIndex = 0;
-            // 
-            // Control_ItemTypeManagement_Label_RemoveIcon
-            // 
-            Control_ItemTypeManagement_Label_RemoveIcon.AutoSize = true;
-            Control_ItemTypeManagement_Label_RemoveIcon.Dock = DockStyle.Fill;
-            Control_ItemTypeManagement_Label_RemoveIcon.Font = new Font("Segoe UI Emoji", 28F);
-            Control_ItemTypeManagement_Label_RemoveIcon.Location = new Point(3, 3);
-            Control_ItemTypeManagement_Label_RemoveIcon.Margin = new Padding(3);
-            Control_ItemTypeManagement_Label_RemoveIcon.Name = "Control_ItemTypeManagement_Label_RemoveIcon";
-            Control_ItemTypeManagement_Label_RemoveIcon.Size = new Size(74, 51);
-            Control_ItemTypeManagement_Label_RemoveIcon.TabIndex = 0;
-            Control_ItemTypeManagement_Label_RemoveIcon.Text = "🗑️";
-            Control_ItemTypeManagement_Label_RemoveIcon.TextAlign = ContentAlignment.MiddleCenter;
-            // 
-            // Control_ItemTypeManagement_Label_RemoveTitle
-            // 
-            Control_ItemTypeManagement_Label_RemoveTitle.AutoSize = true;
-            Control_ItemTypeManagement_Label_RemoveTitle.Dock = DockStyle.Fill;
-            Control_ItemTypeManagement_Label_RemoveTitle.Font = new Font("Segoe UI", 16F, FontStyle.Bold);
-            Control_ItemTypeManagement_Label_RemoveTitle.Location = new Point(83, 3);
-            Control_ItemTypeManagement_Label_RemoveTitle.Margin = new Padding(3);
-            Control_ItemTypeManagement_Label_RemoveTitle.Name = "Control_ItemTypeManagement_Label_RemoveTitle";
-            Control_ItemTypeManagement_Label_RemoveTitle.Size = new Size(316, 51);
-            Control_ItemTypeManagement_Label_RemoveTitle.TabIndex = 1;
-            Control_ItemTypeManagement_Label_RemoveTitle.Text = "Remove Item Type";
-            Control_ItemTypeManagement_Label_RemoveTitle.TextAlign = ContentAlignment.MiddleLeft;
             // 
             // Control_ItemTypeManagement_TableLayout_RemoveContent
             // 
@@ -989,21 +998,65 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             Control_ItemTypeManagement_Button_RemoveCancel.Size = new Size(75, 23);
             Control_ItemTypeManagement_Button_RemoveCancel.TabIndex = 1;
             // 
+            // Control_ItemTypeManagement_TableLayout_RemoveHeader
+            // 
+            Control_ItemTypeManagement_TableLayout_RemoveHeader.AutoSize = true;
+            Control_ItemTypeManagement_TableLayout_RemoveHeader.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            Control_ItemTypeManagement_TableLayout_RemoveHeader.ColumnCount = 2;
+            Control_ItemTypeManagement_TableLayout_RemoveHeader.ColumnStyles.Add(new ColumnStyle());
+            Control_ItemTypeManagement_TableLayout_RemoveHeader.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
+            Control_ItemTypeManagement_TableLayout_RemoveHeader.Controls.Add(Control_ItemTypeManagement_Label_RemoveIcon, 0, 0);
+            Control_ItemTypeManagement_TableLayout_RemoveHeader.Controls.Add(Control_ItemTypeManagement_Label_RemoveTitle, 1, 0);
+            Control_ItemTypeManagement_TableLayout_RemoveHeader.Dock = DockStyle.Fill;
+            Control_ItemTypeManagement_TableLayout_RemoveHeader.Location = new Point(19, 19);
+            Control_ItemTypeManagement_TableLayout_RemoveHeader.Name = "Control_ItemTypeManagement_TableLayout_RemoveHeader";
+            Control_ItemTypeManagement_TableLayout_RemoveHeader.RowCount = 1;
+            Control_ItemTypeManagement_TableLayout_RemoveHeader.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
+            Control_ItemTypeManagement_TableLayout_RemoveHeader.Size = new Size(402, 57);
+            Control_ItemTypeManagement_TableLayout_RemoveHeader.TabIndex = 3;
+            // 
+            // Control_ItemTypeManagement_Label_RemoveIcon
+            // 
+            Control_ItemTypeManagement_Label_RemoveIcon.AutoSize = true;
+            Control_ItemTypeManagement_Label_RemoveIcon.Dock = DockStyle.Fill;
+            Control_ItemTypeManagement_Label_RemoveIcon.Font = new Font("Segoe UI Emoji", 28F);
+            Control_ItemTypeManagement_Label_RemoveIcon.Location = new Point(3, 3);
+            Control_ItemTypeManagement_Label_RemoveIcon.Margin = new Padding(3);
+            Control_ItemTypeManagement_Label_RemoveIcon.Name = "Control_ItemTypeManagement_Label_RemoveIcon";
+            Control_ItemTypeManagement_Label_RemoveIcon.Size = new Size(74, 51);
+            Control_ItemTypeManagement_Label_RemoveIcon.TabIndex = 0;
+            Control_ItemTypeManagement_Label_RemoveIcon.Text = "🗑️";
+            Control_ItemTypeManagement_Label_RemoveIcon.TextAlign = ContentAlignment.MiddleCenter;
+            // 
+            // Control_ItemTypeManagement_Label_RemoveTitle
+            // 
+            Control_ItemTypeManagement_Label_RemoveTitle.AutoSize = true;
+            Control_ItemTypeManagement_Label_RemoveTitle.Dock = DockStyle.Fill;
+            Control_ItemTypeManagement_Label_RemoveTitle.Font = new Font("Segoe UI", 16F, FontStyle.Bold);
+            Control_ItemTypeManagement_Label_RemoveTitle.Location = new Point(83, 3);
+            Control_ItemTypeManagement_Label_RemoveTitle.Margin = new Padding(3);
+            Control_ItemTypeManagement_Label_RemoveTitle.Name = "Control_ItemTypeManagement_Label_RemoveTitle";
+            Control_ItemTypeManagement_Label_RemoveTitle.Size = new Size(316, 51);
+            Control_ItemTypeManagement_Label_RemoveTitle.TabIndex = 1;
+            Control_ItemTypeManagement_Label_RemoveTitle.Text = "Remove Item Type";
+            Control_ItemTypeManagement_Label_RemoveTitle.TextAlign = ContentAlignment.MiddleLeft;
+            // 
             // Control_ItemTypeManagement_TableLayout_BackButton
             // 
             Control_ItemTypeManagement_TableLayout_BackButton.AutoSize = true;
             Control_ItemTypeManagement_TableLayout_BackButton.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            Control_ItemTypeManagement_TableLayout_BackButton.ColumnCount = 2;
+            Control_ItemTypeManagement_TableLayout_BackButton.ColumnCount = 3;
             Control_ItemTypeManagement_TableLayout_BackButton.ColumnStyles.Add(new ColumnStyle());
             Control_ItemTypeManagement_TableLayout_BackButton.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
+            Control_ItemTypeManagement_TableLayout_BackButton.ColumnStyles.Add(new ColumnStyle());
             Control_ItemTypeManagement_TableLayout_BackButton.Controls.Add(Control_ItemTypeManagement_Button_Back, 0, 0);
+            Control_ItemTypeManagement_TableLayout_BackButton.Controls.Add(Control_ItemTypeManagement_Button_Home, 2, 0);
             Control_ItemTypeManagement_TableLayout_BackButton.Dock = DockStyle.Fill;
             Control_ItemTypeManagement_TableLayout_BackButton.Location = new Point(23, 323);
             Control_ItemTypeManagement_TableLayout_BackButton.Name = "Control_ItemTypeManagement_TableLayout_BackButton";
             Control_ItemTypeManagement_TableLayout_BackButton.RowStyles.Add(new RowStyle());
             Control_ItemTypeManagement_TableLayout_BackButton.Size = new Size(446, 43);
             Control_ItemTypeManagement_TableLayout_BackButton.TabIndex = 2;
-            Control_ItemTypeManagement_TableLayout_BackButton.Visible = false;
             // 
             // Control_ItemTypeManagement_Button_Back
             // 
@@ -1014,6 +1067,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             Control_ItemTypeManagement_Button_Back.Size = new Size(152, 37);
             Control_ItemTypeManagement_Button_Back.TabIndex = 0;
             Control_ItemTypeManagement_Button_Back.Text = "← Back to Selection";
+            Control_ItemTypeManagement_Button_Back.Visible = false;
             // 
             // Control_ItemTypeManagement_Label_AddIssuedBy
             // 
@@ -1043,56 +1097,15 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             Control_ItemTypeManagement_Label_EditIssuedByValue.Size = new Size(100, 23);
             Control_ItemTypeManagement_Label_EditIssuedByValue.TabIndex = 0;
             // 
-            // Control_ItemTypeManagement_TableLayout_AddHeader
+            // Control_ItemTypeManagement_Button_Home
             // 
-            Control_ItemTypeManagement_TableLayout_AddHeader.AutoSize = true;
-            Control_ItemTypeManagement_TableLayout_AddHeader.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            Control_ItemTypeManagement_TableLayout_AddHeader.ColumnCount = 2;
-            Control_ItemTypeManagement_TableLayout_AddHeader.ColumnStyles.Add(new ColumnStyle());
-            Control_ItemTypeManagement_TableLayout_AddHeader.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
-            Control_ItemTypeManagement_TableLayout_AddHeader.Controls.Add(Control_ItemTypeManagement_Label_AddIcon, 0, 0);
-            Control_ItemTypeManagement_TableLayout_AddHeader.Controls.Add(Control_ItemTypeManagement_Label_AddTitle, 1, 0);
-            Control_ItemTypeManagement_TableLayout_AddHeader.Dock = DockStyle.Fill;
-            Control_ItemTypeManagement_TableLayout_AddHeader.Location = new Point(19, 19);
-            Control_ItemTypeManagement_TableLayout_AddHeader.Name = "Control_ItemTypeManagement_TableLayout_AddHeader";
-            Control_ItemTypeManagement_TableLayout_AddHeader.RowCount = 1;
-            Control_ItemTypeManagement_TableLayout_AddHeader.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
-            Control_ItemTypeManagement_TableLayout_AddHeader.Size = new Size(400, 57);
-            Control_ItemTypeManagement_TableLayout_AddHeader.TabIndex = 2;
-            // 
-            // Control_ItemTypeManagement_TableLayout_RemoveHeader
-            // 
-            Control_ItemTypeManagement_TableLayout_RemoveHeader.AutoSize = true;
-            Control_ItemTypeManagement_TableLayout_RemoveHeader.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            Control_ItemTypeManagement_TableLayout_RemoveHeader.ColumnCount = 2;
-            Control_ItemTypeManagement_TableLayout_RemoveHeader.ColumnStyles.Add(new ColumnStyle());
-            Control_ItemTypeManagement_TableLayout_RemoveHeader.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
-            Control_ItemTypeManagement_TableLayout_RemoveHeader.Controls.Add(Control_ItemTypeManagement_Label_RemoveIcon, 0, 0);
-            Control_ItemTypeManagement_TableLayout_RemoveHeader.Controls.Add(Control_ItemTypeManagement_Label_RemoveTitle, 1, 0);
-            Control_ItemTypeManagement_TableLayout_RemoveHeader.Dock = DockStyle.Fill;
-            Control_ItemTypeManagement_TableLayout_RemoveHeader.Location = new Point(19, 19);
-            Control_ItemTypeManagement_TableLayout_RemoveHeader.Name = "Control_ItemTypeManagement_TableLayout_RemoveHeader";
-            Control_ItemTypeManagement_TableLayout_RemoveHeader.RowCount = 1;
-            Control_ItemTypeManagement_TableLayout_RemoveHeader.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
-            Control_ItemTypeManagement_TableLayout_RemoveHeader.Size = new Size(402, 57);
-            Control_ItemTypeManagement_TableLayout_RemoveHeader.TabIndex = 3;
-            // 
-            // Control_ItemTypeManagement_TableLayout_EditHeader
-            // 
-            Control_ItemTypeManagement_TableLayout_EditHeader.AutoSize = true;
-            Control_ItemTypeManagement_TableLayout_EditHeader.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            Control_ItemTypeManagement_TableLayout_EditHeader.ColumnCount = 2;
-            Control_ItemTypeManagement_TableLayout_EditHeader.ColumnStyles.Add(new ColumnStyle());
-            Control_ItemTypeManagement_TableLayout_EditHeader.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
-            Control_ItemTypeManagement_TableLayout_EditHeader.Controls.Add(Control_ItemTypeManagement_Label_EditIcon, 0, 0);
-            Control_ItemTypeManagement_TableLayout_EditHeader.Controls.Add(Control_ItemTypeManagement_Label_EditTitle, 1, 0);
-            Control_ItemTypeManagement_TableLayout_EditHeader.Dock = DockStyle.Fill;
-            Control_ItemTypeManagement_TableLayout_EditHeader.Location = new Point(19, 19);
-            Control_ItemTypeManagement_TableLayout_EditHeader.Name = "Control_ItemTypeManagement_TableLayout_EditHeader";
-            Control_ItemTypeManagement_TableLayout_EditHeader.RowCount = 1;
-            Control_ItemTypeManagement_TableLayout_EditHeader.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
-            Control_ItemTypeManagement_TableLayout_EditHeader.Size = new Size(400, 57);
-            Control_ItemTypeManagement_TableLayout_EditHeader.TabIndex = 4;
+            Control_ItemTypeManagement_Button_Home.AutoSize = true;
+            Control_ItemTypeManagement_Button_Home.Location = new Point(291, 3);
+            Control_ItemTypeManagement_Button_Home.Name = "Control_ItemTypeManagement_Button_Home";
+            Control_ItemTypeManagement_Button_Home.Padding = new Padding(16, 6, 16, 6);
+            Control_ItemTypeManagement_Button_Home.Size = new Size(152, 37);
+            Control_ItemTypeManagement_Button_Home.TabIndex = 1;
+            Control_ItemTypeManagement_Button_Home.Text = "🏠 Back to Home";
             // 
             // Control_ItemTypeManagement
             // 
@@ -1129,6 +1142,8 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             Control_ItemTypeManagement_Panel_AddCard.PerformLayout();
             Control_ItemTypeManagement_TableLayout_Add.ResumeLayout(false);
             Control_ItemTypeManagement_TableLayout_Add.PerformLayout();
+            Control_ItemTypeManagement_TableLayout_AddHeader.ResumeLayout(false);
+            Control_ItemTypeManagement_TableLayout_AddHeader.PerformLayout();
             Control_ItemTypeManagement_TableLayout_AddContent.ResumeLayout(false);
             Control_ItemTypeManagement_TableLayout_AddContent.PerformLayout();
             Control_ItemTypeManagement_TableLayout_AddActions.ResumeLayout(false);
@@ -1136,6 +1151,8 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             Control_ItemTypeManagement_Panel_EditCard.PerformLayout();
             Control_ItemTypeManagement_TableLayout_Edit.ResumeLayout(false);
             Control_ItemTypeManagement_TableLayout_Edit.PerformLayout();
+            Control_ItemTypeManagement_TableLayout_EditHeader.ResumeLayout(false);
+            Control_ItemTypeManagement_TableLayout_EditHeader.PerformLayout();
             Control_ItemTypeManagement_TableLayout_EditContent.ResumeLayout(false);
             Control_ItemTypeManagement_TableLayout_EditContent.PerformLayout();
             Control_ItemTypeManagement_TableLayout_EditActions.ResumeLayout(false);
@@ -1148,14 +1165,10 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             Control_ItemTypeManagement_TableLayout_RemoveDetails.ResumeLayout(false);
             Control_ItemTypeManagement_TableLayout_RemoveDetails.PerformLayout();
             Control_ItemTypeManagement_TableLayout_RemoveActions.ResumeLayout(false);
-            Control_ItemTypeManagement_TableLayout_BackButton.ResumeLayout(false);
-            Control_ItemTypeManagement_TableLayout_BackButton.PerformLayout();
-            Control_ItemTypeManagement_TableLayout_AddHeader.ResumeLayout(false);
-            Control_ItemTypeManagement_TableLayout_AddHeader.PerformLayout();
             Control_ItemTypeManagement_TableLayout_RemoveHeader.ResumeLayout(false);
             Control_ItemTypeManagement_TableLayout_RemoveHeader.PerformLayout();
-            Control_ItemTypeManagement_TableLayout_EditHeader.ResumeLayout(false);
-            Control_ItemTypeManagement_TableLayout_EditHeader.PerformLayout();
+            Control_ItemTypeManagement_TableLayout_BackButton.ResumeLayout(false);
+            Control_ItemTypeManagement_TableLayout_BackButton.PerformLayout();
             ResumeLayout(false);
             PerformLayout();
         }
@@ -1164,5 +1177,6 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
         private TableLayoutPanel Control_ItemTypeManagement_TableLayout_EditHeader;
         private TableLayoutPanel Control_ItemTypeManagement_TableLayout_RemoveHeader;
         private TableLayoutPanel Control_ItemTypeManagement_TableLayout_AddHeader;
+        private Button Control_ItemTypeManagement_Button_Home;
     }
 }

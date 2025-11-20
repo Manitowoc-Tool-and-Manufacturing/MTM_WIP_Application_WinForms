@@ -174,6 +174,9 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
 
             // Back button
             Control_PartIDManagement_Button_Back.Click += (_, _) => ShowHome();
+
+            // Back to Home button
+            Control_PartManagement_Button_Home.Click += (_, _) => BackToHomeRequested?.Invoke(this, EventArgs.Empty);
         }
 
         private void WireUpTileControlClick(Control control, int cardIndex)
@@ -194,6 +197,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             Control_PartIDManagement_Panel_Home.Visible = false;
             Control_PartIDManagement_TableLayout_Cards.Visible = true;
             Control_PartIDManagement_TableLayoutPanel_BackButton.Visible = true;
+            Control_PartIDManagement_Button_Back.Visible = true;
 
             // Hide all cards first
             Control_PartIDManagement_Panel_AddCard.Visible = false;
@@ -228,7 +232,8 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             // Show home, hide cards and back button
             Control_PartIDManagement_Panel_Home.Visible = true;
             Control_PartIDManagement_TableLayout_Cards.Visible = false;
-            Control_PartIDManagement_TableLayoutPanel_BackButton.Visible = false;
+            Control_PartIDManagement_TableLayoutPanel_BackButton.Visible = true;
+            Control_PartIDManagement_Button_Back.Visible = false;
         }
 
         private void UpdateIssuedByLabels()
@@ -690,6 +695,11 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
         /// Raised when part data has changed (add, edit, remove) so parent views can refresh caches.
         /// </summary>
         public event EventHandler? PartListChanged;
+
+        /// <summary>
+        /// Raised when the user requests to navigate back to the main settings home.
+        /// </summary>
+        public event EventHandler? BackToHomeRequested;
 
         #endregion
 

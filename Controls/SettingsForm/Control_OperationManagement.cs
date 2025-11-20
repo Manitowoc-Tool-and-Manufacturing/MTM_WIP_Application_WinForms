@@ -60,6 +60,9 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
         private void InitializeControlText()
         {
             // Suggestion controls
+            
+            Control_OperationManagement_TextBox_AddOperation.LabelText = "Operation";
+            Control_OperationManagement_Suggestion_EditSelectOperation.PlaceholderText = "Search operations (F4)";
             Control_OperationManagement_Suggestion_EditSelectOperation.LabelText = "Select Operation";
             Control_OperationManagement_Suggestion_EditSelectOperation.PlaceholderText = "Search operations (F4)";
             Control_OperationManagement_Suggestion_RemoveSelectOperation.LabelText = "Select Operation";
@@ -156,6 +159,9 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             
             // Back button
             Control_OperationManagement_Button_Back.Click += (_, _) => ShowHome();
+
+            // Back to Home button
+            Control_OperationManagement_Button_Home.Click += (_, _) => BackToHomeRequested?.Invoke(this, EventArgs.Empty);
         }
 
         private void WireUpTileControlClick(Control control, int cardIndex)
@@ -176,6 +182,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             Control_OperationManagement_Panel_Home.Visible = false;
             Control_OperationManagement_TableLayout_Cards.Visible = true;
             Control_OperationManagement_TableLayout_BackButton.Visible = true;
+            Control_OperationManagement_Button_Back.Visible = true;
             
             // Hide all cards first
             Control_OperationManagement_Panel_AddCard.Visible = false;
@@ -210,7 +217,8 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             // Show home, hide cards and back button
             Control_OperationManagement_Panel_Home.Visible = true;
             Control_OperationManagement_TableLayout_Cards.Visible = false;
-            Control_OperationManagement_TableLayout_BackButton.Visible = false;
+            Control_OperationManagement_TableLayout_BackButton.Visible = true;
+            Control_OperationManagement_Button_Back.Visible = false;
         }
 
         private void UpdateIssuedByLabels()
@@ -615,6 +623,11 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
         /// Raised to update status message in parent form.
         /// </summary>
         public event EventHandler<string>? StatusMessageChanged;
+
+        /// <summary>
+        /// Raised when the user requests to navigate back to the main settings home.
+        /// </summary>
+        public event EventHandler? BackToHomeRequested;
 
         #endregion
 
