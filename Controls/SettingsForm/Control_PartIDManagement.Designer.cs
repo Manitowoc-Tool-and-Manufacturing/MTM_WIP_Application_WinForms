@@ -1063,27 +1063,6 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             PerformLayout();
         }
 
-        private static void ConfigureCardPanel(Panel panel, Color accentColor)
-        {
-            panel.AutoSize = true;
-            panel.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            panel.BackColor = Color.FromArgb(250, 250, 250);
-            panel.BorderStyle = BorderStyle.FixedSingle;
-            panel.Margin = new Padding(0, 0, 0, 20);
-            panel.Padding = new Padding(0);
-            panel.Dock = DockStyle.Top;
-            
-            // Add accent bar at top
-            Panel accentBar = new Panel
-            {
-                Height = 4,
-                Dock = DockStyle.Top,
-                BackColor = accentColor
-            };
-            panel.Controls.Add(accentBar);
-            accentBar.BringToFront();
-        }
-        
         private static void ConfigureHomeTile(Panel panel, string icon, string title, string description, Color accentColor, int column)
         {
             panel.AutoSize = true;
@@ -1153,89 +1132,6 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             content.Controls.Add(titleLabel, 0, 1);
             content.Controls.Add(descLabel, 0, 2);
             panel.Controls.Add(content);
-        }
-
-        private static void ConfigureSuggestion(SuggestionTextBoxWithLabel control, string labelText, string placeholder)
-        {
-            control.AutoSize = true;
-            control.Dock = DockStyle.Top;
-            control.LabelText = labelText;
-            control.PlaceholderText = placeholder;
-            control.ShowValidationColor = true;
-        }
-
-        private static TableLayoutPanel CreateKeyValueRow(Label keyLabel, Label valueLabel)
-        {
-            TableLayoutPanel panel = new()
-            {
-                AutoSize = true,
-                AutoSizeMode = AutoSizeMode.GrowAndShrink,
-                ColumnCount = 2,
-                Dock = DockStyle.Top
-            };
-            panel.ColumnStyles.Add(new ColumnStyle(SizeType.AutoSize));
-            panel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
-            panel.Controls.Add(keyLabel, 0, 0);
-            panel.Controls.Add(valueLabel, 1, 0);
-            return panel;
-        }
-
-        private static void ConfigureKeyValueLabel(Label label, string text)
-        {
-            label.AutoSize = true;
-            label.ForeColor = Color.FromArgb(90, 90, 90);
-            label.Margin = new Padding(0, 6, 12, 0);
-            label.Text = text + ":";
-            label.TextAlign = ContentAlignment.MiddleLeft;
-        }
-
-        private static void ConfigureKeyValueValue(Label label)
-        {
-            label.AutoSize = true;
-            label.Font = new Font("Segoe UI", 10F, FontStyle.Bold, GraphicsUnit.Point);
-            label.Margin = new Padding(0, 6, 0, 0);
-        }
-
-        private static void ConfigureActionPanel(FlowLayoutPanel panel)
-        {
-            panel.AutoSize = true;
-            panel.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            panel.Dock = DockStyle.Top;
-            panel.FlowDirection = FlowDirection.RightToLeft;
-            panel.Margin = new Padding(0, 12, 0, 0);
-        }
-
-        private static void ConfigurePrimaryButton(Button button, string text)
-        {
-            button.AutoSize = true;
-            button.BackColor = Color.FromArgb(0, 120, 215);
-            button.ForeColor = Color.White;
-            button.Padding = new Padding(16, 6, 16, 6);
-            button.FlatStyle = FlatStyle.Flat;
-            button.FlatAppearance.BorderSize = 0;
-            button.Text = text;
-        }
-
-        private static void ConfigureSecondaryButton(Button button, string text)
-        {
-            button.AutoSize = true;
-            button.BackColor = Color.WhiteSmoke;
-            button.ForeColor = Color.FromArgb(45, 45, 45);
-            button.Padding = new Padding(16, 6, 16, 6);
-            button.FlatStyle = FlatStyle.Flat;
-            button.FlatAppearance.BorderColor = Color.Gainsboro;
-            button.Text = text;
-        }
-
-        private static void ConfigureDangerButton(Button button, string text)
-        {
-            button.AutoSize = true;
-            button.BackColor = Color.FromArgb(194, 57, 52);
-            button.ForeColor = Color.White;
-            button.Padding = new Padding(16, 6, 16, 6);
-            button.FlatStyle = FlatStyle.Flat;
-            button.FlatAppearance.BorderSize = 0;
-            button.Text = text;
         }
 
         #endregion
