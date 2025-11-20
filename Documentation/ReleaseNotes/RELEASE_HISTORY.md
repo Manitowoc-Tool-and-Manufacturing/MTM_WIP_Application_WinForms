@@ -8,7 +8,9 @@
 ## 📋 Version Index
 
 **Latest Releases:**
-- [Version 6.2.1](#version-621---november-13-2025) - Startup Arguments & Help Documentation
+- [Version 6.3.0](#version-630---november-20-2025) - Settings Redesign
+- [Version 6.2.3](#version-623---november-15-2025) - Search Buttons
+- [Version 6.2.2](#version-622---november-15-2025) - Advanced Inventory Improvements
 - [Version 6.2.0](#version-620---november-13-2025) - Smart Autocomplete & Confirmations
 - [Version 6.1.0](#version-610---november-12-2025) - Theme System Overhaul
 - [Version 6.0.2](#version-602---november-8-2025) - Theme Saving Fix
@@ -26,52 +28,61 @@
 
 ---
 
-## Version 6.2.1 - November 13, 2025
+## Version 6.3.0 - November 20, 2025
 
 ### 🎯 Summary
-Optional startup argument support for environment selection and Help documentation improvements.
+Complete redesign of Settings management screens with modern card interface.
 
 ### ✨ New Features
 
-#### Startup Arguments
-- **Environment Selection**: Launch directly into Production or Test mode via command-line arguments
-- **Custom Username**: Override logged username for shared workstations (`-user="Name"`)
-- **Database Override**: Specify server, port, database, username (advanced use cases)
-- **Help Integration**: Press F1 → Search "Startup Arguments" for full documentation
+#### Modern Settings Management
+- **Unified Management Screens**: Combined Add/Edit/Remove tabs into single hubs
+- **Card-Based Navigation**: Large, clear tiles for choosing actions
+- **Consistent Experience**: Managing Parts, Locations, Operations, and Item Types works the same way
+- **Smart Navigation**: Easy return to main selection screen
 
-**Supported Arguments:**
-```
--env=production | -env=test
--user="Display Name"
--server=hostname
--port=3306
--database=database_name
--username=db_user
--password=db_pass (⚠️ Security risk on shared machines)
-```
+### 🎯 Impact
+- **Less Clutter**: Cleaner Settings tree menu
+- **Faster Workflow**: Fewer clicks to make changes
+- **Better Feedback**: Improved validation and status messages
 
-#### Documentation
-- New Help page: "Startup Arguments" with step-by-step shortcut creation guide
-- Screenshots showing Windows shortcut property configuration
-- Security warnings for password usage
-- Real-world examples for common scenarios
+---
 
-### 🎯 Use Cases
-- **Multi-environment users**: Create separate shortcuts for Production vs Test
-- **Shared workstations**: Set custom username for better log tracking
-- **Training environments**: Launch demo database safely
-- **IT deployments**: Automate environment configuration
+## Version 6.2.3 - November 15, 2025
 
-### 📦 Changes
-- Added command-line argument parser to Program.cs
-- Created Help documentation page with examples
-- Updated app initialization to respect startup arguments
-- Added security warnings for password parameters
+### 🎯 Summary
+Search buttons added to all main entry tabs for quick access to full lists.
 
-### ⚠️ Security Notes
-- **Never put passwords in shortcuts on shared computers**
-- Shortcut properties are visible to anyone with file access
-- Use `-password=` only on secured test/development machines
+### ✨ New Features
+
+#### Quick Access Search Buttons
+- **🔎 Search buttons** added next to key fields
+- **Smart behavior**: Opens dropdown if empty, moves to next field if filled
+- **Mouse-friendly**: Alternative to F4 key
+- **Consistent**: Available on Inventory, Transfer, and Remove tabs
+
+### 🎯 Impact
+- **Accessibility**: Easier for mouse-first users
+- **Consistency**: Same behavior across all tabs
+
+---
+
+## Version 6.2.2 - November 15, 2025
+
+### 🎯 Summary
+Advanced Inventory Entry modernized with smart suggestions and Excel auto-template.
+
+### ✨ New Features
+
+#### Advanced Inventory Improvements
+- **Smart Suggestions**: Type-to-search in Advanced Inventory fields
+- **Search Buttons**: Quick access to full lists
+- **Row Deletion**: Select row and press Delete key (with confirmation)
+- **Excel Template**: Automatic creation of import template
+
+### 🎯 Impact
+- **Speed**: Faster data entry for bulk operations
+- **Usability**: Easier to manage large lists
 
 ---
 

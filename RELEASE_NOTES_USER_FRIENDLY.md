@@ -8,10 +8,9 @@
 
 | Date | Version | Summary | What to do |
 | --- | --- | --- | --- |
-| [Nov 15, 2025](#latest-update---november-15-2025-version-623) | [6.2.3](#latest-update---november-15-2025-version-623) | Search buttons added to all main entry tabs for quick access to full lists. | Nothing—just click 🔎 buttons to access dropdown lists! |
+| [Nov 20, 2025](#latest-update---november-20-2025-version-630) | [6.3.0](#latest-update---november-20-2025-version-630) | Complete redesign of Settings management screens with modern card interface. | Check out the new look in Settings! |
+| [Nov 15, 2025](#previous-update---november-15-2025-version-623) | [6.2.3](#previous-update---november-15-2025-version-623) | Search buttons added to all main entry tabs for quick access to full lists. | Nothing—just click 🔎 buttons to access dropdown lists! |
 | [Nov 15, 2025](#previous-update---november-15-2025-version-622) | [6.2.2](#previous-update---november-15-2025-version-622) | Advanced Inventory Entry modernized with smart suggestions and Excel auto-template. | Nothing—faster data entry is ready to use! |
-| [Nov 13, 2025](#previous-update---november-13-2025-version-621) | [6.2.1](#previous-update---november-13-2025-version-621) | Start the app directly in Production/Test and set the user name shown in logs. | Optional: create dedicated shortcuts when you switch between environments. |
-| [Nov 13, 2025](#previous-update---november-13-2025-version-621) | [6.2.1](#previous-update---november-13-2025-version-621) | New Help page with step-by-step instructions for startup arguments. | Press F1 → search "Startup Arguments" to learn more. |
 | [Nov 13, 2025](#previous-update---november-13-2025-version-620) | [6.2.0](#previous-update---november-13-2025-version-620) | Universal suggestions replaced old dropdowns with type-to-search. | Nothing—feature is automatically available. |
 | [Nov 13, 2025](#previous-update---november-13-2025-version-620) | [6.2.0](#previous-update---november-13-2025-version-620) | Smart confirmations now summarize deletions and transfers before you commit. | Review the summary and click Yes to proceed. |
 | [Nov 13, 2025](#previous-update---november-13-2025-version-620) | [6.2.0](#previous-update---november-13-2025-version-620) | Focus highlighting improvements across all tabs. | Notice clearer visual feedback when typing. |
@@ -35,7 +34,38 @@
 
 ---
 
-## Latest Update - November 15, 2025 (Version 6.2.3)
+## Latest Update - November 20, 2025 (Version 6.3.0)
+
+**What Changed**: The Settings area has been completely modernized! Managing Part Numbers, Locations, Operations, and Item Types is now faster and easier with a new "Card" interface.  
+**Do I Need To Do Anything?**: No - but if you manage settings, you'll love the new organized look.
+
+---
+
+### 🎯 What This Means For You
+
+#### Modern Settings Management
+
+**What's new**:
+- **Unified Management Screens**: We've combined the separate "Add", "Edit", and "Remove" tabs into single, easy-to-use management hubs.
+- **Card-Based Navigation**: Large, clear tiles help you choose exactly what you want to do (Add 🏢, Edit ✏️, or Remove 🗑️).
+- **Consistent Experience**: Managing Parts, Locations, Operations, and Item Types now works exactly the same way.
+- **Smart "Back" Navigation**: Easily return to the main selection screen without losing your place.
+
+**Where to see it**:
+- **Settings → Part Numbers**
+- **Settings → Locations**
+- **Settings → Operations**
+- **Settings → Item Types**
+
+**Why this helps**:
+- **Less Clutter**: The Settings tree menu is much cleaner (no more long lists of "Add/Edit/Remove" sub-items).
+- **Faster Workflow**: Get in, make your change, and get out with fewer clicks.
+- **Better Feedback**: Improved validation and status messages keep you informed.
+- **Modern Look**: Matches the clean design of the main application dashboard.
+
+---
+
+## Previous Update - November 15, 2025 (Version 6.2.3)
 
 **What Changed**: All main entry tabs now have 🔎 search buttons next to Part, Operation, and Location fields for quick access to full dropdown lists.  
 **Do I Need To Do Anything?**: No—buttons work automatically! Click when you want to see all options.
@@ -153,45 +183,7 @@
 
 ---
 
-## Previous Update - November 13, 2025 (Version 6.2.1)
 
-**What Changed**: You can now start the app directly in Production or Test, and choose the name that appears in logs. A new Help page shows simple, step‑by‑step instructions.  
-**Do I Need To Do Anything?**: No. Optional feature — use if you need separate shortcuts for Production vs Test.
-
----
-
-### 🎯 What This Means For You
-
-#### Launch App With Database And User Selection (New)
-
-**What's new**:
-- Create a desktop shortcut that opens Production or Test directly
-- Optionally set the name that appears in logs when you use the app
-- Advanced: IT can include database sign‑in details in the shortcut when needed
-
-**How to use**:
-1. Create a desktop shortcut to the app
-2. Make two shortcuts if helpful: one for Production and one for Test
-3. Open the shortcut’s Properties and follow the steps on the Help page to add the option
-
-**Where to learn more**:
-- Help → “Startup Arguments” page (F1 → search “Startup Arguments”)
-
-**Why this helps**:
-- Easy switching between Production and Test without changing settings
-- Clearer logs when multiple people share a station (set `-user=`)
-- Training or demo environments can use separate databases safely
-
-**Security note**:
-- If you put a password inside a shortcut, other people who can view that shortcut may see it. Only do this on secured machines or test environments.
-
----
-
-#### Documentation Update
-
-- New Help page: “Startup Arguments” with examples, screenshots guidance, and step-by-step shortcut instructions
-
----
 
 ## Previous Update - November 13, 2025 (Version 6.2.0)
 
