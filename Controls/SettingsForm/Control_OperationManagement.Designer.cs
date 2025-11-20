@@ -278,21 +278,36 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             Control_OperationManagement_TableLayout_AddContent.ColumnCount = 1;
             Control_OperationManagement_TableLayout_AddContent.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
             Control_OperationManagement_TableLayout_AddContent.Controls.Add(Control_OperationManagement_TextBox_AddOperation, 0, 0);
-            Control_OperationManagement_TableLayout_AddContent.Controls.Add(CreateKeyValueRow(Control_OperationManagement_Label_AddIssuedBy, Control_OperationManagement_Label_AddIssuedByValue), 0, 1);
-            Control_OperationManagement_TableLayout_AddContent.Controls.Add(Control_OperationManagement_TableLayout_AddActions, 0, 2);
-            Control_OperationManagement_TableLayout_AddContent.Dock = DockStyle.Top;
-            Control_OperationManagement_TableLayout_AddContent.RowCount = 3;
-            Control_OperationManagement_TableLayout_AddContent.RowStyles.Add(new RowStyle());
+            Control_OperationManagement_TableLayout_AddContent.Controls.Add(Control_OperationManagement_TableLayout_AddActions, 0, 1);
+            Control_OperationManagement_TableLayout_AddContent.Dock = DockStyle.Fill;
+            Control_OperationManagement_TableLayout_AddContent.RowCount = 2;
             Control_OperationManagement_TableLayout_AddContent.RowStyles.Add(new RowStyle());
             Control_OperationManagement_TableLayout_AddContent.RowStyles.Add(new RowStyle());
 
+            Control_OperationManagement_TextBox_AddOperation.AutoSize = true;
+            Control_OperationManagement_TextBox_AddOperation.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            Control_OperationManagement_TextBox_AddOperation.BorderStyle = BorderStyle.FixedSingle;
+            Control_OperationManagement_TextBox_AddOperation.Dock = DockStyle.Fill;
             Control_OperationManagement_TextBox_AddOperation.EnableSuggestions = false;
+            Control_OperationManagement_TextBox_AddOperation.Margin = new Padding(3, 3, 3, 10);
             Control_OperationManagement_TextBox_AddOperation.ShowValidationColor = true;
-            Control_OperationManagement_TextBox_AddOperation.TextBox.Enabled = true;
 
+            Control_OperationManagement_TableLayout_AddActions.AutoSize = true;
+            Control_OperationManagement_TableLayout_AddActions.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            Control_OperationManagement_TableLayout_AddActions.ColumnCount = 3;
+            Control_OperationManagement_TableLayout_AddActions.ColumnStyles.Add(new ColumnStyle());
+            Control_OperationManagement_TableLayout_AddActions.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
+            Control_OperationManagement_TableLayout_AddActions.ColumnStyles.Add(new ColumnStyle());
+            Control_OperationManagement_TableLayout_AddActions.Controls.Add(Control_OperationManagement_Button_AddSave, 0, 0);
+            Control_OperationManagement_TableLayout_AddActions.Controls.Add(Control_OperationManagement_Button_AddClear, 2, 0);
+            Control_OperationManagement_TableLayout_AddActions.Dock = DockStyle.Fill;
+            Control_OperationManagement_TableLayout_AddActions.RowCount = 1;
+            Control_OperationManagement_TableLayout_AddActions.RowStyles.Add(new RowStyle());
 
-            Control_OperationManagement_TableLayout_AddActions.Controls.Add(Control_OperationManagement_Button_AddClear);
-            Control_OperationManagement_TableLayout_AddActions.Controls.Add(Control_OperationManagement_Button_AddSave);
+            Control_OperationManagement_Button_AddSave.Location = new Point(3, 3);
+            Control_OperationManagement_Button_AddSave.Size = new Size(75, 23);
+
+            Control_OperationManagement_Button_AddClear.Size = new Size(75, 23);
 
             Control_OperationManagement_Panel_AddCard.Controls.Add(Control_OperationManagement_TableLayout_Add);
 
@@ -327,22 +342,42 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             Control_OperationManagement_TableLayout_EditContent.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
             Control_OperationManagement_TableLayout_EditContent.Controls.Add(Control_OperationManagement_Suggestion_EditSelectOperation, 0, 0);
             Control_OperationManagement_TableLayout_EditContent.Controls.Add(Control_OperationManagement_TextBox_EditNewOperation, 0, 1);
-            Control_OperationManagement_TableLayout_EditContent.Controls.Add(CreateKeyValueRow(Control_OperationManagement_Label_EditIssuedBy, Control_OperationManagement_Label_EditIssuedByValue), 0, 3);
-            Control_OperationManagement_TableLayout_EditContent.Controls.Add(Control_OperationManagement_TableLayout_EditActions, 0, 5);
-            Control_OperationManagement_TableLayout_EditContent.Dock = DockStyle.Top;
-            Control_OperationManagement_TableLayout_EditContent.RowCount = 6;
-            Control_OperationManagement_TableLayout_EditContent.RowStyles.Add(new RowStyle());
-            Control_OperationManagement_TableLayout_EditContent.RowStyles.Add(new RowStyle());
-            Control_OperationManagement_TableLayout_EditContent.RowStyles.Add(new RowStyle());
+            Control_OperationManagement_TableLayout_EditContent.Controls.Add(Control_OperationManagement_TableLayout_EditActions, 0, 2);
+            Control_OperationManagement_TableLayout_EditContent.Dock = DockStyle.Fill;
+            Control_OperationManagement_TableLayout_EditContent.RowCount = 3;
             Control_OperationManagement_TableLayout_EditContent.RowStyles.Add(new RowStyle());
             Control_OperationManagement_TableLayout_EditContent.RowStyles.Add(new RowStyle());
             Control_OperationManagement_TableLayout_EditContent.RowStyles.Add(new RowStyle());
 
+            Control_OperationManagement_Suggestion_EditSelectOperation.AutoSize = true;
+            Control_OperationManagement_Suggestion_EditSelectOperation.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            Control_OperationManagement_Suggestion_EditSelectOperation.BorderStyle = BorderStyle.FixedSingle;
+            Control_OperationManagement_Suggestion_EditSelectOperation.Dock = DockStyle.Fill;
+            Control_OperationManagement_Suggestion_EditSelectOperation.Margin = new Padding(3, 3, 3, 10);
+
+            Control_OperationManagement_TextBox_EditNewOperation.AutoSize = true;
+            Control_OperationManagement_TextBox_EditNewOperation.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            Control_OperationManagement_TextBox_EditNewOperation.BorderStyle = BorderStyle.FixedSingle;
+            Control_OperationManagement_TextBox_EditNewOperation.Dock = DockStyle.Fill;
             Control_OperationManagement_TextBox_EditNewOperation.EnableSuggestions = false;
+            Control_OperationManagement_TextBox_EditNewOperation.Margin = new Padding(3, 3, 3, 10);
 
+            Control_OperationManagement_TableLayout_EditActions.AutoSize = true;
+            Control_OperationManagement_TableLayout_EditActions.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            Control_OperationManagement_TableLayout_EditActions.ColumnCount = 3;
+            Control_OperationManagement_TableLayout_EditActions.ColumnStyles.Add(new ColumnStyle());
+            Control_OperationManagement_TableLayout_EditActions.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
+            Control_OperationManagement_TableLayout_EditActions.ColumnStyles.Add(new ColumnStyle());
+            Control_OperationManagement_TableLayout_EditActions.Controls.Add(Control_OperationManagement_Button_EditSave, 0, 0);
+            Control_OperationManagement_TableLayout_EditActions.Controls.Add(Control_OperationManagement_Button_EditReset, 2, 0);
+            Control_OperationManagement_TableLayout_EditActions.Dock = DockStyle.Fill;
+            Control_OperationManagement_TableLayout_EditActions.RowCount = 1;
+            Control_OperationManagement_TableLayout_EditActions.RowStyles.Add(new RowStyle());
 
-            Control_OperationManagement_TableLayout_EditActions.Controls.Add(Control_OperationManagement_Button_EditReset);
-            Control_OperationManagement_TableLayout_EditActions.Controls.Add(Control_OperationManagement_Button_EditSave);
+            Control_OperationManagement_Button_EditSave.Location = new Point(3, 3);
+            Control_OperationManagement_Button_EditSave.Size = new Size(75, 23);
+
+            Control_OperationManagement_Button_EditReset.Size = new Size(75, 23);
 
             Control_OperationManagement_Panel_EditCard.Controls.Add(Control_OperationManagement_TableLayout_Edit);
 
@@ -386,6 +421,11 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             Control_OperationManagement_TableLayout_RemoveContent.RowStyles.Add(new RowStyle());
             Control_OperationManagement_TableLayout_RemoveContent.RowStyles.Add(new RowStyle());
 
+            Control_OperationManagement_Suggestion_RemoveSelectOperation.AutoSize = true;
+            Control_OperationManagement_Suggestion_RemoveSelectOperation.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            Control_OperationManagement_Suggestion_RemoveSelectOperation.BorderStyle = BorderStyle.FixedSingle;
+            Control_OperationManagement_Suggestion_RemoveSelectOperation.Dock = DockStyle.Fill;
+            Control_OperationManagement_Suggestion_RemoveSelectOperation.Margin = new Padding(3, 3, 3, 10);
 
             Control_OperationManagement_TableLayout_RemoveDetails.AutoSize = true;
             Control_OperationManagement_TableLayout_RemoveDetails.AutoSizeMode = AutoSizeMode.GrowAndShrink;
@@ -404,11 +444,24 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
 
             Control_OperationManagement_Label_RemoveWarning.AutoSize = true;
             Control_OperationManagement_Label_RemoveWarning.ForeColor = Color.FromArgb(192, 0, 0);
-            Control_OperationManagement_Label_RemoveWarning.Text = "Warning: Removal is permanent.";
             Control_OperationManagement_Label_RemoveWarning.Margin = new Padding(0, 12, 0, 0);
 
-            Control_OperationManagement_TableLayout_RemoveActions.Controls.Add(Control_OperationManagement_Button_RemoveCancel);
-            Control_OperationManagement_TableLayout_RemoveActions.Controls.Add(Control_OperationManagement_Button_RemoveConfirm);
+            Control_OperationManagement_TableLayout_RemoveActions.AutoSize = true;
+            Control_OperationManagement_TableLayout_RemoveActions.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            Control_OperationManagement_TableLayout_RemoveActions.ColumnCount = 3;
+            Control_OperationManagement_TableLayout_RemoveActions.ColumnStyles.Add(new ColumnStyle());
+            Control_OperationManagement_TableLayout_RemoveActions.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
+            Control_OperationManagement_TableLayout_RemoveActions.ColumnStyles.Add(new ColumnStyle());
+            Control_OperationManagement_TableLayout_RemoveActions.Controls.Add(Control_OperationManagement_Button_RemoveConfirm, 0, 0);
+            Control_OperationManagement_TableLayout_RemoveActions.Controls.Add(Control_OperationManagement_Button_RemoveCancel, 2, 0);
+            Control_OperationManagement_TableLayout_RemoveActions.Dock = DockStyle.Fill;
+            Control_OperationManagement_TableLayout_RemoveActions.RowCount = 1;
+            Control_OperationManagement_TableLayout_RemoveActions.RowStyles.Add(new RowStyle());
+
+            Control_OperationManagement_Button_RemoveConfirm.Location = new Point(3, 3);
+            Control_OperationManagement_Button_RemoveConfirm.Size = new Size(75, 23);
+
+            Control_OperationManagement_Button_RemoveCancel.Size = new Size(75, 23);
 
             Control_OperationManagement_Panel_RemoveCard.Controls.Add(Control_OperationManagement_TableLayout_Remove);
 
