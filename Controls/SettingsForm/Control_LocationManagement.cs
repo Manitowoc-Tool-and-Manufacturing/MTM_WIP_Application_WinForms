@@ -138,6 +138,9 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             
             // Back button
             Control_LocationManagement_Button_Back.Click += (_, _) => ShowHome();
+
+            // Back to Home button
+            Control_LocationManagement_Button_Home.Click += (_, _) => BackToHomeRequested?.Invoke(this, EventArgs.Empty);
         }
 
         private void WireUpTileControlClick(Control control, int cardIndex)
@@ -158,6 +161,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             Control_LocationManagement_Panel_Home.Visible = false;
             Control_LocationManagement_TableLayoutPanel_Cards.Visible = true;
             Control_LocationManagement_TableLayoutPanel_BackButton.Visible = true;
+            Control_LocationManagement_Button_Back.Visible = true;
             
             // Hide all cards first
             Control_LocationManagement_Panel_AddCard.Visible = false;
@@ -192,7 +196,8 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             // Show home, hide cards and back button
             Control_LocationManagement_Panel_Home.Visible = true;
             Control_LocationManagement_TableLayoutPanel_Cards.Visible = false;
-            Control_LocationManagement_TableLayoutPanel_BackButton.Visible = false;
+            Control_LocationManagement_TableLayoutPanel_BackButton.Visible = true;
+            Control_LocationManagement_Button_Back.Visible = false;
         }
 
         private void UpdateIssuedByLabels()
@@ -529,7 +534,10 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
         private void ClearAddSection()
         {
             Control_LocationManagement_TextBox_AddLocation.Clear();
-            Control_LocationManagement_ComboBox_AddBuilding.SelectedIndex = 0;
+            if (Control_LocationManagement_ComboBox_AddBuilding.Items.Count > 0)
+            {
+                Control_LocationManagement_ComboBox_AddBuilding.SelectedIndex = 0;
+            }
         }
 
         private void ClearEditSection()
@@ -537,7 +545,10 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             _selectedEditLocation = null;
             Helper_SuggestionTextBox.Clear(Control_LocationManagement_Suggestion_EditSelectLocation.TextBox);
             Control_LocationManagement_TextBox_EditNewLocation.Clear();
-            Control_LocationManagement_ComboBox_EditBuilding.SelectedIndex = 0;
+            if (Control_LocationManagement_ComboBox_EditBuilding.Items.Count > 0)
+            {
+                Control_LocationManagement_ComboBox_EditBuilding.SelectedIndex = 0;
+            }
             Control_LocationManagement_Label_EditIssuedByValue.Text = Model_Application_Variables.User ?? "Current User";
             SetEditSectionEnabled(false);
         }
@@ -617,6 +628,11 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
         /// Raised when location data has changed (add, edit, remove) so parent views can refresh caches.
         /// </summary>
         public event EventHandler? LocationListChanged;
+
+        /// <summary>
+        /// Raised when the user requests to navigate back to the main settings home.
+        /// </summary>
+        public event EventHandler? BackToHomeRequested;
 
         #endregion
 

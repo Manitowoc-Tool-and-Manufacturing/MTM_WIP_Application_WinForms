@@ -152,6 +152,9 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             
             // Back button
             Control_ItemTypeManagement_Button_Back.Click += (_, _) => ShowHome();
+
+            // Back to Home button
+            Control_ItemTypeManagement_Button_Home.Click += (_, _) => BackToHomeRequested?.Invoke(this, EventArgs.Empty);
         }
 
         private void WireUpTileControlClick(Control control, int cardIndex)
@@ -172,6 +175,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             Control_ItemTypeManagement_Panel_Home.Visible = false;
             Control_ItemTypeManagement_TableLayout_Cards.Visible = true;
             Control_ItemTypeManagement_TableLayout_BackButton.Visible = true;
+            Control_ItemTypeManagement_Button_Back.Visible = true;
             
             // Hide all cards first
             Control_ItemTypeManagement_Panel_AddCard.Visible = false;
@@ -206,7 +210,8 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             // Show home, hide cards and back button
             Control_ItemTypeManagement_Panel_Home.Visible = true;
             Control_ItemTypeManagement_TableLayout_Cards.Visible = false;
-            Control_ItemTypeManagement_TableLayout_BackButton.Visible = false;
+            Control_ItemTypeManagement_TableLayout_BackButton.Visible = true;
+            Control_ItemTypeManagement_Button_Back.Visible = false;
         }
 
         private void UpdateIssuedByLabels()
@@ -596,6 +601,11 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
         /// Raised to update status message in parent form.
         /// </summary>
         public event EventHandler<string>? StatusMessageChanged;
+
+        /// <summary>
+        /// Raised when the user requests to navigate back to the main settings home.
+        /// </summary>
+        public event EventHandler? BackToHomeRequested;
 
         #endregion
 
