@@ -18,6 +18,7 @@ namespace MTM_WIP_Application_Winforms.Forms.Settings
         private Control_PartIDManagement? _controlPartManagement;
         private Control_LocationManagement? _controlLocationManagement;
         private Control_OperationManagement? _controlOperationManagement;
+        private Control_ItemTypeManagement? _controlItemTypeManagement;
 
         #endregion
 
@@ -66,9 +67,7 @@ namespace MTM_WIP_Application_Winforms.Forms.Settings
                 ["Part Numbers"] = SettingsForm_Panel_PartNumbers,
                 ["Operations"] = SettingsForm_Panel_AddOperation,
                 ["Locations"] = SettingsForm_Panel_AddLocation,
-                ["Add ItemType"] = SettingsForm_Panel_AddItemType,
-                ["Edit ItemType"] = SettingsForm_Panel_EditItemType,
-                ["Remove ItemType"] = SettingsForm_Panel_RemoveItemType,
+                ["ItemTypes"] = SettingsForm_Panel_AddItemType,
                 ["Theme"] = SettingsForm_Panel_Theme,
                 ["Shortcuts"] = SettingsForm_Panel_Shortcuts,
                 ["About"] = SettingsForm_Panel_About
@@ -118,10 +117,7 @@ namespace MTM_WIP_Application_Winforms.Forms.Settings
 
             SettingsForm_TreeView_Category.Nodes.Add("Locations", "Locations");
 
-            TreeNode itemTypesNode = SettingsForm_TreeView_Category.Nodes.Add("ItemTypes", "ItemTypes");
-            itemTypesNode.Nodes.Add("Add ItemType", "Add ItemType");
-            itemTypesNode.Nodes.Add("Edit ItemType", "Edit ItemType");
-            itemTypesNode.Nodes.Add("Remove ItemType", "Remove ItemType");
+            SettingsForm_TreeView_Category.Nodes.Add("ItemTypes", "ItemTypes");
 
             TreeNode themeNode = SettingsForm_TreeView_Category.Nodes.Add("Theme", "Theme");
             TreeNode shortcutsNode = SettingsForm_TreeView_Category.Nodes.Add("Shortcuts", "Shortcuts");
@@ -244,29 +240,17 @@ namespace MTM_WIP_Application_Winforms.Forms.Settings
             SettingsForm_Panel_EditLocation.Visible = false;
             SettingsForm_Panel_RemoveLocation.Visible = false;
 
-            Control_Add_ItemType controlAddItemType = new() { Dock = DockStyle.Fill };
-            SettingsForm_Panel_AddItemType.Controls.Add(controlAddItemType);
-            controlAddItemType.ItemTypeAdded += (s, e) =>
+            _controlItemTypeManagement = new Control_ItemTypeManagement { Dock = DockStyle.Fill };
+            _controlItemTypeManagement.SetProgressControls(SettingsForm_ProgressBar, SettingsForm_StatusText);
+            _controlItemTypeManagement.ItemTypeListChanged += (_, _) =>
             {
-                UpdateStatus("ItemType added successfully - lists refreshed");
+                UpdateStatus("ItemTypes updated successfully.");
                 HasChanges = true;
             };
-
-            Control_Edit_ItemType controlEditItemType = new() { Dock = DockStyle.Fill };
-            SettingsForm_Panel_EditItemType.Controls.Add(controlEditItemType);
-            controlEditItemType.ItemTypeUpdated += (s, e) =>
-            {
-                UpdateStatus("ItemType updated successfully - lists refreshed");
-                HasChanges = true;
-            };
-
-            Control_Remove_ItemType controlRemoveItemType = new() { Dock = DockStyle.Fill };
-            SettingsForm_Panel_RemoveItemType.Controls.Add(controlRemoveItemType);
-            controlRemoveItemType.ItemTypeRemoved += (s, e) =>
-            {
-                UpdateStatus("ItemType removed successfully - lists refreshed");
-                HasChanges = true;
-            };
+            _controlItemTypeManagement.StatusMessageChanged += (_, message) => UpdateStatus(message);
+            SettingsForm_Panel_AddItemType.Controls.Add(_controlItemTypeManagement);
+            SettingsForm_Panel_EditItemType.Visible = false;
+            SettingsForm_Panel_RemoveItemType.Visible = false;
         }
 
         private void InitializeForm()
@@ -347,6 +331,18 @@ namespace MTM_WIP_Application_Winforms.Forms.Settings
                 HideNode("Part Numbers");
             }
 
+            // ItemTypes privileges (same as Parts for now, or adjust as needed)
+            bool canAddItemTypes = hasAdminAccess || isNormal;
+            bool canEditItemTypes = hasAdminAccess;
+            bool canRemoveItemTypes = hasAdminAccess;
+
+            _controlItemTypeManagement?.ApplyPrivileges(canAddItemTypes, canEditItemTypes, canRemoveItemTypes);
+
+            if (!canAddItemTypes && !canEditItemTypes && !canRemoveItemTypes)
+            {
+                HideNode("ItemTypes");
+            }
+
             if (hasAdminAccess)
             {
                 // All nodes shown for Admin and Developer
@@ -361,8 +357,7 @@ namespace MTM_WIP_Application_Winforms.Forms.Settings
                 HideNode("Operations", "Remove Operation");
                 HideNode("Locations", "Edit Location");
                 HideNode("Locations", "Remove Location");
-                HideNode("ItemTypes", "Edit ItemType");
-                HideNode("ItemTypes", "Remove ItemType");
+                // ItemTypes handled above
                 HideNode("Users", "Edit User");
                 HideNode("Users", "Delete User");
             }

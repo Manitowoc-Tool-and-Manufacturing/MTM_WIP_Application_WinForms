@@ -18,8 +18,20 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
         private Panel Control_LocationManagement_Panel_Home = null!;
         private TableLayoutPanel Control_LocationManagement_TableLayoutPanel_Home = null!;
         private Panel Control_LocationManagement_Panel_HomeTile_Add = null!;
+        private TableLayoutPanel Control_LocationManagement_TableLayout_HomeTile_Add = null!;
+        private Label Control_LocationManagement_Label_HomeTile_AddIcon = null!;
+        private Label Control_LocationManagement_Label_HomeTile_AddTitle = null!;
+        private Label Control_LocationManagement_Label_HomeTile_AddInstruction = null!;
         private Panel Control_LocationManagement_Panel_HomeTile_Edit = null!;
+        private TableLayoutPanel Control_LocationManagement_TableLayout_HomeTile_Edit = null!;
+        private Label Control_LocationManagement_Label_HomeTile_EditIcon = null!;
+        private Label Control_LocationManagement_Label_HomeTile_EditTitle = null!;
+        private Label Control_LocationManagement_Label_HomeTile_EditInstruction = null!;
         private Panel Control_LocationManagement_Panel_HomeTile_Remove = null!;
+        private TableLayoutPanel Control_LocationManagement_TableLayout_HomeTile_Remove = null!;
+        private Label Control_LocationManagement_Label_HomeTile_RemoveIcon = null!;
+        private Label Control_LocationManagement_Label_HomeTile_RemoveTitle = null!;
+        private Label Control_LocationManagement_Label_HomeTile_RemoveInstruction = null!;
         
         private TableLayoutPanel Control_LocationManagement_TableLayoutPanel_Cards = null!;
         private TableLayoutPanel Control_LocationManagement_TableLayoutPanel_BackButton = null!;
@@ -89,8 +101,20 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             Control_LocationManagement_Panel_Home = new Panel();
             Control_LocationManagement_TableLayoutPanel_Home = new TableLayoutPanel();
             Control_LocationManagement_Panel_HomeTile_Add = new Panel();
+            Control_LocationManagement_TableLayout_HomeTile_Add = new TableLayoutPanel();
+            Control_LocationManagement_Label_HomeTile_AddIcon = new Label();
+            Control_LocationManagement_Label_HomeTile_AddTitle = new Label();
+            Control_LocationManagement_Label_HomeTile_AddInstruction = new Label();
             Control_LocationManagement_Panel_HomeTile_Remove = new Panel();
+            Control_LocationManagement_TableLayout_HomeTile_Remove = new TableLayoutPanel();
+            Control_LocationManagement_Label_HomeTile_RemoveIcon = new Label();
+            Control_LocationManagement_Label_HomeTile_RemoveTitle = new Label();
+            Control_LocationManagement_Label_HomeTile_RemoveInstruction = new Label();
             Control_LocationManagement_Panel_HomeTile_Edit = new Panel();
+            Control_LocationManagement_TableLayout_HomeTile_Edit = new TableLayoutPanel();
+            Control_LocationManagement_Label_HomeTile_EditIcon = new Label();
+            Control_LocationManagement_Label_HomeTile_EditTitle = new Label();
+            Control_LocationManagement_Label_HomeTile_EditInstruction = new Label();
             Control_LocationManagement_TableLayoutPanel_Cards = new TableLayoutPanel();
             Control_LocationManagement_Panel_AddCard = new Panel();
             Control_LocationManagement_TableLayoutPanel_Add = new TableLayoutPanel();
@@ -147,6 +171,12 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             Control_LocationManagement_Panel_Container.SuspendLayout();
             Control_LocationManagement_Panel_Home.SuspendLayout();
             Control_LocationManagement_TableLayoutPanel_Home.SuspendLayout();
+            Control_LocationManagement_Panel_HomeTile_Add.SuspendLayout();
+            Control_LocationManagement_TableLayout_HomeTile_Add.SuspendLayout();
+            Control_LocationManagement_Panel_HomeTile_Remove.SuspendLayout();
+            Control_LocationManagement_TableLayout_HomeTile_Remove.SuspendLayout();
+            Control_LocationManagement_Panel_HomeTile_Edit.SuspendLayout();
+            Control_LocationManagement_TableLayout_HomeTile_Edit.SuspendLayout();
             Control_LocationManagement_TableLayoutPanel_Cards.SuspendLayout();
             Control_LocationManagement_Panel_AddCard.SuspendLayout();
             Control_LocationManagement_TableLayoutPanel_Add.SuspendLayout();
@@ -257,33 +287,168 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             Control_LocationManagement_Panel_HomeTile_Add.AutoSize = true;
             Control_LocationManagement_Panel_HomeTile_Add.AutoSizeMode = AutoSizeMode.GrowAndShrink;
             Control_LocationManagement_Panel_HomeTile_Add.BorderStyle = BorderStyle.FixedSingle;
+            Control_LocationManagement_Panel_HomeTile_Add.Controls.Add(Control_LocationManagement_TableLayout_HomeTile_Add);
+            Control_LocationManagement_Panel_HomeTile_Add.Cursor = Cursors.Hand;
             Control_LocationManagement_Panel_HomeTile_Add.Dock = DockStyle.Fill;
             Control_LocationManagement_Panel_HomeTile_Add.Location = new Point(3, 3);
             Control_LocationManagement_Panel_HomeTile_Add.Name = "Control_LocationManagement_Panel_HomeTile_Add";
             Control_LocationManagement_Panel_HomeTile_Add.Size = new Size(172, 678);
             Control_LocationManagement_Panel_HomeTile_Add.TabIndex = 0;
             // 
+            // Control_LocationManagement_TableLayout_HomeTile_Add
+            // 
+            Control_LocationManagement_TableLayout_HomeTile_Add.AutoSize = true;
+            Control_LocationManagement_TableLayout_HomeTile_Add.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            Control_LocationManagement_TableLayout_HomeTile_Add.ColumnCount = 1;
+            Control_LocationManagement_TableLayout_HomeTile_Add.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
+            Control_LocationManagement_TableLayout_HomeTile_Add.Controls.Add(Control_LocationManagement_Label_HomeTile_AddIcon, 0, 0);
+            Control_LocationManagement_TableLayout_HomeTile_Add.Controls.Add(Control_LocationManagement_Label_HomeTile_AddTitle, 0, 1);
+            Control_LocationManagement_TableLayout_HomeTile_Add.Controls.Add(Control_LocationManagement_Label_HomeTile_AddInstruction, 0, 2);
+            Control_LocationManagement_TableLayout_HomeTile_Add.Dock = DockStyle.Fill;
+            Control_LocationManagement_TableLayout_HomeTile_Add.Padding = new Padding(20);
+            Control_LocationManagement_TableLayout_HomeTile_Add.RowCount = 3;
+            Control_LocationManagement_TableLayout_HomeTile_Add.RowStyles.Add(new RowStyle());
+            Control_LocationManagement_TableLayout_HomeTile_Add.RowStyles.Add(new RowStyle());
+            Control_LocationManagement_TableLayout_HomeTile_Add.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
+            Control_LocationManagement_TableLayout_HomeTile_Add.TabIndex = 0;
+            // 
+            // Control_LocationManagement_Label_HomeTile_AddIcon
+            // 
+            Control_LocationManagement_Label_HomeTile_AddIcon.AutoSize = true;
+            Control_LocationManagement_Label_HomeTile_AddIcon.Dock = DockStyle.Fill;
+            Control_LocationManagement_Label_HomeTile_AddIcon.Font = new Font("Segoe UI Emoji", 48F, FontStyle.Regular, GraphicsUnit.Point);
+            Control_LocationManagement_Label_HomeTile_AddIcon.Text = "🆕";
+            Control_LocationManagement_Label_HomeTile_AddIcon.TextAlign = ContentAlignment.MiddleCenter;
+            // 
+            // Control_LocationManagement_Label_HomeTile_AddTitle
+            // 
+            Control_LocationManagement_Label_HomeTile_AddTitle.AutoSize = true;
+            Control_LocationManagement_Label_HomeTile_AddTitle.Dock = DockStyle.Fill;
+            Control_LocationManagement_Label_HomeTile_AddTitle.Font = new Font("Segoe UI", 14F, FontStyle.Bold, GraphicsUnit.Point);
+            Control_LocationManagement_Label_HomeTile_AddTitle.Margin = new Padding(0, 10, 0, 5);
+            Control_LocationManagement_Label_HomeTile_AddTitle.Text = "Add Location";
+            Control_LocationManagement_Label_HomeTile_AddTitle.TextAlign = ContentAlignment.MiddleCenter;
+            // 
+            // Control_LocationManagement_Label_HomeTile_AddInstruction
+            // 
+            Control_LocationManagement_Label_HomeTile_AddInstruction.AutoSize = true;
+            Control_LocationManagement_Label_HomeTile_AddInstruction.Dock = DockStyle.Fill;
+            Control_LocationManagement_Label_HomeTile_AddInstruction.Font = new Font("Segoe UI", 9F, FontStyle.Italic, GraphicsUnit.Point);
+            Control_LocationManagement_Label_HomeTile_AddInstruction.ForeColor = Color.FromArgb(100, 100, 100);
+            Control_LocationManagement_Label_HomeTile_AddInstruction.Text = "Click to add new locations";
+            Control_LocationManagement_Label_HomeTile_AddInstruction.TextAlign = ContentAlignment.TopCenter;
+            // 
             // Control_LocationManagement_Panel_HomeTile_Remove
             // 
             Control_LocationManagement_Panel_HomeTile_Remove.AutoSize = true;
             Control_LocationManagement_Panel_HomeTile_Remove.AutoSizeMode = AutoSizeMode.GrowAndShrink;
             Control_LocationManagement_Panel_HomeTile_Remove.BorderStyle = BorderStyle.FixedSingle;
+            Control_LocationManagement_Panel_HomeTile_Remove.Controls.Add(Control_LocationManagement_TableLayout_HomeTile_Remove);
+            Control_LocationManagement_Panel_HomeTile_Remove.Cursor = Cursors.Hand;
             Control_LocationManagement_Panel_HomeTile_Remove.Dock = DockStyle.Fill;
             Control_LocationManagement_Panel_HomeTile_Remove.Location = new Point(359, 3);
             Control_LocationManagement_Panel_HomeTile_Remove.Name = "Control_LocationManagement_Panel_HomeTile_Remove";
             Control_LocationManagement_Panel_HomeTile_Remove.Size = new Size(173, 678);
             Control_LocationManagement_Panel_HomeTile_Remove.TabIndex = 2;
             // 
+            // Control_LocationManagement_TableLayout_HomeTile_Remove
+            // 
+            Control_LocationManagement_TableLayout_HomeTile_Remove.AutoSize = true;
+            Control_LocationManagement_TableLayout_HomeTile_Remove.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            Control_LocationManagement_TableLayout_HomeTile_Remove.ColumnCount = 1;
+            Control_LocationManagement_TableLayout_HomeTile_Remove.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
+            Control_LocationManagement_TableLayout_HomeTile_Remove.Controls.Add(Control_LocationManagement_Label_HomeTile_RemoveIcon, 0, 0);
+            Control_LocationManagement_TableLayout_HomeTile_Remove.Controls.Add(Control_LocationManagement_Label_HomeTile_RemoveTitle, 0, 1);
+            Control_LocationManagement_TableLayout_HomeTile_Remove.Controls.Add(Control_LocationManagement_Label_HomeTile_RemoveInstruction, 0, 2);
+            Control_LocationManagement_TableLayout_HomeTile_Remove.Dock = DockStyle.Fill;
+            Control_LocationManagement_TableLayout_HomeTile_Remove.Padding = new Padding(20);
+            Control_LocationManagement_TableLayout_HomeTile_Remove.RowCount = 3;
+            Control_LocationManagement_TableLayout_HomeTile_Remove.RowStyles.Add(new RowStyle());
+            Control_LocationManagement_TableLayout_HomeTile_Remove.RowStyles.Add(new RowStyle());
+            Control_LocationManagement_TableLayout_HomeTile_Remove.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
+            Control_LocationManagement_TableLayout_HomeTile_Remove.TabIndex = 0;
+            // 
+            // Control_LocationManagement_Label_HomeTile_RemoveIcon
+            // 
+            Control_LocationManagement_Label_HomeTile_RemoveIcon.AutoSize = true;
+            Control_LocationManagement_Label_HomeTile_RemoveIcon.Dock = DockStyle.Fill;
+            Control_LocationManagement_Label_HomeTile_RemoveIcon.Font = new Font("Segoe UI Emoji", 48F, FontStyle.Regular, GraphicsUnit.Point);
+            Control_LocationManagement_Label_HomeTile_RemoveIcon.Text = "🗑️";
+            Control_LocationManagement_Label_HomeTile_RemoveIcon.TextAlign = ContentAlignment.MiddleCenter;
+            // 
+            // Control_LocationManagement_Label_HomeTile_RemoveTitle
+            // 
+            Control_LocationManagement_Label_HomeTile_RemoveTitle.AutoSize = true;
+            Control_LocationManagement_Label_HomeTile_RemoveTitle.Dock = DockStyle.Fill;
+            Control_LocationManagement_Label_HomeTile_RemoveTitle.Font = new Font("Segoe UI", 14F, FontStyle.Bold, GraphicsUnit.Point);
+            Control_LocationManagement_Label_HomeTile_RemoveTitle.Margin = new Padding(0, 10, 0, 5);
+            Control_LocationManagement_Label_HomeTile_RemoveTitle.Text = "Remove Location";
+            Control_LocationManagement_Label_HomeTile_RemoveTitle.TextAlign = ContentAlignment.MiddleCenter;
+            // 
+            // Control_LocationManagement_Label_HomeTile_RemoveInstruction
+            // 
+            Control_LocationManagement_Label_HomeTile_RemoveInstruction.AutoSize = true;
+            Control_LocationManagement_Label_HomeTile_RemoveInstruction.Dock = DockStyle.Fill;
+            Control_LocationManagement_Label_HomeTile_RemoveInstruction.Font = new Font("Segoe UI", 9F, FontStyle.Italic, GraphicsUnit.Point);
+            Control_LocationManagement_Label_HomeTile_RemoveInstruction.ForeColor = Color.FromArgb(100, 100, 100);
+            Control_LocationManagement_Label_HomeTile_RemoveInstruction.Text = "Click to remove locations";
+            Control_LocationManagement_Label_HomeTile_RemoveInstruction.TextAlign = ContentAlignment.TopCenter;
+            // 
             // Control_LocationManagement_Panel_HomeTile_Edit
             // 
             Control_LocationManagement_Panel_HomeTile_Edit.AutoSize = true;
             Control_LocationManagement_Panel_HomeTile_Edit.AutoSizeMode = AutoSizeMode.GrowAndShrink;
             Control_LocationManagement_Panel_HomeTile_Edit.BorderStyle = BorderStyle.FixedSingle;
+            Control_LocationManagement_Panel_HomeTile_Edit.Controls.Add(Control_LocationManagement_TableLayout_HomeTile_Edit);
+            Control_LocationManagement_Panel_HomeTile_Edit.Cursor = Cursors.Hand;
             Control_LocationManagement_Panel_HomeTile_Edit.Dock = DockStyle.Fill;
             Control_LocationManagement_Panel_HomeTile_Edit.Location = new Point(181, 3);
             Control_LocationManagement_Panel_HomeTile_Edit.Name = "Control_LocationManagement_Panel_HomeTile_Edit";
             Control_LocationManagement_Panel_HomeTile_Edit.Size = new Size(172, 678);
             Control_LocationManagement_Panel_HomeTile_Edit.TabIndex = 1;
+            // 
+            // Control_LocationManagement_TableLayout_HomeTile_Edit
+            // 
+            Control_LocationManagement_TableLayout_HomeTile_Edit.AutoSize = true;
+            Control_LocationManagement_TableLayout_HomeTile_Edit.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            Control_LocationManagement_TableLayout_HomeTile_Edit.ColumnCount = 1;
+            Control_LocationManagement_TableLayout_HomeTile_Edit.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
+            Control_LocationManagement_TableLayout_HomeTile_Edit.Controls.Add(Control_LocationManagement_Label_HomeTile_EditIcon, 0, 0);
+            Control_LocationManagement_TableLayout_HomeTile_Edit.Controls.Add(Control_LocationManagement_Label_HomeTile_EditTitle, 0, 1);
+            Control_LocationManagement_TableLayout_HomeTile_Edit.Controls.Add(Control_LocationManagement_Label_HomeTile_EditInstruction, 0, 2);
+            Control_LocationManagement_TableLayout_HomeTile_Edit.Dock = DockStyle.Fill;
+            Control_LocationManagement_TableLayout_HomeTile_Edit.Padding = new Padding(20);
+            Control_LocationManagement_TableLayout_HomeTile_Edit.RowCount = 3;
+            Control_LocationManagement_TableLayout_HomeTile_Edit.RowStyles.Add(new RowStyle());
+            Control_LocationManagement_TableLayout_HomeTile_Edit.RowStyles.Add(new RowStyle());
+            Control_LocationManagement_TableLayout_HomeTile_Edit.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
+            Control_LocationManagement_TableLayout_HomeTile_Edit.TabIndex = 0;
+            // 
+            // Control_LocationManagement_Label_HomeTile_EditIcon
+            // 
+            Control_LocationManagement_Label_HomeTile_EditIcon.AutoSize = true;
+            Control_LocationManagement_Label_HomeTile_EditIcon.Dock = DockStyle.Fill;
+            Control_LocationManagement_Label_HomeTile_EditIcon.Font = new Font("Segoe UI Emoji", 48F, FontStyle.Regular, GraphicsUnit.Point);
+            Control_LocationManagement_Label_HomeTile_EditIcon.Text = "✏️";
+            Control_LocationManagement_Label_HomeTile_EditIcon.TextAlign = ContentAlignment.MiddleCenter;
+            // 
+            // Control_LocationManagement_Label_HomeTile_EditTitle
+            // 
+            Control_LocationManagement_Label_HomeTile_EditTitle.AutoSize = true;
+            Control_LocationManagement_Label_HomeTile_EditTitle.Dock = DockStyle.Fill;
+            Control_LocationManagement_Label_HomeTile_EditTitle.Font = new Font("Segoe UI", 14F, FontStyle.Bold, GraphicsUnit.Point);
+            Control_LocationManagement_Label_HomeTile_EditTitle.Margin = new Padding(0, 10, 0, 5);
+            Control_LocationManagement_Label_HomeTile_EditTitle.Text = "Edit Location";
+            Control_LocationManagement_Label_HomeTile_EditTitle.TextAlign = ContentAlignment.MiddleCenter;
+            // 
+            // Control_LocationManagement_Label_HomeTile_EditInstruction
+            // 
+            Control_LocationManagement_Label_HomeTile_EditInstruction.AutoSize = true;
+            Control_LocationManagement_Label_HomeTile_EditInstruction.Dock = DockStyle.Fill;
+            Control_LocationManagement_Label_HomeTile_EditInstruction.Font = new Font("Segoe UI", 9F, FontStyle.Italic, GraphicsUnit.Point);
+            Control_LocationManagement_Label_HomeTile_EditInstruction.ForeColor = Color.FromArgb(100, 100, 100);
+            Control_LocationManagement_Label_HomeTile_EditInstruction.Text = "Click to edit existing locations";
+            Control_LocationManagement_Label_HomeTile_EditInstruction.TextAlign = ContentAlignment.TopCenter;
             // 
             // Control_LocationManagement_TableLayoutPanel_Cards
             // 
@@ -1002,6 +1167,18 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             Control_LocationManagement_Panel_Home.ResumeLayout(false);
             Control_LocationManagement_TableLayoutPanel_Home.ResumeLayout(false);
             Control_LocationManagement_TableLayoutPanel_Home.PerformLayout();
+            Control_LocationManagement_Panel_HomeTile_Add.ResumeLayout(false);
+            Control_LocationManagement_Panel_HomeTile_Add.PerformLayout();
+            Control_LocationManagement_TableLayout_HomeTile_Add.ResumeLayout(false);
+            Control_LocationManagement_TableLayout_HomeTile_Add.PerformLayout();
+            Control_LocationManagement_Panel_HomeTile_Remove.ResumeLayout(false);
+            Control_LocationManagement_Panel_HomeTile_Remove.PerformLayout();
+            Control_LocationManagement_TableLayout_HomeTile_Remove.ResumeLayout(false);
+            Control_LocationManagement_TableLayout_HomeTile_Remove.PerformLayout();
+            Control_LocationManagement_Panel_HomeTile_Edit.ResumeLayout(false);
+            Control_LocationManagement_Panel_HomeTile_Edit.PerformLayout();
+            Control_LocationManagement_TableLayout_HomeTile_Edit.ResumeLayout(false);
+            Control_LocationManagement_TableLayout_HomeTile_Edit.PerformLayout();
             Control_LocationManagement_TableLayoutPanel_Cards.ResumeLayout(false);
             Control_LocationManagement_TableLayoutPanel_Cards.PerformLayout();
             Control_LocationManagement_Panel_AddCard.ResumeLayout(false);
