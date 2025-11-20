@@ -17,6 +17,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
 
         private Color _accentColor = Color.FromArgb(0, 120, 212);
         private readonly List<SubcategoryLink> _subcategoryLinks = new();
+        private string? _navigationTarget;
 
         #endregion
 
@@ -30,6 +31,17 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
         #endregion
 
         #region Properties
+
+        /// <summary>
+        /// Navigation target when card is clicked.
+        /// </summary>
+        [Category("Behavior")]
+        [Description("The navigation target identifier when card is clicked")]
+        public string? NavigationTarget
+        {
+            get => _navigationTarget;
+            set => _navigationTarget = value;
+        }
 
         /// <summary>
         /// Card title text.
@@ -141,6 +153,21 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             this.MouseLeave += OnMouseLeaveCard;
             Control_SettingsCategoryCard_Panel_Content.MouseEnter += OnMouseEnterCard;
             Control_SettingsCategoryCard_Panel_Content.MouseLeave += OnMouseLeaveCard;
+
+            // Click handlers
+            this.Click += OnCardClick;
+            Control_SettingsCategoryCard_Panel_Content.Click += OnCardClick;
+            Control_SettingsCategoryCard_Label_Title.Click += OnCardClick;
+            Control_SettingsCategoryCard_Label_Icon.Click += OnCardClick;
+            Control_SettingsCategoryCard_Label_Description.Click += OnCardClick;
+        }
+
+        private void OnCardClick(object? sender, EventArgs e)
+        {
+            if (!string.IsNullOrWhiteSpace(_navigationTarget))
+            {
+                NavigationRequested?.Invoke(this, _navigationTarget);
+            }
         }
 
         private void SubcategoryLink_Clicked(object? sender, LinkLabelLinkClickedEventArgs e)
