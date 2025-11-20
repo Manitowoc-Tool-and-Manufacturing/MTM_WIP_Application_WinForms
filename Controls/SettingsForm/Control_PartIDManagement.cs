@@ -55,37 +55,93 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             SetRemoveSectionEnabled(false);
         }
 
+        /// <inheritdoc />
+        protected override void ApplyTheme(Model_Shared_UserUiColors theme)
+        {
+            base.ApplyTheme(theme);
+            
+            // Remove warning and confirm button
+
+            Control_PartIDManagement_Label_RemoveWarning.ForeColor = theme.ErrorColor ?? Color.Red;
+            
+            Color errorColor = theme.ErrorColor ?? Color.Red;
+            Control_PartIDManagement_Button_RemoveConfirm.ForeColor = errorColor;
+            Control_PartIDManagement_Button_RemoveConfirm.BackColor = Color.FromArgb(
+                (errorColor.R + 255) / 2,
+                (errorColor.G + 255) / 2,
+                (errorColor.B + 255) / 2);
+        }
         private void InitializeControlText()
         {
-            // Add Card
-            Control_PartIDManagement_Suggestion_AddPartNumber.LabelText = "Part Number";
-            Control_PartIDManagement_Suggestion_AddPartNumber.PlaceholderText = "Enter part number";
-            Control_PartIDManagement_Suggestion_AddItemType.LabelText = "Item Type";
-            Control_PartIDManagement_Suggestion_AddItemType.PlaceholderText = "Search item types (F4)";
-            Control_PartIDManagement_Label_AddIssuedBy.Text = "Issued By:";
-            Control_PartIDManagement_Button_AddSave.Text = "Save";
-            Control_PartIDManagement_Button_AddClear.Text = "Clear";
+            // Home screen labels
+            Control_PartIDManagement_Label_Header.Text = "Part Number Management";
+            Control_PartIDManagement_Label_Subtitle.Text = "Add, edit, or remove part numbers in the system";
             
-            // Edit Card
+            // Suggestion controls - Add
+            Control_PartIDManagement_Suggestion_AddPartNumber.TextBox.Text = string.Empty;
+            Control_PartIDManagement_Suggestion_AddPartNumber.LabelText = "New Part Number";
+            Control_PartIDManagement_Suggestion_AddPartNumber.PlaceholderText = "Enter a new part number";
+            
+            Control_PartIDManagement_Suggestion_AddItemType.TextBox.Text = "WIP";
+            Control_PartIDManagement_Suggestion_AddItemType.LabelText = "Item Type";
+            Control_PartIDManagement_Suggestion_AddItemType.PlaceholderText = "Select Item Type (F4)";
+            
+            Control_PartIDManagement_CheckBox_AddRequiresColorCode.Checked = false;
+            
+            Control_PartIDManagement_Label_AddIssuedByValue.Text = Model_Application_Variables.User ?? "Current User";
+            
+            Control_PartIDManagement_Button_AddClear.Enabled = true;
+            Control_PartIDManagement_Button_AddSave.Enabled = false;
+            
+            // Suggestion controls - Edit
+            Control_PartIDManagement_Suggestion_EditSelectPart.TextBox.Text = string.Empty;
             Control_PartIDManagement_Suggestion_EditSelectPart.LabelText = "Select Part";
             Control_PartIDManagement_Suggestion_EditSelectPart.PlaceholderText = "Search parts (F4)";
+            
+            Control_PartIDManagement_Suggestion_EditNewPartNumber.TextBox.Text = string.Empty;
             Control_PartIDManagement_Suggestion_EditNewPartNumber.LabelText = "New Part Number";
             Control_PartIDManagement_Suggestion_EditNewPartNumber.PlaceholderText = "Enter new part number";
-            Control_PartIDManagement_Suggestion_EditItemType.LabelText = "Item Type";
-            Control_PartIDManagement_Suggestion_EditItemType.PlaceholderText = "Search item types (F4)";
-            Control_PartIDManagement_Label_EditIssuedBy.Text = "Issued By:";
-            Control_PartIDManagement_Button_EditSave.Text = "Save Changes";
-            Control_PartIDManagement_Button_EditReset.Text = "Reset";
             
-            // Remove Card
+            Control_PartIDManagement_Suggestion_EditItemType.TextBox.Text = string.Empty;
+            Control_PartIDManagement_Suggestion_EditItemType.LabelText = "Item Type";
+            Control_PartIDManagement_Suggestion_EditItemType.PlaceholderText = "Select Item Type (F4)";
+            
+            Control_PartIDManagement_CheckBox_EditRequiresColorCode.Checked = false;
+            
+            Control_PartIDManagement_Label_EditIssuedByValue.Text = string.Empty;
+            
+            Control_PartIDManagement_Button_EditReset.Enabled = true;
+            Control_PartIDManagement_Button_EditSave.Enabled = false;
+            
+            // Suggestion controls - Remove
+            Control_PartIDManagement_Suggestion_RemoveSelectPart.TextBox.Text = string.Empty;
             Control_PartIDManagement_Suggestion_RemoveSelectPart.LabelText = "Select Part";
             Control_PartIDManagement_Suggestion_RemoveSelectPart.PlaceholderText = "Search parts (F4)";
-            Control_PartIDManagement_Label_RemoveWarning.Text = "⚠️ Warning: Removal is permanent and cannot be undone.";
+            
+            Control_PartIDManagement_Label_RemoveIssuedByValue.Text = string.Empty;
+            Control_PartIDManagement_Label_RemoveItemNumberValue.Text = string.Empty;
+            Control_PartIDManagement_Label_RemoveTypeValue.Text = string.Empty;
+            
+            Control_PartIDManagement_Button_RemoveCancel.Enabled = true;
+            Control_PartIDManagement_Button_RemoveConfirm.Enabled = false;
+            
+            // Buttons
+            Control_PartIDManagement_Button_AddSave.Text = "Save";
+            Control_PartIDManagement_Button_AddClear.Text = "Clear";
+            Control_PartIDManagement_Button_EditSave.Text = "Save Changes";
+            Control_PartIDManagement_Button_EditReset.Text = "Reset";
             Control_PartIDManagement_Button_RemoveConfirm.Text = "Remove";
             Control_PartIDManagement_Button_RemoveCancel.Text = "Cancel";
-            
-            // Back Button
             Control_PartIDManagement_Button_Back.Text = "← Back to Selection";
+            Control_PartManagement_Button_Home.Text = "Home";
+            
+            // Labels
+            Control_PartIDManagement_Label_AddIssuedBy.Text = "Issued By";
+            Control_PartIDManagement_Label_EditIssuedBy.Text = "Issued By";
+            Control_PartIDManagement_Label_RemoveIssuedBy.Text = "Issued By";
+            Control_PartIDManagement_Label_RemoveItemNumber.Text = "Part Number";
+            Control_PartIDManagement_Label_RemoveType.Text = "Item Type";
+            Control_PartIDManagement_Label_RemoveWarning.Text = "⚠️ Warning: Removal is permanent and cannot be undone.";
         }
 
         private void ConfigureSuggestionInputs()
@@ -561,8 +617,6 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
                 }
 
                 Control_PartIDManagement_Label_RemoveItemNumberValue.Text = _selectedRemovePart["PartID"]?.ToString() ?? string.Empty;
-                Control_PartIDManagement_Label_RemoveCustomerValue.Text = _selectedRemovePart["Customer"]?.ToString() ?? string.Empty;
-                Control_PartIDManagement_Label_RemoveDescriptionValue.Text = _selectedRemovePart["Description"]?.ToString() ?? string.Empty;
                 Control_PartIDManagement_Label_RemoveTypeValue.Text = _selectedRemovePart["ItemType"]?.ToString() ?? string.Empty;
                 Control_PartIDManagement_Label_RemoveIssuedByValue.Text = _selectedRemovePart["IssuedBy"]?.ToString() ?? string.Empty;
 
@@ -586,6 +640,9 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             Control_PartIDManagement_CheckBox_EditRequiresColorCode.Enabled = enabled;
             Control_PartIDManagement_Button_EditSave.Enabled = enabled;
             Control_PartIDManagement_Button_EditReset.Enabled = enabled;
+
+            Control_PartIDManagement_Suggestion_EditNewPartNumber.Visible = enabled;
+            Control_PartIDManagement_Suggestion_EditItemType.Visible = enabled;
         }
 
         private void SetRemoveSectionEnabled(bool enabled)
@@ -600,6 +657,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
         {
             Control_PartIDManagement_Suggestion_AddPartNumber.Text = string.Empty;
             Helper_SuggestionTextBox.Clear(Control_PartIDManagement_Suggestion_AddItemType.TextBox);
+            Control_PartIDManagement_Suggestion_AddItemType.Text = "WIP";
             Control_PartIDManagement_CheckBox_AddRequiresColorCode.Checked = false;
             Control_PartIDManagement_Suggestion_AddPartNumber.Focus();
         }
@@ -620,8 +678,6 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
         {
             Helper_SuggestionTextBox.Clear(Control_PartIDManagement_Suggestion_RemoveSelectPart.TextBox);
             Control_PartIDManagement_Label_RemoveItemNumberValue.Text = string.Empty;
-            Control_PartIDManagement_Label_RemoveCustomerValue.Text = string.Empty;
-            Control_PartIDManagement_Label_RemoveDescriptionValue.Text = string.Empty;
             Control_PartIDManagement_Label_RemoveTypeValue.Text = string.Empty;
             Control_PartIDManagement_Label_RemoveIssuedByValue.Text = Model_Application_Variables.User ?? string.Empty;
             _selectedRemovePart = null;

@@ -50,20 +50,77 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
         {
             base.OnLoad(e);
             UpdateIssuedByLabels();
-            LoadBuildingOptions(Control_LocationManagement_ComboBox_AddBuilding);
-            LoadBuildingOptions(Control_LocationManagement_ComboBox_EditBuilding);
             SetEditSectionEnabled(false);
             SetRemoveSectionEnabled(false);
         }
 
+        /// <inheritdoc />
+        protected override void ApplyTheme(Model_Shared_UserUiColors theme)
+        {
+            base.ApplyTheme(theme);
+            
+            // Remove warning and confirm button
+
+            Control_LocationManagement_Label_RemoveWarning.ForeColor = theme.ErrorColor ?? Color.Red;
+            
+            Color errorColor = theme.ErrorColor ?? Color.Red;
+            Control_LocationManagement_Button_RemoveConfirm.ForeColor = errorColor;
+            Control_LocationManagement_Button_RemoveConfirm.BackColor = Color.FromArgb(
+                (errorColor.R + 255) / 2,
+                (errorColor.G + 255) / 2,
+                (errorColor.B + 255) / 2);
+        }
+
         private void InitializeControlText()
         {
-            // Suggestion controls
+            // Home screen labels
+            Control_LocationManagement_Label_Header.Text = "Location Management";
+            Control_LocationManagement_Label_Subtitle.Text = "Add, edit, or remove locations in the system";
+            
+            // Suggestion controls - Add
+            Control_LocationManagement_TextBox_AddLocation.TextBox.Text = string.Empty;
+            Control_LocationManagement_TextBox_AddLocation.LabelText = "New Location";
+            Control_LocationManagement_TextBox_AddLocation.PlaceholderText = "Enter a new Location name";            
+                
+            Control_LocationManagement_ComboBox_AddBuilding.TextBox.Text = "EXPO";
+            Control_LocationManagement_ComboBox_AddBuilding.LabelText = "Building";
+            Control_LocationManagement_ComboBox_AddBuilding.PlaceholderText = "Select Building (F4)";
+
+            Control_LocationManagement_Label_AddIssuedByValue.Text = Model_Application_Variables.User ?? "Current User";            
+
+            Control_LocationManagement_Button_AddClear.Enabled = true;
+            Control_LocationManagement_Button_AddSave.Enabled = false;
+
+            // Suggestion controls - Edit
+            Control_LocationManagement_Suggestion_EditSelectLocation.TextBox.Text = string.Empty;
             Control_LocationManagement_Suggestion_EditSelectLocation.LabelText = "Select Location";
             Control_LocationManagement_Suggestion_EditSelectLocation.PlaceholderText = "Search locations (F4)";
+
+            Control_LocationManagement_TextBox_EditNewLocation.TextBox.Text = string.Empty;            
+            Control_LocationManagement_TextBox_EditNewLocation.LabelText = "New Location";
+            Control_LocationManagement_TextBox_EditNewLocation.PlaceholderText = "Enter new Location name";
+
+            Control_LocationManagement_ComboBox_EditBuilding.TextBox.Text = string.Empty;
+            Control_LocationManagement_ComboBox_EditBuilding.LabelText = "Building";
+            Control_LocationManagement_ComboBox_EditBuilding.PlaceholderText = "Select Building (F4)";
+            
+            Control_LocationManagement_Label_EditIssuedByValue.Text = string.Empty;
+
+            Control_LocationManagement_Button_EditReset.Enabled = true;
+            Control_LocationManagement_Button_EditSave.Enabled = false;
+
+            // Suggestion controls - Remove
+            Control_LocationManagement_Suggestion_RemoveSelectLocation.TextBox.Text = string.Empty;
             Control_LocationManagement_Suggestion_RemoveSelectLocation.LabelText = "Select Location";
             Control_LocationManagement_Suggestion_RemoveSelectLocation.PlaceholderText = "Search locations (F4)";
-            
+               
+            Control_LocationManagement_Label_RemoveIssuedByValue.Text = string.Empty;
+            Control_LocationManagement_Label_RemoveLocationValue.Text = string.Empty;
+            Control_LocationManagement_Label_RemoveBuildingValue.Text = string.Empty;
+
+            Control_LocationManagement_Button_RemoveCancel.Enabled = true;
+            Control_LocationManagement_Button_RemoveConfirm.Enabled = false;
+
             // Buttons
             Control_LocationManagement_Button_AddSave.Text = "Save";
             Control_LocationManagement_Button_AddClear.Text = "Clear";
@@ -72,16 +129,40 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             Control_LocationManagement_Button_RemoveConfirm.Text = "Remove";
             Control_LocationManagement_Button_RemoveCancel.Text = "Cancel";
             Control_LocationManagement_Button_Back.Text = "← Back to Selection";
+            Control_LocationManagement_Button_Home.Text = "Home";
             
             // Labels
-            Control_LocationManagement_Label_AddIssuedBy.Text = "Issued By:";
-            Control_LocationManagement_Label_EditIssuedBy.Text = "Issued By:";
-            Control_LocationManagement_Label_RemoveIssuedBy.Text = "Issued By:";
+            Control_LocationManagement_Label_AddIssuedBy.Text = "Issued By";
+            Control_LocationManagement_Label_EditIssuedBy.Text = "Issued By";
+            Control_LocationManagement_Label_RemoveIssuedBy.Text = "Issued By";
+            Control_LocationManagement_Label_RemoveLocation.Text = "Location";
+            Control_LocationManagement_Label_RemoveBuilding.Text = "Building";
             Control_LocationManagement_Label_RemoveWarning.Text = "⚠️ Warning: Removal is permanent and cannot be undone.";
         }
 
         private void ConfigureInputs()
         {
+            
+            if (Control_LocationManagement_TextBox_AddLocation != null)
+            {
+                Control_LocationManagement_TextBox_AddLocation.EnableSuggestions = false;
+                Control_LocationManagement_TextBox_AddLocation.ShowF4Button = false;
+                Control_LocationManagement_TextBox_AddLocation.ShowValidationColor = false;
+                // Use TextBox.Enabled directly since UpdateTextBoxEnabledState requires validator
+                Control_LocationManagement_TextBox_AddLocation.TextBox.Enabled = true;
+                Control_LocationManagement_TextBox_AddLocation.TextBox.BackColor = System.Drawing.SystemColors.Window;
+            }
+
+            if (Control_LocationManagement_TextBox_EditNewLocation != null)
+            {
+                Control_LocationManagement_TextBox_EditNewLocation.EnableSuggestions = false;
+                Control_LocationManagement_TextBox_EditNewLocation.ShowF4Button = false;
+                Control_LocationManagement_TextBox_EditNewLocation.ShowValidationColor = false;
+                // Use TextBox.Enabled directly since UpdateTextBoxEnabledState requires validator
+                Control_LocationManagement_TextBox_EditNewLocation.TextBox.Enabled = true;
+                Control_LocationManagement_TextBox_EditNewLocation.TextBox.BackColor = System.Drawing.SystemColors.Window;
+            }
+
             Helper_SuggestionTextBox.ConfigureForLocations(
                 Control_LocationManagement_Suggestion_EditSelectLocation,
                 Helper_SuggestionTextBox.GetCachedLocationsAsync);
@@ -89,6 +170,15 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             Helper_SuggestionTextBox.ConfigureForLocations(
                 Control_LocationManagement_Suggestion_RemoveSelectLocation,
                 Helper_SuggestionTextBox.GetCachedLocationsAsync);
+                
+            Helper_SuggestionTextBox.ConfigureForBuildings(Control_LocationManagement_ComboBox_AddBuilding);
+            Helper_SuggestionTextBox.ConfigureForBuildings(Control_LocationManagement_ComboBox_EditBuilding);
+            
+            // Set padding for new controls
+            Control_LocationManagement_TextBox_AddLocation.Padding = new Padding(3);
+            Control_LocationManagement_ComboBox_AddBuilding.Padding = new Padding(3);
+            Control_LocationManagement_TextBox_EditNewLocation.Padding = new Padding(3);
+            Control_LocationManagement_ComboBox_EditBuilding.Padding = new Padding(3);
         }
 
         private void WireUpEventHandlers()
@@ -208,15 +298,6 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             Control_LocationManagement_Label_RemoveIssuedByValue.Text = issuedBy;
         }
 
-        private void LoadBuildingOptions(ComboBox comboBox)
-        {
-            comboBox.Items.Clear();
-            comboBox.Items.Add("[ Select Building ]");
-            comboBox.Items.Add("Expo");
-            comboBox.Items.Add("Vits");
-            comboBox.SelectedIndex = 0;
-        }
-
         private async Task HandleAddLocationAsync()
         {
             string location = Control_LocationManagement_TextBox_AddLocation.Text?.Trim() ?? string.Empty;
@@ -229,8 +310,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
                 return;
             }
 
-            if (Control_LocationManagement_ComboBox_AddBuilding.SelectedIndex <= 0 ||
-                building == "[ Select Building ]")
+            if (string.IsNullOrWhiteSpace(building))
             {
                 ShowWarning("Building is required before saving.");
                 Control_LocationManagement_ComboBox_AddBuilding.Focus();
@@ -257,7 +337,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             {
                 ShowWarning($"Location '{location}' already exists.");
                 Control_LocationManagement_TextBox_AddLocation.Focus();
-                Control_LocationManagement_TextBox_AddLocation.SelectAll();
+                Control_LocationManagement_TextBox_AddLocation.TextBox.SelectAll();
                 return;
             }
 
@@ -309,8 +389,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
                 return;
             }
 
-            if (Control_LocationManagement_ComboBox_EditBuilding.SelectedIndex <= 0 ||
-                newBuilding == "[ Select Building ]")
+            if (string.IsNullOrWhiteSpace(newBuilding))
             {
                 ShowWarning("Building is required.");
                 Control_LocationManagement_ComboBox_EditBuilding.Focus();
@@ -340,7 +419,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
                 {
                     ShowWarning($"Location '{newLocation}' already exists.");
                     Control_LocationManagement_TextBox_EditNewLocation.Focus();
-                    Control_LocationManagement_TextBox_EditNewLocation.SelectAll();
+                    Control_LocationManagement_TextBox_EditNewLocation.TextBox.SelectAll();
                     return;
                 }
             }
@@ -464,17 +543,14 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             string building = _selectedEditLocation["Building"]?.ToString() ?? string.Empty;
             string issuedBy = _selectedEditLocation["IssuedBy"]?.ToString() ?? "Unknown";
 
+            // Set location name
             Control_LocationManagement_TextBox_EditNewLocation.Text = location;
             
             // Set building dropdown
-            if (building == "Expo")
-                Control_LocationManagement_ComboBox_EditBuilding.SelectedIndex = 1;
-            else if (building == "Vits")
-                Control_LocationManagement_ComboBox_EditBuilding.SelectedIndex = 2;
-            else
-                Control_LocationManagement_ComboBox_EditBuilding.SelectedIndex = 0;
+                Control_LocationManagement_ComboBox_EditBuilding.Text = building;
 
-            Control_LocationManagement_Label_EditIssuedByValue.Text = issuedBy;
+            // Set issued by label
+                Control_LocationManagement_Label_EditIssuedByValue.Text = issuedBy;
 
             SetEditSectionEnabled(true);
         }
@@ -529,37 +605,25 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
         {
             Control_LocationManagement_Button_RemoveConfirm.Enabled = enabled;
             Control_LocationManagement_Button_RemoveCancel.Enabled = enabled;
+            Control_LocationManagement_TableLayoutPanel_RemoveDetails.Visible = enabled;
         }
 
         private void ClearAddSection()
         {
-            Control_LocationManagement_TextBox_AddLocation.Clear();
-            if (Control_LocationManagement_ComboBox_AddBuilding.Items.Count > 0)
-            {
-                Control_LocationManagement_ComboBox_AddBuilding.SelectedIndex = 0;
-            }
+            InitializeControlText();
         }
 
         private void ClearEditSection()
         {
             _selectedEditLocation = null;
-            Helper_SuggestionTextBox.Clear(Control_LocationManagement_Suggestion_EditSelectLocation.TextBox);
-            Control_LocationManagement_TextBox_EditNewLocation.Clear();
-            if (Control_LocationManagement_ComboBox_EditBuilding.Items.Count > 0)
-            {
-                Control_LocationManagement_ComboBox_EditBuilding.SelectedIndex = 0;
-            }
-            Control_LocationManagement_Label_EditIssuedByValue.Text = Model_Application_Variables.User ?? "Current User";
+            InitializeControlText();
             SetEditSectionEnabled(false);
         }
 
         private void ClearRemoveSection()
         {
             _selectedRemoveLocation = null;
-            Helper_SuggestionTextBox.Clear(Control_LocationManagement_Suggestion_RemoveSelectLocation.TextBox);
-            Control_LocationManagement_Label_RemoveLocationValue.Text = string.Empty;
-            Control_LocationManagement_Label_RemoveBuildingValue.Text = string.Empty;
-            Control_LocationManagement_Label_RemoveIssuedByValue.Text = Model_Application_Variables.User ?? "Current User";
+            InitializeControlText();
             SetRemoveSectionEnabled(false);
         }
 

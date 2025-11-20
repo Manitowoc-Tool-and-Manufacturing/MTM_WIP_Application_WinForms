@@ -57,17 +57,68 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             SetRemoveSectionEnabled(false);
         }
 
+        /// <inheritdoc />
+        protected override void ApplyTheme(Model_Shared_UserUiColors theme)
+        {
+            base.ApplyTheme(theme);
+            
+            // Remove warning and confirm button
+
+            Control_OperationManagement_Label_RemoveWarning.ForeColor = theme.ErrorColor ?? Color.Red;
+            
+            Color errorColor = theme.ErrorColor ?? Color.Red;
+            Control_OperationManagement_Button_RemoveConfirm.ForeColor = errorColor;
+            Control_OperationManagement_Button_RemoveConfirm.BackColor = Color.FromArgb(
+                (errorColor.R + 255) / 2,
+                (errorColor.G + 255) / 2,
+                (errorColor.B + 255) / 2);
+        }
+
         private void InitializeControlText()
         {
-            // Suggestion controls
+            // Home screen labels
+            Control_OperationManagement_Label_Header.Text = "Operation Management";
+            Control_OperationManagement_Label_Subtitle.Text = "Add, edit, or remove operations in the system";
             
+            // Suggestion controls - Add
+            Control_OperationManagement_TextBox_AddOperation.TextBox.Text = string.Empty;
             Control_OperationManagement_TextBox_AddOperation.LabelText = "Operation";
-            Control_OperationManagement_Suggestion_EditSelectOperation.PlaceholderText = "Search operations (F4)";
+            Control_OperationManagement_TextBox_AddOperation.PlaceholderText = "Enter New Operation Name";
+            Control_OperationManagement_TextBox_AddOperation.EnableSuggestions = false;
+            Control_OperationManagement_TextBox_AddOperation.ShowF4Button = false;
+            Control_OperationManagement_TextBox_AddOperation.ShowValidationColor = false;
+            Control_OperationManagement_TextBox_AddOperation.TextBox.Enabled = true;
+
+            Control_OperationManagement_Label_AddIssuedByValue.Text = Model_Application_Variables.User ?? "Current User";
+
+            Control_OperationManagement_Button_AddClear.Enabled = true;
+            Control_OperationManagement_Button_AddSave.Enabled = false;
+
+            // Suggestion controls - Edit
+            Control_OperationManagement_Suggestion_EditSelectOperation.TextBox.Text = string.Empty;
             Control_OperationManagement_Suggestion_EditSelectOperation.LabelText = "Select Operation";
             Control_OperationManagement_Suggestion_EditSelectOperation.PlaceholderText = "Search operations (F4)";
+
+            Control_OperationManagement_TextBox_EditNewOperation.TextBox.Text = string.Empty;
+            Control_OperationManagement_TextBox_EditNewOperation.LabelText = "New Operation";
+            Control_OperationManagement_TextBox_EditNewOperation.PlaceholderText = "Enter new Operation name";
+            
+            Control_OperationManagement_Label_EditIssuedByValue.Text = string.Empty;
+
+            Control_OperationManagement_Button_EditReset.Enabled = true;
+            Control_OperationManagement_Button_EditSave.Enabled = false;
+
+            // Suggestion controls - Remove
+            Control_OperationManagement_Suggestion_RemoveSelectOperation.TextBox.Text = string.Empty;
             Control_OperationManagement_Suggestion_RemoveSelectOperation.LabelText = "Select Operation";
             Control_OperationManagement_Suggestion_RemoveSelectOperation.PlaceholderText = "Search operations (F4)";
-            
+               
+            Control_OperationManagement_Label_RemoveIssuedByValue.Text = string.Empty;
+            Control_OperationManagement_Label_RemoveOperationValue.Text = string.Empty;
+
+            Control_OperationManagement_Button_RemoveCancel.Enabled = true;
+            Control_OperationManagement_Button_RemoveConfirm.Enabled = false;
+
             // Buttons
             Control_OperationManagement_Button_AddSave.Text = "Save";
             Control_OperationManagement_Button_AddClear.Text = "Clear";
@@ -76,8 +127,13 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             Control_OperationManagement_Button_RemoveConfirm.Text = "Remove";
             Control_OperationManagement_Button_RemoveCancel.Text = "Cancel";
             Control_OperationManagement_Button_Back.Text = "← Back to Selection";
+            Control_OperationManagement_Button_Home.Text = "Home";
             
             // Labels
+            Control_OperationManagement_Label_AddIssuedBy.Text = "Issued By";
+            Control_OperationManagement_Label_EditIssuedBy.Text = "Issued By";
+            Control_OperationManagement_Label_RemoveIssuedBy.Text = "Issued By";
+            Control_OperationManagement_Label_RemoveOperation.Text = "Operation";
             Control_OperationManagement_Label_RemoveWarning.Text = "⚠️ Warning: Removal is permanent and cannot be undone.";
         }
 
@@ -243,12 +299,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             GetProgressHelper()?.ShowProgress("Checking for existing operation...");
 
             // Check if operation already exists
-            var existsResult = await Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync(
-                Model_Application_Variables.ConnectionString,
-                "md_operation_numbers_Exists_ByOperation",
-                new Dictionary<string, object> { ["Operation"] = operation },
-                _progressHelper
-            );
+            var existsResult = await Dao_Operation.OperationExists(operation);
 
             if (!existsResult.IsSuccess)
             {
@@ -256,32 +307,21 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
                 return;
             }
 
-            if (existsResult.Data != null && existsResult.Data.Rows.Count > 0)
+            if (existsResult.Data)
             {
-                int operationExists = Convert.ToInt32(existsResult.Data.Rows[0]["OperationExists"]);
-                if (operationExists > 0)
-                {
-                    GetProgressHelper()?.ShowError($"Operation '{operation}' already exists.");
-                    ShowWarning($"Operation '{operation}' already exists.");
-                    Control_OperationManagement_TextBox_AddOperation.Focus();
-                    Control_OperationManagement_TextBox_AddOperation.TextBox.SelectAll();
-                    return;
-                }
+                GetProgressHelper()?.ShowError($"Operation '{operation}' already exists.");
+                ShowWarning($"Operation '{operation}' already exists.");
+                Control_OperationManagement_TextBox_AddOperation.Focus();
+                Control_OperationManagement_TextBox_AddOperation.TextBox.SelectAll();
+                return;
             }
 
             GetProgressHelper()?.UpdateProgress(60, "Creating operation...");
 
             // Insert new operation
-            var insertResult = await Helper_Database_StoredProcedure.ExecuteNonQueryWithStatusAsync(
-                Model_Application_Variables.ConnectionString,
-                "md_operation_numbers_Add_Operation",
-                new Dictionary<string, object>
-                {
-                    ["Operation"] = operation,
-                    ["IssuedBy"] = Model_Application_Variables.User ?? "Current User"
-                },
-                _progressHelper
-            );
+            var insertResult = await Dao_Operation.InsertOperation(
+                operation,
+                Model_Application_Variables.User ?? "Current User");
 
             if (!insertResult.IsSuccess)
             {
@@ -519,12 +559,15 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             Control_OperationManagement_TextBox_EditNewOperation.TextBox.Enabled = enabled;
             Control_OperationManagement_Button_EditSave.Enabled = enabled;
             Control_OperationManagement_Button_EditReset.Enabled = enabled;
+
+            Control_OperationManagement_TextBox_EditNewOperation.Visible = enabled;
         }
 
         private void SetRemoveSectionEnabled(bool enabled)
         {
             Control_OperationManagement_Button_RemoveConfirm.Enabled = enabled;
             Control_OperationManagement_Button_RemoveCancel.Enabled = enabled;
+            Control_OperationManagement_TableLayout_RemoveDetails.Visible = enabled;
         }
 
         private void ClearAddSection()
@@ -548,6 +591,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             Control_OperationManagement_Label_RemoveOperationValue.Text = string.Empty;
             Control_OperationManagement_Label_RemoveIssuedByValue.Text = Model_Application_Variables.User ?? "Current User";
             SetRemoveSectionEnabled(false);
+            Control_OperationManagement_TableLayout_RemoveDetails.Visible = false;
         }
 
         private void NotifyOperationListChanged()
