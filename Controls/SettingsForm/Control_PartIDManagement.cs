@@ -470,9 +470,22 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
                 return;
             }
 
+            // Optimization: Don't reload if already selected
+            if (_selectedEditPart != null)
+            {
+                string currentPartNumber = _selectedEditPart["PartID"]?.ToString() ?? string.Empty;
+                if (string.Equals(currentPartNumber, partNumber, StringComparison.OrdinalIgnoreCase))
+                {
+                    // Ensure section is enabled
+                    SetEditSectionEnabled(true);
+                    // Move focus to next control manually since we skipped the load which usually handles state
+                    Control_PartIDManagement_Suggestion_EditNewPartNumber.Focus();
+                    return;
+                }
+            }
+
             try
             {
-                SetEditSectionEnabled(false);
                 var result = await Dao_Part.GetPartByNumberAsync(partNumber);
                 if (!result.IsSuccess)
                 {

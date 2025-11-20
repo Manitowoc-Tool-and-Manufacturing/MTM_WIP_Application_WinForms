@@ -41,6 +41,25 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
 
         private void InitializeEventHandlers()
         {
+            // Set Navigation Targets for Cards
+            Control_SettingsHome_Card_Parts.NavigationTarget = "Part Numbers";
+            Control_SettingsHome_Card_Operations.NavigationTarget = "Operations";
+            Control_SettingsHome_Card_Locations.NavigationTarget = "Locations";
+            Control_SettingsHome_Card_ItemTypes.NavigationTarget = "ItemTypes";
+
+            // Wire up Tile Click Events
+            Control_SettingsHome_Tile_Database.TileClicked += Control_SettingsHome_Tile_TileClicked;
+            Control_SettingsHome_Tile_Theme.TileClicked += Control_SettingsHome_Tile_TileClicked;
+            Control_SettingsHome_Tile_Shortcuts.TileClicked += Control_SettingsHome_Tile_TileClicked;
+            Control_SettingsHome_Tile_About.TileClicked += Control_SettingsHome_Tile_TileClicked;
+
+            // Wire up Card Navigation Events
+            Control_SettingsHome_Card_Users.NavigationRequested += Control_SettingsHome_Card_NavigationRequested;
+            Control_SettingsHome_Card_Parts.NavigationRequested += Control_SettingsHome_Card_NavigationRequested;
+            Control_SettingsHome_Card_Operations.NavigationRequested += Control_SettingsHome_Card_NavigationRequested;
+            Control_SettingsHome_Card_Locations.NavigationRequested += Control_SettingsHome_Card_NavigationRequested;
+            Control_SettingsHome_Card_ItemTypes.NavigationRequested += Control_SettingsHome_Card_NavigationRequested;
+
             // Wire up card subcategory links for admin users (will be shown in InitializeCategories)
             Control_SettingsHome_Card_Users.AddSubcategoryLink("Add User", "Add User");
             Control_SettingsHome_Card_Users.AddSubcategoryLink("Edit User", "Edit User");
