@@ -9,7 +9,9 @@
 
 | Version | Date | Main Features | Action Needed? |
 |---------|------|---------------|----------------|
-| [6.2.1](#version-621-november-13-2025) | Nov 13 | Startup shortcuts, Help page | ℹ️ Optional |
+| [6.3.0](#version-630-november-20-2025) | Nov 20 | Settings redesign | ℹ️ Optional |
+| [6.2.3](#version-623-november-15-2025) | Nov 15 | Search buttons | ✅ Automatic |
+| [6.2.2](#version-622-november-15-2025) | Nov 15 | Advanced Inventory improvements | ✅ Automatic |
 | [6.2.0](#version-620-november-13-2025) | Nov 13 | Smart suggestions, Confirmations | ✅ Automatic |
 | [6.1.0](#version-610-november-12-2025) | Nov 12 | Instant theme changes | ✅ Automatic |
 | [6.0.2](#version-602-november-8-2025) | Nov 8 | Theme saving fix, QuickButtons | ✅ Recommended |
@@ -19,34 +21,45 @@
 
 ---
 
-## Version 6.2.1 (November 13, 2025)
+## Version 6.3.0 (November 20, 2025)
 
-**Summary**: Launch the app directly into Production or Test environments using desktop shortcuts.
+**Summary**: Complete redesign of Settings management screens with modern card interface.
 
 ### 🎯 What's New
 
-#### Startup Environment Selection
-Create shortcuts that launch directly into Production or Test mode without changing settings each time.
+#### Modern Settings Management
+- **Unified Management Screens**: Combined Add/Edit/Remove tabs into single hubs
+- **Card-Based Navigation**: Large, clear tiles for choosing actions
+- **Consistent Experience**: Managing Parts, Locations, Operations, and Item Types works the same way
+- **Smart Navigation**: Easy return to main selection screen
 
-**Benefits:**
-- Switch between environments without manual configuration
-- Set custom username for shared workstations (better log tracking)
-- Safer training/demo setups with dedicated test shortcuts
+---
 
-**How to use:**
-1. Right-click desktop → New Shortcut
-2. Point to the MTM WIP Application executable
-3. Add arguments to the Target field (see Help → "Startup Arguments")
-4. Create separate shortcuts for Production and Test if needed
+## Version 6.2.3 (November 15, 2025)
 
-**Examples:**
-- Production mode: Add `-env=production` to shortcut target
-- Test mode: Add `-env=test` to shortcut target  
-- Custom user: Add `-user="John Smith"` to shortcut target
+**Summary**: Search buttons added to all main entry tabs for quick access to full lists.
 
-📖 **Full instructions**: Press F1 in the app → Search "Startup Arguments"
+### 🎯 What's New
 
-⚠️ **Security note**: Don't include passwords in shortcuts on shared computers
+#### Quick Access Search Buttons
+- **🔎 Search buttons** added next to key fields
+- **Smart behavior**: Opens dropdown if empty, moves to next field if filled
+- **Mouse-friendly**: Alternative to F4 key
+- **Consistent**: Available on Inventory, Transfer, and Remove tabs
+
+---
+
+## Version 6.2.2 (November 15, 2025)
+
+**Summary**: Advanced Inventory Entry modernized with smart suggestions and Excel auto-template.
+
+### 🎯 What's New
+
+#### Advanced Inventory Improvements
+- **Smart Suggestions**: Type-to-search in Advanced Inventory fields
+- **Search Buttons**: Quick access to full lists
+- **Row Deletion**: Select row and press Delete key (with confirmation)
+- **Excel Template**: Automatic creation of import template
 
 ---
 

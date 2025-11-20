@@ -8,7 +8,9 @@
 
 ## 📋 Index
 
-- [Version 6.2.1](#version-621---november-13-2025)
+- [Version 6.3.0](#version-630---november-20-2025)
+- [Version 6.2.3](#version-623---november-15-2025)
+- [Version 6.2.2](#version-622---november-15-2025)
 - [Version 6.2.0](#version-620---november-13-2025)
 - [Version 6.1.0](#version-610---november-12-2025)
 - [Version 6.0.2](#version-602---november-8-2025)
@@ -20,77 +22,58 @@
 
 ---
 
-## Version 6.2.1 - November 13, 2025
+## Version 6.3.0 - November 20, 2025
 
 ### Architecture Changes
 
-#### Command-Line Argument Parser
-**New Component**: `CommandLineArgumentParser` class in `Program.cs`
+#### Settings Form Redesign
+**New Controls:**
+- `Control_Settings_PartNumbers`
+- `Control_Settings_Locations`
+- `Control_Settings_Operations`
+- `Control_Settings_ItemTypes`
 
-**Supported Arguments:**
-```csharp
--env=production | -env=test          // Environment selection
--user="Display Name"                  // Override logged username
--server=hostname                      // Database server override
--port=3306                            // Database port override
--database=database_name               // Database name override
--username=db_user                     // Database username override
--password=db_pass                     // Database password override (⚠️ Security risk)
-```
-
-**Implementation:**
-```csharp
-public static Dictionary<string, string> ParseArguments(string[] args)
-{
-    var arguments = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
-    
-    foreach (var arg in args)
-    {
-        if (arg.StartsWith("-") || arg.StartsWith("/"))
-        {
-            var parts = arg.Substring(1).Split(new[] { '=', ':' }, 2);
-            if (parts.Length == 2)
-            {
-                arguments[parts[0].Trim()] = parts[1].Trim().Trim('"');
-            }
-        }
-    }
-    
-    return arguments;
-}
-```
-
-**Application Flow:**
-1. Parse arguments in `Program.Main()`
-2. Override `Model_Application_Variables` properties before DI setup
-3. Database connection uses overridden values
-4. Log entry includes source (command-line vs config)
-
-#### Help Documentation System
-**New Files:**
-- `Documentation/Help/StartupArguments.md` - User guide
-- `Documentation/Help/StartupArguments.html` - HTML version for in-app display
-
-**Integration:**
-- F1 → Search "Startup Arguments" opens Help viewer
-- Context-sensitive help from Settings → Advanced
-
-### Security Considerations
-
-**Password Argument:**
-- ⚠️ **Warning**: Visible in process list and shortcut properties
-- **Recommendation**: Use only on secured development/test machines
-- **Alternative**: Prompt for password if not provided (future enhancement)
-
-**Logging:**
-- Command-line arguments logged (except `-password=`)
-- Startup source tracked: "CommandLine" vs "Configuration"
+**Design Pattern:**
+- Card-based navigation using `TableLayoutPanel` and `Button` controls
+- Unified management logic (Add/Edit/Remove in one control)
+- Improved validation using `ErrorProvider`
 
 ### Database Impact
-- None - all changes are application-level
+- None
 
-### Breaking Changes
-- None - fully backward compatible
+---
+
+## Version 6.2.3 - November 15, 2025
+
+### UI Improvements
+
+#### Search Buttons
+**Implementation:**
+- Added `Button` controls with "🔎" text next to `SuggestionTextBoxWithLabel` controls
+- Logic:
+  - If text is empty: Trigger `ShowSuggestions()`
+  - If text is not empty: Trigger `SelectNextControl()`
+
+**Affected Controls:**
+- `Control_InventoryTab`
+- `Control_TransferTab`
+- `Control_RemoveTab`
+
+---
+
+## Version 6.2.2 - November 15, 2025
+
+### Feature Updates
+
+#### Advanced Inventory Modernization
+**Changes:**
+- Replaced `ComboBox` with `SuggestionTextBox` in `Control_AdvancedInventory`
+- Added search buttons
+- Implemented row deletion with confirmation in `ListView`
+
+**Excel Template:**
+- Added logic to generate `WIPAppTemplate.xlsx` if missing
+- Validates imported data against `SuggestionTextBox` data providers
 
 ---
 

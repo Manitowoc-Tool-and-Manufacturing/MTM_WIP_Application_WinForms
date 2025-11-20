@@ -12,7 +12,7 @@
 3. [QuickButtons (6.0.1 - 6.0.2)](#quickbuttons-601---602)
 4. [Transaction Viewer (6.0.0)](#transaction-viewer-600)
 5. [Smart Autocomplete (6.2.0)](#smart-autocomplete-620)
-6. [Startup Arguments (6.2.1)](#startup-arguments-621)
+6. [Settings Redesign (6.3.0)](#settings-redesign-630)
 7. [Troubleshooting](#troubleshooting)
 
 ---
@@ -157,31 +157,16 @@
 
 ---
 
-## Startup Arguments (6.2.1)
+## Settings Redesign (6.3.0)
 
-### Q: What are startup arguments?
-**A:** Special commands you add to a desktop shortcut to control how the app launches (e.g., directly into Production or Test mode).
+### Q: Where did the "Add Part" menu go?
+**A:** It's now under **Settings → Part Numbers**. We combined Add, Edit, and Remove into a single "Part Numbers" management screen.
 
-### Q: Why would I want to use this?
-**A:** If you switch between Production and Test frequently, create two shortcuts - one for each environment. No manual switching needed.
+### Q: How do I delete a location now?
+**A:** Go to **Settings → Locations**, then click the large **Remove** card.
 
-### Q: How do I create a shortcut with startup arguments?
-**A:** Right-click desktop → New Shortcut → Point to MTM WIP Application.exe → Edit the Target field → Add arguments like `-env=production`. See Help → "Startup Arguments" for full instructions.
-
-### Q: What arguments are available?
-- `-env=production` or `-env=test` - Launch into specific environment
-- `-user="John Smith"` - Set username for logs (useful on shared workstations)
-- `-server=localhost` - Specify database server (advanced)
-- `-database=mtm_wip_application_winforms` - Specify database name (advanced)
-
-### Q: Is it safe to put my password in a shortcut?
-**A:** **No!** Anyone who can see the shortcut can see the password. Only use `-password=` on secured machines or test environments.
-
-### Q: Can I have multiple shortcuts with different arguments?
-**A:** Yes! Create separate shortcuts: "MTM WIP - Production" and "MTM WIP - Test" with different `-env=` arguments.
-
-### Q: What if I type the wrong argument?
-**A:** The app will show an error message and launch normally. Just correct the shortcut Target field.
+### Q: Why does Settings look different?
+**A:** We modernized the interface with a card-based layout to make it faster and easier to navigate.
 
 ---
 
