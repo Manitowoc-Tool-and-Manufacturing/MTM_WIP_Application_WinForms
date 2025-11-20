@@ -56,7 +56,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             Control_SettingsCategoryCard_Panel_Main.Dock = DockStyle.Fill;
             Control_SettingsCategoryCard_Panel_Main.Location = new Point(0, 0);
             Control_SettingsCategoryCard_Panel_Main.Name = "Control_SettingsCategoryCard_Panel_Main";
-            Control_SettingsCategoryCard_Panel_Main.Padding = new Padding(5);
+            Control_SettingsCategoryCard_Panel_Main.Padding = new Padding(3);
             Control_SettingsCategoryCard_Panel_Main.Size = new Size(213, 101);
             Control_SettingsCategoryCard_Panel_Main.TabIndex = 0;
             // 
@@ -85,7 +85,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             Control_SettingsCategoryCard_FlowPanel_Subcategories.FlowDirection = FlowDirection.TopDown;
             Control_SettingsCategoryCard_FlowPanel_Subcategories.Location = new Point(3, 79);
             Control_SettingsCategoryCard_FlowPanel_Subcategories.Name = "Control_SettingsCategoryCard_FlowPanel_Subcategories";
-            Control_SettingsCategoryCard_FlowPanel_Subcategories.Padding = new Padding(0, 5, 0, 0);
+            Control_SettingsCategoryCard_FlowPanel_Subcategories.Padding = new Padding(0, 3, 0, 0);
             Control_SettingsCategoryCard_FlowPanel_Subcategories.Size = new Size(197, 5);
             Control_SettingsCategoryCard_FlowPanel_Subcategories.TabIndex = 2;
             Control_SettingsCategoryCard_FlowPanel_Subcategories.WrapContents = false;
@@ -145,7 +145,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             Control_SettingsCategoryCard_Label_Title.Font = new Font("Segoe UI Semibold", 12F, FontStyle.Bold);
             Control_SettingsCategoryCard_Label_Title.ForeColor = Color.FromArgb(45, 45, 45);
             Control_SettingsCategoryCard_Label_Title.Location = new Point(77, 1);
-            Control_SettingsCategoryCard_Label_Title.Margin = new Padding(1);
+            Control_SettingsCategoryCard_Label_Title.Margin = new Padding(0);
             Control_SettingsCategoryCard_Label_Title.MaximumSize = new Size(0, 36);
             Control_SettingsCategoryCard_Label_Title.MinimumSize = new Size(0, 36);
             Control_SettingsCategoryCard_Label_Title.Name = "Control_SettingsCategoryCard_Label_Title";
@@ -160,7 +160,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             Control_SettingsCategoryCard_Label_Description.Font = new Font("Segoe UI", 9F);
             Control_SettingsCategoryCard_Label_Description.ForeColor = Color.FromArgb(96, 94, 92);
             Control_SettingsCategoryCard_Label_Description.Location = new Point(77, 39);
-            Control_SettingsCategoryCard_Label_Description.Margin = new Padding(1);
+            Control_SettingsCategoryCard_Label_Description.Margin = new Padding(0);
             Control_SettingsCategoryCard_Label_Description.MaximumSize = new Size(0, 36);
             Control_SettingsCategoryCard_Label_Description.MinimumSize = new Size(0, 36);
             Control_SettingsCategoryCard_Label_Description.Name = "Control_SettingsCategoryCard_Label_Description";
@@ -187,7 +187,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             BackColor = Color.White;
             Controls.Add(Control_SettingsCategoryCard_Panel_Main);
             Cursor = Cursors.Hand;
-            Margin = new Padding(10);
+            Margin = new Padding(5);
             Name = "Control_SettingsCategoryCard";
             Size = new Size(213, 101);
             Control_SettingsCategoryCard_Panel_Main.ResumeLayout(false);

@@ -53,7 +53,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             Control_SettingsCategoryTile_Panel_Main.Dock = DockStyle.Fill;
             Control_SettingsCategoryTile_Panel_Main.Location = new Point(0, 0);
             Control_SettingsCategoryTile_Panel_Main.Name = "Control_SettingsCategoryTile_Panel_Main";
-            Control_SettingsCategoryTile_Panel_Main.Padding = new Padding(15);
+            Control_SettingsCategoryTile_Panel_Main.Padding = new Padding(3);
             Control_SettingsCategoryTile_Panel_Main.Size = new Size(225, 110);
             Control_SettingsCategoryTile_Panel_Main.TabIndex = 0;
             // 
@@ -95,7 +95,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             Control_SettingsCategoryTile_Label_Title.Font = new Font("Segoe UI Semibold", 12F, FontStyle.Bold);
             Control_SettingsCategoryTile_Label_Title.ForeColor = Color.FromArgb(45, 45, 45);
             Control_SettingsCategoryTile_Label_Title.Location = new Point(77, 1);
-            Control_SettingsCategoryTile_Label_Title.Margin = new Padding(1);
+            Control_SettingsCategoryTile_Label_Title.Margin = new Padding(0);
             Control_SettingsCategoryTile_Label_Title.MaximumSize = new Size(0, 36);
             Control_SettingsCategoryTile_Label_Title.MinimumSize = new Size(0, 36);
             Control_SettingsCategoryTile_Label_Title.Name = "Control_SettingsCategoryTile_Label_Title";
@@ -142,7 +142,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             Control_SettingsCategoryTile_Label_Description.Font = new Font("Segoe UI", 9F);
             Control_SettingsCategoryTile_Label_Description.ForeColor = Color.FromArgb(96, 94, 92);
             Control_SettingsCategoryTile_Label_Description.Location = new Point(77, 39);
-            Control_SettingsCategoryTile_Label_Description.Margin = new Padding(1);
+            Control_SettingsCategoryTile_Label_Description.Margin = new Padding(0);
             Control_SettingsCategoryTile_Label_Description.MaximumSize = new Size(0, 36);
             Control_SettingsCategoryTile_Label_Description.MinimumSize = new Size(0, 36);
             Control_SettingsCategoryTile_Label_Description.Name = "Control_SettingsCategoryTile_Label_Description";
@@ -169,7 +169,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             BackColor = Color.White;
             Controls.Add(Control_SettingsCategoryTile_Panel_Main);
             Cursor = Cursors.Hand;
-            Margin = new Padding(10);
+            Margin = new Padding(5);
             Name = "Control_SettingsCategoryTile";
             Size = new Size(225, 110);
             Control_SettingsCategoryTile_Panel_Main.ResumeLayout(false);

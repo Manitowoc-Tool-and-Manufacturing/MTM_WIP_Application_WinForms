@@ -363,7 +363,7 @@
             // 
             AutoScaleDimensions = new SizeF(96F, 96F);
             AutoScaleMode = AutoScaleMode.Dpi;
-            ClientSize = new Size(838, 492);
+            ClientSize = new Size(825, 525);
             Controls.Add(SettingsForm_SplitContainer_Main);
             FormBorderStyle = FormBorderStyle.FixedDialog;
             MaximizeBox = false;
