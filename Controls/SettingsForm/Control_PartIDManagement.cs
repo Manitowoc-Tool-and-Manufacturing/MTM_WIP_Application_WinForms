@@ -36,6 +36,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
         public Control_PartIDManagement()
         {
             InitializeComponent();
+            InitializeControlText();
             ConfigureSuggestionInputs();
             WireUpEventHandlers();
             WireUpNavigationHandlers();
@@ -54,6 +55,39 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             SetRemoveSectionEnabled(false);
         }
 
+        private void InitializeControlText()
+        {
+            // Add Card
+            Control_PartIDManagement_Suggestion_AddPartNumber.LabelText = "Part Number";
+            Control_PartIDManagement_Suggestion_AddPartNumber.PlaceholderText = "Enter part number";
+            Control_PartIDManagement_Suggestion_AddItemType.LabelText = "Item Type";
+            Control_PartIDManagement_Suggestion_AddItemType.PlaceholderText = "Search item types (F4)";
+            Control_PartIDManagement_Label_AddIssuedBy.Text = "Issued By:";
+            Control_PartIDManagement_Button_AddSave.Text = "Save";
+            Control_PartIDManagement_Button_AddClear.Text = "Clear";
+            
+            // Edit Card
+            Control_PartIDManagement_Suggestion_EditSelectPart.LabelText = "Select Part";
+            Control_PartIDManagement_Suggestion_EditSelectPart.PlaceholderText = "Search parts (F4)";
+            Control_PartIDManagement_Suggestion_EditNewPartNumber.LabelText = "New Part Number";
+            Control_PartIDManagement_Suggestion_EditNewPartNumber.PlaceholderText = "Enter new part number";
+            Control_PartIDManagement_Suggestion_EditItemType.LabelText = "Item Type";
+            Control_PartIDManagement_Suggestion_EditItemType.PlaceholderText = "Search item types (F4)";
+            Control_PartIDManagement_Label_EditIssuedBy.Text = "Issued By:";
+            Control_PartIDManagement_Button_EditSave.Text = "Save Changes";
+            Control_PartIDManagement_Button_EditReset.Text = "Reset";
+            
+            // Remove Card
+            Control_PartIDManagement_Suggestion_RemoveSelectPart.LabelText = "Select Part";
+            Control_PartIDManagement_Suggestion_RemoveSelectPart.PlaceholderText = "Search parts (F4)";
+            Control_PartIDManagement_Label_RemoveWarning.Text = "⚠️ Warning: Removal is permanent and cannot be undone.";
+            Control_PartIDManagement_Button_RemoveConfirm.Text = "Remove";
+            Control_PartIDManagement_Button_RemoveCancel.Text = "Cancel";
+            
+            // Back Button
+            Control_PartIDManagement_Button_Back.Text = "← Back to Selection";
+        }
+
         private void ConfigureSuggestionInputs()
         {
             if (Control_PartIDManagement_Suggestion_AddPartNumber != null)
@@ -63,6 +97,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
                 Control_PartIDManagement_Suggestion_AddPartNumber.ShowValidationColor = false;
                 // Use TextBox.Enabled directly since UpdateTextBoxEnabledState requires validator
                 Control_PartIDManagement_Suggestion_AddPartNumber.TextBox.Enabled = true;
+                Control_PartIDManagement_Suggestion_AddPartNumber.TextBox.BackColor = System.Drawing.SystemColors.Window;
             }
 
             Helper_SuggestionTextBox.ConfigureForItemTypes(
@@ -80,6 +115,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
                 Control_PartIDManagement_Suggestion_EditNewPartNumber.ShowValidationColor = false;
                 // Use TextBox.Enabled directly since UpdateTextBoxEnabledState requires validator
                 Control_PartIDManagement_Suggestion_EditNewPartNumber.TextBox.Enabled = true;
+                Control_PartIDManagement_Suggestion_EditNewPartNumber.TextBox.BackColor = System.Drawing.SystemColors.Window;
             }
 
             Helper_SuggestionTextBox.ConfigureForItemTypes(
@@ -121,7 +157,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             Control_PartIDManagement_Panel_HomeTile_Add.Click += (_, _) => ShowCard(0);
             Control_PartIDManagement_Panel_HomeTile_Edit.Click += (_, _) => ShowCard(1);
             Control_PartIDManagement_Panel_HomeTile_Remove.Click += (_, _) => ShowCard(2);
-            
+
             // Make all child controls of home tiles also clickable
             foreach (Control control in Control_PartIDManagement_Panel_HomeTile_Add.Controls)
             {
@@ -135,7 +171,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             {
                 WireUpTileControlClick(control, 2);
             }
-            
+
             // Back button
             Control_PartIDManagement_Button_Back.Click += (_, _) => ShowHome();
         }
@@ -144,7 +180,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
         {
             control.Click += (_, _) => ShowCard(cardIndex);
             control.Cursor = Cursors.Hand;
-            
+
             // Recursively wire up child controls
             foreach (Control child in control.Controls)
             {
@@ -157,13 +193,13 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             // Hide home, show cards container and back button
             Control_PartIDManagement_Panel_Home.Visible = false;
             Control_PartIDManagement_TableLayout_Cards.Visible = true;
-            Control_PartIDManagement_FlowPanel_BackButton.Visible = true;
-            
+            Control_PartIDManagement_TableLayoutPanel_BackButton.Visible = true;
+
             // Hide all cards first
             Control_PartIDManagement_Panel_AddCard.Visible = false;
             Control_PartIDManagement_Panel_EditCard.Visible = false;
             Control_PartIDManagement_Panel_RemoveCard.Visible = false;
-            
+
             // Show selected card
             switch (cardIndex)
             {
@@ -188,11 +224,11 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             ClearAddSection();
             ClearEditSection();
             ClearRemoveSection();
-            
+
             // Show home, hide cards and back button
             Control_PartIDManagement_Panel_Home.Visible = true;
             Control_PartIDManagement_TableLayout_Cards.Visible = false;
-            Control_PartIDManagement_FlowPanel_BackButton.Visible = false;
+            Control_PartIDManagement_TableLayoutPanel_BackButton.Visible = false;
         }
 
         private void UpdateIssuedByLabels()
@@ -591,7 +627,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             Control_PartIDManagement_Panel_HomeTile_Add.Visible = canAdd;
             Control_PartIDManagement_Panel_HomeTile_Edit.Visible = canEdit;
             Control_PartIDManagement_Panel_HomeTile_Remove.Visible = canRemove;
-            
+
             // Add card
             Control_PartIDManagement_Panel_AddCard.Visible = canAdd;
             Control_PartIDManagement_Suggestion_AddPartNumber.Enabled = canAdd;
@@ -624,7 +660,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             {
                 ClearRemoveSection();
             }
-            
+
             // If user has no privileges at all, show message
             if (!canAdd && !canEdit && !canRemove)
             {
@@ -683,5 +719,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
         #region Cleanup / Dispose
 
         #endregion
+
+
     }
 }
