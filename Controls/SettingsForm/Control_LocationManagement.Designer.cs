@@ -216,7 +216,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             Control_LocationManagement_TableLayoutPanel_Main.RowStyles.Add(new RowStyle());
             Control_LocationManagement_TableLayoutPanel_Main.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
             Control_LocationManagement_TableLayoutPanel_Main.RowStyles.Add(new RowStyle());
-            Control_LocationManagement_TableLayoutPanel_Main.Size = new Size(581, 847);
+            Control_LocationManagement_TableLayoutPanel_Main.Size = new Size(492, 389);
             Control_LocationManagement_TableLayoutPanel_Main.TabIndex = 0;
             // 
             // Control_LocationManagement_Label_Header
@@ -228,7 +228,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             Control_LocationManagement_Label_Header.Location = new Point(23, 23);
             Control_LocationManagement_Label_Header.Margin = new Padding(3);
             Control_LocationManagement_Label_Header.Name = "Control_LocationManagement_Label_Header";
-            Control_LocationManagement_Label_Header.Size = new Size(535, 37);
+            Control_LocationManagement_Label_Header.Size = new Size(446, 37);
             Control_LocationManagement_Label_Header.TabIndex = 0;
             Control_LocationManagement_Label_Header.Text = "Locations";
             // 
@@ -241,7 +241,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             Control_LocationManagement_Label_Subtitle.Location = new Point(23, 66);
             Control_LocationManagement_Label_Subtitle.Margin = new Padding(3);
             Control_LocationManagement_Label_Subtitle.Name = "Control_LocationManagement_Label_Subtitle";
-            Control_LocationManagement_Label_Subtitle.Size = new Size(535, 19);
+            Control_LocationManagement_Label_Subtitle.Size = new Size(446, 19);
             Control_LocationManagement_Label_Subtitle.TabIndex = 1;
             Control_LocationManagement_Label_Subtitle.Text = "Select an action below to manage locations.";
             // 
@@ -252,7 +252,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             Control_LocationManagement_Panel_Container.Dock = DockStyle.Fill;
             Control_LocationManagement_Panel_Container.Location = new Point(23, 91);
             Control_LocationManagement_Panel_Container.Name = "Control_LocationManagement_Panel_Container";
-            Control_LocationManagement_Panel_Container.Size = new Size(535, 684);
+            Control_LocationManagement_Panel_Container.Size = new Size(446, 226);
             Control_LocationManagement_Panel_Container.TabIndex = 2;
             // 
             // Control_LocationManagement_Panel_Home
@@ -262,7 +262,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             Control_LocationManagement_Panel_Home.Dock = DockStyle.Fill;
             Control_LocationManagement_Panel_Home.Location = new Point(0, 0);
             Control_LocationManagement_Panel_Home.Name = "Control_LocationManagement_Panel_Home";
-            Control_LocationManagement_Panel_Home.Size = new Size(535, 684);
+            Control_LocationManagement_Panel_Home.Size = new Size(446, 226);
             Control_LocationManagement_Panel_Home.TabIndex = 0;
             // 
             // Control_LocationManagement_TableLayoutPanel_Home
@@ -279,7 +279,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             Control_LocationManagement_TableLayoutPanel_Home.Name = "Control_LocationManagement_TableLayoutPanel_Home";
             Control_LocationManagement_TableLayoutPanel_Home.RowCount = 1;
             Control_LocationManagement_TableLayoutPanel_Home.RowStyles.Add(new RowStyle());
-            Control_LocationManagement_TableLayoutPanel_Home.Size = new Size(535, 684);
+            Control_LocationManagement_TableLayoutPanel_Home.Size = new Size(446, 226);
             Control_LocationManagement_TableLayoutPanel_Home.TabIndex = 0;
             // 
             // Control_LocationManagement_Panel_HomeTile_Add
@@ -292,7 +292,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             Control_LocationManagement_Panel_HomeTile_Add.Dock = DockStyle.Fill;
             Control_LocationManagement_Panel_HomeTile_Add.Location = new Point(3, 3);
             Control_LocationManagement_Panel_HomeTile_Add.Name = "Control_LocationManagement_Panel_HomeTile_Add";
-            Control_LocationManagement_Panel_HomeTile_Add.Size = new Size(172, 678);
+            Control_LocationManagement_Panel_HomeTile_Add.Size = new Size(142, 220);
             Control_LocationManagement_Panel_HomeTile_Add.TabIndex = 0;
             // 
             // Control_LocationManagement_TableLayout_HomeTile_Add
@@ -303,20 +303,30 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             Control_LocationManagement_TableLayout_HomeTile_Add.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
             Control_LocationManagement_TableLayout_HomeTile_Add.Controls.Add(Control_LocationManagement_Label_HomeTile_AddIcon, 0, 0);
             Control_LocationManagement_TableLayout_HomeTile_Add.Controls.Add(Control_LocationManagement_Label_HomeTile_AddTitle, 0, 1);
-            Control_LocationManagement_TableLayout_HomeTile_Add.Controls.Add(Control_LocationManagement_Label_HomeTile_AddInstruction, 0, 2);
+            Control_LocationManagement_TableLayout_HomeTile_Add.Controls.Add(Control_LocationManagement_Label_HomeTile_AddInstruction, 0, 3);
             Control_LocationManagement_TableLayout_HomeTile_Add.Dock = DockStyle.Fill;
-            Control_LocationManagement_TableLayout_HomeTile_Add.Padding = new Padding(20);
-            Control_LocationManagement_TableLayout_HomeTile_Add.RowCount = 3;
+            Control_LocationManagement_TableLayout_HomeTile_Add.Location = new Point(0, 0);
+            Control_LocationManagement_TableLayout_HomeTile_Add.Name = "Control_LocationManagement_TableLayout_HomeTile_Add";
+            Control_LocationManagement_TableLayout_HomeTile_Add.Padding = new Padding(3);
+            Control_LocationManagement_TableLayout_HomeTile_Add.RowCount = 5;
             Control_LocationManagement_TableLayout_HomeTile_Add.RowStyles.Add(new RowStyle());
             Control_LocationManagement_TableLayout_HomeTile_Add.RowStyles.Add(new RowStyle());
-            Control_LocationManagement_TableLayout_HomeTile_Add.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
+            Control_LocationManagement_TableLayout_HomeTile_Add.RowStyles.Add(new RowStyle(SizeType.Percent, 50F));
+            Control_LocationManagement_TableLayout_HomeTile_Add.RowStyles.Add(new RowStyle());
+            Control_LocationManagement_TableLayout_HomeTile_Add.RowStyles.Add(new RowStyle(SizeType.Percent, 50F));
+            Control_LocationManagement_TableLayout_HomeTile_Add.Size = new Size(140, 218);
             Control_LocationManagement_TableLayout_HomeTile_Add.TabIndex = 0;
             // 
             // Control_LocationManagement_Label_HomeTile_AddIcon
             // 
             Control_LocationManagement_Label_HomeTile_AddIcon.AutoSize = true;
             Control_LocationManagement_Label_HomeTile_AddIcon.Dock = DockStyle.Fill;
-            Control_LocationManagement_Label_HomeTile_AddIcon.Font = new Font("Segoe UI Emoji", 48F, FontStyle.Regular, GraphicsUnit.Point);
+            Control_LocationManagement_Label_HomeTile_AddIcon.Font = new Font("Segoe UI Emoji", 48F);
+            Control_LocationManagement_Label_HomeTile_AddIcon.Location = new Point(6, 6);
+            Control_LocationManagement_Label_HomeTile_AddIcon.Margin = new Padding(3);
+            Control_LocationManagement_Label_HomeTile_AddIcon.Name = "Control_LocationManagement_Label_HomeTile_AddIcon";
+            Control_LocationManagement_Label_HomeTile_AddIcon.Size = new Size(128, 85);
+            Control_LocationManagement_Label_HomeTile_AddIcon.TabIndex = 0;
             Control_LocationManagement_Label_HomeTile_AddIcon.Text = "🆕";
             Control_LocationManagement_Label_HomeTile_AddIcon.TextAlign = ContentAlignment.MiddleCenter;
             // 
@@ -324,19 +334,28 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             // 
             Control_LocationManagement_Label_HomeTile_AddTitle.AutoSize = true;
             Control_LocationManagement_Label_HomeTile_AddTitle.Dock = DockStyle.Fill;
-            Control_LocationManagement_Label_HomeTile_AddTitle.Font = new Font("Segoe UI", 14F, FontStyle.Bold, GraphicsUnit.Point);
-            Control_LocationManagement_Label_HomeTile_AddTitle.Margin = new Padding(0, 10, 0, 5);
-            Control_LocationManagement_Label_HomeTile_AddTitle.Text = "Add Location";
+            Control_LocationManagement_Label_HomeTile_AddTitle.Font = new Font("Segoe UI", 14F, FontStyle.Bold);
+            Control_LocationManagement_Label_HomeTile_AddTitle.Location = new Point(6, 97);
+            Control_LocationManagement_Label_HomeTile_AddTitle.Margin = new Padding(3);
+            Control_LocationManagement_Label_HomeTile_AddTitle.Name = "Control_LocationManagement_Label_HomeTile_AddTitle";
+            Control_LocationManagement_Label_HomeTile_AddTitle.Size = new Size(128, 50);
+            Control_LocationManagement_Label_HomeTile_AddTitle.TabIndex = 1;
+            Control_LocationManagement_Label_HomeTile_AddTitle.Text = "Add\r\nLocation";
             Control_LocationManagement_Label_HomeTile_AddTitle.TextAlign = ContentAlignment.MiddleCenter;
             // 
             // Control_LocationManagement_Label_HomeTile_AddInstruction
             // 
             Control_LocationManagement_Label_HomeTile_AddInstruction.AutoSize = true;
             Control_LocationManagement_Label_HomeTile_AddInstruction.Dock = DockStyle.Fill;
-            Control_LocationManagement_Label_HomeTile_AddInstruction.Font = new Font("Segoe UI", 9F, FontStyle.Italic, GraphicsUnit.Point);
+            Control_LocationManagement_Label_HomeTile_AddInstruction.Font = new Font("Segoe UI", 9F, FontStyle.Italic);
             Control_LocationManagement_Label_HomeTile_AddInstruction.ForeColor = Color.FromArgb(100, 100, 100);
+            Control_LocationManagement_Label_HomeTile_AddInstruction.Location = new Point(6, 167);
+            Control_LocationManagement_Label_HomeTile_AddInstruction.Margin = new Padding(3);
+            Control_LocationManagement_Label_HomeTile_AddInstruction.Name = "Control_LocationManagement_Label_HomeTile_AddInstruction";
+            Control_LocationManagement_Label_HomeTile_AddInstruction.Size = new Size(128, 30);
+            Control_LocationManagement_Label_HomeTile_AddInstruction.TabIndex = 2;
             Control_LocationManagement_Label_HomeTile_AddInstruction.Text = "Click to add new locations";
-            Control_LocationManagement_Label_HomeTile_AddInstruction.TextAlign = ContentAlignment.TopCenter;
+            Control_LocationManagement_Label_HomeTile_AddInstruction.TextAlign = ContentAlignment.MiddleCenter;
             // 
             // Control_LocationManagement_Panel_HomeTile_Remove
             // 
@@ -346,9 +365,9 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             Control_LocationManagement_Panel_HomeTile_Remove.Controls.Add(Control_LocationManagement_TableLayout_HomeTile_Remove);
             Control_LocationManagement_Panel_HomeTile_Remove.Cursor = Cursors.Hand;
             Control_LocationManagement_Panel_HomeTile_Remove.Dock = DockStyle.Fill;
-            Control_LocationManagement_Panel_HomeTile_Remove.Location = new Point(359, 3);
+            Control_LocationManagement_Panel_HomeTile_Remove.Location = new Point(299, 3);
             Control_LocationManagement_Panel_HomeTile_Remove.Name = "Control_LocationManagement_Panel_HomeTile_Remove";
-            Control_LocationManagement_Panel_HomeTile_Remove.Size = new Size(173, 678);
+            Control_LocationManagement_Panel_HomeTile_Remove.Size = new Size(144, 220);
             Control_LocationManagement_Panel_HomeTile_Remove.TabIndex = 2;
             // 
             // Control_LocationManagement_TableLayout_HomeTile_Remove
@@ -359,20 +378,30 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             Control_LocationManagement_TableLayout_HomeTile_Remove.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
             Control_LocationManagement_TableLayout_HomeTile_Remove.Controls.Add(Control_LocationManagement_Label_HomeTile_RemoveIcon, 0, 0);
             Control_LocationManagement_TableLayout_HomeTile_Remove.Controls.Add(Control_LocationManagement_Label_HomeTile_RemoveTitle, 0, 1);
-            Control_LocationManagement_TableLayout_HomeTile_Remove.Controls.Add(Control_LocationManagement_Label_HomeTile_RemoveInstruction, 0, 2);
+            Control_LocationManagement_TableLayout_HomeTile_Remove.Controls.Add(Control_LocationManagement_Label_HomeTile_RemoveInstruction, 0, 3);
             Control_LocationManagement_TableLayout_HomeTile_Remove.Dock = DockStyle.Fill;
-            Control_LocationManagement_TableLayout_HomeTile_Remove.Padding = new Padding(20);
-            Control_LocationManagement_TableLayout_HomeTile_Remove.RowCount = 3;
+            Control_LocationManagement_TableLayout_HomeTile_Remove.Location = new Point(0, 0);
+            Control_LocationManagement_TableLayout_HomeTile_Remove.Name = "Control_LocationManagement_TableLayout_HomeTile_Remove";
+            Control_LocationManagement_TableLayout_HomeTile_Remove.Padding = new Padding(3);
+            Control_LocationManagement_TableLayout_HomeTile_Remove.RowCount = 5;
             Control_LocationManagement_TableLayout_HomeTile_Remove.RowStyles.Add(new RowStyle());
             Control_LocationManagement_TableLayout_HomeTile_Remove.RowStyles.Add(new RowStyle());
-            Control_LocationManagement_TableLayout_HomeTile_Remove.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
+            Control_LocationManagement_TableLayout_HomeTile_Remove.RowStyles.Add(new RowStyle(SizeType.Percent, 50F));
+            Control_LocationManagement_TableLayout_HomeTile_Remove.RowStyles.Add(new RowStyle());
+            Control_LocationManagement_TableLayout_HomeTile_Remove.RowStyles.Add(new RowStyle(SizeType.Percent, 50F));
+            Control_LocationManagement_TableLayout_HomeTile_Remove.Size = new Size(142, 218);
             Control_LocationManagement_TableLayout_HomeTile_Remove.TabIndex = 0;
             // 
             // Control_LocationManagement_Label_HomeTile_RemoveIcon
             // 
             Control_LocationManagement_Label_HomeTile_RemoveIcon.AutoSize = true;
             Control_LocationManagement_Label_HomeTile_RemoveIcon.Dock = DockStyle.Fill;
-            Control_LocationManagement_Label_HomeTile_RemoveIcon.Font = new Font("Segoe UI Emoji", 48F, FontStyle.Regular, GraphicsUnit.Point);
+            Control_LocationManagement_Label_HomeTile_RemoveIcon.Font = new Font("Segoe UI Emoji", 48F);
+            Control_LocationManagement_Label_HomeTile_RemoveIcon.Location = new Point(6, 6);
+            Control_LocationManagement_Label_HomeTile_RemoveIcon.Margin = new Padding(3);
+            Control_LocationManagement_Label_HomeTile_RemoveIcon.Name = "Control_LocationManagement_Label_HomeTile_RemoveIcon";
+            Control_LocationManagement_Label_HomeTile_RemoveIcon.Size = new Size(130, 85);
+            Control_LocationManagement_Label_HomeTile_RemoveIcon.TabIndex = 0;
             Control_LocationManagement_Label_HomeTile_RemoveIcon.Text = "🗑️";
             Control_LocationManagement_Label_HomeTile_RemoveIcon.TextAlign = ContentAlignment.MiddleCenter;
             // 
@@ -380,19 +409,28 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             // 
             Control_LocationManagement_Label_HomeTile_RemoveTitle.AutoSize = true;
             Control_LocationManagement_Label_HomeTile_RemoveTitle.Dock = DockStyle.Fill;
-            Control_LocationManagement_Label_HomeTile_RemoveTitle.Font = new Font("Segoe UI", 14F, FontStyle.Bold, GraphicsUnit.Point);
-            Control_LocationManagement_Label_HomeTile_RemoveTitle.Margin = new Padding(0, 10, 0, 5);
-            Control_LocationManagement_Label_HomeTile_RemoveTitle.Text = "Remove Location";
+            Control_LocationManagement_Label_HomeTile_RemoveTitle.Font = new Font("Segoe UI", 14F, FontStyle.Bold);
+            Control_LocationManagement_Label_HomeTile_RemoveTitle.Location = new Point(6, 97);
+            Control_LocationManagement_Label_HomeTile_RemoveTitle.Margin = new Padding(3);
+            Control_LocationManagement_Label_HomeTile_RemoveTitle.Name = "Control_LocationManagement_Label_HomeTile_RemoveTitle";
+            Control_LocationManagement_Label_HomeTile_RemoveTitle.Size = new Size(130, 50);
+            Control_LocationManagement_Label_HomeTile_RemoveTitle.TabIndex = 1;
+            Control_LocationManagement_Label_HomeTile_RemoveTitle.Text = "Remove\r\nLocation";
             Control_LocationManagement_Label_HomeTile_RemoveTitle.TextAlign = ContentAlignment.MiddleCenter;
             // 
             // Control_LocationManagement_Label_HomeTile_RemoveInstruction
             // 
             Control_LocationManagement_Label_HomeTile_RemoveInstruction.AutoSize = true;
             Control_LocationManagement_Label_HomeTile_RemoveInstruction.Dock = DockStyle.Fill;
-            Control_LocationManagement_Label_HomeTile_RemoveInstruction.Font = new Font("Segoe UI", 9F, FontStyle.Italic, GraphicsUnit.Point);
+            Control_LocationManagement_Label_HomeTile_RemoveInstruction.Font = new Font("Segoe UI", 9F, FontStyle.Italic);
             Control_LocationManagement_Label_HomeTile_RemoveInstruction.ForeColor = Color.FromArgb(100, 100, 100);
+            Control_LocationManagement_Label_HomeTile_RemoveInstruction.Location = new Point(6, 167);
+            Control_LocationManagement_Label_HomeTile_RemoveInstruction.Margin = new Padding(3);
+            Control_LocationManagement_Label_HomeTile_RemoveInstruction.Name = "Control_LocationManagement_Label_HomeTile_RemoveInstruction";
+            Control_LocationManagement_Label_HomeTile_RemoveInstruction.Size = new Size(130, 30);
+            Control_LocationManagement_Label_HomeTile_RemoveInstruction.TabIndex = 2;
             Control_LocationManagement_Label_HomeTile_RemoveInstruction.Text = "Click to remove locations";
-            Control_LocationManagement_Label_HomeTile_RemoveInstruction.TextAlign = ContentAlignment.TopCenter;
+            Control_LocationManagement_Label_HomeTile_RemoveInstruction.TextAlign = ContentAlignment.MiddleCenter;
             // 
             // Control_LocationManagement_Panel_HomeTile_Edit
             // 
@@ -402,9 +440,9 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             Control_LocationManagement_Panel_HomeTile_Edit.Controls.Add(Control_LocationManagement_TableLayout_HomeTile_Edit);
             Control_LocationManagement_Panel_HomeTile_Edit.Cursor = Cursors.Hand;
             Control_LocationManagement_Panel_HomeTile_Edit.Dock = DockStyle.Fill;
-            Control_LocationManagement_Panel_HomeTile_Edit.Location = new Point(181, 3);
+            Control_LocationManagement_Panel_HomeTile_Edit.Location = new Point(151, 3);
             Control_LocationManagement_Panel_HomeTile_Edit.Name = "Control_LocationManagement_Panel_HomeTile_Edit";
-            Control_LocationManagement_Panel_HomeTile_Edit.Size = new Size(172, 678);
+            Control_LocationManagement_Panel_HomeTile_Edit.Size = new Size(142, 220);
             Control_LocationManagement_Panel_HomeTile_Edit.TabIndex = 1;
             // 
             // Control_LocationManagement_TableLayout_HomeTile_Edit
@@ -415,20 +453,30 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             Control_LocationManagement_TableLayout_HomeTile_Edit.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
             Control_LocationManagement_TableLayout_HomeTile_Edit.Controls.Add(Control_LocationManagement_Label_HomeTile_EditIcon, 0, 0);
             Control_LocationManagement_TableLayout_HomeTile_Edit.Controls.Add(Control_LocationManagement_Label_HomeTile_EditTitle, 0, 1);
-            Control_LocationManagement_TableLayout_HomeTile_Edit.Controls.Add(Control_LocationManagement_Label_HomeTile_EditInstruction, 0, 2);
+            Control_LocationManagement_TableLayout_HomeTile_Edit.Controls.Add(Control_LocationManagement_Label_HomeTile_EditInstruction, 0, 3);
             Control_LocationManagement_TableLayout_HomeTile_Edit.Dock = DockStyle.Fill;
-            Control_LocationManagement_TableLayout_HomeTile_Edit.Padding = new Padding(20);
-            Control_LocationManagement_TableLayout_HomeTile_Edit.RowCount = 3;
+            Control_LocationManagement_TableLayout_HomeTile_Edit.Location = new Point(0, 0);
+            Control_LocationManagement_TableLayout_HomeTile_Edit.Name = "Control_LocationManagement_TableLayout_HomeTile_Edit";
+            Control_LocationManagement_TableLayout_HomeTile_Edit.Padding = new Padding(3);
+            Control_LocationManagement_TableLayout_HomeTile_Edit.RowCount = 5;
             Control_LocationManagement_TableLayout_HomeTile_Edit.RowStyles.Add(new RowStyle());
             Control_LocationManagement_TableLayout_HomeTile_Edit.RowStyles.Add(new RowStyle());
-            Control_LocationManagement_TableLayout_HomeTile_Edit.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
+            Control_LocationManagement_TableLayout_HomeTile_Edit.RowStyles.Add(new RowStyle(SizeType.Percent, 50F));
+            Control_LocationManagement_TableLayout_HomeTile_Edit.RowStyles.Add(new RowStyle());
+            Control_LocationManagement_TableLayout_HomeTile_Edit.RowStyles.Add(new RowStyle(SizeType.Percent, 50F));
+            Control_LocationManagement_TableLayout_HomeTile_Edit.Size = new Size(140, 218);
             Control_LocationManagement_TableLayout_HomeTile_Edit.TabIndex = 0;
             // 
             // Control_LocationManagement_Label_HomeTile_EditIcon
             // 
             Control_LocationManagement_Label_HomeTile_EditIcon.AutoSize = true;
             Control_LocationManagement_Label_HomeTile_EditIcon.Dock = DockStyle.Fill;
-            Control_LocationManagement_Label_HomeTile_EditIcon.Font = new Font("Segoe UI Emoji", 48F, FontStyle.Regular, GraphicsUnit.Point);
+            Control_LocationManagement_Label_HomeTile_EditIcon.Font = new Font("Segoe UI Emoji", 48F);
+            Control_LocationManagement_Label_HomeTile_EditIcon.Location = new Point(6, 6);
+            Control_LocationManagement_Label_HomeTile_EditIcon.Margin = new Padding(3);
+            Control_LocationManagement_Label_HomeTile_EditIcon.Name = "Control_LocationManagement_Label_HomeTile_EditIcon";
+            Control_LocationManagement_Label_HomeTile_EditIcon.Size = new Size(128, 85);
+            Control_LocationManagement_Label_HomeTile_EditIcon.TabIndex = 0;
             Control_LocationManagement_Label_HomeTile_EditIcon.Text = "✏️";
             Control_LocationManagement_Label_HomeTile_EditIcon.TextAlign = ContentAlignment.MiddleCenter;
             // 
@@ -436,22 +484,33 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             // 
             Control_LocationManagement_Label_HomeTile_EditTitle.AutoSize = true;
             Control_LocationManagement_Label_HomeTile_EditTitle.Dock = DockStyle.Fill;
-            Control_LocationManagement_Label_HomeTile_EditTitle.Font = new Font("Segoe UI", 14F, FontStyle.Bold, GraphicsUnit.Point);
-            Control_LocationManagement_Label_HomeTile_EditTitle.Margin = new Padding(0, 10, 0, 5);
-            Control_LocationManagement_Label_HomeTile_EditTitle.Text = "Edit Location";
+            Control_LocationManagement_Label_HomeTile_EditTitle.Font = new Font("Segoe UI", 14F, FontStyle.Bold);
+            Control_LocationManagement_Label_HomeTile_EditTitle.Location = new Point(6, 97);
+            Control_LocationManagement_Label_HomeTile_EditTitle.Margin = new Padding(3);
+            Control_LocationManagement_Label_HomeTile_EditTitle.Name = "Control_LocationManagement_Label_HomeTile_EditTitle";
+            Control_LocationManagement_Label_HomeTile_EditTitle.Size = new Size(128, 50);
+            Control_LocationManagement_Label_HomeTile_EditTitle.TabIndex = 1;
+            Control_LocationManagement_Label_HomeTile_EditTitle.Text = "Edit\r\nLocation";
             Control_LocationManagement_Label_HomeTile_EditTitle.TextAlign = ContentAlignment.MiddleCenter;
             // 
             // Control_LocationManagement_Label_HomeTile_EditInstruction
             // 
             Control_LocationManagement_Label_HomeTile_EditInstruction.AutoSize = true;
             Control_LocationManagement_Label_HomeTile_EditInstruction.Dock = DockStyle.Fill;
-            Control_LocationManagement_Label_HomeTile_EditInstruction.Font = new Font("Segoe UI", 9F, FontStyle.Italic, GraphicsUnit.Point);
+            Control_LocationManagement_Label_HomeTile_EditInstruction.Font = new Font("Segoe UI", 9F, FontStyle.Italic);
             Control_LocationManagement_Label_HomeTile_EditInstruction.ForeColor = Color.FromArgb(100, 100, 100);
+            Control_LocationManagement_Label_HomeTile_EditInstruction.Location = new Point(6, 167);
+            Control_LocationManagement_Label_HomeTile_EditInstruction.Margin = new Padding(3);
+            Control_LocationManagement_Label_HomeTile_EditInstruction.Name = "Control_LocationManagement_Label_HomeTile_EditInstruction";
+            Control_LocationManagement_Label_HomeTile_EditInstruction.Size = new Size(128, 30);
+            Control_LocationManagement_Label_HomeTile_EditInstruction.TabIndex = 2;
             Control_LocationManagement_Label_HomeTile_EditInstruction.Text = "Click to edit existing locations";
-            Control_LocationManagement_Label_HomeTile_EditInstruction.TextAlign = ContentAlignment.TopCenter;
+            Control_LocationManagement_Label_HomeTile_EditInstruction.TextAlign = ContentAlignment.MiddleCenter;
             // 
             // Control_LocationManagement_TableLayoutPanel_Cards
             // 
+            Control_LocationManagement_TableLayoutPanel_Cards.AutoSize = true;
+            Control_LocationManagement_TableLayoutPanel_Cards.AutoSizeMode = AutoSizeMode.GrowAndShrink;
             Control_LocationManagement_TableLayoutPanel_Cards.ColumnCount = 1;
             Control_LocationManagement_TableLayoutPanel_Cards.ColumnStyles.Add(new ColumnStyle());
             Control_LocationManagement_TableLayoutPanel_Cards.Controls.Add(Control_LocationManagement_Panel_AddCard, 0, 0);
@@ -464,7 +523,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             Control_LocationManagement_TableLayoutPanel_Cards.RowStyles.Add(new RowStyle());
             Control_LocationManagement_TableLayoutPanel_Cards.RowStyles.Add(new RowStyle());
             Control_LocationManagement_TableLayoutPanel_Cards.RowStyles.Add(new RowStyle());
-            Control_LocationManagement_TableLayoutPanel_Cards.Size = new Size(535, 684);
+            Control_LocationManagement_TableLayoutPanel_Cards.Size = new Size(446, 226);
             Control_LocationManagement_TableLayoutPanel_Cards.TabIndex = 1;
             Control_LocationManagement_TableLayoutPanel_Cards.Visible = false;
             // 
@@ -472,11 +531,12 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             // 
             Control_LocationManagement_Panel_AddCard.AutoSize = true;
             Control_LocationManagement_Panel_AddCard.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            Control_LocationManagement_Panel_AddCard.BorderStyle = BorderStyle.FixedSingle;
             Control_LocationManagement_Panel_AddCard.Controls.Add(Control_LocationManagement_TableLayoutPanel_Add);
             Control_LocationManagement_Panel_AddCard.Dock = DockStyle.Fill;
             Control_LocationManagement_Panel_AddCard.Location = new Point(3, 3);
             Control_LocationManagement_Panel_AddCard.Name = "Control_LocationManagement_Panel_AddCard";
-            Control_LocationManagement_Panel_AddCard.Size = new Size(529, 194);
+            Control_LocationManagement_Panel_AddCard.Size = new Size(440, 196);
             Control_LocationManagement_Panel_AddCard.TabIndex = 0;
             // 
             // Control_LocationManagement_TableLayoutPanel_Add
@@ -494,7 +554,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             Control_LocationManagement_TableLayoutPanel_Add.RowCount = 2;
             Control_LocationManagement_TableLayoutPanel_Add.RowStyles.Add(new RowStyle());
             Control_LocationManagement_TableLayoutPanel_Add.RowStyles.Add(new RowStyle());
-            Control_LocationManagement_TableLayoutPanel_Add.Size = new Size(529, 194);
+            Control_LocationManagement_TableLayoutPanel_Add.Size = new Size(438, 194);
             Control_LocationManagement_TableLayoutPanel_Add.TabIndex = 0;
             // 
             // tableLayoutPanel1
@@ -511,7 +571,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             tableLayoutPanel1.Name = "tableLayoutPanel1";
             tableLayoutPanel1.RowCount = 1;
             tableLayoutPanel1.RowStyles.Add(new RowStyle());
-            tableLayoutPanel1.Size = new Size(491, 57);
+            tableLayoutPanel1.Size = new Size(400, 57);
             tableLayoutPanel1.TabIndex = 3;
             // 
             // Control_LocationManagement_Label_AddIcon
@@ -535,7 +595,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             Control_LocationManagement_Label_AddTitle.Location = new Point(83, 3);
             Control_LocationManagement_Label_AddTitle.Margin = new Padding(3);
             Control_LocationManagement_Label_AddTitle.Name = "Control_LocationManagement_Label_AddTitle";
-            Control_LocationManagement_Label_AddTitle.Size = new Size(405, 51);
+            Control_LocationManagement_Label_AddTitle.Size = new Size(314, 51);
             Control_LocationManagement_Label_AddTitle.TabIndex = 1;
             Control_LocationManagement_Label_AddTitle.Text = "Add Location";
             Control_LocationManagement_Label_AddTitle.TextAlign = ContentAlignment.MiddleLeft;
@@ -561,7 +621,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             Control_LocationManagement_TableLayoutPanel_AddContent.RowStyles.Add(new RowStyle());
             Control_LocationManagement_TableLayoutPanel_AddContent.RowStyles.Add(new RowStyle());
             Control_LocationManagement_TableLayoutPanel_AddContent.RowStyles.Add(new RowStyle());
-            Control_LocationManagement_TableLayoutPanel_AddContent.Size = new Size(491, 93);
+            Control_LocationManagement_TableLayoutPanel_AddContent.Size = new Size(400, 93);
             Control_LocationManagement_TableLayoutPanel_AddContent.TabIndex = 2;
             // 
             // label1
@@ -582,7 +642,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             Control_LocationManagement_ComboBox_AddBuilding.DropDownStyle = ComboBoxStyle.DropDownList;
             Control_LocationManagement_ComboBox_AddBuilding.Location = new Point(92, 32);
             Control_LocationManagement_ComboBox_AddBuilding.Name = "Control_LocationManagement_ComboBox_AddBuilding";
-            Control_LocationManagement_ComboBox_AddBuilding.Size = new Size(396, 23);
+            Control_LocationManagement_ComboBox_AddBuilding.Size = new Size(305, 23);
             Control_LocationManagement_ComboBox_AddBuilding.TabIndex = 1;
             // 
             // Control_LocationManagement_TextBox_AddLocation
@@ -590,7 +650,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             Control_LocationManagement_TextBox_AddLocation.Dock = DockStyle.Fill;
             Control_LocationManagement_TextBox_AddLocation.Location = new Point(92, 3);
             Control_LocationManagement_TextBox_AddLocation.Name = "Control_LocationManagement_TextBox_AddLocation";
-            Control_LocationManagement_TextBox_AddLocation.Size = new Size(396, 23);
+            Control_LocationManagement_TextBox_AddLocation.Size = new Size(305, 23);
             Control_LocationManagement_TextBox_AddLocation.TabIndex = 0;
             // 
             // label2
@@ -621,7 +681,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             Control_LocationManagement_TableLayoutPanel_AddActions.Name = "Control_LocationManagement_TableLayoutPanel_AddActions";
             Control_LocationManagement_TableLayoutPanel_AddActions.RowCount = 1;
             Control_LocationManagement_TableLayoutPanel_AddActions.RowStyles.Add(new RowStyle());
-            Control_LocationManagement_TableLayoutPanel_AddActions.Size = new Size(485, 29);
+            Control_LocationManagement_TableLayoutPanel_AddActions.Size = new Size(394, 29);
             Control_LocationManagement_TableLayoutPanel_AddActions.TabIndex = 2;
             // 
             // Control_LocationManagement_Button_AddSave
@@ -638,7 +698,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             // 
             Control_LocationManagement_Button_AddClear.AutoSize = true;
             Control_LocationManagement_Button_AddClear.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            Control_LocationManagement_Button_AddClear.Location = new Point(407, 3);
+            Control_LocationManagement_Button_AddClear.Location = new Point(316, 3);
             Control_LocationManagement_Button_AddClear.MinimumSize = new Size(75, 23);
             Control_LocationManagement_Button_AddClear.Name = "Control_LocationManagement_Button_AddClear";
             Control_LocationManagement_Button_AddClear.Size = new Size(75, 23);
@@ -648,11 +708,12 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             // 
             Control_LocationManagement_Panel_EditCard.AutoSize = true;
             Control_LocationManagement_Panel_EditCard.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            Control_LocationManagement_Panel_EditCard.BorderStyle = BorderStyle.FixedSingle;
             Control_LocationManagement_Panel_EditCard.Controls.Add(Control_LocationManagement_TableLayoutPanel_Edit);
             Control_LocationManagement_Panel_EditCard.Dock = DockStyle.Fill;
-            Control_LocationManagement_Panel_EditCard.Location = new Point(3, 203);
+            Control_LocationManagement_Panel_EditCard.Location = new Point(3, 205);
             Control_LocationManagement_Panel_EditCard.Name = "Control_LocationManagement_Panel_EditCard";
-            Control_LocationManagement_Panel_EditCard.Size = new Size(529, 219);
+            Control_LocationManagement_Panel_EditCard.Size = new Size(440, 221);
             Control_LocationManagement_Panel_EditCard.TabIndex = 1;
             // 
             // Control_LocationManagement_TableLayoutPanel_Edit
@@ -670,7 +731,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             Control_LocationManagement_TableLayoutPanel_Edit.RowCount = 2;
             Control_LocationManagement_TableLayoutPanel_Edit.RowStyles.Add(new RowStyle());
             Control_LocationManagement_TableLayoutPanel_Edit.RowStyles.Add(new RowStyle());
-            Control_LocationManagement_TableLayoutPanel_Edit.Size = new Size(529, 219);
+            Control_LocationManagement_TableLayoutPanel_Edit.Size = new Size(438, 219);
             Control_LocationManagement_TableLayoutPanel_Edit.TabIndex = 0;
             // 
             // Control_LocationManagement_TableLayoutPanel_EditContent
@@ -696,7 +757,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             Control_LocationManagement_TableLayoutPanel_EditContent.RowStyles.Add(new RowStyle());
             Control_LocationManagement_TableLayoutPanel_EditContent.RowStyles.Add(new RowStyle());
             Control_LocationManagement_TableLayoutPanel_EditContent.RowStyles.Add(new RowStyle());
-            Control_LocationManagement_TableLayoutPanel_EditContent.Size = new Size(491, 118);
+            Control_LocationManagement_TableLayoutPanel_EditContent.Size = new Size(400, 118);
             Control_LocationManagement_TableLayoutPanel_EditContent.TabIndex = 2;
             // 
             // Control_LocationManagement_TableLayoutPanel_EditActions
@@ -716,7 +777,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             Control_LocationManagement_TableLayoutPanel_EditActions.Name = "Control_LocationManagement_TableLayoutPanel_EditActions";
             Control_LocationManagement_TableLayoutPanel_EditActions.RowCount = 1;
             Control_LocationManagement_TableLayoutPanel_EditActions.RowStyles.Add(new RowStyle());
-            Control_LocationManagement_TableLayoutPanel_EditActions.Size = new Size(491, 29);
+            Control_LocationManagement_TableLayoutPanel_EditActions.Size = new Size(400, 29);
             Control_LocationManagement_TableLayoutPanel_EditActions.TabIndex = 3;
             // 
             // Control_LocationManagement_Button_EditSave
@@ -733,7 +794,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             // 
             Control_LocationManagement_Button_EditReset.AutoSize = true;
             Control_LocationManagement_Button_EditReset.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            Control_LocationManagement_Button_EditReset.Location = new Point(413, 3);
+            Control_LocationManagement_Button_EditReset.Location = new Point(322, 3);
             Control_LocationManagement_Button_EditReset.MinimumSize = new Size(75, 23);
             Control_LocationManagement_Button_EditReset.Name = "Control_LocationManagement_Button_EditReset";
             Control_LocationManagement_Button_EditReset.Size = new Size(75, 23);
@@ -745,7 +806,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             Control_LocationManagement_ComboBox_EditBuilding.DropDownStyle = ComboBoxStyle.DropDownList;
             Control_LocationManagement_ComboBox_EditBuilding.Location = new Point(127, 63);
             Control_LocationManagement_ComboBox_EditBuilding.Name = "Control_LocationManagement_ComboBox_EditBuilding";
-            Control_LocationManagement_ComboBox_EditBuilding.Size = new Size(361, 23);
+            Control_LocationManagement_ComboBox_EditBuilding.Size = new Size(270, 23);
             Control_LocationManagement_ComboBox_EditBuilding.TabIndex = 2;
             // 
             // Control_LocationManagement_TextBox_EditNewLocation
@@ -753,7 +814,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             Control_LocationManagement_TextBox_EditNewLocation.Dock = DockStyle.Fill;
             Control_LocationManagement_TextBox_EditNewLocation.Location = new Point(127, 34);
             Control_LocationManagement_TextBox_EditNewLocation.Name = "Control_LocationManagement_TextBox_EditNewLocation";
-            Control_LocationManagement_TextBox_EditNewLocation.Size = new Size(361, 23);
+            Control_LocationManagement_TextBox_EditNewLocation.Size = new Size(270, 23);
             Control_LocationManagement_TextBox_EditNewLocation.TabIndex = 1;
             // 
             // Control_LocationManagement_Suggestion_EditSelectLocation
@@ -767,7 +828,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             Control_LocationManagement_Suggestion_EditSelectLocation.Margin = new Padding(0);
             Control_LocationManagement_Suggestion_EditSelectLocation.Name = "Control_LocationManagement_Suggestion_EditSelectLocation";
             Control_LocationManagement_Suggestion_EditSelectLocation.Padding = new Padding(3);
-            Control_LocationManagement_Suggestion_EditSelectLocation.Size = new Size(491, 31);
+            Control_LocationManagement_Suggestion_EditSelectLocation.Size = new Size(400, 31);
             Control_LocationManagement_Suggestion_EditSelectLocation.TabIndex = 0;
             // 
             // label3
@@ -808,7 +869,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             tableLayoutPanel2.Name = "tableLayoutPanel2";
             tableLayoutPanel2.RowCount = 1;
             tableLayoutPanel2.RowStyles.Add(new RowStyle());
-            tableLayoutPanel2.Size = new Size(491, 57);
+            tableLayoutPanel2.Size = new Size(400, 57);
             tableLayoutPanel2.TabIndex = 3;
             // 
             // Control_LocationManagement_Label_EditIcon
@@ -832,7 +893,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             Control_LocationManagement_Label_EditTitle.Location = new Point(83, 3);
             Control_LocationManagement_Label_EditTitle.Margin = new Padding(3);
             Control_LocationManagement_Label_EditTitle.Name = "Control_LocationManagement_Label_EditTitle";
-            Control_LocationManagement_Label_EditTitle.Size = new Size(405, 51);
+            Control_LocationManagement_Label_EditTitle.Size = new Size(314, 51);
             Control_LocationManagement_Label_EditTitle.TabIndex = 1;
             Control_LocationManagement_Label_EditTitle.Text = "Edit Location";
             Control_LocationManagement_Label_EditTitle.TextAlign = ContentAlignment.MiddleLeft;
@@ -841,11 +902,12 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             // 
             Control_LocationManagement_Panel_RemoveCard.AutoSize = true;
             Control_LocationManagement_Panel_RemoveCard.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            Control_LocationManagement_Panel_RemoveCard.BorderStyle = BorderStyle.FixedSingle;
             Control_LocationManagement_Panel_RemoveCard.Controls.Add(Control_LocationManagement_TableLayoutPanel_Remove);
             Control_LocationManagement_Panel_RemoveCard.Dock = DockStyle.Fill;
-            Control_LocationManagement_Panel_RemoveCard.Location = new Point(3, 428);
+            Control_LocationManagement_Panel_RemoveCard.Location = new Point(3, 432);
             Control_LocationManagement_Panel_RemoveCard.Name = "Control_LocationManagement_Panel_RemoveCard";
-            Control_LocationManagement_Panel_RemoveCard.Size = new Size(529, 253);
+            Control_LocationManagement_Panel_RemoveCard.Size = new Size(440, 251);
             Control_LocationManagement_Panel_RemoveCard.TabIndex = 2;
             // 
             // Control_LocationManagement_TableLayoutPanel_Remove
@@ -864,7 +926,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             Control_LocationManagement_TableLayoutPanel_Remove.RowCount = 2;
             Control_LocationManagement_TableLayoutPanel_Remove.RowStyles.Add(new RowStyle());
             Control_LocationManagement_TableLayoutPanel_Remove.RowStyles.Add(new RowStyle());
-            Control_LocationManagement_TableLayoutPanel_Remove.Size = new Size(529, 253);
+            Control_LocationManagement_TableLayoutPanel_Remove.Size = new Size(438, 249);
             Control_LocationManagement_TableLayoutPanel_Remove.TabIndex = 0;
             // 
             // tableLayoutPanel3
@@ -883,7 +945,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             tableLayoutPanel3.Name = "tableLayoutPanel3";
             tableLayoutPanel3.RowCount = 1;
             tableLayoutPanel3.RowStyles.Add(new RowStyle());
-            tableLayoutPanel3.Size = new Size(497, 57);
+            tableLayoutPanel3.Size = new Size(406, 57);
             tableLayoutPanel3.TabIndex = 1;
             // 
             // Control_LocationManagement_Label_RemoveTitle
@@ -894,7 +956,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             Control_LocationManagement_Label_RemoveTitle.Location = new Point(83, 3);
             Control_LocationManagement_Label_RemoveTitle.Margin = new Padding(3);
             Control_LocationManagement_Label_RemoveTitle.Name = "Control_LocationManagement_Label_RemoveTitle";
-            Control_LocationManagement_Label_RemoveTitle.Size = new Size(411, 51);
+            Control_LocationManagement_Label_RemoveTitle.Size = new Size(320, 51);
             Control_LocationManagement_Label_RemoveTitle.TabIndex = 1;
             Control_LocationManagement_Label_RemoveTitle.Text = "Remove Location";
             Control_LocationManagement_Label_RemoveTitle.TextAlign = ContentAlignment.MiddleLeft;
@@ -932,7 +994,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             Control_LocationManagement_TableLayoutPanel_RemoveContent.RowStyles.Add(new RowStyle());
             Control_LocationManagement_TableLayoutPanel_RemoveContent.RowStyles.Add(new RowStyle());
             Control_LocationManagement_TableLayoutPanel_RemoveContent.RowStyles.Add(new RowStyle());
-            Control_LocationManagement_TableLayoutPanel_RemoveContent.Size = new Size(491, 158);
+            Control_LocationManagement_TableLayoutPanel_RemoveContent.Size = new Size(400, 154);
             Control_LocationManagement_TableLayoutPanel_RemoveContent.TabIndex = 2;
             // 
             // Control_LocationManagement_Suggestion_RemoveSelectLocation
@@ -945,7 +1007,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             Control_LocationManagement_Suggestion_RemoveSelectLocation.Margin = new Padding(0);
             Control_LocationManagement_Suggestion_RemoveSelectLocation.Name = "Control_LocationManagement_Suggestion_RemoveSelectLocation";
             Control_LocationManagement_Suggestion_RemoveSelectLocation.Padding = new Padding(3);
-            Control_LocationManagement_Suggestion_RemoveSelectLocation.Size = new Size(491, 31);
+            Control_LocationManagement_Suggestion_RemoveSelectLocation.Size = new Size(400, 31);
             Control_LocationManagement_Suggestion_RemoveSelectLocation.TabIndex = 0;
             // 
             // Control_LocationManagement_TableLayoutPanel_RemoveDetails
@@ -969,7 +1031,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             Control_LocationManagement_TableLayoutPanel_RemoveDetails.RowStyles.Add(new RowStyle());
             Control_LocationManagement_TableLayoutPanel_RemoveDetails.RowStyles.Add(new RowStyle());
             Control_LocationManagement_TableLayoutPanel_RemoveDetails.RowStyles.Add(new RowStyle());
-            Control_LocationManagement_TableLayoutPanel_RemoveDetails.Size = new Size(485, 67);
+            Control_LocationManagement_TableLayoutPanel_RemoveDetails.Size = new Size(394, 67);
             Control_LocationManagement_TableLayoutPanel_RemoveDetails.TabIndex = 1;
             // 
             // Control_LocationManagement_Label_RemoveLocation
@@ -991,7 +1053,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             Control_LocationManagement_Label_RemoveLocationValue.Location = new Point(70, 4);
             Control_LocationManagement_Label_RemoveLocationValue.Margin = new Padding(3);
             Control_LocationManagement_Label_RemoveLocationValue.Name = "Control_LocationManagement_Label_RemoveLocationValue";
-            Control_LocationManagement_Label_RemoveLocationValue.Size = new Size(411, 15);
+            Control_LocationManagement_Label_RemoveLocationValue.Size = new Size(320, 15);
             Control_LocationManagement_Label_RemoveLocationValue.TabIndex = 1;
             Control_LocationManagement_Label_RemoveLocationValue.TextAlign = ContentAlignment.MiddleLeft;
             // 
@@ -1014,7 +1076,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             Control_LocationManagement_Label_RemoveBuildingValue.Location = new Point(70, 26);
             Control_LocationManagement_Label_RemoveBuildingValue.Margin = new Padding(3);
             Control_LocationManagement_Label_RemoveBuildingValue.Name = "Control_LocationManagement_Label_RemoveBuildingValue";
-            Control_LocationManagement_Label_RemoveBuildingValue.Size = new Size(411, 15);
+            Control_LocationManagement_Label_RemoveBuildingValue.Size = new Size(320, 15);
             Control_LocationManagement_Label_RemoveBuildingValue.TabIndex = 3;
             Control_LocationManagement_Label_RemoveBuildingValue.TextAlign = ContentAlignment.MiddleLeft;
             // 
@@ -1037,7 +1099,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             Control_LocationManagement_Label_RemoveIssuedByValue.Location = new Point(70, 48);
             Control_LocationManagement_Label_RemoveIssuedByValue.Margin = new Padding(3);
             Control_LocationManagement_Label_RemoveIssuedByValue.Name = "Control_LocationManagement_Label_RemoveIssuedByValue";
-            Control_LocationManagement_Label_RemoveIssuedByValue.Size = new Size(411, 15);
+            Control_LocationManagement_Label_RemoveIssuedByValue.Size = new Size(320, 15);
             Control_LocationManagement_Label_RemoveIssuedByValue.TabIndex = 5;
             Control_LocationManagement_Label_RemoveIssuedByValue.TextAlign = ContentAlignment.MiddleLeft;
             // 
@@ -1049,9 +1111,10 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             Control_LocationManagement_Label_RemoveWarning.Location = new Point(3, 107);
             Control_LocationManagement_Label_RemoveWarning.Margin = new Padding(3);
             Control_LocationManagement_Label_RemoveWarning.Name = "Control_LocationManagement_Label_RemoveWarning";
-            Control_LocationManagement_Label_RemoveWarning.Size = new Size(485, 15);
+            Control_LocationManagement_Label_RemoveWarning.Size = new Size(394, 15);
             Control_LocationManagement_Label_RemoveWarning.TabIndex = 2;
             Control_LocationManagement_Label_RemoveWarning.Text = "Warning: Removal is permanent.";
+            Control_LocationManagement_Label_RemoveWarning.TextAlign = ContentAlignment.MiddleLeft;
             // 
             // Control_LocationManagement_TableLayoutPanel_RemoveActions
             // 
@@ -1069,7 +1132,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             Control_LocationManagement_TableLayoutPanel_RemoveActions.Name = "Control_LocationManagement_TableLayoutPanel_RemoveActions";
             Control_LocationManagement_TableLayoutPanel_RemoveActions.RowCount = 1;
             Control_LocationManagement_TableLayoutPanel_RemoveActions.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
-            Control_LocationManagement_TableLayoutPanel_RemoveActions.Size = new Size(491, 33);
+            Control_LocationManagement_TableLayoutPanel_RemoveActions.Size = new Size(400, 29);
             Control_LocationManagement_TableLayoutPanel_RemoveActions.TabIndex = 3;
             // 
             // Control_LocationManagement_Button_RemoveConfirm
@@ -1086,7 +1149,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             // 
             Control_LocationManagement_Button_RemoveCancel.AutoSize = true;
             Control_LocationManagement_Button_RemoveCancel.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            Control_LocationManagement_Button_RemoveCancel.Location = new Point(413, 3);
+            Control_LocationManagement_Button_RemoveCancel.Location = new Point(322, 3);
             Control_LocationManagement_Button_RemoveCancel.MinimumSize = new Size(75, 23);
             Control_LocationManagement_Button_RemoveCancel.Name = "Control_LocationManagement_Button_RemoveCancel";
             Control_LocationManagement_Button_RemoveCancel.Size = new Size(75, 23);
@@ -1101,11 +1164,11 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             Control_LocationManagement_TableLayoutPanel_BackButton.ColumnStyles.Add(new ColumnStyle());
             Control_LocationManagement_TableLayoutPanel_BackButton.Controls.Add(Control_LocationManagement_Button_Back, 0, 0);
             Control_LocationManagement_TableLayoutPanel_BackButton.Dock = DockStyle.Fill;
-            Control_LocationManagement_TableLayoutPanel_BackButton.Location = new Point(23, 781);
+            Control_LocationManagement_TableLayoutPanel_BackButton.Location = new Point(23, 323);
             Control_LocationManagement_TableLayoutPanel_BackButton.Name = "Control_LocationManagement_TableLayoutPanel_BackButton";
             Control_LocationManagement_TableLayoutPanel_BackButton.RowCount = 1;
             Control_LocationManagement_TableLayoutPanel_BackButton.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
-            Control_LocationManagement_TableLayoutPanel_BackButton.Size = new Size(535, 43);
+            Control_LocationManagement_TableLayoutPanel_BackButton.Size = new Size(446, 43);
             Control_LocationManagement_TableLayoutPanel_BackButton.TabIndex = 0;
             Control_LocationManagement_TableLayoutPanel_BackButton.Visible = false;
             // 
@@ -1160,10 +1223,11 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             AutoSizeMode = AutoSizeMode.GrowAndShrink;
             Controls.Add(Control_LocationManagement_TableLayoutPanel_Main);
             Name = "Control_LocationManagement";
-            Size = new Size(581, 847);
+            Size = new Size(492, 389);
             Control_LocationManagement_TableLayoutPanel_Main.ResumeLayout(false);
             Control_LocationManagement_TableLayoutPanel_Main.PerformLayout();
             Control_LocationManagement_Panel_Container.ResumeLayout(false);
+            Control_LocationManagement_Panel_Container.PerformLayout();
             Control_LocationManagement_Panel_Home.ResumeLayout(false);
             Control_LocationManagement_TableLayoutPanel_Home.ResumeLayout(false);
             Control_LocationManagement_TableLayoutPanel_Home.PerformLayout();
