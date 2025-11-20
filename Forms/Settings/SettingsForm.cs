@@ -61,9 +61,7 @@ namespace MTM_WIP_Application_Winforms.Forms.Settings
             {
                 ["Home"] = SettingsForm_Panel_Home,
                 ["Database"] = SettingsForm_Panel_Database,
-                ["Add User"] = SettingsForm_Panel_AddUser,
-                ["Edit User"] = SettingsForm_Panel_EditUser,
-                ["Delete User"] = SettingsForm_Panel_DeleteUser,
+                ["User Management"] = SettingsForm_Panel_AddUser,
                 ["Part Numbers"] = SettingsForm_Panel_PartNumbers,
                 ["Operations"] = SettingsForm_Panel_AddOperation,
                 ["Locations"] = SettingsForm_Panel_AddLocation,
@@ -106,10 +104,7 @@ namespace MTM_WIP_Application_Winforms.Forms.Settings
             TreeNode homeNode = SettingsForm_TreeView_Category.Nodes.Add("Home", "Home");
             TreeNode databaseNode = SettingsForm_TreeView_Category.Nodes.Add("Database", "Database");
 
-            TreeNode usersNode = SettingsForm_TreeView_Category.Nodes.Add("Users", "Users");
-            usersNode.Nodes.Add("Add User", "Add User");
-            usersNode.Nodes.Add("Edit User", "Edit User");
-            usersNode.Nodes.Add("Delete User", "Delete User");
+            SettingsForm_TreeView_Category.Nodes.Add("User Management", "User Management");
 
             SettingsForm_TreeView_Category.Nodes.Add("Part Numbers", "Part Numbers");
 
@@ -176,38 +171,9 @@ namespace MTM_WIP_Application_Winforms.Forms.Settings
             controlAbout.StatusMessageChanged += (s, message) => { UpdateStatus(message); };
             SettingsForm_Panel_About.Controls.Add(controlAbout);
 
-            Control_Add_User controlAddUser = new() { Dock = DockStyle.Fill };
-            SettingsForm_Panel_AddUser.Controls.Add(controlAddUser);
-
-            // Pass the ToolStrip progress controls
-            controlAddUser.SetProgressControls(SettingsForm_ProgressBar, SettingsForm_StatusText);
-
-            controlAddUser.UserAdded += (s, e) =>
-            {
-                UpdateStatus("User added successfully.");
-                HasChanges = true;
-            };
-
-            Control_Edit_User controlEditUser = new() { Dock = DockStyle.Fill };
-            SettingsForm_Panel_EditUser.Controls.Add(controlEditUser);
-            controlEditUser.UserEdited += (s, e) =>
-            {
-                UpdateStatus("User updated successfully.");
-                HasChanges = true;
-            };
-            controlEditUser.StatusMessageChanged += (s, message) => { UpdateStatus(message); };
-
-            Control_Remove_User controlDeleteUser = new() { Dock = DockStyle.Fill };
-            SettingsForm_Panel_DeleteUser.Controls.Add(controlDeleteUser);
-
-            // Pass the ToolStrip progress controls
-            controlDeleteUser.SetProgressControls(SettingsForm_ProgressBar, SettingsForm_StatusText);
-
-            controlDeleteUser.UserRemoved += (s, e) =>
-            {
-                UpdateStatus("User deleted successfully.");
-                HasChanges = true;
-            };
+            Control_User_Management controlUserManagement = new() { Dock = DockStyle.Fill };
+            controlUserManagement.BackToHomeRequested += (_, _) => ShowPanel("Home");
+            SettingsForm_Panel_AddUser.Controls.Add(controlUserManagement);
 
             _controlPartManagement = new Control_PartIDManagement { Dock = DockStyle.Fill };
             _controlPartManagement.PartListChanged += (_, _) =>
@@ -380,16 +346,13 @@ namespace MTM_WIP_Application_Winforms.Forms.Settings
             if (isNormal)
             {
                 HideNode("Database");
-                HideNode("Users");
-                // Operations, Locations, ItemTypes handled by unified controls
-                HideNode("Users", "Edit User");
-                HideNode("Users", "Delete User");
+                HideNode("User Management");
             }
 
             if (isReadOnly)
             {
                 HideNode("Database");
-                HideNode("Users");
+                HideNode("User Management");
                 HideNode("Part Numbers");
                 HideNode("Operations");
                 HideNode("Locations");

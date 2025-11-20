@@ -42,6 +42,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
         private void InitializeEventHandlers()
         {
             // Set Navigation Targets for Cards
+            Control_SettingsHome_Card_Users.NavigationTarget = "User Management";
             Control_SettingsHome_Card_Parts.NavigationTarget = "Part Numbers";
             Control_SettingsHome_Card_Operations.NavigationTarget = "Operations";
             Control_SettingsHome_Card_Locations.NavigationTarget = "Locations";
@@ -61,9 +62,8 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             Control_SettingsHome_Card_ItemTypes.NavigationRequested += Control_SettingsHome_Card_NavigationRequested;
 
             // Wire up card subcategory links for admin users (will be shown in InitializeCategories)
-            Control_SettingsHome_Card_Users.AddSubcategoryLink("Add User", "Add User");
-            Control_SettingsHome_Card_Users.AddSubcategoryLink("Edit User", "Edit User");
-            Control_SettingsHome_Card_Users.AddSubcategoryLink("Delete User", "Delete User");
+            Control_SettingsHome_Card_Users.ClearSubcategoryLinks();
+            Control_SettingsHome_Card_Users.AddSubcategoryLink("Manage Users", "User Management");
 
             Control_SettingsHome_Card_Parts.ClearSubcategoryLinks();
             Control_SettingsHome_Card_Parts.AddSubcategoryLink("Manage Part Numbers", "Part Numbers");
@@ -103,7 +103,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             {
                 // Normal users only see Add User
                 Control_SettingsHome_Card_Users.ClearSubcategoryLinks();
-                Control_SettingsHome_Card_Users.AddSubcategoryLink("Add User", "Add User");
+                Control_SettingsHome_Card_Users.AddSubcategoryLink("Manage Users", "User Management");
             }
             
             // Unified controls handle their own privileges, so we don't need to adjust sublinks
