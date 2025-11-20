@@ -87,7 +87,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             Control_SettingsHome_Card_Operations.AutoSizeMode = AutoSizeMode.GrowAndShrink;
             Control_SettingsHome_Card_Operations.BackColor = Color.White;
             Control_SettingsHome_Card_Operations.BorderStyle = BorderStyle.FixedSingle;
-            Control_SettingsHome_Card_Operations.CardDescription = "Manage operation codes";
+            Control_SettingsHome_Card_Operations.CardDescription = "Add, edit, or remove operation codes";
             Control_SettingsHome_Card_Operations.CardIcon = "⚙️";
             Control_SettingsHome_Card_Operations.CardTitle = "Operations";
             Control_SettingsHome_Card_Operations.Cursor = Cursors.Hand;
@@ -124,7 +124,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             Control_SettingsHome_Card_Parts.AutoSizeMode = AutoSizeMode.GrowAndShrink;
             Control_SettingsHome_Card_Parts.BackColor = Color.White;
             Control_SettingsHome_Card_Parts.BorderStyle = BorderStyle.FixedSingle;
-            Control_SettingsHome_Card_Parts.CardDescription = "Manage inventory part numbers";
+            Control_SettingsHome_Card_Parts.CardDescription = "Add, edit, or remove part numbers";
             Control_SettingsHome_Card_Parts.CardIcon = "📦";
             Control_SettingsHome_Card_Parts.CardTitle = "Part Numbers";
             Control_SettingsHome_Card_Parts.Cursor = Cursors.Hand;
@@ -142,7 +142,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             Control_SettingsHome_Card_Locations.AutoSizeMode = AutoSizeMode.GrowAndShrink;
             Control_SettingsHome_Card_Locations.BackColor = Color.White;
             Control_SettingsHome_Card_Locations.BorderStyle = BorderStyle.FixedSingle;
-            Control_SettingsHome_Card_Locations.CardDescription = "Manage storage locations";
+            Control_SettingsHome_Card_Locations.CardDescription = "Add, edit, or remove storage locations";
             Control_SettingsHome_Card_Locations.CardIcon = "📍";
             Control_SettingsHome_Card_Locations.CardTitle = "Locations";
             Control_SettingsHome_Card_Locations.Cursor = Cursors.Hand;
@@ -160,7 +160,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             Control_SettingsHome_Card_ItemTypes.AutoSizeMode = AutoSizeMode.GrowAndShrink;
             Control_SettingsHome_Card_ItemTypes.BackColor = Color.White;
             Control_SettingsHome_Card_ItemTypes.BorderStyle = BorderStyle.FixedSingle;
-            Control_SettingsHome_Card_ItemTypes.CardDescription = "Manage item type classifications";
+            Control_SettingsHome_Card_ItemTypes.CardDescription = "Add, edit, or remove item type classifications";
             Control_SettingsHome_Card_ItemTypes.CardIcon = "🏷️";
             Control_SettingsHome_Card_ItemTypes.CardTitle = "ItemTypes";
             Control_SettingsHome_Card_ItemTypes.Cursor = Cursors.Hand;

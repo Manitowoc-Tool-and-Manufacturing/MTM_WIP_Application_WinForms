@@ -49,17 +49,14 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             Control_SettingsHome_Card_Parts.ClearSubcategoryLinks();
             Control_SettingsHome_Card_Parts.AddSubcategoryLink("Manage Part Numbers", "Part Numbers");
 
-            Control_SettingsHome_Card_Operations.AddSubcategoryLink("Add Operation", "Add Operation");
-            Control_SettingsHome_Card_Operations.AddSubcategoryLink("Edit Operation", "Edit Operation");
-            Control_SettingsHome_Card_Operations.AddSubcategoryLink("Remove Operation", "Remove Operation");
+            Control_SettingsHome_Card_Operations.ClearSubcategoryLinks();
+            Control_SettingsHome_Card_Operations.AddSubcategoryLink("Manage Operations", "Operations");
 
-            Control_SettingsHome_Card_Locations.AddSubcategoryLink("Add Location", "Add Location");
-            Control_SettingsHome_Card_Locations.AddSubcategoryLink("Edit Location", "Edit Location");
-            Control_SettingsHome_Card_Locations.AddSubcategoryLink("Remove Location", "Remove Location");
+            Control_SettingsHome_Card_Locations.ClearSubcategoryLinks();
+            Control_SettingsHome_Card_Locations.AddSubcategoryLink("Manage Locations", "Locations");
 
-            Control_SettingsHome_Card_ItemTypes.AddSubcategoryLink("Add ItemType", "Add ItemType");
-            Control_SettingsHome_Card_ItemTypes.AddSubcategoryLink("Edit ItemType", "Edit ItemType");
-            Control_SettingsHome_Card_ItemTypes.AddSubcategoryLink("Remove ItemType", "Remove ItemType");
+            Control_SettingsHome_Card_ItemTypes.ClearSubcategoryLinks();
+            Control_SettingsHome_Card_ItemTypes.AddSubcategoryLink("Manage ItemTypes", "ItemTypes");
         }
 
         /// <summary>
@@ -90,26 +87,8 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
                 Control_SettingsHome_Card_Users.AddSubcategoryLink("Add User", "Add User");
             }
             
-            // Adjust Operations subcategories
-            if (!hasAdminAccess && !isReadOnly)
-            {
-                Control_SettingsHome_Card_Operations.ClearSubcategoryLinks();
-                Control_SettingsHome_Card_Operations.AddSubcategoryLink("Add Operation", "Add Operation");
-            }
-            
-            // Adjust Locations subcategories
-            if (!hasAdminAccess && !isReadOnly)
-            {
-                Control_SettingsHome_Card_Locations.ClearSubcategoryLinks();
-                Control_SettingsHome_Card_Locations.AddSubcategoryLink("Add Location", "Add Location");
-            }
-            
-            // Adjust ItemTypes subcategories
-            if (!hasAdminAccess && !isReadOnly)
-            {
-                Control_SettingsHome_Card_ItemTypes.ClearSubcategoryLinks();
-                Control_SettingsHome_Card_ItemTypes.AddSubcategoryLink("Add ItemType", "Add ItemType");
-            }
+            // Unified controls handle their own privileges, so we don't need to adjust sublinks
+            // for Operations, Locations, or ItemTypes here.
         }
 
         #endregion

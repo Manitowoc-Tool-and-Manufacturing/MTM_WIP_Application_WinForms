@@ -353,11 +353,7 @@ namespace MTM_WIP_Application_Winforms.Forms.Settings
             {
                 HideNode("Database");
                 HideNode("Users");
-                HideNode("Operations", "Edit Operation");
-                HideNode("Operations", "Remove Operation");
-                HideNode("Locations", "Edit Location");
-                HideNode("Locations", "Remove Location");
-                // ItemTypes handled above
+                // Operations, Locations, ItemTypes handled by unified controls
                 HideNode("Users", "Edit User");
                 HideNode("Users", "Delete User");
             }
