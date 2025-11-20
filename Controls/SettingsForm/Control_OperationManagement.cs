@@ -91,9 +91,6 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
 
             Control_OperationManagement_Label_AddIssuedByValue.Text = Model_Application_Variables.User ?? "Current User";
 
-            Control_OperationManagement_Button_AddClear.Enabled = true;
-            Control_OperationManagement_Button_AddSave.Enabled = false;
-
             // Suggestion controls - Edit
             Control_OperationManagement_Suggestion_EditSelectOperation.TextBox.Text = string.Empty;
             Control_OperationManagement_Suggestion_EditSelectOperation.LabelText = "Select Operation";
@@ -105,9 +102,6 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             
             Control_OperationManagement_Label_EditIssuedByValue.Text = string.Empty;
 
-            Control_OperationManagement_Button_EditReset.Enabled = true;
-            Control_OperationManagement_Button_EditSave.Enabled = false;
-
             // Suggestion controls - Remove
             Control_OperationManagement_Suggestion_RemoveSelectOperation.TextBox.Text = string.Empty;
             Control_OperationManagement_Suggestion_RemoveSelectOperation.LabelText = "Select Operation";
@@ -115,9 +109,6 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
                
             Control_OperationManagement_Label_RemoveIssuedByValue.Text = string.Empty;
             Control_OperationManagement_Label_RemoveOperationValue.Text = string.Empty;
-
-            Control_OperationManagement_Button_RemoveCancel.Enabled = true;
-            Control_OperationManagement_Button_RemoveConfirm.Enabled = false;
 
             // Buttons
             Control_OperationManagement_Button_AddSave.Text = "Save";

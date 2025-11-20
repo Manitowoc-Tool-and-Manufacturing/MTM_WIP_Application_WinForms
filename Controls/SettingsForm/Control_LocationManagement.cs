@@ -88,9 +88,6 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
 
             Control_LocationManagement_Label_AddIssuedByValue.Text = Model_Application_Variables.User ?? "Current User";            
 
-            Control_LocationManagement_Button_AddClear.Enabled = true;
-            Control_LocationManagement_Button_AddSave.Enabled = false;
-
             // Suggestion controls - Edit
             Control_LocationManagement_Suggestion_EditSelectLocation.TextBox.Text = string.Empty;
             Control_LocationManagement_Suggestion_EditSelectLocation.LabelText = "Select Location";
@@ -106,9 +103,6 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             
             Control_LocationManagement_Label_EditIssuedByValue.Text = string.Empty;
 
-            Control_LocationManagement_Button_EditReset.Enabled = true;
-            Control_LocationManagement_Button_EditSave.Enabled = false;
-
             // Suggestion controls - Remove
             Control_LocationManagement_Suggestion_RemoveSelectLocation.TextBox.Text = string.Empty;
             Control_LocationManagement_Suggestion_RemoveSelectLocation.LabelText = "Select Location";
@@ -117,9 +111,6 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             Control_LocationManagement_Label_RemoveIssuedByValue.Text = string.Empty;
             Control_LocationManagement_Label_RemoveLocationValue.Text = string.Empty;
             Control_LocationManagement_Label_RemoveBuildingValue.Text = string.Empty;
-
-            Control_LocationManagement_Button_RemoveCancel.Enabled = true;
-            Control_LocationManagement_Button_RemoveConfirm.Enabled = false;
 
             // Buttons
             Control_LocationManagement_Button_AddSave.Text = "Save";
@@ -145,6 +136,8 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             
             if (Control_LocationManagement_TextBox_AddLocation != null)
             {
+                Control_LocationManagement_ComboBox_AddBuilding.Padding = new Padding(3);                
+                Control_LocationManagement_TextBox_AddLocation.Padding = new Padding(3);
                 Control_LocationManagement_TextBox_AddLocation.EnableSuggestions = false;
                 Control_LocationManagement_TextBox_AddLocation.ShowF4Button = false;
                 Control_LocationManagement_TextBox_AddLocation.ShowValidationColor = false;
@@ -155,6 +148,9 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
 
             if (Control_LocationManagement_TextBox_EditNewLocation != null)
             {
+                
+                Control_LocationManagement_ComboBox_EditBuilding.Padding = new Padding(3);
+                Control_LocationManagement_TextBox_EditNewLocation.Padding = new Padding(3);
                 Control_LocationManagement_TextBox_EditNewLocation.EnableSuggestions = false;
                 Control_LocationManagement_TextBox_EditNewLocation.ShowF4Button = false;
                 Control_LocationManagement_TextBox_EditNewLocation.ShowValidationColor = false;
@@ -174,11 +170,6 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             Helper_SuggestionTextBox.ConfigureForBuildings(Control_LocationManagement_ComboBox_AddBuilding);
             Helper_SuggestionTextBox.ConfigureForBuildings(Control_LocationManagement_ComboBox_EditBuilding);
             
-            // Set padding for new controls
-            Control_LocationManagement_TextBox_AddLocation.Padding = new Padding(3);
-            Control_LocationManagement_ComboBox_AddBuilding.Padding = new Padding(3);
-            Control_LocationManagement_TextBox_EditNewLocation.Padding = new Padding(3);
-            Control_LocationManagement_ComboBox_EditBuilding.Padding = new Padding(3);
         }
 
         private void WireUpEventHandlers()
@@ -428,7 +419,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             var updateResult = await Dao_Location.UpdateLocation(
                 originalLocation,
                 newLocation,
-                Model_Application_Variables.User ?? "Unknown");
+                newBuilding);
 
             if (!updateResult.IsSuccess)
             {
