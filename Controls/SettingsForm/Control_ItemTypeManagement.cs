@@ -2,6 +2,7 @@ using System.Data;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using MTM_WIP_Application_Winforms.Controls.Shared;
+using MTM_WIP_Application_Winforms.Core;
 using MTM_WIP_Application_Winforms.Data;
 using MTM_WIP_Application_Winforms.Forms.Shared;
 using MTM_WIP_Application_Winforms.Helpers;
@@ -53,14 +54,64 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             SetRemoveSectionEnabled(false);
         }
 
+        /// <inheritdoc />
+        protected override void ApplyTheme(Model_Shared_UserUiColors theme)
+        {
+            base.ApplyTheme(theme);
+            
+            // Remove warning and confirm button
+
+            Control_ItemTypeManagement_Label_RemoveWarning.ForeColor = theme.ErrorColor ?? Color.Red;
+            
+            Color errorColor = theme.ErrorColor ?? Color.Red;
+            Control_ItemTypeManagement_Button_RemoveConfirm.ForeColor = errorColor;
+            Control_ItemTypeManagement_Button_RemoveConfirm.BackColor = Color.FromArgb(
+                (errorColor.R + 255) / 2,
+                (errorColor.G + 255) / 2,
+                (errorColor.B + 255) / 2);
+        }
+
         private void InitializeControlText()
         {
-            // Suggestion controls
+            // Home screen labels
+            Control_ItemTypeManagement_Label_Header.Text = "Item Type Management";
+            Control_ItemTypeManagement_Label_Subtitle.Text = "Add, edit, or remove item types in the system";
+            
+            // Suggestion controls - Add
+            Control_ItemTypeManagement_TextBox_AddItemType.TextBox.Text = string.Empty;
+            Control_ItemTypeManagement_TextBox_AddItemType.LabelText = "New Item Type";
+            Control_ItemTypeManagement_TextBox_AddItemType.PlaceholderText = "Enter a new Item Type name";            
+                
+            Control_ItemTypeManagement_Label_AddIssuedByValue.Text = Model_Application_Variables.User ?? "Current User";            
+
+            Control_ItemTypeManagement_Button_AddClear.Enabled = true;
+            Control_ItemTypeManagement_Button_AddSave.Enabled = false;
+
+            // Suggestion controls - Edit
+            Control_ItemTypeManagement_Suggestion_EditSelectItemType.TextBox.Text = string.Empty;
             Control_ItemTypeManagement_Suggestion_EditSelectItemType.LabelText = "Select Item Type";
             Control_ItemTypeManagement_Suggestion_EditSelectItemType.PlaceholderText = "Search item types (F4)";
+
+            Control_ItemTypeManagement_TextBox_EditNewItemType.TextBox.Text = string.Empty;            
+            Control_ItemTypeManagement_TextBox_EditNewItemType.LabelText = "New Item Type";
+            Control_ItemTypeManagement_TextBox_EditNewItemType.PlaceholderText = "Enter new Item Type name";
+            
+            Control_ItemTypeManagement_Label_EditIssuedByValue.Text = string.Empty;
+
+            Control_ItemTypeManagement_Button_EditReset.Enabled = true;
+            Control_ItemTypeManagement_Button_EditSave.Enabled = false;
+
+            // Suggestion controls - Remove
+            Control_ItemTypeManagement_Suggestion_RemoveSelectItemType.TextBox.Text = string.Empty;
             Control_ItemTypeManagement_Suggestion_RemoveSelectItemType.LabelText = "Select Item Type";
             Control_ItemTypeManagement_Suggestion_RemoveSelectItemType.PlaceholderText = "Search item types (F4)";
-            
+               
+            Control_ItemTypeManagement_Label_RemoveIssuedByValue.Text = string.Empty;
+            Control_ItemTypeManagement_Label_RemoveItemTypeValue.Text = string.Empty;
+
+            Control_ItemTypeManagement_Button_RemoveCancel.Enabled = true;
+            Control_ItemTypeManagement_Button_RemoveConfirm.Enabled = false;
+
             // Buttons
             Control_ItemTypeManagement_Button_AddSave.Text = "Save";
             Control_ItemTypeManagement_Button_AddClear.Text = "Clear";
@@ -69,8 +120,13 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             Control_ItemTypeManagement_Button_RemoveConfirm.Text = "Remove";
             Control_ItemTypeManagement_Button_RemoveCancel.Text = "Cancel";
             Control_ItemTypeManagement_Button_Back.Text = "← Back to Selection";
+            Control_ItemTypeManagement_Button_Home.Text = "Home";
             
             // Labels
+            Control_ItemTypeManagement_Label_AddIssuedBy.Text = "Issued By";
+            Control_ItemTypeManagement_Label_EditIssuedBy.Text = "Issued By";
+            Control_ItemTypeManagement_Label_RemoveIssuedBy.Text = "Issued By";
+            Control_ItemTypeManagement_Label_RemoveItemType.Text = "Item Type";
             Control_ItemTypeManagement_Label_RemoveWarning.Text = "⚠️ Warning: Removal is permanent and cannot be undone.";
         }
 
@@ -96,6 +152,16 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
 
         private void ConfigureInputs()
         {
+            
+            if (Control_ItemTypeManagement_TextBox_AddItemType != null)
+            {
+                Control_ItemTypeManagement_TextBox_AddItemType.EnableSuggestions = false;
+                Control_ItemTypeManagement_TextBox_AddItemType.ShowF4Button = false;
+                Control_ItemTypeManagement_TextBox_AddItemType.ShowValidationColor = false;
+                // Use TextBox.Enabled directly since UpdateTextBoxEnabledState requires validator
+                Control_ItemTypeManagement_TextBox_AddItemType.TextBox.Enabled = true;
+                Control_ItemTypeManagement_TextBox_AddItemType.TextBox.BackColor = System.Drawing.SystemColors.Window;
+            }
             Helper_SuggestionTextBox.ConfigureForItemTypes(
                 Control_ItemTypeManagement_Suggestion_EditSelectItemType,
                 Helper_SuggestionTextBox.GetCachedItemTypesAsync);
@@ -501,6 +567,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
 
         private void SetRemoveSectionEnabled(bool enabled)
         {
+            Control_ItemTypeManagement_TableLayout_RemoveDetails.Visible = enabled;
             Control_ItemTypeManagement_Button_RemoveConfirm.Enabled = enabled;
             Control_ItemTypeManagement_Button_RemoveCancel.Enabled = enabled;
         }
@@ -525,6 +592,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             Helper_SuggestionTextBox.Clear(Control_ItemTypeManagement_Suggestion_RemoveSelectItemType.TextBox);
             Control_ItemTypeManagement_Label_RemoveItemTypeValue.Text = string.Empty;
             Control_ItemTypeManagement_Label_RemoveIssuedByValue.Text = Model_Application_Variables.User ?? "Current User";
+            Control_ItemTypeManagement_TableLayout_RemoveDetails.Visible = false;
             SetRemoveSectionEnabled(false);
         }
 

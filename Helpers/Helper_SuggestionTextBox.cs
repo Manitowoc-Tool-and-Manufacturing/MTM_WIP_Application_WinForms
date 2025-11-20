@@ -361,6 +361,32 @@ namespace MTM_WIP_Application_Winforms.Helpers
             
         }
 
+        /// <summary>
+        /// Gets buildings from a static list.
+        /// </summary>
+        /// <returns>List of buildings</returns>
+        public static Task<List<string>> GetCachedBuildingsAsync()
+        {
+            return Task.FromResult(new List<string> { "Expo", "Vits", "KK Warehouse", "Other" });
+        }
+
+        /// <summary>
+        /// Configures a SuggestionTextBoxWithLabel for Building suggestions.
+        /// Standard configuration: MaxResults=20, EnableWildcards=false, ClearOnNoMatch=true, F4 button enabled.
+        /// </summary>
+        public static void ConfigureForBuildings(SuggestionTextBoxWithLabel control)
+        {
+            if (control == null)
+                throw new ArgumentNullException(nameof(control));
+
+            var suggestionTextBox = control.TextBox;
+            suggestionTextBox.DataProvider = GetCachedBuildingsAsync;
+            suggestionTextBox.MaxResults = 20;
+            suggestionTextBox.EnableWildcards = false;
+            suggestionTextBox.ClearOnNoMatch = true;
+            suggestionTextBox.SuppressExactMatch = true;
+        }
+
         #endregion
 
         #region Bulk Configuration

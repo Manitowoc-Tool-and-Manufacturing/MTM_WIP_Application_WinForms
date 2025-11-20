@@ -70,10 +70,6 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
         private TableLayoutPanel Control_PartIDManagement_TableLayout_RemoveDetails = null!;
         private Label Control_PartIDManagement_Label_RemoveItemNumber = null!;
         private Label Control_PartIDManagement_Label_RemoveItemNumberValue = null!;
-        private Label Control_PartIDManagement_Label_RemoveCustomer = null!;
-        private Label Control_PartIDManagement_Label_RemoveCustomerValue = null!;
-        private Label Control_PartIDManagement_Label_RemoveDescription = null!;
-        private Label Control_PartIDManagement_Label_RemoveDescriptionValue = null!;
         private Label Control_PartIDManagement_Label_RemoveType = null!;
         private Label Control_PartIDManagement_Label_RemoveTypeValue = null!;
         private Label Control_PartIDManagement_Label_RemoveIssuedBy = null!;
@@ -128,10 +124,6 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             Control_PartIDManagement_TableLayout_RemoveDetails = new TableLayoutPanel();
             Control_PartIDManagement_Label_RemoveItemNumber = new Label();
             Control_PartIDManagement_Label_RemoveItemNumberValue = new Label();
-            Control_PartIDManagement_Label_RemoveDescriptionValue = new Label();
-            Control_PartIDManagement_Label_RemoveCustomerValue = new Label();
-            Control_PartIDManagement_Label_RemoveCustomer = new Label();
-            Control_PartIDManagement_Label_RemoveDescription = new Label();
             Control_PartIDManagement_Label_RemoveType = new Label();
             Control_PartIDManagement_Label_RemoveIssuedBy = new Label();
             Control_PartIDManagement_Label_RemoveTypeValue = new Label();
@@ -618,20 +610,14 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             Control_PartIDManagement_TableLayout_RemoveDetails.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
             Control_PartIDManagement_TableLayout_RemoveDetails.Controls.Add(Control_PartIDManagement_Label_RemoveItemNumber, 0, 0);
             Control_PartIDManagement_TableLayout_RemoveDetails.Controls.Add(Control_PartIDManagement_Label_RemoveItemNumberValue, 1, 0);
-            Control_PartIDManagement_TableLayout_RemoveDetails.Controls.Add(Control_PartIDManagement_Label_RemoveDescriptionValue, 1, 2);
-            Control_PartIDManagement_TableLayout_RemoveDetails.Controls.Add(Control_PartIDManagement_Label_RemoveCustomerValue, 1, 1);
-            Control_PartIDManagement_TableLayout_RemoveDetails.Controls.Add(Control_PartIDManagement_Label_RemoveCustomer, 0, 1);
-            Control_PartIDManagement_TableLayout_RemoveDetails.Controls.Add(Control_PartIDManagement_Label_RemoveDescription, 0, 2);
-            Control_PartIDManagement_TableLayout_RemoveDetails.Controls.Add(Control_PartIDManagement_Label_RemoveType, 0, 3);
-            Control_PartIDManagement_TableLayout_RemoveDetails.Controls.Add(Control_PartIDManagement_Label_RemoveIssuedBy, 0, 4);
-            Control_PartIDManagement_TableLayout_RemoveDetails.Controls.Add(Control_PartIDManagement_Label_RemoveTypeValue, 1, 3);
-            Control_PartIDManagement_TableLayout_RemoveDetails.Controls.Add(Control_PartIDManagement_Label_RemoveIssuedByValue, 1, 4);
+            Control_PartIDManagement_TableLayout_RemoveDetails.Controls.Add(Control_PartIDManagement_Label_RemoveType, 0, 1);
+            Control_PartIDManagement_TableLayout_RemoveDetails.Controls.Add(Control_PartIDManagement_Label_RemoveIssuedBy, 0, 2);
+            Control_PartIDManagement_TableLayout_RemoveDetails.Controls.Add(Control_PartIDManagement_Label_RemoveTypeValue, 1, 1);
+            Control_PartIDManagement_TableLayout_RemoveDetails.Controls.Add(Control_PartIDManagement_Label_RemoveIssuedByValue, 1, 2);
             Control_PartIDManagement_TableLayout_RemoveDetails.Dock = DockStyle.Fill;
             Control_PartIDManagement_TableLayout_RemoveDetails.Location = new Point(3, 40);
             Control_PartIDManagement_TableLayout_RemoveDetails.Name = "Control_PartIDManagement_TableLayout_RemoveDetails";
-            Control_PartIDManagement_TableLayout_RemoveDetails.RowCount = 5;
-            Control_PartIDManagement_TableLayout_RemoveDetails.RowStyles.Add(new RowStyle());
-            Control_PartIDManagement_TableLayout_RemoveDetails.RowStyles.Add(new RowStyle());
+            Control_PartIDManagement_TableLayout_RemoveDetails.RowCount = 3;
             Control_PartIDManagement_TableLayout_RemoveDetails.RowStyles.Add(new RowStyle());
             Control_PartIDManagement_TableLayout_RemoveDetails.RowStyles.Add(new RowStyle());
             Control_PartIDManagement_TableLayout_RemoveDetails.RowStyles.Add(new RowStyle());
@@ -660,58 +646,10 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             Control_PartIDManagement_Label_RemoveItemNumberValue.Text = "{PartID}";
             Control_PartIDManagement_Label_RemoveItemNumberValue.TextAlign = ContentAlignment.MiddleLeft;
             // 
-            // Control_PartIDManagement_Label_RemoveDescriptionValue
-            // 
-            Control_PartIDManagement_Label_RemoveDescriptionValue.Dock = DockStyle.Fill;
-            Control_PartIDManagement_Label_RemoveDescriptionValue.Location = new Point(111, 64);
-            Control_PartIDManagement_Label_RemoveDescriptionValue.Margin = new Padding(3);
-            Control_PartIDManagement_Label_RemoveDescriptionValue.Name = "Control_PartIDManagement_Label_RemoveDescriptionValue";
-            Control_PartIDManagement_Label_RemoveDescriptionValue.Size = new Size(279, 23);
-            Control_PartIDManagement_Label_RemoveDescriptionValue.TabIndex = 5;
-            Control_PartIDManagement_Label_RemoveDescriptionValue.Text = "{Description}";
-            Control_PartIDManagement_Label_RemoveDescriptionValue.TextAlign = ContentAlignment.MiddleLeft;
-            Control_PartIDManagement_Label_RemoveDescriptionValue.Visible = false;
-            // 
-            // Control_PartIDManagement_Label_RemoveCustomerValue
-            // 
-            Control_PartIDManagement_Label_RemoveCustomerValue.Dock = DockStyle.Fill;
-            Control_PartIDManagement_Label_RemoveCustomerValue.Location = new Point(111, 34);
-            Control_PartIDManagement_Label_RemoveCustomerValue.Margin = new Padding(3);
-            Control_PartIDManagement_Label_RemoveCustomerValue.Name = "Control_PartIDManagement_Label_RemoveCustomerValue";
-            Control_PartIDManagement_Label_RemoveCustomerValue.Size = new Size(279, 23);
-            Control_PartIDManagement_Label_RemoveCustomerValue.TabIndex = 3;
-            Control_PartIDManagement_Label_RemoveCustomerValue.Text = "{Customer}";
-            Control_PartIDManagement_Label_RemoveCustomerValue.TextAlign = ContentAlignment.MiddleLeft;
-            Control_PartIDManagement_Label_RemoveCustomerValue.Visible = false;
-            // 
-            // Control_PartIDManagement_Label_RemoveCustomer
-            // 
-            Control_PartIDManagement_Label_RemoveCustomer.Dock = DockStyle.Fill;
-            Control_PartIDManagement_Label_RemoveCustomer.Location = new Point(4, 34);
-            Control_PartIDManagement_Label_RemoveCustomer.Margin = new Padding(3);
-            Control_PartIDManagement_Label_RemoveCustomer.Name = "Control_PartIDManagement_Label_RemoveCustomer";
-            Control_PartIDManagement_Label_RemoveCustomer.Size = new Size(100, 23);
-            Control_PartIDManagement_Label_RemoveCustomer.TabIndex = 2;
-            Control_PartIDManagement_Label_RemoveCustomer.Text = "Customer: ";
-            Control_PartIDManagement_Label_RemoveCustomer.TextAlign = ContentAlignment.MiddleRight;
-            Control_PartIDManagement_Label_RemoveCustomer.Visible = false;
-            // 
-            // Control_PartIDManagement_Label_RemoveDescription
-            // 
-            Control_PartIDManagement_Label_RemoveDescription.Dock = DockStyle.Fill;
-            Control_PartIDManagement_Label_RemoveDescription.Location = new Point(4, 64);
-            Control_PartIDManagement_Label_RemoveDescription.Margin = new Padding(3);
-            Control_PartIDManagement_Label_RemoveDescription.Name = "Control_PartIDManagement_Label_RemoveDescription";
-            Control_PartIDManagement_Label_RemoveDescription.Size = new Size(100, 23);
-            Control_PartIDManagement_Label_RemoveDescription.TabIndex = 4;
-            Control_PartIDManagement_Label_RemoveDescription.Text = "Description: ";
-            Control_PartIDManagement_Label_RemoveDescription.TextAlign = ContentAlignment.MiddleRight;
-            Control_PartIDManagement_Label_RemoveDescription.Visible = false;
-            // 
             // Control_PartIDManagement_Label_RemoveType
             // 
             Control_PartIDManagement_Label_RemoveType.Dock = DockStyle.Fill;
-            Control_PartIDManagement_Label_RemoveType.Location = new Point(4, 94);
+            Control_PartIDManagement_Label_RemoveType.Location = new Point(4, 34);
             Control_PartIDManagement_Label_RemoveType.Margin = new Padding(3);
             Control_PartIDManagement_Label_RemoveType.Name = "Control_PartIDManagement_Label_RemoveType";
             Control_PartIDManagement_Label_RemoveType.Size = new Size(100, 23);
@@ -722,7 +660,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             // Control_PartIDManagement_Label_RemoveIssuedBy
             // 
             Control_PartIDManagement_Label_RemoveIssuedBy.Dock = DockStyle.Fill;
-            Control_PartIDManagement_Label_RemoveIssuedBy.Location = new Point(4, 124);
+            Control_PartIDManagement_Label_RemoveIssuedBy.Location = new Point(4, 64);
             Control_PartIDManagement_Label_RemoveIssuedBy.Margin = new Padding(3);
             Control_PartIDManagement_Label_RemoveIssuedBy.Name = "Control_PartIDManagement_Label_RemoveIssuedBy";
             Control_PartIDManagement_Label_RemoveIssuedBy.Size = new Size(100, 23);
@@ -733,7 +671,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             // Control_PartIDManagement_Label_RemoveTypeValue
             // 
             Control_PartIDManagement_Label_RemoveTypeValue.Dock = DockStyle.Fill;
-            Control_PartIDManagement_Label_RemoveTypeValue.Location = new Point(111, 94);
+            Control_PartIDManagement_Label_RemoveTypeValue.Location = new Point(111, 34);
             Control_PartIDManagement_Label_RemoveTypeValue.Margin = new Padding(3);
             Control_PartIDManagement_Label_RemoveTypeValue.Name = "Control_PartIDManagement_Label_RemoveTypeValue";
             Control_PartIDManagement_Label_RemoveTypeValue.Size = new Size(279, 23);
@@ -744,7 +682,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             // Control_PartIDManagement_Label_RemoveIssuedByValue
             // 
             Control_PartIDManagement_Label_RemoveIssuedByValue.Dock = DockStyle.Fill;
-            Control_PartIDManagement_Label_RemoveIssuedByValue.Location = new Point(111, 124);
+            Control_PartIDManagement_Label_RemoveIssuedByValue.Location = new Point(111, 64);
             Control_PartIDManagement_Label_RemoveIssuedByValue.Margin = new Padding(3);
             Control_PartIDManagement_Label_RemoveIssuedByValue.Name = "Control_PartIDManagement_Label_RemoveIssuedByValue";
             Control_PartIDManagement_Label_RemoveIssuedByValue.Size = new Size(279, 23);
