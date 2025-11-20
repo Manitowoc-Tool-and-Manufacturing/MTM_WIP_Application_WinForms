@@ -35,6 +35,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
         public Control_LocationManagement()
         {
             InitializeComponent();
+            InitializeControlText();
             ConfigureInputs();
             WireUpEventHandlers();
             WireUpNavigationHandlers();
@@ -53,6 +54,30 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             LoadBuildingOptions(Control_LocationManagement_ComboBox_EditBuilding);
             SetEditSectionEnabled(false);
             SetRemoveSectionEnabled(false);
+        }
+
+        private void InitializeControlText()
+        {
+            // Suggestion controls
+            Control_LocationManagement_Suggestion_EditSelectLocation.LabelText = "Select Location";
+            Control_LocationManagement_Suggestion_EditSelectLocation.PlaceholderText = "Search locations (F4)";
+            Control_LocationManagement_Suggestion_RemoveSelectLocation.LabelText = "Select Location";
+            Control_LocationManagement_Suggestion_RemoveSelectLocation.PlaceholderText = "Search locations (F4)";
+            
+            // Buttons
+            Control_LocationManagement_Button_AddSave.Text = "Save";
+            Control_LocationManagement_Button_AddClear.Text = "Clear";
+            Control_LocationManagement_Button_EditSave.Text = "Save Changes";
+            Control_LocationManagement_Button_EditReset.Text = "Reset";
+            Control_LocationManagement_Button_RemoveConfirm.Text = "Remove";
+            Control_LocationManagement_Button_RemoveCancel.Text = "Cancel";
+            Control_LocationManagement_Button_Back.Text = "← Back to Selection";
+            
+            // Labels
+            Control_LocationManagement_Label_AddIssuedBy.Text = "Issued By:";
+            Control_LocationManagement_Label_EditIssuedBy.Text = "Issued By:";
+            Control_LocationManagement_Label_RemoveIssuedBy.Text = "Issued By:";
+            Control_LocationManagement_Label_RemoveWarning.Text = "⚠️ Warning: Removal is permanent and cannot be undone.";
         }
 
         private void ConfigureInputs()
@@ -131,8 +156,8 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
         {
             // Hide home, show cards container and back button
             Control_LocationManagement_Panel_Home.Visible = false;
-            Control_LocationManagement_TableLayout_Cards.Visible = true;
-            Control_LocationManagement_FlowPanel_BackButton.Visible = true;
+            Control_LocationManagement_TableLayoutPanel_Cards.Visible = true;
+            Control_LocationManagement_TableLayoutPanel_BackButton.Visible = true;
             
             // Hide all cards first
             Control_LocationManagement_Panel_AddCard.Visible = false;
@@ -166,8 +191,8 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             
             // Show home, hide cards and back button
             Control_LocationManagement_Panel_Home.Visible = true;
-            Control_LocationManagement_TableLayout_Cards.Visible = false;
-            Control_LocationManagement_FlowPanel_BackButton.Visible = false;
+            Control_LocationManagement_TableLayoutPanel_Cards.Visible = false;
+            Control_LocationManagement_TableLayoutPanel_BackButton.Visible = false;
         }
 
         private void UpdateIssuedByLabels()
@@ -366,12 +391,9 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             }
 
             // Confirm deletion
-            var confirmation = MessageBox.Show(
-                $"Are you sure you want to permanently remove location '{location}'?\n\nThis action cannot be undone.",
-                "Confirm Removal",
-                MessageBoxButtons.YesNo,
-                MessageBoxIcon.Warning,
-                MessageBoxDefaultButton.Button2);
+            DialogResult confirmation = Service_ErrorHandler.ShowConfirmation(
+                $"Are you sure you want to remove location '{location}'?\n\nThis action cannot be undone.",
+                "Confirm Location Removal");
 
             if (confirmation != DialogResult.Yes)
             {
@@ -513,7 +535,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
         private void ClearEditSection()
         {
             _selectedEditLocation = null;
-            Control_LocationManagement_Suggestion_EditSelectLocation.ClearTextBox();
+            Helper_SuggestionTextBox.Clear(Control_LocationManagement_Suggestion_EditSelectLocation.TextBox);
             Control_LocationManagement_TextBox_EditNewLocation.Clear();
             Control_LocationManagement_ComboBox_EditBuilding.SelectedIndex = 0;
             Control_LocationManagement_Label_EditIssuedByValue.Text = Model_Application_Variables.User ?? "Current User";
@@ -523,7 +545,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
         private void ClearRemoveSection()
         {
             _selectedRemoveLocation = null;
-            Control_LocationManagement_Suggestion_RemoveSelectLocation.ClearTextBox();
+            Helper_SuggestionTextBox.Clear(Control_LocationManagement_Suggestion_RemoveSelectLocation.TextBox);
             Control_LocationManagement_Label_RemoveLocationValue.Text = string.Empty;
             Control_LocationManagement_Label_RemoveBuildingValue.Text = string.Empty;
             Control_LocationManagement_Label_RemoveIssuedByValue.Text = Model_Application_Variables.User ?? "Current User";
@@ -615,14 +637,18 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
 
         private static void ShowWarning(string message)
         {
-            MessageBox.Show(message, "Validation Warning",
+            Service_ErrorHandler.ShowWarning(
+                message,
+                "Warning",
                 MessageBoxButtons.OK,
                 MessageBoxIcon.Warning);
         }
 
         private static void ShowSuccess(string message)
         {
-            MessageBox.Show(message, "Success",
+            Service_ErrorHandler.ShowInformation(
+                message,
+                "Success",
                 MessageBoxButtons.OK,
                 MessageBoxIcon.Information);
         }

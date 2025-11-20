@@ -38,6 +38,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
         public Control_OperationManagement()
         {
             InitializeComponent();
+            InitializeControlText();
             ConfigureInputs();
             WireUpEventHandlers();
             WireUpNavigationHandlers();
@@ -54,6 +55,27 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             UpdateIssuedByLabels();
             SetEditSectionEnabled(false);
             SetRemoveSectionEnabled(false);
+        }
+
+        private void InitializeControlText()
+        {
+            // Suggestion controls
+            Control_OperationManagement_Suggestion_EditSelectOperation.LabelText = "Select Operation";
+            Control_OperationManagement_Suggestion_EditSelectOperation.PlaceholderText = "Search operations (F4)";
+            Control_OperationManagement_Suggestion_RemoveSelectOperation.LabelText = "Select Operation";
+            Control_OperationManagement_Suggestion_RemoveSelectOperation.PlaceholderText = "Search operations (F4)";
+            
+            // Buttons
+            Control_OperationManagement_Button_AddSave.Text = "Save";
+            Control_OperationManagement_Button_AddClear.Text = "Clear";
+            Control_OperationManagement_Button_EditSave.Text = "Save Changes";
+            Control_OperationManagement_Button_EditReset.Text = "Reset";
+            Control_OperationManagement_Button_RemoveConfirm.Text = "Remove";
+            Control_OperationManagement_Button_RemoveCancel.Text = "Cancel";
+            Control_OperationManagement_Button_Back.Text = "← Back to Selection";
+            
+            // Labels
+            Control_OperationManagement_Label_RemoveWarning.Text = "⚠️ Warning: Removal is permanent and cannot be undone.";
         }
 
         public void SetProgressControls(ToolStripProgressBar progressBar, ToolStripStatusLabel statusLabel)
@@ -153,7 +175,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             // Hide home, show cards container and back button
             Control_OperationManagement_Panel_Home.Visible = false;
             Control_OperationManagement_TableLayout_Cards.Visible = true;
-            Control_OperationManagement_FlowPanel_BackButton.Visible = true;
+            Control_OperationManagement_TableLayout_BackButton.Visible = true;
             
             // Hide all cards first
             Control_OperationManagement_Panel_AddCard.Visible = false;
@@ -188,7 +210,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             // Show home, hide cards and back button
             Control_OperationManagement_Panel_Home.Visible = true;
             Control_OperationManagement_TableLayout_Cards.Visible = false;
-            Control_OperationManagement_FlowPanel_BackButton.Visible = false;
+            Control_OperationManagement_TableLayout_BackButton.Visible = false;
         }
 
         private void UpdateIssuedByLabels()
@@ -373,12 +395,9 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             }
 
             // Confirm deletion
-            var confirmation = MessageBox.Show(
-                $"Are you sure you want to permanently remove operation '{operation}'?\n\nThis action cannot be undone.",
-                "Confirm Removal",
-                MessageBoxButtons.YesNo,
-                MessageBoxIcon.Warning,
-                MessageBoxDefaultButton.Button2);
+            DialogResult confirmation = Service_ErrorHandler.ShowConfirmation(
+                $"Are you sure you want to remove operation '{operation}'?\n\nThis action cannot be undone.",
+                "Confirm Operation Removal");
 
             if (confirmation != DialogResult.Yes)
             {
@@ -502,14 +521,14 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
 
         private void ClearAddSection()
         {
-            Control_OperationManagement_TextBox_AddOperation.ClearTextBox();
+            Helper_SuggestionTextBox.Clear(Control_OperationManagement_TextBox_AddOperation.TextBox);
         }
 
         private void ClearEditSection()
         {
             _selectedEditOperation = null;
-            Control_OperationManagement_Suggestion_EditSelectOperation.ClearTextBox();
-            Control_OperationManagement_TextBox_EditNewOperation.ClearTextBox();
+            Helper_SuggestionTextBox.Clear(Control_OperationManagement_Suggestion_EditSelectOperation.TextBox);
+            Helper_SuggestionTextBox.Clear(Control_OperationManagement_TextBox_EditNewOperation.TextBox);
             Control_OperationManagement_Label_EditIssuedByValue.Text = Model_Application_Variables.User ?? "Current User";
             SetEditSectionEnabled(false);
         }
@@ -517,7 +536,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
         private void ClearRemoveSection()
         {
             _selectedRemoveOperation = null;
-            Control_OperationManagement_Suggestion_RemoveSelectOperation.ClearTextBox();
+            Helper_SuggestionTextBox.Clear(Control_OperationManagement_Suggestion_RemoveSelectOperation.TextBox);
             Control_OperationManagement_Label_RemoveOperationValue.Text = string.Empty;
             Control_OperationManagement_Label_RemoveIssuedByValue.Text = Model_Application_Variables.User ?? "Current User";
             SetRemoveSectionEnabled(false);
@@ -616,14 +635,18 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
 
         private static void ShowWarning(string message)
         {
-            MessageBox.Show(message, "Validation Warning",
+            Service_ErrorHandler.ShowWarning(
+                message,
+                "Warning",
                 MessageBoxButtons.OK,
                 MessageBoxIcon.Warning);
         }
 
         private static void ShowSuccess(string message)
         {
-            MessageBox.Show(message, "Success",
+            Service_ErrorHandler.ShowInformation(
+                message,
+                "Success",
                 MessageBoxButtons.OK,
                 MessageBoxIcon.Information);
         }

@@ -22,7 +22,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
         private Panel Control_OperationManagement_Panel_HomeTile_Remove = null!;
         
         private TableLayoutPanel Control_OperationManagement_TableLayout_Cards = null!;
-        private TableLayoutPanel Control_OperationManagement_TableLayout_BackButton = null!;
+        private FlowLayoutPanel Control_OperationManagement_FlowPanel_BackButton = null!;
         private Button Control_OperationManagement_Button_Back = null!;
 
         private Panel Control_OperationManagement_Panel_AddCard = null!;
@@ -33,7 +33,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
         private SuggestionTextBoxWithLabel Control_OperationManagement_TextBox_AddOperation = null!;
         private Label Control_OperationManagement_Label_AddIssuedBy = null!;
         private Label Control_OperationManagement_Label_AddIssuedByValue = null!;
-        private TableLayoutPanel Control_OperationManagement_TableLayout_AddActions = null!;
+        private FlowLayoutPanel Control_OperationManagement_FlowPanel_AddActions = null!;
         private Button Control_OperationManagement_Button_AddSave = null!;
         private Button Control_OperationManagement_Button_AddClear = null!;
 
@@ -46,7 +46,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
         private SuggestionTextBoxWithLabel Control_OperationManagement_TextBox_EditNewOperation = null!;
         private Label Control_OperationManagement_Label_EditIssuedBy = null!;
         private Label Control_OperationManagement_Label_EditIssuedByValue = null!;
-        private TableLayoutPanel Control_OperationManagement_TableLayout_EditActions = null!;
+        private FlowLayoutPanel Control_OperationManagement_FlowPanel_EditActions = null!;
         private Button Control_OperationManagement_Button_EditSave = null!;
         private Button Control_OperationManagement_Button_EditReset = null!;
 
@@ -62,7 +62,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
         private Label Control_OperationManagement_Label_RemoveIssuedBy = null!;
         private Label Control_OperationManagement_Label_RemoveIssuedByValue = null!;
         private Label Control_OperationManagement_Label_RemoveWarning = null!;
-        private TableLayoutPanel Control_OperationManagement_TableLayout_RemoveActions = null!;
+        private FlowLayoutPanel Control_OperationManagement_FlowPanel_RemoveActions = null!;
         private Button Control_OperationManagement_Button_RemoveConfirm = null!;
         private Button Control_OperationManagement_Button_RemoveCancel = null!;
 
@@ -95,7 +95,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             Control_OperationManagement_Panel_HomeTile_Remove = new Panel();
             
             Control_OperationManagement_TableLayout_Cards = new TableLayoutPanel();
-            Control_OperationManagement_TableLayout_BackButton = new TableLayoutPanel();
+            Control_OperationManagement_FlowPanel_BackButton = new FlowLayoutPanel();
             Control_OperationManagement_Button_Back = new Button();
             Control_OperationManagement_Panel_AddCard = new Panel();
             Control_OperationManagement_TableLayout_Add = new TableLayoutPanel();
@@ -105,7 +105,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             Control_OperationManagement_TextBox_AddOperation = new SuggestionTextBoxWithLabel();
             Control_OperationManagement_Label_AddIssuedBy = new Label();
             Control_OperationManagement_Label_AddIssuedByValue = new Label();
-            Control_OperationManagement_TableLayout_AddActions = new TableLayoutPanel();
+            Control_OperationManagement_FlowPanel_AddActions = new FlowLayoutPanel();
             Control_OperationManagement_Button_AddSave = new Button();
             Control_OperationManagement_Button_AddClear = new Button();
             Control_OperationManagement_Panel_EditCard = new Panel();
@@ -117,7 +117,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             Control_OperationManagement_TextBox_EditNewOperation = new SuggestionTextBoxWithLabel();
             Control_OperationManagement_Label_EditIssuedBy = new Label();
             Control_OperationManagement_Label_EditIssuedByValue = new Label();
-            Control_OperationManagement_TableLayout_EditActions = new TableLayoutPanel();
+            Control_OperationManagement_FlowPanel_EditActions = new FlowLayoutPanel();
             Control_OperationManagement_Button_EditSave = new Button();
             Control_OperationManagement_Button_EditReset = new Button();
             Control_OperationManagement_Panel_RemoveCard = new Panel();
@@ -132,7 +132,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             Control_OperationManagement_Label_RemoveIssuedBy = new Label();
             Control_OperationManagement_Label_RemoveIssuedByValue = new Label();
             Control_OperationManagement_Label_RemoveWarning = new Label();
-            Control_OperationManagement_TableLayout_RemoveActions = new TableLayoutPanel();
+            Control_OperationManagement_FlowPanel_RemoveActions = new FlowLayoutPanel();
             Control_OperationManagement_Button_RemoveConfirm = new Button();
             Control_OperationManagement_Button_RemoveCancel = new Button();
             Control_OperationManagement_TableLayout_Main.SuspendLayout();
@@ -143,16 +143,16 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             Control_OperationManagement_Panel_AddCard.SuspendLayout();
             Control_OperationManagement_TableLayout_Add.SuspendLayout();
             Control_OperationManagement_TableLayout_AddContent.SuspendLayout();
-            Control_OperationManagement_TableLayout_AddActions.SuspendLayout();
+            Control_OperationManagement_FlowPanel_AddActions.SuspendLayout();
             Control_OperationManagement_Panel_EditCard.SuspendLayout();
             Control_OperationManagement_TableLayout_Edit.SuspendLayout();
             Control_OperationManagement_TableLayout_EditContent.SuspendLayout();
-            Control_OperationManagement_TableLayout_EditActions.SuspendLayout();
+            Control_OperationManagement_FlowPanel_EditActions.SuspendLayout();
             Control_OperationManagement_Panel_RemoveCard.SuspendLayout();
             Control_OperationManagement_TableLayout_Remove.SuspendLayout();
             Control_OperationManagement_TableLayout_RemoveContent.SuspendLayout();
             Control_OperationManagement_TableLayout_RemoveDetails.SuspendLayout();
-            Control_OperationManagement_TableLayout_RemoveActions.SuspendLayout();
+            Control_OperationManagement_FlowPanel_RemoveActions.SuspendLayout();
             SuspendLayout();
 
             // Control_OperationManagement_TableLayout_Main
@@ -191,7 +191,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             Control_OperationManagement_Panel_Container.Dock = DockStyle.Fill;
             Control_OperationManagement_Panel_Container.Controls.Add(Control_OperationManagement_Panel_Home);
             Control_OperationManagement_Panel_Container.Controls.Add(Control_OperationManagement_TableLayout_Cards);
-            Control_OperationManagement_Panel_Container.Controls.Add(Control_OperationManagement_TableLayout_BackButton);
+            Control_OperationManagement_Panel_Container.Controls.Add(Control_OperationManagement_FlowPanel_BackButton);
 
             // Control_OperationManagement_Panel_Home
             Control_OperationManagement_Panel_Home.AutoSize = true;
@@ -218,17 +218,19 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             ConfigureHomeTile(Control_OperationManagement_Panel_HomeTile_Edit, "✏️", "Edit Part", "Modify existing parts", Color.FromArgb(0, 120, 215), 1);
             ConfigureHomeTile(Control_OperationManagement_Panel_HomeTile_Remove, "🗑️", "Remove Part", "Delete operation codes", Color.FromArgb(194, 57, 52), 2);
 
-            // Control_OperationManagement_TableLayout_BackButton
-            Control_OperationManagement_TableLayout_BackButton.AutoSize = true;
-            Control_OperationManagement_TableLayout_BackButton.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            Control_OperationManagement_TableLayout_BackButton.Dock = DockStyle.Fill;
-            Control_OperationManagement_TableLayout_BackButton.Padding = new Padding(0, 12, 0, 0);
-            Control_OperationManagement_TableLayout_BackButton.Controls.Add(Control_OperationManagement_Button_Back);
-            Control_OperationManagement_TableLayout_BackButton.Visible = false;
+            // Control_OperationManagement_FlowPanel_BackButton
+            Control_OperationManagement_FlowPanel_BackButton.AutoSize = true;
+            Control_OperationManagement_FlowPanel_BackButton.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            Control_OperationManagement_FlowPanel_BackButton.Dock = DockStyle.Bottom;
+            Control_OperationManagement_FlowPanel_BackButton.FlowDirection = FlowDirection.LeftToRight;
+            Control_OperationManagement_FlowPanel_BackButton.Padding = new Padding(0, 12, 0, 0);
+            Control_OperationManagement_FlowPanel_BackButton.Controls.Add(Control_OperationManagement_Button_Back);
+            Control_OperationManagement_FlowPanel_BackButton.Visible = false;
 
             Control_OperationManagement_Button_Back.AutoSize = true;
             Control_OperationManagement_Button_Back.Text = "← Back to Selection";
             Control_OperationManagement_Button_Back.Padding = new Padding(16, 6, 16, 6);
+            ConfigureSecondaryButton(Control_OperationManagement_Button_Back, "← Back to Selection");
 
             // Control_OperationManagement_TableLayout_Cards
             Control_OperationManagement_TableLayout_Cards.AutoSize = true;
@@ -247,6 +249,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             Control_OperationManagement_TableLayout_Cards.GrowStyle = TableLayoutPanelGrowStyle.FixedSize;
 
             // Add Card Panel
+            ConfigureCardPanel(Control_OperationManagement_Panel_AddCard, Color.FromArgb(16, 124, 16));
             Control_OperationManagement_TableLayout_Add.ColumnCount = 2;
             Control_OperationManagement_TableLayout_Add.ColumnStyles.Add(new ColumnStyle());
             Control_OperationManagement_TableLayout_Add.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
@@ -279,24 +282,30 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             Control_OperationManagement_TableLayout_AddContent.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
             Control_OperationManagement_TableLayout_AddContent.Controls.Add(Control_OperationManagement_TextBox_AddOperation, 0, 0);
             Control_OperationManagement_TableLayout_AddContent.Controls.Add(CreateKeyValueRow(Control_OperationManagement_Label_AddIssuedBy, Control_OperationManagement_Label_AddIssuedByValue), 0, 1);
-            Control_OperationManagement_TableLayout_AddContent.Controls.Add(Control_OperationManagement_TableLayout_AddActions, 0, 2);
+            Control_OperationManagement_TableLayout_AddContent.Controls.Add(Control_OperationManagement_FlowPanel_AddActions, 0, 2);
             Control_OperationManagement_TableLayout_AddContent.Dock = DockStyle.Top;
             Control_OperationManagement_TableLayout_AddContent.RowCount = 3;
             Control_OperationManagement_TableLayout_AddContent.RowStyles.Add(new RowStyle());
             Control_OperationManagement_TableLayout_AddContent.RowStyles.Add(new RowStyle());
             Control_OperationManagement_TableLayout_AddContent.RowStyles.Add(new RowStyle());
 
+            ConfigureSuggestion(Control_OperationManagement_TextBox_AddOperation, "Operation", "Enter operation number");
             Control_OperationManagement_TextBox_AddOperation.EnableSuggestions = false;
             Control_OperationManagement_TextBox_AddOperation.ShowValidationColor = true;
             Control_OperationManagement_TextBox_AddOperation.TextBox.Enabled = true;
 
+            ConfigureKeyValueLabel(Control_OperationManagement_Label_AddIssuedBy, "Issued By");
 
-            Control_OperationManagement_TableLayout_AddActions.Controls.Add(Control_OperationManagement_Button_AddClear);
-            Control_OperationManagement_TableLayout_AddActions.Controls.Add(Control_OperationManagement_Button_AddSave);
+            ConfigureActionPanel(Control_OperationManagement_FlowPanel_AddActions);
+            ConfigurePrimaryButton(Control_OperationManagement_Button_AddSave, "Save");
+            ConfigureSecondaryButton(Control_OperationManagement_Button_AddClear, "Clear");
+            Control_OperationManagement_FlowPanel_AddActions.Controls.Add(Control_OperationManagement_Button_AddClear);
+            Control_OperationManagement_FlowPanel_AddActions.Controls.Add(Control_OperationManagement_Button_AddSave);
 
             Control_OperationManagement_Panel_AddCard.Controls.Add(Control_OperationManagement_TableLayout_Add);
 
             // Edit Card Panel
+            ConfigureCardPanel(Control_OperationManagement_Panel_EditCard, Color.FromArgb(0, 120, 215));
             Control_OperationManagement_TableLayout_Edit.ColumnCount = 2;
             Control_OperationManagement_TableLayout_Edit.ColumnStyles.Add(new ColumnStyle());
             Control_OperationManagement_TableLayout_Edit.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
@@ -328,7 +337,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             Control_OperationManagement_TableLayout_EditContent.Controls.Add(Control_OperationManagement_Suggestion_EditSelectOperation, 0, 0);
             Control_OperationManagement_TableLayout_EditContent.Controls.Add(Control_OperationManagement_TextBox_EditNewOperation, 0, 1);
             Control_OperationManagement_TableLayout_EditContent.Controls.Add(CreateKeyValueRow(Control_OperationManagement_Label_EditIssuedBy, Control_OperationManagement_Label_EditIssuedByValue), 0, 3);
-            Control_OperationManagement_TableLayout_EditContent.Controls.Add(Control_OperationManagement_TableLayout_EditActions, 0, 5);
+            Control_OperationManagement_TableLayout_EditContent.Controls.Add(Control_OperationManagement_FlowPanel_EditActions, 0, 5);
             Control_OperationManagement_TableLayout_EditContent.Dock = DockStyle.Top;
             Control_OperationManagement_TableLayout_EditContent.RowCount = 6;
             Control_OperationManagement_TableLayout_EditContent.RowStyles.Add(new RowStyle());
@@ -338,15 +347,23 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             Control_OperationManagement_TableLayout_EditContent.RowStyles.Add(new RowStyle());
             Control_OperationManagement_TableLayout_EditContent.RowStyles.Add(new RowStyle());
 
+            ConfigureSuggestion(Control_OperationManagement_Suggestion_EditSelectOperation, "Select Operation", "Search operations (F4)");
+            ConfigureSuggestion(Control_OperationManagement_TextBox_EditNewOperation, "New Operation", "Enter new value");
             Control_OperationManagement_TextBox_EditNewOperation.EnableSuggestions = false;
 
+            ConfigureKeyValueLabel(Control_OperationManagement_Label_EditIssuedBy, "Issued By");
+            ConfigureKeyValueValue(Control_OperationManagement_Label_EditIssuedByValue);
 
-            Control_OperationManagement_TableLayout_EditActions.Controls.Add(Control_OperationManagement_Button_EditReset);
-            Control_OperationManagement_TableLayout_EditActions.Controls.Add(Control_OperationManagement_Button_EditSave);
+            ConfigureActionPanel(Control_OperationManagement_FlowPanel_EditActions);
+            ConfigurePrimaryButton(Control_OperationManagement_Button_EditSave, "Save Changes");
+            ConfigureSecondaryButton(Control_OperationManagement_Button_EditReset, "Reset");
+            Control_OperationManagement_FlowPanel_EditActions.Controls.Add(Control_OperationManagement_Button_EditReset);
+            Control_OperationManagement_FlowPanel_EditActions.Controls.Add(Control_OperationManagement_Button_EditSave);
 
             Control_OperationManagement_Panel_EditCard.Controls.Add(Control_OperationManagement_TableLayout_Edit);
 
             // Remove Card Panel
+            ConfigureCardPanel(Control_OperationManagement_Panel_RemoveCard, Color.FromArgb(194, 57, 52));
             Control_OperationManagement_TableLayout_Remove.ColumnCount = 2;
             Control_OperationManagement_TableLayout_Remove.ColumnStyles.Add(new ColumnStyle());
             Control_OperationManagement_TableLayout_Remove.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
@@ -378,7 +395,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             Control_OperationManagement_TableLayout_RemoveContent.Controls.Add(Control_OperationManagement_Suggestion_RemoveSelectOperation, 0, 0);
             Control_OperationManagement_TableLayout_RemoveContent.Controls.Add(Control_OperationManagement_TableLayout_RemoveDetails, 0, 1);
             Control_OperationManagement_TableLayout_RemoveContent.Controls.Add(Control_OperationManagement_Label_RemoveWarning, 0, 2);
-            Control_OperationManagement_TableLayout_RemoveContent.Controls.Add(Control_OperationManagement_TableLayout_RemoveActions, 0, 3);
+            Control_OperationManagement_TableLayout_RemoveContent.Controls.Add(Control_OperationManagement_FlowPanel_RemoveActions, 0, 3);
             Control_OperationManagement_TableLayout_RemoveContent.Dock = DockStyle.Top;
             Control_OperationManagement_TableLayout_RemoveContent.RowCount = 4;
             Control_OperationManagement_TableLayout_RemoveContent.RowStyles.Add(new RowStyle());
@@ -386,6 +403,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             Control_OperationManagement_TableLayout_RemoveContent.RowStyles.Add(new RowStyle());
             Control_OperationManagement_TableLayout_RemoveContent.RowStyles.Add(new RowStyle());
 
+            ConfigureSuggestion(Control_OperationManagement_Suggestion_RemoveSelectOperation, "Select Operation", "Search operations (F4)");
 
             Control_OperationManagement_TableLayout_RemoveDetails.AutoSize = true;
             Control_OperationManagement_TableLayout_RemoveDetails.AutoSizeMode = AutoSizeMode.GrowAndShrink;
@@ -401,14 +419,21 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             Control_OperationManagement_TableLayout_RemoveDetails.Controls.Add(Control_OperationManagement_Label_RemoveIssuedBy, 0, 1);
             Control_OperationManagement_TableLayout_RemoveDetails.Controls.Add(Control_OperationManagement_Label_RemoveIssuedByValue, 1, 1);
 
+            ConfigureKeyValueLabel(Control_OperationManagement_Label_RemoveOperation, "Operation:");
+            ConfigureKeyValueValue(Control_OperationManagement_Label_RemoveOperationValue);
+            ConfigureKeyValueLabel(Control_OperationManagement_Label_RemoveIssuedBy, "Issued By:");
+            ConfigureKeyValueValue(Control_OperationManagement_Label_RemoveIssuedByValue);
 
             Control_OperationManagement_Label_RemoveWarning.AutoSize = true;
             Control_OperationManagement_Label_RemoveWarning.ForeColor = Color.FromArgb(192, 0, 0);
             Control_OperationManagement_Label_RemoveWarning.Text = "Warning: Removal is permanent.";
             Control_OperationManagement_Label_RemoveWarning.Margin = new Padding(0, 12, 0, 0);
 
-            Control_OperationManagement_TableLayout_RemoveActions.Controls.Add(Control_OperationManagement_Button_RemoveCancel);
-            Control_OperationManagement_TableLayout_RemoveActions.Controls.Add(Control_OperationManagement_Button_RemoveConfirm);
+            ConfigureActionPanel(Control_OperationManagement_FlowPanel_RemoveActions);
+            ConfigureDangerButton(Control_OperationManagement_Button_RemoveConfirm, "Remove");
+            ConfigureSecondaryButton(Control_OperationManagement_Button_RemoveCancel, "Cancel");
+            Control_OperationManagement_FlowPanel_RemoveActions.Controls.Add(Control_OperationManagement_Button_RemoveCancel);
+            Control_OperationManagement_FlowPanel_RemoveActions.Controls.Add(Control_OperationManagement_Button_RemoveConfirm);
 
             Control_OperationManagement_Panel_RemoveCard.Controls.Add(Control_OperationManagement_TableLayout_Remove);
 
@@ -433,13 +458,13 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             Control_OperationManagement_TableLayout_Add.PerformLayout();
             Control_OperationManagement_TableLayout_AddContent.ResumeLayout(false);
             Control_OperationManagement_TableLayout_AddContent.PerformLayout();
-            Control_OperationManagement_TableLayout_AddActions.ResumeLayout(false);
+            Control_OperationManagement_FlowPanel_AddActions.ResumeLayout(false);
             Control_OperationManagement_Panel_EditCard.ResumeLayout(false);
             Control_OperationManagement_TableLayout_Edit.ResumeLayout(false);
             Control_OperationManagement_TableLayout_Edit.PerformLayout();
             Control_OperationManagement_TableLayout_EditContent.ResumeLayout(false);
             Control_OperationManagement_TableLayout_EditContent.PerformLayout();
-            Control_OperationManagement_TableLayout_EditActions.ResumeLayout(false);
+            Control_OperationManagement_FlowPanel_EditActions.ResumeLayout(false);
             Control_OperationManagement_Panel_RemoveCard.ResumeLayout(false);
             Control_OperationManagement_TableLayout_Remove.ResumeLayout(false);
             Control_OperationManagement_TableLayout_Remove.PerformLayout();
@@ -447,19 +472,39 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             Control_OperationManagement_TableLayout_RemoveContent.PerformLayout();
             Control_OperationManagement_TableLayout_RemoveDetails.ResumeLayout(false);
             Control_OperationManagement_TableLayout_RemoveDetails.PerformLayout();
-            Control_OperationManagement_TableLayout_RemoveActions.ResumeLayout(false);
+            Control_OperationManagement_FlowPanel_RemoveActions.ResumeLayout(false);
             Control_OperationManagement_TableLayout_Home.ResumeLayout(false);
             Control_OperationManagement_TableLayout_Home.PerformLayout();
             Control_OperationManagement_Panel_Home.ResumeLayout(false);
             Control_OperationManagement_Panel_Home.PerformLayout();
-            Control_OperationManagement_TableLayout_BackButton.ResumeLayout(false);
-            Control_OperationManagement_TableLayout_BackButton.PerformLayout();
+            Control_OperationManagement_FlowPanel_BackButton.ResumeLayout(false);
+            Control_OperationManagement_FlowPanel_BackButton.PerformLayout();
             Control_OperationManagement_Panel_Container.ResumeLayout(false);
             Control_OperationManagement_Panel_Container.PerformLayout();
             ResumeLayout(false);
             PerformLayout();
         }
 
+        private static void ConfigureCardPanel(Panel panel, Color accentColor)
+        {
+            panel.AutoSize = true;
+            panel.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            panel.BackColor = Color.FromArgb(250, 250, 250);
+            panel.BorderStyle = BorderStyle.FixedSingle;
+            panel.Margin = new Padding(0, 0, 0, 20);
+            panel.Padding = new Padding(0);
+            panel.Dock = DockStyle.Top;
+            
+            // Add accent bar at top
+            Panel accentBar = new Panel
+            {
+                Height = 4,
+                Dock = DockStyle.Top,
+                BackColor = accentColor
+            };
+            panel.Controls.Add(accentBar);
+            accentBar.BringToFront();
+        }
         
         private static void ConfigureHomeTile(Panel panel, string icon, string title, string description, Color accentColor, int column)
         {
@@ -530,6 +575,89 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             content.Controls.Add(titleLabel, 0, 1);
             content.Controls.Add(descLabel, 0, 2);
             panel.Controls.Add(content);
+        }
+
+        private static void ConfigureSuggestion(SuggestionTextBoxWithLabel control, string labelText, string placeholder)
+        {
+            control.AutoSize = true;
+            control.Dock = DockStyle.Top;
+            control.LabelText = labelText;
+            control.PlaceholderText = placeholder;
+            control.ShowValidationColor = true;
+        }
+
+        private static TableLayoutPanel CreateKeyValueRow(Label keyLabel, Label valueLabel)
+        {
+            TableLayoutPanel panel = new()
+            {
+                AutoSize = true,
+                AutoSizeMode = AutoSizeMode.GrowAndShrink,
+                ColumnCount = 2,
+                Dock = DockStyle.Top
+            };
+            panel.ColumnStyles.Add(new ColumnStyle(SizeType.AutoSize));
+            panel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
+            panel.Controls.Add(keyLabel, 0, 0);
+            panel.Controls.Add(valueLabel, 1, 0);
+            return panel;
+        }
+
+        private static void ConfigureKeyValueLabel(Label label, string text)
+        {
+            label.AutoSize = true;
+            label.ForeColor = Color.FromArgb(90, 90, 90);
+            label.Margin = new Padding(0, 6, 12, 0);
+            label.Text = text + ":";
+            label.TextAlign = ContentAlignment.MiddleLeft;
+        }
+
+        private static void ConfigureKeyValueValue(Label label)
+        {
+            label.AutoSize = true;
+            label.Font = new Font("Segoe UI", 10F, FontStyle.Bold, GraphicsUnit.Point);
+            label.Margin = new Padding(0, 6, 0, 0);
+        }
+
+        private static void ConfigureActionPanel(FlowLayoutPanel panel)
+        {
+            panel.AutoSize = true;
+            panel.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            panel.Dock = DockStyle.Top;
+            panel.FlowDirection = FlowDirection.RightToLeft;
+            panel.Margin = new Padding(0, 12, 0, 0);
+        }
+
+        private static void ConfigurePrimaryButton(Button button, string text)
+        {
+            button.AutoSize = true;
+            button.BackColor = Color.FromArgb(0, 120, 215);
+            button.ForeColor = Color.White;
+            button.Padding = new Padding(16, 6, 16, 6);
+            button.FlatStyle = FlatStyle.Flat;
+            button.FlatAppearance.BorderSize = 0;
+            button.Text = text;
+        }
+
+        private static void ConfigureSecondaryButton(Button button, string text)
+        {
+            button.AutoSize = true;
+            button.BackColor = Color.WhiteSmoke;
+            button.ForeColor = Color.FromArgb(45, 45, 45);
+            button.Padding = new Padding(16, 6, 16, 6);
+            button.FlatStyle = FlatStyle.Flat;
+            button.FlatAppearance.BorderColor = Color.Gainsboro;
+            button.Text = text;
+        }
+
+        private static void ConfigureDangerButton(Button button, string text)
+        {
+            button.AutoSize = true;
+            button.BackColor = Color.FromArgb(194, 57, 52);
+            button.ForeColor = Color.White;
+            button.Padding = new Padding(16, 6, 16, 6);
+            button.FlatStyle = FlatStyle.Flat;
+            button.FlatAppearance.BorderSize = 0;
+            button.Text = text;
         }
 
         #endregion
