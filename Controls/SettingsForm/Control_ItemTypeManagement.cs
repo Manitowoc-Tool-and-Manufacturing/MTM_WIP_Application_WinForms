@@ -73,17 +73,13 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
 
         private void InitializeControlText()
         {
-            // Home screen labels
-            Control_ItemTypeManagement_Label_Header.Text = "Item Type Management";
-            Control_ItemTypeManagement_Label_Subtitle.Text = "Add, edit, or remove item types in the system";
-            
             // Suggestion controls - Add
             Control_ItemTypeManagement_TextBox_AddItemType.TextBox.Text = string.Empty;
             Control_ItemTypeManagement_TextBox_AddItemType.LabelText = "New Item Type";
-            Control_ItemTypeManagement_TextBox_AddItemType.PlaceholderText = "Enter a new Item Type name";            
-                
-            Control_ItemTypeManagement_Label_AddIssuedByValue.Text = Model_Application_Variables.User ?? "Current User";            
-
+            Control_ItemTypeManagement_TextBox_AddItemType.PlaceholderText = "Enter a new Item Type name";
+            
+            Control_ItemTypeManagement_Label_AddIssuedByValue.Text = Model_Application_Variables.User ?? "Current User";
+            
             Control_ItemTypeManagement_Button_AddClear.Enabled = true;
             Control_ItemTypeManagement_Button_AddSave.Enabled = false;
 
@@ -92,7 +88,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             Control_ItemTypeManagement_Suggestion_EditSelectItemType.LabelText = "Select Item Type";
             Control_ItemTypeManagement_Suggestion_EditSelectItemType.PlaceholderText = "Search item types (F4)";
 
-            Control_ItemTypeManagement_TextBox_EditNewItemType.TextBox.Text = string.Empty;            
+            Control_ItemTypeManagement_TextBox_EditNewItemType.TextBox.Text = string.Empty;
             Control_ItemTypeManagement_TextBox_EditNewItemType.LabelText = "New Item Type";
             Control_ItemTypeManagement_TextBox_EditNewItemType.PlaceholderText = "Enter new Item Type name";
             
@@ -105,7 +101,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             Control_ItemTypeManagement_Suggestion_RemoveSelectItemType.TextBox.Text = string.Empty;
             Control_ItemTypeManagement_Suggestion_RemoveSelectItemType.LabelText = "Select Item Type";
             Control_ItemTypeManagement_Suggestion_RemoveSelectItemType.PlaceholderText = "Search item types (F4)";
-               
+            
             Control_ItemTypeManagement_Label_RemoveIssuedByValue.Text = string.Empty;
             Control_ItemTypeManagement_Label_RemoveItemTypeValue.Text = string.Empty;
 
@@ -120,13 +116,11 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             Control_ItemTypeManagement_Button_RemoveConfirm.Text = "Remove";
             Control_ItemTypeManagement_Button_RemoveCancel.Text = "Cancel";
             Control_ItemTypeManagement_Button_Back.Text = "← Back to Selection";
-            Control_ItemTypeManagement_Button_Home.Text = "Home";
             
             // Labels
             Control_ItemTypeManagement_Label_AddIssuedBy.Text = "Issued By";
             Control_ItemTypeManagement_Label_EditIssuedBy.Text = "Issued By";
             Control_ItemTypeManagement_Label_RemoveIssuedBy.Text = "Issued By";
-            Control_ItemTypeManagement_Label_RemoveItemType.Text = "Item Type";
             Control_ItemTypeManagement_Label_RemoveWarning.Text = "⚠️ Warning: Removal is permanent and cannot be undone.";
         }
 

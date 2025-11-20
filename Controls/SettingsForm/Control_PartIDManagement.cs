@@ -84,15 +84,10 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             
             Control_PartIDManagement_Suggestion_AddItemType.TextBox.Text = "WIP";
             Control_PartIDManagement_Suggestion_AddItemType.LabelText = "Item Type";
-            Control_PartIDManagement_Suggestion_AddItemType.PlaceholderText = "Select Item Type (F4)";
-            
-            Control_PartIDManagement_CheckBox_AddRequiresColorCode.Checked = false;
-            
+            Control_PartIDManagement_Suggestion_AddItemType.PlaceholderText = "Select Item Type";
+
             Control_PartIDManagement_Label_AddIssuedByValue.Text = Model_Application_Variables.User ?? "Current User";
-            
-            Control_PartIDManagement_Button_AddClear.Enabled = true;
-            Control_PartIDManagement_Button_AddSave.Enabled = false;
-            
+                        
             // Suggestion controls - Edit
             Control_PartIDManagement_Suggestion_EditSelectPart.TextBox.Text = string.Empty;
             Control_PartIDManagement_Suggestion_EditSelectPart.LabelText = "Select Part";
@@ -109,10 +104,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             Control_PartIDManagement_CheckBox_EditRequiresColorCode.Checked = false;
             
             Control_PartIDManagement_Label_EditIssuedByValue.Text = string.Empty;
-            
-            Control_PartIDManagement_Button_EditReset.Enabled = true;
-            Control_PartIDManagement_Button_EditSave.Enabled = false;
-            
+                        
             // Suggestion controls - Remove
             Control_PartIDManagement_Suggestion_RemoveSelectPart.TextBox.Text = string.Empty;
             Control_PartIDManagement_Suggestion_RemoveSelectPart.LabelText = "Select Part";
@@ -121,10 +113,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             Control_PartIDManagement_Label_RemoveIssuedByValue.Text = string.Empty;
             Control_PartIDManagement_Label_RemoveItemNumberValue.Text = string.Empty;
             Control_PartIDManagement_Label_RemoveTypeValue.Text = string.Empty;
-            
-            Control_PartIDManagement_Button_RemoveCancel.Enabled = true;
-            Control_PartIDManagement_Button_RemoveConfirm.Enabled = false;
-            
+                        
             // Buttons
             Control_PartIDManagement_Button_AddSave.Text = "Save";
             Control_PartIDManagement_Button_AddClear.Text = "Clear";
