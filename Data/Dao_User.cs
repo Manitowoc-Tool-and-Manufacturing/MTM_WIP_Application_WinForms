@@ -160,24 +160,8 @@ internal static class Dao_User
         MySqlConnection? connection = null,
         MySqlTransaction? transaction = null)
     {
-        Service_DebugTracer.TraceMethodEntry(new Dictionary<string, object> { ["user"] = user }, controlName: "Dao_User");
-
-        try
-        {
-            var result = await GetSettingsJsonInternalAsync("Theme_Enabled", user, connection, transaction);
-
-            // Parse the value - default to true if not set or invalid
-            bool enabled = string.IsNullOrEmpty(result) || result.Equals("true", StringComparison.OrdinalIgnoreCase);
-
-            Service_DebugTracer.TraceMethodExit(enabled, controlName: "Dao_User");
-            return Model_Dao_Result<bool>.Success(enabled, $"Retrieved Theme_Enabled for user {user}");
-        }
-        catch (Exception ex)
-        {
-            LoggingUtility.LogDatabaseError(ex);
-            Service_DebugTracer.TraceMethodExit(true, controlName: "Dao_User");
-            return Model_Dao_Result<bool>.Success(true, $"Defaulting Theme_Enabled to true for user {user}");
-        }
+        // Always return true as theming is now mandatory
+        return await Task.FromResult(Model_Dao_Result<bool>.Success(true, $"Theme_Enabled is always true"));
     }
 
     /// <summary>
@@ -190,24 +174,8 @@ internal static class Dao_User
         MySqlConnection? connection = null,
         MySqlTransaction? transaction = null)
     {
-        Service_DebugTracer.TraceMethodEntry(new Dictionary<string, object> { ["user"] = user, ["enabled"] = enabled }, controlName: "Dao_User");
-
-        try
-        {
-            // Theme_Enabled is stored in SettingsJson, not as a column
-            await SetSettingsJsonFieldAsync(user, "Theme_Enabled", enabled.ToString().ToLowerInvariant(), connection, transaction);
-
-            Service_DebugTracer.TraceMethodExit(controlName: "Dao_User");
-            return Model_Dao_Result.Success($"Set Theme_Enabled to {enabled} for user {user}");
-        }
-        catch (Exception ex)
-        {
-            LoggingUtility.LogDatabaseError(ex);
-
-
-            Service_DebugTracer.TraceMethodExit(null, controlName: "Dao_User");
-            return Model_Dao_Result.Failure($"Error setting Theme_Enabled for user {user}", ex);
-        }
+        // No-op as theming is always enabled
+        return await Task.FromResult(Model_Dao_Result.Success($"Theme_Enabled is always true (ignored set to {enabled})"));
     }
 
     /// <summary>

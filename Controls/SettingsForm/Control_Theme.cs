@@ -24,7 +24,6 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             InitializeComponent();
             Control_Themes_Button_Save.Click += SaveButton_Click;
             Control_Themes_Button_Preview.Click += PreviewButton_Click;
-            Control_Themes_CheckBox_EnableTheming.CheckedChanged += EnableThemingCheckBox_CheckedChanged;
             LoadThemeSettingsAsync();
         }
 
@@ -44,15 +43,6 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
 
                     user = Environment.UserName?.ToUpperInvariant() ?? "UNKNOWN";
                 }
-
-                // Load theme enabled/disabled setting
-                var themeEnabledResult = await Dao_User.GetThemeEnabledAsync(user);
-                bool themeEnabled = themeEnabledResult.Data; // Defaults to true
-                Control_Themes_CheckBox_EnableTheming.Checked = themeEnabled;
-
-                // Enable/disable theme controls based on checkbox
-                Control_Themes_ComboBox_Theme.Enabled = themeEnabled;
-                Control_Themes_Button_Preview.Enabled = themeEnabled;
 
                 var themeResult = await Dao_User.GetThemeNameAsync(user);
 
@@ -104,13 +94,6 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             }
         }
 
-        private void EnableThemingCheckBox_CheckedChanged(object? sender, EventArgs e)
-        {
-            bool isEnabled = Control_Themes_CheckBox_EnableTheming.Checked;
-            Control_Themes_ComboBox_Theme.Enabled = isEnabled;
-            Control_Themes_Button_Preview.Enabled = isEnabled;
-        }
-
         private async void SaveButton_Click(object? sender, EventArgs e)
         {
             try
@@ -131,62 +114,39 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
                     return;
                 }
 
-                // Save theme enabled/disabled setting
-                bool themeEnabled = Control_Themes_CheckBox_EnableTheming.Checked;
-                var saveEnabledResult = await Dao_User.SetThemeEnabledAsync(user, themeEnabled);
+                // Save theme name
+                string? selectedTheme = Control_Themes_ComboBox_Theme.SelectedItem?.ToString();
+                if (string.IsNullOrWhiteSpace(selectedTheme))
+                {
+                    Service_ErrorHandler.HandleValidationError("Please select a theme.", "Theme",
+                        callerName: nameof(SaveButton_Click),
+                        controlName: nameof(Control_Theme));
+                    return;
+                }
 
-                if (!saveEnabledResult.IsSuccess)
+                // FIXED: Use the proper theme setter that works with existing database structure
+                var saveResult = await Dao_User.SetThemeNameAsync(user, selectedTheme);
+
+                if (!saveResult.IsSuccess)
                 {
                     Service_ErrorHandler.HandleDatabaseError(
-                        new Exception($"Failed to save theme enabled setting: {saveEnabledResult.ErrorMessage}"),
+                        new Exception($"Failed to save theme: {saveResult.ErrorMessage}"),
                         contextData: new Dictionary<string, object>
                         {
                             ["User"] = user,
-                            ["ThemeEnabled"] = themeEnabled
+                            ["SelectedTheme"] = selectedTheme
                         },
                         callerName: nameof(SaveButton_Click),
                         controlName: nameof(Control_Theme)
                     );
-                    StatusMessageChanged?.Invoke(this, $"Error saving theme settings: {saveEnabledResult.ErrorMessage}");
+
+                    StatusMessageChanged?.Invoke(this, $"Error saving theme: {saveResult.ErrorMessage}");
                     return;
                 }
 
-                // Save theme name (only if theming is enabled)
-                string? selectedTheme = Control_Themes_ComboBox_Theme.SelectedItem?.ToString();
-                if (themeEnabled)
-                {
-                    if (string.IsNullOrWhiteSpace(selectedTheme))
-                    {
-                        Service_ErrorHandler.HandleValidationError("Please select a theme.", "Theme",
-                            callerName: nameof(SaveButton_Click),
-                            controlName: nameof(Control_Theme));
-                        return;
-                    }
-
-                    // FIXED: Use the proper theme setter that works with existing database structure
-                    var saveResult = await Dao_User.SetThemeNameAsync(user, selectedTheme);
-
-                    if (!saveResult.IsSuccess)
-                    {
-                        Service_ErrorHandler.HandleDatabaseError(
-                            new Exception($"Failed to save theme: {saveResult.ErrorMessage}"),
-                            contextData: new Dictionary<string, object>
-                            {
-                                ["User"] = user,
-                                ["SelectedTheme"] = selectedTheme
-                            },
-                            callerName: nameof(SaveButton_Click),
-                            controlName: nameof(Control_Theme)
-                        );
-
-                        StatusMessageChanged?.Invoke(this, $"Error saving theme: {saveResult.ErrorMessage}");
-                        return;
-                    }
-                }
-
                 // Update the application variables and apply changes
-                Model_Application_Variables.ThemeEnabled = themeEnabled;
-                if (themeEnabled && !string.IsNullOrEmpty(selectedTheme))
+                Model_Application_Variables.ThemeEnabled = true; // Always enabled
+                if (!string.IsNullOrEmpty(selectedTheme))
                 {
                     Model_Application_Variables.ThemeName = selectedTheme;
                 }
@@ -195,16 +155,10 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
                 var themeProvider = Program.ServiceProvider?.GetService<IThemeProvider>();
                 if (themeProvider != null)
                 {
-                    if (themeEnabled && !string.IsNullOrEmpty(selectedTheme))
+                    if (!string.IsNullOrEmpty(selectedTheme))
                     {
                         // Apply theme
                         await themeProvider.SetThemeAsync(selectedTheme, ThemeChangeReason.UserSelection, user);
-
-                    }
-                    else if (!themeEnabled)
-                    {
-                        // Theming disabled - forms will reset to system colors on next theme change event
-                        // Trigger a system default "theme" to reset all forms
 
                     }
                 }
@@ -214,9 +168,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
                 }
 
                 ThemeChanged?.Invoke(this, EventArgs.Empty);
-                StatusMessageChanged?.Invoke(this, themeEnabled
-                    ? "Theme saved and applied successfully!"
-                    : "Theme system disabled successfully!");
+                StatusMessageChanged?.Invoke(this, "Theme saved and applied successfully!");
             }
             catch (Exception ex)
             {
@@ -224,8 +176,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
                     contextData: new Dictionary<string, object>
                     {
                         ["User"] = Model_Application_Variables.User,
-                        ["SelectedTheme"] = Control_Themes_ComboBox_Theme.SelectedItem?.ToString() ?? "null",
-                        ["ThemeEnabled"] = Control_Themes_CheckBox_EnableTheming.Checked
+                        ["SelectedTheme"] = Control_Themes_ComboBox_Theme.SelectedItem?.ToString() ?? "null"
                     },
                     callerName: nameof(SaveButton_Click),
                     controlName: nameof(Control_Theme));

@@ -59,7 +59,6 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             Control_Themes_TableLayout_Main.ColumnCount = 2;
             Control_Themes_TableLayout_Main.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
             Control_Themes_TableLayout_Main.ColumnStyles.Add(new ColumnStyle());
-            Control_Themes_TableLayout_Main.Controls.Add(Control_Themes_CheckBox_EnableTheming, 0, 0);
             Control_Themes_TableLayout_Main.Controls.Add(Control_Themes_Button_Preview, 1, 1);
             Control_Themes_TableLayout_Main.Controls.Add(Control_Themes_ComboBox_Theme, 0, 1);
             Control_Themes_TableLayout_Main.Controls.Add(Control_Themes_Button_Save, 1, 3);
@@ -87,6 +86,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             Control_Themes_CheckBox_EnableTheming.TabIndex = 0;
             Control_Themes_CheckBox_EnableTheming.Text = "Enable Theme System (colors only, DPI scaling always on)";
             Control_Themes_CheckBox_EnableTheming.UseVisualStyleBackColor = true;
+            Control_Themes_CheckBox_EnableTheming.Visible = false;
             // 
             // Control_Themes_Button_Preview
             // 
