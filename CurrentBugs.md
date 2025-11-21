@@ -22,10 +22,14 @@
 - Clean up related code in theme management
 - Remove database references if any
 
-### 5. **Import Excel button - Show MessageBox instead of ErrorDialog for open files** *(1.5 hours)*
+### 5. **Import Excel button - Show MessageBox instead of ErrorDialog for open files** *(1.5 hours)* - Done!
 - Modify Excel import logic to detect file locks
 - Replace `Service_ErrorHandler.ShowErrorDialog` with `MessageBox.Show`
 - Add appropriate exception handling for file access
+- Improve Excel diagnostics (missing sheet, empty sheet, no data rows)
+- Validate column names with aliases (e.g. Part Number -> Part)
+- Clear rows from Excel file after successful save
+- Reset DataGridView and re-enable Import button after save
 
 ## Medium Tasks (3-6 hours)
 

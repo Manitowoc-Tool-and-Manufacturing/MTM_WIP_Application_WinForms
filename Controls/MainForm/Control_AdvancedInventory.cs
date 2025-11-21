@@ -2419,7 +2419,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                         // Pass null/empty for batchNumber for unique batch per transaction
                         await Dao_Inventory.AddInventoryItemAsync(
                             part, loc, op, qty, "", Model_Application_Variables.User ?? Environment.UserName, null, notes, null, null, true);
-                        
+
                         // Mark row for removal from Excel and DataGridView
                         // Note: row.Index corresponds to Excel row + 2 (header is row 1, 0-indexed DGV vs 1-indexed Excel)
                         // But we need to be careful with indices as we delete.
@@ -2474,7 +2474,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             {
                 AdvancedInventory_Import_DataGridView.DataSource = null;
                 AdvancedInventory_Import_Button_ImportExcel.Enabled = true;
-                
+
                 Service_ErrorHandler.ShowInformation(@"All transactions saved successfully.", "Import Success");
                 if (MainFormInstance != null)
                 {
