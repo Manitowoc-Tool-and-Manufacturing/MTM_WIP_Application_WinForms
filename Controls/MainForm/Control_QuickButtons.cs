@@ -85,6 +85,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                     Margin = new Padding(1),        // 1px margin on all sides
                     MinimumSize = new Size(0, 0),   // No minimum - let row define size
                     TabIndex = i + 1,
+                    TabStop = false,
                     UseVisualStyleBackColor = false, // Use explicit colors
                     BackColor = SystemColors.Control,
                     ForeColor = SystemColors.ControlText,

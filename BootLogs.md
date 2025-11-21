@@ -3,87 +3,168 @@ You may only use the Microsoft Visual Studio .NET/C/C++ Debugger (vsdbg) with
 Visual Studio Code, Visual Studio or Visual Studio for Mac software to help you
 develop and test your applications.
 ------------------------------------------------------------------------------
-[21:02:39.258] [LOW   ] 🚀 DEBUG TRACER INITIALIZED
-[21:02:39.281] [LOW   ] 🖱️ UI ACTION: DEBUG_CONFIGURATION_INITIALIZED on Service_DebugConfiguration
-[21:02:39.283] [LOW   ] 🖱️ UI ACTION: DEBUG_MODE_SET on Service_DebugConfiguration
-[21:02:39.284] [LOW   ] 🖱️ UI ACTION: APPLICATION_STARTUP on Program
-2025-11-18 21:02:39 - [Startup] Application initialization started
-2025-11-18 21:02:39 - [Startup] User identified: JOHNK
-[21:02:39.326] [MEDIUM] ➡️ ENTERING Dao_User.GetWipServerAddressAsync
-[21:02:39.327] [MEDIUM] ➡️ ENTERING Dao_User.GetSettingsJsonInternalAsync
-[21:02:39.329] [HIGH  ] ⏱️ PERFORMANCE START: SP_usr_ui_settings_Get
-[21:02:39.385] [MEDIUM] ➡️ ENTERING Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync
-[21:02:39.386] [MEDIUM] 🗄️ DB PROCEDURE START: usr_ui_settings_Get
-[21:02:39.567] [HIGH  ] ✅ PROCEDURE usr_ui_settings_Get (237ms) - Status: 1
-[21:02:39.579] [MEDIUM] ✅ DB PROCEDURE COMPLETE: usr_ui_settings_Get (237ms) - 1 rows
-[21:02:39.581] [MEDIUM] ⬅️ EXITING Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync (196ms)
-[21:02:39.582] [HIGH  ] ⏱️ PERFORMANCE COMPLETE: SP_usr_ui_settings_Get (253ms)
-[21:02:39.591] [MEDIUM] ⬅️ EXITING Dao_User.GetSettingsJsonInternalAsync (263ms)
-[21:02:39.592] [MEDIUM] ⬅️ EXITING Dao_User.GetWipServerAddressAsync (265ms)
-[21:02:39.593] [MEDIUM] ➡️ ENTERING Dao_User.GetWipServerPortAsync
-[21:02:39.594] [MEDIUM] ➡️ ENTERING Dao_User.GetSettingsJsonInternalAsync
-[21:02:39.595] [HIGH  ] ⏱️ PERFORMANCE START: SP_usr_ui_settings_Get
-[21:02:39.596] [MEDIUM] ➡️ ENTERING Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync
-[21:02:39.597] [MEDIUM] 🗄️ DB PROCEDURE START: usr_ui_settings_Get
-[21:02:39.601] [HIGH  ] ✅ PROCEDURE usr_ui_settings_Get (5ms) - Status: 1
-[21:02:39.601] [MEDIUM] ✅ DB PROCEDURE COMPLETE: usr_ui_settings_Get (5ms) - 1 rows
-[21:02:39.602] [MEDIUM] ⬅️ EXITING Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync (6ms)
-[21:02:39.603] [HIGH  ] ⏱️ PERFORMANCE COMPLETE: SP_usr_ui_settings_Get (8ms)
-[21:02:39.604] [MEDIUM] ⬅️ EXITING Dao_User.GetSettingsJsonInternalAsync (10ms)
-[21:02:39.605] [MEDIUM] ⬅️ EXITING Dao_User.GetWipServerPortAsync (11ms)
-[21:02:39.606] [MEDIUM] ➡️ ENTERING Dao_User.GetDatabaseAsync
-[21:02:39.607] [MEDIUM] ➡️ ENTERING Dao_User.GetSettingsJsonInternalAsync
-[21:02:39.608] [HIGH  ] ⏱️ PERFORMANCE START: SP_usr_ui_settings_Get
-[21:02:39.608] [MEDIUM] ➡️ ENTERING Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync
-[21:02:39.609] [MEDIUM] 🗄️ DB PROCEDURE START: usr_ui_settings_Get
-[21:02:39.612] [HIGH  ] ✅ PROCEDURE usr_ui_settings_Get (4ms) - Status: 1
-[21:02:39.613] [MEDIUM] ✅ DB PROCEDURE COMPLETE: usr_ui_settings_Get (4ms) - 1 rows
-[21:02:39.613] [MEDIUM] ⬅️ EXITING Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync (5ms)
-[21:02:39.614] [HIGH  ] ⏱️ PERFORMANCE COMPLETE: SP_usr_ui_settings_Get (6ms)
-[21:02:39.615] [MEDIUM] ⬅️ EXITING Dao_User.GetSettingsJsonInternalAsync (8ms)
-[21:02:39.616] [MEDIUM] ⬅️ EXITING Dao_User.GetDatabaseAsync (9ms)
-[21:02:39.617] [HIGH  ] ⏱️ PERFORMANCE START: SP_sys_theme_GetAll
-[21:02:39.618] [MEDIUM] ➡️ ENTERING Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync
-[21:02:39.619] [MEDIUM] 🗄️ DB PROCEDURE START: sys_theme_GetAll
-[21:02:39.650] [HIGH  ] ✅ PROCEDURE sys_theme_GetAll (32ms) - Status: 1
-[21:02:39.651] [MEDIUM] ✅ DB PROCEDURE COMPLETE: sys_theme_GetAll (32ms) - 9 rows
-[21:02:39.652] [MEDIUM] ⬅️ EXITING Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync (33ms)
-[21:02:39.652] [HIGH  ] ⏱️ PERFORMANCE COMPLETE: SP_sys_theme_GetAll (35ms)
-2025-11-18 21:02:39 - [Startup] Database connectivity validated successfully
-2025-11-18 21:02:39 - [Startup] Initializing INFORMATION_SCHEMA parameter cache...
-2025-11-18 21:02:39 - [Startup] Querying INFORMATION_SCHEMA.PARAMETERS for stored procedure metadata
-2025-11-18 21:02:39 - [Startup] Parameter cache populated: 120 procedures, 536 total parameters
-2025-11-18 21:02:39 - [Startup] Parameter prefix cache initialized successfully in 13ms. Cached 120 stored procedures.
-[Startup] Parameter cache: 120 procedures cached in 13ms
-[21:02:39.673] [HIGH  ] ⏱️ PERFORMANCE START: SP_sys_GetUserAccessType
-[21:02:39.674] [MEDIUM] ➡️ ENTERING Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync
-[21:02:39.675] [MEDIUM] 🗄️ DB PROCEDURE START: sys_GetUserAccessType
+MTM_WIP_Application_Winforms.exe (2524): Loaded 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.22\System.Private.CoreLib.dll'. Symbols loaded.
+MTM_WIP_Application_Winforms.exe (2524): Loaded 'c:\Users\jkoll\source\repos\MTM_WIP_Application_WinForms\bin\Debug\net8.0-windows\MTM_WIP_Application_Winforms.dll'. Symbols loaded.
+MTM_WIP_Application_Winforms.exe (2524): Loaded 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.22\System.Runtime.dll'. Cannot find or open the PDB file.
+MTM_WIP_Application_Winforms.exe (2524): Loaded 'c:\Users\jkoll\source\repos\MTM_WIP_Application_WinForms\bin\Debug\net8.0-windows\MySql.Data.dll'. Cannot find or open the PDB file.
+MTM_WIP_Application_Winforms.exe (2524): Loaded 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.22\System.Data.Common.dll'. Cannot find or open the PDB file.
+MTM_WIP_Application_Winforms.exe (2524): Loaded 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.22\System.Collections.dll'. Cannot find or open the PDB file.
+MTM_WIP_Application_Winforms.exe (2524): Loaded 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.22\System.Threading.Thread.dll'. Cannot find or open the PDB file.
+MTM_WIP_Application_Winforms.exe (2524): Loaded 'C:\Program Files\dotnet\shared\Microsoft.WindowsDesktop.App\8.0.22\System.Windows.Forms.dll'. Symbols loaded.
+MTM_WIP_Application_Winforms.exe (2524): Loaded 'C:\Program Files\dotnet\shared\Microsoft.WindowsDesktop.App\8.0.22\System.Windows.Forms.Primitives.dll'. Cannot find or open the PDB file.
+MTM_WIP_Application_Winforms.exe (2524): Loaded 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.22\System.Console.dll'. Cannot find or open the PDB file.
+MTM_WIP_Application_Winforms.exe (2524): Loaded 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.22\System.Diagnostics.TraceSource.dll'. Cannot find or open the PDB file.
+MTM_WIP_Application_Winforms.exe (2524): Loaded 'c:\Users\jkoll\source\repos\MTM_WIP_Application_WinForms\bin\Debug\net8.0-windows\System.Text.Json.dll'. Cannot find or open the PDB file.
+MTM_WIP_Application_Winforms.exe (2524): Loaded 'c:\Users\jkoll\source\repos\MTM_WIP_Application_WinForms\bin\Debug\net8.0-windows\System.Text.Encodings.Web.dll'. Cannot find or open the PDB file.
+MTM_WIP_Application_Winforms.exe (2524): Loaded 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.22\System.Linq.dll'. Cannot find or open the PDB file.
+[13:19:04.761] [LOW   ] 🚀 DEBUG TRACER INITIALIZED
+MTM_WIP_Application_Winforms.exe (2524): Loaded 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.22\System.ComponentModel.TypeConverter.dll'. Cannot find or open the PDB file.
+MTM_WIP_Application_Winforms.exe (2524): Loaded 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.22\System.ComponentModel.Primitives.dll'. Cannot find or open the PDB file.
+MTM_WIP_Application_Winforms.exe (2524): Loaded 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.22\System.ComponentModel.dll'. Cannot find or open the PDB file.
+MTM_WIP_Application_Winforms.exe (2524): Loaded 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.22\System.Xml.ReaderWriter.dll'. Cannot find or open the PDB file.
+MTM_WIP_Application_Winforms.exe (2524): Loaded 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.22\System.Private.Xml.dll'. Cannot find or open the PDB file.
+MTM_WIP_Application_Winforms.exe (2524): Loaded 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.22\System.Drawing.Primitives.dll'. Cannot find or open the PDB file.
+[13:19:04.883] [LOW   ] 🖱️ UI ACTION: DEBUG_CONFIGURATION_INITIALIZED on Service_DebugConfiguration
+[13:19:04.886] [LOW   ] 🖱️ UI ACTION: DEBUG_MODE_SET on Service_DebugConfiguration
+[13:19:04.888] [LOW   ] 🖱️ UI ACTION: APPLICATION_STARTUP on Program
+MTM_WIP_Application_Winforms.exe (2524): Loaded 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.22\System.Collections.Specialized.dll'. Cannot find or open the PDB file.
+MTM_WIP_Application_Winforms.exe (2524): Loaded 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.22\System.Runtime.InteropServices.dll'. Cannot find or open the PDB file.
+MTM_WIP_Application_Winforms.exe (2524): Loaded 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.22\System.Threading.dll'. Cannot find or open the PDB file.
+MTM_WIP_Application_Winforms.exe (2524): Loaded 'C:\Program Files\dotnet\shared\Microsoft.WindowsDesktop.App\8.0.22\System.Drawing.Common.dll'. Cannot find or open the PDB file.
+MTM_WIP_Application_Winforms.exe (2524): Loaded 'c:\Users\jkoll\source\repos\MTM_WIP_Application_WinForms\bin\Debug\net8.0-windows\DocumentFormat.OpenXml.dll'. Cannot find or open the PDB file.
+MTM_WIP_Application_Winforms.exe (2524): Loaded 'c:\Users\jkoll\source\repos\MTM_WIP_Application_WinForms\bin\Debug\net8.0-windows\DocumentFormat.OpenXml.Framework.dll'. Cannot find or open the PDB file.
+2025-11-21 13:19:05 - [Startup] Application initialization started
+MTM_WIP_Application_Winforms.exe (2524): Loaded 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.22\System.Security.Principal.Windows.dll'. Cannot find or open the PDB file.
+MTM_WIP_Application_Winforms.exe (2524): Loaded 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.22\System.Security.Claims.dll'. Cannot find or open the PDB file.
+MTM_WIP_Application_Winforms.exe (2524): Loaded 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.22\Microsoft.Win32.Primitives.dll'. Cannot find or open the PDB file.
+2025-11-21 13:19:05 - [Startup] User identified: JKOLL
+MTM_WIP_Application_Winforms.exe (2524): Loaded 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.22\System.Transactions.Local.dll'. Cannot find or open the PDB file.
+[13:19:05.236] [MEDIUM] ➡️ ENTERING Dao_User.GetWipServerAddressAsync
+[13:19:05.247] [MEDIUM] ➡️ ENTERING Dao_User.GetSettingsJsonInternalAsync
+[13:19:05.262] [HIGH  ] ⏱️ PERFORMANCE START: SP_usr_settings_Get
+MTM_WIP_Application_Winforms.exe (2524): Loaded 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.22\System.Runtime.Intrinsics.dll'. Cannot find or open the PDB file.
+MTM_WIP_Application_Winforms.exe (2524): Loaded 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.22\System.Numerics.Vectors.dll'. Cannot find or open the PDB file.
+MTM_WIP_Application_Winforms.exe (2524): Loaded 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.22\System.Memory.dll'. Cannot find or open the PDB file.
+MTM_WIP_Application_Winforms.exe (2524): Loaded 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.22\System.Text.Encoding.Extensions.dll'. Cannot find or open the PDB file.
+MTM_WIP_Application_Winforms.exe (2524): Loaded 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.22\System.Collections.Concurrent.dll'. Cannot find or open the PDB file.
+MTM_WIP_Application_Winforms.exe (2524): Loaded 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.22\System.Private.Uri.dll'. Cannot find or open the PDB file.
+MTM_WIP_Application_Winforms.exe (2524): Loaded 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.22\System.Reflection.Emit.ILGeneration.dll'. Cannot find or open the PDB file.
+MTM_WIP_Application_Winforms.exe (2524): Loaded 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.22\System.Reflection.Emit.Lightweight.dll'. Cannot find or open the PDB file.
+MTM_WIP_Application_Winforms.exe (2524): Loaded 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.22\System.Reflection.Primitives.dll'. Cannot find or open the PDB file.
+MTM_WIP_Application_Winforms.exe (2524): Loaded 'c:\Users\jkoll\source\repos\MTM_WIP_Application_WinForms\bin\Debug\net8.0-windows\System.IO.Pipelines.dll'. Cannot find or open the PDB file.
+MTM_WIP_Application_Winforms.exe (2524): Loaded 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.22\System.Collections.NonGeneric.dll'. Cannot find or open the PDB file.
+[13:19:05.562] [MEDIUM] ➡️ ENTERING Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync
+[13:19:05.575] [MEDIUM] 🗄️ DB PROCEDURE START: usr_settings_Get
+MTM_WIP_Application_Winforms.exe (2524): Loaded 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.22\System.Text.RegularExpressions.dll'. Cannot find or open the PDB file.
+MTM_WIP_Application_Winforms.exe (2524): Loaded 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.22\System.Diagnostics.DiagnosticSource.dll'. Cannot find or open the PDB file.
+MTM_WIP_Application_Winforms.exe (2524): Loaded 'C:\Program Files\dotnet\shared\Microsoft.WindowsDesktop.App\8.0.22\System.Security.Permissions.dll'. Cannot find or open the PDB file.
+MTM_WIP_Application_Winforms.exe (2524): Loaded 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.22\System.Diagnostics.Tracing.dll'. Cannot find or open the PDB file.
+MTM_WIP_Application_Winforms.exe (2524): Loaded 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.22\System.Runtime.Loader.dll'. Cannot find or open the PDB file.
+MTM_WIP_Application_Winforms.exe (2524): Loaded 'C:\Program Files\dotnet\shared\Microsoft.WindowsDesktop.App\8.0.22\System.Configuration.ConfigurationManager.dll'. Cannot find or open the PDB file.
+MTM_WIP_Application_Winforms.exe (2524): Loaded 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.22\System.Net.WebClient.dll'. Cannot find or open the PDB file.
+MTM_WIP_Application_Winforms.exe (2524): Loaded 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.22\System.Security.Cryptography.dll'. Cannot find or open the PDB file.
+MTM_WIP_Application_Winforms.exe (2524): Loaded 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.22\System.Net.Sockets.dll'. Cannot find or open the PDB file.
+MTM_WIP_Application_Winforms.exe (2524): Loaded 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.22\System.Net.Primitives.dll'. Cannot find or open the PDB file.
+MTM_WIP_Application_Winforms.exe (2524): Loaded 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.22\System.Net.NameResolution.dll'. Cannot find or open the PDB file.
+MTM_WIP_Application_Winforms.exe (2524): Loaded 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.22\System.Threading.Overlapped.dll'. Cannot find or open the PDB file.
+Exception thrown: 'System.NullReferenceException' in MySql.Data.dll
+MTM_WIP_Application_Winforms.exe (2524): Loaded 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.22\System.Diagnostics.Process.dll'. Cannot find or open the PDB file.
+MTM_WIP_Application_Winforms.exe (2524): Loaded 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.22\System.Text.Encoding.CodePages.dll'. Cannot find or open the PDB file.
+MTM_WIP_Application_Winforms.exe (2524): Loaded 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.22\System.Runtime.Numerics.dll'. Cannot find or open the PDB file.
+[13:19:07.489] [HIGH  ] ✅ PROCEDURE usr_settings_Get (2226ms) - Status: 0
+[13:19:07.564] [MEDIUM] ✅ DB PROCEDURE COMPLETE: usr_settings_Get (2226ms) - 1 rows
+[13:19:07.575] [MEDIUM] ⬅️ EXITING Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync (2011ms)
+[13:19:07.580] [HIGH  ] ⏱️ PERFORMANCE COMPLETE: SP_usr_settings_Get (2317ms)
+[13:19:07.610] [MEDIUM] ⬅️ EXITING Dao_User.GetSettingsJsonInternalAsync (2363ms)
+[13:19:07.614] [MEDIUM] ⬅️ EXITING Dao_User.GetWipServerAddressAsync (2378ms)
+[13:19:07.623] [MEDIUM] ➡️ ENTERING Dao_User.GetWipServerPortAsync
+[13:19:07.624] [MEDIUM] ➡️ ENTERING Dao_User.GetSettingsJsonInternalAsync
+[13:19:07.626] [HIGH  ] ⏱️ PERFORMANCE START: SP_usr_settings_Get
+[13:19:07.627] [MEDIUM] ➡️ ENTERING Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync
+[13:19:07.639] [MEDIUM] 🗄️ DB PROCEDURE START: usr_settings_Get
+[13:19:07.675] [HIGH  ] ✅ PROCEDURE usr_settings_Get (49ms) - Status: 0
+[13:19:07.678] [MEDIUM] ✅ DB PROCEDURE COMPLETE: usr_settings_Get (49ms) - 1 rows
+[13:19:07.699] [MEDIUM] ⬅️ EXITING Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync (70ms)
+[13:19:07.709] [HIGH  ] ⏱️ PERFORMANCE COMPLETE: SP_usr_settings_Get (83ms)
+[13:19:07.735] [MEDIUM] ⬅️ EXITING Dao_User.GetSettingsJsonInternalAsync (111ms)
+[13:19:07.740] [MEDIUM] ⬅️ EXITING Dao_User.GetWipServerPortAsync (116ms)
+[13:19:07.757] [MEDIUM] ➡️ ENTERING Dao_User.GetDatabaseAsync
+[13:19:07.760] [MEDIUM] ➡️ ENTERING Dao_User.GetSettingsJsonInternalAsync
+[13:19:07.768] [HIGH  ] ⏱️ PERFORMANCE START: SP_usr_settings_Get
+[13:19:07.779] [MEDIUM] ➡️ ENTERING Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync
+[13:19:07.785] [MEDIUM] 🗄️ DB PROCEDURE START: usr_settings_Get
+[13:19:07.800] [HIGH  ] ✅ PROCEDURE usr_settings_Get (32ms) - Status: 0
+[13:19:07.832] [MEDIUM] ✅ DB PROCEDURE COMPLETE: usr_settings_Get (32ms) - 1 rows
+[13:19:07.865] [MEDIUM] ⬅️ EXITING Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync (85ms)
+[13:19:07.887] [HIGH  ] ⏱️ PERFORMANCE COMPLETE: SP_usr_settings_Get (119ms)
+[13:19:07.917] [MEDIUM] ⬅️ EXITING Dao_User.GetSettingsJsonInternalAsync (156ms)
+[13:19:07.952] [MEDIUM] ⬅️ EXITING Dao_User.GetDatabaseAsync (195ms)
+2025-11-21 13:19:07 - [Startup] Loaded user database server setting: 172.16.1.104
+2025-11-21 13:19:07 - [Startup] Loaded user database port setting: 3306
+2025-11-21 13:19:07 - [Startup] Loaded user database name setting: mtm_wip_application_winforms_test
+[13:19:07.986] [HIGH  ] ⏱️ PERFORMANCE START: SP_sys_theme_GetAll
+[13:19:07.989] [MEDIUM] ➡️ ENTERING Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync
+[13:19:08.003] [MEDIUM] 🗄️ DB PROCEDURE START: sys_theme_GetAll
+[13:19:08.109] [HIGH  ] ✅ PROCEDURE sys_theme_GetAll (122ms) - Status: 1
+[13:19:08.125] [MEDIUM] ✅ DB PROCEDURE COMPLETE: sys_theme_GetAll (122ms) - 9 rows
+[13:19:08.127] [MEDIUM] ⬅️ EXITING Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync (138ms)
+[13:19:08.130] [HIGH  ] ⏱️ PERFORMANCE COMPLETE: SP_sys_theme_GetAll (144ms)
+2025-11-21 13:19:08 - [Startup] Database connectivity validated successfully
+2025-11-21 13:19:08 - [Startup] Initializing INFORMATION_SCHEMA parameter cache...
+2025-11-21 13:19:08 - [Startup] Querying INFORMATION_SCHEMA.PARAMETERS for stored procedure metadata
+2025-11-21 13:19:08 - [Startup] Parameter cache populated: 121 procedures, 542 total parameters
+2025-11-21 13:19:08 - [Startup] Parameter prefix cache initialized successfully in 66ms. Cached 121 stored procedures.
+[Startup] Parameter cache: 121 procedures cached in 66ms
+[13:19:08.221] [HIGH  ] ⏱️ PERFORMANCE START: SP_sys_GetUserAccessType
+[13:19:08.229] [MEDIUM] ➡️ ENTERING Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync
+[13:19:08.239] [MEDIUM] 🗄️ DB PROCEDURE START: sys_GetUserAccessType
 [Trace] [Main] Application starting...
 [Trace] [Main] Application starting...
-2025-11-18 21:02:39 - [Startup] Initializing dependency injection container
-2025-11-18 21:02:39 - [Startup] Dependency injection container initialized successfully
-[21:02:39.715] [HIGH  ] ✅ PROCEDURE sys_GetUserAccessType (42ms) - Status: 1
-[21:02:39.716] [MEDIUM] ✅ DB PROCEDURE COMPLETE: sys_GetUserAccessType (42ms) - 88 rows
-[21:02:39.717] [MEDIUM] ⬅️ EXITING Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync (43ms)
-[21:02:39.718] [HIGH  ] ⏱️ PERFORMANCE COMPLETE: SP_sys_GetUserAccessType (44ms)
-[21:02:39.733] [MEDIUM] ➡️ ENTERING SplashScreenForm.SplashScreenForm
+2025-11-21 13:19:08 - [Startup] Initializing dependency injection container
+MTM_WIP_Application_Winforms.exe (2524): Loaded 'c:\Users\jkoll\source\repos\MTM_WIP_Application_WinForms\bin\Debug\net8.0-windows\Microsoft.Extensions.DependencyInjection.Abstractions.dll'. Cannot find or open the PDB file.
+MTM_WIP_Application_Winforms.exe (2524): Loaded 'c:\Users\jkoll\source\repos\MTM_WIP_Application_WinForms\bin\Debug\net8.0-windows\Microsoft.Extensions.DependencyInjection.dll'. Cannot find or open the PDB file.
+[13:19:08.414] [HIGH  ] ✅ PROCEDURE sys_GetUserAccessType (192ms) - Status: 1
+[13:19:08.423] [MEDIUM] ✅ DB PROCEDURE COMPLETE: sys_GetUserAccessType (192ms) - 88 rows
+[13:19:08.428] [MEDIUM] ⬅️ EXITING Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync (198ms)
+MTM_WIP_Application_Winforms.exe (2524): Loaded 'c:\Users\jkoll\source\repos\MTM_WIP_Application_WinForms\bin\Debug\net8.0-windows\Microsoft.Extensions.Logging.Abstractions.dll'. Cannot find or open the PDB file.
+[13:19:08.444] [HIGH  ] ⏱️ PERFORMANCE COMPLETE: SP_sys_GetUserAccessType (222ms)
+MTM_WIP_Application_Winforms.exe (2524): Loaded 'c:\Users\jkoll\source\repos\MTM_WIP_Application_WinForms\bin\Debug\net8.0-windows\Microsoft.Extensions.Logging.dll'. Cannot find or open the PDB file.
+MTM_WIP_Application_Winforms.exe (2524): Loaded 'c:\Users\jkoll\source\repos\MTM_WIP_Application_WinForms\bin\Debug\net8.0-windows\Microsoft.Extensions.Options.dll'. Cannot find or open the PDB file.
+MTM_WIP_Application_Winforms.exe (2524): Loaded 'c:\Users\jkoll\source\repos\MTM_WIP_Application_WinForms\bin\Debug\net8.0-windows\Microsoft.Extensions.Logging.Console.dll'. Cannot find or open the PDB file.
+MTM_WIP_Application_Winforms.exe (2524): Loaded 'c:\Users\jkoll\source\repos\MTM_WIP_Application_WinForms\bin\Debug\net8.0-windows\Microsoft.Extensions.Logging.Configuration.dll'. Cannot find or open the PDB file.
+MTM_WIP_Application_Winforms.exe (2524): Loaded 'c:\Users\jkoll\source\repos\MTM_WIP_Application_WinForms\bin\Debug\net8.0-windows\Microsoft.Extensions.Options.ConfigurationExtensions.dll'. Cannot find or open the PDB file.
+MTM_WIP_Application_Winforms.exe (2524): Loaded 'c:\Users\jkoll\source\repos\MTM_WIP_Application_WinForms\bin\Debug\net8.0-windows\Microsoft.Extensions.Primitives.dll'. Cannot find or open the PDB file.
+2025-11-21 13:19:08 - [Startup] Dependency injection container initialized successfully
+MTM_WIP_Application_Winforms.exe (2524): Loaded 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.22\System.ComponentModel.EventBasedAsync.dll'. Cannot find or open the PDB file.
+MTM_WIP_Application_Winforms.exe (2524): Loaded 'C:\Program Files\dotnet\shared\Microsoft.WindowsDesktop.App\8.0.22\Accessibility.dll'. Module was built without symbols.
+[13:19:08.696] [MEDIUM] ➡️ ENTERING SplashScreenForm.SplashScreenForm
 [DEBUG] [SplashScreenForm.ctor] Constructing SplashScreenForm...
-[21:02:39.735] [LOW   ] 🖱️ UI ACTION: SPLASH_FORM_INITIALIZATION on SplashScreenForm
-[21:02:39.784] [LOW   ] 🖱️ UI ACTION: THEME_APPLICATION on SplashScreenForm
+[13:19:08.702] [LOW   ] 🖱️ UI ACTION: SPLASH_FORM_INITIALIZATION on SplashScreenForm
+MTM_WIP_Application_Winforms.exe (2524): Loaded 'c:\Users\jkoll\source\repos\MTM_WIP_Application_WinForms\bin\Debug\net8.0-windows\Microsoft.Extensions.Configuration.Abstractions.dll'. Cannot find or open the PDB file.
+MTM_WIP_Application_Winforms.exe (2524): Loaded 'c:\Users\jkoll\source\repos\MTM_WIP_Application_WinForms\bin\Debug\net8.0-windows\Microsoft.Extensions.Configuration.dll'. Cannot find or open the PDB file.
+MTM_WIP_Application_Winforms.exe (2524): Loaded 'c:\Users\jkoll\source\repos\MTM_WIP_Application_WinForms\bin\Debug\net8.0-windows\Microsoft.Extensions.Configuration.Binder.dll'. Cannot find or open the PDB file.
+MTM_WIP_Application_Winforms.exe (2524): Loaded 'C:\Program Files\dotnet\shared\Microsoft.WindowsDesktop.App\8.0.22\System.Resources.Extensions.dll'. Cannot find or open the PDB file.
+MTM_WIP_Application_Winforms.exe (2524): Loaded 'C:\Program Files\dotnet\shared\Microsoft.WindowsDesktop.App\8.0.22\System.Drawing.dll'. Cannot find or open the PDB file.
+[13:19:08.952] [LOW   ] 🖱️ UI ACTION: THEME_APPLICATION on SplashScreenForm
+MTM_WIP_Application_Winforms.exe (2524): Loaded 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.22\System.ObjectModel.dll'. Cannot find or open the PDB file.
 Exception thrown: 'System.Text.Json.JsonException' in System.Text.Json.dll
 Exception thrown: 'System.Text.Json.JsonException' in System.Text.Json.dll
-[21:02:39.813] [MEDIUM] 📊 BUSINESS LOGIC: UI_COLORS_APPLICATION
-[21:02:39.814] [LOW   ] 🖱️ UI ACTION: THEME_APPLIED on SplashScreenForm
-[21:02:39.815] [LOW   ] 🖱️ UI ACTION: SPLASH_FORM_INITIALIZATION on SplashScreenForm
-[21:02:39.816] [MEDIUM] ⬅️ EXITING SplashScreenForm.SplashScreenForm (82ms)
+Exception thrown: 'System.Text.Json.JsonException' in System.Text.Json.dll
+Exception thrown: 'System.Text.Json.JsonException' in System.Text.Json.dll
+[13:19:09.207] [MEDIUM] 📊 BUSINESS LOGIC: UI_COLORS_APPLICATION
+[13:19:09.210] [LOW   ] 🖱️ UI ACTION: THEME_APPLIED on SplashScreenForm
+[13:19:09.221] [LOW   ] 🖱️ UI ACTION: SPLASH_FORM_INITIALIZATION on SplashScreenForm
+[13:19:09.224] [MEDIUM] ⬅️ EXITING SplashScreenForm.SplashScreenForm (528ms)
 [DEBUG] [SplashScreenForm.ctor] SplashScreenForm constructed.
+MTM_WIP_Application_Winforms.exe (2524): Loaded 'C:\Program Files\dotnet\shared\Microsoft.WindowsDesktop.App\8.0.22\Microsoft.Win32.SystemEvents.dll'. Cannot find or open the PDB file.
 [DEBUG] [SplashScreenForm.UpdateProgress] Progress: 0, Status: Starting startup sequence...
+MTM_WIP_Application_Winforms.exe (2524): Loaded 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.22\System.Threading.ThreadPool.dll'. Cannot find or open the PDB file.
 [DEBUG] [SplashScreenForm.UpdateProgress] Progress: 5, Status: Initializing logging...
 [DEBUG] Starting logging initialization...
-[DEBUG] Server: localhost, User: JOHNK
-[DEBUG] Log directory: C:\Users\johnk\OneDrive\Documents\Work Folder\WIP App Logs\JOHNK
-[DEBUG] Normal log file: C:\Users\johnk\OneDrive\Documents\Work Folder\WIP App Logs\JOHNK\JOHNK 11-18-2025 @ 9-02 PM_normal.csv
-2025-11-18 21:02:39 - Initializing logging...
+[DEBUG] Server: 172.16.1.104, User: JKOLL
+[DEBUG] Log directory: X:\MH_RESOURCE\Material_Handler\MTM WIP App\Logs\JKOLL
+[DEBUG] Normal log file: X:\MH_RESOURCE\Material_Handler\MTM WIP App\Logs\JKOLL\JKOLL 11-21-2025 @ 1-19 PM_normal.csv
+2025-11-21 13:19:09 - Initializing logging...
 [DEBUG] Logging initialization completed
 [DEBUG] [SplashScreenForm.UpdateProgress] Progress: 10, Status: Logging initialized.
 [DEBUG] [SplashScreenForm.UpdateProgress] Progress: 15, Status: Cleaning up old logs...
@@ -93,490 +174,779 @@ Exception thrown: 'System.Text.Json.JsonException' in System.Text.Json.dll
 [DEBUG] [SplashScreenForm.UpdateProgress] Progress: 35, Status: Verifying database connectivity...
 [DEBUG] [SplashScreenForm.UpdateProgress] Progress: 40, Status: Database connectivity verified.
 [DEBUG] [SplashScreenForm.UpdateProgress] Progress: 45, Status: Setting up Data Tables...
-[21:02:40.242] [HIGH  ] ⏱️ PERFORMANCE START: SP_md_part_ids_Get_All
-[21:02:40.243] [MEDIUM] ➡️ ENTERING Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync
-[21:02:40.244] [MEDIUM] 🗄️ DB PROCEDURE START: md_part_ids_Get_All
-[21:02:40.303] [HIGH  ] ✅ PROCEDURE md_part_ids_Get_All (61ms) - Status: 1
-[21:02:40.307] [MEDIUM] ✅ DB PROCEDURE COMPLETE: md_part_ids_Get_All (61ms) - 3747 rows
-[21:02:40.308] [MEDIUM] ⬅️ EXITING Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync (64ms)
-[21:02:40.309] [HIGH  ] ⏱️ PERFORMANCE COMPLETE: SP_md_part_ids_Get_All (66ms)
-[21:02:40.317] [HIGH  ] ⏱️ PERFORMANCE START: SP_md_operation_numbers_Get_All
-[21:02:40.319] [MEDIUM] ➡️ ENTERING Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync
-[21:02:40.320] [MEDIUM] 🗄️ DB PROCEDURE START: md_operation_numbers_Get_All
-[21:02:40.348] [HIGH  ] ✅ PROCEDURE md_operation_numbers_Get_All (30ms) - Status: 1
-[21:02:40.349] [MEDIUM] ✅ DB PROCEDURE COMPLETE: md_operation_numbers_Get_All (30ms) - 72 rows
-[21:02:40.350] [MEDIUM] ⬅️ EXITING Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync (30ms)
-[21:02:40.351] [HIGH  ] ⏱️ PERFORMANCE COMPLETE: SP_md_operation_numbers_Get_All (33ms)
-[21:02:40.352] [HIGH  ] ⏱️ PERFORMANCE START: SP_md_locations_Get_All
-[21:02:40.353] [MEDIUM] ➡️ ENTERING Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync
-[21:02:40.354] [MEDIUM] 🗄️ DB PROCEDURE START: md_locations_Get_All
-[21:02:40.433] [HIGH  ] ✅ PROCEDURE md_locations_Get_All (80ms) - Status: 1
-[21:02:40.435] [MEDIUM] ✅ DB PROCEDURE COMPLETE: md_locations_Get_All (80ms) - 10371 rows
-[21:02:40.436] [MEDIUM] ⬅️ EXITING Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync (83ms)
-[21:02:40.437] [HIGH  ] ⏱️ PERFORMANCE COMPLETE: SP_md_locations_Get_All (85ms)
-[21:02:40.448] [HIGH  ] ⏱️ PERFORMANCE START: SP_usr_users_Get_All
-[21:02:40.451] [MEDIUM] ➡️ ENTERING Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync
-[21:02:40.454] [MEDIUM] 🗄️ DB PROCEDURE START: usr_users_Get_All
-[21:02:40.485] [HIGH  ] ✅ PROCEDURE usr_users_Get_All (37ms) - Status: 1
-[21:02:40.486] [MEDIUM] ✅ DB PROCEDURE COMPLETE: usr_users_Get_All (37ms) - 88 rows
-[21:02:40.488] [MEDIUM] ⬅️ EXITING Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync (36ms)
-[21:02:40.489] [HIGH  ] ⏱️ PERFORMANCE COMPLETE: SP_usr_users_Get_All (40ms)
-[21:02:40.490] [HIGH  ] ⏱️ PERFORMANCE START: SP_md_item_types_Get_All
-[21:02:40.491] [MEDIUM] ➡️ ENTERING Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync
-[21:02:40.492] [MEDIUM] 🗄️ DB PROCEDURE START: md_item_types_Get_All
-[21:02:40.523] [HIGH  ] ✅ PROCEDURE md_item_types_Get_All (32ms) - Status: 1
-[21:02:40.524] [MEDIUM] ✅ DB PROCEDURE COMPLETE: md_item_types_Get_All (32ms) - 4 rows
-[21:02:40.525] [MEDIUM] ⬅️ EXITING Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync (33ms)
-[21:02:40.526] [HIGH  ] ⏱️ PERFORMANCE COMPLETE: SP_md_item_types_Get_All (35ms)
+[13:19:10.800] [HIGH  ] ⏱️ PERFORMANCE START: SP_md_part_ids_Get_All
+[13:19:10.816] [MEDIUM] ➡️ ENTERING Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync
+[13:19:10.901] [MEDIUM] 🗄️ DB PROCEDURE START: md_part_ids_Get_All
+[13:19:11.207] [HIGH  ] ✅ PROCEDURE md_part_ids_Get_All (406ms) - Status: 1
+[13:19:11.265] [MEDIUM] ✅ DB PROCEDURE COMPLETE: md_part_ids_Get_All (406ms) - 3745 rows
+[13:19:11.267] [MEDIUM] ⬅️ EXITING Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync (451ms)
+[13:19:11.270] [HIGH  ] ⏱️ PERFORMANCE COMPLETE: SP_md_part_ids_Get_All (469ms)
+[13:19:11.308] [HIGH  ] ⏱️ PERFORMANCE START: SP_md_operation_numbers_Get_All
+[13:19:11.317] [MEDIUM] ➡️ ENTERING Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync
+[13:19:11.320] [MEDIUM] 🗄️ DB PROCEDURE START: md_operation_numbers_Get_All
+[13:19:11.363] [HIGH  ] ✅ PROCEDURE md_operation_numbers_Get_All (54ms) - Status: 1
+[13:19:11.366] [MEDIUM] ✅ DB PROCEDURE COMPLETE: md_operation_numbers_Get_All (54ms) - 71 rows
+[13:19:11.379] [MEDIUM] ⬅️ EXITING Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync (61ms)
+[13:19:11.382] [HIGH  ] ⏱️ PERFORMANCE COMPLETE: SP_md_operation_numbers_Get_All (73ms)
+[13:19:11.386] [HIGH  ] ⏱️ PERFORMANCE START: SP_md_locations_Get_All
+[13:19:11.389] [MEDIUM] ➡️ ENTERING Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync
+[13:19:11.393] [MEDIUM] 🗄️ DB PROCEDURE START: md_locations_Get_All
+[13:19:11.601] [HIGH  ] ✅ PROCEDURE md_locations_Get_All (215ms) - Status: 1
+[13:19:11.608] [MEDIUM] ✅ DB PROCEDURE COMPLETE: md_locations_Get_All (215ms) - 10372 rows
+[13:19:11.611] [MEDIUM] ⬅️ EXITING Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync (222ms)
+[13:19:11.613] [HIGH  ] ⏱️ PERFORMANCE COMPLETE: SP_md_locations_Get_All (227ms)
+[13:19:11.666] [HIGH  ] ⏱️ PERFORMANCE START: SP_usr_users_Get_All
+[13:19:11.672] [MEDIUM] ➡️ ENTERING Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync
+[13:19:11.676] [MEDIUM] 🗄️ DB PROCEDURE START: usr_users_Get_All
+[13:19:11.761] [HIGH  ] ✅ PROCEDURE usr_users_Get_All (95ms) - Status: 1
+[13:19:11.765] [MEDIUM] ✅ DB PROCEDURE COMPLETE: usr_users_Get_All (95ms) - 88 rows
+[13:19:11.769] [MEDIUM] ⬅️ EXITING Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync (96ms)
+[13:19:11.771] [HIGH  ] ⏱️ PERFORMANCE COMPLETE: SP_usr_users_Get_All (105ms)
+[13:19:11.783] [HIGH  ] ⏱️ PERFORMANCE START: SP_md_item_types_Get_All
+[13:19:11.786] [MEDIUM] ➡️ ENTERING Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync
+[13:19:11.789] [MEDIUM] 🗄️ DB PROCEDURE START: md_item_types_Get_All
+[13:19:11.844] [HIGH  ] ✅ PROCEDURE md_item_types_Get_All (60ms) - Status: 1
+[13:19:11.848] [MEDIUM] ✅ DB PROCEDURE COMPLETE: md_item_types_Get_All (60ms) - 4 rows
+[13:19:11.852] [MEDIUM] ⬅️ EXITING Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync (66ms)
+[13:19:11.855] [HIGH  ] ⏱️ PERFORMANCE COMPLETE: SP_md_item_types_Get_All (72ms)
 [DEBUG] [SplashScreenForm.UpdateProgress] Progress: 50, Status: Data Tables set up.
 [DEBUG] [SplashScreenForm.UpdateProgress] Progress: 55, Status: Loading color code cache...
-[21:02:40.587] [MEDIUM] ➡️ ENTERING Dao_Part.GetColorCodeFlaggedPartsAsync
-[21:02:40.588] [HIGH  ] ⏱️ PERFORMANCE START: SP_md_part_ids_GetAllColorCodeFlagged
-[21:02:40.588] [MEDIUM] ➡️ ENTERING Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync
-[21:02:40.589] [MEDIUM] 🗄️ DB PROCEDURE START: md_part_ids_GetAllColorCodeFlagged
-[21:02:40.618] [HIGH  ] ✅ PROCEDURE md_part_ids_GetAllColorCodeFlagged (30ms) - Status: 1
-[21:02:40.619] [MEDIUM] ✅ DB PROCEDURE COMPLETE: md_part_ids_GetAllColorCodeFlagged (30ms) - 5 rows
-[21:02:40.620] [MEDIUM] ⬅️ EXITING Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync (31ms)
-[21:02:40.621] [HIGH  ] ⏱️ PERFORMANCE COMPLETE: SP_md_part_ids_GetAllColorCodeFlagged (33ms)
-[21:02:40.622] [MEDIUM] ⬅️ EXITING Dao_Part.GetColorCodeFlaggedPartsAsync (34ms)
-[21:02:40.623] [HIGH  ] ⏱️ PERFORMANCE START: SP_md_color_codes_GetAll
-[21:02:40.624] [MEDIUM] ➡️ ENTERING Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync
-[21:02:40.625] [MEDIUM] 🗄️ DB PROCEDURE START: md_color_codes_GetAll
-[21:02:40.649] [HIGH  ] ✅ PROCEDURE md_color_codes_GetAll (26ms) - Status: 1
-[21:02:40.650] [MEDIUM] ✅ DB PROCEDURE COMPLETE: md_color_codes_GetAll (26ms) - 10 rows
-[21:02:40.651] [MEDIUM] ⬅️ EXITING Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync (27ms)
-[21:02:40.652] [HIGH  ] ⏱️ PERFORMANCE COMPLETE: SP_md_color_codes_GetAll (29ms)
+[13:19:11.954] [MEDIUM] ➡️ ENTERING Dao_Part.GetColorCodeFlaggedPartsAsync
+[13:19:11.958] [HIGH  ] ⏱️ PERFORMANCE START: SP_md_part_ids_GetAllColorCodeFlagged
+[13:19:11.968] [MEDIUM] ➡️ ENTERING Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync
+[13:19:11.971] [MEDIUM] 🗄️ DB PROCEDURE START: md_part_ids_GetAllColorCodeFlagged
+[13:19:12.030] [HIGH  ] ✅ PROCEDURE md_part_ids_GetAllColorCodeFlagged (72ms) - Status: 1
+[13:19:12.033] [MEDIUM] ✅ DB PROCEDURE COMPLETE: md_part_ids_GetAllColorCodeFlagged (72ms) - 4 rows
+[13:19:12.040] [MEDIUM] ⬅️ EXITING Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync (71ms)
+[13:19:12.043] [HIGH  ] ⏱️ PERFORMANCE COMPLETE: SP_md_part_ids_GetAllColorCodeFlagged (85ms)
+[13:19:12.047] [MEDIUM] ⬅️ EXITING Dao_Part.GetColorCodeFlaggedPartsAsync (92ms)
+[13:19:12.051] [HIGH  ] ⏱️ PERFORMANCE START: SP_md_color_codes_GetAll
+[13:19:12.054] [MEDIUM] ➡️ ENTERING Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync
+[13:19:12.067] [MEDIUM] 🗄️ DB PROCEDURE START: md_color_codes_GetAll
+[13:19:12.125] [HIGH  ] ✅ PROCEDURE md_color_codes_GetAll (74ms) - Status: 1
+[13:19:12.130] [MEDIUM] ✅ DB PROCEDURE COMPLETE: md_color_codes_GetAll (74ms) - 10 rows
+[13:19:12.133] [MEDIUM] ⬅️ EXITING Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync (79ms)
+[13:19:12.136] [HIGH  ] ⏱️ PERFORMANCE COMPLETE: SP_md_color_codes_GetAll (85ms)
 [DEBUG] [SplashScreenForm.UpdateProgress] Progress: 58, Status: Color code cache loaded.
 [DEBUG] [SplashScreenForm.UpdateProgress] Progress: 60, Status: Initializing version checker...
 VersionTimer initialized and started.
 Running VersionChecker...
-[21:02:40.713] [HIGH  ] ⏱️ PERFORMANCE START: SP_log_changelog_Get_Current
-[21:02:40.714] [MEDIUM] ➡️ ENTERING Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync
-[21:02:40.715] [MEDIUM] 🗄️ DB PROCEDURE START: log_changelog_Get_Current
+[13:19:12.225] [HIGH  ] ⏱️ PERFORMANCE START: SP_log_changelog_Get_Current
+[13:19:12.228] [MEDIUM] ➡️ ENTERING Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync
+[13:19:12.230] [MEDIUM] 🗄️ DB PROCEDURE START: log_changelog_Get_Current
 [DEBUG] [SplashScreenForm.UpdateProgress] Progress: 65, Status: Version checker initialized.
-[21:02:40.738] [HIGH  ] ✅ PROCEDURE log_changelog_Get_Current (25ms) - Status: 1
-[21:02:40.739] [MEDIUM] ✅ DB PROCEDURE COMPLETE: log_changelog_Get_Current (25ms) - 1 rows
-[21:02:40.740] [MEDIUM] ⬅️ EXITING Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync (25ms)
-[21:02:40.741] [HIGH  ] ⏱️ PERFORMANCE COMPLETE: SP_log_changelog_Get_Current (27ms)
-Database version retrieved: 6.2.3.0
-Version labels updated - App: 6.3.1.0, DB: 6.2.3.0
+[13:19:12.300] [HIGH  ] ✅ PROCEDURE log_changelog_Get_Current (75ms) - Status: 1
+[13:19:12.314] [MEDIUM] ✅ DB PROCEDURE COMPLETE: log_changelog_Get_Current (75ms) - 1 rows
+[13:19:12.318] [MEDIUM] ⬅️ EXITING Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync (90ms)
+[13:19:12.321] [HIGH  ] ⏱️ PERFORMANCE COMPLETE: SP_log_changelog_Get_Current (96ms)
+Database version retrieved: 6.3.1.0
+Version labels updated - App: 6.3.1.0, DB: 6.3.1.0
 [DEBUG] [SplashScreenForm.UpdateProgress] Progress: 70, Status: Initializing theme system...
-[21:02:40.773] [HIGH  ] ⏱️ PERFORMANCE START: SP_sys_theme_GetAll
-[21:02:40.775] [MEDIUM] ➡️ ENTERING Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync
-[21:02:40.777] [MEDIUM] 🗄️ DB PROCEDURE START: sys_theme_GetAll
-[21:02:40.783] [HIGH  ] ✅ PROCEDURE sys_theme_GetAll (10ms) - Status: 1
-[21:02:40.784] [MEDIUM] ✅ DB PROCEDURE COMPLETE: sys_theme_GetAll (10ms) - 9 rows
-[21:02:40.785] [MEDIUM] ⬅️ EXITING Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync (9ms)
-[21:02:40.786] [HIGH  ] ⏱️ PERFORMANCE COMPLETE: SP_sys_theme_GetAll (12ms)
-[21:02:40.809] [MEDIUM] ➡️ ENTERING Dao_User.GetThemeEnabledAsync
-[21:02:40.810] [MEDIUM] ➡️ ENTERING Dao_User.GetSettingsJsonInternalAsync
-[21:02:40.811] [HIGH  ] ⏱️ PERFORMANCE START: SP_usr_ui_settings_Get
-[21:02:40.812] [MEDIUM] ➡️ ENTERING Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync
-[21:02:40.813] [MEDIUM] 🗄️ DB PROCEDURE START: usr_ui_settings_Get
-[21:02:40.816] [HIGH  ] ✅ PROCEDURE usr_ui_settings_Get (5ms) - Status: 1
-[21:02:40.817] [MEDIUM] ✅ DB PROCEDURE COMPLETE: usr_ui_settings_Get (5ms) - 1 rows
-[21:02:40.818] [MEDIUM] ⬅️ EXITING Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync (6ms)
-[21:02:40.819] [HIGH  ] ⏱️ PERFORMANCE COMPLETE: SP_usr_ui_settings_Get (8ms)
-[21:02:40.821] [MEDIUM] ⬅️ EXITING Dao_User.GetSettingsJsonInternalAsync (10ms)
-[21:02:40.821] [MEDIUM] ⬅️ EXITING Dao_User.GetThemeEnabledAsync (11ms)
-[21:02:40.823] [MEDIUM] ➡️ ENTERING Dao_User.GetThemeNameAsync
-[21:02:40.824] [MEDIUM] ➡️ ENTERING Dao_User.GetSettingsJsonInternalAsync
-[21:02:40.824] [HIGH  ] ⏱️ PERFORMANCE START: SP_usr_ui_settings_Get
-[21:02:40.825] [MEDIUM] ➡️ ENTERING Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync
-[21:02:40.826] [MEDIUM] 🗄️ DB PROCEDURE START: usr_ui_settings_Get
-[21:02:40.829] [HIGH  ] ✅ PROCEDURE usr_ui_settings_Get (4ms) - Status: 1
-[21:02:40.830] [MEDIUM] ✅ DB PROCEDURE COMPLETE: usr_ui_settings_Get (4ms) - 1 rows
-[21:02:40.830] [MEDIUM] ⬅️ EXITING Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync (5ms)
-[21:02:40.831] [HIGH  ] ⏱️ PERFORMANCE COMPLETE: SP_usr_ui_settings_Get (6ms)
-[21:02:40.832] [MEDIUM] ⬅️ EXITING Dao_User.GetSettingsJsonInternalAsync (8ms)
-[21:02:40.833] [MEDIUM] ⬅️ EXITING Dao_User.GetThemeNameAsync (10ms)
+[13:19:12.348] [HIGH  ] ⏱️ PERFORMANCE START: SP_sys_theme_GetAll
+[13:19:12.351] [MEDIUM] ➡️ ENTERING Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync
+[13:19:12.354] [MEDIUM] 🗄️ DB PROCEDURE START: sys_theme_GetAll
+[13:19:12.364] [HIGH  ] ✅ PROCEDURE sys_theme_GetAll (15ms) - Status: 1
+[13:19:12.367] [MEDIUM] ✅ DB PROCEDURE COMPLETE: sys_theme_GetAll (15ms) - 9 rows
+[13:19:12.381] [MEDIUM] ⬅️ EXITING Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync (29ms)
+[13:19:12.384] [HIGH  ] ⏱️ PERFORMANCE COMPLETE: SP_sys_theme_GetAll (35ms)
+[13:19:12.515] [MEDIUM] ➡️ ENTERING Dao_User.GetThemeNameAsync
+[13:19:12.519] [MEDIUM] ➡️ ENTERING Dao_User.GetSettingsJsonInternalAsync
+[13:19:12.523] [HIGH  ] ⏱️ PERFORMANCE START: SP_usr_settings_Get
+[13:19:12.532] [MEDIUM] ➡️ ENTERING Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync
+[13:19:12.535] [MEDIUM] 🗄️ DB PROCEDURE START: usr_settings_Get
+[13:19:12.588] [HIGH  ] ✅ PROCEDURE usr_settings_Get (65ms) - Status: 0
+[13:19:12.599] [MEDIUM] ✅ DB PROCEDURE COMPLETE: usr_settings_Get (65ms) - 1 rows
+[13:19:12.605] [MEDIUM] ⬅️ EXITING Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync (72ms)
+[13:19:12.608] [HIGH  ] ⏱️ PERFORMANCE COMPLETE: SP_usr_settings_Get (85ms)
+[13:19:12.615] [MEDIUM] ⬅️ EXITING Dao_User.GetSettingsJsonInternalAsync (96ms)
+[13:19:12.622] [MEDIUM] ⬅️ EXITING Dao_User.GetThemeNameAsync (106ms)
 info: MTM_WIP_Application_Winforms.Core.Theming.ThemeStore[0]
       Loading themes from database via Core_AppThemes
 info: MTM_WIP_Application_Winforms.Core.Theming.ThemeStore[0]
       Loaded 9 themes into ThemeStore cache
 [DEBUG] [SplashScreenForm.UpdateProgress] Progress: 75, Status: Theme system initialized.
-[DEBUG] [SplashScreenForm.UpdateProgress] Progress: 80, Status: User Full Name loaded: JOHNK
+[DEBUG] [SplashScreenForm.UpdateProgress] Progress: 80, Status: User Full Name loaded: JKOLL
 [DEBUG] [SplashScreenForm.UpdateProgress] Progress: 85, Status: Loading theme settings...
-[21:02:40.963] [MEDIUM] ➡️ ENTERING Dao_User.GetThemeEnabledAsync
-[21:02:40.964] [MEDIUM] ➡️ ENTERING Dao_User.GetSettingsJsonInternalAsync
-[21:02:40.965] [HIGH  ] ⏱️ PERFORMANCE START: SP_usr_ui_settings_Get
-[21:02:40.966] [MEDIUM] ➡️ ENTERING Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync
-[21:02:40.967] [MEDIUM] 🗄️ DB PROCEDURE START: usr_ui_settings_Get
-[21:02:40.971] [HIGH  ] ✅ PROCEDURE usr_ui_settings_Get (6ms) - Status: 1
-[21:02:40.972] [MEDIUM] ✅ DB PROCEDURE COMPLETE: usr_ui_settings_Get (6ms) - 1 rows
-[21:02:40.974] [MEDIUM] ⬅️ EXITING Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync (8ms)
-[21:02:40.975] [HIGH  ] ⏱️ PERFORMANCE COMPLETE: SP_usr_ui_settings_Get (10ms)
-[21:02:40.976] [MEDIUM] ⬅️ EXITING Dao_User.GetSettingsJsonInternalAsync (12ms)
-[21:02:40.977] [MEDIUM] ⬅️ EXITING Dao_User.GetThemeEnabledAsync (14ms)
-[21:02:40.979] [MEDIUM] ➡️ ENTERING Dao_User.GetThemeFontSizeAsync
-[21:02:40.980] [MEDIUM] ➡️ ENTERING Dao_User.GetSettingsJsonInternalAsync
-[21:02:40.981] [HIGH  ] ⏱️ PERFORMANCE START: SP_usr_ui_settings_Get
-[21:02:40.982] [MEDIUM] ➡️ ENTERING Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync
-[21:02:40.983] [MEDIUM] 🗄️ DB PROCEDURE START: usr_ui_settings_Get
-[21:02:40.986] [HIGH  ] ✅ PROCEDURE usr_ui_settings_Get (5ms) - Status: 1
-[21:02:40.987] [MEDIUM] ✅ DB PROCEDURE COMPLETE: usr_ui_settings_Get (5ms) - 1 rows
-[21:02:40.988] [MEDIUM] ⬅️ EXITING Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync (6ms)
-[21:02:40.989] [HIGH  ] ⏱️ PERFORMANCE COMPLETE: SP_usr_ui_settings_Get (8ms)
-[21:02:40.991] [MEDIUM] ⬅️ EXITING Dao_User.GetSettingsJsonInternalAsync (10ms)
-[21:02:40.992] [MEDIUM] ⬅️ EXITING Dao_User.GetThemeFontSizeAsync (12ms)
-[21:02:40.993] [MEDIUM] ➡️ ENTERING Dao_User.GetThemeNameAsync
-[21:02:40.994] [MEDIUM] ➡️ ENTERING Dao_User.GetSettingsJsonInternalAsync
-[21:02:40.995] [HIGH  ] ⏱️ PERFORMANCE START: SP_usr_ui_settings_Get
-[21:02:40.996] [MEDIUM] ➡️ ENTERING Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync
-[21:02:40.997] [MEDIUM] 🗄️ DB PROCEDURE START: usr_ui_settings_Get
-[21:02:41.000] [HIGH  ] ✅ PROCEDURE usr_ui_settings_Get (4ms) - Status: 1
-[21:02:41.000] [MEDIUM] ✅ DB PROCEDURE COMPLETE: usr_ui_settings_Get (4ms) - 1 rows
-[21:02:41.001] [MEDIUM] ⬅️ EXITING Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync (5ms)
-[21:02:41.002] [HIGH  ] ⏱️ PERFORMANCE COMPLETE: SP_usr_ui_settings_Get (7ms)
-[21:02:41.003] [MEDIUM] ⬅️ EXITING Dao_User.GetSettingsJsonInternalAsync (8ms)
-[21:02:41.004] [MEDIUM] ⬅️ EXITING Dao_User.GetThemeNameAsync (10ms)
+[13:19:12.765] [MEDIUM] ➡️ ENTERING Dao_User.GetThemeFontSizeAsync
+[13:19:12.769] [MEDIUM] ➡️ ENTERING Dao_User.GetSettingsJsonInternalAsync
+[13:19:12.772] [HIGH  ] ⏱️ PERFORMANCE START: SP_usr_settings_Get
+[13:19:12.777] [MEDIUM] ➡️ ENTERING Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync
+[13:19:12.780] [MEDIUM] 🗄️ DB PROCEDURE START: usr_settings_Get
+[13:19:12.792] [HIGH  ] ✅ PROCEDURE usr_settings_Get (20ms) - Status: 0
+[13:19:12.800] [MEDIUM] ✅ DB PROCEDURE COMPLETE: usr_settings_Get (20ms) - 1 rows
+[13:19:12.814] [MEDIUM] ⬅️ EXITING Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync (36ms)
+[13:19:12.816] [HIGH  ] ⏱️ PERFORMANCE COMPLETE: SP_usr_settings_Get (44ms)
+[13:19:12.819] [MEDIUM] ⬅️ EXITING Dao_User.GetSettingsJsonInternalAsync (50ms)
+[13:19:12.821] [MEDIUM] ⬅️ EXITING Dao_User.GetThemeFontSizeAsync (55ms)
+[13:19:12.826] [MEDIUM] ➡️ ENTERING Dao_User.GetThemeNameAsync
+[13:19:12.843] [MEDIUM] ➡️ ENTERING Dao_User.GetSettingsJsonInternalAsync
+[13:19:12.848] [HIGH  ] ⏱️ PERFORMANCE START: SP_usr_settings_Get
+[13:19:12.851] [MEDIUM] ➡️ ENTERING Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync
+[13:19:12.854] [MEDIUM] 🗄️ DB PROCEDURE START: usr_settings_Get
+[13:19:12.861] [HIGH  ] ✅ PROCEDURE usr_settings_Get (13ms) - Status: 0
+[13:19:12.865] [MEDIUM] ✅ DB PROCEDURE COMPLETE: usr_settings_Get (13ms) - 1 rows
+[13:19:12.877] [MEDIUM] ⬅️ EXITING Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync (26ms)
+[13:19:12.884] [HIGH  ] ⏱️ PERFORMANCE COMPLETE: SP_usr_settings_Get (36ms)
+[13:19:12.888] [MEDIUM] ⬅️ EXITING Dao_User.GetSettingsJsonInternalAsync (44ms)
+[13:19:12.891] [MEDIUM] ⬅️ EXITING Dao_User.GetThemeNameAsync (64ms)
 [DEBUG] [SplashScreenForm.UpdateProgress] Progress: 90, Status: Theme settings loaded.
-[DEBUG] [SplashScreenForm.UpdateProgress] Progress: 93, Status: Startup sequence completed.
 info: MTM_WIP_Application_Winforms.Core.Theming.ThemeDebouncer[0]
-      Applying debounced theme change: Forest (Reason: Login)
+      Applying debounced theme change: Urban Bloom (Reason: Login)
 info: MTM_WIP_Application_Winforms.Core.Theming.ThemeManager[0]
-      Theme changed to 'Forest' (Reason: Login, User: JOHNK)
+      Theme changed to 'Urban Bloom' (Reason: Login, User: JKOLL)
+[DEBUG] [SplashScreenForm.UpdateProgress] Progress: 93, Status: Startup sequence completed.
 [DEBUG] [SplashScreenForm.UpdateProgress] Progress: 95, Status: Creating main form...
 info: MTM_WIP_Application_Winforms.Core.Theming.ThemeManager[0]
       Form '' subscribed to theme changes
-[21:02:41.385] [MEDIUM] ➡️ ENTERING MainForm.MainForm
+[13:19:13.315] [MEDIUM] ➡️ ENTERING MainForm.MainForm
 [DEBUG] [MainForm.ctor] Constructing MainForm...
-[21:02:41.387] [LOW   ] 🖱️ UI ACTION: FORM_INITIALIZATION on MainForm
-[21:02:41.409] [MEDIUM] ➡️ ENTERING Control_InventoryTab.Control_InventoryTab
-[21:02:41.410] [LOW   ] 🖱️ UI ACTION: INVENTORY_TAB_INITIALIZATION on Control_InventoryTab
-[21:02:41.425] [LOW   ] 🖱️ UI ACTION: THEME_APPLICATION on Control_InventoryTab
-[21:02:41.427] [LOW   ] 🖱️ UI ACTION: TOOLTIPS_SETUP on Control_InventoryTab
-[21:02:41.431] [LOW   ] 🖱️ UI ACTION: VERSION_TIMER_SETUP on Control_InventoryTab
-[21:02:41.432] [LOW   ] 🖱️ UI ACTION: DATA_LOADING_START on Control_InventoryTab
-[21:02:41.434] [MEDIUM] ➡️ ENTERING Control_InventoryTab_OnStartup_LoadDataComboBoxesAsync.Control_InventoryTab
-[21:02:41.435] [HIGH  ] ⏱️ PERFORMANCE START: SP_md_part_ids_Get_All
-[21:02:41.436] [MEDIUM] ➡️ ENTERING Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync
-[21:02:41.437] [MEDIUM] 🗄️ DB PROCEDURE START: md_part_ids_Get_All
-[21:02:41.439] [HIGH  ] ⏱️ PERFORMANCE START: SP_md_operation_numbers_Get_All
-[21:02:41.441] [MEDIUM]   ➡️ ENTERING Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync
-[21:02:41.442] [MEDIUM] 🗄️ DB PROCEDURE START: md_operation_numbers_Get_All
-[21:02:41.444] [HIGH  ] ⏱️ PERFORMANCE START: SP_md_locations_Get_All
-[21:02:41.445] [MEDIUM]     ➡️ ENTERING Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync
-[21:02:41.446] [MEDIUM] 🗄️ DB PROCEDURE START: md_locations_Get_All
-[21:02:41.449] [LOW   ] 🖱️ UI ACTION: EVENTS_WIREUP on Control_InventoryTab
-[21:02:41.450] [LOW   ] 🖱️ UI ACTION: VERSION_LABEL_SET on Control_InventoryTab
-[21:02:41.457] [LOW   ] 🖱️ UI ACTION: UI_STYLING_APPLIED on Control_InventoryTab
-[21:02:41.458] [LOW   ] 🖱️ UI ACTION: PRIVILEGES_APPLIED on Control_InventoryTab
-[21:02:41.460] [LOW   ] 🖱️ UI ACTION: INVENTORY_TAB_INITIALIZATION on Control_InventoryTab
-[21:02:41.461] [MEDIUM] ⬅️ EXITING Control_InventoryTab.Control_InventoryTab (51ms)
-[21:02:41.466] [MEDIUM] ➡️ ENTERING Control_AdvancedInventory.Control_AdvancedInventory
-[21:02:41.467] [LOW   ] 🖱️ UI ACTION: ADVANCED_INVENTORY_INITIALIZATION on Control_AdvancedInventory
-[21:02:41.479] [LOW   ] 🖱️ UI ACTION: THEME_APPLICATION on Control_AdvancedInventory
-[21:02:41.480] [LOW   ] 🖱️ UI ACTION: TOOLTIPS_SETUP on Control_AdvancedInventory
-[21:02:41.490] [MEDIUM] ➡️ ENTERING Control_RemoveTab.Control_RemoveTab
-[21:02:41.491] [LOW   ] 🖱️ UI ACTION: REMOVE_TAB_INITIALIZATION on Control_RemoveTab
-[21:02:41.502] [LOW   ] 🖱️ UI ACTION: THEME_APPLICATION on Control_RemoveTab
-[21:02:41.503] [LOW   ] 🖱️ UI ACTION: CONTROL_INITIALIZATION on Control_RemoveTab
-[21:02:41.504] [LOW   ] 🖱️ UI ACTION: COMBOBOX_PROPERTIES_APPLIED on Control_RemoveTab
-[21:02:41.505] [LOW   ] 🖱️ UI ACTION: DATA_LOADING_START on Control_RemoveTab
-[21:02:41.507] [LOW   ] 🖱️ UI ACTION: EVENT_HANDLERS_SETUP on Control_RemoveTab
-[21:02:41.507] [LOW   ] 🖱️ UI ACTION: TOOLTIPS_SETUP on Control_RemoveTab
-[21:02:41.508] [LOW   ] 🖱️ UI ACTION: PRIVILEGES_APPLIED on Control_RemoveTab
-[21:02:41.509] [LOW   ] 🖱️ UI ACTION: REMOVE_TAB_INITIALIZATION on Control_RemoveTab
-[21:02:41.510] [MEDIUM] ⬅️ EXITING Control_RemoveTab.Control_RemoveTab (20ms)
-[21:02:41.512] [MEDIUM] ➡️ ENTERING Control_AdvancedRemove.Control_AdvancedRemove
-[21:02:41.512] [LOW   ] 🖱️ UI ACTION: ADVANCED_REMOVE_INITIALIZATION on Control_AdvancedRemove
-[21:02:41.591] [LOW   ] 🖱️ UI ACTION: THEME_APPLICATION on Control_AdvancedRemove
-[21:02:41.592] [LOW   ] 🖱️ UI ACTION: CONTROL_INITIALIZATION on Control_AdvancedRemove
-[21:02:41.593] [LOW   ] 🖱️ UI ACTION: BUTTON_EVENTS_SETUP on Control_AdvancedRemove
-[21:02:41.609] [MEDIUM] ➡️ ENTERING Control_TransferTab.Control_TransferTab
-[21:02:41.610] [LOW   ] 🖱️ UI ACTION: TRANSFER_TAB_INITIALIZATION on Control_TransferTab
-[21:02:41.681] [LOW   ] 🖱️ UI ACTION: TRANSFER_TAB_INITIALIZATION on Control_TransferTab
-[21:02:41.682] [MEDIUM] ➡️ ENTERING Control_QuickButtons.Control_QuickButtons
-[21:02:41.683] [LOW   ] 🖱️ UI ACTION: QUICK_BUTTONS_INITIALIZATION on Control_QuickButtons
-[21:02:41.685] [LOW   ] 🖱️ UI ACTION: TABLE_LAYOUT_SETUP on Control_QuickButtons
-[21:02:41.686] [LOW   ] 🖱️ UI ACTION: QUICK_BUTTONS_POST_CONSTRUCTOR on Control_QuickButtons
-[21:02:41.723] [LOW   ] 🖱️ UI ACTION: THEME_APPLICATION on MainForm
+[13:19:13.319] [LOW   ] 🖱️ UI ACTION: FORM_INITIALIZATION on MainForm
+[13:19:13.417] [MEDIUM] ➡️ ENTERING Control_InventoryTab.Control_InventoryTab
+[13:19:13.420] [LOW   ] 🖱️ UI ACTION: INVENTORY_TAB_INITIALIZATION on Control_InventoryTab
+MTM_WIP_Application_Winforms.exe (2524): Loaded 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.22\System.Diagnostics.FileVersionInfo.dll'. Cannot find or open the PDB file.
+[13:19:13.486] [LOW   ] 🖱️ UI ACTION: THEME_APPLICATION on Control_InventoryTab
+[13:19:13.493] [LOW   ] 🖱️ UI ACTION: TOOLTIPS_SETUP on Control_InventoryTab
+[13:19:13.508] [LOW   ] 🖱️ UI ACTION: VERSION_TIMER_SETUP on Control_InventoryTab
+[13:19:13.510] [LOW   ] 🖱️ UI ACTION: DATA_LOADING_START on Control_InventoryTab
+[13:19:13.513] [MEDIUM] ➡️ ENTERING Control_InventoryTab_OnStartup_LoadDataComboBoxesAsync.Control_InventoryTab
+[13:19:13.517] [HIGH  ] ⏱️ PERFORMANCE START: SP_md_part_ids_Get_All
+[13:19:13.520] [MEDIUM] ➡️ ENTERING Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync
+[13:19:13.522] [MEDIUM] 🗄️ DB PROCEDURE START: md_part_ids_Get_All
+[13:19:13.530] [HIGH  ] ⏱️ PERFORMANCE START: SP_md_operation_numbers_Get_All
+[13:19:13.534] [MEDIUM]   ➡️ ENTERING Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync
+[13:19:13.538] [MEDIUM] 🗄️ DB PROCEDURE START: md_operation_numbers_Get_All
+[13:19:13.543] [HIGH  ] ⏱️ PERFORMANCE START: SP_md_locations_Get_All
+[13:19:13.545] [MEDIUM]     ➡️ ENTERING Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync
+[13:19:13.548] [MEDIUM] 🗄️ DB PROCEDURE START: md_locations_Get_All
+[13:19:13.566] [LOW   ] 🖱️ UI ACTION: EVENTS_WIREUP on Control_InventoryTab
+[13:19:13.569] [LOW   ] 🖱️ UI ACTION: VERSION_LABEL_SET on Control_InventoryTab
+[13:19:13.588] [LOW   ] 🖱️ UI ACTION: UI_STYLING_APPLIED on Control_InventoryTab
+[13:19:13.603] [LOW   ] 🖱️ UI ACTION: PRIVILEGES_APPLIED on Control_InventoryTab
+[13:19:13.628] [LOW   ] 🖱️ UI ACTION: INVENTORY_TAB_INITIALIZATION on Control_InventoryTab
+[13:19:13.641] [MEDIUM] ⬅️ EXITING Control_InventoryTab.Control_InventoryTab (223ms)
+[13:19:13.645] [MEDIUM] ➡️ ENTERING Control_AdvancedInventory.Control_AdvancedInventory
+[13:19:13.652] [LOW   ] 🖱️ UI ACTION: ADVANCED_INVENTORY_INITIALIZATION on Control_AdvancedInventory
+[13:19:13.687] [LOW   ] 🖱️ UI ACTION: THEME_APPLICATION on Control_AdvancedInventory
+[13:19:13.697] [LOW   ] 🖱️ UI ACTION: TOOLTIPS_SETUP on Control_AdvancedInventory
+[13:19:13.759] [MEDIUM] ➡️ ENTERING Control_RemoveTab.Control_RemoveTab
+[13:19:13.785] [LOW   ] 🖱️ UI ACTION: REMOVE_TAB_INITIALIZATION on Control_RemoveTab
+[13:19:13.841] [LOW   ] 🖱️ UI ACTION: THEME_APPLICATION on Control_RemoveTab
+[13:19:13.843] [LOW   ] 🖱️ UI ACTION: CONTROL_INITIALIZATION on Control_RemoveTab
+[13:19:13.847] [LOW   ] 🖱️ UI ACTION: COMBOBOX_PROPERTIES_APPLIED on Control_RemoveTab
+[13:19:13.850] [LOW   ] 🖱️ UI ACTION: DATA_LOADING_START on Control_RemoveTab
+[13:19:13.853] [LOW   ] 🖱️ UI ACTION: EVENT_HANDLERS_SETUP on Control_RemoveTab
+[13:19:13.855] [LOW   ] 🖱️ UI ACTION: TOOLTIPS_SETUP on Control_RemoveTab
+[13:19:13.859] [LOW   ] 🖱️ UI ACTION: PRIVILEGES_APPLIED on Control_RemoveTab
+[13:19:13.863] [LOW   ] 🖱️ UI ACTION: REMOVE_TAB_INITIALIZATION on Control_RemoveTab
+[13:19:13.866] [MEDIUM] ⬅️ EXITING Control_RemoveTab.Control_RemoveTab (107ms)
+[13:19:13.873] [MEDIUM] ➡️ ENTERING Control_AdvancedRemove.Control_AdvancedRemove
+[13:19:13.875] [LOW   ] 🖱️ UI ACTION: ADVANCED_REMOVE_INITIALIZATION on Control_AdvancedRemove
+[13:19:14.393] [LOW   ] 🖱️ UI ACTION: THEME_APPLICATION on Control_AdvancedRemove
+[13:19:14.398] [LOW   ] 🖱️ UI ACTION: CONTROL_INITIALIZATION on Control_AdvancedRemove
+[13:19:14.406] [LOW   ] 🖱️ UI ACTION: BUTTON_EVENTS_SETUP on Control_AdvancedRemove
+[13:19:14.501] [MEDIUM] ➡️ ENTERING Control_TransferTab.Control_TransferTab
+[13:19:14.505] [LOW   ] 🖱️ UI ACTION: TRANSFER_TAB_INITIALIZATION on Control_TransferTab
+[13:19:15.006] [LOW   ] 🖱️ UI ACTION: TRANSFER_TAB_INITIALIZATION on Control_TransferTab
+[13:19:15.010] [MEDIUM] ➡️ ENTERING Control_QuickButtons.Control_QuickButtons
+[13:19:15.013] [LOW   ] 🖱️ UI ACTION: QUICK_BUTTONS_INITIALIZATION on Control_QuickButtons
+[13:19:15.021] [LOW   ] 🖱️ UI ACTION: TABLE_LAYOUT_SETUP on Control_QuickButtons
+[13:19:15.025] [LOW   ] 🖱️ UI ACTION: QUICK_BUTTONS_POST_CONSTRUCTOR on Control_QuickButtons
+[13:19:15.122] [MEDIUM] ➡️ ENTERING Dao_User.GetUserFullNameAsync
+[13:19:15.127] [HIGH  ] ⏱️ PERFORMANCE START: SP_usr_users_Get_ByUser
+[13:19:15.132] [MEDIUM]       ➡️ ENTERING Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync
+[13:19:15.135] [MEDIUM] 🗄️ DB PROCEDURE START: usr_users_Get_ByUser
+MTM_WIP_Application_Winforms.exe (2524): Loaded 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.22\System.Linq.Expressions.dll'. Cannot find or open the PDB file.
+MTM_WIP_Application_Winforms.exe (2524): Loaded 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.22\Microsoft.CSharp.dll'. Cannot find or open the PDB file.
+[13:19:15.362] [HIGH  ] ✅ PROCEDURE usr_users_Get_ByUser (235ms) - Status: 1
+[13:19:15.373] [LOW   ] 🖱️ UI ACTION: THEME_APPLICATION on MainForm
 [DEBUG] [MainForm.ctor] InitializeComponent complete.
-[21:02:41.725] [MEDIUM] ➡️ ENTERING MainForm.InitializeFormTitle
-[21:02:41.726] [MEDIUM] ➡️ ENTERING MainForm.GetUserPrivilegeDisplayText
-[21:02:41.728] [MEDIUM] 📊 BUSINESS LOGIC: USER_PRIVILEGE_DETERMINATION
-[21:02:41.729] [MEDIUM] ⬅️ EXITING MainForm.GetUserPrivilegeDisplayText (3ms)
-[21:02:41.731] [MEDIUM] 📊 BUSINESS LOGIC: FORM_TITLE_GENERATION
-[21:02:41.732] [LOW   ] 🖱️ UI ACTION: FORM_TITLE_SET on MainForm
-[21:02:41.733] [MEDIUM] ⬅️ EXITING MainForm.InitializeFormTitle (8ms)
+[13:19:15.387] [MEDIUM] ➡️ ENTERING MainForm.InitializeFormTitle
+[13:19:15.390] [MEDIUM] ➡️ ENTERING MainForm.GetUserPrivilegeDisplayText
+[13:19:15.394] [MEDIUM] ✅ DB PROCEDURE COMPLETE: usr_users_Get_ByUser (235ms) - 1 rows
+[13:19:15.396] [MEDIUM]       ⬅️ EXITING Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync (1876ms)
+[13:19:15.400] [HIGH  ] ⏱️ PERFORMANCE COMPLETE: SP_usr_users_Get_ByUser (273ms)
+[13:19:15.405] [MEDIUM] ⬅️ EXITING Dao_User.GetUserFullNameAsync (283ms)
+[13:19:15.412] [MEDIUM] 📊 BUSINESS LOGIC: USER_PRIVILEGE_DETERMINATION
+[13:19:15.415] [MEDIUM] ⬅️ EXITING MainForm.GetUserPrivilegeDisplayText (25ms)
+[13:19:15.422] [MEDIUM] 📊 BUSINESS LOGIC: FORM_TITLE_GENERATION
+[13:19:15.426] [LOW   ] 🖱️ UI ACTION: FORM_TITLE_SET on MainForm
+[13:19:15.429] [MEDIUM] ⬅️ EXITING MainForm.InitializeFormTitle (41ms)
 [DEBUG] [MainForm] UserControl progress helpers initialized.
 [DEBUG] [MainForm.ctor] Progress control initialized.
-[21:02:41.737] [LOW   ] 🖱️ UI ACTION: CONNECTION_CHECKER_INIT on MainForm
+[13:19:15.443] [LOW   ] 🖱️ UI ACTION: CONNECTION_CHECKER_INIT on MainForm
 [DEBUG] [MainForm.ctor] ConnectionStrengthChecker initialized.
-[21:02:41.738] [LOW   ] 🖱️ UI ACTION: CONNECTION_RECOVERY_INIT on MainForm
+[13:19:15.449] [LOW   ] 🖱️ UI ACTION: CONNECTION_RECOVERY_INIT on MainForm
 [DEBUG] [MainForm.ctor] ConnectionRecoveryManager initialized.
-[21:02:41.741] [MEDIUM] ➡️ ENTERING MainForm.InitializeStartupComponents
-[21:02:41.742] [LOW   ] 🖱️ UI ACTION: CONNECTION_STRENGTH_SETUP on MainForm
+[13:19:15.458] [MEDIUM] ➡️ ENTERING MainForm.InitializeStartupComponents
+[13:19:15.468] [LOW   ] 🖱️ UI ACTION: CONNECTION_STRENGTH_SETUP on MainForm
 [DEBUG] [MainForm.ctor] ConnectionStrengthControl setup complete.
-[21:02:41.744] [LOW   ] 🖱️ UI ACTION: EVENTS_WIREUP on MainForm
+[13:19:15.476] [LOW   ] 🖱️ UI ACTION: EVENTS_WIREUP on MainForm
 [DEBUG] [MainForm.ctor] Events wired up.
-[21:02:41.746] [LOW   ] 🖱️ UI ACTION: DPI_EVENTS_WIREUP on MainForm
+[13:19:15.507] [LOW   ] 🖱️ UI ACTION: DPI_EVENTS_WIREUP on MainForm
 [DEBUG] [MainForm.ctor] DPI change events wired up.
-[21:02:41.748] [LOW   ] 🖱️ UI ACTION: STARTUP_COMPONENTS on MainForm
-[21:02:41.749] [MEDIUM] ⬅️ EXITING MainForm.InitializeStartupComponents (8ms)
+[13:19:15.516] [LOW   ] 🖱️ UI ACTION: STARTUP_COMPONENTS on MainForm
+[13:19:15.521] [MEDIUM] ⬅️ EXITING MainForm.InitializeStartupComponents (62ms)
 [DEBUG] [MainForm.ctor] Startup components initialized.
-[21:02:41.751] [LOW   ] 🖱️ UI ACTION: FORM_INITIALIZATION on MainForm
+[13:19:15.569] [LOW   ] 🖱️ UI ACTION: FORM_INITIALIZATION on MainForm
 [DEBUG] [MainForm.ctor] MainForm constructed.
-[21:02:41.753] [MEDIUM] ⬅️ EXITING MainForm.MainForm (367ms)
+[13:19:15.581] [MEDIUM] ⬅️ EXITING MainForm.MainForm (2265ms)
 [DEBUG] [SplashScreenForm.UpdateProgress] Progress: 97, Status: Configuring form instances...
-[21:02:41.756] [MEDIUM] ➡️ ENTERING Dao_User.GetUserFullNameAsync
-[21:02:41.757] [HIGH  ] ⏱️ PERFORMANCE START: SP_usr_users_Get_ByUser
-[21:02:41.779] [MEDIUM]       ➡️ ENTERING Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync
-[21:02:41.780] [MEDIUM] 🗄️ DB PROCEDURE START: usr_users_Get_ByUser
-[21:02:41.782] [HIGH  ] ✅ PROCEDURE md_operation_numbers_Get_All (342ms) - Status: 1
-[21:02:41.786] [MEDIUM] ✅ DB PROCEDURE COMPLETE: md_operation_numbers_Get_All (342ms) - 72 rows
-[21:02:41.787] [MEDIUM]       ⬅️ EXITING Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync (350ms)
-[21:02:41.788] [HIGH  ] ⏱️ PERFORMANCE COMPLETE: SP_md_operation_numbers_Get_All (348ms)
-[21:02:41.790] [MEDIUM]   ➡️ ENTERING Dao_User.GetUserFullNameAsync
-[21:02:41.791] [HIGH  ] ⏱️ PERFORMANCE START: SP_usr_users_Get_ByUser
-[21:02:41.792] [MEDIUM]       ➡️ ENTERING Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync
-[21:02:41.793] [MEDIUM] 🗄️ DB PROCEDURE START: usr_users_Get_ByUser
+[13:19:15.594] [MEDIUM] ➡️ ENTERING Dao_User.GetUserFullNameAsync
+[13:19:15.632] [HIGH  ] ⏱️ PERFORMANCE START: SP_usr_users_Get_ByUser
+[13:19:15.669] [MEDIUM]       ➡️ ENTERING Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync
+[13:19:15.786] [MEDIUM] 🗄️ DB PROCEDURE START: usr_users_Get_ByUser
+[13:19:15.826] [HIGH  ] ✅ PROCEDURE md_operation_numbers_Get_All (2296ms) - Status: 1
+[13:19:15.834] [MEDIUM] ✅ DB PROCEDURE COMPLETE: md_operation_numbers_Get_All (2296ms) - 71 rows
+[13:19:15.858] [MEDIUM]       ⬅️ EXITING Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync (2323ms)
+[13:19:15.863] [HIGH  ] ⏱️ PERFORMANCE COMPLETE: SP_md_operation_numbers_Get_All (2333ms)
 [DEBUG] [SplashScreenForm.UpdateProgress] Progress: 99, Status: Applying theme...
+[13:19:15.909] [HIGH  ] ✅ PROCEDURE usr_users_Get_ByUser (276ms) - Status: 1
+[13:19:15.947] [MEDIUM] ✅ DB PROCEDURE COMPLETE: usr_users_Get_ByUser (276ms) - 1 rows
+[13:19:15.989] [MEDIUM]     ⬅️ EXITING Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync (2444ms)
+[13:19:16.037] [HIGH  ] ⏱️ PERFORMANCE COMPLETE: SP_usr_users_Get_ByUser (405ms)
+[13:19:16.059] [MEDIUM] ⬅️ EXITING Dao_User.GetUserFullNameAsync (465ms)
+[13:19:16.078] [HIGH  ] ✅ PROCEDURE md_part_ids_Get_All (2560ms) - Status: 1
+[13:19:16.084] [MEDIUM] ✅ DB PROCEDURE COMPLETE: md_part_ids_Get_All (2560ms) - 3745 rows
+[13:19:16.094] [MEDIUM]   ⬅️ EXITING Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync (962ms)
+[13:19:16.098] [HIGH  ] ⏱️ PERFORMANCE COMPLETE: SP_md_part_ids_Get_All (2580ms)
+[13:19:16.110] [HIGH  ] ✅ PROCEDURE md_locations_Get_All (2567ms) - Status: 1
+[13:19:16.127] [MEDIUM] ✅ DB PROCEDURE COMPLETE: md_locations_Get_All (2567ms) - 10372 rows
+[13:19:16.132] [MEDIUM] ⬅️ EXITING Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync (462ms)
+[13:19:16.134] [HIGH  ] ⏱️ PERFORMANCE COMPLETE: SP_md_locations_Get_All (2591ms)
+[13:19:16.173] [MEDIUM] ➡️ ENTERING Dao_Part.GetColorCodeFlaggedPartsAsync
+[13:19:16.177] [HIGH  ] ⏱️ PERFORMANCE START: SP_md_part_ids_GetAllColorCodeFlagged
+[13:19:16.181] [MEDIUM] ➡️ ENTERING Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync
+[13:19:16.188] [MEDIUM] 🗄️ DB PROCEDURE START: md_part_ids_GetAllColorCodeFlagged
 [DEBUG] [SplashScreenForm.UpdateProgress] Progress: 100, Status: Ready to start!
-[21:02:41.830] [HIGH  ] ✅ PROCEDURE usr_users_Get_ByUser (39ms) - Status: 1
-[21:02:41.833] [HIGH  ] ✅ PROCEDURE usr_users_Get_ByUser (76ms) - Status: 1
-[21:02:41.834] [MEDIUM] ✅ DB PROCEDURE COMPLETE: usr_users_Get_ByUser (39ms) - 1 rows
-[21:02:41.834] [MEDIUM] ✅ DB PROCEDURE COMPLETE: usr_users_Get_ByUser (76ms) - 1 rows
-[21:02:41.836] [MEDIUM]       ⬅️ EXITING Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync (394ms)
-[21:02:41.837] [HIGH  ] ⏱️ PERFORMANCE COMPLETE: SP_usr_users_Get_ByUser (46ms)
-[21:02:41.838] [MEDIUM]     ⬅️ EXITING Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync (392ms)
-[21:02:41.839] [HIGH  ] ⏱️ PERFORMANCE COMPLETE: SP_usr_users_Get_ByUser (82ms)
-[21:02:41.839] [MEDIUM]   ⬅️ EXITING Dao_User.GetUserFullNameAsync (83ms)
-[21:02:41.841] [MEDIUM] ⬅️ EXITING Dao_User.GetUserFullNameAsync (51ms)
-[21:02:41.858] [HIGH  ] ✅ PROCEDURE md_part_ids_Get_All (422ms) - Status: 1
-[21:02:41.859] [MEDIUM] ✅ DB PROCEDURE COMPLETE: md_part_ids_Get_All (422ms) - 3747 rows
-[21:02:41.860] [MEDIUM]   ⬅️ EXITING Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync (81ms)
-[21:02:41.861] [HIGH  ] ⏱️ PERFORMANCE COMPLETE: SP_md_part_ids_Get_All (425ms)
-[21:02:41.891] [HIGH  ] ✅ PROCEDURE md_locations_Get_All (446ms) - Status: 1
-[21:02:41.894] [MEDIUM] ✅ DB PROCEDURE COMPLETE: md_locations_Get_All (446ms) - 10371 rows
-[21:02:41.897] [MEDIUM] ⬅️ EXITING Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync (105ms)
-[21:02:41.899] [HIGH  ] ⏱️ PERFORMANCE COMPLETE: SP_md_locations_Get_All (455ms)
-[21:02:41.907] [MEDIUM] ➡️ ENTERING Dao_Part.GetColorCodeFlaggedPartsAsync
-[21:02:41.908] [HIGH  ] ⏱️ PERFORMANCE START: SP_md_part_ids_GetAllColorCodeFlagged
-[21:02:41.909] [MEDIUM] ➡️ ENTERING Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync
-[21:02:41.910] [MEDIUM] 🗄️ DB PROCEDURE START: md_part_ids_GetAllColorCodeFlagged
-[21:02:41.914] [HIGH  ] ✅ PROCEDURE md_part_ids_GetAllColorCodeFlagged (5ms) - Status: 1
-[21:02:41.915] [MEDIUM] ✅ DB PROCEDURE COMPLETE: md_part_ids_GetAllColorCodeFlagged (5ms) - 5 rows
-[21:02:41.916] [MEDIUM] ⬅️ EXITING Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync (6ms)
-[21:02:41.917] [HIGH  ] ⏱️ PERFORMANCE COMPLETE: SP_md_part_ids_GetAllColorCodeFlagged (8ms)
-[21:02:41.918] [MEDIUM] ⬅️ EXITING Dao_Part.GetColorCodeFlaggedPartsAsync (10ms)
-[21:02:41.920] [HIGH  ] ⏱️ PERFORMANCE START: SP_md_color_codes_GetAll
-[21:02:41.921] [MEDIUM] ➡️ ENTERING Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync
-[21:02:41.922] [MEDIUM] 🗄️ DB PROCEDURE START: md_color_codes_GetAll
-[21:02:41.925] [HIGH  ] ✅ PROCEDURE md_color_codes_GetAll (4ms) - Status: 1
-[21:02:41.926] [MEDIUM] ✅ DB PROCEDURE COMPLETE: md_color_codes_GetAll (4ms) - 10 rows
-[21:02:41.927] [MEDIUM] ⬅️ EXITING Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync (5ms)
-[21:02:41.927] [HIGH  ] ⏱️ PERFORMANCE COMPLETE: SP_md_color_codes_GetAll (7ms)
-[21:02:42.031] [MEDIUM] ⬅️ EXITING Control_InventoryTab_OnStartup_LoadDataComboBoxesAsync.Control_InventoryTab (597ms)
-[21:02:42.438] [LOW   ] 🖱️ UI ACTION: QUICK_BUTTONS_LOAD_EVENT on Control_QuickButtons
-2025-11-18 21:02:42 - [Performance Warning] Theme application to form 'MainForm' took 269ms (>100ms threshold)
+[13:19:16.212] [HIGH  ] ✅ PROCEDURE md_part_ids_GetAllColorCodeFlagged (34ms) - Status: 1
+[13:19:16.218] [MEDIUM] ✅ DB PROCEDURE COMPLETE: md_part_ids_GetAllColorCodeFlagged (34ms) - 4 rows
+[13:19:16.220] [MEDIUM] ⬅️ EXITING Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync (38ms)
+[13:19:16.222] [HIGH  ] ⏱️ PERFORMANCE COMPLETE: SP_md_part_ids_GetAllColorCodeFlagged (44ms)
+[13:19:16.224] [MEDIUM] ⬅️ EXITING Dao_Part.GetColorCodeFlaggedPartsAsync (51ms)
+[13:19:16.226] [HIGH  ] ⏱️ PERFORMANCE START: SP_md_color_codes_GetAll
+[13:19:16.228] [MEDIUM] ➡️ ENTERING Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync
+[13:19:16.230] [MEDIUM] 🗄️ DB PROCEDURE START: md_color_codes_GetAll
+[13:19:16.235] [HIGH  ] ✅ PROCEDURE md_color_codes_GetAll (9ms) - Status: 1
+[13:19:16.238] [MEDIUM] ✅ DB PROCEDURE COMPLETE: md_color_codes_GetAll (9ms) - 10 rows
+[13:19:16.240] [MEDIUM] ⬅️ EXITING Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync (12ms)
+[13:19:16.241] [HIGH  ] ⏱️ PERFORMANCE COMPLETE: SP_md_color_codes_GetAll (15ms)
+[13:19:16.365] [MEDIUM] ⬅️ EXITING Control_InventoryTab_OnStartup_LoadDataComboBoxesAsync.Control_InventoryTab (2851ms)
+[13:19:17.282] [LOW   ] 🖱️ UI ACTION: QUICK_BUTTONS_LOAD_EVENT on Control_QuickButtons
+[13:19:17.638] [LOW   ] 🖱️ UI ACTION: QUICK_BUTTONS_LOAD_START on Control_QuickButtons
+[13:19:17.650] [MEDIUM] ➡️ ENTERING LoadLast10Transactions.Control_QuickButtons
+[13:19:17.664] [HIGH  ] ⏱️ PERFORMANCE START: SP_sys_last_10_transactions_Get_ByUser
+[13:19:17.667] [MEDIUM] ➡️ ENTERING Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync
+[13:19:17.671] [MEDIUM] 🗄️ DB PROCEDURE START: sys_last_10_transactions_Get_ByUser
+2025-11-21 13:19:18 - [Performance Warning] Theme application to form 'MainForm' took 1277ms (>100ms threshold)
 [DEBUG] [MainForm.ctor] MainForm Shown event triggered.
-[21:02:42.780] [MEDIUM] ➡️ ENTERING Dao_User.GetUserFullNameAsync
-[21:02:42.781] [HIGH  ] ⏱️ PERFORMANCE START: SP_usr_users_Get_ByUser
-[21:02:42.781] [MEDIUM] ➡️ ENTERING Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync
-[21:02:42.782] [MEDIUM] 🗄️ DB PROCEDURE START: usr_users_Get_ByUser
-[21:02:42.785] [LOW   ] 🖱️ UI ACTION: QUICK_BUTTONS_LOAD_START on Control_QuickButtons
-[21:02:42.787] [MEDIUM] ➡️ ENTERING LoadLast10Transactions.Control_QuickButtons
-[21:02:42.789] [HIGH  ] ⏱️ PERFORMANCE START: SP_sys_last_10_transactions_Get_ByUser
-[21:02:42.790] [MEDIUM]   ➡️ ENTERING Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync
-[21:02:42.791] [MEDIUM] 🗄️ DB PROCEDURE START: sys_last_10_transactions_Get_ByUser
-[21:02:42.795] [HIGH  ] ✅ PROCEDURE usr_users_Get_ByUser (14ms) - Status: 1
-[21:02:42.796] [MEDIUM] ✅ DB PROCEDURE COMPLETE: usr_users_Get_ByUser (14ms) - 1 rows
-[21:02:42.797] [MEDIUM]   ⬅️ EXITING Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync (6ms)
-[21:02:42.798] [HIGH  ] ⏱️ PERFORMANCE COMPLETE: SP_usr_users_Get_ByUser (17ms)
-[21:02:42.799] [MEDIUM] ⬅️ EXITING Dao_User.GetUserFullNameAsync (19ms)
+[13:19:18.970] [MEDIUM] ➡️ ENTERING Dao_User.GetUserFullNameAsync
+[13:19:18.972] [HIGH  ] ⏱️ PERFORMANCE START: SP_usr_users_Get_ByUser
+[13:19:18.974] [MEDIUM]   ➡️ ENTERING Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync
+[13:19:18.976] [MEDIUM] 🗄️ DB PROCEDURE START: usr_users_Get_ByUser
+[13:19:18.979] [HIGH  ] ✅ PROCEDURE sys_last_10_transactions_Get_ByUser (1315ms) - Status: 1
+[13:19:18.985] [MEDIUM] ✅ DB PROCEDURE COMPLETE: sys_last_10_transactions_Get_ByUser (1315ms) - 7 rows
+[13:19:18.986] [MEDIUM]   ⬅️ EXITING Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync (11ms)
+[13:19:18.987] [HIGH  ] ⏱️ PERFORMANCE COMPLETE: SP_sys_last_10_transactions_Get_ByUser (1323ms)
+[13:19:19.031] [HIGH  ] ✅ PROCEDURE usr_users_Get_ByUser (59ms) - Status: 1
+[13:19:19.035] [MEDIUM] ✅ DB PROCEDURE COMPLETE: usr_users_Get_ByUser (59ms) - 1 rows
+[13:19:19.037] [MEDIUM] ⬅️ EXITING Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync (1369ms)
+[13:19:19.038] [HIGH  ] ⏱️ PERFORMANCE COMPLETE: SP_usr_users_Get_ByUser (66ms)
+[13:19:19.040] [MEDIUM] ⬅️ EXITING Dao_User.GetUserFullNameAsync (69ms)
 [DEBUG] [MainForm.ctor] User full name loaded.
-[21:02:42.801] [MEDIUM] ➡️ ENTERING MainForm.ConfigureDevelopmentMenuVisibility
-[21:02:42.804] [MEDIUM] 📊 BUSINESS LOGIC: DEVELOPMENT_MENU_VISIBILITY
-[21:02:42.805] [LOW   ] 🖱️ UI ACTION: DEVELOPMENT_MENU_CONFIGURED on MainForm
-2025-11-18 21:02:42 - Application Info - Development Menu configured for user 'JOHNK': Visible
-[21:02:42.807] [MEDIUM] ⬅️ EXITING MainForm.ConfigureDevelopmentMenuVisibility (5ms)
-[21:02:42.827] [HIGH  ] ✅ PROCEDURE sys_last_10_transactions_Get_ByUser (37ms) - Status: 1
-[21:02:42.828] [MEDIUM] ✅ DB PROCEDURE COMPLETE: sys_last_10_transactions_Get_ByUser (37ms) - 10 rows
-[21:02:42.829] [MEDIUM] ⬅️ EXITING Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync (47ms)
-[21:02:42.829] [HIGH  ] ⏱️ PERFORMANCE COMPLETE: SP_sys_last_10_transactions_Get_ByUser (40ms)
-[21:02:42.915] [HIGH  ] ⏱️ PERFORMANCE START: SP_sys_last_10_transactions_Get_ByUser
-[21:02:42.916] [MEDIUM] ➡️ ENTERING Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync
-[21:02:42.917] [MEDIUM] 🗄️ DB PROCEDURE START: sys_last_10_transactions_Get_ByUser
-[21:02:42.920] [HIGH  ] ✅ PROCEDURE sys_last_10_transactions_Get_ByUser (5ms) - Status: 1
-[21:02:42.921] [MEDIUM] ✅ DB PROCEDURE COMPLETE: sys_last_10_transactions_Get_ByUser (5ms) - 10 rows
-[21:02:42.922] [MEDIUM] ⬅️ EXITING Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync (6ms)
-[21:02:42.923] [HIGH  ] ⏱️ PERFORMANCE COMPLETE: SP_sys_last_10_transactions_Get_ByUser (8ms)
-[21:02:42.926] [MEDIUM] 📊 BUSINESS LOGIC: QUICK_BUTTONS_DATA_RESULT
-[21:02:42.966] [MEDIUM] ⬅️ EXITING LoadLast10Transactions.Control_QuickButtons (178ms)
-[21:02:42.967] [LOW   ] 🖱️ UI ACTION: QUICK_BUTTONS_LOAD_COMPLETE on Control_QuickButtons
+[13:19:19.044] [MEDIUM] ➡️ ENTERING MainForm.ConfigureDevelopmentMenuVisibility
+[13:19:19.049] [MEDIUM] 📊 BUSINESS LOGIC: DEVELOPMENT_MENU_VISIBILITY
+[13:19:19.051] [LOW   ] 🖱️ UI ACTION: DEVELOPMENT_MENU_CONFIGURED on MainForm
+2025-11-21 13:19:19 - Application Info - Development Menu configured for user 'JKOLL': Visible
+[13:19:19.054] [MEDIUM] ⬅️ EXITING MainForm.ConfigureDevelopmentMenuVisibility (10ms)
+[13:19:19.205] [MEDIUM] 📊 BUSINESS LOGIC: QUICK_BUTTONS_CLEANUP_SUCCESS
+[13:19:19.207] [HIGH  ] ⏱️ PERFORMANCE START: SP_sys_last_10_transactions_Get_ByUser
+[13:19:19.209] [MEDIUM] ➡️ ENTERING Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync
+[13:19:19.215] [MEDIUM] 🗄️ DB PROCEDURE START: sys_last_10_transactions_Get_ByUser
+[13:19:19.222] [HIGH  ] ✅ PROCEDURE sys_last_10_transactions_Get_ByUser (15ms) - Status: 1
+[13:19:19.224] [MEDIUM] ✅ DB PROCEDURE COMPLETE: sys_last_10_transactions_Get_ByUser (15ms) - 7 rows
+[13:19:19.226] [MEDIUM] ⬅️ EXITING Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync (17ms)
+[13:19:19.228] [HIGH  ] ⏱️ PERFORMANCE COMPLETE: SP_sys_last_10_transactions_Get_ByUser (21ms)
+[13:19:19.233] [MEDIUM] 📊 BUSINESS LOGIC: QUICK_BUTTONS_DATA_RESULT
+[13:19:19.304] [MEDIUM] ⬅️ EXITING LoadLast10Transactions.Control_QuickButtons (1652ms)
+[13:19:19.308] [LOW   ] 🖱️ UI ACTION: QUICK_BUTTONS_LOAD_COMPLETE on Control_QuickButtons
 [DEBUG] [MainForm.ctor] MainForm is now idle and ready.
-[21:02:44.721] [LOW   ] 🖱️ UI ACTION: SETTINGS_MENU_CLICK on MainForm
-[21:02:44.722] [MEDIUM] ➡️ ENTERING MainForm.MainForm_MenuStrip_File_Settings_Click
-[21:02:44.723] [LOW   ] 🖱️ UI ACTION: SETTINGS_FORM_OPEN on MainForm
-info: MTM_WIP_Application_Winforms.Core.Theming.ThemeManager[0]
-      Form '' subscribed to theme changes
-[21:02:44.724] [MEDIUM] ➡️ ENTERING SettingsForm.SettingsForm
-[21:02:44.725] [LOW   ] 🖱️ UI ACTION: SETTINGS_FORM_INITIALIZATION on SettingsForm
-[21:02:44.728] [LOW   ] 🖱️ UI ACTION: THEME_APPLICATION on SettingsForm
-[21:02:44.729] [LOW   ] 🖱️ UI ACTION: SETTINGS_PANELS_INITIALIZATION on SettingsForm
-[21:02:44.730] [LOW   ] 🖱️ UI ACTION: INITIALIZE_CONTROLS on SettingsForm
-[21:02:44.763] [MEDIUM] ➡️ ENTERING Dao_User.GetShortcutsJsonAsync
-[21:02:44.764] [HIGH  ] ⏱️ PERFORMANCE START: SP_usr_ui_settings_GetShortcutsJson
-[21:02:44.765] [MEDIUM] ➡️ ENTERING Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync
-[21:02:44.766] [MEDIUM] 🗄️ DB PROCEDURE START: usr_ui_settings_GetShortcutsJson
-[21:02:44.770] [MEDIUM] ➡️ ENTERING Dao_User.GetThemeEnabledAsync
-[21:02:44.770] [MEDIUM] ➡️ ENTERING Dao_User.GetSettingsJsonInternalAsync
-[21:02:44.772] [HIGH  ] ⏱️ PERFORMANCE START: SP_usr_ui_settings_Get
-[21:02:44.772] [MEDIUM]   ➡️ ENTERING Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync
-[21:02:44.773] [MEDIUM] 🗄️ DB PROCEDURE START: usr_ui_settings_Get
-[21:02:44.812] [MEDIUM] ➡️ ENTERING Control_Add_User.Control_Add_User
-[21:02:44.813] [LOW   ] 🖱️ UI ACTION: ADD_USER_CONTROL_INITIALIZATION on Control_Add_User
-[21:02:44.817] [LOW   ] 🖱️ UI ACTION: THEME_APPLICATION on Control_Add_User
-[21:02:44.818] [LOW   ] 🖱️ UI ACTION: DEFAULT_USER_TYPE_SET on Control_Add_User
-[21:02:44.819] [LOW   ] 🖱️ UI ACTION: DEVELOPER_ROLE_WIRED on Control_Add_User
-[21:02:44.820] [LOW   ] 🖱️ UI ACTION: KEYPRESS_EVENTS_SETUP on Control_Add_User
-[21:02:44.821] [LOW   ] 🖱️ UI ACTION: PASSWORD_FIELDS_SETUP on Control_Add_User
-[21:02:44.822] [LOW   ] 🖱️ UI ACTION: VISUAL_ACCESS_EVENT_SETUP on Control_Add_User
-[21:02:44.823] [LOW   ] 🖱️ UI ACTION: VIEW_PASSWORDS_EVENT_SETUP on Control_Add_User
-[21:02:44.824] [LOW   ] 🖱️ UI ACTION: ADD_USER_CONTROL_INITIALIZATION on Control_Add_User
-[21:02:44.825] [MEDIUM] ⬅️ EXITING Control_Add_User.Control_Add_User (13ms)
-[21:02:44.827] [MEDIUM] ➡️ ENTERING Control_Edit_User.Control_Edit_User
-[21:02:44.828] [LOW   ] 🖱️ UI ACTION: EDIT_USER_INITIALIZATION on Control_Edit_User
-[21:02:44.835] [LOW   ] 🖱️ UI ACTION: THEME_APPLICATION on Control_Edit_User
-[21:02:44.836] [LOW   ] 🖱️ UI ACTION: KEYPRESS_EVENTS_SETUP on Control_Edit_User
-[21:02:44.837] [LOW   ] 🖱️ UI ACTION: PASSWORD_FIELDS_SETUP on Control_Edit_User
-[21:02:44.839] [MEDIUM] ➡️ ENTERING Control_Remove_User.Control_Remove_User
-[21:02:44.840] [LOW   ] 🖱️ UI ACTION: REMOVE_USER_INITIALIZATION on Control_Remove_User
-[21:02:44.842] [LOW   ] 🖱️ UI ACTION: EVENT_HANDLERS_SETUP on Control_Remove_User
-[21:02:44.843] [LOW   ] 🖱️ UI ACTION: USERS_DATA_LOADING on Control_Remove_User
-[21:02:44.844] [LOW   ] 🖱️ UI ACTION: REMOVE_USER_INITIALIZATION on Control_Remove_User
-[21:02:44.845] [MEDIUM] ⬅️ EXITING Control_Remove_User.Control_Remove_User (5ms)
-[21:02:44.847] [MEDIUM] ➡️ ENTERING Control_Add_PartID.Control_Add_PartID
-[21:02:44.848] [LOW   ] 🖱️ UI ACTION: ADD_PARTID_INITIALIZATION on Control_Add_PartID
-[21:02:44.850] [LOW   ] 🖱️ UI ACTION: PART_TYPES_LOADING on Control_Add_PartID
-[21:02:44.854] [MEDIUM] ⬅️ EXITING Control_Add_PartID.Control_Add_PartID (7ms)
-[21:02:44.856] [MEDIUM] ➡️ ENTERING Control_Edit_PartID.Control_Edit_PartID
-[21:02:44.860] [MEDIUM] ⬅️ EXITING Control_Edit_PartID.Control_Edit_PartID (2ms)
-[21:02:44.862] [MEDIUM] ➡️ ENTERING Control_Add_Operation.Control_Add_Operation
-[21:02:44.863] [LOW   ] 🖱️ UI ACTION: ADD_OPERATION_INITIALIZATION on Control_Add_Operation
-[21:02:44.865] [MEDIUM] ⬅️ EXITING Control_Add_Operation.Control_Add_Operation (2ms)
-[21:02:44.873] [LOW   ] 🖱️ UI ACTION: INITIALIZE_FORM on SettingsForm
-[21:02:44.875] [LOW   ] 🖱️ UI ACTION: SETTINGS_FORM_INITIALIZATION on SettingsForm
-[21:02:44.877] [MEDIUM] ⬅️ EXITING SettingsForm.SettingsForm (152ms)
-[Theme] Applied theme to form 'SettingsForm' in 12ms
-[21:02:44.968] [HIGH  ] ✅ PROCEDURE usr_ui_settings_Get (196ms) - Status: 1
-[21:02:44.970] [MEDIUM] ✅ DB PROCEDURE COMPLETE: usr_ui_settings_Get (196ms) - 1 rows
-[21:02:44.971] [MEDIUM]   ⬅️ EXITING Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync (206ms)
-[21:02:44.972] [HIGH  ] ⏱️ PERFORMANCE COMPLETE: SP_usr_ui_settings_Get (200ms)
-[21:02:44.973] [MEDIUM] ⬅️ EXITING Dao_User.GetSettingsJsonInternalAsync (202ms)
-[21:02:44.974] [MEDIUM] ⬅️ EXITING Dao_User.GetThemeEnabledAsync (204ms)
-[21:02:44.975] [MEDIUM] ➡️ ENTERING Dao_User.GetThemeNameAsync
-[21:02:44.976] [MEDIUM] ➡️ ENTERING Dao_User.GetSettingsJsonInternalAsync
-[21:02:44.978] [HIGH  ] ⏱️ PERFORMANCE START: SP_usr_ui_settings_Get
-[21:02:44.979] [MEDIUM]   ➡️ ENTERING Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync
-[21:02:44.980] [MEDIUM] 🗄️ DB PROCEDURE START: usr_ui_settings_Get
-[21:02:44.982] [HIGH  ] ✅ PROCEDURE usr_ui_settings_GetShortcutsJson (218ms) - Status: 1
-[21:02:44.983] [MEDIUM] ✅ DB PROCEDURE COMPLETE: usr_ui_settings_GetShortcutsJson (218ms) - 1 rows
-[21:02:44.984] [MEDIUM]   ⬅️ EXITING Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync (5ms)
-[21:02:44.985] [HIGH  ] ⏱️ PERFORMANCE COMPLETE: SP_usr_ui_settings_GetShortcutsJson (221ms)
-[21:02:44.986] [MEDIUM] ⬅️ EXITING Dao_User.GetShortcutsJsonAsync (223ms)
-[21:02:44.991] [HIGH  ] ✅ PROCEDURE usr_ui_settings_Get (13ms) - Status: 1
-[21:02:44.992] [MEDIUM] ✅ DB PROCEDURE COMPLETE: usr_ui_settings_Get (13ms) - 1 rows
-[21:02:44.993] [MEDIUM] ⬅️ EXITING Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync (220ms)
-[21:02:44.994] [HIGH  ] ⏱️ PERFORMANCE COMPLETE: SP_usr_ui_settings_Get (16ms)
-[21:02:44.995] [MEDIUM] ⬅️ EXITING Dao_User.GetSettingsJsonInternalAsync (18ms)
-[21:02:44.996] [MEDIUM] ⬅️ EXITING Dao_User.GetThemeNameAsync (20ms)
-[21:02:45.028] [HIGH  ] ⏱️ PERFORMANCE START: SP_usr_users_Get_All
-[21:02:45.029] [MEDIUM] ➡️ ENTERING Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync
-[21:02:45.030] [MEDIUM] 🗄️ DB PROCEDURE START: usr_users_Get_All
-[21:02:45.034] [HIGH  ] ✅ PROCEDURE usr_users_Get_All (6ms) - Status: 1
-[21:02:45.035] [MEDIUM] ✅ DB PROCEDURE COMPLETE: usr_users_Get_All (6ms) - 88 rows
-[21:02:45.037] [MEDIUM] ⬅️ EXITING Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync (7ms)
-[21:02:45.037] [HIGH  ] ⏱️ PERFORMANCE COMPLETE: SP_usr_users_Get_All (9ms)
-[21:02:45.043] [MEDIUM] ➡️ ENTERING Dao_User.GetUserByUsernameAsync
-[21:02:45.044] [HIGH  ] ⏱️ PERFORMANCE START: SP_usr_users_Get_ByUser
-[21:02:45.045] [MEDIUM] ➡️ ENTERING Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync
-[21:02:45.046] [MEDIUM] 🗄️ DB PROCEDURE START: usr_users_Get_ByUser
-[21:02:45.050] [HIGH  ] ✅ PROCEDURE usr_users_Get_ByUser (5ms) - Status: 0
-[21:02:45.051] [MEDIUM] ✅ DB PROCEDURE COMPLETE: usr_users_Get_ByUser (5ms) - 0 rows
-[21:02:45.052] [MEDIUM] ⬅️ EXITING Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync (6ms)
-[21:02:45.053] [HIGH  ] ⏱️ PERFORMANCE COMPLETE: SP_usr_users_Get_ByUser (8ms)
-[21:02:45.054] [MEDIUM] ⬅️ EXITING Dao_User.GetUserByUsernameAsync (10ms)
-[21:02:46.444] [MEDIUM] ➡️ ENTERING Dao_User.GetWipServerAddressAsync
-[21:02:46.445] [MEDIUM] ➡️ ENTERING Dao_User.GetSettingsJsonInternalAsync
-[21:02:46.446] [HIGH  ] ⏱️ PERFORMANCE START: SP_usr_ui_settings_Get
-[21:02:46.447] [MEDIUM] ➡️ ENTERING Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync
-[21:02:46.448] [MEDIUM] 🗄️ DB PROCEDURE START: usr_ui_settings_Get
-[21:02:46.450] [MEDIUM] ➡️ ENTERING Dao_User.GetWipServerPortAsync
-[21:02:46.451] [MEDIUM]   ➡️ ENTERING Dao_User.GetSettingsJsonInternalAsync
-[21:02:46.452] [HIGH  ] ⏱️ PERFORMANCE START: SP_usr_ui_settings_Get
-[21:02:46.453] [MEDIUM]   ➡️ ENTERING Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync
-[21:02:46.454] [MEDIUM] 🗄️ DB PROCEDURE START: usr_ui_settings_Get
-[21:02:46.456] [MEDIUM] ➡️ ENTERING Dao_User.GetDatabaseAsync
-[21:02:46.457] [MEDIUM]     ➡️ ENTERING Dao_User.GetSettingsJsonInternalAsync
-[21:02:46.458] [HIGH  ] ⏱️ PERFORMANCE START: SP_usr_ui_settings_Get
-[21:02:46.459] [MEDIUM]     ➡️ ENTERING Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync
-[21:02:46.460] [MEDIUM] 🗄️ DB PROCEDURE START: usr_ui_settings_Get
-[21:02:46.464] [HIGH  ] ✅ PROCEDURE usr_ui_settings_Get (11ms) - Status: 1
-[21:02:46.465] [MEDIUM] ✅ DB PROCEDURE COMPLETE: usr_ui_settings_Get (11ms) - 1 rows
-[21:02:46.466] [MEDIUM]     ⬅️ EXITING Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync (19ms)
-[21:02:46.467] [HIGH  ] ⏱️ PERFORMANCE COMPLETE: SP_usr_ui_settings_Get (15ms)
-[21:02:46.468] [MEDIUM]     ⬅️ EXITING Dao_User.GetSettingsJsonInternalAsync (23ms)
-[21:02:46.469] [MEDIUM] ⬅️ EXITING Dao_User.GetWipServerPortAsync (18ms)
-[21:02:46.470] [HIGH  ] ✅ PROCEDURE usr_ui_settings_Get (23ms) - Status: 1
-[21:02:46.471] [MEDIUM] ✅ DB PROCEDURE COMPLETE: usr_ui_settings_Get (23ms) - 1 rows
-[21:02:46.472] [MEDIUM]   ⬅️ EXITING Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync (18ms)
-[21:02:46.473] [HIGH  ] ⏱️ PERFORMANCE COMPLETE: SP_usr_ui_settings_Get (26ms)
-[21:02:46.474] [MEDIUM]   ⬅️ EXITING Dao_User.GetSettingsJsonInternalAsync (22ms)
-[21:02:46.474] [MEDIUM] ⬅️ EXITING Dao_User.GetWipServerAddressAsync (30ms)
-[21:02:46.475] [HIGH  ] ✅ PROCEDURE usr_ui_settings_Get (17ms) - Status: 1
-[21:02:46.476] [MEDIUM] ✅ DB PROCEDURE COMPLETE: usr_ui_settings_Get (17ms) - 1 rows
-[21:02:46.477] [MEDIUM] ⬅️ EXITING Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync (17ms)
-[21:02:46.478] [HIGH  ] ⏱️ PERFORMANCE COMPLETE: SP_usr_ui_settings_Get (19ms)
-[21:02:46.479] [MEDIUM] ⬅️ EXITING Dao_User.GetSettingsJsonInternalAsync (21ms)
-[21:02:46.480] [MEDIUM] ⬅️ EXITING Dao_User.GetDatabaseAsync (23ms)
+[ConnectionRecovery] UpdateConnectionStrengthAsync called
+[ConnectionRecovery] Strength: 5, Ping: 4, TimerActive: False
+Resetting user controls...
+Attempting to invoke Control_RemoveTab_SoftReset on Control_RemoveTab
+Attempting to invoke Control_AdvancedRemove_SoftReset on Control_AdvancedRemove
+Invoking Control_RemoveTab_SoftReset on Control_RemoveTab
+Invoking Control_AdvancedRemove_SoftReset on Control_AdvancedRemove
+Attempting to invoke Control_InventoryTab_SoftReset on Control_InventoryTab
+Invoking Control_InventoryTab_SoftReset on Control_InventoryTab
+Attempting to invoke Control_AdvancedInventory_SoftReset on Control_AdvancedInventory
+Method Control_AdvancedInventory_SoftReset not found on Control_AdvancedInventory
+Attempting to invoke Control_TransferTab_SoftReset on Control_TransferTab
+Invoking Control_TransferTab_SoftReset on Control_TransferTab
+[DEBUG] Updating status strip for Soft Reset
+[DEBUG] AdvancedRemove SoftReset button re-enabled
+[DEBUG] Restoring status strip after soft reset
+[13:19:21.549] [MEDIUM] ➡️ ENTERING Control_InventoryTab_SoftReset.Control_InventoryTab
+[DEBUG] Updating status strip for Soft Reset
+[DEBUG] Resetting UI fields
+[DEBUG] TransferTab SoftReset button re-enabled
+[DEBUG] Updating status strip for Soft Reset
+[DEBUG] Resetting UI fields
+[13:19:21.689] [MEDIUM] ➡️ ENTERING Control_InventoryTab.UpdateColorCodeFieldsVisibility
+[13:19:21.693] [LOW   ] 🖱️ UI ACTION: COLOR_FIELDS_VISIBILITY on Control_InventoryTab
+[13:19:21.718] [MEDIUM] ⬅️ EXITING Control_InventoryTab.UpdateColorCodeFieldsVisibility (24ms)
+[13:19:21.725] [MEDIUM] ⬅️ EXITING Control_InventoryTab_SoftReset.Control_InventoryTab (175ms)
+[DEBUG] InventoryTab SoftReset button re-enabled
+[DEBUG] Restoring status strip after reset
+MTM_WIP_Application_Winforms.exe (2524): Loaded 'Anonymously Hosted DynamicMethods Assembly'.
+[13:19:22.166] [HIGH  ] ⏱️ PERFORMANCE START: SP_md_part_ids_Get_All
+[13:19:22.169] [MEDIUM] ➡️ ENTERING Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync
+[13:19:22.172] [MEDIUM] 🗄️ DB PROCEDURE START: md_part_ids_Get_All
+[13:19:22.185] [HIGH  ] ⏱️ PERFORMANCE START: SP_md_operation_numbers_Get_All
+[13:19:22.189] [MEDIUM]   ➡️ ENTERING Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync
+[13:19:22.191] [MEDIUM] 🗄️ DB PROCEDURE START: md_operation_numbers_Get_All
+[13:19:22.202] [HIGH  ] ⏱️ PERFORMANCE START: SP_md_operation_numbers_Get_All
+[13:19:22.205] [MEDIUM]     ➡️ ENTERING Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync
+[13:19:22.208] [MEDIUM] 🗄️ DB PROCEDURE START: md_operation_numbers_Get_All
+[13:19:22.256] [HIGH  ] ✅ PROCEDURE md_operation_numbers_Get_All (71ms) - Status: 1
+[13:19:22.282] [MEDIUM] ✅ DB PROCEDURE COMPLETE: md_operation_numbers_Get_All (71ms) - 71 rows
+[13:19:22.293] [MEDIUM]     ⬅️ EXITING Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync (87ms)
+[13:19:22.296] [HIGH  ] ⏱️ PERFORMANCE COMPLETE: SP_md_operation_numbers_Get_All (110ms)
+[13:19:22.328] [HIGH  ] ✅ PROCEDURE md_operation_numbers_Get_All (126ms) - Status: 1
+[13:19:22.338] [MEDIUM] ✅ DB PROCEDURE COMPLETE: md_operation_numbers_Get_All (126ms) - 71 rows
+[13:19:22.345] [MEDIUM]   ⬅️ EXITING Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync (175ms)
+[13:19:22.347] [HIGH  ] ⏱️ PERFORMANCE COMPLETE: SP_md_operation_numbers_Get_All (145ms)
+[13:19:22.371] [MEDIUM] ➡️ ENTERING Dao_Inventory.GetInventoryByPartIdAndOperationAsync
+[13:19:22.378] [HIGH  ] ⏱️ PERFORMANCE START: SP_inv_inventory_Get_ByPartIDandOperation
+[13:19:22.380] [MEDIUM]   ➡️ ENTERING Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync
+[13:19:22.383] [MEDIUM] 🗄️ DB PROCEDURE START: inv_inventory_Get_ByPartIDandOperation
+[13:19:22.418] [HIGH  ] ✅ PROCEDURE md_part_ids_Get_All (251ms) - Status: 1
+[13:19:22.453] [MEDIUM] ✅ DB PROCEDURE COMPLETE: md_part_ids_Get_All (251ms) - 3745 rows
+[13:19:22.458] [MEDIUM]   ⬅️ EXITING Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync (76ms)
+[13:19:22.460] [HIGH  ] ⏱️ PERFORMANCE COMPLETE: SP_md_part_ids_Get_All (293ms)
+[13:19:22.488] [HIGH  ] ✅ PROCEDURE inv_inventory_Get_ByPartIDandOperation (109ms) - Status: 1
+[13:19:22.490] [MEDIUM] ✅ DB PROCEDURE COMPLETE: inv_inventory_Get_ByPartIDandOperation (109ms) - 1 rows
+[13:19:22.493] [MEDIUM] ⬅️ EXITING Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync (303ms)
+[13:19:22.508] [HIGH  ] ⏱️ PERFORMANCE COMPLETE: SP_inv_inventory_Get_ByPartIDandOperation (129ms)
+[13:19:22.512] [MEDIUM] 📊 BUSINESS LOGIC: INVENTORY_SEARCH_BY_PART_AND_OP_COMPLETE
+[13:19:22.515] [MEDIUM] ⬅️ EXITING Dao_Inventory.GetInventoryByPartIdAndOperationAsync (143ms)
+[13:19:22.599] [MEDIUM] ➡️ ENTERING Dao_User.GetGridViewSettingsJsonAsync
+[13:19:22.601] [HIGH  ] ⏱️ PERFORMANCE START: SP_usr_settings_GetJsonSetting
+[13:19:22.603] [MEDIUM] ➡️ ENTERING Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync
+[13:19:22.605] [MEDIUM] 🗄️ DB PROCEDURE START: usr_settings_GetJsonSetting
+Exception thrown: 'System.ArgumentException' in MySql.Data.dll
+Exception thrown: 'System.ArgumentException' in System.Private.CoreLib.dll
+Exception thrown: 'System.ArgumentException' in System.Private.CoreLib.dll
+Exception thrown: 'System.ArgumentException' in System.Private.CoreLib.dll
+Exception thrown: 'System.ArgumentException' in System.Private.CoreLib.dll
+Exception thrown: 'System.ArgumentException' in System.Private.CoreLib.dll
+Exception thrown: 'System.ArgumentException' in System.Private.CoreLib.dll
+MTM_WIP_Application_Winforms.exe (2524): Loaded 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.22\System.Diagnostics.StackTrace.dll'. Cannot find or open the PDB file.
+MTM_WIP_Application_Winforms.exe (2524): Loaded 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.22\System.Reflection.Metadata.dll'. Cannot find or open the PDB file.
+MTM_WIP_Application_Winforms.exe (2524): Loaded 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.22\System.Collections.Immutable.dll'. Cannot find or open the PDB file.
+MTM_WIP_Application_Winforms.exe (2524): Loaded 'C:\Program Files\dotnet\shared\Microsoft.NETCore.App\8.0.22\System.IO.MemoryMappedFiles.dll'. Cannot find or open the PDB file.
+2025-11-21 13:19:23 - Database Error [ERROR] - Parameter 'p_DgvName' not found in the collection.
+2025-11-21 13:19:23 - Stack Trace -    at MySql.Data.MySqlClient.MySqlParameterCollection.GetParameterFlexible(String parameterName, Boolean throwOnNotFound)
+   at MySql.Data.MySqlClient.StoredProcedure.GetAndFixParameter(String spName, MySqlSchemaRow param, Boolean realAsFloat, MySqlParameter returnParameter)
+   at MySql.Data.MySqlClient.StoredProcedure.CheckParametersAsync(String spName, Boolean execAsync)
+   at MySql.Data.MySqlClient.StoredProcedure.Resolve(Boolean preparing)
+   at MySql.Data.MySqlClient.MySqlCommand.ExecuteReaderAsync(CommandBehavior behavior, Boolean execAsync, CancellationToken cancellationToken)
+   at MySql.Data.MySqlClient.MySqlCommand.ExecuteReader(CommandBehavior behavior)
+   at MySql.Data.MySqlClient.MySqlCommand.ExecuteDbDataReader(CommandBehavior behavior)
+   at System.Data.Common.DbDataAdapter.FillInternal(DataSet dataset, DataTable[] datatables, Int32 startRecord, Int32 maxRecords, String srcTable, IDbCommand command, CommandBehavior behavior)
+   at System.Data.Common.DbDataAdapter.Fill(DataTable[] dataTables, Int32 startRecord, Int32 maxRecords, IDbCommand command, CommandBehavior behavior)
+   at System.Data.Common.DbDataAdapter.Fill(DataTable dataTable)
+   at MTM_WIP_Application_Winforms.Helpers.Helper_Database_StoredProcedure.<>c__DisplayClass4_2.<ExecuteDataTableWithStatusAsync>b__1() in c:\Users\jkoll\source\repos\MTM_WIP_Application_WinForms\Helpers\Helper_Database_StoredProcedure.cs:line 290
+   at System.Threading.Tasks.Task`1.InnerInvoke()
+   at System.Threading.ExecutionContext.RunFromThreadPoolDispatchLoop(Thread threadPoolThread, ExecutionContext executionContext, ContextCallback callback, Object state)
+--- End of stack trace from previous location ---
+   at System.Threading.ExecutionContext.RunFromThreadPoolDispatchLoop(Thread threadPoolThread, ExecutionContext executionContext, ContextCallback callback, Object state)
+   at System.Threading.Tasks.Task.ExecuteWithThreadLocal(Task& currentTaskSlot, Thread threadPoolThread)
+--- End of stack trace from previous location ---
+   at MTM_WIP_Application_Winforms.Helpers.Helper_Database_StoredProcedure.<>c__DisplayClass4_0.<<ExecuteDataTableWithStatusAsync>b__0>d.MoveNext() in c:\Users\jkoll\source\repos\MTM_WIP_Application_WinForms\Helpers\Helper_Database_StoredProcedure.cs:line 290
+--- End of stack trace from previous location ---
+   at MTM_WIP_Application_Winforms.Helpers.Helper_Database_StoredProcedure.ExecuteWithRetryAsync[T](Func`1 operation) in c:\Users\jkoll\source\repos\MTM_WIP_Application_WinForms\Helpers\Helper_Database_StoredProcedure.cs:line 930
+   at MTM_WIP_Application_Winforms.Helpers.Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync(String connectionString, String procedureName, Dictionary`2 parameters, Helper_StoredProcedureProgress progressHelper, MySqlConnection connection, MySqlTransaction transaction) in c:\Users\jkoll\source\repos\MTM_WIP_Application_WinForms\Helpers\Helper_Database_StoredProcedure.cs:line 250
+[13:19:24.096] [MEDIUM] ✅ DB PROCEDURE COMPLETE: usr_settings_GetJsonSetting (1349ms) - 0 rows
+[13:19:24.103] [MEDIUM] ⬅️ EXITING Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync (1499ms)
+[13:19:24.107] [HIGH  ] ⏱️ PERFORMANCE COMPLETE: SP_usr_settings_GetJsonSetting (1505ms)
+[13:19:24.110] [MEDIUM] ⬅️ EXITING Dao_User.GetGridViewSettingsJsonAsync (1511ms)
+[13:19:24.187] [HIGH  ] ⏱️ PERFORMANCE START: SP_md_operation_numbers_Get_All
+[13:19:24.206] [MEDIUM] ➡️ ENTERING Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync
+[13:19:24.216] [MEDIUM] 🗄️ DB PROCEDURE START: md_operation_numbers_Get_All
+[13:19:24.260] [HIGH  ] ✅ PROCEDURE md_operation_numbers_Get_All (72ms) - Status: 1
+[13:19:24.285] [MEDIUM] ✅ DB PROCEDURE COMPLETE: md_operation_numbers_Get_All (72ms) - 71 rows
+[13:19:24.288] [MEDIUM] ⬅️ EXITING Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync (82ms)
+[13:19:24.291] [HIGH  ] ⏱️ PERFORMANCE COMPLETE: SP_md_operation_numbers_Get_All (104ms)
+[ConnectionRecovery] UpdateConnectionStrengthAsync called
+[ConnectionRecovery] Strength: 5, Ping: 3, TimerActive: False
+[13:19:28.158] [MEDIUM] ➡️ ENTERING Dao_User.SetGridViewSettingsJsonAsync
+[13:19:28.245] [MEDIUM] ⬅️ EXITING Dao_User.SetGridViewSettingsJsonAsync (70ms)
+[13:19:28.274] [HIGH  ] ⏱️ PERFORMANCE START: SP_md_part_ids_Get_All
+[13:19:28.289] [MEDIUM] ➡️ ENTERING Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync
+[13:19:28.292] [MEDIUM] 🗄️ DB PROCEDURE START: md_part_ids_Get_All
+[13:19:28.393] [HIGH  ] ✅ PROCEDURE md_part_ids_Get_All (119ms) - Status: 1
+[13:19:28.418] [MEDIUM] ✅ DB PROCEDURE COMPLETE: md_part_ids_Get_All (119ms) - 3745 rows
+[13:19:28.424] [MEDIUM] ⬅️ EXITING Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync (134ms)
+[13:19:28.442] [HIGH  ] ⏱️ PERFORMANCE COMPLETE: SP_md_part_ids_Get_All (168ms)
+[13:19:29.583] [HIGH  ] ⏱️ PERFORMANCE START: SP_md_part_ids_Get_All
+[13:19:29.599] [MEDIUM] ➡️ ENTERING Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync
+[13:19:29.604] [MEDIUM] 🗄️ DB PROCEDURE START: md_part_ids_Get_All
+[13:19:29.765] [HIGH  ] ✅ PROCEDURE md_part_ids_Get_All (182ms) - Status: 1
+[13:19:29.775] [MEDIUM] ✅ DB PROCEDURE COMPLETE: md_part_ids_Get_All (182ms) - 3745 rows
+[13:19:29.790] [MEDIUM] ⬅️ EXITING Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync (190ms)
+[13:19:29.793] [HIGH  ] ⏱️ PERFORMANCE COMPLETE: SP_md_part_ids_Get_All (209ms)
+[ConnectionRecovery] UpdateConnectionStrengthAsync called
+[ConnectionRecovery] Strength: 5, Ping: 3, TimerActive: False
+[ConnectionRecovery] UpdateConnectionStrengthAsync called
+[ConnectionRecovery] Strength: 5, Ping: 1, TimerActive: False
+[13:19:40.144] [MEDIUM] ➡️ ENTERING Dao_User.SetGridViewSettingsJsonAsync
+[13:19:40.163] [MEDIUM] ⬅️ EXITING Dao_User.SetGridViewSettingsJsonAsync (15ms)
+[ConnectionRecovery] UpdateConnectionStrengthAsync called
+[ConnectionRecovery] Strength: 5, Ping: 1, TimerActive: False
+Running VersionChecker...
+[13:19:42.225] [HIGH  ] ⏱️ PERFORMANCE START: SP_log_changelog_Get_Current
+[13:19:42.227] [MEDIUM] ➡️ ENTERING Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync
+[13:19:42.229] [MEDIUM] 🗄️ DB PROCEDURE START: log_changelog_Get_Current
+[13:19:42.236] [HIGH  ] ✅ PROCEDURE log_changelog_Get_Current (10ms) - Status: 1
+[13:19:42.238] [MEDIUM] ✅ DB PROCEDURE COMPLETE: log_changelog_Get_Current (10ms) - 1 rows
+[13:19:42.251] [MEDIUM] ⬅️ EXITING Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync (22ms)
+[13:19:42.253] [HIGH  ] ⏱️ PERFORMANCE COMPLETE: SP_log_changelog_Get_Current (27ms)
+Database version retrieved: 6.3.1.0
+Version labels updated - App: 6.3.1.0, DB: 6.3.1.0
+[ConnectionRecovery] UpdateConnectionStrengthAsync called
+[ConnectionRecovery] Strength: 5, Ping: 1, TimerActive: False
+Resetting user controls...
+Attempting to invoke Control_InventoryTab_SoftReset on Control_InventoryTab
+Attempting to invoke Control_RemoveTab_SoftReset on Control_RemoveTab
+Invoking Control_RemoveTab_SoftReset on Control_RemoveTab
+Invoking Control_InventoryTab_SoftReset on Control_InventoryTab
+Attempting to invoke Control_AdvancedInventory_SoftReset on Control_AdvancedInventory
+Method Control_AdvancedInventory_SoftReset not found on Control_AdvancedInventory
+Attempting to invoke Control_AdvancedRemove_SoftReset on Control_AdvancedRemove
+Invoking Control_AdvancedRemove_SoftReset on Control_AdvancedRemove
+Attempting to invoke Control_TransferTab_SoftReset on Control_TransferTab
+[13:19:49.581] [MEDIUM] ➡️ ENTERING Control_InventoryTab_SoftReset.Control_InventoryTab
+Invoking Control_TransferTab_SoftReset on Control_TransferTab
+[DEBUG] Updating status strip for Soft Reset
+[DEBUG] AdvancedRemove SoftReset button re-enabled
+[DEBUG] Restoring status strip after soft reset
+[DEBUG] Updating status strip for Soft Reset
+[DEBUG] Resetting UI fields
+[DEBUG] TransferTab SoftReset button re-enabled
+[DEBUG] Updating status strip for Soft Reset
+[DEBUG] Resetting UI fields
+[13:19:49.676] [MEDIUM] ➡️ ENTERING Control_InventoryTab.UpdateColorCodeFieldsVisibility
+[13:19:49.678] [LOW   ] 🖱️ UI ACTION: COLOR_FIELDS_VISIBILITY on Control_InventoryTab
+[13:19:49.693] [MEDIUM] ⬅️ EXITING Control_InventoryTab.UpdateColorCodeFieldsVisibility (15ms)
+[13:19:49.699] [MEDIUM] ⬅️ EXITING Control_InventoryTab_SoftReset.Control_InventoryTab (119ms)
+[DEBUG] InventoryTab SoftReset button re-enabled
+[DEBUG] Restoring status strip after reset
+[ConnectionRecovery] UpdateConnectionStrengthAsync called
+[ConnectionRecovery] Strength: 5, Ping: 1, TimerActive: False
+[13:19:52.775] [HIGH  ] ⏱️ PERFORMANCE START: SP_md_part_ids_Get_All
+[13:19:52.779] [MEDIUM] ➡️ ENTERING Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync
+[13:19:52.780] [MEDIUM] 🗄️ DB PROCEDURE START: md_part_ids_Get_All
+[13:19:52.786] [HIGH  ] ⏱️ PERFORMANCE START: SP_md_part_ids_Get_All
+[13:19:52.788] [MEDIUM]   ➡️ ENTERING Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync
+[13:19:52.789] [MEDIUM] 🗄️ DB PROCEDURE START: md_part_ids_Get_All
+[13:19:52.821] [MEDIUM] ➡️ ENTERING Dao_Inventory.GetInventoryByPartIdAndOperationAsync
+[13:19:52.875] [HIGH  ] ⏱️ PERFORMANCE START: SP_inv_inventory_Get_ByPartIDandOperation
+[13:19:52.896] [MEDIUM]     ➡️ ENTERING Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync
+[13:19:52.916] [MEDIUM] 🗄️ DB PROCEDURE START: inv_inventory_Get_ByPartIDandOperation
+[13:19:52.953] [HIGH  ] ✅ PROCEDURE md_part_ids_Get_All (166ms) - Status: 1
+[13:19:52.959] [MEDIUM] ✅ DB PROCEDURE COMPLETE: md_part_ids_Get_All (166ms) - 3745 rows
+[13:19:52.992] [MEDIUM]     ⬅️ EXITING Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync (203ms)
+[13:19:53.002] [HIGH  ] ⏱️ PERFORMANCE COMPLETE: SP_md_part_ids_Get_All (215ms)
+[13:19:53.005] [HIGH  ] ✅ PROCEDURE md_part_ids_Get_All (229ms) - Status: 1
+[13:19:53.006] [MEDIUM] ✅ DB PROCEDURE COMPLETE: md_part_ids_Get_All (229ms) - 3745 rows
+[13:19:53.011] [MEDIUM]   ⬅️ EXITING Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync (231ms)
+[13:19:53.021] [HIGH  ] ⏱️ PERFORMANCE COMPLETE: SP_md_part_ids_Get_All (245ms)
+[13:19:53.036] [HIGH  ] ✅ PROCEDURE inv_inventory_Get_ByPartIDandOperation (172ms) - Status: 1
+[13:19:53.042] [MEDIUM] ✅ DB PROCEDURE COMPLETE: inv_inventory_Get_ByPartIDandOperation (172ms) - 1 rows
+[13:19:53.043] [MEDIUM] ⬅️ EXITING Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync (147ms)
+[13:19:53.046] [HIGH  ] ⏱️ PERFORMANCE COMPLETE: SP_inv_inventory_Get_ByPartIDandOperation (170ms)
+[13:19:53.048] [MEDIUM] 📊 BUSINESS LOGIC: INVENTORY_SEARCH_BY_PART_AND_OP_COMPLETE
+[13:19:53.050] [MEDIUM] ⬅️ EXITING Dao_Inventory.GetInventoryByPartIdAndOperationAsync (228ms)
+[13:19:53.077] [MEDIUM] ➡️ ENTERING Dao_User.GetGridViewSettingsJsonAsync
+[13:19:53.079] [HIGH  ] ⏱️ PERFORMANCE START: SP_usr_settings_GetJsonSetting
+[13:19:53.080] [MEDIUM] ➡️ ENTERING Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync
+[13:19:53.081] [MEDIUM] 🗄️ DB PROCEDURE START: usr_settings_GetJsonSetting
+Exception thrown: 'System.ArgumentException' in MySql.Data.dll
+Exception thrown: 'System.ArgumentException' in System.Private.CoreLib.dll
+Exception thrown: 'System.ArgumentException' in System.Private.CoreLib.dll
+Exception thrown: 'System.ArgumentException' in System.Private.CoreLib.dll
+Exception thrown: 'System.ArgumentException' in System.Private.CoreLib.dll
+Exception thrown: 'System.ArgumentException' in System.Private.CoreLib.dll
+Exception thrown: 'System.ArgumentException' in System.Private.CoreLib.dll
+2025-11-21 13:19:54 - Database Error [ERROR] - Parameter 'p_DgvName' not found in the collection.
+2025-11-21 13:19:54 - Stack Trace -    at MySql.Data.MySqlClient.StoredProcedure.GetAndFixParameter(String spName, MySqlSchemaRow param, Boolean realAsFloat, MySqlParameter returnParameter)
+   at MySql.Data.MySqlClient.StoredProcedure.CheckParametersAsync(String spName, Boolean execAsync)
+   at MySql.Data.MySqlClient.StoredProcedure.Resolve(Boolean preparing)
+   at MySql.Data.MySqlClient.MySqlCommand.ExecuteReaderAsync(CommandBehavior behavior, Boolean execAsync, CancellationToken cancellationToken)
+   at MySql.Data.MySqlClient.MySqlCommand.ExecuteReader(CommandBehavior behavior)
+   at MySql.Data.MySqlClient.MySqlCommand.ExecuteDbDataReader(CommandBehavior behavior)
+   at System.Data.Common.DbDataAdapter.FillInternal(DataSet dataset, DataTable[] datatables, Int32 startRecord, Int32 maxRecords, String srcTable, IDbCommand command, CommandBehavior behavior)
+   at System.Data.Common.DbDataAdapter.Fill(DataTable[] dataTables, Int32 startRecord, Int32 maxRecords, IDbCommand command, CommandBehavior behavior)
+   at System.Data.Common.DbDataAdapter.Fill(DataTable dataTable)
+   at MTM_WIP_Application_Winforms.Helpers.Helper_Database_StoredProcedure.<>c__DisplayClass4_2.<ExecuteDataTableWithStatusAsync>b__1() in c:\Users\jkoll\source\repos\MTM_WIP_Application_WinForms\Helpers\Helper_Database_StoredProcedure.cs:line 290
+   at System.Threading.Tasks.Task`1.InnerInvoke()
+   at System.Threading.ExecutionContext.RunFromThreadPoolDispatchLoop(Thread threadPoolThread, ExecutionContext executionContext, ContextCallback callback, Object state)
+--- End of stack trace from previous location ---
+   at System.Threading.ExecutionContext.RunFromThreadPoolDispatchLoop(Thread threadPoolThread, ExecutionContext executionContext, ContextCallback callback, Object state)
+   at System.Threading.Tasks.Task.ExecuteWithThreadLocal(Task& currentTaskSlot, Thread threadPoolThread)
+--- End of stack trace from previous location ---
+   at MTM_WIP_Application_Winforms.Helpers.Helper_Database_StoredProcedure.<>c__DisplayClass4_0.<<ExecuteDataTableWithStatusAsync>b__0>d.MoveNext() in c:\Users\jkoll\source\repos\MTM_WIP_Application_WinForms\Helpers\Helper_Database_StoredProcedure.cs:line 290
+--- End of stack trace from previous location ---
+   at MTM_WIP_Application_Winforms.Helpers.Helper_Database_StoredProcedure.ExecuteWithRetryAsync[T](Func`1 operation) in c:\Users\jkoll\source\repos\MTM_WIP_Application_WinForms\Helpers\Helper_Database_StoredProcedure.cs:line 930
+   at MTM_WIP_Application_Winforms.Helpers.Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync(String connectionString, String procedureName, Dictionary`2 parameters, Helper_StoredProcedureProgress progressHelper, MySqlConnection connection, MySqlTransaction transaction) in c:\Users\jkoll\source\repos\MTM_WIP_Application_WinForms\Helpers\Helper_Database_StoredProcedure.cs:line 250
+[13:19:54.346] [MEDIUM] ✅ DB PROCEDURE COMPLETE: usr_settings_GetJsonSetting (1261ms) - 0 rows
+[13:19:54.348] [MEDIUM] ⬅️ EXITING Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync (1267ms)
+[13:19:54.350] [HIGH  ] ⏱️ PERFORMANCE COMPLETE: SP_usr_settings_GetJsonSetting (1270ms)
+[13:19:54.356] [MEDIUM] ⬅️ EXITING Dao_User.GetGridViewSettingsJsonAsync (1279ms)
+[13:19:54.380] [HIGH  ] ⏱️ PERFORMANCE START: SP_md_part_ids_Get_All
+[13:19:54.384] [MEDIUM] ➡️ ENTERING Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync
+[13:19:54.386] [MEDIUM] 🗄️ DB PROCEDURE START: md_part_ids_Get_All
+[13:19:54.518] [HIGH  ] ✅ PROCEDURE md_part_ids_Get_All (138ms) - Status: 1
+[13:19:54.530] [MEDIUM] ✅ DB PROCEDURE COMPLETE: md_part_ids_Get_All (138ms) - 3745 rows
+[13:19:54.534] [MEDIUM] ⬅️ EXITING Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync (150ms)
+[13:19:54.562] [HIGH  ] ⏱️ PERFORMANCE COMPLETE: SP_md_part_ids_Get_All (181ms)
 [ConnectionRecovery] UpdateConnectionStrengthAsync called
 [ConnectionRecovery] Strength: 5, Ping: 2, TimerActive: False
 [ConnectionRecovery] UpdateConnectionStrengthAsync called
-[ConnectionRecovery] Strength: 5, Ping: 1, TimerActive: False
-[21:02:54.696] [MEDIUM] ➡️ ENTERING Dao_User.UserExistsAsync
-[21:02:54.697] [HIGH  ] ⏱️ PERFORMANCE START: SP_usr_users_Exists
-[21:02:54.698] [MEDIUM] ➡️ ENTERING Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync
-[21:02:54.699] [MEDIUM] 🗄️ DB PROCEDURE START: usr_users_Exists
-[21:02:54.727] [HIGH  ] ✅ PROCEDURE usr_users_Exists (29ms) - Status: 1
-[21:02:54.728] [MEDIUM] ✅ DB PROCEDURE COMPLETE: usr_users_Exists (29ms) - 1 rows
-[21:02:54.729] [MEDIUM] ⬅️ EXITING Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync (30ms)
-[21:02:54.729] [HIGH  ] ⏱️ PERFORMANCE COMPLETE: SP_usr_users_Exists (32ms)
-[21:02:54.730] [MEDIUM] ⬅️ EXITING Dao_User.UserExistsAsync (34ms)
-[21:02:56.582] [MEDIUM] ➡️ ENTERING Dao_User.SetWipServerAddressAsync
-[21:02:56.584] [MEDIUM] ➡️ ENTERING Dao_User.SetUserSettingInternalAsync
-[21:02:56.587] [MEDIUM] ➡️ ENTERING Dao_User.SetWipServerPortAsync
-[21:02:56.587] [MEDIUM]   ➡️ ENTERING Dao_User.SetUserSettingInternalAsync
-[21:02:56.590] [MEDIUM] ➡️ ENTERING Dao_User.SetDatabaseAsync
-[21:02:56.591] [MEDIUM]     ➡️ ENTERING Dao_User.SetUserSettingInternalAsync
-[21:02:56.622] [MEDIUM]     ⬅️ EXITING Dao_User.SetUserSettingInternalAsync (30ms)
-[21:02:56.623] [MEDIUM] ⬅️ EXITING Dao_User.SetWipServerAddressAsync (40ms)
-[21:02:56.623] [MEDIUM]   ⬅️ EXITING Dao_User.SetUserSettingInternalAsync (39ms)
-[21:02:56.624] [MEDIUM] ⬅️ EXITING Dao_User.SetWipServerPortAsync (37ms)
-[21:02:56.625] [MEDIUM] ⬅️ EXITING Dao_User.SetUserSettingInternalAsync (37ms)
-[21:02:56.626] [MEDIUM] ⬅️ EXITING Dao_User.SetDatabaseAsync (36ms)
+[13:20:00.809] [MEDIUM] ➡️ ENTERING Dao_User.SetGridViewSettingsJsonAsync
+[ConnectionRecovery] Strength: 2, Ping: 393, TimerActive: False
+[13:20:01.236] [MEDIUM] ⬅️ EXITING Dao_User.SetGridViewSettingsJsonAsync (424ms)
+[ConnectionRecovery] UpdateConnectionStrengthAsync called
+[ConnectionRecovery] Strength: 5, Ping: 3, TimerActive: False
+Resetting user controls...
+Attempting to invoke Control_InventoryTab_SoftReset on Control_InventoryTab
+Attempting to invoke Control_RemoveTab_SoftReset on Control_RemoveTab
+Invoking Control_RemoveTab_SoftReset on Control_RemoveTab
+Attempting to invoke Control_AdvancedInventory_SoftReset on Control_AdvancedInventory
+Method Control_AdvancedInventory_SoftReset not found on Control_AdvancedInventory
+Attempting to invoke Control_AdvancedRemove_SoftReset on Control_AdvancedRemove
+Invoking Control_AdvancedRemove_SoftReset on Control_AdvancedRemove
+Invoking Control_InventoryTab_SoftReset on Control_InventoryTab
+Attempting to invoke Control_TransferTab_SoftReset on Control_TransferTab
+Invoking Control_TransferTab_SoftReset on Control_TransferTab
+[DEBUG] Updating status strip for Soft Reset
+[DEBUG] AdvancedRemove SoftReset button re-enabled
+[DEBUG] Restoring status strip after soft reset
+[13:20:07.993] [MEDIUM] ➡️ ENTERING Control_InventoryTab_SoftReset.Control_InventoryTab
+[DEBUG] Updating status strip for Soft Reset
+[DEBUG] Resetting UI fields
+[DEBUG] TransferTab SoftReset button re-enabled
+[DEBUG] Updating status strip for Soft Reset
+[DEBUG] Resetting UI fields
+[13:20:08.125] [MEDIUM] ➡️ ENTERING Control_InventoryTab.UpdateColorCodeFieldsVisibility
+[13:20:08.127] [LOW   ] 🖱️ UI ACTION: COLOR_FIELDS_VISIBILITY on Control_InventoryTab
+[13:20:08.137] [MEDIUM] ⬅️ EXITING Control_InventoryTab.UpdateColorCodeFieldsVisibility (11ms)
+[13:20:08.146] [MEDIUM] ⬅️ EXITING Control_InventoryTab_SoftReset.Control_InventoryTab (153ms)
+[DEBUG] InventoryTab SoftReset button re-enabled
+[DEBUG] Restoring status strip after reset
+[13:20:08.780] [HIGH  ] ⏱️ PERFORMANCE START: SP_md_part_ids_Get_All
+[13:20:08.784] [MEDIUM] ➡️ ENTERING Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync
+[13:20:08.787] [MEDIUM] 🗄️ DB PROCEDURE START: md_part_ids_Get_All
+[13:20:08.798] [HIGH  ] ⏱️ PERFORMANCE START: SP_md_operation_numbers_Get_All
+[13:20:08.799] [MEDIUM]   ➡️ ENTERING Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync
+[13:20:08.802] [MEDIUM] 🗄️ DB PROCEDURE START: md_operation_numbers_Get_All
+[13:20:08.812] [HIGH  ] ⏱️ PERFORMANCE START: SP_md_operation_numbers_Get_All
+[13:20:08.816] [MEDIUM]     ➡️ ENTERING Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync
+[13:20:08.819] [MEDIUM] 🗄️ DB PROCEDURE START: md_operation_numbers_Get_All
+[13:20:08.878] [HIGH  ] ✅ PROCEDURE md_operation_numbers_Get_All (80ms) - Status: 1
+[13:20:08.943] [MEDIUM] ✅ DB PROCEDURE COMPLETE: md_operation_numbers_Get_All (80ms) - 71 rows
+[13:20:08.974] [MEDIUM]     ⬅️ EXITING Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync (190ms)
+[13:20:08.980] [HIGH  ] ⏱️ PERFORMANCE COMPLETE: SP_md_operation_numbers_Get_All (181ms)
+[13:20:08.985] [HIGH  ] ✅ PROCEDURE md_operation_numbers_Get_All (173ms) - Status: 1
+[13:20:09.045] [MEDIUM] ✅ DB PROCEDURE COMPLETE: md_operation_numbers_Get_All (173ms) - 71 rows
+[13:20:09.071] [MEDIUM]   ⬅️ EXITING Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync (271ms)
+[13:20:09.074] [HIGH  ] ⏱️ PERFORMANCE COMPLETE: SP_md_operation_numbers_Get_All (261ms)
+[13:20:09.117] [HIGH  ] ✅ PROCEDURE md_part_ids_Get_All (337ms) - Status: 1
+[13:20:09.140] [MEDIUM] ✅ DB PROCEDURE COMPLETE: md_part_ids_Get_All (337ms) - 3745 rows
+[13:20:09.142] [MEDIUM] ⬅️ EXITING Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync (325ms)
+[13:20:09.144] [HIGH  ] ⏱️ PERFORMANCE COMPLETE: SP_md_part_ids_Get_All (364ms)
+[13:20:09.159] [MEDIUM] ➡️ ENTERING Dao_Inventory.GetInventoryByPartIdAndOperationAsync
+[13:20:09.164] [HIGH  ] ⏱️ PERFORMANCE START: SP_inv_inventory_Get_ByPartIDandOperation
+[13:20:09.166] [MEDIUM] ➡️ ENTERING Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync
+[13:20:09.169] [MEDIUM] 🗄️ DB PROCEDURE START: inv_inventory_Get_ByPartIDandOperation
+[13:20:09.185] [HIGH  ] ✅ PROCEDURE inv_inventory_Get_ByPartIDandOperation (21ms) - Status: 1
+[13:20:09.191] [MEDIUM] ✅ DB PROCEDURE COMPLETE: inv_inventory_Get_ByPartIDandOperation (21ms) - 1 rows
+[13:20:09.195] [MEDIUM] ⬅️ EXITING Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync (28ms)
+[13:20:09.198] [HIGH  ] ⏱️ PERFORMANCE COMPLETE: SP_inv_inventory_Get_ByPartIDandOperation (34ms)
+[13:20:09.205] [MEDIUM] 📊 BUSINESS LOGIC: INVENTORY_SEARCH_BY_PART_AND_OP_COMPLETE
+[13:20:09.207] [MEDIUM] ⬅️ EXITING Dao_Inventory.GetInventoryByPartIdAndOperationAsync (47ms)
+[13:20:09.260] [MEDIUM] ➡️ ENTERING Dao_User.GetGridViewSettingsJsonAsync
+[13:20:09.268] [HIGH  ] ⏱️ PERFORMANCE START: SP_usr_settings_GetJsonSetting
+[13:20:09.272] [MEDIUM] ➡️ ENTERING Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync
+[13:20:09.279] [MEDIUM] 🗄️ DB PROCEDURE START: usr_settings_GetJsonSetting
+Exception thrown: 'System.ArgumentException' in MySql.Data.dll
+Exception thrown: 'System.ArgumentException' in System.Private.CoreLib.dll
+Exception thrown: 'System.ArgumentException' in System.Private.CoreLib.dll
+Exception thrown: 'System.ArgumentException' in System.Private.CoreLib.dll
+Exception thrown: 'System.ArgumentException' in System.Private.CoreLib.dll
+Exception thrown: 'System.ArgumentException' in System.Private.CoreLib.dll
+Exception thrown: 'System.ArgumentException' in System.Private.CoreLib.dll
+2025-11-21 13:20:10 - Database Error [ERROR] - Parameter 'p_DgvName' not found in the collection.
+2025-11-21 13:20:10 - Stack Trace -    at MySql.Data.MySqlClient.StoredProcedure.GetAndFixParameter(String spName, MySqlSchemaRow param, Boolean realAsFloat, MySqlParameter returnParameter)
+   at MySql.Data.MySqlClient.StoredProcedure.CheckParametersAsync(String spName, Boolean execAsync)
+   at MySql.Data.MySqlClient.StoredProcedure.Resolve(Boolean preparing)
+   at MySql.Data.MySqlClient.MySqlCommand.ExecuteReaderAsync(CommandBehavior behavior, Boolean execAsync, CancellationToken cancellationToken)
+   at MySql.Data.MySqlClient.MySqlCommand.ExecuteReader(CommandBehavior behavior)
+   at MySql.Data.MySqlClient.MySqlCommand.ExecuteDbDataReader(CommandBehavior behavior)
+   at System.Data.Common.DbDataAdapter.FillInternal(DataSet dataset, DataTable[] datatables, Int32 startRecord, Int32 maxRecords, String srcTable, IDbCommand command, CommandBehavior behavior)
+   at System.Data.Common.DbDataAdapter.Fill(DataTable[] dataTables, Int32 startRecord, Int32 maxRecords, IDbCommand command, CommandBehavior behavior)
+   at System.Data.Common.DbDataAdapter.Fill(DataTable dataTable)
+   at MTM_WIP_Application_Winforms.Helpers.Helper_Database_StoredProcedure.<>c__DisplayClass4_2.<ExecuteDataTableWithStatusAsync>b__1() in c:\Users\jkoll\source\repos\MTM_WIP_Application_WinForms\Helpers\Helper_Database_StoredProcedure.cs:line 290
+   at System.Threading.ExecutionContext.RunFromThreadPoolDispatchLoop(Thread threadPoolThread, ExecutionContext executionContext, ContextCallback callback, Object state)
+--- End of stack trace from previous location ---
+   at System.Threading.ExecutionContext.RunFromThreadPoolDispatchLoop(Thread threadPoolThread, ExecutionContext executionContext, ContextCallback callback, Object state)
+   at System.Threading.Tasks.Task.ExecuteWithThreadLocal(Task& currentTaskSlot, Thread threadPoolThread)
+--- End of stack trace from previous location ---
+   at MTM_WIP_Application_Winforms.Helpers.Helper_Database_StoredProcedure.<>c__DisplayClass4_0.<<ExecuteDataTableWithStatusAsync>b__0>d.MoveNext() in c:\Users\jkoll\source\repos\MTM_WIP_Application_WinForms\Helpers\Helper_Database_StoredProcedure.cs:line 290
+--- End of stack trace from previous location ---
+   at MTM_WIP_Application_Winforms.Helpers.Helper_Database_StoredProcedure.ExecuteWithRetryAsync[T](Func`1 operation) in c:\Users\jkoll\source\repos\MTM_WIP_Application_WinForms\Helpers\Helper_Database_StoredProcedure.cs:line 930
+   at MTM_WIP_Application_Winforms.Helpers.Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync(String connectionString, String procedureName, Dictionary`2 parameters, Helper_StoredProcedureProgress progressHelper, MySqlConnection connection, MySqlTransaction transaction) in c:\Users\jkoll\source\repos\MTM_WIP_Application_WinForms\Helpers\Helper_Database_StoredProcedure.cs:line 250
+[13:20:10.490] [MEDIUM] ✅ DB PROCEDURE COMPLETE: usr_settings_GetJsonSetting (1216ms) - 0 rows
+[13:20:10.492] [MEDIUM] ⬅️ EXITING Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync (1219ms)
+[13:20:10.497] [HIGH  ] ⏱️ PERFORMANCE COMPLETE: SP_usr_settings_GetJsonSetting (1229ms)
+[13:20:10.503] [MEDIUM] ⬅️ EXITING Dao_User.GetGridViewSettingsJsonAsync (1243ms)
 [ConnectionRecovery] UpdateConnectionStrengthAsync called
 [ConnectionRecovery] Strength: 5, Ping: 1, TimerActive: False
-[21:03:01.094] [LOW   ] 🖱️ UI ACTION: SETTINGS_FORM_CANCELED on MainForm
+[13:20:10.517] [HIGH  ] ⏱️ PERFORMANCE START: SP_md_operation_numbers_Get_All
+[13:20:10.519] [MEDIUM] ➡️ ENTERING Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync
+[13:20:10.521] [MEDIUM] 🗄️ DB PROCEDURE START: md_operation_numbers_Get_All
+[13:20:10.545] [HIGH  ] ✅ PROCEDURE md_operation_numbers_Get_All (27ms) - Status: 1
+[13:20:10.547] [MEDIUM] ✅ DB PROCEDURE COMPLETE: md_operation_numbers_Get_All (27ms) - 71 rows
+[13:20:10.548] [MEDIUM] ⬅️ EXITING Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync (28ms)
+[13:20:10.552] [HIGH  ] ⏱️ PERFORMANCE COMPLETE: SP_md_operation_numbers_Get_All (34ms)
+[13:20:11.730] [HIGH  ] ⏱️ PERFORMANCE START: SP_md_part_ids_Get_All
+[13:20:11.733] [MEDIUM] ➡️ ENTERING Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync
+[13:20:11.736] [MEDIUM] 🗄️ DB PROCEDURE START: md_part_ids_Get_All
+[13:20:11.866] [HIGH  ] ✅ PROCEDURE md_part_ids_Get_All (136ms) - Status: 1
+[13:20:11.885] [MEDIUM] ✅ DB PROCEDURE COMPLETE: md_part_ids_Get_All (136ms) - 3745 rows
+[13:20:11.888] [MEDIUM] ⬅️ EXITING Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync (154ms)
+[13:20:11.890] [HIGH  ] ⏱️ PERFORMANCE COMPLETE: SP_md_part_ids_Get_All (160ms)
+Running VersionChecker...
+[13:20:12.225] [HIGH  ] ⏱️ PERFORMANCE START: SP_log_changelog_Get_Current
+[13:20:12.230] [MEDIUM] ➡️ ENTERING Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync
+[13:20:12.232] [MEDIUM] 🗄️ DB PROCEDURE START: log_changelog_Get_Current
+[13:20:12.241] [HIGH  ] ✅ PROCEDURE log_changelog_Get_Current (16ms) - Status: 1
+[13:20:12.245] [MEDIUM] ✅ DB PROCEDURE COMPLETE: log_changelog_Get_Current (16ms) - 1 rows
+[13:20:12.248] [MEDIUM] ⬅️ EXITING Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync (17ms)
+[13:20:12.251] [HIGH  ] ⏱️ PERFORMANCE COMPLETE: SP_log_changelog_Get_Current (26ms)
+Database version retrieved: 6.3.1.0
+Version labels updated - App: 6.3.1.0, DB: 6.3.1.0
+[13:20:13.014] [HIGH  ] ⏱️ PERFORMANCE START: SP_md_part_ids_Get_All
+[13:20:13.022] [MEDIUM] ➡️ ENTERING Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync
+[13:20:13.031] [MEDIUM] 🗄️ DB PROCEDURE START: md_part_ids_Get_All
+[13:20:13.986] [HIGH  ] ✅ PROCEDURE md_part_ids_Get_All (971ms) - Status: 1
+[13:20:13.994] [MEDIUM] ✅ DB PROCEDURE COMPLETE: md_part_ids_Get_All (971ms) - 3745 rows
+[13:20:13.999] [MEDIUM] ⬅️ EXITING Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync (976ms)
+[13:20:14.001] [HIGH  ] ⏱️ PERFORMANCE COMPLETE: SP_md_part_ids_Get_All (986ms)
+Resetting user controls...
+Attempting to invoke Control_AdvancedInventory_SoftReset on Control_AdvancedInventory
+Attempting to invoke Control_TransferTab_SoftReset on Control_TransferTab
+Invoking Control_TransferTab_SoftReset on Control_TransferTab
+Attempting to invoke Control_AdvancedRemove_SoftReset on Control_AdvancedRemove
+Invoking Control_AdvancedRemove_SoftReset on Control_AdvancedRemove
+Attempting to invoke Control_RemoveTab_SoftReset on Control_RemoveTab
+Invoking Control_RemoveTab_SoftReset on Control_RemoveTab
+[DEBUG] Updating status strip for Soft Reset
+Attempting to invoke Control_InventoryTab_SoftReset on Control_InventoryTab
+[DEBUG] Resetting UI fields
+Invoking Control_InventoryTab_SoftReset on Control_InventoryTab
+Method Control_AdvancedInventory_SoftReset not found on Control_AdvancedInventory
+[DEBUG] TransferTab SoftReset button re-enabled
+[DEBUG] Updating status strip for Soft Reset
+[DEBUG] AdvancedRemove SoftReset button re-enabled
+[DEBUG] Restoring status strip after soft reset
+[13:20:14.298] [MEDIUM] ➡️ ENTERING Control_InventoryTab_SoftReset.Control_InventoryTab
+[DEBUG] Updating status strip for Soft Reset
+[DEBUG] Resetting UI fields
+[13:20:14.346] [MEDIUM] ➡️ ENTERING Control_InventoryTab.UpdateColorCodeFieldsVisibility
+[13:20:14.351] [LOW   ] 🖱️ UI ACTION: COLOR_FIELDS_VISIBILITY on Control_InventoryTab
+[13:20:14.361] [MEDIUM] ⬅️ EXITING Control_InventoryTab.UpdateColorCodeFieldsVisibility (13ms)
+[13:20:14.371] [MEDIUM] ⬅️ EXITING Control_InventoryTab_SoftReset.Control_InventoryTab (73ms)
+[DEBUG] InventoryTab SoftReset button re-enabled
+[DEBUG] Restoring status strip after reset
+Resetting user controls...
+Attempting to invoke Control_AdvancedInventory_SoftReset on Control_AdvancedInventory
+Attempting to invoke Control_AdvancedRemove_SoftReset on Control_AdvancedRemove
+Invoking Control_AdvancedRemove_SoftReset on Control_AdvancedRemove
+Attempting to invoke Control_TransferTab_SoftReset on Control_TransferTab
+Invoking Control_TransferTab_SoftReset on Control_TransferTab
+Method Control_AdvancedInventory_SoftReset not found on Control_AdvancedInventory
+Attempting to invoke Control_RemoveTab_SoftReset on Control_RemoveTab
+Invoking Control_RemoveTab_SoftReset on Control_RemoveTab
+[DEBUG] Updating status strip for Soft Reset
+Attempting to invoke Control_InventoryTab_SoftReset on Control_InventoryTab
+Invoking Control_InventoryTab_SoftReset on Control_InventoryTab
+[DEBUG] AdvancedRemove SoftReset button re-enabled
+[DEBUG] Restoring status strip after soft reset
+[DEBUG] Updating status strip for Soft Reset
+[DEBUG] Resetting UI fields
+[DEBUG] TransferTab SoftReset button re-enabled
+[13:20:15.218] [MEDIUM] ➡️ ENTERING Control_InventoryTab_SoftReset.Control_InventoryTab
+[DEBUG] Updating status strip for Soft Reset
+[DEBUG] Resetting UI fields
+[13:20:15.264] [MEDIUM] ➡️ ENTERING Control_InventoryTab.UpdateColorCodeFieldsVisibility
+[13:20:15.270] [LOW   ] 🖱️ UI ACTION: COLOR_FIELDS_VISIBILITY on Control_InventoryTab
+[13:20:15.286] [MEDIUM] ⬅️ EXITING Control_InventoryTab.UpdateColorCodeFieldsVisibility (21ms)
+[13:20:15.291] [MEDIUM] ⬅️ EXITING Control_InventoryTab_SoftReset.Control_InventoryTab (72ms)
+[DEBUG] InventoryTab SoftReset button re-enabled
+[DEBUG] Restoring status strip after reset
+[ConnectionRecovery] UpdateConnectionStrengthAsync called
+[ConnectionRecovery] Strength: 5, Ping: 3, TimerActive: False
+Resetting user controls...
+Attempting to invoke Control_InventoryTab_SoftReset on Control_InventoryTab
+Invoking Control_InventoryTab_SoftReset on Control_InventoryTab
+Attempting to invoke Control_RemoveTab_SoftReset on Control_RemoveTab
+Invoking Control_RemoveTab_SoftReset on Control_RemoveTab
+Attempting to invoke Control_AdvancedInventory_SoftReset on Control_AdvancedInventory
+Method Control_AdvancedInventory_SoftReset not found on Control_AdvancedInventory
+Attempting to invoke Control_AdvancedRemove_SoftReset on Control_AdvancedRemove
+Invoking Control_AdvancedRemove_SoftReset on Control_AdvancedRemove
+[13:20:15.828] [MEDIUM] ➡️ ENTERING Control_InventoryTab_SoftReset.Control_InventoryTab
+[DEBUG] Updating status strip for Soft Reset
+Attempting to invoke Control_TransferTab_SoftReset on Control_TransferTab
+Invoking Control_TransferTab_SoftReset on Control_TransferTab
+[DEBUG] AdvancedRemove SoftReset button re-enabled
+[DEBUG] Restoring status strip after soft reset
+[DEBUG] Updating status strip for Soft Reset
+[DEBUG] Resetting UI fields
+[DEBUG] TransferTab SoftReset button re-enabled
+[DEBUG] Updating status strip for Soft Reset
+[DEBUG] Resetting UI fields
+[13:20:15.947] [MEDIUM] ➡️ ENTERING Control_InventoryTab.UpdateColorCodeFieldsVisibility
+[13:20:15.949] [LOW   ] 🖱️ UI ACTION: COLOR_FIELDS_VISIBILITY on Control_InventoryTab
+[13:20:15.959] [MEDIUM] ⬅️ EXITING Control_InventoryTab.UpdateColorCodeFieldsVisibility (12ms)
+[13:20:16.099] [MEDIUM] ⬅️ EXITING Control_InventoryTab_SoftReset.Control_InventoryTab (271ms)
+[DEBUG] InventoryTab SoftReset button re-enabled
+[DEBUG] Restoring status strip after reset
+[13:20:18.098] [LOW   ] 🖱️ UI ACTION: VIEW_APPLICATION_LOGS_MENU_CLICK on MainForm
 info: MTM_WIP_Application_Winforms.Core.Theming.ThemeManager[0]
-      Form 'SettingsForm' unsubscribed from theme changes
+      Form '' subscribed to theme changes
+[Theme] Applied theme to form 'ViewApplicationLogsForm' in 69ms
+[ConnectionRecovery] UpdateConnectionStrengthAsync called
+[ConnectionRecovery] Strength: 5, Ping: 2, TimerActive: False
+info: MTM_WIP_Application_Winforms.Core.Theming.ThemeManager[0]
+      Form 'ViewApplicationLogsForm' unsubscribed from theme changes
 info: MTM_WIP_Application_Winforms.Core.Theming.ThemeManager[0]
       Form 'MainForm' unsubscribed from theme changes
-2025-11-18 21:03:01 - [Cleanup] Starting application cleanup
-2025-11-18 21:03:01 - [Cleanup] Control_About temp files cleaned up successfully
-2025-11-18 21:03:01 - [Cleanup] Memory cleanup completed
-2025-11-18 21:03:01 - [Cleanup] Application cleanup completed successfully
+2025-11-21 13:20:21 - [Cleanup] Starting application cleanup
+2025-11-21 13:20:22 - [Cleanup] Control_About temp files cleaned up successfully
+2025-11-21 13:20:22 - [Cleanup] Memory cleanup completed
+2025-11-21 13:20:22 - [Cleanup] Application cleanup completed successfully
 [Trace] [Main] Application exiting Main().
 [Trace] [Main] Application exiting Main().
-2025-11-18 21:03:01 - [Startup] Application shutdown completed
-2025-11-18 21:03:01 - [Cleanup] Starting application cleanup
-2025-11-18 21:03:01 - [Cleanup] Control_About temp files cleaned up successfully
-2025-11-18 21:03:01 - [Cleanup] Memory cleanup completed
-2025-11-18 21:03:01 - [Cleanup] Application cleanup completed successfully
-2025-11-18 21:03:01 - [Cleanup] Starting application cleanup
-2025-11-18 21:03:01 - [Cleanup] Control_About temp files cleaned up successfully
-2025-11-18 21:03:01 - [Cleanup] Memory cleanup completed
-2025-11-18 21:03:01 - [Cleanup] Application cleanup completed successfully
-The program '[9404] MTM_WIP_Application_Winforms.exe' has exited with code 0 (0x0).
+2025-11-21 13:20:22 - [Startup] Application shutdown completed
+2025-11-21 13:20:22 - [Cleanup] Starting application cleanup
+2025-11-21 13:20:22 - [Cleanup] Control_About temp files cleaned up successfully
+2025-11-21 13:20:22 - [Cleanup] Memory cleanup completed
+2025-11-21 13:20:22 - [Cleanup] Application cleanup completed successfully
+2025-11-21 13:20:22 - [Cleanup] Starting application cleanup
+2025-11-21 13:20:22 - [Cleanup] Control_About temp files cleaned up successfully
+2025-11-21 13:20:22 - [Cleanup] Memory cleanup completed
+2025-11-21 13:20:22 - [Cleanup] Application cleanup completed successfully
+The program '[2524] MTM_WIP_Application_Winforms.exe' has exited with code 0 (0x0).

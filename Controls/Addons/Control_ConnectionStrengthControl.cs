@@ -79,16 +79,17 @@ namespace MTM_WIP_Application_Winforms.Controls.Addons
                 true);
             Paint += ConnectionStrengthControl_Paint;
             UpdateToolTip();
+            TabStop = false;
 
             MouseHover += ConnectionStrengthControl_MouseHover;
-            
+
             // Force StatusStrip background color when control loads
             this.Load += (s, e) =>
             {
                 var theme = Model_Application_Variables.UserUiColors;
-                BackColor = theme.StatusStripBackColor 
-                    ?? theme.PanelBackColor 
-                    ?? theme.ControlBackColor 
+                BackColor = theme.StatusStripBackColor
+                    ?? theme.PanelBackColor
+                    ?? theme.ControlBackColor
                     ?? SystemColors.Control;
                 Invalidate();
             };
@@ -192,8 +193,8 @@ namespace MTM_WIP_Application_Winforms.Controls.Addons
             else
             {
                 // Fallback to StatusStrip color if no parent yet
-                BackColor = Model_Application_Variables.UserUiColors.StatusStripBackColor 
-                    ?? Model_Application_Variables.UserUiColors.ControlBackColor 
+                BackColor = Model_Application_Variables.UserUiColors.StatusStripBackColor
+                    ?? Model_Application_Variables.UserUiColors.ControlBackColor
                     ?? SystemColors.Control;
             }
 

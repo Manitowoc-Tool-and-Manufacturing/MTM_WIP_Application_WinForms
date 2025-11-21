@@ -44,7 +44,10 @@ internal static class LoggingUtility
             {
                 try
                 {
-                    var logFiles = Directory.GetFiles(logDirectory, "*.log")
+                    // Clean up both .log (legacy) and .csv (current) files
+                    var logFiles = Directory.GetFiles(logDirectory, "*.*")
+                        .Where(f => f.EndsWith(".log", StringComparison.OrdinalIgnoreCase) ||
+                                   f.EndsWith(".csv", StringComparison.OrdinalIgnoreCase))
                         .OrderByDescending(File.GetCreationTime)
                         .ToList();
 
@@ -54,7 +57,15 @@ internal static class LoggingUtility
                         foreach (var logFile in filesToDelete)
                         {
                             cts.Token.ThrowIfCancellationRequested();
-                            File.Delete(logFile);
+                            try
+                            {
+                                File.Delete(logFile);
+                                Debug.WriteLine($"[DEBUG] Deleted old log file: {logFile}");
+                            }
+                            catch (Exception ex)
+                            {
+                                Debug.WriteLine($"[DEBUG] Failed to delete log file {logFile}: {ex.Message}");
+                            }
                         }
                     }
                 }
@@ -129,13 +140,13 @@ internal static class LoggingUtility
                             // Use FileStream with FileShare.Write to allow multiple processes to write
                             await using var fs = new FileStream(filePath, FileMode.Append, FileAccess.Write, FileShare.Write);
                             await using var writer = new StreamWriter(fs);
-                            
+
                             // Write CSV header if this is a new file
                             if (needsHeader)
                             {
                                 await writer.WriteLineAsync("Timestamp,Level,Source,Message,Details");
                             }
-                            
+
                             await writer.WriteLineAsync(logEntry);
                             break; // Success
                         }
@@ -283,10 +294,10 @@ internal static class LoggingUtility
     {
         var timestamp = DateTime.Now;
         var csvEntry = FormatCsvEntry(timestamp, "INFO", "Application", message, null);
-        
+
         // Output to Debug console (visible in Output window when debugging)
         Debug.WriteLine($"{timestamp:yyyy-MM-dd HH:mm:ss} - {message}");
-        
+
         lock (LogLock)
         {
             FlushLogEntryToDisk(_normalLogFile, csvEntry);
@@ -299,11 +310,11 @@ internal static class LoggingUtility
         var source = ex.Source ?? "Application";
         var details = $"Type: {ex.GetType().Name}\nStack Trace: {ex.StackTrace}";
         var csvEntry = FormatCsvEntry(timestamp, "ERROR", source, ex.Message, details);
-        
+
         // Output to Debug console (visible in Output window when debugging)
         Debug.WriteLine($"{timestamp:yyyy-MM-dd HH:mm:ss} - Application Error - {ex.Message}");
         Debug.WriteLine($"{timestamp:yyyy-MM-dd HH:mm:ss} - Stack Trace - {ex.StackTrace}");
-        
+
         lock (LogLock)
         {
             FlushLogEntryToDisk(_appErrorLogFile, csvEntry);
@@ -351,11 +362,11 @@ internal static class LoggingUtility
             var source = ex.Source ?? "Database";
             var details = $"Type: {ex.GetType().Name}\nStack Trace: {ex.StackTrace}";
             var csvEntry = FormatCsvEntry(timestamp, severityLabel, source, ex.Message, details);
-            
+
             // Output to Debug console (visible in Output window when debugging)
             Debug.WriteLine($"{timestamp:yyyy-MM-dd HH:mm:ss} - Database Error [{severityLabel}] - {ex.Message}");
             Debug.WriteLine($"{timestamp:yyyy-MM-dd HH:mm:ss} - Stack Trace - {ex.StackTrace}");
-            
+
             lock (LogLock)
             {
                 FlushLogEntryToDisk(_dbErrorLogFile, csvEntry);
@@ -371,10 +382,10 @@ internal static class LoggingUtility
     {
         var timestamp = DateTime.Now;
         var csvEntry = FormatCsvEntry(timestamp, "INFO", "Application", message, null);
-        
+
         // Output to Debug console (visible in Output window when debugging)
         Debug.WriteLine($"{timestamp:yyyy-MM-dd HH:mm:ss} - Application Info - {message}");
-        
+
         lock (LogLock)
         {
             FlushLogEntryToDisk(_normalLogFile, csvEntry);

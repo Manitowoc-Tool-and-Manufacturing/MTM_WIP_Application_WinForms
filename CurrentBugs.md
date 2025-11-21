@@ -31,40 +31,51 @@
 - Clear rows from Excel file after successful save
 - Reset DataGridView and re-enable Import button after save
 
+### 6. **Persist DataGridView Column Settings** *(2 hours)* - Done!
+- Implement `LoadAndApplyGridSettingsAsync` in `Core_Themes`
+- Update Transfer, Remove, and Advanced Remove tabs to apply settings after data load
+- Ensure column visibility and order are restored from database
+
+### 7. **Fix usr_settings_Get returning 0 on startup** *(2 hours)*
+- Investigate why `usr_settings_Get` returns 0 (Not Found) on startup
+- Ensure `usr_settings` record is created for new users or migrated from `usr_users`
+- Update `usr_users_Add_User` or application logic to initialize settings
+- Verify log shows Status: 1 after fix
+
 ## Medium Tasks (3-6 hours)
 
-### 6. **All Themes - Set selection colors to -75% brightness** *(3 hours)* - Done!
+### 8. **All Themes - Set selection colors to -75% brightness** *(3 hours)* - Done!
 - Query `app_themes` table for all themes
 - Calculate -75% brightness for all selection color values
 - Update `SettingsJson` column with new color values
 - Test theme switching and selection visibility
 - All this should be done using MAMP MySQL 5.7 CLI, do not create files to do this, and if you do remove them when you are done.
 
-### 7. **MainForm - Fix Developer menu not showing** *(3 hours)* - Done!
+### 9. **MainForm - Fix Developer menu not showing** *(3 hours)* - Done!
 - Check user permission logic in `MainForm`
 - Verify `Model_Application_Variables.User` role detection
 - Debug menu visibility conditions
 - Test with different user types
 
-### 8. **Set proper tab indexing for all controls** *(4 hours)*
+### 10. **Set proper tab indexing for all controls** *(4 hours)*
 - Review all forms in `Forms/` directory
 - Set logical `TabIndex` values (0, 1, 2, etc.)
 - Test tab navigation on each form
 - Document tab order patterns
 
-### 9. **Settings - Themes - Add Enable Animation toggle checkbox** *(4 hours)*
+### 11. **Settings - Themes - Add Enable Animation toggle checkbox** *(4 hours)*
 - Add animation setting to `usr_settings` table `settingsjson`
 - Create UI toggle in Settings → Themes
 - Implement animation enable/disable logic
 - Update theme system to respect setting
 
-### 10. **Clean Excel Button investigation and fix** *(4 hours)*
+### 12. **Clean Excel Button investigation and fix** *(4 hours)*
 - Locate Clean Excel button implementation
 - Debug and trace execution path
 - Identify why no action occurs
 - Implement proper functionality or remove if obsolete
 
-### 11. **Print - Use proper easy-to-understand header names** *(5 hours)*
+### 13. **Print - Use proper easy-to-understand header names** *(5 hours)*
 - Review all print service calls
 - Replace technical column names with user-friendly headers
 - Update print templates and formatting
@@ -72,45 +83,45 @@
 
 ## Major Refactoring (8-16 hours)
 
-### 12. **Advanced Inventory - Convert textboxes to SuggestionTextBoxWithLabel** *(8 hours)*
+### 14. **Advanced Inventory - Convert textboxes to SuggestionTextBoxWithLabel** *(8 hours)*
 - Identify Quantity and How Many textboxes
 - Replace with `SuggestionTextBoxWithLabel` controls
 - Implement suggestion logic and data sources
 - Update validation and form logic
 - Test user experience
 
-### 13. **Print - Fix transparent background and cell backgrounds** *(10 hours)*
+### 15. **Print - Fix transparent background and cell backgrounds** *(10 hours)*
 - Modify print service to use transparent backgrounds
 - Implement proper DataGridView cell background rendering
 - Test print preview and actual printing
 - Ensure compatibility with different printers
 
-### 14. **Print - Fix settings not passing to Windows print manager** *(12 hours)*
+### 16. **Print - Fix settings not passing to Windows print manager** *(12 hours)*
 - Debug print settings pipeline
 - Identify where settings are lost between UI and print manager
 - Implement proper `PrintDocument` configuration
 - Test with various printer settings and paper sizes
 
-### 15. **Settings - Add Auto-Expand/Collapse toggle** *(12 hours)*
+### 17. **Settings - Add Auto-Expand/Collapse toggle** *(12 hours)*
 - Add new setting to `usr_settings` table `settingsjson`
 - Create UI toggle in Settings
 - Implement expand/collapse logic across all applicable forms/controls
 - Update existing TreeView, Panel, and GroupBox behaviors
 
-### 16. **Redesign Shortcut Settings Menu** *(14 hours)*
+### 18. **Redesign Shortcut Settings Menu** *(14 hours)*
 - Analyze current shortcut settings implementation
 - Design new user interface layout
 - Refactor settings storage and retrieval
 - Implement new keyboard shortcut management
 - Test shortcut conflicts and validation
 
-### 17. **Redesign About Settings Menu** *(16 hours)*
+### 19. **Redesign About Settings Menu** *(16 hours)*
 - Review current About dialog functionality
 - Design new layout with proper version info, credits, system info
 - Implement new UI using `ThemedForm` patterns
 - Add useful troubleshooting information
 - Test across different system configurations
 
-**Total Estimated Time: 98.5 hours**
+**Total Estimated Time: 102.5 hours**
 
-**Priority Recommendation:** Start with Quick Fixes (1-5) to provide immediate user experience improvements, then tackle Medium Tasks based on user impact and business priority.
+**Priority Recommendation:** Start with Quick Fixes (1-7) to provide immediate user experience improvements, then tackle Medium Tasks based on user impact and business priority.

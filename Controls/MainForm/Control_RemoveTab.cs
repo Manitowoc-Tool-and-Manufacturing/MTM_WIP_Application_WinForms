@@ -188,9 +188,35 @@ SetStyle(ControlStyles.OptimizedDoubleBuffer, true);
 
         private void Control_RemoveTab_Initialize()
         {
-            Control_RemoveTab_Button_Reset.TabStop = false;
-            Control_RemoveTab_TextBox_Part.SetF4ButtonTabStop(false);
-            Control_RemoveTab_TextBox_Operation.SetF4ButtonTabStop(false);
+            try
+            {
+                // Explicit tab order: Part (0), Operation (1), Search (2), Delete (3), Reset (4)
+                Control_RemoveTab_TextBox_Part.TabIndex = 0;
+                Control_RemoveTab_TextBox_Operation.TabIndex = 1;
+                Control_RemoveTab_Button_Search.TabIndex = 2;
+                Control_RemoveTab_Button_Delete.TabIndex = 3;
+                Control_RemoveTab_Button_Reset.TabIndex = 4;
+
+                // Ensure TabStop is true for navigation chain
+                Control_RemoveTab_TextBox_Part.TabStop = true;
+                Control_RemoveTab_TextBox_Operation.TabStop = true;
+                Control_RemoveTab_Button_Search.TabStop = true;
+                Control_RemoveTab_Button_Delete.TabStop = true;
+                Control_RemoveTab_Button_Reset.TabStop = true;
+
+                // Disable TabStop for F4 buttons and non-navigation controls
+                Control_RemoveTab_TextBox_Part.SetF4ButtonTabStop(false);
+                Control_RemoveTab_TextBox_Operation.SetF4ButtonTabStop(false);
+
+                if (Control_RemoveTab_Button_Toggle_RightPanel != null) Control_RemoveTab_Button_Toggle_RightPanel.TabStop = false;
+                if (Control_RemoveTab_Button_Toggle_InputPanel != null) Control_RemoveTab_Button_Toggle_InputPanel.TabStop = false;
+                if (Control_RemoveTab_Button_AdvancedItemRemoval != null) Control_RemoveTab_Button_AdvancedItemRemoval.TabStop = false;
+                if (Control_RemoveTab_Button_Undo != null) Control_RemoveTab_Button_Undo.TabStop = false;
+                if (Control_RemoveTab_Button_Print != null) Control_RemoveTab_Button_Print.TabStop = false;
+                if (Control_RemoveTab_DataGridView_Main != null) Control_RemoveTab_DataGridView_Main.TabStop = false;
+            }
+            catch { /* Controls may not be created in designer at design-time */ }
+
             Core_Themes.ApplyFocusHighlighting(this);
         }
 

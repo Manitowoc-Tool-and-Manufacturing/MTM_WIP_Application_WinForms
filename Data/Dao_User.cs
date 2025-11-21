@@ -710,9 +710,9 @@ internal static class Dao_User
         {
             Dictionary<string, object> parameters = new()
             {
-                ["UserId"] = userId,
-                ["DgvName"] = dgvName,
-                ["SettingJson"] = settingsJson
+                ["p_UserId"] = userId,
+                ["p_DgvName"] = dgvName,
+                ["p_SettingJson"] = settingsJson
             };
 
             var result = await Helper_Database_StoredProcedure.ExecuteNonQueryWithStatusAsync(
@@ -1325,7 +1325,7 @@ internal static class Dao_User
             "usr_settings_SetThemeJson",
             new Dictionary<string, object>
             {
-                ["UserId"] = user,
+                ["UserID"] = user,
                 ["ThemeJson"] = themeJson
             },
             connection: connection,

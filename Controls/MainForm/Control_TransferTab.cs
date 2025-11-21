@@ -203,29 +203,35 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
         /// </remarks>
         public void Control_TransferTab_Initialize()
         {
-            Control_TransferTab_Button_Reset.TabStop = false;
-            Control_TransferTab_TextBox_Part.SetF4ButtonTabStop(false);
-            Control_TransferTab_TextBox_Operation.SetF4ButtonTabStop(false);
-            Control_TransferTab_TextBox_ToLocation.SetF4ButtonTabStop(false);
-            // Non-tab targets: exclude from tab navigation
             try
             {
-                Control_TransferTab_Button_Toggle_RightPanel.TabStop = false;
-                Control_TransferTab_Button_Print.TabStop = false;
-                Control_TransferTab_Button_Toggle_Split.TabStop = false;
-                Control_TransferTab_DataGridView_Main.TabStop = false;
-            }
-            catch { /* Some controls may be null at design-time */ }
-
-            // Explicit tab order: Part (0), Operation (1), Search (2), Location (3), Quantity (4), Save/Transfer (5)
-            try
-            {
+                // Explicit tab order: Part (0), Operation (1), Search (2), Quantity (3), Location (4), Save/Transfer (5)
                 Control_TransferTab_TextBox_Part.TabIndex = 0;
                 Control_TransferTab_TextBox_Operation.TabIndex = 1;
                 Control_TransferTab_Button_Search.TabIndex = 2;
-                Control_TransferTab_TextBox_ToLocation.TabIndex = 3;
-                Control_TransferTab_NumericUpDown_Quantity.TabIndex = 4;
+                Control_TransferTab_NumericUpDown_Quantity.TabIndex = 3;
+                Control_TransferTab_TextBox_ToLocation.TabIndex = 4;
                 Control_TransferTab_Button_Transfer.TabIndex = 5;
+
+                // Enable TabStop for navigation chain
+                Control_TransferTab_TextBox_Part.TabStop = true;
+                Control_TransferTab_TextBox_Operation.TabStop = true;
+                Control_TransferTab_Button_Search.TabStop = true;
+                Control_TransferTab_NumericUpDown_Quantity.TabStop = true;
+                Control_TransferTab_TextBox_ToLocation.TabStop = true;
+                Control_TransferTab_Button_Transfer.TabStop = true;
+
+                // Disable TabStop for Reset (not in requested chain) and others
+                Control_TransferTab_Button_Reset.TabStop = false;
+
+                Control_TransferTab_TextBox_Part.SetF4ButtonTabStop(false);
+                Control_TransferTab_TextBox_Operation.SetF4ButtonTabStop(false);
+                Control_TransferTab_TextBox_ToLocation.SetF4ButtonTabStop(false);
+
+                if (Control_TransferTab_Button_Toggle_RightPanel != null) Control_TransferTab_Button_Toggle_RightPanel.TabStop = false;
+                if (Control_TransferTab_Button_Print != null) Control_TransferTab_Button_Print.TabStop = false;
+                if (Control_TransferTab_Button_Toggle_Split != null) Control_TransferTab_Button_Toggle_Split.TabStop = false;
+                if (Control_TransferTab_DataGridView_Main != null) Control_TransferTab_DataGridView_Main.TabStop = false;
             }
             catch { /* Controls may not be created in designer at design-time */ }
 

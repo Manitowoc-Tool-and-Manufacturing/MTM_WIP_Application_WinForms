@@ -247,6 +247,21 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
 
             // PlaceholderText is now set in Designer instead of programmatically setting Text
 
+            // Set Tab Order
+            Control_InventoryTab_SuggestionBox_Part.TabIndex = 0;
+            Control_InventoryTab_SuggestionBox_Operation.TabIndex = 1;
+            Control_InventoryTab_SuggestionBox_Quantity.TabIndex = 2;
+            Control_InventoryTab_SuggestionBox_Location.TabIndex = 3;
+            Control_InventoryTab_SuggestionBox_ColorCode.TabIndex = 4;
+            Control_InventoryTab_SuggestionBox_WorkOrder.TabIndex = 5;
+            Control_InventoryTab_RichTextBox_Notes.TabIndex = 6;
+            Control_InventoryTab_Button_Save.TabIndex = 7;
+            Control_InventoryTab_Button_Reset.TabIndex = 8;
+
+            // Disable TabStop for other controls
+            Control_InventoryTab_Button_AdvancedEntry.TabStop = false;
+            Control_InventoryTab_Button_Toggle_RightPanel.TabStop = false;
+
             // Disable tab stop on F4 buttons - they should not be in tab order
             Control_InventoryTab_SuggestionBox_Part.SetF4ButtonTabStop(false);
             Control_InventoryTab_SuggestionBox_Operation.SetF4ButtonTabStop(false);

@@ -7,7 +7,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
     partial class Control_AdvancedRemove
     {
         #region Fields
-        
+
 
 
         private System.ComponentModel.IContainer components = null;
@@ -36,8 +36,8 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
         private Button Control_AdvancedRemove_Button_Search;
         private TableLayoutPanel Control_AdvancedRemove_TableLayout_Inputs;
         private Button Control_AdvancedRemove_Button_SidePanel;
-        
-        
+
+
         #region Methods
 
 
@@ -113,9 +113,9 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             Control_AdvancedRemove_TableLayout_DateRange.SuspendLayout();
             TransactionSearchControl_TableLayout_QuickFilters.SuspendLayout();
             SuspendLayout();
-            // 
+            //
             // Control_AdvancedRemove_GroupBox_Main
-            // 
+            //
             Control_AdvancedRemove_GroupBox_Main.AutoSize = true;
             Control_AdvancedRemove_GroupBox_Main.AutoSizeMode = AutoSizeMode.GrowAndShrink;
             Control_AdvancedRemove_GroupBox_Main.Controls.Add(Control_AdvancedRemove_TableLayout_Main);
@@ -126,9 +126,9 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             Control_AdvancedRemove_GroupBox_Main.TabIndex = 0;
             Control_AdvancedRemove_GroupBox_Main.TabStop = false;
             Control_AdvancedRemove_GroupBox_Main.Text = "Advanced Inventory Removal";
-            // 
+            //
             // Control_AdvancedRemove_TableLayout_Main
-            // 
+            //
             Control_AdvancedRemove_TableLayout_Main.ColumnCount = 1;
             Control_AdvancedRemove_TableLayout_Main.ColumnStyles.Add(new ColumnStyle());
             Control_AdvancedRemove_TableLayout_Main.Controls.Add(Control_AdvancedRemove_TableLayout_Bottom_Buttons, 0, 1);
@@ -141,9 +141,9 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             Control_AdvancedRemove_TableLayout_Main.RowStyles.Add(new RowStyle());
             Control_AdvancedRemove_TableLayout_Main.Size = new Size(794, 412);
             Control_AdvancedRemove_TableLayout_Main.TabIndex = 1;
-            // 
+            //
             // Control_AdvancedRemove_TableLayout_Bottom_Buttons
-            // 
+            //
             Control_AdvancedRemove_TableLayout_Bottom_Buttons.AutoSize = true;
             Control_AdvancedRemove_TableLayout_Bottom_Buttons.AutoSizeMode = AutoSizeMode.GrowAndShrink;
             Control_AdvancedRemove_TableLayout_Bottom_Buttons.ColumnCount = 6;
@@ -164,10 +164,10 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             Control_AdvancedRemove_TableLayout_Bottom_Buttons.RowCount = 1;
             Control_AdvancedRemove_TableLayout_Bottom_Buttons.RowStyles.Add(new RowStyle());
             Control_AdvancedRemove_TableLayout_Bottom_Buttons.Size = new Size(788, 38);
-            Control_AdvancedRemove_TableLayout_Bottom_Buttons.TabIndex = 5;
-            // 
+            Control_AdvancedRemove_TableLayout_Bottom_Buttons.TabStop = false;
+            //
             // Control_AdvancedRemove_Button_SidePanel
-            // 
+            //
             Control_AdvancedRemove_Button_SidePanel.AutoSize = true;
             Control_AdvancedRemove_Button_SidePanel.AutoSizeMode = AutoSizeMode.GrowAndShrink;
             Control_AdvancedRemove_Button_SidePanel.Dock = DockStyle.Fill;
@@ -180,9 +180,10 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             Control_AdvancedRemove_Button_SidePanel.TabIndex = 10;
             Control_AdvancedRemove_Button_SidePanel.UseVisualStyleBackColor = true;
             Control_AdvancedRemove_Button_SidePanel.Click += Control_AdvancedRemove_Button_SidePanel_Click;
-            // 
+            Control_AdvancedRemove_Button_SidePanel.TabStop = false;
+            //
             // Control_AdvancedRemove_Button_Normal
-            // 
+            //
             Control_AdvancedRemove_Button_Normal.AutoSize = true;
             Control_AdvancedRemove_Button_Normal.AutoSizeMode = AutoSizeMode.GrowAndShrink;
             Control_AdvancedRemove_Button_Normal.Dock = DockStyle.Fill;
@@ -196,9 +197,9 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             Control_AdvancedRemove_Button_Normal.TabIndex = 15;
             Control_AdvancedRemove_Button_Normal.TabStop = false;
             Control_AdvancedRemove_Button_Normal.Text = "Back to Normal";
-            // 
+            //
             // Control_AdvancedRemove_Button_Print
-            // 
+            //
             Control_AdvancedRemove_Button_Print.AutoSize = true;
             Control_AdvancedRemove_Button_Print.AutoSizeMode = AutoSizeMode.GrowAndShrink;
             Control_AdvancedRemove_Button_Print.Dock = DockStyle.Fill;
@@ -211,9 +212,10 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             Control_AdvancedRemove_Button_Print.Size = new Size(100, 32);
             Control_AdvancedRemove_Button_Print.TabIndex = 16;
             Control_AdvancedRemove_Button_Print.Text = "Print";
-            // 
+            Control_AdvancedRemove_Button_Print.TabStop = false;
+            //
             // Control_AdvancedRemove_Button_Reset
-            // 
+            //
             Control_AdvancedRemove_Button_Reset.AutoSize = true;
             Control_AdvancedRemove_Button_Reset.AutoSizeMode = AutoSizeMode.GrowAndShrink;
             Control_AdvancedRemove_Button_Reset.Dock = DockStyle.Fill;
@@ -223,11 +225,11 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             Control_AdvancedRemove_Button_Reset.MinimumSize = new Size(100, 32);
             Control_AdvancedRemove_Button_Reset.Name = "Control_AdvancedRemove_Button_Reset";
             Control_AdvancedRemove_Button_Reset.Size = new Size(100, 32);
-            Control_AdvancedRemove_Button_Reset.TabIndex = 1;
+            Control_AdvancedRemove_Button_Reset.TabIndex = 15;
             Control_AdvancedRemove_Button_Reset.Text = "Reset";
-            // 
+            //
             // Control_AdvancedRemove_TableLayout_TopRow
-            // 
+            //
             Control_AdvancedRemove_TableLayout_TopRow.AutoSize = true;
             Control_AdvancedRemove_TableLayout_TopRow.AutoSizeMode = AutoSizeMode.GrowAndShrink;
             Control_AdvancedRemove_TableLayout_TopRow.ColumnCount = 2;
@@ -241,10 +243,10 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             Control_AdvancedRemove_TableLayout_TopRow.RowCount = 1;
             Control_AdvancedRemove_TableLayout_TopRow.RowStyles.Add(new RowStyle());
             Control_AdvancedRemove_TableLayout_TopRow.Size = new Size(788, 362);
-            Control_AdvancedRemove_TableLayout_TopRow.TabIndex = 4;
-            // 
+            Control_AdvancedRemove_TableLayout_TopRow.TabStop = false;
+            //
             // Control_AdvancedRemove_Panel_DGV
-            // 
+            //
             Control_AdvancedRemove_Panel_DGV.AutoSize = true;
             Control_AdvancedRemove_Panel_DGV.AutoSizeMode = AutoSizeMode.GrowAndShrink;
             Control_AdvancedRemove_Panel_DGV.BorderStyle = BorderStyle.FixedSingle;
@@ -255,10 +257,10 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             Control_AdvancedRemove_Panel_DGV.Name = "Control_AdvancedRemove_Panel_DGV";
             Control_AdvancedRemove_Panel_DGV.Padding = new Padding(3);
             Control_AdvancedRemove_Panel_DGV.Size = new Size(476, 356);
-            Control_AdvancedRemove_Panel_DGV.TabIndex = 4;
-            // 
+            Control_AdvancedRemove_Panel_DGV.TabStop = false;
+            //
             // Control_AdvancedRemove_Image_NothingFound
-            // 
+            //
             Control_AdvancedRemove_Image_NothingFound.BackColor = Color.White;
             Control_AdvancedRemove_Image_NothingFound.BorderStyle = BorderStyle.FixedSingle;
             Control_AdvancedRemove_Image_NothingFound.Dock = DockStyle.Fill;
@@ -269,12 +271,11 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             Control_AdvancedRemove_Image_NothingFound.Name = "Control_AdvancedRemove_Image_NothingFound";
             Control_AdvancedRemove_Image_NothingFound.Size = new Size(468, 348);
             Control_AdvancedRemove_Image_NothingFound.SizeMode = PictureBoxSizeMode.Zoom;
-            Control_AdvancedRemove_Image_NothingFound.TabIndex = 21;
             Control_AdvancedRemove_Image_NothingFound.TabStop = false;
             Control_AdvancedRemove_Image_NothingFound.Visible = false;
-            // 
+            //
             // Control_AdvancedRemove_DataGridView_Results
-            // 
+            //
             Control_AdvancedRemove_DataGridView_Results.AllowUserToAddRows = false;
             Control_AdvancedRemove_DataGridView_Results.AllowUserToDeleteRows = false;
             Control_AdvancedRemove_DataGridView_Results.Dock = DockStyle.Fill;
@@ -283,10 +284,10 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             Control_AdvancedRemove_DataGridView_Results.ReadOnly = true;
             Control_AdvancedRemove_DataGridView_Results.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
             Control_AdvancedRemove_DataGridView_Results.Size = new Size(468, 348);
-            Control_AdvancedRemove_DataGridView_Results.TabIndex = 20;
-            // 
+            Control_AdvancedRemove_DataGridView_Results.TabStop = false;
+            //
             // Control_AdvancedRemove_Panel_Inputs
-            // 
+            //
             Control_AdvancedRemove_Panel_Inputs.AutoSize = true;
             Control_AdvancedRemove_Panel_Inputs.AutoSizeMode = AutoSizeMode.GrowAndShrink;
             Control_AdvancedRemove_Panel_Inputs.BorderStyle = BorderStyle.FixedSingle;
@@ -295,10 +296,10 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             Control_AdvancedRemove_Panel_Inputs.Location = new Point(3, 3);
             Control_AdvancedRemove_Panel_Inputs.Name = "Control_AdvancedRemove_Panel_Inputs";
             Control_AdvancedRemove_Panel_Inputs.Size = new Size(300, 356);
-            Control_AdvancedRemove_Panel_Inputs.TabIndex = 5;
-            // 
+            Control_AdvancedRemove_Panel_Inputs.TabStop = false;
+            //
             // Control_AdvancedRemove_TableLayout_Inputs
-            // 
+            //
             Control_AdvancedRemove_TableLayout_Inputs.AutoSize = true;
             Control_AdvancedRemove_TableLayout_Inputs.AutoSizeMode = AutoSizeMode.GrowAndShrink;
             Control_AdvancedRemove_TableLayout_Inputs.ColumnCount = 2;
@@ -336,10 +337,10 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             Control_AdvancedRemove_TableLayout_Inputs.RowStyles.Add(new RowStyle());
             Control_AdvancedRemove_TableLayout_Inputs.RowStyles.Add(new RowStyle());
             Control_AdvancedRemove_TableLayout_Inputs.Size = new Size(298, 354);
-            Control_AdvancedRemove_TableLayout_Inputs.TabIndex = 0;
-            // 
+            Control_AdvancedRemove_TableLayout_Inputs.TabStop = false;
+            //
             // Control_AdvancedRemove_TextBox_Location
-            // 
+            //
             Control_AdvancedRemove_TextBox_Location.Dock = DockStyle.Fill;
             Control_AdvancedRemove_TextBox_Location.Font = new Font("Segoe UI Emoji", 9F);
             Control_AdvancedRemove_TextBox_Location.Location = new Point(65, 32);
@@ -347,9 +348,9 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             Control_AdvancedRemove_TextBox_Location.PlaceholderText = "Enter Location";
             Control_AdvancedRemove_TextBox_Location.Size = new Size(230, 23);
             Control_AdvancedRemove_TextBox_Location.TabIndex = 2;
-            // 
+            //
             // Control_AdvancedRemove_TextBox_Part
-            // 
+            //
             Control_AdvancedRemove_TextBox_Part.Dock = DockStyle.Fill;
             Control_AdvancedRemove_TextBox_Part.Font = new Font("Segoe UI Emoji", 9F);
             Control_AdvancedRemove_TextBox_Part.Location = new Point(65, 3);
@@ -357,9 +358,9 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             Control_AdvancedRemove_TextBox_Part.PlaceholderText = "Enter Part Number";
             Control_AdvancedRemove_TextBox_Part.Size = new Size(230, 23);
             Control_AdvancedRemove_TextBox_Part.TabIndex = 1;
-            // 
+            //
             // Control_AdvancedRemove_Label_Loc
-            // 
+            //
             Control_AdvancedRemove_Label_Loc.AutoSize = true;
             Control_AdvancedRemove_Label_Loc.Dock = DockStyle.Fill;
             Control_AdvancedRemove_Label_Loc.Font = new Font("Segoe UI Emoji", 9F);
@@ -367,12 +368,12 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             Control_AdvancedRemove_Label_Loc.Margin = new Padding(3);
             Control_AdvancedRemove_Label_Loc.Name = "Control_AdvancedRemove_Label_Loc";
             Control_AdvancedRemove_Label_Loc.Size = new Size(56, 23);
-            Control_AdvancedRemove_Label_Loc.TabIndex = 4;
+            Control_AdvancedRemove_Label_Loc.TabStop = false;
             Control_AdvancedRemove_Label_Loc.Text = "Location:";
             Control_AdvancedRemove_Label_Loc.TextAlign = ContentAlignment.MiddleRight;
-            // 
+            //
             // Control_AdvancedRemove_Label_Op
-            // 
+            //
             Control_AdvancedRemove_Label_Op.AutoSize = true;
             Control_AdvancedRemove_Label_Op.Dock = DockStyle.Fill;
             Control_AdvancedRemove_Label_Op.Font = new Font("Segoe UI Emoji", 9F);
@@ -380,12 +381,12 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             Control_AdvancedRemove_Label_Op.Margin = new Padding(3);
             Control_AdvancedRemove_Label_Op.Name = "Control_AdvancedRemove_Label_Op";
             Control_AdvancedRemove_Label_Op.Size = new Size(56, 23);
-            Control_AdvancedRemove_Label_Op.TabIndex = 2;
+            Control_AdvancedRemove_Label_Op.TabStop = false;
             Control_AdvancedRemove_Label_Op.Text = "Op:";
             Control_AdvancedRemove_Label_Op.TextAlign = ContentAlignment.MiddleRight;
-            // 
+            //
             // Control_AdvancedRemove_TextBox_Operation
-            // 
+            //
             Control_AdvancedRemove_TextBox_Operation.Dock = DockStyle.Fill;
             Control_AdvancedRemove_TextBox_Operation.Font = new Font("Segoe UI Emoji", 9F);
             Control_AdvancedRemove_TextBox_Operation.Location = new Point(65, 61);
@@ -393,9 +394,9 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             Control_AdvancedRemove_TextBox_Operation.PlaceholderText = "Enter Operation";
             Control_AdvancedRemove_TextBox_Operation.Size = new Size(230, 23);
             Control_AdvancedRemove_TextBox_Operation.TabIndex = 3;
-            // 
+            //
             // Control_AdvancedRemove_Label_Part
-            // 
+            //
             Control_AdvancedRemove_Label_Part.AutoSize = true;
             Control_AdvancedRemove_Label_Part.Dock = DockStyle.Fill;
             Control_AdvancedRemove_Label_Part.Font = new Font("Segoe UI Emoji", 9F);
@@ -403,12 +404,12 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             Control_AdvancedRemove_Label_Part.Margin = new Padding(3);
             Control_AdvancedRemove_Label_Part.Name = "Control_AdvancedRemove_Label_Part";
             Control_AdvancedRemove_Label_Part.Size = new Size(56, 23);
-            Control_AdvancedRemove_Label_Part.TabIndex = 0;
+            Control_AdvancedRemove_Label_Part.TabStop = false;
             Control_AdvancedRemove_Label_Part.Text = "Part ID:";
             Control_AdvancedRemove_Label_Part.TextAlign = ContentAlignment.MiddleRight;
-            // 
+            //
             // Control_AdvancedRemove_TableLayout_Buttons_Left
-            // 
+            //
             Control_AdvancedRemove_TableLayout_Buttons_Left.AutoSize = true;
             Control_AdvancedRemove_TableLayout_Buttons_Left.AutoSizeMode = AutoSizeMode.GrowAndShrink;
             Control_AdvancedRemove_TableLayout_Buttons_Left.ColumnCount = 5;
@@ -429,10 +430,10 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             Control_AdvancedRemove_TableLayout_Buttons_Left.RowCount = 1;
             Control_AdvancedRemove_TableLayout_Buttons_Left.RowStyles.Add(new RowStyle());
             Control_AdvancedRemove_TableLayout_Buttons_Left.Size = new Size(292, 38);
-            Control_AdvancedRemove_TableLayout_Buttons_Left.TabIndex = 0;
-            // 
+            Control_AdvancedRemove_TableLayout_Buttons_Left.TabStop = false;
+            //
             // Control_AdvancedRemove_Button_Search
-            // 
+            //
             Control_AdvancedRemove_Button_Search.AutoSize = true;
             Control_AdvancedRemove_Button_Search.AutoSizeMode = AutoSizeMode.GrowAndShrink;
             Control_AdvancedRemove_Button_Search.Dock = DockStyle.Fill;
@@ -442,11 +443,11 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             Control_AdvancedRemove_Button_Search.MinimumSize = new Size(80, 32);
             Control_AdvancedRemove_Button_Search.Name = "Control_AdvancedRemove_Button_Search";
             Control_AdvancedRemove_Button_Search.Size = new Size(80, 32);
-            Control_AdvancedRemove_Button_Search.TabIndex = 11;
+            Control_AdvancedRemove_Button_Search.TabIndex = 13;
             Control_AdvancedRemove_Button_Search.Text = "Search";
-            // 
+            //
             // Control_AdvancedRemove_Button_Delete
-            // 
+            //
             Control_AdvancedRemove_Button_Delete.AutoSize = true;
             Control_AdvancedRemove_Button_Delete.AutoSizeMode = AutoSizeMode.GrowAndShrink;
             Control_AdvancedRemove_Button_Delete.Dock = DockStyle.Fill;
@@ -456,11 +457,11 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             Control_AdvancedRemove_Button_Delete.MinimumSize = new Size(80, 32);
             Control_AdvancedRemove_Button_Delete.Name = "Control_AdvancedRemove_Button_Delete";
             Control_AdvancedRemove_Button_Delete.Size = new Size(80, 32);
-            Control_AdvancedRemove_Button_Delete.TabIndex = 1;
+            Control_AdvancedRemove_Button_Delete.TabIndex = 14;
             Control_AdvancedRemove_Button_Delete.Text = "Delete";
-            // 
+            //
             // Control_AdvancedRemove_Button_Undo
-            // 
+            //
             Control_AdvancedRemove_Button_Undo.AutoSize = true;
             Control_AdvancedRemove_Button_Undo.AutoSizeMode = AutoSizeMode.GrowAndShrink;
             Control_AdvancedRemove_Button_Undo.Dock = DockStyle.Fill;
@@ -471,21 +472,21 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             Control_AdvancedRemove_Button_Undo.MinimumSize = new Size(80, 32);
             Control_AdvancedRemove_Button_Undo.Name = "Control_AdvancedRemove_Button_Undo";
             Control_AdvancedRemove_Button_Undo.Size = new Size(80, 32);
-            Control_AdvancedRemove_Button_Undo.TabIndex = 2;
+            Control_AdvancedRemove_Button_Undo.TabStop = false;
             Control_AdvancedRemove_Button_Undo.Text = "Undo";
-            // 
+            //
             // Control_AdvancedRemove_TextBox_Notes
-            // 
+            //
             Control_AdvancedRemove_TextBox_Notes.Dock = DockStyle.Fill;
             Control_AdvancedRemove_TextBox_Notes.Font = new Font("Segoe UI Emoji", 9F);
             Control_AdvancedRemove_TextBox_Notes.Location = new Point(65, 90);
             Control_AdvancedRemove_TextBox_Notes.Name = "Control_AdvancedRemove_TextBox_Notes";
             Control_AdvancedRemove_TextBox_Notes.PlaceholderText = "Enter Notes";
             Control_AdvancedRemove_TextBox_Notes.Size = new Size(230, 23);
-            Control_AdvancedRemove_TextBox_Notes.TabIndex = 5;
-            // 
+            Control_AdvancedRemove_TextBox_Notes.TabIndex = 4;
+            //
             // Control_AdvancedRemove_Label_Notes
-            // 
+            //
             Control_AdvancedRemove_Label_Notes.AutoSize = true;
             Control_AdvancedRemove_Label_Notes.Dock = DockStyle.Fill;
             Control_AdvancedRemove_Label_Notes.Font = new Font("Segoe UI Emoji", 9F);
@@ -493,12 +494,12 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             Control_AdvancedRemove_Label_Notes.Margin = new Padding(3);
             Control_AdvancedRemove_Label_Notes.Name = "Control_AdvancedRemove_Label_Notes";
             Control_AdvancedRemove_Label_Notes.Size = new Size(56, 23);
-            Control_AdvancedRemove_Label_Notes.TabIndex = 10;
+            Control_AdvancedRemove_Label_Notes.TabStop = false;
             Control_AdvancedRemove_Label_Notes.Text = "Notes:";
             Control_AdvancedRemove_Label_Notes.TextAlign = ContentAlignment.MiddleRight;
-            // 
+            //
             // Control_AdvancedRemove_Label_Qty
-            // 
+            //
             Control_AdvancedRemove_Label_Qty.AutoSize = true;
             Control_AdvancedRemove_Label_Qty.Dock = DockStyle.Fill;
             Control_AdvancedRemove_Label_Qty.Font = new Font("Segoe UI Emoji", 9F);
@@ -506,12 +507,12 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             Control_AdvancedRemove_Label_Qty.Margin = new Padding(3);
             Control_AdvancedRemove_Label_Qty.Name = "Control_AdvancedRemove_Label_Qty";
             Control_AdvancedRemove_Label_Qty.Size = new Size(56, 29);
-            Control_AdvancedRemove_Label_Qty.TabIndex = 6;
+            Control_AdvancedRemove_Label_Qty.TabStop = false;
             Control_AdvancedRemove_Label_Qty.Text = "Quantity:";
             Control_AdvancedRemove_Label_Qty.TextAlign = ContentAlignment.MiddleRight;
-            // 
+            //
             // Control_AdvancedRemove_TableLayout_Quantity
-            // 
+            //
             Control_AdvancedRemove_TableLayout_Quantity.AutoSize = true;
             Control_AdvancedRemove_TableLayout_Quantity.AutoSizeMode = AutoSizeMode.GrowAndShrink;
             Control_AdvancedRemove_TableLayout_Quantity.ColumnCount = 3;
@@ -527,42 +528,42 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             Control_AdvancedRemove_TableLayout_Quantity.RowCount = 1;
             Control_AdvancedRemove_TableLayout_Quantity.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
             Control_AdvancedRemove_TableLayout_Quantity.Size = new Size(230, 29);
-            Control_AdvancedRemove_TableLayout_Quantity.TabIndex = 25;
-            // 
+            Control_AdvancedRemove_TableLayout_Quantity.TabStop = false;
+            //
             // Control_AdvancedRemove_TextBox_QtyMin
-            // 
+            //
             Control_AdvancedRemove_TextBox_QtyMin.Dock = DockStyle.Fill;
             Control_AdvancedRemove_TextBox_QtyMin.Font = new Font("Segoe UI Emoji", 9F);
             Control_AdvancedRemove_TextBox_QtyMin.Location = new Point(3, 3);
             Control_AdvancedRemove_TextBox_QtyMin.Name = "Control_AdvancedRemove_TextBox_QtyMin";
             Control_AdvancedRemove_TextBox_QtyMin.PlaceholderText = "Minimum Qty";
             Control_AdvancedRemove_TextBox_QtyMin.Size = new Size(100, 23);
-            Control_AdvancedRemove_TextBox_QtyMin.TabIndex = 6;
-            // 
+            Control_AdvancedRemove_TextBox_QtyMin.TabIndex = 5;
+            //
             // Control_AdvancedRemove_TextBox_QtyMax
-            // 
+            //
             Control_AdvancedRemove_TextBox_QtyMax.Dock = DockStyle.Fill;
             Control_AdvancedRemove_TextBox_QtyMax.Font = new Font("Segoe UI Emoji", 9F);
             Control_AdvancedRemove_TextBox_QtyMax.Location = new Point(127, 3);
             Control_AdvancedRemove_TextBox_QtyMax.Name = "Control_AdvancedRemove_TextBox_QtyMax";
             Control_AdvancedRemove_TextBox_QtyMax.PlaceholderText = "Maximum Qty";
             Control_AdvancedRemove_TextBox_QtyMax.Size = new Size(100, 23);
-            Control_AdvancedRemove_TextBox_QtyMax.TabIndex = 7;
-            // 
+            Control_AdvancedRemove_TextBox_QtyMax.TabIndex = 6;
+            //
             // Control_AdvancedRemove_Label_QtyDash
-            // 
+            //
             Control_AdvancedRemove_Label_QtyDash.AutoSize = true;
             Control_AdvancedRemove_Label_QtyDash.Dock = DockStyle.Fill;
             Control_AdvancedRemove_Label_QtyDash.Location = new Point(109, 3);
             Control_AdvancedRemove_Label_QtyDash.Margin = new Padding(3);
             Control_AdvancedRemove_Label_QtyDash.Name = "Control_AdvancedRemove_Label_QtyDash";
             Control_AdvancedRemove_Label_QtyDash.Size = new Size(12, 23);
-            Control_AdvancedRemove_Label_QtyDash.TabIndex = 1;
+            Control_AdvancedRemove_Label_QtyDash.TabStop = false;
             Control_AdvancedRemove_Label_QtyDash.Text = "-";
             Control_AdvancedRemove_Label_QtyDash.TextAlign = ContentAlignment.MiddleCenter;
-            // 
+            //
             // Control_AdvancedRemove_Label_DateRange
-            // 
+            //
             Control_AdvancedRemove_Label_DateRange.AutoSize = true;
             Control_AdvancedRemove_TableLayout_Inputs.SetColumnSpan(Control_AdvancedRemove_Label_DateRange, 2);
             Control_AdvancedRemove_Label_DateRange.Dock = DockStyle.Fill;
@@ -571,12 +572,12 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             Control_AdvancedRemove_Label_DateRange.Margin = new Padding(3);
             Control_AdvancedRemove_Label_DateRange.Name = "Control_AdvancedRemove_Label_DateRange";
             Control_AdvancedRemove_Label_DateRange.Size = new Size(292, 17);
-            Control_AdvancedRemove_Label_DateRange.TabIndex = 27;
+            Control_AdvancedRemove_Label_DateRange.TabStop = false;
             Control_AdvancedRemove_Label_DateRange.Text = "Date Range";
             Control_AdvancedRemove_Label_DateRange.TextAlign = ContentAlignment.MiddleCenter;
-            // 
+            //
             // Control_AdvancedRemove_TableLayout_DateRange
-            // 
+            //
             Control_AdvancedRemove_TableLayout_DateRange.AutoSize = true;
             Control_AdvancedRemove_TableLayout_DateRange.AutoSizeMode = AutoSizeMode.GrowAndShrink;
             Control_AdvancedRemove_TableLayout_DateRange.ColumnCount = 7;
@@ -599,10 +600,10 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             Control_AdvancedRemove_TableLayout_DateRange.RowStyles.Add(new RowStyle(SizeType.Absolute, 20F));
             Control_AdvancedRemove_TableLayout_DateRange.RowStyles.Add(new RowStyle(SizeType.Absolute, 20F));
             Control_AdvancedRemove_TableLayout_DateRange.Size = new Size(292, 29);
-            Control_AdvancedRemove_TableLayout_DateRange.TabIndex = 26;
-            // 
+            Control_AdvancedRemove_TableLayout_DateRange.TabStop = false;
+            //
             // Control_AdvancedRemove_DateTimePicker_To
-            // 
+            //
             Control_AdvancedRemove_DateTimePicker_To.Dock = DockStyle.Fill;
             Control_AdvancedRemove_DateTimePicker_To.Font = new Font("Segoe UI Emoji", 9F);
             Control_AdvancedRemove_DateTimePicker_To.Format = DateTimePickerFormat.Short;
@@ -611,10 +612,10 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             Control_AdvancedRemove_DateTimePicker_To.MinimumSize = new Size(100, 23);
             Control_AdvancedRemove_DateTimePicker_To.Name = "Control_AdvancedRemove_DateTimePicker_To";
             Control_AdvancedRemove_DateTimePicker_To.Size = new Size(100, 23);
-            Control_AdvancedRemove_DateTimePicker_To.TabIndex = 10;
-            // 
+            Control_AdvancedRemove_DateTimePicker_To.TabStop = false;
+            //
             // Control_AdvancedRemove_DateTimePicker_From
-            // 
+            //
             Control_AdvancedRemove_DateTimePicker_From.Dock = DockStyle.Fill;
             Control_AdvancedRemove_DateTimePicker_From.Font = new Font("Segoe UI Emoji", 9F);
             Control_AdvancedRemove_DateTimePicker_From.Format = DateTimePickerFormat.Short;
@@ -623,10 +624,10 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             Control_AdvancedRemove_DateTimePicker_From.MinimumSize = new Size(100, 23);
             Control_AdvancedRemove_DateTimePicker_From.Name = "Control_AdvancedRemove_DateTimePicker_From";
             Control_AdvancedRemove_DateTimePicker_From.Size = new Size(100, 23);
-            Control_AdvancedRemove_DateTimePicker_From.TabIndex = 9;
-            // 
+            Control_AdvancedRemove_DateTimePicker_From.TabStop = false;
+            //
             // Control_AdvancedRemove_Label_DateDash
-            // 
+            //
             Control_AdvancedRemove_Label_DateDash.AutoSize = true;
             Control_AdvancedRemove_TableLayout_DateRange.SetColumnSpan(Control_AdvancedRemove_Label_DateDash, 3);
             Control_AdvancedRemove_Label_DateDash.Dock = DockStyle.Fill;
@@ -634,12 +635,12 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             Control_AdvancedRemove_Label_DateDash.Margin = new Padding(3);
             Control_AdvancedRemove_Label_DateDash.Name = "Control_AdvancedRemove_Label_DateDash";
             Control_AdvancedRemove_Label_DateDash.Size = new Size(36, 23);
-            Control_AdvancedRemove_Label_DateDash.TabIndex = 1;
+            Control_AdvancedRemove_Label_DateDash.TabStop = false;
             Control_AdvancedRemove_Label_DateDash.Text = "-";
             Control_AdvancedRemove_Label_DateDash.TextAlign = ContentAlignment.MiddleCenter;
-            // 
+            //
             // TransactionSearchControl_TableLayout_QuickFilters
-            // 
+            //
             TransactionSearchControl_TableLayout_QuickFilters.AutoSize = true;
             TransactionSearchControl_TableLayout_QuickFilters.AutoSizeMode = AutoSizeMode.GrowAndShrink;
             TransactionSearchControl_TableLayout_QuickFilters.ColumnCount = 7;
@@ -663,47 +664,47 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             TransactionSearchControl_TableLayout_QuickFilters.RowStyles.Add(new RowStyle());
             TransactionSearchControl_TableLayout_QuickFilters.RowStyles.Add(new RowStyle());
             TransactionSearchControl_TableLayout_QuickFilters.Size = new Size(292, 50);
-            TransactionSearchControl_TableLayout_QuickFilters.TabIndex = 28;
-            // 
+            TransactionSearchControl_TableLayout_QuickFilters.TabStop = false;
+            //
             // TransactionSearchControl_RadioButton_Month
-            // 
+            //
             Control_AdvancedRemove_RadioButton_Month.AutoSize = true;
             Control_AdvancedRemove_RadioButton_Month.Checked = true;
             Control_AdvancedRemove_RadioButton_Month.Dock = DockStyle.Left;
             Control_AdvancedRemove_RadioButton_Month.Location = new Point(202, 3);
             Control_AdvancedRemove_RadioButton_Month.Name = "TransactionSearchControl_RadioButton_Month";
             Control_AdvancedRemove_RadioButton_Month.Size = new Size(61, 19);
-            Control_AdvancedRemove_RadioButton_Month.TabIndex = 2;
+            Control_AdvancedRemove_RadioButton_Month.TabIndex = 10;
             Control_AdvancedRemove_RadioButton_Month.TabStop = true;
             Control_AdvancedRemove_RadioButton_Month.Text = "Month";
             Control_AdvancedRemove_RadioButton_Month.UseVisualStyleBackColor = true;
-            // 
+            //
             // TransactionSearchControl_RadioButton_Today
-            // 
+            //
             Control_AdvancedRemove_RadioButton_Today.AutoSize = true;
             Control_AdvancedRemove_RadioButton_Today.CheckAlign = ContentAlignment.MiddleRight;
             Control_AdvancedRemove_RadioButton_Today.Dock = DockStyle.Right;
             Control_AdvancedRemove_RadioButton_Today.Location = new Point(22, 3);
             Control_AdvancedRemove_RadioButton_Today.Name = "TransactionSearchControl_RadioButton_Today";
             Control_AdvancedRemove_RadioButton_Today.Size = new Size(57, 19);
-            Control_AdvancedRemove_RadioButton_Today.TabIndex = 0;
+            Control_AdvancedRemove_RadioButton_Today.TabIndex = 8;
             Control_AdvancedRemove_RadioButton_Today.Text = "Today";
             Control_AdvancedRemove_RadioButton_Today.UseVisualStyleBackColor = true;
-            // 
+            //
             // TransactionSearchControl_RadioButton_Week
-            // 
+            //
             Control_AdvancedRemove_RadioButton_Week.AutoSize = true;
             Control_AdvancedRemove_RadioButton_Week.CheckAlign = ContentAlignment.MiddleRight;
             Control_AdvancedRemove_RadioButton_Week.Dock = DockStyle.Right;
             Control_AdvancedRemove_RadioButton_Week.Location = new Point(25, 28);
             Control_AdvancedRemove_RadioButton_Week.Name = "TransactionSearchControl_RadioButton_Week";
             Control_AdvancedRemove_RadioButton_Week.Size = new Size(54, 19);
-            Control_AdvancedRemove_RadioButton_Week.TabIndex = 1;
+            Control_AdvancedRemove_RadioButton_Week.TabIndex = 9;
             Control_AdvancedRemove_RadioButton_Week.Text = "Week";
             Control_AdvancedRemove_RadioButton_Week.UseVisualStyleBackColor = true;
-            // 
+            //
             // TransactionSearchControl_RadioButton_Everything
-            // 
+            //
             Control_AdvancedRemove_RadioButton_Everything.AutoSize = true;
             Control_AdvancedRemove_RadioButton_Everything.CheckAlign = ContentAlignment.BottomCenter;
             Control_AdvancedRemove_RadioButton_Everything.Dock = DockStyle.Fill;
@@ -712,24 +713,24 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             Control_AdvancedRemove_RadioButton_Everything.Padding = new Padding(3, 0, 3, 3);
             TransactionSearchControl_TableLayout_QuickFilters.SetRowSpan(Control_AdvancedRemove_RadioButton_Everything, 2);
             Control_AdvancedRemove_RadioButton_Everything.Size = new Size(73, 44);
-            Control_AdvancedRemove_RadioButton_Everything.TabIndex = 4;
+            Control_AdvancedRemove_RadioButton_Everything.TabIndex = 12;
             Control_AdvancedRemove_RadioButton_Everything.Text = "Everything";
             Control_AdvancedRemove_RadioButton_Everything.TextAlign = ContentAlignment.MiddleCenter;
             Control_AdvancedRemove_RadioButton_Everything.UseVisualStyleBackColor = true;
-            // 
+            //
             // TransactionSearchControl_RadioButton_Custom
-            // 
+            //
             Control_AdvancedRemove_RadioButton_Custom.AutoSize = true;
             Control_AdvancedRemove_RadioButton_Custom.Dock = DockStyle.Left;
             Control_AdvancedRemove_RadioButton_Custom.Location = new Point(202, 28);
             Control_AdvancedRemove_RadioButton_Custom.Name = "TransactionSearchControl_RadioButton_Custom";
             Control_AdvancedRemove_RadioButton_Custom.Size = new Size(67, 19);
-            Control_AdvancedRemove_RadioButton_Custom.TabIndex = 3;
+            Control_AdvancedRemove_RadioButton_Custom.TabIndex = 11;
             Control_AdvancedRemove_RadioButton_Custom.Text = "Custom";
             Control_AdvancedRemove_RadioButton_Custom.UseVisualStyleBackColor = true;
-            // 
+            //
             // Control_AdvancedRemove_SuggestionBox_User
-            // 
+            //
             Control_AdvancedRemove_SuggestionBox_User.AutoSize = true;
             Control_AdvancedRemove_SuggestionBox_User.AutoSizeMode = AutoSizeMode.GrowAndShrink;
             Control_AdvancedRemove_TableLayout_Inputs.SetColumnSpan(Control_AdvancedRemove_SuggestionBox_User, 2);
@@ -739,10 +740,10 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             Control_AdvancedRemove_SuggestionBox_User.Name = "Control_AdvancedRemove_SuggestionBox_User";
             Control_AdvancedRemove_SuggestionBox_User.PlaceholderText = "Select or Enter User";
             Control_AdvancedRemove_SuggestionBox_User.Size = new Size(292, 29);
-            Control_AdvancedRemove_SuggestionBox_User.TabIndex = 4;
-            // 
+            Control_AdvancedRemove_SuggestionBox_User.TabIndex = 7;
+            //
             // button1
-            // 
+            //
             Control_AdvancedRemove_Button_QuickButtonToggle.AutoSize = true;
             Control_AdvancedRemove_Button_QuickButtonToggle.AutoSizeMode = AutoSizeMode.GrowAndShrink;
             Control_AdvancedRemove_Button_QuickButtonToggle.Dock = DockStyle.Fill;
@@ -752,11 +753,11 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             Control_AdvancedRemove_Button_QuickButtonToggle.MinimumSize = new Size(32, 32);
             Control_AdvancedRemove_Button_QuickButtonToggle.Name = "Control_AdvancedRemove_Button_QuickButtonToggle";
             Control_AdvancedRemove_Button_QuickButtonToggle.Size = new Size(32, 32);
-            Control_AdvancedRemove_Button_QuickButtonToggle.TabIndex = 17;
+            Control_AdvancedRemove_Button_QuickButtonToggle.TabStop = false;
             Control_AdvancedRemove_Button_QuickButtonToggle.UseVisualStyleBackColor = true;
-            // 
+            //
             // Control_AdvancedRemove
-            // 
+            //
             AutoScaleDimensions = new SizeF(96F, 96F);
             AutoScaleMode = AutoScaleMode.Dpi;
             AutoSizeMode = AutoSizeMode.GrowAndShrink;
@@ -811,6 +812,6 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
         private Button Control_AdvancedRemove_Button_QuickButtonToggle;
     }
 
-        
+
         #endregion
     }
