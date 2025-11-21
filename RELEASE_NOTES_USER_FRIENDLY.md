@@ -8,7 +8,8 @@
 
 | Date | Version | Summary | What to do |
 | --- | --- | --- | --- |
-| [Nov 20, 2025](#latest-update---november-20-2025-version-630) | [6.3.0](#latest-update---november-20-2025-version-630) | Complete redesign of Settings management screens with modern card interface. | Check out the new look in Settings! |
+| [Nov 20, 2025](#latest-update---november-20-2025-version-631) | [6.3.1](#latest-update---november-20-2025-version-631) | User Management screen updated to match new card interface style. | Nothing—enjoy the consistent look! |
+| [Nov 20, 2025](#previous-update---november-20-2025-version-630) | [6.3.0](#previous-update---november-20-2025-version-630) | Complete redesign of Settings management screens with modern card interface. | Check out the new look in Settings! |
 | [Nov 15, 2025](#previous-update---november-15-2025-version-623) | [6.2.3](#previous-update---november-15-2025-version-623) | Search buttons added to all main entry tabs for quick access to full lists. | Nothing—just click 🔎 buttons to access dropdown lists! |
 | [Nov 15, 2025](#previous-update---november-15-2025-version-622) | [6.2.2](#previous-update---november-15-2025-version-622) | Advanced Inventory Entry modernized with smart suggestions and Excel auto-template. | Nothing—faster data entry is ready to use! |
 | [Nov 13, 2025](#previous-update---november-13-2025-version-620) | [6.2.0](#previous-update---november-13-2025-version-620) | Universal suggestions replaced old dropdowns with type-to-search. | Nothing—feature is automatically available. |
@@ -29,12 +30,33 @@
 | [Oct 25, 2025](#update---october-25-2025-version-532) | [5.3.2](#update---october-25-2025-version-532) | Automatic computer name tracking added to error reports. | Nothing—automatic improvement. |
 | [Oct 25, 2025](#update---october-25-2025-version-531) | [5.3.1](#update---october-25-2025-version-531) | Better display on different monitors and screen scaling. | Click "Restart" when prompted if you move between monitors. |
 | [Oct 25, 2025](#update---october-25-2025-version-531) | [5.3.1](#update---october-25-2025-version-531) | Error dialogs sized correctly on all screens. | Error messages now fit nicely on your screen. |
-| [Oct 22, 2025](#update---october-22-2025-version-520) | [5.2.0](#update---october-22-2025-version-520) | Rock-solid database operations with 136 integration tests passing. | Nothing—internal reliability improvements. |
 | [Oct 17-21, 2025](#update---october-17-21-2025-version-510) | [5.1.0](#update---october-17-21-2025-version-510) | Database layer modernization with improved error handling. | Nothing—internal improvements only. |
 
 ---
 
-## Latest Update - November 20, 2025 (Version 6.3.0)
+## Latest Update - November 20, 2025 (Version 6.3.1)
+
+**What Changed**: The User Management screen in Settings has been updated to match the new card-based design of other management screens.  
+**Do I Need To Do Anything?**: No - navigation is now more consistent across all settings.
+
+---
+
+### 🎯 What This Means For You
+
+#### Consistent User Management
+
+**What's new**:
+- **Unified "Manage Users" Link**: The Settings Home page now has a single "Manage Users" link, just like Parts and Locations.
+- **Improved Navigation**: Added a "Home" button to the User Management screen to quickly return to the main Settings menu.
+- **Consistent Behavior**: User Management now works exactly like the other new management screens (Parts, Locations, Operations).
+
+**Why this helps**:
+- **Less Confusion**: All settings screens now look and behave the same way.
+- **Easier Navigation**: Move between screens and back to home with fewer clicks.
+
+---
+
+## Previous Update - November 20, 2025 (Version 6.3.0)
 
 **What Changed**: The Settings area has been completely modernized! Managing Part Numbers, Locations, Operations, and Item Types is now faster and easier with a new "Card" interface.  
 **Do I Need To Do Anything?**: No - but if you manage settings, you'll love the new organized look.
@@ -841,9 +863,7 @@ Under the hood, we also made reliability and performance improvements so theme c
 
 ---
 
-## Update - October 22, 2025 (Version 5.2.0)
-
-### ✅ Do I Need To Update?
+## ✅ Do I Need To Update?
 
 **Version 6.1.0 (Theme System Overhaul - RELEASED November 12, 2025)**:
 - **All users**: Recommended - themes are now faster, smoother, and more reliable
@@ -889,39 +909,6 @@ Under the hood, we also made reliability and performance improvements so theme c
 - **All users**: Update when convenient - this is a helpful new feature, not a critical fix
 
 ---
-
-### 🎯 What This Means For You
-
-#### Rock-Solid Database Operations
-
-**Comprehensive testing completed**:
-- **136 integration tests** now passing (was 113 - 83% coverage)
-- **23 critical bugs fixed** in database operations
-- **All inventory, transfer, and quick button operations validated**
-- **Production-ready reliability** for manufacturing operations
-
-**What improved behind the scenes**:
-- Quick button operations (add, update, move, delete) work perfectly every time
-- System settings and user preferences save and load correctly
-- Inventory adjustments and transfers process reliably
-- Error messages are clearer and more helpful
-
-**Why this matters**:
-- **Fewer errors**: Operations that occasionally failed now work every time
-- **Faster fixes**: When something does go wrong, we can identify and fix it quickly
-- **Better data quality**: Your inventory counts and transaction history stay accurate
-- **Confidence**: The application has been thoroughly validated for manufacturing use
-
-**What you'll notice**:
-- Quick buttons respond faster and more reliably
-- Fewer "unexpected error" messages during daily operations
-- More consistent behavior across different computers and users
-
-**Technical highlights** (for IT staff):
-- 100% DAO (Data Access Object) method coverage
-- Comprehensive stored procedure validation
-- Test data infrastructure for repeatable validation
-- Average 18 minutes per test fix (6.75 hours total effort)
 
 <div style="page-break-after: always;"></div>
 
