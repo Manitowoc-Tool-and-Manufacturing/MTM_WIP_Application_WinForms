@@ -2269,6 +2269,9 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                 }
 
                 AdvancedInventory_Import_DataGridView.DataSource = dt;
+
+                // Disable import button after successful import
+                AdvancedInventory_Import_Button_ImportExcel.Enabled = false;
             }
             catch (Exception ex)
             {
@@ -2331,7 +2334,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             if (missingColumns.Count > 0)
             {
                 string missingList = string.Join(", ", missingColumns);
-                Service_ErrorHandler.HandleValidationError(
+                MessageBox.Show(
                     $"The following required columns are missing from the imported data: {missingList}.\n\nPlease ensure your Excel file has the correct headers (e.g., Part, Operation, Location, Quantity, Notes).",
                     nameof(AdvancedInventory_Import_Button_Save));
                 return;
@@ -2416,6 +2419,16 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                         // Pass null/empty for batchNumber for unique batch per transaction
                         await Dao_Inventory.AddInventoryItemAsync(
                             part, loc, op, qty, "", Model_Application_Variables.User ?? Environment.UserName, null, notes, null, null, true);
+                        
+                        // Mark row for removal from Excel and DataGridView
+                        // Note: row.Index corresponds to Excel row + 2 (header is row 1, 0-indexed DGV vs 1-indexed Excel)
+                        // But we need to be careful with indices as we delete.
+                        // Actually, the logic below uses excelRowsToDelete which is not populated here.
+                        // Let's populate it.
+                        // Excel rows are 1-based. Header is row 1. Data starts at row 2.
+                        // DGV row index 0 corresponds to Excel row 2.
+                        excelRowsToDelete.Add(row.Index + 2);
+                        rowsToRemove.Add(row);
                     }
                     catch (Exception ex)
                     {
@@ -2437,22 +2450,17 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
 
             if (worksheet != null && excelRowsToDelete.Count > 0)
             {
+                // Delete rows from bottom up to avoid index shifting issues
                 excelRowsToDelete.Sort((a, b) => b.CompareTo(a));
                 foreach (int rowNum in excelRowsToDelete)
                 {
                     worksheet.Row(rowNum).Delete();
                 }
 
-                IXLRange? usedRange = worksheet.RangeUsed();
-                if (usedRange != null)
-                {
-                    int headerRow = usedRange.FirstRow().RowNumber();
-                    int lastRow = worksheet.LastRowUsed()?.RowNumber() ?? headerRow;
-                }
-
                 workbook?.Save();
             }
 
+            // Remove rows from DataGridView
             foreach (DataGridViewRow row in rowsToRemove)
             {
                 if (!row.IsNewRow)
@@ -2461,19 +2469,28 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                 }
             }
 
-            RefreshImportDataGridView();
-
-            if (!anyError)
+            // If all rows were processed successfully, clear the grid and re-enable import
+            if (!anyError && dgv.Rows.Count == 0)
             {
+                AdvancedInventory_Import_DataGridView.DataSource = null;
+                AdvancedInventory_Import_Button_ImportExcel.Enabled = true;
+                
                 Service_ErrorHandler.ShowInformation(@"All transactions saved successfully.", "Import Success");
                 if (MainFormInstance != null)
                 {
                     MainFormInstance.MainForm_StatusStrip_SavedStatus.Text =
-                        $"Last Import: {DateTime.Now:hh:mm tt} ({dgv.Rows.Count} rows imported)";
+                        $"Last Import: {DateTime.Now:hh:mm tt} ({rowsToRemove.Count} rows imported)";
                 }
+            }
+            else if (!anyError)
+            {
+                // Some rows remain (shouldn't happen if all valid, but just in case)
+                RefreshImportDataGridView();
+                Service_ErrorHandler.ShowInformation(@"Transactions saved successfully.", "Import Success");
             }
             else
             {
+                RefreshImportDataGridView();
                 Service_ErrorHandler.HandleValidationError(@"Some rows could not be saved. Please correct highlighted errors.", nameof(AdvancedInventory_Import_DataGridView));
             }
         }
