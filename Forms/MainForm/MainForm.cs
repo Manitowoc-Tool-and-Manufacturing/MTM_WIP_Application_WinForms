@@ -1111,7 +1111,7 @@ namespace MTM_WIP_Application_Winforms.Forms.MainForm
             Service_DebugTracer.TraceMethodExit(null, nameof(MainForm_MenuStrip_Exit_Click), nameof(MainForm));
         }
 
-        private async void MainForm_MenuStrip_View_PersonalHistory_Click(object sender, EventArgs e)
+        private void MainForm_MenuStrip_View_PersonalHistory_Click(object sender, EventArgs e)
         {
             try
             {

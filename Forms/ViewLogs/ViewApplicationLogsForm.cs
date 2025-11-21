@@ -1424,6 +1424,9 @@ public partial class ViewApplicationLogsForm : ThemedForm
     /// </summary>
     private async Task PerformBatchPromptGeneration()
     {
+        // Yield to ensure UI responsiveness before starting heavy work
+        await Task.Yield();
+
         if (_currentEntries == null || _currentEntries.Count == 0)
         {
             lblStatus.Text = "No entries loaded";

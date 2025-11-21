@@ -941,7 +941,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             }
         }
 
-        private async void Control_TransferTab_ContextMenuItem_Print_Click(object? sender, EventArgs e)
+        private void Control_TransferTab_ContextMenuItem_Print_Click(object? sender, EventArgs e)
         {
             // Reuse existing print button logic
             Control_TransferTab_Button_Print_Click(sender, e);

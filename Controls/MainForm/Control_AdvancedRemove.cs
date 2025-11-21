@@ -243,7 +243,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             // No standard ComboBoxes to configure - using SuggestionTextBoxWithLabel for Users
         }
 
-        private async Task LoadComboBoxesAsync()
+        private Task LoadComboBoxesAsync()
         {
             try
             {
@@ -256,6 +256,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             {
                 LoggingUtility.LogApplicationError(ex);
             }
+            return Task.CompletedTask;
         }
 
         private void WireUpComboBoxEvents()

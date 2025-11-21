@@ -72,7 +72,7 @@ namespace MTM_WIP_Application_Winforms.Forms.ErrorReports
 
         #region Helpers
 
-        private async Task ShowErrorReportDetailsDialogAsync(int reportId)
+        private Task ShowErrorReportDetailsDialogAsync(int reportId)
         {
             try
             {
@@ -89,6 +89,7 @@ namespace MTM_WIP_Application_Winforms.Forms.ErrorReports
             {
                 Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Medium, controlName: Name);
             }
+            return Task.CompletedTask;
         }
 
         protected override void OnFormClosed(FormClosedEventArgs e)

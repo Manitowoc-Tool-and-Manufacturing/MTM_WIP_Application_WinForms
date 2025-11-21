@@ -63,7 +63,7 @@ public class ThemeManager : IThemeProvider, IDisposable
     /// <summary>
     /// Sets the active theme asynchronously with debouncing.
     /// </summary>
-    public async Task SetThemeAsync(
+    public Task SetThemeAsync(
         string themeName,
         ThemeChangeReason reason = ThemeChangeReason.UserSelection,
         string? userId = null)
@@ -71,11 +71,12 @@ public class ThemeManager : IThemeProvider, IDisposable
         if (string.IsNullOrWhiteSpace(themeName))
         {
             _logger.LogWarning("SetThemeAsync called with null or empty theme name");
-            return;
+            return Task.CompletedTask;
         }
 
         // Debounce rapid changes
         _debouncer.Debounce(themeName, reason, userId, ApplyThemeInternalAsync);
+        return Task.CompletedTask;
     }
 
     /// <summary>

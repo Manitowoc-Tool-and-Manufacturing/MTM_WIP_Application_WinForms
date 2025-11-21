@@ -1659,7 +1659,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
 
         #region Multi-Location Actions
 
-        private async Task AdvancedInventory_MultiLoc_HardResetAsync()
+        private Task AdvancedInventory_MultiLoc_HardResetAsync()
         {
             AdvancedInventory_MultiLoc_Button_Reset.Enabled = false;
             try
@@ -1710,6 +1710,11 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                     "AdvancedInventory_MultiLoc_HardResetAsync");
             }
             finally
+            {
+                // ...existing code...
+            }
+            return Task.CompletedTask;
+        }
             {
                 Debug.WriteLine("[DEBUG] AdvancedInventory MultiLoc HardReset button re-enabled");
                 AdvancedInventory_MultiLoc_Button_Reset.Enabled = true;
