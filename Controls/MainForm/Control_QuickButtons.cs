@@ -55,6 +55,9 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
 
             InitializeComponent();
 
+            // Add padding to the main control as requested
+            this.Padding = new Padding(3);
+
             Service_DebugTracer.TraceUIAction("TABLE_LAYOUT_SETUP", nameof(Control_QuickButtons),
                 new Dictionary<string, object>
                 {
