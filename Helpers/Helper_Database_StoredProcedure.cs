@@ -411,7 +411,7 @@ public static class Helper_Database_StoredProcedure
 
         try
         {
-            return await ExecuteWithRetryAsync(async () =>
+            var result = await ExecuteWithRetryAsync(async () =>
             {
                 progressHelper?.UpdateProgress(10, $"Connecting to database for {procedureName}...");
 
@@ -466,9 +466,9 @@ public static class Helper_Database_StoredProcedure
 
                     // Status codes: 1=success with data, 0=success without data, negative=error
                     if (status >= 0)
-                        return Model_Dao_Result.Success(errorMessage, rowsAffected);
+                        return Model_Dao_Result<object>.Success(safeResult, errorMessage);
                     else
-                        return Model_Dao_Result.Failure(errorMessage, null);
+                        return Model_Dao_Result<object>.Failure(errorMessage, null);
                 }
                 finally
                 {
@@ -500,7 +500,7 @@ public static class Helper_Database_StoredProcedure
                         // Execute recursively against Test DB
                         // - No progress helper (background task)
                         // - No external connection/transaction (must be independent)
-                        await ExecuteNonQueryWithStatusAsync(
+                        await ExecuteScalarWithStatusAsync(
                             testConnectionString,
                             procedureName,
                             parameters,
@@ -563,7 +563,7 @@ public static class Helper_Database_StoredProcedure
 
         try
         {
-            return await ExecuteWithRetryAsync(async () =>
+            var result = await ExecuteWithRetryAsync(async () =>
             {
                 progressHelper?.UpdateProgress(10, $"Connecting to database for {procedureName}...");
 
@@ -629,6 +629,46 @@ public static class Helper_Database_StoredProcedure
                     }
                 }
             });
+
+            // ---------------------------------------------------------
+            // DUAL-WRITE LOGIC (Production -> Test)
+            // ---------------------------------------------------------
+            // If the operation was successful AND we are on Production,
+            // replicate the change to the Test database.
+            if (result.IsSuccess)
+            {
+                try
+                {
+                    var builder = new MySqlConnectionStringBuilder(connectionString);
+                    // Check if we are targeting the Production database
+                    if (builder.Database.Equals("mtm_wip_application_winforms", StringComparison.OrdinalIgnoreCase))
+                    {
+                        // Switch to Test database
+                        builder.Database = "mtm_wip_application_winforms_test";
+                        string testConnectionString = builder.ConnectionString;
+
+                        // Execute recursively against Test DB
+                        // - No progress helper (background task)
+                        // - No external connection/transaction (must be independent)
+                        await ExecuteNonQueryWithStatusAsync(
+                            testConnectionString,
+                            procedureName,
+                            parameters,
+                            null,
+                            null,
+                            null
+                        );
+                    }
+                }
+                catch (Exception ex)
+                {
+                    // Log replication failure but DO NOT fail the primary operation
+                    // This ensures Production stability even if Test DB is down
+                    LoggingUtility.LogApplicationError(new Exception($"Dual-write to Test Database failed for {procedureName}", ex));
+                }
+            }
+
+            return result;
         }
         catch (Exception ex)
         {
@@ -896,7 +936,7 @@ public static class Helper_Database_StoredProcedure
 
                 int delayMs = BASE_RETRY_DELAY_MS * (int)Math.Pow(2, attempt - 1); // Exponential backoff
 
-                
+
 
                 await Task.Delay(delayMs);
             }
@@ -942,7 +982,7 @@ public static class Helper_Database_StoredProcedure
 
         if (elapsedMs > thresholdMs)
         {
-            
+
         }
     }
 
