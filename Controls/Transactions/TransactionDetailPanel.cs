@@ -79,7 +79,8 @@ namespace MTM_WIP_Application_Winforms.Controls.Transactions
         {
             InitializeComponent();
 
-
+            // Disable lifecycle button by default
+            TransactionDetailPanel_Button_ViewBatchHistory.Enabled = false;
 
             _notesRowOriginalHeight = TransactionDetailPanel_TableLayout_Main.RowStyles.Count > 3
                 ? TransactionDetailPanel_TableLayout_Main.RowStyles[3].Height
@@ -216,6 +217,10 @@ namespace MTM_WIP_Application_Winforms.Controls.Transactions
                 TransactionDetailPanel_Label_DateValue.Text = _transaction.DateTime.ToString("MM/dd/yyyy HH:mm:ss");
                 TransactionDetailPanel_TextBox_Notes.Text = string.IsNullOrWhiteSpace(_transaction.Notes) ? "—" : _transaction.Notes;
 
+                // Enable lifecycle button if we have valid data
+                TransactionDetailPanel_Button_ViewBatchHistory.Enabled = 
+                    !string.IsNullOrWhiteSpace(_transaction.PartID) && 
+                    !string.IsNullOrWhiteSpace(_transaction.BatchNumber);
 
             }
             catch (Exception ex)
@@ -267,6 +272,8 @@ namespace MTM_WIP_Application_Winforms.Controls.Transactions
                 TransactionDetailPanel_Label_DateValue.Text = "—";
                 TransactionDetailPanel_TextBox_Notes.Text = "—";
 
+                // Disable lifecycle button
+                TransactionDetailPanel_Button_ViewBatchHistory.Enabled = false;
 
             }
             catch (Exception ex)
