@@ -114,17 +114,17 @@ namespace MTM_WIP_Application_Winforms.Core
                 {
                     // On header - show column visibility menu and suppress default context menu
                     ShowColumnVisibilityMenu(dgv, e.Location);
-                    
+
                     // Temporarily clear the context menu to prevent print menu from showing
                     var originalMenu = dgv.Tag as ContextMenuStrip;
                     dgv.ContextMenuStrip = null;
-                    
+
                     // Restore it after a short delay
-                    Task.Delay(100).ContinueWith(_ => 
+                    Task.Delay(100).ContinueWith(_ =>
                     {
                         if (dgv.IsHandleCreated && !dgv.IsDisposed)
                         {
-                            dgv.BeginInvoke(new Action(() => 
+                            dgv.BeginInvoke(new Action(() =>
                             {
                                 if (!dgv.IsDisposed)
                                 {
@@ -342,6 +342,71 @@ namespace MTM_WIP_Application_Winforms.Core
             dataGridView.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.DisplayedCells;
             dataGridView.AutoResizeColumns(DataGridViewAutoSizeColumnsMode.DisplayedCells);
             dataGridView.AutoResizeRows(DataGridViewAutoSizeRowsMode.DisplayedCells);
+        }
+
+        /// <summary>
+        /// Loads and applies saved grid settings (column visibility and order) for the specified DataGridView.
+        /// </summary>
+        public static async Task LoadAndApplyGridSettingsAsync(DataGridView dgv, string userId)
+        {
+            try
+            {
+                string gridName = dgv.Name;
+                var result = await Dao_User.GetGridViewSettingsJsonAsync(userId);
+
+                if (result.IsSuccess && !string.IsNullOrEmpty(result.Data))
+                {
+                    using JsonDocument doc = JsonDocument.Parse(result.Data);
+                    if (doc.RootElement.TryGetProperty(gridName, out JsonElement gridSettingsElement))
+                    {
+                        string? settingsJson = null;
+                        if (gridSettingsElement.ValueKind == JsonValueKind.String)
+                        {
+                            settingsJson = gridSettingsElement.GetString();
+                        }
+                        else
+                        {
+                            settingsJson = gridSettingsElement.GetRawText();
+                        }
+
+                        if (!string.IsNullOrEmpty(settingsJson))
+                        {
+                            var settings = JsonSerializer.Deserialize<GridSettings>(settingsJson);
+                            if (settings?.Columns != null)
+                            {
+                                // Sort by DisplayIndex to apply order correctly
+                                var orderedSettings = settings.Columns.OrderBy(c => c.DisplayIndex).ToList();
+
+                                foreach (var colSetting in orderedSettings)
+                                {
+                                    if (dgv.Columns.Contains(colSetting.Name))
+                                    {
+                                        var col = dgv.Columns[colSetting.Name];
+                                        col.Visible = colSetting.Visible;
+                                        col.DisplayIndex = colSetting.DisplayIndex;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                LoggingUtility.LogApplicationError(ex);
+            }
+        }
+
+        private class GridSettings
+        {
+            public List<ColumnSetting>? Columns { get; set; }
+        }
+
+        private class ColumnSetting
+        {
+            public string Name { get; set; } = string.Empty;
+            public bool Visible { get; set; }
+            public int DisplayIndex { get; set; }
         }
 
         #endregion

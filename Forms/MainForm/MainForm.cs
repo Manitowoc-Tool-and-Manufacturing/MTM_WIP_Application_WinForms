@@ -280,7 +280,7 @@ namespace MTM_WIP_Application_Winforms.Forms.MainForm
 
         /// <summary>
         /// Configures Development Menu visibility based on current user
-        /// Only users JKOLL or JOHNK can access the Development Menu
+        /// Users with Developer role or legacy hardcoded users (JKOLL, JOHNK) can access the Development Menu
         /// </summary>
         private void ConfigureDevelopmentMenuVisibility()
         {
@@ -293,7 +293,11 @@ namespace MTM_WIP_Application_Winforms.Forms.MainForm
             try
             {
                 string currentUser = Model_Application_Variables.User?.ToUpperInvariant() ?? "";
-                bool isDeveloper = currentUser == "JKOLL" || currentUser == "JOHNK";
+
+                // Check both the database role flag and the hardcoded legacy users
+                bool isDeveloper = Model_Application_Variables.UserTypeDeveloper ||
+                                   currentUser == "JKOLL" ||
+                                   currentUser == "JOHNK";
 
                 if (developmentToolStripMenuItem != null)
                 {
@@ -303,7 +307,8 @@ namespace MTM_WIP_Application_Winforms.Forms.MainForm
                         inputData: new {
                             User = Model_Application_Variables.User,
                             UserUpperCase = currentUser,
-                            IsDeveloper = isDeveloper
+                            IsDeveloper = isDeveloper,
+                            IsUserTypeDeveloper = Model_Application_Variables.UserTypeDeveloper
                         },
                         outputData: new {
                             MenuVisible = isDeveloper,

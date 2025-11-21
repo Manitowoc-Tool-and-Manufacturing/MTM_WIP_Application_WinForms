@@ -40,7 +40,7 @@
 - Test theme switching and selection visibility
 - All this should be done using MAMP MySQL 5.7 CLI, do not create files to do this, and if you do remove them when you are done.
 
-### 7. **MainForm - Fix Developer menu not showing** *(3 hours)*
+### 7. **MainForm - Fix Developer menu not showing** *(3 hours)* - Done!
 - Check user permission logic in `MainForm`
 - Verify `Model_Application_Variables.User` role detection
 - Debug menu visibility conditions

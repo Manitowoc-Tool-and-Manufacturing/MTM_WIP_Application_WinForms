@@ -492,6 +492,10 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
 
                 Core_Themes.ApplyThemeToDataGridView(Control_AdvancedRemove_DataGridView_Results);
                 Core_Themes.SizeDataGrid(Control_AdvancedRemove_DataGridView_Results);
+
+                // Load saved settings (overrides default visibility/order)
+                await Core_Themes.LoadAndApplyGridSettingsAsync(Control_AdvancedRemove_DataGridView_Results, Model_Application_Variables.User);
+
                 Control_AdvancedRemove_Image_NothingFound.Visible = dt.Rows.Count == 0;
                 Control_AdvancedRemove_Update_ButtonStates();
             }

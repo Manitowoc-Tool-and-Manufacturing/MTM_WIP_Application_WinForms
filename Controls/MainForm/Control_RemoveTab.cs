@@ -1049,6 +1049,9 @@ SetStyle(ControlStyles.OptimizedDoubleBuffer, true);
                 }
                 Core_Themes.SizeDataGrid(Control_RemoveTab_DataGridView_Main);
 
+                // Load saved settings (overrides default visibility/order)
+                await Core_Themes.LoadAndApplyGridSettingsAsync(Control_RemoveTab_DataGridView_Main, Model_Application_Variables.User);
+
                 Control_RemoveTab_Image_NothingFound.Visible = results.Rows.Count == 0;
                 _progressHelper?.UpdateProgress(100, "Search complete");
                 SetSearchPanelCollapsed(true);
@@ -1295,6 +1298,10 @@ SetStyle(ControlStyles.OptimizedDoubleBuffer, true);
                     ApplyColorCodingToRows(Control_RemoveTab_DataGridView_Main);
                 }
                 Core_Themes.SizeDataGrid(Control_RemoveTab_DataGridView_Main);
+
+                // Load saved settings (overrides default visibility/order)
+                await Core_Themes.LoadAndApplyGridSettingsAsync(Control_RemoveTab_DataGridView_Main, Model_Application_Variables.User);
+
                 Control_RemoveTab_Image_NothingFound.Visible = dt.Rows.Count == 0;
                 SetSearchPanelCollapsed(true);
 
