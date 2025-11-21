@@ -2177,7 +2177,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                 string excelPath = await GetUserExcelFilePathAsync();
                 if (!File.Exists(excelPath))
                 {
-                    Service_ErrorHandler.HandleValidationError(@"Excel file not found. Please create or open the Excel file first.", nameof(AdvancedInventory_Import_Button_ImportExcel));
+                    MessageBox.Show(@"Excel file not found. Please create or open the Excel file first.", nameof(AdvancedInventory_Import_Button_ImportExcel));
                     return;
                 }
 
@@ -2207,7 +2207,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                     if (worksheet == null)
                     {
                         string availableSheets = string.Join(", ", workbook.Worksheets.Select(w => $"'{w.Name}'"));
-                        Service_ErrorHandler.HandleValidationError(
+                        MessageBox.Show(
                             $"Worksheet 'Tab 1' not found.\n\nAvailable sheets: {availableSheets}\n\nPlease ensure your data is on a sheet named 'Tab 1'.",
                             nameof(AdvancedInventory_Import_Button_ImportExcel));
                         return;
@@ -2218,7 +2218,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                     // Diagnostic: Check for empty sheet
                     if (usedRange == null)
                     {
-                         Service_ErrorHandler.HandleValidationError(
+                         MessageBox.Show(
                             "Worksheet 'Tab 1' appears to be empty.\n\nPlease ensure you have entered data and saved the file.",
                             nameof(AdvancedInventory_Import_Button_ImportExcel));
                         return;
@@ -2230,7 +2230,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                     // Diagnostic: Check for data rows
                     if (rowCount < 2)
                     {
-                         Service_ErrorHandler.HandleValidationError(
+                         MessageBox.Show(
                             $"Found {rowCount} row(s) in 'Tab 1'.\n\nExpected at least 2 rows (1 header row + data rows).\nPlease ensure you have added data below the headers.",
                             nameof(AdvancedInventory_Import_Button_ImportExcel));
                         return;
@@ -2262,7 +2262,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
 
                 if (dt.Rows.Count == 0)
                 {
-                    Service_ErrorHandler.HandleValidationError(
+                    MessageBox.Show(
                         "No data rows could be extracted from the Excel file.",
                         nameof(AdvancedInventory_Import_Button_ImportExcel));
                     return;
@@ -2288,6 +2288,55 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             }
 
             DataGridView? dgv = AdvancedInventory_Import_DataGridView;
+
+            // Column mapping: Internal Name -> List of allowed Excel Header Names
+            var columnMappings = new Dictionary<string, string[]>
+            {
+                { "Part", new[] { "Part", "Part Number", "PartID", "Item", "Item Number" } },
+                { "Operation", new[] { "Operation", "Op", "OpCode" } },
+                { "Location", new[] { "Location", "Loc", "Bin" } },
+                { "Quantity", new[] { "Quantity", "Qty", "Count", "Amount" } },
+                { "Notes", new[] { "Notes", "Note", "Comments", "Description" } }
+            };
+
+            // Resolve actual column names in the DataGridView
+            var resolvedColumns = new Dictionary<string, string>();
+            List<string> missingColumns = new();
+
+            foreach (var kvp in columnMappings)
+            {
+                string internalName = kvp.Key;
+                string[] aliases = kvp.Value;
+                string? foundColumn = null;
+
+                foreach (string alias in aliases)
+                {
+                    if (dgv.Columns.Contains(alias))
+                    {
+                        foundColumn = alias;
+                        break;
+                    }
+                }
+
+                if (foundColumn != null)
+                {
+                    resolvedColumns[internalName] = foundColumn;
+                }
+                else
+                {
+                    missingColumns.Add(internalName);
+                }
+            }
+
+            if (missingColumns.Count > 0)
+            {
+                string missingList = string.Join(", ", missingColumns);
+                Service_ErrorHandler.HandleValidationError(
+                    $"The following required columns are missing from the imported data: {missingList}.\n\nPlease ensure your Excel file has the correct headers (e.g., Part, Operation, Location, Quantity, Notes).",
+                    nameof(AdvancedInventory_Import_Button_Save));
+                return;
+            }
+
             List<DataGridViewRow> rowsToRemove = new();
             bool anyError = false;
 
@@ -2325,37 +2374,37 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                     cell.Style.ForeColor = Model_Application_Variables.UserUiColors.TextBoxForeColor ?? Color.Black;
                 }
 
-                string part = row.Cells["Part"].Value?.ToString() ?? "";
-                string op = row.Cells["Operation"].Value?.ToString() ?? "";
-                string loc = row.Cells["Location"].Value?.ToString() ?? "";
-                string qtyText = row.Cells["Quantity"].Value?.ToString() ?? "";
-                string notesOriginal = row.Cells["Notes"].Value?.ToString() ?? "";
+                string part = row.Cells[resolvedColumns["Part"]].Value?.ToString() ?? "";
+                string op = row.Cells[resolvedColumns["Operation"]].Value?.ToString() ?? "";
+                string loc = row.Cells[resolvedColumns["Location"]].Value?.ToString() ?? "";
+                string qtyText = row.Cells[resolvedColumns["Quantity"]].Value?.ToString() ?? "";
+                string notesOriginal = row.Cells[resolvedColumns["Notes"]].Value?.ToString() ?? "";
                 string notes = "Excel Import: " + notesOriginal;
 
                 if (!validParts.Contains(part))
                 {
-                    row.Cells["Part"].Style.ForeColor =
+                    row.Cells[resolvedColumns["Part"]].Style.ForeColor =
                         Model_Application_Variables.UserUiColors.TextBoxErrorForeColor ?? Color.Red;
                     rowValid = false;
                 }
 
                 if (!validOps.Contains(op))
                 {
-                    row.Cells["Operation"].Style.ForeColor =
+                    row.Cells[resolvedColumns["Operation"]].Style.ForeColor =
                         Model_Application_Variables.UserUiColors.TextBoxErrorForeColor ?? Color.Red;
                     rowValid = false;
                 }
 
                 if (!validLocs.Contains(loc))
                 {
-                    row.Cells["Location"].Style.ForeColor =
+                    row.Cells[resolvedColumns["Location"]].Style.ForeColor =
                         Model_Application_Variables.UserUiColors.TextBoxErrorForeColor ?? Color.Red;
                     rowValid = false;
                 }
 
                 if (!int.TryParse(qtyText, out int qty) || qty <= 0)
                 {
-                    row.Cells["Quantity"].Style.ForeColor =
+                    row.Cells[resolvedColumns["Quantity"]].Style.ForeColor =
                         Model_Application_Variables.UserUiColors.TextBoxErrorForeColor ?? Color.Red;
                     rowValid = false;
                 }
