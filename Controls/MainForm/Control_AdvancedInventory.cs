@@ -2181,6 +2181,24 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                     return;
                 }
 
+                // Check if file is locked
+                try
+                {
+                    using (FileStream stream = File.Open(excelPath, FileMode.Open, FileAccess.Read, FileShare.None))
+                    {
+                        stream.Close();
+                    }
+                }
+                catch (IOException)
+                {
+                    MessageBox.Show(
+                        $"The Excel file is currently open in another application.\n\nPlease close '{Path.GetFileName(excelPath)}' and try again.",
+                        "File In Use",
+                        MessageBoxButtons.OK,
+                        MessageBoxIcon.Warning);
+                    return;
+                }
+
                 DataTable dt = new();
                 using (XLWorkbook workbook = new(excelPath))
                 {

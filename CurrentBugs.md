@@ -7,12 +7,12 @@
 - Add `Padding = new Padding(3)` to constructor or design time properties
 - Test visual appearance
 
-### 2. **Transactions - Lifecycle Button needs to be disabled on form load** *(1 hour)*
+### 2. **Transactions - Lifecycle Button needs to be disabled on form load** *(1 hour)* - Done!
 - Find Transactions form in `Forms/` directory
 - Set `LifecycleButton.Enabled = false` in form constructor
 - Add logic to enable when row selected and DataGridView visible
 
-### 3. **Advanced Inventory - Send Button needs to be disabled on control load** *(1 hour)*
+### 3. **Advanced Inventory - Send Button needs to be disabled on control load** *(1 hour)* - Done!
 - Locate Advanced Inventory form/control
 - Set `SendButton.Enabled = false` in constructor
 - Add validation logic to enable when appropriate
