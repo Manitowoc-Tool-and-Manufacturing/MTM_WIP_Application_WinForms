@@ -1711,11 +1711,6 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             }
             finally
             {
-                // ...existing code...
-            }
-            return Task.CompletedTask;
-        }
-            {
                 Debug.WriteLine("[DEBUG] AdvancedInventory MultiLoc HardReset button re-enabled");
                 AdvancedInventory_MultiLoc_Button_Reset.Enabled = true;
                 if (MainFormInstance != null)
@@ -1728,6 +1723,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                     _progressHelper?.HideProgress();
                 }
             }
+            return Task.CompletedTask;
         }
 
         private void AdvancedInventory_MultiLoc_SoftReset()

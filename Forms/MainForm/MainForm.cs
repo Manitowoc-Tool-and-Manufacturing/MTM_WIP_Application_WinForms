@@ -327,7 +327,7 @@ namespace MTM_WIP_Application_Winforms.Forms.MainForm
                         {
                             ["Warning"] = "developmentToolStripMenuItem is null"
                         });
-                    
+
                 }
             }
             catch (Exception ex)
@@ -476,7 +476,7 @@ namespace MTM_WIP_Application_Winforms.Forms.MainForm
                     try
                     {
                         // Prompt user to restart instead of auto-refresh
-                        
+
 
                         // Note: We don't auto-refresh here because the DpiChanged event
                         // on the form will handle it and prompt the user
@@ -487,7 +487,7 @@ namespace MTM_WIP_Application_Winforms.Forms.MainForm
                     }
                 };
 
-                
+
             }
             catch (Exception ex)
             {
@@ -503,7 +503,7 @@ namespace MTM_WIP_Application_Winforms.Forms.MainForm
         {
             try
             {
-                
+
 
                 // Calculate scaling percentage for user-friendly message
                 int oldPercent = (int)Math.Round(e.DeviceDpiOld / 96.0 * 100);
@@ -524,7 +524,7 @@ namespace MTM_WIP_Application_Winforms.Forms.MainForm
                 if (result == DialogResult.Yes)
                 {
                     // User chose to restart - save state and restart application
-                    
+
 
                     // Get the application executable path
                     string appPath = Application.ExecutablePath;
@@ -537,14 +537,14 @@ namespace MTM_WIP_Application_Winforms.Forms.MainForm
                 }
                 else if (result == DialogResult.No)
                 {
-                    
+
                     // Theme reapplied automatically by ThemedForm base class
-                    
+
                 }
                 else
                 {
                     // User cancelled - do nothing
-                    
+
                 }
             }
             catch (Exception ex)
@@ -901,12 +901,12 @@ namespace MTM_WIP_Application_Winforms.Forms.MainForm
                 string gridName = string.Empty;
 
                 int selectedIndex = MainForm_TabControl.SelectedIndex;
-                
+
                 if (selectedIndex >= 0 && selectedIndex < MainForm_TabControl.TabPages.Count)
                 {
                     var selectedTab = MainForm_TabControl.TabPages[selectedIndex];
                     gridName = selectedTab.Text; // Use tab name (Inventory, Remove, Transfer)
-                    
+
                     // Find first DataGridView in the selected tab
                     activeGrid = FindFirstDataGridView(selectedTab);
                 }
@@ -943,7 +943,7 @@ namespace MTM_WIP_Application_Winforms.Forms.MainForm
                 {
                     return dgv;
                 }
-                
+
                 if (child.Controls.Count > 0)
                 {
                     var found = FindFirstDataGridView(child);
@@ -953,7 +953,7 @@ namespace MTM_WIP_Application_Winforms.Forms.MainForm
                     }
                 }
             }
-            
+
             return null;
         }
 
@@ -1161,7 +1161,7 @@ namespace MTM_WIP_Application_Winforms.Forms.MainForm
 
                     _viewApplicationLogsForm.BringToFront();
                     _viewApplicationLogsForm.Focus();
-                    
+
                     return;
                 }
 
@@ -1170,12 +1170,12 @@ namespace MTM_WIP_Application_Winforms.Forms.MainForm
                 if (!string.IsNullOrWhiteSpace(currentUser))
                 {
                     _viewApplicationLogsForm = new Forms.ViewLogs.ViewApplicationLogsForm(currentUser);
-                    
+
                 }
                 else
                 {
                     _viewApplicationLogsForm = new Forms.ViewLogs.ViewApplicationLogsForm();
-                    
+
                 }
 
                 // Wire up form closed event to clean up reference
@@ -1184,14 +1184,14 @@ namespace MTM_WIP_Application_Winforms.Forms.MainForm
                 // Show as modeless dialog
                 _viewApplicationLogsForm.Show(this);
 
-                
+
             }
             catch (Exception ex)
             {
                 LoggingUtility.LogApplicationError(ex);
-                Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Medium, 
-                    contextData: new Dictionary<string, object> 
-                    { 
+                Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Medium,
+                    contextData: new Dictionary<string, object>
+                    {
                         ["CurrentUser"] = Model_Application_Variables.EnteredUser ?? "Unknown",
                         ["MenuAction"] = "Development > View Application Logs"
                     },
