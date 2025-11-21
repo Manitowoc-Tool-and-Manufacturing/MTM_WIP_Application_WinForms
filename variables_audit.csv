@@ -1,0 +1,80 @@
+Active,Include,File,Variable,Description,CurrentValue,DataType
+TRUE,TRUE,Model_Application_Variables.cs,QueryThresholdMs,Performance threshold for query operations (ms),500,long?
+TRUE,TRUE,Model_Application_Variables.cs,ModificationThresholdMs,Performance threshold for modification operations (ms),1000,long?
+TRUE,TRUE,Model_Application_Variables.cs,BatchThresholdMs,Performance threshold for batch operations (ms),5000,long?
+TRUE,TRUE,Model_Application_Variables.cs,ReportThresholdMs,Performance threshold for report generation (ms),2000,long?
+TRUE,TRUE,Model_Application_Variables.cs,CommandTimeoutSeconds,Command timeout for stored procedures (seconds),30,int
+TRUE,TRUE,Model_Application_Variables.cs,TransactionPageSize,Page size for transaction viewer pagination,50,int
+TRUE,TRUE,Model_Application_Variables.cs,ThemeFontSize,Base font size for application theme,9f,float
+TRUE,TRUE,Model_Application_Variables.cs,ThemeEnabled,Enable/disable theme system globally,true,bool
+TRUE,TRUE,Model_Application_Variables.cs,UserTypeDeveloper,Current user has developer privileges,false,bool
+TRUE,TRUE,Model_Application_Variables.cs,UserTypeAdmin,Current user has admin privileges,false,bool
+TRUE,TRUE,Model_Application_Variables.cs,UserTypeReadOnly,Current user has read-only access,false,bool
+TRUE,TRUE,Model_Application_Variables.cs,UserTypeNormal,Current user has normal privileges,true,bool
+TRUE,TRUE,Model_Application_Variables.cs,DatabaseUser,Database username for connections,root,string
+TRUE,TRUE,Model_Application_Variables.cs,DatabasePassword,Database password for connections,root,string
+TRUE,TRUE,Model_Application_Variables.cs,ThemeName,Current application theme name,Default,string
+TRUE,TRUE,Model_Application_Variables.cs,WipDataGridTheme,DataGridView theme name,Default,string
+TRUE,TRUE,Model_Application_Variables.cs,ErrorReporting.EnableAutoSyncOnStartup,Auto-sync error reports on startup,true,bool
+TRUE,TRUE,Model_Application_Variables.cs,ErrorReporting.MaxPendingAgeDays,Max age for pending error reports (days),30,int
+TRUE,TRUE,Model_Application_Variables.cs,ErrorReporting.MaxSentArchiveAgeDays,Max age for archived error reports (days),30,int
+TRUE,TRUE,Model_Application_Variables.cs,ErrorReporting.SyncProgressThreshold,Pending count threshold to show sync progress,5,int
+TRUE,TRUE,Model_Application_Variables.cs,ErrorReporting.QueueDirectory,Directory for pending error reports,%APPDATA%\MTM_Application\ErrorReports\Pending,string
+TRUE,TRUE,Model_Application_Variables.cs,ErrorReporting.ArchiveDirectory,Directory for archived error reports,%APPDATA%\MTM_Application\ErrorReports\Sent,string
+TRUE,TRUE,Service_ConnectionRecoveryManager.cs,RetryIntervalSeconds,Interval between reconnection attempts (seconds),5,int
+TRUE,TRUE,Service_ConnectionRecoveryManager.cs,MaxConsecutiveFailures,Max failed reconnection attempts before giving up,5,int
+TRUE,TRUE,Helper_Database_StoredProcedure.cs,MAX_RETRY_ATTEMPTS,Maximum retry attempts for transient errors,3,int
+TRUE,TRUE,Helper_Database_StoredProcedure.cs,BASE_RETRY_DELAY_MS,Base delay for exponential backoff retry (ms),500,int
+TRUE,TRUE,Service_LogFileReader.cs,DefaultWindowSize,Default log file read window size (lines),500,int
+TRUE,TRUE,Service_ColorCodeValidator.cs,WorkOrderPrefix,Required prefix for work order numbers,WO-,string
+TRUE,TRUE,Service_ColorCodeValidator.cs,WorkOrderDigits,Required digit count for work order numbers,6,int
+TRUE,TRUE,Validators/LocationCodeValidator.cs,MinLength,Minimum location code length (characters),3,int
+TRUE,TRUE,Validators/LocationCodeValidator.cs,MaxLength,Maximum location code length (characters),8,int
+TRUE,TRUE,Validators/WorkOrderValidator.cs,MinWorkOrderNumber,Minimum work order number,0,long
+TRUE,TRUE,Validators/WorkOrderValidator.cs,MaxWorkOrderNumber,Maximum work order number,999999,long
+TRUE,TRUE,Validators/PartNumberValidator.cs,MinLength,Minimum part number length (characters),6,int
+TRUE,TRUE,Validators/PartNumberValidator.cs,MaxLength,Maximum part number length (characters),50,int
+TRUE,TRUE,Control_AdvancedInventory.cs,SingleInputFallbackWidth,Fallback width for single entry input panel (px),265,float
+TRUE,TRUE,Control_AdvancedInventory.cs,MultiInputFallbackWidth,Fallback width for multi-location input panel (px),255,float
+TRUE,TRUE,Control_AdvancedInventory.cs,SingleListViewLocationColumnIndex,Column index for location in single entry list,0,int
+TRUE,TRUE,Control_AdvancedInventory.cs,SingleListViewDisplayPartColumnIndex,Column index for part display in single entry list,1,int
+TRUE,TRUE,Control_AdvancedInventory.cs,SingleListViewQuantityColumnIndex,Column index for quantity in single entry list,2,int
+TRUE,TRUE,Control_AdvancedInventory.cs,SingleListViewPartIdColumnIndex,Column index for part ID in single entry list,3,int
+TRUE,TRUE,Control_AdvancedInventory.cs,SingleListViewOperationColumnIndex,Column index for operation in single entry list,4,int
+TRUE,TRUE,Control_AdvancedInventory.cs,SingleListViewNotesColumnIndex,Column index for notes in single entry list,5,int
+TRUE,TRUE,Control_TransferTab.cs,InputPanelFallbackWidth,Fallback width for transfer input panel (px),312,float
+TRUE,TRUE,Control_ErrorReportsGrid.cs,AllUsersOption,Dropdown option text for all users filter,[ All Users ],string
+TRUE,TRUE,Control_ErrorReportsGrid.cs,AllMachinesOption,Dropdown option text for all machines filter,[ All Machines ],string
+TRUE,TRUE,Control_ErrorReportsGrid.cs,AllStatusesOption,Dropdown option text for all statuses filter,[ All Statuses ],string
+TRUE,TRUE,Control_ErrorReportDetails.cs,PlaceholderNoData,Placeholder text for empty fields,(No data provided),string
+TRUE,TRUE,PrintForm.cs,PrinterUnavailableDisplayText,Text shown when no printers installed,(No printers installed),string
+TRUE,TRUE,PrintForm.cs,ZoomFitToPage,Zoom option text for fit-to-page,Fit to Page,string
+TRUE,TRUE,Helper_ButtonToggleAnimations.cs,ArrowLeft,Unicode character for left arrow,🡰,string
+TRUE,TRUE,Helper_ButtonToggleAnimations.cs,ArrowRight,Unicode character for right arrow,🡲,string
+TRUE,TRUE,Helper_ButtonToggleAnimations.cs,ArrowUp,Unicode character for up arrow,🡱,string
+TRUE,TRUE,Helper_ButtonToggleAnimations.cs,ArrowDown,Unicode character for down arrow,🡳,string
+TRUE,TRUE,Helper_Database_Variables.cs,TestDatabaseName,Name of test database,mtm_wip_application_winforms_test,string
+TRUE,TRUE,Service_PromptStatusManager.cs,StatusFileName,Filename for prompt status JSON,prompt-status.json,string
+TRUE,TRUE,Core_WipAppVariables.cs,Shortcut_Remove_Search,Keyboard shortcut for Remove tab search,Keys.F5,Keys
+TRUE,TRUE,Core_WipAppVariables.cs,Shortcut_Remove_Delete,Keyboard shortcut for Remove tab delete,Keys.Delete,Keys
+TRUE,TRUE,Core_WipAppVariables.cs,Shortcut_Remove_Reset,Keyboard shortcut for Remove tab reset,Keys.F6,Keys
+TRUE,TRUE,Core_WipAppVariables.cs,Shortcut_Remove_Undo,Keyboard shortcut for Remove tab undo,Keys.Control | Keys.Z,Keys
+TRUE,TRUE,Core_WipAppVariables.cs,Shortcut_Remove_Normal,Keyboard shortcut to return to normal Remove,Keys.Escape,Keys
+TRUE,TRUE,Core_WipAppVariables.cs,Shortcut_Remove_Advanced,Keyboard shortcut for advanced Remove,Keys.F7,Keys
+TRUE,TRUE,Core_WipAppVariables.cs,Shortcut_Transfer_Search,Keyboard shortcut for Transfer tab search,Keys.F5,Keys
+TRUE,TRUE,Core_WipAppVariables.cs,Shortcut_Transfer_Transfer,Keyboard shortcut for Transfer action,Keys.F3,Keys
+TRUE,TRUE,Core_WipAppVariables.cs,Shortcut_Transfer_Reset,Keyboard shortcut for Transfer tab reset,Keys.F6,Keys
+TRUE,TRUE,Core_WipAppVariables.cs,Shortcut_Transfer_ToggleRightPanel_Left,Keyboard shortcut to toggle right panel left,Keys.Alt | Keys.Left,Keys
+TRUE,TRUE,Core_WipAppVariables.cs,Shortcut_Transfer_ToggleRightPanel_Right,Keyboard shortcut to toggle right panel right,Keys.Alt | Keys.Right,Keys
+TRUE,TRUE,Core_WipAppVariables.cs,Shortcut_AdvInv_Send,Keyboard shortcut for advanced inventory send,Keys.F4,Keys
+TRUE,TRUE,Core_WipAppVariables.cs,Shortcut_AdvInv_Save,Keyboard shortcut for advanced inventory save,Keys.F3,Keys
+TRUE,TRUE,Core_WipAppVariables.cs,Shortcut_AdvInv_Reset,Keyboard shortcut for advanced inventory reset,Keys.F6,Keys
+TRUE,TRUE,Core_WipAppVariables.cs,Shortcut_AdvInv_Normal,Keyboard shortcut to return to normal inventory,Keys.Escape,Keys
+TRUE,TRUE,Core_WipAppVariables.cs,Shortcut_AdvInv_Multi_AddLoc,Keyboard shortcut to add location in multi-location,Keys.F4,Keys
+TRUE,TRUE,Core_WipAppVariables.cs,Shortcut_AdvInv_Multi_SaveAll,Keyboard shortcut to save all in multi-location,Keys.F3,Keys
+TRUE,TRUE,Core_WipAppVariables.cs,Shortcut_AdvInv_Multi_Reset,Keyboard shortcut to reset multi-location,Keys.F6,Keys
+TRUE,TRUE,Core_WipAppVariables.cs,Shortcut_AdvInv_Multi_Normal,Keyboard shortcut to return from multi-location,Keys.Escape,Keys
+TRUE,TRUE,Core_WipAppVariables.cs,Shortcut_AdvInv_Import_OpenExcel,Keyboard shortcut to open Excel in import,Keys.F2,Keys
+TRUE,TRUE,Core_WipAppVariables.cs,Shortcut_AdvInv_Import_ImportExcel,Keyboard shortcut to import Excel,Keys.F4,Keys
+TRUE,TRUE,Core_WipAppVariables.cs,Shortcut_AdvInv_Import_Save,Keyboard shortcut to save import,Keys.F3,Keys
+TRUE,TRUE,Core_WipAppVariables.cs,Shortcut_AdvInv_Import_Normal,Keyboard shortcut to return from import,Keys.Escape,Keys

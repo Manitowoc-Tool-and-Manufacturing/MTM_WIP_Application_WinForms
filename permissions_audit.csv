@@ -1,0 +1,24 @@
+Active,Include,File,Feature,Description,RequiredRole,Variable
+TRUE,TRUE,SettingsForm.cs,Manage Parts (Add),Add new part numbers,Admin/Normal,CanAddParts
+TRUE,TRUE,SettingsForm.cs,Manage Parts (Edit),Edit existing part numbers,Admin,CanEditParts
+TRUE,TRUE,SettingsForm.cs,Manage Parts (Remove),Remove part numbers,Admin,CanRemoveParts
+TRUE,TRUE,SettingsForm.cs,Manage ItemTypes (Add),Add new item types,Admin/Normal,CanAddItemTypes
+TRUE,TRUE,SettingsForm.cs,Manage ItemTypes (Edit),Edit existing item types,Admin,CanEditItemTypes
+TRUE,TRUE,SettingsForm.cs,Manage ItemTypes (Remove),Remove item types,Admin,CanRemoveItemTypes
+TRUE,TRUE,SettingsForm.cs,Manage Operations (Add),Add new operations,Admin/Normal,CanAddOperations
+TRUE,TRUE,SettingsForm.cs,Manage Operations (Edit),Edit existing operations,Admin,CanEditOperations
+TRUE,TRUE,SettingsForm.cs,Manage Operations (Remove),Remove operations,Admin,CanRemoveOperations
+TRUE,TRUE,SettingsForm.cs,Manage Locations (Add),Add new locations,Admin/Normal,CanAddLocations
+TRUE,TRUE,SettingsForm.cs,Manage Locations (Edit),Edit existing locations,Admin,CanEditLocations
+TRUE,TRUE,SettingsForm.cs,Manage Locations (Remove),Remove locations,Admin,CanRemoveLocations
+TRUE,TRUE,SettingsForm.cs,Database Settings,Access Database Settings Panel,Admin/Developer,UserTypeAdmin || UserTypeDeveloper
+TRUE,TRUE,SettingsForm.cs,User Management,Access User Management Panel,Admin/Developer,UserTypeAdmin || UserTypeDeveloper
+TRUE,TRUE,SettingsForm.cs,Shortcuts,Access Shortcuts Panel,Normal/Admin/Developer,!UserTypeReadOnly
+TRUE,TRUE,Transactions.cs,Delete Transaction,Delete transaction records,Admin/Developer,UserTypeAdmin || UserTypeDeveloper
+TRUE,TRUE,Control_SettingsHome.cs,Database Tile,Visibility of Database Tile,Admin/Developer,UserTypeAdmin || UserTypeDeveloper
+TRUE,TRUE,Control_SettingsHome.cs,Users Tile,Visibility of Users Tile,Admin/Normal,UserTypeAdmin || UserTypeDeveloper || UserTypeNormal
+TRUE,TRUE,Control_SettingsHome.cs,Parts Tile,Visibility of Parts Tile,Not ReadOnly,!UserTypeReadOnly
+TRUE,TRUE,Control_SettingsHome.cs,Operations Tile,Visibility of Operations Tile,Not ReadOnly,!UserTypeReadOnly
+TRUE,TRUE,Control_SettingsHome.cs,Locations Tile,Visibility of Locations Tile,Not ReadOnly,!UserTypeReadOnly
+TRUE,TRUE,Control_SettingsHome.cs,ItemTypes Tile,Visibility of ItemTypes Tile,Not ReadOnly,!UserTypeReadOnly
+TRUE,TRUE,Control_SettingsHome.cs,Shortcuts Tile,Visibility of Shortcuts Tile,Not ReadOnly,!UserTypeReadOnly
