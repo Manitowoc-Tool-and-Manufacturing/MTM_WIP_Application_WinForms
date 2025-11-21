@@ -218,8 +218,8 @@ namespace MTM_WIP_Application_Winforms.Controls.Transactions
                 TransactionDetailPanel_TextBox_Notes.Text = string.IsNullOrWhiteSpace(_transaction.Notes) ? "—" : _transaction.Notes;
 
                 // Enable lifecycle button if we have valid data
-                TransactionDetailPanel_Button_ViewBatchHistory.Enabled = 
-                    !string.IsNullOrWhiteSpace(_transaction.PartID) && 
+                TransactionDetailPanel_Button_ViewBatchHistory.Enabled =
+                    !string.IsNullOrWhiteSpace(_transaction.PartID) &&
                     !string.IsNullOrWhiteSpace(_transaction.BatchNumber);
 
             }

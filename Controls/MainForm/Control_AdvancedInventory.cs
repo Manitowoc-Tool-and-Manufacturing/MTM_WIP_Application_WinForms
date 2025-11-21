@@ -140,6 +140,9 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                 AdvancedInventory_Single_Button_Reset.TabStop = false;
                 AdvancedInventory_MultiLoc_Button_Reset.TabStop = false;
 
+                // Disable Send button by default
+                AdvancedInventory_Single_Button_Send.Enabled = false;
+
                 // Configure SuggestionTextBox controls for Single and Multi-Location tabs
                 ConfigureSuggestionTextBoxes();
 
@@ -1238,6 +1241,9 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                 AdvancedInventory_Single_RichTextBox_Notes.Text = string.Empty;
                 AdvancedInventory_Single_ListView_Preview.Items.Clear();
 
+                // Disable Send button on hard reset
+                AdvancedInventory_Single_Button_Send.Enabled = false;
+
                 UpdateSingleSaveButtonState();
 
                 Debug.WriteLine("[DEBUG] AdvancedInventory Single HardReset - end");
@@ -1296,6 +1302,9 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                     "Enter Enter How Many Times");
                 AdvancedInventory_Single_RichTextBox_Notes.Text = string.Empty;
                 AdvancedInventory_Single_ListView_Preview.Items.Clear();
+
+                // Disable Send button on reset
+                AdvancedInventory_Single_Button_Send.Enabled = false;
 
                 UpdateSingleSaveButtonState();
             }
