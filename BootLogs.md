@@ -159,7 +159,7 @@ Running VersionChecker...
 [21:02:40.740] [MEDIUM] ⬅️ EXITING Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync (25ms)
 [21:02:40.741] [HIGH  ] ⏱️ PERFORMANCE COMPLETE: SP_log_changelog_Get_Current (27ms)
 Database version retrieved: 6.2.3.0
-Version labels updated - App: 6.2.1.0, DB: 6.2.3.0
+Version labels updated - App: 6.3.1.0, DB: 6.2.3.0
 [DEBUG] [SplashScreenForm.UpdateProgress] Progress: 70, Status: Initializing theme system...
 [21:02:40.773] [HIGH  ] ⏱️ PERFORMANCE START: SP_sys_theme_GetAll
 [21:02:40.775] [MEDIUM] ➡️ ENTERING Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync

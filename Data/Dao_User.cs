@@ -1213,7 +1213,21 @@ internal static class Dao_User
 
             if (dataResult.IsSuccess && dataResult.Data != null && dataResult.Data.Rows.Count > 0)
             {
-                string? json = dataResult.Data.Rows[0]["SettingJson"]?.ToString();
+                // Try to get column by name, handling potential naming variations
+                string? json = null;
+                if (dataResult.Data.Columns.Contains("ShortcutsJson"))
+                {
+                    json = dataResult.Data.Rows[0]["ShortcutsJson"]?.ToString();
+                }
+                else if (dataResult.Data.Columns.Contains("SettingJson"))
+                {
+                    json = dataResult.Data.Rows[0]["SettingJson"]?.ToString();
+                }
+                else
+                {
+                    // Fallback to first column if specific names not found
+                    json = dataResult.Data.Rows[0][0]?.ToString();
+                }
 
                 Service_DebugTracer.TraceMethodExit(json, controlName: "Dao_User");
                 return Model_Dao_Result<string>.Success(json ?? "", $"Retrieved shortcuts JSON for user {userId}");

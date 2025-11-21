@@ -300,14 +300,14 @@ public class Dao_Entity
         return await Helper_Database_StoredProcedure
             .ExecuteDataTableWithStatusAsync("md_entity_GetAll", null);
     }
-    
+
     public async Task<Model_Dao_Result<bool>> InsertAsync(string name)
     {
         var parameters = new Dictionary<string, object>
         {
             { "Name", name }  // NO p_ prefix in C# (only in SQL)
         };
-        
+
         return await Helper_Database_StoredProcedure
             .ExecuteNonQueryWithStatusAsync("md_entity_Insert", parameters);
     }
@@ -542,7 +542,7 @@ Refer to `.mcp/mtm-workflow/README.md` for full tool documentation.
 
 ---
 
-**Last Updated**: 2025-11-12  
-**Project Version**: 6.2.1.0
-**Maintained By**: Manitowoc Tool and Manufacturing  
+**Last Updated**: 2025-11-12
+**Project Version**: 6.3.1.0
+**Maintained By**: Manitowoc Tool and Manufacturing
 **For Questions**: Refer to `.github/copilot-instructions.md` for coding patterns

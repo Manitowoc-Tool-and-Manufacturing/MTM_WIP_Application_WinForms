@@ -67,7 +67,7 @@ Sync Impact Report (2025-11-15):
 **Automatic caller detection** using `[CallerMemberName]` attribute:
 ```csharp
 // Caller's method name automatically captured
-Service_ErrorHandler.HandleException(ex); 
+Service_ErrorHandler.HandleException(ex);
 // Logs: "Error in LoadInventoryData"
 ```
 
@@ -217,10 +217,10 @@ public static void LogDatabaseError(Exception ex, ...) {
 _ = Task.Run(async () => {
     const int maxRetries = 5;
     const int delayMs = 100;
-    
+
     for (int attempt = 0; attempt < maxRetries; attempt++) {
         try {
-            await using var fs = new FileStream(filePath, FileMode.Append, 
+            await using var fs = new FileStream(filePath, FileMode.Append,
                 FileAccess.Write, FileShare.Write);
             await using var writer = new StreamWriter(fs);
             await writer.WriteLineAsync(logEntry);
@@ -343,7 +343,7 @@ public static async Task<Model_Dao_Result<DataTable>> GetSomeDataAsync(...)
 {
     try {
         var result = await Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync(...);
-        return result.IsSuccess 
+        return result.IsSuccess
             ? Model_Dao_Result<DataTable>.Success(result.Data, result.StatusMessage)
             : Model_Dao_Result<DataTable>.Failure(result.ErrorMessage);
     }
@@ -462,8 +462,8 @@ private void LoadPartData(DataRow? row)
     if (row.Table.Columns.Contains("PartID"))
     {
         var partIdValue = row["PartID"];
-        string partId = partIdValue != DBNull.Value 
-            ? partIdValue.ToString() ?? string.Empty 
+        string partId = partIdValue != DBNull.Value
+            ? partIdValue.ToString() ?? string.Empty
             : string.Empty;
     }
 }
@@ -553,7 +553,7 @@ public async Task<Model_Dao_Result<DataTable>> GetDataAsync()
     using var connection = new MySqlConnection(connectionString);
     using var command = new MySqlCommand(sql, connection);
     await connection.OpenAsync();
-    
+
     using var reader = await command.ExecuteReaderAsync();
     var table = new DataTable();
     table.Load(reader);
@@ -573,15 +573,15 @@ protected override void Dispose(bool disposing)
             {
                 saveButton.Click -= SaveButton_Click;
             }
-            
+
             if (partSuggestionTextBox != null)
             {
                 partSuggestionTextBox.SuggestionSelected -= Part_SuggestionSelected;
             }
-            
+
             // Dispose any IDisposable fields
             _someDisposableResource?.Dispose();
-            
+
             // Dispose components if present
             components?.Dispose();
         }
@@ -676,7 +676,7 @@ private bool ValidateInput()
         partNumberTextBox.SelectAll();
         return false;
     }
-    
+
     // Use normalized value (trimmed, uppercased)
     partNumberTextBox.Text = partResult.NormalizedValue;
 
@@ -908,7 +908,7 @@ Service_Validation.RegisterValidator("WorkOrder", new WorkOrderValidator());
 - **PATCH**: Bug fixes, performance improvements, non-breaking refactors
 - **BUILD**: Automated build number (incremented per build)
 
-**Current version** (from AssemblyInfo.cs): `6.2.1.0`
+**Current version** (from AssemblyInfo.cs): `6.3.1.0`
 
 ### Database Migration Strategy
 

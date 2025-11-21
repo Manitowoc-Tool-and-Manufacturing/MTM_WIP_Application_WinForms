@@ -99,11 +99,11 @@ Provide a summary showing:
 **Copilot should**:
 1. Read conversation to identify: SuggestionTextBox system, confirmation dialogs, focus highlighting fixes
 2. Determine this is a minor version bump (new feature): 6.1.0 → 6.2.0
-3. Update `.csproj` to version 6.2.1.0
+3. Update `.csproj` to version 6.3.1.0
 4. Add comprehensive release notes section explaining autocomplete, wildcards, confirmations
 5. Update both database changelogs
 6. Verify all changes
-7. Report: "✅ Updated to version 6.2.1.0 - Release notes updated, databases updated"
+7. Report: "✅ Updated to version 6.3.1.0 - Release notes updated, databases updated"
 
 ---
 
@@ -120,7 +120,7 @@ If errors occur:
 
 - [ ] `.csproj` version incremented appropriately
 - [ ] `RELEASE_NOTES_USER_FRIENDLY.md` has new "Latest Update" section
-- [ ] Previous "Latest Update" moved to "Previous Update"  
+- [ ] Previous "Latest Update" moved to "Previous Update"
 - [ ] Release notes written in user-friendly language
 - [ ] Only RELEASE-visible changes documented (no debug/developer features)
 - [ ] Production database `log_changelog` updated and verified
@@ -134,4 +134,4 @@ If errors occur:
 - This prompt focuses on **user-facing documentation** - internal code changes are documented elsewhere
 - Release notes should be understandable by shop floor workers with no technical background
 - Database must have exactly 1 row in `log_changelog` - we UPDATE, not INSERT
-- Version format: `Major.Minor.Patch.Build` (e.g., 6.2.1.0)
+- Version format: `Major.Minor.Patch.Build` (e.g., 6.3.1.0)
