@@ -2202,22 +2202,39 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                 DataTable dt = new();
                 using (XLWorkbook workbook = new(excelPath))
                 {
-                    IXLWorksheet? worksheet = workbook.Worksheet("Tab 1");
+                    // Diagnostic: Check for "Tab 1" (case-insensitive)
+                    var worksheet = workbook.Worksheets.FirstOrDefault(w => string.Equals(w.Name, "Tab 1", StringComparison.OrdinalIgnoreCase));
                     if (worksheet == null)
                     {
-                        Service_ErrorHandler.HandleValidationError(@"Worksheet 'Tab 1' not found in the Excel file.", nameof(AdvancedInventory_Import_Button_ImportExcel));
+                        string availableSheets = string.Join(", ", workbook.Worksheets.Select(w => $"'{w.Name}'"));
+                        Service_ErrorHandler.HandleValidationError(
+                            $"Worksheet 'Tab 1' not found.\n\nAvailable sheets: {availableSheets}\n\nPlease ensure your data is on a sheet named 'Tab 1'.",
+                            nameof(AdvancedInventory_Import_Button_ImportExcel));
                         return;
                     }
 
                     IXLRange? usedRange = worksheet.RangeUsed();
+
+                    // Diagnostic: Check for empty sheet
                     if (usedRange == null)
                     {
-                        Service_ErrorHandler.HandleValidationError(@"No data found in 'Tab 1'.", nameof(AdvancedInventory_Import_Button_ImportExcel));
+                         Service_ErrorHandler.HandleValidationError(
+                            "Worksheet 'Tab 1' appears to be empty.\n\nPlease ensure you have entered data and saved the file.",
+                            nameof(AdvancedInventory_Import_Button_ImportExcel));
                         return;
                     }
 
                     int colCount = usedRange.ColumnCount();
                     int rowCount = usedRange.RowCount();
+
+                    // Diagnostic: Check for data rows
+                    if (rowCount < 2)
+                    {
+                         Service_ErrorHandler.HandleValidationError(
+                            $"Found {rowCount} row(s) in 'Tab 1'.\n\nExpected at least 2 rows (1 header row + data rows).\nPlease ensure you have added data below the headers.",
+                            nameof(AdvancedInventory_Import_Button_ImportExcel));
+                        return;
+                    }
 
                     IXLRangeRow? headerRow = usedRange.Row(1);
                     for (int col = 1; col <= colCount; col++)
@@ -2245,11 +2262,9 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
 
                 if (dt.Rows.Count == 0)
                 {
-                    MessageBox.Show(
-                        "No data found in the Excel file to import.",
-                        "No Data",
-                        MessageBoxButtons.OK,
-                        MessageBoxIcon.Information);
+                    Service_ErrorHandler.HandleValidationError(
+                        "No data rows could be extracted from the Excel file.",
+                        nameof(AdvancedInventory_Import_Button_ImportExcel));
                     return;
                 }
 

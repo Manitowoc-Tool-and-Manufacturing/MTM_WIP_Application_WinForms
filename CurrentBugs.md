@@ -17,7 +17,7 @@
 - Set `SendButton.Enabled = false` in constructor
 - Add validation logic to enable when appropriate
 
-### 4. **Remove Enable / Disable Theming** *(1.5 hours)*
+### 4. **Remove Enable / Disable Theming** *(1.5 hours)* - Done!
 - Remove theming toggle controls from Settings
 - Clean up related code in theme management
 - Remove database references if any
