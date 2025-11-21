@@ -7,7 +7,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
     partial class Control_RemoveTab
     {
         #region Fields
-        
+
 
 
         private System.ComponentModel.IContainer components = null;
@@ -18,7 +18,6 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
         private PictureBox Control_RemoveTab_Image_NothingFound;
         private DataGridView Control_RemoveTab_DataGridView_Main;
         private ContextMenuStrip Control_RemoveTab_ContextMenu_DataGridView;
-        private ToolStripMenuItem Control_RemoveTab_ContextMenuItem_Print;
         private Button Control_RemoveTab_Button_AdvancedItemRemoval;
         private Button Control_RemoveTab_Button_Reset;
         private Button Control_RemoveTab_Button_Delete;
@@ -57,7 +56,6 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             Control_RemoveTab_Image_NothingFound = new PictureBox();
             Control_RemoveTab_DataGridView_Main = new DataGridView();
             Control_RemoveTab_ContextMenu_DataGridView = new ContextMenuStrip(components);
-            Control_RemoveTab_ContextMenuItem_Print = new ToolStripMenuItem();
             Control_RemoveTab_Panel_Header = new Panel();
             Control_RemoveTab_TableLayout_Top = new TableLayoutPanel();
             Control_RemoveTab_TextBox_Part = new SuggestionTextBoxWithLabel();
@@ -84,9 +82,9 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             Control_RemoveTab_TableLayout_Bottom.SuspendLayout();
             Control_RemoveTab_TableLayout_SearchToggle.SuspendLayout();
             SuspendLayout();
-            // 
+            //
             // Control_RemoveTab_GroupBox_MainControl
-            // 
+            //
             Control_RemoveTab_GroupBox_MainControl.AutoSize = true;
             Control_RemoveTab_GroupBox_MainControl.AutoSizeMode = AutoSizeMode.GrowAndShrink;
             Control_RemoveTab_GroupBox_MainControl.Controls.Add(Control_RemoveTab_Panel_Main);
@@ -99,9 +97,9 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             Control_RemoveTab_GroupBox_MainControl.TabIndex = 17;
             Control_RemoveTab_GroupBox_MainControl.TabStop = false;
             Control_RemoveTab_GroupBox_MainControl.Text = "Part Lookup and Remove";
-            // 
+            //
             // Control_RemoveTab_Panel_Main
-            // 
+            //
             Control_RemoveTab_Panel_Main.AutoSize = true;
             Control_RemoveTab_Panel_Main.AutoSizeMode = AutoSizeMode.GrowAndShrink;
             Control_RemoveTab_Panel_Main.ColumnCount = 1;
@@ -118,9 +116,9 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             Control_RemoveTab_Panel_Main.RowStyles.Add(new RowStyle());
             Control_RemoveTab_Panel_Main.Size = new Size(723, 354);
             Control_RemoveTab_Panel_Main.TabIndex = 0;
-            // 
+            //
             // Control_RemoveTab_Panel_DataGridView
-            // 
+            //
             Control_RemoveTab_Panel_DataGridView.AutoSize = true;
             Control_RemoveTab_Panel_DataGridView.AutoSizeMode = AutoSizeMode.GrowAndShrink;
             Control_RemoveTab_Panel_DataGridView.BorderStyle = BorderStyle.FixedSingle;
@@ -132,9 +130,9 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             Control_RemoveTab_Panel_DataGridView.Padding = new Padding(3);
             Control_RemoveTab_Panel_DataGridView.Size = new Size(717, 263);
             Control_RemoveTab_Panel_DataGridView.TabIndex = 21;
-            // 
+            //
             // Control_RemoveTab_Image_NothingFound
-            // 
+            //
             Control_RemoveTab_Image_NothingFound.BackgroundImageLayout = ImageLayout.Zoom;
             Control_RemoveTab_Image_NothingFound.Dock = DockStyle.Fill;
             Control_RemoveTab_Image_NothingFound.ErrorImage = null;
@@ -147,9 +145,9 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             Control_RemoveTab_Image_NothingFound.TabIndex = 6;
             Control_RemoveTab_Image_NothingFound.TabStop = false;
             Control_RemoveTab_Image_NothingFound.Visible = false;
-            // 
+            //
             // Control_RemoveTab_DataGridView_Main
-            // 
+            //
             Control_RemoveTab_DataGridView_Main.AllowUserToAddRows = false;
             Control_RemoveTab_DataGridView_Main.AllowUserToDeleteRows = false;
             Control_RemoveTab_DataGridView_Main.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
@@ -176,22 +174,14 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             Control_RemoveTab_DataGridView_Main.Size = new Size(709, 255);
             Control_RemoveTab_DataGridView_Main.StandardTab = true;
             Control_RemoveTab_DataGridView_Main.TabIndex = 4;
-            // 
+            //
             // Control_RemoveTab_ContextMenu_DataGridView
-            // 
-            Control_RemoveTab_ContextMenu_DataGridView.Items.AddRange(new ToolStripItem[] { Control_RemoveTab_ContextMenuItem_Print });
+            //
             Control_RemoveTab_ContextMenu_DataGridView.Name = "Control_RemoveTab_ContextMenu_DataGridView";
-            Control_RemoveTab_ContextMenu_DataGridView.Size = new Size(109, 26);
-            // 
-            // Control_RemoveTab_ContextMenuItem_Print
-            // 
-            Control_RemoveTab_ContextMenuItem_Print.Name = "Control_RemoveTab_ContextMenuItem_Print";
-            Control_RemoveTab_ContextMenuItem_Print.Size = new Size(108, 22);
-            Control_RemoveTab_ContextMenuItem_Print.Text = "&Print...";
-            Control_RemoveTab_ContextMenuItem_Print.Click += Control_RemoveTab_ContextMenuItem_Print_Click;
-            // 
+            Control_RemoveTab_ContextMenu_DataGridView.Size = new Size(61, 4);
+            //
             // Control_RemoveTab_Panel_Header
-            // 
+            //
             Control_RemoveTab_Panel_Header.AutoSize = true;
             Control_RemoveTab_Panel_Header.Controls.Add(Control_RemoveTab_TableLayout_Top);
             Control_RemoveTab_Panel_Header.Dock = DockStyle.Fill;
@@ -199,9 +189,9 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             Control_RemoveTab_Panel_Header.Name = "Control_RemoveTab_Panel_Header";
             Control_RemoveTab_Panel_Header.Size = new Size(717, 35);
             Control_RemoveTab_Panel_Header.TabIndex = 22;
-            // 
+            //
             // Control_RemoveTab_TableLayout_Top
-            // 
+            //
             Control_RemoveTab_TableLayout_Top.AutoSize = true;
             Control_RemoveTab_TableLayout_Top.ColumnCount = 2;
             Control_RemoveTab_TableLayout_Top.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
@@ -215,9 +205,9 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             Control_RemoveTab_TableLayout_Top.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
             Control_RemoveTab_TableLayout_Top.Size = new Size(717, 35);
             Control_RemoveTab_TableLayout_Top.TabIndex = 6;
-            // 
+            //
             // Control_RemoveTab_TextBox_Part
-            // 
+            //
             Control_RemoveTab_TextBox_Part.AutoSize = true;
             Control_RemoveTab_TextBox_Part.AutoSizeMode = AutoSizeMode.GrowAndShrink;
             Control_RemoveTab_TextBox_Part.Dock = DockStyle.Fill;
@@ -227,9 +217,9 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             Control_RemoveTab_TextBox_Part.PlaceholderText = "Enter Part Number";
             Control_RemoveTab_TextBox_Part.Size = new Size(352, 29);
             Control_RemoveTab_TextBox_Part.TabIndex = 0;
-            // 
+            //
             // Control_RemoveTab_TextBox_Operation
-            // 
+            //
             Control_RemoveTab_TextBox_Operation.AutoSize = true;
             Control_RemoveTab_TextBox_Operation.AutoSizeMode = AutoSizeMode.GrowAndShrink;
             Control_RemoveTab_TextBox_Operation.Dock = DockStyle.Fill;
@@ -239,9 +229,9 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             Control_RemoveTab_TextBox_Operation.PlaceholderText = "Enter Operation";
             Control_RemoveTab_TextBox_Operation.Size = new Size(353, 29);
             Control_RemoveTab_TextBox_Operation.TabIndex = 1;
-            // 
+            //
             // Control_RemoveTab_TableLayout_Bottom
-            // 
+            //
             Control_RemoveTab_TableLayout_Bottom.AutoSize = true;
             Control_RemoveTab_TableLayout_Bottom.AutoSizeMode = AutoSizeMode.GrowAndShrink;
             Control_RemoveTab_TableLayout_Bottom.ColumnCount = 9;
@@ -270,9 +260,9 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             Control_RemoveTab_TableLayout_Bottom.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
             Control_RemoveTab_TableLayout_Bottom.Size = new Size(717, 38);
             Control_RemoveTab_TableLayout_Bottom.TabIndex = 23;
-            // 
+            //
             // Control_RemoveTab_Button_ShowAll
-            // 
+            //
             Control_RemoveTab_Button_ShowAll.AutoSize = true;
             Control_RemoveTab_Button_ShowAll.AutoSizeMode = AutoSizeMode.GrowAndShrink;
             Control_RemoveTab_Button_ShowAll.Dock = DockStyle.Fill;
@@ -287,9 +277,9 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             Control_RemoveTab_Button_ShowAll.Text = "Show All";
             Control_RemoveTab_Button_ShowAll.UseVisualStyleBackColor = true;
             Control_RemoveTab_Button_ShowAll.Click += Control_RemoveTab_Button_ShowAll_Click;
-            // 
+            //
             // Control_RemoveTab_Button_AdvancedItemRemoval
-            // 
+            //
             Control_RemoveTab_Button_AdvancedItemRemoval.AutoSize = true;
             Control_RemoveTab_Button_AdvancedItemRemoval.AutoSizeMode = AutoSizeMode.GrowAndShrink;
             Control_RemoveTab_Button_AdvancedItemRemoval.Dock = DockStyle.Fill;
@@ -303,9 +293,9 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             Control_RemoveTab_Button_AdvancedItemRemoval.TabIndex = 5;
             Control_RemoveTab_Button_AdvancedItemRemoval.Text = "Advanced";
             Control_RemoveTab_Button_AdvancedItemRemoval.UseVisualStyleBackColor = true;
-            // 
+            //
             // Control_RemoveTab_Button_Delete
-            // 
+            //
             Control_RemoveTab_Button_Delete.AutoSize = true;
             Control_RemoveTab_Button_Delete.AutoSizeMode = AutoSizeMode.GrowAndShrink;
             Control_RemoveTab_Button_Delete.Dock = DockStyle.Fill;
@@ -318,9 +308,9 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             Control_RemoveTab_Button_Delete.TabIndex = 4;
             Control_RemoveTab_Button_Delete.Text = "Delete";
             Control_RemoveTab_Button_Delete.UseVisualStyleBackColor = true;
-            // 
+            //
             // Control_RemoveTab_Button_Search
-            // 
+            //
             Control_RemoveTab_Button_Search.AutoSize = true;
             Control_RemoveTab_Button_Search.AutoSizeMode = AutoSizeMode.GrowAndShrink;
             Control_RemoveTab_Button_Search.Dock = DockStyle.Fill;
@@ -334,9 +324,9 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             Control_RemoveTab_Button_Search.Text = "Search";
             Control_RemoveTab_Button_Search.UseVisualStyleBackColor = true;
             Control_RemoveTab_Button_Search.Click += Control_RemoveTab_Button_Search_Click;
-            // 
+            //
             // Control_RemoveTab_Button_Toggle_RightPanel
-            // 
+            //
             Control_RemoveTab_Button_Toggle_RightPanel.Dock = DockStyle.Fill;
             Control_RemoveTab_Button_Toggle_RightPanel.Font = new Font("Segoe UI Emoji", 9F);
             Control_RemoveTab_Button_Toggle_RightPanel.Location = new Point(682, 3);
@@ -348,9 +338,9 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             Control_RemoveTab_Button_Toggle_RightPanel.Text = "➡";
             Control_RemoveTab_Button_Toggle_RightPanel.UseVisualStyleBackColor = true;
             Control_RemoveTab_Button_Toggle_RightPanel.Click += Control_RemoveTab_Button_Toggle_RightPanel_Click;
-            // 
+            //
             // Control_RemoveTab_Button_Reset
-            // 
+            //
             Control_RemoveTab_Button_Reset.AutoSize = true;
             Control_RemoveTab_Button_Reset.AutoSizeMode = AutoSizeMode.GrowAndShrink;
             Control_RemoveTab_Button_Reset.Dock = DockStyle.Fill;
@@ -364,9 +354,9 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             Control_RemoveTab_Button_Reset.TabStop = false;
             Control_RemoveTab_Button_Reset.Text = "Reset";
             Control_RemoveTab_Button_Reset.UseVisualStyleBackColor = true;
-            // 
+            //
             // Control_RemoveTab_Button_Print
-            // 
+            //
             Control_RemoveTab_Button_Print.AutoSize = true;
             Control_RemoveTab_Button_Print.AutoSizeMode = AutoSizeMode.GrowAndShrink;
             Control_RemoveTab_Button_Print.Dock = DockStyle.Fill;
@@ -380,9 +370,9 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             Control_RemoveTab_Button_Print.TabIndex = 7;
             Control_RemoveTab_Button_Print.Text = "Print";
             Control_RemoveTab_Button_Print.UseVisualStyleBackColor = true;
-            // 
+            //
             // Control_RemoveTab_Button_Undo
-            // 
+            //
             Control_RemoveTab_Button_Undo.AutoSize = true;
             Control_RemoveTab_Button_Undo.AutoSizeMode = AutoSizeMode.GrowAndShrink;
             Control_RemoveTab_Button_Undo.Dock = DockStyle.Fill;
@@ -398,9 +388,9 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             Control_RemoveTab_Button_Undo.Text = "Undo";
             Control_RemoveTab_Button_Undo.UseVisualStyleBackColor = true;
             Control_RemoveTab_Button_Undo.Click += Control_RemoveTab_Button_Undo_Click;
-            // 
+            //
             // tableLayoutPanel1
-            // 
+            //
             Control_RemoveTab_TableLayout_SearchToggle.AutoSize = true;
             Control_RemoveTab_TableLayout_SearchToggle.AutoSizeMode = AutoSizeMode.GrowAndShrink;
             Control_RemoveTab_TableLayout_SearchToggle.ColumnCount = 3;
@@ -416,9 +406,9 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             Control_RemoveTab_TableLayout_SearchToggle.RowStyles.Add(new RowStyle());
             Control_RemoveTab_TableLayout_SearchToggle.Size = new Size(77, 38);
             Control_RemoveTab_TableLayout_SearchToggle.TabIndex = 11;
-            // 
+            //
             // Control_RemoveTab_Button_Toggle_InputPanel
-            // 
+            //
             Control_RemoveTab_Button_Toggle_InputPanel.Dock = DockStyle.Fill;
             Control_RemoveTab_Button_Toggle_InputPanel.Font = new Font("Segoe UI Emoji", 9F);
             Control_RemoveTab_Button_Toggle_InputPanel.Location = new Point(22, 3);
@@ -429,9 +419,9 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             Control_RemoveTab_Button_Toggle_InputPanel.TabIndex = 10;
             Control_RemoveTab_Button_Toggle_InputPanel.UseVisualStyleBackColor = true;
             Control_RemoveTab_Button_Toggle_InputPanel.Click += Control_RemoveTab_Button_Toggle_InputPanel_Click;
-            // 
+            //
             // Control_RemoveTab
-            // 
+            //
             AutoScaleDimensions = new SizeF(96F, 96F);
             AutoScaleMode = AutoScaleMode.Dpi;
             Controls.Add(Control_RemoveTab_GroupBox_MainControl);

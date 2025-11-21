@@ -384,8 +384,11 @@ internal static class Dao_User
 
         try
         {
-            Model_Shared_Users.WipServerAddress = value;
+            // Save setting to CURRENT database/server before updating global state
             await SetUserSettingInternalAsync("WipServerAddress", user, value, connection, transaction);
+
+            // Update global state after successful save
+            Model_Shared_Users.WipServerAddress = value;
 
             Service_DebugTracer.TraceMethodExit(controlName: "Dao_User");
             return Model_Dao_Result.Success($"Set WipServerAddress to {value} for user {user}");
@@ -442,8 +445,11 @@ internal static class Dao_User
 
         try
         {
-            Model_Shared_Users.Database = value;
+            // Save setting to CURRENT database before updating global state
             await SetUserSettingInternalAsync("WIPDatabase", user, value, connection, transaction);
+
+            // Update global state after successful save
+            Model_Shared_Users.Database = value;
 
             Service_DebugTracer.TraceMethodExit(controlName: "Dao_User");
             return Model_Dao_Result.Success($"Set WIPDatabase to {value} for user {user}");
@@ -502,8 +508,11 @@ internal static class Dao_User
 
         try
         {
-            Model_Shared_Users.WipServerPort = value;
+            // Save setting to CURRENT database/server before updating global state
             await SetUserSettingInternalAsync("WipServerPort", user, value, connection, transaction);
+
+            // Update global state after successful save
+            Model_Shared_Users.WipServerPort = value;
 
             Service_DebugTracer.TraceMethodExit(controlName: "Dao_User");
             return Model_Dao_Result.Success($"Set WipServerPort to {value} for user {user}");

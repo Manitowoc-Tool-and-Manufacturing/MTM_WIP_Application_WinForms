@@ -4,19 +4,23 @@ using System.Data;
 using System.Diagnostics;
 using System.Security;
 using System.Windows.Forms;
+
 using ClosedXML.Excel;
-using MTM_WIP_Application_Winforms.Core;
+
 using MTM_WIP_Application_Winforms.Controls.Shared;
+using MTM_WIP_Application_Winforms.Core;
 using MTM_WIP_Application_Winforms.Data;
 using MTM_WIP_Application_Winforms.Forms.ErrorDialog;
 using MTM_WIP_Application_Winforms.Forms.MainForm.Classes;
+using MTM_WIP_Application_Winforms.Forms.Shared;
 using MTM_WIP_Application_Winforms.Helpers;
 using MTM_WIP_Application_Winforms.Logging;
 using MTM_WIP_Application_Winforms.Models;
 using MTM_WIP_Application_Winforms.Services;
+
 using MySql.Data.MySqlClient;
+
 using Color = System.Drawing.Color;
-using MTM_WIP_Application_Winforms.Forms.Shared;
 
 namespace MTM_WIP_Application_Winforms.Controls.MainForm
 {
@@ -93,6 +97,13 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
 
 
                 InitializeComponent();
+
+                // Disable Import Tab
+                if (AdvancedInventory_TabControl.TabPages.Contains(AdvancedInventory_TabControl_Import))
+                {
+                    AdvancedInventory_TabControl.TabPages.Remove(AdvancedInventory_TabControl_Import);
+                }
+
                 SetStyle(ControlStyles.OptimizedDoubleBuffer, true);
                 Service_DebugTracer.TraceUIAction("THEME_APPLICATION", nameof(Control_AdvancedInventory),
                     new Dictionary<string, object>
@@ -1984,6 +1995,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                 if (MainFormInstance != null && savedCount > 0)
                 {
                     string time = DateTime.Now.ToString("hh:mm tt");
+
                     string locDisplay = locations.Count > 1 ? "Multiple Locations" : locations.FirstOrDefault() ?? "";
                     MainFormInstance.MainForm_StatusStrip_SavedStatus.Text =
                         $"Last Inventoried: {partId} (Op: {op}), Location: {locDisplay}, Quantity: {totalQty} @ {time}";
@@ -2218,9 +2230,9 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                     // Diagnostic: Check for empty sheet
                     if (usedRange == null)
                     {
-                         MessageBox.Show(
-                            "Worksheet 'Tab 1' appears to be empty.\n\nPlease ensure you have entered data and saved the file.",
-                            nameof(AdvancedInventory_Import_Button_ImportExcel));
+                        MessageBox.Show(
+                           "Worksheet 'Tab 1' appears to be empty.\n\nPlease ensure you have entered data and saved the file.",
+                           nameof(AdvancedInventory_Import_Button_ImportExcel));
                         return;
                     }
 
@@ -2230,9 +2242,9 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                     // Diagnostic: Check for data rows
                     if (rowCount < 2)
                     {
-                         MessageBox.Show(
-                            $"Found {rowCount} row(s) in 'Tab 1'.\n\nExpected at least 2 rows (1 header row + data rows).\nPlease ensure you have added data below the headers.",
-                            nameof(AdvancedInventory_Import_Button_ImportExcel));
+                        MessageBox.Show(
+                           $"Found {rowCount} row(s) in 'Tab 1'.\n\nExpected at least 2 rows (1 header row + data rows).\nPlease ensure you have added data below the headers.",
+                           nameof(AdvancedInventory_Import_Button_ImportExcel));
                         return;
                     }
 

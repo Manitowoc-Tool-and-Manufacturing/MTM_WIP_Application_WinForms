@@ -33,7 +33,7 @@
 
 ## Medium Tasks (3-6 hours)
 
-### 6. **All Themes - Set selection colors to -75% brightness** *(3 hours)*
+### 6. **All Themes - Set selection colors to -75% brightness** *(3 hours)* - Done!
 - Query `app_themes` table for all themes
 - Calculate -75% brightness for all selection color values
 - Update `SettingsJson` column with new color values

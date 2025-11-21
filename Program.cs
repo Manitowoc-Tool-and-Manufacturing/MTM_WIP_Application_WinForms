@@ -207,35 +207,11 @@ namespace MTM_WIP_Application_Winforms
                         {
                             // Validate database name
                             string dbName = databaseResult.Data;
-                            if (dbName != "mtm_wip_application_winforms" && dbName != "mtm_wip_application_winforms_test")
-                            {
-                                // Invalid database name detected - reset to default database
-                                string defaultDb = "mtm_wip_application_winforms";
-                                LoggingUtility.Log($"[Startup] Invalid database name detected: '{dbName}'. Resetting to default: '{defaultDb}'");
-                                
-                                Model_Shared_Users.Database = defaultDb;
-                                
-                                // Update the database setting in usr_settings
-                                try
-                                {
-                                    Dao_User.SetDatabaseAsync(Model_Application_Variables.User, defaultDb).GetAwaiter().GetResult();
-                                }
-                                catch (Exception dbEx)
-                                {
-                                    LoggingUtility.Log($"[Startup] Could not save corrected database setting: {dbEx.Message}");
-                                }
-                                
-                                // Show warning to user
-                                ShowNonCriticalError("Invalid Database Setting",
-                                    $"An invalid database name was detected in your settings:\n\n'{dbName}'\n\n" +
-                                    $"The system has reset your database to the default database:\n'{defaultDb}'\n\n" +
-                                    "You can change this in Settings → Database if needed.");
-                            }
-                            else
-                            {
-                                Model_Shared_Users.Database = dbName;
-                                LoggingUtility.Log($"[Startup] Loaded user database name setting: {dbName}");
-                            }
+
+                            // Allow any database name that the user has configured
+                            // Connectivity validation happens in CheckConnectivityAsync below
+                            Model_Shared_Users.Database = dbName;
+                            LoggingUtility.Log($"[Startup] Loaded user database name setting: {dbName}");
                         }
                     }
                     catch (Exception ex)
@@ -243,7 +219,7 @@ namespace MTM_WIP_Application_Winforms
                         // If we can't load user settings, use defaults (already set in Model_Shared_Users)
                         LoggingUtility.Log($"[Startup] Could not load user database settings, using defaults: {ex.Message}");
                     }
-                
+
 
                 // ENHANCED: Validate database connectivity using Dao_System.CheckConnectivityAsync per FR-014
                 // NOTE: Using .GetAwaiter().GetResult() in Main as it's synchronous entry point

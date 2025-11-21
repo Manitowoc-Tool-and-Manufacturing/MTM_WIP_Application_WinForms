@@ -4,6 +4,7 @@ using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
 using MTM_WIP_Application_Winforms.Core;
+using MTM_WIP_Application_Winforms.Helpers;
 
 namespace MTM_WIP_Application_Winforms.Controls.Shared
 {
@@ -17,12 +18,14 @@ namespace MTM_WIP_Application_Winforms.Controls.Shared
         private  ListBox? _listBox = null;
         private  Button? _btnOK = null;
         private  Button? _btnCancel = null;
+        private  Button? _btnPrint = null;
         private  Label? _infoLabel = null;
         private  Label? _lblInstructions = null;
         private  List<string> _columnNames = [];
         private  List<string> _visibleColumnNames = [];
         private  List<string> _hiddenColumnNames = [];
         private int dragIndex = -1;
+        private readonly DataGridView _dgv;
 
         #endregion
 
@@ -34,6 +37,7 @@ namespace MTM_WIP_Application_Winforms.Controls.Shared
         /// <param name="dgv">DataGridView to configure column order for</param>
         public ColumnOrderDialog(DataGridView dgv)
         {
+            _dgv = dgv;
             InitializeDialog();
             InitializeColumnData(dgv);
             InitializeControls(dgv);
@@ -68,13 +72,13 @@ namespace MTM_WIP_Application_Winforms.Controls.Shared
                 .OrderBy(c => c.DisplayIndex)
                 .Select(c => c.Name)
                 .ToList();
-            
+
             _visibleColumnNames = dgv.Columns.Cast<DataGridViewColumn>()
                 .Where(c => c.Visible)
                 .OrderBy(c => c.DisplayIndex)
                 .Select(c => c.Name)
                 .ToList();
-            
+
             _hiddenColumnNames = dgv.Columns.Cast<DataGridViewColumn>()
                 .Where(c => !c.Visible)
                 .OrderBy(c => c.DisplayIndex)
@@ -95,7 +99,7 @@ namespace MTM_WIP_Application_Winforms.Controls.Shared
                 Height = 320,
                 AllowDrop = true
             };
-            
+
             foreach (var col in _visibleColumnNames)
             {
                 var gridCol = dgv.Columns[col];
@@ -130,10 +134,13 @@ namespace MTM_WIP_Application_Winforms.Controls.Shared
             // Initialize Buttons
             _btnOK = new Button { Text = "OK", DialogResult = DialogResult.OK, Dock = DockStyle.Bottom };
             _btnCancel = new Button { Text = "Cancel", DialogResult = DialogResult.Cancel, Dock = DockStyle.Bottom };
+            _btnPrint = new Button { Text = "Print...", Dock = DockStyle.Bottom };
+            _btnPrint.Click += BtnPrint_Click;
 
             // Add controls to form
             Controls.Add(_btnOK);
             Controls.Add(_btnCancel);
+            Controls.Add(_btnPrint);
             Controls.Add(_lblInstructions);
             Controls.Add(_infoLabel);
             Controls.Add(_listBox);
@@ -158,6 +165,21 @@ namespace MTM_WIP_Application_Winforms.Controls.Shared
         #endregion
 
         #region Event Handlers
+
+        /// <summary>
+        /// Handle print button click
+        /// </summary>
+        private async void BtnPrint_Click(object? sender, EventArgs e)
+        {
+            try
+            {
+                await Helper_PrintManager.ShowPrintDialogAsync(this, _dgv, _dgv.Name ?? "Grid");
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error printing: {ex.Message}", "Print Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
 
         /// <summary>
         /// Handle mouse down event for drag operation initiation
@@ -271,7 +293,7 @@ namespace MTM_WIP_Application_Winforms.Controls.Shared
                 }
                 visibleOrder.Add(colName);
             }
-            
+
             // Append hidden columns in their original order
             var finalOrder = new List<string>(visibleOrder);
             finalOrder.AddRange(_hiddenColumnNames);
