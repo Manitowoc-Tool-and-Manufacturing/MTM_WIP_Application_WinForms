@@ -378,3 +378,8 @@ Logs/DebugDashboard_*.log
 
 # Developer Tools - Generated code samples
 Documentation/DeveloperTools/Examples/Generated_*.cs
+# Added by Speckit
+.terraform/
+*.tfstate*
+*.tfvars
+.terraform.lock.hcl

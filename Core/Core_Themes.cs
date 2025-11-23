@@ -138,6 +138,44 @@ namespace MTM_WIP_Application_Winforms.Core
         }
 
         /// <summary>
+        /// Saves the current grid settings (column visibility and order) to the database.
+        /// </summary>
+        public static async Task SaveGridSettingsAsync(DataGridView dgv)
+        {
+            try
+            {
+                string gridName = dgv.Name;
+                if (string.IsNullOrEmpty(gridName))
+                {
+                    return;
+                }
+
+                // Serialize column visibility and order
+                var columns = dgv.Columns.Cast<DataGridViewColumn>()
+                    .OrderBy(c => c.DisplayIndex)
+                    .Select(c => new { Name = c.Name, Visible = c.Visible, DisplayIndex = c.DisplayIndex })
+                    .ToList();
+                
+                var settingsObj = new { Columns = columns };
+                string json = JsonSerializer.Serialize(settingsObj);
+                
+                // Get userId (from Model_Application_Variables.User)
+                string userId = Model_Application_Variables.User;
+                
+                var result = await Dao_User.SetGridViewSettingsJsonAsync(userId, gridName, json);
+
+                if (!result.IsSuccess)
+                {
+                     LoggingUtility.Log($"Failed to auto-save settings: {result.ErrorMessage}");
+                }
+            }
+            catch (Exception ex)
+            {
+                LoggingUtility.LogApplicationError(ex);
+            }
+        }
+
+        /// <summary>
         /// Shows the column visibility context menu for a DataGridView
         /// </summary>
         private static void ShowColumnVisibilityMenu(DataGridView dgv, Point location)
@@ -170,6 +208,44 @@ namespace MTM_WIP_Application_Winforms.Core
             // Create a new context menu each time to ensure it's up to date
             ContextMenuStrip menu = new();
 
+            // Track if we should keep the menu open
+            bool shouldStayOpen = false;
+
+            // Handle item clicks to determine if we should keep the menu open
+            menu.ItemClicked += (s, e) =>
+            {
+                // Keep open if it's a column toggle item (has Tag set to column name)
+                // Also keep open for "Select All" and "Deselect All"
+                if (e.ClickedItem?.Tag is string || 
+                    e.ClickedItem?.Text == "Select All" || 
+                    e.ClickedItem?.Text == "Deselect All")
+                {
+                    shouldStayOpen = true;
+                }
+                else
+                {
+                    shouldStayOpen = false;
+                }
+            };
+
+            // Handle closing event to prevent closing if needed, and save on close
+            menu.Closing += (s, e) => 
+            {
+                if (e.CloseReason == ToolStripDropDownCloseReason.ItemClicked && shouldStayOpen)
+                {
+                    e.Cancel = true;
+                    shouldStayOpen = false; // Reset for next click
+                    return;
+                }
+
+                // Only save if we are actually closing
+                if (!e.Cancel)
+                {
+                    LoggingUtility.Log($"Auto-saving grid settings for {dgv.Name} on menu close.");
+                    _ = SaveGridSettingsAsync(dgv);
+                }
+            };
+
             // Add a title item
             ToolStripMenuItem titleItem = new("Column Visibility")
             {
@@ -181,7 +257,12 @@ namespace MTM_WIP_Application_Winforms.Core
             // Add each column as a checkbox menu item
             foreach (DataGridViewColumn col in dgv.Columns)
             {
-                ToolStripMenuItem item = new(col.HeaderText) { Checked = col.Visible, Tag = col.Name };
+                ToolStripMenuItem item = new(col.HeaderText) 
+                { 
+                    Checked = col.Visible, 
+                    Tag = col.Name,
+                    // CheckOnClick = true // We handle click manually to ensure correct behavior with keeping menu open
+                };
 
                 item.Click += (s, e) =>
                 {
@@ -216,6 +297,8 @@ namespace MTM_WIP_Application_Winforms.Core
                             DataGridViewColumn? col = dgv.Columns[newOrder[i]];
                             col.DisplayIndex = i;
                         }
+                        // Save immediately after reordering
+                        _ = SaveGridSettingsAsync(dgv);
                     }
                 }
             };
@@ -277,27 +360,8 @@ namespace MTM_WIP_Application_Winforms.Core
             ToolStripMenuItem saveSettingsItem = new("Save Grid Settings");
             saveSettingsItem.Click += async (s, e) =>
             {
-                try
-                {
-                    // Serialize column visibility and order
-                    var columns = dgv.Columns.Cast<DataGridViewColumn>()
-                        .OrderBy(c => c.DisplayIndex)
-                        .Select(c => new { Name = c.Name, Visible = c.Visible, DisplayIndex = c.DisplayIndex })
-                        .ToList();
-                    string json = JsonSerializer.Serialize(new { Columns = columns });
-                    // Get userId (from Model_Application_Variables.User)
-                    string userId = Model_Application_Variables.User;
-                    string gridName = dgv.Name;
-                    await Dao_User.SetGridViewSettingsJsonAsync(userId, gridName, json);
-
-                    MessageBox.Show(@"Grid settings saved successfully.", @"Grid Settings", MessageBoxButtons.OK,
-                        MessageBoxIcon.Information);
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show($@"Error saving grid settings: {ex.Message}", @"Error", MessageBoxButtons.OK,
-                        MessageBoxIcon.Error);
-                }
+                await SaveGridSettingsAsync(dgv);
+                MessageBox.Show(@"Grid settings saved successfully.", @"Grid Settings", MessageBoxButtons.OK, MessageBoxIcon.Information);
             };
             menu.Items.Add(saveSettingsItem);
 
@@ -334,17 +398,6 @@ namespace MTM_WIP_Application_Winforms.Core
         }
 
         /// <summary>
-        /// Applies auto-sizing to all columns and rows of the DataGridView.
-        /// </summary>
-        private static void ApplyAutoSizingToDataGrid(DataGridView dataGridView)
-        {
-            dataGridView.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.DisplayedCells;
-            dataGridView.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.DisplayedCells;
-            dataGridView.AutoResizeColumns(DataGridViewAutoSizeColumnsMode.DisplayedCells);
-            dataGridView.AutoResizeRows(DataGridViewAutoSizeRowsMode.DisplayedCells);
-        }
-
-        /// <summary>
         /// Loads and applies saved grid settings (column visibility and order) for the specified DataGridView.
         /// </summary>
         public static async Task LoadAndApplyGridSettingsAsync(DataGridView dgv, string userId)
@@ -373,7 +426,21 @@ namespace MTM_WIP_Application_Winforms.Core
                                 {
                                     var col = dgv.Columns[colSetting.Name];
                                     col.Visible = colSetting.Visible;
-                                    col.DisplayIndex = colSetting.DisplayIndex;
+                                    // Only apply DisplayIndex if visible, or apply it carefully
+                                    // Applying DisplayIndex to hidden columns can be tricky, but usually fine.
+                                    // We wrap in try-catch to prevent one column failure from stopping others
+                                    try
+                                    {
+                                        if (colSetting.DisplayIndex >= 0 && colSetting.DisplayIndex < dgv.Columns.Count)
+                                        {
+                                            col.DisplayIndex = colSetting.DisplayIndex;
+                                        }
+                                    }
+                                    catch (Exception ex)
+                                    {
+                                        // Log but continue
+                                        LoggingUtility.LogApplicationError(new Exception($"Failed to set DisplayIndex for {colSetting.Name}", ex));
+                                    }
                                 }
                             }
                         }
@@ -386,12 +453,12 @@ namespace MTM_WIP_Application_Winforms.Core
             }
         }
 
-        private class GridSettings
+        public class GridSettings
         {
             public List<ColumnSetting>? Columns { get; set; }
         }
 
-        private class ColumnSetting
+        public class ColumnSetting
         {
             public string Name { get; set; } = string.Empty;
             public bool Visible { get; set; }

@@ -272,7 +272,10 @@ internal partial class TransactionGridControl : ThemedUserControl
                 TransactionGridControl_DataGridView_Transactions.DataSource = new BindingSource { DataSource = results.Transactions };
 
                 // Apply row colors based on transaction type
-                ApplyRowColors();
+                Service_DataGridView.ApplyTransactionRowColors(TransactionGridControl_DataGridView_Transactions);
+
+                // Apply standard settings (Theme + User Settings)
+                _ = Service_DataGridView.ApplyStandardSettingsAsync(TransactionGridControl_DataGridView_Transactions, Model_Application_Variables.User);
 
                 // Update pagination controls
                 UpdatePaginationControls();
@@ -439,13 +442,15 @@ internal partial class TransactionGridControl : ThemedUserControl
         }
     }
 
-    private void BtnPrint_Click(object? sender, EventArgs e)
+    private async void BtnPrint_Click(object? sender, EventArgs e)
     {
         try
         {
+            // Use centralized print service
+            string gridName = "Transaction History";
+            await Service_DataGridView.PrintGridAsync(this, TransactionGridControl_DataGridView_Transactions, gridName);
 
-
-            // Raise print event for parent form to handle
+            // Raise print event for parent form to handle (if needed for other logic)
             PrintRequested?.Invoke(this, EventArgs.Empty);
         }
         catch (Exception ex)
@@ -715,58 +720,6 @@ internal partial class TransactionGridControl : ThemedUserControl
                     $"Page number must be between 1 and {_currentResults.TotalPages}.",
                     nameof(TransactionGridControl_TextBox_GoToPage));
             }
-        }
-    }
-
-    /// <summary>
-    /// Applies color coding to DataGridView rows based on transaction type.
-    /// IN = Green, TRANSFER = Yellow, OUT = Red
-    /// </summary>
-    private void ApplyRowColors()
-    {
-        try
-        {
-            foreach (DataGridViewRow row in TransactionGridControl_DataGridView_Transactions.Rows)
-            {
-                if (row.DataBoundItem is Model_Transactions_Core transaction)
-                {
-                    Color backgroundColor;
-                    Color foregroundColor = Color.Black;
-
-                    switch (transaction.TransactionType)
-                    {
-                        case TransactionType.IN:
-                            backgroundColor = Color.LightGreen;
-                            break;
-                        case TransactionType.TRANSFER:
-                            backgroundColor = Color.LightYellow;
-                            break;
-                        case TransactionType.OUT:
-                            backgroundColor = Color.LightCoral;
-                            break;
-                        default:
-                            backgroundColor = Color.White;
-                            break;
-                    }
-
-                    row.DefaultCellStyle.BackColor = backgroundColor;
-                    row.DefaultCellStyle.ForeColor = foregroundColor;
-                    row.DefaultCellStyle.SelectionBackColor = Color.FromArgb(
-                        Math.Max(0, backgroundColor.R - 40),
-                        Math.Max(0, backgroundColor.G - 40),
-                        Math.Max(0, backgroundColor.B - 40)
-                    );
-                    row.DefaultCellStyle.SelectionForeColor = Color.Black;
-                }
-            }
-
-
-        }
-        catch (Exception ex)
-        {
-            LoggingUtility.LogApplicationError(ex);
-            Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Low,
-                controlName: nameof(TransactionGridControl));
         }
     }
 

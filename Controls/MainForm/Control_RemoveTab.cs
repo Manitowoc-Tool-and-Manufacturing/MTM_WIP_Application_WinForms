@@ -550,7 +550,9 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                                 drv.Row.Table.Columns.Contains("ReceiveDate") &&
                                 DateTime.TryParse(drv["ReceiveDate"]?.ToString(), out DateTime dt)
                                     ? dt
-                                    : DateTime.Now
+                                    : DateTime.Now,
+                            ColorCode = drv.Row.Table.Columns.Contains("ColorCode") ? drv["ColorCode"]?.ToString() ?? "" : "",
+                            WorkOrder = drv.Row.Table.Columns.Contains("WorkOrder") ? drv["WorkOrder"]?.ToString() ?? "" : ""
                         };
                         if (removedCount > 0)
                         {
@@ -620,14 +622,6 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             {
                 foreach (Model_History_Remove item in _lastRemovedItems)
                 {
-                    // Pass colorCode and workOrder if available (for color-tracked parts)
-                    string? colorCode = null;
-                    string? workOrder = null;
-                    if (item.GetType().GetProperty("ColorCode") != null)
-                        colorCode = (string?)item.GetType().GetProperty("ColorCode")?.GetValue(item);
-                    if (item.GetType().GetProperty("WorkOrder") != null)
-                        workOrder = (string?)item.GetType().GetProperty("WorkOrder")?.GetValue(item);
-
                     await Dao_Inventory.AddInventoryItemAsync(
                         item.PartId,
                         item.Location,
@@ -637,8 +631,8 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                         item.User,
                         item.BatchNumber,
                         "Removal reversed via Undo Button.",
-                        colorCode,
-                        workOrder,
+                        item.ColorCode,
+                        item.WorkOrder,
                         true
                     );
                 }
@@ -705,7 +699,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                         {
                             try
                             {
-                                DataTable sorted = SortInventoryByColorPriority(results, true);
+                                DataTable sorted = Service_DataGridView.SortByColorPriority(results);
                                 if (!ReferenceEquals(sorted, results))
                                 {
                                     dgv.DataSource = sorted;
@@ -1029,7 +1023,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                     {
                         if (colorTrackedPart)
                         {
-                            results = SortInventoryByColorPriority(results, true);
+                            results = Service_DataGridView.SortByColorPriority(results);
                         }
                         else
                         {
@@ -1050,27 +1044,18 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
 
                 // Only show columns in this order: Location, PartID, ColorCode, WorkOrder, Operation, Quantity, Notes
                 string[] columnsToShow = { "Location", "PartID", "ColorCode", "WorkOrder", "Operation", "Quantity", "Notes" };
-                foreach (DataGridViewColumn column in Control_RemoveTab_DataGridView_Main.Columns)
+                
+                // Friendly headers
+                var headerRenames = new Dictionary<string, string>
                 {
-                    column.Visible = columnsToShow.Contains(column.Name);
-                }
+                    { "ColorCode", "Color" },
+                    { "WorkOrder", "Work Order" }
+                };
 
-                // Reorder columns
-                for (int i = 0; i < columnsToShow.Length; i++)
-                {
-                    if (Control_RemoveTab_DataGridView_Main.Columns.Contains(columnsToShow[i]))
-                    {
-                        Control_RemoveTab_DataGridView_Main.Columns[columnsToShow[i]].DisplayIndex = i;
-                        // Friendly headers
-                        if (columnsToShow[i] == "ColorCode")
-                            Control_RemoveTab_DataGridView_Main.Columns[columnsToShow[i]].HeaderText = "Color";
-                        if (columnsToShow[i] == "WorkOrder")
-                            Control_RemoveTab_DataGridView_Main.Columns[columnsToShow[i]].HeaderText = "Work Order";
-                    }
-                }
+                Service_DataGridView.ConfigureColumns(Control_RemoveTab_DataGridView_Main, columnsToShow, headerRenames);
 
                 // Load saved settings (overrides default visibility/order)
-                await Core_Themes.LoadAndApplyGridSettingsAsync(Control_RemoveTab_DataGridView_Main, Model_Application_Variables.User);
+                await Service_DataGridView.ApplyStandardSettingsAsync(Control_RemoveTab_DataGridView_Main, Model_Application_Variables.User);
 
                 // Enforce logic: If not color tracked, these MUST be hidden regardless of saved settings
                 if (!colorTrackedPart)
@@ -1079,13 +1064,10 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                         Control_RemoveTab_DataGridView_Main.Columns["ColorCode"].Visible = false;
                     if (Control_RemoveTab_DataGridView_Main.Columns.Contains("WorkOrder"))
                         Control_RemoveTab_DataGridView_Main.Columns["WorkOrder"].Visible = false;
-
-                    // Normal theming only when not viewing color-tracked part
-                    Core_Themes.ApplyThemeToDataGridView(Control_RemoveTab_DataGridView_Main);
                 }
                 else
                 {
-                    ApplyColorCodingToRows(Control_RemoveTab_DataGridView_Main);
+                    Service_DataGridView.ApplyInventoryColorCoding(Control_RemoveTab_DataGridView_Main);
                 }
                 Core_Themes.SizeDataGrid(Control_RemoveTab_DataGridView_Main);
 
@@ -1105,46 +1087,12 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             }
         }
 
-        private void Control_RemoveTab_Button_Print_Click(object? sender, EventArgs? e)
+        private async void Control_RemoveTab_Button_Print_Click(object? sender, EventArgs? e)
         {
             try
             {
-
-
-                if (Control_RemoveTab_DataGridView_Main is null || Control_RemoveTab_DataGridView_Main.Rows.Count == 0)
-                {
-
-                    Service_ErrorHandler.HandleValidationError(
-                        "No records available to print. Run a search or perform an inventory removal first.",
-                        "Print");
-                    return;
-                }
-
-                Control parent = FindForm() is Control form ? form : this;
                 string gridName = "Remove Inventory";
-
-                var dialogTask = Helper_PrintManager.ShowPrintDialogAsync(parent, Control_RemoveTab_DataGridView_Main, gridName);
-
-                dialogTask.ContinueWith(t =>
-                {
-                    if (t.IsCompletedSuccessfully)
-                    {
-
-                    }
-                    else if (t.IsFaulted)
-                    {
-                        Exception? baseException = t.Exception?.GetBaseException();
-                        if (baseException != null)
-                        {
-                            LoggingUtility.LogApplicationError(baseException);
-                            BeginInvoke(new Action(() =>
-                                Service_ErrorHandler.HandleException(
-                                    baseException,
-                                    Enum_ErrorSeverity.Medium,
-                                    controlName: nameof(Control_RemoveTab_Button_Print_Click))));
-                        }
-                    }
-                });
+                await Service_DataGridView.PrintGridAsync(this, Control_RemoveTab_DataGridView_Main, gridName);
             }
             catch (Exception ex)
             {
@@ -1285,7 +1233,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                     {
                         if (singlePartColorTracked)
                         {
-                            dt = SortInventoryByColorPriority(dt, true);
+                            dt = Service_DataGridView.SortByColorPriority(dt);
                         }
                         else
                         {
@@ -1330,12 +1278,12 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                 }
                 else
                 {
-                    ApplyColorCodingToRows(Control_RemoveTab_DataGridView_Main);
+                    Service_DataGridView.ApplyInventoryColorCoding(Control_RemoveTab_DataGridView_Main);
                 }
                 Core_Themes.SizeDataGrid(Control_RemoveTab_DataGridView_Main);
 
                 // Load saved settings (overrides default visibility/order)
-                await Core_Themes.LoadAndApplyGridSettingsAsync(Control_RemoveTab_DataGridView_Main, Model_Application_Variables.User);
+                await Service_DataGridView.ApplyStandardSettingsAsync(Control_RemoveTab_DataGridView_Main, Model_Application_Variables.User);
 
                 Control_RemoveTab_Image_NothingFound.Visible = dt.Rows.Count == 0;
                 SetSearchPanelCollapsed(true);
@@ -1363,50 +1311,6 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
 
         #region Helpers
 
-        private static readonly HashSet<string> PredefinedColorCodes = new(StringComparer.OrdinalIgnoreCase)
-        {
-            "Red","Blue","Green","Yellow","Orange","Purple","Pink","White","Black"
-        };
-
-        private static int GetColorSortGroup(string? colorCode)
-        {
-            if (string.IsNullOrWhiteSpace(colorCode))
-            {
-                return 2; // Treat blanks as unknown
-            }
-
-            if (colorCode.Equals("Unknown", StringComparison.OrdinalIgnoreCase))
-            {
-                return 2;
-            }
-
-            return PredefinedColorCodes.Contains(colorCode) ? 0 : 1;
-        }
-
-        private static DataTable SortInventoryByColorPriority(DataTable source, bool colorTrackedPart)
-        {
-            if (!colorTrackedPart)
-            {
-                return source;
-            }
-
-            if (!source.Columns.Contains("ColorCode") || !source.Columns.Contains("Location") || source.Rows.Count == 0)
-            {
-                return source;
-            }
-
-            DataTable sortedTable = source.Clone();
-            foreach (DataRow row in source.AsEnumerable()
-                         .OrderBy(r => GetColorSortGroup(r["ColorCode"]?.ToString()))
-                         .ThenBy(r => r["ColorCode"]?.ToString(), StringComparer.OrdinalIgnoreCase)
-                         .ThenBy(r => r["Location"]?.ToString(), StringComparer.OrdinalIgnoreCase))
-            {
-                sortedTable.ImportRow(row);
-            }
-
-            return sortedTable;
-        }
-
         private static bool IsSingleColorTrackedPart(DataTable table)
         {
             if (!table.Columns.Contains("PartID") || table.Rows.Count == 0)
@@ -1429,54 +1333,6 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                 row["PartID"]?.ToString() ?? string.Empty,
                 firstPart,
                 StringComparison.OrdinalIgnoreCase));
-        }
-
-        /// <summary>
-        /// Applies background coloring to rows based on ColorCode column.
-        /// Skips 'Unknown' and any non-predefined (user-defined) colors.
-        /// Uses light variants for dark colors to keep text readable.
-        /// </summary>
-        /// <param name="dgv">Target DataGridView</param>
-        private void ApplyColorCodingToRows(DataGridView dgv)
-        {
-            try
-            {
-                if (dgv.Columns.Contains("ColorCode") == false)
-                    return;
-
-                foreach (DataGridViewRow row in dgv.Rows)
-                {
-                    if (row.IsNewRow) continue;
-                    string colorCode = row.Cells["ColorCode"].Value?.ToString() ?? string.Empty;
-                    if (string.IsNullOrWhiteSpace(colorCode)) continue;
-                    if (colorCode.Equals("Unknown", StringComparison.OrdinalIgnoreCase)) continue;
-                    if (!PredefinedColorCodes.Contains(colorCode)) continue; // user-defined -> skip
-
-                    Color backColor;
-                    switch (colorCode.ToLowerInvariant())
-                    {
-                        case "red": backColor = Color.MistyRose; break;
-                        case "blue": backColor = Color.AliceBlue; break;
-                        case "green": backColor = Color.Honeydew; break;
-                        case "yellow": backColor = Color.LightYellow; break;
-                        case "orange": backColor = Color.Moccasin; break;
-                        case "purple": backColor = Color.Lavender; break;
-                        case "pink": backColor = Color.LavenderBlush; break;
-                        case "white": backColor = Color.WhiteSmoke; break;
-                        case "black": backColor = Color.Gainsboro; break; // light gray for readability
-                        default: continue;
-                    }
-
-                    row.DefaultCellStyle.BackColor = backColor;
-                    row.DefaultCellStyle.SelectionBackColor = Color.FromArgb(Math.Max(0, backColor.R - 60), Math.Max(0, backColor.G - 60), Math.Max(0, backColor.B - 60)); // Darker shade for visible selection
-                    row.DefaultCellStyle.ForeColor = SystemColors.ControlText;
-                    row.DefaultCellStyle.SelectionForeColor = Color.White;
-                }
-            }
-            catch (Exception ex)
-            {
-                LoggingUtility.LogApplicationError(ex);
-            }
         }
 
         private List<(string PartID, string Location, int Quantity)> GetSelectedItemsToDelete(out string summary)

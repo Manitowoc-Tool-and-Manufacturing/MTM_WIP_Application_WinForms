@@ -1,7 +1,7 @@
 # GitHub Copilot Instructions - MTM WIP Application
 
 > **Auto-generated** from codebase analysis following copilot-instructions-blueprint-generator.prompt.md  
-> **Last Updated**: 2025-11-13  
+> **Last Updated**: 2025-11-22  
 > **Version**: 1.0.0
 
 ## Priority Guidelines

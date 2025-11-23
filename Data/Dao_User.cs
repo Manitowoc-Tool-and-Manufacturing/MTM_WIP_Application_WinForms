@@ -695,6 +695,7 @@ internal static class Dao_User
 
     /// <summary>
     /// Sets grid view settings JSON for the specified user and DataGridView.
+    /// Uses the dedicated usr_dgv_settings table.
     /// </summary>
     /// <param name="userId">The user ID.</param>
     /// <param name="dgvName">The DataGridView name.</param>
@@ -712,12 +713,12 @@ internal static class Dao_User
             {
                 ["p_UserId"] = userId,
                 ["p_DgvName"] = dgvName,
-                ["p_SettingJson"] = settingsJson
+                ["p_SettingsJson"] = settingsJson
             };
 
             var result = await Helper_Database_StoredProcedure.ExecuteNonQueryWithStatusAsync(
                 Model_Application_Variables.ConnectionString,
-                "usr_settings_SetJsonSetting",
+                "usr_dgv_settings_Set",
                 parameters,
                 connection: connection,
                 transaction: transaction
@@ -737,8 +738,6 @@ internal static class Dao_User
         catch (Exception ex)
         {
             LoggingUtility.LogDatabaseError(ex);
-
-
             Service_DebugTracer.TraceMethodExit(null, controlName: "Dao_User");
             return Model_Dao_Result.Failure($"Error setting grid view settings for {dgvName}", ex);
         }
@@ -746,10 +745,11 @@ internal static class Dao_User
 
     /// <summary>
     /// Gets grid view settings JSON for the specified user and DataGridView.
+    /// Uses the dedicated usr_dgv_settings table.
     /// </summary>
     /// <param name="userId">The user ID.</param>
     /// <param name="dgvName">The DataGridView name.</param>
-    /// <returns>A Model_Dao_Result containing the grid view settings JSON.</returns>
+    /// <returns>A Model_Dao_Result containing the settings JSON string.</returns>
     public static async Task<Model_Dao_Result<string>> GetGridViewSettingsJsonAsync(string userId, string dgvName,
         MySqlConnection? connection = null,
         MySqlTransaction? transaction = null)
@@ -758,39 +758,41 @@ internal static class Dao_User
 
         try
         {
-            var dataResult = await Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync(
+            Dictionary<string, object> parameters = new()
+            {
+                ["p_UserId"] = userId,
+                ["p_DgvName"] = dgvName
+            };
+
+            var result = await Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync(
                 Model_Application_Variables.ConnectionString,
-                "usr_settings_GetJsonSetting",
-                new Dictionary<string, object> 
-                { 
-                    ["UserId"] = userId,
-                    ["DgvName"] = dgvName
-                },
+                "usr_dgv_settings_Get",
+                parameters,
                 connection: connection,
                 transaction: transaction
             );
 
-            if (dataResult.IsSuccess && dataResult.Data != null && dataResult.Data.Rows.Count > 0)
+            if (result.IsSuccess && result.Data != null && result.Data.Rows.Count > 0)
             {
-                object? result = dataResult.Data.Rows[0][0];
-                string? json = result?.ToString();
-
-                Service_DebugTracer.TraceMethodExit(json, controlName: "Dao_User");
-                return Model_Dao_Result<string>.Success(json ?? "", $"Retrieved grid view settings for user {userId}");
+                string json = result.Data.Rows[0]["SettingsJson"]?.ToString() ?? string.Empty;
+                Service_DebugTracer.TraceMethodExit(result, controlName: "Dao_User");
+                return Model_Dao_Result<string>.Success(json, "Settings retrieved successfully");
             }
-
-            Service_DebugTracer.TraceMethodExit("", controlName: "Dao_User");
-            return Model_Dao_Result<string>.Success("", $"No grid view settings found for user {userId}");
+            else
+            {
+                Service_DebugTracer.TraceMethodExit(result, controlName: "Dao_User");
+                return Model_Dao_Result<string>.Failure("No settings found", null);
+            }
         }
         catch (Exception ex)
         {
             LoggingUtility.LogDatabaseError(ex);
-
-
-            Service_DebugTracer.TraceMethodExit("", controlName: "Dao_User");
-            return Model_Dao_Result<string>.Failure($"Error retrieving grid view settings for user {userId}", ex);
+            Service_DebugTracer.TraceMethodExit(null, controlName: "Dao_User");
+            return Model_Dao_Result<string>.Failure($"Error getting grid view settings for {dgvName}", ex);
         }
     }
+
+
 
     /// <summary>
     /// Internal helper to set a user setting field value in usr_settings.SettingsJson.

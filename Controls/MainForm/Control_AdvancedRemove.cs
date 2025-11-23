@@ -476,25 +476,13 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                 Control_AdvancedRemove_DataGridView_Results.ClearSelection();
                 // Only show columns in this order: Location, PartID, Operation, Quantity, Notes
                 string[] columnsToShow = { "Location", "PartID", "Operation", "Quantity", "Notes" };
-                foreach (DataGridViewColumn column in Control_AdvancedRemove_DataGridView_Results.Columns)
-                {
-                    column.Visible = columnsToShow.Contains(column.Name);
-                }
-
-                // Reorder columns
-                for (int i = 0; i < columnsToShow.Length; i++)
-                {
-                    if (Control_AdvancedRemove_DataGridView_Results.Columns.Contains(columnsToShow[i]))
-                    {
-                        Control_AdvancedRemove_DataGridView_Results.Columns[columnsToShow[i]].DisplayIndex = i;
-                    }
-                }
-
-                Core_Themes.ApplyThemeToDataGridView(Control_AdvancedRemove_DataGridView_Results);
-                Core_Themes.SizeDataGrid(Control_AdvancedRemove_DataGridView_Results);
+                
+                Service_DataGridView.ConfigureColumns(Control_AdvancedRemove_DataGridView_Results, columnsToShow);
 
                 // Load saved settings (overrides default visibility/order)
-                await Core_Themes.LoadAndApplyGridSettingsAsync(Control_AdvancedRemove_DataGridView_Results, Model_Application_Variables.User);
+                await Service_DataGridView.ApplyStandardSettingsAsync(Control_AdvancedRemove_DataGridView_Results, Model_Application_Variables.User);
+
+                Core_Themes.SizeDataGrid(Control_AdvancedRemove_DataGridView_Results);
 
                 Control_AdvancedRemove_Image_NothingFound.Visible = dt.Rows.Count == 0;
                 Control_AdvancedRemove_Update_ButtonStates();
@@ -536,6 +524,8 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                     string itemType = row.Cells["ItemType"]?.Value?.ToString() ?? ""; // If you have this column
                     string user = row.Cells["User"]?.Value?.ToString() ?? "";
                     string batchNumber = row.Cells["BatchNumber"]?.Value?.ToString() ?? "";
+                    string colorCode = row.Cells["ColorCode"]?.Value?.ToString() ?? "";
+                    string workOrder = row.Cells["WorkOrder"]?.Value?.ToString() ?? "";
 
                     _lastRemovedItems.Add(new Model_History_Remove
                     {
@@ -545,7 +535,9 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                         Quantity = quantity,
                         ItemType = itemType,
                         User = user,
-                        BatchNumber = batchNumber
+                        BatchNumber = batchNumber,
+                        ColorCode = colorCode,
+                        WorkOrder = workOrder
                     });
                 }
 
@@ -827,8 +819,8 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                         item.User,
                         item.BatchNumber,
                         "Removal reversed via Undo Button.",
-                        null,  // colorCode
-                        null,  // workOrder
+                        item.ColorCode,
+                        item.WorkOrder,
                         true
                     );
                 }
@@ -858,39 +850,12 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             }
         }
 
-        private void Control_AdvancedRemove_Button_Print_Click(object? sender, EventArgs? e)
+        private async void Control_AdvancedRemove_Button_Print_Click(object? sender, EventArgs? e)
         {
             try
             {
-                if (Control_AdvancedRemove_DataGridView_Results is null || Control_AdvancedRemove_DataGridView_Results.Rows.Count == 0)
-                {
-                    Service_ErrorHandler.HandleValidationError(
-                        "No records available to print. Run a search first.",
-                        "Print");
-                    return;
-                }
-
-                Control parent = FindForm() is Control form ? form : this;
                 string gridName = "Advanced Remove Results";
-
-                var dialogTask = Helper_PrintManager.ShowPrintDialogAsync(parent, Control_AdvancedRemove_DataGridView_Results, gridName);
-                
-                dialogTask.ContinueWith(t =>
-                {
-                    if (t.IsFaulted)
-                    {
-                        Exception? baseException = t.Exception?.GetBaseException();
-                        if (baseException != null)
-                        {
-                            LoggingUtility.LogApplicationError(baseException);
-                            BeginInvoke(new Action(() =>
-                                Service_ErrorHandler.HandleException(
-                                    baseException,
-                                    Enum_ErrorSeverity.Medium,
-                                    controlName: nameof(Control_AdvancedRemove_Button_Print_Click))));
-                        }
-                    }
-                });
+                await Service_DataGridView.PrintGridAsync(this, Control_AdvancedRemove_DataGridView_Results, gridName);
             }
             catch (Exception ex)
             {

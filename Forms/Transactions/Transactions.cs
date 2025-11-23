@@ -470,14 +470,14 @@ internal partial class Transactions : ThemedForm
             }
 
             // Get selected transaction(s)
-            List<(int ID, string Display)> selectedTransactions = new();
+            List<(int ID, string Display, string? BatchNumber)> selectedTransactions = new();
             
             foreach (DataGridViewRow row in dgv.SelectedRows)
             {
                 if (row.DataBoundItem is Model_Transactions_Core transaction)
                 {
                     string display = $"ID: {transaction.ID} - {transaction.TransactionType} - Part: {transaction.PartID} - Qty: {transaction.Quantity}";
-                    selectedTransactions.Add((transaction.ID, display));
+                    selectedTransactions.Add((transaction.ID, display, transaction.BatchNumber));
                 }
             }
 
@@ -492,7 +492,7 @@ internal partial class Transactions : ThemedForm
             confirmMessage.AppendLine("WARNING: You are about to permanently delete the following transaction(s):");
             confirmMessage.AppendLine();
             
-            foreach (var (ID, Display) in selectedTransactions)
+            foreach (var (ID, Display, _) in selectedTransactions)
             {
                 confirmMessage.AppendLine($"  • {Display}");
             }
@@ -522,17 +522,18 @@ internal partial class Transactions : ThemedForm
             int successCount = 0;
             int failureCount = 0;
             List<string> errors = new();
+            HashSet<int> deletedIds = new();
 
             var daoTransactions = new Dao_Transactions();
 
-            foreach (var (ID, Display) in selectedTransactions)
+            foreach (var (ID, Display, _) in selectedTransactions)
             {
                 var deleteResult = await daoTransactions.DeleteTransactionByIdAsync(ID);
                 
                 if (deleteResult.IsSuccess)
                 {
                     successCount++;
-                    
+                    deletedIds.Add(ID);
                 }
                 else
                 {
@@ -542,6 +543,80 @@ internal partial class Transactions : ThemedForm
                     
                 }
             }
+
+            // --- BATCH DELETION CHECK ---
+            // After initial deletion, check if we should delete related batch items
+            if (successCount > 0)
+            {
+                // Get unique batch numbers from successfully deleted items
+                var batchNumbers = selectedTransactions
+                    .Where(x => deletedIds.Contains(x.ID) && !string.IsNullOrWhiteSpace(x.BatchNumber))
+                    .Select(x => x.BatchNumber!)
+                    .Distinct()
+                    .ToList();
+
+                foreach (var batchNumber in batchNumbers)
+                {
+                    // Find other transactions with this batch number
+                    var batchResult = await _viewModel.GetBatchLifecycleAsync(batchNumber);
+                    
+                    if (batchResult.IsSuccess && batchResult.Data != null)
+                    {
+                        // Filter out items that were already deleted in the initial selection
+                        var relatedItems = batchResult.Data
+                            .Where(t => !deletedIds.Contains(t.ID))
+                            .ToList();
+
+                        if (relatedItems.Count > 0)
+                        {
+                            // Prompt user to delete related items
+                            StringBuilder batchMsg = new();
+                            batchMsg.AppendLine($"Transaction(s) deleted. Found {relatedItems.Count} other transaction(s) with Batch Number '{batchNumber}'.");
+                            batchMsg.AppendLine();
+                            batchMsg.AppendLine("Do you want to delete them as well?");
+                            batchMsg.AppendLine();
+                            batchMsg.AppendLine("Affected rows:");
+                            
+                            // Limit list size in message box
+                            int displayLimit = 10;
+                            foreach (var item in relatedItems.Take(displayLimit))
+                            {
+                                batchMsg.AppendLine($"  • ID: {item.ID} - {item.TransactionType} - Part: {item.PartID} - Qty: {item.Quantity}");
+                            }
+                            
+                            if (relatedItems.Count > displayLimit)
+                            {
+                                batchMsg.AppendLine($"  • ... and {relatedItems.Count - displayLimit} more.");
+                            }
+
+                            var batchConfirm = Service_ErrorHandler.ShowConfirmation(
+                                batchMsg.ToString(),
+                                "Delete Related Batch Items?",
+                                MessageBoxButtons.YesNo,
+                                MessageBoxIcon.Question);
+
+                            if (batchConfirm == DialogResult.Yes)
+                            {
+                                foreach (var item in relatedItems)
+                                {
+                                    var batchDeleteResult = await daoTransactions.DeleteTransactionByIdAsync(item.ID);
+                                    if (batchDeleteResult.IsSuccess)
+                                    {
+                                        successCount++;
+                                        deletedIds.Add(item.ID);
+                                    }
+                                    else
+                                    {
+                                        failureCount++;
+                                        errors.Add($"ID {item.ID} (Batch {batchNumber}): {batchDeleteResult.ErrorMessage}");
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            // ----------------------------
 
             // Build result message
             StringBuilder resultMessage = new();

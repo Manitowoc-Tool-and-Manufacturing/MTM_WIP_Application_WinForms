@@ -246,14 +246,77 @@ internal class Dao_Transactions
                 return Model_Dao_Result<List<Model_Transactions_Core>>.Failure("Search criteria cannot be null");
             }
 
+            // Parse transaction types
+            List<TransactionType> selectedTypes = new List<TransactionType>();
+            if (!string.IsNullOrWhiteSpace(criteria.TransactionType))
+            {
+                var typeStrings = criteria.TransactionType.Split(',');
+                foreach (var ts in typeStrings)
+                {
+                    if (Enum.TryParse<TransactionType>(ts.Trim(), out var type))
+                    {
+                        selectedTypes.Add(type);
+                    }
+                }
+            }
 
+            // Determine if we need to use SmartSearch (for multi-select subset of types)
+            // If 0 types selected (implies all?) or all 3 types selected, we can use standard search (empty string = all)
+            // If 1 type selected, we can use standard search
+            // If 2 types selected (subset), we MUST use SmartSearch
+            
+            // Assuming 3 total types (IN, OUT, TRANSFER). 
+            // If selectedTypes.Count is 2, use SmartSearch.
+            // Actually, let's be more robust. If it's a subset (count > 1 but not "all"), use SmartSearch.
+            // But how do we know "all"? Let's assume if it contains comma, and we want to filter precisely, we use SmartSearch.
+            // EXCEPT if it's ALL types, then we can just pass empty string to standard search.
+            
+            bool useSmartSearch = false;
+            if (selectedTypes.Count > 1)
+            {
+                // Check if it's ALL types. 
+                // If we assume IN, OUT, TRANSFER are the only ones.
+                bool hasIn = selectedTypes.Contains(TransactionType.IN);
+                bool hasOut = selectedTypes.Contains(TransactionType.OUT);
+                bool hasTransfer = selectedTypes.Contains(TransactionType.TRANSFER);
+                
+                if (hasIn && hasOut && hasTransfer)
+                {
+                    // All types selected - standard search with empty type string works
+                    useSmartSearch = false;
+                }
+                else
+                {
+                    // Subset selected (e.g. IN + TRANSFER) - must use SmartSearch
+                    useSmartSearch = true;
+                }
+            }
 
-            // ISSUE: The stored procedure inv_transactions_Search expects a single TransactionType value,
-            // but criteria.TransactionType is a comma-separated string like "IN,OUT,TRANSFER".
-            // When all types are selected, we should pass empty string to the SP to match all.
-            // When specific types are selected, we need to call the SP multiple times OR use SmartSearch instead.
+            if (useSmartSearch)
+            {
+                // Map criteria to SmartSearch arguments
+                var searchTerms = new Dictionary<string, string>();
+                if (!string.IsNullOrWhiteSpace(criteria.PartID)) searchTerms["partid"] = criteria.PartID;
+                if (!string.IsNullOrWhiteSpace(criteria.Operation)) searchTerms["operation"] = criteria.Operation;
+                if (!string.IsNullOrWhiteSpace(criteria.Notes)) searchTerms["notes"] = criteria.Notes;
+                if (!string.IsNullOrWhiteSpace(criteria.User)) searchTerms["user"] = criteria.User;
+                if (!string.IsNullOrWhiteSpace(criteria.FromLocation)) searchTerms["fromlocation"] = criteria.FromLocation;
+                if (!string.IsNullOrWhiteSpace(criteria.ToLocation)) searchTerms["tolocation"] = criteria.ToLocation;
+                
+                // Pass to SmartSearch
+                return await SmartSearchAsync(
+                    searchTerms,
+                    selectedTypes,
+                    (criteria.DateFrom, criteria.DateTo),
+                    new List<string>(), // locations list (used for IN clause, not needed here as we use specific from/to)
+                    userName,
+                    isAdmin,
+                    page,
+                    pageSize
+                ).ConfigureAwait(false);
+            }
 
-            // For now, if multiple transaction types are specified (contains comma), pass empty string to match all
+            // Fallback to standard search for single type or all types
             TransactionType? transactionType = null;
             string transactionTypeString = "";
 
@@ -506,6 +569,19 @@ internal class Dao_Transactions
             {
                 whereBuilder.Append($" AND Quantity = {qty}");
                 System.Diagnostics.Debug.WriteLine($"[DAO DEBUG] Added quantity filter - WHERE clause now: '{whereBuilder}'");
+            }
+
+            // NEW: Handle specific From/To location filters from searchTerms
+            if (searchTerms.ContainsKey("fromlocation") && !string.IsNullOrWhiteSpace(searchTerms["fromlocation"]))
+            {
+                whereBuilder.Append($" AND FromLocation = '{searchTerms["fromlocation"].Replace("'", "''")}'");
+                System.Diagnostics.Debug.WriteLine($"[DAO DEBUG] Added fromlocation filter - WHERE clause now: '{whereBuilder}'");
+            }
+
+            if (searchTerms.ContainsKey("tolocation") && !string.IsNullOrWhiteSpace(searchTerms["tolocation"]))
+            {
+                whereBuilder.Append($" AND ToLocation = '{searchTerms["tolocation"].Replace("'", "''")}'");
+                System.Diagnostics.Debug.WriteLine($"[DAO DEBUG] Added tolocation filter - WHERE clause now: '{whereBuilder}'");
             }
 
             // Handle transaction types filter

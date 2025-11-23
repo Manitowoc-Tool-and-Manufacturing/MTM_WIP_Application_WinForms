@@ -1,6 +1,4 @@
-﻿
-
-namespace MTM_WIP_Application_Winforms.Models;
+﻿namespace MTM_WIP_Application_Winforms.Models;
 
 internal class Model_History_Remove
 {
@@ -17,6 +15,8 @@ internal class Model_History_Remove
     public string User { get; set; } = string.Empty;
     public string BatchNumber { get; set; } = string.Empty;
     public string Notes { get; set; } = string.Empty;
+    public string ColorCode { get; set; } = string.Empty;
+    public string WorkOrder { get; set; } = string.Empty;
 
     #endregion
 }

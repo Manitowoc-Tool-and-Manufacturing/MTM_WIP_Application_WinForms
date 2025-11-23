@@ -579,6 +579,29 @@ internal sealed class Model_Transactions_ViewModel
         }
     }
 
+    /// <summary>
+    /// Retrieves the complete transaction lifecycle for a specific batch number.
+    /// </summary>
+    /// <param name="batchNumber">The batch number to retrieve lifecycle for.</param>
+    /// <returns>Model_Dao_Result containing list of transactions in chronological order.</returns>
+    public async Task<Model_Dao_Result<List<Model_Transactions_Core>>> GetBatchLifecycleAsync(string batchNumber)
+    {
+        if (string.IsNullOrWhiteSpace(batchNumber))
+        {
+            return Model_Dao_Result<List<Model_Transactions_Core>>.Failure("Batch number is required");
+        }
+
+        try
+        {
+            return await _dao.GetBatchLifecycleAsync(batchNumber).ConfigureAwait(false);
+        }
+        catch (Exception ex)
+        {
+            LoggingUtility.LogApplicationError(ex);
+            return Model_Dao_Result<List<Model_Transactions_Core>>.Failure("Failed to retrieve batch lifecycle", ex);
+        }
+    }
+
     #endregion
 
     #region Private Methods
