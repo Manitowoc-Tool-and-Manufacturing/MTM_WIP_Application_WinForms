@@ -52,10 +52,7 @@ namespace MTM_WIP_Application_Winforms.Forms.ViewLogs
             lblEntryPosition = new Label();
             btnPrevious = new Button();
             btnNext = new Button();
-            btnManagePromptStatus = new Button();
-            btnCreatePrompt = new Button();
             btnToggleView = new Button();
-            btnOpenPromptFolder = new Button();
             btnGenerateErrorReport = new Button();
             panelFilters = new Panel();
             tableLayoutFilters = new TableLayoutPanel();
@@ -506,10 +503,7 @@ namespace MTM_WIP_Application_Winforms.Forms.ViewLogs
             tableLayoutPanel2.Controls.Add(lblEntryPosition, 1, 0);
             tableLayoutPanel2.Controls.Add(btnPrevious, 0, 0);
             tableLayoutPanel2.Controls.Add(btnNext, 2, 0);
-            tableLayoutPanel2.Controls.Add(btnManagePromptStatus, 1, 1);
-            tableLayoutPanel2.Controls.Add(btnCreatePrompt, 0, 1);
             tableLayoutPanel2.Controls.Add(btnToggleView, 0, 2);
-            tableLayoutPanel2.Controls.Add(btnOpenPromptFolder, 2, 1);
             tableLayoutPanel2.Controls.Add(btnGenerateErrorReport, 2, 2);
             tableLayoutPanel2.Dock = DockStyle.Fill;
             tableLayoutPanel2.Location = new Point(0, 0);
@@ -555,29 +549,6 @@ namespace MTM_WIP_Application_Winforms.Forms.ViewLogs
             btnNext.Text = "Next ►";
             btnNext.UseVisualStyleBackColor = true;
             // 
-            // btnManagePromptStatus
-            // 
-            btnManagePromptStatus.Dock = DockStyle.Fill;
-            btnManagePromptStatus.Location = new Point(242, 41);
-            btnManagePromptStatus.MinimumSize = new Size(120, 30);
-            btnManagePromptStatus.Name = "btnManagePromptStatus";
-            btnManagePromptStatus.Size = new Size(233, 32);
-            btnManagePromptStatus.TabIndex = 5;
-            btnManagePromptStatus.Text = "Manage Prompt Status";
-            btnManagePromptStatus.UseVisualStyleBackColor = true;
-            // 
-            // btnCreatePrompt
-            // 
-            btnCreatePrompt.Dock = DockStyle.Fill;
-            btnCreatePrompt.Enabled = false;
-            btnCreatePrompt.Location = new Point(3, 41);
-            btnCreatePrompt.MinimumSize = new Size(100, 30);
-            btnCreatePrompt.Name = "btnCreatePrompt";
-            btnCreatePrompt.Size = new Size(233, 32);
-            btnCreatePrompt.TabIndex = 4;
-            btnCreatePrompt.Text = "Create Prompt";
-            btnCreatePrompt.UseVisualStyleBackColor = true;
-            // 
             // btnToggleView
             // 
             btnToggleView.Dock = DockStyle.Fill;
@@ -588,17 +559,6 @@ namespace MTM_WIP_Application_Winforms.Forms.ViewLogs
             btnToggleView.TabIndex = 3;
             btnToggleView.Text = "Show Raw View";
             btnToggleView.UseVisualStyleBackColor = true;
-            // 
-            // btnOpenPromptFolder
-            // 
-            btnOpenPromptFolder.Dock = DockStyle.Fill;
-            btnOpenPromptFolder.Location = new Point(481, 41);
-            btnOpenPromptFolder.MinimumSize = new Size(120, 30);
-            btnOpenPromptFolder.Name = "btnOpenPromptFolder";
-            btnOpenPromptFolder.Size = new Size(234, 32);
-            btnOpenPromptFolder.TabIndex = 7;
-            btnOpenPromptFolder.Text = "Open Prompt Fixes Folder";
-            btnOpenPromptFolder.UseVisualStyleBackColor = true;
             // 
             // btnGenerateErrorReport
             // 
@@ -925,10 +885,7 @@ namespace MTM_WIP_Application_Winforms.Forms.ViewLogs
         private System.Windows.Forms.Label lblEntryPosition;
         private System.Windows.Forms.Button btnNext;
         private System.Windows.Forms.Button btnToggleView;
-        private System.Windows.Forms.Button btnCreatePrompt;
-        private System.Windows.Forms.Button btnManagePromptStatus;
         private System.Windows.Forms.Button btnGenerateErrorReport;
-        private System.Windows.Forms.Button btnOpenPromptFolder;
         private System.Windows.Forms.Label lblEntryTimestamp;
         private System.Windows.Forms.TextBox txtTimestamp;
         private System.Windows.Forms.Label lblEntryLevel;
