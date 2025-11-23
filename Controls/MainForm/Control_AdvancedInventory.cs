@@ -1048,28 +1048,32 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
 
                 if (AdvancedInventory_TabControl.SelectedTab == AdvancedInventory_TabControl_Single)
                 {
-                    if (keyData == Core_WipAppVariables.Shortcut_AdvInv_Send && AdvancedInventory_Single_Button_Send.Visible &&
+                    Keys sendKey = _shortcutService?.GetShortcutKey("Shortcut_AdvInv_Send") ?? Core_WipAppVariables.Shortcut_AdvInv_Send;
+                    if (keyData == sendKey && AdvancedInventory_Single_Button_Send.Visible &&
                         AdvancedInventory_Single_Button_Send.Enabled)
                     {
                         AdvancedInventory_Single_Button_Send.PerformClick();
                         return true;                        
                     }
 
-                    if (keyData == Core_WipAppVariables.Shortcut_AdvInv_Save && AdvancedInventory_Single_Button_Save.Visible &&
+                    Keys saveKey = _shortcutService?.GetShortcutKey("Shortcut_AdvInv_Save") ?? Core_WipAppVariables.Shortcut_AdvInv_Save;
+                    if (keyData == saveKey && AdvancedInventory_Single_Button_Save.Visible &&
                         AdvancedInventory_Single_Button_Save.Enabled)
                     {
                         AdvancedInventory_Single_Button_Save.PerformClick();
                         return true;
                     }
 
-                    if (keyData == Core_WipAppVariables.Shortcut_AdvInv_Reset && AdvancedInventory_Single_Button_Reset.Visible &&
+                    Keys resetKey = _shortcutService?.GetShortcutKey("Shortcut_AdvInv_Reset") ?? Core_WipAppVariables.Shortcut_AdvInv_Reset;
+                    if (keyData == resetKey && AdvancedInventory_Single_Button_Reset.Visible &&
                         AdvancedInventory_Single_Button_Reset.Enabled)
                     {
                         AdvancedInventory_Single_Button_Reset.PerformClick();
                         return true;                        
                     }
 
-                    if (keyData == Core_WipAppVariables.Shortcut_AdvInv_Normal && AdvancedInventory_Single_Button_Normal.Visible &&
+                    Keys normalKey = _shortcutService?.GetShortcutKey("Shortcut_AdvInv_Normal") ?? Core_WipAppVariables.Shortcut_AdvInv_Normal;
+                    if (keyData == normalKey && AdvancedInventory_Single_Button_Normal.Visible &&
                         AdvancedInventory_Single_Button_Normal.Enabled)
                     {
                         AdvancedInventory_Single_Button_Normal.PerformClick();
@@ -1079,28 +1083,32 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
 
                 if (AdvancedInventory_TabControl.SelectedTab == AdvancedInventory_TabControl_MultiLoc)
                 {
-                    if (keyData == Core_WipAppVariables.Shortcut_AdvInv_Multi_AddLoc && AdvancedInventory_MultiLoc_Button_AddLoc.Visible &&
+                    Keys addLocKey = _shortcutService?.GetShortcutKey("Shortcut_AdvInv_Multi_AddLoc") ?? Core_WipAppVariables.Shortcut_AdvInv_Multi_AddLoc;
+                    if (keyData == addLocKey && AdvancedInventory_MultiLoc_Button_AddLoc.Visible &&
                         AdvancedInventory_MultiLoc_Button_AddLoc.Enabled)
                     {
                         AdvancedInventory_MultiLoc_Button_AddLoc.PerformClick();
                         return true;
                     }
 
-                    if (keyData == Core_WipAppVariables.Shortcut_AdvInv_Multi_SaveAll && AdvancedInventory_MultiLoc_Button_SaveAll.Visible &&
+                    Keys saveAllKey = _shortcutService?.GetShortcutKey("Shortcut_AdvInv_Multi_SaveAll") ?? Core_WipAppVariables.Shortcut_AdvInv_Multi_SaveAll;
+                    if (keyData == saveAllKey && AdvancedInventory_MultiLoc_Button_SaveAll.Visible &&
                         AdvancedInventory_MultiLoc_Button_SaveAll.Enabled)
                     {
                         AdvancedInventory_MultiLoc_Button_SaveAll.PerformClick();
                         return true;                        
                     }
 
-                    if (keyData == Core_WipAppVariables.Shortcut_AdvInv_Multi_Reset && AdvancedInventory_MultiLoc_Button_Reset.Visible &&
+                    Keys resetKey = _shortcutService?.GetShortcutKey("Shortcut_AdvInv_Multi_Reset") ?? Core_WipAppVariables.Shortcut_AdvInv_Multi_Reset;
+                    if (keyData == resetKey && AdvancedInventory_MultiLoc_Button_Reset.Visible &&
                         AdvancedInventory_MultiLoc_Button_Reset.Enabled)
                     {
                         AdvancedInventory_MultiLoc_Button_Reset.PerformClick();
                         return true;                        
                     }
 
-                    if (keyData == Core_WipAppVariables.Shortcut_AdvInv_Multi_Normal && AdvancedInventory_Multi_Button_Normal.Visible &&
+                    Keys normalKey = _shortcutService?.GetShortcutKey("Shortcut_AdvInv_Multi_Normal") ?? Core_WipAppVariables.Shortcut_AdvInv_Multi_Normal;
+                    if (keyData == normalKey && AdvancedInventory_Multi_Button_Normal.Visible &&
                         AdvancedInventory_Multi_Button_Normal.Enabled)
                     {
                         AdvancedInventory_Multi_Button_Normal.PerformClick();
@@ -1110,28 +1118,32 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
 
                 if (AdvancedInventory_TabControl.SelectedTab == AdvancedInventory_TabControl_Import)
                 {
-                    if (keyData == Core_WipAppVariables.Shortcut_AdvInv_Import_OpenExcel && AdvancedInventory_Import_Button_OpenExcel.Visible &&
+                    Keys openExcelKey = _shortcutService?.GetShortcutKey("Shortcut_AdvInv_Import_OpenExcel") ?? Core_WipAppVariables.Shortcut_AdvInv_Import_OpenExcel;
+                    if (keyData == openExcelKey && AdvancedInventory_Import_Button_OpenExcel.Visible &&
                         AdvancedInventory_Import_Button_OpenExcel.Enabled)
                     {                        
                         AdvancedInventory_Import_Button_OpenExcel.PerformClick();
                         return true;                        
                     }
 
-                    if (keyData == Core_WipAppVariables.Shortcut_AdvInv_Import_ImportExcel && AdvancedInventory_Import_Button_ImportExcel.Visible &&
+                    Keys importExcelKey = _shortcutService?.GetShortcutKey("Shortcut_AdvInv_Import_ImportExcel") ?? Core_WipAppVariables.Shortcut_AdvInv_Import_ImportExcel;
+                    if (keyData == importExcelKey && AdvancedInventory_Import_Button_ImportExcel.Visible &&
                             AdvancedInventory_Import_Button_ImportExcel.Enabled)
                     {
                         AdvancedInventory_Import_Button_ImportExcel.PerformClick();
                         return true;                        
                     }
 
-                    if (keyData == Core_WipAppVariables.Shortcut_AdvInv_Import_Save && AdvancedInventory_Import_Button_Save.Visible &&
+                    Keys saveKey = _shortcutService?.GetShortcutKey("Shortcut_AdvInv_Import_Save") ?? Core_WipAppVariables.Shortcut_AdvInv_Import_Save;
+                    if (keyData == saveKey && AdvancedInventory_Import_Button_Save.Visible &&
                         AdvancedInventory_Import_Button_Save.Enabled)
                     {
                         AdvancedInventory_Import_Button_Save.PerformClick();
                         return true;                        
                     }
 
-                    if (keyData == Core_WipAppVariables.Shortcut_AdvInv_Import_Normal && AdvancedInventory_Import_Button_Normal.Visible &&
+                    Keys normalKey = _shortcutService?.GetShortcutKey("Shortcut_AdvInv_Import_Normal") ?? Core_WipAppVariables.Shortcut_AdvInv_Import_Normal;
+                    if (keyData == normalKey && AdvancedInventory_Import_Button_Normal.Visible &&
                         AdvancedInventory_Import_Button_Normal.Enabled)
                     {
                         AdvancedInventory_Import_Button_Normal.PerformClick();
@@ -1139,7 +1151,8 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                     }
                 }
 
-                if (keyData == Core_WipAppVariables.Shortcut_Remove_Advanced && MainFormInstance != null && MainFormInstance.MainForm_UserControl_AdvancedRemove != null)
+                Keys removeAdvKey = _shortcutService?.GetShortcutKey("Shortcut_Remove_Advanced") ?? Core_WipAppVariables.Shortcut_Remove_Advanced;
+                if (keyData == removeAdvKey && MainFormInstance != null && MainFormInstance.MainForm_UserControl_AdvancedRemove != null)
                 {
                     MainFormInstance.MainForm_UserControl_AdvancedInventory.Visible = false;
                     MainFormInstance.MainForm_UserControl_AdvancedRemove.Visible = true;

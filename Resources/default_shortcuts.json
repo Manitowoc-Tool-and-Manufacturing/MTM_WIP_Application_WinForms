@@ -178,5 +178,65 @@
     "Keys": 131123,
     "Description": "Switch to Transfer Tab",
     "Category": "MainForm"
+  },
+  {
+    "Name": "Shortcut_QuickButton_01",
+    "Keys": 262193,
+    "Description": "Quick Button 1",
+    "Category": "QuickButtons"
+  },
+  {
+    "Name": "Shortcut_QuickButton_02",
+    "Keys": 262194,
+    "Description": "Quick Button 2",
+    "Category": "QuickButtons"
+  },
+  {
+    "Name": "Shortcut_QuickButton_03",
+    "Keys": 262195,
+    "Description": "Quick Button 3",
+    "Category": "QuickButtons"
+  },
+  {
+    "Name": "Shortcut_QuickButton_04",
+    "Keys": 262196,
+    "Description": "Quick Button 4",
+    "Category": "QuickButtons"
+  },
+  {
+    "Name": "Shortcut_QuickButton_05",
+    "Keys": 262197,
+    "Description": "Quick Button 5",
+    "Category": "QuickButtons"
+  },
+  {
+    "Name": "Shortcut_QuickButton_06",
+    "Keys": 262198,
+    "Description": "Quick Button 6",
+    "Category": "QuickButtons"
+  },
+  {
+    "Name": "Shortcut_QuickButton_07",
+    "Keys": 262199,
+    "Description": "Quick Button 7",
+    "Category": "QuickButtons"
+  },
+  {
+    "Name": "Shortcut_QuickButton_08",
+    "Keys": 262200,
+    "Description": "Quick Button 8",
+    "Category": "QuickButtons"
+  },
+  {
+    "Name": "Shortcut_QuickButton_09",
+    "Keys": 262201,
+    "Description": "Quick Button 9",
+    "Category": "QuickButtons"
+  },
+  {
+    "Name": "Shortcut_QuickButton_10",
+    "Keys": 262192,
+    "Description": "Quick Button 10",
+    "Category": "QuickButtons"
   }
 ]

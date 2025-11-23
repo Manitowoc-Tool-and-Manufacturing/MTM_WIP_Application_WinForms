@@ -423,21 +423,24 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                     return true;
                 }
 
-                if (keyData == Keys.Delete)
+                Keys deleteKey = _shortcutService?.GetShortcutKey("Shortcut_Remove_Delete") ?? Core_WipAppVariables.Shortcut_Remove_Delete;
+                if (keyData == deleteKey)
                 {
                     Control_RemoveTab_Button_Delete.PerformClick();
                     return true;
                 }
 
+                Keys toggleRightKey = _shortcutService?.GetShortcutKey("Shortcut_Inventory_ToggleRightPanel_Right") ?? Core_WipAppVariables.Shortcut_Inventory_ToggleRightPanel_Right;
                 if (MainFormInstance != null && !MainFormInstance.MainForm_SplitContainer_Middle.Panel2Collapsed &&
-                    keyData == (Keys.Alt | Keys.Right))
+                    keyData == toggleRightKey)
                 {
                     Control_RemoveTab_Button_Toggle_RightPanel.PerformClick();
                     return true;
                 }
 
+                Keys toggleLeftKey = _shortcutService?.GetShortcutKey("Shortcut_Inventory_ToggleRightPanel_Left") ?? Core_WipAppVariables.Shortcut_Inventory_ToggleRightPanel_Left;
                 if (MainFormInstance != null && MainFormInstance.MainForm_SplitContainer_Middle.Panel2Collapsed &&
-                    keyData == (Keys.Alt | Keys.Left))
+                    keyData == toggleLeftKey)
                 {
                     Control_RemoveTab_Button_Toggle_RightPanel.PerformClick();
                     return true;

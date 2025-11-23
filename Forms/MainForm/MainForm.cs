@@ -13,6 +13,7 @@ using MTM_WIP_Application_Winforms.Logging;
 using MTM_WIP_Application_Winforms.Models;
 using MTM_WIP_Application_Winforms.Services;
 using Timer = System.Windows.Forms.Timer;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace MTM_WIP_Application_Winforms.Forms.MainForm
 {
@@ -25,11 +26,13 @@ namespace MTM_WIP_Application_Winforms.Forms.MainForm
         private Timer? _connectionStrengthTimer;
         public Helper_Control_MySqlSignal ConnectionStrengthChecker = null!;
         private Helper_StoredProcedureProgress? _progressHelper;
-    private Form_ViewErrorReports? _viewErrorReportsForm;
-    private Forms.ViewLogs.ViewApplicationLogsForm? _viewApplicationLogsForm;
+        private Form_ViewErrorReports? _viewErrorReportsForm;
+        private Forms.ViewLogs.ViewApplicationLogsForm? _viewApplicationLogsForm;
+    
 
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public Service_ConnectionRecoveryManager ConnectionRecoveryManager { get; private set; } = null!;
+        private readonly IShortcutService? _shortcutService;
 
         /// <summary>
         /// Flag to skip the next soft reset of the Inventory Tab.
@@ -63,6 +66,15 @@ namespace MTM_WIP_Application_Winforms.Forms.MainForm
                     });
 
                 InitializeComponent();
+                
+                // Resolve shortcut service
+                _shortcutService = Program.ServiceProvider?.GetService<IShortcutService>();
+                if (_shortcutService != null && !string.IsNullOrEmpty(Model_Application_Variables.User))
+                {
+                    // Initialize asynchronously
+                    _ = _shortcutService.InitializeAsync(Model_Application_Variables.User);
+                }
+
                 SetStyle(ControlStyles.OptimizedDoubleBuffer, true);
                 AutoScaleMode = AutoScaleMode.Dpi;
 
@@ -929,19 +941,22 @@ namespace MTM_WIP_Application_Winforms.Forms.MainForm
                     return true;
                 }
 
-                if (keyData == Core_WipAppVariables.Shortcut_MainForm_Tab1)
+                Keys tab1Key = _shortcutService?.GetShortcutKey("Shortcut_MainForm_Tab1") ?? Core_WipAppVariables.Shortcut_MainForm_Tab1;
+                if (keyData == tab1Key)
                 {
                     MainForm_TabControl.SelectedIndex = 0;
                     return true;
                 }
 
-                if (keyData == Core_WipAppVariables.Shortcut_MainForm_Tab2)
+                Keys tab2Key = _shortcutService?.GetShortcutKey("Shortcut_MainForm_Tab2") ?? Core_WipAppVariables.Shortcut_MainForm_Tab2;
+                if (keyData == tab2Key)
                 {
                     MainForm_TabControl.SelectedIndex = 1;
                     return true;
                 }
 
-                if (keyData == Core_WipAppVariables.Shortcut_MainForm_Tab3)
+                Keys tab3Key = _shortcutService?.GetShortcutKey("Shortcut_MainForm_Tab3") ?? Core_WipAppVariables.Shortcut_MainForm_Tab3;
+                if (keyData == tab3Key)
                 {
                     MainForm_TabControl.SelectedIndex = 2;
                     return true;

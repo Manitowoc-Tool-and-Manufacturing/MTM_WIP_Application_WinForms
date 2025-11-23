@@ -1,9 +1,0 @@
-Active,Include,File,Toggle,Description,CurrentState,Variable
-TRUE,TRUE,Model_Application_Variables.cs,ThemeEnabled,Enable/Disable Application Theming,TRUE,Model_Application_Variables.ThemeEnabled
-TRUE,TRUE,Model_Application_Variables.cs,EnableAutoSyncOnStartup,Auto-sync error reports on startup,TRUE,Model_Application_Variables.ErrorReporting.EnableAutoSyncOnStartup
-TRUE,TRUE,Control_Add_User.cs,VisualAccess,Enable Visual Login for User,FALSE,Control_Add_User_CheckBox_VisualAccess.Checked
-TRUE,TRUE,Control_Add_User.cs,ViewHidePasswords,Show/Hide Password Characters,FALSE,Control_Add_User_CheckBox_ViewHidePasswords.Checked
-TRUE,TRUE,Control_Edit_User.cs,VisualAccess,Enable Visual Login for User,FALSE,Control_Edit_User_CheckBox_VisualAccess.Checked
-TRUE,TRUE,Control_Edit_User.cs,ViewHidePasswords,Show/Hide Password Characters,FALSE,Control_Edit_User_CheckBox_ViewHidePasswords.Checked
-TRUE,TRUE,Control_PartIDManagement.cs,RequiresColorCode,Part Requires Color Code Tracking,FALSE,Control_PartIDManagement_CheckBox_AddRequiresColorCode.Checked
-TRUE,TRUE,Control_PartIDManagement.cs,RequiresColorCode,Part Requires Color Code Tracking (Edit),FALSE,Control_PartIDManagement_CheckBox_EditRequiresColorCode.Checked

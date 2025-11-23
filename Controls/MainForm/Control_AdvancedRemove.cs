@@ -10,6 +10,7 @@ using MTM_WIP_Application_Winforms.Helpers;
 using MTM_WIP_Application_Winforms.Logging;
 using MTM_WIP_Application_Winforms.Models;
 using MTM_WIP_Application_Winforms.Services;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace MTM_WIP_Application_Winforms.Controls.MainForm
 {
@@ -23,6 +24,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
         private Control_TextAnimationSequence? _sidePanelAnimator;
         private Control_TextAnimationSequence? _quickButtonsAnimator;
         private bool _isInputPanelCollapsed = false;
+        private readonly IShortcutService? _shortcutService;
 
         #endregion
 
@@ -60,6 +62,15 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                 });
 
             InitializeComponent();
+            
+            // Resolve shortcut service
+            _shortcutService = Program.ServiceProvider?.GetService<IShortcutService>();
+            if (_shortcutService != null && !string.IsNullOrEmpty(Model_Application_Variables.User))
+            {
+                // Initialize asynchronously
+                _ = _shortcutService.InitializeAsync(Model_Application_Variables.User);
+            }
+
             SetStyle(ControlStyles.OptimizedDoubleBuffer, true);
             Service_DebugTracer.TraceUIAction("THEME_APPLICATION", nameof(Control_AdvancedRemove),
                 new Dictionary<string, object>
@@ -95,7 +106,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                 normalBtn.Click += Control_AdvancedRemove_Button_Normal_Click;
                 ToolTip toolTip = new();
                 toolTip.SetToolTip(normalBtn,
-                    $"Shortcut: {Helper_UI_Shortcuts.ToShortcutString(Core_WipAppVariables.Shortcut_Remove_Normal)}");
+                    $"Shortcut: {Helper_UI_Shortcuts.GetShortcutDisplay("Shortcut_Remove_Normal", _shortcutService, Core_WipAppVariables.Shortcut_Remove_Normal)}");
             }
 
             Control[] undoBtn = Controls.Find("Control_AdvancedRemove_Button_Undo", true);
@@ -105,7 +116,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                 undoButton.Click += Control_AdvancedRemove_Button_Undo_Click;
                 ToolTip toolTip = new();
                 toolTip.SetToolTip(undoButton,
-                    $"Shortcut: {Helper_UI_Shortcuts.ToShortcutString(Core_WipAppVariables.Shortcut_Remove_Undo)}");
+                    $"Shortcut: {Helper_UI_Shortcuts.GetShortcutDisplay("Shortcut_Remove_Undo", _shortcutService, Core_WipAppVariables.Shortcut_Remove_Undo)}");
             }
 
             Control[] searchBtn = Controls.Find("Control_AdvancedRemove_Button_Search", true);
@@ -115,7 +126,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                 searchButton.Click += Control_AdvancedRemove_Button_Search_Click;
                 ToolTip toolTip = new();
                 toolTip.SetToolTip(searchButton,
-                    $"Shortcut: {Helper_UI_Shortcuts.ToShortcutString(Core_WipAppVariables.Shortcut_Remove_Search)}");
+                    $"Shortcut: {Helper_UI_Shortcuts.GetShortcutDisplay("Shortcut_Remove_Search", _shortcutService, Core_WipAppVariables.Shortcut_Remove_Search)}");
             }
 
             Control[] resetBtn = Controls.Find("Control_AdvancedRemove_Button_Reset", true);
@@ -125,7 +136,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                 resetButton.Click += Control_AdvancedRemove_Button_Reset_Click;
                 ToolTip toolTip = new();
                 toolTip.SetToolTip(resetButton,
-                    $"Shortcut: {Helper_UI_Shortcuts.ToShortcutString(Core_WipAppVariables.Shortcut_Remove_Reset)}");
+                    $"Shortcut: {Helper_UI_Shortcuts.GetShortcutDisplay("Shortcut_Remove_Reset", _shortcutService, Core_WipAppVariables.Shortcut_Remove_Reset)}");
             }
 
             Control[] deleteBtn = Controls.Find("Control_AdvancedRemove_Button_Delete", true);
@@ -135,7 +146,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                 deleteButton.Click += Control_AdvancedRemove_Button_Delete_Click;
                 ToolTip toolTip = new();
                 toolTip.SetToolTip(deleteButton,
-                    $"Shortcut: {Helper_UI_Shortcuts.ToShortcutString(Core_WipAppVariables.Shortcut_Remove_Delete)}");
+                    $"Shortcut: {Helper_UI_Shortcuts.GetShortcutDisplay("Shortcut_Remove_Delete", _shortcutService, Core_WipAppVariables.Shortcut_Remove_Delete)}");
             }
 
             Control[] printBtn = Controls.Find("Control_AdvancedRemove_Button_Print", true);
@@ -918,19 +929,22 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
 
         protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
         {
-            if (keyData == Core_WipAppVariables.Shortcut_Remove_Delete)
+            Keys deleteKey = _shortcutService?.GetShortcutKey("Shortcut_Remove_Delete") ?? Core_WipAppVariables.Shortcut_Remove_Delete;
+            if (keyData == deleteKey)
             {
                 Control_AdvancedRemove_Button_Delete.PerformClick();
                 return true;
             }
 
-            if (keyData == Core_WipAppVariables.Shortcut_Remove_Undo)
+            Keys undoKey = _shortcutService?.GetShortcutKey("Shortcut_Remove_Undo") ?? Core_WipAppVariables.Shortcut_Remove_Undo;
+            if (keyData == undoKey)
             {
                 Control_AdvancedRemove_Button_Undo.PerformClick();
                 return true;
             }
 
-            if (keyData == Core_WipAppVariables.Shortcut_Remove_Reset)
+            Keys resetKey = _shortcutService?.GetShortcutKey("Shortcut_Remove_Reset") ?? Core_WipAppVariables.Shortcut_Remove_Reset;
+            if (keyData == resetKey)
             {
                 Control[] resetBtn = Controls.Find("Control_AdvancedRemove_Button_Reset", true);
                 if (resetBtn.Length > 0 && resetBtn[0] is Button btn)
@@ -940,7 +954,8 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                 }
             }
 
-            if (keyData == Core_WipAppVariables.Shortcut_Remove_Search)
+            Keys searchKey = _shortcutService?.GetShortcutKey("Shortcut_Remove_Search") ?? Core_WipAppVariables.Shortcut_Remove_Search;
+            if (keyData == searchKey)
             {
                 Control[] searchBtn = Controls.Find("Control_AdvancedRemove_Button_Search", true);
                 if (searchBtn.Length > 0 && searchBtn[0] is Button btn)
@@ -950,7 +965,8 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                 }
             }
 
-            if (keyData == Core_WipAppVariables.Shortcut_Remove_Normal)
+            Keys normalKey = _shortcutService?.GetShortcutKey("Shortcut_Remove_Normal") ?? Core_WipAppVariables.Shortcut_Remove_Normal;
+            if (keyData == normalKey)
             {
                 Control[] normalBtn = Controls.Find("Control_AdvancedRemove_Button_Normal", true);
                 if (normalBtn.Length > 0 && normalBtn[0] is Button btn)

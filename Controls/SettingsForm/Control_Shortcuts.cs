@@ -3,6 +3,7 @@ using MTM_WIP_Application_Winforms.Core;
 using MTM_WIP_Application_Winforms.Forms.Shared;
 using MTM_WIP_Application_Winforms.Helpers;
 using MTM_WIP_Application_Winforms.Logging;
+using MTM_WIP_Application_Winforms.Models;
 using MTM_WIP_Application_Winforms.Services;
 
 namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
@@ -17,6 +18,10 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
         {
             InitializeComponent();
             _shortcutService = Program.ServiceProvider?.GetService<IShortcutService>();
+            
+            // Wire up reset button
+            Control_Shortcuts_Button_Reset.Click += Control_Shortcuts_Button_Reset_Click;
+            
             _ = LoadShortcuts();
         }
 
@@ -24,14 +29,8 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
         {
             try
             {
-                Control_Shortcuts_DataGridView_Shortcuts.Columns.Clear();
-                Control_Shortcuts_DataGridView_Shortcuts.Columns.Add("Action", "Action");
-                Control_Shortcuts_DataGridView_Shortcuts.Columns.Add("Shortcut", "Shortcut");
-                // Hidden column to store the internal shortcut name (key)
-                Control_Shortcuts_DataGridView_Shortcuts.Columns.Add("InternalName", "InternalName");
-                Control_Shortcuts_DataGridView_Shortcuts.Columns["InternalName"].Visible = false;
-                
-                Control_Shortcuts_DataGridView_Shortcuts.Rows.Clear();
+                Control_Shortcuts_FlowLayout_Cards.Controls.Clear();
+                Control_Shortcuts_FlowLayout_Cards.SuspendLayout();
 
                 if (_shortcutService == null)
                 {
@@ -43,27 +42,18 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
                 await _shortcutService.InitializeAsync(Core_WipAppVariables.User);
                 var shortcuts = _shortcutService.GetAllShortcuts();
 
-                foreach (var shortcut in shortcuts)
+                // Group shortcuts by category
+                var groupedShortcuts = shortcuts
+                    .GroupBy(s => GetShortcutGroup(s.Name))
+                    .OrderBy(g => g.Key);
+
+                foreach (var group in groupedShortcuts)
                 {
-                    // Use Description for display, Name for internal key
-                    string action = !string.IsNullOrEmpty(shortcut.Description) ? shortcut.Description : shortcut.Name;
-                    string shortcutValue = shortcut.DisplayString;
-                    string internalName = shortcut.Name;
-
-                    // Also update the helper for immediate effect in current session if needed
-                    // (Though ideally the app should listen to service updates)
-                    Helper_UI_Shortcuts.ApplyShortcutFromDictionary(action, shortcut.Keys);
-
-                    Control_Shortcuts_DataGridView_Shortcuts.Rows.Add(action, shortcutValue, internalName);
+                    var card = CreateCategoryCard(group.Key, group.ToList());
+                    Control_Shortcuts_FlowLayout_Cards.Controls.Add(card);
                 }
 
-                Control_Shortcuts_DataGridView_Shortcuts.ReadOnly = false;
-                Control_Shortcuts_DataGridView_Shortcuts.AllowUserToAddRows = false;
-                Control_Shortcuts_DataGridView_Shortcuts.AllowUserToDeleteRows = false;
-                Control_Shortcuts_DataGridView_Shortcuts.Columns[0].ReadOnly = true;
-                Control_Shortcuts_DataGridView_Shortcuts.Columns[1].ReadOnly = false;
-                Control_Shortcuts_DataGridView_Shortcuts.CellValueChanged += ShortcutsDataGridView_CellValueChanged;
-                Control_Shortcuts_DataGridView_Shortcuts.CellValidating += ShortcutsDataGridView_CellValidating;
+                Control_Shortcuts_FlowLayout_Cards.ResumeLayout();
             }
             catch (Exception ex)
             {
@@ -72,319 +62,192 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             }
         }
 
-        private void ShortcutsDataGridView_CellValidating(object? sender, DataGridViewCellValidatingEventArgs e)
+        private Control_SettingsCollapsibleCard CreateCategoryCard(string category, List<Model_Shortcut> shortcuts)
         {
-            if (e.ColumnIndex == 1)
+            var card = new Control_SettingsCollapsibleCard
             {
-                string shortcutString = e.FormattedValue?.ToString() ?? "";
+                CardTitle = GetCategoryDisplayName(category),
+                CardDescription = GetCategoryDescription(category),
+                CardIcon = GetCategoryIcon(category),
+                Width = Control_Shortcuts_FlowLayout_Cards.Width - 25, // Account for scrollbar
+                Anchor = AnchorStyles.Left | AnchorStyles.Right
+            };
 
-                if (string.IsNullOrWhiteSpace(shortcutString))
-                {
-                    return;
-                }
+            // Create a panel for the content to ensure proper layout
+            var contentPanel = new TableLayoutPanel
+            {
+                Dock = DockStyle.Top,
+                AutoSize = true,
+                ColumnCount = 3,
+                RowCount = shortcuts.Count,
+                Padding = new Padding(0, 5, 0, 5)
+            };
+            
+            contentPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F)); // Action Name
+            contentPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 30F)); // Shortcut Key
+            contentPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 20F)); // Button
 
-                try
+            int row = 0;
+            foreach (var shortcut in shortcuts)
+            {
+                string actionName = !string.IsNullOrEmpty(shortcut.Description) ? shortcut.Description : shortcut.Name;
+                
+                var lblAction = new Label
                 {
-                    Keys keys = Helper_UI_Shortcuts.FromShortcutString(shortcutString);
-                    if (keys == Keys.None && !string.IsNullOrWhiteSpace(shortcutString))
-                    {
-                        e.Cancel = true;
-                        StatusMessageChanged?.Invoke(this, "Invalid shortcut format. Use combinations like 'CTRL + S' or 'ALT + F1'");
-                    }
-                }
-                catch
+                    Text = actionName,
+                    AutoSize = true,
+                    Anchor = AnchorStyles.Left | AnchorStyles.Right,
+                    TextAlign = ContentAlignment.MiddleLeft,
+                    Font = new Font("Segoe UI", 9.5F)
+                };
+
+                var lblShortcut = new Label
                 {
-                    e.Cancel = true;
-                    StatusMessageChanged?.Invoke(this, "Invalid shortcut format. Use combinations like 'CTRL + S' or 'ALT + F1'");
-                }
+                    Text = shortcut.DisplayString,
+                    AutoSize = true,
+                    Anchor = AnchorStyles.Left | AnchorStyles.Right,
+                    TextAlign = ContentAlignment.MiddleCenter,
+                    Font = new Font("Consolas", 10F, FontStyle.Bold),
+                    BackColor = Color.FromArgb(240, 240, 240),
+                    Padding = new Padding(5)
+                };
+
+                var btnChange = new Button
+                {
+                    Text = "Change",
+                    AutoSize = true,
+                    Tag = shortcut
+                };
+                btnChange.Click += async (s, e) => await HandleChangeShortcut(shortcut);
+
+                contentPanel.Controls.Add(lblAction, 0, row);
+                contentPanel.Controls.Add(lblShortcut, 1, row);
+                contentPanel.Controls.Add(btnChange, 2, row);
+                
+                row++;
             }
+
+            card.AddContent(contentPanel);
+            return card;
         }
 
-        private void ShortcutsDataGridView_CellValueChanged(object? sender, DataGridViewCellEventArgs e)
+        private async Task HandleChangeShortcut(Model_Shortcut shortcut)
         {
-            if (e.ColumnIndex == 1 && e.RowIndex >= 0)
+            using (var form = new Form_ShortcutEdit(shortcut.Name, shortcut.Keys))
             {
-                string? actionName = Control_Shortcuts_DataGridView_Shortcuts.Rows[e.RowIndex].Cells[0].Value?.ToString();
-                string shortcutString =
-                    Control_Shortcuts_DataGridView_Shortcuts.Rows[e.RowIndex].Cells[1].Value?.ToString() ?? "";
-
-                if (!string.IsNullOrEmpty(actionName))
+                if (form.ShowDialog(this) == DialogResult.OK)
                 {
                     try
                     {
-                        Keys keys = Helper_UI_Shortcuts.FromShortcutString(shortcutString);
-                        Helper_UI_Shortcuts.ApplyShortcutFromDictionary(actionName, keys);
-                        ShortcutsUpdated?.Invoke(this, EventArgs.Empty);
+                        if (_shortcutService != null)
+                        {
+                            // Call service to update - it handles validation
+                            var result = await _shortcutService.UpdateShortcutAsync(shortcut.Name, form.SelectedKeys);
+                            
+                            if (!result.IsSuccess)
+                            {
+                                Service_ErrorHandler.ShowWarning(result.ErrorMessage, "Shortcut Update Failed");
+                                return;
+                            }
+                            
+                            // Refresh UI
+                            await LoadShortcuts();
+                            
+                            ShortcutsUpdated?.Invoke(this, EventArgs.Empty);
+                            StatusMessageChanged?.Invoke(this, $"Shortcut for '{shortcut.Description}' updated.");
+                        }
                     }
                     catch (Exception ex)
                     {
-                        LoggingUtility.LogApplicationError(ex);
-                        StatusMessageChanged?.Invoke(this, $"Error updating shortcut: {ex.Message}");
+                        Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Medium, controlName: nameof(Control_Shortcuts));
                     }
                 }
             }
         }
 
-        private void ShortcutsDataGridView_CellBeginEdit(object? sender, DataGridViewCellCancelEventArgs e)
+        private async void Control_Shortcuts_Button_Reset_Click(object? sender, EventArgs e)
         {
-            if (e.ColumnIndex == 1 && e.RowIndex >= 0)
+            if (Service_ErrorHandler.ShowConfirmation("Are you sure you want to reset all shortcuts to their default values?", "Reset Shortcuts") == DialogResult.Yes)
             {
-                e.Cancel = true;
-
-                string? actionName = Control_Shortcuts_DataGridView_Shortcuts.Rows[e.RowIndex].Cells[0].Value?.ToString();
-                string currentShortcut =
-                    Control_Shortcuts_DataGridView_Shortcuts.Rows[e.RowIndex].Cells[1].Value?.ToString() ?? "";
-                string? internalName = Control_Shortcuts_DataGridView_Shortcuts.Rows[e.RowIndex].Cells[2].Value?.ToString();
-
-                using (Form inputForm = new())
+                try
                 {
-                    inputForm.Text = $"Set Shortcut for '{actionName}'";
-                    inputForm.Size = new Size(400, 180);
-                    inputForm.StartPosition = FormStartPosition.CenterParent;
-                    inputForm.FormBorderStyle = FormBorderStyle.FixedDialog;
-                    inputForm.MaximizeBox = false;
-                    inputForm.MinimizeBox = false;
-
-                    Label label = new()
+                    if (_shortcutService != null)
                     {
-                        Text = "Press the new shortcut key combination:",
-                        Location = new Point(10, 20),
-                        Size = new Size(360, 20)
-                    };
-                    TextBox shortcutBox = new()
-                    {
-                        Location = new Point(10, 45),
-                        Size = new Size(360, 20),
-                        ReadOnly = true,
-                        TabStop = false,
-                        BackColor = SystemColors.Control,
-                        ForeColor = SystemColors.GrayText
-                    };
-                    shortcutBox.Text = currentShortcut;
-
-                    Label errorLabel = new()
-                    {
-                        Text = "",
-                        ForeColor = Color.Red,
-                        Location = new Point(10, 70),
-                        Size = new Size(360, 30),
-                        Visible = false
-                    };
-
-                    Keys newKeys = Helper_UI_Shortcuts.FromShortcutString(currentShortcut);
-
-                    inputForm.KeyPreview = true;
-                    inputForm.KeyDown += (s, ke) =>
-                    {
-                        if (ke.KeyCode == Keys.Escape)
-                        {
-                            inputForm.DialogResult = DialogResult.Cancel;
-                            inputForm.Close();
-                            return;
-                        }
-
-                        if (ke.KeyCode == Keys.ControlKey || ke.KeyCode == Keys.ShiftKey || ke.KeyCode == Keys.Menu)
-                        {
-                            return;
-                        }
-
-                        newKeys = ke.KeyData;
-                        shortcutBox.Text = Helper_UI_Shortcuts.ToShortcutString(newKeys);
-
-                        if (newKeys == Keys.None)
-                        {
-                            errorLabel.Text = "Shortcut cannot be empty.";
-                            errorLabel.Visible = true;
-                        }
-                        else if (IsShortcutConflict(actionName, newKeys))
-                        {
-                            errorLabel.Text = "This shortcut is already assigned to another action in the same tab.";
-                            errorLabel.Visible = true;
-                        }
-                        else
-                        {
-                            errorLabel.Text = "";
-                            errorLabel.Visible = false;
-                        }
-
-                        ke.SuppressKeyPress = true;
-                    };
-
-                    Button okButton = new() { Text = "OK", Location = new Point(215, 110), Size = new Size(75, 23) };
-                    Button Control_Shortcuts_Button_Cancel = new()
-                    {
-                        Text = "Cancel",
-                        Location = new Point(295, 110),
-                        Size = new Size(75, 23)
-                    };
-
-                    okButton.Click += (s, args) =>
-                    {
-                        if (newKeys == Keys.None)
-                        {
-                            errorLabel.Text = "Shortcut cannot be empty.";
-                            errorLabel.Visible = true;
-                            return;
-                        }
-
-                        if (IsShortcutConflict(actionName, newKeys))
-                        {
-                            errorLabel.Text = "This shortcut is already assigned to another action in the same tab.";
-                            errorLabel.Visible = true;
-                            return;
-                        }
-
-                        errorLabel.Text = "";
-                        errorLabel.Visible = false;
-                        inputForm.DialogResult = DialogResult.OK;
-                        inputForm.Close();
-                    };
-                    Control_Shortcuts_Button_Cancel.Click += (s, args) =>
-                    {
-                        inputForm.DialogResult = DialogResult.Cancel;
-                        inputForm.Close();
-                    };
-
-                    inputForm.Controls.AddRange(new Control[]
-                    {
-                label, shortcutBox, errorLabel, okButton, Control_Shortcuts_Button_Cancel
-                    });
-                    inputForm.AcceptButton = okButton;
-                    inputForm.CancelButton = Control_Shortcuts_Button_Cancel;
-
-                    if (inputForm.ShowDialog(this) == DialogResult.OK)
-                    {
-                        string newShortcut = shortcutBox.Text.Trim();
-                        Control_Shortcuts_DataGridView_Shortcuts.Rows[e.RowIndex].Cells[1].Value = newShortcut;
-                        if (!string.IsNullOrEmpty(actionName))
-                        {
-                            Helper_UI_Shortcuts.ApplyShortcutFromDictionary(actionName, newKeys);
-                        }
-
+                        await _shortcutService.ResetToDefaultsAsync();
+                        await LoadShortcuts();
                         ShortcutsUpdated?.Invoke(this, EventArgs.Empty);
+                        StatusMessageChanged?.Invoke(this, "All shortcuts reset to defaults.");
                     }
                 }
+                catch (Exception ex)
+                {
+                    LoggingUtility.LogApplicationError(ex);
+                    StatusMessageChanged?.Invoke(this, $"Error resetting shortcuts: {ex.Message}");
+                }
             }
         }
 
-        private bool IsShortcutConflict(string? actionName, Keys newKeys)
+        private string GetShortcutGroup(string actionName)
         {
-            if (string.IsNullOrEmpty(actionName) || newKeys == Keys.None)
-            {
-                return false;
-            }
-
-            string group = GetShortcutGroup(actionName);
-
-            for (int i = 0; i < Control_Shortcuts_DataGridView_Shortcuts.Rows.Count; i++)
-            {
-                string? otherAction = Control_Shortcuts_DataGridView_Shortcuts.Rows[i].Cells[0].Value?.ToString();
-                if (otherAction == actionName)
-                {
-                    continue;
-                }
-
-                if (GetShortcutGroup(otherAction) != group)
-                {
-                    continue;
-                }
-
-                string shortcutString = Control_Shortcuts_DataGridView_Shortcuts.Rows[i].Cells[1].Value?.ToString() ?? "";
-                Keys otherKeys = Helper_UI_Shortcuts.FromShortcutString(shortcutString);
-                if (otherKeys == newKeys)
-                {
-                    return true;
-                }
-            }
-
-            return false;
+            if (string.IsNullOrEmpty(actionName)) return "General";
+            if (actionName.StartsWith("Inventory")) return "Inventory";
+            if (actionName.StartsWith("Remove")) return "Remove";
+            if (actionName.StartsWith("Transfer")) return "Transfer";
+            if (actionName.StartsWith("Advanced Inventory")) return "Advanced Inventory";
+            if (actionName.StartsWith("Advanced Remove")) return "Advanced Remove";
+            if (actionName.StartsWith("QuickButton")) return "Quick Buttons";
+            if (actionName.StartsWith("Shortcut_MainForm")) return "Navigation";
+            if (actionName.StartsWith("Shortcut_Transactions")) return "Transactions";
+            
+            return "General";
         }
 
-        private string GetShortcutGroup(string? actionName)
+        private string GetCategoryDisplayName(string category)
         {
-            if (string.IsNullOrEmpty(actionName))
+            return category switch
             {
-                return "";
-            }
-
-            if (actionName.StartsWith("Inventory"))
-            {
-                return "Inventory";
-            }
-
-            if (actionName.StartsWith("Advanced Inventory MultiLoc"))
-            {
-                return "AdvancedInventoryMultiLoc";
-            }
-
-            if (actionName.StartsWith("Advanced Inventory Import"))
-            {
-                return "AdvancedInventoryImport";
-            }
-
-            if (actionName.StartsWith("Advanced Inventory"))
-            {
-                return "AdvancedInventory";
-            }
-
-            if (actionName.StartsWith("Remove"))
-            {
-                return "Remove";
-            }
-
-            if (actionName.StartsWith("Transfer"))
-            {
-                return "Transfer";
-            }
-
-            return "";
+                "Inventory" => "Inventory Tab",
+                "Remove" => "Remove Tab",
+                "Transfer" => "Transfer Tab",
+                "Advanced Inventory" => "Advanced Inventory",
+                "Advanced Remove" => "Advanced Remove",
+                "Quick Buttons" => "Quick Buttons (Alt+0-9)",
+                "Navigation" => "Navigation",
+                "Transactions" => "Transactions Viewer",
+                _ => category
+            };
         }
 
-        private async Task Control_Shortcuts_Button_Save_Click(object sender, EventArgs e)
+        private string GetCategoryDescription(string category)
         {
-         
-            try
+            return category switch
             {
-                if (Control_Shortcuts_DataGridView_Shortcuts.IsCurrentCellInEditMode)
-                {
-                    Control_Shortcuts_DataGridView_Shortcuts.EndEdit();
-                }
+                "Inventory" => "Shortcuts for the main Inventory tab operations.",
+                "Remove" => "Shortcuts for the Remove tab operations.",
+                "Transfer" => "Shortcuts for the Transfer tab operations.",
+                "Advanced Inventory" => "Shortcuts for Advanced Inventory management.",
+                "Advanced Remove" => "Shortcuts for Advanced Remove operations.",
+                "Quick Buttons" => "Customizable shortcuts for the Quick Button bar.",
+                "Navigation" => "Global navigation shortcuts.",
+                "Transactions" => "Shortcuts for the Transaction Viewer.",
+                _ => "General application shortcuts."
+            };
+        }
 
-                if (_shortcutService == null)
-                {
-                    throw new Exception("Shortcut service not available.");
-                }
-
-                for (int i = 0; i < Control_Shortcuts_DataGridView_Shortcuts.Rows.Count; i++)
-                {
-                    DataGridViewRow row = Control_Shortcuts_DataGridView_Shortcuts.Rows[i];
-                    string? actionName = row.Cells[0].Value?.ToString();
-                    string shortcutString = row.Cells[1].Value?.ToString() ?? "";
-                    string? internalName = row.Cells[2].Value?.ToString();
-
-                    if (!string.IsNullOrEmpty(internalName))
-                    {
-                        Keys keys = Helper_UI_Shortcuts.FromShortcutString(shortcutString);
-                        
-                        // Update via service (persists to DB)
-                        await _shortcutService.UpdateShortcutAsync(internalName, keys);
-                        
-                        // Update helper for immediate effect
-                        if (!string.IsNullOrEmpty(actionName))
-                        {
-                            Helper_UI_Shortcuts.ApplyShortcutFromDictionary(actionName, keys);
-                        }
-                    }
-                }
-
-                ShortcutsUpdated?.Invoke(this, EventArgs.Empty);
-                StatusMessageChanged?.Invoke(this, "Shortcuts saved successfully.");
-            }
-            catch (Exception ex)
+        private string GetCategoryIcon(string category)
+        {
+            return category switch
             {
-                LoggingUtility.LogApplicationError(ex);
-                StatusMessageChanged?.Invoke(this, $"Error saving shortcuts: {ex.Message}");
-            }
+                "Inventory" => "📦",
+                "Remove" => "🗑️",
+                "Transfer" => "↔️",
+                "Advanced Inventory" => "🏭",
+                "Advanced Remove" => "📤",
+                "Quick Buttons" => "⚡",
+                "Navigation" => "🧭",
+                "Transactions" => "📝",
+                _ => "⚙️"
+            };
         }
     }
 }

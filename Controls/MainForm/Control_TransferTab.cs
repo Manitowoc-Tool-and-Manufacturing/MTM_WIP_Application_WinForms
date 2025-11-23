@@ -253,7 +253,8 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
         {
             try
             {
-                if (keyData == Core_WipAppVariables.Shortcut_Transfer_Search)
+                Keys searchKey = _shortcutService?.GetShortcutKey("Shortcut_Transfer_Search") ?? Core_WipAppVariables.Shortcut_Transfer_Search;
+                if (keyData == searchKey)
                 {
                     if (Control_TransferTab_Button_Search.Visible && Control_TransferTab_Button_Search.Enabled)
                     {
@@ -262,7 +263,8 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                     }
                 }
 
-                if (keyData == Core_WipAppVariables.Shortcut_Transfer_Transfer)
+                Keys transferKey = _shortcutService?.GetShortcutKey("Shortcut_Transfer_Transfer") ?? Core_WipAppVariables.Shortcut_Transfer_Transfer;
+                if (keyData == transferKey)
                 {
                     if (Control_TransferTab_Button_Transfer.Visible && Control_TransferTab_Button_Transfer.Enabled)
                     {
@@ -271,7 +273,8 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                     }
                 }
 
-                if (keyData == Core_WipAppVariables.Shortcut_Transfer_Reset)
+                Keys resetKey = _shortcutService?.GetShortcutKey("Shortcut_Transfer_Reset") ?? Core_WipAppVariables.Shortcut_Transfer_Reset;
+                if (keyData == resetKey)
                 {
                     if (Control_TransferTab_Button_Reset.Visible && Control_TransferTab_Button_Reset.Enabled)
                     {
@@ -280,7 +283,8 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                     }
                 }
 
-                if (keyData == Core_WipAppVariables.Shortcut_Transfer_ToggleRightPanel_Right)
+                Keys toggleRightKey = _shortcutService?.GetShortcutKey("Shortcut_Transfer_ToggleRightPanel_Right") ?? Core_WipAppVariables.Shortcut_Transfer_ToggleRightPanel_Right;
+                if (keyData == toggleRightKey)
                 {
                     if (Control_TransferTab_Button_Toggle_RightPanel.Visible &&
                         Control_TransferTab_Button_Toggle_RightPanel.Enabled)
@@ -290,7 +294,8 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                     }
                 }
 
-                if (keyData == Core_WipAppVariables.Shortcut_Transfer_ToggleRightPanel_Left)
+                Keys toggleLeftKey = _shortcutService?.GetShortcutKey("Shortcut_Transfer_ToggleRightPanel_Left") ?? Core_WipAppVariables.Shortcut_Transfer_ToggleRightPanel_Left;
+                if (keyData == toggleLeftKey)
                 {
                     if (Control_TransferTab_Button_Toggle_RightPanel.Visible &&
                         Control_TransferTab_Button_Toggle_RightPanel.Enabled)
@@ -309,8 +314,8 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                 if (MainFormInstance != null)
                 {
                     bool panelCollapsed = MainFormInstance.MainForm_SplitContainer_Middle.Panel2Collapsed;
-                    if ((!panelCollapsed && keyData == (Keys.Alt | Keys.Right)) ||
-                        (panelCollapsed && keyData == (Keys.Alt | Keys.Left)))
+                    if ((!panelCollapsed && keyData == toggleRightKey) ||
+                        (panelCollapsed && keyData == toggleLeftKey))
                     {
                         Control_TransferTab_Button_Toggle_RightPanel.PerformClick();
                         return true;

@@ -33,13 +33,11 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
         {
             Control_Shortcuts_GroupBox_Main = new GroupBox();
             Control_Shortcuts_TableLayout_Main = new TableLayoutPanel();
-            Control_Shortcuts_DataGridView_Shortcuts = new DataGridView();
+            Control_Shortcuts_FlowLayout_Cards = new FlowLayoutPanel();
             Control_Shortcuts_TableLayout_Bottom = new TableLayoutPanel();
             Control_Shortcuts_Button_Reset = new Button();
-            Control_Shortcuts_Button_Save = new Button();
             Control_Shortcuts_GroupBox_Main.SuspendLayout();
             Control_Shortcuts_TableLayout_Main.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)Control_Shortcuts_DataGridView_Shortcuts).BeginInit();
             Control_Shortcuts_TableLayout_Bottom.SuspendLayout();
             SuspendLayout();
             // 
@@ -60,7 +58,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             Control_Shortcuts_TableLayout_Main.AutoSize = true;
             Control_Shortcuts_TableLayout_Main.ColumnCount = 1;
             Control_Shortcuts_TableLayout_Main.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
-            Control_Shortcuts_TableLayout_Main.Controls.Add(Control_Shortcuts_DataGridView_Shortcuts, 0, 0);
+            Control_Shortcuts_TableLayout_Main.Controls.Add(Control_Shortcuts_FlowLayout_Cards, 0, 0);
             Control_Shortcuts_TableLayout_Main.Controls.Add(Control_Shortcuts_TableLayout_Bottom, 0, 1);
             Control_Shortcuts_TableLayout_Main.Dock = DockStyle.Fill;
             Control_Shortcuts_TableLayout_Main.Location = new Point(3, 19);
@@ -71,24 +69,24 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             Control_Shortcuts_TableLayout_Main.Size = new Size(629, 367);
             Control_Shortcuts_TableLayout_Main.TabIndex = 0;
             // 
-            // Control_Shortcuts_DataGridView_Shortcuts
+            // Control_Shortcuts_FlowLayout_Cards
             // 
-            Control_Shortcuts_DataGridView_Shortcuts.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            Control_Shortcuts_DataGridView_Shortcuts.Dock = DockStyle.Fill;
-            Control_Shortcuts_DataGridView_Shortcuts.Location = new Point(3, 3);
-            Control_Shortcuts_DataGridView_Shortcuts.Name = "Control_Shortcuts_DataGridView_Shortcuts";
-            Control_Shortcuts_DataGridView_Shortcuts.Size = new Size(623, 326);
-            Control_Shortcuts_DataGridView_Shortcuts.TabIndex = 1;
+            Control_Shortcuts_FlowLayout_Cards.AutoScroll = true;
+            Control_Shortcuts_FlowLayout_Cards.Dock = DockStyle.Fill;
+            Control_Shortcuts_FlowLayout_Cards.FlowDirection = FlowDirection.TopDown;
+            Control_Shortcuts_FlowLayout_Cards.Location = new Point(3, 3);
+            Control_Shortcuts_FlowLayout_Cards.Name = "Control_Shortcuts_FlowLayout_Cards";
+            Control_Shortcuts_FlowLayout_Cards.Size = new Size(623, 326);
+            Control_Shortcuts_FlowLayout_Cards.TabIndex = 1;
+            Control_Shortcuts_FlowLayout_Cards.WrapContents = false;
             // 
             // Control_Shortcuts_TableLayout_Bottom
             // 
             Control_Shortcuts_TableLayout_Bottom.AutoSize = true;
-            Control_Shortcuts_TableLayout_Bottom.ColumnCount = 3;
+            Control_Shortcuts_TableLayout_Bottom.ColumnCount = 2;
             Control_Shortcuts_TableLayout_Bottom.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
             Control_Shortcuts_TableLayout_Bottom.ColumnStyles.Add(new ColumnStyle());
-            Control_Shortcuts_TableLayout_Bottom.ColumnStyles.Add(new ColumnStyle());
             Control_Shortcuts_TableLayout_Bottom.Controls.Add(Control_Shortcuts_Button_Reset, 1, 0);
-            Control_Shortcuts_TableLayout_Bottom.Controls.Add(Control_Shortcuts_Button_Save, 2, 0);
             Control_Shortcuts_TableLayout_Bottom.Dock = DockStyle.Fill;
             Control_Shortcuts_TableLayout_Bottom.Location = new Point(3, 335);
             Control_Shortcuts_TableLayout_Bottom.Name = "Control_Shortcuts_TableLayout_Bottom";
@@ -99,21 +97,12 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             // 
             // Control_Shortcuts_Button_Reset
             // 
-            Control_Shortcuts_Button_Reset.Location = new Point(464, 3);
+            Control_Shortcuts_Button_Reset.Location = new Point(545, 3);
             Control_Shortcuts_Button_Reset.Name = "Control_Shortcuts_Button_Reset";
             Control_Shortcuts_Button_Reset.Size = new Size(75, 23);
             Control_Shortcuts_Button_Reset.TabIndex = 0;
-            Control_Shortcuts_Button_Reset.Text = "Reset";
+            Control_Shortcuts_Button_Reset.Text = "Reset All";
             Control_Shortcuts_Button_Reset.UseVisualStyleBackColor = true;
-            // 
-            // Control_Shortcuts_Button_Save
-            // 
-            Control_Shortcuts_Button_Save.Location = new Point(545, 3);
-            Control_Shortcuts_Button_Save.Name = "Control_Shortcuts_Button_Save";
-            Control_Shortcuts_Button_Save.Size = new Size(75, 23);
-            Control_Shortcuts_Button_Save.TabIndex = 1;
-            Control_Shortcuts_Button_Save.Text = "Save";
-            Control_Shortcuts_Button_Save.UseVisualStyleBackColor = true;
             // 
             // Control_Shortcuts
             // 
@@ -126,7 +115,6 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             Control_Shortcuts_GroupBox_Main.PerformLayout();
             Control_Shortcuts_TableLayout_Main.ResumeLayout(false);
             Control_Shortcuts_TableLayout_Main.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)Control_Shortcuts_DataGridView_Shortcuts).EndInit();
             Control_Shortcuts_TableLayout_Bottom.ResumeLayout(false);
             ResumeLayout(false);
             PerformLayout();
@@ -136,9 +124,8 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
 
         private GroupBox Control_Shortcuts_GroupBox_Main;
         private TableLayoutPanel Control_Shortcuts_TableLayout_Main;
-        private DataGridView Control_Shortcuts_DataGridView_Shortcuts;
+        private FlowLayoutPanel Control_Shortcuts_FlowLayout_Cards;
         private TableLayoutPanel Control_Shortcuts_TableLayout_Bottom;
         private Button Control_Shortcuts_Button_Reset;
-        private Button Control_Shortcuts_Button_Save;
     }
 }

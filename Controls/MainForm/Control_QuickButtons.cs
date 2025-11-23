@@ -7,6 +7,7 @@ using MTM_WIP_Application_Winforms.Logging;
 using MTM_WIP_Application_Winforms.Services;
 using MySql.Data.MySqlClient;
 using MTM_WIP_Application_Winforms.Controls.Shared;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace MTM_WIP_Application_Winforms.Controls.MainForm
 {
@@ -17,6 +18,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
         internal List<Button>? quickButtons; // Changed from static to instance
         public static Forms.MainForm.MainForm? MainFormInstance { get; set; }
         private Helper_StoredProcedureProgress? _progressHelper;
+        private readonly IShortcutService? _shortcutService;
 
         #endregion
 
@@ -49,6 +51,14 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                 });
 
             InitializeComponent();
+            
+            // Resolve shortcut service
+            _shortcutService = Program.ServiceProvider?.GetService<IShortcutService>();
+            if (_shortcutService != null && !string.IsNullOrEmpty(Model_Application_Variables.User))
+            {
+                // Initialize asynchronously
+                _ = _shortcutService.InitializeAsync(Model_Application_Variables.User);
+            }
 
             // Add padding to the main control as requested
             this.Padding = new Padding(3);
@@ -307,9 +317,14 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                             quickButtons[i].Text = string.Empty;
                         }
 
+                        string shortcutId = $"QuickButton_{displayPosition:D2}";
+                        string shortcutDisplay = _shortcutService != null 
+                            ? Helper_UI_Shortcuts.GetShortcutDisplay(shortcutId, _shortcutService, Keys.None)
+                            : $"Alt+{displayPosition % 10}";
+
                         string tooltipText = partId != null && operation != null && quantity != null
-                            ? $"Part ID: {partId}, Operation: {operation}, Quantity: {quantity}\nPosition: {displayPosition}"
-                            : $"Position: {displayPosition}";
+                            ? $"Part ID: {partId}, Operation: {operation}, Quantity: {quantity}\nPosition: {displayPosition}\nShortcut: {shortcutDisplay}"
+                            : $"Position: {displayPosition}\nShortcut: {shortcutDisplay}";
                         Control_QuickButtons_Tooltip.SetToolTip(quickButtons[i], tooltipText);
 
                         quickButtons[i].Tag = new { partId, operation, quantity, position = displayPosition };
@@ -326,15 +341,21 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
 
                     for (; i < quickButtons.Count; i++)
                     {
+                        int displayPosition = i + 1;
+                        string shortcutId = $"QuickButton_{displayPosition:D2}";
+                        string shortcutDisplay = _shortcutService != null 
+                            ? Helper_UI_Shortcuts.GetShortcutDisplay(shortcutId, _shortcutService, Keys.None)
+                            : $"Alt+{displayPosition % 10}";
+
                         quickButtons[i].Controls.Clear();
                         quickButtons[i].Text = string.Empty;
-                        Control_QuickButtons_Tooltip.SetToolTip(quickButtons[i], $"Position: {i + 1}");
+                        Control_QuickButtons_Tooltip.SetToolTip(quickButtons[i], $"Position: {displayPosition}\nShortcut: {shortcutDisplay}");
                         quickButtons[i].Tag = new
                         {
                             partId = (string?)null,
                             operation = (string?)null,
                             quantity = (int?)null,
-                            position = i + 1
+                            position = displayPosition
                         };
                         quickButtons[i].Visible = false;
                     }
@@ -415,6 +436,23 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             button.FlatStyle = FlatStyle.Flat; // Flat style for custom hover effects
             button.FlatAppearance.BorderSize = 1;
             button.FlatAppearance.BorderColor = SystemColors.ControlDark;
+
+            // Register shortcut for this button if it has a position
+            if (button.Tag != null)
+            {
+                dynamic tag = button.Tag;
+                int position = tag.position;
+                string shortcutId = $"QuickButton_{position:D2}";
+                
+                // Register with shortcut service if not already registered
+                // This ensures the shortcut is available for configuration
+                // Note: We don't await here as this is UI thread, registration is fast or cached
+                if (_shortcutService != null)
+                {
+                    // Check if shortcut is reserved/registered
+                    // If not, we could register it, but shortcuts are typically pre-defined in JSON
+                }
+            }
 
             // Calculate adaptive font size based on button height
             // Base calculation: button height / 6 for Part ID, / 8 for Op/Qty

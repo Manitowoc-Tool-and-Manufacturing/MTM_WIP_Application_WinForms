@@ -5,6 +5,7 @@ using MTM_WIP_Application_Winforms.Logging;
 using MTM_WIP_Application_Winforms.Models;
 using MTM_WIP_Application_Winforms.Services;
 using MTM_WIP_Application_Winforms.Helpers;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace MTM_WIP_Application_Winforms.Forms.Transactions;
 
@@ -21,6 +22,7 @@ internal partial class Transactions : ThemedForm
     private readonly string _currentUser;
     private readonly bool _isAdmin;
     private Model_Transactions_SearchResult? _currentSearchResults;
+    private readonly IShortcutService? _shortcutService;
 
     #endregion
 
@@ -38,7 +40,13 @@ internal partial class Transactions : ThemedForm
         _isAdmin = Model_Application_Variables.UserTypeDeveloper || Model_Application_Variables.UserTypeAdmin;
         _viewModel = new Model_Transactions_ViewModel();
 
-        
+        // Resolve shortcut service
+        _shortcutService = Program.ServiceProvider?.GetService<IShortcutService>();
+        if (_shortcutService != null && !string.IsNullOrEmpty(Model_Application_Variables.User))
+        {
+            // Initialize asynchronously
+            _ = _shortcutService.InitializeAsync(Model_Application_Variables.User);
+        }
 
         Transactions_UserControl_Search.SetExportPrintButtonsEnabled(false);
         Transactions_UserControl_Search.SetInformationPanelCollapsed(!Transactions_UserControl_Grid.InformationPanelVisible);
@@ -462,7 +470,8 @@ internal partial class Transactions : ThemedForm
         }
 
         // Check if Delete key was pressed
-        if (e.KeyCode != Keys.Delete)
+        Keys deleteKey = _shortcutService?.GetShortcutKey("Shortcut_Transactions_Delete") ?? Keys.Delete;
+        if (e.KeyCode != deleteKey && e.KeyCode != Keys.Delete) // Support both configured and default
         {
             return;
         }

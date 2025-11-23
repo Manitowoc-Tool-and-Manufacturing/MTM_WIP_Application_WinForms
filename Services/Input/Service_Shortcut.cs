@@ -110,9 +110,21 @@ namespace MTM_WIP_Application_Winforms.Services
             return string.Empty;
         }
 
-        public async Task<bool> UpdateShortcutAsync(string shortcutName, Keys newKeys)
+        public async Task<Model_Dao_Result<bool>> UpdateShortcutAsync(string shortcutName, Keys newKeys)
         {
-            if (string.IsNullOrEmpty(_currentUserName)) return false;
+            if (string.IsNullOrEmpty(_currentUserName)) 
+                return new Model_Dao_Result<bool> { IsSuccess = false, ErrorMessage = "User not initialized." };
+
+            // Validation
+            if (IsReservedKey(newKeys))
+            {
+                return new Model_Dao_Result<bool> { IsSuccess = false, ErrorMessage = "This key combination is reserved for Quick Buttons (Alt+0-9)." };
+            }
+
+            if (IsDuplicate(newKeys, shortcutName))
+            {
+                return new Model_Dao_Result<bool> { IsSuccess = false, ErrorMessage = "This key combination is already in use." };
+            }
 
             var result = await _dao.UpsertUserShortcutAsync(_currentUserName, shortcutName, (int)newKeys);
             if (result.IsSuccess)
@@ -122,9 +134,9 @@ namespace MTM_WIP_Application_Winforms.Services
                 {
                     shortcut.Keys = newKeys;
                 }
-                return true;
+                return new Model_Dao_Result<bool> { IsSuccess = true, Data = true };
             }
-            return false;
+            return new Model_Dao_Result<bool> { IsSuccess = false, ErrorMessage = result.ErrorMessage };
         }
 
         public async Task<bool> ResetToDefaultsAsync()
@@ -150,6 +162,39 @@ namespace MTM_WIP_Application_Winforms.Services
             var deleteKey = GetShortcutKey("Delete");
             if (deleteKey == Keys.None) deleteKey = Keys.Delete; // Default
             return keyData == deleteKey;
+        }
+
+        public bool IsReservedKey(Keys keyData)
+        {
+            // Check if key is Alt+0 through Alt+9 (QuickButtons)
+            // Alt modifier is Keys.Alt (262144)
+            // D0 is 48, D9 is 57
+            
+            if ((keyData & Keys.Alt) == Keys.Alt)
+            {
+                Keys keyCode = keyData & Keys.KeyCode;
+                if (keyCode >= Keys.D0 && keyCode <= Keys.D9)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        public bool IsDuplicate(Keys keyData, string excludeShortcutName)
+        {
+            if (keyData == Keys.None) return false;
+
+            foreach (var shortcut in _shortcutCache.Values)
+            {
+                if (shortcut.Name == excludeShortcutName) continue;
+
+                if (shortcut.Keys == keyData)
+                {
+                    return true;
+                }
+            }
+            return false;
         }
     }
 }

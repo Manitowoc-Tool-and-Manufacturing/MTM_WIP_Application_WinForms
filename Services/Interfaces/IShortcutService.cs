@@ -22,7 +22,7 @@ namespace MTM_WIP_Application_Winforms.Services
         /// <summary>
         /// Updates a user's shortcut preference.
         /// </summary>
-        Task<bool> UpdateShortcutAsync(string shortcutName, Keys newKeys);
+        Task<Model_Dao_Result<bool>> UpdateShortcutAsync(string shortcutName, Keys newKeys);
 
         /// <summary>
         /// Resets all shortcuts to system defaults for the current user.
@@ -38,5 +38,15 @@ namespace MTM_WIP_Application_Winforms.Services
         /// Checks if the provided key data matches the Delete shortcut.
         /// </summary>
         bool IsDelete(Keys keyData);
+
+        /// <summary>
+        /// Checks if the key combination is reserved (e.g. Alt+0-9).
+        /// </summary>
+        bool IsReservedKey(Keys keyData);
+
+        /// <summary>
+        /// Checks if the key combination is already in use by another shortcut.
+        /// </summary>
+        bool IsDuplicate(Keys keyData, string excludeShortcutName);
     }
 }
