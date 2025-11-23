@@ -239,8 +239,8 @@ Running VersionChecker...
 [13:19:12.314] [MEDIUM] ✅ DB PROCEDURE COMPLETE: log_changelog_Get_Current (75ms) - 1 rows
 [13:19:12.318] [MEDIUM] ⬅️ EXITING Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync (90ms)
 [13:19:12.321] [HIGH  ] ⏱️ PERFORMANCE COMPLETE: SP_log_changelog_Get_Current (96ms)
-Database version retrieved: 6.3.1.0
-Version labels updated - App: 6.3.1.0, DB: 6.3.1.0
+Database version retrieved: 6.3.3.0
+Version labels updated - App: 6.3.3.0, DB: 6.3.3.0
 [DEBUG] [SplashScreenForm.UpdateProgress] Progress: 70, Status: Initializing theme system...
 [13:19:12.348] [HIGH  ] ⏱️ PERFORMANCE START: SP_sys_theme_GetAll
 [13:19:12.351] [MEDIUM] ➡️ ENTERING Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync
@@ -612,8 +612,8 @@ Running VersionChecker...
 [13:19:42.238] [MEDIUM] ✅ DB PROCEDURE COMPLETE: log_changelog_Get_Current (10ms) - 1 rows
 [13:19:42.251] [MEDIUM] ⬅️ EXITING Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync (22ms)
 [13:19:42.253] [HIGH  ] ⏱️ PERFORMANCE COMPLETE: SP_log_changelog_Get_Current (27ms)
-Database version retrieved: 6.3.1.0
-Version labels updated - App: 6.3.1.0, DB: 6.3.1.0
+Database version retrieved: 6.3.3.0
+Version labels updated - App: 6.3.3.0, DB: 6.3.3.0
 [ConnectionRecovery] UpdateConnectionStrengthAsync called
 [ConnectionRecovery] Strength: 5, Ping: 1, TimerActive: False
 Resetting user controls...
@@ -835,8 +835,8 @@ Running VersionChecker...
 [13:20:12.245] [MEDIUM] ✅ DB PROCEDURE COMPLETE: log_changelog_Get_Current (16ms) - 1 rows
 [13:20:12.248] [MEDIUM] ⬅️ EXITING Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync (17ms)
 [13:20:12.251] [HIGH  ] ⏱️ PERFORMANCE COMPLETE: SP_log_changelog_Get_Current (26ms)
-Database version retrieved: 6.3.1.0
-Version labels updated - App: 6.3.1.0, DB: 6.3.1.0
+Database version retrieved: 6.3.3.0
+Version labels updated - App: 6.3.3.0, DB: 6.3.3.0
 [13:20:13.014] [HIGH  ] ⏱️ PERFORMANCE START: SP_md_part_ids_Get_All
 [13:20:13.022] [MEDIUM] ➡️ ENTERING Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync
 [13:20:13.031] [MEDIUM] 🗄️ DB PROCEDURE START: md_part_ids_Get_All

@@ -486,6 +486,58 @@ internal static class Dao_ErrorReports
         }
     }
 
+    /// <summary>
+    /// Deletes an error report using sp_error_reports_Delete.
+    /// </summary>
+    /// <param name="reportId">The report identifier to delete.</param>
+    /// <param name="connection">Optional database connection.</param>
+    /// <param name="transaction">Optional database transaction.</param>
+    /// <returns>Model_Dao_Result indicating success or failure.</returns>
+    public static async Task<Model_Dao_Result<bool>> DeleteReportAsync(
+        int reportId,
+        MySqlConnection? connection = null,
+        MySqlTransaction? transaction = null)
+    {
+        if (reportId <= 0)
+        {
+            return Model_Dao_Result<bool>.Failure("Report ID must be greater than zero.");
+        }
+
+        try
+        {
+            string connectionString = Helper_Database_Variables.GetConnectionString(null, null, null, null);
+
+            var parameters = new Dictionary<string, object>
+            {
+                ["p_ReportID"] = reportId
+            };
+
+            var result = await Helper_Database_StoredProcedure.ExecuteNonQueryWithStatusAsync(
+                connectionString,
+                "sp_error_reports_Delete",
+                parameters,
+                connection: connection,
+                transaction: transaction);
+
+            if (!result.IsSuccess)
+            {
+                LoggingUtility.Log(
+                    $"[Dao_ErrorReports] Failed to delete report {reportId}: {result.ErrorMessage}");
+                return Model_Dao_Result<bool>.Failure(result.ErrorMessage ?? "Failed to delete report.");
+            }
+
+            LoggingUtility.LogApplicationInfo($"[Dao_ErrorReports] Deleted report {reportId}.");
+            return Model_Dao_Result<bool>.Success(true, "Report deleted successfully.");
+        }
+        catch (Exception ex)
+        {
+            LoggingUtility.LogApplicationError(ex);
+            return Model_Dao_Result<bool>.Failure(
+                "An unexpected error occurred while deleting the report.",
+                ex);
+        }
+    }
+
     #endregion
 
     #region Helpers

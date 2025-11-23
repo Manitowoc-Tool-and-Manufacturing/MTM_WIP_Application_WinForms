@@ -122,6 +122,62 @@ namespace MTM_WIP_Application_Winforms.Controls.ErrorReports
 
         #region Key Processing
 
+        protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
+        {
+            // Check for Delete key on selected row
+            var shortcutService = Program.ServiceProvider?.GetService(typeof(IShortcutService)) as IShortcutService;
+            if (shortcutService != null && shortcutService.IsDelete(keyData))
+            {
+                if (dgvErrorReports.Focused && HasSelectedRows)
+                {
+                    DeleteSelectedReportAsync();
+                    return true;
+                }
+            }
+            else if (keyData == Keys.Delete) // Fallback if service not available or not configured
+            {
+                if (dgvErrorReports.Focused && HasSelectedRows)
+                {
+                    DeleteSelectedReportAsync();
+                    return true;
+                }
+            }
+
+            return base.ProcessCmdKey(ref msg, keyData);
+        }
+
+        private async void DeleteSelectedReportAsync()
+        {
+            var reportId = SelectedReportId;
+            if (reportId == null) return;
+
+            var result = MessageBox.Show(
+                "Are you sure you want to delete this error report? This action cannot be undone.",
+                "Confirm Delete",
+                MessageBoxButtons.YesNo,
+                MessageBoxIcon.Warning);
+
+            if (result == DialogResult.Yes)
+            {
+                try
+                {
+                    var deleteResult = await Dao_ErrorReports.DeleteReportAsync(reportId.Value);
+                    if (deleteResult.IsSuccess)
+                    {
+                        await LoadReportsAsync(_lastFilter);
+                    }
+                    else
+                    {
+                        Service_ErrorHandler.ShowWarning(deleteResult.ErrorMessage, "Delete Failed");
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Medium, controlName: Name);
+                }
+            }
+        }
+
         private void HandleLoadFailure(string message, Exception? exception = null)
         {
             _bindingSource.DataSource = null;

@@ -908,7 +908,7 @@ Service_Validation.RegisterValidator("WorkOrder", new WorkOrderValidator());
 - **PATCH**: Bug fixes, performance improvements, non-breaking refactors
 - **BUILD**: Automated build number (incremented per build)
 
-**Current version** (from AssemblyInfo.cs): `6.3.1.0`
+**Current version** (from AssemblyInfo.cs): `6.3.3.0`
 
 ### Database Migration Strategy
 

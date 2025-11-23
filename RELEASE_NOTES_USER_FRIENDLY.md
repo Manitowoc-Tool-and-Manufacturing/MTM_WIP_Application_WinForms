@@ -8,7 +8,8 @@
 
 | Date | Version | Summary | What to do |
 | --- | --- | --- | --- |
-| [Nov 22, 2025](#latest-update---november-22-2025-version-632) | [6.3.2](#latest-update---november-22-2025-version-632) | Print dialog improvements: Notes column, collapsible sidebars, and better printer reliability. | Try the new "Add Notes Column" option when printing! |
+| [Nov 23, 2025](#latest-update---november-23-2025-version-633) | [6.3.3](#latest-update---november-23-2025-version-633) | System reliability improvements and error report management tools. | Nothing—automatic improvement. |
+| [Nov 22, 2025](#previous-update---november-22-2025-version-632) | [6.3.2](#previous-update---november-22-2025-version-632) | Print dialog improvements: Notes column, collapsible sidebars, and better printer reliability. | Try the new "Add Notes Column" option when printing! |
 | [Nov 20, 2025](#previous-update---november-20-2025-version-631) | [6.3.1](#previous-update---november-20-2025-version-631) | User Management screen updated to match new card interface style. | Nothing—enjoy the consistent look! |
 | [Nov 20, 2025](#previous-update---november-20-2025-version-630) | [6.3.0](#previous-update---november-20-2025-version-630) | Complete redesign of Settings management screens with modern card interface. (User Managment Screens are still the same.) | Check out the new look in Settings! |
 | [Nov 15, 2025](#previous-update---november-15-2025-version-623) | [6.2.3](#previous-update---november-15-2025-version-623) | Search buttons added to all main entry tabs for quick access to full lists. | Nothing—just click 🔎 buttons to access dropdown lists! |
@@ -35,7 +36,25 @@
 
 ---
 
-## Latest Update - November 22, 2025 (Version 6.3.2)
+## Latest Update - November 23, 2025 (Version 6.3.3)
+
+**What Changed**: We've improved how the system handles errors to help IT support you better, and added tools for IT to manage those reports.  
+**Do I Need To Do Anything?**: No - these improvements happen automatically.
+
+---
+
+### 🎯 What This Means For You
+
+#### System Reliability & Support Tools
+
+**What's new**:
+- **Automatic Error Reporting**: When an error occurs, the system now automatically sends a report to IT in the background. You don't need to do anything.
+- **Report Management (For IT)**: The Error Report Viewer now supports deleting reports, making it easier to keep the list clean.
+- **Keyboard Shortcuts**: You can now use the **Delete** key to remove reports in the viewer.
+
+---
+
+## Previous Update - November 22, 2025 (Version 6.3.2)
 
 **What Changed**: The Print dialog has been improved with a new "Notes" column for handwritten corrections, collapsible sidebars for better preview visibility, and improved printer reliability.  
 **Do I Need To Do Anything?**: No - but try the new features next time you print!

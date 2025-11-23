@@ -146,5 +146,12 @@ namespace MTM_WIP_Application_Winforms.Services
         {
             return _shortcutCache.Values.ToList();
         }
+
+        public bool IsDelete(Keys keyData)
+        {
+            var deleteKey = GetShortcutKey("Delete");
+            if (deleteKey == Keys.None) deleteKey = Keys.Delete; // Default
+            return keyData == deleteKey;
+        }
     }
 }

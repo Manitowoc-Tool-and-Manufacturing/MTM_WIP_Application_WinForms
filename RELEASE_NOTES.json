@@ -1,5 +1,11 @@
 [
   {
+    "Version": "6.3.3",
+    "Date": "November 23, 2025",
+    "Summary": "System reliability improvements, centralized grid system, smart transaction deletion, and enhanced search capabilities.",
+    "Details": "<h3>System Reliability & Support Tools</h3><p><strong>What's new</strong>:</p><ul><li><strong>Automatic Error Reporting</strong>: When an error occurs, the system now automatically sends a report to IT in the background.</li><li><strong>Report Management (For IT)</strong>: The Error Report Viewer now supports deleting reports.</li><li><strong>Keyboard Shortcuts</strong>: You can now use the <strong>Delete</strong> key to remove reports in the viewer.</li></ul><h3>Centralized Grid System</h3><p><strong>What's new</strong>:</p><ul><li><strong>Unified Grid Logic</strong>: All data grids (Transfer, Remove, History) now use a shared service for consistent behavior.</li><li><strong>Consistent Printing</strong>: Printing works exactly the same way across all tabs, with the same options and layout.</li><li><strong>Standardized Theming</strong>: Grid colors and styles are now applied centrally, ensuring a uniform look.</li></ul><h3>Smart Transaction Deletion</h3><p><strong>What's new</strong>:</p><ul><li><strong>Batch Awareness</strong>: When deleting a transaction, the system now detects if it's part of a batch (e.g., related IN/OUT/TRANSFER records).</li><li><strong>One-Click Cleanup</strong>: You are prompted to delete all related records in the batch automatically, keeping your data clean.</li></ul><h3>Transaction Search Improvements</h3><p><strong>What's fixed</strong>:</p><ul><li><strong>Precise Filtering</strong>: Fixed an issue where selecting specific combinations of transaction types (e.g., \"IN\" and \"TRANSFER\" only) wouldn't filter correctly.</li><li><strong>Better Location Search</strong>: Smart search now better handles specific \"From\" and \"To\" location filters.</li></ul>"
+  },
+  {
     "Version": "6.3.2",
     "Date": "November 22, 2025",
     "Summary": "Print dialog improvements: Notes column, collapsible sidebars, and better printer reliability.",

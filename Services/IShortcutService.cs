@@ -34,5 +34,10 @@ namespace MTM_WIP_Application_Winforms.Services
         /// Gets all shortcuts for the current user.
         /// </summary>
         List<Model_Shortcut> GetAllShortcuts();
+
+        /// <summary>
+        /// Checks if the provided key data matches the Delete shortcut.
+        /// </summary>
+        bool IsDelete(Keys keyData);
     }
 }

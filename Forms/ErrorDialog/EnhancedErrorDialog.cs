@@ -144,6 +144,39 @@ namespace MTM_WIP_Application_Winforms.Forms.ErrorDialog
             }
         }
 
+        protected override async void OnLoad(EventArgs e)
+        {
+            base.OnLoad(e);
+            await SendQuietErrorReportAsync();
+        }
+
+        private async System.Threading.Tasks.Task SendQuietErrorReportAsync()
+        {
+            try
+            {
+                // Create error report from current exception
+                var report = new MTM_WIP_Application_WinForms.Models.Model_ErrorReport_Core
+                {
+                    UserName = Model_Application_Variables.User,
+                    MachineName = Environment.MachineName,
+                    AppVersion = Model_Application_Variables.UserVersion,
+                    ErrorType = _exception.GetType().Name,
+                    ErrorSummary = _exception.Message,
+                    TechnicalDetails = _exception.ToString(),
+                    CallStack = _exception.StackTrace ?? string.Empty,
+                    ReportDate = DateTime.Now,
+                    UserNotes = "(Auto-generated report)"
+                };
+
+                await MTM_WIP_Application_Winforms.Data.Dao_ErrorReports.InsertReportAsync(report);
+            }
+            catch (Exception ex)
+            {
+                // Quietly fail, just log to file
+                LoggingUtility.LogApplicationError(ex);
+            }
+        }
+
         private void SetTitleAndIcon()
         {
             string severityText = _severity switch

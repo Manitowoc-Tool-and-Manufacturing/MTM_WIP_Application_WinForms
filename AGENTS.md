@@ -543,6 +543,6 @@ Refer to `.mcp/mtm-workflow/README.md` for full tool documentation.
 ---
 
 **Last Updated**: 2025-11-12
-**Project Version**: 6.3.1.0
+**Project Version**: 6.3.3.0
 **Maintained By**: Manitowoc Tool and Manufacturing
 **For Questions**: Refer to `.github/copilot-instructions.md` for coding patterns
