@@ -76,6 +76,9 @@
         <Content Include="Resources\MTM.png">
             <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </Content>
+        <Content Include="Resources\default_shortcuts.json">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </Content>
     </ItemGroup>
 
     <!-- ✅ HELP SYSTEM FILES - Copy Documentation/Help folder to build output -->

@@ -1,0 +1,182 @@
+[
+  {
+    "Name": "Shortcut_AdvInv_Import_ImportExcel",
+    "Keys": 131145,
+    "Description": "Import Excel Data",
+    "Category": "AdvancedInventory"
+  },
+  {
+    "Name": "Shortcut_AdvInv_Import_Normal",
+    "Keys": 131138,
+    "Description": "Return to Normal Inventory (Import)",
+    "Category": "AdvancedInventory"
+  },
+  {
+    "Name": "Shortcut_AdvInv_Import_OpenExcel",
+    "Keys": 131141,
+    "Description": "Open Excel File",
+    "Category": "AdvancedInventory"
+  },
+  {
+    "Name": "Shortcut_AdvInv_Import_Save",
+    "Keys": 131155,
+    "Description": "Save Imported Data",
+    "Category": "AdvancedInventory"
+  },
+  {
+    "Name": "Shortcut_AdvInv_Multi_Normal",
+    "Keys": 131138,
+    "Description": "Return to Normal Inventory (Multi)",
+    "Category": "AdvancedInventory"
+  },
+  {
+    "Name": "Shortcut_AdvInv_Multi_AddLoc",
+    "Keys": 131085,
+    "Description": "Add Location (Multi)",
+    "Category": "AdvancedInventory"
+  },
+  {
+    "Name": "Shortcut_AdvInv_Multi_Reset",
+    "Keys": 131154,
+    "Description": "Reset Multi Entry",
+    "Category": "AdvancedInventory"
+  },
+  {
+    "Name": "Shortcut_AdvInv_Multi_SaveAll",
+    "Keys": 131155,
+    "Description": "Save All (Multi)",
+    "Category": "AdvancedInventory"
+  },
+  {
+    "Name": "Shortcut_AdvInv_Normal",
+    "Keys": 131138,
+    "Description": "Return to Normal Inventory",
+    "Category": "AdvancedInventory"
+  },
+  {
+    "Name": "Shortcut_AdvInv_Reset",
+    "Keys": 131154,
+    "Description": "Reset Single Entry",
+    "Category": "AdvancedInventory"
+  },
+  {
+    "Name": "Shortcut_AdvInv_Save",
+    "Keys": 131155,
+    "Description": "Save Single Entry",
+    "Category": "AdvancedInventory"
+  },
+  {
+    "Name": "Shortcut_AdvInv_Send",
+    "Keys": 131085,
+    "Description": "Send Single Entry",
+    "Category": "AdvancedInventory"
+  },
+  {
+    "Name": "Shortcut_Remove_Delete",
+    "Keys": 46,
+    "Description": "Delete Selected Items",
+    "Category": "Remove"
+  },
+  {
+    "Name": "Shortcut_Remove_Normal",
+    "Keys": 131138,
+    "Description": "Return to Normal Remove",
+    "Category": "Remove"
+  },
+  {
+    "Name": "Shortcut_Remove_Reset",
+    "Keys": 131154,
+    "Description": "Reset Advanced Remove",
+    "Category": "Remove"
+  },
+  {
+    "Name": "Shortcut_Remove_Search",
+    "Keys": 131155,
+    "Description": "Search Advanced Remove",
+    "Category": "Remove"
+  },
+  {
+    "Name": "Shortcut_Remove_Undo",
+    "Keys": 131162,
+    "Description": "Undo Last Deletion",
+    "Category": "Remove"
+  },
+  {
+    "Name": "Shortcut_Inventory_Advanced",
+    "Keys": 196673,
+    "Description": "Open Advanced Entry",
+    "Category": "Inventory"
+  },
+  {
+    "Name": "Shortcut_Inventory_Reset",
+    "Keys": 131154,
+    "Description": "Reset Inventory Tab",
+    "Category": "Inventory"
+  },
+  {
+    "Name": "Shortcut_Inventory_Save",
+    "Keys": 131155,
+    "Description": "Save Inventory Transaction",
+    "Category": "Inventory"
+  },
+  {
+    "Name": "Shortcut_Inventory_ToggleRightPanel_Right",
+    "Keys": 262183,
+    "Description": "Toggle Right Panel (Right)",
+    "Category": "Inventory"
+  },
+  {
+    "Name": "Shortcut_Inventory_ToggleRightPanel_Left",
+    "Keys": 262181,
+    "Description": "Toggle Right Panel (Left)",
+    "Category": "Inventory"
+  },
+  {
+    "Name": "Shortcut_Transfer_Reset",
+    "Keys": 131154,
+    "Description": "Reset Transfer Tab",
+    "Category": "Transfer"
+  },
+  {
+    "Name": "Shortcut_Transfer_Search",
+    "Keys": 131155,
+    "Description": "Search Inventory",
+    "Category": "Transfer"
+  },
+  {
+    "Name": "Shortcut_Transfer_ToggleRightPanel_Right",
+    "Keys": 262183,
+    "Description": "Toggle Right Panel (Right)",
+    "Category": "Transfer"
+  },
+  {
+    "Name": "Shortcut_Transfer_ToggleRightPanel_Left",
+    "Keys": 262181,
+    "Description": "Toggle Right Panel (Left)",
+    "Category": "Transfer"
+  },
+  {
+    "Name": "Shortcut_Transfer_Transfer",
+    "Keys": 131156,
+    "Description": "Transfer Selected Items",
+    "Category": "Transfer"
+  },
+  {
+    "Name": "Shortcut_MainForm_Tab1",
+    "Keys": 131121,
+    "Description": "Switch to Inventory Tab",
+    "Category": "MainForm"
+  },
+  {
+    "Name": "Shortcut_MainForm_Tab2",
+    "Keys": 131122,
+    "Description": "Switch to Remove Tab",
+    "Category": "MainForm"
+  },
+  {
+    "Name": "Shortcut_MainForm_Tab3",
+    "Keys": 131123,
+    "Description": "Switch to Transfer Tab",
+    "Category": "MainForm"
+  }
+]

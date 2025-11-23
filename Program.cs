@@ -33,10 +33,12 @@ namespace MTM_WIP_Application_Winforms
             // Register theme services (includes IThemeProvider, IThemeStore, all 17 appliers)
             services.AddThemeServices();
 
+            // Register Shortcut services
+            services.AddSingleton<IDao_Shortcuts, Dao_Shortcuts>();
+            services.AddSingleton<IShortcutService, Service_Shortcut>();
+
             // Build the service provider
             ServiceProvider = services.BuildServiceProvider();
-
-
         }
 
         #endregion

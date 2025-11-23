@@ -14,6 +14,7 @@ using MTM_WIP_Application_Winforms.Helpers;
 using MTM_WIP_Application_Winforms.Logging;
 using MTM_WIP_Application_Winforms.Models;
 using MTM_WIP_Application_Winforms.Services;
+using Microsoft.Extensions.DependencyInjection;
 using static System.Int32;
 
 namespace MTM_WIP_Application_Winforms.Controls.MainForm
@@ -30,6 +31,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
         private Control_TextAnimationSequence? _searchPanelAnimator;
         private bool _isSearchPanelCollapsed;
         private ToolTip? _searchPanelToggleToolTip;
+        private readonly IShortcutService? _shortcutService;
 
         #endregion
 
@@ -80,7 +82,16 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                 });
 
             InitializeComponent();
-SetStyle(ControlStyles.OptimizedDoubleBuffer, true);
+            
+            // Resolve shortcut service
+            _shortcutService = Program.ServiceProvider?.GetService<IShortcutService>();
+            if (_shortcutService != null && !string.IsNullOrEmpty(Model_Application_Variables.User))
+            {
+                // Initialize asynchronously
+                _ = _shortcutService.InitializeAsync(Model_Application_Variables.User);
+            }
+
+            SetStyle(ControlStyles.OptimizedDoubleBuffer, true);
             Service_DebugTracer.TraceUIAction("THEME_APPLICATION", nameof(Control_RemoveTab),
                 new Dictionary<string, object>
                 {
@@ -125,11 +136,11 @@ SetStyle(ControlStyles.OptimizedDoubleBuffer, true);
                 });
             ToolTip toolTip = new();
             toolTip.SetToolTip(Control_RemoveTab_Button_Search,
-                $"Shortcut: {Helper_UI_Shortcuts.ToShortcutString(Core_WipAppVariables.Shortcut_Remove_Search)}");
+                $"Shortcut: {Helper_UI_Shortcuts.GetShortcutDisplay("Shortcut_Remove_Search", _shortcutService, Core_WipAppVariables.Shortcut_Remove_Search)}");
             toolTip.SetToolTip(Control_RemoveTab_Button_Delete,
-                $"Shortcut: {Helper_UI_Shortcuts.ToShortcutString(Core_WipAppVariables.Shortcut_Remove_Delete)}");
+                $"Shortcut: {Helper_UI_Shortcuts.GetShortcutDisplay("Shortcut_Remove_Delete", _shortcutService, Core_WipAppVariables.Shortcut_Remove_Delete)}");
             toolTip.SetToolTip(Control_RemoveTab_Button_Reset,
-                $"Shortcut: {Helper_UI_Shortcuts.ToShortcutString(Core_WipAppVariables.Shortcut_Remove_Reset)}");
+                $"Shortcut: {Helper_UI_Shortcuts.GetShortcutDisplay("Shortcut_Remove_Reset", _shortcutService, Core_WipAppVariables.Shortcut_Remove_Reset)}");
             toolTip.SetToolTip(Control_RemoveTab_Button_Toggle_InputPanel, "Collapse search panel");
             _searchPanelToggleToolTip = toolTip;
 
@@ -1058,14 +1069,17 @@ SetStyle(ControlStyles.OptimizedDoubleBuffer, true);
                     }
                 }
 
-                // Hide Color/WorkOrder columns if not a color-tracked part
-                if (Control_RemoveTab_DataGridView_Main.Columns.Contains("ColorCode"))
-                    Control_RemoveTab_DataGridView_Main.Columns["ColorCode"].Visible = colorTrackedPart;
-                if (Control_RemoveTab_DataGridView_Main.Columns.Contains("WorkOrder"))
-                    Control_RemoveTab_DataGridView_Main.Columns["WorkOrder"].Visible = colorTrackedPart;
+                // Load saved settings (overrides default visibility/order)
+                await Core_Themes.LoadAndApplyGridSettingsAsync(Control_RemoveTab_DataGridView_Main, Model_Application_Variables.User);
 
+                // Enforce logic: If not color tracked, these MUST be hidden regardless of saved settings
                 if (!colorTrackedPart)
                 {
+                    if (Control_RemoveTab_DataGridView_Main.Columns.Contains("ColorCode"))
+                        Control_RemoveTab_DataGridView_Main.Columns["ColorCode"].Visible = false;
+                    if (Control_RemoveTab_DataGridView_Main.Columns.Contains("WorkOrder"))
+                        Control_RemoveTab_DataGridView_Main.Columns["WorkOrder"].Visible = false;
+
                     // Normal theming only when not viewing color-tracked part
                     Core_Themes.ApplyThemeToDataGridView(Control_RemoveTab_DataGridView_Main);
                 }
@@ -1074,9 +1088,6 @@ SetStyle(ControlStyles.OptimizedDoubleBuffer, true);
                     ApplyColorCodingToRows(Control_RemoveTab_DataGridView_Main);
                 }
                 Core_Themes.SizeDataGrid(Control_RemoveTab_DataGridView_Main);
-
-                // Load saved settings (overrides default visibility/order)
-                await Core_Themes.LoadAndApplyGridSettingsAsync(Control_RemoveTab_DataGridView_Main, Model_Application_Variables.User);
 
                 Control_RemoveTab_Image_NothingFound.Visible = results.Rows.Count == 0;
                 _progressHelper?.UpdateProgress(100, "Search complete");

@@ -1,6 +1,7 @@
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Text;
+using Microsoft.Extensions.DependencyInjection;
 using DocumentFormat.OpenXml.Office.CustomUI;
 using MTM_WIP_Application_Winforms.Core;
 using MTM_WIP_Application_Winforms.Controls.Shared;
@@ -26,6 +27,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
 
         private Helper_StoredProcedureProgress? _progressHelper;
         private Control_TextAnimationSequence? _quickButtonsPanelAnimator;
+        private readonly IShortcutService? _shortcutService;
 
         #endregion
 
@@ -182,6 +184,15 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                 });
 
             InitializeComponent();
+
+            // Resolve shortcut service
+            _shortcutService = Program.ServiceProvider?.GetService<IShortcutService>();
+            if (_shortcutService != null && !string.IsNullOrEmpty(Model_Application_Variables.User))
+            {
+                // Initialize asynchronously
+                _ = _shortcutService.InitializeAsync(Model_Application_Variables.User);
+            }
+
             SetStyle(ControlStyles.OptimizedDoubleBuffer, true);
             // DPI scaling, layout adjustments, and focus highlighting applied automatically by ThemedUserControl base class
             Service_DebugTracer.TraceUIAction("THEME_APPLICATION", nameof(Control_InventoryTab),
@@ -199,14 +210,17 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                     ["TooltipCount"] = 4,
                     ["ButtonsConfigured"] = new[] { "Save", "AdvancedEntry", "Reset", "ToggleRightPanel" }
                 });
-            Control_InventoryTab_Tooltip.SetToolTip(Control_InventoryTab_Button_Save,
-                $"Shortcut: {Helper_UI_Shortcuts.ToShortcutString(Core_WipAppVariables.Shortcut_Inventory_Save)}");
-            Control_InventoryTab_Tooltip.SetToolTip(Control_InventoryTab_Button_AdvancedEntry,
-                $"Shortcut: {Helper_UI_Shortcuts.ToShortcutString(Core_WipAppVariables.Shortcut_Inventory_Advanced)}");
-            Control_InventoryTab_Tooltip.SetToolTip(Control_InventoryTab_Button_Reset,
-                $"Shortcut: {Helper_UI_Shortcuts.ToShortcutString(Core_WipAppVariables.Shortcut_Inventory_Reset)}");
-            Control_InventoryTab_Tooltip.SetToolTip(Control_InventoryTab_Button_Toggle_RightPanel,
-                $"Shortcut: {Helper_UI_Shortcuts.ToShortcutString(Core_WipAppVariables.Shortcut_Inventory_ToggleRightPanel_Left)}/{Helper_UI_Shortcuts.ToShortcutString(Core_WipAppVariables.Shortcut_Inventory_ToggleRightPanel_Right)}");
+            
+            string saveShortcut = Helper_UI_Shortcuts.GetShortcutDisplay("Shortcut_Inventory_Save", _shortcutService, Core_WipAppVariables.Shortcut_Inventory_Save);
+            string advShortcut = Helper_UI_Shortcuts.GetShortcutDisplay("Shortcut_Inventory_Advanced", _shortcutService, Core_WipAppVariables.Shortcut_Inventory_Advanced);
+            string resetShortcut = Helper_UI_Shortcuts.GetShortcutDisplay("Shortcut_Inventory_Reset", _shortcutService, Core_WipAppVariables.Shortcut_Inventory_Reset);
+            string toggleLeft = Helper_UI_Shortcuts.GetShortcutDisplay("Shortcut_Inventory_ToggleRightPanel_Left", _shortcutService, Core_WipAppVariables.Shortcut_Inventory_ToggleRightPanel_Left);
+            string toggleRight = Helper_UI_Shortcuts.GetShortcutDisplay("Shortcut_Inventory_ToggleRightPanel_Right", _shortcutService, Core_WipAppVariables.Shortcut_Inventory_ToggleRightPanel_Right);
+
+            Control_InventoryTab_Tooltip.SetToolTip(Control_InventoryTab_Button_Save, $"Shortcut: {saveShortcut}");
+            Control_InventoryTab_Tooltip.SetToolTip(Control_InventoryTab_Button_AdvancedEntry, $"Shortcut: {advShortcut}");
+            Control_InventoryTab_Tooltip.SetToolTip(Control_InventoryTab_Button_Reset, $"Shortcut: {resetShortcut}");
+            Control_InventoryTab_Tooltip.SetToolTip(Control_InventoryTab_Button_Toggle_RightPanel, $"Shortcut: {toggleLeft}/{toggleRight}");
 
             InitializeQuickButtonsPanelAnimator();
 
@@ -646,7 +660,8 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             {
                 if (Visible)
                 {
-                    if (keyData == Core_WipAppVariables.Shortcut_Inventory_Save)
+                    Keys saveKey = _shortcutService?.GetShortcutKey("Shortcut_Inventory_Save") ?? Core_WipAppVariables.Shortcut_Inventory_Save;
+                    if (keyData == saveKey)
                     {
                         if (Control_InventoryTab_Button_Save.Visible && Control_InventoryTab_Button_Save.Enabled)
                         {
@@ -656,7 +671,8 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                         }
                     }
 
-                    if (keyData == Core_WipAppVariables.Shortcut_Inventory_Advanced)
+                    Keys advKey = _shortcutService?.GetShortcutKey("Shortcut_Inventory_Advanced") ?? Core_WipAppVariables.Shortcut_Inventory_Advanced;
+                    if (keyData == advKey)
                     {
                         if (Control_InventoryTab_Button_AdvancedEntry.Visible &&
                             Control_InventoryTab_Button_AdvancedEntry.Enabled)
@@ -667,7 +683,8 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                         }
                     }
 
-                    if (keyData == Core_WipAppVariables.Shortcut_Inventory_Reset)
+                    Keys resetKey = _shortcutService?.GetShortcutKey("Shortcut_Inventory_Reset") ?? Core_WipAppVariables.Shortcut_Inventory_Reset;
+                    if (keyData == resetKey)
                     {
                         if (Control_InventoryTab_Button_Reset.Visible && Control_InventoryTab_Button_Reset.Enabled)
                         {
@@ -691,16 +708,18 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                     return true;
                 }
 
+                Keys toggleRightKey = _shortcutService?.GetShortcutKey("Shortcut_Inventory_ToggleRightPanel_Right") ?? Core_WipAppVariables.Shortcut_Inventory_ToggleRightPanel_Right;
                 if (MainFormInstance != null && !MainFormInstance.MainForm_SplitContainer_Middle.Panel2Collapsed &&
-                    keyData == Core_WipAppVariables.Shortcut_Inventory_ToggleRightPanel_Right)
+                    keyData == toggleRightKey)
                 {
                     Control_InventoryTab_Button_Toggle_RightPanel.PerformClick();
                     Service_DebugTracer.TraceMethodExit(new { KeyHandled = true, Action = "TogglePanelRight" }, nameof(Control_InventoryTab), nameof(ProcessCmdKey));
                     return true;
                 }
 
+                Keys toggleLeftKey = _shortcutService?.GetShortcutKey("Shortcut_Inventory_ToggleRightPanel_Left") ?? Core_WipAppVariables.Shortcut_Inventory_ToggleRightPanel_Left;
                 if (MainFormInstance != null && MainFormInstance.MainForm_SplitContainer_Middle.Panel2Collapsed &&
-                    keyData == Core_WipAppVariables.Shortcut_Inventory_ToggleRightPanel_Left)
+                    keyData == toggleLeftKey)
                 {
                     Control_InventoryTab_Button_Toggle_RightPanel.PerformClick();
                     Service_DebugTracer.TraceMethodExit(new { KeyHandled = true, Action = "TogglePanelLeft" }, nameof(Control_InventoryTab), nameof(ProcessCmdKey));

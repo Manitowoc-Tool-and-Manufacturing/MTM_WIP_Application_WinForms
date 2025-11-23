@@ -17,7 +17,7 @@ using MTM_WIP_Application_Winforms.Helpers;
 using MTM_WIP_Application_Winforms.Logging;
 using MTM_WIP_Application_Winforms.Models;
 using MTM_WIP_Application_Winforms.Services;
-
+using Microsoft.Extensions.DependencyInjection;
 using MySql.Data.MySqlClient;
 
 using Color = System.Drawing.Color;
@@ -41,6 +41,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
         private bool _multiInputCollapsed;
         private float _singleInputStoredWidth = SingleInputFallbackWidth;
         private float _multiInputStoredWidth = MultiInputFallbackWidth;
+        private readonly IShortcutService? _shortcutService;
 
         private const float SingleInputFallbackWidth = 265f;
         private const float MultiInputFallbackWidth = 255f;
@@ -97,6 +98,14 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
 
 
                 InitializeComponent();
+                
+                // Resolve shortcut service
+                _shortcutService = Program.ServiceProvider?.GetService<IShortcutService>();
+                if (_shortcutService != null && !string.IsNullOrEmpty(Model_Application_Variables.User))
+                {
+                    // Initialize asynchronously
+                    _ = _shortcutService.InitializeAsync(Model_Application_Variables.User);
+                }
 
                 // Disable Import Tab
                 if (AdvancedInventory_TabControl.TabPages.Contains(AdvancedInventory_TabControl_Import))
@@ -124,29 +133,29 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                     });
                 ToolTip toolTip = new();
                 toolTip.SetToolTip(AdvancedInventory_Single_Button_Send,
-                    $"Shortcut: {Helper_UI_Shortcuts.ToShortcutString(Core_WipAppVariables.Shortcut_AdvInv_Send)}");
+                    $"Shortcut: {Helper_UI_Shortcuts.GetShortcutDisplay("Shortcut_AdvInv_Send", _shortcutService, Core_WipAppVariables.Shortcut_AdvInv_Send)}");
                 toolTip.SetToolTip(AdvancedInventory_Single_Button_Save,
-                    $"Shortcut: {Helper_UI_Shortcuts.ToShortcutString(Core_WipAppVariables.Shortcut_AdvInv_Save)}");
+                    $"Shortcut: {Helper_UI_Shortcuts.GetShortcutDisplay("Shortcut_AdvInv_Save", _shortcutService, Core_WipAppVariables.Shortcut_AdvInv_Save)}");
                 toolTip.SetToolTip(AdvancedInventory_Single_Button_Reset,
-                    $"Shortcut: {Helper_UI_Shortcuts.ToShortcutString(Core_WipAppVariables.Shortcut_AdvInv_Reset)}");
+                    $"Shortcut: {Helper_UI_Shortcuts.GetShortcutDisplay("Shortcut_AdvInv_Reset", _shortcutService, Core_WipAppVariables.Shortcut_AdvInv_Reset)}");
                 toolTip.SetToolTip(AdvancedInventory_Single_Button_Normal,
-                    $"Shortcut: {Helper_UI_Shortcuts.ToShortcutString(Core_WipAppVariables.Shortcut_AdvInv_Normal)}");
+                    $"Shortcut: {Helper_UI_Shortcuts.GetShortcutDisplay("Shortcut_AdvInv_Normal", _shortcutService, Core_WipAppVariables.Shortcut_AdvInv_Normal)}");
                 toolTip.SetToolTip(AdvancedInventory_MultiLoc_Button_AddLoc,
-                    $"Shortcut: {Helper_UI_Shortcuts.ToShortcutString(Core_WipAppVariables.Shortcut_AdvInv_Multi_AddLoc)}");
+                    $"Shortcut: {Helper_UI_Shortcuts.GetShortcutDisplay("Shortcut_AdvInv_Multi_AddLoc", _shortcutService, Core_WipAppVariables.Shortcut_AdvInv_Multi_AddLoc)}");
                 toolTip.SetToolTip(AdvancedInventory_MultiLoc_Button_SaveAll,
-                    $"Shortcut: {Helper_UI_Shortcuts.ToShortcutString(Core_WipAppVariables.Shortcut_AdvInv_Multi_SaveAll)}");
+                    $"Shortcut: {Helper_UI_Shortcuts.GetShortcutDisplay("Shortcut_AdvInv_Multi_SaveAll", _shortcutService, Core_WipAppVariables.Shortcut_AdvInv_Multi_SaveAll)}");
                 toolTip.SetToolTip(AdvancedInventory_MultiLoc_Button_Reset,
-                    $"Shortcut: {Helper_UI_Shortcuts.ToShortcutString(Core_WipAppVariables.Shortcut_AdvInv_Multi_Reset)}");
+                    $"Shortcut: {Helper_UI_Shortcuts.GetShortcutDisplay("Shortcut_AdvInv_Multi_Reset", _shortcutService, Core_WipAppVariables.Shortcut_AdvInv_Multi_Reset)}");
                 toolTip.SetToolTip(AdvancedInventory_Multi_Button_Normal,
-                    $"Shortcut: {Helper_UI_Shortcuts.ToShortcutString(Core_WipAppVariables.Shortcut_AdvInv_Multi_Normal)}");
+                    $"Shortcut: {Helper_UI_Shortcuts.GetShortcutDisplay("Shortcut_AdvInv_Multi_Normal", _shortcutService, Core_WipAppVariables.Shortcut_AdvInv_Multi_Normal)}");
                 toolTip.SetToolTip(AdvancedInventory_Import_Button_OpenExcel,
-                    $"Shortcut: {Helper_UI_Shortcuts.ToShortcutString(Core_WipAppVariables.Shortcut_AdvInv_Import_OpenExcel)}");
+                    $"Shortcut: {Helper_UI_Shortcuts.GetShortcutDisplay("Shortcut_AdvInv_Import_OpenExcel", _shortcutService, Core_WipAppVariables.Shortcut_AdvInv_Import_OpenExcel)}");
                 toolTip.SetToolTip(AdvancedInventory_Import_Button_ImportExcel,
-                    $"Shortcut: {Helper_UI_Shortcuts.ToShortcutString(Core_WipAppVariables.Shortcut_AdvInv_Import_ImportExcel)}");
+                    $"Shortcut: {Helper_UI_Shortcuts.GetShortcutDisplay("Shortcut_AdvInv_Import_ImportExcel", _shortcutService, Core_WipAppVariables.Shortcut_AdvInv_Import_ImportExcel)}");
                 toolTip.SetToolTip(AdvancedInventory_Import_Button_Save,
-                    $"Shortcut: {Helper_UI_Shortcuts.ToShortcutString(Core_WipAppVariables.Shortcut_AdvInv_Import_Save)}");
+                    $"Shortcut: {Helper_UI_Shortcuts.GetShortcutDisplay("Shortcut_AdvInv_Import_Save", _shortcutService, Core_WipAppVariables.Shortcut_AdvInv_Import_Save)}");
                 toolTip.SetToolTip(AdvancedInventory_Import_Button_Normal,
-                    $"Shortcut: {Helper_UI_Shortcuts.ToShortcutString(Core_WipAppVariables.Shortcut_AdvInv_Import_Normal)}");
+                    $"Shortcut: {Helper_UI_Shortcuts.GetShortcutDisplay("Shortcut_AdvInv_Import_Normal", _shortcutService, Core_WipAppVariables.Shortcut_AdvInv_Import_Normal)}");
 
                 AdvancedInventory_Single_Button_Reset.TabStop = false;
                 AdvancedInventory_MultiLoc_Button_Reset.TabStop = false;

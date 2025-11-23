@@ -14,6 +14,7 @@ using MTM_WIP_Application_Winforms.Logging;
 using MTM_WIP_Application_Winforms.Models;
 using MTM_WIP_Application_Winforms.Services;
 using MTM_WIP_Application_Winforms.Forms.Shared;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace MTM_WIP_Application_Winforms.Controls.MainForm
 {
@@ -33,6 +34,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
         private Control_TextAnimationSequence? _rightPanelAnimator;
         private float _inputPanelStoredWidth = InputPanelFallbackWidth;
         private bool _inputPanelInitialWidthCaptured;
+        private readonly IShortcutService? _shortcutService;
 
         private const float InputPanelFallbackWidth = 312f;
 
@@ -78,6 +80,15 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                 });
 
             InitializeComponent();
+            
+            // Resolve shortcut service
+            _shortcutService = Program.ServiceProvider?.GetService<IShortcutService>();
+            if (_shortcutService != null && !string.IsNullOrEmpty(Model_Application_Variables.User))
+            {
+                // Initialize asynchronously
+                _ = _shortcutService.InitializeAsync(Model_Application_Variables.User);
+            }
+
             SetStyle(ControlStyles.OptimizedDoubleBuffer, true);
 
             Control_TransferTab_Initialize();
@@ -124,13 +135,13 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
 
             // Use cached ToolTip
             SharedToolTip.SetToolTip(Control_TransferTab_Button_Search,
-                $"Shortcut: {Helper_UI_Shortcuts.ToShortcutString(Core_WipAppVariables.Shortcut_Transfer_Search)}");
+                $"Shortcut: {Helper_UI_Shortcuts.GetShortcutDisplay("Shortcut_Transfer_Search", _shortcutService, Core_WipAppVariables.Shortcut_Transfer_Search)}");
             SharedToolTip.SetToolTip(Control_TransferTab_Button_Transfer,
-                $"Shortcut: {Helper_UI_Shortcuts.ToShortcutString(Core_WipAppVariables.Shortcut_Transfer_Transfer)}");
+                $"Shortcut: {Helper_UI_Shortcuts.GetShortcutDisplay("Shortcut_Transfer_Transfer", _shortcutService, Core_WipAppVariables.Shortcut_Transfer_Transfer)}");
             SharedToolTip.SetToolTip(Control_TransferTab_Button_Reset,
-                $"Shortcut: {Helper_UI_Shortcuts.ToShortcutString(Core_WipAppVariables.Shortcut_Transfer_Reset)}");
+                $"Shortcut: {Helper_UI_Shortcuts.GetShortcutDisplay("Shortcut_Transfer_Reset", _shortcutService, Core_WipAppVariables.Shortcut_Transfer_Reset)}");
             SharedToolTip.SetToolTip(Control_TransferTab_Button_Toggle_RightPanel,
-                $"Shortcut: {Helper_UI_Shortcuts.ToShortcutString(Core_WipAppVariables.Shortcut_Transfer_ToggleRightPanel_Left)}/{Helper_UI_Shortcuts.ToShortcutString(Core_WipAppVariables.Shortcut_Transfer_ToggleRightPanel_Right)}");
+                $"Shortcut: {Helper_UI_Shortcuts.GetShortcutDisplay("Shortcut_Transfer_ToggleRightPanel_Left", _shortcutService, Core_WipAppVariables.Shortcut_Transfer_ToggleRightPanel_Left)}/{Helper_UI_Shortcuts.GetShortcutDisplay("Shortcut_Transfer_ToggleRightPanel_Right", _shortcutService, Core_WipAppVariables.Shortcut_Transfer_ToggleRightPanel_Right)}");
 
             // Setup Print button event and tooltip directly
             Control_TransferTab_Button_Print.Click -= Control_TransferTab_Button_Print_Click;
@@ -791,14 +802,17 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                     }
                 }
 
-                // Hide Color/WorkOrder columns if not a color-tracked part
-                if (Control_TransferTab_DataGridView_Main.Columns.Contains("ColorCode"))
-                    Control_TransferTab_DataGridView_Main.Columns["ColorCode"].Visible = colorTrackedPart;
-                if (Control_TransferTab_DataGridView_Main.Columns.Contains("WorkOrder"))
-                    Control_TransferTab_DataGridView_Main.Columns["WorkOrder"].Visible = colorTrackedPart;
+                // Load saved settings (overrides default visibility/order)
+                await Core_Themes.LoadAndApplyGridSettingsAsync(Control_TransferTab_DataGridView_Main, Model_Application_Variables.User);
 
+                // Enforce logic: If not color tracked, these MUST be hidden regardless of saved settings
                 if (!colorTrackedPart)
                 {
+                    if (Control_TransferTab_DataGridView_Main.Columns.Contains("ColorCode"))
+                        Control_TransferTab_DataGridView_Main.Columns["ColorCode"].Visible = false;
+                    if (Control_TransferTab_DataGridView_Main.Columns.Contains("WorkOrder"))
+                        Control_TransferTab_DataGridView_Main.Columns["WorkOrder"].Visible = false;
+
                     Core_Themes.ApplyThemeToDataGridView(Control_TransferTab_DataGridView_Main);
                 }
                 else
@@ -806,9 +820,6 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                     ApplyColorCodingToRows(Control_TransferTab_DataGridView_Main);
                 }
                 Core_Themes.SizeDataGrid(Control_TransferTab_DataGridView_Main);
-
-                // Load saved settings (overrides default visibility/order)
-                await Core_Themes.LoadAndApplyGridSettingsAsync(Control_TransferTab_DataGridView_Main, Model_Application_Variables.User);
 
                 Control_TransferTab_Image_NothingFound.Visible = results.Rows.Count == 0;
                 _progressHelper?.UpdateProgress(100, "Search complete");

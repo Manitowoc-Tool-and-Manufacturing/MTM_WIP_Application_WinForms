@@ -1,7 +1,6 @@
-﻿
-
-using MTM_WIP_Application_Winforms.Core;
+﻿using MTM_WIP_Application_Winforms.Core;
 using MTM_WIP_Application_Winforms.Forms.MainForm;
+using MTM_WIP_Application_Winforms.Services;
 
 namespace MTM_WIP_Application_Winforms.Helpers;
 
@@ -45,6 +44,19 @@ internal class Helper_UI_Shortcuts
         }
 
         return string.Join(" + ", parts);
+    }
+
+    /// <summary>
+    /// Gets the display string for a shortcut using the service if available, otherwise falls back to the default keys.
+    /// </summary>
+    public static string GetShortcutDisplay(string shortcutName, IShortcutService? service, Keys defaultKeys)
+    {
+        if (service != null)
+        {
+            var display = service.GetShortcutDisplay(shortcutName);
+            if (!string.IsNullOrEmpty(display)) return display;
+        }
+        return ToShortcutString(defaultKeys);
     }
 
     public static Keys FromShortcutString(string shortcutString)

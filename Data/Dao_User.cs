@@ -745,22 +745,27 @@ internal static class Dao_User
     }
 
     /// <summary>
-    /// Gets grid view settings JSON for the specified user.
+    /// Gets grid view settings JSON for the specified user and DataGridView.
     /// </summary>
     /// <param name="userId">The user ID.</param>
+    /// <param name="dgvName">The DataGridView name.</param>
     /// <returns>A Model_Dao_Result containing the grid view settings JSON.</returns>
-    public static async Task<Model_Dao_Result<string>> GetGridViewSettingsJsonAsync(string userId,
+    public static async Task<Model_Dao_Result<string>> GetGridViewSettingsJsonAsync(string userId, string dgvName,
         MySqlConnection? connection = null,
         MySqlTransaction? transaction = null)
     {
-        Service_DebugTracer.TraceMethodEntry(new Dictionary<string, object> { ["userId"] = userId }, controlName: "Dao_User");
+        Service_DebugTracer.TraceMethodEntry(new Dictionary<string, object> { ["userId"] = userId, ["dgvName"] = dgvName }, controlName: "Dao_User");
 
         try
         {
             var dataResult = await Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync(
                 Model_Application_Variables.ConnectionString,
                 "usr_settings_GetJsonSetting",
-                new Dictionary<string, object> { ["UserId"] = userId },
+                new Dictionary<string, object> 
+                { 
+                    ["UserId"] = userId,
+                    ["DgvName"] = dgvName
+                },
                 connection: connection,
                 transaction: transaction
             );
@@ -1166,111 +1171,6 @@ internal static class Dao_User
     #endregion
 
     #region User UI Settings
-
-    /// <summary>
-    /// Gets the shortcuts JSON for the specified user.
-    /// </summary>
-    /// <param name="userId">The user ID.</param>
-    /// <returns>A Model_Dao_Result containing the shortcuts JSON.</returns>
-    internal static async Task<Model_Dao_Result<string>> GetShortcutsJsonAsync(string userId,
-        MySqlConnection? connection = null,
-        MySqlTransaction? transaction = null)
-    {
-        Service_DebugTracer.TraceMethodEntry(new Dictionary<string, object> { ["userId"] = userId }, controlName: "Dao_User");
-
-        try
-        {
-            var dataResult = await Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync(
-                Model_Application_Variables.ConnectionString,
-                "usr_settings_GetShortcutsJson",
-                new Dictionary<string, object> { ["UserId"] = userId },
-                connection: connection,
-                transaction: transaction
-            );
-
-            if (dataResult.IsSuccess && dataResult.Data != null && dataResult.Data.Rows.Count > 0)
-            {
-                // Try to get column by name, handling potential naming variations
-                string? json = null;
-                if (dataResult.Data.Columns.Contains("ShortcutsJson"))
-                {
-                    json = dataResult.Data.Rows[0]["ShortcutsJson"]?.ToString();
-                }
-                else if (dataResult.Data.Columns.Contains("SettingJson"))
-                {
-                    json = dataResult.Data.Rows[0]["SettingJson"]?.ToString();
-                }
-                else
-                {
-                    // Fallback to first column if specific names not found
-                    json = dataResult.Data.Rows[0][0]?.ToString();
-                }
-
-                Service_DebugTracer.TraceMethodExit(json, controlName: "Dao_User");
-                return Model_Dao_Result<string>.Success(json ?? "", $"Retrieved shortcuts JSON for user {userId}");
-            }
-
-            Service_DebugTracer.TraceMethodExit("", controlName: "Dao_User");
-            return Model_Dao_Result<string>.Success("", $"No shortcuts JSON found for user {userId}");
-        }
-        catch (Exception ex)
-        {
-            LoggingUtility.LogDatabaseError(ex);
-
-
-            Service_DebugTracer.TraceMethodExit("", controlName: "Dao_User");
-            return Model_Dao_Result<string>.Failure($"Error retrieving shortcuts JSON for user {userId}", ex);
-        }
-    }
-
-    /// <summary>
-    /// Sets the shortcuts JSON for the specified user.
-    /// </summary>
-    /// <param name="userId">The user ID.</param>
-    /// <param name="shortcutsJson">The shortcuts JSON to set.</param>
-    /// <returns>A Model_Dao_Result indicating success or failure.</returns>
-    internal static async Task<Model_Dao_Result> SetShortcutsJsonAsync(string userId, string shortcutsJson,
-        MySqlConnection? connection = null,
-        MySqlTransaction? transaction = null)
-    {
-        Service_DebugTracer.TraceMethodEntry(new Dictionary<string, object> { ["userId"] = userId, ["shortcutsJson"] = shortcutsJson }, controlName: "Dao_User");
-
-        try
-        {
-            Dictionary<string, object> parameters = new()
-            {
-                ["UserId"] = userId,
-                ["ShortcutsJson"] = shortcutsJson
-            };
-
-            var result = await Helper_Database_StoredProcedure.ExecuteNonQueryWithStatusAsync(
-                Model_Application_Variables.ConnectionString,
-                "usr_settings_SetShortcutsJson",
-                parameters,
-                connection: connection,
-                transaction: transaction
-            );
-
-            if (result.IsSuccess)
-            {
-                Service_DebugTracer.TraceMethodExit(result, controlName: "Dao_User");
-                return Model_Dao_Result.Success($"Set shortcuts JSON for user {userId}");
-            }
-            else
-            {
-                Service_DebugTracer.TraceMethodExit(result, controlName: "Dao_User");
-                return Model_Dao_Result.Failure($"Failed to set shortcuts JSON: {result.ErrorMessage}");
-            }
-        }
-        catch (Exception ex)
-        {
-            LoggingUtility.LogDatabaseError(ex);
-
-
-            Service_DebugTracer.TraceMethodExit(null, controlName: "Dao_User");
-            return Model_Dao_Result.Failure($"Error setting shortcuts JSON for user {userId}", ex);
-        }
-    }
 
     /// <summary>
     /// Sets the theme name for the specified user.

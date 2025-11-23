@@ -352,39 +352,28 @@ namespace MTM_WIP_Application_Winforms.Core
             try
             {
                 string gridName = dgv.Name;
-                var result = await Dao_User.GetGridViewSettingsJsonAsync(userId);
+                var result = await Dao_User.GetGridViewSettingsJsonAsync(userId, gridName);
 
                 if (result.IsSuccess && !string.IsNullOrEmpty(result.Data))
                 {
-                    using JsonDocument doc = JsonDocument.Parse(result.Data);
-                    if (doc.RootElement.TryGetProperty(gridName, out JsonElement gridSettingsElement))
+                    string settingsJson = result.Data;
+                    
+                    // Check if it's "null" string (JSON null) or empty
+                    if (!string.IsNullOrEmpty(settingsJson) && settingsJson != "null")
                     {
-                        string? settingsJson = null;
-                        if (gridSettingsElement.ValueKind == JsonValueKind.String)
+                        var settings = JsonSerializer.Deserialize<GridSettings>(settingsJson);
+                        if (settings?.Columns != null)
                         {
-                            settingsJson = gridSettingsElement.GetString();
-                        }
-                        else
-                        {
-                            settingsJson = gridSettingsElement.GetRawText();
-                        }
+                            // Sort by DisplayIndex to apply order correctly
+                            var orderedSettings = settings.Columns.OrderBy(c => c.DisplayIndex).ToList();
 
-                        if (!string.IsNullOrEmpty(settingsJson))
-                        {
-                            var settings = JsonSerializer.Deserialize<GridSettings>(settingsJson);
-                            if (settings?.Columns != null)
+                            foreach (var colSetting in orderedSettings)
                             {
-                                // Sort by DisplayIndex to apply order correctly
-                                var orderedSettings = settings.Columns.OrderBy(c => c.DisplayIndex).ToList();
-
-                                foreach (var colSetting in orderedSettings)
+                                if (dgv.Columns.Contains(colSetting.Name))
                                 {
-                                    if (dgv.Columns.Contains(colSetting.Name))
-                                    {
-                                        var col = dgv.Columns[colSetting.Name];
-                                        col.Visible = colSetting.Visible;
-                                        col.DisplayIndex = colSetting.DisplayIndex;
-                                    }
+                                    var col = dgv.Columns[colSetting.Name];
+                                    col.Visible = colSetting.Visible;
+                                    col.DisplayIndex = colSetting.DisplayIndex;
                                 }
                             }
                         }

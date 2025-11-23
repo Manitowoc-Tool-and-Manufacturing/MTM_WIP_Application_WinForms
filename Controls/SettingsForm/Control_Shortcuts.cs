@@ -1,13 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text.Json;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Microsoft.Extensions.DependencyInjection;
 using MTM_WIP_Application_Winforms.Core;
-using MTM_WIP_Application_Winforms.Data;
 using MTM_WIP_Application_Winforms.Forms.Shared;
 using MTM_WIP_Application_Winforms.Helpers;
 using MTM_WIP_Application_Winforms.Logging;
+using MTM_WIP_Application_Winforms.Services;
 
 namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
 {
@@ -15,11 +15,12 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
     {
         public event EventHandler? ShortcutsUpdated;
         public event EventHandler<string>? StatusMessageChanged;
+        private readonly IShortcutService? _shortcutService;
 
         public Control_Shortcuts()
         {
             InitializeComponent();
-                        
+            _shortcutService = Program.ServiceProvider?.GetService<IShortcutService>();
             _ = LoadShortcuts();
         }
 
@@ -30,49 +31,34 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
                 Control_Shortcuts_DataGridView_Shortcuts.Columns.Clear();
                 Control_Shortcuts_DataGridView_Shortcuts.Columns.Add("Action", "Action");
                 Control_Shortcuts_DataGridView_Shortcuts.Columns.Add("Shortcut", "Shortcut");
+                // Hidden column to store the internal shortcut name (key)
+                Control_Shortcuts_DataGridView_Shortcuts.Columns.Add("InternalName", "InternalName");
+                Control_Shortcuts_DataGridView_Shortcuts.Columns["InternalName"].Visible = false;
+                
                 Control_Shortcuts_DataGridView_Shortcuts.Rows.Clear();
 
-                string user = Core_WipAppVariables.User;
-                string? rawShortcutsJson = await Dao_User.GetShortcutsJsonAsync(user);
-                string shortcutsJson = rawShortcutsJson ?? string.Empty;
-
-                Dictionary<string, Keys> shortcutDict = Helper_UI_Shortcuts.GetShortcutDictionary();
-
-                Dictionary<string, string> userShortcuts = new();
-                if (!string.IsNullOrWhiteSpace(shortcutsJson))
+                if (_shortcutService == null)
                 {
-                    try
-                    {
-                        using JsonDocument doc = JsonDocument.Parse(shortcutsJson);
-                        if (doc.RootElement.ValueKind == JsonValueKind.Object &&
-                            doc.RootElement.TryGetProperty("Shortcuts", out JsonElement shortcutsElement) &&
-                            shortcutsElement.ValueKind == JsonValueKind.Object)
-                        {
-                            foreach (JsonProperty prop in shortcutsElement.EnumerateObject())
-                            {
-                                userShortcuts[prop.Name] = prop.Value.GetString() ?? "";
-                            }
-                        }
-                    }
-                    catch (JsonException)
-                    {
-                        StatusMessageChanged?.Invoke(this, "Warning: Shortcuts JSON is malformed. Using defaults.");
-                    }
+                    StatusMessageChanged?.Invoke(this, "Error: Shortcut service not available.");
+                    return;
                 }
 
-                foreach (KeyValuePair<string, Keys> kvp in shortcutDict)
+                // Ensure service is initialized for current user
+                await _shortcutService.InitializeAsync(Core_WipAppVariables.User);
+                var shortcuts = _shortcutService.GetAllShortcuts();
+
+                foreach (var shortcut in shortcuts)
                 {
-                    string action = kvp.Key;
-                    Keys defaultKeys = kvp.Value;
-                    string shortcutValue =
-                        userShortcuts.TryGetValue(action, out string? val) && !string.IsNullOrWhiteSpace(val)
-                            ? val
-                            : Helper_UI_Shortcuts.ToShortcutString(defaultKeys);
+                    // Use Description for display, Name for internal key
+                    string action = !string.IsNullOrEmpty(shortcut.Description) ? shortcut.Description : shortcut.Name;
+                    string shortcutValue = shortcut.DisplayString;
+                    string internalName = shortcut.Name;
 
-                    Helper_UI_Shortcuts.ApplyShortcutFromDictionary(action,
-                        Helper_UI_Shortcuts.FromShortcutString(shortcutValue));
+                    // Also update the helper for immediate effect in current session if needed
+                    // (Though ideally the app should listen to service updates)
+                    Helper_UI_Shortcuts.ApplyShortcutFromDictionary(action, shortcut.Keys);
 
-                    Control_Shortcuts_DataGridView_Shortcuts.Rows.Add(action, shortcutValue);
+                    Control_Shortcuts_DataGridView_Shortcuts.Rows.Add(action, shortcutValue, internalName);
                 }
 
                 Control_Shortcuts_DataGridView_Shortcuts.ReadOnly = false;
@@ -152,6 +138,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
                 string? actionName = Control_Shortcuts_DataGridView_Shortcuts.Rows[e.RowIndex].Cells[0].Value?.ToString();
                 string currentShortcut =
                     Control_Shortcuts_DataGridView_Shortcuts.Rows[e.RowIndex].Cells[1].Value?.ToString() ?? "";
+                string? internalName = Control_Shortcuts_DataGridView_Shortcuts.Rows[e.RowIndex].Cells[2].Value?.ToString();
 
                 using (Form inputForm = new())
                 {
@@ -367,32 +354,40 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
                     Control_Shortcuts_DataGridView_Shortcuts.EndEdit();
                 }
 
-                string user = Core_WipAppVariables.User;
-                Dictionary<string, string> shortcuts = new();
+                if (_shortcutService == null)
+                {
+                    throw new Exception("Shortcut service not available.");
+                }
 
                 for (int i = 0; i < Control_Shortcuts_DataGridView_Shortcuts.Rows.Count; i++)
                 {
                     DataGridViewRow row = Control_Shortcuts_DataGridView_Shortcuts.Rows[i];
                     string? actionName = row.Cells[0].Value?.ToString();
                     string shortcutString = row.Cells[1].Value?.ToString() ?? "";
+                    string? internalName = row.Cells[2].Value?.ToString();
 
-                    if (!string.IsNullOrEmpty(actionName))
+                    if (!string.IsNullOrEmpty(internalName))
                     {
-                        shortcuts[actionName] = shortcutString;
-                        Helper_UI_Shortcuts.ApplyShortcutFromDictionary(actionName,
-                            Helper_UI_Shortcuts.FromShortcutString(shortcutString));
+                        Keys keys = Helper_UI_Shortcuts.FromShortcutString(shortcutString);
+                        
+                        // Update via service (persists to DB)
+                        await _shortcutService.UpdateShortcutAsync(internalName, keys);
+                        
+                        // Update helper for immediate effect
+                        if (!string.IsNullOrEmpty(actionName))
+                        {
+                            Helper_UI_Shortcuts.ApplyShortcutFromDictionary(actionName, keys);
+                        }
                     }
                 }
 
-                string json = JsonSerializer.Serialize(new { Shortcuts = shortcuts });
-
-                await Dao_User.SetShortcutsJsonAsync(user, json);
-
                 ShortcutsUpdated?.Invoke(this, EventArgs.Empty);
+                StatusMessageChanged?.Invoke(this, "Shortcuts saved successfully.");
             }
             catch (Exception ex)
             {
-                throw new Exception($"Failed to save shortcuts: {ex.Message}");
+                LoggingUtility.LogApplicationError(ex);
+                StatusMessageChanged?.Invoke(this, $"Error saving shortcuts: {ex.Message}");
             }
         }
     }
