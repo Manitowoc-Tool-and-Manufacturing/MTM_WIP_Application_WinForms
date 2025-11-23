@@ -5,7 +5,7 @@ using System.Diagnostics;
 using DocumentFormat.OpenXml.Vml.Office;
 using MTM_WIP_Application_Winforms.Helpers;
 using MTM_WIP_Application_Winforms.Models;
-using MTM_WIP_Application_Winforms.Services;
+using MTM_WIP_Application_Winforms.Services.Startup;
 using MySql.Data.MySqlClient;
 
 namespace MTM_WIP_Application_Winforms.Logging;

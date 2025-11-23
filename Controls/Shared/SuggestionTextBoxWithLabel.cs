@@ -281,7 +281,7 @@ namespace MTM_WIP_Application_Winforms.Controls.Shared
             ShowF4Button = false;
 
             // Get validator from Service_Validation
-            _validator = Service_Validation.GetValidator(validatorType);
+            _validator = Service_Validation_Core.GetValidator(validatorType);
             UpdateTextBoxEnabledState();
 
             if (_validator == null)

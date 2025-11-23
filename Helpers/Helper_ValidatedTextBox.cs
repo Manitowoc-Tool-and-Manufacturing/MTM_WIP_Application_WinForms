@@ -98,7 +98,7 @@ public static class Helper_ValidatedTextBox
             throw new ArgumentNullException(nameof(control));
         }
 
-        var validator = new Services.Validators.NumericValidator(min, max, allowDecimals, fieldName);
+        var validator = new Services.Validators.Service_NumericValidator(min, max, allowDecimals, fieldName);
         control.ConfigureForValidation(validator, showValidationColor);
     }
 
