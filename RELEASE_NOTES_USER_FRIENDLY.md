@@ -8,7 +8,8 @@
 
 | Date | Version | Summary | What to do |
 | --- | --- | --- | --- |
-| [Nov 23, 2025](#latest-update---november-23-2025-version-633) | [6.3.3](#latest-update---november-23-2025-version-633) | System reliability improvements and error report management tools. | Nothing—automatic improvement. |
+| [Nov 23, 2025](#latest-update---november-23-2025-version-634) | [6.3.4](#latest-update---november-23-2025-version-634) | Startup architecture modernization and service refactoring. | Nothing—internal improvements. |
+| [Nov 23, 2025](#previous-update---november-23-2025-version-633) | [6.3.3](#previous-update---november-23-2025-version-633) | System reliability improvements and error report management tools. | Nothing—automatic improvement. |
 | [Nov 22, 2025](#previous-update---november-22-2025-version-632) | [6.3.2](#previous-update---november-22-2025-version-632) | Print dialog improvements: Notes column, collapsible sidebars, and better printer reliability. | Try the new "Add Notes Column" option when printing! |
 | [Nov 20, 2025](#previous-update---november-20-2025-version-631) | [6.3.1](#previous-update---november-20-2025-version-631) | User Management screen updated to match new card interface style. | Nothing—enjoy the consistent look! |
 | [Nov 20, 2025](#previous-update---november-20-2025-version-630) | [6.3.0](#previous-update---november-20-2025-version-630) | Complete redesign of Settings management screens with modern card interface. (User Managment Screens are still the same.) | Check out the new look in Settings! |
@@ -36,7 +37,25 @@
 
 ---
 
-## Latest Update - November 23, 2025 (Version 6.3.3)
+## Latest Update - November 23, 2025 (Version 6.3.4)
+
+**What Changed**: We've completely modernized how the application starts up and organizes its internal services. This makes the app more stable and easier to maintain.
+**Do I Need To Do Anything?**: No.
+
+---
+
+### 🎯 What This Means For You
+
+#### Startup Reliability
+
+**What's new**:
+- **Robust Startup Sequence**: The application now checks for database connectivity, user permissions, and system requirements in a strict order before showing the main window.
+- **Better Error Handling**: If something goes wrong during startup, you'll get a clear, helpful error message instead of a crash.
+- **Service Organization**: Internal code has been reorganized for better performance and maintainability.
+
+---
+
+## Previous Update - November 23, 2025 (Version 6.3.3)
 
 **What Changed**: We've improved how the system handles errors to help IT support you better, and added tools for IT to manage those reports.  
 **Do I Need To Do Anything?**: No - these improvements happen automatically.

@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <style>
+        body { margin: 0; padding: 0; font-family: 'Segoe UI', sans-serif; display: flex; height: 100vh; overflow: hidden; background-color: #ffffff; }
+        
+        /* Sidebar */
+        .sidebar {
+            width: 250px;
+            background-color: #212121; /* MTM Black */
+            color: #ffffff;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            border-right: 1px solid #444;
+            flex-shrink: 0;
+            z-index: 10;
+        }
+        
+        .sidebar-header {
+            padding: 20px;
+            background-color: #000000;
+            border-bottom: 1px solid #C5A059; /* MTM Gold Accent */
+            position: sticky;
+            top: 0;
+            z-index: 20;
+        }
+        
+        .sidebar-title { font-size: 18px; font-weight: bold; color: #C5A059; }
+        
+        .nav-item {
+            padding: 20px;
+            border-bottom: 1px solid #333;
+            cursor: pointer;
+            text-decoration: none;
+            color: #ddd;
+            transition: all 0.2s;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            gap: 8px;
+        }
+        
+        .nav-item:hover { background-color: #333; color: #fff; transform: translateY(-2px); box-shadow: 0 4px 8px rgba(0,0,0,0.2); }
+        .nav-item.active { background-color: #333; border-left: 4px solid #C5A059; color: #fff; }
+        
+        .nav-header-row {
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+            font-size: 12px;
+            color: #888;
+            margin-bottom: 4px;
+        }
+
+        .nav-version { font-weight: bold; font-size: 18px; color: #C5A059; }
+        .nav-icon { width: 32px; height: 32px; margin: 5px 0; fill: #ddd; opacity: 0.8; }
+        .nav-item.active .nav-icon { fill: #C5A059; opacity: 1; }
+        .nav-desc { font-size: 13px; color: #aaa; line-height: 1.4; display: -webkit-box; -webkit-line-clamp: 2; line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+        .nav-item:hover .nav-desc { color: #ccc; }
+
+        /* Main Content */
+        .content {
+            flex: 1;
+            /* background-color: #ffffff; Removed to allow watermark to show */
+            overflow-y: auto;
+            padding: 40px;
+            scroll-behavior: smooth;
+            position: relative;
+        }
+
+        /* Watermark */
+        .watermark {
+            position: fixed;
+            top: 50%;
+            left: calc(250px + (100% - 250px) / 2); /* Center of content area */
+            transform: translate(-50%, -50%);
+            opacity: 0.1; /* Increased visibility slightly */
+            pointer-events: none;
+            z-index: 0;
+            max-width: 60%;
+            max-height: 60%;
+            filter: grayscale(100%);
+        }
+
+        .release-section {
+            margin-bottom: 60px;
+            padding-bottom: 40px;
+            border-bottom: 1px solid #eee;
+            position: relative;
+            z-index: 1; /* Above watermark */
+        }
+
+        .release-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .version-badge {
+            background-color: #000000;
+            color: #C5A059;
+            padding: 5px 15px;
+            border-radius: 4px;
+            font-weight: bold;
+            font-size: 24px;
+            margin-right: 15px;
+        }
+
+        .release-date {
+            color: #666;
+            font-size: 16px;
+        }
+
+        .release-summary {
+            font-size: 18px;
+            color: #333;
+            margin-bottom: 25px;
+            font-weight: 500;
+            border-left: 4px solid #C5A059;
+            padding-left: 15px;
+            background-color: #f9f9f9;
+            padding: 15px;
+        }
+
+        .release-details {
+            color: #444;
+            line-height: 1.6;
+        }
+
+        h3 { color: #000000; margin-top: 30px; border-bottom: 2px solid #eee; padding-bottom: 10px; }
+        ul { padding-left: 20px; }
+        li { margin-bottom: 8px; }
+        strong { color: #000; }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar { width: 10px; }
+        ::-webkit-scrollbar-track { background: #f1f1f1; }
+        ::-webkit-scrollbar-thumb { background: #888; }
+        ::-webkit-scrollbar-thumb:hover { background: #555; }
+
+    </style>
+</head>
+<body>
+    <div class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <div class="sidebar-title">Release Notes</div>
+        </div>
+        <!-- Sidebar items will be injected here -->
+    </div>
+    
+    <!-- Watermark Image -->
+    <img id="watermark-img" class="watermark" src="../../Resources/MTM.png" alt="Watermark" />
+
+    <div class="content" id="content">
+        <!-- Content items will be injected here -->
+    </div>
+
+    <script id="release-notes-data" type="application/json">
+        {{RELEASE_NOTES_JSON}}
+    </script>
+
+    <script>
+        // Data will be injected by C#
+        const watermarkBase64 = "{{WATERMARK_BASE64}}";
+
+        function init() {
+            try {
+                // Set watermark from Base64 if injected (for App), otherwise keep default src (for Preview)
+                if (watermarkBase64 && !watermarkBase64.startsWith("{{")) {
+                    document.getElementById('watermark-img').src = "data:image/png;base64," + watermarkBase64;
+                }
+
+                const sidebar = document.getElementById('sidebar');
+                const content = document.getElementById('content');
+
+                // Parse JSON data safely
+                const dataElement = document.getElementById('release-notes-data');
+                let releaseNotes = [];
+                
+                if (dataElement) {
+                    const rawData = dataElement.textContent.trim();
+                    if (rawData && !rawData.startsWith("{{")) {
+                        try {
+                            releaseNotes = JSON.parse(rawData);
+                        } catch (e) {
+                            console.error("Failed to parse release notes JSON", e);
+                            // Don't show error to user if it's just the placeholder failing to parse
+                        }
+                    }
+                }
+
+                if (!releaseNotes || releaseNotes.length === 0) {
+                    content.innerHTML = "<h1>No release notes found.</h1><p>If you are previewing this file, please note that data is injected by the application at runtime.</p>";
+                    return;
+                }
+
+                releaseNotes.forEach(note => {
+                    const id = "v" + note.Version.replace(/\./g, "_");
+                    const category = getCategory(note);
+                    const iconSvg = getIcon(category);
+
+                    // Create Sidebar Item
+                    const navItem = document.createElement('a');
+                    navItem.href = "#" + id;
+                    navItem.className = 'nav-item';
+                    navItem.onclick = function() { setActive(this); };
+                    navItem.innerHTML = `
+                        <div class="nav-header-row">
+                            <span>${note.Version}</span>
+                            <span>${note.Date}</span>
+                        </div>
+                        <div class="nav-icon">${iconSvg}</div>
+                        <div class='nav-desc'>${note.Summary}</div>
+                    `;
+                    sidebar.appendChild(navItem);
+
+                    // Create Content Item
+                    const section = document.createElement('div');
+                    section.id = id;
+                    section.className = 'release-section';
+                    section.innerHTML = `
+                        <div class='release-header'>
+                            <span class='version-badge'>${note.Version}</span>
+                            <span class='release-date'>${note.Date}</span>
+                        </div>
+                        <div class='release-summary'>${note.Summary}</div>
+                        <div class='release-details'>${note.Details}</div>
+                    `;
+                    content.appendChild(section);
+                });
+            } catch (err) {
+                document.body.innerHTML += '<div style="color:red; padding:20px; z-index:100; position:relative; background:white;">JS Error: ' + err.message + '</div>';
+            }
+        }
+
+        function getCategory(note) {
+            const text = (note.Summary + " " + note.Details).toLowerCase();
+            if (text.includes("fix") || text.includes("bug") || text.includes("error") || text.includes("crash") || text.includes("resolve")) return "bug";
+            if (text.includes("print")) return "print";
+            if (text.includes("add") || text.includes("new") || text.includes("feature") || text.includes("create")) return "feature";
+            if (text.includes("ui") || text.includes("theme") || text.includes("style") || text.includes("layout") || text.includes("design") || text.includes("color")) return "ui";
+            if (text.includes("database") || text.includes("sql") || text.includes("data") || text.includes("store")) return "data";
+            if (text.includes("improve") || text.includes("update") || text.includes("enhance") || text.includes("better") || text.includes("refactor") || text.includes("centralize")) return "improvement";
+            return "general";
+        }
+
+        function getIcon(category) {
+            const icons = {
+                bug: '<svg viewBox="0 0 24 24"><path d="M19 8h-1.81a5.985 5.985 0 0 0-1.82-1.96l.93-.93a.996.996 0 1 0-1.41-1.41l-1.47 1.47C12.96 5.06 12.49 5 12 5s-.96.06-1.43.17L9.1 3.7a.996.996 0 1 0-1.41 1.41l.93.93C7.5 6.55 6.81 7.22 6.81 8H5c-.55 0-1 .45-1 1s.45 1 1 1h1.09c-.05.33-.09.66-.09 1v1H5c-.55 0-1 .45-1 1s.45 1 1 1h1v1c0 .34.04.67.09 1H5c-.55 0-1 .45-1 1s.45 1 1 1h1.81c1.04 1.79 2.97 3 5.19 3s4.15-1.21 5.19-3H19c.55 0 1-.45 1-1s-.45-1-1-1h-1.09c.05-.33.09-.66.09-1v-1h1c.55 0 1-.45 1-1s-.45-1-1-1h-1v-1c0-.34-.04-.67-.09-1H19c.55 0 1-.45 1-1s-.45-1-1-1zm-6 8h-2c-.55 0-1-.45-1-1s.45-1 1-1h2c.55 0 1 .45 1 1s-.45 1-1 1z"/></svg>',
+                print: '<svg viewBox="0 0 24 24"><path d="M19 8h-1V3H6v5H5c-1.66 0-3 1.34-3 3v6h3v4h14v-4h3v-6c0-1.66-1.34-3-3-3zM8 5h8v3H8V5zm8 12v2H8v-4h8v2zm2-2v-2H6v2H4v-4c0-.55.45-1 1-1h14c.55 0 1 .45 1 1v4h-2z"/><circle cx="18" cy="11.5" r="1"/></svg>',
+                feature: '<svg viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>',
+                ui: '<svg viewBox="0 0 24 24"><path d="M12 3a9 9 0 0 0 0 18c4.97 0 9-4.03 9-9s-4.03-9-9-9zM7 10.5c-.83 0-1.5-.67-1.5-1.5S6.17 7.5 7 7.5s1.5.67 1.5 1.5S7.83 10.5 7 10.5zm3.5 3.5c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zM12 19c-1.66 0-3-1.34-3-3 0-.55.45-1 1-1s1 .45 1 1 1.34 3 3 3 .55 0 1 .45 1 1-.45 1-1 1zm5-6.5c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5z"/></svg>',
+                data: '<svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22z"/></svg>',
+                improvement: '<svg viewBox="0 0 24 24"><path d="M16 6l2.29 2.29-4.88 4.88-4-4L2 16.59 3.41 18l6-6 4 4 6.3-6.29L22 12V6z"/></svg>',
+                general: '<svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>'
+            };
+            return icons[category] || icons.general;
+        }
+
+        function setActive(element) {
+            document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+            element.classList.add('active');
+        }
+
+        // Initialize
+        init();
+    </script>
+</body>
+</html>

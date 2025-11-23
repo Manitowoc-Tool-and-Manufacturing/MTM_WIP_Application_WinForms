@@ -1,5 +1,11 @@
 [
   {
+    "Version": "6.3.4",
+    "Date": "November 23, 2025",
+    "Summary": "Startup architecture modernization and service refactoring.",
+    "Details": "<h3>Startup Reliability</h3><p><strong>What's new</strong>:</p><ul><li><strong>Robust Startup Sequence</strong>: The application now checks for database connectivity, user permissions, and system requirements in a strict order before showing the main window.</li><li><strong>Better Error Handling</strong>: If something goes wrong during startup, you'll get a clear, helpful error message instead of a crash.</li><li><strong>Service Organization</strong>: Internal code has been reorganized for better performance and maintainability.</li></ul>"
+  },
+  {
     "Version": "6.3.3",
     "Date": "November 23, 2025",
     "Summary": "System reliability improvements, centralized grid system, smart transaction deletion, and enhanced search capabilities.",
