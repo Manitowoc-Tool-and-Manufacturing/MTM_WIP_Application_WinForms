@@ -1,67 +1,67 @@
-Active,Include,File,Method,Description,CurrentShortcut,Variable
-TRUE,TRUE,Control_InventoryTab.cs,Control_InventoryTab_Button_Save.PerformClick(),Save Inventory Transaction,Shortcut_Inventory_Save,Shortcut_Inventory_Save
-TRUE,TRUE,Control_InventoryTab.cs,Control_InventoryTab_Button_AdvancedEntry.PerformClick(),Open Advanced Entry,Shortcut_Inventory_Advanced,Shortcut_Inventory_Advanced
-TRUE,TRUE,Control_InventoryTab.cs,Control_InventoryTab_Button_Reset.PerformClick(),Reset Inventory Tab,Shortcut_Inventory_Reset,Shortcut_Inventory_Reset
-TRUE,TRUE,Control_InventoryTab.cs,Control_InventoryTab_Button_Toggle_RightPanel.PerformClick(),Toggle Right Panel (Right),Shortcut_Inventory_ToggleRightPanel_Right,Shortcut_Inventory_ToggleRightPanel_Right
-TRUE,TRUE,Control_InventoryTab.cs,Control_InventoryTab_Button_Toggle_RightPanel.PerformClick(),Toggle Right Panel (Left),Shortcut_Inventory_ToggleRightPanel_Left,Shortcut_Inventory_ToggleRightPanel_Left
-FALSE,TRUE,Control_RemoveTab.cs,Control_RemoveTab_Button_Search.PerformClick(),Search Inventory,Shortcut_Remove_Search (Tooltip only),Shortcut_Remove_Search
-TRUE,TRUE,Control_RemoveTab.cs,Control_RemoveTab_Button_Delete.PerformClick(),Delete Selected Items,Keys.Delete (Hardcoded),Shortcut_Remove_Delete
-FALSE,TRUE,Control_RemoveTab.cs,Control_RemoveTab_Button_Reset.PerformClick(),Reset Remove Tab,Shortcut_Remove_Reset (Tooltip only),Shortcut_Remove_Reset
-TRUE,TRUE,Control_RemoveTab.cs,Control_RemoveTab_Button_Toggle_RightPanel.PerformClick(),Toggle Right Panel (Right),Alt + Right (Hardcoded),Shortcut_Remove_ToggleRightPanel_Right
-TRUE,TRUE,Control_RemoveTab.cs,Control_RemoveTab_Button_Toggle_RightPanel.PerformClick(),Toggle Right Panel (Left),Alt + Left (Hardcoded),Shortcut_Remove_ToggleRightPanel_Left
-FALSE,TRUE,Control_RemoveTab.cs,Control_RemoveTab_Button_Print.PerformClick(),Print Results,,
-FALSE,TRUE,Control_RemoveTab.cs,Control_RemoveTab_Button_Toggle_InputPanel.PerformClick(),Toggle Search Panel,,
-TRUE,TRUE,Control_TransferTab.cs,Control_TransferTab_Button_Search.PerformClick(),Search Inventory,Shortcut_Transfer_Search,Shortcut_Transfer_Search
-TRUE,TRUE,Control_TransferTab.cs,Control_TransferTab_Button_Transfer.PerformClick(),Transfer Selected Items,Shortcut_Transfer_Transfer,Shortcut_Transfer_Transfer
-TRUE,TRUE,Control_TransferTab.cs,Control_TransferTab_Button_Reset.PerformClick(),Reset Transfer Tab,Shortcut_Transfer_Reset,Shortcut_Transfer_Reset
-TRUE,TRUE,Control_TransferTab.cs,Control_TransferTab_Button_Toggle_RightPanel.PerformClick(),Toggle Right Panel (Right),Shortcut_Transfer_ToggleRightPanel_Right,Shortcut_Transfer_ToggleRightPanel_Right
-TRUE,TRUE,Control_TransferTab.cs,Control_TransferTab_Button_Toggle_RightPanel.PerformClick(),Toggle Right Panel (Left),Shortcut_Transfer_ToggleRightPanel_Left,Shortcut_Transfer_ToggleRightPanel_Left
-FALSE,TRUE,Control_TransferTab.cs,Control_TransferTab_Button_Print.PerformClick(),Print Results,,
-FALSE,TRUE,Control_TransferTab.cs,Control_TransferTab_Button_Toggle_Split.PerformClick(),Toggle Input Panel,,
-TRUE,TRUE,MainForm.cs,HandlePrintShortcut(),Print Active Grid,Ctrl + P (Hardcoded),
-TRUE,TRUE,MainForm.cs,MainForm_TabControl.SelectedIndex = 0,Switch to Inventory Tab,Shortcut_MainForm_Tab1,Shortcut_MainForm_Tab1
-TRUE,TRUE,MainForm.cs,MainForm_TabControl.SelectedIndex = 1,Switch to Remove Tab,Shortcut_MainForm_Tab2,Shortcut_MainForm_Tab2
-TRUE,TRUE,MainForm.cs,MainForm_TabControl.SelectedIndex = 2,Switch to Transfer Tab,Shortcut_MainForm_Tab3,Shortcut_MainForm_Tab3
-FALSE,TRUE,MainForm.cs,MainForm_MenuStrip_File_Settings_Click,Open Settings,,
-FALSE,TRUE,MainForm.cs,MainForm_MenuStrip_Exit_Click,Exit Application,,
-FALSE,TRUE,MainForm.cs,MainForm_MenuStrip_View_PersonalHistory_Click,View Personal History,,
-FALSE,TRUE,MainForm.cs,MainForm_MenuStrip_Development_ViewApplicationLogs_Click,View Application Logs,,
-FALSE,TRUE,MainForm.cs,MainForm_MenuStrip_Development_SyncReports_Click,Sync Reports,,
-FALSE,TRUE,MainForm.cs,MainForm_MenuStrip_Development_ViewErrorReports_Click,View Error Reports,,
-TRUE,TRUE,Control_AdvancedInventory.cs,AdvancedInventory_Single_Button_Send.PerformClick(),Send Single Entry,Shortcut_AdvInv_Send,Shortcut_AdvInv_Send
-TRUE,TRUE,Control_AdvancedInventory.cs,AdvancedInventory_Single_Button_Save.PerformClick(),Save Single Entry,Shortcut_AdvInv_Save,Shortcut_AdvInv_Save
-TRUE,TRUE,Control_AdvancedInventory.cs,AdvancedInventory_Single_Button_Reset.PerformClick(),Reset Single Entry,Shortcut_AdvInv_Reset,Shortcut_AdvInv_Reset
-TRUE,TRUE,Control_AdvancedInventory.cs,AdvancedInventory_Single_Button_Normal.PerformClick(),Return to Normal Inventory,Shortcut_AdvInv_Normal,Shortcut_AdvInv_Normal
-TRUE,TRUE,Control_AdvancedInventory.cs,AdvancedInventory_MultiLoc_Button_AddLoc.PerformClick(),Add Location (Multi),Shortcut_AdvInv_Multi_AddLoc,Shortcut_AdvInv_Multi_AddLoc
-TRUE,TRUE,Control_AdvancedInventory.cs,AdvancedInventory_MultiLoc_Button_SaveAll.PerformClick(),Save All (Multi),Shortcut_AdvInv_Multi_SaveAll,Shortcut_AdvInv_Multi_SaveAll
-TRUE,TRUE,Control_AdvancedInventory.cs,AdvancedInventory_MultiLoc_Button_Reset.PerformClick(),Reset Multi Entry,Shortcut_AdvInv_Multi_Reset,Shortcut_AdvInv_Multi_Reset
-TRUE,TRUE,Control_AdvancedInventory.cs,AdvancedInventory_Multi_Button_Normal.PerformClick(),Return to Normal Inventory (Multi),Shortcut_AdvInv_Multi_Normal,Shortcut_AdvInv_Multi_Normal
-TRUE,TRUE,Control_AdvancedInventory.cs,AdvancedInventory_Import_Button_OpenExcel.PerformClick(),Open Excel File,Shortcut_AdvInv_Import_OpenExcel,Shortcut_AdvInv_Import_OpenExcel
-TRUE,TRUE,Control_AdvancedInventory.cs,AdvancedInventory_Import_Button_ImportExcel.PerformClick(),Import Excel Data,Shortcut_AdvInv_Import_ImportExcel,Shortcut_AdvInv_Import_ImportExcel
-TRUE,TRUE,Control_AdvancedInventory.cs,AdvancedInventory_Import_Button_Save.PerformClick(),Save Imported Data,Shortcut_AdvInv_Import_Save,Shortcut_AdvInv_Import_Save
-TRUE,TRUE,Control_AdvancedInventory.cs,AdvancedInventory_Import_Button_Normal.PerformClick(),Return to Normal Inventory (Import),Shortcut_AdvInv_Import_Normal,Shortcut_AdvInv_Import_Normal
-TRUE,TRUE,Control_AdvancedInventory.cs,Switch to Advanced Remove Tab,Switch to Advanced Remove Tab,Shortcut_Remove_Advanced,Shortcut_Remove_Advanced
-FALSE,TRUE,Control_AdvancedInventory.cs,AdvancedInventory_Single_Button_InputToggle.PerformClick(),Toggle Single Input Panel,,
-FALSE,TRUE,Control_AdvancedInventory.cs,AdvancedInventory_Multi_Button_InputToggle.PerformClick(),Toggle Multi Input Panel,,
-FALSE,TRUE,Control_AdvancedInventory.cs,AdvancedInventory_Single_Button_QuickButtonToggle.PerformClick(),Toggle Single Quick Buttons,,
-FALSE,TRUE,Control_AdvancedInventory.cs,AdvancedInventory_Multi_Button_QuickButtonToggle.PerformClick(),Toggle Multi Quick Buttons,,
-FALSE,TRUE,Control_AdvancedInventory.cs,AdvancedInventory_Import_Button_QuickButtonToggle.PerformClick(),Toggle Import Quick Buttons,,
-TRUE,TRUE,Control_AdvancedRemove.cs,Control_AdvancedRemove_Button_Delete.PerformClick(),Delete Selected Items,Shortcut_Remove_Delete,Shortcut_Remove_Delete
-TRUE,TRUE,Control_AdvancedRemove.cs,Control_AdvancedRemove_Button_Undo.PerformClick(),Undo Last Deletion,Shortcut_Remove_Undo,Shortcut_Remove_Undo
-TRUE,TRUE,Control_AdvancedRemove.cs,Control_AdvancedRemove_Button_Reset.PerformClick(),Reset Advanced Remove,Shortcut_Remove_Reset,Shortcut_Remove_Reset
-TRUE,TRUE,Control_AdvancedRemove.cs,Control_AdvancedRemove_Button_Search.PerformClick(),Search Advanced Remove,Shortcut_Remove_Search,Shortcut_Remove_Search
-TRUE,TRUE,Control_AdvancedRemove.cs,Control_AdvancedRemove_Button_Normal.PerformClick(),Return to Normal Remove,Shortcut_Remove_Normal,Shortcut_Remove_Normal
-FALSE,TRUE,Control_AdvancedRemove.cs,Control_AdvancedRemove_Button_Print.PerformClick(),Print Results,,
-FALSE,TRUE,Control_AdvancedRemove.cs,Control_AdvancedRemove_Button_SidePanel.PerformClick(),Toggle Search Panel,,
-FALSE,TRUE,Control_AdvancedRemove.cs,Control_AdvancedRemove_Button_QuickButtonToggle.PerformClick(),Toggle Quick Buttons,,
-FALSE,TRUE,Control_QuickButtons.cs,MenuItemEdit_Click,Edit Quick Button,,
-FALSE,TRUE,Control_QuickButtons.cs,MenuItemRemove_Click,Remove Quick Button,,
-FALSE,TRUE,Control_QuickButtons.cs,MenuItemReorder_Click,Reorder Quick Buttons,,
-FALSE,TRUE,Control_QuickButtons.cs,QuickButton_Click (1-10),Trigger Quick Button 1-10,,
-FALSE,TRUE,Transactions.cs,SearchControl_SearchRequested,Search Transactions,,
-FALSE,TRUE,Transactions.cs,SearchControl_ResetRequested,Reset Search,,
-FALSE,TRUE,Transactions.cs,SearchControl_ExportRequested,Export Transactions,,
-FALSE,TRUE,Transactions.cs,SearchControl_PrintRequested,Print Transactions,,
-FALSE,TRUE,Transactions.cs,SearchControl_ToggleInformationPanelRequested,Toggle Info Panel,,
-FALSE,TRUE,Transactions.cs,GridControl_ToggleSearchRequested,Toggle Search Panel,,
-FALSE,TRUE,Transactions.cs,GridControl_AnalyticsRequested,Show Analytics,,
+Active,Include,File,Description,Method,CurrentShortcut,DefaultKeyCombo,Rules for Shortcut,Variable
+TRUE,TRUE,Control_AdvancedInventory.cs,Import Excel Data,AdvancedInventory_Import_Button_ImportExcel.PerformClick(),Shortcut_AdvInv_Import_ImportExcel,CTRL+I,,Shortcut_AdvInv_Import_ImportExcel
+TRUE,TRUE,Control_AdvancedInventory.cs,Return to Normal Inventory (Import),AdvancedInventory_Import_Button_Normal.PerformClick(),Shortcut_AdvInv_Import_Normal,CTRL+B,,Shortcut_AdvInv_Import_Normal
+TRUE,TRUE,Control_AdvancedInventory.cs,Open Excel File,AdvancedInventory_Import_Button_OpenExcel.PerformClick(),Shortcut_AdvInv_Import_OpenExcel,CTRL+E,,Shortcut_AdvInv_Import_OpenExcel
+FALSE,TRUE,Control_AdvancedInventory.cs,Toggle Import Quick Buttons,AdvancedInventory_Import_Button_QuickButtonToggle.PerformClick(),,ALT+RIGHT,,
+TRUE,TRUE,Control_AdvancedInventory.cs,Save Imported Data,AdvancedInventory_Import_Button_Save.PerformClick(),Shortcut_AdvInv_Import_Save,CTRL+S,,Shortcut_AdvInv_Import_Save
+FALSE,TRUE,Control_AdvancedInventory.cs,Toggle Multi Input Panel,AdvancedInventory_Multi_Button_InputToggle.PerformClick(),,ALT+LEFT,,
+TRUE,TRUE,Control_AdvancedInventory.cs,Return to Normal Inventory (Multi),AdvancedInventory_Multi_Button_Normal.PerformClick(),Shortcut_AdvInv_Multi_Normal,CTRL+B,,Shortcut_AdvInv_Multi_Normal
+FALSE,TRUE,Control_AdvancedInventory.cs,Toggle Multi Quick Buttons,AdvancedInventory_Multi_Button_QuickButtonToggle.PerformClick(),,ALT+RIGHT,,
+TRUE,TRUE,Control_AdvancedInventory.cs,Add Location (Multi),AdvancedInventory_MultiLoc_Button_AddLoc.PerformClick(),Shortcut_AdvInv_Multi_AddLoc,CTRL+ENTER,,Shortcut_AdvInv_Multi_AddLoc
+TRUE,TRUE,Control_AdvancedInventory.cs,Reset Multi Entry,AdvancedInventory_MultiLoc_Button_Reset.PerformClick(),Shortcut_AdvInv_Multi_Reset,CTRL+R,,Shortcut_AdvInv_Multi_Reset
+TRUE,TRUE,Control_AdvancedInventory.cs,Save All (Multi),AdvancedInventory_MultiLoc_Button_SaveAll.PerformClick(),Shortcut_AdvInv_Multi_SaveAll,CTRL+S,,Shortcut_AdvInv_Multi_SaveAll
+FALSE,TRUE,Control_AdvancedInventory.cs,Toggle Single Input Panel,AdvancedInventory_Single_Button_InputToggle.PerformClick(),,ALT+LEFT,,
+TRUE,TRUE,Control_AdvancedInventory.cs,Return to Normal Inventory,AdvancedInventory_Single_Button_Normal.PerformClick(),Shortcut_AdvInv_Normal,CTRL+B,,Shortcut_AdvInv_Normal
+FALSE,TRUE,Control_AdvancedInventory.cs,Toggle Single Quick Buttons,AdvancedInventory_Single_Button_QuickButtonToggle.PerformClick(),,ALT+RIGHT,,
+TRUE,TRUE,Control_AdvancedInventory.cs,Reset Single Entry,AdvancedInventory_Single_Button_Reset.PerformClick(),Shortcut_AdvInv_Reset,CTRL+R,,Shortcut_AdvInv_Reset
+TRUE,TRUE,Control_AdvancedInventory.cs,Save Single Entry,AdvancedInventory_Single_Button_Save.PerformClick(),Shortcut_AdvInv_Save,CTRL+S,,Shortcut_AdvInv_Save
+TRUE,TRUE,Control_AdvancedInventory.cs,Send Single Entry,AdvancedInventory_Single_Button_Send.PerformClick(),Shortcut_AdvInv_Send,CTRL+ENTER,,Shortcut_AdvInv_Send
+TRUE,TRUE,Control_AdvancedRemove.cs,Delete Selected Items,Control_AdvancedRemove_Button_Delete.PerformClick(),Shortcut_Remove_Delete,DEL,,Shortcut_Remove_Delete
+TRUE,TRUE,Control_AdvancedRemove.cs,Return to Normal Remove,Control_AdvancedRemove_Button_Normal.PerformClick(),Shortcut_Remove_Normal,CTRL+B,,Shortcut_Remove_Normal
+FALSE,TRUE,Control_AdvancedRemove.cs,Print Results,Control_AdvancedRemove_Button_Print.PerformClick(),,CTRL+P,,
+FALSE,TRUE,Control_AdvancedRemove.cs,Toggle Quick Buttons,Control_AdvancedRemove_Button_QuickButtonToggle.PerformClick(),,ALT+RIGHT,,
+TRUE,TRUE,Control_AdvancedRemove.cs,Reset Advanced Remove,Control_AdvancedRemove_Button_Reset.PerformClick(),Shortcut_Remove_Reset,CTRL+R,,Shortcut_Remove_Reset
+TRUE,TRUE,Control_AdvancedRemove.cs,Search Advanced Remove,Control_AdvancedRemove_Button_Search.PerformClick(),Shortcut_Remove_Search,CTRL+S,,Shortcut_Remove_Search
+FALSE,TRUE,Control_AdvancedRemove.cs,Toggle Search Panel,Control_AdvancedRemove_Button_SidePanel.PerformClick(),,ALT+LEFT,,
+TRUE,TRUE,Control_AdvancedRemove.cs,Undo Last Deletion,Control_AdvancedRemove_Button_Undo.PerformClick(),Shortcut_Remove_Undo,CTRL+Z,,Shortcut_Remove_Undo
+TRUE,TRUE,Control_InventoryTab.cs,Open Advanced Entry,Control_InventoryTab_Button_AdvancedEntry.PerformClick(),Shortcut_Inventory_Advanced,CTRL+SHIFT+A,,Shortcut_Inventory_Advanced
+TRUE,TRUE,Control_InventoryTab.cs,Reset Inventory Tab,Control_InventoryTab_Button_Reset.PerformClick(),Shortcut_Inventory_Reset,CTRL+R,,Shortcut_Inventory_Reset
+TRUE,TRUE,Control_InventoryTab.cs,Save Inventory Transaction,Control_InventoryTab_Button_Save.PerformClick(),Shortcut_Inventory_Save,CTRL+S,,Shortcut_Inventory_Save
+TRUE,TRUE,Control_InventoryTab.cs,Toggle Right Panel (Right),Control_InventoryTab_Button_Toggle_RightPanel.PerformClick(),Shortcut_Inventory_ToggleRightPanel_Right,ALT+RIGHT,,Shortcut_Inventory_ToggleRightPanel_Right
+TRUE,TRUE,Control_InventoryTab.cs,Toggle Right Panel (Left),Control_InventoryTab_Button_Toggle_RightPanel.PerformClick(),Shortcut_Inventory_ToggleRightPanel_Left,ALT+LEFT,,Shortcut_Inventory_ToggleRightPanel_Left
+TRUE,TRUE,Control_RemoveTab.cs,Delete Selected Items,Control_RemoveTab_Button_Delete.PerformClick(),Keys.Delete (Hardcoded),DEL,,Shortcut_Remove_Delete
+FALSE,TRUE,Control_RemoveTab.cs,Print Results,Control_RemoveTab_Button_Print.PerformClick(),,CTRL+P,,
+FALSE,TRUE,Control_RemoveTab.cs,Reset Remove Tab,Control_RemoveTab_Button_Reset.PerformClick(),Shortcut_Remove_Reset (Tooltip only),CTRL+R,,Shortcut_Remove_Reset
+FALSE,TRUE,Control_RemoveTab.cs,Search Inventory,Control_RemoveTab_Button_Search.PerformClick(),Shortcut_Remove_Search (Tooltip only),CTRL+S,,Shortcut_Remove_Search
+FALSE,TRUE,Control_RemoveTab.cs,Toggle Search Panel,Control_RemoveTab_Button_Toggle_InputPanel.PerformClick(),,CTRL+UP,,
+TRUE,TRUE,Control_RemoveTab.cs,Toggle Right Panel (Right),Control_RemoveTab_Button_Toggle_RightPanel.PerformClick(),Alt + Right (Hardcoded),ALT+RIGHT,,Shortcut_Remove_ToggleRightPanel_Right
+TRUE,TRUE,Control_RemoveTab.cs,Toggle Right Panel (Left),Control_RemoveTab_Button_Toggle_RightPanel.PerformClick(),Alt + Left (Hardcoded),ALT+LEFT,,Shortcut_Remove_ToggleRightPanel_Left
+FALSE,TRUE,Control_TransferTab.cs,Print Results,Control_TransferTab_Button_Print.PerformClick(),,CTRL+P,,
+TRUE,TRUE,Control_TransferTab.cs,Reset Transfer Tab,Control_TransferTab_Button_Reset.PerformClick(),Shortcut_Transfer_Reset,CTRL+R,,Shortcut_Transfer_Reset
+TRUE,TRUE,Control_TransferTab.cs,Search Inventory,Control_TransferTab_Button_Search.PerformClick(),Shortcut_Transfer_Search,CTRL+S,,Shortcut_Transfer_Search
+TRUE,TRUE,Control_TransferTab.cs,Toggle Right Panel (Right),Control_TransferTab_Button_Toggle_RightPanel.PerformClick(),Shortcut_Transfer_ToggleRightPanel_Right,ALT+RIGHT,Should toggle between Shortcut_Transfer_ToggleRightPanel_Right and Shortcut_Transfer_ToggleRightPanel_Left,Shortcut_Transfer_ToggleRightPanel_Right
+TRUE,TRUE,Control_TransferTab.cs,Toggle Right Panel (Left),Control_TransferTab_Button_Toggle_RightPanel.PerformClick(),Shortcut_Transfer_ToggleRightPanel_Left,ALT+RIGHT,Should toggle between Shortcut_Transfer_ToggleRightPanel_Right and Shortcut_Transfer_ToggleRightPanel_Left,Shortcut_Transfer_ToggleRightPanel_Left
+FALSE,TRUE,Control_TransferTab.cs,Toggle Input Panel,Control_TransferTab_Button_Toggle_Split.PerformClick(),,ALT+LEFT,,
+TRUE,TRUE,Control_TransferTab.cs,Transfer Selected Items,Control_TransferTab_Button_Transfer.PerformClick(),Shortcut_Transfer_Transfer,CTRL+T,,Shortcut_Transfer_Transfer
+FALSE,TRUE,Transactions.cs,Show Analytics,GridControl_AnalyticsRequested,,ALT+DOWN,Should Toggle Analytics and DataGrid Views,
+FALSE,TRUE,Transactions.cs,Toggle Search Panel,GridControl_ToggleSearchRequested,,ALT+UP,,
+TRUE,TRUE,MainForm.cs,Print Active Grid,HandlePrintShortcut(),Ctrl + P (Hardcoded),CTRL+P,,
+FALSE,TRUE,MainForm.cs,View Application Logs,MainForm_MenuStrip_Development_ViewApplicationLogs_Click,,CTRL+ALT+L,,
+FALSE,TRUE,MainForm.cs,View Error Reports,MainForm_MenuStrip_Development_ViewErrorReports_Click,,CTRL+ALT+E,,
+FALSE,TRUE,MainForm.cs,Exit Application,MainForm_MenuStrip_Exit_Click,,ALT+F4,,
+FALSE,TRUE,MainForm.cs,Open Settings,MainForm_MenuStrip_File_Settings_Click,,CTRL+ALT+S,,
+FALSE,TRUE,MainForm.cs,View Personal History,MainForm_MenuStrip_View_PersonalHistory_Click,,CTRL+ALT+H,,
+TRUE,TRUE,MainForm.cs,Switch to Inventory Tab,MainForm_TabControl.SelectedIndex = 0,Shortcut_MainForm_Tab1,CTRL+1,,Shortcut_MainForm_Tab1
+TRUE,TRUE,MainForm.cs,Switch to Remove Tab,MainForm_TabControl.SelectedIndex = 1,Shortcut_MainForm_Tab2,CTRL+2,,Shortcut_MainForm_Tab2
+TRUE,TRUE,MainForm.cs,Switch to Transfer Tab,MainForm_TabControl.SelectedIndex = 2,Shortcut_MainForm_Tab3,CTRL+3,,Shortcut_MainForm_Tab3
+FALSE,TRUE,Control_QuickButtons.cs,Edit Quick Button,MenuItemEdit_Click,,ALT+E+{QuckButtonKey#} 1-10,ALT+E+1 would EDIT quickbutton # 1,
+FALSE,TRUE,Control_QuickButtons.cs,Remove Quick Button,MenuItemRemove_Click,,ALT+R+{QuckButtonKey#} 1-10,ALT+R+1 would DELETE quickbutton # 1,
+FALSE,TRUE,Control_QuickButtons.cs,Reorder Quick Buttons,MenuItemReorder_Click,,ALT+O,,
+FALSE,TRUE,Control_QuickButtons.cs,Trigger Quick Button 1-10,QuickButton_Click (1-10),,ALT+{QuickButtonKey#} 1-10,,
+FALSE,TRUE,Transactions.cs,Export Transactions,SearchControl_ExportRequested,,CTRL+E,,
+FALSE,TRUE,Transactions.cs,Print Transactions,SearchControl_PrintRequested,,CTRL+P,,
+FALSE,TRUE,Transactions.cs,Reset Search,SearchControl_ResetRequested,,CTRL+R,,
+FALSE,TRUE,Transactions.cs,Search Transactions,SearchControl_SearchRequested,,CTRL+S,,
+FALSE,FALSE,Transactions.cs,Toggle Search Panel,Method exists but Im not sure where,,CTRL+UP,,
+FALSE,TRUE,Transactions.cs,Toggle Info Panel,SearchControl_ToggleInformationPanelRequested,,CTRL+RIGHT,,
+TRUE,TRUE,Control_AdvancedInventory.cs,Switch to Advanced Remove Tab,Switch to Advanced Remove Tab,Shortcut_Remove_Advanced,,,Shortcut_Remove_Advanced

@@ -47,9 +47,6 @@
         <None Remove="Resources\CHANGELOG.pdf" />
     </ItemGroup>
 
-    <ItemGroup>
-        <CompilerVisibleProperty Include="C:\Users\jkoll\source\repos\MTM_WIP_Application_Winforms\PlantUMLFiles" />
-    </ItemGroup>
 
     <PropertyGroup>
         <PlantUmlGenerator_OutputDir>$(ProjectDir)generated-uml</PlantUmlGenerator_OutputDir>
@@ -67,8 +64,16 @@
         <Content Include="MTMWIPApp.ico">
             <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </Content>
-        <EmbeddedResource Include="Resources\CHANGELOG.pdf" />
         <Content Include="RELEASE_NOTES_USER_FRIENDLY.md">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </Content>
+        <Content Include="RELEASE_NOTES.json">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </Content>
+        <Content Include="Documentation\ReleaseNotes\release-notes.html">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </Content>
+        <Content Include="Resources\MTM.png">
             <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </Content>
     </ItemGroup>
@@ -155,4 +160,10 @@
         </Compile>
     </ItemGroup>
 
+    <ItemGroup>
+        <Compile Remove="Old_Version\**" />
+        <EmbeddedResource Remove="Old_Version\**" />
+        <None Remove="Old_Version\**" />
+    </ItemGroup>
+    
 </Project>

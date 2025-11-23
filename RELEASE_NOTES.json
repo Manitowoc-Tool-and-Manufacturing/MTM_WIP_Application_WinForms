@@ -1,0 +1,128 @@
+[
+  {
+    "Version": "6.3.2",
+    "Date": "November 22, 2025",
+    "Summary": "Print dialog improvements: Notes column, collapsible sidebars, and better printer reliability.",
+    "Details": "<h3>Better Printing Experience</h3><p><strong>What's new</strong>:</p><ul><li><strong>Add Notes Column</strong>: You can now add a blank \"Notes\" column to your printouts. This is perfect for writing down corrections or counts while walking the floor.</li><li><strong>Collapsible Sidebars</strong>: Need to see more of the preview? You can now collapse the left and right settings panels to maximize the view.</li><li><strong>Improved Reliability</strong>: The print dialog no longer freezes if your selected printer is offline. It handles connection issues gracefully.</li><li><strong>Smarter Defaults</strong>: If you add a Notes column, the system suggests switching to Landscape mode for better fit.</li></ul><p><strong>Why this helps</strong>:</p><ul><li><strong>Paper Workflow</strong>: The new Notes column bridges the gap between digital data and physical inventory checks.</li><li><strong>Better Visibility</strong>: See your document clearly without settings panels taking up space.</li><li><strong>Less Frustration</strong>: No more application freezes when a printer is acting up.</li></ul>"
+  },
+  {
+    "Version": "6.3.1",
+    "Date": "November 20, 2025",
+    "Summary": "User Management screen updated to match new card interface style.",
+    "Details": "<h3>Consistent User Management</h3><p><strong>What's new</strong>:</p><ul><li><strong>Unified \"Manage Users\" Link</strong>: The Settings Home page now has a single \"Manage Users\" link, just like Parts and Locations.</li><li><strong>Improved Navigation</strong>: Added a \"Home\" button to the User Management screen to quickly return to the main Settings menu.</li><li><strong>Consistent Behavior</strong>: User Management now works exactly like the other new management screens (Parts, Locations, Operations).</li></ul><p><strong>Why this helps</strong>:</p><ul><li><strong>Less Confusion</strong>: All settings screens now look and behave the same way.</li><li><strong>Easier Navigation</strong>: Move between screens and back to home with fewer clicks.</li></ul>"
+  },
+  {
+    "Version": "6.3.0",
+    "Date": "November 20, 2025",
+    "Summary": "Complete redesign of Settings management screens with modern card interface.",
+    "Details": "<h3>Modern Settings Management</h3><p><strong>What's new</strong>:</p><ul><li><strong>Unified Management Screens</strong>: We've combined the separate \"Add\", \"Edit\", and \"Remove\" tabs into single, easy-to-use management hubs.</li><li><strong>Card-Based Navigation</strong>: Large, clear tiles help you choose exactly what you want to do (Add 🏢, Edit ✏️, or Remove 🗑️).</li><li><strong>Consistent Experience</strong>: Managing Parts, Locations, Operations, and Item Types now works exactly the same way.</li><li><strong>Smart \"Back\" Navigation</strong>: Easily return to the main selection screen without losing your place.</li></ul><p><strong>Where to see it</strong>:</p><ul><li><strong>Settings → Part Numbers</strong></li><li><strong>Settings → Locations</strong></li><li><strong>Settings → Operations</strong></li><li><strong>Settings → Item Types</strong></li></ul><p><strong>Why this helps</strong>:</p><ul><li><strong>Less Clutter</strong>: The Settings tree menu is much cleaner (no more long lists of \"Add/Edit/Remove\" sub-items).</li><li><strong>Faster Workflow</strong>: Get in, make your change, and get out with fewer clicks.</li><li><strong>Better Feedback</strong>: Improved validation and status messages keep you informed.</li><li><strong>Modern Look</strong>: Matches the clean design of the main application dashboard.</li></ul>"
+  },
+  {
+    "Version": "6.2.3",
+    "Date": "November 15, 2025",
+    "Summary": "Search buttons added to all main entry tabs for quick access to full lists.",
+    "Details": "<h3>Quick Access Search Buttons on All Tabs</h3><p><strong>What's new</strong>:</p><ul><li><strong>🔎 Search buttons</strong> added next to key fields on Inventory, Transfer, and Remove tabs</li><li><strong>Smart behavior</strong>: Buttons adapt based on whether the field has text</li><li><strong>Mouse-friendly alternative</strong> to pressing F4 on the keyboard</li><li><strong>Consistent across all tabs</strong> - same helpful buttons everywhere</li></ul><p><strong>Where they appear</strong>:</p><ul><li><strong>Inventory Tab</strong>: Part Number, Operation, Location, Color Code (4 buttons)</li><li><strong>Transfer Tab</strong>: Part Number, Operation, To Location (3 buttons)</li><li><strong>Remove Tab</strong>: Part Number, Operation (2 buttons)</li></ul><p><strong>How to use them</strong>:</p><ol><li><strong>When field is empty</strong>: Click 🔎 button → Opens full dropdown list (same as pressing F4)</li><li><strong>When field has text</strong>: Click 🔎 button → Moves to next field (same as pressing Enter)</li></ol><p><strong>Why this helps</strong>:</p><ul><li><strong>Less keyboard needed</strong> - mouse users can access dropdowns without touching F4 key</li><li><strong>Faster navigation</strong> - one click moves you forward when you're done</li><li><strong>Clearer interface</strong> - easy to see where you can get help finding values</li><li><strong>Consistent experience</strong> - same buttons work the same way on every tab</li></ul>"
+  },
+  {
+    "Version": "6.2.2",
+    "Date": "November 15, 2025",
+    "Summary": "Advanced Inventory Entry modernized with smart suggestions and Excel auto-template.",
+    "Details": "<h3>Advanced Inventory Entry Gets Smart Suggestions</h3><p><strong>What's new</strong>:</p><ul><li><strong>Type-to-search</strong> now works in Advanced Inventory Entry</li><li><strong>Smart Part/Operation/Location fields</strong> replace the old dropdown menus</li><li><strong>🔎 Search buttons</strong> next to each field</li><li><strong>Keyboard shortcuts</strong>: Press F4 to open suggestions, or just start typing</li><li><strong>Row deletion with confirmation</strong>: Select a preview row and press Delete key to remove it</li></ul><h3>Excel Import Template Auto-Creation</h3><p><strong>What's new</strong>:</p><ul><li><strong>Excel template created automatically</strong> when you open Advanced Inventory Entry</li><li><strong>No more \"file not found\" errors</strong> when trying to import</li><li><strong>Ready-to-use structure</strong> with proper column headers</li></ul>"
+  },
+  {
+    "Version": "6.2.0",
+    "Date": "November 13, 2025",
+    "Summary": "Universal suggestions, smart confirmations, and focus highlighting improvements.",
+    "Details": "<h3>Intelligent Part Number, Operation, and Location Entry</h3><p><strong>What's new</strong>:</p><ul><li><strong>Type to find</strong>: Start typing in Part Number, Operation, or Location and matching options appear instantly</li><li><strong>Works the way you type</strong>: Partial matches are supported</li><li><strong>Keyboard friendly</strong>: Use the arrow keys to move, Enter to select, Escape to cancel</li></ul><h3>Smart Deletion and Transfer Confirmation</h3><p><strong>What's new</strong>:</p><ul><li><strong>Confirmation before any deletion or transfer</strong></li><li><strong>Smart grouping for multiple items</strong></li><li><strong>Clear summary</strong>: See exactly what will be deleted or transferred before it happens</li></ul><h3>Focus Highlighting Improvements</h3><p><strong>What's fixed</strong>:</p><ul><li><strong>Transfer Tab Location field</strong>: Focus highlighting now works on the To Location field</li><li><strong>Consistent highlighting</strong>: All text input fields now highlight properly when focused</li></ul>"
+  },
+  {
+    "Version": "6.1.0",
+    "Date": "November 12, 2025",
+    "Summary": "Themes update instantly and reliably across all forms.",
+    "Details": "<h3>Lightning-Fast Theme Changes</h3><p><strong>What's new</strong>:</p><ul><li><strong>Instant theme updates</strong>: Theme changes now apply in under 100 milliseconds</li><li><strong>Automatic updates everywhere</strong>: When you change your theme, ALL open windows update automatically</li><li><strong>Live preview</strong>: In Settings → Theme tab, see your theme change in real-time</li></ul><p><strong>What's better now</strong>:</p><ul><li><strong>No more manual refresh</strong>: Old system required closing and reopening forms to see theme changes</li><li><strong>Memory efficient</strong>: New system uses 10% less memory</li><li><strong>Performance optimized</strong>: Theme application is 3x faster</li></ul>"
+  },
+  {
+    "Version": "6.0.2",
+    "Date": "November 8, 2025",
+    "Summary": "Theme selection now saves correctly and remembers your choice.",
+    "Details": "<h3>Theme Selection Now Saves Properly</h3><p><strong>What's fixed</strong>:</p><ul><li><strong>Your theme choice is remembered</strong>: When you change your theme in Settings, it now saves correctly</li><li><strong>No more reverting to default</strong>: Fixed issue where theme selection would reset to \"Lavender\"</li></ul><p><strong>What's better now</strong>:</p><ul><li><strong>Pick your theme and keep it</strong>: Choose any of the 9 available themes and your choice is saved</li><li><strong>Instant application</strong>: Theme applies immediately when you click Save</li></ul>"
+  },
+  {
+    "Version": "6.0.1",
+    "Date": "November 8, 2025",
+    "Summary": "QuickButtons now work perfectly - fixes for duplicates, display issues, and save order.",
+    "Details": "<h3>QuickButtons Are Now 100% Reliable</h3><p><strong>What's fixed</strong>:</p><ul><li><strong>No more duplicate buttons</strong>: Fixed issue where the same part/operation would appear multiple times</li><li><strong>Proper display when clicking buttons</strong>: QuickButtons now fill in Part Number and Operation fields correctly</li><li><strong>Edit dialog with smart dropdowns</strong>: Right‑click Edit now shows dropdowns with type‑to‑search</li><li><strong>New buttons appear at top</strong>: When you save a transaction as a QuickButton, it now appears at the top</li></ul>"
+  },
+  {
+    "Version": "6.0.0",
+    "Date": "November 8, 2025",
+    "Summary": "Complete redesign of Transaction History Viewer with major performance and usability improvements.",
+    "Details": "<h3>Settings Form Now Works for All Users</h3><p><strong>What's fixed</strong>:</p><ul><li><strong>Settings form no longer crashes when opening</strong></li><li><strong>Fixed database connection switching issue</strong></li><li><strong>Environment-aware server selection</strong></li></ul><h3>Easier User Management</h3><p><strong>What's fixed</strong>:</p><ul><li><strong>Faster user deletion</strong></li><li><strong>Cleaner process</strong></li></ul><h3>Simplified Part Number Management</h3><p><strong>What's fixed</strong>:</p><ul><li><strong>Only 2 required fields</strong>: Part Number and Item Type</li><li><strong>Item Type defaults to \"WIP\"</strong></li></ul>"
+  },
+  {
+    "Version": "5.9.0",
+    "Date": "November 2, 2025",
+    "Summary": "User Management, Part Number Management, and Settings Form improvements.",
+    "Details": "<h3>Settings Form Now Works for All Users</h3><p><strong>What's New</strong>:</p><ul><li><strong>Modern 3-panel layout</strong></li><li><strong>Lightning fast searches</strong></li><li><strong>Advanced filtering</strong></li><li><strong>Smart pagination</strong></li></ul><h3>Transaction Analytics Summary (NEW!)</h3><p><strong>What's New</strong>:</p><ul><li><strong>Real-time statistics</strong> displayed above the search results</li><li><strong>Summary cards</strong> show totals for current date range</li></ul>"
+  },
+  {
+    "Version": "5.4.0",
+    "Date": "October 26, 2025",
+    "Summary": "New error report management system for developers.",
+    "Details": "<h3>For IT Support and Developers: Manage User-Reported Issues</h3><p><strong>New \"View Error Reports\" feature</strong>:</p><ul><li><strong>Browse all error reports</strong> submitted by users in one place</li><li><strong>Search and filter</strong> by date, user, machine, or error type</li><li><strong>View complete details</strong> including what the user was doing</li></ul>"
+  },
+  {
+    "Version": "5.3.3",
+    "Date": "October 26, 2025",
+    "Summary": "New error reporting feature.",
+    "Details": "<h3>Help Us Fix Problems Faster</h3><p><strong>New \"Report Issue\" button</strong> in error messages:</p><ul><li>When something goes wrong, you'll see a <strong>\"Report Issue\"</strong> button</li><li>Click it to tell us what you were doing when the error happened</li></ul><h3>Works Even When Network is Down</h3><p><strong>Don't worry about losing reports</strong>:</p><ul><li>If the network is down, your report is saved locally</li></ul>"
+  },
+  {
+    "Version": "5.3.2",
+    "Date": "October 25, 2025",
+    "Summary": "Better error tracking with computer names.",
+    "Details": "<h3>Automatic Computer Name Tracking</h3><p><strong>What's new</strong>:</p><ul><li>When you submit an error report, the system now automatically records which computer you're using</li><li>Shows the actual computer name</li></ul><p><strong>Why this helps</strong>:</p><ul><li><strong>IT can troubleshoot faster</strong></li><li><strong>Identify problem machines</strong></li></ul>"
+  },
+  {
+    "Version": "5.3.1",
+    "Date": "October 25, 2025",
+    "Summary": "Display scaling improvements.",
+    "Details": "<h3>Better Display on Different Monitors and Screen Scaling</h3><p><strong>If you use multiple monitors</strong>:</p><ul><li>The application now <strong>asks before automatically resizing</strong> when display scaling changes</li></ul><h3>Error Messages Look Right Now</h3><p><strong>What's fixed</strong>: Error messages now appear at the right size on all screens</p>"
+  },
+  {
+    "Version": "5.1.0",
+    "Date": "October 17-21, 2025",
+    "Summary": "Database layer modernization - comprehensive refactoring.",
+    "Details": "<h3>Modernized Database Architecture</h3><p><strong>Major behind-the-scenes overhaul completed</strong>:</p><ul><li><strong>60+ stored procedures standardized</strong></li><li><strong>12 Data Access Objects (DAOs) refactored</strong></li><li><strong>220+ database call sites updated</strong></li></ul><p><strong>What this prevents</strong>:</p><ul><li>MySQL parameter errors</li><li>Data corruption</li><li>Application crashes</li></ul>"
+  },
+  {
+    "Version": "Items not included above Part 1 of 5",
+    "Date": "August 10, 2025",
+    "Summary": "System Reliability: Connection monitoring and centralized error reporting.",
+    "Details": "<h3>System Health & Monitoring</h3><p><strong>Connection Strength Monitor</strong>:</p><ul><li><strong>Real-time Signal</strong>: New indicator in the status bar shows database connection quality.</li><li><strong>Auto-Recovery</strong>: System automatically attempts to reconnect if the network drops.</li></ul><p><strong>Centralized Error Reporting</strong>:</p><ul><li><strong>No More Crashes</strong>: Replaced generic crash dialogs with a robust error handler.</li><li><strong>Detailed Logs</strong>: Errors are now logged with full stack traces and user context for IT support.</li></ul>"
+  },
+  {
+    "Version": "Items not included above Part 2 of 5",
+    "Date": "August 8, 2025",
+    "Summary": "Transaction Viewer: A powerful replacement for Personal History.",
+    "Details": "<h3>Transaction Intelligence</h3><p><strong>Global Search & Filtering</strong>:</p><ul><li><strong>Beyond Personal History</strong>: Search across ALL transactions in the system, not just your own.</li><li><strong>Advanced Filters</strong>: Filter by Part Number, User, Date Range, or Transaction Type.</li></ul><p><strong>Analytics Dashboard</strong>:</p><ul><li><strong>Visual Insights</strong>: Real-time charts showing Total IN, OUT, and TRANSFER operations.</li><li><strong>Data Export</strong>: One-click export of any search result to Excel.</li></ul><p><strong>Admin Capabilities</strong>:</p><ul><li><strong>Correction Tools</strong>: Administrators can now delete erroneous transactions directly from the grid.</li></ul>"
+  },
+  {
+    "Version": "Items not included above Part 3 of 5",
+    "Date": "August 5, 2025",
+    "Summary": "Advanced Tools: Excel integration, Batch operations, and Undo support.",
+    "Details": "<h3>Advanced Inventory Management</h3><p><strong>Batch Operations</strong>:</p><ul><li><strong>Excel Integration</strong>: Native import/export support for bulk inventory updates.</li><li><strong>Mass Entry</strong>: Optimized interface for entering hundreds of items quickly.</li></ul><p><strong>Safety Nets</strong>:</p><ul><li><strong>Undo Functionality</strong>: Accidentally removed an item? The new 'Undo' button restores it instantly.</li><li><strong>Soft Deletes</strong>: Removed items are archived rather than permanently deleted, creating an audit trail.</li></ul>"
+  },
+  {
+    "Version": "Items not included above Part 4 of 5",
+    "Date": "August 3, 2025",
+    "Summary": "Inventory Experience: Smart suggestions, animations, and async performance.",
+    "Details": "<h3>Modernized Inventory Controls</h3><p><strong>Smart Input Fields</strong>:</p><ul><li><strong>Suggestion Boxes</strong>: Replaced slow dropdowns with fast, type-to-search autocomplete fields for Parts and Locations.</li><li><strong>Color Code Logic</strong>: Robust handling of 'Red', 'Blue', and custom color codes.</li></ul><p><strong>Responsive UI</strong>:</p><ul><li><strong>Async Operations</strong>: Saving and loading data happens in the background - no more screen freezing.</li><li><strong>Progress Feedback</strong>: Visual progress bars show status during complex operations.</li></ul><p><strong>Smart Transfers</strong>:</p><ul><li><strong>Visual Cues</strong>: Animated arrows indicate stock movement direction (Source → Destination).</li><li><strong>Logic Checks</strong>: Prevents transferring more quantity than exists in the source location.</li></ul>"
+  },
+  {
+    "Version": "Items not included above Part 5 of 5",
+    "Date": "August 1, 2025",
+    "Summary": "The Foundation: Complete rewrite with .NET 8 and Enterprise Architecture.",
+    "Details": "<h3>A New Era for MTM WIP</h3><p><strong>Core Architecture</strong>:</p><ul><li><strong>Modern Stack</strong>: Rebuilt from scratch using .NET 8 and C# 12.</li><li><strong>Secure Data</strong>: Moved from direct SQL injection risks to secure Stored Procedures and Data Access Objects (DAOs).</li><li><strong>Dependency Injection</strong>: Modular design makes the app easier to maintain and test.</li></ul><p><strong>User Interface Overhaul</strong>:</p><ul><li><strong>Tab-Based Navigation</strong>: Replaced clunky MDI windows with a clean, modern tab interface.</li><li><strong>Theming Engine</strong>: Native support for Light, Dark, and High Contrast themes.</li><li><strong>High DPI Support</strong>: Looks crisp on 4K monitors and standard screens alike.</li></ul>"
+  }
+]

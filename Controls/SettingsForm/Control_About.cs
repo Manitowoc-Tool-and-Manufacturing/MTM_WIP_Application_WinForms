@@ -64,13 +64,13 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
         {
             try
             {
-                string releaseNotesPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "RELEASE_NOTES_USER_FRIENDLY.md");
+                string releaseNotesPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "RELEASE_NOTES.json");
                 
                 // If not found in bin, check project root (for dev environment)
                 if (!File.Exists(releaseNotesPath))
                 {
                     string projectRoot = Path.GetFullPath(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"..\..\.."));
-                    string devPath = Path.Combine(projectRoot, "RELEASE_NOTES_USER_FRIENDLY.md");
+                    string devPath = Path.Combine(projectRoot, "RELEASE_NOTES.json");
                     if (File.Exists(devPath))
                     {
                         releaseNotesPath = devPath;
@@ -79,8 +79,8 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
 
                 if (File.Exists(releaseNotesPath))
                 {
-                    string markdownContent = File.ReadAllText(releaseNotesPath);
-                    using (var form = new ViewReleaseNotesForm(markdownContent))
+                    string jsonContent = File.ReadAllText(releaseNotesPath);
+                    using (var form = new ViewReleaseNotesForm(jsonContent))
                     {
                         form.ShowDialog(this);
                     }
