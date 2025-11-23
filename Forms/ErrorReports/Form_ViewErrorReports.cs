@@ -1,8 +1,4 @@
-using System;
-using System.Threading.Tasks;
-using System.Windows.Forms;
 using MTM_WIP_Application_Winforms.Controls.ErrorReports;
-using MTM_WIP_Application_Winforms.Core;
 using MTM_WIP_Application_Winforms.Forms.Shared;
 using MTM_WIP_Application_Winforms.Models;
 using MTM_WIP_Application_Winforms.Services;

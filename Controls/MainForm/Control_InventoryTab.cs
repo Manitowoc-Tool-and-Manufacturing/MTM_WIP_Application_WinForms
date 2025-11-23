@@ -1,8 +1,6 @@
 using System.ComponentModel;
 using System.Diagnostics;
-using System.Text;
 using Microsoft.Extensions.DependencyInjection;
-using DocumentFormat.OpenXml.Office.CustomUI;
 using MTM_WIP_Application_Winforms.Core;
 using MTM_WIP_Application_Winforms.Controls.Shared;
 using MTM_WIP_Application_Winforms.Data;
@@ -12,7 +10,6 @@ using MTM_WIP_Application_Winforms.Helpers;
 using MTM_WIP_Application_Winforms.Logging;
 using MTM_WIP_Application_Winforms.Models;
 using MTM_WIP_Application_Winforms.Services;
-using MySql.Data.MySqlClient;
 
 namespace MTM_WIP_Application_Winforms.Controls.MainForm
 {
@@ -1008,6 +1005,8 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                 ["ControlType"] = nameof(Control_InventoryTab)
             }, nameof(Control_InventoryTab), nameof(Control_InventoryTab_SoftReset));
 
+            LoggingUtility.Log("[Control_InventoryTab] SoftReset called");
+
             Control_InventoryTab_Button_Reset.Enabled = false;
             try
             {
@@ -1511,6 +1510,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                 // NOTE: Part and Operation now use SuggestionTextBox - wire up SuggestionSelected events instead
                 Control_InventoryTab_SuggestionBox_Part.TextBox.SuggestionSelected += (s, e) =>
                 {
+                    LoggingUtility.Log($"[Control_InventoryTab] Part SuggestionSelected: '{e.SelectedValue}'");
                     Model_Application_Variables.PartId = e.SelectedValue;
 
                     Control_InventoryTab_Update_SaveButtonState();
@@ -1522,9 +1522,11 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                 // Clear PartId when user manually types (not selecting from overlay)
                 Control_InventoryTab_SuggestionBox_Part.TextChanged += (s, e) =>
                 {
+                    LoggingUtility.Log($"[Control_InventoryTab] Part TextChanged: '{Control_InventoryTab_SuggestionBox_Part.Text}'");
                     // Only clear if text doesn't match the stored valid value
                     if (Control_InventoryTab_SuggestionBox_Part.Text != Model_Application_Variables.PartId)
                     {
+                        LoggingUtility.Log($"[Control_InventoryTab] Clearing PartId (Current: {Model_Application_Variables.PartId})");
                         Model_Application_Variables.PartId = null;
                         Control_InventoryTab_Update_SaveButtonState();
                     }
@@ -1733,6 +1735,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
         {
             try
             {
+                LoggingUtility.Log("[Control_InventoryTab] UpdateColorCodeFieldsVisibility entered");
                 Service_DebugTracer.TraceMethodEntry(null, nameof(UpdateColorCodeFieldsVisibility), nameof(Control_InventoryTab));
 
                 var partText = Control_InventoryTab_SuggestionBox_Part.Text?.Trim();
@@ -1791,9 +1794,11 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                 {
                     ["Visible"] = inCache
                 }, nameof(UpdateColorCodeFieldsVisibility), nameof(Control_InventoryTab));
+                LoggingUtility.Log("[Control_InventoryTab] UpdateColorCodeFieldsVisibility exited");
             }
             catch (Exception ex)
             {
+                LoggingUtility.LogApplicationError(ex);
                 Service_ErrorHandler.HandleException(
                     ex,
                     Enum_ErrorSeverity.Low,

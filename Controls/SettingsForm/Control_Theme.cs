@@ -1,13 +1,8 @@
-﻿using System;
-using System.Linq;
-using System.Threading.Tasks;
-using System.Windows.Forms;
-using MTM_WIP_Application_Winforms.Core;
+﻿using MTM_WIP_Application_Winforms.Core;
 using MTM_WIP_Application_Winforms.Core.Theming;
 using MTM_WIP_Application_Winforms.Core.Theming.Interfaces;
 using MTM_WIP_Application_Winforms.Data;
 using MTM_WIP_Application_Winforms.Models;
-using MTM_WIP_Application_Winforms.Logging;
 using MTM_WIP_Application_Winforms.Services;
 using Microsoft.Extensions.DependencyInjection;
 using MTM_WIP_Application_Winforms.Forms.Shared;
@@ -22,6 +17,23 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
         public Control_Theme()
         {
             InitializeComponent();
+            
+            // Initialize new checkbox programmatically since we can't edit designer
+            Control_Themes_CheckBox_ShowTotalSummaryPanel = new CheckBox();
+            Control_Themes_CheckBox_ShowTotalSummaryPanel.AutoSize = true;
+            Control_Themes_CheckBox_ShowTotalSummaryPanel.Location = new Point(Control_Themes_CheckBox_AutoExpandPanels.Location.X, Control_Themes_CheckBox_AutoExpandPanels.Location.Y + 30);
+            Control_Themes_CheckBox_ShowTotalSummaryPanel.Name = "Control_Themes_CheckBox_ShowTotalSummaryPanel";
+            Control_Themes_CheckBox_ShowTotalSummaryPanel.Size = new Size(180, 24);
+            Control_Themes_CheckBox_ShowTotalSummaryPanel.TabIndex = 10;
+            Control_Themes_CheckBox_ShowTotalSummaryPanel.Text = "Show Total Summary Panel";
+            Control_Themes_CheckBox_ShowTotalSummaryPanel.UseVisualStyleBackColor = true;
+            
+            // Add to the same parent as other checkboxes
+            if (Control_Themes_CheckBox_AutoExpandPanels.Parent != null)
+            {
+                Control_Themes_CheckBox_AutoExpandPanels.Parent.Controls.Add(Control_Themes_CheckBox_ShowTotalSummaryPanel);
+            }
+
             Control_Themes_Button_Save.Click += SaveButton_Click;
             Control_Themes_Button_Preview.Click += PreviewButton_Click;
             LoadThemeSettingsAsync();
@@ -46,6 +58,8 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
 
                 var themeResult = await Dao_User.GetThemeNameAsync(user);
                 var animationsResult = await Dao_User.GetAnimationsEnabledAsync(user);
+                var autoExpandResult = await Dao_User.GetAutoExpandPanelsAsync(user);
+                var showTotalSummaryResult = await Dao_User.GetShowTotalSummaryPanelAsync(user);
 
                 if (themeResult.IsSuccess)
                 {
@@ -60,6 +74,11 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
                     }
 
                     Control_Themes_CheckBox_EnableAnimations.Checked = animationsResult.IsSuccess ? animationsResult.Data : true;
+                    Control_Themes_CheckBox_AutoExpandPanels.Checked = autoExpandResult.IsSuccess ? autoExpandResult.Data : true;
+                    if (Control_Themes_CheckBox_ShowTotalSummaryPanel != null)
+                    {
+                        Control_Themes_CheckBox_ShowTotalSummaryPanel.Checked = showTotalSummaryResult.IsSuccess ? showTotalSummaryResult.Data : false;
+                    }
 
                     StatusMessageChanged?.Invoke(this, "Theme settings loaded successfully.");
                 }
@@ -127,54 +146,38 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
                     return;
                 }
 
-                // FIXED: Use the proper theme setter that works with existing database structure
+                // Save settings
                 var saveResult = await Dao_User.SetThemeNameAsync(user, selectedTheme);
                 var animResult = await Dao_User.SetAnimationsEnabledAsync(user, Control_Themes_CheckBox_EnableAnimations.Checked);
+                var autoExpandResult = await Dao_User.SetAutoExpandPanelsAsync(user, Control_Themes_CheckBox_AutoExpandPanels.Checked);
+                var showTotalSummaryResult = await Dao_User.SetShowTotalSummaryPanelAsync(user, Control_Themes_CheckBox_ShowTotalSummaryPanel?.Checked ?? false);
 
-                if (!saveResult.IsSuccess || !animResult.IsSuccess)
+                if (!saveResult.IsSuccess || !animResult.IsSuccess || !autoExpandResult.IsSuccess || !showTotalSummaryResult.IsSuccess)
                 {
-                    string errorMsg = !saveResult.IsSuccess ? saveResult.ErrorMessage : animResult.ErrorMessage;
+                    string errorMsg = "Failed to save some settings:\n";
+                    if (!saveResult.IsSuccess) errorMsg += $"- Theme: {saveResult.ErrorMessage}\n";
+                    if (!animResult.IsSuccess) errorMsg += $"- Animations: {animResult.ErrorMessage}\n";
+                    if (!autoExpandResult.IsSuccess) errorMsg += $"- Auto Expand: {autoExpandResult.ErrorMessage}\n";
+                    if (!showTotalSummaryResult.IsSuccess) errorMsg += $"- Show Total Summary: {showTotalSummaryResult.ErrorMessage}\n";
+                    
                     Service_ErrorHandler.HandleDatabaseError(
-                        new Exception($"Failed to save theme settings: {errorMsg}"),
-                        contextData: new Dictionary<string, object>
-                        {
-                            ["User"] = user,
-                            ["SelectedTheme"] = selectedTheme
-                        },
+                        new Exception(errorMsg),
+                        contextData: new Dictionary<string, object> { ["User"] = user },
                         callerName: nameof(SaveButton_Click),
-                        controlName: nameof(Control_Theme)
-                    );
-
-                    StatusMessageChanged?.Invoke(this, $"Error saving theme: {errorMsg}");
-                    return;
+                        controlName: nameof(Control_Theme));
+                        
+                    StatusMessageChanged?.Invoke(this, "Error saving settings.");
                 }
-
-                // Update the application variables and apply changes
-                Model_Application_Variables.ThemeEnabled = true; // Always enabled
-                Model_Application_Variables.AnimationsEnabled = Control_Themes_CheckBox_EnableAnimations.Checked;
-                if (!string.IsNullOrEmpty(selectedTheme))
+                else
                 {
+                    // Update global variables
                     Model_Application_Variables.ThemeName = selectedTheme;
+                    Model_Application_Variables.AnimationsEnabled = Control_Themes_CheckBox_EnableAnimations.Checked;
+                    Model_Application_Variables.AutoExpandPanels = Control_Themes_CheckBox_AutoExpandPanels.Checked;
+                    Model_Application_Variables.ShowTotalSummaryPanel = Control_Themes_CheckBox_ShowTotalSummaryPanel?.Checked ?? false;
+
+                    StatusMessageChanged?.Invoke(this, "Settings saved successfully.");
                 }
-
-                // Use new theme system: ThemeManager will notify all ThemedForm subscribers
-                var themeProvider = Program.ServiceProvider?.GetService<IThemeProvider>();
-                if (themeProvider != null)
-                {
-                    if (!string.IsNullOrEmpty(selectedTheme))
-                    {
-                        // Apply theme
-                        await themeProvider.SetThemeAsync(selectedTheme, ThemeChangeReason.UserSelection, user);
-
-                    }
-                }
-                else if (themeProvider == null)
-                {
-
-                }
-
-                ThemeChanged?.Invoke(this, EventArgs.Empty);
-                StatusMessageChanged?.Invoke(this, "Theme saved and applied successfully!");
             }
             catch (Exception ex)
             {
@@ -237,6 +240,6 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             }
         }
 
-
+        private CheckBox? Control_Themes_CheckBox_ShowTotalSummaryPanel;
     }
 }

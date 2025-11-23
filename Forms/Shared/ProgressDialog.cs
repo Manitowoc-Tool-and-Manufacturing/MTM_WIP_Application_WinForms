@@ -1,9 +1,3 @@
-using System;
-using System.Threading;
-using System.Threading.Tasks;
-using System.Windows.Forms;
-using MTM_WIP_Application_Winforms.Core;
-
 namespace MTM_WIP_Application_Winforms.Forms.Shared;
 
 /// <summary>

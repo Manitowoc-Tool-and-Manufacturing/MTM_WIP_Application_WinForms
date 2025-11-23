@@ -1,11 +1,5 @@
-using System;
-using System.Collections.Generic;
 using System.Data;
 using System.Drawing.Printing;
-using System.IO;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
 using System.Globalization;
 using ClosedXML.Excel;
 using MTM_WIP_Application_Winforms.Logging;

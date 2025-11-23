@@ -1,16 +1,9 @@
-using System.Collections.Concurrent;
 using System.Data;
-using System.Diagnostics;
 using System.Text.Json;
-using MTM_WIP_Application_Winforms.Controls.Addons;
-using MTM_WIP_Application_Winforms.Controls.MainForm;
-using MTM_WIP_Application_Winforms.Controls.SettingsForm;
 using MTM_WIP_Application_Winforms.Controls.Shared;
 using MTM_WIP_Application_Winforms.Data;
-using MTM_WIP_Application_Winforms.Helpers;
 using MTM_WIP_Application_Winforms.Logging;
 using MTM_WIP_Application_Winforms.Models;
-using System.Reflection;
 
 namespace MTM_WIP_Application_Winforms.Core
 {

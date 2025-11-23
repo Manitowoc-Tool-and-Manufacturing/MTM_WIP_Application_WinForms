@@ -1,5 +1,3 @@
-using System;
-
 namespace MTM_WIP_Application_WinForms.Models;
 
 /// <summary>

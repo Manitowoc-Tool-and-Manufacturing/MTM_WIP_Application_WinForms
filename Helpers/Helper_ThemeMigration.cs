@@ -1,7 +1,5 @@
-using MTM_WIP_Application_Winforms.Core;
 using MTM_WIP_Application_Winforms.Core.Theming.Interfaces;
 using MTM_WIP_Application_Winforms.Forms.Shared;
-using MTM_WIP_Application_Winforms.Logging;
 
 namespace MTM_WIP_Application_Winforms.Helpers;
 

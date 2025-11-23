@@ -3,12 +3,10 @@ using Microsoft.Extensions.DependencyInjection;
 using MTM_WIP_Application_Winforms.Controls.SettingsForm;
 using MTM_WIP_Application_Winforms.Core.DependencyInjection;
 using MTM_WIP_Application_Winforms.Data;
-using MTM_WIP_Application_Winforms.Forms.ErrorDialog;
 using MTM_WIP_Application_Winforms.Logging;
 using MTM_WIP_Application_Winforms.Models;
 using MTM_WIP_Application_Winforms.Services;
 using MySql.Data.MySqlClient;
-using System.IO;
 using System.Runtime.InteropServices;
 using System.Security;
 

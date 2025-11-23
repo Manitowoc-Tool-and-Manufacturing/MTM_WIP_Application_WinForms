@@ -1,6 +1,4 @@
 using System.Text;
-using MTM_WIP_Application_Winforms.Controls.Transactions;
-using MTM_WIP_Application_Winforms.Core;
 using MTM_WIP_Application_Winforms.Data;
 using MTM_WIP_Application_Winforms.Forms.Shared;
 using MTM_WIP_Application_Winforms.Logging;
@@ -160,6 +158,11 @@ internal partial class Transactions : ThemedForm
 
                     bool hasData = result.Data.Transactions != null && result.Data.Transactions.Count > 0;
                     Transactions_UserControl_Search.SetExportPrintButtonsEnabled(hasData);
+
+                    if (Model_Application_Variables.AutoExpandPanels)
+                    {
+                        Transactions_Panel_Search.Visible = false;
+                    }
                 }
                 else
                 {
@@ -188,6 +191,11 @@ internal partial class Transactions : ThemedForm
         
         Transactions_UserControl_Grid.ClearResults();
         Transactions_UserControl_Search.SetExportPrintButtonsEnabled(false);
+
+        if (Model_Application_Variables.AutoExpandPanels)
+        {
+            Transactions_Panel_Search.Visible = true;
+        }
     }
 
     private async void SearchControl_ExportRequested(object? sender, EventArgs e)

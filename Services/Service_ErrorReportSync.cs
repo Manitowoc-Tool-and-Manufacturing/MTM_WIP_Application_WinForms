@@ -1,15 +1,8 @@
-using System;
-using System.Collections.Generic;
 using System.Data;
-using System.IO;
-using System.Linq;
 using System.Text.RegularExpressions;
-using System.Threading;
-using System.Threading.Tasks;
 using MTM_WIP_Application_Winforms.Helpers;
 using MTM_WIP_Application_Winforms.Logging;
 using MTM_WIP_Application_Winforms.Models;
-using MTM_WIP_Application_WinForms.Models;
 using MySql.Data.MySqlClient;
 
 namespace MTM_WIP_Application_Winforms.Services;

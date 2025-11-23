@@ -1,8 +1,4 @@
-using System;
-using System.Collections.Generic;
-using System.IO;
 using System.Reflection;
-using System.Threading.Tasks;
 using MTM_WIP_Application_Winforms.Data;
 using MTM_WIP_Application_Winforms.Helpers;
 
@@ -68,6 +64,7 @@ namespace MTM_WIP_Application_Winforms.Models
         public static string? ThemeName { get; set; } = "Default";
         public static bool ThemeEnabled { get; set; } = true;
         public static bool AnimationsEnabled { get; set; } = false;
+        public static bool AutoExpandPanels { get; set; } = true;
         public static float ThemeFontSize { get; set; } = 9f;
         public static string? WipDataGridTheme { get; set; } = "Default";
         public static string? WipServerAddress
@@ -266,6 +263,8 @@ namespace MTM_WIP_Application_Winforms.Models
         }
 
         #endregion
+
+        public static bool ShowTotalSummaryPanel { get; set; } = false;
     }
 
     #endregion

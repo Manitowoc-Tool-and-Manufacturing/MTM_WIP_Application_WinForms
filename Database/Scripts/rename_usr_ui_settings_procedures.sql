@@ -59,7 +59,7 @@ BEGIN
         SET p_Status = -1;
     END;
 
-    SELECT UserId, SettingsJson, ShortcutsJson, UpdatedAt
+    SELECT UserId, SettingsJson, UpdatedAt
     FROM usr_settings
     WHERE UserId = p_UserId;
     
@@ -158,7 +158,7 @@ BEGIN
         SET p_Status = -1;
     END;
 
-    SELECT UserId, SettingsJson, ShortcutsJson, UpdatedAt
+    SELECT UserId, SettingsJson, UpdatedAt
     FROM usr_settings;
     
     SET p_Status = 1;
@@ -187,8 +187,8 @@ BEGIN
         SET p_Status = -1;
     END;
 
-    INSERT INTO usr_settings (UserId, SettingsJson, ShortcutsJson)
-    VALUES (p_UserId, JSON_OBJECT(p_DgvName, p_SettingJson), JSON_OBJECT())
+    INSERT INTO usr_settings (UserId, SettingsJson)
+    VALUES (p_UserId, JSON_OBJECT(p_DgvName, p_SettingJson))
     ON DUPLICATE KEY UPDATE
         SettingsJson = JSON_SET(SettingsJson, CONCAT('$."', p_DgvName, '"'), p_SettingJson);
     
@@ -217,10 +217,10 @@ BEGIN
         SET p_Status = -1;
     END;
 
-    INSERT INTO usr_settings (UserId, SettingsJson, ShortcutsJson)
-    VALUES (p_UserId, JSON_OBJECT(), p_ShortcutsJson)
+    INSERT INTO usr_settings (UserId, SettingsJson)
+    VALUES (p_UserId, JSON_OBJECT())
     ON DUPLICATE KEY UPDATE
-        ShortcutsJson = p_ShortcutsJson;
+        SettingsJson = JSON_OBJECT();
     
     SET p_Status = 1;
     SET p_ErrorMsg = CONCAT('Shortcuts saved for user: ', p_UserId);
@@ -247,8 +247,8 @@ BEGIN
         SET p_Status = -1;
     END;
 
-    INSERT INTO usr_settings (UserId, SettingsJson, ShortcutsJson)
-    VALUES (p_UserId, p_ThemeJson, JSON_OBJECT())
+    INSERT INTO usr_settings (UserId, SettingsJson)
+    VALUES (p_UserId, p_ThemeJson)
     ON DUPLICATE KEY UPDATE
         SettingsJson = p_ThemeJson;
     

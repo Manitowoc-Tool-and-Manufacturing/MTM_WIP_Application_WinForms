@@ -1,9 +1,4 @@
-using System;
-using System.Collections.Generic;
-using System.Drawing;
 using System.Reflection;
-using System.Windows.Forms;
-using MTM_WIP_Application_Winforms.Core;
 using MTM_WIP_Application_Winforms.Data;
 using MTM_WIP_Application_Winforms.Forms.Shared;
 using MTM_WIP_Application_Winforms.Helpers;
@@ -805,7 +800,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             if (mainForm.MainForm_UserControl_AdvancedRemove?.Visible == true)
             {
                 Control_AdvancedRemove? advRem = mainForm.MainForm_UserControl_AdvancedRemove;
-                SetComboBoxes(advRem, "Control_AdvancedRemove_ComboBox_Part", "Control_AdvancedRemove_ComboBox_Op",
+                SetComboBoxes(advRem, "Control_AdvancedRemove_TextBox_Part", "Control_AdvancedRemove_TextBox_Operation",
                     partId, operation);
                 advRem.Focus();
                 TriggerEnterEvent(advRem);

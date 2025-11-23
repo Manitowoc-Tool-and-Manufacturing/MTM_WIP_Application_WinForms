@@ -27,7 +27,7 @@ SET s.SettingsJson = JSON_MERGE_PATCH(
 );
 
 -- Step 2: Insert new users who don't have settings yet
-INSERT INTO usr_settings (UserId, SettingsJson, ShortcutsJson)
+INSERT INTO usr_settings (UserId, SettingsJson)
 SELECT
     u.User,
     JSON_OBJECT(

@@ -3,10 +3,8 @@ using System.Diagnostics;
 using System.Reflection;
 using Microsoft.Win32;
 using MTM_WIP_Application_Winforms.Controls.MainForm;
-using MTM_WIP_Application_Winforms.Controls.Shared;
 using MTM_WIP_Application_Winforms.Core;
 using MTM_WIP_Application_Winforms.Data;
-using MTM_WIP_Application_Winforms.Forms.ErrorDialog;
 using MTM_WIP_Application_Winforms.Forms.ErrorReports;
 using MTM_WIP_Application_Winforms.Forms.Settings;
 using MTM_WIP_Application_Winforms.Forms.Shared;
@@ -14,7 +12,6 @@ using MTM_WIP_Application_Winforms.Helpers;
 using MTM_WIP_Application_Winforms.Logging;
 using MTM_WIP_Application_Winforms.Models;
 using MTM_WIP_Application_Winforms.Services;
-using MySql.Data.MySqlClient;
 using Timer = System.Windows.Forms.Timer;
 
 namespace MTM_WIP_Application_Winforms.Forms.MainForm
@@ -33,6 +30,12 @@ namespace MTM_WIP_Application_Winforms.Forms.MainForm
 
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public Service_ConnectionRecoveryManager ConnectionRecoveryManager { get; private set; } = null!;
+
+        /// <summary>
+        /// Flag to skip the next soft reset of the Inventory Tab.
+        /// Used when redirecting from Advanced Inventory with pre-populated data.
+        /// </summary>
+        public bool SkipNextInventoryTabReset { get; set; }
 
         #endregion
 
@@ -254,6 +257,10 @@ namespace MTM_WIP_Application_Winforms.Forms.MainForm
                     {
                         Debug.WriteLine("[DEBUG] [MainForm.ctor] MainForm Shown event triggered.");
                         await MainForm_OnStartup_GetUserFullNameAsync();
+                        
+                        // Load user settings (AutoExpandPanels, AnimationsEnabled)
+                        await MainForm_OnStartup_LoadUserSettingsAsync();
+                        
                         Debug.WriteLine("[DEBUG] [MainForm.ctor] User full name loaded.");
 
                         // Configure Development Menu visibility based on username
@@ -280,7 +287,7 @@ namespace MTM_WIP_Application_Winforms.Forms.MainForm
 
         /// <summary>
         /// Configures Development Menu visibility based on current user
-        /// Users with Developer role or legacy hardcoded users (JKOLL, JOHNK) can access the Development Menu
+        /// Users with Developer role can access the Development Menu
         /// </summary>
         private void ConfigureDevelopmentMenuVisibility()
         {
@@ -295,9 +302,7 @@ namespace MTM_WIP_Application_Winforms.Forms.MainForm
                 string currentUser = Model_Application_Variables.User?.ToUpperInvariant() ?? "";
 
                 // Check both the database role flag and the hardcoded legacy users
-                bool isDeveloper = Model_Application_Variables.UserTypeDeveloper ||
-                                   currentUser == "JKOLL" ||
-                                   currentUser == "JOHNK";
+                bool isDeveloper = Model_Application_Variables.UserTypeDeveloper;
 
                 if (developmentToolStripMenuItem != null)
                 {
@@ -559,6 +564,33 @@ namespace MTM_WIP_Application_Winforms.Forms.MainForm
             }
         }
 
+        private async Task MainForm_OnStartup_LoadUserSettingsAsync()
+        {
+            try
+            {
+                string user = Model_Application_Variables.User;
+
+                // Load AutoExpandPanels
+                var autoExpandResult = await Dao_User.GetAutoExpandPanelsAsync(user);
+                if (autoExpandResult.IsSuccess)
+                {
+                    Model_Application_Variables.AutoExpandPanels = autoExpandResult.Data;
+                }
+
+                // Load AnimationsEnabled
+                var animResult = await Dao_User.GetAnimationsEnabledAsync(user);
+                if (animResult.IsSuccess)
+                {
+                    Model_Application_Variables.AnimationsEnabled = animResult.Data;
+                }
+            }
+            catch (Exception ex)
+            {
+                LoggingUtility.LogApplicationError(ex);
+                // Don't block startup on settings load failure
+            }
+        }
+
         private static async Task MainForm_OnStartup_GetUserFullNameAsync()
         {
             try
@@ -642,6 +674,7 @@ namespace MTM_WIP_Application_Winforms.Forms.MainForm
         {
             try
             {
+                LoggingUtility.Log("[MainForm] TabControl_SelectedIndexChanged started");
                 await ShowTabLoadingProgressAsync();
                 Debug.WriteLine("Resetting user controls...");
 
@@ -651,6 +684,7 @@ namespace MTM_WIP_Application_Winforms.Forms.MainForm
                 UpdateQuickButtonsToggleTextForAllTabs();
 
                 SetTabVisibility();
+                LoggingUtility.Log("[MainForm] TabControl_SelectedIndexChanged finished logic");
             }
             catch (Exception ex)
             {
@@ -661,6 +695,7 @@ namespace MTM_WIP_Application_Winforms.Forms.MainForm
             {
                 SetFocusForCurrentTab();
                 HideTabLoadingProgress();
+                LoggingUtility.Log("[MainForm] TabControl_SelectedIndexChanged finally block executed");
             }
         }
 
@@ -671,10 +706,23 @@ namespace MTM_WIP_Application_Winforms.Forms.MainForm
             try
             {
                 var resetTasks = new List<Task>();
+                LoggingUtility.Log($"[MainForm] ResetAllUserControlsAsync called. SkipNextInventoryTabReset: {SkipNextInventoryTabReset}");
 
                 // Create reset tasks for each user control
                 if (MainForm_UserControl_InventoryTab != null)
-                    resetTasks.Add(Task.Run(() => InvokeResetMethod(MainForm_UserControl_InventoryTab, "Control_InventoryTab_SoftReset")));
+                {
+                    if (!SkipNextInventoryTabReset)
+                    {
+                        LoggingUtility.Log("[MainForm] Queueing Inventory Tab reset");
+                        resetTasks.Add(Task.Run(() => InvokeResetMethod(MainForm_UserControl_InventoryTab, "Control_InventoryTab_SoftReset")));
+                    }
+                    else
+                    {
+                        LoggingUtility.Log("[MainForm] Skipping Inventory Tab reset as requested.");
+                        Debug.WriteLine("[DEBUG] Skipping Inventory Tab reset as requested.");
+                        SkipNextInventoryTabReset = false;
+                    }
+                }
 
                 if (MainForm_UserControl_AdvancedInventory != null)
                     resetTasks.Add(Task.Run(() => InvokeResetMethod(MainForm_UserControl_AdvancedInventory, "Control_AdvancedInventory_SoftReset")));
@@ -702,34 +750,48 @@ namespace MTM_WIP_Application_Winforms.Forms.MainForm
         {
             try
             {
-                Debug.WriteLine($"Attempting to invoke {methodName} on {control.GetType().Name}");
+            string controlName = control.GetType().Name;
+            LoggingUtility.Log($"[MainForm] Attempting to invoke {methodName} on {controlName}");
+            Debug.WriteLine($"Attempting to invoke {methodName} on {controlName}");
 
-                MethodInfo? method = control.GetType().GetMethod(methodName,
-                    BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
+            MethodInfo? method = control.GetType().GetMethod(methodName,
+                BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
 
-                if (method != null)
+            if (method != null)
+            {
+                Debug.WriteLine($"Invoking {method.Name} on {controlName}");
+
+                if (control.InvokeRequired)
                 {
-                    Debug.WriteLine($"Invoking {method.Name} on {control.GetType().Name}");
-
-                    // Ensure method is invoked on UI thread if needed
-                    if (control.InvokeRequired)
+                control.BeginInvoke(new Action(() =>
+                {
+                    try
                     {
-                        control.Invoke(new Action(() => method.Invoke(control, null)));
+                    method.Invoke(control, null);
+                    LoggingUtility.Log($"[MainForm] {method.Name} invoked on UI thread for {controlName}");
                     }
-                    else
+                    catch (Exception ex)
                     {
-                        method.Invoke(control, null);
+                    LoggingUtility.LogApplicationError(ex);
                     }
+                }));
                 }
                 else
                 {
-                    Debug.WriteLine($"Method {methodName} not found on {control.GetType().Name}");
+                method.Invoke(control, null);
+                LoggingUtility.Log($"[MainForm] {method.Name} invoked directly for {controlName}");
                 }
+            }
+            else
+            {
+                LoggingUtility.Log($"[MainForm] Method {methodName} not found on {controlName}");
+                Debug.WriteLine($"Method {methodName} not found on {controlName}");
+            }
             }
             catch (Exception ex)
             {
-                LoggingUtility.LogApplicationError(ex);
-                Debug.WriteLine($"[DEBUG] Error invoking {methodName} on {control.GetType().Name}: {ex.Message}");
+            LoggingUtility.LogApplicationError(ex);
+            Debug.WriteLine($"[DEBUG] Error invoking {methodName} on {control.GetType().Name}: {ex.Message}");
             }
         }
 

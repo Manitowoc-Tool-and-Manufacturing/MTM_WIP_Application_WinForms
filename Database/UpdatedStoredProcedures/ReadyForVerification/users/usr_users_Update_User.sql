@@ -43,14 +43,13 @@ BEGIN
             
             -- If no settings row exists, create one
             IF ROW_COUNT() = 0 THEN
-                INSERT INTO usr_settings (UserId, SettingsJson, ShortcutsJson)
+                INSERT INTO usr_settings (UserId, SettingsJson)
                 VALUES (
                     p_User,
                     JSON_OBJECT(
                         'VisualUserName', p_VisualUserName,
                         'VisualPassword', p_VisualPassword
-                    ),
-                    JSON_OBJECT()
+                    )
                 );
             END IF;
             

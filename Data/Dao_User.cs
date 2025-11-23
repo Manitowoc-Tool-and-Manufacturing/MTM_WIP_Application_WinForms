@@ -1,5 +1,4 @@
 using System.Data;
-using System.Diagnostics;
 using System.Text.Json;
 using MTM_WIP_Application_Winforms.Helpers;
 using MTM_WIP_Application_Winforms.Logging;
@@ -1505,6 +1504,124 @@ internal static class Dao_User
             LoggingUtility.LogDatabaseError(ex);
             Service_DebugTracer.TraceMethodExit(null, controlName: "Dao_User");
             return Model_Dao_Result.Failure($"Error setting AnimationsEnabled for user {user}", ex);
+        }
+    }
+
+    #endregion
+
+    #region AutoExpandPanels
+
+    /// <summary>
+    /// Gets the AutoExpandPanels setting for the specified user.
+    /// </summary>
+    /// <param name="user">The username.</param>
+    /// <returns>A Model_Dao_Result containing the AutoExpandPanels value (default true).</returns>
+    internal static async Task<Model_Dao_Result<bool>> GetAutoExpandPanelsAsync(string user,
+        MySqlConnection? connection = null,
+        MySqlTransaction? transaction = null)
+    {
+        Service_DebugTracer.TraceMethodEntry(new Dictionary<string, object> { ["user"] = user }, controlName: "Dao_User");
+
+        try
+        {
+            string str = await GetSettingsJsonInternalAsync("AutoExpandPanels", user, connection, transaction);
+            // Default to true if not set or invalid
+            bool result = !bool.TryParse(str, out bool val) || val;
+
+            Service_DebugTracer.TraceMethodExit(result, controlName: "Dao_User");
+            return Model_Dao_Result<bool>.Success(result, $"Retrieved AutoExpandPanels for user {user}");
+        }
+        catch (Exception ex)
+        {
+            LoggingUtility.LogDatabaseError(ex);
+            Service_DebugTracer.TraceMethodExit(null, controlName: "Dao_User");
+            return Model_Dao_Result<bool>.Failure($"Error retrieving AutoExpandPanels for user {user}", ex);
+        }
+    }
+
+    /// <summary>
+    /// Sets the AutoExpandPanels setting for the specified user.
+    /// </summary>
+    /// <param name="user">The username.</param>
+    /// <param name="value">The value to set.</param>
+    /// <returns>A Model_Dao_Result indicating success or failure.</returns>
+    internal static async Task<Model_Dao_Result> SetAutoExpandPanelsAsync(string user, bool value,
+        MySqlConnection? connection = null,
+        MySqlTransaction? transaction = null)
+    {
+        Service_DebugTracer.TraceMethodEntry(new Dictionary<string, object> { ["user"] = user, ["value"] = value }, controlName: "Dao_User");
+
+        try
+        {
+            await SetUserSettingInternalAsync("AutoExpandPanels", user, value.ToString(), connection, transaction);
+
+            Service_DebugTracer.TraceMethodExit(controlName: "Dao_User");
+            return Model_Dao_Result.Success($"Set AutoExpandPanels to {value} for user {user}");
+        }
+        catch (Exception ex)
+        {
+            LoggingUtility.LogDatabaseError(ex);
+            Service_DebugTracer.TraceMethodExit(null, controlName: "Dao_User");
+            return Model_Dao_Result.Failure($"Error setting AutoExpandPanels for user {user}", ex);
+        }
+    }
+
+    #endregion
+
+    #region ShowTotalSummaryPanel
+
+    /// <summary>
+    /// Gets the ShowTotalSummaryPanel setting for the specified user.
+    /// </summary>
+    /// <param name="user">The username.</param>
+    /// <returns>A Model_Dao_Result containing the ShowTotalSummaryPanel value (default false).</returns>
+    internal static async Task<Model_Dao_Result<bool>> GetShowTotalSummaryPanelAsync(string user,
+        MySqlConnection? connection = null,
+        MySqlTransaction? transaction = null)
+    {
+        Service_DebugTracer.TraceMethodEntry(new Dictionary<string, object> { ["user"] = user }, controlName: "Dao_User");
+
+        try
+        {
+            string str = await GetSettingsJsonInternalAsync("ShowTotalSummaryPanel", user, connection, transaction);
+            // Default to false if not set or invalid
+            bool result = bool.TryParse(str, out bool val) && val;
+
+            Service_DebugTracer.TraceMethodExit(result, controlName: "Dao_User");
+            return Model_Dao_Result<bool>.Success(result, $"Retrieved ShowTotalSummaryPanel for user {user}");
+        }
+        catch (Exception ex)
+        {
+            LoggingUtility.LogDatabaseError(ex);
+            Service_DebugTracer.TraceMethodExit(null, controlName: "Dao_User");
+            return Model_Dao_Result<bool>.Failure($"Error retrieving ShowTotalSummaryPanel for user {user}", ex);
+        }
+    }
+
+    /// <summary>
+    /// Sets the ShowTotalSummaryPanel setting for the specified user.
+    /// </summary>
+    /// <param name="user">The username.</param>
+    /// <param name="value">The value to set.</param>
+    /// <returns>A Model_Dao_Result indicating success or failure.</returns>
+    internal static async Task<Model_Dao_Result> SetShowTotalSummaryPanelAsync(string user, bool value,
+        MySqlConnection? connection = null,
+        MySqlTransaction? transaction = null)
+    {
+        Service_DebugTracer.TraceMethodEntry(new Dictionary<string, object> { ["user"] = user, ["value"] = value }, controlName: "Dao_User");
+
+        try
+        {
+            await SetUserSettingInternalAsync("ShowTotalSummaryPanel", user, value.ToString().ToLower(), connection, transaction);
+
+            Service_DebugTracer.TraceMethodExit(controlName: "Dao_User");
+            return Model_Dao_Result.Success($"Set ShowTotalSummaryPanel to {value} for user {user}");
+        }
+        catch (Exception ex)
+        {
+            LoggingUtility.LogDatabaseError(ex);
+            Service_DebugTracer.TraceMethodExit(null, controlName: "Dao_User");
+            return Model_Dao_Result.Failure($"Error setting ShowTotalSummaryPanel for user {user}", ex);
         }
     }
 

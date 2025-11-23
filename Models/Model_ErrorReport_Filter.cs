@@ -1,5 +1,3 @@
-using System;
-
 namespace MTM_WIP_Application_Winforms.Models
 {
     #region Model_ErrorReport_Core_Filter

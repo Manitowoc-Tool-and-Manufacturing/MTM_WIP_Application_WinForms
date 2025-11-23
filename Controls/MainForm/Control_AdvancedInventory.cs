@@ -1,16 +1,13 @@
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Diagnostics;
 using System.Security;
-using System.Windows.Forms;
 
 using ClosedXML.Excel;
 
 using MTM_WIP_Application_Winforms.Controls.Shared;
 using MTM_WIP_Application_Winforms.Core;
 using MTM_WIP_Application_Winforms.Data;
-using MTM_WIP_Application_Winforms.Forms.ErrorDialog;
 using MTM_WIP_Application_Winforms.Forms.MainForm.Classes;
 using MTM_WIP_Application_Winforms.Forms.Shared;
 using MTM_WIP_Application_Winforms.Helpers;
@@ -52,6 +49,8 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
         private const int SingleListViewPartIdColumnIndex = 3;
         private const int SingleListViewOperationColumnIndex = 4;
         private const int SingleListViewNotesColumnIndex = 5;
+
+        private bool _isHandlingFlaggedPart;
 
         #endregion
 
@@ -398,11 +397,15 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
         {
             string selectedPart = e.SelectedValue;
 
-
-            // Check if part requires color code and redirect if necessary
-            HandleAdvancedInventoryRedirect(selectedPart);
-
-            UpdateSingleSaveButtonState();
+            if(!Model_Application_Variables.ColorCodeParts.Contains(selectedPart))
+            {                
+                UpdateSingleSaveButtonState();
+            }
+            else 
+            {
+                HandleColorFlaggedPart(selectedPart, "Single Entry Part");
+            }
+            
         }
 
         /// <summary>
@@ -411,8 +414,6 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
         /// </summary>
         private void AdvancedInventory_Single_TextBox_Op_SuggestionSelected(object? sender, SuggestionSelectedEventArgs e)
         {
-            string selectedOp = e.SelectedValue;
-
             UpdateSingleSaveButtonState();
         }
 
@@ -422,8 +423,6 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
         /// </summary>
         private void AdvancedInventory_Single_TextBox_Loc_SuggestionSelected(object? sender, SuggestionSelectedEventArgs e)
         {
-            string selectedLoc = e.SelectedValue;
-
             UpdateSingleSaveButtonState();
         }
 
@@ -432,42 +431,55 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
         /// Overload for SuggestionTextBox (string partId).
         /// </summary>
         /// <param name="partId">The part ID to check</param>
-        private void HandleAdvancedInventoryRedirect(string partId)
+        private void HandleColorFlaggedPart(string partId, string control)
         {
+            if (_isHandlingFlaggedPart) return;
+
             if (string.IsNullOrWhiteSpace(partId))
+            {
                 return;
+            }
+
             if (!Model_Application_Variables.ColorCodeParts.Contains(partId))
+            {
                 return;
+            }
 
-            var result = Service_ErrorHandler.ShowConfirmation(
-                "This part requires color code entry. Redirect to Inventory Tab?",
-                "Redirect Required",
-                MessageBoxButtons.YesNo,
-                MessageBoxIcon.Question);
+            _isHandlingFlaggedPart = true;
 
-            if (result == DialogResult.Yes)
+            // Use BeginInvoke to prevent UI freezing by allowing the current event to complete
+            // before showing the modal dialog and resetting the UI.
+            this.BeginInvoke(new Action(() =>
             {
-                // Switch to Inventory Tab and pre-populate PartID
-                if (MainFormInstance != null && MainFormInstance.MainForm_UserControl_InventoryTab != null)
+                try
                 {
-                    MainFormInstance.MainForm_UserControl_AdvancedInventory.Visible = false;
-                    MainFormInstance.MainForm_UserControl_InventoryTab.Visible = true;
-                    MainFormInstance.MainForm_TabControl.SelectedIndex = 0;
-                    var invTab = MainFormInstance.MainForm_UserControl_InventoryTab;
-                    if (invTab.Control_InventoryTab_SuggestionBox_Part != null)
+                    if (this.IsDisposed || this.Disposing)
                     {
-                        invTab.Control_InventoryTab_SuggestionBox_Part.Text = partId;
-                        invTab.Control_InventoryTab_SuggestionBox_Part.Focus();
-                        invTab.Control_InventoryTab_SuggestionBox_Part.TextBox.SelectAll();
+                        return;
                     }
+
+                    _ = Service_ErrorHandler.ShowWarning(
+                        "Part Numbers that require a Work Order or Color Code can not be inventoried in this tab.",
+                        $"Restricted Part - {control}",
+                        MessageBoxButtons.OK,
+                        MessageBoxIcon.Warning);
+                    AdvancedInventory_Single_TextBox_Part.Text = string.Empty;
+                    AdvancedInventory_Single_TextBox_Op.Text = string.Empty;
+                    AdvancedInventory_Single_TextBox_Loc.Text = string.Empty;
+
+                    AdvancedInventory_MultiLoc_TextBox_Part.Text = string.Empty;
+                    AdvancedInventory_MultiLoc_TextBox_Op.Text = string.Empty;
+                    AdvancedInventory_MultiLoc_TextBox_Loc.Text = string.Empty;
+                    
+
+                    AdvancedInventory_Single_SoftReset();
+                    AdvancedInventory_MultiLoc_SoftReset();
                 }
-            }
-            else
-            {
-                // Clear PartID and return focus
-                AdvancedInventory_Single_TextBox_Part.Text = string.Empty;
-                AdvancedInventory_Single_TextBox_Part.Focus();
-            }
+                finally
+                {
+                    _isHandlingFlaggedPart = false;
+                }
+            }));
         }
 
         #endregion
@@ -483,10 +495,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
         {
             string selectedPart = e.SelectedValue;
 
-
-            // Check if part requires color code and redirect if necessary
-            HandleAdvancedInventoryRedirect(selectedPart);
-
+            HandleColorFlaggedPart(selectedPart, "Multi-Location Part");
             UpdateMultiSaveButtonState();
         }
 
@@ -841,7 +850,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                 ref _singleInputAnimator,
                 components,
                 AdvancedInventory_Single_Button_InputToggle,
-                collapsed);
+                !collapsed);
         }
 
         private void UpdateMultiInputArrow(bool collapsed)
@@ -850,7 +859,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                 ref _multiInputAnimator,
                 components,
                 AdvancedInventory_Multi_Button_InputToggle,
-                collapsed);
+                !collapsed);
         }
 
         private void UpdateQuickButtonToggleStates(bool collapsed)
@@ -922,33 +931,6 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                     LoggingUtility.LogApplicationError(ex);
                 }
             };
-        }
-
-        private static void InventoryTextBoxQty_TextChanged(TextBox textBox)
-        {
-            try
-            {
-                string text = textBox.Text.Trim();
-                if (string.IsNullOrEmpty(text))
-                {
-                    textBox.ForeColor = Model_Application_Variables.UserUiColors.TextBoxForeColor ?? Color.Black;
-                    return;
-                }
-
-                bool isValid = int.TryParse(text, out int qty) && qty > 0;
-                if (isValid)
-                {
-                    textBox.ForeColor = Model_Application_Variables.UserUiColors.TextBoxForeColor ?? Color.Black;
-                }
-                else
-                {
-                    textBox.ForeColor = Model_Application_Variables.UserUiColors.TextBoxErrorForeColor ?? Color.Red;
-                }
-            }
-            catch (Exception ex)
-            {
-                LoggingUtility.LogApplicationError(ex);
-            }
         }
 
         private void UpdateSingleSaveButtonState()
@@ -1228,6 +1210,11 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
 
                 UpdateSingleSaveButtonState();
 
+                if (Model_Application_Variables.AutoExpandPanels)
+                {
+                    SetSingleInputPanelCollapsed(false);
+                }
+
                 Debug.WriteLine("[DEBUG] AdvancedInventory Single HardReset - end");
             }
             catch (Exception ex)
@@ -1289,6 +1276,11 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                 AdvancedInventory_Single_Button_Send.Enabled = false;
 
                 UpdateSingleSaveButtonState();
+
+                if (Model_Application_Variables.AutoExpandPanels)
+                {
+                    SetSingleInputPanelCollapsed(false);
+                }
             }
             catch (Exception ex)
             {
@@ -1691,6 +1683,11 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
 
                 UpdateMultiSaveButtonState();
 
+                if (Model_Application_Variables.AutoExpandPanels)
+                {
+                    SetMultiInputPanelCollapsed(false);
+                }
+
                 Debug.WriteLine("[DEBUG] AdvancedInventory MultiLoc HardReset - end");
             }
             catch (Exception ex)
@@ -1752,6 +1749,11 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                 AdvancedInventory_MultiLoc_TextBox_Op.Enabled = true;
 
                 UpdateMultiSaveButtonState();
+
+                if (Model_Application_Variables.AutoExpandPanels)
+                {
+                    SetMultiInputPanelCollapsed(false);
+                }
             }
             catch (Exception ex)
             {
@@ -1914,6 +1916,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                     if (!int.TryParse(qtyText, out int qty) || qty <= 0)
                     {
                         LoggingUtility.LogApplicationError(
+
                             new Exception($"Invalid quantity for location '{loc}': '{qtyText}'"));
                         continue;
                     }

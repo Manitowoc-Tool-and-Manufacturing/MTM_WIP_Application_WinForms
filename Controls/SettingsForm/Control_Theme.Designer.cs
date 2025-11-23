@@ -26,6 +26,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
         #region Component Designer generated code
 
         private CheckBox Control_Themes_CheckBox_EnableAnimations;
+        private CheckBox Control_Themes_CheckBox_AutoExpandPanels;
 
         /// <summary>
         /// Required method for Designer support - do not modify
@@ -37,6 +38,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             Control_Themes_TableLayout_Main = new TableLayoutPanel();
             Control_Themes_CheckBox_EnableTheming = new CheckBox();
             Control_Themes_CheckBox_EnableAnimations = new CheckBox();
+            Control_Themes_CheckBox_AutoExpandPanels = new CheckBox();
             Control_Themes_Button_Preview = new Button();
             Control_Themes_ComboBox_Theme = new ComboBox();
             Control_Themes_Button_Save = new Button();
@@ -51,7 +53,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             Control_Themes_GroupBox_Main.Dock = DockStyle.Fill;
             Control_Themes_GroupBox_Main.Location = new Point(0, 0);
             Control_Themes_GroupBox_Main.Name = "Control_Themes_GroupBox_Main";
-            Control_Themes_GroupBox_Main.Size = new Size(277, 110);
+            Control_Themes_GroupBox_Main.Size = new Size(277, 135);
             Control_Themes_GroupBox_Main.TabIndex = 3;
             Control_Themes_GroupBox_Main.TabStop = false;
             Control_Themes_GroupBox_Main.Text = "Select A Theme";
@@ -65,17 +67,18 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             Control_Themes_TableLayout_Main.Controls.Add(Control_Themes_Button_Preview, 1, 1);
             Control_Themes_TableLayout_Main.Controls.Add(Control_Themes_ComboBox_Theme, 0, 1);
             Control_Themes_TableLayout_Main.Controls.Add(Control_Themes_CheckBox_EnableAnimations, 0, 2);
-            Control_Themes_TableLayout_Main.Controls.Add(Control_Themes_Button_Save, 1, 4);
+            Control_Themes_TableLayout_Main.Controls.Add(Control_Themes_CheckBox_AutoExpandPanels, 0, 3);            Control_Themes_TableLayout_Main.Controls.Add(Control_Themes_CheckBox_AutoExpandPanels, 0, 3);            Control_Themes_TableLayout_Main.Controls.Add(Control_Themes_Button_Save, 1, 5);
             Control_Themes_TableLayout_Main.Dock = DockStyle.Fill;
             Control_Themes_TableLayout_Main.Location = new Point(3, 19);
             Control_Themes_TableLayout_Main.Name = "Control_Themes_TableLayout_Main";
-            Control_Themes_TableLayout_Main.RowCount = 5;
+            Control_Themes_TableLayout_Main.RowCount = 6;
+            Control_Themes_TableLayout_Main.RowStyles.Add(new RowStyle());
             Control_Themes_TableLayout_Main.RowStyles.Add(new RowStyle());
             Control_Themes_TableLayout_Main.RowStyles.Add(new RowStyle());
             Control_Themes_TableLayout_Main.RowStyles.Add(new RowStyle());
             Control_Themes_TableLayout_Main.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
             Control_Themes_TableLayout_Main.RowStyles.Add(new RowStyle());
-            Control_Themes_TableLayout_Main.Size = new Size(271, 120);
+            Control_Themes_TableLayout_Main.Size = new Size(271, 145);
             Control_Themes_TableLayout_Main.TabIndex = 3;
             //
             // Control_Themes_CheckBox_EnableTheming
@@ -106,6 +109,20 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             Control_Themes_CheckBox_EnableAnimations.TabIndex = 4;
             Control_Themes_CheckBox_EnableAnimations.Text = "Enable UI Animations";
             Control_Themes_CheckBox_EnableAnimations.UseVisualStyleBackColor = true;
+            //
+            // Control_Themes_CheckBox_AutoExpandPanels
+            //
+            Control_Themes_CheckBox_AutoExpandPanels.AutoSize = true;
+            Control_Themes_TableLayout_Main.SetColumnSpan(Control_Themes_CheckBox_AutoExpandPanels, 2);
+            Control_Themes_CheckBox_AutoExpandPanels.Checked = true;
+            Control_Themes_CheckBox_AutoExpandPanels.CheckState = CheckState.Checked;
+            Control_Themes_CheckBox_AutoExpandPanels.Dock = DockStyle.Fill;
+            Control_Themes_CheckBox_AutoExpandPanels.Location = new Point(3, 82);
+            Control_Themes_CheckBox_AutoExpandPanels.Name = "Control_Themes_CheckBox_AutoExpandPanels";
+            Control_Themes_CheckBox_AutoExpandPanels.Size = new Size(265, 19);
+            Control_Themes_CheckBox_AutoExpandPanels.TabIndex = 5;
+            Control_Themes_CheckBox_AutoExpandPanels.Text = "Auto-Expand Panels on Reset/Search";
+            Control_Themes_CheckBox_AutoExpandPanels.UseVisualStyleBackColor = true;
             //
             // Control_Themes_Button_Preview
             //

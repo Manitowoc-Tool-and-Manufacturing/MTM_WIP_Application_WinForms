@@ -1,7 +1,6 @@
 using System.Data;
 using System.Drawing.Printing;
 using System.Globalization;
-using MTM_WIP_Application_Winforms.Core;
 using MTM_WIP_Application_Winforms.Helpers;
 using MTM_WIP_Application_Winforms.Logging;
 using MTM_WIP_Application_Winforms.Models;

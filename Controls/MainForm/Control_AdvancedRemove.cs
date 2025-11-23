@@ -1,7 +1,5 @@
-using System.ComponentModel;
 using System.Data;
 using System.Diagnostics;
-using System.Drawing.Printing;
 using System.Text;
 using MTM_WIP_Application_Winforms.Controls.Shared;
 using MTM_WIP_Application_Winforms.Core;
@@ -471,16 +469,42 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
 
                 DataTable dt = searchResult.Data ?? new DataTable();
 
+                // Sort by color priority if ColorCode column exists
+                if (dt.Columns.Contains("ColorCode") && dt.Columns.Contains("Location"))
+                {
+                    try
+                    {
+                        dt = Service_DataGridView.SortByColorPriority(dt);
+                    }
+                    catch (Exception exSort)
+                    {
+                        LoggingUtility.LogApplicationError(exSort);
+                    }
+                }
 
                 Control_AdvancedRemove_DataGridView_Results.DataSource = dt;
-                Control_AdvancedRemove_DataGridView_Results.ClearSelection();
-                // Only show columns in this order: Location, PartID, Operation, Quantity, Notes
-                string[] columnsToShow = { "Location", "PartID", "Operation", "Quantity", "Notes" };
                 
-                Service_DataGridView.ConfigureColumns(Control_AdvancedRemove_DataGridView_Results, columnsToShow);
+                // Add total row if applicable (must be done after DataSource is set)
+                Service_DataGridView.AddTotalRowIfApplicable(Control_AdvancedRemove_DataGridView_Results);
+
+                Control_AdvancedRemove_DataGridView_Results.ClearSelection();
+                // Only show columns in this order: Location, PartID, ColorCode, WorkOrder, Operation, Quantity, Notes
+                string[] columnsToShow = { "Location", "PartID", "ColorCode", "WorkOrder", "Operation", "Quantity", "Notes" };
+                
+                // Friendly headers
+                var headerRenames = new Dictionary<string, string>
+                {
+                    { "ColorCode", "Color" },
+                    { "WorkOrder", "Work Order" }
+                };
+
+                Service_DataGridView.ConfigureColumns(Control_AdvancedRemove_DataGridView_Results, columnsToShow, headerRenames);
 
                 // Load saved settings (overrides default visibility/order)
                 await Service_DataGridView.ApplyStandardSettingsAsync(Control_AdvancedRemove_DataGridView_Results, Model_Application_Variables.User);
+
+                // Enable automatic color coding (persists after sort)
+                Service_DataGridView.EnableAutomaticInventoryColorCoding(Control_AdvancedRemove_DataGridView_Results);
 
                 Core_Themes.SizeDataGrid(Control_AdvancedRemove_DataGridView_Results);
 
@@ -518,6 +542,9 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                 foreach (DataGridViewRow row in dgv.SelectedRows)
                 {
                     string partId = row.Cells["PartID"].Value?.ToString() ?? "";
+                    // Total row check no longer needed as it's a separate panel now, but keeping for safety
+                    if (partId == "TOTAL") continue;
+
                     string location = row.Cells["Location"].Value?.ToString() ?? "";
                     string operation = row.Cells["Operation"].Value?.ToString() ?? "";
                     int quantity = int.TryParse(row.Cells["Quantity"].Value?.ToString(), out int q) ? q : 0;
@@ -624,7 +651,10 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
         private async Task Control_AdvancedRemove_HardReset()
         {
             // Expand input panel when hard reset is triggered
-            ExpandInputPanel();
+            if (Model_Application_Variables.AutoExpandPanels)
+            {
+                ExpandInputPanel();
+            }
 
             Control[] resetBtn = Controls.Find("Control_AdvancedRemove_Button_Reset", true);
             if (resetBtn.Length > 0 && resetBtn[0] is Button btn)
@@ -711,7 +741,10 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
         private void Control_AdvancedRemove_SoftReset()
         {
             // Expand input panel when soft reset is triggered
-            ExpandInputPanel();
+            if (Model_Application_Variables.AutoExpandPanels)
+            {
+                ExpandInputPanel();
+            }
 
             Control[] resetBtn = Controls.Find("Control_AdvancedRemove_Button_Reset", true);
             if (resetBtn.Length > 0 && resetBtn[0] is Button btn)
@@ -993,7 +1026,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                 ref _sidePanelAnimator,
                 components,
                 Control_AdvancedRemove_Button_SidePanel,
-                collapsed);
+                !collapsed);
         }
 
 

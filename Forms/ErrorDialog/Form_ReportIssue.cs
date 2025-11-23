@@ -1,7 +1,3 @@
-using System;
-using System.Threading.Tasks;
-using System.Windows.Forms;
-using MTM_WIP_Application_Winforms.Core;
 using MTM_WIP_Application_Winforms.Data;
 using MTM_WIP_Application_Winforms.Forms.Shared;
 using MTM_WIP_Application_Winforms.Helpers;

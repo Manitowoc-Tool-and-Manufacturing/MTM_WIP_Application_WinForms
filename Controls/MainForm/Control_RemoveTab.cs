@@ -1,14 +1,9 @@
 using System.ComponentModel;
 using System.Data;
-using System.Diagnostics;
-using System.Drawing.Printing;
-using System.Linq;
 using System.Text;
 using MTM_WIP_Application_Winforms.Controls.Shared;
 using MTM_WIP_Application_Winforms.Core;
 using MTM_WIP_Application_Winforms.Data;
-using MTM_WIP_Application_Winforms.Forms.ErrorDialog;
-using MTM_WIP_Application_Winforms.Forms.MainForm.Classes;
 using MTM_WIP_Application_Winforms.Forms.Shared;
 using MTM_WIP_Application_Winforms.Helpers;
 using MTM_WIP_Application_Winforms.Logging;
@@ -531,10 +526,14 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                 {
                     if (row.DataBoundItem is DataRowView drv)
                     {
+                        string partId = drv["PartID"]?.ToString() ?? "";
+                        // Total row check no longer needed as it's a separate panel now, but keeping for safety
+                        if (partId == "TOTAL") continue;
+
                         attempted++;
                         Model_History_Remove item = new()
                         {
-                            PartId = drv["PartID"]?.ToString() ?? "",
+                            PartId = partId,
                             Location = drv["Location"]?.ToString() ?? "",
                             Operation = drv["Operation"]?.ToString() ?? "",
                             Quantity = TryParse(drv["Quantity"]?.ToString(), out int qty) ? qty : 0,
@@ -791,7 +790,10 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                 }
 
                 Control_RemoveTab_Button_Reset.Enabled = true;
-                SetSearchPanelCollapsed(false);
+                if (Model_Application_Variables.AutoExpandPanels)
+                {
+                    SetSearchPanelCollapsed(false);
+                }
             }
         }
 
@@ -834,7 +836,10 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                         @"Disconnected from Server, please standby...";
                 }
 
-                SetSearchPanelCollapsed(false);
+                if (Model_Application_Variables.AutoExpandPanels)
+                {
+                    SetSearchPanelCollapsed(false);
+                }
             }
         }
 
@@ -1040,6 +1045,10 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
 
                 _progressHelper?.UpdateProgress(70, "Updating results...");
                 Control_RemoveTab_DataGridView_Main.DataSource = results;
+                
+                // Add total row if applicable
+                Service_DataGridView.AddTotalRowIfApplicable(Control_RemoveTab_DataGridView_Main);
+
                 Control_RemoveTab_DataGridView_Main.ClearSelection();
 
                 // Only show columns in this order: Location, PartID, ColorCode, WorkOrder, Operation, Quantity, Notes
@@ -1064,16 +1073,21 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                         Control_RemoveTab_DataGridView_Main.Columns["ColorCode"].Visible = false;
                     if (Control_RemoveTab_DataGridView_Main.Columns.Contains("WorkOrder"))
                         Control_RemoveTab_DataGridView_Main.Columns["WorkOrder"].Visible = false;
+                    
+                    Service_DataGridView.DisableAutomaticInventoryColorCoding(Control_RemoveTab_DataGridView_Main);
                 }
                 else
                 {
-                    Service_DataGridView.ApplyInventoryColorCoding(Control_RemoveTab_DataGridView_Main);
+                    Service_DataGridView.EnableAutomaticInventoryColorCoding(Control_RemoveTab_DataGridView_Main);
                 }
                 Core_Themes.SizeDataGrid(Control_RemoveTab_DataGridView_Main);
 
                 Control_RemoveTab_Image_NothingFound.Visible = results.Rows.Count == 0;
                 _progressHelper?.UpdateProgress(100, "Search complete");
-                SetSearchPanelCollapsed(true);
+                if (Model_Application_Variables.AutoExpandPanels)
+                {
+                    SetSearchPanelCollapsed(true);
+                }
             }
             catch (Exception ex)
             {
@@ -1248,6 +1262,10 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                     }
                 }
                 Control_RemoveTab_DataGridView_Main.DataSource = dt;
+                
+                // Add total row if applicable
+                Service_DataGridView.AddTotalRowIfApplicable(Control_RemoveTab_DataGridView_Main);
+
                 Control_RemoveTab_DataGridView_Main.ClearSelection();
 
                 // Only show columns in this order: Location, PartID, ColorCode, WorkOrder, Operation, Quantity, Notes
@@ -1275,10 +1293,11 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                 if (!singlePartColorTracked)
                 {
                     Core_Themes.ApplyThemeToDataGridView(Control_RemoveTab_DataGridView_Main);
+                    Service_DataGridView.DisableAutomaticInventoryColorCoding(Control_RemoveTab_DataGridView_Main);
                 }
                 else
                 {
-                    Service_DataGridView.ApplyInventoryColorCoding(Control_RemoveTab_DataGridView_Main);
+                    Service_DataGridView.EnableAutomaticInventoryColorCoding(Control_RemoveTab_DataGridView_Main);
                 }
                 Core_Themes.SizeDataGrid(Control_RemoveTab_DataGridView_Main);
 

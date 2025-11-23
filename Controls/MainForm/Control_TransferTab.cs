@@ -1,14 +1,10 @@
 using System.ComponentModel;
 using System.Data;
 using System.Diagnostics;
-using System.Drawing.Printing;
-using System.Linq;
-using System.Runtime.CompilerServices;
 using System.Text;
 using MTM_WIP_Application_Winforms.Core;
 using MTM_WIP_Application_Winforms.Controls.Shared;
 using MTM_WIP_Application_Winforms.Data;
-using MTM_WIP_Application_Winforms.Forms.MainForm.Classes;
 using MTM_WIP_Application_Winforms.Helpers;
 using MTM_WIP_Application_Winforms.Logging;
 using MTM_WIP_Application_Winforms.Models;
@@ -625,7 +621,10 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                 Control_TransferTab_TextBox_Part.Focus();
 
                 // Ensure the input panel is visible after a full reset
-                SetInputPanelCollapsed(false);
+                if (Model_Application_Variables.AutoExpandPanels)
+                {
+                    SetInputPanelCollapsed(false);
+                }
 
                 Debug.WriteLine("[DEBUG] TransferTab HardReset - end");
             }
@@ -684,7 +683,10 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                 Control_TransferTab_NumericUpDown_Quantity.Value = Control_TransferTab_NumericUpDown_Quantity.Minimum;
                 Control_TransferTab_NumericUpDown_Quantity.Enabled = false;
 
-                SetInputPanelCollapsed(false);
+                if (Model_Application_Variables.AutoExpandPanels)
+                {
+                    SetInputPanelCollapsed(false);
+                }
             }
             catch (Exception ex)
             {
@@ -779,6 +781,10 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
 
                 _progressHelper?.UpdateProgress(70, "Updating results...");
                 Control_TransferTab_DataGridView_Main.DataSource = results;
+                
+                // Add total row if applicable
+                Service_DataGridView.AddTotalRowIfApplicable(Control_TransferTab_DataGridView_Main);
+
                 Control_TransferTab_DataGridView_Main.ClearSelection();
 
                 // Only show columns in this order (match RemoveTab): Location, PartID, ColorCode, WorkOrder, Operation, Quantity, Notes
@@ -803,10 +809,12 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                         Control_TransferTab_DataGridView_Main.Columns["ColorCode"].Visible = false;
                     if (Control_TransferTab_DataGridView_Main.Columns.Contains("WorkOrder"))
                         Control_TransferTab_DataGridView_Main.Columns["WorkOrder"].Visible = false;
+                    
+                    Service_DataGridView.DisableAutomaticInventoryColorCoding(Control_TransferTab_DataGridView_Main);
                 }
                 else
                 {
-                    Service_DataGridView.ApplyInventoryColorCoding(Control_TransferTab_DataGridView_Main);
+                    Service_DataGridView.EnableAutomaticInventoryColorCoding(Control_TransferTab_DataGridView_Main);
                 }
                 Core_Themes.SizeDataGrid(Control_TransferTab_DataGridView_Main);
 
@@ -814,7 +822,10 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                 _progressHelper?.UpdateProgress(100, "Search complete");
 
                 // Collapse the input panel after search to maximize results area
-                SetInputPanelCollapsed(true);
+                if (Model_Application_Variables.AutoExpandPanels)
+                {
+                    SetInputPanelCollapsed(true);
+                }
             }
             catch (Exception ex)
             {
@@ -939,6 +950,8 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             string itemType = drv.Row.Table.Columns.Contains("ItemType") ? drv["ItemType"]?.ToString() ?? "" : "";
             string notes = drv["Notes"]?.ToString() ?? "";
             string operation = drv["Operation"]?.ToString() ?? "";
+            string colorCode = drv.Row.Table.Columns.Contains("ColorCode") ? drv["ColorCode"]?.ToString() ?? "" : "";
+            string workOrder = drv.Row.Table.Columns.Contains("WorkOrder") ? drv["WorkOrder"]?.ToString() ?? "" : "";
             string quantityStr = drv["Quantity"]?.ToString() ?? "";
             if (!int.TryParse(quantityStr, out int originalQuantity))
             {
@@ -954,7 +967,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             if (transferQuantity < originalQuantity)
             {
                 await Dao_Inventory.TransferInventoryQuantityAsync(
-                    batchNumber, partId, operation, transferQuantity, originalQuantity, newLocation, user);
+                    batchNumber, partId, operation, transferQuantity, originalQuantity, newLocation, user, colorCode, workOrder);
             }
             else
             {
@@ -1005,8 +1018,11 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                     continue;
                 }
 
-                string batchNumber = drv["BatchNumber"]?.ToString() ?? "";
                 string partId = drv["PartID"]?.ToString() ?? "";
+                // Total row check no longer needed as it's a separate panel now, but keeping for safety
+                if (partId == "TOTAL") continue;
+
+                string batchNumber = drv["BatchNumber"]?.ToString() ?? "";
                 string fromLocation = drv["Location"]?.ToString() ?? "";
                 string itemType = drv.Row.Table.Columns.Contains("ItemType") ? drv["ItemType"]?.ToString() ?? "" : "";
                 string operation = drv["Operation"]?.ToString() ?? "";

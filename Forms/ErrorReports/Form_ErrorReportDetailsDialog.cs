@@ -1,9 +1,4 @@
-using System;
-using System.Windows.Forms;
-using MTM_WIP_Application_Winforms.Controls.ErrorReports;
-using MTM_WIP_Application_Winforms.Core;
 using MTM_WIP_Application_Winforms.Forms.Shared;
-using MTM_WIP_Application_Winforms.Models;
 using static MTM_WIP_Application_Winforms.Controls.ErrorReports.Control_ErrorReportDetails;
 
 namespace MTM_WIP_Application_Winforms.Forms.ErrorReports

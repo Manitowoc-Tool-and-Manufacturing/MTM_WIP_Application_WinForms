@@ -1,7 +1,4 @@
-﻿
-
-using MTM_WIP_Application_Winforms.Data;
-using MTM_WIP_Application_Winforms.Helpers;
+﻿using MTM_WIP_Application_Winforms.Helpers;
 using MTM_WIP_Application_Winforms.Models;
 
 namespace MTM_WIP_Application_Winforms.Core;

@@ -1,8 +1,4 @@
-using System;
-using System.IO;
 using System.Reflection;
-using System.Threading.Tasks;
-using System.Windows.Forms;
 using MTM_WIP_Application_Winforms.Forms.Settings;
 using MTM_WIP_Application_Winforms.Forms.Shared;
 using MTM_WIP_Application_Winforms.Logging;

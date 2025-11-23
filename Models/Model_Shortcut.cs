@@ -1,5 +1,3 @@
-using System.Windows.Forms;
-
 namespace MTM_WIP_Application_Winforms.Models
 {
     public class Model_Shortcut

@@ -664,6 +664,8 @@ public static class Dao_Inventory
         int originalQuantity,
         string newLocation,
         string user,
+        string? colorCode = null,
+        string? workOrder = null,
         MySqlConnection? connection = null,
         MySqlTransaction? transaction = null)
     {
@@ -678,7 +680,9 @@ public static class Dao_Inventory
                 ["TransferQuantity"] = transferQuantity,
                 ["OriginalQuantity"] = originalQuantity,
                 ["NewLocation"] = newLocation,
-                ["User"] = user
+                ["User"] = user,
+                ["ColorCode"] = colorCode ?? "Unknown",
+                ["WorkOrder"] = workOrder ?? "Unknown"
             };
 
             var result = await Helper_Database_StoredProcedure.ExecuteNonQueryWithStatusAsync(
