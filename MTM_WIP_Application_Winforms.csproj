@@ -47,6 +47,11 @@
         <None Remove="Resources\CHANGELOG.pdf" />
     </ItemGroup>
 
+    <ItemGroup>
+        <Compile Remove="Database\**" />
+        <EmbeddedResource Remove="Database\**" />
+        <None Remove="Database\**" />
+    </ItemGroup>
 
     <PropertyGroup>
         <PlantUmlGenerator_OutputDir>$(ProjectDir)generated-uml</PlantUmlGenerator_OutputDir>

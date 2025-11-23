@@ -505,7 +505,7 @@ internal static class Dao_ErrorReports
 
             var parameters = new Dictionary<string, object>
             {
-                ["p_ReportID"] = reportId
+                ["ReportID"] = reportId
             };
 
             var result = await Helper_Database_StoredProcedure.ExecuteNonQueryWithStatusAsync(
