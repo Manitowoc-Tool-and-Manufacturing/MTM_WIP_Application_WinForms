@@ -1,10 +1,9 @@
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using MTM_WIP_Application_Winforms.Core;
+using MTM_WIP_Application_Winforms.Forms.Settings;
 using MTM_WIP_Application_Winforms.Forms.Shared;
 using MTM_WIP_Application_Winforms.Logging;
 using MTM_WIP_Application_Winforms.Models;
@@ -20,7 +19,6 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
         #region Fields
 
         public event EventHandler<string>? StatusMessageChanged;
-        private string? _currentTempPdfPath;
 
         #endregion
 
@@ -32,9 +30,6 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
         public Control_About()
         {
             InitializeComponent();
-            
-            // Apply comprehensive DPI scaling and runtime layout adjustments
-            
             Control_About_LoadControl();
         }
 
@@ -42,375 +37,81 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
 
         #region Initialization
 
-        private async void Control_About_LoadControl()
+        private void Control_About_LoadControl()
         {
             LoggingUtility.Log("[Control_About] Loading control started");
             try
             {
-                // Use Model_Application_Variables instead of direct assembly calls
-                Control_About_Label_Version_Data.Text = Model_Application_Variables.ApplicationVersion;
-                Control_About_Label_Copyright_Data.Text = Model_Application_Variables.ApplicationCopyright;
-                Control_About_Label_Author_Data.Text = Model_Application_Variables.ApplicationAuthor;
-                Control_About_Label_LastUpdate_Data.Text = Model_Application_Variables.LastUpdated ?? "Unknown";
-
-                // Initialize WebView2 and load PDF
-                await LoadChangelogAsync();
+                // Load Version Info
+                var version = Assembly.GetExecutingAssembly().GetName().Version;
+                Control_About_Label_AppInfo_Version.Text = $"Version: {version?.ToString() ?? "Unknown"}";
                 
-                LoggingUtility.Log("[Control_About] Loading control completed");
+                // Copyright and Owner are static in designer, but can be dynamic if needed
+                Control_About_Label_AppInfo_Copyright.Text = $"Copyright © {DateTime.Now.Year}";
             }
             catch (Exception ex)
             {
-                Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Medium,
-                    contextData: new Dictionary<string, object>
-                    {
-                        ["Operation"] = "About Control Initialization",
-                        ["Version"] = Model_Application_Variables.ApplicationVersion,
-                        ["User"] = Model_Application_Variables.User
-                    },
-                    callerName: nameof(Control_About_LoadControl),
-                    controlName: nameof(Control_About));
-                StatusMessageChanged?.Invoke(this, $"Error loading about information: {ex.Message}");
+                LoggingUtility.LogApplicationError(ex);
+                Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Medium);
             }
         }
 
         #endregion
 
-        #region Changelog Loading
+        #region Event Handlers
 
-        /// <summary>
-        /// Loads the changelog PDF into the WebView2 control.
-        /// </summary>
-        private async Task LoadChangelogAsync()
+        private void Control_About_Button_ViewReleaseNotes_Click(object sender, EventArgs e)
         {
-            LoggingUtility.Log("[Control_About] Loading changelog started");
             try
             {
-                // Ensure WebView2 runtime is initialized first
-                await Control_About_Label_WebView_ChangeLogView.EnsureCoreWebView2Async();
-
-                string? pdfPath = await GetChangelogPdfPathAsync();
+                string releaseNotesPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "RELEASE_NOTES_USER_FRIENDLY.md");
                 
-                if (!string.IsNullOrEmpty(pdfPath) && File.Exists(pdfPath))
+                // If not found in bin, check project root (for dev environment)
+                if (!File.Exists(releaseNotesPath))
                 {
-                    // Store reference to temp file for cleanup
-                    _currentTempPdfPath = pdfPath;
-                    
-                    // Create proper file URI for WebView2
-                    string fileUri = new Uri(pdfPath).AbsoluteUri;
-                    
-                    // Navigate to the PDF file
-                    Control_About_Label_WebView_ChangeLogView.Source = new Uri(fileUri);
-                    
-                    StatusMessageChanged?.Invoke(this, "Changelog loaded successfully.");
-                    LoggingUtility.Log($"[Control_About] Changelog PDF loaded - Path={pdfPath}");
+                    string projectRoot = Path.GetFullPath(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"..\..\.."));
+                    string devPath = Path.Combine(projectRoot, "RELEASE_NOTES_USER_FRIENDLY.md");
+                    if (File.Exists(devPath))
+                    {
+                        releaseNotesPath = devPath;
+                    }
+                }
+
+                if (File.Exists(releaseNotesPath))
+                {
+                    string markdownContent = File.ReadAllText(releaseNotesPath);
+                    using (var form = new ViewReleaseNotesForm(markdownContent))
+                    {
+                        form.ShowDialog(this);
+                    }
                 }
                 else
                 {
-                    // If PDF is not available, show fallback content
-                    ShowFallbackContent();
-                    StatusMessageChanged?.Invoke(this, "Showing fallback changelog content.");
-                    LoggingUtility.Log("[Control_About] Changelog PDF not found, showing fallback");
+                    Service_ErrorHandler.ShowWarning("Release notes file not found.");
                 }
             }
             catch (Exception ex)
             {
-                Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Medium,
-                    contextData: new Dictionary<string, object>
-                    {
-                        ["Operation"] = "Changelog Loading",
-                        ["WebView2Initialized"] = Control_About_Label_WebView_ChangeLogView?.CoreWebView2 != null,
-                        ["User"] = Model_Application_Variables.User
-                    },
-                    callerName: nameof(LoadChangelogAsync),
-                    controlName: nameof(Control_About));
-                ShowErrorContent(ex.Message);
-                StatusMessageChanged?.Invoke(this, $"Warning: Could not load changelog - {ex.Message}");
+                LoggingUtility.LogApplicationError(ex);
+                Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Medium);
             }
-        }
-
-        /// <summary>
-        /// Retrieves the path to the changelog PDF file.
-        /// </summary>
-        /// <returns>The path to the PDF file, or null if not found.</returns>
-        private async Task<string?> GetChangelogPdfPathAsync()
-        {
-            try
-            {
-                // First, try to get from embedded resource
-                var resourceStream = Assembly.GetExecutingAssembly()
-                    .GetManifestResourceStream("MTM_WIP_Application_Winforms.Resources.CHANGELOG.pdf");
-
-                if (resourceStream != null)
-                {
-                    // Create a temporary file from embedded resource
-                    string tempPdfPath = Path.Combine(Path.GetTempPath(), $"MTM_WIP_Application_CHANGELOG_{Guid.NewGuid()}.pdf");
-                    
-                    using (var fileStream = new FileStream(tempPdfPath, FileMode.Create, FileAccess.Write))
-                    {
-                        await resourceStream.CopyToAsync(fileStream);
-                    }
-
-                    // Verify the file was created successfully
-                    if (File.Exists(tempPdfPath) && new FileInfo(tempPdfPath).Length > 0)
-                    {
-                        return tempPdfPath;
-                    }
-                }
-
-                // Second, try to find in application directory (for Content files)
-                string appDir = AppDomain.CurrentDomain.BaseDirectory;
-                string[] possiblePaths = {
-                    Path.Combine(appDir, "Resources", "CHANGELOG.pdf"),
-                    Path.Combine(appDir, "CHANGELOG.pdf"),
-                    Path.Combine(Directory.GetParent(appDir)?.FullName ?? appDir, "Resources", "CHANGELOG.pdf")
-                };
-
-                foreach (string path in possiblePaths)
-                {
-                    if (File.Exists(path))
-                    {
-                        return path;
-                    }
-                }
-
-                return null;
-            }
-            catch (Exception ex)
-            {
-                Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Low,
-                    contextData: new Dictionary<string, object>
-                    {
-                        ["Operation"] = "PDF Path Resolution",
-                        ["AppDirectory"] = AppDomain.CurrentDomain.BaseDirectory,
-                        ["TempPath"] = Path.GetTempPath(),
-                        ["User"] = Model_Application_Variables.User,
-                        ["IsCritical"] = false // Falls back to HTML content
-                    },
-                    callerName: nameof(GetChangelogPdfPathAsync),
-                    controlName: nameof(Control_About));
-                return null;
-            }
-        }
-
-        #endregion
-
-        #region HTML Content Display
-
-        private void ShowFallbackContent()
-        {
-            string fallbackHtml = $@"
-<!DOCTYPE html>
-<html>
-<head>
-    <meta charset='utf-8'>
-    <title>Changelog</title>
-    <style>
-        body {{ 
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
-            margin: 20px; 
-            background-color: #f5f5f5;
-            color: #333;
-        }}
-        .container {{
-            background-color: white;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-        }}
-        h1 {{ 
-            color: #2c5aa0; 
-            border-bottom: 2px solid #2c5aa0;
-            padding-bottom: 10px;
-        }}
-        .version {{ 
-            background-color: #e8f4fd; 
-            padding: 10px; 
-            margin: 10px 0; 
-            border-left: 4px solid #2c5aa0;
-        }}
-        .date {{ color: #666; font-style: italic; }}
-        .feature {{ margin: 5px 0; }}
-    </style>
-</head>
-<body>
-    <div class='container'>
-        <h1>MTM WIP Application Changelog</h1>
-        <div class='version'>
-            <h3>Version {Model_Application_Variables.ApplicationVersion}</h3>
-            <p class='date'>Last Updated: {Model_Application_Variables.LastUpdated}</p>
-            <ul>
-                <li class='feature'>Enhanced user interface and user experience</li>
-                <li class='feature'>Improved database connectivity and performance</li>
-                <li class='feature'>Added comprehensive settings management</li>
-                <li class='feature'>Implemented advanced inventory tracking features</li>
-                <li class='feature'>Updated security and user authentication</li>
-                <li class='feature'>Progress tracking for all user operations</li>
-                <li class='feature'>Enhanced error handling and logging</li>
-            </ul>
-        </div>
-        <div class='version'>
-            <h3>Recent Improvements</h3>
-            <ul>
-                <li class='feature'>Improved ComboBox data management</li>
-                <li class='feature'>Optimized database operations with stored procedures</li>
-                <li class='feature'>Better theme and UI customization</li>
-                <li class='feature'>Enhanced user removal functionality</li>
-                <li class='feature'>Comprehensive progress feedback system</li>
-                <li class='feature'>Improved cross-thread operation safety</li>
-            </ul>
-        </div>
-        <div class='version'>
-            <h3>Technical Enhancements</h3>
-            <ul>
-                <li class='feature'>Upgraded to .NET 8 framework</li>
-                <li class='feature'>Enhanced MySQL database integration</li>
-                <li class='feature'>Improved WebView2 implementation</li>
-                <li class='feature'>Better resource management and cleanup</li>
-                <li class='feature'>Centralized application configuration</li>
-            </ul>
-        </div>
-        <hr>
-        <p><em>This is a summary of recent changes. For detailed changelog information, please refer to the application documentation or contact the system administrator.</em></p>
-        <p><small>Developed by: {Model_Application_Variables.ApplicationAuthor}<br>
-        Company: {Model_Application_Variables.ApplicationCopyright}</small></p>
-    </div>
-</body>
-</html>";
-
-            Control_About_Label_WebView_ChangeLogView.CoreWebView2.NavigateToString(fallbackHtml);
-        }
-
-        private void ShowErrorContent(string errorMessage)
-        {
-            string errorHtml = $@"
-<!DOCTYPE html>
-<html>
-<head>
-    <meta charset='utf-8'>
-    <title>Changelog Error</title>
-    <style>
-        body {{ 
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
-            margin: 20px; 
-            background-color: #fff5f5;
-            color: #333;
-        }}
-        .error-container {{
-            background-color: white;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-            border-left: 4px solid #dc3545;
-        }}
-        h1 {{ color: #dc3545; }}
-        .error-details {{ 
-            background-color: #f8f9fa; 
-            padding: 10px; 
-            border-radius: 4px;
-            font-family: 'Courier New', monospace;
-            font-size: 12px;
-            margin: 10px 0;
-        }}
-    </style>
-</head>
-<body>
-    <div class='error-container'>
-        <h1>⚠️ Changelog Unavailable</h1>
-        <p>The changelog could not be loaded at this time.</p>
-        <div class='error-details'>Error: {errorMessage}</div>
-        <p>Please check the application logs for more details or contact the system administrator.</p>
-        <hr>
-        <p><strong>Application Information:</strong></p>
-        <ul>
-            <li>Version: {Model_Application_Variables.ApplicationVersion}</li>
-            <li>Last Updated: {Model_Application_Variables.LastUpdated}</li>
-            <li>Author: {Model_Application_Variables.ApplicationAuthor}</li>
-            <li>Copyright: {Model_Application_Variables.ApplicationCopyright}</li>
-        </ul>
-    </div>
-</body>
-</html>";
-
-            Control_About_Label_WebView_ChangeLogView.CoreWebView2.NavigateToString(errorHtml);
         }
 
         #endregion
 
         #region Cleanup Methods
 
-        internal void CleanupTempFiles()
-        {
-            try
-            {
-                // Clean up the current temp file if it exists
-                if (!string.IsNullOrEmpty(_currentTempPdfPath) && File.Exists(_currentTempPdfPath))
-                {
-                    try
-                    {
-                        File.Delete(_currentTempPdfPath);
-                        _currentTempPdfPath = null;
-                    }
-                    catch (Exception ex)
-                    {
-                        LoggingUtility.LogApplicationError(ex);
-                        // Ignore cleanup errors - file may be in use
-                    }
-                }
-
-                // Clean up any orphaned temp files from previous sessions
-                string tempPath = Path.GetTempPath();
-                var tempFiles = Directory.GetFiles(tempPath, "MTM_WIP_Application_CHANGELOG_*.pdf");
-                foreach (string file in tempFiles)
-                {
-                    try
-                    {
-                        // Only delete files older than 1 hour to avoid conflicts
-                        if (File.GetCreationTime(file) < DateTime.Now.AddHours(-1))
-                        {
-                            File.Delete(file);
-                        }
-                    }
-                    catch (Exception ex)
-                    {
-                        LoggingUtility.LogApplicationError(ex);
-                        // Ignore cleanup errors - files may be in use
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                LoggingUtility.LogApplicationError(ex);
-                // Ignore cleanup errors
-            }
-        }
-
         /// <summary>
         /// Static method to clean up temp files at application shutdown
         /// </summary>
         public static void CleanupAllTempFiles()
         {
-            try
-            {
-                string tempPath = Path.GetTempPath();
-                var tempFiles = Directory.GetFiles(tempPath, "MTM_WIP_Application_CHANGELOG_*.pdf");
-                foreach (string file in tempFiles)
-                {
-                    try
-                    {
-                        File.Delete(file);
-                    }
-                    catch (Exception ex)
-                    {
-                        LoggingUtility.LogApplicationError(ex);
-                        // Ignore cleanup errors - files may be in use
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                LoggingUtility.LogApplicationError(ex);
-                // Ignore cleanup errors
-            }
+            // No temp files to clean up in new version
+        }
+        
+        internal void CleanupTempFiles()
+        {
+             // No temp files to clean up in new version
         }
 
         #endregion

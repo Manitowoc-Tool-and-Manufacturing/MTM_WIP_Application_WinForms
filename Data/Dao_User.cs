@@ -816,7 +816,7 @@ internal static class Dao_User
 
             if (!result.IsSuccess)
             {
-
+                LoggingUtility.Log($"Failed to set user setting '{field}' for user '{user}': {result.ErrorMessage}");
             }
 
             Service_DebugTracer.TraceMethodExit(controlName: "Dao_User");
@@ -1544,6 +1544,65 @@ internal static class Dao_User
 
             Service_DebugTracer.TraceMethodExit(null, controlName: "Dao_User");
             return Model_Dao_Result.Failure($"Error removing role {roleId} from user {userId}", ex);
+        }
+    }
+
+    #endregion
+
+    #region Animations
+
+    /// <summary>
+    /// Gets whether animations are enabled for the specified user.
+    /// </summary>
+    /// <param name="user">The username.</param>
+    /// <returns>A Model_Dao_Result containing true if enabled, false if disabled. Defaults to true.</returns>
+    internal static async Task<Model_Dao_Result<bool>> GetAnimationsEnabledAsync(string user,
+        MySqlConnection? connection = null,
+        MySqlTransaction? transaction = null)
+    {
+        Service_DebugTracer.TraceMethodEntry(new Dictionary<string, object> { ["user"] = user }, controlName: "Dao_User");
+
+        try
+        {
+            string str = await GetSettingsJsonInternalAsync("AnimationsEnabled", user, connection, transaction);
+            // Default to true if not set or invalid
+            bool result = !bool.TryParse(str, out bool val) || val;
+
+            Service_DebugTracer.TraceMethodExit(result, controlName: "Dao_User");
+            return Model_Dao_Result<bool>.Success(result, $"Retrieved AnimationsEnabled for user {user}");
+        }
+        catch (Exception ex)
+        {
+            LoggingUtility.LogDatabaseError(ex);
+            Service_DebugTracer.TraceMethodExit(true, controlName: "Dao_User");
+            return Model_Dao_Result<bool>.Failure($"Error retrieving AnimationsEnabled for user {user}", ex);
+        }
+    }
+
+    /// <summary>
+    /// Sets whether animations are enabled for the specified user.
+    /// </summary>
+    /// <param name="user">The username.</param>
+    /// <param name="enabled">True to enable animations, false to disable.</param>
+    /// <returns>A Model_Dao_Result indicating success or failure.</returns>
+    internal static async Task<Model_Dao_Result> SetAnimationsEnabledAsync(string user, bool enabled,
+        MySqlConnection? connection = null,
+        MySqlTransaction? transaction = null)
+    {
+        Service_DebugTracer.TraceMethodEntry(new Dictionary<string, object> { ["user"] = user, ["enabled"] = enabled }, controlName: "Dao_User");
+
+        try
+        {
+            await SetUserSettingInternalAsync("AnimationsEnabled", user, enabled.ToString().ToLower(), connection, transaction);
+
+            Service_DebugTracer.TraceMethodExit(controlName: "Dao_User");
+            return Model_Dao_Result.Success($"Set AnimationsEnabled to {enabled} for user {user}");
+        }
+        catch (Exception ex)
+        {
+            LoggingUtility.LogDatabaseError(ex);
+            Service_DebugTracer.TraceMethodExit(null, controlName: "Dao_User");
+            return Model_Dao_Result.Failure($"Error setting AnimationsEnabled for user {user}", ex);
         }
     }
 

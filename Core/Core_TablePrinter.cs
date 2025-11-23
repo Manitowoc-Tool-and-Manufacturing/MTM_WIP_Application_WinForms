@@ -54,6 +54,13 @@ public class Core_TablePrinter : IDisposable
     /// </summary>
     public PrintDocument PrintDocument => _printDocument;
 
+    /// <summary>
+    /// Gets or sets whether the printer is rendering for a preview.
+    /// If true, a white background is drawn to simulate paper.
+    /// If false, the background is transparent (useful for pre-printed stationery).
+    /// </summary>
+    public bool IsPreview { get; set; }
+
     #endregion
 
     #region Constructors
@@ -301,12 +308,37 @@ public class Core_TablePrinter : IDisposable
             int yPosition = topMargin;
 
             // Paint page background to ensure dark application themes do not influence printouts
-            e.Graphics.FillRectangle(_pageBackgroundBrush, e.PageBounds);
+            if (IsPreview)
+            {
+                e.Graphics.FillRectangle(_pageBackgroundBrush, e.PageBounds);
+            }
+
+            // Draw header logo (small watermark)
+            Bitmap? logoImage = Properties.Resources.MTM;
+            if (logoImage != null)
+            {
+                int logoHeight = 40;
+                float scale = (float)logoHeight / logoImage.Height;
+                int logoWidth = (int)(logoImage.Width * scale);
+                
+                // Draw logo at top left
+                e.Graphics.DrawImage(logoImage, leftMargin, topMargin, logoWidth, logoHeight);
+                
+                // Adjust title position to be centered but respect the logo
+                // Or just center the title on the page as before, assuming logo is small enough
+            }
 
             // Draw title
             var titleSize = e.Graphics.MeasureString(_title, _titleFont);
             e.Graphics.DrawString(_title, _titleFont, _titleBrush,
                 leftMargin + (printableWidth - titleSize.Width) / 2, yPosition);
+            
+            // Draw date/time on right
+            string dateText = DateTime.Now.ToString("g");
+            var dateSize = e.Graphics.MeasureString(dateText, _pageFont);
+            e.Graphics.DrawString(dateText, _pageFont, _cellBrush, 
+                rightMargin - dateSize.Width, yPosition + (titleSize.Height - dateSize.Height) / 2);
+
             yPosition += (int)titleSize.Height + 20;
 
             // Draw watermark
@@ -314,7 +346,14 @@ public class Core_TablePrinter : IDisposable
 
             // Calculate column widths
             int columnCount = _visibleColumns.Count;
-            int columnWidth = printableWidth / Math.Max(columnCount, 1);
+            int notesWidth = 0;
+            if (_printJob?.AddNotesColumn == true)
+            {
+                double percentage = Math.Clamp(_printJob.NotesColumnWidthPercentage, 5, 75) / 100.0;
+                notesWidth = (int)(printableWidth * percentage);
+            }
+            int dataWidth = printableWidth - notesWidth;
+            int columnWidth = dataWidth / Math.Max(columnCount, 1);
 
             // Draw header row with background
             var headerRect = new Rectangle(leftMargin, yPosition, printableWidth, 30);
@@ -326,10 +365,25 @@ public class Core_TablePrinter : IDisposable
             int xPosition = leftMargin;
             foreach (var columnName in _visibleColumns)
             {
+                // Use user-friendly header if available, otherwise fallback to column name
+                string headerText = columnName;
+                if (_printJob?.ColumnHeaders.TryGetValue(columnName, out string? friendlyHeader) == true)
+                {
+                    headerText = friendlyHeader;
+                }
+
                 e.Graphics.DrawRectangle(_gridPen, xPosition, yPosition, columnWidth, 30);
-                e.Graphics.DrawString(columnName, _headerFont, _headerBrush,
+                e.Graphics.DrawString(headerText, _headerFont, _headerBrush,
                     new RectangleF(xPosition + 5, yPosition + 7, columnWidth - 10, 20));
                 xPosition += columnWidth;
+            }
+
+            if (notesWidth > 0)
+            {
+                e.Graphics.DrawRectangle(_gridPen, xPosition, yPosition, notesWidth, 30);
+                e.Graphics.DrawString("Corrections", _headerFont, _headerBrush,
+                    new RectangleF(xPosition + 5, yPosition + 7, notesWidth - 10, 20));
+                xPosition += notesWidth;
             }
             yPosition += 30;
 
@@ -340,6 +394,10 @@ public class Core_TablePrinter : IDisposable
             {
                 var row = _data.Rows[_currentRow];
                 xPosition = leftMargin;
+
+                // Determine row background color
+                Color rowColor = Color.Empty;
+                bool hasCustomColor = _printJob?.RowColors.TryGetValue(_currentRow, out rowColor) == true;
 
                 foreach (var columnName in _visibleColumns)
                 {
@@ -358,11 +416,39 @@ public class Core_TablePrinter : IDisposable
                     }
 
                     Rectangle cellBounds = new Rectangle(xPosition, yPosition, columnWidth, rowHeight);
-                    e.Graphics.FillRectangle(_rowBackgroundBrush, cellBounds);
+                    
+                    if (hasCustomColor)
+                    {
+                        using var customBrush = new SolidBrush(EnsureReadableBackgroundColor(rowColor));
+                        e.Graphics.FillRectangle(customBrush, cellBounds);
+                    }
+                    else
+                    {
+                        e.Graphics.FillRectangle(_rowBackgroundBrush, cellBounds);
+                    }
+
                     e.Graphics.DrawRectangle(_gridPen, cellBounds);
                     e.Graphics.DrawString(cellValue, _cellFont, _cellBrush,
                         new RectangleF(xPosition + 5, yPosition + 5, columnWidth - 10, rowHeight - 10));
                     xPosition += columnWidth;
+                }
+
+                if (notesWidth > 0)
+                {
+                    Rectangle cellBounds = new Rectangle(xPosition, yPosition, notesWidth, rowHeight);
+
+                    if (hasCustomColor)
+                    {
+                        using var customBrush = new SolidBrush(EnsureReadableBackgroundColor(rowColor));
+                        e.Graphics.FillRectangle(customBrush, cellBounds);
+                    }
+                    else
+                    {
+                        e.Graphics.FillRectangle(_rowBackgroundBrush, cellBounds);
+                    }
+
+                    e.Graphics.DrawRectangle(_gridPen, cellBounds);
+                    xPosition += notesWidth;
                 }
 
                 yPosition += rowHeight;
@@ -370,7 +456,10 @@ public class Core_TablePrinter : IDisposable
             }
 
             // Draw page number
-            string pageText = $"Page {_pageNumber}";
+            int totalPages = _printJob?.TotalPages ?? 0;
+            string pageText = totalPages > 0 
+                ? $"Page {_pageNumber} of {totalPages}" 
+                : $"Page {_pageNumber}";
             var pageSize = e.Graphics.MeasureString(pageText, _pageFont);
             e.Graphics.DrawString(pageText, _pageFont, _cellBrush,
                 rightMargin - pageSize.Width, bottomMargin + 10);

@@ -1353,11 +1353,14 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
 
         private void UpdateInputPanelArrow(bool collapsed)
         {
+            // For the left panel, the arrows are opposite to the right panel logic
+            // Collapsed -> Needs Right arrow to expand
+            // Expanded -> Needs Left arrow to collapse
             Helper_ButtonToggleAnimations.ApplyHorizontalArrow(
                 ref _inputPanelAnimator,
                 components,
                 Control_TransferTab_Button_Toggle_Split,
-                collapsed);
+                !collapsed);
         }
 
         private void UpdateRightPanelArrow(bool collapsed)

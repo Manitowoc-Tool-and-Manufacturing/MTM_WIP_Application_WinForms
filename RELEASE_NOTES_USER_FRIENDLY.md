@@ -8,8 +8,9 @@
 
 | Date | Version | Summary | What to do |
 | --- | --- | --- | --- |
-| [Nov 20, 2025](#latest-update---november-20-2025-version-631) | [6.3.1](#latest-update---november-20-2025-version-631) | User Management screen updated to match new card interface style. | Nothing—enjoy the consistent look! |
-| [Nov 20, 2025](#previous-update---november-20-2025-version-630) | [6.3.0](#previous-update---november-20-2025-version-630) | Complete redesign of Settings management screens with modern card interface. | Check out the new look in Settings! |
+| [Nov 22, 2025](#latest-update---november-22-2025-version-632) | [6.3.2](#latest-update---november-22-2025-version-632) | Print dialog improvements: Notes column, collapsible sidebars, and better printer reliability. | Try the new "Add Notes Column" option when printing! |
+| [Nov 20, 2025](#previous-update---november-20-2025-version-631) | [6.3.1](#previous-update---november-20-2025-version-631) | User Management screen updated to match new card interface style. | Nothing—enjoy the consistent look! |
+| [Nov 20, 2025](#previous-update---november-20-2025-version-630) | [6.3.0](#previous-update---november-20-2025-version-630) | Complete redesign of Settings management screens with modern card interface. (User Managment Screens are still the same.) | Check out the new look in Settings! |
 | [Nov 15, 2025](#previous-update---november-15-2025-version-623) | [6.2.3](#previous-update---november-15-2025-version-623) | Search buttons added to all main entry tabs for quick access to full lists. | Nothing—just click 🔎 buttons to access dropdown lists! |
 | [Nov 15, 2025](#previous-update---november-15-2025-version-622) | [6.2.2](#previous-update---november-15-2025-version-622) | Advanced Inventory Entry modernized with smart suggestions and Excel auto-template. | Nothing—faster data entry is ready to use! |
 | [Nov 13, 2025](#previous-update---november-13-2025-version-620) | [6.2.0](#previous-update---november-13-2025-version-620) | Universal suggestions replaced old dropdowns with type-to-search. | Nothing—feature is automatically available. |
@@ -34,7 +35,31 @@
 
 ---
 
-## Latest Update - November 20, 2025 (Version 6.3.1)
+## Latest Update - November 22, 2025 (Version 6.3.2)
+
+**What Changed**: The Print dialog has been improved with a new "Notes" column for handwritten corrections, collapsible sidebars for better preview visibility, and improved printer reliability.  
+**Do I Need To Do Anything?**: No - but try the new features next time you print!
+
+---
+
+### 🎯 What This Means For You
+
+#### Better Printing Experience
+
+**What's new**:
+- **Add Notes Column**: You can now add a blank "Notes" column to your printouts. This is perfect for writing down corrections or counts while walking the floor.
+- **Collapsible Sidebars**: Need to see more of the preview? You can now collapse the left and right settings panels to maximize the view.
+- **Improved Reliability**: The print dialog no longer freezes if your selected printer is offline. It handles connection issues gracefully.
+- **Smarter Defaults**: If you add a Notes column, the system suggests switching to Landscape mode for better fit.
+
+**Why this helps**:
+- **Paper Workflow**: The new Notes column bridges the gap between digital data and physical inventory checks.
+- **Better Visibility**: See your document clearly without settings panels taking up space.
+- **Less Frustration**: No more application freezes when a printer is acting up.
+
+---
+
+## Previous Update - November 20, 2025 (Version 6.3.1)
 
 **What Changed**: The User Management screen in Settings has been updated to match the new card-based design of other management screens.  
 **Do I Need To Do Anything?**: No - navigation is now more consistent across all settings.

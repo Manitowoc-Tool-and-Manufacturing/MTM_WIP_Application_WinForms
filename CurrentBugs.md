@@ -36,12 +36,6 @@
 - Update Transfer, Remove, and Advanced Remove tabs to apply settings after data load
 - Ensure column visibility and order are restored from database
 
-### 7. **Fix usr_settings_Get returning 0 on startup** *(2 hours)*
-- Investigate why `usr_settings_Get` returns 0 (Not Found) on startup
-- Ensure `usr_settings` record is created for new users or migrated from `usr_users`
-- Update `usr_users_Add_User` or application logic to initialize settings
-- Verify log shows Status: 1 after fix
-
 ## Medium Tasks (3-6 hours)
 
 ### 8. **All Themes - Set selection colors to -75% brightness** *(3 hours)* - Done!
@@ -57,25 +51,19 @@
 - Debug menu visibility conditions
 - Test with different user types
 
-### 10. **Set proper tab indexing for all controls** *(4 hours)*
+### 10. **Set proper tab indexing for all controls** *(4 hours)* - Done!
 - Review all forms in `Forms/` directory
 - Set logical `TabIndex` values (0, 1, 2, etc.)
 - Test tab navigation on each form
 - Document tab order patterns
 
-### 11. **Settings - Themes - Add Enable Animation toggle checkbox** *(4 hours)*
+### 11. **Settings - Themes - Add Enable Animation toggle checkbox** *(4 hours)* - Done!
 - Add animation setting to `usr_settings` table `settingsjson`
 - Create UI toggle in Settings → Themes
 - Implement animation enable/disable logic
 - Update theme system to respect setting
 
-### 12. **Clean Excel Button investigation and fix** *(4 hours)*
-- Locate Clean Excel button implementation
-- Debug and trace execution path
-- Identify why no action occurs
-- Implement proper functionality or remove if obsolete
-
-### 13. **Print - Use proper easy-to-understand header names** *(5 hours)*
+### 13. **Print - Use proper easy-to-understand header names** *(5 hours)* - Done!
 - Review all print service calls
 - Replace technical column names with user-friendly headers
 - Update print templates and formatting
@@ -83,20 +71,20 @@
 
 ## Major Refactoring (8-16 hours)
 
-### 14. **Advanced Inventory - Convert textboxes to SuggestionTextBoxWithLabel** *(8 hours)*
+### 14. **Advanced Inventory - Convert textboxes to SuggestionTextBoxWithLabel** *(8 hours)* - Done!
 - Identify Quantity and How Many textboxes
 - Replace with `SuggestionTextBoxWithLabel` controls
 - Implement suggestion logic and data sources
 - Update validation and form logic
 - Test user experience
 
-### 15. **Print - Fix transparent background and cell backgrounds** *(10 hours)*
+### 15. **Print - Fix transparent background and cell backgrounds** *(10 hours)* - Done!
 - Modify print service to use transparent backgrounds
 - Implement proper DataGridView cell background rendering
 - Test print preview and actual printing
 - Ensure compatibility with different printers
 
-### 16. **Print - Fix settings not passing to Windows print manager** *(12 hours)*
+### 16. **Print - Fix settings not passing to Windows print manager** *(12 hours)* - Done!
 - Debug print settings pipeline
 - Identify where settings are lost between UI and print manager
 - Implement proper `PrintDocument` configuration
@@ -106,7 +94,7 @@
 - Add new setting to `usr_settings` table `settingsjson`
 - Create UI toggle in Settings
 - Implement expand/collapse logic across all applicable forms/controls
-- Update existing TreeView, Panel, and GroupBox behaviors
+- Update existing Panel, and GroupBox, TableLayoutPanel, Visiblilty triggers caused by auto collapse behaviors
 
 ### 18. **Redesign Shortcut Settings Menu** *(14 hours)*
 - Analyze current shortcut settings implementation

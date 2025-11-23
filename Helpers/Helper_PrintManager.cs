@@ -25,6 +25,15 @@ public class Helper_PrintManager : IDisposable
 
     #endregion
 
+    #region Properties
+
+    /// <summary>
+    /// Gets or sets whether the printer is rendering for a preview.
+    /// </summary>
+    public bool IsPreview { get; set; }
+
+    #endregion
+
     #region Constructors
 
     /// <summary>
@@ -56,6 +65,7 @@ public class Helper_PrintManager : IDisposable
 
             // Create new table printer
             _tablePrinter = new Core_TablePrinter();
+            _tablePrinter.IsPreview = IsPreview;
             
             // Set data (pass ALL data - PrintDocument.PrinterSettings will control pages)
             _tablePrinter.SetData(_printJob);
@@ -101,15 +111,27 @@ public class Helper_PrintManager : IDisposable
             // Show print dialog
             using var printDialog = new PrintDialog
             {
-                Document = printDocument,
+                // UseEXDialog = true can cause issues with settings transfer on some systems.
+                // Reverting to standard dialog to ensure settings (Landscape, Copies) are respected.
+                UseEXDialog = false,
                 AllowSomePages = true,
-                AllowSelection = false,
-                UseEXDialog = true
+                AllowSelection = false
             };
 
-            if (printDialog.ShowDialog() == DialogResult.OK)
+            // CRITICAL: Explicitly assign Document AND PrinterSettings to ensure 
+            // the dialog respects the pre-configured printer and orientation.
+            printDialog.Document = printDocument;
+            printDialog.PrinterSettings = printDocument.PrinterSettings;
+
+            DialogResult result = printDialog.ShowDialog();
+            LoggingUtility.Log($"[Helper_PrintManager] PrintDialog result: {result}");
+
+            if (result == DialogResult.OK)
             {
-                // User confirmed - start printing
+                // Capture settings back to job so they can be persisted
+                _printJob.PrinterName = printDocument.PrinterSettings.PrinterName;
+                _printJob.Copies = printDocument.PrinterSettings.Copies;
+                _printJob.Landscape = printDocument.DefaultPageSettings.Landscape;
                 
                 printDocument.Print();
                 SyncPageBoundariesFromPrinter();
@@ -252,7 +274,34 @@ public class Helper_PrintManager : IDisposable
             .Select(c => !string.IsNullOrWhiteSpace(c.DataPropertyName) ? c.DataPropertyName : c.Name)
             .ToList();
 
-        return new Model_Print_Job(data, columnOrder, visibleColumns, title);
+        var job = new Model_Print_Job(data, columnOrder, visibleColumns, title);
+
+        // Capture user-friendly headers
+        foreach (DataGridViewColumn col in dgv.Columns)
+        {
+            string colKey = !string.IsNullOrWhiteSpace(col.DataPropertyName) ? col.DataPropertyName : col.Name;
+            if (!string.IsNullOrWhiteSpace(col.HeaderText))
+            {
+                job.ColumnHeaders[colKey] = col.HeaderText;
+            }
+        }
+
+        // Capture row colors
+        int rowIndex = 0;
+        foreach (DataGridViewRow row in dgv.Rows)
+        {
+            if (row.IsNewRow) continue;
+
+            if (row.DefaultCellStyle.BackColor != Color.Empty &&
+                row.DefaultCellStyle.BackColor != Color.Transparent &&
+                row.DefaultCellStyle.BackColor != SystemColors.Window)
+            {
+                job.RowColors[rowIndex] = row.DefaultCellStyle.BackColor;
+            }
+            rowIndex++;
+        }
+
+        return job;
     }
 
     /// <summary>

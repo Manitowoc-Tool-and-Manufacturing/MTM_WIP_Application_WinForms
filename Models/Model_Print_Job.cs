@@ -104,6 +104,26 @@ public class Model_Print_Job
     /// </summary>
     public IReadOnlyList<Model_Print_PageBoundary> PageBoundaries => _pageBoundaries.AsReadOnly();
 
+    /// <summary>
+    /// Mapping of column names to user-friendly header text
+    /// </summary>
+    public Dictionary<string, string> ColumnHeaders { get; set; } = new();
+
+    /// <summary>
+    /// Mapping of row indices to specific background colors.
+    /// </summary>
+    public Dictionary<int, System.Drawing.Color> RowColors { get; set; } = new();
+
+    /// <summary>
+    /// Whether to add a blank "Notes" column (30% width) for auditing.
+    /// </summary>
+    public bool AddNotesColumn { get; set; }
+
+    /// <summary>
+    /// Percentage of page width to allocate for the "Notes" column (default 30).
+    /// </summary>
+    public int NotesColumnWidthPercentage { get; set; } = 30;
+
     #endregion
 
     #region Constructors
@@ -190,6 +210,10 @@ public class Model_Print_Job
         {
             printDocument.PrinterSettings.PrinterName = PrinterName;
         }
+
+        // Ensure DefaultPageSettings is linked to the correct PrinterSettings
+        // This is required for PrintDialog to correctly reflect orientation
+        printDocument.DefaultPageSettings.PrinterSettings = printDocument.PrinterSettings;
 
         // Apply page orientation
         printDocument.DefaultPageSettings.Landscape = Landscape;

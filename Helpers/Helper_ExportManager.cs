@@ -220,7 +220,13 @@ public static class Helper_ExportManager
                 // Header row
                 for (int columnIndex = 0; columnIndex < columnsToExport.Count; columnIndex++)
                 {
-                    worksheet.Cell(1, columnIndex + 1).Value = columnsToExport[columnIndex];
+                    string columnName = columnsToExport[columnIndex];
+                    string headerText = columnName;
+                    if (printJob.ColumnHeaders.TryGetValue(columnName, out string? friendlyHeader))
+                    {
+                        headerText = friendlyHeader;
+                    }
+                    worksheet.Cell(1, columnIndex + 1).Value = headerText;
                 }
 
                 var headerRange = worksheet.Range(1, 1, 1, columnsToExport.Count);

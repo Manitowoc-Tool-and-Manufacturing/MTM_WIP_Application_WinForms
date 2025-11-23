@@ -66,11 +66,8 @@ namespace MTM_WIP_Application_Winforms.Forms.Shared
         /// <exception cref="ArgumentNullException">If suggestions is null.</exception>
         public SuggestionOverlayForm(List<string> suggestions, Control parentControl)
         {
-            if (suggestions == null)
-                throw new ArgumentNullException(nameof(suggestions));
-
-            if (parentControl == null)
-                throw new ArgumentNullException(nameof(parentControl));
+            ArgumentNullException.ThrowIfNull(suggestions);
+            ArgumentNullException.ThrowIfNull(parentControl);
 
             InitializeComponent();
 
@@ -78,15 +75,67 @@ namespace MTM_WIP_Application_Winforms.Forms.Shared
             _selectedItem = null;
             _parentControl = parentControl;
 
-            // Calculate position relative to parent control
-            this.StartPosition = FormStartPosition.Manual;
-            this.Location = CalculatePosition(parentControl);
+            // Calculate position and size
+            Point overlayLocation = CalculatePosition(parentControl, out Size overlaySize);
+
+            // Capture parent form for full-screen overlay (Click-to-dismiss support)
+            Form? topLevelForm = parentControl.FindForm();
+            if (topLevelForm != null)
+            {
+            // 1. Capture screenshot of parent form
+            Rectangle bounds = topLevelForm.Bounds;
+            Bitmap bmp = new(bounds.Width, bounds.Height);
+            using (Graphics g = Graphics.FromImage(bmp))
+            {
+                g.CopyFromScreen(bounds.Location, Point.Empty, bounds.Size);
+            }
+
+            // 2. Configure this form as full-screen overlay
+            BackgroundImage = bmp;
+            FormBorderStyle = FormBorderStyle.None;
+            StartPosition = FormStartPosition.Manual;
+            Bounds = bounds;
+            
+            // 3. Create container for actual content
+            Panel containerPanel = new()
+            {
+                BackColor = Color.White,
+                Size = overlaySize,
+                Location = new Point(
+                overlayLocation.X - bounds.X, 
+                overlayLocation.Y - bounds.Y),
+                BorderStyle = BorderStyle.FixedSingle // Flat black border
+            };
+            
+            // 4. Move existing controls to container
+            List<Control> controls = [];
+            foreach (Control c in Controls) 
+                controls.Add(c);
+            foreach (Control c in controls) 
+                containerPanel.Controls.Add(c);
+
+            // 5. Add container and setup click handlers
+            Controls.Add(containerPanel);
+            containerPanel.BringToFront();
+            
+            // Click on background -> Close
+            Click += (s, e) => CancelSelection();
+            // Click on container -> Do nothing (consume)
+            containerPanel.Click += (s, e) => { };
+            }
+            else
+            {
+            // Fallback: Standard positioning
+            StartPosition = FormStartPosition.Manual;
+            Location = overlayLocation;
+            Size = overlaySize;
+            }
 
             // Populate ListBox with suggestions
             PopulateListBox();
 
             // Enable double buffering for smooth rendering
-            this.DoubleBuffered = true;
+            DoubleBuffered = true;
             
             // Enable custom drawing for ListBox to add professional styling
             suggestionListBox.DrawMode = DrawMode.OwnerDrawFixed;
@@ -107,10 +156,13 @@ namespace MTM_WIP_Application_Winforms.Forms.Shared
         {
             base.OnPaint(e);
             
-            // Draw a professional 1px border around the form
-            using (Pen borderPen = new Pen(Color.FromArgb(100, 100, 100), 1))
+            // Only draw border on Form if NOT in full-screen overlay mode
+            if (this.BackgroundImage == null)
             {
-                e.Graphics.DrawRectangle(borderPen, 0, 0, this.Width - 1, this.Height - 1);
+                using (Pen borderPen = new Pen(Color.FromArgb(100, 100, 100), 1))
+                {
+                    e.Graphics.DrawRectangle(borderPen, 0, 0, this.Width - 1, this.Height - 1);
+                }
             }
         }
 
@@ -242,26 +294,25 @@ namespace MTM_WIP_Application_Winforms.Forms.Shared
         /// Handles multi-monitor setups and DPI scaling.
         /// </summary>
         /// <param name="parentControl">Parent TextBox control.</param>
+        /// <param name="size">Output size of the overlay.</param>
         /// <returns>Screen coordinates for form location.</returns>
-        private Point CalculatePosition(Control parentControl)
+        private Point CalculatePosition(Control parentControl, out Size size)
         {
             // Get parent screen location (handles DPI scaling automatically)
             Point textBoxScreenLocation = parentControl.PointToScreen(new Point(0, parentControl.Height));
 
             // Get overlay size (use parent width, fixed height)
-            Size overlaySize = new Size(parentControl.Width, 300); // Max height 300px
-            this.Width = overlaySize.Width;
-            this.Height = overlaySize.Height;
+            size = new Size(parentControl.Width, 300); // Max height 300px
 
             // Get current screen bounds
             Screen currentScreen = Screen.FromControl(parentControl);
             Rectangle workingArea = currentScreen.WorkingArea;
 
             // Check if overlay would extend beyond bottom of screen
-            if (textBoxScreenLocation.Y + overlaySize.Height > workingArea.Bottom)
+            if (textBoxScreenLocation.Y + size.Height > workingArea.Bottom)
             {
                 // Position above TextBox instead
-                return parentControl.PointToScreen(new Point(0, -overlaySize.Height));
+                return parentControl.PointToScreen(new Point(0, -size.Height));
             }
 
             // Position below TextBox (default)
@@ -342,7 +393,7 @@ namespace MTM_WIP_Application_Winforms.Forms.Shared
 
             // Light dismiss: user clicked outside overlay
             // BUT: Don't cancel if we're already closing with OK (Enter key pressed)
-            if (this.Modal && this.Visible && this.DialogResult != DialogResult.OK)
+            if (this.Visible && this.DialogResult != DialogResult.OK)
             {
                 CancelSelection();
             }

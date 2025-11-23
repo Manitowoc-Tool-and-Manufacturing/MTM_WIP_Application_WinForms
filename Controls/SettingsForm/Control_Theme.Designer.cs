@@ -25,6 +25,8 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
 
         #region Component Designer generated code
 
+        private CheckBox Control_Themes_CheckBox_EnableAnimations;
+
         /// <summary>
         /// Required method for Designer support - do not modify
         /// the contents of this method with the code editor.
@@ -34,6 +36,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             Control_Themes_GroupBox_Main = new GroupBox();
             Control_Themes_TableLayout_Main = new TableLayoutPanel();
             Control_Themes_CheckBox_EnableTheming = new CheckBox();
+            Control_Themes_CheckBox_EnableAnimations = new CheckBox();
             Control_Themes_Button_Preview = new Button();
             Control_Themes_ComboBox_Theme = new ComboBox();
             Control_Themes_Button_Save = new Button();
@@ -48,7 +51,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             Control_Themes_GroupBox_Main.Dock = DockStyle.Fill;
             Control_Themes_GroupBox_Main.Location = new Point(0, 0);
             Control_Themes_GroupBox_Main.Name = "Control_Themes_GroupBox_Main";
-            Control_Themes_GroupBox_Main.Size = new Size(277, 80);
+            Control_Themes_GroupBox_Main.Size = new Size(277, 110);
             Control_Themes_GroupBox_Main.TabIndex = 3;
             Control_Themes_GroupBox_Main.TabStop = false;
             Control_Themes_GroupBox_Main.Text = "Select A Theme";
@@ -61,16 +64,18 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             Control_Themes_TableLayout_Main.ColumnStyles.Add(new ColumnStyle());
             Control_Themes_TableLayout_Main.Controls.Add(Control_Themes_Button_Preview, 1, 1);
             Control_Themes_TableLayout_Main.Controls.Add(Control_Themes_ComboBox_Theme, 0, 1);
-            Control_Themes_TableLayout_Main.Controls.Add(Control_Themes_Button_Save, 1, 3);
+            Control_Themes_TableLayout_Main.Controls.Add(Control_Themes_CheckBox_EnableAnimations, 0, 2);
+            Control_Themes_TableLayout_Main.Controls.Add(Control_Themes_Button_Save, 1, 4);
             Control_Themes_TableLayout_Main.Dock = DockStyle.Fill;
             Control_Themes_TableLayout_Main.Location = new Point(3, 19);
             Control_Themes_TableLayout_Main.Name = "Control_Themes_TableLayout_Main";
-            Control_Themes_TableLayout_Main.RowCount = 4;
+            Control_Themes_TableLayout_Main.RowCount = 5;
+            Control_Themes_TableLayout_Main.RowStyles.Add(new RowStyle());
             Control_Themes_TableLayout_Main.RowStyles.Add(new RowStyle());
             Control_Themes_TableLayout_Main.RowStyles.Add(new RowStyle());
             Control_Themes_TableLayout_Main.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
             Control_Themes_TableLayout_Main.RowStyles.Add(new RowStyle());
-            Control_Themes_TableLayout_Main.Size = new Size(271, 90);
+            Control_Themes_TableLayout_Main.Size = new Size(271, 120);
             Control_Themes_TableLayout_Main.TabIndex = 3;
             //
             // Control_Themes_CheckBox_EnableTheming
@@ -87,6 +92,20 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             Control_Themes_CheckBox_EnableTheming.Text = "Enable Theme System (colors only, DPI scaling always on)";
             Control_Themes_CheckBox_EnableTheming.UseVisualStyleBackColor = true;
             Control_Themes_CheckBox_EnableTheming.Visible = false;
+            //
+            // Control_Themes_CheckBox_EnableAnimations
+            //
+            Control_Themes_CheckBox_EnableAnimations.AutoSize = true;
+            Control_Themes_TableLayout_Main.SetColumnSpan(Control_Themes_CheckBox_EnableAnimations, 2);
+            Control_Themes_CheckBox_EnableAnimations.Checked = true;
+            Control_Themes_CheckBox_EnableAnimations.CheckState = CheckState.Checked;
+            Control_Themes_CheckBox_EnableAnimations.Dock = DockStyle.Fill;
+            Control_Themes_CheckBox_EnableAnimations.Location = new Point(3, 57);
+            Control_Themes_CheckBox_EnableAnimations.Name = "Control_Themes_CheckBox_EnableAnimations";
+            Control_Themes_CheckBox_EnableAnimations.Size = new Size(265, 19);
+            Control_Themes_CheckBox_EnableAnimations.TabIndex = 4;
+            Control_Themes_CheckBox_EnableAnimations.Text = "Enable UI Animations";
+            Control_Themes_CheckBox_EnableAnimations.UseVisualStyleBackColor = true;
             //
             // Control_Themes_Button_Preview
             //
@@ -108,7 +127,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             //
             // Control_Themes_Button_Save
             //
-            Control_Themes_Button_Save.Location = new Point(193, 64);
+            Control_Themes_Button_Save.Location = new Point(193, 94);
             Control_Themes_Button_Save.Name = "Control_Themes_Button_Save";
             Control_Themes_Button_Save.Size = new Size(75, 23);
             Control_Themes_Button_Save.TabIndex = 3;

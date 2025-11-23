@@ -860,23 +860,46 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
 
         private void Control_AdvancedRemove_Button_Print_Click(object? sender, EventArgs? e)
         {
-            // TEMPORARY: Print system being refactored (Phase 1 - Task T002)
-            Service_ErrorHandler.ShowInformation(
-                "Print functionality is being rebuilt. Coming soon!",
-                "Feature Temporarily Unavailable");
-
-            /* OLD IMPLEMENTATION - Kept for reference, will be restored in Phase 7
             try
             {
-                MessageBox.Show(@"Not Implemented Yet");
+                if (Control_AdvancedRemove_DataGridView_Results is null || Control_AdvancedRemove_DataGridView_Results.Rows.Count == 0)
+                {
+                    Service_ErrorHandler.HandleValidationError(
+                        "No records available to print. Run a search first.",
+                        "Print");
+                    return;
+                }
+
+                Control parent = FindForm() is Control form ? form : this;
+                string gridName = "Advanced Remove Results";
+
+                var dialogTask = Helper_PrintManager.ShowPrintDialogAsync(parent, Control_AdvancedRemove_DataGridView_Results, gridName);
+                
+                dialogTask.ContinueWith(t =>
+                {
+                    if (t.IsFaulted)
+                    {
+                        Exception? baseException = t.Exception?.GetBaseException();
+                        if (baseException != null)
+                        {
+                            LoggingUtility.LogApplicationError(baseException);
+                            BeginInvoke(new Action(() =>
+                                Service_ErrorHandler.HandleException(
+                                    baseException,
+                                    Enum_ErrorSeverity.Medium,
+                                    controlName: nameof(Control_AdvancedRemove_Button_Print_Click))));
+                        }
+                    }
+                });
             }
             catch (Exception ex)
             {
                 LoggingUtility.LogApplicationError(ex);
-                MessageBox.Show($@"Print failed: {ex.Message}", @"Print Error", MessageBoxButtons.OK,
-                    MessageBoxIcon.Error);
+                Service_ErrorHandler.HandleException(
+                    ex,
+                    Enum_ErrorSeverity.Medium,
+                    controlName: nameof(Control_AdvancedRemove_Button_Print_Click));
             }
-            */
         }
 
         private void Control_AdvancedRemove_Update_ButtonStates()

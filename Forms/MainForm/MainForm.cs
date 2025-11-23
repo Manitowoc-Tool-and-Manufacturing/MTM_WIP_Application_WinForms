@@ -910,7 +910,11 @@ namespace MTM_WIP_Application_Winforms.Forms.MainForm
                 if (selectedIndex >= 0 && selectedIndex < MainForm_TabControl.TabPages.Count)
                 {
                     var selectedTab = MainForm_TabControl.TabPages[selectedIndex];
-                    gridName = selectedTab.Text; // Use tab name (Inventory, Remove, Transfer)
+                    // Use user-friendly names for print titles
+                    if (selectedTab.Text.Contains("Inventory")) gridName = "Inventory List";
+                    else if (selectedTab.Text.Contains("Remove")) gridName = "Remove Inventory";
+                    else if (selectedTab.Text.Contains("Transfer")) gridName = "Transfer Inventory";
+                    else gridName = selectedTab.Text;
 
                     // Find first DataGridView in the selected tab
                     activeGrid = FindFirstDataGridView(selectedTab);

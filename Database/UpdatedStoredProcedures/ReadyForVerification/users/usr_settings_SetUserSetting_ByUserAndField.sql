@@ -18,7 +18,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `usr_settings_SetUserSetting_ByUserA
 )
 BEGIN
     DECLARE v_RowsAffected INT DEFAULT 0;
-    DECLARE v_AllowedFields VARCHAR(1000) DEFAULT 'Theme_Name,Theme_FontSize,VisualUserName,VisualPassword,WipServerAddress,WIPDatabase,WipServerPort';
+    DECLARE v_AllowedFields VARCHAR(1000) DEFAULT 'Theme_Name,Theme_FontSize,VisualUserName,VisualPassword,WipServerAddress,WIPDatabase,WipServerPort,AnimationsEnabled';
     
     DECLARE EXIT HANDLER FOR SQLEXCEPTION
     BEGIN

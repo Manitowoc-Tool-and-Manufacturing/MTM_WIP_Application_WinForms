@@ -1110,9 +1110,7 @@ SetStyle(ControlStyles.OptimizedDoubleBuffer, true);
                 }
 
                 Control parent = FindForm() is Control form ? form : this;
-                string gridName = string.IsNullOrWhiteSpace(Control_RemoveTab_DataGridView_Main.Name)
-                    ? "Remove Inventory"
-                    : Control_RemoveTab_DataGridView_Main.Name;
+                string gridName = "Remove Inventory";
 
                 var dialogTask = Helper_PrintManager.ShowPrintDialogAsync(parent, Control_RemoveTab_DataGridView_Main, gridName);
 

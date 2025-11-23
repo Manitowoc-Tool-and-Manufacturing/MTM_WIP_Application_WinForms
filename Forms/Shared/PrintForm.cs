@@ -62,6 +62,10 @@ public partial class PrintForm : ThemedForm
     private string? _windowTitleSnapshot;
     private string? _exportButtonTextSnapshot;
 
+    private bool _isLeftPanelExpanded = false;
+    private bool _isRightPanelExpanded = false;
+    private bool _isPrinterOnline = true;
+
     #endregion
 
     #region Properties
@@ -105,21 +109,71 @@ public partial class PrintForm : ThemedForm
         _printJob = printJob;
         _printSettings = printSettings;
 
-        
+
 
         InitializeComponent();
         // DPI scaling and layout now handled by ThemedForm.OnLoad
         ApplyThemeColors();
 
-        
-
-        Shown += PrintForm_Shown;
-        PrintForm_PrintPreviewControl.StartPageChanged += PrintForm_PrintPreviewControl_StartPageChanged;
+        WireEventHandlers();
 
         LoadSettings();
         InitializeSections();
-        
-        
+    }
+
+    private void WireEventHandlers()
+    {
+        // Form
+        Shown += PrintForm_Shown;
+        PrintForm_PrintPreviewControl.StartPageChanged += PrintForm_PrintPreviewControl_StartPageChanged;
+
+        // Buttons
+        PrintForm_Button_PrinterSettingsToggle.Click += PrintForm_Button_PrinterSettingsToggle_Click;
+        PrintForm_Button_PageSettingsToggle.Click += PrintForm_Button_PageSettingsToggle_Click;
+        PrintForm_Button_ColumnSettingsToggle.Click += PrintForm_Button_ColumnSettingsToggle_Click;
+        PrintForm_Button_OptionsToggle.Click += PrintForm_Button_OptionsToggle_Click;
+        PrintForm_Button_ColumnUp.Click += PrintForm_Button_ColumnUp_Click;
+        PrintForm_Button_ColumnDown.Click += PrintForm_Button_ColumnDown_Click;
+        PrintForm_Button_FirstPage.Click += PrintForm_Button_FirstPage_Click;
+        PrintForm_Button_PreviousPage.Click += PrintForm_Button_PreviousPage_Click;
+        PrintForm_Button_NextPage.Click += PrintForm_Button_NextPage_Click;
+        PrintForm_Button_LastPage.Click += PrintForm_Button_LastPage_Click;
+        PrintForm_Button_Print.Click += PrintForm_Button_Print_Click;
+        PrintForm_Button_Export.Click += PrintForm_Button_Export_Click;
+        PrintForm_Button_Cancel.Click += PrintForm_Button_Cancel_Click;
+        PrintForm_Button_LeftPanelToggle.Click += PrintForm_Button_LeftPanelToggle_Click;
+        PrintForm_Button_RightPanelToggle.Click += PrintForm_Button_RightPanelToggle_Click;
+
+        // Context Menu
+        PrintForm_ToolStripMenuItem_ExportPdf.Click += PrintForm_ToolStripMenuItem_ExportPdf_Click;
+        PrintForm_ToolStripMenuItem_ExportExcel.Click += PrintForm_ToolStripMenuItem_ExportExcel_Click;
+
+        // ComboBoxes
+        PrintForm_ComboBox_Printer.SelectedIndexChanged += PrintForm_ComboBox_Printer_SelectedIndexChanged;
+        PrintForm_ComboBox_Zoom.SelectedIndexChanged += PrintForm_ComboBox_Zoom_SelectedIndexChanged;
+
+        // RadioButtons
+        PrintForm_RadioButton_Portrait.CheckedChanged += PrintForm_RadioButton_Portrait_CheckedChanged;
+        PrintForm_RadioButton_Landscape.CheckedChanged += PrintForm_RadioButton_Landscape_CheckedChanged;
+        PrintForm_RadioButton_AllPages.CheckedChanged += PrintForm_RadioButton_AllPages_CheckedChanged;
+        PrintForm_RadioButton_CurrentPage.CheckedChanged += PrintForm_RadioButton_CurrentPage_CheckedChanged;
+        PrintForm_RadioButton_CustomRange.CheckedChanged += PrintForm_RadioButton_CustomRange_CheckedChanged;
+        PrintForm_RadioButton_Color.CheckedChanged += PrintForm_RadioButton_Color_CheckedChanged;
+        PrintForm_RadioButton_Grayscale.CheckedChanged += PrintForm_RadioButton_Grayscale_CheckedChanged;
+
+        // TextBoxes
+        PrintForm_TextBox_FromPage.TextChanged += PrintForm_TextBox_FromPage_TextChanged;
+        PrintForm_TextBox_ToPage.TextChanged += PrintForm_TextBox_ToPage_TextChanged;
+
+        // CheckedListBox
+        PrintForm_CheckedListBox_Columns.SelectedIndexChanged += PrintForm_CheckedListBox_Columns_SelectedIndexChanged;
+        PrintForm_CheckedListBox_Columns.ItemCheck += PrintForm_CheckedListBox_Columns_ItemCheck;
+
+        // CheckBox
+        PrintForm_CheckBox_AddNotesColumn.CheckedChanged += PrintForm_CheckBox_AddNotesColumn_CheckedChanged;
+
+        // NumericUpDown
+        PrintForm_NumericUpDown_AddNotesColumn.ValueChanged += PrintForm_NumericUpDown_AddNotesColumn_ValueChanged;
     }
 
     #endregion
@@ -134,6 +188,60 @@ public partial class PrintForm : ThemedForm
         InitializeOptionsSection();
         InitializePreviewSection();
         InitializeActionButtons();
+        InitializeLeftPanelToggle();
+        InitializeRightPanelToggle();
+    }
+
+    private void InitializeLeftPanelToggle()
+    {
+        if (PrintForm_TableLayout_LeftSidebar.ColumnStyles.Count > 1)
+        {
+            PrintForm_Button_LeftPanelToggle.Text = _isLeftPanelExpanded ? "🡲" : "🡰";
+            UpdateLeftPanelToggleState();
+        }
+    }
+
+    private void InitializeRightPanelToggle()
+    {
+        if (PrintForm_TableLayout_RightSidebar.ColumnStyles.Count > 0)
+        {
+            PrintForm_Button_RightPanelToggle.Text = _isRightPanelExpanded ? "🡰" : "🡲";
+            UpdateRightPanelToggleState();
+        }
+    }
+
+    private void UpdateLeftPanelToggleState()
+    {
+        if (_isLeftPanelExpanded)
+        {
+            PrintForm_TableLayout_PrinterSettingsSection.Visible = false;
+            PrintForm_TableLayout_PageSettingsSection.Visible = false;
+            PrintForm_TableLayout_ActionButtons.Visible = false;
+            _isLeftPanelExpanded = false;
+        }
+        else
+        {
+            PrintForm_TableLayout_PrinterSettingsSection.Visible = true;
+            PrintForm_TableLayout_PageSettingsSection.Visible = true;
+            PrintForm_TableLayout_ActionButtons.Visible = true;
+            _isLeftPanelExpanded = true;
+        }
+    }
+
+    private void UpdateRightPanelToggleState()
+    {
+        if (_isRightPanelExpanded)
+        {
+            PrintForm_TableLayout_ColumnSettingsSection.Visible = false;
+            PrintForm_TableLayout_OptionsSection.Visible = false;
+            _isRightPanelExpanded = false;
+        }
+        else
+        {
+            PrintForm_TableLayout_ColumnSettingsSection.Visible = true;
+            PrintForm_TableLayout_OptionsSection.Visible = true;
+            _isRightPanelExpanded = true;
+        }
     }
 
     #endregion
@@ -165,14 +273,14 @@ public partial class PrintForm : ThemedForm
 
     private async Task GeneratePreviewAsync()
     {
-        
-
+        // Prevent re-entry
         if (_isGeneratingPreview)
         {
             _isPreviewRefreshPending = true;
             return;
         }
 
+        // Validate data availability
         if (_printJob.VisibleColumns.Count == 0 || _printJob.Data is not { Rows.Count: > 0 })
         {
             ResetPreviewState();
@@ -181,56 +289,85 @@ public partial class PrintForm : ThemedForm
         }
 
         _isGeneratingPreview = true;
+        UpdateActionButtonsState();
+
+        // Detach document to prevent accessing disposed object
+        if (PrintForm_PrintPreviewControl.Document != null)
+        {
+            PrintForm_PrintPreviewControl.Document = null;
+        }
+
         Cursor? previousCursor = Cursor.Current;
         Cursor.Current = Cursors.WaitCursor;
 
-        // Reset to page 1 for initial preview generation
-        _printJob.CurrentPage = 1;
-        
-
+        // Capture state to restore later
         Enum_PrintRangeType originalRange = _printJob.PageRangeType;
         int originalFromPage = _printJob.FromPage;
         int originalToPage = _printJob.ToPage;
-        int originalCurrentPage = 1;
-        
-        
+        int originalCurrentPage = _printJob.CurrentPage;
+        string? originalPrinterName = _printJob.PrinterName;
 
-        PreviewPageInfo[] pageInfos = Array.Empty<PreviewPageInfo>();
         PrintDocument? previewDocument = null;
+        PreviewPageInfo[] pageInfos = Array.Empty<PreviewPageInfo>();
         bool generationSucceeded = false;
 
         try
         {
+            // Configure for full preview generation
             _printJob.PageRangeType = Enum_PrintRangeType.AllPages;
             _printJob.FromPage = 1;
             _printJob.ToPage = Math.Max(1, _printJob.TotalPages);
-            _printJob.CurrentPage = Math.Clamp(originalCurrentPage, 1, Math.Max(1, _printJob.TotalPages));
+            // Try to maintain current page if possible, otherwise default to 1
+            _printJob.CurrentPage = Math.Max(1, originalCurrentPage);
 
-            _printManager ??= new Helper_PrintManager(_printJob);
-            previewDocument = _printManager.PreparePrintDocument();
-            if (previewDocument is null)
+            // Attempt 1: Primary Printer
+            try
             {
-                return;
+                // Use a 4-second timeout for the primary printer to prevent hanging if offline
+                (previewDocument, pageInfos) = await CreatePreviewDocumentAsync(4000);
+                generationSucceeded = true;
+            }
+            catch (Exception ex)
+            {
+                LoggingUtility.Log($"Primary preview generation failed: {ex.Message}");
             }
 
-            var previewController = new PreviewPrintController
+            // Attempt 2: Fallback to Default Printer (if primary failed)
+            if (!generationSucceeded)
             {
-                UseAntiAlias = true
-            };
-            previewDocument.PrintController = previewController;
+                try
+                {
+                    LoggingUtility.Log("Attempting fallback preview generation with default printer.");
+                    _printJob.PrinterName = new PrinterSettings().PrinterName;
+                    
+                    // Re-configure range in case it was modified
+                    _printJob.PageRangeType = Enum_PrintRangeType.AllPages;
+                    _printJob.FromPage = 1;
+                    _printJob.ToPage = Math.Max(1, _printJob.TotalPages);
+                    _printJob.CurrentPage = Math.Max(1, originalCurrentPage);
 
-            await Task.Run(() => previewDocument.Print());
-            pageInfos = previewController.GetPreviewPageInfo() ?? Array.Empty<PreviewPageInfo>();
-            _printManager.SyncPageBoundariesFromPrinter();
-            generationSucceeded = true;
-        }
-        catch (Exception ex)
-        {
-            LoggingUtility.LogApplicationError(ex);
-            Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Medium, controlName: nameof(PrintForm));
+                    // Force new print manager for fallback to ensure clean state
+                    if (_printManager != null)
+                    {
+                        _printManager.Dispose();
+                        _printManager = null;
+                    }
+
+                    // Give fallback more time as it should be reliable
+                    (previewDocument, pageInfos) = await CreatePreviewDocumentAsync(10000);
+                    generationSucceeded = true;
+                }
+                catch (Exception ex)
+                {
+                    LoggingUtility.LogApplicationError(ex);
+                    Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Medium, controlName: nameof(PrintForm));
+                }
+            }
         }
         finally
         {
+            // Restore original settings
+            _printJob.PrinterName = originalPrinterName;
             _printJob.PageRangeType = originalRange;
             _printJob.FromPage = originalFromPage;
             _printJob.ToPage = originalToPage;
@@ -240,25 +377,61 @@ public partial class PrintForm : ThemedForm
             _isGeneratingPreview = false;
         }
 
-        if (!generationSucceeded || previewDocument is null)
+        // Apply results or reset
+        if (generationSucceeded && previewDocument != null)
+        {
+            ApplyPreviewDocument(previewDocument, pageInfos, originalCurrentPage);
+        }
+        else
         {
             ResetPreviewState();
             ValidateCustomRangeInputs();
-
-            if (_isPreviewRefreshPending)
-            {
-                _isPreviewRefreshPending = false;
-                _ = GeneratePreviewAsync();
-            }
-
-            return;
         }
 
-        _previewDocument = previewDocument;
-        _previewTotalPages = _printJob.TotalPages > 0 ? _printJob.TotalPages : pageInfos.Length;
-        _previewPageInfos = pageInfos;
+        // Handle pending refresh
+        if (_isPreviewRefreshPending)
+        {
+            _isPreviewRefreshPending = false;
+            _ = GeneratePreviewAsync();
+        }
+    }
+
+    private async Task<(PrintDocument?, PreviewPageInfo[])> CreatePreviewDocumentAsync(int timeoutMs)
+    {
+        _printManager ??= new Helper_PrintManager(_printJob);
+        _printManager.IsPreview = true;
+        
+        PrintDocument? doc = _printManager.PreparePrintDocument();
+        if (doc is null) return (null, Array.Empty<PreviewPageInfo>());
+
+        var controller = new PreviewPrintController { UseAntiAlias = true };
+        doc.PrintController = controller;
+
+        // Run printing with timeout to prevent hanging on offline printers
+        var printTask = Task.Run(() => doc.Print());
+        
+        if (await Task.WhenAny(printTask, Task.Delay(timeoutMs)) != printTask)
+        {
+            throw new TimeoutException($"Preview generation timed out after {timeoutMs}ms");
+        }
+
+        // Ensure we catch any exceptions from the print task
+        await printTask;
+        
+        var infos = controller.GetPreviewPageInfo() ?? Array.Empty<PreviewPageInfo>();
+        _printManager.SyncPageBoundariesFromPrinter();
+        
+        return (doc, infos);
+    }
+
+    private void ApplyPreviewDocument(PrintDocument doc, PreviewPageInfo[] infos, int targetPage)
+    {
+        _previewDocument = doc;
+        _previewPageInfos = infos;
+        _previewTotalPages = _printJob.TotalPages > 0 ? _printJob.TotalPages : infos.Length;
         _printJob.TotalPages = _previewTotalPages;
 
+        // Validate ranges
         if (_previewTotalPages > 0)
         {
             _printJob.FromPage = Math.Clamp(_printJob.FromPage, 1, _previewTotalPages);
@@ -270,44 +443,22 @@ public partial class PrintForm : ThemedForm
             _printJob.ToPage = 1;
         }
 
+        // Calculate target index
         int targetIndex = _previewTotalPages > 0
-            ? Math.Clamp(originalCurrentPage - 1, 0, _previewTotalPages - 1)
+            ? Math.Clamp(targetPage - 1, 0, _previewTotalPages - 1)
             : 0;
 
-        
-        
-
-        // Clear document first to reset internal state
         PrintForm_PrintPreviewControl.Document = null;
-        
-        // Now assign the actual document  
-        PrintForm_PrintPreviewControl.Document = previewDocument;
-        
-        // CRITICAL: Set StartPage BEFORE InvalidatePreview
-        // The control's internal rendering uses StartPage to determine scroll position
+        PrintForm_PrintPreviewControl.Document = doc;
         PrintForm_PrintPreviewControl.StartPage = targetIndex;
-        
-        
-        
-        // Force the control to re-render with the correct StartPage
-        PrintForm_PrintPreviewControl.InvalidatePreview();
-        
         PrintForm_PrintPreviewControl.InvalidatePreview();
 
         _printJob.CurrentPage = _previewTotalPages > 0 ? targetIndex + 1 : 1;
-        
-        
 
         ApplyZoomSelection();
         UpdatePreviewNavigationState();
         UpdatePageRangeControls();
         UpdateActionButtonsState();
-
-        if (_isPreviewRefreshPending)
-        {
-            _isPreviewRefreshPending = false;
-            _ = GeneratePreviewAsync();
-        }
     }
 
     private void ResetPreviewState()
@@ -327,11 +478,11 @@ public partial class PrintForm : ThemedForm
         _previewTotalPages = Math.Max(0, _printJob.TotalPages);
         PrintForm_PrintPreviewControl.AutoZoom = true;
         PrintForm_PrintPreviewControl.Zoom = 1.0;
-        
-        
+
+
         PrintForm_PrintPreviewControl.StartPage = 0;
-        
-        
+
+
         UpdatePreviewNavigationState();
     }
 
@@ -354,9 +505,9 @@ public partial class PrintForm : ThemedForm
         {
             int currentIndex = Math.Clamp(PrintForm_PrintPreviewControl.StartPage, 0, Math.Max(0, _previewTotalPages - 1));
             int displayPage = _previewTotalPages > 0 ? currentIndex + 1 : 0;
-            
-            
-            
+
+
+
             PrintForm_Label_PageCounter.Text = $"Page {displayPage} / {_previewTotalPages}";
 
             bool hasPages = _previewTotalPages > 0;
@@ -369,8 +520,8 @@ public partial class PrintForm : ThemedForm
             PrintForm_Button_LastPage.Enabled = hasNext;
 
             _printJob.CurrentPage = hasPages ? currentIndex + 1 : 1;
-            
-            
+
+
 
             if (_printJob.PageRangeType == Enum_PrintRangeType.AllPages)
             {
@@ -410,56 +561,56 @@ public partial class PrintForm : ThemedForm
 
     #region Button Clicks
 
-    private void PrintForm_Button_PrinterSettingsToggle_Click(object sender, EventArgs e)
+    private void PrintForm_Button_PrinterSettingsToggle_Click(object? sender, EventArgs e)
     {
         _isPrinterSettingsExpanded = !_isPrinterSettingsExpanded;
         UpdatePrinterSettingsCollapseState();
     }
 
-    private void PrintForm_Button_PageSettingsToggle_Click(object sender, EventArgs e)
+    private void PrintForm_Button_PageSettingsToggle_Click(object? sender, EventArgs e)
     {
         _isPageSettingsExpanded = !_isPageSettingsExpanded;
         UpdatePageSettingsCollapseState();
     }
 
-    private void PrintForm_Button_ColumnSettingsToggle_Click(object sender, EventArgs e)
+    private void PrintForm_Button_ColumnSettingsToggle_Click(object? sender, EventArgs e)
     {
         _isColumnSettingsExpanded = !_isColumnSettingsExpanded;
         UpdateColumnSettingsCollapseState();
     }
 
-    private void PrintForm_Button_OptionsToggle_Click(object sender, EventArgs e)
+    private void PrintForm_Button_OptionsToggle_Click(object? sender, EventArgs e)
     {
         _isOptionsExpanded = !_isOptionsExpanded;
         UpdateOptionsCollapseState();
     }
 
-    private void PrintForm_Button_ColumnUp_Click(object sender, EventArgs e)
+    private void PrintForm_Button_ColumnUp_Click(object? sender, EventArgs e)
     {
         MoveColumnItem(-1);
     }
 
-    private void PrintForm_Button_ColumnDown_Click(object sender, EventArgs e)
+    private void PrintForm_Button_ColumnDown_Click(object? sender, EventArgs e)
     {
         MoveColumnItem(1);
     }
 
-    private void PrintForm_Button_FirstPage_Click(object sender, EventArgs e)
+    private void PrintForm_Button_FirstPage_Click(object? sender, EventArgs e)
     {
         ChangePreviewPage(0);
     }
 
-    private void PrintForm_Button_PreviousPage_Click(object sender, EventArgs e)
+    private void PrintForm_Button_PreviousPage_Click(object? sender, EventArgs e)
     {
         ChangePreviewPage(PrintForm_PrintPreviewControl.StartPage - 1);
     }
 
-    private void PrintForm_Button_NextPage_Click(object sender, EventArgs e)
+    private void PrintForm_Button_NextPage_Click(object? sender, EventArgs e)
     {
         ChangePreviewPage(PrintForm_PrintPreviewControl.StartPage + 1);
     }
 
-    private void PrintForm_Button_LastPage_Click(object sender, EventArgs e)
+    private void PrintForm_Button_LastPage_Click(object? sender, EventArgs e)
     {
         if (_previewTotalPages <= 0)
         {
@@ -469,7 +620,7 @@ public partial class PrintForm : ThemedForm
         ChangePreviewPage(_previewTotalPages - 1);
     }
 
-    private void PrintForm_Button_Print_Click(object sender, EventArgs e)
+    private void PrintForm_Button_Print_Click(object? sender, EventArgs e)
     {
         if (_previewDocument is null)
         {
@@ -482,6 +633,7 @@ public partial class PrintForm : ThemedForm
             UpdateActionButtonsState();
 
             _printManager ??= new Helper_PrintManager(_printJob);
+            _printManager.IsPreview = false;
             bool printSucceeded = _printManager.Print();
 
             if (printSucceeded)
@@ -502,7 +654,7 @@ public partial class PrintForm : ThemedForm
         }
     }
 
-    private void PrintForm_Button_Export_Click(object sender, EventArgs e)
+    private void PrintForm_Button_Export_Click(object? sender, EventArgs e)
     {
         if (!PrintForm_Button_Export.Enabled)
         {
@@ -513,13 +665,13 @@ public partial class PrintForm : ThemedForm
         PrintForm_ContextMenu_Export.Show(PrintForm_Button_Export, menuLocation);
     }
 
-    private void PrintForm_Button_Cancel_Click(object sender, EventArgs e)
+    private void PrintForm_Button_Cancel_Click(object? sender, EventArgs e)
     {
         DialogResult = DialogResult.Cancel;
         Close();
     }
 
-    private async void PrintForm_ToolStripMenuItem_ExportPdf_Click(object sender, EventArgs e)
+    private async void PrintForm_ToolStripMenuItem_ExportPdf_Click(object? sender, EventArgs e)
     {
         PrintForm_ContextMenu_Export.Close();
         await ExecuteExportAsync(
@@ -529,7 +681,7 @@ public partial class PrintForm : ThemedForm
             "Export to PDF");
     }
 
-    private async void PrintForm_ToolStripMenuItem_ExportExcel_Click(object sender, EventArgs e)
+    private async void PrintForm_ToolStripMenuItem_ExportExcel_Click(object? sender, EventArgs e)
     {
         PrintForm_ContextMenu_Export.Close();
         await ExecuteExportAsync(
@@ -539,26 +691,51 @@ public partial class PrintForm : ThemedForm
             "Export to Excel");
     }
 
+    private void PrintForm_Button_LeftPanelToggle_Click(object? sender, EventArgs e)
+    {
+        PrintForm_Button_LeftPanelToggle.Text = _isLeftPanelExpanded ? "🡲" : "🡰";
+        UpdateLeftPanelToggleState();
+    }
+
+    private void PrintForm_Button_RightPanelToggle_Click(object? sender, EventArgs e)
+    {
+        PrintForm_Button_RightPanelToggle.Text = _isRightPanelExpanded ? "🡰" : "🡲";
+        UpdateRightPanelToggleState();
+    }
+
     #endregion
 
     #region ComboBox & UI Events
 
-    private void PrintForm_ComboBox_Printer_SelectedIndexChanged(object sender, EventArgs e)
+    private void PrintForm_ComboBox_Printer_SelectedIndexChanged(object? sender, EventArgs e)
     {
-        if (_isUpdatingPrinterSection)
+        if (_isUpdatingPrinterSection) return;
+
+        string? selectedText = PrintForm_ComboBox_Printer.SelectedItem?.ToString();
+        if (string.IsNullOrEmpty(selectedText) ||
+            string.Equals(selectedText, PrinterUnavailableDisplayText, StringComparison.OrdinalIgnoreCase))
         {
+            _isPrinterOnline = false;
+            UpdateActionButtonsState();
             return;
         }
 
-        if (PrintForm_ComboBox_Printer.SelectedItem is string printerName && !string.Equals(printerName, PrinterUnavailableDisplayText, StringComparison.Ordinal))
-        {
-            _printJob.PrinterName = printerName;
-            _printSettings.PrinterName = printerName;
-            SchedulePreviewRefresh();
-        }
+        // We rely on Windows to handle printer connectivity. 
+        // We assume the printer is available if it's in the list.
+        _isPrinterOnline = true;
+        
+        // Reset visual state in case it was changed previously
+        Color normalColor = Model_Application_Variables.UserUiColors.ComboBoxForeColor ?? SystemColors.WindowText;
+        PrintForm_ComboBox_Printer.ForeColor = normalColor;
+
+        _printJob.PrinterName = selectedText;
+        _printSettings.PrinterName = selectedText;
+
+        UpdateActionButtonsState();
+        SchedulePreviewRefresh();
     }
 
-    private void PrintForm_RadioButton_Portrait_CheckedChanged(object sender, EventArgs e)
+    private void PrintForm_RadioButton_Portrait_CheckedChanged(object? sender, EventArgs e)
     {
         if (_isUpdatingPrinterSection || !PrintForm_RadioButton_Portrait.Checked)
         {
@@ -569,7 +746,7 @@ public partial class PrintForm : ThemedForm
         SchedulePreviewRefresh();
     }
 
-    private void PrintForm_RadioButton_Landscape_CheckedChanged(object sender, EventArgs e)
+    private void PrintForm_RadioButton_Landscape_CheckedChanged(object? sender, EventArgs e)
     {
         if (_isUpdatingPrinterSection || !PrintForm_RadioButton_Landscape.Checked)
         {
@@ -580,7 +757,7 @@ public partial class PrintForm : ThemedForm
         SchedulePreviewRefresh();
     }
 
-    private void PrintForm_RadioButton_AllPages_CheckedChanged(object sender, EventArgs e)
+    private void PrintForm_RadioButton_AllPages_CheckedChanged(object? sender, EventArgs e)
     {
         if (_isUpdatingPageSettings || !PrintForm_RadioButton_AllPages.Checked)
         {
@@ -591,7 +768,7 @@ public partial class PrintForm : ThemedForm
         UpdatePageRangeControls();
     }
 
-    private void PrintForm_RadioButton_CurrentPage_CheckedChanged(object sender, EventArgs e)
+    private void PrintForm_RadioButton_CurrentPage_CheckedChanged(object? sender, EventArgs e)
     {
         if (_isUpdatingPageSettings || !PrintForm_RadioButton_CurrentPage.Checked)
         {
@@ -602,7 +779,7 @@ public partial class PrintForm : ThemedForm
         UpdatePageRangeControls();
     }
 
-    private void PrintForm_RadioButton_CustomRange_CheckedChanged(object sender, EventArgs e)
+    private void PrintForm_RadioButton_CustomRange_CheckedChanged(object? sender, EventArgs e)
     {
         if (_isUpdatingPageSettings || !PrintForm_RadioButton_CustomRange.Checked)
         {
@@ -613,7 +790,7 @@ public partial class PrintForm : ThemedForm
         UpdatePageRangeControls();
     }
 
-    private void PrintForm_TextBox_FromPage_TextChanged(object sender, EventArgs e)
+    private void PrintForm_TextBox_FromPage_TextChanged(object? sender, EventArgs e)
     {
         if (_isUpdatingPageSettings)
         {
@@ -623,7 +800,7 @@ public partial class PrintForm : ThemedForm
         ValidateCustomRangeInputs();
     }
 
-    private void PrintForm_TextBox_ToPage_TextChanged(object sender, EventArgs e)
+    private void PrintForm_TextBox_ToPage_TextChanged(object? sender, EventArgs e)
     {
         if (_isUpdatingPageSettings)
         {
@@ -633,7 +810,7 @@ public partial class PrintForm : ThemedForm
         ValidateCustomRangeInputs();
     }
 
-    private void PrintForm_CheckedListBox_Columns_SelectedIndexChanged(object sender, EventArgs e)
+    private void PrintForm_CheckedListBox_Columns_SelectedIndexChanged(object? sender, EventArgs e)
     {
         if (_isUpdatingColumnSettings)
         {
@@ -653,7 +830,7 @@ public partial class PrintForm : ThemedForm
         BeginInvoke(new Action(() => ApplyColumnSelectionFromListBoxWithPendingState(e.Index, e.NewValue == CheckState.Checked)));
     }
 
-    private void PrintForm_RadioButton_Color_CheckedChanged(object sender, EventArgs e)
+    private void PrintForm_RadioButton_Color_CheckedChanged(object? sender, EventArgs e)
     {
         if (_isUpdatingOptionsSection || !PrintForm_RadioButton_Color.Checked)
         {
@@ -664,7 +841,7 @@ public partial class PrintForm : ThemedForm
         SchedulePreviewRefresh();
     }
 
-    private void PrintForm_RadioButton_Grayscale_CheckedChanged(object sender, EventArgs e)
+    private void PrintForm_RadioButton_Grayscale_CheckedChanged(object? sender, EventArgs e)
     {
         if (_isUpdatingOptionsSection || !PrintForm_RadioButton_Grayscale.Checked)
         {
@@ -675,7 +852,7 @@ public partial class PrintForm : ThemedForm
         SchedulePreviewRefresh();
     }
 
-    private void PrintForm_ComboBox_Zoom_SelectedIndexChanged(object sender, EventArgs e)
+    private void PrintForm_ComboBox_Zoom_SelectedIndexChanged(object? sender, EventArgs e)
     {
         if (_isUpdatingZoomSelection)
         {
@@ -689,10 +866,57 @@ public partial class PrintForm : ThemedForm
         }
     }
 
+    private void PrintForm_CheckBox_AddNotesColumn_CheckedChanged(object? sender, EventArgs e)
+    {
+        if (_isUpdatingOptionsSection)
+        {
+            return;
+        }
+
+        _printJob.AddNotesColumn = PrintForm_CheckBox_AddNotesColumn.Checked;
+        PrintForm_NumericUpDown_AddNotesColumn.Enabled = PrintForm_CheckBox_AddNotesColumn.Checked;
+
+        if (PrintForm_CheckBox_AddNotesColumn.Checked && !_printJob.Landscape)
+        {
+            var result = Service_ErrorHandler.ShowConfirmation(
+                "It is recommended to use landscape mode when adding the corrections column.\n\nWould you like to switch to landscape mode?",
+                "Recommended Orientation",
+                MessageBoxButtons.YesNo,
+                MessageBoxIcon.Question);
+
+            if (result == DialogResult.Yes)
+            {
+                _isUpdatingPrinterSection = true;
+                try
+                {
+                    PrintForm_RadioButton_Landscape.Checked = true;
+                    _printJob.Landscape = true;
+                }
+                finally
+                {
+                    _isUpdatingPrinterSection = false;
+                }
+            }
+        }
+
+        SchedulePreviewRefresh();
+    }
+
+    private void PrintForm_NumericUpDown_AddNotesColumn_ValueChanged(object? sender, EventArgs e)
+    {
+        if (_isUpdatingOptionsSection)
+        {
+            return;
+        }
+
+        _printJob.NotesColumnWidthPercentage = (int)PrintForm_NumericUpDown_AddNotesColumn.Value;
+        SchedulePreviewRefresh();
+    }
+
     private void PrintForm_PrintPreviewControl_StartPageChanged(object? sender, EventArgs e)
     {
-        
-        
+
+
         UpdatePreviewNavigationState();
 
         if (_printJob.PageRangeType == Enum_PrintRangeType.CurrentPage)
@@ -703,6 +927,8 @@ public partial class PrintForm : ThemedForm
             UpdateCustomRangeTextBoxValue(PrintForm_TextBox_ToPage, _printJob.ToPage);
         }
     }
+
+
 
     #endregion
 
@@ -720,8 +946,8 @@ public partial class PrintForm : ThemedForm
         Color panelBack = colors.PanelBackColor ?? SystemColors.Control;
         PrintForm_Panel_Main.BackColor = panelBack;
         PrintForm_TableLayout_Master.BackColor = panelBack;
-        PrintForm_Panel_Sidebar.BackColor = panelBack;
-        PrintForm_TableLayout_Sidebar.BackColor = panelBack;
+        PrintForm_Panel_LeftSidebar.BackColor = panelBack;
+        PrintForm_TableLayout_LeftSidebar.BackColor = panelBack;
         PrintForm_Panel_PrinterSettingsContent.BackColor = panelBack;
         PrintForm_Panel_PageSettingsContent.BackColor = panelBack;
         PrintForm_Panel_ColumnSettingsContent.BackColor = panelBack;
@@ -744,7 +970,8 @@ public partial class PrintForm : ThemedForm
                 PrintForm_Label_OptionsHeader,
                 PrintForm_Label_ColorMode,
                 PrintForm_Label_Zoom,
-                PrintForm_Label_PageCounter
+                PrintForm_Label_PageCounter,
+                PrintForm_Label_AddNotesColumn
             })
         {
             label.ForeColor = labelFore;
@@ -766,6 +993,8 @@ public partial class PrintForm : ThemedForm
         PrintForm_RadioButton_Color.ForeColor = radioFore;
         PrintForm_RadioButton_Grayscale.BackColor = radioBack;
         PrintForm_RadioButton_Grayscale.ForeColor = radioFore;
+        PrintForm_CheckBox_AddNotesColumn.BackColor = radioBack;
+        PrintForm_CheckBox_AddNotesColumn.ForeColor = radioFore;
 
         Color textBoxBack = colors.TextBoxBackColor ?? SystemColors.Window;
         Color textBoxFore = colors.TextBoxForeColor ?? SystemColors.WindowText;
@@ -774,6 +1003,9 @@ public partial class PrintForm : ThemedForm
             textBox.BackColor = textBoxBack;
             textBox.ForeColor = textBoxFore;
         }
+
+        PrintForm_NumericUpDown_AddNotesColumn.BackColor = textBoxBack;
+        PrintForm_NumericUpDown_AddNotesColumn.ForeColor = textBoxFore;
 
         Color comboBack = colors.ComboBoxBackColor ?? SystemColors.Window;
         Color comboFore = colors.ComboBoxForeColor ?? SystemColors.WindowText;
@@ -802,7 +1034,9 @@ public partial class PrintForm : ThemedForm
                 PrintForm_Button_NextPage,
                 PrintForm_Button_LastPage,
                 PrintForm_Button_Export,
-                PrintForm_Button_Cancel
+                PrintForm_Button_Cancel,
+                PrintForm_Button_LeftPanelToggle,
+                PrintForm_Button_RightPanelToggle
             })
         {
             button.BackColor = buttonBack;
@@ -972,6 +1206,9 @@ public partial class PrintForm : ThemedForm
         {
             PrintForm_RadioButton_Color.Checked = _printJob.ColorMode == Enum_PrintColorMode.Color;
             PrintForm_RadioButton_Grayscale.Checked = _printJob.ColorMode == Enum_PrintColorMode.Grayscale;
+            PrintForm_CheckBox_AddNotesColumn.Checked = _printJob.AddNotesColumn;
+            PrintForm_NumericUpDown_AddNotesColumn.Value = Math.Clamp(_printJob.NotesColumnWidthPercentage, 5, 75);
+            PrintForm_NumericUpDown_AddNotesColumn.Enabled = _printJob.AddNotesColumn;
 
             _isUpdatingZoomSelection = true;
             try
@@ -1443,10 +1680,17 @@ public partial class PrintForm : ThemedForm
     {
         bool hasPreview = _previewDocument is not null && _previewTotalPages > 0 && _printJob.VisibleColumns.Count > 0;
         bool rangeValid = _printJob.PageRangeType != Enum_PrintRangeType.PageRange || _isCustomRangeValid;
-        bool canExecute = hasPreview && rangeValid && !_isGeneratingPreview;
+        bool baseState = hasPreview && rangeValid && !_isGeneratingPreview;
 
-        PrintForm_Button_Print.Enabled = canExecute;
-        PrintForm_Button_Export.Enabled = canExecute;
+        bool canPrint = baseState && _isPrinterOnline;
+        bool canExport = baseState;
+
+        if (PrintForm_Button_Print.Enabled != canPrint || PrintForm_Button_Export.Enabled != canExport)
+        {
+            LoggingUtility.Log($"[PrintForm] Updating action buttons. Print: {canPrint}, Export: {canExport}. State: Online={_isPrinterOnline}, HasPreview={hasPreview}, RangeValid={rangeValid}, IsGenerating={_isGeneratingPreview}");
+            PrintForm_Button_Print.Enabled = canPrint;
+            PrintForm_Button_Export.Enabled = canExport;
+        }
     }
 
     #endregion
@@ -1465,4 +1709,8 @@ public partial class PrintForm : ThemedForm
 
     #endregion
 
+    private void PrintForm_TableLayout_LeftSidebar_Paint(object sender, PaintEventArgs e)
+    {
+
+    }
 }

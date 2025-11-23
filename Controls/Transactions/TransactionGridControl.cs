@@ -777,13 +777,13 @@ internal partial class TransactionGridControl : ThemedUserControl
         if (visible)
         {
             TransactionGridControl_TableLayout_Main.SetColumnSpan(TransactionGridControl_Panel_DataGridView, 1);
-            TransactionGridControl_Button_ToggleDetails.Text = "◀ 📋";
+            TransactionGridControl_Button_ToggleDetails.Text = "📋 ▶";
             TransactionGridControl_Button_ToggleDetails.ToolTipText = "Hide transaction details panel";
         }
         else
         {
             TransactionGridControl_TableLayout_Main.SetColumnSpan(TransactionGridControl_Panel_DataGridView, 2);
-            TransactionGridControl_Button_ToggleDetails.Text = "📋 ▶";
+            TransactionGridControl_Button_ToggleDetails.Text = "◀ 📋";
             TransactionGridControl_Button_ToggleDetails.ToolTipText = "Show transaction details panel";
         }
 

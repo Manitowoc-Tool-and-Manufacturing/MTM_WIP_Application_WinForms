@@ -755,6 +755,10 @@ namespace MTM_WIP_Application_Winforms.Services
                 var themeEnabledResult = await Dao_User.GetThemeEnabledAsync(Model_Application_Variables.User);
                 Model_Application_Variables.ThemeEnabled = themeEnabledResult.Data; // Defaults to true
 
+                // Load animations enabled setting
+                var animationsResult = await Dao_User.GetAnimationsEnabledAsync(Model_Application_Variables.User);
+                Model_Application_Variables.AnimationsEnabled = animationsResult.IsSuccess ? animationsResult.Data : true;
+
                 int? fontSize = await Dao_User.GetThemeFontSizeAsync(Model_Application_Variables.User);
                 Model_Application_Variables.ThemeFontSize = fontSize ?? 9;
 

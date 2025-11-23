@@ -288,7 +288,7 @@ internal partial class Transactions : ThemedForm
             }
 
             // Show print dialog for the grid and await result
-            var dialogResultTask = Helper_PrintManager.ShowPrintDialogAsync(this, Transactions_UserControl_Grid.DataGridView, "Transactions");
+            var dialogResultTask = Helper_PrintManager.ShowPrintDialogAsync(this, Transactions_UserControl_Grid.DataGridView, "Transaction History");
             dialogResultTask.ContinueWith(t =>
             {
                 if (t.IsCompletedSuccessfully)

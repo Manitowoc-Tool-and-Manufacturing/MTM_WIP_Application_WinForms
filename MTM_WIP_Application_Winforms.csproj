@@ -6,7 +6,7 @@
         <Nullable>enable</Nullable>
         <UseWindowsForms>true</UseWindowsForms>
         <ImplicitUsings>enable</ImplicitUsings>
-        <Version>6.3.1.0</Version>
+        <Version>6.3.2.0</Version>
         <ApplicationIcon>MTMWIPApp.ico</ApplicationIcon>
         <!-- Ensure files are copied locally -->
         <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
@@ -68,6 +68,9 @@
             <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </Content>
         <EmbeddedResource Include="Resources\CHANGELOG.pdf" />
+        <Content Include="RELEASE_NOTES_USER_FRIENDLY.md">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </Content>
     </ItemGroup>
 
     <!-- ✅ HELP SYSTEM FILES - Copy Documentation/Help folder to build output -->

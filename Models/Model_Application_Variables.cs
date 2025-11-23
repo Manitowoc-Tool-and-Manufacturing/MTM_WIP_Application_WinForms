@@ -67,6 +67,7 @@ namespace MTM_WIP_Application_Winforms.Models
         public static string? LastUpdated { get; set; } = "08/05/2025";
         public static string? ThemeName { get; set; } = "Default";
         public static bool ThemeEnabled { get; set; } = true;
+        public static bool AnimationsEnabled { get; set; } = false;
         public static float ThemeFontSize { get; set; } = 9f;
         public static string? WipDataGridTheme { get; set; } = "Default";
         public static string? WipServerAddress

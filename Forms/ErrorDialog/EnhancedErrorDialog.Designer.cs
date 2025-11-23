@@ -247,6 +247,7 @@
             this.buttonViewLogs.TabIndex = 3;
             this.buttonViewLogs.Text = "View Logs";
             this.buttonViewLogs.UseVisualStyleBackColor = false;
+            this.buttonViewLogs.Visible = false;
             // 
             // buttonClose
             // 

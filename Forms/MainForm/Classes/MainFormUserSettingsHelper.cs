@@ -1,6 +1,4 @@
-﻿
-
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using MTM_WIP_Application_Winforms.Data;
 using MTM_WIP_Application_Winforms.Models;
 
@@ -45,6 +43,10 @@ public static class MainFormUserSettingsHelper
 
         var fontSize = await Dao_User.GetThemeFontSizeAsync(Model_Application_Variables.User);
         Model_Application_Variables.ThemeFontSize = fontSize.IsSuccess && fontSize.Data.HasValue ? fontSize.Data.Value : 9;
+
+        var animationsResult = await Dao_User.GetAnimationsEnabledAsync(Model_Application_Variables.User);
+        Model_Application_Variables.AnimationsEnabled = animationsResult.IsSuccess ? animationsResult.Data : true;
+
         Debug.WriteLine("[DEBUG] Finished loading user theme settings from DB");
     }
 

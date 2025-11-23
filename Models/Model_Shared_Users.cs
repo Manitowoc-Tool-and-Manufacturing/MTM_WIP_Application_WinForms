@@ -18,12 +18,10 @@ namespace MTM_WIP_Application_Winforms.Models
         public bool VitsUser { get; set; } = false;
         public static string? Database { get; set ; } = "mtm_wip_application_winforms";
 
-        public static string WipServerAddress { get; set; } = "172.16.1.104";
+        public static string WipServerAddress { get; set; } = "localhost";
 
 
         public static string WipServerPort { get; set; } = "3306";
-
-        public static bool EnableAnimations { get; set; } = false;
 
         /// <summary>
         /// Centralized check for whether 32x32 icon animations should run.
@@ -31,7 +29,7 @@ namespace MTM_WIP_Application_Winforms.Models
         /// </summary>
         public static bool AreAnimationsEnabled()
         {
-            return EnableAnimations;
+            return Model_Application_Variables.AnimationsEnabled;
         }
 
         #endregion

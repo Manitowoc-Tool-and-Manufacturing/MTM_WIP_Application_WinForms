@@ -45,6 +45,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
                 }
 
                 var themeResult = await Dao_User.GetThemeNameAsync(user);
+                var animationsResult = await Dao_User.GetAnimationsEnabledAsync(user);
 
                 if (themeResult.IsSuccess)
                 {
@@ -57,6 +58,8 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
                     {
                         Control_Themes_ComboBox_Theme.SelectedIndex = 0;
                     }
+
+                    Control_Themes_CheckBox_EnableAnimations.Checked = animationsResult.IsSuccess ? animationsResult.Data : true;
 
                     StatusMessageChanged?.Invoke(this, "Theme settings loaded successfully.");
                 }
@@ -126,11 +129,13 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
 
                 // FIXED: Use the proper theme setter that works with existing database structure
                 var saveResult = await Dao_User.SetThemeNameAsync(user, selectedTheme);
+                var animResult = await Dao_User.SetAnimationsEnabledAsync(user, Control_Themes_CheckBox_EnableAnimations.Checked);
 
-                if (!saveResult.IsSuccess)
+                if (!saveResult.IsSuccess || !animResult.IsSuccess)
                 {
+                    string errorMsg = !saveResult.IsSuccess ? saveResult.ErrorMessage : animResult.ErrorMessage;
                     Service_ErrorHandler.HandleDatabaseError(
-                        new Exception($"Failed to save theme: {saveResult.ErrorMessage}"),
+                        new Exception($"Failed to save theme settings: {errorMsg}"),
                         contextData: new Dictionary<string, object>
                         {
                             ["User"] = user,
@@ -140,12 +145,13 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
                         controlName: nameof(Control_Theme)
                     );
 
-                    StatusMessageChanged?.Invoke(this, $"Error saving theme: {saveResult.ErrorMessage}");
+                    StatusMessageChanged?.Invoke(this, $"Error saving theme: {errorMsg}");
                     return;
                 }
 
                 // Update the application variables and apply changes
                 Model_Application_Variables.ThemeEnabled = true; // Always enabled
+                Model_Application_Variables.AnimationsEnabled = Control_Themes_CheckBox_EnableAnimations.Checked;
                 if (!string.IsNullOrEmpty(selectedTheme))
                 {
                     Model_Application_Variables.ThemeName = selectedTheme;
