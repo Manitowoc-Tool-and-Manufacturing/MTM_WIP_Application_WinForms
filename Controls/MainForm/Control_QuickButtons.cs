@@ -184,9 +184,15 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                     string operation = tag.operation?.ToString() ?? "";
                     int quantity = tag.quantity != null ? Convert.ToInt32(tag.quantity) : 0;
                     string hotkeyText = tag.shortcutDisplay?.ToString() ?? "";
+                    
+                    // Safely access new properties (handle case where Tag might be from older code version if not fully reloaded)
+                    string workOrder = "";
+                    string colorCode = "";
+                    try { workOrder = tag.workOrder?.ToString() ?? ""; } catch { }
+                    try { colorCode = tag.colorCode?.ToString() ?? ""; } catch { }
 
                     // Repopulate with adaptive font sizes based on new button height
-                    PopulateQuickButtonLayout(btn, partId, operation, quantity, hotkeyText);
+                    PopulateQuickButtonLayout(btn, partId, operation, quantity, hotkeyText, workOrder, colorCode);
                 }
             }
         }
@@ -293,6 +299,14 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                     string? operation = row["Operation"] == DBNull.Value ? null : row["Operation"].ToString();
                     int? quantity = row["Quantity"] == DBNull.Value ? null :
                         row["Quantity"] is int q ? q : Convert.ToInt32(row["Quantity"]);
+                    
+                    // Check for optional columns (WorkOrder, ColorCode) that might be added in future DB updates
+                    string? workOrder = dataTable.Columns.Contains("WorkOrder") && row["WorkOrder"] != DBNull.Value 
+                        ? row["WorkOrder"].ToString() 
+                        : null;
+                    string? colorCode = dataTable.Columns.Contains("ColorCode") && row["ColorCode"] != DBNull.Value 
+                        ? row["ColorCode"].ToString() 
+                        : null;
 
                     // Always set position 1-10, no duplicates
                     int displayPosition = i + 1;
@@ -302,20 +316,36 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                         string shortcutId = $"Shortcut_QuickButton_{displayPosition:D2}";
                         string shortcutDisplay = GetShortcutKey(displayPosition - 1);
 
-                        // Set all data at once using SetData (includes hotkey, part, operation, quantity)
+                        // Set all data at once using SetData (includes hotkey, part, operation, quantity, workOrder, colorCode)
                         if (quickButtons[i] is Control_QuickButton_Single singleButton)
                         {
-                            singleButton.SetData(shortcutDisplay, partId ?? "", operation ?? "", quantity ?? 0);
+                            singleButton.SetData(shortcutDisplay, partId ?? "", operation ?? "", quantity ?? 0, workOrder ?? "", colorCode ?? "");
                             singleButton.UpdateFontSizes();
                         }
 
                         string tooltipText = partId != null && operation != null && quantity != null
-                            ? $"Part ID: {partId}, Operation: {operation}, Quantity: {quantity}\nPosition: {displayPosition}\nShortcut: {shortcutDisplay}"
-                            : $"Position: {displayPosition}\nShortcut: {shortcutDisplay}";
-                        Control_QuickButtons_Tooltip.SetToolTip(quickButtons[i], tooltipText);
+                            ? $"Part ID: {partId}, Operation: {operation}, Quantity: {quantity}"
+                            : $"Position: {displayPosition}";
 
-                        quickButtons[i].Tag = new { shortcutDisplay, partId, operation, quantity, position = displayPosition };
-                        quickButtons[i].Visible = shortcutDisplay != null && partId != null && operation != null && quantity != null;
+                        if (!string.IsNullOrEmpty(workOrder))
+                        {
+                            tooltipText += $"\nWork Order: {workOrder}";
+                        }
+                        if (!string.IsNullOrEmpty(colorCode))
+                        {
+                            tooltipText += $"\nColor: {colorCode}";
+                        }
+
+                        tooltipText += $"\nPosition: {displayPosition}\nShortcut: {shortcutDisplay}";
+                        
+                        // Recursively set tooltip on button and all its children to ensure it shows up
+                        SetTooltipRecursive(quickButtons[i], tooltipText);
+
+                        quickButtons[i].Tag = new { shortcutDisplay, partId, operation, quantity, position = displayPosition, workOrder, colorCode };
+                        quickButtons[i].Visible = !string.IsNullOrWhiteSpace(shortcutDisplay) && 
+                                                  !string.IsNullOrWhiteSpace(partId) && 
+                                                  !string.IsNullOrWhiteSpace(operation) && 
+                                                  quantity != null;
                     }
                     i++;
                 }
@@ -333,15 +363,20 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                             singleButton.SetData(GetShortcutKey(displayPosition - 1), "", "", 0);
                         }
 
-                        quickButtons[i].Controls.Clear();
+                        // quickButtons[i].Controls.Clear(); // REMOVED: This destroys the UserControl structure!
                         quickButtons[i].Text = string.Empty;
-                        Control_QuickButtons_Tooltip.SetToolTip(quickButtons[i], $"Position: {displayPosition}\nShortcut: {GetShortcutKey(displayPosition - 1)}");
+                        
+                        string tooltipText = $"Position: {displayPosition}\nShortcut: {GetShortcutKey(displayPosition - 1)}";
+                        SetTooltipRecursive(quickButtons[i], tooltipText);
+                        
                         quickButtons[i].Tag = new
                         {
                             partId = (string?)null,
                             operation = (string?)null,
                             quantity = (int?)null,
-                            position = displayPosition
+                            position = displayPosition,
+                            workOrder = (string?)null,
+                            colorCode = (string?)null
                         };
                         quickButtons[i].Visible = false;
                     }
@@ -380,6 +415,22 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             }
         }
 
+        /// <summary>
+        /// Recursively sets the tooltip for a control and all its children.
+        /// This ensures the tooltip shows up even when hovering over child controls (labels, panels, etc.).
+        /// </summary>
+        private void SetTooltipRecursive(Control control, string text)
+        {
+            if (control == null) return;
+            
+            Control_QuickButtons_Tooltip.SetToolTip(control, text);
+            
+            foreach (Control child in control.Controls)
+            {
+                SetTooltipRecursive(child, text);
+            }
+        }
+
         private void RefreshButtonLayout()
         {
             // Force UI refresh: clear and re-add only visible buttons
@@ -398,15 +449,18 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             }
 
             Control_QuickButtons_TableLayoutPanel_Main.ResumeLayout();
+            Control_QuickButtons_TableLayoutPanel_Main.PerformLayout();
         }
 
-        private void PopulateQuickButtonLayout(Control_QuickButton_Single button, string partId, string operation, int quantity, string hotkeyText)
+        private void PopulateQuickButtonLayout(Control_QuickButton_Single button, string partId, string operation, int quantity, string hotkeyText, string workOrder = "", string colorCode = "")
         {
             // Update the custom control's data properties
             button.PartId = partId;
             button.Operation = operation;
             button.Quantity = quantity;
             button.HotkeyText = hotkeyText;
+            button.WorkOrder = workOrder;
+            button.ColorCode = colorCode;
 
             // Update font sizes for current height
             button.UpdateFontSizes();
@@ -524,6 +578,12 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             string partId = tag.partId;
             string operation = tag.operation;
             int quantity = tag.quantity;
+            
+            string workOrder = "";
+            string colorCode = "";
+            try { workOrder = tag.workOrder?.ToString() ?? ""; } catch { }
+            try { colorCode = tag.colorCode?.ToString() ?? ""; } catch { }
+
             Forms.MainForm.MainForm? mainForm = MainFormInstance;
             if (mainForm == null)
             {
@@ -580,6 +640,11 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                 SetTextBoxText(inv, "Control_InventoryTab_SuggestionBox_Part", partId);
                 SetTextBoxText(inv, "Control_InventoryTab_SuggestionBox_Operation", operation);
                 SetTextBoxText(inv, "Control_InventoryTab_SuggestionBox_Quantity", quantity.ToString());
+                
+                // Set optional fields
+                SetTextBoxText(inv, "Control_InventoryTab_SuggestionBox_WorkOrder", workOrder);
+                SetTextBoxText(inv, "Control_InventoryTab_SuggestionBox_ColorCode", colorCode);
+
                 SetFocusOnControl(inv, "Control_InventoryTab_SuggestionBox_Location");
                 mainForm.MainForm_UserControl_InventoryTab.UpdateColorCodeFieldsVisibility();
                 return;
@@ -850,11 +915,62 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                 return;
             }
 
-            // TODO: Form_QuickButtonOrder needs refactoring to work with Control_QuickButton_Single
-            MessageBox.Show("Reorder functionality temporarily disabled during refactoring.", "Info", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            using Form_QuickButtonOrder dlg = new(quickButtons);
+            if (dlg.ShowDialog(this) == DialogResult.OK)
+            {
+                string user = Model_Application_Variables.User;
+                List<Control_QuickButton_Single> newOrder = dlg.GetButtonOrder();
+
+                try
+                {
+                    // Extract data to avoid UI thread issues during async operations
+                    var buttonsData = newOrder
+                        .Where(b => !string.IsNullOrEmpty(b.PartId) && !string.IsNullOrEmpty(b.Operation))
+                        .Select(b => new { b.PartId, b.Operation, b.Quantity })
+                        .ToList();
+
+                    // Delete all existing buttons
+                    var deleteResult = await Dao_QuickButtons.DeleteAllQuickButtonsForUserAsync(user);
+                    if (!deleteResult.IsSuccess)
+                    {
+                        Service_ErrorHandler.HandleDatabaseError(
+                            deleteResult.Exception ?? new Exception(deleteResult.ErrorMessage),
+                            contextData: new Dictionary<string, object> { ["User"] = user },
+                            methodName: nameof(MenuItemReorder_Click),
+                            dbSeverity: Enum_DatabaseEnum_ErrorSeverity.Error);
+                        return;
+                    }
+
+                    // Insert buttons in new order
+                    for (int i = 0; i < buttonsData.Count; i++)
+                    {
+                        var data = buttonsData[i];
+                        int position = i + 1;
+
+                        // Use AddQuickButtonAsync which maps to sys_last_10_transactions_Add_AtPosition
+                        var addResult = await Dao_QuickButtons.AddQuickButtonAsync(
+                            user, data.PartId, data.Operation, data.Quantity, position);
+
+                        if (!addResult.IsSuccess)
+                        {
+                            LoggingUtility.LogDatabaseError(new Exception($"Failed to add button at position {position}: {addResult.ErrorMessage}"));
+                        }
+                    }
+
+                    // Reload UI
+                    await LoadLast10Transactions(user);
+                }
+                catch (Exception ex)
+                {
+                    LoggingUtility.LogApplicationError(ex);
+                    Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Medium,
+                        contextData: new Dictionary<string, object> { ["User"] = user },
+                        controlName: nameof(Control_QuickButtons));
+                }
+            }
         }
 
         #endregion Methods
     }
 }
-  
+

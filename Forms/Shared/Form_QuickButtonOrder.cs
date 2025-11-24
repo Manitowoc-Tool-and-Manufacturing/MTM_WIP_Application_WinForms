@@ -1,3 +1,5 @@
+using MTM_WIP_Application_Winforms.Controls.MainForm;
+
 namespace MTM_WIP_Application_Winforms.Forms.Shared;
 
 /// <summary>
@@ -16,7 +18,7 @@ public partial class Form_QuickButtonOrder : ThemedForm
 {
     #region Fields
 
-    private readonly List<Button> buttonOrder;
+    private readonly List<Control_QuickButton_Single> buttonOrder;
     private int dragIndex = -1;
 
     #endregion
@@ -27,7 +29,7 @@ public partial class Form_QuickButtonOrder : ThemedForm
     /// Initializes a new instance of the Form_QuickButtonOrder dialog.
     /// </summary>
     /// <param name="buttons">List of QuickButtons to display and reorder. Only visible buttons are included.</param>
-    public Form_QuickButtonOrder(List<Button> buttons)
+    public Form_QuickButtonOrder(List<Control_QuickButton_Single> buttons)
     {
         InitializeComponent();
 
@@ -35,7 +37,7 @@ public partial class Form_QuickButtonOrder : ThemedForm
         SetStyle(ControlStyles.OptimizedDoubleBuffer, true);
 
         // Store visible buttons only
-        buttonOrder = new List<Button>(buttons.Where(b => b.Visible));
+        buttonOrder = new List<Control_QuickButton_Single>(buttons.Where(b => b.Visible));
 
         // Populate ListView with button data
         PopulateListView();
@@ -62,25 +64,11 @@ public partial class Form_QuickButtonOrder : ThemedForm
 
         for (int i = 0; i < buttonOrder.Count; i++)
         {
-            Button btn = buttonOrder[i];
-            object? tagObj = btn.Tag;
-            string partId;
-            string op;
-            string qty;
-
-            if (tagObj == null)
-            {
-                partId = string.Empty;
-                op = string.Empty;
-                qty = string.Empty;
-            }
-            else
-            {
-                dynamic tag = tagObj;
-                partId = tag?.partId ?? string.Empty;
-                op = tag?.operation ?? string.Empty;
-                qty = tag?.quantity?.ToString() ?? string.Empty;
-            }
+            Control_QuickButton_Single btn = buttonOrder[i];
+            
+            string partId = btn.PartId;
+            string op = btn.Operation;
+            string qty = btn.Quantity.ToString();
 
             ListViewItem lvi = new(new[] { (i + 1).ToString(), partId, op, qty });
             Form_QuickButtonOrder_ListView_Main.Items.Add(lvi);
@@ -96,10 +84,10 @@ public partial class Form_QuickButtonOrder : ThemedForm
     /// Call this after dialog closes with OK result to get new ordering.
     /// </summary>
     /// <returns>List of buttons in the order shown in the ListView.</returns>
-    public List<Button> GetButtonOrder()
+    public List<Control_QuickButton_Single> GetButtonOrder()
     {
         // Return the button order as currently shown in the ListView
-        List<Button> result = new();
+        List<Control_QuickButton_Single> result = new();
 
         for (int i = 0; i < Form_QuickButtonOrder_ListView_Main.Items.Count; i++)
         {
@@ -110,14 +98,11 @@ public partial class Form_QuickButtonOrder : ThemedForm
             string quantity = listViewItem.SubItems[3].Text;
 
             // Find the button with matching data
-            Button? matchingButton = buttonOrder.FirstOrDefault(btn =>
+            Control_QuickButton_Single? matchingButton = buttonOrder.FirstOrDefault(btn =>
             {
-                object? tagObj = btn.Tag;
-                if (tagObj == null) return false;
-                dynamic tag = tagObj;
-                return (tag?.partId?.ToString() ?? string.Empty) == partId &&
-                       (tag?.operation?.ToString() ?? string.Empty) == operation &&
-                       (tag?.quantity?.ToString() ?? string.Empty) == quantity;
+                return btn.PartId == partId &&
+                       btn.Operation == operation &&
+                       btn.Quantity.ToString() == quantity;
             });
 
             if (matchingButton != null)
@@ -185,7 +170,7 @@ public partial class Form_QuickButtonOrder : ThemedForm
             }
 
             // Reorder both button list and ListView
-            Button btn = buttonOrder[dragItem.Index];
+            Control_QuickButton_Single btn = buttonOrder[dragItem.Index];
             buttonOrder.RemoveAt(dragItem.Index);
             Form_QuickButtonOrder_ListView_Main.Items.RemoveAt(dragItem.Index);
             buttonOrder.Insert(dropIndex, btn);
@@ -213,7 +198,7 @@ public partial class Form_QuickButtonOrder : ThemedForm
             if (e.KeyCode == Keys.Up && idx > 0)
             {
                 // Move item up
-                Button btn = buttonOrder[idx];
+                Control_QuickButton_Single btn = buttonOrder[idx];
                 buttonOrder.RemoveAt(idx);
                 buttonOrder.Insert(idx - 1, btn);
 
@@ -228,7 +213,7 @@ public partial class Form_QuickButtonOrder : ThemedForm
             else if (e.KeyCode == Keys.Down && idx < Form_QuickButtonOrder_ListView_Main.Items.Count - 1)
             {
                 // Move item down
-                Button btn = buttonOrder[idx];
+                Control_QuickButton_Single btn = buttonOrder[idx];
                 buttonOrder.RemoveAt(idx);
                 buttonOrder.Insert(idx + 1, btn);
 

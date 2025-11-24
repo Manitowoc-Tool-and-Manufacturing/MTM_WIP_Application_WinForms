@@ -18,6 +18,8 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
         private string _partId = "";
         private string _operation = "";
         private int _quantity = 0;
+        private string _workOrder = "";
+        private string _colorCode = "";
 
         #endregion
 
@@ -186,6 +188,30 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
         }
 
         /// <summary>
+        /// Gets or sets the work order.
+        /// </summary>
+        [Category("Data")]
+        [Description("The work order associated with this button.")]
+        [DefaultValue("")]
+        public string WorkOrder
+        {
+            get => _workOrder;
+            set => _workOrder = value;
+        }
+
+        /// <summary>
+        /// Gets or sets the color code.
+        /// </summary>
+        [Category("Data")]
+        [Description("The color code associated with this button.")]
+        [DefaultValue("")]
+        public string ColorCode
+        {
+            get => _colorCode;
+            set => _colorCode = value;
+        }
+
+        /// <summary>
         /// Gets or sets the border color at the top of the control.
         /// </summary>
         [Category("Appearance")]
@@ -255,15 +281,17 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
         /// <summary>
         /// Sets all data properties at once.
         /// </summary>
-        public void SetData(string hotkeyText, string partId, string operation, int quantity)
+        public void SetData(string hotkeyText, string partId, string operation, int quantity, string workOrder = "", string colorCode = "")
         {
             HotkeyText = hotkeyText;
             PartId = partId;
             Operation = operation;
             Quantity = quantity;
+            WorkOrder = workOrder;
+            ColorCode = colorCode;
             
-            // Update tooltip with all information
-            UpdateTooltip();
+            // Tooltip is now handled by the parent control (Control_QuickButtons)
+            // UpdateTooltip(); 
         }
 
         /// <summary>
