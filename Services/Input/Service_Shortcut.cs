@@ -133,7 +133,7 @@ namespace MTM_WIP_Application_Winforms.Services
             // Validation
             if (IsReservedKey(newKeys))
             {
-                return new Model_Dao_Result<bool> { IsSuccess = false, ErrorMessage = "This key combination is reserved for Quick Buttons (Alt+0-9)." };
+                return new Model_Dao_Result<bool> { IsSuccess = false, ErrorMessage = "This key combination is reserved for Quick Buttons." };
             }
 
             if (IsDuplicate(newKeys, shortcutName))

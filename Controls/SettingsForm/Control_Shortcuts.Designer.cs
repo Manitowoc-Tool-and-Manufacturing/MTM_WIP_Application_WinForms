@@ -233,7 +233,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             Control_Shortcuts_Card_QuickButtons.BackColor = Color.FromArgb(200, 200, 200);
             Control_Shortcuts_Card_QuickButtons.CardDescription = "Customizable shortcuts for the Quick Button bar.";
             Control_Shortcuts_Card_QuickButtons.CardIcon = "⚡";
-            Control_Shortcuts_Card_QuickButtons.CardTitle = "Quick Buttons (Alt+0-9)";
+            Control_Shortcuts_Card_QuickButtons.CardTitle = "Quick Buttons";
             Control_Shortcuts_Card_QuickButtons.IsExpanded = true;
             Control_Shortcuts_Card_QuickButtons.Location = new Point(3, 353);
             Control_Shortcuts_Card_QuickButtons.MinimumSize = new Size(442, 64);

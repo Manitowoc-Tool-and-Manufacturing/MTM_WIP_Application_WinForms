@@ -1,5 +1,11 @@
 [
   {
+    "Version": "6.3.5",
+    "Date": "November 23, 2025",
+    "Summary": "QuickButtons visual improvements and theme system refinements.",
+    "Details": "<h3>Clearer QuickButtons</h3><p><strong>What's new</strong>:</p><ul><li><strong>Better Shortcut Display</strong>: Complex hotkeys like \"Shift+Alt+F1\" now display on multiple lines so they're easier to read.</li><li><strong>Detailed Tooltips</strong>: Hover over any QuickButton to see the full Part Number, Operation, Quantity, and Hotkey.</li><li><strong>Visual Fixes</strong>: Buttons now look correct regardless of which theme you're using.</li></ul>"
+  },
+  {
     "Version": "6.3.4",
     "Date": "November 23, 2025",
     "Summary": "Startup architecture modernization and service refactoring.",

@@ -86,4 +86,4 @@ As a user, I want the Shortcuts settings to look and behave consistently with ot
 - **SC-002**: All application shortcuts are managed through the centralized service, with no hardcoded key bindings remaining in the codebase.
 - **SC-003**: User can successfully rebind a shortcut and use it immediately.
 - **SC-004**: Attempting to bind a duplicate key triggers a validation error 100% of the time.
-- **SC-005**: Reserved keys (e.g., Alt+0-9) cannot be assigned to non-QuickButton features.
+- **SC-005**: Reserved keys cannot be assigned to non-QuickButton features.

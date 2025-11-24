@@ -7,7 +7,7 @@
 
 ## Summary
 
-Refactor `Control_Shortcuts` to replace the legacy DataGridView with a modern, card-based UI using `Control_SettingsCollapsibleCard`. Ensure all shortcuts are managed via `Service_Shortcut`, enforce QuickButton exclusivity (Alt+0-9), and align default shortcuts with the codebase.
+Refactor `Control_Shortcuts` to replace the legacy DataGridView with a modern, card-based UI using `Control_SettingsCollapsibleCard`. Ensure all shortcuts are managed via `Service_Shortcut`, enforce QuickButton exclusivity, and align default shortcuts with the codebase.
 
 ## Technical Context
 

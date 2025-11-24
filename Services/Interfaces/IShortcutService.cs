@@ -40,7 +40,7 @@ namespace MTM_WIP_Application_Winforms.Services
         bool IsDelete(Keys keyData);
 
         /// <summary>
-        /// Checks if the key combination is reserved (e.g. Alt+0-9).
+        /// Checks if the key combination is reserved.
         /// </summary>
         bool IsReservedKey(Keys keyData);
 

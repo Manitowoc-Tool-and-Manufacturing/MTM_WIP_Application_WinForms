@@ -30,7 +30,7 @@ This feature refactors the shortcut management system to use a centralized servi
 
 **Goal**: Centralize all shortcut logic in `Service_Shortcut` and remove hardcoded keys from the codebase.
 
-- [x] T004 Update `Services/Input/Service_Shortcut.cs` to implement `IsReservedKey` (Alt+0-9), `IsDuplicate`, and `GetShortcutDisplay`.
+- [x] T004 Update `Services/Input/Service_Shortcut.cs` to implement `IsReservedKey`, `IsDuplicate`, and `GetShortcutDisplay`.
 - [x] T005 Refactor `Controls/MainForm/Control_InventoryTab.cs` to replace `Keys` enums with `_shortcutService.GetShortcutKey()`.
 - [x] T006 Refactor `Controls/MainForm/Control_RemoveTab.cs` to replace `Keys` enums with `_shortcutService.GetShortcutKey()`.
 - [x] T007 Refactor `Controls/MainForm/Control_TransferTab.cs` to replace `Keys` enums with `_shortcutService.GetShortcutKey()`.
