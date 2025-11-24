@@ -1,0 +1,69 @@
+/*!50003 DROP PROCEDURE IF EXISTS `inv_inventory_Transfer_Part` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8mb4 */ ;
+/*!50003 SET character_set_results = utf8mb4 */ ;
+/*!50003 SET collation_connection  = utf8mb4_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'NO_AUTO_VALUE_ON_ZERO' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `inv_inventory_Transfer_Part`(IN `p_BatchNumber` VARCHAR(300), IN `p_PartID` VARCHAR(300), IN `p_Operation` VARCHAR(100), IN `p_NewLocation` VARCHAR(100), OUT `p_Status` INT, OUT `p_ErrorMsg` VARCHAR(500))
+BEGIN
+    DECLARE v_RowsAffected INT DEFAULT 0;
+    DECLARE v_Exists INT DEFAULT 0;
+    -- Transaction management removed: Works within caller's transaction context (tests use transactions)`r`n    DECLARE EXIT HANDLER FOR SQLEXCEPTION
+    BEGIN
+        GET DIAGNOSTICS CONDITION 1
+            @sqlstate = RETURNED_SQLSTATE,
+            @errno = MYSQL_ERRNO,
+            @text = MESSAGE_TEXT;
+        SET p_Status = -1;
+        SET p_ErrorMsg = CONCAT('Database error: ', @text);
+    END;
+    -- No START TRANSACTION - works within caller's transaction context (tests use transactions)
+    IF p_BatchNumber IS NULL OR p_BatchNumber = '' THEN
+        SET p_Status = -2;
+        SET p_ErrorMsg = 'BatchNumber is required';
+    ELSEIF p_PartID IS NULL OR p_PartID = '' THEN
+        SET p_Status = -2;
+        SET p_ErrorMsg = 'PartID is required';
+    ELSEIF p_Operation IS NULL OR p_Operation = '' THEN
+        SET p_Status = -2;
+        SET p_ErrorMsg = 'Operation is required';
+    ELSEIF p_NewLocation IS NULL OR p_NewLocation = '' THEN
+        SET p_Status = -2;
+        SET p_ErrorMsg = 'NewLocation is required';
+    ELSE
+        SELECT COUNT(*) INTO v_Exists
+        FROM inv_inventory
+        WHERE BatchNumber = p_BatchNumber
+          AND PartID = p_PartID
+          AND Operation = p_Operation;
+        IF v_Exists = 0 THEN
+            SET p_Status = -4;
+            SET p_ErrorMsg = 'Inventory record not found';
+        ELSE
+            UPDATE inv_inventory
+            SET Location = p_NewLocation,
+                LastUpdated = CURRENT_TIMESTAMP
+            WHERE BatchNumber = p_BatchNumber
+              AND PartID = p_PartID
+              AND Operation = p_Operation;
+            SET v_RowsAffected = ROW_COUNT();
+            IF v_RowsAffected > 0 THEN
+                SET p_Status = 1;
+                SET p_ErrorMsg = CONCAT('Successfully transferred ', v_RowsAffected, ' item(s) to ', p_NewLocation);
+            ELSE
+                SET p_Status = 0;
+                SET p_ErrorMsg = 'No rows were affected';
+            END IF;
+        END IF;
+    END IF;
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+
