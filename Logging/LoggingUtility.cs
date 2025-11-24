@@ -33,6 +33,21 @@ internal static class LoggingUtility
 
     #region LogCleanup
 
+/// <summary>
+/// The CleanUpOldLogsAsync function cleans up old log files and application data directories in a
+/// specified directory with a maximum number of logs to keep.
+/// </summary>
+/// <param name="logDirectory">The `logDirectory` parameter in the `CleanUpOldLogsAsync` method is the
+/// directory path where log files are stored. This method is responsible for cleaning up old log files
+/// in the specified directory based on the provided criteria.</param>
+/// <param name="maxLogs">The `maxLogs` parameter in the `CleanUpOldLogsAsync` method specifies the
+/// maximum number of log files that should be retained in the `logDirectory`. If the number of log
+/// files in the directory exceeds this value, the method will delete the oldest log files to ensure
+/// that only the most</param>
+/// <returns>
+/// The `CleanUpOldLogsAsync` method returns a `Task` representing the asynchronous operation of
+/// cleaning up old log files and application data directories.
+/// </returns>
     private static async Task CleanUpOldLogsAsync(string logDirectory, int maxLogs)
     {
         try
@@ -101,6 +116,10 @@ internal static class LoggingUtility
         }
     }
 
+/// <summary>
+/// The function `CleanUpOldLogsIfNeededAsync` checks if a log directory is not empty and then calls
+/// `CleanUpOldLogsAsync` to clean up old logs.
+/// </summary>
     public static async Task CleanUpOldLogsIfNeededAsync()
     {
         if (!string.IsNullOrEmpty(_logDirectory))
@@ -111,6 +130,17 @@ internal static class LoggingUtility
 
     #region LogFileWriting
 
+/// <summary>
+/// The FlushLogEntryToDisk function asynchronously writes a log entry to a file, handling retries in
+/// case of IOException and logging any exceptions.
+/// </summary>
+/// <param name="filePath">The `filePath` parameter in the `FlushLogEntryToDisk` method is the path to
+/// the file where the log entry will be written. It specifies the location on disk where the log
+/// information will be stored.</param>
+/// <param name="logEntry">The `logEntry` parameter in the `FlushLogEntryToDisk` method represents the
+/// log entry that needs to be written to the specified file. This log entry typically contains
+/// information such as timestamp, log level, source, message, and details of the event that occurred.
+/// The method attempts to write</param>
     private static void FlushLogEntryToDisk(string filePath, string logEntry)
     {
         try
@@ -174,6 +204,10 @@ internal static class LoggingUtility
 
     #region Initialization
 
+/// <summary>
+/// The InitializeLoggingAsync function initializes logging, handles timeouts, and sets up log file
+/// paths with fallback options.
+/// </summary>
     public static async Task InitializeLoggingAsync()
     {
         try
@@ -290,6 +324,12 @@ internal static class LoggingUtility
 
     #region LoggingMethods
 
+/// <summary>
+/// The Log function in C# is used to output a message to a log file or console.
+/// </summary>
+/// <param name="message">The `message` parameter in the `Log` method is a string that represents the
+/// information or data that you want to log or output. When you call this method, you would pass a
+/// string message as an argument to be logged or displayed.</param>
     public static void Log(string message)
     {
         var timestamp = DateTime.Now;
@@ -304,6 +344,13 @@ internal static class LoggingUtility
         }
     }
 
+/// <summary>
+/// This C# function logs application errors along with the exception details.
+/// </summary>
+/// <param name="Exception">The parameter `ex` in the `LogApplicationError` method is of type
+/// `Exception`. This means that the method expects an object of type `Exception` to be passed as an
+/// argument when it is called. This allows the method to handle and log any exceptions that occur
+/// within the application.</param>
     public static void LogApplicationError(Exception ex)
     {
         var timestamp = DateTime.Now;
@@ -321,6 +368,17 @@ internal static class LoggingUtility
         }
     }
 
+/// <summary>
+/// The function `LogDatabaseError` logs database errors with an optional severity level parameter.
+/// </summary>
+/// <param name="Exception">The `Exception ex` parameter in the `LogDatabaseError` method is used to
+/// pass an exception object that represents the error or exception that occurred in the database
+/// operation. This allows the method to log details about the error for debugging and troubleshooting
+/// purposes.</param>
+/// <param name="Enum_DatabaseEnum_ErrorSeverity">The Enum_DatabaseEnum_ErrorSeverity is an enumeration
+/// that defines different levels of error severity that can be associated with a database error. It
+/// likely contains values such as "Error", "Warning", "Information", etc., to categorize the severity
+/// of the error that occurred in the database.</param>
     public static void LogDatabaseError(Exception ex, Enum_DatabaseEnum_ErrorSeverity severity = Enum_DatabaseEnum_ErrorSeverity.Error)
     {
         // Prevent recursive logging if database operation called from logging itself fails
@@ -378,6 +436,13 @@ internal static class LoggingUtility
         }
     }
 
+/// <summary>
+/// The function LogApplicationInfo logs the provided message as application information.
+/// </summary>
+/// <param name="message">The `message` parameter in the `LogApplicationInfo` method is a string that
+/// represents the information or message that you want to log or record in the application. This
+/// message could be any relevant information that you want to track for debugging, monitoring, or
+/// auditing purposes within your application.</param>
     public static void LogApplicationInfo(string message)
     {
         var timestamp = DateTime.Now;
@@ -396,6 +461,16 @@ internal static class LoggingUtility
 
     #region Shutdown
 
+/// <summary>
+/// The above function is a private static method in C# that handles the process exit event.
+/// </summary>
+/// <param name="sender">The `sender` parameter in the `OnProcessExit` method refers to the object that
+/// raised the event. In this case, it would typically be the object that triggered the process exit
+/// event.</param>
+/// <param name="EventArgs">The EventArgs class is the base class for classes containing event data. It
+/// provides a parameterless constructor and is typically used when no additional data needs to be
+/// passed to an event handler. In the context of your code snippet, the EventArgs parameter in the
+/// OnProcessExit method represents the event data associated with the</param>
     private static void OnProcessExit(object? sender, EventArgs e)
     {
         var shutdownMsg = $"{DateTime.Now:yyyy-MM-dd HH:mm:ss} - Application exiting.";

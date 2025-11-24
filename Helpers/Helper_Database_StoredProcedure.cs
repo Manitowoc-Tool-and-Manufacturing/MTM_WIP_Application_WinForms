@@ -956,7 +956,7 @@ public static class Helper_Database_StoredProcedure
         return false;
     }
 
-    #endregion
+    #endregion Private Helper Methods - Retry Logic
 
     #region Private Helper Methods - Performance Monitoring
 
@@ -983,7 +983,7 @@ public static class Helper_Database_StoredProcedure
         }
     }
 
-    #endregion
+    #endregion Private Helper Methods - Performance Monitoring
 
     #region Private Helper Methods - Error Handling
 
@@ -1032,5 +1032,5 @@ public static class Helper_Database_StoredProcedure
         }
     }
 
-    #endregion
+    #endregion Private Helper Methods - Error Handling
 }

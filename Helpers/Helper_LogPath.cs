@@ -189,47 +189,6 @@ public static class Helper_LogPath
         return userDirectory;
     }
 
-    /// <summary>
-    /// Constructs a safe full file path within a user's log directory.
-    /// </summary>
-    /// <param name="username">Username who owns the log file.</param>
-    /// <param name="filename">Log filename.</param>
-    /// <returns>Full path to the log file, or null if validation fails.</returns>
-    public static string? GetUserLogFilePath(string username, string filename)
-    {
-        string? userDirectory = GetUserLogDirectory(username);
-        if (userDirectory == null)
-        {
-            return null;
-        }
-
-        if (string.IsNullOrWhiteSpace(filename))
-        {
-            
-            return null;
-        }
-
-        // Remove any path-unsafe characters from filename
-        string safeFilename = SanitizeFilename(filename);
-
-        if (string.IsNullOrWhiteSpace(safeFilename))
-        {
-            
-            return null;
-        }
-
-        string filePath = Path.Combine(userDirectory, safeFilename);
-
-        // Validate the constructed path
-        if (!IsPathSafe(filePath))
-        {
-            
-            return null;
-        }
-
-        return filePath;
-    }
-
     #endregion
 
     #region Filename Sanitization
@@ -263,63 +222,6 @@ public static class Helper_LogPath
 
     #endregion
 
-    #region Directory Operations
-
-    /// <summary>
-    /// Ensures the base log directory exists, creating it if necessary.
-    /// </summary>
-    /// <returns>True if directory exists or was created successfully; false otherwise.</returns>
-    public static bool EnsureBaseDirectoryExists()
-    {
-        try
-        {
-            if (!Directory.Exists(BaseLogDirectory))
-            {
-                Directory.CreateDirectory(BaseLogDirectory);
-                
-            }
-            return true;
-        }
-        catch (Exception ex)
-        {
-            
-            LoggingUtility.LogApplicationError(ex);
-            return false;
-        }
-    }
-
-    /// <summary>
-    /// Ensures a user's log directory exists, creating it if necessary.
-    /// </summary>
-    /// <param name="username">Username to create directory for.</param>
-    /// <returns>True if directory exists or was created successfully; false otherwise.</returns>
-    public static bool EnsureUserDirectoryExists(string username)
-    {
-        string? userDirectory = GetUserLogDirectory(username);
-        if (userDirectory == null)
-        {
-            return false;
-        }
-
-        try
-        {
-            if (!Directory.Exists(userDirectory))
-            {
-                Directory.CreateDirectory(userDirectory);
-                
-            }
-            return true;
-        }
-        catch (Exception ex)
-        {
-            
-            LoggingUtility.LogApplicationError(ex);
-            return false;
-        }
-    }
-
-    #endregion
-
     #region Prompt Fixes Directory Management
 
     /// <summary>
@@ -329,76 +231,6 @@ public static class Helper_LogPath
     public static string GetPromptFixesDirectory()
     {
         return Path.Combine(GetBaseLogDirectory(), "Prompt Fixes");
-    }
-
-    /// <summary>
-    /// Ensures the Prompt Fixes directory exists, creating it if necessary.
-    /// </summary>
-    /// <returns>True if directory exists or was created successfully; false otherwise.</returns>
-    public static bool CreatePromptFixesDirectory()
-    {
-        try
-        {
-            string promptFixesDir = GetPromptFixesDirectory();
-            
-            // Validate the constructed path for security
-            if (!IsDirectorySafe(promptFixesDir))
-            {
-                
-                return false;
-            }
-
-            if (!Directory.Exists(promptFixesDir))
-            {
-                Directory.CreateDirectory(promptFixesDir);
-                
-            }
-            
-            return true;
-        }
-        catch (Exception ex)
-        {
-            
-            LoggingUtility.LogApplicationError(ex);
-            return false;
-        }
-    }
-
-    /// <summary>
-    /// Constructs a safe file path for a prompt fix file based on method name.
-    /// Sanitizes the method name to create a valid filename.
-    /// </summary>
-    /// <param name="methodName">Method name to create prompt file for.</param>
-    /// <returns>Full path to the prompt file, or null if validation fails.</returns>
-    public static string? GetPromptFilePath(string methodName)
-    {
-        if (string.IsNullOrWhiteSpace(methodName))
-        {
-            
-            return null;
-        }
-
-        // Sanitize method name for filesystem (remove invalid characters)
-        string safeMethodName = SanitizeFilename(methodName);
-
-        if (string.IsNullOrWhiteSpace(safeMethodName))
-        {
-            
-            return null;
-        }
-
-        // Construct prompt file path with .md extension
-        string promptFixesDir = GetPromptFixesDirectory();
-        string filePath = Path.Combine(promptFixesDir, $"{safeMethodName}.md");
-
-        // Validate the constructed path
-        if (!IsPathSafe(filePath))
-        {
-            
-            return null;
-        }
-
-        return filePath;
     }
 
     #endregion

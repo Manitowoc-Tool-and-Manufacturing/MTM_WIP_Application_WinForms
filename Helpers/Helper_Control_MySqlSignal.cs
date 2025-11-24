@@ -2,6 +2,8 @@ using MySql.Data.MySqlClient;
 
 namespace MTM_WIP_Application_Winforms.Helpers;
 
+/* The class `Helper_Control_MySqlSignal` provides a method to get the network strength and ping time
+to a MySQL server asynchronously. */
 public class Helper_Control_MySqlSignal
 {
     #region Public Methods
@@ -56,9 +58,7 @@ public class Helper_Control_MySqlSignal
     #endregion
 }
 
-/// <summary>
-/// Database configuration helper class
-/// </summary>
+/* The `DatabaseConfig` class in C# contains a static property for the database connection string. */
 public static class DatabaseConfig
 {
     #region Properties

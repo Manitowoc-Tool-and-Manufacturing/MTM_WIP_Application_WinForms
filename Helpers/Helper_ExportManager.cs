@@ -14,27 +14,6 @@ namespace MTM_WIP_Application_Winforms.Helpers;
 /// </summary>
 public static class Helper_ExportManager
 {
-    /// <summary>
-    /// Persist a PDF stream to disk asynchronously. Creates parent directory when missing.
-    /// </summary>
-    public static async Task ExportPdfStreamToFileAsync(Stream sourcePdfStream, string destinationPath, CancellationToken cancellationToken = default)
-    {
-        if (sourcePdfStream is null) throw new ArgumentNullException(nameof(sourcePdfStream));
-        if (string.IsNullOrWhiteSpace(destinationPath)) throw new ArgumentException("destinationPath required", nameof(destinationPath));
-
-        try
-        {
-            Directory.CreateDirectory(Path.GetDirectoryName(destinationPath) ?? Path.GetTempPath());
-            await using var fileStream = File.Create(destinationPath);
-            sourcePdfStream.Seek(0, SeekOrigin.Begin);
-            await sourcePdfStream.CopyToAsync(fileStream, 81920, cancellationToken).ConfigureAwait(false);
-        }
-        catch (Exception ex)
-        {
-            LoggingUtility.LogApplicationError(ex);
-            throw;
-        }
-    }
 
     /// <summary>
     /// Renders the supplied <see cref="Model_Print_Job"/> to a PDF file using the Microsoft Print to PDF driver.
@@ -284,6 +263,17 @@ public static class Helper_ExportManager
         }
     }
 
+    /// <summary>
+    /// The ResolvePageRange function determines the page range based on the print job details such as
+    /// current page, total pages, and page boundaries.
+    /// </summary>
+    /// <param name="Model_Print_Job">The `ResolvePageRange` method takes a `Model_Print_Job` object as a
+    /// parameter and returns a tuple of two integers representing a page range.</param>
+    /// <returns>
+    /// The ResolvePageRange method returns a tuple containing two integers representing the resolved page
+    /// range based on the input Model_Print_Job printJob. The first integer in the tuple represents the
+    /// starting page number (fromPage), and the second integer represents the ending page number (toPage).
+    /// </returns>
     private static (int fromPage, int toPage) ResolvePageRange(Model_Print_Job printJob)
     {
         int maxBoundaryPage = printJob.PageBoundaries.Count > 0
@@ -303,6 +293,18 @@ public static class Helper_ExportManager
         };
     }
 
+    /// <summary>
+    /// The Clamp function restricts a value to be within a specified range defined by a minimum and maximum
+    /// value.
+    /// </summary>
+    /// <param name="value">The `value` parameter represents the number that you want to clamp within the
+    /// specified range.</param>
+    /// <param name="min">The `min` parameter represents the minimum value that the `value` should be
+    /// clamped to. This means that if the `value` is less than `min`, the function will return `min` as the
+    /// result.</param>
+    /// <param name="max">The `max` parameter represents the maximum value that the `value` parameter can be
+    /// clamped to. This means that if the `value` parameter is greater than `max`, it will be set to
+    /// `max`.</param>
     private static int Clamp(int value, int min, int max)
     {
         if (value < min)

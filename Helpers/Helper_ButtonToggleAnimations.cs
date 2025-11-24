@@ -83,6 +83,18 @@ namespace MTM_WIP_Application_Winforms.Helpers
             }
         }
 
+        /// <summary>
+        /// The function `ShouldAnimate` checks if a button should be animated based on its size and animation
+        /// settings.
+        /// </summary>
+        /// <param name="button">The `ShouldAnimate` method takes a nullable `Button` parameter named `button`.
+        /// This method checks if the button is not null, if animations are enabled, and if the button's width
+        /// and height are both less than or equal to 48. If all conditions are met, it returns true
+        /// indicating</param>
+        /// <returns>
+        /// The method `ShouldAnimate` returns a boolean value, indicating whether the button should be animated
+        /// or not.
+        /// </returns>
         private static bool ShouldAnimate(Button? button)
         {
             if (button == null)
@@ -98,6 +110,19 @@ namespace MTM_WIP_Application_Winforms.Helpers
             return button.Width <= 48 && button.Height <= 48;
         }
 
+        /// <summary>
+        /// The function `EnsureAnimator` ensures that a `Control_TextAnimationSequence` animator is created and
+        /// configured with the specified interval and target button.
+        /// </summary>
+        /// <param name="animator">This method `EnsureAnimator` takes in three parameters:</param>
+        /// <param name="components">`components` is an `IContainer` object that may contain references to other
+        /// components in the application. It is used in the `EnsureAnimator` method to create a new
+        /// `Control_TextAnimationSequence` object if it is not already initialized.</param>
+        /// <param name="Button">The `EnsureAnimator` method takes in three parameters:</param>
+        /// <returns>
+        /// The method `EnsureAnimator` is returning the `animator` object after setting its `TargetButton`
+        /// property to the `targetButton` parameter.
+        /// </returns>
         private static Control_TextAnimationSequence? EnsureAnimator(
             ref Control_TextAnimationSequence? animator,
             IContainer? components,

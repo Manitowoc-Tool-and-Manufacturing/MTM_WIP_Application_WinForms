@@ -8,15 +8,6 @@ namespace MTM_WIP_Application_Winforms.Helpers
 
     public static class Helper_Database_Variables
     {
-        #region Database Configuration Constants
-
-        /// <summary>
-        /// Test database name for integration testing. Matches the database created during test setup.
-        /// </summary>
-        public const string TestDatabaseName = "mtm_wip_application_winforms_test";
-
-        #endregion
-
         #region Connection String
 
         public static string GetConnectionString(string? server, string? database, string? uid, string? password)
@@ -36,7 +27,7 @@ namespace MTM_WIP_Application_Winforms.Helpers
             }
         }
 
-        #endregion
+        #endregion Connection String
 
         #region Log File Path
 
@@ -78,12 +69,7 @@ namespace MTM_WIP_Application_Winforms.Helpers
             }
         }
 
-        // Keep the synchronous version for backward compatibility, but mark as obsolete
-        [Obsolete("Use GetLogFilePathAsync for better async performance")]
-        public static string GetLogFilePath(string server, string userName) =>
-            GetLogFilePathAsync(server, userName).GetAwaiter().GetResult();
-
-        #endregion
+        #endregion Log File Path
     }
 
     #endregion

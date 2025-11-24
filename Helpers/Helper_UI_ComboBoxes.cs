@@ -26,11 +26,6 @@ namespace MTM_WIP_Application_Winforms.Helpers
         private static readonly DataTable ComboBoxLocation_DataTable = new();
         private static readonly DataTable ComboBoxUser_DataTable = new();
         private static readonly DataTable ComboBoxItemType_DataTable = new();
-        private static readonly MySqlDataAdapter ComboBoxPart_DataAdapter = new();
-        private static readonly MySqlDataAdapter ComboBoxOperation_DataAdapter = new();
-        private static readonly MySqlDataAdapter ComboBoxLocation_DataAdapter = new();
-        private static readonly MySqlDataAdapter ComboBoxUser_DataAdapter = new();
-        private static readonly MySqlDataAdapter ComboBoxItemType_DataAdapter = new();
 
         #endregion
 
@@ -639,82 +634,6 @@ namespace MTM_WIP_Application_Winforms.Helpers
 
         #endregion
 
-        #region ComboBoxValidation
-
-        public static bool ValidateComboBoxItem(ComboBox comboBox, string placeholder)
-        {
-            if (comboBox == null)
-            {
-                return false;
-            }
-
-            if (comboBox.DataSource is not DataTable dt)
-            {
-                return false;
-            }
-
-            string text = comboBox.Text?.Trim() ?? string.Empty;
-            string displayMember = comboBox.DisplayMember;
-
-            if (string.IsNullOrWhiteSpace(displayMember) || !dt.Columns.Contains(displayMember))
-            {
-                return false;
-            }
-
-            if (string.IsNullOrWhiteSpace(text))
-            {
-                comboBox.ForeColor = Model_Application_Variables.UserUiColors.ComboBoxErrorForeColor ?? Color.Red;
-                comboBox.Text = placeholder;
-                if (comboBox.Items.Count > 0)
-                {
-                    comboBox.SelectedIndex = 0;
-                }
-
-                return false;
-            }
-
-            if (text.Equals(placeholder, StringComparison.OrdinalIgnoreCase))
-            {
-                comboBox.ForeColor = Model_Application_Variables.UserUiColors.ComboBoxErrorForeColor ?? Color.Red;
-                if (comboBox.Items.Count > 0)
-                {
-                    comboBox.SelectedIndex = 0;
-                }
-
-                return true;
-            }
-
-            bool found = false;
-            foreach (DataRow row in dt.Rows)
-            {
-                string? value = row[displayMember]?.ToString();
-                if (!string.IsNullOrEmpty(value) && value.Equals(text, StringComparison.OrdinalIgnoreCase))
-                {
-                    found = true;
-                    break;
-                }
-            }
-
-            if (found)
-            {
-                comboBox.ForeColor = Model_Application_Variables.UserUiColors.ComboBoxForeColor ?? Color.Black;
-                return true;
-            }
-            else
-            {
-                comboBox.ForeColor = Model_Application_Variables.UserUiColors.ComboBoxErrorForeColor ?? Color.Red;
-                comboBox.Text = placeholder;
-                if (comboBox.Items.Count > 0)
-                {
-                    comboBox.SelectedIndex = 0;
-                }
-
-                return false;
-            }
-        }
-
-        #endregion
-
         #region DataTable Merge Helpers
 
         /// <summary>
@@ -805,20 +724,6 @@ namespace MTM_WIP_Application_Winforms.Helpers
         #endregion
 
         #region ComboBoxUIHelpers
-
-        public static void ApplyStandardComboBoxProperties(ComboBox comboBox, bool ownerDraw = false)
-        {
-            if (comboBox == null)
-            {
-                return;
-            }
-
-            comboBox.AutoCompleteMode = AutoCompleteMode.SuggestAppend;
-            comboBox.AutoCompleteSource = AutoCompleteSource.ListItems;
-            comboBox.FormattingEnabled = true;
-            comboBox.DropDownStyle = ComboBoxStyle.DropDown;
-            comboBox.DrawMode = ownerDraw ? DrawMode.OwnerDrawVariable : DrawMode.Normal;
-        }
 
         public static void DeselectAllComboBoxText(Control parent) => ComboBoxHelpers.DeselectAllComboBoxText(parent);
 

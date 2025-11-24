@@ -14,6 +14,16 @@ namespace MTM_WIP_Application_Winforms.Helpers
     {
         #region Helpers
 
+        /// <summary>
+        /// The functions provided are used to check if a DataTable has any specified columns and to retrieve
+        /// the value of a specified column in a DataRow case-insensitively.
+        /// </summary>
+        /// <param name="DataTable">A DataTable represents a table of in-memory data. It consists of rows and
+        /// columns, similar to a database table.</param>
+        /// <returns>
+        /// In the `HasAnyColumn` method, a boolean value is being returned to indicate whether any of the
+        /// column names in the `DataTable` match any of the candidate names provided.
+        /// </returns>
         private static bool HasAnyColumn(DataTable table, params string[] candidateNames)
         {
             foreach (DataColumn col in table.Columns)
@@ -27,6 +37,12 @@ namespace MTM_WIP_Application_Winforms.Helpers
             return false;
         }
 
+        /// <summary>
+        /// The function `GetValueCaseInsensitive` retrieves a value from a DataRow using a case-insensitive
+        /// search based on the provided candidate column names.
+        /// </summary>
+        /// <param name="DataRow">A DataRow is a single row of data within a DataTable. It represents a record
+        /// in a tabular format and contains values corresponding to columns in the DataTable.</param>
         private static string? GetValueCaseInsensitive(DataRow row, params string[] candidateNames)
         {
             foreach (DataColumn col in row.Table.Columns)
