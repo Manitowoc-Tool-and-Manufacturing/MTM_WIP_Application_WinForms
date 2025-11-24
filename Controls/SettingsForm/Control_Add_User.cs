@@ -54,7 +54,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
                     ["DefaultSelection"] = true
                 });
             Control_Add_User_RadioButton_NormalUser.Checked = true;
-            
+
             // Wire up Developer radio button (roleId = 4)
             Service_DebugTracer.TraceUIAction("DEVELOPER_ROLE_WIRED", nameof(Control_Add_User),
                 new Dictionary<string, object>
@@ -120,7 +120,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
 
         public void SetProgressControls(ToolStripProgressBar progressBar, ToolStripStatusLabel statusLabel)
         {
-            _progressHelper = Helper_StoredProcedureProgress.Create(progressBar, statusLabel, 
+            _progressHelper = Helper_StoredProcedureProgress.Create(progressBar, statusLabel,
                 this.FindForm() ?? throw new InvalidOperationException("Control must be added to a form"));
         }
 
@@ -172,7 +172,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
         private async void Control_Add_User_Button_Save_Click(object sender, EventArgs e)
         {
             string userName = string.Empty; // Declare outside try block for catch access
-            
+
             try
             {
                 Control_Add_User_Button_Save.Enabled = false;
@@ -253,15 +253,15 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
                 await Task.Delay(100);
 
                 UpdateProgress(40, "Creating user account...");
-                
+
                 // Use DAO method with Model_Dao_Result pattern
                 string lastShownVersion = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version?.ToString() ?? string.Empty;
-                
+
                 // Use default connection values for new user (they can change them later in settings)
                 string wipServerAddress = string.IsNullOrWhiteSpace(Model_Shared_Users.WipServerAddress) ? "172.16.1.104" : Model_Shared_Users.WipServerAddress;
                 string database = string.IsNullOrWhiteSpace(Model_Shared_Users.Database) ? "MTM_WIP_Application_Winforms" : Model_Shared_Users.Database;
                 string wipServerPort = string.IsNullOrWhiteSpace(Model_Shared_Users.WipServerPort) ? "3306" : Model_Shared_Users.WipServerPort;
-                
+
                 var createUserResult = await Dao_User.CreateUserAsync(
                     userName,
                     fullName,
@@ -293,7 +293,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
                 }
 
                 UpdateProgress(60, "Retrieving user information...");
-                
+
                 // Get the created user to retrieve the ID
                 var getUserResult = await Dao_User.GetUserByUsernameAsync(userName);
 
@@ -323,7 +323,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
                 }
 
                 UpdateProgress(80, "Assigning user role...");
-                
+
                 // Add user role assignment using DAO method
                 var addRoleResult = await Dao_User.AddUserRoleAsync(userId, roleId, Environment.UserName);
 
@@ -400,32 +400,61 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
 
         private void ShowProgress(string status = "Loading...")
         {
-            _progressHelper?.ShowProgress(status);
+            if (_progressHelper != null)
+            {
+                _progressHelper.ShowProgress(status);
+            }
+            // No fallback needed for just showing progress spinner
         }
 
         private void UpdateProgress(int progress, string status)
         {
-            _progressHelper?.UpdateProgress(progress, status);
+            if (_progressHelper != null)
+            {
+                _progressHelper.UpdateProgress(progress, status);
+            }
         }
 
         private void HideProgress()
         {
-            _progressHelper?.HideProgress();
+            if (_progressHelper != null)
+            {
+                _progressHelper.HideProgress();
+            }
         }
 
         private void UpdateStatus(string message)
         {
-            _progressHelper?.UpdateStatus(message);
+            if (_progressHelper != null)
+            {
+                _progressHelper.UpdateStatus(message);
+            }
         }
 
         private void ShowError(string errorMessage)
         {
-            _progressHelper?.ShowError(errorMessage);
+            if (_progressHelper != null)
+            {
+                _progressHelper.ShowError(errorMessage);
+            }
+            else
+            {
+                // Fallback if progress helper is not initialized
+                Service_ErrorHandler.ShowWarning(errorMessage);
+            }
         }
 
         private void ShowSuccess(string successMessage)
         {
-            _progressHelper?.ShowSuccess(successMessage);
+            if (_progressHelper != null)
+            {
+                _progressHelper.ShowSuccess(successMessage);
+            }
+            else
+            {
+                // Fallback if progress helper is not initialized
+                Service_ErrorHandler.ShowWarning(successMessage);
+            }
         }
 
         #endregion

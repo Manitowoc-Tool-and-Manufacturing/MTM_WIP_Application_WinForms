@@ -37,7 +37,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
                 });
 
             InitializeComponent();
-            
+
             Service_DebugTracer.TraceUIAction("THEME_APPLICATION", nameof(Control_Edit_User),
                 new Dictionary<string, object>
                 {
@@ -142,7 +142,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             {
                 userName = drv["User"]?.ToString();
             }
-            
+
             if (!string.IsNullOrWhiteSpace(userName))
             {
                 var userResult = await Dao_User.GetUserByUsernameAsync(userName);
@@ -165,7 +165,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
                     !string.IsNullOrWhiteSpace(userRow["VisualUserName"]?.ToString());
                 Control_Edit_User_TextBox_VisualUserName.Text = userRow["VisualUserName"]?.ToString() ?? "";
                 Control_Edit_User_TextBox_VisualPassword.Text = userRow["VisualPassword"]?.ToString() ?? "";
-                
+
                 // Use correct column name 'ID' from usr_users table (not 'p_ID')
                 int userId = Convert.ToInt32(userRow["ID"]);
                 var roleResult = await Dao_User.GetUserRoleIdAsync(userId);
@@ -185,7 +185,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             try
             {
                 Control_Edit_User_Button_Save.Enabled = false;
-                
+
                 if (Control_Edit_User_ComboBox_Users.Text is not { } userName)
                 {
                     StatusMessageChanged?.Invoke(this, "Please select a user to edit.");
@@ -268,12 +268,13 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
                 }
 
                 UserEdited?.Invoke(this, EventArgs.Empty);
-                StatusMessageChanged?.Invoke(this, "User updated successfully!");
+                Service_ErrorHandler.ShowInformation("User updated successfully!", "Success");
+                ClearForm();
             }
             catch (Exception ex)
             {
                 LoggingUtility.LogApplicationError(ex);
-                StatusMessageChanged?.Invoke(this, $"Error updating user: {ex.Message}");
+                Service_ErrorHandler.ShowWarning($"Error updating user: {ex.Message}");
             }
             finally
             {
@@ -281,8 +282,29 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             }
         }
 
-        private void Control_Edit_User_Button_Clear_Click(object? sender, EventArgs e) =>
-            Control_Edit_User_ComboBox_Users_SelectedIndexChanged(this, EventArgs.Empty);
+        private void Control_Edit_User_Button_Clear_Click(object? sender, EventArgs e) => ClearForm();
+
+        private void ClearForm()
+        {
+            Control_Edit_User_ComboBox_Users.SelectedIndex = -1;
+            Control_Edit_User_TextBox_FirstName.Clear();
+            Control_Edit_User_TextBox_LastName.Clear();
+            Control_Edit_User_TextBox_UserName.Clear();
+            Control_Edit_User_TextBox_Pin.Clear();
+            Control_Edit_User_TextBox_VisualUserName.Clear();
+            Control_Edit_User_TextBox_VisualPassword.Clear();
+
+            if (Control_Edit_User_ComboBox_Shift.Items.Count > 0)
+                Control_Edit_User_ComboBox_Shift.SelectedIndex = 0;
+
+            Control_Edit_User_RadioButton_NormalUser.Checked = true;
+            Control_Edit_User_CheckBox_VisualAccess.Checked = false;
+            Control_Edit_User_CheckBox_ViewHidePasswords.Checked = false;
+
+            // Reset visual fields state
+            Control_Edit_User_TextBox_VisualUserName.Enabled = false;
+            Control_Edit_User_TextBox_VisualPassword.Enabled = false;
+        }
 
         #endregion
     }

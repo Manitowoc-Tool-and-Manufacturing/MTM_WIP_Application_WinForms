@@ -28,7 +28,7 @@ namespace MTM_WIP_Application_Winforms.Forms.MainForm
         private Helper_StoredProcedureProgress? _progressHelper;
         private Form_ViewErrorReports? _viewErrorReportsForm;
         private Forms.ViewLogs.ViewApplicationLogsForm? _viewApplicationLogsForm;
-    
+
 
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public Service_ConnectionRecoveryManager ConnectionRecoveryManager { get; private set; } = null!;
@@ -66,7 +66,7 @@ namespace MTM_WIP_Application_Winforms.Forms.MainForm
                     });
 
                 InitializeComponent();
-                
+
                 // Resolve shortcut service
                 _shortcutService = Program.ServiceProvider?.GetService<IShortcutService>();
                 if (_shortcutService != null && !string.IsNullOrEmpty(Model_Application_Variables.User))
@@ -269,10 +269,10 @@ namespace MTM_WIP_Application_Winforms.Forms.MainForm
                     {
                         Debug.WriteLine("[DEBUG] [MainForm.ctor] MainForm Shown event triggered.");
                         await MainForm_OnStartup_GetUserFullNameAsync();
-                        
+
                         // Load user settings (AutoExpandPanels, AnimationsEnabled)
                         await MainForm_OnStartup_LoadUserSettingsAsync();
-                        
+
                         Debug.WriteLine("[DEBUG] [MainForm.ctor] User full name loaded.");
 
                         // Configure Development Menu visibility based on username
@@ -954,11 +954,11 @@ namespace MTM_WIP_Application_Winforms.Forms.MainForm
                     string shortcutName = $"Shortcut_QuickButton_{(i + 1):D2}";
                     Keys defaultKey = (Keys)(Keys.F1 + i);
                     Keys quickButtonKey = _shortcutService?.GetShortcutKey(shortcutName) ?? defaultKey;
-                    
+
                     if (keyData == quickButtonKey)
                     {
                         // Trigger QuickButton click
-                        if (MainForm_UserControl_QuickButtons?.quickButtons != null && 
+                        if (MainForm_UserControl_QuickButtons?.quickButtons != null &&
                             i < MainForm_UserControl_QuickButtons.quickButtons.Count)
                         {
                             MainForm_UserControl_QuickButtons.quickButtons[i].PerformClick();
@@ -1395,14 +1395,24 @@ namespace MTM_WIP_Application_Winforms.Forms.MainForm
             }
         }
 
-        // COMMENTED OUT - Help Menu Event Handlers (to be reimplemented later)
-        /*
         #region Help Menu Event Handlers
 
+        private void MainFomr_MenuStrip_Help_Warn()
+        {
+            try
+            {
+                MessageBox.Show("Be aware that not all data in these files are accurate as I have not gotten to updating them yet.", "Help", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+            catch (Exception ex)
+            {
+                Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Medium, controlName: nameof(MainForm));
+            }
+        }
         private void MainForm_MenuStrip_Help_GettingStarted_Click(object sender, EventArgs e)
         {
             try
             {
+                MainFomr_MenuStrip_Help_Warn();
                 OpenHelpFile("getting-started.html");
             }
             catch (Exception ex)
@@ -1417,6 +1427,8 @@ namespace MTM_WIP_Application_Winforms.Forms.MainForm
         {
             try
             {
+
+                MainFomr_MenuStrip_Help_Warn();
                 OpenHelpFile("index.html");
             }
             catch (Exception ex)
@@ -1431,6 +1443,8 @@ namespace MTM_WIP_Application_Winforms.Forms.MainForm
         {
             try
             {
+
+                MainFomr_MenuStrip_Help_Warn();
                 OpenHelpFile("keyboard-shortcuts.html");
             }
             catch (Exception ex)
@@ -1505,7 +1519,7 @@ namespace MTM_WIP_Application_Winforms.Forms.MainForm
         }
 
         #endregion
-        */
+
 
     }
 
