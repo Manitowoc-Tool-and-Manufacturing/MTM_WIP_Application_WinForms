@@ -258,7 +258,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
                 string lastShownVersion = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version?.ToString() ?? string.Empty;
                 
                 // Use default connection values for new user (they can change them later in settings)
-                string wipServerAddress = string.IsNullOrWhiteSpace(Model_Shared_Users.WipServerAddress) ? "localhost" : Model_Shared_Users.WipServerAddress;
+                string wipServerAddress = string.IsNullOrWhiteSpace(Model_Shared_Users.WipServerAddress) ? "172.16.1.104" : Model_Shared_Users.WipServerAddress;
                 string database = string.IsNullOrWhiteSpace(Model_Shared_Users.Database) ? "MTM_WIP_Application_Winforms" : Model_Shared_Users.Database;
                 string wipServerPort = string.IsNullOrWhiteSpace(Model_Shared_Users.WipServerPort) ? "3306" : Model_Shared_Users.WipServerPort;
                 
