@@ -15,7 +15,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
     {
         #region Fields
 
-        internal List<Button>? quickButtons; // Changed from static to instance
+        internal List<Control_QuickButton_Single>? quickButtons; // Changed to use custom control
         public static Forms.MainForm.MainForm? MainFormInstance { get; set; }
         private Helper_StoredProcedureProgress? _progressHelper;
         private readonly IShortcutService? _shortcutService;
@@ -66,37 +66,38 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             Service_DebugTracer.TraceUIAction("TABLE_LAYOUT_SETUP", nameof(Control_QuickButtons),
                 new Dictionary<string, object>
                 {
-                    ["RowCount"] = 10,
+                    ["RowCount"] = 11,
                     ["LayoutType"] = "TableLayoutPanel"
                 });
 
-            Control_QuickButtons_TableLayoutPanel_Main.RowCount = 10;
+            Control_QuickButtons_TableLayoutPanel_Main.RowCount = 11;
             Control_QuickButtons_TableLayoutPanel_Main.RowStyles.Clear();
 
             for (int i = 0; i < 10; i++)
             {
                 Control_QuickButtons_TableLayoutPanel_Main.RowStyles.Add(new RowStyle(SizeType.Percent, 10F));
             }
+            
+            // Add 11th row to fill remaining space and equalize button heights
+            Control_QuickButtons_TableLayoutPanel_Main.RowStyles.Add(new RowStyle(SizeType.Percent, 0F));
 
-            quickButtons = new List<Button>();
+            quickButtons = new List<Control_QuickButton_Single>();
             for (int i = 0; i < 10; i++)
             {
-                var btn = new Button
+                string shortcutId = $"Shortcut_QuickButton_{(i + 1):D2}";
+                string hotkeyText = GetShortcutKey(i);
+
+
+                var btn = new Control_QuickButton_Single
                 {
-                    Name = $"Control_QuickButtons_Button_Button{i + 1}",
-                    Dock = DockStyle.Fill,          // Fill the entire row
-                    Anchor = AnchorStyles.Left | AnchorStyles.Right | AnchorStyles.Top | AnchorStyles.Bottom,
-                    AutoSize = false,               // Don't auto-size the button itself
-                    Margin = new Padding(1),        // 1px margin on all sides
-                    MinimumSize = new Size(0, 0),   // No minimum - let row define size
+                    Name = $"Control_QuickButtons_Button_{i + 1}",
+                    Dock = DockStyle.Fill,
+                    Margin = new Padding(1),
+                    MinimumSize = new Size(0, 0),
                     TabIndex = i + 1,
                     TabStop = false,
-                    UseVisualStyleBackColor = false, // Use explicit colors
-                    BackColor = SystemColors.Control,
-                    ForeColor = SystemColors.ControlText,
-                    FlatStyle = FlatStyle.Standard,
-                    UseMnemonic = false,
-                    ContextMenuStrip = Control_QuickButtons_ContextMenu
+                    ContextMenuStrip = Control_QuickButtons_ContextMenu,
+                    HotkeyText = hotkeyText
                 };
 
                 btn.Click += QuickButton_Click;
@@ -174,7 +175,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                 return;
             }
             // Refresh all button layouts with new adaptive font sizes
-            foreach (Button btn in quickButtons)
+            foreach (var btn in quickButtons)
             {
                 if (btn.Tag != null)
                 {
@@ -182,9 +183,10 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                     string partId = tag.partId?.ToString() ?? "";
                     string operation = tag.operation?.ToString() ?? "";
                     int quantity = tag.quantity != null ? Convert.ToInt32(tag.quantity) : 0;
+                    string hotkeyText = tag.shortcutDisplay?.ToString() ?? "";
 
                     // Repopulate with adaptive font sizes based on new button height
-                    PopulateQuickButtonLayout(btn, partId, operation, quantity);
+                    PopulateQuickButtonLayout(btn, partId, operation, quantity, hotkeyText);
                 }
             }
         }
@@ -193,11 +195,6 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
         {
             try
             {
-
-
-
-
-
 
                 Service_DebugTracer.TraceMethodEntry(new Dictionary<string, object>
                 {
@@ -276,8 +273,6 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                         RefreshButtonLayout();
                     }
 
-
-
                     Service_DebugTracer.TraceMethodExit(null, nameof(Control_QuickButtons), nameof(LoadLast10Transactions));
                     return;
                 }
@@ -302,38 +297,28 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                     // Always set position 1-10, no duplicates
                     int displayPosition = i + 1;
 
-
-
                     if (quickButtons != null)
                     {
-                        // Create structured layout inside button
-                        if (partId != null && operation != null && quantity != null)
-                        {
-                            PopulateQuickButtonLayout(quickButtons[i], partId, operation, quantity.Value);
-                        }
-                        else
-                        {
-                            quickButtons[i].Controls.Clear();
-                            quickButtons[i].Text = string.Empty;
-                        }
+                        string shortcutId = $"Shortcut_QuickButton_{displayPosition:D2}";
+                        string shortcutDisplay = GetShortcutKey(displayPosition - 1);
 
-                        string shortcutId = $"QuickButton_{displayPosition:D2}";
-                        string shortcutDisplay = _shortcutService != null 
-                            ? Helper_UI_Shortcuts.GetShortcutDisplay(shortcutId, _shortcutService, Keys.None)
-                            : $"Alt+{displayPosition % 10}";
+                        // Set all data at once using SetData (includes hotkey, part, operation, quantity)
+                        if (quickButtons[i] is Control_QuickButton_Single singleButton)
+                        {
+                            singleButton.SetData(shortcutDisplay, partId ?? "", operation ?? "", quantity ?? 0);
+                            singleButton.UpdateFontSizes();
+                        }
 
                         string tooltipText = partId != null && operation != null && quantity != null
                             ? $"Part ID: {partId}, Operation: {operation}, Quantity: {quantity}\nPosition: {displayPosition}\nShortcut: {shortcutDisplay}"
                             : $"Position: {displayPosition}\nShortcut: {shortcutDisplay}";
                         Control_QuickButtons_Tooltip.SetToolTip(quickButtons[i], tooltipText);
 
-                        quickButtons[i].Tag = new { partId, operation, quantity, position = displayPosition };
-                        quickButtons[i].Visible = partId != null && operation != null && quantity != null;
+                        quickButtons[i].Tag = new { shortcutDisplay, partId, operation, quantity, position = displayPosition };
+                        quickButtons[i].Visible = shortcutDisplay != null && partId != null && operation != null && quantity != null;
                     }
                     i++;
                 }
-
-
 
                 // Clear remaining buttons
                 if (quickButtons != null && i < quickButtons.Count)
@@ -342,14 +327,15 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                     for (; i < quickButtons.Count; i++)
                     {
                         int displayPosition = i + 1;
-                        string shortcutId = $"QuickButton_{displayPosition:D2}";
-                        string shortcutDisplay = _shortcutService != null 
-                            ? Helper_UI_Shortcuts.GetShortcutDisplay(shortcutId, _shortcutService, Keys.None)
-                            : $"Alt+{displayPosition % 10}";
+
+                        if (quickButtons[i] is Control_QuickButton_Single singleButton)
+                        {
+                            singleButton.SetData(GetShortcutKey(displayPosition - 1), "", "", 0);
+                        }
 
                         quickButtons[i].Controls.Clear();
                         quickButtons[i].Text = string.Empty;
-                        Control_QuickButtons_Tooltip.SetToolTip(quickButtons[i], $"Position: {displayPosition}\nShortcut: {shortcutDisplay}");
+                        Control_QuickButtons_Tooltip.SetToolTip(quickButtons[i], $"Position: {displayPosition}\nShortcut: {GetShortcutKey(displayPosition - 1)}");
                         quickButtons[i].Tag = new
                         {
                             partId = (string?)null,
@@ -369,14 +355,6 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                     int visibleCount = quickButtons.Count(b => b.Visible);
 
                 }
-
-
-
-
-
-
-
-
 
                 Service_DebugTracer.TraceMethodExit(new { VisibleButtons = quickButtons?.Count(b => b.Visible) ?? 0 },
                     nameof(Control_QuickButtons), nameof(LoadLast10Transactions));
@@ -422,194 +400,24 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             Control_QuickButtons_TableLayoutPanel_Main.ResumeLayout();
         }
 
-        private void PopulateQuickButtonLayout(Button button, string partId, string operation, int quantity)
+        private void PopulateQuickButtonLayout(Control_QuickButton_Single button, string partId, string operation, int quantity, string hotkeyText)
         {
-            button.Controls.Clear();
-            button.Text = string.Empty;
+            // Update the custom control's data properties
+            button.PartId = partId;
+            button.Operation = operation;
+            button.Quantity = quantity;
+            button.HotkeyText = hotkeyText;
 
-            // Button configuration: Auto-fill row, minimal padding
-            button.Padding = new Padding(4);
-            button.AutoSize = false; // Button fills row, doesn't auto-size
-            button.UseVisualStyleBackColor = false; // Need to set BackColor for hover effects
-            button.BackColor = SystemColors.Control;
-            button.ForeColor = SystemColors.ControlText;
-            button.FlatStyle = FlatStyle.Flat; // Flat style for custom hover effects
-            button.FlatAppearance.BorderSize = 1;
-            button.FlatAppearance.BorderColor = SystemColors.ControlDark;
-
-            // Register shortcut for this button if it has a position
-            if (button.Tag != null)
-            {
-                dynamic tag = button.Tag;
-                int position = tag.position;
-                string shortcutId = $"QuickButton_{position:D2}";
-                
-                // Register with shortcut service if not already registered
-                // This ensures the shortcut is available for configuration
-                // Note: We don't await here as this is UI thread, registration is fast or cached
-                if (_shortcutService != null)
-                {
-                    // Check if shortcut is reserved/registered
-                    // If not, we could register it, but shortcuts are typically pre-defined in JSON
-                }
-            }
-
-            // Calculate adaptive font size based on button height
-            // Base calculation: button height / 6 for Part ID, / 8 for Op/Qty
-            float buttonHeight = Math.Max(button.Height, 40); // Minimum 40px for safety
-            float partIdFontSize = Math.Max(8f, Math.Min(14f, buttonHeight / 4.5f)); // 8-14pt range
-            float detailFontSize = Math.Max(7f, Math.Min(11f, buttonHeight / 6f));   // 7-11pt range
-
-            // TableLayoutPanel: Fill button completely, constrained to button size
-            var tableLayout = new TableLayoutPanel
-            {
-                Dock = DockStyle.Fill,
-                ColumnCount = 2,
-                RowCount = 2,
-                AutoSize = false,  // Don't auto-size - stay within button bounds
-                Padding = new Padding(2),
-                Margin = Padding.Empty,
-                BackColor = Color.Transparent
-            };
-
-            // Columns: 50% / 50%
-            tableLayout.ColumnStyles.Clear();
-            tableLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
-            tableLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
-
-            // Rows: First row larger for Part ID, second row for Op/Qty
-            tableLayout.RowStyles.Clear();
-            tableLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 55F)); // Part ID row
-            tableLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 45F)); // Op/Qty row
-
-            // Part ID Label: Bold, adaptive font, centered, spans both columns
-            var lblPartId = new Label
-            {
-                Text = partId,
-                Dock = DockStyle.Fill,
-                TextAlign = ContentAlignment.MiddleCenter,
-                Font = new Font("Segoe UI", partIdFontSize, FontStyle.Bold, GraphicsUnit.Point),
-                AutoSize = false,  // Don't auto-size - fit within cell
-                AutoEllipsis = true, // Show ... if text too long
-                BackColor = Color.Transparent,
-                Margin = new Padding(2, 0, 2, 0),
-                Padding = Padding.Empty
-            };
-            tableLayout.Controls.Add(lblPartId, 0, 0);
-            tableLayout.SetColumnSpan(lblPartId, 2);
-
-            // Operation Label: Adaptive font, centered, left column
-            var lblOperation = new Label
-            {
-                Text = $"Op: {operation}",
-                Dock = DockStyle.Fill,
-                TextAlign = ContentAlignment.MiddleCenter,
-                Font = new Font("Segoe UI", detailFontSize, FontStyle.Regular, GraphicsUnit.Point),
-                AutoSize = false,  // Don't auto-size - fit within cell
-                AutoEllipsis = true, // Show ... if text too long
-                BackColor = Color.Transparent,
-                Margin = new Padding(2, 0, 1, 0),
-                Padding = Padding.Empty
-            };
-            tableLayout.Controls.Add(lblOperation, 0, 1);
-
-            // Quantity Label: Adaptive font, centered, right column
-            var lblQuantity = new Label
-            {
-                Text = $"Qty: {quantity}",
-                Dock = DockStyle.Fill,
-                TextAlign = ContentAlignment.MiddleCenter,
-                Font = new Font("Segoe UI", detailFontSize, FontStyle.Regular, GraphicsUnit.Point),
-                AutoSize = false,  // Don't auto-size - fit within cell
-                AutoEllipsis = true, // Show ... if text too long
-                BackColor = Color.Transparent,
-                Margin = new Padding(1, 0, 2, 0),
-                Padding = Padding.Empty
-            };
-            tableLayout.Controls.Add(lblQuantity, 1, 1);
-
-            button.Controls.Add(tableLayout);
-
-            // Wire up mouse events for hover/click effects
-            // Note: With nested controls (labels), we need to wire events to both button and children
-            button.MouseEnter += QuickButton_MouseEnter;
-            button.MouseLeave += QuickButton_MouseLeave;
-            button.MouseDown += QuickButton_MouseDown;
-            button.MouseUp += QuickButton_MouseUp;
-
-            // Wire child control events to propagate to button
-            WireMouseEventsToChildren(button, tableLayout);
-            WireMouseEventsToChildren(button, lblPartId);
-            WireMouseEventsToChildren(button, lblOperation);
-            WireMouseEventsToChildren(button, lblQuantity);
-
-            // Pass clicks through from labels to button
-            lblPartId.Click += (s, e) => button.PerformClick();
-            lblOperation.Click += (s, e) => button.PerformClick();
-            lblQuantity.Click += (s, e) => button.PerformClick();
+            // Update font sizes for current height
+            button.UpdateFontSizes();
         }
 
         /// <summary>
         /// Wires mouse events from child controls to propagate to parent button for hover/click effects
         /// </summary>
-        private void WireMouseEventsToChildren(Button parentButton, Control childControl)
+        private void WireMouseEventsToChildren(Control parentButton, Control childControl)
         {
-            childControl.MouseEnter += (s, e) => QuickButton_MouseEnter(parentButton, e);
-            childControl.MouseLeave += (s, e) => QuickButton_MouseLeave(parentButton, e);
-            childControl.MouseDown += (s, e) => QuickButton_MouseDown(parentButton, e);
-            childControl.MouseUp += (s, e) => QuickButton_MouseUp(parentButton, e);
-        }
-
-        /// <summary>
-        /// Handles mouse enter for hover effect using system colors
-        /// </summary>
-        private void QuickButton_MouseEnter(object? sender, EventArgs e)
-        {
-            if (sender is Button btn)
-            {
-                btn.BackColor = SystemColors.ControlLight;
-            }
-        }
-
-        /// <summary>
-        /// Handles mouse leave to restore normal color
-        /// </summary>
-        private void QuickButton_MouseLeave(object? sender, EventArgs e)
-        {
-            if (sender is Button btn)
-            {
-                btn.BackColor = SystemColors.Control;
-            }
-        }
-
-        /// <summary>
-        /// Handles mouse down for pressed effect using system colors
-        /// </summary>
-        private void QuickButton_MouseDown(object? sender, MouseEventArgs e)
-        {
-            if (sender is Button btn)
-            {
-                btn.BackColor = SystemColors.ControlDark;
-            }
-        }
-
-        /// <summary>
-        /// Handles mouse up to restore hover or normal color
-        /// </summary>
-        private void QuickButton_MouseUp(object? sender, MouseEventArgs e)
-        {
-            if (sender is Button btn)
-            {
-                // Check if mouse is still over button - if yes, use hover color, else normal color
-                if (btn.ClientRectangle.Contains(btn.PointToClient(Cursor.Position)))
-                {
-                    btn.BackColor = SystemColors.ControlLight;
-                }
-                else
-                {
-                    btn.BackColor = SystemColors.Control;
-                }
-            }
+            // No longer needed - UserControl handles clicks directly
         }
 
         private static void SetComboBoxText(object control, string fieldName, string value)
@@ -701,7 +509,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
 
         private void QuickButton_Click(object? sender, EventArgs? e) // Changed from static to instance method
         {
-            if (sender is not Button btn)
+            if (sender is not Control_QuickButton_Single btn)
             {
                 return;
             }
@@ -849,7 +657,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
 
         private async void MenuItemEdit_Click(object? sender, EventArgs? e)
         {
-                if (Control_QuickButtons_ContextMenu.SourceControl is Button btn && btn.Tag != null && quickButtons != null)
+                if (Control_QuickButtons_ContextMenu.SourceControl is Control_QuickButton_Single btn && btn.Tag != null && quickButtons != null)
             {
                 int idx = quickButtons.IndexOf(btn);
                 int position = idx + 1; // Convert 0-based index to 1-based position
@@ -869,7 +677,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                 {
                     // Check if the edited values create a duplicate (same PartID + Operation already exists)
                     bool isDuplicate = false;
-                    foreach (Button otherBtn in quickButtons)
+                    foreach (var otherBtn in quickButtons)
                     {
                         if (otherBtn == btn) continue; // Skip the current button being edited
 
@@ -959,7 +767,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
 
         private async void MenuItemRemove_Click(object? sender, EventArgs? e)
         {
-            if (Control_QuickButtons_ContextMenu.SourceControl is Button btn && quickButtons != null)
+            if (Control_QuickButtons_ContextMenu.SourceControl is Control_QuickButton_Single btn && quickButtons != null)
             {
                 int idx = quickButtons.IndexOf(btn);
                 if (idx >= 0 && btn.Tag is not null)
@@ -1022,6 +830,19 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             }
         }
 
+        private string GetShortcutKey(int index)
+        {
+            if (_shortcutService == null)
+            {
+            return "Error";
+            }
+
+            string shortcutId = $"Shortcut_QuickButton_{(index + 1):D2}";
+            Keys shortcutKey = _shortcutService.GetShortcutKey(shortcutId);
+            
+            return shortcutKey == Keys.None ? string.Empty : shortcutKey.ToString();
+        }
+
         private async void MenuItemReorder_Click(object? sender, EventArgs? e)
         {
             if (quickButtons == null)
@@ -1029,71 +850,11 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                 return;
             }
 
-            using Form_QuickButtonOrder dlg = new(quickButtons);
-            if (dlg.ShowDialog(this) == DialogResult.OK)
-            {
-                List<Button> newOrder = dlg.GetButtonOrder();
-                string user = Model_Application_Variables.User;
-
-                // Remove all quick buttons for the user from the server
-                var deleteResult = await Dao_QuickButtons.DeleteAllQuickButtonsForUserAsync(user);
-                if (!deleteResult.IsSuccess)
-                {
-                    Service_ErrorHandler.HandleDatabaseError(
-                        deleteResult.Exception ?? new Exception(deleteResult.ErrorMessage),
-                        contextData: new Dictionary<string, object>
-                        {
-                            ["User"] = user,
-                            ["Operation"] = "DeleteAllQuickButtons"
-                        },
-                        methodName: nameof(MenuItemReorder_Click),
-                        dbSeverity: Enum_DatabaseEnum_ErrorSeverity.Error);
-                    return;
-                }
-
-                // Re-add them in the exact order shown in ListView
-                for (int i = 0; i < newOrder.Count; i++)
-                {
-                    Button btn = newOrder[i];
-                    if (btn.Tag == null) continue; // Skip if no tag
-
-                    dynamic tag = btn.Tag!; // Null-forgiving operator since we checked above
-                    string partId = tag?.partId ?? string.Empty;
-                    string operation = tag?.operation ?? string.Empty;
-                    int quantity = tag?.quantity ?? 0;
-
-                    // Use the new method that doesn't shift - directly insert at position i+1
-                    var addResult = await Dao_QuickButtons.AddQuickButtonAtPositionAsync(user, partId, operation, quantity, i + 1);
-                    if (!addResult.IsSuccess)
-                    {
-                        Service_ErrorHandler.HandleDatabaseError(
-                            addResult.Exception ?? new Exception(addResult.ErrorMessage),
-                            contextData: new Dictionary<string, object>
-                            {
-                                ["User"] = user,
-                                ["Position"] = i + 1,
-                                ["PartId"] = partId,
-                                ["Operation"] = operation,
-                                ["Quantity"] = quantity
-                            },
-                            methodName: nameof(MenuItemReorder_Click),
-                            dbSeverity: Enum_DatabaseEnum_ErrorSeverity.Error);
-                        // Continue with remaining buttons despite error
-                    }
-                }
-
-                // CRITICAL: Cleanup after all adds to ensure data integrity
-                var cleanupResult = await Dao_QuickButtons.CleanupGapsAndDuplicatesAsync(user);
-                if (!cleanupResult.IsSuccess)
-                {
-
-                }
-
-                // CRITICAL: Reload from database to ensure UI matches database state
-                await LoadLast10Transactions(user);
-            }
+            // TODO: Form_QuickButtonOrder needs refactoring to work with Control_QuickButton_Single
+            MessageBox.Show("Reorder functionality temporarily disabled during refactoring.", "Info", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
         #endregion Methods
     }
 }
+  

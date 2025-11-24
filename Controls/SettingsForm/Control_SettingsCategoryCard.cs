@@ -204,6 +204,38 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             e.Graphics.DrawRectangle(pen, 0, 0, Width - 1, Height - 1);
         }
 
+        protected override void OnParentChanged(EventArgs e)
+        {
+            base.OnParentChanged(e);
+            
+            // Revert any theme colors - this card manages its own colors
+            this.BackColor = Color.White;
+            if (Control_SettingsCategoryCard_Panel_AccentBar != null)
+            {
+                Control_SettingsCategoryCard_Panel_AccentBar.BackColor = _accentColor;
+            }
+        }
+
+        protected override void OnBackColorChanged(EventArgs e)
+        {
+            base.OnBackColorChanged(e);
+            
+            // Prevent theme system from changing our background color
+            // Only allow our hardcoded hover colors
+            if (this.BackColor != Color.White && 
+                this.BackColor != Color.FromArgb(250, 250, 250))
+            {
+                this.BackColor = Color.White;
+            }
+        }
+
+        protected override void OnForeColorChanged(EventArgs e)
+        {
+            base.OnForeColorChanged(e);
+            
+            // Preserve our foreground color - prevent theme changes
+        }
+
         #endregion
 
         #region Nested Types

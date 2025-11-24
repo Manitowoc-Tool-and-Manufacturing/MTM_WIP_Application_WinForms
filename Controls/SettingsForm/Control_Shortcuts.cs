@@ -12,16 +12,18 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
     {
         public event EventHandler? ShortcutsUpdated;
         public event EventHandler<string>? StatusMessageChanged;
+        public event EventHandler? RequestNavigationHome;
         private readonly IShortcutService? _shortcutService;
 
         public Control_Shortcuts()
         {
             InitializeComponent();
             _shortcutService = Program.ServiceProvider?.GetService<IShortcutService>();
-            
-            // Wire up reset button
+
+            // Wire up buttons
             Control_Shortcuts_Button_Reset.Click += Control_Shortcuts_Button_Reset_Click;
-            
+            Control_Shortcuts_Button_Home.Click += (s, e) => RequestNavigationHome?.Invoke(this, EventArgs.Empty);
+
             _ = LoadShortcuts();
         }
 
@@ -29,8 +31,16 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
         {
             try
             {
-                Control_Shortcuts_FlowLayout_Cards.Controls.Clear();
-                Control_Shortcuts_FlowLayout_Cards.SuspendLayout();
+                // Clear existing content in all cards
+                Control_Shortcuts_Card_Inventory.ClearContent();
+                Control_Shortcuts_Card_Remove.ClearContent();
+                Control_Shortcuts_Card_Transfer.ClearContent();
+                Control_Shortcuts_Card_AdvancedInventory.ClearContent();
+                Control_Shortcuts_Card_AdvancedRemove.ClearContent();
+                Control_Shortcuts_Card_QuickButtons.ClearContent();
+                Control_Shortcuts_Card_Navigation.ClearContent();
+                Control_Shortcuts_Card_Transactions.ClearContent();
+                Control_Shortcuts_Card_General.ClearContent();
 
                 if (_shortcutService == null)
                 {
@@ -42,18 +52,51 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
                 await _shortcutService.InitializeAsync(Core_WipAppVariables.User);
                 var shortcuts = _shortcutService.GetAllShortcuts();
 
+                LoggingUtility.Log($"[Control_Shortcuts] Loaded {shortcuts.Count} shortcuts from service.");
+
                 // Group shortcuts by category
                 var groupedShortcuts = shortcuts
-                    .GroupBy(s => GetShortcutGroup(s.Name))
+                    .GroupBy(s => GetShortcutCategory(s))
                     .OrderBy(g => g.Key);
+
+                var populatedCards = new HashSet<Control_SettingsCollapsibleCard>();
 
                 foreach (var group in groupedShortcuts)
                 {
-                    var card = CreateCategoryCard(group.Key, group.ToList());
-                    Control_Shortcuts_FlowLayout_Cards.Controls.Add(card);
+                    LoggingUtility.Log($"[Control_Shortcuts] Processing category group: '{group.Key}' with {group.Count()} shortcuts.");
+                    var card = GetCardForCategory(group.Key);
+                    if (card != null)
+                    {
+                        PopulateCard(card, group.ToList());
+                        populatedCards.Add(card);
+                    }
+                    else
+                    {
+                        LoggingUtility.Log($"[Control_Shortcuts] Warning: No card found for category '{group.Key}'");
+                    }
                 }
 
-                Control_Shortcuts_FlowLayout_Cards.ResumeLayout();
+                // Ensure all cards are sized correctly and visibility is set
+                foreach (Control ctrl in Control_Shortcuts_FlowLayoutPanel_Cards.Controls)
+                {
+                    if (ctrl is Control_SettingsCollapsibleCard card)
+                    {
+                        if (populatedCards.Contains(card))
+                        {
+                            card.Visible = true;
+                            // Width is handled by Dock=Fill in TableLayout
+                            card.AdjustHeight();
+                        }
+                        else
+                        {
+                            card.Visible = false;
+                        }
+                    }
+                }
+
+                // Force layout update
+                Control_Shortcuts_FlowLayoutPanel_Cards.PerformLayout();
+                Control_Shortcuts_Panel_ScrollContainer.PerformLayout();
             }
             catch (Exception ex)
             {
@@ -62,43 +105,59 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             }
         }
 
-        private Control_SettingsCollapsibleCard CreateCategoryCard(string category, List<Model_Shortcut> shortcuts)
+        private Control_SettingsCollapsibleCard? GetCardForCategory(string category)
         {
-            var card = new Control_SettingsCollapsibleCard
+            return category switch
             {
-                CardTitle = GetCategoryDisplayName(category),
-                CardDescription = GetCategoryDescription(category),
-                CardIcon = GetCategoryIcon(category),
-                Width = Control_Shortcuts_FlowLayout_Cards.Width - 25, // Account for scrollbar
-                Anchor = AnchorStyles.Left | AnchorStyles.Right
+                "Inventory" => Control_Shortcuts_Card_Inventory,
+                "Remove" => Control_Shortcuts_Card_Remove,
+                "Transfer" => Control_Shortcuts_Card_Transfer,
+                "Advanced Inventory" => Control_Shortcuts_Card_AdvancedInventory,
+                "Advanced Remove" => Control_Shortcuts_Card_AdvancedRemove,
+                "Quick Buttons" => Control_Shortcuts_Card_QuickButtons,
+                "Navigation" => Control_Shortcuts_Card_Navigation,
+                "Transactions" => Control_Shortcuts_Card_Transactions,
+                _ => Control_Shortcuts_Card_General
             };
+        }
 
+        private void PopulateCard(Control_SettingsCollapsibleCard card, List<Model_Shortcut> shortcuts)
+        {
             // Create a panel for the content to ensure proper layout
             var contentPanel = new TableLayoutPanel
             {
                 Dock = DockStyle.Top,
                 AutoSize = true,
                 ColumnCount = 3,
-                RowCount = shortcuts.Count,
-                Padding = new Padding(0, 5, 0, 5)
+                RowCount = shortcuts.Count + 1,
+                Padding = new Padding(0),
+                CellBorderStyle = TableLayoutPanelCellBorderStyle.Single,
+                BackColor = Color.White
             };
-            
+
             contentPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F)); // Action Name
             contentPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 30F)); // Shortcut Key
             contentPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 20F)); // Button
 
-            int row = 0;
+            // Header Row
+            contentPanel.Controls.Add(CreateHeaderLabel("Action"), 0, 0);
+            contentPanel.Controls.Add(CreateHeaderLabel("Shortcut"), 1, 0);
+            contentPanel.Controls.Add(CreateHeaderLabel("Edit"), 2, 0);
+
+            int row = 1;
             foreach (var shortcut in shortcuts)
             {
                 string actionName = !string.IsNullOrEmpty(shortcut.Description) ? shortcut.Description : shortcut.Name;
-                
+
                 var lblAction = new Label
                 {
                     Text = actionName,
                     AutoSize = true,
                     Anchor = AnchorStyles.Left | AnchorStyles.Right,
                     TextAlign = ContentAlignment.MiddleLeft,
-                    Font = new Font("Segoe UI", 9.5F)
+                    Font = new Font("Segoe UI", 8.5F),
+                    BackColor = Color.Transparent,
+                    Padding = new Padding(2)
                 };
 
                 var lblShortcut = new Label
@@ -107,28 +166,46 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
                     AutoSize = true,
                     Anchor = AnchorStyles.Left | AnchorStyles.Right,
                     TextAlign = ContentAlignment.MiddleCenter,
-                    Font = new Font("Consolas", 10F, FontStyle.Bold),
-                    BackColor = Color.FromArgb(240, 240, 240),
-                    Padding = new Padding(5)
+                    Font = new Font("Consolas", 9F, FontStyle.Bold),
+                    BackColor = Color.Transparent,
+                    Padding = new Padding(2)
                 };
 
                 var btnChange = new Button
                 {
-                    Text = "Change",
+                    Text = "...",
                     AutoSize = true,
-                    Tag = shortcut
+                    AutoSizeMode = AutoSizeMode.GrowAndShrink,
+                    Tag = shortcut,
+                    Dock = DockStyle.Fill,
+                    FlatStyle = FlatStyle.Flat,
+                    Font = new Font("Segoe UI", 8F)
                 };
+                btnChange.FlatAppearance.BorderSize = 0;
                 btnChange.Click += async (s, e) => await HandleChangeShortcut(shortcut);
 
                 contentPanel.Controls.Add(lblAction, 0, row);
                 contentPanel.Controls.Add(lblShortcut, 1, row);
                 contentPanel.Controls.Add(btnChange, 2, row);
-                
+
                 row++;
             }
 
             card.AddContent(contentPanel);
-            return card;
+        }
+
+        private Label CreateHeaderLabel(string text)
+        {
+            return new Label
+            {
+                Text = text,
+                AutoSize = true,
+                Anchor = AnchorStyles.Left | AnchorStyles.Right,
+                TextAlign = ContentAlignment.MiddleCenter,
+                Font = new Font("Segoe UI", 8.5F, FontStyle.Bold),
+                BackColor = Color.FromArgb(240, 240, 240),
+                Padding = new Padding(2)
+            };
         }
 
         private async Task HandleChangeShortcut(Model_Shortcut shortcut)
@@ -143,16 +220,16 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
                         {
                             // Call service to update - it handles validation
                             var result = await _shortcutService.UpdateShortcutAsync(shortcut.Name, form.SelectedKeys);
-                            
+
                             if (!result.IsSuccess)
                             {
                                 Service_ErrorHandler.ShowWarning(result.ErrorMessage, "Shortcut Update Failed");
                                 return;
                             }
-                            
+
                             // Refresh UI
                             await LoadShortcuts();
-                            
+
                             ShortcutsUpdated?.Invoke(this, EventArgs.Empty);
                             StatusMessageChanged?.Invoke(this, $"Shortcut for '{shortcut.Description}' updated.");
                         }
@@ -187,67 +264,100 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             }
         }
 
-        private string GetShortcutGroup(string actionName)
+        private static readonly Dictionary<string, string> _shortcutCategoryMap = new()
         {
-            if (string.IsNullOrEmpty(actionName)) return "General";
-            if (actionName.StartsWith("Inventory")) return "Inventory";
-            if (actionName.StartsWith("Remove")) return "Remove";
-            if (actionName.StartsWith("Transfer")) return "Transfer";
-            if (actionName.StartsWith("Advanced Inventory")) return "Advanced Inventory";
-            if (actionName.StartsWith("Advanced Remove")) return "Advanced Remove";
-            if (actionName.StartsWith("QuickButton")) return "Quick Buttons";
-            if (actionName.StartsWith("Shortcut_MainForm")) return "Navigation";
-            if (actionName.StartsWith("Shortcut_Transactions")) return "Transactions";
-            
+            { "Shortcut_AdvInv_Import_ImportExcel", "AdvancedInventory" },
+            { "Shortcut_AdvInv_Import_Normal", "AdvancedInventory" },
+            { "Shortcut_AdvInv_Import_OpenExcel", "AdvancedInventory" },
+            { "Shortcut_AdvInv_Import_Save", "AdvancedInventory" },
+            { "Shortcut_AdvInv_Multi_Normal", "AdvancedInventory" },
+            { "Shortcut_AdvInv_Multi_AddLoc", "AdvancedInventory" },
+            { "Shortcut_AdvInv_Multi_Reset", "AdvancedInventory" },
+            { "Shortcut_AdvInv_Multi_SaveAll", "AdvancedInventory" },
+            { "Shortcut_AdvInv_Normal", "AdvancedInventory" },
+            { "Shortcut_AdvInv_Reset", "AdvancedInventory" },
+            { "Shortcut_AdvInv_Save", "AdvancedInventory" },
+            { "Shortcut_AdvInv_Send", "AdvancedInventory" },
+            { "Shortcut_Remove_Delete", "Remove" },
+            { "Shortcut_Remove_Normal", "Remove" },
+            { "Shortcut_Remove_Reset", "AdvancedRemove" },
+            { "Shortcut_Remove_Search", "AdvancedRemove" },
+            { "Shortcut_Remove_Undo", "Remove" },
+            { "Shortcut_Inventory_Advanced", "Inventory" },
+            { "Shortcut_Inventory_Reset", "Inventory" },
+            { "Shortcut_Inventory_Save", "Inventory" },
+            { "Shortcut_Inventory_ToggleRightPanel_Right", "Inventory" },
+            { "Shortcut_Inventory_ToggleRightPanel_Left", "Inventory" },
+            { "Shortcut_Transfer_Reset", "Transfer" },
+            { "Shortcut_Transfer_Search", "Transfer" },
+            { "Shortcut_Transfer_ToggleRightPanel_Right", "Transfer" },
+            { "Shortcut_Transfer_ToggleRightPanel_Left", "Transfer" },
+            { "Shortcut_Transfer_Transfer", "Transfer" },
+            { "Shortcut_MainForm_Tab1", "MainForm" },
+            { "Shortcut_MainForm_Tab2", "MainForm" },
+            { "Shortcut_MainForm_Tab3", "MainForm" },
+            { "Shortcut_QuickButton_01", "QuickButtons" },
+            { "Shortcut_QuickButton_02", "QuickButtons" },
+            { "Shortcut_QuickButton_03", "QuickButtons" },
+            { "Shortcut_QuickButton_04", "QuickButtons" },
+            { "Shortcut_QuickButton_05", "QuickButtons" },
+            { "Shortcut_QuickButton_06", "QuickButtons" },
+            { "Shortcut_QuickButton_07", "QuickButtons" },
+            { "Shortcut_QuickButton_08", "QuickButtons" },
+            { "Shortcut_QuickButton_09", "QuickButtons" },
+            { "Shortcut_QuickButton_10", "QuickButtons" }
+        };
+
+        private string GetShortcutCategory(Model_Shortcut shortcut)
+        {
+            string category = shortcut.Category;
+
+            // Override from static map if available (fixes wrong/missing categories in DB)
+            if (_shortcutCategoryMap.TryGetValue(shortcut.Name, out var mappedCategory))
+            {
+                category = mappedCategory;
+            }
+
+            if (!string.IsNullOrEmpty(category))
+            {
+                return category switch
+                {
+                    "AdvancedInventory" => "Advanced Inventory",
+                    "AdvancedRemove" => "Advanced Remove",
+                    "QuickButtons" => "Quick Buttons",
+                    "MainForm" => "Navigation",
+                    _ => category // Inventory, Remove, Transfer, Transactions match directly
+                };
+            }
+
+            // Fallback: Parse from Name if Category is missing
+            string name = shortcut.Name;
+            if (string.IsNullOrEmpty(name)) return "General";
+
+            // Normalize name to check categories
+            if (name.StartsWith("Shortcut_")) name = name.Substring(9);
+
+            if (name.StartsWith("Inventory")) return "Inventory";
+            if (name.StartsWith("Remove")) return "Remove";
+            if (name.StartsWith("Transfer")) return "Transfer";
+            if (name.StartsWith("AdvancedInventory") || name.StartsWith("Advanced Inventory") || name.StartsWith("AdvInv")) return "Advanced Inventory";
+            if (name.StartsWith("AdvancedRemove") || name.StartsWith("Advanced Remove")) return "Advanced Remove";
+            if (name.StartsWith("QuickButton")) return "Quick Buttons";
+            if (name.StartsWith("MainForm") || name.StartsWith("Navigation")) return "Navigation";
+            if (name.StartsWith("Transactions")) return "Transactions";
+
+            LoggingUtility.Log($"[Control_Shortcuts] Warning: Could not categorize shortcut '{shortcut.Name}'. Defaulting to General.");
             return "General";
         }
 
-        private string GetCategoryDisplayName(string category)
+        private void Control_Shortcuts_Card_Transfer_Load(object sender, EventArgs e)
         {
-            return category switch
-            {
-                "Inventory" => "Inventory Tab",
-                "Remove" => "Remove Tab",
-                "Transfer" => "Transfer Tab",
-                "Advanced Inventory" => "Advanced Inventory",
-                "Advanced Remove" => "Advanced Remove",
-                "Quick Buttons" => "Quick Buttons (Alt+0-9)",
-                "Navigation" => "Navigation",
-                "Transactions" => "Transactions Viewer",
-                _ => category
-            };
+
         }
 
-        private string GetCategoryDescription(string category)
+        private void Control_Shortcuts_TableLayout_ScrollContainer_Paint(object sender, PaintEventArgs e)
         {
-            return category switch
-            {
-                "Inventory" => "Shortcuts for the main Inventory tab operations.",
-                "Remove" => "Shortcuts for the Remove tab operations.",
-                "Transfer" => "Shortcuts for the Transfer tab operations.",
-                "Advanced Inventory" => "Shortcuts for Advanced Inventory management.",
-                "Advanced Remove" => "Shortcuts for Advanced Remove operations.",
-                "Quick Buttons" => "Customizable shortcuts for the Quick Button bar.",
-                "Navigation" => "Global navigation shortcuts.",
-                "Transactions" => "Shortcuts for the Transaction Viewer.",
-                _ => "General application shortcuts."
-            };
-        }
 
-        private string GetCategoryIcon(string category)
-        {
-            return category switch
-            {
-                "Inventory" => "📦",
-                "Remove" => "🗑️",
-                "Transfer" => "↔️",
-                "Advanced Inventory" => "🏭",
-                "Advanced Remove" => "📤",
-                "Quick Buttons" => "⚡",
-                "Navigation" => "🧭",
-                "Transactions" => "📝",
-                _ => "⚙️"
-            };
         }
     }
 }

@@ -16,6 +16,11 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
         /// </summary>
         public event EventHandler? BackToHomeRequested;
 
+        /// <summary>
+        /// Raised when a user is added, edited, or removed.
+        /// </summary>
+        public event EventHandler? UserListChanged;
+
         #endregion
 
         #region Constructors
@@ -62,9 +67,21 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             Control_User_Management_Button_Home.Click += (s, e) => BackToHomeRequested?.Invoke(this, EventArgs.Empty);
 
             // Embedded Control Events
-            Control_User_Management_Control_AddUser.UserAdded += (s, e) => SwitchToMode("None");
-            Control_User_Management_Control_EditUser.UserEdited += (s, e) => SwitchToMode("None");
-            Control_User_Management_Control_RemoveUser.UserRemoved += (s, e) => SwitchToMode("None");
+            Control_User_Management_Control_AddUser.UserAdded += (s, e) => 
+            {
+                SwitchToMode("None");
+                UserListChanged?.Invoke(this, EventArgs.Empty);
+            };
+            Control_User_Management_Control_EditUser.UserEdited += (s, e) => 
+            {
+                SwitchToMode("None");
+                UserListChanged?.Invoke(this, EventArgs.Empty);
+            };
+            Control_User_Management_Control_RemoveUser.UserRemoved += (s, e) => 
+            {
+                SwitchToMode("None");
+                UserListChanged?.Invoke(this, EventArgs.Empty);
+            };
         }
 
 

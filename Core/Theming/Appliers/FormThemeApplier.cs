@@ -3,6 +3,8 @@ using Microsoft.Extensions.Logging;
 using MTM_WIP_Application_Winforms.Core.Theming.Interfaces;
 using MTM_WIP_Application_Winforms.Logging;
 using MTM_WIP_Application_Winforms.Models;
+using MTM_WIP_Application_Winforms.Controls.MainForm;
+using MTM_WIP_Application_Winforms.Controls.SettingsForm;
 
 namespace MTM_WIP_Application_Winforms.Core.Theming.Appliers;
 
@@ -91,6 +93,41 @@ public class FormThemeApplier : ThemeApplierBase
             try
             {
                 // T079: Apply theme even to invisible controls so they're correct when made visible
+                
+                // Skip Control_QuickButton_Single and all its descendants - it manages its own colors
+                if (child is Control_QuickButton_Single)
+                {
+                    Logger?.LogDebug("Skipping Control_QuickButton_Single '{ControlName}' - manages own colors", child.Name);
+                    continue;
+                }
+                
+                // Skip Control_SettingsCategoryCard and all its descendants - it manages its own colors
+                if (child is Control_SettingsCategoryCard)
+                {
+                    Logger?.LogDebug("Skipping Control_SettingsCategoryCard '{ControlName}' - manages own colors", child.Name);
+                    continue;
+                }
+                
+                // Skip if child is inside a Control_QuickButton_Single (check all ancestors up to root)
+                bool isInsideQuickButton = false;
+                Control? checkParent = child.Parent;
+                while (checkParent != null)
+                {
+                    if (checkParent is Control_QuickButton_Single or Control_SettingsCategoryCard)
+                    {
+                        Logger?.LogDebug("Skipping descendant of theme-excluded control: '{ControlName}' (Type: {ControlType})", 
+                            child.Name, child.GetType().Name);
+                        isInsideQuickButton = true;
+                        break;
+                    }
+                    checkParent = checkParent.Parent;
+                }
+                
+                if (isInsideQuickButton)
+                {
+                    continue;
+                }
+                
                 // Find matching applier for this control type
                 var applier = appliers.FirstOrDefault(a => a != this && a.CanApply(child));
 

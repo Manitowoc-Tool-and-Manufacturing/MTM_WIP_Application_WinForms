@@ -19,18 +19,15 @@ namespace MTM_WIP_Application_Winforms.Services
         public async Task InitializeAsync(string userName)
         {
             _currentUserName = userName;
-            bool hasCustom = await RefreshCacheAsync();
+            await RefreshCacheAsync();
 
-            // If no custom shortcuts found (meaning user relies entirely on system defaults or nothing),
-            // load defaults from JSON and populate for user so they have their own copy.
-            if (!hasCustom)
-            {
-                await PopulateDefaultsFromJsonAsync();
-                await RefreshCacheAsync();
-            }
+            // Always check for missing defaults and add them
+            // This ensures that if new defaults are added to the application (like QuickButtons),
+            // existing users will get them added to their profile.
+            await EnsureDefaultsExistAsync();
         }
 
-        private async Task PopulateDefaultsFromJsonAsync()
+        private async Task EnsureDefaultsExistAsync()
         {
             try
             {
@@ -42,10 +39,28 @@ namespace MTM_WIP_Application_Winforms.Services
 
                     if (defaults != null)
                     {
+                        bool addedAny = false;
                         foreach (var shortcut in defaults)
                         {
-                            // Insert as user shortcut since system shortcuts might be empty or read-only
-                            await _dao.UpsertUserShortcutAsync(_currentUserName, shortcut.Name, (int)shortcut.Keys);
+                            // If shortcut is not in cache, add it
+                            if (!_shortcutCache.ContainsKey(shortcut.Name))
+                            {
+                                await _dao.UpsertUserShortcutAsync(_currentUserName, shortcut.Name, (int)shortcut.Keys);
+                                addedAny = true;
+                            }
+                            else
+                            {
+                                // If it exists but category/description might be missing in DB (since we don't store them in user table),
+                                // we rely on the cache being populated from DB.
+                                // But if the DB sys_shortcuts table is missing these entries, the cache might have empty Description/Category.
+                                // We can't easily fix sys_shortcuts from here without a new DAO method.
+                                // However, Control_Shortcuts has fallback logic for Category.
+                            }
+                        }
+
+                        if (addedAny)
+                        {
+                            await RefreshCacheAsync();
                         }
                     }
                 }

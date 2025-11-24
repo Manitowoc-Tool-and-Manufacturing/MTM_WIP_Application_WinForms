@@ -87,19 +87,25 @@
     "Name": "Shortcut_Remove_Reset",
     "Keys": 131154,
     "Description": "Reset Advanced Remove",
-    "Category": "Remove"
+    "Category": "AdvancedRemove"
   },
   {
     "Name": "Shortcut_Remove_Search",
     "Keys": 131155,
     "Description": "Search Advanced Remove",
-    "Category": "Remove"
+    "Category": "AdvancedRemove"
   },
   {
     "Name": "Shortcut_Remove_Undo",
     "Keys": 131162,
     "Description": "Undo Last Deletion",
     "Category": "Remove"
+  },
+  {
+    "Name": "Shortcut_Transactions_Delete",
+    "Keys": 46,
+    "Description": "Delete Selected Transaction",
+    "Category": "Transactions"
   },
   {
     "Name": "Shortcut_Inventory_Advanced",
@@ -181,61 +187,61 @@
   },
   {
     "Name": "Shortcut_QuickButton_01",
-    "Keys": 262193,
+    "Keys": 112,
     "Description": "Quick Button 1",
     "Category": "QuickButtons"
   },
   {
     "Name": "Shortcut_QuickButton_02",
-    "Keys": 262194,
+    "Keys": 113,
     "Description": "Quick Button 2",
     "Category": "QuickButtons"
   },
   {
     "Name": "Shortcut_QuickButton_03",
-    "Keys": 262195,
+    "Keys": 114,
     "Description": "Quick Button 3",
     "Category": "QuickButtons"
   },
   {
     "Name": "Shortcut_QuickButton_04",
-    "Keys": 262196,
+    "Keys": 115,
     "Description": "Quick Button 4",
     "Category": "QuickButtons"
   },
   {
     "Name": "Shortcut_QuickButton_05",
-    "Keys": 262197,
+    "Keys": 116,
     "Description": "Quick Button 5",
     "Category": "QuickButtons"
   },
   {
     "Name": "Shortcut_QuickButton_06",
-    "Keys": 262198,
+    "Keys": 117,
     "Description": "Quick Button 6",
     "Category": "QuickButtons"
   },
   {
     "Name": "Shortcut_QuickButton_07",
-    "Keys": 262199,
+    "Keys": 118,
     "Description": "Quick Button 7",
     "Category": "QuickButtons"
   },
   {
     "Name": "Shortcut_QuickButton_08",
-    "Keys": 262200,
+    "Keys": 119,
     "Description": "Quick Button 8",
     "Category": "QuickButtons"
   },
   {
     "Name": "Shortcut_QuickButton_09",
-    "Keys": 262201,
+    "Keys": 120,
     "Description": "Quick Button 9",
     "Category": "QuickButtons"
   },
   {
     "Name": "Shortcut_QuickButton_10",
-    "Keys": 262192,
+    "Keys": 121,
     "Description": "Quick Button 10",
     "Category": "QuickButtons"
   }

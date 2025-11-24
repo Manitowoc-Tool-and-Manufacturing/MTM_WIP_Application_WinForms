@@ -595,6 +595,13 @@ namespace MTM_WIP_Application_Winforms.Forms.MainForm
                 {
                     Model_Application_Variables.AnimationsEnabled = animResult.Data;
                 }
+
+                // Load ShowTotalSummaryPanel
+                var showTotalResult = await Dao_User.GetShowTotalSummaryPanelAsync(user);
+                if (showTotalResult.IsSuccess)
+                {
+                    Model_Application_Variables.ShowTotalSummaryPanel = showTotalResult.Data;
+                }
             }
             catch (Exception ex)
             {
@@ -939,6 +946,25 @@ namespace MTM_WIP_Application_Winforms.Forms.MainForm
                 {
                     HandlePrintShortcut();
                     return true;
+                }
+
+                // QuickButton shortcuts (F1-F10)
+                for (int i = 0; i < 10; i++)
+                {
+                    string shortcutName = $"Shortcut_QuickButton_{(i + 1):D2}";
+                    Keys defaultKey = (Keys)(Keys.F1 + i);
+                    Keys quickButtonKey = _shortcutService?.GetShortcutKey(shortcutName) ?? defaultKey;
+                    
+                    if (keyData == quickButtonKey)
+                    {
+                        // Trigger QuickButton click
+                        if (MainForm_UserControl_QuickButtons?.quickButtons != null && 
+                            i < MainForm_UserControl_QuickButtons.quickButtons.Count)
+                        {
+                            MainForm_UserControl_QuickButtons.quickButtons[i].PerformClick();
+                            return true;
+                        }
+                    }
                 }
 
                 Keys tab1Key = _shortcutService?.GetShortcutKey("Shortcut_MainForm_Tab1") ?? Core_WipAppVariables.Shortcut_MainForm_Tab1;

@@ -145,6 +145,7 @@ namespace MTM_WIP_Application_Winforms.Forms.Settings
                 HasChanges = true;
             };
             controlShortcuts.StatusMessageChanged += (s, message) => { UpdateStatus(message); };
+            controlShortcuts.RequestNavigationHome += (_, _) => ShowPanel("Home");
             SettingsForm_Panel_Shortcuts.Controls.Add(controlShortcuts);
 
             Control_Theme controlTheme = new() { Dock = DockStyle.Fill };
@@ -171,6 +172,11 @@ namespace MTM_WIP_Application_Winforms.Forms.Settings
 
             Control_User_Management controlUserManagement = new() { Dock = DockStyle.Fill };
             controlUserManagement.BackToHomeRequested += (_, _) => ShowPanel("Home");
+            controlUserManagement.UserListChanged += (_, _) =>
+            {
+                UpdateStatus("User list updated successfully.");
+                HasChanges = true;
+            };
             SettingsForm_Panel_AddUser.Controls.Add(controlUserManagement);
 
             _controlPartManagement = new Control_PartIDManagement { Dock = DockStyle.Fill };

@@ -3,6 +3,8 @@ using MTM_WIP_Application_Winforms.Core.Theming.Interfaces;
 using MTM_WIP_Application_Winforms.Logging;
 using MTM_WIP_Application_Winforms.Models;
 using MTM_WIP_Application_Winforms.Services;
+using MTM_WIP_Application_Winforms.Controls.MainForm;
+using MTM_WIP_Application_Winforms.Controls.SettingsForm;
 
 namespace MTM_WIP_Application_Winforms.Core.Theming.Appliers;
 
@@ -42,6 +44,20 @@ public abstract class ThemeApplierBase : IThemeApplier
     /// <param name="theme">The theme to apply.</param>
     protected virtual void ApplyCommonStyles(Control control, Model_Shared_UserUiColors theme)
     {
+        // Skip Control_QuickButton_Single - it manages its own colors
+        if (control is Control_QuickButton_Single)
+        {
+            Logger.LogDebug("Skipping ApplyCommonStyles for Control_QuickButton_Single '{ControlName}'", control.Name);
+            return;
+        }
+        
+        // Skip Control_SettingsCategoryCard - it manages its own colors
+        if (control is Control_SettingsCategoryCard)
+        {
+            Logger.LogDebug("Skipping ApplyCommonStyles for Control_SettingsCategoryCard '{ControlName}'", control.Name);
+            return;
+        }
+        
         try
         {
             if (theme.ControlBackColor.HasValue)

@@ -357,7 +357,7 @@ namespace MTM_WIP_Application_Winforms.Forms.MainForm
             // MainForm_SplitContainer_Middle.Panel2
             //
             MainForm_SplitContainer_Middle.Panel2.Controls.Add(MainForm_UserControl_QuickButtons);
-            MainForm_SplitContainer_Middle.Size = new Size(884, 400);
+            MainForm_SplitContainer_Middle.Size = new Size(884, 450);
             MainForm_SplitContainer_Middle.SplitterDistance = 739;
             MainForm_SplitContainer_Middle.TabIndex = 93;
             MainForm_SplitContainer_Middle.TabStop = false;
@@ -498,7 +498,7 @@ namespace MTM_WIP_Application_Winforms.Forms.MainForm
             //
             AutoScaleDimensions = new SizeF(96F, 96F);
             AutoScaleMode = AutoScaleMode.Dpi;
-            ClientSize = new Size(900, 525);
+            ClientSize = new Size(950, 600);
             Controls.Add(MainForm_TableLayout);
             Icon = (Icon)resources.GetObject("$this.Icon");
             IsMdiContainer = true;

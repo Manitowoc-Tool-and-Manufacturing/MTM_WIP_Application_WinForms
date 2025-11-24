@@ -1,5 +1,6 @@
 using System.ComponentModel;
 using MTM_WIP_Application_Winforms.Forms.Shared;
+using MTM_WIP_Application_Winforms.Helpers;
 
 namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
 {
@@ -13,13 +14,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
 
         private bool _isExpanded = true;
         private Color _accentColor = Color.FromArgb(0, 120, 212);
-        private readonly Panel _headerPanel;
-        private readonly Label _titleLabel;
-        private readonly Label _descriptionLabel;
-        private readonly Label _iconLabel;
-        private readonly Label _expandIconLabel;
-        private readonly Panel _contentPanel;
-        private readonly Panel _accentBar;
+        private DateTime _lastClickTime = DateTime.MinValue;
 
         #endregion
 
@@ -108,99 +103,40 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
 
         public Control_SettingsCollapsibleCard()
         {
-            // Initialize components programmatically to ensure correct layout
-            this.DoubleBuffered = true;
-            this.Padding = new Padding(1); // Border width
-            this.BackColor = Color.FromArgb(200, 200, 200); // Border color
-
-            // Accent Bar
-            _accentBar = new Panel
+            InitializeComponent();
+            
+            // Wire up events for all header children to ensure clicking anywhere toggles the card
+            if (_headerPanel != null)
             {
-                Dock = DockStyle.Top,
-                Height = 4,
-                BackColor = _accentColor
-            };
-
-            // Header Panel
-            _headerPanel = new Panel
-            {
-                Dock = DockStyle.Top,
-                Height = 60,
-                BackColor = Color.White,
-                Padding = new Padding(10)
-            };
-            _headerPanel.Click += Header_Click;
-            _headerPanel.MouseEnter += Header_MouseEnter;
-            _headerPanel.MouseLeave += Header_MouseLeave;
-
-            // Icon Label
-            _iconLabel = new Label
-            {
-                Text = "⚙️",
-                Font = new Font("Segoe UI Emoji", 24F, FontStyle.Regular, GraphicsUnit.Point),
-                AutoSize = true,
-                Location = new Point(10, 8),
-                BackColor = Color.Transparent
-            };
-            _iconLabel.Click += Header_Click;
-
-            // Title Label
-            _titleLabel = new Label
-            {
-                Text = "Card Title",
-                Font = new Font("Segoe UI", 12F, FontStyle.Bold, GraphicsUnit.Point),
-                ForeColor = _accentColor,
-                AutoSize = true,
-                Location = new Point(60, 10),
-                BackColor = Color.Transparent
-            };
-            _titleLabel.Click += Header_Click;
-
-            // Description Label
-            _descriptionLabel = new Label
-            {
-                Text = "Card description goes here...",
-                Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point),
-                ForeColor = Color.Gray,
-                AutoSize = true,
-                Location = new Point(60, 35),
-                BackColor = Color.Transparent
-            };
-            _descriptionLabel.Click += Header_Click;
-
-            // Expand Icon Label
-            _expandIconLabel = new Label
-            {
-                Text = "▼",
-                Font = new Font("Segoe UI Symbol", 10F, FontStyle.Regular, GraphicsUnit.Point),
-                ForeColor = Color.Gray,
-                AutoSize = true,
-                Anchor = AnchorStyles.Right | AnchorStyles.Top,
-                BackColor = Color.Transparent
-            };
-            _expandIconLabel.Location = new Point(this.Width - 30, 20);
-            _expandIconLabel.Click += Header_Click;
-
-            _headerPanel.Controls.Add(_iconLabel);
-            _headerPanel.Controls.Add(_titleLabel);
-            _headerPanel.Controls.Add(_descriptionLabel);
-            _headerPanel.Controls.Add(_expandIconLabel);
-
-            // Content Panel
-            _contentPanel = new Panel
-            {
-                Dock = DockStyle.Fill,
-                BackColor = Color.White,
-                Padding = new Padding(10)
-            };
-
-            // Add controls to main container
-            this.Controls.Add(_contentPanel);
-            this.Controls.Add(_headerPanel);
-            this.Controls.Add(_accentBar);
-
+                WireUpHeaderEvents(_headerPanel);
+            }
+            
             // Initial state
             UpdateExpandedState();
+        }
+
+        private void WireUpHeaderEvents(Control parent)
+        {
+            foreach (Control child in parent.Controls)
+            {
+                // Skip Labels as they are already wired in Designer to prevent double-firing
+                if (child is not Label)
+                {
+                    // Remove existing handlers first to prevent duplicates if called multiple times
+                    child.Click -= Header_Click;
+                    child.MouseEnter -= Header_MouseEnter;
+                    child.MouseLeave -= Header_MouseLeave;
+
+                    child.Click += Header_Click;
+                    child.MouseEnter += Header_MouseEnter;
+                    child.MouseLeave += Header_MouseLeave;
+                }
+                
+                if (child.HasChildren)
+                {
+                    WireUpHeaderEvents(child);
+                }
+            }
         }
 
         #endregion
@@ -227,8 +163,32 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             AdjustHeight();
         }
 
+        public void AdjustHeight()
+        {
+            if (_isExpanded)
+            {
+                int contentHeight = 0;
+                foreach (Control ctrl in _contentPanel.Controls)
+                {
+                    contentHeight += ctrl.Height + ctrl.Margin.Vertical;
+                }
+                // Header + Accent + Separator + Padding + Content
+                this.Height = 60 + 4 + 1 + 20 + contentHeight; 
+            }
+            else
+            {
+                // Header + Accent + Border
+                this.Height = 60 + 4 + 2;
+            }
+        }
+
         private void Header_Click(object? sender, EventArgs e)
         {
+            // Debounce click to prevent double-toggling
+            if ((DateTime.Now - _lastClickTime).TotalMilliseconds < 300)
+                return;
+
+            _lastClickTime = DateTime.Now;
             IsExpanded = !IsExpanded;
         }
 
@@ -247,27 +207,9 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
         private void UpdateExpandedState()
         {
             _contentPanel.Visible = _isExpanded;
-            _expandIconLabel.Text = _isExpanded ? "▼" : "▶";
+            _separatorLine.Visible = _isExpanded;
+            _expandIconLabel.Text = _isExpanded ? Helper_ButtonToggleAnimations.ArrowDown : Helper_ButtonToggleAnimations.ArrowRight;
             AdjustHeight();
-        }
-
-        private void AdjustHeight()
-        {
-            if (_isExpanded)
-            {
-                int contentHeight = 0;
-                foreach (Control ctrl in _contentPanel.Controls)
-                {
-                    contentHeight += ctrl.Height + ctrl.Margin.Vertical;
-                }
-                // Header + Accent + Padding + Content
-                this.Height = 60 + 4 + 20 + contentHeight; 
-            }
-            else
-            {
-                // Header + Accent + Border
-                this.Height = 60 + 4 + 2;
-            }
         }
 
         protected override void OnResize(EventArgs e)

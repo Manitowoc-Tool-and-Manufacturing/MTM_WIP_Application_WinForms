@@ -177,6 +177,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
                     Model_Application_Variables.ShowTotalSummaryPanel = Control_Themes_CheckBox_ShowTotalSummaryPanel?.Checked ?? false;
 
                     StatusMessageChanged?.Invoke(this, "Settings saved successfully.");
+                    ThemeChanged?.Invoke(this, EventArgs.Empty);
                 }
             }
             catch (Exception ex)

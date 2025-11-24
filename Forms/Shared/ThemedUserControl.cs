@@ -3,6 +3,8 @@ using MTM_WIP_Application_Winforms.Core.Theming;
 using MTM_WIP_Application_Winforms.Core.Theming.Interfaces;
 using MTM_WIP_Application_Winforms.Logging;
 using MTM_WIP_Application_Winforms.Models;
+using MTM_WIP_Application_Winforms.Controls.MainForm;
+using MTM_WIP_Application_Winforms.Controls.SettingsForm;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace MTM_WIP_Application_Winforms.Forms.Shared;
@@ -183,6 +185,23 @@ public class ThemedUserControl : UserControl
                 continue;
             }
 
+            // Skip controls that manage their own colors
+            if (control is Control_QuickButton_Single or Control_SettingsCategoryCard)
+            {
+                continue;
+            }
+
+            // Skip descendants of theme-excluded controls
+            Control? checkParent = control.Parent;
+            while (checkParent != null)
+            {
+                if (checkParent is Control_QuickButton_Single or Control_SettingsCategoryCard)
+                {
+                    goto skipControl;
+                }
+                checkParent = checkParent.Parent;
+            }
+
             // Find matching applier
             var applier = ThemeAppliers?.FirstOrDefault(a => a.CanApply(control));
             
@@ -205,6 +224,8 @@ public class ThemedUserControl : UserControl
             {
                 ApplyThemeToControlHierarchy(control, theme);
             }
+
+            skipControl:;
         }
     }
 
@@ -258,6 +279,23 @@ public class ThemedUserControl : UserControl
         if (control == null || control.IsDisposed)
         {
             return;
+        }
+
+        // Skip controls that manage their own colors
+        if (control is Control_QuickButton_Single or Control_SettingsCategoryCard)
+        {
+            return;
+        }
+
+        // Skip descendants of theme-excluded controls
+        Control? checkParent = control.Parent;
+        while (checkParent != null)
+        {
+            if (checkParent is Control_QuickButton_Single or Control_SettingsCategoryCard)
+            {
+                return;
+            }
+            checkParent = checkParent.Parent;
         }
 
         // Find matching applier
