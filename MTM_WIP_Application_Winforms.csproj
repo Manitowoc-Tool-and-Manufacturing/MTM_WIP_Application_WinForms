@@ -173,5 +173,6 @@
         <EmbeddedResource Remove="Old_Version\**" />
         <None Remove="Old_Version\**" />
     </ItemGroup>
-    
+
+   
 </Project>
