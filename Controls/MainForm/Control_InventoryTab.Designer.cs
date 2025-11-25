@@ -319,10 +319,10 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             Control_InventoryTab_Button_Toggle_RightPanel.Dock = DockStyle.Fill;
             Control_InventoryTab_Button_Toggle_RightPanel.Font = new Font("Segoe UI Emoji", 9F);
             Control_InventoryTab_Button_Toggle_RightPanel.Location = new Point(411, 3);
-            Control_InventoryTab_Button_Toggle_RightPanel.MaximumSize = new Size(32, 32);
-            Control_InventoryTab_Button_Toggle_RightPanel.MinimumSize = new Size(32, 32);
+            Control_InventoryTab_Button_Toggle_RightPanel.MaximumSize = new Size(64, 32);
+            Control_InventoryTab_Button_Toggle_RightPanel.MinimumSize = new Size(64, 32);
             Control_InventoryTab_Button_Toggle_RightPanel.Name = "Control_InventoryTab_Button_Toggle_RightPanel";
-            Control_InventoryTab_Button_Toggle_RightPanel.Size = new Size(32, 32);
+            Control_InventoryTab_Button_Toggle_RightPanel.Size = new Size(64, 32);
             Control_InventoryTab_Button_Toggle_RightPanel.TabIndex = 9;
             Control_InventoryTab_Button_Toggle_RightPanel.TabStop = false;
             Control_InventoryTab_Button_Toggle_RightPanel.Text = "➡";

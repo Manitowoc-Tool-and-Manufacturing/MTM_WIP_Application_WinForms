@@ -241,10 +241,10 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             // AdvancedInventory_Single_Button_InputToggle
             // 
             AdvancedInventory_Single_Button_InputToggle.Location = new Point(3, 3);
-            AdvancedInventory_Single_Button_InputToggle.MaximumSize = new Size(32, 32);
-            AdvancedInventory_Single_Button_InputToggle.MinimumSize = new Size(32, 32);
+            AdvancedInventory_Single_Button_InputToggle.MaximumSize = new Size(64, 32);
+            AdvancedInventory_Single_Button_InputToggle.MinimumSize = new Size(64, 32);
             AdvancedInventory_Single_Button_InputToggle.Name = "AdvancedInventory_Single_Button_InputToggle";
-            AdvancedInventory_Single_Button_InputToggle.Size = new Size(32, 32);
+            AdvancedInventory_Single_Button_InputToggle.Size = new Size(64, 32);
             AdvancedInventory_Single_Button_InputToggle.TabIndex = 15;
             // 
             // AdvancedInventory_Single_Button_Normal
@@ -286,10 +286,10 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             // AdvancedInventory_Single_Button_QuickButtonToggle
             // 
             AdvancedInventory_Single_Button_QuickButtonToggle.Location = new Point(436, 3);
-            AdvancedInventory_Single_Button_QuickButtonToggle.MaximumSize = new Size(32, 32);
-            AdvancedInventory_Single_Button_QuickButtonToggle.MinimumSize = new Size(32, 32);
+            AdvancedInventory_Single_Button_QuickButtonToggle.MaximumSize = new Size(64, 32);
+            AdvancedInventory_Single_Button_QuickButtonToggle.MinimumSize = new Size(64, 32);
             AdvancedInventory_Single_Button_QuickButtonToggle.Name = "AdvancedInventory_Single_Button_QuickButtonToggle";
-            AdvancedInventory_Single_Button_QuickButtonToggle.Size = new Size(32, 32);
+            AdvancedInventory_Single_Button_QuickButtonToggle.Size = new Size(64, 32);
             AdvancedInventory_Single_Button_QuickButtonToggle.TabIndex = 16;
             // 
             // AdvancedInventory_Single_Panel_Preview
@@ -601,10 +601,10 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             // 
             AdvancedInventory_Multi_Button_InputToggle.AutoSize = true;
             AdvancedInventory_Multi_Button_InputToggle.Location = new Point(3, 3);
-            AdvancedInventory_Multi_Button_InputToggle.MaximumSize = new Size(32, 32);
-            AdvancedInventory_Multi_Button_InputToggle.MinimumSize = new Size(32, 32);
+            AdvancedInventory_Multi_Button_InputToggle.MaximumSize = new Size(64, 32);
+            AdvancedInventory_Multi_Button_InputToggle.MinimumSize = new Size(64, 32);
             AdvancedInventory_Multi_Button_InputToggle.Name = "AdvancedInventory_Multi_Button_InputToggle";
-            AdvancedInventory_Multi_Button_InputToggle.Size = new Size(32, 32);
+            AdvancedInventory_Multi_Button_InputToggle.Size = new Size(64, 32);
             AdvancedInventory_Multi_Button_InputToggle.TabIndex = 16;
             AdvancedInventory_Multi_Button_InputToggle.TabStop = false;
             // 
@@ -650,10 +650,10 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             // 
             AdvancedInventory_Multi_Button_QuickButtonToggle.AutoSize = true;
             AdvancedInventory_Multi_Button_QuickButtonToggle.Location = new Point(451, 3);
-            AdvancedInventory_Multi_Button_QuickButtonToggle.MaximumSize = new Size(32, 32);
-            AdvancedInventory_Multi_Button_QuickButtonToggle.MinimumSize = new Size(32, 32);
+            AdvancedInventory_Multi_Button_QuickButtonToggle.MaximumSize = new Size(64, 32);
+            AdvancedInventory_Multi_Button_QuickButtonToggle.MinimumSize = new Size(64, 32);
             AdvancedInventory_Multi_Button_QuickButtonToggle.Name = "AdvancedInventory_Multi_Button_QuickButtonToggle";
-            AdvancedInventory_Multi_Button_QuickButtonToggle.Size = new Size(32, 32);
+            AdvancedInventory_Multi_Button_QuickButtonToggle.Size = new Size(64, 32);
             AdvancedInventory_Multi_Button_QuickButtonToggle.TabIndex = 17;
             AdvancedInventory_Multi_Button_QuickButtonToggle.TabStop = false;
             // 
@@ -916,10 +916,10 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             // 
             AdvancedInventory_Import_Button_QuickButtonToggle.Dock = DockStyle.Fill;
             AdvancedInventory_Import_Button_QuickButtonToggle.Location = new Point(675, 3);
-            AdvancedInventory_Import_Button_QuickButtonToggle.MaximumSize = new Size(32, 32);
-            AdvancedInventory_Import_Button_QuickButtonToggle.MinimumSize = new Size(32, 32);
+            AdvancedInventory_Import_Button_QuickButtonToggle.MaximumSize = new Size(64, 32);
+            AdvancedInventory_Import_Button_QuickButtonToggle.MinimumSize = new Size(64, 32);
             AdvancedInventory_Import_Button_QuickButtonToggle.Name = "AdvancedInventory_Import_Button_QuickButtonToggle";
-            AdvancedInventory_Import_Button_QuickButtonToggle.Size = new Size(32, 32);
+            AdvancedInventory_Import_Button_QuickButtonToggle.Size = new Size(64, 32);
             AdvancedInventory_Import_Button_QuickButtonToggle.TabIndex = 17;
             // 
             // AdvancedInventory_Import_TableLayout_Top

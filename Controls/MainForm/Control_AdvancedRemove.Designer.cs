@@ -173,10 +173,10 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             Control_AdvancedRemove_Button_SidePanel.Dock = DockStyle.Fill;
             Control_AdvancedRemove_Button_SidePanel.Font = new Font("Segoe UI Emoji", 9F);
             Control_AdvancedRemove_Button_SidePanel.Location = new Point(3, 3);
-            Control_AdvancedRemove_Button_SidePanel.MaximumSize = new Size(32, 32);
-            Control_AdvancedRemove_Button_SidePanel.MinimumSize = new Size(32, 32);
+            Control_AdvancedRemove_Button_SidePanel.MaximumSize = new Size(64, 32);
+            Control_AdvancedRemove_Button_SidePanel.MinimumSize = new Size(64, 32);
             Control_AdvancedRemove_Button_SidePanel.Name = "Control_AdvancedRemove_Button_SidePanel";
-            Control_AdvancedRemove_Button_SidePanel.Size = new Size(32, 32);
+            Control_AdvancedRemove_Button_SidePanel.Size = new Size(64, 32);
             Control_AdvancedRemove_Button_SidePanel.TabIndex = 10;
             Control_AdvancedRemove_Button_SidePanel.UseVisualStyleBackColor = true;
             Control_AdvancedRemove_Button_SidePanel.Click += Control_AdvancedRemove_Button_SidePanel_Click;
@@ -749,10 +749,10 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             Control_AdvancedRemove_Button_QuickButtonToggle.Dock = DockStyle.Fill;
             Control_AdvancedRemove_Button_QuickButtonToggle.Font = new Font("Segoe UI Emoji", 9F);
             Control_AdvancedRemove_Button_QuickButtonToggle.Location = new Point(753, 3);
-            Control_AdvancedRemove_Button_QuickButtonToggle.MaximumSize = new Size(32, 32);
-            Control_AdvancedRemove_Button_QuickButtonToggle.MinimumSize = new Size(32, 32);
+            Control_AdvancedRemove_Button_QuickButtonToggle.MaximumSize = new Size(64, 32);
+            Control_AdvancedRemove_Button_QuickButtonToggle.MinimumSize = new Size(64, 32);
             Control_AdvancedRemove_Button_QuickButtonToggle.Name = "Control_AdvancedRemove_Button_QuickButtonToggle";
-            Control_AdvancedRemove_Button_QuickButtonToggle.Size = new Size(32, 32);
+            Control_AdvancedRemove_Button_QuickButtonToggle.Size = new Size(64, 32);
             Control_AdvancedRemove_Button_QuickButtonToggle.TabStop = false;
             Control_AdvancedRemove_Button_QuickButtonToggle.UseVisualStyleBackColor = true;
             //

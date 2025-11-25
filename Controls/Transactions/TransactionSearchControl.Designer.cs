@@ -33,44 +33,44 @@ namespace MTM_WIP_Application_Winforms.Controls.Transactions
         /// </summary>
         private void InitializeComponent()
         {
-            TransactionSearchControl_TableLayout_Filters = new TableLayoutPanel();
-            TransactionSearchControl_GroupBox_Right = new GroupBox();
-            TransactionSearchControl_TableLayout_Right = new TableLayoutPanel();
-            TransactionSearchControl_TableLayout_DateToFrom = new TableLayoutPanel();
-            TransactionSearchControl_Label_DateFrom = new Label();
-            TransactionSearchControl_Label_DateTo = new Label();
-            TransactionSearchControl_DateTimePicker_DateTo = new DateTimePicker();
-            TransactionSearchControl_DateTimePicker_DateFrom = new DateTimePicker();
-            TransactionSearchControl_TableLayout_Options = new TableLayoutPanel();
-            TransactionSearchControl_GroupBox_TransactionTypes = new GroupBox();
-            TransactionSearchControl_TableLayout_TransactionTypes = new TableLayoutPanel();
-            TransactionSearchControl_CheckBox_TRANSFER = new CheckBox();
-            TransactionSearchControl_CheckBox_OUT = new CheckBox();
-            TransactionSearchControl_CheckBox_IN = new CheckBox();
-            TransactionSearchControl_GroupBox_RadioButtons = new GroupBox();
-            TransactionSearchControl_TableLayout_QuickFilters = new TableLayoutPanel();
-            TransactionSearchControl_RadioButton_Custom = new RadioButton();
-            TransactionSearchControl_RadioButton_Month = new RadioButton();
-            TransactionSearchControl_RadioButton_Week = new RadioButton();
-            TransactionSearchControl_RadioButton_Today = new RadioButton();
-            TransactionSearchControl_RadioButton_Everything = new RadioButton();
-            TransactionSearchControl_GroupBox_Search = new GroupBox();
-            TransactionSearchControl_TableLayout_Left = new TableLayoutPanel();
-            TransactionSearchControl_TableLayout_Search = new TableLayoutPanel();
-            TransactionSearchControl_Suggestion_PartNumber = new SuggestionTextBoxWithLabel();
-            TransactionSearchControl_Suggestion_FromLocation = new SuggestionTextBoxWithLabel();
-            TransactionSearchControl_Suggestion_User = new SuggestionTextBoxWithLabel();
-            TransactionSearchControl_Suggestion_ToLocation = new SuggestionTextBoxWithLabel();
-            TransactionSearchControl_Suggestion_Operation = new SuggestionTextBoxWithLabel();
-            TransactionSearchControl_Suggestion_Notes = new SuggestionTextBoxWithLabel();
-            tableLayoutPanel1 = new TableLayoutPanel();
-            TransactionSearchControl_Panel_Buttons = new Panel();
-            TransactionSearchControl_Button_Print = new Button();
             TransactionSearchControl_Button_Export = new Button();
             TransactionSearchControl_Button_InfoPanel = new Button();
+            TransactionSearchControl_Button_Print = new Button();
             TransactionSearchControl_Button_Reset = new Button();
             TransactionSearchControl_Button_Search = new Button();
+            TransactionSearchControl_CheckBox_IN = new CheckBox();
+            TransactionSearchControl_CheckBox_OUT = new CheckBox();
+            TransactionSearchControl_CheckBox_TRANSFER = new CheckBox();
+            TransactionSearchControl_DateTimePicker_DateFrom = new DateTimePicker();
+            TransactionSearchControl_DateTimePicker_DateTo = new DateTimePicker();
+            TransactionSearchControl_GroupBox_RadioButtons = new GroupBox();
+            TransactionSearchControl_GroupBox_Right = new GroupBox();
+            TransactionSearchControl_GroupBox_Search = new GroupBox();
+            TransactionSearchControl_GroupBox_TransactionTypes = new GroupBox();
+            TransactionSearchControl_Label_DateFrom = new Label();
+            TransactionSearchControl_Label_DateTo = new Label();
+            TransactionSearchControl_Panel_Buttons = new Panel();
+            TransactionSearchControl_RadioButton_Custom = new RadioButton();
+            TransactionSearchControl_RadioButton_Everything = new RadioButton();
+            TransactionSearchControl_RadioButton_Month = new RadioButton();
+            TransactionSearchControl_RadioButton_Today = new RadioButton();
+            TransactionSearchControl_RadioButton_Week = new RadioButton();
+            TransactionSearchControl_Suggestion_FromLocation = new SuggestionTextBoxWithLabel();
+            TransactionSearchControl_Suggestion_Notes = new SuggestionTextBoxWithLabel();
+            TransactionSearchControl_Suggestion_Operation = new SuggestionTextBoxWithLabel();
+            TransactionSearchControl_Suggestion_PartNumber = new SuggestionTextBoxWithLabel();
+            TransactionSearchControl_Suggestion_ToLocation = new SuggestionTextBoxWithLabel();
+            TransactionSearchControl_Suggestion_User = new SuggestionTextBoxWithLabel();
+            TransactionSearchControl_TableLayoutPanel_LeftLow = new TableLayoutPanel();
             TransactionSearchControl_TableLayout_Buttons = new TableLayoutPanel();
+            TransactionSearchControl_TableLayout_DateToFrom = new TableLayoutPanel();
+            TransactionSearchControl_TableLayout_Filters = new TableLayoutPanel();
+            TransactionSearchControl_TableLayout_Left = new TableLayoutPanel();
+            TransactionSearchControl_TableLayout_Options = new TableLayoutPanel();
+            TransactionSearchControl_TableLayout_QuickFilters = new TableLayoutPanel();
+            TransactionSearchControl_TableLayout_Right = new TableLayoutPanel();
+            TransactionSearchControl_TableLayout_Search = new TableLayoutPanel();
+            TransactionSearchControl_TableLayout_TransactionTypes = new TableLayoutPanel();
             TransactionSearchControl_TableLayout_Filters.SuspendLayout();
             TransactionSearchControl_GroupBox_Right.SuspendLayout();
             TransactionSearchControl_TableLayout_Right.SuspendLayout();
@@ -83,7 +83,7 @@ namespace MTM_WIP_Application_Winforms.Controls.Transactions
             TransactionSearchControl_GroupBox_Search.SuspendLayout();
             TransactionSearchControl_TableLayout_Left.SuspendLayout();
             TransactionSearchControl_TableLayout_Search.SuspendLayout();
-            tableLayoutPanel1.SuspendLayout();
+            TransactionSearchControl_TableLayoutPanel_LeftLow.SuspendLayout();
             TransactionSearchControl_Panel_Buttons.SuspendLayout();
             TransactionSearchControl_TableLayout_Buttons.SuspendLayout();
             SuspendLayout();
@@ -145,10 +145,10 @@ namespace MTM_WIP_Application_Winforms.Controls.Transactions
             TransactionSearchControl_TableLayout_DateToFrom.ColumnCount = 2;
             TransactionSearchControl_TableLayout_DateToFrom.ColumnStyles.Add(new ColumnStyle());
             TransactionSearchControl_TableLayout_DateToFrom.ColumnStyles.Add(new ColumnStyle());
-            TransactionSearchControl_TableLayout_DateToFrom.Controls.Add(TransactionSearchControl_Label_DateFrom, 0, 1);
-            TransactionSearchControl_TableLayout_DateToFrom.Controls.Add(TransactionSearchControl_Label_DateTo, 0, 0);
-            TransactionSearchControl_TableLayout_DateToFrom.Controls.Add(TransactionSearchControl_DateTimePicker_DateTo, 1, 0);
-            TransactionSearchControl_TableLayout_DateToFrom.Controls.Add(TransactionSearchControl_DateTimePicker_DateFrom, 1, 1);
+            TransactionSearchControl_TableLayout_DateToFrom.Controls.Add(TransactionSearchControl_Label_DateFrom, 0, 0);
+            TransactionSearchControl_TableLayout_DateToFrom.Controls.Add(TransactionSearchControl_Label_DateTo, 0, 1);
+            TransactionSearchControl_TableLayout_DateToFrom.Controls.Add(TransactionSearchControl_DateTimePicker_DateTo, 1, 1);
+            TransactionSearchControl_TableLayout_DateToFrom.Controls.Add(TransactionSearchControl_DateTimePicker_DateFrom, 1, 0);
             TransactionSearchControl_TableLayout_DateToFrom.Dock = DockStyle.Fill;
             TransactionSearchControl_TableLayout_DateToFrom.Location = new Point(2, 2);
             TransactionSearchControl_TableLayout_DateToFrom.Margin = new Padding(2, 2, 2, 2);
@@ -552,28 +552,27 @@ namespace MTM_WIP_Application_Winforms.Controls.Transactions
             // 
             // tableLayoutPanel1
             // 
-            tableLayoutPanel1.AutoSize = true;
-            tableLayoutPanel1.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            tableLayoutPanel1.ColumnCount = 1;
-            tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
-            tableLayoutPanel1.Controls.Add(TransactionSearchControl_TableLayout_Buttons, 0, 0);
-            tableLayoutPanel1.Dock = DockStyle.Fill;
-            tableLayoutPanel1.Location = new Point(0, 0);
-            tableLayoutPanel1.Margin = new Padding(0);
-            tableLayoutPanel1.Name = "tableLayoutPanel1";
-            tableLayoutPanel1.RowCount = 2;
-            tableLayoutPanel1.RowStyles.Add(new RowStyle());
-            tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
-            tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Absolute, 20F));
-            tableLayoutPanel1.Size = new Size(551, 46);
-            tableLayoutPanel1.TabIndex = 0;
+            TransactionSearchControl_TableLayoutPanel_LeftLow.AutoSize = true;
+            TransactionSearchControl_TableLayoutPanel_LeftLow.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            TransactionSearchControl_TableLayoutPanel_LeftLow.ColumnCount = 1;
+            TransactionSearchControl_TableLayoutPanel_LeftLow.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
+            TransactionSearchControl_TableLayoutPanel_LeftLow.Controls.Add(TransactionSearchControl_TableLayout_Buttons, 0, 0);
+            TransactionSearchControl_TableLayoutPanel_LeftLow.Dock = DockStyle.Fill;
+            TransactionSearchControl_TableLayoutPanel_LeftLow.Location = new Point(0, 0);
+            TransactionSearchControl_TableLayoutPanel_LeftLow.Margin = new Padding(0);
+            TransactionSearchControl_TableLayoutPanel_LeftLow.Name = "TransactionSearchControl_TableLayoutPanel_LeftLow";
+            TransactionSearchControl_TableLayoutPanel_LeftLow.RowCount = 2;
+            TransactionSearchControl_TableLayoutPanel_LeftLow.RowStyles.Add(new RowStyle());
+            TransactionSearchControl_TableLayoutPanel_LeftLow.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
+            TransactionSearchControl_TableLayoutPanel_LeftLow.Size = new Size(551, 46);
+            TransactionSearchControl_TableLayoutPanel_LeftLow.TabIndex = 0;
             // 
             // TransactionSearchControl_Panel_Buttons
             // 
             TransactionSearchControl_Panel_Buttons.AutoSize = true;
             TransactionSearchControl_Panel_Buttons.AutoSizeMode = AutoSizeMode.GrowAndShrink;
             TransactionSearchControl_Panel_Buttons.BorderStyle = BorderStyle.FixedSingle;
-            TransactionSearchControl_Panel_Buttons.Controls.Add(tableLayoutPanel1);
+            TransactionSearchControl_Panel_Buttons.Controls.Add(TransactionSearchControl_TableLayoutPanel_LeftLow);
             TransactionSearchControl_Panel_Buttons.Dock = DockStyle.Fill;
             TransactionSearchControl_Panel_Buttons.Location = new Point(3, 124);
             TransactionSearchControl_Panel_Buttons.Name = "TransactionSearchControl_Panel_Buttons";
@@ -620,12 +619,12 @@ namespace MTM_WIP_Application_Winforms.Controls.Transactions
             TransactionSearchControl_Button_InfoPanel.FlatStyle = FlatStyle.Flat;
             TransactionSearchControl_Button_InfoPanel.Font = new Font("Segoe UI", 10F, FontStyle.Bold);
             TransactionSearchControl_Button_InfoPanel.Location = new Point(255, 3);
-            TransactionSearchControl_Button_InfoPanel.MaximumSize = new Size(40, 40);
-            TransactionSearchControl_Button_InfoPanel.MinimumSize = new Size(40, 40);
+            TransactionSearchControl_Button_InfoPanel.MaximumSize = new Size(80, 40);
+            TransactionSearchControl_Button_InfoPanel.MinimumSize = new Size(80, 40);
             TransactionSearchControl_Button_InfoPanel.Name = "TransactionSearchControl_Button_InfoPanel";
-            TransactionSearchControl_Button_InfoPanel.Size = new Size(40, 40);
+            TransactionSearchControl_Button_InfoPanel.Size = new Size(80, 40);
             TransactionSearchControl_Button_InfoPanel.TabIndex = 16;
-            TransactionSearchControl_Button_InfoPanel.Text = "🡲";
+            TransactionSearchControl_Button_InfoPanel.Text = "📋 🡲";
             TransactionSearchControl_Button_InfoPanel.UseVisualStyleBackColor = false;
             // 
             // TransactionSearchControl_Button_Reset
@@ -725,8 +724,8 @@ namespace MTM_WIP_Application_Winforms.Controls.Transactions
             TransactionSearchControl_TableLayout_Left.PerformLayout();
             TransactionSearchControl_TableLayout_Search.ResumeLayout(false);
             TransactionSearchControl_TableLayout_Search.PerformLayout();
-            tableLayoutPanel1.ResumeLayout(false);
-            tableLayoutPanel1.PerformLayout();
+            TransactionSearchControl_TableLayoutPanel_LeftLow.ResumeLayout(false);
+            TransactionSearchControl_TableLayoutPanel_LeftLow.PerformLayout();
             TransactionSearchControl_Panel_Buttons.ResumeLayout(false);
             TransactionSearchControl_Panel_Buttons.PerformLayout();
             TransactionSearchControl_TableLayout_Buttons.ResumeLayout(false);
@@ -768,7 +767,7 @@ namespace MTM_WIP_Application_Winforms.Controls.Transactions
         private SuggestionTextBoxWithLabel TransactionSearchControl_Suggestion_Operation;
         private SuggestionTextBoxWithLabel TransactionSearchControl_Suggestion_Notes;
         private Panel TransactionSearchControl_Panel_Buttons;
-        private TableLayoutPanel tableLayoutPanel1;
+        private TableLayoutPanel TransactionSearchControl_TableLayoutPanel_LeftLow;
         private TableLayoutPanel TransactionSearchControl_TableLayout_Buttons;
         private Button TransactionSearchControl_Button_Search;
         private Button TransactionSearchControl_Button_Reset;

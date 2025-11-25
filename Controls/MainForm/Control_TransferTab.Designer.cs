@@ -420,10 +420,10 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             Control_TransferTab_Button_Toggle_Split.AutoSize = true;
             Control_TransferTab_Button_Toggle_Split.Font = new Font("Segoe UI Emoji", 9F);
             Control_TransferTab_Button_Toggle_Split.Location = new Point(3, 3);
-            Control_TransferTab_Button_Toggle_Split.MaximumSize = new Size(32, 32);
-            Control_TransferTab_Button_Toggle_Split.MinimumSize = new Size(32, 32);
+            Control_TransferTab_Button_Toggle_Split.MaximumSize = new Size(64, 32);
+            Control_TransferTab_Button_Toggle_Split.MinimumSize = new Size(64, 32);
             Control_TransferTab_Button_Toggle_Split.Name = "Control_TransferTab_Button_Toggle_Split";
-            Control_TransferTab_Button_Toggle_Split.Size = new Size(32, 32);
+            Control_TransferTab_Button_Toggle_Split.Size = new Size(64, 32);
             Control_TransferTab_Button_Toggle_Split.TabIndex = 1000;
             Control_TransferTab_Button_Toggle_Split.UseVisualStyleBackColor = true;
             Control_TransferTab_Button_Toggle_Split.Click += Control_TransferTab_Button_Toggle_Split_Click;
@@ -448,10 +448,10 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             Control_TransferTab_Button_Toggle_RightPanel.AutoSize = true;
             Control_TransferTab_Button_Toggle_RightPanel.Font = new Font("Segoe UI Emoji", 9F);
             Control_TransferTab_Button_Toggle_RightPanel.Location = new Point(789, 3);
-            Control_TransferTab_Button_Toggle_RightPanel.MaximumSize = new Size(32, 32);
-            Control_TransferTab_Button_Toggle_RightPanel.MinimumSize = new Size(32, 32);
+            Control_TransferTab_Button_Toggle_RightPanel.MaximumSize = new Size(64, 32);
+            Control_TransferTab_Button_Toggle_RightPanel.MinimumSize = new Size(64, 32);
             Control_TransferTab_Button_Toggle_RightPanel.Name = "Control_TransferTab_Button_Toggle_RightPanel";
-            Control_TransferTab_Button_Toggle_RightPanel.Size = new Size(32, 32);
+            Control_TransferTab_Button_Toggle_RightPanel.Size = new Size(64, 32);
             Control_TransferTab_Button_Toggle_RightPanel.TabIndex = 999;
             Control_TransferTab_Button_Toggle_RightPanel.TabStop = false;
             Control_TransferTab_Button_Toggle_RightPanel.UseVisualStyleBackColor = true;

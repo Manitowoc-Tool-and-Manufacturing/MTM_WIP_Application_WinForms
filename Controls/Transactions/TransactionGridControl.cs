@@ -229,7 +229,7 @@ internal partial class TransactionGridControl : ThemedUserControl
         TransactionGridControl_TextBox_GoToPage.KeyPress += TxtGoToPage_KeyPress;
         TransactionGridControl_DataGridView_Transactions.SelectionChanged += DgvTransactions_SelectionChanged;
         TransactionGridControl_Button_ShowHideSearch.Click += BtnShowHideSearch_Click;
-        TransactionGridControl_Button_Export.Click += BtnExport_Click;
+        TransactionGridControl_Button_AdminTools.Click += BtnExport_Click;
         TransactionGridControl_Button_Print.Click += BtnPrint_Click;
         TransactionGridControl_Button_Analytics.Click += BtnAnalytics_Click;
         TransactionGridControl_Button_ToggleDetails.Click += BtnToggleDetails_Click;
@@ -315,7 +315,7 @@ internal partial class TransactionGridControl : ThemedUserControl
     /// <param name="enabled">True to enable buttons, false to disable.</param>
     public void SetExportPrintButtonsEnabled(bool enabled)
     {
-        TransactionGridControl_Button_Export.Enabled = enabled;
+        TransactionGridControl_Button_AdminTools.Enabled = enabled;
         TransactionGridControl_Button_Print.Enabled = enabled;
 
 
@@ -725,13 +725,13 @@ internal partial class TransactionGridControl : ThemedUserControl
         if (visible)
         {
             TransactionGridControl_TableLayout_Main.SetColumnSpan(TransactionGridControl_Panel_DataGridView, 1);
-            TransactionGridControl_Button_ToggleDetails.Text = "📋 ▶";
+            TransactionGridControl_Button_ToggleDetails.Text = "📋 🡲";
             TransactionGridControl_Button_ToggleDetails.ToolTipText = "Hide transaction details panel";
         }
         else
         {
             TransactionGridControl_TableLayout_Main.SetColumnSpan(TransactionGridControl_Panel_DataGridView, 2);
-            TransactionGridControl_Button_ToggleDetails.Text = "◀ 📋";
+            TransactionGridControl_Button_ToggleDetails.Text = "🡰 📋";
             TransactionGridControl_Button_ToggleDetails.ToolTipText = "Show transaction details panel";
         }
 

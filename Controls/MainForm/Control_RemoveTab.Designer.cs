@@ -330,10 +330,10 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             Control_RemoveTab_Button_Toggle_RightPanel.Dock = DockStyle.Fill;
             Control_RemoveTab_Button_Toggle_RightPanel.Font = new Font("Segoe UI Emoji", 9F);
             Control_RemoveTab_Button_Toggle_RightPanel.Location = new Point(682, 3);
-            Control_RemoveTab_Button_Toggle_RightPanel.MaximumSize = new Size(32, 32);
-            Control_RemoveTab_Button_Toggle_RightPanel.MinimumSize = new Size(32, 32);
+            Control_RemoveTab_Button_Toggle_RightPanel.MaximumSize = new Size(64, 32);
+            Control_RemoveTab_Button_Toggle_RightPanel.MinimumSize = new Size(64, 32);
             Control_RemoveTab_Button_Toggle_RightPanel.Name = "Control_RemoveTab_Button_Toggle_RightPanel";
-            Control_RemoveTab_Button_Toggle_RightPanel.Size = new Size(32, 32);
+            Control_RemoveTab_Button_Toggle_RightPanel.Size = new Size(64, 32);
             Control_RemoveTab_Button_Toggle_RightPanel.TabIndex = 9;
             Control_RemoveTab_Button_Toggle_RightPanel.Text = "➡";
             Control_RemoveTab_Button_Toggle_RightPanel.UseVisualStyleBackColor = true;
@@ -412,10 +412,10 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             Control_RemoveTab_Button_Toggle_InputPanel.Dock = DockStyle.Fill;
             Control_RemoveTab_Button_Toggle_InputPanel.Font = new Font("Segoe UI Emoji", 9F);
             Control_RemoveTab_Button_Toggle_InputPanel.Location = new Point(22, 3);
-            Control_RemoveTab_Button_Toggle_InputPanel.MaximumSize = new Size(32, 32);
-            Control_RemoveTab_Button_Toggle_InputPanel.MinimumSize = new Size(32, 32);
+            Control_RemoveTab_Button_Toggle_InputPanel.MaximumSize = new Size(64, 32);
+            Control_RemoveTab_Button_Toggle_InputPanel.MinimumSize = new Size(64, 32);
             Control_RemoveTab_Button_Toggle_InputPanel.Name = "Control_RemoveTab_Button_Toggle_InputPanel";
-            Control_RemoveTab_Button_Toggle_InputPanel.Size = new Size(32, 32);
+            Control_RemoveTab_Button_Toggle_InputPanel.Size = new Size(64, 32);
             Control_RemoveTab_Button_Toggle_InputPanel.TabIndex = 10;
             Control_RemoveTab_Button_Toggle_InputPanel.UseVisualStyleBackColor = true;
             Control_RemoveTab_Button_Toggle_InputPanel.Click += Control_RemoveTab_Button_Toggle_InputPanel_Click;

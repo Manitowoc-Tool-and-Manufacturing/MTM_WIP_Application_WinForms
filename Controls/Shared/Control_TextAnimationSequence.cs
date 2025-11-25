@@ -25,48 +25,42 @@ namespace MTM_WIP_Application_Winforms.Controls.Shared
 
         private static readonly IReadOnlyList<string> RightArrowFrames = new List<string>
         {
-            "🡢", // fa-chevron-right
-            "🡪", // fa-long-arrow-alt-right
-            "🡲", // fa-long-arrow-alt-right
-            "🡺", // fa-arrow-right
-            "🢂", // fa-long-arrow-alt-right            
-            "🡺", // fa-arrow-right
-            "🡲", // fa-long-arrow-alt-right            
-            "🡪", // fa-long-arrow-alt-right
-            "🡢" // fa-chevron-right
+            "📋 🡢", // fa-chevron-right
+            "📋 🡪", // fa-long-arrow-alt-right
+            "📋 🡲", // fa-long-arrow-alt-right
+            "📋 🡲", // fa-long-arrow-alt-right            
+            "📋 🡪", // fa-long-arrow-alt-right
+            "📋 🡢" // fa-chevron-right
         };
 
         private static readonly IReadOnlyList<string> LeftArrowFrames = new List<string>
         {
-            "🡠", // fa-chevron-left
-            "🡨", // fa-chevron-double-left
-            "🡰", // fa-arrow-left
-            "🡸", // fa-long-arrow-alt-left
-            "🢀",  // fa-arrow-circle-left
-            "🡸", // fa-long-arrow-alt-left
-            "🡰", // fa-arrow-left
-            "🡨", // fa-chevron-double-left
-            "🡠" // fa-chevron-left
+            "🡠 📋", // fa-chevron-left
+            "🡨 📋", // fa-chevron-double-left
+            "🡰 📋", // fa-arrow-left
+            "🡰 📋", // fa-arrow-left
+            "🡨 📋", // fa-chevron-double-left
+            "🡠 📋" // fa-chevron-left
         };
 
         private static readonly IReadOnlyList<string> UpArrowFrames = new List<string>
         {
-            "🡡", // arrow up light
-            "🡩", // arrow up normal
-            "🡹", // arrow up heavy
-            "🡹", // arrow up heavy
-            "🡩", // arrow up normal
-            "🡡" // arrow up light
+            "🡡 📋", // arrow up light
+            "🡩 📋", // arrow up normal
+            "🡹 📋", // arrow up heavy
+            "🡹 📋", // arrow up heavy
+            "🡩 📋", // arrow up normal
+            "🡡 📋" // arrow up light
         };
 
         private static readonly IReadOnlyList<string> DownArrowFrames = new List<string>
         {
-            "🡣", // fa-chevron-down
-            "🡫", // fa-chevron-double-down
-            "🡻", // fa-arrow-down
-            "🡻", // fa-long-arrow-alt-down
-            "🡫", // fa-arrow-circle-down
-            "🡣" // fa-chevron-down
+            "🡣 📋", // fa-chevron-down
+            "🡫 📋", // fa-chevron-double-down
+            "🡻 📋", // fa-arrow-down
+            "🡻 📋", // fa-long-arrow-alt-down
+            "🡫 📋", // fa-arrow-circle-down
+            "🡣 📋" // fa-chevron-down
         };
 
         private static readonly IReadOnlyDictionary<TextAnimationPreset, IReadOnlyList<string>> PresetFrameMap =

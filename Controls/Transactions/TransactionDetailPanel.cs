@@ -15,7 +15,6 @@ namespace MTM_WIP_Application_Winforms.Controls.Transactions
 
         private Model_Transactions_Core? _transaction;
         private bool _detailsCollapsed;
-        private float _notesRowOriginalHeight;
         private bool _isEmbeddedMode;
 
         #endregion
@@ -80,10 +79,6 @@ namespace MTM_WIP_Application_Winforms.Controls.Transactions
 
             // Disable lifecycle button by default
             TransactionDetailPanel_Button_ViewBatchHistory.Enabled = false;
-
-            _notesRowOriginalHeight = TransactionDetailPanel_TableLayout_Main.RowStyles.Count > 3
-                ? TransactionDetailPanel_TableLayout_Main.RowStyles[3].Height
-                : 70F;
 
             // Add tooltip to make collapse feature discoverable
             var toolTip = new ToolTip();

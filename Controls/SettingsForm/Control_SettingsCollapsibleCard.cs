@@ -208,7 +208,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
         {
             _contentPanel.Visible = _isExpanded;
             _separatorLine.Visible = _isExpanded;
-            _expandIconLabel.Text = _isExpanded ? Helper_ButtonToggleAnimations.ArrowDown : Helper_ButtonToggleAnimations.ArrowRight;
+            _expandIconLabel.Text = _isExpanded ? Helper_ButtonToggleAnimations.ArrowUp : Helper_ButtonToggleAnimations.ArrowDown;
             AdjustHeight();
         }
 

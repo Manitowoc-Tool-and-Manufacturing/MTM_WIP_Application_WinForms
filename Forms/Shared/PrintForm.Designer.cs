@@ -291,15 +291,17 @@ namespace MTM_WIP_Application_Winforms.Forms.Shared
             PrintForm_Button_PrinterSettingsToggle.AutoSize = true;
             PrintForm_Button_PrinterSettingsToggle.AutoSizeMode = AutoSizeMode.GrowAndShrink;
             PrintForm_Button_PrinterSettingsToggle.Dock = DockStyle.Fill;
-            PrintForm_Button_PrinterSettingsToggle.FlatAppearance.BorderSize = 0;
+            PrintForm_Button_PrinterSettingsToggle.FlatAppearance.BorderSize = 1;
+            PrintForm_Button_PrinterSettingsToggle.FlatAppearance.BorderColor = Color.SteelBlue;
+
             PrintForm_Button_PrinterSettingsToggle.FlatStyle = FlatStyle.Flat;
             PrintForm_Button_PrinterSettingsToggle.Location = new Point(309, 3);
-            PrintForm_Button_PrinterSettingsToggle.MaximumSize = new Size(25, 25);
-            PrintForm_Button_PrinterSettingsToggle.MinimumSize = new Size(25, 25);
+            PrintForm_Button_PrinterSettingsToggle.MaximumSize = new Size(50, 25);
+            PrintForm_Button_PrinterSettingsToggle.MinimumSize = new Size(50, 25);
             PrintForm_Button_PrinterSettingsToggle.Name = "PrintForm_Button_PrinterSettingsToggle";
-            PrintForm_Button_PrinterSettingsToggle.Size = new Size(25, 25);
+            PrintForm_Button_PrinterSettingsToggle.Size = new Size(50, 25);
             PrintForm_Button_PrinterSettingsToggle.TabIndex = 1;
-            PrintForm_Button_PrinterSettingsToggle.Text = "-";
+            PrintForm_Button_PrinterSettingsToggle.Text = "🡱 📋";
             PrintForm_Button_PrinterSettingsToggle.UseVisualStyleBackColor = true;
             // 
             // PrintForm_Panel_PrinterSettingsContent
@@ -532,15 +534,16 @@ namespace MTM_WIP_Application_Winforms.Forms.Shared
             PrintForm_Button_PageSettingsToggle.AutoSize = true;
             PrintForm_Button_PageSettingsToggle.AutoSizeMode = AutoSizeMode.GrowAndShrink;
             PrintForm_Button_PageSettingsToggle.Dock = DockStyle.Fill;
-            PrintForm_Button_PageSettingsToggle.FlatAppearance.BorderSize = 0;
+            PrintForm_Button_PageSettingsToggle.FlatAppearance.BorderSize = 1;
+            PrintForm_Button_PageSettingsToggle.FlatAppearance.BorderColor = Color.SteelBlue;
             PrintForm_Button_PageSettingsToggle.FlatStyle = FlatStyle.Flat;
             PrintForm_Button_PageSettingsToggle.Location = new Point(309, 3);
-            PrintForm_Button_PageSettingsToggle.MaximumSize = new Size(25, 25);
-            PrintForm_Button_PageSettingsToggle.MinimumSize = new Size(25, 25);
+            PrintForm_Button_PageSettingsToggle.MaximumSize = new Size(50, 25);
+            PrintForm_Button_PageSettingsToggle.MinimumSize = new Size(50, 25);
             PrintForm_Button_PageSettingsToggle.Name = "PrintForm_Button_PageSettingsToggle";
-            PrintForm_Button_PageSettingsToggle.Size = new Size(25, 25);
+            PrintForm_Button_PageSettingsToggle.Size = new Size(50, 25);
             PrintForm_Button_PageSettingsToggle.TabIndex = 1;
-            PrintForm_Button_PageSettingsToggle.Text = "-";
+            PrintForm_Button_PageSettingsToggle.Text = "🡱 📋";
             PrintForm_Button_PageSettingsToggle.UseVisualStyleBackColor = true;
             // 
             // PrintForm_Panel_PageSettingsContent
@@ -714,15 +717,16 @@ namespace MTM_WIP_Application_Winforms.Forms.Shared
             // PrintForm_Button_LeftPanelToggle
             // 
             PrintForm_Button_LeftPanelToggle.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            PrintForm_Button_LeftPanelToggle.FlatAppearance.BorderSize = 0;
+            PrintForm_Button_LeftPanelToggle.FlatAppearance.BorderSize = 1;
+            PrintForm_Button_LeftPanelToggle.FlatAppearance.BorderColor = Color.SteelBlue;
             PrintForm_Button_LeftPanelToggle.FlatStyle = FlatStyle.Flat;
             PrintForm_Button_LeftPanelToggle.Location = new Point(3, 586);
-            PrintForm_Button_LeftPanelToggle.MaximumSize = new Size(25, 25);
-            PrintForm_Button_LeftPanelToggle.MinimumSize = new Size(25, 25);
+            PrintForm_Button_LeftPanelToggle.MaximumSize = new Size(50, 25);
+            PrintForm_Button_LeftPanelToggle.MinimumSize = new Size(50, 25);
             PrintForm_Button_LeftPanelToggle.Name = "PrintForm_Button_LeftPanelToggle";
-            PrintForm_Button_LeftPanelToggle.Size = new Size(25, 25);
+            PrintForm_Button_LeftPanelToggle.Size = new Size(50, 25);
             PrintForm_Button_LeftPanelToggle.TabIndex = 2;
-            PrintForm_Button_LeftPanelToggle.Text = "🡰";
+            PrintForm_Button_LeftPanelToggle.Text = "🡰 📋";
             PrintForm_Button_LeftPanelToggle.UseVisualStyleBackColor = true;
             // 
             // PrintForm_Panel_PreviewViewport
@@ -817,7 +821,7 @@ namespace MTM_WIP_Application_Winforms.Forms.Shared
             PrintForm_Button_PreviousPage.Name = "PrintForm_Button_PreviousPage";
             PrintForm_Button_PreviousPage.Size = new Size(40, 40);
             PrintForm_Button_PreviousPage.TabIndex = 1;
-            PrintForm_Button_PreviousPage.Text = "🡰";
+            PrintForm_Button_PreviousPage.Text = "🡰 📋";
             PrintForm_Button_PreviousPage.UseVisualStyleBackColor = true;
             // 
             // PrintForm_Label_PageCounter
@@ -843,7 +847,7 @@ namespace MTM_WIP_Application_Winforms.Forms.Shared
             PrintForm_Button_NextPage.Name = "PrintForm_Button_NextPage";
             PrintForm_Button_NextPage.Size = new Size(40, 40);
             PrintForm_Button_NextPage.TabIndex = 3;
-            PrintForm_Button_NextPage.Text = "🡲";
+            PrintForm_Button_NextPage.Text = "📋 🡲";
             PrintForm_Button_NextPage.UseVisualStyleBackColor = true;
             // 
             // PrintForm_Button_LastPage
@@ -963,14 +967,16 @@ namespace MTM_WIP_Application_Winforms.Forms.Shared
             PrintForm_Button_ColumnSettingsToggle.AutoSize = true;
             PrintForm_Button_ColumnSettingsToggle.AutoSizeMode = AutoSizeMode.GrowAndShrink;
             PrintForm_Button_ColumnSettingsToggle.Dock = DockStyle.Fill;
-            PrintForm_Button_ColumnSettingsToggle.FlatAppearance.BorderSize = 0;
+            PrintForm_Button_ColumnSettingsToggle.FlatAppearance.BorderSize = 1;
+            PrintForm_Button_ColumnSettingsToggle.FlatAppearance.BorderColor = Color.SteelBlue;
             PrintForm_Button_ColumnSettingsToggle.FlatStyle = FlatStyle.Flat;
             PrintForm_Button_ColumnSettingsToggle.Location = new Point(315, 3);
-            PrintForm_Button_ColumnSettingsToggle.MaximumSize = new Size(25, 25);
+            PrintForm_Button_ColumnSettingsToggle.MaximumSize = new Size(50, 25);
+            PrintForm_Button_ColumnSettingsToggle.MinimumSize = new Size(50, 25);
             PrintForm_Button_ColumnSettingsToggle.Name = "PrintForm_Button_ColumnSettingsToggle";
-            PrintForm_Button_ColumnSettingsToggle.Size = new Size(22, 25);
+            PrintForm_Button_ColumnSettingsToggle.Size = new Size(50, 25);
             PrintForm_Button_ColumnSettingsToggle.TabIndex = 1;
-            PrintForm_Button_ColumnSettingsToggle.Text = "-";
+            PrintForm_Button_ColumnSettingsToggle.Text = "🡱 📋";
             PrintForm_Button_ColumnSettingsToggle.UseVisualStyleBackColor = true;
             // 
             // PrintForm_Label_ColumnSettingsHeader
@@ -1043,7 +1049,7 @@ namespace MTM_WIP_Application_Winforms.Forms.Shared
             PrintForm_Button_ColumnUp.Name = "PrintForm_Button_ColumnUp";
             PrintForm_Button_ColumnUp.Size = new Size(161, 25);
             PrintForm_Button_ColumnUp.TabIndex = 0;
-            PrintForm_Button_ColumnUp.Text = "🡱";
+            PrintForm_Button_ColumnUp.Text = "🡱 𝄜";
             // 
             // PrintForm_Button_ColumnDown
             // 
@@ -1052,7 +1058,7 @@ namespace MTM_WIP_Application_Winforms.Forms.Shared
             PrintForm_Button_ColumnDown.Name = "PrintForm_Button_ColumnDown";
             PrintForm_Button_ColumnDown.Size = new Size(161, 25);
             PrintForm_Button_ColumnDown.TabIndex = 1;
-            PrintForm_Button_ColumnDown.Text = "🡳";
+            PrintForm_Button_ColumnDown.Text = "🡳  𝄜";
             PrintForm_Button_ColumnDown.UseVisualStyleBackColor = true;
             // 
             // PrintForm_CheckBox_AddNotesColumn
@@ -1133,15 +1139,16 @@ namespace MTM_WIP_Application_Winforms.Forms.Shared
             PrintForm_Button_OptionsToggle.AutoSize = true;
             PrintForm_Button_OptionsToggle.AutoSizeMode = AutoSizeMode.GrowAndShrink;
             PrintForm_Button_OptionsToggle.Dock = DockStyle.Fill;
-            PrintForm_Button_OptionsToggle.FlatAppearance.BorderSize = 0;
+            PrintForm_Button_OptionsToggle.FlatAppearance.BorderSize = 1;
+            PrintForm_Button_OptionsToggle.FlatAppearance.BorderColor = Color.SteelBlue;
             PrintForm_Button_OptionsToggle.FlatStyle = FlatStyle.Flat;
             PrintForm_Button_OptionsToggle.Location = new Point(312, 3);
-            PrintForm_Button_OptionsToggle.MaximumSize = new Size(25, 25);
-            PrintForm_Button_OptionsToggle.MinimumSize = new Size(25, 25);
+            PrintForm_Button_OptionsToggle.MaximumSize = new Size(50, 25);
+            PrintForm_Button_OptionsToggle.MinimumSize = new Size(50, 25);
             PrintForm_Button_OptionsToggle.Name = "PrintForm_Button_OptionsToggle";
-            PrintForm_Button_OptionsToggle.Size = new Size(25, 25);
+            PrintForm_Button_OptionsToggle.Size = new Size(50, 25);
             PrintForm_Button_OptionsToggle.TabIndex = 1;
-            PrintForm_Button_OptionsToggle.Text = "-";
+            PrintForm_Button_OptionsToggle.Text = "🡱 📋";
             PrintForm_Button_OptionsToggle.UseVisualStyleBackColor = true;
             // 
             // PrintForm_Label_OptionsHeader
@@ -1299,15 +1306,17 @@ namespace MTM_WIP_Application_Winforms.Forms.Shared
             // 
             PrintForm_Button_RightPanelToggle.AutoSize = true;
             PrintForm_Button_RightPanelToggle.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            PrintForm_Button_RightPanelToggle.FlatAppearance.BorderSize = 0;
+            PrintForm_Button_RightPanelToggle.FlatAppearance.BorderSize = 1;
+            PrintForm_Button_RightPanelToggle.FlatAppearance.BorderColor = Color.SteelBlue;
             PrintForm_Button_RightPanelToggle.FlatStyle = FlatStyle.Flat;
+            PrintForm_Button_RightPanelToggle.TextAlign = ContentAlignment.MiddleCenter;
             PrintForm_Button_RightPanelToggle.Location = new Point(3, 586);
-            PrintForm_Button_RightPanelToggle.MaximumSize = new Size(25, 25);
-            PrintForm_Button_RightPanelToggle.MinimumSize = new Size(25, 25);
+            PrintForm_Button_RightPanelToggle.MaximumSize = new Size(25, 50);
+            PrintForm_Button_RightPanelToggle.MinimumSize = new Size(25, 50);
             PrintForm_Button_RightPanelToggle.Name = "PrintForm_Button_RightPanelToggle";
-            PrintForm_Button_RightPanelToggle.Size = new Size(25, 25);
+            PrintForm_Button_RightPanelToggle.Size = new Size(25, 50);
             PrintForm_Button_RightPanelToggle.TabIndex = 2;
-            PrintForm_Button_RightPanelToggle.Text = "🡲";
+            PrintForm_Button_RightPanelToggle.Text = "📋 🡲";
             PrintForm_Button_RightPanelToggle.UseVisualStyleBackColor = true;
             // 
             // tableLayoutPanel1

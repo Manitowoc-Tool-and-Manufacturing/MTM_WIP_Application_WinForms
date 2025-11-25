@@ -119,16 +119,15 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             _expandIconLabel.BackColor = Color.Transparent;
             _expandIconLabel.BorderStyle = BorderStyle.FixedSingle;
             _expandIconLabel.Dock = DockStyle.Fill;
-            _expandIconLabel.Font = new Font("Segoe UI Symbol", 10F);
-            _expandIconLabel.ForeColor = Color.Gray;
+            _expandIconLabel.Font = new Font("Segoe UI Emoji", 10F);
             _expandIconLabel.Location = new Point(0, 11);
             _expandIconLabel.Margin = new Padding(0);
-            _expandIconLabel.MaximumSize = new Size(25, 25);
-            _expandIconLabel.MinimumSize = new Size(25, 25);
+            _expandIconLabel.MaximumSize = new Size(50, 25);
+            _expandIconLabel.MinimumSize = new Size(50, 25);
             _expandIconLabel.Name = "_expandIconLabel";
-            _expandIconLabel.Size = new Size(25, 25);
+            _expandIconLabel.Size = new Size(50, 25);
             _expandIconLabel.TabIndex = 3;
-            _expandIconLabel.Text = "🡳";
+            _expandIconLabel.Text = "🡱 📋";
             _expandIconLabel.TextAlign = ContentAlignment.MiddleCenter;
             _expandIconLabel.Click += Header_Click;
             // 
@@ -138,7 +137,6 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             _titleLabel.BackColor = Color.Transparent;
             _titleLabel.Dock = DockStyle.Fill;
             _titleLabel.Font = new Font("Segoe UI", 12F, FontStyle.Bold);
-            _titleLabel.ForeColor = Color.FromArgb(0, 120, 212);
             _titleLabel.Location = new Point(63, 0);
             _titleLabel.Margin = new Padding(0);
             _titleLabel.Name = "_titleLabel";
@@ -170,7 +168,6 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             _descriptionLabel.BackColor = Color.Transparent;
             _descriptionLabel.Dock = DockStyle.Fill;
             _descriptionLabel.Font = new Font("Segoe UI", 9F);
-            _descriptionLabel.ForeColor = Color.Gray;
             _descriptionLabel.Location = new Point(63, 21);
             _descriptionLabel.Margin = new Padding(0);
             _descriptionLabel.Name = "_descriptionLabel";

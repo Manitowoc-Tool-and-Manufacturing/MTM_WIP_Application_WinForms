@@ -11,10 +11,10 @@ namespace MTM_WIP_Application_Winforms.Helpers
     /// </summary>
     internal static class Helper_ButtonToggleAnimations
     {
-        public const string ArrowLeft = "🡰";
-        public const string ArrowRight = "🡲";
-        public const string ArrowUp = "🡱";
-        public const string ArrowDown = "🡳";
+        public const string ArrowLeft = "🡰 📋";
+        public const string ArrowRight = "📋 🡲";
+        public const string ArrowUp = "🡱 📋";
+        public const string ArrowDown = "🡳 📋";
 
         /// <summary>
         /// Updates an icon button to reflect the collapsed state, using animations when they are enabled/supported

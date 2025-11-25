@@ -195,7 +195,7 @@ public partial class PrintForm : ThemedForm
     {
         if (PrintForm_TableLayout_LeftSidebar.ColumnStyles.Count > 1)
         {
-            PrintForm_Button_LeftPanelToggle.Text = _isLeftPanelExpanded ? "🡲" : "🡰";
+            PrintForm_Button_LeftPanelToggle.Text = _isLeftPanelExpanded ? "📋 🡲" : "🡰 📋";
             UpdateLeftPanelToggleState();
         }
     }
@@ -204,7 +204,7 @@ public partial class PrintForm : ThemedForm
     {
         if (PrintForm_TableLayout_RightSidebar.ColumnStyles.Count > 0)
         {
-            PrintForm_Button_RightPanelToggle.Text = _isRightPanelExpanded ? "🡰" : "🡲";
+            PrintForm_Button_RightPanelToggle.Text = _isRightPanelExpanded ? "🡰 📋" : "📋 🡲";
             UpdateRightPanelToggleState();
         }
     }
@@ -692,13 +692,13 @@ public partial class PrintForm : ThemedForm
 
     private void PrintForm_Button_LeftPanelToggle_Click(object? sender, EventArgs e)
     {
-        PrintForm_Button_LeftPanelToggle.Text = _isLeftPanelExpanded ? "🡲" : "🡰";
+        PrintForm_Button_LeftPanelToggle.Text = _isLeftPanelExpanded ? "📋 🡲" : "🡰 📋";
         UpdateLeftPanelToggleState();
     }
 
     private void PrintForm_Button_RightPanelToggle_Click(object? sender, EventArgs e)
     {
-        PrintForm_Button_RightPanelToggle.Text = _isRightPanelExpanded ? "🡰" : "🡲";
+        PrintForm_Button_RightPanelToggle.Text = _isRightPanelExpanded ? "🡰 📋" : "📋 🡲";
         UpdateRightPanelToggleState();
     }
 
@@ -1249,25 +1249,25 @@ public partial class PrintForm : ThemedForm
     private void UpdatePrinterSettingsCollapseState()
     {
         PrintForm_Panel_PrinterSettingsContent.Visible = _isPrinterSettingsExpanded;
-        PrintForm_Button_PrinterSettingsToggle.Text = _isPrinterSettingsExpanded ? "-" : "+";
+        PrintForm_Button_PrinterSettingsToggle.Text = _isPrinterSettingsExpanded ? "🡱 📋" : "🡳 📋";
     }
 
     private void UpdatePageSettingsCollapseState()
     {
         PrintForm_Panel_PageSettingsContent.Visible = _isPageSettingsExpanded;
-        PrintForm_Button_PageSettingsToggle.Text = _isPageSettingsExpanded ? "-" : "+";
+        PrintForm_Button_PageSettingsToggle.Text = _isPageSettingsExpanded ? "🡱 📋" : "🡳 📋";
     }
 
     private void UpdateColumnSettingsCollapseState()
     {
         PrintForm_Panel_ColumnSettingsContent.Visible = _isColumnSettingsExpanded;
-        PrintForm_Button_ColumnSettingsToggle.Text = _isColumnSettingsExpanded ? "-" : "+";
+        PrintForm_Button_ColumnSettingsToggle.Text = _isColumnSettingsExpanded ? "🡱 📋" : "🡳 📋";
     }
 
     private void UpdateOptionsCollapseState()
     {
         PrintForm_Panel_OptionsContent.Visible = _isOptionsExpanded;
-        PrintForm_Button_OptionsToggle.Text = _isOptionsExpanded ? "-" : "+";
+        PrintForm_Button_OptionsToggle.Text = _isOptionsExpanded ? "🡱 📋" : "🡳 📋";
     }
 
     private void UpdatePageRangeControls()
