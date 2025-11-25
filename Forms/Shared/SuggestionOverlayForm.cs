@@ -64,6 +64,8 @@ namespace MTM_WIP_Application_Winforms.Forms.Shared
 
             InitializeComponent();
 
+            // Apply UI scaling fixes to prevent warping at high DPI
+
             _suggestions = suggestions;
             _selectedItem = null;
             _parentControl = parentControl;
@@ -132,7 +134,8 @@ namespace MTM_WIP_Application_Winforms.Forms.Shared
             
             // Enable custom drawing for ListBox to add professional styling
             suggestionListBox.DrawMode = DrawMode.OwnerDrawFixed;
-            suggestionListBox.ItemHeight = 24; // Comfortable height for items
+            // Scale item height based on font size (approx 1.5x font height)
+            suggestionListBox.ItemHeight = (int)(this.Font.Height * 1.8); 
             suggestionListBox.DrawItem += SuggestionListBox_DrawItem;
 
             // Theme automatically applied by ThemedForm base class
@@ -358,16 +361,17 @@ namespace MTM_WIP_Application_Winforms.Forms.Shared
                 e.Graphics.FillRectangle(backgroundBrush, e.Bounds);
             }
 
-            // Draw text with padding
+            // Draw text with padding and vertical centering
             using (SolidBrush textBrush = new SolidBrush(textColor))
+            using (StringFormat sf = new StringFormat { LineAlignment = StringAlignment.Center, Alignment = StringAlignment.Near })
             {
                 Rectangle textBounds = new Rectangle(
                     e.Bounds.X + 8, 
-                    e.Bounds.Y + 4, 
+                    e.Bounds.Y, 
                     e.Bounds.Width - 16, 
-                    e.Bounds.Height - 8);
+                    e.Bounds.Height);
                 
-                e.Graphics.DrawString(itemText, e.Font ?? this.Font, textBrush, textBounds);
+                e.Graphics.DrawString(itemText, e.Font ?? this.Font, textBrush, textBounds, sf);
             }
 
             // Draw focus rectangle if item has focus

@@ -234,10 +234,6 @@ internal partial class TransactionGridControl : ThemedUserControl
         TransactionGridControl_Button_Analytics.Click += BtnAnalytics_Click;
         TransactionGridControl_Button_ToggleDetails.Click += BtnToggleDetails_Click;
 
-#if DEBUG
-        // Debug-only: Toggle privileges button
-        TransactionGridControl_Button_TogglePrivileges.Click += BtnTogglePrivileges_Click;
-#endif
     }
 
     #endregion

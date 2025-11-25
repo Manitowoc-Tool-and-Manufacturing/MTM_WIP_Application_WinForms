@@ -103,8 +103,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             {
                 HideProgress();
                 LoggingUtility.LogApplicationError(e);
-                MessageBox.Show($@"Error loading users: {e.Message}", @"Error", MessageBoxButtons.OK,
-                    MessageBoxIcon.Error);
+                Service_ErrorHandler.ShowWarning($"Error loading users: {e.Message}");
             }
         }
 
@@ -114,6 +113,15 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
 
         private async void RemoveUserControl_ComboBox_Users_SelectedIndexChanged(object? sender, EventArgs e)
         {
+            // Skip if placeholder is selected
+            if (RemoveUserControl_ComboBox_Users.SelectedIndex <= 0)
+            {
+                RemoveUserControl_Label_FullName.Text = "";
+                RemoveUserControl_Label_Role.Text = "";
+                RemoveUserControl_Label_Shift.Text = "";
+                return;
+            }
+
             if (RemoveUserControl_ComboBox_Users.Text is not { } userName)
             {
                 RemoveUserControl_Label_FullName.Text = "";
@@ -172,6 +180,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
                         UpdateStatus($"Error loading user: {userResult.ErrorMessage}");
                         if (userResult.Exception != null)
                             LoggingUtility.LogApplicationError(userResult.Exception);
+                        Service_ErrorHandler.ShowWarning($"Error loading user: {userResult.ErrorMessage}");
                     }
                 }
 
@@ -189,14 +198,13 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
 
         private async void RemoveUserControl_Button_Remove_Click(object? sender, EventArgs e)
         {
-            if (RemoveUserControl_ComboBox_Users.Text is not { } userName)
+            if (RemoveUserControl_ComboBox_Users.Text is not { } userName || string.IsNullOrWhiteSpace(userName) || userName.StartsWith("[") || RemoveUserControl_ComboBox_Users.SelectedIndex <= 0)
             {
+                Service_ErrorHandler.ShowWarning("Please select a user to remove.");
                 return;
             }
 
-            DialogResult confirm = MessageBox.Show($@"Are you sure you want to remove user '{userName}'?",
-                @"Confirm Remove",
-                MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+            DialogResult confirm = Service_ErrorHandler.ShowConfirmation($"Are you sure you want to remove user '{userName}'?", "Confirm Remove");
             if (confirm != DialogResult.Yes)
             {
                 return;
@@ -218,8 +226,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
                 if (!deleteUserResult.IsSuccess)
                 {
                     HideProgress();
-                    MessageBox.Show($@"Error deleting user: {deleteUserResult.ErrorMessage}", @"Error", 
-                        MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    Service_ErrorHandler.ShowWarning($"Error deleting user: {deleteUserResult.ErrorMessage}");
                     if (deleteUserResult.Exception != null)
                         LoggingUtility.LogApplicationError(deleteUserResult.Exception);
                     return;
@@ -235,8 +242,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
                 await Task.Delay(500);
                 HideProgress();
 
-                MessageBox.Show(@"User removed successfully!", @"Success", MessageBoxButtons.OK,
-                    MessageBoxIcon.Information);
+                Service_ErrorHandler.ShowInformation("User removed successfully!", "Success");
 
                 // Reinitialize the ComboBox with detailed progress
                 LoadUsersAsync();
@@ -245,8 +251,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             {
                 HideProgress();
                 LoggingUtility.LogApplicationError(ex);
-                MessageBox.Show($@"Error removing user: {ex.Message}", @"Error", MessageBoxButtons.OK,
-                    MessageBoxIcon.Error);
+                Service_ErrorHandler.ShowWarning($"Error removing user: {ex.Message}");
             }
         }
 

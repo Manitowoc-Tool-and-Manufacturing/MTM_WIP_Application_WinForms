@@ -34,6 +34,9 @@ public class ThemedForm : Form
     {
         InitializeComponentSafe();
 
+        this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
+        this.AutoScaleMode = AutoScaleMode.Dpi;
+
         // Try to resolve dependencies from static ServiceProvider
         // This happens AFTER InitializeComponent to ensure form is ready
         if (Program.ServiceProvider != null)

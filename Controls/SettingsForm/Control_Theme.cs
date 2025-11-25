@@ -17,7 +17,8 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
         public Control_Theme()
         {
             InitializeComponent();
-            
+            this.AutoScaleDimensions = new SizeF(96F, 96F);
+            this.AutoScaleMode = AutoScaleMode.Dpi;
             // Initialize new checkbox programmatically since we can't edit designer
             Control_Themes_CheckBox_ShowTotalSummaryPanel = new CheckBox();
             Control_Themes_CheckBox_ShowTotalSummaryPanel.AutoSize = true;

@@ -28,8 +28,12 @@ public class PanelThemeApplier : ThemeApplierBase
         {
             if (panel.BorderStyle != BorderStyle.None)
             {
-                panel.BackColor = GetColorOrDefault(theme.PanelBackColor, Color.White);
-                panel.BorderStyle = panel.BorderStyle;
+                if (panel.BackColor != Color.SteelBlue)
+                {
+                    panel.BackColor = GetColorOrDefault(theme.PanelBackColor, Color.White);
+                }
+                
+                panel.BorderStyle = panel.BorderStyle;               
             }
             else
             {

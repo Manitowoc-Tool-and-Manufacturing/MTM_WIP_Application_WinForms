@@ -541,6 +541,8 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             Controls.Add(Control_User_Management_TableLayout_Main);
             Name = "Control_User_Management";
             Size = new Size(530, 493);
+            AutoScaleDimensions = new SizeF(96F, 96F);
+            AutoScaleMode = AutoScaleMode.Dpi;
             Control_User_Management_TableLayout_Main.ResumeLayout(false);
             Control_User_Management_TableLayout_Main.PerformLayout();
             Control_User_Management_Panel_Container.ResumeLayout(false);

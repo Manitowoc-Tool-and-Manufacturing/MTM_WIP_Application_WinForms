@@ -195,8 +195,8 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             // 
             // Control_QuickButton_Single
             // 
-            AutoScaleDimensions = new SizeF(7F, 15F);
-            AutoScaleMode = AutoScaleMode.Font;
+            AutoScaleDimensions = new SizeF(96F, 96F);
+            AutoScaleMode = AutoScaleMode.Dpi;
             BackColor = SystemColors.Control;
             BorderStyle = BorderStyle.FixedSingle;
             Controls.Add(_tableLayout);

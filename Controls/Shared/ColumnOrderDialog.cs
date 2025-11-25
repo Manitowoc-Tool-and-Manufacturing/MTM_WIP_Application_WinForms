@@ -48,6 +48,8 @@ namespace MTM_WIP_Application_Winforms.Controls.Shared
         private void InitializeDialog()
         {
             Text = "Change Column Order";
+            AutoScaleMode = AutoScaleMode.Dpi;
+            AutoScaleDimensions = new SizeF(96F, 96F);
             Size = new Size(400, 540);
             FormBorderStyle = FormBorderStyle.FixedDialog;
             StartPosition = FormStartPosition.CenterParent;

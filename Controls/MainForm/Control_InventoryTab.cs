@@ -182,6 +182,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
 
             InitializeComponent();
 
+
             // Resolve shortcut service
             _shortcutService = Program.ServiceProvider?.GetService<IShortcutService>();
             if (_shortcutService != null && !string.IsNullOrEmpty(Model_Application_Variables.User))

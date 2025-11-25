@@ -99,7 +99,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             catch (Exception e)
             {
                 LoggingUtility.LogApplicationError(e);
-                StatusMessageChanged?.Invoke(this, $"Error loading users: {e.Message}");
+                Service_ErrorHandler.ShowWarning($"Error loading users: {e.Message}");
             }
         }
 
@@ -136,6 +136,13 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
 
         private async void Control_Edit_User_ComboBox_Users_SelectedIndexChanged(object? sender, EventArgs e)
         {
+            // Skip if placeholder is selected
+            if (Control_Edit_User_ComboBox_Users.SelectedIndex <= 0)
+            {
+                ClearForm();
+                return;
+            }
+
             // Extract username from DataRowView properly - don't use .Text with data-bound ComboBoxes
             string? userName = null;
             if (Control_Edit_User_ComboBox_Users.SelectedItem is DataRowView drv)
@@ -143,12 +150,12 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
                 userName = drv["User"]?.ToString();
             }
 
-            if (!string.IsNullOrWhiteSpace(userName))
+            if (!string.IsNullOrWhiteSpace(userName) && !userName.StartsWith("["))
             {
                 var userResult = await Dao_User.GetUserByUsernameAsync(userName);
-                if (!userResult.IsSuccess || userResult.Data == null)
+                if (!userResult.IsSuccess || userResult.Data == null )
                 {
-                    StatusMessageChanged?.Invoke(this, $"Error loading user: {userResult.ErrorMessage}");
+                    Service_ErrorHandler.ShowWarning($"Error loading user: {userResult.ErrorMessage}");
                     if (userResult.Exception != null)
                         LoggingUtility.LogApplicationError(userResult.Exception);
                     return;
@@ -186,36 +193,37 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             {
                 Control_Edit_User_Button_Save.Enabled = false;
 
-                if (Control_Edit_User_ComboBox_Users.Text is not { } userName)
+                string userName = Control_Edit_User_ComboBox_Users.Text;
+                if (string.IsNullOrWhiteSpace(userName) || userName.StartsWith("[") || Control_Edit_User_ComboBox_Users.SelectedIndex <= 0)
                 {
-                    StatusMessageChanged?.Invoke(this, "Please select a user to edit.");
+                    Service_ErrorHandler.ShowWarning("Please select a user to edit.");
                     return;
                 }
 
                 if (string.IsNullOrWhiteSpace(Control_Edit_User_TextBox_FirstName.Text))
                 {
-                    StatusMessageChanged?.Invoke(this, "First name is required.");
+                    Service_ErrorHandler.ShowWarning("First name is required.");
                     Control_Edit_User_TextBox_FirstName.Focus();
                     return;
                 }
 
                 if (string.IsNullOrWhiteSpace(Control_Edit_User_TextBox_LastName.Text))
                 {
-                    StatusMessageChanged?.Invoke(this, "Last name is required.");
+                    Service_ErrorHandler.ShowWarning("Last name is required.");
                     Control_Edit_User_TextBox_LastName.Focus();
                     return;
                 }
 
-                if (Control_Edit_User_ComboBox_Shift.SelectedIndex <= -1)
+                if (Control_Edit_User_ComboBox_Shift.SelectedIndex <= -1 || Control_Edit_User_ComboBox_Shift.Text.StartsWith("Enter"))
                 {
-                    StatusMessageChanged?.Invoke(this, "Please select a shift.");
+                    Service_ErrorHandler.ShowWarning("Please select a shift.");
                     Control_Edit_User_ComboBox_Shift.Focus();
                     return;
                 }
 
                 if (string.IsNullOrWhiteSpace(Control_Edit_User_TextBox_Pin.Text))
                 {
-                    StatusMessageChanged?.Invoke(this, "Pin is required.");
+                    Service_ErrorHandler.ShowWarning("Pin is required.");
                     Control_Edit_User_TextBox_Pin.Focus();
                     return;
                 }
@@ -232,7 +240,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
 
                 if (!updateResult.IsSuccess)
                 {
-                    StatusMessageChanged?.Invoke(this, $"Error updating user: {updateResult.ErrorMessage}");
+                    Service_ErrorHandler.ShowWarning($"Error updating user: {updateResult.ErrorMessage}");
                     if (updateResult.Exception != null)
                         LoggingUtility.LogApplicationError(updateResult.Exception);
                     return;
@@ -260,7 +268,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
                     var roleResult = await Dao_User.SetUserRoleAsync(userId, newRoleId, Environment.UserName);
                     if (!roleResult.IsSuccess)
                     {
-                        StatusMessageChanged?.Invoke(this, $"User updated but role change failed: {roleResult.ErrorMessage}");
+                        Service_ErrorHandler.ShowWarning($"User updated but role change failed: {roleResult.ErrorMessage}");
                         if (roleResult.Exception != null)
                             LoggingUtility.LogApplicationError(roleResult.Exception);
                         return;

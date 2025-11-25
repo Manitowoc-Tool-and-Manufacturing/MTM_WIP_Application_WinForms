@@ -36,6 +36,9 @@ public class ThemedUserControl : UserControl
     {
         InitializeComponentSafe();
 
+            this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
+            this.AutoScaleMode = AutoScaleMode.Dpi;
+
         // Try to resolve dependencies from static ServiceProvider
         // This happens AFTER InitializeComponent to ensure control is ready
         if (Program.ServiceProvider != null)

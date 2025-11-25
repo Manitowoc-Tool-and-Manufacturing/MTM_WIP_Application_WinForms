@@ -37,7 +37,9 @@ namespace MTM_WIP_Application_Winforms.Forms.Splash
                     ["LayoutAdjustments"] = "APPLIED"
                 });
 
-            AutoScaleMode = AutoScaleMode.Dpi;
+            
+            AutoSize = true;
+            AutoSizeMode = AutoSizeMode.GrowAndShrink;
 
             Service_DebugTracer.TraceBusinessLogic("UI_COLORS_APPLICATION",
                 inputData: new
