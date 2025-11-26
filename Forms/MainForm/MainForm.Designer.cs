@@ -187,7 +187,6 @@ namespace MTM_WIP_Application_Winforms.Forms.MainForm
             MainForm_MenuStrip_Visual.Name = "MainForm_MenuStrip_Visual";
             MainForm_MenuStrip_Visual.Size = new Size(51, 24);
             MainForm_MenuStrip_Visual.Text = "Visual";
-            MainForm_MenuStrip_Visual.Visible = false;
             MainForm_MenuStrip_Visual.Click += MainForm_MenuStrip_Visual_Click;
             //
             // developmentToolStripMenuItem

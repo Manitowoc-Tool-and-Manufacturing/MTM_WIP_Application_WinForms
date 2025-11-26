@@ -383,25 +383,22 @@ namespace MTM_WIP_Application_Winforms.Forms.MainForm
         /// </summary>
         private void ConfigureVisualMenuVisibility()
         {
-            try
-            {
-                bool hasVisualAccess = !string.IsNullOrEmpty(Model_Application_Variables.VisualUserName);
-                
-                if (MainForm_MenuStrip_Visual != null)
-                {
-                    MainForm_MenuStrip_Visual.Visible = hasVisualAccess;
-                }
-            }
-            catch (Exception ex)
-            {
-                LoggingUtility.LogApplicationError(ex);
-            }
+            // Menu is always visible, access is checked on click
         }
 
         private void MainForm_MenuStrip_Visual_Click(object? sender, EventArgs e)
         {
             try
             {
+                if (string.IsNullOrEmpty(Model_Application_Variables.VisualUserName) || 
+                    string.IsNullOrEmpty(Model_Application_Variables.VisualPassword))
+                {
+                    Service_ErrorHandler.ShowUserError(
+                        "You do not have Infor Visual credentials configured.\n\nPlease go to File > Settings > User Management to configure your Visual ERP access.",
+                        "Access Denied");
+                    return;
+                }
+
                 var visualForm = new Forms.Visual.InforVisualDashboard();
                 visualForm.Show();
             }
