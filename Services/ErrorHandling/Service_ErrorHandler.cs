@@ -129,6 +129,24 @@ internal static class Service_ErrorHandler
     }
 
     /// <summary>
+    /// Show a generic error dialog (not an exception - just a user error message)
+    /// </summary>
+    public static void ShowError(string message, string title = "Error", [CallerMemberName] string callerName = "")
+    {
+        try
+        {
+            // Log as error
+            LoggingUtility.Log($"[User Error] {message} (Caller: {callerName})");
+            
+            MessageBox.Show(message, title, MessageBoxButtons.OK, MessageBoxIcon.Error);
+        }
+        catch (Exception ex)
+        {
+            LoggingUtility.LogApplicationError(ex);
+        }
+    }
+
+    /// <summary>
     /// Handle validation errors (user input errors)
     /// </summary>
     public static void HandleValidationError(string message, string field = "",

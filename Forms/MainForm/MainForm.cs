@@ -277,6 +277,9 @@ namespace MTM_WIP_Application_Winforms.Forms.MainForm
 
                         // Configure Development Menu visibility based on username
                         ConfigureDevelopmentMenuVisibility();
+                        
+                        // Configure Visual Menu visibility
+                        ConfigureVisualMenuVisibility();
 
                         await Task.Delay(500);
                         SetInitialFocusToInventoryTab();
@@ -373,6 +376,39 @@ namespace MTM_WIP_Application_Winforms.Forms.MainForm
             }
 
             Service_DebugTracer.TraceMethodExit(null, nameof(ConfigureDevelopmentMenuVisibility), nameof(MainForm));
+        }
+
+        /// <summary>
+        /// Configures Visual Menu visibility based on current user credentials.
+        /// </summary>
+        private void ConfigureVisualMenuVisibility()
+        {
+            try
+            {
+                bool hasVisualAccess = !string.IsNullOrEmpty(Model_Application_Variables.VisualUserName);
+                
+                if (MainForm_MenuStrip_Visual != null)
+                {
+                    MainForm_MenuStrip_Visual.Visible = hasVisualAccess;
+                }
+            }
+            catch (Exception ex)
+            {
+                LoggingUtility.LogApplicationError(ex);
+            }
+        }
+
+        private void MainForm_MenuStrip_Visual_Click(object? sender, EventArgs e)
+        {
+            try
+            {
+                var visualForm = new Forms.Visual.InforVisualDashboard();
+                visualForm.Show();
+            }
+            catch (Exception ex)
+            {
+                Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Medium, controlName: nameof(MainForm));
+            }
         }
 
         private void SetInitialFocusToInventoryTab()

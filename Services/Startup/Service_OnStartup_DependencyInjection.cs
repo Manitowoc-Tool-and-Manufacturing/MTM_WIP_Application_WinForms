@@ -32,6 +32,9 @@ namespace MTM_WIP_Application_Winforms.Services.Startup
                 services.AddSingleton<IDao_Shortcuts, Dao_Shortcuts>();
                 services.AddSingleton<IShortcutService, Service_Shortcut>();
 
+                // Register Visual Database Service
+                services.AddTransient<MTM_WIP_Application_Winforms.Services.Visual.IService_VisualDatabase, MTM_WIP_Application_Winforms.Services.Visual.Service_VisualDatabase>();
+
                 // Build the service provider
                 ServiceProvider serviceProvider = services.BuildServiceProvider();
 

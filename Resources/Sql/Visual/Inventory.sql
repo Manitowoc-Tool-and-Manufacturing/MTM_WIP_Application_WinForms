@@ -1,0 +1,1 @@
+SELECT 'Inventory Placeholder' AS Status

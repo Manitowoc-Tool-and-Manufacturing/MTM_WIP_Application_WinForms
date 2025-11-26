@@ -24,6 +24,7 @@ namespace MTM_WIP_Application_Winforms.Forms.MainForm
         private ToolStripMenuItem MainForm_MenuStrip_View;
         private ToolStripMenuItem MainForm_MenuStrip_View_PersonalHistory;
         private ToolStripSeparator MainForm_MenuStrip_View_Separator2;
+        private ToolStripMenuItem MainForm_MenuStrip_Visual;
 
         private StatusStrip MainForm_StatusStrip;
         public ToolStripStatusLabel MainForm_StatusStrip_SavedStatus;
@@ -79,6 +80,7 @@ namespace MTM_WIP_Application_Winforms.Forms.MainForm
             MainForm_MenuStrip_View = new ToolStripMenuItem();
             MainForm_MenuStrip_View_PersonalHistory = new ToolStripMenuItem();
             MainForm_MenuStrip_View_Separator2 = new ToolStripSeparator();
+            MainForm_MenuStrip_Visual = new ToolStripMenuItem();
             developmentToolStripMenuItem = new ToolStripMenuItem();
             viewErrorReportsToolStripMenuItem = new ToolStripMenuItem();
             viewApplicationLogsToolStripMenuItem = new ToolStripMenuItem();
@@ -130,7 +132,7 @@ namespace MTM_WIP_Application_Winforms.Forms.MainForm
             //
             MainForm_MenuStrip.Dock = DockStyle.Fill;
             MainForm_MenuStrip.ImageScalingSize = new Size(24, 24);
-            MainForm_MenuStrip.Items.AddRange(new ToolStripItem[] { MainForm_MenuStrip_File, MainForm_MenuStrip_View, developmentToolStripMenuItem , helpToolStripMenuItem });
+            MainForm_MenuStrip.Items.AddRange(new ToolStripItem[] { MainForm_MenuStrip_File, MainForm_MenuStrip_View, MainForm_MenuStrip_Visual, developmentToolStripMenuItem , helpToolStripMenuItem });
             MainForm_MenuStrip.Location = new Point(0, 0);
             MainForm_MenuStrip.Name = "MainForm_MenuStrip";
             MainForm_MenuStrip.Padding = new Padding(0);
@@ -179,6 +181,14 @@ namespace MTM_WIP_Application_Winforms.Forms.MainForm
             //
             MainForm_MenuStrip_View_Separator2.Name = "MainForm_MenuStrip_View_Separator2";
             MainForm_MenuStrip_View_Separator2.Size = new Size(216, 6);
+            // 
+            // MainForm_MenuStrip_Visual
+            // 
+            MainForm_MenuStrip_Visual.Name = "MainForm_MenuStrip_Visual";
+            MainForm_MenuStrip_Visual.Size = new Size(51, 24);
+            MainForm_MenuStrip_Visual.Text = "Visual";
+            MainForm_MenuStrip_Visual.Visible = false;
+            MainForm_MenuStrip_Visual.Click += MainForm_MenuStrip_Visual_Click;
             //
             // developmentToolStripMenuItem
             //

@@ -1,0 +1,1 @@
+SELECT 'Receiving Placeholder' AS Status

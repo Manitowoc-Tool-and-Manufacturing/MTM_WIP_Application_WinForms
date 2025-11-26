@@ -1,0 +1,1 @@
+SELECT 'Die Tool Discovery Placeholder' AS Status
