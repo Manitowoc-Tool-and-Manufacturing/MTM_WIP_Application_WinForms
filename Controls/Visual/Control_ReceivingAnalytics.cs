@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using Microsoft.Extensions.DependencyInjection;
 using MTM_WIP_Application_Winforms.Forms.Shared;
+using MTM_WIP_Application_Winforms.Models;
 using MTM_WIP_Application_Winforms.Services;
 using MTM_WIP_Application_Winforms.Services.Visual;
 
@@ -153,6 +154,21 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
             }
 
             row.DefaultCellStyle.BackColor = backColor;
+        }
+
+        /// <summary>
+        /// Applies the theme to the control and restores legend colors.
+        /// </summary>
+        /// <param name="theme">The theme to apply.</param>
+        protected override void ApplyTheme(Model_Shared_UserUiColors theme)
+        {
+            base.ApplyTheme(theme);
+
+            // Restore legend colors that might have been overwritten by the theme
+            if (panelLegendClosed != null) panelLegendClosed.BackColor = Color.FromArgb(200, 255, 200);
+            if (panelLegendLate != null) panelLegendLate.BackColor = Color.FromArgb(255, 200, 200);
+            if (panelLegendPartial != null) panelLegendPartial.BackColor = Color.FromArgb(255, 255, 200);
+            if (panelLegendOnTime != null) panelLegendOnTime.BackColor = Color.FromArgb(200, 240, 255);
         }
     }
 }
