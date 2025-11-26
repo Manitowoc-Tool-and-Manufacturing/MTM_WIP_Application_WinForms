@@ -9,6 +9,9 @@ using MTM_WIP_Application_Winforms.Models;
 using MTM_WIP_Application_Winforms.Services;
 using MTM_WIP_Application_Winforms.Services.Visual;
 
+using MTM_WIP_Application_Winforms.Controls.Shared;
+using MTM_WIP_Application_Winforms.Logging;
+
 namespace MTM_WIP_Application_Winforms.Controls.Visual
 {
     public partial class Control_ReceivingAnalytics : ThemedUserControl
@@ -31,6 +34,13 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
             chkShowConsignment.Checked = true;
             chkShowInternal.Checked = true;
             chkShowService.Checked = true;
+
+            // Add context menu for column ordering
+            var contextMenu = new ContextMenuStrip();
+            var itemColumnOrder = new ToolStripMenuItem("Column Order...");
+            itemColumnOrder.Click += ContextMenuItem_ColumnOrder_Click;
+            contextMenu.Items.Add(itemColumnOrder);
+            dataGridViewResults.ContextMenuStrip = contextMenu;
         }
 
         private void SetCurrentWeek()
@@ -87,6 +97,9 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
                         dataGridViewResults.Columns["Line Desired Date"].DefaultCellStyle.Format = "d";
                     if (dataGridViewResults.Columns["Line Promise Date"] != null)
                         dataGridViewResults.Columns["Line Promise Date"].DefaultCellStyle.Format = "d";
+
+                    // Apply standard settings (load user column preferences)
+                    await Service_DataGridView.ApplyStandardSettingsAsync(dataGridViewResults, Model_Application_Variables.User);
                 }
                 else
                 {
@@ -169,6 +182,26 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
             if (panelLegendLate != null) panelLegendLate.BackColor = Color.FromArgb(255, 200, 200);
             if (panelLegendPartial != null) panelLegendPartial.BackColor = Color.FromArgb(255, 255, 200);
             if (panelLegendOnTime != null) panelLegendOnTime.BackColor = Color.FromArgb(200, 240, 255);
+        }
+
+        private void ContextMenuItem_ColumnOrder_Click(object? sender, EventArgs e)
+        {
+            try
+            {
+                using (var dlg = new ColumnOrderDialog(dataGridViewResults))
+                {
+                    if (dlg.ShowDialog(this) == DialogResult.OK)
+                    {
+                        // Settings are saved within the dialog logic via Core_Themes.SaveGridSettingsAsync
+                        // We just need to refresh if needed, but the dialog updates the grid directly
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                LoggingUtility.LogApplicationError(ex);
+                Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Low, controlName: this.Name);
+            }
         }
     }
 }
