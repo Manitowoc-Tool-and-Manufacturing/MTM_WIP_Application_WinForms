@@ -341,6 +341,11 @@ namespace MTM_WIP_Application_Winforms.Forms.MainForm
                         });
 
                     LoggingUtility.LogApplicationInfo($"Development Menu configured for user '{Model_Application_Variables.User}': {(isDeveloper ? "Visible" : "Hidden")}");
+                    
+                    if (isDeveloper)
+                    {
+                        InitializeDatabaseMaintenanceMenu();
+                    }
                 }
                 else
                 {
@@ -1520,7 +1525,35 @@ namespace MTM_WIP_Application_Winforms.Forms.MainForm
 
         #endregion
 
+        private void MainForm_MenuStrip_Development_DatabaseMaintenance_Click(object? sender, EventArgs e)
+        {
+            try
+            {
+                using var maintenanceForm = new Forms.Maintenance.Form_DatabaseMaintenance();
+                maintenanceForm.ShowDialog(this);
+            }
+            catch (Exception ex)
+            {
+                LoggingUtility.LogApplicationError(ex);
+                Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Medium, controlName: nameof(MainForm));
+            }
+        }
 
+        private void InitializeDatabaseMaintenanceMenu()
+        {
+            if (developmentToolStripMenuItem == null) return;
+
+            // Check if already added
+            foreach (ToolStripItem item in developmentToolStripMenuItem.DropDownItems)
+            {
+                if (item.Text == "Database Maintenance") return;
+            }
+
+            var dbMenu = new ToolStripMenuItem("Database Maintenance");
+            dbMenu.Click += MainForm_MenuStrip_Development_DatabaseMaintenance_Click;
+
+            developmentToolStripMenuItem.DropDownItems.Add(dbMenu);
+        }
     }
 
     #endregion

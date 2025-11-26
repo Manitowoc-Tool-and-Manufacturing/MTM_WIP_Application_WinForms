@@ -1,0 +1,285 @@
+using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.IO;
+using System.Threading.Tasks;
+using MTM_WIP_Application_Winforms.Helpers;
+using MTM_WIP_Application_Winforms.Logging;
+using MTM_WIP_Application_Winforms.Models;
+using MySql.Data.MySqlClient;
+
+namespace MTM_WIP_Application_Winforms.Services.Maintenance
+{
+    public static class Service_Migration
+    {
+        private const string MysqlDumpPath = @"C:\MAMP\bin\mysql\bin\mysqldump.exe";
+
+        #region Migration Methods
+
+        public static async Task<Model_Dao_Result<bool>> RunMigrationScriptAsync(string scriptName, string sqlContent)
+        {
+            try
+            {
+                LoggingUtility.Log($"[Migration] Starting script: {scriptName}");
+                
+                var connectionString = Helper_Database_Variables.GetConnectionString(null, null, null, null);
+                using var connection = new MySqlConnection(connectionString);
+                await connection.OpenAsync();
+                
+                using var command = new MySqlCommand(sqlContent, connection);
+                command.CommandTimeout = 300; // 5 minutes for large migrations
+                await command.ExecuteNonQueryAsync();
+
+                LoggingUtility.Log($"[Migration] Completed script: {scriptName}");
+                return Model_Dao_Result<bool>.Success(true);
+            }
+            catch (Exception ex)
+            {
+                LoggingUtility.LogApplicationError(ex);
+                return Model_Dao_Result<bool>.Failure($"Migration failed for {scriptName}: {ex.Message}");
+            }
+        }
+
+        public static async Task<Model_Dao_Result<bool>> MigrateSingleTableAsync(string tableName)
+        {
+            try
+            {
+                string sql = GetMigrationSqlForTable(tableName);
+                if (string.IsNullOrEmpty(sql))
+                    return Model_Dao_Result<bool>.Failure($"No migration logic defined for table: {tableName}");
+
+                return await RunMigrationScriptAsync($"Single_Table_{tableName}", sql);
+            }
+            catch (Exception ex)
+            {
+                return Model_Dao_Result<bool>.Failure(ex);
+            }
+        }
+
+        private static string GetMigrationSqlForTable(string tableName)
+        {
+            // Dynamic SQL generation based on table name
+            // This mimics the logic in the bulk scripts but for single tables
+            return tableName switch
+            {
+                "md_part_ids" => @"
+                    SET FOREIGN_KEY_CHECKS = 0;
+                    TRUNCATE TABLE mtm_wip_application_winforms.md_part_ids;
+                    INSERT INTO mtm_wip_application_winforms.md_part_ids (PartID, Customer, Description, IssuedBy, ItemType, Operations)
+                    SELECT PartID, Customer, Description, IssuedBy, ItemType, Operations FROM mtm_wip_application.md_part_ids;
+                    SET FOREIGN_KEY_CHECKS = 1;",
+                
+                "md_locations" => @"
+                    SET FOREIGN_KEY_CHECKS = 0;
+                    TRUNCATE TABLE mtm_wip_application_winforms.md_locations;
+                    INSERT INTO mtm_wip_application_winforms.md_locations (Location, Building, IssuedBy)
+                    SELECT Location, Building, IssuedBy FROM mtm_wip_application.md_locations;
+                    SET FOREIGN_KEY_CHECKS = 1;",
+
+                "md_operation_numbers" => @"
+                    SET FOREIGN_KEY_CHECKS = 0;
+                    TRUNCATE TABLE mtm_wip_application_winforms.md_operation_numbers;
+                    INSERT INTO mtm_wip_application_winforms.md_operation_numbers (Operation, IssuedBy)
+                    SELECT Operation, IssuedBy FROM mtm_wip_application.md_operation_numbers;
+                    SET FOREIGN_KEY_CHECKS = 1;",
+
+                "md_item_types" => @"
+                    SET FOREIGN_KEY_CHECKS = 0;
+                    TRUNCATE TABLE mtm_wip_application_winforms.md_item_types;
+                    INSERT INTO mtm_wip_application_winforms.md_item_types (ItemType, IssuedBy)
+                    SELECT ItemType, IssuedBy FROM mtm_wip_application.md_item_types;
+                    SET FOREIGN_KEY_CHECKS = 1;",
+
+                "usr_users" => @"
+                    SET FOREIGN_KEY_CHECKS = 0;
+                    INSERT IGNORE INTO mtm_wip_application_winforms.usr_users (User, `Full Name`, Shift, VitsUser, Pin, LastShownVersion, HideChangeLog)
+                    SELECT User, `Full Name`, Shift, VitsUser, Pin, LastShownVersion, HideChangeLog FROM mtm_wip_application.usr_users;
+                    SET FOREIGN_KEY_CHECKS = 1;",
+
+                "inv_inventory" => @"
+                    SET FOREIGN_KEY_CHECKS = 0;
+                    TRUNCATE TABLE mtm_wip_application_winforms.inv_inventory;
+                    INSERT INTO mtm_wip_application_winforms.inv_inventory (PartID, Location, Operation, Quantity, ItemType, ReceiveDate, LastUpdated, User, BatchNumber, Notes, ColorCode, WorkOrder)
+                    SELECT PartID, Location, Operation, Quantity, ItemType, ReceiveDate, LastUpdated, User, BatchNumber, Notes, 'UNKNOWN', 'UNKNOWN'
+                    FROM mtm_wip_application.inv_inventory;
+                    SET FOREIGN_KEY_CHECKS = 1;",
+
+                "inv_transaction" => @"
+                    SET FOREIGN_KEY_CHECKS = 0;
+                    TRUNCATE TABLE mtm_wip_application_winforms.inv_transaction;
+                    INSERT INTO mtm_wip_application_winforms.inv_transaction (TransactionType, BatchNumber, PartID, FromLocation, ToLocation, Operation, Quantity, Notes, User, ItemType, ReceiveDate, ColorCode, WorkOrder)
+                    SELECT TransactionType, BatchNumber, PartID, FromLocation, ToLocation, Operation, Quantity, Notes, User, ItemType, ReceiveDate, 'Unknown', 'Unknown'
+                    FROM mtm_wip_application.inv_transaction;
+                    SET FOREIGN_KEY_CHECKS = 1;",
+
+                _ => string.Empty
+            };
+        }
+
+        #endregion
+
+        #region Maintenance Methods
+
+        public static async Task<Model_Dao_Result<int>> CleanTestDataAsync()
+        {
+            try
+            {
+                string sql = @"
+                    DELETE FROM inv_inventory 
+                    WHERE User = 'JOHNK' 
+                       OR PartID LIKE '%test%' 
+                       OR Location LIKE '%test%' 
+                       OR Operation LIKE '%test%';
+                    
+                    DELETE FROM inv_transaction 
+                    WHERE User = 'JOHNK' 
+                       OR PartID LIKE '%test%' 
+                       OR FromLocation LIKE '%test%' 
+                       OR ToLocation LIKE '%test%'
+                       OR Operation LIKE '%test%';
+                ";
+
+                return await ExecuteNonQueryAndReturnRowsAsync(sql);
+            }
+            catch (Exception ex)
+            {
+                return Model_Dao_Result<int>.Failure(ex);
+            }
+        }
+
+        public static async Task<Model_Dao_Result<bool>> OptimizeTablesAsync()
+        {
+            try
+            {
+                // Get all tables
+                var tables = new[] { 
+                    "inv_inventory", "inv_transaction", "md_part_ids", "md_locations", 
+                    "md_operation_numbers", "log_error", "sys_last_10_transactions" 
+                };
+                
+                string sql = $"OPTIMIZE TABLE {string.Join(", ", tables)};";
+                await RunMigrationScriptAsync("Optimize_Tables", sql);
+                
+                return Model_Dao_Result<bool>.Success(true);
+            }
+            catch (Exception ex)
+            {
+                return Model_Dao_Result<bool>.Failure(ex);
+            }
+        }
+
+        public static async Task<Model_Dao_Result<bool>> TruncateLogsAsync()
+        {
+            try
+            {
+                string sql = "TRUNCATE TABLE log_error;";
+                await RunMigrationScriptAsync("Truncate_Logs", sql);
+                return Model_Dao_Result<bool>.Success(true);
+            }
+            catch (Exception ex)
+            {
+                return Model_Dao_Result<bool>.Failure(ex);
+            }
+        }
+
+        public static async Task<Model_Dao_Result<Dictionary<string, long>>> GetTableRowCountsAsync()
+        {
+            try
+            {
+                var counts = new Dictionary<string, long>();
+                var tables = new[] { "inv_inventory", "inv_transaction", "md_part_ids", "md_locations", "usr_users" };
+
+                var connectionString = Helper_Database_Variables.GetConnectionString(null, null, null, null);
+                using var connection = new MySqlConnection(connectionString);
+                await connection.OpenAsync();
+
+                foreach (var table in tables)
+                {
+                    using var cmd = new MySqlCommand($"SELECT COUNT(*) FROM {table}", connection);
+                    var count = Convert.ToInt64(await cmd.ExecuteScalarAsync());
+                    counts[table] = count;
+                }
+
+                return Model_Dao_Result<Dictionary<string, long>>.Success(counts);
+            }
+            catch (Exception ex)
+            {
+                return Model_Dao_Result<Dictionary<string, long>>.Failure(ex);
+            }
+        }
+
+        private static async Task<Model_Dao_Result<int>> ExecuteNonQueryAndReturnRowsAsync(string sql)
+        {
+            try
+            {
+                var connectionString = Helper_Database_Variables.GetConnectionString(null, null, null, null);
+                using var connection = new MySqlConnection(connectionString);
+                await connection.OpenAsync();
+
+                using var command = new MySqlCommand(sql, connection);
+                int rows = await command.ExecuteNonQueryAsync();
+                
+                return Model_Dao_Result<int>.Success(rows, "Operation completed", rows);
+            }
+            catch (Exception ex)
+            {
+                return Model_Dao_Result<int>.Failure(ex);
+            }
+        }
+
+        #endregion
+
+        #region Backup Methods
+
+        public static async Task<Model_Dao_Result<string>> BackupDatabaseAsync(string destinationPath)
+        {
+            try
+            {
+                if (!File.Exists(MysqlDumpPath))
+                {
+                    return Model_Dao_Result<string>.Failure("mysqldump.exe not found at " + MysqlDumpPath);
+                }
+
+                var dbName = "mtm_wip_application_winforms";
+                var user = "root";
+                var pass = "root"; // Should come from config ideally
+                var host = "localhost";
+                var port = "3306";
+
+                var fileName = $"backup_{dbName}_{DateTime.Now:yyyyMMdd_HHmmss}.sql";
+                var fullPath = Path.Combine(destinationPath, fileName);
+
+                var arguments = $"-h {host} -P {port} -u {user} -p{pass} {dbName} -r \"{fullPath}\"";
+
+                var psi = new ProcessStartInfo
+                {
+                    FileName = MysqlDumpPath,
+                    Arguments = arguments,
+                    RedirectStandardOutput = true,
+                    RedirectStandardError = true,
+                    UseShellExecute = false,
+                    CreateNoWindow = true
+                };
+
+                using var process = Process.Start(psi);
+                if (process == null) return Model_Dao_Result<string>.Failure("Failed to start mysqldump process");
+
+                var error = await process.StandardError.ReadToEndAsync();
+                await process.WaitForExitAsync();
+
+                if (process.ExitCode != 0)
+                {
+                    return Model_Dao_Result<string>.Failure($"Backup failed: {error}");
+                }
+
+                return Model_Dao_Result<string>.Success(fullPath, "Backup created successfully");
+            }
+            catch (Exception ex)
+            {
+                LoggingUtility.LogApplicationError(ex);
+                return Model_Dao_Result<string>.Failure($"Backup exception: {ex.Message}");
+            }
+        }
+    }
+        # endregion
+}

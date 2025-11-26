@@ -174,5 +174,13 @@
         <None Remove="Old_Version\**" />
     </ItemGroup>
 
+    <!-- ✅ MIGRATION SCRIPTS - Copy Database/Migration folder to build output -->
+    <ItemGroup>
+        <Content Include="Database\Migration\**\*">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+            <Link>Database\Migration\%(RecursiveDir)%(Filename)%(Extension)</Link>
+        </Content>
+    </ItemGroup>
+
    
 </Project>
