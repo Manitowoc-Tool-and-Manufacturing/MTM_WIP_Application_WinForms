@@ -37,6 +37,24 @@ namespace MTM_WIP_Application_Winforms.Controls.Shared
             get => SuggestionTextBoxWithLabel_Label_Main.Text.TrimEnd(':', ' ');
             set => SuggestionTextBoxWithLabel_Label_Main.Text = string.IsNullOrWhiteSpace(value) ? string.Empty : $"{value}: ";
         }
+        
+        /// <summary>
+        /// Gets or sets the minimum number of characters the user can type or paste into the text box control.
+        /// </summary>
+        public int MinLength
+        {
+            get => SuggestionTextBoxWithLabel_Label_Main.MinimumSize.Width;
+            set => SuggestionTextBoxWithLabel_Label_Main.MinimumSize = new Size(value, SuggestionTextBoxWithLabel_TextBox_Main.MinimumSize.Height);
+        }
+
+        /// <summary>
+        /// Gets or sets the maximum number of characters the user can type or paste into the text box control.
+        /// </summary>
+        public int MaxLength
+        {
+            get => SuggestionTextBoxWithLabel_Label_Main.MaximumSize.Width;
+            set => SuggestionTextBoxWithLabel_Label_Main.MaximumSize = new Size(value, SuggestionTextBoxWithLabel_TextBox_Main.MaximumSize.Height);
+        }
 
         /// <summary>
         /// Gets the inner SuggestionTextBox control for direct access.

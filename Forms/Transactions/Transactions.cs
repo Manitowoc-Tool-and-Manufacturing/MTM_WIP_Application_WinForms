@@ -49,7 +49,8 @@ internal partial class Transactions : ThemedForm
         }
 
         Transactions_UserControl_Search.SetExportPrintButtonsEnabled(false);
-        Transactions_UserControl_Search.SetInformationPanelCollapsed(!Transactions_UserControl_Grid.InformationPanelVisible);
+        // Initialize information panel state (panel is visible by default)
+        Transactions_UserControl_Search.SetInformationPanelCollapsed(false);
 
         WireUpEvents();
         

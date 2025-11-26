@@ -224,7 +224,6 @@ namespace MTM_WIP_Application_Winforms.Controls.Transactions
             // 
             TransactionGridControl_TransactionDetailPanel.AutoSize = true;
             TransactionGridControl_TransactionDetailPanel.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            TransactionGridControl_TransactionDetailPanel.DetailsCollapsed = false;
             TransactionGridControl_TransactionDetailPanel.Dock = DockStyle.Fill;
             TransactionGridControl_TransactionDetailPanel.Location = new Point(867, 3);
             TransactionGridControl_TransactionDetailPanel.Name = "TransactionGridControl_TransactionDetailPanel";

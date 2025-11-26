@@ -93,7 +93,6 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             // Initialize UI state immediately without heavy operations
             InitializeImmediateUI();
             InitializeArrowToggleAnimations();
-
             // Move heavy initialization to background thread
             _ = Task.Run(async () =>
             {
@@ -108,6 +107,13 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                     this.BeginInvoke(() => Control_TransferTab_Update_ButtonStates());
                 }
             });
+
+            Control_TransferTab_TextBox_Operation.MinLength = 102;
+            Control_TransferTab_TextBox_Part.MinLength = 102;
+            Control_TransferTab_TextBox_ToLocation.MinLength = 102;
+            Control_TransferTab_TextBox_Operation.MaxLength = 102;
+            Control_TransferTab_TextBox_Part.MaxLength = 102;
+            Control_TransferTab_TextBox_ToLocation.MaxLength = 102;
 
             Service_DebugTracer.TraceUIAction("TRANSFER_TAB_INITIALIZATION", nameof(Control_TransferTab),
                 new Dictionary<string, object>

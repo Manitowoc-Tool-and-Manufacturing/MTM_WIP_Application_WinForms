@@ -115,6 +115,8 @@ namespace MTM_WIP_Application_Winforms.Controls.Shared
         /// </summary>
         internal TextBox InnerTextBox => SuggestionTextBox_TextBox;
 
+
+               
         /// <inheritdoc />
         [Browsable(true)]
         [Category("Appearance")]
@@ -124,6 +126,7 @@ namespace MTM_WIP_Application_Winforms.Controls.Shared
             get => SuggestionTextBox_TextBox.Text;
             set => SuggestionTextBox_TextBox.Text = value ?? string.Empty;
         }
+
 
         /// <inheritdoc />
         [AllowNull]

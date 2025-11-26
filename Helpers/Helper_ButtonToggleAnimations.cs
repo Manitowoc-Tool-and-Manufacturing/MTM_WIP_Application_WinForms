@@ -54,7 +54,8 @@ namespace MTM_WIP_Application_Winforms.Helpers
             IContainer? components,
             Button? button,
             bool collapsed)
-        {if (button.Name == "TransactionSearchControl_Button_InfoPanel")
+        {
+            if (button != null && button.Name == "TransactionSearchControl_Button_InfoPanel")
             {
                 ApplyAnimationState(
                     ref animator,
@@ -68,17 +69,16 @@ namespace MTM_WIP_Application_Winforms.Helpers
             }
             else
             {
-            ApplyAnimationState(
-                ref animator,
-                components,
-                button,
-                collapsed,
-                TextAnimationPreset.Left,
-                TextAnimationPreset.Right,
-                ArrowLeft,
-                ArrowRight);
+                ApplyAnimationState(
+                    ref animator,
+                    components,
+                    button,
+                    collapsed,
+                    TextAnimationPreset.Left,
+                    TextAnimationPreset.Right,
+                    ArrowLeft,
+                    ArrowRight);
             }
-
         }
 
         /// <summary>

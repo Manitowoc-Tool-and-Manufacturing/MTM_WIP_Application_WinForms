@@ -291,6 +291,22 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                 });
 
             Service_DebugTracer.TraceMethodExit(null, nameof(Control_InventoryTab), nameof(Control_InventoryTab));
+
+            Control_InventoryTab_SuggestionBox_Operation.MinLength = 80;
+            Control_InventoryTab_SuggestionBox_Part.MinLength = 80;
+            Control_InventoryTab_SuggestionBox_Location.MinLength = 80;
+            Control_InventoryTab_SuggestionBox_ColorCode.MinLength = 80;
+            Control_InventoryTab_SuggestionBox_WorkOrder.MinLength = 80;
+            Control_InventoryTab_SuggestionBox_Quantity.MinLength = 80;
+            
+
+
+            Control_InventoryTab_SuggestionBox_Operation.MaxLength = 80;
+            Control_InventoryTab_SuggestionBox_Part.MaxLength = 80;
+            Control_InventoryTab_SuggestionBox_Location.MaxLength = 80;
+            Control_InventoryTab_SuggestionBox_ColorCode.MaxLength = 80;
+            Control_InventoryTab_SuggestionBox_WorkOrder.MaxLength = 80;
+            Control_InventoryTab_SuggestionBox_Quantity.MaxLength = 80;
         }
 
         #endregion

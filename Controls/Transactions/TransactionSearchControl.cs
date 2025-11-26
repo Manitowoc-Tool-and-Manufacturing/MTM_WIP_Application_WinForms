@@ -122,6 +122,7 @@ internal partial class TransactionSearchControl : ThemedUserControl
 
     private void InitializeInformationPanelToggle()
     {
+        Helper_ButtonToggleAnimations.ValidateIconButton(TransactionSearchControl_Button_InfoPanel, nameof(TransactionSearchControl));
         SetInformationPanelCollapsed(collapsed: false);
     }
 
@@ -716,19 +717,23 @@ internal partial class TransactionSearchControl : ThemedUserControl
 
     private void UpdateInformationPanelButton()
     {
-        Helper_ButtonToggleAnimations.ApplyHorizontalArrow(
-            ref _informationPanelAnimator,
-            components,
-            TransactionSearchControl_Button_InfoPanel,
-            _informationPanelCollapsed);
+        if (TransactionSearchControl_Button_InfoPanel == null) return;
 
-        if (TransactionSearchControl_Button_InfoPanel != null)
+        // Simple if/then logic to set the icon based on collapsed state
+        if (_informationPanelCollapsed)
         {
-            TransactionSearchControl_Button_InfoPanel.AccessibleName = _informationPanelCollapsed
-                ? "Show information panel"
-                : "Hide information panel";
-            TransactionSearchControl_Button_InfoPanel.AccessibleDescription = TransactionSearchControl_Button_InfoPanel.AccessibleName;
+            // Panel is hidden (collapsed) -> Show Right Arrow to indicate "Expand"
+            TransactionSearchControl_Button_InfoPanel.Text = Helper_ButtonToggleAnimations.ArrowRight;
+            TransactionSearchControl_Button_InfoPanel.AccessibleName = "Show information panel";
         }
+        else
+        {
+            // Panel is visible (expanded) -> Show Down Arrow to indicate "Collapse"
+            TransactionSearchControl_Button_InfoPanel.Text = Helper_ButtonToggleAnimations.ArrowDown;
+            TransactionSearchControl_Button_InfoPanel.AccessibleName = "Hide information panel";
+        }
+
+        TransactionSearchControl_Button_InfoPanel.AccessibleDescription = TransactionSearchControl_Button_InfoPanel.AccessibleName;
     }
 
     #endregion

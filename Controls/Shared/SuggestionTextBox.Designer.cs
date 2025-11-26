@@ -59,7 +59,7 @@ namespace MTM_WIP_Application_Winforms.Controls.Shared
             BackColor = SystemColors.Window;
             Controls.Add(SuggestionTextBox_Panel_Host);
             Margin = new Padding(0);
-            MinimumSize = new Size(150, 27);
+            MinimumSize = new Size(0, 27);
             Name = "SuggestionTextBox";
             Size = new Size(150, 27);
             SuggestionTextBox_Panel_Host.ResumeLayout(false);

@@ -62,7 +62,7 @@ namespace MTM_WIP_Application_Winforms.Controls.Shared
             SuggestionTextBoxWithLabel_TableLayout_Main.Dock = DockStyle.Fill;
             SuggestionTextBoxWithLabel_TableLayout_Main.Location = new Point(0, 0);
             SuggestionTextBoxWithLabel_TableLayout_Main.MaximumSize = new Size(0, 23);
-            SuggestionTextBoxWithLabel_TableLayout_Main.MinimumSize = new Size(320, 23);
+            SuggestionTextBoxWithLabel_TableLayout_Main.MinimumSize = new Size(0, 23);
             SuggestionTextBoxWithLabel_TableLayout_Main.Name = "SuggestionTextBoxWithLabel_TableLayout_Main";
             SuggestionTextBoxWithLabel_TableLayout_Main.RowCount = 1;
             SuggestionTextBoxWithLabel_TableLayout_Main.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
@@ -117,7 +117,7 @@ namespace MTM_WIP_Application_Winforms.Controls.Shared
             AutoSize = true;
             AutoSizeMode = AutoSizeMode.GrowAndShrink;
             Controls.Add(SuggestionTextBoxWithLabel_TableLayout_Main);
-            MinimumSize = new Size(320, 23);
+            MinimumSize = new Size(0, 23);
             Name = "SuggestionTextBoxWithLabel";
             Size = new Size(320, 23);
             SuggestionTextBoxWithLabel_TableLayout_Main.ResumeLayout(false);

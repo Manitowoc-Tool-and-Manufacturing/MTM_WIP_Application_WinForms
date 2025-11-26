@@ -109,8 +109,8 @@ internal partial class TransactionGridControl : ThemedUserControl
         // Initially disable Export and Print buttons until grid has data
         SetExportPrintButtonsEnabled(false);
 
-        // Initialize toggle button text to match initial state (panel hidden)
-        TransactionGridControl_Button_ToggleDetails.Text = Helper_ButtonToggleAnimations.ArrowRight;
+        // Initialize toggle button text to match initial state (panel visible)
+        TransactionGridControl_Button_ToggleDetails.Text = Helper_ButtonToggleAnimations.ArrowUp;
     }
 
     #endregion

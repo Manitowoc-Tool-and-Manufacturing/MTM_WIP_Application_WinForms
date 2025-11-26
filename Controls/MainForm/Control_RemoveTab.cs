@@ -220,6 +220,11 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                 if (Control_RemoveTab_Button_Undo != null) Control_RemoveTab_Button_Undo.TabStop = false;
                 if (Control_RemoveTab_Button_Print != null) Control_RemoveTab_Button_Print.TabStop = false;
                 if (Control_RemoveTab_DataGridView_Main != null) Control_RemoveTab_DataGridView_Main.TabStop = false;
+
+            Control_RemoveTab_TextBox_Operation.MinLength = 80;
+            Control_RemoveTab_TextBox_Part.MinLength = 80;
+            Control_RemoveTab_TextBox_Operation.MaxLength = 80;
+            Control_RemoveTab_TextBox_Part.MaxLength = 80;
             }
             catch { /* Controls may not be created in designer at design-time */ }
 
