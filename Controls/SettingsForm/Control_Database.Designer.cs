@@ -187,7 +187,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             Control_Database_TextBox_Server.MaximumSize = new Size(350, 0);
             Control_Database_TextBox_Server.MinimumSize = new Size(350, 0);
             Control_Database_TextBox_Server.Name = "Control_Database_TextBox_Server";
-            Control_Database_TextBox_Server.PlaceholderText = "Enter MySQL server address (e.g., localhost or IP)";
+            Control_Database_TextBox_Server.PlaceholderText = "Enter MySQL server address (e.g., 172.16.1.104 or IP)";
             Control_Database_TextBox_Server.Size = new Size(350, 27);
             Control_Database_TextBox_Server.TabIndex = 2;
             //

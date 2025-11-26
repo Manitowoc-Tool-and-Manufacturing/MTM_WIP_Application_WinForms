@@ -21,11 +21,11 @@ namespace MTM_WIP_Application_Winforms.Services.Maintenance
             try
             {
                 LoggingUtility.Log($"[Migration] Starting script: {scriptName}");
-                
+
                 var connectionString = Helper_Database_Variables.GetConnectionString(null, null, null, null);
                 using var connection = new MySqlConnection(connectionString);
                 await connection.OpenAsync();
-                
+
                 using var command = new MySqlCommand(sqlContent, connection);
                 command.CommandTimeout = 300; // 5 minutes for large migrations
                 await command.ExecuteNonQueryAsync();
@@ -68,7 +68,7 @@ namespace MTM_WIP_Application_Winforms.Services.Maintenance
                     INSERT INTO mtm_wip_application_winforms.md_part_ids (PartID, Customer, Description, IssuedBy, ItemType, Operations)
                     SELECT PartID, Customer, Description, IssuedBy, ItemType, Operations FROM mtm_wip_application.md_part_ids;
                     SET FOREIGN_KEY_CHECKS = 1;",
-                
+
                 "md_locations" => @"
                     SET FOREIGN_KEY_CHECKS = 0;
                     TRUNCATE TABLE mtm_wip_application_winforms.md_locations;
@@ -125,16 +125,16 @@ namespace MTM_WIP_Application_Winforms.Services.Maintenance
             try
             {
                 string sql = @"
-                    DELETE FROM inv_inventory 
-                    WHERE User = 'JOHNK' 
-                       OR PartID LIKE '%test%' 
-                       OR Location LIKE '%test%' 
+                    DELETE FROM inv_inventory
+                    WHERE User = 'JOHNK'
+                       OR PartID LIKE '%test%'
+                       OR Location LIKE '%test%'
                        OR Operation LIKE '%test%';
-                    
-                    DELETE FROM inv_transaction 
-                    WHERE User = 'JOHNK' 
-                       OR PartID LIKE '%test%' 
-                       OR FromLocation LIKE '%test%' 
+
+                    DELETE FROM inv_transaction
+                    WHERE User = 'JOHNK'
+                       OR PartID LIKE '%test%'
+                       OR FromLocation LIKE '%test%'
                        OR ToLocation LIKE '%test%'
                        OR Operation LIKE '%test%';
                 ";
@@ -152,14 +152,14 @@ namespace MTM_WIP_Application_Winforms.Services.Maintenance
             try
             {
                 // Get all tables
-                var tables = new[] { 
-                    "inv_inventory", "inv_transaction", "md_part_ids", "md_locations", 
-                    "md_operation_numbers", "log_error", "sys_last_10_transactions" 
+                var tables = new[] {
+                    "inv_inventory", "inv_transaction", "md_part_ids", "md_locations",
+                    "md_operation_numbers", "log_error", "sys_last_10_transactions"
                 };
-                
+
                 string sql = $"OPTIMIZE TABLE {string.Join(", ", tables)};";
                 await RunMigrationScriptAsync("Optimize_Tables", sql);
-                
+
                 return Model_Dao_Result<bool>.Success(true);
             }
             catch (Exception ex)
@@ -213,10 +213,10 @@ namespace MTM_WIP_Application_Winforms.Services.Maintenance
             try
             {
                 string sql = @"
-                    SELECT 
-                        table_name AS `Table`, 
-                        round(((data_length + index_length) / 1024 / 1024), 2) AS `SizeMB` 
-                    FROM information_schema.TABLES 
+                    SELECT
+                        table_name AS `Table`,
+                        round(((data_length + index_length) / 1024 / 1024), 2) AS `SizeMB`
+                    FROM information_schema.TABLES
                     WHERE table_schema = 'mtm_wip_application_winforms'
                     ORDER BY (data_length + index_length) DESC;";
 
@@ -314,9 +314,9 @@ namespace MTM_WIP_Application_Winforms.Services.Maintenance
             try
             {
                 var issues = new List<string>();
-                var requiredTables = new[] { 
-                    "inv_inventory", "inv_transaction", "md_part_ids", "md_locations", 
-                    "md_operation_numbers", "md_item_types", "usr_users", "log_error" 
+                var requiredTables = new[] {
+                    "inv_inventory", "inv_transaction", "md_part_ids", "md_locations",
+                    "md_operation_numbers", "md_item_types", "usr_users", "log_error"
                 };
 
                 var connectionString = Helper_Database_Variables.GetConnectionString(null, null, null, null);
@@ -371,8 +371,8 @@ namespace MTM_WIP_Application_Winforms.Services.Maintenance
                 string fullPath = Path.Combine(destinationPath, fileName);
 
                 string sql = "SELECT * FROM log_error INTO OUTFILE '" + fullPath.Replace("\\", "/") + "' FIELDS TERMINATED BY ',' ENCLOSED BY '\"' LINES TERMINATED BY '\\n';";
-                
-                // Note: SELECT INTO OUTFILE writes to the SERVER'S filesystem. 
+
+                // Note: SELECT INTO OUTFILE writes to the SERVER'S filesystem.
                 // If client and server are different, this won't work as expected for client path.
                 // For local dev (MAMP), it works if permissions allow.
                 // Safer approach for client app: Read data, write file in C#.
@@ -437,7 +437,7 @@ namespace MTM_WIP_Application_Winforms.Services.Maintenance
 
                 using var command = new MySqlCommand(sql, connection);
                 int rows = await command.ExecuteNonQueryAsync();
-                
+
                 return Model_Dao_Result<int>.Success(rows, "Operation completed", rows);
             }
             catch (Exception ex)
@@ -462,7 +462,7 @@ namespace MTM_WIP_Application_Winforms.Services.Maintenance
                 var dbName = "mtm_wip_application_winforms";
                 var user = "root";
                 var pass = "root"; // Should come from config ideally
-                var host = "localhost";
+                var host = "172.16.1.104";
                 var port = "3306";
 
                 var fileName = $"backup_{dbName}_{DateTime.Now:yyyyMMdd_HHmmss}.sql";
