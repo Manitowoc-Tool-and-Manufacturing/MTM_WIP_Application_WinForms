@@ -17,5 +17,13 @@ namespace MTM_WIP_Application_Winforms.Services.Visual
         /// <param name="category">The dashboard category to load query for.</param>
         /// <returns>DataTable containing the results.</returns>
         Task<Model_Dao_Result<DataTable>> GetDashboardDataAsync(Enum_VisualDashboardCategory category);
+
+        /// <summary>
+        /// Searches for dies based on part number or die number.
+        /// </summary>
+        /// <param name="searchTerm">The term to search for.</param>
+        /// <param name="searchByPart">True to search by Part Number, False to search by Die Number.</param>
+        /// <returns>DataTable containing search results.</returns>
+        Task<Model_Dao_Result<DataTable>> SearchDiesAsync(string searchTerm, bool searchByPart);
     }
 }

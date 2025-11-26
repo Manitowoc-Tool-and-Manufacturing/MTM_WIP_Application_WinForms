@@ -10,6 +10,7 @@ using MTM_WIP_Application_Winforms.Helpers;
 using MTM_WIP_Application_Winforms.Logging;
 using System.Linq;
 using System.Data;
+using MTM_WIP_Application_Winforms.Controls.Visual;
 
 namespace MTM_WIP_Application_Winforms.Forms.Visual
 {
@@ -19,6 +20,7 @@ namespace MTM_WIP_Application_Winforms.Forms.Visual
     public partial class InforVisualDashboard : ThemedForm
     {
         private readonly IService_VisualDatabase? _visualService;
+        private Control_DieToolDiscovery? _controlDieToolDiscovery;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="InforVisualDashboard"/> class.
@@ -66,6 +68,17 @@ namespace MTM_WIP_Application_Winforms.Forms.Visual
         {
             if (_visualService == null) return;
 
+            // Handle Die Tool Discovery specifically
+            if (category == Enum_VisualDashboardCategory.DieToolDiscovery)
+            {
+                ShowDieToolDiscoveryControl();
+                return;
+            }
+            else
+            {
+                HideCustomControls();
+            }
+
             try
             {
                 // UI State: Loading
@@ -73,6 +86,9 @@ namespace MTM_WIP_Application_Winforms.Forms.Visual
                 controlEmptyState.Visible = false;
                 dataGridViewResults.Visible = false;
                 btnExport.Visible = false;
+
+                // Update Title
+                labelTitle.Text = GetCategoryTitle(category);
 
                 // Fetch Data
                 var result = await _visualService.GetDashboardDataAsync(category);
@@ -206,6 +222,55 @@ namespace MTM_WIP_Application_Winforms.Forms.Visual
                 // Log but don't show error dialog for every keystroke
                 LoggingUtility.LogApplicationError(ex);
             }
+        }
+
+        private void ShowDieToolDiscoveryControl()
+        {
+            // Hide generic controls
+            dataGridViewResults.Visible = false;
+            controlEmptyState.Visible = false;
+            btnExport.Visible = false;
+            textBoxFilter.Visible = false;
+            labelFilter.Visible = false;
+
+            // Initialize control if needed
+            if (_controlDieToolDiscovery == null)
+            {
+                _controlDieToolDiscovery = new Control_DieToolDiscovery();
+                _controlDieToolDiscovery.Dock = DockStyle.Fill;
+                panelContent.Controls.Add(_controlDieToolDiscovery);
+                _controlDieToolDiscovery.BringToFront();
+            }
+
+            _controlDieToolDiscovery.Visible = true;
+            labelTitle.Text = "Die Tool Discovery";
+        }
+
+        private void HideCustomControls()
+        {
+            if (_controlDieToolDiscovery != null)
+            {
+                _controlDieToolDiscovery.Visible = false;
+            }
+            
+            // Restore generic controls visibility
+            textBoxFilter.Visible = true;
+            labelFilter.Visible = true;
+        }
+
+        private string GetCategoryTitle(Enum_VisualDashboardCategory category)
+        {
+            return category switch
+            {
+                Enum_VisualDashboardCategory.Inventory => "Inventory",
+                Enum_VisualDashboardCategory.Receiving => "Receiving",
+                Enum_VisualDashboardCategory.Shipping => "Shipping",
+                Enum_VisualDashboardCategory.InventoryAuditing => "Inventory Auditing",
+                Enum_VisualDashboardCategory.DieToolDiscovery => "Die Tool Discovery",
+                Enum_VisualDashboardCategory.MaterialHandlerAnalytics_General => "MH Analytics (General)",
+                Enum_VisualDashboardCategory.MaterialHandlerAnalytics_Team => "MH Analytics (Team)",
+                _ => "Dashboard"
+            };
         }
     }
 }
