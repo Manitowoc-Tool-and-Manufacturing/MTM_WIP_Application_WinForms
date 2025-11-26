@@ -21,6 +21,7 @@ namespace MTM_WIP_Application_Winforms.Forms.Visual
     {
         private readonly IService_VisualDatabase? _visualService;
         private Control_DieToolDiscovery? _controlDieToolDiscovery;
+        private Control_ReceivingAnalytics? _controlReceivingAnalytics;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="InforVisualDashboard"/> class.
@@ -72,6 +73,11 @@ namespace MTM_WIP_Application_Winforms.Forms.Visual
             if (category == Enum_VisualDashboardCategory.DieToolDiscovery)
             {
                 ShowDieToolDiscoveryControl();
+                return;
+            }
+            else if (category == Enum_VisualDashboardCategory.Receiving)
+            {
+                ShowReceivingAnalyticsControl();
                 return;
             }
             else
@@ -246,11 +252,40 @@ namespace MTM_WIP_Application_Winforms.Forms.Visual
             labelTitle.Text = "Die Tool Discovery";
         }
 
+        private void ShowReceivingAnalyticsControl()
+        {
+            // Hide generic controls
+            dataGridViewResults.Visible = false;
+            controlEmptyState.Visible = false;
+            btnExport.Visible = false;
+            textBoxFilter.Visible = false;
+            labelFilter.Visible = false;
+
+            // Initialize control if needed
+            if (_controlReceivingAnalytics == null)
+            {
+                _controlReceivingAnalytics = new Control_ReceivingAnalytics();
+                _controlReceivingAnalytics.Dock = DockStyle.Fill;
+                panelContent.Controls.Add(_controlReceivingAnalytics);
+                _controlReceivingAnalytics.BringToFront();
+            }
+
+            _controlReceivingAnalytics.Visible = true;
+            labelTitle.Text = "Receiving Analytics";
+            
+            // Hide other custom controls
+            if (_controlDieToolDiscovery != null) _controlDieToolDiscovery.Visible = false;
+        }
+
         private void HideCustomControls()
         {
             if (_controlDieToolDiscovery != null)
             {
                 _controlDieToolDiscovery.Visible = false;
+            }
+            if (_controlReceivingAnalytics != null)
+            {
+                _controlReceivingAnalytics.Visible = false;
             }
             
             // Restore generic controls visibility
