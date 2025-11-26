@@ -189,5 +189,5 @@
         <EmbeddedResource Include="Resources\Sql\Visual\*.sql" />
     </ItemGroup>
 
-   
+
 </Project>

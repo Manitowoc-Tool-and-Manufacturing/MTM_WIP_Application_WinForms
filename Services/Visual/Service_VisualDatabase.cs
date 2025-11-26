@@ -19,12 +19,12 @@ namespace MTM_WIP_Application_Winforms.Services.Visual
         private string _serverAddress => ConfigurationManager.AppSettings["VisualServer"] ?? "VISUALSQL";
         private string _databaseName => ConfigurationManager.AppSettings["VisualDatabase"] ?? "VMFG";
 
-        private string? _userName => !string.IsNullOrEmpty(Model_Application_Variables.VisualUserName) 
-            ? Model_Application_Variables.VisualUserName 
+        private string? _userName => !string.IsNullOrEmpty(Model_Application_Variables.VisualUserName)
+            ? Model_Application_Variables.VisualUserName
             : ConfigurationManager.AppSettings["VisualUserName"];
 
-        private string? _password => !string.IsNullOrEmpty(Model_Application_Variables.VisualPassword) 
-            ? Model_Application_Variables.VisualPassword 
+        private string? _password => !string.IsNullOrEmpty(Model_Application_Variables.VisualPassword)
+            ? Model_Application_Variables.VisualPassword
             : ConfigurationManager.AppSettings["VisualPassword"];
 
         private string GetConnectionString()
@@ -156,10 +156,10 @@ namespace MTM_WIP_Application_Winforms.Services.Visual
             {
                 // Search by Part Number -> Find Die (USER_1)
                 sql = @"
-                    SELECT 
-                        P.ID as [Part Number], 
-                        P.DESCRIPTION as [Description], 
-                        P.USER_1 as [Die Number], 
+                    SELECT
+                        P.ID as [Part Number],
+                        P.DESCRIPTION as [Description],
+                        P.USER_1 as [Die Number],
                         D.USER_2 as [Die Location],
                         P.USER_7 as [Customer],
                         P.USER_9 as [Coil]
@@ -171,15 +171,15 @@ namespace MTM_WIP_Application_Winforms.Services.Visual
             {
                 // Search by Die Number (FGT) -> Find Part (USER_5)
                 sql = @"
-                    SELECT 
-                        D.ID as [Die Number], 
-                        D.DESCRIPTION as [Description], 
-                        D.USER_5 as [Part Number], 
+                    SELECT
+                        D.ID as [Die Number],
+                        D.DESCRIPTION as [Description],
+                        D.USER_5 as [Part Number],
                         D.USER_2 as [Die Location],
                         D.USER_9 as [Coil]
                     FROM PART D
-                    WHERE D.ID LIKE @SearchTerm 
-                    AND D.ID LIKE 'FGT%-01' 
+                    WHERE D.ID LIKE @SearchTerm
+                    AND D.ID LIKE 'FGT%-01'
                     AND D.ID <> 'FGT0001-01'";
             }
 
@@ -228,12 +228,12 @@ namespace MTM_WIP_Application_Winforms.Services.Visual
         /// <param name="includeService">Whether to include service items.</param>
         /// <returns>DataTable containing the receiving schedule.</returns>
         public async Task<Model_Dao_Result<DataTable>> GetReceivingScheduleAsync(
-            DateTime startDate, 
-            DateTime endDate, 
-            string dateFilterType, 
-            bool includeClosed, 
-            bool includeConsignment, 
-            bool includeInternal, 
+            DateTime startDate,
+            DateTime endDate,
+            string dateFilterType,
+            bool includeClosed,
+            bool includeConsignment,
+            bool includeInternal,
             bool includeService)
         {
             if (string.IsNullOrEmpty(_userName) || string.IsNullOrEmpty(_password))
@@ -247,7 +247,7 @@ namespace MTM_WIP_Application_Winforms.Services.Visual
 
             // Base Query
             string sql = @"
-                SELECT 
+                SELECT
                     PO.ID as [PO Number],
                     V.NAME as [Vendor],
                     PO.ORDER_DATE as [Order Date],
@@ -361,7 +361,7 @@ namespace MTM_WIP_Application_Winforms.Services.Visual
         {
             string resourceName = $"MTM_WIP_Application_Winforms.Resources.Sql.Visual.{category}.sql";
             var assembly = Assembly.GetExecutingAssembly();
-            
+
             using (var stream = assembly.GetManifestResourceStream(resourceName))
             {
                 if (stream == null)
