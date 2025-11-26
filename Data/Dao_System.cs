@@ -110,13 +110,13 @@ internal static class Dao_System
 
             if (!dataResult.IsSuccess)
             {
-                // If stored procedure fails, create a default developer user
+                // If stored procedure fails, default to ReadOnly
 
 
-                // Set current user as developer by default when stored procedures have issues
-                Model_Application_Variables.UserTypeDeveloper = true;
+                // Set current user as ReadOnly by default when stored procedures have issues
+                Model_Application_Variables.UserTypeDeveloper = false;
                 Model_Application_Variables.UserTypeAdmin = false;
-                Model_Application_Variables.UserTypeReadOnly = false;
+                Model_Application_Variables.UserTypeReadOnly = true;
 
                 var defaultUser = new Model_Shared_Users
                 {
@@ -159,11 +159,11 @@ internal static class Dao_System
             }
             else
             {
-                // No users found, create default developer
+                // No users found, default to ReadOnly
 
-                Model_Application_Variables.UserTypeDeveloper = true;
+                Model_Application_Variables.UserTypeDeveloper = false;
                 Model_Application_Variables.UserTypeAdmin = false;
-                Model_Application_Variables.UserTypeReadOnly = false;
+                Model_Application_Variables.UserTypeReadOnly = true;
 
                 var defaultUser = new Model_Shared_Users
                 {
@@ -180,11 +180,11 @@ internal static class Dao_System
         {
             LoggingUtility.LogApplicationError(ex);
 
-            // FALLBACK: If everything fails, grant default developer access to prevent application lockup
-
-            Model_Application_Variables.UserTypeDeveloper = true;
+            // FALLBACK: If everything fails, grant ReadOnly access to prevent application lockup but ensure safety
+            Model_Application_Variables.UserTypeDeveloper = false;
             Model_Application_Variables.UserTypeAdmin = false;
-            Model_Application_Variables.UserTypeReadOnly = false;
+            Model_Application_Variables.UserTypeReadOnly = true;
+            Model_Application_Variables.UserTypeNormal = false;
 
             var fallbackUser = new Model_Shared_Users
             {
@@ -194,7 +194,7 @@ internal static class Dao_System
 
             await HandleSystemDaoExceptionAsync(ex, "System_UserAccessType");
             return Model_Dao_Result<List<Model_Shared_Users>>.Success(new List<Model_Shared_Users> { fallbackUser },
-                $"Fallback developer access granted for user: {user}");
+                $"Fallback ReadOnly access granted for user: {user}");
         }
     }
 

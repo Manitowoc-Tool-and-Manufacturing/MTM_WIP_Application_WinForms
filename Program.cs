@@ -42,23 +42,11 @@ namespace MTM_WIP_Application_Winforms
                 // User identification
                 Service_OnStartup_User.IdentifyUser();
 
-                // Load user settings
-                Service_OnStartup_User.LoadUserSettings();
-
-                // Validate database connectivity
-                if (!Service_OnStartup_Database.ValidateConnectivity())
-                {
-                    return;
-                }
-
-                // Initialize parameter cache
-                Service_OnStartup_Database.InitializeParameterCache();
+                // Initialize parameter cache (Moved to Splash Context)
+                // Service_OnStartup_Database.InitializeParameterCache();
 
                 // Synchronize error reports
                 Service_OnStartup_Reporting.SyncErrorReports();
-
-                // Load user access permissions
-                Service_OnStartup_User.LoadUserAccess();
 
                 // Trace setup
                 Service_OnStartup_System.SetupTrace();

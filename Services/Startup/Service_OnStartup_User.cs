@@ -41,13 +41,13 @@ namespace MTM_WIP_Application_Winforms.Services.Startup
             }
         }
 
-        public static void LoadUserSettings()
+        public static async Task LoadUserSettingsAsync()
         {
             try
             {
-                var serverResult = Dao_User.GetWipServerAddressAsync(Model_Application_Variables.User).GetAwaiter().GetResult();
-                var portResult = Dao_User.GetWipServerPortAsync(Model_Application_Variables.User).GetAwaiter().GetResult();
-                var databaseResult = Dao_User.GetDatabaseAsync(Model_Application_Variables.User).GetAwaiter().GetResult();
+                var serverResult = await Dao_User.GetWipServerAddressAsync(Model_Application_Variables.User);
+                var portResult = await Dao_User.GetWipServerPortAsync(Model_Application_Variables.User);
+                var databaseResult = await Dao_User.GetDatabaseAsync(Model_Application_Variables.User);
 
                 if (serverResult.IsSuccess && !string.IsNullOrWhiteSpace(serverResult.Data))
                 {
@@ -79,11 +79,11 @@ namespace MTM_WIP_Application_Winforms.Services.Startup
             }
         }
 
-        public static void LoadUserAccess()
+        public static async Task LoadUserAccessAsync()
         {
             try
             {
-                _ = Dao_System.System_UserAccessTypeAsync();
+                await Dao_System.System_UserAccessTypeAsync();
             }
             catch (MySqlException ex)
             {

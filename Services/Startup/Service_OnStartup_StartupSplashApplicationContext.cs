@@ -4,6 +4,7 @@ using MTM_WIP_Application_Winforms.Core;
 using MTM_WIP_Application_Winforms.Core.Theming.Interfaces;
 using MTM_WIP_Application_Winforms.Data;
 using MTM_WIP_Application_Winforms.Forms.MainForm;
+using MTM_WIP_Application_Winforms.Forms.Shared;
 using MTM_WIP_Application_Winforms.Forms.Splash;
 using MTM_WIP_Application_Winforms.Helpers;
 using MTM_WIP_Application_Winforms.Logging;
@@ -155,8 +156,51 @@ namespace MTM_WIP_Application_Winforms.Services.Startup
                 }
                 await Task.Delay(50);
 
-                // 4. Verify database connectivity using helper patterns - CRITICAL STEP
-                progress = 35;
+                // 3.5. Shared Workstation Login
+                if (Model_Application_Variables.User.Equals("SHOP2", StringComparison.OrdinalIgnoreCase) ||
+                    Model_Application_Variables.User.Equals("MTMDC", StringComparison.OrdinalIgnoreCase))
+                {
+                    progress = 31;
+                    _splashScreen?.UpdateProgress(progress, "Shared workstation detected. Please login...");
+                    
+                    using var loginForm = new Form_SharedLogin();
+                    // Show dialog on top of splash screen
+                    var result = loginForm.ShowDialog(_splashScreen);
+                    
+                    if (result == DialogResult.OK)
+                    {
+                        Model_Application_Variables.User = loginForm.ValidatedUsername;
+                        LoggingUtility.Log($"[Startup] Shared workstation login successful. User: {Model_Application_Variables.User}");
+                    }
+                    else
+                    {
+                        // User cancelled or failed
+                        LoggingUtility.Log("[Startup] Shared workstation login cancelled/failed. Exiting.");
+                        _splashScreen?.Close();
+                        return;
+                    }
+                }
+
+                // 4. Load User Settings (Async)
+                progress = 32;
+                _splashScreen?.UpdateProgress(progress, "Loading user settings...");
+                try
+                {
+                    await Service_OnStartup_User.LoadUserSettingsAsync();
+                    progress = 35;
+                    _splashScreen?.UpdateProgress(progress, "User settings loaded.");
+                }
+                catch (Exception ex)
+                {
+                    Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Medium,
+                        contextData: new Dictionary<string, object> { ["StartupStep"] = "Load User Settings" },
+                        callerName: "RunStartupAsync_LoadUserSettings",
+                        controlName: "StartupSplash_LoadUserSettings");
+                }
+                await Task.Delay(50);
+
+                // 5. Verify database connectivity using helper patterns - CRITICAL STEP
+                progress = 38;
                 _splashScreen?.UpdateProgress(progress, "Verifying database connectivity...");
                 try
                 {
@@ -188,8 +232,59 @@ namespace MTM_WIP_Application_Winforms.Services.Startup
                 }
                 await Task.Delay(50);
 
-                // 5. Setup data tables with error handling - CRITICAL STEP
+                // 6. Initialize Parameter Cache (Async wrapper)
                 progress = 45;
+                _splashScreen?.UpdateProgress(progress, "Initializing parameter cache...");
+                try
+                {
+                    await Task.Run(() => Service_OnStartup_Database.InitializeParameterCache());
+                    progress = 48;
+                    _splashScreen?.UpdateProgress(progress, "Parameter cache initialized.");
+                }
+                catch (Exception ex)
+                {
+                     Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Low,
+                        contextData: new Dictionary<string, object> { ["StartupStep"] = "Parameter Cache" },
+                        callerName: "RunStartupAsync_ParameterCache",
+                        controlName: "StartupSplash_ParameterCache");
+                }
+                await Task.Delay(50);
+
+                // 7. Load User Access (Async)
+                progress = 50;
+                _splashScreen?.UpdateProgress(progress, "Verifying permissions...");
+                try
+                {
+                    await Service_OnStartup_User.LoadUserAccessAsync();
+                    
+                    // User Not Found check
+                    bool hasAccess = Model_Application_Variables.UserTypeNormal || 
+                                     Model_Application_Variables.UserTypeReadOnly || 
+                                     Model_Application_Variables.UserTypeAdmin || 
+                                     Model_Application_Variables.UserTypeDeveloper;
+
+                    if (!hasAccess)
+                    {
+                        ShowErrorDialog("User Not Found", 
+                            "You do not currently have a username set. Please contact your supervisor.");
+                        _splashScreen?.Close();
+                        return;
+                    }
+
+                    progress = 55;
+                    _splashScreen?.UpdateProgress(progress, "Permissions verified.");
+                }
+                catch (Exception ex)
+                {
+                     Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Fatal,
+                        contextData: new Dictionary<string, object> { ["StartupStep"] = "Load User Access" },
+                        callerName: "RunStartupAsync_LoadUserAccess",
+                        controlName: "StartupSplash_LoadUserAccess");
+                }
+                await Task.Delay(50);
+
+                // 8. Setup data tables with error handling - CRITICAL STEP
+                progress = 60;
                 _splashScreen?.UpdateProgress(progress, "Setting up Data Tables...");
                 try
                 {
@@ -494,8 +589,8 @@ namespace MTM_WIP_Application_Winforms.Services.Startup
                 // Use consistent timeout settings
                 var connectionStringBuilder = new MySqlConnectionStringBuilder(Model_Application_Variables.ConnectionString)
                 {
-                    ConnectionTimeout = 10,
-                    DefaultCommandTimeout = 10
+                    ConnectionTimeout = 30,
+                    DefaultCommandTimeout = 30
                 };
 
                 using var connection = new MySqlConnection(connectionStringBuilder.ConnectionString);
