@@ -41,6 +41,14 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
             this.labelLegendPartial = new System.Windows.Forms.Label();
             this.panelLegendOnTime = new System.Windows.Forms.Panel();
             this.labelLegendOnTime = new System.Windows.Forms.Label();
+            this.labelVendorFilter = new System.Windows.Forms.Label();
+            this.txtVendorFilter = new System.Windows.Forms.TextBox();
+            this.labelPOFilter = new System.Windows.Forms.Label();
+            this.txtPOFilter = new System.Windows.Forms.TextBox();
+            this.chkShowLate = new System.Windows.Forms.CheckBox();
+            this.chkShowPartial = new System.Windows.Forms.CheckBox();
+            this.chkShowOnTime = new System.Windows.Forms.CheckBox();
+            this.chkShowWithPartNumber = new System.Windows.Forms.CheckBox();
 
             this.tableLayoutPanelMain.SuspendLayout();
             this.panelFilters.SuspendLayout();
