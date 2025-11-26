@@ -14,8 +14,6 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
     {
         #region Fields
 
-        public event EventHandler<string>? StatusMessageChanged;
-
         #endregion
 
         #region Constructors

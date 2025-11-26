@@ -208,6 +208,225 @@ namespace MTM_WIP_Application_Winforms.Services.Maintenance
             }
         }
 
+        public static async Task<Model_Dao_Result<List<Dictionary<string, object>>>> GetTableSizesAsync()
+        {
+            try
+            {
+                string sql = @"
+                    SELECT 
+                        table_name AS `Table`, 
+                        round(((data_length + index_length) / 1024 / 1024), 2) AS `SizeMB` 
+                    FROM information_schema.TABLES 
+                    WHERE table_schema = 'mtm_wip_application_winforms'
+                    ORDER BY (data_length + index_length) DESC;";
+
+                var connectionString = Helper_Database_Variables.GetConnectionString(null, null, null, null);
+                using var connection = new MySqlConnection(connectionString);
+                await connection.OpenAsync();
+
+                using var cmd = new MySqlCommand(sql, connection);
+                using var reader = await cmd.ExecuteReaderAsync();
+
+                var results = new List<Dictionary<string, object>>();
+                while (await reader.ReadAsync())
+                {
+                    results.Add(new Dictionary<string, object>
+                    {
+                        { "Table", reader["Table"] },
+                        { "SizeMB", reader["SizeMB"] }
+                    });
+                }
+
+                return Model_Dao_Result<List<Dictionary<string, object>>>.Success(results);
+            }
+            catch (Exception ex)
+            {
+                return Model_Dao_Result<List<Dictionary<string, object>>>.Failure(ex);
+            }
+        }
+
+        public static async Task<Model_Dao_Result<Dictionary<string, string>>> CheckTableIntegrityAsync()
+        {
+            try
+            {
+                var results = new Dictionary<string, string>();
+                var tables = new[] { "inv_inventory", "inv_transaction", "md_part_ids", "md_locations", "usr_users" };
+
+                var connectionString = Helper_Database_Variables.GetConnectionString(null, null, null, null);
+                using var connection = new MySqlConnection(connectionString);
+                await connection.OpenAsync();
+
+                foreach (var table in tables)
+                {
+                    using var cmd = new MySqlCommand($"CHECK TABLE {table}", connection);
+                    using var reader = await cmd.ExecuteReaderAsync();
+                    if (await reader.ReadAsync())
+                    {
+                        // Msg_text column usually contains OK or error
+                        results[table] = reader["Msg_text"].ToString() ?? "Unknown";
+                    }
+                }
+
+                return Model_Dao_Result<Dictionary<string, string>>.Success(results);
+            }
+            catch (Exception ex)
+            {
+                return Model_Dao_Result<Dictionary<string, string>>.Failure(ex);
+            }
+        }
+
+        public static async Task<Model_Dao_Result<List<string>>> GetActiveConnectionsAsync()
+        {
+            try
+            {
+                var connections = new List<string>();
+                string sql = "SHOW PROCESSLIST";
+
+                var connectionString = Helper_Database_Variables.GetConnectionString(null, null, null, null);
+                using var connection = new MySqlConnection(connectionString);
+                await connection.OpenAsync();
+
+                using var cmd = new MySqlCommand(sql, connection);
+                using var reader = await cmd.ExecuteReaderAsync();
+
+                while (await reader.ReadAsync())
+                {
+                    string user = reader["User"].ToString() ?? "Unknown";
+                    string host = reader["Host"].ToString() ?? "Unknown";
+                    string db = reader["db"].ToString() ?? "None";
+                    string command = reader["Command"].ToString() ?? "Unknown";
+                    string time = reader["Time"].ToString() ?? "0";
+                    string state = reader["State"].ToString() ?? "";
+
+                    connections.Add($"User: {user} | Host: {host} | DB: {db} | Cmd: {command} | Time: {time}s | State: {state}");
+                }
+
+                return Model_Dao_Result<List<string>>.Success(connections);
+            }
+            catch (Exception ex)
+            {
+                return Model_Dao_Result<List<string>>.Failure(ex);
+            }
+        }
+
+        public static async Task<Model_Dao_Result<List<string>>> ValidateSchemaAsync()
+        {
+            try
+            {
+                var issues = new List<string>();
+                var requiredTables = new[] { 
+                    "inv_inventory", "inv_transaction", "md_part_ids", "md_locations", 
+                    "md_operation_numbers", "md_item_types", "usr_users", "log_error" 
+                };
+
+                var connectionString = Helper_Database_Variables.GetConnectionString(null, null, null, null);
+                using var connection = new MySqlConnection(connectionString);
+                await connection.OpenAsync();
+
+                // Check tables
+                foreach (var table in requiredTables)
+                {
+                    using var cmd = new MySqlCommand($"SHOW TABLES LIKE '{table}'", connection);
+                    var result = await cmd.ExecuteScalarAsync();
+                    if (result == null)
+                    {
+                        issues.Add($"Missing Table: {table}");
+                    }
+                }
+
+                // Check critical columns
+                var criticalColumns = new Dictionary<string, string[]>
+                {
+                    { "inv_inventory", new[] { "ColorCode", "WorkOrder" } },
+                    { "inv_transaction", new[] { "ColorCode", "WorkOrder" } }
+                };
+
+                foreach (var kvp in criticalColumns)
+                {
+                    foreach (var col in kvp.Value)
+                    {
+                        using var cmd = new MySqlCommand($"SHOW COLUMNS FROM {kvp.Key} LIKE '{col}'", connection);
+                        var result = await cmd.ExecuteScalarAsync();
+                        if (result == null)
+                        {
+                            issues.Add($"Missing Column: {kvp.Key}.{col}");
+                        }
+                    }
+                }
+
+                return Model_Dao_Result<List<string>>.Success(issues);
+            }
+            catch (Exception ex)
+            {
+                return Model_Dao_Result<List<string>>.Failure(ex);
+            }
+        }
+
+        public static async Task<Model_Dao_Result<string>> ArchiveAndClearLogsAsync(string destinationPath)
+        {
+            try
+            {
+                // 1. Export logs to CSV
+                string fileName = $"error_logs_archive_{DateTime.Now:yyyyMMdd_HHmmss}.csv";
+                string fullPath = Path.Combine(destinationPath, fileName);
+
+                string sql = "SELECT * FROM log_error INTO OUTFILE '" + fullPath.Replace("\\", "/") + "' FIELDS TERMINATED BY ',' ENCLOSED BY '\"' LINES TERMINATED BY '\\n';";
+                
+                // Note: SELECT INTO OUTFILE writes to the SERVER'S filesystem. 
+                // If client and server are different, this won't work as expected for client path.
+                // For local dev (MAMP), it works if permissions allow.
+                // Safer approach for client app: Read data, write file in C#.
+
+                var connectionString = Helper_Database_Variables.GetConnectionString(null, null, null, null);
+                using var connection = new MySqlConnection(connectionString);
+                await connection.OpenAsync();
+
+                using (var cmd = new MySqlCommand("SELECT * FROM log_error", connection))
+                using (var reader = await cmd.ExecuteReaderAsync())
+                using (var writer = new StreamWriter(fullPath))
+                {
+                    // Write header
+                    await writer.WriteLineAsync("ErrorID,Timestamp,User,Message,StackTrace,Source");
+
+                    while (await reader.ReadAsync())
+                    {
+                        var line = $"{reader["ErrorID"]},{reader["Timestamp"]},{reader["User"]},\"{reader["Message"]}\",\"{reader["StackTrace"]}\",{reader["Source"]}";
+                        await writer.WriteLineAsync(line);
+                    }
+                }
+
+                // 2. Truncate table
+                await TruncateLogsAsync();
+
+                return Model_Dao_Result<string>.Success(data: fullPath);
+            }
+            catch (Exception ex)
+            {
+                return Model_Dao_Result<string>.Failure(ex);
+            }
+        }
+
+        public static async Task<Model_Dao_Result<bool>> FactoryResetAsync()
+        {
+            try
+            {
+                string sql = @"
+                    SET FOREIGN_KEY_CHECKS = 0;
+                    TRUNCATE TABLE inv_inventory;
+                    TRUNCATE TABLE inv_transaction;
+                    TRUNCATE TABLE sys_last_10_transactions;
+                    SET FOREIGN_KEY_CHECKS = 1;
+                ";
+
+                await RunMigrationScriptAsync("Factory_Reset", sql);
+                return Model_Dao_Result<bool>.Success(true);
+            }
+            catch (Exception ex)
+            {
+                return Model_Dao_Result<bool>.Failure(ex);
+            }
+        }
+
         private static async Task<Model_Dao_Result<int>> ExecuteNonQueryAndReturnRowsAsync(string sql)
         {
             try

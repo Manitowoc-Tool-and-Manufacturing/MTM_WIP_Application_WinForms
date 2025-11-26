@@ -344,7 +344,7 @@ namespace MTM_WIP_Application_Winforms.Forms.MainForm
                     
                     if (isDeveloper)
                     {
-                        InitializeDatabaseMaintenanceMenu();
+                        InitializeDevelopmentMenuItems();
                     }
                 }
                 else
@@ -1539,20 +1539,51 @@ namespace MTM_WIP_Application_Winforms.Forms.MainForm
             }
         }
 
-        private void InitializeDatabaseMaintenanceMenu()
+        private void MainForm_MenuStrip_Development_Analytics_Click(object? sender, EventArgs e)
+        {
+            try
+            {
+                using var analyticsForm = new Forms.Analytics.Form_Analytics();
+                analyticsForm.ShowDialog(this);
+            }
+            catch (Exception ex)
+            {
+                LoggingUtility.LogApplicationError(ex);
+                Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Medium, controlName: nameof(MainForm));
+            }
+        }
+
+        private void InitializeDevelopmentMenuItems()
         {
             if (developmentToolStripMenuItem == null) return;
 
-            // Check if already added
+            // Database Maintenance
+            bool hasDbMenu = false;
             foreach (ToolStripItem item in developmentToolStripMenuItem.DropDownItems)
             {
-                if (item.Text == "Database Maintenance") return;
+                if (item.Text == "Database Maintenance") hasDbMenu = true;
             }
 
-            var dbMenu = new ToolStripMenuItem("Database Maintenance");
-            dbMenu.Click += MainForm_MenuStrip_Development_DatabaseMaintenance_Click;
+            if (!hasDbMenu)
+            {
+                var dbMenu = new ToolStripMenuItem("Database Maintenance");
+                dbMenu.Click += MainForm_MenuStrip_Development_DatabaseMaintenance_Click;
+                developmentToolStripMenuItem.DropDownItems.Add(dbMenu);
+            }
 
-            developmentToolStripMenuItem.DropDownItems.Add(dbMenu);
+            // Material Handler Analytics
+            bool hasAnalyticsMenu = false;
+            foreach (ToolStripItem item in developmentToolStripMenuItem.DropDownItems)
+            {
+                if (item.Text == "Material Handler Analytics") hasAnalyticsMenu = true;
+            }
+
+            if (!hasAnalyticsMenu)
+            {
+                var analyticsMenu = new ToolStripMenuItem("Material Handler Analytics");
+                analyticsMenu.Click += MainForm_MenuStrip_Development_Analytics_Click;
+                developmentToolStripMenuItem.DropDownItems.Add(analyticsMenu);
+            }
         }
     }
 

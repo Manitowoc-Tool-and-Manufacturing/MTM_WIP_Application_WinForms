@@ -59,7 +59,6 @@ internal partial class TransactionSearchControl : ThemedUserControl
     private bool _fromLocationSuggestionsConfigured;
     private bool _toLocationSuggestionsConfigured;
     private bool _operationSuggestionsConfigured;
-    private Control_TextAnimationSequence? _informationPanelAnimator;
     private bool _informationPanelCollapsed;
 
     #endregion

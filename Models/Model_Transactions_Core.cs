@@ -1,7 +1,7 @@
 
 namespace MTM_WIP_Application_Winforms.Models
 {
-    internal class Model_Transactions_Core
+    public class Model_Transactions_Core
     {
         public int ID { get; set; }
         public TransactionType TransactionType { get; set; }
@@ -17,7 +17,7 @@ namespace MTM_WIP_Application_Winforms.Models
         public DateTime DateTime { get; set; }
     }
 
-    internal enum TransactionType
+    public enum TransactionType
     {
         IN,
         OUT,

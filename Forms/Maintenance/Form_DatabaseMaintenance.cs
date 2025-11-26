@@ -211,5 +211,149 @@ namespace MTM_WIP_Application_Winforms.Forms.Maintenance
                 Log($"Check Failed: {result.ErrorMessage}");
             }
         }
+
+        private async void btnTableSizes_Click(object sender, EventArgs e)
+        {
+            Log("Analyzing Table Sizes...");
+            var result = await Service_Migration.GetTableSizesAsync();
+            if (result.IsSuccess && result.Data != null)
+            {
+                // Create a temporary grid to show results if needed, or just log
+                // For now, logging to the rich text box
+                Log(string.Format("{0,-30} {1,10}", "Table Name", "Size (MB)"));
+                Log(new string('-', 45));
+                
+                foreach (var row in result.Data)
+                {
+                    Log(string.Format("{0,-30} {1,10}", row["Table"], row["SizeMB"]));
+                }
+            }
+            else
+            {
+                Log($"Analysis Failed: {result.ErrorMessage}");
+            }
+        }
+
+        private async void btnIntegrity_Click(object sender, EventArgs e)
+        {
+            Log("Verifying Table Integrity...");
+            var result = await Service_Migration.CheckTableIntegrityAsync();
+            if (result.IsSuccess && result.Data != null)
+            {
+                foreach (var kvp in result.Data)
+                {
+                    string status = kvp.Value;
+                    if (status == "OK")
+                        Log($"{kvp.Key}: OK");
+                    else
+                        Log($"{kvp.Key}: {status}"); // Shows error if not OK
+                }
+            }
+            else
+            {
+                Log($"Integrity Check Failed: {result.ErrorMessage}");
+            }
+        }
+
+        private async void btnConnections_Click(object sender, EventArgs e)
+        {
+            Log("Monitoring Active Connections...");
+            var result = await Service_Migration.GetActiveConnectionsAsync();
+            if (result.IsSuccess && result.Data != null)
+            {
+                foreach (var conn in result.Data)
+                {
+                    Log(conn);
+                }
+            }
+            else
+            {
+                Log($"Monitor Failed: {result.ErrorMessage}");
+            }
+        }
+
+        private async void btnSchema_Click(object sender, EventArgs e)
+        {
+            Log("Validating Database Schema...");
+            var result = await Service_Migration.ValidateSchemaAsync();
+            if (result.IsSuccess)
+            {
+                if (result.Data == null || result.Data.Count == 0)
+                {
+                    Log("Schema Validation: PASS (All required tables and columns found)");
+                }
+                else
+                {
+                    Log("Schema Validation: FAIL");
+                    foreach (var issue in result.Data)
+                    {
+                        Log($" - {issue}");
+                    }
+                }
+            }
+            else
+            {
+                Log($"Validation Failed: {result.ErrorMessage}");
+            }
+        }
+
+        private async void btnArchiveLogs_Click(object sender, EventArgs e)
+        {
+            using var fbd = new FolderBrowserDialog();
+            fbd.Description = "Select Archive Destination";
+            if (fbd.ShowDialog() == DialogResult.OK)
+            {
+                Log("Archiving Logs...");
+                var result = await Service_Migration.ArchiveAndClearLogsAsync(fbd.SelectedPath);
+                if (result.IsSuccess)
+                {
+                    Log($"Logs Archived to: {result.Data}");
+                    Log("Log Table Truncated.");
+                    Service_ErrorHandler.ShowInformation($"Logs archived and cleared successfully.\nFile: {result.Data}", "Archive Complete");
+                }
+                else
+                {
+                    Log($"Archive Failed: {result.ErrorMessage}");
+                }
+            }
+        }
+
+        private async void btnFactoryReset_Click(object sender, EventArgs e)
+        {
+            // Warning 1
+            if (Service_ErrorHandler.ShowConfirmation(
+                "Are you sure you want to perform a Factory Reset?\n\nThis will DELETE ALL INVENTORY and TRANSACTION history.\nMaster Data (Parts, Users) will be kept.", 
+                "Factory Reset - Warning 1/3", 
+                MessageBoxButtons.YesNo, 
+                MessageBoxIcon.Warning) != DialogResult.Yes) return;
+
+            // Warning 2
+            if (Service_ErrorHandler.ShowConfirmation(
+                "THIS IS PERMANENT.\n\nAll current inventory counts and movement history will be lost forever.\n\nAre you absolutely sure?", 
+                "Factory Reset - Warning 2/3", 
+                MessageBoxButtons.YesNo, 
+                MessageBoxIcon.Error) != DialogResult.Yes) return;
+
+            // Warning 3
+            if (Service_ErrorHandler.ShowConfirmation(
+                "FINAL CHANCE.\n\nClick YES to wipe the database.\nClick NO to cancel.", 
+                "Factory Reset - Warning 3/3", 
+                MessageBoxButtons.YesNo, 
+                MessageBoxIcon.Stop) != DialogResult.Yes) return;
+
+            Log("PERFORMING FACTORY RESET...");
+            var result = await Service_Migration.FactoryResetAsync();
+            
+            if (result.IsSuccess)
+            {
+                Log("FACTORY RESET COMPLETE.");
+                Service_ErrorHandler.ShowInformation("Factory Reset Complete.\nAll inventory data has been wiped.", "Reset Successful");
+            }
+            else
+            {
+                Log($"RESET FAILED: {result.ErrorMessage}");
+                Service_ErrorHandler.ShowUserError($"Reset Failed: {result.ErrorMessage}");
+            }
+        }
     }
 }

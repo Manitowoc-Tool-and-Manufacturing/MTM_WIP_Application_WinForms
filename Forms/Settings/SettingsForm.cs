@@ -167,7 +167,6 @@ namespace MTM_WIP_Application_Winforms.Forms.Settings
             SettingsForm_Panel_Database.Controls.Add(controlDatabase);
 
             Control_About controlAbout = new() { Dock = DockStyle.Fill };
-            controlAbout.StatusMessageChanged += (s, message) => { UpdateStatus(message); };
             SettingsForm_Panel_About.Controls.Add(controlAbout);
 
             Control_User_Management controlUserManagement = new() { Dock = DockStyle.Fill };
