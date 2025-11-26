@@ -211,7 +211,7 @@ namespace MTM_WIP_Application_Winforms.Controls.Transactions
             TransactionGridControl_Button_ToggleDetails.Margin = new Padding(3);
             TransactionGridControl_Button_ToggleDetails.Name = "TransactionGridControl_Button_ToggleDetails";
             TransactionGridControl_Button_ToggleDetails.Size = new Size(36, 23);
-            TransactionGridControl_Button_ToggleDetails.Text = "📋 🡲";
+            TransactionGridControl_Button_ToggleDetails.Text = "📋 �";
             TransactionGridControl_Button_ToggleDetails.ToolTipText = "Hide/Show transaction details panel";
             // 
             // TransactionGridControl_ToolStripSeparator5

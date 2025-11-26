@@ -122,7 +122,6 @@ internal partial class TransactionSearchControl : ThemedUserControl
 
     private void InitializeInformationPanelToggle()
     {
-        Helper_ButtonToggleAnimations.ValidateIconButton(TransactionSearchControl_Button_InfoPanel, nameof(TransactionSearchControl));
         SetInformationPanelCollapsed(collapsed: false);
     }
 

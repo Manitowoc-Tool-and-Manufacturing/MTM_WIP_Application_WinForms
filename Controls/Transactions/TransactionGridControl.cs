@@ -109,7 +109,8 @@ internal partial class TransactionGridControl : ThemedUserControl
         // Initially disable Export and Print buttons until grid has data
         SetExportPrintButtonsEnabled(false);
 
-
+        // Initialize toggle button text to match initial state (panel hidden)
+        TransactionGridControl_Button_ToggleDetails.Text = Helper_ButtonToggleAnimations.ArrowRight;
     }
 
     #endregion
@@ -725,13 +726,13 @@ internal partial class TransactionGridControl : ThemedUserControl
         if (visible)
         {
             TransactionGridControl_TableLayout_Main.SetColumnSpan(TransactionGridControl_Panel_DataGridView, 1);
-            TransactionGridControl_Button_ToggleDetails.Text = "📋 🡲";
+            TransactionGridControl_Button_ToggleDetails.Text = Helper_ButtonToggleAnimations.ArrowUp;
             TransactionGridControl_Button_ToggleDetails.ToolTipText = "Hide transaction details panel";
         }
         else
         {
             TransactionGridControl_TableLayout_Main.SetColumnSpan(TransactionGridControl_Panel_DataGridView, 2);
-            TransactionGridControl_Button_ToggleDetails.Text = "🡰 📋";
+            TransactionGridControl_Button_ToggleDetails.Text = Helper_ButtonToggleAnimations.ArrowRight;
             TransactionGridControl_Button_ToggleDetails.ToolTipText = "Show transaction details panel";
         }
 

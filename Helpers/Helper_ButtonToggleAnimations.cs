@@ -12,7 +12,7 @@ namespace MTM_WIP_Application_Winforms.Helpers
     internal static class Helper_ButtonToggleAnimations
     {
         public const string ArrowLeft = "🡰 📋";
-        public const string ArrowRight = "📋 🡲";
+        public const string ArrowRight = "🡲 📋";
         public const string ArrowUp = "🡱 📋";
         public const string ArrowDown = "🡳 📋";
 
@@ -54,7 +54,20 @@ namespace MTM_WIP_Application_Winforms.Helpers
             IContainer? components,
             Button? button,
             bool collapsed)
-        {
+        {if (button.Name == "TransactionSearchControl_Button_InfoPanel")
+            {
+                ApplyAnimationState(
+                    ref animator,
+                    components,
+                    button,
+                    collapsed,
+                    TextAnimationPreset.Right,
+                    TextAnimationPreset.Down,
+                    ArrowRight,
+                    ArrowDown);
+            }
+            else
+            {
             ApplyAnimationState(
                 ref animator,
                 components,
@@ -64,6 +77,8 @@ namespace MTM_WIP_Application_Winforms.Helpers
                 TextAnimationPreset.Right,
                 ArrowLeft,
                 ArrowRight);
+            }
+
         }
 
         /// <summary>

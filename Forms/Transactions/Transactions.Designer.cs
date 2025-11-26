@@ -35,7 +35,7 @@ namespace MTM_WIP_Application_Winforms.Forms.Transactions
             Transactions_Panel_Main.Dock = DockStyle.Fill;
             Transactions_Panel_Main.Location = new Point(0, 0);
             Transactions_Panel_Main.Name = "Transactions_Panel_Main";
-            Transactions_Panel_Main.Size = new Size(1251, 661);
+            Transactions_Panel_Main.Size = new Size(1159, 661);
             Transactions_Panel_Main.TabIndex = 0;
             // 
             // Transactions_TableLayout_Main
@@ -52,7 +52,7 @@ namespace MTM_WIP_Application_Winforms.Forms.Transactions
             Transactions_TableLayout_Main.RowStyles.Add(new RowStyle());
             Transactions_TableLayout_Main.RowStyles.Add(new RowStyle());
             Transactions_TableLayout_Main.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
-            Transactions_TableLayout_Main.Size = new Size(1251, 661);
+            Transactions_TableLayout_Main.Size = new Size(1159, 661);
             Transactions_TableLayout_Main.TabIndex = 0;
             // 
             // Transactions_Label_Title
@@ -63,7 +63,7 @@ namespace MTM_WIP_Application_Winforms.Forms.Transactions
             Transactions_Label_Title.Location = new Point(3, 3);
             Transactions_Label_Title.Margin = new Padding(3);
             Transactions_Label_Title.Name = "Transactions_Label_Title";
-            Transactions_Label_Title.Size = new Size(1245, 19);
+            Transactions_Label_Title.Size = new Size(1153, 19);
             Transactions_Label_Title.TabIndex = 2;
             Transactions_Label_Title.Text = "MTM WIP Application - Transaction History System";
             Transactions_Label_Title.TextAlign = ContentAlignment.MiddleLeft;
@@ -74,9 +74,9 @@ namespace MTM_WIP_Application_Winforms.Forms.Transactions
             Transactions_Panel_Grid.AutoSizeMode = AutoSizeMode.GrowAndShrink;
             Transactions_Panel_Grid.Controls.Add(Transactions_UserControl_Grid);
             Transactions_Panel_Grid.Dock = DockStyle.Fill;
-            Transactions_Panel_Grid.Location = new Point(3, 195);
+            Transactions_Panel_Grid.Location = new Point(3, 306);
             Transactions_Panel_Grid.Name = "Transactions_Panel_Grid";
-            Transactions_Panel_Grid.Size = new Size(1245, 463);
+            Transactions_Panel_Grid.Size = new Size(1153, 352);
             Transactions_Panel_Grid.TabIndex = 1;
             // 
             // Transactions_UserControl_Grid
@@ -88,7 +88,7 @@ namespace MTM_WIP_Application_Winforms.Forms.Transactions
             Transactions_UserControl_Grid.Margin = new Padding(0);
             Transactions_UserControl_Grid.Name = "Transactions_UserControl_Grid";
             Transactions_UserControl_Grid.Padding = new Padding(2);
-            Transactions_UserControl_Grid.Size = new Size(1245, 463);
+            Transactions_UserControl_Grid.Size = new Size(1153, 352);
             Transactions_UserControl_Grid.TabIndex = 0;
             // 
             // Transactions_Panel_Search
@@ -99,7 +99,7 @@ namespace MTM_WIP_Application_Winforms.Forms.Transactions
             Transactions_Panel_Search.Dock = DockStyle.Fill;
             Transactions_Panel_Search.Location = new Point(3, 28);
             Transactions_Panel_Search.Name = "Transactions_Panel_Search";
-            Transactions_Panel_Search.Size = new Size(1245, 161);
+            Transactions_Panel_Search.Size = new Size(1153, 272);
             Transactions_Panel_Search.TabIndex = 0;
             // 
             // Transactions_UserControl_Search
@@ -110,16 +110,16 @@ namespace MTM_WIP_Application_Winforms.Forms.Transactions
             Transactions_UserControl_Search.Location = new Point(0, 0);
             Transactions_UserControl_Search.Margin = new Padding(0);
             Transactions_UserControl_Search.Name = "Transactions_UserControl_Search";
-            Transactions_UserControl_Search.Size = new Size(1245, 161);
+            Transactions_UserControl_Search.Size = new Size(1153, 272);
             Transactions_UserControl_Search.TabIndex = 0;
             // 
             // Transactions
             // 
             AutoScaleDimensions = new SizeF(96F, 96F);
             AutoScaleMode = AutoScaleMode.Dpi;
-            ClientSize = new Size(1251, 661);
+            ClientSize = new Size(1159, 661);
             Controls.Add(Transactions_Panel_Main);
-            MinimumSize = new Size(1200, 700);
+            MinimumSize = new Size(1175, 700);
             Name = "Transactions";
             StartPosition = FormStartPosition.CenterScreen;
             Text = "Transaction Viewer";
