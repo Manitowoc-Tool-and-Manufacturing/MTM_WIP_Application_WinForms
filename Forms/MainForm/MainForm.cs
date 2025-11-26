@@ -15,6 +15,7 @@ using MTM_WIP_Application_Winforms.Services;
 using Timer = System.Windows.Forms.Timer;
 using System.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using ConfigurationManager = System.Configuration.ConfigurationManager;
 
 namespace MTM_WIP_Application_Winforms.Forms.MainForm
 {
@@ -278,7 +279,7 @@ namespace MTM_WIP_Application_Winforms.Forms.MainForm
 
                         // Configure Development Menu visibility based on username
                         ConfigureDevelopmentMenuVisibility();
-                        
+
                         // Configure Visual Menu visibility
                         ConfigureVisualMenuVisibility();
 
@@ -345,7 +346,7 @@ namespace MTM_WIP_Application_Winforms.Forms.MainForm
                         });
 
                     LoggingUtility.LogApplicationInfo($"Development Menu configured for user '{Model_Application_Variables.User}': {(isDeveloper ? "Visible" : "Hidden")}");
-                    
+
                     if (isDeveloper)
                     {
                         InitializeDevelopmentMenuItems();

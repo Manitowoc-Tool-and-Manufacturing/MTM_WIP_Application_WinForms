@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using MTM_WIP_Application_Winforms.Models;
 using MTM_WIP_Application_Winforms.Logging;
 using System.Configuration;
+using ConfigurationManager = System.Configuration.ConfigurationManager;
 
 namespace MTM_WIP_Application_Winforms.Services.Visual
 {
