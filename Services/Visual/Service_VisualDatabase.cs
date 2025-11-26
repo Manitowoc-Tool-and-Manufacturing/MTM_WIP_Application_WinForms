@@ -6,6 +6,7 @@ using System.Reflection;
 using System.Threading.Tasks;
 using MTM_WIP_Application_Winforms.Models;
 using MTM_WIP_Application_Winforms.Logging;
+using System.Configuration;
 
 namespace MTM_WIP_Application_Winforms.Services.Visual
 {
@@ -14,18 +15,23 @@ namespace MTM_WIP_Application_Winforms.Services.Visual
     /// </summary>
     public class Service_VisualDatabase : IService_VisualDatabase
     {
-        private const string SERVER_ADDRESS = "VISUALSQL"; 
-        private const string DATABASE_NAME = "VMFG"; 
+        private string _serverAddress => ConfigurationManager.AppSettings["VisualServer"] ?? "VISUALSQL";
+        private string _databaseName => ConfigurationManager.AppSettings["VisualDatabase"] ?? "VMFG";
 
-        private string? _userName => Model_Application_Variables.VisualUserName;
-        private string? _password => Model_Application_Variables.VisualPassword;
+        private string? _userName => !string.IsNullOrEmpty(Model_Application_Variables.VisualUserName) 
+            ? Model_Application_Variables.VisualUserName 
+            : ConfigurationManager.AppSettings["VisualUserName"];
+
+        private string? _password => !string.IsNullOrEmpty(Model_Application_Variables.VisualPassword) 
+            ? Model_Application_Variables.VisualPassword 
+            : ConfigurationManager.AppSettings["VisualPassword"];
 
         private string GetConnectionString()
         {
             var builder = new SqlConnectionStringBuilder
             {
-                DataSource = SERVER_ADDRESS,
-                InitialCatalog = DATABASE_NAME,
+                DataSource = _serverAddress,
+                InitialCatalog = _databaseName,
                 UserID = _userName,
                 Password = _password,
                 ConnectTimeout = 15,

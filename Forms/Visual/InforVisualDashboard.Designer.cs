@@ -20,6 +20,8 @@ namespace MTM_WIP_Application_Winforms.Forms.Visual
             this.panelHeader = new System.Windows.Forms.Panel();
             this.labelTitle = new System.Windows.Forms.Label();
             this.btnExport = new System.Windows.Forms.Button();
+            this.textBoxFilter = new System.Windows.Forms.TextBox();
+            this.labelFilter = new System.Windows.Forms.Label();
             this.dataGridViewResults = new System.Windows.Forms.DataGridView();
             this.controlEmptyState = new MTM_WIP_Application_Winforms.Controls.Shared.Control_EmptyState();
             this.labelLoading = new System.Windows.Forms.Label();
@@ -139,6 +141,8 @@ namespace MTM_WIP_Application_Winforms.Forms.Visual
             this.panelHeader.Height = 60;
             this.panelHeader.Padding = new System.Windows.Forms.Padding(20, 10, 20, 10);
             this.panelHeader.Controls.Add(this.btnExport);
+            this.panelHeader.Controls.Add(this.textBoxFilter);
+            this.panelHeader.Controls.Add(this.labelFilter);
             this.panelHeader.Controls.Add(this.labelTitle);
 
             // labelTitle
@@ -147,6 +151,20 @@ namespace MTM_WIP_Application_Winforms.Forms.Visual
             this.labelTitle.Font = new System.Drawing.Font("Segoe UI", 16F, System.Drawing.FontStyle.Bold);
             this.labelTitle.Text = "Dashboard";
             this.labelTitle.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+
+            // labelFilter
+            this.labelFilter.Dock = System.Windows.Forms.DockStyle.Right;
+            this.labelFilter.AutoSize = true;
+            this.labelFilter.Text = "Filter:";
+            this.labelFilter.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.labelFilter.Padding = new System.Windows.Forms.Padding(0, 12, 5, 0);
+
+            // textBoxFilter
+            this.textBoxFilter.Dock = System.Windows.Forms.DockStyle.Right;
+            this.textBoxFilter.Width = 200;
+            this.textBoxFilter.Height = 30;
+            this.textBoxFilter.Margin = new System.Windows.Forms.Padding(0, 10, 10, 10);
+            this.textBoxFilter.TextChanged += new System.EventHandler(this.textBoxFilter_TextChanged);
 
             // btnExport
             this.btnExport.Dock = System.Windows.Forms.DockStyle.Right;
@@ -214,5 +232,7 @@ namespace MTM_WIP_Application_Winforms.Forms.Visual
         private System.Windows.Forms.Button btnDieToolDiscovery;
         private System.Windows.Forms.Button btnMaterialHandlerGeneral;
         private System.Windows.Forms.Button btnMaterialHandlerTeam;
+        private System.Windows.Forms.TextBox textBoxFilter;
+        private System.Windows.Forms.Label labelFilter;
     }
 }

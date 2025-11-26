@@ -13,6 +13,7 @@ using MTM_WIP_Application_Winforms.Logging;
 using MTM_WIP_Application_Winforms.Models;
 using MTM_WIP_Application_Winforms.Services;
 using Timer = System.Windows.Forms.Timer;
+using System.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace MTM_WIP_Application_Winforms.Forms.MainForm
@@ -383,15 +384,32 @@ namespace MTM_WIP_Application_Winforms.Forms.MainForm
         /// </summary>
         private void ConfigureVisualMenuVisibility()
         {
-            // Menu is always visible, access is checked on click
+            bool hasDbCredentials = !string.IsNullOrEmpty(Model_Application_Variables.VisualUserName) &&
+                                    !string.IsNullOrEmpty(Model_Application_Variables.VisualPassword);
+
+            bool hasConfigCredentials = !string.IsNullOrEmpty(ConfigurationManager.AppSettings["VisualUserName"]) &&
+                                        !string.IsNullOrEmpty(ConfigurationManager.AppSettings["VisualPassword"]);
+
+            bool isVisible = hasDbCredentials || hasConfigCredentials;
+
+            if (MainForm_MenuStrip_Visual != null)
+            {
+                MainForm_MenuStrip_Visual.Visible = isVisible;
+                MainForm_MenuStrip_Visual.Enabled = isVisible;
+            }
         }
 
         private void MainForm_MenuStrip_Visual_Click(object? sender, EventArgs e)
         {
             try
             {
-                if (string.IsNullOrEmpty(Model_Application_Variables.VisualUserName) || 
-                    string.IsNullOrEmpty(Model_Application_Variables.VisualPassword))
+                bool hasDbCredentials = !string.IsNullOrEmpty(Model_Application_Variables.VisualUserName) &&
+                                        !string.IsNullOrEmpty(Model_Application_Variables.VisualPassword);
+
+                bool hasConfigCredentials = !string.IsNullOrEmpty(ConfigurationManager.AppSettings["VisualUserName"]) &&
+                                            !string.IsNullOrEmpty(ConfigurationManager.AppSettings["VisualPassword"]);
+
+                if (!hasDbCredentials && !hasConfigCredentials)
                 {
                     Service_ErrorHandler.ShowUserError(
                         "You do not have Infor Visual credentials configured.\n\nPlease go to File > Settings > User Management to configure your Visual ERP access.",
@@ -639,6 +657,19 @@ namespace MTM_WIP_Application_Winforms.Forms.MainForm
                 if (showTotalResult.IsSuccess)
                 {
                     Model_Application_Variables.ShowTotalSummaryPanel = showTotalResult.Data;
+                }
+
+                // Load Visual Credentials
+                var visualUserResult = await Dao_User.GetVisualUserNameAsync(user);
+                if (visualUserResult.IsSuccess)
+                {
+                    Model_Application_Variables.VisualUserName = visualUserResult.Data;
+                }
+
+                var visualPassResult = await Dao_User.GetVisualPasswordAsync(user);
+                if (visualPassResult.IsSuccess)
+                {
+                    Model_Application_Variables.VisualPassword = visualPassResult.Data;
                 }
             }
             catch (Exception ex)

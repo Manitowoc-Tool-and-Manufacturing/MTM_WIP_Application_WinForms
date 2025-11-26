@@ -7,6 +7,7 @@ using MTM_WIP_Application_Winforms.Models;
 using MTM_WIP_Application_Winforms.Services;
 using Microsoft.Extensions.DependencyInjection;
 using MTM_WIP_Application_Winforms.Helpers;
+using MTM_WIP_Application_Winforms.Logging;
 using System.Linq;
 using System.Data;
 
@@ -174,6 +175,36 @@ namespace MTM_WIP_Application_Winforms.Forms.Visual
                 {
                     SetLoadingState(false);
                 }
+            }
+        }
+
+        private void textBoxFilter_TextChanged(object sender, EventArgs e)
+        {
+            try
+            {
+                if (dataGridViewResults.DataSource is DataTable dt)
+                {
+                    string filterText = textBoxFilter.Text.Trim();
+                    if (string.IsNullOrEmpty(filterText))
+                    {
+                        dt.DefaultView.RowFilter = string.Empty;
+                    }
+                    else
+                    {
+                        // Build a filter string that checks all string columns
+                        var columns = dt.Columns.Cast<DataColumn>()
+                            .Where(c => c.DataType == typeof(string))
+                            .Select(c => $"[{c.ColumnName}] LIKE '%{filterText.Replace("'", "''")}%'");
+                        
+                        string rowFilter = string.Join(" OR ", columns);
+                        dt.DefaultView.RowFilter = rowFilter;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                // Log but don't show error dialog for every keystroke
+                LoggingUtility.LogApplicationError(ex);
             }
         }
     }
