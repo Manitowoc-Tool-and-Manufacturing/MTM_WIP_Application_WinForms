@@ -60,7 +60,7 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
             this.tableLayoutPanelMain.Location = new System.Drawing.Point(0, 0);
             this.tableLayoutPanelMain.Name = "tableLayoutPanelMain";
             this.tableLayoutPanelMain.RowCount = 3;
-            this.tableLayoutPanelMain.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 100F));
+            this.tableLayoutPanelMain.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 140F));
             this.tableLayoutPanelMain.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tableLayoutPanelMain.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 40F));
             this.tableLayoutPanelMain.Size = new System.Drawing.Size(1000, 600);
@@ -69,6 +69,14 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
             // 
             // panelFilters
             // 
+            this.panelFilters.Controls.Add(this.txtPOFilter);
+            this.panelFilters.Controls.Add(this.labelPOFilter);
+            this.panelFilters.Controls.Add(this.txtVendorFilter);
+            this.panelFilters.Controls.Add(this.labelVendorFilter);
+            this.panelFilters.Controls.Add(this.chkShowWithPartNumber);
+            this.panelFilters.Controls.Add(this.chkShowOnTime);
+            this.panelFilters.Controls.Add(this.chkShowPartial);
+            this.panelFilters.Controls.Add(this.chkShowLate);
             this.panelFilters.Controls.Add(this.btnSearch);
             this.panelFilters.Controls.Add(this.chkShowService);
             this.panelFilters.Controls.Add(this.chkShowInternal);
@@ -83,7 +91,7 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
             this.panelFilters.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panelFilters.Location = new System.Drawing.Point(3, 3);
             this.panelFilters.Name = "panelFilters";
-            this.panelFilters.Size = new System.Drawing.Size(994, 94);
+            this.panelFilters.Size = new System.Drawing.Size(994, 140);
             this.panelFilters.TabIndex = 0;
 
             // 
@@ -151,6 +159,42 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
             this.cmbDateType.TabIndex = 5;
 
             // 
+            // labelVendorFilter
+            // 
+            this.labelVendorFilter.AutoSize = true;
+            this.labelVendorFilter.Location = new System.Drawing.Point(570, 15);
+            this.labelVendorFilter.Name = "labelVendorFilter";
+            this.labelVendorFilter.Size = new System.Drawing.Size(47, 15);
+            this.labelVendorFilter.TabIndex = 11;
+            this.labelVendorFilter.Text = "Vendor:";
+
+            // 
+            // txtVendorFilter
+            // 
+            this.txtVendorFilter.Location = new System.Drawing.Point(623, 12);
+            this.txtVendorFilter.Name = "txtVendorFilter";
+            this.txtVendorFilter.Size = new System.Drawing.Size(120, 23);
+            this.txtVendorFilter.TabIndex = 12;
+
+            // 
+            // labelPOFilter
+            // 
+            this.labelPOFilter.AutoSize = true;
+            this.labelPOFilter.Location = new System.Drawing.Point(755, 15);
+            this.labelPOFilter.Name = "labelPOFilter";
+            this.labelPOFilter.Size = new System.Drawing.Size(37, 15);
+            this.labelPOFilter.TabIndex = 13;
+            this.labelPOFilter.Text = "PO #:";
+
+            // 
+            // txtPOFilter
+            // 
+            this.txtPOFilter.Location = new System.Drawing.Point(798, 12);
+            this.txtPOFilter.Name = "txtPOFilter";
+            this.txtPOFilter.Size = new System.Drawing.Size(100, 23);
+            this.txtPOFilter.TabIndex = 14;
+
+            // 
             // chkIncludeClosed
             // 
             this.chkIncludeClosed.AutoSize = true;
@@ -195,14 +239,61 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
             this.chkShowService.UseVisualStyleBackColor = true;
 
             // 
+            // chkShowLate
+            // 
+            this.chkShowLate.AutoSize = true;
+            this.chkShowLate.Location = new System.Drawing.Point(18, 80);
+            this.chkShowLate.Name = "chkShowLate";
+            this.chkShowLate.Size = new System.Drawing.Size(80, 19);
+            this.chkShowLate.TabIndex = 15;
+            this.chkShowLate.Text = "Show Late";
+            this.chkShowLate.UseVisualStyleBackColor = true;
+            this.chkShowLate.Checked = true;
+
+            // 
+            // chkShowPartial
+            // 
+            this.chkShowPartial.AutoSize = true;
+            this.chkShowPartial.Location = new System.Drawing.Point(140, 80);
+            this.chkShowPartial.Name = "chkShowPartial";
+            this.chkShowPartial.Size = new System.Drawing.Size(91, 19);
+            this.chkShowPartial.TabIndex = 16;
+            this.chkShowPartial.Text = "Show Partial";
+            this.chkShowPartial.UseVisualStyleBackColor = true;
+            this.chkShowPartial.Checked = true;
+
+            // 
+            // chkShowOnTime
+            // 
+            this.chkShowOnTime.AutoSize = true;
+            this.chkShowOnTime.Location = new System.Drawing.Point(280, 80);
+            this.chkShowOnTime.Name = "chkShowOnTime";
+            this.chkShowOnTime.Size = new System.Drawing.Size(103, 19);
+            this.chkShowOnTime.TabIndex = 17;
+            this.chkShowOnTime.Text = "Show On Time";
+            this.chkShowOnTime.UseVisualStyleBackColor = true;
+            this.chkShowOnTime.Checked = true;
+
+            // 
+            // chkShowWithPartNumber
+            // 
+            this.chkShowWithPartNumber.AutoSize = true;
+            this.chkShowWithPartNumber.Location = new System.Drawing.Point(430, 80);
+            this.chkShowWithPartNumber.Name = "chkShowWithPartNumber";
+            this.chkShowWithPartNumber.Size = new System.Drawing.Size(150, 19);
+            this.chkShowWithPartNumber.TabIndex = 18;
+            this.chkShowWithPartNumber.Text = "Must Have Part Number";
+            this.chkShowWithPartNumber.UseVisualStyleBackColor = true;
+
+            // 
             // btnSearch
             // 
             this.btnSearch.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(215)))));
             this.btnSearch.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnSearch.ForeColor = System.Drawing.Color.White;
-            this.btnSearch.Location = new System.Drawing.Point(580, 12);
+            this.btnSearch.Location = new System.Drawing.Point(910, 12);
             this.btnSearch.Name = "btnSearch";
-            this.btnSearch.Size = new System.Drawing.Size(100, 60);
+            this.btnSearch.Size = new System.Drawing.Size(80, 80);
             this.btnSearch.TabIndex = 10;
             this.btnSearch.Text = "Search";
             this.btnSearch.UseVisualStyleBackColor = false;
@@ -389,5 +480,13 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
         private System.Windows.Forms.Label labelLegendPartial;
         private System.Windows.Forms.Panel panelLegendOnTime;
         private System.Windows.Forms.Label labelLegendOnTime;
+        private System.Windows.Forms.Label labelVendorFilter;
+        private System.Windows.Forms.TextBox txtVendorFilter;
+        private System.Windows.Forms.Label labelPOFilter;
+        private System.Windows.Forms.TextBox txtPOFilter;
+        private System.Windows.Forms.CheckBox chkShowLate;
+        private System.Windows.Forms.CheckBox chkShowPartial;
+        private System.Windows.Forms.CheckBox chkShowOnTime;
+        private System.Windows.Forms.CheckBox chkShowWithPartNumber;
     }
 }

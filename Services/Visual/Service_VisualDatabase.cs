@@ -226,6 +226,9 @@ namespace MTM_WIP_Application_Winforms.Services.Visual
         /// <param name="includeConsignment">Whether to include consignment orders.</param>
         /// <param name="includeInternal">Whether to include internal orders.</param>
         /// <param name="includeService">Whether to include service items.</param>
+        /// <param name="vendorFilter">Optional vendor name filter.</param>
+        /// <param name="poFilter">Optional PO number filter.</param>
+        /// <param name="mustHavePartNumber">Whether to require a part number.</param>
         /// <returns>DataTable containing the receiving schedule.</returns>
         public async Task<Model_Dao_Result<DataTable>> GetReceivingScheduleAsync(
             DateTime startDate,
@@ -234,7 +237,10 @@ namespace MTM_WIP_Application_Winforms.Services.Visual
             bool includeClosed,
             bool includeConsignment,
             bool includeInternal,
-            bool includeService)
+            bool includeService,
+            string vendorFilter = "",
+            string poFilter = "",
+            bool mustHavePartNumber = false)
         {
             if (string.IsNullOrEmpty(_userName) || string.IsNullOrEmpty(_password))
             {
@@ -320,6 +326,21 @@ namespace MTM_WIP_Application_Winforms.Services.Visual
                 sql += " AND POL.SERVICE_ID IS NULL";
             }
 
+            if (mustHavePartNumber)
+            {
+                sql += " AND POL.PART_ID IS NOT NULL AND POL.PART_ID <> ''";
+            }
+
+            if (!string.IsNullOrWhiteSpace(vendorFilter))
+            {
+                sql += " AND V.NAME LIKE @VendorFilter";
+            }
+
+            if (!string.IsNullOrWhiteSpace(poFilter))
+            {
+                sql += " AND PO.ID LIKE @PoFilter";
+            }
+
             // Ordering
             sql += " ORDER BY PO.DESIRED_RECV_DATE, PO.ID, POL.LINE_NO";
 
@@ -332,6 +353,16 @@ namespace MTM_WIP_Application_Winforms.Services.Visual
                     {
                         command.Parameters.AddWithValue("@StartDate", startDate.Date);
                         command.Parameters.AddWithValue("@EndDate", endDate.Date.AddDays(1).AddSeconds(-1)); // End of day
+
+                        if (!string.IsNullOrWhiteSpace(vendorFilter))
+                        {
+                            command.Parameters.AddWithValue("@VendorFilter", "%" + vendorFilter + "%");
+                        }
+
+                        if (!string.IsNullOrWhiteSpace(poFilter))
+                        {
+                            command.Parameters.AddWithValue("@PoFilter", "%" + poFilter + "%");
+                        }
 
                         using (var reader = await command.ExecuteReaderAsync())
                         {
@@ -353,6 +384,74 @@ namespace MTM_WIP_Application_Winforms.Services.Visual
                 {
                     IsSuccess = false,
                     ErrorMessage = $"Error retrieving receiving schedule: {ex.Message}"
+                };
+            }
+        }
+
+        /// <summary>
+        /// Retrieves all line details for a specific Purchase Order.
+        /// </summary>
+        /// <param name="poNumber">The PO Number to retrieve details for.</param>
+        /// <returns>DataTable containing PO details.</returns>
+        public async Task<Model_Dao_Result<DataTable>> GetPODetailsAsync(string poNumber)
+        {
+            if (string.IsNullOrEmpty(_userName) || string.IsNullOrEmpty(_password))
+            {
+                return new Model_Dao_Result<DataTable>
+                {
+                    IsSuccess = false,
+                    ErrorMessage = "Visual ERP credentials are not configured."
+                };
+            }
+
+            string sql = @"
+                SELECT
+                    POL.LINE_NO as [Line #],
+                    POL.PART_ID as [Part Number],
+                    P.DESCRIPTION as [Description],
+                    POL.ORDER_QTY as [Ordered],
+                    POL.TOTAL_RECEIVED_QTY as [Received],
+                    (POL.ORDER_QTY - POL.TOTAL_RECEIVED_QTY) as [Remaining],
+                    POL.DESIRED_RECV_DATE as [Desired Date],
+                    POL.PROMISE_DATE as [Promise Date],
+                    POL.LINE_STATUS as [Status],
+                    POL.UNIT_PRICE as [Unit Price],
+                    POL.TOTAL_AMT_ORDERED as [Total Amount]
+                FROM PURC_ORDER_LINE POL
+                LEFT JOIN PART P ON POL.PART_ID = P.ID
+                WHERE POL.PURC_ORDER_ID = @PoNumber
+                ORDER BY POL.LINE_NO
+            ";
+
+            try
+            {
+                using (var connection = new SqlConnection(GetConnectionString()))
+                {
+                    await connection.OpenAsync();
+                    using (var command = new SqlCommand(sql, connection))
+                    {
+                        command.Parameters.AddWithValue("@PoNumber", poNumber);
+
+                        using (var reader = await command.ExecuteReaderAsync())
+                        {
+                            var dataTable = new DataTable();
+                            dataTable.Load(reader);
+                            return new Model_Dao_Result<DataTable>
+                            {
+                                IsSuccess = true,
+                                Data = dataTable
+                            };
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                LoggingUtility.LogApplicationError(ex);
+                return new Model_Dao_Result<DataTable>
+                {
+                    IsSuccess = false,
+                    ErrorMessage = $"Error retrieving PO details: {ex.Message}"
                 };
             }
         }

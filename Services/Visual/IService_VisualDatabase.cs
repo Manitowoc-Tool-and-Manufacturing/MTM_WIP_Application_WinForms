@@ -36,6 +36,14 @@ namespace MTM_WIP_Application_Winforms.Services.Visual
             bool includeClosed, 
             bool includeConsignment, 
             bool includeInternal, 
-            bool includeService);
+            bool includeService,
+            string vendorFilter = "",
+            string poFilter = "",
+            bool mustHavePartNumber = false);
+
+        /// <summary>
+        /// Retrieves all line details for a specific Purchase Order.
+        /// </summary>
+        Task<Model_Dao_Result<DataTable>> GetPODetailsAsync(string poNumber);
     }
 }

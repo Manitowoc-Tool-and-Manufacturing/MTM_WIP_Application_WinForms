@@ -34,6 +34,10 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
             chkShowConsignment.Checked = true;
             chkShowInternal.Checked = true;
             chkShowService.Checked = true;
+            chkShowLate.Checked = true;
+            chkShowPartial.Checked = true;
+            chkShowOnTime.Checked = true;
+            chkShowWithPartNumber.Checked = false;
 
             // Add context menu for column ordering
             var contextMenu = new ContextMenuStrip();
@@ -41,6 +45,14 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
             itemColumnOrder.Click += ContextMenuItem_ColumnOrder_Click;
             contextMenu.Items.Add(itemColumnOrder);
             dataGridViewResults.ContextMenuStrip = contextMenu;
+
+            // Performance: Handle coloring in DataBindingComplete instead of CellFormatting
+            dataGridViewResults.CellFormatting -= dataGridViewResults_CellFormatting;
+            dataGridViewResults.DataBindingComplete += (s, e) => ApplyRowColors();
+            dataGridViewResults.Sorted += (s, e) => ApplyRowColors();
+
+            // Double click to show PO details
+            dataGridViewResults.CellDoubleClick += DataGridViewResults_CellDoubleClick;
         }
 
         private void SetCurrentWeek()
@@ -79,12 +91,56 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
                     chkIncludeClosed.Checked,
                     chkShowConsignment.Checked,
                     chkShowInternal.Checked,
-                    chkShowService.Checked
+                    chkShowService.Checked,
+                    txtVendorFilter.Text.Trim(),
+                    txtPOFilter.Text.Trim(),
+                    chkShowWithPartNumber.Checked
                 );
 
                 if (result.IsSuccess && result.Data != null)
                 {
-                    dataGridViewResults.DataSource = result.Data;
+                    // Apply client-side filters for status (Late, OnTime, Partial)
+                    // We do this here to avoid complex SQL logic for derived statuses
+                    // and to allow quick toggling if we wanted to implement that later (though currently it requires search)
+                    DataTable dt = result.Data;
+                    
+                    // If any of the status checkboxes are unchecked, we need to filter
+                    if (!chkShowLate.Checked || !chkShowPartial.Checked || !chkShowOnTime.Checked)
+                    {
+                        // We'll use a list of rows to remove to avoid modifying collection while iterating
+                        var rowsToRemove = new System.Collections.Generic.List<DataRow>();
+                        
+                        foreach (DataRow row in dt.Rows)
+                        {
+                            string poStatus = row["PO Status"]?.ToString() ?? "";
+                            string lineStatus = row["Line Status"]?.ToString() ?? "";
+                            
+                            decimal orderQty = 0;
+                            decimal receivedQty = 0;
+                            decimal.TryParse(row["Order Qty"]?.ToString(), out orderQty);
+                            decimal.TryParse(row["Received Qty"]?.ToString(), out receivedQty);
+
+                            DateTime? desiredDate = null;
+                            if (DateTime.TryParse(row["Line Desired Date"]?.ToString(), out DateTime d1)) desiredDate = d1;
+                            else if (DateTime.TryParse(row["PO Desired Date"]?.ToString(), out DateTime d2)) desiredDate = d2;
+
+                            bool isClosed = poStatus == "C" || lineStatus == "C";
+                            bool isLate = !isClosed && desiredDate.HasValue && desiredDate.Value.Date < DateTime.Today && receivedQty < orderQty;
+                            bool isPartial = !isClosed && !isLate && receivedQty > 0 && receivedQty < orderQty;
+                            bool isOnTime = !isClosed && !isLate && !isPartial; // Everything else (On Time or Open)
+
+                            if (isLate && !chkShowLate.Checked) rowsToRemove.Add(row);
+                            else if (isPartial && !chkShowPartial.Checked) rowsToRemove.Add(row);
+                            else if (isOnTime && !chkShowOnTime.Checked) rowsToRemove.Add(row);
+                        }
+
+                        foreach (var row in rowsToRemove)
+                        {
+                            dt.Rows.Remove(row);
+                        }
+                    }
+
+                    dataGridViewResults.DataSource = dt;
                     
                     // Format columns if needed
                     if (dataGridViewResults.Columns["Order Date"] != null)
@@ -117,56 +173,63 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
             }
         }
 
-        private void dataGridViewResults_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
+        private void ApplyRowColors()
         {
-            if (e.RowIndex < 0 || e.RowIndex >= dataGridViewResults.Rows.Count) return;
+            foreach (DataGridViewRow row in dataGridViewResults.Rows)
+            {
+                if (row.DataBoundItem is not DataRowView drv) continue;
 
-            var row = dataGridViewResults.Rows[e.RowIndex];
-            
-            // Get values safely
-            string poStatus = row.Cells["PO Status"].Value?.ToString() ?? "";
-            string lineStatus = row.Cells["Line Status"].Value?.ToString() ?? "";
-            
-            decimal orderQty = 0;
-            decimal receivedQty = 0;
-            decimal.TryParse(row.Cells["Order Qty"].Value?.ToString(), out orderQty);
-            decimal.TryParse(row.Cells["Received Qty"].Value?.ToString(), out receivedQty);
+                // Get values safely from DataRowView (faster than Cells access)
+                string poStatus = drv["PO Status"]?.ToString() ?? "";
+                string lineStatus = drv["Line Status"]?.ToString() ?? "";
+                
+                decimal orderQty = 0;
+                decimal receivedQty = 0;
+                decimal.TryParse(drv["Order Qty"]?.ToString(), out orderQty);
+                decimal.TryParse(drv["Received Qty"]?.ToString(), out receivedQty);
 
-            DateTime? desiredDate = null;
-            if (DateTime.TryParse(row.Cells["Line Desired Date"].Value?.ToString(), out DateTime dt))
-            {
-                desiredDate = dt;
-            }
-            else if (DateTime.TryParse(row.Cells["PO Desired Date"].Value?.ToString(), out DateTime dt2))
-            {
-                desiredDate = dt2;
-            }
+                DateTime? desiredDate = null;
+                if (DateTime.TryParse(drv["Line Desired Date"]?.ToString(), out DateTime dt))
+                {
+                    desiredDate = dt;
+                }
+                else if (DateTime.TryParse(drv["PO Desired Date"]?.ToString(), out DateTime dt2))
+                {
+                    desiredDate = dt2;
+                }
 
-            // Logic for coloring
-            Color backColor = Color.White;
+                // Logic for coloring
+                Color backColor = Color.White;
 
-            if (poStatus == "C" || lineStatus == "C")
-            {
-                // Closed - Green
-                backColor = Color.FromArgb(200, 255, 200);
-            }
-            else if (desiredDate.HasValue && desiredDate.Value.Date < DateTime.Today && receivedQty < orderQty)
-            {
-                // Late - Red
-                backColor = Color.FromArgb(255, 200, 200);
-            }
-            else if (receivedQty > 0 && receivedQty < orderQty)
-            {
-                // Partial - Yellow
-                backColor = Color.FromArgb(255, 255, 200);
-            }
-            else
-            {
-                // On Time / Open - Blue (Light)
-                backColor = Color.FromArgb(200, 240, 255);
-            }
+                if (poStatus == "C" || lineStatus == "C")
+                {
+                    // Closed - Green
+                    backColor = Color.FromArgb(200, 255, 200);
+                }
+                else if (desiredDate.HasValue && desiredDate.Value.Date < DateTime.Today && receivedQty < orderQty)
+                {
+                    // Late - Red
+                    backColor = Color.FromArgb(255, 200, 200);
+                }
+                else if (receivedQty > 0 && receivedQty < orderQty)
+                {
+                    // Partial - Yellow
+                    backColor = Color.FromArgb(255, 255, 200);
+                }
+                else
+                {
+                    // On Time / Open - Blue (Light)
+                    backColor = Color.FromArgb(200, 240, 255);
+                }
 
-            row.DefaultCellStyle.BackColor = backColor;
+                row.DefaultCellStyle.BackColor = backColor;
+            }
+        }
+
+        private void dataGridViewResults_CellFormatting(object? sender, DataGridViewCellFormattingEventArgs e)
+        {
+            // Logic moved to ApplyRowColors for performance
+            // This method remains to satisfy the designer-generated code
         }
 
         /// <summary>
@@ -200,6 +263,31 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
             catch (Exception ex)
             {
                 LoggingUtility.LogApplicationError(ex);
+                Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Low, controlName: this.Name);
+            }
+        }
+
+        private void DataGridViewResults_CellDoubleClick(object? sender, DataGridViewCellEventArgs e)
+        {
+            if (e.RowIndex < 0) return;
+
+            try
+            {
+                var row = dataGridViewResults.Rows[e.RowIndex];
+                if (row.DataBoundItem is DataRowView drv)
+                {
+                    string poNumber = drv["PO Number"]?.ToString() ?? "";
+                    if (!string.IsNullOrEmpty(poNumber))
+                    {
+                        using (var detailsForm = new MTM_WIP_Application_Winforms.Forms.Visual.Form_PODetails(poNumber))
+                        {
+                            detailsForm.ShowDialog(this);
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
                 Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Low, controlName: this.Name);
             }
         }
