@@ -10,25 +10,26 @@ internal static class Service_ErrorHandler
 {
     #region Fields
 
-    private static readonly Dictionary<string, int> _errorFrequency = new();
-    private static readonly Dictionary<string, DateTime> _lastErrorTimestamp = new();
-    private static readonly object _errorLock = new();
-    private static readonly TimeSpan ErrorCooldownPeriod = TimeSpan.FromSeconds(5);
+    private static readonly Dictionary<string, int> s_errorFrequency = [];
+    private static readonly Dictionary<string, DateTime> s_lastErrorTimestamp = [];
+    private static readonly object s_errorLock = new();
+    private static readonly TimeSpan s_errorCooldownPeriod = TimeSpan.FromSeconds(5);
 
     #endregion
 
     #region Public Methods - Enhanced Error Handling
 
     /// <summary>
-    /// Handle any exception with enhanced error dialog and automatic logging
+    /// Handle any exception with enhanced error dialog and automatic logging.
+    /// This is the core handler used by other specific methods.
     /// </summary>
-    /// <param name="ex">The exception that occurred</param>
-    /// <param name="severity">The severity level of the error</param>
-    /// <param name="retryAction">Optional action to retry the failed operation</param>
-    /// <param name="contextData">Additional context information</param>
-    /// <param name="callerName">Automatically filled caller method name</param>
-    /// <param name="controlName">Name of the control or form where error occurred</param>
-    /// <returns>True if user chose to retry and retry succeeded, false otherwise</returns>
+    /// <param name="ex">The exception that occurred.</param>
+    /// <param name="severity">The severity level of the error.</param>
+    /// <param name="retryAction">Optional action to retry the failed operation.</param>
+    /// <param name="contextData">Additional context information.</param>
+    /// <param name="callerName">Automatically filled caller method name.</param>
+    /// <param name="controlName">Name of the control or form where error occurred.</param>
+    /// <returns>True if user chose to retry and retry succeeded, false otherwise.</returns>
     public static bool HandleException(Exception ex,
         Enum_ErrorSeverity severity = Enum_ErrorSeverity.Medium,
         Func<bool>? retryAction = null,
@@ -40,7 +41,7 @@ internal static class Service_ErrorHandler
         {
             // Always log the error first
             LoggingUtility.LogApplicationError(ex);
-            LogErrorContext(ex, callerName, controlName, contextData);
+            LogErrorContext(callerName, controlName, contextData);
 
             // Handle connection recovery if it's a database error
             if (IsDatabaseError(ex))
@@ -61,7 +62,7 @@ internal static class Service_ErrorHandler
             // Handle critical errors that should terminate the application
             if (severity == Enum_ErrorSeverity.Fatal || IsFatalError(ex))
             {
-                HandleFatalError(ex, callerName, controlName);
+                HandleFatalError(ex, callerName);
                 return false;
             }
 
@@ -77,8 +78,16 @@ internal static class Service_ErrorHandler
     }
 
     /// <summary>
-    /// Handle database-specific errors with automatic connection recovery
+    /// Handle database-specific errors with automatic connection recovery.
     /// </summary>
+    /// <param name="ex">The database exception.</param>
+    /// <param name="retryAction">Optional action to retry the database operation.</param>
+    /// <param name="contextData">Additional context information.</param>
+    /// <param name="callerName">Automatically filled caller method name.</param>
+    /// <param name="controlName">Name of the control or form where error occurred.</param>
+    /// <param name="methodName">Specific method name if different from caller.</param>
+    /// <param name="dbSeverity">Database-specific severity level.</param>
+    /// <returns>True if retry was successful.</returns>
     public static bool HandleDatabaseError(Exception ex,
         Func<bool>? retryAction = null,
         Dictionary<string, object>? contextData = null,
@@ -88,7 +97,7 @@ internal static class Service_ErrorHandler
         Enum_DatabaseEnum_ErrorSeverity dbSeverity = Enum_DatabaseEnum_ErrorSeverity.Error)
     {
         // Add database-specific context
-        var dbContextData = contextData ?? new Dictionary<string, object>();
+        var dbContextData = contextData ?? [];
         dbContextData["ErrorType"] = "Database";
         dbContextData["ConnectionString"] = "Hidden for security";
         dbContextData["DatabaseSeverity"] = dbSeverity.ToString();
@@ -111,15 +120,18 @@ internal static class Service_ErrorHandler
     }
 
     /// <summary>
-    /// Show a user-friendly error message (validation or business logic error)
+    /// Show a user-friendly error message (validation or business logic error).
     /// </summary>
+    /// <param name="message">The error message to display.</param>
+    /// <param name="title">The title of the message box (default: "Error").</param>
+    /// <param name="callerName">Automatically filled caller method name.</param>
     public static void ShowUserError(string message, string title = "Error", [CallerMemberName] string callerName = "")
     {
         try
         {
             // Log as warning/info, not error
             LoggingUtility.Log($"[User Error] {message} (Caller: {callerName})");
-            
+
             MessageBox.Show(message, title, MessageBoxButtons.OK, MessageBoxIcon.Warning);
         }
         catch (Exception ex)
@@ -129,15 +141,18 @@ internal static class Service_ErrorHandler
     }
 
     /// <summary>
-    /// Show a generic error dialog (not an exception - just a user error message)
+    /// Show a generic error dialog (not an exception - just a user error message).
     /// </summary>
+    /// <param name="message">The error message to display.</param>
+    /// <param name="title">The title of the message box (default: "Error").</param>
+    /// <param name="callerName">Automatically filled caller method name.</param>
     public static void ShowError(string message, string title = "Error", [CallerMemberName] string callerName = "")
     {
         try
         {
             // Log as error
             LoggingUtility.Log($"[User Error] {message} (Caller: {callerName})");
-            
+
             MessageBox.Show(message, title, MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
         catch (Exception ex)
@@ -147,16 +162,96 @@ internal static class Service_ErrorHandler
     }
 
     /// <summary>
-    /// Handle validation errors (user input errors)
+    /// Show a confirmation dialog (not an error - just a user confirmation).
     /// </summary>
+    /// <param name="message">The confirmation message.</param>
+    /// <param name="title">The title of the dialog (default: "Confirmation").</param>
+    /// <param name="buttons">The buttons to display (default: YesNo).</param>
+    /// <param name="icon">The icon to display (default: Question).</param>
+    /// <returns>The DialogResult chosen by the user.</returns>
+    public static DialogResult ShowConfirmation(string message, string title = "Confirmation",
+        MessageBoxButtons buttons = MessageBoxButtons.YesNo,
+        MessageBoxIcon icon = MessageBoxIcon.Question)
+    {
+        try
+        {
+            return MessageBox.Show(message, title, buttons, icon);
+        }
+        catch (Exception ex)
+        {
+            LoggingUtility.LogApplicationError(ex);
+            return DialogResult.Cancel;
+        }
+    }
+
+    /// <summary>
+    /// Show a warning dialog (not an error - just a user warning).
+    /// </summary>
+    /// <param name="message">The warning message.</param>
+    /// <param name="title">The title of the dialog (default: "Warning").</param>
+    /// <param name="buttons">The buttons to display (default: OKCancel).</param>
+    /// <param name="icon">The icon to display (default: Warning).</param>
+    /// <returns>The DialogResult chosen by the user.</returns>
+    public static DialogResult ShowWarning(string message, string title = "Warning",
+        MessageBoxButtons buttons = MessageBoxButtons.OKCancel,
+        MessageBoxIcon icon = MessageBoxIcon.Warning)
+    {
+        try
+        {
+            return MessageBox.Show(message, title, buttons, icon);
+        }
+        catch (Exception ex)
+        {
+            LoggingUtility.LogApplicationError(ex);
+            return DialogResult.Cancel;
+        }
+    }
+
+    /// <summary>
+    /// Show an information dialog (not an error - just informational message).
+    /// </summary>
+    /// <param name="message">The information message.</param>
+    /// <param name="title">The title of the dialog (default: "Information").</param>
+    /// <param name="buttons">The buttons to display (default: OK).</param>
+    /// <param name="icon">The icon to display (default: Information).</param>
+    /// <param name="controlName">Optional control name for logging context.</param>
+    /// <returns>The DialogResult chosen by the user.</returns>
+    public static DialogResult ShowInformation(string message, string title = "Information",
+        MessageBoxButtons buttons = MessageBoxButtons.OK,
+        MessageBoxIcon icon = MessageBoxIcon.Information,
+        string controlName = "")
+    {
+        try
+        {
+            var logMessage = $"Information dialog shown: {title} - {message}";
+            if (!string.IsNullOrEmpty(controlName))
+            {
+                logMessage += $" (Control: {controlName})";
+            }
+            LoggingUtility.Log(logMessage);
+
+            return MessageBox.Show(message, title, buttons, icon);
+        }
+        catch (Exception ex)
+        {
+            LoggingUtility.LogApplicationError(ex);
+            return DialogResult.Cancel;
+        }
+    }
+
+    /// <summary>
+    /// Handle validation errors (user input errors).
+    /// </summary>
+    /// <param name="message">The validation error message.</param>
+    /// <param name="field">The name of the field that failed validation.</param>
+    /// <param name="callerName">Automatically filled caller method name.</param>
+    /// <param name="controlName">Name of the control where validation failed.</param>
     public static void HandleValidationError(string message, string field = "",
         [CallerMemberName] string callerName = "",
         string controlName = "")
     {
         try
         {
-
-
             var validationEx = new ArgumentException($"Validation failed for {field}: {message}");
             var contextData = new Dictionary<string, object>
             {
@@ -174,8 +269,73 @@ internal static class Service_ErrorHandler
     }
 
     /// <summary>
-    /// Handle unauthorized access with appropriate messaging
+    /// Handle file operation errors.
     /// </summary>
+    /// <param name="ex">The exception that occurred.</param>
+    /// <param name="filePath">The path of the file involved.</param>
+    /// <param name="retryAction">Optional retry action.</param>
+    /// <param name="callerName">Automatically filled caller method name.</param>
+    /// <param name="controlName">Name of the control or form.</param>
+    /// <returns>True if retry was successful.</returns>
+    public static bool HandleFileError(Exception ex, string filePath = "",
+        Func<bool>? retryAction = null,
+        [CallerMemberName] string callerName = "",
+        string controlName = "")
+    {
+        try
+        {
+            var contextData = new Dictionary<string, object>
+            {
+                ["FilePath"] = filePath,
+                ["FileExists"] = !string.IsNullOrEmpty(filePath) && File.Exists(filePath),
+                ["ErrorType"] = "File Operation"
+            };
+
+            return HandleException(ex, Enum_ErrorSeverity.Medium, retryAction, contextData, callerName, controlName);
+        }
+        catch (Exception innerEx)
+        {
+            LoggingUtility.LogApplicationError(innerEx);
+            return false;
+        }
+    }
+
+    /// <summary>
+    /// Handle network/connectivity errors.
+    /// </summary>
+    /// <param name="ex">The exception that occurred.</param>
+    /// <param name="retryAction">Optional retry action.</param>
+    /// <param name="callerName">Automatically filled caller method name.</param>
+    /// <param name="controlName">Name of the control or form.</param>
+    /// <returns>True if retry was successful.</returns>
+    public static bool HandleNetworkError(Exception ex,
+        Func<bool>? retryAction = null,
+        [CallerMemberName] string callerName = "",
+        string controlName = "")
+    {
+        try
+        {
+            var contextData = new Dictionary<string, object>
+            {
+                ["ErrorType"] = "Network/Connectivity",
+                ["NetworkAvailable"] = System.Net.NetworkInformation.NetworkInterface.GetIsNetworkAvailable()
+            };
+
+            return HandleException(ex, Enum_ErrorSeverity.High, retryAction, contextData, callerName, controlName);
+        }
+        catch (Exception innerEx)
+        {
+            LoggingUtility.LogApplicationError(innerEx);
+            return false;
+        }
+    }
+
+    /// <summary>
+    /// Handle unauthorized access with appropriate messaging.
+    /// </summary>
+    /// <param name="operation">The operation that was attempted.</param>
+    /// <param name="callerName">Automatically filled caller method name.</param>
+    /// <param name="controlName">Name of the control or form.</param>
     public static void HandleUnauthorizedAccess(string operation = "",
         [CallerMemberName] string callerName = "",
         string controlName = "")
@@ -201,129 +361,14 @@ internal static class Service_ErrorHandler
     }
 
     /// <summary>
-    /// Handle file operation errors
-    /// </summary>
-    public static bool HandleFileError(Exception ex, string filePath = "",
-        Func<bool>? retryAction = null,
-        [CallerMemberName] string callerName = "",
-        string controlName = "")
-    {
-        try
-        {
-            var contextData = new Dictionary<string, object>
-            {
-                ["FilePath"] = filePath,
-                ["FileExists"] = !string.IsNullOrEmpty(filePath) && System.IO.File.Exists(filePath),
-                ["ErrorType"] = "File Operation"
-            };
-
-            return HandleException(ex, Enum_ErrorSeverity.Medium, retryAction, contextData, callerName, controlName);
-        }
-        catch (Exception innerEx)
-        {
-            LoggingUtility.LogApplicationError(innerEx);
-            return false;
-        }
-    }
-
-    /// <summary>
-    /// Handle network/connectivity errors
-    /// </summary>
-    public static bool HandleNetworkError(Exception ex,
-        Func<bool>? retryAction = null,
-        [CallerMemberName] string callerName = "",
-        string controlName = "")
-    {
-        try
-        {
-            var contextData = new Dictionary<string, object>
-            {
-                ["ErrorType"] = "Network/Connectivity",
-                ["NetworkAvailable"] = System.Net.NetworkInformation.NetworkInterface.GetIsNetworkAvailable()
-            };
-
-            return HandleException(ex, Enum_ErrorSeverity.High, retryAction, contextData, callerName, controlName);
-        }
-        catch (Exception innerEx)
-        {
-            LoggingUtility.LogApplicationError(innerEx);
-            return false;
-        }
-    }
-
-    /// <summary>
-    /// Show a confirmation dialog (not an error - just a user confirmation)
-    /// </summary>
-    public static DialogResult ShowConfirmation(string message, string title = "Confirmation",
-        MessageBoxButtons buttons = MessageBoxButtons.YesNo,
-        MessageBoxIcon icon = MessageBoxIcon.Question)
-    {
-        try
-        {
-
-            return MessageBox.Show(message, title, buttons, icon);
-        }
-        catch (Exception ex)
-        {
-            LoggingUtility.LogApplicationError(ex);
-            return DialogResult.Cancel;
-        }
-    }
-
-    /// <summary>
-    /// Show a warning dialog (not an error - just a user warning)
-    /// </summary>
-    public static DialogResult ShowWarning(string message, string title = "Warning",
-        MessageBoxButtons buttons = MessageBoxButtons.OKCancel,
-        MessageBoxIcon icon = MessageBoxIcon.Warning)
-    {
-        try
-        {
-
-            return MessageBox.Show(message, title, buttons, icon);
-        }
-        catch (Exception ex)
-        {
-            LoggingUtility.LogApplicationError(ex);
-            return DialogResult.Cancel;
-        }
-    }
-
-    /// <summary>
-    /// Show an information dialog (not an error - just informational message)
-    /// </summary>
-    public static DialogResult ShowInformation(string message, string title = "Information",
-        MessageBoxButtons buttons = MessageBoxButtons.OK,
-        MessageBoxIcon icon = MessageBoxIcon.Information,
-        string controlName = "")
-    {
-        try
-        {
-            var logMessage = $"Information dialog shown: {title} - {message}";
-            if (!string.IsNullOrEmpty(controlName))
-            {
-                logMessage += $" (Control: {controlName})";
-            }
-
-            return MessageBox.Show(message, title, buttons, icon);
-        }
-        catch (Exception ex)
-        {
-            LoggingUtility.LogApplicationError(ex);
-            return DialogResult.Cancel;
-        }
-    }
-
-    /// <summary>
-    /// Clear error cooldown state (useful for testing or after resolving known issues)
+    /// Clear error cooldown state (useful for testing or after resolving known issues).
     /// </summary>
     public static void ClearErrorCooldownState()
     {
-        lock (_errorLock)
+        lock (s_errorLock)
         {
-            _lastErrorTimestamp.Clear();
-            _errorFrequency.Clear();
-
+            s_lastErrorTimestamp.Clear();
+            s_errorFrequency.Clear();
         }
     }
 
@@ -354,16 +399,16 @@ internal static class Service_ErrorHandler
 
     #region Private Helper Methods
 
-    private static void LogErrorContext(Exception ex, string callerName, string controlName, Dictionary<string, object>? contextData)
+    private static void LogErrorContext(string callerName, string controlName, Dictionary<string, object>? contextData)
     {
         try
         {
             var contextLog = $"Error context - Caller: {callerName}, Control: {controlName}";
-            if (contextData?.Any() == true)
+            if (contextData?.Count > 0)
             {
                 contextLog += $", Context: {string.Join(", ", contextData.Select(kvp => $"{kvp.Key}={kvp.Value}"))}";
             }
-
+            LoggingUtility.Log(contextLog);
         }
         catch (Exception logEx)
         {
@@ -375,10 +420,10 @@ internal static class Service_ErrorHandler
     private static bool IsDatabaseError(Exception ex)
     {
         return ex is MySql.Data.MySqlClient.MySqlException ||
-               ex.Message.ToLower().Contains("database") ||
-               ex.Message.ToLower().Contains("connection") ||
-               ex.Message.ToLower().Contains("mysql") ||
-               ex.Message.ToLower().Contains("sql");
+               ex.Message.Contains("database", StringComparison.OrdinalIgnoreCase) ||
+               ex.Message.Contains("connection", StringComparison.OrdinalIgnoreCase) ||
+               ex.Message.Contains("mysql", StringComparison.OrdinalIgnoreCase) ||
+               ex.Message.Contains("sql", StringComparison.OrdinalIgnoreCase);
     }
 
     private static bool IsFatalError(Exception ex)
@@ -407,42 +452,40 @@ internal static class Service_ErrorHandler
 
     private static bool ShouldSuppressError(Exception ex, string callerName)
     {
-        lock (_errorLock)
+        lock (s_errorLock)
         {
             var errorKey = $"{ex.GetType().Name}:{callerName}:{ex.Message.GetHashCode()}";
             var now = DateTime.Now;
 
             // Check if this is a duplicate error within the cooldown period
-            if (_lastErrorTimestamp.TryGetValue(errorKey, out var lastTimestamp))
+            if (s_lastErrorTimestamp.TryGetValue(errorKey, out var lastTimestamp))
             {
                 var timeSinceLastError = now - lastTimestamp;
 
                 // Update frequency counter
-                if (_errorFrequency.ContainsKey(errorKey))
+                if (s_errorFrequency.ContainsKey(errorKey))
                 {
-                    _errorFrequency[errorKey]++;
+                    s_errorFrequency[errorKey]++;
                 }
                 else
                 {
-                    _errorFrequency[errorKey] = 1;
+                    s_errorFrequency[errorKey] = 1;
                 }
 
                 // Log that we're suppressing the UI display but still logging to database
-                if (timeSinceLastError < ErrorCooldownPeriod)
+                if (timeSinceLastError < s_errorCooldownPeriod)
                 {
-
                     // Update timestamp for next occurrence
-                    _lastErrorTimestamp[errorKey] = now;
+                    s_lastErrorTimestamp[errorKey] = now;
                     return true; // Suppress UI display
                 }
 
                 // Cooldown period expired, allow display but check frequency
-                _lastErrorTimestamp[errorKey] = now;
+                s_lastErrorTimestamp[errorKey] = now;
 
                 // Suppress if we've seen this error more than 10 times in this session (spam protection)
-                if (_errorFrequency[errorKey] > 10)
+                if (s_errorFrequency[errorKey] > 10)
                 {
-
                     return true;
                 }
 
@@ -450,18 +493,16 @@ internal static class Service_ErrorHandler
             }
 
             // First occurrence of this error
-            _lastErrorTimestamp[errorKey] = now;
-            _errorFrequency[errorKey] = 1;
+            s_lastErrorTimestamp[errorKey] = now;
+            s_errorFrequency[errorKey] = 1;
             return false; // Allow UI display
         }
     }
 
-    private static void HandleFatalError(Exception ex, string callerName, string controlName)
+    private static void HandleFatalError(Exception ex, string callerName)
     {
         try
         {
-
-
             // Give user a chance to save work or see what happened
             var message = $"A fatal error has occurred and the application must close.\n\n" +
                          $"Error: {ex.Message}\n\n" +

@@ -42,9 +42,9 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
             this.panelLegendOnTime = new System.Windows.Forms.Panel();
             this.labelLegendOnTime = new System.Windows.Forms.Label();
             this.labelVendorFilter = new System.Windows.Forms.Label();
-            this.txtVendorFilter = new System.Windows.Forms.TextBox();
+            this.cmbVendorFilter = new System.Windows.Forms.ComboBox();
             this.labelPOFilter = new System.Windows.Forms.Label();
-            this.txtPOFilter = new System.Windows.Forms.TextBox();
+            this.cmbPOFilter = new System.Windows.Forms.ComboBox();
             this.chkShowLate = new System.Windows.Forms.CheckBox();
             this.chkShowPartial = new System.Windows.Forms.CheckBox();
             this.chkShowOnTime = new System.Windows.Forms.CheckBox();
@@ -77,9 +77,9 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
             // 
             // panelFilters
             // 
-            this.panelFilters.Controls.Add(this.txtPOFilter);
+            this.panelFilters.Controls.Add(this.cmbPOFilter);
             this.panelFilters.Controls.Add(this.labelPOFilter);
-            this.panelFilters.Controls.Add(this.txtVendorFilter);
+            this.panelFilters.Controls.Add(this.cmbVendorFilter);
             this.panelFilters.Controls.Add(this.labelVendorFilter);
             this.panelFilters.Controls.Add(this.chkShowWithPartNumber);
             this.panelFilters.Controls.Add(this.chkShowOnTime);
@@ -177,12 +177,14 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
             this.labelVendorFilter.Text = "Vendor:";
 
             // 
-            // txtVendorFilter
+            // cmbVendorFilter
             // 
-            this.txtVendorFilter.Location = new System.Drawing.Point(623, 12);
-            this.txtVendorFilter.Name = "txtVendorFilter";
-            this.txtVendorFilter.Size = new System.Drawing.Size(120, 23);
-            this.txtVendorFilter.TabIndex = 12;
+            this.cmbVendorFilter.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cmbVendorFilter.FormattingEnabled = true;
+            this.cmbVendorFilter.Location = new System.Drawing.Point(623, 12);
+            this.cmbVendorFilter.Name = "cmbVendorFilter";
+            this.cmbVendorFilter.Size = new System.Drawing.Size(120, 23);
+            this.cmbVendorFilter.TabIndex = 12;
 
             // 
             // labelPOFilter
@@ -195,12 +197,14 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
             this.labelPOFilter.Text = "PO #:";
 
             // 
-            // txtPOFilter
+            // cmbPOFilter
             // 
-            this.txtPOFilter.Location = new System.Drawing.Point(798, 12);
-            this.txtPOFilter.Name = "txtPOFilter";
-            this.txtPOFilter.Size = new System.Drawing.Size(100, 23);
-            this.txtPOFilter.TabIndex = 14;
+            this.cmbPOFilter.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cmbPOFilter.FormattingEnabled = true;
+            this.cmbPOFilter.Location = new System.Drawing.Point(798, 12);
+            this.cmbPOFilter.Name = "cmbPOFilter";
+            this.cmbPOFilter.Size = new System.Drawing.Size(100, 23);
+            this.cmbPOFilter.TabIndex = 14;
 
             // 
             // chkIncludeClosed
@@ -489,9 +493,9 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
         private System.Windows.Forms.Panel panelLegendOnTime;
         private System.Windows.Forms.Label labelLegendOnTime;
         private System.Windows.Forms.Label labelVendorFilter;
-        private System.Windows.Forms.TextBox txtVendorFilter;
+        private System.Windows.Forms.ComboBox cmbVendorFilter;
         private System.Windows.Forms.Label labelPOFilter;
-        private System.Windows.Forms.TextBox txtPOFilter;
+        private System.Windows.Forms.ComboBox cmbPOFilter;
         private System.Windows.Forms.CheckBox chkShowLate;
         private System.Windows.Forms.CheckBox chkShowPartial;
         private System.Windows.Forms.CheckBox chkShowOnTime;
