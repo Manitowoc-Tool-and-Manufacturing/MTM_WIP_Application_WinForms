@@ -1,24 +1,22 @@
 using System;
 using System.Data;
 using System.Drawing;
-using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Microsoft.Extensions.DependencyInjection;
-using MTM_WIP_Application_Winforms.Controls.Shared;
 using MTM_WIP_Application_Winforms.Forms.Shared;
-using MTM_WIP_Application_Winforms.Logging;
 using MTM_WIP_Application_Winforms.Models;
 using MTM_WIP_Application_Winforms.Services;
 using MTM_WIP_Application_Winforms.Services.Visual;
+
+using MTM_WIP_Application_Winforms.Controls.Shared;
+using MTM_WIP_Application_Winforms.Logging;
 
 namespace MTM_WIP_Application_Winforms.Controls.Visual
 {
     public partial class Control_ReceivingAnalytics : ThemedUserControl
     {
         private readonly IService_VisualDatabase? _visualService;
-        private DataTable? _originalData;
-        private bool _isPopulatingFilters;
 
         public Control_ReceivingAnalytics()
         {
@@ -55,14 +53,6 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
 
             // Double click to show PO details
             dataGridViewResults.CellDoubleClick += DataGridViewResults_CellDoubleClick;
-
-            // Filter events
-            cmbVendorFilter.SelectedIndexChanged += (s, e) => ApplyClientSideFilters();
-            cmbPOFilter.SelectedIndexChanged += (s, e) => ApplyClientSideFilters();
-            chkShowLate.CheckedChanged += (s, e) => ApplyClientSideFilters();
-            chkShowPartial.CheckedChanged += (s, e) => ApplyClientSideFilters();
-            chkShowOnTime.CheckedChanged += (s, e) => ApplyClientSideFilters();
-            chkShowWithPartNumber.CheckedChanged += (s, e) => ApplyClientSideFilters();
         }
 
         private void SetCurrentWeek()
@@ -102,20 +92,57 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
                     chkShowConsignment.Checked,
                     chkShowInternal.Checked,
                     chkShowService.Checked,
-                    "", // Vendor filter handled client-side
-                    "", // PO filter handled client-side
+                    txtVendorFilter.Text.Trim(),
+                    txtPOFilter.Text.Trim(),
                     chkShowWithPartNumber.Checked
                 );
 
                 if (result.IsSuccess && result.Data != null)
                 {
-                    _originalData = result.Data;
-                    PopulateFilters();
-                    ApplyClientSideFilters();
+                    // Apply client-side filters for status (Late, OnTime, Partial)
+                    // We do this here to avoid complex SQL logic for derived statuses
+                    // and to allow quick toggling if we wanted to implement that later (though currently it requires search)
+                    DataTable dt = result.Data;
+                    
+                    // If any of the status checkboxes are unchecked, we need to filter
+                    if (!chkShowLate.Checked || !chkShowPartial.Checked || !chkShowOnTime.Checked)
+                    {
+                        // We'll use a list of rows to remove to avoid modifying collection while iterating
+                        var rowsToRemove = new System.Collections.Generic.List<DataRow>();
+                        
+                        foreach (DataRow row in dt.Rows)
+                        {
+                            string poStatus = row["PO Status"]?.ToString() ?? "";
+                            string lineStatus = row["Line Status"]?.ToString() ?? "";
+                            
+                            decimal orderQty = 0;
+                            decimal receivedQty = 0;
+                            decimal.TryParse(row["Order Qty"]?.ToString(), out orderQty);
+                            decimal.TryParse(row["Received Qty"]?.ToString(), out receivedQty);
+
+                            DateTime? desiredDate = null;
+                            if (DateTime.TryParse(row["Line Desired Date"]?.ToString(), out DateTime d1)) desiredDate = d1;
+                            else if (DateTime.TryParse(row["PO Desired Date"]?.ToString(), out DateTime d2)) desiredDate = d2;
+
+                            bool isClosed = poStatus == "C" || lineStatus == "C";
+                            bool isLate = !isClosed && desiredDate.HasValue && desiredDate.Value.Date < DateTime.Today && receivedQty < orderQty;
+                            bool isPartial = !isClosed && !isLate && receivedQty > 0 && receivedQty < orderQty;
+                            bool isOnTime = !isClosed && !isLate && !isPartial; // Everything else (On Time or Open)
+
+                            if (isLate && !chkShowLate.Checked) rowsToRemove.Add(row);
+                            else if (isPartial && !chkShowPartial.Checked) rowsToRemove.Add(row);
+                            else if (isOnTime && !chkShowOnTime.Checked) rowsToRemove.Add(row);
+                        }
+
+                        foreach (var row in rowsToRemove)
+                        {
+                            dt.Rows.Remove(row);
+                        }
+                    }
+
+                    dataGridViewResults.DataSource = dt;
                     
                     // Format columns if needed
-                    if (dataGridViewResults.Columns["Order Date"] != null)
-                        dataGridViewResults.Columns["Order Date"].DefaultCellStyle.Format = "d";
                     if (dataGridViewResults.Columns["Order Date"] != null)
                         dataGridViewResults.Columns["Order Date"].DefaultCellStyle.Format = "d";
                     if (dataGridViewResults.Columns["PO Desired Date"] != null)
@@ -203,150 +230,6 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
         {
             // Logic moved to ApplyRowColors for performance
             // This method remains to satisfy the designer-generated code
-        }
-
-        private void PopulateFilters()
-        {
-            _isPopulatingFilters = true;
-
-            try
-            {
-                PopulateCombo(cmbVendorFilter, "Vendor", "[ Enter Vendor ]");
-                PopulateCombo(cmbPOFilter, "PO Number", "[ Enter PO # ]");
-            }
-            finally
-            {
-                _isPopulatingFilters = false;
-            }
-        }
-
-        private void PopulateCombo(ComboBox comboBox, string columnName, string placeholder)
-        {
-            if (comboBox == null)
-            {
-                return;
-            }
-
-            comboBox.BeginUpdate();
-            comboBox.Items.Clear();
-            comboBox.Items.Add(placeholder);
-
-            if (_originalData != null)
-            {
-                var values = _originalData.AsEnumerable()
-                    .Select(row => row[columnName]?.ToString())
-                    .Where(value => !string.IsNullOrWhiteSpace(value))
-                    .Distinct(StringComparer.OrdinalIgnoreCase)
-                    .OrderBy(value => value);
-
-                foreach (var value in values)
-                {
-                    if (!string.IsNullOrWhiteSpace(value))
-                    {
-                        comboBox.Items.Add(value);
-                    }
-                }
-            }
-
-            comboBox.SelectedIndex = 0;
-            comboBox.EndUpdate();
-        }
-
-        private void ApplyClientSideFilters()
-        {
-            if (_originalData == null || _isPopulatingFilters)
-            {
-                return;
-            }
-
-            var filteredTable = _originalData.Clone();
-
-            foreach (DataRow row in _originalData.Rows)
-            {
-                if (ShouldIncludeRow(row))
-                {
-                    filteredTable.ImportRow(row);
-                }
-            }
-
-            dataGridViewResults.DataSource = filteredTable;
-        }
-
-        private bool ShouldIncludeRow(DataRow row)
-        {
-            if (cmbVendorFilter != null && cmbVendorFilter.SelectedIndex > 0)
-            {
-                var selectedVendor = cmbVendorFilter.SelectedItem?.ToString();
-                if (!string.Equals(row["Vendor"]?.ToString(), selectedVendor, StringComparison.OrdinalIgnoreCase))
-                {
-                    return false;
-                }
-            }
-
-            if (cmbPOFilter != null && cmbPOFilter.SelectedIndex > 0)
-            {
-                var selectedPo = cmbPOFilter.SelectedItem?.ToString();
-                if (!string.Equals(row["PO Number"]?.ToString(), selectedPo, StringComparison.OrdinalIgnoreCase))
-                {
-                    return false;
-                }
-            }
-
-            if (chkShowWithPartNumber.Checked)
-            {
-                var partNumber = row["Part Number"]?.ToString();
-                if (string.IsNullOrWhiteSpace(partNumber))
-                {
-                    return false;
-                }
-            }
-
-            string poStatus = row["PO Status"]?.ToString() ?? string.Empty;
-            string lineStatus = row["Line Status"]?.ToString() ?? string.Empty;
-
-            decimal orderQty = 0;
-            decimal receivedQty = 0;
-            decimal.TryParse(row["Order Qty"]?.ToString(), out orderQty);
-            decimal.TryParse(row["Received Qty"]?.ToString(), out receivedQty);
-
-            var desiredDate = GetDesiredDate(row);
-
-            bool isClosed = poStatus == "C" || lineStatus == "C";
-            bool isLate = !isClosed && desiredDate.HasValue && desiredDate.Value.Date < DateTime.Today && receivedQty < orderQty;
-            bool isPartial = !isClosed && !isLate && receivedQty > 0 && receivedQty < orderQty;
-            bool isOnTime = !isClosed && !isLate && !isPartial;
-
-            if (isLate && !chkShowLate.Checked)
-            {
-                return false;
-            }
-
-            if (isPartial && !chkShowPartial.Checked)
-            {
-                return false;
-            }
-
-            if (isOnTime && !chkShowOnTime.Checked)
-            {
-                return false;
-            }
-
-            return true;
-        }
-
-        private static DateTime? GetDesiredDate(DataRow row)
-        {
-            if (DateTime.TryParse(row["Line Desired Date"]?.ToString(), out DateTime lineDate))
-            {
-                return lineDate;
-            }
-
-            if (DateTime.TryParse(row["PO Desired Date"]?.ToString(), out DateTime poDate))
-            {
-                return poDate;
-            }
-
-            return null;
         }
 
         /// <summary>
