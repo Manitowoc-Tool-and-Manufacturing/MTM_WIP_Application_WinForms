@@ -45,5 +45,10 @@ namespace MTM_WIP_Application_Winforms.Services.Visual
         /// Retrieves all line details for a specific Purchase Order.
         /// </summary>
         Task<Model_Dao_Result<DataTable>> GetPODetailsAsync(string poNumber);
+
+        /// <summary>
+        /// Retrieves analytics data for receiving history and forecast.
+        /// </summary>
+        Task<Model_Dao_Result<Model_ReceivingAnalytics>> GetReceivingAnalyticsAsync();
     }
 }

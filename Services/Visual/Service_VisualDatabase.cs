@@ -637,5 +637,198 @@ namespace MTM_WIP_Application_Winforms.Services.Visual
 
             return new Model_Dao_Result<DataTable> { IsSuccess = true, Data = dt };
         }
+
+        /// <summary>
+        /// Retrieves analytics data for receiving history and forecast.
+        /// </summary>
+        public async Task<Model_Dao_Result<Model_ReceivingAnalytics>> GetReceivingAnalyticsAsync()
+        {
+            if (_useSampleData)
+            {
+                return GetSampleReceivingAnalytics();
+            }
+
+            if (string.IsNullOrEmpty(_userName) || string.IsNullOrEmpty(_password))
+            {
+#if DEBUG
+                _useSampleData = true;
+                return GetSampleReceivingAnalytics();
+#else
+                return new Model_Dao_Result<Model_ReceivingAnalytics>
+                {
+                    IsSuccess = false,
+                    ErrorMessage = "Visual ERP credentials are not configured."
+                };
+#endif
+            }
+
+            var analytics = new Model_ReceivingAnalytics();
+            var startDate = new DateTime(DateTime.Now.Year, 1, 1); // YTD
+
+            // 1. History Query (Approximation using PURC_ORDER_LINE.LAST_RECV_DATE for simplicity)
+            // Using COUNT(*) to count lines as "workload"
+            string sqlHistory = @"
+                SELECT 
+                    POL.LAST_RECV_DATE as [Date],
+                    COUNT(*) as [Count],
+                    CASE 
+                        WHEN PO.CONSIGNMENT = 'Y' THEN 'Consignment'
+                        WHEN PO.INTERNAL_ORDER = 'Y' THEN 'Internal'
+                        WHEN POL.SERVICE_ID IS NOT NULL THEN 'Service'
+                        WHEN POL.PART_ID LIKE 'MMC%' THEN 'MMC'
+                        WHEN POL.PART_ID LIKE 'MMF%' THEN 'MMF'
+                        ELSE 'Part'
+                    END as [Type]
+                FROM PURC_ORDER_LINE POL
+                INNER JOIN PURCHASE_ORDER PO ON POL.PURC_ORDER_ID = PO.ID
+                WHERE POL.TOTAL_RECEIVED_QTY > 0 
+                  AND POL.LAST_RECV_DATE >= @StartDate
+                GROUP BY POL.LAST_RECV_DATE, 
+                    CASE 
+                        WHEN PO.CONSIGNMENT = 'Y' THEN 'Consignment'
+                        WHEN PO.INTERNAL_ORDER = 'Y' THEN 'Internal'
+                        WHEN POL.SERVICE_ID IS NOT NULL THEN 'Service'
+                        WHEN POL.PART_ID LIKE 'MMC%' THEN 'MMC'
+                        WHEN POL.PART_ID LIKE 'MMF%' THEN 'MMF'
+                        ELSE 'Part'
+                    END
+                ORDER BY POL.LAST_RECV_DATE";
+
+            // 2. Forecast Query (Open Lines)
+            string sqlForecast = @"
+                SELECT 
+                    ISNULL(POL.PROMISE_DATE, POL.DESIRED_RECV_DATE) as [Date],
+                    COUNT(*) as [Count],
+                    CASE 
+                        WHEN PO.CONSIGNMENT = 'Y' THEN 'Consignment'
+                        WHEN PO.INTERNAL_ORDER = 'Y' THEN 'Internal'
+                        WHEN POL.SERVICE_ID IS NOT NULL THEN 'Service'
+                        WHEN POL.PART_ID LIKE 'MMC%' THEN 'MMC'
+                        WHEN POL.PART_ID LIKE 'MMF%' THEN 'MMF'
+                        ELSE 'Part'
+                    END as [Type]
+                FROM PURC_ORDER_LINE POL
+                INNER JOIN PURCHASE_ORDER PO ON POL.PURC_ORDER_ID = PO.ID
+                WHERE (POL.ORDER_QTY - POL.TOTAL_RECEIVED_QTY) > 0 
+                  AND POL.LINE_STATUS <> 'C'
+                  AND PO.STATUS <> 'C'
+                  AND ISNULL(POL.PROMISE_DATE, POL.DESIRED_RECV_DATE) >= @Today
+                GROUP BY ISNULL(POL.PROMISE_DATE, POL.DESIRED_RECV_DATE),
+                    CASE 
+                        WHEN PO.CONSIGNMENT = 'Y' THEN 'Consignment'
+                        WHEN PO.INTERNAL_ORDER = 'Y' THEN 'Internal'
+                        WHEN POL.SERVICE_ID IS NOT NULL THEN 'Service'
+                        WHEN POL.PART_ID LIKE 'MMC%' THEN 'MMC'
+                        WHEN POL.PART_ID LIKE 'MMF%' THEN 'MMF'
+                        ELSE 'Part'
+                    END
+                ORDER BY [Date]";
+
+            try
+            {
+                using (var connection = new SqlConnection(GetConnectionString()))
+                {
+                    await connection.OpenAsync();
+
+                    // Execute History
+                    using (var command = new SqlCommand(sqlHistory, connection))
+                    {
+                        command.Parameters.AddWithValue("@StartDate", startDate);
+                        using (var reader = await command.ExecuteReaderAsync())
+                        {
+                            while (await reader.ReadAsync())
+                            {
+                                if (reader["Date"] != DBNull.Value)
+                                {
+                                    analytics.History.Add(new AnalyticsDataPoint
+                                    {
+                                        Date = Convert.ToDateTime(reader["Date"]),
+                                        Count = Convert.ToInt32(reader["Count"]),
+                                        Type = reader["Type"].ToString() ?? "Part"
+                                    });
+                                }
+                            }
+                        }
+                    }
+
+                    // Execute Forecast
+                    using (var command = new SqlCommand(sqlForecast, connection))
+                    {
+                        command.Parameters.AddWithValue("@Today", DateTime.Today);
+                        using (var reader = await command.ExecuteReaderAsync())
+                        {
+                            while (await reader.ReadAsync())
+                            {
+                                if (reader["Date"] != DBNull.Value)
+                                {
+                                    analytics.Forecast.Add(new AnalyticsDataPoint
+                                    {
+                                        Date = Convert.ToDateTime(reader["Date"]),
+                                        Count = Convert.ToInt32(reader["Count"]),
+                                        Type = reader["Type"].ToString() ?? "Part"
+                                    });
+                                }
+                            }
+                        }
+                    }
+                }
+
+                return new Model_Dao_Result<Model_ReceivingAnalytics> { IsSuccess = true, Data = analytics };
+            }
+            catch (Exception ex)
+            {
+                LoggingUtility.LogApplicationError(ex);
+                return new Model_Dao_Result<Model_ReceivingAnalytics>
+                {
+                    IsSuccess = false,
+                    ErrorMessage = $"Error fetching analytics: {ex.Message}"
+                };
+            }
+        }
+
+        private Model_Dao_Result<Model_ReceivingAnalytics> GetSampleReceivingAnalytics()
+        {
+            var analytics = new Model_ReceivingAnalytics();
+            var rnd = new Random();
+            var types = new[] { "Part", "MMC", "MMF", "Service", "Consignment", "Internal" };
+
+            // Generate History (YTD)
+            var startDate = new DateTime(DateTime.Now.Year, 1, 1);
+            for (var date = startDate; date <= DateTime.Today; date = date.AddDays(1))
+            {
+                if (date.DayOfWeek == DayOfWeek.Saturday || date.DayOfWeek == DayOfWeek.Sunday) continue;
+                
+                // Add random data points for each day
+                int points = rnd.Next(1, 4);
+                for (int i = 0; i < points; i++)
+                {
+                    analytics.History.Add(new AnalyticsDataPoint
+                    {
+                        Date = date,
+                        Count = rnd.Next(1, 10),
+                        Type = types[rnd.Next(types.Length)]
+                    });
+                }
+            }
+
+            // Generate Forecast (Next 90 days)
+            for (var date = DateTime.Today; date <= DateTime.Today.AddDays(90); date = date.AddDays(1))
+            {
+                if (date.DayOfWeek == DayOfWeek.Saturday || date.DayOfWeek == DayOfWeek.Sunday) continue;
+
+                int points = rnd.Next(1, 4);
+                for (int i = 0; i < points; i++)
+                {
+                    analytics.Forecast.Add(new AnalyticsDataPoint
+                    {
+                        Date = date,
+                        Count = rnd.Next(1, 10),
+                        Type = types[rnd.Next(types.Length)]
+                    });
+                }
+            }
+
+            return new Model_Dao_Result<Model_ReceivingAnalytics> { IsSuccess = true, Data = analytics };
+        }
     }
 }

@@ -56,6 +56,7 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
             Control_ReceivingAnalytics_SuggestionTextBoxWithLabel_Carrier = new MTM_WIP_Application_Winforms.Controls.Shared.SuggestionTextBoxWithLabel();
             Control_ReceivingAnalytics_TableLayoutPanel_Buttons = new TableLayoutPanel();
             Control_ReceivingAnalytics_Button_ToggleOptions = new Button();
+            Control_ReceivingAnalytics_Button_Analytics = new Button();
             Control_ReceivingAnalytics_Panel_CheckBoxes_Legend = new Panel();
             Control_ReceivingAnalytics_TableLayoutPanel_Legend = new TableLayoutPanel();
             Control_ReceivingAnalytics_Label_LegendOnTime = new Label();
@@ -593,11 +594,13 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
             // 
             Control_ReceivingAnalytics_TableLayoutPanel_Buttons.AutoSize = true;
             Control_ReceivingAnalytics_TableLayoutPanel_Buttons.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            Control_ReceivingAnalytics_TableLayoutPanel_Buttons.ColumnCount = 2;
-            Control_ReceivingAnalytics_TableLayoutPanel_Buttons.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
+            Control_ReceivingAnalytics_TableLayoutPanel_Buttons.ColumnCount = 3;
+            Control_ReceivingAnalytics_TableLayoutPanel_Buttons.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 80F));
+            Control_ReceivingAnalytics_TableLayoutPanel_Buttons.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 20F));
             Control_ReceivingAnalytics_TableLayoutPanel_Buttons.ColumnStyles.Add(new ColumnStyle());
-            Control_ReceivingAnalytics_TableLayoutPanel_Buttons.Controls.Add(Control_ReceivingAnalytics_Button_ToggleOptions, 1, 0);
+            Control_ReceivingAnalytics_TableLayoutPanel_Buttons.Controls.Add(Control_ReceivingAnalytics_Button_ToggleOptions, 2, 0);
             Control_ReceivingAnalytics_TableLayoutPanel_Buttons.Controls.Add(Control_ReceivingAnalytics_Button_Search, 0, 0);
+            Control_ReceivingAnalytics_TableLayoutPanel_Buttons.Controls.Add(Control_ReceivingAnalytics_Button_Analytics, 1, 0);
             Control_ReceivingAnalytics_TableLayoutPanel_Buttons.Dock = DockStyle.Fill;
             Control_ReceivingAnalytics_TableLayoutPanel_Buttons.Location = new Point(3, 185);
             Control_ReceivingAnalytics_TableLayoutPanel_Buttons.Name = "Control_ReceivingAnalytics_TableLayoutPanel_Buttons";
@@ -621,6 +624,23 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
             Control_ReceivingAnalytics_Button_ToggleOptions.Size = new Size(32, 32);
             Control_ReceivingAnalytics_Button_ToggleOptions.TabIndex = 11;
             Control_ReceivingAnalytics_Button_ToggleOptions.UseVisualStyleBackColor = false;
+            // 
+            // Control_ReceivingAnalytics_Button_Analytics
+            // 
+            Control_ReceivingAnalytics_Button_Analytics.AutoSize = true;
+            Control_ReceivingAnalytics_Button_Analytics.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            Control_ReceivingAnalytics_Button_Analytics.BackColor = Color.Teal;
+            Control_ReceivingAnalytics_Button_Analytics.Dock = DockStyle.Fill;
+            Control_ReceivingAnalytics_Button_Analytics.FlatStyle = FlatStyle.Flat;
+            Control_ReceivingAnalytics_Button_Analytics.ForeColor = Color.White;
+            Control_ReceivingAnalytics_Button_Analytics.Location = new Point(758, 3);
+            Control_ReceivingAnalytics_Button_Analytics.MaximumSize = new Size(0, 32);
+            Control_ReceivingAnalytics_Button_Analytics.MinimumSize = new Size(0, 32);
+            Control_ReceivingAnalytics_Button_Analytics.Name = "Control_ReceivingAnalytics_Button_Analytics";
+            Control_ReceivingAnalytics_Button_Analytics.Size = new Size(189, 32);
+            Control_ReceivingAnalytics_Button_Analytics.TabIndex = 12;
+            Control_ReceivingAnalytics_Button_Analytics.Text = "Receiving Analytics";
+            Control_ReceivingAnalytics_Button_Analytics.UseVisualStyleBackColor = false;
             // 
             // Control_ReceivingAnalytics_Panel_CheckBoxes_Legend
             // 
@@ -873,5 +893,6 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
         private Panel Control_ReceivingAnalytics_Panel_LegendPartial;
         private Panel Control_ReceivingAnalytics_Panel_LegendOnTime;
         private Label Control_ReceivingAnalytics_Label_LegendTitle;
+        private Button Control_ReceivingAnalytics_Button_Analytics;
     }
 }

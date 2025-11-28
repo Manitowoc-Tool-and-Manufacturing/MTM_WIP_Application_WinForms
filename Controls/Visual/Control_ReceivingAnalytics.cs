@@ -72,6 +72,9 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
             // Search Button
             Control_ReceivingAnalytics_Button_Search.Click += async (s, e) => await FetchDataAsync();
 
+            // Analytics Button
+            Control_ReceivingAnalytics_Button_Analytics.Click += Control_ReceivingAnalytics_Button_Analytics_Click;
+
             // Toggle Options
             Control_ReceivingAnalytics_Button_ToggleOptions.Click += Control_ReceivingAnalytics_Button_ToggleOptions_Click;
 
@@ -271,6 +274,64 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
             else
             {
                 _toggleButtonAnimation.UsePreset(TextAnimationPreset.Down);
+            }
+        }
+
+        private async void Control_ReceivingAnalytics_Button_Analytics_Click(object? sender, EventArgs e)
+        {
+            try
+            {
+                string htmlPath = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Resources", "Html", "ReceivingAnalytics.html");
+                
+                // Fallback for development environment if not copied to bin
+                if (!System.IO.File.Exists(htmlPath))
+                {
+                    // Try to find it in the source tree (up 3 levels from bin/Debug/net8.0-windows)
+                    string sourcePath = System.IO.Path.GetFullPath(System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"..\..\..\Resources\Html\ReceivingAnalytics.html"));
+                    if (System.IO.File.Exists(sourcePath))
+                    {
+                        htmlPath = sourcePath;
+                    }
+                    else
+                    {
+                        Service_ErrorHandler.ShowError($"Analytics template not found at: {htmlPath}");
+                        return;
+                    }
+                }
+
+                string htmlContent = System.IO.File.ReadAllText(htmlPath);
+                
+                // Fetch Data
+                if (_visualService == null) return;
+                
+                Control_ReceivingAnalytics_Button_Analytics.Enabled = false;
+                Control_ReceivingAnalytics_Button_Analytics.Text = "Loading...";
+
+                var result = await _visualService.GetReceivingAnalyticsAsync();
+                
+                Control_ReceivingAnalytics_Button_Analytics.Enabled = true;
+                Control_ReceivingAnalytics_Button_Analytics.Text = "Receiving Analytics";
+
+                if (result.IsSuccess && result.Data != null)
+                {
+                    string jsonData = System.Text.Json.JsonSerializer.Serialize(result.Data);
+                    htmlContent = htmlContent.Replace("// To be populated by C#", $"loadData('{jsonData.Replace("'", "\\'")}');");
+
+                    using (var viewer = new Form_HtmlViewer("Receiving Analytics", htmlContent))
+                    {
+                        viewer.ShowDialog(this);
+                    }
+                }
+                else
+                {
+                    Service_ErrorHandler.ShowError(result.ErrorMessage);
+                }
+            }
+            catch (Exception ex)
+            {
+                Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Medium, controlName: this.Name);
+                Control_ReceivingAnalytics_Button_Analytics.Enabled = true;
+                Control_ReceivingAnalytics_Button_Analytics.Text = "Receiving Analytics";
             }
         }
 

@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Receiving Analytics</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f0f2f5;
+        }
+        .container {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            padding: 20px;
+            height: 90vh;
+            display: flex;
+            flex-direction: column;
+        }
+        .toolbar {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            margin-bottom: 20px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #eee;
+            align-items: center;
+        }
+        .control-group {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+        .control-group label {
+            font-size: 12px;
+            font-weight: bold;
+            color: #666;
+        }
+        .btn-group {
+            display: flex;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+        .btn-group button {
+            border: none;
+            background: #fff;
+            padding: 8px 16px;
+            cursor: pointer;
+            border-right: 1px solid #ccc;
+            transition: background 0.2s;
+        }
+        .btn-group button:last-child {
+            border-right: none;
+        }
+        .btn-group button:hover {
+            background: #f5f5f5;
+        }
+        .btn-group button.active {
+            background: #0078d4;
+            color: white;
+        }
+        .checkbox-group {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+        .checkbox-item {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 14px;
+        }
+        .chart-container {
+            flex-grow: 1;
+            position: relative;
+            min-height: 0;
+        }
+        .toggle-switch {
+            position: relative;
+            display: inline-block;
+            width: 160px;
+            height: 34px;
+        }
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #2196F3;
+            transition: .4s;
+            border-radius: 34px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 10px;
+            color: white;
+            font-size: 12px;
+            font-weight: bold;
+        }
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 26px;
+            width: 26px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+        input:checked + .slider {
+            background-color: #4CAF50;
+        }
+        input:checked + .slider:before {
+            transform: translateX(126px);
+        }
+        /* Custom labels for toggle */
+        .slider .label-history { opacity: 1; transition: opacity 0.4s; }
+        .slider .label-forecast { opacity: 0.5; transition: opacity 0.4s; }
+        input:checked + .slider .label-history { opacity: 0.5; }
+        input:checked + .slider .label-forecast { opacity: 1; }
+        
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="toolbar">
+            <div class="control-group">
+                <label>View Mode</label>
+                <label class="toggle-switch">
+                    <input type="checkbox" id="viewModeToggle" onchange="updateViewMode()">
+                    <span class="slider">
+                        <span class="label-history">HISTORY (YTD)</span>
+                        <span class="label-forecast">FORECAST</span>
+                    </span>
+                </label>
+            </div>
+
+            <div class="control-group">
+                <label>Time Period</label>
+                <div class="btn-group" id="periodButtons">
+                    <button onclick="setPeriod('Day')" class="active">Day</button>
+                    <button onclick="setPeriod('Week')">Week</button>
+                    <button onclick="setPeriod('Month')">Month</button>
+                    <button onclick="setPeriod('Quarter')">Quarter</button>
+                    <button onclick="setPeriod('Year')">Year</button>
+                </div>
+            </div>
+
+            <div class="control-group">
+                <label>Filters</label>
+                <div class="checkbox-group">
+                    <label class="checkbox-item"><input type="checkbox" id="chkParts" checked onchange="refreshChart()"> Parts Only</label>
+                    <label class="checkbox-item"><input type="checkbox" id="chkMMC" onchange="refreshChart()"> MMC (Coils)</label>
+                    <label class="checkbox-item"><input type="checkbox" id="chkMMF" onchange="refreshChart()"> MMF (Flat)</label>
+                    <label class="checkbox-item"><input type="checkbox" id="chkOutside" checked onchange="refreshChart()"> Outside Svc</label>
+                    <label class="checkbox-item"><input type="checkbox" id="chkConsignment" checked onchange="refreshChart()"> Consignment</label>
+                    <label class="checkbox-item"><input type="checkbox" id="chkInternal" checked onchange="refreshChart()"> Internal</label>
+                </div>
+            </div>
+        </div>
+
+        <div class="chart-container">
+            <canvas id="analyticsChart"></canvas>
+        </div>
+    </div>
+
+    <script>
+        let chartInstance = null;
+        let currentPeriod = 'Day';
+        let isForecast = false;
+        let rawData = []; // To be populated by C#
+
+        // Initialize Chart
+        function initChart() {
+            const ctx = document.getElementById('analyticsChart').getContext('2d');
+            chartInstance = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: [],
+                    datasets: [{
+                        label: 'PO / Line Count',
+                        data: [],
+                        borderColor: '#0078d4',
+                        backgroundColor: 'rgba(0, 120, 212, 0.1)',
+                        tension: 0.4,
+                        fill: true
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: 'Receiving Department Workload'
+                        },
+                        tooltip: {
+                            mode: 'index',
+                            intersect: false,
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: 'Count'
+                            }
+                        },
+                        x: {
+                            title: {
+                                display: true,
+                                text: 'Date'
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        function setPeriod(period) {
+            currentPeriod = period;
+            // Update UI
+            document.querySelectorAll('#periodButtons button').forEach(btn => {
+                btn.classList.remove('active');
+                if (btn.textContent === period) btn.classList.add('active');
+            });
+            refreshChart();
+        }
+
+        function updateViewMode() {
+            isForecast = document.getElementById('viewModeToggle').checked;
+            refreshChart();
+        }
+
+        function refreshChart() {
+            if (!chartInstance) return;
+
+            // Filter data based on mode (History vs Forecast)
+            let sourceData = isForecast ? rawData.Forecast : rawData.History;
+            if (!sourceData) sourceData = [];
+
+            // Filter by Type checkboxes
+            const showParts = document.getElementById('chkParts').checked;
+            const showMMC = document.getElementById('chkMMC').checked;
+            const showMMF = document.getElementById('chkMMF').checked;
+            const showOutside = document.getElementById('chkOutside').checked;
+            const showConsignment = document.getElementById('chkConsignment').checked;
+            const showInternal = document.getElementById('chkInternal').checked;
+
+            // Filter and Aggregate
+            // We need to group by Date (based on Period) and Sum the Counts
+            
+            let aggregated = {};
+
+            sourceData.forEach(item => {
+                // Check filters
+                if (item.Type === 'Part' && !showParts) return;
+                if (item.Type === 'MMC' && !showMMC) return;
+                if (item.Type === 'MMF' && !showMMF) return;
+                if (item.Type === 'Service' && !showOutside) return;
+                if (item.Type === 'Consignment' && !showConsignment) return;
+                if (item.Type === 'Internal' && !showInternal) return;
+
+                // Determine Key based on Period
+                let date = new Date(item.Date);
+                let key = getDateKey(date, currentPeriod);
+
+                if (!aggregated[key]) aggregated[key] = 0;
+                aggregated[key] += item.Count;
+            });
+
+            // Sort keys
+            let sortedKeys = Object.keys(aggregated).sort((a, b) => {
+                // Simple string sort works for ISO-like keys, but let's be careful
+                return new Date(a) - new Date(b);
+            });
+
+            // Prepare Chart Data
+            chartInstance.data.labels = sortedKeys;
+            chartInstance.data.datasets[0].data = sortedKeys.map(k => aggregated[k]);
+            
+            chartInstance.options.plugins.title.text = 
+                `Receiving Workload - ${isForecast ? 'FORECAST' : 'HISTORY (YTD)'} by ${currentPeriod}`;
+            
+            chartInstance.update();
+        }
+
+        function getDateKey(date, period) {
+            const y = date.getFullYear();
+            const m = date.getMonth() + 1;
+            const d = date.getDate();
+            
+            if (period === 'Day') return `${y}-${m.toString().padStart(2,'0')}-${d.toString().padStart(2,'0')}`;
+            if (period === 'Month') return `${y}-${m.toString().padStart(2,'0')}`;
+            if (period === 'Year') return `${y}`;
+            
+            if (period === 'Week') {
+                // Get ISO week
+                const d2 = new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()));
+                const dayNum = d2.getUTCDay() || 7;
+                d2.setUTCDate(d2.getUTCDate() + 4 - dayNum);
+                const yearStart = new Date(Date.UTC(d2.getUTCFullYear(),0,1));
+                const weekNo = Math.ceil((((d2 - yearStart) / 86400000) + 1)/7);
+                return `${d2.getUTCFullYear()}-W${weekNo.toString().padStart(2,'0')}`;
+            }
+            
+            if (period === 'Quarter') {
+                const q = Math.floor((date.getMonth() + 3) / 3);
+                return `${y}-Q${q}`;
+            }
+            
+            return date.toISOString().split('T')[0];
+        }
+
+        // Called by C# to inject data
+        function loadData(jsonString) {
+            try {
+                rawData = JSON.parse(jsonString);
+                refreshChart();
+            } catch (e) {
+                console.error("Failed to parse data", e);
+            }
+        }
+
+        // Initialize on load
+        window.onload = initChart;
+    </script>
+</body>
+</html>
