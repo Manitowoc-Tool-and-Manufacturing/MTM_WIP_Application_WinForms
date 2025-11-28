@@ -129,10 +129,7 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
             Control_ReceivingAnalytics_SuggestionTextBoxWithLabel_PartNumber.LabelText = "Part #";
             Control_ReceivingAnalytics_SuggestionTextBoxWithLabel_PartNumber.EnableSuggestions = true;
             // Use helper if available, otherwise default behavior
-            if (typeof(Helper_SuggestionTextBox).GetMethod("ConfigureForPartNumbers") != null)
-            {
-                Helper_SuggestionTextBox.ConfigureForPartNumbers(Control_ReceivingAnalytics_SuggestionTextBoxWithLabel_PartNumber, Helper_SuggestionTextBox.GetCachedPartNumbersAsync);
-            }
+            Helper_SuggestionTextBox.ConfigureForPartNumbers(Control_ReceivingAnalytics_SuggestionTextBoxWithLabel_PartNumber, Helper_SuggestionTextBox.GetCachedPartNumbersAsync);
 
             // Carrier
             Control_ReceivingAnalytics_SuggestionTextBoxWithLabel_Carrier.LabelText = "Carrier";
