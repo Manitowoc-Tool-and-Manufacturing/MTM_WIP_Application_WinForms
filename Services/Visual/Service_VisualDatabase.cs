@@ -665,11 +665,11 @@ namespace MTM_WIP_Application_Winforms.Services.Visual
             var analytics = new Model_ReceivingAnalytics();
             var startDate = new DateTime(DateTime.Now.Year, 1, 1); // YTD
 
-            // 1. History Query (Approximation using PURC_ORDER_LINE.LAST_RECV_DATE for simplicity)
+            // 1. History Query (Approximation using PURC_ORDER_LINE.LAST_RECEIVED_DATE for simplicity)
             // Using COUNT(*) to count lines as "workload"
             string sqlHistory = @"
                 SELECT 
-                    POL.LAST_RECV_DATE as [Date],
+                    POL.LAST_RECEIVED_DATE as [Date],
                     COUNT(*) as [Count],
                     CASE 
                         WHEN PO.CONSIGNMENT = 'Y' THEN 'Consignment'
@@ -682,8 +682,8 @@ namespace MTM_WIP_Application_Winforms.Services.Visual
                 FROM PURC_ORDER_LINE POL
                 INNER JOIN PURCHASE_ORDER PO ON POL.PURC_ORDER_ID = PO.ID
                 WHERE POL.TOTAL_RECEIVED_QTY > 0 
-                  AND POL.LAST_RECV_DATE >= @StartDate
-                GROUP BY POL.LAST_RECV_DATE, 
+                  AND POL.LAST_RECEIVED_DATE >= @StartDate
+                GROUP BY POL.LAST_RECEIVED_DATE, 
                     CASE 
                         WHEN PO.CONSIGNMENT = 'Y' THEN 'Consignment'
                         WHEN PO.INTERNAL_ORDER = 'Y' THEN 'Internal'
@@ -692,7 +692,7 @@ namespace MTM_WIP_Application_Winforms.Services.Visual
                         WHEN POL.PART_ID LIKE 'MMF%' THEN 'MMF'
                         ELSE 'Part'
                     END
-                ORDER BY POL.LAST_RECV_DATE";
+                ORDER BY POL.LAST_RECEIVED_DATE";
 
             // 2. Forecast Query (Open Lines)
             string sqlForecast = @"
