@@ -309,21 +309,21 @@ namespace MTM_WIP_Application_Winforms.Services.Visual
 
             // Date Filter Logic
             string dateCondition = "";
-            switch (dateFilterType)
+            switch (dateFilterType?.ToUpper())
             {
-                case "PO Desired Date":
+                case "PO DESIRED DATE":
                     dateCondition = " AND PO.DESIRED_RECV_DATE BETWEEN @StartDate AND @EndDate";
                     break;
-                case "PO Promise Date":
+                case "PO PROMISE DATE":
                     dateCondition = " AND PO.PROMISE_DATE BETWEEN @StartDate AND @EndDate";
                     break;
-                case "Line Desired Date":
+                case "LINE DESIRED DATE":
                     dateCondition = " AND POL.DESIRED_RECV_DATE BETWEEN @StartDate AND @EndDate";
                     break;
-                case "Line Promise Date":
+                case "LINE PROMISE DATE":
                     dateCondition = " AND POL.PROMISE_DATE BETWEEN @StartDate AND @EndDate";
                     break;
-                case "Any of the Above":
+                case "ANY OF THE ABOVE":
                 default:
                     dateCondition = @" AND (
                         PO.DESIRED_RECV_DATE BETWEEN @StartDate AND @EndDate OR
@@ -341,17 +341,29 @@ namespace MTM_WIP_Application_Winforms.Services.Visual
                 sql += " AND PO.STATUS <> 'C' AND POL.LINE_STATUS <> 'C'";
             }
 
-            if (!includeConsignment)
+            if (includeConsignment)
+            {
+                sql += " AND PO.CONSIGNMENT = 'Y'";
+            }
+            else
             {
                 sql += " AND (PO.CONSIGNMENT IS NULL OR PO.CONSIGNMENT <> 'Y')";
             }
 
-            if (!includeInternal)
+            if (includeInternal)
+            {
+                sql += " AND PO.INTERNAL_ORDER = 'Y'";
+            }
+            else
             {
                 sql += " AND (PO.INTERNAL_ORDER IS NULL OR PO.INTERNAL_ORDER <> 'Y')";
             }
 
-            if (!includeService)
+            if (includeService)
+            {
+                sql += " AND POL.SERVICE_ID IS NOT NULL";
+            }
+            else
             {
                 sql += " AND POL.SERVICE_ID IS NULL";
             }
