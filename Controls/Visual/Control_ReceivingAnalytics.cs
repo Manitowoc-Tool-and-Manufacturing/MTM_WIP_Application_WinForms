@@ -42,9 +42,9 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
 
             // Set default checkboxes
             Control_ReceivingAnalytics_CheckBox_ShowClosed.Checked = false;
-            Control_ReceivingAnalytics_CheckBox_ShowConsignment.Checked = true;
-            Control_ReceivingAnalytics_CheckBox_ShowInternal.Checked = true;
-            Control_ReceivingAnalytics_CheckBox_ShowOutsideService.Checked = true;
+            Control_ReceivingAnalytics_CheckBox_ShowConsignment.Checked = false;
+            Control_ReceivingAnalytics_CheckBox_ShowInternal.Checked = false;
+            Control_ReceivingAnalytics_CheckBox_ShowOutsideService.Checked = false;
             Control_ReceivingAnalytics_CheckBox_ShowLate.Checked = true;
             Control_ReceivingAnalytics_CheckBox_ShowPartial.Checked = true;
             Control_ReceivingAnalytics_CheckBox_ShowOnTime.Checked = true;
