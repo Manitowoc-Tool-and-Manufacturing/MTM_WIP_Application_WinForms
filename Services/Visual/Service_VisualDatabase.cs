@@ -830,5 +830,117 @@ namespace MTM_WIP_Application_Winforms.Services.Visual
 
             return new Model_Dao_Result<Model_ReceivingAnalytics> { IsSuccess = true, Data = analytics };
         }
+
+        /// <summary>
+        /// Retrieves inventory data based on search criteria.
+        /// </summary>
+        public async Task<Model_Dao_Result<DataTable>> GetInventoryAsync(string partNumber, string warehouse, string location, bool nonZeroOnly)
+        {
+            if (_useSampleData)
+            {
+                // Return sample data
+                var dt = new DataTable();
+                dt.Columns.Add("Part Number");
+                dt.Columns.Add("Description");
+                dt.Columns.Add("Warehouse");
+                dt.Columns.Add("Location");
+                dt.Columns.Add("On Hand", typeof(decimal));
+                dt.Columns.Add("Allocated", typeof(decimal));
+                dt.Columns.Add("Available", typeof(decimal));
+                dt.Columns.Add("Product Code");
+                dt.Columns.Add("Commodity Code");
+
+                dt.Rows.Add("SAMPLE-PART-1", "Sample Description 1", "MAIN", "A-01-01", 100, 10, 90, "FG", "STEEL");
+                dt.Rows.Add("SAMPLE-PART-2", "Sample Description 2", "MAIN", "B-02-02", 50, 0, 50, "RM", "ALUM");
+                
+                return new Model_Dao_Result<DataTable> { IsSuccess = true, Data = dt };
+            }
+
+            if (string.IsNullOrEmpty(_userName) || string.IsNullOrEmpty(_password))
+            {
+#if DEBUG
+                // Fallback to sample data in debug
+                return GetInventoryAsync(partNumber, warehouse, location, nonZeroOnly).Result; 
+#else
+                return new Model_Dao_Result<DataTable>
+                {
+                    IsSuccess = false,
+                    ErrorMessage = "Visual ERP credentials are not configured."
+                };
+#endif
+            }
+
+            string sql = @"
+                SELECT 
+                    P.ID as [Part Number],
+                    P.DESCRIPTION as [Description],
+                    PL.WAREHOUSE_ID as [Warehouse],
+                    PL.LOCATION_ID as [Location],
+                    PL.QTY as [On Hand],
+                    PL.COMMITTED_QTY as [Allocated],
+                    (PL.QTY - PL.COMMITTED_QTY) as [Available],
+                    P.PRODUCT_CODE as [Product Code],
+                    P.COMMODITY_CODE as [Commodity Code]
+                FROM PART_LOCATION PL
+                INNER JOIN PART P ON PL.PART_ID = P.ID
+                WHERE 1=1";
+
+            if (!string.IsNullOrWhiteSpace(partNumber))
+            {
+                sql += " AND P.ID LIKE @PartNumber";
+            }
+
+            if (!string.IsNullOrWhiteSpace(warehouse))
+            {
+                sql += " AND PL.WAREHOUSE_ID LIKE @Warehouse";
+            }
+
+            if (!string.IsNullOrWhiteSpace(location))
+            {
+                sql += " AND PL.LOCATION_ID LIKE @Location";
+            }
+
+            if (nonZeroOnly)
+            {
+                sql += " AND PL.QTY <> 0";
+            }
+
+            sql += " ORDER BY P.ID, PL.WAREHOUSE_ID, PL.LOCATION_ID";
+
+            try
+            {
+                using (var connection = new SqlConnection(GetConnectionString()))
+                {
+                    await connection.OpenAsync();
+                    using (var command = new SqlCommand(sql, connection))
+                    {
+                        if (!string.IsNullOrWhiteSpace(partNumber))
+                            command.Parameters.AddWithValue("@PartNumber", "%" + partNumber + "%");
+                        
+                        if (!string.IsNullOrWhiteSpace(warehouse))
+                            command.Parameters.AddWithValue("@Warehouse", "%" + warehouse + "%");
+
+                        if (!string.IsNullOrWhiteSpace(location))
+                            command.Parameters.AddWithValue("@Location", "%" + location + "%");
+
+                        using (var reader = await command.ExecuteReaderAsync())
+                        {
+                            var dt = new DataTable();
+                            dt.Load(reader);
+                            return new Model_Dao_Result<DataTable> { IsSuccess = true, Data = dt };
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                LoggingUtility.LogApplicationError(ex);
+                return new Model_Dao_Result<DataTable>
+                {
+                    IsSuccess = false,
+                    ErrorMessage = $"Error fetching inventory: {ex.Message}"
+                };
+            }
+        }
     }
 }

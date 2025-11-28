@@ -22,6 +22,7 @@ namespace MTM_WIP_Application_Winforms.Forms.Visual
         private readonly IService_VisualDatabase? _visualService;
         private Control_DieToolDiscovery? _controlDieToolDiscovery;
         private Control_ReceivingAnalytics? _controlReceivingAnalytics;
+        private Control_VisualInventory? _controlVisualInventory;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="InforVisualDashboard"/> class.
@@ -78,6 +79,11 @@ namespace MTM_WIP_Application_Winforms.Forms.Visual
             else if (category == Enum_VisualDashboardCategory.Receiving)
             {
                 ShowReceivingAnalyticsControl();
+                return;
+            }
+            else if (category == Enum_VisualDashboardCategory.Inventory)
+            {
+                ShowVisualInventoryControl();
                 return;
             }
             else
@@ -275,6 +281,33 @@ namespace MTM_WIP_Application_Winforms.Forms.Visual
             
             // Hide other custom controls
             if (_controlDieToolDiscovery != null) _controlDieToolDiscovery.Visible = false;
+            if (_controlVisualInventory != null) _controlVisualInventory.Visible = false;
+        }
+
+        private void ShowVisualInventoryControl()
+        {
+            // Hide generic controls
+            dataGridViewResults.Visible = false;
+            controlEmptyState.Visible = false;
+            btnExport.Visible = false;
+            textBoxFilter.Visible = false;
+            labelFilter.Visible = false;
+
+            // Initialize control if needed
+            if (_controlVisualInventory == null)
+            {
+                _controlVisualInventory = new Control_VisualInventory();
+                _controlVisualInventory.Dock = DockStyle.Fill;
+                panelContent.Controls.Add(_controlVisualInventory);
+                _controlVisualInventory.BringToFront();
+            }
+
+            _controlVisualInventory.Visible = true;
+            labelTitle.Text = "Inventory Search";
+
+            // Hide other custom controls
+            if (_controlDieToolDiscovery != null) _controlDieToolDiscovery.Visible = false;
+            if (_controlReceivingAnalytics != null) _controlReceivingAnalytics.Visible = false;
         }
 
         private void HideCustomControls()
@@ -286,6 +319,10 @@ namespace MTM_WIP_Application_Winforms.Forms.Visual
             if (_controlReceivingAnalytics != null)
             {
                 _controlReceivingAnalytics.Visible = false;
+            }
+            if (_controlVisualInventory != null)
+            {
+                _controlVisualInventory.Visible = false;
             }
             
             // Restore generic controls visibility

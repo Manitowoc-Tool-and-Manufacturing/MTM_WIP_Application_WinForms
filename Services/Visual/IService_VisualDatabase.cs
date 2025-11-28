@@ -50,5 +50,10 @@ namespace MTM_WIP_Application_Winforms.Services.Visual
         /// Retrieves analytics data for receiving history and forecast.
         /// </summary>
         Task<Model_Dao_Result<Model_ReceivingAnalytics>> GetReceivingAnalyticsAsync();
+
+        /// <summary>
+        /// Retrieves inventory data based on search criteria.
+        /// </summary>
+        Task<Model_Dao_Result<DataTable>> GetInventoryAsync(string partNumber, string warehouse, string location, bool nonZeroOnly);
     }
 }
