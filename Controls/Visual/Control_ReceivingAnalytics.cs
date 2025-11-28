@@ -21,6 +21,7 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
         private bool _isFiltersVisible = true;
         private readonly Control_TextAnimationSequence _toggleButtonAnimation;
         private DataTable? _cachedDataTable;
+        private bool _isHandlingFilterLogic = false;
 
         public Control_ReceivingAnalytics()
         {
@@ -61,6 +62,9 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
             itemColumnOrder.Click += ContextMenuItem_ColumnOrder_Click;
             contextMenu.Items.Add(itemColumnOrder);
             Control_ReceivingAnalytics_DataGridView_Results.ContextMenuStrip = contextMenu;
+
+            // Initial Load
+            _ = FetchDataAsync();
         }
 
         private void WireUpEvents()
@@ -78,26 +82,133 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
 
             // Server-side filters (require fetch)
             Control_ReceivingAnalytics_CheckBox_ShowClosed.CheckedChanged += async (s, e) => await FetchDataAsync();
-            Control_ReceivingAnalytics_CheckBox_ShowConsignment.CheckedChanged += async (s, e) => await FetchDataAsync();
-            Control_ReceivingAnalytics_CheckBox_ShowInternal.CheckedChanged += async (s, e) => await FetchDataAsync();
-            Control_ReceivingAnalytics_CheckBox_ShowOutsideService.CheckedChanged += async (s, e) => await FetchDataAsync();
-            Control_ReceivingAnalytics_CheckBox_ShowWithPartID.CheckedChanged += async (s, e) => await FetchDataAsync();
+            
+            // Mutually Exclusive / Interaction Filters
+            Control_ReceivingAnalytics_CheckBox_ShowOutsideService.CheckedChanged += async (s, e) => { HandleFilterLogic(Control_ReceivingAnalytics_CheckBox_ShowOutsideService); await FetchDataAsync(); };
+            Control_ReceivingAnalytics_CheckBox_ShowConsignment.CheckedChanged += async (s, e) => { HandleFilterLogic(Control_ReceivingAnalytics_CheckBox_ShowConsignment); await FetchDataAsync(); };
+            Control_ReceivingAnalytics_CheckBox_ShowInternal.CheckedChanged += async (s, e) => { HandleFilterLogic(Control_ReceivingAnalytics_CheckBox_ShowInternal); await FetchDataAsync(); };
+            Control_ReceivingAnalytics_CheckBox_ShowWithPartID.CheckedChanged += async (s, e) => { HandleFilterLogic(Control_ReceivingAnalytics_CheckBox_ShowWithPartID); await FetchDataAsync(); };
 
             // Client-side filters (apply to cached data)
             Control_ReceivingAnalytics_CheckBox_ShowLate.CheckedChanged += async (s, e) => await ApplyFiltersAsync();
             Control_ReceivingAnalytics_CheckBox_ShowPartial.CheckedChanged += async (s, e) => await ApplyFiltersAsync();
             Control_ReceivingAnalytics_CheckBox_ShowOnTime.CheckedChanged += async (s, e) => await ApplyFiltersAsync();
             Control_ReceivingAnalytics_CheckBox_ShowOpen.CheckedChanged += async (s, e) => await ApplyFiltersAsync();
-            Control_ReceivingAnalytics_CheckBox_ShowMMC.CheckedChanged += async (s, e) => await ApplyFiltersAsync();
-            Control_ReceivingAnalytics_CheckBox_ShowMMF.CheckedChanged += async (s, e) => await ApplyFiltersAsync();
+            
+            // MMC/MMF Logic
+            Control_ReceivingAnalytics_CheckBox_ShowMMC.CheckedChanged += async (s, e) => { HandleFilterLogic(Control_ReceivingAnalytics_CheckBox_ShowMMC); await ApplyFiltersAsync(); };
+            Control_ReceivingAnalytics_CheckBox_ShowMMF.CheckedChanged += async (s, e) => { HandleFilterLogic(Control_ReceivingAnalytics_CheckBox_ShowMMF); await ApplyFiltersAsync(); };
 
             // Suggestion Boxes (Client-side)
             Control_ReceivingAnalytics_SuggestionTextBoxWithLabel_PartNumber.SuggestionSelected += async (s, e) => await ApplyFiltersAsync();
             Control_ReceivingAnalytics_SuggestionTextBoxWithLabel_Carrier.SuggestionSelected += async (s, e) => await ApplyFiltersAsync();
+            Control_ReceivingAnalytics_SuggestionTextBoxWithLabel_Supplier.SuggestionSelected += async (s, e) => await ApplyFiltersAsync();
+            Control_ReceivingAnalytics_SuggestionTextBoxWithLabel_PONumber.SuggestionSelected += async (s, e) => await ApplyFiltersAsync();
             
             // Also trigger on Enter key for text boxes
             Control_ReceivingAnalytics_SuggestionTextBoxWithLabel_PartNumber.TextBox.KeyDown += async (s, e) => { if (e.KeyCode == Keys.Enter) await ApplyFiltersAsync(); };
             Control_ReceivingAnalytics_SuggestionTextBoxWithLabel_Carrier.TextBox.KeyDown += async (s, e) => { if (e.KeyCode == Keys.Enter) await ApplyFiltersAsync(); };
+            Control_ReceivingAnalytics_SuggestionTextBoxWithLabel_Supplier.TextBox.KeyDown += async (s, e) => { if (e.KeyCode == Keys.Enter) await ApplyFiltersAsync(); };
+            Control_ReceivingAnalytics_SuggestionTextBoxWithLabel_PONumber.TextBox.KeyDown += async (s, e) => { if (e.KeyCode == Keys.Enter) await ApplyFiltersAsync(); };
+        }
+
+        private void HandleFilterLogic(CheckBox source)
+        {
+            if (_isHandlingFilterLogic) return;
+            _isHandlingFilterLogic = true;
+            try
+            {
+                if (source.Checked)
+                {
+                    if (source == Control_ReceivingAnalytics_CheckBox_ShowOutsideService)
+                    {
+                        UncheckAndDisable(Control_ReceivingAnalytics_CheckBox_ShowConsignment);
+                        UncheckAndDisable(Control_ReceivingAnalytics_CheckBox_ShowInternal);
+                        UncheckAndDisable(Control_ReceivingAnalytics_CheckBox_ShowWithPartID);
+                        UncheckAndDisable(Control_ReceivingAnalytics_CheckBox_ShowMMC);
+                        UncheckAndDisable(Control_ReceivingAnalytics_CheckBox_ShowMMF);
+                    }
+                    else if (source == Control_ReceivingAnalytics_CheckBox_ShowConsignment)
+                    {
+                        UncheckAndDisable(Control_ReceivingAnalytics_CheckBox_ShowOutsideService);
+                        UncheckAndDisable(Control_ReceivingAnalytics_CheckBox_ShowInternal);
+                        UncheckAndDisable(Control_ReceivingAnalytics_CheckBox_ShowWithPartID);
+                        UncheckAndDisable(Control_ReceivingAnalytics_CheckBox_ShowMMC);
+                        UncheckAndDisable(Control_ReceivingAnalytics_CheckBox_ShowMMF);
+                    }
+                    else if (source == Control_ReceivingAnalytics_CheckBox_ShowInternal)
+                    {
+                        UncheckAndDisable(Control_ReceivingAnalytics_CheckBox_ShowOutsideService);
+                        UncheckAndDisable(Control_ReceivingAnalytics_CheckBox_ShowConsignment);
+                        UncheckAndDisable(Control_ReceivingAnalytics_CheckBox_ShowWithPartID);
+                        UncheckAndDisable(Control_ReceivingAnalytics_CheckBox_ShowMMC);
+                        UncheckAndDisable(Control_ReceivingAnalytics_CheckBox_ShowMMF);
+                    }
+                    else if (source == Control_ReceivingAnalytics_CheckBox_ShowWithPartID)
+                    {
+                        Uncheck(Control_ReceivingAnalytics_CheckBox_ShowOutsideService);
+                        Uncheck(Control_ReceivingAnalytics_CheckBox_ShowConsignment);
+                        Uncheck(Control_ReceivingAnalytics_CheckBox_ShowInternal);
+                        Uncheck(Control_ReceivingAnalytics_CheckBox_ShowMMC);
+                        Uncheck(Control_ReceivingAnalytics_CheckBox_ShowMMF);
+                        
+                        EnableAllFilters();
+                    }
+                    else if (source == Control_ReceivingAnalytics_CheckBox_ShowMMC)
+                    {
+                        Uncheck(Control_ReceivingAnalytics_CheckBox_ShowWithPartID);
+                        Uncheck(Control_ReceivingAnalytics_CheckBox_ShowOutsideService);
+                        Uncheck(Control_ReceivingAnalytics_CheckBox_ShowConsignment);
+                        Uncheck(Control_ReceivingAnalytics_CheckBox_ShowInternal);
+                        
+                        EnableAllFilters();
+                    }
+                    else if (source == Control_ReceivingAnalytics_CheckBox_ShowMMF)
+                    {
+                        Uncheck(Control_ReceivingAnalytics_CheckBox_ShowWithPartID);
+                        Uncheck(Control_ReceivingAnalytics_CheckBox_ShowOutsideService);
+                        Uncheck(Control_ReceivingAnalytics_CheckBox_ShowConsignment);
+                        Uncheck(Control_ReceivingAnalytics_CheckBox_ShowInternal);
+                        
+                        EnableAllFilters();
+                    }
+                }
+                else
+                {
+                    // If unchecked, we might need to re-enable things.
+                    if (source == Control_ReceivingAnalytics_CheckBox_ShowOutsideService ||
+                        source == Control_ReceivingAnalytics_CheckBox_ShowConsignment ||
+                        source == Control_ReceivingAnalytics_CheckBox_ShowInternal)
+                    {
+                        EnableAllFilters();
+                    }
+                }
+            }
+            finally
+            {
+                _isHandlingFilterLogic = false;
+            }
+        }
+
+        private void UncheckAndDisable(CheckBox chk)
+        {
+            chk.Checked = false;
+            chk.Enabled = false;
+        }
+
+        private void Uncheck(CheckBox chk)
+        {
+            chk.Checked = false;
+        }
+
+        private void EnableAllFilters()
+        {
+            Control_ReceivingAnalytics_CheckBox_ShowOutsideService.Enabled = true;
+            Control_ReceivingAnalytics_CheckBox_ShowConsignment.Enabled = true;
+            Control_ReceivingAnalytics_CheckBox_ShowInternal.Enabled = true;
+            Control_ReceivingAnalytics_CheckBox_ShowWithPartID.Enabled = true;
+            Control_ReceivingAnalytics_CheckBox_ShowMMC.Enabled = true;
+            Control_ReceivingAnalytics_CheckBox_ShowMMF.Enabled = true;
         }
 
         private void InitializeSuggestionBoxes()
@@ -192,6 +303,7 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
                 if (result.IsSuccess && result.Data != null)
                 {
                     _cachedDataTable = result.Data;
+                    PopulateSuggestionBoxes(_cachedDataTable);
                     await ApplyFiltersAsync();
                 }
                 else
@@ -212,6 +324,54 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
             }
         }
 
+        private void PopulateSuggestionBoxes(DataTable dt)
+        {
+            try
+            {
+                // Extract unique values for suggestion boxes
+                var vendors = dt.AsEnumerable()
+                    .Select(r => r["Vendor"]?.ToString())
+                    .Where(s => !string.IsNullOrEmpty(s))
+                    .Select(s => s!)
+                    .Distinct()
+                    .OrderBy(s => s)
+                    .ToList();
+
+                var poNumbers = dt.AsEnumerable()
+                    .Select(r => r["PO Number"]?.ToString())
+                    .Where(s => !string.IsNullOrEmpty(s))
+                    .Select(s => s!)
+                    .Distinct()
+                    .OrderBy(s => s)
+                    .ToList();
+
+                var partNumbers = dt.AsEnumerable()
+                    .Select(r => r["Part Number"]?.ToString())
+                    .Where(s => !string.IsNullOrEmpty(s))
+                    .Select(s => s!)
+                    .Distinct()
+                    .OrderBy(s => s)
+                    .ToList();
+
+                var carriers = dt.AsEnumerable()
+                    .Select(r => r["Ship Via"]?.ToString())
+                    .Where(s => !string.IsNullOrEmpty(s))
+                    .Select(s => s!)
+                    .Distinct()
+                    .OrderBy(s => s)
+                    .ToList();
+
+                Control_ReceivingAnalytics_SuggestionTextBoxWithLabel_Supplier.TextBox.DataProvider = async () => await Task.FromResult(vendors);
+                Control_ReceivingAnalytics_SuggestionTextBoxWithLabel_PONumber.TextBox.DataProvider = async () => await Task.FromResult(poNumbers);
+                Control_ReceivingAnalytics_SuggestionTextBoxWithLabel_PartNumber.TextBox.DataProvider = async () => await Task.FromResult(partNumbers);
+                Control_ReceivingAnalytics_SuggestionTextBoxWithLabel_Carrier.TextBox.DataProvider = async () => await Task.FromResult(carriers);
+            }
+            catch (Exception ex)
+            {
+                LoggingUtility.LogApplicationError(ex);
+            }
+        }
+
         private async Task ApplyFiltersAsync()
         {
             if (_cachedDataTable == null) return;
@@ -225,6 +385,8 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
                 // Client-side filtering logic from LoadDataAsync
                 string carrierFilter = Control_ReceivingAnalytics_SuggestionTextBoxWithLabel_Carrier.Text?.Trim() ?? "";
                 string partNumberFilter = Control_ReceivingAnalytics_SuggestionTextBoxWithLabel_PartNumber.Text?.Trim() ?? "";
+                string vendorFilter = Control_ReceivingAnalytics_SuggestionTextBoxWithLabel_Supplier.Text?.Trim() ?? "";
+                string poFilter = Control_ReceivingAnalytics_SuggestionTextBoxWithLabel_PONumber.Text?.Trim() ?? "";
 
                 foreach (DataRow row in dt.Rows)
                 {
@@ -251,10 +413,29 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
                     if (isOnTime && !Control_ReceivingAnalytics_CheckBox_ShowOnTime.Checked) { rowsToRemove.Add(row); continue; }
                     if (!isClosed && !Control_ReceivingAnalytics_CheckBox_ShowOpen.Checked) { rowsToRemove.Add(row); continue; }
 
-                    // MMC/MMF Filters
+                    // MMC/MMF Filters (Inclusive Logic)
                     string partNumber = row["Part Number"]?.ToString() ?? "";
-                    if (Control_ReceivingAnalytics_CheckBox_ShowMMC.Checked && !partNumber.StartsWith("MMC", StringComparison.OrdinalIgnoreCase)) { rowsToRemove.Add(row); continue; }
-                    if (Control_ReceivingAnalytics_CheckBox_ShowMMF.Checked && !partNumber.StartsWith("MMF", StringComparison.OrdinalIgnoreCase)) { rowsToRemove.Add(row); continue; }
+                    bool showMMC = Control_ReceivingAnalytics_CheckBox_ShowMMC.Checked;
+                    bool showMMF = Control_ReceivingAnalytics_CheckBox_ShowMMF.Checked;
+
+                    if (showMMC || showMMF)
+                    {
+                        bool isMMC = partNumber.StartsWith("MMC", StringComparison.OrdinalIgnoreCase);
+                        bool isMMF = partNumber.StartsWith("MMF", StringComparison.OrdinalIgnoreCase);
+
+                        if (showMMC && showMMF)
+                        {
+                            if (!isMMC && !isMMF) { rowsToRemove.Add(row); continue; }
+                        }
+                        else if (showMMC)
+                        {
+                            if (!isMMC) { rowsToRemove.Add(row); continue; }
+                        }
+                        else if (showMMF)
+                        {
+                            if (!isMMF) { rowsToRemove.Add(row); continue; }
+                        }
+                    }
 
                     // Carrier Filter
                     if (!string.IsNullOrEmpty(carrierFilter))
@@ -267,6 +448,20 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
                     if (!string.IsNullOrEmpty(partNumberFilter))
                     {
                         if (string.IsNullOrEmpty(partNumber) || !partNumber.Contains(partNumberFilter, StringComparison.OrdinalIgnoreCase)) { rowsToRemove.Add(row); continue; }
+                    }
+
+                    // Vendor Filter
+                    if (!string.IsNullOrEmpty(vendorFilter))
+                    {
+                        string vendor = row["Vendor"]?.ToString() ?? "";
+                        if (string.IsNullOrEmpty(vendor) || !vendor.Contains(vendorFilter, StringComparison.OrdinalIgnoreCase)) { rowsToRemove.Add(row); continue; }
+                    }
+
+                    // PO Filter
+                    if (!string.IsNullOrEmpty(poFilter))
+                    {
+                        string po = row["PO Number"]?.ToString() ?? "";
+                        if (string.IsNullOrEmpty(po) || !po.Contains(poFilter, StringComparison.OrdinalIgnoreCase)) { rowsToRemove.Add(row); continue; }
                     }
                 }
 

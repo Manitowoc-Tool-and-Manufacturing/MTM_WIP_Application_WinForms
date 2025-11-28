@@ -393,6 +393,11 @@ namespace MTM_WIP_Application_Winforms.Forms.MainForm
 
             bool isVisible = hasDbCredentials || hasConfigCredentials;
 
+#if DEBUG
+            // In DEBUG mode, always show the menu to allow testing with sample data
+            isVisible = true;
+#endif
+
             if (MainForm_MenuStrip_Visual != null)
             {
                 MainForm_MenuStrip_Visual.Visible = isVisible;
@@ -410,6 +415,9 @@ namespace MTM_WIP_Application_Winforms.Forms.MainForm
                 bool hasConfigCredentials = !string.IsNullOrEmpty(ConfigurationManager.AppSettings["VisualUserName"]) &&
                                             !string.IsNullOrEmpty(ConfigurationManager.AppSettings["VisualPassword"]);
 
+#if DEBUG
+                // In DEBUG mode, bypass credential check to allow sample data testing
+#else
                 if (!hasDbCredentials && !hasConfigCredentials)
                 {
                     Service_ErrorHandler.ShowUserError(
@@ -417,6 +425,7 @@ namespace MTM_WIP_Application_Winforms.Forms.MainForm
                         "Access Denied");
                     return;
                 }
+#endif
 
                 var visualForm = new Forms.Visual.InforVisualDashboard();
                 visualForm.Show();

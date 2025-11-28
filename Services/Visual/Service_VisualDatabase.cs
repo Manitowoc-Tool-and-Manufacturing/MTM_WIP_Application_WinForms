@@ -27,6 +27,8 @@ namespace MTM_WIP_Application_Winforms.Services.Visual
             ? Model_Application_Variables.VisualPassword
             : ConfigurationManager.AppSettings["VisualPassword"];
 
+        private bool _useSampleData = false;
+
         private string GetConnectionString()
         {
             var builder = new SqlConnectionStringBuilder
@@ -35,7 +37,7 @@ namespace MTM_WIP_Application_Winforms.Services.Visual
                 InitialCatalog = _databaseName,
                 UserID = _userName,
                 Password = _password,
-                ConnectTimeout = 15,
+                ConnectTimeout = 5, // Reduced timeout for faster fallback
                 ApplicationName = "MTM_WIP_App_VisualDashboard",
                 TrustServerCertificate = true // Required for some SQL Server configurations
             };
@@ -48,6 +50,14 @@ namespace MTM_WIP_Application_Winforms.Services.Visual
         /// <returns>A result indicating success or failure of the connection test.</returns>
         public async Task<Model_Dao_Result<bool>> TestConnectionAsync()
         {
+#if DEBUG
+            // In DEBUG mode, if credentials are missing, force fallback to sample data immediately
+            if (string.IsNullOrEmpty(_userName) || string.IsNullOrEmpty(_password))
+            {
+                _useSampleData = true;
+                return new Model_Dao_Result<bool> { IsSuccess = true, Data = true, ErrorMessage = "Debug Mode: Using Sample Data (No Credentials)" };
+            }
+#else
             if (string.IsNullOrEmpty(_userName) || string.IsNullOrEmpty(_password))
             {
                 return new Model_Dao_Result<bool>
@@ -56,17 +66,25 @@ namespace MTM_WIP_Application_Winforms.Services.Visual
                     ErrorMessage = "Visual ERP credentials are not configured."
                 };
             }
+#endif
 
             try
             {
                 using (var connection = new SqlConnection(GetConnectionString()))
                 {
                     await connection.OpenAsync();
+                    _useSampleData = false;
                     return new Model_Dao_Result<bool> { IsSuccess = true, Data = true };
                 }
             }
             catch (Exception ex)
             {
+#if DEBUG
+                // In DEBUG mode, if connection fails, fallback to sample data
+                LoggingUtility.Log($"[VisualService] Connection failed in DEBUG mode. Falling back to sample data. Error: {ex.Message}");
+                _useSampleData = true;
+                return new Model_Dao_Result<bool> { IsSuccess = true, Data = true, ErrorMessage = "Debug Mode: Using Sample Data (Connection Failed)" };
+#else
                 LoggingUtility.LogApplicationError(ex);
                 return new Model_Dao_Result<bool>
                 {
@@ -74,6 +92,7 @@ namespace MTM_WIP_Application_Winforms.Services.Visual
                     ErrorMessage = $"Connection failed: {ex.Message}",
                     Data = false
                 };
+#endif
             }
         }
 
@@ -242,13 +261,23 @@ namespace MTM_WIP_Application_Winforms.Services.Visual
             string poFilter = "",
             bool mustHavePartNumber = false)
         {
+            if (_useSampleData)
+            {
+                return GetSampleReceivingSchedule();
+            }
+
             if (string.IsNullOrEmpty(_userName) || string.IsNullOrEmpty(_password))
             {
+#if DEBUG
+                _useSampleData = true;
+                return GetSampleReceivingSchedule();
+#else
                 return new Model_Dao_Result<DataTable>
                 {
                     IsSuccess = false,
                     ErrorMessage = "Visual ERP credentials are not configured."
                 };
+#endif
             }
 
             // Base Query
@@ -270,7 +299,8 @@ namespace MTM_WIP_Application_Winforms.Services.Visual
                     PO.STATUS as [PO Status],
                     POL.LINE_STATUS as [Line Status],
                     PO.CONSIGNMENT as [Consignment],
-                    PO.INTERNAL_ORDER as [Internal]
+                    PO.INTERNAL_ORDER as [Internal],
+                    PO.SHIP_VIA as [Ship Via]
                 FROM PURCHASE_ORDER PO
                 INNER JOIN PURC_ORDER_LINE POL ON PO.ID = POL.PURC_ORDER_ID
                 LEFT JOIN VENDOR V ON PO.VENDOR_ID = V.ID
@@ -379,12 +409,18 @@ namespace MTM_WIP_Application_Winforms.Services.Visual
             }
             catch (Exception ex)
             {
+#if DEBUG
+                LoggingUtility.Log($"[VisualService] GetReceivingScheduleAsync failed in DEBUG. Fallback to sample. Error: {ex.Message}");
+                _useSampleData = true;
+                return GetSampleReceivingSchedule();
+#else
                 LoggingUtility.LogApplicationError(ex);
                 return new Model_Dao_Result<DataTable>
                 {
                     IsSuccess = false,
                     ErrorMessage = $"Error retrieving receiving schedule: {ex.Message}"
                 };
+#endif
             }
         }
 
@@ -395,13 +431,23 @@ namespace MTM_WIP_Application_Winforms.Services.Visual
         /// <returns>DataTable containing PO details.</returns>
         public async Task<Model_Dao_Result<DataTable>> GetPODetailsAsync(string poNumber)
         {
+            if (_useSampleData)
+            {
+                return GetSamplePODetails(poNumber);
+            }
+
             if (string.IsNullOrEmpty(_userName) || string.IsNullOrEmpty(_password))
             {
+#if DEBUG
+                _useSampleData = true;
+                return GetSamplePODetails(poNumber);
+#else
                 return new Model_Dao_Result<DataTable>
                 {
                     IsSuccess = false,
                     ErrorMessage = "Visual ERP credentials are not configured."
                 };
+#endif
             }
 
             string sql = @"
@@ -447,12 +493,18 @@ namespace MTM_WIP_Application_Winforms.Services.Visual
             }
             catch (Exception ex)
             {
+#if DEBUG
+                LoggingUtility.Log($"[VisualService] GetPODetailsAsync failed in DEBUG. Fallback to sample. Error: {ex.Message}");
+                _useSampleData = true;
+                return GetSamplePODetails(poNumber);
+#else
                 LoggingUtility.LogApplicationError(ex);
                 return new Model_Dao_Result<DataTable>
                 {
                     IsSuccess = false,
                     ErrorMessage = $"Error retrieving PO details: {ex.Message}"
                 };
+#endif
             }
         }
 
@@ -472,6 +524,106 @@ namespace MTM_WIP_Application_Winforms.Services.Visual
                     return reader.ReadToEnd();
                 }
             }
+        }
+
+        private Model_Dao_Result<DataTable> GetSampleReceivingSchedule()
+        {
+            var dt = new DataTable();
+            dt.Columns.Add("PO Number");
+            dt.Columns.Add("Vendor");
+            dt.Columns.Add("Order Date", typeof(DateTime));
+            dt.Columns.Add("PO Desired Date", typeof(DateTime));
+            dt.Columns.Add("PO Promise Date", typeof(DateTime));
+            dt.Columns.Add("Line #", typeof(short));
+            dt.Columns.Add("Part Number");
+            dt.Columns.Add("Service ID");
+            dt.Columns.Add("Order Qty", typeof(decimal));
+            dt.Columns.Add("Received Qty", typeof(decimal));
+            dt.Columns.Add("Remaining Qty", typeof(decimal));
+            dt.Columns.Add("Line Desired Date", typeof(DateTime));
+            dt.Columns.Add("Line Promise Date", typeof(DateTime));
+            dt.Columns.Add("PO Status");
+            dt.Columns.Add("Line Status");
+            dt.Columns.Add("Consignment");
+            dt.Columns.Add("Internal");
+            dt.Columns.Add("Ship Via"); // Added for Carrier filter
+
+            var rnd = new Random();
+            var vendors = new[] { "Acme Corp", "Steel Supply Co", "Fasteners Inc", "Global Logistics", "Local Services" };
+            var carriers = new[] { "UPS", "FedEx", "DHL", "Our Truck", "Customer Pickup" };
+            var parts = new[] { "MMC-1001", "MMF-2002", "PART-3003", "SVC-MAINT", "MMC-5005" };
+
+            for (int i = 0; i < 50; i++)
+            {
+                var orderDate = DateTime.Today.AddDays(-rnd.Next(0, 30));
+                var desiredDate = orderDate.AddDays(rnd.Next(5, 20));
+                var qty = rnd.Next(10, 1000);
+                var rec = rnd.Next(0, qty + 1);
+                var part = parts[rnd.Next(parts.Length)];
+                var vendor = vendors[rnd.Next(vendors.Length)];
+                var carrier = carriers[rnd.Next(carriers.Length)];
+
+                dt.Rows.Add(
+                    $"PO-{10000 + i}",
+                    vendor,
+                    orderDate,
+                    desiredDate,
+                    desiredDate.AddDays(rnd.Next(-2, 5)),
+                    (short)rnd.Next(1, 5),
+                    part,
+                    part.StartsWith("SVC") ? "SERVICE" : DBNull.Value,
+                    qty,
+                    rec,
+                    qty - rec,
+                    desiredDate,
+                    desiredDate.AddDays(rnd.Next(-2, 5)),
+                    rec == qty ? "C" : "O",
+                    rec == qty ? "C" : "O",
+                    rnd.Next(0, 5) == 0 ? "Y" : "N", // Consignment
+                    rnd.Next(0, 10) == 0 ? "Y" : "N", // Internal
+                    carrier
+                );
+            }
+
+            return new Model_Dao_Result<DataTable> { IsSuccess = true, Data = dt };
+        }
+
+        private Model_Dao_Result<DataTable> GetSamplePODetails(string poNumber)
+        {
+            var dt = new DataTable();
+            dt.Columns.Add("Line #", typeof(short));
+            dt.Columns.Add("Part Number");
+            dt.Columns.Add("Description");
+            dt.Columns.Add("Ordered", typeof(decimal));
+            dt.Columns.Add("Received", typeof(decimal));
+            dt.Columns.Add("Remaining", typeof(decimal));
+            dt.Columns.Add("Desired Date", typeof(DateTime));
+            dt.Columns.Add("Promise Date", typeof(DateTime));
+            dt.Columns.Add("Status");
+            dt.Columns.Add("Unit Price", typeof(decimal));
+            dt.Columns.Add("Total Amount", typeof(decimal));
+
+            var rnd = new Random();
+            for (int i = 1; i <= 3; i++)
+            {
+                var qty = rnd.Next(10, 100);
+                var price = (decimal)rnd.NextDouble() * 100;
+                dt.Rows.Add(
+                    (short)i,
+                    $"SAMPLE-PART-{i}",
+                    $"Sample Description for Line {i}",
+                    qty,
+                    0,
+                    qty,
+                    DateTime.Today.AddDays(7),
+                    DateTime.Today.AddDays(7),
+                    "O",
+                    Math.Round(price, 2),
+                    Math.Round(price * qty, 2)
+                );
+            }
+
+            return new Model_Dao_Result<DataTable> { IsSuccess = true, Data = dt };
         }
     }
 }
