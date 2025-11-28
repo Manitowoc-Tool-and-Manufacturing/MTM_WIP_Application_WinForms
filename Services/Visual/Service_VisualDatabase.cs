@@ -326,10 +326,10 @@ namespace MTM_WIP_Application_Winforms.Services.Visual
                 case "ALL OF THE ABOVE":
                 default:
                     dateCondition = @" AND (
-                        PO.DESIRED_RECV_DATE BETWEEN @StartDate AND @EndDate AND
-                        PO.PROMISE_DATE BETWEEN @StartDate AND @EndDate AND
-                        POL.DESIRED_RECV_DATE BETWEEN @StartDate AND @EndDate AND
-                        POL.PROMISE_DATE BETWEEN @StartDate AND @EndDate
+                        (PO.DESIRED_RECV_DATE IS NULL OR PO.DESIRED_RECV_DATE BETWEEN @StartDate AND @EndDate) AND
+                        (PO.PROMISE_DATE IS NULL OR PO.PROMISE_DATE BETWEEN @StartDate AND @EndDate) AND
+                        (POL.DESIRED_RECV_DATE IS NULL OR POL.DESIRED_RECV_DATE BETWEEN @StartDate AND @EndDate) AND
+                        (POL.PROMISE_DATE IS NULL OR POL.PROMISE_DATE BETWEEN @StartDate AND @EndDate)
                     )";
                     break;
             }
