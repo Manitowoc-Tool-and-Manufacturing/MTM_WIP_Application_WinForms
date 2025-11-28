@@ -323,7 +323,7 @@ namespace MTM_WIP_Application_Winforms.Services.Visual
                 case "LINE PROMISE DATE":
                     dateCondition = " AND POL.PROMISE_DATE BETWEEN @StartDate AND @EndDate";
                     break;
-                case "ANY OF THE ABOVE":
+                case "ALL OF THE ABOVE":
                 default:
                     dateCondition = @" AND (
                         PO.DESIRED_RECV_DATE BETWEEN @StartDate AND @EndDate OR

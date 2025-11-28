@@ -221,9 +221,9 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
                 "PO Promise Date", 
                 "Line Desired Date", 
                 "Line Promise Date", 
-                "Any of the Above" 
+                "All of the Above" 
             });
-            Control_ReceivingAnalytics_SuggestionTextBoxWithLabel_DateType.Text = "Any of the Above";
+            Control_ReceivingAnalytics_SuggestionTextBoxWithLabel_DateType.Text = "All of the Above";
             Control_ReceivingAnalytics_SuggestionTextBoxWithLabel_DateType.EnableSuggestions = true;
 
             // Supplier
