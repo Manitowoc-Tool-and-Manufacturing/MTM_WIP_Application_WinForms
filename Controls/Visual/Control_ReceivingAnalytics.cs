@@ -1,58 +1,142 @@
 using System;
+using System.Collections.Generic;
 using System.Data;
 using System.Drawing;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Microsoft.Extensions.DependencyInjection;
+using MTM_WIP_Application_Winforms.Controls.Shared;
 using MTM_WIP_Application_Winforms.Forms.Shared;
 using MTM_WIP_Application_Winforms.Models;
 using MTM_WIP_Application_Winforms.Services;
 using MTM_WIP_Application_Winforms.Services.Visual;
-
-using MTM_WIP_Application_Winforms.Controls.Shared;
 using MTM_WIP_Application_Winforms.Logging;
+using MTM_WIP_Application_Winforms.Helpers;
 
 namespace MTM_WIP_Application_Winforms.Controls.Visual
 {
     public partial class Control_ReceivingAnalytics : ThemedUserControl
     {
         private readonly IService_VisualDatabase? _visualService;
+        private bool _isFiltersVisible = true;
+        private readonly Control_TextAnimationSequence _toggleButtonAnimation;
+        private DataTable? _cachedDataTable;
 
         public Control_ReceivingAnalytics()
         {
             InitializeComponent();
             _visualService = Program.ServiceProvider?.GetService<IService_VisualDatabase>();
 
+            // Initialize Toggle Button Animation
+            _toggleButtonAnimation = new Control_TextAnimationSequence();
+            _toggleButtonAnimation.TargetButton = Control_ReceivingAnalytics_Button_ToggleOptions;
+            _toggleButtonAnimation.UsePreset(TextAnimationPreset.Up); // Initially visible, so arrow up
+            _toggleButtonAnimation.StartAnimation();
+
+            // Initialize Suggestion Boxes
+            InitializeSuggestionBoxes();
+
             // Set default dates to current week (Monday - Friday)
             SetCurrentWeek();
 
-            // Set default combo selection
-            cmbDateType.SelectedIndex = 4; // "Any of the Above"
-
             // Set default checkboxes
-            chkIncludeClosed.Checked = false;
-            chkShowConsignment.Checked = true;
-            chkShowInternal.Checked = true;
-            chkShowService.Checked = true;
-            chkShowLate.Checked = true;
-            chkShowPartial.Checked = true;
-            chkShowOnTime.Checked = true;
-            chkShowWithPartNumber.Checked = false;
+            Control_ReceivingAnalytics_CheckBox_ShowClosed.Checked = false;
+            Control_ReceivingAnalytics_CheckBox_ShowConsignment.Checked = true;
+            Control_ReceivingAnalytics_CheckBox_ShowInternal.Checked = true;
+            Control_ReceivingAnalytics_CheckBox_ShowOutsideService.Checked = true;
+            Control_ReceivingAnalytics_CheckBox_ShowLate.Checked = true;
+            Control_ReceivingAnalytics_CheckBox_ShowPartial.Checked = true;
+            Control_ReceivingAnalytics_CheckBox_ShowOnTime.Checked = true;
+            Control_ReceivingAnalytics_CheckBox_ShowWithPartID.Checked = false;
+            Control_ReceivingAnalytics_CheckBox_ShowOpen.Checked = true;
+            Control_ReceivingAnalytics_CheckBox_ShowMMC.Checked = false;
+            Control_ReceivingAnalytics_CheckBox_ShowMMF.Checked = false;
+
+            // Wire up events for auto-refresh
+            WireUpEvents();
 
             // Add context menu for column ordering
             var contextMenu = new ContextMenuStrip();
             var itemColumnOrder = new ToolStripMenuItem("Column Order...");
             itemColumnOrder.Click += ContextMenuItem_ColumnOrder_Click;
             contextMenu.Items.Add(itemColumnOrder);
-            dataGridViewResults.ContextMenuStrip = contextMenu;
+            Control_ReceivingAnalytics_DataGridView_Results.ContextMenuStrip = contextMenu;
+        }
 
-            // Performance: Handle coloring in DataBindingComplete instead of CellFormatting
-            dataGridViewResults.CellFormatting -= dataGridViewResults_CellFormatting;
-            dataGridViewResults.DataBindingComplete += (s, e) => ApplyRowColors();
-            dataGridViewResults.Sorted += (s, e) => ApplyRowColors();
+        private void WireUpEvents()
+        {
+            // Search Button
+            Control_ReceivingAnalytics_Button_Search.Click += async (s, e) => await FetchDataAsync();
 
-            // Double click to show PO details
-            dataGridViewResults.CellDoubleClick += DataGridViewResults_CellDoubleClick;
+            // Toggle Options
+            Control_ReceivingAnalytics_Button_ToggleOptions.Click += Control_ReceivingAnalytics_Button_ToggleOptions_Click;
+
+            // DataGridView Events
+            Control_ReceivingAnalytics_DataGridView_Results.CellDoubleClick += DataGridViewResults_CellDoubleClick;
+            Control_ReceivingAnalytics_DataGridView_Results.DataBindingComplete += (s, e) => ApplyRowColors();
+            Control_ReceivingAnalytics_DataGridView_Results.Sorted += (s, e) => ApplyRowColors();
+
+            // Server-side filters (require fetch)
+            Control_ReceivingAnalytics_CheckBox_ShowClosed.CheckedChanged += async (s, e) => await FetchDataAsync();
+            Control_ReceivingAnalytics_CheckBox_ShowConsignment.CheckedChanged += async (s, e) => await FetchDataAsync();
+            Control_ReceivingAnalytics_CheckBox_ShowInternal.CheckedChanged += async (s, e) => await FetchDataAsync();
+            Control_ReceivingAnalytics_CheckBox_ShowOutsideService.CheckedChanged += async (s, e) => await FetchDataAsync();
+            Control_ReceivingAnalytics_CheckBox_ShowWithPartID.CheckedChanged += async (s, e) => await FetchDataAsync();
+
+            // Client-side filters (apply to cached data)
+            Control_ReceivingAnalytics_CheckBox_ShowLate.CheckedChanged += async (s, e) => await ApplyFiltersAsync();
+            Control_ReceivingAnalytics_CheckBox_ShowPartial.CheckedChanged += async (s, e) => await ApplyFiltersAsync();
+            Control_ReceivingAnalytics_CheckBox_ShowOnTime.CheckedChanged += async (s, e) => await ApplyFiltersAsync();
+            Control_ReceivingAnalytics_CheckBox_ShowOpen.CheckedChanged += async (s, e) => await ApplyFiltersAsync();
+            Control_ReceivingAnalytics_CheckBox_ShowMMC.CheckedChanged += async (s, e) => await ApplyFiltersAsync();
+            Control_ReceivingAnalytics_CheckBox_ShowMMF.CheckedChanged += async (s, e) => await ApplyFiltersAsync();
+
+            // Suggestion Boxes (Client-side)
+            Control_ReceivingAnalytics_SuggestionTextBoxWithLabel_PartNumber.SuggestionSelected += async (s, e) => await ApplyFiltersAsync();
+            Control_ReceivingAnalytics_SuggestionTextBoxWithLabel_Carrier.SuggestionSelected += async (s, e) => await ApplyFiltersAsync();
+            
+            // Also trigger on Enter key for text boxes
+            Control_ReceivingAnalytics_SuggestionTextBoxWithLabel_PartNumber.TextBox.KeyDown += async (s, e) => { if (e.KeyCode == Keys.Enter) await ApplyFiltersAsync(); };
+            Control_ReceivingAnalytics_SuggestionTextBoxWithLabel_Carrier.TextBox.KeyDown += async (s, e) => { if (e.KeyCode == Keys.Enter) await ApplyFiltersAsync(); };
+        }
+
+        private void InitializeSuggestionBoxes()
+        {
+            // Date Type
+            Control_ReceivingAnalytics_SuggestionTextBoxWithLabel_DateType.LabelText = "Filter By";
+            Control_ReceivingAnalytics_SuggestionTextBoxWithLabel_DateType.TextBox.DataProvider = async () => await Task.FromResult(new List<string> 
+            { 
+                "PO Desired Date", 
+                "PO Promise Date", 
+                "Line Desired Date", 
+                "Line Promise Date", 
+                "Any of the Above" 
+            });
+            Control_ReceivingAnalytics_SuggestionTextBoxWithLabel_DateType.Text = "Any of the Above";
+            Control_ReceivingAnalytics_SuggestionTextBoxWithLabel_DateType.EnableSuggestions = true;
+
+            // Supplier
+            Control_ReceivingAnalytics_SuggestionTextBoxWithLabel_Supplier.LabelText = "Vendor";
+            Control_ReceivingAnalytics_SuggestionTextBoxWithLabel_Supplier.EnableSuggestions = true;
+            // Note: Assuming no specific data provider for now, or user types in. 
+            // If there is a vendor list service, it should be hooked up here.
+
+            // PO Number
+            Control_ReceivingAnalytics_SuggestionTextBoxWithLabel_PONumber.LabelText = "PO #";
+            Control_ReceivingAnalytics_SuggestionTextBoxWithLabel_PONumber.EnableSuggestions = true;
+
+            // Part Number
+            Control_ReceivingAnalytics_SuggestionTextBoxWithLabel_PartNumber.LabelText = "Part #";
+            Control_ReceivingAnalytics_SuggestionTextBoxWithLabel_PartNumber.EnableSuggestions = true;
+            // Use helper if available, otherwise default behavior
+            if (typeof(Helper_SuggestionTextBox).GetMethod("ConfigureForPartNumbers") != null)
+            {
+                Helper_SuggestionTextBox.ConfigureForPartNumbers(Control_ReceivingAnalytics_SuggestionTextBoxWithLabel_PartNumber, Helper_SuggestionTextBox.GetCachedPartNumbersAsync);
+            }
+
+            // Carrier
+            Control_ReceivingAnalytics_SuggestionTextBoxWithLabel_Carrier.LabelText = "Carrier";
+            Control_ReceivingAnalytics_SuggestionTextBoxWithLabel_Carrier.EnableSuggestions = true;
         }
 
         private void SetCurrentWeek()
@@ -62,16 +146,27 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
             DateTime monday = today.AddDays(-1 * diff).Date;
             DateTime friday = monday.AddDays(4).Date;
 
-            dtpStartDate.Value = monday;
-            dtpEndDate.Value = friday;
+            Control_ReceivingAnalytics_DateTimePicker_StartDate.Value = monday;
+            Control_ReceivingAnalytics_DateTimePicker_EndDate.Value = friday;
         }
 
-        private async void btnSearch_Click(object sender, EventArgs e)
+        private void Control_ReceivingAnalytics_Button_ToggleOptions_Click(object? sender, EventArgs e)
         {
-            await LoadDataAsync();
+            _isFiltersVisible = !_isFiltersVisible;
+            Control_ReceivingAnalytics_TableLayoutPanel_Filters.Visible = _isFiltersVisible;
+            Control_ReceivingAnalytics_TableLayoutPanel_CheckBoxes.Visible = _isFiltersVisible;
+            
+            if (_isFiltersVisible)
+            {
+                _toggleButtonAnimation.UsePreset(TextAnimationPreset.Up);
+            }
+            else
+            {
+                _toggleButtonAnimation.UsePreset(TextAnimationPreset.Down);
+            }
         }
 
-        private async Task LoadDataAsync()
+        private async Task FetchDataAsync()
         {
             if (_visualService == null)
             {
@@ -81,85 +176,32 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
 
             try
             {
-                btnSearch.Enabled = false;
-                btnSearch.Text = "Loading...";
+                Control_ReceivingAnalytics_Button_Search.Enabled = false;
+                Control_ReceivingAnalytics_Button_Search.Text = "Loading...";
 
                 var result = await _visualService.GetReceivingScheduleAsync(
-                    dtpStartDate.Value,
-                    dtpEndDate.Value,
-                    cmbDateType.SelectedItem?.ToString() ?? "Any of the Above",
-                    chkIncludeClosed.Checked,
-                    chkShowConsignment.Checked,
-                    chkShowInternal.Checked,
-                    chkShowService.Checked,
-                    txtVendorFilter.Text.Trim(),
-                    txtPOFilter.Text.Trim(),
-                    chkShowWithPartNumber.Checked
+                    Control_ReceivingAnalytics_DateTimePicker_StartDate.Value,
+                    Control_ReceivingAnalytics_DateTimePicker_EndDate.Value,
+                    Control_ReceivingAnalytics_SuggestionTextBoxWithLabel_DateType.Text ?? "Any of the Above",
+                    Control_ReceivingAnalytics_CheckBox_ShowClosed.Checked,
+                    Control_ReceivingAnalytics_CheckBox_ShowConsignment.Checked,
+                    Control_ReceivingAnalytics_CheckBox_ShowInternal.Checked,
+                    Control_ReceivingAnalytics_CheckBox_ShowOutsideService.Checked,
+                    Control_ReceivingAnalytics_SuggestionTextBoxWithLabel_Supplier.Text?.Trim() ?? "",
+                    Control_ReceivingAnalytics_SuggestionTextBoxWithLabel_PONumber.Text?.Trim() ?? "",
+                    Control_ReceivingAnalytics_CheckBox_ShowWithPartID.Checked
                 );
 
                 if (result.IsSuccess && result.Data != null)
                 {
-                    // Apply client-side filters for status (Late, OnTime, Partial)
-                    // We do this here to avoid complex SQL logic for derived statuses
-                    // and to allow quick toggling if we wanted to implement that later (though currently it requires search)
-                    DataTable dt = result.Data;
-                    
-                    // If any of the status checkboxes are unchecked, we need to filter
-                    if (!chkShowLate.Checked || !chkShowPartial.Checked || !chkShowOnTime.Checked)
-                    {
-                        // We'll use a list of rows to remove to avoid modifying collection while iterating
-                        var rowsToRemove = new System.Collections.Generic.List<DataRow>();
-                        
-                        foreach (DataRow row in dt.Rows)
-                        {
-                            string poStatus = row["PO Status"]?.ToString() ?? "";
-                            string lineStatus = row["Line Status"]?.ToString() ?? "";
-                            
-                            decimal orderQty = 0;
-                            decimal receivedQty = 0;
-                            decimal.TryParse(row["Order Qty"]?.ToString(), out orderQty);
-                            decimal.TryParse(row["Received Qty"]?.ToString(), out receivedQty);
-
-                            DateTime? desiredDate = null;
-                            if (DateTime.TryParse(row["Line Desired Date"]?.ToString(), out DateTime d1)) desiredDate = d1;
-                            else if (DateTime.TryParse(row["PO Desired Date"]?.ToString(), out DateTime d2)) desiredDate = d2;
-
-                            bool isClosed = poStatus == "C" || lineStatus == "C";
-                            bool isLate = !isClosed && desiredDate.HasValue && desiredDate.Value.Date < DateTime.Today && receivedQty < orderQty;
-                            bool isPartial = !isClosed && !isLate && receivedQty > 0 && receivedQty < orderQty;
-                            bool isOnTime = !isClosed && !isLate && !isPartial; // Everything else (On Time or Open)
-
-                            if (isLate && !chkShowLate.Checked) rowsToRemove.Add(row);
-                            else if (isPartial && !chkShowPartial.Checked) rowsToRemove.Add(row);
-                            else if (isOnTime && !chkShowOnTime.Checked) rowsToRemove.Add(row);
-                        }
-
-                        foreach (var row in rowsToRemove)
-                        {
-                            dt.Rows.Remove(row);
-                        }
-                    }
-
-                    dataGridViewResults.DataSource = dt;
-                    
-                    // Format columns if needed
-                    if (dataGridViewResults.Columns["Order Date"] != null)
-                        dataGridViewResults.Columns["Order Date"].DefaultCellStyle.Format = "d";
-                    if (dataGridViewResults.Columns["PO Desired Date"] != null)
-                        dataGridViewResults.Columns["PO Desired Date"].DefaultCellStyle.Format = "d";
-                    if (dataGridViewResults.Columns["PO Promise Date"] != null)
-                        dataGridViewResults.Columns["PO Promise Date"].DefaultCellStyle.Format = "d";
-                    if (dataGridViewResults.Columns["Line Desired Date"] != null)
-                        dataGridViewResults.Columns["Line Desired Date"].DefaultCellStyle.Format = "d";
-                    if (dataGridViewResults.Columns["Line Promise Date"] != null)
-                        dataGridViewResults.Columns["Line Promise Date"].DefaultCellStyle.Format = "d";
-
-                    // Apply standard settings (load user column preferences)
-                    await Service_DataGridView.ApplyStandardSettingsAsync(dataGridViewResults, Model_Application_Variables.User);
+                    _cachedDataTable = result.Data;
+                    await ApplyFiltersAsync();
                 }
                 else
                 {
                     Service_ErrorHandler.ShowError(result.ErrorMessage);
+                    _cachedDataTable = null;
+                    Control_ReceivingAnalytics_DataGridView_Results.DataSource = null;
                 }
             }
             catch (Exception ex)
@@ -168,14 +210,99 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
             }
             finally
             {
-                btnSearch.Enabled = true;
-                btnSearch.Text = "Search";
+                Control_ReceivingAnalytics_Button_Search.Enabled = true;
+                Control_ReceivingAnalytics_Button_Search.Text = "Search";
+            }
+        }
+
+        private async Task ApplyFiltersAsync()
+        {
+            if (_cachedDataTable == null) return;
+
+            try
+            {
+                // Create a view or clone to filter without modifying cache
+                DataTable dt = _cachedDataTable.Copy();
+                var rowsToRemove = new List<DataRow>();
+
+                // Client-side filtering logic from LoadDataAsync
+                string carrierFilter = Control_ReceivingAnalytics_SuggestionTextBoxWithLabel_Carrier.Text?.Trim() ?? "";
+                string partNumberFilter = Control_ReceivingAnalytics_SuggestionTextBoxWithLabel_PartNumber.Text?.Trim() ?? "";
+
+                foreach (DataRow row in dt.Rows)
+                {
+                    string poStatus = row["PO Status"]?.ToString() ?? "";
+                    string lineStatus = row["Line Status"]?.ToString() ?? "";
+                    
+                    decimal orderQty = 0;
+                    decimal receivedQty = 0;
+                    decimal.TryParse(row["Order Qty"]?.ToString(), out orderQty);
+                    decimal.TryParse(row["Received Qty"]?.ToString(), out receivedQty);
+
+                    DateTime? desiredDate = null;
+                    if (DateTime.TryParse(row["Line Desired Date"]?.ToString(), out DateTime d1)) desiredDate = d1;
+                    else if (DateTime.TryParse(row["PO Desired Date"]?.ToString(), out DateTime d2)) desiredDate = d2;
+
+                    bool isClosed = poStatus == "C" || lineStatus == "C";
+                    bool isLate = !isClosed && desiredDate.HasValue && desiredDate.Value.Date < DateTime.Today && receivedQty < orderQty;
+                    bool isPartial = !isClosed && !isLate && receivedQty > 0 && receivedQty < orderQty;
+                    bool isOnTime = !isClosed && !isLate && !isPartial;
+
+                    // Status Filters
+                    if (isLate && !Control_ReceivingAnalytics_CheckBox_ShowLate.Checked) { rowsToRemove.Add(row); continue; }
+                    if (isPartial && !Control_ReceivingAnalytics_CheckBox_ShowPartial.Checked) { rowsToRemove.Add(row); continue; }
+                    if (isOnTime && !Control_ReceivingAnalytics_CheckBox_ShowOnTime.Checked) { rowsToRemove.Add(row); continue; }
+                    if (!isClosed && !Control_ReceivingAnalytics_CheckBox_ShowOpen.Checked) { rowsToRemove.Add(row); continue; }
+
+                    // MMC/MMF Filters
+                    string partNumber = row["Part Number"]?.ToString() ?? "";
+                    if (Control_ReceivingAnalytics_CheckBox_ShowMMC.Checked && !partNumber.StartsWith("MMC", StringComparison.OrdinalIgnoreCase)) { rowsToRemove.Add(row); continue; }
+                    if (Control_ReceivingAnalytics_CheckBox_ShowMMF.Checked && !partNumber.StartsWith("MMF", StringComparison.OrdinalIgnoreCase)) { rowsToRemove.Add(row); continue; }
+
+                    // Carrier Filter
+                    if (!string.IsNullOrEmpty(carrierFilter))
+                    {
+                        string carrier = row["Ship Via"]?.ToString() ?? "";
+                        if (string.IsNullOrEmpty(carrier) || !carrier.Contains(carrierFilter, StringComparison.OrdinalIgnoreCase)) { rowsToRemove.Add(row); continue; }
+                    }
+
+                    // Part Number Filter
+                    if (!string.IsNullOrEmpty(partNumberFilter))
+                    {
+                        if (string.IsNullOrEmpty(partNumber) || !partNumber.Contains(partNumberFilter, StringComparison.OrdinalIgnoreCase)) { rowsToRemove.Add(row); continue; }
+                    }
+                }
+
+                foreach (var row in rowsToRemove)
+                {
+                    dt.Rows.Remove(row);
+                }
+
+                Control_ReceivingAnalytics_DataGridView_Results.DataSource = dt;
+
+                // Format columns
+                if (Control_ReceivingAnalytics_DataGridView_Results.Columns["Order Date"] != null)
+                    Control_ReceivingAnalytics_DataGridView_Results.Columns["Order Date"].DefaultCellStyle.Format = "d";
+                if (Control_ReceivingAnalytics_DataGridView_Results.Columns["PO Desired Date"] != null)
+                    Control_ReceivingAnalytics_DataGridView_Results.Columns["PO Desired Date"].DefaultCellStyle.Format = "d";
+                if (Control_ReceivingAnalytics_DataGridView_Results.Columns["PO Promise Date"] != null)
+                    Control_ReceivingAnalytics_DataGridView_Results.Columns["PO Promise Date"].DefaultCellStyle.Format = "d";
+                if (Control_ReceivingAnalytics_DataGridView_Results.Columns["Line Desired Date"] != null)
+                    Control_ReceivingAnalytics_DataGridView_Results.Columns["Line Desired Date"].DefaultCellStyle.Format = "d";
+                if (Control_ReceivingAnalytics_DataGridView_Results.Columns["Line Promise Date"] != null)
+                    Control_ReceivingAnalytics_DataGridView_Results.Columns["Line Promise Date"].DefaultCellStyle.Format = "d";
+
+                await Service_DataGridView.ApplyStandardSettingsAsync(Control_ReceivingAnalytics_DataGridView_Results, Model_Application_Variables.User);
+            }
+            catch (Exception ex)
+            {
+                Service_ErrorHandler.HandleException(ex, Models.Enum_ErrorSeverity.Medium);
             }
         }
 
         private void ApplyRowColors()
         {
-            foreach (DataGridViewRow row in dataGridViewResults.Rows)
+            foreach (DataGridViewRow row in Control_ReceivingAnalytics_DataGridView_Results.Rows)
             {
                 if (row.DataBoundItem is not DataRowView drv) continue;
 
@@ -229,7 +356,6 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
         private void dataGridViewResults_CellFormatting(object? sender, DataGridViewCellFormattingEventArgs e)
         {
             // Logic moved to ApplyRowColors for performance
-            // This method remains to satisfy the designer-generated code
         }
 
         /// <summary>
@@ -241,22 +367,21 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
             base.ApplyTheme(theme);
 
             // Restore legend colors that might have been overwritten by the theme
-            if (panelLegendClosed != null) panelLegendClosed.BackColor = Color.FromArgb(200, 255, 200);
-            if (panelLegendLate != null) panelLegendLate.BackColor = Color.FromArgb(255, 200, 200);
-            if (panelLegendPartial != null) panelLegendPartial.BackColor = Color.FromArgb(255, 255, 200);
-            if (panelLegendOnTime != null) panelLegendOnTime.BackColor = Color.FromArgb(200, 240, 255);
+            if (Control_ReceivingAnalytics_Panel_LegendClosed != null) Control_ReceivingAnalytics_Panel_LegendClosed.BackColor = Color.FromArgb(200, 255, 200);
+            if (Control_ReceivingAnalytics_Panel_LegendLate != null) Control_ReceivingAnalytics_Panel_LegendLate.BackColor = Color.FromArgb(255, 200, 200);
+            if (Control_ReceivingAnalytics_Panel_LegendPartial != null) Control_ReceivingAnalytics_Panel_LegendPartial.BackColor = Color.FromArgb(255, 255, 200);
+            if (Control_ReceivingAnalytics_Panel_LegendOnTime != null) Control_ReceivingAnalytics_Panel_LegendOnTime.BackColor = Color.FromArgb(200, 240, 255);
         }
 
         private void ContextMenuItem_ColumnOrder_Click(object? sender, EventArgs e)
         {
             try
             {
-                using (var dlg = new ColumnOrderDialog(dataGridViewResults))
+                using (var dlg = new ColumnOrderDialog(Control_ReceivingAnalytics_DataGridView_Results))
                 {
                     if (dlg.ShowDialog(this) == DialogResult.OK)
                     {
                         // Settings are saved within the dialog logic via Core_Themes.SaveGridSettingsAsync
-                        // We just need to refresh if needed, but the dialog updates the grid directly
                     }
                 }
             }
@@ -273,7 +398,7 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
 
             try
             {
-                var row = dataGridViewResults.Rows[e.RowIndex];
+                var row = Control_ReceivingAnalytics_DataGridView_Results.Rows[e.RowIndex];
                 if (row.DataBoundItem is DataRowView drv)
                 {
                     string poNumber = drv["PO Number"]?.ToString() ?? "";

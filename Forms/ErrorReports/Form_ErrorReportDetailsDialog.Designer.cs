@@ -35,14 +35,14 @@ namespace MTM_WIP_Application_Winforms.Forms.ErrorReports
             tableLayoutPanelMain.SuspendLayout();
             SuspendLayout();
             // 
-            // tableLayoutPanelMain
+            // Control_ReceivingAnalytics_TableLayoutPanel_Main
             // 
             tableLayoutPanelMain.ColumnCount = 1;
             tableLayoutPanelMain.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
             tableLayoutPanelMain.Controls.Add(controlErrorReportDetails, 0, 0);
             tableLayoutPanelMain.Dock = DockStyle.Fill;
             tableLayoutPanelMain.Location = new Point(0, 0);
-            tableLayoutPanelMain.Name = "tableLayoutPanelMain";
+            tableLayoutPanelMain.Name = "Control_ReceivingAnalytics_TableLayoutPanel_Main";
             tableLayoutPanelMain.Padding = new Padding(10);
             tableLayoutPanelMain.RowCount = 1;
             tableLayoutPanelMain.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));

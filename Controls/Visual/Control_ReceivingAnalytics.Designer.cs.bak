@@ -19,8 +19,8 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
         {
             Control_ReceivingAnalytics_TableLayoutPanel_Main = new TableLayoutPanel();
             Control_ReceivingAnalytics_Panel_Filters = new Panel();
-            Control_ReceivingAnalytics_SuggestionTextBoxWithLabel_PONumber = new MTM_WIP_Application_Winforms.Controls.Shared.SuggestionTextBoxWithLabel();
-            Control_ReceivingAnalytics_SuggestionTextBoxWithLabel_Supplier = new MTM_WIP_Application_Winforms.Controls.Shared.SuggestionTextBoxWithLabel();
+            Control_ReceivingAnalytics_SuggestionTextBoxWithLabel_PONumber = new TextBox();
+            Control_ReceivingAnalytics_SuggestionTextBoxWithLabel_Supplier = new TextBox();
             Control_ReceivingAnalytics_CheckBox_ShowWithPartID = new CheckBox();
             Control_ReceivingAnalytics_CheckBox_ShowOnTime = new CheckBox();
             Control_ReceivingAnalytics_CheckBox_ShowPartial = new CheckBox();
@@ -30,7 +30,7 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
             Control_ReceivingAnalytics_CheckBox_ShowInternal = new CheckBox();
             Control_ReceivingAnalytics_CheckBox_ShowConsignment = new CheckBox();
             Control_ReceivingAnalytics_CheckBox_ShowClosed = new CheckBox();
-            Control_ReceivingAnalytics_SuggestionTextBoxWithLabel_DateType = new MTM_WIP_Application_Winforms.Controls.Shared.SuggestionTextBoxWithLabel();
+            Control_ReceivingAnalytics_SuggestionTextBoxWithLabel_DateType = new ComboBox();
             Control_ReceivingAnalytics_DateTimePicker_EndDate = new DateTimePicker();
             Control_ReceivingAnalytics_Label_DateRangeTo = new Label();
             Control_ReceivingAnalytics_DateTimePicker_StartDate = new DateTimePicker();
@@ -51,9 +51,9 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
             Control_ReceivingAnalytics_Label_OnlyReceiving = new Label();
             Control_ReceivingAnalytics_TableLayoutPanel_Options = new TableLayoutPanel();
             Control_ReceivingAnalytics_TableLayoutPanel_PartNumber = new TableLayoutPanel();
-            Control_ReceivingAnalytics_SuggestionTextBoxWithLabel_PartNumber = new MTM_WIP_Application_Winforms.Controls.Shared.SuggestionTextBoxWithLabel();
+            Control_ReceivingAnalytics_SuggestionTextBoxWithLabel_PartNumber = new TextBox();
             Control_ReceivingAnalytics_TableLayoutPanel_Carrier = new TableLayoutPanel();
-            Control_ReceivingAnalytics_SuggestionTextBoxWithLabel_Carrier = new MTM_WIP_Application_Winforms.Controls.Shared.SuggestionTextBoxWithLabel();
+            Control_ReceivingAnalytics_SuggestionTextBoxWithLabel_Carrier = new TextBox();
             Control_ReceivingAnalytics_TableLayoutPanel_Buttons = new TableLayoutPanel();
             Control_ReceivingAnalytics_Button_ToggleOptions = new Button();
             Control_ReceivingAnalytics_Panel_CheckBoxes_Legend = new Panel();
@@ -196,6 +196,7 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
             Control_ReceivingAnalytics_Button_Search.TabIndex = 10;
             Control_ReceivingAnalytics_Button_Search.Text = "Search";
             Control_ReceivingAnalytics_Button_Search.UseVisualStyleBackColor = false;
+            Control_ReceivingAnalytics_Button_Search.Click += btnSearch_Click;
             // 
             // Control_ReceivingAnalytics_CheckBox_ShowOutsideService
             // 
@@ -244,6 +245,9 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
             // Control_ReceivingAnalytics_SuggestionTextBoxWithLabel_DateType
             // 
             Control_ReceivingAnalytics_SuggestionTextBoxWithLabel_DateType.Dock = DockStyle.Fill;
+            Control_ReceivingAnalytics_SuggestionTextBoxWithLabel_DateType.DropDownStyle = ComboBoxStyle.DropDownList;
+            Control_ReceivingAnalytics_SuggestionTextBoxWithLabel_DateType.FormattingEnabled = true;
+            Control_ReceivingAnalytics_SuggestionTextBoxWithLabel_DateType.Items.AddRange(new object[] { "PO Desired Date", "PO Promise Date", "Line Desired Date", "Line Promise Date", "Any of the Above" });
             Control_ReceivingAnalytics_SuggestionTextBoxWithLabel_DateType.Location = new Point(3, 3);
             Control_ReceivingAnalytics_SuggestionTextBoxWithLabel_DateType.Name = "Control_ReceivingAnalytics_SuggestionTextBoxWithLabel_DateType";
             Control_ReceivingAnalytics_SuggestionTextBoxWithLabel_DateType.Size = new Size(317, 23);
@@ -309,6 +313,7 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
             Control_ReceivingAnalytics_DataGridView_Results.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
             Control_ReceivingAnalytics_DataGridView_Results.Size = new Size(994, 323);
             Control_ReceivingAnalytics_DataGridView_Results.TabIndex = 1;
+            Control_ReceivingAnalytics_DataGridView_Results.CellFormatting += dataGridViewResults_CellFormatting;
             // 
             // Control_ReceivingAnalytics_TableLayoutPanel_CheckBoxes
             // 
@@ -852,18 +857,18 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
         private Label Control_ReceivingAnalytics_Label_NotReceiving;
         private TableLayoutPanel Control_ReceivingAnalytics_TableLayoutPanel_Carrier;
         private Label Control_ReceivingAnalytics_Label_Carrier;
-        private MTM_WIP_Application_Winforms.Controls.Shared.SuggestionTextBoxWithLabel Control_ReceivingAnalytics_SuggestionTextBoxWithLabel_Carrier;
+        private TextBox Control_ReceivingAnalytics_SuggestionTextBoxWithLabel_Carrier;
         private TableLayoutPanel Control_ReceivingAnalytics_TableLayoutPanel_PartNumber;
         private Label Control_ReceivingAnalytics_Label_PartNumber;
-        private MTM_WIP_Application_Winforms.Controls.Shared.SuggestionTextBoxWithLabel Control_ReceivingAnalytics_SuggestionTextBoxWithLabel_PartNumber;
+        private TextBox Control_ReceivingAnalytics_SuggestionTextBoxWithLabel_PartNumber;
         private TableLayoutPanel Control_ReceivingAnalytics_TableLayoutPanel_Buttons;
         private Button Control_ReceivingAnalytics_Button_ToggleOptions;
         private Panel Control_ReceivingAnalytics_Panel_CheckBoxes_Legend;
         private TableLayoutPanel Control_ReceivingAnalytics_TableLayoutPanel_Legend;
-        private MTM_WIP_Application_Winforms.Controls.Shared.SuggestionTextBoxWithLabel Control_ReceivingAnalytics_SuggestionTextBoxWithLabel_PONumber;
+        private TextBox Control_ReceivingAnalytics_SuggestionTextBoxWithLabel_PONumber;
         private TableLayoutPanel Control_ReceivingAnalytics_TableLayoutPanel_Options;
-        private MTM_WIP_Application_Winforms.Controls.Shared.SuggestionTextBoxWithLabel Control_ReceivingAnalytics_SuggestionTextBoxWithLabel_Supplier;
-        private MTM_WIP_Application_Winforms.Controls.Shared.SuggestionTextBoxWithLabel Control_ReceivingAnalytics_SuggestionTextBoxWithLabel_DateType;
+        private TextBox Control_ReceivingAnalytics_SuggestionTextBoxWithLabel_Supplier;
+        private ComboBox Control_ReceivingAnalytics_SuggestionTextBoxWithLabel_DateType;
         private Label Control_ReceivingAnalytics_Label_LegendOnTime;
         private Label Control_ReceivingAnalytics_Label_LegendPartial;
         private Label Control_ReceivingAnalytics_Label_LegendLate;

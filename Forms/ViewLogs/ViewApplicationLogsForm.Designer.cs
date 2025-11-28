@@ -624,12 +624,12 @@ namespace MTM_WIP_Application_Winforms.Forms.ViewLogs
             lblStartDate.TabIndex = 0;
             lblStartDate.Text = "Start Date:";
             // 
-            // dtpStartDate
+            // Control_ReceivingAnalytics_DateTimePicker_StartDate
             // 
             dtpStartDate.Anchor = AnchorStyles.Left;
             dtpStartDate.Format = DateTimePickerFormat.Short;
             dtpStartDate.Location = new Point(83, 8);
-            dtpStartDate.Name = "dtpStartDate";
+            dtpStartDate.Name = "Control_ReceivingAnalytics_DateTimePicker_StartDate";
             dtpStartDate.Size = new Size(120, 23);
             dtpStartDate.TabIndex = 1;
             // 
@@ -643,12 +643,12 @@ namespace MTM_WIP_Application_Winforms.Forms.ViewLogs
             lblEndDate.TabIndex = 2;
             lblEndDate.Text = "End Date:";
             // 
-            // dtpEndDate
+            // Control_ReceivingAnalytics_DateTimePicker_EndDate
             // 
             dtpEndDate.Anchor = AnchorStyles.Left;
             dtpEndDate.Format = DateTimePickerFormat.Short;
             dtpEndDate.Location = new Point(283, 8);
-            dtpEndDate.Name = "dtpEndDate";
+            dtpEndDate.Name = "Control_ReceivingAnalytics_DateTimePicker_EndDate";
             dtpEndDate.Size = new Size(120, 23);
             dtpEndDate.TabIndex = 3;
             // 

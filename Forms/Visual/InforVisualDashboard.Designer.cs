@@ -177,7 +177,7 @@ namespace MTM_WIP_Application_Winforms.Forms.Visual
             this.btnExport.Click += new System.EventHandler(this.btnExport_Click);
             this.btnExport.Visible = false;
 
-            // dataGridViewResults
+            // Control_ReceivingAnalytics_DataGridView_Results
             this.dataGridViewResults.Dock = System.Windows.Forms.DockStyle.Fill;
             this.dataGridViewResults.Visible = false;
             this.dataGridViewResults.AllowUserToAddRows = false;

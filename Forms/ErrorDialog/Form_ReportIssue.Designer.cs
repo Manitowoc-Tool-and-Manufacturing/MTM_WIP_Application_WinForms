@@ -40,7 +40,7 @@ namespace MTM_WIP_Application_Winforms.Forms.ErrorDialog
             tableLayoutPanelButtons.SuspendLayout();
             SuspendLayout();
             // 
-            // tableLayoutPanelMain
+            // Control_ReceivingAnalytics_TableLayoutPanel_Main
             // 
             tableLayoutPanelMain.ColumnCount = 1;
             tableLayoutPanelMain.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
@@ -51,7 +51,7 @@ namespace MTM_WIP_Application_Winforms.Forms.ErrorDialog
             tableLayoutPanelMain.Controls.Add(tableLayoutPanelButtons, 0, 4);
             tableLayoutPanelMain.Dock = System.Windows.Forms.DockStyle.Fill;
             tableLayoutPanelMain.Location = new System.Drawing.Point(0, 0);
-            tableLayoutPanelMain.Name = "tableLayoutPanelMain";
+            tableLayoutPanelMain.Name = "Control_ReceivingAnalytics_TableLayoutPanel_Main";
             tableLayoutPanelMain.Padding = new System.Windows.Forms.Padding(10);
             tableLayoutPanelMain.RowCount = 5;
             tableLayoutPanelMain.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 25F));
