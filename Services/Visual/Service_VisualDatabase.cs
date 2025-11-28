@@ -942,5 +942,103 @@ namespace MTM_WIP_Application_Winforms.Services.Visual
                 };
             }
         }
+        /// <summary>
+        /// Retrieves inventory audit history based on search criteria.
+        /// </summary>
+        public async Task<Model_Dao_Result<DataTable>> GetInventoryAuditAsync(DateTime startDate, DateTime endDate, string userId, string transType)
+        {
+            if (_useSampleData)
+            {
+                // Return sample data
+                var dt = new DataTable();
+                dt.Columns.Add("Date", typeof(DateTime));
+                dt.Columns.Add("User");
+                dt.Columns.Add("Type");
+                dt.Columns.Add("Part Number");
+                dt.Columns.Add("Warehouse");
+                dt.Columns.Add("Location");
+                dt.Columns.Add("Qty", typeof(decimal));
+                dt.Columns.Add("Description");
+
+                dt.Rows.Add(DateTime.Now.AddDays(-1), "JDOE", "ISS", "SAMPLE-PART-1", "MAIN", "A-01-01", -10, "Issue to WO");
+                dt.Rows.Add(DateTime.Now.AddDays(-2), "BSMITH", "REC", "SAMPLE-PART-2", "MAIN", "B-02-02", 50, "PO Receipt");
+                
+                return new Model_Dao_Result<DataTable> { IsSuccess = true, Data = dt };
+            }
+
+            if (string.IsNullOrEmpty(_userName) || string.IsNullOrEmpty(_password))
+            {
+#if DEBUG
+                // Fallback to sample data in debug
+                return GetInventoryAuditAsync(startDate, endDate, userId, transType).Result; 
+#else
+                return new Model_Dao_Result<DataTable>
+                {
+                    IsSuccess = false,
+                    ErrorMessage = "Visual ERP credentials are not configured."
+                };
+#endif
+            }
+
+            string sql = @"
+                SELECT 
+                    IT.TRANSACTION_DATE as [Date],
+                    IT.USER_ID as [User],
+                    IT.TYPE as [Type],
+                    IT.PART_ID as [Part Number],
+                    IT.WAREHOUSE_ID as [Warehouse],
+                    IT.LOCATION_ID as [Location],
+                    IT.QTY as [Qty],
+                    IT.DESCRIPTION as [Description]
+                FROM INVENTORY_TRANS IT
+                WHERE IT.TRANSACTION_DATE BETWEEN @StartDate AND @EndDate";
+
+            if (!string.IsNullOrWhiteSpace(userId))
+            {
+                sql += " AND IT.USER_ID LIKE @UserId";
+            }
+
+            if (!string.IsNullOrWhiteSpace(transType))
+            {
+                sql += " AND IT.TYPE LIKE @TransType";
+            }
+
+            sql += " ORDER BY IT.TRANSACTION_DATE DESC";
+
+            try
+            {
+                using (var connection = new SqlConnection(GetConnectionString()))
+                {
+                    await connection.OpenAsync();
+                    using (var command = new SqlCommand(sql, connection))
+                    {
+                        command.Parameters.AddWithValue("@StartDate", startDate);
+                        command.Parameters.AddWithValue("@EndDate", endDate);
+
+                        if (!string.IsNullOrWhiteSpace(userId))
+                            command.Parameters.AddWithValue("@UserId", "%" + userId + "%");
+                        
+                        if (!string.IsNullOrWhiteSpace(transType))
+                            command.Parameters.AddWithValue("@TransType", "%" + transType + "%");
+
+                        using (var reader = await command.ExecuteReaderAsync())
+                        {
+                            var dt = new DataTable();
+                            dt.Load(reader);
+                            return new Model_Dao_Result<DataTable> { IsSuccess = true, Data = dt };
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                LoggingUtility.LogApplicationError(ex);
+                return new Model_Dao_Result<DataTable>
+                {
+                    IsSuccess = false,
+                    ErrorMessage = $"Error fetching inventory audit: {ex.Message}"
+                };
+            }
+        }
     }
 }
