@@ -11,6 +11,7 @@ using MTM_WIP_Application_Winforms.Logging;
 using System.Linq;
 using System.Data;
 using MTM_WIP_Application_Winforms.Controls.Visual;
+using System.Collections.Generic;
 
 namespace MTM_WIP_Application_Winforms.Forms.Visual
 {
@@ -19,125 +20,103 @@ namespace MTM_WIP_Application_Winforms.Forms.Visual
     /// </summary>
     public partial class InforVisualDashboard : ThemedForm
     {
+        #region Fields
         private readonly IService_VisualDatabase? _visualService;
         private Control_DieToolDiscovery? _controlDieToolDiscovery;
         private Control_ReceivingAnalytics? _controlReceivingAnalytics;
         private Control_VisualInventory? _controlVisualInventory;
+        #endregion
 
+        #region Properties
+        // Intentionally left blank.
+        #endregion
+
+        #region Constructors
         /// <summary>
         /// Initializes a new instance of the <see cref="InforVisualDashboard"/> class.
         /// </summary>
         public InforVisualDashboard()
         {
             InitializeComponent();
-            // Resolve service
             _visualService = Program.ServiceProvider?.GetService<IService_VisualDatabase>();
-            this.Load += InforVisualDashboard_Load;
+            Load += InforVisualDashboard_Load;
         }
+        #endregion
 
-        private async void InforVisualDashboard_Load(object? sender, EventArgs e)
+        #region Methods
+        private async Task LoadCategoryDataAsync(Enum_VisualDashboardCategory category)
         {
             if (_visualService == null)
             {
-                Service_ErrorHandler.ShowError("Visual Database Service not available.");
+                Service_ErrorHandler.ShowUserError("Visual Database Service is not available.");
                 return;
             }
 
-            try
-            {
-                var result = await _visualService.TestConnectionAsync();
-                if (!result.IsSuccess)
-                {
-                    Service_ErrorHandler.ShowError($"Connection to Visual ERP failed: {result.ErrorMessage}");
-                    // Optionally close form or disable controls
-                }
-            }
-            catch (Exception ex)
-            {
-                Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Medium, controlName: this.Name);
-            }
-        }
-
-        private async void CategoryButton_Click(object sender, EventArgs e)
-        {
-            if (sender is Button btn && btn.Tag is Enum_VisualDashboardCategory category)
-            {
-                await LoadCategoryDataAsync(category);
-            }
-        }
-
-        private async Task LoadCategoryDataAsync(Enum_VisualDashboardCategory category)
-        {
-            if (_visualService == null) return;
-
-            // Handle Die Tool Discovery specifically
             if (category == Enum_VisualDashboardCategory.DieToolDiscovery)
             {
                 ShowDieToolDiscoveryControl();
                 return;
             }
-            else if (category == Enum_VisualDashboardCategory.Receiving)
+
+            if (category == Enum_VisualDashboardCategory.Receiving)
             {
                 ShowReceivingAnalyticsControl();
                 return;
             }
-            else if (category == Enum_VisualDashboardCategory.Inventory)
+
+            if (category == Enum_VisualDashboardCategory.Inventory)
             {
                 ShowVisualInventoryControl();
                 return;
             }
-            else
-            {
-                HideCustomControls();
-            }
+
+            HideCustomControls();
 
             try
             {
-                // UI State: Loading
                 SetLoadingState(true);
                 controlEmptyState.Visible = false;
                 dataGridViewResults.Visible = false;
                 btnExport.Visible = false;
-
-                // Update Title
                 labelTitle.Text = GetCategoryTitle(category);
 
-                // Fetch Data
                 var result = await _visualService.GetDashboardDataAsync(category);
-
                 if (result.IsSuccess && result.Data != null)
                 {
-                    var dt = result.Data;
+                    dataGridViewResults.DataSource = result.Data;
+                    controlEmptyState.Message = string.Empty;
 
-                    // Bind Data
-                    dataGridViewResults.DataSource = dt;
-
-                    if (dt.Rows.Count > 0)
+                    if (result.Data.Rows.Count > 0)
                     {
                         dataGridViewResults.Visible = true;
-                        controlEmptyState.Visible = false;
                         btnExport.Visible = true;
-                        // Auto-size columns
                         dataGridViewResults.AutoResizeColumns(DataGridViewAutoSizeColumnsMode.DisplayedCells);
                     }
                     else
                     {
-                        dataGridViewResults.Visible = false;
                         controlEmptyState.Visible = true;
-                        btnExport.Visible = false;
                         controlEmptyState.Message = "No records found for this category.";
                     }
                 }
                 else
                 {
-                    Service_ErrorHandler.ShowError($"Failed to load data: {result.ErrorMessage}");
+                    Service_ErrorHandler.ShowUserError($"Failed to load data: {result.ErrorMessage}");
                     controlEmptyState.Visible = true;
                     controlEmptyState.Message = "Error loading data.";
                 }
             }
             catch (Exception ex)
             {
-                Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Medium, controlName: this.Name);
+                Service_ErrorHandler.HandleException(
+                    ex,
+                    Enum_ErrorSeverity.Medium,
+                    contextData: new Dictionary<string, object>
+                    {
+                        ["Category"] = category.ToString()
+                    },
+                    callerName: nameof(LoadCategoryDataAsync),
+                    controlName: Name);
+
                 controlEmptyState.Visible = true;
                 controlEmptyState.Message = "An unexpected error occurred.";
             }
@@ -151,20 +130,68 @@ namespace MTM_WIP_Application_Winforms.Forms.Visual
         {
             labelLoading.Visible = isLoading;
             panelSidebar.Enabled = !isLoading;
-            btnExport.Enabled = !isLoading;
+
+            if (btnExport != null)
+            {
+                btnExport.Enabled = !isLoading;
+                if (isLoading)
+                {
+                    btnExport.Visible = false;
+                }
+            }
 
             if (isLoading)
             {
-                controlEmptyState.Visible = false;
                 dataGridViewResults.Visible = false;
+                controlEmptyState.Visible = false;
+            }
+        }
+        #endregion
+
+        #region Events
+        private async void InforVisualDashboard_Load(object? sender, EventArgs e)
+        {
+            if (_visualService == null)
+            {
+                Service_ErrorHandler.ShowUserError("Visual Database Service is not available.");
+                return;
+            }
+
+            try
+            {
+                var result = await _visualService.TestConnectionAsync();
+                if (!result.IsSuccess)
+                {
+                    Service_ErrorHandler.ShowUserError($"Connection to Visual ERP failed: {result.ErrorMessage}");
+                }
+            }
+            catch (Exception ex)
+            {
+                Service_ErrorHandler.HandleException(
+                    ex,
+                    Enum_ErrorSeverity.Medium,
+                    contextData: new Dictionary<string, object>
+                    {
+                        ["Stage"] = "TestConnection"
+                    },
+                    callerName: nameof(InforVisualDashboard_Load),
+                    controlName: Name);
             }
         }
 
-        private async void btnExport_Click(object sender, EventArgs e)
+        private async void CategoryButton_Click(object? sender, EventArgs e)
+        {
+            if (sender is Button btn && btn.Tag is Enum_VisualDashboardCategory category)
+            {
+                await LoadCategoryDataAsync(category);
+            }
+        }
+
+        private async void btnExport_Click(object? sender, EventArgs e)
         {
             if (dataGridViewResults.DataSource is not DataTable dt || dt.Rows.Count == 0)
             {
-                Service_ErrorHandler.ShowError("No data to export.");
+                Service_ErrorHandler.ShowUserError("No data to export.");
                 return;
             }
 
@@ -175,159 +202,165 @@ namespace MTM_WIP_Application_Winforms.Forms.Visual
                 FileName = $"VisualDashboard_Export_{DateTime.Now:yyyyMMdd_HHmmss}.xlsx"
             };
 
-            if (saveFileDialog.ShowDialog() == DialogResult.OK)
+            if (saveFileDialog.ShowDialog() != DialogResult.OK)
             {
-                try
+                return;
+            }
+
+            try
+            {
+                SetLoadingState(true);
+                var columnOrder = dt.Columns.Cast<DataColumn>().Select(c => c.ColumnName).ToList();
+                var printJob = new Model_Print_Job(dt, columnOrder, columnOrder, "Visual Dashboard Export");
+                var result = await Helper_ExportManager.ExportToExcelAsync(printJob, saveFileDialog.FileName);
+
+                if (result.IsSuccess)
                 {
-                    SetLoadingState(true);
-                    
-                    var columnOrder = dt.Columns.Cast<DataColumn>().Select(c => c.ColumnName).ToList();
-                    var printJob = new Model_Print_Job(dt, columnOrder, columnOrder, "Visual Dashboard Export");
-                    
-                    var result = await Helper_ExportManager.ExportToExcelAsync(printJob, saveFileDialog.FileName);
-                    
-                    if (result.IsSuccess)
+                    Service_ErrorHandler.ShowInformation($"Export successful to {saveFileDialog.FileName}");
+                }
+                else
+                {
+                    Service_ErrorHandler.ShowUserError($"Export failed: {result.ErrorMessage}");
+                }
+            }
+            catch (Exception ex)
+            {
+                Service_ErrorHandler.HandleException(
+                    ex,
+                    Enum_ErrorSeverity.Medium,
+                    contextData: new Dictionary<string, object>
                     {
-                        Service_ErrorHandler.ShowInformation($"Export successful to {saveFileDialog.FileName}");
-                    }
-                    else
-                    {
-                        Service_ErrorHandler.ShowError($"Export failed: {result.ErrorMessage}");
-                    }
-                }
-                catch (Exception ex)
-                {
-                    Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Medium, controlName: this.Name);
-                }
-                finally
-                {
-                    SetLoadingState(false);
-                }
+                        ["ExportPath"] = saveFileDialog.FileName
+                    },
+                    callerName: nameof(btnExport_Click),
+                    controlName: Name);
+            }
+            finally
+            {
+                SetLoadingState(false);
             }
         }
 
-        private void textBoxFilter_TextChanged(object sender, EventArgs e)
+        private void textBoxFilter_TextChanged(object? sender, EventArgs e)
         {
             try
             {
                 if (dataGridViewResults.DataSource is DataTable dt)
                 {
-                    string filterText = textBoxFilter.Text.Trim();
+                    var filterText = textBoxFilter.Text.Trim();
                     if (string.IsNullOrEmpty(filterText))
                     {
                         dt.DefaultView.RowFilter = string.Empty;
+                        return;
                     }
-                    else
-                    {
-                        // Build a filter string that checks all string columns
-                        var columns = dt.Columns.Cast<DataColumn>()
-                            .Where(c => c.DataType == typeof(string))
-                            .Select(c => $"[{c.ColumnName}] LIKE '%{filterText.Replace("'", "''")}%'");
-                        
-                        string rowFilter = string.Join(" OR ", columns);
-                        dt.DefaultView.RowFilter = rowFilter;
-                    }
+
+                    var columns = dt.Columns.Cast<DataColumn>()
+                        .Where(c => c.DataType == typeof(string))
+                        .Select(c => $"[{c.ColumnName}] LIKE '%{filterText.Replace("'", "''")}%'");
+
+                    dt.DefaultView.RowFilter = string.Join(" OR ", columns);
                 }
             }
             catch (Exception ex)
             {
-                // Log but don't show error dialog for every keystroke
                 LoggingUtility.LogApplicationError(ex);
             }
         }
+        #endregion
 
+        #region Helpers
         private void ShowDieToolDiscoveryControl()
         {
-            // Hide generic controls
-            dataGridViewResults.Visible = false;
-            controlEmptyState.Visible = false;
-            btnExport.Visible = false;
-            textBoxFilter.Visible = false;
-            labelFilter.Visible = false;
-
-            // Initialize control if needed
-            if (_controlDieToolDiscovery == null)
-            {
-                _controlDieToolDiscovery = new Control_DieToolDiscovery();
-                _controlDieToolDiscovery.Dock = DockStyle.Fill;
-                panelContent.Controls.Add(_controlDieToolDiscovery);
-                _controlDieToolDiscovery.BringToFront();
-            }
-
-            _controlDieToolDiscovery.Visible = true;
+            HideGenericControls();
+            EnsureDieToolDiscoveryControl();
+            HideAllCustomControls(_controlDieToolDiscovery);
+            _controlDieToolDiscovery!.Visible = true;
             labelTitle.Text = "Die Tool Discovery";
         }
 
         private void ShowReceivingAnalyticsControl()
         {
-            // Hide generic controls
-            dataGridViewResults.Visible = false;
-            controlEmptyState.Visible = false;
-            btnExport.Visible = false;
-            textBoxFilter.Visible = false;
-            labelFilter.Visible = false;
-
-            // Initialize control if needed
-            if (_controlReceivingAnalytics == null)
-            {
-                _controlReceivingAnalytics = new Control_ReceivingAnalytics();
-                _controlReceivingAnalytics.Dock = DockStyle.Fill;
-                panelContent.Controls.Add(_controlReceivingAnalytics);
-                _controlReceivingAnalytics.BringToFront();
-            }
-
-            _controlReceivingAnalytics.Visible = true;
+            HideGenericControls();
+            EnsureReceivingAnalyticsControl();
+            HideAllCustomControls(_controlReceivingAnalytics);
+            _controlReceivingAnalytics!.Visible = true;
             labelTitle.Text = "Receiving Analytics";
-            
-            // Hide other custom controls
-            if (_controlDieToolDiscovery != null) _controlDieToolDiscovery.Visible = false;
-            if (_controlVisualInventory != null) _controlVisualInventory.Visible = false;
         }
 
         private void ShowVisualInventoryControl()
         {
-            // Hide generic controls
+            HideGenericControls();
+            EnsureVisualInventoryControl();
+            HideAllCustomControls(_controlVisualInventory);
+            _controlVisualInventory!.Visible = true;
+            labelTitle.Text = "Inventory Search";
+        }
+
+        private void HideGenericControls()
+        {
             dataGridViewResults.Visible = false;
             controlEmptyState.Visible = false;
             btnExport.Visible = false;
             textBoxFilter.Visible = false;
             labelFilter.Visible = false;
-
-            // Initialize control if needed
-            if (_controlVisualInventory == null)
-            {
-                _controlVisualInventory = new Control_VisualInventory();
-                _controlVisualInventory.Dock = DockStyle.Fill;
-                panelContent.Controls.Add(_controlVisualInventory);
-                _controlVisualInventory.BringToFront();
-            }
-
-            _controlVisualInventory.Visible = true;
-            labelTitle.Text = "Inventory Search";
-
-            // Hide other custom controls
-            if (_controlDieToolDiscovery != null) _controlDieToolDiscovery.Visible = false;
-            if (_controlReceivingAnalytics != null) _controlReceivingAnalytics.Visible = false;
         }
 
         private void HideCustomControls()
         {
-            if (_controlDieToolDiscovery != null)
-            {
-                _controlDieToolDiscovery.Visible = false;
-            }
-            if (_controlReceivingAnalytics != null)
-            {
-                _controlReceivingAnalytics.Visible = false;
-            }
-            if (_controlVisualInventory != null)
-            {
-                _controlVisualInventory.Visible = false;
-            }
-            
-            // Restore generic controls visibility
+            HideAllCustomControls();
             textBoxFilter.Visible = true;
             labelFilter.Visible = true;
+        }
+
+        private void HideAllCustomControls(Control? exception = null)
+        {
+            if (_controlDieToolDiscovery != null)
+            {
+                _controlDieToolDiscovery.Visible = _controlDieToolDiscovery == exception;
+            }
+
+            if (_controlReceivingAnalytics != null)
+            {
+                _controlReceivingAnalytics.Visible = _controlReceivingAnalytics == exception;
+            }
+
+            if (_controlVisualInventory != null)
+            {
+                _controlVisualInventory.Visible = _controlVisualInventory == exception;
+            }
+        }
+
+        private void EnsureDieToolDiscoveryControl()
+        {
+            if (_controlDieToolDiscovery != null)
+            {
+                return;
+            }
+
+            _controlDieToolDiscovery = new Control_DieToolDiscovery { Dock = DockStyle.Fill };
+            panelContent.Controls.Add(_controlDieToolDiscovery);
+        }
+
+        private void EnsureReceivingAnalyticsControl()
+        {
+            if (_controlReceivingAnalytics != null)
+            {
+                return;
+            }
+
+            _controlReceivingAnalytics = new Control_ReceivingAnalytics { Dock = DockStyle.Fill };
+            panelContent.Controls.Add(_controlReceivingAnalytics);
+        }
+
+        private void EnsureVisualInventoryControl()
+        {
+            if (_controlVisualInventory != null)
+            {
+                return;
+            }
+
+            _controlVisualInventory = new Control_VisualInventory { Dock = DockStyle.Fill };
+            panelContent.Controls.Add(_controlVisualInventory);
         }
 
         private string GetCategoryTitle(Enum_VisualDashboardCategory category)
@@ -344,5 +377,21 @@ namespace MTM_WIP_Application_Winforms.Forms.Visual
                 _ => "Dashboard"
             };
         }
+        #endregion
+
+        #region Cleanup / Dispose
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                Load -= InforVisualDashboard_Load;
+                _controlDieToolDiscovery?.Dispose();
+                _controlReceivingAnalytics?.Dispose();
+                _controlVisualInventory?.Dispose();
+            }
+
+            base.Dispose(disposing);
+        }
+        #endregion
     }
 }

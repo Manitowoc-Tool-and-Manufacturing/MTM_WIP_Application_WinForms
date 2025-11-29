@@ -843,16 +843,11 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
         private System.Windows.Forms.DateTimePicker Control_ReceivingAnalytics_DateTimePicker_StartDate;
         private System.Windows.Forms.Label Control_ReceivingAnalytics_Label_DateRangeTo;
         private System.Windows.Forms.DateTimePicker Control_ReceivingAnalytics_DateTimePicker_EndDate;
-        private System.Windows.Forms.Label Remove_Control_ReceivingAnalytics_Label_DateType;
         private System.Windows.Forms.CheckBox Control_ReceivingAnalytics_CheckBox_ShowClosed;
         private System.Windows.Forms.CheckBox Control_ReceivingAnalytics_CheckBox_ShowConsignment;
         private System.Windows.Forms.CheckBox Control_ReceivingAnalytics_CheckBox_ShowInternal;
         private System.Windows.Forms.CheckBox Control_ReceivingAnalytics_CheckBox_ShowOutsideService;
         private System.Windows.Forms.Button Control_ReceivingAnalytics_Button_Search;
-        private System.Windows.Forms.Label Control_ReceivingAnalytics_Label_Supplier;
-        private System.Windows.Forms.TextBox Control_ReceivingAnalytics_TextBox_Supplier;
-        private System.Windows.Forms.Label Control_ReceivingAnalytics_Label_PONumber;
-        private System.Windows.Forms.TextBox Control_ReceivingAnalytics_TextBox_PONumber;
         private System.Windows.Forms.CheckBox Control_ReceivingAnalytics_CheckBox_ShowLate;
         private System.Windows.Forms.CheckBox Control_ReceivingAnalytics_CheckBox_ShowPartial;
         private System.Windows.Forms.CheckBox Control_ReceivingAnalytics_CheckBox_ShowOnTime;
@@ -871,10 +866,8 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
         private Label Control_ReceivingAnalytics_Label_OnlyReceiving;
         private Label Control_ReceivingAnalytics_Label_NotReceiving;
         private TableLayoutPanel Control_ReceivingAnalytics_TableLayoutPanel_Carrier;
-        private Label Control_ReceivingAnalytics_Label_Carrier;
         private MTM_WIP_Application_Winforms.Controls.Shared.SuggestionTextBoxWithLabel Control_ReceivingAnalytics_SuggestionTextBoxWithLabel_Carrier;
         private TableLayoutPanel Control_ReceivingAnalytics_TableLayoutPanel_PartNumber;
-        private Label Control_ReceivingAnalytics_Label_PartNumber;
         private MTM_WIP_Application_Winforms.Controls.Shared.SuggestionTextBoxWithLabel Control_ReceivingAnalytics_SuggestionTextBoxWithLabel_PartNumber;
         private TableLayoutPanel Control_ReceivingAnalytics_TableLayoutPanel_Buttons;
         private Button Control_ReceivingAnalytics_Button_ToggleOptions;

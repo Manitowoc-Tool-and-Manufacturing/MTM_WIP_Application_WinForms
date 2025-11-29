@@ -39,7 +39,6 @@ This repository follows a strict architectural constitution emphasizing centrali
 
 ## AI Workflow & Prompts
 
-- [Create LLMs.txt Prompt](.github/prompts/create-llms.prompt.md): Standardized workflow for generating llms.txt files following llmstxt.org specification
 - [Generate Suggestions](.github/prompts/mtm.generate-suggestions.prompt.md): AI-powered code improvement and refactoring suggestions
 - [Update Release Notes](.github/prompts/mtm.update-release-notes.prompt.md): Automated release note generation from version changes
 - [SpecKit Analyze](.github/prompts/speckit.analyze.prompt.md): Codebase analysis and pattern detection
