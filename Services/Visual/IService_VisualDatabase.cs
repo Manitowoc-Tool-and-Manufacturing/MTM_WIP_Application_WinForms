@@ -55,10 +55,5 @@ namespace MTM_WIP_Application_Winforms.Services.Visual
         /// Retrieves inventory data based on search criteria.
         /// </summary>
         Task<Model_Dao_Result<DataTable>> GetInventoryAsync(string partNumber, string warehouse, string location, bool nonZeroOnly);
-
-        /// <summary>
-        /// Retrieves inventory audit history based on search criteria.
-        /// </summary>
-        Task<Model_Dao_Result<DataTable>> GetInventoryAuditAsync(DateTime startDate, DateTime endDate, string userId, string transType);
     }
 }

@@ -23,7 +23,6 @@ namespace MTM_WIP_Application_Winforms.Forms.Visual
         private Control_DieToolDiscovery? _controlDieToolDiscovery;
         private Control_ReceivingAnalytics? _controlReceivingAnalytics;
         private Control_VisualInventory? _controlVisualInventory;
-        private Control_VisualInventoryAudit? _controlVisualInventoryAudit;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="InforVisualDashboard"/> class.
@@ -85,11 +84,6 @@ namespace MTM_WIP_Application_Winforms.Forms.Visual
             else if (category == Enum_VisualDashboardCategory.Inventory)
             {
                 ShowVisualInventoryControl();
-                return;
-            }
-            else if (category == Enum_VisualDashboardCategory.InventoryAuditing)
-            {
-                ShowVisualInventoryAuditControl();
                 return;
             }
             else
@@ -288,7 +282,6 @@ namespace MTM_WIP_Application_Winforms.Forms.Visual
             // Hide other custom controls
             if (_controlDieToolDiscovery != null) _controlDieToolDiscovery.Visible = false;
             if (_controlVisualInventory != null) _controlVisualInventory.Visible = false;
-            if (_controlVisualInventoryAudit != null) _controlVisualInventoryAudit.Visible = false;
         }
 
         private void ShowVisualInventoryControl()
@@ -315,34 +308,6 @@ namespace MTM_WIP_Application_Winforms.Forms.Visual
             // Hide other custom controls
             if (_controlDieToolDiscovery != null) _controlDieToolDiscovery.Visible = false;
             if (_controlReceivingAnalytics != null) _controlReceivingAnalytics.Visible = false;
-            if (_controlVisualInventoryAudit != null) _controlVisualInventoryAudit.Visible = false;
-        }
-
-        private void ShowVisualInventoryAuditControl()
-        {
-            // Hide generic controls
-            dataGridViewResults.Visible = false;
-            controlEmptyState.Visible = false;
-            btnExport.Visible = false;
-            textBoxFilter.Visible = false;
-            labelFilter.Visible = false;
-
-            // Initialize control if needed
-            if (_controlVisualInventoryAudit == null)
-            {
-                _controlVisualInventoryAudit = new Control_VisualInventoryAudit();
-                _controlVisualInventoryAudit.Dock = DockStyle.Fill;
-                panelContent.Controls.Add(_controlVisualInventoryAudit);
-                _controlVisualInventoryAudit.BringToFront();
-            }
-
-            _controlVisualInventoryAudit.Visible = true;
-            labelTitle.Text = "Inventory Audit";
-
-            // Hide other custom controls
-            if (_controlDieToolDiscovery != null) _controlDieToolDiscovery.Visible = false;
-            if (_controlReceivingAnalytics != null) _controlReceivingAnalytics.Visible = false;
-            if (_controlVisualInventory != null) _controlVisualInventory.Visible = false;
         }
 
         private void HideCustomControls()
@@ -358,10 +323,6 @@ namespace MTM_WIP_Application_Winforms.Forms.Visual
             if (_controlVisualInventory != null)
             {
                 _controlVisualInventory.Visible = false;
-            }
-            if (_controlVisualInventoryAudit != null)
-            {
-                _controlVisualInventoryAudit.Visible = false;
             }
             
             // Restore generic controls visibility
