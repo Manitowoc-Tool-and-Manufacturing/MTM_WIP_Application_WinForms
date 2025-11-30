@@ -36,6 +36,12 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
 
             InitializeSuggestionBoxes();
             WireUpEvents();
+
+            // Initialize Nothing Found image state
+            if (Control_VisualInventory_Image_NothingFound != null)
+            {
+                Control_VisualInventory_Image_NothingFound.Visible = false;
+            }
         }
         #endregion
 
@@ -94,11 +100,21 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
                     _cachedDataTable = result.Data;
                     Control_VisualInventory_DataGridView_Results.DataSource = _cachedDataTable;
                     await Service_DataGridView.ApplyStandardSettingsAsync(Control_VisualInventory_DataGridView_Results, Model_Application_Variables.User);
+
+                    if (Control_VisualInventory_Image_NothingFound != null)
+                    {
+                        Control_VisualInventory_Image_NothingFound.Visible = _cachedDataTable.Rows.Count == 0;
+                    }
                 }
                 else
                 {
                     Service_ErrorHandler.ShowError(result.ErrorMessage);
                     Control_VisualInventory_DataGridView_Results.DataSource = null;
+
+                    if (Control_VisualInventory_Image_NothingFound != null)
+                    {
+                        Control_VisualInventory_Image_NothingFound.Visible = false;
+                    }
                 }
             }
             catch (Exception ex)
@@ -110,6 +126,20 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
                 Control_VisualInventory_Button_Search.Enabled = true;
                 Control_VisualInventory_Button_Search.Text = "Search";
             }
+        }
+
+        /// <summary>
+        /// Performs a search initiated from an external control.
+        /// </summary>
+        /// <param name="partNumber">The part number to search for.</param>
+        public async Task PerformExternalSearchAsync(string partNumber)
+        {
+            Control_VisualInventory_SuggestionTextBoxWithLabel_PartNumber.Text = partNumber;
+            Control_VisualInventory_SuggestionTextBoxWithLabel_Warehouse.Text = string.Empty;
+            Control_VisualInventory_SuggestionTextBoxWithLabel_Location.Text = string.Empty;
+            Control_VisualInventory_CheckBox_NonZeroOnly.Checked = false;
+
+            await PerformSearchAsync();
         }
         #endregion
 

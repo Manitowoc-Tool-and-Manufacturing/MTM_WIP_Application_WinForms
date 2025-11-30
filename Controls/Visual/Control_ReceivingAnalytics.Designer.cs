@@ -101,7 +101,7 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
             Control_ReceivingAnalytics_TableLayoutPanel_Main.RowStyles.Add(new RowStyle());
             Control_ReceivingAnalytics_TableLayoutPanel_Main.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
             Control_ReceivingAnalytics_TableLayoutPanel_Main.RowStyles.Add(new RowStyle());
-            Control_ReceivingAnalytics_TableLayoutPanel_Main.Size = new Size(874, 600);
+            Control_ReceivingAnalytics_TableLayoutPanel_Main.Size = new Size(874, 608);
             Control_ReceivingAnalytics_TableLayoutPanel_Main.TabIndex = 0;
             // 
             // Control_ReceivingAnalytics_Panel_Filters
@@ -112,7 +112,7 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
             Control_ReceivingAnalytics_Panel_Filters.Dock = DockStyle.Fill;
             Control_ReceivingAnalytics_Panel_Filters.Location = new Point(3, 3);
             Control_ReceivingAnalytics_Panel_Filters.Name = "Control_ReceivingAnalytics_Panel_Filters";
-            Control_ReceivingAnalytics_Panel_Filters.Size = new Size(868, 226);
+            Control_ReceivingAnalytics_Panel_Filters.Size = new Size(868, 234);
             Control_ReceivingAnalytics_Panel_Filters.TabIndex = 0;
             // 
             // Control_ReceivingAnalytics_TableLayoutPanel_Options
@@ -131,7 +131,7 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
             Control_ReceivingAnalytics_TableLayoutPanel_Options.RowStyles.Add(new RowStyle());
             Control_ReceivingAnalytics_TableLayoutPanel_Options.RowStyles.Add(new RowStyle());
             Control_ReceivingAnalytics_TableLayoutPanel_Options.RowStyles.Add(new RowStyle());
-            Control_ReceivingAnalytics_TableLayoutPanel_Options.Size = new Size(868, 226);
+            Control_ReceivingAnalytics_TableLayoutPanel_Options.Size = new Size(868, 234);
             Control_ReceivingAnalytics_TableLayoutPanel_Options.TabIndex = 25;
             // 
             // Control_ReceivingAnalytics_TableLayoutPanel_Filters
@@ -608,7 +608,7 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
             Control_ReceivingAnalytics_TableLayoutPanel_Buttons.Name = "Control_ReceivingAnalytics_TableLayoutPanel_Buttons";
             Control_ReceivingAnalytics_TableLayoutPanel_Buttons.RowCount = 1;
             Control_ReceivingAnalytics_TableLayoutPanel_Buttons.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
-            Control_ReceivingAnalytics_TableLayoutPanel_Buttons.Size = new Size(862, 38);
+            Control_ReceivingAnalytics_TableLayoutPanel_Buttons.Size = new Size(862, 46);
             Control_ReceivingAnalytics_TableLayoutPanel_Buttons.TabIndex = 25;
             // 
             // Control_ReceivingAnalytics_Button_ToggleOptions
@@ -619,11 +619,11 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
             Control_ReceivingAnalytics_Button_ToggleOptions.Dock = DockStyle.Fill;
             Control_ReceivingAnalytics_Button_ToggleOptions.FlatStyle = FlatStyle.Flat;
             Control_ReceivingAnalytics_Button_ToggleOptions.ForeColor = Color.White;
-            Control_ReceivingAnalytics_Button_ToggleOptions.Location = new Point(827, 3);
-            Control_ReceivingAnalytics_Button_ToggleOptions.MaximumSize = new Size(32, 32);
-            Control_ReceivingAnalytics_Button_ToggleOptions.MinimumSize = new Size(32, 32);
+            Control_ReceivingAnalytics_Button_ToggleOptions.Location = new Point(819, 3);
+            Control_ReceivingAnalytics_Button_ToggleOptions.MaximumSize = new Size(40, 40);
+            Control_ReceivingAnalytics_Button_ToggleOptions.MinimumSize = new Size(40, 40);
             Control_ReceivingAnalytics_Button_ToggleOptions.Name = "Control_ReceivingAnalytics_Button_ToggleOptions";
-            Control_ReceivingAnalytics_Button_ToggleOptions.Size = new Size(32, 32);
+            Control_ReceivingAnalytics_Button_ToggleOptions.Size = new Size(40, 40);
             Control_ReceivingAnalytics_Button_ToggleOptions.TabIndex = 11;
             Control_ReceivingAnalytics_Button_ToggleOptions.UseVisualStyleBackColor = false;
             // 
@@ -636,10 +636,10 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
             Control_ReceivingAnalytics_Button_Search.FlatStyle = FlatStyle.Flat;
             Control_ReceivingAnalytics_Button_Search.ForeColor = Color.White;
             Control_ReceivingAnalytics_Button_Search.Location = new Point(3, 3);
-            Control_ReceivingAnalytics_Button_Search.MaximumSize = new Size(0, 32);
-            Control_ReceivingAnalytics_Button_Search.MinimumSize = new Size(0, 32);
+            Control_ReceivingAnalytics_Button_Search.MaximumSize = new Size(0, 40);
+            Control_ReceivingAnalytics_Button_Search.MinimumSize = new Size(0, 40);
             Control_ReceivingAnalytics_Button_Search.Name = "Control_ReceivingAnalytics_Button_Search";
-            Control_ReceivingAnalytics_Button_Search.Size = new Size(691, 32);
+            Control_ReceivingAnalytics_Button_Search.Size = new Size(683, 40);
             Control_ReceivingAnalytics_Button_Search.TabIndex = 10;
             Control_ReceivingAnalytics_Button_Search.Text = "Search";
             Control_ReceivingAnalytics_Button_Search.UseVisualStyleBackColor = false;
@@ -652,11 +652,11 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
             Control_ReceivingAnalytics_Button_Analytics.Dock = DockStyle.Fill;
             Control_ReceivingAnalytics_Button_Analytics.FlatStyle = FlatStyle.Flat;
             Control_ReceivingAnalytics_Button_Analytics.ForeColor = Color.White;
-            Control_ReceivingAnalytics_Button_Analytics.Location = new Point(700, 3);
-            Control_ReceivingAnalytics_Button_Analytics.MaximumSize = new Size(0, 32);
-            Control_ReceivingAnalytics_Button_Analytics.MinimumSize = new Size(0, 32);
+            Control_ReceivingAnalytics_Button_Analytics.Location = new Point(692, 3);
+            Control_ReceivingAnalytics_Button_Analytics.MaximumSize = new Size(0, 40);
+            Control_ReceivingAnalytics_Button_Analytics.MinimumSize = new Size(0, 40);
             Control_ReceivingAnalytics_Button_Analytics.Name = "Control_ReceivingAnalytics_Button_Analytics";
-            Control_ReceivingAnalytics_Button_Analytics.Size = new Size(121, 32);
+            Control_ReceivingAnalytics_Button_Analytics.Size = new Size(121, 40);
             Control_ReceivingAnalytics_Button_Analytics.TabIndex = 12;
             Control_ReceivingAnalytics_Button_Analytics.Text = "Receiving Analytics";
             Control_ReceivingAnalytics_Button_Analytics.UseVisualStyleBackColor = false;
@@ -670,7 +670,7 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
             Control_ReceivingAnalytics_DataGridView_Results.BorderStyle = BorderStyle.None;
             Control_ReceivingAnalytics_DataGridView_Results.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             Control_ReceivingAnalytics_DataGridView_Results.Dock = DockStyle.Fill;
-            Control_ReceivingAnalytics_DataGridView_Results.Location = new Point(3, 235);
+            Control_ReceivingAnalytics_DataGridView_Results.Location = new Point(3, 243);
             Control_ReceivingAnalytics_DataGridView_Results.Name = "Control_ReceivingAnalytics_DataGridView_Results";
             Control_ReceivingAnalytics_DataGridView_Results.ReadOnly = true;
             Control_ReceivingAnalytics_DataGridView_Results.RowHeadersVisible = false;
@@ -685,7 +685,7 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
             Control_ReceivingAnalytics_Panel_CheckBoxes_Legend.BorderStyle = BorderStyle.FixedSingle;
             Control_ReceivingAnalytics_Panel_CheckBoxes_Legend.Controls.Add(Control_ReceivingAnalytics_TableLayoutPanel_Legend);
             Control_ReceivingAnalytics_Panel_CheckBoxes_Legend.Dock = DockStyle.Fill;
-            Control_ReceivingAnalytics_Panel_CheckBoxes_Legend.Location = new Point(3, 564);
+            Control_ReceivingAnalytics_Panel_CheckBoxes_Legend.Location = new Point(3, 572);
             Control_ReceivingAnalytics_Panel_CheckBoxes_Legend.Name = "Control_ReceivingAnalytics_Panel_CheckBoxes_Legend";
             Control_ReceivingAnalytics_Panel_CheckBoxes_Legend.Padding = new Padding(5);
             Control_ReceivingAnalytics_Panel_CheckBoxes_Legend.Size = new Size(868, 33);
@@ -840,7 +840,7 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
             AutoSizeMode = AutoSizeMode.GrowAndShrink;
             Controls.Add(Control_ReceivingAnalytics_TableLayoutPanel_Main);
             Name = "Control_ReceivingAnalytics";
-            Size = new Size(874, 600);
+            Size = new Size(874, 608);
             Control_ReceivingAnalytics_TableLayoutPanel_Main.ResumeLayout(false);
             Control_ReceivingAnalytics_TableLayoutPanel_Main.PerformLayout();
             Control_ReceivingAnalytics_Panel_Filters.ResumeLayout(false);

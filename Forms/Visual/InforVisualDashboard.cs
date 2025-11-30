@@ -70,27 +70,30 @@ namespace MTM_WIP_Application_Winforms.Forms.Visual
                 return;
             }
 
+            if (category == Enum_VisualDashboardCategory.Shipping ||
+                category == Enum_VisualDashboardCategory.InventoryAuditing ||
+                category == Enum_VisualDashboardCategory.MaterialHandlerAnalytics_General ||
+                category == Enum_VisualDashboardCategory.MaterialHandlerAnalytics_Team)
+            {
+                Service_ErrorHandler.ShowUserError("This category is not yet implemented.");
+                return;
+            }
+
             HideCustomControls();
 
             try
             {
                 SetLoadingState(true);
                 controlEmptyState.Visible = false;
-                dataGridViewResults.Visible = false;
-                btnExport.Visible = false;
-                labelTitle.Text = GetCategoryTitle(category);
 
                 var result = await _visualService.GetDashboardDataAsync(category);
                 if (result.IsSuccess && result.Data != null)
                 {
-                    dataGridViewResults.DataSource = result.Data;
                     controlEmptyState.Message = string.Empty;
 
                     if (result.Data.Rows.Count > 0)
                     {
-                        dataGridViewResults.Visible = true;
-                        btnExport.Visible = true;
-                        dataGridViewResults.AutoResizeColumns(DataGridViewAutoSizeColumnsMode.DisplayedCells);
+
                     }
                     else
                     {
@@ -131,18 +134,9 @@ namespace MTM_WIP_Application_Winforms.Forms.Visual
             labelLoading.Visible = isLoading;
             panelSidebar.Enabled = !isLoading;
 
-            if (btnExport != null)
-            {
-                btnExport.Enabled = !isLoading;
-                if (isLoading)
-                {
-                    btnExport.Visible = false;
-                }
-            }
 
             if (isLoading)
             {
-                dataGridViewResults.Visible = false;
                 controlEmptyState.Visible = false;
             }
         }
@@ -187,85 +181,7 @@ namespace MTM_WIP_Application_Winforms.Forms.Visual
             }
         }
 
-        private async void btnExport_Click(object? sender, EventArgs e)
-        {
-            if (dataGridViewResults.DataSource is not DataTable dt || dt.Rows.Count == 0)
-            {
-                Service_ErrorHandler.ShowUserError("No data to export.");
-                return;
-            }
 
-            using var saveFileDialog = new SaveFileDialog
-            {
-                Filter = "Excel Workbook|*.xlsx",
-                Title = "Export to Excel",
-                FileName = $"VisualDashboard_Export_{DateTime.Now:yyyyMMdd_HHmmss}.xlsx"
-            };
-
-            if (saveFileDialog.ShowDialog() != DialogResult.OK)
-            {
-                return;
-            }
-
-            try
-            {
-                SetLoadingState(true);
-                var columnOrder = dt.Columns.Cast<DataColumn>().Select(c => c.ColumnName).ToList();
-                var printJob = new Model_Print_Job(dt, columnOrder, columnOrder, "Visual Dashboard Export");
-                var result = await Helper_ExportManager.ExportToExcelAsync(printJob, saveFileDialog.FileName);
-
-                if (result.IsSuccess)
-                {
-                    Service_ErrorHandler.ShowInformation($"Export successful to {saveFileDialog.FileName}");
-                }
-                else
-                {
-                    Service_ErrorHandler.ShowUserError($"Export failed: {result.ErrorMessage}");
-                }
-            }
-            catch (Exception ex)
-            {
-                Service_ErrorHandler.HandleException(
-                    ex,
-                    Enum_ErrorSeverity.Medium,
-                    contextData: new Dictionary<string, object>
-                    {
-                        ["ExportPath"] = saveFileDialog.FileName
-                    },
-                    callerName: nameof(btnExport_Click),
-                    controlName: Name);
-            }
-            finally
-            {
-                SetLoadingState(false);
-            }
-        }
-
-        private void textBoxFilter_TextChanged(object? sender, EventArgs e)
-        {
-            try
-            {
-                if (dataGridViewResults.DataSource is DataTable dt)
-                {
-                    var filterText = textBoxFilter.Text.Trim();
-                    if (string.IsNullOrEmpty(filterText))
-                    {
-                        dt.DefaultView.RowFilter = string.Empty;
-                        return;
-                    }
-
-                    var columns = dt.Columns.Cast<DataColumn>()
-                        .Where(c => c.DataType == typeof(string))
-                        .Select(c => $"[{c.ColumnName}] LIKE '%{filterText.Replace("'", "''")}%'");
-
-                    dt.DefaultView.RowFilter = string.Join(" OR ", columns);
-                }
-            }
-            catch (Exception ex)
-            {
-                LoggingUtility.LogApplicationError(ex);
-            }
-        }
         #endregion
 
         #region Helpers
@@ -275,7 +191,6 @@ namespace MTM_WIP_Application_Winforms.Forms.Visual
             EnsureDieToolDiscoveryControl();
             HideAllCustomControls(_controlDieToolDiscovery);
             _controlDieToolDiscovery!.Visible = true;
-            labelTitle.Text = "Die Tool Discovery";
         }
 
         private void ShowReceivingAnalyticsControl()
@@ -284,7 +199,6 @@ namespace MTM_WIP_Application_Winforms.Forms.Visual
             EnsureReceivingAnalyticsControl();
             HideAllCustomControls(_controlReceivingAnalytics);
             _controlReceivingAnalytics!.Visible = true;
-            labelTitle.Text = "Receiving Analytics";
         }
 
         private void ShowVisualInventoryControl()
@@ -293,23 +207,16 @@ namespace MTM_WIP_Application_Winforms.Forms.Visual
             EnsureVisualInventoryControl();
             HideAllCustomControls(_controlVisualInventory);
             _controlVisualInventory!.Visible = true;
-            labelTitle.Text = "Inventory Search";
         }
 
         private void HideGenericControls()
         {
-            dataGridViewResults.Visible = false;
             controlEmptyState.Visible = false;
-            btnExport.Visible = false;
-            textBoxFilter.Visible = false;
-            labelFilter.Visible = false;
         }
 
         private void HideCustomControls()
         {
             HideAllCustomControls();
-            textBoxFilter.Visible = true;
-            labelFilter.Visible = true;
         }
 
         private void HideAllCustomControls(Control? exception = null)
@@ -376,6 +283,19 @@ namespace MTM_WIP_Application_Winforms.Forms.Visual
                 Enum_VisualDashboardCategory.MaterialHandlerAnalytics_Team => "MH Analytics (Team)",
                 _ => "Dashboard"
             };
+        }
+
+        /// <summary>
+        /// Opens the Inventory Search tab and performs a search for the specified part number.
+        /// </summary>
+        /// <param name="partNumber">The part number to search for.</param>
+        public async Task OpenInventorySearchAsync(string partNumber)
+        {
+            ShowVisualInventoryControl();
+            if (_controlVisualInventory != null)
+            {
+                await _controlVisualInventory.PerformExternalSearchAsync(partNumber);
+            }
         }
         #endregion
 

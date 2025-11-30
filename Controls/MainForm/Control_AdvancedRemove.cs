@@ -11,6 +11,7 @@ using MTM_WIP_Application_Winforms.Services.Logging;
 using MTM_WIP_Application_Winforms.Models;
 using MTM_WIP_Application_Winforms.Services;
 using Microsoft.Extensions.DependencyInjection;
+using MTM_WIP_Application_Winforms.Services.Visual;
 
 namespace MTM_WIP_Application_Winforms.Controls.MainForm
 {
@@ -156,6 +157,18 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                 printButton.Click += Control_AdvancedRemove_Button_Print_Click;
                 ToolTip toolTip = new();
                 toolTip.SetToolTip(printButton, "Print the current results");
+            }
+
+            Control[] searchVisualBtn = Controls.Find("Control_AdvancedRemove_Button_SearchVisual", true);
+            if (searchVisualBtn.Length > 0 && searchVisualBtn[0] is Button searchVisualButton)
+            {
+                var visualService = Program.ServiceProvider?.GetService<IService_VisualDatabase>();
+                searchVisualButton.Visible = visualService != null;
+
+                searchVisualButton.Click -= Control_AdvancedRemove_Button_SearchVisual_Click;
+                searchVisualButton.Click += Control_AdvancedRemove_Button_SearchVisual_Click;
+                ToolTip toolTip = new();
+                toolTip.SetToolTip(searchVisualButton, "Search this part in Infor Visual");
             }
 
             // Wire up date range radio button events
@@ -908,6 +921,28 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                     ex,
                     Enum_ErrorSeverity.Medium,
                     controlName: nameof(Control_AdvancedRemove_Button_Print_Click));
+            }
+        }
+
+        private async void Control_AdvancedRemove_Button_SearchVisual_Click(object? sender, EventArgs e)
+        {
+            try
+            {
+                string partNumber = Control_AdvancedRemove_TextBox_Part.Text?.Trim() ?? "";
+                if (string.IsNullOrWhiteSpace(partNumber))
+                {
+                    Service_ErrorHandler.ShowWarning("Please enter a Part Number to search in Visual.");
+                    return;
+                }
+
+                var dashboard = new Forms.Visual.InforVisualDashboard();
+                dashboard.Show();
+                await dashboard.OpenInventorySearchAsync(partNumber);
+            }
+            catch (Exception ex)
+            {
+                LoggingUtility.LogApplicationError(ex);
+                Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Medium, controlName: nameof(Control_AdvancedRemove));
             }
         }
 
