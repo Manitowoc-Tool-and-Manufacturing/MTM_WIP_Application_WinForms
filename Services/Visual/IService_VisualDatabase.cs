@@ -132,6 +132,11 @@ namespace MTM_WIP_Application_Winforms.Services.Visual
         /// Retrieves a list of all Customer Order IDs from the transaction history.
         /// </summary>
         Task<Model_Dao_Result<List<string>>> GetCustomerOrdersAsync();
+
+        /// <summary>
+        /// Retrieves a list of all Part IDs from the Visual database.
+        /// </summary>
+        Task<Model_Dao_Result<List<string>>> GetPartIdsAsync();
     }
     #endregion
 

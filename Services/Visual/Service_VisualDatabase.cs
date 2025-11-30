@@ -971,6 +971,14 @@ namespace MTM_WIP_Application_Winforms.Services.Visual
             return await GetDistinctColumnValuesAsync("CUST_ORDER_ID", "INVENTORY_TRANS");
         }
 
+        /// <summary>
+        /// Retrieves a list of all Part IDs from the Visual database.
+        /// </summary>
+        public async Task<Model_Dao_Result<List<string>>> GetPartIdsAsync()
+        {
+            return await GetDistinctColumnValuesAsync("ID", "PART");
+        }
+
         private async Task<Model_Dao_Result<List<string>>> GetDistinctColumnValuesAsync(string columnName, string tableName)
         {
             if (_useSampleData)

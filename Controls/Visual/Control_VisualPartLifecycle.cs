@@ -135,8 +135,8 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
             this.Controls.Add(mainLayout);
 
             // Configure Suggestions
-            Helper_SuggestionTextBox.ConfigureForPartNumbers(_txtLifecyclePart, Helper_SuggestionTextBox.GetCachedPartNumbersAsync);
-            Helper_SuggestionTextBox.ConfigureForPartNumbers(_txtByPartPart, Helper_SuggestionTextBox.GetCachedPartNumbersAsync);
+            Helper_SuggestionTextBox.ConfigureForPartNumbers(_txtLifecyclePart, GetPartIdsAsync);
+            Helper_SuggestionTextBox.ConfigureForPartNumbers(_txtByPartPart, GetPartIdsAsync);
             Helper_SuggestionTextBox.ConfigureForUsers(_txtByUserUser, GetUsersAsync);
             Helper_SuggestionTextBox.ConfigureForWorkOrders(_txtByWOWO, GetWorkOrdersAsync);
             Helper_SuggestionTextBox.ConfigureForCustomerOrders(_txtByCOCO, GetCustomerOrdersAsync);
@@ -209,6 +209,13 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
         #endregion
 
         #region Methods
+        private async Task<List<string>> GetPartIdsAsync()
+        {
+            if (_visualService == null) return new List<string>();
+            var result = await _visualService.GetPartIdsAsync();
+            return result.IsSuccess ? (result.Data ?? new List<string>()) : new List<string>();
+        }
+
         private async Task<List<string>> GetUsersAsync()
         {
             if (_visualService == null) return new List<string>();
