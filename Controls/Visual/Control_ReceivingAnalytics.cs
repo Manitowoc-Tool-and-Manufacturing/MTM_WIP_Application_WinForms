@@ -131,6 +131,11 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
             Control_ReceivingAnalytics_SuggestionTextBoxWithLabel_Carrier.TextBox.KeyDown += async (s, e) => { if (e.KeyCode == Keys.Enter) await ApplyFiltersAsync(); };
             Control_ReceivingAnalytics_SuggestionTextBoxWithLabel_Supplier.TextBox.KeyDown += async (s, e) => { if (e.KeyCode == Keys.Enter) await ApplyFiltersAsync(); };
             Control_ReceivingAnalytics_SuggestionTextBoxWithLabel_PONumber.TextBox.KeyDown += async (s, e) => { if (e.KeyCode == Keys.Enter) await ApplyFiltersAsync(); };
+
+            // Week Navigation
+            Control_ReceivingAnalytics_Button_PreviousWeek.Click += async (s, e) => { SetPreviousWeek(); await FetchDataAsync(); };
+            Control_ReceivingAnalytics_Button_NextWeek.Click += async (s, e) => { SetNextWeek(); await FetchDataAsync(); };
+            Control_ReceivingAnalytics_Button_CurrentWeek.Click += async (s, e) => { SetCurrentWeek(); await FetchDataAsync(); };
         }
 
         private void InitializeSuggestionBoxes()
@@ -178,6 +183,34 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
 
             Control_ReceivingAnalytics_DateTimePicker_StartDate.Value = monday;
             Control_ReceivingAnalytics_DateTimePicker_EndDate.Value = friday;
+        }
+
+        private void SetPreviousWeek()
+        {
+            // Snap to the week of the current start date, then move back 1 week
+            DateTime currentStart = Control_ReceivingAnalytics_DateTimePicker_StartDate.Value;
+            int diff = (7 + (currentStart.DayOfWeek - DayOfWeek.Monday)) % 7;
+            DateTime currentMonday = currentStart.AddDays(-1 * diff).Date;
+
+            DateTime prevMonday = currentMonday.AddDays(-7);
+            DateTime prevFriday = prevMonday.AddDays(4);
+
+            Control_ReceivingAnalytics_DateTimePicker_StartDate.Value = prevMonday;
+            Control_ReceivingAnalytics_DateTimePicker_EndDate.Value = prevFriday;
+        }
+
+        private void SetNextWeek()
+        {
+            // Snap to the week of the current start date, then move forward 1 week
+            DateTime currentStart = Control_ReceivingAnalytics_DateTimePicker_StartDate.Value;
+            int diff = (7 + (currentStart.DayOfWeek - DayOfWeek.Monday)) % 7;
+            DateTime currentMonday = currentStart.AddDays(-1 * diff).Date;
+
+            DateTime nextMonday = currentMonday.AddDays(7);
+            DateTime nextFriday = nextMonday.AddDays(4);
+
+            Control_ReceivingAnalytics_DateTimePicker_StartDate.Value = nextMonday;
+            Control_ReceivingAnalytics_DateTimePicker_EndDate.Value = nextFriday;
         }
 
         private async Task FetchDataAsync()
