@@ -17,7 +17,7 @@ public class Model_LogEntry
     /// <summary>
     /// Format type of this log entry (Normal, ApplicationError, DatabaseError, or Unknown).
     /// </summary>
-    public required LogFormat LogType { get; init; }
+    public required Model_LogFormat LogType { get; init; }
 
     /// <summary>
     /// Raw text of the log entry as it appears in the file.
@@ -122,7 +122,7 @@ public class Model_LogEntry
         return new Model_LogEntry
         {
             Timestamp = timestamp,
-            LogType = LogFormat.Normal,
+            LogType = Model_LogFormat.Normal,
             ParseSuccess = true,
             Level = level,
             Emoji = emoji,
@@ -152,7 +152,7 @@ public class Model_LogEntry
         return new Model_LogEntry
         {
             Timestamp = timestamp,
-            LogType = LogFormat.ApplicationError,
+            LogType = Model_LogFormat.ApplicationError,
             ParseSuccess = true,
             ErrorType = errorType,
             Message = message,
@@ -180,7 +180,7 @@ public class Model_LogEntry
         return new Model_LogEntry
         {
             Timestamp = timestamp,
-            LogType = LogFormat.DatabaseError,
+            LogType = Model_LogFormat.DatabaseError,
             ParseSuccess = true,
             Severity = severity,
             Message = message,
@@ -201,7 +201,7 @@ public class Model_LogEntry
         return new Model_LogEntry
         {
             Timestamp = timestamp,
-            LogType = LogFormat.Unknown,
+            LogType = Model_LogFormat.Unknown,
             ParseSuccess = false,
             RawText = rawText
         };

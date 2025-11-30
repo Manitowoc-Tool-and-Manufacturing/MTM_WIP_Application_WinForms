@@ -21,7 +21,7 @@ public class Model_LogFile
     /// <summary>
     /// Detected log format type based on filename pattern.
     /// </summary>
-    public required LogFormat LogType { get; init; }
+    public required Model_LogFormat LogType { get; init; }
 
     /// <summary>
     /// File size in bytes.

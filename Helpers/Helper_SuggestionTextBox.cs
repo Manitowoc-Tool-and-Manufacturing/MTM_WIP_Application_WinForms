@@ -1,6 +1,6 @@
 using MTM_WIP_Application_Winforms.Controls.Shared;
 using MTM_WIP_Application_Winforms.Forms.Shared;
-using MTM_WIP_Application_Winforms.Logging;
+using MTM_WIP_Application_Winforms.Services.Logging;
 using MTM_WIP_Application_Winforms.Models;
 using MTM_WIP_Application_Winforms.Services;
 
@@ -78,7 +78,7 @@ namespace MTM_WIP_Application_Winforms.Helpers
                     suggestionTextBox.Text = overlay.SelectedItem.ToUpperInvariant();
                     
                     // Manually trigger SuggestionSelected event
-                    suggestionTextBox.RaiseSuggestionSelectedEvent(new SuggestionSelectedEventArgs
+                    suggestionTextBox.RaiseSuggestionSelectedEvent(new EventArgs_SuggestionSelectedEventArgs
                     {
                         OriginalInput = suggestionTextBox.Text,
                         SelectedValue = overlay.SelectedItem,

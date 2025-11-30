@@ -1,7 +1,7 @@
 using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
 using MTM_WIP_Application_Winforms.Forms.Shared;
-using MTM_WIP_Application_Winforms.Logging;
+using MTM_WIP_Application_Winforms.Services.Logging;
 using MTM_WIP_Application_Winforms.Models;
 using MTM_WIP_Application_Winforms.Services;
 
@@ -206,7 +206,7 @@ namespace MTM_WIP_Application_Winforms.Controls.Shared
         /// </summary>
         [Category("Action")]
         [Description("Occurs when user selects a suggestion")]
-        public event EventHandler<SuggestionSelectedEventArgs>? SuggestionSelected;
+        public event EventHandler<EventArgs_SuggestionSelectedEventArgs>? SuggestionSelected;
 
         /// <summary>
         /// Occurs when user cancels suggestion selection.
@@ -214,7 +214,7 @@ namespace MTM_WIP_Application_Winforms.Controls.Shared
         /// </summary>
         [Category("Action")]
         [Description("Occurs when user cancels suggestion selection")]
-        public event EventHandler<SuggestionCancelledEventArgs>? SuggestionCancelled;
+        public event EventHandler<EventArgs_SuggestionCancelledEventArgs>? SuggestionCancelled;
 
         /// <summary>
         /// Occurs when suggestion overlay is opened.
@@ -265,7 +265,7 @@ namespace MTM_WIP_Application_Winforms.Controls.Shared
         /// Used by helper methods to trigger event after programmatic selection.
         /// </summary>
         /// <param name="e">Event arguments</param>
-        public void RaiseSuggestionSelectedEvent(SuggestionSelectedEventArgs e)
+        public void RaiseSuggestionSelectedEvent(EventArgs_SuggestionSelectedEventArgs e)
         {
             OnSuggestionSelected(e);
         }
@@ -427,7 +427,7 @@ namespace MTM_WIP_Application_Winforms.Controls.Shared
                 // Check for empty input
                 if (string.IsNullOrWhiteSpace(_originalInput))
                 {
-                    OnSuggestionCancelled(new SuggestionCancelledEventArgs
+                    OnSuggestionCancelled(new EventArgs_SuggestionCancelledEventArgs
                     {
                         OriginalInput = _originalInput,
                         Reason = SuggestionCancelReason.EmptyInput,
@@ -553,7 +553,7 @@ namespace MTM_WIP_Application_Winforms.Controls.Shared
 
 
 
-                    OnSuggestionSelected(new SuggestionSelectedEventArgs
+                    OnSuggestionSelected(new EventArgs_SuggestionSelectedEventArgs
                     {
                         OriginalInput = _originalInput,
                         SelectedValue = selectedValue,
@@ -572,7 +572,7 @@ namespace MTM_WIP_Application_Winforms.Controls.Shared
                     // User cancelled - restore focus to this field
 
 
-                    OnSuggestionCancelled(new SuggestionCancelledEventArgs
+                    OnSuggestionCancelled(new EventArgs_SuggestionCancelledEventArgs
                     {
                         OriginalInput = _originalInput,
                         Reason = SuggestionCancelReason.Escape,
@@ -599,7 +599,7 @@ namespace MTM_WIP_Application_Winforms.Controls.Shared
         /// </summary>
         private void HandleNoMatches()
         {
-            OnSuggestionCancelled(new SuggestionCancelledEventArgs
+            OnSuggestionCancelled(new EventArgs_SuggestionCancelledEventArgs
             {
                 OriginalInput = _originalInput,
                 Reason = SuggestionCancelReason.NoMatches,
@@ -618,7 +618,7 @@ namespace MTM_WIP_Application_Winforms.Controls.Shared
         /// <summary>
         /// Raises the SuggestionSelected event.
         /// </summary>
-        protected virtual void OnSuggestionSelected(SuggestionSelectedEventArgs e)
+        protected virtual void OnSuggestionSelected(EventArgs_SuggestionSelectedEventArgs e)
         {
             SuggestionSelected?.Invoke(this, e);
         }
@@ -626,7 +626,7 @@ namespace MTM_WIP_Application_Winforms.Controls.Shared
         /// <summary>
         /// Raises the SuggestionCancelled event.
         /// </summary>
-        protected virtual void OnSuggestionCancelled(SuggestionCancelledEventArgs e)
+        protected virtual void OnSuggestionCancelled(EventArgs_SuggestionCancelledEventArgs e)
         {
             SuggestionCancelled?.Invoke(this, e);
         }
@@ -790,7 +790,7 @@ namespace MTM_WIP_Application_Winforms.Controls.Shared
             }
 
             var selectionIndex = source.FindIndex(s => s.Equals(matchedValue, StringComparison.OrdinalIgnoreCase));
-            OnSuggestionSelected(new SuggestionSelectedEventArgs
+            OnSuggestionSelected(new EventArgs_SuggestionSelectedEventArgs
             {
                 OriginalInput = _originalInput,
                 SelectedValue = matchedValue,

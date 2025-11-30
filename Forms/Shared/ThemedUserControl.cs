@@ -1,7 +1,7 @@
 using MTM_WIP_Application_Winforms.Core;
 using MTM_WIP_Application_Winforms.Core.Theming;
 using MTM_WIP_Application_Winforms.Core.Theming.Interfaces;
-using MTM_WIP_Application_Winforms.Logging;
+using MTM_WIP_Application_Winforms.Services.Logging;
 using MTM_WIP_Application_Winforms.Models;
 using MTM_WIP_Application_Winforms.Controls.MainForm;
 using MTM_WIP_Application_Winforms.Controls.SettingsForm;

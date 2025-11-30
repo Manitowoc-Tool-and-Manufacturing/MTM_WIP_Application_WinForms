@@ -3,7 +3,7 @@ using System.Timers;
 using MTM_WIP_Application_Winforms.Controls.MainForm;
 using MTM_WIP_Application_Winforms.Forms.MainForm;
 using MTM_WIP_Application_Winforms.Helpers;
-using MTM_WIP_Application_Winforms.Logging;
+using MTM_WIP_Application_Winforms.Services.Logging;
 using MTM_WIP_Application_Winforms.Models;
 using Timer = System.Timers.Timer;
 

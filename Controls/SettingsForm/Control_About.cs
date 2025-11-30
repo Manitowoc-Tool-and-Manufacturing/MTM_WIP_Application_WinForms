@@ -1,7 +1,7 @@
 using System.Reflection;
 using MTM_WIP_Application_Winforms.Forms.Settings;
 using MTM_WIP_Application_Winforms.Forms.Shared;
-using MTM_WIP_Application_Winforms.Logging;
+using MTM_WIP_Application_Winforms.Services.Logging;
 using MTM_WIP_Application_Winforms.Models;
 using MTM_WIP_Application_Winforms.Services;
 

@@ -8,7 +8,7 @@ using MTM_WIP_Application_Winforms.Models;
 using MTM_WIP_Application_Winforms.Services.Startup;
 using MySql.Data.MySqlClient;
 
-namespace MTM_WIP_Application_Winforms.Logging;
+namespace MTM_WIP_Application_Winforms.Services.Logging;
 
 #region LoggingUtility
 

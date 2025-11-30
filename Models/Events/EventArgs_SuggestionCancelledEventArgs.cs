@@ -3,7 +3,7 @@ namespace MTM_WIP_Application_Winforms.Models
     /// <summary>
     /// Event arguments for SuggestionCancelled event.
     /// </summary>
-    public class SuggestionCancelledEventArgs : EventArgs
+    public class EventArgs_SuggestionCancelledEventArgs : EventArgs
     {
         #region Properties
 

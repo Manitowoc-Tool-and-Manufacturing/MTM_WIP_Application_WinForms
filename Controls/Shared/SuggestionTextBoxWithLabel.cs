@@ -192,7 +192,7 @@ namespace MTM_WIP_Application_Winforms.Controls.Shared
         /// </summary>
         [Category("Action")]
         [Description("Occurs when user selects a suggestion")]
-        public event EventHandler<SuggestionSelectedEventArgs>? SuggestionSelected;
+        public event EventHandler<EventArgs_SuggestionSelectedEventArgs>? SuggestionSelected;
 
         /// <summary>
         /// Occurs when user cancels suggestion selection.
@@ -200,7 +200,7 @@ namespace MTM_WIP_Application_Winforms.Controls.Shared
         /// </summary>
         [Category("Action")]
         [Description("Occurs when user cancels suggestion selection")]
-        public event EventHandler<SuggestionCancelledEventArgs>? SuggestionCancelled;
+        public event EventHandler<EventArgs_SuggestionCancelledEventArgs>? SuggestionCancelled;
 
         /// <summary>
         /// Occurs when validation state changes in non-suggestion mode.

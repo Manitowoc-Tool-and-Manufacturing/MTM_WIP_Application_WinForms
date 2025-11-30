@@ -10,16 +10,25 @@ using MTM_WIP_Application_Winforms.Forms.Shared;
 using MTM_WIP_Application_Winforms.Models;
 using MTM_WIP_Application_Winforms.Services;
 using MTM_WIP_Application_Winforms.Services.Visual;
-using MTM_WIP_Application_Winforms.Logging;
+using MTM_WIP_Application_Winforms.Services.Logging;
 using MTM_WIP_Application_Winforms.Helpers;
 
 namespace MTM_WIP_Application_Winforms.Controls.Visual
 {
+    /// <summary>
+    /// Provides inventory lookup functionality with filtering, export, and suggestion support.
+    /// </summary>
     public partial class Control_VisualInventory : ThemedUserControl
     {
+        #region Fields
         private readonly IService_VisualDatabase? _visualService;
         private DataTable? _cachedDataTable;
+        #endregion
 
+        #region Constructors
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Control_VisualInventory"/> class.
+        /// </summary>
         public Control_VisualInventory()
         {
             InitializeComponent();
@@ -28,7 +37,9 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
             InitializeSuggestionBoxes();
             WireUpEvents();
         }
+        #endregion
 
+        #region Methods
         private void InitializeSuggestionBoxes()
         {
             // Part Number
@@ -100,7 +111,9 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
                 Control_VisualInventory_Button_Search.Text = "Search";
             }
         }
+        #endregion
 
+        #region Events
         private async void Control_VisualInventory_Button_Export_Click(object? sender, EventArgs e)
         {
             if (Control_VisualInventory_DataGridView_Results.DataSource is not DataTable dt || dt.Rows.Count == 0)
@@ -152,5 +165,7 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
                 }
             }
         }
+        #endregion
+
     }
 }

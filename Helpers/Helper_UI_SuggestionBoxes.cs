@@ -1,5 +1,5 @@
 using System.Data;
-using MTM_WIP_Application_Winforms.Logging;
+using MTM_WIP_Application_Winforms.Services.Logging;
 using MTM_WIP_Application_Winforms.Models;
 
 namespace MTM_WIP_Application_Winforms.Helpers

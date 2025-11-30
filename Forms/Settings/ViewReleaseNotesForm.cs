@@ -1,6 +1,6 @@
 using Microsoft.Web.WebView2.Core;
 using MTM_WIP_Application_Winforms.Forms.Shared;
-using MTM_WIP_Application_Winforms.Logging;
+using MTM_WIP_Application_Winforms.Services.Logging;
 using MTM_WIP_Application_Winforms.Services;
 
 namespace MTM_WIP_Application_Winforms.Forms.Settings

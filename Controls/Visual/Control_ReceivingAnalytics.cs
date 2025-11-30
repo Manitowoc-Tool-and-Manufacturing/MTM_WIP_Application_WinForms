@@ -1,28 +1,29 @@
-using System;
-using System.Collections.Generic;
 using System.Data;
-using System.Drawing;
-using System.Threading.Tasks;
-using System.Windows.Forms;
 using Microsoft.Extensions.DependencyInjection;
 using MTM_WIP_Application_Winforms.Controls.Shared;
 using MTM_WIP_Application_Winforms.Forms.Shared;
 using MTM_WIP_Application_Winforms.Models;
 using MTM_WIP_Application_Winforms.Services;
 using MTM_WIP_Application_Winforms.Services.Visual;
-using MTM_WIP_Application_Winforms.Logging;
+using MTM_WIP_Application_Winforms.Services.Logging;
 using MTM_WIP_Application_Winforms.Helpers;
 
 namespace MTM_WIP_Application_Winforms.Controls.Visual
 {
     public partial class Control_ReceivingAnalytics : ThemedUserControl
     {
+        #region Fields
         private readonly IService_VisualDatabase? _visualService;
         private bool _isFiltersVisible = true;
         private readonly Control_TextAnimationSequence _toggleButtonAnimation;
         private DataTable? _cachedDataTable;
         private bool _isHandlingFilterLogic = false;
+        #endregion
 
+        #region Constructors
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Control_ReceivingAnalytics"/> class.
+        /// </summary>
         public Control_ReceivingAnalytics()
         {
             InitializeComponent();
@@ -65,6 +66,23 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
 
             // Initial Load
             _ = FetchDataAsync();
+        }
+        #endregion
+
+        #region Methods
+        /// <summary>
+        /// Applies the theme to the control and restores legend colors.
+        /// </summary>
+        /// <param name="theme">The theme to apply.</param>
+        protected override void ApplyTheme(Model_Shared_UserUiColors theme)
+        {
+            base.ApplyTheme(theme);
+
+            // Restore legend colors that might have been overwritten by the theme
+            if (Control_ReceivingAnalytics_Panel_LegendClosed != null) Control_ReceivingAnalytics_Panel_LegendClosed.BackColor = Color.FromArgb(200, 255, 200);
+            if (Control_ReceivingAnalytics_Panel_LegendLate != null) Control_ReceivingAnalytics_Panel_LegendLate.BackColor = Color.FromArgb(255, 200, 200);
+            if (Control_ReceivingAnalytics_Panel_LegendPartial != null) Control_ReceivingAnalytics_Panel_LegendPartial.BackColor = Color.FromArgb(255, 255, 200);
+            if (Control_ReceivingAnalytics_Panel_LegendOnTime != null) Control_ReceivingAnalytics_Panel_LegendOnTime.BackColor = Color.FromArgb(200, 240, 255);
         }
 
         private void WireUpEvents()
@@ -115,105 +133,6 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
             Control_ReceivingAnalytics_SuggestionTextBoxWithLabel_PONumber.TextBox.KeyDown += async (s, e) => { if (e.KeyCode == Keys.Enter) await ApplyFiltersAsync(); };
         }
 
-        private void HandleFilterLogic(CheckBox source)
-        {
-            if (_isHandlingFilterLogic) return;
-            _isHandlingFilterLogic = true;
-            try
-            {
-                if (source.Checked)
-                {
-                    if (source == Control_ReceivingAnalytics_CheckBox_ShowOutsideService)
-                    {
-                        UncheckAndDisable(Control_ReceivingAnalytics_CheckBox_ShowConsignment);
-                        UncheckAndDisable(Control_ReceivingAnalytics_CheckBox_ShowInternal);
-                        UncheckAndDisable(Control_ReceivingAnalytics_CheckBox_ShowWithPartID);
-                        UncheckAndDisable(Control_ReceivingAnalytics_CheckBox_ShowMMC);
-                        UncheckAndDisable(Control_ReceivingAnalytics_CheckBox_ShowMMF);
-                    }
-                    else if (source == Control_ReceivingAnalytics_CheckBox_ShowConsignment)
-                    {
-                        UncheckAndDisable(Control_ReceivingAnalytics_CheckBox_ShowOutsideService);
-                        UncheckAndDisable(Control_ReceivingAnalytics_CheckBox_ShowInternal);
-                        UncheckAndDisable(Control_ReceivingAnalytics_CheckBox_ShowWithPartID);
-                        UncheckAndDisable(Control_ReceivingAnalytics_CheckBox_ShowMMC);
-                        UncheckAndDisable(Control_ReceivingAnalytics_CheckBox_ShowMMF);
-                    }
-                    else if (source == Control_ReceivingAnalytics_CheckBox_ShowInternal)
-                    {
-                        UncheckAndDisable(Control_ReceivingAnalytics_CheckBox_ShowOutsideService);
-                        UncheckAndDisable(Control_ReceivingAnalytics_CheckBox_ShowConsignment);
-                        UncheckAndDisable(Control_ReceivingAnalytics_CheckBox_ShowWithPartID);
-                        UncheckAndDisable(Control_ReceivingAnalytics_CheckBox_ShowMMC);
-                        UncheckAndDisable(Control_ReceivingAnalytics_CheckBox_ShowMMF);
-                    }
-                    else if (source == Control_ReceivingAnalytics_CheckBox_ShowWithPartID)
-                    {
-                        Uncheck(Control_ReceivingAnalytics_CheckBox_ShowOutsideService);
-                        Uncheck(Control_ReceivingAnalytics_CheckBox_ShowConsignment);
-                        Uncheck(Control_ReceivingAnalytics_CheckBox_ShowInternal);
-                        Uncheck(Control_ReceivingAnalytics_CheckBox_ShowMMC);
-                        Uncheck(Control_ReceivingAnalytics_CheckBox_ShowMMF);
-                        
-                        EnableAllFilters();
-                    }
-                    else if (source == Control_ReceivingAnalytics_CheckBox_ShowMMC)
-                    {
-                        Uncheck(Control_ReceivingAnalytics_CheckBox_ShowWithPartID);
-                        Uncheck(Control_ReceivingAnalytics_CheckBox_ShowOutsideService);
-                        Uncheck(Control_ReceivingAnalytics_CheckBox_ShowConsignment);
-                        Uncheck(Control_ReceivingAnalytics_CheckBox_ShowInternal);
-                        
-                        EnableAllFilters();
-                    }
-                    else if (source == Control_ReceivingAnalytics_CheckBox_ShowMMF)
-                    {
-                        Uncheck(Control_ReceivingAnalytics_CheckBox_ShowWithPartID);
-                        Uncheck(Control_ReceivingAnalytics_CheckBox_ShowOutsideService);
-                        Uncheck(Control_ReceivingAnalytics_CheckBox_ShowConsignment);
-                        Uncheck(Control_ReceivingAnalytics_CheckBox_ShowInternal);
-                        
-                        EnableAllFilters();
-                    }
-                }
-                else
-                {
-                    // If unchecked, we might need to re-enable things.
-                    if (source == Control_ReceivingAnalytics_CheckBox_ShowOutsideService ||
-                        source == Control_ReceivingAnalytics_CheckBox_ShowConsignment ||
-                        source == Control_ReceivingAnalytics_CheckBox_ShowInternal)
-                    {
-                        EnableAllFilters();
-                    }
-                }
-            }
-            finally
-            {
-                _isHandlingFilterLogic = false;
-            }
-        }
-
-        private void UncheckAndDisable(CheckBox chk)
-        {
-            chk.Checked = false;
-            chk.Enabled = false;
-        }
-
-        private void Uncheck(CheckBox chk)
-        {
-            chk.Checked = false;
-        }
-
-        private void EnableAllFilters()
-        {
-            Control_ReceivingAnalytics_CheckBox_ShowOutsideService.Enabled = true;
-            Control_ReceivingAnalytics_CheckBox_ShowConsignment.Enabled = true;
-            Control_ReceivingAnalytics_CheckBox_ShowInternal.Enabled = true;
-            Control_ReceivingAnalytics_CheckBox_ShowWithPartID.Enabled = true;
-            Control_ReceivingAnalytics_CheckBox_ShowMMC.Enabled = true;
-            Control_ReceivingAnalytics_CheckBox_ShowMMF.Enabled = true;
-        }
-
         private void InitializeSuggestionBoxes()
         {
             // Date Type
@@ -259,80 +178,6 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
 
             Control_ReceivingAnalytics_DateTimePicker_StartDate.Value = monday;
             Control_ReceivingAnalytics_DateTimePicker_EndDate.Value = friday;
-        }
-
-        private void Control_ReceivingAnalytics_Button_ToggleOptions_Click(object? sender, EventArgs e)
-        {
-            _isFiltersVisible = !_isFiltersVisible;
-            Control_ReceivingAnalytics_TableLayoutPanel_Filters.Visible = _isFiltersVisible;
-            Control_ReceivingAnalytics_TableLayoutPanel_CheckBoxes.Visible = _isFiltersVisible;
-            
-            if (_isFiltersVisible)
-            {
-                _toggleButtonAnimation.UsePreset(TextAnimationPreset.Up);
-            }
-            else
-            {
-                _toggleButtonAnimation.UsePreset(TextAnimationPreset.Down);
-            }
-        }
-
-        private async void Control_ReceivingAnalytics_Button_Analytics_Click(object? sender, EventArgs e)
-        {
-            try
-            {
-                string htmlPath = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Resources", "Html", "ReceivingAnalytics.html");
-                
-                // Fallback for development environment if not copied to bin
-                if (!System.IO.File.Exists(htmlPath))
-                {
-                    // Try to find it in the source tree (up 3 levels from bin/Debug/net8.0-windows)
-                    string sourcePath = System.IO.Path.GetFullPath(System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"..\..\..\Resources\Html\ReceivingAnalytics.html"));
-                    if (System.IO.File.Exists(sourcePath))
-                    {
-                        htmlPath = sourcePath;
-                    }
-                    else
-                    {
-                        Service_ErrorHandler.ShowError($"Analytics template not found at: {htmlPath}");
-                        return;
-                    }
-                }
-
-                string htmlContent = System.IO.File.ReadAllText(htmlPath);
-                
-                // Fetch Data
-                if (_visualService == null) return;
-                
-                Control_ReceivingAnalytics_Button_Analytics.Enabled = false;
-                Control_ReceivingAnalytics_Button_Analytics.Text = "Loading...";
-
-                var result = await _visualService.GetReceivingAnalyticsAsync();
-                
-                Control_ReceivingAnalytics_Button_Analytics.Enabled = true;
-                Control_ReceivingAnalytics_Button_Analytics.Text = "Receiving Analytics";
-
-                if (result.IsSuccess && result.Data != null)
-                {
-                    string jsonData = System.Text.Json.JsonSerializer.Serialize(result.Data);
-                    htmlContent = htmlContent.Replace("// To be populated by C#", $"loadData('{jsonData.Replace("'", "\\'")}');");
-
-                    using (var viewer = new Form_HtmlViewer("Receiving Analytics", htmlContent))
-                    {
-                        viewer.ShowDialog(this);
-                    }
-                }
-                else
-                {
-                    Service_ErrorHandler.ShowError(result.ErrorMessage);
-                }
-            }
-            catch (Exception ex)
-            {
-                Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Medium, controlName: this.Name);
-                Control_ReceivingAnalytics_Button_Analytics.Enabled = true;
-                Control_ReceivingAnalytics_Button_Analytics.Text = "Receiving Analytics";
-            }
         }
 
         private async Task FetchDataAsync()
@@ -605,25 +450,81 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
                 row.DefaultCellStyle.BackColor = backColor;
             }
         }
+        #endregion
 
-        private void dataGridViewResults_CellFormatting(object? sender, DataGridViewCellFormattingEventArgs e)
+        #region Events
+        private void Control_ReceivingAnalytics_Button_ToggleOptions_Click(object? sender, EventArgs e)
         {
-            // Logic moved to ApplyRowColors for performance
+            _isFiltersVisible = !_isFiltersVisible;
+            Control_ReceivingAnalytics_TableLayoutPanel_Filters.Visible = _isFiltersVisible;
+            Control_ReceivingAnalytics_TableLayoutPanel_CheckBoxes.Visible = _isFiltersVisible;
+            
+            if (_isFiltersVisible)
+            {
+                _toggleButtonAnimation.UsePreset(TextAnimationPreset.Up);
+            }
+            else
+            {
+                _toggleButtonAnimation.UsePreset(TextAnimationPreset.Down);
+            }
         }
 
-        /// <summary>
-        /// Applies the theme to the control and restores legend colors.
-        /// </summary>
-        /// <param name="theme">The theme to apply.</param>
-        protected override void ApplyTheme(Model_Shared_UserUiColors theme)
+        private async void Control_ReceivingAnalytics_Button_Analytics_Click(object? sender, EventArgs e)
         {
-            base.ApplyTheme(theme);
+            try
+            {
+                string htmlPath = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Resources", "Html", "ReceivingAnalytics.html");
+                
+                // Fallback for development environment if not copied to bin
+                if (!System.IO.File.Exists(htmlPath))
+                {
+                    // Try to find it in the source tree (up 3 levels from bin/Debug/net8.0-windows)
+                    string sourcePath = System.IO.Path.GetFullPath(System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"..\..\..\Resources\Html\ReceivingAnalytics.html"));
+                    if (System.IO.File.Exists(sourcePath))
+                    {
+                        htmlPath = sourcePath;
+                    }
+                    else
+                    {
+                        Service_ErrorHandler.ShowError($"Analytics template not found at: {htmlPath}");
+                        return;
+                    }
+                }
 
-            // Restore legend colors that might have been overwritten by the theme
-            if (Control_ReceivingAnalytics_Panel_LegendClosed != null) Control_ReceivingAnalytics_Panel_LegendClosed.BackColor = Color.FromArgb(200, 255, 200);
-            if (Control_ReceivingAnalytics_Panel_LegendLate != null) Control_ReceivingAnalytics_Panel_LegendLate.BackColor = Color.FromArgb(255, 200, 200);
-            if (Control_ReceivingAnalytics_Panel_LegendPartial != null) Control_ReceivingAnalytics_Panel_LegendPartial.BackColor = Color.FromArgb(255, 255, 200);
-            if (Control_ReceivingAnalytics_Panel_LegendOnTime != null) Control_ReceivingAnalytics_Panel_LegendOnTime.BackColor = Color.FromArgb(200, 240, 255);
+                string htmlContent = System.IO.File.ReadAllText(htmlPath);
+                
+                // Fetch Data
+                if (_visualService == null) return;
+                
+                Control_ReceivingAnalytics_Button_Analytics.Enabled = false;
+                Control_ReceivingAnalytics_Button_Analytics.Text = "Loading...";
+
+                var result = await _visualService.GetReceivingAnalyticsAsync();
+                
+                Control_ReceivingAnalytics_Button_Analytics.Enabled = true;
+                Control_ReceivingAnalytics_Button_Analytics.Text = "Receiving Analytics";
+
+                if (result.IsSuccess && result.Data != null)
+                {
+                    string jsonData = System.Text.Json.JsonSerializer.Serialize(result.Data);
+                    htmlContent = htmlContent.Replace("// To be populated by C#", $"loadData('{jsonData.Replace("'", "\\'")}');");
+
+                    using (var viewer = new Form_HtmlViewer("Receiving Analytics", htmlContent))
+                    {
+                        viewer.ShowDialog(this);
+                    }
+                }
+                else
+                {
+                    Service_ErrorHandler.ShowError(result.ErrorMessage);
+                }
+            }
+            catch (Exception ex)
+            {
+                Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Medium, controlName: this.Name);
+                Control_ReceivingAnalytics_Button_Analytics.Enabled = true;
+                Control_ReceivingAnalytics_Button_Analytics.Text = "Receiving Analytics";
+            }
         }
 
         private void ContextMenuItem_ColumnOrder_Click(object? sender, EventArgs e)
@@ -669,5 +570,109 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
                 Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Low, controlName: this.Name);
             }
         }
+
+        #endregion
+
+        #region Helpers
+        private void HandleFilterLogic(CheckBox source)
+        {
+            if (_isHandlingFilterLogic) return;
+            _isHandlingFilterLogic = true;
+            try
+            {
+                if (source.Checked)
+                {
+                    if (source == Control_ReceivingAnalytics_CheckBox_ShowOutsideService)
+                    {
+                        UncheckAndDisable(Control_ReceivingAnalytics_CheckBox_ShowConsignment);
+                        UncheckAndDisable(Control_ReceivingAnalytics_CheckBox_ShowInternal);
+                        UncheckAndDisable(Control_ReceivingAnalytics_CheckBox_ShowWithPartID);
+                        UncheckAndDisable(Control_ReceivingAnalytics_CheckBox_ShowMMC);
+                        UncheckAndDisable(Control_ReceivingAnalytics_CheckBox_ShowMMF);
+                    }
+                    else if (source == Control_ReceivingAnalytics_CheckBox_ShowConsignment)
+                    {
+                        UncheckAndDisable(Control_ReceivingAnalytics_CheckBox_ShowOutsideService);
+                        UncheckAndDisable(Control_ReceivingAnalytics_CheckBox_ShowInternal);
+                        UncheckAndDisable(Control_ReceivingAnalytics_CheckBox_ShowWithPartID);
+                        UncheckAndDisable(Control_ReceivingAnalytics_CheckBox_ShowMMC);
+                        UncheckAndDisable(Control_ReceivingAnalytics_CheckBox_ShowMMF);
+                    }
+                    else if (source == Control_ReceivingAnalytics_CheckBox_ShowInternal)
+                    {
+                        UncheckAndDisable(Control_ReceivingAnalytics_CheckBox_ShowOutsideService);
+                        UncheckAndDisable(Control_ReceivingAnalytics_CheckBox_ShowConsignment);
+                        UncheckAndDisable(Control_ReceivingAnalytics_CheckBox_ShowWithPartID);
+                        UncheckAndDisable(Control_ReceivingAnalytics_CheckBox_ShowMMC);
+                        UncheckAndDisable(Control_ReceivingAnalytics_CheckBox_ShowMMF);
+                    }
+                    else if (source == Control_ReceivingAnalytics_CheckBox_ShowWithPartID)
+                    {
+                        Uncheck(Control_ReceivingAnalytics_CheckBox_ShowOutsideService);
+                        Uncheck(Control_ReceivingAnalytics_CheckBox_ShowConsignment);
+                        Uncheck(Control_ReceivingAnalytics_CheckBox_ShowInternal);
+                        Uncheck(Control_ReceivingAnalytics_CheckBox_ShowMMC);
+                        Uncheck(Control_ReceivingAnalytics_CheckBox_ShowMMF);
+                        
+                        EnableAllFilters();
+                    }
+                    else if (source == Control_ReceivingAnalytics_CheckBox_ShowMMC)
+                    {
+                        Uncheck(Control_ReceivingAnalytics_CheckBox_ShowWithPartID);
+                        Uncheck(Control_ReceivingAnalytics_CheckBox_ShowOutsideService);
+                        Uncheck(Control_ReceivingAnalytics_CheckBox_ShowConsignment);
+                        Uncheck(Control_ReceivingAnalytics_CheckBox_ShowInternal);
+                        
+                        EnableAllFilters();
+                    }
+                    else if (source == Control_ReceivingAnalytics_CheckBox_ShowMMF)
+                    {
+                        Uncheck(Control_ReceivingAnalytics_CheckBox_ShowWithPartID);
+                        Uncheck(Control_ReceivingAnalytics_CheckBox_ShowOutsideService);
+                        Uncheck(Control_ReceivingAnalytics_CheckBox_ShowConsignment);
+                        Uncheck(Control_ReceivingAnalytics_CheckBox_ShowInternal);
+                        
+                        EnableAllFilters();
+                    }
+                }
+                else
+                {
+                    // If unchecked, we might need to re-enable things.
+                    if (source == Control_ReceivingAnalytics_CheckBox_ShowOutsideService ||
+                        source == Control_ReceivingAnalytics_CheckBox_ShowConsignment ||
+                        source == Control_ReceivingAnalytics_CheckBox_ShowInternal)
+                    {
+                        EnableAllFilters();
+                    }
+                }
+            }
+            finally
+            {
+                _isHandlingFilterLogic = false;
+            }
+        }
+
+        private void UncheckAndDisable(CheckBox chk)
+        {
+            chk.Checked = false;
+            chk.Enabled = false;
+        }
+
+        private void Uncheck(CheckBox chk)
+        {
+            chk.Checked = false;
+        }
+
+        private void EnableAllFilters()
+        {
+            Control_ReceivingAnalytics_CheckBox_ShowOutsideService.Enabled = true;
+            Control_ReceivingAnalytics_CheckBox_ShowConsignment.Enabled = true;
+            Control_ReceivingAnalytics_CheckBox_ShowInternal.Enabled = true;
+            Control_ReceivingAnalytics_CheckBox_ShowWithPartID.Enabled = true;
+            Control_ReceivingAnalytics_CheckBox_ShowMMC.Enabled = true;
+            Control_ReceivingAnalytics_CheckBox_ShowMMF.Enabled = true;
+        }
+        #endregion
+
     }
 }

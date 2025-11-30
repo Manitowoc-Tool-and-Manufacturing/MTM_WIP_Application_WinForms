@@ -9,7 +9,7 @@ using MTM_WIP_Application_Winforms.Forms.ErrorReports;
 using MTM_WIP_Application_Winforms.Forms.Settings;
 using MTM_WIP_Application_Winforms.Forms.Shared;
 using MTM_WIP_Application_Winforms.Helpers;
-using MTM_WIP_Application_Winforms.Logging;
+using MTM_WIP_Application_Winforms.Services.Logging;
 using MTM_WIP_Application_Winforms.Models;
 using MTM_WIP_Application_Winforms.Services;
 using Timer = System.Windows.Forms.Timer;

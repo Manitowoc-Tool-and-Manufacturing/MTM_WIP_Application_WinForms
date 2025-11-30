@@ -6,47 +6,74 @@ using System.Threading.Tasks;
 using MTM_WIP_Application_Winforms.Data;
 using MTM_WIP_Application_Winforms.Models;
 using MySql.Data.MySqlClient;
-using MTM_WIP_Application_Winforms.Logging;
+using MTM_WIP_Application_Winforms.Services.Logging;
 
 namespace MTM_WIP_Application_Winforms.Services.Analytics
 {
+    /// <summary>
+    /// Provides analytics and performance aggregation for transaction history.
+    /// </summary>
     public class Service_Analytics
     {
-        public Service_Analytics()
-        {
-        }
+        #region Fields
+        private const string SqlTransactionsByRange = @"
+            SELECT ID, TransactionType, BatchNumber, PartID, FromLocation, ToLocation,
+                   Operation, Quantity, Notes, User, ItemType, ReceiveDate
+            FROM inv_transaction
+            WHERE ReceiveDate >= @Start AND ReceiveDate <= @End";
 
+        private const string SqlUsers = "SELECT User, `Full Name`, Shift FROM usr_users";
+
+        private const string SqlUserHistory = @"
+            SELECT ID, TransactionType, BatchNumber, PartID, FromLocation, ToLocation,
+                   Operation, Quantity, Notes, User, ItemType, ReceiveDate
+            FROM inv_transaction
+            WHERE User = @User AND ReceiveDate >= @Start AND ReceiveDate <= @End
+            ORDER BY ReceiveDate DESC";
+
+        private const string SqlAllUsers = "SELECT User FROM usr_users ORDER BY User";
+        #endregion
+
+
+        #region Methods
+        /// <summary>
+        /// Builds team performance statistics for the specified date range.
+        /// </summary>
+        /// <param name="start">Inclusive start date.</param>
+        /// <param name="end">Inclusive end date.</param>
+        /// <returns>
+        /// Model_Dao_Result containing a list of <see cref="Model_User_Performance"/>.
+        /// Check IsSuccess before accessing Data.
+        /// </returns>
         public async Task<Model_Dao_Result<List<Model_User_Performance>>> GetTeamPerformanceAsync(DateTime start, DateTime end)
         {
+            if (start > end)
+            {
+                return Model_Dao_Result<List<Model_User_Performance>>.Failure("Start date must be earlier than or equal to the end date.");
+            }
+
             try
             {
                 var transactions = new List<Model_Transactions_Core>();
                 var usersTable = new DataTable();
 
-                using (var connection = new MySqlConnection(Model_Application_Variables.ConnectionString))
+                await using (var connection = new MySqlConnection(Model_Application_Variables.ConnectionString))
                 {
-                    await connection.OpenAsync();
+                    await connection.OpenAsync().ConfigureAwait(false);
 
-                    // 1. Get all transactions for the period using RAW SQL (Requested by user for this form only)
-                    string sqlTransactions = @"
-                        SELECT ID, TransactionType, BatchNumber, PartID, FromLocation, ToLocation, 
-                               Operation, Quantity, Notes, User, ItemType, ReceiveDate
-                        FROM inv_transaction
-                        WHERE ReceiveDate >= @Start AND ReceiveDate <= @End";
-
-                    using (var cmd = new MySqlCommand(sqlTransactions, connection))
+                    using (var cmd = new MySqlCommand(SqlTransactionsByRange, connection))
                     {
                         cmd.Parameters.AddWithValue("@Start", start);
                         cmd.Parameters.AddWithValue("@End", end);
 
-                        using (var reader = await cmd.ExecuteReaderAsync())
+                        using (var reader = await cmd.ExecuteReaderAsync().ConfigureAwait(false))
                         {
-                            while (await reader.ReadAsync())
+                            while (await reader.ReadAsync().ConfigureAwait(false))
                             {
                                 transactions.Add(new Model_Transactions_Core
                                 {
                                     ID = Convert.ToInt32(reader["ID"]),
-                                    TransactionType = Enum.TryParse<TransactionType>(reader["TransactionType"]?.ToString(), out var txType) ? txType : TransactionType.IN,
+                                    TransactionType = Enum.TryParse(reader["TransactionType"]?.ToString(), out TransactionType txType) ? txType : TransactionType.IN,
                                     BatchNumber = reader["BatchNumber"]?.ToString(),
                                     PartID = reader["PartID"]?.ToString(),
                                     FromLocation = reader["FromLocation"]?.ToString(),
@@ -62,55 +89,32 @@ namespace MTM_WIP_Application_Winforms.Services.Analytics
                         }
                     }
 
-                    // 2. Get all users to map shifts/names using RAW SQL
-                    string sqlUsers = "SELECT User, `Full Name`, Shift FROM usr_users";
-                    using (var cmdUsers = new MySqlCommand(sqlUsers, connection))
+                    using (var cmdUsers = new MySqlCommand(SqlUsers, connection))
+                    using (var adapter = new MySqlDataAdapter(cmdUsers))
                     {
-                        using (var adapter = new MySqlDataAdapter(cmdUsers))
-                        {
-                            await Task.Run(() => adapter.Fill(usersTable));
-                        }
+                        await Task.Run(() => adapter.Fill(usersTable)).ConfigureAwait(false);
                     }
                 }
 
-                // 3. Group by User
-                var userGroups = transactions
-                    .GroupBy(t => t.User)
-                    .Where(g => !string.IsNullOrEmpty(g.Key))
-                    .ToList();
-
                 var performanceList = new List<Model_User_Performance>();
-
-                foreach (var group in userGroups)
+                foreach (var group in transactions.Where(t => !string.IsNullOrWhiteSpace(t.User))
+                                                  .GroupBy(t => t.User))
                 {
-                    var user = group.Key ?? "Unknown";
-                    
-                    // Find user row manually since AsEnumerable might be tricky without reference
-                    DataRow? userRow = null;
-                    if (usersTable != null)
-                    {
-                        foreach (DataRow row in usersTable.Rows)
-                        {
-                            if (row["User"].ToString()?.Equals(user, StringComparison.OrdinalIgnoreCase) == true)
-                            {
-                                userRow = row;
-                                break;
-                            }
-                        }
-                    }
-
-                    var shift = userRow?["Shift"]?.ToString() ?? "Unknown";
-                    var fullName = userRow?["Full Name"]?.ToString() ?? user;
+                    string userKey = group.Key ?? "Unknown";
+                    DataRow? userRow = FindUserRow(usersTable, userKey);
+                    string shift = userRow?["Shift"]?.ToString() ?? "Unknown";
+                    string fullName = userRow?["Full Name"]?.ToString() ?? userKey;
 
                     var stats = AnalyzeUserTransactions(group.ToList(), shift);
-                    stats.UserName = user;
+                    stats.UserName = userKey;
                     stats.FullName = fullName;
                     stats.Shift = shift;
 
                     performanceList.Add(stats);
                 }
 
-                return Model_Dao_Result<List<Model_User_Performance>>.Success(performanceList.OrderByDescending(x => x.TotalTransactions).ToList());
+                return Model_Dao_Result<List<Model_User_Performance>>.Success(
+                    performanceList.OrderByDescending(x => x.TotalTransactions).ToList());
             }
             catch (Exception ex)
             {
@@ -119,32 +123,38 @@ namespace MTM_WIP_Application_Winforms.Services.Analytics
             }
         }
 
+        /// <summary>
+        /// Retrieves transaction history for a single user.
+        /// </summary>
+        /// <param name="user">The user identifier to filter by.</param>
+        /// <param name="start">Inclusive start date.</param>
+        /// <param name="end">Inclusive end date.</param>
+        /// <returns>
+        /// Model_Dao_Result containing the user’s transactions.
+        /// Check IsSuccess before accessing Data.
+        /// </returns>
         public async Task<Model_Dao_Result<List<Model_Transactions_Core>>> GetUserHistoryAsync(string user, DateTime start, DateTime end)
         {
+            ArgumentException.ThrowIfNullOrWhiteSpace(user);
+
             try
             {
                 var transactions = new List<Model_Transactions_Core>();
-                using (var connection = new MySqlConnection(Model_Application_Variables.ConnectionString))
+                await using (var connection = new MySqlConnection(Model_Application_Variables.ConnectionString))
                 {
-                    await connection.OpenAsync();
-                    string sql = @"
-                        SELECT ID, TransactionType, BatchNumber, PartID, FromLocation, ToLocation, 
-                               Operation, Quantity, Notes, User, ItemType, ReceiveDate
-                        FROM inv_transaction
-                        WHERE User = @User AND ReceiveDate >= @Start AND ReceiveDate <= @End
-                        ORDER BY ReceiveDate DESC";
+                    await connection.OpenAsync().ConfigureAwait(false);
 
-                    using (var cmd = new MySqlCommand(sql, connection))
+                    using (var cmd = new MySqlCommand(SqlUserHistory, connection))
                     {
                         cmd.Parameters.AddWithValue("@User", user);
                         cmd.Parameters.AddWithValue("@Start", start);
                         cmd.Parameters.AddWithValue("@End", end);
 
-                        using (var reader = await cmd.ExecuteReaderAsync())
+                        using (var reader = await cmd.ExecuteReaderAsync().ConfigureAwait(false))
                         {
-                            while (await reader.ReadAsync())
+                            while (await reader.ReadAsync().ConfigureAwait(false))
                             {
-                                string txTypeStr = reader["TransactionType"]?.ToString() ?? "IN";
+                                string txTypeStr = reader["TransactionType"]?.ToString() ?? nameof(TransactionType.IN);
                                 _ = Enum.TryParse(txTypeStr, out TransactionType txType);
 
                                 transactions.Add(new Model_Transactions_Core
@@ -166,6 +176,7 @@ namespace MTM_WIP_Application_Winforms.Services.Analytics
                         }
                     }
                 }
+
                 return Model_Dao_Result<List<Model_Transactions_Core>>.Success(transactions);
             }
             catch (Exception ex)
@@ -175,26 +186,35 @@ namespace MTM_WIP_Application_Winforms.Services.Analytics
             }
         }
 
+        /// <summary>
+        /// Retrieves all user names for selection lists.
+        /// </summary>
+        /// <returns>
+        /// Model_Dao_Result containing user names.
+        /// Check IsSuccess before accessing Data.
+        /// </returns>
         public async Task<Model_Dao_Result<List<string>>> GetAllUserNamesAsync()
         {
             try
             {
                 var users = new List<string>();
-                using (var connection = new MySqlConnection(Model_Application_Variables.ConnectionString))
+                await using (var connection = new MySqlConnection(Model_Application_Variables.ConnectionString))
                 {
-                    await connection.OpenAsync();
-                    string sql = "SELECT User FROM usr_users ORDER BY User";
-                    using (var cmd = new MySqlCommand(sql, connection))
+                    await connection.OpenAsync().ConfigureAwait(false);
+                    using (var cmd = new MySqlCommand(SqlAllUsers, connection))
+                    using (var reader = await cmd.ExecuteReaderAsync().ConfigureAwait(false))
                     {
-                        using (var reader = await cmd.ExecuteReaderAsync())
+                        while (await reader.ReadAsync().ConfigureAwait(false))
                         {
-                            while (await reader.ReadAsync())
+                            var value = reader["User"]?.ToString();
+                            if (!string.IsNullOrWhiteSpace(value))
                             {
-                                users.Add(reader["User"].ToString() ?? "");
+                                users.Add(value);
                             }
                         }
                     }
                 }
+
                 return Model_Dao_Result<List<string>>.Success(users);
             }
             catch (Exception ex)
@@ -203,7 +223,25 @@ namespace MTM_WIP_Application_Winforms.Services.Analytics
                 return Model_Dao_Result<List<string>>.Failure(ex.Message);
             }
         }
+        #endregion
 
+        #region Helpers
+        private static DataRow? FindUserRow(DataTable usersTable, string userName)
+        {
+            foreach (DataRow row in usersTable.Rows)
+            {
+                if (row["User"]?.ToString()?.Equals(userName, StringComparison.OrdinalIgnoreCase) == true)
+                {
+                    return row;
+                }
+            }
+
+            return null;
+        }
+
+        /// <summary>
+        /// Analyzes transaction activity for a single user and shift.
+        /// </summary>
         private Model_User_Performance AnalyzeUserTransactions(List<Model_Transactions_Core> transactions, string shift)
         {
             var stats = new Model_User_Performance
@@ -299,35 +337,8 @@ namespace MTM_WIP_Application_Winforms.Services.Analytics
 
             return stats;
         }
+        #endregion
+
     }
 
-    public class Model_User_Performance
-    {
-        public string UserName { get; set; } = string.Empty;
-        public string FullName { get; set; } = string.Empty;
-        public string Shift { get; set; } = string.Empty;
-        public int TotalTransactions { get; set; }
-        public long TotalQuantity { get; set; }
-        public int UniqueParts { get; set; }
-        
-        // Quality Metrics
-        public int RapidFireCount { get; set; } // < 10s gap
-        public int PingPongCount { get; set; }  // A->B->A
-        public int OutsideShiftCount { get; set; }
-        
-        public double QualityScore 
-        { 
-            get 
-            {
-                // Arbitrary scoring: Start at 100, deduct for flags
-                // Normalized by volume (more transactions = more chance for flags, but ratio matters)
-                if (TotalTransactions == 0) return 100;
-                
-                // OffShift is considered positive (helping out), so removed from penalty
-                double penalty = (RapidFireCount * 0.5) + (PingPongCount * 5);
-                double score = 100 - (penalty / TotalTransactions * 100);
-                return Math.Max(0, Math.Min(100, score));
-            } 
-        }
-    }
 }

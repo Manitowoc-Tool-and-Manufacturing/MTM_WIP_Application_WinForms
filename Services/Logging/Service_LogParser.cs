@@ -1,4 +1,4 @@
-using MTM_WIP_Application_Winforms.Logging;
+using MTM_WIP_Application_Winforms.Services.Logging;
 using MTM_WIP_Application_Winforms.Models;
 
 namespace MTM_WIP_Application_Winforms.Services;
@@ -68,7 +68,7 @@ public static class Service_LogParser
     /// <param name="csvLine">CSV line to parse.</param>
     /// <param name="format">Log format type for proper model creation.</param>
     /// <returns>Parsed Model_LogEntry or raw entry if parsing fails.</returns>
-    public static Model_LogEntry ParseEntry(string csvLine, LogFormat format = LogFormat.Normal)
+    public static Model_LogEntry ParseEntry(string csvLine, Model_LogFormat format = Model_LogFormat.Normal)
     {
         if (string.IsNullOrWhiteSpace(csvLine))
         {
@@ -110,7 +110,7 @@ public static class Service_LogParser
             // Route to appropriate factory method based on format
             return format switch
             {
-                LogFormat.Normal => Model_LogEntry.CreateNormalEntry(
+                Model_LogFormat.Normal => Model_LogEntry.CreateNormalEntry(
                     timestamp,
                     level,
                     string.Empty, // No emoji in CSV format
@@ -119,14 +119,14 @@ public static class Service_LogParser
                     details,
                     csvLine),
 
-                LogFormat.ApplicationError => Model_LogEntry.CreateApplicationErrorEntry(
+                Model_LogFormat.ApplicationError => Model_LogEntry.CreateApplicationErrorEntry(
                     timestamp,
                     "ApplicationException", // Error type from message if needed
                     message,
                     details, // Stack trace
                     csvLine),
 
-                LogFormat.DatabaseError => Model_LogEntry.CreateDatabaseErrorEntry(
+                Model_LogFormat.DatabaseError => Model_LogEntry.CreateDatabaseErrorEntry(
                     timestamp,
                     level, // Severity (ERROR, WARNING, CRITICAL)
                     message,
@@ -149,7 +149,7 @@ public static class Service_LogParser
     /// </summary>
     public static Model_LogEntry ParseNormalLog(string csvLine)
     {
-        return ParseEntry(csvLine, LogFormat.Normal);
+        return ParseEntry(csvLine, Model_LogFormat.Normal);
     }
 
     /// <summary>
@@ -157,7 +157,7 @@ public static class Service_LogParser
     /// </summary>
     public static Model_LogEntry ParseApplicationError(string csvLine)
     {
-        return ParseEntry(csvLine, LogFormat.ApplicationError);
+        return ParseEntry(csvLine, Model_LogFormat.ApplicationError);
     }
 
     /// <summary>
@@ -165,7 +165,7 @@ public static class Service_LogParser
     /// </summary>
     public static Model_LogEntry ParseDatabaseError(string csvLine)
     {
-        return ParseEntry(csvLine, LogFormat.DatabaseError);
+        return ParseEntry(csvLine, Model_LogFormat.DatabaseError);
     }
 
     #endregion

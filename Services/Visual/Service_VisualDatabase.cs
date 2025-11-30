@@ -5,9 +5,10 @@ using System.IO;
 using System.Reflection;
 using System.Threading.Tasks;
 using MTM_WIP_Application_Winforms.Models;
-using MTM_WIP_Application_Winforms.Logging;
+using MTM_WIP_Application_Winforms.Services.Logging;
 using System.Configuration;
 using ConfigurationManager = System.Configuration.ConfigurationManager;
+using System.Linq;
 
 namespace MTM_WIP_Application_Winforms.Services.Visual
 {
@@ -16,38 +17,29 @@ namespace MTM_WIP_Application_Winforms.Services.Visual
     /// </summary>
     public class Service_VisualDatabase : IService_VisualDatabase
     {
+        #region Fields
+        private bool _useSampleData = false;
+        #endregion
+
+        #region Properties
         private string _serverAddress => ConfigurationManager.AppSettings["VisualServer"] ?? "VISUALSQL";
         private string _databaseName => ConfigurationManager.AppSettings["VisualDatabase"] ?? "VMFG";
-
         private string? _userName => !string.IsNullOrEmpty(Model_Application_Variables.VisualUserName)
             ? Model_Application_Variables.VisualUserName
             : ConfigurationManager.AppSettings["VisualUserName"];
-
         private string? _password => !string.IsNullOrEmpty(Model_Application_Variables.VisualPassword)
             ? Model_Application_Variables.VisualPassword
             : ConfigurationManager.AppSettings["VisualPassword"];
+        #endregion
 
-        private bool _useSampleData = false;
-
-        private string GetConnectionString()
-        {
-            var builder = new SqlConnectionStringBuilder
-            {
-                DataSource = _serverAddress,
-                InitialCatalog = _databaseName,
-                UserID = _userName,
-                Password = _password,
-                ConnectTimeout = 5, // Reduced timeout for faster fallback
-                ApplicationName = "MTM_WIP_App_VisualDashboard",
-                TrustServerCertificate = true // Required for some SQL Server configurations
-            };
-            return builder.ConnectionString;
-        }
-
+        #region Methods
         /// <summary>
         /// Tests the connection to the Infor Visual database using current credentials.
         /// </summary>
-        /// <returns>A result indicating success or failure of the connection test.</returns>
+        /// <returns>
+        /// Model_Dao_Result containing true when the connection succeeds.
+        /// Check IsSuccess before accessing Data.
+        /// </returns>
         public async Task<Model_Dao_Result<bool>> TestConnectionAsync()
         {
 #if DEBUG
@@ -520,124 +512,6 @@ namespace MTM_WIP_Application_Winforms.Services.Visual
             }
         }
 
-        private string GetEmbeddedSql(Enum_VisualDashboardCategory category)
-        {
-            string resourceName = $"MTM_WIP_Application_Winforms.Resources.Sql.Visual.{category}.sql";
-            var assembly = Assembly.GetExecutingAssembly();
-
-            using (var stream = assembly.GetManifestResourceStream(resourceName))
-            {
-                if (stream == null)
-                {
-                    return string.Empty;
-                }
-                using (var reader = new StreamReader(stream))
-                {
-                    return reader.ReadToEnd();
-                }
-            }
-        }
-
-        private Model_Dao_Result<DataTable> GetSampleReceivingSchedule()
-        {
-            var dt = new DataTable();
-            dt.Columns.Add("PO Number");
-            dt.Columns.Add("Vendor");
-            dt.Columns.Add("Order Date", typeof(DateTime));
-            dt.Columns.Add("PO Desired Date", typeof(DateTime));
-            dt.Columns.Add("PO Promise Date", typeof(DateTime));
-            dt.Columns.Add("Line #", typeof(short));
-            dt.Columns.Add("Part Number");
-            dt.Columns.Add("Service ID");
-            dt.Columns.Add("Order Qty", typeof(decimal));
-            dt.Columns.Add("Received Qty", typeof(decimal));
-            dt.Columns.Add("Remaining Qty", typeof(decimal));
-            dt.Columns.Add("Line Desired Date", typeof(DateTime));
-            dt.Columns.Add("Line Promise Date", typeof(DateTime));
-            dt.Columns.Add("PO Status");
-            dt.Columns.Add("Line Status");
-            dt.Columns.Add("Consignment");
-            dt.Columns.Add("Internal");
-            dt.Columns.Add("Ship Via"); // Added for Carrier filter
-
-            var rnd = new Random();
-            var vendors = new[] { "Acme Corp", "Steel Supply Co", "Fasteners Inc", "Global Logistics", "Local Services" };
-            var carriers = new[] { "UPS", "FedEx", "DHL", "Our Truck", "Customer Pickup" };
-            var parts = new[] { "MMC-1001", "MMF-2002", "PART-3003", "SVC-MAINT", "MMC-5005" };
-
-            for (int i = 0; i < 50; i++)
-            {
-                var orderDate = DateTime.Today.AddDays(-rnd.Next(0, 30));
-                var desiredDate = orderDate.AddDays(rnd.Next(5, 20));
-                var qty = rnd.Next(10, 1000);
-                var rec = rnd.Next(0, qty + 1);
-                var part = parts[rnd.Next(parts.Length)];
-                var vendor = vendors[rnd.Next(vendors.Length)];
-                var carrier = carriers[rnd.Next(carriers.Length)];
-
-                dt.Rows.Add(
-                    $"PO-{10000 + i}",
-                    vendor,
-                    orderDate,
-                    desiredDate,
-                    desiredDate.AddDays(rnd.Next(-2, 5)),
-                    (short)rnd.Next(1, 5),
-                    part,
-                    part.StartsWith("SVC") ? "SERVICE" : DBNull.Value,
-                    qty,
-                    rec,
-                    qty - rec,
-                    desiredDate,
-                    desiredDate.AddDays(rnd.Next(-2, 5)),
-                    rec == qty ? "C" : "O",
-                    rec == qty ? "C" : "O",
-                    rnd.Next(0, 5) == 0 ? "Y" : "N", // Consignment
-                    rnd.Next(0, 10) == 0 ? "Y" : "N", // Internal
-                    carrier
-                );
-            }
-
-            return new Model_Dao_Result<DataTable> { IsSuccess = true, Data = dt };
-        }
-
-        private Model_Dao_Result<DataTable> GetSamplePODetails(string poNumber)
-        {
-            var dt = new DataTable();
-            dt.Columns.Add("Line #", typeof(short));
-            dt.Columns.Add("Part Number");
-            dt.Columns.Add("Description");
-            dt.Columns.Add("Ordered", typeof(decimal));
-            dt.Columns.Add("Received", typeof(decimal));
-            dt.Columns.Add("Remaining", typeof(decimal));
-            dt.Columns.Add("Desired Date", typeof(DateTime));
-            dt.Columns.Add("Promise Date", typeof(DateTime));
-            dt.Columns.Add("Status");
-            dt.Columns.Add("Unit Price", typeof(decimal));
-            dt.Columns.Add("Total Amount", typeof(decimal));
-
-            var rnd = new Random();
-            for (int i = 1; i <= 3; i++)
-            {
-                var qty = rnd.Next(10, 100);
-                var price = (decimal)rnd.NextDouble() * 100;
-                dt.Rows.Add(
-                    (short)i,
-                    $"SAMPLE-PART-{i}",
-                    $"Sample Description for Line {i}",
-                    qty,
-                    0,
-                    qty,
-                    DateTime.Today.AddDays(7),
-                    DateTime.Today.AddDays(7),
-                    "O",
-                    Math.Round(price, 2),
-                    Math.Round(price * qty, 2)
-                );
-            }
-
-            return new Model_Dao_Result<DataTable> { IsSuccess = true, Data = dt };
-        }
-
         /// <summary>
         /// Retrieves analytics data for receiving history and forecast.
         /// </summary>
@@ -834,33 +708,26 @@ namespace MTM_WIP_Application_Winforms.Services.Visual
         /// <summary>
         /// Retrieves inventory data based on search criteria.
         /// </summary>
+        /// <param name="partNumber">Optional part number filter.</param>
+        /// <param name="warehouse">Optional warehouse filter.</param>
+        /// <param name="location">Optional location filter.</param>
+        /// <param name="nonZeroOnly">True to return only rows with non-zero quantities.</param>
+        /// <returns>
+        /// Model_Dao_Result containing the inventory DataTable.
+        /// Check IsSuccess before accessing Data.
+        /// </returns>
         public async Task<Model_Dao_Result<DataTable>> GetInventoryAsync(string partNumber, string warehouse, string location, bool nonZeroOnly)
         {
             if (_useSampleData)
             {
-                // Return sample data
-                var dt = new DataTable();
-                dt.Columns.Add("Part Number");
-                dt.Columns.Add("Description");
-                dt.Columns.Add("Warehouse");
-                dt.Columns.Add("Location");
-                dt.Columns.Add("On Hand", typeof(decimal));
-                dt.Columns.Add("Allocated", typeof(decimal));
-                dt.Columns.Add("Available", typeof(decimal));
-                dt.Columns.Add("Product Code");
-                dt.Columns.Add("Commodity Code");
-
-                dt.Rows.Add("SAMPLE-PART-1", "Sample Description 1", "MAIN", "A-01-01", 100, 10, 90, "FG", "STEEL");
-                dt.Rows.Add("SAMPLE-PART-2", "Sample Description 2", "MAIN", "B-02-02", 50, 0, 50, "RM", "ALUM");
-                
-                return new Model_Dao_Result<DataTable> { IsSuccess = true, Data = dt };
+                return await Task.FromResult(GetSampleInventoryData(partNumber, warehouse, location, nonZeroOnly));
             }
 
             if (string.IsNullOrEmpty(_userName) || string.IsNullOrEmpty(_password))
             {
 #if DEBUG
-                // Fallback to sample data in debug
-                return GetInventoryAsync(partNumber, warehouse, location, nonZeroOnly).Result; 
+                _useSampleData = true;
+                return await Task.FromResult(GetSampleInventoryData(partNumber, warehouse, location, nonZeroOnly));
 #else
                 return new Model_Dao_Result<DataTable>
                 {
@@ -942,5 +809,210 @@ namespace MTM_WIP_Application_Winforms.Services.Visual
                 };
             }
         }
+
+        #endregion
+
+        #region Helpers
+        private string GetConnectionString()
+        {
+            var builder = new SqlConnectionStringBuilder
+            {
+                DataSource = _serverAddress,
+                InitialCatalog = _databaseName,
+                UserID = _userName,
+                Password = _password,
+                ConnectTimeout = 5, // Reduced timeout for faster fallback
+                ApplicationName = "MTM_WIP_App_VisualDashboard",
+                TrustServerCertificate = true // Required for some SQL Server configurations
+            };
+            return builder.ConnectionString;
+        }
+
+        private Model_Dao_Result<DataTable> GetSampleInventoryData(string partNumber, string warehouse, string location, bool nonZeroOnly)
+        {
+            var dt = new DataTable();
+            dt.Columns.Add("Part Number");
+            dt.Columns.Add("Description");
+            dt.Columns.Add("Warehouse");
+            dt.Columns.Add("Location");
+            dt.Columns.Add("On Hand", typeof(decimal));
+            dt.Columns.Add("Allocated", typeof(decimal));
+            dt.Columns.Add("Available", typeof(decimal));
+            dt.Columns.Add("Product Code");
+            dt.Columns.Add("Commodity Code");
+
+            dt.Rows.Add("SAMPLE-PART-1", "Sample Description 1", "MAIN", "A-01-01", 100m, 10m, 90m, "FG", "STEEL");
+            dt.Rows.Add("SAMPLE-PART-2", "Sample Description 2", "MAIN", "B-02-02", 50m, 0m, 50m, "RM", "ALUM");
+
+            var filteredRows = dt.AsEnumerable()
+                .Where(row => MatchesInventoryFilters(row, partNumber, warehouse, location, nonZeroOnly))
+                .ToList();
+
+            if (!filteredRows.Any())
+            {
+                return new Model_Dao_Result<DataTable> { IsSuccess = true, Data = dt.Clone() };
+            }
+
+            var result = dt.Clone();
+            foreach (var row in filteredRows)
+            {
+                result.ImportRow(row);
+            }
+
+            return new Model_Dao_Result<DataTable> { IsSuccess = true, Data = result };
+        }
+
+        private static bool MatchesInventoryFilters(DataRow row, string partNumber, string warehouse, string location, bool nonZeroOnly)
+        {
+            string? partValue = row["Part Number"]?.ToString();
+            string? warehouseValue = row["Warehouse"]?.ToString();
+            string? locationValue = row["Location"]?.ToString();
+            decimal onHand = row.Field<decimal>("On Hand");
+
+            if (!string.IsNullOrWhiteSpace(partNumber) &&
+                (partValue == null || !partValue.Contains(partNumber, StringComparison.OrdinalIgnoreCase)))
+            {
+                return false;
+            }
+
+            if (!string.IsNullOrWhiteSpace(warehouse) &&
+                (warehouseValue == null || !warehouseValue.Contains(warehouse, StringComparison.OrdinalIgnoreCase)))
+            {
+                return false;
+            }
+
+            if (!string.IsNullOrWhiteSpace(location) &&
+                (locationValue == null || !locationValue.Contains(location, StringComparison.OrdinalIgnoreCase)))
+            {
+                return false;
+            }
+
+            if (nonZeroOnly && onHand == 0)
+            {
+                return false;
+            }
+
+            return true;
+        }
+
+        private string GetEmbeddedSql(Enum_VisualDashboardCategory category)
+        {
+            string resourceName = $"MTM_WIP_Application_Winforms.Resources.Sql.Visual.{category}.sql";
+            var assembly = Assembly.GetExecutingAssembly();
+
+            using (var stream = assembly.GetManifestResourceStream(resourceName))
+            {
+                if (stream == null)
+                {
+                    return string.Empty;
+                }
+                using (var reader = new StreamReader(stream))
+                {
+                    return reader.ReadToEnd();
+                }
+            }
+        }
+
+        private Model_Dao_Result<DataTable> GetSampleReceivingSchedule()
+        {
+            var dt = new DataTable();
+            dt.Columns.Add("PO Number");
+            dt.Columns.Add("Vendor");
+            dt.Columns.Add("Order Date", typeof(DateTime));
+            dt.Columns.Add("PO Desired Date", typeof(DateTime));
+            dt.Columns.Add("PO Promise Date", typeof(DateTime));
+            dt.Columns.Add("Line #", typeof(short));
+            dt.Columns.Add("Part Number");
+            dt.Columns.Add("Service ID");
+            dt.Columns.Add("Order Qty", typeof(decimal));
+            dt.Columns.Add("Received Qty", typeof(decimal));
+            dt.Columns.Add("Remaining Qty", typeof(decimal));
+            dt.Columns.Add("Line Desired Date", typeof(DateTime));
+            dt.Columns.Add("Line Promise Date", typeof(DateTime));
+            dt.Columns.Add("PO Status");
+            dt.Columns.Add("Line Status");
+            dt.Columns.Add("Consignment");
+            dt.Columns.Add("Internal");
+            dt.Columns.Add("Ship Via"); // Added for Carrier filter
+
+            var rnd = new Random();
+            var vendors = new[] { "Acme Corp", "Steel Supply Co", "Fasteners Inc", "Global Logistics", "Local Services" };
+            var carriers = new[] { "UPS", "FedEx", "DHL", "Our Truck", "Customer Pickup" };
+            var parts = new[] { "MMC-1001", "MMF-2002", "PART-3003", "SVC-MAINT", "MMC-5005" };
+
+            for (int i = 0; i < 50; i++)
+            {
+                var orderDate = DateTime.Today.AddDays(-rnd.Next(0, 30));
+                var desiredDate = orderDate.AddDays(rnd.Next(5, 20));
+                var qty = rnd.Next(10, 1000);
+                var rec = rnd.Next(0, qty + 1);
+                var part = parts[rnd.Next(parts.Length)];
+                var vendor = vendors[rnd.Next(vendors.Length)];
+                var carrier = carriers[rnd.Next(carriers.Length)];
+
+                dt.Rows.Add(
+                    $"PO-{10000 + i}",
+                    vendor,
+                    orderDate,
+                    desiredDate,
+                    desiredDate.AddDays(rnd.Next(-2, 5)),
+                    (short)rnd.Next(1, 5),
+                    part,
+                    part.StartsWith("SVC") ? "SERVICE" : DBNull.Value,
+                    qty,
+                    rec,
+                    qty - rec,
+                    desiredDate,
+                    desiredDate.AddDays(rnd.Next(-2, 5)),
+                    rec == qty ? "C" : "O",
+                    rec == qty ? "C" : "O",
+                    rnd.Next(0, 5) == 0 ? "Y" : "N", // Consignment
+                    rnd.Next(0, 10) == 0 ? "Y" : "N", // Internal
+                    carrier
+                );
+            }
+
+            return new Model_Dao_Result<DataTable> { IsSuccess = true, Data = dt };
+        }
+
+        private Model_Dao_Result<DataTable> GetSamplePODetails(string poNumber)
+        {
+            var dt = new DataTable();
+            dt.Columns.Add("Line #", typeof(short));
+            dt.Columns.Add("Part Number");
+            dt.Columns.Add("Description");
+            dt.Columns.Add("Ordered", typeof(decimal));
+            dt.Columns.Add("Received", typeof(decimal));
+            dt.Columns.Add("Remaining", typeof(decimal));
+            dt.Columns.Add("Desired Date", typeof(DateTime));
+            dt.Columns.Add("Promise Date", typeof(DateTime));
+            dt.Columns.Add("Status");
+            dt.Columns.Add("Unit Price", typeof(decimal));
+            dt.Columns.Add("Total Amount", typeof(decimal));
+
+            var rnd = new Random();
+            for (int i = 1; i <= 3; i++)
+            {
+                var qty = rnd.Next(10, 100);
+                var price = (decimal)rnd.NextDouble() * 100;
+                dt.Rows.Add(
+                    (short)i,
+                    $"SAMPLE-PART-{i}",
+                    $"Sample Description for Line {i}",
+                    qty,
+                    0,
+                    qty,
+                    DateTime.Today.AddDays(7),
+                    DateTime.Today.AddDays(7),
+                    "O",
+                    Math.Round(price, 2),
+                    Math.Round(price * qty, 2)
+                );
+            }
+
+            return new Model_Dao_Result<DataTable> { IsSuccess = true, Data = dt };
+        }
+        #endregion
+
     }
 }

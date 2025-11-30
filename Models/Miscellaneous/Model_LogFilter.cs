@@ -21,7 +21,7 @@ public class Model_LogFilter
     /// <summary>
     /// Log format types to include. Empty list means include all types.
     /// </summary>
-    public List<LogFormat> LogTypes { get; set; } = new();
+    public List<Model_LogFormat> LogTypes { get; set; } = new();
 
     /// <summary>
     /// Severity levels to include (e.g., "INFO", "WARNING", "ERROR").
@@ -92,7 +92,7 @@ public class Model_LogFilter
         {
             StartDate = StartDate,
             EndDate = EndDate,
-            LogTypes = new List<LogFormat>(LogTypes),
+            LogTypes = new List<Model_LogFormat>(LogTypes),
             SeverityLevels = new List<string>(SeverityLevels),
             SourceComponent = SourceComponent,
             SearchText = SearchText

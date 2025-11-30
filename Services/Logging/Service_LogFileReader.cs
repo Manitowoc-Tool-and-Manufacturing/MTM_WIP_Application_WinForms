@@ -1,5 +1,5 @@
 using MTM_WIP_Application_Winforms.Helpers;
-using MTM_WIP_Application_Winforms.Logging;
+using MTM_WIP_Application_Winforms.Services.Logging;
 using MTM_WIP_Application_Winforms.Models;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -104,7 +104,7 @@ public class Service_LogFileReader
                         }
 
                         // Detect log type from filename
-                        LogFormat logType = DetectLogTypeFromFilename(fileInfo.Name);
+                        Model_LogFormat logType = DetectLogTypeFromFilename(fileInfo.Name);
 
                         // Create log file model
                         var logFile = new Model_LogFile
@@ -159,24 +159,24 @@ public class Service_LogFileReader
     /// </summary>
     /// <param name="filename">Filename to analyze.</param>
     /// <returns>Detected LogFormat type or Unknown if pattern doesn't match.</returns>
-    private static LogFormat DetectLogTypeFromFilename(string filename)
+    private static Model_LogFormat DetectLogTypeFromFilename(string filename)
     {
         if (NormalLogPattern.IsMatch(filename))
         {
-            return LogFormat.Normal;
+            return Model_LogFormat.Normal;
         }
 
         if (AppErrorPattern.IsMatch(filename))
         {
-            return LogFormat.ApplicationError;
+            return Model_LogFormat.ApplicationError;
         }
 
         if (DbErrorPattern.IsMatch(filename))
         {
-            return LogFormat.DatabaseError;
+            return Model_LogFormat.DatabaseError;
         }
 
-        return LogFormat.Unknown;
+        return Model_LogFormat.Unknown;
     }
 
     #endregion

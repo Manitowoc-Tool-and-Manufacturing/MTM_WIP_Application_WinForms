@@ -6,7 +6,7 @@ using MTM_WIP_Application_Winforms.Core;
 using MTM_WIP_Application_Winforms.Controls.Shared;
 using MTM_WIP_Application_Winforms.Data;
 using MTM_WIP_Application_Winforms.Helpers;
-using MTM_WIP_Application_Winforms.Logging;
+using MTM_WIP_Application_Winforms.Services.Logging;
 using MTM_WIP_Application_Winforms.Models;
 using MTM_WIP_Application_Winforms.Services;
 using MTM_WIP_Application_Winforms.Forms.Shared;

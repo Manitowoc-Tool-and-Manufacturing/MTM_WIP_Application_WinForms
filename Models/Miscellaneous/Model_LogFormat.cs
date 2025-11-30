@@ -3,7 +3,7 @@ namespace MTM_WIP_Application_Winforms.Models;
 /// <summary>
 /// Defines the types of log formats that can be parsed by the log viewing system.
 /// </summary>
-public enum LogFormat
+public enum Model_LogFormat
 {
     /// <summary>
     /// Unknown or unparseable log format. Used when format detection fails.

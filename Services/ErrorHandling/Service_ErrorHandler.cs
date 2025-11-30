@@ -1,7 +1,7 @@
 using System.Runtime.CompilerServices;
 using MTM_WIP_Application_Winforms.Forms.ErrorDialog;
 using MTM_WIP_Application_Winforms.Forms.MainForm;
-using MTM_WIP_Application_Winforms.Logging;
+using MTM_WIP_Application_Winforms.Services.Logging;
 using MTM_WIP_Application_Winforms.Models;
 
 namespace MTM_WIP_Application_Winforms.Services;

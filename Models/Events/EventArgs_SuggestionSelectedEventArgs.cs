@@ -3,7 +3,7 @@ namespace MTM_WIP_Application_Winforms.Models
     /// <summary>
     /// Event arguments for SuggestionSelected event.
     /// </summary>
-    public class SuggestionSelectedEventArgs : EventArgs
+    public class EventArgs_SuggestionSelectedEventArgs : EventArgs
     {
         #region Properties
 

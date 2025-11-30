@@ -343,7 +343,7 @@ namespace MTM_WIP_Application_Winforms.Models
             catch (Exception ex)
             {
                 // Log error but don't throw - cache remains in previous state
-                Logging.LoggingUtility.LogDatabaseError(ex);
+                Services.Logging.LoggingUtility.LogDatabaseError(ex);
             }
         }
 

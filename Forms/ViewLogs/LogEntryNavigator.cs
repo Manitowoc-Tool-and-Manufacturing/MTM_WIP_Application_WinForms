@@ -204,19 +204,19 @@ public class LogEntryNavigator
             query = query.Where(e =>
             {
                 // Normal logs have Level property
-                if (e.LogType == LogFormat.Normal && !string.IsNullOrEmpty(e.Level))
+                if (e.LogType == Model_LogFormat.Normal && !string.IsNullOrEmpty(e.Level))
                 {
                     return _activeFilter.SeverityLevels.Contains(e.Level, StringComparer.OrdinalIgnoreCase);
                 }
 
                 // DatabaseError logs have Severity property
-                if (e.LogType == LogFormat.DatabaseError && !string.IsNullOrEmpty(e.Severity))
+                if (e.LogType == Model_LogFormat.DatabaseError && !string.IsNullOrEmpty(e.Severity))
                 {
                     return _activeFilter.SeverityLevels.Contains(e.Severity, StringComparer.OrdinalIgnoreCase);
                 }
 
                 // ApplicationError logs don't have configurable severity - exclude from severity filtering
-                return e.LogType == LogFormat.ApplicationError;
+                return e.LogType == Model_LogFormat.ApplicationError;
             });
         }
 

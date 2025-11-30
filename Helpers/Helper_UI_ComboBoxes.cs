@@ -2,7 +2,7 @@ using System.Data;
 using System.Diagnostics;
 using System.Reflection;
 using MTM_WIP_Application_Winforms.Controls.MainForm;
-using MTM_WIP_Application_Winforms.Logging;
+using MTM_WIP_Application_Winforms.Services.Logging;
 using MTM_WIP_Application_Winforms.Models;
 using MySql.Data.MySqlClient;
 using MethodInvoker = System.Windows.Forms.MethodInvoker;
@@ -70,7 +70,7 @@ namespace MTM_WIP_Application_Winforms.Helpers
                 {
                     ComboBoxPart_DataTable.Clear();
                 }
-                Logging.LoggingUtility.LogApplicationError(ex);
+                Services.Logging.LoggingUtility.LogApplicationError(ex);
             }
         }
 
@@ -102,7 +102,7 @@ namespace MTM_WIP_Application_Winforms.Helpers
                 {
                     ComboBoxOperation_DataTable.Clear();
                 }
-                Logging.LoggingUtility.LogApplicationError(ex);
+                Services.Logging.LoggingUtility.LogApplicationError(ex);
             }
         }
 
@@ -134,7 +134,7 @@ namespace MTM_WIP_Application_Winforms.Helpers
                 {
                     ComboBoxLocation_DataTable.Clear();
                 }
-                Logging.LoggingUtility.LogApplicationError(ex);
+                Services.Logging.LoggingUtility.LogApplicationError(ex);
             }
         }
 
@@ -183,7 +183,7 @@ namespace MTM_WIP_Application_Winforms.Helpers
                 {
                     ComboBoxUser_DataTable.Clear();
                 }
-                Logging.LoggingUtility.LogApplicationError(ex);
+                Services.Logging.LoggingUtility.LogApplicationError(ex);
             }
         }
 
@@ -215,7 +215,7 @@ namespace MTM_WIP_Application_Winforms.Helpers
                 {
                     ComboBoxItemType_DataTable.Clear();
                 }
-                Logging.LoggingUtility.LogApplicationError(ex);
+                Services.Logging.LoggingUtility.LogApplicationError(ex);
             }
         }
 

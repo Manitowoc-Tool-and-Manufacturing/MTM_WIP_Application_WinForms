@@ -3,7 +3,7 @@ using System.IO.Compression;
 using System.Text;
 using MTM_WIP_Application_Winforms.Forms.Shared;
 using MTM_WIP_Application_Winforms.Helpers;
-using MTM_WIP_Application_Winforms.Logging;
+using MTM_WIP_Application_Winforms.Services.Logging;
 using MTM_WIP_Application_Winforms.Models;
 using MTM_WIP_Application_Winforms.Services;
 
@@ -372,11 +372,11 @@ namespace MTM_WIP_Application_Winforms.Forms.ViewLogs
 
                 // Detect log format from file name
                 string fileName = Path.GetFileName(filePath).ToLower();
-                LogFormat logFormat = LogFormat.Normal;
+                Model_LogFormat logFormat = Model_LogFormat.Normal;
                 if (fileName.Contains("application"))
-                    logFormat = LogFormat.ApplicationError;
+                    logFormat = Model_LogFormat.ApplicationError;
                 else if (fileName.Contains("database"))
-                    logFormat = LogFormat.DatabaseError;
+                    logFormat = Model_LogFormat.DatabaseError;
 
                 foreach (var rawEntry in rawEntries)
                 {
