@@ -246,12 +246,47 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
                 var row = _dataGridView.Rows[e.RowIndex];
                 if (row.DataBoundItem is DataRowView drv)
                 {
+                    // Check if we are already in Lifecycle View and have a Trans ID
+                    if (_tabControl.SelectedTab == _tabLifecycle && drv.Row.Table.Columns.Contains("Trans ID"))
+                    {
+                        // This is a trace request on a specific transaction
+                        string transIdStr = drv["Trans ID"]?.ToString() ?? "";
+                        
+                        // Handle combined IDs (e.g. "123/124")
+                        int transId = 0;
+                        if (transIdStr.Contains("/"))
+                        {
+                            // Pick the first one (usually the OUT part of a transfer)
+                            int.TryParse(transIdStr.Split('/')[0], out transId);
+                        }
+                        else
+                        {
+                            int.TryParse(transIdStr, out transId);
+                        }
+
+                        if (transId > 0 && _cachedDataTable != null)
+                        {
+                            // We need the raw data to trace, but _cachedDataTable is already processed.
+                            // We need to re-fetch or store raw data.
+                            // For now, let's re-fetch to be safe and ensure we have the full context.
+                            // Or better, if we are in Lifecycle view, we just filter the current view?
+                            // No, TraceTransactionFlow needs raw data.
+                            
+                            // Let's trigger a special trace search
+                            await PerformTraceSearchAsync(transId);
+                            return;
+                        }
+                    }
+
+                    // Otherwise, standard Part ID switch logic
                     // Try to find Part ID column (could be PART_ID or Part Number depending on view)
                     string partId = "";
                     if (drv.Row.Table.Columns.Contains("PART_ID"))
                         partId = drv["PART_ID"]?.ToString() ?? "";
                     else if (drv.Row.Table.Columns.Contains("Part Number"))
                         partId = drv["Part Number"]?.ToString() ?? "";
+                    else if (drv.Row.Table.Columns.Contains("Part ID"))
+                        partId = drv["Part ID"]?.ToString() ?? "";
                     
                     if (!string.IsNullOrEmpty(partId))
                     {
@@ -270,6 +305,54 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
             catch (Exception ex)
             {
                 Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Low, controlName: this.Name);
+            }
+        }
+
+        private async Task PerformTraceSearchAsync(int transId)
+        {
+            if (_visualService == null) return;
+
+            try
+            {
+                _btnSearch.Enabled = false;
+                _btnSearch.Text = "Tracing...";
+
+                // We need to fetch the raw transactions for the current part first
+                // We can reuse the current filter settings since we are already on the Lifecycle tab
+                var filter = new Model_VisualTransactionFilter
+                {
+                    PartId = _txtLifecyclePart.Text?.Trim(),
+                    StartDate = _dtpLifecycleStart.Value,
+                    EndDate = _dtpLifecycleEnd.Value
+                };
+
+                var result = await _visualService.GetTransactionsAsync(filter);
+
+                if (result.IsSuccess && result.Data != null)
+                {
+                    // Apply Trace Logic
+                    _cachedDataTable = Helper_VisualLifecycle.TraceTransactionFlow(result.Data, transId);
+                    
+                    _dataGridView.DataSource = _cachedDataTable;
+                    await Service_DataGridView.ApplyStandardSettingsAsync(_dataGridView, Model_Application_Variables.User);
+                    Service_DataGridView.ApplySmartNumericFormatting(_dataGridView);
+                    ApplyLifecycleColoring();
+                    
+                    Service_ErrorHandler.ShowInformation("Showing transaction flow trace. Search again to reset.");
+                }
+                else
+                {
+                    Service_ErrorHandler.ShowError(result.ErrorMessage);
+                }
+            }
+            catch (Exception ex)
+            {
+                Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Medium, controlName: this.Name);
+            }
+            finally
+            {
+                _btnSearch.Enabled = true;
+                _btnSearch.Text = "Search";
             }
         }
 

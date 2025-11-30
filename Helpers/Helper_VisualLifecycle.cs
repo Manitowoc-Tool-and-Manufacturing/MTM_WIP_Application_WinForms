@@ -169,5 +169,150 @@ namespace MTM_WIP_Application_Winforms.Helpers
         {
             dt.Rows.Add(id, date, date.ToString("HH:mm"), action, qty, warehouse, flow, reference, user, partId, rowType);
         }
+
+        /// <summary>
+        /// Traces the flow of a specific transaction upstream and downstream.
+        /// </summary>
+        /// <param name="allTransactions">All transactions for the part.</param>
+        /// <param name="startTransactionId">The ID of the transaction to trace.</param>
+        /// <returns>DataTable containing only the relevant flow transactions.</returns>
+        public static DataTable TraceTransactionFlow(DataTable allTransactions, int startTransactionId)
+        {
+            // 1. Convert to List<TransactionObj> for easier traversal
+            var transactions = allTransactions.AsEnumerable()
+                .Select(row => new TransactionObj(row))
+                .OrderBy(t => t.Date)
+                .ThenBy(t => t.Id)
+                .ToList();
+
+            // 2. Find Start Node
+            var startNode = transactions.FirstOrDefault(t => t.Id == startTransactionId);
+            if (startNode == null) return ProcessTransactions(allTransactions); // Fallback
+
+            var flowChain = new HashSet<int>();
+            flowChain.Add(startNode.Id);
+
+            // 3. Trace Upstream (Where did it come from?)
+            TraceUpstream(startNode, transactions, flowChain);
+
+            // 4. Trace Downstream (Where did it go?)
+            TraceDownstream(startNode, transactions, flowChain);
+
+            // 5. Filter original DataTable
+            var filteredRows = allTransactions.AsEnumerable()
+                .Where(row => flowChain.Contains(row.Field<int>("TRANSACTION_ID")));
+
+            if (!filteredRows.Any()) return ProcessTransactions(allTransactions);
+
+            return ProcessTransactions(filteredRows.CopyToDataTable());
+        }
+
+        private static void TraceUpstream(TransactionObj current, List<TransactionObj> all, HashSet<int> chain)
+        {
+            // If current is an IN (Receipt/Transfer In), look for the matching OUT (Transfer Out)
+            if (current.Type == "I")
+            {
+                // Look for OUT with same time, qty, part
+                var transferOut = all.FirstOrDefault(t => 
+                    t.Type == "O" && 
+                    t.Date == current.Date && // Identical time per user requirement
+                    Math.Abs(t.Qty) == Math.Abs(current.Qty) &&
+                    t.PartId == current.PartId &&
+                    !chain.Contains(t.Id));
+
+                if (transferOut != null)
+                {
+                    chain.Add(transferOut.Id);
+                    TraceUpstream(transferOut, all, chain);
+                }
+                // Else: It's a Receipt (WO/PO), stop here.
+            }
+            // If current is an OUT (Shipment/Transfer Out), look for the previous IN in this location
+            else if (current.Type == "O")
+            {
+                // Find the most recent IN for this location/part before this OUT
+                var previousIn = all
+                    .Where(t => 
+                        t.Type == "I" &&
+                        t.PartId == current.PartId &&
+                        t.Warehouse == current.Warehouse &&
+                        t.Location == current.Location &&
+                        (t.Date < current.Date || (t.Date == current.Date && t.Id < current.Id)) && // Strictly before
+                        !chain.Contains(t.Id))
+                    .OrderByDescending(t => t.Date)
+                    .ThenByDescending(t => t.Id)
+                    .FirstOrDefault();
+
+                if (previousIn != null)
+                {
+                    chain.Add(previousIn.Id);
+                    TraceUpstream(previousIn, all, chain);
+                }
+            }
+        }
+
+        private static void TraceDownstream(TransactionObj current, List<TransactionObj> all, HashSet<int> chain)
+        {
+            // If current is an OUT (Transfer Out), look for the matching IN (Transfer In)
+            if (current.Type == "O")
+            {
+                var transferIn = all.FirstOrDefault(t => 
+                    t.Type == "I" && 
+                    t.Date == current.Date && // Identical time per user requirement
+                    Math.Abs(t.Qty) == Math.Abs(current.Qty) &&
+                    t.PartId == current.PartId &&
+                    !chain.Contains(t.Id));
+
+                if (transferIn != null)
+                {
+                    chain.Add(transferIn.Id);
+                    TraceDownstream(transferIn, all, chain);
+                }
+            }
+            // If current is an IN (Receipt/Transfer In), look for the next OUT from this location
+            else if (current.Type == "I")
+            {
+                var nextOut = all
+                    .Where(t => 
+                        t.Type == "O" &&
+                        t.PartId == current.PartId &&
+                        t.Warehouse == current.Warehouse &&
+                        t.Location == current.Location &&
+                        (t.Date > current.Date || (t.Date == current.Date && t.Id > current.Id)) && // Strictly after
+                        !chain.Contains(t.Id))
+                    .OrderBy(t => t.Date)
+                    .ThenBy(t => t.Id)
+                    .FirstOrDefault();
+
+                if (nextOut != null)
+                {
+                    chain.Add(nextOut.Id);
+                    TraceDownstream(nextOut, all, chain);
+                }
+            }
+        }
+
+        // Helper class for easier property access
+        private class TransactionObj
+        {
+            public int Id { get; }
+            public DateTime Date { get; }
+            public string Type { get; }
+            public decimal Qty { get; }
+            public string PartId { get; }
+            public string Warehouse { get; }
+            public string Location { get; }
+
+            public TransactionObj(DataRow row)
+            {
+                Id = row.Field<int>("TRANSACTION_ID");
+                Date = row.Field<DateTime?>("CREATE_DATE") ?? row.Field<DateTime>("TRANSACTION_DATE");
+                Type = row.Field<string>("TYPE") ?? "";
+                Qty = row.Field<decimal>("QTY");
+                PartId = row.Field<string>("PART_ID") ?? "";
+                Warehouse = row.Field<string>("WAREHOUSE_ID") ?? "";
+                Location = row.Field<string>("LOCATION_ID") ?? "";
+            }
+        }
     }
 }
