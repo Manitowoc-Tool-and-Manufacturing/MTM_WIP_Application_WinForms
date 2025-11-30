@@ -507,13 +507,13 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
         {
             try
             {
-                string htmlPath = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Resources", "Html", "ReceivingAnalytics.html");
+                string htmlPath = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Resources", "Html", "ReceivingAnalytics_Enhanced.html");
                 
                 // Fallback for development environment if not copied to bin
                 if (!System.IO.File.Exists(htmlPath))
                 {
                     // Try to find it in the source tree (up 3 levels from bin/Debug/net8.0-windows)
-                    string sourcePath = System.IO.Path.GetFullPath(System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"..\..\..\Resources\Html\ReceivingAnalytics.html"));
+                    string sourcePath = System.IO.Path.GetFullPath(System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"..\..\..\Resources\Html\ReceivingAnalytics_Enhanced.html"));
                     if (System.IO.File.Exists(sourcePath))
                     {
                         htmlPath = sourcePath;
@@ -540,8 +540,35 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
 
                 if (result.IsSuccess && result.Data != null)
                 {
-                    string jsonData = System.Text.Json.JsonSerializer.Serialize(result.Data);
-                    htmlContent = htmlContent.Replace("// To be populated by C#", $"loadData('{jsonData.Replace("'", "\\'")}');");
+                    // Transform data to match expected format with Type categorization
+                    var transformedData = new
+                    {
+                        History = result.Data.History.Select(h => new
+                        {
+                            Date = h.Date.ToString("yyyy-MM-dd"),
+                            Type = DetermineReceivingType(h.Type),
+                            Count = h.Count
+                        }),
+                        Forecast = result.Data.Forecast.Select(f => new
+                        {
+                            Date = f.Date.ToString("yyyy-MM-dd"),
+                            Type = DetermineReceivingType(f.Type),
+                            Count = f.Count
+                        })
+                    };
+
+                    var jsonOptions = new System.Text.Json.JsonSerializerOptions
+                    {
+                        PropertyNamingPolicy = null,
+                        WriteIndented = false
+                    };
+                    
+                    string jsonData = System.Text.Json.JsonSerializer.Serialize(transformedData, jsonOptions);
+                    
+                    // Escape for JavaScript string
+                    jsonData = jsonData.Replace("\\", "\\\\").Replace("'", "\\'").Replace("\r", "").Replace("\n", "");
+                    
+                    htmlContent = htmlContent.Replace("// To be populated by C#", $"loadData('{jsonData}');");
 
                     using (var viewer = new Form_HtmlViewer("Receiving Analytics", htmlContent))
                     {
@@ -559,6 +586,23 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
                 Control_ReceivingAnalytics_Button_Analytics.Enabled = true;
                 Control_ReceivingAnalytics_Button_Analytics.Text = "Receiving Analytics";
             }
+        }
+
+        private string DetermineReceivingType(string originalType)
+        {
+            // Map the type from Visual Analytics to chart categories
+            // This handles the categorization from GetReceivingAnalyticsAsync
+            if (originalType == null) return "Part";
+            
+            var type = originalType.ToUpperInvariant();
+            
+            if (type.Contains("MMC")) return "MMC";
+            if (type.Contains("MMF")) return "MMF";
+            if (type.Contains("SERVICE")) return "Service";
+            if (type.Contains("CONSIGNMENT")) return "Consignment";
+            if (type.Contains("INTERNAL")) return "Internal";
+            
+            return "Part";
         }
 
         private void ContextMenuItem_ColumnOrder_Click(object? sender, EventArgs e)
