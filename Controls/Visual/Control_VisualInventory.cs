@@ -38,10 +38,10 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
             WireUpEvents();
 
             // Initialize Nothing Found image state
-            if (Control_VisualInventory_Image_NothingFound != null)
-            {
-                Control_VisualInventory_Image_NothingFound.Visible = false;
-            }
+            // if (Control_VisualInventory_Image_NothingFound != null)
+            // {
+            //     Control_VisualInventory_Image_NothingFound.Visible = false;
+            // }
         }
         #endregion
 
@@ -101,20 +101,20 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
                     Control_VisualInventory_DataGridView_Results.DataSource = _cachedDataTable;
                     await Service_DataGridView.ApplyStandardSettingsAsync(Control_VisualInventory_DataGridView_Results, Model_Application_Variables.User);
 
-                    if (Control_VisualInventory_Image_NothingFound != null)
-                    {
-                        Control_VisualInventory_Image_NothingFound.Visible = _cachedDataTable.Rows.Count == 0;
-                    }
+                    // if (Control_VisualInventory_Image_NothingFound != null)
+                    // {
+                    //     Control_VisualInventory_Image_NothingFound.Visible = _cachedDataTable.Rows.Count == 0;
+                    // }
                 }
                 else
                 {
                     Service_ErrorHandler.ShowError(result.ErrorMessage);
                     Control_VisualInventory_DataGridView_Results.DataSource = null;
 
-                    if (Control_VisualInventory_Image_NothingFound != null)
-                    {
-                        Control_VisualInventory_Image_NothingFound.Visible = false;
-                    }
+                    // if (Control_VisualInventory_Image_NothingFound != null)
+                    // {
+                    //     Control_VisualInventory_Image_NothingFound.Visible = false;
+                    // }
                 }
             }
             catch (Exception ex)

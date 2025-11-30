@@ -810,9 +810,185 @@ namespace MTM_WIP_Application_Winforms.Services.Visual
             }
         }
 
+        /// <summary>
+        /// Retrieves transaction history based on flexible filter criteria.
+        /// </summary>
+        /// <param name="filter">The filter criteria object.</param>
+        /// <returns>
+        /// Model_Dao_Result containing the transaction DataTable.
+        /// Check IsSuccess before accessing Data.
+        /// </returns>
+        public async Task<Model_Dao_Result<DataTable>> GetTransactionsAsync(Model_VisualTransactionFilter filter)
+        {
+            if (_useSampleData)
+            {
+                return GetSampleTransactions(filter);
+            }
+
+            if (string.IsNullOrEmpty(_userName) || string.IsNullOrEmpty(_password))
+            {
+#if DEBUG
+                _useSampleData = true;
+                return GetSampleTransactions(filter);
+#else
+                return new Model_Dao_Result<DataTable>
+                {
+                    IsSuccess = false,
+                    ErrorMessage = "Visual ERP credentials are not configured."
+                };
+#endif
+            }
+
+            // Base Query
+            string sql = @"
+                SELECT TOP (@MaxRecords)
+                    TRANSACTION_ID,
+                    TRANSACTION_DATE,
+                    CREATE_DATE,
+                    TYPE,
+                    QTY,
+                    WAREHOUSE_ID,
+                    LOCATION_ID,
+                    USER_ID,
+                    DESCRIPTION,
+                    PART_ID,
+                    WORKORDER_BASE_ID,
+                    WORKORDER_LOT_ID,
+                    CUST_ORDER_ID,
+                    PURC_ORDER_ID
+                FROM INVENTORY_TRANS
+                WHERE 1=1
+            ";
+
+            // Dynamic Filters
+            if (!string.IsNullOrWhiteSpace(filter.PartId))
+                sql += " AND PART_ID LIKE @PartId";
+
+            if (!string.IsNullOrWhiteSpace(filter.UserId))
+                sql += " AND USER_ID LIKE @UserId";
+
+            if (!string.IsNullOrWhiteSpace(filter.WorkOrder))
+                sql += " AND WORKORDER_BASE_ID LIKE @WorkOrder";
+
+            if (!string.IsNullOrWhiteSpace(filter.CustomerOrder))
+                sql += " AND CUST_ORDER_ID LIKE @CustomerOrder";
+
+            if (!string.IsNullOrWhiteSpace(filter.PurchaseOrder))
+                sql += " AND PURC_ORDER_ID LIKE @PurchaseOrder";
+
+            if (filter.StartDate.HasValue)
+                sql += " AND CAST(COALESCE(CREATE_DATE, TRANSACTION_DATE) AS DATE) >= @StartDate";
+
+            if (filter.EndDate.HasValue)
+                sql += " AND CAST(COALESCE(CREATE_DATE, TRANSACTION_DATE) AS DATE) <= @EndDate";
+
+            // Ordering
+            sql += " ORDER BY CREATE_DATE DESC, TRANSACTION_ID DESC";
+
+            try
+            {
+                using (var connection = new SqlConnection(GetConnectionString()))
+                {
+                    await connection.OpenAsync();
+                    using (var command = new SqlCommand(sql, connection))
+                    {
+                        command.Parameters.AddWithValue("@MaxRecords", filter.MaxRecords > 0 ? filter.MaxRecords : 1000);
+
+                        if (!string.IsNullOrWhiteSpace(filter.PartId))
+                            command.Parameters.AddWithValue("@PartId", "%" + filter.PartId + "%");
+
+                        if (!string.IsNullOrWhiteSpace(filter.UserId))
+                            command.Parameters.AddWithValue("@UserId", "%" + filter.UserId + "%");
+
+                        if (!string.IsNullOrWhiteSpace(filter.WorkOrder))
+                            command.Parameters.AddWithValue("@WorkOrder", "%" + filter.WorkOrder + "%");
+
+                        if (!string.IsNullOrWhiteSpace(filter.CustomerOrder))
+                            command.Parameters.AddWithValue("@CustomerOrder", "%" + filter.CustomerOrder + "%");
+
+                        if (!string.IsNullOrWhiteSpace(filter.PurchaseOrder))
+                            command.Parameters.AddWithValue("@PurchaseOrder", "%" + filter.PurchaseOrder + "%");
+
+                        if (filter.StartDate.HasValue)
+                            command.Parameters.AddWithValue("@StartDate", filter.StartDate.Value.Date);
+
+                        if (filter.EndDate.HasValue)
+                            command.Parameters.AddWithValue("@EndDate", filter.EndDate.Value.Date);
+
+                        using (var reader = await command.ExecuteReaderAsync())
+                        {
+                            var dataTable = new DataTable();
+                            dataTable.Load(reader);
+                            return new Model_Dao_Result<DataTable>
+                            {
+                                IsSuccess = true,
+                                Data = dataTable
+                            };
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                LoggingUtility.LogApplicationError(ex);
+                return new Model_Dao_Result<DataTable>
+                {
+                    IsSuccess = false,
+                    ErrorMessage = $"Error retrieving transactions: {ex.Message}"
+                };
+            }
+        }
+
         #endregion
 
         #region Helpers
+        private Model_Dao_Result<DataTable> GetSampleTransactions(Model_VisualTransactionFilter filter)
+        {
+            var dt = new DataTable();
+            dt.Columns.Add("TRANSACTION_ID", typeof(int));
+            dt.Columns.Add("TRANSACTION_DATE", typeof(DateTime));
+            dt.Columns.Add("CREATE_DATE", typeof(DateTime));
+            dt.Columns.Add("TYPE", typeof(string));
+            dt.Columns.Add("QTY", typeof(decimal));
+            dt.Columns.Add("WAREHOUSE_ID", typeof(string));
+            dt.Columns.Add("LOCATION_ID", typeof(string));
+            dt.Columns.Add("USER_ID", typeof(string));
+            dt.Columns.Add("DESCRIPTION", typeof(string));
+            dt.Columns.Add("PART_ID", typeof(string));
+            dt.Columns.Add("WORKORDER_BASE_ID", typeof(string));
+            dt.Columns.Add("WORKORDER_LOT_ID", typeof(string));
+            dt.Columns.Add("CUST_ORDER_ID", typeof(string));
+            dt.Columns.Add("PURC_ORDER_ID", typeof(string));
+
+            var rnd = new Random();
+            var types = new[] { "I", "O", "A" };
+            var parts = new[] { "PART-A", "PART-B", "PART-C" };
+            var users = new[] { "USER1", "USER2", "ADMIN" };
+
+            for (int i = 0; i < 50; i++)
+            {
+                var date = DateTime.Now.AddDays(-rnd.Next(0, 30));
+                dt.Rows.Add(
+                    1000 + i,
+                    date.Date,
+                    date,
+                    types[rnd.Next(types.Length)],
+                    rnd.Next(1, 100),
+                    "MAIN",
+                    $"LOC-{rnd.Next(1, 10)}",
+                    users[rnd.Next(users.Length)],
+                    "Sample Transaction",
+                    parts[rnd.Next(parts.Length)],
+                    rnd.Next(0, 2) == 0 ? $"WO-{rnd.Next(1000, 9999)}" : null,
+                    null,
+                    rnd.Next(0, 5) == 0 ? $"CO-{rnd.Next(1000, 9999)}" : null,
+                    rnd.Next(0, 5) == 0 ? $"PO-{rnd.Next(1000, 9999)}" : null
+                );
+            }
+
+            return new Model_Dao_Result<DataTable> { IsSuccess = true, Data = dt };
+        }
+
         private string GetConnectionString()
         {
             var builder = new SqlConnectionStringBuilder

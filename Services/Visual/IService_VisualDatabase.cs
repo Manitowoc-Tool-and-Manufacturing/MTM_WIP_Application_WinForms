@@ -102,6 +102,16 @@ namespace MTM_WIP_Application_Winforms.Services.Visual
         /// Check IsSuccess before accessing Data.
         /// </returns>
         Task<Model_Dao_Result<DataTable>> GetInventoryAsync(string partNumber, string warehouse, string location, bool nonZeroOnly);
+
+        /// <summary>
+        /// Retrieves transaction history based on flexible filter criteria.
+        /// </summary>
+        /// <param name="filter">The filter criteria object.</param>
+        /// <returns>
+        /// Model_Dao_Result containing the transaction DataTable.
+        /// Check IsSuccess before accessing Data.
+        /// </returns>
+        Task<Model_Dao_Result<DataTable>> GetTransactionsAsync(Model_VisualTransactionFilter filter);
     }
     #endregion
 

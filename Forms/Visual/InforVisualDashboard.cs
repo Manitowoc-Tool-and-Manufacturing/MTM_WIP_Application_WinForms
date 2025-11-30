@@ -25,6 +25,7 @@ namespace MTM_WIP_Application_Winforms.Forms.Visual
         private Control_DieToolDiscovery? _controlDieToolDiscovery;
         private Control_ReceivingAnalytics? _controlReceivingAnalytics;
         private Control_VisualInventory? _controlVisualInventory;
+        private Control_InventoryAudit? _controlInventoryAudit;
         #endregion
 
         #region Properties
@@ -70,8 +71,13 @@ namespace MTM_WIP_Application_Winforms.Forms.Visual
                 return;
             }
 
+            if (category == Enum_VisualDashboardCategory.InventoryAuditing)
+            {
+                ShowInventoryAuditControl();
+                return;
+            }
+
             if (category == Enum_VisualDashboardCategory.Shipping ||
-                category == Enum_VisualDashboardCategory.InventoryAuditing ||
                 category == Enum_VisualDashboardCategory.MaterialHandlerAnalytics_General ||
                 category == Enum_VisualDashboardCategory.MaterialHandlerAnalytics_Team)
             {
@@ -209,6 +215,14 @@ namespace MTM_WIP_Application_Winforms.Forms.Visual
             _controlVisualInventory!.Visible = true;
         }
 
+        private void ShowInventoryAuditControl()
+        {
+            HideGenericControls();
+            EnsureInventoryAuditControl();
+            HideAllCustomControls(_controlInventoryAudit);
+            _controlInventoryAudit!.Visible = true;
+        }
+
         private void HideGenericControls()
         {
             controlEmptyState.Visible = false;
@@ -234,6 +248,11 @@ namespace MTM_WIP_Application_Winforms.Forms.Visual
             if (_controlVisualInventory != null)
             {
                 _controlVisualInventory.Visible = _controlVisualInventory == exception;
+            }
+
+            if (_controlInventoryAudit != null)
+            {
+                _controlInventoryAudit.Visible = _controlInventoryAudit == exception;
             }
         }
 
@@ -268,6 +287,17 @@ namespace MTM_WIP_Application_Winforms.Forms.Visual
 
             _controlVisualInventory = new Control_VisualInventory { Dock = DockStyle.Fill };
             panelContent.Controls.Add(_controlVisualInventory);
+        }
+
+        private void EnsureInventoryAuditControl()
+        {
+            if (_controlInventoryAudit != null)
+            {
+                return;
+            }
+
+            _controlInventoryAudit = new Control_InventoryAudit { Dock = DockStyle.Fill };
+            panelContent.Controls.Add(_controlInventoryAudit);
         }
 
         private string GetCategoryTitle(Enum_VisualDashboardCategory category)
@@ -308,6 +338,7 @@ namespace MTM_WIP_Application_Winforms.Forms.Visual
                 _controlDieToolDiscovery?.Dispose();
                 _controlReceivingAnalytics?.Dispose();
                 _controlVisualInventory?.Dispose();
+                _controlInventoryAudit?.Dispose();
             }
 
             base.Dispose(disposing);
