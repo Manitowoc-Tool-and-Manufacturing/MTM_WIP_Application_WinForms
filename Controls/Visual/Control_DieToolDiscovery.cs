@@ -101,6 +101,7 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
                 if (result.IsSuccess)
                 {
                     gridResults.DataSource = result.Data;
+                    Service_DataGridView.ApplySmartNumericFormatting(gridResults);
                     
                     if (result.Data != null && result.Data.Rows.Count > 0)
                     {

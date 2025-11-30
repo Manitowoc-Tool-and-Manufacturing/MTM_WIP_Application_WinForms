@@ -103,6 +103,7 @@ namespace MTM_WIP_Application_Winforms.Forms.Visual
                 {
                     _dataGridView.DataSource = result.Data;
                     ApplyColumnFormatting(_dataGridView);
+                    Service_DataGridView.ApplySmartNumericFormatting(_dataGridView);
                     ToggleLoadingState(false);
                     return;
                 }

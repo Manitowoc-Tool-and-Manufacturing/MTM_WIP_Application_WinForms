@@ -357,6 +357,96 @@ namespace MTM_WIP_Application_Winforms.Helpers
         }
 
         /// <summary>
+        /// Configures a SuggestionTextBox for Work Order suggestions.
+        /// Standard configuration: MaxResults=50, EnableWildcards=true, ClearOnNoMatch=true
+        /// </summary>
+        public static void ConfigureForWorkOrders(SuggestionTextBox suggestionTextBox, Func<Task<List<string>>> dataProvider, bool enableF4 = true)
+        {
+            if (suggestionTextBox == null)
+                throw new ArgumentNullException(nameof(suggestionTextBox));
+
+            suggestionTextBox.DataProvider = dataProvider;
+            suggestionTextBox.MaxResults = 50;
+            suggestionTextBox.EnableWildcards = true;
+            suggestionTextBox.ClearOnNoMatch = true;
+            suggestionTextBox.SuppressExactMatch = true;
+
+            if (enableF4)
+            {
+                RegisterF4Handler(suggestionTextBox);
+            }
+        }
+
+        /// <summary>
+        /// Configures a SuggestionTextBoxWithLabel for Work Order suggestions.
+        /// </summary>
+        public static void ConfigureForWorkOrders(SuggestionTextBoxWithLabel control, Func<Task<List<string>>> dataProvider)
+        {
+            if (control == null) throw new ArgumentNullException(nameof(control));
+            ConfigureForWorkOrders(control.TextBox, dataProvider, enableF4: false);
+        }
+
+        /// <summary>
+        /// Configures a SuggestionTextBox for Purchase Order suggestions.
+        /// Standard configuration: MaxResults=50, EnableWildcards=true, ClearOnNoMatch=true
+        /// </summary>
+        public static void ConfigureForPurchaseOrders(SuggestionTextBox suggestionTextBox, Func<Task<List<string>>> dataProvider, bool enableF4 = true)
+        {
+            if (suggestionTextBox == null)
+                throw new ArgumentNullException(nameof(suggestionTextBox));
+
+            suggestionTextBox.DataProvider = dataProvider;
+            suggestionTextBox.MaxResults = 50;
+            suggestionTextBox.EnableWildcards = true;
+            suggestionTextBox.ClearOnNoMatch = true;
+            suggestionTextBox.SuppressExactMatch = true;
+
+            if (enableF4)
+            {
+                RegisterF4Handler(suggestionTextBox);
+            }
+        }
+
+        /// <summary>
+        /// Configures a SuggestionTextBoxWithLabel for Purchase Order suggestions.
+        /// </summary>
+        public static void ConfigureForPurchaseOrders(SuggestionTextBoxWithLabel control, Func<Task<List<string>>> dataProvider)
+        {
+            if (control == null) throw new ArgumentNullException(nameof(control));
+            ConfigureForPurchaseOrders(control.TextBox, dataProvider, enableF4: false);
+        }
+
+        /// <summary>
+        /// Configures a SuggestionTextBox for Customer Order suggestions.
+        /// Standard configuration: MaxResults=50, EnableWildcards=true, ClearOnNoMatch=true
+        /// </summary>
+        public static void ConfigureForCustomerOrders(SuggestionTextBox suggestionTextBox, Func<Task<List<string>>> dataProvider, bool enableF4 = true)
+        {
+            if (suggestionTextBox == null)
+                throw new ArgumentNullException(nameof(suggestionTextBox));
+
+            suggestionTextBox.DataProvider = dataProvider;
+            suggestionTextBox.MaxResults = 50;
+            suggestionTextBox.EnableWildcards = true;
+            suggestionTextBox.ClearOnNoMatch = true;
+            suggestionTextBox.SuppressExactMatch = true;
+
+            if (enableF4)
+            {
+                RegisterF4Handler(suggestionTextBox);
+            }
+        }
+
+        /// <summary>
+        /// Configures a SuggestionTextBoxWithLabel for Customer Order suggestions.
+        /// </summary>
+        public static void ConfigureForCustomerOrders(SuggestionTextBoxWithLabel control, Func<Task<List<string>>> dataProvider)
+        {
+            if (control == null) throw new ArgumentNullException(nameof(control));
+            ConfigureForCustomerOrders(control.TextBox, dataProvider, enableF4: false);
+        }
+
+        /// <summary>
         /// Gets buildings from a static list.
         /// </summary>
         /// <returns>List of buildings</returns>

@@ -525,5 +525,74 @@ namespace MTM_WIP_Application_Winforms.Services
         }
 
         #endregion
+
+        #region Numeric Formatting
+
+        /// <summary>
+        /// Applies smart numeric formatting to the DataGridView.
+        /// Numbers will show 2 decimal places, or 0 if whole number.
+        /// Respects Currency formatting if applied to the cell style.
+        /// </summary>
+        /// <param name="dgv">The DataGridView to format.</param>
+        public static void ApplySmartNumericFormatting(DataGridView dgv)
+        {
+            if (dgv == null) return;
+
+            // Remove to ensure no duplicates
+            dgv.CellFormatting -= Dgv_CellFormatting_SmartNumeric;
+            dgv.CellFormatting += Dgv_CellFormatting_SmartNumeric;
+        }
+
+        private static void Dgv_CellFormatting_SmartNumeric(object? sender, DataGridViewCellFormattingEventArgs e)
+        {
+            if (e.Value == null || e.Value == DBNull.Value) return;
+
+            // Helper function to format based on type
+            void FormatNumber(decimal val)
+            {
+                bool isCurrency = e.CellStyle?.Format?.StartsWith("C", StringComparison.OrdinalIgnoreCase) == true;
+                if (val % 1 == 0)
+                {
+                    e.Value = isCurrency ? val.ToString("C0") : val.ToString("N0");
+                }
+                else
+                {
+                    e.Value = isCurrency ? val.ToString("C2") : val.ToString("N2");
+                }
+                e.FormattingApplied = true;
+            }
+
+            if (e.Value is decimal decVal)
+            {
+                FormatNumber(decVal);
+            }
+            else if (e.Value is double dblVal)
+            {
+                FormatNumber((decimal)dblVal);
+            }
+            else if (e.Value is float fltVal)
+            {
+                FormatNumber((decimal)fltVal);
+            }
+            else if (e.Value is int || e.Value is long || e.Value is short)
+            {
+                // Integers are always whole numbers
+                // If currency, format as C0, otherwise let default handling (or N0) take over
+                // But default handling might not add thousands separators if not configured.
+                // Let's enforce N0/C0 for consistency if we are touching it.
+                
+                bool isCurrency = e.CellStyle?.Format?.StartsWith("C", StringComparison.OrdinalIgnoreCase) == true;
+                if (isCurrency)
+                {
+                    e.Value = string.Format("{0:C0}", e.Value);
+                    e.FormattingApplied = true;
+                }
+                // For non-currency integers, we usually leave them alone unless we want N0.
+                // The requirement was "if it is a whole number dont show a decmial".
+                // Integers satisfy this by default.
+            }
+        }
+
+        #endregion
     }
 }

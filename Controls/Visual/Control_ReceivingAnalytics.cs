@@ -391,6 +391,7 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
                     Control_ReceivingAnalytics_DataGridView_Results.Columns["Line Promise Date"].DefaultCellStyle.Format = "d";
 
                 await Service_DataGridView.ApplyStandardSettingsAsync(Control_ReceivingAnalytics_DataGridView_Results, Model_Application_Variables.User);
+                Service_DataGridView.ApplySmartNumericFormatting(Control_ReceivingAnalytics_DataGridView_Results);
             }
             catch (Exception ex)
             {

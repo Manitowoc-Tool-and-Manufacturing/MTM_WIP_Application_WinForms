@@ -939,6 +939,90 @@ namespace MTM_WIP_Application_Winforms.Services.Visual
             }
         }
 
+        /// <summary>
+        /// Retrieves a list of all User IDs from the transaction history.
+        /// </summary>
+        public async Task<Model_Dao_Result<List<string>>> GetUserIdsAsync()
+        {
+            return await GetDistinctColumnValuesAsync("USER_ID", "INVENTORY_TRANS");
+        }
+
+        /// <summary>
+        /// Retrieves a list of all Work Order IDs from the transaction history.
+        /// </summary>
+        public async Task<Model_Dao_Result<List<string>>> GetWorkOrdersAsync()
+        {
+            return await GetDistinctColumnValuesAsync("WORKORDER_BASE_ID", "INVENTORY_TRANS");
+        }
+
+        /// <summary>
+        /// Retrieves a list of all Purchase Order IDs from the transaction history.
+        /// </summary>
+        public async Task<Model_Dao_Result<List<string>>> GetPurchaseOrdersAsync()
+        {
+            return await GetDistinctColumnValuesAsync("PURC_ORDER_ID", "INVENTORY_TRANS");
+        }
+
+        /// <summary>
+        /// Retrieves a list of all Customer Order IDs from the transaction history.
+        /// </summary>
+        public async Task<Model_Dao_Result<List<string>>> GetCustomerOrdersAsync()
+        {
+            return await GetDistinctColumnValuesAsync("CUST_ORDER_ID", "INVENTORY_TRANS");
+        }
+
+        private async Task<Model_Dao_Result<List<string>>> GetDistinctColumnValuesAsync(string columnName, string tableName)
+        {
+            if (_useSampleData)
+            {
+                return new Model_Dao_Result<List<string>> { IsSuccess = true, Data = new List<string> { "SAMPLE-1", "SAMPLE-2" } };
+            }
+
+            if (string.IsNullOrEmpty(_userName) || string.IsNullOrEmpty(_password))
+            {
+                return new Model_Dao_Result<List<string>>
+                {
+                    IsSuccess = false,
+                    ErrorMessage = "Visual ERP credentials are not configured."
+                };
+            }
+
+            string sql = $"SELECT DISTINCT {columnName} FROM {tableName} WHERE {columnName} IS NOT NULL AND {columnName} <> '' ORDER BY {columnName}";
+
+            try
+            {
+                using (var connection = new SqlConnection(GetConnectionString()))
+                {
+                    await connection.OpenAsync();
+                    using (var command = new SqlCommand(sql, connection))
+                    {
+                        using (var reader = await command.ExecuteReaderAsync())
+                        {
+                            var list = new List<string>();
+                            while (await reader.ReadAsync())
+                            {
+                                list.Add(reader[0].ToString() ?? "");
+                            }
+                            return new Model_Dao_Result<List<string>>
+                            {
+                                IsSuccess = true,
+                                Data = list
+                            };
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                LoggingUtility.LogApplicationError(ex);
+                return new Model_Dao_Result<List<string>>
+                {
+                    IsSuccess = false,
+                    ErrorMessage = $"Error retrieving {columnName}: {ex.Message}"
+                };
+            }
+        }
+
         #endregion
 
         #region Helpers

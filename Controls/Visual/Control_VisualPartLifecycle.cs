@@ -137,7 +137,10 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
             // Configure Suggestions
             Helper_SuggestionTextBox.ConfigureForPartNumbers(_txtLifecyclePart, Helper_SuggestionTextBox.GetCachedPartNumbersAsync);
             Helper_SuggestionTextBox.ConfigureForPartNumbers(_txtByPartPart, Helper_SuggestionTextBox.GetCachedPartNumbersAsync);
-            // TODO: Configure User/WO/CO/PO suggestions if providers available
+            Helper_SuggestionTextBox.ConfigureForUsers(_txtByUserUser, GetUsersAsync);
+            Helper_SuggestionTextBox.ConfigureForWorkOrders(_txtByWOWO, GetWorkOrdersAsync);
+            Helper_SuggestionTextBox.ConfigureForCustomerOrders(_txtByCOCO, GetCustomerOrdersAsync);
+            Helper_SuggestionTextBox.ConfigureForPurchaseOrders(_txtByPOPO, GetPurchaseOrdersAsync);
         }
 
         private TabPage CreateTab(string title, out TableLayoutPanel panel)
@@ -200,10 +203,76 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
             _txtByWOWO.TextBox.KeyDown += async (s, e) => { if (e.KeyCode == Keys.Enter) await PerformSearchAsync(); };
             _txtByCOCO.TextBox.KeyDown += async (s, e) => { if (e.KeyCode == Keys.Enter) await PerformSearchAsync(); };
             _txtByPOPO.TextBox.KeyDown += async (s, e) => { if (e.KeyCode == Keys.Enter) await PerformSearchAsync(); };
+            
+            _dataGridView.CellDoubleClick += DataGridView_CellDoubleClick;
         }
         #endregion
 
         #region Methods
+        private async Task<List<string>> GetUsersAsync()
+        {
+            if (_visualService == null) return new List<string>();
+            var result = await _visualService.GetUserIdsAsync();
+            return result.IsSuccess ? (result.Data ?? new List<string>()) : new List<string>();
+        }
+
+        private async Task<List<string>> GetWorkOrdersAsync()
+        {
+            if (_visualService == null) return new List<string>();
+            var result = await _visualService.GetWorkOrdersAsync();
+            return result.IsSuccess ? (result.Data ?? new List<string>()) : new List<string>();
+        }
+
+        private async Task<List<string>> GetPurchaseOrdersAsync()
+        {
+            if (_visualService == null) return new List<string>();
+            var result = await _visualService.GetPurchaseOrdersAsync();
+            return result.IsSuccess ? (result.Data ?? new List<string>()) : new List<string>();
+        }
+
+        private async Task<List<string>> GetCustomerOrdersAsync()
+        {
+            if (_visualService == null) return new List<string>();
+            var result = await _visualService.GetCustomerOrdersAsync();
+            return result.IsSuccess ? (result.Data ?? new List<string>()) : new List<string>();
+        }
+
+        private async void DataGridView_CellDoubleClick(object? sender, DataGridViewCellEventArgs e)
+        {
+            if (e.RowIndex < 0) return;
+
+            try
+            {
+                var row = _dataGridView.Rows[e.RowIndex];
+                if (row.DataBoundItem is DataRowView drv)
+                {
+                    // Try to find Part ID column (could be PART_ID or Part Number depending on view)
+                    string partId = "";
+                    if (drv.Row.Table.Columns.Contains("PART_ID"))
+                        partId = drv["PART_ID"]?.ToString() ?? "";
+                    else if (drv.Row.Table.Columns.Contains("Part Number"))
+                        partId = drv["Part Number"]?.ToString() ?? "";
+                    
+                    if (!string.IsNullOrEmpty(partId))
+                    {
+                        // Switch to Lifecycle tab
+                        _tabControl.SelectedTab = _tabLifecycle;
+                        _txtLifecyclePart.Text = partId;
+                        
+                        // Set date range to cover a broad history
+                        _dtpLifecycleStart.Value = DateTime.Today.AddYears(-2); 
+                        _dtpLifecycleEnd.Value = DateTime.Today;
+
+                        await PerformSearchAsync();
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Low, controlName: this.Name);
+            }
+        }
+
         private async Task PerformSearchAsync()
         {
             if (_visualService == null)
@@ -297,6 +366,7 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
 
                     _dataGridView.DataSource = _cachedDataTable;
                     await Service_DataGridView.ApplyStandardSettingsAsync(_dataGridView, Model_Application_Variables.User);
+                    Service_DataGridView.ApplySmartNumericFormatting(_dataGridView);
                     
                     // Apply row coloring if Lifecycle view
                     if (isLifecycleView)

@@ -100,6 +100,7 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
                     _cachedDataTable = result.Data;
                     Control_VisualInventory_DataGridView_Results.DataSource = _cachedDataTable;
                     await Service_DataGridView.ApplyStandardSettingsAsync(Control_VisualInventory_DataGridView_Results, Model_Application_Variables.User);
+                    Service_DataGridView.ApplySmartNumericFormatting(Control_VisualInventory_DataGridView_Results);
 
                     // if (Control_VisualInventory_Image_NothingFound != null)
                     // {

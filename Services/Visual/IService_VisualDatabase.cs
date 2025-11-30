@@ -112,6 +112,26 @@ namespace MTM_WIP_Application_Winforms.Services.Visual
         /// Check IsSuccess before accessing Data.
         /// </returns>
         Task<Model_Dao_Result<DataTable>> GetTransactionsAsync(Model_VisualTransactionFilter filter);
+
+        /// <summary>
+        /// Retrieves a list of all User IDs from the transaction history.
+        /// </summary>
+        Task<Model_Dao_Result<List<string>>> GetUserIdsAsync();
+
+        /// <summary>
+        /// Retrieves a list of all Work Order IDs from the transaction history.
+        /// </summary>
+        Task<Model_Dao_Result<List<string>>> GetWorkOrdersAsync();
+
+        /// <summary>
+        /// Retrieves a list of all Purchase Order IDs from the transaction history.
+        /// </summary>
+        Task<Model_Dao_Result<List<string>>> GetPurchaseOrdersAsync();
+
+        /// <summary>
+        /// Retrieves a list of all Customer Order IDs from the transaction history.
+        /// </summary>
+        Task<Model_Dao_Result<List<string>>> GetCustomerOrdersAsync();
     }
     #endregion
 
