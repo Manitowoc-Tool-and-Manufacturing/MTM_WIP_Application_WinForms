@@ -551,7 +551,8 @@ namespace MTM_WIP_Application_Winforms.Services.Visual
                         WHEN POL.PART_ID LIKE 'MMC%' THEN 'MMC'
                         WHEN POL.PART_ID LIKE 'MMF%' THEN 'MMF'
                         ELSE 'Part'
-                    END as [Type]
+                    END as [Type],
+                    POL.PART_ID as [PartNumber]
                 FROM PURC_ORDER_LINE POL
                 INNER JOIN PURCHASE_ORDER PO ON POL.PURC_ORDER_ID = PO.ID
                 WHERE POL.TOTAL_RECEIVED_QTY > 0 
@@ -565,7 +566,8 @@ namespace MTM_WIP_Application_Winforms.Services.Visual
                         WHEN POL.PART_ID LIKE 'MMC%' THEN 'MMC'
                         WHEN POL.PART_ID LIKE 'MMF%' THEN 'MMF'
                         ELSE 'Part'
-                    END
+                    END,
+                    POL.PART_ID
                 ORDER BY POL.LAST_RECEIVED_DATE";
 
             // 2. Forecast Query
@@ -584,7 +586,8 @@ namespace MTM_WIP_Application_Winforms.Services.Visual
                         WHEN POL.PART_ID LIKE 'MMC%' THEN 'MMC'
                         WHEN POL.PART_ID LIKE 'MMF%' THEN 'MMF'
                         ELSE 'Part'
-                    END as [Type]
+                    END as [Type],
+                    POL.PART_ID as [PartNumber]
                 FROM PURC_ORDER_LINE POL
                 INNER JOIN PURCHASE_ORDER PO ON POL.PURC_ORDER_ID = PO.ID
                 WHERE (POL.ORDER_QTY - POL.TOTAL_RECEIVED_QTY) > 0 
@@ -614,7 +617,8 @@ namespace MTM_WIP_Application_Winforms.Services.Visual
                         WHEN POL.PART_ID LIKE 'MMC%' THEN 'MMC'
                         WHEN POL.PART_ID LIKE 'MMF%' THEN 'MMF'
                         ELSE 'Part'
-                    END
+                    END,
+                    POL.PART_ID
                 ORDER BY [Date]";
 
             try
@@ -642,7 +646,8 @@ namespace MTM_WIP_Application_Winforms.Services.Visual
                                     {
                                         Date = Convert.ToDateTime(reader["Date"]),
                                         Count = Convert.ToInt32(reader["Count"]),
-                                        Type = reader["Type"].ToString() ?? "Part"
+                                        Type = reader["Type"].ToString() ?? "Part",
+                                        PartNumber = reader["PartNumber"]?.ToString() ?? string.Empty
                                     });
                                 }
                             }
@@ -665,7 +670,8 @@ namespace MTM_WIP_Application_Winforms.Services.Visual
                                     {
                                         Date = Convert.ToDateTime(reader["Date"]),
                                         Count = Convert.ToInt32(reader["Count"]),
-                                        Type = reader["Type"].ToString() ?? "Part"
+                                        Type = reader["Type"].ToString() ?? "Part",
+                                        PartNumber = reader["PartNumber"]?.ToString() ?? string.Empty
                                     });
                                 }
                             }

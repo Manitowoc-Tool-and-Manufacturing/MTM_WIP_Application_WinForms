@@ -168,6 +168,7 @@
                     <label class="checkbox-item"><input type="checkbox" id="chkOutside" checked onchange="refreshChart()"> Outside Svc</label>
                     <label class="checkbox-item"><input type="checkbox" id="chkConsignment" checked onchange="refreshChart()"> Consignment</label>
                     <label class="checkbox-item"><input type="checkbox" id="chkInternal" checked onchange="refreshChart()"> Internal</label>
+                    <label class="checkbox-item"><input type="checkbox" id="chkUninventoried" checked onchange="refreshChart()"> Uninventoried</label>
                 </div>
             </div>
         </div>
@@ -262,6 +263,7 @@
             const showOutside = document.getElementById('chkOutside').checked;
             const showConsignment = document.getElementById('chkConsignment').checked;
             const showInternal = document.getElementById('chkInternal').checked;
+            const showUninventoried = document.getElementById('chkUninventoried').checked;
 
             // Filter and Aggregate
             // We need to group by Date (based on Period) and Sum the Counts
@@ -270,12 +272,18 @@
 
             sourceData.forEach(item => {
                 // Check filters
-                if (item.Type === 'Part' && !showParts) return;
-                if (item.Type === 'MMC' && !showMMC) return;
-                if (item.Type === 'MMF' && !showMMF) return;
-                if (item.Type === 'Service' && !showOutside) return;
-                if (item.Type === 'Consignment' && !showConsignment) return;
-                if (item.Type === 'Internal' && !showInternal) return;
+                if (item.Type === 'Part') {
+                    if (item.PartNumber && item.PartNumber.trim() !== '') {
+                        if (!showParts) return;
+                    } else {
+                        if (!showUninventoried) return;
+                    }
+                }
+                else if (item.Type === 'MMC' && !showMMC) return;
+                else if (item.Type === 'MMF' && !showMMF) return;
+                else if (item.Type === 'Service' && !showOutside) return;
+                else if (item.Type === 'Consignment' && !showConsignment) return;
+                else if (item.Type === 'Internal' && !showInternal) return;
 
                 // Determine Key based on Period
                 let date = new Date(item.Date);
