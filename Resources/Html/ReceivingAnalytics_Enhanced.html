@@ -88,8 +88,9 @@
         }
         .checkbox-group {
             display: flex;
-            flex-direction: column;
-            gap: 5px;
+            flex-direction: row;
+            flex-wrap: wrap;
+            gap: 15px;
         }
         .checkbox-item {
             display: flex;
@@ -101,6 +102,31 @@
             flex: 1;
             position: relative;
             min-height: 0;
+        }
+        .table-container {
+            flex: 1;
+            overflow: auto;
+            display: none; /* Hidden by default */
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 14px;
+        }
+        th, td {
+            padding: 10px;
+            text-align: left;
+            border-bottom: 1px solid #eee;
+        }
+        th {
+            background-color: #f8f9fa;
+            position: sticky;
+            top: 0;
+            font-weight: 600;
+            color: #444;
+        }
+        tr:hover {
+            background-color: #f5f5f5;
         }
         .toggle-switch {
             position: relative;
@@ -160,6 +186,12 @@
         }
         input:checked + .slider .label-history { opacity: 0.5; }
         input:checked + .slider .label-forecast { opacity: 1; }
+
+        /* Generic toggle labels */
+        .slider .label-left { opacity: 1; transition: opacity 0.4s; z-index: 1; }
+        .slider .label-right { opacity: 0.5; transition: opacity 0.4s; z-index: 1; }
+        input:checked + .slider .label-left { opacity: 0.5; }
+        input:checked + .slider .label-right { opacity: 1; }
         
         .export-btn {
             margin-left: auto;
@@ -230,6 +262,17 @@
             </div>
 
             <div class="control-group">
+                <label>Display</label>
+                <label class="toggle-switch">
+                    <input type="checkbox" id="displayToggle" onchange="updateDisplayMode()">
+                    <span class="slider">
+                        <span class="label-left">GRAPH</span>
+                        <span class="label-right">DATA</span>
+                    </span>
+                </label>
+            </div>
+
+            <div class="control-group">
                 <label>Chart Type</label>
                 <div class="btn-group">
                     <button onclick="setChartType('line')" class="active" id="btnLine">Line</button>
@@ -253,6 +296,9 @@
                     <label class="checkbox-item">
                         <input type="checkbox" checked onchange="refreshChart()" data-type="Service"> Outside Svc
                     </label>
+                    <label class="checkbox-item">
+                        <input type="checkbox" checked onchange="refreshChart()" data-type="Uninventoried"> Uninventoried
+                    </label>
                 </div>
             </div>
 
@@ -270,8 +316,24 @@
             </button>
         </div>
 
-        <div class="chart-container">
+        <div class="chart-container" id="chartView">
             <canvas id="analyticsChart" role="img" aria-label="Receiving analytics chart showing workload over time"></canvas>
+        </div>
+        
+        <div class="table-container" id="tableView">
+            <table id="dataTable">
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Type</th>
+                        <th>Part Number</th>
+                        <th>Count</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Populated by JS -->
+                </tbody>
+            </table>
         </div>
     </div>
 
@@ -279,6 +341,7 @@
         let chartInstance = null;
         let currentPeriod = 'Day';
         let isForecast = true;
+        let isGridView = false;
         let currentChartType = 'line';
         let rawData = { History: [], Forecast: [] };
         let comparisonEnabled = false;
@@ -323,6 +386,15 @@
                             data: [],
                             borderColor: '#d83b01',
                             backgroundColor: 'rgba(216, 59, 1, 0.1)',
+                            borderWidth: 2,
+                            tension: 0.4,
+                            fill: true
+                        },
+                        {
+                            label: 'Uninventoried',
+                            data: [],
+                            borderColor: '#69797e',
+                            backgroundColor: 'rgba(105, 121, 126, 0.1)',
                             borderWidth: 2,
                             tension: 0.4,
                             fill: true
@@ -426,6 +498,23 @@
             refreshChart();
         }
 
+        function updateDisplayMode() {
+            isGridView = document.getElementById('displayToggle').checked;
+            
+            const chartView = document.getElementById('chartView');
+            const tableView = document.getElementById('tableView');
+            
+            if (isGridView) {
+                chartView.style.display = 'none';
+                tableView.style.display = 'block';
+            } else {
+                chartView.style.display = 'block';
+                tableView.style.display = 'none';
+            }
+            
+            refreshChart();
+        }
+
         function refreshChart() {
             if (!chartInstance) return;
             const dataSource = isForecast ? rawData.Forecast : rawData.History;
@@ -442,27 +531,48 @@
             const endDate = endDateInput ? new Date(endDateInput + 'T00:00:00') : null;
 
             const aggregated = {};
-            const types = ['Part', 'MMC', 'MMF', 'Service'];
+            const types = ['Part', 'MMC', 'MMF', 'Service', 'Uninventoried'];
             
-            dataSource.forEach(item => {
-                if (!activeTypes.includes(item.Type)) return;
+            // Filter Data
+            let filteredData = dataSource.filter(item => {
+                // Determine effective type
+                let effectiveType = item.Type;
+                if (item.Type === 'Part' && (!item.PartNumber || item.PartNumber.trim() === '')) {
+                    effectiveType = 'Uninventoried';
+                }
+
+                if (!activeTypes.includes(effectiveType)) return false;
                 
                 // Apply Date Filter
                 // Date already has T00:00:00 appended from loadData
                 const itemDate = new Date(item.Date);
                 
                 if (startDate) {
-                    if (itemDate < startDate) return;
+                    if (itemDate < startDate) return false;
                 }
                 if (endDate) {
-                    if (itemDate > endDate) return;
+                    if (itemDate > endDate) return false;
+                }
+                return true;
+            });
+
+            if (isGridView) {
+                renderTable(filteredData);
+                return;
+            }
+
+            filteredData.forEach(item => {
+                let effectiveType = item.Type;
+                if (item.Type === 'Part' && (!item.PartNumber || item.PartNumber.trim() === '')) {
+                    effectiveType = 'Uninventoried';
                 }
 
+                const itemDate = new Date(item.Date);
                 const dateKey = getDateKey(itemDate, currentPeriod);
                 if (!aggregated[dateKey]) {
-                    aggregated[dateKey] = { Part: 0, MMC: 0, MMF: 0, Service: 0 };
+                    aggregated[dateKey] = { Part: 0, MMC: 0, MMF: 0, Service: 0, Uninventoried: 0 };
                 }
-                aggregated[dateKey][item.Type] = (aggregated[dateKey][item.Type] || 0) + item.Count;
+                aggregated[dateKey][effectiveType] = (aggregated[dateKey][effectiveType] || 0) + item.Count;
             });
 
             // Ensure current week is included in History view if within range
@@ -477,7 +587,7 @@
                     
                     if (showCurrentWeek) {
                         // Add empty entry for current week so it appears on the chart
-                        aggregated[todayKey] = { Part: 0, MMC: 0, MMF: 0, Service: 0 };
+                        aggregated[todayKey] = { Part: 0, MMC: 0, MMF: 0, Service: 0, Uninventoried: 0 };
                     }
                 }
             }
@@ -489,14 +599,39 @@
             chartInstance.data.datasets[1].data = sortedKeys.map(key => aggregated[key].MMC || 0);
             chartInstance.data.datasets[2].data = sortedKeys.map(key => aggregated[key].MMF || 0);
             chartInstance.data.datasets[3].data = sortedKeys.map(key => aggregated[key].Service || 0);
-            // Consignment and Internal datasets removed
+            chartInstance.data.datasets[4].data = sortedKeys.map(key => aggregated[key].Uninventoried || 0);
             
-            updateMetrics(dataSource, activeTypes);
+            updateMetrics(filteredData, activeTypes);
             chartInstance.update();
         }
 
-        function updateMetrics(dataSource, activeTypes) {
-            const filteredData = dataSource.filter(item => activeTypes.includes(item.Type));
+        function renderTable(data) {
+            const tbody = document.querySelector('#dataTable tbody');
+            tbody.innerHTML = '';
+
+            // Sort by Date Descending
+            data.sort((a, b) => new Date(b.Date) - new Date(a.Date));
+
+            data.forEach(item => {
+                const tr = document.createElement('tr');
+                
+                // Determine display type
+                let displayType = item.Type;
+                if (item.Type === 'Part' && (!item.PartNumber || item.PartNumber.trim() === '')) {
+                    displayType = 'Uninventoried';
+                }
+
+                tr.innerHTML = `
+                    <td>${item.Date.split('T')[0]}</td>
+                    <td>${displayType}</td>
+                    <td>${item.PartNumber || '-'}</td>
+                    <td>${item.Count}</td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        function updateMetrics(filteredData, activeTypes) {
             const totalLines = filteredData.reduce((sum, item) => sum + item.Count, 0);
             
             const uniqueDates = [...new Set(filteredData.map(item => new Date(item.Date).toDateString()))];
