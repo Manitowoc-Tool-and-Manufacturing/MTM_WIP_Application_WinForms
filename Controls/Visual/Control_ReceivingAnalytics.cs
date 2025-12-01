@@ -627,13 +627,13 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
         {
             try
             {
-                string htmlPath = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Resources", "Html", "ReceivingAnalytics_Enhanced.html");
+                string htmlPath = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Resources", "Html", "ReceivingAnalytics.html");
                 
                 // Fallback for development environment if not copied to bin
                 if (!System.IO.File.Exists(htmlPath))
                 {
                     // Try to find it in the source tree (up 3 levels from bin/Debug/net8.0-windows)
-                    string sourcePath = System.IO.Path.GetFullPath(System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"..\..\..\Resources\Html\ReceivingAnalytics_Enhanced.html"));
+                    string sourcePath = System.IO.Path.GetFullPath(System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"..\..\..\Resources\Html\ReceivingAnalytics.html"));
                     if (System.IO.File.Exists(sourcePath))
                     {
                         htmlPath = sourcePath;

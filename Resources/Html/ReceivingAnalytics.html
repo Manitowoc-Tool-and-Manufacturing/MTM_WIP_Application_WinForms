@@ -229,6 +229,8 @@
                     }
                 }
             });
+            
+            refreshChart();
         }
 
         function setPeriod(period) {
@@ -284,10 +286,7 @@
             });
 
             // Sort keys
-            let sortedKeys = Object.keys(aggregated).sort((a, b) => {
-                // Simple string sort works for ISO-like keys, but let's be careful
-                return new Date(a) - new Date(b);
-            });
+            let sortedKeys = Object.keys(aggregated).sort();
 
             // Prepare Chart Data
             chartInstance.data.labels = sortedKeys;
