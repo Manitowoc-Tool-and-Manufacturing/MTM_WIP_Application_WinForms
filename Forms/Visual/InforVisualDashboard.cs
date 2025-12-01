@@ -39,7 +39,13 @@ namespace MTM_WIP_Application_Winforms.Forms.Visual
         public InforVisualDashboard()
         {
             InitializeComponent();
-            _visualService = Program.ServiceProvider?.GetService<IService_VisualDatabase>();
+            
+            // Prevent accessing DI container at design time
+            if (!DesignMode && System.ComponentModel.LicenseManager.UsageMode != System.ComponentModel.LicenseUsageMode.Designtime)
+            {
+                _visualService = Program.ServiceProvider?.GetService<IService_VisualDatabase>();
+            }
+            
             Load += InforVisualDashboard_Load;
         }
         #endregion
@@ -348,19 +354,9 @@ namespace MTM_WIP_Application_Winforms.Forms.Visual
         #endregion
 
         #region Cleanup / Dispose
-        protected override void Dispose(bool disposing)
-        {
-            if (disposing)
-            {
-                Load -= InforVisualDashboard_Load;
-                _controlDieToolDiscovery?.Dispose();
-                _controlReceivingAnalytics?.Dispose();
-                _controlVisualInventory?.Dispose();
-                _controlInventoryAudit?.Dispose();
-            }
-
-            base.Dispose(disposing);
-        }
+        // Note: Controls added to the Controls collection (like _controlDieToolDiscovery) 
+        // are automatically disposed when the Form is disposed.
+        // Manual disposal is only needed for resources NOT added to the UI tree.
         #endregion
     }
 }

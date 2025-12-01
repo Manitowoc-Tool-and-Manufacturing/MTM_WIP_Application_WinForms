@@ -64,6 +64,7 @@
             lblAnalyticsEnd = new Label();
             _dtpAnalyticsEnd = new DateTimePicker();
             _btnLoadUsers = new Button();
+            _btnSelectAllUsers = new Button();
             _clbUsers = new CheckedListBox();
             _btnGenerateReport = new Button();
             _lblUserCount = new Label();
