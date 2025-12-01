@@ -24,13 +24,27 @@ namespace MTM_WIP_Application_Winforms.Forms.Visual
         {
             try
             {
-                await webView.EnsureCoreWebView2Async();
+                // Configure WebView2 to use a local user data folder to prevent file locking issues
+                // when the application is run from a network share by multiple users.
+                string userDataFolder = Path.Combine(
+                    Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), 
+                    "MTM", 
+                    "WebView2");
+                
+                var env = await CoreWebView2Environment.CreateAsync(null, userDataFolder);
+                await webView.EnsureCoreWebView2Async(env);
                 
                 string htmlPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Resources", "Html", "UserAnalytics.html");
                 
                 if (File.Exists(htmlPath))
                 {
-                    string htmlContent = await File.ReadAllTextAsync(htmlPath);
+                    // Use FileStream with FileShare.ReadWrite to allow concurrent reads
+                    string htmlContent;
+                    using (var fs = new FileStream(htmlPath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
+                    using (var sr = new StreamReader(fs))
+                    {
+                        htmlContent = await sr.ReadToEndAsync();
+                    }
                     
                     // Serialize data
                     var dataList = new List<object>();
