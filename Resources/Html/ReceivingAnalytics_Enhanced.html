@@ -571,8 +571,12 @@
             if (period === 'Day') {
                 return `${year}-${month}-${day}`;
             } else if (period === 'Week') {
-                const weekNum = Math.ceil((date.getDate() + 6 - date.getDay()) / 7);
-                return `${year}-W${String(weekNum).padStart(2, '0')}`;
+                const d = new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()));
+                const dayNum = d.getUTCDay() || 7;
+                d.setUTCDate(d.getUTCDate() + 4 - dayNum);
+                const yearStart = new Date(Date.UTC(d.getUTCFullYear(),0,1));
+                const weekNo = Math.ceil((((d - yearStart) / 86400000) + 1)/7);
+                return `${d.getUTCFullYear()}-W${String(weekNo).padStart(2, '0')}`;
             } else if (period === 'Month') {
                 return `${year}-${month}`;
             }

@@ -515,7 +515,7 @@ namespace MTM_WIP_Application_Winforms.Services.Visual
         /// <summary>
         /// Retrieves analytics data for receiving history and forecast.
         /// </summary>
-        public async Task<Model_Dao_Result<Model_ReceivingAnalytics>> GetReceivingAnalyticsAsync()
+        public async Task<Model_Dao_Result<Model_ReceivingAnalytics>> GetReceivingAnalyticsAsync(DateTime? startDate = null, DateTime? endDate = null)
         {
             if (_useSampleData)
             {
@@ -537,7 +537,8 @@ namespace MTM_WIP_Application_Winforms.Services.Visual
             }
 
             var analytics = new Model_ReceivingAnalytics();
-            var startDate = new DateTime(DateTime.Now.Year, 1, 1); // YTD
+            var historyStart = startDate ?? new DateTime(DateTime.Now.Year, 1, 1); // Default to YTD
+            var forecastEnd = endDate ?? DateTime.Today.AddDays(90); // Default to +90 days
 
             // 1. History Query (Approximation using PURC_ORDER_LINE.LAST_RECEIVED_DATE for simplicity)
             // Using COUNT(*) to count lines as "workload"
@@ -557,6 +558,7 @@ namespace MTM_WIP_Application_Winforms.Services.Visual
                 INNER JOIN PURCHASE_ORDER PO ON POL.PURC_ORDER_ID = PO.ID
                 WHERE POL.TOTAL_RECEIVED_QTY > 0 
                   AND POL.LAST_RECEIVED_DATE >= @StartDate
+                  AND POL.LAST_RECEIVED_DATE <= @Today
                 GROUP BY POL.LAST_RECEIVED_DATE, 
                     CASE 
                         WHEN PO.CONSIGNMENT = 'Y' THEN 'Consignment'
@@ -587,6 +589,7 @@ namespace MTM_WIP_Application_Winforms.Services.Visual
                   AND POL.LINE_STATUS <> 'C'
                   AND PO.STATUS <> 'C'
                   AND ISNULL(POL.PROMISE_DATE, POL.DESIRED_RECV_DATE) >= @Today
+                  AND ISNULL(POL.PROMISE_DATE, POL.DESIRED_RECV_DATE) <= @EndDate
                 GROUP BY ISNULL(POL.PROMISE_DATE, POL.DESIRED_RECV_DATE),
                     CASE 
                         WHEN PO.CONSIGNMENT = 'Y' THEN 'Consignment'
@@ -607,7 +610,8 @@ namespace MTM_WIP_Application_Winforms.Services.Visual
                     // Execute History
                     using (var command = new SqlCommand(sqlHistory, connection))
                     {
-                        command.Parameters.AddWithValue("@StartDate", startDate);
+                        command.Parameters.AddWithValue("@StartDate", historyStart);
+                        command.Parameters.AddWithValue("@Today", DateTime.Today);
                         using (var reader = await command.ExecuteReaderAsync())
                         {
                             while (await reader.ReadAsync())
@@ -629,6 +633,7 @@ namespace MTM_WIP_Application_Winforms.Services.Visual
                     using (var command = new SqlCommand(sqlForecast, connection))
                     {
                         command.Parameters.AddWithValue("@Today", DateTime.Today);
+                        command.Parameters.AddWithValue("@EndDate", forecastEnd);
                         using (var reader = await command.ExecuteReaderAsync())
                         {
                             while (await reader.ReadAsync())

@@ -653,7 +653,20 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
                 Control_ReceivingAnalytics_Button_Analytics.Enabled = false;
                 Control_ReceivingAnalytics_Button_Analytics.Text = "Loading...";
 
-                var result = await _visualService.GetReceivingAnalyticsAsync();
+                // Use the date range from the UI
+                var startDate = Control_ReceivingAnalytics_DateTimePicker_StartDate.Value;
+                var endDate = Control_ReceivingAnalytics_DateTimePicker_EndDate.Value;
+
+                // If the range is very small (e.g. 1 week), we might want to expand it for analytics context
+                // But for now, let's respect the user's selection or default to YTD if they haven't changed it?
+                // Actually, the user explicitly asked to change the date range.
+                // So we pass the selected dates.
+                // However, typically analytics shows History up to Today, and Forecast from Today onwards.
+                // If the user selects a past range, they probably want to see history in that range.
+                // If they select a future range, they want forecast.
+                // The service method now handles filtering both history and forecast by the passed dates.
+                
+                var result = await _visualService.GetReceivingAnalyticsAsync(startDate, endDate);
                 
                 Control_ReceivingAnalytics_Button_Analytics.Enabled = true;
                 Control_ReceivingAnalytics_Button_Analytics.Text = "Receiving Analytics";

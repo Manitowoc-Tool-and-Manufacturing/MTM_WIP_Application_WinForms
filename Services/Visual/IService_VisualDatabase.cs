@@ -84,11 +84,13 @@ namespace MTM_WIP_Application_Winforms.Services.Visual
         /// <summary>
         /// Retrieves analytics data for receiving history and forecast.
         /// </summary>
+        /// <param name="startDate">Optional start date for history (defaults to YTD).</param>
+        /// <param name="endDate">Optional end date for forecast (defaults to +90 days).</param>
         /// <returns>
         /// Model_Dao_Result containing receiving analytics data.
         /// Check IsSuccess before accessing Data.
         /// </returns>
-        Task<Model_Dao_Result<Model_ReceivingAnalytics>> GetReceivingAnalyticsAsync();
+        Task<Model_Dao_Result<Model_ReceivingAnalytics>> GetReceivingAnalyticsAsync(DateTime? startDate = null, DateTime? endDate = null);
 
         /// <summary>
         /// Retrieves inventory data based on search criteria.
