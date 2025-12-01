@@ -538,17 +538,15 @@ namespace MTM_WIP_Application_Winforms.Services.Visual
 
             var analytics = new Model_ReceivingAnalytics();
             var historyStart = startDate ?? new DateTime(DateTime.Now.Year, 1, 1); // Default to YTD
-            var forecastEnd = endDate ?? DateTime.Today.AddDays(90); // Default to +90 days
+            var forecastEnd = endDate ?? DateTime.Today.AddDays(180); // Default to +180 days
 
-            // 1. History Query (Approximation using PURC_ORDER_LINE.LAST_RECEIVED_DATE for simplicity)
-            // Using COUNT(*) to count lines as "workload"
+            // 1. History Query
+            // Get all receipts within the date range, regardless of "Today"
             string sqlHistory = @"
                 SELECT 
                     POL.LAST_RECEIVED_DATE as [Date],
                     COUNT(*) as [Count],
                     CASE 
-                        WHEN PO.CONSIGNMENT = 'Y' THEN 'Consignment'
-                        WHEN PO.INTERNAL_ORDER = 'Y' THEN 'Internal'
                         WHEN POL.SERVICE_ID IS NOT NULL THEN 'Service'
                         WHEN POL.PART_ID LIKE 'MMC%' THEN 'MMC'
                         WHEN POL.PART_ID LIKE 'MMF%' THEN 'MMF'
@@ -558,11 +556,11 @@ namespace MTM_WIP_Application_Winforms.Services.Visual
                 INNER JOIN PURCHASE_ORDER PO ON POL.PURC_ORDER_ID = PO.ID
                 WHERE POL.TOTAL_RECEIVED_QTY > 0 
                   AND POL.LAST_RECEIVED_DATE >= @StartDate
-                  AND POL.LAST_RECEIVED_DATE <= @Today
+                  AND POL.LAST_RECEIVED_DATE <= @EndDate
+                  AND ISNULL(PO.CONSIGNMENT, 'N') <> 'Y' 
+                  AND ISNULL(PO.INTERNAL_ORDER, 'N') <> 'Y'
                 GROUP BY POL.LAST_RECEIVED_DATE, 
                     CASE 
-                        WHEN PO.CONSIGNMENT = 'Y' THEN 'Consignment'
-                        WHEN PO.INTERNAL_ORDER = 'Y' THEN 'Internal'
                         WHEN POL.SERVICE_ID IS NOT NULL THEN 'Service'
                         WHEN POL.PART_ID LIKE 'MMC%' THEN 'MMC'
                         WHEN POL.PART_ID LIKE 'MMF%' THEN 'MMF'
@@ -570,14 +568,18 @@ namespace MTM_WIP_Application_Winforms.Services.Visual
                     END
                 ORDER BY POL.LAST_RECEIVED_DATE";
 
-            // 2. Forecast Query (Open Lines)
+            // 2. Forecast Query
+            // Get all open lines due within the date range
+            // Logic: Service -> Desired Date, Others -> Promise Date
+            // Fallback chain: Line Date -> PO Date -> Alternate Date Type
             string sqlForecast = @"
                 SELECT 
-                    ISNULL(POL.PROMISE_DATE, POL.DESIRED_RECV_DATE) as [Date],
+                    CASE 
+                        WHEN POL.SERVICE_ID IS NOT NULL THEN COALESCE(POL.DESIRED_RECV_DATE, PO.DESIRED_RECV_DATE, POL.PROMISE_DATE, PO.PROMISE_DATE)
+                        ELSE COALESCE(POL.PROMISE_DATE, PO.PROMISE_DATE, POL.DESIRED_RECV_DATE, PO.DESIRED_RECV_DATE)
+                    END as [Date],
                     COUNT(*) as [Count],
                     CASE 
-                        WHEN PO.CONSIGNMENT = 'Y' THEN 'Consignment'
-                        WHEN PO.INTERNAL_ORDER = 'Y' THEN 'Internal'
                         WHEN POL.SERVICE_ID IS NOT NULL THEN 'Service'
                         WHEN POL.PART_ID LIKE 'MMC%' THEN 'MMC'
                         WHEN POL.PART_ID LIKE 'MMF%' THEN 'MMF'
@@ -588,12 +590,26 @@ namespace MTM_WIP_Application_Winforms.Services.Visual
                 WHERE (POL.ORDER_QTY - POL.TOTAL_RECEIVED_QTY) > 0 
                   AND POL.LINE_STATUS <> 'C'
                   AND PO.STATUS <> 'C'
-                  AND ISNULL(POL.PROMISE_DATE, POL.DESIRED_RECV_DATE) >= @Today
-                  AND ISNULL(POL.PROMISE_DATE, POL.DESIRED_RECV_DATE) <= @EndDate
-                GROUP BY ISNULL(POL.PROMISE_DATE, POL.DESIRED_RECV_DATE),
+                  AND ISNULL(PO.CONSIGNMENT, 'N') <> 'Y' 
+                  AND ISNULL(PO.INTERNAL_ORDER, 'N') <> 'Y'
+                  AND (
+                      CASE 
+                          WHEN POL.SERVICE_ID IS NOT NULL THEN COALESCE(POL.DESIRED_RECV_DATE, PO.DESIRED_RECV_DATE, POL.PROMISE_DATE, PO.PROMISE_DATE)
+                          ELSE COALESCE(POL.PROMISE_DATE, PO.PROMISE_DATE, POL.DESIRED_RECV_DATE, PO.DESIRED_RECV_DATE)
+                      END
+                  ) >= @StartDate
+                  AND (
+                      CASE 
+                          WHEN POL.SERVICE_ID IS NOT NULL THEN COALESCE(POL.DESIRED_RECV_DATE, PO.DESIRED_RECV_DATE, POL.PROMISE_DATE, PO.PROMISE_DATE)
+                          ELSE COALESCE(POL.PROMISE_DATE, PO.PROMISE_DATE, POL.DESIRED_RECV_DATE, PO.DESIRED_RECV_DATE)
+                      END
+                  ) <= @EndDate
+                GROUP BY 
                     CASE 
-                        WHEN PO.CONSIGNMENT = 'Y' THEN 'Consignment'
-                        WHEN PO.INTERNAL_ORDER = 'Y' THEN 'Internal'
+                        WHEN POL.SERVICE_ID IS NOT NULL THEN COALESCE(POL.DESIRED_RECV_DATE, PO.DESIRED_RECV_DATE, POL.PROMISE_DATE, PO.PROMISE_DATE)
+                        ELSE COALESCE(POL.PROMISE_DATE, PO.PROMISE_DATE, POL.DESIRED_RECV_DATE, PO.DESIRED_RECV_DATE)
+                    END,
+                    CASE 
                         WHEN POL.SERVICE_ID IS NOT NULL THEN 'Service'
                         WHEN POL.PART_ID LIKE 'MMC%' THEN 'MMC'
                         WHEN POL.PART_ID LIKE 'MMF%' THEN 'MMF'
@@ -610,8 +626,12 @@ namespace MTM_WIP_Application_Winforms.Services.Visual
                     // Execute History
                     using (var command = new SqlCommand(sqlHistory, connection))
                     {
-                        command.Parameters.AddWithValue("@StartDate", historyStart);
-                        command.Parameters.AddWithValue("@Today", DateTime.Today);
+                        // Broad range: 1 year back to 6 months forward (or user specified)
+                        // If user didn't specify, we default to a wide window in the caller or here
+                        // The caller (Control_ReceivingAnalytics) is now passing -1 year to +6 months
+                        command.Parameters.AddWithValue("@StartDate", startDate ?? DateTime.Today.AddYears(-1));
+                        command.Parameters.AddWithValue("@EndDate", endDate ?? DateTime.Today.AddMonths(6));
+                        
                         using (var reader = await command.ExecuteReaderAsync())
                         {
                             while (await reader.ReadAsync())
@@ -632,8 +652,9 @@ namespace MTM_WIP_Application_Winforms.Services.Visual
                     // Execute Forecast
                     using (var command = new SqlCommand(sqlForecast, connection))
                     {
-                        command.Parameters.AddWithValue("@Today", DateTime.Today);
-                        command.Parameters.AddWithValue("@EndDate", forecastEnd);
+                        command.Parameters.AddWithValue("@StartDate", startDate ?? DateTime.Today.AddYears(-1));
+                        command.Parameters.AddWithValue("@EndDate", endDate ?? DateTime.Today.AddMonths(6));
+                        
                         using (var reader = await command.ExecuteReaderAsync())
                         {
                             while (await reader.ReadAsync())

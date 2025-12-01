@@ -682,9 +682,8 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
                             Date = f.Date.ToString("yyyy-MM-dd"),
                             Type = DetermineReceivingType(f.Type),
                             Count = f.Count
-                        }),
-                        InitialStartDate = userStartDate.ToString("yyyy-MM-dd"),
-                        InitialEndDate = userEndDate.ToString("yyyy-MM-dd")
+                        })
+                        // Removed InitialStartDate/EndDate to let HTML show full dataset by default
                     };
 
                     var jsonOptions = new System.Text.Json.JsonSerializerOptions
@@ -729,8 +728,7 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
             if (type.Contains("MMC")) return "MMC";
             if (type.Contains("MMF")) return "MMF";
             if (type.Contains("SERVICE")) return "Service";
-            if (type.Contains("CONSIGNMENT")) return "Consignment";
-            if (type.Contains("INTERNAL")) return "Internal";
+            // Consignment and Internal removed per requirements
             
             return "Part";
         }

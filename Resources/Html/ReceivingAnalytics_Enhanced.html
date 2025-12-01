@@ -221,7 +221,7 @@
             <div class="control-group">
                 <label>View Mode</label>
                 <label class="toggle-switch">
-                    <input type="checkbox" onchange="updateViewMode()" id="viewModeToggle">
+                    <input type="checkbox" onchange="updateViewMode()" id="viewModeToggle" checked>
                     <span class="slider">
                         <span class="label-history">History</span>
                         <span class="label-forecast">Forecast</span>
@@ -253,12 +253,6 @@
                     <label class="checkbox-item">
                         <input type="checkbox" checked onchange="refreshChart()" data-type="Service"> Outside Svc
                     </label>
-                    <label class="checkbox-item">
-                        <input type="checkbox" checked onchange="refreshChart()" data-type="Consignment"> Consignment
-                    </label>
-                    <label class="checkbox-item">
-                        <input type="checkbox" checked onchange="refreshChart()" data-type="Internal"> Internal
-                    </label>
                 </div>
             </div>
 
@@ -284,7 +278,7 @@
     <script>
         let chartInstance = null;
         let currentPeriod = 'Day';
-        let isForecast = false;
+        let isForecast = true;
         let currentChartType = 'line';
         let rawData = { History: [], Forecast: [] };
         let comparisonEnabled = false;
@@ -329,24 +323,6 @@
                             data: [],
                             borderColor: '#d83b01',
                             backgroundColor: 'rgba(216, 59, 1, 0.1)',
-                            borderWidth: 2,
-                            tension: 0.4,
-                            fill: true
-                        },
-                        {
-                            label: 'Consignment',
-                            data: [],
-                            borderColor: '#ca5010',
-                            backgroundColor: 'rgba(202, 80, 16, 0.1)',
-                            borderWidth: 2,
-                            tension: 0.4,
-                            fill: true
-                        },
-                        {
-                            label: 'Internal',
-                            data: [],
-                            borderColor: '#8764b8',
-                            backgroundColor: 'rgba(135, 100, 184, 0.1)',
                             borderWidth: 2,
                             tension: 0.4,
                             fill: true
@@ -461,36 +437,50 @@
             // Date Filtering
             const startDateInput = document.getElementById('dateStart').value;
             const endDateInput = document.getElementById('dateEnd').value;
-            const startDate = startDateInput ? new Date(startDateInput) : null;
-            const endDate = endDateInput ? new Date(endDateInput) : null;
+            // Append T00:00:00 to force local time parsing to avoid timezone shifts
+            const startDate = startDateInput ? new Date(startDateInput + 'T00:00:00') : null;
+            const endDate = endDateInput ? new Date(endDateInput + 'T00:00:00') : null;
 
             const aggregated = {};
-            const types = ['Part', 'MMC', 'MMF', 'Service', 'Consignment', 'Internal'];
+            const types = ['Part', 'MMC', 'MMF', 'Service'];
             
             dataSource.forEach(item => {
                 if (!activeTypes.includes(item.Type)) return;
                 
                 // Apply Date Filter
+                // Date already has T00:00:00 appended from loadData
                 const itemDate = new Date(item.Date);
-                // Reset time part for accurate comparison
-                itemDate.setHours(0,0,0,0);
+                
                 if (startDate) {
-                    const start = new Date(startDate);
-                    start.setHours(0,0,0,0);
-                    if (itemDate < start) return;
+                    if (itemDate < startDate) return;
                 }
                 if (endDate) {
-                    const end = new Date(endDate);
-                    end.setHours(0,0,0,0);
-                    if (itemDate > end) return;
+                    if (itemDate > endDate) return;
                 }
 
-                const dateKey = getDateKey(new Date(item.Date), currentPeriod);
+                const dateKey = getDateKey(itemDate, currentPeriod);
                 if (!aggregated[dateKey]) {
-                    aggregated[dateKey] = { Part: 0, MMC: 0, MMF: 0, Service: 0, Consignment: 0, Internal: 0 };
+                    aggregated[dateKey] = { Part: 0, MMC: 0, MMF: 0, Service: 0 };
                 }
                 aggregated[dateKey][item.Type] = (aggregated[dateKey][item.Type] || 0) + item.Count;
             });
+
+            // Ensure current week is included in History view if within range
+            if (!isForecast && currentPeriod === 'Week') {
+                const today = new Date();
+                const todayKey = getDateKey(today, 'Week');
+                if (!aggregated[todayKey]) {
+                    // If no data for current week, check if we should show it (based on date filter)
+                    let showCurrentWeek = true;
+                    if (startDate && today < startDate) showCurrentWeek = false;
+                    if (endDate && today > endDate) showCurrentWeek = false;
+                    
+                    if (showCurrentWeek) {
+                        // Add empty entry for current week so it appears on the chart
+                        aggregated[todayKey] = { Part: 0, MMC: 0, MMF: 0, Service: 0 };
+                    }
+                }
+            }
 
             const sortedKeys = Object.keys(aggregated).sort();
             
@@ -499,8 +489,7 @@
             chartInstance.data.datasets[1].data = sortedKeys.map(key => aggregated[key].MMC || 0);
             chartInstance.data.datasets[2].data = sortedKeys.map(key => aggregated[key].MMF || 0);
             chartInstance.data.datasets[3].data = sortedKeys.map(key => aggregated[key].Service || 0);
-            chartInstance.data.datasets[4].data = sortedKeys.map(key => aggregated[key].Consignment || 0);
-            chartInstance.data.datasets[5].data = sortedKeys.map(key => aggregated[key].Internal || 0);
+            // Consignment and Internal datasets removed
             
             updateMetrics(dataSource, activeTypes);
             chartInstance.update();
@@ -616,6 +605,12 @@
         function loadData(jsonString) {
             try {
                 rawData = JSON.parse(jsonString);
+                
+                // Fix date parsing by appending time component to force local time
+                // This prevents timezone shifts when converting yyyy-MM-dd to Date objects
+                if (rawData.History) rawData.History.forEach(x => x.Date += 'T00:00:00');
+                if (rawData.Forecast) rawData.Forecast.forEach(x => x.Date += 'T00:00:00');
+
                 console.log('Data loaded:', rawData);
                 
                 // Set initial dates if provided
@@ -624,6 +619,29 @@
                 }
                 if (rawData.InitialEndDate) {
                     document.getElementById('dateEnd').value = rawData.InitialEndDate;
+                }
+
+                // If no dates set, default to current week (Monday to Friday)
+                if (!document.getElementById('dateStart').value) {
+                    const d = new Date();
+                    const dayOfWeek = d.getDay();
+                    const diffToMonday = d.getDate() - dayOfWeek + (dayOfWeek === 0 ? -6 : 1); // adjust when day is sunday
+                    
+                    // Create new date objects to avoid mutation issues
+                    const monday = new Date(d.setDate(diffToMonday));
+                    // Reset d to monday before adding 4 days
+                    const friday = new Date(new Date(monday).setDate(monday.getDate() + 4));
+                    
+                    // Format as yyyy-MM-dd using local time
+                    const formatDate = (date) => {
+                        const year = date.getFullYear();
+                        const month = String(date.getMonth() + 1).padStart(2, '0');
+                        const day = String(date.getDate()).padStart(2, '0');
+                        return `${year}-${month}-${day}`;
+                    };
+
+                    document.getElementById('dateStart').value = formatDate(monday);
+                    document.getElementById('dateEnd').value = formatDate(friday);
                 }
 
                 refreshChart();
