@@ -12,12 +12,26 @@ namespace MTM_WIP_Application_Winforms.Forms.Visual
     public partial class Form_AnalyticsViewer : ThemedForm
     {
         private readonly DataTable _analyticsData;
+        private string? _tempFilePath;
 
         public Form_AnalyticsViewer(DataTable data)
         {
             InitializeComponent();
             _analyticsData = data;
             InitializeWebView();
+        }
+
+        protected override void OnFormClosed(FormClosedEventArgs e)
+        {
+            base.OnFormClosed(e);
+            if (!string.IsNullOrEmpty(_tempFilePath) && File.Exists(_tempFilePath))
+            {
+                try
+                {
+                    File.Delete(_tempFilePath);
+                }
+                catch { /* Ignore cleanup errors */ }
+            }
         }
 
         private async void InitializeWebView()
@@ -65,10 +79,13 @@ namespace MTM_WIP_Application_Winforms.Forms.Visual
                     string json = JsonConvert.SerializeObject(dataList);
 
                     // Inject data directly into HTML before navigation
-                    // This avoids race conditions with DOMContentLoaded
                     htmlContent = htmlContent.Replace("// DATA_INJECTION_POINT", $"window.injectedData = {json};");
 
-                    webView.NavigateToString(htmlContent);
+                    // Use temp file to avoid NavigateToString size limits (approx 2MB) which causes ArgumentException on large datasets
+                    _tempFilePath = Path.Combine(Path.GetTempPath(), $"MTM_Analytics_{Guid.NewGuid()}.html");
+                    await File.WriteAllTextAsync(_tempFilePath, htmlContent);
+                    
+                    webView.Source = new Uri(_tempFilePath);
                 }
                 else
                 {
