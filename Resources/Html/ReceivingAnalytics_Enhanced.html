@@ -383,6 +383,7 @@
                     }
                 }
             });
+            refreshChart();
         }
 
         function handleChartClick(event, activeElements) {
@@ -441,6 +442,7 @@
         }
 
         function refreshChart() {
+            if (!chartInstance) return;
             const dataSource = isForecast ? rawData.Forecast : rawData.History;
             if (!dataSource || dataSource.length === 0) return;
 
@@ -589,6 +591,8 @@
         }
 
         window.onload = initChart;
+        
+        // To be populated by C#
     </script>
 </body>
 </html>
