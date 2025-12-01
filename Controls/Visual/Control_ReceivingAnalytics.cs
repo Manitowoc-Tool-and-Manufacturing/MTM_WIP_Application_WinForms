@@ -644,7 +644,13 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
                     }
                 }
 
-                string htmlContent = System.IO.File.ReadAllText(htmlPath);
+                // Use FileStream with FileShare.ReadWrite to allow concurrent reads
+                string htmlContent;
+                using (var fs = new System.IO.FileStream(htmlPath, System.IO.FileMode.Open, System.IO.FileAccess.Read, System.IO.FileShare.ReadWrite))
+                using (var sr = new System.IO.StreamReader(fs))
+                {
+                    htmlContent = await sr.ReadToEndAsync();
+                }
                 
                 // Fetch Data
                 if (_visualService == null) return;
@@ -702,7 +708,11 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
                     
                     htmlContent = htmlContent.Replace("// To be populated by C#", $"loadData('{jsonData}');");
 
-                    using (var viewer = new Form_HtmlViewer("Receiving Analytics", htmlContent))
+                    // Use temp file to avoid NavigateToString size limits
+                    string tempFilePath = System.IO.Path.Combine(System.IO.Path.GetTempPath(), $"MTM_ReceivingAnalytics_{Guid.NewGuid()}.html");
+                    await System.IO.File.WriteAllTextAsync(tempFilePath, htmlContent);
+
+                    using (var viewer = new Form_HtmlViewer("Receiving Analytics", new Uri(tempFilePath), tempFilePath))
                     {
                         viewer.ShowDialog(this);
                     }

@@ -165,10 +165,11 @@ namespace MTM_WIP_Application_Winforms.Services.Visual
             string sql;
             if (searchByPart)
             {
-                // Search by Part Number -> Find Die (USER_1)
-                // Updated to use reverse lookup (D.USER_5 = P.ID) to handle parts with multiple dies
+                // Search by Part Number -> Find Die
+                // Updated to use both Legacy (USER_5) and Engineering Master (BOM) links
+                // This handles cases where dies are linked via the Engineering Master (Subordinate parts)
                 sql = @"
-                    SELECT
+                    SELECT DISTINCT
                         P.ID as [Part Number],
                         P.DESCRIPTION as [Description],
                         D.ID as [Die Number],
@@ -176,22 +177,56 @@ namespace MTM_WIP_Application_Winforms.Services.Visual
                         P.USER_7 as [Customer],
                         P.USER_9 as [Coil]
                     FROM PART P
-                    LEFT JOIN PART D ON D.USER_5 = P.ID 
-                        AND D.ID LIKE 'FGT%-01' 
+                    LEFT JOIN PART D ON (
+                        D.ID LIKE 'FGT%-01' 
                         AND D.ID <> 'FGT0001-01'
+                        AND (
+                            -- Link 1: Legacy USER_5 (Die points to Part)
+                            (D.USER_5 = P.ID)
+                            OR
+                            -- Link 2: Engineering Master BOM (Part has Die as component)
+                            EXISTS (
+                                SELECT 1 FROM WORK_ORDER WO
+                                JOIN REQUIREMENT R ON R.WORKORDER_BASE_ID = WO.BASE_ID 
+                                                   AND R.WORKORDER_LOT_ID = WO.LOT_ID 
+                                                   AND R.WORKORDER_SPLIT_ID = WO.SPLIT_ID 
+                                                   AND R.WORKORDER_SUB_ID = WO.SUB_ID
+                                WHERE WO.PART_ID = P.ID 
+                                AND WO.TYPE = 'M' -- Engineering Master
+                                AND R.PART_ID = D.ID
+                            )
+                        )
+                    )
                     WHERE P.ID LIKE @SearchTerm";
             }
             else
             {
-                // Search by Die Number (FGT) -> Find Part (USER_5)
+                // Search by Die Number (FGT) -> Find Part
+                // Updated to use both Legacy (USER_5) and Engineering Master (BOM) links
                 sql = @"
-                    SELECT
+                    SELECT DISTINCT
                         D.ID as [Die Number],
                         D.DESCRIPTION as [Description],
-                        D.USER_5 as [Part Number],
+                        P.ID as [Part Number],
                         D.USER_2 as [Die Location],
                         D.USER_9 as [Coil]
                     FROM PART D
+                    LEFT JOIN PART P ON (
+                        -- Link 1: Legacy USER_5 (Die points to Part)
+                        (P.ID = D.USER_5)
+                        OR
+                        -- Link 2: Engineering Master BOM (Part has Die as component)
+                        EXISTS (
+                            SELECT 1 FROM WORK_ORDER WO
+                            JOIN REQUIREMENT R ON R.WORKORDER_BASE_ID = WO.BASE_ID 
+                                               AND R.WORKORDER_LOT_ID = WO.LOT_ID 
+                                               AND R.WORKORDER_SPLIT_ID = WO.SPLIT_ID 
+                                               AND R.WORKORDER_SUB_ID = WO.SUB_ID
+                            WHERE WO.PART_ID = P.ID 
+                            AND WO.TYPE = 'M' -- Engineering Master
+                            AND R.PART_ID = D.ID
+                        )
+                    )
                     WHERE D.ID LIKE @SearchTerm
                     AND D.ID LIKE 'FGT%-01'
                     AND D.ID <> 'FGT0001-01'";
