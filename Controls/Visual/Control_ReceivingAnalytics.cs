@@ -657,14 +657,11 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
                 var startDate = Control_ReceivingAnalytics_DateTimePicker_StartDate.Value;
                 var endDate = Control_ReceivingAnalytics_DateTimePicker_EndDate.Value;
 
-                // If the range is very small (e.g. 1 week), we might want to expand it for analytics context
-                // But for now, let's respect the user's selection or default to YTD if they haven't changed it?
-                // Actually, the user explicitly asked to change the date range.
-                // So we pass the selected dates.
-                // However, typically analytics shows History up to Today, and Forecast from Today onwards.
-                // If the user selects a past range, they probably want to see history in that range.
-                // If they select a future range, they want forecast.
-                // The service method now handles filtering both history and forecast by the passed dates.
+                // Ensure forecast doesn't go beyond 1 month if that's the max desired, 
+                // but the user asked to "allow the user to change how long they wish to go out".
+                // The UI has a date picker for End Date. If the user picks a date 1 month out, it will be passed here.
+                // If they pick 1 day out, it will be passed here.
+                // So the existing logic I just added supports this, as long as the user uses the date picker.
                 
                 var result = await _visualService.GetReceivingAnalyticsAsync(startDate, endDate);
                 
