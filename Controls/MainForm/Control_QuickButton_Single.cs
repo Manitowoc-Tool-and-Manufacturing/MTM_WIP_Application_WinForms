@@ -273,9 +273,9 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             // float partIdFontSize = Math.Max(9f, Math.Min(14f, buttonHeight / 4.5f));
             // float detailFontSize = Math.Max(7.5f, Math.Min(11f, buttonHeight / 6f));
 
-            // _lblPartId.Font = new Font("Segoe UI", partIdFontSize, FontStyle.Bold, GraphicsUnit.Point);
-            // _lblOperation.Font = new Font("Segoe UI", detailFontSize, FontStyle.Regular, GraphicsUnit.Point);
-            // _lblQuantity.Font = new Font("Segoe UI", detailFontSize, FontStyle.Regular, GraphicsUnit.Point);
+            // _lblPartId.Font = new Font("Segoe UI Emoji", partIdFontSize, FontStyle.Bold, GraphicsUnit.Point);
+            // _lblOperation.Font = new Font("Segoe UI Emoji", detailFontSize, FontStyle.Regular, GraphicsUnit.Point);
+            // _lblQuantity.Font = new Font("Segoe UI Emoji", detailFontSize, FontStyle.Regular, GraphicsUnit.Point);
         }
 
         /// <summary>

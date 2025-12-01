@@ -67,11 +67,11 @@ public class Core_TablePrinter : IDisposable
     public Core_TablePrinter()
     {
         // Initialize fonts
-        _titleFont = new Font("Segoe UI", 16, FontStyle.Bold);
-        _headerFont = new Font("Segoe UI", 11, FontStyle.Bold);
-        _cellFont = new Font("Segoe UI", 10, FontStyle.Regular);
-        _watermarkFont = new Font("Segoe UI", 48, FontStyle.Bold);
-        _pageFont = new Font("Segoe UI", 9, FontStyle.Regular);
+        _titleFont = new Font("Segoe UI Emoji", 16, FontStyle.Bold);
+        _headerFont = new Font("Segoe UI Emoji", 11, FontStyle.Bold);
+        _cellFont = new Font("Segoe UI Emoji", 10, FontStyle.Regular);
+        _watermarkFont = new Font("Segoe UI Emoji", 48, FontStyle.Bold);
+        _pageFont = new Font("Segoe UI Emoji", 9, FontStyle.Regular);
 
         // Get theme colors from Model_Application_Variables
         var colors = Model_Application_Variables.UserUiColors;

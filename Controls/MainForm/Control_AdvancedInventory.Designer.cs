@@ -767,7 +767,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             AdvancedInventory_MultiLoc_TextBox_Loc.Size = new Size(212, 35);
             AdvancedInventory_MultiLoc_TextBox_Loc.TabIndex = 4;
             // 
-            // panel3
+            // Control_ReceivingAnalytics_Panel_ReceivingScopeContents
             // 
             panel3.AutoSize = true;
             panel3.AutoSizeMode = AutoSizeMode.GrowAndShrink;
@@ -775,7 +775,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             panel3.Controls.Add(AdvancedInventory_MultiLoc_RichTextBox_Notes);
             panel3.Dock = DockStyle.Fill;
             panel3.Location = new Point(3, 140);
-            panel3.Name = "panel3";
+            panel3.Name = "Control_ReceivingAnalytics_Panel_ReceivingScopeContents";
             panel3.Size = new Size(212, 126);
             panel3.TabIndex = 9;
             // 

@@ -59,7 +59,7 @@ namespace MTM_WIP_Application_Winforms.Forms.Transactions
             // 
             Transactions_Label_Title.AutoSize = true;
             Transactions_Label_Title.Dock = DockStyle.Fill;
-            Transactions_Label_Title.Font = new Font("Segoe UI", 10F, FontStyle.Bold);
+            Transactions_Label_Title.Font = new Font("Segoe UI Emoji", 10F, FontStyle.Bold);
             Transactions_Label_Title.Location = new Point(3, 3);
             Transactions_Label_Title.Margin = new Padding(3);
             Transactions_Label_Title.Name = "Transactions_Label_Title";

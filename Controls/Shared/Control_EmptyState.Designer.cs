@@ -34,7 +34,7 @@ namespace MTM_WIP_Application_Winforms.Controls.Shared
             // labelMessage
             // 
             this.labelMessage.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.labelMessage.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.labelMessage.Font = new System.Drawing.Font("Segoe UI Emoji", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.labelMessage.Location = new System.Drawing.Point(50, 160);
             this.labelMessage.Name = "labelMessage";
             this.labelMessage.Size = new System.Drawing.Size(300, 30);

@@ -277,7 +277,7 @@ namespace MTM_WIP_Application_Winforms.Forms.Shared
             // 
             PrintForm_Label_PrinterSettingsHeader.AutoSize = true;
             PrintForm_Label_PrinterSettingsHeader.Dock = DockStyle.Fill;
-            PrintForm_Label_PrinterSettingsHeader.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
+            PrintForm_Label_PrinterSettingsHeader.Font = new Font("Segoe UI Emoji", 9F, FontStyle.Bold);
             PrintForm_Label_PrinterSettingsHeader.Location = new Point(3, 3);
             PrintForm_Label_PrinterSettingsHeader.Margin = new Padding(3);
             PrintForm_Label_PrinterSettingsHeader.Name = "PrintForm_Label_PrinterSettingsHeader";
@@ -520,7 +520,7 @@ namespace MTM_WIP_Application_Winforms.Forms.Shared
             // 
             PrintForm_Label_PageSettingsHeader.AutoSize = true;
             PrintForm_Label_PageSettingsHeader.Dock = DockStyle.Fill;
-            PrintForm_Label_PageSettingsHeader.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
+            PrintForm_Label_PageSettingsHeader.Font = new Font("Segoe UI Emoji", 9F, FontStyle.Bold);
             PrintForm_Label_PageSettingsHeader.Location = new Point(3, 3);
             PrintForm_Label_PageSettingsHeader.Margin = new Padding(3);
             PrintForm_Label_PageSettingsHeader.Name = "PrintForm_Label_PageSettingsHeader";
@@ -983,7 +983,7 @@ namespace MTM_WIP_Application_Winforms.Forms.Shared
             // 
             PrintForm_Label_ColumnSettingsHeader.AutoSize = true;
             PrintForm_Label_ColumnSettingsHeader.Dock = DockStyle.Fill;
-            PrintForm_Label_ColumnSettingsHeader.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
+            PrintForm_Label_ColumnSettingsHeader.Font = new Font("Segoe UI Emoji", 9F, FontStyle.Bold);
             PrintForm_Label_ColumnSettingsHeader.Location = new Point(3, 3);
             PrintForm_Label_ColumnSettingsHeader.Margin = new Padding(3);
             PrintForm_Label_ColumnSettingsHeader.Name = "PrintForm_Label_ColumnSettingsHeader";
@@ -1155,7 +1155,7 @@ namespace MTM_WIP_Application_Winforms.Forms.Shared
             // 
             PrintForm_Label_OptionsHeader.AutoSize = true;
             PrintForm_Label_OptionsHeader.Dock = DockStyle.Fill;
-            PrintForm_Label_OptionsHeader.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
+            PrintForm_Label_OptionsHeader.Font = new Font("Segoe UI Emoji", 9F, FontStyle.Bold);
             PrintForm_Label_OptionsHeader.Location = new Point(3, 3);
             PrintForm_Label_OptionsHeader.Margin = new Padding(3);
             PrintForm_Label_OptionsHeader.Name = "PrintForm_Label_OptionsHeader";

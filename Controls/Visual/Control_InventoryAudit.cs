@@ -1,32 +1,427 @@
 using System;
+using System.Collections.Generic;
+using System.Data;
+using System.Drawing;
+using System.Threading.Tasks;
 using System.Windows.Forms;
+using Microsoft.Extensions.DependencyInjection;
+using MTM_WIP_Application_Winforms.Controls.Shared;
 using MTM_WIP_Application_Winforms.Forms.Shared;
+using MTM_WIP_Application_Winforms.Models;
+using MTM_WIP_Application_Winforms.Services;
+using MTM_WIP_Application_Winforms.Services.Visual;
+using MTM_WIP_Application_Winforms.Services.Logging;
+using MTM_WIP_Application_Winforms.Helpers;
 
 namespace MTM_WIP_Application_Winforms.Controls.Visual
 {
     /// <summary>
-    /// Main container control for Inventory Auditing features.
-    /// Hosts the Part Lifecycle Tracker and potentially other audit tools.
+    /// Control for tracking part transaction lifecycles and auditing inventory history.
+    /// Supports multiple filter modes via tabs.
     /// </summary>
     public partial class Control_InventoryAudit : ThemedUserControl
     {
-        private Control_VisualPartLifecycle _lifecycleControl = null!;
+        #region Fields
+        private readonly IService_VisualDatabase? _visualService;
+        private DataTable? _cachedDataTable;
+        #endregion
 
+        #region Constructors
         public Control_InventoryAudit()
         {
-            // InitializeComponent(); // Not using designer
-            InitializeContent();
+            InitializeComponent();
+            _visualService = Program.ServiceProvider?.GetService<IService_VisualDatabase>();
+            WireUpEvents();
+            ConfigureSuggestions();
+            InitializeDefaultValues();
+        }
+        #endregion
+
+        #region Initialization
+        private void ConfigureSuggestions()
+        {
+            Helper_SuggestionTextBox.ConfigureForPartNumbers(_txtLifecyclePart, GetPartIdsAsync);
+            Helper_SuggestionTextBox.ConfigureForPartNumbers(_txtByPartPart, GetPartIdsAsync);
+            Helper_SuggestionTextBox.ConfigureForUsers(_txtByUserUser, GetUsersAsync);
+            Helper_SuggestionTextBox.ConfigureForWorkOrders(_txtByWOWO, GetWorkOrdersAsync);
+            Helper_SuggestionTextBox.ConfigureForCustomerOrders(_txtByCOCO, GetCustomerOrdersAsync);
+            Helper_SuggestionTextBox.ConfigureForPurchaseOrders(_txtByPOPO, GetPurchaseOrdersAsync);
         }
 
-        private void InitializeContent()
+        private void InitializeDefaultValues()
         {
-            // For now, we just host the Lifecycle control filling the entire space.
-            // In the future, this could have a dashboard-like layout or navigation.
-            _lifecycleControl = new Control_VisualPartLifecycle
-            {
-                Dock = DockStyle.Fill
-            };
-            this.Controls.Add(_lifecycleControl);
+            _dtpLifecycleStart.Value = DateTime.Today.AddDays(-30);
+            _dtpLifecycleEnd.Value = DateTime.Today;
+            
+            _dtpByUserStart.Value = DateTime.Today.AddDays(-30);
+            _dtpByUserEnd.Value = DateTime.Today;
         }
+
+        private void WireUpEvents()
+        {
+            _btnSearch.Click += async (s, e) => await PerformSearchAsync();
+            _btnExport.Click += BtnExport_Click;
+            
+            // Enter key support on inputs
+            _txtLifecyclePart.TextBox.KeyDown += async (s, e) => { if (e.KeyCode == Keys.Enter) await PerformSearchAsync(); };
+            _txtByPartPart.TextBox.KeyDown += async (s, e) => { if (e.KeyCode == Keys.Enter) await PerformSearchAsync(); };
+            _txtByUserUser.TextBox.KeyDown += async (s, e) => { if (e.KeyCode == Keys.Enter) await PerformSearchAsync(); };
+            _txtByWOWO.TextBox.KeyDown += async (s, e) => { if (e.KeyCode == Keys.Enter) await PerformSearchAsync(); };
+            _txtByCOCO.TextBox.KeyDown += async (s, e) => { if (e.KeyCode == Keys.Enter) await PerformSearchAsync(); };
+            _txtByPOPO.TextBox.KeyDown += async (s, e) => { if (e.KeyCode == Keys.Enter) await PerformSearchAsync(); };
+            
+            _dataGridView.CellDoubleClick += DataGridView_CellDoubleClick;
+        }
+        #endregion
+
+        #region Methods
+        private async Task<List<string>> GetPartIdsAsync()
+        {
+            if (_visualService == null) return new List<string>();
+            var result = await _visualService.GetPartIdsAsync();
+            return result.IsSuccess ? (result.Data ?? new List<string>()) : new List<string>();
+        }
+
+        private async Task<List<string>> GetUsersAsync()
+        {
+            if (_visualService == null) return new List<string>();
+            var result = await _visualService.GetUserIdsAsync();
+            return result.IsSuccess ? (result.Data ?? new List<string>()) : new List<string>();
+        }
+
+        private async Task<List<string>> GetWorkOrdersAsync()
+        {
+            if (_visualService == null) return new List<string>();
+            var result = await _visualService.GetWorkOrdersAsync();
+            return result.IsSuccess ? (result.Data ?? new List<string>()) : new List<string>();
+        }
+
+        private async Task<List<string>> GetPurchaseOrdersAsync()
+        {
+            if (_visualService == null) return new List<string>();
+            var result = await _visualService.GetPurchaseOrdersAsync();
+            return result.IsSuccess ? (result.Data ?? new List<string>()) : new List<string>();
+        }
+
+        private async Task<List<string>> GetCustomerOrdersAsync()
+        {
+            if (_visualService == null) return new List<string>();
+            var result = await _visualService.GetCustomerOrdersAsync();
+            return result.IsSuccess ? (result.Data ?? new List<string>()) : new List<string>();
+        }
+
+        private async void DataGridView_CellDoubleClick(object? sender, DataGridViewCellEventArgs e)
+        {
+            if (e.RowIndex < 0) return;
+
+            try
+            {
+                var row = _dataGridView.Rows[e.RowIndex];
+                if (row.DataBoundItem is DataRowView drv)
+                {
+                    // Check if we are already in Lifecycle View and have a Trans ID
+                    if (_tabControl.SelectedTab == _tabLifecycle && drv.Row.Table.Columns.Contains("Trans ID"))
+                    {
+                        // This is a trace request on a specific transaction
+                        string transIdStr = drv["Trans ID"]?.ToString() ?? "";
+                        
+                        // Handle combined IDs (e.g. "123/124")
+                        int transId = 0;
+                        if (transIdStr.Contains("/"))
+                        {
+                            // Pick the first one (usually the OUT part of a transfer)
+                            int.TryParse(transIdStr.Split('/')[0], out transId);
+                        }
+                        else
+                        {
+                            int.TryParse(transIdStr, out transId);
+                        }
+
+                        if (transId > 0 && _cachedDataTable != null)
+                        {
+                            // We need the raw data to trace, but _cachedDataTable is already processed.
+                            // We need to re-fetch or store raw data.
+                            // For now, let's re-fetch to be safe and ensure we have the full context.
+                            // Or better, if we are in Lifecycle view, we just filter the current view?
+                            // No, TraceTransactionFlow needs raw data.
+                            
+                            // Let's trigger a special trace search
+                            await PerformTraceSearchAsync(transId);
+                            return;
+                        }
+                    }
+
+                    // Otherwise, standard Part ID switch logic
+                    // Try to find Part ID column (could be PART_ID or Part Number depending on view)
+                    string partId = "";
+                    if (drv.Row.Table.Columns.Contains("PART_ID"))
+                        partId = drv["PART_ID"]?.ToString() ?? "";
+                    else if (drv.Row.Table.Columns.Contains("Part Number"))
+                        partId = drv["Part Number"]?.ToString() ?? "";
+                    else if (drv.Row.Table.Columns.Contains("Part ID"))
+                        partId = drv["Part ID"]?.ToString() ?? "";
+                    
+                    if (!string.IsNullOrEmpty(partId))
+                    {
+                        // Switch to Lifecycle tab
+                        _tabControl.SelectedTab = _tabLifecycle;
+                        _txtLifecyclePart.Text = partId;
+                        
+                        // Set date range to cover a broad history
+                        _dtpLifecycleStart.Value = DateTime.Today.AddYears(-2); 
+                        _dtpLifecycleEnd.Value = DateTime.Today;
+
+                        await PerformSearchAsync();
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Low, controlName: this.Name);
+            }
+        }
+
+        private async Task PerformTraceSearchAsync(int transId)
+        {
+            if (_visualService == null) return;
+
+            try
+            {
+                _btnSearch.Enabled = false;
+                _btnSearch.Text = "Tracing...";
+
+                // We need to fetch the raw transactions for the current part first
+                // We can reuse the current filter settings since we are already on the Lifecycle tab
+                var filter = new Model_VisualTransactionFilter
+                {
+                    PartId = _txtLifecyclePart.Text?.Trim(),
+                    StartDate = _dtpLifecycleStart.Value,
+                    EndDate = _dtpLifecycleEnd.Value
+                };
+
+                var result = await _visualService.GetTransactionsAsync(filter);
+
+                if (result.IsSuccess && result.Data != null)
+                {
+                    // Apply Trace Logic
+                    _cachedDataTable = Helper_VisualLifecycle.TraceTransactionFlow(result.Data, transId);
+                    
+                    _dataGridView.DataSource = _cachedDataTable;
+                    await Service_DataGridView.ApplyStandardSettingsAsync(_dataGridView, Model_Application_Variables.User);
+                    Service_DataGridView.ApplySmartNumericFormatting(_dataGridView);
+                    ApplyLifecycleColoring();
+                    
+                    Service_ErrorHandler.ShowInformation("Showing transaction flow trace. Search again to reset.");
+                }
+                else
+                {
+                    Service_ErrorHandler.ShowError(result.ErrorMessage);
+                }
+            }
+            catch (Exception ex)
+            {
+                Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Medium, controlName: this.Name);
+            }
+            finally
+            {
+                _btnSearch.Enabled = true;
+                _btnSearch.Text = "Search";
+            }
+        }
+
+        private async Task PerformSearchAsync()
+        {
+            if (_visualService == null)
+            {
+                Service_ErrorHandler.ShowError("Visual Database Service not available.");
+                return;
+            }
+
+            try
+            {
+                _btnSearch.Enabled = false;
+                _btnSearch.Text = "Searching...";
+
+                var filter = new Model_VisualTransactionFilter();
+                bool isLifecycleView = false;
+
+                // Populate filter based on active tab
+                if (_tabControl.SelectedTab == _tabLifecycle)
+                {
+                    filter.PartId = _txtLifecyclePart.Text?.Trim();
+                    filter.StartDate = _dtpLifecycleStart.Value;
+                    filter.EndDate = _dtpLifecycleEnd.Value;
+                    isLifecycleView = true;
+
+                    if (string.IsNullOrEmpty(filter.PartId))
+                    {
+                        Service_ErrorHandler.ShowUserError("Please enter a Part ID for Lifecycle View.");
+                        return;
+                    }
+                }
+                else if (_tabControl.SelectedTab == _tabByPart)
+                {
+                    filter.PartId = _txtByPartPart.Text?.Trim();
+                    if (string.IsNullOrEmpty(filter.PartId))
+                    {
+                        Service_ErrorHandler.ShowUserError("Please enter a Part ID.");
+                        return;
+                    }
+                }
+                else if (_tabControl.SelectedTab == _tabByUser)
+                {
+                    filter.UserId = _txtByUserUser.Text?.Trim();
+                    filter.StartDate = _dtpByUserStart.Value;
+                    filter.EndDate = _dtpByUserEnd.Value;
+                    if (string.IsNullOrEmpty(filter.UserId))
+                    {
+                        Service_ErrorHandler.ShowUserError("Please enter a User ID.");
+                        return;
+                    }
+                }
+                else if (_tabControl.SelectedTab == _tabByWO)
+                {
+                    filter.WorkOrder = _txtByWOWO.Text?.Trim();
+                    if (string.IsNullOrEmpty(filter.WorkOrder))
+                    {
+                        Service_ErrorHandler.ShowUserError("Please enter a Work Order.");
+                        return;
+                    }
+                }
+                else if (_tabControl.SelectedTab == _tabByCO)
+                {
+                    filter.CustomerOrder = _txtByCOCO.Text?.Trim();
+                    if (string.IsNullOrEmpty(filter.CustomerOrder))
+                    {
+                        Service_ErrorHandler.ShowUserError("Please enter a Customer Order.");
+                        return;
+                    }
+                }
+                else if (_tabControl.SelectedTab == _tabByPO)
+                {
+                    filter.PurchaseOrder = _txtByPOPO.Text?.Trim();
+                    if (string.IsNullOrEmpty(filter.PurchaseOrder))
+                    {
+                        Service_ErrorHandler.ShowUserError("Please enter a PO Number.");
+                        return;
+                    }
+                }
+
+                var result = await _visualService.GetTransactionsAsync(filter);
+
+                if (result.IsSuccess && result.Data != null)
+                {
+                    if (isLifecycleView)
+                    {
+                        _cachedDataTable = Helper_VisualLifecycle.ProcessTransactions(result.Data);
+                    }
+                    else
+                    {
+                        _cachedDataTable = result.Data;
+                    }
+
+                    _dataGridView.DataSource = _cachedDataTable;
+                    await Service_DataGridView.ApplyStandardSettingsAsync(_dataGridView, Model_Application_Variables.User);
+                    Service_DataGridView.ApplySmartNumericFormatting(_dataGridView);
+                    
+                    // Apply row coloring if Lifecycle view
+                    if (isLifecycleView)
+                    {
+                        ApplyLifecycleColoring();
+                    }
+                }
+                else
+                {
+                    Service_ErrorHandler.ShowError(result.ErrorMessage);
+                    _dataGridView.DataSource = null;
+                }
+            }
+            catch (Exception ex)
+            {
+                Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Medium, controlName: this.Name);
+            }
+            finally
+            {
+                _btnSearch.Enabled = true;
+                _btnSearch.Text = "Search";
+            }
+        }
+
+        private void ApplyLifecycleColoring()
+        {
+            foreach (DataGridViewRow row in _dataGridView.Rows)
+            {
+                if (row.DataBoundItem is DataRowView drv)
+                {
+                    string type = drv["RowType"]?.ToString() ?? "";
+                    switch (type)
+                    {
+                        case "receipt": row.DefaultCellStyle.BackColor = Color.FromArgb(26, 76, 46); break; // Dark Green
+                        case "transfer-out": row.DefaultCellStyle.BackColor = Color.FromArgb(76, 58, 26); break; // Dark Brown/Orange
+                        case "transfer-in": row.DefaultCellStyle.BackColor = Color.FromArgb(26, 46, 76); break; // Dark Blue
+                        case "shipment": row.DefaultCellStyle.BackColor = Color.FromArgb(76, 26, 26); break; // Dark Red
+                    }
+                    
+                    // Ensure text is readable on dark backgrounds
+                    if (!string.IsNullOrEmpty(type))
+                    {
+                        row.DefaultCellStyle.ForeColor = Color.White;
+                    }
+                }
+            }
+        }
+
+        private async void BtnExport_Click(object? sender, EventArgs e)
+        {
+            if (_dataGridView.DataSource is not DataTable dt || dt.Rows.Count == 0)
+            {
+                Service_ErrorHandler.ShowError("No data to export.");
+                return;
+            }
+
+            using var saveFileDialog = new SaveFileDialog
+            {
+                Filter = "Excel Workbook|*.xlsx",
+                Title = "Export to Excel",
+                FileName = $"VisualAudit_{DateTime.Now:yyyyMMdd_HHmmss}.xlsx"
+            };
+
+            if (saveFileDialog.ShowDialog() == DialogResult.OK)
+            {
+                try
+                {
+                    _btnExport.Enabled = false;
+                    _btnExport.Text = "Exporting...";
+
+                    var columnOrder = new List<string>();
+                    foreach (DataGridViewColumn col in _dataGridView.Columns)
+                    {
+                        if (col.Visible) columnOrder.Add(col.Name);
+                    }
+
+                    var printJob = new Model_Print_Job(dt, columnOrder, columnOrder, "Visual Audit Export");
+                    var result = await Helper_ExportManager.ExportToExcelAsync(printJob, saveFileDialog.FileName);
+
+                    if (result.IsSuccess)
+                    {
+                        Service_ErrorHandler.ShowInformation($"Export successful to {saveFileDialog.FileName}");
+                    }
+                    else
+                    {
+                        Service_ErrorHandler.ShowError($"Export failed: {result.ErrorMessage}");
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Medium, controlName: this.Name);
+                }
+                finally
+                {
+                    _btnExport.Enabled = true;
+                    _btnExport.Text = "Export to Excel";
+                }
+            }
+        }
+        #endregion
     }
 }

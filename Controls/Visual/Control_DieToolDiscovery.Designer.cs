@@ -15,145 +15,176 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
         /// </summary>
         private void InitializeComponent()
         {
-            this.tabControlMain = new System.Windows.Forms.TabControl();
-            this.tabLocator = new System.Windows.Forms.TabPage();
-            this.gridResults = new System.Windows.Forms.DataGridView();
-            this.grpSearch = new System.Windows.Forms.GroupBox();
-            this.btnSearch = new System.Windows.Forms.Button();
-            this.txtSearch = new System.Windows.Forms.TextBox();
-            this.lblSearch = new System.Windows.Forms.Label();
-            this.radioSearchByDie = new System.Windows.Forms.RadioButton();
-            this.radioSearchByPart = new System.Windows.Forms.RadioButton();
-            this.tabDiscovery = new System.Windows.Forms.TabPage();
-            this.tabControlMain.SuspendLayout();
-            this.tabLocator.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.gridResults)).BeginInit();
-            this.grpSearch.SuspendLayout();
-            this.SuspendLayout();
+            tabControlMain = new TabControl();
+            tabLocator = new TabPage();
+            grpSearch = new GroupBox();
+            tableLayoutPanel1 = new TableLayoutPanel();
+            tableLayoutPanel2 = new TableLayoutPanel();
+            txtSearch = new TextBox();
+            lblSearch = new Label();
+            btnSearch = new Button();
+            panel1 = new Panel();
+            gridResults = new DataGridView();
+            tabControlMain.SuspendLayout();
+            tabLocator.SuspendLayout();
+            grpSearch.SuspendLayout();
+            tableLayoutPanel1.SuspendLayout();
+            tableLayoutPanel2.SuspendLayout();
+            panel1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)gridResults).BeginInit();
+            SuspendLayout();
             // 
             // tabControlMain
             // 
-            this.tabControlMain.Controls.Add(this.tabLocator);
-            this.tabControlMain.Controls.Add(this.tabDiscovery);
-            this.tabControlMain.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tabControlMain.Location = new System.Drawing.Point(0, 0);
-            this.tabControlMain.Name = "tabControlMain";
-            this.tabControlMain.SelectedIndex = 0;
-            this.tabControlMain.Size = new System.Drawing.Size(800, 600);
-            this.tabControlMain.TabIndex = 0;
+            tabControlMain.Controls.Add(tabLocator);
+            tabControlMain.Dock = DockStyle.Fill;
+            tabControlMain.Location = new Point(0, 0);
+            tabControlMain.Name = "tabControlMain";
+            tabControlMain.SelectedIndex = 0;
+            tabControlMain.Size = new Size(800, 350);
+            tabControlMain.TabIndex = 0;
             // 
             // tabLocator
             // 
-            this.tabLocator.Controls.Add(this.gridResults);
-            this.tabLocator.Controls.Add(this.grpSearch);
-            this.tabLocator.Location = new System.Drawing.Point(4, 24);
-            this.tabLocator.Name = "tabLocator";
-            this.tabLocator.Padding = new System.Windows.Forms.Padding(10);
-            this.tabLocator.Size = new System.Drawing.Size(792, 572);
-            this.tabLocator.TabIndex = 0;
-            this.tabLocator.Text = "Die Locator";
-            this.tabLocator.UseVisualStyleBackColor = true;
-            // 
-            // gridResults
-            // 
-            this.gridResults.AllowUserToAddRows = false;
-            this.gridResults.AllowUserToDeleteRows = false;
-            this.gridResults.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.gridResults.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.gridResults.Location = new System.Drawing.Point(10, 110);
-            this.gridResults.Name = "gridResults";
-            this.gridResults.ReadOnly = true;
-            this.gridResults.RowTemplate.Height = 25;
-            this.gridResults.Size = new System.Drawing.Size(772, 452);
-            this.gridResults.TabIndex = 1;
+            tabLocator.Controls.Add(grpSearch);
+            tabLocator.Location = new Point(4, 24);
+            tabLocator.Name = "tabLocator";
+            tabLocator.Padding = new Padding(10);
+            tabLocator.Size = new Size(792, 322);
+            tabLocator.TabIndex = 0;
+            tabLocator.Text = "Die Locator";
+            tabLocator.UseVisualStyleBackColor = true;
             // 
             // grpSearch
             // 
-            this.grpSearch.Controls.Add(this.btnSearch);
-            this.grpSearch.Controls.Add(this.txtSearch);
-            this.grpSearch.Controls.Add(this.lblSearch);
-            this.grpSearch.Controls.Add(this.radioSearchByDie);
-            this.grpSearch.Controls.Add(this.radioSearchByPart);
-            this.grpSearch.Dock = System.Windows.Forms.DockStyle.Top;
-            this.grpSearch.Location = new System.Drawing.Point(10, 10);
-            this.grpSearch.Name = "grpSearch";
-            this.grpSearch.Size = new System.Drawing.Size(772, 100);
-            this.grpSearch.TabIndex = 0;
-            this.grpSearch.TabStop = false;
-            this.grpSearch.Text = "Search Criteria";
+            grpSearch.AutoSize = true;
+            grpSearch.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            grpSearch.Controls.Add(tableLayoutPanel1);
+            grpSearch.Dock = DockStyle.Fill;
+            grpSearch.Location = new Point(10, 10);
+            grpSearch.Name = "grpSearch";
+            grpSearch.Size = new Size(772, 302);
+            grpSearch.TabIndex = 0;
+            grpSearch.TabStop = false;
+            grpSearch.Text = "Search Criteria";
             // 
-            // btnSearch
+            // tableLayoutPanel1
             // 
-            this.btnSearch.Location = new System.Drawing.Point(450, 50);
-            this.btnSearch.Name = "btnSearch";
-            this.btnSearch.Size = new System.Drawing.Size(100, 25);
-            this.btnSearch.TabIndex = 4;
-            this.btnSearch.Text = "Search";
-            this.btnSearch.UseVisualStyleBackColor = true;
-            this.btnSearch.Click += new System.EventHandler(this.btnSearch_Click);
+            tableLayoutPanel1.AutoSize = true;
+            tableLayoutPanel1.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            tableLayoutPanel1.ColumnCount = 1;
+            tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle());
+            tableLayoutPanel1.Controls.Add(tableLayoutPanel2, 0, 0);
+            tableLayoutPanel1.Controls.Add(btnSearch, 0, 1);
+            tableLayoutPanel1.Controls.Add(panel1, 0, 2);
+            tableLayoutPanel1.Dock = DockStyle.Fill;
+            tableLayoutPanel1.Location = new Point(3, 19);
+            tableLayoutPanel1.Name = "tableLayoutPanel1";
+            tableLayoutPanel1.RowCount = 3;
+            tableLayoutPanel1.RowStyles.Add(new RowStyle());
+            tableLayoutPanel1.RowStyles.Add(new RowStyle());
+            tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
+            tableLayoutPanel1.Size = new Size(766, 280);
+            tableLayoutPanel1.TabIndex = 5;
+            // 
+            // tableLayoutPanel2
+            // 
+            tableLayoutPanel2.AutoSize = true;
+            tableLayoutPanel2.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            tableLayoutPanel2.ColumnCount = 2;
+            tableLayoutPanel2.ColumnStyles.Add(new ColumnStyle());
+            tableLayoutPanel2.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
+            tableLayoutPanel2.Controls.Add(txtSearch, 1, 0);
+            tableLayoutPanel2.Controls.Add(lblSearch, 0, 0);
+            tableLayoutPanel2.Dock = DockStyle.Fill;
+            tableLayoutPanel2.Location = new Point(3, 3);
+            tableLayoutPanel2.Name = "tableLayoutPanel2";
+            tableLayoutPanel2.RowCount = 1;
+            tableLayoutPanel2.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
+            tableLayoutPanel2.Size = new Size(760, 29);
+            tableLayoutPanel2.TabIndex = 6;
             // 
             // txtSearch
             // 
-            this.txtSearch.Location = new System.Drawing.Point(120, 52);
-            this.txtSearch.Name = "txtSearch";
-            this.txtSearch.Size = new System.Drawing.Size(300, 23);
-            this.txtSearch.TabIndex = 3;
-            this.txtSearch.KeyDown += new System.Windows.Forms.KeyEventHandler(this.txtSearch_KeyDown);
+            txtSearch.Dock = DockStyle.Fill;
+            txtSearch.Location = new Point(84, 3);
+            txtSearch.Name = "txtSearch";
+            txtSearch.Size = new Size(673, 23);
+            txtSearch.TabIndex = 3;
+            txtSearch.KeyDown += txtSearch_KeyDown;
             // 
             // lblSearch
             // 
-            this.lblSearch.AutoSize = true;
-            this.lblSearch.Location = new System.Drawing.Point(20, 55);
-            this.lblSearch.Name = "lblSearch";
-            this.lblSearch.Size = new System.Drawing.Size(90, 15);
-            this.lblSearch.TabIndex = 2;
-            this.lblSearch.Text = "Search Term:";
+            lblSearch.AutoSize = true;
+            lblSearch.Dock = DockStyle.Fill;
+            lblSearch.Location = new Point(3, 3);
+            lblSearch.Margin = new Padding(3);
+            lblSearch.Name = "lblSearch";
+            lblSearch.Size = new Size(75, 23);
+            lblSearch.TabIndex = 2;
+            lblSearch.Text = "Search Term:";
+            lblSearch.TextAlign = ContentAlignment.MiddleRight;
             // 
-            // radioSearchByDie
+            // btnSearch
             // 
-            this.radioSearchByDie.AutoSize = true;
-            this.radioSearchByDie.Location = new System.Drawing.Point(200, 25);
-            this.radioSearchByDie.Name = "radioSearchByDie";
-            this.radioSearchByDie.Size = new System.Drawing.Size(160, 19);
-            this.radioSearchByDie.TabIndex = 1;
-            this.radioSearchByDie.Text = "Search by Die Number (FGT)";
-            this.radioSearchByDie.UseVisualStyleBackColor = true;
+            btnSearch.AutoSize = true;
+            btnSearch.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            btnSearch.Dock = DockStyle.Fill;
+            btnSearch.Location = new Point(3, 38);
+            btnSearch.Name = "btnSearch";
+            btnSearch.Size = new Size(760, 25);
+            btnSearch.TabIndex = 4;
+            btnSearch.Text = "Search";
+            btnSearch.UseVisualStyleBackColor = true;
+            btnSearch.Click += btnSearch_Click;
             // 
-            // radioSearchByPart
+            // panel1
             // 
-            this.radioSearchByPart.AutoSize = true;
-            this.radioSearchByPart.Checked = true;
-            this.radioSearchByPart.Location = new System.Drawing.Point(20, 25);
-            this.radioSearchByPart.Name = "radioSearchByPart";
-            this.radioSearchByPart.Size = new System.Drawing.Size(150, 19);
-            this.radioSearchByPart.TabIndex = 0;
-            this.radioSearchByPart.TabStop = true;
-            this.radioSearchByPart.Text = "Search by Part Number";
-            this.radioSearchByPart.UseVisualStyleBackColor = true;
+            panel1.AutoSize = true;
+            panel1.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            panel1.BorderStyle = BorderStyle.FixedSingle;
+            panel1.Controls.Add(gridResults);
+            panel1.Dock = DockStyle.Fill;
+            panel1.Location = new Point(3, 69);
+            panel1.Name = "panel1";
+            panel1.Padding = new Padding(10);
+            panel1.Size = new Size(760, 208);
+            panel1.TabIndex = 7;
             // 
-            // tabDiscovery
+            // gridResults
             // 
-            this.tabDiscovery.Location = new System.Drawing.Point(4, 24);
-            this.tabDiscovery.Name = "tabDiscovery";
-            this.tabDiscovery.Padding = new System.Windows.Forms.Padding(3);
-            this.tabDiscovery.Size = new System.Drawing.Size(792, 572);
-            this.tabDiscovery.TabIndex = 1;
-            this.tabDiscovery.Text = "Discovery";
-            this.tabDiscovery.UseVisualStyleBackColor = true;
+            gridResults.AllowUserToAddRows = false;
+            gridResults.AllowUserToDeleteRows = false;
+            gridResults.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            gridResults.Dock = DockStyle.Fill;
+            gridResults.Location = new Point(10, 10);
+            gridResults.Name = "gridResults";
+            gridResults.ReadOnly = true;
+            gridResults.Size = new Size(738, 186);
+            gridResults.TabIndex = 2;
             // 
             // Control_DieToolDiscovery
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.Controls.Add(this.tabControlMain);
-            this.Name = "Control_DieToolDiscovery";
-            this.Size = new System.Drawing.Size(800, 600);
-            this.tabControlMain.ResumeLayout(false);
-            this.tabLocator.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.gridResults)).EndInit();
-            this.grpSearch.ResumeLayout(false);
-            this.grpSearch.PerformLayout();
-            this.ResumeLayout(false);
+            AutoScaleDimensions = new SizeF(7F, 15F);
+            AutoScaleMode = AutoScaleMode.Font;
+            AutoSize = true;
+            AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            Controls.Add(tabControlMain);
+            MinimumSize = new Size(800, 350);
+            Name = "Control_DieToolDiscovery";
+            Size = new Size(800, 350);
+            tabControlMain.ResumeLayout(false);
+            tabLocator.ResumeLayout(false);
+            tabLocator.PerformLayout();
+            grpSearch.ResumeLayout(false);
+            grpSearch.PerformLayout();
+            tableLayoutPanel1.ResumeLayout(false);
+            tableLayoutPanel1.PerformLayout();
+            tableLayoutPanel2.ResumeLayout(false);
+            tableLayoutPanel2.PerformLayout();
+            panel1.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)gridResults).EndInit();
+            ResumeLayout(false);
 
         }
 
@@ -161,13 +192,13 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
 
         private System.Windows.Forms.TabControl tabControlMain;
         private System.Windows.Forms.TabPage tabLocator;
-        private System.Windows.Forms.TabPage tabDiscovery;
         private System.Windows.Forms.GroupBox grpSearch;
-        private System.Windows.Forms.RadioButton radioSearchByDie;
-        private System.Windows.Forms.RadioButton radioSearchByPart;
         private System.Windows.Forms.Label lblSearch;
         private System.Windows.Forms.TextBox txtSearch;
         private System.Windows.Forms.Button btnSearch;
-        private System.Windows.Forms.DataGridView gridResults;
+        private TableLayoutPanel tableLayoutPanel1;
+        private TableLayoutPanel tableLayoutPanel2;
+        private Panel panel1;
+        private DataGridView gridResults;
     }
 }

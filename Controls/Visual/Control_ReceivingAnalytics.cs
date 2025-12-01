@@ -15,9 +15,24 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
         #region Fields
         private readonly IService_VisualDatabase? _visualService;
         private bool _isFiltersVisible = true;
-        private readonly Control_TextAnimationSequence _toggleButtonAnimation;
         private DataTable? _cachedDataTable;
         private bool _isHandlingFilterLogic = false;
+        
+        // Animation controls for expand/collapse
+        private readonly Control_TextAnimationSequence _dateRangeAnimation;
+        private readonly Control_TextAnimationSequence _filtersAnimation;
+        private readonly Control_TextAnimationSequence _poStatesAnimation;
+        private readonly Control_TextAnimationSequence _deliveryStatesAnimation;
+        private readonly Control_TextAnimationSequence _receivingScopeAnimation;
+        private readonly Control_TextAnimationSequence _outsideScopeAnimation;
+        
+        // Expanded state tracking
+        private bool _isDateRangeExpanded = true;
+        private bool _isFiltersExpanded = true;
+        private bool _isPOStatesExpanded = true;
+        private bool _isDeliveryStatesExpanded = true;
+        private bool _isReceivingScopeExpanded = true;
+        private bool _isOutsideScopeExpanded = true;
         #endregion
 
         #region Constructors
@@ -29,11 +44,36 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
             InitializeComponent();
             _visualService = Program.ServiceProvider?.GetService<IService_VisualDatabase>();
 
-            // Initialize Toggle Button Animation
-            _toggleButtonAnimation = new Control_TextAnimationSequence();
-            _toggleButtonAnimation.TargetButton = Control_ReceivingAnalytics_Button_ToggleOptions;
-            _toggleButtonAnimation.UsePreset(TextAnimationPreset.Up); // Initially visible, so arrow up
-            _toggleButtonAnimation.StartAnimation();
+            // Initialize Animation Controls
+            _dateRangeAnimation = new Control_TextAnimationSequence();
+            _dateRangeAnimation.TargetButton = Control_ReceivingAnalytics_Button_DateRangeHeader;
+            _dateRangeAnimation.UsePreset(TextAnimationPreset.Up);
+            _dateRangeAnimation.StartAnimation();
+
+            _filtersAnimation = new Control_TextAnimationSequence();
+            _filtersAnimation.TargetButton = Control_ReceivingAnalytics_Button_FiltersHeader;
+            _filtersAnimation.UsePreset(TextAnimationPreset.Up);
+            _filtersAnimation.StartAnimation();
+
+            _poStatesAnimation = new Control_TextAnimationSequence();
+            _poStatesAnimation.TargetButton = Control_ReceivingAnalytics_Button_POStatesHeader;
+            _poStatesAnimation.UsePreset(TextAnimationPreset.Up);
+            _poStatesAnimation.StartAnimation();
+
+            _deliveryStatesAnimation = new Control_TextAnimationSequence();
+            _deliveryStatesAnimation.TargetButton = Control_ReceivingAnalytics_Button_DeliveryStatesHeader;
+            _deliveryStatesAnimation.UsePreset(TextAnimationPreset.Up);
+            _deliveryStatesAnimation.StartAnimation();
+
+            _receivingScopeAnimation = new Control_TextAnimationSequence();
+            _receivingScopeAnimation.TargetButton = Control_ReceivingAnalytics_Button_ReceivingScopeHeader;
+            _receivingScopeAnimation.UsePreset(TextAnimationPreset.Up);
+            _receivingScopeAnimation.StartAnimation();
+
+            _outsideScopeAnimation = new Control_TextAnimationSequence();
+            _outsideScopeAnimation.TargetButton = Control_ReceivingAnalytics_Button_OutsideScopeHeader;
+            _outsideScopeAnimation.UsePreset(TextAnimationPreset.Up);
+            _outsideScopeAnimation.StartAnimation();
 
             // Initialize Suggestion Boxes
             InitializeSuggestionBoxes();
@@ -93,9 +133,6 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
             // Analytics Button
             Control_ReceivingAnalytics_Button_Analytics.Click += Control_ReceivingAnalytics_Button_Analytics_Click;
 
-            // Toggle Options
-            Control_ReceivingAnalytics_Button_ToggleOptions.Click += Control_ReceivingAnalytics_Button_ToggleOptions_Click;
-
             // DataGridView Events
             Control_ReceivingAnalytics_DataGridView_Results.CellDoubleClick += DataGridViewResults_CellDoubleClick;
             Control_ReceivingAnalytics_DataGridView_Results.DataBindingComplete += (s, e) => ApplyRowColors();
@@ -136,6 +173,14 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
             Control_ReceivingAnalytics_Button_PreviousWeek.Click += async (s, e) => { SetPreviousWeek(); await FetchDataAsync(); };
             Control_ReceivingAnalytics_Button_NextWeek.Click += async (s, e) => { SetNextWeek(); await FetchDataAsync(); };
             Control_ReceivingAnalytics_Button_CurrentWeek.Click += async (s, e) => { SetCurrentWeek(); await FetchDataAsync(); };
+
+            // Expand/Collapse Header Buttons
+            Control_ReceivingAnalytics_Button_DateRangeHeader.Click += ToggleDateRangeSection;
+            Control_ReceivingAnalytics_Button_FiltersHeader.Click += ToggleFiltersSection;
+            Control_ReceivingAnalytics_Button_POStatesHeader.Click += TogglePOStatesSection;
+            Control_ReceivingAnalytics_Button_DeliveryStatesHeader.Click += ToggleDeliveryStatesSection;
+            Control_ReceivingAnalytics_Button_ReceivingScopeHeader.Click += ToggleReceivingScopeSection;
+            Control_ReceivingAnalytics_Button_OutsideScopeHeader.Click += ToggleOutsideScopeSection;
         }
 
         private void InitializeSuggestionBoxes()
@@ -487,19 +532,94 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
         #endregion
 
         #region Events
-        private void Control_ReceivingAnalytics_Button_ToggleOptions_Click(object? sender, EventArgs e)
+
+        private void ToggleDateRangeSection(object? sender, EventArgs e)
         {
-            _isFiltersVisible = !_isFiltersVisible;
-            Control_ReceivingAnalytics_TableLayoutPanel_Filters.Visible = _isFiltersVisible;
-            Control_ReceivingAnalytics_TableLayoutPanel_CheckBoxes.Visible = _isFiltersVisible;
+            _isDateRangeExpanded = !_isDateRangeExpanded;
+            Control_ReceivingAnalytics_Panel_DateRangeContents.Visible = _isDateRangeExpanded;
             
-            if (_isFiltersVisible)
+            if (_isDateRangeExpanded)
             {
-                _toggleButtonAnimation.UsePreset(TextAnimationPreset.Up);
+                _dateRangeAnimation.UsePreset(TextAnimationPreset.Up);
             }
             else
             {
-                _toggleButtonAnimation.UsePreset(TextAnimationPreset.Down);
+                _dateRangeAnimation.UsePreset(TextAnimationPreset.Down);
+            }
+        }
+
+        private void ToggleFiltersSection(object? sender, EventArgs e)
+        {
+            _isFiltersExpanded = !_isFiltersExpanded;
+            Control_ReceivingAnalytics_Panel_FiltersContents.Visible = _isFiltersExpanded;
+            
+            if (_isFiltersExpanded)
+            {
+                _filtersAnimation.UsePreset(TextAnimationPreset.Up);
+            }
+            else
+            {
+                _filtersAnimation.UsePreset(TextAnimationPreset.Down);
+            }
+        }
+
+        private void TogglePOStatesSection(object? sender, EventArgs e)
+        {
+            _isPOStatesExpanded = !_isPOStatesExpanded;
+            Control_ReceivingAnalytics_TableLayoutPanel_POStatesContents.Visible = _isPOStatesExpanded;
+            
+            if (_isPOStatesExpanded)
+            {
+                _poStatesAnimation.UsePreset(TextAnimationPreset.Up);
+            }
+            else
+            {
+                _poStatesAnimation.UsePreset(TextAnimationPreset.Down);
+            }
+        }
+
+        private void ToggleDeliveryStatesSection(object? sender, EventArgs e)
+        {
+            _isDeliveryStatesExpanded = !_isDeliveryStatesExpanded;
+            Control_ReceivingAnalytics_Panel_DeliveryStatesContents.Visible = _isDeliveryStatesExpanded;
+            
+            if (_isDeliveryStatesExpanded)
+            {
+                _deliveryStatesAnimation.UsePreset(TextAnimationPreset.Up);
+            }
+            else
+            {
+                _deliveryStatesAnimation.UsePreset(TextAnimationPreset.Down);
+            }
+        }
+
+        private void ToggleReceivingScopeSection(object? sender, EventArgs e)
+        {
+            _isReceivingScopeExpanded = !_isReceivingScopeExpanded;
+            Control_ReceivingAnalytics_Panel_ReceivingScopeContents.Visible = _isReceivingScopeExpanded;
+            
+            if (_isReceivingScopeExpanded)
+            {
+                _receivingScopeAnimation.UsePreset(TextAnimationPreset.Up);
+            }
+            else
+            {
+                _receivingScopeAnimation.UsePreset(TextAnimationPreset.Down);
+            }
+        }
+
+        private void ToggleOutsideScopeSection(object? sender, EventArgs e)
+        {
+            _isOutsideScopeExpanded = !_isOutsideScopeExpanded;
+            Control_ReceivingAnalytics_Panel_OutsideScopeContents.Visible = _isOutsideScopeExpanded;
+            
+            if (_isOutsideScopeExpanded)
+            {
+                _outsideScopeAnimation.UsePreset(TextAnimationPreset.Up);
+            }
+            else
+            {
+                _outsideScopeAnimation.UsePreset(TextAnimationPreset.Down);
             }
         }
 

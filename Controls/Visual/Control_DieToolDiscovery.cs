@@ -90,11 +90,11 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
                 return;
             }
 
-            LoggingUtility.Log($"[Control_DieToolDiscovery] Search initiated | SearchTerm={searchTerm}, SearchByPart={radioSearchByPart.Checked}");
+            LoggingUtility.Log($"[Control_DieToolDiscovery] Search initiated | SearchTerm={searchTerm}, SearchByPart={true}");
 
             try
             {
-                bool searchByPart = radioSearchByPart.Checked;
+                bool searchByPart = true;
                 
                 var result = await _visualService.SearchDiesAsync(searchTerm, searchByPart);
 
@@ -130,7 +130,7 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
                     {
                         ["User"] = Model_Application_Variables.User,
                         ["SearchTerm"] = searchTerm,
-                        ["SearchByPart"] = radioSearchByPart.Checked,
+                        ["SearchByPart"] = true,
                         ["Operation"] = "SearchDies"
                     },
                     callerName: nameof(PerformSearch),

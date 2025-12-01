@@ -155,7 +155,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
                     AutoSize = true,
                     Anchor = AnchorStyles.Left | AnchorStyles.Right,
                     TextAlign = ContentAlignment.MiddleLeft,
-                    Font = new Font("Segoe UI", 8.5F),
+                    Font = new Font("Segoe UI Emoji", 8.5F),
                     BackColor = Color.Transparent,
                     Padding = new Padding(2)
                 };
@@ -179,7 +179,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
                     Tag = shortcut,
                     Dock = DockStyle.Fill,
                     FlatStyle = FlatStyle.Flat,
-                    Font = new Font("Segoe UI", 8F)
+                    Font = new Font("Segoe UI Emoji", 8F)
                 };
                 btnChange.FlatAppearance.BorderSize = 0;
                 btnChange.Click += async (s, e) => await HandleChangeShortcut(shortcut);
@@ -202,7 +202,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
                 AutoSize = true,
                 Anchor = AnchorStyles.Left | AnchorStyles.Right,
                 TextAlign = ContentAlignment.MiddleCenter,
-                Font = new Font("Segoe UI", 8.5F, FontStyle.Bold),
+                Font = new Font("Segoe UI Emoji", 8.5F, FontStyle.Bold),
                 BackColor = Color.FromArgb(240, 240, 240),
                 Padding = new Padding(2)
             };

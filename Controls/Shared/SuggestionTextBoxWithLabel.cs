@@ -37,7 +37,19 @@ namespace MTM_WIP_Application_Winforms.Controls.Shared
             get => SuggestionTextBoxWithLabel_Label_Main.Text.TrimEnd(':', ' ');
             set => SuggestionTextBoxWithLabel_Label_Main.Text = string.IsNullOrWhiteSpace(value) ? string.Empty : $"{value}: ";
         }
-        
+
+        public string LabelVisible
+        {
+            get => SuggestionTextBoxWithLabel_Label_Main.Visible.ToString();
+            set
+            {
+                if (bool.TryParse(value, out bool isVisible))
+                {
+                    SuggestionTextBoxWithLabel_Label_Main.Visible = isVisible;
+                }
+            }
+        }
+
         /// <summary>
         /// Gets or sets the minimum number of characters the user can type or paste into the text box control.
         /// </summary>

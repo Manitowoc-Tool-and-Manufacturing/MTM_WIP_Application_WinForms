@@ -315,7 +315,7 @@ namespace MTM_WIP_Application_Winforms.Forms.ViewLogs
             panelUserSelection.Size = new Size(718, 50);
             panelUserSelection.TabIndex = 0;
             // 
-            // tableLayoutPanel4
+            // Control_ReceivingAnalytics_TableLayoutPanel_ReceivingScopeContents
             // 
             tableLayoutPanel4.ColumnCount = 7;
             tableLayoutPanel4.ColumnStyles.Add(new ColumnStyle());
@@ -333,7 +333,7 @@ namespace MTM_WIP_Application_Winforms.Forms.ViewLogs
             tableLayoutPanel4.Controls.Add(chkGroupErrors, 5, 0);
             tableLayoutPanel4.Dock = DockStyle.Fill;
             tableLayoutPanel4.Location = new Point(10, 10);
-            tableLayoutPanel4.Name = "tableLayoutPanel4";
+            tableLayoutPanel4.Name = "Control_ReceivingAnalytics_TableLayoutPanel_ReceivingScopeContents";
             tableLayoutPanel4.RowCount = 1;
             tableLayoutPanel4.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
             tableLayoutPanel4.Size = new Size(698, 30);
@@ -416,7 +416,7 @@ namespace MTM_WIP_Application_Winforms.Forms.ViewLogs
             panelFileList.Size = new Size(718, 243);
             panelFileList.TabIndex = 1;
             // 
-            // tableLayoutPanel3
+            // Control_ReceivingAnalytics_TableLayoutPanel_ReceivingScopeHeader
             // 
             tableLayoutPanel3.ColumnCount = 3;
             tableLayoutPanel3.ColumnStyles.Add(new ColumnStyle());
@@ -427,7 +427,7 @@ namespace MTM_WIP_Application_Winforms.Forms.ViewLogs
             tableLayoutPanel3.Controls.Add(lstLogFiles, 0, 1);
             tableLayoutPanel3.Dock = DockStyle.Fill;
             tableLayoutPanel3.Location = new Point(10, 10);
-            tableLayoutPanel3.Name = "tableLayoutPanel3";
+            tableLayoutPanel3.Name = "Control_ReceivingAnalytics_TableLayoutPanel_ReceivingScopeHeader";
             tableLayoutPanel3.RowCount = 2;
             tableLayoutPanel3.RowStyles.Add(new RowStyle());
             tableLayoutPanel3.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
@@ -467,7 +467,7 @@ namespace MTM_WIP_Application_Winforms.Forms.ViewLogs
             // lblLogFiles
             // 
             lblLogFiles.AutoSize = true;
-            lblLogFiles.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
+            lblLogFiles.Font = new Font("Segoe UI Emoji", 9F, FontStyle.Bold);
             lblLogFiles.Location = new Point(3, 3);
             lblLogFiles.Margin = new Padding(3);
             lblLogFiles.Name = "lblLogFiles";

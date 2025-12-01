@@ -513,7 +513,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             Control_Add_User_Button_Save.UseVisualStyleBackColor = true;
             Control_Add_User_Button_Save.Click += Control_Add_User_Button_Save_Click;
             //
-            // tableLayoutPanel4
+            // Control_ReceivingAnalytics_TableLayoutPanel_ReceivingScopeContents
             //
             Control_Add_User_TableLayoutPanel_Buttons.AutoSize = true;
             Control_Add_User_TableLayoutPanel_Buttons.AutoSizeMode = AutoSizeMode.GrowAndShrink;

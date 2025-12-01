@@ -252,7 +252,7 @@ namespace MTM_WIP_Application_Winforms.Forms.ViewLogs
             // lblTitle
             // 
             lblTitle.Dock = DockStyle.Fill;
-            lblTitle.Font = new Font("Segoe UI", 14F, FontStyle.Bold);
+            lblTitle.Font = new Font("Segoe UI Emoji", 14F, FontStyle.Bold);
             lblTitle.Location = new Point(0, 0);
             lblTitle.Margin = new Padding(0);
             lblTitle.Name = "lblTitle";

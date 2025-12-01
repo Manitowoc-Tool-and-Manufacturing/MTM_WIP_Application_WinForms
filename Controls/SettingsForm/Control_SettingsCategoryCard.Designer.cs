@@ -160,7 +160,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             // Control_SettingsCategoryCard_Label_Description
             // 
             Control_SettingsCategoryCard_Label_Description.Dock = DockStyle.Fill;
-            Control_SettingsCategoryCard_Label_Description.Font = new Font("Segoe UI", 9F);
+            Control_SettingsCategoryCard_Label_Description.Font = new Font("Segoe UI Emoji", 9F);
             Control_SettingsCategoryCard_Label_Description.ForeColor = Color.FromArgb(96, 94, 92);
             Control_SettingsCategoryCard_Label_Description.Location = new Point(113, 54);
             Control_SettingsCategoryCard_Label_Description.Margin = new Padding(0);

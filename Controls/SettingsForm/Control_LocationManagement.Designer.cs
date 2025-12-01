@@ -224,7 +224,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             // 
             Control_LocationManagement_Label_Header.AutoSize = true;
             Control_LocationManagement_Label_Header.Dock = DockStyle.Fill;
-            Control_LocationManagement_Label_Header.Font = new Font("Segoe UI", 20F, FontStyle.Bold);
+            Control_LocationManagement_Label_Header.Font = new Font("Segoe UI Emoji", 20F, FontStyle.Bold);
             Control_LocationManagement_Label_Header.ForeColor = Color.FromArgb(45, 45, 45);
             Control_LocationManagement_Label_Header.Location = new Point(23, 23);
             Control_LocationManagement_Label_Header.Margin = new Padding(3);
@@ -237,7 +237,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             // 
             Control_LocationManagement_Label_Subtitle.AutoSize = true;
             Control_LocationManagement_Label_Subtitle.Dock = DockStyle.Fill;
-            Control_LocationManagement_Label_Subtitle.Font = new Font("Segoe UI", 10F);
+            Control_LocationManagement_Label_Subtitle.Font = new Font("Segoe UI Emoji", 10F);
             Control_LocationManagement_Label_Subtitle.ForeColor = Color.FromArgb(90, 90, 90);
             Control_LocationManagement_Label_Subtitle.Location = new Point(23, 66);
             Control_LocationManagement_Label_Subtitle.Margin = new Padding(3);
@@ -335,7 +335,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             // 
             Control_LocationManagement_Label_HomeTile_AddTitle.AutoSize = true;
             Control_LocationManagement_Label_HomeTile_AddTitle.Dock = DockStyle.Fill;
-            Control_LocationManagement_Label_HomeTile_AddTitle.Font = new Font("Segoe UI", 14F, FontStyle.Bold);
+            Control_LocationManagement_Label_HomeTile_AddTitle.Font = new Font("Segoe UI Emoji", 14F, FontStyle.Bold);
             Control_LocationManagement_Label_HomeTile_AddTitle.Location = new Point(6, 97);
             Control_LocationManagement_Label_HomeTile_AddTitle.Margin = new Padding(3);
             Control_LocationManagement_Label_HomeTile_AddTitle.Name = "Control_LocationManagement_Label_HomeTile_AddTitle";
@@ -348,7 +348,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             // 
             Control_LocationManagement_Label_HomeTile_AddInstruction.AutoSize = true;
             Control_LocationManagement_Label_HomeTile_AddInstruction.Dock = DockStyle.Fill;
-            Control_LocationManagement_Label_HomeTile_AddInstruction.Font = new Font("Segoe UI", 9F, FontStyle.Italic);
+            Control_LocationManagement_Label_HomeTile_AddInstruction.Font = new Font("Segoe UI Emoji", 9F, FontStyle.Italic);
             Control_LocationManagement_Label_HomeTile_AddInstruction.ForeColor = Color.FromArgb(100, 100, 100);
             Control_LocationManagement_Label_HomeTile_AddInstruction.Location = new Point(6, 167);
             Control_LocationManagement_Label_HomeTile_AddInstruction.Margin = new Padding(3);
@@ -410,7 +410,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             // 
             Control_LocationManagement_Label_HomeTile_RemoveTitle.AutoSize = true;
             Control_LocationManagement_Label_HomeTile_RemoveTitle.Dock = DockStyle.Fill;
-            Control_LocationManagement_Label_HomeTile_RemoveTitle.Font = new Font("Segoe UI", 14F, FontStyle.Bold);
+            Control_LocationManagement_Label_HomeTile_RemoveTitle.Font = new Font("Segoe UI Emoji", 14F, FontStyle.Bold);
             Control_LocationManagement_Label_HomeTile_RemoveTitle.Location = new Point(6, 97);
             Control_LocationManagement_Label_HomeTile_RemoveTitle.Margin = new Padding(3);
             Control_LocationManagement_Label_HomeTile_RemoveTitle.Name = "Control_LocationManagement_Label_HomeTile_RemoveTitle";
@@ -423,7 +423,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             // 
             Control_LocationManagement_Label_HomeTile_RemoveInstruction.AutoSize = true;
             Control_LocationManagement_Label_HomeTile_RemoveInstruction.Dock = DockStyle.Fill;
-            Control_LocationManagement_Label_HomeTile_RemoveInstruction.Font = new Font("Segoe UI", 9F, FontStyle.Italic);
+            Control_LocationManagement_Label_HomeTile_RemoveInstruction.Font = new Font("Segoe UI Emoji", 9F, FontStyle.Italic);
             Control_LocationManagement_Label_HomeTile_RemoveInstruction.ForeColor = Color.FromArgb(100, 100, 100);
             Control_LocationManagement_Label_HomeTile_RemoveInstruction.Location = new Point(6, 167);
             Control_LocationManagement_Label_HomeTile_RemoveInstruction.Margin = new Padding(3);
@@ -485,7 +485,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             // 
             Control_LocationManagement_Label_HomeTile_EditTitle.AutoSize = true;
             Control_LocationManagement_Label_HomeTile_EditTitle.Dock = DockStyle.Fill;
-            Control_LocationManagement_Label_HomeTile_EditTitle.Font = new Font("Segoe UI", 14F, FontStyle.Bold);
+            Control_LocationManagement_Label_HomeTile_EditTitle.Font = new Font("Segoe UI Emoji", 14F, FontStyle.Bold);
             Control_LocationManagement_Label_HomeTile_EditTitle.Location = new Point(6, 97);
             Control_LocationManagement_Label_HomeTile_EditTitle.Margin = new Padding(3);
             Control_LocationManagement_Label_HomeTile_EditTitle.Name = "Control_LocationManagement_Label_HomeTile_EditTitle";
@@ -498,7 +498,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             // 
             Control_LocationManagement_Label_HomeTile_EditInstruction.AutoSize = true;
             Control_LocationManagement_Label_HomeTile_EditInstruction.Dock = DockStyle.Fill;
-            Control_LocationManagement_Label_HomeTile_EditInstruction.Font = new Font("Segoe UI", 9F, FontStyle.Italic);
+            Control_LocationManagement_Label_HomeTile_EditInstruction.Font = new Font("Segoe UI Emoji", 9F, FontStyle.Italic);
             Control_LocationManagement_Label_HomeTile_EditInstruction.ForeColor = Color.FromArgb(100, 100, 100);
             Control_LocationManagement_Label_HomeTile_EditInstruction.Location = new Point(6, 167);
             Control_LocationManagement_Label_HomeTile_EditInstruction.Margin = new Padding(3);
@@ -592,7 +592,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             // 
             Control_LocationManagement_Label_AddTitle.AutoSize = true;
             Control_LocationManagement_Label_AddTitle.Dock = DockStyle.Fill;
-            Control_LocationManagement_Label_AddTitle.Font = new Font("Segoe UI", 16F, FontStyle.Bold);
+            Control_LocationManagement_Label_AddTitle.Font = new Font("Segoe UI Emoji", 16F, FontStyle.Bold);
             Control_LocationManagement_Label_AddTitle.Location = new Point(83, 3);
             Control_LocationManagement_Label_AddTitle.Margin = new Padding(3);
             Control_LocationManagement_Label_AddTitle.Name = "Control_LocationManagement_Label_AddTitle";
@@ -836,7 +836,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             // 
             Control_LocationManagement_Label_EditTitle.AutoSize = true;
             Control_LocationManagement_Label_EditTitle.Dock = DockStyle.Fill;
-            Control_LocationManagement_Label_EditTitle.Font = new Font("Segoe UI", 16F, FontStyle.Bold);
+            Control_LocationManagement_Label_EditTitle.Font = new Font("Segoe UI Emoji", 16F, FontStyle.Bold);
             Control_LocationManagement_Label_EditTitle.Location = new Point(83, 3);
             Control_LocationManagement_Label_EditTitle.Margin = new Padding(3);
             Control_LocationManagement_Label_EditTitle.Name = "Control_LocationManagement_Label_EditTitle";
@@ -876,7 +876,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             Control_LocationManagement_TableLayoutPanel_Remove.Size = new Size(438, 249);
             Control_LocationManagement_TableLayoutPanel_Remove.TabIndex = 0;
             // 
-            // tableLayoutPanel3
+            // Control_ReceivingAnalytics_TableLayoutPanel_ReceivingScopeHeader
             // 
             tableLayoutPanel3.AutoSize = true;
             tableLayoutPanel3.AutoSizeMode = AutoSizeMode.GrowAndShrink;
@@ -889,7 +889,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             tableLayoutPanel3.Dock = DockStyle.Fill;
             tableLayoutPanel3.Location = new Point(16, 16);
             tableLayoutPanel3.Margin = new Padding(0);
-            tableLayoutPanel3.Name = "tableLayoutPanel3";
+            tableLayoutPanel3.Name = "Control_ReceivingAnalytics_TableLayoutPanel_ReceivingScopeHeader";
             tableLayoutPanel3.RowCount = 1;
             tableLayoutPanel3.RowStyles.Add(new RowStyle());
             tableLayoutPanel3.Size = new Size(406, 57);
@@ -899,7 +899,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             // 
             Control_LocationManagement_Label_RemoveTitle.AutoSize = true;
             Control_LocationManagement_Label_RemoveTitle.Dock = DockStyle.Fill;
-            Control_LocationManagement_Label_RemoveTitle.Font = new Font("Segoe UI", 16F, FontStyle.Bold);
+            Control_LocationManagement_Label_RemoveTitle.Font = new Font("Segoe UI Emoji", 16F, FontStyle.Bold);
             Control_LocationManagement_Label_RemoveTitle.Location = new Point(83, 3);
             Control_LocationManagement_Label_RemoveTitle.Margin = new Padding(3);
             Control_LocationManagement_Label_RemoveTitle.Name = "Control_LocationManagement_Label_RemoveTitle";
@@ -1290,7 +1290,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             Label titleLabel = new Label
             {
                 Text = title,
-                Font = new Font("Segoe UI", 14F, FontStyle.Bold, GraphicsUnit.Point),
+                Font = new Font("Segoe UI Emoji", 14F, FontStyle.Bold, GraphicsUnit.Point),
                 AutoSize = true,
                 TextAlign = ContentAlignment.MiddleCenter,
                 Dock = DockStyle.Fill,
@@ -1300,7 +1300,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             Label descLabel = new Label
             {
                 Text = description,
-                Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point),
+                Font = new Font("Segoe UI Emoji", 9F, FontStyle.Regular, GraphicsUnit.Point),
                 ForeColor = Color.FromArgb(90, 90, 90),
                 AutoSize = true,
                 TextAlign = ContentAlignment.MiddleCenter,

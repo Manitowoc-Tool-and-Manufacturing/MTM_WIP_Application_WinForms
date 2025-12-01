@@ -84,7 +84,7 @@ namespace MTM_WIP_Application_Winforms.Forms.Transactions
             // TransactionLifecycleForm_TreeView_Lifecycle
             // 
             TransactionLifecycleForm_TreeView_Lifecycle.Dock = DockStyle.Fill;
-            TransactionLifecycleForm_TreeView_Lifecycle.Font = new Font("Segoe UI", 9F);
+            TransactionLifecycleForm_TreeView_Lifecycle.Font = new Font("Segoe UI Emoji", 9F);
             TransactionLifecycleForm_TreeView_Lifecycle.HideSelection = false;
             TransactionLifecycleForm_TreeView_Lifecycle.ImageIndex = 0;
             TransactionLifecycleForm_TreeView_Lifecycle.ImageList = TransactionLifecycleForm_ImageList_Icons;
@@ -153,7 +153,7 @@ namespace MTM_WIP_Application_Winforms.Forms.Transactions
             TransactionLifecycleForm_Button_Export.AutoSizeMode = AutoSizeMode.GrowAndShrink;
             TransactionLifecycleForm_Button_Export.BackColor = Color.FromArgb(34, 197, 94);
             TransactionLifecycleForm_Button_Export.FlatStyle = FlatStyle.Flat;
-            TransactionLifecycleForm_Button_Export.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
+            TransactionLifecycleForm_Button_Export.Font = new Font("Segoe UI Emoji", 9F, FontStyle.Bold);
             TransactionLifecycleForm_Button_Export.ForeColor = Color.White;
             TransactionLifecycleForm_Button_Export.Location = new Point(267, 5);
             TransactionLifecycleForm_Button_Export.Margin = new Padding(5);
@@ -170,7 +170,7 @@ namespace MTM_WIP_Application_Winforms.Forms.Transactions
             TransactionLifecycleForm_Button_Print.AutoSizeMode = AutoSizeMode.GrowAndShrink;
             TransactionLifecycleForm_Button_Print.BackColor = Color.FromArgb(59, 130, 246);
             TransactionLifecycleForm_Button_Print.FlatStyle = FlatStyle.Flat;
-            TransactionLifecycleForm_Button_Print.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
+            TransactionLifecycleForm_Button_Print.Font = new Font("Segoe UI Emoji", 9F, FontStyle.Bold);
             TransactionLifecycleForm_Button_Print.ForeColor = Color.White;
             TransactionLifecycleForm_Button_Print.Location = new Point(357, 5);
             TransactionLifecycleForm_Button_Print.Margin = new Padding(5);
@@ -188,7 +188,7 @@ namespace MTM_WIP_Application_Winforms.Forms.Transactions
             TransactionLifecycleForm_Button_Close.BackColor = Color.FromArgb(226, 232, 240);
             TransactionLifecycleForm_Button_Close.DialogResult = DialogResult.Cancel;
             TransactionLifecycleForm_Button_Close.FlatStyle = FlatStyle.Flat;
-            TransactionLifecycleForm_Button_Close.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
+            TransactionLifecycleForm_Button_Close.Font = new Font("Segoe UI Emoji", 9F, FontStyle.Bold);
             TransactionLifecycleForm_Button_Close.Location = new Point(442, 5);
             TransactionLifecycleForm_Button_Close.Margin = new Padding(5);
             TransactionLifecycleForm_Button_Close.MinimumSize = new Size(75, 32);

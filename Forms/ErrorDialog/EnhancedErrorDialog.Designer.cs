@@ -104,7 +104,7 @@
             this.labelPlainEnglish.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.labelPlainEnglish.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.labelPlainEnglish.Font = new System.Drawing.Font("Segoe UI Emoji", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.labelPlainEnglish.Location = new System.Drawing.Point(78, 15);
             this.labelPlainEnglish.Name = "labelPlainEnglish";
             this.labelPlainEnglish.Size = new System.Drawing.Size(437, 266);
@@ -160,7 +160,7 @@
             // 
             this.treeViewCallStack.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.treeViewCallStack.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.treeViewCallStack.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.treeViewCallStack.Font = new System.Drawing.Font("Segoe UI Emoji", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.treeViewCallStack.Location = new System.Drawing.Point(8, 8);
             this.treeViewCallStack.Name = "treeViewCallStack";
             this.treeViewCallStack.Size = new System.Drawing.Size(514, 280);
@@ -194,7 +194,7 @@
             this.buttonRetry.Dock = System.Windows.Forms.DockStyle.Fill;
             this.buttonRetry.FlatAppearance.BorderSize = 0;
             this.buttonRetry.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.buttonRetry.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.buttonRetry.Font = new System.Drawing.Font("Segoe UI Emoji", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.buttonRetry.ForeColor = System.Drawing.Color.White;
             this.buttonRetry.Location = new System.Drawing.Point(3, 3);
             this.buttonRetry.Name = "buttonRetry";
@@ -209,7 +209,7 @@
             this.buttonCopyDetails.Dock = System.Windows.Forms.DockStyle.Fill;
             this.buttonCopyDetails.FlatAppearance.BorderSize = 0;
             this.buttonCopyDetails.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.buttonCopyDetails.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.buttonCopyDetails.Font = new System.Drawing.Font("Segoe UI Emoji", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.buttonCopyDetails.ForeColor = System.Drawing.Color.White;
             this.buttonCopyDetails.Location = new System.Drawing.Point(191, 3);
             this.buttonCopyDetails.Name = "buttonCopyDetails";
@@ -224,7 +224,7 @@
             this.buttonReportIssue.Dock = System.Windows.Forms.DockStyle.Fill;
             this.buttonReportIssue.FlatAppearance.BorderSize = 0;
             this.buttonReportIssue.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.buttonReportIssue.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.buttonReportIssue.Font = new System.Drawing.Font("Segoe UI Emoji", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.buttonReportIssue.ForeColor = System.Drawing.Color.White;
             this.buttonReportIssue.Location = new System.Drawing.Point(298, 3);
             this.buttonReportIssue.Name = "buttonReportIssue";
@@ -239,7 +239,7 @@
             this.buttonViewLogs.Dock = System.Windows.Forms.DockStyle.Fill;
             this.buttonViewLogs.FlatAppearance.BorderSize = 0;
             this.buttonViewLogs.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.buttonViewLogs.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.buttonViewLogs.Font = new System.Drawing.Font("Segoe UI Emoji", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.buttonViewLogs.ForeColor = System.Drawing.Color.White;
             this.buttonViewLogs.Location = new System.Drawing.Point(405, 3);
             this.buttonViewLogs.Name = "buttonViewLogs";
@@ -255,7 +255,7 @@
             this.buttonClose.Dock = System.Windows.Forms.DockStyle.Fill;
             this.buttonClose.FlatAppearance.BorderSize = 0;
             this.buttonClose.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.buttonClose.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.buttonClose.Font = new System.Drawing.Font("Segoe UI Emoji", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.buttonClose.ForeColor = System.Drawing.Color.White;
             this.buttonClose.Location = new System.Drawing.Point(485, 3);
             this.buttonClose.Name = "buttonClose";

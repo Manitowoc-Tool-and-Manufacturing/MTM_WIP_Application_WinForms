@@ -393,7 +393,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             Control_TransferTab_Button_Print.Text = "Print";
             Control_TransferTab_Button_Print.UseVisualStyleBackColor = true;
             //
-            // tableLayoutPanel3
+            // Control_ReceivingAnalytics_TableLayoutPanel_ReceivingScopeHeader
             //
             tableLayoutPanel3.AutoSize = true;
             tableLayoutPanel3.AutoSizeMode = AutoSizeMode.GrowAndShrink;
@@ -409,7 +409,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             tableLayoutPanel3.Controls.Add(Control_TransferTab_Button_Toggle_RightPanel, 3, 0);
             tableLayoutPanel3.Dock = DockStyle.Fill;
             tableLayoutPanel3.Location = new Point(3, 312);
-            tableLayoutPanel3.Name = "tableLayoutPanel3";
+            tableLayoutPanel3.Name = "Control_ReceivingAnalytics_TableLayoutPanel_ReceivingScopeHeader";
             tableLayoutPanel3.RowCount = 1;
             tableLayoutPanel3.RowStyles.Add(new RowStyle());
             tableLayoutPanel3.Size = new Size(824, 38);

@@ -53,7 +53,7 @@ namespace MTM_WIP_Application_Winforms.Forms.Shared
             | System.Windows.Forms.AnchorStyles.Right)));
             this.lblMatchCount.BackColor = System.Drawing.SystemColors.Control;
             this.lblMatchCount.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.lblMatchCount.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
+            this.lblMatchCount.Font = new System.Drawing.Font("Segoe UI Emoji", 9F, System.Drawing.FontStyle.Bold);
             this.lblMatchCount.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
             this.lblMatchCount.Location = new System.Drawing.Point(1, 1);
             this.lblMatchCount.Name = "lblMatchCount";

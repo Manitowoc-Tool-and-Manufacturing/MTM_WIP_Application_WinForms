@@ -197,6 +197,7 @@ namespace MTM_WIP_Application_Winforms.Forms.Visual
             EnsureDieToolDiscoveryControl();
             HideAllCustomControls(_controlDieToolDiscovery);
             _controlDieToolDiscovery!.Visible = true;
+            CenterFormOnScreen();
         }
 
         private void ShowReceivingAnalyticsControl()
@@ -205,6 +206,7 @@ namespace MTM_WIP_Application_Winforms.Forms.Visual
             EnsureReceivingAnalyticsControl();
             HideAllCustomControls(_controlReceivingAnalytics);
             _controlReceivingAnalytics!.Visible = true;
+            CenterFormOnScreen();
         }
 
         private void ShowVisualInventoryControl()
@@ -213,6 +215,7 @@ namespace MTM_WIP_Application_Winforms.Forms.Visual
             EnsureVisualInventoryControl();
             HideAllCustomControls(_controlVisualInventory);
             _controlVisualInventory!.Visible = true;
+            CenterFormOnScreen();
         }
 
         private void ShowInventoryAuditControl()
@@ -221,6 +224,7 @@ namespace MTM_WIP_Application_Winforms.Forms.Visual
             EnsureInventoryAuditControl();
             HideAllCustomControls(_controlInventoryAudit);
             _controlInventoryAudit!.Visible = true;
+            CenterFormOnScreen();
         }
 
         private void HideGenericControls()
@@ -326,6 +330,20 @@ namespace MTM_WIP_Application_Winforms.Forms.Visual
             {
                 await _controlVisualInventory.PerformExternalSearchAsync(partNumber);
             }
+        }
+        /// <summary>
+        /// Centers the form on the screen.
+        /// </summary>
+        private void CenterFormOnScreen()
+        {
+            if (this.InvokeRequired)
+            {
+                this.Invoke(new Action(CenterFormOnScreen));
+                return;
+            }
+            
+            this.StartPosition = FormStartPosition.CenterScreen;
+            this.CenterToScreen();
         }
         #endregion
 

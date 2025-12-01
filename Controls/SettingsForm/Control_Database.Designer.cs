@@ -104,7 +104,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             //
             Control_Database_Label_Header.AutoSize = true;
             Control_Database_Label_Header.Dock = DockStyle.Fill;
-            Control_Database_Label_Header.Font = new Font("Segoe UI", 18F, FontStyle.Bold);
+            Control_Database_Label_Header.Font = new Font("Segoe UI Emoji", 18F, FontStyle.Bold);
             Control_Database_Label_Header.ForeColor = Color.FromArgb(45, 45, 45);
             Control_Database_Label_Header.Location = new Point(23, 20);
             Control_Database_Label_Header.MaximumSize = new Size(400, 0);
@@ -126,7 +126,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             Control_Database_Panel_Content.Size = new Size(433, 246);
             Control_Database_Panel_Content.TabIndex = 1;
             //
-            // tableLayoutPanel4
+            // Control_ReceivingAnalytics_TableLayoutPanel_ReceivingScopeContents
             //
             tableLayoutPanel4.AutoSize = true;
             tableLayoutPanel4.AutoSizeMode = AutoSizeMode.GrowAndShrink;
@@ -137,7 +137,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             tableLayoutPanel4.Controls.Add(Control_Database_Panel_PortCard, 0, 1);
             tableLayoutPanel4.Dock = DockStyle.Fill;
             tableLayoutPanel4.Location = new Point(0, 0);
-            tableLayoutPanel4.Name = "tableLayoutPanel4";
+            tableLayoutPanel4.Name = "Control_ReceivingAnalytics_TableLayoutPanel_ReceivingScopeContents";
             tableLayoutPanel4.RowCount = 3;
             tableLayoutPanel4.RowStyles.Add(new RowStyle());
             tableLayoutPanel4.RowStyles.Add(new RowStyle());
@@ -182,12 +182,12 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             // Control_Database_TextBox_Server
             //
             Control_Database_TextBox_Server.Dock = DockStyle.Fill;
-            Control_Database_TextBox_Server.Font = new Font("Segoe UI", 11F);
+            Control_Database_TextBox_Server.Font = new Font("Segoe UI Emoji", 11F);
             Control_Database_TextBox_Server.Location = new Point(68, 30);
             Control_Database_TextBox_Server.MaximumSize = new Size(350, 0);
             Control_Database_TextBox_Server.MinimumSize = new Size(350, 0);
             Control_Database_TextBox_Server.Name = "Control_Database_TextBox_Server";
-            Control_Database_TextBox_Server.PlaceholderText = "Enter MySQL server address (e.g., 172.16.1.104 or IP)";
+            Control_Database_TextBox_Server.PlaceholderText = "Enter MySQL server address (e.g., localhost or IP)";
             Control_Database_TextBox_Server.Size = new Size(350, 27);
             Control_Database_TextBox_Server.TabIndex = 2;
             //
@@ -236,7 +236,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             Control_Database_Panel_DatabaseCard.Size = new Size(433, 72);
             Control_Database_Panel_DatabaseCard.TabIndex = 2;
             //
-            // tableLayoutPanel3
+            // Control_ReceivingAnalytics_TableLayoutPanel_ReceivingScopeHeader
             //
             tableLayoutPanel3.AutoSize = true;
             tableLayoutPanel3.AutoSizeMode = AutoSizeMode.GrowAndShrink;
@@ -248,7 +248,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             tableLayoutPanel3.Controls.Add(Control_Database_Label_DatabaseIcon, 0, 0);
             tableLayoutPanel3.Dock = DockStyle.Fill;
             tableLayoutPanel3.Location = new Point(5, 5);
-            tableLayoutPanel3.Name = "tableLayoutPanel3";
+            tableLayoutPanel3.Name = "Control_ReceivingAnalytics_TableLayoutPanel_ReceivingScopeHeader";
             tableLayoutPanel3.RowCount = 2;
             tableLayoutPanel3.RowStyles.Add(new RowStyle());
             tableLayoutPanel3.RowStyles.Add(new RowStyle());
@@ -258,7 +258,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             // Control_Database_TextBox_Database
             //
             Control_Database_TextBox_Database.Dock = DockStyle.Fill;
-            Control_Database_TextBox_Database.Font = new Font("Segoe UI", 11F);
+            Control_Database_TextBox_Database.Font = new Font("Segoe UI Emoji", 11F);
             Control_Database_TextBox_Database.Location = new Point(68, 30);
             Control_Database_TextBox_Database.MaximumSize = new Size(350, 0);
             Control_Database_TextBox_Database.MinimumSize = new Size(350, 0);
@@ -334,7 +334,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             // Control_Database_TextBox_Port
             //
             Control_Database_TextBox_Port.Dock = DockStyle.Fill;
-            Control_Database_TextBox_Port.Font = new Font("Segoe UI", 11F);
+            Control_Database_TextBox_Port.Font = new Font("Segoe UI Emoji", 11F);
             Control_Database_TextBox_Port.Location = new Point(68, 30);
             Control_Database_TextBox_Port.MaximumSize = new Size(350, 0);
             Control_Database_TextBox_Port.MinimumSize = new Size(350, 0);

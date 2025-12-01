@@ -65,7 +65,7 @@ namespace MTM_WIP_Application_Winforms.Forms.Visual
             _dataGridView.Visible = false;
 
             _lblLoading.AutoSize = true;
-            _lblLoading.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point);
+            _lblLoading.Font = new Font("Segoe UI Emoji", 12F, FontStyle.Regular, GraphicsUnit.Point);
             _lblLoading.Location = new Point(350, 220);
             _lblLoading.Name = "_lblLoading";
             _lblLoading.Size = new Size(78, 21);

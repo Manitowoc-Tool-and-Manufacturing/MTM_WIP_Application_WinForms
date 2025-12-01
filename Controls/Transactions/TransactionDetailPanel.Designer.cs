@@ -140,7 +140,7 @@ namespace MTM_WIP_Application_Winforms.Controls.Transactions
             // 
             TransactionDetailPanel_Label_RelatedTitle.AutoSize = true;
             TransactionDetailPanel_Label_RelatedTitle.Dock = DockStyle.Fill;
-            TransactionDetailPanel_Label_RelatedTitle.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
+            TransactionDetailPanel_Label_RelatedTitle.Font = new Font("Segoe UI Emoji", 9F, FontStyle.Bold);
             TransactionDetailPanel_Label_RelatedTitle.Location = new Point(2, 2);
             TransactionDetailPanel_Label_RelatedTitle.Margin = new Padding(2);
             TransactionDetailPanel_Label_RelatedTitle.Name = "TransactionDetailPanel_Label_RelatedTitle";
@@ -481,7 +481,7 @@ namespace MTM_WIP_Application_Winforms.Controls.Transactions
             // 
             TransactionDetailPanel_Label_NotesCaption.AutoSize = true;
             TransactionDetailPanel_Label_NotesCaption.Dock = DockStyle.Fill;
-            TransactionDetailPanel_Label_NotesCaption.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
+            TransactionDetailPanel_Label_NotesCaption.Font = new Font("Segoe UI Emoji", 9F, FontStyle.Bold);
             TransactionDetailPanel_Label_NotesCaption.Location = new Point(2, 217);
             TransactionDetailPanel_Label_NotesCaption.Margin = new Padding(2);
             TransactionDetailPanel_Label_NotesCaption.Name = "TransactionDetailPanel_Label_NotesCaption";
@@ -516,7 +516,7 @@ namespace MTM_WIP_Application_Winforms.Controls.Transactions
         {
             label.AutoSize = true;
             label.Dock = DockStyle.Fill;
-            label.Font = new Font("Segoe UI", 9F, FontStyle.Bold, GraphicsUnit.Point);
+            label.Font = new Font("Segoe UI Emoji", 9F, FontStyle.Bold, GraphicsUnit.Point);
             label.Margin = new Padding(0, 0, 6, 6);
             label.Text = text;
             label.TextAlign = ContentAlignment.MiddleLeft;

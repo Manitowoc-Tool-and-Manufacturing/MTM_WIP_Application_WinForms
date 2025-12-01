@@ -274,7 +274,7 @@ namespace MTM_WIP_Application_Winforms.Controls.Transactions
             // 
             Model_Transactions_Core_AnalyticsControl_Label_InPercentage.AutoSize = true;
             Model_Transactions_Core_AnalyticsControl_Label_InPercentage.Dock = DockStyle.Fill;
-            Model_Transactions_Core_AnalyticsControl_Label_InPercentage.Font = new Font("Segoe UI", 9F);
+            Model_Transactions_Core_AnalyticsControl_Label_InPercentage.Font = new Font("Segoe UI Emoji", 9F);
             Model_Transactions_Core_AnalyticsControl_Label_InPercentage.ForeColor = Color.FromArgb(22, 163, 74);
             Model_Transactions_Core_AnalyticsControl_Label_InPercentage.Location = new Point(124, 29);
             Model_Transactions_Core_AnalyticsControl_Label_InPercentage.Margin = new Padding(3);

@@ -47,7 +47,7 @@ namespace MTM_WIP_Application_Winforms.Forms.Shared
             // 
             _instructionLabel.AutoSize = true;
             _instructionLabel.Dock = DockStyle.Fill;
-            _instructionLabel.Font = new Font("Segoe UI", 10F);
+            _instructionLabel.Font = new Font("Segoe UI Emoji", 10F);
             _instructionLabel.Location = new Point(3, 3);
             _instructionLabel.Margin = new Padding(3);
             _instructionLabel.Name = "_instructionLabel";
@@ -61,7 +61,7 @@ namespace MTM_WIP_Application_Winforms.Forms.Shared
             _keyDisplayLabel.AutoSize = true;
             _keyDisplayLabel.BackColor = Color.WhiteSmoke;
             _keyDisplayLabel.Dock = DockStyle.Fill;
-            _keyDisplayLabel.Font = new Font("Segoe UI", 16F, FontStyle.Bold);
+            _keyDisplayLabel.Font = new Font("Segoe UI Emoji", 16F, FontStyle.Bold);
             _keyDisplayLabel.ForeColor = Color.FromArgb(0, 120, 212);
             _keyDisplayLabel.Location = new Point(3, 28);
             _keyDisplayLabel.Margin = new Padding(3);
@@ -156,7 +156,7 @@ namespace MTM_WIP_Application_Winforms.Forms.Shared
             tableLayoutPanel2.Size = new Size(318, 40);
             tableLayoutPanel2.TabIndex = 4;
             // 
-            // tableLayoutPanel3
+            // Control_ReceivingAnalytics_TableLayoutPanel_ReceivingScopeHeader
             // 
             tableLayoutPanel3.AutoSize = true;
             tableLayoutPanel3.AutoSizeMode = AutoSizeMode.GrowAndShrink;
@@ -166,7 +166,7 @@ namespace MTM_WIP_Application_Winforms.Forms.Shared
             tableLayoutPanel3.Controls.Add(_keyDisplayLabel, 0, 2);
             tableLayoutPanel3.Dock = DockStyle.Fill;
             tableLayoutPanel3.Location = new Point(65, 22);
-            tableLayoutPanel3.Name = "tableLayoutPanel3";
+            tableLayoutPanel3.Name = "Control_ReceivingAnalytics_TableLayoutPanel_ReceivingScopeHeader";
             tableLayoutPanel3.RowCount = 3;
             tableLayoutPanel3.RowStyles.Add(new RowStyle());
             tableLayoutPanel3.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));

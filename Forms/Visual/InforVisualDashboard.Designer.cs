@@ -155,6 +155,8 @@ namespace MTM_WIP_Application_Winforms.Forms.Visual
             // 
             // panelContent
             // 
+            panelContent.AutoSize = true;
+            panelContent.AutoSizeMode = AutoSizeMode.GrowAndShrink;
             panelContent.Controls.Add(controlEmptyState);
             panelContent.Controls.Add(labelLoading);
             panelContent.Dock = DockStyle.Fill;
@@ -167,6 +169,8 @@ namespace MTM_WIP_Application_Winforms.Forms.Visual
             // 
             controlEmptyState.Action = null;
             controlEmptyState.ActionText = "Retry";
+            controlEmptyState.AutoSize = true;
+            controlEmptyState.AutoSizeMode = AutoSizeMode.GrowAndShrink;
             controlEmptyState.Dock = DockStyle.Fill;
             controlEmptyState.Image = null;
             controlEmptyState.Location = new Point(0, 0);
@@ -178,7 +182,7 @@ namespace MTM_WIP_Application_Winforms.Forms.Visual
             // labelLoading
             // 
             labelLoading.Dock = DockStyle.Fill;
-            labelLoading.Font = new Font("Segoe UI", 14F);
+            labelLoading.Font = new Font("Segoe UI Emoji", 14F);
             labelLoading.Location = new Point(0, 0);
             labelLoading.Name = "labelLoading";
             labelLoading.Size = new Size(880, 700);
@@ -190,15 +194,20 @@ namespace MTM_WIP_Application_Winforms.Forms.Visual
             // InforVisualDashboard
             // 
             AutoScaleDimensions = new SizeF(96F, 96F);
+            AutoSize = true;
+            AutoSizeMode = AutoSizeMode.GrowAndShrink;
             ClientSize = new Size(1100, 700);
             Controls.Add(panelContent);
             Controls.Add(panelSidebar);
             Name = "InforVisualDashboard";
+            StartPosition = FormStartPosition.CenterScreen;
             Text = "Infor Visual Dashboard";
             panelSidebar.ResumeLayout(false);
             flowLayoutPanelSidebar.ResumeLayout(false);
             panelContent.ResumeLayout(false);
+            panelContent.PerformLayout();
             ResumeLayout(false);
+            PerformLayout();
         }
 
         private System.Windows.Forms.Panel panelSidebar;
