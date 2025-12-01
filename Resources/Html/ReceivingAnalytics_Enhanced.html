@@ -201,6 +201,15 @@
 
         <div class="toolbar">
             <div class="control-group">
+                <label>Date Range</label>
+                <div style="display: flex; gap: 5px; align-items: center;">
+                    <input type="date" id="dateStart" onchange="refreshChart()" style="border: 1px solid #ccc; border-radius: 4px; padding: 4px; font-family: inherit; color: #333;">
+                    <span style="color: #666;">-</span>
+                    <input type="date" id="dateEnd" onchange="refreshChart()" style="border: 1px solid #ccc; border-radius: 4px; padding: 4px; font-family: inherit; color: #333;">
+                </div>
+            </div>
+
+            <div class="control-group">
                 <label>View Period</label>
                 <div class="btn-group">
                     <button onclick="setPeriod('Day')" class="active" id="btnDay">Day</button>
@@ -449,12 +458,33 @@
             const activeTypes = Array.from(document.querySelectorAll('.checkbox-item input:checked'))
                 .map(cb => cb.dataset.type);
 
+            // Date Filtering
+            const startDateInput = document.getElementById('dateStart').value;
+            const endDateInput = document.getElementById('dateEnd').value;
+            const startDate = startDateInput ? new Date(startDateInput) : null;
+            const endDate = endDateInput ? new Date(endDateInput) : null;
+
             const aggregated = {};
             const types = ['Part', 'MMC', 'MMF', 'Service', 'Consignment', 'Internal'];
             
             dataSource.forEach(item => {
                 if (!activeTypes.includes(item.Type)) return;
                 
+                // Apply Date Filter
+                const itemDate = new Date(item.Date);
+                // Reset time part for accurate comparison
+                itemDate.setHours(0,0,0,0);
+                if (startDate) {
+                    const start = new Date(startDate);
+                    start.setHours(0,0,0,0);
+                    if (itemDate < start) return;
+                }
+                if (endDate) {
+                    const end = new Date(endDate);
+                    end.setHours(0,0,0,0);
+                    if (itemDate > end) return;
+                }
+
                 const dateKey = getDateKey(new Date(item.Date), currentPeriod);
                 if (!aggregated[dateKey]) {
                     aggregated[dateKey] = { Part: 0, MMC: 0, MMF: 0, Service: 0, Consignment: 0, Internal: 0 };
@@ -587,6 +617,15 @@
             try {
                 rawData = JSON.parse(jsonString);
                 console.log('Data loaded:', rawData);
+                
+                // Set initial dates if provided
+                if (rawData.InitialStartDate) {
+                    document.getElementById('dateStart').value = rawData.InitialStartDate;
+                }
+                if (rawData.InitialEndDate) {
+                    document.getElementById('dateEnd').value = rawData.InitialEndDate;
+                }
+
                 refreshChart();
             } catch (e) {
                 console.error('Failed to load data:', e);

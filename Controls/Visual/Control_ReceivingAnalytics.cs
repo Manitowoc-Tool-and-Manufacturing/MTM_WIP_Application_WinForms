@@ -653,17 +653,15 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
                 Control_ReceivingAnalytics_Button_Analytics.Enabled = false;
                 Control_ReceivingAnalytics_Button_Analytics.Text = "Loading...";
 
-                // Use the date range from the UI
-                var startDate = Control_ReceivingAnalytics_DateTimePicker_StartDate.Value;
-                var endDate = Control_ReceivingAnalytics_DateTimePicker_EndDate.Value;
+                // Capture user selection for initial view in the HTML chart
+                var userStartDate = Control_ReceivingAnalytics_DateTimePicker_StartDate.Value;
+                var userEndDate = Control_ReceivingAnalytics_DateTimePicker_EndDate.Value;
 
-                // Ensure forecast doesn't go beyond 1 month if that's the max desired, 
-                // but the user asked to "allow the user to change how long they wish to go out".
-                // The UI has a date picker for End Date. If the user picks a date 1 month out, it will be passed here.
-                // If they pick 1 day out, it will be passed here.
-                // So the existing logic I just added supports this, as long as the user uses the date picker.
+                // Fetch a wider range of data (1 year history, 6 months forecast) so the user can explore in the HTML view
+                var dataStart = DateTime.Today.AddYears(-1);
+                var dataEnd = DateTime.Today.AddMonths(6);
                 
-                var result = await _visualService.GetReceivingAnalyticsAsync(startDate, endDate);
+                var result = await _visualService.GetReceivingAnalyticsAsync(dataStart, dataEnd);
                 
                 Control_ReceivingAnalytics_Button_Analytics.Enabled = true;
                 Control_ReceivingAnalytics_Button_Analytics.Text = "Receiving Analytics";
@@ -684,7 +682,9 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
                             Date = f.Date.ToString("yyyy-MM-dd"),
                             Type = DetermineReceivingType(f.Type),
                             Count = f.Count
-                        })
+                        }),
+                        InitialStartDate = userStartDate.ToString("yyyy-MM-dd"),
+                        InitialEndDate = userEndDate.ToString("yyyy-MM-dd")
                     };
 
                     var jsonOptions = new System.Text.Json.JsonSerializerOptions
