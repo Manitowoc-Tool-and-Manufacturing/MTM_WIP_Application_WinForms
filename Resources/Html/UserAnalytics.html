@@ -157,6 +157,9 @@
                 <button id="btnTable" onclick="setView('table')">Table View</button>
                 <button id="btnLeaderboard" onclick="setView('leaderboard')">Leaderboard</button>
             </div>
+            <div style="margin-left: auto;">
+                 <button id="btnScoring" onclick="toggleScoring()" style="padding: 6px 12px; border: 1px solid #ccc; border-radius: 4px; background: #fff; cursor: pointer; font-size: 14px;">ℹ️ Scoring Rules</button>
+            </div>
         </div>
 
         <div class="chart-container" id="chartView">
@@ -187,10 +190,59 @@
                 <!-- Populated by JS -->
             </div>
         </div>
+
+        <div id="scoringView" style="display:none; padding: 20px; background: #fff; border-radius: 8px; border: 1px solid #eee;">
+            <h3 style="margin-top: 0; color: #333;">🏆 Scoring System</h3>
+            <p style="color: #555;">Points are awarded based on the complexity and effort required for each transaction type:</p>
+            <ul style="list-style: none; padding: 0; margin-top: 15px;">
+                <li style="padding: 12px; border-bottom: 1px solid #f0f0f0; display: flex; justify-content: space-between; align-items: center;">
+                    <span style="display: flex; align-items: center;">
+                        <span style="display:inline-block; width: 16px; height: 16px; background: #fee140; margin-right: 12px; border-radius: 4px;"></span>
+                        <strong style="font-size: 16px;">Flatstock (MMF)</strong>
+                    </span>
+                    <strong style="font-size: 18px; color: #0078d4;">8 pts</strong>
+                </li>
+                <li style="padding: 12px; border-bottom: 1px solid #f0f0f0; display: flex; justify-content: space-between; align-items: center;">
+                    <span style="display: flex; align-items: center;">
+                        <span style="display:inline-block; width: 16px; height: 16px; background: #fa709a; margin-right: 12px; border-radius: 4px;"></span>
+                        <strong style="font-size: 16px;">Coils (MMC)</strong>
+                    </span>
+                    <strong style="font-size: 18px; color: #0078d4;">4 pts</strong>
+                </li>
+                <li style="padding: 12px; border-bottom: 1px solid #f0f0f0; display: flex; justify-content: space-between; align-items: center;">
+                    <span style="display: flex; align-items: center;">
+                        <span style="display:inline-block; width: 16px; height: 16px; background: #4facfe; margin-right: 12px; border-radius: 4px;"></span>
+                        <strong style="font-size: 16px;">Work Orders</strong>
+                    </span>
+                    <strong style="font-size: 18px; color: #666;">1 pt</strong>
+                </li>
+                <li style="padding: 12px; border-bottom: 1px solid #f0f0f0; display: flex; justify-content: space-between; align-items: center;">
+                    <span style="display: flex; align-items: center;">
+                        <span style="display:inline-block; width: 16px; height: 16px; background: #43e97b; margin-right: 12px; border-radius: 4px;"></span>
+                        <strong style="font-size: 16px;">Location Transfers</strong>
+                    </span>
+                    <strong style="font-size: 18px; color: #666;">1 pt</strong>
+                </li>
+                <li style="padding: 12px; border-bottom: 1px solid #f0f0f0; display: flex; justify-content: space-between; align-items: center;">
+                    <span style="display: flex; align-items: center;">
+                        <span style="display:inline-block; width: 16px; height: 16px; background: #f093fb; margin-right: 12px; border-radius: 4px;"></span>
+                        <strong style="font-size: 16px;">Adjustments (In/Out)</strong>
+                    </span>
+                    <strong style="font-size: 18px; color: #666;">1 pt</strong>
+                </li>
+            </ul>
+            <div style="margin-top: 20px; padding: 15px; background: #f8f9fa; border-radius: 6px; border-left: 4px solid #0078d4;">
+                <p style="margin: 0; color: #444; font-size: 14px;">
+                    <strong>Why the difference?</strong><br>
+                    Flatstock and Coils are weighted higher due to the physical effort, equipment usage (forklift/crane), and time required to move these heavy items compared to standard parts.
+                </p>
+            </div>
+        </div>
     </div>
 
     <script>
         let chartInstance = null;
+        let lastView = 'chart';
         // Default data structure
         let analyticsData = [];
         let aggregatedData = [];
@@ -207,6 +259,15 @@
         };
 
         function initChart() {
+            // Ensure Chart.js is loaded
+            if (typeof Chart === 'undefined') {
+                console.error("Chart.js not loaded");
+                document.getElementById('chartView').innerHTML = '<div style="color:red; padding:20px;">Error: Chart library failed to load. Please check internet connection.</div>';
+                // Still try to load data for table view
+                if (window.injectedData) loadData(window.injectedData);
+                return;
+            }
+
             const ctx = document.getElementById('analyticsChart').getContext('2d');
             chartInstance = new Chart(ctx, {
                 type: 'bar',
@@ -381,7 +442,30 @@
             });
         }
 
+        function toggleScoring() {
+            const scoringView = document.getElementById('scoringView');
+            const btn = document.getElementById('btnScoring');
+            
+            if (scoringView.style.display === 'none') {
+                // Show Scoring
+                document.getElementById('chartView').style.display = 'none';
+                document.getElementById('tableView').style.display = 'none';
+                document.getElementById('leaderboardView').style.display = 'none';
+                
+                scoringView.style.display = 'block';
+                btn.style.background = '#e1dfdd';
+                btn.innerText = '❌ Close Rules';
+            } else {
+                // Hide Scoring, restore last view
+                scoringView.style.display = 'none';
+                setView(lastView); // Restore
+                btn.style.background = '#fff';
+                btn.innerText = 'ℹ️ Scoring Rules';
+            }
+        }
+
         function setView(view) {
+            lastView = view;
             document.getElementById('btnChart').classList.toggle('active', view === 'chart');
             document.getElementById('btnTable').classList.toggle('active', view === 'table');
             document.getElementById('btnLeaderboard').classList.toggle('active', view === 'leaderboard');
@@ -389,9 +473,16 @@
             document.getElementById('chartView').style.display = view === 'chart' ? 'block' : 'none';
             document.getElementById('tableView').style.display = view === 'table' ? 'block' : 'none';
             document.getElementById('leaderboardView').style.display = view === 'leaderboard' ? 'block' : 'none';
+            
+            // Ensure scoring view is hidden if we switch views explicitly
+            document.getElementById('scoringView').style.display = 'none';
+            document.getElementById('btnScoring').style.background = '#fff';
+            document.getElementById('btnScoring').innerText = 'ℹ️ Scoring Rules';
         }
 
         window.onload = initChart;
+        
+        // DATA_INJECTION_POINT
     </script>
 </body>
 </html>
