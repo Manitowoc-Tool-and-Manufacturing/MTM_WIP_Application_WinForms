@@ -131,6 +131,38 @@
         .slider .label-forecast { opacity: 0.5; transition: opacity 0.4s; }
         input:checked + .slider .label-history { opacity: 0.5; }
         input:checked + .slider .label-forecast { opacity: 1; }
+
+        /* Generic toggle labels */
+        .slider .label-left { opacity: 1; transition: opacity 0.4s; }
+        .slider .label-right { opacity: 0.5; transition: opacity 0.4s; }
+        input:checked + .slider .label-left { opacity: 0.5; }
+        input:checked + .slider .label-right { opacity: 1; }
+
+        .table-container {
+            flex-grow: 1;
+            overflow: auto;
+            display: none; /* Hidden by default */
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 14px;
+        }
+        th, td {
+            padding: 10px;
+            text-align: left;
+            border-bottom: 1px solid #eee;
+        }
+        th {
+            background-color: #f8f9fa;
+            position: sticky;
+            top: 0;
+            font-weight: 600;
+            color: #444;
+        }
+        tr:hover {
+            background-color: #f5f5f5;
+        }
         
     </style>
 </head>
@@ -160,6 +192,17 @@
             </div>
 
             <div class="control-group">
+                <label>Display</label>
+                <label class="toggle-switch">
+                    <input type="checkbox" id="displayToggle" onchange="updateDisplayMode()">
+                    <span class="slider">
+                        <span class="label-left">GRAPH</span>
+                        <span class="label-right">DATA</span>
+                    </span>
+                </label>
+            </div>
+
+            <div class="control-group">
                 <label>Filters</label>
                 <div class="checkbox-group">
                     <label class="checkbox-item"><input type="checkbox" id="chkParts" checked onchange="refreshChart()"> Parts Only</label>
@@ -173,8 +216,24 @@
             </div>
         </div>
 
-        <div class="chart-container">
+        <div class="chart-container" id="chartView">
             <canvas id="analyticsChart"></canvas>
+        </div>
+        
+        <div class="table-container" id="tableView">
+            <table id="dataTable">
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Type</th>
+                        <th>Part Number</th>
+                        <th>Count</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Populated by JS -->
+                </tbody>
+            </table>
         </div>
     </div>
 
@@ -182,6 +241,7 @@
         let chartInstance = null;
         let currentPeriod = 'Day';
         let isForecast = false;
+        let isGridView = false;
         let rawData = []; // To be populated by C#
 
         // Initialize Chart
@@ -249,9 +309,24 @@
             refreshChart();
         }
 
-        function refreshChart() {
-            if (!chartInstance) return;
+        function updateDisplayMode() {
+            isGridView = document.getElementById('displayToggle').checked;
+            
+            const chartView = document.getElementById('chartView');
+            const tableView = document.getElementById('tableView');
+            
+            if (isGridView) {
+                chartView.style.display = 'none';
+                tableView.style.display = 'block';
+            } else {
+                chartView.style.display = 'block';
+                tableView.style.display = 'none';
+            }
+            
+            refreshChart();
+        }
 
+        function refreshChart() {
             // Filter data based on mode (History vs Forecast)
             let sourceData = isForecast ? rawData.Forecast : rawData.History;
             if (!sourceData) sourceData = [];
@@ -265,26 +340,34 @@
             const showInternal = document.getElementById('chkInternal').checked;
             const showUninventoried = document.getElementById('chkUninventoried').checked;
 
-            // Filter and Aggregate
-            // We need to group by Date (based on Period) and Sum the Counts
-            
-            let aggregated = {};
-
-            sourceData.forEach(item => {
-                // Check filters
+            // Filter Data
+            let filteredData = sourceData.filter(item => {
                 if (item.Type === 'Part') {
                     if (item.PartNumber && item.PartNumber.trim() !== '') {
-                        if (!showParts) return;
+                        return showParts;
                     } else {
-                        if (!showUninventoried) return;
+                        return showUninventoried;
                     }
                 }
-                else if (item.Type === 'MMC' && !showMMC) return;
-                else if (item.Type === 'MMF' && !showMMF) return;
-                else if (item.Type === 'Service' && !showOutside) return;
-                else if (item.Type === 'Consignment' && !showConsignment) return;
-                else if (item.Type === 'Internal' && !showInternal) return;
+                else if (item.Type === 'MMC') return showMMC;
+                else if (item.Type === 'MMF') return showMMF;
+                else if (item.Type === 'Service') return showOutside;
+                else if (item.Type === 'Consignment') return showConsignment;
+                else if (item.Type === 'Internal') return showInternal;
+                return false;
+            });
 
+            if (isGridView) {
+                renderTable(filteredData);
+                return;
+            }
+
+            if (!chartInstance) return;
+
+            // Aggregate for Chart
+            let aggregated = {};
+
+            filteredData.forEach(item => {
                 // Determine Key based on Period
                 let date = new Date(item.Date);
                 let key = getDateKey(date, currentPeriod);
@@ -304,6 +387,32 @@
                 `Receiving Workload - ${isForecast ? 'FORECAST' : 'HISTORY (YTD)'} by ${currentPeriod}`;
             
             chartInstance.update();
+        }
+
+        function renderTable(data) {
+            const tbody = document.querySelector('#dataTable tbody');
+            tbody.innerHTML = '';
+
+            // Sort by Date Descending
+            data.sort((a, b) => new Date(b.Date) - new Date(a.Date));
+
+            data.forEach(item => {
+                const tr = document.createElement('tr');
+                
+                // Determine display type (handle Uninventoried logic for display if needed, or just show raw Type)
+                let displayType = item.Type;
+                if (item.Type === 'Part' && (!item.PartNumber || item.PartNumber.trim() === '')) {
+                    displayType = 'Uninventoried';
+                }
+
+                tr.innerHTML = `
+                    <td>${item.Date}</td>
+                    <td>${displayType}</td>
+                    <td>${item.PartNumber || '-'}</td>
+                    <td>${item.Count}</td>
+                `;
+                tbody.appendChild(tr);
+            });
         }
 
         function getDateKey(date, period) {
