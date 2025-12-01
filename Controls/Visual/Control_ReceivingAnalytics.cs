@@ -675,14 +675,16 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
                             Date = h.Date.ToString("yyyy-MM-dd"),
                             Type = DetermineReceivingType(h.Type),
                             Count = h.Count,
-                            PartNumber = h.PartNumber
+                            PartNumber = h.PartNumber,
+                            ReceivedBy = h.ReceivedBy
                         }),
                         Forecast = result.Data.Forecast.Select(f => new
                         {
                             Date = f.Date.ToString("yyyy-MM-dd"),
                             Type = DetermineReceivingType(f.Type),
                             Count = f.Count,
-                            PartNumber = f.PartNumber
+                            PartNumber = f.PartNumber,
+                            ReceivedBy = f.ReceivedBy
                         })
                         // Removed InitialStartDate/EndDate to let HTML show full dataset by default
                     };

@@ -327,6 +327,7 @@
                         <th>Date</th>
                         <th>Type</th>
                         <th>Part Number</th>
+                        <th>Received By</th>
                         <th>Count</th>
                     </tr>
                 </thead>
@@ -625,6 +626,7 @@
                     <td>${item.Date.split('T')[0]}</td>
                     <td>${displayType}</td>
                     <td>${item.PartNumber || '-'}</td>
+                    <td>${item.ReceivedBy || '-'}</td>
                     <td>${item.Count}</td>
                 `;
                 tbody.appendChild(tr);

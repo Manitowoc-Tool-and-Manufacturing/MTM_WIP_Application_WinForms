@@ -16,5 +16,6 @@ namespace MTM_WIP_Application_Winforms.Models
         public int Count { get; set; }
         public string Type { get; set; } = string.Empty; // "Part", "MMC", "MMF", "Service", etc.
         public string PartNumber { get; set; } = string.Empty;
+        public string ReceivedBy { get; set; } = string.Empty;
     }
 }

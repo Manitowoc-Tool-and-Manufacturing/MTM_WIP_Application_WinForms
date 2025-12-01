@@ -292,7 +292,13 @@ namespace MTM_WIP_Application_Winforms.Services.Visual
                     POL.LINE_STATUS as [Line Status],
                     PO.CONSIGNMENT as [Consignment],
                     PO.INTERNAL_ORDER as [Internal],
-                    PO.SHIP_VIA as [Ship Via]
+                    PO.SHIP_VIA as [Ship Via],
+                    (SELECT TOP 1 R.USER_ID 
+                     FROM RECEIVER R 
+                     INNER JOIN RECEIVER_LINE RL ON R.ID = RL.RECEIVER_ID 
+                     WHERE RL.PURC_ORDER_ID = POL.PURC_ORDER_ID 
+                       AND RL.PURC_ORDER_LINE_NO = POL.LINE_NO 
+                     ORDER BY R.RECEIVED_DATE DESC) as [Received By]
                 FROM PURCHASE_ORDER PO
                 INNER JOIN PURC_ORDER_LINE POL ON PO.ID = POL.PURC_ORDER_ID
                 LEFT JOIN VENDOR V ON PO.VENDOR_ID = V.ID
@@ -543,82 +549,74 @@ namespace MTM_WIP_Application_Winforms.Services.Visual
             // 1. History Query
             // Get all receipts within the date range, regardless of "Today"
             string sqlHistory = @"
-                SELECT 
-                    POL.LAST_RECEIVED_DATE as [Date],
-                    COUNT(*) as [Count],
-                    CASE 
-                        WHEN POL.SERVICE_ID IS NOT NULL THEN 'Service'
-                        WHEN POL.PART_ID LIKE 'MMC%' THEN 'MMC'
-                        WHEN POL.PART_ID LIKE 'MMF%' THEN 'MMF'
-                        ELSE 'Part'
-                    END as [Type],
-                    POL.PART_ID as [PartNumber]
-                FROM PURC_ORDER_LINE POL
-                INNER JOIN PURCHASE_ORDER PO ON POL.PURC_ORDER_ID = PO.ID
-                WHERE POL.TOTAL_RECEIVED_QTY > 0 
-                  AND POL.LAST_RECEIVED_DATE >= @StartDate
-                  AND POL.LAST_RECEIVED_DATE <= @EndDate
-                  AND ISNULL(PO.CONSIGNMENT, 'N') <> 'Y' 
-                  AND ISNULL(PO.INTERNAL_ORDER, 'N') <> 'Y'
-                GROUP BY POL.LAST_RECEIVED_DATE, 
-                    CASE 
-                        WHEN POL.SERVICE_ID IS NOT NULL THEN 'Service'
-                        WHEN POL.PART_ID LIKE 'MMC%' THEN 'MMC'
-                        WHEN POL.PART_ID LIKE 'MMF%' THEN 'MMF'
-                        ELSE 'Part'
-                    END,
-                    POL.PART_ID
-                ORDER BY POL.LAST_RECEIVED_DATE";
+                SELECT [Date], COUNT(*) as [Count], [Type], [PartNumber], [ReceivedBy]
+                FROM (
+                    SELECT 
+                        POL.LAST_RECEIVED_DATE as [Date],
+                        CASE 
+                            WHEN POL.SERVICE_ID IS NOT NULL THEN 'Service'
+                            WHEN POL.PART_ID LIKE 'MMC%' THEN 'MMC'
+                            WHEN POL.PART_ID LIKE 'MMF%' THEN 'MMF'
+                            ELSE 'Part'
+                        END as [Type],
+                        POL.PART_ID as [PartNumber],
+                        (SELECT TOP 1 R.USER_ID 
+                         FROM RECEIVER R 
+                         INNER JOIN RECEIVER_LINE RL ON R.ID = RL.RECEIVER_ID 
+                         WHERE RL.PURC_ORDER_ID = POL.PURC_ORDER_ID 
+                           AND RL.PURC_ORDER_LINE_NO = POL.LINE_NO 
+                         ORDER BY R.RECEIVED_DATE DESC) as [ReceivedBy]
+                    FROM PURC_ORDER_LINE POL
+                    INNER JOIN PURCHASE_ORDER PO ON POL.PURC_ORDER_ID = PO.ID
+                    WHERE POL.TOTAL_RECEIVED_QTY > 0 
+                      AND POL.LAST_RECEIVED_DATE >= @StartDate
+                      AND POL.LAST_RECEIVED_DATE <= @EndDate
+                      AND ISNULL(PO.CONSIGNMENT, 'N') <> 'Y' 
+                      AND ISNULL(PO.INTERNAL_ORDER, 'N') <> 'Y'
+                ) as Sub
+                GROUP BY [Date], [Type], [PartNumber], [ReceivedBy]
+                ORDER BY [Date]";
 
             // 2. Forecast Query
             // Get all open lines due within the date range
             // Logic: Service -> Desired Date, Others -> Promise Date
             // Fallback chain: Line Date -> PO Date -> Alternate Date Type
             string sqlForecast = @"
-                SELECT 
-                    CASE 
-                        WHEN POL.SERVICE_ID IS NOT NULL THEN COALESCE(POL.DESIRED_RECV_DATE, PO.DESIRED_RECV_DATE, POL.PROMISE_DATE, PO.PROMISE_DATE)
-                        ELSE COALESCE(POL.PROMISE_DATE, PO.PROMISE_DATE, POL.DESIRED_RECV_DATE, PO.DESIRED_RECV_DATE)
-                    END as [Date],
-                    COUNT(*) as [Count],
-                    CASE 
-                        WHEN POL.SERVICE_ID IS NOT NULL THEN 'Service'
-                        WHEN POL.PART_ID LIKE 'MMC%' THEN 'MMC'
-                        WHEN POL.PART_ID LIKE 'MMF%' THEN 'MMF'
-                        ELSE 'Part'
-                    END as [Type],
-                    POL.PART_ID as [PartNumber]
-                FROM PURC_ORDER_LINE POL
-                INNER JOIN PURCHASE_ORDER PO ON POL.PURC_ORDER_ID = PO.ID
-                WHERE (POL.ORDER_QTY - POL.TOTAL_RECEIVED_QTY) > 0 
-                  AND POL.LINE_STATUS <> 'C'
-                  AND PO.STATUS <> 'C'
-                  AND ISNULL(PO.CONSIGNMENT, 'N') <> 'Y' 
-                  AND ISNULL(PO.INTERNAL_ORDER, 'N') <> 'Y'
-                  AND (
-                      CASE 
-                          WHEN POL.SERVICE_ID IS NOT NULL THEN COALESCE(POL.DESIRED_RECV_DATE, PO.DESIRED_RECV_DATE, POL.PROMISE_DATE, PO.PROMISE_DATE)
-                          ELSE COALESCE(POL.PROMISE_DATE, PO.PROMISE_DATE, POL.DESIRED_RECV_DATE, PO.DESIRED_RECV_DATE)
-                      END
-                  ) >= @StartDate
-                  AND (
-                      CASE 
-                          WHEN POL.SERVICE_ID IS NOT NULL THEN COALESCE(POL.DESIRED_RECV_DATE, PO.DESIRED_RECV_DATE, POL.PROMISE_DATE, PO.PROMISE_DATE)
-                          ELSE COALESCE(POL.PROMISE_DATE, PO.PROMISE_DATE, POL.DESIRED_RECV_DATE, PO.DESIRED_RECV_DATE)
-                      END
-                  ) <= @EndDate
-                GROUP BY 
-                    CASE 
-                        WHEN POL.SERVICE_ID IS NOT NULL THEN COALESCE(POL.DESIRED_RECV_DATE, PO.DESIRED_RECV_DATE, POL.PROMISE_DATE, PO.PROMISE_DATE)
-                        ELSE COALESCE(POL.PROMISE_DATE, PO.PROMISE_DATE, POL.DESIRED_RECV_DATE, PO.DESIRED_RECV_DATE)
-                    END,
-                    CASE 
-                        WHEN POL.SERVICE_ID IS NOT NULL THEN 'Service'
-                        WHEN POL.PART_ID LIKE 'MMC%' THEN 'MMC'
-                        WHEN POL.PART_ID LIKE 'MMF%' THEN 'MMF'
-                        ELSE 'Part'
-                    END,
-                    POL.PART_ID
+                SELECT [Date], COUNT(*) as [Count], [Type], [PartNumber], '' as [ReceivedBy]
+                FROM (
+                    SELECT 
+                        CASE 
+                            WHEN POL.SERVICE_ID IS NOT NULL THEN COALESCE(POL.DESIRED_RECV_DATE, PO.DESIRED_RECV_DATE, POL.PROMISE_DATE, PO.PROMISE_DATE)
+                            ELSE COALESCE(POL.PROMISE_DATE, PO.PROMISE_DATE, POL.DESIRED_RECV_DATE, PO.DESIRED_RECV_DATE)
+                        END as [Date],
+                        CASE 
+                            WHEN POL.SERVICE_ID IS NOT NULL THEN 'Service'
+                            WHEN POL.PART_ID LIKE 'MMC%' THEN 'MMC'
+                            WHEN POL.PART_ID LIKE 'MMF%' THEN 'MMF'
+                            ELSE 'Part'
+                        END as [Type],
+                        POL.PART_ID as [PartNumber]
+                    FROM PURC_ORDER_LINE POL
+                    INNER JOIN PURCHASE_ORDER PO ON POL.PURC_ORDER_ID = PO.ID
+                    WHERE (POL.ORDER_QTY - POL.TOTAL_RECEIVED_QTY) > 0 
+                      AND POL.LINE_STATUS <> 'C'
+                      AND PO.STATUS <> 'C'
+                      AND ISNULL(PO.CONSIGNMENT, 'N') <> 'Y' 
+                      AND ISNULL(PO.INTERNAL_ORDER, 'N') <> 'Y'
+                      AND (
+                          CASE 
+                              WHEN POL.SERVICE_ID IS NOT NULL THEN COALESCE(POL.DESIRED_RECV_DATE, PO.DESIRED_RECV_DATE, POL.PROMISE_DATE, PO.PROMISE_DATE)
+                              ELSE COALESCE(POL.PROMISE_DATE, PO.PROMISE_DATE, POL.DESIRED_RECV_DATE, PO.DESIRED_RECV_DATE)
+                          END
+                      ) >= @StartDate
+                      AND (
+                          CASE 
+                              WHEN POL.SERVICE_ID IS NOT NULL THEN COALESCE(POL.DESIRED_RECV_DATE, PO.DESIRED_RECV_DATE, POL.PROMISE_DATE, PO.PROMISE_DATE)
+                              ELSE COALESCE(POL.PROMISE_DATE, PO.PROMISE_DATE, POL.DESIRED_RECV_DATE, PO.DESIRED_RECV_DATE)
+                          END
+                      ) <= @EndDate
+                ) as Sub
+                GROUP BY [Date], [Type], [PartNumber]
                 ORDER BY [Date]";
 
             try
@@ -647,7 +645,8 @@ namespace MTM_WIP_Application_Winforms.Services.Visual
                                         Date = Convert.ToDateTime(reader["Date"]),
                                         Count = Convert.ToInt32(reader["Count"]),
                                         Type = reader["Type"].ToString() ?? "Part",
-                                        PartNumber = reader["PartNumber"]?.ToString() ?? string.Empty
+                                        PartNumber = reader["PartNumber"]?.ToString() ?? string.Empty,
+                                        ReceivedBy = reader["ReceivedBy"]?.ToString() ?? string.Empty
                                     });
                                 }
                             }
@@ -671,7 +670,8 @@ namespace MTM_WIP_Application_Winforms.Services.Visual
                                         Date = Convert.ToDateTime(reader["Date"]),
                                         Count = Convert.ToInt32(reader["Count"]),
                                         Type = reader["Type"].ToString() ?? "Part",
-                                        PartNumber = reader["PartNumber"]?.ToString() ?? string.Empty
+                                        PartNumber = reader["PartNumber"]?.ToString() ?? string.Empty,
+                                        ReceivedBy = reader["ReceivedBy"]?.ToString() ?? string.Empty
                                     });
                                 }
                             }
@@ -697,6 +697,7 @@ namespace MTM_WIP_Application_Winforms.Services.Visual
             var analytics = new Model_ReceivingAnalytics();
             var rnd = new Random();
             var types = new[] { "Part", "MMC", "MMF", "Service", "Consignment", "Internal" };
+            var users = new[] { "JDOE", "BSMITH", "MJONES", "ADMIN", "RECEIVING" };
 
             // Generate History (YTD)
             var startDate = new DateTime(DateTime.Now.Year, 1, 1);
@@ -712,7 +713,8 @@ namespace MTM_WIP_Application_Winforms.Services.Visual
                     {
                         Date = date,
                         Count = rnd.Next(1, 10),
-                        Type = types[rnd.Next(types.Length)]
+                        Type = types[rnd.Next(types.Length)],
+                        ReceivedBy = users[rnd.Next(users.Length)]
                     });
                 }
             }
@@ -729,7 +731,8 @@ namespace MTM_WIP_Application_Winforms.Services.Visual
                     {
                         Date = date,
                         Count = rnd.Next(1, 10),
-                        Type = types[rnd.Next(types.Length)]
+                        Type = types[rnd.Next(types.Length)],
+                        ReceivedBy = string.Empty
                     });
                 }
             }
@@ -1234,11 +1237,13 @@ namespace MTM_WIP_Application_Winforms.Services.Visual
             dt.Columns.Add("Consignment");
             dt.Columns.Add("Internal");
             dt.Columns.Add("Ship Via"); // Added for Carrier filter
+            dt.Columns.Add("Received By"); // Added for Received By column
 
             var rnd = new Random();
             var vendors = new[] { "Acme Corp", "Steel Supply Co", "Fasteners Inc", "Global Logistics", "Local Services" };
             var carriers = new[] { "UPS", "FedEx", "DHL", "Our Truck", "Customer Pickup" };
             var parts = new[] { "MMC-1001", "MMF-2002", "PART-3003", "SVC-MAINT", "MMC-5005" };
+            var users = new[] { "JDOE", "BSMITH", "MJONES", "ADMIN", "RECEIVING" };
 
             for (int i = 0; i < 50; i++)
             {
@@ -1249,6 +1254,7 @@ namespace MTM_WIP_Application_Winforms.Services.Visual
                 var part = parts[rnd.Next(parts.Length)];
                 var vendor = vendors[rnd.Next(vendors.Length)];
                 var carrier = carriers[rnd.Next(carriers.Length)];
+                var receivedBy = rec > 0 ? users[rnd.Next(users.Length)] : DBNull.Value;
 
                 dt.Rows.Add(
                     $"PO-{10000 + i}",
@@ -1268,7 +1274,8 @@ namespace MTM_WIP_Application_Winforms.Services.Visual
                     rec == qty ? "C" : "O",
                     rnd.Next(0, 5) == 0 ? "Y" : "N", // Consignment
                     rnd.Next(0, 10) == 0 ? "Y" : "N", // Internal
-                    carrier
+                    carrier,
+                    receivedBy
                 );
             }
 
