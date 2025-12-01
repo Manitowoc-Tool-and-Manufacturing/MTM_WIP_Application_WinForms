@@ -1254,7 +1254,7 @@ namespace MTM_WIP_Application_Winforms.Services.Visual
                 var part = parts[rnd.Next(parts.Length)];
                 var vendor = vendors[rnd.Next(vendors.Length)];
                 var carrier = carriers[rnd.Next(carriers.Length)];
-                var receivedBy = rec > 0 ? users[rnd.Next(users.Length)] : DBNull.Value;
+                var receivedBy = rec > 0 ? users[rnd.Next(users.Length)] : string.Empty;
 
                 dt.Rows.Add(
                     $"PO-{10000 + i}",
