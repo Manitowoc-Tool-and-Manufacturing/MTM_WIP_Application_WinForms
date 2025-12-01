@@ -61,6 +61,14 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
             }
         }
 
+        /// <summary>
+        /// Handles the Click event of the coil search button.
+        /// </summary>
+        private async void btnCoilSearch_Click(object? sender, EventArgs e)
+        {
+            await PerformCoilSearch();
+        }
+
         #endregion
 
         #region Private Methods
@@ -136,6 +144,78 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
                     callerName: nameof(PerformSearch),
                     controlName: this.Name);
             }
+        }
+
+        /// <summary>
+        /// Performs the coil/flatstock search operation.
+        /// </summary>
+        private async Task PerformCoilSearch()
+        {
+            if (_visualService == null)
+            {
+                Service_ErrorHandler.ShowUserError("Visual Database Service is not available. Please restart the application.");
+                return;
+            }
+
+            string partNumber = txtCoilSearch.Text?.Trim() ?? "";
+            if (string.IsNullOrEmpty(partNumber))
+            {
+                Service_ErrorHandler.HandleValidationError(
+                    "Please enter a part number.",
+                    field: "Part Number",
+                    callerName: nameof(PerformCoilSearch),
+                    controlName: this.Name);
+                txtCoilSearch.Focus();
+                return;
+            }
+
+            LoggingUtility.Log($"[Control_DieToolDiscovery] Coil Search initiated | PartNumber={partNumber}");
+
+            try
+            {
+                var result = await _visualService.GetCoilFlatstockInfoAsync(partNumber);
+
+                if (result.IsSuccess)
+                {
+                    var info = result.Data;
+                    txtThickness.Text = info?.Thickness;
+                    txtWidth.Text = info?.Width;
+                    txtLength.Text = info?.Length;
+                    txtGauge.Text = info?.Gauge;
+                    txtWhereUsed.Text = info?.WhereUsed;
+                    txtProgression.Text = info?.Progression;
+                    txtCustomer.Text = info?.Customer;
+                    txtScrapLocation.Text = info?.ScrapLocation;
+                    txtGenericType.Text = info?.GenericType;
+                    txtDetailedType.Text = info?.DetailedType;
+                    LoggingUtility.Log($"[Control_DieToolDiscovery] Coil Search completed successfully");
+                }
+                else
+                {
+                    Service_ErrorHandler.ShowUserError(result.ErrorMessage);
+                    ClearCoilFields();
+                }
+            }
+            catch (Exception ex)
+            {
+                Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Medium, 
+                    callerName: nameof(PerformCoilSearch), controlName: this.Name);
+                ClearCoilFields();
+            }
+        }
+
+        private void ClearCoilFields()
+        {
+            txtThickness.Text = string.Empty;
+            txtWidth.Text = string.Empty;
+            txtLength.Text = string.Empty;
+            txtGauge.Text = string.Empty;
+            txtWhereUsed.Text = string.Empty;
+            txtProgression.Text = string.Empty;
+            txtCustomer.Text = string.Empty;
+            txtScrapLocation.Text = string.Empty;
+            txtGenericType.Text = string.Empty;
+            txtDetailedType.Text = string.Empty;
         }
 
         #endregion

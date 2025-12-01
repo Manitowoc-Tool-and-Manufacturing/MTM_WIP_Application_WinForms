@@ -43,6 +43,15 @@ namespace MTM_WIP_Application_Winforms.Services.Visual
         Task<Model_Dao_Result<DataTable>> SearchDiesAsync(string searchTerm, bool searchByPart);
 
         /// <summary>
+        /// Retrieves coil/flatstock information for a given part number.
+        /// </summary>
+        /// <param name="partNumber">The part number to search for (e.g., MMC or MMF).</param>
+        /// <returns>
+        /// Model_Dao_Result containing the coil/flatstock details.
+        /// </returns>
+        Task<Model_Dao_Result<Model_Visual_CoilFlatstock>> GetCoilFlatstockInfoAsync(string partNumber);
+
+        /// <summary>
         /// Retrieves the receiving schedule based on specified filters.
         /// </summary>
         /// <param name="startDate">Start date for the schedule range.</param>

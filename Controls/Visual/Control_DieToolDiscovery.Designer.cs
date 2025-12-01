@@ -25,6 +25,24 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
             btnSearch = new Button();
             panel1 = new Panel();
             gridResults = new DataGridView();
+
+            // Coil Tab Initialization
+            tabCoilFlatstock = new TabPage();
+            tableLayoutCoil = new TableLayoutPanel();
+            txtCoilSearch = new MTM_WIP_Application_Winforms.Controls.Shared.SuggestionTextBoxWithLabel();
+            btnCoilSearch = new Button();
+            tableLayoutCoilDetails = new TableLayoutPanel();
+            txtThickness = new MTM_WIP_Application_Winforms.Controls.Shared.SuggestionTextBoxWithLabel();
+            txtWidth = new MTM_WIP_Application_Winforms.Controls.Shared.SuggestionTextBoxWithLabel();
+            txtLength = new MTM_WIP_Application_Winforms.Controls.Shared.SuggestionTextBoxWithLabel();
+            txtGauge = new MTM_WIP_Application_Winforms.Controls.Shared.SuggestionTextBoxWithLabel();
+            txtWhereUsed = new MTM_WIP_Application_Winforms.Controls.Shared.SuggestionTextBoxWithLabel();
+            txtProgression = new MTM_WIP_Application_Winforms.Controls.Shared.SuggestionTextBoxWithLabel();
+            txtCustomer = new MTM_WIP_Application_Winforms.Controls.Shared.SuggestionTextBoxWithLabel();
+            txtScrapLocation = new MTM_WIP_Application_Winforms.Controls.Shared.SuggestionTextBoxWithLabel();
+            txtGenericType = new MTM_WIP_Application_Winforms.Controls.Shared.SuggestionTextBoxWithLabel();
+            txtDetailedType = new MTM_WIP_Application_Winforms.Controls.Shared.SuggestionTextBoxWithLabel();
+
             tabControlMain.SuspendLayout();
             tabLocator.SuspendLayout();
             grpSearch.SuspendLayout();
@@ -32,11 +50,15 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
             tableLayoutPanel2.SuspendLayout();
             panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)gridResults).BeginInit();
+            tabCoilFlatstock.SuspendLayout();
+            tableLayoutCoil.SuspendLayout();
+            tableLayoutCoilDetails.SuspendLayout();
             SuspendLayout();
             // 
             // tabControlMain
             // 
             tabControlMain.Controls.Add(tabLocator);
+            tabControlMain.Controls.Add(tabCoilFlatstock);
             tabControlMain.Dock = DockStyle.Fill;
             tabControlMain.Location = new Point(0, 0);
             tabControlMain.Name = "tabControlMain";
@@ -163,6 +185,201 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
             gridResults.Size = new Size(738, 186);
             gridResults.TabIndex = 2;
             // 
+            // tabCoilFlatstock
+            // 
+            tabCoilFlatstock.Controls.Add(tableLayoutCoil);
+            tabCoilFlatstock.Location = new Point(4, 24);
+            tabCoilFlatstock.Name = "tabCoilFlatstock";
+            tabCoilFlatstock.Padding = new Padding(10);
+            tabCoilFlatstock.Size = new Size(792, 322);
+            tabCoilFlatstock.TabIndex = 1;
+            tabCoilFlatstock.Text = "Coil/Flatstock Search";
+            tabCoilFlatstock.UseVisualStyleBackColor = true;
+            // 
+            // tableLayoutCoil
+            // 
+            tableLayoutCoil.ColumnCount = 1;
+            tableLayoutCoil.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
+            tableLayoutCoil.Controls.Add(txtCoilSearch, 0, 0);
+            tableLayoutCoil.Controls.Add(btnCoilSearch, 0, 1);
+            tableLayoutCoil.Controls.Add(tableLayoutCoilDetails, 0, 2);
+            tableLayoutCoil.Dock = DockStyle.Fill;
+            tableLayoutCoil.Location = new Point(10, 10);
+            tableLayoutCoil.Name = "tableLayoutCoil";
+            tableLayoutCoil.RowCount = 3;
+            tableLayoutCoil.RowStyles.Add(new RowStyle());
+            tableLayoutCoil.RowStyles.Add(new RowStyle());
+            tableLayoutCoil.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
+            tableLayoutCoil.Size = new Size(772, 302);
+            tableLayoutCoil.TabIndex = 0;
+            // 
+            // txtCoilSearch
+            // 
+            txtCoilSearch.Dock = DockStyle.Fill;
+            txtCoilSearch.LabelText = "Part Number (MMC/MMF)";
+            txtCoilSearch.Location = new Point(3, 3);
+            txtCoilSearch.Name = "txtCoilSearch";
+            txtCoilSearch.Size = new Size(766, 45);
+            txtCoilSearch.TabIndex = 0;
+            // 
+            // btnCoilSearch
+            // 
+            btnCoilSearch.Dock = DockStyle.Fill;
+            btnCoilSearch.Location = new Point(3, 54);
+            btnCoilSearch.Name = "btnCoilSearch";
+            btnCoilSearch.Size = new Size(766, 30);
+            btnCoilSearch.TabIndex = 1;
+            btnCoilSearch.Text = "Search";
+            btnCoilSearch.UseVisualStyleBackColor = true;
+            btnCoilSearch.Click += btnCoilSearch_Click;
+            // 
+            // tableLayoutCoilDetails
+            // 
+            tableLayoutCoilDetails.ColumnCount = 2;
+            tableLayoutCoilDetails.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
+            tableLayoutCoilDetails.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
+            tableLayoutCoilDetails.Controls.Add(txtThickness, 0, 0);
+            tableLayoutCoilDetails.Controls.Add(txtWidth, 1, 0);
+            tableLayoutCoilDetails.Controls.Add(txtLength, 0, 1);
+            tableLayoutCoilDetails.Controls.Add(txtGauge, 1, 1);
+            tableLayoutCoilDetails.Controls.Add(txtWhereUsed, 0, 2);
+            tableLayoutCoilDetails.Controls.Add(txtProgression, 1, 2);
+            tableLayoutCoilDetails.Controls.Add(txtCustomer, 0, 3);
+            tableLayoutCoilDetails.Controls.Add(txtScrapLocation, 1, 3);
+            tableLayoutCoilDetails.Controls.Add(txtGenericType, 0, 4);
+            tableLayoutCoilDetails.Controls.Add(txtDetailedType, 1, 4);
+            tableLayoutCoilDetails.Dock = DockStyle.Fill;
+            tableLayoutCoilDetails.Location = new Point(3, 90);
+            tableLayoutCoilDetails.Name = "tableLayoutCoilDetails";
+            tableLayoutCoilDetails.RowCount = 5;
+            tableLayoutCoilDetails.RowStyles.Add(new RowStyle(SizeType.Percent, 20F));
+            tableLayoutCoilDetails.RowStyles.Add(new RowStyle(SizeType.Percent, 20F));
+            tableLayoutCoilDetails.RowStyles.Add(new RowStyle(SizeType.Percent, 20F));
+            tableLayoutCoilDetails.RowStyles.Add(new RowStyle(SizeType.Percent, 20F));
+            tableLayoutCoilDetails.RowStyles.Add(new RowStyle(SizeType.Percent, 20F));
+            tableLayoutCoilDetails.Size = new Size(766, 209);
+            tableLayoutCoilDetails.TabIndex = 2;
+            // 
+            // txtThickness
+            // 
+            txtThickness.Dock = DockStyle.Fill;
+            txtThickness.LabelText = "Thickness";
+            txtThickness.Location = new Point(3, 3);
+            txtThickness.Name = "txtThickness";
+            txtThickness.Size = new Size(377, 35);
+            txtThickness.TabIndex = 0;
+            txtThickness.Enabled = false;
+            txtThickness.ShowF4Button = false;
+            txtThickness.EnableSuggestions = false;
+            // 
+            // txtWidth
+            // 
+            txtWidth.Dock = DockStyle.Fill;
+            txtWidth.LabelText = "Width";
+            txtWidth.Location = new Point(386, 3);
+            txtWidth.Name = "txtWidth";
+            txtWidth.Size = new Size(377, 35);
+            txtWidth.TabIndex = 1;
+            txtWidth.Enabled = false;
+            txtWidth.ShowF4Button = false;
+            txtWidth.EnableSuggestions = false;
+            // 
+            // txtLength
+            // 
+            txtLength.Dock = DockStyle.Fill;
+            txtLength.LabelText = "Length";
+            txtLength.Location = new Point(3, 44);
+            txtLength.Name = "txtLength";
+            txtLength.Size = new Size(377, 35);
+            txtLength.TabIndex = 2;
+            txtLength.Enabled = false;
+            txtLength.ShowF4Button = false;
+            txtLength.EnableSuggestions = false;
+            // 
+            // txtGauge
+            // 
+            txtGauge.Dock = DockStyle.Fill;
+            txtGauge.LabelText = "Ga.";
+            txtGauge.Location = new Point(386, 44);
+            txtGauge.Name = "txtGauge";
+            txtGauge.Size = new Size(377, 35);
+            txtGauge.TabIndex = 3;
+            txtGauge.Enabled = false;
+            txtGauge.ShowF4Button = false;
+            txtGauge.EnableSuggestions = false;
+            // 
+            // txtWhereUsed
+            // 
+            txtWhereUsed.Dock = DockStyle.Fill;
+            txtWhereUsed.LabelText = "Where Used";
+            txtWhereUsed.Location = new Point(3, 85);
+            txtWhereUsed.Name = "txtWhereUsed";
+            txtWhereUsed.Size = new Size(377, 35);
+            txtWhereUsed.TabIndex = 4;
+            txtWhereUsed.Enabled = false;
+            txtWhereUsed.ShowF4Button = false;
+            txtWhereUsed.EnableSuggestions = false;
+            // 
+            // txtProgression
+            // 
+            txtProgression.Dock = DockStyle.Fill;
+            txtProgression.LabelText = "Progression";
+            txtProgression.Location = new Point(386, 85);
+            txtProgression.Name = "txtProgression";
+            txtProgression.Size = new Size(377, 35);
+            txtProgression.TabIndex = 5;
+            txtProgression.Enabled = false;
+            txtProgression.ShowF4Button = false;
+            txtProgression.EnableSuggestions = false;
+            // 
+            // txtCustomer
+            // 
+            txtCustomer.Dock = DockStyle.Fill;
+            txtCustomer.LabelText = "Customer";
+            txtCustomer.Location = new Point(3, 126);
+            txtCustomer.Name = "txtCustomer";
+            txtCustomer.Size = new Size(377, 35);
+            txtCustomer.TabIndex = 6;
+            txtCustomer.Enabled = false;
+            txtCustomer.ShowF4Button = false;
+            txtCustomer.EnableSuggestions = false;
+            // 
+            // txtScrapLocation
+            // 
+            txtScrapLocation.Dock = DockStyle.Fill;
+            txtScrapLocation.LabelText = "Scrap Location";
+            txtScrapLocation.Location = new Point(386, 126);
+            txtScrapLocation.Name = "txtScrapLocation";
+            txtScrapLocation.Size = new Size(377, 35);
+            txtScrapLocation.TabIndex = 7;
+            txtScrapLocation.Enabled = false;
+            txtScrapLocation.ShowF4Button = false;
+            txtScrapLocation.EnableSuggestions = false;
+            // 
+            // txtGenericType
+            // 
+            txtGenericType.Dock = DockStyle.Fill;
+            txtGenericType.LabelText = "Generic Type";
+            txtGenericType.Location = new Point(3, 167);
+            txtGenericType.Name = "txtGenericType";
+            txtGenericType.Size = new Size(377, 39);
+            txtGenericType.TabIndex = 8;
+            txtGenericType.Enabled = false;
+            txtGenericType.ShowF4Button = false;
+            txtGenericType.EnableSuggestions = false;
+            // 
+            // txtDetailedType
+            // 
+            txtDetailedType.Dock = DockStyle.Fill;
+            txtDetailedType.LabelText = "Detailed Type";
+            txtDetailedType.Location = new Point(386, 167);
+            txtDetailedType.Name = "txtDetailedType";
+            txtDetailedType.Size = new Size(377, 39);
+            txtDetailedType.TabIndex = 9;
+            txtDetailedType.Enabled = false;
+            txtDetailedType.ShowF4Button = false;
+            txtDetailedType.EnableSuggestions = false;
+            // 
             // Control_DieToolDiscovery
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -200,5 +417,21 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
         private TableLayoutPanel tableLayoutPanel2;
         private Panel panel1;
         private DataGridView gridResults;
+
+        private System.Windows.Forms.TabPage tabCoilFlatstock;
+        private System.Windows.Forms.TableLayoutPanel tableLayoutCoil;
+        private MTM_WIP_Application_Winforms.Controls.Shared.SuggestionTextBoxWithLabel txtCoilSearch;
+        private System.Windows.Forms.Button btnCoilSearch;
+        private System.Windows.Forms.TableLayoutPanel tableLayoutCoilDetails;
+        private MTM_WIP_Application_Winforms.Controls.Shared.SuggestionTextBoxWithLabel txtThickness;
+        private MTM_WIP_Application_Winforms.Controls.Shared.SuggestionTextBoxWithLabel txtWidth;
+        private MTM_WIP_Application_Winforms.Controls.Shared.SuggestionTextBoxWithLabel txtLength;
+        private MTM_WIP_Application_Winforms.Controls.Shared.SuggestionTextBoxWithLabel txtGauge;
+        private MTM_WIP_Application_Winforms.Controls.Shared.SuggestionTextBoxWithLabel txtWhereUsed;
+        private MTM_WIP_Application_Winforms.Controls.Shared.SuggestionTextBoxWithLabel txtProgression;
+        private MTM_WIP_Application_Winforms.Controls.Shared.SuggestionTextBoxWithLabel txtCustomer;
+        private MTM_WIP_Application_Winforms.Controls.Shared.SuggestionTextBoxWithLabel txtScrapLocation;
+        private MTM_WIP_Application_Winforms.Controls.Shared.SuggestionTextBoxWithLabel txtGenericType;
+        private MTM_WIP_Application_Winforms.Controls.Shared.SuggestionTextBoxWithLabel txtDetailedType;
     }
 }

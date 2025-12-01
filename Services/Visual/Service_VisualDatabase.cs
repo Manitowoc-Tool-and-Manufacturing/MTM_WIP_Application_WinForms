@@ -266,6 +266,87 @@ namespace MTM_WIP_Application_Winforms.Services.Visual
         }
 
         /// <summary>
+        /// Retrieves coil/flatstock information for a given part number.
+        /// </summary>
+        /// <param name="partNumber">The part number to search for (e.g., MMC or MMF).</param>
+        /// <returns>
+        /// Model_Dao_Result containing the coil/flatstock details.
+        /// </returns>
+        public async Task<Model_Dao_Result<Model_Visual_CoilFlatstock>> GetCoilFlatstockInfoAsync(string partNumber)
+        {
+            if (string.IsNullOrEmpty(_userName) || string.IsNullOrEmpty(_password))
+            {
+                return new Model_Dao_Result<Model_Visual_CoilFlatstock>
+                {
+                    IsSuccess = false,
+                    ErrorMessage = "Visual ERP credentials are not configured."
+                };
+            }
+
+            string sql = @"
+                SELECT 
+                    ID, 
+                    DESCRIPTION, 
+                    USER_1, 
+                    USER_2, 
+                    USER_3, 
+                    USER_4, 
+                    USER_5, 
+                    USER_6, 
+                    USER_7, 
+                    USER_8, 
+                    USER_9, 
+                    USER_10
+                FROM PART 
+                WHERE ID = @PartNumber";
+
+            try
+            {
+                using (var connection = new SqlConnection(GetConnectionString()))
+                {
+                    await connection.OpenAsync();
+                    using (var command = new SqlCommand(sql, connection))
+                    {
+                        command.Parameters.AddWithValue("@PartNumber", partNumber);
+
+                        using (var reader = await command.ExecuteReaderAsync())
+                        {
+                            if (await reader.ReadAsync())
+                            {
+                                var model = new Model_Visual_CoilFlatstock
+                                {
+                                    PartId = reader["ID"]?.ToString() ?? string.Empty,
+                                    Description = reader["DESCRIPTION"]?.ToString() ?? string.Empty,
+                                    Thickness = reader["USER_1"]?.ToString() ?? string.Empty,
+                                    Width = reader["USER_2"]?.ToString() ?? string.Empty,
+                                    Length = reader["USER_3"]?.ToString() ?? string.Empty,
+                                    Gauge = reader["USER_4"]?.ToString() ?? string.Empty,
+                                    WhereUsed = reader["USER_5"]?.ToString() ?? string.Empty,
+                                    Progression = reader["USER_6"]?.ToString() ?? string.Empty,
+                                    Customer = reader["USER_7"]?.ToString() ?? string.Empty,
+                                    ScrapLocation = reader["USER_8"]?.ToString() ?? string.Empty,
+                                    GenericType = reader["USER_9"]?.ToString() ?? string.Empty,
+                                    DetailedType = reader["USER_10"]?.ToString() ?? string.Empty
+                                };
+
+                                return Model_Dao_Result<Model_Visual_CoilFlatstock>.Success(model);
+                            }
+                            else
+                            {
+                                return Model_Dao_Result<Model_Visual_CoilFlatstock>.Failure("Part not found.");
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                LoggingUtility.LogApplicationError(ex);
+                return Model_Dao_Result<Model_Visual_CoilFlatstock>.Failure($"Error retrieving coil info: {ex.Message}");
+            }
+        }
+
+        /// <summary>
         /// Retrieves the receiving schedule based on specified filters.
         /// </summary>
         /// <param name="startDate">Start date for the filter.</param>
