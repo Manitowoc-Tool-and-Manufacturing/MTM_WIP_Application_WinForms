@@ -56,6 +56,17 @@
             _tabByPO = new TabPage();
             pnlByPO = new TableLayoutPanel();
             _txtByPOPO = new MTM_WIP_Application_Winforms.Controls.Shared.SuggestionTextBoxWithLabel();
+            _tabUserAnalytics = new TabPage();
+            pnlUserAnalytics = new TableLayoutPanel();
+            tableLayoutPanel4 = new TableLayoutPanel();
+            lblAnalyticsStart = new Label();
+            _dtpAnalyticsStart = new DateTimePicker();
+            lblAnalyticsEnd = new Label();
+            _dtpAnalyticsEnd = new DateTimePicker();
+            _btnLoadUsers = new Button();
+            _clbUsers = new CheckedListBox();
+            _btnGenerateReport = new Button();
+            _lblUserCount = new Label();
             _btnSearch = new Button();
             _btnExport = new Button();
             _dataGridView = new DataGridView();
@@ -76,6 +87,9 @@
             pnlByCO.SuspendLayout();
             _tabByPO.SuspendLayout();
             pnlByPO.SuspendLayout();
+            _tabUserAnalytics.SuspendLayout();
+            pnlUserAnalytics.SuspendLayout();
+            tableLayoutPanel4.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)_dataGridView).BeginInit();
             tableLayoutPanel1.SuspendLayout();
             tableLayoutPanel2.SuspendLayout();
@@ -108,6 +122,7 @@
             _tabControl.Controls.Add(_tabByWO);
             _tabControl.Controls.Add(_tabByCO);
             _tabControl.Controls.Add(_tabByPO);
+            _tabControl.Controls.Add(_tabUserAnalytics);
             _tabControl.Dock = DockStyle.Fill;
             _tabControl.Location = new Point(3, 3);
             _tabControl.Name = "_tabControl";
@@ -493,6 +508,143 @@
             _txtByPOPO.TabIndex = 0;
             _txtByPOPO.ValidatorType = null;
             // 
+            // _tabUserAnalytics
+            // 
+            _tabUserAnalytics.Controls.Add(pnlUserAnalytics);
+            _tabUserAnalytics.Location = new Point(4, 24);
+            _tabUserAnalytics.Name = "_tabUserAnalytics";
+            _tabUserAnalytics.Padding = new Padding(3);
+            _tabUserAnalytics.Size = new Size(786, 106);
+            _tabUserAnalytics.TabIndex = 6;
+            _tabUserAnalytics.Text = "User Analytics";
+            _tabUserAnalytics.UseVisualStyleBackColor = true;
+            // 
+            // pnlUserAnalytics
+            // 
+            pnlUserAnalytics.AutoSize = true;
+            pnlUserAnalytics.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            pnlUserAnalytics.ColumnCount = 3;
+            pnlUserAnalytics.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 40F));
+            pnlUserAnalytics.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 40F));
+            pnlUserAnalytics.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 20F));
+            pnlUserAnalytics.Controls.Add(tableLayoutPanel4, 0, 0);
+            pnlUserAnalytics.Controls.Add(_clbUsers, 1, 0);
+            pnlUserAnalytics.Controls.Add(_btnGenerateReport, 2, 0);
+            pnlUserAnalytics.Controls.Add(_lblUserCount, 1, 1);
+            pnlUserAnalytics.Dock = DockStyle.Fill;
+            pnlUserAnalytics.Location = new Point(3, 3);
+            pnlUserAnalytics.Name = "pnlUserAnalytics";
+            pnlUserAnalytics.Padding = new Padding(10);
+            pnlUserAnalytics.RowCount = 2;
+            pnlUserAnalytics.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
+            pnlUserAnalytics.RowStyles.Add(new RowStyle());
+            pnlUserAnalytics.Size = new Size(780, 100);
+            pnlUserAnalytics.TabIndex = 0;
+            // 
+            // tableLayoutPanel4
+            // 
+            tableLayoutPanel4.AutoSize = true;
+            tableLayoutPanel4.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            tableLayoutPanel4.ColumnCount = 2;
+            tableLayoutPanel4.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
+            tableLayoutPanel4.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
+            tableLayoutPanel4.Controls.Add(lblAnalyticsStart, 0, 0);
+            tableLayoutPanel4.Controls.Add(_dtpAnalyticsStart, 0, 1);
+            tableLayoutPanel4.Controls.Add(lblAnalyticsEnd, 1, 0);
+            tableLayoutPanel4.Controls.Add(_dtpAnalyticsEnd, 1, 1);
+            tableLayoutPanel4.Controls.Add(_btnLoadUsers, 0, 2);
+            tableLayoutPanel4.Dock = DockStyle.Fill;
+            tableLayoutPanel4.Location = new Point(13, 13);
+            tableLayoutPanel4.Name = "tableLayoutPanel4";
+            tableLayoutPanel4.RowCount = 3;
+            tableLayoutPanel4.RowStyles.Add(new RowStyle());
+            tableLayoutPanel4.RowStyles.Add(new RowStyle());
+            tableLayoutPanel4.RowStyles.Add(new RowStyle());
+            tableLayoutPanel4.Size = new Size(298, 74);
+            tableLayoutPanel4.TabIndex = 0;
+            // 
+            // lblAnalyticsStart
+            // 
+            lblAnalyticsStart.AutoSize = true;
+            lblAnalyticsStart.Dock = DockStyle.Fill;
+            lblAnalyticsStart.Location = new Point(3, 3);
+            lblAnalyticsStart.Margin = new Padding(3);
+            lblAnalyticsStart.Name = "lblAnalyticsStart";
+            lblAnalyticsStart.Size = new Size(143, 15);
+            lblAnalyticsStart.TabIndex = 0;
+            lblAnalyticsStart.Text = "Start Date";
+            // 
+            // _dtpAnalyticsStart
+            // 
+            _dtpAnalyticsStart.Dock = DockStyle.Fill;
+            _dtpAnalyticsStart.Format = DateTimePickerFormat.Short;
+            _dtpAnalyticsStart.Location = new Point(3, 24);
+            _dtpAnalyticsStart.Name = "_dtpAnalyticsStart";
+            _dtpAnalyticsStart.Size = new Size(143, 23);
+            _dtpAnalyticsStart.TabIndex = 1;
+            // 
+            // lblAnalyticsEnd
+            // 
+            lblAnalyticsEnd.AutoSize = true;
+            lblAnalyticsEnd.Dock = DockStyle.Fill;
+            lblAnalyticsEnd.Location = new Point(152, 3);
+            lblAnalyticsEnd.Margin = new Padding(3);
+            lblAnalyticsEnd.Name = "lblAnalyticsEnd";
+            lblAnalyticsEnd.Size = new Size(143, 15);
+            lblAnalyticsEnd.TabIndex = 2;
+            lblAnalyticsEnd.Text = "End Date";
+            // 
+            // _dtpAnalyticsEnd
+            // 
+            _dtpAnalyticsEnd.Dock = DockStyle.Fill;
+            _dtpAnalyticsEnd.Format = DateTimePickerFormat.Short;
+            _dtpAnalyticsEnd.Location = new Point(152, 24);
+            _dtpAnalyticsEnd.Name = "_dtpAnalyticsEnd";
+            _dtpAnalyticsEnd.Size = new Size(143, 23);
+            _dtpAnalyticsEnd.TabIndex = 3;
+            // 
+            // _btnLoadUsers
+            // 
+            tableLayoutPanel4.SetColumnSpan(_btnLoadUsers, 2);
+            _btnLoadUsers.Dock = DockStyle.Fill;
+            _btnLoadUsers.Location = new Point(3, 53);
+            _btnLoadUsers.Name = "_btnLoadUsers";
+            _btnLoadUsers.Size = new Size(292, 23);
+            _btnLoadUsers.TabIndex = 4;
+            _btnLoadUsers.Text = "Load Users";
+            _btnLoadUsers.UseVisualStyleBackColor = true;
+            // 
+            // _clbUsers
+            // 
+            _clbUsers.Dock = DockStyle.Fill;
+            _clbUsers.FormattingEnabled = true;
+            _clbUsers.Location = new Point(317, 13);
+            _clbUsers.Name = "_clbUsers";
+            _clbUsers.Size = new Size(298, 74);
+            _clbUsers.TabIndex = 1;
+            // 
+            // _btnGenerateReport
+            // 
+            _btnGenerateReport.Dock = DockStyle.Fill;
+            _btnGenerateReport.Enabled = false;
+            _btnGenerateReport.Location = new Point(621, 13);
+            _btnGenerateReport.Name = "_btnGenerateReport";
+            _btnGenerateReport.Size = new Size(146, 74);
+            _btnGenerateReport.TabIndex = 2;
+            _btnGenerateReport.Text = "Generate Report";
+            _btnGenerateReport.UseVisualStyleBackColor = true;
+            // 
+            // _lblUserCount
+            // 
+            _lblUserCount.AutoSize = true;
+            _lblUserCount.Dock = DockStyle.Fill;
+            _lblUserCount.Location = new Point(317, 90);
+            _lblUserCount.Name = "_lblUserCount";
+            _lblUserCount.Size = new Size(298, 15);
+            _lblUserCount.TabIndex = 3;
+            _lblUserCount.Text = "Selected: 0 / 10";
+            _lblUserCount.TextAlign = ContentAlignment.MiddleCenter;
+            // 
             // _btnSearch
             // 
             _btnSearch.AutoSize = true;
@@ -673,6 +825,17 @@
         private System.Windows.Forms.TabPage _tabByPO;
         private System.Windows.Forms.TableLayoutPanel pnlByPO;
         private MTM_WIP_Application_Winforms.Controls.Shared.SuggestionTextBoxWithLabel _txtByPOPO;
+        private System.Windows.Forms.TabPage _tabUserAnalytics;
+        private System.Windows.Forms.TableLayoutPanel pnlUserAnalytics;
+        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel4;
+        private System.Windows.Forms.Label lblAnalyticsStart;
+        private System.Windows.Forms.DateTimePicker _dtpAnalyticsStart;
+        private System.Windows.Forms.Label lblAnalyticsEnd;
+        private System.Windows.Forms.DateTimePicker _dtpAnalyticsEnd;
+        private System.Windows.Forms.Button _btnLoadUsers;
+        private System.Windows.Forms.CheckedListBox _clbUsers;
+        private System.Windows.Forms.Button _btnGenerateReport;
+        private System.Windows.Forms.Label _lblUserCount;
         private System.Windows.Forms.Button _btnSearch;
         private System.Windows.Forms.Button _btnExport;
         private System.Windows.Forms.DataGridView _dataGridView;

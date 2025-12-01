@@ -1319,6 +1319,190 @@ namespace MTM_WIP_Application_Winforms.Services.Visual
 
             return new Model_Dao_Result<DataTable> { IsSuccess = true, Data = dt };
         }
+
+        /// <summary>
+        /// Retrieves a list of distinct users who have performed transactions within the specified date range.
+        /// </summary>
+        /// <param name="start">Start date.</param>
+        /// <param name="end">End date.</param>
+        /// <returns>List of user IDs.</returns>
+        public async Task<Model_Dao_Result<List<string>>> GetDistinctUsersForAnalyticsAsync(DateTime start, DateTime end)
+        {
+            if (_useSampleData)
+            {
+                return new Model_Dao_Result<List<string>>
+                {
+                    IsSuccess = true,
+                    Data = new List<string> { "SAMPLE_USER_1", "SAMPLE_USER_2", "SAMPLE_USER_3" }
+                };
+            }
+
+            string sql = @"
+                SELECT DISTINCT USER_ID 
+                FROM INVENTORY_TRANS 
+                WHERE CAST(COALESCE(CREATE_DATE, TRANSACTION_DATE) AS DATE) >= @Start 
+                AND CAST(COALESCE(CREATE_DATE, TRANSACTION_DATE) AS DATE) <= @End
+                AND USER_ID IS NOT NULL
+                ORDER BY USER_ID";
+
+            try
+            {
+                using (var connection = new SqlConnection(GetConnectionString()))
+                {
+                    await connection.OpenAsync();
+                    using (var command = new SqlCommand(sql, connection))
+                    {
+                        command.Parameters.AddWithValue("@Start", start.Date);
+                        command.Parameters.AddWithValue("@End", end.Date);
+
+                        var list = new List<string>();
+                        using (var reader = await command.ExecuteReaderAsync())
+                        {
+                            while (await reader.ReadAsync())
+                            {
+                                if (!reader.IsDBNull(0))
+                                    list.Add(reader.GetString(0));
+                            }
+                        }
+                        return new Model_Dao_Result<List<string>> { IsSuccess = true, Data = list };
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                LoggingUtility.LogApplicationError(ex);
+                return new Model_Dao_Result<List<string>>
+                {
+                    IsSuccess = false,
+                    ErrorMessage = $"Error retrieving users: {ex.Message}"
+                };
+            }
+        }
+
+        /// <summary>
+        /// Retrieves detailed analytics data for selected users within a date range.
+        /// </summary>
+        /// <param name="start">Start date.</param>
+        /// <param name="end">End date.</param>
+        /// <param name="userIds">List of user IDs to include.</param>
+        /// <returns>DataTable with analytics columns.</returns>
+        public async Task<Model_Dao_Result<DataTable>> GetUserAnalyticsDataAsync(DateTime start, DateTime end, List<string> userIds)
+        {
+            if (_useSampleData)
+            {
+                // Return sample data structure
+                var dt = new DataTable();
+                dt.Columns.Add("User", typeof(string));
+                dt.Columns.Add("Type", typeof(string));
+                dt.Columns.Add("Part", typeof(string));
+                dt.Columns.Add("Qty", typeof(decimal));
+                dt.Columns.Add("Date", typeof(DateTime));
+                dt.Columns.Add("FromLoc", typeof(string));
+                dt.Columns.Add("ToLoc", typeof(string));
+                dt.Columns.Add("WorkOrder", typeof(string));
+
+                foreach (var user in userIds)
+                {
+                    dt.Rows.Add(user, "Work Order", "PART-A", 10, DateTime.Now, "MAIN", null, "WO-123");
+                    dt.Rows.Add(user, "Location Transfer", "PART-B", 5, DateTime.Now, "LOC-A", "LOC-B", null);
+                    dt.Rows.Add(user, "Adjusted In", "PART-C", 2, DateTime.Now, "LOC-C", null, null);
+                }
+                return new Model_Dao_Result<DataTable> { IsSuccess = true, Data = dt };
+            }
+
+            if (userIds == null || userIds.Count == 0)
+            {
+                return new Model_Dao_Result<DataTable> { IsSuccess = true, Data = new DataTable() };
+            }
+
+            // Build IN clause dynamically
+            var userParams = new List<string>();
+            for (int i = 0; i < userIds.Count; i++)
+            {
+                userParams.Add($"@User{i}");
+            }
+            string inClause = string.Join(",", userParams);
+
+            string sql = $@"
+                SELECT TOP 5000
+                    T.USER_ID as User,
+                    CASE 
+                        WHEN T.PART_ID LIKE 'MMF%' THEN 'Flatstock'
+                        WHEN T.PART_ID LIKE 'MMC%' THEN 'Coil'
+                        WHEN T.WORKORDER_BASE_ID IS NOT NULL THEN 'Work Order'
+                        WHEN T_MATCH.TRANSACTION_ID IS NOT NULL THEN 'Location Transfer'
+                        WHEN T.TYPE = 'I' THEN 'Adjusted In'
+                        WHEN T.TYPE = 'O' THEN 'Adjusted Out'
+                        ELSE 'Unknown'
+                    END as Type,
+                    T.PART_ID as Part,
+                    T.QTY as Qty,
+                    T.CREATE_DATE as Date,
+                    T.LOCATION_ID as FromLoc,
+                    T_MATCH.LOCATION_ID as ToLoc,
+                    T.WORKORDER_BASE_ID as WorkOrder
+                FROM INVENTORY_TRANS T
+                LEFT JOIN INVENTORY_TRANS T_MATCH ON 
+                    T.CREATE_DATE = T_MATCH.CREATE_DATE 
+                    AND T.PART_ID = T_MATCH.PART_ID 
+                    AND T.USER_ID = T_MATCH.USER_ID
+                    AND T.TYPE = 'O' AND T_MATCH.TYPE = 'I'
+                    AND T.WORKORDER_BASE_ID IS NULL 
+                    AND T_MATCH.WORKORDER_BASE_ID IS NULL
+                WHERE 
+                    T.CREATE_DATE >= @Start AND T.CREATE_DATE <= @End
+                    AND T.USER_ID IN ({inClause})
+                    AND (
+                        (T.WORKORDER_BASE_ID IS NOT NULL)
+                        OR
+                        (T.TYPE = 'O' AND T_MATCH.TRANSACTION_ID IS NOT NULL)
+                        OR
+                        (T.TYPE = 'I' AND NOT EXISTS (
+                            SELECT 1 FROM INVENTORY_TRANS T_OUT 
+                            WHERE T_OUT.CREATE_DATE = T.CREATE_DATE 
+                            AND T_OUT.PART_ID = T.PART_ID 
+                            AND T_OUT.USER_ID = T.USER_ID
+                            AND T_OUT.TYPE = 'O'
+                            AND T_OUT.WORKORDER_BASE_ID IS NULL
+                        ))
+                        OR
+                        (T.TYPE = 'O' AND T_MATCH.TRANSACTION_ID IS NULL)
+                    )
+                ORDER BY T.CREATE_DATE DESC";
+
+            try
+            {
+                using (var connection = new SqlConnection(GetConnectionString()))
+                {
+                    await connection.OpenAsync();
+                    using (var command = new SqlCommand(sql, connection))
+                    {
+                        command.Parameters.AddWithValue("@Start", start);
+                        command.Parameters.AddWithValue("@End", end);
+                        for (int i = 0; i < userIds.Count; i++)
+                        {
+                            command.Parameters.AddWithValue($"@User{i}", userIds[i]);
+                        }
+
+                        var dt = new DataTable();
+                        using (var reader = await command.ExecuteReaderAsync())
+                        {
+                            dt.Load(reader);
+                        }
+                        return new Model_Dao_Result<DataTable> { IsSuccess = true, Data = dt };
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                LoggingUtility.LogApplicationError(ex);
+                return new Model_Dao_Result<DataTable>
+                {
+                    IsSuccess = false,
+                    ErrorMessage = $"Error retrieving analytics data: {ex.Message}"
+                };
+            }
+        }
         #endregion
 
     }

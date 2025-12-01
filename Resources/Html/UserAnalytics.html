@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Analytics</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f0f2f5;
+        }
+        .container {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            padding: 20px;
+            height: 90vh;
+            display: flex;
+            flex-direction: column;
+        }
+        .metrics-row {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+        .metric-card {
+            flex: 1;
+            min-width: 150px;
+            padding: 15px;
+            border-radius: 8px;
+            color: white;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+        }
+        .metric-value {
+            font-size: 32px;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        .metric-label {
+            font-size: 12px;
+            opacity: 0.9;
+        }
+        .leaderboard-container {
+            margin-top: 20px;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 8px;
+        }
+        .leaderboard-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px;
+            border-bottom: 1px solid #eee;
+        }
+        .leaderboard-item:last-child { border-bottom: none; }
+        .rank-badge {
+            background: #0078d4;
+            color: white;
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            margin-right: 10px;
+        }
+        .toolbar {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            margin-bottom: 20px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #eee;
+            align-items: center;
+        }
+        .chart-container {
+            flex: 1;
+            position: relative;
+            min-height: 0;
+        }
+        .table-container {
+            flex: 1;
+            overflow: auto;
+            display: none;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 14px;
+        }
+        th, td {
+            padding: 10px;
+            text-align: left;
+            border-bottom: 1px solid #eee;
+        }
+        th {
+            background-color: #f8f9fa;
+            position: sticky;
+            top: 0;
+            font-weight: 600;
+            color: #444;
+        }
+        tr:hover {
+            background-color: #f5f5f5;
+        }
+        .btn-group {
+            display: flex;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+        .btn-group button {
+            border: none;
+            background: #fff;
+            padding: 6px 12px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .btn-group button:not(:last-child) {
+            border-right: 1px solid #ccc;
+        }
+        .btn-group button:hover {
+            background: #f5f5f5;
+        }
+        .btn-group button.active {
+            background: #0078d4;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Metrics Row -->
+        <div class="metrics-row">
+            <div class="metric-card" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+                <div class="metric-value" id="totalTransactions">0</div>
+                <div class="metric-label">Total Transactions</div>
+            </div>
+            <div class="metric-card" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);">
+                <div class="metric-value" id="topUser">N/A</div>
+                <div class="metric-label">Top User (By Score)</div>
+            </div>
+            <div class="metric-card" style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);">
+                <div class="metric-value" id="avgScore">0</div>
+                <div class="metric-label">Avg Score/User</div>
+            </div>
+        </div>
+
+        <div class="toolbar">
+            <div class="btn-group">
+                <button id="btnChart" class="active" onclick="setView('chart')">Chart View</button>
+                <button id="btnTable" onclick="setView('table')">Table View</button>
+                <button id="btnLeaderboard" onclick="setView('leaderboard')">Leaderboard</button>
+            </div>
+        </div>
+
+        <div class="chart-container" id="chartView">
+            <canvas id="analyticsChart"></canvas>
+        </div>
+        
+        <div class="table-container" id="tableView">
+            <table id="dataTable">
+                <thead>
+                    <tr>
+                        <th>User</th>
+                        <th>Work Orders</th>
+                        <th>Loc-to-Loc</th>
+                        <th>Coils (MMC)</th>
+                        <th>Flatstock (MMF)</th>
+                        <th>Adj In</th>
+                        <th>Adj Out</th>
+                        <th>Total Count</th>
+                        <th>Total Score</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+
+        <div class="table-container" id="leaderboardView" style="display:none;">
+            <div class="leaderboard-container" id="leaderboardList">
+                <!-- Populated by JS -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let chartInstance = null;
+        // Default data structure
+        let analyticsData = [];
+        let aggregatedData = [];
+
+        // Points System
+        const POINTS = {
+            'Work Order': 1,
+            'Location Transfer': 1,
+            'Adjusted In': 1,
+            'Adjusted Out': 1,
+            'Coil': 4,
+            'Flatstock': 8,
+            'Unknown': 0
+        };
+
+        function initChart() {
+            const ctx = document.getElementById('analyticsChart').getContext('2d');
+            chartInstance = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: [],
+                    datasets: [
+                        { label: 'Work Orders', data: [], backgroundColor: '#4facfe' },
+                        { label: 'Loc-to-Loc', data: [], backgroundColor: '#43e97b' },
+                        { label: 'Coils', data: [], backgroundColor: '#fa709a' },
+                        { label: 'Flatstock', data: [], backgroundColor: '#fee140' },
+                        { label: 'Adj In', data: [], backgroundColor: '#f093fb' },
+                        { label: 'Adj Out', data: [], backgroundColor: '#f5576c' }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        x: { stacked: true },
+                        y: { stacked: true, beginAtZero: true }
+                    }
+                }
+            });
+            
+            // Check if data was injected from C#
+            if (window.injectedData) {
+                loadData(window.injectedData);
+            } else {
+                // Load default/sample data
+                refreshDashboard();
+            }
+        }
+
+        function loadData(jsonData) {
+            try {
+                const rawData = typeof jsonData === 'string' ? JSON.parse(jsonData) : jsonData;
+                processData(rawData);
+                refreshDashboard();
+            } catch (e) {
+                console.error("Failed to load data", e);
+            }
+        }
+
+        function processData(rawData) {
+            // Aggregate raw transaction list into user summaries
+            const userMap = {};
+
+            rawData.forEach(row => {
+                if (!userMap[row.User]) {
+                    userMap[row.User] = {
+                        User: row.User,
+                        WorkOrders: 0,
+                        LocToLoc: 0,
+                        Coils: 0,
+                        Flatstock: 0,
+                        AdjIn: 0,
+                        AdjOut: 0,
+                        TotalCount: 0,
+                        TotalScore: 0
+                    };
+                }
+
+                const user = userMap[row.User];
+                const type = row.Type;
+                const points = POINTS[type] || 0;
+
+                user.TotalCount++;
+                user.TotalScore += points;
+
+                if (type === 'Work Order') user.WorkOrders++;
+                else if (type === 'Location Transfer') user.LocToLoc++;
+                else if (type === 'Coil') user.Coils++;
+                else if (type === 'Flatstock') user.Flatstock++;
+                else if (type === 'Adjusted In') user.AdjIn++;
+                else if (type === 'Adjusted Out') user.AdjOut++;
+            });
+
+            aggregatedData = Object.values(userMap);
+            analyticsData = rawData; // Keep raw data if needed for drill-down later
+        }
+
+        function refreshDashboard() {
+            updateMetrics();
+            updateChart();
+            updateTable();
+            updateLeaderboard();
+        }
+
+        function updateMetrics() {
+            let totalTrans = 0;
+            let totalScore = 0;
+            let maxScore = -1;
+            let topUser = 'N/A';
+
+            aggregatedData.forEach(d => {
+                totalTrans += d.TotalCount;
+                totalScore += d.TotalScore;
+                if (d.TotalScore > maxScore) {
+                    maxScore = d.TotalScore;
+                    topUser = d.User;
+                }
+            });
+
+            document.getElementById('totalTransactions').innerText = totalTrans.toLocaleString();
+            document.getElementById('topUser').innerText = topUser;
+            document.getElementById('avgScore').innerText = aggregatedData.length ? Math.round(totalScore / aggregatedData.length).toLocaleString() : 0;
+        }
+
+        function updateChart() {
+            if (!chartInstance) return;
+
+            const labels = aggregatedData.map(d => d.User);
+            const woData = aggregatedData.map(d => d.WorkOrders);
+            const ltlData = aggregatedData.map(d => d.LocToLoc);
+            const coilData = aggregatedData.map(d => d.Coils);
+            const flatData = aggregatedData.map(d => d.Flatstock);
+            const aiData = aggregatedData.map(d => d.AdjIn);
+            const aoData = aggregatedData.map(d => d.AdjOut);
+
+            chartInstance.data.labels = labels;
+            chartInstance.data.datasets[0].data = woData;
+            chartInstance.data.datasets[1].data = ltlData;
+            chartInstance.data.datasets[2].data = coilData;
+            chartInstance.data.datasets[3].data = flatData;
+            chartInstance.data.datasets[4].data = aiData;
+            chartInstance.data.datasets[5].data = aoData;
+            chartInstance.update();
+        }
+
+        function updateTable() {
+            const tbody = document.querySelector('#dataTable tbody');
+            tbody.innerHTML = '';
+            
+            aggregatedData.forEach(d => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td>${d.User}</td>
+                    <td>${d.WorkOrders}</td>
+                    <td>${d.LocToLoc}</td>
+                    <td>${d.Coils}</td>
+                    <td>${d.Flatstock}</td>
+                    <td>${d.AdjIn}</td>
+                    <td>${d.AdjOut}</td>
+                    <td><strong>${d.TotalCount}</strong></td>
+                    <td><strong style="color:#0078d4">${d.TotalScore}</strong></td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        function updateLeaderboard() {
+            const container = document.getElementById('leaderboardList');
+            container.innerHTML = '';
+
+            // Sort by score descending
+            const sorted = [...aggregatedData].sort((a, b) => b.TotalScore - a.TotalScore);
+
+            sorted.forEach((d, index) => {
+                const div = document.createElement('div');
+                div.className = 'leaderboard-item';
+                div.innerHTML = `
+                    <div>
+                        <span class="rank-badge">${index + 1}</span>
+                        <strong>${d.User}</strong>
+                    </div>
+                    <div>
+                        <span style="color:#666; font-size:12px; margin-right:10px;">${d.TotalCount} Trans</span>
+                        <strong style="color:#0078d4; font-size:18px;">${d.TotalScore} pts</strong>
+                    </div>
+                `;
+                container.appendChild(div);
+            });
+        }
+
+        function setView(view) {
+            document.getElementById('btnChart').classList.toggle('active', view === 'chart');
+            document.getElementById('btnTable').classList.toggle('active', view === 'table');
+            document.getElementById('btnLeaderboard').classList.toggle('active', view === 'leaderboard');
+            
+            document.getElementById('chartView').style.display = view === 'chart' ? 'block' : 'none';
+            document.getElementById('tableView').style.display = view === 'table' ? 'block' : 'none';
+            document.getElementById('leaderboardView').style.display = view === 'leaderboard' ? 'block' : 'none';
+        }
+
+        window.onload = initChart;
+    </script>
+</body>
+</html>

@@ -55,6 +55,10 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
             
             _dtpByUserStart.Value = DateTime.Today.AddDays(-30);
             _dtpByUserEnd.Value = DateTime.Today;
+
+            // Analytics Defaults
+            _dtpAnalyticsStart.Value = DateTime.Today;
+            _dtpAnalyticsEnd.Value = DateTime.Today.AddDays(1).AddSeconds(-1); // End of today
         }
 
         private void WireUpEvents()
@@ -62,6 +66,15 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
             _btnSearch.Click += async (s, e) => await PerformSearchAsync();
             _btnExport.Click += BtnExport_Click;
             
+            // User Analytics Events
+            _btnLoadUsers.Click += async (s, e) => await LoadUsersForAnalyticsAsync();
+            _btnGenerateReport.Click += async (s, e) => await GenerateAnalyticsReportAsync();
+            _clbUsers.ItemCheck += (s, e) => 
+            {
+                // Delay check to allow ItemCheck to complete
+                this.BeginInvoke(new Action(() => UpdateUserSelectionState()));
+            };
+
             // Enter key support on inputs
             _txtLifecyclePart.TextBox.KeyDown += async (s, e) => { if (e.KeyCode == Keys.Enter) await PerformSearchAsync(); };
             _txtByPartPart.TextBox.KeyDown += async (s, e) => { if (e.KeyCode == Keys.Enter) await PerformSearchAsync(); };
@@ -420,6 +433,112 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
                     _btnExport.Enabled = true;
                     _btnExport.Text = "Export to Excel";
                 }
+            }
+        }
+
+        private async Task LoadUsersForAnalyticsAsync()
+        {
+            if (_visualService == null) return;
+
+            try
+            {
+                _btnLoadUsers.Enabled = false;
+                _btnLoadUsers.Text = "Loading...";
+                _clbUsers.Items.Clear();
+
+                var start = _dtpAnalyticsStart.Value;
+                var end = _dtpAnalyticsEnd.Value;
+
+                var result = await _visualService.GetDistinctUsersForAnalyticsAsync(start, end);
+
+                if (result.IsSuccess && result.Data != null)
+                {
+                    foreach (var user in result.Data)
+                    {
+                        _clbUsers.Items.Add(user);
+                    }
+                    UpdateUserSelectionState();
+                }
+                else
+                {
+                    Service_ErrorHandler.ShowError(result.ErrorMessage);
+                }
+            }
+            catch (Exception ex)
+            {
+                Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Medium, controlName: this.Name);
+            }
+            finally
+            {
+                _btnLoadUsers.Enabled = true;
+                _btnLoadUsers.Text = "Load Users";
+            }
+        }
+
+        private void UpdateUserSelectionState()
+        {
+            int count = _clbUsers.CheckedItems.Count;
+            _lblUserCount.Text = $"Selected: {count} / 10";
+            
+            if (count > 10)
+            {
+                _lblUserCount.ForeColor = Color.Red;
+                _btnGenerateReport.Enabled = false;
+                _lblUserCount.Text += " (Max 10)";
+            }
+            else
+            {
+                _lblUserCount.ForeColor = Color.Black;
+                _btnGenerateReport.Enabled = count > 0;
+            }
+        }
+
+        private async Task GenerateAnalyticsReportAsync()
+        {
+            if (_visualService == null) return;
+
+            try
+            {
+                _btnGenerateReport.Enabled = false;
+                _btnGenerateReport.Text = "Generating...";
+
+                var selectedUsers = new List<string>();
+                foreach (var item in _clbUsers.CheckedItems)
+                {
+                    selectedUsers.Add(item.ToString() ?? "");
+                }
+
+                var start = _dtpAnalyticsStart.Value;
+                var end = _dtpAnalyticsEnd.Value;
+
+                var result = await _visualService.GetUserAnalyticsDataAsync(start, end, selectedUsers);
+
+                if (result.IsSuccess && result.Data != null)
+                {
+                    if (result.Data.Rows.Count == 0)
+                    {
+                        Service_ErrorHandler.ShowInformation("No data found for the selected users and date range.");
+                    }
+                    else
+                    {
+                        // Open the viewer form
+                        var viewer = new MTM_WIP_Application_Winforms.Forms.Visual.Form_AnalyticsViewer(result.Data);
+                        viewer.Show();
+                    }
+                }
+                else
+                {
+                    Service_ErrorHandler.ShowError(result.ErrorMessage);
+                }
+            }
+            catch (Exception ex)
+            {
+                Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Medium, controlName: this.Name);
+            }
+            finally
+            {
+                _btnGenerateReport.Enabled = true;
+                _btnGenerateReport.Text = "Generate Report";
             }
         }
         #endregion

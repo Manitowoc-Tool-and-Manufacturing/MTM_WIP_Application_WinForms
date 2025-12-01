@@ -139,6 +139,22 @@ namespace MTM_WIP_Application_Winforms.Services.Visual
         /// Retrieves a list of all Part IDs from the Visual database.
         /// </summary>
         Task<Model_Dao_Result<List<string>>> GetPartIdsAsync();
+        /// <summary>
+        /// Retrieves a list of distinct users who have performed transactions within the specified date range.
+        /// </summary>
+        /// <param name="start">Start date.</param>
+        /// <param name="end">End date.</param>
+        /// <returns>List of user IDs.</returns>
+        Task<Model_Dao_Result<List<string>>> GetDistinctUsersForAnalyticsAsync(DateTime start, DateTime end);
+
+        /// <summary>
+        /// Retrieves detailed analytics data for selected users within a date range.
+        /// </summary>
+        /// <param name="start">Start date.</param>
+        /// <param name="end">End date.</param>
+        /// <param name="userIds">List of user IDs to include.</param>
+        /// <returns>DataTable with analytics columns.</returns>
+        Task<Model_Dao_Result<DataTable>> GetUserAnalyticsDataAsync(DateTime start, DateTime end, List<string> userIds);
     }
     #endregion
 
