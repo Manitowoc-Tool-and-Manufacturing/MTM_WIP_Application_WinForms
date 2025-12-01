@@ -1564,7 +1564,6 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
         }
 
         private TableLayoutPanel Control_ReceivingAnalytics_TableLayoutPanel_Main;
-        private System.Windows.Forms.Panel Control_ReceivingAnalytics_Panel_Filters;
         private System.Windows.Forms.Label Control_ReceivingAnalytics_Label_DateRange;
         private System.Windows.Forms.DateTimePicker Control_ReceivingAnalytics_DateTimePicker_StartDate;
         private System.Windows.Forms.Label Control_ReceivingAnalytics_Label_DateRangeTo;
@@ -1579,23 +1578,15 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
         private System.Windows.Forms.CheckBox Control_ReceivingAnalytics_CheckBox_ShowOnTime;
         private System.Windows.Forms.CheckBox Control_ReceivingAnalytics_CheckBox_ShowWithPartID;
         private TableLayoutPanel Control_ReceivingAnalytics_TableLayoutPanel_DateRange;
-        private TableLayoutPanel Control_ReceivingAnalytics_TableLayoutPanel_PONumber;
-        private TableLayoutPanel Control_ReceivingAnalytics_TableLayoutPanel_CheckBoxes;
-        private TableLayoutPanel Control_ReceivingAnalytics_TableLayoutPanel_Vendor;
-        private TableLayoutPanel Control_ReceivingAnalytics_TableLayoutPanel_FilterBy;
-        private TableLayoutPanel Control_ReceivingAnalytics_TableLayoutPanel_Filters;
         private CheckBox Control_ReceivingAnalytics_CheckBox_ShowOpen;
         private CheckBox Control_ReceivingAnalytics_CheckBox_ShowMMC;
         private CheckBox Control_ReceivingAnalytics_CheckBox_ShowMMF;
-        private TableLayoutPanel Control_ReceivingAnalytics_TableLayoutPanel_Carrier;
         private MTM_WIP_Application_Winforms.Controls.Shared.SuggestionTextBoxWithLabel Control_ReceivingAnalytics_SuggestionTextBoxWithLabel_Carrier;
-        private TableLayoutPanel Control_ReceivingAnalytics_TableLayoutPanel_PartNumber;
         private MTM_WIP_Application_Winforms.Controls.Shared.SuggestionTextBoxWithLabel Control_ReceivingAnalytics_SuggestionTextBoxWithLabel_PartNumber;
         private TableLayoutPanel Control_ReceivingAnalytics_TableLayoutPanel_Buttons;
         private Panel Control_ReceivingAnalytics_Panel_CheckBoxes_Legend;
         private TableLayoutPanel Control_ReceivingAnalytics_TableLayoutPanel_Legend;
         private MTM_WIP_Application_Winforms.Controls.Shared.SuggestionTextBoxWithLabel Control_ReceivingAnalytics_SuggestionTextBoxWithLabel_PONumber;
-        private TableLayoutPanel Control_ReceivingAnalytics_TableLayoutPanel_Options;
         private MTM_WIP_Application_Winforms.Controls.Shared.SuggestionTextBoxWithLabel Control_ReceivingAnalytics_SuggestionTextBoxWithLabel_Supplier;
         private MTM_WIP_Application_Winforms.Controls.Shared.SuggestionTextBoxWithLabel Control_ReceivingAnalytics_SuggestionTextBoxWithLabel_DateType;
         private Label Control_ReceivingAnalytics_Label_LegendOnTime;
@@ -1614,7 +1605,6 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
         private Button Control_ReceivingAnalytics_Button_CurrentWeek;
         private Panel Control_ReceivingAnalytics_Panel_DataGridView;
         private DataGridView Control_ReceivingAnalytics_DataGridView_Results;
-        private TableLayoutPanel Control_ReceivingAnalytics_TableLayoutPanel_MainX;
         private TableLayoutPanel Control_ReceivingAnalytics_TableLayoutPanel_DateRangeContents;
         private TableLayoutPanel Control_ReceivingAnalytics_TableLayoutPanel_FiltersContents;
         private Label Control_ReceivingAnalytics_Label_SideBarFilters;

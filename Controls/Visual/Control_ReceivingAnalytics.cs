@@ -14,7 +14,6 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
     {
         #region Fields
         private readonly IService_VisualDatabase? _visualService;
-        private bool _isFiltersVisible = true;
         private DataTable? _cachedDataTable;
         private bool _isHandlingFilterLogic = false;
         
