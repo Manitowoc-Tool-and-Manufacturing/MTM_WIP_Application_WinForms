@@ -551,6 +551,7 @@
             tableLayoutPanel4.Controls.Add(lblAnalyticsEnd, 1, 0);
             tableLayoutPanel4.Controls.Add(_dtpAnalyticsEnd, 1, 1);
             tableLayoutPanel4.Controls.Add(_btnLoadUsers, 0, 2);
+            tableLayoutPanel4.Controls.Add(_btnSelectAllUsers, 1, 2);
             tableLayoutPanel4.Dock = DockStyle.Fill;
             tableLayoutPanel4.Location = new Point(13, 13);
             tableLayoutPanel4.Margin = new Padding(3, 3, 10, 3);
@@ -604,14 +605,23 @@
             // 
             // _btnLoadUsers
             // 
-            tableLayoutPanel4.SetColumnSpan(_btnLoadUsers, 2);
             _btnLoadUsers.Dock = DockStyle.Fill;
             _btnLoadUsers.Location = new Point(3, 53);
             _btnLoadUsers.Name = "_btnLoadUsers";
-            _btnLoadUsers.Size = new Size(292, 30);
+            _btnLoadUsers.Size = new Size(143, 30);
             _btnLoadUsers.TabIndex = 4;
             _btnLoadUsers.Text = "Load Users";
             _btnLoadUsers.UseVisualStyleBackColor = true;
+            // 
+            // _btnSelectAllUsers
+            // 
+            _btnSelectAllUsers.Dock = DockStyle.Fill;
+            _btnSelectAllUsers.Location = new Point(152, 53);
+            _btnSelectAllUsers.Name = "_btnSelectAllUsers";
+            _btnSelectAllUsers.Size = new Size(143, 30);
+            _btnSelectAllUsers.TabIndex = 5;
+            _btnSelectAllUsers.Text = "Select All";
+            _btnSelectAllUsers.UseVisualStyleBackColor = true;
             // 
             // _clbUsers
             // 
@@ -643,7 +653,7 @@
             _lblUserCount.Name = "_lblUserCount";
             _lblUserCount.Size = new Size(298, 15);
             _lblUserCount.TabIndex = 3;
-            _lblUserCount.Text = "Selected: 0 / 10";
+            _lblUserCount.Text = "Selected: 0";
             _lblUserCount.TextAlign = ContentAlignment.MiddleCenter;
             // 
             // _btnSearch
@@ -834,6 +844,7 @@
         private System.Windows.Forms.Label lblAnalyticsEnd;
         private System.Windows.Forms.DateTimePicker _dtpAnalyticsEnd;
         private System.Windows.Forms.Button _btnLoadUsers;
+        private System.Windows.Forms.Button _btnSelectAllUsers;
         private System.Windows.Forms.CheckedListBox _clbUsers;
         private System.Windows.Forms.Button _btnGenerateReport;
         private System.Windows.Forms.Label _lblUserCount;

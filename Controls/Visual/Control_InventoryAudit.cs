@@ -68,6 +68,7 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
             
             // User Analytics Events
             _btnLoadUsers.Click += async (s, e) => await LoadUsersForAnalyticsAsync();
+            _btnSelectAllUsers.Click += (s, e) => SelectAllUsers();
             _btnGenerateReport.Click += async (s, e) => await GenerateAnalyticsReportAsync();
             _clbUsers.ItemCheck += (s, e) => 
             {
@@ -478,19 +479,29 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
         private void UpdateUserSelectionState()
         {
             int count = _clbUsers.CheckedItems.Count;
-            _lblUserCount.Text = $"Selected: {count} / 10";
+            _lblUserCount.Text = $"Selected: {count}";
             
             if (count > 10)
             {
-                _lblUserCount.ForeColor = Color.Red;
-                _btnGenerateReport.Enabled = false;
-                _lblUserCount.Text += " (Max 10)";
+                _lblUserCount.ForeColor = Color.OrangeRed;
+                _lblUserCount.Text += " (Slow)";
+                _btnGenerateReport.Enabled = true;
             }
             else
             {
                 _lblUserCount.ForeColor = Color.Black;
                 _btnGenerateReport.Enabled = count > 0;
             }
+        }
+
+        private void SelectAllUsers()
+        {
+            bool allChecked = _clbUsers.CheckedItems.Count == _clbUsers.Items.Count;
+            for (int i = 0; i < _clbUsers.Items.Count; i++)
+            {
+                _clbUsers.SetItemChecked(i, !allChecked);
+            }
+            UpdateUserSelectionState();
         }
 
         private async Task GenerateAnalyticsReportAsync()

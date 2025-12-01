@@ -166,16 +166,19 @@ namespace MTM_WIP_Application_Winforms.Services.Visual
             if (searchByPart)
             {
                 // Search by Part Number -> Find Die (USER_1)
+                // Updated to use reverse lookup (D.USER_5 = P.ID) to handle parts with multiple dies
                 sql = @"
                     SELECT
                         P.ID as [Part Number],
                         P.DESCRIPTION as [Description],
-                        P.USER_1 as [Die Number],
+                        D.ID as [Die Number],
                         D.USER_2 as [Die Location],
                         P.USER_7 as [Customer],
                         P.USER_9 as [Coil]
                     FROM PART P
-                    LEFT JOIN PART D ON P.USER_1 = D.ID
+                    LEFT JOIN PART D ON D.USER_5 = P.ID 
+                        AND D.ID LIKE 'FGT%-01' 
+                        AND D.ID <> 'FGT0001-01'
                     WHERE P.ID LIKE @SearchTerm";
             }
             else
