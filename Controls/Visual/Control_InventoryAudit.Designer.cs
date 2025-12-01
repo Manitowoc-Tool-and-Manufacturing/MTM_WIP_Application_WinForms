@@ -127,7 +127,7 @@
             _tabControl.Location = new Point(3, 3);
             _tabControl.Name = "_tabControl";
             _tabControl.SelectedIndex = 0;
-            _tabControl.Size = new Size(794, 134);
+            _tabControl.Size = new Size(794, 200);
             _tabControl.TabIndex = 0;
             // 
             // _tabLifecycle
@@ -514,15 +514,13 @@
             _tabUserAnalytics.Location = new Point(4, 24);
             _tabUserAnalytics.Name = "_tabUserAnalytics";
             _tabUserAnalytics.Padding = new Padding(3);
-            _tabUserAnalytics.Size = new Size(786, 106);
+            _tabUserAnalytics.Size = new Size(786, 172);
             _tabUserAnalytics.TabIndex = 6;
             _tabUserAnalytics.Text = "User Analytics";
             _tabUserAnalytics.UseVisualStyleBackColor = true;
             // 
             // pnlUserAnalytics
             // 
-            pnlUserAnalytics.AutoSize = true;
-            pnlUserAnalytics.AutoSizeMode = AutoSizeMode.GrowAndShrink;
             pnlUserAnalytics.ColumnCount = 3;
             pnlUserAnalytics.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 40F));
             pnlUserAnalytics.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 40F));
@@ -538,7 +536,7 @@
             pnlUserAnalytics.RowCount = 2;
             pnlUserAnalytics.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
             pnlUserAnalytics.RowStyles.Add(new RowStyle());
-            pnlUserAnalytics.Size = new Size(780, 100);
+            pnlUserAnalytics.Size = new Size(780, 166);
             pnlUserAnalytics.TabIndex = 0;
             // 
             // tableLayoutPanel4
@@ -555,12 +553,13 @@
             tableLayoutPanel4.Controls.Add(_btnLoadUsers, 0, 2);
             tableLayoutPanel4.Dock = DockStyle.Fill;
             tableLayoutPanel4.Location = new Point(13, 13);
+            tableLayoutPanel4.Margin = new Padding(3, 3, 10, 3);
             tableLayoutPanel4.Name = "tableLayoutPanel4";
             tableLayoutPanel4.RowCount = 3;
             tableLayoutPanel4.RowStyles.Add(new RowStyle());
             tableLayoutPanel4.RowStyles.Add(new RowStyle());
             tableLayoutPanel4.RowStyles.Add(new RowStyle());
-            tableLayoutPanel4.Size = new Size(298, 74);
+            tableLayoutPanel4.Size = new Size(298, 125);
             tableLayoutPanel4.TabIndex = 0;
             // 
             // lblAnalyticsStart
@@ -609,7 +608,7 @@
             _btnLoadUsers.Dock = DockStyle.Fill;
             _btnLoadUsers.Location = new Point(3, 53);
             _btnLoadUsers.Name = "_btnLoadUsers";
-            _btnLoadUsers.Size = new Size(292, 23);
+            _btnLoadUsers.Size = new Size(292, 30);
             _btnLoadUsers.TabIndex = 4;
             _btnLoadUsers.Text = "Load Users";
             _btnLoadUsers.UseVisualStyleBackColor = true;
@@ -619,8 +618,9 @@
             _clbUsers.Dock = DockStyle.Fill;
             _clbUsers.FormattingEnabled = true;
             _clbUsers.Location = new Point(317, 13);
+            _clbUsers.Margin = new Padding(3, 3, 3, 10);
             _clbUsers.Name = "_clbUsers";
-            _clbUsers.Size = new Size(298, 74);
+            _clbUsers.Size = new Size(298, 125);
             _clbUsers.TabIndex = 1;
             // 
             // _btnGenerateReport
@@ -628,8 +628,9 @@
             _btnGenerateReport.Dock = DockStyle.Fill;
             _btnGenerateReport.Enabled = false;
             _btnGenerateReport.Location = new Point(621, 13);
+            _btnGenerateReport.Margin = new Padding(3, 3, 3, 10);
             _btnGenerateReport.Name = "_btnGenerateReport";
-            _btnGenerateReport.Size = new Size(146, 74);
+            _btnGenerateReport.Size = new Size(146, 125);
             _btnGenerateReport.TabIndex = 2;
             _btnGenerateReport.Text = "Generate Report";
             _btnGenerateReport.UseVisualStyleBackColor = true;
@@ -638,7 +639,7 @@
             // 
             _lblUserCount.AutoSize = true;
             _lblUserCount.Dock = DockStyle.Fill;
-            _lblUserCount.Location = new Point(317, 90);
+            _lblUserCount.Location = new Point(317, 148);
             _lblUserCount.Name = "_lblUserCount";
             _lblUserCount.Size = new Size(298, 15);
             _lblUserCount.TabIndex = 3;

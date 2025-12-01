@@ -1484,8 +1484,8 @@ namespace MTM_WIP_Application_Winforms.Services.Visual
                     .Where(r => r["TYPE"].ToString() == "I" && r["WORKORDER_BASE_ID"] == DBNull.Value)
                     .GroupBy(r => new { 
                         Date = (DateTime)r["CREATE_DATE"], 
-                        Part = r["PART_ID"].ToString(), 
-                        User = r["USER_ID"].ToString() 
+                        Part = r["PART_ID"].ToString() ?? "", 
+                        User = r["USER_ID"].ToString() ?? ""
                     })
                     .ToDictionary(g => g.Key, g => g.ToList());
 
