@@ -1,29 +1,24 @@
-using System;
-using System.Collections.Generic;
 using System.Data;
-using System.Drawing;
-using System.Threading.Tasks;
-using System.Windows.Forms;
 using Microsoft.Extensions.DependencyInjection;
-using MTM_WIP_Application_Winforms.Controls.Shared;
 using MTM_WIP_Application_Winforms.Forms.Shared;
 using MTM_WIP_Application_Winforms.Models;
 using MTM_WIP_Application_Winforms.Services;
 using MTM_WIP_Application_Winforms.Services.Visual;
-using MTM_WIP_Application_Winforms.Services.Logging;
 using MTM_WIP_Application_Winforms.Helpers;
+using MTM_WIP_Application_Winforms.Data;
 
 namespace MTM_WIP_Application_Winforms.Controls.Visual
 {
     /// <summary>
     /// Control for tracking part transaction lifecycles and auditing inventory history.
-    /// Supports multiple filter modes via tabs.
+    /// Supports multiple filter modes via dynamic search selection.
     /// </summary>
     public partial class Control_InventoryAudit : ThemedUserControl
     {
         #region Fields
         private readonly IService_VisualDatabase? _visualService;
         private DataTable? _cachedDataTable;
+        private string _lastSearchSelection = string.Empty;
         #endregion
 
         #region Constructors
@@ -31,21 +26,37 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
         {
             InitializeComponent();
             _visualService = Program.ServiceProvider?.GetService<IService_VisualDatabase>();
+            
+            // Initialize Search By options
+            _txtSearchBy.TextBox.DataProvider = () => Task.FromResult(new List<string> 
+            { 
+                "Part Number", 
+                "User", 
+                "Work Order", 
+                "Customer Order", 
+                "Purchase Order" 
+            });
+            _txtSearchBy.EnableSuggestions = true;
+            _txtSearchBy.ShowF4Button = true;
+            _txtSearchBy.Text = "Part Number"; // Default
+
+            // Initialize Analytics Workflow List
+            _ProcessUserAnalytics.SelectionMode = SelectionMode.None;
+
             WireUpEvents();
             ConfigureSuggestions();
             InitializeDefaultValues();
+            
+            // Trigger initial setup for default selection
+            OnSearchBySelected();
         }
         #endregion
 
         #region Initialization
         private void ConfigureSuggestions()
         {
+            // Initial configuration for Part Number (default)
             Helper_SuggestionTextBox.ConfigureForPartNumbers(_txtLifecyclePart, GetPartIdsAsync);
-            Helper_SuggestionTextBox.ConfigureForPartNumbers(_txtByPartPart, GetPartIdsAsync);
-            Helper_SuggestionTextBox.ConfigureForUsers(_txtByUserUser, GetUsersAsync);
-            Helper_SuggestionTextBox.ConfigureForWorkOrders(_txtByWOWO, GetWorkOrdersAsync);
-            Helper_SuggestionTextBox.ConfigureForCustomerOrders(_txtByCOCO, GetCustomerOrdersAsync);
-            Helper_SuggestionTextBox.ConfigureForPurchaseOrders(_txtByPOPO, GetPurchaseOrdersAsync);
         }
 
         private void InitializeDefaultValues()
@@ -53,12 +64,11 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
             _dtpLifecycleStart.Value = DateTime.Today.AddDays(-30);
             _dtpLifecycleEnd.Value = DateTime.Today;
             
-            _dtpByUserStart.Value = DateTime.Today.AddDays(-30);
-            _dtpByUserEnd.Value = DateTime.Today;
-
             // Analytics Defaults
             _dtpAnalyticsStart.Value = DateTime.Today;
             _dtpAnalyticsEnd.Value = DateTime.Today.AddDays(1).AddSeconds(-1); // End of today
+            
+            UpdateAnalyticsWorkflow();
         }
 
         private void WireUpEvents()
@@ -66,6 +76,10 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
             _btnSearch.Click += async (s, e) => await PerformSearchAsync();
             _btnExport.Click += BtnExport_Click;
             
+            // Search By Selection Change
+            _txtSearchBy.SuggestionSelected += (s, e) => OnSearchBySelected();
+            _txtSearchBy.TextBox.Leave += (s, e) => OnSearchBySelected(); // Ensure update on leave if typed
+
             // User Analytics Events
             _btnLoadUsers.Click += async (s, e) => await LoadUsersForAnalyticsAsync();
             _btnSelectAllUsers.Click += (s, e) => SelectAllUsers();
@@ -73,22 +87,97 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
             _clbUsers.ItemCheck += (s, e) => 
             {
                 // Delay check to allow ItemCheck to complete
-                this.BeginInvoke(new Action(() => UpdateUserSelectionState()));
+                this.BeginInvoke(new Action(() => 
+                {
+                    UpdateUserSelectionState();
+                    UpdateAnalyticsWorkflow();
+                }));
             };
+            
+            _dtpAnalyticsStart.ValueChanged += (s, e) => UpdateAnalyticsWorkflow();
+            _dtpAnalyticsEnd.ValueChanged += (s, e) => UpdateAnalyticsWorkflow();
 
             // Enter key support on inputs
             _txtLifecyclePart.TextBox.KeyDown += async (s, e) => { if (e.KeyCode == Keys.Enter) await PerformSearchAsync(); };
-            _txtByPartPart.TextBox.KeyDown += async (s, e) => { if (e.KeyCode == Keys.Enter) await PerformSearchAsync(); };
-            _txtByUserUser.TextBox.KeyDown += async (s, e) => { if (e.KeyCode == Keys.Enter) await PerformSearchAsync(); };
-            _txtByWOWO.TextBox.KeyDown += async (s, e) => { if (e.KeyCode == Keys.Enter) await PerformSearchAsync(); };
-            _txtByCOCO.TextBox.KeyDown += async (s, e) => { if (e.KeyCode == Keys.Enter) await PerformSearchAsync(); };
-            _txtByPOPO.TextBox.KeyDown += async (s, e) => { if (e.KeyCode == Keys.Enter) await PerformSearchAsync(); };
             
             _dataGridView.CellDoubleClick += DataGridView_CellDoubleClick;
         }
         #endregion
 
         #region Methods
+        
+        private void OnSearchBySelected()
+        {
+            string selection = _txtSearchBy.Text;
+            
+            // Prevent unnecessary updates if selection hasn't changed
+            if (string.Equals(selection, _lastSearchSelection, StringComparison.OrdinalIgnoreCase))
+            {
+                return;
+            }
+
+            _lastSearchSelection = selection;
+            _txtLifecyclePart.Text = string.Empty;
+
+            switch (selection)
+            {
+                case "User":
+                    _txtLifecyclePart.LabelText = "Enter User ID";
+                    _txtLifecyclePart.PlaceholderText = "Enter User Name";
+                    Helper_SuggestionTextBox.ConfigureForUsers(_txtLifecyclePart, GetUsersAsync);
+                    break;
+                case "Work Order":
+                    _txtLifecyclePart.LabelText = "Enter Work Order";
+                    _txtLifecyclePart.PlaceholderText = "Enter Work Order Number";
+                    Helper_SuggestionTextBox.ConfigureForWorkOrders(_txtLifecyclePart, GetWorkOrdersAsync);
+                    break;
+                case "Customer Order":
+                    _txtLifecyclePart.LabelText = "Enter Customer Order";
+                    _txtLifecyclePart.PlaceholderText = "Enter Customer Order Number";
+                    Helper_SuggestionTextBox.ConfigureForCustomerOrders(_txtLifecyclePart, GetCustomerOrdersAsync);
+                    break;
+                case "Purchase Order":
+                    _txtLifecyclePart.LabelText = "Enter Purchase Order";
+                    _txtLifecyclePart.PlaceholderText = "Enter Purchase Order Number";
+                    Helper_SuggestionTextBox.ConfigureForPurchaseOrders(_txtLifecyclePart, GetPurchaseOrdersAsync);
+                    break;
+                case "Part Number":
+                default:
+                    _txtLifecyclePart.LabelText = "Enter Part ID";
+                    _txtLifecyclePart.PlaceholderText = "Enter Part Number";
+                    Helper_SuggestionTextBox.ConfigureForPartNumbers(_txtLifecyclePart, GetPartIdsAsync);
+                    break;
+            }
+        }
+
+        private void UpdateAnalyticsWorkflow()
+        {
+            // Step 1: Enter Desired Date Range (Always true if dates valid)
+            SetWorkflowStep(0, true);
+
+            // Step 2: Click Load Users (True if users loaded)
+            bool usersLoaded = _clbUsers.Items.Count > 0;
+            SetWorkflowStep(1, usersLoaded);
+
+            // Step 3: Click Select All Users (Optional - True if all selected)
+            bool allSelected = usersLoaded && _clbUsers.CheckedItems.Count == _clbUsers.Items.Count;
+            SetWorkflowStep(2, allSelected);
+
+            // Step 4: Select Users Below (True if any selected)
+            bool anySelected = _clbUsers.CheckedItems.Count > 0;
+            SetWorkflowStep(3, anySelected);
+
+            // Step 5: Click Generate Report (Handled in GenerateAnalyticsReportAsync)
+        }
+
+        private void SetWorkflowStep(int index, bool isChecked)
+        {
+            if (index >= 0 && index < _ProcessUserAnalytics.Items.Count)
+            {
+                _ProcessUserAnalytics.SetItemChecked(index, isChecked);
+            }
+        }
+
         private async Task<List<string>> GetPartIdsAsync()
         {
             if (_visualService == null) return new List<string>();
@@ -153,20 +242,12 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
 
                         if (transId > 0 && _cachedDataTable != null)
                         {
-                            // We need the raw data to trace, but _cachedDataTable is already processed.
-                            // We need to re-fetch or store raw data.
-                            // For now, let's re-fetch to be safe and ensure we have the full context.
-                            // Or better, if we are in Lifecycle view, we just filter the current view?
-                            // No, TraceTransactionFlow needs raw data.
-                            
-                            // Let's trigger a special trace search
                             await PerformTraceSearchAsync(transId);
                             return;
                         }
                     }
 
                     // Otherwise, standard Part ID switch logic
-                    // Try to find Part ID column (could be PART_ID or Part Number depending on view)
                     string partId = "";
                     if (drv.Row.Table.Columns.Contains("PART_ID"))
                         partId = drv["PART_ID"]?.ToString() ?? "";
@@ -177,8 +258,10 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
                     
                     if (!string.IsNullOrEmpty(partId))
                     {
-                        // Switch to Lifecycle tab
+                        // Switch to Lifecycle tab and Part Number mode
                         _tabControl.SelectedTab = _tabLifecycle;
+                        _txtSearchBy.Text = "Part Number";
+                        OnSearchBySelected();
                         _txtLifecyclePart.Text = partId;
                         
                         // Set date range to cover a broad history
@@ -259,66 +342,46 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
                 var filter = new Model_VisualTransactionFilter();
                 bool isLifecycleView = false;
 
-                // Populate filter based on active tab
+                // Populate filter based on active tab and search selection
                 if (_tabControl.SelectedTab == _tabLifecycle)
                 {
-                    filter.PartId = _txtLifecyclePart.Text?.Trim();
+                    string searchBy = _txtSearchBy.Text;
+                    string searchTerm = _txtLifecyclePart.Text?.Trim() ?? "";
+                    
                     filter.StartDate = _dtpLifecycleStart.Value;
                     filter.EndDate = _dtpLifecycleEnd.Value;
-                    isLifecycleView = true;
 
-                    if (string.IsNullOrEmpty(filter.PartId))
+                    if (string.IsNullOrEmpty(searchTerm))
                     {
-                        Service_ErrorHandler.ShowUserError("Please enter a Part ID for Lifecycle View.");
+                        Service_ErrorHandler.ShowUserError($"Please enter a {searchBy}.");
                         return;
+                    }
+
+                    switch (searchBy)
+                    {
+                        case "User":
+                            filter.UserId = searchTerm;
+                            break;
+                        case "Work Order":
+                            filter.WorkOrder = searchTerm;
+                            break;
+                        case "Customer Order":
+                            filter.CustomerOrder = searchTerm;
+                            break;
+                        case "Purchase Order":
+                            filter.PurchaseOrder = searchTerm;
+                            break;
+                        case "Part Number":
+                        default:
+                            filter.PartId = searchTerm;
+                            isLifecycleView = true; // Only Part Number search supports lifecycle view logic
+                            break;
                     }
                 }
-                else if (_tabControl.SelectedTab == _tabByPart)
+                else if (_tabControl.SelectedTab == _tabUserAnalytics)
                 {
-                    filter.PartId = _txtByPartPart.Text?.Trim();
-                    if (string.IsNullOrEmpty(filter.PartId))
-                    {
-                        Service_ErrorHandler.ShowUserError("Please enter a Part ID.");
-                        return;
-                    }
-                }
-                else if (_tabControl.SelectedTab == _tabByUser)
-                {
-                    filter.UserId = _txtByUserUser.Text?.Trim();
-                    filter.StartDate = _dtpByUserStart.Value;
-                    filter.EndDate = _dtpByUserEnd.Value;
-                    if (string.IsNullOrEmpty(filter.UserId))
-                    {
-                        Service_ErrorHandler.ShowUserError("Please enter a User ID.");
-                        return;
-                    }
-                }
-                else if (_tabControl.SelectedTab == _tabByWO)
-                {
-                    filter.WorkOrder = _txtByWOWO.Text?.Trim();
-                    if (string.IsNullOrEmpty(filter.WorkOrder))
-                    {
-                        Service_ErrorHandler.ShowUserError("Please enter a Work Order.");
-                        return;
-                    }
-                }
-                else if (_tabControl.SelectedTab == _tabByCO)
-                {
-                    filter.CustomerOrder = _txtByCOCO.Text?.Trim();
-                    if (string.IsNullOrEmpty(filter.CustomerOrder))
-                    {
-                        Service_ErrorHandler.ShowUserError("Please enter a Customer Order.");
-                        return;
-                    }
-                }
-                else if (_tabControl.SelectedTab == _tabByPO)
-                {
-                    filter.PurchaseOrder = _txtByPOPO.Text?.Trim();
-                    if (string.IsNullOrEmpty(filter.PurchaseOrder))
-                    {
-                        Service_ErrorHandler.ShowUserError("Please enter a PO Number.");
-                        return;
-                    }
+                    // Should not happen as search button is on Lifecycle tab, but just in case
+                    return;
                 }
 
                 var result = await _visualService.GetTransactionsAsync(filter);
@@ -459,6 +522,7 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
                         _clbUsers.Items.Add(user);
                     }
                     UpdateUserSelectionState();
+                    UpdateAnalyticsWorkflow();
                 }
                 else
                 {
@@ -483,13 +547,15 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
             
             if (count > 10)
             {
-                _lblUserCount.ForeColor = Color.OrangeRed;
+                var userUiColors = Model_Application_Variables.UserUiColors;
+                var colorWarning = userUiColors?.WarningColor;
+                _lblUserCount.ForeColor = colorWarning ?? Color.OrangeRed;
                 _lblUserCount.Text += " (Slow)";
                 _btnGenerateReport.Enabled = true;
             }
             else
             {
-                _lblUserCount.ForeColor = Color.Black;
+                // _lblUserCount.ForeColor = Color.Black; // Removed to allow theme system to manage color
                 _btnGenerateReport.Enabled = count > 0;
             }
         }
@@ -502,6 +568,7 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
                 _clbUsers.SetItemChecked(i, !allChecked);
             }
             UpdateUserSelectionState();
+            UpdateAnalyticsWorkflow();
         }
 
         private async Task GenerateAnalyticsReportAsync()
@@ -526,6 +593,8 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
 
                 if (result.IsSuccess && result.Data != null)
                 {
+                    SetWorkflowStep(4, true); // Step 5 complete
+                    
                     if (result.Data.Rows.Count == 0)
                     {
                         Service_ErrorHandler.ShowInformation("No data found for the selected users and date range.");
